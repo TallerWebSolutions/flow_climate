@@ -1,0 +1,13 @@
+<div class="container">
+  <div class="row">
+    <div class="col-xs-12 header">
+      <% if user_signed_in? %>
+          <div class="pull-right">
+            <%= link_to :destroy_user_session, method: :delete do %>
+                <i class="fa fa-sign-out fa-3x" aria-hidden="true"></i>
+            <% end %>
+          </div>
+      <% end %>
+    </div>
+  </div>
+</div>

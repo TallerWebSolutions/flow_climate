@@ -1,14 +1,28 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>FlowControl</title>
-    <%= csrf_meta_tags %>
+    <title>Flow Control - Mastering the flow management</title>
+    <%= stylesheet_link_tag '//netdna.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css', media: 'all' %>
+    <%= stylesheet_link_tag 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/css/bootstrap-datepicker.css', media: 'all' %>
+    <%= stylesheet_link_tag '//netdna.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css', media: 'all' %>
+    <%= stylesheet_link_tag 'https://fonts.googleapis.com/css?family=Open+Sans|Ubuntu:500', media: 'all' %>
+    <%= stylesheet_link_tag 'application', media: 'all' %>
 
-    <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
-    <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+    <%= yield :stylesheet %>
+    <%= csrf_meta_tags %>
   </head>
 
   <body>
+    <%= render 'layouts/header' %>
+
+    <section class="alerts">
+      <%= notice %>
+      <%= alert %>
+      <%= error %>
+    </section>
+
     <%= yield %>
+
+    <%= render 'layouts/footer' %>
   </body>
 </html>
