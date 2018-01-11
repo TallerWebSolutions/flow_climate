@@ -40,10 +40,13 @@ RSpec.describe CompaniesController, type: :controller do
     describe 'GET #show' do
       context 'passing a valid ID' do
         let(:company) { Fabricate :company, users: [user] }
+        let!(:finances) { Fabricate :financial_information, company: company, finances_date: 2.days.ago }
+        let!(:other_finances) { Fabricate :financial_information, company: company, finances_date: Time.zone.today }
         before { get :show, params: { id: company.id } }
         it 'assigns the instance variable and renders the template' do
           expect(response).to render_template :show
           expect(assigns(:company)).to eq company
+          expect(assigns(:financial_informations)).to eq [other_finances, finances]
         end
       end
       context 'passing an invalid ID' do

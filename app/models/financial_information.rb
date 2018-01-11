@@ -25,4 +25,8 @@ class FinancialInformation < ApplicationRecord
   belongs_to :company
 
   validates :finances_date, :income_total, :expenses_total, presence: true
+
+  def financial_result
+    income_total.to_f - expenses_total.to_f
+  end
 end

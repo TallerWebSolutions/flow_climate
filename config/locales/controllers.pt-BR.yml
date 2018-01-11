@@ -18,16 +18,20 @@ pt-BR:
     search: "Buscar"
     home:
       title: "Home"
+    result: "Resultado"
+    month: "Mês"
   header:
     logout: Sair
     sign_up: Cadastre-se
     login: Login
-  company:
-    new:
-      title: "Nova Empresa"
   users:
     change_last_company:
       title: "Mudar para esta empresa"
   companies:
     index:
       title: "Empresas"
+    new:
+      title: "Nova Empresa"
+  financial_informations:
+    new:
+      title: "Nova Informação Financeira"

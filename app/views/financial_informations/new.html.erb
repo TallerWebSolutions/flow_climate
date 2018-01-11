@@ -3,12 +3,13 @@
     <div class="col-xs-12">
       <ul class="breadcrumb">
         <li><%= link_to t('general.home.title'), root_path %></li>
-        <li><%= t('companies.new.title') %></li>
+        <li><%= link_to @company.name, company_path(@company) %></li>
+        <li><%= t('financial_informations.new.title') %></li>
       </ul>
     </div>
   </div>
 
-  <%= form_for @company do |f| %>
+  <%= form_for [@company, @financial_information] do |f| %>
     <div class="row botton-spaced-component">
       <div class="col-xs-12">
         <%= render 'form', f: f %>

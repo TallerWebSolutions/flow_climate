@@ -12,6 +12,7 @@
 
 class Company < ApplicationRecord
   has_and_belongs_to_many :users
+  has_many :financial_informations, dependent: :restrict_with_error
 
   validates :name, presence: true
 end

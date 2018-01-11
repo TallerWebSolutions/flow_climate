@@ -7,7 +7,9 @@ class CompaniesController < AuthenticatedController
     @companies = current_user.companies.order(:name)
   end
 
-  def show; end
+  def show
+    @financial_informations = @company.financial_informations.order(finances_date: :desc)
+  end
 
   def new
     @company = Company.new

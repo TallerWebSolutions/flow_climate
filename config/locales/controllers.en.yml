@@ -18,17 +18,21 @@ en:
     search: "Search"
     home:
       title: "Home"
+    result: "Result"
+    month: "Month"
   header:
     logout: Logout
     explore: Explore
     sign_up: Register
     login: Login
-  company:
-    new:
-      title: "New Company"
   users:
     change_last_company:
       title: "Change to this company"
   companies:
     index:
       title: "Companies"
+    new:
+      title: "New Company"
+  financial_informations:
+    new:
+      title: "New Financial Information"

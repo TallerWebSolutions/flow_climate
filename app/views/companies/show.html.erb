@@ -3,4 +3,24 @@
   <% if @company.id != current_user.last_company_id %>
     <%= link_to t('users.change_last_company.title'), change_current_company_users_path(company_id: @company.id), method: :patch %>
   <% end %>
+  <%= link_to t('financial_informations.new.title'), new_company_financial_information_path(@company), class: 'btn btn-sm btn-primary botton-spaced-component' %>
+
+  <table class="table">
+    <tr>
+      <th><%= FinancialInformation.human_attribute_name :finances_date %></th>
+      <th><%= t('general.month') %></th>
+      <th><%= FinancialInformation.human_attribute_name :income_total %></th>
+      <th><%= FinancialInformation.human_attribute_name :expenses_total %></th>
+      <th><%= t('general.result') %></th>
+    </tr>
+    <% @financial_informations.each do |finance| %>
+      <tr>
+        <td><%= l(finance.finances_date) %></td>
+        <td><%= l(finance.finances_date, format: :month_year) %></td>
+        <td><%= number_to_currency(finance.income_total) %></td>
+        <td><%= number_to_currency(finance.expenses_total) %></td>
+        <td><%= number_to_currency(finance.financial_result) %></td>
+      </tr>
+    <% end %>
+  </table>
 </div>

@@ -13,7 +13,9 @@ Rails.application.routes.draw do
     patch :change_current_company, on: :collection
   end
 
-  resources :companies, only: %i[show new create index]
+  resources :companies, only: %i[show new create index] do
+    resources :financial_informations, only: %i[new create]
+  end
 
   root 'companies#index'
 end

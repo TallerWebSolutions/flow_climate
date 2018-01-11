@@ -1,7 +1,7 @@
 <div class="container">
   <h1><%= t('companies.index.title') %></h1>
 
-  <%= link_to t('company.new.title'), new_company_path, class: 'btn btn-sm btn-primary botton-spaced-component' %>
+  <%= link_to t('companies.new.title'), new_company_path, class: 'btn btn-sm btn-primary botton-spaced-component' %>
 
   <% if @companies.empty? %>
     Você ainda não tem empresas.
@@ -12,7 +12,7 @@
       </tr>
       <% @companies.each do |company| %>
         <tr>
-          <td><%= company.name %></td>
+          <td><%= link_to company.name, company_path(company) %></td>
         </tr>
     <% end %>
     </table>
