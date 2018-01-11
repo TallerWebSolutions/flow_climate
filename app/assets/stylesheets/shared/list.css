@@ -1,0 +1,6 @@
+.not-paid-leaving {
+    color: red;
+    font-style: italic;
+    font-weight: bold;
+    background-color: lightpink;
+}

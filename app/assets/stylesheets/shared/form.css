@@ -1,0 +1,34 @@
+.help-block {
+    margin-bottom: 0;
+
+    font-size: 1.2rem;
+    text-align: left;
+}
+
+.has-error {
+    border: 2px solid lighten(#EE1C3A, 10%) !important;
+    box-shadow: none;
+}
+
+.no-data {
+    font-style: italic;
+}
+
+.header-link {
+    text-align: right;
+    text-transform: uppercase;
+}
+
+.botton-spaced-component {
+    margin-bottom: 8px;
+}
+
+h1 {
+    font-size: x-large;
+}
+
+h2 {
+    font-size: large;
+    margin-bottom: 15px;
+    font-weight: bold;
+}

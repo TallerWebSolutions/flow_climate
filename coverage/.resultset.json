@@ -31,11 +31,20 @@
         null,
         null,
         null,
+        null,
+        null,
+        null,
+        null,
+        null,
         1,
         null,
         null,
         1,
         null,
+        null,
+        1,
+        null,
+        1,
         null
       ],
       "/Users/celsomartins/workspace/taller/flow_control/app/models/application_record.rb": [
@@ -60,17 +69,11 @@
         null,
         null
       ],
-      "/Users/celsomartins/workspace/taller/flow_control/app/controllers/devise_custom/registrations_controller.rb": [
+      "/Users/celsomartins/workspace/taller/flow_control/app/controllers/authenticated_controller.rb": [
         null,
         null,
         1,
         1,
-        1,
-        null,
-        1,
-        1,
-        null,
-        null,
         null
       ],
       "/Users/celsomartins/workspace/taller/flow_control/app/controllers/application_controller.rb": [
@@ -84,19 +87,48 @@
         1,
         null,
         1,
-        0,
-        0,
-        0,
+        2,
+        3,
+        3,
         null,
         null,
         null
       ],
-      "/Users/celsomartins/workspace/taller/flow_control/app/channels/application_cable/channel.rb": [
+      "/Users/celsomartins/workspace/taller/flow_control/app/controllers/companies_controller.rb": [
         null,
         null,
         1,
         1,
+        null
+      ],
+      "/Users/celsomartins/workspace/taller/flow_control/app/controllers/devise_custom/registrations_controller.rb": [
         null,
+        null,
+        1,
+        1,
+        1,
+        null,
+        1,
+        1,
+        null,
+        null,
+        null
+      ],
+      "/Users/celsomartins/workspace/taller/flow_control/app/models/company.rb": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        1,
+        1,
         null
       ],
       "/Users/celsomartins/workspace/taller/flow_control/app/channels/application_cable/connection.rb": [
@@ -121,21 +153,15 @@
         1,
         null
       ],
-      "/Users/celsomartins/workspace/taller/flow_control/app/controllers/authenticated_controller.rb": [
+      "/Users/celsomartins/workspace/taller/flow_control/app/channels/application_cable/channel.rb": [
         null,
         null,
-        0,
-        0,
-        0
-      ],
-      "/Users/celsomartins/workspace/taller/flow_control/app/controllers/companies_controller.rb": [
+        1,
+        1,
         null,
-        null,
-        0,
-        0,
-        0
+        null
       ]
     },
-    "timestamp": 1515689489
+    "timestamp": 1515692700
   }
 }

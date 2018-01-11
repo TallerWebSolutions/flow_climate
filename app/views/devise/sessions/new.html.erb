@@ -1,6 +1,6 @@
 <div class="container">
   <div class="row">
-    <div class="col-xs-4 col-xs-offset-4 swarga-header">
+    <div class="col-xs-4 col-xs-offset-4">
       <h1><%= t('devise.sessions.login') %></h1>
       <%= form_for(resource, as: resource_name, url: session_path(resource_name), class: 'form-horizontal') do |f| %>
           <div class="form-group">
@@ -21,7 +21,7 @@
           <% end -%>
 
           <div class="form-group">
-            <%= f.submit t('devise.sessions.login'), class: 'btn btn-lg btn-green' %>
+            <%= f.submit t('devise.sessions.login'), class: 'btn btn-primary' %>
           </div>
       <% end %>
 
