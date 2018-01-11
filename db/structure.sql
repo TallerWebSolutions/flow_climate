@@ -83,6 +83,38 @@ CREATE TABLE companies_users (
 
 
 --
+-- Name: customers; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE customers (
+    id bigint NOT NULL,
+    company_id integer NOT NULL,
+    name character varying NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: customers_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE customers_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: customers_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE customers_id_seq OWNED BY customers.id;
+
+
+--
 -- Name: financial_informations; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -178,6 +210,13 @@ ALTER TABLE ONLY companies ALTER COLUMN id SET DEFAULT nextval('companies_id_seq
 
 
 --
+-- Name: customers id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY customers ALTER COLUMN id SET DEFAULT nextval('customers_id_seq'::regclass);
+
+
+--
 -- Name: financial_informations id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -205,6 +244,14 @@ ALTER TABLE ONLY ar_internal_metadata
 
 ALTER TABLE ONLY companies
     ADD CONSTRAINT companies_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: customers customers_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY customers
+    ADD CONSTRAINT customers_pkey PRIMARY KEY (id);
 
 
 --
@@ -243,6 +290,13 @@ CREATE INDEX index_companies_users_on_company_id ON companies_users USING btree 
 --
 
 CREATE INDEX index_companies_users_on_user_id ON companies_users USING btree (user_id);
+
+
+--
+-- Name: index_customers_on_company_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_customers_on_company_id ON customers USING btree (company_id);
 
 
 --
@@ -299,6 +353,14 @@ ALTER TABLE ONLY users
 
 
 --
+-- Name: customers fk_rails_ef51a916ef; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY customers
+    ADD CONSTRAINT fk_rails_ef51a916ef FOREIGN KEY (company_id) REFERENCES companies(id);
+
+
+--
 -- PostgreSQL database dump complete
 --
 
@@ -307,6 +369,7 @@ SET search_path TO "$user", public;
 INSERT INTO "schema_migrations" (version) VALUES
 ('20180111164501'),
 ('20180111170136'),
-('20180111180016');
+('20180111180016'),
+('20180111232828');
 
 
