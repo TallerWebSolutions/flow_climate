@@ -1,0 +1,18 @@
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  pool: 5
+
+development:
+  <<: *default
+  database: flowcontrol_development
+
+test:
+  <<: *default
+  database: flowcontrol_test
+
+production:
+  <<: *default
+  database: flowcontrol_production
+  username: flowcontrol
+  password: <%= ENV['FLOWCONTROL_DATABASE_PASSWORD'] %>

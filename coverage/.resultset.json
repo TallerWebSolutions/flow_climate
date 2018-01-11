@@ -1,0 +1,43 @@
+{
+  "RSpec": {
+    "coverage": {
+      "/Users/celsomartins/workspace/taller/flow_control/app/helpers/application_helper.rb": [
+        1,
+        null
+      ],
+      "/Users/celsomartins/workspace/taller/flow_control/app/mailers/application_mailer.rb": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "/Users/celsomartins/workspace/taller/flow_control/app/models/application_record.rb": [
+        0,
+        0,
+        0
+      ],
+      "/Users/celsomartins/workspace/taller/flow_control/app/jobs/application_job.rb": [
+        0,
+        0
+      ],
+      "/Users/celsomartins/workspace/taller/flow_control/app/controllers/application_controller.rb": [
+        0,
+        0,
+        0
+      ],
+      "/Users/celsomartins/workspace/taller/flow_control/app/channels/application_cable/connection.rb": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "/Users/celsomartins/workspace/taller/flow_control/app/channels/application_cable/channel.rb": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    "timestamp": 1515687439
+  }
+}
