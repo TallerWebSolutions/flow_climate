@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180111170136) do
+ActiveRecord::Schema.define(version: 20180111180016) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -28,6 +28,16 @@ ActiveRecord::Schema.define(version: 20180111170136) do
     t.datetime "updated_at", null: false
     t.index ["company_id"], name: "index_companies_users_on_company_id"
     t.index ["user_id"], name: "index_companies_users_on_user_id"
+  end
+
+  create_table "financial_informations", force: :cascade do |t|
+    t.integer "company_id", null: false
+    t.date "finances_date", null: false
+    t.decimal "income_total", null: false
+    t.decimal "expenses_total", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["company_id"], name: "index_financial_informations_on_company_id"
   end
 
   create_table "users", id: :serial, force: :cascade do |t|
@@ -53,5 +63,6 @@ ActiveRecord::Schema.define(version: 20180111170136) do
 
   add_foreign_key "companies_users", "companies"
   add_foreign_key "companies_users", "users"
+  add_foreign_key "financial_informations", "companies"
   add_foreign_key "users", "companies", column: "last_company_id"
 end

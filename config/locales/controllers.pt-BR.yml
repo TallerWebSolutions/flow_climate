@@ -1,0 +1,33 @@
+pt-BR:
+  general:
+    buttons:
+      delete_confirmation: Tem certeza?
+      back: Voltar
+      show: Exibir
+      cancel: Cancelar
+      save: Salvar
+      delete: Excluir
+      add: Adicionar
+      edit: Editar
+      i_am_done: 'Pronto!'
+      send: Enviar
+    no_records: Você ainda não tem %{record}! Que tal criar o seu primeiro?
+    messages:
+      saved: Salvo!
+      save_error: Não foi possível salvar! Por favor recarregue a página e tente novamente.
+    search: "Buscar"
+    home:
+      title: "Home"
+  header:
+    logout: Sair
+    sign_up: Cadastre-se
+    login: Login
+  company:
+    new:
+      title: "Nova Empresa"
+  users:
+    change_last_company:
+      title: "Mudar para esta empresa"
+  companies:
+    index:
+      title: "Empresas"

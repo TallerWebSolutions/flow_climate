@@ -1,1 +1,6 @@
-<h1>Mothefucker Management System</h1>
+<div class="container">
+  <h1><%= @company.name %></h1>
+  <% if @company.id != current_user.last_company_id %>
+    <%= link_to t('users.change_last_company.title'), change_current_company_users_path(company_id: @company.id), method: :patch %>
+  <% end %>
+</div>

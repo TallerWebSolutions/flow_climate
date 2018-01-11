@@ -1,0 +1,20 @@
+<div class="container">
+  <h1><%= t('companies.index.title') %></h1>
+
+  <%= link_to t('company.new.title'), new_company_path, class: 'btn btn-sm btn-primary botton-spaced-component' %>
+
+  <% if @companies.empty? %>
+    Você ainda não tem empresas.
+  <% else %>
+    <table class="table">
+      <tr>
+        <th><%= Company.human_attribute_name :name %></th>
+      </tr>
+      <% @companies.each do |company| %>
+        <tr>
+          <td><%= company.name %></td>
+        </tr>
+    <% end %>
+    </table>
+  <% end %>
+</div>

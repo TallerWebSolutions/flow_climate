@@ -1,0 +1,17 @@
+<div class="list-table">
+  <h2><%= t('company.new.title') %></h2>
+
+  <div class="row">
+    <div class='col-xs-4 form-group <%= 'has-error' if @company.errors[:name].present? %>'>
+      <%= f.label :name, class: 'control-label' %>
+      <%= f.text_field :name, value: @company.name, autofocus: true, class: 'form-control' %>
+      <span class="help-block"><%= @company.errors[:name].join(', ') %></span>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-xs-12">
+      <%= f.submit class: 'btn btn-success' %>
+    </div>
+  </div>
+</div>

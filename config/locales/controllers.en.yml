@@ -1,0 +1,34 @@
+en:
+  general:
+    buttons:
+      delete_confirmation: Are you sure?
+      back: Back
+      show: Show
+      cancel: Cancel
+      save: Save
+      delete: Delete
+      add: Add
+      edit: Edit
+      i_am_done: I'm done
+      send: Send
+    no_records: You have no %{record} yet! Why not create your first?
+    messages:
+      saved: Saved!
+      save_error: We couldn't save it now! Please reload and try again.
+    search: "Search"
+    home:
+      title: "Home"
+  header:
+    logout: Logout
+    explore: Explore
+    sign_up: Register
+    login: Login
+  company:
+    new:
+      title: "New Company"
+  users:
+    change_last_company:
+      title: "Change to this company"
+  companies:
+    index:
+      title: "Companies"

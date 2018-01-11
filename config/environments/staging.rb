@@ -76,7 +76,6 @@ Rails.application.configure do
   # Use a different logger for distributed setups.
   # require 'syslog/logger'
   # config.logger = ActiveSupport::TaggedLogging.new(Syslog::Logger.new 'app-name')
-
   if ENV['RAILS_LOG_TO_STDOUT'].present?
     logger           = ActiveSupport::Logger.new(STDOUT)
     logger.formatter = config.log_formatter
@@ -86,7 +85,7 @@ Rails.application.configure do
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
 
-  host = 'http://swarga.herokuapp.com/'
+  host = 'http://staging-swarga.herokuapp.com/'
   config.action_mailer.default_url_options = { host: host }
   config.action_mailer.asset_host = host
 end

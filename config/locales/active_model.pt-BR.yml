@@ -1,0 +1,82 @@
+pt-BR:
+  errors:
+    format: "%{attribute} %{message}"
+    messages:
+      accepted: deve ser aceito
+      blank: não pode ficar em branco
+      present: deve ficar em branco
+      confirmation: não é igual a %{attribute}
+      empty: não pode ficar vazio
+      equal_to: deve ser igual a %{count}
+      even: deve ser par
+      exclusion: não está disponível
+      greater_than: deve ser maior que %{count}
+      greater_than_or_equal_to: deve ser maior ou igual a %{count}
+      inclusion: não está incluído na lista
+      invalid: não é válido
+      less_than: deve ser menor que %{count}
+      less_than_or_equal_to: deve ser menor ou igual a %{count}
+      model_invalid: 'A validação falhou: %{errors}'
+      not_a_number: não é um número
+      not_an_integer: não é um número inteiro
+      odd: deve ser ímpar
+      required: deve existir
+      taken: já está em uso
+      too_long:
+        one: 'é muito longo (máximo: 1 caracter)'
+        other: 'é muito longo (máximo: %{count} caracteres)'
+      too_short:
+        one: 'é muito curto (mínimo: 1 caracter)'
+        other: 'é muito curto (mínimo: %{count} caracteres)'
+      wrong_length:
+        one: não possui o tamanho esperado (1 caracter)
+        other: não possui o tamanho esperado (%{count} caracteres)
+      other_than: deve ser diferente de %{count}
+    template:
+      body: 'Por favor, verifique o(s) seguinte(s) campo(s):'
+      header:
+        one: 'Não foi possível gravar %{model}: 1 erro'
+        other: 'Não foi possível gravar %{model}: %{count} erros'
+  activerecord:
+    errors:
+      messages:
+        record_invalid: 'A validação falhou: %{errors}'
+        restrict_dependent_destroy:
+          has_one: Não é possível excluir o registro pois existe um %{record} dependente
+          has_many: Não é possível excluir o registro pois existem %{record} dependentes
+      models:
+        stage:
+          attributes:
+            base:
+              restrict_dependent_destroy:
+                has_many: Não é possível excluir o registro pois existem registros dependentes
+        prospect:
+          errors:
+            blank: Oops! Este campo é requerido
+          attributes:
+            email:
+              invalid: Este não é um email válido
+    models:
+      user:
+        one: Usuários
+        other: Usuário
+      company:
+        one: Empresa
+        other: Empresas
+      financial_information:
+        one: Informação Financeira
+        other: Informações Financeiras
+    attributes:
+      user:
+        first_name: Nome
+        last_name: Sobrenome
+        email: Email
+        password: Senha
+        password_confirmation: Confirmação de senha
+        remember_me: Lembrar
+      company:
+        name: Nome
+      financial_information:
+        finances_date: Data das Finanças
+        income_total: Receitas totais
+        expense_total: Despesas totais
