@@ -1,0 +1,78 @@
+version: 2
+jobs:
+  build:
+    working_directory: ~/flow_control
+
+    docker:
+      - image: circleci/ruby:2.4.3-node
+        environment:
+          CC_TEST_REPORTER_ID: cbef24a82b759b7c8782730952d0389ee671f319d88eb5587701bc15f84415b0
+          TEST_REPORT_PATH: "test/reports"
+          RAILS_ENV: test
+          PGHOST: 127.0.0.1
+          PGUSER: root
+      - image: circleci/postgres:10.1-alpine
+        environment:
+          POSTGRES_USER: root
+          POSTGRES_DB: circle-test_test
+    steps:
+      - checkout
+
+      - restore_cache:
+          keys:
+            - flow_control-{{ checksum "Gemfile.lock" }}
+            - flow_control-
+
+      - run:
+          name: Install dependencies
+          command: |
+            bundle check --path=vendor/bundle || bundle install --path=vendor/bundle --jobs 4 --retry 3
+            curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+
+      - save_cache:
+          key: flow_control-{{ checksum "Gemfile.lock" }}
+          paths:
+            - vendor/bundle
+
+      - run:
+          name: Database Setup
+          command: |
+            sudo apt install postgresql-client
+            bundle exec rake db:create
+            bundle exec rake db:structure:load
+
+      - run:
+          name:  Download cc-test-reporter
+          command: |
+            mkdir -p tmp/
+            curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./tmp/cc-test-reporter
+            chmod +x ./tmp/cc-test-reporter
+
+
+      - persist_to_workspace:
+          root: tmp
+          paths:
+            - cc-test-reporter
+
+      - run:
+          name: RSpec
+          command: |
+            bundle exec rake spec
+            ./tmp/cc-test-reporter format-coverage -t simplecov -o tmp/codeclimate.backend.json coverage/backend/.resultset.json
+
+      - persist_to_workspace:
+          root: tmp
+          paths:
+            - codeclimate.backend.json
+
+      - attach_workspace:
+          at: ~/repo/tmp
+
+      - run:
+          name: Upload coverage results to Code Climate
+          command: |
+            ./tmp/cc-test-reporter upload-coverage -i tmp/codeclimate.backend.json
+
+      - run:
+          name: Rubocop
+          command: bundle exec rubocop -DR
