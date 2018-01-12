@@ -37,4 +37,12 @@ class Project < ApplicationRecord
   validates :name, :start_date, :end_date, :status, :initial_scope, presence: true
 
   delegate :name, to: :customer, prefix: true
+
+  def total_days
+    (end_date - start_date).to_i
+  end
+
+  def remaining_days
+    (end_date - Time.zone.today).to_i
+  end
 end

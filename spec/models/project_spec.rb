@@ -22,4 +22,14 @@ RSpec.describe Project, type: :model do
   context 'delegations' do
     it { is_expected.to delegate_method(:name).to(:customer).with_prefix }
   end
+
+  describe '#total_days' do
+    let(:project) { Fabricate :project, start_date: 1.day.ago, end_date: 1.day.from_now }
+    it { expect(project.total_days).to eq 2 }
+  end
+
+  describe '#remaining_days' do
+    let(:project) { Fabricate :project, start_date: 1.day.ago, end_date: 1.day.from_now }
+    it { expect(project.remaining_days).to eq 1 }
+  end
 end

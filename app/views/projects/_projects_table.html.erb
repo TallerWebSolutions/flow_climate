@@ -1,5 +1,6 @@
 <h2><%= t('projects.index.title') %></h2>
 <table class="table">
+  <thead>
   <tr>
     <th><%= Project.human_attribute_name :customer_name %></th>
     <th><%= Project.human_attribute_name :name %></th>
@@ -10,11 +11,15 @@
     <th><%= Project.human_attribute_name :value %></th>
     <th><%= Project.human_attribute_name :start_date %></th>
     <th><%= Project.human_attribute_name :end_date %></th>
+    <th><%= t('projects.index.total_days') %></th>
+    <th><%= t('projects.index.total_remaining_days') %></th>
   </tr>
-  <% @projects.each do |project| %>
+  </thead>
+  <tbody>
+  <% projects_list.each do |project| %>
     <tr>
       <td><%= project.customer_name %></td>
-      <td><%= link_to project.name, company_customer_project_path(@company, project.customer, project) %></td>
+      <td><%= link_to project.name, company_project_path(@company, project) %></td>
       <td><%= project.status.capitalize %></td>
       <td><%= project.project_type.capitalize %></td>
       <td><%= number_with_precision(project.qty_hours, precision: 0) %></td>
@@ -22,6 +27,24 @@
       <td><%= number_to_currency(project.value) %></td>
       <td><%= l(project.start_date) %></td>
       <td><%= l(project.end_date) %></td>
+      <td><%= project.total_days %></td>
+      <td><%= project.remaining_days %></td>
     </tr>
   <% end %>
+  </tbody>
+  <tfoot>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td><%= number_with_precision(@total_hours, precision: 0) %></td>
+    <td><%= number_to_currency(@average_hour_value) %></td>
+    <td><%= number_to_currency(@total_value) %></td>
+    <td></td>
+    <td></td>
+    <td><%= @total_days %></td>
+    <td><%= @total_remaining_days %></td>
+  </tr>
+  </tfoot>
 </table>

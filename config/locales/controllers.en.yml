@@ -51,5 +51,12 @@ en:
   projects:
     index:
       title: "Projects"
+      all_filter: "All"
+      waiting_filter: "Waiting"
+      executing_filter: "Executing"
+      finished_filter: "Finished"
+      cancelled_filter: "Cancelled"
+      total_days: "Days (total)"
+      total_remaining_days: "Days (remaining)"
     show:
       initial_scope: "Initial Scope"

@@ -50,5 +50,12 @@ pt-BR:
   projects:
     index:
       title: "Projetos"
+      all_filter: "Todos"
+      waiting_filter: "Aguardando Início"
+      executing_filter: "Executando"
+      finished_filter: "Finalizado"
+      cancelled_filter: "Cancelado"
+      total_days: "Dias (total)"
+      total_remaining_days: "Dias (restantes)"
     show:
       initial_scope: "Escopo Inicial"

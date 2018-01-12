@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 Fabricator(:project) do
+  customer
   name { Faker::BossaNova.song }
   start_date { 1.day.from_now }
   end_date { 1.week.from_now }

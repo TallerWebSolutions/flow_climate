@@ -32,3 +32,10 @@ h2 {
     margin-bottom: 15px;
     font-weight: bold;
 }
+
+tfoot {
+    display: table-footer-group;
+    vertical-align: middle;
+    border-color: inherit;
+    font-weight: bolder;
+}
