@@ -66,6 +66,9 @@ pt-BR:
       financial_information:
         one: Informação Financeira
         other: Informações Financeiras
+      project:
+        one: Projeto
+        one: Projetos
     attributes:
       user:
         first_name: Nome
@@ -87,3 +90,13 @@ pt-BR:
         billable: Faturável?
         billable_type: Tipo do Faturamento
         active: Ativo?
+      project:
+        qty_hours: Qtd de Horas
+        value: Valor do Projeto
+        hour_value: Valor da Hora
+        start_date: Data de Início
+        end_date: Data Final
+        project_type: Tipo do Projeto
+        status: Status
+        name: Nome
+        customer_name: Cliente
