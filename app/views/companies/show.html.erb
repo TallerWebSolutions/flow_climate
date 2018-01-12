@@ -13,27 +13,25 @@
       <div class="stamp-title"><%= t('companies.show.management_cost_per_week') %></div>
       <div class="stamp-content"><%= number_to_currency(@company.management_cost_per_week) %></div>
     </div>
-    <div class="col-xs-2 stamp">
+    <div class="col-xs-1 stamp">
       <div class="stamp-title"><%= t('companies.show.members_billable_count') %></div>
       <div class="stamp-content"><%= @company.members_billable_count %></div>
     </div>
-    <div class="col-xs-2 stamp">
+    <div class="col-xs-1 stamp">
       <div class="stamp-title"><%= t('companies.show.management_count') %></div>
       <div class="stamp-content"><%= @company.management_count %></div>
     </div>
-  </div>
-
-  <div class="row">
-    <div class="col-xs-6">
-      <h2><%= t('financial_informations.index.title') %></h2>
+    <div class="col-xs-1 stamp">
+      <div class="stamp-title"><%= t('companies.show.waiting_project_count') %></div>
+      <div class="stamp-content"><%= @company.waiting_projects_count %></div>
+    </div>
+    <div class="col-xs-1 stamp">
+      <div class="stamp-title"><%= t('companies.show.active_project_count') %></div>
+      <div class="stamp-content"><%= @company.active_projects_count %></div>
     </div>
   </div>
 
   <div class="row">
-    <div class="col-xs-3">
-      <%= link_to t('financial_informations.new.title'), new_company_financial_information_path(@company), class: 'btn btn-sm btn-primary botton-spaced-component' %>
-    </div>
-
     <div class="col-xs-3">
       <% if @company.id != current_user.last_company_id %>
         <%= link_to t('users.change_last_company.title'), change_current_company_users_path(company_id: @company.id), method: :patch %>
@@ -42,72 +40,7 @@
 
   </div>
 
-  <table class="table">
-    <tr>
-      <th><%= FinancialInformation.human_attribute_name :finances_date %></th>
-      <th><%= t('general.month') %></th>
-      <th><%= FinancialInformation.human_attribute_name :income_total %></th>
-      <th><%= FinancialInformation.human_attribute_name :expenses_total %></th>
-      <th><%= t('general.result') %></th>
-    </tr>
-    <% @financial_informations.each do |finance| %>
-      <tr>
-        <td><%= l(finance.finances_date) %></td>
-        <td><%= l(finance.finances_date, format: :month_year) %></td>
-        <td><%= number_to_currency(finance.income_total) %></td>
-        <td><%= number_to_currency(finance.expenses_total) %></td>
-        <td><%= number_to_currency(finance.financial_result) %></td>
-      </tr>
-    <% end %>
-  </table>
-
-  <h2><%= t('team_members.index.title') %></h2>
-  <table class="table">
-    <tr>
-      <th><%= TeamMember.human_attribute_name :name %></th>
-      <th><%= TeamMember.human_attribute_name :monthly_payment %></th>
-      <th><%= TeamMember.human_attribute_name :hours_per_month %></th>
-      <th><%= TeamMember.human_attribute_name :billable %></th>
-      <th><%= TeamMember.human_attribute_name :billable_type %></th>
-      <th><%= TeamMember.human_attribute_name :active %></th>
-    </tr>
-    <% @team_members.each do |member| %>
-      <tr>
-        <td><%= member.name %></td>
-        <td><%= number_to_currency(member.monthly_payment) %></td>
-        <td><%= member.hours_per_month %></td>
-        <td><%= t(member.billable&.to_s) %></td>
-        <td><%= member.billable_type&.capitalize %></td>
-        <td><%= t(member.active.to_s) %></td>
-      </tr>
-    <% end %>
-  </table>
-
-  <h2><%= t('projects.index.title') %></h2>
-  <table class="table">
-    <tr>
-      <th><%= Project.human_attribute_name :customer_name %></th>
-      <th><%= Project.human_attribute_name :name %></th>
-      <th><%= Project.human_attribute_name :status %></th>
-      <th><%= Project.human_attribute_name :project_type %></th>
-      <th><%= Project.human_attribute_name :qty_hours %></th>
-      <th><%= Project.human_attribute_name :hour_value %></th>
-      <th><%= Project.human_attribute_name :value %></th>
-      <th><%= Project.human_attribute_name :start_date %></th>
-      <th><%= Project.human_attribute_name :end_date %></th>
-    </tr>
-    <% @projects.each do |project| %>
-      <tr>
-        <td><%= project.customer_name %></td>
-        <td><%= link_to project.name, company_customer_project_path(@company, project.customer, project) %></td>
-        <td><%= project.status.capitalize %></td>
-        <td><%= project.project_type.capitalize %></td>
-        <td><%= number_with_precision(project.qty_hours, precision: 0) %></td>
-        <td><%= number_to_currency(project.hour_value) %></td>
-        <td><%= number_to_currency(project.value) %></td>
-        <td><%= l(project.start_date) %></td>
-        <td><%= l(project.end_date) %></td>
-      </tr>
-    <% end %>
-  </table>
+  <%= render 'projects_table' %>
+  <%= render 'financial_informations_table' %>
+  <%= render 'team_members_table' %>
 </div>

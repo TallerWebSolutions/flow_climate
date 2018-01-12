@@ -24,4 +24,12 @@ class Customer < ApplicationRecord
   has_many :projects, dependent: :restrict_with_error
 
   validates :company, :name, presence: true
+
+  def active_projects
+    projects.executing
+  end
+
+  def waiting_projects
+    projects.waiting
+  end
 end

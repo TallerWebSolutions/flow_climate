@@ -1,0 +1,27 @@
+<h2><%= t('projects.index.title') %></h2>
+<table class="table">
+  <tr>
+    <th><%= Project.human_attribute_name :customer_name %></th>
+    <th><%= Project.human_attribute_name :name %></th>
+    <th><%= Project.human_attribute_name :status %></th>
+    <th><%= Project.human_attribute_name :project_type %></th>
+    <th><%= Project.human_attribute_name :qty_hours %></th>
+    <th><%= Project.human_attribute_name :hour_value %></th>
+    <th><%= Project.human_attribute_name :value %></th>
+    <th><%= Project.human_attribute_name :start_date %></th>
+    <th><%= Project.human_attribute_name :end_date %></th>
+  </tr>
+  <% @projects.each do |project| %>
+    <tr>
+      <td><%= project.customer_name %></td>
+      <td><%= link_to project.name, company_customer_project_path(@company, project.customer, project) %></td>
+      <td><%= project.status.capitalize %></td>
+      <td><%= project.project_type.capitalize %></td>
+      <td><%= number_with_precision(project.qty_hours, precision: 0) %></td>
+      <td><%= number_to_currency(project.hour_value) %></td>
+      <td><%= number_to_currency(project.value) %></td>
+      <td><%= l(project.start_date) %></td>
+      <td><%= l(project.end_date) %></td>
+    </tr>
+  <% end %>
+</table>

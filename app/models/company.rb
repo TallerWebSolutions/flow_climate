@@ -34,4 +34,12 @@ class Company < ApplicationRecord
   def management_count
     team_members.where(billable: false).count
   end
+
+  def active_projects_count
+    customers.map(&:active_projects).flatten.count
+  end
+
+  def waiting_projects_count
+    customers.map(&:waiting_projects).flatten.count
+  end
 end

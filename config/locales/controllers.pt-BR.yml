@@ -37,6 +37,8 @@ pt-BR:
       members_billable_count: "Qtd Força Faturável"
       management_cost_per_week: "Custo da gestão por semana"
       management_count: "Qtd Gestão"
+      active_project_count: "Projetos Ativos"
+      waiting_project_count: "Projetos Aguardando Início"
   financial_informations:
     new:
       title: "Nova Informação Financeira"

@@ -1,0 +1,30 @@
+<div class="row">
+  <div class="col-xs-6">
+    <h2><%= t('financial_informations.index.title') %></h2>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-xs-3">
+    <%= link_to t('financial_informations.new.title'), new_company_financial_information_path(@company), class: 'btn btn-sm btn-primary botton-spaced-component' %>
+  </div>
+</div>
+
+<table class="table">
+  <tr>
+    <th><%= FinancialInformation.human_attribute_name :finances_date %></th>
+    <th><%= t('general.month') %></th>
+    <th><%= FinancialInformation.human_attribute_name :income_total %></th>
+    <th><%= FinancialInformation.human_attribute_name :expenses_total %></th>
+    <th><%= t('general.result') %></th>
+  </tr>
+  <% @financial_informations.each do |finance| %>
+    <tr>
+      <td><%= l(finance.finances_date) %></td>
+      <td><%= l(finance.finances_date, format: :month_year) %></td>
+      <td><%= number_to_currency(finance.income_total) %></td>
+      <td><%= number_to_currency(finance.expenses_total) %></td>
+      <td><%= number_to_currency(finance.financial_result) %></td>
+    </tr>
+  <% end %>
+</table>

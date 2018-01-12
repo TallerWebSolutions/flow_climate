@@ -38,6 +38,8 @@ en:
       members_billable_count: "Billable members"
       management_cost_per_week: "Management cost per week"
       management_count: "Qty Management"
+      active_project_count: "Active Projects"
+      waiting_project_count: "Waiting"
   financial_informations:
     new:
       title: "New Financial Information"
