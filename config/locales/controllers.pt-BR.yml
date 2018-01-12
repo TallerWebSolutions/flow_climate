@@ -48,3 +48,5 @@ pt-BR:
   projects:
     index:
       title: "Projetos"
+    show:
+      initial_scope: "Escopo Inicial"

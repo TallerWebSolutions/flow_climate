@@ -23,7 +23,6 @@
     </div>
   </div>
 
-
   <div class="row">
     <div class="col-xs-6">
       <h2><%= t('financial_informations.index.title') %></h2>
@@ -100,7 +99,7 @@
     <% @projects.each do |project| %>
       <tr>
         <td><%= project.customer_name %></td>
-        <td><%= project.name %></td>
+        <td><%= link_to project.name, company_customer_project_path(@company, project.customer, project) %></td>
         <td><%= project.status.capitalize %></td>
         <td><%= project.project_type.capitalize %></td>
         <td><%= number_with_precision(project.qty_hours, precision: 0) %></td>

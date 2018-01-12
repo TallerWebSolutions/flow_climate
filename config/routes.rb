@@ -15,6 +15,10 @@ Rails.application.routes.draw do
 
   resources :companies, only: %i[show new create index] do
     resources :financial_informations, only: %i[new create]
+
+    resources :customers, only: [] do
+      resources :projects, only: [:show]
+    end
   end
 
   root 'companies#index'

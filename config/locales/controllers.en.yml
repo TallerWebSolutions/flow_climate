@@ -49,3 +49,5 @@ en:
   projects:
     index:
       title: "Projects"
+    show:
+      initial_scope: "Initial Scope"

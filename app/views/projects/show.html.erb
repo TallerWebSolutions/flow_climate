@@ -1,0 +1,17 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-xs-6">
+      <h1><%= @project.name %></h1>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-2 stamp">
+      <div class="stamp-title"><%= Customer.model_name %></div>
+      <div class="stamp-content"><%= @project.customer_name %></div>
+    </div>
+    <div class="col-xs-2 stamp">
+      <div class="stamp-title"><%= t('projects.show.initial_scope') %></div>
+      <div class="stamp-content"><%= @project.initial_scope %></div>
+    </div>
+  </div>
+</div>
