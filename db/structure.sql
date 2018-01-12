@@ -149,6 +149,45 @@ ALTER SEQUENCE financial_informations_id_seq OWNED BY financial_informations.id;
 
 
 --
+-- Name: projects; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE projects (
+    id bigint NOT NULL,
+    customer_id integer NOT NULL,
+    name character varying NOT NULL,
+    status integer NOT NULL,
+    start_date date NOT NULL,
+    end_date date NOT NULL,
+    value numeric,
+    qty_hours numeric,
+    hour_value numeric,
+    initial_scope integer NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: projects_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE projects_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: projects_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE projects_id_seq OWNED BY projects.id;
+
+
+--
 -- Name: schema_migrations; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -224,6 +263,13 @@ ALTER TABLE ONLY financial_informations ALTER COLUMN id SET DEFAULT nextval('fin
 
 
 --
+-- Name: projects id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY projects ALTER COLUMN id SET DEFAULT nextval('projects_id_seq'::regclass);
+
+
+--
 -- Name: users id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -260,6 +306,14 @@ ALTER TABLE ONLY customers
 
 ALTER TABLE ONLY financial_informations
     ADD CONSTRAINT financial_informations_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: projects projects_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY projects
+    ADD CONSTRAINT projects_pkey PRIMARY KEY (id);
 
 
 --
@@ -307,6 +361,13 @@ CREATE INDEX index_financial_informations_on_company_id ON financial_information
 
 
 --
+-- Name: index_projects_on_customer_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_projects_on_customer_id ON projects USING btree (customer_id);
+
+
+--
 -- Name: index_users_on_email; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -326,6 +387,14 @@ CREATE UNIQUE INDEX index_users_on_reset_password_token ON users USING btree (re
 
 ALTER TABLE ONLY companies_users
     ADD CONSTRAINT fk_rails_27539b2fc9 FOREIGN KEY (user_id) REFERENCES users(id);
+
+
+--
+-- Name: projects fk_rails_47c768ed16; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY projects
+    ADD CONSTRAINT fk_rails_47c768ed16 FOREIGN KEY (customer_id) REFERENCES customers(id);
 
 
 --
@@ -370,6 +439,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20180111164501'),
 ('20180111170136'),
 ('20180111180016'),
-('20180111232828');
+('20180111232828'),
+('20180111234624');
 
 

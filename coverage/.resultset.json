@@ -202,6 +202,7 @@
         1,
         1,
         1,
+        1,
         null,
         1,
         null
@@ -228,6 +229,7 @@
         null,
         null,
         null,
+        1,
         1,
         1,
         null,
@@ -268,18 +270,39 @@
         null,
         null
       ],
-      "/Users/celsomartins/workspace/taller/flow_control/app/jobs/application_job.rb": [
+      "/Users/celsomartins/workspace/taller/flow_control/app/models/project.rb": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
         null,
         null,
         1,
-        null
-      ],
-      "/Users/celsomartins/workspace/taller/flow_control/app/channels/application_cable/channel.rb": [
-        null,
-        null,
-        1,
         1,
         null,
+        1,
+        null,
+        1,
         null
       ],
       "/Users/celsomartins/workspace/taller/flow_control/app/mailers/application_mailer.rb": [
@@ -297,8 +320,22 @@
         1,
         null,
         null
+      ],
+      "/Users/celsomartins/workspace/taller/flow_control/app/channels/application_cable/channel.rb": [
+        null,
+        null,
+        1,
+        1,
+        null,
+        null
+      ],
+      "/Users/celsomartins/workspace/taller/flow_control/app/jobs/application_job.rb": [
+        null,
+        null,
+        1,
+        null
       ]
     },
-    "timestamp": 1515714258
+    "timestamp": 1515716666
   }
 }

@@ -21,6 +21,7 @@
 
 class Customer < ApplicationRecord
   belongs_to :company
+  has_many :projects, dependent: :restrict_with_error
 
   validates :company, :name, presence: true
 end
