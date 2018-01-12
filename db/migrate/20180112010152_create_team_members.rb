@@ -9,7 +9,7 @@ class CreateTeamMembers < ActiveRecord::Migration[5.1]
       t.integer :hours_per_month, null: false
       t.boolean :active, default: true
       t.boolean :billable, default: true
-      t.integer :billable_type, default: true
+      t.integer :billable_type, default: 0
 
       t.timestamps
     end

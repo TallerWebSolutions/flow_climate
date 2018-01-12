@@ -1,10 +1,16 @@
 .stamp {
-    border: 1px solid;
-    font-size: smaller;
-    padding: 5px;
-    background-color: lightblue;
-    margin: 0 0 3px 3px;
+    padding: 10px;
+    background-color: lightskyblue;
+    margin: 0 6px 6px 0;
     font-weight: bold;
+}
+
+.stamp-title {
+    font-size: x-small;
+}
+
+.stamp-content {
+    font-size: x-large;
 }
 
 .list-table {

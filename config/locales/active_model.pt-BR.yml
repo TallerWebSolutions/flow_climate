@@ -80,3 +80,10 @@ pt-BR:
         finances_date: Data das Finanças
         income_total: Receitas totais
         expenses_total: Despesas totais
+      team_member:
+        name: Nome
+        monthly_payment: Pagamento mensal
+        hours_per_month: Horas por mês
+        billable: Faturável?
+        billable_type: Tipo do Faturamento
+        active: Ativo?

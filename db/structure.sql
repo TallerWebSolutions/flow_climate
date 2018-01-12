@@ -283,7 +283,7 @@ CREATE TABLE team_members (
     hours_per_month integer NOT NULL,
     active boolean DEFAULT true,
     billable boolean DEFAULT true,
-    billable_type integer DEFAULT 1,
+    billable_type integer DEFAULT 0,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL
 );

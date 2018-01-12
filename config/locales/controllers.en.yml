@@ -33,6 +33,16 @@ en:
       title: "Companies"
     new:
       title: "New Company"
+    show:
+      outsourcing_cost_per_week: "Outsourcing cost per week"
+      members_billable_count: "Billable members"
+      management_cost_per_week: "Management cost per week"
+      management_count: "Qty Management"
   financial_informations:
     new:
       title: "New Financial Information"
+    index:
+      title: "Financial Informations"
+  team_members:
+    index:
+      title: "Team members"

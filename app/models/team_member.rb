@@ -11,7 +11,7 @@
 #  hours_per_month :integer          not null
 #  active          :boolean          default(TRUE)
 #  billable        :boolean          default(TRUE)
-#  billable_type   :integer          default(1)
+#  billable_type   :integer          default("outsourcing")
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
 #

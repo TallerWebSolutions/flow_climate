@@ -18,4 +18,20 @@ class Company < ApplicationRecord
   has_many :operation_weekly_results, dependent: :restrict_with_error
 
   validates :name, presence: true
+
+  def outsourcing_cost_per_week
+    team_members.where(billable: true, billable_type: :outsourcing).sum(&:monthly_payment) / 4
+  end
+
+  def management_cost_per_week
+    team_members.where(billable: false).sum(&:monthly_payment) / 4
+  end
+
+  def members_billable_count
+    team_members.where(billable: true).count
+  end
+
+  def management_count
+    team_members.where(billable: false).count
+  end
 end

@@ -1,5 +1,7 @@
 ---
 pt-BR:
+  "true": Sim
+  "false": Não
   date:
     abbr_day_names:
     - Dom
