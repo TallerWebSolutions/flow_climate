@@ -43,10 +43,22 @@ class Project < ApplicationRecord
   end
 
   def remaining_days
+    return 0 if end_date < Time.zone.today || start_date > Time.zone.today
     (end_date - Time.zone.today).to_i
   end
 
   def consumed_hours
     project_results.sum(&:total_hours_consumed)
+  end
+
+  def remaining_money
+    value - (consumed_hours * hour_value)
+  end
+
+  def red?
+    return false unless executing?
+    money_percentage = remaining_money / value
+    time_percentage = remaining_days.to_f / total_days.to_f
+    money_percentage < time_percentage
   end
 end

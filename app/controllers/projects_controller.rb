@@ -7,10 +7,9 @@ class ProjectsController < AuthenticatedController
   def show; end
 
   def index
-    @projects = Project.joins(:customer).where('customers.company_id = ?', @company.id)
-    @projects = @projects.where(status: params[:status_filter]) if params[:status_filter].present?
-    @projects = @projects.order(:end_date)
+    mount_projects_list
     @total_hours = @projects.sum(&:qty_hours)
+    @total_consumed_hours = @projects.sum(&:consumed_hours)
     @average_hour_value = @projects.average(:hour_value)
     @total_value = @projects.sum(&:value)
     @total_days = @projects.sum(&:total_days)
@@ -18,6 +17,12 @@ class ProjectsController < AuthenticatedController
   end
 
   private
+
+  def mount_projects_list
+    @projects = Project.joins(:customer).where('customers.company_id = ?', @company.id)
+    @projects = @projects.where(status: params[:status_filter]) if params[:status_filter].present?
+    @projects = @projects.order(end_date: :desc)
+  end
 
   def assign_company
     @company = Company.find(params[:company_id])

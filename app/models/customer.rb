@@ -32,4 +32,10 @@ class Customer < ApplicationRecord
   def waiting_projects
     projects.waiting
   end
+
+  def red_projects
+    projects.select(&:red?)
+  end
+
+  delegate :count, to: :projects, prefix: true
 end

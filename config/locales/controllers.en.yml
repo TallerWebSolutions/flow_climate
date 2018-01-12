@@ -40,11 +40,16 @@ en:
       management_count: "Qty Management"
       active_project_count: "Active Projects"
       waiting_project_count: "Waiting"
+      red_project_count: "RED PROJECTS"
+      project_count: "Projects"
   financial_informations:
     new:
       title: "New Financial Information"
     index:
       title: "Financial Informations"
+      last_cost_per_hour: "Last Cost/Hour"
+      cost_per_hour: "Cost/Hour"
+      billable_hours_count: "Hours Count"
   team_members:
     index:
       title: "Team members"
@@ -60,5 +65,8 @@ en:
       total_remaining_days: "Days (remaining)"
       consumed_hours: "Consumed Hours"
       percentage_hours_consumed: "% Hours Consumed"
+      percentage_remaining_days: "% Time Remaining"
+      remaining_money: "Remaining ($$)"
+      percentage_remaining_money: "% Remaining ($$)"
     show:
       initial_scope: "Initial Scope"

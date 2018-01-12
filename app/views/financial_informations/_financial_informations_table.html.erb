@@ -16,6 +16,8 @@
     <th><%= t('general.month') %></th>
     <th><%= FinancialInformation.human_attribute_name :income_total %></th>
     <th><%= FinancialInformation.human_attribute_name :expenses_total %></th>
+    <th><%= t('financial_informations.index.billable_hours_count') %></th>
+    <th><%= t('financial_informations.index.cost_per_hour') %></th>
     <th><%= t('general.result') %></th>
   </tr>
   <% @financial_informations.each do |finance| %>
@@ -24,6 +26,8 @@
       <td><%= l(finance.finances_date, format: :month_year) %></td>
       <td><%= number_to_currency(finance.income_total) %></td>
       <td><%= number_to_currency(finance.expenses_total) %></td>
+      <td><%= finance.hours_delivered %></td>
+      <td><%= number_to_currency(finance.cost_per_hour) %></td>
       <td><%= number_to_currency(finance.financial_result) %></td>
     </tr>
   <% end %>

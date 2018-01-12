@@ -42,4 +42,17 @@ class Company < ApplicationRecord
   def waiting_projects_count
     customers.map(&:waiting_projects).flatten.count
   end
+
+  def red_projects_count
+    customers.map(&:red_projects).flatten.count
+  end
+
+  def projects_count
+    customers.sum(&:projects_count)
+  end
+
+  def last_cost_per_hour
+    finance = financial_informations.order(finances_date: :desc).first
+    finance.cost_per_hour
+  end
 end

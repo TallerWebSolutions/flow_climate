@@ -39,11 +39,16 @@ pt-BR:
       management_count: "Qtd Gestão"
       active_project_count: "Projetos Ativos"
       waiting_project_count: "Projetos Aguardando Início"
+      red_project_count: "PROJETOS VERMELHOS"
+      project_count: "Projetos"
   financial_informations:
     new:
       title: "Nova Informação Financeira"
     index:
       title: "Informações Financeiras"
+      last_cost_per_hour: "Último Custo/Hora"
+      cost_per_hour: "Custo/Hora"
+      billable_hours_count: "Total de horas"
   team_members:
     index:
       title: "Membros do Time"
@@ -59,5 +64,8 @@ pt-BR:
       total_remaining_days: "Dias (restantes)"
       consumed_hours: "Horas Consumidas"
       percentage_hours_consumed: "% Horas consumidas"
+      percentage_remaining_days: "% Tempo Restante"
+      remaining_money: "Restante ($$)"
+      percentage_remaining_money: "% Restante ($$)"
     show:
       initial_scope: "Escopo Inicial"

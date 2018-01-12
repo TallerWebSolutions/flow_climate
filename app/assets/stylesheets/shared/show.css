@@ -5,6 +5,20 @@
     font-weight: bold;
 }
 
+.red-stamp {
+    background-color: #f0cbcf;
+    padding: 10px;
+    margin: 0 6px 6px 0;
+    font-weight: bold;
+}
+
+.green-stamp {
+    background-color: #a0f0e0;
+    padding: 10px;
+    margin: 0 6px 6px 0;
+    font-weight: bold;
+}
+
 .stamp-title {
     font-size: x-small;
 }

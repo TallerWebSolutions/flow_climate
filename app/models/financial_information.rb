@@ -29,4 +29,12 @@ class FinancialInformation < ApplicationRecord
   def financial_result
     income_total.to_f - expenses_total.to_f
   end
+
+  def cost_per_hour
+    expenses_total / hours_delivered
+  end
+
+  def hours_delivered
+    ProjectResultsRepository.instance.project_results_for_company_month(company, finances_date.month, finances_date.year).sum(&:total_hours_consumed)
+  end
 end
