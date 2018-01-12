@@ -44,11 +44,6 @@ RSpec.describe CompaniesController, type: :controller do
         let!(:other_finances) { Fabricate :financial_information, company: company, finances_date: Time.zone.today }
         let!(:team_member) { Fabricate :team_member, company: company, name: 'zzz' }
         let!(:other_team_member) { Fabricate :team_member, company: company, name: 'aaa' }
-        let(:customer) { Fabricate :customer, company: company, name: 'zzz' }
-        let(:other_customer) { Fabricate :customer, company: company, name: 'aaa' }
-        let!(:first_project) { Fabricate :project, customer: customer, end_date: 5.days.from_now }
-        let!(:second_project) { Fabricate :project, customer: customer, end_date: 3.days.from_now }
-        let!(:third_project) { Fabricate :project, customer: other_customer, end_date: 3.days.from_now }
 
         before { get :show, params: { id: company.id } }
         it 'assigns the instance variable and renders the template' do
@@ -56,7 +51,6 @@ RSpec.describe CompaniesController, type: :controller do
           expect(assigns(:company)).to eq company
           expect(assigns(:financial_informations)).to eq [other_finances, finances]
           expect(assigns(:team_members)).to eq [other_team_member, team_member]
-          expect(assigns(:projects)).to eq [third_project, second_project, first_project]
         end
       end
       context 'passing an invalid ID' do

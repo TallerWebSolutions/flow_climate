@@ -32,7 +32,7 @@ class Project < ApplicationRecord
   enum project_type: { outsourcing: 0, consulting: 1, training: 2 }
 
   belongs_to :customer
-  has_many :project_weekly_results, dependent: :restrict_with_error
+  has_many :project_results, dependent: :restrict_with_error
 
   validates :name, :start_date, :end_date, :status, :initial_scope, presence: true
 
@@ -44,5 +44,9 @@ class Project < ApplicationRecord
 
   def remaining_days
     (end_date - Time.zone.today).to_i
+  end
+
+  def consumed_hours
+    project_results.sum(&:total_hours_consumed)
   end
 end

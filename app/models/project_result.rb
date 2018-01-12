@@ -2,7 +2,7 @@
 
 # == Schema Information
 #
-# Table name: project_weekly_results
+# Table name: project_results
 #
 #  id                    :integer          not null, primary key
 #  project_id            :integer          not null
@@ -21,15 +21,19 @@
 #
 # Indexes
 #
-#  index_project_weekly_results_on_project_id  (project_id)
+#  index_project_results_on_project_id  (project_id)
 #
 # Foreign Keys
 #
 #  fk_rails_...  (project_id => projects.id)
 #
 
-class ProjectWeeklyResult < ApplicationRecord
+class ProjectResult < ApplicationRecord
   belongs_to :project
 
   validates :qty_hours_bug, :qty_bugs_closed, :qty_bugs_opened, :throughput, :result_date, presence: true
+
+  def total_hours_consumed
+    qty_hours_upstream + qty_hours_downstream
+  end
 end

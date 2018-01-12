@@ -7,6 +7,8 @@
     <th><%= Project.human_attribute_name :status %></th>
     <th><%= Project.human_attribute_name :project_type %></th>
     <th><%= Project.human_attribute_name :qty_hours %></th>
+    <th><%= t('projects.index.consumed_hours') %></th>
+    <th><%= t('projects.index.percentage_hours_consumed') %></th>
     <th><%= Project.human_attribute_name :hour_value %></th>
     <th><%= Project.human_attribute_name :value %></th>
     <th><%= Project.human_attribute_name :start_date %></th>
@@ -22,7 +24,9 @@
       <td><%= link_to project.name, company_project_path(@company, project) %></td>
       <td><%= project.status.capitalize %></td>
       <td><%= project.project_type.capitalize %></td>
-      <td><%= number_with_precision(project.qty_hours, precision: 0) %></td>
+      <td><%= number_with_precision(project.qty_hours, precision: 2) %></td>
+      <td><%= number_with_precision(project.consumed_hours, precision: 2) %></td>
+      <td><%= number_to_percentage((project.consumed_hours/project.qty_hours) * 100, precision: 2) %></td>
       <td><%= number_to_currency(project.hour_value) %></td>
       <td><%= number_to_currency(project.value) %></td>
       <td><%= l(project.start_date) %></td>

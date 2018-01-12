@@ -156,10 +156,15 @@ CREATE TABLE operation_weekly_results (
     id bigint NOT NULL,
     company_id integer NOT NULL,
     result_date date NOT NULL,
-    billable_count integer NOT NULL,
+    people_billable_count integer NOT NULL,
     operation_week_value numeric NOT NULL,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    available_hours integer NOT NULL,
+    total_billable_hours integer NOT NULL,
+    total_th integer NOT NULL,
+    total_opened_bugs integer NOT NULL,
+    total_accumulated_closed_bugs integer NOT NULL
 );
 
 
@@ -183,10 +188,10 @@ ALTER SEQUENCE operation_weekly_results_id_seq OWNED BY operation_weekly_results
 
 
 --
--- Name: project_weekly_results; Type: TABLE; Schema: public; Owner: -
+-- Name: project_results; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE project_weekly_results (
+CREATE TABLE project_results (
     id bigint NOT NULL,
     project_id integer NOT NULL,
     result_date date NOT NULL,
@@ -205,10 +210,10 @@ CREATE TABLE project_weekly_results (
 
 
 --
--- Name: project_weekly_results_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: project_results_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE project_weekly_results_id_seq
+CREATE SEQUENCE project_results_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -217,10 +222,10 @@ CREATE SEQUENCE project_weekly_results_id_seq
 
 
 --
--- Name: project_weekly_results_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+-- Name: project_results_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE project_weekly_results_id_seq OWNED BY project_weekly_results.id;
+ALTER SEQUENCE project_results_id_seq OWNED BY project_results.id;
 
 
 --
@@ -383,10 +388,10 @@ ALTER TABLE ONLY operation_weekly_results ALTER COLUMN id SET DEFAULT nextval('o
 
 
 --
--- Name: project_weekly_results id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: project_results id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY project_weekly_results ALTER COLUMN id SET DEFAULT nextval('project_weekly_results_id_seq'::regclass);
+ALTER TABLE ONLY project_results ALTER COLUMN id SET DEFAULT nextval('project_results_id_seq'::regclass);
 
 
 --
@@ -451,11 +456,11 @@ ALTER TABLE ONLY operation_weekly_results
 
 
 --
--- Name: project_weekly_results project_weekly_results_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: project_results project_results_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY project_weekly_results
-    ADD CONSTRAINT project_weekly_results_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY project_results
+    ADD CONSTRAINT project_results_pkey PRIMARY KEY (id);
 
 
 --
@@ -519,10 +524,10 @@ CREATE INDEX index_financial_informations_on_company_id ON financial_information
 
 
 --
--- Name: index_project_weekly_results_on_project_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_project_results_on_project_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_project_weekly_results_on_project_id ON project_weekly_results USING btree (project_id);
+CREATE INDEX index_project_results_on_project_id ON project_results USING btree (project_id);
 
 
 --
@@ -602,10 +607,10 @@ ALTER TABLE ONLY users
 
 
 --
--- Name: project_weekly_results fk_rails_c3c9938173; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: project_results fk_rails_c3c9938173; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY project_weekly_results
+ALTER TABLE ONLY project_results
     ADD CONSTRAINT fk_rails_c3c9938173 FOREIGN KEY (project_id) REFERENCES projects(id);
 
 
@@ -639,6 +644,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20180111234624'),
 ('20180112002920'),
 ('20180112010014'),
-('20180112010152');
+('20180112010152'),
+('20180112161621'),
+('20180112182233');
 
 

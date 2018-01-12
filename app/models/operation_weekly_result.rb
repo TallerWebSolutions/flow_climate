@@ -4,13 +4,18 @@
 #
 # Table name: operation_weekly_results
 #
-#  id                   :integer          not null, primary key
-#  company_id           :integer          not null
-#  result_date          :date             not null
-#  billable_count       :integer          not null
-#  operation_week_value :decimal(, )      not null
-#  created_at           :datetime         not null
-#  updated_at           :datetime         not null
+#  id                            :integer          not null, primary key
+#  company_id                    :integer          not null
+#  result_date                   :date             not null
+#  people_billable_count         :integer          not null
+#  operation_week_value          :decimal(, )      not null
+#  created_at                    :datetime         not null
+#  updated_at                    :datetime         not null
+#  available_hours               :integer          not null
+#  total_billable_hours          :integer          not null
+#  total_th                      :integer          not null
+#  total_opened_bugs             :integer          not null
+#  total_accumulated_closed_bugs :integer          not null
 #
 # Foreign Keys
 #
@@ -20,5 +25,5 @@
 class OperationWeeklyResult < ApplicationRecord
   belongs_to :company
 
-  validates :result_date, :billable_count, :operation_week_value, presence: true
+  validates :result_date, :people_billable_count, :operation_week_value, :available_hours, :total_billable_hours, :total_th, :total_opened_bugs, :total_accumulated_closed_bugs, presence: true
 end

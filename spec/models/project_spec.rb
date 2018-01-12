@@ -8,7 +8,7 @@ RSpec.describe Project, type: :model do
 
   context 'associations' do
     it { is_expected.to belong_to :customer }
-    it { is_expected.to have_many :project_weekly_results }
+    it { is_expected.to have_many :project_results }
   end
 
   context 'validations' do
@@ -31,5 +31,12 @@ RSpec.describe Project, type: :model do
   describe '#remaining_days' do
     let(:project) { Fabricate :project, start_date: 1.day.ago, end_date: 1.day.from_now }
     it { expect(project.remaining_days).to eq 1 }
+  end
+
+  describe '#consumed_hours' do
+    let(:project) { Fabricate :project }
+    let!(:result) { Fabricate :project_result, project: project }
+    let!(:other_result) { Fabricate :project_result, project: project }
+    it { expect(project.consumed_hours).to eq result.total_hours_consumed + other_result.total_hours_consumed }
   end
 end

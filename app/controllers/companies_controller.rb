@@ -10,7 +10,6 @@ class CompaniesController < AuthenticatedController
   def show
     @financial_informations = @company.financial_informations.order(finances_date: :desc)
     @team_members = @company.team_members.order(:name)
-    @projects = Project.joins(:customer).where('customers.company_id = ?', @company.id).order('customers.name, end_date')
   end
 
   def new

@@ -57,5 +57,7 @@ pt-BR:
       cancelled_filter: "Cancelado"
       total_days: "Dias (total)"
       total_remaining_days: "Dias (restantes)"
+      consumed_hours: "Horas Consumidas"
+      percentage_hours_consumed: "% Horas consumidas"
     show:
       initial_scope: "Escopo Inicial"

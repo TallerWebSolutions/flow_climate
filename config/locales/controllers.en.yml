@@ -58,5 +58,7 @@ en:
       cancelled_filter: "Cancelled"
       total_days: "Days (total)"
       total_remaining_days: "Days (remaining)"
+      consumed_hours: "Consumed Hours"
+      percentage_hours_consumed: "% Hours Consumed"
     show:
       initial_scope: "Initial Scope"

@@ -7,7 +7,12 @@ RSpec.describe OperationWeeklyResult, type: :model do
 
   context 'validations' do
     it { is_expected.to validate_presence_of :result_date }
-    it { is_expected.to validate_presence_of :billable_count }
+    it { is_expected.to validate_presence_of :people_billable_count }
     it { is_expected.to validate_presence_of :operation_week_value }
+    it { is_expected.to validate_presence_of :available_hours }
+    it { is_expected.to validate_presence_of :total_billable_hours }
+    it { is_expected.to validate_presence_of :total_th }
+    it { is_expected.to validate_presence_of :total_opened_bugs }
+    it { is_expected.to validate_presence_of :total_accumulated_closed_bugs }
   end
 end

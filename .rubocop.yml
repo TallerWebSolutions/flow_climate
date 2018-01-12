@@ -61,3 +61,6 @@ Metrics/AbcSize:
 
 Metrics/ParameterLists:
   Enabled: false
+
+Rails/NotNullColumn:
+  Enabled: false
