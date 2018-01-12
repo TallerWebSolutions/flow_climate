@@ -149,6 +149,81 @@ ALTER SEQUENCE financial_informations_id_seq OWNED BY financial_informations.id;
 
 
 --
+-- Name: operation_weekly_results; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE operation_weekly_results (
+    id bigint NOT NULL,
+    company_id integer NOT NULL,
+    result_date date NOT NULL,
+    billable_count integer NOT NULL,
+    operation_week_value numeric NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: operation_weekly_results_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE operation_weekly_results_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: operation_weekly_results_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE operation_weekly_results_id_seq OWNED BY operation_weekly_results.id;
+
+
+--
+-- Name: project_weekly_results; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE project_weekly_results (
+    id bigint NOT NULL,
+    project_id integer NOT NULL,
+    result_date date NOT NULL,
+    qty_hours_upstream integer,
+    qty_hours_downstream integer,
+    throughput integer NOT NULL,
+    qty_bugs_opened integer NOT NULL,
+    qty_bugs_closed integer NOT NULL,
+    qty_hours_bug integer NOT NULL,
+    leadtime numeric,
+    histogram_first_mode numeric,
+    histogram_second_mode numeric,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: project_weekly_results_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE project_weekly_results_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: project_weekly_results_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE project_weekly_results_id_seq OWNED BY project_weekly_results.id;
+
+
+--
 -- Name: projects; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -194,6 +269,43 @@ ALTER SEQUENCE projects_id_seq OWNED BY projects.id;
 CREATE TABLE schema_migrations (
     version character varying NOT NULL
 );
+
+
+--
+-- Name: team_members; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE team_members (
+    id bigint NOT NULL,
+    company_id integer NOT NULL,
+    name character varying NOT NULL,
+    monthly_payment numeric NOT NULL,
+    hours_per_month integer NOT NULL,
+    active boolean DEFAULT true,
+    billable boolean DEFAULT true,
+    billable_type integer DEFAULT 1,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: team_members_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE team_members_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: team_members_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE team_members_id_seq OWNED BY team_members.id;
 
 
 --
@@ -263,10 +375,31 @@ ALTER TABLE ONLY financial_informations ALTER COLUMN id SET DEFAULT nextval('fin
 
 
 --
+-- Name: operation_weekly_results id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY operation_weekly_results ALTER COLUMN id SET DEFAULT nextval('operation_weekly_results_id_seq'::regclass);
+
+
+--
+-- Name: project_weekly_results id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY project_weekly_results ALTER COLUMN id SET DEFAULT nextval('project_weekly_results_id_seq'::regclass);
+
+
+--
 -- Name: projects id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY projects ALTER COLUMN id SET DEFAULT nextval('projects_id_seq'::regclass);
+
+
+--
+-- Name: team_members id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY team_members ALTER COLUMN id SET DEFAULT nextval('team_members_id_seq'::regclass);
 
 
 --
@@ -309,6 +442,22 @@ ALTER TABLE ONLY financial_informations
 
 
 --
+-- Name: operation_weekly_results operation_weekly_results_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY operation_weekly_results
+    ADD CONSTRAINT operation_weekly_results_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: project_weekly_results project_weekly_results_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY project_weekly_results
+    ADD CONSTRAINT project_weekly_results_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: projects projects_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -322,6 +471,14 @@ ALTER TABLE ONLY projects
 
 ALTER TABLE ONLY schema_migrations
     ADD CONSTRAINT schema_migrations_pkey PRIMARY KEY (version);
+
+
+--
+-- Name: team_members team_members_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY team_members
+    ADD CONSTRAINT team_members_pkey PRIMARY KEY (id);
 
 
 --
@@ -361,10 +518,24 @@ CREATE INDEX index_financial_informations_on_company_id ON financial_information
 
 
 --
+-- Name: index_project_weekly_results_on_project_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_project_weekly_results_on_project_id ON project_weekly_results USING btree (project_id);
+
+
+--
 -- Name: index_projects_on_customer_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_projects_on_customer_id ON projects USING btree (customer_id);
+
+
+--
+-- Name: index_team_members_on_company_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_team_members_on_company_id ON team_members USING btree (company_id);
 
 
 --
@@ -387,6 +558,14 @@ CREATE UNIQUE INDEX index_users_on_reset_password_token ON users USING btree (re
 
 ALTER TABLE ONLY companies_users
     ADD CONSTRAINT fk_rails_27539b2fc9 FOREIGN KEY (user_id) REFERENCES users(id);
+
+
+--
+-- Name: team_members fk_rails_3ec60e399b; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY team_members
+    ADD CONSTRAINT fk_rails_3ec60e399b FOREIGN KEY (company_id) REFERENCES companies(id);
 
 
 --
@@ -422,6 +601,22 @@ ALTER TABLE ONLY users
 
 
 --
+-- Name: project_weekly_results fk_rails_c3c9938173; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY project_weekly_results
+    ADD CONSTRAINT fk_rails_c3c9938173 FOREIGN KEY (project_id) REFERENCES projects(id);
+
+
+--
+-- Name: operation_weekly_results fk_rails_dbd0ae3c1c; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY operation_weekly_results
+    ADD CONSTRAINT fk_rails_dbd0ae3c1c FOREIGN KEY (company_id) REFERENCES companies(id);
+
+
+--
 -- Name: customers fk_rails_ef51a916ef; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -440,6 +635,9 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20180111170136'),
 ('20180111180016'),
 ('20180111232828'),
-('20180111234624');
+('20180111234624'),
+('20180112002920'),
+('20180112010014'),
+('20180112010152');
 
 

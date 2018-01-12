@@ -30,6 +30,7 @@ class Project < ApplicationRecord
   enum status: { waiting: 0, executing: 1, finished: 2, cancelled: 3 }
 
   belongs_to :customer
+  has_many :project_weekly_results, dependent: :restrict_with_error
 
   validates :name, :start_date, :end_date, :status, :initial_scope, presence: true
 end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateProjectWeeklyResults < ActiveRecord::Migration[5.1]
   def change
     create_table :project_weekly_results do |t|
@@ -17,6 +19,6 @@ class CreateProjectWeeklyResults < ActiveRecord::Migration[5.1]
       t.timestamps
     end
 
-    add_foreign_key :weekly_operation_results, :projects, column: :project_id
+    add_foreign_key :project_weekly_results, :projects, column: :project_id
   end
 end
