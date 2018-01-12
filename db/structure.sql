@@ -232,6 +232,7 @@ CREATE TABLE projects (
     customer_id integer NOT NULL,
     name character varying NOT NULL,
     status integer NOT NULL,
+    project_type integer NOT NULL,
     start_date date NOT NULL,
     end_date date NOT NULL,
     value numeric,

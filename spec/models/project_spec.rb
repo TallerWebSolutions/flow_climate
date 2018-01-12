@@ -3,6 +3,7 @@
 RSpec.describe Project, type: :model do
   context 'enums' do
     it { is_expected.to define_enum_for(:status).with(waiting: 0, executing: 1, finished: 2, cancelled: 3) }
+    it { is_expected.to define_enum_for(:project_type).with(outsourcing: 0, consulting: 1, training: 2) }
   end
 
   context 'associations' do
@@ -16,5 +17,9 @@ RSpec.describe Project, type: :model do
     it { is_expected.to validate_presence_of :end_date }
     it { is_expected.to validate_presence_of :status }
     it { is_expected.to validate_presence_of :initial_scope }
+  end
+
+  context 'delegations' do
+    it { is_expected.to delegate_method(:name).to(:customer).with_prefix }
   end
 end

@@ -45,3 +45,6 @@ pt-BR:
   team_members:
     index:
       title: "Membros do Time"
+  projects:
+    index:
+      title: "Projetos"

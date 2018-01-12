@@ -46,3 +46,6 @@ en:
   team_members:
     index:
       title: "Team members"
+  projects:
+    index:
+      title: "Projects"

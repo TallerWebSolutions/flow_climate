@@ -6,6 +6,7 @@ class CreateProjects < ActiveRecord::Migration[5.1]
       t.integer :customer_id, null: false, index: true
       t.string :name, null: false
       t.integer :status, null: false
+      t.integer :project_type, null: false
       t.date :start_date, null: false
       t.date :end_date, null: false
       t.decimal :value
