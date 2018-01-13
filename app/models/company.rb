@@ -15,7 +15,7 @@ class Company < ApplicationRecord
   has_many :financial_informations, dependent: :restrict_with_error
   has_many :customers, dependent: :restrict_with_error
   has_many :team_members, dependent: :restrict_with_error
-  has_many :operation_weekly_results, dependent: :restrict_with_error
+  has_many :operation_results, dependent: :restrict_with_error
 
   validates :name, presence: true
 

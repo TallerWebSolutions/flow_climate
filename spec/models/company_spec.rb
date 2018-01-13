@@ -6,7 +6,7 @@ RSpec.describe Company, type: :model do
     it { is_expected.to have_many :financial_informations }
     it { is_expected.to have_many :customers }
     it { is_expected.to have_many :team_members }
-    it { is_expected.to have_many :operation_weekly_results }
+    it { is_expected.to have_many :operation_results }
   end
 
   context 'validations' do

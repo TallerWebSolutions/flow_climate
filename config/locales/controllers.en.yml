@@ -46,6 +46,7 @@ en:
       waiting_project_count: "Waiting"
       red_project_count: "RED PROJECTS"
       project_count: "Projects"
+      operation_result_count: "Operation Results"
   financial_informations:
     new:
       title: "New Financial Information"

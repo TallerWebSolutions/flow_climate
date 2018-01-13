@@ -72,6 +72,9 @@ pt-BR:
       project_result:
         one: Resultado de Projeto
         other: Resultados de Projeto
+      operation_result:
+        one: Resultado da Operação
+        other: Resultados da Operação
     attributes:
       user:
         first_name: Nome
@@ -115,3 +118,12 @@ pt-BR:
         leadtime: Leadtime
         histogram_first_mode: Primeira Moda Histograma
         histogram_second_mode: Segunda Moda Histograma
+      operation_result:
+        result_date: Data
+        people_billable_count: Qtd de Pessoas Faturáveis
+        operation_week_value: Valor da Operação na Semana
+        available_hours: Horas Disponíveis
+        total_billable_hours: Horas Consumidas
+        total_th: Throughput Total
+        total_opened_bugs: Bugs Abertos
+        total_accumulated_closed_bugs: Acumulado de Bugs Fechados

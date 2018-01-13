@@ -45,6 +45,7 @@ pt-BR:
       waiting_project_count: "Projetos Aguardando Início"
       red_project_count: "PROJETOS VERMELHOS"
       project_count: "Projetos"
+      operation_result_count: "Resultados da Operação"
   financial_informations:
     new:
       title: "Nova Informação Financeira"

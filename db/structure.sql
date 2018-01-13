@@ -149,10 +149,10 @@ ALTER SEQUENCE financial_informations_id_seq OWNED BY financial_informations.id;
 
 
 --
--- Name: operation_weekly_results; Type: TABLE; Schema: public; Owner: -
+-- Name: operation_results; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE operation_weekly_results (
+CREATE TABLE operation_results (
     id bigint NOT NULL,
     company_id integer NOT NULL,
     result_date date NOT NULL,
@@ -169,10 +169,10 @@ CREATE TABLE operation_weekly_results (
 
 
 --
--- Name: operation_weekly_results_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: operation_results_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE operation_weekly_results_id_seq
+CREATE SEQUENCE operation_results_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -181,10 +181,10 @@ CREATE SEQUENCE operation_weekly_results_id_seq
 
 
 --
--- Name: operation_weekly_results_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+-- Name: operation_results_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE operation_weekly_results_id_seq OWNED BY operation_weekly_results.id;
+ALTER SEQUENCE operation_results_id_seq OWNED BY operation_results.id;
 
 
 --
@@ -381,10 +381,10 @@ ALTER TABLE ONLY financial_informations ALTER COLUMN id SET DEFAULT nextval('fin
 
 
 --
--- Name: operation_weekly_results id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: operation_results id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY operation_weekly_results ALTER COLUMN id SET DEFAULT nextval('operation_weekly_results_id_seq'::regclass);
+ALTER TABLE ONLY operation_results ALTER COLUMN id SET DEFAULT nextval('operation_results_id_seq'::regclass);
 
 
 --
@@ -448,11 +448,11 @@ ALTER TABLE ONLY financial_informations
 
 
 --
--- Name: operation_weekly_results operation_weekly_results_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: operation_results operation_results_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY operation_weekly_results
-    ADD CONSTRAINT operation_weekly_results_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY operation_results
+    ADD CONSTRAINT operation_results_pkey PRIMARY KEY (id);
 
 
 --
@@ -615,10 +615,10 @@ ALTER TABLE ONLY project_results
 
 
 --
--- Name: operation_weekly_results fk_rails_dbd0ae3c1c; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: operation_results fk_rails_dbd0ae3c1c; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY operation_weekly_results
+ALTER TABLE ONLY operation_results
     ADD CONSTRAINT fk_rails_dbd0ae3c1c FOREIGN KEY (company_id) REFERENCES companies(id);
 
 
@@ -646,6 +646,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20180112010014'),
 ('20180112010152'),
 ('20180112161621'),
-('20180112182233');
+('20180112182233'),
+('20180113231517');
 
 

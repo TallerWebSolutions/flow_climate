@@ -1,0 +1,56 @@
+<div class="row">
+  <div class="col-xs-2 green-stamp">
+    <div class="stamp-title"><%= t('companies.show.outsourcing_cost_per_week') %></div>
+    <div class="stamp-content"><%= number_to_currency(@company.outsourcing_cost_per_week) %></div>
+  </div>
+  <div class="col-xs-2 green-stamp">
+    <div class="stamp-title"><%= t('companies.show.management_cost_per_week') %></div>
+    <div class="stamp-content"><%= number_to_currency(@company.management_cost_per_week) %></div>
+  </div>
+  <div class="col-xs-2 stamp">
+    <div class="stamp-title"><%= t('companies.show.members_billable_count') %></div>
+    <div class="stamp-content"><%= @company.members_billable_count %></div>
+  </div>
+  <div class="col-xs-2 stamp">
+    <div class="stamp-title"><%= t('companies.show.management_count') %></div>
+    <div class="stamp-content"><%= @company.management_count %></div>
+  </div>
+
+  <div class="col-xs-2 green-stamp">
+    <div class="stamp-title"><%= t('financial_informations.index.last_cost_per_hour') %></div>
+    <div class="stamp-content"><%= number_to_currency(@company.last_cost_per_hour) %></div>
+  </div>
+
+  <%= link_to company_projects_path(company_id: @company, customer_id: @customer) do %>
+    <div class="col-xs-2 stamp">
+      <div class="stamp-title"><%= t('companies.show.project_count') %></div>
+      <div class="stamp-content"><%= @company.projects_count %></div>
+    </div>
+  <% end %>
+
+  <%= link_to company_projects_path(company_id: @company, customer_id: @customer, status_filter: :waiting) do %>
+    <div class="col-xs-2 stamp">
+      <div class="stamp-title"><%= t('companies.show.waiting_project_count') %></div>
+      <div class="stamp-content"><%= @company.waiting_projects_count %></div>
+    </div>
+  <% end %>
+
+  <%= link_to company_projects_path(company_id: @company, customer_id: @customer, status_filter: :executing) do %>
+    <div class="col-xs-2 stamp">
+      <div class="stamp-title"><%= t('companies.show.active_project_count') %></div>
+      <div class="stamp-content"><%= @company.active_projects_count %></div>
+    </div>
+  <% end %>
+
+  <div class="col-xs-2 red-stamp">
+    <div class="stamp-title"><%= t('companies.show.red_project_count') %></div>
+    <div class="stamp-content"><%= @company.red_projects_count %></div>
+  </div>
+
+  <%= link_to company_operation_results_path(@company) do %>
+    <div class="col-xs-2 stamp">
+      <div class="stamp-title"><%= t('companies.show.operation_result_count') %></div>
+      <div class="stamp-content"><%= @company.operation_results.count %></div>
+    </div>
+  <% end %>
+</div>

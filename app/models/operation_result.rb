@@ -2,7 +2,7 @@
 
 # == Schema Information
 #
-# Table name: operation_weekly_results
+# Table name: operation_results
 #
 #  id                            :integer          not null, primary key
 #  company_id                    :integer          not null
@@ -22,7 +22,7 @@
 #  fk_rails_...  (company_id => companies.id)
 #
 
-class OperationWeeklyResult < ApplicationRecord
+class OperationResult < ApplicationRecord
   belongs_to :company
 
   validates :result_date, :people_billable_count, :operation_week_value, :available_hours, :total_billable_hours, :total_th, :total_opened_bugs, :total_accumulated_closed_bugs, presence: true
