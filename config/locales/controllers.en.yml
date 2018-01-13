@@ -75,3 +75,5 @@ en:
   project_results:
     index:
       title: "Project results"
+    new:
+      title: "New Project Result"

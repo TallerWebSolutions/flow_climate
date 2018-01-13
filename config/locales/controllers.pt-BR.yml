@@ -74,3 +74,5 @@ pt-BR:
   project_results:
     index:
       title: "Resultados do Projeto"
+    new:
+      title: "Novo Resultado de Projeto"

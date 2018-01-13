@@ -1,4 +1,9 @@
 <h2><%= t('project_results.index.title') %></h2>
+<div class="row">
+  <div class="col-xs-3">
+    <%= link_to t('project_results.new.title'), new_company_project_project_result_path(@company, @project), class: 'btn btn-sm btn-primary botton-spaced-component' %>
+  </div>
+</div>
 <table class="table">
   <thead>
   <tr>
