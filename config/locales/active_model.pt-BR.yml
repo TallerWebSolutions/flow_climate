@@ -68,7 +68,7 @@ pt-BR:
         other: Informações Financeiras
       project:
         one: Projeto
-        one: Projetos
+        other: Projetos
     attributes:
       user:
         first_name: Nome
@@ -100,3 +100,15 @@ pt-BR:
         status: Status
         name: Nome
         customer_name: Cliente
+      project_result:
+        result_date: Data
+        qty_hours_upstream: Horas no Upstream
+        qty_hours_downstream: Horas no Downstream
+        qty_hours_total: Horas (total)
+        throughput: Throughput
+        qty_bugs_opened: Bugs Abertos
+        qty_bugs_closed: Bugs Fechados
+        qty_hours_bug: Horas em Bugs
+        leadtime: Leadtime
+        histogram_first_mode: Primeira Moda Histograma
+        histogram_second_mode: Segunda Moda Histograma

@@ -20,6 +20,8 @@ pt-BR:
       title: "Home"
     result: "Resultado"
     month: "Mês"
+    week: "Semana"
+    year: "Ano"
   header:
     logout: Sair
     sign_up: Cadastre-se
@@ -69,3 +71,6 @@ pt-BR:
       percentage_remaining_money: "% Restante ($$)"
     show:
       initial_scope: "Escopo Inicial"
+  project_results:
+    index:
+      title: "Resultados do Projeto"

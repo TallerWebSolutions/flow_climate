@@ -1,0 +1,56 @@
+<h2><%= t('project_results.index.title') %></h2>
+<table class="table">
+  <thead>
+  <tr>
+    <th><%= ProjectResult.human_attribute_name :result_date %></th>
+    <th><%= t('general.week') %></th>
+    <th><%= t('general.year') %></th>
+    <th><%= ProjectResult.human_attribute_name :qty_hours_upstream %></th>
+    <th><%= ProjectResult.human_attribute_name :qty_hours_downstream %></th>
+    <th><%= ProjectResult.human_attribute_name :qty_hours_total %></th>
+    <th><%= ProjectResult.human_attribute_name :throughput %></th>
+    <th><%= ProjectResult.human_attribute_name :qty_bugs_opened %></th>
+    <th><%= ProjectResult.human_attribute_name :qty_bugs_closed %></th>
+    <th><%= ProjectResult.human_attribute_name :qty_hours_bug %></th>
+    <th><%= ProjectResult.human_attribute_name :leadtime %></th>
+    <th><%= ProjectResult.human_attribute_name :histogram_first_mode %></th>
+    <th><%= ProjectResult.human_attribute_name :histogram_second_mode %></th>
+  </tr>
+  </thead>
+  <tbody>
+  <% project_results_list.each do |result| %>
+    <tr>
+      <td><%= l(result.result_date) %></td>
+      <td><%= result.result_date.cweek %></td>
+      <td><%= result.result_date.cwyear %></td>
+      <td><%= number_with_precision(result.qty_hours_upstream, precision: 0) %></td>
+      <td><%= number_with_precision(result.qty_hours_downstream, precision: 0) %></td>
+      <td><%= number_with_precision(result.total_hours_consumed, precision: 0) %></td>
+      <td><%= number_with_precision(result.throughput, precision: 0) %></td>
+      <td><%= number_with_precision(result.qty_bugs_opened, precision: 0) %></td>
+      <td><%= number_with_precision(result.qty_bugs_closed, precision: 0) %></td>
+      <td><%= number_with_precision(result.qty_hours_bug, precision: 0) %></td>
+      <td><%= number_with_precision(result.leadtime, precision: 0) %></td>
+      <td><%= number_with_precision(result.histogram_first_mode, precision: 0) %></td>
+      <td><%= number_with_precision(result.histogram_second_mode, precision: 0) %></td>
+    </tr>
+  <% end %>
+  </tbody>
+  <tfoot>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td><%= number_with_precision(@total_hours_upstream, precision: 0) %></td>
+    <td><%= number_with_precision(@total_hours_downstream, precision: 0) %></td>
+    <td><%= number_with_precision(@total_hours, precision: 0) %></td>
+    <td><%= number_with_precision(@total_throughput, precision: 0) %></td>
+    <td><%= number_with_precision(@total_bugs_opened, precision: 0) %></td>
+    <td><%= number_with_precision(@total_bugs_closed, precision: 0) %></td>
+    <td><%= number_with_precision(@total_hours_bug, precision: 0) %></td>
+    <td><%= number_with_precision(@avg_leadtime, precision: 0) %></td>
+    <td></td>
+    <td></td>
+  </tr>
+  </tfoot>
+</table>

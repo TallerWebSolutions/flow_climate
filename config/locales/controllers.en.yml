@@ -20,6 +20,8 @@ en:
       title: "Home"
     result: "Result"
     month: "Month"
+    week: "Week"
+    year: "Year"
   header:
     logout: Logout
     explore: Explore
@@ -70,3 +72,6 @@ en:
       percentage_remaining_money: "% Remaining ($$)"
     show:
       initial_scope: "Initial Scope"
+  project_results:
+    index:
+      title: "Project results"

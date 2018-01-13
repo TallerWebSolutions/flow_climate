@@ -1,9 +1,15 @@
 <div class="container-fluid">
   <div class="row">
-    <div class="col-xs-6">
-      <h1><%= @project.name %></h1>
+    <div class="col-xs-12">
+      <ul class="breadcrumb">
+        <li><%= link_to t('general.home.title'), root_path %></li>
+        <li><%= link_to @company.name, company_path(@company) %></li>
+        <li><%= link_to Project.model_name.human.pluralize, company_projects_path(@company) %></li>
+        <li><%= @project.name %></li>
+      </ul>
     </div>
   </div>
+
   <div class="row">
     <div class="col-xs-2 stamp">
       <div class="stamp-title"><%= Customer.model_name %></div>
@@ -14,4 +20,6 @@
       <div class="stamp-content"><%= @project.initial_scope %></div>
     </div>
   </div>
+
+  <%= render 'projects/projects_results_table', project_results_list: @project_results  %>
 </div>

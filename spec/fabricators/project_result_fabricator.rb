@@ -9,4 +9,5 @@ Fabricator(:project_result) do
   qty_bugs_closed { Faker::Number.decimal(0) }
   qty_bugs_opened { Faker::Number.decimal(0) }
   throughput { Faker::Number.decimal(0) }
+  leadtime { Faker::Number.decimal(2) }
 end
