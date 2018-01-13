@@ -22,6 +22,8 @@ pt-BR:
     month: "Mês"
     week: "Semana"
     year: "Ano"
+    table:
+      actions: "Ações"
   header:
     logout: Sair
     sign_up: Cadastre-se

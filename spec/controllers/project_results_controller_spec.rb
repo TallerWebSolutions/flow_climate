@@ -10,6 +10,10 @@ RSpec.describe ProjectResultsController, type: :controller do
       before { post :create, params: { company_id: 'xpto', project_id: 'bar' } }
       it { expect(response).to redirect_to new_user_session_path }
     end
+    describe 'DELETE #destroy' do
+      before { delete :destroy, params: { company_id: 'xpto', project_id: 'bar', id: 'foo' } }
+      it { expect(response).to redirect_to new_user_session_path }
+    end
   end
 
   context 'authenticated' do
@@ -84,6 +88,40 @@ RSpec.describe ProjectResultsController, type: :controller do
             expect(response).to render_template :new
             expect(assigns(:project_result).errors.full_messages).to eq ['Horas em Bugs não pode ficar em branco', 'Bugs Fechados não pode ficar em branco', 'Bugs Abertos não pode ficar em branco', 'Throughput não pode ficar em branco', 'Data não pode ficar em branco']
           end
+        end
+      end
+    end
+
+    describe 'DELETE #destroy' do
+      let(:company) { Fabricate :company, users: [user] }
+      let(:customer) { Fabricate :customer, company: company, name: 'zzz' }
+      let!(:project) { Fabricate :project, customer: customer, end_date: 5.days.from_now }
+      let!(:project_result) { Fabricate :project_result, project: project }
+
+      context 'passing valid IDs' do
+        before { delete :destroy, params: { company_id: company, project_id: project, id: project_result } }
+        it 'assigns the instance variable and renders the template' do
+          expect(response).to redirect_to company_project_path(company, project)
+          expect(ProjectResult.last).to be_nil
+        end
+      end
+      context 'passing an invalid ID' do
+        context 'non-existent project result' do
+          before { delete :destroy, params: { company_id: company, project_id: project, id: 'foo' } }
+          it { expect(response).to have_http_status :not_found }
+        end
+        context 'non-existent project' do
+          before { delete :destroy, params: { company_id: company, project_id: 'foo', id: project_result } }
+          it { expect(response).to have_http_status :not_found }
+        end
+        context 'non-existent company' do
+          before { delete :destroy, params: { company_id: 'foo', project_id: project, id: project_result } }
+          it { expect(response).to have_http_status :not_found }
+        end
+        context 'not permitted' do
+          let(:company) { Fabricate :company, users: [] }
+          before { delete :destroy, params: { company_id: company, project_id: project, id: project_result } }
+          it { expect(response).to have_http_status :not_found }
         end
       end
     end

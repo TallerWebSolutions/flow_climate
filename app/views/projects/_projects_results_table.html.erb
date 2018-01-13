@@ -20,6 +20,7 @@
     <th><%= ProjectResult.human_attribute_name :leadtime %></th>
     <th><%= ProjectResult.human_attribute_name :histogram_first_mode %></th>
     <th><%= ProjectResult.human_attribute_name :histogram_second_mode %></th>
+    <th><%= t('general.table.actions') %></th>
   </tr>
   </thead>
   <tbody>
@@ -38,6 +39,11 @@
       <td><%= number_with_precision(result.leadtime, precision: 0) %></td>
       <td><%= number_with_precision(result.histogram_first_mode, precision: 0) %></td>
       <td><%= number_with_precision(result.histogram_second_mode, precision: 0) %></td>
+      <td>
+        <%= link_to company_project_project_result_path(@company, @project, result), method: :delete do %>
+          <i class="fa fa-times" aria-hidden="true"></i>
+        <% end %>
+      </td>
     </tr>
   <% end %>
   </tbody>
@@ -54,6 +60,7 @@
     <td><%= number_with_precision(@total_bugs_closed, precision: 0) %></td>
     <td><%= number_with_precision(@total_hours_bug, precision: 0) %></td>
     <td><%= number_with_precision(@avg_leadtime, precision: 0) %></td>
+    <td></td>
     <td></td>
     <td></td>
   </tr>

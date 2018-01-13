@@ -16,7 +16,7 @@ Rails.application.routes.draw do
   resources :companies, only: %i[show new create index] do
     resources :financial_informations, only: %i[new create]
     resources :projects, only: %i[show index] do
-      resources :project_results, only: %i[new create]
+      resources :project_results, only: %i[new create destroy]
     end
   end
 

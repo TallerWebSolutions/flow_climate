@@ -14,6 +14,12 @@ class ProjectResultsController < AuthenticatedController
     render :new
   end
 
+  def destroy
+    @project_result = ProjectResult.find(params[:id])
+    @project_result.destroy
+    redirect_to company_project_path(@company, @project)
+  end
+
   private
 
   def project_result_params

@@ -22,6 +22,8 @@ en:
     month: "Month"
     week: "Week"
     year: "Year"
+    table:
+      actions: "Actions"
   header:
     logout: Logout
     explore: Explore
