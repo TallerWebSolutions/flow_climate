@@ -5,6 +5,7 @@
         <ul class="breadcrumb">
           <li><%= link_to t('general.home.title'), root_path %></li>
           <li><%= link_to @company.name, company_path(@company) %></li>
+          <li><%= link_to t('operation_results.index.title'), company_operation_results_path(@company) %></li>
           <li><%= t('operation_results.new.title') %></li>
         </ul>
       </div>
