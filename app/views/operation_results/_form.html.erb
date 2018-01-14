@@ -3,19 +3,19 @@
   <div class="row">
     <div class='col-xs-4 form-group <%= 'has-error' if @operation_result.errors[:result_date].present? %>'>
       <%= f.label :result_date, class: 'control-label' %>
-      <%= f.date_field :result_date, class: 'form-control', autofocus: true %>
+      <%= f.date_field :result_date, value: @operation_result.result_date || Time.zone.today, class: 'form-control', autofocus: true %>
       <span class="help-block"><%= @operation_result.errors[:result_date].join(', ') %></span>
     </div>
 
     <div class='col-xs-4 form-group <%= 'has-error' if @operation_result.errors[:people_billable_count].present? %>'>
       <%= f.label :people_billable_count, class: 'control-label' %>
-      <%= f.number_field :people_billable_count, value: @operation_result.people_billable_count, class: 'form-control', step: 1 %>
+      <%= f.number_field :people_billable_count, value: @operation_result.people_billable_count || @company.outsourcing_members_billable_count, class: 'form-control', step: 1 %>
       <span class="help-block"><%= @operation_result.errors[:people_billable_count].join(', ') %></span>
     </div>
 
     <div class='col-xs-4 form-group <%= 'has-error' if @operation_result.errors[:operation_week_value].present? %>'>
       <%= f.label :operation_week_value, class: 'control-label' %>
-      <%= f.number_field :operation_week_value, value: @operation_result.operation_week_value, class: 'form-control', step: 0.01 %>
+      <%= f.number_field :operation_week_value, value: @operation_result.operation_week_value || @company.outsourcing_cost_per_week, class: 'form-control', step: 0.01 %>
       <span class="help-block"><%= @operation_result.errors[:operation_week_value].join(', ') %></span>
     </div>
   </div>
@@ -23,7 +23,7 @@
   <div class="row">
     <div class='col-xs-4 form-group <%= 'has-error' if @operation_result.errors[:available_hours].present? %>'>
       <%= f.label :available_hours, class: 'control-label' %>
-      <%= f.number_field :available_hours, value: @operation_result.available_hours, class: 'form-control', step: 1 %>
+      <%= f.number_field :available_hours, value: @operation_result.available_hours || (@company.current_monthly_available_hours / 4), class: 'form-control', step: 1 %>
       <span class="help-block"><%= @operation_result.errors[:available_hours].join(', ') %></span>
     </div>
 

@@ -41,7 +41,7 @@ pt-BR:
       title: "Nova Empresa"
     show:
       outsourcing_cost_per_week: "Custo do Outsourcing por Semana"
-      members_billable_count: "Qtd Força Faturável"
+      members_billable_count: "Qtd Força Faturável (Outsourcing)"
       management_cost_per_week: "Custo da gestão por semana"
       management_count: "Qtd Gestão"
       active_project_count: "Projetos Ativos"

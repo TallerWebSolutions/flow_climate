@@ -31,13 +31,13 @@ RSpec.describe Company, type: :model do
     it { expect(company.management_cost_per_week).to eq(not_billable_members.sum(&:monthly_payment) / 4) }
   end
 
-  context '#members_billable_count' do
+  context '#outsourcing_members_billable_count' do
     let(:company) { Fabricate :company }
     let!(:members) { Fabricate.times(4, :team_member, company: company, billable_type: :outsourcing) }
     let!(:consulting_members) { Fabricate.times(2, :team_member, company: company, billable_type: :consulting) }
     let!(:not_billable_members) { Fabricate.times(10, :team_member, company: company, billable: false, billable_type: nil) }
 
-    it { expect(company.members_billable_count).to eq 6 }
+    it { expect(company.outsourcing_members_billable_count).to eq 6 }
   end
 
   context '#management_count' do
@@ -144,5 +144,14 @@ RSpec.describe Company, type: :model do
     let!(:fifth_result) { Fabricate :project_result, project: other_company_project, result_date: 1.day.ago, known_scope: 100 }
 
     it { expect(company.current_backlog).to eq 75 }
+  end
+
+  context '#current_monthly_available_hours' do
+    let(:company) { Fabricate :company }
+    let!(:members) { Fabricate.times(4, :team_member, company: company, billable_type: :outsourcing) }
+    let!(:consulting_members) { Fabricate.times(2, :team_member, company: company, billable_type: :consulting) }
+    let!(:not_billable_members) { Fabricate.times(10, :team_member, company: company, billable: false, billable_type: nil) }
+
+    it { expect(company.current_monthly_available_hours).to eq(members.sum(&:hours_per_month)) }
   end
 end

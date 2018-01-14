@@ -27,8 +27,8 @@ class Company < ApplicationRecord
     team_members.where(billable: false).sum(&:monthly_payment) / 4
   end
 
-  def members_billable_count
-    team_members.where(billable: true).count
+  def outsourcing_members_billable_count
+    team_members.where(billable: true, billable_type: :outsourcing).count
   end
 
   def management_count
@@ -58,5 +58,9 @@ class Company < ApplicationRecord
 
   def current_backlog
     customers.sum(&:current_backlog)
+  end
+
+  def current_monthly_available_hours
+    team_members.where(billable: true, billable_type: :outsourcing).sum(&:hours_per_month)
   end
 end

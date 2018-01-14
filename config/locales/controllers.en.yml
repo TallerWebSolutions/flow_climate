@@ -42,7 +42,7 @@ en:
       title: "New Company"
     show:
       outsourcing_cost_per_week: "Outsourcing cost per week"
-      members_billable_count: "Billable members"
+      members_billable_count: "Billable members (Outsourcing)"
       management_cost_per_week: "Management cost per week"
       management_count: "Qty Management"
       active_project_count: "Active Projects"
