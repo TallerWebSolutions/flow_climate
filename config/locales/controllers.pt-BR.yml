@@ -79,3 +79,8 @@ pt-BR:
       title: "Resultados do Projeto"
     new:
       title: "Novo Resultado de Projeto"
+  operation_results:
+    index:
+      title: "Resultados da Operação"
+    new:
+      title: "Novo Resultado"

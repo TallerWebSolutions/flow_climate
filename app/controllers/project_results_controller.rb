@@ -26,11 +26,6 @@ class ProjectResultsController < AuthenticatedController
     params.require(:project_result).permit(:result_date, :qty_hours_upstream, :qty_hours_downstream, :throughput, :qty_bugs_opened, :qty_bugs_closed, :qty_hours_bug, :leadtime, :histogram_first_mode, :histogram_second_mode)
   end
 
-  def assign_company
-    @company = Company.find(params[:company_id])
-    not_found unless current_user.companies.include?(@company)
-  end
-
   def assign_project
     @project = Project.find(params[:project_id])
   end

@@ -1,0 +1,62 @@
+<div class="list-table">
+
+  <div class="row">
+    <div class='col-xs-4 form-group <%= 'has-error' if @operation_result.errors[:result_date].present? %>'>
+      <%= f.label :result_date, class: 'control-label' %>
+      <%= f.date_field :result_date, class: 'form-control', autofocus: true %>
+      <span class="help-block"><%= @operation_result.errors[:result_date].join(', ') %></span>
+    </div>
+
+    <div class='col-xs-4 form-group <%= 'has-error' if @operation_result.errors[:people_billable_count].present? %>'>
+      <%= f.label :people_billable_count, class: 'control-label' %>
+      <%= f.number_field :people_billable_count, value: @operation_result.people_billable_count, class: 'form-control', step: 1 %>
+      <span class="help-block"><%= @operation_result.errors[:people_billable_count].join(', ') %></span>
+    </div>
+
+    <div class='col-xs-4 form-group <%= 'has-error' if @operation_result.errors[:operation_week_value].present? %>'>
+      <%= f.label :operation_week_value, class: 'control-label' %>
+      <%= f.number_field :operation_week_value, value: @operation_result.operation_week_value, class: 'form-control', step: 0.01 %>
+      <span class="help-block"><%= @operation_result.errors[:operation_week_value].join(', ') %></span>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class='col-xs-4 form-group <%= 'has-error' if @operation_result.errors[:available_hours].present? %>'>
+      <%= f.label :available_hours, class: 'control-label' %>
+      <%= f.number_field :available_hours, value: @operation_result.available_hours, class: 'form-control', step: 1 %>
+      <span class="help-block"><%= @operation_result.errors[:available_hours].join(', ') %></span>
+    </div>
+
+    <div class='col-xs-4 form-group <%= 'has-error' if @operation_result.errors[:total_billable_hours].present? %>'>
+      <%= f.label :total_billable_hours, class: 'control-label' %>
+      <%= f.number_field :total_billable_hours, value: @operation_result.total_billable_hours, class: 'form-control', step: 1 %>
+      <span class="help-block"><%= @operation_result.errors[:total_billable_hours].join(', ') %></span>
+    </div>
+
+    <div class='col-xs-4 form-group <%= 'has-error' if @operation_result.errors[:total_th].present? %>'>
+      <%= f.label :total_th, class: 'control-label' %>
+      <%= f.number_field :total_th, value: @operation_result.total_th, class: 'form-control', step: 1 %>
+      <span class="help-block"><%= @operation_result.errors[:total_th].join(', ') %></span>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class='col-xs-3 form-group <%= 'has-error' if @operation_result.errors[:total_opened_bugs].present? %>'>
+      <%= f.label :total_opened_bugs, class: 'control-label' %>
+      <%= f.number_field :total_opened_bugs, value: @operation_result.total_opened_bugs, class: 'form-control', step: 1 %>
+      <span class="help-block"><%= @operation_result.errors[:total_opened_bugs].join(', ') %></span>
+    </div>
+
+    <div class='col-xs-3 form-group <%= 'has-error' if @operation_result.errors[:total_accumulated_closed_bugs].present? %>'>
+      <%= f.label :total_accumulated_closed_bugs, class: 'control-label' %>
+      <%= f.number_field :total_accumulated_closed_bugs, value: @operation_result.total_accumulated_closed_bugs, class: 'form-control', step: 1 %>
+      <span class="help-block"><%= @operation_result.errors[:total_accumulated_closed_bugs].join(', ') %></span>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-xs-12">
+      <%= f.submit class: 'btn btn-success' %>
+    </div>
+  </div>
+</div>

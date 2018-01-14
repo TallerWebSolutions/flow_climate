@@ -4,8 +4,14 @@
       <ul class="breadcrumb">
         <li><%= link_to t('general.home.title'), root_path %></li>
         <li><%= link_to @company.name, company_path(@company) %></li>
-        <li><%= t('projects.index.title') %></li>
+        <li><%= t('operation_results.index.title') %></li>
       </ul>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-xs-3">
+      <%= link_to t('operation_results.new.title'), new_company_operation_result_path(@company), class: 'btn btn-sm btn-primary botton-spaced-component' %>
     </div>
   </div>
 

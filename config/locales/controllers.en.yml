@@ -80,3 +80,8 @@ en:
       title: "Project results"
     new:
       title: "New Project Result"
+  operation_results:
+    index:
+      title: "Operation Results"
+    new:
+      title: "New Result"

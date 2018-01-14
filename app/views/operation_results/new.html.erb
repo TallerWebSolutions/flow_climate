@@ -1,0 +1,21 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="row">
+      <div class="col-xs-12">
+        <ul class="breadcrumb">
+          <li><%= link_to t('general.home.title'), root_path %></li>
+          <li><%= link_to @company.name, company_path(@company) %></li>
+          <li><%= t('operation_results.new.title') %></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <%= form_for [@company, @operation_result] do |f| %>
+    <div class="row botton-spaced-component">
+      <div class="col-xs-12">
+        <%= render 'form', f: f %>
+      </div>
+    </div>
+  <% end %>
+</div>
