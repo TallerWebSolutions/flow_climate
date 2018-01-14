@@ -123,7 +123,7 @@ pt-BR:
         people_billable_count: Qtd de Pessoas Faturáveis
         operation_week_value: Valor da Operação na Semana
         available_hours: Horas Disponíveis
-        total_billable_hours: Horas Consumidas
+        delivered_hours: Horas Consumidas
         total_th: Throughput Total
         total_opened_bugs: Bugs Abertos
         total_accumulated_closed_bugs: Acumulado de Bugs Fechados

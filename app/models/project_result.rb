@@ -7,8 +7,9 @@
 #  id                    :integer          not null, primary key
 #  project_id            :integer          not null
 #  result_date           :date             not null
-#  qty_hours_upstream    :integer
-#  qty_hours_downstream  :integer
+#  known_scope           :integer          not null
+#  qty_hours_upstream    :integer          not null
+#  qty_hours_downstream  :integer          not null
 #  throughput            :integer          not null
 #  qty_bugs_opened       :integer          not null
 #  qty_bugs_closed       :integer          not null
@@ -31,9 +32,9 @@
 class ProjectResult < ApplicationRecord
   belongs_to :project
 
-  validates :qty_hours_bug, :qty_bugs_closed, :qty_bugs_opened, :throughput, :result_date, presence: true
+  validates :known_scope, :qty_hours_upstream, :qty_hours_downstream, :qty_hours_bug, :qty_bugs_closed, :qty_bugs_opened, :throughput, :result_date, presence: true
 
-  def total_hours_consumed
+  def project_delivered_hours
     qty_hours_upstream + qty_hours_downstream
   end
 end

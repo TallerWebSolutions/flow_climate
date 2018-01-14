@@ -47,7 +47,7 @@ RSpec.describe Project, type: :model do
     let(:project) { Fabricate :project }
     let!(:result) { Fabricate :project_result, project: project }
     let!(:other_result) { Fabricate :project_result, project: project }
-    it { expect(project.consumed_hours).to eq result.total_hours_consumed + other_result.total_hours_consumed }
+    it { expect(project.consumed_hours).to eq result.project_delivered_hours + other_result.project_delivered_hours }
   end
 
   describe '#remaining_money' do
@@ -95,5 +95,12 @@ RSpec.describe Project, type: :model do
         it { expect(project.red?).to be false }
       end
     end
+  end
+
+  describe '#current_backlog' do
+    let(:project) { Fabricate :project }
+    let!(:result) { Fabricate :project_result, project: project, result_date: 1.day.ago, known_scope: 10 }
+    let!(:other_result) { Fabricate :project_result, project: project, result_date: Time.zone.today, known_scope: 20 }
+    it { expect(project.current_backlog).to eq 20 }
   end
 end

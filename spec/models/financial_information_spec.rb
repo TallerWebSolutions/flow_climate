@@ -16,7 +16,17 @@ RSpec.describe FinancialInformation, type: :model do
     it { expect(finances.financial_result).to eq 8.2 }
   end
 
-  describe '#hours_delivered' do
+  describe '#cost_per_hour' do
+    let(:company) { Fabricate :company }
+    let!(:finances) { Fabricate :financial_information, company: company, finances_date: 1.month.ago, income_total: 20.4, expenses_total: 12.2 }
+    let!(:result) { Fabricate :operation_result, company: company, result_date: 1.month.ago, delivered_hours: 30 }
+    let!(:other_result) { Fabricate :operation_result, company: company, result_date: 1.month.ago, delivered_hours: 50 }
+    let!(:out_result) { Fabricate :operation_result, result_date: 1.month.ago, delivered_hours: 60 }
+
+    it { expect(finances.cost_per_hour).to eq finances.expenses_total / 80 }
+  end
+
+  describe '#hours_delivered_projects' do
     let!(:finances) { Fabricate :financial_information, income_total: 20.4, expenses_total: 12.2 }
     let(:customer) { Fabricate :customer, company: finances.company }
     let!(:project) { Fabricate :project, customer: customer }
@@ -25,6 +35,16 @@ RSpec.describe FinancialInformation, type: :model do
     let!(:other_result) { Fabricate :project_result, project: other_project, result_date: finances.finances_date, qty_hours_downstream: 50 }
     let!(:out_result) { Fabricate :project_result, result_date: finances.finances_date, qty_hours_downstream: 60 }
 
-    it { expect(finances.hours_delivered).to eq 80 }
+    it { expect(finances.project_delivered_hours).to eq 80 }
+  end
+
+  describe '#hours_delivered_operation_result' do
+    let(:company) { Fabricate :company }
+    let!(:finances) { Fabricate :financial_information, company: company, finances_date: 1.month.ago, income_total: 20.4, expenses_total: 12.2 }
+    let!(:result) { Fabricate :operation_result, company: company, result_date: 1.month.ago, delivered_hours: 30 }
+    let!(:other_result) { Fabricate :operation_result, company: company, result_date: 1.month.ago, delivered_hours: 50 }
+    let!(:out_result) { Fabricate :operation_result, result_date: 1.month.ago, delivered_hours: 60 }
+
+    it { expect(finances.hours_delivered_operation_result).to eq 80 }
   end
 end

@@ -32,7 +32,7 @@ RSpec.describe ProjectsController, type: :controller do
           expect(assigns(:project_results)).to eq [second_result, first_result]
           expect(assigns(:total_hours_upstream)).to eq first_result.qty_hours_upstream + second_result.qty_hours_upstream
           expect(assigns(:total_hours_downstream)).to eq first_result.qty_hours_downstream + second_result.qty_hours_downstream
-          expect(assigns(:total_hours)).to eq first_result.total_hours_consumed + second_result.total_hours_consumed
+          expect(assigns(:total_hours)).to eq first_result.project_delivered_hours + second_result.project_delivered_hours
           expect(assigns(:total_throughput)).to eq first_result.throughput + second_result.throughput
           expect(assigns(:total_bugs_opened)).to eq first_result.qty_bugs_opened + second_result.qty_bugs_opened
           expect(assigns(:total_bugs_closed)).to eq first_result.qty_bugs_closed + second_result.qty_bugs_closed

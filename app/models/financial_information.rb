@@ -31,10 +31,14 @@ class FinancialInformation < ApplicationRecord
   end
 
   def cost_per_hour
-    expenses_total / hours_delivered
+    expenses_total / hours_delivered_operation_result
   end
 
-  def hours_delivered
-    ProjectResultsRepository.instance.project_results_for_company_month(company, finances_date.month, finances_date.year).sum(&:total_hours_consumed)
+  def project_delivered_hours
+    ProjectResultsRepository.instance.project_results_for_company_month(company, finances_date.month, finances_date.year).sum(&:project_delivered_hours)
+  end
+
+  def hours_delivered_operation_result
+    OperationResultsRepository.instance.operation_results_for_company_month(company, finances_date.month, finances_date.year).sum(&:delivered_hours)
   end
 end

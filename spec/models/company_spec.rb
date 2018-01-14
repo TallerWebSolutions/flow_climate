@@ -125,4 +125,24 @@ RSpec.describe Company, type: :model do
 
     it { expect(company.last_cost_per_hour).to eq other_finance.cost_per_hour }
   end
+
+  describe '#current_backlog' do
+    let(:company) { Fabricate :company }
+    let(:customer) { Fabricate :customer, company: company }
+    let(:other_customer) { Fabricate :customer, company: company }
+    let(:other_company_customer) { Fabricate :customer }
+
+    let(:project) { Fabricate :project, customer: customer }
+    let(:other_project) { Fabricate :project, customer: customer }
+    let(:other_customer_project) { Fabricate :project, customer: other_customer }
+    let(:other_company_project) { Fabricate :project, customer: other_company_customer }
+
+    let!(:first_result) { Fabricate :project_result, project: project, result_date: 1.day.ago, known_scope: 10 }
+    let!(:second_result) { Fabricate :project_result, project: project, result_date: Time.zone.today, known_scope: 20 }
+    let!(:third_result) { Fabricate :project_result, project: other_project, result_date: 1.day.ago, known_scope: 5 }
+    let!(:fourth_result) { Fabricate :project_result, project: other_customer_project, result_date: 1.day.ago, known_scope: 50 }
+    let!(:fifth_result) { Fabricate :project_result, project: other_company_project, result_date: 1.day.ago, known_scope: 100 }
+
+    it { expect(company.current_backlog).to eq 75 }
+  end
 end

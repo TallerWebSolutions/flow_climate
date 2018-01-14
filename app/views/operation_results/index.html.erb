@@ -24,7 +24,7 @@
       <th><%= OperationResult.human_attribute_name :people_billable_count %></th>
       <th><%= OperationResult.human_attribute_name :operation_week_value %></th>
       <th><%= OperationResult.human_attribute_name :available_hours %></th>
-      <th><%= OperationResult.human_attribute_name :total_billable_hours %></th>
+      <th><%= OperationResult.human_attribute_name :delivered_hours %></th>
       <th><%= OperationResult.human_attribute_name :total_th %></th>
       <th><%= OperationResult.human_attribute_name :total_opened_bugs %></th>
       <th><%= OperationResult.human_attribute_name :total_accumulated_closed_bugs %></th>
@@ -40,7 +40,7 @@
         <td><%= number_with_precision(result.people_billable_count, precision: 0) %></td>
         <td><%= number_to_currency(result.operation_week_value) %></td>
         <td><%= number_with_precision(result.available_hours, precision: 0) %></td>
-        <td><%= number_with_precision(result.total_billable_hours, precision: 0) %></td>
+        <td><%= number_with_precision(result.delivered_hours, precision: 0) %></td>
         <td><%= number_with_precision(result.total_th, precision: 0) %></td>
         <td><%= number_with_precision(result.total_opened_bugs, precision: 0) %></td>
         <td><%= number_with_precision(result.total_accumulated_closed_bugs, precision: 0) %></td>

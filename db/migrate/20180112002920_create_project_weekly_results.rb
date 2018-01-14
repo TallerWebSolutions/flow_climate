@@ -5,8 +5,10 @@ class CreateProjectWeeklyResults < ActiveRecord::Migration[5.1]
     create_table :project_weekly_results do |t|
       t.integer :project_id, null: false, index: true
       t.date :result_date, null: false
-      t.integer :qty_hours_upstream
-      t.integer :qty_hours_downstream
+
+      t.integer :known_scope, null: false
+      t.integer :qty_hours_upstream, null: false
+      t.integer :qty_hours_downstream, null: false
       t.integer :throughput, null: false
       t.integer :qty_bugs_opened, null: false
       t.integer :qty_bugs_closed, null: false

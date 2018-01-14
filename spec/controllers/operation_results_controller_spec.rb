@@ -93,7 +93,7 @@ RSpec.describe OperationResultsController, type: :controller do
       let(:company) { Fabricate :company, users: [user] }
 
       context 'passing valid parameters' do
-        before { post :create, params: { company_id: company, operation_result: { result_date: Time.zone.today, people_billable_count: 11, operation_week_value: 2003.21, available_hours: 222, total_billable_hours: 222, total_th: 9, total_opened_bugs: 0, total_accumulated_closed_bugs: 1 } } }
+        before { post :create, params: { company_id: company, operation_result: { result_date: Time.zone.today, people_billable_count: 11, operation_week_value: 2003.21, available_hours: 222, delivered_hours: 222, total_th: 9, total_opened_bugs: 0, total_accumulated_closed_bugs: 1 } } }
         it 'assigns the instance variable and renders the template' do
           expect(response).to redirect_to company_operation_results_path(company)
           result = OperationResult.last
@@ -101,7 +101,7 @@ RSpec.describe OperationResultsController, type: :controller do
           expect(result.people_billable_count).to eq 11
           expect(result.operation_week_value).to eq 2003.21
           expect(result.available_hours).to eq 222
-          expect(result.total_billable_hours).to eq 222
+          expect(result.delivered_hours).to eq 222
           expect(result.total_th).to eq 9
           expect(result.total_opened_bugs).to eq 0
           expect(result.total_accumulated_closed_bugs).to eq 1
@@ -113,7 +113,7 @@ RSpec.describe OperationResultsController, type: :controller do
           it { expect(response).to have_http_status :not_found }
         end
         context 'results parameters' do
-          before { post :create, params: { company_id: company, operation_result: { result_date: nil, people_billable_count: nil, operation_week_value: nil, available_hours: nil, total_billable_hours: nil, total_th: nil, total_opened_bugs: nil, total_accumulated_closed_bugs: nil } } }
+          before { post :create, params: { company_id: company, operation_result: { result_date: nil, people_billable_count: nil, operation_week_value: nil, available_hours: nil, delivered_hours: nil, total_th: nil, total_opened_bugs: nil, total_accumulated_closed_bugs: nil } } }
           it 'renders the template again showing the errors' do
             expect(response).to render_template :new
             expect(assigns(:operation_result).errors.full_messages).to eq ['Data não pode ficar em branco', 'Qtd de Pessoas Faturáveis não pode ficar em branco', 'Valor da Operação na Semana não pode ficar em branco', 'Horas Disponíveis não pode ficar em branco', 'Horas Consumidas não pode ficar em branco', 'Throughput Total não pode ficar em branco', 'Bugs Abertos não pode ficar em branco', 'Acumulado de Bugs Fechados não pode ficar em branco']

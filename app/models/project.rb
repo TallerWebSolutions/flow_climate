@@ -48,7 +48,7 @@ class Project < ApplicationRecord
   end
 
   def consumed_hours
-    project_results.sum(&:total_hours_consumed)
+    project_results.sum(&:project_delivered_hours)
   end
 
   def remaining_money
@@ -60,5 +60,9 @@ class Project < ApplicationRecord
     money_percentage = remaining_money / value
     time_percentage = remaining_days.to_f / total_days.to_f
     money_percentage < time_percentage
+  end
+
+  def current_backlog
+    project_results.order(result_date: :desc).first&.known_scope || initial_scope
   end
 end

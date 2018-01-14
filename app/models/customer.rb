@@ -25,6 +25,8 @@ class Customer < ApplicationRecord
 
   validates :company, :name, presence: true
 
+  delegate :count, to: :projects, prefix: true
+
   def active_projects
     projects.executing
   end
@@ -37,5 +39,7 @@ class Customer < ApplicationRecord
     projects.select(&:red?)
   end
 
-  delegate :count, to: :projects, prefix: true
+  def current_backlog
+    projects.sum(&:current_backlog)
+  end
 end

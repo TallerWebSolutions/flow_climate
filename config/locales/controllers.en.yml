@@ -24,6 +24,9 @@ en:
     year: "Year"
     table:
       actions: "Actions"
+    current_week: "Current Week"
+    current_year: "Current Year"
+    current_backlog: "Current Backlog"
   header:
     logout: Logout
     explore: Explore
@@ -54,7 +57,8 @@ en:
       title: "Financial Informations"
       last_cost_per_hour: "Last Cost/Hour"
       cost_per_hour: "Cost/Hour"
-      billable_hours_count: "Hours Count"
+      project_delivered_hours_count: "Delivered Hours (Projects)"
+      delivered_hours: "Hours Delivered (Operation)"
   team_members:
     index:
       title: "Team members"

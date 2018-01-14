@@ -1,4 +1,19 @@
 <div class="row">
+  <div class="col-xs-1 stamp">
+    <div class="stamp-title"><%= t('general.current_week') %></div>
+    <div class="stamp-content"><%= Time.zone.today.cweek %></div>
+  </div>
+  <div class="col-xs-1 stamp">
+    <div class="stamp-title"><%= t('general.current_year') %></div>
+    <div class="stamp-content"><%= Time.zone.today.cwyear %></div>
+  </div>
+  <div class="col-xs-1 stamp">
+    <div class="stamp-title"><%= t('general.current_backlog') %></div>
+    <div class="stamp-content"><%= @company.current_backlog %></div>
+  </div>
+</div>
+
+<div class="row">
   <div class="col-xs-2 green-stamp">
     <div class="stamp-title"><%= t('companies.show.outsourcing_cost_per_week') %></div>
     <div class="stamp-content"><%= number_to_currency(@company.outsourcing_cost_per_week) %></div>

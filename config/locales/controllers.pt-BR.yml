@@ -24,6 +24,9 @@ pt-BR:
     year: "Ano"
     table:
       actions: "Ações"
+    current_week: "Semana Atual"
+    current_year: "Ano Atual"
+    current_backlog: "Backlog Atual"
   header:
     logout: Sair
     sign_up: Cadastre-se
@@ -53,7 +56,8 @@ pt-BR:
       title: "Informações Financeiras"
       last_cost_per_hour: "Último Custo/Hora"
       cost_per_hour: "Custo/Hora"
-      billable_hours_count: "Total de horas"
+      project_delivered_hours_count: "Total de horas (Projetos)"
+      delivered_hours: "Horas Entregues (Operação)"
   team_members:
     index:
       title: "Membros do Time"

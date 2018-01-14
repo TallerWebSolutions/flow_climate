@@ -26,6 +26,6 @@ class OperationResultsController < AuthenticatedController
   private
 
   def operation_result_params
-    params.require(:operation_result).permit(:result_date, :people_billable_count, :operation_week_value, :available_hours, :total_billable_hours, :total_th, :total_opened_bugs, :total_accumulated_closed_bugs)
+    params.require(:operation_result).permit(:result_date, :people_billable_count, :operation_week_value, :available_hours, :delivered_hours, :total_th, :total_opened_bugs, :total_accumulated_closed_bugs)
   end
 end

@@ -27,10 +27,10 @@
       <span class="help-block"><%= @operation_result.errors[:available_hours].join(', ') %></span>
     </div>
 
-    <div class='col-xs-4 form-group <%= 'has-error' if @operation_result.errors[:total_billable_hours].present? %>'>
-      <%= f.label :total_billable_hours, class: 'control-label' %>
-      <%= f.number_field :total_billable_hours, value: @operation_result.total_billable_hours, class: 'form-control', step: 1 %>
-      <span class="help-block"><%= @operation_result.errors[:total_billable_hours].join(', ') %></span>
+    <div class='col-xs-4 form-group <%= 'has-error' if @operation_result.errors[:delivered_hours].present? %>'>
+      <%= f.label :delivered_hours, class: 'control-label' %>
+      <%= f.number_field :delivered_hours, value: @operation_result.delivered_hours, class: 'form-control', step: 1 %>
+      <span class="help-block"><%= @operation_result.errors[:delivered_hours].join(', ') %></span>
     </div>
 
     <div class='col-xs-4 form-group <%= 'has-error' if @operation_result.errors[:total_th].present? %>'>

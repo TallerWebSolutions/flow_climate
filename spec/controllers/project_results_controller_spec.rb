@@ -56,7 +56,7 @@ RSpec.describe ProjectResultsController, type: :controller do
       let!(:project) { Fabricate :project, customer: customer, end_date: 2.days.from_now }
 
       context 'passing valid parameters' do
-        before { post :create, params: { company_id: company, project_id: project, project_result: { result_date: Time.zone.today, qty_hours_upstream: 10, qty_hours_downstream: 13, throughput: 5, qty_bugs_opened: 0, qty_bugs_closed: 3, qty_hours_bug: 7, leadtime: 10.5, histogram_first_mode: 12.2, histogram_second_mode: 9.2 } } }
+        before { post :create, params: { company_id: company, project_id: project, project_result: { result_date: Time.zone.today, known_scope: 100, qty_hours_upstream: 10, qty_hours_downstream: 13, throughput: 5, qty_bugs_opened: 0, qty_bugs_closed: 3, qty_hours_bug: 7, leadtime: 10.5, histogram_first_mode: 12.2, histogram_second_mode: 9.2 } } }
         it 'assigns the instance variable and renders the template' do
           expect(response).to redirect_to company_project_path(company, project)
           result = ProjectResult.last
@@ -83,10 +83,10 @@ RSpec.describe ProjectResultsController, type: :controller do
           it { expect(response).to have_http_status :not_found }
         end
         context 'results parameters' do
-          before { post :create, params: { company_id: company, project_id: project, project_result: { result_date: nil, qty_hours_upstream: nil, qty_hours_downstream: nil, throughput: nil, qty_bugs_opened: nil, qty_bugs_closed: nil, qty_hours_bug: nil, leadtime: nil, histogram_first_mode: nil, histogram_second_mode: nil } } }
+          before { post :create, params: { company_id: company, project_id: project, project_result: { result_date: nil } } }
           it 'renders the template again showing the errors' do
             expect(response).to render_template :new
-            expect(assigns(:project_result).errors.full_messages).to eq ['Horas em Bugs não pode ficar em branco', 'Bugs Fechados não pode ficar em branco', 'Bugs Abertos não pode ficar em branco', 'Throughput não pode ficar em branco', 'Data não pode ficar em branco']
+            expect(assigns(:project_result).errors.full_messages).to eq ['Known scope não pode ficar em branco', 'Horas no Upstream não pode ficar em branco', 'Horas no Downstream não pode ficar em branco', 'Horas em Bugs não pode ficar em branco', 'Bugs Fechados não pode ficar em branco', 'Bugs Abertos não pode ficar em branco', 'Throughput não pode ficar em branco', 'Data não pode ficar em branco']
           end
         end
       end

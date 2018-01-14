@@ -55,4 +55,8 @@ class Company < ApplicationRecord
     finance = financial_informations.order(finances_date: :desc).first
     finance.cost_per_hour
   end
+
+  def current_backlog
+    customers.sum(&:current_backlog)
+  end
 end
