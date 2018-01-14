@@ -22,6 +22,7 @@
       <th><%= OperationResult.human_attribute_name :total_th %></th>
       <th><%= OperationResult.human_attribute_name :total_opened_bugs %></th>
       <th><%= OperationResult.human_attribute_name :total_accumulated_closed_bugs %></th>
+      <th><%= t('general.table.actions') %></th>
     </tr>
     </thead>
     <tbody>
@@ -37,6 +38,11 @@
         <td><%= number_with_precision(result.total_th, precision: 0) %></td>
         <td><%= number_with_precision(result.total_opened_bugs, precision: 0) %></td>
         <td><%= number_with_precision(result.total_accumulated_closed_bugs, precision: 0) %></td>
+        <td>
+          <%= link_to company_operation_result_path(@company, result), method: :delete do %>
+            <i class="fa fa-times" aria-hidden="true"></i>
+          <% end %>
+        </td>
       </tr>
     <% end %>
     </tbody>
