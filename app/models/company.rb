@@ -63,4 +63,20 @@ class Company < ApplicationRecord
   def current_monthly_available_hours
     team_members.where(billable: true, billable_type: :outsourcing).sum(&:hours_per_month)
   end
+
+  def consumed_hours_in_week(week, year)
+    ProjectResultsRepository.instance.consumed_hours_in_week(self, week, year)
+  end
+
+  def th_in_week(week, year)
+    ProjectResultsRepository.instance.th_in_week(self, week, year)
+  end
+
+  def bugs_opened_in_week(week, year)
+    ProjectResultsRepository.instance.bugs_opened_in_week(self, week, year)
+  end
+
+  def bugs_closed_in_week(week, year)
+    ProjectResultsRepository.instance.bugs_closed_in_week(self, week, year)
+  end
 end

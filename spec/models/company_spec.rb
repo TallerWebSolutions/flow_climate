@@ -37,7 +37,7 @@ RSpec.describe Company, type: :model do
     let!(:consulting_members) { Fabricate.times(2, :team_member, company: company, billable_type: :consulting) }
     let!(:not_billable_members) { Fabricate.times(10, :team_member, company: company, billable: false, billable_type: nil) }
 
-    it { expect(company.outsourcing_members_billable_count).to eq 6 }
+    it { expect(company.outsourcing_members_billable_count).to eq 4 }
   end
 
   context '#management_count' do
@@ -153,5 +153,85 @@ RSpec.describe Company, type: :model do
     let!(:not_billable_members) { Fabricate.times(10, :team_member, company: company, billable: false, billable_type: nil) }
 
     it { expect(company.current_monthly_available_hours).to eq(members.sum(&:hours_per_month)) }
+  end
+
+  context '#consumed_hours_in_week' do
+    let(:company) { Fabricate :company }
+    let(:customer) { Fabricate :customer, company: company }
+    let(:other_customer) { Fabricate :customer, company: company }
+    let(:other_company_customer) { Fabricate :customer }
+
+    let(:project) { Fabricate :project, customer: customer }
+    let(:other_project) { Fabricate :project, customer: customer }
+    let(:other_customer_project) { Fabricate :project, customer: other_customer }
+    let(:other_company_project) { Fabricate :project, customer: other_company_customer }
+
+    let!(:first_result) { Fabricate :project_result, project: project, result_date: 1.month.ago, qty_hours_downstream: 10 }
+    let!(:second_result) { Fabricate :project_result, project: project, result_date: 1.month.ago, qty_hours_downstream: 20 }
+    let!(:third_result) { Fabricate :project_result, project: other_project, result_date: Time.zone.today, qty_hours_downstream: 5 }
+    let!(:fourth_result) { Fabricate :project_result, project: other_customer_project, result_date: Time.zone.today, qty_hours_downstream: 50 }
+    let!(:fifth_result) { Fabricate :project_result, project: other_company_project, result_date: Time.zone.today, qty_hours_downstream: 100 }
+
+    it { expect(company.consumed_hours_in_week(1.month.ago.to_date.cweek, 1.month.ago.to_date.cwyear)).to eq 30 }
+  end
+
+  context '#th_in_week' do
+    let(:company) { Fabricate :company }
+    let(:customer) { Fabricate :customer, company: company }
+    let(:other_customer) { Fabricate :customer, company: company }
+    let(:other_company_customer) { Fabricate :customer }
+
+    let(:project) { Fabricate :project, customer: customer }
+    let(:other_project) { Fabricate :project, customer: customer }
+    let(:other_customer_project) { Fabricate :project, customer: other_customer }
+    let(:other_company_project) { Fabricate :project, customer: other_company_customer }
+
+    let!(:first_result) { Fabricate :project_result, project: project, result_date: 1.month.ago, throughput: 10 }
+    let!(:second_result) { Fabricate :project_result, project: project, result_date: 1.month.ago, throughput: 20 }
+    let!(:third_result) { Fabricate :project_result, project: other_project, result_date: Time.zone.today, throughput: 5 }
+    let!(:fourth_result) { Fabricate :project_result, project: other_customer_project, result_date: Time.zone.today, throughput: 50 }
+    let!(:fifth_result) { Fabricate :project_result, project: other_company_project, result_date: Time.zone.today, throughput: 100 }
+
+    it { expect(company.th_in_week(1.month.ago.to_date.cweek, 1.month.ago.to_date.cwyear)).to eq 30 }
+  end
+
+  context '#bugs_opened_in_week' do
+    let(:company) { Fabricate :company }
+    let(:customer) { Fabricate :customer, company: company }
+    let(:other_customer) { Fabricate :customer, company: company }
+    let(:other_company_customer) { Fabricate :customer }
+
+    let(:project) { Fabricate :project, customer: customer }
+    let(:other_project) { Fabricate :project, customer: customer }
+    let(:other_customer_project) { Fabricate :project, customer: other_customer }
+    let(:other_company_project) { Fabricate :project, customer: other_company_customer }
+
+    let!(:first_result) { Fabricate :project_result, project: project, result_date: 1.month.ago, qty_bugs_opened: 10 }
+    let!(:second_result) { Fabricate :project_result, project: project, result_date: 1.month.ago, qty_bugs_opened: 20 }
+    let!(:third_result) { Fabricate :project_result, project: other_project, result_date: Time.zone.today, qty_bugs_opened: 5 }
+    let!(:fourth_result) { Fabricate :project_result, project: other_customer_project, result_date: Time.zone.today, qty_bugs_opened: 50 }
+    let!(:fifth_result) { Fabricate :project_result, project: other_company_project, result_date: Time.zone.today, qty_bugs_opened: 100 }
+
+    it { expect(company.bugs_opened_in_week(1.month.ago.to_date.cweek, 1.month.ago.to_date.cwyear)).to eq 30 }
+  end
+
+  context '#bugs_closed_in_week' do
+    let(:company) { Fabricate :company }
+    let(:customer) { Fabricate :customer, company: company }
+    let(:other_customer) { Fabricate :customer, company: company }
+    let(:other_company_customer) { Fabricate :customer }
+
+    let(:project) { Fabricate :project, customer: customer }
+    let(:other_project) { Fabricate :project, customer: customer }
+    let(:other_customer_project) { Fabricate :project, customer: other_customer }
+    let(:other_company_project) { Fabricate :project, customer: other_company_customer }
+
+    let!(:first_result) { Fabricate :project_result, project: project, result_date: 1.month.ago, qty_bugs_closed: 10 }
+    let!(:second_result) { Fabricate :project_result, project: project, result_date: 1.month.ago, qty_bugs_closed: 20 }
+    let!(:third_result) { Fabricate :project_result, project: other_project, result_date: Time.zone.today, qty_bugs_closed: 5 }
+    let!(:fourth_result) { Fabricate :project_result, project: other_customer_project, result_date: Time.zone.today, qty_bugs_closed: 50 }
+    let!(:fifth_result) { Fabricate :project_result, project: other_company_project, result_date: Time.zone.today, qty_bugs_closed: 100 }
+
+    it { expect(company.bugs_closed_in_week(1.month.ago.to_date.cweek, 1.month.ago.to_date.cwyear)).to eq 30 }
   end
 end
