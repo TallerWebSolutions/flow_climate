@@ -24,11 +24,6 @@ class TeamsController < AuthenticatedController
 
   private
 
-  def assign_company
-    @company = Company.find(params[:company_id])
-    not_found unless current_user.companies.include?(@company)
-  end
-
   def assign_team
     @team = Team.find(params[:id])
   end

@@ -1,19 +1,25 @@
 <div class="list-table">
 
   <div class="row">
-    <div class='col-xs-4 form-group <%= 'has-error' if @project_result.errors[:result_date].present? %>'>
+    <div class='col-xs-5 form-group <%= 'has-error' if @project_result.errors[:result_date].present? %>'>
       <%= f.label :result_date, class: 'control-label' %>
       <%= f.date_field :result_date, class: 'form-control', autofocus: true %>
       <span class="help-block"><%= @project_result.errors[:result_date].join(', ') %></span>
     </div>
 
-    <div class='col-xs-4 form-group <%= 'has-error' if @project_result.errors[:qty_hours_upstream].present? %>'>
+    <div class='col-xs-2 form-group <%= 'has-error' if @project_result.errors[:known_scope].present? %>'>
+      <%= f.label :known_scope, class: 'control-label' %>
+      <%= f.number_field :known_scope, value: @project_result.known_scope, class: 'form-control', step: 1 %>
+      <span class="help-block"><%= @project_result.errors[:known_scope].join(', ') %></span>
+    </div>
+
+    <div class='col-xs-2 form-group <%= 'has-error' if @project_result.errors[:qty_hours_upstream].present? %>'>
       <%= f.label :qty_hours_upstream, class: 'control-label' %>
       <%= f.number_field :qty_hours_upstream, value: @project_result.qty_hours_upstream, class: 'form-control', step: 0.01 %>
       <span class="help-block"><%= @project_result.errors[:qty_hours_upstream].join(', ') %></span>
     </div>
 
-    <div class='col-xs-4 form-group <%= 'has-error' if @project_result.errors[:qty_hours_downstream].present? %>'>
+    <div class='col-xs-2 form-group <%= 'has-error' if @project_result.errors[:qty_hours_downstream].present? %>'>
       <%= f.label :qty_hours_downstream, class: 'control-label' %>
       <%= f.number_field :qty_hours_downstream, value: @project_result.qty_hours_downstream, class: 'form-control', step: 0.01 %>
       <span class="help-block"><%= @project_result.errors[:qty_hours_downstream].join(', ') %></span>

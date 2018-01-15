@@ -1,0 +1,42 @@
+<div class="list-table">
+
+  <div class="row">
+    <div class='col-xs-4 form-group <%= 'has-error' if @team_member.errors[:name].present? %>'>
+      <%= f.label :name, class: 'control-label' %>
+      <%= f.text_field :name, class: 'form-control', autofocus: true %>
+      <span class="help-block"><%= @team_member.errors[:name].join(', ') %></span>
+    </div>
+
+    <div class='col-xs-4 form-group <%= 'has-error' if @team_member.errors[:monthly_payment].present? %>'>
+      <%= f.label :monthly_payment, class: 'control-label' %>
+      <%= f.number_field :monthly_payment, value: @team_member.monthly_payment, class: 'form-control', step: 0.01 %>
+      <span class="help-block"><%= @team_member.errors[:monthly_payment].join(', ') %></span>
+    </div>
+
+    <div class='col-xs-4 form-group <%= 'has-error' if @team_member.errors[:hours_per_month].present? %>'>
+      <%= f.label :hours_per_month, class: 'control-label' %>
+      <%= f.number_field :hours_per_month, value: @team_member.hours_per_month, class: 'form-control', step: 1 %>
+      <span class="help-block"><%= @team_member.errors[:hours_per_month].join(', ') %></span>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class='col-xs-6 form-check botton-spaced-component'>
+      <%= f.check_box :billable, class: 'form-check-input', checked: true %>
+      <%= f.label :billable, class: 'form-check-label' %>
+    </div>
+
+    <div class='col-xs-4 form-group <%= 'has-error' if @team_member.errors[:billable_type].present? %>'>
+      <%= f.label :billable_type, class: 'control-label' %>
+      <%= f.select :billable_type, options_for_select(TeamMember.billable_types.map {|k, _v| [k.humanize.capitalize, k]}), class: 'form-control', include_blank: t('general.select') %>
+      <span class="help-block"><%= @team_member.errors[:billable_type].join(', ') %></span>
+    </div>
+
+  </div>
+
+  <div class="row">
+    <div class="col-xs-12">
+      <%= f.submit class: 'btn btn-success' %>
+    </div>
+  </div>
+</div>

@@ -27,6 +27,7 @@ en:
     current_week: "Current Week"
     current_year: "Current Year"
     current_backlog: "Current Backlog"
+    select: "Select"
   header:
     logout: Logout
     explore: Explore
@@ -62,6 +63,8 @@ en:
   team_members:
     index:
       title: "Team members"
+    new:
+      title: "New Team Member"
   projects:
     index:
       title: "Projects"

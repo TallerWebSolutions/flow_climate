@@ -27,6 +27,7 @@ pt-BR:
     current_week: "Semana Atual"
     current_year: "Ano Atual"
     current_backlog: "Backlog Atual"
+    select: "Selecione"
   header:
     logout: Sair
     sign_up: Cadastre-se
@@ -61,6 +62,8 @@ pt-BR:
   team_members:
     index:
       title: "Membros do Time"
+    new:
+      title: "Novo Membro do Time"
   projects:
     index:
       title: "Projetos"
