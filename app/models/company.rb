@@ -14,25 +14,25 @@ class Company < ApplicationRecord
   has_and_belongs_to_many :users
   has_many :financial_informations, dependent: :restrict_with_error
   has_many :customers, dependent: :restrict_with_error
-  has_many :team_members, dependent: :restrict_with_error
+  has_many :teams, dependent: :restrict_with_error
   has_many :operation_results, dependent: :restrict_with_error
 
   validates :name, presence: true
 
   def outsourcing_cost_per_week
-    team_members.where(billable: true, billable_type: :outsourcing).sum(&:monthly_payment) / 4
+    teams.sum(&:outsourcing_cost_per_week)
   end
 
   def management_cost_per_week
-    team_members.where(billable: false).sum(&:monthly_payment) / 4
+    teams.sum(&:management_cost_per_week)
   end
 
   def outsourcing_members_billable_count
-    team_members.where(billable: true, billable_type: :outsourcing).count
+    teams.sum(&:outsourcing_members_billable_count)
   end
 
   def management_count
-    team_members.where(billable: false).count
+    teams.sum(&:management_count)
   end
 
   def active_projects_count
@@ -60,8 +60,8 @@ class Company < ApplicationRecord
     customers.sum(&:current_backlog)
   end
 
-  def current_monthly_available_hours
-    team_members.where(billable: true, billable_type: :outsourcing).sum(&:hours_per_month)
+  def current_outsourcing_monthly_available_hours
+    teams.sum(&:current_outsourcing_monthly_available_hours)
   end
 
   def consumed_hours_in_week(week, year)

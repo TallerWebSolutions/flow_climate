@@ -16,5 +16,17 @@
   </div>
 
   <%= render 'financial_informations/financial_informations_table' %>
-  <%= render 'team_members/team_members_table' %>
+
+  <h2><%= t('teams.index.title') %></h2>
+  <table class="table">
+    <tr>
+      <th><%= TeamMember.human_attribute_name :name %></th>
+    </tr>
+    <% @teams.each do |team| %>
+      <tr>
+        <td><%= link_to team.name, company_team_path(@company, team) %></td>
+      </tr>
+    <% end %>
+  </table>
+
 </div>

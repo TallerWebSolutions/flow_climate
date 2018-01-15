@@ -75,6 +75,12 @@ pt-BR:
       operation_result:
         one: Resultado da Operação
         other: Resultados da Operação
+      team:
+        one: Time
+        other: Times
+      team_member:
+        one: Membro do Time
+        other: Membros do Time
     attributes:
       user:
         first_name: Nome
@@ -127,3 +133,5 @@ pt-BR:
         total_th: Throughput Total
         total_opened_bugs: Bugs Abertos
         total_accumulated_closed_bugs: Acumulado de Bugs Fechados
+      team:
+        name: Nome

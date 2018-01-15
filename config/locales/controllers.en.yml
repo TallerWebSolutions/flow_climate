@@ -89,3 +89,6 @@ en:
       title: "Operation Results"
     new:
       title: "New Result"
+  teams:
+    index:
+      title: "Teams"

@@ -88,3 +88,6 @@ pt-BR:
       title: "Resultados da Operação"
     new:
       title: "Novo Resultado"
+  teams:
+    index:
+      title: "Times"

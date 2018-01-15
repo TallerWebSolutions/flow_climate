@@ -9,6 +9,7 @@ RSpec.describe Project, type: :model do
   context 'associations' do
     it { is_expected.to belong_to :customer }
     it { is_expected.to have_many :project_results }
+    it { is_expected.to have_and_belong_to_many :teams }
   end
 
   context 'validations' do

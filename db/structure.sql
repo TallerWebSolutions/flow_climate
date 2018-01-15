@@ -270,6 +270,38 @@ ALTER SEQUENCE projects_id_seq OWNED BY projects.id;
 
 
 --
+-- Name: projects_teams; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE projects_teams (
+    id bigint NOT NULL,
+    project_id integer NOT NULL,
+    team_id integer NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: projects_teams_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE projects_teams_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: projects_teams_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE projects_teams_id_seq OWNED BY projects_teams.id;
+
+
+--
 -- Name: schema_migrations; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -284,7 +316,6 @@ CREATE TABLE schema_migrations (
 
 CREATE TABLE team_members (
     id bigint NOT NULL,
-    company_id integer NOT NULL,
     name character varying NOT NULL,
     monthly_payment numeric NOT NULL,
     hours_per_month integer NOT NULL,
@@ -292,7 +323,8 @@ CREATE TABLE team_members (
     billable boolean DEFAULT true,
     billable_type integer DEFAULT 0,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    team_id integer NOT NULL
 );
 
 
@@ -313,6 +345,38 @@ CREATE SEQUENCE team_members_id_seq
 --
 
 ALTER SEQUENCE team_members_id_seq OWNED BY team_members.id;
+
+
+--
+-- Name: teams; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE teams (
+    id bigint NOT NULL,
+    company_id integer NOT NULL,
+    name character varying NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: teams_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE teams_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: teams_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE teams_id_seq OWNED BY teams.id;
 
 
 --
@@ -403,10 +467,24 @@ ALTER TABLE ONLY projects ALTER COLUMN id SET DEFAULT nextval('projects_id_seq':
 
 
 --
+-- Name: projects_teams id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY projects_teams ALTER COLUMN id SET DEFAULT nextval('projects_teams_id_seq'::regclass);
+
+
+--
 -- Name: team_members id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY team_members ALTER COLUMN id SET DEFAULT nextval('team_members_id_seq'::regclass);
+
+
+--
+-- Name: teams id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY teams ALTER COLUMN id SET DEFAULT nextval('teams_id_seq'::regclass);
 
 
 --
@@ -473,6 +551,14 @@ ALTER TABLE ONLY projects
 
 
 --
+-- Name: projects_teams projects_teams_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY projects_teams
+    ADD CONSTRAINT projects_teams_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: schema_migrations schema_migrations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -486,6 +572,14 @@ ALTER TABLE ONLY schema_migrations
 
 ALTER TABLE ONLY team_members
     ADD CONSTRAINT team_members_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: teams teams_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY teams
+    ADD CONSTRAINT teams_pkey PRIMARY KEY (id);
 
 
 --
@@ -539,10 +633,24 @@ CREATE INDEX index_projects_on_customer_id ON projects USING btree (customer_id)
 
 
 --
--- Name: index_team_members_on_company_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_projects_teams_on_project_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_team_members_on_company_id ON team_members USING btree (company_id);
+CREATE INDEX index_projects_teams_on_project_id ON projects_teams USING btree (project_id);
+
+
+--
+-- Name: index_projects_teams_on_team_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_projects_teams_on_team_id ON projects_teams USING btree (team_id);
+
+
+--
+-- Name: index_teams_on_company_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_teams_on_company_id ON teams USING btree (company_id);
 
 
 --
@@ -560,6 +668,14 @@ CREATE UNIQUE INDEX index_users_on_reset_password_token ON users USING btree (re
 
 
 --
+-- Name: team_members fk_rails_194b5b076d; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY team_members
+    ADD CONSTRAINT fk_rails_194b5b076d FOREIGN KEY (team_id) REFERENCES teams(id);
+
+
+--
 -- Name: companies_users fk_rails_27539b2fc9; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -568,11 +684,11 @@ ALTER TABLE ONLY companies_users
 
 
 --
--- Name: team_members fk_rails_3ec60e399b; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: projects_teams fk_rails_3bd810646f; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY team_members
-    ADD CONSTRAINT fk_rails_3ec60e399b FOREIGN KEY (company_id) REFERENCES companies(id);
+ALTER TABLE ONLY projects_teams
+    ADD CONSTRAINT fk_rails_3bd810646f FOREIGN KEY (project_id) REFERENCES projects(id);
 
 
 --
@@ -600,6 +716,14 @@ ALTER TABLE ONLY companies_users
 
 
 --
+-- Name: projects_teams fk_rails_8deec0569d; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY projects_teams
+    ADD CONSTRAINT fk_rails_8deec0569d FOREIGN KEY (team_id) REFERENCES projects(id);
+
+
+--
 -- Name: users fk_rails_971bf2d9a1; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -621,6 +745,14 @@ ALTER TABLE ONLY project_results
 
 ALTER TABLE ONLY operation_results
     ADD CONSTRAINT fk_rails_dbd0ae3c1c FOREIGN KEY (company_id) REFERENCES companies(id);
+
+
+--
+-- Name: teams fk_rails_e080df8a94; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY teams
+    ADD CONSTRAINT fk_rails_e080df8a94 FOREIGN KEY (company_id) REFERENCES companies(id);
 
 
 --
@@ -648,6 +780,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20180112010152'),
 ('20180112161621'),
 ('20180112182233'),
-('20180113231517');
+('20180113231517'),
+('20180115152551');
 
 

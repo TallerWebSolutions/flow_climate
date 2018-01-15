@@ -32,7 +32,9 @@ class Project < ApplicationRecord
   enum project_type: { outsourcing: 0, consulting: 1, training: 2 }
 
   belongs_to :customer
+  belongs_to :team
   has_many :project_results, dependent: :restrict_with_error
+  has_and_belongs_to_many :teams
 
   validates :name, :start_date, :end_date, :status, :initial_scope, presence: true
 

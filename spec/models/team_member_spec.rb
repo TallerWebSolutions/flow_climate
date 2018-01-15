@@ -6,10 +6,11 @@ RSpec.describe TeamMember, type: :model do
   end
 
   context 'associations' do
-    it { is_expected.to belong_to :company }
+    it { is_expected.to belong_to :team }
   end
 
   context 'validations' do
+    it { is_expected.to validate_presence_of :team }
     it { is_expected.to validate_presence_of :name }
     it { is_expected.to validate_presence_of :monthly_payment }
     it { is_expected.to validate_presence_of :hours_per_month }

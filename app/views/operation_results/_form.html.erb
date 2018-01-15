@@ -23,7 +23,7 @@
   <div class="row">
     <div class='col-xs-4 form-group <%= 'has-error' if @operation_result.errors[:available_hours].present? %>'>
       <%= f.label :available_hours, class: 'control-label' %>
-      <%= f.number_field :available_hours, value: @operation_result.available_hours || (@company.current_monthly_available_hours / 4), class: 'form-control', step: 1 %>
+      <%= f.number_field :available_hours, value: @operation_result.available_hours || (@company.current_outsourcing_monthly_available_hours / 4), class: 'form-control', step: 1 %>
       <span class="help-block"><%= @operation_result.errors[:available_hours].join(', ') %></span>
     </div>
 
