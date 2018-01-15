@@ -121,21 +121,28 @@ RSpec.describe Company, type: :model do
   end
 
   context '#last_cost_per_hour' do
-    let(:company) { Fabricate :company }
-    let(:finance) { Fabricate :financial_information, company: company, finances_date: 1.month.ago }
-    let(:other_finance) { Fabricate :financial_information, company: company, finances_date: 2.months.from_now }
+    context 'having finances' do
+      let(:company) { Fabricate :company }
+      let(:finance) { Fabricate :financial_information, company: company, finances_date: 1.month.ago }
+      let(:other_finance) { Fabricate :financial_information, company: company, finances_date: 2.months.from_now }
 
-    let(:customer) { Fabricate :customer, company: company }
+      let(:customer) { Fabricate :customer, company: company }
 
-    let(:first_project) { Fabricate :project, customer: customer, status: :executing, qty_hours: 1000, value: 100_000, hour_value: 100, start_date: 1.day.ago, end_date: 1.month.from_now }
-    let!(:second_project) { Fabricate :project, customer: customer, status: :executing, qty_hours: 1000, value: 100_000, hour_value: 100, start_date: 1.day.ago, end_date: 1.month.from_now }
-    let!(:third_project) { Fabricate :project, customer: customer, status: :executing, qty_hours: 1000, value: 100_000, hour_value: 100, start_date: 1.day.ago, end_date: 1.month.from_now }
-    let!(:first_result) { Fabricate :project_result, project: first_project, qty_hours_downstream: 400, result_date: finance.finances_date }
-    let!(:second_result) { Fabricate :project_result, project: first_project, qty_hours_downstream: 300, result_date: finance.finances_date }
-    let!(:third_result) { Fabricate :project_result, project: second_project, qty_hours_downstream: 400, result_date: other_finance.finances_date }
-    let!(:fourth_result) { Fabricate :project_result, project: second_project, qty_hours_downstream: 300, result_date: other_finance.finances_date }
+      let(:first_project) { Fabricate :project, customer: customer, status: :executing, qty_hours: 1000, value: 100_000, hour_value: 100, start_date: 1.day.ago, end_date: 1.month.from_now }
+      let!(:second_project) { Fabricate :project, customer: customer, status: :executing, qty_hours: 1000, value: 100_000, hour_value: 100, start_date: 1.day.ago, end_date: 1.month.from_now }
+      let!(:third_project) { Fabricate :project, customer: customer, status: :executing, qty_hours: 1000, value: 100_000, hour_value: 100, start_date: 1.day.ago, end_date: 1.month.from_now }
+      let!(:first_result) { Fabricate :project_result, project: first_project, qty_hours_downstream: 400, result_date: finance.finances_date }
+      let!(:second_result) { Fabricate :project_result, project: first_project, qty_hours_downstream: 300, result_date: finance.finances_date }
+      let!(:third_result) { Fabricate :project_result, project: second_project, qty_hours_downstream: 400, result_date: other_finance.finances_date }
+      let!(:fourth_result) { Fabricate :project_result, project: second_project, qty_hours_downstream: 300, result_date: other_finance.finances_date }
 
-    it { expect(company.last_cost_per_hour).to eq other_finance.cost_per_hour }
+      it { expect(company.last_cost_per_hour).to eq other_finance.cost_per_hour }
+    end
+
+    context 'having no finances' do
+      let(:company) { Fabricate :company }
+      it { expect(company.last_cost_per_hour).to eq nil }
+    end
   end
 
   describe '#current_backlog' do

@@ -92,3 +92,5 @@ en:
   teams:
     index:
       title: "Teams"
+    new:
+      title: "New Team"

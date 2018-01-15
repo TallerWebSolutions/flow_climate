@@ -53,7 +53,7 @@ class Company < ApplicationRecord
 
   def last_cost_per_hour
     finance = financial_informations.order(finances_date: :desc).first
-    finance.cost_per_hour
+    finance&.cost_per_hour
   end
 
   def current_backlog

@@ -91,3 +91,5 @@ pt-BR:
   teams:
     index:
       title: "Times"
+    new:
+      title: "Novo Time"

@@ -18,9 +18,11 @@
   <%= render 'financial_informations/financial_informations_table' %>
 
   <h2><%= t('teams.index.title') %></h2>
+  <%= link_to t('teams.new.title'), new_company_team_path(@company), class: 'btn btn-sm btn-primary botton-spaced-component' %>
+
   <table class="table">
     <tr>
-      <th><%= TeamMember.human_attribute_name :name %></th>
+      <th><%= Team.human_attribute_name :name %></th>
     </tr>
     <% @teams.each do |team| %>
       <tr>
