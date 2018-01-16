@@ -47,7 +47,8 @@ CREATE TABLE companies (
     id bigint NOT NULL,
     name character varying NOT NULL,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    abbreviation character varying NOT NULL
 );
 
 
@@ -781,6 +782,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20180112161621'),
 ('20180112182233'),
 ('20180113231517'),
-('20180115152551');
+('20180115152551'),
+('20180116022142');
 
 

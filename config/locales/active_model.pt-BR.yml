@@ -91,6 +91,7 @@ pt-BR:
         remember_me: Lembrar
       company:
         name: Nome
+        abbreviation: Sigla
       financial_information:
         finances_date: Data das Finanças
         income_total: Receitas totais
@@ -102,6 +103,11 @@ pt-BR:
         billable: Faturável?
         billable_type: Tipo do Faturamento
         active: Ativo?
+        enums:
+          billable_type:
+            outsourcing: Outsourcing
+            consulting: Consultoria
+            training: Treinamento
       project:
         qty_hours: Qtd de Horas
         value: Valor do Projeto
@@ -112,6 +118,17 @@ pt-BR:
         status: Status
         name: Nome
         customer_name: Cliente
+        initial_scope: Escopo inicial
+        enums:
+          status:
+            waiting: Aguardando Início
+            executing: Executando
+            finished: Finalizado
+            cancelled: Cancelado
+          project_type:
+            outsourcing: Outsourcing
+            consulting: Consultoria
+            training: Treinamento
       project_result:
         result_date: Data
         qty_hours_upstream: Horas no Upstream

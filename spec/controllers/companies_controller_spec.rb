@@ -77,9 +77,10 @@ RSpec.describe CompaniesController, type: :controller do
 
     describe 'POST #create' do
       context 'passing valid parameters' do
-        before { post :create, params: { company: { name: 'foo' } } }
+        before { post :create, params: { company: { name: 'foo', abbreviation: 'bar' } } }
         it 'creates the new company and redirects to its show' do
           expect(Company.last.name).to eq 'foo'
+          expect(Company.last.abbreviation).to eq 'bar'
           expect(Company.last.users).to eq [user]
           expect(response).to redirect_to company_path(Company.last)
         end
@@ -89,7 +90,7 @@ RSpec.describe CompaniesController, type: :controller do
         it 'does not create the company and re-render the template with the errors' do
           expect(Company.last).to be_nil
           expect(response).to render_template :new
-          expect(assigns(:company).errors.full_messages).to eq ['Nome não pode ficar em branco']
+          expect(assigns(:company).errors.full_messages).to eq ['Nome não pode ficar em branco', 'Sigla não pode ficar em branco']
         end
       end
     end

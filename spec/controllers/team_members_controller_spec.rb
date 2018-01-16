@@ -56,7 +56,7 @@ RSpec.describe TeamMembersController, type: :controller do
       end
       context 'passing invalid parameters' do
         before { post :create, params: { company_id: company, team_id: team, team_member: { name: '' } } }
-        it 'does not create the company and re-render the template with the errors' do
+        it 'does not create the team member and re-render the template with the errors' do
           expect(TeamMember.last).to be_nil
           expect(response).to render_template :new
           expect(assigns(:team_member).errors.full_messages).to eq ['Nome não pode ficar em branco', 'Pagamento mensal não pode ficar em branco', 'Horas por mês não pode ficar em branco']

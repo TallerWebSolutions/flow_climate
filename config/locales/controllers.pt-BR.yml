@@ -96,3 +96,6 @@ pt-BR:
       title: "Times"
     new:
       title: "Novo Time"
+  project:
+    new:
+      title: "Novo Projeto"

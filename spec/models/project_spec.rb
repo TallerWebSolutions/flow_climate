@@ -13,7 +13,10 @@ RSpec.describe Project, type: :model do
   end
 
   context 'validations' do
+    it { is_expected.to validate_presence_of :customer }
+    it { is_expected.to validate_presence_of :project_type }
     it { is_expected.to validate_presence_of :name }
+    it { is_expected.to validate_presence_of :status }
     it { is_expected.to validate_presence_of :start_date }
     it { is_expected.to validate_presence_of :end_date }
     it { is_expected.to validate_presence_of :status }

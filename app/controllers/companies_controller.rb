@@ -31,6 +31,6 @@ class CompaniesController < AuthenticatedController
   end
 
   def company_params
-    params.require(:company).permit(:name)
+    params.require(:company).permit(:name, :abbreviation)
   end
 end

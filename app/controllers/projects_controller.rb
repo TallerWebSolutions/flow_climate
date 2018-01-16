@@ -2,7 +2,7 @@
 
 class ProjectsController < AuthenticatedController
   before_action :assign_company
-  before_action :assign_project, except: [:index]
+  before_action :assign_project, only: [:show]
 
   def show
     @project_results = @project.project_results.order(:result_date)
@@ -26,7 +26,22 @@ class ProjectsController < AuthenticatedController
     @total_remaining_days = @projects.sum(&:remaining_days)
   end
 
+  def new
+    @project = Project.new
+  end
+
+  def create
+    customer = Customer.find_by(id: project_params[:customer])
+    @project = Project.new(project_params.merge(customer: customer))
+    return redirect_to company_projects_path(@company) if @project.save
+    render :new
+  end
+
   private
+
+  def project_params
+    params.require(:project).permit(:customer, :name, :status, :project_type, :start_date, :end_date, :value, :qty_hours, :hour_value, :initial_scope)
+  end
 
   def mount_projects_list
     @projects = Project.joins(:customer).where('customers.company_id = ?', @company.id)

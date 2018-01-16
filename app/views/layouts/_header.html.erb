@@ -3,7 +3,9 @@
     <div class="col-xs-12 header">
       <% if user_signed_in? %>
         <%= "#{current_user&.first_name}" %>
-        <%= " | #{Company.find(current_user.last_company_id).name}" if current_user.last_company_id.present? %>
+        <% current_user.companies.each do |company| %>
+          <%= " | #{company.abbreviation}" %>
+        <% end %>
         <div class="pull-right">
           <%= link_to :destroy_user_session, method: :delete do %>
             <i class="fa fa-sign-out fa-2x" aria-hidden="true"></i>

@@ -97,3 +97,6 @@ en:
       title: "Teams"
     new:
       title: "New Team"
+  project:
+    new:
+      title: "New Project"

@@ -11,6 +11,7 @@ RSpec.describe Company, type: :model do
 
   context 'validations' do
     it { is_expected.to validate_presence_of :name }
+    it { is_expected.to validate_presence_of :abbreviation }
   end
 
   context '#outsourcing_cost_per_week' do

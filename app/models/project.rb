@@ -36,7 +36,7 @@ class Project < ApplicationRecord
   has_many :project_results, dependent: :restrict_with_error
   has_and_belongs_to_many :teams
 
-  validates :name, :start_date, :end_date, :status, :initial_scope, presence: true
+  validates :customer, :project_type, :name, :status, :start_date, :end_date, :status, :initial_scope, presence: true
 
   delegate :name, to: :customer, prefix: true
 
