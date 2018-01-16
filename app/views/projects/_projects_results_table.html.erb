@@ -38,9 +38,9 @@
       <td><%= number_with_precision(result.qty_bugs_opened, precision: 0) %></td>
       <td><%= number_with_precision(result.qty_bugs_closed, precision: 0) %></td>
       <td><%= number_with_precision(result.qty_hours_bug, precision: 0) %></td>
-      <td><%= number_with_precision(result.leadtime, precision: 0) %></td>
-      <td><%= number_with_precision(result.histogram_first_mode, precision: 0) %></td>
-      <td><%= number_with_precision(result.histogram_second_mode, precision: 0) %></td>
+      <td><%= number_with_precision(result.leadtime, precision: 4) %></td>
+      <td><%= number_with_precision(result.histogram_first_mode, precision: 4) %></td>
+      <td><%= number_with_precision(result.histogram_second_mode, precision: 4) %></td>
       <td>
         <%= link_to company_project_project_result_path(@company, @project, result), method: :delete do %>
           <i class="fa fa-times" aria-hidden="true"></i>
@@ -62,7 +62,7 @@
     <td><%= number_with_precision(@total_bugs_opened, precision: 0) %></td>
     <td><%= number_with_precision(@total_bugs_closed, precision: 0) %></td>
     <td><%= number_with_precision(@total_hours_bug, precision: 0) %></td>
-    <td><%= number_with_precision(@avg_leadtime, precision: 0) %></td>
+    <td><%= number_with_precision(@avg_leadtime, precision: 4) %></td>
     <td></td>
     <td></td>
     <td></td>
