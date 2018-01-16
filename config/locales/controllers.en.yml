@@ -102,3 +102,5 @@ en:
       title: "New Project"
     edit:
       title: "Edit Project"
+    validations:
+      no_value: "Value or Hour value is mandatory"

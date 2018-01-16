@@ -17,6 +17,7 @@
     <th><%= t('projects.index.total_days') %></th>
     <th><%= t('projects.index.total_remaining_days') %></th>
     <th><%= t('projects.index.percentage_remaining_days') %></th>
+    <th><%= t('general.table.actions') %></th>
   </tr>
   </thead>
   <tbody>
@@ -38,6 +39,11 @@
       <td><%= project.total_days %></td>
       <td><%= project.remaining_days %></td>
       <td><%= number_to_percentage((project.remaining_days.to_f / project.total_days.to_f) * 100, precision: 2) if project.total_days > 0 && project.start_date <= Time.zone.today %></td>
+      <td>
+        <%= link_to company_project_path(@company, project) do %>
+          <i class="fa fa-pencil"></i>
+        <% end %>
+      </td>
     </tr>
   <% end %>
   </tbody>

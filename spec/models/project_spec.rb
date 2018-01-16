@@ -13,14 +13,36 @@ RSpec.describe Project, type: :model do
   end
 
   context 'validations' do
-    it { is_expected.to validate_presence_of :customer }
-    it { is_expected.to validate_presence_of :project_type }
-    it { is_expected.to validate_presence_of :name }
-    it { is_expected.to validate_presence_of :status }
-    it { is_expected.to validate_presence_of :start_date }
-    it { is_expected.to validate_presence_of :end_date }
-    it { is_expected.to validate_presence_of :status }
-    it { is_expected.to validate_presence_of :initial_scope }
+    context 'simple ones' do
+      it { is_expected.to validate_presence_of :customer }
+      it { is_expected.to validate_presence_of :project_type }
+      it { is_expected.to validate_presence_of :name }
+      it { is_expected.to validate_presence_of :status }
+      it { is_expected.to validate_presence_of :start_date }
+      it { is_expected.to validate_presence_of :end_date }
+      it { is_expected.to validate_presence_of :status }
+      it { is_expected.to validate_presence_of :initial_scope }
+      it { is_expected.to validate_presence_of :qty_hours }
+    end
+    context 'complex ones' do
+      context 'values' do
+        context 'with both value and hour value null' do
+          let(:project) { Fabricate.build :project, value: nil, hour_value: nil }
+          it 'fails the validation' do
+            expect(project.valid?).to be false
+            expect(project.errors.full_messages).to eq ['Valor do Projeto Valor ou Valor da hora é obrigatório', 'Valor da Hora Valor ou Valor da hora é obrigatório']
+          end
+        end
+        context 'with both value and hour value null' do
+          let(:project) { Fabricate.build :project, value: 10, hour_value: nil }
+          it { expect(project.valid?).to be true }
+        end
+        context 'with both value and hour value null' do
+          let(:project) { Fabricate.build :project, value: nil, hour_value: 10 }
+          it { expect(project.valid?).to be true }
+        end
+      end
+    end
   end
 
   context 'delegations' do
@@ -55,10 +77,18 @@ RSpec.describe Project, type: :model do
   end
 
   describe '#remaining_money' do
-    let(:project) { Fabricate :project, qty_hours: 1000, value: 100_000, hour_value: 100 }
-    let!(:result) { Fabricate :project_result, project: project, qty_hours_downstream: 10 }
-    let!(:other_result) { Fabricate :project_result, project: project, qty_hours_downstream: 20 }
-    it { expect(project.remaining_money.to_f).to eq 97_000 }
+    context 'having hour_value' do
+      let(:project) { Fabricate :project, qty_hours: 1000, value: 100_000, hour_value: 100 }
+      let!(:result) { Fabricate :project_result, project: project, qty_hours_downstream: 10 }
+      let!(:other_result) { Fabricate :project_result, project: project, qty_hours_downstream: 20 }
+      it { expect(project.remaining_money.to_f).to eq 97_000 }
+    end
+    context 'having no hour_value' do
+      let(:project) { Fabricate :project, qty_hours: 1000, value: 100_000, hour_value: nil }
+      let!(:result) { Fabricate :project_result, project: project, qty_hours_downstream: 10 }
+      let!(:other_result) { Fabricate :project_result, project: project, qty_hours_downstream: 20 }
+      it { expect(project.remaining_money.to_f).to eq 97_000 }
+    end
   end
 
   describe '#red?' do

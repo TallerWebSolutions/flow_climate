@@ -4,7 +4,7 @@
       <% if user_signed_in? %>
         <%= "#{current_user&.first_name}" %>
         <% current_user.companies.each do |company| %>
-          <%= " | #{company.abbreviation}" %>
+          | <%= link_to company.abbreviation&.upcase, company_path(company) %>
         <% end %>
         <div class="pull-right">
           <%= link_to :destroy_user_session, method: :delete do %>

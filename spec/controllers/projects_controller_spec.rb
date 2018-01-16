@@ -71,30 +71,32 @@ RSpec.describe ProjectsController, type: :controller do
     end
 
     describe 'GET #index' do
-      context 'not passing status filter' do
-        let(:customer) { Fabricate :customer, company: company }
-        let!(:project) { Fabricate :project, customer: customer, end_date: 2.days.from_now }
-        let!(:other_project) { Fabricate :project, customer: customer, end_date: 5.days.from_now }
-        let!(:other_company_project) { Fabricate :project, end_date: 2.days.from_now }
-        before { get :index, params: { company_id: company } }
-        it 'assigns the instance variable and renders the template' do
-          expect(response).to render_template :index
-          projects = assigns(:projects)
-          expect(projects).to eq [other_project, project]
-          expect(assigns(:total_hours)).to eq projects.sum(&:qty_hours)
-          expect(assigns(:average_hour_value)).to eq projects.average(:hour_value)
-          expect(assigns(:total_value)).to eq projects.sum(:value)
+      context 'having projects' do
+        context 'not passing status filter' do
+          let(:customer) { Fabricate :customer, company: company }
+          let!(:project) { Fabricate :project, customer: customer, end_date: 2.days.from_now }
+          let!(:other_project) { Fabricate :project, customer: customer, end_date: 5.days.from_now }
+          let!(:other_company_project) { Fabricate :project, end_date: 2.days.from_now }
+          before { get :index, params: { company_id: company } }
+          it 'assigns the instance variable and renders the template' do
+            expect(response).to render_template :index
+            projects = assigns(:projects)
+            expect(projects).to eq [other_project, project]
+            expect(assigns(:total_hours)).to eq projects.sum(&:qty_hours)
+            expect(assigns(:average_hour_value)).to eq projects.average(:hour_value)
+            expect(assigns(:total_value)).to eq projects.sum(:value)
+          end
         end
-      end
-      context 'passing status filter' do
-        let(:customer) { Fabricate :customer, company: company }
-        let!(:project) { Fabricate :project, customer: customer, status: :executing }
-        let!(:other_project) { Fabricate :project, customer: customer, status: :waiting }
-        let!(:other_company_project) { Fabricate :project, status: :executing }
-        before { get :index, params: { company_id: company, status_filter: :executing } }
-        it 'assigns the instance variable and renders the template' do
-          expect(response).to render_template :index
-          expect(assigns(:projects)).to eq [project]
+        context 'passing status filter' do
+          let(:customer) { Fabricate :customer, company: company }
+          let!(:project) { Fabricate :project, customer: customer, status: :executing }
+          let!(:other_project) { Fabricate :project, customer: customer, status: :waiting }
+          let!(:other_company_project) { Fabricate :project, status: :executing }
+          before { get :index, params: { company_id: company, status_filter: :executing } }
+          it 'assigns the instance variable and renders the template' do
+            expect(response).to render_template :index
+            expect(assigns(:projects)).to eq [project]
+          end
         end
       end
     end
@@ -146,7 +148,7 @@ RSpec.describe ProjectsController, type: :controller do
           it 'does not create the project and re-render the template with the errors' do
             expect(Project.last).to be_nil
             expect(response).to render_template :new
-            expect(assigns(:project).errors.full_messages).to eq ['Tipo do Projeto não pode ficar em branco', 'Nome não pode ficar em branco', 'Status não pode ficar em branco', 'Data de Início não pode ficar em branco', 'Data Final não pode ficar em branco', 'Escopo inicial não pode ficar em branco']
+            expect(assigns(:project).errors.full_messages).to eq ['Qtd de Horas não pode ficar em branco', 'Tipo do Projeto não pode ficar em branco', 'Nome não pode ficar em branco', 'Status não pode ficar em branco', 'Data de Início não pode ficar em branco', 'Data Final não pode ficar em branco', 'Escopo inicial não pode ficar em branco', 'Valor do Projeto Valor ou Valor da hora é obrigatório', 'Valor da Hora Valor ou Valor da hora é obrigatório']
           end
         end
         context 'unpermitted company' do
@@ -217,7 +219,7 @@ RSpec.describe ProjectsController, type: :controller do
           before { put :update, params: { company_id: company, id: project, project: { customer: customer.id, name: '', status: nil, project_type: nil, start_date: nil, end_date: nil, value: nil, qty_hours: nil, hour_value: nil, initial_scope: nil } } }
           it 'does not create the project and re-render the template with the errors' do
             expect(response).to render_template :edit
-            expect(assigns(:project).errors.full_messages).to eq ['Tipo do Projeto não pode ficar em branco', 'Nome não pode ficar em branco', 'Status não pode ficar em branco', 'Data de Início não pode ficar em branco', 'Data Final não pode ficar em branco', 'Escopo inicial não pode ficar em branco']
+            expect(assigns(:project).errors.full_messages).to eq ['Qtd de Horas não pode ficar em branco', 'Tipo do Projeto não pode ficar em branco', 'Nome não pode ficar em branco', 'Status não pode ficar em branco', 'Data de Início não pode ficar em branco', 'Data Final não pode ficar em branco', 'Escopo inicial não pode ficar em branco', 'Valor do Projeto Valor ou Valor da hora é obrigatório', 'Valor da Hora Valor ou Valor da hora é obrigatório']
           end
         end
         context 'non-existent project' do
