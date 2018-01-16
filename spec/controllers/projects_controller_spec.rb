@@ -37,8 +37,8 @@ RSpec.describe ProjectsController, type: :controller do
     describe 'GET #show' do
       let(:customer) { Fabricate :customer, company: company, name: 'zzz' }
       let!(:first_project) { Fabricate :project, customer: customer, end_date: 5.days.from_now }
-      let!(:first_result) { Fabricate :project_result, project: first_project, result_date: 1.day.ago }
-      let!(:second_result) { Fabricate :project_result, project: first_project, result_date: 2.days.ago }
+      let!(:first_result) { Fabricate :project_result, project: first_project, result_date: 2.days.ago }
+      let!(:second_result) { Fabricate :project_result, project: first_project, result_date: 1.day.ago }
 
       context 'passing valid IDs' do
         before { get :show, params: { company_id: company, customer_id: customer, id: first_project } }

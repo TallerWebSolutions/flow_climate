@@ -5,7 +5,7 @@ class ProjectsController < AuthenticatedController
   before_action :assign_project, only: %i[show edit update]
 
   def show
-    @project_results = @project.project_results.order(:result_date)
+    @project_results = @project.project_results.order(result_date: :desc)
     @total_hours_upstream = @project_results.sum(&:qty_hours_upstream)
     @total_hours_downstream = @project_results.sum(&:qty_hours_downstream)
     @total_hours = @project_results.sum(&:project_delivered_hours)
