@@ -99,3 +99,5 @@ pt-BR:
   project:
     new:
       title: "Novo Projeto"
+    edit:
+      title: "Editar Projeto"

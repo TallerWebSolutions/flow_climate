@@ -41,24 +41,26 @@
     </tr>
   <% end %>
   </tbody>
-  <tfoot>
-  <tr>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td><%= number_with_precision(@total_hours, precision: 2) %></td>
-    <td><%= number_with_precision(@total_consumed_hours, precision: 2) %></td>
-    <td><%= number_to_percentage((@total_consumed_hours/@total_hours) * 100, precision: 2) %></td>
-    <td><%= number_to_currency(@average_hour_value) %></td>
-    <td><%= number_to_currency(@total_value) %></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td><%= @total_days %></td>
-    <td><%= @total_remaining_days %></td>
-    <td></td>
-  </tr>
-  </tfoot>
+  <% unless projects_list.empty? %>
+    <tfoot>
+    <tr>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td><%= number_with_precision(@total_hours, precision: 2) %></td>
+      <td><%= number_with_precision(@total_consumed_hours, precision: 2) %></td>
+      <td><%= number_to_percentage((@total_consumed_hours/@total_hours) * 100, precision: 2) %></td>
+      <td><%= number_to_currency(@average_hour_value) %></td>
+      <td><%= number_to_currency(@total_value) %></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td><%= @total_days %></td>
+      <td><%= @total_remaining_days %></td>
+      <td></td>
+    </tr>
+    </tfoot>
+  <% end %>
 </table>

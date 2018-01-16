@@ -2,7 +2,7 @@
 
 class ProjectsController < AuthenticatedController
   before_action :assign_company
-  before_action :assign_project, only: [:show]
+  before_action :assign_project, only: %i[show edit update]
 
   def show
     @project_results = @project.project_results.order(:result_date)
@@ -35,6 +35,15 @@ class ProjectsController < AuthenticatedController
     @project = Project.new(project_params.merge(customer: customer))
     return redirect_to company_projects_path(@company) if @project.save
     render :new
+  end
+
+  def edit; end
+
+  def update
+    customer = Customer.find_by(id: project_params[:customer])
+    @project.update(project_params.merge(customer: customer))
+    return redirect_to company_projects_path(@company) if @project.save
+    render :edit
   end
 
   private

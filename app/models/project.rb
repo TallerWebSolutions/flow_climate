@@ -34,7 +34,7 @@ class Project < ApplicationRecord
   belongs_to :customer
   belongs_to :team
   has_many :project_results, dependent: :restrict_with_error
-  has_and_belongs_to_many :teams
+  has_and_belongs_to_many :teams, dependent: :destroy
 
   validates :customer, :project_type, :name, :status, :start_date, :end_date, :status, :initial_scope, presence: true
 
