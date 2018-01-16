@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 Fabricator(:project_result) do
+  team
   project
   result_date Time.zone.today
   known_scope { Faker::Number.decimal(0) }

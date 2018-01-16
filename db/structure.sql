@@ -207,7 +207,8 @@ CREATE TABLE project_results (
     histogram_first_mode numeric,
     histogram_second_mode numeric,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    team_id integer NOT NULL
 );
 
 
@@ -733,6 +734,14 @@ ALTER TABLE ONLY users
 
 
 --
+-- Name: project_results fk_rails_b11de7d28e; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY project_results
+    ADD CONSTRAINT fk_rails_b11de7d28e FOREIGN KEY (team_id) REFERENCES teams(id);
+
+
+--
 -- Name: project_results fk_rails_c3c9938173; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -783,6 +792,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20180112182233'),
 ('20180113231517'),
 ('20180115152551'),
-('20180116022142');
+('20180116022142'),
+('20180116205144');
 
 

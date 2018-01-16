@@ -19,6 +19,7 @@
 #  histogram_second_mode :decimal(, )
 #  created_at            :datetime         not null
 #  updated_at            :datetime         not null
+#  team_id               :integer          not null
 #
 # Indexes
 #
@@ -27,12 +28,14 @@
 # Foreign Keys
 #
 #  fk_rails_...  (project_id => projects.id)
+#  fk_rails_...  (team_id => teams.id)
 #
 
 class ProjectResult < ApplicationRecord
+  belongs_to :team
   belongs_to :project
 
-  validates :known_scope, :qty_hours_upstream, :qty_hours_downstream, :qty_hours_bug, :qty_bugs_closed, :qty_bugs_opened, :throughput, :result_date, presence: true
+  validates :project, :team, :known_scope, :qty_hours_upstream, :qty_hours_downstream, :qty_hours_bug, :qty_bugs_closed, :qty_bugs_opened, :throughput, :result_date, presence: true
 
   def project_delivered_hours
     qty_hours_upstream + qty_hours_downstream

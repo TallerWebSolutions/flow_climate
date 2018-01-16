@@ -133,6 +133,7 @@ pt-BR:
             consulting: Consultoria
             training: Treinamento
       project_result:
+        team: Time
         known_scope: Escopo Conhecido
         result_date: Data
         qty_hours_upstream: Horas no Upstream

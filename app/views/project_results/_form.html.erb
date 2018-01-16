@@ -1,7 +1,13 @@
 <div class="list-table">
 
   <div class="row">
-    <div class='col-xs-5 form-group <%= 'has-error' if @project_result.errors[:result_date].present? %>'>
+      <div class='col-xs-4 form-group <%= 'has-error' if @project_result.errors[:team].present? %>'>
+        <%= f.label :team, class: 'control-label' %>
+        <%= f.select :team, @company.teams.map { |t| [t.name, t.id] }, { include_blank: t('general.select'), selected: @project_result.team_id }, class: 'form-control' %>
+        <span class="help-block"><%= @project_result.errors[:team].join(', ') %></span>
+      </div>
+
+    <div class='col-xs-2 form-group <%= 'has-error' if @project_result.errors[:result_date].present? %>'>
       <%= f.label :result_date, class: 'control-label' %>
       <%= f.date_field :result_date, class: 'form-control', autofocus: true %>
       <span class="help-block"><%= @project_result.errors[:result_date].join(', ') %></span>
