@@ -25,8 +25,8 @@
     <tr class="<%= 'red-project' if project.red? %>">
       <td><%= project.customer_name %></td>
       <td><%= link_to project.name, company_project_path(@company, project) %></td>
-      <td><%= project.status.capitalize %></td>
-      <td><%= project.project_type.capitalize %></td>
+      <td><%= t("activerecord.attributes.project.enums.status.#{project.status}") %></td>
+      <td><%= t("activerecord.attributes.project.enums.project_type.#{project.project_type}") %></td>
       <td><%= number_with_precision(project.qty_hours, precision: 2) %></td>
       <td><%= number_with_precision(project.consumed_hours, precision: 2) %></td>
       <td><%= number_to_percentage((project.consumed_hours/project.qty_hours) * 100, precision: 2) %></td>
