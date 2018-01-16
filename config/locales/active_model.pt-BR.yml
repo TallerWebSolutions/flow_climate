@@ -110,6 +110,7 @@ pt-BR:
             training: Treinamento
       project:
         customer: Cliente
+        name: Nome
         qty_hours: Qtd de Horas
         value: Valor do Projeto
         hour_value: Valor da Hora

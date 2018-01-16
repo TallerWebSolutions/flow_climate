@@ -9,7 +9,7 @@
     </div>
   </div>
 
-  <%= form_for company_project_path(@company, @project), class: 'form' do |f| %>
+  <%= form_for @project, url: company_project_path(@company, @project), method: :put, class: 'form' do |f| %>
     <div class="row botton-spaced-component">
       <div class="col-xs-12">
         <%= render 'form', f: f %>

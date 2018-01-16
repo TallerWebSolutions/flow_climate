@@ -3,13 +3,13 @@
   <div class="row">
     <div class='col-xs-3 form-group <%= 'has-error' if @project.errors[:name].present? %>'>
       <%= f.label :name, class: 'control-label' %>
-      <%= f.text_field :name, class: 'form-control', autofocus: true %>
+      <%= f.text_field :name, class: 'form-control', value: @project.name, autofocus: true %>
       <span class="help-block"><%= @project.errors[:name].join(', ') %></span>
     </div>
 
     <div class='col-xs-3 form-group <%= 'has-error' if @project.errors[:customer].present? %>'>
       <%= f.label :customer, class: 'control-label' %>
-      <%= f.select :customer, @company.customers.map { |c| [c.name, c.id] }, { include_blank: t('general.select'), selected: @project.status }, class: 'form-control' %>
+      <%= f.select :customer, @company.customers.map { |c| [c.name, c.id] }, { include_blank: t('general.select'), selected: @project.customer_id }, class: 'form-control' %>
       <span class="help-block"><%= @project.errors[:customer].join(', ') %></span>
     </div>
 
@@ -29,13 +29,13 @@
   <div class="row">
     <div class='col-xs-4 form-group <%= 'has-error' if @project.errors[:start_date].present? %>'>
       <%= f.label :start_date, class: 'control-label' %>
-      <%= f.date_field :start_date, class: 'form-control' %>
+      <%= f.date_field :start_date, value: @project.start_date, class: 'form-control' %>
       <span class="help-block"><%= @project.errors[:start_date].join(', ') %></span>
     </div>
 
     <div class='col-xs-4 form-group <%= 'has-error' if @project.errors[:end_date].present? %>'>
       <%= f.label :end_date, class: 'control-label' %>
-      <%= f.date_field :end_date, class: 'form-control' %>
+      <%= f.date_field :end_date, value: @project.end_date, class: 'form-control' %>
       <span class="help-block"><%= @project.errors[:end_date].join(', ') %></span>
     </div>
 
@@ -66,7 +66,7 @@
 
   <div class="row">
     <div class="col-xs-12">
-      <%= f.submit class: 'btn btn-success' %>
+      <%= f.submit t('general.buttons.save'), class: 'btn btn-success' %>
     </div>
   </div>
 </div>
