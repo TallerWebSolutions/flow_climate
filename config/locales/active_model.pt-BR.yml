@@ -125,6 +125,7 @@ pt-BR:
           status:
             waiting: Aguardando Início
             executing: Executando
+            maintenance: Manutenção
             finished: Finalizado
             cancelled: Cancelado
           project_type:
@@ -132,6 +133,7 @@ pt-BR:
             consulting: Consultoria
             training: Treinamento
       project_result:
+        known_scope: Escopo Conhecido
         result_date: Data
         qty_hours_upstream: Horas no Upstream
         qty_hours_downstream: Horas no Downstream

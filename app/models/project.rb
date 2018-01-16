@@ -28,7 +28,7 @@
 #
 
 class Project < ApplicationRecord
-  enum status: { waiting: 0, executing: 1, finished: 2, cancelled: 3 }
+  enum status: { waiting: 0, executing: 1, maintenance: 2, finished: 3, cancelled: 4 }
   enum project_type: { outsourcing: 0, consulting: 1, training: 2 }
 
   belongs_to :customer
