@@ -127,7 +127,7 @@ RSpec.describe TeamMembersController, type: :controller do
 
       context 'passing valid parameters' do
         before { put :update, params: { company_id: company, team_id: team, id: team_member, team_member: { name: 'foo', billable: false, active: false, monthly_payment: 100, hours_per_month: 10, billable_type: :outsourcing } } }
-        it 'creates the new project and redirects to projects index' do
+        it 'updates the member and redirects to team show' do
           expect(TeamMember.last.name).to eq 'foo'
           expect(TeamMember.last.billable).to be false
           expect(TeamMember.last.active).to be false
@@ -141,7 +141,7 @@ RSpec.describe TeamMembersController, type: :controller do
       context 'passing invalid' do
         context 'team member parameters' do
           before { put :update, params: { company_id: company, team_id: team, id: team_member, team_member: { name: nil, billable: nil, active: nil, monthly_payment: nil, hours_per_month: nil, billable_type: nil } } }
-          it 'does not create the project and re-render the template with the errors' do
+          it 'does not update the member and re-render the template with the errors' do
             expect(response).to render_template :edit
             expect(assigns(:team_member).errors.full_messages).to eq ['Nome não pode ficar em branco', 'Pagamento mensal não pode ficar em branco', 'Horas por mês não pode ficar em branco']
           end
@@ -156,9 +156,8 @@ RSpec.describe TeamMembersController, type: :controller do
         end
         context 'unpermitted company' do
           let(:company) { Fabricate :company, users: [] }
-          let(:customer) { Fabricate :customer, company: company }
 
-          before { put :update, params: { company_id: company, team_id: team, id: team_member, team_member: { customer: customer.id, name: 'foo', status: :executing, project_type: :outsourcing, start_date: 1.day.ago, end_date: 1.day.from_now, value: 100.2, qty_hours: 300, hour_value: 200, initial_scope: 1000 } } }
+          before { put :update, params: { company_id: company, team_id: team, id: team_member, team_member: { name: 'foo', billable: false, active: false, monthly_payment: 100, hours_per_month: 10, billable_type: :outsourcing } } }
           it { expect(response).to have_http_status :not_found }
         end
       end
@@ -170,7 +169,7 @@ RSpec.describe TeamMembersController, type: :controller do
 
       context 'passing valid parameters' do
         before { patch :activate, params: { company_id: company, team_id: team, id: team_member } }
-        it 'creates the new project and redirects to projects index' do
+        it 'updates the team member and redirects to team show' do
           expect(TeamMember.last.active).to be true
           expect(response).to redirect_to company_team_path(company, team)
         end
@@ -187,7 +186,6 @@ RSpec.describe TeamMembersController, type: :controller do
         end
         context 'unpermitted company' do
           let(:company) { Fabricate :company, users: [] }
-          let(:customer) { Fabricate :customer, company: company }
 
           before { patch :update, params: { company_id: company, team_id: team, id: team_member } }
           it { expect(response).to have_http_status :not_found }
@@ -201,7 +199,7 @@ RSpec.describe TeamMembersController, type: :controller do
 
       context 'passing valid parameters' do
         before { patch :deactivate, params: { company_id: company, team_id: team, id: team_member } }
-        it 'creates the new project and redirects to projects index' do
+        it 'activates the member and redirects to team show' do
           expect(TeamMember.last.active).to be false
           expect(response).to redirect_to company_team_path(company, team)
         end
@@ -218,7 +216,6 @@ RSpec.describe TeamMembersController, type: :controller do
         end
         context 'unpermitted company' do
           let(:company) { Fabricate :company, users: [] }
-          let(:customer) { Fabricate :customer, company: company }
 
           before { patch :deactivate, params: { company_id: company, team_id: team, id: team_member } }
           it { expect(response).to have_http_status :not_found }

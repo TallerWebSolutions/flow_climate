@@ -2,7 +2,7 @@
 
 class TeamsController < AuthenticatedController
   before_action :assign_company
-  before_action :assign_team, only: [:show]
+  before_action :assign_team, only: %i[show edit update]
 
   def index
     @teams = @company.teams.order(:name)
@@ -20,6 +20,14 @@ class TeamsController < AuthenticatedController
     @team = Team.new(team_params.merge(company: @company))
     return redirect_to company_team_path(@company, @team) if @team.save
     render :new
+  end
+
+  def edit; end
+
+  def update
+    @team.update(team_params.merge(company: @company))
+    return redirect_to company_path(@company) if @team.save
+    render :edit
   end
 
   private

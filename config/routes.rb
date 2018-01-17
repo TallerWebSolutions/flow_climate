@@ -14,7 +14,7 @@ Rails.application.routes.draw do
   end
 
   resources :companies, only: %i[show new create index] do
-    resources :teams, only: %i[index show new create] do
+    resources :teams, only: %i[index show new create edit update] do
       resources :team_members, only: %i[new create edit update] do
         member do
           patch :activate

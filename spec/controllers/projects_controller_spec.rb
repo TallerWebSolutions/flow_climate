@@ -223,7 +223,7 @@ RSpec.describe ProjectsController, type: :controller do
 
       context 'passing valid parameters' do
         before { put :update, params: { company_id: company, id: project, project: { customer: customer.id, name: 'foo', status: :executing, project_type: :outsourcing, start_date: 1.day.ago, end_date: 1.day.from_now, value: 100.2, qty_hours: 300, hour_value: 200, initial_scope: 1000 } } }
-        it 'creates the new project and redirects to projects index' do
+        it 'updates the project and redirects to projects index' do
           expect(Project.last.name).to eq 'foo'
           expect(Project.last.status).to eq 'executing'
           expect(Project.last.project_type).to eq 'outsourcing'
@@ -240,7 +240,7 @@ RSpec.describe ProjectsController, type: :controller do
       context 'passing invalid' do
         context 'project parameters' do
           before { put :update, params: { company_id: company, id: project, project: { customer: customer.id, name: '', status: nil, project_type: nil, start_date: nil, end_date: nil, value: nil, qty_hours: nil, hour_value: nil, initial_scope: nil } } }
-          it 'does not create the project and re-render the template with the errors' do
+          it 'does not update the project and re-render the template with the errors' do
             expect(response).to render_template :edit
             expect(assigns(:project).errors.full_messages).to eq ['Qtd de Horas não pode ficar em branco', 'Tipo do Projeto não pode ficar em branco', 'Nome não pode ficar em branco', 'Status não pode ficar em branco', 'Data de Início não pode ficar em branco', 'Data Final não pode ficar em branco', 'Escopo inicial não pode ficar em branco', 'Valor do Projeto Valor ou Valor da hora é obrigatório', 'Valor da Hora Valor ou Valor da hora é obrigatório']
           end

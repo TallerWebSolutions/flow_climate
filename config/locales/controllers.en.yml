@@ -109,3 +109,6 @@ en:
   team_member:
     edit:
       title: "Edit Team Member"
+  team:
+    edit:
+      title: "Edit Team Member"

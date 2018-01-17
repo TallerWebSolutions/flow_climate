@@ -108,3 +108,6 @@ pt-BR:
   team_member:
     edit:
       title: "Editar Membro do Time"
+  team:
+    edit:
+      title: "Editar Membro do Time"
