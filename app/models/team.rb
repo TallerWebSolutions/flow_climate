@@ -22,7 +22,7 @@
 class Team < ApplicationRecord
   belongs_to :company
   has_many :team_members, dependent: :restrict_with_error
-  has_and_belongs_to_many :projects
+  has_many :project_results, dependent: :restrict_with_error
 
   validates :company, :name, presence: true
 

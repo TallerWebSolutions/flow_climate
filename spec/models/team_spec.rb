@@ -4,7 +4,7 @@ RSpec.describe Team, type: :model do
   context 'associations' do
     it { is_expected.to belong_to :company }
     it { is_expected.to have_many :team_members }
-    it { is_expected.to have_and_belong_to_many :projects }
+    it { is_expected.to have_many(:project_results).dependent(:restrict_with_error) }
   end
 
   context 'validations' do

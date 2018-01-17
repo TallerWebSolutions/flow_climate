@@ -9,7 +9,6 @@ RSpec.describe Project, type: :model do
   context 'associations' do
     it { is_expected.to belong_to :customer }
     it { is_expected.to have_many :project_results }
-    it { is_expected.to have_and_belong_to_many :teams }
   end
 
   context 'validations' do
@@ -136,5 +135,19 @@ RSpec.describe Project, type: :model do
     let!(:result) { Fabricate :project_result, project: project, result_date: 1.day.ago, known_scope: 10 }
     let!(:other_result) { Fabricate :project_result, project: project, result_date: Time.zone.today, known_scope: 20 }
     it { expect(project.current_backlog).to eq 20 }
+  end
+
+  describe '#current_team' do
+    let(:project) { Fabricate :project }
+    context 'having teams' do
+      let(:team) { Fabricate :team }
+      let(:other_team) { Fabricate :team }
+      let!(:result) { Fabricate :project_result, project: project, result_date: 1.day.ago, known_scope: 10, team: team }
+      let!(:other_result) { Fabricate :project_result, project: project, result_date: Time.zone.today, known_scope: 20, team: other_team }
+      it { expect(project.current_team).to eq other_team }
+    end
+    context 'having no results' do
+      it { expect(project.current_team).to be_nil }
+    end
   end
 end

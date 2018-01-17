@@ -19,6 +19,10 @@
       <div class="stamp-title"><%= t('projects.show.initial_scope') %></div>
       <div class="stamp-content"><%= @project.initial_scope %></div>
     </div>
+    <div class="col-xs-4 stamp">
+      <div class="stamp-title"><%= t('projects.show.last_team') %></div>
+      <div class="stamp-content"><%= @project.current_team&.name %></div>
+    </div>
   </div>
 
   <%= render 'projects/projects_results_table', project_results_list: @project_results  %>

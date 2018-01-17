@@ -82,6 +82,7 @@ en:
       percentage_remaining_money: "% Remaining ($$)"
     show:
       initial_scope: "Initial Scope"
+      last_team: "Current team"
   project_results:
     index:
       title: "Project results"

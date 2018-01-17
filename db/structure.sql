@@ -272,38 +272,6 @@ ALTER SEQUENCE projects_id_seq OWNED BY projects.id;
 
 
 --
--- Name: projects_teams; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE projects_teams (
-    id bigint NOT NULL,
-    project_id integer NOT NULL,
-    team_id integer NOT NULL,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
-);
-
-
---
--- Name: projects_teams_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE projects_teams_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: projects_teams_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE projects_teams_id_seq OWNED BY projects_teams.id;
-
-
---
 -- Name: schema_migrations; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -469,13 +437,6 @@ ALTER TABLE ONLY projects ALTER COLUMN id SET DEFAULT nextval('projects_id_seq':
 
 
 --
--- Name: projects_teams id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY projects_teams ALTER COLUMN id SET DEFAULT nextval('projects_teams_id_seq'::regclass);
-
-
---
 -- Name: team_members id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -553,14 +514,6 @@ ALTER TABLE ONLY projects
 
 
 --
--- Name: projects_teams projects_teams_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY projects_teams
-    ADD CONSTRAINT projects_teams_pkey PRIMARY KEY (id);
-
-
---
 -- Name: schema_migrations schema_migrations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -635,20 +588,6 @@ CREATE INDEX index_projects_on_customer_id ON projects USING btree (customer_id)
 
 
 --
--- Name: index_projects_teams_on_project_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_projects_teams_on_project_id ON projects_teams USING btree (project_id);
-
-
---
--- Name: index_projects_teams_on_team_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_projects_teams_on_team_id ON projects_teams USING btree (team_id);
-
-
---
 -- Name: index_teams_on_company_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -686,14 +625,6 @@ ALTER TABLE ONLY companies_users
 
 
 --
--- Name: projects_teams fk_rails_3bd810646f; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY projects_teams
-    ADD CONSTRAINT fk_rails_3bd810646f FOREIGN KEY (project_id) REFERENCES projects(id);
-
-
---
 -- Name: projects fk_rails_47c768ed16; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -715,14 +646,6 @@ ALTER TABLE ONLY financial_informations
 
 ALTER TABLE ONLY companies_users
     ADD CONSTRAINT fk_rails_667cd952fb FOREIGN KEY (company_id) REFERENCES companies(id);
-
-
---
--- Name: projects_teams fk_rails_8deec0569d; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY projects_teams
-    ADD CONSTRAINT fk_rails_8deec0569d FOREIGN KEY (team_id) REFERENCES projects(id);
 
 
 --
@@ -793,6 +716,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20180113231517'),
 ('20180115152551'),
 ('20180116022142'),
-('20180116205144');
+('20180116205144'),
+('20180116235900');
 
 

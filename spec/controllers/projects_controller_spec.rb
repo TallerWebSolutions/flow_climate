@@ -37,24 +37,47 @@ RSpec.describe ProjectsController, type: :controller do
     describe 'GET #show' do
       let(:customer) { Fabricate :customer, company: company, name: 'zzz' }
       let!(:first_project) { Fabricate :project, customer: customer, end_date: 5.days.from_now }
-      let!(:first_result) { Fabricate :project_result, project: first_project, result_date: 2.days.ago }
-      let!(:second_result) { Fabricate :project_result, project: first_project, result_date: 1.day.ago }
 
-      context 'passing valid IDs' do
-        before { get :show, params: { company_id: company, customer_id: customer, id: first_project } }
-        it 'assigns the instance variable and renders the template' do
-          expect(response).to render_template :show
-          expect(assigns(:company)).to eq company
-          expect(assigns(:project)).to eq first_project
-          expect(assigns(:project_results)).to eq [second_result, first_result]
-          expect(assigns(:total_hours_upstream)).to eq first_result.qty_hours_upstream + second_result.qty_hours_upstream
-          expect(assigns(:total_hours_downstream)).to eq first_result.qty_hours_downstream + second_result.qty_hours_downstream
-          expect(assigns(:total_hours)).to eq first_result.project_delivered_hours + second_result.project_delivered_hours
-          expect(assigns(:total_throughput)).to eq first_result.throughput + second_result.throughput
-          expect(assigns(:total_bugs_opened)).to eq first_result.qty_bugs_opened + second_result.qty_bugs_opened
-          expect(assigns(:total_bugs_closed)).to eq first_result.qty_bugs_closed + second_result.qty_bugs_closed
-          expect(assigns(:total_hours_bug)).to eq first_result.qty_hours_bug + second_result.qty_hours_bug
-          expect(assigns(:avg_leadtime)).to eq((first_result.leadtime + second_result.leadtime) / 2)
+      context 'having results' do
+        let!(:first_result) { Fabricate :project_result, project: first_project, result_date: 2.days.ago }
+        let!(:second_result) { Fabricate :project_result, project: first_project, result_date: 1.day.ago }
+
+        context 'passing valid IDs' do
+          before { get :show, params: { company_id: company, customer_id: customer, id: first_project } }
+          it 'assigns the instance variable and renders the template' do
+            expect(response).to render_template :show
+            expect(assigns(:company)).to eq company
+            expect(assigns(:project)).to eq first_project
+            expect(assigns(:project_results)).to eq [second_result, first_result]
+            expect(assigns(:total_hours_upstream)).to eq first_result.qty_hours_upstream + second_result.qty_hours_upstream
+            expect(assigns(:total_hours_downstream)).to eq first_result.qty_hours_downstream + second_result.qty_hours_downstream
+            expect(assigns(:total_hours)).to eq first_result.project_delivered_hours + second_result.project_delivered_hours
+            expect(assigns(:total_throughput)).to eq first_result.throughput + second_result.throughput
+            expect(assigns(:total_bugs_opened)).to eq first_result.qty_bugs_opened + second_result.qty_bugs_opened
+            expect(assigns(:total_bugs_closed)).to eq first_result.qty_bugs_closed + second_result.qty_bugs_closed
+            expect(assigns(:total_hours_bug)).to eq first_result.qty_hours_bug + second_result.qty_hours_bug
+            expect(assigns(:avg_leadtime)).to eq((first_result.leadtime + second_result.leadtime) / 2)
+          end
+        end
+      end
+
+      context 'having no results' do
+        context 'passing valid IDs' do
+          before { get :show, params: { company_id: company, customer_id: customer, id: first_project } }
+          it 'assigns the instance variable and renders the template' do
+            expect(response).to render_template :show
+            expect(assigns(:company)).to eq company
+            expect(assigns(:project)).to eq first_project
+            expect(assigns(:project_results)).to eq []
+            expect(assigns(:total_hours_upstream)).to eq 0
+            expect(assigns(:total_hours_downstream)).to eq 0
+            expect(assigns(:total_hours)).to eq 0
+            expect(assigns(:total_throughput)).to eq 0
+            expect(assigns(:total_bugs_opened)).to eq 0
+            expect(assigns(:total_bugs_closed)).to eq 0
+            expect(assigns(:total_hours_bug)).to eq 0
+            expect(assigns(:avg_leadtime)).to eq nil
+          end
         end
       end
       context 'passing an invalid ID' do

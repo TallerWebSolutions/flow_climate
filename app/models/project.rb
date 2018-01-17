@@ -34,7 +34,6 @@ class Project < ApplicationRecord
   belongs_to :customer
   belongs_to :team
   has_many :project_results, dependent: :restrict_with_error
-  has_and_belongs_to_many :teams, dependent: :destroy
 
   validates :qty_hours, :customer, :project_type, :name, :status, :start_date, :end_date, :status, :initial_scope, presence: true
 
@@ -69,6 +68,10 @@ class Project < ApplicationRecord
 
   def current_backlog
     project_results.order(result_date: :desc).first&.known_scope || initial_scope
+  end
+
+  def current_team
+    project_results.order(result_date: :desc)&.first&.team
   end
 
   private

@@ -81,6 +81,7 @@ pt-BR:
       percentage_remaining_money: "% Restante ($$)"
     show:
       initial_scope: "Escopo Inicial"
+      last_team: "Time atual"
   project_results:
     index:
       title: "Resultados do Projeto"
