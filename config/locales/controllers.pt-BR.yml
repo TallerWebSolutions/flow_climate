@@ -82,6 +82,7 @@ pt-BR:
     show:
       initial_scope: "Escopo Inicial"
       last_team: "Time atual"
+      current_scope: "Escopo corrente"
   project_results:
     index:
       title: "Resultados do Projeto"
