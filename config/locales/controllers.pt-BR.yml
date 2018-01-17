@@ -105,3 +105,6 @@ pt-BR:
       title: "Editar Projeto"
     validations:
       no_value: "Valor ou Valor da hora é obrigatório"
+  team_member:
+    edit:
+      title: "Editar Membro do Time"

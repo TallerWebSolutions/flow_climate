@@ -106,3 +106,6 @@ en:
       title: "Edit Project"
     validations:
       no_value: "Value or Hour value is mandatory"
+  team_member:
+    edit:
+      title: "Edit Team Member"

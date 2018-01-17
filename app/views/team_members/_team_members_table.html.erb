@@ -8,6 +8,7 @@
     <th><%= TeamMember.human_attribute_name :billable %></th>
     <th><%= TeamMember.human_attribute_name :billable_type %></th>
     <th><%= TeamMember.human_attribute_name :active %></th>
+    <th><%= t('general.table.actions') %></th>
   </tr>
   <% @team_members.each do |member| %>
     <tr>
@@ -17,6 +18,11 @@
       <td><%= t(member.billable&.to_s) %></td>
       <td><%= member.billable_type&.capitalize %></td>
       <td><%= t(member.active.to_s) %></td>
+      <td>
+        <%= link_to edit_company_team_team_member_path(@company, @team, member) do %>
+          <i class="fa fa-pencil"></i>
+        <% end %>
+      </td>
     </tr>
   <% end %>
 </table>

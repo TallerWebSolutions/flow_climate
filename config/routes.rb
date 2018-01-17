@@ -15,8 +15,9 @@ Rails.application.routes.draw do
 
   resources :companies, only: %i[show new create index] do
     resources :teams, only: %i[index show new create] do
-      resources :team_members, only: %i[new create]
+      resources :team_members, only: %i[new create edit update]
     end
+
     resources :financial_informations, only: %i[new create]
     resources :operation_results, only: %i[index destroy new create]
 

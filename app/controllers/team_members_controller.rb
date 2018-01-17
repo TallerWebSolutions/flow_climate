@@ -3,6 +3,7 @@
 class TeamMembersController < AuthenticatedController
   before_action :assign_company
   before_action :assign_team
+  before_action :assign_team_member, only: %i[edit update]
 
   def new
     @team_member = TeamMember.new(team: @team)
@@ -14,10 +15,22 @@ class TeamMembersController < AuthenticatedController
     render :new
   end
 
+  def edit; end
+
+  def update
+    @team_member.update(team_member_params.merge(team: @team))
+    return redirect_to company_team_path(@company, @team) if @team_member.save
+    render :edit
+  end
+
   private
 
   def assign_team
     @team = Team.find(params[:team_id])
+  end
+
+  def assign_team_member
+    @team_member = TeamMember.find(params[:id])
   end
 
   def team_member_params
