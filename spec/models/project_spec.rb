@@ -8,12 +8,14 @@ RSpec.describe Project, type: :model do
 
   context 'associations' do
     it { is_expected.to belong_to :customer }
+    it { is_expected.to belong_to :product }
     it { is_expected.to have_many :project_results }
   end
 
   context 'validations' do
     context 'simple ones' do
       it { is_expected.to validate_presence_of :customer }
+      it { is_expected.to validate_presence_of :product }
       it { is_expected.to validate_presence_of :project_type }
       it { is_expected.to validate_presence_of :name }
       it { is_expected.to validate_presence_of :status }
@@ -150,4 +152,6 @@ RSpec.describe Project, type: :model do
       it { expect(project.current_team).to be_nil }
     end
   end
+
+  pending '#customer_name'
 end

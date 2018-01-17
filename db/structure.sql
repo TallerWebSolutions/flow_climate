@@ -189,6 +189,38 @@ ALTER SEQUENCE operation_results_id_seq OWNED BY operation_results.id;
 
 
 --
+-- Name: products; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE products (
+    id bigint NOT NULL,
+    customer_id integer NOT NULL,
+    name character varying NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: products_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE products_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: products_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE products_id_seq OWNED BY products.id;
+
+
+--
 -- Name: project_results; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -237,7 +269,6 @@ ALTER SEQUENCE project_results_id_seq OWNED BY project_results.id;
 
 CREATE TABLE projects (
     id bigint NOT NULL,
-    customer_id integer NOT NULL,
     name character varying NOT NULL,
     status integer NOT NULL,
     project_type integer NOT NULL,
@@ -248,7 +279,9 @@ CREATE TABLE projects (
     hour_value numeric,
     initial_scope integer NOT NULL,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    customer_id integer,
+    product_id integer
 );
 
 
@@ -423,6 +456,13 @@ ALTER TABLE ONLY operation_results ALTER COLUMN id SET DEFAULT nextval('operatio
 
 
 --
+-- Name: products id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY products ALTER COLUMN id SET DEFAULT nextval('products_id_seq'::regclass);
+
+
+--
 -- Name: project_results id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -495,6 +535,14 @@ ALTER TABLE ONLY financial_informations
 
 ALTER TABLE ONLY operation_results
     ADD CONSTRAINT operation_results_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: products products_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY products
+    ADD CONSTRAINT products_pkey PRIMARY KEY (id);
 
 
 --
@@ -574,17 +622,17 @@ CREATE INDEX index_financial_informations_on_company_id ON financial_information
 
 
 --
+-- Name: index_products_on_customer_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_products_on_customer_id ON products USING btree (customer_id);
+
+
+--
 -- Name: index_project_results_on_project_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_project_results_on_project_id ON project_results USING btree (project_id);
-
-
---
--- Name: index_projects_on_customer_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_projects_on_customer_id ON projects USING btree (customer_id);
 
 
 --
@@ -617,19 +665,27 @@ ALTER TABLE ONLY team_members
 
 
 --
+-- Name: projects fk_rails_21e11c2480; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY projects
+    ADD CONSTRAINT fk_rails_21e11c2480 FOREIGN KEY (product_id) REFERENCES products(id);
+
+
+--
+-- Name: products fk_rails_252452a41b; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY products
+    ADD CONSTRAINT fk_rails_252452a41b FOREIGN KEY (customer_id) REFERENCES customers(id);
+
+
+--
 -- Name: companies_users fk_rails_27539b2fc9; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY companies_users
     ADD CONSTRAINT fk_rails_27539b2fc9 FOREIGN KEY (user_id) REFERENCES users(id);
-
-
---
--- Name: projects fk_rails_47c768ed16; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY projects
-    ADD CONSTRAINT fk_rails_47c768ed16 FOREIGN KEY (customer_id) REFERENCES customers(id);
 
 
 --
@@ -717,6 +773,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20180115152551'),
 ('20180116022142'),
 ('20180116205144'),
-('20180116235900');
+('20180116235900'),
+('20180117150255');
 
 

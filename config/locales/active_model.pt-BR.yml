@@ -66,6 +66,12 @@ pt-BR:
       financial_information:
         one: Informação Financeira
         other: Informações Financeiras
+      customer:
+        one: Cliente
+        other: Clientes
+      product:
+        one: Produto
+        other: Produtos
       project:
         one: Projeto
         other: Projetos
@@ -108,8 +114,12 @@ pt-BR:
             outsourcing: Outsourcing
             consulting: Consultoria
             training: Treinamento
+      customer:
+        name: Nome
+      product:
+        name: Nome
       project:
-        customer: Cliente
+        product: Produto
         name: Nome
         qty_hours: Qtd de Horas
         value: Valor do Projeto

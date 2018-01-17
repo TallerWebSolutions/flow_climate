@@ -33,10 +33,11 @@ RSpec.describe ProjectsController, type: :controller do
     before { sign_in user }
 
     let(:company) { Fabricate :company, users: [user] }
+    let(:customer) { Fabricate :customer, company: company, name: 'zzz' }
+    let(:product) { Fabricate :product, customer: customer, name: 'zzz' }
 
     describe 'GET #show' do
-      let(:customer) { Fabricate :customer, company: company, name: 'zzz' }
-      let!(:first_project) { Fabricate :project, customer: customer, end_date: 5.days.from_now }
+      let!(:first_project) { Fabricate :project, product: product, end_date: 5.days.from_now }
 
       context 'having results' do
         let!(:first_result) { Fabricate :project_result, project: first_project, result_date: 2.days.ago }
@@ -97,9 +98,11 @@ RSpec.describe ProjectsController, type: :controller do
       context 'having projects' do
         context 'not passing status filter' do
           let(:customer) { Fabricate :customer, company: company }
-          let!(:project) { Fabricate :project, customer: customer, end_date: 2.days.from_now }
-          let!(:other_project) { Fabricate :project, customer: customer, end_date: 5.days.from_now }
+          let(:product) { Fabricate :product, customer: customer, name: 'zzz' }
+          let!(:project) { Fabricate :project, product: product, end_date: 2.days.from_now }
+          let!(:other_project) { Fabricate :project, product: product, end_date: 5.days.from_now }
           let!(:other_company_project) { Fabricate :project, end_date: 2.days.from_now }
+
           before { get :index, params: { company_id: company } }
           it 'assigns the instance variable and renders the template' do
             expect(response).to render_template :index
@@ -112,8 +115,9 @@ RSpec.describe ProjectsController, type: :controller do
         end
         context 'passing status filter' do
           let(:customer) { Fabricate :customer, company: company }
-          let!(:project) { Fabricate :project, customer: customer, status: :executing }
-          let!(:other_project) { Fabricate :project, customer: customer, status: :waiting }
+          let(:product) { Fabricate :product, customer: customer, name: 'zzz' }
+          let!(:project) { Fabricate :project, product: product, status: :executing }
+          let!(:other_project) { Fabricate :project, product: product, status: :waiting }
           let!(:other_company_project) { Fabricate :project, status: :executing }
           before { get :index, params: { company_id: company, status_filter: :executing } }
           it 'assigns the instance variable and renders the template' do
@@ -150,7 +154,7 @@ RSpec.describe ProjectsController, type: :controller do
       let(:customer) { Fabricate :customer, company: company }
 
       context 'passing valid parameters' do
-        before { post :create, params: { company_id: company, project: { customer: customer.id, name: 'foo', status: :executing, project_type: :outsourcing, start_date: 1.day.ago, end_date: 1.day.from_now, value: 100.2, qty_hours: 300, hour_value: 200, initial_scope: 1000 } } }
+        before { post :create, params: { company_id: company, project: { customer_id: customer, product_id: product.id, name: 'foo', status: :executing, project_type: :outsourcing, start_date: 1.day.ago, end_date: 1.day.from_now, value: 100.2, qty_hours: 300, hour_value: 200, initial_scope: 1000 } } }
         it 'creates the new project and redirects to projects index' do
           expect(Project.last.name).to eq 'foo'
           expect(Project.last.status).to eq 'executing'
@@ -167,18 +171,18 @@ RSpec.describe ProjectsController, type: :controller do
 
       context 'passing invalid' do
         context 'project parameters' do
-          before { post :create, params: { company_id: company, project: { customer: customer.id, name: '' } } }
+          before { post :create, params: { company_id: company, project: { customer_id: customer, product: product.id, name: '' } } }
           it 'does not create the project and re-render the template with the errors' do
             expect(Project.last).to be_nil
             expect(response).to render_template :new
-            expect(assigns(:project).errors.full_messages).to eq ['Qtd de Horas não pode ficar em branco', 'Tipo do Projeto não pode ficar em branco', 'Nome não pode ficar em branco', 'Status não pode ficar em branco', 'Data de Início não pode ficar em branco', 'Data Final não pode ficar em branco', 'Escopo inicial não pode ficar em branco', 'Valor do Projeto Valor ou Valor da hora é obrigatório', 'Valor da Hora Valor ou Valor da hora é obrigatório']
+            expect(assigns(:project).errors.full_messages).to eq ['Qtd de Horas não pode ficar em branco', 'Produto não pode ficar em branco', 'Tipo do Projeto não pode ficar em branco', 'Nome não pode ficar em branco', 'Status não pode ficar em branco', 'Data de Início não pode ficar em branco', 'Data Final não pode ficar em branco', 'Escopo inicial não pode ficar em branco', 'Valor do Projeto Valor ou Valor da hora é obrigatório', 'Valor da Hora Valor ou Valor da hora é obrigatório']
           end
         end
         context 'unpermitted company' do
           let(:company) { Fabricate :company, users: [] }
           let(:customer) { Fabricate :customer, company: company }
 
-          before { post :create, params: { company_id: company, project: { customer: customer.id, name: 'foo', status: :executing, project_type: :outsourcing, start_date: 1.day.ago, end_date: 1.day.from_now, value: 100.2, qty_hours: 300, hour_value: 200, initial_scope: 1000 } } }
+          before { post :create, params: { company_id: company, project: { customer_id: customer, product: product.id, name: 'foo', status: :executing, project_type: :outsourcing, start_date: 1.day.ago, end_date: 1.day.from_now, value: 100.2, qty_hours: 300, hour_value: 200, initial_scope: 1000 } } }
           it { expect(response).to have_http_status :not_found }
         end
       end
@@ -186,7 +190,8 @@ RSpec.describe ProjectsController, type: :controller do
 
     describe 'GET #edit' do
       let(:customer) { Fabricate :customer, company: company }
-      let(:project) { Fabricate :project, customer: customer }
+      let(:product) { Fabricate :product, customer: customer, name: 'zzz' }
+      let(:project) { Fabricate :project, product: product }
 
       context 'valid parameters' do
         before { get :edit, params: { company_id: company, id: project } }
@@ -219,10 +224,11 @@ RSpec.describe ProjectsController, type: :controller do
 
     describe 'PUT #update' do
       let(:customer) { Fabricate :customer, company: company }
-      let(:project) { Fabricate :project, customer: customer }
+      let(:product) { Fabricate :product, customer: customer, name: 'zzz' }
+      let(:project) { Fabricate :project, product: product }
 
       context 'passing valid parameters' do
-        before { put :update, params: { company_id: company, id: project, project: { customer: customer.id, name: 'foo', status: :executing, project_type: :outsourcing, start_date: 1.day.ago, end_date: 1.day.from_now, value: 100.2, qty_hours: 300, hour_value: 200, initial_scope: 1000 } } }
+        before { put :update, params: { company_id: company, id: project, project: { customer_id: customer, product_id: product, name: 'foo', status: :executing, project_type: :outsourcing, start_date: 1.day.ago, end_date: 1.day.from_now, value: 100.2, qty_hours: 300, hour_value: 200, initial_scope: 1000 } } }
         it 'updates the project and redirects to projects index' do
           expect(Project.last.name).to eq 'foo'
           expect(Project.last.status).to eq 'executing'
@@ -239,23 +245,23 @@ RSpec.describe ProjectsController, type: :controller do
 
       context 'passing invalid' do
         context 'project parameters' do
-          before { put :update, params: { company_id: company, id: project, project: { customer: customer.id, name: '', status: nil, project_type: nil, start_date: nil, end_date: nil, value: nil, qty_hours: nil, hour_value: nil, initial_scope: nil } } }
+          before { put :update, params: { company_id: company, id: project, project: { customer_id: customer, product: product, name: '', status: nil, project_type: nil, start_date: nil, end_date: nil, value: nil, qty_hours: nil, hour_value: nil, initial_scope: nil } } }
           it 'does not update the project and re-render the template with the errors' do
             expect(response).to render_template :edit
-            expect(assigns(:project).errors.full_messages).to eq ['Qtd de Horas não pode ficar em branco', 'Tipo do Projeto não pode ficar em branco', 'Nome não pode ficar em branco', 'Status não pode ficar em branco', 'Data de Início não pode ficar em branco', 'Data Final não pode ficar em branco', 'Escopo inicial não pode ficar em branco', 'Valor do Projeto Valor ou Valor da hora é obrigatório', 'Valor da Hora Valor ou Valor da hora é obrigatório']
+            expect(assigns(:project).errors.full_messages).to eq ['Qtd de Horas não pode ficar em branco', 'Produto não pode ficar em branco', 'Tipo do Projeto não pode ficar em branco', 'Nome não pode ficar em branco', 'Status não pode ficar em branco', 'Data de Início não pode ficar em branco', 'Data Final não pode ficar em branco', 'Escopo inicial não pode ficar em branco', 'Valor do Projeto Valor ou Valor da hora é obrigatório', 'Valor da Hora Valor ou Valor da hora é obrigatório']
           end
         end
         context 'non-existent project' do
           let(:customer) { Fabricate :customer, company: company }
 
-          before { put :update, params: { company_id: company, id: 'foo', project: { customer: customer.id, name: 'foo', status: :executing, project_type: :outsourcing, start_date: 1.day.ago, end_date: 1.day.from_now, value: 100.2, qty_hours: 300, hour_value: 200, initial_scope: 1000 } } }
+          before { put :update, params: { company_id: company, id: 'foo', project: { customer_id: customer, product: product.id, name: 'foo', status: :executing, project_type: :outsourcing, start_date: 1.day.ago, end_date: 1.day.from_now, value: 100.2, qty_hours: 300, hour_value: 200, initial_scope: 1000 } } }
           it { expect(response).to have_http_status :not_found }
         end
         context 'unpermitted company' do
           let(:company) { Fabricate :company, users: [] }
           let(:customer) { Fabricate :customer, company: company }
 
-          before { put :update, params: { company_id: company, id: project, project: { customer: customer.id, name: 'foo', status: :executing, project_type: :outsourcing, start_date: 1.day.ago, end_date: 1.day.from_now, value: 100.2, qty_hours: 300, hour_value: 200, initial_scope: 1000 } } }
+          before { put :update, params: { company_id: company, id: project, project: { customer_id: customer, product: product.id, name: 'foo', status: :executing, project_type: :outsourcing, start_date: 1.day.ago, end_date: 1.day.from_now, value: 100.2, qty_hours: 300, hour_value: 200, initial_scope: 1000 } } }
           it { expect(response).to have_http_status :not_found }
         end
       end

@@ -26,6 +26,9 @@ Rails.application.routes.draw do
     resources :financial_informations, only: %i[new create]
     resources :operation_results, only: %i[index destroy new create]
 
+    resources :products, only: [:show] do
+    end
+
     resources :projects, only: %i[show index new create edit update] do
       resources :project_results, only: %i[new create destroy]
     end

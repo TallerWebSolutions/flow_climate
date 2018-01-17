@@ -21,25 +21,29 @@
 
 class Customer < ApplicationRecord
   belongs_to :company
-  has_many :projects, dependent: :restrict_with_error
+  has_many :products, dependent: :restrict_with_error
 
   validates :company, :name, presence: true
 
-  delegate :count, to: :projects, prefix: true
+  delegate :count, to: :products, prefix: true
+
+  def projects_count
+    products.sum(&:projects_count)
+  end
 
   def active_projects
-    projects.executing
+    products.sum(&:active_projects)
   end
 
   def waiting_projects
-    projects.waiting
+    products.sum(&:waiting_projects)
   end
 
   def red_projects
-    projects.select(&:red?)
+    products.sum(&:red_projects)
   end
 
   def current_backlog
-    projects.sum(&:current_backlog)
+    products.sum(&:current_backlog)
   end
 end

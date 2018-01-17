@@ -31,8 +31,9 @@ class ProjectsController < AuthenticatedController
   end
 
   def create
-    customer = Customer.find_by(id: project_params[:customer])
-    @project = Project.new(project_params.merge(customer: customer))
+    assign_customer
+    assign_product
+    @project = Project.new(project_params.merge(customer: @customer, product: @product))
     return redirect_to company_projects_path(@company) if @project.save
     render :new
   end
@@ -40,20 +41,29 @@ class ProjectsController < AuthenticatedController
   def edit; end
 
   def update
-    customer = Customer.find_by(id: project_params[:customer])
-    @project.update(project_params.merge(customer: customer))
+    assign_customer
+    assign_product
+    @project.update(project_params.merge(customer: @customer, product: @product))
     return redirect_to company_projects_path(@company) if @project.save
     render :edit
   end
 
   private
 
+  def assign_product
+    @product = Product.find_by(id: project_params[:product_id])
+  end
+
+  def assign_customer
+    @customer = Customer.find_by(id: project_params[:customer_id])
+  end
+
   def project_params
-    params.require(:project).permit(:customer, :name, :status, :project_type, :start_date, :end_date, :value, :qty_hours, :hour_value, :initial_scope)
+    params.require(:project).permit(:customer_id, :product_id, :name, :status, :project_type, :start_date, :end_date, :value, :qty_hours, :hour_value, :initial_scope)
   end
 
   def mount_projects_list
-    @projects = Project.joins(:customer).where('customers.company_id = ?', @company.id)
+    @projects = Project.joins(product: :customer).where('customers.company_id = ?', @company.id)
     @projects = @projects.where(status: params[:status_filter]) if params[:status_filter].present?
     @projects = @projects.order(end_date: :desc)
   end

@@ -5,7 +5,6 @@
 # Table name: projects
 #
 #  id            :integer          not null, primary key
-#  customer_id   :integer          not null
 #  name          :string           not null
 #  status        :integer          not null
 #  project_type  :integer          not null
@@ -17,14 +16,12 @@
 #  initial_scope :integer          not null
 #  created_at    :datetime         not null
 #  updated_at    :datetime         not null
-#
-# Indexes
-#
-#  index_projects_on_customer_id  (customer_id)
+#  customer_id   :integer
+#  product_id    :integer
 #
 # Foreign Keys
 #
-#  fk_rails_...  (customer_id => customers.id)
+#  fk_rails_...  (product_id => products.id)
 #
 
 class Project < ApplicationRecord
@@ -32,10 +29,11 @@ class Project < ApplicationRecord
   enum project_type: { outsourcing: 0, consulting: 1, training: 2 }
 
   belongs_to :customer
+  belongs_to :product
   belongs_to :team
   has_many :project_results, dependent: :restrict_with_error
 
-  validates :qty_hours, :customer, :project_type, :name, :status, :start_date, :end_date, :status, :initial_scope, presence: true
+  validates :customer, :qty_hours, :product, :project_type, :name, :status, :start_date, :end_date, :status, :initial_scope, presence: true
 
   validate :hour_value_project_value?
 
