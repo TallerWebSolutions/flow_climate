@@ -18,6 +18,14 @@ RSpec.describe TeamMembersController, type: :controller do
       before { put :update, params: { company_id: 'xpto', team_id: 'bar', id: 'foo' } }
       it { expect(response).to redirect_to new_user_session_path }
     end
+    describe 'PATCH #activate' do
+      before { patch :activate, params: { company_id: 'xpto', team_id: 'bar', id: 'foo' } }
+      it { expect(response).to redirect_to new_user_session_path }
+    end
+    describe 'PATCH #deactivate' do
+      before { patch :activate, params: { company_id: 'xpto', team_id: 'bar', id: 'foo' } }
+      it { expect(response).to redirect_to new_user_session_path }
+    end
   end
 
   context 'authenticated' do
@@ -138,6 +146,10 @@ RSpec.describe TeamMembersController, type: :controller do
             expect(assigns(:team_member).errors.full_messages).to eq ['Nome não pode ficar em branco', 'Pagamento mensal não pode ficar em branco', 'Horas por mês não pode ficar em branco']
           end
         end
+        context 'non-existent team' do
+          before { put :update, params: { company_id: company, team_id: 'foo', id: team_member, team_member: { name: 'foo', billable: false, active: false, monthly_payment: 100, hours_per_month: 10, billable_type: :outsourcing } } }
+          it { expect(response).to have_http_status :not_found }
+        end
         context 'non-existent team member' do
           before { put :update, params: { company_id: company, team_id: team, id: 'foo', team_member: { name: 'foo', billable: false, active: false, monthly_payment: 100, hours_per_month: 10, billable_type: :outsourcing } } }
           it { expect(response).to have_http_status :not_found }
@@ -146,7 +158,69 @@ RSpec.describe TeamMembersController, type: :controller do
           let(:company) { Fabricate :company, users: [] }
           let(:customer) { Fabricate :customer, company: company }
 
-          before { put :update, params: { company_id: company, team_id: team, id: team_member, project: { customer: customer.id, name: 'foo', status: :executing, project_type: :outsourcing, start_date: 1.day.ago, end_date: 1.day.from_now, value: 100.2, qty_hours: 300, hour_value: 200, initial_scope: 1000 } } }
+          before { put :update, params: { company_id: company, team_id: team, id: team_member, team_member: { customer: customer.id, name: 'foo', status: :executing, project_type: :outsourcing, start_date: 1.day.ago, end_date: 1.day.from_now, value: 100.2, qty_hours: 300, hour_value: 200, initial_scope: 1000 } } }
+          it { expect(response).to have_http_status :not_found }
+        end
+      end
+    end
+
+    describe 'PATCH #activate' do
+      let(:team) { Fabricate :team, company: company }
+      let(:team_member) { Fabricate :team_member, team: team }
+
+      context 'passing valid parameters' do
+        before { patch :activate, params: { company_id: company, team_id: team, id: team_member } }
+        it 'creates the new project and redirects to projects index' do
+          expect(TeamMember.last.active).to be true
+          expect(response).to redirect_to company_team_path(company, team)
+        end
+      end
+
+      context 'passing invalid' do
+        context 'non-existent team member' do
+          before { patch :activate, params: { company_id: company, team_id: team, id: 'foo' } }
+          it { expect(response).to have_http_status :not_found }
+        end
+        context 'non-existent team' do
+          before { patch :update, params: { company_id: company, team_id: 'foo', id: team_member } }
+          it { expect(response).to have_http_status :not_found }
+        end
+        context 'unpermitted company' do
+          let(:company) { Fabricate :company, users: [] }
+          let(:customer) { Fabricate :customer, company: company }
+
+          before { patch :update, params: { company_id: company, team_id: team, id: team_member } }
+          it { expect(response).to have_http_status :not_found }
+        end
+      end
+    end
+
+    describe 'PATCH #deactivate' do
+      let(:team) { Fabricate :team, company: company }
+      let(:team_member) { Fabricate :team_member, team: team }
+
+      context 'passing valid parameters' do
+        before { patch :deactivate, params: { company_id: company, team_id: team, id: team_member } }
+        it 'creates the new project and redirects to projects index' do
+          expect(TeamMember.last.active).to be false
+          expect(response).to redirect_to company_team_path(company, team)
+        end
+      end
+
+      context 'passing invalid' do
+        context 'non-existent team member' do
+          before { patch :deactivate, params: { company_id: company, team_id: team, id: 'foo' } }
+          it { expect(response).to have_http_status :not_found }
+        end
+        context 'non-existent team' do
+          before { patch :deactivate, params: { company_id: company, team_id: 'foo', id: team_member } }
+          it { expect(response).to have_http_status :not_found }
+        end
+        context 'unpermitted company' do
+          let(:company) { Fabricate :company, users: [] }
+          let(:customer) { Fabricate :customer, company: company }
+
+          before { patch :deactivate, params: { company_id: company, team_id: team, id: team_member } }
           it { expect(response).to have_http_status :not_found }
         end
       end

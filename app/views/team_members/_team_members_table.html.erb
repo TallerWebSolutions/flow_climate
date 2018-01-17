@@ -22,6 +22,15 @@
         <%= link_to edit_company_team_team_member_path(@company, @team, member) do %>
           <i class="fa fa-pencil"></i>
         <% end %>
+        <% if member.active? %>
+          <%= link_to deactivate_company_team_team_member_path(@company, @team, member), method: :patch do %>
+            <i class="fa fa-power-off"></i>
+          <% end %>
+        <% else %>
+          <%= link_to activate_company_team_team_member_path(@company, @team, member), method: :patch do %>
+            <i class="fa fa-check"></i>
+          <% end %>
+        <% end %>
       </td>
     </tr>
   <% end %>
