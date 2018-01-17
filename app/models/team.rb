@@ -27,22 +27,22 @@ class Team < ApplicationRecord
   validates :company, :name, presence: true
 
   def outsourcing_cost_per_week
-    team_members.where(billable: true, billable_type: :outsourcing).sum(&:monthly_payment) / 4
+    team_members.active.where(billable: true, billable_type: :outsourcing).sum(&:monthly_payment) / 4
   end
 
   def management_cost_per_week
-    team_members.where(billable: false).sum(&:monthly_payment) / 4
+    team_members.active.where(billable: false).sum(&:monthly_payment) / 4
   end
 
   def outsourcing_members_billable_count
-    team_members.where(billable: true, billable_type: :outsourcing).count
+    team_members.active.where(billable: true, billable_type: :outsourcing).count
   end
 
   def management_count
-    team_members.where(billable: false).count
+    team_members.active.where(billable: false).count
   end
 
   def current_outsourcing_monthly_available_hours
-    team_members.where(billable: true, billable_type: :outsourcing).sum(&:hours_per_month)
+    team_members.active.where(billable: true, billable_type: :outsourcing).sum(&:hours_per_month)
   end
 end

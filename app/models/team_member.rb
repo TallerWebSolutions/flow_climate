@@ -25,5 +25,7 @@ class TeamMember < ApplicationRecord
 
   belongs_to :team
 
-  validates :team, :name, :monthly_payment, :hours_per_month, presence: true
+  validates :team, :name, :monthly_payment, :hours_per_month, :billable_type, presence: true
+
+  scope :active, -> { where active: true }
 end

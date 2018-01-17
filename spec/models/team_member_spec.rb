@@ -15,4 +15,13 @@ RSpec.describe TeamMember, type: :model do
     it { is_expected.to validate_presence_of :monthly_payment }
     it { is_expected.to validate_presence_of :hours_per_month }
   end
+
+  context 'scopes' do
+    describe '.active' do
+      let(:active) { Fabricate :team_member, active: true }
+      let(:other_active) { Fabricate :team_member, active: true }
+      let(:inactive) { Fabricate :team_member, active: false }
+      it { expect(TeamMember.active).to match_array [active, other_active] }
+    end
+  end
 end

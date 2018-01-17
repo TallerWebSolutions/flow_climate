@@ -4,5 +4,5 @@ Fabricator(:team_member) do
   team
   name { Faker::Name.name }
   monthly_payment { Faker::Number.decimal }
-  hours_per_month { Faker::Number.decimal(0) }
+  hours_per_month { [100, 200, 300, 400, 203, 123, 44, 221, 453].sample }
 end

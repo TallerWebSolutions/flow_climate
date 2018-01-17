@@ -45,9 +45,11 @@ RSpec.describe TeamMembersController, type: :controller do
       let(:company) { Fabricate :company, users: [user] }
 
       context 'passing valid parameters' do
-        before { post :create, params: { company_id: company, team_id: team, team_member: { name: 'foo', monthly_payment: 100, hours_per_month: 10, billable_type: :outsourcing } } }
+        before { post :create, params: { company_id: company, team_id: team, team_member: { name: 'foo', billable: false, active: false, monthly_payment: 100, hours_per_month: 10, billable_type: :outsourcing } } }
         it 'creates the new team member and redirects to team show' do
           expect(TeamMember.last.name).to eq 'foo'
+          expect(TeamMember.last.billable).to be false
+          expect(TeamMember.last.active).to be false
           expect(TeamMember.last.monthly_payment).to eq 100
           expect(TeamMember.last.hours_per_month).to eq 10
           expect(TeamMember.last.billable_type).to eq 'outsourcing'

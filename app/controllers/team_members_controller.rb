@@ -21,6 +21,6 @@ class TeamMembersController < AuthenticatedController
   end
 
   def team_member_params
-    params.require(:team_member).permit(:name, :monthly_payment, :hours_per_month, :billable_type)
+    params.require(:team_member).permit(:name, :monthly_payment, :hours_per_month, :billable, :active, :billable_type)
   end
 end
