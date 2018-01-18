@@ -51,6 +51,7 @@ en:
       red_project_count: "RED PROJECTS"
       project_count: "Projects"
       operation_result_count: "Operation Results"
+      product_count: "Products"
   financial_informations:
     new:
       title: "New Financial Information"
@@ -112,3 +113,9 @@ en:
   team:
     edit:
       title: "Edit Team Member"
+  products:
+    index:
+      no_data: "There is no products here. Register a new one."
+      title: "Products"
+    new:
+      title: "New Product"

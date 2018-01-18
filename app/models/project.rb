@@ -5,6 +5,7 @@
 # Table name: projects
 #
 #  id            :integer          not null, primary key
+#  customer_id   :integer          not null
 #  name          :string           not null
 #  status        :integer          not null
 #  project_type  :integer          not null
@@ -16,11 +17,15 @@
 #  initial_scope :integer          not null
 #  created_at    :datetime         not null
 #  updated_at    :datetime         not null
-#  customer_id   :integer
 #  product_id    :integer
+#
+# Indexes
+#
+#  index_projects_on_customer_id  (customer_id)
 #
 # Foreign Keys
 #
+#  fk_rails_...  (customer_id => customers.id)
 #  fk_rails_...  (product_id => products.id)
 #
 
@@ -38,6 +43,7 @@ class Project < ApplicationRecord
   validate :hour_value_project_value?
 
   delegate :name, to: :customer, prefix: true
+  delegate :name, to: :product, prefix: true, allow_nil: true
 
   def total_days
     (end_date - start_date).to_i

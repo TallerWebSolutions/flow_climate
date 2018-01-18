@@ -11,9 +11,7 @@
     <div class="stamp-title"><%= t('general.current_backlog') %></div>
     <div class="stamp-content"><%= @company.current_backlog %></div>
   </div>
-</div>
 
-<div class="row">
   <div class="col-xs-2 green-stamp">
     <div class="stamp-title"><%= t('companies.show.outsourcing_cost_per_week') %></div>
     <div class="stamp-content"><%= number_to_currency(@company.outsourcing_cost_per_week) %></div>
@@ -31,10 +29,19 @@
     <div class="stamp-content"><%= @company.management_count %></div>
   </div>
 
-  <div class="col-xs-2 green-stamp">
+  <div class="col-xs-1 green-stamp">
     <div class="stamp-title"><%= t('financial_informations.index.last_cost_per_hour') %></div>
     <div class="stamp-content"><%= number_to_currency(@company.last_cost_per_hour) %></div>
   </div>
+</div>
+
+<div class="row">
+  <%= link_to company_products_path(company_id: @company) do %>
+    <div class="col-xs-2 stamp">
+      <div class="stamp-title"><%= t('companies.show.product_count') %></div>
+      <div class="stamp-content"><%= @company.products_count %></div>
+    </div>
+  <% end %>
 
   <%= link_to company_projects_path(company_id: @company, customer_id: @customer) do %>
     <div class="col-xs-2 stamp">

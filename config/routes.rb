@@ -3,6 +3,8 @@
 require 'sidekiq/web'
 
 Rails.application.routes.draw do
+  get 'product/index'
+
   authenticate :user do
     mount Sidekiq::Web => '/sidekiq'
   end
@@ -26,7 +28,7 @@ Rails.application.routes.draw do
     resources :financial_informations, only: %i[new create]
     resources :operation_results, only: %i[index destroy new create]
 
-    resources :products, only: [:show] do
+    resources :products, only: %i[index new create] do
     end
 
     resources :projects, only: %i[show index new create edit update] do

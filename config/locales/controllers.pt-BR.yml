@@ -50,6 +50,7 @@ pt-BR:
       red_project_count: "PROJETOS VERMELHOS"
       project_count: "Projetos"
       operation_result_count: "Resultados da Operação"
+      product_count: "Produtos"
   financial_informations:
     new:
       title: "Nova Informação Financeira"
@@ -111,3 +112,9 @@ pt-BR:
   team:
     edit:
       title: "Editar Membro do Time"
+  products:
+    index:
+      no_data: "Não há produtos aqui. Cadastre um."
+      title: "Produtos"
+    new:
+      title: "Novo Produto"

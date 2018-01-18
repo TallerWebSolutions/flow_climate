@@ -99,8 +99,8 @@ RSpec.describe ProjectsController, type: :controller do
         context 'not passing status filter' do
           let(:customer) { Fabricate :customer, company: company }
           let(:product) { Fabricate :product, customer: customer, name: 'zzz' }
-          let!(:project) { Fabricate :project, product: product, end_date: 2.days.from_now }
-          let!(:other_project) { Fabricate :project, product: product, end_date: 5.days.from_now }
+          let!(:project) { Fabricate :project, customer: customer, product: product, end_date: 2.days.from_now }
+          let!(:other_project) { Fabricate :project, customer: customer, product: product, end_date: 5.days.from_now }
           let!(:other_company_project) { Fabricate :project, end_date: 2.days.from_now }
 
           before { get :index, params: { company_id: company } }
@@ -116,8 +116,8 @@ RSpec.describe ProjectsController, type: :controller do
         context 'passing status filter' do
           let(:customer) { Fabricate :customer, company: company }
           let(:product) { Fabricate :product, customer: customer, name: 'zzz' }
-          let!(:project) { Fabricate :project, product: product, status: :executing }
-          let!(:other_project) { Fabricate :project, product: product, status: :waiting }
+          let!(:project) { Fabricate :project, customer: customer, product: product, status: :executing }
+          let!(:other_project) { Fabricate :project, customer: customer, product: product, status: :waiting }
           let!(:other_company_project) { Fabricate :project, status: :executing }
           before { get :index, params: { company_id: company, status_filter: :executing } }
           it 'assigns the instance variable and renders the template' do

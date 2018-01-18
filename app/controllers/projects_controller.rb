@@ -63,7 +63,7 @@ class ProjectsController < AuthenticatedController
   end
 
   def mount_projects_list
-    @projects = Project.joins(product: :customer).where('customers.company_id = ?', @company.id)
+    @projects = Project.joins(:customer).where('customers.company_id = ?', @company.id)
     @projects = @projects.where(status: params[:status_filter]) if params[:status_filter].present?
     @projects = @projects.order(end_date: :desc)
   end

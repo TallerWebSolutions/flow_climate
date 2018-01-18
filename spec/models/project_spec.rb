@@ -154,4 +154,6 @@ RSpec.describe Project, type: :model do
   end
 
   pending '#customer_name'
+  pending '#product_name'
+  pending 'customer should be equal to the product customer'
 end

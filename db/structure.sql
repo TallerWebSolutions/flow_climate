@@ -269,6 +269,7 @@ ALTER SEQUENCE project_results_id_seq OWNED BY project_results.id;
 
 CREATE TABLE projects (
     id bigint NOT NULL,
+    customer_id integer NOT NULL,
     name character varying NOT NULL,
     status integer NOT NULL,
     project_type integer NOT NULL,
@@ -280,7 +281,6 @@ CREATE TABLE projects (
     initial_scope integer NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    customer_id integer,
     product_id integer
 );
 
@@ -636,6 +636,13 @@ CREATE INDEX index_project_results_on_project_id ON project_results USING btree 
 
 
 --
+-- Name: index_projects_on_customer_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_projects_on_customer_id ON projects USING btree (customer_id);
+
+
+--
 -- Name: index_teams_on_company_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -686,6 +693,14 @@ ALTER TABLE ONLY products
 
 ALTER TABLE ONLY companies_users
     ADD CONSTRAINT fk_rails_27539b2fc9 FOREIGN KEY (user_id) REFERENCES users(id);
+
+
+--
+-- Name: projects fk_rails_47c768ed16; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY projects
+    ADD CONSTRAINT fk_rails_47c768ed16 FOREIGN KEY (customer_id) REFERENCES customers(id);
 
 
 --

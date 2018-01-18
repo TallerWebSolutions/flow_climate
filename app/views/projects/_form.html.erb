@@ -7,9 +7,10 @@
       <span class="help-block"><%= @project.errors[:name].join(', ') %></span>
     </div>
 
-    <div class='col-xs-3 form-group'>
-      <%= label_tag :customer, Customer.model_name.name, { class: 'control-label' } %>
+    <div class='col-xs-3 form-group <%= 'has-error' if @project.errors[:customer].present? %>'>
+      <%= label_tag :customer, Customer.model_name.human, { class: 'control-label' } %>
       <%= f.collection_select :customer_id, @company.customers, :id, :name, { include_blank: t('general.select') }, { class: 'form-control' } %>
+      <span class="help-block"><%= @project.errors[:customer].join(', ') %></span>
     </div>
 
     <div class='col-xs-3 form-group <%= 'has-error' if @project.errors[:product].present? %>'>

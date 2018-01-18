@@ -1,0 +1,34 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-xs-12">
+      <ul class="breadcrumb">
+        <li><%= link_to t('general.home.title'), root_path %></li>
+        <li><%= link_to @company.abbreviation, company_path(@company) %></li>
+        <li><%= t('products.index.title') %></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-xs-12">
+      <%= link_to t('products.new.title'), new_company_product_path(@company), class: 'btn btn-sm btn-primary botton-spaced-component' %>
+    </div>
+  </div>
+
+  <% if @products.empty? %>
+    <%= t('products.index.no_data') %>
+  <% else %>
+    <table class="table">
+      <tr>
+        <th><%= Product.human_attribute_name :customer %></th>
+        <th><%= Product.human_attribute_name :name %></th>
+      </tr>
+      <% @products.each do |product| %>
+        <tr>
+          <td><%= product.customer_name %></td>
+          <td><%= product.name %></td>
+        </tr>
+      <% end %>
+    </table>
+  <% end %>
+</div>

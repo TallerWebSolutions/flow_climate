@@ -15,6 +15,7 @@ class Company < ApplicationRecord
   has_and_belongs_to_many :users
   has_many :financial_informations, dependent: :restrict_with_error
   has_many :customers, dependent: :restrict_with_error
+  has_many :products, through: :customers
   has_many :teams, dependent: :restrict_with_error
   has_many :operation_results, dependent: :restrict_with_error
 
@@ -50,6 +51,10 @@ class Company < ApplicationRecord
 
   def projects_count
     customers.sum(&:projects_count)
+  end
+
+  def products_count
+    customers.sum(&:products_count)
   end
 
   def last_cost_per_hour

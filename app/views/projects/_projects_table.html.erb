@@ -2,6 +2,7 @@
   <thead>
   <tr>
     <th><%= Project.human_attribute_name :customer_name %></th>
+    <th><%= Project.human_attribute_name :product_name %></th>
     <th><%= Project.human_attribute_name :name %></th>
     <th><%= Project.human_attribute_name :status %></th>
     <th><%= Project.human_attribute_name :project_type %></th>
@@ -24,6 +25,7 @@
   <% projects_list.each do |project| %>
     <tr class="<%= 'red-project' if project.red? %>">
       <td><%= project.customer_name %></td>
+      <td><%= project.product_name %></td>
       <td><%= link_to project.name, company_project_path(@company, project) %></td>
       <td><%= t("activerecord.attributes.project.enums.status.#{project.status}") %></td>
       <td><%= t("activerecord.attributes.project.enums.project_type.#{project.project_type}") %></td>

@@ -5,6 +5,7 @@ RSpec.describe Company, type: :model do
     it { is_expected.to have_and_belong_to_many :users }
     it { is_expected.to have_many :financial_informations }
     it { is_expected.to have_many :customers }
+    it { is_expected.to have_many(:products).through(:customers) }
     it { is_expected.to have_many :teams }
     it { is_expected.to have_many :operation_results }
   end
@@ -125,9 +126,9 @@ RSpec.describe Company, type: :model do
     let(:product) { Fabricate :product, customer: customer, name: 'zzz' }
     let(:other_product) { Fabricate :product, customer: other_customer, name: 'zzz' }
 
-    let!(:first_project) { Fabricate :project, product: product, status: :executing, qty_hours: 1000, value: 100_000, hour_value: 100, start_date: 1.day.ago, end_date: 1.month.from_now }
-    let!(:second_project) { Fabricate :project, product: product, status: :executing, qty_hours: 1000, value: 100_000, hour_value: 100, start_date: 1.day.ago, end_date: 1.month.from_now }
-    let!(:third_project) { Fabricate :project, product: other_product, status: :executing, qty_hours: 1000, value: 100_000, hour_value: 100, start_date: 1.day.ago, end_date: 1.month.from_now }
+    let!(:first_project) { Fabricate :project, customer: customer, product: product, status: :executing, qty_hours: 1000, value: 100_000, hour_value: 100, start_date: 1.day.ago, end_date: 1.month.from_now }
+    let!(:second_project) { Fabricate :project, customer: customer, product: product, status: :executing, qty_hours: 1000, value: 100_000, hour_value: 100, start_date: 1.day.ago, end_date: 1.month.from_now }
+    let!(:third_project) { Fabricate :project, customer: other_customer, product: other_product, status: :executing, qty_hours: 1000, value: 100_000, hour_value: 100, start_date: 1.day.ago, end_date: 1.month.from_now }
 
     it { expect(company.projects_count).to eq 2 }
   end
@@ -288,5 +289,17 @@ RSpec.describe Company, type: :model do
     let!(:fifth_result) { Fabricate :project_result, project: other_company_project, result_date: Time.zone.today, qty_bugs_closed: 100 }
 
     it { expect(company.bugs_closed_in_week(1.month.ago.to_date.cweek, 1.month.ago.to_date.cwyear)).to eq 30 }
+  end
+
+  context '#products_count' do
+    let(:company) { Fabricate :company }
+    let(:customer) { Fabricate :customer, company: company }
+    let(:other_customer) { Fabricate :customer, company: company }
+    let(:other_company_customer) { Fabricate :customer }
+
+    let!(:product) { Fabricate :product, customer: customer, name: 'zzz' }
+    let!(:other_product) { Fabricate :product, customer: other_customer, name: 'zzz' }
+
+    it { expect(company.products_count).to eq 2 }
   end
 end

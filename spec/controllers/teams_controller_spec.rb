@@ -116,14 +116,14 @@ RSpec.describe TeamsController, type: :controller do
     describe 'POST #create' do
       context 'passing valid parameters' do
         before { post :create, params: { company_id: company, team: { name: 'foo' } } }
-        it 'creates the new company and redirects to its show' do
+        it 'creates the new team and redirects to its show' do
           expect(Team.last.name).to eq 'foo'
           expect(response).to redirect_to company_team_path(company, Team.last)
         end
       end
       context 'passing invalid parameters' do
         before { post :create, params: { company_id: company, team: { name: '' } } }
-        it 'does not create the company and re-render the template with the errors' do
+        it 'does not create the team and re-render the template with the errors' do
           expect(Team.last).to be_nil
           expect(response).to render_template :new
           expect(assigns(:team).errors.full_messages).to eq ['Nome não pode ficar em branco']
