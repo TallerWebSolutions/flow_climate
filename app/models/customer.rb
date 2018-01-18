@@ -27,22 +27,21 @@ class Customer < ApplicationRecord
   validates :company, :name, presence: true
 
   delegate :count, to: :products, prefix: true
-
   delegate :count, to: :projects, prefix: true
 
   def active_projects
-    products.sum(&:active_projects)
+    projects.where(status: :executing)
   end
 
   def waiting_projects
-    products.sum(&:waiting_projects)
+    projects.where(status: :waiting)
   end
 
   def red_projects
-    products.sum(&:red_projects)
+    projects.select(&:red?)
   end
 
   def current_backlog
-    products.sum(&:current_backlog)
+    projects.sum(&:current_backlog)
   end
 end

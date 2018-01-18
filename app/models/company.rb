@@ -38,11 +38,11 @@ class Company < ApplicationRecord
   end
 
   def active_projects_count
-    customers.map(&:active_projects).flatten.count
+    customers.sum { |p| p.active_projects.count }
   end
 
   def waiting_projects_count
-    customers.map(&:waiting_projects).flatten.count
+    customers.sum { |p| p.waiting_projects.count }
   end
 
   def red_projects_count

@@ -24,12 +24,12 @@
     <div class="stamp-title"><%= t('companies.show.members_billable_count') %></div>
     <div class="stamp-content"><%= @company.outsourcing_members_billable_count %></div>
   </div>
-  <div class="col-xs-2 stamp">
+  <div class="col-xs-1 stamp">
     <div class="stamp-title"><%= t('companies.show.management_count') %></div>
     <div class="stamp-content"><%= @company.management_count %></div>
   </div>
 
-  <div class="col-xs-1 green-stamp">
+  <div class="col-xs-2 green-stamp">
     <div class="stamp-title"><%= t('financial_informations.index.last_cost_per_hour') %></div>
     <div class="stamp-content"><%= number_to_currency(@company.last_cost_per_hour) %></div>
   </div>
