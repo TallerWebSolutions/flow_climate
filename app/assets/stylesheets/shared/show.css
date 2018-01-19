@@ -25,6 +25,7 @@
 
 .stamp-content {
     font-size: large;
+    min-height: 25px;
 }
 
 .standard-form {
