@@ -2,8 +2,20 @@ language: ruby
 rvm:
  - 2.4.3
 
+sudo: required
+
 services:
   - postgresql
 
+addons:
+  postgresql: "9.6"
+
+script:
+  - RAILS_ENV=test bundle exec rake db:migrate --trace
+  - bundle exec rake db:test:prepare
+  - bundle exec rspec spec/
+  - bundle exec rubocop -DR
+
 before_script:
+  - bash install-postgres-10.sh
   - psql -c 'create database flowcontrol_test;' -U postgres
