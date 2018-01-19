@@ -84,6 +84,8 @@ pt-BR:
       percentage_remaining_days: "% Tempo Restante"
       remaining_money: "Restante ($$)"
       percentage_remaining_money: "% Restante ($$)"
+      flow_pressure: "Pressão do Fluxo"
+      percentage_flow_pressure: "% Pressão do Fluxo"
     show:
       initial_scope: "Escopo Inicial"
       last_team: "Time atual"

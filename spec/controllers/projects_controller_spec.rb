@@ -104,13 +104,17 @@ RSpec.describe ProjectsController, type: :controller do
           let!(:other_company_project) { Fabricate :project, end_date: 2.days.from_now }
 
           before { get :index, params: { company_id: company } }
-          it 'assigns the instance variable and renders the template' do
+          it 'assigns the instances variables and renders the template' do
             expect(response).to render_template :index
             projects = assigns(:projects)
             expect(projects).to eq [other_project, project]
             expect(assigns(:total_hours)).to eq projects.sum(&:qty_hours)
             expect(assigns(:average_hour_value)).to eq projects.average(:hour_value)
             expect(assigns(:total_value)).to eq projects.sum(:value)
+            expect(assigns(:total_consumed_hours)).to eq projects.sum(&:consumed_hours)
+            expect(assigns(:total_days)).to eq projects.sum(&:total_days)
+            expect(assigns(:total_remaining_days)).to eq projects.sum(&:remaining_days)
+            expect(assigns(:total_flow_pressure)).to eq projects.sum(&:flow_pressure)
           end
         end
         context 'passing status filter' do

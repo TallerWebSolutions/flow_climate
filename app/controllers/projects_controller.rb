@@ -24,6 +24,7 @@ class ProjectsController < AuthenticatedController
     @total_value = @projects.sum(&:value)
     @total_days = @projects.sum(&:total_days)
     @total_remaining_days = @projects.sum(&:remaining_days)
+    @total_flow_pressure = @projects.sum(&:flow_pressure)
   end
 
   def new

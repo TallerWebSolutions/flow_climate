@@ -91,7 +91,7 @@ RSpec.describe Project, type: :model do
     end
     context 'when the start date is in the future' do
       let(:project) { Fabricate :project, start_date: 2.days.from_now, end_date: 3.days.from_now }
-      it { expect(project.remaining_days).to eq 0 }
+      it { expect(project.remaining_days).to eq 1 }
     end
   end
 
@@ -175,6 +175,18 @@ RSpec.describe Project, type: :model do
     end
     context 'having no results' do
       it { expect(project.current_team).to be_nil }
+    end
+  end
+
+  describe '#flow_pressure' do
+    let(:project) { Fabricate :project, initial_scope: 30, start_date: 1.day.from_now, end_date: 1.week.from_now }
+    context 'having results' do
+      let!(:result) { Fabricate :project_result, project: project, result_date: 1.day.ago, known_scope: 10 }
+      let!(:other_result) { Fabricate :project_result, project: project, result_date: Time.zone.today, known_scope: 20 }
+      it { expect(project.flow_pressure).to be_within(0.01).of(3.333) }
+    end
+    context 'having no results' do
+      it { expect(project.flow_pressure).to eq 5 }
     end
   end
 end

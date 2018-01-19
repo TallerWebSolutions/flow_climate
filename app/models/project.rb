@@ -35,7 +35,6 @@ class Project < ApplicationRecord
 
   belongs_to :customer
   belongs_to :product
-  belongs_to :team
   has_many :project_results, dependent: :restrict_with_error
 
   validates :customer, :qty_hours, :product, :project_type, :name, :status, :start_date, :end_date, :status, :initial_scope, presence: true
@@ -50,7 +49,8 @@ class Project < ApplicationRecord
   end
 
   def remaining_days
-    return 0 if end_date < Time.zone.today || start_date > Time.zone.today
+    return 0 if end_date < Time.zone.today
+    return (end_date - start_date).to_i if start_date > Time.zone.today
     (end_date - Time.zone.today).to_i
   end
 
@@ -76,6 +76,12 @@ class Project < ApplicationRecord
 
   def current_team
     project_results.order(result_date: :desc)&.first&.team
+  end
+
+  def flow_pressure
+    return 0 if finished? || cancelled?
+    days = remaining_days || total_days
+    current_backlog.to_f / days.to_f
   end
 
   private

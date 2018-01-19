@@ -85,6 +85,8 @@ en:
       percentage_remaining_days: "% Time Remaining"
       remaining_money: "Remaining ($$)"
       percentage_remaining_money: "% Remaining ($$)"
+      flow_pressure: "Flow Pressure"
+      percentage_flow_pressure: "% Flow Pressure"
     show:
       initial_scope: "Initial Scope"
       last_team: "Current team"
