@@ -62,6 +62,16 @@ class Company < ApplicationRecord
     finance&.cost_per_hour
   end
 
+  def last_hours_per_demand
+    finance = financial_informations.order(finances_date: :desc).first
+    finance&.hours_per_demand
+  end
+
+  def last_throughput
+    finance = financial_informations.order(finances_date: :desc).first
+    finance&.throughput_operation_result
+  end
+
   def current_backlog
     customers.sum(&:current_backlog)
   end

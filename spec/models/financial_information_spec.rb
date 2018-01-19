@@ -48,4 +48,24 @@ RSpec.describe FinancialInformation, type: :model do
 
     it { expect(finances.hours_delivered_operation_result).to eq 80 }
   end
+
+  describe '#throughput_operation_result' do
+    let(:company) { Fabricate :company }
+    let!(:finances) { Fabricate :financial_information, company: company, finances_date: 1.month.ago, income_total: 20.4, expenses_total: 12.2 }
+    let!(:result) { Fabricate :operation_result, company: company, result_date: 1.month.ago, delivered_hours: 30, total_th: 10 }
+    let!(:other_result) { Fabricate :operation_result, company: company, result_date: 1.month.ago, delivered_hours: 50, total_th: 5 }
+    let!(:out_result) { Fabricate :operation_result, result_date: 1.month.ago, delivered_hours: 60, total_th: 1 }
+
+    it { expect(finances.throughput_operation_result).to eq 15 }
+  end
+
+  describe '#hours_per_demand' do
+    let(:company) { Fabricate :company }
+    let!(:finances) { Fabricate :financial_information, company: company, finances_date: 1.month.ago, income_total: 20.4, expenses_total: 12.2 }
+    let!(:result) { Fabricate :operation_result, company: company, result_date: 1.month.ago, delivered_hours: 30, total_th: 10 }
+    let!(:other_result) { Fabricate :operation_result, company: company, result_date: 1.month.ago, delivered_hours: 50, total_th: 5 }
+    let!(:out_result) { Fabricate :operation_result, result_date: 1.month.ago, delivered_hours: 60, total_th: 1 }
+
+    it { expect(finances.hours_per_demand).to be_within(0.01).of(5.3333) }
+  end
 end

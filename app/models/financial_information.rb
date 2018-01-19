@@ -34,11 +34,19 @@ class FinancialInformation < ApplicationRecord
     expenses_total / hours_delivered_operation_result
   end
 
+  def hours_per_demand
+    hours_delivered_operation_result.to_f / throughput_operation_result.to_f
+  end
+
   def project_delivered_hours
     ProjectResultsRepository.instance.project_results_for_company_month(company, finances_date.month, finances_date.year).sum(&:project_delivered_hours)
   end
 
   def hours_delivered_operation_result
     OperationResultsRepository.instance.operation_results_for_company_month(company, finances_date.month, finances_date.year).sum(&:delivered_hours)
+  end
+
+  def throughput_operation_result
+    OperationResultsRepository.instance.operation_results_for_company_month(company, finances_date.month, finances_date.year).sum(&:total_th)
   end
 end

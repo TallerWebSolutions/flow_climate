@@ -60,6 +60,10 @@ pt-BR:
       cost_per_hour: "Custo/Hora"
       project_delivered_hours_count: "Total de horas (Projetos)"
       delivered_hours: "Horas Entregues (Operação)"
+      throughput: "Throughput"
+      hours_per_demand: "Horas/Demanda"
+      last_hours_per_demand: "Última horas/demanda"
+      last_throughput: "Último throughput"
   team_members:
     index:
       title: "Membros do Time"

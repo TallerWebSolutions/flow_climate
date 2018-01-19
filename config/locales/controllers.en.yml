@@ -61,6 +61,10 @@ en:
       cost_per_hour: "Cost/Hour"
       project_delivered_hours_count: "Delivered Hours (Projects)"
       delivered_hours: "Hours Delivered (Operation)"
+      throughput: "Throughput"
+      hours_per_demand: "Hours/Demand"
+      last_hours_per_demand: "Last hours/demand"
+      last_throughput: "Last throughput"
   team_members:
     index:
       title: "Team members"

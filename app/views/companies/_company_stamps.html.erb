@@ -1,15 +1,11 @@
 <div class="row">
-  <div class="col-xs-1 stamp">
+  <div class="col-xs-2 stamp">
     <div class="stamp-title"><%= t('general.current_week') %></div>
     <div class="stamp-content"><%= Time.zone.today.cweek %></div>
   </div>
-  <div class="col-xs-1 stamp">
+  <div class="col-xs-2 stamp">
     <div class="stamp-title"><%= t('general.current_year') %></div>
     <div class="stamp-content"><%= Time.zone.today.cwyear %></div>
-  </div>
-  <div class="col-xs-1 stamp">
-    <div class="stamp-title"><%= t('general.current_backlog') %></div>
-    <div class="stamp-content"><%= @company.current_backlog %></div>
   </div>
 
   <div class="col-xs-2 green-stamp">
@@ -24,14 +20,28 @@
     <div class="stamp-title"><%= t('companies.show.members_billable_count') %></div>
     <div class="stamp-content"><%= @company.outsourcing_members_billable_count %></div>
   </div>
-  <div class="col-xs-1 stamp">
+  <div class="col-xs-2 stamp">
     <div class="stamp-title"><%= t('companies.show.management_count') %></div>
     <div class="stamp-content"><%= @company.management_count %></div>
   </div>
+</div>
 
-  <div class="col-xs-2 green-stamp">
+<div class="row">
+  <div class="col-xs-3 stamp">
+    <div class="stamp-title"><%= t('general.current_backlog') %></div>
+    <div class="stamp-content"><%= @company.current_backlog %></div>
+  </div>
+  <div class="col-xs-3 stamp">
+    <div class="stamp-title"><%= t('financial_informations.index.last_throughput') %></div>
+    <div class="stamp-content"><%= @company.last_throughput %></div>
+  </div>
+  <div class="col-xs-3 stamp">
     <div class="stamp-title"><%= t('financial_informations.index.last_cost_per_hour') %></div>
     <div class="stamp-content"><%= number_to_currency(@company.last_cost_per_hour) %></div>
+  </div>
+  <div class="col-xs-3 stamp">
+    <div class="stamp-title"><%= t('financial_informations.index.last_hours_per_demand') %></div>
+    <div class="stamp-content"><%= number_with_precision(@company.last_hours_per_demand, precision: 2) %></div>
   </div>
 </div>
 

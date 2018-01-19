@@ -162,6 +162,24 @@ RSpec.describe Company, type: :model do
     end
   end
 
+  context '#last_hours_per_demand' do
+    context 'having finances' do
+      let(:company) { Fabricate :company }
+      let(:finance) { Fabricate :financial_information, company: company, finances_date: 1.month.ago }
+      let!(:other_finance) { Fabricate :financial_information, company: company, finances_date: 2.months.from_now }
+      let!(:result) { Fabricate :operation_result, company: company, result_date: 2.months.ago, delivered_hours: 30, total_th: 10 }
+      let!(:other_result) { Fabricate :operation_result, company: company, result_date: 2.months.from_now, delivered_hours: 50, total_th: 5 }
+      let!(:out_result) { Fabricate :operation_result, result_date: 2.months.from_now, delivered_hours: 60, total_th: 1 }
+
+      it { expect(company.last_hours_per_demand).to eq other_result.delivered_hours / other_result.total_th }
+    end
+
+    context 'having no finances' do
+      let(:company) { Fabricate :company }
+      it { expect(company.last_hours_per_demand).to eq nil }
+    end
+  end
+
   describe '#current_backlog' do
     let(:company) { Fabricate :company }
     let(:customer) { Fabricate :customer, company: company }
