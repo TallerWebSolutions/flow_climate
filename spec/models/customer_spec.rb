@@ -12,6 +12,11 @@ RSpec.describe Customer, type: :model do
     it { is_expected.to validate_presence_of :name }
   end
 
+  context 'delegations' do
+    it { is_expected.to delegate_method(:count).to(:projects).with_prefix }
+    it { is_expected.to delegate_method(:count).to(:products).with_prefix }
+  end
+
   describe '#active_projects' do
     let(:customer) { Fabricate :customer }
     let(:product) { Fabricate :product, customer: customer, name: 'zzz' }
@@ -32,8 +37,8 @@ RSpec.describe Customer, type: :model do
     let!(:active_project) { Fabricate :project, customer: customer, product: product, status: :executing }
     let!(:waiting_project) { Fabricate :project, customer: customer, product: product, status: :waiting }
     let!(:other_waiting_project) { Fabricate :project, customer: customer, product: product, status: :waiting }
-    let!(:finished_project) { Fabricate :project, product: product, status: :finished }
-    let!(:cancelled_project) { Fabricate :project, product: product, status: :cancelled }
+    let!(:finished_project) { Fabricate :project, customer: customer, product: product, status: :finished }
+    let!(:cancelled_project) { Fabricate :project, customer: customer, product: product, status: :cancelled }
 
     it { expect(customer.waiting_projects).to match_array [waiting_project, other_waiting_project] }
   end
@@ -79,6 +84,4 @@ RSpec.describe Customer, type: :model do
 
     it { expect(customer.current_backlog).to eq 25 }
   end
-
-  pending '#projects_count'
 end

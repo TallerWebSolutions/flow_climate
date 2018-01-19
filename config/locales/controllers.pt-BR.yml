@@ -110,6 +110,7 @@ pt-BR:
       title: "Editar Projeto"
     validations:
       no_value: "Valor ou Valor da hora é obrigatório"
+      customer_not_same: "O cliente do projeto deve ser o mesmo cliente do produto"
   team_member:
     edit:
       title: "Editar Membro do Time"

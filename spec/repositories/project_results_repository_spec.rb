@@ -6,8 +6,8 @@ RSpec.describe ProjectResultsRepository, type: :repository do
   let(:product) { Fabricate :product, customer: customer, name: 'zzz' }
 
   describe '#project_results_for_company_month' do
-    let!(:project) { Fabricate :project, product: product }
-    let!(:other_project) { Fabricate :project, product: product }
+    let!(:project) { Fabricate :project, customer: customer, product: product }
+    let!(:other_project) { Fabricate :project, customer: customer, product: product }
     let!(:first_result) { Fabricate :project_result, project: project, result_date: 1.day.ago, qty_hours_downstream: 30 }
     let!(:second_result) { Fabricate :project_result, project: other_project, result_date: 1.day.ago, qty_hours_downstream: 50 }
     let!(:third_result) { Fabricate :project_result, project: other_project, result_date: 2.months.ago, qty_hours_downstream: 90 }
@@ -17,8 +17,8 @@ RSpec.describe ProjectResultsRepository, type: :repository do
   end
 
   describe '#consumed_hours_in_week' do
-    let!(:project) { Fabricate :project, product: product }
-    let!(:other_project) { Fabricate :project, product: product }
+    let!(:project) { Fabricate :project, customer: customer, product: product }
+    let!(:other_project) { Fabricate :project, customer: customer, product: product }
     let!(:first_result) { Fabricate :project_result, project: project, result_date: 1.day.ago, qty_hours_downstream: 30 }
     let!(:second_result) { Fabricate :project_result, project: other_project, result_date: 1.day.ago, qty_hours_downstream: 50 }
     let!(:third_result) { Fabricate :project_result, project: other_project, result_date: 2.months.ago, qty_hours_downstream: 90 }
@@ -28,8 +28,8 @@ RSpec.describe ProjectResultsRepository, type: :repository do
   end
 
   describe '#th_in_week' do
-    let!(:project) { Fabricate :project, product: product }
-    let!(:other_project) { Fabricate :project, product: product }
+    let!(:project) { Fabricate :project, customer: customer, product: product }
+    let!(:other_project) { Fabricate :project, customer: customer, product: product }
     let!(:first_result) { Fabricate :project_result, project: project, result_date: 1.day.ago, throughput: 30 }
     let!(:second_result) { Fabricate :project_result, project: other_project, result_date: 1.day.ago, throughput: 50 }
     let!(:third_result) { Fabricate :project_result, project: other_project, result_date: 2.months.ago, throughput: 90 }
@@ -39,8 +39,8 @@ RSpec.describe ProjectResultsRepository, type: :repository do
   end
 
   describe '#bugs_opened_in_week' do
-    let!(:project) { Fabricate :project, product: product }
-    let!(:other_project) { Fabricate :project, product: product }
+    let!(:project) { Fabricate :project, customer: customer, product: product }
+    let!(:other_project) { Fabricate :project, customer: customer, product: product }
     let!(:first_result) { Fabricate :project_result, project: project, result_date: 1.day.ago, qty_bugs_opened: 30 }
     let!(:second_result) { Fabricate :project_result, project: other_project, result_date: 1.day.ago, qty_bugs_opened: 50 }
     let!(:third_result) { Fabricate :project_result, project: other_project, result_date: 2.months.ago, qty_bugs_opened: 90 }
@@ -50,8 +50,8 @@ RSpec.describe ProjectResultsRepository, type: :repository do
   end
 
   describe '#bugs_closed_in_week' do
-    let!(:project) { Fabricate :project, product: product }
-    let!(:other_project) { Fabricate :project, product: product }
+    let!(:project) { Fabricate :project, customer: customer, product: product }
+    let!(:other_project) { Fabricate :project, customer: customer, product: product }
     let!(:first_result) { Fabricate :project_result, project: project, result_date: 1.day.ago, qty_bugs_closed: 30 }
     let!(:second_result) { Fabricate :project_result, project: other_project, result_date: 1.day.ago, qty_bugs_closed: 50 }
     let!(:third_result) { Fabricate :project_result, project: other_project, result_date: 2.months.ago, qty_bugs_closed: 90 }

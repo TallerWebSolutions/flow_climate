@@ -43,11 +43,36 @@ RSpec.describe Project, type: :model do
           it { expect(project.valid?).to be true }
         end
       end
+
+      context 'the customer in the project must be the same of in the product' do
+        let(:customer) { Fabricate :customer }
+        let(:other_customer) { Fabricate :customer }
+        let(:product) { Fabricate :product, customer: customer }
+
+        context 'when they are not the same' do
+          let(:project) { Fabricate.build :project, customer: other_customer, product: product }
+          it 'fails the validation' do
+            expect(project.valid?).to be false
+            expect(project.errors.full_messages).to eq ['Customer O cliente do projeto deve ser o mesmo cliente do produto']
+          end
+        end
+
+        context 'when they are the same' do
+          let(:project) { Fabricate :project, customer: customer, product: product }
+          it { expect(project.valid?).to be true }
+        end
+
+        context 'having no product' do
+          let(:project) { Fabricate :project, customer: customer }
+          it { expect(project.valid?).to be true }
+        end
+      end
     end
   end
 
   context 'delegations' do
     it { is_expected.to delegate_method(:name).to(:customer).with_prefix }
+    it { is_expected.to delegate_method(:name).to(:product).with_prefix }
   end
 
   describe '#total_days' do
@@ -152,8 +177,4 @@ RSpec.describe Project, type: :model do
       it { expect(project.current_team).to be_nil }
     end
   end
-
-  pending '#customer_name'
-  pending '#product_name'
-  pending 'customer should be equal to the product customer'
 end

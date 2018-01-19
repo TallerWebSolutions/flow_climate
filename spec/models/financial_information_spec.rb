@@ -30,8 +30,8 @@ RSpec.describe FinancialInformation, type: :model do
     let!(:finances) { Fabricate :financial_information, income_total: 20.4, expenses_total: 12.2 }
     let(:customer) { Fabricate :customer, company: finances.company }
     let(:product) { Fabricate :product, customer: customer, name: 'zzz' }
-    let!(:project) { Fabricate :project, product: product }
-    let!(:other_project) { Fabricate :project, product: product }
+    let!(:project) { Fabricate :project, customer: customer, product: product }
+    let!(:other_project) { Fabricate :project, customer: customer, product: product }
     let!(:result) { Fabricate :project_result, project: project, result_date: finances.finances_date, qty_hours_downstream: 30 }
     let!(:other_result) { Fabricate :project_result, project: other_project, result_date: finances.finances_date, qty_hours_downstream: 50 }
     let!(:out_result) { Fabricate :project_result, result_date: finances.finances_date, qty_hours_downstream: 60 }
