@@ -30,8 +30,8 @@ end
 
 group :development do
   gem 'annotate'
-  gem 'web-console'
   gem 'listen'
+  gem 'web-console'
 end
 
 group :test do
