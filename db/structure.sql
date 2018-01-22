@@ -240,7 +240,8 @@ CREATE TABLE project_results (
     histogram_second_mode numeric,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    team_id integer NOT NULL
+    team_id integer NOT NULL,
+    monte_carlo_date date
 );
 
 
@@ -789,6 +790,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20180116022142'),
 ('20180116205144'),
 ('20180116235900'),
-('20180117150255');
+('20180117150255'),
+('20180122211258');
 
 

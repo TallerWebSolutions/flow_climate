@@ -24,7 +24,7 @@ class ProjectResultsController < AuthenticatedController
   private
 
   def project_result_params
-    params.require(:project_result).permit(:team, :result_date, :known_scope, :qty_hours_upstream, :qty_hours_downstream, :throughput, :qty_bugs_opened, :qty_bugs_closed, :qty_hours_bug, :leadtime, :histogram_first_mode, :histogram_second_mode)
+    params.require(:project_result).permit(:team, :result_date, :known_scope, :qty_hours_upstream, :qty_hours_downstream, :throughput, :monte_carlo_date, :qty_bugs_opened, :qty_bugs_closed, :qty_hours_bug, :leadtime, :histogram_first_mode, :histogram_second_mode)
   end
 
   def assign_project

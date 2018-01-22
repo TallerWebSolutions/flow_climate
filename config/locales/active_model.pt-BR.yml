@@ -157,6 +157,7 @@ pt-BR:
         leadtime: Leadtime
         histogram_first_mode: Primeira Moda Histograma
         histogram_second_mode: Segunda Moda Histograma
+        monte_carlo_date: Previsão Monte Carlo
       operation_result:
         result_date: Data
         people_billable_count: Qtd de Pessoas Faturáveis

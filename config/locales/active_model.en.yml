@@ -38,20 +38,12 @@ en:
         one: 1 error prohibited this %{model} from being saved
         other: "%{count} errors prohibited this %{model} from being saved"
   activerecord:
+    attributes:
+      project_result:
+        monte_carlo_date: Monte Carlo Forecast
     errors:
       messages:
         record_invalid: 'Validation failed: %{errors}'
         restrict_dependent_destroy:
           has_one: Cannot delete record because a dependent %{record} exists
           has_many: Cannot delete record because dependent %{record} exist
-      models:
-        stage:
-          attributes:
-            base:
-              restrict_dependent_destroy:
-                has_many: Cannot delete record because there are dependent records
-        prospect:
-          blank: Oops! This field is required
-          attributes:
-            email:
-              invalid: This is not a valid email

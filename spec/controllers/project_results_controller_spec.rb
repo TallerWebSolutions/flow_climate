@@ -59,7 +59,7 @@ RSpec.describe ProjectResultsController, type: :controller do
       let!(:project) { Fabricate :project, customer: customer, product: product, end_date: 2.days.from_now }
 
       context 'passing valid parameters' do
-        before { post :create, params: { company_id: company, project_id: project, project_result: { team: team.id, result_date: Time.zone.today, known_scope: 100, qty_hours_upstream: 10, qty_hours_downstream: 13, throughput: 5, qty_bugs_opened: 0, qty_bugs_closed: 3, qty_hours_bug: 7, leadtime: 10.5, histogram_first_mode: 12.2, histogram_second_mode: 9.2 } } }
+        before { post :create, params: { company_id: company, project_id: project, project_result: { team: team.id, result_date: Time.zone.today, known_scope: 100, qty_hours_upstream: 10, qty_hours_downstream: 13, throughput: 5, monte_carlo_date: 1.month.from_now, qty_bugs_opened: 0, qty_bugs_closed: 3, qty_hours_bug: 7, leadtime: 10.5, histogram_first_mode: 12.2, histogram_second_mode: 9.2 } } }
         it 'assigns the instance variable and renders the template' do
           expect(response).to redirect_to company_project_path(company, project)
           result = ProjectResult.last
@@ -69,6 +69,7 @@ RSpec.describe ProjectResultsController, type: :controller do
           expect(result.qty_hours_upstream).to eq 10
           expect(result.qty_hours_downstream).to eq 13
           expect(result.throughput).to eq 5
+          expect(result.monte_carlo_date).to eq 1.month.from_now.to_date
           expect(result.qty_bugs_opened).to eq 0
           expect(result.qty_bugs_closed).to eq 3
           expect(result.qty_hours_bug).to eq 7

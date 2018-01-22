@@ -20,6 +20,7 @@
 #  created_at            :datetime         not null
 #  updated_at            :datetime         not null
 #  team_id               :integer          not null
+#  monte_carlo_date      :date
 #
 # Indexes
 #
