@@ -24,7 +24,7 @@ RSpec.describe Company, type: :model do
     let!(:consulting_members) { Fabricate.times(2, :team_member, team: other_team, billable_type: :consulting) }
     let!(:not_billable_members) { Fabricate.times(10, :team_member, team: team, billable: false, billable_type: nil) }
 
-    it { expect(company.outsourcing_cost_per_week).to eq((members.sum(&:monthly_payment) + other_members.sum(&:monthly_payment)) / 4) }
+    it { expect(company.outsourcing_cost).to eq((members.sum(&:monthly_payment) + other_members.sum(&:monthly_payment))) }
   end
 
   context '#management_cost_per_week' do
@@ -36,7 +36,7 @@ RSpec.describe Company, type: :model do
     let!(:not_billable_members) { Fabricate.times(10, :team_member, team: team, billable: false, billable_type: nil) }
     let!(:other_not_billable_members) { Fabricate.times(10, :team_member, team: other_team, billable: false, billable_type: nil) }
 
-    it { expect(company.management_cost_per_week).to eq((not_billable_members.sum(&:monthly_payment) + other_not_billable_members.sum(&:monthly_payment)) / 4) }
+    it { expect(company.management_cost).to eq((not_billable_members.sum(&:monthly_payment) + other_not_billable_members.sum(&:monthly_payment))) }
   end
 
   context '#outsourcing_members_billable_count' do

@@ -21,12 +21,12 @@ class Company < ApplicationRecord
 
   validates :name, :abbreviation, presence: true
 
-  def outsourcing_cost_per_week
-    teams.sum(&:outsourcing_cost_per_week)
+  def outsourcing_cost
+    teams.sum(&:outsourcing_cost)
   end
 
-  def management_cost_per_week
-    teams.sum(&:management_cost_per_week)
+  def management_cost
+    teams.sum(&:management_cost)
   end
 
   def outsourcing_members_billable_count

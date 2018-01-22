@@ -103,6 +103,8 @@ pt-BR:
   teams:
     index:
       title: "Times"
+      billable_cost: "Custo Faturável"
+      management_cost: "Custo da Gestão"
     new:
       title: "Novo Time"
   project:

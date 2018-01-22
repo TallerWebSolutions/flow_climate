@@ -68,7 +68,7 @@ GEM
     docile (1.1.5)
     erubi (1.7.0)
     execjs (2.7.0)
-    fabrication (2.19.0)
+    fabrication (2.20.1)
     faker (1.8.7)
       i18n (>= 0.7)
     ffi (1.9.18)
@@ -106,7 +106,7 @@ GEM
       ast (~> 2.3)
     pg (0.21.0)
     powerpack (0.1.1)
-    puma (3.11.0)
+    puma (3.11.2)
     rack (2.0.3)
     rack-protection (2.0.0)
       rack

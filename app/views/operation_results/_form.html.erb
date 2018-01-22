@@ -15,7 +15,7 @@
 
     <div class='col-xs-4 form-group <%= 'has-error' if @operation_result.errors[:operation_week_value].present? %>'>
       <%= f.label :operation_week_value, class: 'control-label' %>
-      <%= f.number_field :operation_week_value, value: @operation_result.operation_week_value || @company.outsourcing_cost_per_week, class: 'form-control', step: 0.01 %>
+      <%= f.number_field :operation_week_value, value: @operation_result.operation_week_value || @company.outsourcing_cost, class: 'form-control', step: 0.01 %>
       <span class="help-block"><%= @operation_result.errors[:operation_week_value].join(', ') %></span>
     </div>
   </div>
