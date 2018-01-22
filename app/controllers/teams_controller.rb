@@ -9,6 +9,7 @@ class TeamsController < AuthenticatedController
   end
 
   def show
+    @projects_summary = ProjectsSummaryObject.new(@team.projects)
     @team_members = @team.team_members.order(:name)
   end
 

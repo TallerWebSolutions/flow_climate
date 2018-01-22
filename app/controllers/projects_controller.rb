@@ -18,13 +18,7 @@ class ProjectsController < AuthenticatedController
 
   def index
     mount_projects_list
-    @total_hours = @projects.sum(&:qty_hours)
-    @total_consumed_hours = @projects.sum(&:consumed_hours)
-    @average_hour_value = @projects.average(:hour_value)
-    @total_value = @projects.sum(&:value)
-    @total_days = @projects.sum(&:total_days)
-    @total_remaining_days = @projects.sum(&:remaining_days)
-    @total_flow_pressure = @projects.sum(&:flow_pressure)
+    @projects_summary = ProjectsSummaryObject.new(@projects)
   end
 
   def new

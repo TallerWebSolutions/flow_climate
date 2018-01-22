@@ -108,13 +108,8 @@ RSpec.describe ProjectsController, type: :controller do
             expect(response).to render_template :index
             projects = assigns(:projects)
             expect(projects).to eq [other_project, project]
-            expect(assigns(:total_hours)).to eq projects.sum(&:qty_hours)
-            expect(assigns(:average_hour_value)).to eq projects.average(:hour_value)
-            expect(assigns(:total_value)).to eq projects.sum(:value)
-            expect(assigns(:total_consumed_hours)).to eq projects.sum(&:consumed_hours)
-            expect(assigns(:total_days)).to eq projects.sum(&:total_days)
-            expect(assigns(:total_remaining_days)).to eq projects.sum(&:remaining_days)
-            expect(assigns(:total_flow_pressure)).to eq projects.sum(&:flow_pressure)
+            expect(assigns(:projects_summary)).to be_a ProjectsSummaryObject
+            expect(assigns(:projects_summary).projects).to eq [other_project, project]
           end
         end
         context 'passing status filter' do

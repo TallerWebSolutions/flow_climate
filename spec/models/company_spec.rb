@@ -229,11 +229,11 @@ RSpec.describe Company, type: :model do
     let(:other_customer_project) { Fabricate :project, customer: other_product.customer, product: other_product }
     let(:other_company_project) { Fabricate :project, customer: other_company_product.customer, product: other_company_product }
 
-    let!(:first_result) { Fabricate :project_result, project: project, result_date: 1.month.ago, qty_hours_downstream: 10 }
-    let!(:second_result) { Fabricate :project_result, project: project, result_date: 1.month.ago, qty_hours_downstream: 20 }
-    let!(:third_result) { Fabricate :project_result, project: other_project, result_date: Time.zone.today, qty_hours_downstream: 5 }
-    let!(:fourth_result) { Fabricate :project_result, project: other_customer_project, result_date: Time.zone.today, qty_hours_downstream: 50 }
-    let!(:fifth_result) { Fabricate :project_result, project: other_company_project, result_date: Time.zone.today, qty_hours_downstream: 100 }
+    let!(:first_result) { Fabricate :project_result, project: project, result_date: 1.month.ago, qty_hours_upstream: 0, qty_hours_downstream: 10 }
+    let!(:second_result) { Fabricate :project_result, project: project, result_date: 1.month.ago, qty_hours_upstream: 0, qty_hours_downstream: 20 }
+    let!(:third_result) { Fabricate :project_result, project: other_project, result_date: Time.zone.today, qty_hours_upstream: 0, qty_hours_downstream: 5 }
+    let!(:fourth_result) { Fabricate :project_result, project: other_customer_project, result_date: Time.zone.today, qty_hours_upstream: 0, qty_hours_downstream: 50 }
+    let!(:fifth_result) { Fabricate :project_result, project: other_company_project, result_date: Time.zone.today, qty_hours_upstream: 0, qty_hours_downstream: 100 }
 
     it { expect(company.consumed_hours_in_week(1.month.ago.to_date.cweek, 1.month.ago.to_date.cwyear)).to eq 30 }
   end

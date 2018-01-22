@@ -10,6 +10,6 @@ Fabricator(:project) do
   project_type 0
   initial_scope 30
   value { Faker::Number.decimal }
-  qty_hours { Faker::Number.decimal(0) }
+  qty_hours { Faker::Number.number(3) }
   hour_value { Faker::Number.decimal(2) }
 end

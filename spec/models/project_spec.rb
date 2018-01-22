@@ -105,14 +105,14 @@ RSpec.describe Project, type: :model do
   describe '#remaining_money' do
     context 'having hour_value' do
       let(:project) { Fabricate :project, qty_hours: 1000, value: 100_000, hour_value: 100 }
-      let!(:result) { Fabricate :project_result, project: project, qty_hours_downstream: 10 }
-      let!(:other_result) { Fabricate :project_result, project: project, qty_hours_downstream: 20 }
+      let!(:result) { Fabricate :project_result, project: project, qty_hours_upstream: 0, qty_hours_downstream: 10 }
+      let!(:other_result) { Fabricate :project_result, project: project, qty_hours_upstream: 0, qty_hours_downstream: 20 }
       it { expect(project.remaining_money.to_f).to eq 97_000 }
     end
     context 'having no hour_value' do
       let(:project) { Fabricate :project, qty_hours: 1000, value: 100_000, hour_value: nil }
-      let!(:result) { Fabricate :project_result, project: project, qty_hours_downstream: 10 }
-      let!(:other_result) { Fabricate :project_result, project: project, qty_hours_downstream: 20 }
+      let!(:result) { Fabricate :project_result, project: project, qty_hours_upstream: 0, qty_hours_downstream: 10 }
+      let!(:other_result) { Fabricate :project_result, project: project, qty_hours_upstream: 0, qty_hours_downstream: 20 }
       it { expect(project.remaining_money.to_f).to eq 97_000 }
     end
   end
@@ -126,8 +126,8 @@ RSpec.describe Project, type: :model do
         it { expect(project.red?).to be true }
       end
       context 'when there is more money than time remaining' do
-        let!(:result) { Fabricate :project_result, project: project, qty_hours_downstream: 1 }
-        let!(:other_result) { Fabricate :project_result, project: project, qty_hours_downstream: 2 }
+        let!(:result) { Fabricate :project_result, project: project, qty_hours_upstream: 0, qty_hours_downstream: 1 }
+        let!(:other_result) { Fabricate :project_result, project: project, qty_hours_upstream: 0, qty_hours_downstream: 2 }
         it { expect(project.red?).to be false }
       end
     end

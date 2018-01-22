@@ -23,11 +23,16 @@ class Team < ApplicationRecord
   belongs_to :company
   has_many :team_members, dependent: :restrict_with_error
   has_many :project_results, dependent: :restrict_with_error
+  has_many :projects, -> { distinct }, through: :project_results
 
   validates :company, :name, presence: true
 
   def outsourcing_cost
     team_members.active.where(billable: true, billable_type: :outsourcing).sum(&:monthly_payment)
+  end
+
+  def consulting_cost
+    team_members.active.where(billable: true, billable_type: :consulting).sum(&:monthly_payment)
   end
 
   def management_cost
@@ -36,6 +41,10 @@ class Team < ApplicationRecord
 
   def outsourcing_members_billable_count
     team_members.active.where(billable: true, billable_type: :outsourcing).count
+  end
+
+  def consulting_members_billable_count
+    team_members.active.where(billable: true, billable_type: :consulting).count
   end
 
   def management_count

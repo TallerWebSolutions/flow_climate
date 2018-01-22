@@ -52,6 +52,7 @@ en:
       project_count: "Projects"
       operation_result_count: "Operation Results"
       product_count: "Products"
+      consulting_members_billable_count: "Qty Billable (Consulting)"
   financial_informations:
     new:
       title: "New Financial Information"
@@ -91,6 +92,7 @@ en:
       initial_scope: "Initial Scope"
       last_team: "Current team"
       current_scope: "Current scope"
+      current_team: "Current Team"
   project_results:
     index:
       title: "Project results"
@@ -104,8 +106,9 @@ en:
   teams:
     index:
       title: "Teams"
-      billable_cost: "Billable Cost"
-      management_cost: "Management Cost"
+      billable_cost: "Billable Cost (Outsourcing)"
+      management_cost: "Management Cost ($$)"
+      consulting_cost: "Consulting Cost ($$)"
     new:
       title: "New Team"
   project:

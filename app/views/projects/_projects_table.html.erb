@@ -1,9 +1,12 @@
+<h2><%= t('projects.index.title') %></h2>
+
 <table class="table table-index">
   <thead>
   <tr>
     <th><%= Project.human_attribute_name :customer_name %></th>
     <th><%= Project.human_attribute_name :product_name %></th>
     <th><%= Project.human_attribute_name :name %></th>
+    <th><%= t('projects.show.current_team') %></th>
     <th><%= Project.human_attribute_name :start_date %></th>
     <th><%= Project.human_attribute_name :end_date %></th>
     <th><%= Project.human_attribute_name :status %></th>
@@ -31,6 +34,7 @@
       <td><%= project.customer_name %></td>
       <td><%= project.product_name %></td>
       <td><%= link_to project.name, company_project_path(@company, project) %></td>
+      <td><%= link_to project.current_team.name, company_team_path(@company, project.current_team) if project.current_team.present? %></td>
       <td><%= l(project.start_date) %></td>
       <td><%= l(project.end_date) %></td>
       <td><%= t("activerecord.attributes.project.enums.status.#{project.status}") %></td>
@@ -48,7 +52,7 @@
       <td><%= project.remaining_days %></td>
       <td><%= number_to_percentage((project.remaining_days.to_f / project.total_days.to_f) * 100, precision: 2) %></td>
       <td><%= number_with_precision(project.flow_pressure, precision: 3) %></td>
-      <td><%= number_to_percentage((project.flow_pressure.to_f / @total_flow_pressure) * 100, precision: 2) %></td>
+      <td><%= number_to_percentage((project.flow_pressure.to_f / @projects_summary.total_flow_pressure) * 100, precision: 2) %></td>
       <td>
         <%= link_to edit_company_project_path(@company, project) do %>
           <i class="fa fa-pencil"></i>
@@ -68,18 +72,18 @@
       <td></td>
       <td></td>
       <td></td>
-      <td><%= number_with_precision(@total_hours, precision: 2) %></td>
+      <td><%= number_with_precision(@projects_summary.total_hours, precision: 2) %></td>
       <td></td>
-      <td><%= number_with_precision(@total_consumed_hours, precision: 2) %></td>
-      <td><%= number_to_percentage((@total_consumed_hours/@total_hours) * 100, precision: 2) %></td>
-      <td><%= number_to_currency(@average_hour_value) %></td>
-      <td><%= number_to_currency(@total_value) %></td>
+      <td><%= number_with_precision(@projects_summary.total_consumed_hours, precision: 2) %></td>
+      <td><%= number_to_percentage(@projects_summary.percentage_hours_consumed, precision: 2) %></td>
+      <td><%= number_to_currency(@projects_summary.average_hour_value) %></td>
+      <td><%= number_to_currency(@projects_summary.total_value) %></td>
       <td></td>
       <td></td>
-      <td><%= @total_days %></td>
-      <td><%= @total_remaining_days %></td>
+      <td><%= @projects_summary.total_days %></td>
+      <td><%= @projects_summary.total_remaining_days %></td>
       <td></td>
-      <td><%= number_with_precision(@total_flow_pressure, precision: 3) %></td>
+      <td><%= number_with_precision(@projects_summary.total_flow_pressure, precision: 3) %></td>
       <td></td>
     </tr>
     </tfoot>

@@ -51,6 +51,7 @@ pt-BR:
       project_count: "Projetos"
       operation_result_count: "Resultados da Operação"
       product_count: "Produtos"
+      consulting_members_billable_count: "Qtd Força Faturável (consultoria)"
   financial_informations:
     new:
       title: "Nova Informação Financeira"
@@ -90,6 +91,7 @@ pt-BR:
       initial_scope: "Escopo Inicial"
       last_team: "Time atual"
       current_scope: "Escopo corrente"
+      current_team: "Time Atual"
   project_results:
     index:
       title: "Resultados do Projeto"
@@ -103,8 +105,9 @@ pt-BR:
   teams:
     index:
       title: "Times"
-      billable_cost: "Custo Faturável"
-      management_cost: "Custo da Gestão"
+      billable_cost: "Custo Faturável (Outsourcing)"
+      management_cost: "Custo da Gestão ($$)"
+      consulting_cost: "Custo da Consultoria ($$)"
     new:
       title: "Novo Time"
   project:

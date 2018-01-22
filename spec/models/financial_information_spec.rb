@@ -32,9 +32,9 @@ RSpec.describe FinancialInformation, type: :model do
     let(:product) { Fabricate :product, customer: customer, name: 'zzz' }
     let!(:project) { Fabricate :project, customer: customer, product: product }
     let!(:other_project) { Fabricate :project, customer: customer, product: product }
-    let!(:result) { Fabricate :project_result, project: project, result_date: finances.finances_date, qty_hours_downstream: 30 }
-    let!(:other_result) { Fabricate :project_result, project: other_project, result_date: finances.finances_date, qty_hours_downstream: 50 }
-    let!(:out_result) { Fabricate :project_result, result_date: finances.finances_date, qty_hours_downstream: 60 }
+    let!(:result) { Fabricate :project_result, project: project, result_date: finances.finances_date, qty_hours_upstream: 0, qty_hours_downstream: 30 }
+    let!(:other_result) { Fabricate :project_result, project: other_project, result_date: finances.finances_date, qty_hours_upstream: 0, qty_hours_downstream: 50 }
+    let!(:out_result) { Fabricate :project_result, result_date: finances.finances_date, qty_hours_upstream: 0, qty_hours_downstream: 60 }
 
     it { expect(finances.project_delivered_hours).to eq 80 }
   end

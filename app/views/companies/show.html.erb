@@ -24,8 +24,10 @@
     <tr>
       <th><%= Team.human_attribute_name :name %></th>
       <th><%= t('companies.show.members_billable_count') %></th>
+      <th><%= t('companies.show.consulting_members_billable_count') %></th>
       <th><%= t('companies.show.management_count') %></th>
       <th><%= t('teams.index.billable_cost') %></th>
+      <th><%= t('teams.index.consulting_cost') %></th>
       <th><%= t('teams.index.management_cost') %></th>
       <th><%= t('general.table.actions') %></th>
     </tr>
@@ -33,8 +35,10 @@
       <tr>
         <td><%= link_to team.name, company_team_path(@company, team) %></td>
         <td><%= team.outsourcing_members_billable_count %></td>
+        <td><%= team.consulting_members_billable_count %></td>
         <td><%= team.management_count %></td>
         <td><%= number_to_currency(team.outsourcing_cost) %></td>
+        <td><%= number_to_currency(team.consulting_cost) %></td>
         <td><%= number_to_currency(team.management_cost) %></td>
         <td>
           <%= link_to edit_company_team_path(@company, team) do %>
