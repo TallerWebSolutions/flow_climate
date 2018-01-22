@@ -14,6 +14,14 @@ RSpec.describe ProductsController, type: :controller do
       before { post :create, params: { company_id: 'bar' } }
       it { expect(response).to redirect_to new_user_session_path }
     end
+    describe 'GET #edit' do
+      before { get :edit, params: { company_id: 'xpto', id: 'foo' } }
+      it { expect(response).to redirect_to new_user_session_path }
+    end
+    describe 'PUT #update' do
+      before { put :update, params: { company_id: 'xpto', id: 'foo' } }
+      it { expect(response).to redirect_to new_user_session_path }
+    end
   end
 
   context 'authenticated' do
@@ -84,7 +92,77 @@ RSpec.describe ProductsController, type: :controller do
         it 'does not create the product and re-render the template with the errors' do
           expect(Product.last).to be_nil
           expect(response).to render_template :new
-          expect(assigns(:product).errors.full_messages).to eq ['Nome não pode ficar em branco', 'Cliente não pode ficar em branco']
+          expect(assigns(:product).errors.full_messages).to match_array ['Nome não pode ficar em branco', 'Cliente não pode ficar em branco']
+        end
+      end
+    end
+
+    describe 'GET #edit' do
+      let(:customer) { Fabricate :customer, company: company }
+      let(:product) { Fabricate :product, customer: customer }
+
+      context 'valid parameters' do
+        before { get :edit, params: { company_id: company, id: product } }
+        it 'assigns the instance variables and renders the template' do
+          expect(response).to render_template :edit
+          expect(assigns(:company)).to eq company
+          expect(assigns(:product)).to eq product
+        end
+      end
+
+      context 'invalid' do
+        context 'product' do
+          before { get :edit, params: { company_id: company, id: 'foo' } }
+          it { expect(response).to have_http_status :not_found }
+        end
+
+        context 'company' do
+          context 'non-existent' do
+            before { get :edit, params: { company_id: 'foo', id: product } }
+            it { expect(response).to have_http_status :not_found }
+          end
+          context 'not-permitted' do
+            let(:company) { Fabricate :company, users: [] }
+            before { get :edit, params: { company_id: company, id: product } }
+            it { expect(response).to have_http_status :not_found }
+          end
+        end
+      end
+    end
+
+    describe 'PUT #update' do
+      let(:customer) { Fabricate :customer, company: company }
+      let(:product) { Fabricate :product, customer: customer }
+
+      context 'passing valid parameters' do
+        before { put :update, params: { company_id: company, id: product, product: { customer_id: customer, name: 'foo' } } }
+        it 'updates the product and redirects to projects index' do
+          expect(Product.last.customer).to eq customer
+          expect(Product.last.name).to eq 'foo'
+          expect(response).to redirect_to company_products_path(company)
+        end
+      end
+
+      context 'passing invalid' do
+        context 'product parameters' do
+          before { put :update, params: { company_id: company, id: product, product: { customer_id: 'foo', name: '' } } }
+          it 'does not update the product and re-render the template with the errors' do
+            expect(response).to render_template :edit
+            expect(assigns(:product).errors.full_messages).to match_array ['Cliente não pode ficar em branco', 'Nome não pode ficar em branco']
+          end
+        end
+        context 'non-existent product' do
+          let(:customer) { Fabricate :customer, company: company }
+
+          before { put :update, params: { company_id: company, id: 'foo', product: { customer_id: customer, name: 'foo' } } }
+          it { expect(response).to have_http_status :not_found }
+        end
+        context 'unpermitted company' do
+          let(:company) { Fabricate :company, users: [] }
+          let(:customer) { Fabricate :customer, company: company }
+
+          before { put :update, params: { company_id: company, id: product, product: { customer_id: customer, name: 'foo' } } }
+          it { expect(response).to have_http_status :not_found }
         end
       end
     end

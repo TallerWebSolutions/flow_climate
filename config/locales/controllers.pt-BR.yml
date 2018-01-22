@@ -125,3 +125,5 @@ pt-BR:
       title: "Produtos"
     new:
       title: "Novo Produto"
+    edit:
+      title: "Editar Produto"

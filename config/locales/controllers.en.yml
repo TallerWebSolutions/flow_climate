@@ -126,3 +126,5 @@ en:
       title: "Products"
     new:
       title: "New Product"
+    edit:
+      title: "Edit Product"
