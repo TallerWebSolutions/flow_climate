@@ -4,10 +4,7 @@ class ProjectsController < AuthenticatedController
   before_action :assign_company
   before_action :assign_project, only: %i[show edit update]
 
-  def show
-    project_results = @project.project_results.order(result_date: :desc)
-    @project_results_summary = ProjectResultsSummaryObject.new(@company, @project, project_results)
-  end
+  def show; end
 
   def index
     mount_projects_list

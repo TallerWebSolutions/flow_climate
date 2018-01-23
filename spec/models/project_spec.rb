@@ -189,4 +189,100 @@ RSpec.describe Project, type: :model do
       it { expect(project.flow_pressure).to eq 5 }
     end
   end
+
+  describe '#total_throughput' do
+    let(:project) { Fabricate :project, initial_scope: 30, start_date: 1.day.from_now, end_date: 1.week.from_now }
+    context 'having results' do
+      let!(:result) { Fabricate :project_result, project: project, result_date: 1.day.ago, known_scope: 10 }
+      let!(:other_result) { Fabricate :project_result, project: project, result_date: Time.zone.today, known_scope: 20 }
+      it { expect(project.total_throughput).to eq result.throughput + other_result.throughput }
+    end
+    context 'having no results' do
+      it { expect(project.total_throughput).to eq 0 }
+    end
+  end
+
+  describe '#total_hours_upstream' do
+    let(:project) { Fabricate :project, initial_scope: 30, start_date: 1.day.from_now, end_date: 1.week.from_now }
+    context 'having results' do
+      let!(:result) { Fabricate :project_result, project: project, result_date: 1.day.ago, known_scope: 10 }
+      let!(:other_result) { Fabricate :project_result, project: project, result_date: Time.zone.today, known_scope: 20 }
+      it { expect(project.total_hours_upstream).to eq result.qty_hours_upstream + other_result.qty_hours_upstream }
+    end
+    context 'having no results' do
+      it { expect(project.total_hours_upstream).to eq 0 }
+    end
+  end
+
+  describe '#total_hours_downstream' do
+    let(:project) { Fabricate :project, initial_scope: 30, start_date: 1.day.from_now, end_date: 1.week.from_now }
+    context 'having results' do
+      let!(:result) { Fabricate :project_result, project: project, result_date: 1.day.ago, known_scope: 10 }
+      let!(:other_result) { Fabricate :project_result, project: project, result_date: Time.zone.today, known_scope: 20 }
+      it { expect(project.total_hours_downstream).to eq result.qty_hours_downstream + other_result.qty_hours_downstream }
+    end
+    context 'having no results' do
+      it { expect(project.total_hours_downstream).to eq 0 }
+    end
+  end
+
+  describe '#total_hours' do
+    let(:project) { Fabricate :project, initial_scope: 30, start_date: 1.day.from_now, end_date: 1.week.from_now }
+    context 'having results' do
+      let!(:result) { Fabricate :project_result, project: project, result_date: 1.day.ago, known_scope: 10 }
+      let!(:other_result) { Fabricate :project_result, project: project, result_date: Time.zone.today, known_scope: 20 }
+      it { expect(project.total_hours).to eq result.project_delivered_hours + other_result.project_delivered_hours }
+    end
+    context 'having no results' do
+      it { expect(project.total_hours).to eq 0 }
+    end
+  end
+
+  describe '#total_bugs_opened' do
+    let(:project) { Fabricate :project, initial_scope: 30, start_date: 1.day.from_now, end_date: 1.week.from_now }
+    context 'having results' do
+      let!(:result) { Fabricate :project_result, project: project, result_date: 1.day.ago, known_scope: 10 }
+      let!(:other_result) { Fabricate :project_result, project: project, result_date: Time.zone.today, known_scope: 20 }
+      it { expect(project.total_bugs_opened).to eq result.qty_bugs_opened + other_result.qty_bugs_opened }
+    end
+    context 'having no results' do
+      it { expect(project.total_bugs_opened).to eq 0 }
+    end
+  end
+
+  describe '#total_bugs_closed' do
+    let(:project) { Fabricate :project, initial_scope: 30, start_date: 1.day.from_now, end_date: 1.week.from_now }
+    context 'having results' do
+      let!(:result) { Fabricate :project_result, project: project, result_date: 1.day.ago, known_scope: 10 }
+      let!(:other_result) { Fabricate :project_result, project: project, result_date: Time.zone.today, known_scope: 20 }
+      it { expect(project.total_bugs_closed).to eq result.qty_bugs_closed + other_result.qty_bugs_closed }
+    end
+    context 'having no results' do
+      it { expect(project.total_bugs_closed).to eq 0 }
+    end
+  end
+
+  describe '#total_hours_bug' do
+    let(:project) { Fabricate :project, initial_scope: 30, start_date: 1.day.from_now, end_date: 1.week.from_now }
+    context 'having results' do
+      let!(:result) { Fabricate :project_result, project: project, result_date: 1.day.ago, known_scope: 10 }
+      let!(:other_result) { Fabricate :project_result, project: project, result_date: Time.zone.today, known_scope: 20 }
+      it { expect(project.total_hours_bug).to eq result.qty_hours_bug + other_result.qty_hours_bug }
+    end
+    context 'having no results' do
+      it { expect(project.total_hours_bug).to eq 0 }
+    end
+  end
+
+  describe '#avg_leadtime' do
+    let(:project) { Fabricate :project, initial_scope: 30, start_date: 1.day.from_now, end_date: 1.week.from_now }
+    context 'having results' do
+      let!(:result) { Fabricate :project_result, project: project, result_date: 1.day.ago, known_scope: 10 }
+      let!(:other_result) { Fabricate :project_result, project: project, result_date: Time.zone.today, known_scope: 20 }
+      it { expect(project.avg_leadtime).to eq((result.leadtime + other_result.leadtime) / 2) }
+    end
+    context 'having no results' do
+      it { expect(project.avg_leadtime).to eq nil }
+    end
+  end
 end

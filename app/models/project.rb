@@ -84,6 +84,38 @@ class Project < ApplicationRecord
     current_backlog.to_f / days.to_f
   end
 
+  def total_throughput
+    project_results.sum(&:throughput)
+  end
+
+  def total_hours_upstream
+    project_results.sum(&:qty_hours_upstream)
+  end
+
+  def total_hours_downstream
+    project_results.sum(&:qty_hours_downstream)
+  end
+
+  def total_hours
+    project_results.sum(&:project_delivered_hours)
+  end
+
+  def total_bugs_opened
+    project_results.sum(&:qty_bugs_opened)
+  end
+
+  def total_bugs_closed
+    project_results.sum(&:qty_bugs_closed)
+  end
+
+  def total_hours_bug
+    project_results.sum(&:qty_hours_bug)
+  end
+
+  def avg_leadtime
+    project_results.average(:leadtime)
+  end
+
   private
 
   def hour_value_project_value?
