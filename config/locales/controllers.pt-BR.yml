@@ -93,6 +93,11 @@ pt-BR:
       current_scope: "Escopo corrente"
       current_team: "Time Atual"
       delivered_scope: "Escopo Entregue"
+    graphs:
+      xlabel: "Semanas"
+      ylabel: "Demandas"
+      tooltipsufix: " demandas"
+      burnup: "Burnup para %{project_name}"
   project_results:
     index:
       title: "Resultados do Projeto"

@@ -4,7 +4,9 @@ class ProjectsController < AuthenticatedController
   before_action :assign_company
   before_action :assign_project, only: %i[show edit update]
 
-  def show; end
+  def show
+    @burnup_data = BurnupData.new(@project)
+  end
 
   def index
     mount_projects_list

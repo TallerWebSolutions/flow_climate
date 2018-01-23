@@ -38,6 +38,17 @@ RSpec.describe ProjectResultsRepository, type: :repository do
     it { expect(ProjectResultsRepository.instance.th_in_week(company, 1.day.ago.to_date.cweek, 1.day.ago.to_date.cwyear)).to eq 80 }
   end
 
+  describe '#th_in_week_for_project' do
+    let!(:project) { Fabricate :project, customer: customer, product: product }
+    let!(:other_project) { Fabricate :project, customer: customer, product: product }
+    let!(:first_result) { Fabricate :project_result, project: project, result_date: 1.day.ago, throughput: 30 }
+    let!(:second_result) { Fabricate :project_result, project: other_project, result_date: 1.day.ago, throughput: 50 }
+    let!(:third_result) { Fabricate :project_result, project: other_project, result_date: 2.months.ago, throughput: 90 }
+    let!(:out_result) { Fabricate :project_result, result_date: 1.day.ago, throughput: 60 }
+
+    it { expect(ProjectResultsRepository.instance.th_in_week_for_project(project, 1.day.ago.to_date.cweek, 1.day.ago.to_date.cwyear)).to eq 30 }
+  end
+
   describe '#bugs_opened_in_week' do
     let!(:project) { Fabricate :project, customer: customer, product: product }
     let!(:other_project) { Fabricate :project, customer: customer, product: product }
@@ -58,5 +69,16 @@ RSpec.describe ProjectResultsRepository, type: :repository do
     let!(:out_result) { Fabricate :project_result, result_date: 1.day.ago, qty_bugs_closed: 60 }
 
     it { expect(ProjectResultsRepository.instance.bugs_closed_in_week(company, 1.day.ago.to_date.cweek, 1.day.ago.to_date.cwyear)).to eq 80 }
+  end
+
+  describe '#scope_in_week_for_project' do
+    let!(:project) { Fabricate :project, customer: customer, product: product }
+    let!(:other_project) { Fabricate :project, customer: customer, product: product }
+    let!(:first_result) { Fabricate :project_result, project: project, result_date: 1.day.ago, qty_bugs_closed: 30 }
+    let!(:second_result) { Fabricate :project_result, project: other_project, result_date: 2.days.ago, qty_bugs_closed: 50 }
+    let!(:third_result) { Fabricate :project_result, project: other_project, result_date: 2.months.ago, qty_bugs_closed: 90 }
+    let!(:out_result) { Fabricate :project_result, result_date: 1.day.ago, qty_bugs_closed: 60 }
+
+    it { expect(ProjectResultsRepository.instance.scope_in_week_for_project(project, 1.day.ago.to_date.cweek, 1.day.ago.to_date.cwyear)).to eq first_result.known_scope }
   end
 end

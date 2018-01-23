@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe ProjectsSummaryObject, type: :params_object do
+describe ProjectsSummaryObject, type: :data_object do
   describe '#percentage_hours_consumed' do
     context 'when the total hours is different of zero' do
       let!(:project) { Fabricate :project }

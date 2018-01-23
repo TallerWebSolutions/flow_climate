@@ -94,6 +94,11 @@ en:
       current_scope: "Current scope"
       current_team: "Current Team"
       delivered_scope: "Delivered Scope"
+    graphs:
+      xlabel: "Weeks"
+      ylabel: "Demands"
+      tooltipsufix: " demands"
+      burnup: "Burnup for %{project_name}"
   project_results:
     index:
       title: "Project results"

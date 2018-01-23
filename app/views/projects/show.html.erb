@@ -13,4 +13,24 @@
   <%= render 'project_stamps', project: @project %>
 
   <%= render 'projects/projects_results_table', project: @project  %>
+
+  <div class="row">
+    <div class="col-xs-12">
+      <div id="burnup"
+           class="flow-graph"
+           data-title='<%= t('projects.graphs.burnup', project_name: @project.name) %>'
+           data-weeks='<%= @burnup_data.weeks %>'
+           data-xtitle='<%= t('projects.graphs.xlabel') %>'
+           data-ytitle='<%= t('projects.graphs.ylabel') %>'
+           data-tooltipsufix='<%= t('projects.graphs.tooltipsufix') %>'
+           data-ideal='<%= @burnup_data.ideal %>'
+           data-current='<%= @burnup_data.current %>'
+           data-scope='<%= @burnup_data.scope %>'>
+      </div>
+    </div>
+  </div>
 </div>
+
+<% content_for :javascript do %>
+  <%= javascript_include_tag 'graphs/burnup' %>
+<%end%>
