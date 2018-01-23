@@ -33,54 +33,42 @@
   </div>
 
   <div class="row">
-    <div class='col-xs-3 form-group <%= 'has-error' if @project_result.errors[:throughput].present? %>'>
+    <div class='col-xs-4 form-group <%= 'has-error' if @project_result.errors[:throughput].present? %>'>
       <%= f.label :throughput, class: 'control-label required' %>
       <%= f.number_field :throughput, value: @project_result.throughput, class: 'form-control', step: 1 %>
       <span class="help-block"><%= @project_result.errors[:throughput].join(', ') %></span>
     </div>
 
-    <div class='col-xs-3 form-group <%= 'has-error' if @project_result.errors[:monte_carlo_date].present? %>'>
+    <div class='col-xs-4 form-group <%= 'has-error' if @project_result.errors[:monte_carlo_date].present? %>'>
       <%= f.label :monte_carlo_date, class: 'control-label' %>
       <%= f.date_field :monte_carlo_date, class: 'form-control' %>
       <span class="help-block"><%= @project_result.errors[:monte_carlo_date].join(', ') %></span>
     </div>
 
-    <div class='col-xs-3 form-group <%= 'has-error' if @project_result.errors[:qty_bugs_opened].present? %>'>
+    <div class='col-xs-4 form-group <%= 'has-error' if @project_result.errors[:leadtime].present? %>'>
+      <%= f.label :leadtime, class: 'control-label' %>
+      <%= f.number_field :leadtime, value: @project_result.leadtime, class: 'form-control', step: 0.01 %>
+      <span class="help-block"><%= @project_result.errors[:leadtime].join(', ') %></span>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class='col-xs-4 form-group <%= 'has-error' if @project_result.errors[:qty_bugs_opened].present? %>'>
       <%= f.label :qty_bugs_opened, class: 'control-label required' %>
       <%= f.number_field :qty_bugs_opened, value: @project_result.qty_bugs_opened, class: 'form-control', step: 0.01 %>
       <span class="help-block"><%= @project_result.errors[:qty_bugs_opened].join(', ') %></span>
     </div>
 
-    <div class='col-xs-3 form-group <%= 'has-error' if @project_result.errors[:qty_bugs_closed].present? %>'>
+    <div class='col-xs-4 form-group <%= 'has-error' if @project_result.errors[:qty_bugs_closed].present? %>'>
       <%= f.label :qty_bugs_closed, class: 'control-label required' %>
       <%= f.number_field :qty_bugs_closed, value: @project_result.qty_bugs_closed, class: 'form-control', step: 0.01 %>
       <span class="help-block"><%= @project_result.errors[:qty_bugs_closed].join(', ') %></span>
     </div>
-  </div>
 
-  <div class="row">
-    <div class='col-xs-3 form-group <%= 'has-error' if @project_result.errors[:leadtime].present? %>'>
-      <%= f.label :leadtime, class: 'control-label' %>
-      <%= f.number_field :leadtime, value: @project_result.leadtime, class: 'form-control', step: 0.01 %>
-      <span class="help-block"><%= @project_result.errors[:leadtime].join(', ') %></span>
-    </div>
-
-    <div class='col-xs-3 form-group <%= 'has-error' if @project_result.errors[:qty_hours_bug].present? %>'>
+    <div class='col-xs-4 form-group <%= 'has-error' if @project_result.errors[:qty_hours_bug].present? %>'>
       <%= f.label :qty_hours_bug, class: 'control-label required' %>
       <%= f.number_field :qty_hours_bug, value: @project_result.qty_hours_bug, class: 'form-control', step: 0.01 %>
       <span class="help-block"><%= @project_result.errors[:qty_hours_bug].join(', ') %></span>
-    </div>
-
-    <div class='col-xs-3 form-group <%= 'has-error' if @project_result.errors[:histogram_first_mode].present? %>'>
-      <%= f.label :histogram_first_mode, class: 'control-label' %>
-      <%= f.number_field :histogram_first_mode, value: @project_result.histogram_first_mode, class: 'form-control', step: 0.01 %>
-      <span class="help-block"><%= @project_result.errors[:histogram_first_mode].join(', ') %></span>
-    </div>
-
-    <div class='col-xs-3 form-group <%= 'has-error' if @project_result.errors[:histogram_second_mode].present? %>'>
-      <%= f.label :histogram_second_mode, class: 'control-label' %>
-      <%= f.number_field :histogram_second_mode, value: @project_result.histogram_first_mode, class: 'form-control', step: 0.01 %>
-      <span class="help-block"><%= @project_result.errors[:histogram_second_mode].join(', ') %></span>
     </div>
   </div>
 

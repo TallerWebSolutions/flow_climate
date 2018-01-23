@@ -236,8 +236,6 @@ CREATE TABLE project_results (
     qty_bugs_closed integer NOT NULL,
     qty_hours_bug integer NOT NULL,
     leadtime numeric,
-    histogram_first_mode numeric,
-    histogram_second_mode numeric,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     team_id integer NOT NULL,
@@ -791,6 +789,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20180116205144'),
 ('20180116235900'),
 ('20180117150255'),
-('20180122211258');
+('20180122211258'),
+('20180123032144');
 
 

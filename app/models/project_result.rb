@@ -4,23 +4,21 @@
 #
 # Table name: project_results
 #
-#  id                    :integer          not null, primary key
-#  project_id            :integer          not null
-#  result_date           :date             not null
-#  known_scope           :integer          not null
-#  qty_hours_upstream    :integer          not null
-#  qty_hours_downstream  :integer          not null
-#  throughput            :integer          not null
-#  qty_bugs_opened       :integer          not null
-#  qty_bugs_closed       :integer          not null
-#  qty_hours_bug         :integer          not null
-#  leadtime              :decimal(, )
-#  histogram_first_mode  :decimal(, )
-#  histogram_second_mode :decimal(, )
-#  created_at            :datetime         not null
-#  updated_at            :datetime         not null
-#  team_id               :integer          not null
-#  monte_carlo_date      :date
+#  id                   :integer          not null, primary key
+#  project_id           :integer          not null
+#  result_date          :date             not null
+#  known_scope          :integer          not null
+#  qty_hours_upstream   :integer          not null
+#  qty_hours_downstream :integer          not null
+#  throughput           :integer          not null
+#  qty_bugs_opened      :integer          not null
+#  qty_bugs_closed      :integer          not null
+#  qty_hours_bug        :integer          not null
+#  leadtime             :decimal(, )
+#  created_at           :datetime         not null
+#  updated_at           :datetime         not null
+#  team_id              :integer          not null
+#  monte_carlo_date     :date
 #
 # Indexes
 #
