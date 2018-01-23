@@ -116,6 +116,11 @@ class Project < ApplicationRecord
     project_results.average(:leadtime)
   end
 
+  def avg_hours_per_demand
+    return 0 if project_results.empty?
+    total_hours.to_f / total_throughput.to_f
+  end
+
   private
 
   def hour_value_project_value?

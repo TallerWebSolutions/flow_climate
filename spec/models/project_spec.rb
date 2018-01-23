@@ -285,4 +285,16 @@ RSpec.describe Project, type: :model do
       it { expect(project.avg_leadtime).to eq nil }
     end
   end
+
+  describe '#avg_hours_per_demand' do
+    let(:project) { Fabricate :project, initial_scope: 30, start_date: 1.day.from_now, end_date: 1.week.from_now }
+    context 'having results' do
+      let!(:result) { Fabricate :project_result, project: project, result_date: 1.day.ago, known_scope: 10 }
+      let!(:other_result) { Fabricate :project_result, project: project, result_date: Time.zone.today, known_scope: 20 }
+      it { expect(project.avg_hours_per_demand).to eq(project.total_hours.to_f / project.total_throughput.to_f) }
+    end
+    context 'having no results' do
+      it { expect(project.avg_hours_per_demand).to eq 0 }
+    end
+  end
 end

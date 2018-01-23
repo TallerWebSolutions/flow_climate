@@ -65,7 +65,7 @@
     <td><%= number_with_precision(project.total_hours_downstream, precision: 0) %></td>
     <td><%= number_with_precision(project.total_hours, precision: 0) %></td>
     <td><%= number_with_precision(project.total_throughput, precision: 0) %></td>
-    <td></td>
+    <td><%= number_with_precision(project.avg_hours_per_demand, precision: 3) %></td>
     <td><%= number_with_precision(project.total_bugs_opened, precision: 0) %></td>
     <td><%= number_with_precision(project.total_bugs_closed, precision: 0) %></td>
     <td><%= number_with_precision(project.total_hours_bug, precision: 0) %></td>

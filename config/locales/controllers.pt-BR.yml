@@ -93,6 +93,7 @@ pt-BR:
       current_scope: "Escopo corrente"
       current_team: "Time Atual"
       delivered_scope: "Escopo Entregue"
+      avg_hours_per_demand: "Média Horas/Demanda"
     graphs:
       xlabel: "Semanas"
       ylabel: "Demandas"

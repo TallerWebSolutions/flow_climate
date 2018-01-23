@@ -34,8 +34,12 @@
     <div class="stamp-title"><%= t('projects.index.total_remaining_days') %></div>
     <div class="stamp-content"><%= project.remaining_days %></div>
   </div>
-  <div class="col-xs-2 stamp">
+  <div class="col-xs-3 stamp">
     <div class="stamp-title"><%= t('projects.index.percentage_remaining_days') %></div>
     <div class="stamp-content"><%= number_to_percentage((project.remaining_days.to_f / project.total_days.to_f) * 100, precision: 2)  %></div>
+  </div>
+  <div class="col-xs-3 stamp">
+    <div class="stamp-title"><%= t('projects.show.avg_hours_per_demand') %></div>
+    <div class="stamp-content"><%= number_with_precision(project.avg_hours_per_demand, precision: 3) %></div>
   </div>
 </div>

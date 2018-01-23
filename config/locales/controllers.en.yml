@@ -94,6 +94,7 @@ en:
       current_scope: "Current scope"
       current_team: "Current Team"
       delivered_scope: "Delivered Scope"
+      avg_hours_per_demand: "Avg Hours/Demand"
     graphs:
       xlabel: "Weeks"
       ylabel: "Demands"
