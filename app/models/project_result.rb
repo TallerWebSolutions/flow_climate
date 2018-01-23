@@ -39,4 +39,8 @@ class ProjectResult < ApplicationRecord
   def project_delivered_hours
     qty_hours_upstream + qty_hours_downstream
   end
+
+  def hours_per_demand
+    project_delivered_hours / throughput
+  end
 end

@@ -16,6 +16,7 @@
     <th><%= ProjectResult.human_attribute_name :qty_hours_downstream %></th>
     <th><%= ProjectResult.human_attribute_name :qty_hours_total %></th>
     <th><%= ProjectResult.human_attribute_name :throughput %></th>
+    <th><%= t('project_results.index.hours_per_demand') %></th>
     <th><%= ProjectResult.human_attribute_name :qty_bugs_opened %></th>
     <th><%= ProjectResult.human_attribute_name :qty_bugs_closed %></th>
     <th><%= ProjectResult.human_attribute_name :qty_hours_bug %></th>
@@ -35,6 +36,7 @@
       <td><%= number_with_precision(result.qty_hours_downstream, precision: 0) %></td>
       <td><%= number_with_precision(result.project_delivered_hours, precision: 0) %></td>
       <td><%= number_with_precision(result.throughput, precision: 0) %></td>
+      <td><%= number_with_precision(result.hours_per_demand, precision: 3) %></td>
       <td><%= number_with_precision(result.qty_bugs_opened, precision: 0) %></td>
       <td><%= number_with_precision(result.qty_bugs_closed, precision: 0) %></td>
       <td><%= number_with_precision(result.qty_hours_bug, precision: 0) %></td>
@@ -63,6 +65,7 @@
     <td><%= number_with_precision(project.total_hours_downstream, precision: 0) %></td>
     <td><%= number_with_precision(project.total_hours, precision: 0) %></td>
     <td><%= number_with_precision(project.total_throughput, precision: 0) %></td>
+    <td></td>
     <td><%= number_with_precision(project.total_bugs_opened, precision: 0) %></td>
     <td><%= number_with_precision(project.total_bugs_closed, precision: 0) %></td>
     <td><%= number_with_precision(project.total_hours_bug, precision: 0) %></td>

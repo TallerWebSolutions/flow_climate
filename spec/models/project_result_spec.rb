@@ -23,4 +23,9 @@ RSpec.describe ProjectResult, type: :model do
     let(:result) { Fabricate :project_result }
     it { expect(result.project_delivered_hours).to eq result.qty_hours_upstream + result.qty_hours_downstream }
   end
+
+  describe '#hours_per_demand' do
+    let(:result) { Fabricate :project_result }
+    it { expect(result.hours_per_demand).to eq result.project_delivered_hours / result.throughput }
+  end
 end

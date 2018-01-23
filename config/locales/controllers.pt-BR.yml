@@ -101,6 +101,7 @@ pt-BR:
   project_results:
     index:
       title: "Resultados do Projeto"
+      hours_per_demand: "Horas/Demanda"
     new:
       title: "Novo Resultado de Projeto"
   operation_results:
