@@ -1,11 +1,11 @@
 <div class="standard-form">
   <div class="row">
     <div class='col-xs-6 form-group'>
-      <%= f.label :customer, Customer.model_name.human, { class: 'control-label' } %>
+      <%= f.label :customer, Customer.model_name.human, { class: 'control-label required' } %>
       <%= f.collection_select :customer_id, @company.customers, :id, :name, { include_blank: t('general.select'), selected: @product.customer_id }, { class: 'form-control' } %>
     </div>
     <div class='col-xs-6 form-group <%= 'has-error' if @product.errors[:name].present? %>'>
-      <%= f.label :name, class: 'control-label' %>
+      <%= f.label :name, class: 'control-label required' %>
       <%= f.text_field :name, value: @product.name, autofocus: true, class: 'form-control' %>
       <span class="help-block"><%= @product.errors[:name].join(', ') %></span>
     </div>

@@ -2,31 +2,31 @@
 
   <div class="row">
       <div class='col-xs-4 form-group <%= 'has-error' if @project_result.errors[:team].present? %>'>
-        <%= f.label :team, class: 'control-label' %>
+        <%= f.label :team, class: 'control-label required' %>
         <%= f.select :team, @company.teams.map { |t| [t.name, t.id] }, { include_blank: t('general.select'), selected: @project_result.team_id, autofocus: true }, class: 'form-control' %>
         <span class="help-block"><%= @project_result.errors[:team].join(', ') %></span>
       </div>
 
     <div class='col-xs-2 form-group <%= 'has-error' if @project_result.errors[:result_date].present? %>'>
-      <%= f.label :result_date, class: 'control-label' %>
+      <%= f.label :result_date, class: 'control-label required' %>
       <%= f.date_field :result_date, class: 'form-control' %>
       <span class="help-block"><%= @project_result.errors[:result_date].join(', ') %></span>
     </div>
 
     <div class='col-xs-2 form-group <%= 'has-error' if @project_result.errors[:known_scope].present? %>'>
-      <%= f.label :known_scope, class: 'control-label' %>
+      <%= f.label :known_scope, class: 'control-label required' %>
       <%= f.number_field :known_scope, value: @project_result.known_scope, class: 'form-control', step: 1 %>
       <span class="help-block"><%= @project_result.errors[:known_scope].join(', ') %></span>
     </div>
 
     <div class='col-xs-2 form-group <%= 'has-error' if @project_result.errors[:qty_hours_upstream].present? %>'>
-      <%= f.label :qty_hours_upstream, class: 'control-label' %>
+      <%= f.label :qty_hours_upstream, class: 'control-label required' %>
       <%= f.number_field :qty_hours_upstream, value: @project_result.qty_hours_upstream, class: 'form-control', step: 0.01 %>
       <span class="help-block"><%= @project_result.errors[:qty_hours_upstream].join(', ') %></span>
     </div>
 
     <div class='col-xs-2 form-group <%= 'has-error' if @project_result.errors[:qty_hours_downstream].present? %>'>
-      <%= f.label :qty_hours_downstream, class: 'control-label' %>
+      <%= f.label :qty_hours_downstream, class: 'control-label required' %>
       <%= f.number_field :qty_hours_downstream, value: @project_result.qty_hours_downstream, class: 'form-control', step: 0.01 %>
       <span class="help-block"><%= @project_result.errors[:qty_hours_downstream].join(', ') %></span>
     </div>
@@ -34,7 +34,7 @@
 
   <div class="row">
     <div class='col-xs-3 form-group <%= 'has-error' if @project_result.errors[:throughput].present? %>'>
-      <%= f.label :throughput, class: 'control-label' %>
+      <%= f.label :throughput, class: 'control-label required' %>
       <%= f.number_field :throughput, value: @project_result.throughput, class: 'form-control', step: 1 %>
       <span class="help-block"><%= @project_result.errors[:throughput].join(', ') %></span>
     </div>
@@ -46,13 +46,13 @@
     </div>
 
     <div class='col-xs-3 form-group <%= 'has-error' if @project_result.errors[:qty_bugs_opened].present? %>'>
-      <%= f.label :qty_bugs_opened, class: 'control-label' %>
+      <%= f.label :qty_bugs_opened, class: 'control-label required' %>
       <%= f.number_field :qty_bugs_opened, value: @project_result.qty_bugs_opened, class: 'form-control', step: 0.01 %>
       <span class="help-block"><%= @project_result.errors[:qty_bugs_opened].join(', ') %></span>
     </div>
 
     <div class='col-xs-3 form-group <%= 'has-error' if @project_result.errors[:qty_bugs_closed].present? %>'>
-      <%= f.label :qty_bugs_closed, class: 'control-label' %>
+      <%= f.label :qty_bugs_closed, class: 'control-label required' %>
       <%= f.number_field :qty_bugs_closed, value: @project_result.qty_bugs_closed, class: 'form-control', step: 0.01 %>
       <span class="help-block"><%= @project_result.errors[:qty_bugs_closed].join(', ') %></span>
     </div>
@@ -66,7 +66,7 @@
     </div>
 
     <div class='col-xs-3 form-group <%= 'has-error' if @project_result.errors[:qty_hours_bug].present? %>'>
-      <%= f.label :qty_hours_bug, class: 'control-label' %>
+      <%= f.label :qty_hours_bug, class: 'control-label required' %>
       <%= f.number_field :qty_hours_bug, value: @project_result.qty_hours_bug, class: 'form-control', step: 0.01 %>
       <span class="help-block"><%= @project_result.errors[:qty_hours_bug].join(', ') %></span>
     </div>

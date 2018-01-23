@@ -1,7 +1,7 @@
 <div class="standard-form">
   <div class="row">
     <div class='col-xs-4 form-group <%= 'has-error' if @team.errors[:name].present? %>'>
-      <%= f.label :name, class: 'control-label' %>
+      <%= f.label :name, class: 'control-label required' %>
       <%= f.text_field :name, value: @team.name, autofocus: true, class: 'form-control' %>
       <span class="help-block"><%= @team.errors[:name].join(', ') %></span>
     </div>

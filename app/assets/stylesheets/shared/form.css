@@ -10,22 +10,18 @@
     box-shadow: none;
 }
 
-.no-data {
-    font-style: italic;
-}
+.no-data {font-style: italic;}
 
 .header-link {
     text-align: right;
     text-transform: uppercase;
 }
 
-.botton-spaced-component {
-    margin-bottom: 8px;
-}
+.botton-spaced-component {margin-bottom: 8px;}
 
-h1 {
-    font-size: xx-large;
-}
+label.required:after{content: " *"}
+
+h1 {font-size: xx-large;}
 
 h2 {
     font-size: large;

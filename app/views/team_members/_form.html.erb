@@ -2,19 +2,19 @@
 
   <div class="row">
     <div class='col-xs-4 form-group <%= 'has-error' if @team_member.errors[:name].present? %>'>
-      <%= f.label :name, class: 'control-label' %>
+      <%= f.label :name, class: 'control-label required' %>
       <%= f.text_field :name, class: 'form-control', autofocus: true %>
       <span class="help-block"><%= @team_member.errors[:name].join(', ') %></span>
     </div>
 
     <div class='col-xs-4 form-group <%= 'has-error' if @team_member.errors[:monthly_payment].present? %>'>
-      <%= f.label :monthly_payment, class: 'control-label' %>
+      <%= f.label :monthly_payment, class: 'control-label required' %>
       <%= f.number_field :monthly_payment, value: @team_member.monthly_payment, class: 'form-control', step: 0.01 %>
       <span class="help-block"><%= @team_member.errors[:monthly_payment].join(', ') %></span>
     </div>
 
     <div class='col-xs-4 form-group <%= 'has-error' if @team_member.errors[:hours_per_month].present? %>'>
-      <%= f.label :hours_per_month, class: 'control-label' %>
+      <%= f.label :hours_per_month, class: 'control-label required' %>
       <%= f.number_field :hours_per_month, value: @team_member.hours_per_month, class: 'form-control', step: 1 %>
       <span class="help-block"><%= @team_member.errors[:hours_per_month].join(', ') %></span>
     </div>
