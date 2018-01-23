@@ -93,6 +93,7 @@ en:
       last_team: "Current team"
       current_scope: "Current scope"
       current_team: "Current Team"
+      delivered_scope: "Delivered Scope"
   project_results:
     index:
       title: "Project results"
@@ -133,3 +134,6 @@ en:
       title: "New Product"
     edit:
       title: "Edit Product"
+  project_result:
+    edit:
+      title: "Edit Project Result"

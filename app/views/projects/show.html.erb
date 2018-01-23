@@ -11,21 +11,25 @@
   </div>
 
   <div class="row">
-    <div class="col-xs-3 stamp">
+    <div class="col-xs-4 stamp">
       <div class="stamp-title"><%= Customer.model_name %></div>
       <div class="stamp-content"><%= @project.customer_name %></div>
     </div>
-    <div class="col-xs-3 stamp">
+    <div class="col-xs-2 stamp">
+      <div class="stamp-title"><%= t('projects.show.last_team') %></div>
+      <div class="stamp-content"><%= @project.current_team&.name %></div>
+    </div>
+    <div class="col-xs-2 stamp">
       <div class="stamp-title"><%= t('projects.show.initial_scope') %></div>
       <div class="stamp-content"><%= @project.initial_scope %></div>
     </div>
-    <div class="col-xs-3 stamp">
+    <div class="col-xs-2 stamp">
       <div class="stamp-title"><%= t('projects.show.current_scope') %></div>
       <div class="stamp-content"><%= @project.current_backlog %></div>
     </div>
-    <div class="col-xs-3 stamp">
-      <div class="stamp-title"><%= t('projects.show.last_team') %></div>
-      <div class="stamp-content"><%= @project.current_team&.name %></div>
+    <div class="col-xs-2 stamp">
+      <div class="stamp-title"><%= t('projects.show.delivered_scope') %></div>
+      <div class="stamp-content"><%= @total_throughput %></div>
     </div>
   </div>
 

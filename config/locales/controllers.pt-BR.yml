@@ -92,6 +92,7 @@ pt-BR:
       last_team: "Time atual"
       current_scope: "Escopo corrente"
       current_team: "Time Atual"
+      delivered_scope: "Escopo Entregue"
   project_results:
     index:
       title: "Resultados do Projeto"
@@ -132,3 +133,6 @@ pt-BR:
       title: "Novo Produto"
     edit:
       title: "Editar Produto"
+  project_result:
+    edit:
+      title: "Editar Resultado de Projeto"

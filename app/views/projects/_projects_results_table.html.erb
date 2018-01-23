@@ -11,18 +11,18 @@
     <th><%= t('general.week') %></th>
     <th><%= t('general.year') %></th>
     <th><%= ProjectResult.human_attribute_name :known_scope %></th>
+    <th><%= ProjectResult.human_attribute_name :monte_carlo_date %></th>
     <th><%= ProjectResult.human_attribute_name :qty_hours_upstream %></th>
     <th><%= ProjectResult.human_attribute_name :qty_hours_downstream %></th>
     <th><%= ProjectResult.human_attribute_name :qty_hours_total %></th>
     <th><%= ProjectResult.human_attribute_name :throughput %></th>
-    <th><%= ProjectResult.human_attribute_name :monte_carlo_date %></th>
     <th><%= ProjectResult.human_attribute_name :qty_bugs_opened %></th>
     <th><%= ProjectResult.human_attribute_name :qty_bugs_closed %></th>
     <th><%= ProjectResult.human_attribute_name :qty_hours_bug %></th>
     <th><%= ProjectResult.human_attribute_name :leadtime %></th>
     <th><%= ProjectResult.human_attribute_name :histogram_first_mode %></th>
     <th><%= ProjectResult.human_attribute_name :histogram_second_mode %></th>
-    <th><%= t('general.table.actions') %></th>
+    <th colspan="2"><%= t('general.table.actions') %></th>
   </tr>
   </thead>
   <tbody>
@@ -32,17 +32,22 @@
       <td><%= result.result_date.cweek %></td>
       <td><%= result.result_date.cwyear %></td>
       <td><%= number_with_precision(result.known_scope, precision: 0) %></td>
+      <td><%= l(result.monte_carlo_date) if result.monte_carlo_date.present? %></td>
       <td><%= number_with_precision(result.qty_hours_upstream, precision: 0) %></td>
       <td><%= number_with_precision(result.qty_hours_downstream, precision: 0) %></td>
       <td><%= number_with_precision(result.project_delivered_hours, precision: 0) %></td>
       <td><%= number_with_precision(result.throughput, precision: 0) %></td>
-      <td><%= l(result.monte_carlo_date) if result.monte_carlo_date.present? %></td>
       <td><%= number_with_precision(result.qty_bugs_opened, precision: 0) %></td>
       <td><%= number_with_precision(result.qty_bugs_closed, precision: 0) %></td>
       <td><%= number_with_precision(result.qty_hours_bug, precision: 0) %></td>
       <td><%= number_with_precision(result.leadtime, precision: 4) %></td>
       <td><%= number_with_precision(result.histogram_first_mode, precision: 4) %></td>
       <td><%= number_with_precision(result.histogram_second_mode, precision: 4) %></td>
+      <td>
+        <%= link_to edit_company_project_project_result_path(@company, @project, result) do %>
+          <i class="fa fa-pencil"></i>
+        <% end %>
+      </td>
       <td>
         <%= link_to company_project_project_result_path(@company, @project, result), method: :delete do %>
           <i class="fa fa-times" aria-hidden="true"></i>
@@ -57,6 +62,7 @@
     <td></td>
     <td></td>
     <td></td>
+    <td></td>
     <td><%= number_with_precision(@total_hours_upstream, precision: 0) %></td>
     <td><%= number_with_precision(@total_hours_downstream, precision: 0) %></td>
     <td><%= number_with_precision(@total_hours, precision: 0) %></td>
@@ -65,6 +71,8 @@
     <td><%= number_with_precision(@total_bugs_closed, precision: 0) %></td>
     <td><%= number_with_precision(@total_hours_bug, precision: 0) %></td>
     <td><%= number_with_precision(@avg_leadtime, precision: 4) %></td>
+    <td></td>
+    <td></td>
     <td></td>
     <td></td>
     <td></td>
