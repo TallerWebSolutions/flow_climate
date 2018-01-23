@@ -1,7 +1,7 @@
 <h2><%= t('project_results.index.title') %></h2>
 <div class="row">
   <div class="col-xs-3">
-    <%= link_to t('project_results.new.title'), new_company_project_project_result_path(@company, @project), class: 'btn btn-sm btn-primary botton-spaced-component' %>
+    <%= link_to t('project_results.new.title'), new_company_project_project_result_path(@project_results_summary.company, @project_results_summary.project), class: 'btn btn-sm btn-primary botton-spaced-component' %>
   </div>
 </div>
 <table class="table table-index">
@@ -44,12 +44,12 @@
       <td><%= number_with_precision(result.histogram_first_mode, precision: 4) %></td>
       <td><%= number_with_precision(result.histogram_second_mode, precision: 4) %></td>
       <td>
-        <%= link_to edit_company_project_project_result_path(@company, @project, result) do %>
+        <%= link_to edit_company_project_project_result_path(@project_results_summary.company, @project_results_summary.project, result) do %>
           <i class="fa fa-pencil"></i>
         <% end %>
       </td>
       <td>
-        <%= link_to company_project_project_result_path(@company, @project, result), method: :delete do %>
+        <%= link_to company_project_project_result_path(@project_results_summary.company, @project_results_summary.project, result), method: :delete do %>
           <i class="fa fa-times" aria-hidden="true"></i>
         <% end %>
       </td>
@@ -63,14 +63,14 @@
     <td></td>
     <td></td>
     <td></td>
-    <td><%= number_with_precision(@total_hours_upstream, precision: 0) %></td>
-    <td><%= number_with_precision(@total_hours_downstream, precision: 0) %></td>
-    <td><%= number_with_precision(@total_hours, precision: 0) %></td>
-    <td><%= number_with_precision(@total_throughput, precision: 0) %></td>
-    <td><%= number_with_precision(@total_bugs_opened, precision: 0) %></td>
-    <td><%= number_with_precision(@total_bugs_closed, precision: 0) %></td>
-    <td><%= number_with_precision(@total_hours_bug, precision: 0) %></td>
-    <td><%= number_with_precision(@avg_leadtime, precision: 4) %></td>
+    <td><%= number_with_precision(@project_results_summary.total_hours_upstream, precision: 0) %></td>
+    <td><%= number_with_precision(@project_results_summary.total_hours_downstream, precision: 0) %></td>
+    <td><%= number_with_precision(@project_results_summary.total_hours, precision: 0) %></td>
+    <td><%= number_with_precision(@project_results_summary.total_throughput, precision: 0) %></td>
+    <td><%= number_with_precision(@project_results_summary.total_bugs_opened, precision: 0) %></td>
+    <td><%= number_with_precision(@project_results_summary.total_bugs_closed, precision: 0) %></td>
+    <td><%= number_with_precision(@project_results_summary.total_hours_bug, precision: 0) %></td>
+    <td><%= number_with_precision(@project_results_summary.avg_leadtime, precision: 4) %></td>
     <td></td>
     <td></td>
     <td></td>

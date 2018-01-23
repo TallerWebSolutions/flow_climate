@@ -5,15 +5,8 @@ class ProjectsController < AuthenticatedController
   before_action :assign_project, only: %i[show edit update]
 
   def show
-    @project_results = @project.project_results.order(result_date: :desc)
-    @total_hours_upstream = @project_results.sum(&:qty_hours_upstream)
-    @total_hours_downstream = @project_results.sum(&:qty_hours_downstream)
-    @total_hours = @project_results.sum(&:project_delivered_hours)
-    @total_throughput = @project_results.sum(&:throughput)
-    @total_bugs_opened = @project_results.sum(&:qty_bugs_opened)
-    @total_bugs_closed = @project_results.sum(&:qty_bugs_closed)
-    @total_hours_bug = @project_results.sum(&:qty_hours_bug)
-    @avg_leadtime = @project_results.average(:leadtime)
+    project_results = @project.project_results.order(result_date: :desc)
+    @project_results_summary = ProjectResultsSummaryObject.new(@company, @project, project_results)
   end
 
   def index
