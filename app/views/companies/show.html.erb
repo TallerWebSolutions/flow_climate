@@ -7,20 +7,12 @@
 
   <%= render 'company_stamps' %>
 
-  <div class="row">
-    <div class="col-xs-3">
-      <% if @company.id != current_user.last_company_id %>
-        <%= link_to t('users.change_last_company.title'), change_current_company_users_path(company_id: @company.id), method: :patch %>
-      <% end %>
-    </div>
-  </div>
-
   <%= render 'financial_informations/financial_informations_table' %>
 
   <h2><%= t('teams.index.title') %></h2>
   <%= link_to t('teams.new.title'), new_company_team_path(@company), class: 'btn btn-sm btn-primary botton-spaced-component' %>
 
-  <table class="table">
+  <table class="table table-index">
     <tr>
       <th><%= Team.human_attribute_name :name %></th>
       <th><%= t('companies.show.members_billable_count') %></th>

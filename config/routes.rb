@@ -11,10 +11,6 @@ Rails.application.routes.draw do
 
   devise_for :users, controllers: { registrations: 'devise_custom/registrations' }
 
-  resources :users, only: [] do
-    patch :change_current_company, on: :collection
-  end
-
   resources :companies, only: %i[show new create index] do
     resources :teams, only: %i[index show new create edit update] do
       resources :team_members, only: %i[new create edit update] do
