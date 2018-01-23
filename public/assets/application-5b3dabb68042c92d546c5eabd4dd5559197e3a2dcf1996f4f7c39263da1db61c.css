@@ -1,0 +1,135 @@
+.help-block {
+    margin-bottom: 0;
+
+    font-size: 1.2rem;
+    text-align: left;
+}
+
+.has-error {
+    border: 2px solid lighten(#EE1C3A, 10%) !important;
+    box-shadow: none;
+}
+
+.no-data {
+    font-style: italic;
+}
+
+.header-link {
+    text-align: right;
+    text-transform: uppercase;
+}
+
+.botton-spaced-component {
+    margin-bottom: 8px;
+}
+
+h1 {
+    font-size: xx-large;
+}
+
+h2 {
+    font-size: large;
+    margin-bottom: 15px;
+    font-weight: bold;
+}
+
+tfoot {
+    display: table-footer-group;
+    vertical-align: middle;
+    border-color: inherit;
+    font-weight: bolder;
+}
+.header {
+    padding: 10px;
+    background-color: #8fa9df;
+    margin-bottom: 15px;
+}
+
+/* Style the list */
+ul.breadcrumb {
+    list-style: none;
+    background-color: transparent;
+}
+
+/* Display list items side by side */
+ul.breadcrumb li {
+    display: inline;
+    font-size: large;
+}
+
+/* Add a slash symbol (/) before/behind each list item */
+ul.breadcrumb li+li:before {
+    color: black;
+    content: "\2192";
+}
+
+/* Add a color to all links inside the list */
+ul.breadcrumb li a {
+    text-decoration: none;
+}
+
+/* Add a color on mouse-over */
+ul.breadcrumb li a:hover {
+    text-decoration: underline;
+}
+.red-project {
+    background-color: #f0cbcf;
+}
+.stamp {
+    padding: 10px;
+    background-color: lightskyblue;
+    font-weight: bold;
+    border: thin solid;
+}
+
+.red-stamp {
+    background-color: #f0cbcf;
+    padding: 10px;
+    font-weight: bold;
+    border: thin solid;
+}
+
+.green-stamp {
+    background-color: #a0f0e0;
+    padding: 10px;
+    font-weight: bold;
+    border: thin solid;
+}
+
+.stamp-title {
+    font-size: x-small;
+}
+
+.stamp-content {
+    font-size: large;
+    min-height: 25px;
+}
+
+.standard-form {
+    background-color: #f3f6fc;
+    margin-top: 10px;
+    padding: 10px;
+}
+
+.table-index {
+    font-size: smaller;
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+}
+/*
+ * This is a manifest file that'll be compiled into application.css, which will include all the files
+ * listed below.
+ *
+ * Any CSS and SCSS file within this directory, lib/assets/stylesheets, vendor/assets/stylesheets,
+ * or any plugin's vendor/assets/stylesheets directory can be referenced here using a relative path.
+ *
+ * You're free to add application-wide styles to this file and they'll appear at the bottom of the
+ * compiled file so the styles you add here take precedence over styles defined in any other CSS/SCSS
+ * files in this directory. Styles in this file should be added after the last require_* statement.
+ * It is generally better to create a new file per style scope.
+ *
+
+
+ */
+
