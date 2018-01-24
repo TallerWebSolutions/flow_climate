@@ -81,7 +81,7 @@ class Project < ApplicationRecord
   def flow_pressure
     return 0 if finished? || cancelled?
     days = remaining_days || total_days
-    current_backlog.to_f / days.to_f
+    total_gap.to_f / days.to_f
   end
 
   def total_throughput
@@ -131,6 +131,10 @@ class Project < ApplicationRecord
     end
 
     array_of_weeks
+  end
+
+  def total_gap
+    current_backlog - total_throughput
   end
 
   private

@@ -88,6 +88,8 @@ pt-BR:
       percentage_remaining_money: "% Restante ($$)"
       flow_pressure: "Pressão do Fluxo"
       percentage_flow_pressure: "% Pressão do Fluxo"
+      percentage_remaining_scope: "% Escopo Restante"
+      total_gap: "Gap Total"
     show:
       initial_scope: "Escopo Inicial"
       last_team: "Time atual"
@@ -95,6 +97,7 @@ pt-BR:
       current_team: "Time Atual"
       delivered_scope: "Escopo Entregue"
       avg_hours_per_demand: "Média Horas/Demanda"
+      scope_gap: "Restante do escopo"
     charts:
       xlabel: "Semanas"
       burnup:
@@ -155,6 +158,8 @@ pt-BR:
     index:
       title: "Lista de Clientes"
       no_customers_message: "Você ainda não tem times."
+    show:
+      total_value: "Valor Total"
   customer:
     edit:
       title: "Editar Cliente"

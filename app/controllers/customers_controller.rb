@@ -2,10 +2,15 @@
 
 class CustomersController < AuthenticatedController
   before_action :assign_company
-  before_action :assign_customer, only: %i[edit update]
+  before_action :assign_customer, only: %i[edit update show]
 
   def index
-    @customers = @company.customers.order(:name)
+    @customers = @company.customers.sort_by(&:total_flow_pressure).reverse
+  end
+
+  def show
+    @customer_projects = @customer.projects.order(end_date: :desc)
+    @projects_summary = ProjectsSummaryObject.new(@customer.projects)
   end
 
   def new

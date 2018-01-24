@@ -183,7 +183,7 @@ RSpec.describe Project, type: :model do
     context 'having results' do
       let!(:result) { Fabricate :project_result, project: project, result_date: 1.day.ago, known_scope: 10 }
       let!(:other_result) { Fabricate :project_result, project: project, result_date: Time.zone.today, known_scope: 20 }
-      it { expect(project.flow_pressure).to be_within(0.01).of(3.333) }
+      it { expect(project.flow_pressure).to be_within(0.01).of(project.total_gap.to_f / project.remaining_days.to_f) }
     end
     context 'having no results' do
       it { expect(project.flow_pressure).to eq 5 }
@@ -302,5 +302,17 @@ RSpec.describe Project, type: :model do
     let(:project) { Fabricate :project, initial_scope: 30, start_date: 1.week.ago, end_date: 1.week.from_now }
     let(:start_week) { project.start_date.cweek }
     it { expect(project.project_weeks).to eq [[project.start_date.cweek, project.start_date.cwyear], [(project.start_date + 1.week).cweek, (project.start_date + 1.week).cwyear], [(project.start_date + 2.weeks).cweek, (project.start_date + 2.weeks).cwyear]] }
+  end
+
+  describe '#total_gap' do
+    let(:project) { Fabricate :project, initial_scope: 30, start_date: 1.week.ago, end_date: 1.week.from_now }
+    context 'having results' do
+      let!(:result) { Fabricate :project_result, project: project, result_date: 1.day.ago, known_scope: 10 }
+      let!(:other_result) { Fabricate :project_result, project: project, result_date: Time.zone.today, known_scope: 20 }
+      it { expect(project.total_gap).to eq project.current_backlog - project.total_throughput }
+    end
+    context 'having no results' do
+      it { expect(project.total_gap).to eq project.initial_scope }
+    end
   end
 end

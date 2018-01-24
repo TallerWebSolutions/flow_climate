@@ -89,6 +89,8 @@ en:
       percentage_remaining_money: "% Remaining ($$)"
       flow_pressure: "Flow Pressure"
       percentage_flow_pressure: "% Flow Pressure"
+      percentage_remaining_scope: "% Remaining Scope"
+      total_gap: "Total Gap"
     show:
       initial_scope: "Initial Scope"
       last_team: "Current team"
@@ -96,6 +98,7 @@ en:
       current_team: "Current Team"
       delivered_scope: "Delivered Scope"
       avg_hours_per_demand: "Avg Hours/Demand"
+      scope_gap: "Scope Gap"
     charts:
       xlabel: "Weeks"
       burnup:
@@ -156,6 +159,8 @@ en:
     index:
       title: "Customers List"
       no_customers_message: "You do not have teams yet."
+    show:
+      total_value: "Total Value"
   customer:
     edit:
       title: "Edit Customer"

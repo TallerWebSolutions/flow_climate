@@ -33,9 +33,6 @@ RSpec.describe TeamsController, type: :controller do
     describe 'GET #show' do
       let(:team) { Fabricate :team, company: company }
       context 'passing a valid ID' do
-        let!(:finances) { Fabricate :financial_information, company: company, finances_date: 2.days.ago }
-        let!(:other_finances) { Fabricate :financial_information, company: company, finances_date: Time.zone.today }
-
         before { get :show, params: { company_id: company, id: team.id } }
         it 'assigns the instance variable and renders the template' do
           expect(response).to render_template :show
