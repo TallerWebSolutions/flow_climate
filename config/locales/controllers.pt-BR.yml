@@ -52,6 +52,7 @@ pt-BR:
       operation_result_count: "Resultados da Operação"
       product_count: "Produtos"
       consulting_members_billable_count: "Qtd Força Faturável (consultoria)"
+      customers_count: "Clientes"
   financial_informations:
     new:
       title: "Nova Informação Financeira"
@@ -143,3 +144,12 @@ pt-BR:
   project_result:
     edit:
       title: "Editar Resultado de Projeto"
+  customers:
+    new:
+      title: "Novo Cliente"
+    index:
+      title: "Lista de Clientes"
+      no_customers_message: "Você ainda não tem times."
+  customer:
+    edit:
+      title: "Editar Cliente"

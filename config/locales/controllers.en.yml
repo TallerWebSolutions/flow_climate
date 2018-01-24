@@ -53,6 +53,7 @@ en:
       operation_result_count: "Operation Results"
       product_count: "Products"
       consulting_members_billable_count: "Qty Billable (Consulting)"
+      customers_count: "Customers"
   financial_informations:
     new:
       title: "New Financial Information"
@@ -144,3 +145,12 @@ en:
   project_result:
     edit:
       title: "Edit Project Result"
+  customers:
+    new:
+      title: "New Customer"
+    index:
+      title: "Customers List"
+      no_customers_message: "You do not have teams yet."
+  customer:
+    edit:
+      title: "Edit Customer"

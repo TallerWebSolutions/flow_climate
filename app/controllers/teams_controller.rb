@@ -4,10 +4,6 @@ class TeamsController < AuthenticatedController
   before_action :assign_company
   before_action :assign_team, only: %i[show edit update]
 
-  def index
-    @teams = @company.teams.order(:name)
-  end
-
   def show
     @projects_summary = ProjectsSummaryObject.new(@team.projects)
     @team_members = @team.team_members.order(:name)

@@ -1,0 +1,34 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-xs-12">
+      <ul class="breadcrumb">
+        <li><%= link_to t('general.home.title'), root_path %></li>
+        <li><%= link_to @company.abbreviation, company_path(@company) %></li>
+        <li><%= t('customers.index.title') %></li>
+      </ul>
+    </div>
+  </div>
+
+  <%= link_to t('customers.new.title'), new_company_customer_path(@company), class: 'btn btn-sm btn-primary botton-spaced-component' %>
+
+  <% if @customers.empty? %>
+    <%= t('customers.index.no_customers_message') %>
+  <% else %>
+    <table class="table">
+      <tr>
+        <th><%= Customer.human_attribute_name :name %></th>
+        <th><%= t('general.table.actions') %></th>
+      </tr>
+      <% @customers.each do |customer| %>
+        <tr>
+          <td><%= customer.name %></td>
+          <td>
+            <%= link_to edit_company_customer_path(@company, customer) do %>
+              <i class="fa fa-pencil"></i>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+    </table>
+  <% end %>
+</div>

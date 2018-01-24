@@ -21,6 +21,8 @@ class Company < ApplicationRecord
 
   validates :name, :abbreviation, presence: true
 
+  delegate :count, to: :customers, prefix: true
+
   def outsourcing_cost
     teams.sum(&:outsourcing_cost)
   end

@@ -2,10 +2,6 @@
 
 RSpec.describe TeamsController, type: :controller do
   context 'unauthenticated' do
-    describe 'GET #index' do
-      before { get :index, params: { company_id: 'bar' } }
-      it { expect(response).to redirect_to new_user_session_path }
-    end
     describe 'GET #show' do
       before { get :show, params: { company_id: 'bar', id: 'foo' } }
       it { expect(response).to redirect_to new_user_session_path }
@@ -33,33 +29,6 @@ RSpec.describe TeamsController, type: :controller do
     before { sign_in user }
 
     let(:company) { Fabricate :company, users: [user] }
-
-    describe 'GET #index' do
-      let(:team) { Fabricate :team, company: company, name: 'zzz' }
-      context 'passing valid parameters' do
-        context 'valid parameters' do
-          let(:other_team) { Fabricate :team, company: company, name: 'aaa' }
-          let(:out_team) { Fabricate :team, name: 'aaa' }
-          before { get :index, params: { company_id: company } }
-          it 'assigns the instance variable and renders the template' do
-            expect(response).to render_template :index
-            expect(assigns(:teams)).to eq [other_team, team]
-          end
-        end
-      end
-
-      context 'passing invalid parameters' do
-        context 'non-existent company' do
-          before { get :index, params: { company_id: 'foo', id: team } }
-          it { expect(response).to have_http_status :not_found }
-        end
-        context 'not permitted' do
-          let(:company) { Fabricate :company, users: [] }
-          before { get :index, params: { company_id: company } }
-          it { expect(response).to have_http_status :not_found }
-        end
-      end
-    end
 
     describe 'GET #show' do
       let(:team) { Fabricate :team, company: company }

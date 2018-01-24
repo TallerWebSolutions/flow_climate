@@ -15,6 +15,10 @@ RSpec.describe Company, type: :model do
     it { is_expected.to validate_presence_of :abbreviation }
   end
 
+  context 'delegations' do
+    it { is_expected.to delegate_method(:count).to(:customers).with_prefix }
+  end
+
   context '#outsourcing_cost_per_week' do
     let(:company) { Fabricate :company }
     let(:team) { Fabricate :team, company: company }

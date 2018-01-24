@@ -167,3 +167,5 @@ pt-BR:
         total_accumulated_closed_bugs: Acumulado de Bugs Fechados
       team:
         name: Nome
+      customer:
+        name: Nome
