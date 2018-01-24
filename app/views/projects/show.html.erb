@@ -12,13 +12,13 @@
 
   <%= render 'project_stamps', project: @project %>
 
-  <%= render 'projects/projects_results_table', project: @project  %>
+  <%= render 'projects/projects_results_table', project: @project, project_results: @ordered_project_results  %>
 
   <div class="row">
     <div class="col-xs-6">
       <div id="burnup"
            class="flow-chart"
-           data-title='<%= t('projects.charts.burnup.title', project_name: @project.name) %>'
+           data-title='<%= t('projects.charts.burnup.title', project_name: "#{@project.product_name} | #{@project.name}") %>'
            data-weeks='<%= @burnup_data.weeks %>'
            data-xtitle='<%= t('projects.charts.xlabel') %>'
            data-ytitle='<%= t('projects.charts.burnup.ylabel') %>'
@@ -29,9 +29,9 @@
       </div>
     </div>
     <div class="col-xs-6">
-      <div id="line"
+      <div id="column"
            class="flow-chart"
-           data-title='<%= t('projects.charts.hours_per_demand.title', project_name: @project.name) %>'
+           data-title='<%= t('projects.charts.hours_per_demand.title', project_name: "#{@project.product_name} | #{@project.name}") %>'
            data-weeks='<%= @weeks %>'
            data-xtitle='<%= t('projects.charts.xlabel') %>'
            data-ytitle='<%= t('projects.charts.hours_per_demand.ylabel') %>'

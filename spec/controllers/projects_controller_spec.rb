@@ -37,11 +37,11 @@ RSpec.describe ProjectsController, type: :controller do
     let(:product) { Fabricate :product, customer: customer, name: 'zzz' }
 
     describe 'GET #show' do
-      let!(:first_project) { Fabricate :project, customer: customer, product: product, end_date: 5.days.from_now }
+      let!(:first_project) { Fabricate :project, customer: customer, product: product, start_date: 1.week.ago, end_date: Time.zone.today }
 
       context 'having results' do
-        let!(:first_result) { Fabricate :project_result, project: first_project, result_date: 2.days.ago }
-        let!(:second_result) { Fabricate :project_result, project: first_project, result_date: 1.day.ago }
+        let!(:first_result) { Fabricate :project_result, project: first_project, result_date: 1.week.ago }
+        let!(:second_result) { Fabricate :project_result, project: first_project, result_date: Time.zone.today }
 
         context 'passing valid IDs' do
           before { get :show, params: { company_id: company, customer_id: customer, id: first_project } }
@@ -50,8 +50,8 @@ RSpec.describe ProjectsController, type: :controller do
             expect(assigns(:company)).to eq company
             expect(assigns(:project)).to eq first_project
             expect(assigns(:burnup_data)).to be_a BurnupData
-            expect(assigns(:weeks)).to eq [[first_project.start_date.cweek, first_project.start_date.cwyear]]
-            expect(assigns(:hours_per_demand_data)).to eq [{ name: I18n.t('projects.charts.hours_per_demand.ylabel'), data: first_project.project_results.order(:result_date).map(&:hours_per_demand).flatten }]
+            expect(assigns(:weeks)).to eq [[first_project.start_date.cweek, first_project.start_date.cwyear], [(first_project.start_date + 1.week).cweek, (first_project.start_date + 1.week).cwyear]]
+            expect(assigns(:hours_per_demand_data)).to eq [{ name: I18n.t('projects.charts.hours_per_demand.ylabel'), data: [first_result.hours_per_demand, second_result.hours_per_demand] }]
           end
         end
       end
