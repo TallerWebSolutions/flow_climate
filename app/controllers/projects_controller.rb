@@ -6,9 +6,9 @@ class ProjectsController < AuthenticatedController
 
   def show
     @ordered_project_results = @project.project_results.order(:result_date)
-    @burnup_data = BurnupData.new(@project)
+    @report_data = ReportData.new(Project.where(id: @project.id))
     @weeks = @project.project_weeks
-    @hours_per_demand_data = [{ name: I18n.t('projects.charts.hours_per_demand.ylabel'), data: hours_per_demand_chart_data }]
+    @hours_per_demand_data = [{ name: I18n.t('projects.charts.hours_per_demand.ylabel'), data: @report_data.hours_per_demand_chart_data_for_week(@ordered_project_results) }]
   end
 
   def index
@@ -65,15 +65,5 @@ class ProjectsController < AuthenticatedController
 
   def assign_project
     @project = Project.find(params[:id])
-  end
-
-  def hours_per_demand_chart_data
-    result_data = []
-    @weeks.each { |week| result_data << @ordered_project_results.for_week(week[0], week[1]).sum(&:hours_per_demand) if add_data_to_chart?(week) }
-    result_data
-  end
-
-  def add_data_to_chart?(week)
-    week[1] < Time.zone.today.cwyear || (week[0] <= Time.zone.today.cweek && week[1] <= Time.zone.today.cwyear)
   end
 end

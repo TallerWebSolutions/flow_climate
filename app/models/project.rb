@@ -44,6 +44,10 @@ class Project < ApplicationRecord
   delegate :name, to: :customer, prefix: true
   delegate :name, to: :product, prefix: true, allow_nil: true
 
+  def full_name
+    "#{customer_name} | #{product_name} | #{name}"
+  end
+
   def total_days
     (end_date - start_date).to_i
   end
@@ -118,7 +122,7 @@ class Project < ApplicationRecord
 
   def avg_hours_per_demand
     return 0 if project_results.empty?
-    total_hours.to_f / total_throughput.to_f
+    (total_hours.to_f / total_throughput.to_f)
   end
 
   def project_weeks

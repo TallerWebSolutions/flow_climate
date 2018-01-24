@@ -100,7 +100,9 @@ en:
       avg_hours_per_demand: "Avg Hours/Demand"
       scope_gap: "Scope Gap"
     charts:
-      xlabel: "Weeks"
+      xlabel:
+        weeks: "Weeks"
+        projects: "Projects"
       burnup:
         ylabel: "Demands"
         tooltipsufix: " demands"

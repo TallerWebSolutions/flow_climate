@@ -46,7 +46,7 @@ RSpec.describe ProjectResultsRepository, type: :repository do
     let!(:third_result) { Fabricate :project_result, project: other_project, result_date: 2.months.ago, throughput: 90 }
     let!(:out_result) { Fabricate :project_result, result_date: 1.day.ago, throughput: 60 }
 
-    it { expect(ProjectResultsRepository.instance.th_in_week_for_project(project, 1.day.ago.to_date.cweek, 1.day.ago.to_date.cwyear)).to eq 30 }
+    it { expect(ProjectResultsRepository.instance.th_in_week_for_projects([project], 1.day.ago.to_date.cweek, 1.day.ago.to_date.cwyear)).to eq 30 }
   end
 
   describe '#bugs_opened_in_week' do
@@ -79,6 +79,6 @@ RSpec.describe ProjectResultsRepository, type: :repository do
     let!(:third_result) { Fabricate :project_result, project: other_project, result_date: 2.months.ago, qty_bugs_closed: 90 }
     let!(:out_result) { Fabricate :project_result, result_date: 1.day.ago, qty_bugs_closed: 60 }
 
-    it { expect(ProjectResultsRepository.instance.scope_in_week_for_project(project, 1.day.ago.to_date.cweek, 1.day.ago.to_date.cwyear)).to eq first_result.known_scope }
+    it { expect(ProjectResultsRepository.instance.scope_in_week_for_projects([project], 1.day.ago.to_date.cweek, 1.day.ago.to_date.cwyear)).to eq first_result.known_scope }
   end
 end

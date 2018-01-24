@@ -99,7 +99,9 @@ pt-BR:
       avg_hours_per_demand: "Média Horas/Demanda"
       scope_gap: "Restante do escopo"
     charts:
-      xlabel: "Semanas"
+      xlabel:
+        weeks: "Semanas"
+        projects: "Projetos"
       burnup:
         ylabel: "Demandas"
         tooltipsufix: " demandas"

@@ -315,4 +315,9 @@ RSpec.describe Project, type: :model do
       it { expect(project.total_gap).to eq project.initial_scope }
     end
   end
+
+  describe '#full_name' do
+    let(:project) { Fabricate :project, initial_scope: 30, start_date: 1.week.ago, end_date: 1.week.from_now }
+    it { expect(project.full_name).to eq "#{project.customer_name} | #{project.product_name} | #{project.name}" }
+  end
 end

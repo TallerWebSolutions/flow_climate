@@ -179,6 +179,7 @@ RSpec.describe CustomersController, type: :controller do
           expect(response).to render_template :show
           expect(assigns(:company)).to eq company
           expect(assigns(:customer)).to eq customer
+          expect(assigns(:report_data)).to be_a ReportData
           expect(assigns(:customer_projects)).to eq [second_project, first_project]
         end
       end

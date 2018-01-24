@@ -14,7 +14,7 @@ $(function () {
             text: 'Source: Flow Control'
         },
         xAxis: {
-            categories: columnDiv.data('weeks'),
+            categories: columnDiv.data('xcategories'),
             title: { text: columnDiv.data('xtitle') }
         },
         yAxis: {
@@ -43,7 +43,10 @@ $(function () {
             column: {
                 dataLabels: {
                     enabled: true,
-                    color: 'black'
+                    color: 'black',
+                    formatter: function() {
+                        return  Highcharts.numberFormat(this.y, 3, '.');
+                    }
                 }
             }
         },

@@ -16,8 +16,8 @@ class ProjectResultsRepository
     project_result_joins.where('customers.company_id = :company_id AND EXTRACT(WEEK FROM result_date) = :week AND EXTRACT(YEAR FROM result_date) = :year', company_id: company.id, week: week, year: year).sum(&:throughput)
   end
 
-  def th_in_week_for_project(project, week, year)
-    project.project_results.where('EXTRACT(WEEK FROM result_date) = :week AND EXTRACT(YEAR FROM result_date) = :year', week: week, year: year).sum(:throughput)
+  def th_in_week_for_projects(projects, week, year)
+    ProjectResult.where('project_id in (:project_ids) AND EXTRACT(WEEK FROM result_date) = :week AND EXTRACT(YEAR FROM result_date) = :year', project_ids: projects.pluck(:id), week: week, year: year).sum(:throughput)
   end
 
   def bugs_opened_in_week(company, week, year)
@@ -28,9 +28,14 @@ class ProjectResultsRepository
     project_result_joins.where('customers.company_id = :company_id AND EXTRACT(WEEK FROM result_date) = :week AND EXTRACT(YEAR FROM result_date) = :year', company_id: company.id, week: week, year: year).sum(&:qty_bugs_closed)
   end
 
-  def scope_in_week_for_project(project, week, year)
-    known_scope = project.project_results.where('EXTRACT(WEEK FROM result_date) <= :week AND EXTRACT(YEAR FROM result_date) <= :year', week: week, year: year).order(:result_date).last&.known_scope
-    known_scope || project.initial_scope
+  def scope_in_week_for_projects(projects, week, year)
+    total_scope = 0
+    projects.each do |project|
+      known_scope = project.project_results.where('EXTRACT(WEEK FROM result_date) <= :week AND EXTRACT(YEAR FROM result_date) <= :year', week: week, year: year).order(:result_date).last&.known_scope
+      total_scope += known_scope || project.initial_scope
+    end
+
+    total_scope
   end
 
   private

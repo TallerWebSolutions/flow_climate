@@ -11,6 +11,8 @@ class CustomersController < AuthenticatedController
   def show
     @customer_projects = @customer.projects.order(end_date: :desc)
     @projects_summary = ProjectsSummaryObject.new(@customer.projects)
+    @report_data = ReportData.new(@customer_projects)
+    @hours_per_demand_data = [{ name: I18n.t('projects.charts.hours_per_demand.ylabel'), data: @customer_projects.map(&:avg_hours_per_demand) }]
   end
 
   def new
