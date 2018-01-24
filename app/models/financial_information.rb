@@ -49,4 +49,8 @@ class FinancialInformation < ApplicationRecord
   def throughput_operation_result
     OperationResultsRepository.instance.operation_results_for_company_month(company, finances_date.month, finances_date.year).sum(&:total_th)
   end
+
+  def red?
+    expenses_total > income_total
+  end
 end

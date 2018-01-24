@@ -24,7 +24,7 @@
     <th><%= t('general.result') %></th>
   </tr>
   <% @financial_informations.each do |finance| %>
-    <tr>
+    <tr class='<%= 'red-data' if finance.red? %>'>
       <td><%= l(finance.finances_date) %></td>
       <td><%= l(finance.finances_date, format: :month_year) %></td>
       <td><%= number_to_currency(finance.income_total) %></td>

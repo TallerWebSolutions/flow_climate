@@ -68,4 +68,16 @@ RSpec.describe FinancialInformation, type: :model do
 
     it { expect(finances.hours_per_demand).to be_within(0.01).of(5.3333) }
   end
+
+  describe '#red?' do
+    let(:company) { Fabricate :company }
+    context 'when the expenses are greather than incomes' do
+      let!(:finances) { Fabricate :financial_information, company: company, finances_date: 1.month.ago, income_total: 20.4, expenses_total: 30 }
+      it { expect(finances.red?).to be true }
+    end
+    context 'when the expenses are smaller than incomes' do
+      let!(:finances) { Fabricate :financial_information, company: company, finances_date: 1.month.ago, income_total: 20.4, expenses_total: 1 }
+      it { expect(finances.red?).to be false }
+    end
+  end
 end
