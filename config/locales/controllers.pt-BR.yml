@@ -102,7 +102,7 @@ pt-BR:
         tooltipsufix: " demandas"
         title: "Burnup para %{project_name}"
       hours_per_demand:
-        title: "Horas por demanda no tempo"
+        title: "Horas por demanda no tempo para %{project_name}"
         ylabel: "Horas/Demanda"
         tooltipsufix: "horas por demanda"
   project_results:

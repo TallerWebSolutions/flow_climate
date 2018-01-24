@@ -298,5 +298,9 @@ RSpec.describe Project, type: :model do
     end
   end
 
-  pending '#project_weeks'
+  describe '#project_weeks' do
+    let(:project) { Fabricate :project, initial_scope: 30, start_date: 1.week.ago, end_date: 1.week.from_now }
+    let(:start_week) { project.start_date.cweek }
+    it { expect(project.project_weeks).to eq [[project.start_date.cweek, project.start_date.cwyear], [(project.start_date + 1.week).cweek, (project.start_date + 1.week).cwyear], [(project.start_date + 2.weeks).cweek, (project.start_date + 2.weeks).cwyear]] }
+  end
 end

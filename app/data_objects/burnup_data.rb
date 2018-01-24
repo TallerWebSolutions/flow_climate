@@ -18,7 +18,7 @@ class BurnupData
     total_delivered = 0
 
     @weeks.each_with_index do |week, index|
-      @ideal << ideal_burn * index
+      @ideal << ideal_burn(index)
       total_delivered += ProjectResultsRepository.instance.th_in_week_for_project(project, week[0], week[1])
       @current << total_delivered if add_current_th?(week)
       @scope << ProjectResultsRepository.instance.scope_in_week_for_project(project, week[0], week[1])
@@ -29,7 +29,7 @@ class BurnupData
     week[1] < Time.zone.today.cwyear || (week[0] <= Time.zone.today.cweek && week[1] <= Time.zone.today.cwyear)
   end
 
-  def ideal_burn
-    @project.current_backlog.to_f / @weeks.count.to_f
+  def ideal_burn(index)
+    (@project.current_backlog.to_f / @weeks.count.to_f) * (index + 1)
   end
 end
