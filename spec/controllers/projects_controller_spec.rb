@@ -49,6 +49,9 @@ RSpec.describe ProjectsController, type: :controller do
             expect(response).to render_template :show
             expect(assigns(:company)).to eq company
             expect(assigns(:project)).to eq first_project
+            expect(assigns(:burnup_data)).to be_a BurnupData
+            expect(assigns(:weeks)).to eq [[first_project.start_date.cweek, first_project.start_date.cwyear]]
+            expect(assigns(:hours_per_demand_data)).to eq [{ name: I18n.t('projects.charts.hours_per_demand.ylabel'), data: first_project.project_results.order(:result_date).map(&:hours_per_demand).flatten }]
           end
         end
       end

@@ -5,7 +5,7 @@ class BurnupData
 
   def initialize(project)
     @project = project
-    @weeks = mount_weeks
+    @weeks = project.project_weeks
     @ideal = []
     @current = []
     @scope = []
@@ -31,18 +31,5 @@ class BurnupData
 
   def ideal_burn
     @project.current_backlog.to_f / @weeks.count.to_f
-  end
-
-  def mount_weeks
-    current = @project.start_date
-    max = @project.end_date
-    array_of_weeks = []
-
-    while current < max
-      array_of_weeks << [current.cweek, current.cwyear]
-      current += 7.days
-    end
-
-    array_of_weeks
   end
 end

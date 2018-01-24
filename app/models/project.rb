@@ -121,6 +121,18 @@ class Project < ApplicationRecord
     total_hours.to_f / total_throughput.to_f
   end
 
+  def project_weeks
+    current = start_date
+    array_of_weeks = []
+
+    while current <= end_date
+      array_of_weeks << [current.cweek, current.cwyear]
+      current += 7.days
+    end
+
+    array_of_weeks
+  end
+
   private
 
   def hour_value_project_value?

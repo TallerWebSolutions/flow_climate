@@ -95,11 +95,16 @@ pt-BR:
       current_team: "Time Atual"
       delivered_scope: "Escopo Entregue"
       avg_hours_per_demand: "Média Horas/Demanda"
-    graphs:
+    charts:
       xlabel: "Semanas"
-      ylabel: "Demandas"
-      tooltipsufix: " demandas"
-      burnup: "Burnup para %{project_name}"
+      burnup:
+        ylabel: "Demandas"
+        tooltipsufix: " demandas"
+        title: "Burnup para %{project_name}"
+      hours_per_demand:
+        title: "Horas por demanda no tempo"
+        ylabel: "Horas/Demanda"
+        tooltipsufix: "horas por demanda"
   project_results:
     index:
       title: "Resultados do Projeto"

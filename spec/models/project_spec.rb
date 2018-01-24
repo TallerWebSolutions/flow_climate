@@ -297,4 +297,6 @@ RSpec.describe Project, type: :model do
       it { expect(project.avg_hours_per_demand).to eq 0 }
     end
   end
+
+  pending '#project_weeks'
 end

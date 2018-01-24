@@ -96,11 +96,16 @@ en:
       current_team: "Current Team"
       delivered_scope: "Delivered Scope"
       avg_hours_per_demand: "Avg Hours/Demand"
-    graphs:
+    charts:
       xlabel: "Weeks"
-      ylabel: "Demands"
-      tooltipsufix: " demands"
-      burnup: "Burnup for %{project_name}"
+      burnup:
+        ylabel: "Demands"
+        tooltipsufix: " demands"
+        title: "Burnup for %{project_name}"
+      hours_per_demand:
+        title: "Hours per demand on time for %{project_name}"
+        ylabel: "Hours/Demand"
+        tooltipsufix: " hours per demand"
   project_results:
     index:
       title: "Project results"

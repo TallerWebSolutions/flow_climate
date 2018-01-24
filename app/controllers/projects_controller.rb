@@ -6,6 +6,8 @@ class ProjectsController < AuthenticatedController
 
   def show
     @burnup_data = BurnupData.new(@project)
+    @weeks = @project.project_weeks
+    @hours_per_demand_data = [{ name: I18n.t('projects.charts.hours_per_demand.ylabel'), data: @project.project_results.order(:result_date).map(&:hours_per_demand).flatten }]
   end
 
   def index
