@@ -1,5 +1,15 @@
 <div class="standard-form">
 
+  <% if @team_member.persisted? %>
+    <div class="row">
+      <div class='col-xs-12 form-group <%= 'has-error' if @team_member.errors[:team].present? %>'>
+        <%= f.label :team, class: 'control-label' %>
+        <%= f.select :team, @company.teams.map { |team| [team.name, team.id] }, { include_blank: t('general.select'), selected: @team_member.team.id }, class: 'form-control' %>
+        <span class="help-block"><%= @team_member.errors[:team].join(', ') %></span>
+      </div>
+    </div>
+  <% end %>
+
   <div class="row">
     <div class='col-xs-4 form-group <%= 'has-error' if @team_member.errors[:name].present? %>'>
       <%= f.label :name, class: 'control-label required' %>

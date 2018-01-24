@@ -123,11 +123,13 @@ RSpec.describe TeamMembersController, type: :controller do
 
     describe 'PUT #update' do
       let(:team) { Fabricate :team, company: company }
+      let(:other_team) { Fabricate :team, company: company }
       let(:team_member) { Fabricate :team_member, team: team }
 
       context 'passing valid parameters' do
-        before { put :update, params: { company_id: company, team_id: team, id: team_member, team_member: { name: 'foo', billable: false, active: false, monthly_payment: 100, hours_per_month: 10, billable_type: :outsourcing } } }
+        before { put :update, params: { company_id: company, team_id: team, id: team_member, team_member: { team: other_team, name: 'foo', billable: false, active: false, monthly_payment: 100, hours_per_month: 10, billable_type: :outsourcing } } }
         it 'updates the member and redirects to team show' do
+          expect(TeamMember.last.team).to eq other_team
           expect(TeamMember.last.name).to eq 'foo'
           expect(TeamMember.last.billable).to be false
           expect(TeamMember.last.active).to be false
@@ -140,24 +142,24 @@ RSpec.describe TeamMembersController, type: :controller do
 
       context 'passing invalid' do
         context 'team member parameters' do
-          before { put :update, params: { company_id: company, team_id: team, id: team_member, team_member: { name: nil, billable: nil, active: nil, monthly_payment: nil, hours_per_month: nil, billable_type: nil } } }
+          before { put :update, params: { company_id: company, team_id: team, id: team_member, team_member: { team: other_team, name: nil, billable: nil, active: nil, monthly_payment: nil, hours_per_month: nil, billable_type: nil } } }
           it 'does not update the member and re-render the template with the errors' do
             expect(response).to render_template :edit
             expect(assigns(:team_member).errors.full_messages).to eq ['Nome não pode ficar em branco', 'Pagamento mensal não pode ficar em branco', 'Horas por mês não pode ficar em branco']
           end
         end
         context 'non-existent team' do
-          before { put :update, params: { company_id: company, team_id: 'foo', id: team_member, team_member: { name: 'foo', billable: false, active: false, monthly_payment: 100, hours_per_month: 10, billable_type: :outsourcing } } }
+          before { put :update, params: { company_id: company, team_id: 'foo', id: team_member, team_member: { team: other_team, name: 'foo', billable: false, active: false, monthly_payment: 100, hours_per_month: 10, billable_type: :outsourcing } } }
           it { expect(response).to have_http_status :not_found }
         end
         context 'non-existent team member' do
-          before { put :update, params: { company_id: company, team_id: team, id: 'foo', team_member: { name: 'foo', billable: false, active: false, monthly_payment: 100, hours_per_month: 10, billable_type: :outsourcing } } }
+          before { put :update, params: { company_id: company, team_id: team, id: 'foo', team_member: { team: other_team, name: 'foo', billable: false, active: false, monthly_payment: 100, hours_per_month: 10, billable_type: :outsourcing } } }
           it { expect(response).to have_http_status :not_found }
         end
         context 'unpermitted company' do
           let(:company) { Fabricate :company, users: [] }
 
-          before { put :update, params: { company_id: company, team_id: team, id: team_member, team_member: { name: 'foo', billable: false, active: false, monthly_payment: 100, hours_per_month: 10, billable_type: :outsourcing } } }
+          before { put :update, params: { company_id: company, team_id: team, id: team_member, team_member: { team: other_team, name: 'foo', billable: false, active: false, monthly_payment: 100, hours_per_month: 10, billable_type: :outsourcing } } }
           it { expect(response).to have_http_status :not_found }
         end
       end

@@ -18,7 +18,8 @@ class TeamMembersController < AuthenticatedController
   def edit; end
 
   def update
-    @team_member.update(team_member_params.merge(team: @team))
+    team = @company.teams.find_by(id: team_member_params[:team])
+    @team_member.update(team_member_params.merge(team: team))
     return redirect_to company_team_path(@company, @team) if @team_member.save
     render :edit
   end
@@ -44,6 +45,6 @@ class TeamMembersController < AuthenticatedController
   end
 
   def team_member_params
-    params.require(:team_member).permit(:name, :monthly_payment, :hours_per_month, :billable, :active, :billable_type)
+    params.require(:team_member).permit(:team, :name, :monthly_payment, :hours_per_month, :billable, :active, :billable_type)
   end
 end
