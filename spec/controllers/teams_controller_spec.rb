@@ -38,13 +38,28 @@ RSpec.describe TeamsController, type: :controller do
       let!(:second_result) { Fabricate :project_result, project: second_project, team: team }
 
       context 'passing a valid ID' do
-        before { get :show, params: { company_id: company, id: team.id } }
-        it 'assigns the instance variable and renders the template' do
-          expect(response).to render_template :show
-          expect(assigns(:company)).to eq company
-          expect(assigns(:team)).to eq team
-          expect(assigns(:report_data)).to be_a ReportData
-          expect(assigns(:team_projects)).to eq [second_project, first_project]
+        context 'having data' do
+          before { get :show, params: { company_id: company, id: team.id } }
+          it 'assigns the instance variable and renders the template' do
+            expect(response).to render_template :show
+            expect(assigns(:company)).to eq company
+            expect(assigns(:team)).to eq team
+            expect(assigns(:report_data)).to be_a ReportData
+            expect(assigns(:team_projects)).to eq [second_project, first_project]
+          end
+        end
+        context 'having no data' do
+          let(:other_company) { Fabricate :company, users: [user] }
+          let(:empty_team) { Fabricate :team, company: other_company }
+
+          before { get :show, params: { company_id: other_company, id: empty_team } }
+          it 'assigns the instance variable and renders the template' do
+            expect(response).to render_template :show
+            expect(assigns(:company)).to eq other_company
+            expect(assigns(:team)).to eq empty_team
+            expect(assigns(:report_data)).to be_nil
+            expect(assigns(:team_projects)).to eq []
+          end
         end
       end
       context 'passing invalid parameters' do

@@ -134,8 +134,16 @@ RSpec.describe Team, type: :model do
   end
 
   describe '#percentage_remaining_money' do
-    include_context 'consolidations variables data for team'
-    it { expect(team.percentage_remaining_money).to eq((team.remaining_money / team.total_value) * 100) }
+    context 'having data' do
+      include_context 'consolidations variables data for team'
+      it { expect(team.percentage_remaining_money).to eq((team.remaining_money / team.total_value) * 100) }
+    end
+    context 'having no data' do
+      let(:company) { Fabricate :company }
+      let(:team) { Fabricate :team, company: company }
+
+      it { expect(team.percentage_remaining_money).to eq 0 }
+    end
   end
 
   describe '#total_gap' do
@@ -144,8 +152,16 @@ RSpec.describe Team, type: :model do
   end
 
   describe '#percentage_remaining_scope' do
-    include_context 'consolidations variables data for team'
-    it { expect(team.percentage_remaining_scope).to eq((team.total_gap.to_f / team.current_backlog.to_f) * 100) }
+    context 'having data' do
+      include_context 'consolidations variables data for team'
+      it { expect(team.percentage_remaining_scope).to eq((team.total_gap.to_f / team.current_backlog.to_f) * 100) }
+    end
+    context 'having no data' do
+      let(:company) { Fabricate :company }
+      let(:team) { Fabricate :team, company: company }
+
+      it { expect(team.percentage_remaining_scope).to eq 0 }
+    end
   end
 
   describe '#total_flow_pressure' do

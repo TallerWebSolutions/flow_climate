@@ -8,7 +8,7 @@ class TeamsController < AuthenticatedController
     @team_members = @team.team_members.order(:name)
     @team_projects = @team.projects.order(end_date: :desc)
     @projects_summary = ProjectsSummaryObject.new(@team.projects)
-    @report_data = ReportData.new(@team_projects)
+    @report_data = ReportData.new(@team_projects) if @team_projects.present?
     @hours_per_demand_data = [{ name: I18n.t('projects.charts.hours_per_demand.ylabel'), data: @team_projects.map(&:avg_hours_per_demand) }]
   end
 

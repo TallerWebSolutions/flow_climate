@@ -75,6 +75,7 @@ class Team < ApplicationRecord
   end
 
   def percentage_remaining_money
+    return 0 if total_value.zero?
     (remaining_money / total_value) * 100
   end
 
@@ -83,6 +84,7 @@ class Team < ApplicationRecord
   end
 
   def percentage_remaining_scope
+    return 0 if current_backlog.zero?
     (total_gap.to_f / current_backlog.to_f) * 100
   end
 

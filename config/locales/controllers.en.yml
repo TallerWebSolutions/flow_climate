@@ -91,6 +91,7 @@ en:
       percentage_flow_pressure: "% Flow Pressure"
       percentage_remaining_scope: "% Remaining Scope"
       total_gap: "Total Gap"
+      no_data: "There are no projects. Add one."
     show:
       initial_scope: "Initial Scope"
       last_team: "Current team"
@@ -162,7 +163,7 @@ en:
       title: "Customers List"
       no_customers_message: "You do not have teams yet."
     show:
-      total_value: "Total Value"
+      total_value: "Projects Total Value"
   customer:
     edit:
       title: "Edit Customer"
