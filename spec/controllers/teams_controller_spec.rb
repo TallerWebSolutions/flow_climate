@@ -32,12 +32,19 @@ RSpec.describe TeamsController, type: :controller do
 
     describe 'GET #show' do
       let(:team) { Fabricate :team, company: company }
+      let!(:first_project) { Fabricate :project, end_date: 5.days.from_now }
+      let!(:second_project) { Fabricate :project, end_date: 7.days.from_now }
+      let!(:first_result) { Fabricate :project_result, project: first_project, team: team }
+      let!(:second_result) { Fabricate :project_result, project: second_project, team: team }
+
       context 'passing a valid ID' do
         before { get :show, params: { company_id: company, id: team.id } }
         it 'assigns the instance variable and renders the template' do
           expect(response).to render_template :show
           expect(assigns(:company)).to eq company
           expect(assigns(:team)).to eq team
+          expect(assigns(:report_data)).to be_a ReportData
+          expect(assigns(:team_projects)).to eq [second_project, first_project]
         end
       end
       context 'passing invalid parameters' do

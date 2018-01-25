@@ -5,8 +5,11 @@ class TeamsController < AuthenticatedController
   before_action :assign_team, only: %i[show edit update]
 
   def show
-    @projects_summary = ProjectsSummaryObject.new(@team.projects)
     @team_members = @team.team_members.order(:name)
+    @team_projects = @team.projects.order(end_date: :desc)
+    @projects_summary = ProjectsSummaryObject.new(@team.projects)
+    @report_data = ReportData.new(@team_projects)
+    @hours_per_demand_data = [{ name: I18n.t('projects.charts.hours_per_demand.ylabel'), data: @team_projects.map(&:avg_hours_per_demand) }]
   end
 
   def new

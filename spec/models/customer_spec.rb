@@ -122,4 +122,9 @@ RSpec.describe Customer, type: :model do
     include_context 'consolidations variables data'
     it { expect(customer.total_flow_pressure).to eq customer.projects.sum(&:flow_pressure) }
   end
+
+  describe '#delivered_scope' do
+    include_context 'consolidations variables data'
+    it { expect(customer.delivered_scope).to eq customer.projects.sum(&:total_throughput) }
+  end
 end
