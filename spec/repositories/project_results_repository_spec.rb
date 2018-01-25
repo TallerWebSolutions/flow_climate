@@ -91,6 +91,7 @@ RSpec.describe ProjectResultsRepository, type: :repository do
     end
     context 'when there is no data' do
       let!(:project) { Fabricate :project, customer: customer, product: product }
+      let!(:first_result) { Fabricate :project_result, project: project, result_date: 1.month.from_now, qty_bugs_closed: 90 }
       let!(:out_result) { Fabricate :project_result, result_date: 1.day.ago, qty_bugs_closed: 60 }
 
       it { expect(ProjectResultsRepository.instance.scope_in_week_for_projects([project], Time.zone.today.cweek, Time.zone.today.cwyear)).to eq project.initial_scope }

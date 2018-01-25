@@ -31,8 +31,7 @@ class ProjectResultsRepository
   def scope_in_week_for_projects(projects, week, year)
     total_scope = 0
     projects.each do |project|
-      known_scope = project.project_results.where('EXTRACT(WEEK FROM result_date) <= :week AND EXTRACT(YEAR FROM result_date) <= :year', week: week, year: year).order(:result_date).last&.known_scope
-      known_scope = search_for_known_last_scope(project) if known_scope.blank?
+      known_scope = project.project_results.where('(EXTRACT(WEEK FROM result_date) <= :week AND EXTRACT(YEAR FROM result_date) <= :year) OR (EXTRACT(YEAR FROM result_date) < :year)', week: week, year: year).order(:result_date).last&.known_scope
       total_scope += known_scope || project.initial_scope
     end
 
@@ -43,9 +42,5 @@ class ProjectResultsRepository
 
   def project_result_joins
     ProjectResult.joins(project: [{ product: :customer }])
-  end
-
-  def search_for_known_last_scope(project)
-    project.project_results.order(:result_date).last&.known_scope
   end
 end
