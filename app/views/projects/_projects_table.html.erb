@@ -38,7 +38,7 @@
       <% projects_list.each do |project| %>
         <tr class="<%= 'red-project' if project.red? %>">
           <td><%= link_to project.customer_name, company_customer_path(@company, project.customer) %></td>
-          <td><%= project.product_name %></td>
+          <td><%= link_to project.product_name, company_product_path(@company, project.product) %></td>
           <td><%= link_to project.name, company_project_path(@company, project) %></td>
           <td><%= link_to project.current_team.name, company_team_path(@company, project.current_team) if project.current_team.present? %></td>
           <td><%= l(project.start_date) %></td>

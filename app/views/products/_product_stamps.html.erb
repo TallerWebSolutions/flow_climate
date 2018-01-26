@@ -1,0 +1,43 @@
+<div class="row">
+  <%= link_to company_product_path(@company, product) do %>
+    <div class="col-xs-2 stamp">
+      <div class="stamp-title"><%= Product.model_name.human %></div>
+      <div class="stamp-content"><%= product.name  %></div>
+    </div>
+  <% end %>
+  <div class="col-xs-2 stamp">
+    <div class="stamp-title"><%= t('projects.show.current_scope') %></div>
+    <div class="stamp-content"><%= product.current_backlog  %></div>
+  </div>
+  <div class="col-xs-2 stamp">
+    <div class="stamp-title"><%= t('projects.show.delivered_scope') %></div>
+    <div class="stamp-content"><%= product.delivered_scope  %></div>
+  </div>
+  <div class="col-xs-2 stamp">
+    <div class="stamp-title"><%= t('projects.index.total_gap') %></div>
+    <div class="stamp-content"><%= product.total_gap  %></div>
+  </div>
+  <div class="col-xs-2 stamp">
+    <div class="stamp-title"><%= t('projects.index.percentage_remaining_scope') %></div>
+    <div class="stamp-content"><%= number_to_percentage(product.percentage_remaining_scope, precision: 2)  %></div>
+  </div>
+  <div class="col-xs-2 stamp">
+    <div class="stamp-title"><%= t('projects.index.flow_pressure') %></div>
+    <div class="stamp-content"><%= number_with_precision(product.total_flow_pressure, precision: 3)  %></div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-xs-4 green-stamp">
+    <div class="stamp-title"><%= t('customers.show.total_value') %></div>
+    <div class="stamp-content"><%= number_to_currency(product.total_value) %></div>
+  </div>
+  <div class="col-xs-4 green-stamp">
+    <div class="stamp-title"><%= t('projects.index.remaining_money') %></div>
+    <div class="stamp-content"><%= number_to_currency(product.remaining_money) %></div>
+  </div>
+  <div class="col-xs-4 green-stamp">
+    <div class="stamp-title"><%= t('projects.index.percentage_remaining_money') %></div>
+    <div class="stamp-content"><%= number_to_percentage(product.percentage_remaining_money, precision: 2)  %></div>
+  </div>
+</div>

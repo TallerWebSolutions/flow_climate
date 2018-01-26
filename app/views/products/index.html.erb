@@ -15,26 +15,5 @@
     </div>
   </div>
 
-  <% if @products.empty? %>
-    <%= t('products.index.no_data') %>
-  <% else %>
-    <table class="table">
-      <tr>
-        <th><%= Product.human_attribute_name :customer %></th>
-        <th><%= Product.human_attribute_name :name %></th>
-        <th><%= t('general.table.actions') %></th>
-      </tr>
-      <% @products.each do |product| %>
-        <tr>
-          <td><%= product.customer_name %></td>
-          <td><%= product.name %></td>
-          <td>
-            <%= link_to edit_company_product_path(@company, product) do %>
-              <i class="fa fa-pencil"></i>
-            <% end %>
-          </td>
-        </tr>
-      <% end %>
-    </table>
-  <% end %>
+  <%= render 'products_table' %>
 </div>

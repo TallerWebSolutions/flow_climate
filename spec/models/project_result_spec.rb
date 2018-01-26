@@ -19,6 +19,10 @@ RSpec.describe ProjectResult, type: :model do
     it { is_expected.to validate_presence_of :qty_hours_bug }
   end
 
+  context 'delegations' do
+    it { is_expected.to delegate_method(:name).to(:team).with_prefix }
+  end
+
   describe '#project_delivered_hours' do
     let(:result) { Fabricate :project_result }
     it { expect(result.project_delivered_hours).to eq result.qty_hours_upstream + result.qty_hours_downstream }

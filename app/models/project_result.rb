@@ -38,6 +38,8 @@ class ProjectResult < ApplicationRecord
 
   scope :for_week, ->(week, year) { where('EXTRACT(WEEK FROM result_date) = :week AND EXTRACT(YEAR FROM result_date) = :year', week: week, year: year) }
 
+  delegate :name, to: :team, prefix: true
+
   def project_delivered_hours
     qty_hours_upstream + qty_hours_downstream
   end

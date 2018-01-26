@@ -2,10 +2,17 @@
 
 class ProductsController < AuthenticatedController
   before_action :assign_company
-  before_action :assign_product, only: %i[edit update]
+  before_action :assign_product, only: %i[show edit update]
 
   def index
     @products = @company.products.order(:name)
+  end
+
+  def show
+    @product_projects = @product.projects.order(end_date: :desc)
+    @projects_summary = ProjectsSummaryObject.new(@product.projects)
+    @report_data = ReportData.new(@product_projects) if @product_projects.present?
+    @hours_per_demand_data = [{ name: I18n.t('projects.charts.hours_per_demand.ylabel'), data: @product_projects.map(&:avg_hours_per_demand) }]
   end
 
   def new

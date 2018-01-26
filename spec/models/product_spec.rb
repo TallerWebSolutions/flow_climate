@@ -66,22 +66,62 @@ RSpec.describe Product, type: :model do
     it { expect(product.red_projects).to eq [project] }
   end
 
-  describe '#current_backlog' do
-    let(:customer) { Fabricate :customer }
-    let(:other_customer) { Fabricate :customer }
+  RSpec.shared_context 'consolidations variables data for product', shared_context: :metadata do
+    let(:product) { Fabricate :product, name: 'zzz' }
+    let(:other_product) { Fabricate :product, name: 'zzz' }
 
-    let(:product) { Fabricate :product, customer: customer, name: 'zzz' }
-    let(:other_product) { Fabricate :product, customer: other_customer, name: 'zzz' }
-
-    let(:project) { Fabricate :project, customer: customer, product: product }
-    let(:other_project) { Fabricate :project, customer: customer, product: product }
-    let(:other_customer_project) { Fabricate :project, customer: other_product.customer, product: other_product }
+    let(:project) { Fabricate :project, customer: product.customer, product: product }
+    let(:other_project) { Fabricate :project, customer: product.customer, product: product }
+    let(:other_product_project) { Fabricate :project, customer: other_product.customer, product: other_product }
 
     let!(:first_result) { Fabricate :project_result, project: project, result_date: 1.day.ago, known_scope: 10 }
     let!(:second_result) { Fabricate :project_result, project: project, result_date: Time.zone.today, known_scope: 20 }
     let!(:third_result) { Fabricate :project_result, project: other_project, result_date: 1.day.ago, known_scope: 5 }
-    let!(:fourth_result) { Fabricate :project_result, project: other_customer_project, result_date: 1.day.ago, known_scope: 50 }
+    let!(:fourth_result) { Fabricate :project_result, project: other_product_project, result_date: 1.day.ago, known_scope: 50 }
+  end
 
+  describe '#current_backlog' do
+    include_context 'consolidations variables data for product'
     it { expect(product.current_backlog).to eq 25 }
+  end
+
+  describe '#avg_hours_per_demand' do
+    include_context 'consolidations variables data for product'
+    it { expect(product.avg_hours_per_demand).to eq product.projects.sum(&:avg_hours_per_demand) / product.projects_count.to_f }
+  end
+
+  describe '#total_value' do
+    include_context 'consolidations variables data for product'
+    it { expect(product.total_value).to eq product.projects.sum(:value) }
+  end
+
+  describe '#remaining_money' do
+    include_context 'consolidations variables data for product'
+    it { expect(product.remaining_money).to eq product.projects.sum(&:remaining_money) }
+  end
+
+  describe '#percentage_remaining_money' do
+    include_context 'consolidations variables data for product'
+    it { expect(product.percentage_remaining_money).to eq((product.remaining_money / product.total_value) * 100) }
+  end
+
+  describe '#total_gap' do
+    include_context 'consolidations variables data for product'
+    it { expect(product.total_gap).to eq product.projects.sum(&:total_gap) }
+  end
+
+  describe '#percentage_remaining_scope' do
+    include_context 'consolidations variables data for product'
+    it { expect(product.percentage_remaining_scope).to eq((product.total_gap.to_f / product.current_backlog.to_f) * 100) }
+  end
+
+  describe '#total_flow_pressure' do
+    include_context 'consolidations variables data for product'
+    it { expect(product.total_flow_pressure).to eq product.projects.sum(&:flow_pressure) }
+  end
+
+  describe '#delivered_scope' do
+    include_context 'consolidations variables data for product'
+    it { expect(product.delivered_scope).to eq product.projects.sum(&:total_throughput) }
   end
 end

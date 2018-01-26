@@ -22,6 +22,10 @@ RSpec.describe ProductsController, type: :controller do
       before { put :update, params: { company_id: 'xpto', id: 'foo' } }
       it { expect(response).to redirect_to new_user_session_path }
     end
+    describe 'GET #show' do
+      before { get :show, params: { company_id: 'bar', id: 'foo' } }
+      it { expect(response).to redirect_to new_user_session_path }
+    end
   end
 
   context 'authenticated' do
@@ -34,10 +38,9 @@ RSpec.describe ProductsController, type: :controller do
         let(:customer) { Fabricate :customer, company: company }
         let(:other_customer) { Fabricate :customer, company: company }
 
-        let(:product) { Fabricate :product, customer: customer, name: 'zzz' }
-        let(:other_product) { Fabricate :product, customer: other_customer, name: 'aaa' }
-
-        let(:other_company_product) { Fabricate :product }
+        let!(:product) { Fabricate :product, customer: customer, name: 'zzz' }
+        let!(:other_product) { Fabricate :product, customer: other_customer, name: 'aaa' }
+        let!(:other_company_product) { Fabricate :product }
 
         before { get :index, params: { company_id: company } }
         it 'assigns the instance variable and renders the template' do
@@ -162,6 +165,52 @@ RSpec.describe ProductsController, type: :controller do
           let(:customer) { Fabricate :customer, company: company }
 
           before { put :update, params: { company_id: company, id: product, product: { customer_id: customer, name: 'foo' } } }
+          it { expect(response).to have_http_status :not_found }
+        end
+      end
+    end
+
+    describe 'GET #show' do
+      let(:customer) { Fabricate :customer, company: company }
+      let(:product) { Fabricate :product, customer: customer }
+      let!(:first_project) { Fabricate :project, customer: product.customer, product: product, end_date: 5.days.from_now }
+      let!(:second_project) { Fabricate :project, customer: product.customer, product: product, end_date: 7.days.from_now }
+
+      context 'passing a valid ID' do
+        context 'having data' do
+          before { get :show, params: { company_id: company, id: product } }
+          it 'assigns the instance variable and renders the template' do
+            expect(response).to render_template :show
+            expect(assigns(:company)).to eq company
+            expect(assigns(:product)).to eq product
+            expect(assigns(:report_data)).to be_a ReportData
+            expect(assigns(:product_projects)).to eq [second_project, first_project]
+          end
+        end
+        context 'having no data' do
+          let(:empty_product) { Fabricate :product, customer: customer }
+          before { get :show, params: { company_id: company, id: empty_product } }
+          it 'assigns the instance variable and renders the template' do
+            expect(response).to render_template :show
+            expect(assigns(:company)).to eq company
+            expect(assigns(:product)).to eq empty_product
+            expect(assigns(:report_data)).to be_nil
+            expect(assigns(:product_projects)).to eq []
+          end
+        end
+      end
+      context 'passing invalid parameters' do
+        context 'non-existent company' do
+          before { get :show, params: { company_id: 'foo', id: product } }
+          it { expect(response).to have_http_status :not_found }
+        end
+        context 'non-existent product' do
+          before { get :show, params: { company_id: company, id: 'foo' } }
+          it { expect(response).to have_http_status :not_found }
+        end
+        context 'not permitted' do
+          let(:company) { Fabricate :company, users: [] }
+          before { get :show, params: { company_id: company, id: product } }
           it { expect(response).to have_http_status :not_found }
         end
       end

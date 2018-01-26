@@ -7,6 +7,7 @@
 <table class="table table-index">
   <thead>
   <tr>
+    <th><%= ProjectResult.human_attribute_name :team %></th>
     <th><%= ProjectResult.human_attribute_name :result_date %></th>
     <th><%= t('general.week') %></th>
     <th><%= t('general.year') %></th>
@@ -27,6 +28,7 @@
   <tbody>
   <% project_results.each do |result| %>
     <tr>
+      <td><%= link_to result.team_name, company_team_path(@company, result.team) %></td>
       <td><%= l(result.result_date) %></td>
       <td><%= result.result_date.cweek %></td>
       <td><%= result.result_date.cwyear %></td>
@@ -56,6 +58,7 @@
   </tbody>
   <tfoot>
   <tr>
+    <td></td>
     <td></td>
     <td></td>
     <td></td>

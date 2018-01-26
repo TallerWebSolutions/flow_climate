@@ -66,7 +66,7 @@ RSpec.describe Customer, type: :model do
     it { expect(customer.red_projects).to eq [project] }
   end
 
-  RSpec.shared_context 'consolidations variables data', shared_context: :metadata do
+  RSpec.shared_context 'consolidations variables data for customer', shared_context: :metadata do
     let(:customer) { Fabricate :customer }
     let(:other_customer) { Fabricate :customer }
 
@@ -84,47 +84,47 @@ RSpec.describe Customer, type: :model do
   end
 
   describe '#current_backlog' do
-    include_context 'consolidations variables data'
+    include_context 'consolidations variables data for customer'
     it { expect(customer.current_backlog).to eq 25 }
   end
 
   describe '#avg_hours_per_demand' do
-    include_context 'consolidations variables data'
+    include_context 'consolidations variables data for customer'
     it { expect(customer.avg_hours_per_demand).to eq customer.projects.sum(&:avg_hours_per_demand) / customer.projects_count.to_f }
   end
 
   describe '#total_value' do
-    include_context 'consolidations variables data'
+    include_context 'consolidations variables data for customer'
     it { expect(customer.total_value).to eq customer.projects.sum(:value) }
   end
 
   describe '#remaining_money' do
-    include_context 'consolidations variables data'
+    include_context 'consolidations variables data for customer'
     it { expect(customer.remaining_money).to eq customer.projects.sum(&:remaining_money) }
   end
 
   describe '#percentage_remaining_money' do
-    include_context 'consolidations variables data'
+    include_context 'consolidations variables data for customer'
     it { expect(customer.percentage_remaining_money).to eq((customer.remaining_money / customer.total_value) * 100) }
   end
 
   describe '#total_gap' do
-    include_context 'consolidations variables data'
+    include_context 'consolidations variables data for customer'
     it { expect(customer.total_gap).to eq customer.projects.sum(&:total_gap) }
   end
 
   describe '#percentage_remaining_scope' do
-    include_context 'consolidations variables data'
+    include_context 'consolidations variables data for customer'
     it { expect(customer.percentage_remaining_scope).to eq((customer.total_gap.to_f / customer.current_backlog.to_f) * 100) }
   end
 
   describe '#total_flow_pressure' do
-    include_context 'consolidations variables data'
+    include_context 'consolidations variables data for customer'
     it { expect(customer.total_flow_pressure).to eq customer.projects.sum(&:flow_pressure) }
   end
 
   describe '#delivered_scope' do
-    include_context 'consolidations variables data'
+    include_context 'consolidations variables data for customer'
     it { expect(customer.delivered_scope).to eq customer.projects.sum(&:total_throughput) }
   end
 end
