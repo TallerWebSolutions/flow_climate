@@ -14,7 +14,8 @@
 #
 # Indexes
 #
-#  index_customers_on_company_id  (company_id)
+#  index_customers_on_company_id           (company_id)
+#  index_customers_on_company_id_and_name  (company_id,name) UNIQUE
 #
 # Foreign Keys
 #
@@ -29,4 +30,5 @@ class Customer < ApplicationRecord
   has_many :projects, dependent: :restrict_with_error
 
   validates :company, :name, presence: true
+  validates :name, uniqueness: { scope: :company, message: I18n.t('customer.name.uniqueness') }
 end

@@ -8,8 +8,35 @@ RSpec.describe Customer, type: :model do
   end
 
   context 'validations' do
-    it { is_expected.to validate_presence_of :company }
-    it { is_expected.to validate_presence_of :name }
+    context 'complex ones' do
+      it { is_expected.to validate_presence_of :company }
+      it { is_expected.to validate_presence_of :name }
+    end
+
+    context 'complex ones' do
+      let(:company) { Fabricate :company }
+
+      context 'uniqueness' do
+        context 'same name in same customer' do
+          let!(:customer) { Fabricate :customer, company: company, name: 'zzz' }
+          let!(:other_customer) { Fabricate.build :customer, company: company, name: 'zzz' }
+          it 'does not accept the model' do
+            expect(other_customer.valid?).to be false
+            expect(other_customer.errors[:name]).to eq ['Não deve repetir nome de cliente para a mesma empresa.']
+          end
+        end
+        context 'different name in same customer' do
+          let!(:customer) { Fabricate :customer, company: company, name: 'zzz' }
+          let!(:other_customer) { Fabricate.build :customer, company: company, name: 'aaa' }
+          it { expect(other_customer.valid?).to be true }
+        end
+        context 'different name in same customer' do
+          let!(:customer) { Fabricate :customer, company: company, name: 'zzz' }
+          let!(:other_customer) { Fabricate.build :customer, name: 'zzz' }
+          it { expect(other_customer.valid?).to be true }
+        end
+      end
+    end
   end
 
   describe '#active_projects' do

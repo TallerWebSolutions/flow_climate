@@ -13,7 +13,8 @@
 #
 # Indexes
 #
-#  index_products_on_customer_id  (customer_id)
+#  index_products_on_customer_id           (customer_id)
+#  index_products_on_customer_id_and_name  (customer_id,name) UNIQUE
 #
 # Foreign Keys
 #
@@ -27,6 +28,7 @@ class Product < ApplicationRecord
   has_many :projects, dependent: :restrict_with_error
 
   validates :name, :customer, presence: true
+  validates :name, uniqueness: { scope: :customer, message: I18n.t('product.name.uniqueness') }
 
   delegate :name, to: :customer, prefix: true
 

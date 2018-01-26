@@ -2,5 +2,5 @@
 
 Fabricator(:product) do
   customer
-  name { Faker::Company.name }
+  name { Faker::Name.unique.name }
 end

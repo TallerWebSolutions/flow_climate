@@ -12,7 +12,8 @@
 #
 # Indexes
 #
-#  index_teams_on_company_id  (company_id)
+#  index_teams_on_company_id           (company_id)
+#  index_teams_on_company_id_and_name  (company_id,name) UNIQUE
 #
 # Foreign Keys
 #
@@ -28,6 +29,7 @@ class Team < ApplicationRecord
   has_many :projects, -> { distinct }, through: :project_results
 
   validates :company, :name, presence: true
+  validates :name, uniqueness: { scope: :company, message: I18n.t('team.name.uniqueness') }
 
   delegate :count, to: :projects, prefix: true
 

@@ -21,7 +21,8 @@
 #
 # Indexes
 #
-#  index_projects_on_customer_id  (customer_id)
+#  index_projects_on_customer_id          (customer_id)
+#  index_projects_on_product_id_and_name  (product_id,name) UNIQUE
 #
 # Foreign Keys
 #
@@ -38,7 +39,7 @@ class Project < ApplicationRecord
   has_many :project_results, dependent: :restrict_with_error
 
   validates :customer, :qty_hours, :project_type, :name, :status, :start_date, :end_date, :status, :initial_scope, presence: true
-
+  validates :name, uniqueness: { scope: :product, message: I18n.t('project.name.uniqueness') }
   validate :hour_value_project_value?, :same_customer_in_product?, :needs_a_product?
 
   delegate :name, to: :customer, prefix: true

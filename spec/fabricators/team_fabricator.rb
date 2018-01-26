@@ -2,5 +2,5 @@
 
 Fabricator(:team) do
   company
-  name { Faker::Name.name }
+  name { Faker::Name.unique.name }
 end

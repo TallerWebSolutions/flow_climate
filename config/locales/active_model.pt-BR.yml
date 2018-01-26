@@ -177,3 +177,15 @@ pt-BR:
       demand:
         demand_id: Id da Demanda
         effort: Esforço
+  product:
+    name:
+      uniqueness: "Não deve repetir nome de produto para o mesmo cliente."
+  project:
+    name:
+      uniqueness: "Não deve repetir nome de projeto para o mesmo produto."
+  team:
+    name:
+      uniqueness: "Não deve repetir nome do time para a mesma empresa."
+  customer:
+    name:
+      uniqueness: "Não deve repetir nome de cliente para a mesma empresa."

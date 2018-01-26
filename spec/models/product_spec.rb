@@ -11,6 +11,30 @@ RSpec.describe Product, type: :model do
       it { is_expected.to validate_presence_of :customer }
       it { is_expected.to validate_presence_of :name }
     end
+    context 'complex ones' do
+      let(:customer) { Fabricate :customer }
+
+      context 'uniqueness' do
+        context 'same name in same customer' do
+          let!(:product) { Fabricate :product, customer: customer, name: 'zzz' }
+          let!(:other_product) { Fabricate.build :product, customer: customer, name: 'zzz' }
+          it 'does not accept the model' do
+            expect(other_product.valid?).to be false
+            expect(other_product.errors[:name]).to eq ['Não deve repetir nome de produto para o mesmo cliente.']
+          end
+        end
+        context 'different name in same customer' do
+          let!(:product) { Fabricate :product, customer: customer, name: 'zzz' }
+          let!(:other_product) { Fabricate.build :product, customer: customer, name: 'aaa' }
+          it { expect(other_product.valid?).to be true }
+        end
+        context 'different name in same customer' do
+          let!(:product) { Fabricate :product, customer: customer, name: 'zzz' }
+          let!(:other_product) { Fabricate.build :product, name: 'zzz' }
+          it { expect(other_product.valid?).to be true }
+        end
+      end
+    end
   end
 
   context 'delegations' do

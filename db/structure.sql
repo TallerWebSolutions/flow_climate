@@ -667,6 +667,13 @@ CREATE INDEX index_customers_on_company_id ON customers USING btree (company_id)
 
 
 --
+-- Name: index_customers_on_company_id_and_name; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_customers_on_company_id_and_name ON customers USING btree (company_id, name);
+
+
+--
 -- Name: index_demands_on_project_result_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -688,6 +695,13 @@ CREATE INDEX index_products_on_customer_id ON products USING btree (customer_id)
 
 
 --
+-- Name: index_products_on_customer_id_and_name; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_products_on_customer_id_and_name ON products USING btree (customer_id, name);
+
+
+--
 -- Name: index_project_results_on_project_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -702,10 +716,24 @@ CREATE INDEX index_projects_on_customer_id ON projects USING btree (customer_id)
 
 
 --
+-- Name: index_projects_on_product_id_and_name; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_projects_on_product_id_and_name ON projects USING btree (product_id, name);
+
+
+--
 -- Name: index_teams_on_company_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_teams_on_company_id ON teams USING btree (company_id);
+
+
+--
+-- Name: index_teams_on_company_id_and_name; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_teams_on_company_id_and_name ON teams USING btree (company_id, name);
 
 
 --
@@ -853,6 +881,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20180123032144'),
 ('20180126021945'),
 ('20180126152312'),
-('20180126155811');
+('20180126155811'),
+('20180126175210');
 
 

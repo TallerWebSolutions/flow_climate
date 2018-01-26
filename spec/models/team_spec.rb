@@ -11,6 +11,31 @@ RSpec.describe Team, type: :model do
   context 'validations' do
     it { is_expected.to validate_presence_of :company }
     it { is_expected.to validate_presence_of :name }
+
+    context 'complex ones' do
+      let(:company) { Fabricate :company }
+
+      context 'uniqueness' do
+        context 'same name in same customer' do
+          let!(:team) { Fabricate :team, company: company, name: 'zzz' }
+          let!(:other_team) { Fabricate.build :team, company: company, name: 'zzz' }
+          it 'does not accept the model' do
+            expect(other_team.valid?).to be false
+            expect(other_team.errors[:name]).to eq ['Não deve repetir nome do time para a mesma empresa.']
+          end
+        end
+        context 'different name in same customer' do
+          let!(:team) { Fabricate :team, company: company, name: 'zzz' }
+          let!(:other_team) { Fabricate.build :team, company: company, name: 'aaa' }
+          it { expect(other_team.valid?).to be true }
+        end
+        context 'different name in same customer' do
+          let!(:team) { Fabricate :team, company: company, name: 'zzz' }
+          let!(:other_team) { Fabricate.build :team, name: 'zzz' }
+          it { expect(other_team.valid?).to be true }
+        end
+      end
+    end
   end
 
   context 'delegations' do
