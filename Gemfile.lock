@@ -42,7 +42,7 @@ GEM
       activerecord (>= 3.2, < 6.0)
       rake (>= 10.4, < 13.0)
     arel (8.0.0)
-    ast (2.3.0)
+    ast (2.4.0)
     bcrypt (3.1.11)
     bindex (0.5.0)
     brakeman (4.1.1)
@@ -96,7 +96,7 @@ GEM
     method_source (0.9.0)
     mini_mime (1.0.0)
     mini_portile2 (2.3.0)
-    minitest (5.11.1)
+    minitest (5.11.2)
     nio4r (2.2.0)
     nokogiri (1.8.1)
       mini_portile2 (~> 2.3.0)
@@ -242,7 +242,7 @@ DEPENDENCIES
   parser
   pg (~> 0.20)
   puma
-  rails (= 5.1.4)
+  rails (~> 5.1.4)
   rails-controller-testing
   rails_12factor
   rspec-collection_matchers
