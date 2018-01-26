@@ -4,11 +4,12 @@
 #
 # Table name: products
 #
-#  id          :integer          not null, primary key
-#  customer_id :integer          not null
-#  name        :string           not null
-#  created_at  :datetime         not null
-#  updated_at  :datetime         not null
+#  id             :integer          not null, primary key
+#  customer_id    :integer          not null
+#  name           :string           not null
+#  created_at     :datetime         not null
+#  updated_at     :datetime         not null
+#  projects_count :integer          default(0)
 #
 # Indexes
 #
@@ -22,7 +23,7 @@
 class Product < ApplicationRecord
   include ProjectAggregator
 
-  belongs_to :customer
+  belongs_to :customer, counter_cache: true
   has_many :projects, dependent: :restrict_with_error
 
   validates :name, :customer, presence: true

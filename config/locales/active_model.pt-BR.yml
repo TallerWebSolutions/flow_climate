@@ -131,6 +131,7 @@ pt-BR:
         status: Status
         name: Nome
         customer_name: Cliente
+        product_name: Produto
         initial_scope: Escopo inicial
         enums:
           status:

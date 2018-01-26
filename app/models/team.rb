@@ -29,6 +29,8 @@ class Team < ApplicationRecord
 
   validates :company, :name, presence: true
 
+  delegate :count, to: :projects, prefix: true
+
   def outsourcing_cost
     team_members.active.where(billable: true, billable_type: :outsourcing).sum(&:monthly_payment)
   end

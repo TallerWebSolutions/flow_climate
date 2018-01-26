@@ -12,11 +12,6 @@ RSpec.describe Customer, type: :model do
     it { is_expected.to validate_presence_of :name }
   end
 
-  context 'delegations' do
-    it { is_expected.to delegate_method(:count).to(:projects).with_prefix }
-    it { is_expected.to delegate_method(:count).to(:products).with_prefix }
-  end
-
   describe '#active_projects' do
     let(:customer) { Fabricate :customer }
     let(:product) { Fabricate :product, customer: customer, name: 'zzz' }

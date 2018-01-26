@@ -3,10 +3,6 @@
 module ProjectAggregator
   extend ActiveSupport::Concern
 
-  included do
-    delegate :count, to: :projects, prefix: true
-  end
-
   def active_projects
     projects.where(status: :executing)
   end

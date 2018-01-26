@@ -48,7 +48,8 @@ CREATE TABLE companies (
     name character varying NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    abbreviation character varying NOT NULL
+    abbreviation character varying NOT NULL,
+    customers_count integer DEFAULT 0
 );
 
 
@@ -92,7 +93,9 @@ CREATE TABLE customers (
     company_id integer NOT NULL,
     name character varying NOT NULL,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    products_count integer DEFAULT 0,
+    projects_count integer DEFAULT 0
 );
 
 
@@ -197,7 +200,8 @@ CREATE TABLE products (
     customer_id integer NOT NULL,
     name character varying NOT NULL,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    projects_count integer DEFAULT 0
 );
 
 
@@ -790,6 +794,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20180116235900'),
 ('20180117150255'),
 ('20180122211258'),
-('20180123032144');
+('20180123032144'),
+('20180126021945');
 
 

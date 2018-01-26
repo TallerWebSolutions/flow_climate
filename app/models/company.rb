@@ -4,11 +4,12 @@
 #
 # Table name: companies
 #
-#  id           :integer          not null, primary key
-#  name         :string           not null
-#  created_at   :datetime         not null
-#  updated_at   :datetime         not null
-#  abbreviation :string           not null
+#  id              :integer          not null, primary key
+#  name            :string           not null
+#  created_at      :datetime         not null
+#  updated_at      :datetime         not null
+#  abbreviation    :string           not null
+#  customers_count :integer          default(0)
 #
 
 class Company < ApplicationRecord
@@ -20,8 +21,6 @@ class Company < ApplicationRecord
   has_many :operation_results, dependent: :restrict_with_error
 
   validates :name, :abbreviation, presence: true
-
-  delegate :count, to: :customers, prefix: true
 
   def outsourcing_cost
     teams.sum(&:outsourcing_cost)

@@ -33,8 +33,8 @@ class Project < ApplicationRecord
   enum status: { waiting: 0, executing: 1, maintenance: 2, finished: 3, cancelled: 4 }
   enum project_type: { outsourcing: 0, consulting: 1, training: 2 }
 
-  belongs_to :customer
-  belongs_to :product
+  belongs_to :customer, counter_cache: true
+  belongs_to :product, counter_cache: true
   has_many :project_results, dependent: :restrict_with_error
 
   validates :customer, :qty_hours, :product, :project_type, :name, :status, :start_date, :end_date, :status, :initial_scope, presence: true
