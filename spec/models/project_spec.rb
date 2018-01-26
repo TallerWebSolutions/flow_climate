@@ -15,7 +15,6 @@ RSpec.describe Project, type: :model do
   context 'validations' do
     context 'simple ones' do
       it { is_expected.to validate_presence_of :customer }
-      it { is_expected.to validate_presence_of :product }
       it { is_expected.to validate_presence_of :project_type }
       it { is_expected.to validate_presence_of :name }
       it { is_expected.to validate_presence_of :status }
@@ -64,6 +63,30 @@ RSpec.describe Project, type: :model do
 
         context 'having no product' do
           let(:project) { Fabricate :project, customer: customer }
+          it { expect(project.valid?).to be true }
+        end
+      end
+      context 'the product cannot be blank to outsourcing projects' do
+        context 'when is outsourcing and the product is blank' do
+          let(:project) { Fabricate.build :project, project_type: :outsourcing, product: nil }
+          it 'fails the validation' do
+            expect(project.valid?).to be false
+            expect(project.errors.full_messages).to eq ['Customer O cliente do projeto deve ser o mesmo cliente do produto', 'Produto é obrigatório para projeto de outsourcing']
+          end
+        end
+
+        context 'when is outsourcing and the product is present' do
+          let(:project) { Fabricate.build :project, project_type: :outsourcing }
+          it { expect(project.valid?).to be true }
+        end
+
+        context 'when it is consulting' do
+          let(:project) { Fabricate :project, project_type: :consulting, product: nil }
+          it { expect(project.valid?).to be true }
+        end
+
+        context 'when it is consulting' do
+          let(:project) { Fabricate :project, project_type: :training, product: nil }
           it { expect(project.valid?).to be true }
         end
       end

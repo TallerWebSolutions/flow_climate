@@ -84,7 +84,7 @@ RSpec.describe ProjectsController, type: :controller do
           let(:customer) { Fabricate :customer, company: company }
           let(:product) { Fabricate :product, customer: customer, name: 'zzz' }
           let!(:project) { Fabricate :project, customer: customer, product: product, end_date: 2.days.from_now }
-          let!(:other_project) { Fabricate :project, customer: customer, product: product, end_date: 5.days.from_now }
+          let!(:other_project) { Fabricate :project, customer: customer, project_type: :consulting, product: nil, end_date: 5.days.from_now }
           let!(:other_company_project) { Fabricate :project, end_date: 2.days.from_now }
 
           before { get :index, params: { company_id: company } }

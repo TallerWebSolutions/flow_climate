@@ -37,9 +37,9 @@ class Project < ApplicationRecord
   belongs_to :product, counter_cache: true
   has_many :project_results, dependent: :restrict_with_error
 
-  validates :customer, :qty_hours, :product, :project_type, :name, :status, :start_date, :end_date, :status, :initial_scope, presence: true
+  validates :customer, :qty_hours, :project_type, :name, :status, :start_date, :end_date, :status, :initial_scope, presence: true
 
-  validate :hour_value_project_value?, :same_customer_in_product?
+  validate :hour_value_project_value?, :same_customer_in_product?, :needs_a_product?
 
   delegate :name, to: :customer, prefix: true
   delegate :name, to: :product, prefix: true, allow_nil: true
@@ -138,7 +138,12 @@ class Project < ApplicationRecord
   end
 
   def same_customer_in_product?
-    return true if customer == product&.customer
+    return true if (customer == product&.customer) || consulting? || training?
     errors.add(:customer, I18n.t('project.validations.customer_not_same'))
+  end
+
+  def needs_a_product?
+    return true if consulting? || training?
+    errors.add(:product, I18n.t('project.validations.product_blank')) if outsourcing? && product.blank?
   end
 end

@@ -5,12 +5,10 @@
       <div class="stamp-content"><%= project.customer_name %></div>
     </div>
   <% end %>
-  <%= link_to company_product_path(@company, project.product) do %>
-    <div class="col-xs-3 stamp">
-      <div class="stamp-title"><%= Product.model_name.human %></div>
-      <div class="stamp-content"><%= project.product_name %></div>
-    </div>
-  <% end %>
+  <div class="col-xs-3 stamp">
+    <div class="stamp-title"><%= Product.model_name.human %></div>
+    <div class="stamp-content"><%= project.product_name %></div>
+  </div>
 
   <div class="col-xs-2 stamp">
     <div class="stamp-title"><%= t('projects.show.last_team') %></div>

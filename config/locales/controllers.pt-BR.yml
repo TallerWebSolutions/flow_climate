@@ -138,6 +138,7 @@ pt-BR:
     validations:
       no_value: "Valor ou Valor da hora é obrigatório"
       customer_not_same: "O cliente do projeto deve ser o mesmo cliente do produto"
+      product_blank: "é obrigatório para projeto de outsourcing"
   team_member:
     edit:
       title: "Editar Membro do Time"
