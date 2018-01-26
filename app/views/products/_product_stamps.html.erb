@@ -2,7 +2,9 @@
   <%= link_to company_product_path(@company, product) do %>
     <div class="col-xs-2 stamp">
       <div class="stamp-title"><%= Product.model_name.human %></div>
-      <div class="stamp-content"><%= product.name  %></div>
+      <% if product.present? %>
+        <%= link_to product.name, company_product_path(@company, product) %>
+      <% end %>
     </div>
   <% end %>
   <div class="col-xs-2 stamp">

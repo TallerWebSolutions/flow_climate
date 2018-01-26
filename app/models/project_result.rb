@@ -19,6 +19,7 @@
 #  updated_at           :datetime         not null
 #  team_id              :integer          not null
 #  monte_carlo_date     :date
+#  demands_ids          :string
 #
 # Indexes
 #

@@ -22,6 +22,7 @@
     <th><%= ProjectResult.human_attribute_name :qty_bugs_closed %></th>
     <th><%= ProjectResult.human_attribute_name :qty_hours_bug %></th>
     <th><%= ProjectResult.human_attribute_name :leadtime %></th>
+    <th><%= ProjectResult.human_attribute_name :demands_ids %></th>
     <th colspan="2"><%= t('general.table.actions') %></th>
   </tr>
   </thead>
@@ -43,6 +44,7 @@
       <td><%= number_with_precision(result.qty_bugs_closed, precision: 0) %></td>
       <td><%= number_with_precision(result.qty_hours_bug, precision: 0) %></td>
       <td><%= number_with_precision(result.leadtime, precision: 4) %></td>
+      <td><%= number_with_precision(result.demands_ids, precision: 4) %></td>
       <td>
         <%= link_to edit_company_project_project_result_path(@company, project, result) do %>
           <i class="fa fa-pencil"></i>

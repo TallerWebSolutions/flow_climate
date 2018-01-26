@@ -157,6 +157,7 @@ pt-BR:
         qty_hours_bug: Horas em Bugs
         leadtime: Leadtime
         monte_carlo_date: Previsão Monte Carlo
+        demands_ids: IDs das Demandas
       operation_result:
         result_date: Data
         people_billable_count: Qtd de Pessoas Faturáveis
