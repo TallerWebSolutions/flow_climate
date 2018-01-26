@@ -17,8 +17,8 @@
     <div id="column"
          class="flow-chart"
          data-title='<%= t('projects.charts.hours_per_demand.title', project_name: target_name) %>'
-         data-xcategories='<%= report_data.projects_names %>'
-         data-xtitle='<%= t('projects.charts.xlabel.projects') %>'
+         data-xcategories='<%= categories %>'
+         data-xtitle='<%= xlabel %>'
          data-ytitle='<%= t('projects.charts.hours_per_demand.ylabel') %>'
          data-tooltipsufix='<%= t('projects.charts.hours_per_demand.tooltipsufix') %>'
          data-series='<%= hours_per_demand_data.to_json %>'>

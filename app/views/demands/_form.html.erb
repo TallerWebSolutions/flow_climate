@@ -1,0 +1,21 @@
+<div class="standard-form">
+
+  <div class="row">
+    <div class='col-xs-6 form-group <%= 'has-error' if @demand.errors[:demand_id].present? %>'>
+      <%= f.label :demand_id, class: 'control-label required' %>
+      <%= f.text_field :demand_id, class: 'form-control', autofocus: true %>
+      <span class="help-block"><%= @demand.errors[:demand_id].join(', ') %></span>
+    </div>
+    <div class='col-xs-6 form-group <%= 'has-error' if @demand.errors[:effort].present? %>'>
+      <%= f.label :effort, class: 'control-label required' %>
+      <%= f.number_field :effort, value: @demand.effort, class: 'form-control', step: 0.01 %>
+      <span class="help-block"><%= @demand.errors[:effort].join(', ') %></span>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-xs-12">
+      <%= f.submit class: 'btn btn-success' %>
+    </div>
+  </div>
+</div>

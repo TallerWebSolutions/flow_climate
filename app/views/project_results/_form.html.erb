@@ -53,27 +53,22 @@
   </div>
 
   <div class="row">
-    <div class='col-xs-3 form-group <%= 'has-error' if @project_result.errors[:qty_bugs_opened].present? %>'>
+    <div class='col-xs-4 form-group <%= 'has-error' if @project_result.errors[:qty_bugs_opened].present? %>'>
       <%= f.label :qty_bugs_opened, class: 'control-label required' %>
       <%= f.number_field :qty_bugs_opened, value: @project_result.qty_bugs_opened, class: 'form-control', step: 0.01 %>
       <span class="help-block"><%= @project_result.errors[:qty_bugs_opened].join(', ') %></span>
     </div>
 
-    <div class='col-xs-3 form-group <%= 'has-error' if @project_result.errors[:qty_bugs_closed].present? %>'>
+    <div class='col-xs-4 form-group <%= 'has-error' if @project_result.errors[:qty_bugs_closed].present? %>'>
       <%= f.label :qty_bugs_closed, class: 'control-label required' %>
       <%= f.number_field :qty_bugs_closed, value: @project_result.qty_bugs_closed, class: 'form-control', step: 0.01 %>
       <span class="help-block"><%= @project_result.errors[:qty_bugs_closed].join(', ') %></span>
     </div>
 
-    <div class='col-xs-3 form-group <%= 'has-error' if @project_result.errors[:qty_hours_bug].present? %>'>
+    <div class='col-xs-4 form-group <%= 'has-error' if @project_result.errors[:qty_hours_bug].present? %>'>
       <%= f.label :qty_hours_bug, class: 'control-label required' %>
       <%= f.number_field :qty_hours_bug, value: @project_result.qty_hours_bug, class: 'form-control', step: 0.01 %>
       <span class="help-block"><%= @project_result.errors[:qty_hours_bug].join(', ') %></span>
-    </div>
-
-    <div class="col-xs-3 form-group">
-      <%= f.label :demands_ids, class: 'control-label required' %>
-      <%= f.text_field :demands_ids, value: @project_result.demands_ids, class: 'form-control' %>
     </div>
   </div>
 

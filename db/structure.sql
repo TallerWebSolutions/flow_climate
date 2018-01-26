@@ -119,6 +119,39 @@ ALTER SEQUENCE customers_id_seq OWNED BY customers.id;
 
 
 --
+-- Name: demands; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE demands (
+    id bigint NOT NULL,
+    project_result_id integer NOT NULL,
+    demand_id character varying NOT NULL,
+    effort numeric NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: demands_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE demands_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: demands_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE demands_id_seq OWNED BY demands.id;
+
+
+--
 -- Name: financial_informations; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -244,7 +277,7 @@ CREATE TABLE project_results (
     updated_at timestamp without time zone NOT NULL,
     team_id integer NOT NULL,
     monte_carlo_date date,
-    demands_ids character varying
+    demands_count integer
 );
 
 
@@ -446,6 +479,13 @@ ALTER TABLE ONLY customers ALTER COLUMN id SET DEFAULT nextval('customers_id_seq
 
 
 --
+-- Name: demands id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY demands ALTER COLUMN id SET DEFAULT nextval('demands_id_seq'::regclass);
+
+
+--
 -- Name: financial_informations id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -523,6 +563,14 @@ ALTER TABLE ONLY companies
 
 ALTER TABLE ONLY customers
     ADD CONSTRAINT customers_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: demands demands_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY demands
+    ADD CONSTRAINT demands_pkey PRIMARY KEY (id);
 
 
 --
@@ -616,6 +664,13 @@ CREATE INDEX index_companies_users_on_user_id ON companies_users USING btree (us
 --
 
 CREATE INDEX index_customers_on_company_id ON customers USING btree (company_id);
+
+
+--
+-- Name: index_demands_on_project_result_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_demands_on_project_result_id ON demands USING btree (project_result_id);
 
 
 --
@@ -797,6 +852,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20180122211258'),
 ('20180123032144'),
 ('20180126021945'),
-('20180126152312');
+('20180126152312'),
+('20180126155811');
 
 

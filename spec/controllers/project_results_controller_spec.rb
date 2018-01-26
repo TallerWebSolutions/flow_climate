@@ -3,6 +3,10 @@
 RSpec.describe ProjectResultsController, type: :controller do
   context 'unauthenticated' do
     describe 'GET #show' do
+      before { get :show, params: { company_id: 'xpto', project_id: 'bar', id: 'foo' } }
+      it { expect(response).to redirect_to new_user_session_path }
+    end
+    describe 'GET #new' do
       before { get :new, params: { company_id: 'xpto', project_id: 'bar' } }
       it { expect(response).to redirect_to new_user_session_path }
     end
@@ -67,7 +71,7 @@ RSpec.describe ProjectResultsController, type: :controller do
       let!(:project) { Fabricate :project, customer: customer, product: product, end_date: 2.days.from_now }
 
       context 'passing valid parameters' do
-        before { post :create, params: { company_id: company, project_id: project, project_result: { team: team.id, result_date: Time.zone.today, known_scope: 100, qty_hours_upstream: 10, qty_hours_downstream: 13, throughput: 5, monte_carlo_date: 1.month.from_now, qty_bugs_opened: 0, qty_bugs_closed: 3, qty_hours_bug: 7, leadtime: 10.5, demands_ids: 'ABC-123;ACD-332' } } }
+        before { post :create, params: { company_id: company, project_id: project, project_result: { team: team.id, result_date: Time.zone.today, known_scope: 100, qty_hours_upstream: 10, qty_hours_downstream: 13, throughput: 5, monte_carlo_date: 1.month.from_now, qty_bugs_opened: 0, qty_bugs_closed: 3, qty_hours_bug: 7, leadtime: 10.5 } } }
         it 'assigns the instance variable and renders the template' do
           expect(response).to redirect_to company_project_path(company, project)
           result = ProjectResult.last
@@ -82,7 +86,6 @@ RSpec.describe ProjectResultsController, type: :controller do
           expect(result.qty_bugs_closed).to eq 3
           expect(result.qty_hours_bug).to eq 7
           expect(result.leadtime).to eq 10.5
-          expect(result.demands_ids).to eq 'ABC-123;ACD-332'
         end
       end
       context 'passing invalid' do
@@ -189,7 +192,7 @@ RSpec.describe ProjectResultsController, type: :controller do
       let(:project_result) { Fabricate :project_result, project: project }
 
       context 'passing valid parameters' do
-        before { put :update, params: { company_id: company, project_id: project, id: project_result, project_result: { team: team.id, result_date: Time.zone.today, known_scope: 100, qty_hours_upstream: 10, qty_hours_downstream: 13, throughput: 5, monte_carlo_date: 1.month.from_now, qty_bugs_opened: 0, qty_bugs_closed: 3, qty_hours_bug: 7, leadtime: 10.5, demands_ids: 'ABC-123;ACD-332' } } }
+        before { put :update, params: { company_id: company, project_id: project, id: project_result, project_result: { team: team.id, result_date: Time.zone.today, known_scope: 100, qty_hours_upstream: 10, qty_hours_downstream: 13, throughput: 5, monte_carlo_date: 1.month.from_now, qty_bugs_opened: 0, qty_bugs_closed: 3, qty_hours_bug: 7, leadtime: 10.5 } } }
         it 'updates the project_result and redirects to projects index' do
           result = ProjectResult.last
           expect(result.team).to eq team
@@ -203,7 +206,6 @@ RSpec.describe ProjectResultsController, type: :controller do
           expect(result.qty_bugs_closed).to eq 3
           expect(result.qty_hours_bug).to eq 7
           expect(result.leadtime).to eq 10.5
-          expect(result.demands_ids).to eq 'ABC-123;ACD-332'
           expect(response).to redirect_to company_project_path(company, project)
         end
       end
@@ -227,6 +229,55 @@ RSpec.describe ProjectResultsController, type: :controller do
           let(:customer) { Fabricate :customer, company: company }
 
           before { put :update, params: { company_id: company, project_id: project, id: project_result, project_result: { customer_id: customer, name: 'foo' } } }
+          it { expect(response).to have_http_status :not_found }
+        end
+      end
+    end
+
+    describe 'GET #show' do
+      let(:company) { Fabricate :company, users: [user] }
+      let(:customer) { Fabricate :customer, company: company }
+      let(:product) { Fabricate :product, customer: customer }
+      let!(:project) { Fabricate :project, customer: product.customer, product: product, end_date: 5.days.from_now }
+      let!(:project_result) { Fabricate :project_result, project: project }
+      let!(:first_demand) { Fabricate :demand, project_result: project_result, demand_id: 'ZZZ' }
+      let!(:second_demand) { Fabricate :demand, project_result: project_result, demand_id: 'AAA' }
+
+      context 'passing a valid ID' do
+        context 'having data' do
+          before { get :show, params: { company_id: company, project_id: project, id: project_result } }
+          it 'assigns the instance variable and renders the template' do
+            expect(response).to render_template :show
+            expect(assigns(:company)).to eq company
+            expect(assigns(:project)).to eq project
+            expect(assigns(:project_result)).to eq project_result
+            expect(assigns(:demands)).to eq [second_demand, first_demand]
+          end
+        end
+        context 'having no data' do
+          let(:empty_project_result) { Fabricate :project_result, project: project }
+          before { get :show, params: { company_id: company, project_id: project, id: empty_project_result } }
+          it 'assigns the instance variable and renders the template' do
+            expect(response).to render_template :show
+            expect(assigns(:company)).to eq company
+            expect(assigns(:project)).to eq project
+            expect(assigns(:project_result)).to eq empty_project_result
+            expect(assigns(:demands)).to eq []
+          end
+        end
+      end
+      context 'passing invalid parameters' do
+        context 'non-existent company' do
+          before { get :show, params: { company_id: 'foo', project_id: project, id: project_result } }
+          it { expect(response).to have_http_status :not_found }
+        end
+        context 'non-existent project_result' do
+          before { get :show, params: { company_id: company, project_id: project, id: 'foo' } }
+          it { expect(response).to have_http_status :not_found }
+        end
+        context 'not permitted' do
+          let(:company) { Fabricate :company, users: [] }
+          before { get :show, params: { company_id: company, project_id: project, id: product } }
           it { expect(response).to have_http_status :not_found }
         end
       end

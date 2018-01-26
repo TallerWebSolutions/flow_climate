@@ -22,7 +22,7 @@
     <th><%= ProjectResult.human_attribute_name :qty_bugs_closed %></th>
     <th><%= ProjectResult.human_attribute_name :qty_hours_bug %></th>
     <th><%= ProjectResult.human_attribute_name :leadtime %></th>
-    <th><%= ProjectResult.human_attribute_name :demands_ids %></th>
+    <th><%= ProjectResult.human_attribute_name :demands_count %></th>
     <th colspan="2"><%= t('general.table.actions') %></th>
   </tr>
   </thead>
@@ -30,7 +30,7 @@
   <% project_results.each do |result| %>
     <tr>
       <td><%= link_to result.team_name, company_team_path(@company, result.team) %></td>
-      <td><%= l(result.result_date) %></td>
+      <td><%= link_to l(result.result_date), company_project_project_result_path(@company, @project, result) %></td>
       <td><%= result.result_date.cweek %></td>
       <td><%= result.result_date.cwyear %></td>
       <td><%= number_with_precision(result.known_scope, precision: 0) %></td>
@@ -44,7 +44,7 @@
       <td><%= number_with_precision(result.qty_bugs_closed, precision: 0) %></td>
       <td><%= number_with_precision(result.qty_hours_bug, precision: 0) %></td>
       <td><%= number_with_precision(result.leadtime, precision: 4) %></td>
-      <td><%= number_with_precision(result.demands_ids, precision: 4) %></td>
+      <td><%= result.demands_count %></td>
       <td>
         <%= link_to edit_company_project_project_result_path(@company, project, result) do %>
           <i class="fa fa-pencil"></i>

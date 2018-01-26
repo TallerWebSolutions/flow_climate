@@ -41,6 +41,7 @@ en:
     attributes:
       project_result:
         monte_carlo_date: Monte Carlo Forecast
+        demands_count: Qty Demands
     errors:
       messages:
         record_invalid: 'Validation failed: %{errors}'

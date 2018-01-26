@@ -167,3 +167,8 @@ pt-BR:
   customer:
     edit:
       title: "Editar Cliente"
+  demands:
+    new:
+      title: "Nova Demanda"
+    index:
+      title: "Demandas neste Resultado"

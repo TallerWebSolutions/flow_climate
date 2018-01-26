@@ -168,3 +168,8 @@ en:
   customer:
     edit:
       title: "Edit Customer"
+  demands:
+    new:
+      title: "New Demand"
+    index:
+      title: "Demands in this Result"

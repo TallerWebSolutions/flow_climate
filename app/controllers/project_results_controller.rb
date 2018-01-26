@@ -4,7 +4,11 @@ class ProjectResultsController < AuthenticatedController
   before_action :assign_company
   before_action :assign_project
   before_action :assign_team, only: %i[create update]
-  before_action :assign_project_result, only: %i[destroy edit update]
+  before_action :assign_project_result, only: %i[destroy edit update show]
+
+  def show
+    @demands = @project_result.demands.order(:demand_id)
+  end
 
   def new
     @project_result = ProjectResult.new(project: @project)
@@ -41,7 +45,7 @@ class ProjectResultsController < AuthenticatedController
   end
 
   def project_result_params
-    params.require(:project_result).permit(:team, :result_date, :known_scope, :qty_hours_upstream, :qty_hours_downstream, :throughput, :monte_carlo_date, :qty_bugs_opened, :qty_bugs_closed, :qty_hours_bug, :leadtime, :demands_ids)
+    params.require(:project_result).permit(:team, :result_date, :known_scope, :qty_hours_upstream, :qty_hours_downstream, :throughput, :monte_carlo_date, :qty_bugs_opened, :qty_bugs_closed, :qty_hours_bug, :leadtime)
   end
 
   def assign_project

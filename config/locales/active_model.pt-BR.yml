@@ -87,6 +87,9 @@ pt-BR:
       team_member:
         one: Membro do Time
         other: Membros do Time
+      demand:
+        one: Demanda
+        other: Demandas
     attributes:
       user:
         first_name: Nome
@@ -157,7 +160,7 @@ pt-BR:
         qty_hours_bug: Horas em Bugs
         leadtime: Leadtime
         monte_carlo_date: Previsão Monte Carlo
-        demands_ids: IDs das Demandas
+        demands_count: Qtd de Demandas
       operation_result:
         result_date: Data
         people_billable_count: Qtd de Pessoas Faturáveis
@@ -171,3 +174,6 @@ pt-BR:
         name: Nome
       customer:
         name: Nome
+      demand:
+        demand_id: Id da Demanda
+        effort: Esforço

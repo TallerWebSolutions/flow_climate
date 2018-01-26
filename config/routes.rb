@@ -28,7 +28,9 @@ Rails.application.routes.draw do
     resources :products, only: %i[index new create edit update show]
 
     resources :projects, only: %i[show index new create edit update] do
-      resources :project_results, only: %i[new create destroy edit update]
+      resources :project_results do
+        resources :demands, only: %i[new create]
+      end
     end
   end
 
