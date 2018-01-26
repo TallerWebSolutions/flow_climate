@@ -20,28 +20,16 @@
 #
 
 class Product < ApplicationRecord
+  include ProjectAggregator
+
   belongs_to :customer
   has_many :projects, dependent: :restrict_with_error
 
   validates :name, :customer, presence: true
 
-  delegate :count, to: :projects, prefix: true
-
-  def active_projects
-    projects.executing
-  end
-
-  def waiting_projects
-    projects.waiting
-  end
-
-  def red_projects
-    projects.select(&:red?)
-  end
+  delegate :name, to: :customer, prefix: true
 
   def current_backlog
     projects.sum(&:current_backlog)
   end
-
-  delegate :name, to: :customer, prefix: true
 end

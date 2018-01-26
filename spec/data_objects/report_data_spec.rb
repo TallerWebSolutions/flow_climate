@@ -10,7 +10,7 @@ describe ReportData, type: :data_object do
     it 'do the math and provides the correct information' do
       expect(report_data.projects).to eq Project.all
       expect(report_data.weeks).to eq [[project.start_date.cweek, project.start_date.cwyear]]
-      expect(report_data.ideal).to eq [project.current_backlog.to_f / project.project_weeks.count.to_f]
+      expect(report_data.ideal).to eq [project.current_backlog.to_f / 1.0]
       expect(report_data.current).to eq [project_results.sum(&:throughput)]
       expect(report_data.scope).to eq [project.current_backlog]
     end
