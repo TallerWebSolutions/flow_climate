@@ -19,4 +19,6 @@
   <% end %>
 </div>
 
-<%= javascript_include_tag 'projects/new' %>
+<% content_for :javascript do %>
+  <%= javascript_include_tag 'projects/form' %>
+<% end %>

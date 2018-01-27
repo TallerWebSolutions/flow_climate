@@ -26,6 +26,10 @@ RSpec.describe ProjectsController, type: :controller do
       before { put :update, params: { company_id: 'xpto', id: 'foo' } }
       it { expect(response).to redirect_to new_user_session_path }
     end
+    describe 'GET #product_options_for_customer' do
+      before { get :product_options_for_customer, params: { company_id: 'foo', customer_id: 'bar' }, xhr: true }
+      it { expect(response.status).to eq 401 }
+    end
   end
 
   context 'authenticated' do
@@ -246,6 +250,46 @@ RSpec.describe ProjectsController, type: :controller do
 
           before { put :update, params: { company_id: company, id: project, project: { customer_id: customer, product_id: product.id, name: 'foo', status: :executing, project_type: :outsourcing, start_date: 1.day.ago, end_date: 1.day.from_now, value: 100.2, qty_hours: 300, hour_value: 200, initial_scope: 1000 } } }
           it { expect(response).to have_http_status :not_found }
+        end
+      end
+    end
+
+    describe 'GET #product_options_for_customer' do
+      let(:company) { Fabricate :company, users: [user] }
+      let(:customer) { Fabricate :customer, company: company }
+
+      context 'valid parameters' do
+        context 'having data' do
+          let!(:first_product) { Fabricate :product, customer: customer, name: 'zzz' }
+          let!(:second_product) { Fabricate :product, customer: customer, name: 'aaa' }
+          let!(:third_product) { Fabricate :product, name: 'aaa' }
+          before { get :product_options_for_customer, params: { company_id: company, customer_id: customer }, xhr: true }
+          it 'assigns the instance variable and renders the templates' do
+            expect(assigns(:products)).to eq [second_product, first_product]
+            expect(response).to render_template 'projects/product_options.js.erb'
+          end
+        end
+        context 'having no data' do
+          before { get :product_options_for_customer, params: { company_id: company, customer_id: customer }, xhr: true }
+          it 'assigns the instance variable as empty array and renders the templates' do
+            expect(assigns(:products)).to eq []
+            expect(response).to render_template 'projects/product_options.js.erb'
+          end
+        end
+      end
+
+      context 'invalid parameters' do
+        context 'no customer passed' do
+          before { get :product_options_for_customer, params: { company_id: company }, xhr: true }
+          it 'assigns the instance variable as empty array and renders the templates' do
+            expect(assigns(:products)).to eq []
+            expect(response).to render_template 'projects/product_options.js.erb'
+          end
+        end
+        context 'unpermitted company' do
+          let(:unpermitted_company) { Fabricate :company }
+          before { get :product_options_for_customer, params: { company_id: unpermitted_company }, xhr: true }
+          it { expect(response.status).to eq 404 }
         end
       end
     end

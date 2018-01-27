@@ -17,6 +17,7 @@ class ProjectsController < AuthenticatedController
 
   def new
     @project = Project.new
+    @products = []
   end
 
   def create
@@ -24,20 +25,35 @@ class ProjectsController < AuthenticatedController
     assign_product
     @project = Project.new(project_params.merge(customer: @customer, product: @product))
     return redirect_to company_projects_path(@company) if @project.save
+    assign_products_list
     render :new
   end
 
-  def edit; end
+  def edit
+    assign_products_list
+  end
 
   def update
     assign_customer
     assign_product
     @project.update(project_params.merge(customer: @customer, product: @product))
     return redirect_to company_projects_path(@company) if @project.save
+    assign_products_list
     render :edit
   end
 
+  def product_options_for_customer
+    @products = []
+    customer = Customer.find_by(id: params[:customer_id])
+    @products = customer.products.order(:name) if customer.present?
+    respond_to { |format| format.js { render file: 'projects/product_options.js.erb' } }
+  end
+
   private
+
+  def assign_products_list
+    @products = @project.customer.products.order(:name)
+  end
 
   def assign_product
     @product = Product.find_by(id: project_params[:product_id])

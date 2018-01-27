@@ -40,6 +40,8 @@ Rails.application.routes.draw do
       resources :project_results do
         resources :demands, only: %i[new create]
       end
+
+      get 'product_options_for_customer/(:customer_id)', action: :product_options_for_customer, on: :collection
     end
   end
 
