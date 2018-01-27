@@ -440,7 +440,8 @@ CREATE TABLE users (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     admin boolean DEFAULT false NOT NULL,
-    last_company_id integer
+    last_company_id integer,
+    email_notifications boolean DEFAULT false NOT NULL
 );
 
 
@@ -882,6 +883,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20180126021945'),
 ('20180126152312'),
 ('20180126155811'),
-('20180126175210');
+('20180126175210'),
+('20180127180639');
 
 

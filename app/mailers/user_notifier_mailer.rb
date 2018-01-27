@@ -10,7 +10,7 @@ class UserNotifierMailer < ApplicationMailer
     @next_starting_project = company.next_starting_project
     @next_finishing_project = company.next_finishing_project
     @top_three_flow_pressure = company.top_three_flow_pressure
-    emails = @company.users.pluck(:email)
+    emails = @company.users.to_notify_email.pluck(:email)
     Rails.logger.info("Notifying users #{emails}")
     mail(to: emails, subject: t('projects.starting_finishing.subject'))
   end

@@ -6,6 +6,18 @@ RSpec.describe OperationResultsController, type: :controller do
       before { get :index, params: { company_id: 'foo' } }
       it { expect(response).to redirect_to new_user_session_path }
     end
+    describe 'GET #new' do
+      before { get :new, params: { company_id: 'foo' } }
+      it { expect(response).to redirect_to new_user_session_path }
+    end
+    describe 'GET #new' do
+      before { get :new, params: { company_id: 'foo' } }
+      it { expect(response).to redirect_to new_user_session_path }
+    end
+    describe 'POST #create' do
+      before { post :create, params: { company_id: 'foo' } }
+      it { expect(response).to redirect_to new_user_session_path }
+    end
     describe 'DELETE #destroy' do
       before { delete :destroy, params: { company_id: 'foo', id: 'bar' } }
       it { expect(response).to redirect_to new_user_session_path }

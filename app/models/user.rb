@@ -21,6 +21,7 @@
 #  updated_at             :datetime         not null
 #  admin                  :boolean          default(FALSE), not null
 #  last_company_id        :integer
+#  email_notifications    :boolean          default(FALSE), not null
 #
 # Indexes
 #
@@ -41,4 +42,6 @@ class User < ApplicationRecord
   has_and_belongs_to_many :companies
 
   validates :first_name, :last_name, :email, presence: true
+
+  scope :to_notify_email, -> { where email_notifications: true }
 end

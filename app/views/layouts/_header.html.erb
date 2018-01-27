@@ -1,17 +1,7 @@
 <div class="container-fluid">
   <div class="row">
-    <div class="col-xs-12 header">
-      <% if user_signed_in? %>
-        <%= "#{current_user&.first_name}" %>
-        <% current_user.companies.each do |company| %>
-          | <%= link_to company.abbreviation&.upcase, company_path(company) %>
-        <% end %>
-        <div class="pull-right">
-          <%= link_to :destroy_user_session, method: :delete do %>
-            <i class="fa fa-sign-out fa-2x" aria-hidden="true"></i>
-          <% end %>
-        </div>
-      <% end %>
+    <div class="col-xs-12 header" id="header-controls">
+      <%= render 'layouts/signed_actions' %>
     </div>
   </div>
 </div>

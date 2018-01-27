@@ -2,11 +2,12 @@
 
 RSpec.describe UserNotifierMailer, type: :mailer do
   describe '#company_weekly_bulletin' do
-    let(:first_user) { Fabricate :user }
-    let(:second_user) { Fabricate :user }
-    let(:third_user) { Fabricate :user }
+    let(:first_user) { Fabricate :user, email_notifications: true }
+    let(:second_user) { Fabricate :user, email_notifications: true }
+    let(:third_user) { Fabricate :user, email_notifications: false }
+    let(:fourth_user) { Fabricate :user }
 
-    let!(:company) { Fabricate :company, users: [first_user, second_user] }
+    let!(:company) { Fabricate :company, users: [first_user, second_user, third_user] }
     let(:customer) { Fabricate :customer }
 
     let(:first_project) { Fabricate :project, customer: customer, start_date: Time.zone.today }
