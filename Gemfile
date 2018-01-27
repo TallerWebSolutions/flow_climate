@@ -9,7 +9,7 @@ gem 'devise'
 gem 'figaro'
 gem 'jquery-rails'
 gem 'pg', '~> 0.20'
-gem 'rails', '~> 5.1.4'
+gem 'rails', '5.1.4'
 gem 'sidekiq'
 gem 'therubyracer', platforms: :ruby
 gem 'uglifier'

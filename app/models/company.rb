@@ -17,6 +17,7 @@ class Company < ApplicationRecord
   has_many :financial_informations, dependent: :restrict_with_error
   has_many :customers, dependent: :restrict_with_error
   has_many :products, through: :customers
+  has_many :projects, through: :customers
   has_many :teams, dependent: :restrict_with_error
   has_many :operation_results, dependent: :restrict_with_error
 
@@ -95,5 +96,17 @@ class Company < ApplicationRecord
 
   def bugs_closed_in_week(week, year)
     ProjectResultsRepository.instance.bugs_closed_in_week(self, week, year)
+  end
+
+  def top_three_flow_pressure
+    projects.sort_by(&:flow_pressure).reverse.first(3)
+  end
+
+  def next_starting_project
+    projects.waiting.order(:start_date).first
+  end
+
+  def next_finishing_project
+    projects.executing.order(:end_date).first
   end
 end

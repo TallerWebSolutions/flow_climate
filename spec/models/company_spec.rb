@@ -6,6 +6,7 @@ RSpec.describe Company, type: :model do
     it { is_expected.to have_many :financial_informations }
     it { is_expected.to have_many :customers }
     it { is_expected.to have_many(:products).through(:customers) }
+    it { is_expected.to have_many(:projects).through(:customers) }
     it { is_expected.to have_many :teams }
     it { is_expected.to have_many :operation_results }
   end
@@ -320,5 +321,31 @@ RSpec.describe Company, type: :model do
     let!(:other_product) { Fabricate :product, customer: other_customer, name: 'zzz' }
 
     it { expect(company.products_count).to eq 2 }
+  end
+
+  RSpec.shared_context 'projects to company bulletin', shared_context: :metadata do
+    let(:company) { Fabricate :company }
+    let(:customer) { Fabricate :customer, company: company }
+    let(:other_customer) { Fabricate :customer, company: company }
+
+    let!(:starting_project) { Fabricate :project, customer: customer, status: :waiting, initial_scope: 5, start_date: Time.zone.today, end_date: 3.days.from_now }
+    let!(:first_project) { Fabricate :project, customer: customer, status: :executing, initial_scope: 5, start_date: Time.zone.today, end_date: 3.days.from_now }
+    let!(:second_project) { Fabricate :project, customer: other_customer, status: :executing, initial_scope: 40, start_date: 1.day.from_now, end_date: 5.days.from_now }
+    let!(:third_project) { Fabricate :project, customer: other_customer, status: :executing, initial_scope: 20, start_date: 2.days.from_now, end_date: 5.days.from_now }
+  end
+
+  context '#top_three_flow_pressure' do
+    include_context 'projects to company bulletin'
+    it { expect(company.top_three_flow_pressure).to eq [second_project, third_project, first_project] }
+  end
+
+  context '#next_starting_project' do
+    include_context 'projects to company bulletin'
+    it { expect(company.next_starting_project).to eq starting_project }
+  end
+
+  context '#next_finishing_project' do
+    include_context 'projects to company bulletin'
+    it { expect(company.next_finishing_project).to eq first_project }
   end
 end

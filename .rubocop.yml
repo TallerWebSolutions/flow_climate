@@ -15,6 +15,7 @@ AllCops:
     - !ruby/regexp /old_and_unused\.rb$/
     - 'app/helpers/**/*'
     - 'lib/tasks/seed.rake'
+    - 'config/environments/**/*'
 
 Rails:
   Enabled: true

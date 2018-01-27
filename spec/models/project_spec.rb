@@ -121,6 +121,23 @@ RSpec.describe Project, type: :model do
     it { is_expected.to delegate_method(:name).to(:product).with_prefix }
   end
 
+  context 'scopes' do
+    let!(:first_project) { Fabricate :project, status: :waiting, start_date: Time.zone.today }
+    let!(:second_project) { Fabricate :project, status: :waiting, start_date: Time.zone.today }
+    let!(:third_project) { Fabricate :project, status: :executing, end_date: Time.zone.today }
+    let!(:fourth_project) { Fabricate :project, status: :executing, end_date: Time.zone.today }
+    let!(:fifth_project) { Fabricate :project, status: :cancelled, end_date: Time.zone.today }
+    let!(:sixth_project) { Fabricate :project, status: :finished, end_date: Time.zone.today }
+
+    describe '.waiting_projects_starting_within_week' do
+      it { expect(Project.waiting_projects_starting_within_week).to match_array [first_project, second_project] }
+    end
+
+    describe '.executing_projects_finishing_within_week' do
+      it { expect(Project.executing_projects_finishing_within_week).to match_array [third_project, fourth_project] }
+    end
+  end
+
   describe '#total_days' do
     let(:project) { Fabricate :project, start_date: 1.day.ago, end_date: 1.day.from_now }
     it { expect(project.total_days).to eq 2 }
