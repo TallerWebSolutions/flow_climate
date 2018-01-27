@@ -215,5 +215,48 @@ RSpec.describe ProductsController, type: :controller do
         end
       end
     end
+
+    describe 'GET #products_for_customer' do
+      let(:company) { Fabricate :company, users: [user] }
+      let(:customer) { Fabricate :customer, company: company }
+
+      context 'valid parameters' do
+        context 'having data' do
+          let!(:first_product) { Fabricate :product, customer: customer, name: 'zzz' }
+          let!(:second_product) { Fabricate :product, customer: customer, name: 'aaa' }
+          let!(:third_product) { Fabricate :product, name: 'aaa' }
+          before { get :products_for_customer, params: { company_id: company, customer_id: customer }, xhr: true }
+          it 'assigns the instance variable and renders the templates' do
+            expect(assigns(:products)).to eq [second_product, first_product]
+            expect(response).to render_template 'products/products.js.erb'
+            expect(response).to render_template 'products/_products_table'
+          end
+        end
+        context 'having no data' do
+          before { get :products_for_customer, params: { company_id: company, customer_id: customer }, xhr: true }
+          it 'assigns the instance variable as empty array and renders the templates' do
+            expect(assigns(:products)).to eq []
+            expect(response).to render_template 'products/products.js.erb'
+            expect(response).to render_template 'products/_products_table'
+          end
+        end
+      end
+
+      context 'invalid parameters' do
+        context 'no customer passed' do
+          before { get :products_for_customer, params: { company_id: company }, xhr: true }
+          it 'assigns the instance variable as empty array and renders the templates' do
+            expect(assigns(:products)).to eq []
+            expect(response).to render_template 'products/products.js.erb'
+            expect(response).to render_template 'products/_products_table'
+          end
+        end
+        context 'unpermitted company' do
+          let(:unpermitted_company) { Fabricate :company }
+          before { get :products_for_customer, params: { company_id: unpermitted_company }, xhr: true }
+          it { expect(response.status).to eq 404 }
+        end
+      end
+    end
   end
 end

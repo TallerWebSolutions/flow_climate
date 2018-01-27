@@ -32,7 +32,9 @@ Rails.application.routes.draw do
     resources :operation_results, only: %i[index destroy new create]
 
     resources :customers, only: %i[index new create edit update show]
-    resources :products, only: %i[index new create edit update show]
+    resources :products, only: %i[index new create edit update show] do
+      get 'products_for_customer/(:customer_id)', action: :products_for_customer, on: :collection
+    end
 
     resources :projects, only: %i[show index new create edit update] do
       resources :project_results do
