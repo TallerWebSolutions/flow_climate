@@ -23,3 +23,5 @@ coverage/*
 
 .byebug_history
 /lib/tasks/seed.rake
+
+dump.rdb
