@@ -301,6 +301,74 @@ ALTER SEQUENCE project_results_id_seq OWNED BY project_results.id;
 
 
 --
+-- Name: project_risk_alerts; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE project_risk_alerts (
+    id bigint NOT NULL,
+    project_id integer NOT NULL,
+    project_risk_config_id integer NOT NULL,
+    alert_color integer NOT NULL,
+    alert_value numeric NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: project_risk_alerts_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE project_risk_alerts_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: project_risk_alerts_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE project_risk_alerts_id_seq OWNED BY project_risk_alerts.id;
+
+
+--
+-- Name: project_risk_configs; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE project_risk_configs (
+    id bigint NOT NULL,
+    company_id integer NOT NULL,
+    risk_type integer NOT NULL,
+    high_yellow_value numeric NOT NULL,
+    low_yellow_value numeric NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: project_risk_configs_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE project_risk_configs_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: project_risk_configs_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE project_risk_configs_id_seq OWNED BY project_risk_configs.id;
+
+
+--
 -- Name: projects; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -515,6 +583,20 @@ ALTER TABLE ONLY project_results ALTER COLUMN id SET DEFAULT nextval('project_re
 
 
 --
+-- Name: project_risk_alerts id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY project_risk_alerts ALTER COLUMN id SET DEFAULT nextval('project_risk_alerts_id_seq'::regclass);
+
+
+--
+-- Name: project_risk_configs id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY project_risk_configs ALTER COLUMN id SET DEFAULT nextval('project_risk_configs_id_seq'::regclass);
+
+
+--
 -- Name: projects id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -604,6 +686,22 @@ ALTER TABLE ONLY products
 
 ALTER TABLE ONLY project_results
     ADD CONSTRAINT project_results_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: project_risk_alerts project_risk_alerts_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY project_risk_alerts
+    ADD CONSTRAINT project_risk_alerts_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: project_risk_configs project_risk_configs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY project_risk_configs
+    ADD CONSTRAINT project_risk_configs_pkey PRIMARY KEY (id);
 
 
 --
@@ -710,6 +808,27 @@ CREATE INDEX index_project_results_on_project_id ON project_results USING btree 
 
 
 --
+-- Name: index_project_risk_alerts_on_project_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_project_risk_alerts_on_project_id ON project_risk_alerts USING btree (project_id);
+
+
+--
+-- Name: index_project_risk_alerts_on_project_risk_config_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_project_risk_alerts_on_project_risk_config_id ON project_risk_alerts USING btree (project_risk_config_id);
+
+
+--
+-- Name: index_project_risk_configs_on_company_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_project_risk_configs_on_company_id ON project_risk_configs USING btree (company_id);
+
+
+--
 -- Name: index_projects_on_customer_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -784,6 +903,14 @@ ALTER TABLE ONLY companies_users
 
 
 --
+-- Name: project_risk_alerts fk_rails_4685dfa1bb; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY project_risk_alerts
+    ADD CONSTRAINT fk_rails_4685dfa1bb FOREIGN KEY (project_id) REFERENCES projects(id);
+
+
+--
 -- Name: projects fk_rails_47c768ed16; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -821,6 +948,22 @@ ALTER TABLE ONLY users
 
 ALTER TABLE ONLY project_results
     ADD CONSTRAINT fk_rails_b11de7d28e FOREIGN KEY (team_id) REFERENCES teams(id);
+
+
+--
+-- Name: project_risk_alerts fk_rails_b8b501e2eb; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY project_risk_alerts
+    ADD CONSTRAINT fk_rails_b8b501e2eb FOREIGN KEY (project_risk_config_id) REFERENCES project_risk_configs(id);
+
+
+--
+-- Name: project_risk_configs fk_rails_bf04320283; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY project_risk_configs
+    ADD CONSTRAINT fk_rails_bf04320283 FOREIGN KEY (company_id) REFERENCES companies(id);
 
 
 --
@@ -884,6 +1027,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20180126152312'),
 ('20180126155811'),
 ('20180126175210'),
-('20180127180639');
+('20180127180639'),
+('20180128150500'),
+('20180128155627');
 
 

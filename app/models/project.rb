@@ -36,7 +36,9 @@ class Project < ApplicationRecord
 
   belongs_to :customer, counter_cache: true
   belongs_to :product, counter_cache: true
+
   has_many :project_results, dependent: :restrict_with_error
+  has_many :project_risk_alerts, dependent: :destroy
 
   validates :customer, :qty_hours, :project_type, :name, :status, :start_date, :end_date, :status, :initial_scope, presence: true
   validates :name, uniqueness: { scope: :product, message: I18n.t('project.name.uniqueness') }
@@ -132,6 +134,11 @@ class Project < ApplicationRecord
 
   def remaining_hours
     qty_hours - total_hours
+  end
+
+  def risk_color
+    return 'green' if project_risk_alerts.empty?
+    project_risk_alerts.order(:created_at).last.alert_color
   end
 
   private

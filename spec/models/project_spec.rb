@@ -9,7 +9,8 @@ RSpec.describe Project, type: :model do
   context 'associations' do
     it { is_expected.to belong_to :customer }
     it { is_expected.to belong_to :product }
-    it { is_expected.to have_many :project_results }
+    it { is_expected.to have_many(:project_results).dependent(:restrict_with_error) }
+    it { is_expected.to have_many(:project_risk_alerts).dependent(:destroy) }
   end
 
   context 'validations' do
@@ -388,6 +389,19 @@ RSpec.describe Project, type: :model do
 
         it { expect(first_project.required_hours).to eq first_project.initial_scope * company.avg_hours_per_demand }
       end
+    end
+  end
+
+  describe '#risk_color' do
+    let(:project) { Fabricate :project }
+    context 'having alerts' do
+      let!(:risk_alert) { Fabricate :project_risk_alert, project: project, alert_color: :red, created_at: Time.zone.today }
+      let!(:other_risk_alert) { Fabricate :project_risk_alert, project: project, alert_color: :green, created_at: 1.day.ago }
+
+      it { expect(project.risk_color).to eq 'red' }
+    end
+    context 'having no alerts' do
+      it { expect(project.risk_color).to eq 'green' }
     end
   end
 end

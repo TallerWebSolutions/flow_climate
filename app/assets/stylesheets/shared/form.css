@@ -21,9 +21,12 @@
 
 label.required:after{content: " *"}
 
-.red-data {
+.data-red {
     color: #EE1C3A;
-    font-style: italic;
+}
+
+.data-yellow {
+    color: #EEE1B7;
 }
 
 h1 {font-size: xx-large;}
