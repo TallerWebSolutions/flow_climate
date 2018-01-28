@@ -102,24 +102,6 @@ RSpec.describe Company, type: :model do
     it { expect(company.waiting_projects_count).to eq 3 }
   end
 
-  context '#red_projects_count' do
-    let(:company) { Fabricate :company }
-    let(:customer) { Fabricate :customer, company: company }
-
-    let(:product) { Fabricate :product, customer: customer, name: 'zzz' }
-
-    let(:first_project) { Fabricate :project, customer: customer, product: product, status: :executing, qty_hours: 1000, value: 100_000, hour_value: 100, start_date: 1.day.ago, end_date: 1.month.from_now }
-    let!(:second_project) { Fabricate :project, customer: customer, product: product, status: :executing, qty_hours: 1000, value: 100_000, hour_value: 100, start_date: 1.day.ago, end_date: 1.month.from_now }
-    let!(:third_project) { Fabricate :project, customer: customer, product: product, status: :executing, qty_hours: 1000, value: 100_000, hour_value: 100, start_date: 1.day.ago, end_date: 1.month.from_now }
-
-    let!(:first_result) { Fabricate :project_result, project: first_project, qty_hours_downstream: 400 }
-    let!(:second_result) { Fabricate :project_result, project: first_project, qty_hours_downstream: 300 }
-    let!(:third_result) { Fabricate :project_result, project: second_project, qty_hours_downstream: 400 }
-    let!(:fourth_result) { Fabricate :project_result, project: second_project, qty_hours_downstream: 300 }
-
-    it { expect(company.red_projects_count).to eq 2 }
-  end
-
   context '#projects_count' do
     let(:company) { Fabricate :company }
     let(:customer) { Fabricate :customer, company: company }
@@ -203,6 +185,30 @@ RSpec.describe Company, type: :model do
     let!(:fifth_result) { Fabricate :project_result, project: other_company_project, result_date: 1.day.ago, known_scope: 100 }
 
     it { expect(company.current_backlog).to eq 75 }
+  end
+
+  describe '#avg_hours_per_demand' do
+    let(:company) { Fabricate :company }
+    let(:customer) { Fabricate :customer, company: company }
+    let(:other_customer) { Fabricate :customer, company: company }
+    let(:other_company_customer) { Fabricate :customer }
+
+    let(:product) { Fabricate :product, customer: customer, name: 'zzz' }
+    let(:other_product) { Fabricate :product, customer: other_customer, name: 'zzz' }
+    let(:other_company_product) { Fabricate :product, customer: other_company_customer, name: 'zzz' }
+
+    let(:project) { Fabricate :project, customer: customer, product: product }
+    let(:other_project) { Fabricate :project, customer: customer, product: product }
+    let(:other_customer_project) { Fabricate :project, customer: other_customer, product: other_product }
+    let(:other_company_project) { Fabricate :project, customer: other_company_customer, product: other_company_product }
+
+    let!(:first_result) { Fabricate :project_result, project: project, result_date: 1.day.ago, known_scope: 10 }
+    let!(:second_result) { Fabricate :project_result, project: project, result_date: Time.zone.today, known_scope: 20 }
+    let!(:third_result) { Fabricate :project_result, project: other_project, result_date: 1.day.ago, known_scope: 5 }
+    let!(:fourth_result) { Fabricate :project_result, project: other_customer_project, result_date: 1.day.ago, known_scope: 50 }
+    let!(:fifth_result) { Fabricate :project_result, project: other_company_project, result_date: 1.day.ago, known_scope: 100 }
+
+    it { expect(company.avg_hours_per_demand).to eq company.customers.sum(&:avg_hours_per_demand) / company.customers.count }
   end
 
   context '#current_outsourcing_monthly_available_hours' do

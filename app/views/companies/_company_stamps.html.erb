@@ -47,14 +47,14 @@
 
 <div class="row">
   <%= link_to company_customers_path(@company) do %>
-    <div class="col-xs-1 stamp">
+    <div class="col-xs-2 stamp">
       <div class="stamp-title"><%= t('companies.show.customers_count') %></div>
       <div class="stamp-content"><%= @company.customers_count %></div>
     </div>
   <% end %>
 
   <%= link_to company_products_path(@company) do %>
-    <div class="col-xs-1 stamp">
+    <div class="col-xs-2 stamp">
       <div class="stamp-title"><%= t('companies.show.product_count') %></div>
       <div class="stamp-content"><%= @company.products_count %></div>
     </div>
@@ -80,11 +80,6 @@
       <div class="stamp-content"><%= @company.active_projects_count %></div>
     </div>
   <% end %>
-
-  <div class="col-xs-2 red-stamp">
-    <div class="stamp-title"><%= t('companies.show.red_project_count') %></div>
-    <div class="stamp-content"><%= @company.red_projects_count %></div>
-  </div>
 
   <%= link_to company_operation_results_path(@company) do %>
     <div class="col-xs-2 stamp">

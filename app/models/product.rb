@@ -35,4 +35,9 @@ class Product < ApplicationRecord
   def current_backlog
     projects.sum(&:current_backlog)
   end
+
+  def regressive_avg_hours_per_demand
+    return avg_hours_per_demand if avg_hours_per_demand.positive?
+    customer.regressive_avg_hours_per_demand
+  end
 end

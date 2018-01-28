@@ -15,14 +15,15 @@
         <th><%= Project.human_attribute_name :end_date %></th>
         <th><%= Project.human_attribute_name :status %></th>
         <th><%= Project.human_attribute_name :project_type %></th>
-        <th><%= Project.human_attribute_name :initial_scope %></th>
         <th><%= Project.human_attribute_name :qty_hours %></th>
+        <th><%= t('projects.index.consumed_hours') %></th>
+        <th><%= t('projects.index.remaining_hours') %></th>
+        <th><%= t('projects.index.percentage_hours_consumed') %></th>
+        <th><%= Project.human_attribute_name :hour_value %></th>
+        <th><%= Project.human_attribute_name :initial_scope %></th>
         <th><%= t('projects.show.current_scope') %></th>
         <th><%= t('projects.show.delivered_scope') %></th>
         <th><%= t('projects.show.scope_gap') %></th>
-        <th><%= t('projects.index.consumed_hours') %></th>
-        <th><%= t('projects.index.percentage_hours_consumed') %></th>
-        <th><%= Project.human_attribute_name :hour_value %></th>
         <th><%= Project.human_attribute_name :value %></th>
         <th><%= t('projects.index.remaining_money') %></th>
         <th><%= t('projects.index.percentage_remaining_money') %></th>
@@ -36,7 +37,7 @@
       </thead>
       <tbody>
       <% projects_list.each do |project| %>
-        <tr class="<%= 'red-project' if project.red? %>">
+        <tr>
           <td><%= link_to project.customer_name, company_customer_path(@company, project.customer) %></td>
           <td>
             <% if project.product.present? %>
@@ -49,14 +50,15 @@
           <td><%= l(project.end_date) %></td>
           <td><%= t("activerecord.attributes.project.enums.status.#{project.status}") %></td>
           <td><%= t("activerecord.attributes.project.enums.project_type.#{project.project_type}") %></td>
-          <td><%= project.initial_scope %></td>
           <td><%= number_with_precision(project.qty_hours, precision: 2) %></td>
+          <td><%= number_with_precision(project.consumed_hours, precision: 2) %></td>
+          <td><%= number_with_precision(project.remaining_hours, precision: 2) %></td>
+          <td><%= number_to_percentage((project.consumed_hours/project.qty_hours) * 100, precision: 2) %></td>
+          <td><%= number_to_currency(project.hour_value) %></td>
+          <td><%= project.initial_scope %></td>
           <td><%= number_with_precision(project.current_backlog, precision: 0) %></td>
           <td><%= number_with_precision(project.total_throughput, precision: 0) %></td>
           <td><%= number_with_precision(project.total_gap, precision: 0) %></td>
-          <td><%= number_with_precision(project.consumed_hours, precision: 2) %></td>
-          <td><%= number_to_percentage((project.consumed_hours/project.qty_hours) * 100, precision: 2) %></td>
-          <td><%= number_to_currency(project.hour_value) %></td>
           <td><%= number_to_currency(project.value) %></td>
           <td><%= number_to_currency(project.remaining_money) %></td>
           <td><%= number_to_percentage((project.remaining_money / project.value) * 100, precision: 2) if project.value > 0 %></td>
@@ -84,14 +86,15 @@
           <td></td>
           <td></td>
           <td></td>
-          <td><%= number_with_precision(@projects_summary.total_initial_scope, precision: 0) %></td>
           <td><%= number_with_precision(@projects_summary.total_hours, precision: 2) %></td>
+          <td><%= number_with_precision(@projects_summary.total_consumed_hours, precision: 2) %></td>
+          <td><%= number_with_precision(@projects_summary.total_remaining_hours, precision: 2) %></td>
+          <td><%= number_to_percentage(@projects_summary.percentage_hours_consumed, precision: 2) %></td>
+          <td><%= number_to_currency(@projects_summary.average_hour_value) %></td>
+          <td><%= number_with_precision(@projects_summary.total_initial_scope, precision: 0) %></td>
           <td><%= number_with_precision(@projects_summary.total_current_scope, precision: 0) %></td>
           <td><%= number_with_precision(@projects_summary.total_delivered_scope, precision: 0) %></td>
           <td><%= number_with_precision(@projects_summary.total_gap, precision: 0) %></td>
-          <td><%= number_with_precision(@projects_summary.total_consumed_hours, precision: 2) %></td>
-          <td><%= number_to_percentage(@projects_summary.percentage_hours_consumed, precision: 2) %></td>
-          <td><%= number_to_currency(@projects_summary.average_hour_value) %></td>
           <td><%= number_to_currency(@projects_summary.total_value) %></td>
           <td><%= number_to_currency(@projects_summary.total_remaining_money) %></td>
           <td><%= number_to_percentage(@projects_summary.percentage_remaining_money, precision: 2) %></td>

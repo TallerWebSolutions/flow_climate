@@ -180,46 +180,6 @@ RSpec.describe Project, type: :model do
     end
   end
 
-  describe '#red?' do
-    context 'when it is executing' do
-      let(:project) { Fabricate :project, status: :executing, qty_hours: 1000, value: 100_000, hour_value: 100, start_date: 1.day.ago, end_date: 1.month.from_now }
-      context 'when there is less money than time remaining' do
-        let!(:result) { Fabricate :project_result, project: project, qty_hours_downstream: 400 }
-        let!(:other_result) { Fabricate :project_result, project: project, qty_hours_downstream: 300 }
-        it { expect(project.red?).to be true }
-      end
-      context 'when there is more money than time remaining' do
-        let!(:result) { Fabricate :project_result, project: project, qty_hours_upstream: 0, qty_hours_downstream: 1 }
-        let!(:other_result) { Fabricate :project_result, project: project, qty_hours_upstream: 0, qty_hours_downstream: 2 }
-        it { expect(project.red?).to be false }
-      end
-    end
-    context 'when it is waiting' do
-      let(:project) { Fabricate :project, status: :waiting, qty_hours: 1000, value: 100_000, hour_value: 100, start_date: 1.day.ago, end_date: 1.month.from_now }
-      context 'when there is less money than time remaining' do
-        let!(:result) { Fabricate :project_result, project: project, qty_hours_downstream: 400 }
-        let!(:other_result) { Fabricate :project_result, project: project, qty_hours_downstream: 300 }
-        it { expect(project.red?).to be false }
-      end
-    end
-    context 'when it is finished' do
-      let(:project) { Fabricate :project, status: :finished, qty_hours: 1000, value: 100_000, hour_value: 100, start_date: 1.day.ago, end_date: 1.month.from_now }
-      context 'when there is less money than time remaining' do
-        let!(:result) { Fabricate :project_result, project: project, qty_hours_downstream: 400 }
-        let!(:other_result) { Fabricate :project_result, project: project, qty_hours_downstream: 300 }
-        it { expect(project.red?).to be false }
-      end
-    end
-    context 'when it is cancelled' do
-      let(:project) { Fabricate :project, status: :cancelled, qty_hours: 1000, value: 100_000, hour_value: 100, start_date: 1.day.ago, end_date: 1.month.from_now }
-      context 'when there is less money than time remaining' do
-        let!(:result) { Fabricate :project_result, project: project, qty_hours_downstream: 400 }
-        let!(:other_result) { Fabricate :project_result, project: project, qty_hours_downstream: 300 }
-        it { expect(project.red?).to be false }
-      end
-    end
-  end
-
   describe '#current_backlog' do
     let(:project) { Fabricate :project }
     let!(:result) { Fabricate :project_result, project: project, result_date: 1.day.ago, known_scope: 10 }
@@ -301,6 +261,18 @@ RSpec.describe Project, type: :model do
     end
   end
 
+  describe '#remaining_hours' do
+    let(:project) { Fabricate :project, initial_scope: 30, start_date: 1.day.from_now, end_date: 1.week.from_now }
+    context 'having results' do
+      let!(:result) { Fabricate :project_result, project: project, result_date: 1.day.ago, known_scope: 10 }
+      let!(:other_result) { Fabricate :project_result, project: project, result_date: Time.zone.today, known_scope: 20 }
+      it { expect(project.remaining_hours).to eq project.qty_hours - project.total_hours }
+    end
+    context 'having no results' do
+      it { expect(project.remaining_hours).to eq project.qty_hours }
+    end
+  end
+
   describe '#total_bugs_opened' do
     let(:project) { Fabricate :project, initial_scope: 30, start_date: 1.day.from_now, end_date: 1.week.from_now }
     context 'having results' do
@@ -376,5 +348,46 @@ RSpec.describe Project, type: :model do
   describe '#full_name' do
     let(:project) { Fabricate :project, initial_scope: 30, start_date: 1.week.ago, end_date: 1.week.from_now }
     it { expect(project.full_name).to eq "#{project.customer_name} | #{project.product_name} | #{project.name}" }
+  end
+
+  describe '#required_hours' do
+    let(:company) { Fabricate :company }
+    let(:customer) { Fabricate :customer, company: company }
+    let(:product) { Fabricate :product, customer: customer }
+    let!(:first_project) { Fabricate :project, customer: customer, product: product, initial_scope: 30, start_date: 1.week.ago, end_date: 1.week.from_now }
+    context 'having results' do
+      it { expect(first_project.required_hours).to eq first_project.total_gap * first_project.avg_hours_per_demand }
+    end
+    context 'having no results' do
+      context 'but having results to the product' do
+        let!(:second_project) { Fabricate :project, initial_scope: 100, customer: customer, product: product, start_date: 1.week.ago, end_date: 1.week.from_now }
+        let!(:third_project) { Fabricate :project, initial_scope: 100, customer: customer, product: product, start_date: 1.week.ago, end_date: 1.week.from_now }
+        let!(:result) { Fabricate :project_result, project: second_project, result_date: 1.day.ago, known_scope: 10 }
+        let!(:other_result) { Fabricate :project_result, project: third_project, result_date: Time.zone.today, known_scope: 20 }
+
+        it { expect(first_project.required_hours).to eq first_project.initial_scope * product.avg_hours_per_demand }
+      end
+      context 'but having results to the customer' do
+        let(:other_product) { Fabricate :product, customer: customer }
+
+        let!(:second_project) { Fabricate :project, initial_scope: 100, customer: customer, product: other_product, start_date: 1.week.ago, end_date: 1.week.from_now }
+        let!(:third_project) { Fabricate :project, initial_scope: 100, customer: customer, product: other_product, start_date: 1.week.ago, end_date: 1.week.from_now }
+        let!(:result) { Fabricate :project_result, project: second_project, result_date: 1.day.ago, known_scope: 10 }
+        let!(:other_result) { Fabricate :project_result, project: third_project, result_date: Time.zone.today, known_scope: 20 }
+
+        it { expect(first_project.required_hours).to eq first_project.initial_scope * customer.avg_hours_per_demand }
+      end
+      context 'but having results to the company' do
+        let(:other_customer) { Fabricate :customer, company: company }
+        let(:other_product) { Fabricate :product, customer: other_customer }
+
+        let!(:second_project) { Fabricate :project, initial_scope: 100, customer: other_customer, product: other_product, start_date: 1.week.ago, end_date: 1.week.from_now }
+        let!(:third_project) { Fabricate :project, initial_scope: 100, customer: other_customer, product: other_product, start_date: 1.week.ago, end_date: 1.week.from_now }
+        let!(:result) { Fabricate :project_result, project: second_project, result_date: 1.day.ago, known_scope: 10 }
+        let!(:other_result) { Fabricate :project_result, project: third_project, result_date: Time.zone.today, known_scope: 20 }
+
+        it { expect(first_project.required_hours).to eq first_project.initial_scope * company.avg_hours_per_demand }
+      end
+    end
   end
 end

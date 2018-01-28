@@ -37,4 +37,8 @@ class ProjectsSummaryObject
   def total_gap
     @total_current_scope - @total_delivered_scope
   end
+
+  def total_remaining_hours
+    @total_hours - @total_consumed_hours
+  end
 end

@@ -40,7 +40,7 @@ class Project < ApplicationRecord
 
   validates :customer, :qty_hours, :project_type, :name, :status, :start_date, :end_date, :status, :initial_scope, presence: true
   validates :name, uniqueness: { scope: :product, message: I18n.t('project.name.uniqueness') }
-  validate :hour_value_project_value?, :same_customer_in_product?, :needs_a_product?
+  validate :hour_value_project_value?, :same_customer_in_product?, :product_required?
 
   delegate :name, to: :customer, prefix: true
   delegate :name, to: :product, prefix: true, allow_nil: true
@@ -69,13 +69,6 @@ class Project < ApplicationRecord
   def remaining_money
     hour_value_calc = hour_value || (value / qty_hours)
     value - (consumed_hours * hour_value_calc)
-  end
-
-  def red?
-    return false unless executing?
-    money_percentage = remaining_money / value
-    time_percentage = remaining_days.to_f / total_days.to_f
-    money_percentage < time_percentage
   end
 
   def current_backlog
@@ -133,7 +126,20 @@ class Project < ApplicationRecord
     current_backlog - total_throughput
   end
 
+  def required_hours
+    total_gap * regressive_hours_per_demand
+  end
+
+  def remaining_hours
+    qty_hours - total_hours
+  end
+
   private
+
+  def regressive_hours_per_demand
+    return avg_hours_per_demand if avg_hours_per_demand.positive?
+    product.regressive_avg_hours_per_demand
+  end
 
   def hour_value_project_value?
     return true if hour_value.present? || value.present?
@@ -146,7 +152,7 @@ class Project < ApplicationRecord
     errors.add(:customer, I18n.t('project.validations.customer_not_same'))
   end
 
-  def needs_a_product?
+  def product_required?
     return true if consulting? || training?
     errors.add(:product, I18n.t('project.validations.product_blank')) if outsourcing? && product.blank?
   end

@@ -47,10 +47,6 @@ class Company < ApplicationRecord
     customers.sum { |p| p.waiting_projects.count }
   end
 
-  def red_projects_count
-    customers.map(&:red_projects).flatten.count
-  end
-
   def projects_count
     customers.sum(&:projects_count)
   end
@@ -76,6 +72,10 @@ class Company < ApplicationRecord
 
   def current_backlog
     customers.sum(&:current_backlog)
+  end
+
+  def avg_hours_per_demand
+    customers.sum(&:avg_hours_per_demand) / customers_count.to_f
   end
 
   def current_outsourcing_monthly_available_hours

@@ -79,17 +79,6 @@ RSpec.describe Product, type: :model do
     it { expect(product.waiting_projects).to match_array [waiting_project, other_waiting_project] }
   end
 
-  describe '#red_projects' do
-    let(:customer) { Fabricate :customer }
-    let(:product) { Fabricate :product, customer: customer, name: 'zzz' }
-
-    let(:project) { Fabricate :project, customer: customer, product: product, status: :executing, qty_hours: 1000, value: 100_000, hour_value: 100, start_date: 1.day.ago, end_date: 1.month.from_now }
-    let!(:other_project) { Fabricate :project, customer: customer, product: product, status: :executing, qty_hours: 1000, value: 100_000, hour_value: 100, start_date: 1.day.ago, end_date: 1.month.from_now }
-    let!(:result) { Fabricate :project_result, project: project, qty_hours_downstream: 400 }
-    let!(:other_result) { Fabricate :project_result, project: project, qty_hours_downstream: 300 }
-    it { expect(product.red_projects).to eq [project] }
-  end
-
   RSpec.shared_context 'consolidations variables data for product', shared_context: :metadata do
     let(:product) { Fabricate :product, name: 'zzz' }
     let(:other_product) { Fabricate :product, name: 'zzz' }
@@ -147,5 +136,44 @@ RSpec.describe Product, type: :model do
   describe '#delivered_scope' do
     include_context 'consolidations variables data for product'
     it { expect(product.delivered_scope).to eq product.projects.sum(&:total_throughput) }
+  end
+
+  describe '#regressive_avg_hours_per_demand' do
+    let(:company) { Fabricate :company }
+    let(:customer) { Fabricate :customer, company: company }
+    let(:product) { Fabricate :product, customer: customer }
+
+    let!(:first_project) { Fabricate :project, initial_scope: 100, customer: customer, product: product, start_date: 1.week.ago, end_date: 1.week.from_now }
+    let!(:second_project) { Fabricate :project, initial_scope: 100, customer: customer, product: product, start_date: 1.week.ago, end_date: 1.week.from_now }
+
+    context 'having results' do
+      let!(:result) { Fabricate :project_result, project: first_project, result_date: 1.day.ago, known_scope: 10 }
+      let!(:other_result) { Fabricate :project_result, project: second_project, result_date: Time.zone.today, known_scope: 20 }
+      it { expect(product.regressive_avg_hours_per_demand).to eq product.avg_hours_per_demand }
+    end
+
+    context 'having no results' do
+      context 'but having results to the customer' do
+        let(:other_product) { Fabricate :product, customer: customer }
+
+        let!(:second_project) { Fabricate :project, initial_scope: 100, customer: customer, product: other_product, start_date: 1.week.ago, end_date: 1.week.from_now }
+        let!(:third_project) { Fabricate :project, initial_scope: 100, customer: customer, product: other_product, start_date: 1.week.ago, end_date: 1.week.from_now }
+        let!(:result) { Fabricate :project_result, project: second_project, result_date: 1.day.ago, known_scope: 10 }
+        let!(:other_result) { Fabricate :project_result, project: third_project, result_date: Time.zone.today, known_scope: 20 }
+
+        it { expect(product.regressive_avg_hours_per_demand).to eq customer.avg_hours_per_demand }
+      end
+      context 'but having results to the company' do
+        let(:other_customer) { Fabricate :customer, company: company }
+        let(:other_product) { Fabricate :product, customer: other_customer }
+
+        let!(:second_project) { Fabricate :project, initial_scope: 100, customer: other_customer, product: other_product, start_date: 1.week.ago, end_date: 1.week.from_now }
+        let!(:third_project) { Fabricate :project, initial_scope: 100, customer: other_customer, product: other_product, start_date: 1.week.ago, end_date: 1.week.from_now }
+        let!(:result) { Fabricate :project_result, project: second_project, result_date: 1.day.ago, known_scope: 10 }
+        let!(:other_result) { Fabricate :project_result, project: third_project, result_date: Time.zone.today, known_scope: 20 }
+
+        it { expect(product.regressive_avg_hours_per_demand).to eq company.avg_hours_per_demand }
+      end
+    end
   end
 end

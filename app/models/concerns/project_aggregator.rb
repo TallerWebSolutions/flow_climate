@@ -11,10 +11,6 @@ module ProjectAggregator
     projects.where(status: :waiting)
   end
 
-  def red_projects
-    projects.select(&:red?)
-  end
-
   def current_backlog
     projects.sum(&:current_backlog)
   end
