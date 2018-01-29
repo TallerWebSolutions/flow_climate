@@ -43,10 +43,7 @@ class ProjectsController < AuthenticatedController
   end
 
   def product_options_for_customer
-    @products = []
-    customer = Customer.find_by(id: params[:customer_id])
-    @products = customer.products.order(:name) if customer.present?
-    respond_to { |format| format.js { render file: 'projects/product_options.js.erb' } }
+    render_products_for_customer('projects/product_options.js.erb', params[:customer_id])
   end
 
   private

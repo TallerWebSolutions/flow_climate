@@ -25,11 +25,11 @@ class ProjectRiskMonitorJob < ApplicationJob
 
   def process_no_money_to_deadline(risk, project)
     if project.money_per_deadline < risk.low_yellow_value
-      ProjectRiskAlert.create(project: project, project_risk_config: risk, alert_color: :green, alert_value: project.money_per_deadline)
+      create_alert(project, risk, :green)
     elsif project.money_per_deadline > risk.high_yellow_value
-      ProjectRiskAlert.create(project: project, project_risk_config: risk, alert_color: :red, alert_value: project.money_per_deadline)
+      create_alert(project, risk, :red)
     else
-      ProjectRiskAlert.create(project: project, project_risk_config: risk, alert_color: :yellow, alert_value: project.money_per_deadline)
+      create_alert(project, risk, :yellow)
     end
   end
 
@@ -61,5 +61,9 @@ class ProjectRiskMonitorJob < ApplicationJob
     else
       ProjectRiskAlert.create(project: project, project_risk_config: risk, alert_color: :yellow, alert_value: project.flow_pressure)
     end
+  end
+
+  def create_alert(project, risk, color)
+    ProjectRiskAlert.create(project: project, project_risk_config: risk, alert_color: color, alert_value: project.money_per_deadline)
   end
 end

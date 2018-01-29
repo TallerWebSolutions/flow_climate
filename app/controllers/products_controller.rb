@@ -36,10 +36,7 @@ class ProductsController < AuthenticatedController
   end
 
   def products_for_customer
-    @products = []
-    customer = Customer.find_by(id: params[:customer_id])
-    @products = customer.products.order(:name) if customer.present?
-    respond_to { |format| format.js { render file: 'products/products.js.erb' } }
+    render_products_for_customer('products/products.js.erb', params[:customer_id])
   end
 
   private
