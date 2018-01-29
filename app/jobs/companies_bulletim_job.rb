@@ -8,7 +8,7 @@ class CompaniesBulletimJob < ApplicationJob
   end
 
   def perform
-    process_weekly_bulletin if Time.zone.today.monday?
+    process_weekly_bulletin if Time.zone.today.tuesday?
   end
 
   private
