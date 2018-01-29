@@ -159,6 +159,17 @@ RSpec.describe Project, type: :model do
     end
   end
 
+  describe '#percentage_remaining_days' do
+    context 'total_days is higher than 0' do
+      let(:project) { Fabricate :project, start_date: 1.day.ago, end_date: 1.day.from_now }
+      it { expect(project.percentage_remaining_days).to eq 50.0 }
+    end
+    context 'total_days is 0' do
+      let(:project) { Fabricate :project, start_date: Time.zone.today, end_date: Time.zone.today }
+      it { expect(project.percentage_remaining_days).to eq 0 }
+    end
+  end
+
   describe '#consumed_hours' do
     let(:project) { Fabricate :project }
     let!(:result) { Fabricate :project_result, project: project }
@@ -178,6 +189,19 @@ RSpec.describe Project, type: :model do
       let!(:result) { Fabricate :project_result, project: project, qty_hours_upstream: 0, qty_hours_downstream: 10 }
       let!(:other_result) { Fabricate :project_result, project: project, qty_hours_upstream: 0, qty_hours_downstream: 20 }
       it { expect(project.remaining_money.to_f).to eq 97_000 }
+    end
+  end
+
+  describe '#percentage_remaining_money' do
+    context 'total_days is higher than 0' do
+      let(:project) { Fabricate :project, qty_hours: 1000, value: 100_000, hour_value: 100 }
+      let!(:result) { Fabricate :project_result, project: project, qty_hours_upstream: 0, qty_hours_downstream: 10 }
+      let!(:other_result) { Fabricate :project_result, project: project, qty_hours_upstream: 0, qty_hours_downstream: 20 }
+      it { expect(project.percentage_remaining_money).to eq((project.remaining_money / project.value) * 100) }
+    end
+    context 'value is 0' do
+      let(:project) { Fabricate :project, value: 0 }
+      it { expect(project.percentage_remaining_money).to eq 0 }
     end
   end
 
@@ -250,15 +274,15 @@ RSpec.describe Project, type: :model do
     end
   end
 
-  describe '#total_hours' do
+  describe '#total_hours_consumed' do
     let(:project) { Fabricate :project, initial_scope: 30, start_date: 1.day.from_now, end_date: 1.week.from_now }
     context 'having results' do
       let!(:result) { Fabricate :project_result, project: project, result_date: 1.day.ago, known_scope: 10 }
       let!(:other_result) { Fabricate :project_result, project: project, result_date: Time.zone.today, known_scope: 20 }
-      it { expect(project.total_hours).to eq result.project_delivered_hours + other_result.project_delivered_hours }
+      it { expect(project.total_hours_consumed).to eq result.project_delivered_hours + other_result.project_delivered_hours }
     end
     context 'having no results' do
-      it { expect(project.total_hours).to eq 0 }
+      it { expect(project.total_hours_consumed).to eq 0 }
     end
   end
 
@@ -267,7 +291,7 @@ RSpec.describe Project, type: :model do
     context 'having results' do
       let!(:result) { Fabricate :project_result, project: project, result_date: 1.day.ago, known_scope: 10 }
       let!(:other_result) { Fabricate :project_result, project: project, result_date: Time.zone.today, known_scope: 20 }
-      it { expect(project.remaining_hours).to eq project.qty_hours - project.total_hours }
+      it { expect(project.remaining_hours).to eq project.qty_hours - project.total_hours_consumed }
     end
     context 'having no results' do
       it { expect(project.remaining_hours).to eq project.qty_hours }
@@ -327,7 +351,7 @@ RSpec.describe Project, type: :model do
     context 'having results' do
       let!(:result) { Fabricate :project_result, project: project, result_date: 1.day.ago, known_scope: 10 }
       let!(:other_result) { Fabricate :project_result, project: project, result_date: Time.zone.today, known_scope: 20 }
-      it { expect(project.avg_hours_per_demand).to eq(project.total_hours.to_f / project.total_throughput.to_f) }
+      it { expect(project.avg_hours_per_demand).to eq(project.total_hours_consumed.to_f / project.total_throughput.to_f) }
     end
     context 'having no results' do
       it { expect(project.avg_hours_per_demand).to eq 0 }
@@ -392,16 +416,161 @@ RSpec.describe Project, type: :model do
     end
   end
 
+  describe '#required_hours_per_available_hours' do
+    let!(:first_project) { Fabricate :project }
+
+    context 'having data' do
+      let!(:result) { Fabricate :project_result, project: first_project, result_date: 1.day.ago, known_scope: 10 }
+      let!(:other_result) { Fabricate :project_result, project: first_project, result_date: Time.zone.today, known_scope: 20 }
+
+      it { expect(first_project.required_hours_per_available_hours).to eq first_project.required_hours.to_f / first_project.remaining_hours.to_f }
+    end
+    context 'having no data' do
+      it { expect(first_project.required_hours_per_available_hours).to eq 0 }
+    end
+  end
+
   describe '#risk_color' do
     let(:project) { Fabricate :project }
     context 'having alerts' do
       let!(:risk_alert) { Fabricate :project_risk_alert, project: project, alert_color: :red, created_at: Time.zone.today }
       let!(:other_risk_alert) { Fabricate :project_risk_alert, project: project, alert_color: :green, created_at: 1.day.ago }
-
       it { expect(project.risk_color).to eq 'red' }
     end
     context 'having no alerts' do
       it { expect(project.risk_color).to eq 'green' }
+    end
+  end
+
+  describe '#backlog_unit_growth' do
+    let!(:first_project) { Fabricate :project, initial_scope: 30 }
+
+    context 'having data for last week' do
+      let!(:result) { Fabricate :project_result, project: first_project, result_date: 1.week.ago, known_scope: 110 }
+      let!(:other_result) { Fabricate :project_result, project: first_project, result_date: Time.zone.today, known_scope: 80 }
+
+      it { expect(first_project.backlog_unit_growth).to eq(-30.0) }
+    end
+
+    context 'having data for 2 weeks ago' do
+      let!(:result) { Fabricate :project_result, project: first_project, result_date: 2.weeks.ago, known_scope: 110 }
+      let!(:other_result) { Fabricate :project_result, project: first_project, result_date: Time.zone.today, known_scope: 80 }
+
+      it { expect(first_project.backlog_unit_growth).to eq(-30.0) }
+    end
+
+    context 'having no result' do
+      it { expect(first_project.backlog_unit_growth).to eq 0 }
+    end
+  end
+
+  describe '#backlog_growth_rate' do
+    let!(:first_project) { Fabricate :project, initial_scope: 30 }
+
+    context 'having data for last week' do
+      let!(:result) { Fabricate :project_result, project: first_project, result_date: 1.week.ago, known_scope: 110 }
+      let!(:other_result) { Fabricate :project_result, project: first_project, result_date: Time.zone.today, known_scope: 80 }
+
+      it { expect(first_project.backlog_growth_rate).to be_within(0.01).of(-0.27) }
+    end
+
+    context 'having data for 2 weeks ago' do
+      let!(:result) { Fabricate :project_result, project: first_project, result_date: 2.weeks.ago, known_scope: 110 }
+      let!(:other_result) { Fabricate :project_result, project: first_project, result_date: Time.zone.today, known_scope: 80 }
+
+      it { expect(first_project.backlog_growth_rate).to be_within(0.01).of(-0.27) }
+    end
+
+    context 'having no result' do
+      it { expect(first_project.backlog_growth_rate).to eq 0 }
+    end
+  end
+
+  describe '#backlog_for' do
+    let!(:first_project) { Fabricate :project, initial_scope: 30 }
+
+    context 'having data for last week' do
+      let!(:result) { Fabricate :project_result, project: first_project, result_date: 1.week.ago, known_scope: 110 }
+      let!(:other_result) { Fabricate :project_result, project: first_project, result_date: Time.zone.today, known_scope: 80 }
+
+      it { expect(first_project.backlog_for(1.week.ago)).to eq 110 }
+    end
+
+    context 'having data for 2 weeks ago' do
+      let!(:result) { Fabricate :project_result, project: first_project, result_date: 2.weeks.ago, known_scope: 110 }
+      let!(:other_result) { Fabricate :project_result, project: first_project, result_date: Time.zone.today, known_scope: 80 }
+
+      it { expect(first_project.backlog_for(1.week.ago)).to eq 110 }
+    end
+
+    context 'having no result' do
+      it { expect(first_project.backlog_for(1.week.ago)).to eq 30 }
+    end
+  end
+
+  describe '#total_throughput_for' do
+    let!(:first_project) { Fabricate :project, initial_scope: 30 }
+
+    context 'having data for last week' do
+      let!(:result) { Fabricate :project_result, project: first_project, result_date: 1.week.ago, known_scope: 110, throughput: 20 }
+      let!(:other_result) { Fabricate :project_result, project: first_project, result_date: Time.zone.today, known_scope: 80, throughput: 25 }
+
+      it { expect(first_project.total_throughput_for(1.week.ago)).to eq 20 }
+    end
+
+    context 'having data for 2 weeks ago' do
+      let!(:result) { Fabricate :project_result, project: first_project, result_date: 2.weeks.ago, known_scope: 110 }
+      let!(:other_result) { Fabricate :project_result, project: first_project, result_date: Time.zone.today, known_scope: 80 }
+
+      it { expect(first_project.backlog_for(1.week.ago)).to eq 110 }
+    end
+
+    context 'having no result' do
+      it { expect(first_project.backlog_for(1.week.ago)).to eq 30 }
+    end
+  end
+
+  describe '#money_per_deadline' do
+    let!(:first_project) { Fabricate :project, initial_scope: 30 }
+
+    context 'having data for last week' do
+      let!(:result) { Fabricate :project_result, project: first_project, result_date: 1.week.ago, known_scope: 110 }
+      let!(:other_result) { Fabricate :project_result, project: first_project, result_date: Time.zone.today, known_scope: 80 }
+
+      it { expect(first_project.money_per_deadline).to eq first_project.percentage_remaining_money / first_project.percentage_remaining_days }
+    end
+
+    context 'having data for 2 weeks ago' do
+      let!(:result) { Fabricate :project_result, project: first_project, result_date: 2.weeks.ago, known_scope: 110 }
+      let!(:other_result) { Fabricate :project_result, project: first_project, result_date: Time.zone.today, known_scope: 80 }
+
+      it { expect(first_project.money_per_deadline).to eq first_project.percentage_remaining_money / first_project.percentage_remaining_days }
+    end
+
+    context 'having no result' do
+      it { expect(first_project.money_per_deadline).to eq first_project.percentage_remaining_money / first_project.percentage_remaining_days }
+    end
+  end
+
+  describe '#backlog_growth_throughput_rate' do
+    let!(:first_project) { Fabricate :project, initial_scope: 30 }
+
+    context 'having data for last week' do
+      let!(:result) { Fabricate :project_result, project: first_project, result_date: 1.week.ago, known_scope: 110, throughput: 20 }
+      let!(:other_result) { Fabricate :project_result, project: first_project, result_date: Time.zone.today, known_scope: 80, throughput: 25 }
+
+      it { expect(first_project.backlog_growth_throughput_rate).to eq(-1) }
+    end
+
+    context 'having data for 2 weeks ago' do
+      let!(:result) { Fabricate :project_result, project: first_project, result_date: 2.weeks.ago, known_scope: 110, throughput: 20 }
+      let!(:other_result) { Fabricate :project_result, project: first_project, result_date: Time.zone.today, known_scope: 80, throughput: 25 }
+
+      it { expect(first_project.backlog_growth_throughput_rate).to eq(-1) }
+    end
+
+    context 'having no result' do
+      it { expect(first_project.backlog_growth_throughput_rate).to eq(0) }
     end
   end
 end

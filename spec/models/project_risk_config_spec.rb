@@ -2,7 +2,7 @@
 
 RSpec.describe ProjectRiskConfig, type: :model do
   context 'enums' do
-    it { is_expected.to define_enum_for(:risk_type).with(no_money_to_deadline: 0, backlog_grouth_date: 1, not_enough_available_hours: 2, profit_margin: 3) }
+    it { is_expected.to define_enum_for(:risk_type).with(no_money_to_deadline: 0, backlog_growth_rate: 1, not_enough_available_hours: 2, profit_margin: 3, flow_pressure: 4) }
   end
 
   context 'associations' do

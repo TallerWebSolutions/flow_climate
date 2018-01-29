@@ -101,6 +101,9 @@ en:
       delivered_scope: "Delivered Scope"
       avg_hours_per_demand: "Avg Hours/Demand"
       scope_gap: "Scope Gap"
+      scope_growth: "Scope Growth"
+      scope_unit_growth: "Scope Growth (unity)"
+      scope_for_last_week: "Scope (last week)"
     charts:
       xlabel:
         weeks: "Weeks"

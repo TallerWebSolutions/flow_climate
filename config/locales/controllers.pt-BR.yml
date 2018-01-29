@@ -100,6 +100,9 @@ pt-BR:
       delivered_scope: "Escopo Entregue"
       avg_hours_per_demand: "Média Horas/Demanda"
       scope_gap: "Restante do escopo"
+      scope_growth: "Taxa de Crescimento do Escopo"
+      scope_unit_growth: "Crescimento do Escopo (un.)"
+      scope_for_last_week: "Escopo (última semana)"
     charts:
       xlabel:
         weeks: "Semanas"

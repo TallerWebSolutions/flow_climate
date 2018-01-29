@@ -46,6 +46,10 @@ Metrics/BlockLength:
     - 'config/routes.rb'
     - 'lib/tasks/auto_annotate_models.rake'
 
+Metrics/ClassLength:
+  Exclude:
+    - 'app/models/project.rb'
+
 Metrics/CyclomaticComplexity:
   Exclude:
     - 'app/controllers/base_report_controller.rb'

@@ -64,6 +64,11 @@ class Project < ApplicationRecord
     (end_date - Time.zone.today).to_i
   end
 
+  def percentage_remaining_days
+    return 0 if total_days.zero?
+    (remaining_days.to_f / total_days.to_f) * 100
+  end
+
   def consumed_hours
     project_results.sum(&:project_delivered_hours)
   end
@@ -73,8 +78,26 @@ class Project < ApplicationRecord
     value - (consumed_hours * hour_value_calc)
   end
 
+  def percentage_remaining_money
+    return 0 if value.zero?
+    (remaining_money / value) * 100
+  end
+
   def current_backlog
     project_results.order(result_date: :desc).first&.known_scope || initial_scope
+  end
+
+  def backlog_unit_growth
+    current_backlog - previous_week_backlog
+  end
+
+  def backlog_growth_rate
+    return 0 if previous_week_backlog.zero?
+    backlog_unit_growth.to_f / previous_week_backlog.to_f
+  end
+
+  def backlog_for(date)
+    project_results.until_week(date.to_date.cweek, date.to_date.cwyear).first&.known_scope || initial_scope
   end
 
   def current_team
@@ -91,6 +114,10 @@ class Project < ApplicationRecord
     project_results.sum(&:throughput)
   end
 
+  def total_throughput_for(date)
+    project_results.for_week(date.to_date.cweek, date.to_date.cwyear).sum(:throughput)
+  end
+
   def total_hours_upstream
     project_results.sum(&:qty_hours_upstream)
   end
@@ -99,8 +126,17 @@ class Project < ApplicationRecord
     project_results.sum(&:qty_hours_downstream)
   end
 
-  def total_hours
+  def total_hours_consumed
     project_results.sum(&:project_delivered_hours)
+  end
+
+  # Higher than 1 -> more hours required than available
+  # Equal 1 -> enough hours to finish the scope
+  # Between 0 and 1 -> more available hours than required
+  #   if we have a result of 20% (0,2) means that we have 80% over the required hours
+  #   if we have a result of 120% (1,2) means that we have 20% of the required hours over the available hours (20% is missing)
+  def required_hours_per_available_hours
+    required_hours.to_f / remaining_hours.to_f
   end
 
   def total_bugs_opened
@@ -121,7 +157,7 @@ class Project < ApplicationRecord
 
   def avg_hours_per_demand
     return 0 if project_results.empty?
-    (total_hours.to_f / total_throughput.to_f)
+    (total_hours_consumed.to_f / total_throughput.to_f)
   end
 
   def total_gap
@@ -133,12 +169,21 @@ class Project < ApplicationRecord
   end
 
   def remaining_hours
-    qty_hours - total_hours
+    qty_hours - total_hours_consumed
   end
 
   def risk_color
     return 'green' if project_risk_alerts.empty?
     project_risk_alerts.order(:created_at).last.alert_color
+  end
+
+  def money_per_deadline
+    percentage_remaining_money / percentage_remaining_days
+  end
+
+  def backlog_growth_throughput_rate
+    return 0 if backlog_unit_growth.zero?
+    total_throughput_for(Time.zone.today) / backlog_unit_growth
   end
 
   private
@@ -162,5 +207,11 @@ class Project < ApplicationRecord
   def product_required?
     return true if consulting? || training?
     errors.add(:product, I18n.t('project.validations.product_blank')) if outsourcing? && product.blank?
+  end
+
+  def previous_week_backlog
+    previous_backlog = backlog_for(1.week.ago.to_date)
+    previous_backlog = initial_scope if previous_backlog.zero?
+    previous_backlog
   end
 end

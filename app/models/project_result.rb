@@ -39,6 +39,7 @@ class ProjectResult < ApplicationRecord
   validates :project, :team, :known_scope, :qty_hours_upstream, :qty_hours_downstream, :qty_hours_bug, :qty_bugs_closed, :qty_bugs_opened, :throughput, :result_date, presence: true
 
   scope :for_week, ->(week, year) { where('EXTRACT(WEEK FROM result_date) = :week AND EXTRACT(YEAR FROM result_date) = :year', week: week, year: year) }
+  scope :until_week, ->(week, year) { where('EXTRACT(WEEK FROM result_date) <= :week AND EXTRACT(YEAR FROM result_date) <= :year', week: week, year: year) }
 
   delegate :name, to: :team, prefix: true
 
