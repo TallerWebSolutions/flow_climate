@@ -21,19 +21,10 @@ RSpec.describe CompaniesBulletimJob, type: :job do
     let!(:third_project) { Fabricate :project, customer: customer, end_date: Time.zone.today }
     let!(:fourth_project) { Fabricate :project, customer: customer, end_date: Time.zone.today }
 
-    context 'when it is Tuesday' do
-      it 'calls the mailer to send the data' do
-        allow(Time.zone).to receive(:today).and_return Time.zone.today.beginning_of_week + 1.day
-        expect(UserNotifierMailer).to receive(:company_weekly_bulletin).with(company, company.projects.waiting_projects_starting_within_week, company.projects.executing_projects_finishing_within_week).once
-        CompaniesBulletimJob.perform_now
-      end
-    end
-    context 'when today it is not Tuesday' do
-      it 'calls the mailer to send the data' do
-        allow(Time.zone).to receive(:today).and_return Time.zone.today.end_of_week
-        expect(UserNotifierMailer).to receive(:company_weekly_bulletin).never
-        CompaniesBulletimJob.perform_now
-      end
+    it 'calls the mailer to send the data' do
+      allow(Time.zone).to receive(:today).and_return Time.zone.today.beginning_of_week + 1.day
+      expect(UserNotifierMailer).to receive(:company_weekly_bulletin).with(company, company.projects.waiting_projects_starting_within_week, company.projects.executing_projects_finishing_within_week).once
+      CompaniesBulletimJob.perform_now
     end
   end
 end
