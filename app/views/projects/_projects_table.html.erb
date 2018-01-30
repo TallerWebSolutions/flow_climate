@@ -72,7 +72,7 @@
             </td>
             <td>
               <% if project.last_alert_for(:flow_pressure).present? %>
-                <figure title="<%= t('activerecord.attributes.project_risk_config.enums.risk_type.flow_pressure') %>" data-toggle="tooltip" data-placement="top" class='circle-<%=project.last_alert_for(:flow_pressure) %>'></figure>
+                <figure title="<%= t('activerecord.attributes.project_risk_config.enums.risk_type.flow_pressure') %>" data-toggle="tooltip" data-placement="top" class='circle-<%=project.last_alert_for(:flow_pressure).alert_color %>'></figure>
               <% else %>
                 <figure title="<%= t('activerecord.attributes.project_risk_config.enums.risk_type.flow_pressure') %>" data-toggle="tooltip" data-placement="top" class="circle-transparent"></figure>
               <% end %>
