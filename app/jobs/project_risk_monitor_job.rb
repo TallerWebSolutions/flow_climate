@@ -65,6 +65,11 @@ class ProjectRiskMonitorJob < ApplicationJob
   end
 
   def create_alert(project, risk, alert_value, color)
-    ProjectRiskAlert.create(project: project, project_risk_config: risk, alert_color: color, alert_value: alert_value)
+    alert = ProjectRiskAlert.where('DATE(created_at) = :created_date AND project_id = :project_id AND project_risk_config_id = :risk_id', created_date: Time.zone.today, project_id: project.id, risk_id: risk.id)
+    if alert.present?
+      alert.update(alert_color: color, alert_value: alert_value)
+    else
+      ProjectRiskAlert.create(project: project, project_risk_config: risk, alert_color: color, alert_value: alert_value)
+    end
   end
 end
