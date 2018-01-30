@@ -89,16 +89,16 @@ class Project < ApplicationRecord
   end
 
   def backlog_unit_growth
-    backlog_for(1.week.ago.to_date) - backlog_for(2.weeks.ago.to_date)
+    backlog_for(locate_last_results.second&.result_date) - backlog_for(locate_last_results.first&.result_date)
   end
 
   def backlog_growth_rate
-    previous_week_backlog = backlog_for(2.weeks.ago.to_date)
-    return 0 if previous_week_backlog.zero?
-    backlog_unit_growth.to_f / previous_week_backlog.to_f
+    return 0 if locate_last_results.first.blank? || locate_last_results.first.known_scope.zero?
+    backlog_unit_growth.to_f / locate_last_results.first.known_scope.to_f
   end
 
   def backlog_for(date)
+    return initial_scope if date.blank?
     project_results.for_week(date.to_date.cweek, date.to_date.cwyear).first&.known_scope || initial_scope
   end
 
@@ -117,6 +117,7 @@ class Project < ApplicationRecord
   end
 
   def total_throughput_for(date)
+    return initial_scope if date.blank?
     project_results.for_week(date.to_date.cweek, date.to_date.cwyear).sum(:throughput)
   end
 
@@ -197,6 +198,10 @@ class Project < ApplicationRecord
   end
 
   private
+
+  def locate_last_results
+    @last_result ||= project_results.until_week(1.week.ago.to_date.cweek, 1.week.ago.to_date.cwyear).order(:result_date).last(2)
+  end
 
   def regressive_hours_per_demand
     return avg_hours_per_demand if avg_hours_per_demand.positive?

@@ -474,6 +474,14 @@ RSpec.describe Project, type: :model do
       it { expect(first_project.backlog_growth_rate).to be_within(0.01).of(0.375) }
     end
 
+    context 'having data for last week and 3 weeks ago' do
+      let!(:first_result) { Fabricate :project_result, project: first_project, result_date: 1.week.ago, known_scope: 110, throughput: 20 }
+      let!(:second_result) { Fabricate :project_result, project: first_project, result_date: 3.weeks.ago, known_scope: 80, throughput: 10 }
+      let!(:third_result) { Fabricate :project_result, project: first_project, result_date: Time.zone.today, known_scope: 80, throughput: 25 }
+
+      it { expect(first_project.backlog_growth_rate).to be_within(0.01).of(0.375) }
+    end
+
     context 'having no data to required weeks' do
       let!(:result) { Fabricate :project_result, project: first_project, result_date: Time.zone.today, known_scope: 80 }
 
