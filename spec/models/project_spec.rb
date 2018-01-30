@@ -449,21 +449,16 @@ RSpec.describe Project, type: :model do
   describe '#backlog_unit_growth' do
     let!(:first_project) { Fabricate :project, initial_scope: 30 }
 
-    context 'having data for last week' do
-      let!(:result) { Fabricate :project_result, project: first_project, result_date: 1.week.ago, known_scope: 110 }
-      let!(:other_result) { Fabricate :project_result, project: first_project, result_date: Time.zone.today, known_scope: 80 }
+    context 'having data for last week and 2 weeks ago' do
+      let!(:first_result) { Fabricate :project_result, project: first_project, result_date: 1.week.ago, known_scope: 110, throughput: 20 }
+      let!(:second_result) { Fabricate :project_result, project: first_project, result_date: 2.weeks.ago, known_scope: 80, throughput: 10 }
+      let!(:third_result) { Fabricate :project_result, project: first_project, result_date: Time.zone.today, known_scope: 80, throughput: 25 }
 
-      it { expect(first_project.backlog_unit_growth).to eq(-30.0) }
+      it { expect(first_project.backlog_unit_growth).to eq 30 }
     end
 
-    context 'having data for 2 weeks ago' do
-      let!(:result) { Fabricate :project_result, project: first_project, result_date: 2.weeks.ago, known_scope: 110 }
-      let!(:other_result) { Fabricate :project_result, project: first_project, result_date: Time.zone.today, known_scope: 80 }
-
-      it { expect(first_project.backlog_unit_growth).to eq(-30.0) }
-    end
-
-    context 'having no result' do
+    context 'having no data to required weeks' do
+      let!(:result) { Fabricate :project_result, project: first_project, result_date: Time.zone.today, known_scope: 80 }
       it { expect(first_project.backlog_unit_growth).to eq 0 }
     end
   end
@@ -471,21 +466,17 @@ RSpec.describe Project, type: :model do
   describe '#backlog_growth_rate' do
     let!(:first_project) { Fabricate :project, initial_scope: 30 }
 
-    context 'having data for last week' do
-      let!(:result) { Fabricate :project_result, project: first_project, result_date: 1.week.ago, known_scope: 110 }
-      let!(:other_result) { Fabricate :project_result, project: first_project, result_date: Time.zone.today, known_scope: 80 }
+    context 'having data for last week and 2 weeks ago' do
+      let!(:first_result) { Fabricate :project_result, project: first_project, result_date: 1.week.ago, known_scope: 110, throughput: 20 }
+      let!(:second_result) { Fabricate :project_result, project: first_project, result_date: 2.weeks.ago, known_scope: 80, throughput: 10 }
+      let!(:third_result) { Fabricate :project_result, project: first_project, result_date: Time.zone.today, known_scope: 80, throughput: 25 }
 
-      it { expect(first_project.backlog_growth_rate).to be_within(0.01).of(-0.27) }
+      it { expect(first_project.backlog_growth_rate).to be_within(0.01).of(0.375) }
     end
 
-    context 'having data for 2 weeks ago' do
-      let!(:result) { Fabricate :project_result, project: first_project, result_date: 2.weeks.ago, known_scope: 110 }
-      let!(:other_result) { Fabricate :project_result, project: first_project, result_date: Time.zone.today, known_scope: 80 }
+    context 'having no data to required weeks' do
+      let!(:result) { Fabricate :project_result, project: first_project, result_date: Time.zone.today, known_scope: 80 }
 
-      it { expect(first_project.backlog_growth_rate).to be_within(0.01).of(-0.27) }
-    end
-
-    context 'having no result' do
       it { expect(first_project.backlog_growth_rate).to eq 0 }
     end
   end
@@ -504,7 +495,7 @@ RSpec.describe Project, type: :model do
       let!(:result) { Fabricate :project_result, project: first_project, result_date: 2.weeks.ago, known_scope: 110 }
       let!(:other_result) { Fabricate :project_result, project: first_project, result_date: Time.zone.today, known_scope: 80 }
 
-      it { expect(first_project.backlog_for(1.week.ago)).to eq 110 }
+      it { expect(first_project.backlog_for(1.week.ago)).to eq 30 }
     end
 
     context 'having no result' do
@@ -526,7 +517,7 @@ RSpec.describe Project, type: :model do
       let!(:result) { Fabricate :project_result, project: first_project, result_date: 2.weeks.ago, known_scope: 110 }
       let!(:other_result) { Fabricate :project_result, project: first_project, result_date: Time.zone.today, known_scope: 80 }
 
-      it { expect(first_project.backlog_for(1.week.ago)).to eq 110 }
+      it { expect(first_project.backlog_for(1.week.ago)).to eq 30 }
     end
 
     context 'having no result' do
@@ -559,22 +550,17 @@ RSpec.describe Project, type: :model do
   describe '#backlog_growth_throughput_rate' do
     let!(:first_project) { Fabricate :project, initial_scope: 30 }
 
-    context 'having data for last week' do
-      let!(:result) { Fabricate :project_result, project: first_project, result_date: 1.week.ago, known_scope: 110, throughput: 20 }
-      let!(:other_result) { Fabricate :project_result, project: first_project, result_date: Time.zone.today, known_scope: 80, throughput: 25 }
+    context 'having data for last week and 2 weeks ago' do
+      let!(:first_result) { Fabricate :project_result, project: first_project, result_date: 1.week.ago, known_scope: 110, throughput: 20 }
+      let!(:second_result) { Fabricate :project_result, project: first_project, result_date: 2.weeks.ago, known_scope: 80, throughput: 10 }
+      let!(:third_result) { Fabricate :project_result, project: first_project, result_date: Time.zone.today, known_scope: 80, throughput: 25 }
 
-      it { expect(first_project.backlog_growth_throughput_rate).to eq(-1) }
+      it { expect(first_project.backlog_growth_throughput_rate).to eq 1.5 }
     end
 
-    context 'having data for 2 weeks ago' do
-      let!(:result) { Fabricate :project_result, project: first_project, result_date: 2.weeks.ago, known_scope: 110, throughput: 20 }
+    context 'having no data to required weeks' do
       let!(:other_result) { Fabricate :project_result, project: first_project, result_date: Time.zone.today, known_scope: 80, throughput: 25 }
-
-      it { expect(first_project.backlog_growth_throughput_rate).to eq(-1) }
-    end
-
-    context 'having no result' do
-      it { expect(first_project.backlog_growth_throughput_rate).to eq(0) }
+      it { expect(first_project.backlog_growth_throughput_rate).to eq 0 }
     end
   end
 

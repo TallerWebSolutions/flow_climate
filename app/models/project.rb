@@ -89,16 +89,17 @@ class Project < ApplicationRecord
   end
 
   def backlog_unit_growth
-    current_backlog - previous_week_backlog
+    backlog_for(1.week.ago.to_date) - backlog_for(2.weeks.ago.to_date)
   end
 
   def backlog_growth_rate
+    previous_week_backlog = backlog_for(2.weeks.ago.to_date)
     return 0 if previous_week_backlog.zero?
     backlog_unit_growth.to_f / previous_week_backlog.to_f
   end
 
   def backlog_for(date)
-    project_results.until_week(date.to_date.cweek, date.to_date.cwyear).first&.known_scope || initial_scope
+    project_results.for_week(date.to_date.cweek, date.to_date.cwyear).first&.known_scope || initial_scope
   end
 
   def current_team
@@ -182,9 +183,13 @@ class Project < ApplicationRecord
     percentage_remaining_money / percentage_remaining_days
   end
 
+  # Determines if the backlog growth is above the throughput
+  # the rate represents how many times the growth was over the throughput
+  # One is a bad value since the project is not *burning* backlog when the rate is one.
+  # Values under one means backlog burning
   def backlog_growth_throughput_rate
-    return 0 if backlog_unit_growth.zero?
-    total_throughput_for(Time.zone.today) / backlog_unit_growth
+    return backlog_unit_growth if total_throughput_for(1.week.ago).to_f.zero?
+    backlog_unit_growth.to_f / total_throughput_for(1.week.ago).to_f
   end
 
   def last_alert_for(risk_type)
@@ -212,11 +217,5 @@ class Project < ApplicationRecord
   def product_required?
     return true if consulting? || training?
     errors.add(:product, I18n.t('project.validations.product_blank')) if outsourcing? && product.blank?
-  end
-
-  def previous_week_backlog
-    previous_backlog = backlog_for(1.week.ago.to_date)
-    previous_backlog = initial_scope if previous_backlog.zero?
-    previous_backlog
   end
 end
