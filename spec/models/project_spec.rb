@@ -126,7 +126,7 @@ RSpec.describe Project, type: :model do
     let!(:first_project) { Fabricate :project, status: :waiting, start_date: Time.zone.today }
     let!(:second_project) { Fabricate :project, status: :waiting, start_date: Time.zone.today }
     let!(:third_project) { Fabricate :project, status: :executing, end_date: Time.zone.today }
-    let!(:fourth_project) { Fabricate :project, status: :executing, end_date: Time.zone.today }
+    let!(:fourth_project) { Fabricate :project, status: :maintenance, end_date: Time.zone.today }
     let!(:fifth_project) { Fabricate :project, status: :cancelled, end_date: Time.zone.today }
     let!(:sixth_project) { Fabricate :project, status: :finished, end_date: Time.zone.today }
 
@@ -134,8 +134,12 @@ RSpec.describe Project, type: :model do
       it { expect(Project.waiting_projects_starting_within_week).to match_array [first_project, second_project] }
     end
 
-    describe '.executing_projects_finishing_within_week' do
-      it { expect(Project.executing_projects_finishing_within_week).to match_array [third_project, fourth_project] }
+    describe '.running_projects_finishing_within_week' do
+      it { expect(Project.running_projects_finishing_within_week).to match_array [third_project, fourth_project] }
+    end
+
+    describe '.running' do
+      it { expect(Project.running).to match_array [third_project, fourth_project] }
     end
   end
 
@@ -571,6 +575,23 @@ RSpec.describe Project, type: :model do
 
     context 'having no result' do
       it { expect(first_project.backlog_growth_throughput_rate).to eq(0) }
+    end
+  end
+
+  describe '#last_alert_for' do
+    let(:project) { Fabricate :project }
+    let(:first_risk_config) { Fabricate :project_risk_config, risk_type: :no_money_to_deadline }
+    let(:second_risk_config) { Fabricate :project_risk_config, risk_type: :flow_pressure }
+    let(:third_risk_config) { Fabricate :project_risk_config, risk_type: :not_enough_available_hours }
+    let!(:first_risk_alert) { Fabricate :project_risk_alert, project_risk_config: first_risk_config, project: project, created_at: 1.day.ago }
+    let!(:second_risk_alert) { Fabricate :project_risk_alert, project_risk_config: first_risk_config, project: project, created_at: Time.zone.today }
+    let!(:third_risk_alert) { Fabricate :project_risk_alert, project_risk_config: second_risk_config, project: project, created_at: Time.zone.today }
+
+    context 'having alerts' do
+      it { expect(project.last_alert_for(first_risk_config.risk_type)).to eq second_risk_alert }
+    end
+    context 'having no alerts to the type' do
+      it { expect(project.last_alert_for(third_risk_config.risk_type)).to eq nil }
     end
   end
 end

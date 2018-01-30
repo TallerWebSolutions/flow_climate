@@ -48,7 +48,8 @@ class Project < ApplicationRecord
   delegate :name, to: :product, prefix: true, allow_nil: true
 
   scope :waiting_projects_starting_within_week, -> { waiting.where('EXTRACT(week FROM start_date) = :week AND EXTRACT(year FROM start_date) = :year', week: Time.zone.today.cweek, year: Time.zone.today.cwyear) }
-  scope :executing_projects_finishing_within_week, -> { where('EXTRACT(week FROM end_date) = :week AND EXTRACT(year FROM end_date) = :year AND (status = 1 OR status = 2)', week: Time.zone.today.cweek, year: Time.zone.today.cwyear) }
+  scope :running, -> { where('status = 1 OR status = 2') }
+  scope :running_projects_finishing_within_week, -> { running.where('EXTRACT(week FROM end_date) = :week AND EXTRACT(year FROM end_date) = :year', week: Time.zone.today.cweek, year: Time.zone.today.cwyear) }
 
   def full_name
     "#{customer_name} | #{product_name} | #{name}"
@@ -184,6 +185,10 @@ class Project < ApplicationRecord
   def backlog_growth_throughput_rate
     return 0 if backlog_unit_growth.zero?
     total_throughput_for(Time.zone.today) / backlog_unit_growth
+  end
+
+  def last_alert_for(risk_type)
+    project_risk_alerts.joins(:project_risk_config).where('project_risk_configs.risk_type = :risk_type', risk_type: ProjectRiskConfig.risk_types[risk_type]).order(created_at: :desc).first
   end
 
   private

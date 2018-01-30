@@ -45,7 +45,13 @@ RSpec.describe ProjectResult, type: :model do
   end
 
   describe '#hours_per_demand' do
-    let(:result) { Fabricate :project_result }
-    it { expect(result.hours_per_demand).to eq result.project_delivered_hours / result.throughput }
+    context 'when the throughput is different of zero' do
+      let(:result) { Fabricate :project_result }
+      it { expect(result.hours_per_demand).to eq result.project_delivered_hours / result.throughput }
+    end
+    context 'when the throughput is zero' do
+      let(:result) { Fabricate :project_result, throughput: 0 }
+      it { expect(result.hours_per_demand).to eq 0 }
+    end
   end
 end

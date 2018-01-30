@@ -46,7 +46,7 @@ RSpec.describe Product, type: :model do
     let(:product) { Fabricate :product, customer: customer, name: 'zzz' }
 
     let!(:active_project) { Fabricate :project, customer: customer, product: product, status: :executing }
-    let!(:other_active_project) { Fabricate :project, customer: customer, product: product, status: :executing }
+    let!(:other_active_project) { Fabricate :project, customer: customer, product: product, status: :maintenance }
     let!(:waiting_project) { Fabricate :project, customer: customer, product: product, status: :waiting }
     let!(:finished_project) { Fabricate :project, customer: customer, product: product, status: :finished }
     let!(:cancelled_project) { Fabricate :project, customer: customer, product: product, status: :cancelled }

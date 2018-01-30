@@ -92,6 +92,7 @@ pt-BR:
       total_gap: "Gap Total"
       no_data: "Não há projetos aqui. Cadastre um."
       remaining_hours: "Horas Restantes"
+      risk_alerts: "Alertas de Risco"
     show:
       initial_scope: "Escopo Inicial"
       last_team: "Time atual"

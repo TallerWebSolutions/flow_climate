@@ -177,6 +177,14 @@ pt-BR:
       demand:
         demand_id: Id da Demanda
         effort: Esforço
+      project_risk_config:
+        enums:
+          risk_type:
+            no_money_to_deadline: "Sem Dinheiro para o Prazo"
+            backlog_growth_rate: "Tx de Crescimento do Backlog"
+            not_enough_available_hours: "Sem Horas Disponíveis"
+            profit_margin: "Margem de Lucro"
+            flow_pressure: "Pressão do Fluxo"
   product:
     name:
       uniqueness: "Não deve repetir nome de produto para o mesmo cliente."

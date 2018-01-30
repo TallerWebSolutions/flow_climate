@@ -23,7 +23,7 @@ RSpec.describe CompaniesBulletimJob, type: :job do
 
     it 'calls the mailer to send the data' do
       allow(Time.zone).to receive(:today).and_return Time.zone.today.beginning_of_week + 1.day
-      expect(UserNotifierMailer).to receive(:company_weekly_bulletin).with(company, company.projects.waiting_projects_starting_within_week, company.projects.executing_projects_finishing_within_week).once
+      expect(UserNotifierMailer).to receive(:company_weekly_bulletin).with(company, company.projects.waiting_projects_starting_within_week, company.projects.running_projects_finishing_within_week).once
       CompaniesBulletimJob.perform_now
     end
   end

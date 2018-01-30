@@ -48,6 +48,7 @@ class ProjectResult < ApplicationRecord
   end
 
   def hours_per_demand
+    return 0 if throughput.zero?
     project_delivered_hours / throughput
   end
 end

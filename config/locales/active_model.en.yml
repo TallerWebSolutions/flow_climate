@@ -42,6 +42,14 @@ en:
       project_result:
         monte_carlo_date: Monte Carlo Forecast
         demands_count: Qty Demands
+      project_risk_config:
+        enums:
+          risk_type:
+            no_money_to_deadline: "No Money to Deadline"
+            backlog_growth_rate: "Backlog Growth Rate"
+            not_enough_available_hours: "Not Enough Available Hours"
+            profit_margin: "Profit Margin"
+            flow_pressure: "Flow Pressure"
     errors:
       messages:
         record_invalid: 'Validation failed: %{errors}'

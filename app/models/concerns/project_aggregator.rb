@@ -4,7 +4,7 @@ module ProjectAggregator
   extend ActiveSupport::Concern
 
   def active_projects
-    projects.where(status: :executing)
+    projects.running
   end
 
   def waiting_projects

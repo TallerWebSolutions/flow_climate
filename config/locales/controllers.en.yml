@@ -93,6 +93,7 @@ en:
       total_gap: "Total Gap"
       no_data: "There are no projects. Add one."
       remaining_hours: "Remaining Hours"
+      risk_alerts: "Risk Alerts"
     show:
       initial_scope: "Initial Scope"
       last_team: "Current team"
