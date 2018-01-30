@@ -38,7 +38,7 @@ Rails.application.routes.draw do
 
     resources :projects, only: %i[show index new create edit update] do
       resources :project_results do
-        resources :demands, only: %i[new create]
+        resources :demands, only: %i[new create destroy]
       end
 
       get 'product_options_for_customer/(:customer_id)', action: :product_options_for_customer, on: :collection

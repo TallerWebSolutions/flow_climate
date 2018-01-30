@@ -15,6 +15,12 @@ class DemandsController < AuthenticatedController
     render :new
   end
 
+  def destroy
+    demand = Demand.find(params[:id])
+    demand.destroy
+    redirect_to company_project_project_result_path(@company, @project, @project_result)
+  end
+
   private
 
   def demand_params

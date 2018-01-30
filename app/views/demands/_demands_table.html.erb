@@ -18,6 +18,7 @@
     <th><%= ProjectResult.human_attribute_name :result_date %></th>
     <th><%= Demand.human_attribute_name :demand_id %></th>
     <th><%= Demand.human_attribute_name :effort %></th>
+    <th><%= t('general.table.actions') %></th>
   </tr>
   <% demands_list.each do |demand| %>
     <tr>
@@ -31,6 +32,11 @@
       <td><%= l @project_result.result_date %></td>
       <td><%= demand.demand_id %></td>
       <td><%= number_with_precision(demand.effort, precision: 2) %></td>
+      <td>
+        <%= link_to company_project_project_result_demand_path(@company, @project, @project_result, demand), method: :delete do %>
+          <i class="fa fa-times" aria-hidden="true"></i>
+        <% end %>
+      </td>
     </tr>
   <% end %>
 </table>
