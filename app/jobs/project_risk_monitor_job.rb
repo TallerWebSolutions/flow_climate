@@ -9,58 +9,48 @@ class ProjectRiskMonitorJob < ApplicationJob
       company = project.customer.company
 
       company.project_risk_configs.each do |risk|
-        if risk.no_money_to_deadline?
-          process_no_money_to_deadline(risk, project)
-        elsif risk.backlog_growth_rate?
-          process_backlog_growth_throughput_rate(risk, project)
-        elsif risk.not_enough_available_hours?
-          process_not_enough_available_hours(risk, project)
-        elsif risk.flow_pressure?
-          process_flow_pressure(risk, project)
-        end
+        process_risk(project, risk)
       end
     end
   end
 
   private
 
-  def process_no_money_to_deadline(risk, project)
-    if project.money_per_deadline < risk.low_yellow_value
-      create_alert(project, risk, project.money_per_deadline, :green)
-    elsif project.money_per_deadline > risk.high_yellow_value
-      create_alert(project, risk, project.money_per_deadline, :red)
-    else
-      create_alert(project, risk, project.money_per_deadline, :yellow)
+  def process_risk(project, risk)
+    if risk.no_money_to_deadline?
+      process_no_money_to_deadline(risk, project)
+    elsif risk.backlog_growth_rate?
+      process_backlog_growth_throughput_rate(risk, project)
+    elsif risk.not_enough_available_hours?
+      process_not_enough_available_hours(risk, project)
+    elsif risk.flow_pressure?
+      process_flow_pressure(risk, project)
     end
+  end
+
+  def process_no_money_to_deadline(risk, project)
+    process_alert(risk, project, project.money_per_deadline)
   end
 
   def process_backlog_growth_throughput_rate(risk, project)
-    if project.backlog_growth_throughput_rate < risk.low_yellow_value
-      create_alert(project, risk, project.backlog_growth_throughput_rate, :green)
-    elsif project.backlog_growth_throughput_rate > risk.high_yellow_value
-      create_alert(project, risk, project.backlog_growth_throughput_rate, :red)
-    else
-      create_alert(project, risk, project.backlog_growth_throughput_rate, :yellow)
-    end
+    process_alert(risk, project, project.backlog_growth_throughput_rate)
   end
 
   def process_not_enough_available_hours(risk, project)
-    if project.required_hours_per_available_hours < risk.low_yellow_value
-      create_alert(project, risk, project.required_hours_per_available_hours, :green)
-    elsif project.required_hours_per_available_hours > risk.high_yellow_value
-      create_alert(project, risk, project.required_hours_per_available_hours, :red)
-    else
-      create_alert(project, risk, project.required_hours_per_available_hours, :yellow)
-    end
+    process_alert(risk, project, project.required_hours_per_available_hours)
   end
 
   def process_flow_pressure(risk, project)
-    if project.flow_pressure < risk.low_yellow_value
-      create_alert(project, risk, project.flow_pressure, :green)
-    elsif project.flow_pressure > risk.high_yellow_value
-      create_alert(project, risk, project.flow_pressure, :red)
+    process_alert(risk, project, project.flow_pressure)
+  end
+
+  def process_alert(risk, project, result_value)
+    if result_value < risk.low_yellow_value
+      create_alert(project, risk, result_value, :green)
+    elsif result_value > risk.high_yellow_value
+      create_alert(project, risk, result_value, :red)
     else
-      create_alert(project, risk, project.flow_pressure, :yellow)
+      create_alert(project, risk, result_value, :yellow)
     end
   end
 
