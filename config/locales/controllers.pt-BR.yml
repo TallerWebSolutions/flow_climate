@@ -53,6 +53,8 @@ pt-BR:
       product_count: "Produtos"
       consulting_members_billable_count: "Qtd Força Faturável (consultoria)"
       customers_count: "Clientes"
+    edit:
+      title: "Editar Empresa"
   financial_informations:
     new:
       title: "Nova Informação Financeira"

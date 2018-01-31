@@ -54,6 +54,8 @@ en:
       product_count: "Products"
       consulting_members_billable_count: "Qty Billable (Consulting)"
       customers_count: "Customers"
+    edit:
+      title: "Edit Company"
   financial_informations:
     new:
       title: "New Financial Information"

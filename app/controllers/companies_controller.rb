@@ -23,6 +23,14 @@ class CompaniesController < AuthenticatedController
     render :new
   end
 
+  def edit; end
+
+  def update
+    @company.update(company_params)
+    return redirect_to company_path(@company) if @company.save
+    render :edit
+  end
+
   private
 
   def assign_company

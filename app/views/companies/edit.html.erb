@@ -1,0 +1,22 @@
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-xs-12">
+      <ul class="breadcrumb">
+        <li><%= link_to t('general.home.title'), root_path %></li>
+        <li><%= link_to @company.abbreviation, company_path(@company) %></li>
+        <li><%= t('companies.edit.title') %></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="row">
+    <%= form_for @company, url: company_path(@company), method: :put, class: 'form' do |f| %>
+      <div class="row botton-spaced-component">
+        <div class="col-xs-12">
+          <%= render 'form', f: f %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

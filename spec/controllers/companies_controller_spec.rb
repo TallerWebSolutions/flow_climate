@@ -18,6 +18,14 @@ RSpec.describe CompaniesController, type: :controller do
       before { post :create }
       it { expect(response).to redirect_to new_user_session_path }
     end
+    describe 'GET #edit' do
+      before { get :edit, params: { id: 'xpto' } }
+      it { expect(response).to redirect_to new_user_session_path }
+    end
+    describe 'PUT #update' do
+      before { put :update, params: { id: 'xpto' } }
+      it { expect(response).to redirect_to new_user_session_path }
+    end
   end
 
   context 'authenticated' do
@@ -91,6 +99,65 @@ RSpec.describe CompaniesController, type: :controller do
           expect(Company.last).to be_nil
           expect(response).to render_template :new
           expect(assigns(:company).errors.full_messages).to eq ['Nome não pode ficar em branco', 'Sigla não pode ficar em branco']
+        end
+      end
+    end
+
+    describe 'GET #edit' do
+      let(:company) { Fabricate :company, users: [user] }
+
+      context 'valid parameters' do
+        before { get :edit, params: { id: company } }
+        it 'assigns the instance variables and renders the template' do
+          expect(response).to render_template :edit
+          expect(assigns(:company)).to eq company
+        end
+      end
+
+      context 'invalid' do
+        context 'company' do
+          context 'non-existent' do
+            before { get :edit, params: { id: 'foo' } }
+            it { expect(response).to have_http_status :not_found }
+          end
+          context 'not-permitted' do
+            let(:company) { Fabricate :company, users: [] }
+            before { get :edit, params: { id: company } }
+            it { expect(response).to have_http_status :not_found }
+          end
+        end
+      end
+    end
+
+    describe 'PUT #update' do
+      let(:company) { Fabricate :company, users: [user] }
+
+      context 'passing valid parameters' do
+        before { put :update, params: { id: company, company: { name: 'foo', abbreviation: 'bar' } } }
+        it 'updates the product and redirects to projects index' do
+          expect(Company.last.name).to eq 'foo'
+          expect(Company.last.abbreviation).to eq 'bar'
+          expect(response).to redirect_to company_path(company)
+        end
+      end
+
+      context 'passing invalid' do
+        context 'product parameters' do
+          before { put :update, params: { id: company, company: { name: '', abbreviation: '' } } }
+          it 'does not update the product and re-render the template with the errors' do
+            expect(response).to render_template :edit
+            expect(assigns(:company).errors.full_messages).to eq ['Nome não pode ficar em branco', 'Sigla não pode ficar em branco']
+          end
+        end
+        context 'non-existent company' do
+          before { put :update, params: { id: 'foo', product: { name: 'foo', abbreviation: 'bar' } } }
+          it { expect(response).to have_http_status :not_found }
+        end
+        context 'unpermitted company' do
+          let(:company) { Fabricate :company, users: [] }
+
+          before { put :update, params: { id: company, product: { name: 'foo', abbreviation: 'bar' } } }
+          it { expect(response).to have_http_status :not_found }
         end
       end
     end
