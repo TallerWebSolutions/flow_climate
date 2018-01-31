@@ -24,6 +24,11 @@ class Company < ApplicationRecord
 
   validates :name, :abbreviation, presence: true
 
+  def add_user(user)
+    return if users.include?(user)
+    users << user
+  end
+
   def outsourcing_cost
     teams.sum(&:outsourcing_cost)
   end

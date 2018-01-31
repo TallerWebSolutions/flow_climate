@@ -3,3 +3,8 @@
 2018-01-11 14:22:47.921 -02 [58144] LOG:  listening on Unix socket "/tmp/.s.PGSQL.5432"
 2018-01-11 14:22:47.963 -02 [58145] LOG:  database system was shut down at 2018-01-10 16:53:57 -02
 2018-01-11 14:22:47.978 -02 [58144] LOG:  database system is ready to accept connections
+2018-01-31 21:29:50.991 -02 [5894] LOG:  listening on IPv6 address "::1", port 5432
+2018-01-31 21:29:50.992 -02 [5894] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2018-01-31 21:29:50.993 -02 [5894] LOG:  listening on Unix socket "/tmp/.s.PGSQL.5432"
+2018-01-31 21:29:51.042 -02 [5895] LOG:  database system was shut down at 2018-01-31 12:09:29 -02
+2018-01-31 21:29:51.053 -02 [5894] LOG:  database system is ready to accept connections

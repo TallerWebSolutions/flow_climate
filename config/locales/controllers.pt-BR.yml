@@ -28,6 +28,7 @@ pt-BR:
     current_year: "Ano Atual"
     current_backlog: "Backlog Atual"
     select: "Selecione"
+    user_not_found: "Usuário não encontrado"
   header:
     logout: Sair
     sign_up: Cadastre-se
@@ -55,6 +56,10 @@ pt-BR:
       customers_count: "Clientes"
     edit:
       title: "Editar Empresa"
+    add_user:
+      email_field: "Email"
+      title: "Adicionar usuário"
+    users_in_company: "Usuários na empresa"
   financial_informations:
     new:
       title: "Nova Informação Financeira"

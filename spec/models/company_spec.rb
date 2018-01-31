@@ -17,6 +17,21 @@ RSpec.describe Company, type: :model do
     it { is_expected.to validate_presence_of :abbreviation }
   end
 
+  describe '#add_user' do
+    context 'when already has the user' do
+      let(:user) { Fabricate :user }
+      let!(:company) { Fabricate :company, users: [user] }
+      before { company.add_user(user) }
+      it { expect(company.users).to eq [user] }
+    end
+    context 'when does not have the user' do
+      let(:user) { Fabricate :user }
+      let!(:company) { Fabricate :company }
+      before { company.add_user(user) }
+      it { expect(company.users).to eq [user] }
+    end
+  end
+
   context '#outsourcing_cost_per_week' do
     let(:company) { Fabricate :company }
     let(:team) { Fabricate :team, company: company }

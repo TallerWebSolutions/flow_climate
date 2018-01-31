@@ -26,10 +26,14 @@ RSpec.describe CompaniesController, type: :controller do
       before { put :update, params: { id: 'xpto' } }
       it { expect(response).to redirect_to new_user_session_path }
     end
+    describe 'PATCH #add_user' do
+      before { patch :add_user, params: { id: 'xpto' } }
+      it { expect(response).to redirect_to new_user_session_path }
+    end
   end
 
   context 'authenticated' do
-    let(:user) { Fabricate :user }
+    let(:user) { Fabricate :user, first_name: 'zzz' }
     before { sign_in user }
 
     describe 'GET #index' do
@@ -104,13 +108,15 @@ RSpec.describe CompaniesController, type: :controller do
     end
 
     describe 'GET #edit' do
-      let(:company) { Fabricate :company, users: [user] }
+      let(:other_user) { Fabricate :user, first_name: 'aaa' }
+      let(:company) { Fabricate :company, users: [user, other_user] }
 
       context 'valid parameters' do
         before { get :edit, params: { id: company } }
         it 'assigns the instance variables and renders the template' do
           expect(response).to render_template :edit
           expect(assigns(:company)).to eq company
+          expect(assigns(:users_in_company)).to eq [other_user, user]
         end
       end
 
@@ -134,7 +140,7 @@ RSpec.describe CompaniesController, type: :controller do
 
       context 'passing valid parameters' do
         before { put :update, params: { id: company, company: { name: 'foo', abbreviation: 'bar' } } }
-        it 'updates the product and redirects to projects index' do
+        it 'updates the company and redirects to projects index' do
           expect(Company.last.name).to eq 'foo'
           expect(Company.last.abbreviation).to eq 'bar'
           expect(response).to redirect_to company_path(company)
@@ -142,9 +148,9 @@ RSpec.describe CompaniesController, type: :controller do
       end
 
       context 'passing invalid' do
-        context 'product parameters' do
+        context 'company parameters' do
           before { put :update, params: { id: company, company: { name: '', abbreviation: '' } } }
-          it 'does not update the product and re-render the template with the errors' do
+          it 'does not update the company and re-render the template with the errors' do
             expect(response).to render_template :edit
             expect(assigns(:company).errors.full_messages).to eq ['Nome não pode ficar em branco', 'Sigla não pode ficar em branco']
           end
@@ -157,6 +163,41 @@ RSpec.describe CompaniesController, type: :controller do
           let(:company) { Fabricate :company, users: [] }
 
           before { put :update, params: { id: company, product: { name: 'foo', abbreviation: 'bar' } } }
+          it { expect(response).to have_http_status :not_found }
+        end
+      end
+    end
+
+    describe 'PATCH #add_user' do
+      let(:company) { Fabricate :company, users: [user] }
+      let!(:other_user) { Fabricate :user }
+
+      context 'passing valid parameters' do
+        context 'and the user is not in the company users list' do
+          before { patch :add_user, params: { id: company, user_email: other_user.email } }
+          it 'adds the user and redirects to the edit page' do
+            expect(company.reload.users).to match_array [user, other_user]
+            expect(response).to redirect_to edit_company_path(company)
+          end
+        end
+        context 'and the user is already in the company users list' do
+          before { patch :add_user, params: { id: company, user_email: user.email } }
+          it 'does not add the repeated user' do
+            expect(company.reload.users).to eq [user]
+            expect(response).to redirect_to edit_company_path(company)
+          end
+        end
+      end
+
+      context 'passing invalid' do
+        context 'non-existent company' do
+          before { patch :add_user, params: { id: 'foo', user_email: user.email } }
+          it { expect(response).to have_http_status :not_found }
+        end
+        context 'unpermitted company' do
+          let(:company) { Fabricate :company, users: [] }
+
+          before { put :update, params: { id: company, user_email: user.email } }
           it { expect(response).to have_http_status :not_found }
         end
       end

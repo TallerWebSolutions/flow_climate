@@ -28,6 +28,7 @@ en:
     current_year: "Current Year"
     current_backlog: "Current Backlog"
     select: "Select"
+    user_not_found: "User not found"
   header:
     logout: Logout
     explore: Explore
@@ -56,6 +57,10 @@ en:
       customers_count: "Customers"
     edit:
       title: "Edit Company"
+    add_user:
+      email_field: "Email"
+      title: "Add user"
+    users_in_company: "Users in company"
   financial_informations:
     new:
       title: "New Financial Information"

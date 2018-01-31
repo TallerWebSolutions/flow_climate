@@ -1,4 +1,3 @@
-
 <div class="container-fluid">
   <div class="row">
     <div class="col-xs-12">
@@ -18,5 +17,47 @@
         </div>
       </div>
     <% end %>
+  </div>
+
+  <div class="row">
+    <div class='col-xs-12'>
+      <h4><%= t('companies.add_user.title') %></h4>
+    </div>
+
+    <%= form_tag add_user_company_url(@company), method: :patch do %>
+      <div class='col-xs-12 form-group'>
+        <%= label_tag t('companies.add_user.email_field'), nil, class: 'control-label' %>
+        <%= text_field_tag :user_email, params[:user_email], class: 'form-control' %>
+      </div>
+
+      <div class="col-xs-12">
+        <%= submit_tag t('general.buttons.save'), class: 'btn btn-success' %>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="row">
+    <div class='col-xs-12'>
+      <h4><%= t('companies.users_in_company') %></h4>
+    </div>
+
+    <div class='col-xs-12'>
+      <table class="table">
+        <thead>
+          <th><%= User.human_attribute_name :first_name %></th>
+          <th><%= User.human_attribute_name :last_name %></th>
+          <th><%= User.human_attribute_name :email %></th>
+        </thead>
+        <tbody>
+          <% @users_in_company.each do |user| %>
+            <tr>
+              <td><%= user.first_name %></td>
+              <td><%= user.last_name %></td>
+              <td><%= user.email %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>

@@ -18,20 +18,34 @@ class CompaniesController < AuthenticatedController
 
   def create
     @company = Company.new(company_params)
-    @company.users << current_user
+    @company.add_user(current_user)
     return redirect_to company_path(@company) if @company.save
     render :new
   end
 
-  def edit; end
+  def edit
+    assign_users_in_company
+  end
 
   def update
     @company.update(company_params)
     return redirect_to company_path(@company) if @company.save
+    assign_users_in_company
     render :edit
   end
 
+  def add_user
+    user = User.find_by(email: params[:user_email])
+    return redirect_to(edit_company_path(@company), error: t('general.user_not_found')) if user.blank?
+    @company.add_user(user)
+    redirect_to edit_company_path(@company)
+  end
+
   private
+
+  def assign_users_in_company
+    @users_in_company = @company.users.order(:first_name, :last_name)
+  end
 
   def assign_company
     @company = Company.find(params[:id])
