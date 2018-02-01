@@ -1,0 +1,23 @@
+<h4><%= t('projects.project_risk_alert.table_title') %></h4>
+<table class="table">
+  <thead>
+    <th><%= ProjectRiskAlert.human_attribute_name :alert_color %></th>
+    <th><%= ProjectRiskAlert.human_attribute_name :created_at %></th>
+    <th><%= ProjectRiskConfig.human_attribute_name :risk_type %></th>
+    <th><%= ProjectRiskConfig.human_attribute_name :low_yellow_value %></th>
+    <th><%= ProjectRiskConfig.human_attribute_name :high_yellow_value %></th>
+    <th><%= ProjectRiskAlert.human_attribute_name :alert_value %></th>
+  </thead>
+  <tbody>
+    <% @ordered_project_risk_alerts.each do |alert| %>
+      <tr>
+        <td><figure class='circle-<%= alert.alert_color %>'></figure></td>
+        <td><%= l(alert.created_at, format: :short) %></td>
+        <td><%= t("activerecord.attributes.project_risk_config.enums.risk_type.#{alert.project_risk_config.risk_type}") %></td>
+        <td><%= number_with_precision(alert.project_risk_config.low_yellow_value, precision: 2) %></td>
+        <td><%= number_with_precision(alert.project_risk_config.high_yellow_value, precision: 2) %></td>
+        <td><%= number_with_precision(alert.alert_value, precision: 2) %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
