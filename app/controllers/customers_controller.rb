@@ -2,7 +2,7 @@
 
 class CustomersController < AuthenticatedController
   before_action :assign_company
-  before_action :assign_customer, only: %i[edit update show]
+  before_action :assign_customer, only: %i[edit update show destroy]
 
   def index
     @customers = @company.customers.sort_by(&:total_flow_pressure).reverse
@@ -31,6 +31,11 @@ class CustomersController < AuthenticatedController
     @customer.update(customer_params.merge(company: @company))
     return redirect_to company_customers_path(@company) if @customer.save
     render :edit
+  end
+
+  def destroy
+    return redirect_to company_customers_path(@company) if @customer.destroy
+    redirect_to(company_customers_path(@company), flash: { error: @customer.errors.full_messages.join(',') })
   end
 
   private

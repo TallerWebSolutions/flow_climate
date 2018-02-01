@@ -26,6 +26,10 @@ RSpec.describe CustomersController, type: :controller do
       before { get :show, params: { company_id: 'bar', id: 'foo' } }
       it { expect(response).to redirect_to new_user_session_path }
     end
+    describe 'DELETE #destroy' do
+      before { delete :destroy, params: { company_id: 'foo', id: 'bar' } }
+      it { expect(response).to redirect_to new_user_session_path }
+    end
   end
 
   context 'authenticated' do
@@ -195,6 +199,48 @@ RSpec.describe CustomersController, type: :controller do
         context 'not permitted' do
           let(:company) { Fabricate :company, users: [] }
           before { get :show, params: { company_id: company, id: customer } }
+          it { expect(response).to have_http_status :not_found }
+        end
+      end
+    end
+
+    describe 'DELETE #destroy' do
+      let(:company) { Fabricate :company, users: [user] }
+      let(:customer) { Fabricate :customer, company: company }
+
+      context 'passing valid ID' do
+        context 'having no dependencies' do
+          before { delete :destroy, params: { company_id: company, id: customer } }
+          it 'deletes the customer and redirects' do
+            expect(response).to redirect_to company_customers_path(company)
+            expect(Customer.last).to be_nil
+          end
+        end
+        context 'having dependencies' do
+          let!(:project) { Fabricate :project, customer: customer }
+          let!(:product) { Fabricate :product, customer: customer }
+          before { delete :destroy, params: { company_id: company, id: customer } }
+
+          it 'does not delete the customer and show the error' do
+            expect(response).to redirect_to company_customers_path(company)
+            expect(Customer.last).to eq customer
+            expect(flash[:error]).to eq assigns(:customer).errors.full_messages.join(',')
+          end
+        end
+      end
+
+      context 'passing an invalid ID' do
+        context 'non-existent operation result' do
+          before { delete :destroy, params: { company_id: company, id: 'foo' } }
+          it { expect(response).to have_http_status :not_found }
+        end
+        context 'non-existent company' do
+          before { delete :destroy, params: { company_id: 'foo', id: customer } }
+          it { expect(response).to have_http_status :not_found }
+        end
+        context 'not permitted' do
+          let(:company) { Fabricate :company, users: [] }
+          before { delete :destroy, params: { company_id: company, id: customer } }
           it { expect(response).to have_http_status :not_found }
         end
       end

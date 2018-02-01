@@ -33,7 +33,8 @@ Rails.application.routes.draw do
     resources :financial_informations, only: %i[new create]
     resources :operation_results, only: %i[index destroy new create]
 
-    resources :customers, only: %i[index new create edit update show]
+    resources :customers
+
     resources :products do
       get 'products_for_customer/(:customer_id)', action: :products_for_customer, on: :collection
     end

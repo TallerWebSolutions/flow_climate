@@ -119,6 +119,8 @@ pt-BR:
             training: Treinamento
       customer:
         name: Nome
+        products: Produtos
+        projects: Projetos
       product:
         customer: Cliente
         name: Nome
@@ -172,8 +174,6 @@ pt-BR:
         total_opened_bugs: Bugs Abertos
         total_accumulated_closed_bugs: Acumulado de Bugs Fechados
       team:
-        name: Nome
-      customer:
         name: Nome
       demand:
         demand_id: Id da Demanda

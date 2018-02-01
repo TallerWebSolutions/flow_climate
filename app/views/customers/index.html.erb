@@ -34,6 +34,9 @@
             <%= link_to edit_company_customer_path(@company, customer) do %>
               <i class="fa fa-pencil"></i>
             <% end %>
+            <%= link_to company_customer_path(@company, customer), method: :delete do %>
+              <i class="fa fa-times"></i>
+            <% end %>
           </td>
         </tr>
       <% end %>
