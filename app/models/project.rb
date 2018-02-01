@@ -42,7 +42,7 @@ class Project < ApplicationRecord
 
   validates :customer, :qty_hours, :project_type, :name, :status, :start_date, :end_date, :status, :initial_scope, presence: true
   validates :name, uniqueness: { scope: :product, message: I18n.t('project.name.uniqueness') }
-  validate :hour_value_project_value?, :same_customer_in_product?, :product_required?
+  validate :hour_value_project_value?, :product_required?
 
   delegate :name, to: :customer, prefix: true
   delegate :name, to: :product, prefix: true, allow_nil: true
@@ -212,11 +212,6 @@ class Project < ApplicationRecord
     return true if hour_value.present? || value.present?
     errors.add(:value, I18n.t('project.validations.no_value'))
     errors.add(:hour_value, I18n.t('project.validations.no_value'))
-  end
-
-  def same_customer_in_product?
-    return true if (customer == product&.customer) || consulting? || training?
-    errors.add(:customer, I18n.t('project.validations.customer_not_same'))
   end
 
   def product_required?
