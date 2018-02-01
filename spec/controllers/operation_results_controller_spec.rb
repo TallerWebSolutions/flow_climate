@@ -55,7 +55,7 @@ RSpec.describe OperationResultsController, type: :controller do
 
       context 'passing valid IDs' do
         before { delete :destroy, params: { company_id: company, id: operation_result } }
-        it 'assigns the instance variable and renders the template' do
+        it 'deletes the operation result and redirects' do
           expect(response).to redirect_to company_operation_results_path(company)
           expect(OperationResult.last).to be_nil
         end
@@ -106,7 +106,7 @@ RSpec.describe OperationResultsController, type: :controller do
 
       context 'passing valid parameters' do
         before { post :create, params: { company_id: company, operation_result: { result_date: Time.zone.today, people_billable_count: 11, operation_week_value: 2003.21, available_hours: 222, delivered_hours: 222, total_th: 9, total_opened_bugs: 0, total_accumulated_closed_bugs: 1 } } }
-        it 'assigns the instance variable and renders the template' do
+        it 'creates the operation result and redirects' do
           expect(response).to redirect_to company_operation_results_path(company)
           result = OperationResult.last
           expect(result.company).to eq company

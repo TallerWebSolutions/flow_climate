@@ -122,6 +122,7 @@ pt-BR:
       product:
         customer: Cliente
         name: Nome
+        projects: Projetos
       project:
         product: Produto
         name: Nome

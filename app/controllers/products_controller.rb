@@ -2,7 +2,7 @@
 
 class ProductsController < AuthenticatedController
   before_action :assign_company
-  before_action :assign_product, only: %i[show edit update]
+  before_action :assign_product, only: %i[show edit update destroy]
 
   def index
     @products = @company.products.order(:name)
@@ -37,6 +37,11 @@ class ProductsController < AuthenticatedController
 
   def products_for_customer
     render_products_for_customer('products/products.js.erb', params[:customer_id])
+  end
+
+  def destroy
+    return redirect_to company_products_path(@company) if @product.destroy
+    redirect_to(company_products_path(@company), flash: { error: @product.errors.full_messages.join(',') })
   end
 
   private
