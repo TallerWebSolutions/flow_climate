@@ -44,35 +44,12 @@ RSpec.describe Project, type: :model do
         end
       end
 
-      context 'the customer in the project must be the same of in the product' do
-        let(:customer) { Fabricate :customer }
-        let(:other_customer) { Fabricate :customer }
-        let(:product) { Fabricate :product, customer: customer }
-
-        context 'when they are not the same' do
-          let(:project) { Fabricate.build :project, customer: other_customer, product: product }
-          it 'fails the validation' do
-            expect(project.valid?).to be false
-            expect(project.errors.full_messages).to eq ['Customer O cliente do projeto deve ser o mesmo cliente do produto']
-          end
-        end
-
-        context 'when they are the same' do
-          let(:project) { Fabricate :project, customer: customer, product: product }
-          it { expect(project.valid?).to be true }
-        end
-
-        context 'having no product' do
-          let(:project) { Fabricate :project, customer: customer }
-          it { expect(project.valid?).to be true }
-        end
-      end
       context 'the product cannot be blank to outsourcing projects' do
         context 'when is outsourcing and the product is blank' do
           let(:project) { Fabricate.build :project, project_type: :outsourcing, product: nil }
           it 'fails the validation' do
             expect(project.valid?).to be false
-            expect(project.errors.full_messages).to eq ['Customer O cliente do projeto deve ser o mesmo cliente do produto', 'Produto é obrigatório para projeto de outsourcing']
+            expect(project.errors.full_messages).to eq ['Produto é obrigatório para projeto de outsourcing']
           end
         end
 
