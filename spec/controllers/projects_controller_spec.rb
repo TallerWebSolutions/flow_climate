@@ -30,6 +30,10 @@ RSpec.describe ProjectsController, type: :controller do
       before { get :product_options_for_customer, params: { company_id: 'foo', customer_id: 'bar' }, xhr: true }
       it { expect(response.status).to eq 401 }
     end
+    describe 'GET #search_for_projects' do
+      before { get :search_for_projects, params: { company_id: 'foo', status_filter: :executing }, xhr: true }
+      it { expect(response.status).to eq 401 }
+    end
   end
 
   context 'authenticated' do
@@ -101,18 +105,6 @@ RSpec.describe ProjectsController, type: :controller do
             expect(projects).to eq [other_project, project]
             expect(assigns(:projects_summary)).to be_a ProjectsSummaryObject
             expect(assigns(:projects_summary).projects).to eq [other_project, project]
-          end
-        end
-        context 'passing status filter' do
-          let(:customer) { Fabricate :customer, company: company }
-          let(:product) { Fabricate :product, customer: customer, name: 'zzz' }
-          let!(:project) { Fabricate :project, customer: customer, product: product, status: :executing }
-          let!(:other_project) { Fabricate :project, customer: customer, product: product, status: :waiting }
-          let!(:other_company_project) { Fabricate :project, status: :executing }
-          before { get :index, params: { company_id: company, status_filter: :executing } }
-          it 'assigns the instance variable and renders the template' do
-            expect(response).to render_template :index
-            expect(assigns(:projects)).to eq [project]
           end
         end
       end
@@ -294,6 +286,56 @@ RSpec.describe ProjectsController, type: :controller do
           before { get :product_options_for_customer, params: { company_id: unpermitted_company }, xhr: true }
           it { expect(response.status).to eq 404 }
         end
+      end
+    end
+
+    describe '#search_for_projects' do
+      let(:customer) { Fabricate :customer, company: company }
+      let(:product) { Fabricate :product, customer: customer, name: 'zzz' }
+
+      context 'passing valid parameters' do
+        context 'having data' do
+          let!(:first_project) { Fabricate :project, customer: customer, product: product, status: :executing, end_date: 10.days.from_now }
+          let!(:second_project) { Fabricate :project, customer: customer, product: product, status: :executing, end_date: 50.days.from_now }
+          let!(:third_project) { Fabricate :project, customer: customer, product: product, status: :waiting, end_date: 15.days.from_now }
+          let!(:other_company_project) { Fabricate :project, status: :executing }
+
+          context 'and passing a status filter' do
+            before { get :search_for_projects, params: { company_id: company, status_filter: :executing }, xhr: true }
+            it 'assigns the instance variable and renders the template' do
+              expect(response).to render_template 'projects/projects_search.js.erb'
+              expect(assigns(:projects)).to eq [second_project, first_project]
+            end
+          end
+          context 'and passing no status filter' do
+            before { get :search_for_projects, params: { company_id: company, status_filter: :all }, xhr: true }
+            it 'assigns the instance variable and renders the template' do
+              expect(response).to render_template 'projects/projects_search.js.erb'
+              expect(assigns(:projects)).to eq [second_project, third_project, first_project]
+            end
+          end
+        end
+        context 'having no data' do
+          let!(:other_company_project) { Fabricate :project, status: :executing }
+
+          before { get :search_for_projects, params: { company_id: company, status_filter: :executing }, xhr: true }
+          it 'assigns the instance variable and renders the template' do
+            expect(response).to render_template 'projects/projects_search.js.erb'
+            expect(assigns(:projects)).to eq []
+          end
+        end
+      end
+    end
+
+    context 'passing invalid' do
+      context 'company' do
+        before { get :search_for_projects, params: { company_id: 'foo', status_filter: :executing }, xhr: true }
+        it { expect(response).to have_http_status :not_found }
+      end
+      context 'not permitted company' do
+        let(:company) { Fabricate :company, users: [] }
+        before { get :search_for_projects, params: { company_id: company, status_filter: :executing }, xhr: true }
+        it { expect(response).to have_http_status :not_found }
       end
     end
   end

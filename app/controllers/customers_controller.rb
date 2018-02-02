@@ -2,7 +2,7 @@
 
 class CustomersController < AuthenticatedController
   before_action :assign_company
-  before_action :assign_customer, only: %i[edit update show destroy]
+  before_action :assign_customer, only: %i[edit update show destroy search_for_projects]
 
   def index
     @customers = @company.customers.sort_by(&:total_flow_pressure).reverse
@@ -36,6 +36,11 @@ class CustomersController < AuthenticatedController
   def destroy
     return redirect_to company_customers_path(@company) if @customer.destroy
     redirect_to(company_customers_path(@company), flash: { error: @customer.errors.full_messages.join(',') })
+  end
+
+  def search_for_projects
+    @projects = @customer.projects.order(end_date: :desc)
+    add_queries_to_projects
   end
 
   private

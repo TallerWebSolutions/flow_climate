@@ -1,5 +1,3 @@
-<h2><%= t('projects.index.title') %></h2>
-
 <% if projects_list.empty? %>
   <%= t('projects.index.no_data') %>
 <% else %>
@@ -7,6 +5,7 @@
     <table class="table table-index">
       <thead>
         <tr>
+          <th><%= t('general.table.actions') %></th>
           <th colspan="5" class="center"><%= t('projects.index.risk_alerts') %></th>
           <th><%= Project.human_attribute_name :customer_name %></th>
           <th><%= Project.human_attribute_name :product_name %></th>
@@ -42,6 +41,7 @@
       <tbody>
         <% projects_list.each do |project| %>
           <tr>
+            <td><%= render 'projects/project_actions', project: project %></td>
             <td>
               <% if project.last_alert_for(:no_money_to_deadline).present? %>
                 <figure title="<%= t('activerecord.attributes.project_risk_config.enums.risk_type.no_money_to_deadline') %>" data-toggle="tooltip" data-placement="top" class='circle-<%=project.last_alert_for(:no_money_to_deadline).alert_color %>'></figure>
@@ -109,17 +109,14 @@
             <td><%= number_to_percentage((project.remaining_days.to_f / project.total_days.to_f) * 100, precision: 2) %></td>
             <td><%= number_with_precision(project.flow_pressure, precision: 3) %></td>
             <td><%= number_to_percentage((project.flow_pressure.to_f / @projects_summary.total_flow_pressure) * 100, precision: 2) %></td>
-            <td>
-              <%= link_to edit_company_project_path(@company, project) do %>
-                <i class="fa fa-pencil"></i>
-              <% end %>
-            </td>
+            <td><%= render 'projects/project_actions', project: project %></td>
           </tr>
         <% end %>
       </tbody>
       <% unless projects_list.empty? %>
         <tfoot>
           <tr>
+            <td></td>
             <td></td>
             <td></td>
             <td></td>
@@ -141,7 +138,6 @@
             <td><%= number_with_precision(@projects_summary.total_initial_scope, precision: 0) %></td>
             <td></td>
             <td><%= number_with_precision(@projects_summary.total_current_scope, precision: 0) %></td>
-            <td></td>
             <td></td>
             <td></td>
             <td><%= number_with_precision(@projects_summary.total_delivered_scope, precision: 0) %></td>

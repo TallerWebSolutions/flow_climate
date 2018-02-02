@@ -6,17 +6,17 @@ class ProjectsSummaryObject
 
   def initialize(projects)
     @projects = projects
-    @total_initial_scope = projects.sum(:initial_scope)
-    @total_delivered_scope = projects.sum(&:total_throughput)
-    @total_current_scope = projects.sum(&:current_backlog)
-    @total_hours = projects.sum(&:qty_hours)
-    @total_consumed_hours = projects.sum(&:consumed_hours)
-    @average_hour_value = projects.average(:hour_value)
-    @total_value = projects.sum(&:value)
-    @total_days = projects.sum(&:total_days)
-    @total_remaining_money = projects.sum(&:remaining_money)
-    @total_remaining_days = projects.sum(&:remaining_days)
-    @total_flow_pressure = projects.sum(&:flow_pressure)
+    @total_initial_scope = projects&.sum(:initial_scope)
+    @total_delivered_scope = projects&.sum(&:total_throughput)
+    @total_current_scope = projects&.sum(&:current_backlog)
+    @total_hours = projects&.sum(&:qty_hours)
+    @total_consumed_hours = projects&.sum(&:consumed_hours)
+    @average_hour_value = projects&.average(:hour_value)
+    @total_value = projects&.sum(&:value)
+    @total_days = projects&.sum(&:total_days)
+    @total_remaining_money = projects&.sum(&:remaining_money)
+    @total_remaining_days = projects&.sum(&:remaining_days)
+    @total_flow_pressure = projects&.sum(&:flow_pressure)
   end
 
   def percentage_hours_consumed

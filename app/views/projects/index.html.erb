@@ -15,15 +15,19 @@
     </div>
   </div>
 
+  <h2><%= t('projects.index.title') %></h2>
+
   <div class="row">
     <div class="col-xs-12">
-      <%= link_to t('projects.index.all_filter'), company_projects_path(@company), class: 'btn btn-sm btn-info' %>
-      <%= link_to t('projects.index.waiting_filter'), company_projects_path(company_id: @company.id, status_filter: :waiting), class: 'btn btn-sm btn-info' %>
-      <%= link_to t('projects.index.executing_filter'), company_projects_path(company_id: @company.id, status_filter: :executing), class: 'btn btn-sm btn-info' %>
-      <%= link_to t('projects.index.finished_filter'), company_projects_path(company_id: @company.id, status_filter: :finished), class: 'btn btn-sm btn-info' %>
-      <%= link_to t('projects.index.cancelled_filter'), company_projects_path(company_id: @company.id, status_filter: :cancelled), class: 'btn btn-sm btn-info' %>
+      <%= link_to t('projects.index.all_filter'), search_for_projects_company_projects_path(company_id: @company, status_filter: :all), remote: true, class: 'btn btn-sm btn-info' %>
+      <%= link_to t('projects.index.waiting_filter'), search_for_projects_company_projects_path(company_id: @company, status_filter: :waiting), remote: true, class: 'btn btn-sm btn-info' %>
+      <%= link_to t('projects.index.executing_filter'), search_for_projects_company_projects_path(company_id: @company, status_filter: :executing), remote: true, class: 'btn btn-sm btn-info' %>
+      <%= link_to t('projects.index.finished_filter'), search_for_projects_company_projects_path(company_id: @company, status_filter: :finished), remote: true, class: 'btn btn-sm btn-info' %>
+      <%= link_to t('projects.index.cancelled_filter'), search_for_projects_company_projects_path(company_id: @company, status_filter: :cancelled), remote: true, class: 'btn btn-sm btn-info' %>
     </div>
   </div>
 
-  <%= render 'projects/projects_table', projects_list: @projects %>
+  <div id="projects-table">
+    <%= render 'projects/projects_table', projects_list: @projects %>
+  </div>
 </div>

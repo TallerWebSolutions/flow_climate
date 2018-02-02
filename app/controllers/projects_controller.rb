@@ -12,7 +12,7 @@ class ProjectsController < AuthenticatedController
   end
 
   def index
-    mount_projects_list
+    @projects = Project.joins(:customer).where('customers.company_id = ?', @company.id).order(end_date: :desc)
     @projects_summary = ProjectsSummaryObject.new(@projects)
   end
 
@@ -47,6 +47,11 @@ class ProjectsController < AuthenticatedController
     render_products_for_customer('projects/product_options.js.erb', params[:customer_id])
   end
 
+  def search_for_projects
+    @projects = Project.joins(:customer).where('customers.company_id = ?', @company.id)
+    add_queries_to_projects
+  end
+
   private
 
   def assign_products_list
@@ -63,12 +68,6 @@ class ProjectsController < AuthenticatedController
 
   def project_params
     params.require(:project).permit(:customer_id, :product_id, :name, :status, :project_type, :start_date, :end_date, :value, :qty_hours, :hour_value, :initial_scope)
-  end
-
-  def mount_projects_list
-    @projects = Project.joins(:customer).where('customers.company_id = ?', @company.id)
-    @projects = @projects.where(status: params[:status_filter]) if params[:status_filter].present?
-    @projects = @projects.order(end_date: :desc)
   end
 
   def assign_company

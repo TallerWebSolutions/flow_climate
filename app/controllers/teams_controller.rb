@@ -2,7 +2,7 @@
 
 class TeamsController < AuthenticatedController
   before_action :assign_company
-  before_action :assign_team, only: %i[show edit update]
+  before_action :assign_team, only: %i[show edit update search_for_projects]
 
   def show
     @team_members = @team.team_members.order(:name)
@@ -28,6 +28,11 @@ class TeamsController < AuthenticatedController
     @team.update(team_params.merge(company: @company))
     return redirect_to company_path(@company) if @team.save
     render :edit
+  end
+
+  def search_for_projects
+    @projects = @team.projects.order(end_date: :desc)
+    add_queries_to_projects
   end
 
   private
