@@ -20,6 +20,7 @@
       <%= link_to t('projects.index.all_filter'), search_for_projects_company_team_path(company_id: @company, team_id: @team, status_filter: :all), remote: true, class: 'btn btn-sm btn-info' %>
       <%= link_to t('projects.index.waiting_filter'), search_for_projects_company_team_path(company_id: @company, team_id: @team, status_filter: :waiting), remote: true, class: 'btn btn-sm btn-info' %>
       <%= link_to t('projects.index.executing_filter'), search_for_projects_company_team_path(company_id: @company, team_id: @team, status_filter: :executing), remote: true, class: 'btn btn-sm btn-info' %>
+      <%= link_to t('projects.index.maintenance_filter'), search_for_projects_company_team_path(company_id: @company, team_id: @team, status_filter: :maintenance), remote: true, class: 'btn btn-sm btn-info' %>
       <%= link_to t('projects.index.finished_filter'), search_for_projects_company_team_path(company_id: @company, team_id: @team, status_filter: :finished), remote: true, class: 'btn btn-sm btn-info' %>
       <%= link_to t('projects.index.cancelled_filter'), search_for_projects_company_team_path(company_id: @company, team_id: @team, status_filter: :cancelled), remote: true, class: 'btn btn-sm btn-info' %>
     </div>

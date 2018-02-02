@@ -100,6 +100,7 @@ pt-BR:
       no_data: "Não há projetos aqui. Cadastre um."
       remaining_hours: "Horas Restantes"
       risk_alerts: "Alertas de Risco"
+      maintenance_filter: "Manutenção"
     show:
       initial_scope: "Escopo Inicial"
       last_team: "Time atual"
