@@ -132,15 +132,15 @@ RSpec.describe Team, type: :model do
     let(:other_project) { Fabricate :project }
     let(:other_customer_project) { Fabricate :project }
 
-    let!(:first_result) { Fabricate :project_result, project: project, team: team, result_date: 1.day.ago, known_scope: 10 }
-    let!(:second_result) { Fabricate :project_result, project: project, team: team, result_date: Time.zone.today, known_scope: 20 }
-    let!(:third_result) { Fabricate :project_result, project: other_project, team: team, result_date: 1.day.ago, known_scope: 5 }
-    let!(:fourth_result) { Fabricate :project_result, project: other_customer_project, team: other_team, result_date: 1.day.ago, known_scope: 50 }
+    let!(:first_result) { Fabricate :project_result, project: project, team: team, result_date: 1.week.ago, known_scope: 10 }
+    let!(:second_result) { Fabricate :project_result, project: project, team: team, result_date: 1.week.ago, known_scope: 20 }
+    let!(:third_result) { Fabricate :project_result, project: other_project, team: team, result_date: 1.week.ago, known_scope: 5 }
+    let!(:fourth_result) { Fabricate :project_result, project: other_customer_project, team: other_team, result_date: 1.week.ago, known_scope: 50 }
   end
 
-  describe '#current_backlog' do
+  describe '#last_week_scope' do
     include_context 'consolidations variables data for team'
-    it { expect(team.current_backlog).to eq 25 }
+    it { expect(team.last_week_scope).to eq 15 }
   end
 
   describe '#avg_hours_per_demand' do
@@ -179,7 +179,7 @@ RSpec.describe Team, type: :model do
   describe '#percentage_remaining_scope' do
     context 'having data' do
       include_context 'consolidations variables data for team'
-      it { expect(team.percentage_remaining_scope).to eq((team.total_gap.to_f / team.current_backlog.to_f) * 100) }
+      it { expect(team.percentage_remaining_scope).to eq((team.total_gap.to_f / team.last_week_scope.to_f) * 100) }
     end
     context 'having no data' do
       let(:company) { Fabricate :company }

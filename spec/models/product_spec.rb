@@ -87,15 +87,15 @@ RSpec.describe Product, type: :model do
     let(:other_project) { Fabricate :project, customer: product.customer, product: product }
     let(:other_product_project) { Fabricate :project, customer: other_product.customer, product: other_product }
 
-    let!(:first_result) { Fabricate :project_result, project: project, result_date: 1.day.ago, known_scope: 10 }
+    let!(:first_result) { Fabricate :project_result, project: project, result_date: 1.week.ago, known_scope: 10 }
     let!(:second_result) { Fabricate :project_result, project: project, result_date: Time.zone.today, known_scope: 20 }
-    let!(:third_result) { Fabricate :project_result, project: other_project, result_date: 1.day.ago, known_scope: 5 }
-    let!(:fourth_result) { Fabricate :project_result, project: other_product_project, result_date: 1.day.ago, known_scope: 50 }
+    let!(:third_result) { Fabricate :project_result, project: other_project, result_date: 1.week.ago, known_scope: 5 }
+    let!(:fourth_result) { Fabricate :project_result, project: other_product_project, result_date: 1.week.ago, known_scope: 50 }
   end
 
-  describe '#current_backlog' do
+  describe '#last_week_scope' do
     include_context 'consolidations variables data for product'
-    it { expect(product.current_backlog).to eq 25 }
+    it { expect(product.last_week_scope).to eq 15 }
   end
 
   describe '#avg_hours_per_demand' do
@@ -125,7 +125,7 @@ RSpec.describe Product, type: :model do
 
   describe '#percentage_remaining_scope' do
     include_context 'consolidations variables data for product'
-    it { expect(product.percentage_remaining_scope).to eq((product.total_gap.to_f / product.current_backlog.to_f) * 100) }
+    it { expect(product.percentage_remaining_scope).to eq((product.total_gap.to_f / product.last_week_scope.to_f) * 100) }
   end
 
   describe '#total_flow_pressure' do

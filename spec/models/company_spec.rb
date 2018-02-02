@@ -179,7 +179,7 @@ RSpec.describe Company, type: :model do
     end
   end
 
-  describe '#current_backlog' do
+  describe '#last_week_scope' do
     let(:company) { Fabricate :company }
     let(:customer) { Fabricate :customer, company: company }
     let(:other_customer) { Fabricate :customer, company: company }
@@ -194,13 +194,13 @@ RSpec.describe Company, type: :model do
     let(:other_customer_project) { Fabricate :project, customer: other_customer, product: other_product }
     let(:other_company_project) { Fabricate :project, customer: other_company_customer, product: other_company_product }
 
-    let!(:first_result) { Fabricate :project_result, project: project, result_date: 1.day.ago, known_scope: 10 }
-    let!(:second_result) { Fabricate :project_result, project: project, result_date: Time.zone.today, known_scope: 20 }
-    let!(:third_result) { Fabricate :project_result, project: other_project, result_date: 1.day.ago, known_scope: 5 }
-    let!(:fourth_result) { Fabricate :project_result, project: other_customer_project, result_date: 1.day.ago, known_scope: 50 }
-    let!(:fifth_result) { Fabricate :project_result, project: other_company_project, result_date: 1.day.ago, known_scope: 100 }
+    let!(:first_result) { Fabricate :project_result, project: project, result_date: 1.week.ago, known_scope: 10 }
+    let!(:second_result) { Fabricate :project_result, project: project, result_date: 1.week.ago, known_scope: 20 }
+    let!(:third_result) { Fabricate :project_result, project: other_project, result_date: 1.week.ago, known_scope: 5 }
+    let!(:fourth_result) { Fabricate :project_result, project: other_customer_project, result_date: 1.week.ago, known_scope: 50 }
+    let!(:fifth_result) { Fabricate :project_result, project: other_company_project, result_date: 1.week.ago, known_scope: 100 }
 
-    it { expect(company.current_backlog).to eq 75 }
+    it { expect(company.last_week_scope).to eq 65 }
   end
 
   describe '#avg_hours_per_demand' do

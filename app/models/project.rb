@@ -84,12 +84,16 @@ class Project < ApplicationRecord
     (remaining_money / value) * 100
   end
 
-  def current_backlog
-    project_results.order(result_date: :desc).first&.known_scope || initial_scope
+  def penultimate_week_scope
+    locate_last_results.first&.known_scope || initial_scope
+  end
+
+  def last_week_scope
+    locate_last_results.last&.known_scope || initial_scope
   end
 
   def backlog_unit_growth
-    backlog_for(locate_last_results.second&.result_date) - backlog_for(locate_last_results.first&.result_date)
+    last_week_scope - penultimate_week_scope
   end
 
   def backlog_growth_rate
@@ -99,7 +103,7 @@ class Project < ApplicationRecord
 
   def backlog_for(date)
     return initial_scope if date.blank?
-    project_results.for_week(date.to_date.cweek, date.to_date.cwyear).first&.known_scope || initial_scope
+    project_results.for_week(date.to_date.cweek, date.to_date.cwyear).last&.known_scope || initial_scope
   end
 
   def current_team
@@ -164,7 +168,7 @@ class Project < ApplicationRecord
   end
 
   def total_gap
-    current_backlog - total_throughput
+    last_week_scope - total_throughput
   end
 
   def required_hours
@@ -200,7 +204,7 @@ class Project < ApplicationRecord
   private
 
   def locate_last_results
-    @last_result ||= project_results.until_week(1.week.ago.to_date.cweek, 1.week.ago.to_date.cwyear).order(:result_date).last(2)
+    @last_results ||= project_results.until_week(1.week.ago.to_date.cweek, 1.week.ago.to_date.cwyear).order(:result_date).last(2)
   end
 
   def regressive_hours_per_demand

@@ -84,19 +84,19 @@ RSpec.describe Customer, type: :model do
     let(:product) { Fabricate :product, customer: customer, name: 'zzz' }
     let(:other_product) { Fabricate :product, customer: other_customer, name: 'zzz' }
 
-    let(:project) { Fabricate :project, customer: customer, product: product }
+    let(:project) { Fabricate :project, customer: customer, product: product, start_date: 2.weeks.ago, end_date: 2.weeks.from_now }
     let(:other_project) { Fabricate :project, customer: customer, product: product }
     let(:other_customer_project) { Fabricate :project, customer: other_customer, product: other_product }
 
-    let!(:first_result) { Fabricate :project_result, project: project, result_date: 1.day.ago, known_scope: 10 }
-    let!(:second_result) { Fabricate :project_result, project: project, result_date: Time.zone.today, known_scope: 20 }
-    let!(:third_result) { Fabricate :project_result, project: other_project, result_date: 1.day.ago, known_scope: 5 }
-    let!(:fourth_result) { Fabricate :project_result, project: other_customer_project, result_date: 1.day.ago, known_scope: 50 }
+    let!(:first_result) { Fabricate :project_result, project: project, result_date: 1.week.ago, known_scope: 10 }
+    let!(:second_result) { Fabricate :project_result, project: project, result_date: 1.week.ago, known_scope: 20 }
+    let!(:third_result) { Fabricate :project_result, project: other_project, result_date: 1.week.ago, known_scope: 5 }
+    let!(:fourth_result) { Fabricate :project_result, project: other_customer_project, result_date: 1.week.ago, known_scope: 50 }
   end
 
-  describe '#current_backlog' do
+  describe '#last_week_scope' do
     include_context 'consolidations variables data for customer'
-    it { expect(customer.current_backlog).to eq 25 }
+    it { expect(customer.last_week_scope).to eq 15 }
   end
 
   describe '#avg_hours_per_demand' do
@@ -126,7 +126,7 @@ RSpec.describe Customer, type: :model do
 
   describe '#percentage_remaining_scope' do
     include_context 'consolidations variables data for customer'
-    it { expect(customer.percentage_remaining_scope).to eq((customer.total_gap.to_f / customer.current_backlog.to_f) * 100) }
+    it { expect(customer.percentage_remaining_scope).to eq((customer.total_gap.to_f / customer.last_week_scope.to_f) * 100) }
   end
 
   describe '#total_flow_pressure' do

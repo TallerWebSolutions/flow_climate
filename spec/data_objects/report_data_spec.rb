@@ -1,36 +1,32 @@
 # frozen_string_literal: true
 
 describe ReportData, type: :data_object do
-  describe '.initialize' do
-    let(:project) { Fabricate :project, start_date: Time.zone.today, end_date: Time.zone.today }
-    let!(:project_results) { Fabricate.times(10, :project_result, project: project, result_date: project.start_date) }
+  let(:project) { Fabricate :project, start_date: 2.weeks.ago, end_date: 1.week.from_now }
+  let!(:first_project_result) { Fabricate(:project_result, project: project, result_date: project.start_date, known_scope: 10, throughput: 23, qty_hours_upstream: 10, qty_hours_downstream: 20) }
+  let!(:second_project_result) { Fabricate(:project_result, project: project, result_date: 1.week.ago, known_scope: 20, throughput: 10, qty_hours_upstream: 13, qty_hours_downstream: 25) }
+  let!(:third_project_result) { Fabricate(:project_result, project: project, result_date: 1.week.ago, known_scope: 21, throughput: 15, qty_hours_upstream: 9, qty_hours_downstream: 32) }
+  let!(:fourth_project_result) { Fabricate(:project_result, project: project, result_date: Time.zone.today, known_scope: 19, throughput: 12, qty_hours_upstream: 21, qty_hours_downstream: 11) }
+  let!(:fifth_project_result) { Fabricate(:project_result, project: project, result_date: 1.week.from_now, known_scope: 25, throughput: 28, qty_hours_upstream: 87, qty_hours_downstream: 16) }
 
+  describe '.initialize' do
     subject(:report_data) { ReportData.new(Project.all) }
 
     it 'do the math and provides the correct information' do
       expect(report_data.projects).to eq Project.all
-      expect(report_data.weeks).to eq [[project.start_date.cweek, project.start_date.cwyear]]
-      expect(report_data.ideal).to eq [project.current_backlog.to_f / 1.0]
-      expect(report_data.current).to eq [project_results.sum(&:throughput)]
-      expect(report_data.scope).to eq [project.current_backlog]
+      expect(report_data.weeks).to eq [[2.weeks.ago.to_date.cweek, 2.weeks.ago.to_date.cwyear], [1.week.ago.to_date.cweek, 1.week.ago.to_date.cwyear], [Time.zone.today.cweek, Time.zone.today.to_date.cwyear], [1.week.from_now.to_date.cweek, 1.week.from_now.to_date.cwyear]]
+      expect(report_data.ideal).to eq [5.0, 10.0, 15.0, 20.0]
+      expect(report_data.current).to eq [23, 48]
+      expect(report_data.scope).to eq [10, 20, 19, 25]
     end
   end
 
   describe '#projects_names' do
-    let(:project) { Fabricate :project, start_date: Time.zone.today, end_date: Time.zone.today }
-    let!(:project_results) { Fabricate.times(10, :project_result, project: project, result_date: project.start_date) }
-
     subject(:report_data) { ReportData.new(Project.all) }
-
     it { expect(report_data.projects_names).to eq [project.full_name] }
   end
 
   describe '#hours_per_demand_chart_data_for_week' do
-    let(:project) { Fabricate :project, start_date: Time.zone.today, end_date: Time.zone.today }
-    let!(:project_results) { Fabricate.times(10, :project_result, project: project, result_date: project.start_date) }
-
     subject(:report_data) { ReportData.new(Project.all) }
-
-    it { expect(report_data.hours_per_demand_chart_data_for_week(ProjectResult.all)).to eq [project_results.sum(&:hours_per_demand)] }
+    it { expect(report_data.hours_per_demand_chart_data_for_week(ProjectResult.all)).to eq [1, 5] }
   end
 end

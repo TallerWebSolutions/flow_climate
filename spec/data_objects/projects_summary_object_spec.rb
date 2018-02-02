@@ -84,7 +84,7 @@ describe ProjectsSummaryObject, type: :data_object do
 
       subject(:projects_summary) { ProjectsSummaryObject.new(Project.all) }
 
-      it { expect(projects_summary.total_gap).to eq(projects_summary.total_current_scope - projects_summary.total_delivered_scope) }
+      it { expect(projects_summary.total_gap).to eq(projects_summary.total_last_week_scope - projects_summary.total_delivered_scope) }
     end
   end
 

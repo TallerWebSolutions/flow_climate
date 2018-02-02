@@ -45,11 +45,11 @@ RSpec.describe ProjectsController, type: :controller do
     let(:product) { Fabricate :product, customer: customer, name: 'zzz' }
 
     describe 'GET #show' do
-      let!(:first_project) { Fabricate :project, customer: customer, product: product, start_date: 1.week.ago, end_date: Time.zone.today }
+      let!(:first_project) { Fabricate :project, customer: customer, product: product, start_date: 2.weeks.ago, end_date: Time.zone.today }
 
       context 'having results' do
-        let!(:first_result) { Fabricate :project_result, project: first_project, result_date: 1.week.ago }
-        let!(:second_result) { Fabricate :project_result, project: first_project, result_date: Time.zone.today }
+        let!(:first_result) { Fabricate :project_result, project: first_project, result_date: 2.weeks.ago }
+        let!(:second_result) { Fabricate :project_result, project: first_project, result_date: 1.week.ago }
         let!(:first_alert) { Fabricate :project_risk_alert, project: first_project, created_at: 1.week.ago }
         let!(:second_alert) { Fabricate :project_risk_alert, project: first_project, created_at: Time.zone.now }
 

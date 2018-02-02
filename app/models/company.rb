@@ -76,8 +76,8 @@ class Company < ApplicationRecord
     finance&.throughput_operation_result
   end
 
-  def current_backlog
-    customers.sum(&:current_backlog)
+  def last_week_scope
+    customers.sum(&:last_week_scope)
   end
 
   def avg_hours_per_demand

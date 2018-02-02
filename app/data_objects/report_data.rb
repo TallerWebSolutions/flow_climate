@@ -49,10 +49,10 @@ class ReportData
   end
 
   def ideal_burn(index)
-    (@projects.sum(&:current_backlog).to_f / @weeks.count.to_f) * (index + 1)
+    (@projects.sum(&:last_week_scope).to_f / @weeks.count.to_f) * (index + 1)
   end
 
   def add_data_to_chart?(week)
-    week[1] < Time.zone.today.cwyear || (week[0] <= Time.zone.today.cweek && week[1] <= Time.zone.today.cwyear)
+    week[1] < Time.zone.today.cwyear || (week[0] < Time.zone.today.cweek && week[1] <= Time.zone.today.cwyear)
   end
 end

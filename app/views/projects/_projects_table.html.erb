@@ -21,8 +21,8 @@
           <th><%= t('projects.index.percentage_hours_consumed') %></th>
           <th><%= Project.human_attribute_name :hour_value %></th>
           <th><%= Project.human_attribute_name :initial_scope %></th>
-          <th><%= t('projects.show.scope_for_last_week') %></th>
-          <th><%= t('projects.show.current_scope') %></th>
+          <th><%= t('projects.show.penultimate_week_scope') %></th>
+          <th><%= t('projects.show.last_week_scope') %></th>
           <th><%= t('projects.show.scope_unit_growth') %></th>
           <th><%= t('projects.show.scope_growth') %></th>
           <th><%= t('projects.show.delivered_scope') %></th>
@@ -95,8 +95,8 @@
             <td><%= number_to_percentage((project.consumed_hours/project.qty_hours) * 100, precision: 2) %></td>
             <td><%= number_to_currency(project.hour_value) %></td>
             <td><%= project.initial_scope %></td>
-            <td><%= number_with_precision(project.backlog_for(1.week.ago.to_date), precision: 0) %></td>
-            <td><%= number_with_precision(project.current_backlog, precision: 0) %></td>
+            <td><%= number_with_precision(project.penultimate_week_scope, precision: 0) %></td>
+            <td><%= number_with_precision(project.last_week_scope, precision: 0) %></td>
             <td><%= number_with_precision(project.backlog_unit_growth, precision: 0) %></td>
             <td><%= number_to_percentage(project.backlog_growth_rate * 100, precision: 2) %></td>
             <td><%= number_with_precision(project.total_throughput, precision: 0) %></td>
@@ -137,7 +137,7 @@
             <td><%= number_to_currency(@projects_summary.average_hour_value) %></td>
             <td><%= number_with_precision(@projects_summary.total_initial_scope, precision: 0) %></td>
             <td></td>
-            <td><%= number_with_precision(@projects_summary.total_current_scope, precision: 0) %></td>
+            <td><%= number_with_precision(@projects_summary.total_last_week_scope, precision: 0) %></td>
             <td></td>
             <td></td>
             <td><%= number_with_precision(@projects_summary.total_delivered_scope, precision: 0) %></td>
