@@ -2,7 +2,7 @@
 
 class ProductsController < AuthenticatedController
   before_action :assign_company
-  before_action :assign_product, only: %i[show edit update destroy]
+  before_action :assign_product, only: %i[show edit update destroy search_for_projects]
 
   def index
     @products = @company.products.order(:name)
@@ -42,6 +42,11 @@ class ProductsController < AuthenticatedController
   def destroy
     return redirect_to company_products_path(@company) if @product.destroy
     redirect_to(company_products_path(@company), flash: { error: @product.errors.full_messages.join(',') })
+  end
+
+  def search_for_projects
+    @projects = @product.projects.order(end_date: :desc)
+    add_queries_to_projects
   end
 
   private

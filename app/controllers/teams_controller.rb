@@ -32,10 +32,7 @@ class TeamsController < AuthenticatedController
 
   def search_for_projects
     @projects = @team.projects.order(end_date: :desc)
-    @projects = @projects.where(status: params[:status_filter]) if params[:status_filter] != 'all'
-    @projects = @projects.order(end_date: :desc)
-    @projects_summary = ProjectsSummaryObject.new(@projects)
-    respond_to { |format| format.js { render file: 'projects/projects_search.js.erb' } }
+    add_queries_to_projects
   end
 
   private
