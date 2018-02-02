@@ -25,3 +25,5 @@ coverage/*
 /lib/tasks/seed.rake
 
 dump.rdb
+
+logfile

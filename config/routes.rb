@@ -28,15 +28,19 @@ Rails.application.routes.draw do
           patch :deactivate
         end
       end
+      get 'search_for_projects/:status_filter', action: :search_for_projects, as: 'search_for_projects', on: :member
     end
 
     resources :financial_informations, only: %i[new create]
     resources :operation_results, only: %i[index destroy new create]
 
-    resources :customers
+    resources :customers do
+      get 'search_for_projects/:status_filter', action: :search_for_projects, as: 'search_for_projects', on: :member
+    end
 
     resources :products do
       get 'products_for_customer/(:customer_id)', action: :products_for_customer, on: :collection
+      get 'search_for_projects/:status_filter', action: :search_for_projects, as: 'search_for_projects', on: :member
     end
 
     resources :projects, only: %i[show index new create edit update] do
@@ -45,6 +49,7 @@ Rails.application.routes.draw do
       end
 
       get 'product_options_for_customer/(:customer_id)', action: :product_options_for_customer, on: :collection
+      get 'search_for_projects/:status_filter', action: :search_for_projects, as: 'search_for_projects', on: :collection
     end
   end
 
