@@ -124,6 +124,8 @@ en:
         title: "Hours per demand on time for %{project_name}"
         ylabel: "Hours/Demand"
         tooltipsufix: " hours per demand"
+    project_risk_alert:
+      table_title: "Risk alerts to the project"
   project_results:
     index:
       title: "Project results"

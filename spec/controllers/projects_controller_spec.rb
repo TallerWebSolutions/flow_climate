@@ -50,6 +50,8 @@ RSpec.describe ProjectsController, type: :controller do
       context 'having results' do
         let!(:first_result) { Fabricate :project_result, project: first_project, result_date: 1.week.ago }
         let!(:second_result) { Fabricate :project_result, project: first_project, result_date: Time.zone.today }
+        let!(:first_alert) { Fabricate :project_risk_alert, project: first_project, created_at: 1.week.ago }
+        let!(:second_alert) { Fabricate :project_risk_alert, project: first_project, created_at: Time.zone.now }
 
         context 'passing valid IDs' do
           before { get :show, params: { company_id: company, customer_id: customer, id: first_project } }
@@ -59,6 +61,7 @@ RSpec.describe ProjectsController, type: :controller do
             expect(assigns(:project)).to eq first_project
             expect(assigns(:report_data)).to be_a ReportData
             expect(assigns(:hours_per_demand_data)).to eq [{ name: I18n.t('projects.charts.hours_per_demand.ylabel'), data: [first_result.hours_per_demand, second_result.hours_per_demand] }]
+            expect(assigns(:ordered_project_risk_alerts)).to eq [second_alert, first_alert]
           end
         end
       end

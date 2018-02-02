@@ -123,6 +123,8 @@ pt-BR:
         title: "Horas por demanda no tempo para %{project_name}"
         ylabel: "Horas/Demanda"
         tooltipsufix: "horas por demanda"
+    project_risk_alert:
+      table_title: "Alertas de risco para o projeto"
   project_results:
     index:
       title: "Resultados do Projeto"

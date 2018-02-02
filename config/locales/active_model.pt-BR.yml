@@ -179,6 +179,10 @@ pt-BR:
         demand_id: Id da Demanda
         effort: Esforço
       project_risk_config:
+        company: Empresa
+        risk_type: Tipo do Risco
+        high_yellow_value: Maior Valor do Amarelo
+        low_yellow_value: Menor Valor do Amarelo
         enums:
           risk_type:
             no_money_to_deadline: "Sem Dinheiro para o Prazo"
@@ -186,6 +190,15 @@ pt-BR:
             not_enough_available_hours: "Sem Horas Disponíveis"
             profit_margin: "Margem de Lucro"
             flow_pressure: "Pressão do Fluxo"
+      project_risk_alert:
+        created_at: Criado em
+        alert_color: Cor do Alerta
+        alert_value: Valor do Alerta
+        enums:
+          alert_color:
+            red: Vermelho
+            yellow: Amarelo
+            green: Verde
   product:
     name:
       uniqueness: "Não deve repetir nome de produto para o mesmo cliente."
