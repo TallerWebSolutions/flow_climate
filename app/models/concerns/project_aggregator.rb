@@ -11,8 +11,8 @@ module ProjectAggregator
     projects.where(status: :waiting)
   end
 
-  def current_backlog
-    projects.sum(&:current_backlog)
+  def last_week_scope
+    projects.sum(&:last_week_scope)
   end
 
   def avg_hours_per_demand
@@ -38,8 +38,8 @@ module ProjectAggregator
   end
 
   def percentage_remaining_scope
-    return 0 if current_backlog.zero?
-    (total_gap.to_f / current_backlog.to_f) * 100
+    return 0 if last_week_scope.zero?
+    (total_gap.to_f / last_week_scope.to_f) * 100
   end
 
   def total_flow_pressure

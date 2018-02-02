@@ -32,8 +32,8 @@ class Product < ApplicationRecord
 
   delegate :name, to: :customer, prefix: true
 
-  def current_backlog
-    projects.sum(&:current_backlog)
+  def last_week_scope
+    projects.sum(&:last_week_scope)
   end
 
   def regressive_avg_hours_per_demand

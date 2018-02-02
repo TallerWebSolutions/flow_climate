@@ -26,7 +26,8 @@ pt-BR:
       actions: "Ações"
     current_week: "Semana Atual"
     current_year: "Ano Atual"
-    current_backlog: "Backlog Atual"
+    penultimate_week_scope: "Escopo Penúltima Semana"
+    last_week_scope: "Escopo Última Semana"
     select: "Selecione"
     user_not_found: "Usuário não encontrado"
   header:
@@ -104,14 +105,14 @@ pt-BR:
     show:
       initial_scope: "Escopo Inicial"
       last_team: "Time atual"
-      current_scope: "Escopo corrente"
+      last_week_scope: "Escopo da Última Sem."
       current_team: "Time Atual"
       delivered_scope: "Escopo Entregue"
       avg_hours_per_demand: "Média Horas/Demanda"
       scope_gap: "Restante do escopo"
-      scope_growth: "Taxa de Crescimento do Escopo"
+      scope_growth: "Crescimento do Escopo (%)"
       scope_unit_growth: "Crescimento do Escopo (un.)"
-      scope_for_last_week: "Escopo (última semana)"
+      penultimate_week_scope: "Escopo Penúltima Sem."
     charts:
       xlabel:
         weeks: "Semanas"

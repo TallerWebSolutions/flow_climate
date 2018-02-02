@@ -1,14 +1,14 @@
 # frozen_string_literal: true
 
 class ProjectsSummaryObject
-  attr_reader :projects, :total_initial_scope, :total_current_scope, :total_delivered_scope, :total_hours, :total_consumed_hours, :average_hour_value, :total_value,
+  attr_reader :projects, :total_initial_scope, :total_last_week_scope, :total_delivered_scope, :total_hours, :total_consumed_hours, :average_hour_value, :total_value,
               :total_days, :total_remaining_money, :total_remaining_days, :total_flow_pressure
 
   def initialize(projects)
     @projects = projects
     @total_initial_scope = projects&.sum(:initial_scope)
     @total_delivered_scope = projects&.sum(&:total_throughput)
-    @total_current_scope = projects&.sum(&:current_backlog)
+    @total_last_week_scope = projects&.sum(&:last_week_scope)
     @total_hours = projects&.sum(&:qty_hours)
     @total_consumed_hours = projects&.sum(&:consumed_hours)
     @average_hour_value = projects&.average(:hour_value)
@@ -35,7 +35,7 @@ class ProjectsSummaryObject
   end
 
   def total_gap
-    @total_current_scope - @total_delivered_scope
+    @total_last_week_scope - @total_delivered_scope
   end
 
   def total_remaining_hours
