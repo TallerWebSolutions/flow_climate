@@ -1,8 +1,8 @@
 en:
   projects:
-    starting_finishing:
-      subject: "Starting and Finishing Projects"
-      starting_title: "The following projects are starting within this week:"
+    portfolio_bulletin:
+      subject: "Portfolio Bulletin"
+      portfolio_bulletin_text: "The following projects are starting within this week:"
       finishing_title: "The following projects are finishing within this week:"
       next_finishing_project: "Next finishing project"
       next_starting_project: "Next project to start"
@@ -13,4 +13,7 @@ en:
     no_project_starting_week: "No project starting this week"
     bulletin:
       title: "Weekly Bulletin for %{company_name}"
+      demand_effort: "effort: "
+      starting_title: "Starting projects in the next week:"
     no_top_three_flow_pressure: "There is no projects"
+    no_demands_delivered: "No delivered demands registered in last week."

@@ -370,4 +370,12 @@ RSpec.describe Company, type: :model do
     include_context 'projects to company bulletin'
     it { expect(company.next_finishing_project).to eq first_project }
   end
+
+  describe '#demands_delivered_last_week' do
+    let(:company) { Fabricate :company }
+    it 'calls the repository' do
+      expect(DemandsRepository.instance).to receive(:demands_for_company_and_week).once
+      company.demands_delivered_last_week
+    end
+  end
 end

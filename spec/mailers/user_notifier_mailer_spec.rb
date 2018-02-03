@@ -8,23 +8,34 @@ RSpec.describe UserNotifierMailer, type: :mailer do
     let(:fourth_user) { Fabricate :user }
 
     let!(:company) { Fabricate :company, users: [first_user, second_user, third_user] }
-    let(:customer) { Fabricate :customer }
+    let(:customer) { Fabricate :customer, company: company }
 
     let(:first_project) { Fabricate :project, customer: customer, start_date: Time.zone.today }
     let(:second_project) { Fabricate :project, customer: customer, start_date: Time.zone.today }
     let(:third_project) { Fabricate :project, customer: customer, end_date: Time.zone.today }
     let(:fourth_project) { Fabricate :project, customer: customer, end_date: Time.zone.today }
 
+    let(:first_project_result) { Fabricate :project_result, project: first_project, result_date: 1.week.ago }
+    let(:second_project_result) { Fabricate :project_result, project: second_project, result_date: 1.week.ago }
+    let(:third_project_result) { Fabricate :project_result, project: third_project, result_date: Time.zone.today }
+
+    let!(:first_demand) { Fabricate :demand, project_result: first_project_result }
+    let!(:second_demand) { Fabricate :demand, project_result: first_project_result }
+    let!(:third_demand) { Fabricate :demand, project_result: second_project_result }
+    let!(:fourth_demand) { Fabricate :demand, project_result: third_project_result }
+
     subject(:mail) { UserNotifierMailer.company_weekly_bulletin(company, [first_project, second_project], [third_project, fourth_project]).deliver_now }
 
     it 'renders the email' do
-      expect(mail.subject).to eq I18n.t('projects.starting_finishing.subject')
+      expect(mail.subject).to eq I18n.t('projects.portfolio_bulletin.subject')
       expect(mail.to).to match_array [first_user.email, second_user.email]
       expect(mail.from).to eq(['no-reply@taller.net.br'])
       expect(mail.body.encoded).to match first_project.full_name
       expect(mail.body.encoded).to match second_project.full_name
       expect(mail.body.encoded).to match third_project.full_name
       expect(mail.body.encoded).to match fourth_project.full_name
+      expect(mail.body.encoded).to match first_demand.demand_id
+      expect(mail.body.encoded).to match second_demand.demand_id
     end
   end
 end
