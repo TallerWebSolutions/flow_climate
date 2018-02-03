@@ -24,6 +24,12 @@ class ReportData
     result_data
   end
 
+  def throughput_per_week
+    result_data = []
+    @weeks.each { |week_year| result_data << ProjectResultsRepository.instance.throughput_in_week_for_projects(@projects, week_year[0], week_year[1]) if add_data_to_chart?(week_year) }
+    result_data
+  end
+
   private
 
   def projects_weeks

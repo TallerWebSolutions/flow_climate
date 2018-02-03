@@ -1,5 +1,4 @@
-
 $(function () {
-    var columnDiv = $('#flowpressure-column');
+    var columnDiv = $('#throughput-column');
     buildColumnChart(columnDiv);
 });
