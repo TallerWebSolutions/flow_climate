@@ -164,6 +164,8 @@ pt-BR:
         leadtime: Leadtime
         monte_carlo_date: Previsão Monte Carlo
         demands_count: Qtd de Demandas
+        flow_pressure: Pressão do Fluxo
+        remaining_days: Dias Restantes
       operation_result:
         result_date: Data
         people_billable_count: Qtd de Pessoas Faturáveis

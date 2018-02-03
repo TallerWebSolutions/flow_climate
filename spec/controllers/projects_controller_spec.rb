@@ -60,7 +60,6 @@ RSpec.describe ProjectsController, type: :controller do
             expect(assigns(:company)).to eq company
             expect(assigns(:project)).to eq first_project
             expect(assigns(:report_data)).to be_a ReportData
-            expect(assigns(:hours_per_demand_data)).to eq [{ name: I18n.t('projects.charts.hours_per_demand.ylabel'), data: [first_result.hours_per_demand, second_result.hours_per_demand] }]
             expect(assigns(:ordered_project_risk_alerts)).to eq [second_alert, first_alert]
           end
         end

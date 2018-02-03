@@ -7,7 +7,6 @@ class ProjectsController < AuthenticatedController
   def show
     @ordered_project_results = @project.project_results.order(:result_date)
     @report_data = ReportData.new(Project.where(id: @project.id))
-    @hours_per_demand_data = [{ name: I18n.t('projects.charts.hours_per_demand.ylabel'), data: @report_data.hours_per_demand_chart_data_for_week(@ordered_project_results) }]
     @ordered_project_risk_alerts = @project.project_risk_alerts.order(created_at: :desc)
   end
 

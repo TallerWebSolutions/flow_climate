@@ -12,6 +12,8 @@
     <th><%= t('general.week') %></th>
     <th><%= t('general.year') %></th>
     <th><%= ProjectResult.human_attribute_name :known_scope %></th>
+    <th><%= ProjectResult.human_attribute_name :flow_pressure %></th>
+    <th><%= ProjectResult.human_attribute_name :remaining_days %></th>
     <th><%= ProjectResult.human_attribute_name :monte_carlo_date %></th>
     <th><%= ProjectResult.human_attribute_name :qty_hours_upstream %></th>
     <th><%= ProjectResult.human_attribute_name :qty_hours_downstream %></th>
@@ -34,6 +36,8 @@
       <td><%= result.result_date.cweek %></td>
       <td><%= result.result_date.cwyear %></td>
       <td><%= number_with_precision(result.known_scope, precision: 0) %></td>
+      <td><%= number_with_precision(result.flow_pressure, precision: 3) %></td>
+      <td><%= number_with_precision(result.remaining_days, precision: 0) %></td>
       <td><%= l(result.monte_carlo_date) if result.monte_carlo_date.present? %></td>
       <td><%= number_with_precision(result.qty_hours_upstream, precision: 0) %></td>
       <td><%= number_with_precision(result.qty_hours_downstream, precision: 0) %></td>
@@ -60,6 +64,8 @@
   </tbody>
   <tfoot>
   <tr>
+    <td></td>
+    <td></td>
     <td></td>
     <td></td>
     <td></td>

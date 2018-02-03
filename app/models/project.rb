@@ -59,10 +59,10 @@ class Project < ApplicationRecord
     (end_date - start_date).to_i
   end
 
-  def remaining_days
-    return 0 if end_date < Time.zone.today
-    return (end_date - start_date).to_i if start_date > Time.zone.today
-    (end_date - Time.zone.today).to_i
+  def remaining_days(from_date = Time.zone.today)
+    return 0 if end_date < from_date
+    return (end_date - start_date).to_i if start_date > from_date
+    (end_date - from_date).to_i
   end
 
   def percentage_remaining_days
