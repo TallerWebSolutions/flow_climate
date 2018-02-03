@@ -17,3 +17,10 @@ en:
       starting_title: "Starting projects in the next week:"
     no_top_three_flow_pressure: "There is no projects"
     no_demands_delivered: "No delivered demands registered in last week."
+    red_alert:
+      subject: "[Action Required] The project %{project_name} became red."
+    notify_new_red_alert:
+      red_alert_text: "The project %{project_name} became red. Your action is required!"
+      alert_value: "Trigger value: %{alert_value}"
+      risk_type: "Risk type: %{risk_type}"
+      previous_color: "Previous alert color: %{previous_color}"

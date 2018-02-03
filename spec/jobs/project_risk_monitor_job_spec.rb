@@ -10,7 +10,7 @@ RSpec.describe ProjectRiskMonitorJob, type: :job do
 
   context 'having projects to process alerts' do
     let(:first_user) { Fabricate :user }
-    let!(:company) { Fabricate :company }
+    let!(:company) { Fabricate :company, users: [first_user] }
     let(:customer) { Fabricate :customer, company: company }
 
     context 'having alerts configured' do
@@ -57,10 +57,14 @@ RSpec.describe ProjectRiskMonitorJob, type: :job do
         end
         context 'when the project is in the red area' do
           it 'creates a green alert to the project' do
+            ProjectRiskAlert.create(created_at: Time.zone.today, project: first_project, project_risk_config: first_risk_config, alert_color: :red, alert_value: 30)
+
             allow_any_instance_of(Project).to receive(:money_per_deadline) { 40 }
             allow_any_instance_of(Project).to receive(:backlog_growth_throughput_rate) { 45 }
             allow_any_instance_of(Project).to receive(:required_hours_per_available_hours) { 55 }
             allow_any_instance_of(Project).to receive(:flow_pressure) { 65 }
+
+            expect(UserNotifierMailer).to receive(:notify_new_red_alert).exactly(3).times.and_call_original
 
             ProjectRiskMonitorJob.perform_now
             expect(first_project.reload.project_risk_alerts.count).to eq 4
