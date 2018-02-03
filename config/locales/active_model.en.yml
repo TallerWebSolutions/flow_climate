@@ -68,3 +68,6 @@ en:
   customer:
     name:
       uniqueness: "Should have only one to the same company."
+  projects:
+    portfolio_bulletin:
+      delivered_demands: "Delivered demands in last week"

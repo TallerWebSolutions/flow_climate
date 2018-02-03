@@ -4,9 +4,9 @@
     <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
   </head>
   <body>
-    <h1><%= t('projects.bulletin.title', company_name: @company.name) %></h1>
+    <h1><%= t('projects.bulletin.starting_title', company_name: @company.name) %></h1>
 
-    <h3><%= t('projects.starting_finishing.starting_title') %></h3>
+    <h3><%= t('projects.portfolio_bulletin.portfolio_bulletin_text') %></h3>
     <% if @projects_starting.present? %>
       <% @projects_starting.each do |project| %>
         <ul>
@@ -17,7 +17,7 @@
       <%= t('projects.no_project_starting_week') %>
     <% end %>
 
-    <h3><%= t('projects.starting_finishing.finishing_title') %></h3>
+    <h3><%= t('projects.portfolio_bulletin.finishing_title') %></h3>
     <% if @projects_finishing.present? %>
       <% @projects_finishing.each do |project| %>
         <ul>
@@ -28,7 +28,7 @@
       <%= t('projects.no_project_finishing_week') %>
     <% end %>
 
-    <h3><%= t('projects.starting_finishing.next_starting_project') %></h3>
+    <h3><%= t('projects.portfolio_bulletin.next_starting_project') %></h3>
     <% if @next_starting_project.present? %>
       <ul>
         <li><%= link_to "#{@next_starting_project.full_name} (#{l(@next_starting_project.start_date)}) [#{number_with_precision(@next_starting_project.flow_pressure , precision: 3)}]", company_project_url(@company, @next_starting_project) %></li>
@@ -37,7 +37,7 @@
       <%= t('projects.no_project_starting') %>
     <% end %>
 
-    <h3><%= t('projects.starting_finishing.next_finishing_project') %></h3>
+    <h3><%= t('projects.portfolio_bulletin.next_finishing_project') %></h3>
     <% if @next_finishing_project.present? %>
       <ul>
         <li><%= link_to "#{@next_finishing_project.full_name} (#{l(@next_finishing_project.end_date)}) [#{number_with_precision(@next_finishing_project.flow_pressure , precision: 3)}]", company_project_url(@company, @next_finishing_project) %></li>
@@ -46,7 +46,7 @@
       <%= t('projects.no_project_finishing') %>
     <% end %>
 
-    <h3><%= t('projects.starting_finishing.top_three_flow_pressure') %></h3>
+    <h3><%= t('projects.portfolio_bulletin.top_three_flow_pressure') %></h3>
     <% if @top_three_flow_pressure.present? %>
       <% @top_three_flow_pressure.each do |project| %>
         <ul>
@@ -55,6 +55,17 @@
       <% end %>
     <% else %>
       <%= t('projects.no_top_three_flow_pressure') %>
+    <% end %>
+
+    <h3><%= t('projects.portfolio_bulletin.delivered_demands') %></h3>
+    <% if @demands_delivered.present? %>
+      <% @demands_delivered.each do |demand| %>
+        <ul>
+          <li><%= "#{demand.project_result.project.product.name}|#{demand.project_result.project.name}|#{demand.demand_id} - #{t('projects.bulletin.demand_effort')} #{number_with_precision(demand.effort, precision: 2)})" %></li>
+        </ul>
+      <% end %>
+    <% else %>
+      <%= t('projects.no_demands_delivered') %>
     <% end %>
   </body>
 </html>

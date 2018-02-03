@@ -115,4 +115,8 @@ class Company < ApplicationRecord
   def next_finishing_project
     projects.executing.order(:end_date).first
   end
+
+  def demands_delivered_last_week
+    DemandsRepository.instance.demands_for_company_and_week(self, 1.week.ago.to_date)
+  end
 end

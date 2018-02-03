@@ -1,8 +1,8 @@
 pt-BR:
   projects:
-    starting_finishing:
-      subject: "Projetos Iniciando e Terminando"
-      starting_title: "Os seguintes projetos estão iniciando nesta semana:"
+    portfolio_bulletin:
+      subject: "Boletim Semanal do Portfólio de Projetos"
+      portfolio_bulletin_text: "Seguem os números do seu portfólio:"
       finishing_title: "Os seguintes projetos estão terminando nesta semana:"
       next_finishing_project: "Próximo projeto a terminar"
       next_starting_project: "Próximo projeto a começar"
@@ -13,4 +13,6 @@ pt-BR:
     no_project_starting_week: "Nenhum projeto iniciando nesta semana"
     bulletin:
       title: "Boletim Semanal para %{company_name}"
+      demand_effort: "esforço: "
+      starting_title: "Projetos iniciando nesta semana:"
     no_top_three_flow_pressure: "Não foram encontrados projetos"

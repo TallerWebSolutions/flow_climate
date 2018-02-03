@@ -127,6 +127,9 @@ pt-BR:
         tooltipsufix: "horas por demanda"
     project_risk_alert:
       table_title: "Alertas de risco para o projeto"
+    portfolio_bulletin:
+      delivered_demands: "Demandas entregues na última semana"
+    no_demands_delivered: "Nenhuma demanda registrada para a semana passada."
   project_results:
     index:
       title: "Resultados do Projeto"
