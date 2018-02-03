@@ -48,6 +48,16 @@ class ProjectResultsRepository
     total_flow_pressure
   end
 
+  def throughput_in_week_for_projects(projects, week, year)
+    total_throughput = 0
+    projects.each do |project|
+      throughput = project.project_results.where('EXTRACT(WEEK FROM result_date) = :week AND EXTRACT(YEAR FROM result_date) = :year', week: week, year: year).sum(:throughput)
+      total_throughput += throughput || 0
+    end
+
+    total_throughput
+  end
+
   private
 
   def project_result_joins

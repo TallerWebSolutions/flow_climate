@@ -131,6 +131,10 @@ pt-BR:
         tooltipsufix: " demandas/dia"
       flow_pressure_per_project:
         ylabel: "Pressão do Fluxo"
+      throughput_per_week:
+        title: "Throughput por Semana"
+        tooltipsufix: " demandas"
+        ylabel: "Demandas"
     project_risk_alert:
       table_title: "Alertas de risco para o projeto"
     portfolio_bulletin:

@@ -54,3 +54,4 @@ function buildColumnChart(columnDiv) {
         series: columnDiv.data('series')
     });
 }
+;

@@ -18,6 +18,7 @@ describe ReportData, type: :data_object do
       expect(report_data.current).to eq [23, 48]
       expect(report_data.scope).to eq [10, 20, 19, 25]
       expect(report_data.flow_pressure_data).to eq [4.0, 1.0]
+      expect(report_data.throughput_per_week).to eq [23, 25]
     end
   end
 
