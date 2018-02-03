@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+    <h3><%= t('projects.notify_new_red_alert.red_alert_text', project_name: @project.full_name) %></h3>
+    <p><%= t('projects.notify_new_red_alert.risk_type', risk_type: t("activerecord.attributes.project_risk_config.enums.risk_type.#{@risk.risk_type}")) %></p>
+    <p><%= t('projects.notify_new_red_alert.alert_value', alert_value: number_with_precision(@alert_value, precision: 2)) %></p>
+    <p><%= t('projects.notify_new_red_alert.previous_color', previous_color: t("activerecord.attributes.project_risk_alert.enums.alert_color.#{@previous_color}")) %></p>
+  </body>
+</html>

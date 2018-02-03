@@ -6,4 +6,5 @@ Fabricator(:user) do
   email { Faker::Internet.email }
   password 'abc123456'
   password_confirmation 'abc123456'
+  email_notifications true
 end
