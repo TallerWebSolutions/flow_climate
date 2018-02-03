@@ -125,6 +125,12 @@ en:
         title: "Hours per demand on time for %{project_name}"
         ylabel: "Hours/Demand"
         tooltipsufix: " hours per demand"
+      flow_pressure:
+        title: "Flow Pressure in Time"
+        ylabel: "Flow Pressure"
+        tooltipsufix: " demands/day"
+      flow_pressure_per_project:
+        ylabel: "Flow Pressure"
     project_risk_alert:
       table_title: "Risk alerts to the project"
   project_results:

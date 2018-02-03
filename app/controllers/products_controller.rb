@@ -12,7 +12,6 @@ class ProductsController < AuthenticatedController
     @product_projects = @product.projects.order(end_date: :desc)
     @projects_summary = ProjectsSummaryObject.new(@product.projects)
     @report_data = ReportData.new(@product_projects) if @product_projects.present?
-    @hours_per_demand_data = [{ name: I18n.t('projects.charts.hours_per_demand.ylabel'), data: @product_projects.map(&:avg_hours_per_demand) }]
   end
 
   def new

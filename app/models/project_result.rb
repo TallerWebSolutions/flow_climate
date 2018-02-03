@@ -20,6 +20,8 @@
 #  team_id              :integer          not null
 #  monte_carlo_date     :date
 #  demands_count        :integer
+#  flow_pressure        :decimal(, )      not null
+#  remaining_days       :integer          not null
 #
 # Indexes
 #
@@ -39,7 +41,7 @@ class ProjectResult < ApplicationRecord
   validates :project, :team, :known_scope, :qty_hours_upstream, :qty_hours_downstream, :qty_hours_bug, :qty_bugs_closed, :qty_bugs_opened, :throughput, :result_date, presence: true
 
   scope :for_week, ->(week, year) { where('EXTRACT(WEEK FROM result_date) = :week AND EXTRACT(YEAR FROM result_date) = :year', week: week, year: year) }
-  scope :until_week, ->(week, year) { where('EXTRACT(WEEK FROM result_date) <= :week AND EXTRACT(YEAR FROM result_date) <= :year', week: week, year: year) }
+  scope :until_week, ->(week, year) { where('(EXTRACT(WEEK FROM result_date) <= :week AND EXTRACT(YEAR FROM result_date) <= :year) OR (EXTRACT(YEAR FROM result_date) < :year)', week: week, year: year) }
 
   delegate :name, to: :team, prefix: true
 
@@ -50,5 +52,20 @@ class ProjectResult < ApplicationRecord
   def hours_per_demand
     return 0 if throughput.zero?
     project_delivered_hours / throughput
+  end
+
+  def define_automatic_project_params!
+    update(remaining_days: project.remaining_days, flow_pressure: current_flow_pressure)
+  end
+
+  private
+
+  def current_gap
+    known_scope - project.project_results.for_week(result_date.cweek, result_date.cwyear).sum(&:throughput)
+  end
+
+  def current_flow_pressure
+    return 0 if project.remaining_days(result_date).zero?
+    current_gap.to_f / project.remaining_days(result_date).to_f
   end
 end

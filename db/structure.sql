@@ -277,7 +277,9 @@ CREATE TABLE project_results (
     updated_at timestamp without time zone NOT NULL,
     team_id integer NOT NULL,
     monte_carlo_date date,
-    demands_count integer
+    demands_count integer,
+    flow_pressure numeric NOT NULL,
+    remaining_days integer NOT NULL
 );
 
 
@@ -1029,6 +1031,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20180126175210'),
 ('20180127180639'),
 ('20180128150500'),
-('20180128155627');
+('20180128155627'),
+('20180203152518');
 
 

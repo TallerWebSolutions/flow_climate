@@ -138,6 +138,10 @@ RSpec.describe Project, type: :model do
       let(:project) { Fabricate :project, start_date: 2.days.from_now, end_date: 3.days.from_now }
       it { expect(project.remaining_days).to eq 1 }
     end
+    context 'passing from_date as parameter' do
+      let(:project) { Fabricate :project, start_date: 2.days.from_now, end_date: 10.days.from_now }
+      it { expect(project.remaining_days(1.week.from_now.to_date)).to eq 3 }
+    end
   end
 
   describe '#percentage_remaining_days' do

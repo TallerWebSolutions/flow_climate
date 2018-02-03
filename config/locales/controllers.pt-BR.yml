@@ -124,7 +124,13 @@ pt-BR:
       hours_per_demand:
         title: "Horas por demanda no tempo para %{project_name}"
         ylabel: "Horas/Demanda"
-        tooltipsufix: "horas por demanda"
+        tooltipsufix: " horas por demanda"
+      flow_pressure:
+        title: "Pressão do Fluxo no Tempo"
+        ylabel: "Pressão do Fluxo"
+        tooltipsufix: " demandas/dia"
+      flow_pressure_per_project:
+        ylabel: "Pressão do Fluxo"
     project_risk_alert:
       table_title: "Alertas de risco para o projeto"
     portfolio_bulletin:

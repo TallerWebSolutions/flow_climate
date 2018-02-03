@@ -38,6 +38,16 @@ class ProjectResultsRepository
     total_scope
   end
 
+  def flow_pressure_in_week_for_projects(projects, week, year)
+    total_flow_pressure = 0
+    projects.each do |project|
+      flow_pressure = project.project_results.where('(EXTRACT(WEEK FROM result_date) <= :week AND EXTRACT(YEAR FROM result_date) <= :year) OR (EXTRACT(YEAR FROM result_date) < :year)', week: week, year: year).order(:result_date).last&.flow_pressure
+      total_flow_pressure += flow_pressure.to_f || 0
+    end
+
+    total_flow_pressure
+  end
+
   private
 
   def project_result_joins
