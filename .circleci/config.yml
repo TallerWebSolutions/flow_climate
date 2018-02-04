@@ -1,7 +1,7 @@
 version: 2
 jobs:
   build:
-    working_directory: ~/flow_control
+    working_directory: ~/flow_climate
 
     docker:
       - image: circleci/ruby:2.4.3-node
@@ -20,8 +20,8 @@ jobs:
 
       - restore_cache:
           keys:
-            - flow_control-{{ checksum "Gemfile.lock" }}
-            - flow_control-
+            - flow_climate-{{ checksum "Gemfile.lock" }}
+            - flow_climate-
 
       - run:
           name: Install dependencies
@@ -30,7 +30,7 @@ jobs:
             curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
 
       - save_cache:
-          key: flow_control-{{ checksum "Gemfile.lock" }}
+          key: flow_climate-{{ checksum "Gemfile.lock" }}
           paths:
             - vendor/bundle
 
