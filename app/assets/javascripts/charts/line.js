@@ -8,7 +8,7 @@ $(function () {
             x: -20 //center
         },
         subtitle: {
-            text: 'Source: Flow Control'
+            text: 'Source: Flow Climate'
         },
         xAxis: {
             categories: lineDiv.data('weeks'),
