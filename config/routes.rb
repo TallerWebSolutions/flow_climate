@@ -48,6 +48,8 @@ Rails.application.routes.draw do
         resources :demands, only: %i[new create destroy]
       end
 
+      resources :project_risk_configs, only: %i[new create]
+
       get 'product_options_for_customer/(:customer_id)', action: :product_options_for_customer, on: :collection
       get 'search_for_projects/:status_filter', action: :search_for_projects, as: 'search_for_projects', on: :collection
     end

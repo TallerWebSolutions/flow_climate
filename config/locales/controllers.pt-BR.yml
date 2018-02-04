@@ -135,11 +135,18 @@ pt-BR:
         title: "Throughput por Semana"
         tooltipsufix: " demandas"
         ylabel: "Demandas"
-    project_risk_alert:
-      table_title: "Alertas de risco para o projeto"
+    project_risk_alert_table: "Alertas de risco para o projeto"
     portfolio_bulletin:
       delivered_demands: "Demandas entregues na última semana"
     no_demands_delivered: "Nenhuma demanda registrada para a semana passada."
+    navbar:
+      project_details: "Detalhes do Projeto"
+      project_results: "Resultados do Projeto"
+      charts: "Gráficos"
+      risk_alerts: "Alertas de Risco"
+      settings: "Configurações"
+    project_risk_configs:
+      title: "Configurações de Risco"
   project_results:
     index:
       title: "Resultados do Projeto"
@@ -200,3 +207,6 @@ pt-BR:
       title: "Nova Demanda"
     index:
       title: "Demandas neste Resultado"
+  project_risk_configs:
+    new:
+      title: "Nova Configuração de Risco"

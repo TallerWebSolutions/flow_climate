@@ -9,7 +9,6 @@ RSpec.describe Company, type: :model do
     it { is_expected.to have_many(:projects).through(:customers) }
     it { is_expected.to have_many :teams }
     it { is_expected.to have_many :operation_results }
-    it { is_expected.to have_many(:project_risk_configs).dependent(:destroy) }
   end
 
   context 'validations' do

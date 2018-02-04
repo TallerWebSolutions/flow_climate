@@ -15,14 +15,14 @@ RSpec.describe ProjectRiskMonitorJob, type: :job do
 
     context 'having alerts configured' do
       context 'no duplication' do
-        let!(:first_risk_config) { Fabricate :project_risk_config, company: company, risk_type: :no_money_to_deadline, low_yellow_value: 10, high_yellow_value: 30 }
-        let!(:second_risk_config) { Fabricate :project_risk_config, company: company, risk_type: :backlog_growth_rate, low_yellow_value: 10, high_yellow_value: 30 }
-        let!(:third_risk_config) { Fabricate :project_risk_config, company: company, risk_type: :not_enough_available_hours, low_yellow_value: 10, high_yellow_value: 30 }
-        let!(:fourth_risk_config) { Fabricate :project_risk_config, company: company, risk_type: :flow_pressure, low_yellow_value: 10, high_yellow_value: 30 }
-
         let!(:first_project) { Fabricate :project, customer: customer, status: :executing, start_date: Time.zone.today }
         let!(:second_project) { Fabricate :project, customer: customer, status: :finished, start_date: Time.zone.today }
         let!(:third_project) { Fabricate :project, customer: customer, status: :cancelled, start_date: Time.zone.today }
+
+        let!(:first_risk_config) { Fabricate :project_risk_config, project: first_project, risk_type: :no_money_to_deadline, low_yellow_value: 10, high_yellow_value: 30 }
+        let!(:second_risk_config) { Fabricate :project_risk_config, project: first_project, risk_type: :backlog_growth_rate, low_yellow_value: 10, high_yellow_value: 30 }
+        let!(:third_risk_config) { Fabricate :project_risk_config, project: first_project, risk_type: :not_enough_available_hours, low_yellow_value: 10, high_yellow_value: 30 }
+        let!(:fourth_risk_config) { Fabricate :project_risk_config, project: first_project, risk_type: :flow_pressure, low_yellow_value: 10, high_yellow_value: 30 }
 
         context 'when the project is in the green area' do
           it 'creates a green alert to the active projects' do
@@ -77,8 +77,8 @@ RSpec.describe ProjectRiskMonitorJob, type: :job do
 
       context 'having duplication' do
         context 'when already has the same alert for the date' do
-          let!(:first_risk_config) { Fabricate :project_risk_config, company: company, risk_type: :no_money_to_deadline, low_yellow_value: 10, high_yellow_value: 30 }
           let!(:first_project) { Fabricate :project, customer: customer, status: :executing, start_date: Time.zone.today }
+          let!(:first_risk_config) { Fabricate :project_risk_config, project: first_project, risk_type: :no_money_to_deadline, low_yellow_value: 10, high_yellow_value: 30 }
 
           it 'will not create the new alert and will update the existent one' do
             ProjectRiskAlert.create(created_at: Time.zone.today, project: first_project, project_risk_config: first_risk_config, alert_color: :green, alert_value: 30)

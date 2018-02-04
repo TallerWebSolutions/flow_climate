@@ -78,6 +78,9 @@ pt-BR:
       project_result:
         one: Resultado de Projeto
         other: Resultados de Projeto
+      project_risk_config:
+        one: Configuração de Risco
+        other: Configurações de Risco
       operation_result:
         one: Resultado da Operação
         other: Resultados da Operação

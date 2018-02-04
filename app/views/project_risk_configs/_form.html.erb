@@ -1,0 +1,28 @@
+<div class="standard-form">
+
+  <div class="row">
+      <div class='col-xs-4 form-group <%= 'has-error' if @project_risk_config.errors[:risk_type].present? %>'>
+        <%= f.label :risk_type, class: 'control-label required' %>
+        <%= f.select :risk_type, ProjectRiskConfig.risk_types.map { |key, _value| [t("activerecord.attributes.project_risk_config.enums.risk_type.#{key}"), key] }, { include_blank: t('general.select'), selected: @project_risk_config.risk_type, autofocus: true }, class: 'form-control' %>
+        <span class="help-block"><%= @project_risk_config.errors[:risk_type].join(', ') %></span>
+      </div>
+
+    <div class='col-xs-4 form-group <%= 'has-error' if @project_risk_config.errors[:low_yellow_value].present? %>'>
+      <%= f.label :low_yellow_value, class: 'control-label required' %>
+      <%= f.number_field :low_yellow_value, value: @project_risk_config.low_yellow_value, class: 'form-control', step: 0.1 %>
+      <span class="help-block"><%= @project_risk_config.errors[:low_yellow_value].join(', ') %></span>
+    </div>
+
+    <div class='col-xs-4 form-group <%= 'has-error' if @project_risk_config.errors[:high_yellow_value].present? %>'>
+      <%= f.label :high_yellow_value, class: 'control-label required' %>
+      <%= f.number_field :high_yellow_value, value: @project_risk_config.high_yellow_value, class: 'form-control', step: 0.1 %>
+      <span class="help-block"><%= @project_risk_config.errors[:high_yellow_value].join(', ') %></span>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-xs-12">
+      <%= f.submit class: 'btn btn-success' %>
+    </div>
+  </div>
+</div>
