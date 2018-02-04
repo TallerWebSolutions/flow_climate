@@ -142,6 +142,8 @@ en:
       charts: "Project Charts"
       risk_alerts: "Project Risk Alerts"
       settings: "Project Settings"
+    project_risk_configs:
+      title: "Risk Configurations"
   project_results:
     index:
       title: "Project results"
@@ -203,3 +205,6 @@ en:
       title: "New Demand"
     index:
       title: "Demands in this Result"
+  project_risk_configs:
+    new:
+      title: "New Risk Configuration"

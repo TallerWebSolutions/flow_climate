@@ -145,6 +145,8 @@ pt-BR:
       charts: "Gráficos"
       risk_alerts: "Alertas de Risco"
       settings: "Configurações"
+    project_risk_configs:
+      title: "Configurações de Risco"
   project_results:
     index:
       title: "Resultados do Projeto"
@@ -205,3 +207,6 @@ pt-BR:
       title: "Nova Demanda"
     index:
       title: "Demandas neste Resultado"
+  project_risk_configs:
+    new:
+      title: "Nova Configuração de Risco"
