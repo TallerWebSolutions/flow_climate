@@ -3,6 +3,7 @@
 class ProjectRiskConfigsController < AuthenticatedController
   before_action :assign_company
   before_action :assign_project
+  before_action :assign_project_risk_config, only: %i[activate deactivate]
 
   def new
     @project_risk_config = ProjectRiskConfig.new(project: @project)
@@ -14,6 +15,16 @@ class ProjectRiskConfigsController < AuthenticatedController
     render :new
   end
 
+  def activate
+    @project_risk_config.activate!
+    redirect_to company_project_path(@company, @project)
+  end
+
+  def deactivate
+    @project_risk_config.deactivate!
+    redirect_to company_project_path(@company, @project)
+  end
+
   private
 
   def project_risk_configs_params
@@ -22,5 +33,9 @@ class ProjectRiskConfigsController < AuthenticatedController
 
   def assign_project
     @project = Project.find(params[:project_id])
+  end
+
+  def assign_project_risk_config
+    @project_risk_config = ProjectRiskConfig.find(params[:id])
   end
 end

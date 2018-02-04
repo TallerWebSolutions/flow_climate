@@ -347,7 +347,8 @@ CREATE TABLE project_risk_configs (
     low_yellow_value numeric NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    project_id integer NOT NULL
+    project_id integer NOT NULL,
+    active boolean DEFAULT true
 );
 
 
@@ -1018,6 +1019,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20180128150500'),
 ('20180128155627'),
 ('20180203152518'),
-('20180204121055');
+('20180204121055'),
+('20180204213721');
 
 

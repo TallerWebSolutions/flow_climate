@@ -15,4 +15,16 @@ RSpec.describe ProjectRiskConfig, type: :model do
     it { is_expected.to validate_presence_of :low_yellow_value }
     it { is_expected.to validate_presence_of :high_yellow_value }
   end
+
+  describe '#activate' do
+    let(:risk_config) { Fabricate :project_risk_config, active: false }
+    before { risk_config.activate! }
+    it { expect(risk_config.reload.active).to be true }
+  end
+
+  describe '#deactivate' do
+    let(:risk_config) { Fabricate :project_risk_config, active: true }
+    before { risk_config.deactivate! }
+    it { expect(risk_config.reload.active).to be false }
+  end
 end
