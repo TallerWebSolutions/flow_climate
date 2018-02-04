@@ -6,9 +6,7 @@ class ProjectRiskMonitorJob < ApplicationJob
   def perform
     Project.running.each do |project|
       Rails.logger.info("Checking alerts to project: #{project.full_name}")
-      company = project.customer.company
-
-      company.project_risk_configs.each do |risk|
+      project.project_risk_configs.each do |risk|
         process_risk(project, risk)
       end
     end

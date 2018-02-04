@@ -135,8 +135,7 @@ pt-BR:
         title: "Throughput por Semana"
         tooltipsufix: " demandas"
         ylabel: "Demandas"
-    project_risk_alert:
-      table_title: "Alertas de risco para o projeto"
+    project_risk_alert_table: "Alertas de risco para o projeto"
     portfolio_bulletin:
       delivered_demands: "Demandas entregues na última semana"
     no_demands_delivered: "Nenhuma demanda registrada para a semana passada."

@@ -135,8 +135,7 @@ en:
         title: "Throughput per Week"
         tooltipsufix: " demands"
         ylabel: "Demands"
-    project_risk_alert:
-      table_title: "Risk alerts to the project"
+    project_risk_alert_table: "Risk alerts to the project"
   project_results:
     index:
       title: "Project results"

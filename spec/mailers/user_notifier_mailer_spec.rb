@@ -50,7 +50,7 @@ RSpec.describe UserNotifierMailer, type: :mailer do
 
     let(:first_project) { Fabricate :project, customer: customer, start_date: Time.zone.today }
 
-    let!(:first_risk_config) { Fabricate :project_risk_config, company: company, risk_type: :no_money_to_deadline, low_yellow_value: 10, high_yellow_value: 30 }
+    let!(:first_risk_config) { Fabricate :project_risk_config, project: first_project, risk_type: :no_money_to_deadline, low_yellow_value: 10, high_yellow_value: 30 }
     let(:project_risk_alert) { Fabricate(:project_risk_alert, created_at: Time.zone.today, project: first_project, project_risk_config: first_risk_config, alert_color: :red, alert_value: 30) }
 
     subject(:mail) { UserNotifierMailer.notify_new_red_alert(first_project, first_risk_config, 'green', 30.0).deliver_now }

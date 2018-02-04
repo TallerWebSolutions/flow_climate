@@ -342,12 +342,12 @@ ALTER SEQUENCE project_risk_alerts_id_seq OWNED BY project_risk_alerts.id;
 
 CREATE TABLE project_risk_configs (
     id bigint NOT NULL,
-    company_id integer NOT NULL,
     risk_type integer NOT NULL,
     high_yellow_value numeric NOT NULL,
     low_yellow_value numeric NOT NULL,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    project_id integer NOT NULL
 );
 
 
@@ -824,13 +824,6 @@ CREATE INDEX index_project_risk_alerts_on_project_risk_config_id ON project_risk
 
 
 --
--- Name: index_project_risk_configs_on_company_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_project_risk_configs_on_company_id ON project_risk_configs USING btree (company_id);
-
-
---
 -- Name: index_projects_on_customer_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -961,14 +954,6 @@ ALTER TABLE ONLY project_risk_alerts
 
 
 --
--- Name: project_risk_configs fk_rails_bf04320283; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY project_risk_configs
-    ADD CONSTRAINT fk_rails_bf04320283 FOREIGN KEY (company_id) REFERENCES companies(id);
-
-
---
 -- Name: project_results fk_rails_c3c9938173; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1032,6 +1017,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20180127180639'),
 ('20180128150500'),
 ('20180128155627'),
-('20180203152518');
+('20180203152518'),
+('20180204121055');
 
 
