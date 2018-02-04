@@ -136,6 +136,12 @@ en:
         tooltipsufix: " demands"
         ylabel: "Demands"
     project_risk_alert_table: "Risk alerts to the project"
+    navbar:
+      project_details: "Project Details"
+      project_results: "Project Results"
+      charts: "Project Charts"
+      risk_alerts: "Project Risk Alerts"
+      settings: "Project Settings"
   project_results:
     index:
       title: "Project results"

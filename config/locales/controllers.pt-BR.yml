@@ -139,6 +139,12 @@ pt-BR:
     portfolio_bulletin:
       delivered_demands: "Demandas entregues na última semana"
     no_demands_delivered: "Nenhuma demanda registrada para a semana passada."
+    navbar:
+      project_details: "Detalhes do Projeto"
+      project_results: "Resultados do Projeto"
+      charts: "Gráficos"
+      risk_alerts: "Alertas de Risco"
+      settings: "Configurações"
   project_results:
     index:
       title: "Resultados do Projeto"
