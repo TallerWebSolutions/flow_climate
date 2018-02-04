@@ -10,6 +10,14 @@ RSpec.describe ProjectRiskConfigsController, type: :controller do
       before { post :create, params: { company_id: 'xpto', project_id: 'bar' } }
       it { expect(response).to redirect_to new_user_session_path }
     end
+    describe 'PATCH #activate' do
+      before { patch :activate, params: { company_id: 'xpto', project_id: 'bar', id: 'sbbrubles' } }
+      it { expect(response).to redirect_to new_user_session_path }
+    end
+    describe 'PATCH #deactivate' do
+      before { patch :deactivate, params: { company_id: 'xpto', project_id: 'bar', id: 'sbbrubles' } }
+      it { expect(response).to redirect_to new_user_session_path }
+    end
   end
 
   context 'authenticated' do
@@ -79,6 +87,60 @@ RSpec.describe ProjectRiskConfigsController, type: :controller do
             expect(response).to render_template :new
             expect(assigns(:project_risk_config).errors.full_messages).to eq ['Tipo do Risco não pode ficar em branco', 'Maior Valor do Amarelo não pode ficar em branco', 'Menor Valor do Amarelo não pode ficar em branco']
           end
+        end
+      end
+    end
+
+    describe 'PATCH #activate' do
+      let(:company) { Fabricate :company, users: [user] }
+      let(:team) { Fabricate :team, company: company }
+      let(:customer) { Fabricate :customer, company: company }
+      let(:product) { Fabricate :product, customer: customer, name: 'zzz' }
+      let!(:project) { Fabricate :project, customer: customer, product: product, end_date: 2.days.from_now }
+      let(:project_risk_config) { Fabricate :project_risk_config, project: project, active: false }
+
+      context 'passing valid parameters' do
+        before { patch :activate, params: { company_id: company, project_id: project, id: project_risk_config } }
+        it 'assigns the instance variable and renders the template' do
+          expect(response).to redirect_to company_project_path(company, project)
+          expect(project_risk_config.reload.active).to be true
+        end
+      end
+      context 'passing invalid' do
+        context 'company' do
+          before { patch :activate, params: { company_id: 'foo', project_id: project, id: project_risk_config } }
+          it { expect(response).to have_http_status :not_found }
+        end
+        context 'project' do
+          before { patch :activate, params: { company_id: company, project_id: 'foo', id: project_risk_config } }
+          it { expect(response).to have_http_status :not_found }
+        end
+      end
+    end
+
+    describe 'PATCH #deactivate' do
+      let(:company) { Fabricate :company, users: [user] }
+      let(:team) { Fabricate :team, company: company }
+      let(:customer) { Fabricate :customer, company: company }
+      let(:product) { Fabricate :product, customer: customer, name: 'zzz' }
+      let!(:project) { Fabricate :project, customer: customer, product: product, end_date: 2.days.from_now }
+      let(:project_risk_config) { Fabricate :project_risk_config, project: project, active: true }
+
+      context 'passing valid parameters' do
+        before { patch :deactivate, params: { company_id: company, project_id: project, id: project_risk_config } }
+        it 'assigns the instance variable and renders the template' do
+          expect(response).to redirect_to company_project_path(company, project)
+          expect(project_risk_config.reload.active).to be false
+        end
+      end
+      context 'passing invalid' do
+        context 'company' do
+          before { patch :deactivate, params: { company_id: 'foo', project_id: project, id: project_risk_config } }
+          it { expect(response).to have_http_status :not_found }
+        end
+        context 'project' do
+          before { patch :deactivate, params: { company_id: company, project_id: 'foo', id: project_risk_config } }
+          it { expect(response).to have_http_status :not_found }
         end
       end
     end

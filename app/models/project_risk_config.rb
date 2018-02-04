@@ -11,6 +11,7 @@
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
 #  project_id        :integer          not null
+#  active            :boolean          default(TRUE)
 #
 
 class ProjectRiskConfig < ApplicationRecord
@@ -19,4 +20,14 @@ class ProjectRiskConfig < ApplicationRecord
   belongs_to :project
 
   validates :project, :risk_type, :high_yellow_value, :low_yellow_value, presence: true
+
+  scope :active, -> { where active: true }
+
+  def activate!
+    update(active: true)
+  end
+
+  def deactivate!
+    update(active: false)
+  end
 end
