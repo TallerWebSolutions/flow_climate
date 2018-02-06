@@ -46,6 +46,17 @@
       <%= t('projects.no_project_finishing') %>
     <% end %>
 
+    <h3><%= t('projects.portfolio_bulletin.red_projects') %></h3>
+    <% if @red_projects.present? %>
+      <% @red_projects.each do |red_project| %>
+        <ul>
+          <li><%= link_to "#{red_project.full_name} (#{l(red_project.end_date)}) [#{number_with_precision(red_project.flow_pressure , precision: 3)}]", company_project_url(@company, red_project) %></li>
+        </ul>
+      <% end %>
+    <% else %>
+      <%= t('projects.no_demands_delivered') %>
+    <% end %>
+
     <h3><%= t('projects.portfolio_bulletin.top_three_flow_pressure') %></h3>
     <% if @top_three_flow_pressure.present? %>
       <% @top_three_flow_pressure.each do |project| %>
