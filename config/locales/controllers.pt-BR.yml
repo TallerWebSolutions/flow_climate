@@ -144,6 +144,7 @@ pt-BR:
     project_risk_alert_table: "Alertas de risco para o projeto"
     portfolio_bulletin:
       delivered_demands: "Demandas entregues na última semana"
+      red_projects: "Projetos em Alerta Vermelho"
     no_demands_delivered: "Nenhuma demanda registrada para a semana passada."
     navbar:
       project_details: "Detalhes do Projeto"

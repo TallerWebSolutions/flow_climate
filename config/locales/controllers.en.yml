@@ -150,6 +150,8 @@ en:
       settings: "Project Settings"
     project_risk_configs:
       title: "Risk Configurations"
+    portfolio_bulletin:
+      red_projects: "Red Alert Projects"
   project_results:
     index:
       title: "Project results"
