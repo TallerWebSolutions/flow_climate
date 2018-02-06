@@ -8,16 +8,57 @@ RSpec.describe ProjectResult, type: :model do
   end
 
   context 'validations' do
-    it { is_expected.to validate_presence_of :team }
-    it { is_expected.to validate_presence_of :project }
-    it { is_expected.to validate_presence_of :result_date }
-    it { is_expected.to validate_presence_of :known_scope }
-    it { is_expected.to validate_presence_of :qty_hours_downstream }
-    it { is_expected.to validate_presence_of :qty_hours_upstream }
-    it { is_expected.to validate_presence_of :throughput }
-    it { is_expected.to validate_presence_of :qty_bugs_opened }
-    it { is_expected.to validate_presence_of :qty_bugs_closed }
-    it { is_expected.to validate_presence_of :qty_hours_bug }
+    context 'simple ones' do
+      it { is_expected.to validate_presence_of :team }
+      it { is_expected.to validate_presence_of :project }
+      it { is_expected.to validate_presence_of :result_date }
+      it { is_expected.to validate_presence_of :known_scope }
+      it { is_expected.to validate_presence_of :qty_hours_downstream }
+      it { is_expected.to validate_presence_of :qty_hours_upstream }
+      it { is_expected.to validate_presence_of :throughput }
+      it { is_expected.to validate_presence_of :qty_bugs_opened }
+      it { is_expected.to validate_presence_of :qty_bugs_closed }
+      it { is_expected.to validate_presence_of :qty_hours_bug }
+    end
+
+    context 'complex ones' do
+      describe '#result_date_less_than_project_start_date' do
+        let(:project) { Fabricate :project, start_date: 2.days.ago, end_date: 3.days.from_now }
+        context 'when the result date is less than the start date' do
+          let!(:result) { Fabricate.build :project_result, project: project, result_date: 3.days.ago }
+          it 'does not validate the model and add the error to the correct attribute' do
+            expect(result.valid?).to be false
+            expect(result.errors_on(:result_date)).to eq [I18n.t('project_result.validations.result_date_less_than_project_start_date')]
+          end
+        end
+        context 'when the result date is equal to the start date' do
+          let!(:result) { Fabricate.build :project_result, project: project, result_date: 2.days.ago }
+          it { expect(result.valid?).to be true }
+        end
+        context 'when the result date is greater than to the start date' do
+          let!(:result) { Fabricate.build :project_result, project: project, result_date: 1.day.ago }
+          it { expect(result.valid?).to be true }
+        end
+      end
+      describe '#result_date_greater_than_project_start_date' do
+        let(:project) { Fabricate :project, start_date: 2.days.ago, end_date: 3.days.from_now }
+        context 'when the result date is greater than to the end date' do
+          let!(:result) { Fabricate.build :project_result, project: project, result_date: 4.days.from_now }
+          it 'does not validate the model and add the error to the correct attribute' do
+            expect(result.valid?).to be false
+            expect(result.errors_on(:result_date)).to eq [I18n.t('project_result.validations.result_date_greater_than_project_start_date')]
+          end
+        end
+        context 'when the result date is equal to the end date' do
+          let!(:result) { Fabricate.build :project_result, project: project, result_date: 3.days.from_now }
+          it { expect(result.valid?).to be true }
+        end
+        context 'when the result date is less than the end date' do
+          let!(:result) { Fabricate.build :project_result, project: project, result_date: 1.day.from_now }
+          it { expect(result.valid?).to be true }
+        end
+      end
+    end
   end
 
   context 'scopes' do
@@ -30,7 +71,7 @@ RSpec.describe ProjectResult, type: :model do
     describe '.until_week' do
       let(:first_result) { Fabricate :project_result, result_date: 2.weeks.ago }
       let(:second_result) { Fabricate :project_result, result_date: 1.week.ago }
-      let(:third_result) { Fabricate :project_result, result_date: 1.year.ago }
+      let(:third_result) { Fabricate :project_result, result_date: 3.weeks.ago }
       let(:fourth_result) { Fabricate :project_result, result_date: Time.zone.today }
       it { expect(ProjectResult.until_week(1.week.ago.to_date.cweek, 1.week.ago.to_date.cwyear)).to match_array [first_result, second_result, third_result] }
     end
@@ -60,8 +101,8 @@ RSpec.describe ProjectResult, type: :model do
     context 'when the remaining days is different of zero' do
       let(:result) { Fabricate :project_result, known_scope: 20, throughput: 4 }
       before { result.define_automatic_project_params! }
-      it { expect(result.reload.flow_pressure.to_f).to be_within(0.01).of(2.66) }
-      it { expect(result.reload.remaining_days).to eq 6 }
+      it { expect(result.reload.flow_pressure.to_f).to be_within(0.01).of(0.2711) }
+      it { expect(result.reload.remaining_days).to eq 59 }
     end
     context 'when the remaining days is zero' do
       let(:project) { Fabricate :project, start_date: 2.days.ago, end_date: Time.zone.today }

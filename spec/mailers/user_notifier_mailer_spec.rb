@@ -10,10 +10,10 @@ RSpec.describe UserNotifierMailer, type: :mailer do
     let!(:company) { Fabricate :company, users: [first_user, second_user, third_user] }
     let(:customer) { Fabricate :customer, company: company }
 
-    let(:first_project) { Fabricate :project, customer: customer, start_date: Time.zone.today }
-    let(:second_project) { Fabricate :project, customer: customer, start_date: Time.zone.today }
-    let(:third_project) { Fabricate :project, customer: customer, end_date: Time.zone.today }
-    let(:fourth_project) { Fabricate :project, customer: customer, end_date: Time.zone.today }
+    let(:first_project) { Fabricate :project, customer: customer, start_date: 2.months.ago, end_date: 1.month.from_now }
+    let(:second_project) { Fabricate :project, customer: customer, start_date: 2.months.ago, end_date: 1.month.from_now }
+    let(:third_project) { Fabricate :project, customer: customer, start_date: 2.months.ago, end_date: 1.month.from_now }
+    let(:fourth_project) { Fabricate :project, customer: customer, start_date: 2.months.ago, end_date: 1.month.from_now }
 
     let(:first_project_result) { Fabricate :project_result, project: first_project, result_date: 1.week.ago }
     let(:second_project_result) { Fabricate :project_result, project: second_project, result_date: 1.week.ago }
@@ -48,7 +48,7 @@ RSpec.describe UserNotifierMailer, type: :mailer do
     let!(:company) { Fabricate :company, users: [first_user, second_user, third_user] }
     let(:customer) { Fabricate :customer, company: company }
 
-    let(:first_project) { Fabricate :project, customer: customer, start_date: Time.zone.today }
+    let(:first_project) { Fabricate :project, customer: customer, start_date: 2.months.ago, end_date: 1.month.from_now }
 
     let!(:first_risk_config) { Fabricate :project_risk_config, project: first_project, risk_type: :no_money_to_deadline, low_yellow_value: 10, high_yellow_value: 30 }
     let(:project_risk_alert) { Fabricate(:project_risk_alert, created_at: Time.zone.today, project: first_project, project_risk_config: first_risk_config, alert_color: :red, alert_value: 30) }

@@ -4,9 +4,9 @@
     <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
   </head>
   <body>
-    <h1><%= t('projects.bulletin.starting_title', company_name: @company.name) %></h1>
+    <h1><%= t('projects.portfolio_bulletin.portfolio_bulletin_text') %></h1>
 
-    <h3><%= t('projects.portfolio_bulletin.portfolio_bulletin_text') %></h3>
+    <h3><%= t('projects.bulletin.starting_title', company_name: @company.name) %></h3>
     <% if @projects_starting.present? %>
       <% @projects_starting.each do |project| %>
         <ul>

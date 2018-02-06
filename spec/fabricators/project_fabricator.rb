@@ -4,8 +4,8 @@ Fabricator(:project) do
   customer
   product { |attrs| Fabricate :product, customer: attrs[:customer] }
   name { Faker::Name.unique.name }
-  start_date { 1.day.from_now }
-  end_date { 1.week.from_now }
+  start_date 2.months.ago
+  end_date 2.months.from_now
   status 0
   project_type 0
   initial_scope 30

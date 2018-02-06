@@ -153,6 +153,8 @@ pt-BR:
       hours_per_demand: "Horas/Demanda"
     new:
       title: "Novo Resultado de Projeto"
+    edit:
+      title: "Editar Resultado de Projeto"
   operation_results:
     index:
       title: "Resultados da Operação"
@@ -188,9 +190,6 @@ pt-BR:
       title: "Novo Produto"
     edit:
       title: "Editar Produto"
-  project_result:
-    edit:
-      title: "Editar Resultado de Projeto"
   customers:
     new:
       title: "Novo Cliente"

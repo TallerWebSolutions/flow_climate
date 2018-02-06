@@ -45,6 +45,8 @@ class ProjectResult < ApplicationRecord
 
   delegate :name, to: :team, prefix: true
 
+  validate :result_date_less_than_project_start_date, :result_date_greater_than_project_start_date
+
   def project_delivered_hours
     qty_hours_upstream + qty_hours_downstream
   end
@@ -67,5 +69,15 @@ class ProjectResult < ApplicationRecord
   def current_flow_pressure
     return 0 if project.remaining_days(result_date).zero?
     current_gap.to_f / project.remaining_days(result_date).to_f
+  end
+
+  def result_date_less_than_project_start_date
+    return true if (result_date.blank? || project.start_date.blank?) || (result_date >= project.start_date)
+    errors.add(:result_date, I18n.t('project_result.validations.result_date_less_than_project_start_date'))
+  end
+
+  def result_date_greater_than_project_start_date
+    return true if (result_date.blank? || project.start_date.blank?) || (result_date <= project.end_date)
+    errors.add(:result_date, I18n.t('project_result.validations.result_date_greater_than_project_start_date'))
   end
 end

@@ -2,7 +2,7 @@ pt-BR:
   projects:
     portfolio_bulletin:
       subject: "Boletim Semanal do Portfólio de Projetos"
-      portfolio_bulletin_text: "Seguem os números do seu portfólio:"
+      portfolio_bulletin_text: "Seguem os números do seu portfólio"
       finishing_title: "Os seguintes projetos estão terminando nesta semana:"
       next_finishing_project: "Próximo projeto a terminar"
       next_starting_project: "Próximo projeto a começar"

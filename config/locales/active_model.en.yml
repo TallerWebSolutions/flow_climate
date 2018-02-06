@@ -71,3 +71,7 @@ en:
   projects:
     portfolio_bulletin:
       delivered_demands: "Delivered demands in last week"
+  project_result:
+    validations:
+      result_date_less_than_project_start_date: "The result data should be greater or equal the project start date."
+      result_date_greater_than_project_start_date: "The result data should be less or equal the project start date."
