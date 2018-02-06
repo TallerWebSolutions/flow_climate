@@ -31,7 +31,7 @@ class ProjectResultsRepository
   def scope_in_week_for_projects(projects, week, year)
     total_scope = 0
     projects.each do |project|
-      known_scope = project.project_results.where('(EXTRACT(WEEK FROM result_date) <= :week AND EXTRACT(YEAR FROM result_date) <= :year) OR (EXTRACT(YEAR FROM result_date) < :year)', week: week, year: year).order(:result_date).last&.known_scope
+      known_scope = results_until_week(project, week, year).last&.known_scope
       total_scope += known_scope || project.initial_scope
     end
 
@@ -41,7 +41,7 @@ class ProjectResultsRepository
   def flow_pressure_in_week_for_projects(projects, week, year)
     total_flow_pressure = 0
     projects.each do |project|
-      flow_pressure = project.project_results.where('(EXTRACT(WEEK FROM result_date) <= :week AND EXTRACT(YEAR FROM result_date) <= :year) OR (EXTRACT(YEAR FROM result_date) < :year)', week: week, year: year).order(:result_date).last&.flow_pressure
+      flow_pressure = results_until_week(project, week, year).last&.flow_pressure
       total_flow_pressure += flow_pressure.to_f || 0
     end
 
@@ -51,14 +51,32 @@ class ProjectResultsRepository
   def throughput_in_week_for_projects(projects, week, year)
     total_throughput = 0
     projects.each do |project|
-      throughput = project.project_results.where('EXTRACT(WEEK FROM result_date) = :week AND EXTRACT(YEAR FROM result_date) = :year', week: week, year: year).sum(:throughput)
+      throughput = results_for_week(project, week, year).sum(:throughput)
       total_throughput += throughput || 0
     end
 
     total_throughput
   end
 
+  def average_demand_cost_in_week_for_projects(projects, week, year)
+    total_average_demand_cost = []
+    projects.each do |project|
+      average_demand_cost = results_for_week(project, week, year).order(:result_date).last&.average_demand_cost.to_f
+      total_average_demand_cost << average_demand_cost || 0
+    end
+
+    total_average_demand_cost.sum / total_average_demand_cost.size.to_f
+  end
+
   private
+
+  def results_until_week(project, week, year)
+    project.project_results.where('(EXTRACT(WEEK FROM result_date) <= :week AND EXTRACT(YEAR FROM result_date) <= :year) OR (EXTRACT(YEAR FROM result_date) < :year)', week: week, year: year).order(:result_date)
+  end
+
+  def results_for_week(project, week, year)
+    project.project_results.where('EXTRACT(WEEK FROM result_date) = :week AND EXTRACT(YEAR FROM result_date) = :year', week: week, year: year)
+  end
 
   def project_result_joins
     ProjectResult.joins(project: [{ product: :customer }])

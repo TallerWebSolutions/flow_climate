@@ -202,6 +202,11 @@ class Project < ApplicationRecord
     project_risk_alerts.joins(:project_risk_config).where('project_risk_configs.risk_type = :risk_type', risk_type: ProjectRiskConfig.risk_types[risk_type]).order(created_at: :desc).first
   end
 
+  def average_demand_cost
+    return 0 if project_results.blank?
+    project_results.order(:result_date).last.average_demand_cost
+  end
+
   private
 
   def locate_last_results

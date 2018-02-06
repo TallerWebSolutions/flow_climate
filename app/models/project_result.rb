@@ -22,6 +22,8 @@
 #  demands_count        :integer
 #  flow_pressure        :decimal(, )      not null
 #  remaining_days       :integer          not null
+#  cost_in_week         :decimal(, )      not null
+#  average_demand_cost  :decimal(, )      not null
 #
 # Indexes
 #
@@ -56,11 +58,22 @@ class ProjectResult < ApplicationRecord
     project_delivered_hours / throughput
   end
 
-  def define_automatic_project_params!
-    update(remaining_days: project.remaining_days, flow_pressure: current_flow_pressure)
+  def define_automatic_attributes!
+    update(remaining_days: project.remaining_days, flow_pressure: current_flow_pressure, cost_in_week: calculate_cost_in_week, average_demand_cost: calculate_average_demand_cost)
   end
 
   private
+
+  def calculate_average_demand_cost
+    return 0 if calculate_cost_in_week.zero?
+    return calculate_cost_in_week if throughput.zero?
+    calculate_cost_in_week / throughput.to_f
+  end
+
+  def calculate_cost_in_week
+    return 0 if team.blank? || team.total_cost.zero?
+    team.total_cost / 4
+  end
 
   def current_gap
     known_scope - project.project_results.for_week(result_date.cweek, result_date.cwyear).sum(&:throughput)

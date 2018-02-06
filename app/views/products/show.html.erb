@@ -38,6 +38,7 @@
                hours_per_demand_data: [{ name: I18n.t('projects.charts.hours_per_demand.ylabel'), data: @product_projects.map(&:avg_hours_per_demand) }],
                flow_pressure_data: [{ name: I18n.t('projects.charts.hours_per_demand.ylabel'), data: @product_projects.map(&:flow_pressure) }],
                throughput_data: [{ name: I18n.t('projects.charts.throughput_per_week.ylabel'), data: @report_data.throughput_per_week }],
+               cmd_data: [{ name: I18n.t('projects.charts.cmd.ylabel'), data: @report_data.average_demand_cost }],
                xlabel: t('projects.charts.xlabel.projects'),
                categories: @report_data&.projects_names %>
   <% end %>
@@ -46,7 +47,9 @@
 <% content_for :javascript do %>
   <%= javascript_include_tag 'charts/burnup' %>
   <%= javascript_include_tag 'charts/column' %>
+  <%= javascript_include_tag 'charts/line' %>
   <%= javascript_include_tag 'projects/column_hours_demand_chart' %>
   <%= javascript_include_tag 'projects/column_flow_pressure_chart' %>
   <%= javascript_include_tag 'projects/column_throughput_per_week_chart' %>
+  <%= javascript_include_tag 'projects/line_cmd' %>
 <% end %>

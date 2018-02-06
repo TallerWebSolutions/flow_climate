@@ -279,7 +279,9 @@ CREATE TABLE project_results (
     monte_carlo_date date,
     demands_count integer,
     flow_pressure numeric NOT NULL,
-    remaining_days integer NOT NULL
+    remaining_days integer NOT NULL,
+    cost_in_week numeric NOT NULL,
+    average_demand_cost numeric NOT NULL
 );
 
 
@@ -1020,6 +1022,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20180128155627'),
 ('20180203152518'),
 ('20180204121055'),
-('20180204213721');
+('20180204213721'),
+('20180206183551');
 
 

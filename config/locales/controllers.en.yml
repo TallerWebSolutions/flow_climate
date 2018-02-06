@@ -113,6 +113,8 @@ en:
       scope_growth: "Scope Growth (%)"
       scope_unit_growth: "Scope Growth (unity)"
       penultimate_week_scope: "Scope (last week)"
+      average_demand_cost: "Average Demand Cost"
+      cost_in_week: "Week Cost"
     charts:
       xlabel:
         weeks: "Weeks"
@@ -135,6 +137,10 @@ en:
         title: "Throughput per Week"
         tooltipsufix: " demands"
         ylabel: "Demands"
+      cmd:
+        title: "Average Demand Cost to %{project_name}"
+        ylabel: "Average Demand Cost"
+        tooltipsufix: "dollars"
     project_risk_alert_table: "Risk alerts to the project"
     navbar:
       project_details: "Project Details"

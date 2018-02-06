@@ -597,4 +597,21 @@ RSpec.describe Project, type: :model do
       it { expect(project.last_alert_for(third_risk_config.risk_type)).to eq nil }
     end
   end
+
+  describe '#average_demand_cost' do
+    let!(:first_project) { Fabricate :project, initial_scope: 30 }
+
+    context 'having data for last week and 2 weeks ago' do
+      let!(:first_result) { Fabricate :project_result, project: first_project, result_date: 1.week.ago, cost_in_week: 110, average_demand_cost: 20 }
+      let!(:second_result) { Fabricate :project_result, project: first_project, result_date: 2.weeks.ago, cost_in_week: 80, average_demand_cost: 10 }
+      let!(:third_result) { Fabricate :project_result, project: first_project, result_date: Time.zone.today, cost_in_week: 80, average_demand_cost: 25 }
+
+      it { expect(first_project.average_demand_cost.to_f).to eq 25.0 }
+    end
+
+    context 'having no data to required weeks' do
+      let!(:other_result) { Fabricate :project_result, result_date: Time.zone.today, known_scope: 80, throughput: 25 }
+      it { expect(first_project.average_demand_cost.to_d).to eq 0 }
+    end
+  end
 end

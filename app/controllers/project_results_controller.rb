@@ -16,7 +16,7 @@ class ProjectResultsController < AuthenticatedController
 
   def create
     @project_result = ProjectResult.new(project_result_params.merge(project: @project, team: @team))
-    @project_result.define_automatic_project_params! if @project_result.valid?
+    @project_result.define_automatic_attributes! if @project_result.valid?
     return redirect_to company_project_path(@company, @project) if @project_result.save
     render :new
   end
@@ -31,7 +31,7 @@ class ProjectResultsController < AuthenticatedController
 
   def update
     @project_result.update(project_result_params.merge(project: @project, team: @team))
-    @project_result.define_automatic_project_params!
+    @project_result.define_automatic_attributes!
     return redirect_to company_project_path(@company, @project) if @project_result.save
     render :edit
   end
