@@ -12,12 +12,14 @@ class ProjectResultsController < AuthenticatedController
 
   def new
     @project_result = ProjectResult.new(project: @project)
+    assign_company_teams
   end
 
   def create
     @project_result = ProjectResult.new(project_result_params.merge(project: @project, team: @team))
     @project_result.define_automatic_attributes! if @project_result.valid?
     return redirect_to company_project_path(@company, @project) if @project_result.save
+    assign_company_teams
     render :new
   end
 
@@ -27,16 +29,23 @@ class ProjectResultsController < AuthenticatedController
     redirect_to company_project_path(@company, @project)
   end
 
-  def edit; end
+  def edit
+    assign_company_teams
+  end
 
   def update
     @project_result.update(project_result_params.merge(project: @project, team: @team))
     @project_result.define_automatic_attributes!
     return redirect_to company_project_path(@company, @project) if @project_result.save
+    assign_company_teams
     render :edit
   end
 
   private
+
+  def assign_company_teams
+    @company_teams = @company.teams.order(:name)
+  end
 
   def assign_team
     @team = Team.find_by(id: project_result_params[:team])

@@ -3,7 +3,7 @@
   <div class="row">
       <div class='col-xs-4 form-group <%= 'has-error' if @project_result.errors[:team].present? %>'>
         <%= f.label :team, class: 'control-label required' %>
-        <%= f.select :team, @company.teams.map { |t| [t.name, t.id] }, { include_blank: t('general.select'), selected: @project_result.team_id, autofocus: true }, class: 'form-control' %>
+        <%= f.select :team, @company_teams.map { |t| [t.name, t.id] }, { include_blank: t('general.select'), selected: @project_result.team_id, autofocus: true }, class: 'form-control' %>
         <span class="help-block"><%= @project_result.errors[:team].join(', ') %></span>
       </div>
 

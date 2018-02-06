@@ -37,6 +37,9 @@ RSpec.describe ProjectResultsController, type: :controller do
       let(:customer) { Fabricate :customer, company: company, name: 'zzz' }
       let(:product) { Fabricate :product, customer: customer, name: 'zzz' }
       let!(:project) { Fabricate :project, customer: customer, product: product, end_date: 5.days.from_now }
+      let!(:team) { Fabricate :team, company: company, name: 'zzz' }
+      let!(:other_team) { Fabricate :team, company: company, name: 'aaa' }
+      let!(:other_company_team) { Fabricate :team, name: 'aaa' }
 
       context 'passing valid IDs' do
         before { get :new, params: { company_id: company, project_id: project } }
@@ -44,6 +47,7 @@ RSpec.describe ProjectResultsController, type: :controller do
           expect(response).to render_template :new
           expect(assigns(:project_result)).to be_a_new ProjectResult
           expect(assigns(:project_result).project).to eq project
+          expect(assigns(:company_teams)).to eq [other_team, team]
         end
       end
       context 'passing an invalid ID' do
@@ -66,6 +70,7 @@ RSpec.describe ProjectResultsController, type: :controller do
     describe 'POST #create' do
       let(:company) { Fabricate :company, users: [user] }
       let(:team) { Fabricate :team, company: company }
+      let(:other_team) { Fabricate :team, company: company }
       let!(:team_member) { Fabricate(:team_member, monthly_payment: 100, team: team) }
       let(:customer) { Fabricate :customer, company: company }
       let(:product) { Fabricate :product, customer: customer, name: 'zzz' }
