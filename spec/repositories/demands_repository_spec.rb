@@ -5,10 +5,10 @@ RSpec.describe DemandsRepository, type: :repository do
     let(:company) { Fabricate :company }
     let(:customer) { Fabricate :customer, company: company }
 
-    let(:first_project) { Fabricate :project, customer: customer, start_date: Time.zone.today }
-    let(:second_project) { Fabricate :project, customer: customer, start_date: Time.zone.today }
-    let(:third_project) { Fabricate :project, customer: customer, end_date: Time.zone.today }
-    let(:fourth_project) { Fabricate :project, customer: customer, end_date: Time.zone.today }
+    let(:first_project) { Fabricate :project, customer: customer, start_date: 1.week.ago }
+    let(:second_project) { Fabricate :project, customer: customer, start_date: 1.week.ago }
+    let(:third_project) { Fabricate :project, customer: customer, end_date: 1.week.from_now }
+    let(:fourth_project) { Fabricate :project, customer: customer, end_date: 1.week.from_now }
 
     let(:first_project_result) { Fabricate :project_result, project: first_project, result_date: 1.week.ago }
     let(:second_project_result) { Fabricate :project_result, project: second_project, result_date: 1.week.ago }
