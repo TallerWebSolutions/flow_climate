@@ -66,6 +66,7 @@ RSpec.describe ProjectResultsController, type: :controller do
     describe 'POST #create' do
       let(:company) { Fabricate :company, users: [user] }
       let(:team) { Fabricate :team, company: company }
+      let!(:team_member) { Fabricate(:team_member, monthly_payment: 100, team: team) }
       let(:customer) { Fabricate :customer, company: company }
       let(:product) { Fabricate :product, customer: customer, name: 'zzz' }
       let!(:project) { Fabricate :project, customer: customer, product: product, end_date: 2.days.from_now }
@@ -88,6 +89,8 @@ RSpec.describe ProjectResultsController, type: :controller do
           expect(result.leadtime).to eq 10.5
           expect(result.flow_pressure.to_f).to eq 50.0
           expect(result.remaining_days).to eq 2
+          expect(result.average_demand_cost.to_f).to eq 5.0
+          expect(result.cost_in_week.to_f).to eq 25.0
         end
       end
       context 'passing invalid' do
@@ -189,9 +192,11 @@ RSpec.describe ProjectResultsController, type: :controller do
       let(:company) { Fabricate :company, users: [user] }
 
       let(:team) { Fabricate :team, company: company }
+      let!(:team_member) { Fabricate(:team_member, monthly_payment: 100, team: team) }
+
       let(:customer) { Fabricate :customer, company: company }
       let(:project) { Fabricate :project, customer: customer }
-      let(:project_result) { Fabricate :project_result, project: project }
+      let!(:project_result) { Fabricate :project_result, project: project }
 
       context 'passing valid parameters' do
         before { put :update, params: { company_id: company, project_id: project, id: project_result, project_result: { team: team.id, result_date: Time.zone.today, known_scope: 100, qty_hours_upstream: 10, qty_hours_downstream: 13, throughput: 5, monte_carlo_date: 1.month.from_now, qty_bugs_opened: 0, qty_bugs_closed: 3, qty_hours_bug: 7, leadtime: 10.5 } } }
@@ -210,6 +215,8 @@ RSpec.describe ProjectResultsController, type: :controller do
           expect(result.leadtime).to eq 10.5
           expect(result.flow_pressure.to_f).to be_within(0.01).of(1.61)
           expect(result.remaining_days).to eq 59
+          expect(result.average_demand_cost.to_f).to eq 5.0
+          expect(result.cost_in_week.to_f).to eq 25.0
           expect(response).to redirect_to company_project_path(company, project)
         end
       end

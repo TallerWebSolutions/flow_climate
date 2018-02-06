@@ -45,6 +45,10 @@ class Team < ApplicationRecord
     team_members.active.where(billable: false).sum(&:monthly_payment)
   end
 
+  def total_cost
+    team_members.active.sum(&:monthly_payment)
+  end
+
   def outsourcing_members_billable_count
     team_members.active.where(billable: true, billable_type: :outsourcing).count
   end

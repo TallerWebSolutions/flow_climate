@@ -113,6 +113,8 @@ pt-BR:
       scope_growth: "Crescimento do Escopo (%)"
       scope_unit_growth: "Crescimento do Escopo (un.)"
       penultimate_week_scope: "Escopo Penúltima Sem."
+      average_demand_cost: "Custo Médio por Demanda"
+      cost_in_week: "Custo da Semana"
     charts:
       xlabel:
         weeks: "Semanas"
@@ -135,6 +137,10 @@ pt-BR:
         title: "Throughput por Semana"
         tooltipsufix: " demandas"
         ylabel: "Demandas"
+      cmd:
+        title: "Custo Médio por Deamanda para %{project_name}"
+        ylabel: "Custo Médio por Demanda"
+        tooltipsufix: "reais"
     project_risk_alert_table: "Alertas de risco para o projeto"
     portfolio_bulletin:
       delivered_demands: "Demandas entregues na última semana"

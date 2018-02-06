@@ -30,6 +30,12 @@ class ReportData
     result_data
   end
 
+  def average_demand_cost
+    result_data = []
+    @weeks.each { |week_year| result_data << ProjectResultsRepository.instance.average_demand_cost_in_week_for_projects(@projects, week_year[0], week_year[1]) if add_data_to_chart?(week_year) }
+    result_data
+  end
+
   private
 
   def projects_weeks

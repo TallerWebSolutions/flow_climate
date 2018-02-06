@@ -198,4 +198,12 @@ RSpec.describe Team, type: :model do
     include_context 'consolidations variables data for team'
     it { expect(team.delivered_scope).to eq team.projects.sum(&:total_throughput) }
   end
+
+  describe '#total_cost' do
+    let(:team) { Fabricate :team }
+    let!(:team_member) { Fabricate :team_member, team: team, monthly_payment: 100 }
+    let!(:other_team_member) { Fabricate :team_member, team: team, monthly_payment: 100 }
+
+    it { expect(team.total_cost).to eq team.team_members.sum(&:monthly_payment) }
+  end
 end
