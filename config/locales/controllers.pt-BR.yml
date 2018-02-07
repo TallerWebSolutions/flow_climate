@@ -211,11 +211,10 @@ pt-BR:
     new:
       title: "Nova Configuração de Risco"
   navbar:
-    project_details: "Detalhes do Projeto"
+    details: "Detalhes"
     project_results: "Resultados do Projeto"
     charts: "Gráficos"
     risk_alerts: "Alertas de Risco"
     settings: "Configurações"
-    team_details: "Detalhes do Time"
     projects_list: "Projetos"
     members_table: "Membros do Time"

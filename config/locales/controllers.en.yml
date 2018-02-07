@@ -210,11 +210,10 @@ en:
     new:
       title: "New Risk Configuration"
   navbar:
-    project_details: "Project Details"
+    details: "Details"
     project_results: "Project Results"
     charts: "Project Charts"
     risk_alerts: "Project Risk Alerts"
     settings: "Project Settings"
-    team_details: "Team Details"
     projects_list: "Projects"
     members_table: "Team Members"

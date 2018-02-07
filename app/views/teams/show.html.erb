@@ -13,14 +13,14 @@
 
   <div class="row">
     <div class="topnav">
-      <%= link_to t('navbar.team_details'), '#', id: 'nav-item-stamps', class: 'active' %>
+      <%= link_to t('navbar.details'), '#', id: 'nav-item-stamps', class: 'active' %>
       <%= link_to t('navbar.projects_list'), '#', id: 'nav-item-list' %>
       <%= link_to t('navbar.charts'), '#', id: 'nav-item-charts' %>
       <%= link_to t('navbar.members_table'), '#', id: 'nav-item-members' %>
     </div>
   </div>
 
-  <div id="team-stamps">
+  <div id="stamps">
     <%= render 'team_stamps', team: @team %>
   </div>
 

@@ -37,3 +37,4 @@ function hideAllComponents() {
     $('#nav-item-charts').removeClass('active');
     $('#nav-item-members').removeClass('active');
 }
+;
