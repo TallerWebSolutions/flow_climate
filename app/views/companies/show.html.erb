@@ -5,8 +5,11 @@
     </div>
   </div>
   <div class="row">
-    <div class="col-xs-2 botton-spaced-component">
-      <%= link_to t('companies.edit.title'), edit_company_path(@company), class: 'btn btn-sm btn-primary' %>
+    <div class="col-xs-1 botton-spaced-component">
+      <%= link_to t('companies.edit.title'), edit_company_path(@company), class: 'btn btn-sm btn-primary top-button' %>
+    </div>
+    <div class="col-xs-1 botton-spaced-component">
+      <%= link_to t('companies.send_company_bulletin.button'), send_company_bulletin_company_path(@company), class: 'btn btn-sm btn-primary top-button' %>
     </div>
   </div>
 

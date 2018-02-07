@@ -53,7 +53,12 @@ class Project < ApplicationRecord
   scope :running_projects_finishing_within_week, -> { running.where('EXTRACT(week FROM end_date) = :week AND EXTRACT(year FROM end_date) = :year', week: Time.zone.today.cweek, year: Time.zone.today.cwyear) }
 
   def red?
-    project_risk_alerts.order(:created_at).last&.red? || false
+    project_risk_configs.each do |risk_config|
+      risk_alert = project_risk_alerts.where(project_risk_config: risk_config).order(:created_at).last
+      return true if risk_alert&.red?
+    end
+
+    false
   end
 
   def full_name

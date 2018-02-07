@@ -16,7 +16,7 @@ class CompaniesBulletimJob < ApplicationJob
   def process_weekly_bulletin
     Company.all.each do |company|
       Rails.logger.info("Notifying projects for #{company.name}")
-      UserNotifierMailer.company_weekly_bulletin(company, company.projects.waiting_projects_starting_within_week, company.projects.running_projects_finishing_within_week).deliver
+      UserNotifierMailer.company_weekly_bulletin(company.users, company).deliver
     end
   end
 end

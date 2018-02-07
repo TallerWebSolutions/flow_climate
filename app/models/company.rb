@@ -112,7 +112,7 @@ class Company < ApplicationRecord
   end
 
   def next_finishing_project
-    projects.executing.order(:end_date).first
+    projects.running.order(:end_date).first
   end
 
   def demands_delivered_last_week
