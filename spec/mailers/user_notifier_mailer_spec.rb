@@ -32,10 +32,6 @@ RSpec.describe UserNotifierMailer, type: :mailer do
     let!(:other_first_alert) { Fabricate :project_risk_alert, project: other_red_project, alert_color: :red, created_at: Time.zone.now }
     let!(:other_second_alert) { Fabricate :project_risk_alert, project: other_red_project, alert_color: :green, created_at: 1.hour.ago }
 
-    let(:finished_red_project) { Fabricate :project, customer: customer, status: :finished, end_date: 3.days.from_now, name: 'finished_red_risk_alert' }
-    let!(:finished_first_alert) { Fabricate :project_risk_alert, project: finished_red_project, alert_color: :red, created_at: Time.zone.now }
-    let!(:finished_second_alert) { Fabricate :project_risk_alert, project: finished_red_project, alert_color: :green, created_at: 1.hour.ago }
-
     subject(:mail) { UserNotifierMailer.company_weekly_bulletin(company.users, company).deliver_now }
 
     it 'renders the email' do
@@ -50,7 +46,6 @@ RSpec.describe UserNotifierMailer, type: :mailer do
       expect(mail.body.encoded).to match second_demand.demand_id
       expect(mail.body.encoded).to match red_project.full_name
       expect(mail.body.encoded).to match other_red_project.full_name
-      expect(mail.body.encoded).not_to match 'finished_red_risk_alert'
     end
   end
 
