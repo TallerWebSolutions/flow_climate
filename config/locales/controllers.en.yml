@@ -64,6 +64,9 @@ en:
     send_company_bulletin:
       queued: "Your request was queued."
       button: "Send Bulletin to Me"
+    charts:
+      active_projects:
+        title: "Active Projects Count to Months for %{project_name}"
   financial_informations:
     new:
       title: "New Financial Information"
@@ -220,3 +223,15 @@ en:
     settings: "Project Settings"
     projects_list: "Projects"
     members_table: "Team Members"
+    strategic: "Strategic Informations"
+    finance: "Financial Informations"
+    teams: "Teams"
+  charts:
+    xlabel:
+      months: "Months"
+    ylabel:
+      projects:
+        text: "Projects"
+    tooltipsufix:
+      projects:
+        text: "projects"

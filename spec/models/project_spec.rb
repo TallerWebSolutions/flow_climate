@@ -119,6 +119,10 @@ RSpec.describe Project, type: :model do
     describe '.running' do
       it { expect(Project.running).to match_array [third_project, fourth_project] }
     end
+
+    describe '.active' do
+      it { expect(Project.active).to match_array [first_project, second_project, third_project, fourth_project] }
+    end
   end
 
   describe '#total_days' do

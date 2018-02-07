@@ -64,6 +64,9 @@ pt-BR:
     send_company_bulletin:
       queued: "Sua solicitação foi colocada na fila."
       button: "Me Enviar Boletim"
+    charts:
+      active_projects:
+        title: "Contagem de Projetos Ativos no Mês para %{project_name}"
   financial_informations:
     new:
       title: "Nova Informação Financeira"
@@ -221,3 +224,15 @@ pt-BR:
     settings: "Configurações"
     projects_list: "Projetos"
     members_table: "Membros do Time"
+    strategic: "Informações Estratégicas"
+    finance: "Informações Financeiras"
+    teams: "Times"
+  charts:
+    xlabel:
+      months: "Meses"
+    ylabel:
+      projects:
+        text: "Projetos"
+    tooltipsufix:
+      projects:
+        text: "projetos"

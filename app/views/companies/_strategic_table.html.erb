@@ -1,0 +1,12 @@
+<div class="col-xs-6">
+  <div id="projects-count-column"
+       class="flow-chart"
+       data-title='<%= t('companies.charts.active_projects.title', project_name: @company.name) %>'
+       data-xcategories='<%= @strategic_report_data.array_of_months %>'
+       data-xtitle='<%= t('charts.xlabel.months') %>'
+       data-ytitle='<%= t('charts.ylabel.projects.text') %>'
+       data-tooltipsufix='<%= t('charts.tooltipsufix.projects.text') %>'
+       data-series='<%= [{ name: I18n.t('charts.ylabel.projects.text'), data: @strategic_report_data.active_projects_count_data }].to_json %>'
+       data-decimals='0'>
+  </div>
+</div>
