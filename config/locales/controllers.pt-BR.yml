@@ -128,7 +128,7 @@ pt-BR:
         ylabel: "Horas/Demanda"
         tooltipsufix: " horas por demanda"
       flow_pressure:
-        title: "Pressão do Fluxo no Tempo"
+        title: "Pressão do Fluxo para %{project_name}"
         ylabel: "Pressão do Fluxo"
         tooltipsufix: " demandas/dia"
       flow_pressure_per_project:
@@ -146,12 +146,6 @@ pt-BR:
       delivered_demands: "Demandas entregues na última semana"
       red_projects: "Projetos em Alerta Vermelho"
     no_demands_delivered: "Nenhuma demanda registrada para a semana passada."
-    navbar:
-      project_details: "Detalhes do Projeto"
-      project_results: "Resultados do Projeto"
-      charts: "Gráficos"
-      risk_alerts: "Alertas de Risco"
-      settings: "Configurações"
     project_risk_configs:
       title: "Configurações de Risco"
   project_results:
@@ -216,3 +210,12 @@ pt-BR:
   project_risk_configs:
     new:
       title: "Nova Configuração de Risco"
+  navbar:
+    project_details: "Detalhes do Projeto"
+    project_results: "Resultados do Projeto"
+    charts: "Gráficos"
+    risk_alerts: "Alertas de Risco"
+    settings: "Configurações"
+    team_details: "Detalhes do Time"
+    projects_list: "Projetos"
+    members_table: "Membros do Time"
