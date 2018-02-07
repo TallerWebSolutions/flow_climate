@@ -62,6 +62,10 @@ class ProjectResult < ApplicationRecord
     update(remaining_days: project.remaining_days, flow_pressure: current_flow_pressure, cost_in_week: calculate_cost_in_week, average_demand_cost: calculate_average_demand_cost)
   end
 
+  def total_hours
+    qty_hours_upstream + qty_hours_downstream
+  end
+
   private
 
   def calculate_average_demand_cost

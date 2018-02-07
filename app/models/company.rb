@@ -92,7 +92,7 @@ class Company < ApplicationRecord
   end
 
   def th_in_week(week, year)
-    ProjectResultsRepository.instance.th_in_week(self, week, year)
+    ProjectResultsRepository.instance.th_in_week_for_company(self, week, year)
   end
 
   def bugs_opened_in_week(week, year)
