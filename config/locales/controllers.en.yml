@@ -128,7 +128,7 @@ en:
         ylabel: "Hours/Demand"
         tooltipsufix: " hours per demand"
       flow_pressure:
-        title: "Flow Pressure in Time"
+        title: "Flow Pressure for %{project_name}"
         ylabel: "Flow Pressure"
         tooltipsufix: " demands/day"
       flow_pressure_per_project:
@@ -142,12 +142,6 @@ en:
         ylabel: "Average Demand Cost"
         tooltipsufix: "dollars"
     project_risk_alert_table: "Risk alerts to the project"
-    navbar:
-      project_details: "Project Details"
-      project_results: "Project Results"
-      charts: "Project Charts"
-      risk_alerts: "Project Risk Alerts"
-      settings: "Project Settings"
     project_risk_configs:
       title: "Risk Configurations"
     portfolio_bulletin:
@@ -215,3 +209,11 @@ en:
   project_risk_configs:
     new:
       title: "New Risk Configuration"
+  navbar:
+    details: "Details"
+    project_results: "Project Results"
+    charts: "Project Charts"
+    risk_alerts: "Project Risk Alerts"
+    settings: "Project Settings"
+    projects_list: "Projects"
+    members_table: "Team Members"
