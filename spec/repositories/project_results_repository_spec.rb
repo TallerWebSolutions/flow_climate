@@ -27,7 +27,7 @@ RSpec.describe ProjectResultsRepository, type: :repository do
     it { expect(ProjectResultsRepository.instance.consumed_hours_in_week(company, 1.day.ago.to_date.cweek, 1.day.ago.to_date.cwyear)).to eq 80 }
   end
 
-  describe '#th_in_week' do
+  describe '#th_in_week_for_company' do
     let!(:project) { Fabricate :project, customer: customer, product: product, start_date: 2.months.ago, end_date: 1.month.from_now }
     let!(:other_project) { Fabricate :project, customer: customer, product: product, start_date: 2.months.ago, end_date: 1.month.from_now }
     let!(:first_result) { Fabricate :project_result, project: project, result_date: 1.day.ago, throughput: 30 }
@@ -35,7 +35,7 @@ RSpec.describe ProjectResultsRepository, type: :repository do
     let!(:third_result) { Fabricate :project_result, project: other_project, result_date: 2.months.ago, throughput: 90 }
     let!(:out_result) { Fabricate :project_result, result_date: 1.day.ago, throughput: 60 }
 
-    it { expect(ProjectResultsRepository.instance.th_in_week(company, 1.day.ago.to_date.cweek, 1.day.ago.to_date.cwyear)).to eq 80 }
+    it { expect(ProjectResultsRepository.instance.th_in_week_for_company(company, 1.day.ago.to_date.cweek, 1.day.ago.to_date.cwyear)).to eq 80 }
   end
 
   describe '#th_in_week_for_project' do
@@ -184,6 +184,39 @@ RSpec.describe ProjectResultsRepository, type: :repository do
       let!(:out_result) { Fabricate :project_result, result_date: 1.day.ago, throughput: 4 }
 
       it { expect(ProjectResultsRepository.instance.throughput_in_week_for_projects([project], Time.zone.today.cweek, Time.zone.today.cwyear)).to eq 0 }
+    end
+  end
+
+  describe '#hours_per_demand_in_time_for_projects' do
+    let(:team) { Fabricate :team }
+    let!(:team_member) { Fabricate :team_member, team: team, monthly_payment: 100 }
+    let!(:other_team_member) { Fabricate :team_member, team: team, monthly_payment: 100 }
+
+    context 'when there is data in the week' do
+      let!(:first_project) { Fabricate :project, customer: customer, product: product, start_date: 2.months.ago, end_date: 3.weeks.from_now }
+      let!(:second_project) { Fabricate :project, customer: customer, product: product, start_date: 2.months.ago, end_date: 3.weeks.from_now }
+      let!(:third_project) { Fabricate :project, customer: customer, product: product, start_date: 2.months.ago, end_date: 1.month.from_now }
+
+      let!(:first_result) { Fabricate :project_result, project: first_project, result_date: 1.week.ago, throughput: 20, qty_hours_downstream: 20, qty_hours_upstream: 11 }
+      let!(:second_result) { Fabricate :project_result, project: second_project, result_date: 1.week.ago, throughput: 10, qty_hours_downstream: 20, qty_hours_upstream: 11 }
+      let!(:third_result) { Fabricate :project_result, project: third_project, result_date: 2.months.ago, throughput: 5, qty_hours_downstream: 20, qty_hours_upstream: 11 }
+      let!(:out_result) { Fabricate :project_result, result_date: 1.day.ago, flow_pressure: 4 }
+
+      it { expect(ProjectResultsRepository.instance.hours_per_demand_in_time_for_projects([first_project, second_project], 1.week.ago.to_date.cweek, 1.week.ago.to_date.cwyear)).to eq 2.325 }
+    end
+    context 'when there is no data in the week but there is in past weeks' do
+      let!(:project) { Fabricate :project, customer: customer, product: product, start_date: 2.months.ago, end_date: 1.month.from_now }
+      let!(:first_result) { Fabricate :project_result, project: project, result_date: 2.months.ago, throughput: 4 }
+      let!(:out_result) { Fabricate :project_result, result_date: 1.day.ago, throughput: 3 }
+
+      it { expect(ProjectResultsRepository.instance.hours_per_demand_in_time_for_projects([project], Time.zone.today.cweek, Time.zone.today.cwyear)).to eq 0 }
+    end
+    context 'when there is no data' do
+      let!(:project) { Fabricate :project, customer: customer, product: product, start_date: 1.month.ago, end_date: 1.month.from_now }
+      let!(:first_result) { Fabricate :project_result, project: project, result_date: 1.month.from_now, throughput: 3 }
+      let!(:out_result) { Fabricate :project_result, result_date: 1.day.ago, throughput: 4 }
+
+      it { expect(ProjectResultsRepository.instance.hours_per_demand_in_time_for_projects([project], Time.zone.today.cweek, Time.zone.today.cwyear)).to eq 0 }
     end
   end
 end

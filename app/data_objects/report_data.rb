@@ -18,9 +18,9 @@ class ReportData
     projects.map(&:full_name)
   end
 
-  def hours_per_demand_chart_data_for_week(project_results)
+  def hours_per_demand_per_week
     result_data = []
-    @weeks.each { |week_year| result_data << project_results.for_week(week_year[0], week_year[1]).sum(&:hours_per_demand) if add_data_to_chart?(week_year) }
+    @weeks.each { |week_year| result_data << ProjectResultsRepository.instance.hours_per_demand_in_time_for_projects(@projects, week_year[0], week_year[1]) if add_data_to_chart?(week_year) }
     result_data
   end
 

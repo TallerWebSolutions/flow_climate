@@ -11,8 +11,7 @@ class ProjectResultsRepository
     project_result_joins.where('customers.company_id = :company_id AND EXTRACT(WEEK FROM result_date) = :week AND EXTRACT(YEAR FROM result_date) = :year', company_id: company.id, week: week, year: year).sum(&:project_delivered_hours)
   end
 
-  # TODO: rename to th_in_week_for_company
-  def th_in_week(company, week, year)
+  def th_in_week_for_company(company, week, year)
     project_result_joins.where('customers.company_id = :company_id AND EXTRACT(WEEK FROM result_date) = :week AND EXTRACT(YEAR FROM result_date) = :year', company_id: company.id, week: week, year: year).sum(&:throughput)
   end
 
@@ -46,6 +45,20 @@ class ProjectResultsRepository
     end
 
     total_flow_pressure
+  end
+
+  def hours_per_demand_in_time_for_projects(projects, week, year)
+    hours_per_demand_in_week = []
+    projects.each do |project|
+      throughput = results_for_week(project, week, year).sum(:throughput)
+      next unless throughput.positive?
+
+      total_hours = results_for_week(project, week, year).sum(&:total_hours)
+      hours_per_demand_in_week << total_hours.to_f / throughput.to_f
+    end
+
+    return 0 if hours_per_demand_in_week.size.zero?
+    hours_per_demand_in_week.sum / hours_per_demand_in_week.size.to_f
   end
 
   def throughput_in_week_for_projects(projects, week, year)

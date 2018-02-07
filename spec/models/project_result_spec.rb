@@ -126,4 +126,9 @@ RSpec.describe ProjectResult, type: :model do
       it { expect(result.flow_pressure.to_f).to eq 0 }
     end
   end
+
+  describe '#total_hours' do
+    let(:result) { Fabricate :project_result, qty_hours_upstream: 100, qty_hours_downstream: 50 }
+    it { expect(result.total_hours).to eq 150 }
+  end
 end

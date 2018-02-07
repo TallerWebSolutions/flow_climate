@@ -27,8 +27,8 @@ describe ReportData, type: :data_object do
     it { expect(report_data.projects_names).to eq [project.full_name] }
   end
 
-  describe '#hours_per_demand_chart_data_for_week' do
+  describe '#hours_per_demand_per_week' do
     subject(:report_data) { ReportData.new(Project.all) }
-    it { expect(report_data.hours_per_demand_chart_data_for_week(ProjectResult.all)).to eq [1, 5] }
+    it { expect(report_data.hours_per_demand_per_week).to eq [1.3043478260869565, 3.16] }
   end
 end
