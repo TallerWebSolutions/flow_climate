@@ -29,3 +29,4 @@ function hideAllComponents() {
     $('#nav-item-list').removeClass('active');
     $('#nav-item-charts').removeClass('active');
 }
+;

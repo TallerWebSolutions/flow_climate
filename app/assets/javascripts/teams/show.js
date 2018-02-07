@@ -16,7 +16,7 @@ $('#nav-item-list').on('click', function(){
 
 $('#nav-item-charts').on('click', function(){
     hideAllComponents();
-    $('#team-charts').show();
+    $('#charts').show();
     $('#nav-item-charts').addClass('active');
 });
 
@@ -30,7 +30,7 @@ function hideAllComponents() {
     $('#stamps').hide();
     $('#project-list').hide();
     $('#members-table').hide();
-    $('#team-charts').hide();
+    $('#charts').hide();
 
     $('#nav-item-stamps').removeClass('active');
     $('#nav-item-list').removeClass('active');
