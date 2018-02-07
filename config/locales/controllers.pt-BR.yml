@@ -233,6 +233,8 @@ pt-BR:
     ylabel:
       projects:
         text: "Projetos"
+      total_hours:
+        text: "Total de Horas"
     tooltipsufix:
       projects:
         text: "projetos"

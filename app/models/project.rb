@@ -67,7 +67,7 @@ class Project < ApplicationRecord
   end
 
   def total_days
-    (end_date - start_date).to_i
+    (end_date - start_date).to_i + 1
   end
 
   def remaining_days(from_date = Time.zone.today)
@@ -215,6 +215,10 @@ class Project < ApplicationRecord
   def average_demand_cost
     return 0 if project_results.blank?
     project_results.order(:result_date).last.average_demand_cost
+  end
+
+  def hours_per_month
+    qty_hours.to_f / (total_days.to_f / 30)
   end
 
   private

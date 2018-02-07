@@ -1,16 +1,24 @@
 # frozen_string_literal: true
 
 class StrategicReportData
-  attr_reader :array_of_months, :active_projects_count_data
+  attr_reader :array_of_months, :active_projects_count_data, :total_hours_in_month
 
   def initialize(company)
     @array_of_months = []
     @active_projects_count_data = []
+    @total_hours_in_month = []
     assign_months_by_projects_dates(company)
     assign_active_projects_count_data(company)
+    assign_total_hours_per_month(company)
   end
 
   private
+
+  def assign_total_hours_per_month(company)
+    @array_of_months.each do |month_year|
+      @total_hours_in_month << ProjectsRepository.instance.running_projects_in_month(company, Date.new(month_year[1], month_year[0], 1)).sum(&:hours_per_month)
+    end
+  end
 
   def assign_active_projects_count_data(company)
     @array_of_months.each do |month_year|

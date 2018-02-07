@@ -127,7 +127,7 @@ RSpec.describe Project, type: :model do
 
   describe '#total_days' do
     let(:project) { Fabricate :project, start_date: 1.day.ago, end_date: 1.day.from_now }
-    it { expect(project.total_days).to eq 2 }
+    it { expect(project.total_days).to eq 3 }
   end
 
   describe '#remaining_days' do
@@ -152,7 +152,7 @@ RSpec.describe Project, type: :model do
   describe '#percentage_remaining_days' do
     context 'total_days is higher than 0' do
       let(:project) { Fabricate :project, start_date: 1.day.ago, end_date: 1.day.from_now }
-      it { expect(project.percentage_remaining_days).to eq 50.0 }
+      it { expect(project.percentage_remaining_days).to be_within(0.01).of(33.33) }
     end
     context 'total_days is 0' do
       let(:project) { Fabricate :project, start_date: Time.zone.today, end_date: Time.zone.today }

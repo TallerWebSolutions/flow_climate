@@ -232,6 +232,8 @@ en:
     ylabel:
       projects:
         text: "Projects"
+      total_hours:
+        text: "Total Hours"
     tooltipsufix:
       projects:
         text: "projects"
