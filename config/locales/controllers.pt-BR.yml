@@ -61,6 +61,9 @@ pt-BR:
       email_field: "Email"
       title: "Adicionar usuário"
     users_in_company: "Usuários na empresa"
+    send_company_bulletin:
+      queued: "Sua solicitação foi colocada na fila."
+      button: "Me Enviar Boletim"
   financial_informations:
     new:
       title: "Nova Informação Financeira"

@@ -30,6 +30,10 @@ RSpec.describe CompaniesController, type: :controller do
       before { patch :add_user, params: { id: 'xpto' } }
       it { expect(response).to redirect_to new_user_session_path }
     end
+    describe 'GET #send_company_bulletin' do
+      before { get :send_company_bulletin, params: { id: 'xpto' } }
+      it { expect(response).to redirect_to new_user_session_path }
+    end
   end
 
   context 'authenticated' do
@@ -199,6 +203,34 @@ RSpec.describe CompaniesController, type: :controller do
 
           before { put :update, params: { id: company, user_email: user.email } }
           it { expect(response).to have_http_status :not_found }
+        end
+      end
+    end
+    describe 'GET #send_company_bulletin' do
+      let(:other_user) { Fabricate :user }
+      let(:company) { Fabricate :company, users: [user, other_user] }
+
+      context 'valid parameters' do
+        it 'assigns the instance variables and renders the template' do
+          expect(UserNotifierMailer).to receive(:company_weekly_bulletin).with(User.where(id: user.id), company).once.and_call_original
+          get :send_company_bulletin, params: { id: company }
+          expect(response).to redirect_to company_path(company)
+          expect(flash[:notice]).to eq I18n.t('companies.send_company_bulletin.queued')
+          expect(assigns(:company)).to eq company
+        end
+      end
+
+      context 'invalid' do
+        context 'company' do
+          context 'non-existent' do
+            before { get :send_company_bulletin, params: { id: 'foo' } }
+            it { expect(response).to have_http_status :not_found }
+          end
+          context 'not-permitted' do
+            let(:company) { Fabricate :company, users: [] }
+            before { get :send_company_bulletin, params: { id: company } }
+            it { expect(response).to have_http_status :not_found }
+          end
         end
       end
     end

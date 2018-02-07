@@ -41,6 +41,12 @@ class CompaniesController < AuthenticatedController
     redirect_to edit_company_path(@company)
   end
 
+  def send_company_bulletin
+    UserNotifierMailer.company_weekly_bulletin(User.where(id: current_user.id), @company).deliver
+    flash[:notice] = t('companies.send_company_bulletin.queued')
+    redirect_to company_path(@company)
+  end
+
   private
 
   def assign_users_in_company

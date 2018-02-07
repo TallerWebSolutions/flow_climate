@@ -61,6 +61,9 @@ en:
       email_field: "Email"
       title: "Add user"
     users_in_company: "Users in company"
+    send_company_bulletin:
+      queued: "Your request was queued."
+      button: "Send Bulletin to Me"
   financial_informations:
     new:
       title: "New Financial Information"
