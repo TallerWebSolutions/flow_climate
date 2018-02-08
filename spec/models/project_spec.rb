@@ -651,4 +651,14 @@ RSpec.describe Project, type: :model do
       it { expect(project.red?).to be false }
     end
   end
+
+  describe '#hours_per_month' do
+    let(:project) { Fabricate :project, qty_hours: 100, start_date: 1.month.ago, end_date: 3.months.from_now }
+    it { expect(project.hours_per_month).to be 24.793388429752067 }
+  end
+
+  describe '#money_per_month' do
+    let(:project) { Fabricate :project, value: 100, start_date: 1.month.ago, end_date: 3.months.from_now }
+    it { expect(project.money_per_month.to_f).to be 24.793388429752067 }
+  end
 end

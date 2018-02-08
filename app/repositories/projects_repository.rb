@@ -29,4 +29,8 @@ class ProjectsRepository
     end
     total_flow_pressure
   end
+
+  def money_to_month(company, required_date)
+    active_projects_in_month(company, required_date).sum(&:money_per_month)
+  end
 end

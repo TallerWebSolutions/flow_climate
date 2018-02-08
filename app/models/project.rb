@@ -221,6 +221,10 @@ class Project < ApplicationRecord
     qty_hours.to_f / (total_days.to_f / 30)
   end
 
+  def money_per_month
+    value / (total_days.to_f / 30)
+  end
+
   private
 
   def locate_last_results

@@ -71,6 +71,8 @@ en:
         title: "Project Hours per Month for %{project_name}"
       flowpressure_per_month:
         title: "Flow Pressure for %{project_name}"
+      money_per_month:
+        title: "Money Distribution by Competency for %{project_name}"
   financial_informations:
     new:
       title: "New Financial Information"
@@ -242,6 +244,8 @@ en:
         text: "Available Hours"
       flow_pressure:
         text: "Flow Pressure"
+      money:
+        text: "Money"
     tooltipsufix:
       projects:
         text: "projects"

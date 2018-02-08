@@ -9,14 +9,14 @@ RSpec.describe StrategicReportData, type: :service do
     let!(:other_team_member) { Fabricate :team_member, team: team, hours_per_month: 160 }
 
     context 'having projects' do
-      let!(:first_project) { Fabricate :project, customer: customer, status: :maintenance, start_date: 3.months.ago, end_date: 2.months.ago, qty_hours: 1000, initial_scope: 95 }
-      let!(:second_project) { Fabricate :project, customer: customer, status: :executing, start_date: 3.months.ago, end_date: 2.months.ago, qty_hours: 500, initial_scope: 95 }
-      let!(:third_project) { Fabricate :project, customer: customer, status: :maintenance, start_date: 1.month.from_now, end_date: 2.months.from_now, qty_hours: 1500, initial_scope: 95 }
-      let!(:fourth_project) { Fabricate :project, customer: customer, status: :executing, start_date: 1.month.from_now, end_date: 2.months.from_now, qty_hours: 700, initial_scope: 95 }
-      let!(:fifth_project) { Fabricate :project, customer: customer, status: :maintenance, start_date: 2.months.from_now, end_date: 3.months.from_now, qty_hours: 200, initial_scope: 95 }
-      let!(:sixth_project) { Fabricate :project, customer: customer, status: :waiting, start_date: 2.months.from_now, end_date: 3.months.from_now, qty_hours: 5000, initial_scope: 95 }
-      let!(:seventh_project) { Fabricate :project, customer: customer, status: :finished, start_date: 2.months.from_now, end_date: 3.months.from_now, qty_hours: 8765, initial_scope: 95 }
-      let!(:eighth_project) { Fabricate :project, customer: customer, status: :cancelled, start_date: 2.months.from_now, end_date: 3.months.from_now, qty_hours: 1232, initial_scope: 95 }
+      let!(:first_project) { Fabricate :project, customer: customer, status: :maintenance, start_date: 3.months.ago, end_date: 2.months.ago, qty_hours: 1000, initial_scope: 95, value: 200.0 }
+      let!(:second_project) { Fabricate :project, customer: customer, status: :executing, start_date: 3.months.ago, end_date: 2.months.ago, qty_hours: 500, initial_scope: 95, value: 3_453_220.0 }
+      let!(:third_project) { Fabricate :project, customer: customer, status: :maintenance, start_date: 1.month.from_now, end_date: 2.months.from_now, qty_hours: 1500, initial_scope: 95, value: 10_000.0 }
+      let!(:fourth_project) { Fabricate :project, customer: customer, status: :executing, start_date: 1.month.from_now, end_date: 2.months.from_now, qty_hours: 700, initial_scope: 95, value: 700.0 }
+      let!(:fifth_project) { Fabricate :project, customer: customer, status: :maintenance, start_date: 2.months.from_now, end_date: 3.months.from_now, qty_hours: 200, initial_scope: 95, value: 200.0 }
+      let!(:sixth_project) { Fabricate :project, customer: customer, status: :waiting, start_date: 2.months.from_now, end_date: 3.months.from_now, qty_hours: 5000, initial_scope: 95, value: 123.0 }
+      let!(:seventh_project) { Fabricate :project, customer: customer, status: :finished, start_date: 2.months.from_now, end_date: 3.months.from_now, qty_hours: 8765, initial_scope: 95, value: 23.0 }
+      let!(:eighth_project) { Fabricate :project, customer: customer, status: :cancelled, start_date: 2.months.from_now, end_date: 3.months.from_now, qty_hours: 1232, initial_scope: 95, value: 200.0 }
 
       let!(:first_project_result) { Fabricate :project_result, project: first_project, team: team, result_date: 3.months.ago, qty_hours_upstream: 10, qty_hours_downstream: 40, available_hours: 234, throughput: 13, flow_pressure: 2.45 }
       let!(:second_project_result) { Fabricate :project_result, project: second_project, team: team, result_date: 3.months.ago, qty_hours_upstream: 10, qty_hours_downstream: 40, available_hours: 234, throughput: 13, flow_pressure: 2.45 }
@@ -35,6 +35,7 @@ RSpec.describe StrategicReportData, type: :service do
         expect(strategic_data.consumed_hours_per_month).to eq [100, 0, 0, 0, 100, 100, 0]
         expect(strategic_data.available_hours_per_month).to eq [180, 180, 180, 180, 180, 180, 180]
         expect(strategic_data.flow_pressure_per_month_data).to eq [4.9, 0, 0, 0, 4.9, 10.190322580645162, 5.466666666666667]
+        expect(strategic_data.money_per_month_data).to eq [3_342_019.3548387107, 3_342_019.3548387107, 0.0, 0.0, 10_031.249999999996, 10_343.830645161288, 312.5806451612904]
       end
     end
 

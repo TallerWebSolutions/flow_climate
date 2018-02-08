@@ -57,4 +57,16 @@ RSpec.describe ProjectsRepository, type: :repository do
       end
     end
   end
+
+  describe '#money_to_month' do
+    let!(:project) { Fabricate :project, customer: customer, value: 100, start_date: 2.months.ago, end_date: 1.month.from_now }
+    let!(:other_project) { Fabricate :project, customer: customer, value: 50, start_date: 2.months.ago, end_date: 1.month.from_now }
+    context 'having projects in the month' do
+      it { expect(ProjectsRepository.instance.money_to_month(company, 2.months.ago.to_date).to_f).to eq 49.45054945054945 }
+    end
+
+    context 'having no projects in the month' do
+      it { expect(ProjectsRepository.instance.money_to_month(company, 3.months.ago.to_date)).to eq 0 }
+    end
+  end
 end
