@@ -22,3 +22,7 @@
 en:
   "true": Yes
   "false": No
+  charts:
+    ylabel:
+      hours:
+        text: "Hours"

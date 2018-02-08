@@ -17,4 +17,5 @@ Fabricator(:project_result) do
   remaining_days { Faker::Number.decimal(0) }
   cost_in_week { Faker::Number.decimal(2) }
   average_demand_cost { Faker::Number.decimal(2) }
+  available_hours { Faker::Number.decimal(2) }
 end

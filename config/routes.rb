@@ -22,6 +22,7 @@ Rails.application.routes.draw do
     member do
       patch :add_user
       get :send_company_bulletin
+      post :update_settings
     end
 
     resources :teams, only: %i[index show new create edit update] do

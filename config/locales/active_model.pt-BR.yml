@@ -93,6 +93,9 @@ pt-BR:
       demand:
         one: Demanda
         other: Demandas
+      company_settings:
+        one: Configurações da Empresa
+        other: Configurações da Empresa
     attributes:
       user:
         first_name: Nome
@@ -204,6 +207,9 @@ pt-BR:
             red: Vermelho
             yellow: Amarelo
             green: Verde
+      company_settings:
+        max_active_parallel_projects: Qtd Máxima de Projetos Paralelos Ativos
+        max_flow_pressure: Máxima Pressão Geral do Fluxo
   product:
     name:
       uniqueness: "Não deve repetir nome de produto para o mesmo cliente."

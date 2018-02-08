@@ -11,6 +11,7 @@ class CompaniesController < AuthenticatedController
     @financial_informations = @company.financial_informations.order(finances_date: :desc)
     @teams = @company.teams.order(:name)
     @strategic_report_data = StrategicReportData.new(@company)
+    @company_settings = @company.company_settings || CompanySettings.new(company: @company)
   end
 
   def new
@@ -48,6 +49,13 @@ class CompaniesController < AuthenticatedController
     redirect_to company_path(@company)
   end
 
+  def update_settings
+    @company_settings = @company.company_settings
+    @company_settings = CompanySettings.new(company: @company) if @company_settings.blank?
+    @company_settings.update(company_settings_params)
+    respond_to { |format| format.js { render file: 'companies/update_settings.js.erb' } }
+  end
+
   private
 
   def assign_users_in_company
@@ -61,5 +69,9 @@ class CompaniesController < AuthenticatedController
 
   def company_params
     params.require(:company).permit(:name, :abbreviation)
+  end
+
+  def company_settings_params
+    params.require(:company_settings).permit(:max_active_parallel_projects, :max_flow_pressure)
   end
 end

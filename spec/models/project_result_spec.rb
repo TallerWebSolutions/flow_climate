@@ -75,6 +75,14 @@ RSpec.describe ProjectResult, type: :model do
       let(:fourth_result) { Fabricate :project_result, result_date: Time.zone.today }
       it { expect(ProjectResult.until_week(1.week.ago.to_date.cweek, 1.week.ago.to_date.cwyear)).to match_array [first_result, second_result, third_result] }
     end
+
+    describe '.in_month' do
+      let(:first_result) { Fabricate :project_result, result_date: 2.months.ago }
+      let(:second_result) { Fabricate :project_result, result_date: 1.month.ago }
+      let(:third_result) { Fabricate :project_result, result_date: 1.month.ago }
+      let(:fourth_result) { Fabricate :project_result, result_date: 3.months.ago }
+      it { expect(ProjectResult.in_month(1.month.ago)).to match_array [second_result, third_result] }
+    end
   end
 
   context 'delegations' do
@@ -97,7 +105,7 @@ RSpec.describe ProjectResult, type: :model do
     end
   end
 
-  describe '#define_automatic_attributes!!' do
+  describe '#define_automatic_attributes!' do
     let(:company) { Fabricate :company }
     let(:customer) { Fabricate :customer, company: company }
     let(:project) { Fabricate :project, customer: customer }
@@ -108,15 +116,19 @@ RSpec.describe ProjectResult, type: :model do
       it { expect(result.reload.remaining_days).to eq 59 }
       it { expect(result.reload.cost_in_week).to eq 0 }
       it { expect(result.reload.average_demand_cost.to_f).to eq 0 }
+      it { expect(result.reload.available_hours.to_f).to eq 0 }
     end
     context 'when the project already has a team and a cost' do
       let(:team) { Fabricate :team }
-      let!(:team_member) { Fabricate :team_member, team: team, monthly_payment: 100 }
-      let!(:other_team_member) { Fabricate :team_member, team: team, monthly_payment: 100 }
+      let!(:team_member) { Fabricate :team_member, active: true, billable_type: :outsourcing, billable: true, team: team, monthly_payment: 100, hours_per_month: 22 }
+      let!(:other_team_member) { Fabricate :team_member, active: true, billable_type: :outsourcing, billable: true, team: team, monthly_payment: 100, hours_per_month: 11 }
       let!(:result) { Fabricate :project_result, project: project, team: team, known_scope: 20, throughput: 4 }
       before { result.define_automatic_attributes! }
-      it { expect(result.reload.cost_in_week.to_f).to eq 50.0 }
-      it { expect(result.reload.average_demand_cost.to_f).to eq 12.5 }
+      it 'defines the automatic attributes' do
+        expect(result.reload.cost_in_week.to_f).to eq 50.0
+        expect(result.reload.average_demand_cost.to_f).to eq 12.5
+        expect(result.reload.available_hours.to_f).to eq 8.25
+      end
     end
     context 'when the remaining days is zero' do
       let(:project) { Fabricate :project, start_date: 2.days.ago, end_date: Time.zone.today }

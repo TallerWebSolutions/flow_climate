@@ -24,6 +24,7 @@
 #  remaining_days       :integer          not null
 #  cost_in_week         :decimal(, )      not null
 #  average_demand_cost  :decimal(, )      not null
+#  available_hours      :decimal(, )      not null
 #
 # Indexes
 #
@@ -44,6 +45,7 @@ class ProjectResult < ApplicationRecord
 
   scope :for_week, ->(week, year) { where('EXTRACT(WEEK FROM result_date) = :week AND EXTRACT(YEAR FROM result_date) = :year', week: week, year: year) }
   scope :until_week, ->(week, year) { where('(EXTRACT(WEEK FROM result_date) <= :week AND EXTRACT(YEAR FROM result_date) <= :year) OR (EXTRACT(YEAR FROM result_date) < :year)', week: week, year: year) }
+  scope :in_month, ->(target_date) { where('result_date >= :start_date AND result_date <= :end_date', start_date: target_date.beginning_of_month, end_date: target_date.end_of_month) }
 
   delegate :name, to: :team, prefix: true
 
@@ -59,7 +61,9 @@ class ProjectResult < ApplicationRecord
   end
 
   def define_automatic_attributes!
-    update(remaining_days: project.remaining_days, flow_pressure: current_flow_pressure, cost_in_week: calculate_cost_in_week, average_demand_cost: calculate_average_demand_cost)
+    available_hours = 0
+    available_hours = team.current_outsourcing_monthly_available_hours.to_f / 4 if team.present?
+    update(remaining_days: project.remaining_days, flow_pressure: current_flow_pressure, cost_in_week: calculate_cost_in_week, average_demand_cost: calculate_average_demand_cost, available_hours: available_hours)
   end
 
   def total_hours

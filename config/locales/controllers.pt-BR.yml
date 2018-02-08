@@ -67,6 +67,10 @@ pt-BR:
     charts:
       active_projects:
         title: "Contagem de Projetos Ativos no Mês para %{project_name}"
+      hours_per_month:
+        title: "Horas dos Projetos por Mês para %{project_name}"
+      flowpressure_per_month:
+        title: "Pressão de Fluxo para %{project_name}"
   financial_informations:
     new:
       title: "Nova Informação Financeira"
@@ -234,7 +238,16 @@ pt-BR:
       projects:
         text: "Projetos"
       total_hours:
-        text: "Total de Horas"
+        text: "Horas em Projetos"
+      hours:
+        text: "Horas"
+      available:
+        text: "Horas Disponíveis"
+      flow_pressure:
+        text: "Pressão do Fluxo"
     tooltipsufix:
       projects:
         text: "projetos"
+    series:
+      consumed_hours:
+        text: "Horas Consumidas"

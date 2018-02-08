@@ -16,17 +16,6 @@
     </div>
   </div>
 
-  <div id="settings">
-    <div class="row">
-      <div class="col-xs-1 botton-spaced-component">
-        <%= link_to t('companies.edit.title'), edit_company_path(@company), class: 'btn btn-sm btn-primary top-button' %>
-      </div>
-      <div class="col-xs-1 botton-spaced-component">
-        <%= link_to t('companies.send_company_bulletin.button'), send_company_bulletin_company_path(@company), class: 'btn btn-sm btn-primary top-button' %>
-      </div>
-    </div>
-  </div>
-
   <div id="stamps">
     <%= render 'company_stamps' %>
   </div>
@@ -46,11 +35,18 @@
   <div id="strategic">
     <%= render 'companies/strategic_table' %>
   </div>
+
+  <div id="settings">
+    <%= render 'company_settings' %>
+  </div>
 </div>
 
 <% content_for :javascript do %>
   <%= javascript_include_tag 'companies/show' %>
   <%= javascript_include_tag 'charts/column-line' %>
+  <%= javascript_include_tag 'charts/line' %>
   <%= javascript_include_tag 'companies/column_active_projects_count_chart' %>
+  <%= javascript_include_tag 'companies/hours_per_month_chart' %>
+  <%= javascript_include_tag 'companies/flow_pressure_chart' %>
 <% end %>
 

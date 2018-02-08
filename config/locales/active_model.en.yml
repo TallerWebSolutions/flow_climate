@@ -50,6 +50,9 @@ en:
             not_enough_available_hours: "Not Enough Available Hours"
             profit_margin: "Profit Margin"
             flow_pressure: "Flow Pressure"
+      company_settings:
+        max_flow_pressure: Maximum Total Flow Pressure
+        max_active_parallel_projects: Maximum Parallel Active Projects
     errors:
       messages:
         record_invalid: 'Validation failed: %{errors}'

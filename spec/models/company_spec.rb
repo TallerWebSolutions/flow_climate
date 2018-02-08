@@ -9,6 +9,7 @@ RSpec.describe Company, type: :model do
     it { is_expected.to have_many(:projects).through(:customers) }
     it { is_expected.to have_many :teams }
     it { is_expected.to have_many :operation_results }
+    it { is_expected.to have_one :company_settings }
   end
 
   context 'validations' do
@@ -375,6 +376,23 @@ RSpec.describe Company, type: :model do
     it 'calls the repository' do
       expect(DemandsRepository.instance).to receive(:demands_for_company_and_week).once
       company.demands_delivered_last_week
+    end
+  end
+
+  describe '#total_available_hours' do
+    context 'having teams' do
+      let(:company) { Fabricate :company }
+      let(:team) { Fabricate :team, company: company }
+      let(:other_team) { Fabricate :team, company: company }
+      let!(:first_team_member) { Fabricate :team_member, team: team, hours_per_month: 100 }
+      let!(:second_team_member) { Fabricate :team_member, team: team, hours_per_month: 160 }
+      let!(:third_team_member) { Fabricate :team_member, team: other_team, hours_per_month: 160 }
+
+      it { expect(company.total_available_hours).to eq 420 }
+    end
+    context 'having no teams' do
+      let(:company) { Fabricate :company }
+      it { expect(company.total_available_hours).to eq 0 }
     end
   end
 end

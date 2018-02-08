@@ -85,6 +85,39 @@ CREATE TABLE companies_users (
 
 
 --
+-- Name: company_settings; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE company_settings (
+    id bigint NOT NULL,
+    company_id integer NOT NULL,
+    max_active_parallel_projects integer NOT NULL,
+    max_flow_pressure numeric NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: company_settings_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE company_settings_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: company_settings_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE company_settings_id_seq OWNED BY company_settings.id;
+
+
+--
 -- Name: customers; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -281,7 +314,8 @@ CREATE TABLE project_results (
     flow_pressure numeric NOT NULL,
     remaining_days integer NOT NULL,
     cost_in_week numeric NOT NULL,
-    average_demand_cost numeric NOT NULL
+    average_demand_cost numeric NOT NULL,
+    available_hours numeric NOT NULL
 );
 
 
@@ -546,6 +580,13 @@ ALTER TABLE ONLY companies ALTER COLUMN id SET DEFAULT nextval('companies_id_seq
 
 
 --
+-- Name: company_settings id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY company_settings ALTER COLUMN id SET DEFAULT nextval('company_settings_id_seq'::regclass);
+
+
+--
 -- Name: customers id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -643,6 +684,14 @@ ALTER TABLE ONLY ar_internal_metadata
 
 ALTER TABLE ONLY companies
     ADD CONSTRAINT companies_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: company_settings company_settings_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY company_settings
+    ADD CONSTRAINT company_settings_pkey PRIMARY KEY (id);
 
 
 --
@@ -761,6 +810,13 @@ CREATE INDEX index_companies_users_on_company_id ON companies_users USING btree 
 --
 
 CREATE INDEX index_companies_users_on_user_id ON companies_users USING btree (user_id);
+
+
+--
+-- Name: index_company_settings_on_company_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_company_settings_on_company_id ON company_settings USING btree (company_id);
 
 
 --
@@ -925,6 +981,14 @@ ALTER TABLE ONLY financial_informations
 
 
 --
+-- Name: company_settings fk_rails_6434bf6768; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY company_settings
+    ADD CONSTRAINT fk_rails_6434bf6768 FOREIGN KEY (company_id) REFERENCES companies(id);
+
+
+--
 -- Name: companies_users fk_rails_667cd952fb; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1023,6 +1087,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20180203152518'),
 ('20180204121055'),
 ('20180204213721'),
-('20180206183551');
+('20180206183551'),
+('20180207231739'),
+('20180208112930');
 
 
