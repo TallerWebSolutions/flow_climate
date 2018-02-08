@@ -395,4 +395,54 @@ RSpec.describe Company, type: :model do
       it { expect(company.total_available_hours).to eq 0 }
     end
   end
+
+  describe '#total_active_hours' do
+    let(:company) { Fabricate :company }
+    let(:customer) { Fabricate :customer, company: company }
+
+    context 'having active projects' do
+      let!(:first_project) { Fabricate :project, customer: customer, status: :executing, qty_hours: 20 }
+      let!(:second_project) { Fabricate :project, customer: customer, status: :maintenance, qty_hours: 25 }
+      let!(:third_project) { Fabricate :project, customer: customer, status: :cancelled, qty_hours: 40 }
+      let!(:fourth_project) { Fabricate :project, customer: customer, status: :finished, qty_hours: 35 }
+      let!(:fifth_project) { Fabricate :project, customer: customer, status: :waiting, qty_hours: 10 }
+
+      it { expect(company.total_active_hours).to eq 55 }
+    end
+    context 'having no active projects' do
+      let!(:first_project) { Fabricate :project, customer: customer, status: :cancelled, qty_hours: 40 }
+      let!(:second_project) { Fabricate :project, customer: customer, status: :finished, qty_hours: 35 }
+      it { expect(company.total_active_hours).to eq 0 }
+    end
+  end
+
+  describe '#total_active_consumed_hours' do
+    let(:company) { Fabricate :company }
+    let(:customer) { Fabricate :customer, company: company }
+
+    context 'having active projects' do
+      let(:first_project) { Fabricate :project, customer: customer, status: :executing, qty_hours: 20 }
+      let(:second_project) { Fabricate :project, customer: customer, status: :maintenance, qty_hours: 25 }
+      let(:third_project) { Fabricate :project, customer: customer, status: :cancelled, qty_hours: 40 }
+      let(:fourth_project) { Fabricate :project, customer: customer, status: :finished, qty_hours: 35 }
+      let(:fifth_project) { Fabricate :project, customer: customer, status: :waiting, qty_hours: 10 }
+
+      let!(:first_result) { Fabricate :project_result, project: first_project, qty_hours_downstream: 10, qty_hours_upstream: 20 }
+      let!(:second_result) { Fabricate :project_result, project: second_project, qty_hours_downstream: 10, qty_hours_upstream: 20 }
+      let!(:third_result) { Fabricate :project_result, project: third_project, qty_hours_downstream: 10, qty_hours_upstream: 20 }
+      let!(:third_result) { Fabricate :project_result, project: fourth_project, qty_hours_downstream: 10, qty_hours_upstream: 20 }
+      let!(:fifth_result) { Fabricate :project_result, project: fifth_project, qty_hours_downstream: 10, qty_hours_upstream: 20 }
+
+      it { expect(company.total_active_consumed_hours).to eq 90 }
+    end
+
+    context 'having no active projects' do
+      let!(:first_project) { Fabricate :project, customer: customer, status: :cancelled, qty_hours: 40 }
+      let!(:second_project) { Fabricate :project, customer: customer, status: :finished, qty_hours: 35 }
+      let!(:first_result) { Fabricate :project_result, project: first_project, qty_hours_downstream: 10, qty_hours_upstream: 20 }
+      let!(:second_result) { Fabricate :project_result, project: second_project, qty_hours_downstream: 10, qty_hours_upstream: 20 }
+
+      it { expect(company.total_active_consumed_hours).to eq 0 }
+    end
+  end
 end

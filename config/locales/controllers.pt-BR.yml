@@ -255,3 +255,6 @@ pt-BR:
     series:
       consumed_hours:
         text: "Horas Consumidas"
+    hours_available:
+      title: "Horas Vendidas"
+      suffix: "Horas Consumidas"

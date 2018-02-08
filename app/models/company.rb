@@ -123,4 +123,12 @@ class Company < ApplicationRecord
   def total_available_hours
     teams.sum(&:current_outsourcing_monthly_available_hours)
   end
+
+  def total_active_hours
+    projects.active.sum(:qty_hours)
+  end
+
+  def total_active_consumed_hours
+    projects.active.sum(&:total_hours_consumed)
+  end
 end

@@ -252,3 +252,6 @@ en:
     series:
       consumed_hours:
         text: "Consumed Hours"
+    hours_available:
+      title: "Hours Sold"
+      suffix: "Hours Consumed"
