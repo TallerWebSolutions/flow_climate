@@ -12,6 +12,8 @@ class CompaniesController < AuthenticatedController
     @teams = @company.teams.order(:name)
     @strategic_report_data = StrategicReportData.new(@company)
     @company_settings = @company.company_settings || CompanySettings.new(company: @company)
+    @company_projects = @company.projects.order(end_date: :desc)
+    @projects_summary = ProjectsSummaryObject.new(@company_projects)
   end
 
   def new
