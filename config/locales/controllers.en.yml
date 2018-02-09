@@ -255,3 +255,5 @@ en:
     hours_available:
       title: "Hours Sold"
       suffix: "Hours Consumed"
+    team_hours_available:
+      title: "Available Hours"

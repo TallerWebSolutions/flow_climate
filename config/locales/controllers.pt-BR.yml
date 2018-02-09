@@ -258,3 +258,5 @@ pt-BR:
     hours_available:
       title: "Horas Vendidas"
       suffix: "Horas Consumidas"
+    team_hours_available:
+      title: "Horas Disponíveis"

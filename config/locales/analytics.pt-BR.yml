@@ -1,0 +1,8 @@
+pt-BR:
+  flow_analytics:
+    best_month_to_start:
+      no_config: "Favor configurar primeiro a empresa."
+      best_month_html: "O melhor mês para começar projetos é <span style='color: blue'>%{best_month}</span>, quando teremos espaço para <b>%{project_portfolio_room} projetos</b>."
+    financial_debt:
+      no_finances: "Você não tem finanças registradas para esta empresa."
+      financial_debt_month_html: "As entradas financeiras de projetos no mês de <span style='color: blue'>%{debt_month}</span> são menores que as despesas e a diferença é de <span style='color: red'>%{debt_difference}</span>."
