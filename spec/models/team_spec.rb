@@ -206,4 +206,18 @@ RSpec.describe Team, type: :model do
 
     it { expect(team.total_cost).to eq team.team_members.sum(&:monthly_payment) }
   end
+
+  describe '#consumed_hours_in_month' do
+    let(:team) { Fabricate :team }
+    context 'having project results' do
+      let!(:project_result) { Fabricate :project_result, team: team, qty_hours_downstream: 200, qty_hours_upstream: 87 }
+      let!(:other_project_result) { Fabricate :project_result, team: team, qty_hours_downstream: 130, qty_hours_upstream: 65 }
+
+      it { expect(team.consumed_hours_in_month(Time.zone.today)).to eq 482 }
+    end
+
+    context 'having no project results' do
+      it { expect(team.consumed_hours_in_month(Time.zone.today)).to eq 0 }
+    end
+  end
 end

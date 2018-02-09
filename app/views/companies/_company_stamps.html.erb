@@ -88,3 +88,23 @@
     </div>
   <% end %>
 </div>
+
+<div class="row">
+  <div class="col-xs-6">
+    <div id="hours-gauge"
+         class="flow-chart"
+         data-title='<%= t('charts.hours_available.title') %>'
+         data-suffix='<%= t('charts.hours_available.suffix') %>'
+         data-max='<%= @company.total_active_hours %>'
+         data-value='<%= @company.total_active_consumed_hours %>'>
+    </div>
+  </div>
+  <div class="col-xs-6">
+    <h3>
+      <ul>
+        <li><%= FlowAnalytic.new(@company).best_month_to_start_a_project(Time.zone.today).html_safe %></li>
+        <li><%= FlowAnalytic.new(@company).financial_debt_to_sold_projects(Time.zone.today).html_safe %></li>
+      </ul>
+    </h3>
+  </div>
+</div>

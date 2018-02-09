@@ -64,6 +64,15 @@ en:
     send_company_bulletin:
       queued: "Your request was queued."
       button: "Send Bulletin to Me"
+    charts:
+      active_projects:
+        title: "Active Projects Count to Months for %{project_name}"
+      hours_per_month:
+        title: "Project Hours per Month for %{project_name}"
+      flowpressure_per_month:
+        title: "Flow Pressure for %{project_name}"
+      money_per_month:
+        title: "Money Distribution by Competency for %{project_name}"
   financial_informations:
     new:
       title: "New Financial Information"
@@ -220,3 +229,31 @@ en:
     settings: "Project Settings"
     projects_list: "Projects"
     members_table: "Team Members"
+    strategic: "Strategic Informations"
+    finance: "Financial Informations"
+    teams: "Teams"
+  charts:
+    xlabel:
+      months: "Months"
+    ylabel:
+      projects:
+        text: "Projects"
+      total_hours:
+        text: "Hours In Projects"
+      available:
+        text: "Available Hours"
+      flow_pressure:
+        text: "Flow Pressure"
+      money:
+        text: "Money"
+    tooltipsufix:
+      projects:
+        text: "projects"
+    series:
+      consumed_hours:
+        text: "Consumed Hours"
+    hours_available:
+      title: "Hours Sold"
+      suffix: "Hours Consumed"
+    team_hours_available:
+      title: "Available Hours"

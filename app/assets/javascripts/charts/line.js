@@ -1,44 +1,54 @@
-function buildLineChart(lineDiv) {
-    $(function () {
-        new Highcharts.Chart({
-            chart: {
-                renderTo: lineDiv.attr('id')
-            },
+function buildLineChart(columnDiv) {
+    new Highcharts.Chart({
+        chart: {
+            type: 'line',
+            renderTo: columnDiv.attr('id')
+        },
+        title: {
+            text: columnDiv.data('title'),
+            x: -20 //center
+        },
+        subtitle: {
+            text: 'Source: Flow Climate'
+        },
+        xAxis: {
+            categories: columnDiv.data('xcategories'),
+            title: {text: columnDiv.data('xtitle')}
+        },
+        yAxis: [{
             title: {
-                text: lineDiv.data('title'),
-                x: -20 //center
+                text: columnDiv.data('ylinetitle')
             },
-            subtitle: {
-                text: 'Source: Flow Climate'
+            plotLines: [{
+                value: 0,
+                width: 1,
+                color: '#808080'
+            }],
+            stackLabels: {
+                enabled: true
             },
-            xAxis: {
-                categories: lineDiv.data('weeks'),
-                title: {text: lineDiv.data('xtitle')}
-            },
-            yAxis: {
-                title: {
-                    text: lineDiv.data('ytitle')
-                },
-                plotLines: [{
-                    value: 0,
-                    width: 1,
-                    color: '#808080'
-                }]
-            },
-            tooltip: {
-                formatter: function() {
-                    return '<b>'+ this.series.name +'</b><br/>'+
-                        'R$ '+ this.y.toFixed(2).replace(".",",");
-
+            opposite: true
+        }],
+        tooltip: {
+            enabled: false
+        },
+        legend: {
+            layout: 'vertical',
+            align: 'right',
+            verticalAlign: 'middle',
+            borderWidth: 0
+        },
+        plotOptions: {
+            line: {
+                dataLabels: {
+                    enabled: true,
+                    color: 'black',
+                    formatter: function () {
+                        return Highcharts.numberFormat(this.y, columnDiv.data('decimals'), '.');
+                    }
                 }
-            },
-            legend: {
-                layout: 'vertical',
-                align: 'right',
-                verticalAlign: 'middle',
-                borderWidth: 0
-            },
-            series: lineDiv.data('series')
-        });
-    })
+            }
+        },
+        series: columnDiv.data('series')
+    });
 }

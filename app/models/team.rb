@@ -64,4 +64,8 @@ class Team < ApplicationRecord
   def current_outsourcing_monthly_available_hours
     team_members.active.where(billable: true, billable_type: :outsourcing).sum(&:hours_per_month)
   end
+
+  def consumed_hours_in_month(required_date)
+    project_results.in_month(required_date).sum(&:total_hours)
+  end
 end

@@ -119,11 +119,15 @@ RSpec.describe Project, type: :model do
     describe '.running' do
       it { expect(Project.running).to match_array [third_project, fourth_project] }
     end
+
+    describe '.active' do
+      it { expect(Project.active).to match_array [first_project, second_project, third_project, fourth_project] }
+    end
   end
 
   describe '#total_days' do
     let(:project) { Fabricate :project, start_date: 1.day.ago, end_date: 1.day.from_now }
-    it { expect(project.total_days).to eq 2 }
+    it { expect(project.total_days).to eq 3 }
   end
 
   describe '#remaining_days' do
@@ -148,7 +152,7 @@ RSpec.describe Project, type: :model do
   describe '#percentage_remaining_days' do
     context 'total_days is higher than 0' do
       let(:project) { Fabricate :project, start_date: 1.day.ago, end_date: 1.day.from_now }
-      it { expect(project.percentage_remaining_days).to eq 50.0 }
+      it { expect(project.percentage_remaining_days).to be_within(0.01).of(33.33) }
     end
     context 'total_days is 0' do
       let(:project) { Fabricate :project, start_date: Time.zone.today, end_date: Time.zone.today }
@@ -646,5 +650,15 @@ RSpec.describe Project, type: :model do
 
       it { expect(project.red?).to be false }
     end
+  end
+
+  describe '#hours_per_month' do
+    let(:project) { Fabricate :project, qty_hours: 100, start_date: 1.month.ago, end_date: 3.months.from_now }
+    it { expect(project.hours_per_month).to be 24.793388429752067 }
+  end
+
+  describe '#money_per_month' do
+    let(:project) { Fabricate :project, value: 100, start_date: 1.month.ago, end_date: 3.months.from_now }
+    it { expect(project.money_per_month.to_f).to be 24.793388429752067 }
   end
 end

@@ -193,6 +193,7 @@ RSpec.describe ProductsController, type: :controller do
             expect(assigns(:product)).to eq product
             expect(assigns(:report_data)).to be_a ReportData
             expect(assigns(:product_projects)).to eq [second_project, first_project]
+            expect(assigns(:projects_summary).total_initial_scope).to eq 60
           end
         end
         context 'having no data' do

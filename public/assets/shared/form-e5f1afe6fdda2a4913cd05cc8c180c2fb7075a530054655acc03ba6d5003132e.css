@@ -17,7 +17,7 @@
     text-transform: uppercase;
 }
 
-.botton-spaced-component {margin-bottom: 8px;}
+.bottom-spaced-component {margin-bottom: 8px;}
 
 label.required:after{content: " *"}
 

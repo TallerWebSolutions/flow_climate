@@ -20,6 +20,7 @@ class Company < ApplicationRecord
   has_many :projects, through: :customers
   has_many :teams, dependent: :restrict_with_error
   has_many :operation_results, dependent: :restrict_with_error
+  has_one :company_settings, dependent: :destroy
 
   validates :name, :abbreviation, presence: true
 
@@ -117,5 +118,17 @@ class Company < ApplicationRecord
 
   def demands_delivered_last_week
     DemandsRepository.instance.demands_for_company_and_week(self, 1.week.ago.to_date)
+  end
+
+  def total_available_hours
+    teams.sum(&:current_outsourcing_monthly_available_hours)
+  end
+
+  def total_active_hours
+    projects.active.sum(:qty_hours)
+  end
+
+  def total_active_consumed_hours
+    projects.active.sum(&:total_hours_consumed)
   end
 end

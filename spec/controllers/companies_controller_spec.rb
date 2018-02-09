@@ -34,6 +34,10 @@ RSpec.describe CompaniesController, type: :controller do
       before { get :send_company_bulletin, params: { id: 'xpto' } }
       it { expect(response).to redirect_to new_user_session_path }
     end
+    describe 'POST #update_settings' do
+      before { post :update_settings, params: { id: 'xpto' }, xhr: true }
+      it { expect(response.status).to eq 401 }
+    end
   end
 
   context 'authenticated' do
@@ -54,20 +58,39 @@ RSpec.describe CompaniesController, type: :controller do
     end
 
     describe 'GET #show' do
-      context 'passing a valid ID' do
+      context 'passing valid parameters' do
         let(:company) { Fabricate :company, users: [user] }
-        let(:team) { Fabricate :team, company: company }
-        let!(:finances) { Fabricate :financial_information, company: company, finances_date: 2.days.ago }
-        let!(:other_finances) { Fabricate :financial_information, company: company, finances_date: Time.zone.today }
-        let!(:team_member) { Fabricate :team_member, team: team, name: 'zzz' }
-        let!(:other_team_member) { Fabricate :team_member, team: team, name: 'aaa' }
+        context 'and the company has no settings yet' do
+          let(:customer) { Fabricate :customer, company: company }
 
-        before { get :show, params: { id: company.id } }
-        it 'assigns the instance variable and renders the template' do
-          expect(response).to render_template :show
-          expect(assigns(:company)).to eq company
-          expect(assigns(:financial_informations)).to eq [other_finances, finances]
-          expect(assigns(:teams)).to eq [team]
+          let(:team) { Fabricate :team, company: company }
+          let!(:finances) { Fabricate :financial_information, company: company, finances_date: 2.days.ago }
+          let!(:other_finances) { Fabricate :financial_information, company: company, finances_date: Time.zone.today }
+          let!(:team_member) { Fabricate :team_member, team: team, name: 'zzz' }
+          let!(:other_team_member) { Fabricate :team_member, team: team, name: 'aaa' }
+
+          let!(:first_project) { Fabricate :project, customer: customer, status: :maintenance, start_date: 10.minutes.from_now, end_date: 10.minutes.from_now }
+          let!(:second_project) { Fabricate :project, customer: customer, status: :executing, start_date: Time.zone.today, end_date: Time.zone.now }
+          let!(:third_project) { Fabricate :project, customer: customer, status: :maintenance, start_date: 1.month.from_now, end_date: 1.month.from_now }
+          let!(:fourth_project) { Fabricate :project, customer: customer, status: :executing, start_date: 5.weeks.from_now, end_date: 5.weeks.from_now }
+
+          before { get :show, params: { id: company.id } }
+          it 'assigns the instance variable and renders the template' do
+            expect(response).to render_template :show
+            expect(assigns(:company)).to eq company
+            expect(assigns(:financial_informations)).to eq [other_finances, finances]
+            expect(assigns(:teams)).to eq [team]
+            expect(assigns(:strategic_report_data).array_of_months).to eq [[Time.zone.today.month, Time.zone.today.year], [1.month.from_now.to_date.month, 1.month.from_now.to_date.year]]
+            expect(assigns(:strategic_report_data).active_projects_count_data).to eq [2, 2]
+            expect(assigns(:company_settings)).to be_a_new CompanySettings
+            expect(assigns(:company_projects)).to eq [fourth_project, third_project, first_project, second_project]
+            expect(assigns(:projects_summary).total_initial_scope).to eq 120
+          end
+        end
+        context 'and the company already have settings' do
+          let!(:company_settings) { Fabricate :company_settings, company: company }
+          before { get :show, params: { id: company.id } }
+          it { expect(assigns(:company_settings)).to eq company.reload.company_settings }
         end
       end
       context 'passing an invalid ID' do
@@ -230,6 +253,44 @@ RSpec.describe CompaniesController, type: :controller do
             let(:company) { Fabricate :company, users: [] }
             before { get :send_company_bulletin, params: { id: company } }
             it { expect(response).to have_http_status :not_found }
+          end
+        end
+      end
+    end
+
+    describe 'POST #update_settings' do
+      let(:company) { Fabricate :company, users: [user] }
+      context 'passing valid parameters' do
+        context 'when the company does not have settings yet' do
+          before { post :update_settings, params: { id: company, company_settings: { max_active_parallel_projects: 100, max_flow_pressure: 2.2 } }, xhr: true }
+          it 'updates the already existent settings' do
+            expect(company.reload.company_settings.max_active_parallel_projects).to eq 100
+            expect(company.reload.company_settings.max_flow_pressure).to eq 2.2
+            expect(CompanySettings.count).to eq 1
+            expect(response).to render_template 'companies/update_settings.js.erb'
+          end
+        end
+        context 'when the company already has settings' do
+          let!(:company_settings) { Fabricate :company_settings, company: company }
+          before { post :update_settings, params: { id: company, company_settings: { max_active_parallel_projects: 100, max_flow_pressure: 2.2 } }, xhr: true }
+          it 'updates the already existent settings' do
+            expect(company.reload.company_settings.max_active_parallel_projects).to eq 100
+            expect(company.reload.company_settings.max_flow_pressure).to eq 2.2
+            expect(response).to render_template 'companies/update_settings.js.erb'
+          end
+        end
+      end
+
+      context 'invalid' do
+        context 'company' do
+          context 'non-existent' do
+            before { post :update_settings, params: { id: 'foo', company_settings: { max_active_parallel_projects: 100, max_flow_pressure: 2.2 } }, xhr: true }
+            it { expect(response.status).to eq 404 }
+          end
+          context 'not-permitted' do
+            let(:company) { Fabricate :company, users: [] }
+            before { post :update_settings, params: { id: company, company_settings: { max_active_parallel_projects: 100, max_flow_pressure: 2.2 } }, xhr: true }
+            it { expect(response.status).to eq 404 }
           end
         end
       end

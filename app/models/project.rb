@@ -49,8 +49,9 @@ class Project < ApplicationRecord
   delegate :name, to: :product, prefix: true, allow_nil: true
 
   scope :waiting_projects_starting_within_week, -> { waiting.where('EXTRACT(week FROM start_date) = :week AND EXTRACT(year FROM start_date) = :year', week: Time.zone.today.cweek, year: Time.zone.today.cwyear) }
-  scope :running, -> { where('status = 1 OR status = 2') }
   scope :running_projects_finishing_within_week, -> { running.where('EXTRACT(week FROM end_date) = :week AND EXTRACT(year FROM end_date) = :year', week: Time.zone.today.cweek, year: Time.zone.today.cwyear) }
+  scope :running, -> { where('status = 1 OR status = 2') }
+  scope :active, -> { where('status = 0 OR status = 1 OR status = 2') }
 
   def red?
     project_risk_configs.each do |risk_config|
@@ -66,7 +67,7 @@ class Project < ApplicationRecord
   end
 
   def total_days
-    (end_date - start_date).to_i
+    (end_date - start_date).to_i + 1
   end
 
   def remaining_days(from_date = Time.zone.today)
@@ -214,6 +215,14 @@ class Project < ApplicationRecord
   def average_demand_cost
     return 0 if project_results.blank?
     project_results.order(:result_date).last.average_demand_cost
+  end
+
+  def hours_per_month
+    qty_hours.to_f / (total_days.to_f / 30)
+  end
+
+  def money_per_month
+    value / (total_days.to_f / 30)
   end
 
   private

@@ -4,16 +4,52 @@
       <h1><%= @company.name %></h1>
     </div>
   </div>
+
   <div class="row">
-    <div class="col-xs-1 botton-spaced-component">
-      <%= link_to t('companies.edit.title'), edit_company_path(@company), class: 'btn btn-sm btn-primary top-button' %>
-    </div>
-    <div class="col-xs-1 botton-spaced-component">
-      <%= link_to t('companies.send_company_bulletin.button'), send_company_bulletin_company_path(@company), class: 'btn btn-sm btn-primary top-button' %>
+    <div class="topnav">
+      <%= link_to t('navbar.details'), '#', id: 'nav-item-stamps', class: 'active' %>
+      <%= link_to t('navbar.projects_list'), '#', id: 'nav-item-list' %>
+      <%= link_to t('navbar.teams'), '#', id: 'nav-item-teams' %>
+      <%= link_to t('navbar.finance'), '#', id: 'nav-item-finance' %>
+      <%= link_to t('navbar.strategic'), '#', id: 'nav-item-strategic' %>
+      <%= link_to t('navbar.settings'), '#', id: 'nav-item-settings' %>
     </div>
   </div>
 
-  <%= render 'company_stamps' %>
-  <%= render 'financial_informations/financial_informations_table' %>
-  <%= render 'teams/teams_table' %>
+  <div id="stamps">
+    <%= render 'company_stamps' %>
+  </div>
+
+  <div id="project-list">
+    <%= render 'projects/projects_table', projects_list: @company.projects %>
+  </div>
+
+  <div id="teams">
+    <%= render 'teams/teams_table' %>
+  </div>
+
+  <div id="finance">
+    <%= render 'financial_informations/financial_informations_table' %>
+  </div>
+
+  <div id="strategic">
+    <%= render 'companies/strategic_table' %>
+  </div>
+
+  <div id="settings">
+    <%= render 'company_settings' %>
+  </div>
 </div>
+
+<% content_for :javascript do %>
+  <%= javascript_include_tag 'companies/show' %>
+  <%= javascript_include_tag 'charts/column-line' %>
+  <%= javascript_include_tag 'charts/line' %>
+  <%= javascript_include_tag 'charts/gauge' %>
+  <%= javascript_include_tag 'companies/column_active_projects_count_chart' %>
+  <%= javascript_include_tag 'companies/hours_per_month_chart' %>
+  <%= javascript_include_tag 'companies/flow_pressure_chart' %>
+  <%= javascript_include_tag 'companies/money_chart' %>
+  <%= javascript_include_tag 'companies/hours_gauge_chart' %>
+<% end %>
+
