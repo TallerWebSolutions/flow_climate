@@ -10,9 +10,9 @@ class ProcessPipefyCardJob < ApplicationJob
 
     return if data.empty?
 
-    card_response = JSON.parse(card_details(base_uri, data, headers))
+    card_response = JSON.parse(card_details(base_uri, data, headers).body)
     pipe_id = card_response.try(:[], 'data').try(:[], 'card').try(:[], 'pipe').try(:[], 'id')
-    pipe_response = JSON.parse(pipe_details(base_uri, headers, pipe_id))
+    pipe_response = JSON.parse(pipe_details(base_uri, headers, pipe_id).body)
     pipefy_data = PipefyData.new(card_response, pipe_response)
     process_card(pipefy_data)
   end
