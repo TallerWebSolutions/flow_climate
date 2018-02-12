@@ -10,6 +10,10 @@
 #  effort            :decimal(, )      not null
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
+#  demand_type       :integer
+#  demand_url        :string
+#  commitment_date   :datetime
+#  end_date          :datetime
 #
 # Indexes
 #
@@ -17,6 +21,7 @@
 #
 
 class Demand < ApplicationRecord
+  enum demand_type: { feature: 0, bug: 1, performance_improvement: 2, ux_improvement: 3, chore: 4 }
   belongs_to :project_result, counter_cache: true
 
   validates :demand_id, :effort, presence: true

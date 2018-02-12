@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe CompaniesBulletimJob, type: :job do
+RSpec.describe CompaniesBulletimJob, type: :active_job do
   describe '.perform_later' do
     it 'enqueues after calling perform_later' do
       CompaniesBulletimJob.perform_later

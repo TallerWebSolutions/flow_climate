@@ -161,7 +161,11 @@ CREATE TABLE demands (
     demand_id character varying NOT NULL,
     effort numeric NOT NULL,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    demand_type integer,
+    demand_url character varying,
+    commitment_date timestamp without time zone,
+    end_date timestamp without time zone
 );
 
 
@@ -255,6 +259,39 @@ CREATE SEQUENCE operation_results_id_seq
 --
 
 ALTER SEQUENCE operation_results_id_seq OWNED BY operation_results.id;
+
+
+--
+-- Name: pipefy_configs; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE pipefy_configs (
+    id bigint NOT NULL,
+    project_id integer NOT NULL,
+    team_id integer NOT NULL,
+    pipe_id character varying NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: pipefy_configs_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE pipefy_configs_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: pipefy_configs_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE pipefy_configs_id_seq OWNED BY pipefy_configs.id;
 
 
 --
@@ -615,6 +652,13 @@ ALTER TABLE ONLY operation_results ALTER COLUMN id SET DEFAULT nextval('operatio
 
 
 --
+-- Name: pipefy_configs id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY pipefy_configs ALTER COLUMN id SET DEFAULT nextval('pipefy_configs_id_seq'::regclass);
+
+
+--
 -- Name: products id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -724,6 +768,14 @@ ALTER TABLE ONLY financial_informations
 
 ALTER TABLE ONLY operation_results
     ADD CONSTRAINT operation_results_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: pipefy_configs pipefy_configs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY pipefy_configs
+    ADD CONSTRAINT pipefy_configs_pkey PRIMARY KEY (id);
 
 
 --
@@ -848,6 +900,20 @@ CREATE INDEX index_financial_informations_on_company_id ON financial_information
 
 
 --
+-- Name: index_pipefy_configs_on_project_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_pipefy_configs_on_project_id ON pipefy_configs USING btree (project_id);
+
+
+--
+-- Name: index_pipefy_configs_on_team_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_pipefy_configs_on_team_id ON pipefy_configs USING btree (team_id);
+
+
+--
 -- Name: index_products_on_customer_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -925,6 +991,14 @@ CREATE UNIQUE INDEX index_users_on_reset_password_token ON users USING btree (re
 
 
 --
+-- Name: pipefy_configs fk_rails_0732eff170; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY pipefy_configs
+    ADD CONSTRAINT fk_rails_0732eff170 FOREIGN KEY (project_id) REFERENCES projects(id);
+
+
+--
 -- Name: team_members fk_rails_194b5b076d; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -954,6 +1028,14 @@ ALTER TABLE ONLY products
 
 ALTER TABLE ONLY companies_users
     ADD CONSTRAINT fk_rails_27539b2fc9 FOREIGN KEY (user_id) REFERENCES users(id);
+
+
+--
+-- Name: pipefy_configs fk_rails_429f1ebe04; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY pipefy_configs
+    ADD CONSTRAINT fk_rails_429f1ebe04 FOREIGN KEY (team_id) REFERENCES teams(id);
 
 
 --
@@ -1089,6 +1171,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20180204213721'),
 ('20180206183551'),
 ('20180207231739'),
-('20180208112930');
+('20180208112930'),
+('20180209180125'),
+('20180209223011');
 
 
