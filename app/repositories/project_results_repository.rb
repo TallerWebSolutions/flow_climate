@@ -81,7 +81,25 @@ class ProjectResultsRepository
     total_average_demand_cost.sum / total_average_demand_cost.size.to_f
   end
 
+  def update_result_for_date(project, result_date, known_scope, qty_bugs_opened)
+    project_result = ProjectResult.where(result_date: result_date).last
+    return if project_result.blank?
+
+    demands_for_date = Demand.where('DATE(end_date) = :end_date', end_date: result_date.to_date)
+    bug_demands = demands_for_date.where(demand_type: :bug)
+
+    project_result.update(known_scope: known_scope, throughput: demands_for_date.count, qty_hours_upstream: 0, qty_hours_downstream: demands_for_date.sum(:effort), qty_hours_bug: bug_demands.sum(:effort),
+                          qty_bugs_closed: bug_demands.count, qty_bugs_opened: qty_bugs_opened, flow_pressure: demands_for_date.count.to_f / project.remaining_days,
+                          average_demand_cost: average_demand_cost(demands_for_date, project_result))
+    project_result
+  end
+
   private
+
+  def average_demand_cost(demands_for_date, project_result)
+    return project_result.cost_in_week if demands_for_date.blank?
+    project_result.cost_in_week / demands_for_date.count
+  end
 
   def results_until_week(project, week, year)
     project.project_results.where('(EXTRACT(WEEK FROM result_date) <= :week AND EXTRACT(YEAR FROM result_date) <= :year) OR (EXTRACT(YEAR FROM result_date) < :year)', week: week, year: year).order(:result_date)

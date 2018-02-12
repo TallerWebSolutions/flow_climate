@@ -219,4 +219,58 @@ RSpec.describe ProjectResultsRepository, type: :repository do
       it { expect(ProjectResultsRepository.instance.hours_per_demand_in_time_for_projects([project], Time.zone.today.cweek, Time.zone.today.cwyear)).to eq 0 }
     end
   end
+
+  describe '#update_result_for_date' do
+    let!(:project) { Fabricate :project, customer: customer, product: product, start_date: 2.months.ago, end_date: 3.weeks.from_now }
+    context 'having the project_result' do
+      let!(:result) { Fabricate :project_result, project: project, result_date: 1.week.ago, throughput: 20, qty_hours_downstream: 20, qty_hours_upstream: 11, cost_in_week: 20 }
+
+      context 'having no demands for the date' do
+        it 'updates the project result' do
+          ProjectResultsRepository.instance.update_result_for_date(project, 1.week.ago, 20, 5)
+          updated_project_result = ProjectResult.last
+          expect(updated_project_result.project).to eq project
+          expect(updated_project_result.result_date).to eq 1.week.ago.to_date
+          expect(updated_project_result.known_scope).to eq 20
+          expect(updated_project_result.throughput).to eq 0
+          expect(updated_project_result.qty_hours_upstream).to eq 0
+          expect(updated_project_result.qty_hours_downstream).to eq 0
+          expect(updated_project_result.qty_hours_bug).to eq 0
+          expect(updated_project_result.qty_bugs_closed).to eq 0
+          expect(updated_project_result.qty_bugs_opened).to eq 5
+          expect(updated_project_result.flow_pressure.to_f).to eq 0.0
+          expect(updated_project_result.remaining_days).to eq 0
+          expect(updated_project_result.average_demand_cost.to_f).to eq 20
+        end
+      end
+
+      context 'having demands for the date' do
+        let!(:demand) { Fabricate :demand, demand_type: :feature, project_result: result, end_date: 1.week.ago.to_date, effort: 100 }
+
+        it 'updates the project result' do
+          ProjectResultsRepository.instance.update_result_for_date(project, 1.week.ago, 20, 5)
+          updated_project_result = ProjectResult.last
+          expect(updated_project_result.project).to eq project
+          expect(updated_project_result.result_date).to eq 1.week.ago.to_date
+          expect(updated_project_result.known_scope).to eq 20
+          expect(updated_project_result.throughput).to eq 1
+          expect(updated_project_result.qty_hours_upstream).to eq 0
+          expect(updated_project_result.qty_hours_downstream).to eq 100
+          expect(updated_project_result.qty_hours_bug).to eq 0
+          expect(updated_project_result.qty_bugs_closed).to eq 0
+          expect(updated_project_result.qty_bugs_opened).to eq 5
+          expect(updated_project_result.flow_pressure.to_f).to eq 0.0476190476190476
+          expect(updated_project_result.remaining_days).to eq 0
+          expect(updated_project_result.average_demand_cost.to_f).to eq 20
+        end
+      end
+    end
+
+    context 'having no project_result' do
+      it 'returns doing nothing' do
+        ProjectResultsRepository.instance.update_result_for_date(project, 1.week.ago, 20, 5)
+        expect(ProjectResult.count).to eq 0
+      end
+    end
+  end
 end

@@ -14,6 +14,8 @@ gem 'sidekiq'
 gem 'therubyracer', platforms: :ruby
 gem 'uglifier'
 gem 'yui-compressor'
+gem 'httparty'
+gem 'webmock'
 
 group :test, :development do
   gem 'brakeman'
