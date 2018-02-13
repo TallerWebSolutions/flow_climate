@@ -14,6 +14,7 @@
 #  demand_url        :string
 #  commitment_date   :datetime
 #  end_date          :datetime
+#  created_date      :datetime         not null
 #
 # Indexes
 #
@@ -22,7 +23,8 @@
 
 class Demand < ApplicationRecord
   enum demand_type: { feature: 0, bug: 1, performance_improvement: 2, ux_improvement: 3, chore: 4 }
+
   belongs_to :project_result, counter_cache: true
 
-  validates :demand_id, :effort, presence: true
+  validates :project_result, :created_date, :demand_id, :effort, presence: true
 end

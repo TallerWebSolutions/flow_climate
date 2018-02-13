@@ -13,6 +13,7 @@ RSpec.describe PipefyData, type: :data_object do
           expect(pipefy_data.pipe_id).to eq '356528'
           expect(pipefy_data.known_scope).to eq 2
           expect(pipefy_data.demand_type).to eq :bug
+          expect(pipefy_data.created_date).to eq Time.iso8601('2018-01-16T22:44:57-02:00')
           expect(pipefy_data.commitment_date).to eq Time.iso8601('2018-01-16T23:01:46-02:00')
           expect(pipefy_data.end_date).to eq Time.iso8601('2018-02-09T01:01:41-02:00')
         end

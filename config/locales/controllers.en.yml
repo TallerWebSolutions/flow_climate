@@ -11,6 +11,7 @@ en:
       edit: Edit
       i_am_done: I'm done
       send: Send
+      import: "Import"
     no_records: You have no %{record} yet! Why not create your first?
     messages:
       saved: Saved!
@@ -218,6 +219,13 @@ en:
       title: "New Demand"
     index:
       title: "Demands in this Result"
+    import_csv:
+      title: "Import CSV File"
+      field_label: "CSV Text"
+      bad_string: "Malformed CSV String."
+    import:
+      instructions: "Format Instructions"
+      optional_fields: "The fields commitment_date and end_date are optionals."
   project_risk_configs:
     new:
       title: "New Risk Configuration"

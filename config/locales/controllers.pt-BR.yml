@@ -11,6 +11,7 @@ pt-BR:
       edit: Editar
       i_am_done: 'Pronto!'
       send: Enviar
+      import: "Importar"
     no_records: Você ainda não tem %{record}! Que tal criar o seu primeiro?
     messages:
       saved: Salvo!
@@ -219,6 +220,13 @@ pt-BR:
       title: "Nova Demanda"
     index:
       title: "Demandas neste Resultado"
+    import_csv:
+      title: "Importar Texto CSV"
+      field_label: "Texto CSV"
+      bad_string: "String CSV Inválida."
+    import:
+      instructions: "Instruções do Formato"
+      optional_fields: "Os campos commitment_date e end_date são opcionais."
   project_risk_configs:
     new:
       title: "Nova Configuração de Risco"
