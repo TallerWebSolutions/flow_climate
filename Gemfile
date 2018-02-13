@@ -4,12 +4,13 @@ source 'https://rubygems.org'
 
 ruby '2.4.3'
 
+gem 'rails', '~> 5.1.5.rc1'
+
 gem 'coffee-rails'
 gem 'devise'
 gem 'figaro'
 gem 'jquery-rails'
-gem 'pg', '~> 0.20'
-gem 'rails', '5.1.4'
+gem 'pg'
 gem 'sidekiq'
 gem 'therubyracer', platforms: :ruby
 gem 'uglifier'
