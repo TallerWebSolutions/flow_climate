@@ -12,6 +12,7 @@ script:
 - bundle exec rake db:test:prepare
 - bundle exec rspec spec/
 - bundle exec rubocop -DR
+- bundle exec rake assets:precompile
 before_script:
 - bash install-postgres-10.sh
 - psql -c 'create database flowcontrol_test;' -U postgres
