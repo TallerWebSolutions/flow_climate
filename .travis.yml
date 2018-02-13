@@ -1,21 +1,25 @@
 language: ruby
 rvm:
- - 2.4.3
-
+- 2.4.3
 sudo: required
-
 services:
-  - postgresql
-
+- postgresql
 addons:
-  postgresql: "9.6"
-
+  postgresql: '9.6'
 script:
-  - RAILS_ENV=test bundle exec rake db:migrate --trace
-  - bundle exec rake db:test:prepare
-  - bundle exec rspec spec/
-  - bundle exec rubocop -DR
-
+- RAILS_ENV=test bundle exec rake db:migrate --trace
+- bundle exec rake db:test:prepare
+- bundle exec rspec spec/
+- bundle exec rubocop -DR
 before_script:
-  - bash install-postgres-10.sh
-  - psql -c 'create database flowcontrol_test;' -U postgres
+- bash install-postgres-10.sh
+- psql -c 'create database flowcontrol_test;' -U postgres
+
+deploy:
+  provider: heroku
+  api_key:
+    secure: N1v0rcEcFvVZBBBA1L0fFG2Wwdo+DRxOZdxrcgw8AeMhescDCUVz5DwmZch49oCEZEw5oH0FQpy5sZgX62827yRZlDtowAEpG3uoI+/UxsbnN4tE90yiMntVwxYEZEz7/KVjZVTzaKDcWxgcpmHZoU7Yi9+e/lIYMrvPippNss1mZd1XqOpzfasQ5JCW3haOVVmBDG2tZgrYhbKZzjhK3gMVqAt2WjC+WOQ5ioKtJMQEH8fePHL4wx5I9wQWQ9YduIgBYq2LN31B1VQqcPPHL/REAe8DmFPSeWBfigG9iu353r1yIi9ghbvoGFDnv7BrNvM+R05MOdRfpHADqdwthm3KV9b8lPg71qgCT6kLE9ammUnR2wNrXzkf1JKwEck020a1YytsHx81AqDSUuNabELUIry5gJVumdRSBgd7mHovL773MSCT5+F9PvF/X2Ya4cR/SyyspPwkgQG7XsnWhOb9xj8T7VO82Dy7L8LuOnCiqroFlPgJ68GXTuNXBXR5qjA5WHG7oDoTBBLwO0IFQz0p+avwVfBKax3buJQFh47xL24y/yxu3YQOFw9GVqNIEADlnLK+ApOQGbnpBEechtof1U/aDVXi7pF7u3wsbJPIV/gU3+u2qjloNl7bO6mD/1oR+Ve4cfyPAfb7EWVBFVs4Rppd+Nijx8YTwVoF3Y4=
+    run: "rake db:migrate"
+  app:
+    master: flowclimateapp
+    develop: flowclimatestaging

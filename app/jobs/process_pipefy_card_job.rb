@@ -3,7 +3,7 @@
 class ProcessPipefyCardJob < ApplicationJob
   def perform(data)
     base_uri = 'https://app.pipefy.com'
-    token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJ1c2VyIjp7ImlkIjoxMDEzODEsImVtYWlsIjoiY2Vsc29AdGFsbGVyLm5ldC5iciIsImFwcGxpY2F0aW9uIjo0NzA4fX0.0gKv0iZ5D5wu2fnKKxTvINBkJvohusrB2LxyvMeLsDyn13eAI5sPwcyhneYfgTQp2V_e96G_oy_wxYzBezdLOg'
+    token = Figaro.env.pipefy_token
     headers = {
       Authorization: "Bearer #{token}"
     }

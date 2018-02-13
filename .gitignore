@@ -27,3 +27,5 @@ coverage/*
 dump.rdb
 
 logfile
+# Ignore application configuration
+/config/application.yml
