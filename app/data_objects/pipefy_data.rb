@@ -1,14 +1,14 @@
 # frozen_string_literal: true
 
 class PipefyData
-  attr_reader :demand_type, :commitment_date, :end_date, :demand_id, :pipe_id, :known_scope
+  attr_reader :demand_type, :commitment_date, :created_date, :end_date, :demand_id, :pipe_id, :known_scope
 
   def initialize(card_response, pipe_response)
     @demand_id = card_response['data'].try(:[], 'card').try(:[], 'id')
     @pipe_id = card_response['data'].try(:[], 'card').try(:[], 'pipe').try(:[], 'id')
     @known_scope = pipe_known_scope(pipe_response)
     define_demand_type(card_response['data'])
-    define_commitment_and_end_dates(card_response['data'])
+    read_phases(card_response['data'])
   end
 
   private
@@ -19,13 +19,19 @@ class PipefyData
     known_scope
   end
 
-  def define_commitment_and_end_dates(response_data)
+  def read_phases(response_data)
     response_data.try(:[], 'card').try(:[], 'phases_history')&.each do |phase|
-      if phase['phase'].try(:[], 'fields')&.first.try(:[], 'label') == 'Commitment Point?'
-        @commitment_date = Time.iso8601(phase['firstTimeIn'])
-      elsif phase['phase']['done']
-        @end_date = Time.iso8601(phase['firstTimeIn'])
-      end
+      define_demand_dates(phase)
+    end
+  end
+
+  def define_demand_dates(phase)
+    if phase['phase']['name'] == 'Start form'
+      @created_date = Time.iso8601(phase['firstTimeIn'])
+    elsif phase['phase'].try(:[], 'fields')&.first.try(:[], 'label') == 'Commitment Point?'
+      @commitment_date = Time.iso8601(phase['firstTimeIn'])
+    elsif phase['phase']['done']
+      @end_date = Time.iso8601(phase['firstTimeIn'])
     end
   end
 

@@ -47,35 +47,9 @@ class ProcessPipefyCardJob < ApplicationJob
 
   def update_card(project, team, pipefy_data)
     demand = Demand.where(demand_id: pipefy_data.demand_id).first_or_initialize
-    demand.demand_type = pipefy_data.demand_type
-    hours_consumed = calculate_hours_consumed(pipefy_data.commitment_date, pipefy_data.end_date)
-    project_result = create_project_result(pipefy_data.end_date, project, team)
-    demand.update(project_result: project_result, end_date: pipefy_data.end_date, commitment_date: pipefy_data.commitment_date, effort: hours_consumed)
-    ProjectResultsRepository.instance.update_result_for_date(project, demand.end_date, pipefy_data.known_scope, 0)
-  end
-
-  def create_project_result(end_date, project, team)
-    project_results = ProjectResult.where(result_date: end_date, project: project)
-    return create_new_project_result(end_date, project, team) if project_results.blank?
-    project_results.first
-  end
-
-  def create_new_project_result(end_date, project, team)
-    ProjectResult.create(project: project, result_date: end_date, known_scope: 0, throughput: 0, qty_hours_upstream: 0,
-                         qty_hours_downstream: 0, qty_hours_bug: 0, qty_bugs_closed: 0, qty_bugs_opened: 0,
-                         team: team, flow_pressure: 0, remaining_days: project.remaining_days, cost_in_week: (team.outsourcing_cost / 4),
-                         average_demand_cost: 0, available_hours: team.current_outsourcing_monthly_available_hours)
-  end
-
-  def calculate_hours_consumed(commitment_date, end_date)
-    return (end_date - commitment_date) / 1.hour if commitment_date.to_date == end_date.to_date
-    start_date = commitment_date
-    business_days = 0
-    while start_date <= end_date
-      business_days += 1 unless start_date.saturday? || start_date.sunday?
-      start_date += 1.day
-    end
-    business_days * 8
+    hours_consumed = DemandService.instance.compute_effort_for_dates(pipefy_data.commitment_date, pipefy_data.end_date)
+    project_result = ProjectResultsRepository.instance.create_project_result(project, team, pipefy_data.end_date)
+    DemandsRepository.instance.update_demand_and_project_result(demand, hours_consumed, pipefy_data.demand_type, pipefy_data.created_date, pipefy_data.commitment_date, pipefy_data.end_date, pipefy_data.known_scope, project, project_result)
   end
 
   def card_show_request_body(card_id)

@@ -94,6 +94,12 @@ class ProjectResultsRepository
     project_result
   end
 
+  def create_project_result(project, team, result_date)
+    project_results = ProjectResult.where(result_date: result_date, project: project)
+    return create_new_empty_project_result(result_date, project, team) if project_results.blank?
+    project_results.first
+  end
+
   private
 
   def average_demand_cost(demands_for_date, project_result)
@@ -111,5 +117,12 @@ class ProjectResultsRepository
 
   def project_result_joins
     ProjectResult.joins(project: [{ product: :customer }])
+  end
+
+  def create_new_empty_project_result(end_date, project, team)
+    ProjectResult.create(project: project, result_date: end_date, known_scope: 0, throughput: 0, qty_hours_upstream: 0,
+                         qty_hours_downstream: 0, qty_hours_bug: 0, qty_bugs_closed: 0, qty_bugs_opened: 0,
+                         team: team, flow_pressure: 0, remaining_days: project.remaining_days, cost_in_week: (team.outsourcing_cost / 4),
+                         average_demand_cost: 0, available_hours: team.current_outsourcing_monthly_available_hours)
   end
 end

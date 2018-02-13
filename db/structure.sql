@@ -165,7 +165,8 @@ CREATE TABLE demands (
     demand_type integer,
     demand_url character varying,
     commitment_date timestamp without time zone,
-    end_date timestamp without time zone
+    end_date timestamp without time zone,
+    created_date timestamp without time zone NOT NULL
 );
 
 
@@ -1173,6 +1174,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20180207231739'),
 ('20180208112930'),
 ('20180209180125'),
-('20180209223011');
+('20180209223011'),
+('20180213155318');
 
 

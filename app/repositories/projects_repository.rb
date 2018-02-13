@@ -33,4 +33,8 @@ class ProjectsRepository
   def money_to_month(company, required_date)
     active_projects_in_month(company, required_date).sum(&:money_per_month)
   end
+
+  def known_scope(project, created_date)
+    project.demands.where('DATE(created_date) <= :created_date', created_date: created_date).count
+  end
 end

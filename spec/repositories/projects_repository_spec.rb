@@ -69,4 +69,24 @@ RSpec.describe ProjectsRepository, type: :repository do
       it { expect(ProjectsRepository.instance.money_to_month(company, 3.months.ago.to_date)).to eq 0 }
     end
   end
+
+  describe '#known_scope' do
+    let(:created_date) { Time.zone.local(2018, 2, 13, 14, 0, 0) }
+    let(:commitment_date) { Time.zone.local(2018, 2, 15, 16, 0, 0) }
+    let(:end_date) { Time.zone.local(2018, 2, 17, 16, 0, 0) }
+
+    context 'having demands created until the date' do
+      let(:project) { Fabricate :project }
+      let!(:project_result) { Fabricate :project_result, project: project, result_date: end_date }
+      let!(:first_demand) { Fabricate :demand, project_result: project_result, created_date: created_date, commitment_date: commitment_date, end_date: end_date }
+      let!(:second_demand) { Fabricate :demand, project_result: project_result, created_date: (created_date - 1.month), commitment_date: commitment_date, end_date: end_date }
+      let!(:third_demand) { Fabricate :demand, project_result: project_result, created_date: (created_date + 1.month), commitment_date: commitment_date, end_date: end_date }
+      it { expect(ProjectsRepository.instance.known_scope(project, created_date)).to eq 2 }
+    end
+    context 'having no demands created until the date' do
+      let(:project) { Fabricate :project }
+      let!(:project_result) { Fabricate :project_result, project: project, result_date: end_date }
+      it { expect(ProjectsRepository.instance.known_scope(project, created_date)).to eq 0 }
+    end
+  end
 end

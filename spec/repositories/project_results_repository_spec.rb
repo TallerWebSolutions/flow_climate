@@ -273,4 +273,26 @@ RSpec.describe ProjectResultsRepository, type: :repository do
       end
     end
   end
+
+  describe '#create_project_result' do
+    let(:company) { Fabricate :company }
+    let(:team) { Fabricate :team, company: company }
+    let(:customer) { Fabricate :customer, company: company }
+    let(:project) { Fabricate :project, customer: customer }
+
+    context 'when there is no project result to the date' do
+      before { ProjectResultsRepository.instance.create_project_result(project, team, Time.zone.today) }
+      it { expect(ProjectResult.count).to eq 1 }
+    end
+    context 'when there is project result to the date' do
+      let!(:project_result) { Fabricate :project_result, project: project, result_date: Time.zone.today }
+      before { ProjectResultsRepository.instance.create_project_result(project, team, Time.zone.today) }
+      it { expect(ProjectResult.count).to eq 1 }
+    end
+    context 'when there is project result to other date' do
+      let!(:project_result) { Fabricate :project_result, project: project, result_date: 1.day.ago.to_date }
+      before { ProjectResultsRepository.instance.create_project_result(project, team, Time.zone.today) }
+      it { expect(ProjectResult.count).to eq 2 }
+    end
+  end
 end

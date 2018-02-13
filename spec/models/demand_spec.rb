@@ -10,6 +10,8 @@ RSpec.describe Demand, type: :model do
   end
 
   context 'validations' do
+    it { is_expected.to validate_presence_of :project_result }
+    it { is_expected.to validate_presence_of :created_date }
     it { is_expected.to validate_presence_of :demand_id }
     it { is_expected.to validate_presence_of :effort }
   end

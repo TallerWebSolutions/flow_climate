@@ -190,6 +190,7 @@ pt-BR:
         demand_url: URL da Demanda
         commitment_date: Data do Comprometimento
         end_date: Data da Entrega
+        created_date: Data de Criação
       project_risk_config:
         company: Empresa
         risk_type: Tipo do Risco
