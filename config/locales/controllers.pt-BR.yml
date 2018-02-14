@@ -227,6 +227,8 @@ pt-BR:
     import:
       instructions: "Instruções do Formato"
       optional_fields: "Os campos commitment_date e end_date são opcionais."
+    edit:
+      title: "Editar Demanda"
   project_risk_configs:
     new:
       title: "Nova Configuração de Risco"

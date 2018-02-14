@@ -226,6 +226,8 @@ en:
     import:
       instructions: "Format Instructions"
       optional_fields: "The fields commitment_date and end_date are optionals."
+    edit:
+      title: "Edit Demand"
   project_risk_configs:
     new:
       title: "New Risk Configuration"
