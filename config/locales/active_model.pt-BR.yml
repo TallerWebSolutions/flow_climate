@@ -191,6 +191,11 @@ pt-BR:
         commitment_date: Data do Comprometimento
         end_date: Data da Entrega
         created_date: Data de Criação
+        enums:
+          demand_type:
+            bug: Bug
+            feature: Nova Funcionalidade
+            chore: Manutenção Técnica
       project_risk_config:
         company: Empresa
         risk_type: Tipo do Risco
