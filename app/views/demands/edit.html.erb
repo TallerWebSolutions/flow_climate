@@ -11,7 +11,7 @@
     </div>
   </div>
 
-  <%= form_for @demand, url: company_project_project_result_demand_url(@company, @project, @project_result, @demand), method: :update, class: 'form' do |f| %>
+  <%= form_for @demand, url: company_project_project_result_demand_url(@company, @project, @project_result, @demand), method: :put, class: 'form' do |f| %>
     <div class="row bottom-spaced-component">
       <div class="col-xs-12">
         <%= render 'form', f: f %>
