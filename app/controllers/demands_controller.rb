@@ -12,7 +12,10 @@ class DemandsController < AuthenticatedController
 
   def create
     @demand = Demand.new(demand_params.merge(project_result: @project_result))
-    return redirect_to company_project_project_result_path(@company, @project, @project_result) if @demand.save
+    if @demand.save
+      update_project_results(@demand)
+      return redirect_to company_project_project_result_path(@company, @project, @project_result)
+    end
     render :new
   end
 
@@ -51,9 +54,11 @@ class DemandsController < AuthenticatedController
 
   private
 
-  def update_project_results(demand, previous_date)
-    known_scope = ProjectsRepository.instance.known_scope(@project, previous_date)
-    ProjectResultsRepository.instance.update_result_for_date(@project, previous_date, known_scope, 0)
+  def update_project_results(demand, previous_date = nil)
+    if previous_date.present?
+      known_scope = ProjectsRepository.instance.known_scope(@project, previous_date)
+      ProjectResultsRepository.instance.update_result_for_date(@project, previous_date, known_scope, 0)
+    end
 
     current_date = demand.end_date || demand.created_date
     known_scope = ProjectsRepository.instance.known_scope(@project, current_date)

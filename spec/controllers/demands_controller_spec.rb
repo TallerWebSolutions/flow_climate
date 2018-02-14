@@ -81,8 +81,10 @@ RSpec.describe DemandsController, type: :controller do
 
       context 'passing valid parameters' do
         let(:date_to_demand) { 1.day.ago.change(usec: 0) }
-        before { post :create, params: { company_id: company, project_id: project, project_result_id: project_result, demand: { demand_id: 'xpto', demand_type: 'bug', effort: 5, created_date: date_to_demand, commitment_date: date_to_demand, end_date: date_to_demand } } }
         it 'creates the new financial information to the company and redirects to its show' do
+          expect(ProjectResultsRepository.instance).to receive(:update_result_for_date).with(project, date_to_demand, 1, 0).once
+          post :create, params: { company_id: company, project_id: project, project_result_id: project_result, demand: { demand_id: 'xpto', demand_type: 'bug', effort: 5, created_date: date_to_demand, commitment_date: date_to_demand, end_date: date_to_demand } }
+
           expect(assigns(:company)).to eq company
           expect(assigns(:project)).to eq project
           expect(assigns(:project_result)).to eq project_result
