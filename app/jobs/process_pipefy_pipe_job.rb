@@ -24,8 +24,8 @@ class ProcessPipefyPipeJob < ApplicationJob
     cards_in_pipe
   end
 
-  def read_card_details_from_card_response(project, team, card_id, pipe_response, card_response)
+  def read_card_details_from_card_response(project, team, demand_id, pipe_response, card_response)
     pipefy_data = PipefyData.new(card_response, pipe_response)
-    DemandsRepository.instance.create_demand(project, team, card_id, pipefy_data.demand_type, pipefy_data.commitment_date, pipefy_data.created_date, pipefy_data.end_date)
+    DemandsRepository.instance.create_or_update_demand(project, team, demand_id, pipefy_data.demand_type, pipefy_data.commitment_date, pipefy_data.created_date, pipefy_data.end_date)
   end
 end

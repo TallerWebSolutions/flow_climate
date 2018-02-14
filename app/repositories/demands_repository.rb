@@ -12,7 +12,7 @@ class DemandsRepository
     ProjectResultsRepository.instance.update_result_for_date(project, demand.end_date, known_scope, 0)
   end
 
-  def create_demand(project, team, demand_id, demand_type, commitment_date, created_date, end_date)
+  def create_or_update_demand(project, team, demand_id, demand_type, commitment_date, created_date, end_date)
     demand = Demand.where(demand_id: demand_id).first_or_initialize
     prior_result = demand.project_result
     result_date = end_date || created_date

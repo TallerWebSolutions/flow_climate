@@ -49,7 +49,7 @@ Rails.application.routes.draw do
 
     resources :projects, only: %i[show index new create edit update] do
       resources :project_results do
-        resources :demands, only: %i[new create destroy]
+        resources :demands, only: %i[new create destroy edit update]
       end
       resources :demands, only: [] do
         collection do
