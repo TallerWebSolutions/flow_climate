@@ -202,6 +202,7 @@ RSpec.describe DemandsController, type: :controller do
             it 'imports updating the demand and the project results in the date' do
               expect(ProjectResultsRepository.instance).to receive(:update_result_for_date).with(project, Time.iso8601('2018-01-20T22:44:57-02:00'), 1, 0).once
               expect(ProjectResultsRepository.instance).to receive(:update_result_for_date).with(project, Time.iso8601('2018-01-05T22:44:57-02:00'), 1, 0).once
+              expect(ProjectResultsRepository.instance).to receive(:update_result_for_date).with(project, project_result.result_date, 1, 0).once
               post :import_csv, params: { company_id: company, project_id: project, team: team.id, csv_text: csv_text }
 
               expect(response).to redirect_to company_project_path(company, project)
@@ -222,6 +223,8 @@ RSpec.describe DemandsController, type: :controller do
           it 'imports updating the demand and creates the project results in the date' do
             created_date = Time.iso8601('2018-01-10T22:44:57-02:00')
             expect(ProjectResultsRepository.instance).to receive(:update_result_for_date).with(project, created_date, 1, 0).once
+            expect(ProjectResultsRepository.instance).to receive(:update_result_for_date).with(project, project_result.result_date, 1, 0).once
+
             post :import_csv, params: { company_id: company, project_id: project, team: team.id, csv_text: '345;bug;2018-01-10T22:44:57-02:00' }
 
             expect(response).to redirect_to company_project_path(company, project)
