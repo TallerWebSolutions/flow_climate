@@ -52,9 +52,9 @@ RSpec.describe DemandsRepository, type: :repository do
 
     context 'when the demand does not exist' do
       it 'creates the demand and the project result' do
-        created_date = 2.days.ago
-        commitment_date = 1.day.ago
-        end_date = Time.zone.now
+        created_date = 2.days.ago.change(usec: 0).change(sec: 0)
+        commitment_date = 1.day.ago.change(usec: 0).change(sec: 0)
+        end_date = Time.zone.now.change(usec: 0).change(sec: 0)
         DemandsRepository.instance.create_demand(project, team, '100', 'bug', commitment_date, created_date, end_date)
 
         updated_demand = Demand.last
