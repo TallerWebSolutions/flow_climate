@@ -43,6 +43,8 @@ class ReportData
     max_date = projects.maximum(:end_date)
     array_of_weeks = []
 
+    return [] if min_date.blank? || max_date.blank?
+
     while min_date <= max_date
       array_of_weeks << [min_date.cweek, min_date.cwyear]
       min_date += 7.days
