@@ -272,7 +272,8 @@ CREATE TABLE pipefy_configs (
     team_id integer NOT NULL,
     pipe_id character varying NOT NULL,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    company_id integer NOT NULL
 );
 
 
@@ -1032,6 +1033,14 @@ ALTER TABLE ONLY companies_users
 
 
 --
+-- Name: pipefy_configs fk_rails_3895e626a7; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY pipefy_configs
+    ADD CONSTRAINT fk_rails_3895e626a7 FOREIGN KEY (company_id) REFERENCES companies(id);
+
+
+--
 -- Name: pipefy_configs fk_rails_429f1ebe04; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1175,6 +1184,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20180208112930'),
 ('20180209180125'),
 ('20180209223011'),
-('20180213155318');
+('20180213155318'),
+('20180215151505');
 
 

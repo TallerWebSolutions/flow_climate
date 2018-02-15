@@ -96,6 +96,9 @@ pt-BR:
       company_settings:
         one: Configurações da Empresa
         other: Configurações da Empresa
+      pipefy_config:
+        one: Configuração do Pipefy
+        other: Configurações do Pipefy
     attributes:
       user:
         first_name: Nome
@@ -222,6 +225,10 @@ pt-BR:
       company_settings:
         max_active_parallel_projects: Qtd Máxima de Projetos Paralelos Ativos
         max_flow_pressure: Máxima Pressão Geral do Fluxo
+      pipefy_config:
+        pipe_id: Id do Pipe
+        project: Projeto
+        team: Time
   product:
     name:
       uniqueness: "Não deve repetir nome de produto para o mesmo cliente."
