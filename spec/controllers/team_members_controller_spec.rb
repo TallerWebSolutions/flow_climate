@@ -61,7 +61,7 @@ RSpec.describe TeamMembersController, type: :controller do
       let(:company) { Fabricate :company, users: [user] }
 
       context 'passing valid parameters' do
-        before { post :create, params: { company_id: company, team_id: team, team_member: { name: 'foo', billable: false, active: false, monthly_payment: 100, hours_per_month: 10, billable_type: :outsourcing } } }
+        before { post :create, params: { company_id: company, team_id: team, team_member: { name: 'foo', billable: false, active: false, monthly_payment: 100, hours_per_month: 10, billable_type: :outsourcing, hour_value: 80, total_monthly_payment: 1000 } } }
         it 'creates the new team member and redirects to team show' do
           expect(TeamMember.last.name).to eq 'foo'
           expect(TeamMember.last.billable).to be false
@@ -69,6 +69,8 @@ RSpec.describe TeamMembersController, type: :controller do
           expect(TeamMember.last.monthly_payment).to eq 100
           expect(TeamMember.last.hours_per_month).to eq 10
           expect(TeamMember.last.billable_type).to eq 'outsourcing'
+          expect(TeamMember.last.hour_value).to eq 80
+          expect(TeamMember.last.total_monthly_payment).to eq 1000
           expect(response).to redirect_to company_team_path(company, Team.last)
         end
       end
@@ -127,7 +129,7 @@ RSpec.describe TeamMembersController, type: :controller do
       let(:team_member) { Fabricate :team_member, team: team }
 
       context 'passing valid parameters' do
-        before { put :update, params: { company_id: company, team_id: team, id: team_member, team_member: { team: other_team, name: 'foo', billable: false, active: false, monthly_payment: 100, hours_per_month: 10, billable_type: :outsourcing } } }
+        before { put :update, params: { company_id: company, team_id: team, id: team_member, team_member: { team: other_team, name: 'foo', billable: false, active: false, monthly_payment: 100, hours_per_month: 10, billable_type: :outsourcing, hour_value: 80, total_monthly_payment: 1000 } } }
         it 'updates the member and redirects to team show' do
           expect(TeamMember.last.team).to eq other_team
           expect(TeamMember.last.name).to eq 'foo'
@@ -136,6 +138,8 @@ RSpec.describe TeamMembersController, type: :controller do
           expect(TeamMember.last.monthly_payment.to_f).to be 100.0
           expect(TeamMember.last.hours_per_month).to be 10
           expect(TeamMember.last.billable_type).to eq 'outsourcing'
+          expect(TeamMember.last.hour_value).to eq 80
+          expect(TeamMember.last.total_monthly_payment).to eq 1000
           expect(response).to redirect_to company_team_path(company, team)
         end
       end

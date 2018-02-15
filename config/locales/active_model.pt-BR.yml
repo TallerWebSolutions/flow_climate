@@ -121,6 +121,8 @@ pt-BR:
         billable: Faturável?
         billable_type: Tipo do Faturamento
         active: Ativo?
+        hour_value: Valor da Hora
+        total_monthly_payment: Pagamento Mensal Total
         enums:
           billable_type:
             outsourcing: Outsourcing
