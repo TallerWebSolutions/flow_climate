@@ -267,3 +267,11 @@ en:
       suffix: "Hours Consumed"
     team_hours_available:
       title: "Available Hours"
+  pipefy_configs:
+    new:
+      title: "New Pipefy Config"
+    index:
+      title: "Pipefy Integrations"
+  pipeconfigs:
+    new:
+      title: "New Pipefy Config"

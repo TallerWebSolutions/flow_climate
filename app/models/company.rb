@@ -20,6 +20,7 @@ class Company < ApplicationRecord
   has_many :projects, through: :customers
   has_many :teams, dependent: :restrict_with_error
   has_many :operation_results, dependent: :restrict_with_error
+  has_many :pipefy_configs, dependent: :destroy
   has_one :company_settings, dependent: :destroy
 
   validates :name, :abbreviation, presence: true

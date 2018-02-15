@@ -1,15 +1,17 @@
 <div class="row">
-  <div class="col-xs-10">
-    <h3><%= t('navbar.settings') %></h3>
+  <div class="btn-group">
+    <div class="col-xs-6">
+      <%= link_to t('companies.edit.title'), edit_company_path(@company), class: 'btn btn-primary btn-list bottom-spaced-component' %>
+    </div>
+    <div class="col-xs-6">
+      <%= link_to t('companies.send_company_bulletin.button'), send_company_bulletin_company_path(@company), class: 'btn btn-primary' %>
+    </div>
   </div>
 </div>
 
 <div class="row">
-  <div class="col-xs-2 bottom-spaced-component">
-    <%= link_to t('companies.send_company_bulletin.button'), send_company_bulletin_company_path(@company) %>
-  </div>
-  <div class="col-xs-2 bottom-spaced-component">
-    <%= link_to t('companies.edit.title'), edit_company_path(@company) %>
+  <div class="col-xs-10">
+    <h4><%= t('navbar.settings') %></h4>
   </div>
 </div>
 

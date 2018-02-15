@@ -3,13 +3,14 @@
 RSpec.describe Company, type: :model do
   context 'associations' do
     it { is_expected.to have_and_belong_to_many :users }
-    it { is_expected.to have_many :financial_informations }
-    it { is_expected.to have_many :customers }
+    it { is_expected.to have_many(:financial_informations).dependent(:restrict_with_error) }
+    it { is_expected.to have_many(:customers).dependent(:restrict_with_error) }
     it { is_expected.to have_many(:products).through(:customers) }
     it { is_expected.to have_many(:projects).through(:customers) }
-    it { is_expected.to have_many :teams }
-    it { is_expected.to have_many :operation_results }
-    it { is_expected.to have_one :company_settings }
+    it { is_expected.to have_many(:teams).dependent(:restrict_with_error) }
+    it { is_expected.to have_many(:operation_results).dependent(:restrict_with_error) }
+    it { is_expected.to have_one(:company_settings).dependent(:destroy) }
+    it { is_expected.to have_many(:pipefy_configs).dependent(:destroy) }
   end
 
   context 'validations' do

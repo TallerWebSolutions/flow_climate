@@ -270,3 +270,11 @@ pt-BR:
       suffix: "Horas Consumidas"
     team_hours_available:
       title: "Horas Disponíveis"
+  pipefy_configs:
+    new:
+      title: "Nova Configuração do Pipefy"
+    index:
+      title: "Integrações com o Pipefy"
+  pipeconfigs:
+    new:
+      title: "Nova Configuração do Pipefy"

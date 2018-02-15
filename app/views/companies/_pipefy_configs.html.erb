@@ -1,0 +1,25 @@
+<h4><%= t('pipefy_configs.index.title') %></h4>
+
+<div class="row">
+  <div class="col-xs-2 bottom-spaced-component">
+    <%= link_to t('pipeconfigs.new.title'), new_company_pipefy_config_path(@company), class: 'btn btn-primary btn-list bottom-spaced-component' %>
+  </div>
+</div>
+<div class="row">
+  <table class="table">
+    <thead>
+      <th><%= PipefyConfig.human_attribute_name :team %></th>
+      <th><%= PipefyConfig.human_attribute_name :project %></th>
+      <th><%= PipefyConfig.human_attribute_name :pipe_id %></th>
+    </thead>
+    <tbody>
+      <% @company.pipefy_configs.each do |pipefy_config| %>
+        <tr>
+          <td><%= pipefy_config.team_name %></td>
+          <td><%= pipefy_config.project_full_name %></td>
+          <td><%= pipefy_config.pipe_id %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
