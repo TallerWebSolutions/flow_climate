@@ -47,7 +47,7 @@ RSpec.describe DemandsRepository, type: :repository do
   describe '#create_or_update_demand' do
     let(:company) { Fabricate :company }
     let(:team) { Fabricate :team, company: company }
-    let!(:team_member) { Fabricate :team_member, team: team, monthly_payment: 100, hours_per_month: 30 }
+    let!(:team_member) { Fabricate :team_member, team: team, monthly_payment: 100, hours_per_month: 30, total_monthly_payment: 100 }
     let!(:project) { Fabricate :project }
 
     context 'when the demand does not exist' do

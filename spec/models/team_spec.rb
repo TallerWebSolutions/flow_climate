@@ -50,7 +50,7 @@ RSpec.describe Team, type: :model do
     let!(:not_billable_members) { Fabricate.times(10, :team_member, team: team, billable: false, billable_type: nil) }
     let!(:not_active_members) { Fabricate.times(3, :team_member, team: team, billable: true, billable_type: :outsourcing, active: false) }
 
-    it { expect(team.outsourcing_cost).to eq(members.sum(&:monthly_payment)) }
+    it { expect(team.outsourcing_cost).to eq(members.sum(&:total_monthly_payment)) }
   end
 
   context '#management_cost' do
@@ -61,7 +61,7 @@ RSpec.describe Team, type: :model do
     let!(:not_billable_members) { Fabricate.times(10, :team_member, team: team, billable: false, billable_type: nil) }
     let!(:not_active_members) { Fabricate.times(3, :team_member, team: team, billable: false, active: false) }
 
-    it { expect(team.management_cost).to eq(not_billable_members.sum(&:monthly_payment)) }
+    it { expect(team.management_cost).to eq(not_billable_members.sum(&:total_monthly_payment)) }
   end
 
   context '#consulting_cost' do
@@ -72,7 +72,7 @@ RSpec.describe Team, type: :model do
     let!(:not_billable_members) { Fabricate.times(10, :team_member, team: team, billable: false, billable_type: nil) }
     let!(:not_active_members) { Fabricate.times(3, :team_member, team: team, billable: false, active: false) }
 
-    it { expect(team.consulting_cost).to eq(consulting_members.sum(&:monthly_payment)) }
+    it { expect(team.consulting_cost).to eq(consulting_members.sum(&:total_monthly_payment)) }
   end
 
   context '#outsourcing_members_billable_count' do
@@ -204,7 +204,7 @@ RSpec.describe Team, type: :model do
     let!(:team_member) { Fabricate :team_member, team: team, monthly_payment: 100 }
     let!(:other_team_member) { Fabricate :team_member, team: team, monthly_payment: 100 }
 
-    it { expect(team.total_cost).to eq team.team_members.sum(&:monthly_payment) }
+    it { expect(team.total_cost).to eq team.team_members.sum(&:total_monthly_payment) }
   end
 
   describe '#consumed_hours_in_month' do

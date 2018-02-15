@@ -2,47 +2,56 @@
 
   <% if @team_member.persisted? %>
     <div class="row">
-      <div class='col-xs-12 form-group <%= 'has-error' if @team_member.errors[:team].present? %>'>
+      <div class='col-xs-4 form-group <%= 'has-error' if @team_member.errors[:team].present? %>'>
         <%= f.label :team, class: 'control-label' %>
-        <%= f.select :team, @company.teams.map { |team| [team.name, team.id] }, { include_blank: t('general.select'), selected: @team_member.team.id }, class: 'form-control' %>
+        <%= f.select :team, @company.teams.map { |team| [team.name, team.id] }, { include_blank: t('general.select'), selected: @team_member.team_id }, class: 'form-control' %>
         <span class="help-block"><%= @team_member.errors[:team].join(', ') %></span>
+      </div>
+      <div class='col-xs-4 form-group <%= 'has-error' if @team_member.errors[:name].present? %>'>
+        <%= f.label :name, class: 'control-label required' %>
+        <%= f.text_field :name, class: 'form-control', autofocus: true %>
+        <span class="help-block"><%= @team_member.errors[:name].join(', ') %></span>
+      </div>
+      <div class='col-xs-4 form-group <%= 'has-error' if @team_member.errors[:billable_type].present? %>'>
+        <%= f.label :billable_type, class: 'control-label' %>
+        <%= f.select :billable_type, TeamMember.billable_types.map { |key, _value| [t("activerecord.attributes.team_member.enums.billable_type.#{key}"), key] }, { include_blank: t('general.select'), selected: @team_member.billable_type }, class: 'form-control' %>
+        <span class="help-block"><%= @team_member.errors[:billable_type].join(', ') %></span>
       </div>
     </div>
   <% end %>
 
   <div class="row">
-    <div class='col-xs-4 form-group <%= 'has-error' if @team_member.errors[:name].present? %>'>
-      <%= f.label :name, class: 'control-label required' %>
-      <%= f.text_field :name, class: 'form-control', autofocus: true %>
-      <span class="help-block"><%= @team_member.errors[:name].join(', ') %></span>
-    </div>
-
-    <div class='col-xs-4 form-group <%= 'has-error' if @team_member.errors[:monthly_payment].present? %>'>
+    <div class='col-xs-3 form-group <%= 'has-error' if @team_member.errors[:monthly_payment].present? %>'>
       <%= f.label :monthly_payment, class: 'control-label required' %>
-      <%= f.number_field :monthly_payment, value: @team_member.monthly_payment, class: 'form-control', step: 0.01 %>
+      <%= f.number_field :monthly_payment, class: 'form-control', step: 0.01, id: 'monthly_payment' %>
       <span class="help-block"><%= @team_member.errors[:monthly_payment].join(', ') %></span>
     </div>
 
-    <div class='col-xs-4 form-group <%= 'has-error' if @team_member.errors[:hours_per_month].present? %>'>
+    <div class='col-xs-3 form-group <%= 'has-error' if @team_member.errors[:hours_per_month].present? %>'>
       <%= f.label :hours_per_month, class: 'control-label required' %>
-      <%= f.number_field :hours_per_month, value: @team_member.hours_per_month, class: 'form-control', step: 1 %>
+      <%= f.number_field :hours_per_month, class: 'form-control', step: 1, id: 'hours_per_month' %>
       <span class="help-block"><%= @team_member.errors[:hours_per_month].join(', ') %></span>
+    </div>
+    <div class='col-xs-3 form-group <%= 'has-error' if @team_member.errors[:hour_value].present? %>'>
+      <%= f.label :hour_value, class: 'control-label required' %>
+      <%= f.number_field :hour_value, class: 'form-control', step: 0.01, id: 'hour_value' %>
+      <span class="help-block"><%= @team_member.errors[:hour_value].join(', ') %></span>
+    </div>
+    <div class='col-xs-3 form-group <%= 'has-error' if @team_member.errors[:total_monthly_payment].present? %>'>
+      <%= f.label :total_monthly_payment, class: 'control-label' %>
+      <%= f.number_field :total_monthly_payment, class: 'form-control', step: 0.01, id: 'total_monthly_payment', disabled: true %>
+      <span class="help-block"><%= @team_member.errors[:total_monthly_payment].join(', ') %></span>
     </div>
   </div>
 
   <div class="row">
-    <div class='col-xs-2 form-check bottom-spaced-component'>
+    <div class='col-xs-3 form-check bottom-spaced-component'>
       <%= f.check_box :active, class: 'form-check-input', checked: true %>
       <%= f.label :active, class: 'form-check-label' %>
     </div>
-    <div class='col-xs-2 form-check bottom-spaced-component'>
+    <div class='col-xs-3 form-check bottom-spaced-component'>
       <%= f.check_box :billable, class: 'form-check-input', checked: true %>
       <%= f.label :billable, class: 'form-check-label' %>
-    </div>
-    <div class='col-xs-4 form-group <%= 'has-error' if @team_member.errors[:billable_type].present? %>'>
-      <%= f.label :billable_type, class: 'control-label' %>
-      <%= f.select :billable_type, TeamMember.billable_types.map { |key, _value| [t("activerecord.attributes.team_member.enums.billable_type.#{key}"), key] }, { include_blank: t('general.select'), selected: @team_member.billable_type }, class: 'form-control' %>
-      <span class="help-block"><%= @team_member.errors[:billable_type].join(', ') %></span>
     </div>
   </div>
   <div class="row">

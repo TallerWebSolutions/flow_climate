@@ -34,19 +34,19 @@ class Team < ApplicationRecord
   delegate :count, to: :projects, prefix: true
 
   def outsourcing_cost
-    team_members.active.where(billable: true, billable_type: :outsourcing).sum(&:monthly_payment)
+    team_members.active.where(billable: true, billable_type: :outsourcing).sum(&:total_monthly_payment)
   end
 
   def consulting_cost
-    team_members.active.where(billable: true, billable_type: :consulting).sum(&:monthly_payment)
+    team_members.active.where(billable: true, billable_type: :consulting).sum(&:total_monthly_payment)
   end
 
   def management_cost
-    team_members.active.where(billable: false).sum(&:monthly_payment)
+    team_members.active.where(billable: false).sum(&:total_monthly_payment)
   end
 
   def total_cost
-    team_members.active.sum(&:monthly_payment)
+    team_members.active.sum(&:total_monthly_payment)
   end
 
   def outsourcing_members_billable_count

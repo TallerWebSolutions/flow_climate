@@ -510,7 +510,9 @@ CREATE TABLE team_members (
     billable_type integer DEFAULT 0,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    team_id integer NOT NULL
+    team_id integer NOT NULL,
+    hour_value numeric DEFAULT 0,
+    total_monthly_payment numeric NOT NULL
 );
 
 
@@ -1185,6 +1187,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20180209180125'),
 ('20180209223011'),
 ('20180213155318'),
-('20180215151505');
+('20180215151505'),
+('20180215201832');
 
 

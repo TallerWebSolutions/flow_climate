@@ -71,7 +71,7 @@ RSpec.describe ProjectResultsController, type: :controller do
       let(:company) { Fabricate :company, users: [user] }
       let(:team) { Fabricate :team, company: company }
       let(:other_team) { Fabricate :team, company: company }
-      let!(:team_member) { Fabricate(:team_member, monthly_payment: 100, team: team) }
+      let!(:team_member) { Fabricate(:team_member, team: team, monthly_payment: 100, total_monthly_payment: 100) }
       let(:customer) { Fabricate :customer, company: company }
       let(:product) { Fabricate :product, customer: customer, name: 'zzz' }
       let!(:project) { Fabricate :project, customer: customer, product: product, end_date: 2.days.from_now }
@@ -197,7 +197,7 @@ RSpec.describe ProjectResultsController, type: :controller do
       let(:company) { Fabricate :company, users: [user] }
 
       let(:team) { Fabricate :team, company: company }
-      let!(:team_member) { Fabricate(:team_member, monthly_payment: 100, team: team) }
+      let!(:team_member) { Fabricate(:team_member, team: team, monthly_payment: 100, total_monthly_payment: 100) }
 
       let(:customer) { Fabricate :customer, company: company }
       let(:project) { Fabricate :project, customer: customer }

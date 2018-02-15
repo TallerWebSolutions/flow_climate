@@ -120,8 +120,8 @@ RSpec.describe ProjectResult, type: :model do
     end
     context 'when the project already has a team and a cost' do
       let(:team) { Fabricate :team }
-      let!(:team_member) { Fabricate :team_member, active: true, billable_type: :outsourcing, billable: true, team: team, monthly_payment: 100, hours_per_month: 22 }
-      let!(:other_team_member) { Fabricate :team_member, active: true, billable_type: :outsourcing, billable: true, team: team, monthly_payment: 100, hours_per_month: 11 }
+      let!(:team_member) { Fabricate :team_member, active: true, billable_type: :outsourcing, billable: true, team: team, monthly_payment: 100, hours_per_month: 22, total_monthly_payment: 100 }
+      let!(:other_team_member) { Fabricate :team_member, active: true, billable_type: :outsourcing, billable: true, team: team, monthly_payment: 100, hours_per_month: 11, total_monthly_payment: 100 }
       let!(:result) { Fabricate :project_result, project: project, team: team, known_scope: 20, throughput: 4 }
       before { result.define_automatic_attributes! }
       it 'defines the automatic attributes' do
