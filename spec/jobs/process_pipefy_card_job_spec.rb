@@ -46,7 +46,7 @@ RSpec.describe ProcessPipefyCardJob, type: :active_job do
           expect(created_project_result.project).to eq project
           expect(created_project_result.team).to eq team
           expect(created_project_result.result_date).to eq Time.iso8601('2018-02-09T01:01:41-02:00').to_date
-          expect(created_project_result.known_scope).to eq 2
+          expect(created_project_result.known_scope).to eq 1
           expect(created_project_result.throughput).to eq 1
           expect(created_project_result.qty_hours_upstream).to eq 0
           expect(created_project_result.qty_hours_downstream).to eq 144.0
@@ -123,7 +123,7 @@ RSpec.describe ProcessPipefyCardJob, type: :active_job do
             expect(updated_project_result.project).to eq project
             expect(updated_project_result.team).to eq team
             expect(updated_project_result.result_date).to eq Time.iso8601('2018-02-09T01:01:41-02:00').to_date
-            expect(updated_project_result.known_scope).to eq 2
+            expect(updated_project_result.known_scope).to eq 1
             expect(updated_project_result.throughput).to eq 1
             expect(updated_project_result.qty_hours_upstream).to eq 0
             expect(updated_project_result.qty_hours_downstream).to eq 144

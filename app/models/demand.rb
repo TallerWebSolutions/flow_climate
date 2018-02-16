@@ -15,6 +15,7 @@
 #  commitment_date   :datetime
 #  end_date          :datetime
 #  created_date      :datetime         not null
+#  url               :string
 #
 # Indexes
 #

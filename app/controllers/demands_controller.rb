@@ -83,7 +83,7 @@ class DemandsController < AuthenticatedController
     commitment_date = Time.iso8601(row_parts[3]) if row_parts[3].present?
     end_date = Time.iso8601(row_parts[4]) if row_parts[4].present?
 
-    DemandsRepository.instance.create_or_update_demand(@project, team, row_parts[0], row_parts[1], commitment_date, created_date, end_date)
+    DemandsRepository.instance.create_or_update_demand(@project, team, row_parts[0], row_parts[1], commitment_date, created_date, end_date, '')
   end
 
   def demand_params

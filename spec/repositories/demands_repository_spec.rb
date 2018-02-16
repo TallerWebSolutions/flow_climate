@@ -55,7 +55,7 @@ RSpec.describe DemandsRepository, type: :repository do
         created_date = 2.days.ago.change(usec: 0).change(sec: 0)
         commitment_date = 1.day.ago.change(usec: 0).change(sec: 0)
         end_date = Time.zone.now.change(usec: 0).change(sec: 0)
-        DemandsRepository.instance.create_or_update_demand(project, team, '100', 'bug', commitment_date, created_date, end_date)
+        DemandsRepository.instance.create_or_update_demand(project, team, '100', 'bug', commitment_date, created_date, end_date, 'bla.xpto.com')
 
         updated_demand = Demand.last
         expect(updated_demand.demand_id).to eq '100'
@@ -64,6 +64,7 @@ RSpec.describe DemandsRepository, type: :repository do
         expect(updated_demand.created_date).to eq created_date
         expect(updated_demand.commitment_date).to eq commitment_date
         expect(updated_demand.end_date).to eq end_date
+        expect(updated_demand.url).to eq 'bla.xpto.com'
 
         updated_project_result = ProjectResult.last
         expect(updated_project_result.demands).to match_array [updated_demand]
@@ -94,7 +95,7 @@ RSpec.describe DemandsRepository, type: :repository do
       let!(:demand) { Fabricate :demand, project_result: project_result, demand_id: '100', effort: 25, created_date: created_date }
 
       it 'updates the demand and the project result' do
-        DemandsRepository.instance.create_or_update_demand(project, team, '100', 'bug', commitment_date, created_date, end_date)
+        DemandsRepository.instance.create_or_update_demand(project, team, '100', 'bug', commitment_date, created_date, end_date, 'bla.xpto.com')
         expect(ProjectResult.count).to eq 2
         updated_project_result = ProjectResult.order(:result_date).first
         created_project_result = ProjectResult.order(:result_date).second
@@ -106,6 +107,7 @@ RSpec.describe DemandsRepository, type: :repository do
         expect(updated_demand.commitment_date).to eq commitment_date
         expect(updated_demand.end_date).to eq end_date
         expect(updated_demand.project_result).to eq created_project_result
+        expect(updated_demand.url).to eq 'bla.xpto.com'
 
         expect(updated_project_result.demands).to eq []
         expect(updated_project_result.project).to eq project
