@@ -1,23 +1,17 @@
 # frozen_string_literal: true
 
 class PipefyData
-  attr_reader :demand_type, :commitment_date, :created_date, :end_date, :demand_id, :pipe_id, :known_scope
+  attr_reader :demand_type, :commitment_date, :created_date, :end_date, :demand_id, :pipe_id, :url
 
-  def initialize(card_response, pipe_response)
+  def initialize(card_response)
     @demand_id = card_response['data'].try(:[], 'card').try(:[], 'id')
     @pipe_id = card_response['data'].try(:[], 'card').try(:[], 'pipe').try(:[], 'id')
-    @known_scope = pipe_known_scope(pipe_response)
+    @url = card_response['data'].try(:[], 'card').try(:[], 'url')
     define_demand_type(card_response['data'])
     read_phases(card_response['data'])
   end
 
   private
-
-  def pipe_known_scope(pipe_response)
-    known_scope = 0
-    pipe_response['data'].try(:[], 'pipe').try(:[], 'phases')&.each { |phase| known_scope += phase['cards']['edges'].count }
-    known_scope
-  end
 
   def read_phases(response_data)
     response_data.try(:[], 'card').try(:[], 'phases_history')&.each do |phase|

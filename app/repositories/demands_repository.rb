@@ -12,13 +12,13 @@ class DemandsRepository
     ProjectResultsRepository.instance.update_result_for_date(project, demand.end_date, known_scope, 0)
   end
 
-  def create_or_update_demand(project, team, demand_id, demand_type, commitment_date, created_date, end_date)
+  def create_or_update_demand(project, team, demand_id, demand_type, commitment_date, created_date, end_date, url)
     demand = Demand.where(demand_id: demand_id).first_or_initialize
     prior_result = demand.project_result
-    result_date = end_date || created_date
+    result_date = end_date&.to_date || created_date.to_date
     project_result = ProjectResultsRepository.instance.create_project_result(project, team, result_date)
     hours_consumed = DemandService.instance.compute_effort_for_dates(commitment_date, end_date)
-    demand.update(project_result: project_result, demand_type: demand_type, created_date: created_date, commitment_date: commitment_date, end_date: end_date, effort: hours_consumed)
+    demand.update(project_result: project_result, demand_type: demand_type, created_date: created_date, commitment_date: commitment_date, end_date: end_date, effort: hours_consumed, url: url)
     known_scope = ProjectsRepository.instance.known_scope(project, result_date)
     ProjectResultsRepository.instance.update_result_for_date(project, result_date, known_scope, 0)
 

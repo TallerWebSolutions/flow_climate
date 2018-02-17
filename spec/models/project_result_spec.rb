@@ -114,7 +114,7 @@ RSpec.describe ProjectResult, type: :model do
       before { result.define_automatic_attributes! }
       it { expect(result.reload.flow_pressure.to_f).to be_within(0.01).of(0.2711) }
       it { expect(result.reload.remaining_days).to eq 59 }
-      it { expect(result.reload.cost_in_week).to eq 0 }
+      it { expect(result.reload.cost_in_month).to eq 0 }
       it { expect(result.reload.average_demand_cost.to_f).to eq 0 }
       it { expect(result.reload.available_hours.to_f).to eq 0 }
     end
@@ -125,8 +125,8 @@ RSpec.describe ProjectResult, type: :model do
       let!(:result) { Fabricate :project_result, project: project, team: team, known_scope: 20, throughput: 4 }
       before { result.define_automatic_attributes! }
       it 'defines the automatic attributes' do
-        expect(result.reload.cost_in_week.to_f).to eq 50.0
-        expect(result.reload.average_demand_cost.to_f).to eq 12.5
+        expect(result.reload.cost_in_month.to_f).to eq 200.0
+        expect(result.reload.average_demand_cost.to_f).to eq 1.6666666666666667
         expect(result.reload.available_hours.to_f).to eq 8.25
       end
     end

@@ -61,7 +61,7 @@ class DemandsController < AuthenticatedController
     end
 
     current_date = demand.end_date || demand.created_date
-    known_scope = ProjectsRepository.instance.known_scope(@project, current_date)
+    known_scope = ProjectsRepository.instance.known_scope(@project, current_date.to_date)
     ProjectResultsRepository.instance.update_result_for_date(@project, current_date, known_scope, 0)
   end
 
@@ -83,7 +83,7 @@ class DemandsController < AuthenticatedController
     commitment_date = Time.iso8601(row_parts[3]) if row_parts[3].present?
     end_date = Time.iso8601(row_parts[4]) if row_parts[4].present?
 
-    DemandsRepository.instance.create_or_update_demand(@project, team, row_parts[0], row_parts[1], commitment_date, created_date, end_date)
+    DemandsRepository.instance.create_or_update_demand(@project, team, row_parts[0], row_parts[1], commitment_date, created_date, end_date, '')
   end
 
   def demand_params

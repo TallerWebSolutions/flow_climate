@@ -22,7 +22,7 @@
 #  demands_count        :integer
 #  flow_pressure        :decimal(, )      not null
 #  remaining_days       :integer          not null
-#  cost_in_week         :decimal(, )      not null
+#  cost_in_month        :decimal(, )      not null
 #  average_demand_cost  :decimal(, )      not null
 #  available_hours      :decimal(, )      not null
 #
@@ -63,7 +63,7 @@ class ProjectResult < ApplicationRecord
   def define_automatic_attributes!
     available_hours = 0
     available_hours = team.current_outsourcing_monthly_available_hours.to_f / 4 if team.present?
-    update(remaining_days: project.remaining_days, flow_pressure: current_flow_pressure, cost_in_week: calculate_cost_in_week, average_demand_cost: calculate_average_demand_cost, available_hours: available_hours)
+    update(remaining_days: project.remaining_days(result_date), flow_pressure: current_flow_pressure, cost_in_month: team&.outsourcing_cost, average_demand_cost: calculate_average_demand_cost, available_hours: available_hours)
   end
 
   def total_hours
@@ -73,14 +73,8 @@ class ProjectResult < ApplicationRecord
   private
 
   def calculate_average_demand_cost
-    return 0 if calculate_cost_in_week.zero?
-    return calculate_cost_in_week if throughput.zero?
-    calculate_cost_in_week / throughput.to_f
-  end
-
-  def calculate_cost_in_week
-    return 0 if team.blank? || team.total_cost.zero?
-    team.total_cost / 4
+    return 0 if team.blank? || team.outsourcing_cost&.zero? || throughput.zero?
+    (team.outsourcing_cost / 30) / throughput.to_f
   end
 
   def current_gap

@@ -12,6 +12,7 @@
 
 <table class="table table-index">
   <tr>
+    <th><%= t('general.table.actions') %></th>
     <th><%= Project.human_attribute_name :customer_name %></th>
     <th><%= Project.human_attribute_name :product_name %></th>
     <th><%= Project.human_attribute_name :name %></th>
@@ -21,10 +22,19 @@
     <th><%= Demand.human_attribute_name :commitment_date %></th>
     <th><%= Demand.human_attribute_name :end_date %></th>
     <th><%= Demand.human_attribute_name :effort %></th>
+    <th><%= Demand.human_attribute_name(:url).upcase %></th>
     <th><%= t('general.table.actions') %></th>
   </tr>
   <% demands_list.each do |demand| %>
     <tr>
+      <td>
+        <%= link_to company_project_project_result_demand_path(@company, @project, @project_result, demand), method: :delete do %>
+          <i class="fa fa-times" aria-hidden="true"></i>
+        <% end %>
+        <%= link_to edit_company_project_project_result_demand_path(@company, @project, @project_result, demand) do %>
+          <i class="fa fa-pencil"></i>
+        <% end %>
+      </td>
       <td><%= link_to @project.customer_name, company_customer_path(@company, @project.customer) %></td>
       <td>
         <% if @project.product.present? %>
@@ -38,6 +48,7 @@
       <td><%= l(demand.commitment_date, format: :short) if demand.commitment_date.present? %></td>
       <td><%= l(demand.end_date, format: :short) if demand.end_date.present? %></td>
       <td><%= number_with_precision(demand.effort, precision: 2) %></td>
+      <td><%= link_to demand.url, demand.url %></td>
       <td>
         <%= link_to company_project_project_result_demand_path(@company, @project, @project_result, demand), method: :delete do %>
           <i class="fa fa-times" aria-hidden="true"></i>

@@ -166,7 +166,8 @@ CREATE TABLE demands (
     demand_url character varying,
     commitment_date timestamp without time zone,
     end_date timestamp without time zone,
-    created_date timestamp without time zone NOT NULL
+    created_date timestamp without time zone NOT NULL,
+    url character varying
 );
 
 
@@ -352,7 +353,7 @@ CREATE TABLE project_results (
     demands_count integer,
     flow_pressure numeric NOT NULL,
     remaining_days integer NOT NULL,
-    cost_in_week numeric NOT NULL,
+    cost_in_month numeric NOT NULL,
     average_demand_cost numeric NOT NULL,
     available_hours numeric NOT NULL
 );
@@ -1188,6 +1189,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20180209223011'),
 ('20180213155318'),
 ('20180215151505'),
-('20180215201832');
+('20180215201832'),
+('20180216160706'),
+('20180216231515');
 
 

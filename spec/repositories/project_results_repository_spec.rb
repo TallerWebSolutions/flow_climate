@@ -164,9 +164,9 @@ RSpec.describe ProjectResultsRepository, type: :repository do
       let!(:second_project) { Fabricate :project, customer: customer, product: product, start_date: 2.months.ago, end_date: 3.weeks.from_now }
       let!(:third_project) { Fabricate :project, customer: customer, product: product, start_date: 2.months.ago, end_date: 1.month.from_now }
 
-      let!(:first_result) { Fabricate :project_result, project: first_project, result_date: 1.week.ago, throughput: 20, average_demand_cost: 20, cost_in_week: 11 }
-      let!(:second_result) { Fabricate :project_result, project: second_project, result_date: 1.week.ago, throughput: 10, average_demand_cost: 20, cost_in_week: 11 }
-      let!(:third_result) { Fabricate :project_result, project: third_project, result_date: 2.months.ago, throughput: 5, average_demand_cost: 20, cost_in_week: 11 }
+      let!(:first_result) { Fabricate :project_result, project: first_project, result_date: 1.week.ago, throughput: 20, average_demand_cost: 20, cost_in_month: 11 }
+      let!(:second_result) { Fabricate :project_result, project: second_project, result_date: 1.week.ago, throughput: 10, average_demand_cost: 20, cost_in_month: 11 }
+      let!(:third_result) { Fabricate :project_result, project: third_project, result_date: 2.months.ago, throughput: 5, average_demand_cost: 20, cost_in_month: 11 }
       let!(:out_result) { Fabricate :project_result, result_date: 1.day.ago, flow_pressure: 4 }
 
       it { expect(ProjectResultsRepository.instance.throughput_in_week_for_projects([first_project, second_project], 1.week.ago.to_date.cweek, 1.week.ago.to_date.cwyear)).to eq 30 }
@@ -223,7 +223,7 @@ RSpec.describe ProjectResultsRepository, type: :repository do
   describe '#update_result_for_date' do
     let!(:project) { Fabricate :project, customer: customer, product: product, start_date: 2.months.ago, end_date: 3.weeks.from_now }
     context 'having the project_result' do
-      let!(:result) { Fabricate :project_result, project: project, result_date: 1.week.ago, throughput: 20, qty_hours_downstream: 20, qty_hours_upstream: 11, cost_in_week: 20 }
+      let!(:result) { Fabricate :project_result, project: project, result_date: 1.week.ago, throughput: 20, qty_hours_downstream: 20, qty_hours_upstream: 11, cost_in_month: 340 }
 
       context 'having no demands for the date' do
         it 'updates the project result' do
@@ -239,8 +239,8 @@ RSpec.describe ProjectResultsRepository, type: :repository do
           expect(updated_project_result.qty_bugs_closed).to eq 0
           expect(updated_project_result.qty_bugs_opened).to eq 5
           expect(updated_project_result.flow_pressure.to_f).to eq 0.0
-          expect(updated_project_result.remaining_days).to eq 0
-          expect(updated_project_result.average_demand_cost.to_f).to eq 20
+          expect(updated_project_result.remaining_days).to eq 28
+          expect(updated_project_result.average_demand_cost.to_f).to eq 0
         end
       end
 
@@ -259,9 +259,9 @@ RSpec.describe ProjectResultsRepository, type: :repository do
           expect(updated_project_result.qty_hours_bug).to eq 0
           expect(updated_project_result.qty_bugs_closed).to eq 0
           expect(updated_project_result.qty_bugs_opened).to eq 5
-          expect(updated_project_result.flow_pressure.to_f).to eq 0.0476190476190476
-          expect(updated_project_result.remaining_days).to eq 0
-          expect(updated_project_result.average_demand_cost.to_f).to eq 20
+          expect(updated_project_result.flow_pressure.to_f).to eq 0.0357142857142857
+          expect(updated_project_result.remaining_days).to eq 28
+          expect(updated_project_result.average_demand_cost.to_f).to eq 11.333333333333334
         end
       end
     end

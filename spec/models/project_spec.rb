@@ -202,13 +202,11 @@ RSpec.describe Project, type: :model do
       let!(:first_result) { Fabricate :project_result, project: project, result_date: 3.weeks.ago, known_scope: 5 }
       let!(:second_result) { Fabricate :project_result, project: project, result_date: 2.weeks.ago, known_scope: 10 }
       let!(:third_result) { Fabricate :project_result, project: project, result_date: 1.week.ago, known_scope: 20 }
-      let!(:fourth_result) { Fabricate :project_result, project: project, result_date: Time.zone.today, known_scope: 30 }
       it { expect(project.last_week_scope).to eq 20 }
     end
     context 'having no data in the week but in the previous' do
       let!(:first_result) { Fabricate :project_result, project: project, result_date: 3.weeks.ago, known_scope: 5 }
-      let!(:second_result) { Fabricate :project_result, project: project, result_date: 2.weeks.ago, known_scope: 10 }
-      let!(:fourth_result) { Fabricate :project_result, project: project, result_date: Time.zone.today, known_scope: 30 }
+      let!(:second_result) { Fabricate :project_result, project: project, result_date: Time.zone.today, known_scope: 10 }
       it { expect(project.last_week_scope).to eq 10 }
     end
   end
@@ -218,14 +216,12 @@ RSpec.describe Project, type: :model do
     context 'having data in the week' do
       let!(:first_result) { Fabricate :project_result, project: project, result_date: 3.weeks.ago, known_scope: 5 }
       let!(:second_result) { Fabricate :project_result, project: project, result_date: 2.weeks.ago, known_scope: 10 }
-      let!(:third_result) { Fabricate :project_result, project: project, result_date: 1.week.ago, known_scope: 20 }
-      let!(:fourth_result) { Fabricate :project_result, project: project, result_date: Time.zone.today, known_scope: 30 }
+      let!(:third_result) { Fabricate :project_result, project: project, result_date: Time.zone.today, known_scope: 20 }
       it { expect(project.penultimate_week_scope).to eq 10 }
     end
     context 'having no data in the week but in the previous' do
       let!(:first_result) { Fabricate :project_result, project: project, result_date: 3.weeks.ago, known_scope: 5 }
-      let!(:second_result) { Fabricate :project_result, project: project, result_date: 1.week.ago, known_scope: 20 }
-      let!(:third_result) { Fabricate :project_result, project: project, result_date: Time.zone.today, known_scope: 30 }
+      let!(:second_result) { Fabricate :project_result, project: project, result_date: Time.zone.today, known_scope: 20 }
       it { expect(project.penultimate_week_scope).to eq 5 }
     end
   end
@@ -464,9 +460,8 @@ RSpec.describe Project, type: :model do
     let!(:first_project) { Fabricate :project, initial_scope: 30 }
 
     context 'having data for last week and 2 weeks ago' do
-      let!(:first_result) { Fabricate :project_result, project: first_project, result_date: 1.week.ago, known_scope: 110, throughput: 20 }
+      let!(:first_result) { Fabricate :project_result, project: first_project, result_date: Time.zone.today, known_scope: 110, throughput: 20 }
       let!(:second_result) { Fabricate :project_result, project: first_project, result_date: 2.weeks.ago, known_scope: 80, throughput: 10 }
-      let!(:third_result) { Fabricate :project_result, project: first_project, result_date: Time.zone.today, known_scope: 80, throughput: 25 }
 
       it { expect(first_project.backlog_unit_growth).to eq 30 }
     end
@@ -481,17 +476,15 @@ RSpec.describe Project, type: :model do
     let!(:first_project) { Fabricate :project, initial_scope: 30 }
 
     context 'having data for last week and 2 weeks ago' do
-      let!(:first_result) { Fabricate :project_result, project: first_project, result_date: 1.week.ago, known_scope: 110, throughput: 20 }
+      let!(:first_result) { Fabricate :project_result, project: first_project, result_date: Time.zone.today, known_scope: 110, throughput: 20 }
       let!(:second_result) { Fabricate :project_result, project: first_project, result_date: 2.weeks.ago, known_scope: 80, throughput: 10 }
-      let!(:third_result) { Fabricate :project_result, project: first_project, result_date: Time.zone.today, known_scope: 80, throughput: 25 }
 
       it { expect(first_project.backlog_growth_rate).to be_within(0.01).of(0.375) }
     end
 
     context 'having data for last week and 3 weeks ago' do
-      let!(:first_result) { Fabricate :project_result, project: first_project, result_date: 1.week.ago, known_scope: 110, throughput: 20 }
+      let!(:first_result) { Fabricate :project_result, project: first_project, result_date: Time.zone.today, known_scope: 110, throughput: 20 }
       let!(:second_result) { Fabricate :project_result, project: first_project, result_date: 3.weeks.ago, known_scope: 80, throughput: 10 }
-      let!(:third_result) { Fabricate :project_result, project: first_project, result_date: Time.zone.today, known_scope: 80, throughput: 25 }
 
       it { expect(first_project.backlog_growth_rate).to be_within(0.01).of(0.375) }
     end
@@ -532,18 +525,18 @@ RSpec.describe Project, type: :model do
       let!(:result) { Fabricate :project_result, project: first_project, result_date: 1.week.ago, known_scope: 110, throughput: 20 }
       let!(:other_result) { Fabricate :project_result, project: first_project, result_date: Time.zone.today, known_scope: 80, throughput: 25 }
 
-      it { expect(first_project.total_throughput_for(1.week.ago)).to eq 20 }
+      it { expect(first_project.total_throughput_for(Time.zone.today)).to eq 25 }
     end
 
     context 'having data for 2 weeks ago' do
-      let!(:result) { Fabricate :project_result, project: first_project, result_date: 2.weeks.ago, known_scope: 110 }
-      let!(:other_result) { Fabricate :project_result, project: first_project, result_date: Time.zone.today, known_scope: 80 }
+      let!(:result) { Fabricate :project_result, project: first_project, result_date: 2.weeks.ago, known_scope: 110, throughput: 20 }
+      let!(:other_result) { Fabricate :project_result, project: first_project, result_date: Time.zone.today, known_scope: 80, throughput: 25 }
 
-      it { expect(first_project.backlog_for(1.week.ago)).to eq 30 }
+      it { expect(first_project.total_throughput_for(1.week.ago)).to eq 0 }
     end
 
     context 'having no result' do
-      it { expect(first_project.backlog_for(1.week.ago)).to eq 30 }
+      it { expect(first_project.total_throughput_for(1.week.ago)).to eq 0 }
     end
   end
 
@@ -573,9 +566,8 @@ RSpec.describe Project, type: :model do
     let!(:first_project) { Fabricate :project, initial_scope: 30 }
 
     context 'having data for last week and 2 weeks ago' do
-      let!(:first_result) { Fabricate :project_result, project: first_project, result_date: 1.week.ago, known_scope: 110, throughput: 20 }
-      let!(:second_result) { Fabricate :project_result, project: first_project, result_date: 2.weeks.ago, known_scope: 80, throughput: 10 }
-      let!(:third_result) { Fabricate :project_result, project: first_project, result_date: Time.zone.today, known_scope: 80, throughput: 25 }
+      let!(:first_result) { Fabricate :project_result, project: first_project, result_date: Time.zone.today, known_scope: 110, throughput: 20 }
+      let!(:second_result) { Fabricate :project_result, project: first_project, result_date: 1.week.ago, known_scope: 80, throughput: 10 }
 
       it { expect(first_project.backlog_growth_throughput_rate).to eq 1.5 }
     end
@@ -607,9 +599,9 @@ RSpec.describe Project, type: :model do
     let!(:first_project) { Fabricate :project, initial_scope: 30 }
 
     context 'having data for last week and 2 weeks ago' do
-      let!(:first_result) { Fabricate :project_result, project: first_project, result_date: 1.week.ago, cost_in_week: 110, average_demand_cost: 20 }
-      let!(:second_result) { Fabricate :project_result, project: first_project, result_date: 2.weeks.ago, cost_in_week: 80, average_demand_cost: 10 }
-      let!(:third_result) { Fabricate :project_result, project: first_project, result_date: Time.zone.today, cost_in_week: 80, average_demand_cost: 25 }
+      let!(:first_result) { Fabricate :project_result, project: first_project, result_date: 1.week.ago, cost_in_month: 110, average_demand_cost: 20 }
+      let!(:second_result) { Fabricate :project_result, project: first_project, result_date: 2.weeks.ago, cost_in_month: 80, average_demand_cost: 10 }
+      let!(:third_result) { Fabricate :project_result, project: first_project, result_date: Time.zone.today, cost_in_month: 80, average_demand_cost: 25 }
 
       it { expect(first_project.average_demand_cost.to_f).to eq 25.0 }
     end
@@ -661,5 +653,27 @@ RSpec.describe Project, type: :model do
   describe '#money_per_month' do
     let(:project) { Fabricate :project, value: 100, start_date: 1.month.ago, end_date: 3.months.from_now }
     it { expect(project.money_per_month.to_f).to be 24.793388429752067 }
+  end
+
+  describe '#total_throughput_until' do
+    let!(:first_project) { Fabricate :project, initial_scope: 30 }
+
+    context 'having data for last week' do
+      let!(:result) { Fabricate :project_result, project: first_project, result_date: 1.week.ago, known_scope: 110, throughput: 20 }
+      let!(:other_result) { Fabricate :project_result, project: first_project, result_date: Time.zone.today, known_scope: 80, throughput: 25 }
+
+      it { expect(first_project.total_throughput_until(Time.zone.today)).to eq 45 }
+    end
+
+    context 'having data for 2 weeks ago' do
+      let!(:result) { Fabricate :project_result, project: first_project, result_date: 2.weeks.ago, known_scope: 110, throughput: 20 }
+      let!(:other_result) { Fabricate :project_result, project: first_project, result_date: Time.zone.today, known_scope: 80, throughput: 25 }
+
+      it { expect(first_project.total_throughput_until(1.week.ago)).to eq 20 }
+    end
+
+    context 'having no result' do
+      it { expect(first_project.total_throughput_until(1.week.ago)).to eq 0 }
+    end
   end
 end

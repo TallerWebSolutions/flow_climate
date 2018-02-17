@@ -89,13 +89,13 @@ RSpec.describe Product, type: :model do
 
     let!(:first_result) { Fabricate :project_result, project: project, result_date: 1.week.ago, known_scope: 10 }
     let!(:second_result) { Fabricate :project_result, project: project, result_date: Time.zone.today, known_scope: 20 }
-    let!(:third_result) { Fabricate :project_result, project: other_project, result_date: 1.week.ago, known_scope: 5 }
+    let!(:third_result) { Fabricate :project_result, project: other_project, result_date: Time.zone.today, known_scope: 5 }
     let!(:fourth_result) { Fabricate :project_result, project: other_product_project, result_date: 1.week.ago, known_scope: 50 }
   end
 
   describe '#last_week_scope' do
     include_context 'consolidations variables data for product'
-    it { expect(product.last_week_scope).to eq 15 }
+    it { expect(product.last_week_scope).to eq 25 }
   end
 
   describe '#avg_hours_per_demand' do

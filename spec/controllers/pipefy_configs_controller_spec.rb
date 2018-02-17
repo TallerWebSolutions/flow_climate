@@ -10,6 +10,10 @@ RSpec.describe PipefyConfigsController, type: :controller do
       before { post :create, params: { company_id: 'foo' } }
       it { expect(response).to redirect_to new_user_session_path }
     end
+    describe 'DELETE #destroy' do
+      before { delete :destroy, params: { company_id: 'foo', id: 'bar' } }
+      it { expect(response).to redirect_to new_user_session_path }
+    end
   end
 
   context 'authenticated' do
@@ -48,6 +52,37 @@ RSpec.describe PipefyConfigsController, type: :controller do
           expect(PipefyConfig.last).to be_nil
           expect(response).to render_template :new
           expect(assigns(:pipefy_config).errors.full_messages).to eq ['Projeto não pode ficar em branco', 'Id do Pipe não pode ficar em branco', 'Time não pode ficar em branco']
+        end
+      end
+    end
+
+    describe 'DELETE #destroy' do
+      let(:company) { Fabricate :company, users: [user] }
+      let(:pipefy_config) { Fabricate :pipefy_config, company: company }
+
+      context 'passing valid ID' do
+        context 'having no dependencies' do
+          before { delete :destroy, params: { company_id: company, id: pipefy_config } }
+          it 'deletes the customer and redirects' do
+            expect(response).to redirect_to company_path(company)
+            expect(PipefyConfig.last).to be_nil
+          end
+        end
+      end
+
+      context 'passing an invalid ID' do
+        context 'non-existent pipefy_config' do
+          before { delete :destroy, params: { company_id: company, id: 'foo' } }
+          it { expect(response).to have_http_status :not_found }
+        end
+        context 'non-existent company' do
+          before { delete :destroy, params: { company_id: 'foo', id: pipefy_config } }
+          it { expect(response).to have_http_status :not_found }
+        end
+        context 'not permitted' do
+          let(:company) { Fabricate :company, users: [] }
+          before { delete :destroy, params: { company_id: company, id: pipefy_config } }
+          it { expect(response).to have_http_status :not_found }
         end
       end
     end
