@@ -27,8 +27,8 @@
           <th><%= t('projects.index.percentage_hours_consumed') %></th>
           <th><%= Project.human_attribute_name :hour_value %></th>
           <th><%= Project.human_attribute_name :initial_scope %></th>
-          <th><%= t('projects.show.penultimate_week_scope') %></th>
           <th><%= t('projects.show.last_week_scope') %></th>
+          <th><%= t('projects.show.current_week_scope') %></th>
           <th><%= t('projects.show.scope_unit_growth') %></th>
           <th><%= t('projects.show.scope_growth') %></th>
           <th><%= t('projects.show.delivered_scope') %></th>
@@ -106,7 +106,7 @@
             <td><%= number_with_precision(project.last_week_scope, precision: 0) %></td>
             <td><%= number_with_precision(project.backlog_unit_growth, precision: 0) %></td>
             <td><%= number_to_percentage(project.backlog_growth_rate * 100, precision: 2) %></td>
-            <td><%= number_with_precision(project.total_throughput, precision: 0) %></td>
+            <td><%= number_with_precision(project.total_throughput_until(Time.zone.today), precision: 0) %></td>
             <td><%= number_with_precision(project.total_gap, precision: 0) %></td>
             <td><%= number_to_currency(project.average_demand_cost) %></td>
             <td><%= number_to_currency(project.value) %></td>

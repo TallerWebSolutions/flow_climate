@@ -61,7 +61,7 @@ class DemandsController < AuthenticatedController
     end
 
     current_date = demand.end_date || demand.created_date
-    known_scope = ProjectsRepository.instance.known_scope(@project, current_date)
+    known_scope = ProjectsRepository.instance.known_scope(@project, current_date.to_date)
     ProjectResultsRepository.instance.update_result_for_date(@project, current_date, known_scope, 0)
   end
 

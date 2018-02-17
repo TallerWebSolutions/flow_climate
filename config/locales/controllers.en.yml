@@ -125,9 +125,9 @@ en:
       scope_gap: "Scope Gap"
       scope_growth: "Scope Growth (%)"
       scope_unit_growth: "Scope Growth (unity)"
-      penultimate_week_scope: "Scope (last week)"
+      current_week_scope: "Scope (current)"
       average_demand_cost: "Average Demand Cost"
-      cost_in_week: "Week Cost"
+      cost_in_month: "Monthly Cost"
     charts:
       xlabel:
         weeks: "Weeks"

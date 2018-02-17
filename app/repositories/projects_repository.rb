@@ -35,6 +35,6 @@ class ProjectsRepository
   end
 
   def known_scope(project, created_date)
-    project.demands.where('DATE(created_date) <= :created_date', created_date: created_date).count
+    project.demands.where('created_date <= :created_date', created_date: created_date.end_of_day).count
   end
 end

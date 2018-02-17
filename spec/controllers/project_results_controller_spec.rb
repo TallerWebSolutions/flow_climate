@@ -94,8 +94,8 @@ RSpec.describe ProjectResultsController, type: :controller do
           expect(result.leadtime).to eq 10.5
           expect(result.flow_pressure.to_f).to eq 50.0
           expect(result.remaining_days).to eq 2
-          expect(result.average_demand_cost.to_f).to eq 5.0
-          expect(result.cost_in_week.to_f).to eq 25.0
+          expect(result.average_demand_cost.to_f).to eq 0.6666666666666666
+          expect(result.cost_in_month.to_f).to eq 100.0
         end
       end
       context 'passing invalid' do
@@ -220,8 +220,8 @@ RSpec.describe ProjectResultsController, type: :controller do
           expect(result.leadtime).to eq 10.5
           expect(result.flow_pressure.to_f).to be_within(0.01).of(1.61)
           expect(result.remaining_days).to eq 59
-          expect(result.average_demand_cost.to_f).to eq 5.0
-          expect(result.cost_in_week.to_f).to eq 25.0
+          expect(result.average_demand_cost.to_f).to eq 0.6666666666666666
+          expect(result.cost_in_month.to_f).to eq 100.0
           expect(response).to redirect_to company_project_path(company, project)
         end
       end

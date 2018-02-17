@@ -74,7 +74,9 @@ class ProjectResultsRepository
   def average_demand_cost_in_week_for_projects(projects, week, year)
     total_average_demand_cost = []
     projects.each do |project|
-      average_demand_cost = results_for_week(project, week, year).order(:result_date).last&.average_demand_cost.to_f
+      th_in_week_for_cost = th_in_week_for_projects([project], week, year)
+      cost_in_week = results_for_week(project, week, year).average(:cost_in_month).to_f / 4
+      average_demand_cost = cost_in_week.to_f / th_in_week_for_cost.to_f
       total_average_demand_cost << average_demand_cost || 0
     end
 
@@ -89,8 +91,8 @@ class ProjectResultsRepository
     bug_demands = demands_for_date.where(demand_type: :bug)
 
     project_result.update(known_scope: known_scope, throughput: demands_for_date.count, qty_hours_upstream: 0, qty_hours_downstream: demands_for_date.sum(:effort), qty_hours_bug: bug_demands.sum(:effort),
-                          qty_bugs_closed: bug_demands.count, qty_bugs_opened: qty_bugs_opened, flow_pressure: demands_for_date.count.to_f / project.remaining_days,
-                          average_demand_cost: average_demand_cost(demands_for_date, project_result))
+                          qty_bugs_closed: bug_demands.count, qty_bugs_opened: qty_bugs_opened, remaining_days: project.remaining_days(result_date),
+                          flow_pressure: demands_for_date.count.to_f / project.remaining_days(result_date), average_demand_cost: average_demand_cost(demands_for_date, project_result))
     project_result
   end
 
@@ -103,8 +105,8 @@ class ProjectResultsRepository
   private
 
   def average_demand_cost(demands_for_date, project_result)
-    return project_result.cost_in_week if demands_for_date.blank?
-    project_result.cost_in_week / demands_for_date.count
+    return 0 if demands_for_date.blank?
+    (project_result.cost_in_month / 30) / demands_for_date.count
   end
 
   def results_until_week(project, week, year)
@@ -119,10 +121,10 @@ class ProjectResultsRepository
     ProjectResult.joins(project: [{ product: :customer }])
   end
 
-  def create_new_empty_project_result(end_date, project, team)
-    ProjectResult.create(project: project, result_date: end_date, known_scope: 0, throughput: 0, qty_hours_upstream: 0,
+  def create_new_empty_project_result(result_date, project, team)
+    ProjectResult.create(project: project, result_date: result_date, known_scope: 0, throughput: 0, qty_hours_upstream: 0,
                          qty_hours_downstream: 0, qty_hours_bug: 0, qty_bugs_closed: 0, qty_bugs_opened: 0,
-                         team: team, flow_pressure: 0, remaining_days: project.remaining_days, cost_in_week: (team.outsourcing_cost / 4),
+                         team: team, flow_pressure: 0, remaining_days: project.remaining_days(result_date), cost_in_month: team.outsourcing_cost,
                          average_demand_cost: 0, available_hours: team.current_outsourcing_monthly_available_hours)
   end
 end

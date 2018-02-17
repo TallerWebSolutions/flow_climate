@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe ReportData, type: :data_object do
+RSpec.describe ReportData, type: :data_object do
   context 'having projects' do
     let(:project) { Fabricate :project, start_date: 2.weeks.ago, end_date: 1.week.from_now }
     let!(:first_project_result) { Fabricate(:project_result, project: project, result_date: project.start_date, known_scope: 10, throughput: 23, qty_hours_upstream: 10, qty_hours_downstream: 20, flow_pressure: 4) }
@@ -15,7 +15,7 @@ describe ReportData, type: :data_object do
       it 'do the math and provides the correct information' do
         expect(report_data.projects).to eq Project.all
         expect(report_data.weeks).to eq [[2.weeks.ago.to_date.cweek, 2.weeks.ago.to_date.cwyear], [1.week.ago.to_date.cweek, 1.week.ago.to_date.cwyear], [Time.zone.today.cweek, Time.zone.today.to_date.cwyear], [1.week.from_now.to_date.cweek, 1.week.from_now.to_date.cwyear]]
-        expect(report_data.ideal).to eq [5.0, 10.0, 15.0, 20.0]
+        expect(report_data.ideal).to eq [4.75, 9.5, 14.25, 19.0]
         expect(report_data.current).to eq [23, 48]
         expect(report_data.scope).to eq [10, 20, 19, 25]
         expect(report_data.flow_pressure_data).to eq [4.0, 1.0]

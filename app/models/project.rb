@@ -73,8 +73,8 @@ class Project < ApplicationRecord
 
   def remaining_days(from_date = Time.zone.today)
     return 0 if end_date < from_date
-    return (end_date - start_date).to_i if start_date > from_date
-    (end_date - from_date).to_i
+    return (end_date - start_date).to_i if start_date > from_date.to_date
+    (end_date - from_date.to_date).to_i
   end
 
   def percentage_remaining_days
@@ -133,8 +133,13 @@ class Project < ApplicationRecord
   end
 
   def total_throughput_for(date)
-    return initial_scope if date.blank?
+    return total_throughput if date.blank?
     project_results.for_week(date.to_date.cweek, date.to_date.cwyear).sum(:throughput)
+  end
+
+  def total_throughput_until(date)
+    return total_throughput if date.blank?
+    project_results.until_week(date.to_date.cweek, date.to_date.cwyear).sum(:throughput)
   end
 
   def total_hours_upstream
@@ -205,8 +210,8 @@ class Project < ApplicationRecord
   # One is a bad value since the project is not *burning* backlog when the rate is one.
   # Values under one means backlog burning
   def backlog_growth_throughput_rate
-    return backlog_unit_growth if total_throughput_for(1.week.ago).to_f.zero?
-    backlog_unit_growth.to_f / total_throughput_for(1.week.ago).to_f
+    return backlog_unit_growth if total_throughput_for(Time.zone.today).to_f.zero?
+    backlog_unit_growth.to_f / total_throughput_for(Time.zone.today).to_f
   end
 
   def last_alert_for(risk_type)
@@ -229,7 +234,7 @@ class Project < ApplicationRecord
   private
 
   def locate_last_results
-    @last_results ||= project_results.until_week(1.week.ago.to_date.cweek, 1.week.ago.to_date.cwyear).order(:result_date).last(2)
+    @last_results ||= project_results.until_week(Time.zone.today.cweek, Time.zone.today.cwyear).order(:result_date).last(2)
   end
 
   def regressive_hours_per_demand

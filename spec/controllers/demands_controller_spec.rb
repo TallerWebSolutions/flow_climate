@@ -196,7 +196,7 @@ RSpec.describe DemandsController, type: :controller do
           context 'when the demand and the result do not exist' do
             it 'imports creating the demand and the project results in the date' do
               end_date = Time.iso8601('2018-01-20T22:44:57-02:00')
-              expect(ProjectResultsRepository.instance).to receive(:update_result_for_date).with(project, end_date, 1, 0).once
+              expect(ProjectResultsRepository.instance).to receive(:update_result_for_date).with(project, end_date.to_date, 1, 0).once
               post :import_csv, params: { company_id: company, project_id: project, team: team.id, csv_text: '345;bug;2018-01-10T22:44:57-02:00;2018-01-16T22:44:57-02:00;2018-01-20T22:44:57-02:00' }
 
               expect(response).to redirect_to company_project_path(company, project)
@@ -214,8 +214,8 @@ RSpec.describe DemandsController, type: :controller do
             let(:csv_text) { "345;bug;2018-01-10T22:44:57-02:00;2018-01-16T22:44:57-02:00;2018-01-20T22:44:57-02:00\n346;feature;2018-01-01T22:44:57-02:00;2018-01-03T22:44:57-02:00;2018-01-05T22:44:57-02:00" }
 
             it 'imports updating the demand and the project results in the date' do
-              expect(ProjectResultsRepository.instance).to receive(:update_result_for_date).with(project, Time.iso8601('2018-01-20T22:44:57-02:00'), 1, 0).once
-              expect(ProjectResultsRepository.instance).to receive(:update_result_for_date).with(project, Time.iso8601('2018-01-05T22:44:57-02:00'), 1, 0).once
+              expect(ProjectResultsRepository.instance).to receive(:update_result_for_date).with(project, Time.iso8601('2018-01-20T22:44:57-02:00').to_date, 1, 0).once
+              expect(ProjectResultsRepository.instance).to receive(:update_result_for_date).with(project, Time.iso8601('2018-01-05T22:44:57-02:00').to_date, 1, 0).once
               expect(ProjectResultsRepository.instance).to receive(:update_result_for_date).with(project, project_result.result_date, 1, 0).once
               post :import_csv, params: { company_id: company, project_id: project, team: team.id, csv_text: csv_text }
 
@@ -230,14 +230,15 @@ RSpec.describe DemandsController, type: :controller do
           end
         end
 
-        context 'having no commitment nor end date' do
-          let(:project_result) { Fabricate :project_result, project: project }
-          let!(:demand) { Fabricate :demand, project_result: project_result, demand_id: '345' }
+        context 'having no commitment nor end dates' do
+          let(:prior_created_date) { Time.iso8601('2018-01-09T22:44:57-02:00') }
+          let(:project_result) { Fabricate :project_result, project: project, result_date: prior_created_date }
+          let!(:demand) { Fabricate :demand, project_result: project_result, demand_id: '345', created_date: prior_created_date }
 
-          it 'imports updating the demand and creates the project results in the date' do
+          it 'imports updating the demand and updates the project results in the created date' do
             created_date = Time.iso8601('2018-01-10T22:44:57-02:00')
-            expect(ProjectResultsRepository.instance).to receive(:update_result_for_date).with(project, created_date, 1, 0).once
-            expect(ProjectResultsRepository.instance).to receive(:update_result_for_date).with(project, project_result.result_date, 1, 0).once
+            expect(ProjectResultsRepository.instance).to receive(:update_result_for_date).with(project, created_date.to_date, 1, 0).once
+            expect(ProjectResultsRepository.instance).to receive(:update_result_for_date).with(project, prior_created_date.to_date, 0, 0).once
 
             post :import_csv, params: { company_id: company, project_id: project, team: team.id, csv_text: '345;bug;2018-01-10T22:44:57-02:00' }
 
