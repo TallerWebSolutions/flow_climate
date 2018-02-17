@@ -73,6 +73,6 @@ class ReportData
   end
 
   def add_data_to_chart?(week_year)
-    week_year[1] < Time.zone.today.cwyear || (week_year[0] < Time.zone.today.cweek && week_year[1] <= Time.zone.today.cwyear)
+    week_year[1] < Time.zone.today.cwyear || (week_year[0] <= Time.zone.today.cweek && week_year[1] <= Time.zone.today.cwyear)
   end
 end

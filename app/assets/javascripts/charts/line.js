@@ -30,7 +30,10 @@ function buildLineChart(columnDiv) {
             opposite: true
         }],
         tooltip: {
-            enabled: false
+            enabled: true,
+            valuePrefix: columnDiv.data('prefix'),
+            valueDecimals: columnDiv.data('decimals'),
+            shared: true
         },
         legend: {
             layout: 'vertical',
@@ -44,7 +47,7 @@ function buildLineChart(columnDiv) {
                     enabled: true,
                     color: 'black',
                     formatter: function () {
-                        return Highcharts.numberFormat(this.y, columnDiv.data('decimals'), '.');
+                        return columnDiv.data('prefix') + Highcharts.numberFormat(this.y, columnDiv.data('decimals'), '.');
                     }
                 }
             }

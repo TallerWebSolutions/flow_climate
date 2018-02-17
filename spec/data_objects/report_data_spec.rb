@@ -16,10 +16,10 @@ RSpec.describe ReportData, type: :data_object do
         expect(report_data.projects).to eq Project.all
         expect(report_data.weeks).to eq [[2.weeks.ago.to_date.cweek, 2.weeks.ago.to_date.cwyear], [1.week.ago.to_date.cweek, 1.week.ago.to_date.cwyear], [Time.zone.today.cweek, Time.zone.today.to_date.cwyear], [1.week.from_now.to_date.cweek, 1.week.from_now.to_date.cwyear]]
         expect(report_data.ideal).to eq [4.75, 9.5, 14.25, 19.0]
-        expect(report_data.current).to eq [23, 48]
+        expect(report_data.current).to eq [23, 48, 60]
         expect(report_data.scope).to eq [10, 20, 19, 25]
-        expect(report_data.flow_pressure_data).to eq [4.0, 1.0]
-        expect(report_data.throughput_per_week).to eq [23, 25]
+        expect(report_data.flow_pressure_data).to eq [4.0, 1.0, 1.0]
+        expect(report_data.throughput_per_week).to eq [23, 25, 12]
       end
     end
     describe '#projects_names' do
@@ -29,7 +29,7 @@ RSpec.describe ReportData, type: :data_object do
 
     describe '#hours_per_demand_per_week' do
       subject(:report_data) { ReportData.new(Project.all) }
-      it { expect(report_data.hours_per_demand_per_week).to eq [1.3043478260869565, 3.16] }
+      it { expect(report_data.hours_per_demand_per_week).to eq [1.3043478260869565, 3.16, 2.6666666666666665] }
     end
   end
 

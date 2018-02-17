@@ -154,6 +154,7 @@ en:
         title: "Average Demand Cost to %{project_name}"
         ylabel: "Average Demand Cost"
         tooltipsufix: "dollars"
+        tooltip_prefix: "$ "
     project_risk_alert_table: "Risk alerts to the project"
     project_risk_configs:
       title: "Risk Configurations"

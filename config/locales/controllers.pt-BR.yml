@@ -154,6 +154,7 @@ pt-BR:
         title: "Custo Médio por Deamanda para %{project_name}"
         ylabel: "Custo Médio por Demanda"
         tooltipsufix: "reais"
+        tooltip_prefix: "R$ "
     project_risk_alert_table: "Alertas de risco para o projeto"
     portfolio_bulletin:
       delivered_demands: "Demandas entregues na última semana"
