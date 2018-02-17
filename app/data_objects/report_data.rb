@@ -20,13 +20,23 @@ class ReportData
 
   def hours_per_demand_per_week
     result_data = []
-    @weeks.each { |week_year| result_data << ProjectResultsRepository.instance.hours_per_demand_in_time_for_projects(@projects, week_year[0], week_year[1]) if add_data_to_chart?(week_year) }
+    weekly_data = ProjectResultsRepository.instance.hours_per_demand_in_time_for_projects(@projects)
+    @weeks.each do |week_year|
+      break unless add_data_to_chart?(week_year)
+      keys_matching = weekly_data.keys.select { |key| hash_key_matching?(key, week_year) }
+      result_data << (weekly_data[keys_matching.first] || 0)
+    end
     result_data
   end
 
   def throughput_per_week
     result_data = []
-    @weeks.each { |week_year| result_data << ProjectResultsRepository.instance.throughput_in_week_for_projects(@projects, week_year[0], week_year[1]) if add_data_to_chart?(week_year) }
+    weekly_throughput = ProjectResultsRepository.instance.throughput_in_week_for_projects(@projects)
+    @weeks.each do |week_year|
+      break unless add_data_to_chart?(week_year)
+      keys_matching = weekly_throughput.keys.select { |key| hash_key_matching?(key, week_year) }
+      result_data << (weekly_throughput[keys_matching.first] || 0)
+    end
     result_data
   end
 
@@ -37,6 +47,10 @@ class ReportData
   end
 
   private
+
+  def hash_key_matching?(key, week_year)
+    key.to_date.cweek == week_year[0] && key.to_date.cwyear == week_year[1]
+  end
 
   def projects_weeks
     min_date = projects.minimum(:start_date)

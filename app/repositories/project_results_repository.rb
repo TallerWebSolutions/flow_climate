@@ -47,40 +47,33 @@ class ProjectResultsRepository
     total_flow_pressure
   end
 
-  def hours_per_demand_in_time_for_projects(projects, week, year)
-    hours_per_demand_in_week = []
-    projects.each do |project|
-      throughput = results_for_week(project, week, year).sum(:throughput)
-      next unless throughput.positive?
+  def hours_per_demand_in_time_for_projects(projects)
+    hours_upstream_hash = build_hash_data(projects, :qty_hours_upstream)
+    hours_downstream_hash = build_hash_data(projects, :qty_hours_downstream)
+    hours_throughput_hash = build_hash_data(projects, :throughput)
 
-      total_hours = results_for_week(project, week, year).sum(&:total_hours)
-      hours_per_demand_in_week << total_hours.to_f / throughput.to_f
+    hours_per_demand_hash = {}
+    hours_throughput_hash.each do |key, value|
+      hours_per_demand = (hours_upstream_hash[key] + hours_downstream_hash[key]).to_f / value.to_f
+      hours_per_demand_hash[key] = hours_per_demand
     end
 
-    return 0 if hours_per_demand_in_week.size.zero?
-    hours_per_demand_in_week.sum / hours_per_demand_in_week.size.to_f
+    hours_per_demand_hash
   end
 
-  def throughput_in_week_for_projects(projects, week, year)
-    total_throughput = 0
-    projects.each do |project|
-      throughput = results_for_week(project, week, year).sum(:throughput)
-      total_throughput += throughput || 0
-    end
-
-    total_throughput
+  def throughput_in_week_for_projects(projects)
+    build_hash_data(projects, :throughput)
   end
 
   def average_demand_cost_in_week_for_projects(projects, week, year)
-    total_average_demand_cost = []
-    projects.each do |project|
-      th_in_week_for_cost = th_in_week_for_projects([project], week, year)
-      cost_in_week = results_for_week(project, week, year).average(:cost_in_month).to_f / 4
-      average_demand_cost = cost_in_week.to_f / th_in_week_for_cost.to_f
-      total_average_demand_cost << average_demand_cost || 0
-    end
+    results = results_for_week(week, year).where(project_id: projects.pluck(:id))
 
-    total_average_demand_cost.sum / total_average_demand_cost.size.to_f
+    avg_cost = results.average(:cost_in_month).to_f
+    th_in_week = th_in_week_for_projects(projects, week, year)
+
+    return 0 if avg_cost.blank? || th_in_week.blank?
+
+    (avg_cost / 4) / th_in_week
   end
 
   def update_result_for_date(project, result_date, known_scope, qty_bugs_opened)
@@ -104,6 +97,10 @@ class ProjectResultsRepository
 
   private
 
+  def build_hash_data(projects, field)
+    ProjectResult.select("date_trunc('week', result_date) AS week").where(project_id: projects.pluck(:id)).order("date_trunc('week', result_date)").group("date_trunc('week', result_date)").sum(field)
+  end
+
   def average_demand_cost(demands_for_date, project_result)
     return 0 if demands_for_date.blank?
     (project_result.cost_in_month / 30) / demands_for_date.count
@@ -113,8 +110,8 @@ class ProjectResultsRepository
     project.project_results.where('(EXTRACT(WEEK FROM result_date) <= :week AND EXTRACT(YEAR FROM result_date) <= :year) OR (EXTRACT(YEAR FROM result_date) < :year)', week: week, year: year).order(:result_date)
   end
 
-  def results_for_week(project, week, year)
-    project.project_results.where('EXTRACT(WEEK FROM result_date) = :week AND EXTRACT(YEAR FROM result_date) = :year', week: week, year: year)
+  def results_for_week(week, year)
+    ProjectResult.where('EXTRACT(week FROM result_date) = :week AND EXTRACT(year FROM result_date) = :year', week: week, year: year)
   end
 
   def project_result_joins
