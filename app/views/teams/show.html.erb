@@ -53,7 +53,7 @@
                  target_name: @team.name,
                  report_data: @report_data,
                  hours_per_demand_data: [{ name: I18n.t('projects.charts.hours_per_demand.ylabel'), data: @report_data.hours_per_demand_per_week }],
-                 flow_pressure_data: [{ name: I18n.t('projects.charts.hours_per_demand.ylabel'), data: @team_projects.map(&:flow_pressure) }],
+                 flow_pressure_data: [{ name: I18n.t('projects.charts.hours_per_demand.ylabel'), data: @report_data.flow_pressure_data }],
                  throughput_data: [{ name: I18n.t('projects.charts.throughput_per_week.ylabel'), data: @report_data.throughput_per_week }],
                  cmd_data: [{ name: I18n.t('projects.charts.cmd.ylabel'), data: @report_data.average_demand_cost }],
                  xlabel: t('projects.charts.xlabel.projects'),
@@ -71,6 +71,6 @@
   <%= javascript_include_tag 'projects/column_hours_demand_chart' %>
   <%= javascript_include_tag 'projects/column_flow_pressure_chart' %>
   <%= javascript_include_tag 'projects/column_throughput_per_week_chart' %>
-  <%= javascript_include_tag 'projects/line_cmd' %>
+  <%= javascript_include_tag 'projects/column_cmd' %>
   <%= javascript_include_tag 'companies/hours_gauge_chart' %>
 <% end %>

@@ -38,17 +38,6 @@ RSpec.describe ProjectResultsRepository, type: :repository do
     it { expect(ProjectResultsRepository.instance.th_in_week_for_company(company, 1.day.ago.to_date.cweek, 1.day.ago.to_date.cwyear)).to eq 80 }
   end
 
-  describe '#th_in_week_for_project' do
-    let!(:project) { Fabricate :project, customer: customer, product: product, start_date: 2.months.ago, end_date: 1.month.from_now }
-    let!(:other_project) { Fabricate :project, customer: customer, product: product, start_date: 2.months.ago, end_date: 1.month.from_now }
-    let!(:first_result) { Fabricate :project_result, project: project, result_date: 1.day.ago, throughput: 30 }
-    let!(:second_result) { Fabricate :project_result, project: other_project, result_date: 1.day.ago, throughput: 50 }
-    let!(:third_result) { Fabricate :project_result, project: other_project, result_date: 2.months.ago, throughput: 90 }
-    let!(:out_result) { Fabricate :project_result, result_date: 1.day.ago, throughput: 60 }
-
-    it { expect(ProjectResultsRepository.instance.th_in_week_for_projects([project], 1.day.ago.to_date.cweek, 1.day.ago.to_date.cwyear)).to eq 30 }
-  end
-
   describe '#bugs_opened_in_week' do
     let!(:project) { Fabricate :project, customer: customer, product: product, start_date: 2.months.ago, end_date: 1.month.from_now }
     let!(:other_project) { Fabricate :project, customer: customer, product: product, start_date: 2.months.ago, end_date: 1.month.from_now }
@@ -107,25 +96,16 @@ RSpec.describe ProjectResultsRepository, type: :repository do
       let!(:third_result) { Fabricate :project_result, project: other_project, result_date: 2.months.ago, flow_pressure: 5 }
       let!(:out_result) { Fabricate :project_result, result_date: 1.day.ago, flow_pressure: 4 }
 
-      it { expect(ProjectResultsRepository.instance.flow_pressure_in_week_for_projects([project], 1.week.ago.to_date.cweek, 1.week.ago.to_date.cwyear)).to eq 20.0 }
-    end
-    context 'when there is no data in the week but there is in past weeks' do
-      let!(:project) { Fabricate :project, customer: customer, product: product, start_date: 2.months.ago, end_date: 1.month.from_now }
-      let!(:first_result) { Fabricate :project_result, project: project, result_date: 2.months.ago, qty_bugs_closed: 90, flow_pressure: 4 }
-      let!(:out_result) { Fabricate :project_result, result_date: 1.day.ago, qty_bugs_closed: 60, flow_pressure: 3 }
-
-      it { expect(ProjectResultsRepository.instance.flow_pressure_in_week_for_projects([project], Time.zone.today.cweek, Time.zone.today.cwyear)).to eq 4 }
+      it { expect(ProjectResultsRepository.instance.flow_pressure_in_week_for_projects([project])).to eq(1.week.ago.localtime(0).change(hour: 0).beginning_of_week => 0.2e2) }
     end
     context 'when there is no data' do
       let!(:project) { Fabricate :project, customer: customer, product: product, start_date: 1.month.ago, end_date: 1.month.from_now }
-      let!(:first_result) { Fabricate :project_result, project: project, result_date: 1.month.from_now, flow_pressure: 3 }
-      let!(:out_result) { Fabricate :project_result, result_date: 1.day.ago, flow_pressure: 4 }
 
-      it { expect(ProjectResultsRepository.instance.flow_pressure_in_week_for_projects([project], Time.zone.today.cweek, Time.zone.today.cwyear)).to eq 0 }
+      it { expect(ProjectResultsRepository.instance.flow_pressure_in_week_for_projects([project])).to eq({}) }
     end
   end
 
-  describe '#throughput_in_week_for_projects' do
+  describe '#throughput_for_projects_grouped_per_week' do
     context 'when there is data in the week' do
       let!(:first_project) { Fabricate :project, customer: customer, product: product, start_date: 2.months.ago, end_date: 3.weeks.from_now }
       let!(:second_project) { Fabricate :project, customer: customer, product: product, start_date: 2.months.ago, end_date: 3.weeks.from_now }
@@ -136,54 +116,12 @@ RSpec.describe ProjectResultsRepository, type: :repository do
       let!(:third_result) { Fabricate :project_result, project: third_project, result_date: 2.months.ago, throughput: 5 }
       let!(:out_result) { Fabricate :project_result, result_date: 1.day.ago, flow_pressure: 4 }
 
-      it { expect(ProjectResultsRepository.instance.throughput_in_week_for_projects([first_project, second_project], 1.week.ago.to_date.cweek, 1.week.ago.to_date.cwyear)).to eq 30 }
-    end
-    context 'when there is no data in the week but there is in past weeks' do
-      let!(:project) { Fabricate :project, customer: customer, product: product, start_date: 2.months.ago, end_date: 1.month.from_now }
-      let!(:first_result) { Fabricate :project_result, project: project, result_date: 2.months.ago, throughput: 4 }
-      let!(:out_result) { Fabricate :project_result, result_date: 1.day.ago, throughput: 3 }
-
-      it { expect(ProjectResultsRepository.instance.throughput_in_week_for_projects([project], Time.zone.today.cweek, Time.zone.today.cwyear)).to eq 0 }
+      it { expect(ProjectResultsRepository.instance.throughput_for_projects_grouped_per_week([first_project, second_project])).to eq(1.week.ago.localtime(0).change(hour: 0).beginning_of_week => 30) }
     end
     context 'when there is no data' do
       let!(:project) { Fabricate :project, customer: customer, product: product, start_date: 1.month.ago, end_date: 1.month.from_now }
-      let!(:first_result) { Fabricate :project_result, project: project, result_date: 1.month.from_now, throughput: 3 }
-      let!(:out_result) { Fabricate :project_result, result_date: 1.day.ago, throughput: 4 }
 
-      it { expect(ProjectResultsRepository.instance.throughput_in_week_for_projects([project], Time.zone.today.cweek, Time.zone.today.cwyear)).to eq 0 }
-    end
-  end
-
-  describe '#throughput_in_week_for_projects' do
-    let(:team) { Fabricate :team }
-    let!(:team_member) { Fabricate :team_member, team: team, monthly_payment: 100 }
-    let!(:other_team_member) { Fabricate :team_member, team: team, monthly_payment: 100 }
-
-    context 'when there is data in the week' do
-      let!(:first_project) { Fabricate :project, customer: customer, product: product, start_date: 2.months.ago, end_date: 3.weeks.from_now }
-      let!(:second_project) { Fabricate :project, customer: customer, product: product, start_date: 2.months.ago, end_date: 3.weeks.from_now }
-      let!(:third_project) { Fabricate :project, customer: customer, product: product, start_date: 2.months.ago, end_date: 1.month.from_now }
-
-      let!(:first_result) { Fabricate :project_result, project: first_project, result_date: 1.week.ago, throughput: 20, average_demand_cost: 20, cost_in_month: 11 }
-      let!(:second_result) { Fabricate :project_result, project: second_project, result_date: 1.week.ago, throughput: 10, average_demand_cost: 20, cost_in_month: 11 }
-      let!(:third_result) { Fabricate :project_result, project: third_project, result_date: 2.months.ago, throughput: 5, average_demand_cost: 20, cost_in_month: 11 }
-      let!(:out_result) { Fabricate :project_result, result_date: 1.day.ago, flow_pressure: 4 }
-
-      it { expect(ProjectResultsRepository.instance.throughput_in_week_for_projects([first_project, second_project], 1.week.ago.to_date.cweek, 1.week.ago.to_date.cwyear)).to eq 30 }
-    end
-    context 'when there is no data in the week but there is in past weeks' do
-      let!(:project) { Fabricate :project, customer: customer, product: product, start_date: 2.months.ago, end_date: 1.month.from_now }
-      let!(:first_result) { Fabricate :project_result, project: project, result_date: 2.months.ago, throughput: 4 }
-      let!(:out_result) { Fabricate :project_result, result_date: 1.day.ago, throughput: 3 }
-
-      it { expect(ProjectResultsRepository.instance.throughput_in_week_for_projects([project], Time.zone.today.cweek, Time.zone.today.cwyear)).to eq 0 }
-    end
-    context 'when there is no data' do
-      let!(:project) { Fabricate :project, customer: customer, product: product, start_date: 1.month.ago, end_date: 1.month.from_now }
-      let!(:first_result) { Fabricate :project_result, project: project, result_date: 1.month.from_now, throughput: 3 }
-      let!(:out_result) { Fabricate :project_result, result_date: 1.day.ago, throughput: 4 }
-
-      it { expect(ProjectResultsRepository.instance.throughput_in_week_for_projects([project], Time.zone.today.cweek, Time.zone.today.cwyear)).to eq 0 }
+      it { expect(ProjectResultsRepository.instance.throughput_for_projects_grouped_per_week([project])).to eq({}) }
     end
   end
 
@@ -202,21 +140,36 @@ RSpec.describe ProjectResultsRepository, type: :repository do
       let!(:third_result) { Fabricate :project_result, project: third_project, result_date: 2.months.ago, throughput: 5, qty_hours_downstream: 20, qty_hours_upstream: 11 }
       let!(:out_result) { Fabricate :project_result, result_date: 1.day.ago, flow_pressure: 4 }
 
-      it { expect(ProjectResultsRepository.instance.hours_per_demand_in_time_for_projects([first_project, second_project], 1.week.ago.to_date.cweek, 1.week.ago.to_date.cwyear)).to eq 2.325 }
-    end
-    context 'when there is no data in the week but there is in past weeks' do
-      let!(:project) { Fabricate :project, customer: customer, product: product, start_date: 2.months.ago, end_date: 1.month.from_now }
-      let!(:first_result) { Fabricate :project_result, project: project, result_date: 2.months.ago, throughput: 4 }
-      let!(:out_result) { Fabricate :project_result, result_date: 1.day.ago, throughput: 3 }
-
-      it { expect(ProjectResultsRepository.instance.hours_per_demand_in_time_for_projects([project], Time.zone.today.cweek, Time.zone.today.cwyear)).to eq 0 }
+      it { expect(ProjectResultsRepository.instance.hours_per_demand_in_time_for_projects([first_project, second_project])).to eq(1.week.ago.localtime(0).change(hour: 0).beginning_of_week => 2.066666666666667) }
     end
     context 'when there is no data' do
       let!(:project) { Fabricate :project, customer: customer, product: product, start_date: 1.month.ago, end_date: 1.month.from_now }
-      let!(:first_result) { Fabricate :project_result, project: project, result_date: 1.month.from_now, throughput: 3 }
-      let!(:out_result) { Fabricate :project_result, result_date: 1.day.ago, throughput: 4 }
 
-      it { expect(ProjectResultsRepository.instance.hours_per_demand_in_time_for_projects([project], Time.zone.today.cweek, Time.zone.today.cwyear)).to eq 0 }
+      it { expect(ProjectResultsRepository.instance.hours_per_demand_in_time_for_projects([project])).to eq({}) }
+    end
+  end
+
+  describe '#average_demand_cost_in_week_for_projects' do
+    let(:team) { Fabricate :team }
+    let!(:team_member) { Fabricate :team_member, team: team, monthly_payment: 100 }
+    let!(:other_team_member) { Fabricate :team_member, team: team, monthly_payment: 100 }
+
+    context 'when there is data in the week' do
+      let!(:first_project) { Fabricate :project, customer: customer, product: product, start_date: 2.months.ago, end_date: 3.weeks.from_now }
+      let!(:second_project) { Fabricate :project, customer: customer, product: product, start_date: 2.months.ago, end_date: 3.weeks.from_now }
+      let!(:third_project) { Fabricate :project, customer: customer, product: product, start_date: 2.months.ago, end_date: 1.month.from_now }
+
+      let!(:first_result) { Fabricate :project_result, project: first_project, result_date: 1.week.ago, throughput: 20, qty_hours_downstream: 20, qty_hours_upstream: 11, cost_in_month: 100 }
+      let!(:second_result) { Fabricate :project_result, project: second_project, result_date: 1.week.ago, throughput: 10, qty_hours_downstream: 20, qty_hours_upstream: 11, cost_in_month: 150 }
+      let!(:third_result) { Fabricate :project_result, project: third_project, result_date: 2.months.ago, throughput: 5, qty_hours_downstream: 20, qty_hours_upstream: 11, cost_in_month: 50 }
+      let!(:out_result) { Fabricate :project_result, result_date: 1.day.ago, flow_pressure: 4, cost_in_month: 300 }
+
+      it { expect(ProjectResultsRepository.instance.average_demand_cost_in_week_for_projects([first_project, second_project])).to eq(1.week.ago.localtime(0).change(hour: 0).beginning_of_week => 1.0416666666666667) }
+    end
+    context 'when there is no data' do
+      let!(:project) { Fabricate :project, customer: customer, product: product, start_date: 1.month.ago, end_date: 1.month.from_now }
+
+      it { expect(ProjectResultsRepository.instance.average_demand_cost_in_week_for_projects([project])).to eq({}) }
     end
   end
 

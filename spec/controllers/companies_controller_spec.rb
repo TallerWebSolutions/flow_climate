@@ -69,10 +69,8 @@ RSpec.describe CompaniesController, type: :controller do
           let!(:team_member) { Fabricate :team_member, team: team, name: 'zzz' }
           let!(:other_team_member) { Fabricate :team_member, team: team, name: 'aaa' }
 
-          let!(:first_project) { Fabricate :project, customer: customer, status: :maintenance, start_date: 10.minutes.from_now, end_date: 10.minutes.from_now }
-          let!(:second_project) { Fabricate :project, customer: customer, status: :executing, start_date: Time.zone.today, end_date: Time.zone.now }
-          let!(:third_project) { Fabricate :project, customer: customer, status: :maintenance, start_date: 1.month.from_now, end_date: 1.month.from_now }
-          let!(:fourth_project) { Fabricate :project, customer: customer, status: :executing, start_date: 5.weeks.from_now, end_date: 5.weeks.from_now }
+          let!(:first_project) { Fabricate :project, customer: customer, status: :executing, start_date: Time.zone.today, end_date: Time.zone.now }
+          let!(:second_project) { Fabricate :project, customer: customer, status: :maintenance, start_date: 1.month.from_now, end_date: 1.month.from_now }
 
           before { get :show, params: { id: company.id } }
           it 'assigns the instance variable and renders the template' do
@@ -81,10 +79,10 @@ RSpec.describe CompaniesController, type: :controller do
             expect(assigns(:financial_informations)).to eq [other_finances, finances]
             expect(assigns(:teams)).to eq [team]
             expect(assigns(:strategic_report_data).array_of_months).to eq [[Time.zone.today.month, Time.zone.today.year], [1.month.from_now.to_date.month, 1.month.from_now.to_date.year]]
-            expect(assigns(:strategic_report_data).active_projects_count_data).to eq [2, 2]
+            expect(assigns(:strategic_report_data).active_projects_count_data).to eq [1, 1]
             expect(assigns(:company_settings)).to be_a_new CompanySettings
-            expect(assigns(:company_projects)).to eq [fourth_project, third_project, first_project, second_project]
-            expect(assigns(:projects_summary).total_initial_scope).to eq 120
+            expect(assigns(:company_projects)).to eq [second_project, first_project]
+            expect(assigns(:projects_summary).total_initial_scope).to eq 60
           end
         end
         context 'and the company already have settings' do

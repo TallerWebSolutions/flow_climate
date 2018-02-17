@@ -33,7 +33,7 @@
       <div id="flowpressure-column"
            class="flow-chart"
            data-title='<%= t('projects.charts.flow_pressure.title', project_name: target_name) %>'
-           data-xcategories='<%= categories %>'
+           data-xcategories='<%= report_data.weeks %>'
            data-xtitle='<%= xlabel %>'
            data-ytitle='<%= t('projects.charts.flow_pressure.ylabel') %>'
            data-tooltipsufix='<%= t('projects.charts.flow_pressure.tooltipsufix') %>'
@@ -55,13 +55,13 @@
     </div>
     <div class="row">
       <div class="col-xs-6">
-        <div id="cmd-line"
+        <div id="cmd-column"
              class="flow-chart"
              data-title='<%= t('projects.charts.cmd.title', project_name: target_name) %>'
              data-xcategories='<%= @report_data.weeks %>'
              data-xtitle='<%= t('projects.charts.xlabel.weeks') %>'
              data-ytitle='<%= t('projects.charts.cmd.ylabel') %>'
-             data-tooltipsufix='<%= t('projects.charts.cmd.tooltipsufix') %>'
+             data-prefix='<%= t('projects.charts.cmd.tooltip_prefix') %>'
              data-series='<%= cmd_data.to_json %>'
              data-decimals='2'>
         </div>
