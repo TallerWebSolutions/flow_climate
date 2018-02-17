@@ -19,8 +19,9 @@ class ReportData
   end
 
   def hours_per_demand_per_week
-    result_data = []
     weekly_data = ProjectResultsRepository.instance.hours_per_demand_in_time_for_projects(@projects)
+
+    result_data = []
     @weeks.each do |week_year|
       break unless add_data_to_chart?(week_year)
       keys_matching = weekly_data.keys.select { |key| hash_key_matching?(key, week_year) }
@@ -30,19 +31,26 @@ class ReportData
   end
 
   def throughput_per_week
+    weekly_data = ProjectResultsRepository.instance.throughput_for_projects_grouped_per_week(@projects)
+
     result_data = []
-    weekly_throughput = ProjectResultsRepository.instance.throughput_in_week_for_projects(@projects)
     @weeks.each do |week_year|
       break unless add_data_to_chart?(week_year)
-      keys_matching = weekly_throughput.keys.select { |key| hash_key_matching?(key, week_year) }
-      result_data << (weekly_throughput[keys_matching.first] || 0)
+      keys_matching = weekly_data.keys.select { |key| hash_key_matching?(key, week_year) }
+      result_data << (weekly_data[keys_matching.first] || 0)
     end
     result_data
   end
 
   def average_demand_cost
+    weekly_data = ProjectResultsRepository.instance.average_demand_cost_in_week_for_projects(@projects)
+
     result_data = []
-    @weeks.each { |week_year| result_data << ProjectResultsRepository.instance.average_demand_cost_in_week_for_projects(@projects, week_year[0], week_year[1]) if add_data_to_chart?(week_year) }
+    @weeks.each do |week_year|
+      break unless add_data_to_chart?(week_year)
+      keys_matching = weekly_data.keys.select { |key| hash_key_matching?(key, week_year) }
+      result_data << (weekly_data[keys_matching.first] || 0)
+    end
     result_data
   end
 
@@ -68,11 +76,9 @@ class ReportData
   end
 
   def mount_burnup_data
-    total_delivered = 0
-
     @weeks.each_with_index do |week_year, index|
       @ideal << ideal_burn(index)
-      total_delivered += ProjectResultsRepository.instance.th_in_week_for_projects(projects, week_year[0], week_year[1])
+      total_delivered = ProjectResultsRepository.instance.delivered_until_week(projects, week_year[0], week_year[1])
       @current << total_delivered if add_data_to_chart?(week_year)
       @scope << ProjectResultsRepository.instance.scope_in_week_for_projects(projects, week_year[0], week_year[1])
     end
@@ -83,7 +89,12 @@ class ReportData
   end
 
   def mount_flow_pressure_array
-    @weeks.each { |week_year| @flow_pressure_data << ProjectResultsRepository.instance.flow_pressure_in_week_for_projects(projects, week_year[0], week_year[1]) if add_data_to_chart?(week_year) }
+    weekly_data = ProjectResultsRepository.instance.flow_pressure_in_week_for_projects(@projects)
+
+    @weeks.each do |week_year|
+      keys_matching = weekly_data.keys.select { |key| hash_key_matching?(key, week_year) }
+      @flow_pressure_data << (weekly_data[keys_matching.first].to_f || 0.0)
+    end
   end
 
   def add_data_to_chart?(week_year)
