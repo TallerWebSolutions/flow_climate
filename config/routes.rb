@@ -69,7 +69,7 @@ Rails.application.routes.draw do
       get 'search_for_projects/:status_filter', action: :search_for_projects, as: 'search_for_projects', on: :collection
     end
 
-    resources :pipefy_configs, only: %i[new create destroy]
+    resources :pipefy_configs, only: %i[new create destroy edit update]
   end
 
   root 'companies#index'

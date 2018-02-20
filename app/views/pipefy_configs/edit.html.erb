@@ -5,12 +5,12 @@
         <li><%= link_to t('general.home.title'), root_path %></li>
         <li><%= link_to @company.abbreviation.upcase, company_path(@company) %></li>
         <li><%= link_to Product.model_name.plural.capitalize, company_products_path(@company) %></li>
-        <li><%= t('products.edit.title') %></li>
+        <li><%= t('pipefy_configs.edit.title') %></li>
       </ul>
     </div>
   </div>
 
-  <%= form_for @product, url: company_product_path(@company, @product), method: :put, class: 'form' do |f| %>
+  <%= form_for @pipefy_config, url: company_pipefy_config_path(@company, @pipefy_config), method: :put, class: 'form' do |f| %>
     <div class="row bottom-spaced-component">
       <div class="col-xs-12">
         <%= render 'form', f: f %>

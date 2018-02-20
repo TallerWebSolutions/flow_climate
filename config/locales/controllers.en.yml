@@ -273,6 +273,8 @@ en:
       title: "New Pipefy Config"
     index:
       title: "Pipefy Integrations"
+    edit:
+      title: "Edit Pipefy Config"
   pipeconfigs:
     new:
       title: "New Pipefy Config"

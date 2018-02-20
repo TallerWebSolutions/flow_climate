@@ -51,16 +51,17 @@ RSpec.describe DemandsRepository, type: :repository do
     let!(:project) { Fabricate :project }
 
     context 'when the demand does not exist' do
+      let(:created_date) { Time.zone.local(2018, 2, 13, 14, 0, 0) }
+      let(:commitment_date) { Time.zone.local(2018, 2, 15, 16, 0, 0) }
+      let(:end_date) { Time.zone.local(2018, 2, 17, 16, 0, 0) }
+
       it 'creates the demand and the project result' do
-        created_date = 2.days.ago.change(usec: 0).change(sec: 0)
-        commitment_date = 1.day.ago.change(usec: 0).change(sec: 0)
-        end_date = Time.zone.now.change(usec: 0).change(sec: 0)
         DemandsRepository.instance.create_or_update_demand(project, team, '100', 'bug', commitment_date, created_date, end_date, 'bla.xpto.com')
 
         updated_demand = Demand.last
         expect(updated_demand.demand_id).to eq '100'
         expect(updated_demand.demand_type).to eq 'bug'
-        expect(updated_demand.effort.to_f).to eq 8.0
+        expect(updated_demand.effort.to_f).to eq 16.0
         expect(updated_demand.created_date).to eq created_date
         expect(updated_demand.commitment_date).to eq commitment_date
         expect(updated_demand.end_date).to eq end_date
@@ -74,12 +75,12 @@ RSpec.describe DemandsRepository, type: :repository do
         expect(updated_project_result.known_scope).to eq 1
         expect(updated_project_result.throughput).to eq 1
         expect(updated_project_result.qty_hours_upstream).to eq 0
-        expect(updated_project_result.qty_hours_downstream).to eq 8
-        expect(updated_project_result.qty_hours_bug).to eq 8
+        expect(updated_project_result.qty_hours_downstream).to eq 16
+        expect(updated_project_result.qty_hours_bug).to eq 16
         expect(updated_project_result.qty_bugs_closed).to eq 1
         expect(updated_project_result.qty_bugs_opened).to eq 0
-        expect(updated_project_result.flow_pressure.to_f).to eq 0.0169491525423729
-        expect(updated_project_result.remaining_days).to eq 59
+        expect(updated_project_result.flow_pressure.to_f).to eq 0.0163934426229508
+        expect(updated_project_result.remaining_days).to eq 61
         expect(updated_project_result.cost_in_month.to_f).to eq 100.0
         expect(updated_project_result.average_demand_cost.to_f).to eq 3.3333333333333335
         expect(updated_project_result.available_hours.to_f).to eq 30
