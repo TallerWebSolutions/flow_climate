@@ -30,6 +30,9 @@
               <i class="fa fa-check"></i>
             <% end %>
           <% end %>
+          <%= link_to company_project_project_risk_config_path(@company, @project, risk_config), method: :delete do %>
+            <i class="fa fa-times" aria-hidden="true"></i>
+          <% end %>
         </td>
       </tr>
     <% end %>

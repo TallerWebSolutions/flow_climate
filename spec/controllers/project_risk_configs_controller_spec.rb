@@ -18,6 +18,10 @@ RSpec.describe ProjectRiskConfigsController, type: :controller do
       before { patch :deactivate, params: { company_id: 'xpto', project_id: 'bar', id: 'sbbrubles' } }
       it { expect(response).to redirect_to new_user_session_path }
     end
+    describe 'DELETE #destroy' do
+      before { delete :destroy, params: { company_id: 'foo', project_id: 'xpto', id: 'bar' } }
+      it { expect(response).to redirect_to new_user_session_path }
+    end
   end
 
   context 'authenticated' do
@@ -140,6 +144,54 @@ RSpec.describe ProjectRiskConfigsController, type: :controller do
         end
         context 'project' do
           before { patch :deactivate, params: { company_id: company, project_id: 'foo', id: project_risk_config } }
+          it { expect(response).to have_http_status :not_found }
+        end
+      end
+    end
+    describe 'DELETE #destroy' do
+      let(:company) { Fabricate :company, users: [user] }
+      let(:customer) { Fabricate :customer, company: company }
+      let!(:project) { Fabricate :project, customer: customer }
+      let!(:project_risk_config) { Fabricate :project_risk_config, project: project }
+
+      context 'passing valid ID' do
+        context 'having no dependencies' do
+          before { delete :destroy, params: { company_id: company, project_id: project, id: project_risk_config } }
+          it 'deletes the project result and redirects' do
+            expect(response).to redirect_to company_project_path(company, project)
+            expect(ProjectRiskConfig.last).to be_nil
+          end
+        end
+
+        context 'having dependencies' do
+          let!(:project_risk_config) { Fabricate :project_risk_config, project: project }
+          let!(:project_risk_alert) { Fabricate :project_risk_alert, project: project, project_risk_config: project_risk_config }
+          before { delete :destroy, params: { company_id: company, project_id: project, id: project_risk_config } }
+
+          it 'does not delete the project and show the error' do
+            expect(response).to redirect_to company_project_path(company, project)
+            expect(Project.last).to eq project
+            expect(flash[:error]).to eq assigns(:project_risk_config).errors.full_messages.join(',')
+          end
+        end
+      end
+
+      context 'passing an invalid ID' do
+        context 'non-existent project result' do
+          before { delete :destroy, params: { company_id: company, project_id: project, id: 'foo' } }
+          it { expect(response).to have_http_status :not_found }
+        end
+        context 'non-existent project' do
+          before { delete :destroy, params: { company_id: company, project_id: 'foo', id: project_risk_config } }
+          it { expect(response).to have_http_status :not_found }
+        end
+        context 'non-existent company' do
+          before { delete :destroy, params: { company_id: 'foo', project_id: project, id: project_risk_config } }
+          it { expect(response).to have_http_status :not_found }
+        end
+        context 'not permitted' do
+          let(:company) { Fabricate :company, users: [] }
+          before { delete :destroy, params: { company_id: company, project_id: project, id: project_risk_config } }
           it { expect(response).to have_http_status :not_found }
         end
       end

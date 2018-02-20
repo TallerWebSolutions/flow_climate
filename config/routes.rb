@@ -58,7 +58,7 @@ Rails.application.routes.draw do
         end
       end
 
-      resources :project_risk_configs, only: %i[new create] do
+      resources :project_risk_configs, only: %i[new create destroy] do
         member do
           patch :activate
           patch :deactivate

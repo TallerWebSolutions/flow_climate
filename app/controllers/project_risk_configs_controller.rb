@@ -3,7 +3,7 @@
 class ProjectRiskConfigsController < AuthenticatedController
   before_action :assign_company
   before_action :assign_project
-  before_action :assign_project_risk_config, only: %i[activate deactivate]
+  before_action :assign_project_risk_config, only: %i[activate deactivate destroy]
 
   def new
     @project_risk_config = ProjectRiskConfig.new(project: @project)
@@ -23,6 +23,11 @@ class ProjectRiskConfigsController < AuthenticatedController
   def deactivate
     @project_risk_config.deactivate!
     redirect_to company_project_path(@company, @project)
+  end
+
+  def destroy
+    return redirect_to company_project_path(@company, @project) if @project_risk_config.destroy
+    redirect_to(company_project_path(@company, @project), flash: { error: @project_risk_config.errors.full_messages.join(',') })
   end
 
   private

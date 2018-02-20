@@ -18,6 +18,7 @@ class ProjectRiskConfig < ApplicationRecord
   enum risk_type: { no_money_to_deadline: 0, backlog_growth_rate: 1, not_enough_available_hours: 2, profit_margin: 3, flow_pressure: 4 }
 
   belongs_to :project
+  has_many :project_risk_alerts, dependent: :restrict_with_error
 
   validates :project, :risk_type, :high_yellow_value, :low_yellow_value, presence: true
 
