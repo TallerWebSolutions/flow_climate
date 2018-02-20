@@ -2,7 +2,10 @@ $(function () {
     var burnupDiv = $('#burnup');
 
     new Highcharts.Chart({
-        chart: { renderTo: 'burnup' },
+        chart: {
+            renderTo: 'burnup',
+            zoomType: 'x'
+        },
         plotOptions: {
             series: {
                 marker: {

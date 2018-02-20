@@ -2,7 +2,8 @@ function buildColumnChart(columnDiv) {
     new Highcharts.Chart({
         chart: {
             renderTo: columnDiv.attr('id'),
-            type: 'column'
+            type: 'column',
+            zoomType: 'x'
         },
         title: {
             text: columnDiv.data('title'),
