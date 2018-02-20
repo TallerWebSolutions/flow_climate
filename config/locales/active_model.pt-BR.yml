@@ -209,6 +209,7 @@ pt-BR:
         risk_type: Tipo do Risco
         high_yellow_value: Maior Valor do Amarelo
         low_yellow_value: Menor Valor do Amarelo
+        project_risk_alerts: Alertas de Risco
         enums:
           risk_type:
             no_money_to_deadline: "Sem Dinheiro para o Prazo"
