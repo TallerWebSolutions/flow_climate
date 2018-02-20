@@ -4,7 +4,7 @@ source 'https://rubygems.org'
 
 ruby '2.4.3'
 
-gem 'rails', '~> 5.1.5.rc1'
+gem 'rails', '~> 5.1.5'
 
 gem 'coffee-rails'
 gem 'devise'
@@ -40,6 +40,10 @@ end
 group :test do
   gem 'rails-controller-testing'
   gem 'rspec_junit_formatter'
+end
+
+group :production, :development do
+  gem 'airbrake-ruby', '~> 2.8'
 end
 
 group :production do

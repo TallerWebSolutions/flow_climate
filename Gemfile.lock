@@ -40,6 +40,7 @@ GEM
       tzinfo (~> 1.1)
     addressable (2.5.2)
       public_suffix (>= 2.0.2, < 4.0)
+    airbrake-ruby (2.8.1)
     annotate (2.7.2)
       activerecord (>= 3.2, < 6.0)
       rake (>= 10.4, < 13.0)
@@ -243,6 +244,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  airbrake-ruby (~> 2.8)
   annotate
   brakeman
   coffee-rails
@@ -257,7 +259,7 @@ DEPENDENCIES
   parser
   pg
   puma
-  rails (~> 5.1.5.rc1)
+  rails (~> 5.1.5)
   rails-controller-testing
   rails_12factor
   rspec-collection_matchers
