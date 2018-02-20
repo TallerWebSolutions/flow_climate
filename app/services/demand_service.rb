@@ -22,6 +22,6 @@ class DemandService
   end
 
   def compute_less_than_one_day_effort(commitment_date, end_date)
-    (end_date - commitment_date) / 1.hour
+    (end_date - commitment_date).to_f / 1.hour
   end
 end
