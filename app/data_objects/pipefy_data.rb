@@ -22,7 +22,7 @@ class PipefyData
   def define_demand_dates(phase)
     if phase['phase']['name'] == 'Start form'
       @created_date = Time.iso8601(phase['firstTimeIn'])
-    elsif phase['phase'].try(:[], 'fields')&.first.try(:[], 'label') == 'Commitment Point?'
+    elsif phase['phase'].try(:[], 'fields')&.first.try(:[], 'label') == 'Commitment Point'
       @commitment_date = Time.iso8601(phase['firstTimeIn'])
     elsif phase['phase']['done']
       @end_date = Time.iso8601(phase['firstTimeIn'])
