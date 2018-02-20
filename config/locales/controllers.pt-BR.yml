@@ -276,6 +276,8 @@ pt-BR:
       title: "Nova Configuração do Pipefy"
     index:
       title: "Integrações com o Pipefy"
+    edit:
+      title: "Editar Configuração do Pipefy"
   pipeconfigs:
     new:
       title: "Nova Configuração do Pipefy"

@@ -23,6 +23,9 @@
             <%= link_to company_pipefy_config_path(@company, pipefy_config), method: :delete do %>
               <i class="fa fa-times" aria-hidden="true"></i>
             <% end %>
+            <%= link_to edit_company_pipefy_config_path(@company, pipefy_config) do %>
+              <i class="fa fa-pencil"></i>
+            <% end %>
           </td>
         </tr>
       <% end %>

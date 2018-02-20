@@ -2,7 +2,7 @@
 
 class PipefyConfigsController < AuthenticatedController
   before_action :assign_company
-  before_action :assign_pipefy_config, only: [:destroy]
+  before_action :assign_pipefy_config, only: %i[destroy edit update]
 
   def new
     @pipefy_config = PipefyConfig.new
@@ -17,6 +17,14 @@ class PipefyConfigsController < AuthenticatedController
   def destroy
     @pipefy_config.destroy
     redirect_to company_path(@company)
+  end
+
+  def edit; end
+
+  def update
+    @pipefy_config.update(pipefy_config_params.merge(company: @company))
+    return redirect_to company_path(@company) if @pipefy_config.save
+    render :edit
   end
 
   private
