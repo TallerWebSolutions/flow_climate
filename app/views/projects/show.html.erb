@@ -5,7 +5,7 @@
         <li><%= link_to t('general.home.title'), root_path %></li>
         <li><%= link_to @company.abbreviation&.upcase, company_path(@company) %></li>
         <li><%= link_to Project.model_name.human.pluralize, company_projects_path(@company) %></li>
-        <li><%= @project.name %></li>
+        <li><%= @project.full_name %></li>
       </ul>
     </div>
   </div>

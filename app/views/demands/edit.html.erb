@@ -4,7 +4,7 @@
       <ul class="breadcrumb">
         <li><%= link_to t('general.home.title'), root_path %></li>
         <li><%= link_to @company.abbreviation&.upcase, company_path(@company) %></li>
-        <li><%= link_to @project.name, company_project_path(@company, @project) %></li>
+        <li><%= link_to @project.full_name, company_project_path(@company, @project) %></li>
         <li><%= link_to ProjectResult.model_name.human.capitalize, company_project_project_result_path(@company, @project, @project_result) %></li>
         <li><%= t('demands.edit.title') %></li>
       </ul>
