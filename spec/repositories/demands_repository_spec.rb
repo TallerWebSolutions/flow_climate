@@ -48,7 +48,8 @@ RSpec.describe DemandsRepository, type: :repository do
     let(:company) { Fabricate :company }
     let(:team) { Fabricate :team, company: company }
     let!(:team_member) { Fabricate :team_member, team: team, monthly_payment: 100, hours_per_month: 30, total_monthly_payment: 100 }
-    let!(:project) { Fabricate :project }
+
+    let!(:project) { Fabricate :project, start_date: Time.zone.local(2018, 2, 12, 14, 0, 0), end_date: Time.zone.local(2018, 2, 20, 16, 0, 0) }
 
     context 'when the demand does not exist' do
       let(:created_date) { Time.zone.local(2018, 2, 13, 14, 0, 0) }
@@ -79,8 +80,8 @@ RSpec.describe DemandsRepository, type: :repository do
         expect(updated_project_result.qty_hours_bug).to eq 16
         expect(updated_project_result.qty_bugs_closed).to eq 1
         expect(updated_project_result.qty_bugs_opened).to eq 0
-        expect(updated_project_result.flow_pressure.to_f).to eq 0.0163934426229508
-        expect(updated_project_result.remaining_days).to eq 61
+        expect(updated_project_result.flow_pressure.to_f).to be_within(0.01).of(0.33)
+        expect(updated_project_result.remaining_days).to eq 3
         expect(updated_project_result.cost_in_month.to_f).to eq 100.0
         expect(updated_project_result.average_demand_cost.to_f).to eq 3.3333333333333335
         expect(updated_project_result.available_hours.to_f).to eq 30

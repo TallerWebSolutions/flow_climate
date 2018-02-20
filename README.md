@@ -8,3 +8,10 @@
 Bringing the management to the next level.
 
 Have the ultimate management tools in your hands!
+
+Using:
+- Sendgrid to send emails
+- Airbrake to monitor production errors
+- RSpec as test framework
+- Fabrication as factory for specs
+- Faker to generate fake data
