@@ -6,7 +6,7 @@
           <li><%= link_to t('general.home.title'), root_path %></li>
           <li><%= link_to @company.abbreviation&.upcase, company_path(@company) %></li>
           <li><%= link_to Project.model_name.human.pluralize, company_projects_path(@company) %></li>
-          <li><%= link_to @project.name, company_project_path(@company, @project) %></li>
+          <li><%= link_to @project.full_name, company_project_path(@company, @project) %></li>
           <li><%= t('project_risk_configs.new.title') %></li>
         </ul>
       </div>
