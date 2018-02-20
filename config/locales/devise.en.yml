@@ -5,7 +5,7 @@ en:
     confirmations:
       confirmed: "Your email address has been successfully confirmed."
       send_instructions: "You will receive an email with instructions for how to confirm your email address in a few minutes."
-      send_paranoid_instructions: "If your email address exists in our database, you will receive an email with instructions for how to confirm your email address in a few minutes."
+      button: "Confirm my account"
     failure:
       already_authenticated: "You are already signed in."
       inactive: "Your account is not activated yet."
@@ -27,6 +27,7 @@ en:
         subject: "Email Changed"
       password_change:
         subject: "Password Changed"
+        instructions: "We are contacting you to notify you that your password has been changed."
     omniauth_callbacks:
       failure: "Could not authenticate you from %{kind} because \"%{reason}\"."
       success: "Successfully authenticated from %{kind} account."
@@ -37,6 +38,13 @@ en:
       updated: "Your password has been changed successfully. You are now signed in."
       updated_not_active: "Your password has been changed successfully."
       reset_instructions: "Send me reset password instructions"
+      reset_instructions_text: "Someone has requested a link to change your password. You can do this through the link below."
+      change_password:
+        button: "Change my password"
+        warning: >
+          If you didn't request this, please ignore this email.
+          Your password won't change until you access the link above and create a new one.
+        title: "Change your password"
     registrations:
       destroyed: "Bye! Your account has been successfully cancelled. We hope to see you again soon."
       signed_up: "Welcome! You have signed up successfully."
@@ -46,6 +54,9 @@ en:
       update_needs_confirmation: "You updated your account successfully, but we need to verify your new email address. Please check your email and follow the confirm link to confirm your new email address."
       updated: "Your account has been updated successfully."
       sign_up: "Sign up"
+      edit:
+        title: "Edit %{model_name}"
+        password_info: "we need your current password to confirm your changes"
     sessions:
       signed_in: "Signed in successfully."
       signed_out: "Signed out successfully."
@@ -57,6 +68,8 @@ en:
       unlocked: "Your account has been unlocked successfully. Please sign in to continue."
     shared_links:
       forgot_password: "Forgot your password?"
+    general:
+          greetings: "Hello %{name}!"
   errors:
     messages:
       already_confirmed: "was already confirmed, please try signing in"
