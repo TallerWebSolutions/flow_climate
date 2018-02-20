@@ -21,6 +21,8 @@
 
 label.required:after{content: " *"}
 
+.label-hint { color: #768899; }
+
 .data-red {
     color: #EE1C3A;
 }
