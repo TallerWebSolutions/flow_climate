@@ -138,6 +138,7 @@ pt-BR:
         projects: Projetos
       project:
         product: Produto
+        project_results: Resultados de Projeto
         name: Nome
         qty_hours: Qtd de Horas
         value: Valor do Projeto

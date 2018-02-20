@@ -294,7 +294,7 @@ RSpec.describe ProductsController, type: :controller do
       end
 
       context 'passing an invalid ID' do
-        context 'non-existent operation result' do
+        context 'non-existent product' do
           before { delete :destroy, params: { company_id: company, id: 'foo' } }
           it { expect(response).to have_http_status :not_found }
         end
