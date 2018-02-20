@@ -2,7 +2,7 @@
 
 class ProjectsController < AuthenticatedController
   before_action :assign_company
-  before_action :assign_project, only: %i[show edit update]
+  before_action :assign_project, only: %i[show edit update destroy]
 
   def show
     @ordered_project_results = @project.project_results.order(:result_date)
@@ -49,6 +49,11 @@ class ProjectsController < AuthenticatedController
   def search_for_projects
     @projects = Project.joins(:customer).where('customers.company_id = ?', @company.id)
     add_queries_to_projects
+  end
+
+  def destroy
+    return redirect_to company_projects_path(@company) if @project.destroy
+    redirect_to(company_projects_path(@company), flash: { error: @project.errors.full_messages.join(',') })
   end
 
   private

@@ -47,7 +47,7 @@ Rails.application.routes.draw do
       get 'search_for_projects/:status_filter', action: :search_for_projects, as: 'search_for_projects', on: :member
     end
 
-    resources :projects, only: %i[show index new create edit update] do
+    resources :projects do
       resources :project_results do
         resources :demands, only: %i[new create destroy edit update]
       end

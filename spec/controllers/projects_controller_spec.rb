@@ -34,6 +34,10 @@ RSpec.describe ProjectsController, type: :controller do
       before { get :search_for_projects, params: { company_id: 'foo', status_filter: :executing }, xhr: true }
       it { expect(response.status).to eq 401 }
     end
+    describe 'DELETE #destroy' do
+      before { delete :destroy, params: { company_id: 'foo', id: 'bar' } }
+      it { expect(response).to redirect_to new_user_session_path }
+    end
   end
 
   context 'authenticated' do
@@ -324,17 +328,59 @@ RSpec.describe ProjectsController, type: :controller do
           end
         end
       end
+      context 'passing invalid' do
+        context 'company' do
+          before { get :search_for_projects, params: { company_id: 'foo', status_filter: :executing }, xhr: true }
+          it { expect(response).to have_http_status :not_found }
+        end
+        context 'not permitted company' do
+          let(:company) { Fabricate :company, users: [] }
+          before { get :search_for_projects, params: { company_id: company, status_filter: :executing }, xhr: true }
+          it { expect(response).to have_http_status :not_found }
+        end
+      end
     end
 
-    context 'passing invalid' do
-      context 'company' do
-        before { get :search_for_projects, params: { company_id: 'foo', status_filter: :executing }, xhr: true }
-        it { expect(response).to have_http_status :not_found }
+    describe 'DELETE #destroy' do
+      let(:company) { Fabricate :company, users: [user] }
+      let(:customer) { Fabricate :customer, company: company }
+      let!(:project) { Fabricate :project, customer: customer }
+
+      context 'passing valid ID' do
+        context 'having no dependencies' do
+          before { delete :destroy, params: { company_id: company, id: project } }
+          it 'deletes the project and redirects' do
+            expect(response).to redirect_to company_projects_path(company)
+            expect(Project.last).to be_nil
+          end
+        end
+        context 'having dependencies' do
+          let!(:project) { Fabricate :project, customer: customer }
+          let!(:project_result) { Fabricate :project_result, project: project }
+          before { delete :destroy, params: { company_id: company, id: project } }
+
+          it 'does not delete the project and show the error' do
+            expect(response).to redirect_to company_projects_path(company)
+            expect(Project.last).to eq project
+            expect(flash[:error]).to eq assigns(:project).errors.full_messages.join(',')
+          end
+        end
       end
-      context 'not permitted company' do
-        let(:company) { Fabricate :company, users: [] }
-        before { get :search_for_projects, params: { company_id: company, status_filter: :executing }, xhr: true }
-        it { expect(response).to have_http_status :not_found }
+
+      context 'passing an invalid ID' do
+        context 'non-existent project' do
+          before { delete :destroy, params: { company_id: company, id: 'foo' } }
+          it { expect(response).to have_http_status :not_found }
+        end
+        context 'non-existent company' do
+          before { delete :destroy, params: { company_id: 'foo', id: project } }
+          it { expect(response).to have_http_status :not_found }
+        end
+        context 'not permitted' do
+          let(:company) { Fabricate :company, users: [] }
+          before { delete :destroy, params: { company_id: company, id: project } }
+          it { expect(response).to have_http_status :not_found }
+        end
       end
     end
   end
