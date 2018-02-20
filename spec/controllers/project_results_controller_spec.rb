@@ -42,12 +42,22 @@ RSpec.describe ProjectResultsController, type: :controller do
       let!(:other_company_team) { Fabricate :team, name: 'aaa' }
 
       context 'passing valid IDs' do
-        before { get :new, params: { company_id: company, project_id: project } }
-        it 'assigns the instance variable and renders the template' do
-          expect(response).to render_template :new
-          expect(assigns(:project_result)).to be_a_new ProjectResult
-          expect(assigns(:project_result).project).to eq project
-          expect(assigns(:company_teams)).to eq [other_team, team]
+        context 'having no previous results' do
+          before { get :new, params: { company_id: company, project_id: project } }
+          it 'assigns the instance variable and renders the template' do
+            expect(response).to render_template :new
+            expect(assigns(:project_result)).to be_a_new ProjectResult
+            expect(assigns(:project_result).project).to eq project
+            expect(assigns(:company_teams)).to eq [other_team, team]
+            expect(assigns(:last_known_scope)).to eq nil
+          end
+        end
+        context 'having previous results' do
+          let!(:project_result) { Fabricate :project_result, project: project, result_date: Time.zone.today }
+          let!(:other_project_result) { Fabricate :project_result, project: project, result_date: 1.day.ago }
+
+          before { get :new, params: { company_id: company, project_id: project } }
+          it { expect(assigns(:last_known_scope)).to eq project_result.known_scope }
         end
       end
       context 'passing an invalid ID' do

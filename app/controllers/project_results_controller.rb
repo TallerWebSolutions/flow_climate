@@ -12,6 +12,7 @@ class ProjectResultsController < AuthenticatedController
 
   def new
     @project_result = ProjectResult.new(project: @project)
+    @last_known_scope = @project.project_results.order(:result_date).last&.known_scope
     assign_company_teams
   end
 

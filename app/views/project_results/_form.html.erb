@@ -15,7 +15,7 @@
 
     <div class='col-xs-2 form-group <%= 'has-error' if @project_result.errors[:known_scope].present? %>'>
       <%= f.label :known_scope, class: 'control-label required' %>
-      <%= f.number_field :known_scope, value: @project_result.known_scope, class: 'form-control', step: 1 %>
+      <%= f.number_field :known_scope, value: @project_result.known_scope || @last_known_scope, class: 'form-control', step: 1 %>
       <span class="help-block"><%= @project_result.errors[:known_scope].join(', ') %></span>
     </div>
 
