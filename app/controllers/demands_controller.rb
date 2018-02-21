@@ -87,7 +87,7 @@ class DemandsController < AuthenticatedController
   end
 
   def demand_params
-    params.require(:demand).permit(:demand_id, :demand_type, :effort, :created_date, :commitment_date, :end_date)
+    params.require(:demand).permit(:demand_id, :demand_type, :class_of_service, :effort, :created_date, :commitment_date, :end_date)
   end
 
   def assign_project

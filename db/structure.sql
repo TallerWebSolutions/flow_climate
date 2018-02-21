@@ -162,12 +162,13 @@ CREATE TABLE demands (
     effort numeric NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    demand_type integer,
+    demand_type integer NOT NULL,
     demand_url character varying,
     commitment_date timestamp without time zone,
     end_date timestamp without time zone,
     created_date timestamp without time zone NOT NULL,
-    url character varying
+    url character varying,
+    class_of_service integer DEFAULT 0 NOT NULL
 );
 
 
@@ -1191,6 +1192,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20180215151505'),
 ('20180215201832'),
 ('20180216160706'),
-('20180216231515');
+('20180216231515'),
+('20180221160521');
 
 
