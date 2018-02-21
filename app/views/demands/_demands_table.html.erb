@@ -18,6 +18,7 @@
     <th><%= Project.human_attribute_name :name %></th>
     <th><%= Demand.human_attribute_name :demand_id %></th>
     <th><%= Demand.human_attribute_name :demand_type %></th>
+    <th><%= Demand.human_attribute_name :class_of_service %></th>
     <th><%= Demand.human_attribute_name :created_date %></th>
     <th><%= Demand.human_attribute_name :commitment_date %></th>
     <th><%= Demand.human_attribute_name :end_date %></th>
@@ -44,6 +45,7 @@
       <td><%= link_to @project.name, company_project_path(@company, @project) %></td>
       <td><%= demand.demand_id %></td>
       <td><%= t("activerecord.attributes.demand.enums.demand_type.#{demand.demand_type}") %></td>
+      <td><%= t("activerecord.attributes.demand.enums.class_of_service.#{demand.class_of_service}") %></td>
       <td><%= l(demand.created_date, format: :short) %></td>
       <td><%= l(demand.commitment_date, format: :short) if demand.commitment_date.present? %></td>
       <td><%= l(demand.end_date, format: :short) if demand.end_date.present? %></td>
