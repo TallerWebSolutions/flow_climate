@@ -278,3 +278,6 @@ en:
   pipeconfigs:
     new:
       title: "New Pipefy Config"
+  finances_params:
+    edit:
+      title: "Edit Financial Information"

@@ -281,3 +281,6 @@ pt-BR:
   pipeconfigs:
     new:
       title: "Nova Configuração do Pipefy"
+  finances_params:
+    edit:
+      title: "Editar Informação Financeira"
