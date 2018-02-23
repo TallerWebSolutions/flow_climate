@@ -35,7 +35,7 @@ Rails.application.routes.draw do
       get 'search_for_projects/:status_filter', action: :search_for_projects, as: 'search_for_projects', on: :member
     end
 
-    resources :financial_informations, only: %i[new create]
+    resources :financial_informations, only: %i[new create edit update]
     resources :operation_results, only: %i[index destroy new create]
 
     resources :customers do

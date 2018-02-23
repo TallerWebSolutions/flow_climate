@@ -2,6 +2,7 @@
 
 class FinancialInformationsController < AuthenticatedController
   before_action :assign_company
+  before_action :assign_financial_information, only: %i[edit update]
 
   def new
     @financial_information = FinancialInformation.new
@@ -13,9 +14,21 @@ class FinancialInformationsController < AuthenticatedController
     render :new
   end
 
+  def edit; end
+
+  def update
+    @financial_information.update(finances_params)
+    return redirect_to company_path(@company) if @financial_information.save
+    render :edit
+  end
+
   private
 
   def finances_params
     params.require(:financial_information).permit(:finances_date, :income_total, :expenses_total)
+  end
+
+  def assign_financial_information
+    @financial_information = FinancialInformation.find(params[:id])
   end
 end

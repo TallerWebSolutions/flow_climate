@@ -10,6 +10,14 @@ RSpec.describe FinancialInformationsController, type: :controller do
       before { post :create, params: { company_id: 'foo' } }
       it { expect(response).to redirect_to new_user_session_path }
     end
+    describe 'GET #edit' do
+      before { get :edit, params: { company_id: 'xpto', id: 'foo' } }
+      it { expect(response).to redirect_to new_user_session_path }
+    end
+    describe 'PUT #update' do
+      before { put :update, params: { company_id: 'xpto', id: 'foo' } }
+      it { expect(response).to redirect_to new_user_session_path }
+    end
   end
 
   context 'authenticated' do
@@ -66,6 +74,74 @@ RSpec.describe FinancialInformationsController, type: :controller do
         context 'and not permitted company' do
           let(:company) { Fabricate :company }
           before { post :create, params: { company_id: company, financial_information: { finances_date: Time.zone.today, income_total: 10, expenses_total: 5 } } }
+          it { expect(response).to have_http_status :not_found }
+        end
+      end
+    end
+
+    describe 'GET #edit' do
+      let(:customer) { Fabricate :customer, company: company }
+      let(:financial_information) { Fabricate :financial_information, company: company }
+
+      context 'valid parameters' do
+        before { get :edit, params: { company_id: company, id: financial_information } }
+        it 'assigns the instance variables and renders the template' do
+          expect(response).to render_template :edit
+          expect(assigns(:company)).to eq company
+          expect(assigns(:financial_information)).to eq financial_information
+        end
+      end
+
+      context 'invalid' do
+        context 'financial_information' do
+          before { get :edit, params: { company_id: company, id: 'foo' } }
+          it { expect(response).to have_http_status :not_found }
+        end
+
+        context 'company' do
+          context 'non-existent' do
+            before { get :edit, params: { company_id: 'foo', id: financial_information } }
+            it { expect(response).to have_http_status :not_found }
+          end
+          context 'not-permitted' do
+            let(:company) { Fabricate :company, users: [] }
+            before { get :edit, params: { company_id: company, id: financial_information } }
+            it { expect(response).to have_http_status :not_found }
+          end
+        end
+      end
+    end
+
+    describe 'PUT #update' do
+      let(:customer) { Fabricate :customer, company: company }
+      let(:financial_information) { Fabricate :financial_information, company: company }
+
+      context 'passing valid parameters' do
+        before { put :update, params: { company_id: company, id: financial_information, financial_information: { finances_date: Time.zone.today, income_total: 10, expenses_total: 5 } } }
+        it 'updates the financial_information and redirects to projects index' do
+          expect(FinancialInformation.last.finances_date).to eq Time.zone.today
+          expect(FinancialInformation.last.income_total).to eq 10
+          expect(FinancialInformation.last.expenses_total).to eq 5
+          expect(response).to redirect_to company_path(company)
+        end
+      end
+
+      context 'passing invalid' do
+        context 'financial_information parameters' do
+          before { put :update, params: { company_id: company, id: financial_information, financial_information: { finances_date: nil, income_total: nil, expenses_total: nil } } }
+          it 'does not update the financial_information and re-render the template with the errors' do
+            expect(response).to render_template :edit
+            expect(assigns(:financial_information).errors.full_messages).to match_array ['Data das Finanças não pode ficar em branco', 'Despesas totais não pode ficar em branco', 'Receitas totais não pode ficar em branco']
+          end
+        end
+        context 'non-existent financial_information' do
+          before { put :update, params: { company_id: company, id: 'foo', financial_information: { finances_date: Time.zone.today, income_total: 10, expenses_total: 5 } } }
+          it { expect(response).to have_http_status :not_found }
+        end
+        context 'unpermitted company' do
+          let(:company) { Fabricate :company, users: [] }
+
+          before { put :update, params: { company_id: company, id: financial_information, financial_information: { finances_date: Time.zone.today, income_total: 10, expenses_total: 5 } } }
           it { expect(response).to have_http_status :not_found }
         end
       end

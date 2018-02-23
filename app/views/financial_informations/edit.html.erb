@@ -1,0 +1,19 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-xs-12">
+      <ul class="breadcrumb">
+        <li><%= link_to t('general.home.title'), root_path %></li>
+        <li><%= link_to @company.abbreviation.upcase, company_path(@company) %></li>
+        <li><%= t('finances_params.edit.title') %></li>
+      </ul>
+    </div>
+  </div>
+
+  <%= form_for @financial_information, url: company_financial_information_path(@company, @financial_information), method: :put, class: 'form' do |f| %>
+    <div class="row bottom-spaced-component">
+      <div class="col-xs-12">
+        <%= render 'form', f: f %>
+      </div>
+    </div>
+  <% end %>
+</div>

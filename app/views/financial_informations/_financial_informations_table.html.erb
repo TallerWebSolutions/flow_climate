@@ -22,6 +22,7 @@
     <th><%= t('financial_informations.index.hours_per_demand') %></th>
     <th><%= t('financial_informations.index.cost_per_hour') %></th>
     <th><%= t('general.result') %></th>
+    <th><%= t('general.table.actions') %></th>
   </tr>
   <% @financial_informations.each do |finance| %>
     <tr class='<%= 'red-data' if finance.red? %>'>
@@ -35,6 +36,11 @@
       <td><%= number_with_precision(finance.hours_per_demand, precision: 2) %></td>
       <td><%= number_to_currency(finance.cost_per_hour) %></td>
       <td><%= number_to_currency(finance.financial_result) %></td>
+      <td>
+        <%= link_to edit_company_financial_information_path(@company, finance) do %>
+          <i class="fa fa-pencil"></i>
+        <% end %>
+      </td>
     </tr>
   <% end %>
 </table>
