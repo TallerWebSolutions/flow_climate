@@ -37,6 +37,9 @@
       <td><%= number_to_currency(finance.cost_per_hour) %></td>
       <td><%= number_to_currency(finance.financial_result) %></td>
       <td>
+        <%= link_to company_financial_information_path(@company, finance), method: :delete do %>
+          <i class="fa fa-times" aria-hidden="true"></i>
+        <% end %>
         <%= link_to edit_company_financial_information_path(@company, finance) do %>
           <i class="fa fa-pencil"></i>
         <% end %>

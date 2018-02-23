@@ -2,7 +2,7 @@
 
 class FinancialInformationsController < AuthenticatedController
   before_action :assign_company
-  before_action :assign_financial_information, only: %i[edit update]
+  before_action :assign_financial_information, only: %i[edit update destroy]
 
   def new
     @financial_information = FinancialInformation.new
@@ -20,6 +20,11 @@ class FinancialInformationsController < AuthenticatedController
     @financial_information.update(finances_params)
     return redirect_to company_path(@company) if @financial_information.save
     render :edit
+  end
+
+  def destroy
+    @financial_information.destroy
+    redirect_to company_path(@company)
   end
 
   private

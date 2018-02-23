@@ -18,6 +18,10 @@ RSpec.describe FinancialInformationsController, type: :controller do
       before { put :update, params: { company_id: 'xpto', id: 'foo' } }
       it { expect(response).to redirect_to new_user_session_path }
     end
+    describe 'DELETE #destroy' do
+      before { delete :destroy, params: { company_id: 'foo', id: 'bar' } }
+      it { expect(response).to redirect_to new_user_session_path }
+    end
   end
 
   context 'authenticated' do
@@ -142,6 +146,37 @@ RSpec.describe FinancialInformationsController, type: :controller do
           let(:company) { Fabricate :company, users: [] }
 
           before { put :update, params: { company_id: company, id: financial_information, financial_information: { finances_date: Time.zone.today, income_total: 10, expenses_total: 5 } } }
+          it { expect(response).to have_http_status :not_found }
+        end
+      end
+    end
+
+    describe 'DELETE #destroy' do
+      let(:company) { Fabricate :company, users: [user] }
+      let(:financial_information) { Fabricate :financial_information, company: company }
+
+      context 'passing valid ID' do
+        context 'having no dependencies' do
+          before { delete :destroy, params: { company_id: company, id: financial_information } }
+          it 'deletes the financial_information and redirects' do
+            expect(response).to redirect_to company_path(company)
+            expect(FinancialInformation.last).to be_nil
+          end
+        end
+      end
+
+      context 'passing an invalid ID' do
+        context 'non-existent financial_information' do
+          before { delete :destroy, params: { company_id: company, id: 'foo' } }
+          it { expect(response).to have_http_status :not_found }
+        end
+        context 'non-existent company' do
+          before { delete :destroy, params: { company_id: 'foo', id: financial_information } }
+          it { expect(response).to have_http_status :not_found }
+        end
+        context 'not permitted' do
+          let(:company) { Fabricate :company, users: [] }
+          before { delete :destroy, params: { company_id: company, id: financial_information } }
           it { expect(response).to have_http_status :not_found }
         end
       end
