@@ -8,6 +8,7 @@ RSpec.describe Demand, type: :model do
 
   context 'associations' do
     it { is_expected.to belong_to :project_result }
+    it { is_expected.to have_many :demand_transitions }
   end
 
   context 'validations' do

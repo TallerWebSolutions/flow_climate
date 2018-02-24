@@ -99,6 +99,12 @@ pt-BR:
       pipefy_config:
         one: Configuração do Pipefy
         other: Configurações do Pipefy
+      stage:
+        one: Etapa
+        other: Etapas
+      demand_transition:
+        one: Transição da Demanda
+        other: Transições da Demanda
     attributes:
       user:
         first_name: Nome
@@ -239,6 +245,30 @@ pt-BR:
         pipe_id: Id do Pipe
         project: Projeto
         team: Time
+      stage:
+        projects: Projetos
+        demand_transitions: Transições de Demanda
+        integration_id: Id na Integração
+        name: Nome
+        stage_type: Tipo da Etapa
+        stage_stream: Tipo do Stream
+        enums:
+          stage_type:
+            design: Design
+            analysis: Análise
+            development: Desenvolvimento
+            test: Teste
+            homologation: Homologação
+            ready_to_deploy: Pronto para Entrega
+            deployed: Entregue
+          stage_stream:
+            upstream: Upstream
+            downstream: Downstream
+      demand_transition:
+        demand: Demanda
+        stage: Etapa
+        last_time_in: Última vez na etapa
+        last_time_out: Última saída da etapa
   product:
     name:
       uniqueness: "Não deve repetir nome de produto para o mesmo cliente."

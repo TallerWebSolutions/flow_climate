@@ -28,6 +28,7 @@ class Demand < ApplicationRecord
   enum class_of_service: { standard: 0, expedite: 1, fixed_date: 2, intangible: 3 }
 
   belongs_to :project_result, counter_cache: true
+  has_many :demand_transitions, dependent: :destroy
 
   validates :project_result, :created_date, :demand_id, :effort, :demand_type, :class_of_service, presence: true
 end
