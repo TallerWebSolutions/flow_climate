@@ -29,27 +29,36 @@ RSpec.describe PipefyConfigsController, type: :controller do
     before { sign_in user }
 
     let(:company) { Fabricate :company, users: [user] }
-    let(:customer) { Fabricate :customer, company: company }
+    let(:customer) { Fabricate :customer, company: company, name: 'zzz' }
+    let(:other_customer) { Fabricate :customer, company: company, name: 'aaa' }
 
     describe 'GET #new' do
       let!(:team) { Fabricate :team, company: company }
-      let!(:project) { Fabricate :project, customer: customer }
-      before { get :new, params: { company_id: company } }
+      let!(:first_project) { Fabricate :project, customer: customer }
+      let!(:second_project) { Fabricate :project, customer: other_customer }
+      let!(:third_project) { Fabricate :project, customer: customer }
+      let!(:pipefy_config) { Fabricate :pipefy_config, project: third_project }
+
       it 'instantiates a new Company and renders the template' do
+        get :new, params: { company_id: company }
         expect(response).to render_template :new
         expect(assigns(:pipefy_config)).to be_a_new PipefyConfig
+        expect(assigns(:projects_to_select)).to eq [second_project, first_project]
       end
     end
 
     describe 'POST #create' do
+      let!(:first_project) { Fabricate :project, customer: customer }
+      let!(:second_project) { Fabricate :project, customer: other_customer }
+      let!(:third_project) { Fabricate :project, customer: customer }
+      let!(:other_pipefy_config) { Fabricate :pipefy_config, project: third_project }
+
       context 'passing valid parameters' do
         let!(:team) { Fabricate :team, company: company }
-        let(:customer) { Fabricate :customer, company: company }
-        let!(:project) { Fabricate :project, customer: customer }
-        before { post :create, params: { company_id: company, pipefy_config: { team_id: team, project_id: project, pipe_id: '332223' } } }
+        before { post :create, params: { company_id: company, pipefy_config: { team_id: team, project_id: first_project, pipe_id: '332223' } } }
         it 'creates the new company and redirects to its show' do
           expect(PipefyConfig.last.team).to eq team
-          expect(PipefyConfig.last.project).to eq project
+          expect(PipefyConfig.last.project).to eq first_project
           expect(PipefyConfig.last.pipe_id).to eq '332223'
           expect(response).to redirect_to company_path(company)
         end
@@ -57,8 +66,9 @@ RSpec.describe PipefyConfigsController, type: :controller do
       context 'passing invalid parameters' do
         before { post :create, params: { company_id: company, pipefy_config: { pipe_id: '' } } }
         it 'does not create the company and re-render the template with the errors' do
-          expect(PipefyConfig.last).to be_nil
+          expect(PipefyConfig.count).to eq 1
           expect(response).to render_template :new
+          expect(assigns(:projects_to_select)).to eq [second_project, first_project]
           expect(assigns(:pipefy_config).errors.full_messages).to eq ['Projeto não pode ficar em branco', 'Id do Pipe não pode ficar em branco', 'Time não pode ficar em branco']
         end
       end
@@ -97,6 +107,10 @@ RSpec.describe PipefyConfigsController, type: :controller do
 
     describe 'GET #edit' do
       let(:pipefy_config) { Fabricate :pipefy_config, company: company }
+      let!(:first_project) { Fabricate :project, customer: customer }
+      let!(:second_project) { Fabricate :project, customer: other_customer }
+      let!(:third_project) { Fabricate :project, customer: customer }
+      let!(:other_pipefy_config) { Fabricate :pipefy_config, project: third_project }
 
       context 'valid parameters' do
         before { get :edit, params: { company_id: company, id: pipefy_config } }
@@ -104,6 +118,7 @@ RSpec.describe PipefyConfigsController, type: :controller do
           expect(response).to render_template :edit
           expect(assigns(:company)).to eq company
           expect(assigns(:pipefy_config)).to eq pipefy_config
+          expect(assigns(:projects_to_select)).to eq [second_project, first_project]
         end
       end
 
@@ -130,14 +145,16 @@ RSpec.describe PipefyConfigsController, type: :controller do
     describe 'PUT #update' do
       let(:pipefy_config) { Fabricate :pipefy_config, company: company }
       let(:team) { Fabricate :team, company: company }
-      let(:customer) { Fabricate :customer, company: company }
-      let(:project) { Fabricate :project, customer: customer }
+      let!(:first_project) { Fabricate :project, customer: customer }
+      let!(:second_project) { Fabricate :project, customer: other_customer }
+      let!(:third_project) { Fabricate :project, customer: customer }
+      let!(:other_pipefy_config) { Fabricate :pipefy_config, company: company, project: third_project }
 
       context 'passing valid parameters' do
-        before { put :update, params: { company_id: company, id: pipefy_config, pipefy_config: { project_id: project, team_id: team, pipe_id: '100' } } }
+        before { put :update, params: { company_id: company, id: pipefy_config, pipefy_config: { project_id: first_project, team_id: team, pipe_id: '100' } } }
         it 'updates the pipefy config and redirects to company show' do
           expect(PipefyConfig.last.company).to eq company
-          expect(PipefyConfig.last.project).to eq project
+          expect(PipefyConfig.last.project).to eq first_project
           expect(PipefyConfig.last.team).to eq team
           expect(PipefyConfig.last.pipe_id).to eq '100'
           expect(response).to redirect_to company_path(company)
@@ -149,18 +166,19 @@ RSpec.describe PipefyConfigsController, type: :controller do
           before { put :update, params: { company_id: company, id: pipefy_config, pipefy_config: { project_id: 'xpto', team_id: '', pipe_id: '' } } }
           it 'does not update the pipefy config and re-render the template with the errors' do
             expect(response).to render_template :edit
+            expect(assigns(:projects_to_select)).to eq [second_project, first_project]
             expect(assigns(:pipefy_config).errors.full_messages).to match_array ['Id do Pipe não pode ficar em branco', 'Projeto não pode ficar em branco', 'Time não pode ficar em branco']
           end
         end
         context 'non-existent pipefy_config' do
-          before { put :update, params: { company_id: company, id: 'foo', pipefy_config: { project_id: project, team_id: team, pipe_id: '100' } } }
+          before { put :update, params: { company_id: company, id: 'foo', pipefy_config: { project_id: first_project, team_id: team, pipe_id: '100' } } }
           it { expect(response).to have_http_status :not_found }
         end
         context 'unpermitted company' do
           let(:company) { Fabricate :company, users: [] }
           let(:customer) { Fabricate :customer, company: company }
 
-          before { put :update, params: { company_id: company, id: pipefy_config, product: { project_id: project, team_id: team, pipe_id: '100' } } }
+          before { put :update, params: { company_id: company, id: pipefy_config, product: { project_id: first_project, team_id: team, pipe_id: '100' } } }
           it { expect(response).to have_http_status :not_found }
         end
       end

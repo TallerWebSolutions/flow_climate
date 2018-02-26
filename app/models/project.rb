@@ -41,6 +41,7 @@ class Project < ApplicationRecord
   has_many :project_risk_configs, dependent: :destroy
   has_many :project_risk_alerts, dependent: :destroy
   has_many :demands, dependent: :restrict_with_error
+  has_one :pipefy_config, dependent: :destroy, autosave: true
   has_and_belongs_to_many :stages
 
   validates :customer, :qty_hours, :project_type, :name, :status, :start_date, :end_date, :status, :initial_scope, presence: true
@@ -54,6 +55,7 @@ class Project < ApplicationRecord
   scope :running_projects_finishing_within_week, -> { running.where('EXTRACT(week FROM end_date) = :week AND EXTRACT(year FROM end_date) = :year', week: Time.zone.today.cweek, year: Time.zone.today.cwyear) }
   scope :running, -> { where('status = 1 OR status = 2') }
   scope :active, -> { where('status = 0 OR status = 1 OR status = 2') }
+  scope :no_pipefy_config, -> { left_outer_joins(:pipefy_config).where('pipefy_configs.id IS NULL') }
 
   def red?
     project_risk_configs.each do |risk_config|
