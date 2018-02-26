@@ -58,11 +58,11 @@ class PipefyReader
     return if first_transition.blank?
 
     result_date = define_result_date(demand, first_transition)
-    ProjectResultsRepository.instance.create_project_result(demand.project, team, result_date)
+    new_result = ProjectResultsRepository.instance.create_project_result(demand.project, team, result_date)
 
     update_effort(demand)
 
-    ProjectResultsRepository.instance.update_all_results(demand.project)
+    ProjectResultsRepository.instance.update_previous_and_current_demand_results(demand.project, demand.project_result, new_result)
   end
 
   def define_result_date(demand, first_transition)
