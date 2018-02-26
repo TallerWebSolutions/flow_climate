@@ -234,5 +234,5 @@ RSpec.describe ProjectResultsRepository, type: :repository do
     end
   end
 
-  pending '#update_all_results'
+  pending '#update_previous_and_current_demand_results'
 end

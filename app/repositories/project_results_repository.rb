@@ -79,8 +79,9 @@ class ProjectResultsRepository
     project_results.first
   end
 
-  def update_all_results(project)
-    project.project_results.each do |result|
+  def update_previous_and_current_demand_results(project, previous_result, current_result)
+    [previous_result, current_result].each do |result|
+      next if result.blank?
       update_result_for_date(project, result.result_date)
     end
   end
