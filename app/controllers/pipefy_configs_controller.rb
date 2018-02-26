@@ -6,11 +6,13 @@ class PipefyConfigsController < AuthenticatedController
 
   def new
     @pipefy_config = PipefyConfig.new
+    assign_projects_to_select
   end
 
   def create
     @pipefy_config = PipefyConfig.new(pipefy_config_params.merge(company: @company))
     return redirect_to company_path(@company) if @pipefy_config.save
+    assign_projects_to_select
     render :new
   end
 
@@ -19,11 +21,14 @@ class PipefyConfigsController < AuthenticatedController
     redirect_to company_path(@company)
   end
 
-  def edit; end
+  def edit
+    assign_projects_to_select
+  end
 
   def update
     @pipefy_config.update(pipefy_config_params.merge(company: @company))
     return redirect_to company_path(@company) if @pipefy_config.save
+    assign_projects_to_select
     render :edit
   end
 
@@ -35,5 +40,9 @@ class PipefyConfigsController < AuthenticatedController
 
   def assign_pipefy_config
     @pipefy_config = PipefyConfig.find(params[:id])
+  end
+
+  def assign_projects_to_select
+    @projects_to_select = @company.projects.no_pipefy_config.sort_by(&:full_name)
   end
 end
