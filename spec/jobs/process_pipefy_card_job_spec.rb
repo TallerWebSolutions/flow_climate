@@ -10,7 +10,7 @@ RSpec.describe ProcessPipefyCardJob, type: :active_job do
 
   context 'having no params' do
     it 'returns doing nothing' do
-      expect(PipefyReader.instance).to receive(:process_response).never
+      expect(PipefyReader.instance).to receive(:process_card).never
       ProcessPipefyCardJob.perform_now({})
     end
   end

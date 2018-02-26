@@ -9,7 +9,7 @@ class ProcessPipefyPipeJob < ApplicationJob
       cards_in_pipe = read_cards_from_pipe_response(pipe_response)
       cards_in_pipe.each do |card_id|
         card_response = JSON.parse(PipefyApiService.request_card_details(card_id).body)
-        PipefyReader.instance.process_response(card_response)
+        PipefyReader.instance.process_card(card_response)
       end
     end
   end

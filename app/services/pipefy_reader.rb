@@ -3,15 +3,14 @@
 class PipefyReader
   include Singleton
 
-  def process_response(card_response)
+  def process_card(card_response)
     response_data = card_response['data']
     pipe_id = response_data.try(:[], 'card').try(:[], 'pipe').try(:[], 'id')
     pipefy_configs = PipefyConfig.where(pipe_id: pipe_id)
+    return if pipefy_configs.blank?
 
     project = pipefy_configs.first.project
     team = pipefy_configs.first.team
-
-    return if pipefy_configs.blank?
 
     demand = create_demand(project, response_data)
     read_phases(response_data, demand)

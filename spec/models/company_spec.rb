@@ -352,9 +352,9 @@ RSpec.describe Company, type: :model do
     let(:other_customer) { Fabricate :customer, company: company }
 
     let!(:starting_project) { Fabricate :project, customer: customer, status: :waiting, initial_scope: 5, start_date: Time.zone.today, end_date: 3.days.from_now }
-    let!(:first_project) { Fabricate :project, customer: customer, status: :executing, initial_scope: 5, start_date: Time.zone.today, end_date: 3.days.from_now }
+    let!(:first_project) { Fabricate :project, customer: customer, status: :executing, initial_scope: 10, start_date: Time.zone.today, end_date: 4.days.from_now }
     let!(:second_project) { Fabricate :project, customer: other_customer, status: :executing, initial_scope: 40, start_date: 1.day.from_now, end_date: 5.days.from_now }
-    let!(:third_project) { Fabricate :project, customer: other_customer, status: :executing, initial_scope: 20, start_date: 2.days.from_now, end_date: 5.days.from_now }
+    let!(:third_project) { Fabricate :project, customer: other_customer, status: :executing, initial_scope: 20, start_date: 2.days.from_now, end_date: 6.days.from_now }
   end
 
   context '#top_three_flow_pressure' do
