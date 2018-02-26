@@ -22,7 +22,6 @@ coverage/*
 /yarn-error.log
 
 .byebug_history
-/lib/tasks/seed.rake
 
 dump.rdb
 
