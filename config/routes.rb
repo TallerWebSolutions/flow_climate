@@ -51,12 +51,6 @@ Rails.application.routes.draw do
       resources :project_results do
         resources :demands, only: %i[new create destroy edit update]
       end
-      resources :demands, only: [] do
-        collection do
-          get :import_csv_form
-          post :import_csv
-        end
-      end
 
       resources :project_risk_configs, only: %i[new create destroy] do
         member do

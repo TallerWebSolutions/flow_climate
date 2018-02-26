@@ -49,6 +49,7 @@ Metrics/BlockLength:
 Metrics/ClassLength:
   Exclude:
     - 'app/models/project.rb'
+    - 'app/repositories/project_results_repository.rb'
 
 Metrics/CyclomaticComplexity:
   Exclude:

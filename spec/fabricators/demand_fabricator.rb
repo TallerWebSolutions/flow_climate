@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 Fabricator(:demand) do
+  project
   project_result
   created_date { Faker::Date.backward }
   demand_type 0

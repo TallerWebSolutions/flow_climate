@@ -11,7 +11,7 @@ RSpec.describe DemandService, type: :service do
       context 'in different minutes' do
         let(:start_date) { Time.zone.local(2018, 2, 13, 14, 0, 0) }
         let(:end_date) { Time.zone.local(2018, 2, 13, 14, 23, 0) }
-        it { expect(DemandService.instance.compute_effort_for_dates(start_date, end_date)).to eq(23.0 / 60.0) }
+        it { expect(DemandService.instance.compute_effort_for_dates(start_date, end_date)).to eq 1 }
       end
     end
     context 'when the dates are in different days' do
@@ -19,13 +19,13 @@ RSpec.describe DemandService, type: :service do
         let(:start_date) { Time.zone.local(2018, 2, 13, 14, 0, 0) }
         let(:end_date) { Time.zone.local(2018, 2, 15, 16, 0, 0) }
 
-        it { expect(DemandService.instance.compute_effort_for_dates(start_date, end_date)).to eq 24 }
+        it { expect(DemandService.instance.compute_effort_for_dates(start_date, end_date)).to eq 16.666666666666668 }
       end
       context 'and there is weekend between the dates' do
         let(:start_date) { Time.zone.local(2018, 2, 9, 14, 0, 0) }
         let(:end_date) { Time.zone.local(2018, 2, 13, 16, 0, 0) }
 
-        it { expect(DemandService.instance.compute_effort_for_dates(start_date, end_date)).to eq 24 }
+        it { expect(DemandService.instance.compute_effort_for_dates(start_date, end_date)).to eq 16.666666666666668 }
       end
     end
     context 'when the dates are nil' do
