@@ -191,18 +191,19 @@ ALTER SEQUENCE demand_transitions_id_seq OWNED BY demand_transitions.id;
 
 CREATE TABLE demands (
     id bigint NOT NULL,
-    project_result_id integer NOT NULL,
+    project_result_id integer,
     demand_id character varying NOT NULL,
-    effort numeric NOT NULL,
+    effort numeric,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     demand_type integer NOT NULL,
     demand_url character varying,
     commitment_date timestamp without time zone,
     end_date timestamp without time zone,
-    created_date timestamp without time zone NOT NULL,
+    created_date timestamp without time zone,
     url character varying,
-    class_of_service integer DEFAULT 0 NOT NULL
+    class_of_service integer DEFAULT 0 NOT NULL,
+    project_id integer NOT NULL
 );
 
 
@@ -577,6 +578,8 @@ CREATE TABLE stages (
     commitment_point boolean DEFAULT false,
     end_point boolean DEFAULT false,
     queue boolean DEFAULT false,
+    compute_effort boolean DEFAULT false,
+    percentage_effort numeric,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL
 );
@@ -1203,6 +1206,14 @@ ALTER TABLE ONLY team_members
 
 
 --
+-- Name: demands fk_rails_19bdd8aa1e; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY demands
+    ADD CONSTRAINT fk_rails_19bdd8aa1e FOREIGN KEY (project_id) REFERENCES projects(id);
+
+
+--
 -- Name: projects fk_rails_21e11c2480; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1417,6 +1428,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20180216231515'),
 ('20180221160521'),
 ('20180223211920'),
-('20180224031304');
+('20180224031304'),
+('20180224142451');
 
 

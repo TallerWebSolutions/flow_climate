@@ -4,16 +4,18 @@
 #
 # Table name: stages
 #
-#  id               :integer          not null, primary key
-#  integration_id   :string           not null
-#  name             :string           not null
-#  stage_type       :integer          not null
-#  stage_stream     :integer          not null
-#  commitment_point :boolean          default(FALSE)
-#  end_point        :boolean          default(FALSE)
-#  queue            :boolean          default(FALSE)
-#  created_at       :datetime         not null
-#  updated_at       :datetime         not null
+#  id                :integer          not null, primary key
+#  integration_id    :string           not null
+#  name              :string           not null
+#  stage_type        :integer          not null
+#  stage_stream      :integer          not null
+#  commitment_point  :boolean          default(FALSE)
+#  end_point         :boolean          default(FALSE)
+#  queue             :boolean          default(FALSE)
+#  compute_effort    :boolean          default(FALSE)
+#  percentage_effort :decimal(, )
+#  created_at        :datetime         not null
+#  updated_at        :datetime         not null
 #
 # Indexes
 #
@@ -22,7 +24,7 @@
 #
 
 class Stage < ApplicationRecord
-  enum stage_type: { design: 0, analysis: 1, development: 2, test: 3, homologation: 4, ready_to_deploy: 5, deployed: 6 }
+  enum stage_type: { backlog: 0, design: 1, analysis: 2, development: 3, test: 4, homologation: 5, ready_to_deploy: 6, delivered: 7 }
   enum stage_stream: { upstream: 0, downstream: 1 }
 
   has_and_belongs_to_many :projects

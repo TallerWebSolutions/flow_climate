@@ -40,7 +40,8 @@ class Project < ApplicationRecord
   has_many :project_results, dependent: :restrict_with_error
   has_many :project_risk_configs, dependent: :destroy
   has_many :project_risk_alerts, dependent: :destroy
-  has_many :demands, through: :project_results
+  has_many :demands, dependent: :restrict_with_error
+  has_and_belongs_to_many :stages
 
   validates :customer, :qty_hours, :project_type, :name, :status, :start_date, :end_date, :status, :initial_scope, presence: true
   validates :name, uniqueness: { scope: :product, message: I18n.t('project.name.uniqueness') }

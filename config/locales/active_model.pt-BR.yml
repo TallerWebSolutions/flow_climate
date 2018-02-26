@@ -254,6 +254,7 @@ pt-BR:
         stage_stream: Tipo do Stream
         enums:
           stage_type:
+            backlog: Backlog
             design: Design
             analysis: Análise
             development: Desenvolvimento
@@ -267,7 +268,7 @@ pt-BR:
       demand_transition:
         demand: Demanda
         stage: Etapa
-        last_time_in: Última vez na etapa
+        last_time_in: Primeira vez na etapa
         last_time_out: Última saída da etapa
   product:
     name:

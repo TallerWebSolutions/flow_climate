@@ -73,26 +73,40 @@ class ProjectResultsRepository
     average_demand_cost_hash
   end
 
-  def update_result_for_date(project, result_date, known_scope, qty_bugs_opened)
-    project_result = ProjectResult.where(result_date: result_date).last
-    return if project_result.blank?
-
-    demands_for_date = Demand.where('DATE(end_date) = :end_date', end_date: result_date.to_date)
-    bug_demands = demands_for_date.where(demand_type: :bug)
-
-    project_result.update(known_scope: known_scope, throughput: demands_for_date.count, qty_hours_upstream: 0, qty_hours_downstream: demands_for_date.sum(:effort), qty_hours_bug: bug_demands.sum(:effort),
-                          qty_bugs_closed: bug_demands.count, qty_bugs_opened: qty_bugs_opened, remaining_days: project.remaining_days(result_date),
-                          flow_pressure: demands_for_date.count.to_f / project.remaining_days(result_date), average_demand_cost: average_demand_cost(demands_for_date, project_result))
-    project_result
-  end
-
   def create_project_result(project, team, result_date)
     project_results = ProjectResult.where(result_date: result_date, project: project)
     return create_new_empty_project_result(result_date, project, team) if project_results.blank?
     project_results.first
   end
 
+  def update_all_results(project)
+    project.project_results.each do |result|
+      update_result_for_date(project, result.result_date)
+    end
+  end
+
+  def update_result_for_date(project, result_date)
+    project_result = ProjectResult.where(result_date: result_date).last
+    return if project_result.blank?
+
+    known_scope = project.demands.known_scope_to_date(result_date)
+    finished_demands = project.demands.finished_until_date(result_date)
+    created_in_date_demands = project.demands.created_until_date(result_date)
+    demands_in_result = finished_demands + created_in_date_demands
+    finished_bugs = project.demands.bug.finished_until_date(result_date)
+
+    update_result(demands_in_result, finished_bugs, finished_demands, known_scope, project, project_result, result_date)
+    project_result
+  end
+
   private
+
+  def update_result(demands_in_result, finished_bugs, finished_demands, known_scope, project, project_result, result_date)
+    project_result.update(demands: demands_in_result, known_scope: known_scope, throughput: finished_demands.count, qty_hours_upstream: 0, qty_hours_downstream: finished_demands.sum(:effort),
+                          qty_hours_bug: finished_bugs.sum(:effort), qty_bugs_closed: finished_bugs.count, qty_bugs_opened: project.demands.bugs_opened_until_date_count(result_date),
+                          remaining_days: project.remaining_days(result_date), flow_pressure: finished_demands.count.to_f / project.remaining_days(result_date),
+                          average_demand_cost: average_demand_cost(finished_demands, project_result))
+  end
 
   def build_hash_data_with_sum(projects, field)
     grouped_project_results(projects).sum(field)

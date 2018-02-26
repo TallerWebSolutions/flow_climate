@@ -10,6 +10,8 @@ class CreateStages < ActiveRecord::Migration[5.1]
       t.boolean :commitment_point, default: false
       t.boolean :end_point, default: false
       t.boolean :queue, default: false
+      t.boolean :compute_effort, default: false
+      t.decimal :percentage_effort
 
       t.timestamps
     end
