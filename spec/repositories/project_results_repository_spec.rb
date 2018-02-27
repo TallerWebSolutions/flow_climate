@@ -5,7 +5,7 @@ RSpec.describe ProjectResultsRepository, type: :repository do
   let(:customer) { Fabricate :customer, company: company }
   let(:product) { Fabricate :product, customer: customer, name: 'zzz' }
 
-  let!(:first_project) { Fabricate :project, customer: customer, product: product, start_date: Time.iso8601('2018-01-09T23:01:46'), end_date: Time.iso8601('2018-03-16T23:01:46') }
+  let!(:first_project) { Fabricate :project, customer: customer, product: product, start_date: Time.iso8601('2018-01-03T23:01:46'), end_date: Time.iso8601('2018-03-16T23:01:46') }
   let!(:second_project) { Fabricate :project, customer: customer, product: product, start_date: Time.iso8601('2018-01-10T23:01:46'), end_date: Time.iso8601('2018-03-16T23:01:46') }
   let!(:third_project) { Fabricate :project, customer: customer, product: product, start_date: Time.iso8601('2018-01-04T23:01:46'), end_date: Time.iso8601('2018-03-16T23:01:46') }
 
@@ -156,22 +156,24 @@ RSpec.describe ProjectResultsRepository, type: :repository do
 
   describe '#update_result_for_date' do
     context 'having the project_result' do
-      let!(:result) { Fabricate :project_result, project: first_project, result_date: Time.iso8601('2018-02-16T23:01:46'), throughput: 20, qty_hours_downstream: 20, qty_hours_upstream: 11, cost_in_month: 340 }
+      let!(:first_result) { Fabricate :project_result, project: first_project, result_date: Time.iso8601('2018-01-05T23:01:46'), throughput: 20, qty_hours_downstream: 20, qty_hours_upstream: 11, cost_in_month: 340, known_scope: 30 }
+      let!(:second_result) { Fabricate :project_result, project: first_project, result_date: Time.iso8601('2018-02-16T23:01:46'), throughput: 20, qty_hours_downstream: 20, qty_hours_upstream: 11, cost_in_month: 340, known_scope: 100 }
 
       context 'having demands for the date' do
-        let!(:first_demand) { Fabricate :demand, project: first_project, demand_type: :feature, project_result: result, effort: 100 }
-        let!(:second_demand) { Fabricate :demand, project: first_project, demand_type: :bug, project_result: result, effort: 123 }
-        let!(:third_demand) { Fabricate :demand, project: first_project, demand_type: :feature, project_result: result, effort: 12 }
+        let!(:first_demand) { Fabricate :demand, project: first_project, demand_type: :feature, project_result: second_result, effort: 100 }
+        let!(:second_demand) { Fabricate :demand, project: first_project, demand_type: :bug, project_result: second_result, effort: 123 }
+        let!(:third_demand) { Fabricate :demand, project: first_project, demand_type: :feature, project_result: second_result, effort: 12 }
+
         let!(:first_transition) { Fabricate :demand_transition, stage: end_stage, demand: first_demand, last_time_in: '2018-02-16T01:01:41-02:00', last_time_out: '2018-02-18T01:01:41-02:00' }
         let!(:second_transition) { Fabricate :demand_transition, stage: end_stage, demand: second_demand, last_time_in: '2018-02-16T01:01:41-02:00', last_time_out: '2018-02-16T01:42:41-02:00' }
         let!(:third_transition) { Fabricate :demand_transition, stage: stage, demand: third_demand, last_time_in: '2018-02-10T01:01:41-02:00' }
 
-        it 'updates the project result' do
+        it 'updates the project result and the known scope will be the sum of the result with no transition and the ones having the transition' do
           ProjectResultsRepository.instance.update_result_for_date(first_project, Date.new(2018, 2, 16))
           updated_project_result = ProjectResult.last
           expect(updated_project_result.project).to eq first_project
           expect(updated_project_result.result_date).to eq Time.iso8601('2018-02-16T23:01:46').to_date
-          expect(updated_project_result.known_scope).to eq 3
+          expect(updated_project_result.known_scope).to eq 33
           expect(updated_project_result.throughput).to eq 2
           expect(updated_project_result.qty_hours_upstream).to eq 0
           expect(updated_project_result.qty_hours_downstream).to eq 223
@@ -190,7 +192,7 @@ RSpec.describe ProjectResultsRepository, type: :repository do
           updated_project_result = ProjectResult.last
           expect(updated_project_result.project).to eq first_project
           expect(updated_project_result.result_date).to eq Time.iso8601('2018-02-16T23:01:46').to_date
-          expect(updated_project_result.known_scope).to eq 0
+          expect(updated_project_result.known_scope).to eq 100
           expect(updated_project_result.throughput).to eq 0
           expect(updated_project_result.qty_hours_upstream).to eq 0
           expect(updated_project_result.qty_hours_downstream).to eq 0
@@ -235,4 +237,44 @@ RSpec.describe ProjectResultsRepository, type: :repository do
   end
 
   pending '#update_previous_and_current_demand_results'
+
+  describe '#update_results_greater_than' do
+    context 'having the project_result' do
+      let!(:first_result) { Fabricate :project_result, project: first_project, result_date: Date.new(2018, 1, 5), throughput: 20, qty_hours_downstream: 20, qty_hours_upstream: 11, cost_in_month: 340, known_scope: 30 }
+      let!(:second_result) { Fabricate :project_result, project: first_project, result_date: Date.new(2018, 2, 16), throughput: 20, qty_hours_downstream: 20, qty_hours_upstream: 11, cost_in_month: 340, known_scope: 100 }
+      let!(:third_result) { Fabricate :project_result, project: first_project, result_date: Date.new(2018, 2, 20), throughput: 20, qty_hours_downstream: 20, qty_hours_upstream: 11, cost_in_month: 340, known_scope: 95 }
+
+      context 'having demands for the date' do
+        let!(:first_demand) { Fabricate :demand, project: first_project, demand_type: :feature, project_result: second_result, effort: 100 }
+        let!(:second_demand) { Fabricate :demand, project: first_project, demand_type: :bug, project_result: second_result, effort: 123 }
+        let!(:third_demand) { Fabricate :demand, project: first_project, demand_type: :feature, project_result: second_result, effort: 12 }
+        let!(:fourth_demand) { Fabricate :demand, project: first_project, demand_type: :feature, project_result: third_result, effort: 12 }
+
+        let!(:first_transition) { Fabricate :demand_transition, stage: end_stage, demand: first_demand, last_time_in: '2018-02-16T01:01:41-02:00', last_time_out: '2018-02-18T01:01:41-02:00' }
+        let!(:second_transition) { Fabricate :demand_transition, stage: end_stage, demand: second_demand, last_time_in: '2018-02-16T01:01:41-02:00', last_time_out: '2018-02-16T01:42:41-02:00' }
+        let!(:third_transition) { Fabricate :demand_transition, stage: stage, demand: third_demand, last_time_in: '2018-02-10T01:01:41-02:00' }
+        let!(:fourth_transition) { Fabricate :demand_transition, stage: stage, demand: third_demand, last_time_in: '2018-02-19T01:01:41-02:00' }
+
+        it 'updates the project result and the known scope will be the sum of the result with no transition and the ones having the transition' do
+          ProjectResultsRepository.instance.update_results_greater_than(Demand.all, Date.new(2018, 2, 16))
+          expect(ProjectResult.pluck(:project_id)).to match_array [first_project.id, first_project.id, first_project.id]
+          expect(ProjectResult.pluck(:result_date)).to match_array [Date.new(2018, 1, 5), Date.new(2018, 2, 16), Date.new(2018, 2, 20)]
+          expect(ProjectResult.pluck(:known_scope)).to match_array [30, 98, 98]
+          expect(ProjectResult.pluck(:throughput)).to match_array [0, 2, 20]
+          expect(ProjectResult.pluck(:qty_hours_downstream)).to match_array [0, 20, 223]
+        end
+      end
+
+      context 'having no demands for the date' do
+        it 'updates the project result' do
+          ProjectResultsRepository.instance.update_result_for_date(first_project, Date.new(2018, 5, 1))
+          expect(ProjectResult.pluck(:project_id)).to match_array [first_project.id, first_project.id, first_project.id]
+          expect(ProjectResult.pluck(:result_date)).to match_array [Date.new(2018, 1, 5), Date.new(2018, 2, 16), Date.new(2018, 2, 20)]
+          expect(ProjectResult.pluck(:known_scope)).to match_array [30, 95, 100]
+          expect(ProjectResult.pluck(:throughput)).to match_array [20, 20, 20]
+          expect(ProjectResult.pluck(:qty_hours_downstream)).to match_array [20, 20, 20]
+        end
+      end
+    end
+  end
 end

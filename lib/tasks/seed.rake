@@ -12,7 +12,7 @@ namespace :seed do
     Stage.create(projects: [project_flow_climate], integration_id: '2457379', name: 'Homologating', stage_type: :homologation, stage_stream: :downstream, commitment_point: false, end_point: false, queue: false)
     Stage.create(projects: [project_flow_climate], integration_id: '2457387', name: 'Ready to Deploy', stage_type: :ready_to_deploy, stage_stream: :downstream, commitment_point: false, end_point: false, queue: true)
     Stage.create(projects: [project_flow_climate], integration_id: '2457326', name: 'Live', stage_type: :delivered, stage_stream: :downstream, commitment_point: false, end_point: true, queue: true)
-    Stage.create(projects: [project_flow_climate], integration_id: '2457327', name: 'Arquivado', stage_type: :delivered, stage_stream: :downstream, commitment_point: false, end_point: true, queue: true)
+    Stage.create(projects: [project_flow_climate], integration_id: '2457327', name: 'Arquivado', stage_type: :delivered, stage_stream: :downstream, commitment_point: false, end_point: false, queue: true)
 
     # stages for Vingadores
     vingadores = Team.first
@@ -32,5 +32,6 @@ namespace :seed do
     Stage.create(projects: vingadores.projects, integration_id: '2480521', name: 'Homologating', stage_type: :homologation, stage_stream: :downstream, commitment_point: false, end_point: false, queue: false)
     Stage.create(projects: vingadores.projects, integration_id: '2480522', name: 'Ready to Deploy', stage_type: :ready_to_deploy, stage_stream: :downstream, commitment_point: false, end_point: false, queue: true)
     Stage.create(projects: vingadores.projects, integration_id: '2457326', name: 'Live', stage_type: :delivered, stage_stream: :downstream, commitment_point: false, end_point: true, queue: false)
+    Stage.create(projects: vingadores.projects, integration_id: '2697997', name: 'Arquivado', stage_type: :delivered, stage_stream: :downstream, commitment_point: false, end_point: false, queue: false)
   end
 end

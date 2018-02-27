@@ -16,4 +16,16 @@ RSpec.describe PipefyApiService, type: :service do
       PipefyApiService.request_pipe_details_with_card_summary('222')
     end
   end
+  describe '.request_cards_to_phase' do
+    it 'calls HTTParty' do
+      expect(HTTParty).to receive(:post).with(base_uri, body: { query: PipefyProtocol.phase_cards_request_pages(222) }, headers: headers).once
+      PipefyApiService.request_cards_to_phase('222')
+    end
+  end
+  describe '.request_next_page_cards_to_phase' do
+    it 'calls HTTParty' do
+      expect(HTTParty).to receive(:post).with(base_uri, body: { query: PipefyProtocol.phase_cards_paginated(222, 'aswqdf') }, headers: headers).once
+      PipefyApiService.request_next_page_cards_to_phase('222', 'aswqdf')
+    end
+  end
 end

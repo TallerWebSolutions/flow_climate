@@ -26,132 +26,23 @@ RSpec.describe ProcessPipefyCardJob, type: :active_job do
       stub_request(:post, 'https://app.pipefy.com/queries').with(headers: headers, body: /356528/).to_return(status: 200, body: pipe_response.to_json, headers: {})
     end
 
-    context 'and a pipe config' do
-      let!(:stage) { Fabricate :stage, projects: [project], integration_id: '2481595', compute_effort: true }
-      let!(:end_stage) { Fabricate :stage, projects: [project], integration_id: '2481597', compute_effort: false, end_point: true }
+    let!(:stage) { Fabricate :stage, projects: [project], integration_id: '2481595', compute_effort: true }
+    let!(:end_stage) { Fabricate :stage, projects: [project], integration_id: '2481597', compute_effort: false, end_point: true }
 
-      let(:team) { Fabricate :team }
+    let(:team) { Fabricate :team }
+
+    context 'and a pipefy config' do
       let!(:pipefy_config) { Fabricate :pipefy_config, project: project, team: team, pipe_id: '356528' }
-
-      context 'when there is no demand and project result' do
-        it 'creates the demand the project_result for the card end_date' do
-          ProcessPipefyCardJob.perform_now(params)
-
-          created_demand = Demand.last
-          expect(created_demand.demand_id).to eq '4648391'
-          expect(created_demand.demand_type).to eq 'bug'
-          expect(created_demand.effort.to_f).to eq 8.33333333333333
-          expect(created_demand.url).to eq 'http://app.pipefy.com/pipes/356528#cards/4648391'
-
-          created_project_result = ProjectResult.last
-          expect(created_project_result.demands).to eq [created_demand]
-          expect(created_project_result.project).to eq project
-          expect(created_project_result.team).to eq team
-          expect(created_project_result.result_date).to eq Time.iso8601('2018-02-09T01:01:41-02:00').to_date
-          expect(created_project_result.known_scope).to eq 1
-          expect(created_project_result.throughput).to eq 1
-          expect(created_project_result.qty_hours_upstream).to eq 0
-          expect(created_project_result.qty_hours_downstream).to eq 8
-          expect(created_project_result.qty_hours_bug).to eq 8
-          expect(created_project_result.qty_bugs_closed).to eq 1
-          expect(created_project_result.qty_bugs_opened).to eq 0
-          expect(created_project_result.flow_pressure.to_f).to eq 0.142857142857143
-          expect(created_project_result.remaining_days).to eq 7
-          expect(created_project_result.cost_in_month).to eq team.outsourcing_cost / 4
-          expect(created_project_result.average_demand_cost).to eq team.outsourcing_cost / 4
-          expect(created_project_result.available_hours).to eq team.current_outsourcing_monthly_available_hours
-        end
+      it 'updates the demand and the project result' do
+        expect(PipefyReader.instance).to receive(:process_card).with(team, card_response).once
+        ProcessPipefyCardJob.perform_now(params)
       end
+    end
 
-      context 'when there is a project result and an another demand in this project result' do
-        let(:project_result) { Fabricate :project_result, project: project, result_date: Time.iso8601('2018-02-09T01:01:41-02:00').to_date, team: team, known_scope: 1, throughput: 1, qty_hours_upstream: 30, qty_hours_downstream: 130, qty_hours_bug: 23, qty_bugs_closed: 2, qty_bugs_opened: 4, cost_in_month: 100, available_hours: 30, remaining_days: 2 }
-        let!(:demand) { Fabricate :demand, project: project, demand_type: :feature, project_result: project_result, created_date: Time.iso8601('2018-02-06T01:01:41-02:00'), end_date: Time.iso8601('2018-02-09T01:01:41-02:00').to_date, effort: 100 }
-        let!(:transition) { Fabricate :demand_transition, stage: end_stage, demand: demand, last_time_in: '2018-02-09T01:01:41-02:00' }
-
-        it 'creates the new demand and updates the project result' do
-          ProcessPipefyCardJob.perform_now(params)
-
-          expect(Demand.count).to eq 2
-
-          created_demand = Demand.last
-          expect(created_demand.demand_id).to eq '4648391'
-          expect(created_demand.demand_type).to eq 'bug'
-          expect(created_demand.effort.to_f).to eq 8.33333333333333
-          expect(created_demand.url).to eq 'http://app.pipefy.com/pipes/356528#cards/4648391'
-
-          expect(ProjectResult.count).to eq 1
-
-          updated_project_result = ProjectResult.last
-          expect(updated_project_result.demands).to match_array [demand, created_demand]
-          expect(updated_project_result.project).to eq project
-          expect(updated_project_result.team).to eq team
-          expect(updated_project_result.result_date).to eq Time.iso8601('2018-02-09T01:01:41-02:00').to_date
-          expect(updated_project_result.known_scope).to eq 2
-          expect(updated_project_result.throughput).to eq 2
-          expect(updated_project_result.qty_hours_upstream).to eq 0
-          expect(updated_project_result.qty_hours_downstream).to eq 108
-          expect(updated_project_result.qty_hours_bug).to eq 8
-          expect(updated_project_result.qty_bugs_closed).to eq 1
-          expect(updated_project_result.qty_bugs_opened).to eq 0
-          expect(updated_project_result.flow_pressure.to_f).to eq 0.285714285714286
-          expect(updated_project_result.remaining_days).to eq 7
-          expect(updated_project_result.cost_in_month.to_f).to eq 100
-          expect(updated_project_result.average_demand_cost.to_f).to eq 1.6666666666666667
-          expect(updated_project_result.available_hours.to_f).to eq 30
-        end
-      end
-
-      context 'when the project result and the demand already exists' do
-        context 'in the same project result' do
-          let(:project_result) { Fabricate :project_result, project: project, result_date: Time.iso8601('2018-02-09T01:01:41-02:00').to_date, team: team, known_scope: 1, throughput: 1, qty_hours_upstream: 30, qty_hours_downstream: 130, qty_hours_bug: 23, qty_bugs_closed: 2, qty_bugs_opened: 4, cost_in_month: 100, available_hours: 30, remaining_days: 2 }
-          let!(:demand) { Fabricate :demand, project: project, demand_id: '4648391', project_result: project_result, end_date: Time.iso8601('2018-02-07T01:01:41-02:00').to_date }
-
-          it 'updates the demand and the project result' do
-            ProcessPipefyCardJob.perform_now(params)
-
-            expect(Demand.count).to eq 1
-
-            updated_demand = Demand.last
-            expect(updated_demand.demand_id).to eq '4648391'
-            expect(updated_demand.demand_type).to eq 'bug'
-            expect(updated_demand.effort.to_f).to eq 8.33333333333333
-            expect(updated_demand.url).to eq 'http://app.pipefy.com/pipes/356528#cards/4648391'
-
-            expect(ProjectResult.count).to eq 1
-
-            updated_project_result = ProjectResult.last
-            expect(updated_project_result.demands).to match_array [demand]
-            expect(updated_project_result.project).to eq project
-            expect(updated_project_result.team).to eq team
-            expect(updated_project_result.result_date).to eq Time.iso8601('2018-02-09T01:01:41-02:00').to_date
-            expect(updated_project_result.known_scope).to eq 1
-            expect(updated_project_result.throughput).to eq 1
-            expect(updated_project_result.qty_hours_upstream).to eq 0
-            expect(updated_project_result.qty_hours_downstream).to eq 8
-            expect(updated_project_result.qty_hours_bug).to eq 8
-            expect(updated_project_result.qty_bugs_closed).to eq 1
-            expect(updated_project_result.qty_bugs_opened).to eq 0
-            expect(updated_project_result.flow_pressure.to_f).to eq 0.142857142857143
-            expect(updated_project_result.remaining_days).to eq 7
-            expect(updated_project_result.cost_in_month.to_f).to eq 100
-            expect(updated_project_result.average_demand_cost.to_f).to eq 3.3333333333333335
-            expect(updated_project_result.available_hours.to_f).to eq 30
-          end
-        end
-
-        context 'in another project result' do
-          let!(:project_result) { Fabricate :project_result, project: project, result_date: Time.iso8601('2018-02-09T01:01:41-02:00').to_date, team: team, known_scope: 1, throughput: 1, qty_hours_upstream: 30, qty_hours_downstream: 130, qty_hours_bug: 23, qty_bugs_closed: 2, qty_bugs_opened: 4, cost_in_month: 100, available_hours: 30, remaining_days: 2 }
-          let!(:other_project_result) { Fabricate :project_result, project: project, result_date: Time.iso8601('2018-02-07T01:01:41-02:00').to_date, team: team, known_scope: 1, throughput: 1, qty_hours_upstream: 30, qty_hours_downstream: 130, qty_hours_bug: 23, qty_bugs_closed: 2, qty_bugs_opened: 4, cost_in_month: 100, available_hours: 30, remaining_days: 2 }
-          let!(:demand) { Fabricate :demand, project: project, demand_id: '4648391', project_result: other_project_result }
-          let!(:transition) { Fabricate :demand_transition, demand: demand, last_time_in: '2018-02-09T01:01:41-02:00' }
-
-          it 'updates the demand and move it from a project result to the new one' do
-            ProcessPipefyCardJob.perform_now(params)
-            expect(Demand.count).to eq 1
-            expect(demand.reload.project_result).to eq project_result
-            expect(other_project_result.reload.demands).to eq []
-          end
-        end
+    context 'and no pipefy config' do
+      it 'updates the demand and the project result' do
+        expect(PipefyReader.instance).to receive(:process_card).with(team, card_response).never
+        ProcessPipefyCardJob.perform_now(params)
       end
     end
   end

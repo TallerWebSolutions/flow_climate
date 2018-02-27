@@ -28,11 +28,12 @@ RSpec.describe DemandsRepository, type: :repository do
 
     context 'when the demand does not exist' do
       it 'creates the demand and the project result' do
-        DemandsRepository.instance.create_or_update_demand(project, '100', 'bug', 'bla.xpto.com')
+        DemandsRepository.instance.create_or_update_demand(project, '100', 'bug', 'fixed_date', 'bla.xpto.com')
 
         created_demand = Demand.last
         expect(created_demand.demand_id).to eq '100'
         expect(created_demand.demand_type).to eq 'bug'
+        expect(created_demand.class_of_service).to eq 'fixed_date'
         expect(created_demand.url).to eq 'bla.xpto.com'
       end
     end
@@ -41,10 +42,11 @@ RSpec.describe DemandsRepository, type: :repository do
       let!(:demand) { Fabricate :demand, demand_id: '100', effort: 25 }
 
       it 'updates the demand' do
-        DemandsRepository.instance.create_or_update_demand(project, 1, :bug, 'bla.xpto.com')
+        DemandsRepository.instance.create_or_update_demand(project, 1, :bug, :intangible, 'bla.xpto.com')
         updated_demand = Demand.last
         expect(updated_demand.demand_id).to eq '1'
         expect(updated_demand.demand_type).to eq 'bug'
+        expect(updated_demand.class_of_service).to eq 'intangible'
         expect(updated_demand.url).to eq 'bla.xpto.com'
       end
     end

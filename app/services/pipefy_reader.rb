@@ -3,14 +3,13 @@
 class PipefyReader
   include Singleton
 
-  def process_card(card_response)
+  def process_card(team, card_response)
     response_data = card_response['data']
-    pipe_id = response_data.try(:[], 'card').try(:[], 'pipe').try(:[], 'id')
-    pipefy_configs = PipefyConfig.where(pipe_id: pipe_id)
-    return if pipefy_configs.blank?
+    name_in_pipefy = read_project_name_from_pipefy_data(response_data)
+    return if name_in_pipefy.blank?
 
-    project = pipefy_configs.first.project
-    team = pipefy_configs.first.team
+    project = Project.all.select { |p| p.full_name.casecmp(name_in_pipefy.downcase).zero? }.first
+    return if project.blank?
 
     demand = create_demand(project, response_data)
     read_phases(response_data, demand)
@@ -19,10 +18,19 @@ class PipefyReader
 
   private
 
+  def read_project_name_from_pipefy_data(response_data)
+    project_pipefy_name = ''
+    response_data.try(:[], 'card').try(:[], 'fields')&.each do |field|
+      next unless field['name'].casecmp('project').zero?
+      project_pipefy_name = field['value']
+    end
+    project_pipefy_name
+  end
+
   def create_demand(project, response_data)
     demand_id = response_data.try(:[], 'card').try(:[], 'id')
     url = response_data.try(:[], 'card').try(:[], 'url')
-    DemandsRepository.instance.create_or_update_demand(project, demand_id, demand_type(response_data), url)
+    DemandsRepository.instance.create_or_update_demand(project, demand_id, read_demand_type(response_data), read_class_of_service(response_data), url)
   end
 
   def read_phases(response_data, demand)
@@ -34,11 +42,11 @@ class PipefyReader
   def create_transition_for_phase(phase, demand)
     phase_id = phase['phase']['id']
     stage = Stage.where(integration_id: phase_id).first
-    return if stage.blank?
-    DemandTransition.create(stage: stage, demand: demand, last_time_in: phase['lastTimeIn'], last_time_out: phase['lastTimeOut'])
+    return if stage.blank? || demand.blank?
+    DemandTransition.create(stage: stage, demand: demand, last_time_in: phase['firstTimeIn'], last_time_out: phase['lastTimeOut'])
   end
 
-  def demand_type(response_data)
+  def read_demand_type(response_data)
     demand_type_in_response = :feature
     response_data.try(:[], 'card').try(:[], 'fields')&.each do |field|
       next unless field['name'].casecmp('type').zero?
@@ -51,6 +59,23 @@ class PipefyReader
                                 end
     end
     demand_type_in_response
+  end
+
+  def read_class_of_service(response_data)
+    demand_class_of_service = :standard
+    response_data.try(:[], 'card').try(:[], 'fields')&.each do |field|
+      next unless field['name'].casecmp('class of service').zero?
+      demand_class_of_service = if field['value'].casecmp('expedição').zero?
+                                  :expedite
+                                elsif field['value'].casecmp('data fixa').zero?
+                                  :fixed_date
+                                elsif field['value'].casecmp('intangível').zero?
+                                  :intangible
+                                else
+                                  :standard
+                                end
+    end
+    demand_class_of_service
   end
 
   def update_project_results(demand, team)
