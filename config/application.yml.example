@@ -2,3 +2,4 @@
 #
 
 pipefy_token: 'XPTO'
+perform_full_pipefy_read: false

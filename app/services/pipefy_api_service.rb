@@ -19,4 +19,20 @@ class PipefyApiService
       headers: HEADERS
     )
   end
+
+  def self.request_cards_to_phase(phase_id)
+    HTTParty.post(
+      "#{BASE_URI}/queries",
+      body: { query: PipefyProtocol.phase_cards_request_pages(phase_id) },
+      headers: HEADERS
+    )
+  end
+
+  def self.request_next_page_cards_to_phase(phase_id, cursor)
+    HTTParty.post(
+      "#{BASE_URI}/queries",
+      body: { query: PipefyProtocol.phase_cards_paginated(phase_id, cursor) },
+      headers: HEADERS
+    )
+  end
 end

@@ -3,7 +3,7 @@
   <div class="row">
     <div class='col-xs-3 form-group <%= 'has-error' if @demand.errors[:demand_type].present? %>'>
       <%= f.label :demand_type, class: 'control-label' %>
-      <%= f.select :demand_type, Demand.demand_types.map { |key, _value| [t("activerecord.attributes.demand.enums.demand_type.#{key}"), key] }, { include_blank: t('general.select'), selected: @demand.demand_type }, class: 'form-control' %>
+      <%= f.select :demand_type, Demand.demand_types.map { |key, _value| [t("activerecord.attributes.demand.enums.demand_type.#{key}"), key] }, {include_blank: t('general.select'), selected: @demand.demand_type }, class: 'form-control' %>
       <span class="help-block"><%= @demand.errors[:demand_type].join(', ') %></span>
     </div>
     <div class='col-xs-3 form-group <%= 'has-error' if @demand.errors[:class_of_service].present? %>'>

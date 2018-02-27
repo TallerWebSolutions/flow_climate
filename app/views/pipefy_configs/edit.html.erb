@@ -4,7 +4,6 @@
       <ul class="breadcrumb">
         <li><%= link_to t('general.home.title'), root_path %></li>
         <li><%= link_to @company.abbreviation.upcase, company_path(@company) %></li>
-        <li><%= link_to Product.model_name.plural.capitalize, company_products_path(@company) %></li>
         <li><%= t('pipefy_configs.edit.title') %></li>
       </ul>
     </div>

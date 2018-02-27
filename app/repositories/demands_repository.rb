@@ -7,9 +7,9 @@ class DemandsRepository
     Demand.joins(project_result: { project: :customer }).where('customers.company_id = :company_id AND EXTRACT(week FROM project_results.result_date) = :week AND EXTRACT(year FROM project_results.result_date) = :year', company_id: company.id, week: required_date.cweek, year: required_date.cwyear).order(:demand_id)
   end
 
-  def create_or_update_demand(project, demand_id, demand_type, url)
+  def create_or_update_demand(project, demand_id, demand_type, class_of_service, url)
     demand = Demand.where(project: project, demand_id: demand_id).first_or_initialize
-    demand.update(demand_type: demand_type, url: url)
+    demand.update(demand_type: demand_type, class_of_service: class_of_service, url: url)
     demand
   end
 end

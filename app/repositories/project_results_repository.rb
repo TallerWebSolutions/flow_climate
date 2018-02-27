@@ -26,7 +26,6 @@ class ProjectResultsRepository
   def scope_in_week_for_projects(projects, week, year)
     total_scope = 0
     projects.each do |project|
-      ProjectResult.select("date_trunc('week', result_date) AS week").where(project_id: project.id).order("date_trunc('week', result_date)").group("date_trunc('week', result_date)")
       known_scope = results_until_week(project, week, year).last&.known_scope
       total_scope += known_scope || project.initial_scope
     end
@@ -90,17 +89,36 @@ class ProjectResultsRepository
     project_result = ProjectResult.where(result_date: result_date).last
     return if project_result.blank?
 
+    results_without_transitions = previous_result_transitions(project)
+
     known_scope = project.demands.known_scope_to_date(result_date)
+    known_scope += results_without_transitions.last.known_scope if results_without_transitions.present?
+
+    compute_fields_and_update_result(known_scope, project, project_result, result_date)
+    project_result
+  end
+
+  def update_results_greater_than(demands, min_date)
+    demands.select(:project_id).group(:project_id).each do |project_id_hash|
+      results_to_update = Project.find(project_id_hash.project_id).project_results.where('result_date >= :min_date', min_date: min_date)
+      results_to_update.each { |result| update_result_for_date(result.project, result.result_date) }
+    end
+  end
+
+  private
+
+  def compute_fields_and_update_result(known_scope, project, project_result, result_date)
     finished_demands = project.demands.finished_until_date(result_date)
     created_in_date_demands = project.demands.created_until_date(result_date)
     demands_in_result = finished_demands + created_in_date_demands
     finished_bugs = project.demands.bug.finished_until_date(result_date)
 
     update_result(demands_in_result, finished_bugs, finished_demands, known_scope, project, project_result, result_date)
-    project_result
   end
 
-  private
+  def previous_result_transitions(project)
+    project.project_results.left_outer_joins(demands: :demand_transitions).where('demand_transitions.id IS NULL').order(:result_date)
+  end
 
   def update_result(demands_in_result, finished_bugs, finished_demands, known_scope, project, project_result, result_date)
     project_result.update(demands: demands_in_result, known_scope: known_scope, throughput: finished_demands.count, qty_hours_upstream: 0, qty_hours_downstream: finished_demands.sum(:effort),
