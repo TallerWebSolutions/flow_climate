@@ -11,7 +11,7 @@ class ProcessPipefyPipeJob < ApplicationJob
         card_response = JSON.parse(PipefyApiService.request_card_details(card_id).body)
         PipefyReader.instance.process_card(config.team, card_response)
       end
-      update_project_results(cards_in_pipe)
+      ProjectResultsRepository.instance.update_processed_project_results(cards_in_pipe)
     end
   end
 
@@ -27,23 +27,19 @@ class ProcessPipefyPipeJob < ApplicationJob
     phase_id = phase['id']
     cards_in_phase = JSON.parse(PipefyApiService.request_cards_to_phase(phase_id).body)
     root_cards = cards_in_phase['data']['phase']['cards']
-    cards_in_pipe << root_cards['edges'].map { |edge| edge['node']['id'] }
-    read_all_the_cards_in_phase(cards_in_pipe.flatten.uniq, phase_id, root_cards) if full_read && root_cards['pageInfo']['hasNextPage']
+    cards_in_pipe.concat(root_cards['edges'].map { |edge| edge['node']['id'] })
+    cards_in_pipe.concat(read_all_the_cards_in_phase(phase_id, root_cards)) if full_read && root_cards['pageInfo']['hasNextPage']
+    cards_in_pipe
   end
 
-  def read_all_the_cards_in_phase(cards_in_pipe, phase_id, root_cards)
-    while root_cards['pageInfo']['hasNextPage']
-      cards_in_phase = JSON.parse(PipefyApiService.request_next_page_cards_to_phase(phase_id, root_cards['pageInfo']['endCursor']).body)
-      root_cards = cards_in_phase['data']['phase']['cards']
-      cards_in_pipe << root_cards['edges'].map { |edge| edge['node']['id'] }
+  def read_all_the_cards_in_phase(phase_id, root_cards)
+    card_in_pages = []
+    root_cards_updated = root_cards
+    while root_cards_updated['pageInfo']['hasNextPage']
+      cards_in_phase = JSON.parse(PipefyApiService.request_next_page_cards_to_phase(phase_id, root_cards_updated['pageInfo']['endCursor']).body)
+      root_cards_updated = cards_in_phase['data']['phase']['cards']
+      card_in_pages.concat(root_cards_updated['edges'].map { |edge| edge['node']['id'] })
     end
-    cards_in_pipe.flatten.uniq
-  end
-
-  def update_project_results(cards_in_pipe)
-    demands_processed = Demand.where(demand_id: cards_in_pipe)
-    minimum_result_date = demands_processed.joins(:project_result).minimum('project_results.result_date')
-
-    ProjectResultsRepository.instance.update_results_greater_than(demands_processed, minimum_result_date)
+    card_in_pages.flatten.uniq
   end
 end

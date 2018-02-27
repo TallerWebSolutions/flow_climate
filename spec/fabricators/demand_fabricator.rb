@@ -2,7 +2,6 @@
 
 Fabricator(:demand) do
   project
-  project_result
   created_date { Faker::Date.backward }
   demand_type 0
   class_of_service 0

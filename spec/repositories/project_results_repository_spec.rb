@@ -214,67 +214,28 @@ RSpec.describe ProjectResultsRepository, type: :repository do
     end
   end
 
-  describe '#create_project_result' do
+  describe '#create_empty_project_result' do
     let(:company) { Fabricate :company }
     let(:team) { Fabricate :team, company: company }
     let(:customer) { Fabricate :customer, company: company }
     let(:project) { Fabricate :project, customer: customer }
+    let(:demand) { Fabricate :demand, project: project }
 
     context 'when there is no project result to the date' do
-      before { ProjectResultsRepository.instance.create_project_result(project, team, Time.iso8601('2018-02-15T23:01:46')) }
+      before { ProjectResultsRepository.instance.create_empty_project_result(demand, team, Time.iso8601('2018-02-15T23:01:46')) }
       it { expect(ProjectResult.count).to eq 1 }
     end
     context 'when there is project result to the date' do
       let!(:project_result) { Fabricate :project_result, project: project, result_date: Time.iso8601('2018-02-15T23:01:46') }
-      before { ProjectResultsRepository.instance.create_project_result(project, team, Time.iso8601('2018-02-15T23:01:46')) }
+      before { ProjectResultsRepository.instance.create_empty_project_result(demand, team, Time.iso8601('2018-02-15T23:01:46')) }
       it { expect(ProjectResult.count).to eq 1 }
     end
     context 'when there is project result to other date' do
       let!(:project_result) { Fabricate :project_result, project: project, result_date: Time.iso8601('2018-02-14T23:01:46').to_date }
-      before { ProjectResultsRepository.instance.create_project_result(project, team, Time.iso8601('2018-02-15T23:01:46')) }
+      before { ProjectResultsRepository.instance.create_empty_project_result(demand, team, Time.iso8601('2018-02-15T23:01:46')) }
       it { expect(ProjectResult.count).to eq 2 }
     end
   end
 
   pending '#update_previous_and_current_demand_results'
-
-  describe '#update_results_greater_than' do
-    context 'having the project_result' do
-      let!(:first_result) { Fabricate :project_result, project: first_project, result_date: Date.new(2018, 1, 5), throughput: 20, qty_hours_downstream: 20, qty_hours_upstream: 11, cost_in_month: 340, known_scope: 30 }
-      let!(:second_result) { Fabricate :project_result, project: first_project, result_date: Date.new(2018, 2, 16), throughput: 20, qty_hours_downstream: 20, qty_hours_upstream: 11, cost_in_month: 340, known_scope: 100 }
-      let!(:third_result) { Fabricate :project_result, project: first_project, result_date: Date.new(2018, 2, 20), throughput: 20, qty_hours_downstream: 20, qty_hours_upstream: 11, cost_in_month: 340, known_scope: 95 }
-
-      context 'having demands for the date' do
-        let!(:first_demand) { Fabricate :demand, project: first_project, demand_type: :feature, project_result: second_result, effort: 100 }
-        let!(:second_demand) { Fabricate :demand, project: first_project, demand_type: :bug, project_result: second_result, effort: 123 }
-        let!(:third_demand) { Fabricate :demand, project: first_project, demand_type: :feature, project_result: second_result, effort: 12 }
-        let!(:fourth_demand) { Fabricate :demand, project: first_project, demand_type: :feature, project_result: third_result, effort: 12 }
-
-        let!(:first_transition) { Fabricate :demand_transition, stage: end_stage, demand: first_demand, last_time_in: '2018-02-16T01:01:41-02:00', last_time_out: '2018-02-18T01:01:41-02:00' }
-        let!(:second_transition) { Fabricate :demand_transition, stage: end_stage, demand: second_demand, last_time_in: '2018-02-16T01:01:41-02:00', last_time_out: '2018-02-16T01:42:41-02:00' }
-        let!(:third_transition) { Fabricate :demand_transition, stage: stage, demand: third_demand, last_time_in: '2018-02-10T01:01:41-02:00' }
-        let!(:fourth_transition) { Fabricate :demand_transition, stage: stage, demand: third_demand, last_time_in: '2018-02-19T01:01:41-02:00' }
-
-        it 'updates the project result and the known scope will be the sum of the result with no transition and the ones having the transition' do
-          ProjectResultsRepository.instance.update_results_greater_than(Demand.all, Date.new(2018, 2, 16))
-          expect(ProjectResult.pluck(:project_id)).to match_array [first_project.id, first_project.id, first_project.id]
-          expect(ProjectResult.pluck(:result_date)).to match_array [Date.new(2018, 1, 5), Date.new(2018, 2, 16), Date.new(2018, 2, 20)]
-          expect(ProjectResult.pluck(:known_scope)).to match_array [30, 98, 98]
-          expect(ProjectResult.pluck(:throughput)).to match_array [0, 2, 20]
-          expect(ProjectResult.pluck(:qty_hours_downstream)).to match_array [0, 20, 223]
-        end
-      end
-
-      context 'having no demands for the date' do
-        it 'updates the project result' do
-          ProjectResultsRepository.instance.update_result_for_date(first_project, Date.new(2018, 5, 1))
-          expect(ProjectResult.pluck(:project_id)).to match_array [first_project.id, first_project.id, first_project.id]
-          expect(ProjectResult.pluck(:result_date)).to match_array [Date.new(2018, 1, 5), Date.new(2018, 2, 16), Date.new(2018, 2, 20)]
-          expect(ProjectResult.pluck(:known_scope)).to match_array [30, 95, 100]
-          expect(ProjectResult.pluck(:throughput)).to match_array [20, 20, 20]
-          expect(ProjectResult.pluck(:qty_hours_downstream)).to match_array [20, 20, 20]
-        end
-      end
-    end
-  end
 end

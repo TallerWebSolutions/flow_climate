@@ -7,7 +7,7 @@ RSpec.describe PipefyReader, type: :service do
     let(:product) { Fabricate :product, customer: customer, name: 'xpto' }
     let(:other_product) { Fabricate :product, customer: customer, name: 'bar' }
 
-    let(:first_project) { Fabricate :project, customer: customer, product: product, name: 'Fase 1', start_date: Time.iso8601('2018-01-11T23:01:46-02:00'), end_date: Time.iso8601('2018-02-25T23:01:46-02:00') }
+    let(:first_project) { Fabricate :project, customer: customer, product: product, name: 'Fase 1', start_date: Time.iso8601('2018-01-04T23:01:46-02:00'), end_date: Time.iso8601('2018-02-25T23:01:46-02:00') }
     let(:second_project) { Fabricate :project, customer: customer, product: product, name: 'Fase 2', start_date: Time.iso8601('2018-02-26T23:01:46-02:00'), end_date: Time.iso8601('2018-04-25T23:01:46-02:00') }
     let(:third_project) { Fabricate :project, customer: other_customer, product: other_product, name: 'Fase 1', start_date: Time.iso8601('2018-02-26T23:01:46-02:00'), end_date: Time.iso8601('2018-04-25T23:01:46-02:00') }
 
@@ -35,19 +35,20 @@ RSpec.describe PipefyReader, type: :service do
       context 'when the demand exists' do
         context 'and the project result is in another date' do
           let!(:demand) { Fabricate :demand, project: first_project, project_result: nil, demand_id: '5140999' }
-          let!(:project_result) { Fabricate :project_result, project: first_project, demands: [demand], result_date: '2018-01-12T01:01:41-02:00' }
+          let!(:project_result) { Fabricate :project_result, project: first_project, demands: [demand], result_date: '2018-01-10T01:01:41-02:00' }
 
-          it 'processes the card creating the demand and project result' do
+          it 'processes the card updating the demand' do
             PipefyReader.instance.process_card(team, first_card_response)
 
             expect(Demand.count).to eq 1
             expect(Demand.last.class_of_service).to eq 'standard'
             expect(Demand.last.demand_type).to eq 'bug'
+            expect(Demand.last.demand_id).to eq '5140999'
 
             expect(ProjectResult.count).to eq 2
 
             updated_result = ProjectResult.first
-            expect(updated_result.result_date).to eq Date.new(2018, 1, 12)
+            expect(updated_result.result_date).to eq Date.new(2018, 1, 10)
             expect(updated_result.known_scope).to eq 0
             expect(updated_result.qty_hours_downstream).to eq 0
             expect(updated_result.qty_hours_upstream).to eq 0
@@ -63,20 +64,12 @@ RSpec.describe PipefyReader, type: :service do
         end
         context 'and the project result is in the same date' do
           let!(:demand) { Fabricate :demand, project: first_project, project_result: nil, demand_id: '5140999' }
-          let!(:project_result) { Fabricate :project_result, project: first_project, demands: [demand], result_date: Date.new(2018, 2, 23) }
+          let!(:project_result) { Fabricate :project_result, project: first_project, demands: [demand], result_date: Date.new(2018, 2, 23), known_scope: 5 }
 
-          it 'processes the card creating the demand and project result' do
+          it 'processes the card updating the demand and project result' do
             PipefyReader.instance.process_card(team, first_card_response)
-
             expect(Demand.count).to eq 1
             expect(ProjectResult.count).to eq 1
-
-            updated_result = ProjectResult.first
-            expect(updated_result.result_date).to eq Date.new(2018, 2, 23)
-            expect(updated_result.known_scope).to eq 1
-            expect(updated_result.qty_hours_downstream).to eq 16
-            expect(updated_result.qty_hours_upstream).to eq 0
-            expect(updated_result.qty_hours_bug).to eq 16
           end
         end
       end

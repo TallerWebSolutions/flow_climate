@@ -72,40 +72,46 @@ class ProjectResultsRepository
     average_demand_cost_hash
   end
 
-  def create_project_result(project, team, result_date)
-    project_results = ProjectResult.where(result_date: result_date, project: project)
-    return create_new_empty_project_result(result_date, project, team) if project_results.blank?
+  def create_empty_project_result(demand, team, result_date)
+    project_results = ProjectResult.where(result_date: result_date, project: demand.project)
+    return create_new_empty_project_result(demand, team, result_date) if project_results.blank?
     project_results.first
   end
 
-  def update_previous_and_current_demand_results(project, previous_result, current_result)
-    [previous_result, current_result].each do |result|
-      next if result.blank?
-      update_result_for_date(project, result.result_date)
+  def update_processed_project_results(processed_demands)
+    demands_processed = Demand.where(demand_id: processed_demands)
+    projects_ids = demands_processed.select(:project_id).group(:project_id)
+    projects_ids.each do |grouped_project_id|
+      project = Project.find(grouped_project_id.project_id)
+      min_date = project.demands.where(demand_id: processed_demands).joins(:demand_transitions).minimum(:last_time_in)
+      next if min_date.blank?
+      update_project_results_after_date(project, min_date)
     end
   end
 
   def update_result_for_date(project, result_date)
     project_result = ProjectResult.where(result_date: result_date).last
     return if project_result.blank?
-
-    results_without_transitions = previous_result_transitions(project)
-
-    known_scope = project.demands.known_scope_to_date(result_date)
-    known_scope += results_without_transitions.last.known_scope if results_without_transitions.present?
-
+    known_scope = compute_known_scope(project, result_date)
     compute_fields_and_update_result(known_scope, project, project_result, result_date)
     project_result
   end
 
-  def update_results_greater_than(demands, min_date)
-    demands.select(:project_id).group(:project_id).each do |project_id_hash|
-      results_to_update = Project.find(project_id_hash.project_id).project_results.where('result_date >= :min_date', min_date: min_date)
-      results_to_update.each { |result| update_result_for_date(result.project, result.result_date) }
+  private
+
+  def update_project_results_after_date(project, min_date)
+    project.project_results.where('result_date >= :min_date', min_date: min_date.to_date).order(:result_date).each do |result|
+      update_result_for_date(project, result.result_date)
     end
   end
 
-  private
+  def compute_known_scope(project, result_date)
+    results_without_transitions = manual_project_results(project)
+
+    known_scope = project.demands.known_scope_to_date(result_date)
+    known_scope += results_without_transitions.last.known_scope if results_without_transitions.present?
+    known_scope
+  end
 
   def compute_fields_and_update_result(known_scope, project, project_result, result_date)
     finished_demands = project.demands.finished_until_date(result_date)
@@ -116,7 +122,7 @@ class ProjectResultsRepository
     update_result(demands_in_result, finished_bugs, finished_demands, known_scope, project, project_result, result_date)
   end
 
-  def previous_result_transitions(project)
+  def manual_project_results(project)
     project.project_results.left_outer_joins(demands: :demand_transitions).where('demand_transitions.id IS NULL').order(:result_date)
   end
 
@@ -152,10 +158,11 @@ class ProjectResultsRepository
     ProjectResult.joins(project: [{ product: :customer }])
   end
 
-  def create_new_empty_project_result(result_date, project, team)
-    ProjectResult.create(project: project, result_date: result_date, known_scope: 0, throughput: 0, qty_hours_upstream: 0,
+  def create_new_empty_project_result(demand, team, result_date)
+    known_scope = compute_known_scope(demand.project, result_date)
+    ProjectResult.create(demands: [demand], project: demand.project, result_date: result_date, known_scope: known_scope, throughput: 0, qty_hours_upstream: 0,
                          qty_hours_downstream: 0, qty_hours_bug: 0, qty_bugs_closed: 0, qty_bugs_opened: 0,
-                         team: team, flow_pressure: 0, remaining_days: project.remaining_days(result_date), cost_in_month: team.outsourcing_cost,
+                         team: team, flow_pressure: 0, remaining_days: demand.project.remaining_days(result_date), cost_in_month: team.outsourcing_cost,
                          average_demand_cost: 0, available_hours: team.current_outsourcing_monthly_available_hours)
   end
 end

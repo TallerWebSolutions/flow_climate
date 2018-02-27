@@ -33,4 +33,8 @@ class ProjectsRepository
   def money_to_month(company, required_date)
     active_projects_in_month(company, required_date).sum(&:money_per_month)
   end
+
+  def search_project_by_full_name(full_name)
+    Project.all.select { |p| p.full_name.casecmp(full_name.downcase).zero? }.first
+  end
 end

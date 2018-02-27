@@ -8,12 +8,13 @@ class PipefyReader
     name_in_pipefy = read_project_name_from_pipefy_data(response_data)
     return if name_in_pipefy.blank?
 
-    project = Project.all.select { |p| p.full_name.casecmp(name_in_pipefy.downcase).zero? }.first
+    project = ProjectsRepository.instance.search_project_by_full_name(name_in_pipefy)
     return if project.blank?
 
     demand = create_demand(project, response_data)
     read_phases(response_data, demand)
-    update_project_results(demand, team)
+    create_empty_project_result_using_transition(demand, team)
+    ProjectResultsRepository.instance.update_processed_project_results([demand.demand_id])
   end
 
   private
@@ -43,7 +44,9 @@ class PipefyReader
     phase_id = phase['phase']['id']
     stage = Stage.where(integration_id: phase_id).first
     return if stage.blank? || demand.blank?
-    DemandTransition.create(stage: stage, demand: demand, last_time_in: phase['firstTimeIn'], last_time_out: phase['lastTimeOut'])
+    last_time_out = nil
+    last_time_out = Time.iso8601(phase['lastTimeOut']) if phase['lastTimeOut'].present?
+    DemandTransition.where(stage: stage, demand: demand, last_time_in: Time.iso8601(phase['firstTimeIn']), last_time_out: last_time_out).first_or_create
   end
 
   def read_demand_type(response_data)
@@ -78,16 +81,16 @@ class PipefyReader
     demand_class_of_service
   end
 
-  def update_project_results(demand, team)
+  def create_empty_project_result_using_transition(demand, team)
     first_transition = demand.demand_transitions.order(:last_time_in).first
     return if first_transition.blank?
 
-    result_date = define_result_date(demand, first_transition)
-    new_result = ProjectResultsRepository.instance.create_project_result(demand.project, team, result_date)
+    ProjectResultsRepository.instance.update_result_for_date(demand.project, demand.project_result.result_date) if demand.project_result.present?
+
+    result_date = define_result_date(demand, first_transition).to_date
+    ProjectResultsRepository.instance.create_empty_project_result(demand, team, result_date)
 
     update_effort(demand)
-
-    ProjectResultsRepository.instance.update_previous_and_current_demand_results(demand.project, demand.project_result, new_result)
   end
 
   def define_result_date(demand, first_transition)
