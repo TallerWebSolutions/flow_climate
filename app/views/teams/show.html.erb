@@ -14,9 +14,10 @@
   <div class="row">
     <div class="topnav">
       <%= link_to t('navbar.details'), '#', id: 'nav-item-stamps', class: 'active' %>
-      <%= link_to t('navbar.projects_list'), '#', id: 'nav-item-list' %>
-      <%= link_to t('navbar.charts'), '#', id: 'nav-item-charts' %>
       <%= link_to t('navbar.members_table'), '#', id: 'nav-item-members' %>
+      <%= link_to t('navbar.projects_list'), '#', id: 'nav-item-list' %>
+      <%= link_to t('navbar.strategic'), '#', id: 'nav-item-strategic' %>
+      <%= link_to t('navbar.charts'), '#', id: 'nav-item-charts' %>
     </div>
   </div>
 
@@ -47,6 +48,10 @@
     <%= render 'team_members/team_members_table' %>
   </div>
 
+  <div id="strategic">
+    <%= render 'companies/strategic_table', model_name: @team.name, strategic_report_data: @strategic_report_data %>
+  </div>
+
   <div id="charts">
     <% if @report_data.present? %>
       <%= render 'reports/reports',
@@ -64,13 +69,21 @@
 
 <% content_for :javascript do %>
   <%= javascript_include_tag 'teams/show' %>
+
   <%= javascript_include_tag 'charts/burnup' %>
   <%= javascript_include_tag 'charts/column' %>
   <%= javascript_include_tag 'charts/line' %>
+  <%= javascript_include_tag 'charts/column-line' %>
   <%= javascript_include_tag 'charts/gauge' %>
+
   <%= javascript_include_tag 'projects/column_hours_demand_chart' %>
   <%= javascript_include_tag 'projects/column_flow_pressure_chart' %>
   <%= javascript_include_tag 'projects/column_throughput_per_week_chart' %>
   <%= javascript_include_tag 'projects/column_cmd' %>
+
   <%= javascript_include_tag 'companies/hours_gauge_chart' %>
+  <%= javascript_include_tag 'companies/column_active_projects_count_chart' %>
+  <%= javascript_include_tag 'companies/hours_per_month_chart' %>
+  <%= javascript_include_tag 'companies/flow_pressure_chart' %>
+  <%= javascript_include_tag 'companies/money_chart' %>
 <% end %>
