@@ -389,8 +389,14 @@ RSpec.describe Project, type: :model do
   end
 
   describe '#full_name' do
-    let(:project) { Fabricate :project, initial_scope: 30, start_date: 1.week.ago, end_date: 1.week.from_now }
-    it { expect(project.full_name).to eq "#{project.customer_name} | #{project.product_name} | #{project.name}" }
+    context 'having product' do
+      let(:project) { Fabricate :project, initial_scope: 30, start_date: 1.week.ago, end_date: 1.week.from_now }
+      it { expect(project.full_name).to eq "#{project.customer_name} | #{project.product_name} | #{project.name}" }
+    end
+    context 'having no product' do
+      let(:project) { Fabricate :project, project_type: :consulting, product: nil, initial_scope: 30, start_date: 1.week.ago, end_date: 1.week.from_now }
+      it { expect(project.full_name).to eq "#{project.customer_name} | #{project.name}" }
+    end
   end
 
   describe '#required_hours' do
