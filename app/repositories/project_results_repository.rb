@@ -78,60 +78,20 @@ class ProjectResultsRepository
     project_results.first
   end
 
-  def update_processed_project_results(processed_demands)
-    demands_processed = Demand.where(demand_id: processed_demands)
-    projects_ids = demands_processed.select(:project_id).group(:project_id)
-    projects_ids.each do |grouped_project_id|
-      project = Project.find(grouped_project_id.project_id)
-      min_date = project.demands.where(demand_id: processed_demands).joins(:demand_transitions).minimum(:last_time_in)
-      next if min_date.blank?
-      update_project_results_after_date(project, min_date)
-    end
-  end
+  def create_empty_project_result_using_transition(demand, team)
+    first_transition = demand.demand_transitions.order(:last_time_in).first
+    return if first_transition.blank?
 
-  def update_result_for_date(project, result_date)
-    project_result = ProjectResult.where(result_date: result_date).last
-    return if project_result.blank?
-    known_scope = compute_known_scope(project, result_date)
-    compute_fields_and_update_result(known_scope, project, project_result, result_date)
-    project_result
+    previous_result = demand.project_result
+
+    previous_result.remove_demand!(demand) if previous_result.present?
+
+    result_date = define_result_date(demand, first_transition).to_date
+    project_result = ProjectResultsRepository.instance.create_empty_project_result(demand, team, result_date)
+    project_result.add_demand!(demand)
   end
 
   private
-
-  def update_project_results_after_date(project, min_date)
-    project.project_results.where('result_date >= :min_date', min_date: min_date.to_date).order(:result_date).each do |result|
-      update_result_for_date(project, result.result_date)
-    end
-  end
-
-  def compute_known_scope(project, result_date)
-    results_without_transitions = manual_project_results(project)
-
-    known_scope = project.demands.known_scope_to_date(result_date)
-    known_scope += results_without_transitions.last.known_scope if results_without_transitions.present?
-    known_scope
-  end
-
-  def compute_fields_and_update_result(known_scope, project, project_result, result_date)
-    finished_demands = project.demands.finished_until_date(result_date)
-    created_in_date_demands = project.demands.created_until_date(result_date)
-    demands_in_result = finished_demands + created_in_date_demands
-    finished_bugs = project.demands.bug.finished_until_date(result_date)
-
-    update_result(demands_in_result, finished_bugs, finished_demands, known_scope, project, project_result, result_date)
-  end
-
-  def manual_project_results(project)
-    project.project_results.left_outer_joins(demands: :demand_transitions).where('demand_transitions.id IS NULL').order(:result_date)
-  end
-
-  def update_result(demands_in_result, finished_bugs, finished_demands, known_scope, project, project_result, result_date)
-    project_result.update(demands: demands_in_result, known_scope: known_scope, throughput: finished_demands.count, qty_hours_upstream: 0, qty_hours_downstream: finished_demands.sum(:effort),
-                          qty_hours_bug: finished_bugs.sum(:effort), qty_bugs_closed: finished_bugs.count, qty_bugs_opened: project.demands.bugs_opened_until_date_count(result_date),
-                          remaining_days: project.remaining_days(result_date), flow_pressure: finished_demands.count.to_f / project.remaining_days(result_date),
-                          average_demand_cost: average_demand_cost(finished_demands, project_result))
-  end
 
   def build_hash_data_with_sum(projects, field)
     grouped_project_results(projects).sum(field)
@@ -145,11 +105,6 @@ class ProjectResultsRepository
     ProjectResult.select("date_trunc('week', result_date) AS week").where(project_id: projects.pluck(:id)).order("date_trunc('week', result_date)").group("date_trunc('week', result_date)")
   end
 
-  def average_demand_cost(demands_for_date, project_result)
-    return 0 if demands_for_date.blank?
-    (project_result.cost_in_month / 30) / demands_for_date.count
-  end
-
   def results_until_week(project, week, year)
     project.project_results.where('(EXTRACT(WEEK FROM result_date) <= :week AND EXTRACT(YEAR FROM result_date) <= :year) OR (EXTRACT(YEAR FROM result_date) < :year)', week: week, year: year).order(:result_date)
   end
@@ -159,10 +114,18 @@ class ProjectResultsRepository
   end
 
   def create_new_empty_project_result(demand, team, result_date)
-    known_scope = compute_known_scope(demand.project, result_date)
-    ProjectResult.create(demands: [demand], project: demand.project, result_date: result_date, known_scope: known_scope, throughput: 0, qty_hours_upstream: 0,
+    project_result = demand.project.project_results.where(result_date: result_date)
+    return project_result if project_result.present?
+    ProjectResult.create(project: demand.project, result_date: result_date, known_scope: 0, throughput: 0, qty_hours_upstream: 0,
                          qty_hours_downstream: 0, qty_hours_bug: 0, qty_bugs_closed: 0, qty_bugs_opened: 0,
                          team: team, flow_pressure: 0, remaining_days: demand.project.remaining_days(result_date), cost_in_month: team.outsourcing_cost,
                          average_demand_cost: 0, available_hours: team.current_outsourcing_monthly_available_hours)
+  end
+
+  def define_result_date(demand, first_transition)
+    end_transition = demand.demand_transitions.joins(:stage).where('stages.end_point = true').last
+    commitment_transition = demand.demand_transitions.joins(:stage).where('stages.commitment_point = true').last
+
+    end_transition&.last_time_in || commitment_transition&.last_time_in || first_transition&.last_time_in
   end
 end

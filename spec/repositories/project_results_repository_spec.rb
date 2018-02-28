@@ -154,66 +154,6 @@ RSpec.describe ProjectResultsRepository, type: :repository do
     end
   end
 
-  describe '#update_result_for_date' do
-    context 'having the project_result' do
-      let!(:first_result) { Fabricate :project_result, project: first_project, result_date: Time.iso8601('2018-01-05T23:01:46'), throughput: 20, qty_hours_downstream: 20, qty_hours_upstream: 11, cost_in_month: 340, known_scope: 30 }
-      let!(:second_result) { Fabricate :project_result, project: first_project, result_date: Time.iso8601('2018-02-16T23:01:46'), throughput: 20, qty_hours_downstream: 20, qty_hours_upstream: 11, cost_in_month: 340, known_scope: 100 }
-
-      context 'having demands for the date' do
-        let!(:first_demand) { Fabricate :demand, project: first_project, demand_type: :feature, project_result: second_result, effort: 100 }
-        let!(:second_demand) { Fabricate :demand, project: first_project, demand_type: :bug, project_result: second_result, effort: 123 }
-        let!(:third_demand) { Fabricate :demand, project: first_project, demand_type: :feature, project_result: second_result, effort: 12 }
-
-        let!(:first_transition) { Fabricate :demand_transition, stage: end_stage, demand: first_demand, last_time_in: '2018-02-16T01:01:41-02:00', last_time_out: '2018-02-18T01:01:41-02:00' }
-        let!(:second_transition) { Fabricate :demand_transition, stage: end_stage, demand: second_demand, last_time_in: '2018-02-16T01:01:41-02:00', last_time_out: '2018-02-16T01:42:41-02:00' }
-        let!(:third_transition) { Fabricate :demand_transition, stage: stage, demand: third_demand, last_time_in: '2018-02-10T01:01:41-02:00' }
-
-        it 'updates the project result and the known scope will be the sum of the result with no transition and the ones having the transition' do
-          ProjectResultsRepository.instance.update_result_for_date(first_project, Date.new(2018, 2, 16))
-          updated_project_result = ProjectResult.last
-          expect(updated_project_result.project).to eq first_project
-          expect(updated_project_result.result_date).to eq Time.iso8601('2018-02-16T23:01:46').to_date
-          expect(updated_project_result.known_scope).to eq 33
-          expect(updated_project_result.throughput).to eq 2
-          expect(updated_project_result.qty_hours_upstream).to eq 0
-          expect(updated_project_result.qty_hours_downstream).to eq 223
-          expect(updated_project_result.qty_hours_bug).to eq 123
-          expect(updated_project_result.qty_bugs_closed).to eq 1
-          expect(updated_project_result.qty_bugs_opened).to eq 1
-          expect(updated_project_result.flow_pressure.to_f).to eq 0.0714285714285714
-          expect(updated_project_result.remaining_days).to eq 28
-          expect(updated_project_result.average_demand_cost.to_f).to eq 5.666666666666667
-        end
-      end
-
-      context 'having no demands for the date' do
-        it 'updates the project result' do
-          ProjectResultsRepository.instance.update_result_for_date(first_project, Time.iso8601('2018-02-16T23:01:46'))
-          updated_project_result = ProjectResult.last
-          expect(updated_project_result.project).to eq first_project
-          expect(updated_project_result.result_date).to eq Time.iso8601('2018-02-16T23:01:46').to_date
-          expect(updated_project_result.known_scope).to eq 100
-          expect(updated_project_result.throughput).to eq 0
-          expect(updated_project_result.qty_hours_upstream).to eq 0
-          expect(updated_project_result.qty_hours_downstream).to eq 0
-          expect(updated_project_result.qty_hours_bug).to eq 0
-          expect(updated_project_result.qty_bugs_closed).to eq 0
-          expect(updated_project_result.qty_bugs_opened).to eq 0
-          expect(updated_project_result.flow_pressure.to_f).to eq 0
-          expect(updated_project_result.remaining_days).to eq 28
-          expect(updated_project_result.average_demand_cost.to_f).to eq 0
-        end
-      end
-    end
-
-    context 'having no project_result' do
-      it 'returns doing nothing' do
-        ProjectResultsRepository.instance.update_result_for_date(first_project, Time.iso8601('2018-02-16T23:01:46'))
-        expect(ProjectResult.count).to eq 0
-      end
-    end
-  end
-
   describe '#create_empty_project_result' do
     let(:company) { Fabricate :company }
     let(:team) { Fabricate :team, company: company }
@@ -236,6 +176,4 @@ RSpec.describe ProjectResultsRepository, type: :repository do
       it { expect(ProjectResult.count).to eq 2 }
     end
   end
-
-  pending '#update_previous_and_current_demand_results'
 end

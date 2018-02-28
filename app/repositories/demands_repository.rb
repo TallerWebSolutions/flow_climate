@@ -12,4 +12,8 @@ class DemandsRepository
     demand.update(demand_type: demand_type, class_of_service: class_of_service, url: url)
     demand
   end
+
+  def known_scope_to_date(project, date)
+    Demand.joins(:demand_transitions).where('project_id = :project_id AND (SELECT MIN(DATE(demand_transitions.last_time_in)) FROM demand_transitions WHERE demand_transitions.demand_id = demands.id) <= :cut_date', project_id: project.id, cut_date: date).uniq.count
+  end
 end

@@ -11,9 +11,9 @@ class DemandsController < AuthenticatedController
   end
 
   def create
-    @demand = Demand.new(demand_params.merge(project: @project, project_result: @project_result))
+    @demand = Demand.new(demand_params.merge(project: @project))
     if @demand.save
-      update_project_results(@demand)
+      @project_result.add_demand!(@demand)
       return redirect_to company_project_project_result_path(@company, @project, @project_result)
     end
     render :new
@@ -28,10 +28,8 @@ class DemandsController < AuthenticatedController
   def edit; end
 
   def update
-    previous_date = @demand.end_date || @demand.created_date
-
     if @demand.update(demand_params)
-      update_project_results(@demand, previous_date)
+      @project_result.add_demand!(@demand)
       return redirect_to company_project_project_result_path(@company, @project, @project_result)
     end
 
@@ -39,15 +37,6 @@ class DemandsController < AuthenticatedController
   end
 
   private
-
-  def update_project_results(demand, previous_date = nil)
-    if previous_date.present?
-      ProjectResultsRepository.instance.update_result_for_date(@project, previous_date)
-    end
-
-    current_date = demand.end_date || demand.created_date
-    ProjectResultsRepository.instance.update_result_for_date(@project, current_date)
-  end
 
   def demand_params
     params.require(:demand).permit(:demand_id, :demand_type, :class_of_service, :effort, :created_date, :commitment_date, :end_date)

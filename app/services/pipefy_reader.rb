@@ -12,9 +12,10 @@ class PipefyReader
     return if project.blank?
 
     demand = create_demand(project, response_data)
-    read_phases(response_data, demand)
-    create_empty_project_result_using_transition(demand, team)
-    ProjectResultsRepository.instance.update_processed_project_results([demand.demand_id])
+    read_phases_transitions(demand, response_data)
+    demand.update_effort!
+    ProjectResultsRepository.instance.create_empty_project_result_using_transition(demand, team)
+    project
   end
 
   private
@@ -34,13 +35,13 @@ class PipefyReader
     DemandsRepository.instance.create_or_update_demand(project, demand_id, read_demand_type(response_data), read_class_of_service(response_data), url)
   end
 
-  def read_phases(response_data, demand)
+  def read_phases_transitions(demand, response_data)
     response_data.try(:[], 'card').try(:[], 'phases_history')&.each do |phase|
-      create_transition_for_phase(phase, demand)
+      create_transition_for_phase_and_demand(phase, demand)
     end
   end
 
-  def create_transition_for_phase(phase, demand)
+  def create_transition_for_phase_and_demand(phase, demand)
     phase_id = phase['phase']['id']
     stage = Stage.where(integration_id: phase_id).first
     return if stage.blank? || demand.blank?
@@ -79,31 +80,5 @@ class PipefyReader
                                 end
     end
     demand_class_of_service
-  end
-
-  def create_empty_project_result_using_transition(demand, team)
-    first_transition = demand.demand_transitions.order(:last_time_in).first
-    return if first_transition.blank?
-
-    ProjectResultsRepository.instance.update_result_for_date(demand.project, demand.project_result.result_date) if demand.project_result.present?
-
-    result_date = define_result_date(demand, first_transition).to_date
-    ProjectResultsRepository.instance.create_empty_project_result(demand, team, result_date)
-
-    update_effort(demand)
-  end
-
-  def define_result_date(demand, first_transition)
-    end_transition = demand.demand_transitions.joins(:stage).where('stages.end_point = true').first
-    commitment_transition = demand.demand_transitions.joins(:stage).where('stages.commitment_point = true').first
-
-    end_transition&.last_time_in || commitment_transition&.last_time_in || first_transition&.last_time_in
-  end
-
-  def update_effort(demand)
-    effort_transition = demand.demand_transitions.joins(:stage).where('stages.compute_effort = true').first
-    return if effort_transition.blank?
-    effort = DemandService.instance.compute_effort_for_dates(effort_transition.last_time_in, effort_transition.last_time_out)
-    demand.update(effort: effort)
   end
 end

@@ -3,19 +3,24 @@
 class ProcessPipefyPipeJob < ApplicationJob
   def perform(full_reading)
     pipefy_configs = PipefyConfig.select('pipe_id, team_id').group(:pipe_id, :team_id)
-
-    pipefy_configs.each do |config|
-      pipe_response = JSON.parse(PipefyApiService.request_pipe_details_with_card_summary(config.pipe_id).body)
-      cards_in_pipe = read_cards_from_pipe_response(pipe_response, full_reading)
-      cards_in_pipe.each do |card_id|
-        card_response = JSON.parse(PipefyApiService.request_card_details(card_id).body)
-        PipefyReader.instance.process_card(config.team, card_response)
-      end
-      ProjectResultsRepository.instance.update_processed_project_results(cards_in_pipe)
-    end
+    processed_projects = process_pipe(full_reading, pipefy_configs)
+    processed_projects.uniq.each { |updated_project| updated_project.project_results.order(:result_date).joins(demands: :demand_transitions).map(&:compute_flow_metrics!) if updated_project.present? }
   end
 
   private
+
+  def process_pipe(full_reading, pipefy_configs)
+    processed_projects = []
+    pipefy_configs.each do |config|
+      pipe_response = JSON.parse(PipefyApiService.request_pipe_details_with_card_summary(config.pipe_id).body)
+      cards_in_pipe = read_cards_from_pipe_response(pipe_response, full_reading)
+      cards_in_pipe.sort.reverse.each do |card_id|
+        card_response = JSON.parse(PipefyApiService.request_card_details(card_id).body)
+        processed_projects << PipefyReader.instance.process_card(config.team, card_response)
+      end
+    end
+    processed_projects
+  end
 
   def read_cards_from_pipe_response(pipe_response, full_read)
     cards_in_pipe = []

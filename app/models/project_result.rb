@@ -46,6 +46,7 @@ class ProjectResult < ApplicationRecord
   scope :for_week, ->(week, year) { where('EXTRACT(WEEK FROM result_date) = :week AND EXTRACT(YEAR FROM result_date) = :year', week: week, year: year) }
   scope :until_week, ->(week, year) { where('(EXTRACT(WEEK FROM result_date) <= :week AND EXTRACT(YEAR FROM result_date) <= :year) OR (EXTRACT(YEAR FROM result_date) < :year)', week: week, year: year) }
   scope :in_month, ->(target_date) { where('result_date >= :start_date AND result_date <= :end_date', start_date: target_date.beginning_of_month, end_date: target_date.end_of_month) }
+  scope :manual_results, -> { left_outer_joins(demands: :demand_transitions).where('demand_transitions.id IS NULL').order(:result_date) }
 
   delegate :name, to: :team, prefix: true
 
@@ -70,7 +71,52 @@ class ProjectResult < ApplicationRecord
     qty_hours_upstream + qty_hours_downstream
   end
 
+  def add_demand!(demand)
+    demands << demand unless demands.include?(demand)
+    compute_flow_metrics!
+    save
+  end
+
+  def remove_demand!(demand)
+    demands.delete(demand) if demands.include?(demand)
+    return destroy if demands.count.zero?
+    compute_flow_metrics!
+  end
+
+  def compute_flow_metrics!
+    finished_in_date = project.demands.finished_in_date(result_date)
+    finished_bugs = project.demands.bug.finished_in_date(result_date)
+
+    update_result!(finished_bugs, finished_in_date)
+  end
+
   private
+
+  def compute_known_scope
+    results_without_transitions = project.project_results.manual_results
+
+    known_scope = DemandsRepository.instance.known_scope_to_date(project, result_date)
+    known_scope += results_without_transitions.last.known_scope if results_without_transitions.present?
+    known_scope
+  end
+
+  def update_result!(finished_bugs, finished_demands)
+    update(known_scope: compute_known_scope, throughput: finished_demands.count, qty_hours_upstream: 0, qty_hours_downstream: finished_demands.sum(&:effort),
+           qty_hours_bug: finished_bugs.sum(&:effort), qty_bugs_closed: finished_bugs.count, qty_bugs_opened: project.demands.bugs_opened_in_date_count(result_date),
+           remaining_days: project.remaining_days(result_date), flow_pressure: compute_flow_pressure, average_demand_cost: compute_average_demand_cost)
+  end
+
+  def compute_flow_pressure
+    project.total_gap / project.remaining_days(result_date)
+  end
+
+  def compute_average_demand_cost
+    cost_per_day / demands.count.to_f
+  end
+
+  def cost_per_day
+    cost_in_month / 30
+  end
 
   def calculate_average_demand_cost
     return 0 if team.blank? || team.outsourcing_cost&.zero? || throughput.zero?
