@@ -36,6 +36,10 @@ RSpec.describe TeamsController, type: :controller do
 
     describe 'GET #show' do
       let(:team) { Fabricate :team, company: company }
+      let(:first_team_member) { Fabricate :team_member, team: team }
+      let(:second_team_member) { Fabricate :team_member, team: team }
+      let(:third_team_member) { Fabricate :team_member, team: team }
+
       let!(:first_project) { Fabricate :project, end_date: 5.days.from_now }
       let!(:second_project) { Fabricate :project, end_date: 7.days.from_now }
       let!(:first_result) { Fabricate :project_result, project: first_project, team: team }
