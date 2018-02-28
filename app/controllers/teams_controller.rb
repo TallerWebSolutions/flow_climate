@@ -9,6 +9,7 @@ class TeamsController < AuthenticatedController
     @team_projects = @team.projects.order(end_date: :desc)
     @projects_summary = ProjectsSummaryObject.new(@team.projects)
     @report_data = ReportData.new(@team_projects) if @team_projects.present?
+    @strategic_report_data = StrategicReportData.new(@team.projects, @team.current_outsourcing_monthly_available_hours)
   end
 
   def new

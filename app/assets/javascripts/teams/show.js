@@ -20,6 +20,12 @@ $('#nav-item-charts').on('click', function(){
     $('#nav-item-charts').addClass('active');
 });
 
+$('#nav-item-strategic').on('click', function(){
+    hideAllComponents();
+    $('#strategic').show();
+    $('#nav-item-strategic').addClass('active');
+});
+
 $('#nav-item-members').on('click', function(){
     hideAllComponents();
     $('#members-table').show();
@@ -29,11 +35,13 @@ $('#nav-item-members').on('click', function(){
 function hideAllComponents() {
     $('#stamps').hide();
     $('#project-list').hide();
-    $('#members-table').hide();
     $('#charts').hide();
+    $('#strategic').hide();
+    $('#members-table').hide();
 
     $('#nav-item-stamps').removeClass('active');
     $('#nav-item-list').removeClass('active');
     $('#nav-item-charts').removeClass('active');
+    $('#nav-item-strategic').removeClass('active');
     $('#nav-item-members').removeClass('active');
 }
