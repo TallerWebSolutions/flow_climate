@@ -9,7 +9,7 @@
        data-columnname='<%= t('charts.ylabel.projects.text') %>'
        data-seriescolumndata='<%= @strategic_report_data.active_projects_count_data %>'
        data-linename='<%= t('charts.ylabel.total_hours.text') %>'
-       data-serieslinedata='<%= @strategic_report_data.total_hours_in_month %>'
+       data-serieslinedata='<%= @strategic_report_data.sold_hours_in_month %>'
        data-decimals='0'>
   </div>
 </div>
@@ -24,7 +24,7 @@
        data-ylinetitle='<%= t('charts.ylabel.total_hours.text') %>'
        data-series='<%= [
                           { name: t('charts.series.consumed_hours.text'), data: @strategic_report_data.consumed_hours_per_month },
-                          { name: t('charts.ylabel.total_hours.text'), data: @strategic_report_data.total_hours_in_month },
+                          { name: t('charts.ylabel.total_hours.text'), data: @strategic_report_data.sold_hours_in_month },
                           { name: t('charts.ylabel.available.text'), data: @strategic_report_data.available_hours_per_month }].to_json %>'
        data-prefix=''
        data-decimals='0'>
