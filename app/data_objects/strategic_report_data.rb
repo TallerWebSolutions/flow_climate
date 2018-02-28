@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
 class StrategicReportData
-  attr_reader :array_of_months, :active_projects_count_data, :total_hours_in_month, :consumed_hours_per_month, :available_hours_per_month, :flow_pressure_per_month_data, :money_per_month_data
+  attr_reader :array_of_months, :active_projects_count_data, :sold_hours_in_month, :consumed_hours_per_month, :available_hours_per_month, :flow_pressure_per_month_data, :money_per_month_data
 
   def initialize(company)
     @array_of_months = []
     @active_projects_count_data = []
-    @total_hours_in_month = []
+    @sold_hours_in_month = []
     @consumed_hours_per_month = []
     @available_hours_per_month = []
     @flow_pressure_per_month_data = []
@@ -14,7 +14,7 @@ class StrategicReportData
 
     assign_months_by_projects_dates(company)
     assign_active_projects_count_data(company)
-    assign_total_hours_per_month(company)
+    assign_sold_hours_per_month(company)
     assign_consumed_hours_per_month(company)
     assign_available_hours_per_month(company)
     assign_flow_pressure_per_month_data(company)
@@ -35,9 +35,9 @@ class StrategicReportData
     end
   end
 
-  def assign_total_hours_per_month(company)
+  def assign_sold_hours_per_month(company)
     @array_of_months.each do |month_year|
-      @total_hours_in_month << ProjectsRepository.instance.active_projects_in_month(company, Date.new(month_year[1], month_year[0], 1)).sum(&:hours_per_month)
+      @sold_hours_in_month << ProjectsRepository.instance.active_projects_in_month(company, Date.new(month_year[1], month_year[0], 1)).sum(&:hours_per_month)
     end
   end
 
