@@ -23,7 +23,7 @@
 #
 
 class TeamMember < ApplicationRecord
-  enum billable_type: { outsourcing: 0, consulting: 1, training: 2 }
+  enum billable_type: { outsourcing: 0, consulting: 1, training: 2, domestic_product: 3 }
 
   belongs_to :team
 

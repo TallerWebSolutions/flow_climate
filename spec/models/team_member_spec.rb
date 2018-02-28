@@ -2,7 +2,7 @@
 
 RSpec.describe TeamMember, type: :model do
   context 'enums' do
-    it { is_expected.to define_enum_for(:billable_type).with(outsourcing: 0, consulting: 1, training: 2) }
+    it { is_expected.to define_enum_for(:billable_type).with(outsourcing: 0, consulting: 1, training: 2, domestic_product: 3) }
   end
 
   context 'associations' do
