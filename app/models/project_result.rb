@@ -63,7 +63,7 @@ class ProjectResult < ApplicationRecord
 
   def define_automatic_attributes!
     available_hours = 0
-    available_hours = team.current_outsourcing_monthly_available_hours.to_f / 4 if team.present?
+    available_hours = available_hours_per_day if team.present?
     update(remaining_days: project.remaining_days(result_date), flow_pressure: current_flow_pressure, cost_in_month: team&.outsourcing_cost, average_demand_cost: calculate_average_demand_cost, available_hours: available_hours)
   end
 
@@ -91,6 +91,10 @@ class ProjectResult < ApplicationRecord
   end
 
   private
+
+  def available_hours_per_day
+    team.current_outsourcing_monthly_available_hours.to_f / 30
+  end
 
   def compute_known_scope
     results_without_transitions = project.project_results.manual_results

@@ -44,18 +44,22 @@ pt-BR:
     new:
       title: "Nova Empresa"
     show:
-      outsourcing_cost_per_week: "Custo do Outsourcing por Semana"
+      outsourcing_cost_per_month: "Custo do Outsourcing por Mês"
       members_billable_count: "Qtd Força Faturável (Outsourcing)"
-      management_cost_per_week: "Custo da gestão por semana"
+      management_cost_per_month: "Custo da gestão por mês"
       management_count: "Qtd Gestão"
       active_project_count: "Projetos Ativos"
       waiting_project_count: "Projetos Aguardando Início"
       red_project_count: "PROJETOS VERMELHOS"
       project_count: "Projetos"
-      operation_result_count: "Resultados da Operação"
       product_count: "Produtos"
       consulting_members_billable_count: "Qtd Força Faturável (consultoria)"
       customers_count: "Clientes"
+      current_hours_per_demand: "Horas/demanda do Mês"
+      current_month_throughput: "Throughput do Mês"
+      current_cost_per_hour: "Custo/Hora do Mês"
+      current_month_closed_bugs: "Bugs Fechados no Mês"
+      current_month_opened_bugs: "Bugs Abertos no Mês"
     edit:
       title: "Editar Empresa"
     add_user:
@@ -79,14 +83,11 @@ pt-BR:
       title: "Nova Informação Financeira"
     index:
       title: "Informações Financeiras"
-      last_cost_per_hour: "Último Custo/Hora"
       cost_per_hour: "Custo/Hora"
       project_delivered_hours_count: "Total de horas (Projetos)"
       delivered_hours: "Horas Entregues (Operação)"
       throughput: "Throughput"
       hours_per_demand: "Horas/Demanda"
-      last_hours_per_demand: "Última horas/demanda"
-      last_throughput: "Último throughput"
   team_members:
     index:
       title: "Membros do Time"

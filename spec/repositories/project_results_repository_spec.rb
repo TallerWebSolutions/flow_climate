@@ -13,48 +13,66 @@ RSpec.describe ProjectResultsRepository, type: :repository do
   let!(:end_stage) { Fabricate :stage, projects: [first_project], integration_id: '2481597', compute_effort: false, end_point: true }
 
   describe '#project_results_for_company_month' do
-    let!(:first_result) { Fabricate :project_result, project: first_project, result_date: Time.iso8601('2018-02-14T23:01:46'), qty_hours_downstream: 30 }
+    let!(:first_result) { Fabricate :project_result, project: first_project, result_date: Time.iso8601('2018-01-14T23:01:46'), qty_hours_downstream: 30 }
     let!(:second_result) { Fabricate :project_result, project: second_project, result_date: Time.iso8601('2018-02-14T23:01:46'), qty_hours_downstream: 50 }
-    let!(:third_result) { Fabricate :project_result, project: third_project, result_date: Time.iso8601('2018-01-11T23:01:46'), qty_hours_downstream: 90 }
+    let!(:third_result) { Fabricate :project_result, project: third_project, result_date: Time.iso8601('2018-02-11T23:01:46'), qty_hours_downstream: 90 }
     let!(:out_result) { Fabricate :project_result, result_date: Time.iso8601('2018-02-14T23:01:46'), qty_hours_downstream: 60 }
 
-    it { expect(ProjectResultsRepository.instance.project_results_for_company_month(company, Time.iso8601('2018-02-14T23:01:46').month, Time.iso8601('2018-02-14T23:01:46').year)).to match_array [first_result, second_result] }
+    it { expect(ProjectResultsRepository.instance.project_results_for_company_month(company, Time.iso8601('2018-02-14T23:01:46'))).to match_array [second_result, third_result] }
   end
 
-  describe '#consumed_hours_in_week' do
-    let!(:first_result) { Fabricate :project_result, project: first_project, result_date: Time.iso8601('2018-02-14T23:01:46'), qty_hours_upstream: 0, qty_hours_downstream: 30 }
+  describe '#consumed_hours_in_month' do
+    let!(:first_result) { Fabricate :project_result, project: first_project, result_date: Time.iso8601('2018-01-14T23:01:46'), qty_hours_upstream: 0, qty_hours_downstream: 30 }
     let!(:second_result) { Fabricate :project_result, project: second_project, result_date: Time.iso8601('2018-02-14T23:01:46'), qty_hours_upstream: 0, qty_hours_downstream: 50 }
     let!(:third_result) { Fabricate :project_result, project: third_project, result_date: Time.iso8601('2018-02-11T23:01:46'), qty_hours_upstream: 0, qty_hours_downstream: 90 }
     let!(:out_result) { Fabricate :project_result, result_date: Time.iso8601('2018-02-14T23:01:46'), qty_hours_downstream: 60 }
 
-    it { expect(ProjectResultsRepository.instance.consumed_hours_in_week(company, Time.iso8601('2018-02-14T23:01:46').to_date.cweek, Time.iso8601('2018-02-14T23:01:46').to_date.cwyear)).to eq 80 }
+    it { expect(ProjectResultsRepository.instance.consumed_hours_in_month(company, Time.iso8601('2018-02-14T23:01:46').to_date)).to eq 140 }
   end
 
-  describe '#th_in_week_for_company' do
-    let!(:first_result) { Fabricate :project_result, project: first_project, result_date: Time.iso8601('2018-02-14T23:01:46'), throughput: 30 }
+  describe '#consumed_hours_in_month' do
+    let!(:first_result) { Fabricate :project_result, project: first_project, result_date: Time.iso8601('2018-01-14T23:01:46'), qty_hours_upstream: 0, qty_hours_downstream: 30 }
+    let!(:second_result) { Fabricate :project_result, project: second_project, result_date: Time.iso8601('2018-02-14T23:01:46'), qty_hours_upstream: 0, qty_hours_downstream: 50 }
+    let!(:third_result) { Fabricate :project_result, project: third_project, result_date: Time.iso8601('2018-02-11T23:01:46'), qty_hours_upstream: 0, qty_hours_downstream: 90 }
+    let!(:out_result) { Fabricate :project_result, result_date: Time.iso8601('2018-02-14T23:01:46'), qty_hours_downstream: 60 }
+
+    it { expect(ProjectResultsRepository.instance.consumed_hours_in_month(company, Time.iso8601('2018-02-14T23:01:46'))).to eq 140 }
+  end
+
+  describe '#throughput_in_month_for_company' do
+    let!(:first_result) { Fabricate :project_result, project: first_project, result_date: Time.iso8601('2018-01-14T23:01:46'), throughput: 30 }
     let!(:second_result) { Fabricate :project_result, project: second_project, result_date: Time.iso8601('2018-02-14T23:01:46'), throughput: 50 }
     let!(:third_result) { Fabricate :project_result, project: third_project, result_date: Time.iso8601('2018-02-11T23:01:46'), throughput: 90 }
     let!(:out_result) { Fabricate :project_result, result_date: Time.iso8601('2018-02-14T23:01:46'), throughput: 60 }
 
-    it { expect(ProjectResultsRepository.instance.th_in_week_for_company(company, Time.iso8601('2018-02-14T23:01:46').to_date.cweek, Time.iso8601('2018-02-14T23:01:46').to_date.cwyear)).to eq 80 }
+    it { expect(ProjectResultsRepository.instance.throughput_in_month_for_company(company, Time.iso8601('2018-02-14T23:01:46'))).to eq 140 }
   end
 
-  describe '#bugs_opened_in_week' do
-    let!(:first_result) { Fabricate :project_result, project: first_project, result_date: Time.iso8601('2018-02-14T23:01:46'), qty_bugs_opened: 30 }
+  describe '#throughput_in_month_for_company' do
+    let!(:first_result) { Fabricate :project_result, project: first_project, result_date: Time.iso8601('2018-01-14T23:01:46'), throughput: 30 }
+    let!(:second_result) { Fabricate :project_result, project: second_project, result_date: Time.iso8601('2018-02-14T23:01:46'), throughput: 50 }
+    let!(:third_result) { Fabricate :project_result, project: third_project, result_date: Time.iso8601('2018-02-11T23:01:46'), throughput: 90 }
+    let!(:out_result) { Fabricate :project_result, result_date: Time.iso8601('2018-02-14T23:01:46'), throughput: 60 }
+
+    it { expect(ProjectResultsRepository.instance.throughput_in_month_for_company(company, Time.iso8601('2018-02-14T23:01:46').to_date)).to eq 140 }
+  end
+
+  describe '#bugs_opened_in_month' do
+    let!(:first_result) { Fabricate :project_result, project: first_project, result_date: Time.iso8601('2018-01-14T23:01:46'), qty_bugs_opened: 30 }
     let!(:second_result) { Fabricate :project_result, project: second_project, result_date: Time.iso8601('2018-02-14T23:01:46'), qty_bugs_opened: 50 }
     let!(:third_result) { Fabricate :project_result, project: third_project, result_date: Time.iso8601('2018-02-11T23:01:46'), qty_bugs_opened: 90 }
     let!(:out_result) { Fabricate :project_result, result_date: Time.iso8601('2018-02-14T23:01:46'), qty_bugs_opened: 60 }
 
-    it { expect(ProjectResultsRepository.instance.bugs_opened_in_week(company, Time.iso8601('2018-02-14T23:01:46').to_date.cweek, Time.iso8601('2018-02-14T23:01:46').to_date.cwyear)).to eq 80 }
+    it { expect(ProjectResultsRepository.instance.bugs_opened_in_month(company, Time.iso8601('2018-02-14T23:01:46').to_date)).to eq 140 }
   end
 
-  describe '#bugs_closed_in_week' do
-    let!(:first_result) { Fabricate :project_result, project: first_project, result_date: Time.iso8601('2018-02-14T23:01:46'), qty_bugs_closed: 30 }
+  describe '#bugs_closed_in_month' do
+    let!(:first_result) { Fabricate :project_result, project: first_project, result_date: Time.iso8601('2018-01-14T23:01:46'), qty_bugs_closed: 30 }
     let!(:second_result) { Fabricate :project_result, project: second_project, result_date: Time.iso8601('2018-02-14T23:01:46'), qty_bugs_closed: 50 }
     let!(:third_result) { Fabricate :project_result, project: third_project, result_date: Time.iso8601('2018-02-11T23:01:46'), qty_bugs_closed: 90 }
     let!(:out_result) { Fabricate :project_result, result_date: Time.iso8601('2018-02-14T23:01:46'), qty_bugs_closed: 60 }
 
-    it { expect(ProjectResultsRepository.instance.bugs_closed_in_week(company, Time.iso8601('2018-02-14T23:01:46').to_date.cweek, Time.iso8601('2018-02-14T23:01:46').to_date.cwyear)).to eq 80 }
+    it { expect(ProjectResultsRepository.instance.bugs_closed_in_month(company, Time.iso8601('2018-02-14T23:01:46').to_date)).to eq 140 }
   end
 
   describe '#scope_in_week_for_project' do

@@ -62,19 +62,20 @@ class Company < ApplicationRecord
     customers.sum(&:products_count)
   end
 
-  def last_cost_per_hour
-    finance = financial_informations.order(finances_date: :desc).first
-    finance&.cost_per_hour
+  def current_cost_per_hour
+    finance = financial_informations.where('finances_date <= current_date').order(finances_date: :desc).first
+    return 0 if finance.blank?
+    return compute_current_cost_per_hour(finance) if consumed_hours_in_month.positive?
+    finance.expenses_total
   end
 
-  def last_hours_per_demand
-    finance = financial_informations.order(finances_date: :desc).first
-    finance&.hours_per_demand
+  def current_hours_per_demand
+    consumed_hours_in_month.to_f / current_month_throughput.to_f if current_month_throughput.positive?
+    consumed_hours_in_month
   end
 
-  def last_throughput
-    finance = financial_informations.order(finances_date: :desc).first
-    finance&.throughput_operation_result
+  def current_month_throughput
+    @throughput_in_month ||= ProjectResultsRepository.instance.throughput_in_month_for_company(self)
   end
 
   def last_week_scope
@@ -89,20 +90,20 @@ class Company < ApplicationRecord
     teams.sum(&:current_outsourcing_monthly_available_hours)
   end
 
-  def consumed_hours_in_week(week, year)
-    ProjectResultsRepository.instance.consumed_hours_in_week(self, week, year)
+  def consumed_hours_in_month(date = Time.zone.today)
+    @consumed_hours_in_month ||= ProjectResultsRepository.instance.consumed_hours_in_month(self, date)
   end
 
-  def th_in_week(week, year)
-    ProjectResultsRepository.instance.th_in_week_for_company(self, week, year)
+  def throughput_in_month(date = Time.zone.today)
+    ProjectResultsRepository.instance.throughput_in_month_for_company(self, date)
   end
 
-  def bugs_opened_in_week(week, year)
-    ProjectResultsRepository.instance.bugs_opened_in_week(self, week, year)
+  def bugs_opened_in_month(date = Time.zone.today)
+    ProjectResultsRepository.instance.bugs_opened_in_month(self, date)
   end
 
-  def bugs_closed_in_week(week, year)
-    ProjectResultsRepository.instance.bugs_closed_in_week(self, week, year)
+  def bugs_closed_in_month(date = Time.zone.today)
+    ProjectResultsRepository.instance.bugs_closed_in_month(self, date)
   end
 
   def top_three_flow_pressure
@@ -131,5 +132,11 @@ class Company < ApplicationRecord
 
   def total_active_consumed_hours
     projects.active.sum(&:total_hours_consumed)
+  end
+
+  private
+
+  def compute_current_cost_per_hour(finance)
+    finance.expenses_total / consumed_hours_in_month
   end
 end

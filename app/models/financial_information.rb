@@ -39,7 +39,7 @@ class FinancialInformation < ApplicationRecord
   end
 
   def project_delivered_hours
-    ProjectResultsRepository.instance.project_results_for_company_month(company, finances_date.month, finances_date.year).sum(&:project_delivered_hours)
+    ProjectResultsRepository.instance.project_results_for_company_month(company, finances_date).sum(&:project_delivered_hours)
   end
 
   def hours_delivered_operation_result

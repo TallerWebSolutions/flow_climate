@@ -53,7 +53,7 @@ RSpec.describe ProjectsRepository, type: :repository do
         it { expect(ProjectsRepository.instance.flow_pressure_to_month(company, 2.months.ago.to_date)).to eq 0 }
       end
       context 'if in the future, returns the current flow pressure to the project' do
-        it { expect(ProjectsRepository.instance.flow_pressure_to_month(company, 1.month.from_now.to_date)).to eq 5.357142857142858 }
+        it { expect(ProjectsRepository.instance.flow_pressure_to_month(company, 1.month.from_now.to_date)).to eq 5.172413793103448 }
       end
     end
   end
