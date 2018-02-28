@@ -62,14 +62,14 @@ describe ProjectsSummaryObject, type: :data_object do
 
       it { expect(projects_summary.percentage_remaining_days).to eq((projects_summary.total_remaining_days.to_f / projects_summary.total_days.to_f) * 100) }
     end
-    context 'when the total_days is zero' do
+    context 'when the start and end dates are in the same day' do
       let!(:project) { Fabricate :project, start_date: Time.zone.today, end_date: Time.zone.today, value: 0 }
       let!(:project_result) { Fabricate :project_result, project: project }
       let!(:other_project_result) { Fabricate :project_result, project: project }
 
       subject(:projects_summary) { ProjectsSummaryObject.new(Project.all) }
 
-      it { expect(projects_summary.percentage_remaining_days).to eq 0 }
+      it { expect(projects_summary.percentage_remaining_days).to eq 100 }
     end
   end
 

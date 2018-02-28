@@ -9,12 +9,12 @@
   </div>
 
   <div class="col-xs-2 green-stamp">
-    <div class="stamp-title"><%= t('companies.show.outsourcing_cost_per_week') %></div>
-    <div class="stamp-content"><%= number_to_currency(@company.outsourcing_cost / 4) %></div>
+    <div class="stamp-title"><%= t('companies.show.outsourcing_cost_per_month') %></div>
+    <div class="stamp-content"><%= number_to_currency(@company.outsourcing_cost) %></div>
   </div>
   <div class="col-xs-2 green-stamp">
-    <div class="stamp-title"><%= t('companies.show.management_cost_per_week') %></div>
-    <div class="stamp-content"><%= number_to_currency(@company.management_cost / 4) %></div>
+    <div class="stamp-title"><%= t('companies.show.management_cost_per_month') %></div>
+    <div class="stamp-content"><%= number_to_currency(@company.management_cost) %></div>
   </div>
   <div class="col-xs-2 stamp">
     <div class="stamp-title"><%= t('companies.show.members_billable_count') %></div>
@@ -27,34 +27,44 @@
 </div>
 
 <div class="row">
-  <div class="col-xs-3 stamp">
+  <div class="col-xs-2 stamp">
     <div class="stamp-title"><%= t('general.last_week_scope') %></div>
     <div class="stamp-content"><%= @company.last_week_scope %></div>
   </div>
-  <div class="col-xs-3 stamp">
-    <div class="stamp-title"><%= t('financial_informations.index.last_throughput') %></div>
-    <div class="stamp-content"><%= @company.last_throughput %></div>
+  <div class="col-xs-2 stamp">
+    <div class="stamp-title"><%= t('companies.show.current_month_throughput') %></div>
+    <div class="stamp-content"><%= @company.current_month_throughput %></div>
   </div>
-  <div class="col-xs-3 stamp">
-    <div class="stamp-title"><%= t('financial_informations.index.last_cost_per_hour') %></div>
-    <div class="stamp-content"><%= number_to_currency(@company.last_cost_per_hour) %></div>
+  <div class="col-xs-2 stamp">
+    <div class="stamp-title"><%= t('companies.show.current_month_opened_bugs') %></div>
+    <div class="stamp-content"><%= @company.bugs_opened_in_month %></div>
   </div>
-  <div class="col-xs-3 stamp">
-    <div class="stamp-title"><%= t('financial_informations.index.last_hours_per_demand') %></div>
-    <div class="stamp-content"><%= number_with_precision(@company.last_hours_per_demand, precision: 2) %></div>
+  <div class="col-xs-2 stamp">
+    <div class="stamp-title"><%= t('companies.show.current_month_closed_bugs') %></div>
+    <div class="stamp-content"><%= @company.bugs_closed_in_month %></div>
+  </div>
+  <div class="col-xs-2 stamp">
+    <div class="stamp-title"><%= t('companies.show.current_cost_per_hour') %></div>
+    <div class="stamp-content">
+      <%= number_to_currency(@company.current_cost_per_hour) %>
+    </div>
+  </div>
+  <div class="col-xs-2 stamp">
+    <div class="stamp-title"><%= t('companies.show.current_hours_per_demand') %></div>
+    <div class="stamp-content"><%= number_with_precision(@company.current_hours_per_demand, precision: 2) %></div>
   </div>
 </div>
 
 <div class="row">
   <%= link_to company_customers_path(@company) do %>
-    <div class="col-xs-2 stamp">
+    <div class="col-xs-3 stamp">
       <div class="stamp-title"><%= t('companies.show.customers_count') %></div>
       <div class="stamp-content"><%= @company.customers_count %></div>
     </div>
   <% end %>
 
   <%= link_to company_products_path(@company) do %>
-    <div class="col-xs-2 stamp">
+    <div class="col-xs-3 stamp">
       <div class="stamp-title"><%= t('companies.show.product_count') %></div>
       <div class="stamp-content"><%= @company.products_count %></div>
     </div>
@@ -78,13 +88,6 @@
     <div class="col-xs-2 stamp">
       <div class="stamp-title"><%= t('companies.show.active_project_count') %></div>
       <div class="stamp-content"><%= @company.active_projects_count %></div>
-    </div>
-  <% end %>
-
-  <%= link_to company_operation_results_path(@company) do %>
-    <div class="col-xs-2 stamp">
-      <div class="stamp-title"><%= t('companies.show.operation_result_count') %></div>
-      <div class="stamp-content"><%= @company.operation_results.count %></div>
     </div>
   <% end %>
 </div>
