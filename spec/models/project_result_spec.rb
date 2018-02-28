@@ -143,4 +143,7 @@ RSpec.describe ProjectResult, type: :model do
     let(:result) { Fabricate :project_result, qty_hours_upstream: 100, qty_hours_downstream: 50 }
     it { expect(result.total_hours).to eq 150 }
   end
+
+  pending '#add_demand!'
+  pending '#remove_demand!'
 end

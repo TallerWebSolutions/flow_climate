@@ -51,4 +51,6 @@ RSpec.describe DemandsRepository, type: :repository do
       end
     end
   end
+
+  pending '#known_scope_to_date'
 end

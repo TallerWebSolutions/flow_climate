@@ -38,7 +38,7 @@ RSpec.describe DemandsController, type: :controller do
 
       context 'valid parameters' do
         before { get :new, params: { company_id: company, project_id: project, project_result_id: project_result } }
-        it 'instantiates a new Company and renders the template' do
+        it 'instantiates a new Demand and renders the template' do
           expect(response).to render_template :new
           expect(assigns(:company)).to eq company
           expect(assigns(:project)).to eq project
@@ -73,13 +73,13 @@ RSpec.describe DemandsController, type: :controller do
 
       context 'passing valid parameters' do
         let(:date_to_demand) { 1.day.ago.change(usec: 0) }
-        it 'creates the new financial information to the company and redirects to its show' do
-          expect(ProjectResultsRepository.instance).to receive(:update_result_for_date).with(project, date_to_demand).once
+        it 'creates the new demand and redirects' do
           post :create, params: { company_id: company, project_id: project, project_result_id: project_result, demand: { demand_id: 'xpto', demand_type: 'bug', class_of_service: 'expedite', effort: 5, created_date: date_to_demand, commitment_date: date_to_demand, end_date: date_to_demand } }
 
           expect(assigns(:company)).to eq company
           expect(assigns(:project)).to eq project
           expect(assigns(:project_result)).to eq project_result
+          expect(assigns(:project_result).demands).to eq [Demand.last]
 
           expect(Demand.last.project_result).to eq project_result
           expect(Demand.last.demand_id).to eq 'xpto'
@@ -95,7 +95,7 @@ RSpec.describe DemandsController, type: :controller do
       context 'passing invalid parameters' do
         context 'invalid attributes' do
           before { post :create, params: { company_id: company, project_id: project, project_result_id: project_result, demand: { finances: nil, income_total: nil, expenses_total: nil } } }
-          it 'does not create the company and re-render the template with the errors' do
+          it 'does not create the demand and re-render the template with the errors' do
             expect(Demand.last).to be_nil
             expect(response).to render_template :new
             expect(assigns(:demand).errors.full_messages).to eq ['Id da Demanda não pode ficar em branco', 'Tipo da Demanda não pode ficar em branco']
@@ -135,7 +135,7 @@ RSpec.describe DemandsController, type: :controller do
       end
 
       context 'passing an invalid ID' do
-        context 'non-existent operation result' do
+        context 'non-existent project result' do
           before { delete :destroy, params: { company_id: company, project_id: project, project_result_id: 'foo', id: demand } }
           it { expect(response).to have_http_status :not_found }
         end
@@ -222,8 +222,6 @@ RSpec.describe DemandsController, type: :controller do
 
       context 'passing valid parameters' do
         it 'updates the demand and redirects to projects index' do
-          expect(ProjectResultsRepository.instance).to receive(:update_result_for_date).with(project, created_date).once
-          expect(ProjectResultsRepository.instance).to receive(:update_result_for_date).with(project, end_date).once
           put :update, params: { company_id: company, project_id: project, project_result_id: project_result, id: demand, demand: { demand_id: 'xpto', demand_type: 'bug', class_of_service: 'expedite', effort: 5, created_date: created_date, commitment_date: created_date, end_date: end_date } }
           created_demand = Demand.last
           expect(created_demand.demand_id).to eq 'xpto'
