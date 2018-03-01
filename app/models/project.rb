@@ -136,8 +136,7 @@ class Project < ApplicationRecord
     project_results.sum(&:throughput)
   end
 
-  def total_throughput_for(date)
-    return total_throughput if date.blank?
+  def total_throughput_for(date = Time.zone.today)
     project_results.for_week(date.to_date.cweek, date.to_date.cwyear).sum(:throughput)
   end
 

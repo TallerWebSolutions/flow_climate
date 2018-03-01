@@ -29,6 +29,7 @@ class UserNotifierMailer < ApplicationMailer
     @next_starting_project = company.next_starting_project
     @next_finishing_project = company.next_finishing_project
     @top_three_flow_pressure = company.top_three_flow_pressure
+    @top_three_throughput = company.top_three_throughput
     @demands_delivered = company.demands_delivered_last_week
     @red_projects = company.projects.running.select(&:red?)
   end

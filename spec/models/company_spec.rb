@@ -323,15 +323,25 @@ RSpec.describe Company, type: :model do
     let(:customer) { Fabricate :customer, company: company }
     let(:other_customer) { Fabricate :customer, company: company }
 
-    let!(:starting_project) { Fabricate :project, customer: customer, status: :waiting, initial_scope: 5, start_date: Time.zone.today, end_date: 3.days.from_now }
-    let!(:first_project) { Fabricate :project, customer: customer, status: :executing, initial_scope: 10, start_date: Time.zone.today, end_date: 4.days.from_now }
-    let!(:second_project) { Fabricate :project, customer: other_customer, status: :executing, initial_scope: 40, start_date: 1.day.from_now, end_date: 5.days.from_now }
-    let!(:third_project) { Fabricate :project, customer: other_customer, status: :executing, initial_scope: 20, start_date: 2.days.from_now, end_date: 6.days.from_now }
+    let!(:starting_project) { Fabricate :project, customer: customer, status: :waiting, initial_scope: 5, start_date: 2.weeks.ago.to_date, end_date: 3.days.from_now }
+    let!(:first_project) { Fabricate :project, customer: customer, status: :executing, initial_scope: 10, start_date: 2.weeks.ago.to_date, end_date: 4.days.from_now }
+    let!(:second_project) { Fabricate :project, customer: other_customer, status: :executing, initial_scope: 40, start_date: 2.weeks.ago.to_date, end_date: 5.days.from_now }
+    let!(:third_project) { Fabricate :project, customer: other_customer, status: :executing, initial_scope: 30, start_date: 2.weeks.ago.to_date, end_date: 6.days.from_now }
+
+    let!(:first_project_result) { Fabricate :project_result, result_date: 1.week.ago.to_date, project: first_project, throughput: 20, known_scope: first_project.initial_scope }
+    let!(:second_project_result) { Fabricate :project_result, result_date: 2.weeks.ago.to_date, project: first_project, throughput: 60, known_scope: first_project.initial_scope }
+    let!(:third_project_result) { Fabricate :project_result, result_date: 1.week.ago.to_date, project: second_project, throughput: 10, known_scope: second_project.initial_scope }
+    let!(:fourth_project_result) { Fabricate :project_result, result_date: 1.week.ago.to_date, project: third_project, throughput: 40, known_scope: third_project.initial_scope }
   end
 
   context '#top_three_flow_pressure' do
     include_context 'projects to company bulletin'
     it { expect(company.top_three_flow_pressure).to eq [second_project, third_project, first_project] }
+  end
+
+  context '#top_three_throughput' do
+    include_context 'projects to company bulletin'
+    it { expect(company.top_three_throughput).to eq [third_project, first_project, second_project] }
   end
 
   context '#next_starting_project' do

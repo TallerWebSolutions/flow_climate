@@ -288,3 +288,6 @@ pt-BR:
     validations:
       result_date_less_than_project_start_date: "A data do resultado deve ser maior ou igual a data de início do projeto."
       result_date_greater_than_project_start_date: "A data do resultado deve ser menor ou igual a data final do projeto."
+  projects:
+    portfolio_bulletin:
+      top_three_throughput: "Top 3 Throughput"

@@ -7,6 +7,7 @@ en:
       next_finishing_project: "Next finishing project"
       next_starting_project: "Next project to start"
       top_three_flow_pressure: "Top 3 flow pressure"
+      top_three_throughput: "Top 3 Throughput"
     no_project_finishing: "No project finishing"
     no_project_finishing_week: "No project finishing this week"
     no_project_starting: "No project starting"
@@ -24,3 +25,4 @@ en:
       alert_value: "Trigger value: %{alert_value}"
       risk_type: "Risk type: %{risk_type}"
       previous_color: "Previous alert color: %{previous_color}"
+    no_top_three_throughput: "There is no projects"
