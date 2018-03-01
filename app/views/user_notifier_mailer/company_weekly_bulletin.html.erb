@@ -68,6 +68,17 @@
       <%= t('projects.no_top_three_flow_pressure') %>
     <% end %>
 
+    <h3><%= t('projects.portfolio_bulletin.top_three_throughput') %></h3>
+    <% if @top_three_throughput.present? %>
+      <% @top_three_throughput.each do |project| %>
+        <ul>
+          <li><%= link_to "#{project.full_name} (#{l(project.end_date)}) [#{number_with_precision(project.total_throughput_for(1.week.ago.to_date) , precision: 3)}]", company_project_url(@company, project) %></li>
+        </ul>
+      <% end %>
+    <% else %>
+      <%= t('projects.no_top_three_throughput') %>
+    <% end %>
+
     <h3><%= t('projects.portfolio_bulletin.delivered_demands') %></h3>
     <% if @demands_delivered.present? %>
       <% @demands_delivered.each do |demand| %>
