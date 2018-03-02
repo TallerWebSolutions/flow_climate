@@ -25,6 +25,7 @@
 #  cost_in_month        :decimal(, )      not null
 #  average_demand_cost  :decimal(, )      not null
 #  available_hours      :decimal(, )      not null
+#  manual_input         :boolean          default(FALSE)
 #
 # Indexes
 #
@@ -97,11 +98,8 @@ class ProjectResult < ApplicationRecord
   end
 
   def compute_known_scope
-    results_without_transitions = project.project_results.manual_results
-
-    known_scope = DemandsRepository.instance.known_scope_to_date(project, result_date)
-    known_scope += results_without_transitions.last.known_scope if results_without_transitions.present?
-    known_scope
+    last_manual_scope = ProjectResultsRepository.instance.last_manual_entry(project)&.known_scope || 0
+    DemandsRepository.instance.known_scope_to_date(project, result_date) + last_manual_scope
   end
 
   def update_result!(finished_bugs, finished_demands)
@@ -111,6 +109,7 @@ class ProjectResult < ApplicationRecord
   end
 
   def compute_flow_pressure
+    return 0 if project.remaining_days(result_date).zero?
     project.total_gap / project.remaining_days(result_date)
   end
 

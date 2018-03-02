@@ -91,6 +91,10 @@ class ProjectResultsRepository
     project_result.add_demand!(demand)
   end
 
+  def last_manual_entry(project)
+    project.project_results.left_outer_joins(demands: :demand_transitions).where(demands: { demand_transitions: { demand_id: nil } }).order(:result_date).last
+  end
+
   private
 
   def build_hash_data_with_sum(projects, field)

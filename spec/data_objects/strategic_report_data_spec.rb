@@ -31,11 +31,11 @@ RSpec.describe StrategicReportData, type: :service do
         strategic_data = StrategicReportData.new(company.projects, company.total_available_hours)
         expect(strategic_data.array_of_months).to eq [[3.months.ago.to_date.month, 3.months.ago.to_date.year], [2.months.ago.to_date.month, 2.months.ago.to_date.year], [1.month.ago.to_date.month, 1.month.ago.to_date.year], [Time.zone.today.month, Time.zone.today.year], [1.month.from_now.to_date.month, 1.month.from_now.to_date.year], [2.months.from_now.to_date.month, 2.months.from_now.to_date.year], [3.months.from_now.to_date.month, 3.months.from_now.to_date.year]]
         expect(strategic_data.active_projects_count_data).to eq [2, 2, 0, 0, 2, 4, 2]
-        expect(strategic_data.sold_hours_in_month).to eq [1451.6129032258063, 1451.6129032258063, 0, 0, 2062.5, 7094.758064516129, 5032.258064516129]
+        expect(strategic_data.sold_hours_in_month).to eq [1406.25, 1406.25, 0, 0, 2129.032258064516, 7004.032258064516, 4875.0]
         expect(strategic_data.consumed_hours_per_month).to eq [100, 0, 0, 0, 100, 100, 0]
         expect(strategic_data.available_hours_per_month).to eq [180, 180, 180, 180, 180, 180, 180]
-        expect(strategic_data.flow_pressure_per_month_data).to eq [4.9, 0, 0, 0, 4.9, 10.190322580645162, 5.466666666666667]
-        expect(strategic_data.money_per_month_data).to eq [3_342_019.3548387107, 3_342_019.3548387107, 0.0, 0.0, 10_031.249999999996, 10_343.830645161288, 312.5806451612904]
+        expect(strategic_data.flow_pressure_per_month_data).to eq [4.9, 0.0, 0, 0, 4.9, 10.366666666666667, 5.290322580645161]
+        expect(strategic_data.money_per_month_data).to eq [3237581.249999999, 3237581.249999999, 0.0, 0.0, 10354.838709677422, 10657.651209677422, 302.8124999999999]
       end
     end
 

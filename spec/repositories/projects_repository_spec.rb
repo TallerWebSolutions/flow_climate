@@ -52,8 +52,8 @@ RSpec.describe ProjectsRepository, type: :repository do
       context 'if in the past, returns zero' do
         it { expect(ProjectsRepository.instance.flow_pressure_to_month(company.projects, 2.months.ago.to_date)).to eq 0 }
       end
-      context 'if in the future, returns the current flow pressure to the project' do
-        it { expect(ProjectsRepository.instance.flow_pressure_to_month(company.projects, 1.month.from_now.to_date)).to eq 5.172413793103448 }
+      context 'if in the future, returns the future flow pressure to the project' do
+        it { expect(ProjectsRepository.instance.flow_pressure_to_month(company.projects, 1.month.from_now.to_date)).to eq 4.6875 }
       end
     end
   end

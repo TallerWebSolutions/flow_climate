@@ -154,13 +154,14 @@ RSpec.describe Company, type: :model do
       let(:other_customer_project) { Fabricate :project, customer: other_customer, product: other_product }
       let(:other_company_project) { Fabricate :project, customer: other_company_customer, product: other_company_product }
 
-      let!(:first_result) { Fabricate :project_result, project: project, result_date: 1.week.ago, qty_hours_downstream: 10, qty_hours_upstream: 20 }
-      let!(:second_result) { Fabricate :project_result, project: project, result_date: 1.week.ago, qty_hours_downstream: 20, qty_hours_upstream: 30 }
-      let!(:third_result) { Fabricate :project_result, project: other_project, result_date: 1.week.ago, qty_hours_downstream: 5, qty_hours_upstream: 40 }
-      let!(:fourth_result) { Fabricate :project_result, project: other_customer_project, result_date: 1.week.ago, qty_hours_downstream: 50, qty_hours_upstream: 10 }
-      let!(:fifth_result) { Fabricate :project_result, project: other_company_project, result_date: 1.week.ago, qty_hours_downstream: 100, qty_hours_upstream: 50 }
+      let!(:first_result) { Fabricate :project_result, project: project, result_date: Date.new(2018, 3, 2), qty_hours_downstream: 10, qty_hours_upstream: 20 }
+      let!(:second_result) { Fabricate :project_result, project: project, result_date: Date.new(2018, 3, 1), qty_hours_downstream: 20, qty_hours_upstream: 30 }
+      let!(:third_result) { Fabricate :project_result, project: other_project, result_date: Date.new(2018, 2, 25), qty_hours_downstream: 5, qty_hours_upstream: 40 }
+      let!(:fourth_result) { Fabricate :project_result, project: other_customer_project, result_date: Date.new(2018, 2, 28), qty_hours_downstream: 50, qty_hours_upstream: 10 }
+      let!(:fifth_result) { Fabricate :project_result, project: other_company_project, result_date: Date.new(2018, 1, 25), qty_hours_downstream: 100, qty_hours_upstream: 50 }
 
-      it { expect(company.current_cost_per_hour.to_f).to eq 1.0810810810810811 }
+      before { allow(Time.zone).to receive(:today) { Date.new(2018, 3, 2) } }
+      it { expect(company.current_cost_per_hour.to_f).to eq 2.5 }
     end
 
     context 'having no finances' do

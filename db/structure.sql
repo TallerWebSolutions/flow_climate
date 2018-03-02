@@ -391,7 +391,8 @@ CREATE TABLE project_results (
     remaining_days integer NOT NULL,
     cost_in_month numeric NOT NULL,
     average_demand_cost numeric NOT NULL,
-    available_hours numeric NOT NULL
+    available_hours numeric NOT NULL,
+    manual_input boolean DEFAULT false
 );
 
 
@@ -1429,6 +1430,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20180221160521'),
 ('20180223211920'),
 ('20180224031304'),
-('20180224142451');
+('20180224142451'),
+('20180302152036');
 
 
