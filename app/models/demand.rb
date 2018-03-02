@@ -18,6 +18,7 @@
 #  url               :string
 #  class_of_service  :integer          default("standard"), not null
 #  project_id        :integer          not null
+#  assignees_count   :integer          not null
 #
 # Indexes
 #
@@ -36,7 +37,7 @@ class Demand < ApplicationRecord
   belongs_to :project_result, counter_cache: true
   has_many :demand_transitions, dependent: :destroy
 
-  validates :project, :demand_id, :demand_type, :class_of_service, presence: true
+  validates :project, :demand_id, :demand_type, :class_of_service, :assignees_count, presence: true
 
   scope :bugs_opened_in_date_count, ->(result_date) { bug.joins(:demand_transitions).having('MIN(DATE(demand_transitions.last_time_in)) = :result_date', result_date: result_date).count }
   scope :finished_in_date, ->(result_date) { joins(demand_transitions: :stage).where('stages.end_point = true AND date(demand_transitions.last_time_in) = :result_date', result_date: result_date) }

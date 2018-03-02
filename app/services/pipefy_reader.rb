@@ -31,8 +31,12 @@ class PipefyReader
 
   def create_demand(project, response_data)
     demand_id = response_data.try(:[], 'card').try(:[], 'id')
+    assignees_count = response_data.try(:[], 'card').try(:[], 'assignees')&.uniq&.count || 1
     url = response_data.try(:[], 'card').try(:[], 'url')
-    DemandsRepository.instance.create_or_update_demand(project, demand_id, read_demand_type(response_data), read_class_of_service(response_data), url)
+
+    demand = Demand.where(project: project, demand_id: demand_id).first_or_initialize
+    demand.update(demand_type: read_demand_type(response_data), class_of_service: read_class_of_service(response_data), assignees_count: assignees_count, url: url)
+    demand
   end
 
   def read_phases_transitions(demand, response_data)
@@ -81,4 +85,6 @@ class PipefyReader
     end
     demand_class_of_service
   end
+
+  def read_assignees_count(response_data); end
 end
