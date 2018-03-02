@@ -24,17 +24,22 @@
   </div>
 
   <div class="row">
-    <div class='col-xs-4 form-group <%= 'has-error' if @demand.errors[:created_date].present? %>'>
+    <div class='col-xs-3 form-group <%= 'has-error' if @demand.errors[:assignees_count].present? %>'>
+      <%= f.label :assignees_count, class: 'control-label required' %>
+      <%= f.number_field :assignees_count, class: 'form-control', step: 1 %>
+      <span class="help-block"><%= @demand.errors[:assignees_count].join(', ') %></span>
+    </div>
+    <div class='col-xs-3 form-group <%= 'has-error' if @demand.errors[:created_date].present? %>'>
       <%= f.label :created_date, class: 'control-label required' %>
       <%= f.datetime_field :created_date, class: 'form-control' %>
       <span class="help-block"><%= @demand.errors[:created_date].join(', ') %></span>
     </div>
-    <div class='col-xs-4 form-group <%= 'has-error' if @demand.errors[:commitment_date].present? %>'>
+    <div class='col-xs-3 form-group <%= 'has-error' if @demand.errors[:commitment_date].present? %>'>
       <%= f.label :commitment_date, class: 'control-label' %>
       <%= f.datetime_field :commitment_date, class: 'form-control' %>
       <span class="help-block"><%= @demand.errors[:commitment_date].join(', ') %></span>
     </div>
-    <div class='col-xs-4 form-group <%= 'has-error' if @demand.errors[:end_date].present? %>'>
+    <div class='col-xs-3 form-group <%= 'has-error' if @demand.errors[:end_date].present? %>'>
       <%= f.label :end_date, class: 'control-label' %>
       <%= f.datetime_field :end_date, class: 'form-control' %>
       <span class="help-block"><%= @demand.errors[:end_date].join(', ') %></span>

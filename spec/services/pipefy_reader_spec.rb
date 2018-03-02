@@ -16,7 +16,7 @@ RSpec.describe PipefyReader, type: :service do
     let!(:end_stage) { Fabricate :stage, projects: [first_project, second_project, third_project], integration_id: '2481597', compute_effort: false, end_point: true }
     let!(:other_end_stage) { Fabricate :stage, integration_id: '2480504', compute_effort: false, end_point: true }
 
-    let(:first_card_response) { { data: { card: { id: '5140999', comments: [], fields: [{ name: 'Descrição da pesquisa', value: 'teste' }, { name: 'Title', value: 'Página dos colunistas' }, { name: 'Type', value: 'bUG' }, { name: 'JiraKey', value: 'PD-46' }, { name: 'Class of Service', value: 'Padrão' }, { name: 'Project', value: 'bLa | XpTO | FASE 1' }], phases_history: [{ phase: { id: '2481595' }, firstTimeIn: '2018-02-22T17:09:58-03:00', lastTimeOut: '2018-02-26T17:09:58-03:00' }, { phase: { id: '2481597' }, firstTimeIn: '2018-02-23T17:09:58-03:00', lastTimeOut: nil }], pipe: { id: '356355' }, url: 'http://app.pipefy.com/pipes/356355#cards/5140999' } } }.with_indifferent_access }
+    let(:first_card_response) { { data: { card: { id: '5140999', assignees: [{ id: '101381' }, { id: '101381' }, { id: '101382' }], comments: [], fields: [{ name: 'Descrição da pesquisa', value: 'teste' }, { name: 'Title', value: 'Página dos colunistas' }, { name: 'Type', value: 'bUG' }, { name: 'JiraKey', value: 'PD-46' }, { name: 'Class of Service', value: 'Padrão' }, { name: 'Project', value: 'bLa | XpTO | FASE 1' }], phases_history: [{ phase: { id: '2481595' }, firstTimeIn: '2018-02-22T17:09:58-03:00', lastTimeOut: '2018-02-26T17:09:58-03:00' }, { phase: { id: '2481597' }, firstTimeIn: '2018-02-23T17:09:58-03:00', lastTimeOut: nil }], pipe: { id: '356355' }, url: 'http://app.pipefy.com/pipes/356355#cards/5140999' } } }.with_indifferent_access }
     let(:second_card_response) { { data: { card: { id: '5141010', comments: [], fields: [{ name: 'Title', value: 'Simplicação dos passos para cadastrar um novo artigo pelo colunista' }, { name: 'Type', value: 'chORE' }, { name: 'JiraKey', value: 'PD-119' }, { name: 'Class of Service', value: 'Expedição' }, { name: 'Project', value: 'bLa | XpTO | FASE 2' }], phases_history: [{ phase: { id: '2481595' }, firstTimeIn: '2018-02-23T17:10:40-03:00', lastTimeOut: '2018-02-27T17:10:40-03:00' }, { phase: { id: '2481597' }, firstTimeIn: '2018-02-23T17:10:40-03:00', lastTimeOut: nil }], pipe: { id: '356355' }, url: 'http://app.pipefy.com/pipes/356355#cards/5141010' } } }.with_indifferent_access }
     let(:third_card_response) { { data: { card: { id: '5141022', comments: [], fields: [{ name: 'Title', value: 'Agendamento de artigo do colunista' }, { name: 'Type', value: 'Nova Funcionalidade' }, { name: 'JiraKey', value: 'PD-124' }, { name: 'Class of Service', value: 'Data Fixa' }, { name: 'Project', value: 'Foo | BaR | FASE 1' }], phases_history: [{ phase: { id: '2480502' }, firstTimeIn: '2018-02-23T17:11:23-03:00', lastTimeOut: '2018-02-23T17:11:23-03:00' }, { phase: { id: '2480504' }, firstTimeIn: '2018-02-23T17:11:23-03:00', lastTimeOut: nil }], pipe: { id: '356355' }, url: 'http://app.pipefy.com/pipes/356355#cards/5141022' } } }.with_indifferent_access }
     let(:pipe_response) { { data: { pipe: { phases: [{ cards: { edges: [{ node: { id: '4648389', title: 'ateste' } }] } }, { cards: { edges: [] } }, { cards: { edges: [{ node: { id: '4648391', title: 'teste 2' } }] } }] } } }.with_indifferent_access }
@@ -50,6 +50,7 @@ RSpec.describe PipefyReader, type: :service do
             expect(Demand.last.class_of_service).to eq 'standard'
             expect(Demand.last.demand_type).to eq 'bug'
             expect(Demand.last.demand_id).to eq '5140999'
+            expect(Demand.last.assignees_count).to eq 2
             expect(Demand.last.effort).to eq 16
 
             expect(ProjectResult.count).to eq 2
@@ -103,6 +104,7 @@ RSpec.describe PipefyReader, type: :service do
             created_demand = Demand.last
             expect(created_demand.chore?).to be true
             expect(created_demand.demand_id).to eq '5141010'
+            expect(created_demand.assignees_count).to eq 1
             expect(created_demand.effort.to_f).to eq 16.0
             expect(created_demand.class_of_service).to eq 'expedite'
             expect(created_demand.url).to eq 'http://app.pipefy.com/pipes/356355#cards/5141010'

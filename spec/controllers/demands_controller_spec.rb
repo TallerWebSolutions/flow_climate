@@ -74,7 +74,7 @@ RSpec.describe DemandsController, type: :controller do
       context 'passing valid parameters' do
         let(:date_to_demand) { 1.day.ago.change(usec: 0) }
         it 'creates the new demand and redirects' do
-          post :create, params: { company_id: company, project_id: project, project_result_id: project_result, demand: { demand_id: 'xpto', demand_type: 'bug', class_of_service: 'expedite', effort: 5, created_date: date_to_demand, commitment_date: date_to_demand, end_date: date_to_demand } }
+          post :create, params: { company_id: company, project_id: project, project_result_id: project_result, demand: { demand_id: 'xpto', demand_type: 'bug', class_of_service: 'expedite', assignees_count: 3, effort: 5, created_date: date_to_demand, commitment_date: date_to_demand, end_date: date_to_demand } }
 
           expect(assigns(:company)).to eq company
           expect(assigns(:project)).to eq project
@@ -85,6 +85,7 @@ RSpec.describe DemandsController, type: :controller do
           expect(Demand.last.demand_id).to eq 'xpto'
           expect(Demand.last.demand_type).to eq 'bug'
           expect(Demand.last.class_of_service).to eq 'expedite'
+          expect(Demand.last.assignees_count).to eq 3
           expect(Demand.last.effort).to eq 5
           expect(Demand.last.created_date).to eq date_to_demand
           expect(Demand.last.commitment_date).to eq date_to_demand
@@ -98,7 +99,7 @@ RSpec.describe DemandsController, type: :controller do
           it 'does not create the demand and re-render the template with the errors' do
             expect(Demand.last).to be_nil
             expect(response).to render_template :new
-            expect(assigns(:demand).errors.full_messages).to eq ['Id da Demanda não pode ficar em branco', 'Tipo da Demanda não pode ficar em branco']
+            expect(assigns(:demand).errors.full_messages).to eq ['Id da Demanda não pode ficar em branco', 'Tipo da Demanda não pode ficar em branco', 'Qtd Atribuídos não pode ficar em branco']
           end
         end
         context 'inexistent company' do

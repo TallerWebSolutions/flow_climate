@@ -203,7 +203,8 @@ CREATE TABLE demands (
     created_date timestamp without time zone,
     url character varying,
     class_of_service integer DEFAULT 0 NOT NULL,
-    project_id integer NOT NULL
+    project_id integer NOT NULL,
+    assignees_count integer NOT NULL
 );
 
 
@@ -1431,6 +1432,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20180223211920'),
 ('20180224031304'),
 ('20180224142451'),
-('20180302152036');
+('20180302152036'),
+('20180302225234');
 
 
