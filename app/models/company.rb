@@ -30,22 +30,6 @@ class Company < ApplicationRecord
     users << user
   end
 
-  def outsourcing_cost
-    teams.sum(&:outsourcing_cost)
-  end
-
-  def management_cost
-    teams.sum(&:management_cost)
-  end
-
-  def outsourcing_members_billable_count
-    teams.sum(&:outsourcing_members_billable_count)
-  end
-
-  def management_count
-    teams.sum(&:management_count)
-  end
-
   def active_projects_count
     customers.sum { |p| p.active_projects.count }
   end
@@ -86,10 +70,6 @@ class Company < ApplicationRecord
     customers.sum(&:avg_hours_per_demand) / customers_count.to_f
   end
 
-  def current_outsourcing_monthly_available_hours
-    teams.sum(&:current_outsourcing_monthly_available_hours)
-  end
-
   def consumed_hours_in_month(date = Time.zone.today)
     @consumed_hours_in_month ||= ProjectResultsRepository.instance.consumed_hours_in_month(self, date)
   end
@@ -126,16 +106,18 @@ class Company < ApplicationRecord
     DemandsRepository.instance.demands_for_company_and_week(self, 1.week.ago.to_date)
   end
 
-  def total_available_hours
-    teams.sum(&:current_outsourcing_monthly_available_hours)
-  end
-
   def total_active_hours
     projects.active.sum(:qty_hours)
   end
 
   def total_active_consumed_hours
     projects.active.sum(&:total_hours_consumed)
+  end
+
+  def total_available_hours
+    total_available = 0
+    teams.sum { |team| total_available += team.active_available_hours_for_billable_types(team.projects.pluck(:project_type).uniq) }
+    total_available
   end
 
   private

@@ -112,8 +112,8 @@ RSpec.describe ProjectResult, type: :model do
     context 'when the remaining days is different of zero and has no team yet' do
       let(:result) { Fabricate :project_result, project: project, known_scope: 20, throughput: 4 }
       before { result.define_automatic_attributes! }
-      it { expect(result.reload.flow_pressure.to_f).to be_within(0.01).of(0.2711) }
-      it { expect(result.reload.remaining_days).to eq 60 }
+      it { expect(result.reload.flow_pressure.to_f).to be_within(0.01).of(0.25) }
+      it { expect(result.reload.remaining_days).to eq 62 }
       it { expect(result.reload.cost_in_month).to eq 0 }
       it { expect(result.reload.average_demand_cost.to_f).to eq 0 }
       it { expect(result.reload.available_hours.to_f).to eq 0 }

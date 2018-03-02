@@ -194,4 +194,6 @@ RSpec.describe ProjectResultsRepository, type: :repository do
       it { expect(ProjectResult.count).to eq 2 }
     end
   end
+
+  pending '#last_manual_entry'
 end

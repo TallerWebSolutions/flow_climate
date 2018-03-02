@@ -44,16 +44,11 @@ pt-BR:
     new:
       title: "Nova Empresa"
     show:
-      outsourcing_cost_per_month: "Custo do Outsourcing por Mês"
-      members_billable_count: "Qtd Força Faturável (Outsourcing)"
-      management_cost_per_month: "Custo da gestão por mês"
-      management_count: "Qtd Gestão"
       active_project_count: "Projetos Ativos"
       waiting_project_count: "Projetos Aguardando Início"
       red_project_count: "PROJETOS VERMELHOS"
       project_count: "Projetos"
       product_count: "Produtos"
-      consulting_members_billable_count: "Qtd Força Faturável (consultoria)"
       customers_count: "Clientes"
       current_hours_per_demand: "Horas/demanda do Mês"
       current_month_throughput: "Throughput do Mês"
@@ -179,9 +174,6 @@ pt-BR:
   teams:
     index:
       title: "Times"
-      billable_cost: "Custo Faturável (Outsourcing)"
-      management_cost: "Custo da Gestão ($$)"
-      consulting_cost: "Custo da Consultoria ($$)"
     new:
       title: "Novo Time"
   project:

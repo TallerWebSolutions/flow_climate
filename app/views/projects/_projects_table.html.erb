@@ -15,7 +15,7 @@
           <th colspan="5" class="center"><%= t('projects.index.risk_alerts') %></th>
           <th><%= Project.human_attribute_name :customer_name %></th>
           <th><%= Project.human_attribute_name :product_name %></th>
-          <th><%= Project.human_attribute_name :name %></th>
+          <th><%= Project.model_name.human %></th>
           <th><%= t('projects.show.current_team') %></th>
           <th><%= Project.human_attribute_name :start_date %></th>
           <th><%= Project.human_attribute_name :end_date %></th>

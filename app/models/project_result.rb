@@ -25,6 +25,7 @@
 #  cost_in_month        :decimal(, )      not null
 #  average_demand_cost  :decimal(, )      not null
 #  available_hours      :decimal(, )      not null
+#  manual_input         :boolean          default(FALSE)
 #
 # Indexes
 #
@@ -63,8 +64,9 @@ class ProjectResult < ApplicationRecord
 
   def define_automatic_attributes!
     available_hours = 0
-    available_hours = available_hours_per_day if team.present?
-    update(remaining_days: project.remaining_days(result_date), flow_pressure: current_flow_pressure, cost_in_month: team&.outsourcing_cost, average_demand_cost: calculate_average_demand_cost, available_hours: available_hours)
+    available_hours = available_hours_per_day([project.project_type]) if team.present?
+    update(remaining_days: project.remaining_days(result_date), flow_pressure: current_flow_pressure, cost_in_month: team&.active_cost_for_billable_types([project.project_type]),
+           average_demand_cost: calculate_average_demand_cost, available_hours: available_hours)
   end
 
   def total_hours
@@ -92,26 +94,19 @@ class ProjectResult < ApplicationRecord
 
   private
 
-  def available_hours_per_day
-    team.current_outsourcing_monthly_available_hours.to_f / 30
+  def available_hours_per_day(project_types)
+    team.active_available_hours_for_billable_types(project_types).to_f / 30
   end
 
   def compute_known_scope
-    results_without_transitions = project.project_results.manual_results
-
-    known_scope = DemandsRepository.instance.known_scope_to_date(project, result_date)
-    known_scope += results_without_transitions.last.known_scope if results_without_transitions.present?
-    known_scope
+    last_manual_scope = ProjectResultsRepository.instance.last_manual_entry(project)&.known_scope || 0
+    DemandsRepository.instance.known_scope_to_date(project, result_date) + last_manual_scope
   end
 
   def update_result!(finished_bugs, finished_demands)
     update(known_scope: compute_known_scope, throughput: finished_demands.count, qty_hours_upstream: 0, qty_hours_downstream: finished_demands.sum(&:effort),
            qty_hours_bug: finished_bugs.sum(&:effort), qty_bugs_closed: finished_bugs.count, qty_bugs_opened: project.demands.bugs_opened_in_date_count(result_date),
-           remaining_days: project.remaining_days(result_date), flow_pressure: compute_flow_pressure, average_demand_cost: compute_average_demand_cost)
-  end
-
-  def compute_flow_pressure
-    project.total_gap / project.remaining_days(result_date)
+           remaining_days: project.remaining_days(result_date), flow_pressure: project.flow_pressure(result_date), average_demand_cost: compute_average_demand_cost)
   end
 
   def compute_average_demand_cost
@@ -123,8 +118,9 @@ class ProjectResult < ApplicationRecord
   end
 
   def calculate_average_demand_cost
-    return 0 if team.blank? || team.outsourcing_cost&.zero? || throughput.zero?
-    (team.outsourcing_cost / 30) / throughput.to_f
+    current_monthly_team_cost = team&.active_cost_for_billable_types([project.project_type]) || 0
+    return 0 if current_monthly_team_cost.zero? || throughput.zero?
+    (current_monthly_team_cost / 30) / throughput.to_f
   end
 
   def current_gap

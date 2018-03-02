@@ -91,6 +91,10 @@ class ProjectResultsRepository
     project_result.add_demand!(demand)
   end
 
+  def last_manual_entry(project)
+    project.project_results.left_outer_joins(demands: :demand_transitions).where(demands: { demand_transitions: { demand_id: nil } }).order(:result_date).last
+  end
+
   private
 
   def build_hash_data_with_sum(projects, field)
@@ -118,8 +122,9 @@ class ProjectResultsRepository
     return project_result if project_result.present?
     ProjectResult.create(project: demand.project, result_date: result_date, known_scope: 0, throughput: 0, qty_hours_upstream: 0,
                          qty_hours_downstream: 0, qty_hours_bug: 0, qty_bugs_closed: 0, qty_bugs_opened: 0,
-                         team: team, flow_pressure: 0, remaining_days: demand.project.remaining_days(result_date), cost_in_month: team.outsourcing_cost,
-                         average_demand_cost: 0, available_hours: team.current_outsourcing_monthly_available_hours)
+                         team: team, flow_pressure: 0, remaining_days: demand.project.remaining_days(result_date),
+                         cost_in_month: team.active_cost_for_billable_types([demand.project.project_type]), average_demand_cost: 0,
+                         available_hours: team.active_available_hours_for_billable_types([demand.project.project_type]))
   end
 
   def define_result_date(demand, first_transition)

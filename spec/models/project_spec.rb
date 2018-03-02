@@ -3,7 +3,7 @@
 RSpec.describe Project, type: :model do
   context 'enums' do
     it { is_expected.to define_enum_for(:status).with(waiting: 0, executing: 1, maintenance: 2, finished: 3, cancelled: 4, negotiating: 5) }
-    it { is_expected.to define_enum_for(:project_type).with(outsourcing: 0, consulting: 1, training: 2) }
+    it { is_expected.to define_enum_for(:project_type).with(outsourcing: 0, consulting: 1, training: 2, domestic_product: 3) }
   end
 
   context 'associations' do
@@ -248,9 +248,14 @@ RSpec.describe Project, type: :model do
     context 'and the start and finish dates are in different days' do
       let(:project) { Fabricate :project, initial_scope: 30, start_date: 1.day.ago, end_date: 1.week.from_now }
       context 'having results' do
-        let!(:result) { Fabricate :project_result, project: project, result_date: 1.day.ago, known_scope: 10 }
-        let!(:other_result) { Fabricate :project_result, project: project, result_date: Time.zone.today, known_scope: 20 }
-        it { expect(project.flow_pressure).to be_within(0.01).of(project.total_gap.to_f / project.remaining_days.to_f) }
+        let!(:result) { Fabricate :project_result, project: project, result_date: 1.day.ago, known_scope: 10, throughput: 4 }
+        let!(:other_result) { Fabricate :project_result, project: project, result_date: Time.zone.today, known_scope: 20, throughput: 7 }
+        context 'specifying no date' do
+          it { expect(project.flow_pressure).to eq 1.125 }
+        end
+        context 'specifying a date' do
+          it { expect(project.flow_pressure(1.day.ago)).to eq 1.0 }
+        end
       end
       context 'having no results' do
         it { expect(project.flow_pressure).to be_within(0.01).of(3.75) }
@@ -392,9 +397,14 @@ RSpec.describe Project, type: :model do
   describe '#total_gap' do
     let(:project) { Fabricate :project, initial_scope: 30, start_date: 1.week.ago, end_date: 1.week.from_now }
     context 'having results' do
-      let!(:result) { Fabricate :project_result, project: project, result_date: 1.day.ago, known_scope: 10 }
-      let!(:other_result) { Fabricate :project_result, project: project, result_date: Time.zone.today, known_scope: 20 }
-      it { expect(project.total_gap).to eq project.last_week_scope - project.total_throughput }
+      let!(:result) { Fabricate :project_result, project: project, result_date: 1.day.ago, known_scope: 10, throughput: 4 }
+      let!(:other_result) { Fabricate :project_result, project: project, result_date: Time.zone.today, known_scope: 20, throughput: 7 }
+      context 'specifying no date' do
+        it { expect(project.total_gap).to eq 9 }
+      end
+      context 'specifying a date' do
+        it { expect(project.total_gap(1.day.ago)).to eq 9 }
+      end
     end
     context 'having no results' do
       it { expect(project.total_gap).to eq project.initial_scope }
@@ -532,8 +542,12 @@ RSpec.describe Project, type: :model do
     context 'having data for 2 weeks ago' do
       let!(:result) { Fabricate :project_result, project: first_project, result_date: 2.weeks.ago, known_scope: 110 }
       let!(:other_result) { Fabricate :project_result, project: first_project, result_date: Time.zone.today, known_scope: 80 }
-
-      it { expect(first_project.backlog_for(1.week.ago)).to eq 30 }
+      context 'specifying the date' do
+        it { expect(first_project.backlog_for(1.week.ago)).to eq 30 }
+      end
+      context 'specifying no date' do
+        it { expect(first_project.backlog_for).to eq 80 }
+      end
     end
 
     context 'having no result' do

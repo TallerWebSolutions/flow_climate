@@ -42,84 +42,43 @@ RSpec.describe Team, type: :model do
     it { is_expected.to delegate_method(:count).to(:projects).with_prefix }
   end
 
-  context '#outsourcing_cost' do
+  describe '#active_cost_for_billable_types' do
     let(:company) { Fabricate :company }
     let(:team) { Fabricate :team, company: company }
     let!(:members) { Fabricate.times(4, :team_member, team: team, billable_type: :outsourcing) }
     let!(:consulting_members) { Fabricate.times(2, :team_member, team: team, billable_type: :consulting) }
+    let!(:training_members) { Fabricate.times(6, :team_member, team: team, billable_type: :training) }
     let!(:not_billable_members) { Fabricate.times(10, :team_member, team: team, billable: false, billable_type: nil) }
     let!(:not_active_members) { Fabricate.times(3, :team_member, team: team, billable: true, billable_type: :outsourcing, active: false) }
 
-    it { expect(team.outsourcing_cost).to eq(members.sum(&:total_monthly_payment)) }
+    it { expect(team.active_cost_for_billable_types(%i[outsourcing consulting])).to eq(members.concat(consulting_members).sum(&:total_monthly_payment)) }
   end
 
-  context '#management_cost' do
+  describe '#active_members_count_for_billable_types' do
     let(:company) { Fabricate :company }
     let(:team) { Fabricate :team, company: company }
     let!(:members) { Fabricate.times(4, :team_member, team: team, billable_type: :outsourcing) }
     let!(:consulting_members) { Fabricate.times(2, :team_member, team: team, billable_type: :consulting) }
-    let!(:not_billable_members) { Fabricate.times(10, :team_member, team: team, billable: false, billable_type: nil) }
-    let!(:not_active_members) { Fabricate.times(3, :team_member, team: team, billable: false, active: false) }
-
-    it { expect(team.management_cost).to eq(not_billable_members.sum(&:total_monthly_payment)) }
-  end
-
-  context '#consulting_cost' do
-    let(:company) { Fabricate :company }
-    let(:team) { Fabricate :team, company: company }
-    let!(:members) { Fabricate.times(4, :team_member, team: team, billable_type: :outsourcing) }
-    let!(:consulting_members) { Fabricate.times(2, :team_member, team: team, billable_type: :consulting) }
-    let!(:not_billable_members) { Fabricate.times(10, :team_member, team: team, billable: false, billable_type: nil) }
-    let!(:not_active_members) { Fabricate.times(3, :team_member, team: team, billable: false, active: false) }
-
-    it { expect(team.consulting_cost).to eq(consulting_members.sum(&:total_monthly_payment)) }
-  end
-
-  context '#outsourcing_members_billable_count' do
-    let(:company) { Fabricate :company }
-    let(:team) { Fabricate :team, company: company }
-    let!(:members) { Fabricate.times(4, :team_member, team: team, billable_type: :outsourcing) }
-    let!(:consulting_members) { Fabricate.times(2, :team_member, team: team, billable_type: :consulting) }
+    let!(:training_members) { Fabricate.times(6, :team_member, team: team, billable_type: :training) }
     let!(:not_billable_members) { Fabricate.times(10, :team_member, team: team, billable: false, billable_type: nil) }
     let!(:not_active_members) { Fabricate.times(3, :team_member, team: team, billable: true, billable_type: :outsourcing, active: false) }
 
-    it { expect(team.outsourcing_members_billable_count).to eq 4 }
+    it { expect(team.active_members_count_for_billable_types(%i[consulting outsourcing])).to eq 6 }
   end
 
-  context '#consulting_members_billable_count' do
-    let(:company) { Fabricate :company }
-    let(:team) { Fabricate :team, company: company }
-    let!(:members) { Fabricate.times(4, :team_member, team: team, billable_type: :consulting) }
-    let!(:consulting_members) { Fabricate.times(2, :team_member, team: team, billable_type: :outsourcing) }
-    let!(:not_billable_members) { Fabricate.times(10, :team_member, team: team, billable: false, billable_type: nil) }
-    let!(:not_active_members) { Fabricate.times(3, :team_member, team: team, billable: true, billable_type: :consulting, active: false) }
-
-    it { expect(team.consulting_members_billable_count).to eq 4 }
-  end
-
-  context '#management_count' do
+  describe '#active_available_hours_for_billable_types' do
     let(:company) { Fabricate :company }
     let(:team) { Fabricate :team, company: company }
     let!(:members) { Fabricate.times(4, :team_member, team: team, billable_type: :outsourcing) }
     let!(:consulting_members) { Fabricate.times(2, :team_member, team: team, billable_type: :consulting) }
-    let!(:not_billable_members) { Fabricate.times(10, :team_member, team: team, billable: false, billable_type: nil) }
-    let!(:not_active_members) { Fabricate.times(3, :team_member, team: team, billable: false, active: false) }
-
-    it { expect(team.management_count).to eq 10 }
-  end
-
-  context '#current_outsourcing_monthly_available_hours' do
-    let(:company) { Fabricate :company }
-    let(:team) { Fabricate :team, company: company }
-    let!(:members) { Fabricate.times(4, :team_member, team: team, billable_type: :outsourcing) }
-    let!(:consulting_members) { Fabricate.times(2, :team_member, team: team, billable_type: :consulting) }
+    let!(:training_members) { Fabricate.times(6, :team_member, team: team, billable_type: :training) }
     let!(:not_billable_members) { Fabricate.times(10, :team_member, team: team, billable: false, billable_type: nil) }
     let!(:not_active_members) { Fabricate.times(3, :team_member, team: team, billable_type: :outsourcing, active: false) }
 
-    it { expect(team.current_outsourcing_monthly_available_hours).to eq(members.sum(&:hours_per_month)) }
+    it { expect(team.active_available_hours_for_billable_types(%i[outsourcing consulting])).to eq members.concat(consulting_members).sum(&:hours_per_month) }
   end
 
-  RSpec.shared_context 'consolidations variables data for team', shared_context: :metadata do
+  RSpec.shared_context 'consolidations data for team', shared_context: :metadata do
     let(:company) { Fabricate :company }
 
     let(:team) { Fabricate :team, company: company }
@@ -139,28 +98,28 @@ RSpec.describe Team, type: :model do
   end
 
   describe '#last_week_scope' do
-    include_context 'consolidations variables data for team'
+    include_context 'consolidations data for team'
     it { expect(team.last_week_scope).to eq 15 }
   end
 
   describe '#avg_hours_per_demand' do
-    include_context 'consolidations variables data for team'
+    include_context 'consolidations data for team'
     it { expect(team.avg_hours_per_demand).to eq team.projects.sum(&:avg_hours_per_demand) / team.projects_count.to_f }
   end
 
   describe '#total_value' do
-    include_context 'consolidations variables data for team'
+    include_context 'consolidations data for team'
     it { expect(team.total_value).to eq team.projects.sum(:value) }
   end
 
   describe '#remaining_money' do
-    include_context 'consolidations variables data for team'
+    include_context 'consolidations data for team'
     it { expect(team.remaining_money).to eq team.projects.sum(&:remaining_money) }
   end
 
   describe '#percentage_remaining_money' do
     context 'having data' do
-      include_context 'consolidations variables data for team'
+      include_context 'consolidations data for team'
       it { expect(team.percentage_remaining_money).to eq((team.remaining_money / team.total_value) * 100) }
     end
     context 'having no data' do
@@ -172,13 +131,13 @@ RSpec.describe Team, type: :model do
   end
 
   describe '#total_gap' do
-    include_context 'consolidations variables data for team'
+    include_context 'consolidations data for team'
     it { expect(team.total_gap).to eq team.projects.sum(&:total_gap) }
   end
 
   describe '#percentage_remaining_scope' do
     context 'having data' do
-      include_context 'consolidations variables data for team'
+      include_context 'consolidations data for team'
       it { expect(team.percentage_remaining_scope).to eq((team.total_gap.to_f / team.last_week_scope.to_f) * 100) }
     end
     context 'having no data' do
@@ -190,12 +149,12 @@ RSpec.describe Team, type: :model do
   end
 
   describe '#total_flow_pressure' do
-    include_context 'consolidations variables data for team'
+    include_context 'consolidations data for team'
     it { expect(team.total_flow_pressure).to eq team.projects.sum(&:flow_pressure) }
   end
 
   describe '#delivered_scope' do
-    include_context 'consolidations variables data for team'
+    include_context 'consolidations data for team'
     it { expect(team.delivered_scope).to eq team.projects.sum(&:total_throughput) }
   end
 
