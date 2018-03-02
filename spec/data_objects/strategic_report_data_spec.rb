@@ -34,8 +34,8 @@ RSpec.describe StrategicReportData, type: :service do
         expect(strategic_data.sold_hours_in_month).to eq [1406.25, 1406.25, 0, 0, 2129.032258064516, 7004.032258064516, 4875.0]
         expect(strategic_data.consumed_hours_per_month).to eq [100, 0, 0, 0, 100, 100, 0]
         expect(strategic_data.available_hours_per_month).to eq [180, 180, 180, 180, 180, 180, 180]
-        expect(strategic_data.flow_pressure_per_month_data).to eq [4.9, 0.0, 0, 0, 4.9, 10.366666666666667, 5.290322580645161]
-        expect(strategic_data.money_per_month_data).to eq [3237581.249999999, 3237581.249999999, 0.0, 0.0, 10354.838709677422, 10657.651209677422, 302.8124999999999]
+        expect(strategic_data.flow_pressure_per_month_data).to eq [4.9, 0.0, 0, 0, 4.9, 11.233333333333334, 6.129032258064516]
+        expect(strategic_data.money_per_month_data).to eq [3_237_581.249999999, 3_237_581.249999999, 0.0, 0.0, 10_354.838709677422, 10_657.651209677422, 302.8124999999999]
       end
     end
 

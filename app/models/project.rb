@@ -117,7 +117,7 @@ class Project < ApplicationRecord
     backlog_unit_growth.to_f / locate_last_results.first.known_scope.to_f
   end
 
-  def backlog_for(date)
+  def backlog_for(date = Time.zone.today)
     return initial_scope if date.blank?
     project_results.for_week(date.to_date.cweek, date.to_date.cwyear).last&.known_scope || initial_scope
   end
@@ -126,10 +126,10 @@ class Project < ApplicationRecord
     project_results.order(result_date: :desc)&.first&.team
   end
 
-  def flow_pressure
+  def flow_pressure(date = Time.zone.today)
     return 0 if finished? || cancelled?
-    days = remaining_days || total_days
-    total_gap.to_f / days.to_f
+    days = remaining_days(date) || total_days
+    total_gap(date).to_f / days.to_f
   end
 
   def total_throughput
@@ -187,8 +187,8 @@ class Project < ApplicationRecord
     (total_hours_consumed.to_f / total_throughput.to_f)
   end
 
-  def total_gap
-    last_week_scope - total_throughput
+  def total_gap(date = Time.zone.today)
+    backlog_for(date) - total_throughput_until(date)
   end
 
   def required_hours
