@@ -51,7 +51,7 @@ RSpec.describe TeamsController, type: :controller do
       context 'passing a valid ID' do
         context 'having data' do
           before { get :show, params: { company_id: company, id: team.id } }
-          it 'assigns the instance variable and renders the template' do
+          it 'assigns the instance variables and renders the template' do
             expect(response).to render_template :show
             expect(assigns(:company)).to eq company
             expect(assigns(:team)).to eq team
@@ -66,7 +66,7 @@ RSpec.describe TeamsController, type: :controller do
           let(:empty_team) { Fabricate :team, company: other_company }
 
           before { get :show, params: { company_id: other_company, id: empty_team } }
-          it 'assigns the instance variable and renders the template' do
+          it 'assigns the empty instance variables and renders the template' do
             expect(response).to render_template :show
             expect(assigns(:company)).to eq other_company
             expect(assigns(:team)).to eq empty_team

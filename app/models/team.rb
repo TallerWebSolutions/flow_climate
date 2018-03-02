@@ -33,36 +33,20 @@ class Team < ApplicationRecord
 
   delegate :count, to: :projects, prefix: true
 
-  def outsourcing_cost
-    team_members.active.where(billable: true, billable_type: :outsourcing).sum(&:total_monthly_payment)
+  def active_cost_for_billable_types(billable_types)
+    team_members.active.where(billable: true, billable_type: billable_types).sum(&:total_monthly_payment)
   end
 
-  def consulting_cost
-    team_members.active.where(billable: true, billable_type: :consulting).sum(&:total_monthly_payment)
+  def active_members_count_for_billable_types(billable_types)
+    team_members.active.where(billable: true, billable_type: billable_types).count
   end
 
-  def management_cost
-    team_members.active.where(billable: false).sum(&:total_monthly_payment)
+  def active_available_hours_for_billable_types(billable_types)
+    team_members.active.where(billable: true, billable_type: billable_types).sum(&:hours_per_month)
   end
 
   def total_cost
     team_members.active.sum(&:total_monthly_payment)
-  end
-
-  def outsourcing_members_billable_count
-    team_members.active.where(billable: true, billable_type: :outsourcing).count
-  end
-
-  def consulting_members_billable_count
-    team_members.active.where(billable: true, billable_type: :consulting).count
-  end
-
-  def management_count
-    team_members.active.where(billable: false).count
-  end
-
-  def current_outsourcing_monthly_available_hours
-    team_members.active.where(billable: true, billable_type: :outsourcing).sum(&:hours_per_month)
   end
 
   def consumed_hours_in_month(required_date)

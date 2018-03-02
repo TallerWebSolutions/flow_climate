@@ -46,7 +46,7 @@
          class="flow-chart"
          data-title='<%= t('charts.team_hours_available.title') %>'
          data-suffix='<%= t('charts.hours_available.suffix') %>'
-         data-max='<%= @team.current_outsourcing_monthly_available_hours %>'
+         data-max='<%= @team.active_available_hours_for_billable_types(@team.projects.pluck(:project_type).uniq) %>'
          data-value='<%= @team.consumed_hours_in_month(Time.zone.today) %>'>
     </div>
   </div>

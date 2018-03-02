@@ -1,29 +1,33 @@
 <div class="row">
-  <div class="col-xs-2 stamp">
+  <div class="col-xs-3 stamp">
     <div class="stamp-title"><%= t('general.current_week') %></div>
     <div class="stamp-content"><%= Time.zone.today.cweek %></div>
   </div>
-  <div class="col-xs-2 stamp">
+  <div class="col-xs-3 stamp">
     <div class="stamp-title"><%= t('general.current_year') %></div>
     <div class="stamp-content"><%= Time.zone.today.cwyear %></div>
   </div>
 
-  <div class="col-xs-2 green-stamp">
-    <div class="stamp-title"><%= t('companies.show.outsourcing_cost_per_month') %></div>
-    <div class="stamp-content"><%= number_to_currency(@company.outsourcing_cost) %></div>
-  </div>
-  <div class="col-xs-2 green-stamp">
-    <div class="stamp-title"><%= t('companies.show.management_cost_per_month') %></div>
-    <div class="stamp-content"><%= number_to_currency(@company.management_cost) %></div>
-  </div>
-  <div class="col-xs-2 stamp">
-    <div class="stamp-title"><%= t('companies.show.members_billable_count') %></div>
-    <div class="stamp-content"><%= @company.outsourcing_members_billable_count %></div>
-  </div>
-  <div class="col-xs-2 stamp">
-    <div class="stamp-title"><%= t('companies.show.management_count') %></div>
-    <div class="stamp-content"><%= @company.management_count %></div>
-  </div>
+  <%= link_to company_customers_path(@company) do %>
+    <div class="col-xs-2 stamp">
+      <div class="stamp-title"><%= t('companies.show.customers_count') %></div>
+      <div class="stamp-content"><%= @company.customers_count %></div>
+    </div>
+  <% end %>
+
+  <%= link_to company_products_path(@company) do %>
+    <div class="col-xs-2 stamp">
+      <div class="stamp-title"><%= t('companies.show.product_count') %></div>
+      <div class="stamp-content"><%= @company.products_count %></div>
+    </div>
+  <% end %>
+
+  <%= link_to company_projects_path(@company, customer_id: @customer) do %>
+    <div class="col-xs-2 stamp">
+      <div class="stamp-title"><%= t('companies.show.project_count') %></div>
+      <div class="stamp-content"><%= @company.projects_count %></div>
+    </div>
+  <% end %>
 </div>
 
 <div class="row">
@@ -56,36 +60,15 @@
 </div>
 
 <div class="row">
-  <%= link_to company_customers_path(@company) do %>
-    <div class="col-xs-3 stamp">
-      <div class="stamp-title"><%= t('companies.show.customers_count') %></div>
-      <div class="stamp-content"><%= @company.customers_count %></div>
-    </div>
-  <% end %>
-
-  <%= link_to company_products_path(@company) do %>
-    <div class="col-xs-3 stamp">
-      <div class="stamp-title"><%= t('companies.show.product_count') %></div>
-      <div class="stamp-content"><%= @company.products_count %></div>
-    </div>
-  <% end %>
-
-  <%= link_to company_projects_path(@company, customer_id: @customer) do %>
-    <div class="col-xs-2 stamp">
-      <div class="stamp-title"><%= t('companies.show.project_count') %></div>
-      <div class="stamp-content"><%= @company.projects_count %></div>
-    </div>
-  <% end %>
-
   <%= link_to company_projects_path(@company, customer_id: @customer, status_filter: :waiting) do %>
-    <div class="col-xs-2 stamp">
+    <div class="col-xs-6 stamp">
       <div class="stamp-title"><%= t('companies.show.waiting_project_count') %></div>
       <div class="stamp-content"><%= @company.waiting_projects_count %></div>
     </div>
   <% end %>
 
   <%= link_to company_projects_path(@company, customer_id: @customer, status_filter: :executing) do %>
-    <div class="col-xs-2 stamp">
+    <div class="col-xs-6 stamp">
       <div class="stamp-title"><%= t('companies.show.active_project_count') %></div>
       <div class="stamp-content"><%= @company.active_projects_count %></div>
     </div>

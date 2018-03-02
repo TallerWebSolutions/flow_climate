@@ -122,8 +122,9 @@ class ProjectResultsRepository
     return project_result if project_result.present?
     ProjectResult.create(project: demand.project, result_date: result_date, known_scope: 0, throughput: 0, qty_hours_upstream: 0,
                          qty_hours_downstream: 0, qty_hours_bug: 0, qty_bugs_closed: 0, qty_bugs_opened: 0,
-                         team: team, flow_pressure: 0, remaining_days: demand.project.remaining_days(result_date), cost_in_month: team.outsourcing_cost,
-                         average_demand_cost: 0, available_hours: team.current_outsourcing_monthly_available_hours)
+                         team: team, flow_pressure: 0, remaining_days: demand.project.remaining_days(result_date),
+                         cost_in_month: team.active_cost_for_billable_types([demand.project.project_type]), average_demand_cost: 0,
+                         available_hours: team.active_available_hours_for_billable_types([demand.project.project_type]))
   end
 
   def define_result_date(demand, first_transition)

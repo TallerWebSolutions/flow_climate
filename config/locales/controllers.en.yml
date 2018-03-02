@@ -44,16 +44,11 @@ en:
     new:
       title: "New Company"
     show:
-      outsourcing_cost_per_month: "Outsourcing cost per month"
-      members_billable_count: "Billable members (Outsourcing)"
-      management_cost_per_month: "Management cost per month"
-      management_count: "Qty Management"
       active_project_count: "Active Projects"
       waiting_project_count: "Waiting"
       red_project_count: "RED PROJECTS"
       project_count: "Projects"
       product_count: "Products"
-      consulting_members_billable_count: "Qty Billable (Consulting)"
       customers_count: "Customers"
       current_hours_per_demand: "Hours/demand in Month"
       current_month_throughput: "Throughput in Month"
@@ -177,9 +172,6 @@ en:
   teams:
     index:
       title: "Teams"
-      billable_cost: "Billable Cost (Outsourcing)"
-      management_cost: "Management Cost ($$)"
-      consulting_cost: "Consulting Cost ($$)"
     new:
       title: "New Team"
   project:

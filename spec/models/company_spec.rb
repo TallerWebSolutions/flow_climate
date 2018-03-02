@@ -33,55 +33,7 @@ RSpec.describe Company, type: :model do
     end
   end
 
-  context '#outsourcing_cost_per_week' do
-    let(:company) { Fabricate :company }
-    let(:team) { Fabricate :team, company: company }
-    let(:other_team) { Fabricate :team, company: company }
-    let!(:members) { Fabricate.times(4, :team_member, team: team, billable_type: :outsourcing) }
-    let!(:other_members) { Fabricate.times(2, :team_member, team: other_team, billable_type: :outsourcing) }
-    let!(:consulting_members) { Fabricate.times(2, :team_member, team: other_team, billable_type: :consulting) }
-    let!(:not_billable_members) { Fabricate.times(10, :team_member, team: team, billable: false, billable_type: nil) }
-
-    it { expect(company.outsourcing_cost).to eq((members.sum(&:total_monthly_payment) + other_members.sum(&:total_monthly_payment))) }
-  end
-
-  context '#management_cost_per_week' do
-    let(:company) { Fabricate :company }
-    let(:team) { Fabricate :team, company: company }
-    let(:other_team) { Fabricate :team, company: company }
-    let!(:members) { Fabricate.times(4, :team_member, team: team, billable_type: :outsourcing) }
-    let!(:consulting_members) { Fabricate.times(2, :team_member, team: other_team, billable_type: :consulting) }
-    let!(:not_billable_members) { Fabricate.times(10, :team_member, team: team, billable: false, billable_type: nil) }
-    let!(:other_not_billable_members) { Fabricate.times(10, :team_member, team: other_team, billable: false, billable_type: nil) }
-
-    it { expect(company.management_cost).to eq((not_billable_members.sum(&:total_monthly_payment) + other_not_billable_members.sum(&:total_monthly_payment))) }
-  end
-
-  context '#outsourcing_members_billable_count' do
-    let(:company) { Fabricate :company }
-    let(:team) { Fabricate :team, company: company }
-    let(:other_team) { Fabricate :team, company: company }
-    let!(:members) { Fabricate.times(4, :team_member, team: team, billable_type: :outsourcing) }
-    let!(:other_members) { Fabricate.times(2, :team_member, team: other_team, billable_type: :outsourcing) }
-    let!(:consulting_members) { Fabricate.times(2, :team_member, team: team, billable_type: :consulting) }
-    let!(:not_billable_members) { Fabricate.times(10, :team_member, team: team, billable: false, billable_type: nil) }
-
-    it { expect(company.outsourcing_members_billable_count).to eq 6 }
-  end
-
-  context '#management_count' do
-    let(:company) { Fabricate :company }
-    let(:team) { Fabricate :team, company: company }
-    let(:other_team) { Fabricate :team, company: company }
-    let!(:members) { Fabricate.times(4, :team_member, team: team, billable_type: :outsourcing) }
-    let!(:consulting_members) { Fabricate.times(2, :team_member, team: team, billable_type: :consulting) }
-    let!(:not_billable_members) { Fabricate.times(10, :team_member, team: team, billable: false, billable_type: nil) }
-    let!(:other_not_billable_members) { Fabricate.times(3, :team_member, team: other_team, billable: false, billable_type: nil) }
-
-    it { expect(company.management_count).to eq 13 }
-  end
-
-  context '#active_projects_count' do
+  describe '#active_projects_count' do
     let(:company) { Fabricate :company }
     let(:customer) { Fabricate :customer, company: company }
     let(:other_customer) { Fabricate :customer, company: company }
@@ -100,7 +52,7 @@ RSpec.describe Company, type: :model do
     it { expect(company.active_projects_count).to eq 3 }
   end
 
-  context '#waiting_projects_count' do
+  describe '#waiting_projects_count' do
     let(:company) { Fabricate :company }
     let(:customer) { Fabricate :customer, company: company }
     let(:other_customer) { Fabricate :customer, company: company }
@@ -134,7 +86,7 @@ RSpec.describe Company, type: :model do
     it { expect(company.projects_count).to eq 2 }
   end
 
-  context '#current_cost_per_hour' do
+  describe '#current_cost_per_hour' do
     context 'having finances' do
       let(:company) { Fabricate :company }
       let!(:first_finance) { Fabricate :financial_information, company: company, finances_date: 1.month.ago, expenses_total: 300 }
@@ -170,7 +122,7 @@ RSpec.describe Company, type: :model do
     end
   end
 
-  context '#current_hours_per_demand' do
+  describe '#current_hours_per_demand' do
     context 'having finances' do
       let(:company) { Fabricate :company }
       let(:customer) { Fabricate :customer, company: company }
@@ -249,17 +201,7 @@ RSpec.describe Company, type: :model do
     it { expect(company.avg_hours_per_demand).to eq company.customers.sum(&:avg_hours_per_demand) / company.customers.count }
   end
 
-  context '#current_outsourcing_monthly_available_hours' do
-    let(:company) { Fabricate :company }
-    let(:team) { Fabricate :team, company: company }
-    let!(:members) { Fabricate.times(4, :team_member, team: team, billable_type: :outsourcing) }
-    let!(:consulting_members) { Fabricate.times(2, :team_member, team: team, billable_type: :consulting) }
-    let!(:not_billable_members) { Fabricate.times(10, :team_member, team: team, billable: false, billable_type: nil) }
-
-    it { expect(company.current_outsourcing_monthly_available_hours).to eq(members.sum(&:hours_per_month)) }
-  end
-
-  context '#consumed_hours_in_month' do
+  describe '#consumed_hours_in_month' do
     let(:company) { Fabricate :company }
     let(:customer) { Fabricate :customer, company: company }
     let(:other_customer) { Fabricate :customer, company: company }
@@ -283,7 +225,7 @@ RSpec.describe Company, type: :model do
     it { expect(company.consumed_hours_in_month(1.month.ago.to_date)).to eq 30 }
   end
 
-  context '#throughput_in_month' do
+  describe '#throughput_in_month' do
     let(:company) { Fabricate :company }
     let(:customer) { Fabricate :customer, company: company }
     let(:other_customer) { Fabricate :customer, company: company }
@@ -307,7 +249,7 @@ RSpec.describe Company, type: :model do
     it { expect(company.throughput_in_month(1.month.ago.to_date)).to eq 30 }
   end
 
-  context '#products_count' do
+  describe '#products_count' do
     let(:company) { Fabricate :company }
     let(:customer) { Fabricate :customer, company: company }
     let(:other_customer) { Fabricate :customer, company: company }
@@ -335,22 +277,22 @@ RSpec.describe Company, type: :model do
     let!(:fourth_project_result) { Fabricate :project_result, result_date: 1.week.ago.to_date, project: third_project, throughput: 40, known_scope: third_project.initial_scope }
   end
 
-  context '#top_three_flow_pressure' do
+  describe '#top_three_flow_pressure' do
     include_context 'projects to company bulletin'
     it { expect(company.top_three_flow_pressure).to eq [second_project, third_project, first_project] }
   end
 
-  context '#top_three_throughput' do
+  describe '#top_three_throughput' do
     include_context 'projects to company bulletin'
     it { expect(company.top_three_throughput).to eq [third_project, first_project, second_project] }
   end
 
-  context '#next_starting_project' do
+  describe '#next_starting_project' do
     include_context 'projects to company bulletin'
     it { expect(company.next_starting_project).to eq starting_project }
   end
 
-  context '#next_finishing_project' do
+  describe '#next_finishing_project' do
     include_context 'projects to company bulletin'
     it { expect(company.next_finishing_project).to eq first_project }
   end
@@ -360,23 +302,6 @@ RSpec.describe Company, type: :model do
     it 'calls the repository' do
       expect(DemandsRepository.instance).to receive(:demands_for_company_and_week).once
       company.demands_delivered_last_week
-    end
-  end
-
-  describe '#total_available_hours' do
-    context 'having teams' do
-      let(:company) { Fabricate :company }
-      let(:team) { Fabricate :team, company: company }
-      let(:other_team) { Fabricate :team, company: company }
-      let!(:first_team_member) { Fabricate :team_member, team: team, hours_per_month: 100 }
-      let!(:second_team_member) { Fabricate :team_member, team: team, hours_per_month: 160 }
-      let!(:third_team_member) { Fabricate :team_member, team: other_team, hours_per_month: 160 }
-
-      it { expect(company.total_available_hours).to eq 420 }
-    end
-    context 'having no teams' do
-      let(:company) { Fabricate :company }
-      it { expect(company.total_available_hours).to eq 0 }
     end
   end
 
@@ -477,4 +402,6 @@ RSpec.describe Company, type: :model do
 
     it { expect(company.bugs_closed_in_month(1.month.ago.to_date)).to eq 30 }
   end
+
+  pending '#total_available_hours'
 end
