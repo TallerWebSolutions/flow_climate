@@ -59,14 +59,14 @@ class ProjectResult < ApplicationRecord
 
   def hours_per_demand
     return 0 if throughput.zero?
-    project_delivered_hours / throughput
+    project_delivered_hours.to_f / throughput.to_f
   end
 
   def define_automatic_attributes!
-    available_hours = 0
-    available_hours = available_hours_per_day([project.project_type]) if team.present?
-    update(remaining_days: project.remaining_days(result_date), flow_pressure: current_flow_pressure, cost_in_month: team&.active_cost_for_billable_types([project.project_type]),
-           average_demand_cost: calculate_average_demand_cost, available_hours: available_hours)
+    available_hours = available_hours_per_day([project.project_type])
+    team_cost_in_month = team.active_cost_for_billable_types([project.project_type])
+    update(remaining_days: project.remaining_days(result_date), flow_pressure: current_flow_pressure, cost_in_month: team_cost_in_month, available_hours: available_hours,
+           average_demand_cost: team_cost_in_month / 30 / known_scope.to_f)
   end
 
   def total_hours
@@ -75,8 +75,8 @@ class ProjectResult < ApplicationRecord
 
   def add_demand!(demand)
     demands << demand unless demands.include?(demand)
-    compute_flow_metrics!
     save
+    compute_flow_metrics!
   end
 
   def remove_demand!(demand)
@@ -104,23 +104,26 @@ class ProjectResult < ApplicationRecord
   end
 
   def update_result!(finished_bugs, finished_demands)
-    update(known_scope: compute_known_scope, throughput: finished_demands.count, qty_hours_upstream: 0, qty_hours_downstream: finished_demands.sum(&:effort),
+    known_scope = compute_known_scope
+    remaining_days = project.remaining_days(result_date)
+    update(known_scope: known_scope, throughput: finished_demands.count, qty_hours_upstream: 0, qty_hours_downstream: finished_demands.sum(&:effort),
            qty_hours_bug: finished_bugs.sum(&:effort), qty_bugs_closed: finished_bugs.count, qty_bugs_opened: project.demands.bugs_opened_in_date_count(result_date),
-           remaining_days: project.remaining_days(result_date), flow_pressure: project.flow_pressure(result_date), average_demand_cost: compute_average_demand_cost)
+           remaining_days: remaining_days, flow_pressure: compute_flow_pressure(finished_demands, remaining_days), average_demand_cost: calculate_average_demand_cost(finished_demands))
   end
 
-  def compute_average_demand_cost
-    cost_per_day / demands.count.to_f
+  def compute_flow_pressure(finished_demands, remaining_days)
+    (compute_known_scope - finished_demands.count).to_f / remaining_days.to_f
   end
 
   def cost_per_day
     cost_in_month / 30
   end
 
-  def calculate_average_demand_cost
-    current_monthly_team_cost = team&.active_cost_for_billable_types([project.project_type]) || 0
-    return 0 if current_monthly_team_cost.zero? || throughput.zero?
-    (current_monthly_team_cost / 30) / throughput.to_f
+  def calculate_average_demand_cost(finished_demands = nil)
+    throughput_for_result = throughput
+    throughput_for_result = finished_demands.count if finished_demands.present?
+    return 0 if cost_per_day.zero? || throughput_for_result.zero?
+    cost_per_day / throughput_for_result.to_f
   end
 
   def current_gap

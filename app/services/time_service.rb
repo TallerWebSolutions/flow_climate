@@ -1,16 +1,16 @@
 # frozen_string_literal: true
 
-class DemandService
+class TimeService
   include Singleton
 
-  def compute_effort_for_dates(commitment_date, end_date)
+  def compute_working_hours_for_dates(commitment_date, end_date)
     return 0 if commitment_date.blank? || end_date.blank?
-    compute_effort(commitment_date, end_date)
+    compute_working_hours(commitment_date, end_date)
   end
 
   private
 
-  def compute_effort(start_time, end_time)
+  def compute_working_hours(start_time, end_time)
     initial_time = start_time
     total_hours = 0
     while initial_time < end_time

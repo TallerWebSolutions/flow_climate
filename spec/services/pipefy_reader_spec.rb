@@ -16,8 +16,8 @@ RSpec.describe PipefyReader, type: :service do
     let!(:end_stage) { Fabricate :stage, projects: [first_project, second_project, third_project], integration_id: '2481597', compute_effort: false, end_point: true }
     let!(:other_end_stage) { Fabricate :stage, integration_id: '2480504', compute_effort: false, end_point: true }
 
-    let(:first_card_response) { { data: { card: { id: '5140999', assignees: [{ id: '101381' }, { id: '101381' }, { id: '101382' }], comments: [], fields: [{ name: 'Descrição da pesquisa', value: 'teste' }, { name: 'Title', value: 'Página dos colunistas' }, { name: 'Type', value: 'bUG' }, { name: 'JiraKey', value: 'PD-46' }, { name: 'Class of Service', value: 'Padrão' }, { name: 'Project', value: 'bLa | XpTO | FASE 1' }], phases_history: [{ phase: { id: '2481595' }, firstTimeIn: '2018-02-22T17:09:58-03:00', lastTimeOut: '2018-02-26T17:09:58-03:00' }, { phase: { id: '2481597' }, firstTimeIn: '2018-02-23T17:09:58-03:00', lastTimeOut: nil }], pipe: { id: '356355' }, url: 'http://app.pipefy.com/pipes/356355#cards/5140999' } } }.with_indifferent_access }
-    let(:second_card_response) { { data: { card: { id: '5141010', comments: [], fields: [{ name: 'Title', value: 'Simplicação dos passos para cadastrar um novo artigo pelo colunista' }, { name: 'Type', value: 'chORE' }, { name: 'JiraKey', value: 'PD-119' }, { name: 'Class of Service', value: 'Expedição' }, { name: 'Project', value: 'bLa | XpTO | FASE 2' }], phases_history: [{ phase: { id: '2481595' }, firstTimeIn: '2018-02-23T17:10:40-03:00', lastTimeOut: '2018-02-27T17:10:40-03:00' }, { phase: { id: '2481597' }, firstTimeIn: '2018-02-23T17:10:40-03:00', lastTimeOut: nil }], pipe: { id: '356355' }, url: 'http://app.pipefy.com/pipes/356355#cards/5141010' } } }.with_indifferent_access }
+    let(:first_card_response) { { data: { card: { id: '5140999', assignees: [{ id: '101381' }, { id: '101381' }, { id: '101382' }], comments: [{ created_at: '2018-03-01T18:39:46-03:00', author: { username: 'sbbrubles' }, text: '[BLOCKED]: xpto of bla having foo.' }], fields: [{ name: 'Descrição da pesquisa', value: 'teste' }, { name: 'Title', value: 'Página dos colunistas' }, { name: 'Type', value: 'bUG' }, { name: 'JiraKey', value: 'PD-46' }, { name: 'Class of Service', value: 'Padrão' }, { name: 'Project', value: 'bLa | XpTO | FASE 1' }], phases_history: [{ phase: { id: '2481595' }, firstTimeIn: '2018-02-22T17:09:58-03:00', lastTimeOut: '2018-02-26T17:09:58-03:00' }, { phase: { id: '2481597' }, firstTimeIn: '2018-02-23T17:09:58-03:00', lastTimeOut: nil }], pipe: { id: '356355' }, url: 'http://app.pipefy.com/pipes/356355#cards/5140999' } } }.with_indifferent_access }
+    let(:second_card_response) { { data: { card: { id: '5141010', assignees: [], comments: [{ created_at: '2018-02-18T18:39:46-03:00', author: { username: 'sbbrubles' }, text: '[BLOCKED][1]: xpto of bla having foo in the block 1.' }, { created_at: '2018-02-18T18:39:46-03:00', author: { username: 'sbbrubles' }, text: '[BLOCKED][2]: xpto of bla having foo.' }, { created_at: '2018-02-20T18:39:46-03:00', author: { username: 'sbbrubles' }, text: '[UNBLOCKED][2]: there is no more xpto of bla having foo.' }], fields: [{ name: 'Title', value: 'Simplicação dos passos para cadastrar um novo artigo pelo colunista' }, { name: 'Type', value: 'chORE' }, { name: 'JiraKey', value: 'PD-119' }, { name: 'Class of Service', value: 'Expedição' }, { name: 'Project', value: 'bLa | XpTO | FASE 2' }], phases_history: [{ phase: { id: '2481595' }, firstTimeIn: '2018-02-23T17:10:40-03:00', lastTimeOut: '2018-02-27T17:10:40-03:00' }, { phase: { id: '2481597' }, firstTimeIn: '2018-02-23T17:10:40-03:00', lastTimeOut: nil }], pipe: { id: '356355' }, url: 'http://app.pipefy.com/pipes/356355#cards/5141010' } } }.with_indifferent_access }
     let(:third_card_response) { { data: { card: { id: '5141022', comments: [], fields: [{ name: 'Title', value: 'Agendamento de artigo do colunista' }, { name: 'Type', value: 'Nova Funcionalidade' }, { name: 'JiraKey', value: 'PD-124' }, { name: 'Class of Service', value: 'Data Fixa' }, { name: 'Project', value: 'Foo | BaR | FASE 1' }], phases_history: [{ phase: { id: '2480502' }, firstTimeIn: '2018-02-23T17:11:23-03:00', lastTimeOut: '2018-02-23T17:11:23-03:00' }, { phase: { id: '2480504' }, firstTimeIn: '2018-02-23T17:11:23-03:00', lastTimeOut: nil }], pipe: { id: '356355' }, url: 'http://app.pipefy.com/pipes/356355#cards/5141022' } } }.with_indifferent_access }
     let(:pipe_response) { { data: { pipe: { phases: [{ cards: { edges: [{ node: { id: '4648389', title: 'ateste' } }] } }, { cards: { edges: [] } }, { cards: { edges: [{ node: { id: '4648391', title: 'teste 2' } }] } }] } } }.with_indifferent_access }
 
@@ -40,27 +40,62 @@ RSpec.describe PipefyReader, type: :service do
           let!(:second_transition) { Fabricate :demand_transition, stage: end_stage, demand: second_demand, last_time_in: '2018-02-16T01:01:41-02:00', last_time_out: '2018-02-16T01:42:41-02:00' }
           let!(:project_result) { Fabricate :project_result, project: first_project, demands: [first_demand, second_demand], result_date: Date.new(2018, 2, 16) }
 
-          it 'processes the card updating the demand' do
-            PipefyReader.instance.process_card(team, first_card_response)
+          context 'when the card has only one block not unblocked' do
+            it 'processes the card updating the demand, creating the project result and creating the new block' do
+              PipefyReader.instance.process_card(team, first_card_response)
 
-            expect(Demand.count).to eq 2
+              expect(Demand.count).to eq 2
 
-            expect(Demand.first.project_result).to eq project_result
+              expect(Demand.first.project_result).to eq project_result
 
-            expect(Demand.last.class_of_service).to eq 'standard'
-            expect(Demand.last.demand_type).to eq 'bug'
-            expect(Demand.last.demand_id).to eq '5140999'
-            expect(Demand.last.assignees_count).to eq 2
-            expect(Demand.last.effort).to eq 16
+              updated_demand = Demand.last
+              expect(updated_demand.class_of_service).to eq 'standard'
+              expect(updated_demand.demand_type).to eq 'bug'
+              expect(updated_demand.demand_id).to eq '5140999'
+              expect(updated_demand.assignees_count).to eq 2
+              expect(updated_demand.effort).to eq 16
 
-            expect(ProjectResult.count).to eq 2
+              expect(DemandBlock.count).to eq 1
+              block = Demand.last.demand_blocks.first
+              expect(block.demand_block_id).to eq 1
+              expect(block.block_reason).to eq '[BLOCKED]: xpto of bla having foo.'
+              expect(block.block_time).to eq Time.iso8601('2018-03-01T18:39:46-03:00')
+              expect(block.blocker_username).to eq 'sbbrubles'
 
-            created_result = ProjectResult.last
-            expect(created_result.result_date).to eq Date.new(2018, 2, 23)
-            expect(created_result.known_scope).to eq 2
-            expect(created_result.qty_hours_downstream).to eq 16
-            expect(created_result.qty_hours_upstream).to eq 0
-            expect(created_result.qty_hours_bug).to eq 16
+              expect(ProjectResult.count).to eq 2
+
+              created_result = ProjectResult.last
+              expect(created_result.result_date).to eq Date.new(2018, 2, 23)
+              expect(created_result.known_scope).to eq 2
+              expect(created_result.qty_hours_downstream).to eq 16
+              expect(created_result.qty_hours_upstream).to eq 0
+              expect(created_result.qty_hours_bug).to eq 16
+            end
+          end
+
+          context 'when the card has multiple blocks, some not unblocked' do
+            let(:card_response) { { data: { card: { id: '5140999', assignees: [], comments: [{ created_at: '2018-02-18T18:39:46-03:00', author: { username: 'sbbrubles' }, text: '[BLOCKED][1]: xpto of bla having foo in the block 1.' }, { created_at: '2018-02-18T18:39:46-03:00', author: { username: 'sbbrubles' }, text: '[BLOCKED][2]: xpto of bla having foo.' }, { created_at: '2018-02-20T18:39:46-03:00', author: { username: 'johndoe' }, text: '[UNBLOCKED][2]: there is no more xpto of bla having foo.' }], fields: [{ name: 'Title', value: 'Simplicação dos passos para cadastrar um novo artigo pelo colunista' }, { name: 'Type', value: 'chORE' }, { name: 'JiraKey', value: 'PD-119' }, { name: 'Class of Service', value: 'Expedição' }, { name: 'Project', value: 'bLa | XpTO | FASE 2' }], phases_history: [{ phase: { id: '2481595' }, firstTimeIn: '2018-02-23T17:10:40-03:00', lastTimeOut: '2018-02-27T17:10:40-03:00' }, { phase: { id: '2481597' }, firstTimeIn: '2018-02-23T17:10:40-03:00', lastTimeOut: nil }], pipe: { id: '356355' }, url: 'http://app.pipefy.com/pipes/356355#cards/5141010' } } }.with_indifferent_access }
+            it 'processes the card creating and updating the blocks' do
+              PipefyReader.instance.process_card(team, card_response)
+              expect(DemandBlock.count).to eq 2
+              created_demand = Demand.last
+
+              first_block = DemandBlock.where(demand: created_demand, demand_block_id: '1').first
+              expect(first_block.block_reason).to eq '[BLOCKED][1]: xpto of bla having foo in the block 1.'
+              expect(first_block.block_time).to eq Time.iso8601('2018-02-18T18:39:46-03:00')
+              expect(first_block.blocker_username).to eq 'sbbrubles'
+
+              second_block = DemandBlock.where(demand: created_demand, demand_block_id: '2').first
+
+              expect(second_block.block_reason).to eq '[BLOCKED][2]: xpto of bla having foo.'
+              expect(second_block.block_time).to eq Time.iso8601('2018-02-18T18:39:46-03:00')
+              expect(second_block.blocker_username).to eq 'sbbrubles'
+
+              expect(second_block.unblocker_username).to eq 'johndoe'
+              expect(second_block.unblock_time).to eq Time.iso8601('2018-02-20T18:39:46-03:00')
+              expect(second_block.unblock_reason).to eq '[UNBLOCKED][2]: there is no more xpto of bla having foo.'
+              expect(second_block.block_duration).to eq 14
+            end
           end
         end
         context 'and the project result is in the same date' do
@@ -92,6 +127,7 @@ RSpec.describe PipefyReader, type: :service do
             created_demand = Demand.last
             expect(created_demand.bug?).to be true
             expect(created_demand.demand_id).to eq '5140999'
+            expect(created_demand.assignees_count).to eq 2
             expect(created_demand.effort.to_f).to eq 16.0
             expect(created_demand.class_of_service).to eq 'standard'
             expect(created_demand.url).to eq 'http://app.pipefy.com/pipes/356355#cards/5140999'
@@ -104,7 +140,7 @@ RSpec.describe PipefyReader, type: :service do
             created_demand = Demand.last
             expect(created_demand.chore?).to be true
             expect(created_demand.demand_id).to eq '5141010'
-            expect(created_demand.assignees_count).to eq 1
+            expect(created_demand.assignees_count).to eq 0
             expect(created_demand.effort.to_f).to eq 16.0
             expect(created_demand.class_of_service).to eq 'expedite'
             expect(created_demand.url).to eq 'http://app.pipefy.com/pipes/356355#cards/5141010'
@@ -117,6 +153,7 @@ RSpec.describe PipefyReader, type: :service do
             created_demand = Demand.last
             expect(created_demand.feature?).to be true
             expect(created_demand.demand_id).to eq '5141022'
+            expect(created_demand.assignees_count).to eq 1
             expect(created_demand.effort.to_f).to eq 0
             expect(created_demand.class_of_service).to eq 'fixed_date'
             expect(created_demand.url).to eq 'http://app.pipefy.com/pipes/356355#cards/5141022'
@@ -130,6 +167,7 @@ RSpec.describe PipefyReader, type: :service do
             created_demand = Demand.last
             expect(created_demand.feature?).to be true
             expect(created_demand.demand_id).to eq '5141022'
+            expect(created_demand.assignees_count).to eq 1
             expect(created_demand.effort.to_f).to eq 0
             expect(created_demand.class_of_service).to eq 'intangible'
             expect(created_demand.url).to eq 'http://app.pipefy.com/pipes/356355#cards/5141022'

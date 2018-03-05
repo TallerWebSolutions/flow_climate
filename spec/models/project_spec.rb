@@ -254,7 +254,7 @@ RSpec.describe Project, type: :model do
           it { expect(project.flow_pressure).to eq 1.125 }
         end
         context 'specifying a date' do
-          it { expect(project.flow_pressure(1.day.ago)).to eq 1.0 }
+          it { expect(project.flow_pressure(1.day.ago)).to eq 0.6666666666666666 }
         end
       end
       context 'having no results' do
@@ -403,8 +403,12 @@ RSpec.describe Project, type: :model do
         it { expect(project.total_gap).to eq 9 }
       end
       context 'specifying a date' do
-        it { expect(project.total_gap(1.day.ago)).to eq 9 }
+        it { expect(project.total_gap(1.day.ago)).to eq 6 }
       end
+    end
+    context 'having result to last week' do
+      let!(:result) { Fabricate :project_result, project: project, result_date: 1.week.ago, known_scope: 10, throughput: 4 }
+      it { expect(project.total_gap).to eq 6 }
     end
     context 'having no results' do
       it { expect(project.total_gap).to eq project.initial_scope }

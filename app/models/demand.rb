@@ -36,6 +36,7 @@ class Demand < ApplicationRecord
   belongs_to :project
   belongs_to :project_result, counter_cache: true
   has_many :demand_transitions, dependent: :destroy
+  has_many :demand_blocks, dependent: :destroy
 
   validates :project, :demand_id, :demand_type, :class_of_service, :assignees_count, presence: true
 
@@ -45,7 +46,7 @@ class Demand < ApplicationRecord
   def update_effort!
     effort_transition = demand_transitions.joins(:stage).find_by('stages.compute_effort = true')
     return if effort_transition.blank?
-    effort = DemandService.instance.compute_effort_for_dates(effort_transition.last_time_in, effort_transition.last_time_out)
+    effort = TimeService.instance.compute_working_hours_for_dates(effort_transition.last_time_in, effort_transition.last_time_out)
     update(effort: effort)
   end
 end
