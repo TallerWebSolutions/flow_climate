@@ -403,5 +403,30 @@ RSpec.describe Company, type: :model do
     it { expect(company.bugs_closed_in_month(1.month.ago.to_date)).to eq 30 }
   end
 
-  pending '#total_available_hours'
+  describe '#total_available_hours' do
+    let(:company) { Fabricate :company }
+    let(:customer) { Fabricate :customer, company: company }
+    let(:other_customer) { Fabricate :customer, company: company }
+    let(:other_company_customer) { Fabricate :customer }
+
+    let(:first_team) { Fabricate :team, company: company }
+    let(:second_team) { Fabricate :team, company: company }
+    let(:third_team) { Fabricate :team, company: other_company_customer.company }
+
+    let!(:first_member) { Fabricate :team_member, team: first_team, hours_per_month: 160, billable: true, active: true, billable_type: :outsourcing }
+    let!(:second_member) { Fabricate :team_member, team: first_team, hours_per_month: 40, billable: true, active: true, billable_type: :consulting }
+    let!(:third_member) { Fabricate :team_member, team: second_team, hours_per_month: 140, billable: true, active: true, billable_type: :training }
+    let!(:fourth_member) { Fabricate :team_member, team: third_team, hours_per_month: 20, billable: true, active: true, billable_type: :outsourcing }
+
+    let!(:project) { Fabricate :project, customer: customer, project_type: first_member.billable_type }
+    let!(:other_project) { Fabricate :project, customer: customer, project_type: second_member.billable_type }
+    let!(:other_customer_project) { Fabricate :project, customer: other_customer, project_type: third_member.billable_type }
+    let!(:other_company_project) { Fabricate :project, customer: other_company_customer, project_type: fourth_member.billable_type }
+
+    let!(:first_result) { Fabricate :project_result, project: project, team: first_team }
+    let!(:second_result) { Fabricate :project_result, project: other_project, team: second_team }
+    let!(:third_result) { Fabricate :project_result, project: other_customer_project, team: third_team }
+
+    it { expect(company.total_available_hours).to eq 340 }
+  end
 end

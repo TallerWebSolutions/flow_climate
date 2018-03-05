@@ -36,7 +36,7 @@ class ProjectResultsController < AuthenticatedController
 
   def update
     @project_result.update(project_result_params.merge(project: @project, team: @team))
-    @project_result.define_automatic_attributes!
+    @project_result.define_automatic_attributes! if @project_result.valid?
     return redirect_to company_project_path(@company, @project) if @project_result.save
     assign_company_teams
     render :edit

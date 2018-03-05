@@ -9,7 +9,8 @@ RSpec.describe Demand, type: :model do
   context 'associations' do
     it { is_expected.to belong_to :project }
     it { is_expected.to belong_to :project_result }
-    it { is_expected.to have_many :demand_transitions }
+    it { is_expected.to have_many(:demand_transitions).dependent(:destroy) }
+    it { is_expected.to have_many(:demand_blocks).dependent(:destroy) }
   end
 
   context 'validations' do

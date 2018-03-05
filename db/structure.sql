@@ -152,6 +152,45 @@ ALTER SEQUENCE customers_id_seq OWNED BY customers.id;
 
 
 --
+-- Name: demand_blocks; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE demand_blocks (
+    id bigint NOT NULL,
+    demand_id integer NOT NULL,
+    demand_block_id integer NOT NULL,
+    blocker_username character varying NOT NULL,
+    block_time timestamp without time zone NOT NULL,
+    block_reason character varying NOT NULL,
+    unblocker_username character varying,
+    unblock_time timestamp without time zone,
+    unblock_reason character varying,
+    block_duration integer,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: demand_blocks_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE demand_blocks_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: demand_blocks_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE demand_blocks_id_seq OWNED BY demand_blocks.id;
+
+
+--
 -- Name: demand_transitions; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -745,6 +784,13 @@ ALTER TABLE ONLY customers ALTER COLUMN id SET DEFAULT nextval('customers_id_seq
 
 
 --
+-- Name: demand_blocks id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY demand_blocks ALTER COLUMN id SET DEFAULT nextval('demand_blocks_id_seq'::regclass);
+
+
+--
 -- Name: demand_transitions id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -879,6 +925,14 @@ ALTER TABLE ONLY company_settings
 
 ALTER TABLE ONLY customers
     ADD CONSTRAINT customers_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: demand_blocks demand_blocks_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY demand_blocks
+    ADD CONSTRAINT demand_blocks_pkey PRIMARY KEY (id);
 
 
 --
@@ -1045,6 +1099,13 @@ CREATE UNIQUE INDEX index_customers_on_company_id_and_name ON customers USING bt
 
 
 --
+-- Name: index_demand_blocks_on_demand_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_demand_blocks_on_demand_id ON demand_blocks USING btree (demand_id);
+
+
+--
 -- Name: index_demand_transitions_on_demand_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1197,6 +1258,14 @@ CREATE UNIQUE INDEX index_users_on_reset_password_token ON users USING btree (re
 
 ALTER TABLE ONLY pipefy_configs
     ADD CONSTRAINT fk_rails_0732eff170 FOREIGN KEY (project_id) REFERENCES projects(id);
+
+
+--
+-- Name: demand_blocks fk_rails_0c8fa8d3a7; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY demand_blocks
+    ADD CONSTRAINT fk_rails_0c8fa8d3a7 FOREIGN KEY (demand_id) REFERENCES demands(id);
 
 
 --
@@ -1433,6 +1502,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20180224031304'),
 ('20180224142451'),
 ('20180302152036'),
-('20180302225234');
+('20180302225234'),
+('20180303002459');
 
 

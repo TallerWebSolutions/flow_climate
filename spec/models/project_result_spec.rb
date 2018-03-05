@@ -97,7 +97,7 @@ RSpec.describe ProjectResult, type: :model do
   describe '#hours_per_demand' do
     context 'when the throughput is different of zero' do
       let(:result) { Fabricate :project_result }
-      it { expect(result.hours_per_demand).to eq result.project_delivered_hours / result.throughput }
+      it { expect(result.hours_per_demand).to eq result.project_delivered_hours.to_f / result.throughput.to_f }
     end
     context 'when the throughput is zero' do
       let(:result) { Fabricate :project_result, throughput: 0 }
@@ -110,12 +110,12 @@ RSpec.describe ProjectResult, type: :model do
     let(:customer) { Fabricate :customer, company: company }
     let(:project) { Fabricate :project, customer: customer }
     context 'when the remaining days is different of zero and has no team yet' do
-      let(:result) { Fabricate :project_result, project: project, known_scope: 20, throughput: 4 }
+      let(:result) { Fabricate :project_result, project: project, known_scope: 20, throughput: 4, cost_in_month: 432_123 }
       before { result.define_automatic_attributes! }
       it { expect(result.reload.flow_pressure.to_f).to be_within(0.01).of(0.25) }
       it { expect(result.reload.remaining_days).to eq 62 }
       it { expect(result.reload.cost_in_month).to eq 0 }
-      it { expect(result.reload.average_demand_cost.to_f).to eq 0 }
+      it { expect(result.reload.average_demand_cost.to_f).to eq 0.0 }
       it { expect(result.reload.available_hours.to_f).to eq 0 }
     end
     context 'when the project already has a team and a cost' do
@@ -126,7 +126,7 @@ RSpec.describe ProjectResult, type: :model do
       before { result.define_automatic_attributes! }
       it 'defines the automatic attributes' do
         expect(result.reload.cost_in_month.to_f).to eq 200.0
-        expect(result.reload.average_demand_cost.to_f).to eq 1.6666666666666667
+        expect(result.reload.average_demand_cost.to_f).to be_within(0.01).of(0.33)
         expect(result.reload.available_hours.to_f).to eq 1.1
       end
     end
@@ -144,6 +144,34 @@ RSpec.describe ProjectResult, type: :model do
     it { expect(result.total_hours).to eq 150 }
   end
 
-  pending '#add_demand!'
+  describe '#add_demand!' do
+    let(:project) { Fabricate :project }
+    let(:result) { Fabricate :project_result, project: project, result_date: Time.zone.today, known_scope: 2032, cost_in_month: 30_000, throughput: 0 }
+    let(:demand) { Fabricate :demand, project_result: result, project: project }
+    let(:other_demand) { Fabricate :demand, project: project, demand_type: :bug, effort: 100 }
+    let!(:demand_transition) { Fabricate :demand_transition, demand: demand, last_time_in: Time.zone.yesterday }
+    let!(:other_demand_transition) { Fabricate :demand_transition, demand: other_demand, last_time_in: Time.zone.yesterday }
+    context 'when it does not have the demand yet' do
+      it 'adds the demand and compute the flow metrics in the result' do
+        result.add_demand!(other_demand)
+        expect(ProjectResult.count).to eq 1
+        expect(result.reload.demands).to match_array [demand, other_demand]
+        expect(result.reload.known_scope).to eq 2
+        expect(result.reload.throughput).to eq 0
+        expect(result.reload.qty_hours_upstream).to eq 0
+        expect(result.reload.qty_hours_downstream).to eq 0
+        expect(result.reload.qty_hours_bug).to eq 0
+        expect(result.reload.qty_bugs_closed).to eq 0
+        expect(result.reload.qty_bugs_opened).to eq 0
+        expect(result.reload.flow_pressure.to_f).to eq 0.032258064516129
+        expect(result.reload.average_demand_cost.to_f).to eq 0.0
+      end
+    end
+    context 'when it does already have the demand' do
+      before { result.add_demand!(demand) }
+      it { expect(result.reload.demands).to eq [demand] }
+    end
+  end
+
   pending '#remove_demand!'
 end
