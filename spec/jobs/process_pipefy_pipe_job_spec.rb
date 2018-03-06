@@ -60,7 +60,64 @@ RSpec.describe ProcessPipefyPipeJob, type: :active_job do
           ProcessPipefyPipeJob.perform_now(true)
         end
       end
+
+      context 'returning an error' do
+        let!(:pipefy_config) { Fabricate :pipefy_config, project: project, team: team, pipe_id: '356528' }
+
+        context 'in a card response' do
+          before do
+            stub_request(:post, 'https://app.pipefy.com/queries').with(headers: headers, body: /4648391/).to_return(status: 500, body: card_response.to_json, headers: {})
+            stub_request(:post, 'https://app.pipefy.com/queries').with(headers: headers, body: /4648389/).to_return(status: 200, body: other_card_response.to_json, headers: {})
+            stub_request(:post, 'https://app.pipefy.com/queries').with(headers: headers, body: /356528/).to_return(status: 200, body: pipe_response.to_json, headers: {})
+            stub_request(:post, 'https://app.pipefy.com/queries').with(headers: headers, body: /2481594/).to_return(status: 200, body: phase_response.to_json, headers: {})
+            stub_request(:post, 'https://app.pipefy.com/queries').with(headers: headers, body: /2481595/).to_return(status: 200, body: phase_response.to_json, headers: {})
+            stub_request(:post, 'https://app.pipefy.com/queries').with(headers: headers, body: /2481596/).to_return(status: 200, body: phase_response.to_json, headers: {})
+            stub_request(:post, 'https://app.pipefy.com/queries').with(headers: headers, body: /2481597/).to_return(status: 200, body: phase_response.to_json, headers: {})
+          end
+          it 'process nothing for the error response, but process the success ones' do
+            expect(PipefyReader.instance).to receive(:process_card).with(team, card_response).never
+            expect(PipefyReader.instance).to receive(:process_card).with(team, other_card_response).once
+            ProcessPipefyPipeJob.perform_now(false)
+          end
+        end
+
+        context 'in the pipe response' do
+          before do
+            stub_request(:post, 'https://app.pipefy.com/queries').with(headers: headers, body: /4648391/).to_return(status: 200, body: card_response.to_json, headers: {})
+            stub_request(:post, 'https://app.pipefy.com/queries').with(headers: headers, body: /4648389/).to_return(status: 200, body: other_card_response.to_json, headers: {})
+            stub_request(:post, 'https://app.pipefy.com/queries').with(headers: headers, body: /356528/).to_return(status: 500, body: 'there is a problem', headers: {})
+            stub_request(:post, 'https://app.pipefy.com/queries').with(headers: headers, body: /2481594/).to_return(status: 200, body: phase_response.to_json, headers: {})
+            stub_request(:post, 'https://app.pipefy.com/queries').with(headers: headers, body: /2481595/).to_return(status: 200, body: phase_response.to_json, headers: {})
+            stub_request(:post, 'https://app.pipefy.com/queries').with(headers: headers, body: /2481596/).to_return(status: 200, body: phase_response.to_json, headers: {})
+            stub_request(:post, 'https://app.pipefy.com/queries').with(headers: headers, body: /2481597/).to_return(status: 200, body: phase_response.to_json, headers: {})
+          end
+
+          it 'process nothing for the error response, but process the success ones' do
+            expect(PipefyReader.instance).to receive(:process_card).with(team, card_response).never
+            expect(PipefyReader.instance).to receive(:process_card).with(team, other_card_response).never
+            ProcessPipefyPipeJob.perform_now(false)
+          end
+        end
+        context 'in the phase response' do
+          before do
+            stub_request(:post, 'https://app.pipefy.com/queries').with(headers: headers, body: /4648391/).to_return(status: 200, body: card_response.to_json, headers: {})
+            stub_request(:post, 'https://app.pipefy.com/queries').with(headers: headers, body: /4648389/).to_return(status: 200, body: other_card_response.to_json, headers: {})
+            stub_request(:post, 'https://app.pipefy.com/queries').with(headers: headers, body: /356528/).to_return(status: 200, body: pipe_response.to_json, headers: {})
+            stub_request(:post, 'https://app.pipefy.com/queries').with(headers: headers, body: /2481594/).to_return(status: 500, body: 'there is a problem', headers: {})
+            stub_request(:post, 'https://app.pipefy.com/queries').with(headers: headers, body: /2481595/).to_return(status: 500, body: 'there is a problem', headers: {})
+            stub_request(:post, 'https://app.pipefy.com/queries').with(headers: headers, body: /2481596/).to_return(status: 500, body: 'there is a problem', headers: {})
+            stub_request(:post, 'https://app.pipefy.com/queries').with(headers: headers, body: /2481597/).to_return(status: 500, body: 'there is a problem', headers: {})
+          end
+
+          it 'process nothing for the error response, but process the success ones' do
+            expect(PipefyReader.instance).to receive(:process_card).with(team, card_response).never
+            expect(PipefyReader.instance).to receive(:process_card).with(team, other_card_response).never
+            ProcessPipefyPipeJob.perform_now(false)
+          end
+        end
+      end
     end
+
     context 'and no pipe config' do
       context 'when there is no demand and project result' do
         it 'creates the demand the project_result for the card end_date' do
