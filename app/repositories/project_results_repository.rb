@@ -86,7 +86,7 @@ class ProjectResultsRepository
 
     previous_result.remove_demand!(demand) if previous_result.present?
 
-    result_date = define_result_date(demand, first_transition).to_date
+    result_date = define_result_date(demand, first_transition).utc.to_date
     project_result = ProjectResultsRepository.instance.create_empty_project_result(demand, team, result_date)
     project_result.add_demand!(demand)
   end

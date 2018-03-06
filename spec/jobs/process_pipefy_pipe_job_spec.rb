@@ -17,7 +17,7 @@ RSpec.describe ProcessPipefyPipeJob, type: :active_job do
 
   context 'having params' do
     let(:team) { Fabricate :team }
-    let(:project) { Fabricate :project, start_date: Time.iso8601('2018-01-11T23:01:46-02:00'), end_date: Time.iso8601('2018-02-25T23:01:46-02:00') }
+    let(:project) { Fabricate :project, start_date: Time.zone.iso8601('2018-01-11T23:01:46-02:00'), end_date: Time.zone.iso8601('2018-02-25T23:01:46-02:00') }
     let!(:stage) { Fabricate :stage, projects: [project], integration_id: '2481595', compute_effort: true }
     let!(:end_stage) { Fabricate :stage, projects: [project], integration_id: '2481597', compute_effort: false, end_point: true }
 

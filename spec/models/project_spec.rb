@@ -246,15 +246,15 @@ RSpec.describe Project, type: :model do
 
   describe '#flow_pressure' do
     context 'and the start and finish dates are in different days' do
-      let(:project) { Fabricate :project, initial_scope: 30, start_date: 1.day.ago, end_date: 1.week.from_now }
+      let(:project) { Fabricate :project, initial_scope: 30, start_date: 2.days.ago, end_date: 1.week.from_now }
       context 'having results' do
-        let!(:result) { Fabricate :project_result, project: project, result_date: 1.day.ago, known_scope: 10, throughput: 4 }
+        let!(:result) { Fabricate :project_result, project: project, result_date: 2.days.ago, known_scope: 10, throughput: 4 }
         let!(:other_result) { Fabricate :project_result, project: project, result_date: Time.zone.today, known_scope: 20, throughput: 7 }
         context 'specifying no date' do
           it { expect(project.flow_pressure).to eq 1.125 }
         end
         context 'specifying a date' do
-          it { expect(project.flow_pressure(1.day.ago)).to eq 0.6666666666666666 }
+          it { expect(project.flow_pressure(2.days.ago)).to eq 0.6 }
         end
       end
       context 'having no results' do
@@ -397,13 +397,13 @@ RSpec.describe Project, type: :model do
   describe '#total_gap' do
     let(:project) { Fabricate :project, initial_scope: 30, start_date: 1.week.ago, end_date: 1.week.from_now }
     context 'having results' do
-      let!(:result) { Fabricate :project_result, project: project, result_date: 1.day.ago, known_scope: 10, throughput: 4 }
+      let!(:result) { Fabricate :project_result, project: project, result_date: 1.week.ago, known_scope: 10, throughput: 4 }
       let!(:other_result) { Fabricate :project_result, project: project, result_date: Time.zone.today, known_scope: 20, throughput: 7 }
       context 'specifying no date' do
         it { expect(project.total_gap).to eq 9 }
       end
       context 'specifying a date' do
-        it { expect(project.total_gap(1.day.ago)).to eq 6 }
+        it { expect(project.total_gap(1.week.ago)).to eq 6 }
       end
     end
     context 'having result to last week' do
