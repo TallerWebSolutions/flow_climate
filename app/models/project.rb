@@ -239,7 +239,7 @@ class Project < ApplicationRecord
   private
 
   def locate_last_results_for_date(date = Time.zone.today)
-    @last_results ||= project_results.until_week(date.to_date.cweek, date.to_date.cwyear).order(:result_date).last(2)
+    @locate_last_results_for_date ||= project_results.until_week(date.to_date.cweek, date.to_date.cwyear).order(:result_date).last(2)
   end
 
   def regressive_hours_per_demand

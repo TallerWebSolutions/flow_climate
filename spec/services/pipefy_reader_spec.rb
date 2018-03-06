@@ -53,7 +53,7 @@ RSpec.describe PipefyReader, type: :service do
               expect(updated_demand.demand_type).to eq 'bug'
               expect(updated_demand.demand_id).to eq '5140999'
               expect(updated_demand.assignees_count).to eq 2
-              expect(updated_demand.effort).to eq 16
+              expect(updated_demand.effort.to_f).to eq 24.0
 
               expect(DemandBlock.count).to eq 1
               block = Demand.last.demand_blocks.first
@@ -67,9 +67,9 @@ RSpec.describe PipefyReader, type: :service do
               created_result = ProjectResult.last
               expect(created_result.result_date).to eq Date.new(2018, 2, 23)
               expect(created_result.known_scope).to eq 2
-              expect(created_result.qty_hours_downstream).to eq 16
+              expect(created_result.qty_hours_downstream).to eq 24
               expect(created_result.qty_hours_upstream).to eq 0
-              expect(created_result.qty_hours_bug).to eq 16
+              expect(created_result.qty_hours_bug).to eq 24
             end
           end
 
@@ -128,7 +128,7 @@ RSpec.describe PipefyReader, type: :service do
             expect(created_demand.bug?).to be true
             expect(created_demand.demand_id).to eq '5140999'
             expect(created_demand.assignees_count).to eq 2
-            expect(created_demand.effort.to_f).to eq 16.0
+            expect(created_demand.effort.to_f).to eq 24.0
             expect(created_demand.class_of_service).to eq 'standard'
             expect(created_demand.url).to eq 'http://app.pipefy.com/pipes/356355#cards/5140999'
           end
@@ -141,7 +141,7 @@ RSpec.describe PipefyReader, type: :service do
             expect(created_demand.chore?).to be true
             expect(created_demand.demand_id).to eq '5141010'
             expect(created_demand.assignees_count).to eq 0
-            expect(created_demand.effort.to_f).to eq 16.0
+            expect(created_demand.effort.to_f).to eq 0.0
             expect(created_demand.class_of_service).to eq 'expedite'
             expect(created_demand.url).to eq 'http://app.pipefy.com/pipes/356355#cards/5141010'
           end
