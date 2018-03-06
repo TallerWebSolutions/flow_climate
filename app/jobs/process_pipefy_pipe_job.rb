@@ -12,12 +12,21 @@ class ProcessPipefyPipeJob < ApplicationJob
   def process_pipe(full_reading, pipefy_configs)
     processed_projects = []
     pipefy_configs.each do |config|
-      pipe_response = JSON.parse(PipefyApiService.request_pipe_details_with_card_summary(config.pipe_id).body)
-      cards_in_pipe = read_cards_from_pipe_response(pipe_response, full_reading)
-      cards_in_pipe.sort.reverse.each do |card_id|
-        card_response = JSON.parse(PipefyApiService.request_card_details(card_id).body)
-        processed_projects << PipefyReader.instance.process_card(config.team, card_response)
-      end
+      pipe_response = PipefyApiService.request_pipe_details_with_card_summary(config.pipe_id)
+      next if pipe_response.code != 200
+      processed_projects.concat(process_success_pipe_response(config, full_reading, pipe_response))
+    end
+    processed_projects
+  end
+
+  def process_success_pipe_response(config, full_reading, pipe_response)
+    cards_in_pipe = read_cards_from_pipe_response(JSON.parse(pipe_response.body), full_reading)
+
+    processed_projects = []
+    cards_in_pipe.sort.reverse.each do |card_id|
+      card_response = PipefyApiService.request_card_details(card_id)
+      next if card_response.code != 200
+      processed_projects << PipefyReader.instance.process_card(config.team, JSON.parse(card_response.body))
     end
     processed_projects
   end
@@ -30,7 +39,13 @@ class ProcessPipefyPipeJob < ApplicationJob
 
   def read_phase(cards_in_pipe, full_read, phase)
     phase_id = phase['id']
-    cards_in_phase = JSON.parse(PipefyApiService.request_cards_to_phase(phase_id).body)
+    phase_response = PipefyApiService.request_cards_to_phase(phase_id)
+    return if phase_response.code != 200
+    process_success_phase_response(cards_in_pipe, full_read, phase_id, phase_response)
+  end
+
+  def process_success_phase_response(cards_in_pipe, full_read, phase_id, phase_response)
+    cards_in_phase = JSON.parse(phase_response.body)
     root_cards = cards_in_phase['data']['phase']['cards']
     cards_in_pipe.concat(root_cards['edges'].map { |edge| edge['node']['id'] })
     cards_in_pipe.concat(read_all_the_cards_in_phase(phase_id, root_cards)) if full_read && root_cards['pageInfo']['hasNextPage']
