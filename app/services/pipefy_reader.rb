@@ -41,6 +41,7 @@ class PipefyReader
   end
 
   def read_phases_transitions(demand, response_data)
+    demand.demand_transitions.destroy_all
     response_data.try(:[], 'card').try(:[], 'phases_history')&.each do |phase|
       create_transition_for_phase_and_demand(phase, demand)
     end
