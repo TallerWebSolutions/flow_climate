@@ -59,7 +59,7 @@ class Company < ApplicationRecord
   end
 
   def current_month_throughput
-    @throughput_in_month ||= ProjectResultsRepository.instance.throughput_in_month_for_company(self)
+    @current_month_throughput ||= ProjectResultsRepository.instance.throughput_in_month_for_company(self)
   end
 
   def last_week_scope
