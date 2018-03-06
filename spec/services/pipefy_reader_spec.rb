@@ -7,9 +7,9 @@ RSpec.describe PipefyReader, type: :service do
     let(:product) { Fabricate :product, customer: customer, name: 'xpto' }
     let(:other_product) { Fabricate :product, customer: customer, name: 'bar' }
 
-    let(:first_project) { Fabricate :project, customer: customer, product: product, name: 'Fase 1', start_date: Time.iso8601('2018-01-04T23:01:46-02:00'), end_date: Time.iso8601('2018-02-25T23:01:46-02:00') }
-    let(:second_project) { Fabricate :project, customer: customer, product: product, name: 'Fase 2', start_date: Time.iso8601('2018-02-26T23:01:46-02:00'), end_date: Time.iso8601('2018-04-25T23:01:46-02:00') }
-    let(:third_project) { Fabricate :project, customer: other_customer, product: other_product, name: 'Fase 1', start_date: Time.iso8601('2018-02-26T23:01:46-02:00'), end_date: Time.iso8601('2018-04-25T23:01:46-02:00') }
+    let(:first_project) { Fabricate :project, customer: customer, product: product, name: 'Fase 1', start_date: Time.zone.iso8601('2018-01-04T23:01:46-02:00'), end_date: Time.zone.iso8601('2018-02-25T23:01:46-02:00') }
+    let(:second_project) { Fabricate :project, customer: customer, product: product, name: 'Fase 2', start_date: Time.zone.iso8601('2018-02-26T23:01:46-02:00'), end_date: Time.zone.iso8601('2018-04-25T23:01:46-02:00') }
+    let(:third_project) { Fabricate :project, customer: other_customer, product: other_product, name: 'Fase 1', start_date: Time.zone.iso8601('2018-02-26T23:01:46-02:00'), end_date: Time.zone.iso8601('2018-04-25T23:01:46-02:00') }
 
     let(:team) { Fabricate :team }
     let!(:stage) { Fabricate :stage, projects: [first_project, second_project, third_project], integration_id: '2481595', compute_effort: true }
@@ -22,7 +22,7 @@ RSpec.describe PipefyReader, type: :service do
     let(:pipe_response) { { data: { pipe: { phases: [{ cards: { edges: [{ node: { id: '4648389', title: 'ateste' } }] } }, { cards: { edges: [] } }, { cards: { edges: [{ node: { id: '4648391', title: 'teste 2' } }] } }] } } }.with_indifferent_access }
 
     context 'having no matching project' do
-      let(:first_project) { Fabricate :project, customer: customer, product: product, name: 'Fase 5', start_date: Time.iso8601('2018-01-11T23:01:46-02:00'), end_date: Time.iso8601('2018-02-25T23:01:46-02:00') }
+      let(:first_project) { Fabricate :project, customer: customer, product: product, name: 'Fase 5', start_date: Time.zone.iso8601('2018-01-11T23:01:46-02:00'), end_date: Time.zone.iso8601('2018-02-25T23:01:46-02:00') }
       it 'processes the card creating or updating the models' do
         PipefyReader.instance.process_card(team, first_card_response)
 
@@ -59,7 +59,7 @@ RSpec.describe PipefyReader, type: :service do
               block = Demand.last.demand_blocks.first
               expect(block.demand_block_id).to eq 1
               expect(block.block_reason).to eq '[BLOCKED]: xpto of bla having foo.'
-              expect(block.block_time).to eq Time.iso8601('2018-03-01T18:39:46-03:00')
+              expect(block.block_time).to eq Time.zone.iso8601('2018-03-01T18:39:46-03:00')
               expect(block.blocker_username).to eq 'sbbrubles'
 
               expect(ProjectResult.count).to eq 2
@@ -82,17 +82,17 @@ RSpec.describe PipefyReader, type: :service do
 
               first_block = DemandBlock.where(demand: created_demand, demand_block_id: '1').first
               expect(first_block.block_reason).to eq '[BLOCKED][1]: xpto of bla having foo in the block 1.'
-              expect(first_block.block_time).to eq Time.iso8601('2018-02-18T18:39:46-03:00')
+              expect(first_block.block_time).to eq Time.zone.iso8601('2018-02-18T18:39:46-03:00')
               expect(first_block.blocker_username).to eq 'sbbrubles'
 
               second_block = DemandBlock.where(demand: created_demand, demand_block_id: '2').first
 
               expect(second_block.block_reason).to eq '[BLOCKED][2]: xpto of bla having foo.'
-              expect(second_block.block_time).to eq Time.iso8601('2018-02-18T18:39:46-03:00')
+              expect(second_block.block_time).to eq Time.zone.iso8601('2018-02-18T18:39:46-03:00')
               expect(second_block.blocker_username).to eq 'sbbrubles'
 
               expect(second_block.unblocker_username).to eq 'johndoe'
-              expect(second_block.unblock_time).to eq Time.iso8601('2018-02-20T18:39:46-03:00')
+              expect(second_block.unblock_time).to eq Time.zone.iso8601('2018-02-20T18:39:46-03:00')
               expect(second_block.unblock_reason).to eq '[UNBLOCKED][2]: there is no more xpto of bla having foo.'
               expect(second_block.block_duration).to eq 14
             end
