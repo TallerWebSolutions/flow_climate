@@ -17,7 +17,7 @@ class TimeService
       total_hours += 1 unless initial_time.saturday? || initial_time.sunday?
       initial_time += 1.hour
     end
-    return total_hours if total_hours <= 8
+    return total_hours if total_hours <= 6
     total_hours.to_f / 3
   end
 end
