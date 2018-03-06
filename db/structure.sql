@@ -350,7 +350,8 @@ CREATE TABLE pipefy_configs (
     pipe_id character varying NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    company_id integer NOT NULL
+    company_id integer NOT NULL,
+    active boolean DEFAULT true
 );
 
 
@@ -1503,6 +1504,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20180224142451'),
 ('20180302152036'),
 ('20180302225234'),
-('20180303002459');
+('20180303002459'),
+('20180306142224');
 
 
