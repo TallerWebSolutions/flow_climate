@@ -1,9 +1,11 @@
 # frozen_string_literal: true
 
 class StrategicReportData
-  attr_reader :array_of_months, :active_projects_count_data, :sold_hours_in_month, :consumed_hours_per_month, :available_hours_per_month, :flow_pressure_per_month_data, :money_per_month_data
+  attr_reader :company, :array_of_months, :active_projects_count_data, :sold_hours_in_month, :consumed_hours_per_month, :available_hours_per_month,
+              :flow_pressure_per_month_data, :money_per_month_data, :expenses_per_month_data
 
-  def initialize(projects, total_available_hours)
+  def initialize(company, projects, total_available_hours)
+    @company = company
     @array_of_months = []
     @active_projects_count_data = []
     @sold_hours_in_month = []
@@ -11,7 +13,14 @@ class StrategicReportData
     @available_hours_per_month = []
     @flow_pressure_per_month_data = []
     @money_per_month_data = []
+    @expenses_per_month_data = []
 
+    assign_attributes(projects, total_available_hours)
+  end
+
+  private
+
+  def assign_attributes(projects, total_available_hours)
     assign_months_by_projects_dates(projects)
     assign_active_projects_count_data(projects)
     assign_sold_hours_per_month(projects)
@@ -19,9 +28,8 @@ class StrategicReportData
     assign_available_hours_per_month(total_available_hours)
     assign_flow_pressure_per_month_data(projects)
     assign_money_per_month_data(projects)
+    assign_expenses_per_month_data
   end
-
-  private
 
   def assign_consumed_hours_per_month(projects)
     @array_of_months.each do |month_year|
@@ -56,6 +64,15 @@ class StrategicReportData
   def assign_money_per_month_data(projects)
     @array_of_months.each do |month_year|
       @money_per_month_data << ProjectsRepository.instance.money_to_month(projects, Date.new(month_year[1], month_year[0], 1)).to_f
+    end
+  end
+
+  def assign_expenses_per_month_data
+    last_expense = 0
+    @array_of_months.each do |month_year|
+      expenses_in_month = @company.financial_informations.for_month(month_year[0], month_year[1]).first&.expenses_total&.to_f || last_expense
+      @expenses_per_month_data << expenses_in_month
+      last_expense = expenses_in_month
     end
   end
 

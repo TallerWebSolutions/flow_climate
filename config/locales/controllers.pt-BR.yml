@@ -246,6 +246,10 @@ pt-BR:
         text: "Pressão do Fluxo"
       money:
         text: "Dinheiro"
+      expenses:
+        text: "Despesas"
+      incomes:
+        text: "Receitas"
     tooltipsufix:
       projects:
         text: "projetos"

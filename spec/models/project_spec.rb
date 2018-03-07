@@ -246,19 +246,21 @@ RSpec.describe Project, type: :model do
 
   describe '#flow_pressure' do
     context 'and the start and finish dates are in different days' do
-      let(:project) { Fabricate :project, initial_scope: 30, start_date: 2.days.ago, end_date: 1.week.from_now }
+      let(:project) { Fabricate :project, initial_scope: 30, start_date: Time.zone.parse('2018-03-05 22:00'), end_date: Time.zone.parse('2018-03-07 10:00') }
       context 'having results' do
-        let!(:result) { Fabricate :project_result, project: project, result_date: 2.days.ago, known_scope: 10, throughput: 4 }
-        let!(:other_result) { Fabricate :project_result, project: project, result_date: Time.zone.today, known_scope: 20, throughput: 7 }
+        let!(:result) { Fabricate :project_result, project: project, result_date: Time.zone.parse('2018-03-05 23:00'), known_scope: 10, throughput: 4 }
+        let!(:other_result) { Fabricate :project_result, project: project, result_date: Time.zone.parse('2018-03-06 22:00'), known_scope: 20, throughput: 7 }
         context 'specifying no date' do
-          it { expect(project.flow_pressure).to eq 1.125 }
+          before { allow(Time.zone).to receive(:today) { Time.zone.parse('2018-03-06') } }
+          it { expect(project.flow_pressure).to eq 4.5 }
         end
         context 'specifying a date' do
-          it { expect(project.flow_pressure(2.days.ago)).to eq 0.6 }
+          it { expect(project.flow_pressure(Time.zone.parse('2018-03-05 22:00'))).to eq 3.0 }
         end
       end
       context 'having no results' do
-        it { expect(project.flow_pressure).to be_within(0.01).of(3.75) }
+        before { allow(Time.zone).to receive(:today) { Time.zone.parse('2018-03-06') } }
+        it { expect(project.flow_pressure).to eq 15 }
       end
     end
     context 'and the start and finish dates are in the same day' do
