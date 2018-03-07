@@ -245,6 +245,8 @@ en:
         text: "Money"
       expenses:
         text: "Expenses"
+      incomes:
+        text: "Incomes"
     tooltipsufix:
       projects:
         text: "projects"

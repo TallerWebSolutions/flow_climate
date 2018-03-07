@@ -54,8 +54,8 @@
          data-ytitle='<%= t('charts.ylabel.hours.text') %>'
          data-ylinetitle='<%= t('charts.ylabel.money.text') %>'
          data-series='<%= [
-                            { name: t('charts.ylabel.money.text'), color: '#4C7F18', data: strategic_report_data.money_per_month_data },
-                            { name: t('charts.ylabel.expenses.text'), color: '#E0115F', data: strategic_report_data.expenses_per_month_data }
+                            { name: t('charts.ylabel.incomes.text'), color: '#81ea90', data: strategic_report_data.money_per_month_data },
+                            { name: t('charts.ylabel.expenses.text'), color: '#f90000', data: strategic_report_data.expenses_per_month_data }
                           ].to_json %>'
          data-prefix='<%= t('projects.charts.cmd.tooltip_prefix') %>'
          data-decimals='2'>

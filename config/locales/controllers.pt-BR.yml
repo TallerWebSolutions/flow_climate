@@ -248,6 +248,8 @@ pt-BR:
         text: "Dinheiro"
       expenses:
         text: "Despesas"
+      incomes:
+        text: "Receitas"
     tooltipsufix:
       projects:
         text: "projetos"
