@@ -26,6 +26,8 @@ class FinancialInformation < ApplicationRecord
 
   validates :finances_date, :income_total, :expenses_total, presence: true
 
+  scope :for_month, ->(month, year) { where('EXTRACT(MONTH FROM finances_date) = :month AND EXTRACT(YEAR FROM finances_date) = :year', month: month, year: year) }
+
   def financial_result
     income_total.to_f - expenses_total.to_f
   end

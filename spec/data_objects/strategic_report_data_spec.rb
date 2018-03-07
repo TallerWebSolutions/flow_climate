@@ -3,7 +3,12 @@
 RSpec.describe StrategicReportData, type: :service do
   describe '.active_projects_count_per_month' do
     let(:company) { Fabricate :company }
+    let!(:first_financial_information) { Fabricate :financial_information, company: company, finances_date: 3.months.ago, expenses_total: 300 }
+    let!(:second_financial_information) { Fabricate :financial_information, company: company, finances_date: 1.month.ago, expenses_total: 200 }
+    let!(:third_financial_information) { Fabricate :financial_information, company: company, finances_date: 2.months.from_now, expenses_total: 100 }
+
     let(:customer) { Fabricate :customer, company: company }
+
     let(:team) { Fabricate :team, company: company }
     let!(:team_member) { Fabricate :team_member, team: team, hours_per_month: 20 }
     let!(:other_team_member) { Fabricate :team_member, team: team, hours_per_month: 160 }
@@ -28,7 +33,7 @@ RSpec.describe StrategicReportData, type: :service do
       let!(:eighth_project_result) { Fabricate :project_result, project: eighth_project, team: team, result_date: 2.months.from_now, qty_hours_upstream: 10, qty_hours_downstream: 40, available_hours: 234, throughput: 5, flow_pressure: 1 }
 
       it 'mounts the data structure to the active project counts in months' do
-        strategic_data = StrategicReportData.new(company.projects, company.total_available_hours)
+        strategic_data = StrategicReportData.new(company, company.projects, company.total_available_hours)
         expect(strategic_data.array_of_months).to eq [[3.months.ago.to_date.month, 3.months.ago.to_date.year], [2.months.ago.to_date.month, 2.months.ago.to_date.year], [1.month.ago.to_date.month, 1.month.ago.to_date.year], [Time.zone.today.month, Time.zone.today.year], [1.month.from_now.to_date.month, 1.month.from_now.to_date.year], [2.months.from_now.to_date.month, 2.months.from_now.to_date.year], [3.months.from_now.to_date.month, 3.months.from_now.to_date.year]]
         expect(strategic_data.active_projects_count_data).to eq [2, 2, 0, 0, 2, 4, 2]
         expect(strategic_data.sold_hours_in_month).to eq [1406.25, 1406.25, 0, 0, 2129.032258064516, 7004.032258064516, 4875.0]
@@ -36,12 +41,13 @@ RSpec.describe StrategicReportData, type: :service do
         expect(strategic_data.available_hours_per_month).to eq [180, 180, 180, 180, 180, 180, 180]
         expect(strategic_data.flow_pressure_per_month_data.map { |pressure| pressure.round(2) }).to eq [8.0, 0.0, 0.0, 0.0, 1.1, 5.85, 3.87]
         expect(strategic_data.money_per_month_data.map { |money| money.round(2) }).to eq [3_237_581.25, 3_237_581.25, 0.0, 0.0, 10_354.84, 10_657.65, 302.81]
+        expect(strategic_data.expenses_per_month_data.map { |expense| expense.round(2) }).to eq [300.0, 300.0, 200.0, 200.0, 200.0, 100.0, 100.0]
       end
     end
 
     context 'having no projects' do
       it 'returns an empty array' do
-        strategic_data = StrategicReportData.new(company.projects, company.total_available_hours)
+        strategic_data = StrategicReportData.new(company, company.projects, company.total_available_hours)
         expect(strategic_data.array_of_months).to eq []
         expect(strategic_data.active_projects_count_data).to eq []
       end

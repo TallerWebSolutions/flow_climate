@@ -243,6 +243,8 @@ en:
         text: "Flow Pressure"
       money:
         text: "Money"
+      expenses:
+        text: "Expenses"
     tooltipsufix:
       projects:
         text: "projects"
