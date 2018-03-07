@@ -146,32 +146,77 @@ RSpec.describe ProjectResult, type: :model do
 
   describe '#add_demand!' do
     let(:project) { Fabricate :project }
-    let(:result) { Fabricate :project_result, project: project, result_date: Time.zone.today, known_scope: 2032, cost_in_month: 30_000, throughput: 0 }
-    let(:demand) { Fabricate :demand, project_result: result, project: project }
-    let(:other_demand) { Fabricate :demand, project: project, demand_type: :bug, effort: 100 }
-    let!(:demand_transition) { Fabricate :demand_transition, demand: demand, last_time_in: Time.zone.yesterday }
-    let!(:other_demand_transition) { Fabricate :demand_transition, demand: other_demand, last_time_in: Time.zone.yesterday }
+    let(:stage) { Fabricate :stage, projects: [project], end_point: true }
+    let(:other_stage) { Fabricate :stage, projects: [project] }
+
+    let(:result) { Fabricate :project_result, project: project, result_date: Time.zone.today, known_scope: 2032, cost_in_month: 30_000, throughput: 0, flow_pressure: 2 }
+
+    let(:first_demand) { Fabricate :demand, project_result: result, project: project, effort: 50 }
+    let(:second_demand) { Fabricate :demand, project: project, demand_type: :bug, effort: 100 }
+    let(:third_demand) { Fabricate :demand, project_result: result, project: project, demand_type: :feature, effort: 70 }
+
+    let!(:first_demand_transition) { Fabricate :demand_transition, stage: stage, demand: first_demand, last_time_in: Time.zone.today }
+    let!(:second_demand_transition) { Fabricate :demand_transition, stage: stage, demand: second_demand, last_time_in: Time.zone.today }
+    let!(:third_demand_transition) { Fabricate :demand_transition, stage: other_stage, demand: third_demand, last_time_in: Time.zone.today }
+
     context 'when it does not have the demand yet' do
       it 'adds the demand and compute the flow metrics in the result' do
-        result.add_demand!(other_demand)
+        result.add_demand!(second_demand)
         expect(ProjectResult.count).to eq 1
-        expect(result.reload.demands).to match_array [demand, other_demand]
-        expect(result.reload.known_scope).to eq 2
-        expect(result.reload.throughput).to eq 0
+        expect(result.reload.demands).to match_array [first_demand, second_demand, third_demand]
+        expect(result.reload.known_scope).to eq 3
+        expect(result.reload.throughput).to eq 2
         expect(result.reload.qty_hours_upstream).to eq 0
-        expect(result.reload.qty_hours_downstream).to eq 0
+        expect(result.reload.qty_hours_downstream).to eq 150
+        expect(result.reload.qty_hours_bug).to eq 100
+        expect(result.reload.qty_bugs_closed).to eq 1
+        expect(result.reload.qty_bugs_opened).to eq 1
+        expect(result.reload.flow_pressure.to_f).to eq 0.0161290322580645
+        expect(result.reload.average_demand_cost.to_f).to eq 500.0
+      end
+    end
+    context 'when it does already have the demand' do
+      before { result.add_demand!(first_demand) }
+      it { expect(result.reload.demands).to eq [first_demand, third_demand] }
+    end
+  end
+
+  describe '#remove_demand!' do
+    let(:project) { Fabricate :project }
+    let(:stage) { Fabricate :stage, projects: [project], end_point: true }
+    let(:other_stage) { Fabricate :stage, projects: [project] }
+
+    let(:result) { Fabricate :project_result, project: project, result_date: Time.zone.today, known_scope: 2032, cost_in_month: 30_000, throughput: 0, flow_pressure: 2 }
+
+    let(:first_demand) { Fabricate :demand, project_result: result, project: project, effort: 50 }
+    let(:second_demand) { Fabricate :demand, project: project, demand_type: :bug, effort: 100 }
+    let(:third_demand) { Fabricate :demand, project_result: result, project: project, demand_type: :feature, effort: 70 }
+
+    let!(:first_demand_transition) { Fabricate :demand_transition, stage: stage, demand: first_demand, last_time_in: Time.zone.today }
+    let!(:second_demand_transition) { Fabricate :demand_transition, stage: stage, demand: second_demand, last_time_in: Time.zone.today }
+    let!(:third_demand_transition) { Fabricate :demand_transition, stage: other_stage, demand: third_demand, last_time_in: Time.zone.today }
+
+    context 'when it has the demand' do
+      it 'removes the demand and compute the flow metrics in t he result' do
+        second_demand_transition.update(last_time_in: Time.zone.yesterday)
+        result.remove_demand!(second_demand)
+
+        expect(ProjectResult.count).to eq 1
+        expect(result.reload.demands).to match_array [first_demand, third_demand]
+        expect(result.reload.known_scope).to eq 3
+        expect(result.reload.throughput).to eq 1
+        expect(result.reload.qty_hours_upstream).to eq 0
+        expect(result.reload.qty_hours_downstream).to eq 50
         expect(result.reload.qty_hours_bug).to eq 0
         expect(result.reload.qty_bugs_closed).to eq 0
         expect(result.reload.qty_bugs_opened).to eq 0
         expect(result.reload.flow_pressure.to_f).to eq 0.032258064516129
-        expect(result.reload.average_demand_cost.to_f).to eq 0.0
+        expect(result.reload.average_demand_cost.to_f).to eq 1000
       end
     end
-    context 'when it does already have the demand' do
-      before { result.add_demand!(demand) }
-      it { expect(result.reload.demands).to eq [demand] }
+    context 'when it does not have the demand' do
+      before { result.remove_demand!(second_demand) }
+      it { expect(result.reload.demands).to eq [first_demand, third_demand] }
     end
   end
-
-  pending '#remove_demand!'
 end
