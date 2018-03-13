@@ -22,8 +22,28 @@ RSpec.describe Demand, type: :model do
   end
 
   context 'scopes' do
-    pending '.opened_in_date'
-    pending '.finished'
+    describe '.opened_in_date' do
+      let!(:first_demand) { Fabricate :demand, created_date: Time.zone.parse('2018-02-03 11:00') }
+      let!(:second_demand) { Fabricate :demand, created_date: Time.zone.parse('2018-02-03 11:00') }
+      let!(:third_demand) { Fabricate :demand, created_date: Time.zone.parse('2018-02-05 11:00') }
+
+      it { expect(Demand.opened_in_date(Date.new(2018, 2, 3))).to match_array [first_demand, second_demand] }
+    end
+
+    describe '.finished' do
+      let!(:first_demand) { Fabricate :demand }
+      let!(:second_demand) { Fabricate :demand }
+      let!(:third_demand) { Fabricate :demand }
+
+      let(:not_end_stage) { Fabricate :stage, commitment_point: false, end_point: false }
+      let(:end_stage) { Fabricate :stage, commitment_point: false, end_point: true }
+
+      let!(:first_demand_transition) { Fabricate :demand_transition, demand: first_demand, stage: end_stage }
+      let!(:second_demand_transition) { Fabricate :demand_transition, demand: second_demand, stage: end_stage }
+      let!(:third_demand_transition) { Fabricate :demand_transition, demand: third_demand, stage: not_end_stage }
+
+      it { expect(Demand.finished).to match_array [first_demand, second_demand] }
+    end
   end
 
   describe '#update_effort!' do
