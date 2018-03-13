@@ -99,7 +99,7 @@ RSpec.describe DemandsController, type: :controller do
           it 'does not create the demand and re-render the template with the errors' do
             expect(Demand.last).to be_nil
             expect(response).to render_template :new
-            expect(assigns(:demand).errors.full_messages).to eq ['Id da Demanda não pode ficar em branco', 'Tipo da Demanda não pode ficar em branco', 'Qtd Atribuídos não pode ficar em branco']
+            expect(assigns(:demand).errors.full_messages).to eq ['Data de Criação não pode ficar em branco', 'Id da Demanda não pode ficar em branco', 'Tipo da Demanda não pode ficar em branco', 'Qtd Atribuídos não pode ficar em branco']
           end
         end
         context 'inexistent company' do
@@ -246,7 +246,7 @@ RSpec.describe DemandsController, type: :controller do
           before { put :update, params: { company_id: company, project_id: project, project_result_id: project_result, id: demand, demand: { demand_id: '', demand_type: '', effort: nil, created_date: nil, commitment_date: nil, end_date: nil } } }
           it 'does not update the demand and re-render the template with the errors' do
             expect(response).to render_template :edit
-            expect(assigns(:demand).errors.full_messages).to match_array ['Id da Demanda não pode ficar em branco', 'Tipo da Demanda não pode ficar em branco']
+            expect(assigns(:demand).errors.full_messages).to match_array ['Data de Criação não pode ficar em branco', 'Id da Demanda não pode ficar em branco', 'Tipo da Demanda não pode ficar em branco']
           end
         end
         context 'non-existent project_result' do

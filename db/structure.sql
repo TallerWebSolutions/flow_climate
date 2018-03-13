@@ -238,7 +238,7 @@ CREATE TABLE public.demands (
     demand_url character varying,
     commitment_date timestamp without time zone,
     end_date timestamp without time zone,
-    created_date timestamp without time zone,
+    created_date timestamp without time zone NOT NULL,
     url character varying,
     class_of_service integer DEFAULT 0 NOT NULL,
     project_id integer NOT NULL,
@@ -1655,6 +1655,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20180303002459'),
 ('20180306142224'),
 ('20180307203657'),
-('20180312220710');
+('20180312220710'),
+('20180313152829');
 
 

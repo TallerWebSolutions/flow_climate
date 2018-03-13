@@ -10,6 +10,7 @@ class CompaniesController < AuthenticatedController
   def show
     @financial_informations = @company.financial_informations.order(finances_date: :desc)
     @teams = @company.teams.order(:name)
+    @company_projects = @company.projects.order(end_date: :desc)
     @strategic_report_data = StrategicReportData.new(@company, @company.projects, @company.total_available_hours)
     @company_settings = @company.company_settings || CompanySettings.new(company: @company)
     @company_projects = @company.projects.order(end_date: :desc)

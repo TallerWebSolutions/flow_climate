@@ -175,20 +175,19 @@ RSpec.describe ProjectResultsRepository, type: :repository do
     let(:team) { Fabricate :team, company: company }
     let(:customer) { Fabricate :customer, company: company }
     let(:project) { Fabricate :project, customer: customer }
-    let(:demand) { Fabricate :demand, project: project }
-    let!(:demand_transition) { Fabricate :demand_transition, demand: demand, last_time_in: Time.zone.iso8601('2018-02-15T23:01:46') }
+    let(:demand) { Fabricate :demand, project: project, created_date: Time.zone.parse('2018-02-14 12:00:00') }
 
     context 'when there is no project result to the date' do
       before { ProjectResultsRepository.instance.create_project_result!(demand, team) }
       it { expect(ProjectResult.count).to eq 1 }
     end
     context 'when there is project result to the date' do
-      let!(:project_result) { Fabricate :project_result, project: project, result_date: Time.zone.iso8601('2018-02-15T23:01:46').utc.to_date }
+      let!(:project_result) { Fabricate :project_result, project: project, result_date: Date.new(2018, 2, 14) }
       before { ProjectResultsRepository.instance.create_project_result!(demand, team) }
       it { expect(ProjectResult.count).to eq 1 }
     end
     context 'when there is project result to another date' do
-      let!(:project_result) { Fabricate :project_result, project: project, result_date: Time.zone.iso8601('2018-02-14T23:01:46').utc.to_date }
+      let!(:project_result) { Fabricate :project_result, project: project, result_date: Date.new(2018, 2, 13) }
       before { ProjectResultsRepository.instance.create_project_result!(demand, team) }
       it { expect(ProjectResult.count).to eq 2 }
     end

@@ -78,6 +78,7 @@ RSpec.describe CompaniesController, type: :controller do
             expect(assigns(:company)).to eq company
             expect(assigns(:financial_informations)).to eq [other_finances, finances]
             expect(assigns(:teams)).to eq [team]
+            expect(assigns(:company_projects)).to eq [second_project, first_project]
             expect(assigns(:strategic_report_data).array_of_months).to eq [[Time.zone.today.month, Time.zone.today.year], [1.month.from_now.to_date.month, 1.month.from_now.to_date.year]]
             expect(assigns(:strategic_report_data).active_projects_count_data).to eq [1, 1]
             expect(assigns(:company_settings)).to be_a_new CompanySettings

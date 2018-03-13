@@ -16,15 +16,17 @@ RSpec.describe Demand, type: :model do
   context 'validations' do
     it { is_expected.to validate_presence_of :project }
     it { is_expected.to validate_presence_of :demand_id }
+    it { is_expected.to validate_presence_of :created_date }
     it { is_expected.to validate_presence_of :demand_type }
     it { is_expected.to validate_presence_of :class_of_service }
   end
 
   context 'scopes' do
-    pending '.bugs_opened_in_date_count'
+    pending '.opened_in_date'
+    pending '.finished'
   end
 
-  describe 'update_effort!' do
+  describe '#update_effort!' do
     let(:company) { Fabricate :company }
     let(:customer) { Fabricate :customer, company: company }
     let(:project) { Fabricate :project, customer: customer }

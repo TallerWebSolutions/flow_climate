@@ -7,9 +7,9 @@ RSpec.describe PipefyReader, type: :service do
     let(:product) { Fabricate :product, customer: customer, name: 'xpto' }
     let(:other_product) { Fabricate :product, customer: customer, name: 'bar' }
 
-    let(:first_project) { Fabricate :project, customer: customer, product: product, name: 'Fase 1', start_date: Time.zone.iso8601('2018-01-04T23:01:46-02:00'), end_date: Time.zone.iso8601('2018-02-25T23:01:46-02:00') }
-    let(:second_project) { Fabricate :project, customer: customer, product: product, name: 'Fase 2', start_date: Time.zone.iso8601('2018-02-26T23:01:46-02:00'), end_date: Time.zone.iso8601('2018-04-25T23:01:46-02:00') }
-    let(:third_project) { Fabricate :project, customer: other_customer, product: other_product, name: 'Fase 1', start_date: Time.zone.iso8601('2018-02-26T23:01:46-02:00'), end_date: Time.zone.iso8601('2018-04-25T23:01:46-02:00') }
+    let(:first_project) { Fabricate :project, customer: customer, product: product, name: 'Fase 1', start_date: Date.new(2018, 1, 4), end_date: Date.new(2018, 4, 4) }
+    let(:second_project) { Fabricate :project, customer: customer, product: product, name: 'Fase 2', start_date: Date.new(2018, 2, 26), end_date: Date.new(2018, 4, 25) }
+    let(:third_project) { Fabricate :project, customer: other_customer, product: other_product, name: 'Fase 1', start_date: Date.new(2018, 2, 26), end_date: Date.new(2018, 4, 25) }
 
     let(:team) { Fabricate :team }
     let!(:stage) { Fabricate :stage, projects: [first_project, second_project, third_project], integration_id: '2481595', compute_effort: true }
@@ -40,7 +40,7 @@ RSpec.describe PipefyReader, type: :service do
           let!(:second_demand) { Fabricate :demand, project: first_project, project_result: nil, demand_id: '5140999' }
           let!(:first_transition) { Fabricate :demand_transition, stage: end_stage, demand: first_demand, last_time_in: '2018-02-14T01:01:41-02:00', last_time_out: '2018-02-16T01:01:41-02:00' }
           let!(:second_transition) { Fabricate :demand_transition, stage: end_stage, demand: second_demand, last_time_in: '2018-02-16T01:01:41-02:00', last_time_out: '2018-02-16T01:42:41-02:00' }
-          let!(:project_result) { Fabricate :project_result, project: first_project, demands: [first_demand, second_demand], result_date: Date.new(2018, 2, 16) }
+          let!(:project_result) { Fabricate :project_result, project: first_project, demands: [first_demand, second_demand], result_date: Date.new(2018, 2, 15) }
 
           context 'when the card has only one block not unblocked' do
             it 'processes the card updating the demand, creating the project result and creating the new block' do
@@ -76,8 +76,8 @@ RSpec.describe PipefyReader, type: :service do
               expect(ProjectResult.count).to eq 2
 
               created_result = ProjectResult.last
-              expect(created_result.result_date).to eq Date.new(2018, 2, 23)
-              expect(created_result.known_scope).to eq 2
+              expect(created_result.result_date).to eq Date.new(2018, 2, 16)
+              expect(created_result.known_scope).to eq 1
               expect(created_result.qty_hours_downstream).to eq 23
               expect(created_result.qty_hours_upstream).to eq 0
               expect(created_result.qty_hours_bug).to eq 23
@@ -188,7 +188,7 @@ RSpec.describe PipefyReader, type: :service do
     end
     context 'with invalid' do
       context 'project_result' do
-        let(:first_project) { Fabricate :project, customer: customer, product: product, name: 'Fase 1', start_date: Date.new(2018, 4, 7), end_date: Date.new(2018, 2, 25) }
+        let(:first_project) { Fabricate :project, customer: customer, product: product, name: 'Fase 1', start_date: Date.new(2018, 4, 7), end_date: Date.new(2018, 4, 25) }
         let!(:stage) { Fabricate :stage, projects: [first_project], integration_id: '2481595', compute_effort: true }
         let!(:end_stage) { Fabricate :stage, projects: [first_project], integration_id: '2481597', compute_effort: false, end_point: true }
         let!(:other_end_stage) { Fabricate :stage, integration_id: '2480504', compute_effort: false, end_point: true }

@@ -16,7 +16,7 @@ RSpec.describe DemandBlock, type: :model do
 
   context '#callbacks' do
     describe '#before_update' do
-      let(:demand_block) { Fabricate :demand_block, unblock_time: nil }
+      let(:demand_block) { Fabricate :demand_block, block_time: Time.zone.yesterday }
       context 'when there is unblock_time' do
         before { demand_block.update(unblock_time: Time.zone.now) }
         it { expect(demand_block.reload.block_duration).not_to eq 0 }

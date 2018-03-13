@@ -52,7 +52,7 @@ class PipefyReader
     url = response_data.try(:[], 'card').try(:[], 'url')
 
     demand = Demand.where(project: project, demand_id: demand_id).first_or_initialize
-    demand.update(demand_type: read_demand_type(response_data), class_of_service: read_class_of_service(response_data), assignees_count: assignees_count, url: url)
+    demand.update(created_date: Time.zone.now, demand_type: read_demand_type(response_data), class_of_service: read_class_of_service(response_data), assignees_count: assignees_count, url: url)
     demand
   end
 
