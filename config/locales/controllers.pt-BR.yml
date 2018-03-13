@@ -274,3 +274,9 @@ pt-BR:
   finances_params:
     edit:
       title: "Editar Informação Financeira"
+  pipefy_team_config:
+    edit:
+      title: "Editar Config de Membro do Pipefy"
+  pipefy_team_configs:
+    index:
+      title: "Configurações de Time no Pipefy"

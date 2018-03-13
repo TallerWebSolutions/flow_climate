@@ -2,7 +2,7 @@
 
 class PipefyProtocol
   def self.card_show_request_body(card_id)
-    "{card(id: #{card_id}) { id assignees { id } comments { created_at author { username } text } fields { name value } phases_history { phase { id } firstTimeIn lastTimeOut } pipe { id } url } }"
+    "{card(id: #{card_id}) { id assignees { id username } comments { created_at author { username } text } fields { name value } phases_history { phase { id } firstTimeIn lastTimeOut } pipe { id } url } }"
   end
 
   def self.pipe_show_request_body(pipe_id)

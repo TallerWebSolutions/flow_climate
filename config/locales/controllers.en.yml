@@ -271,3 +271,9 @@ en:
   finances_params:
     edit:
       title: "Edit Financial Information"
+  pipefy_team_config:
+    edit:
+      title: "Edit Pipefy Team Config"
+  pipefy_team_configs:
+    index:
+      title: "Pipefy Team Configurations"

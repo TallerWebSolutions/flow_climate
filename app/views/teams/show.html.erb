@@ -18,6 +18,7 @@
       <%= link_to t('navbar.projects_list'), '#', id: 'nav-item-list' %>
       <%= link_to t('navbar.strategic'), '#', id: 'nav-item-strategic' %>
       <%= link_to t('navbar.charts'), '#', id: 'nav-item-charts' %>
+      <%= link_to t('navbar.settings'), '#', id: 'nav-item-settings' %>
     </div>
   </div>
 
@@ -64,6 +65,10 @@
                  xlabel: t('projects.charts.xlabel.projects'),
                  categories: @report_data&.projects_names %>
     <% end %>
+  </div>
+
+  <div id="settings">
+    <%= render 'pipefy_team_configs/pipefy_team_configs_table' %>
   </div>
 </div>
 

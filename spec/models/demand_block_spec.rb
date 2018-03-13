@@ -7,6 +7,7 @@ RSpec.describe DemandBlock, type: :model do
 
   context 'validations' do
     it { is_expected.to validate_presence_of :demand }
+    it { is_expected.to validate_presence_of :demand_id }
     it { is_expected.to validate_presence_of :demand_block_id }
     it { is_expected.to validate_presence_of :blocker_username }
     it { is_expected.to validate_presence_of :block_time }

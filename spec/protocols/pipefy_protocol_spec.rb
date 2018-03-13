@@ -2,7 +2,7 @@
 
 RSpec.describe PipefyProtocol, type: :protocol do
   describe '.card_show_request_body' do
-    it { expect(PipefyProtocol.card_show_request_body('222')).to eq '{card(id: 222) { id assignees { id } comments { created_at author { username } text } fields { name value } phases_history { phase { id } firstTimeIn lastTimeOut } pipe { id } url } }' }
+    it { expect(PipefyProtocol.card_show_request_body('222')).to eq '{card(id: 222) { id assignees { id username } comments { created_at author { username } text } fields { name value } phases_history { phase { id } firstTimeIn lastTimeOut } pipe { id } url } }' }
   end
   describe '.pipe_show_request_body' do
     it { expect(PipefyProtocol.pipe_show_request_body('222')).to eq '{ pipe(id: 222) { phases { id } } }' }

@@ -29,7 +29,7 @@
 class DemandBlock < ApplicationRecord
   belongs_to :demand
 
-  validates :demand, :demand_block_id, :blocker_username, :block_time, :block_reason, presence: true
+  validates :demand, :demand_id, :demand_block_id, :blocker_username, :block_time, :block_reason, presence: true
 
   before_update :update_computed_fields!
 

@@ -21,7 +21,6 @@ RSpec.describe Demand, type: :model do
   end
 
   context 'scopes' do
-    pending '.finished_in_date'
     pending '.bugs_opened_in_date_count'
   end
 

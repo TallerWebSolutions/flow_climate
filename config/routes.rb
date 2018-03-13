@@ -32,6 +32,8 @@ Rails.application.routes.draw do
           patch :deactivate
         end
       end
+      resources :pipefy_team_configs, only: %i[edit update]
+
       get 'search_for_projects/:status_filter', action: :search_for_projects, as: 'search_for_projects', on: :member
     end
 
