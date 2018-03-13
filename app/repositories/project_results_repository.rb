@@ -69,11 +69,10 @@ class ProjectResultsRepository
   end
 
   def create_project_result!(demand, team)
-    first_transition = demand.demand_transitions.order(:last_time_in).first
-    return if first_transition.blank?
+    return if demand.created_date.blank?
 
-    result_date = define_result_date(demand, first_transition).utc.to_date
-    project_result = create_empty_project_result(demand, team, result_date)
+    result_date = (demand.end_date || demand.commitment_date || demand.created_date).utc.to_date
+    project_result = create_new_empty_project_result(demand, team, result_date)
     project_result.add_demand!(demand)
     project_result
   end
@@ -83,12 +82,6 @@ class ProjectResultsRepository
   end
 
   private
-
-  def create_empty_project_result(demand, team, result_date)
-    project_results = ProjectResult.where(result_date: result_date, project: demand.project)
-    return create_new_empty_project_result(demand, team, result_date) if project_results.blank?
-    project_results.first
-  end
 
   def build_hash_data_with_sum(projects, field)
     grouped_project_results(projects).sum(field)
@@ -118,12 +111,5 @@ class ProjectResultsRepository
                          team: team, flow_pressure: 0, remaining_days: demand.project.remaining_days(result_date),
                          cost_in_month: team.active_cost_for_billable_types([demand.project.project_type]), average_demand_cost: 0,
                          available_hours: team.active_available_hours_for_billable_types([demand.project.project_type]))
-  end
-
-  def define_result_date(demand, first_transition)
-    end_transition = demand.demand_transitions.joins(:stage).where('stages.end_point = true').last
-    commitment_transition = demand.demand_transitions.joins(:stage).where('stages.commitment_point = true').last
-
-    end_transition&.last_time_in || commitment_transition&.last_time_in || first_transition&.last_time_in
   end
 end

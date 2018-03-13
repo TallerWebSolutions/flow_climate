@@ -14,7 +14,7 @@
 #  demand_url        :string
 #  commitment_date   :datetime
 #  end_date          :datetime
-#  created_date      :datetime
+#  created_date      :datetime         not null
 #  url               :string
 #  class_of_service  :integer          default("standard"), not null
 #  project_id        :integer          not null
@@ -34,13 +34,13 @@ class Demand < ApplicationRecord
   enum class_of_service: { standard: 0, expedite: 1, fixed_date: 2, intangible: 3 }
 
   belongs_to :project
-  belongs_to :project_result, counter_cache: true, touch: true
+  belongs_to :project_result, counter_cache: true
   has_many :demand_transitions, dependent: :destroy
   has_many :demand_blocks, dependent: :destroy
 
-  validates :project, :demand_id, :demand_type, :class_of_service, :assignees_count, presence: true
+  validates :project, :created_date, :demand_id, :demand_type, :class_of_service, :assignees_count, presence: true
 
-  scope :opened_in_date, ->(result_date) { joins(:demand_transitions).having('MIN(DATE(demand_transitions.last_time_in)) = :result_date', result_date: result_date) }
+  scope :opened_in_date, ->(result_date) { where('created_date::timestamp::date = :result_date', result_date: result_date) }
   scope :finished, -> { joins(demand_transitions: :stage).where('stages.end_point = true') }
 
   def update_effort!

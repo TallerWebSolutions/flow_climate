@@ -111,6 +111,9 @@ RSpec.describe Project, type: :model do
     let!(:fifth_project) { Fabricate :project, status: :cancelled, end_date: Time.zone.today }
     let!(:sixth_project) { Fabricate :project, status: :finished, end_date: Time.zone.today }
 
+    let!(:first_pipefy_config) { Fabricate :pipefy_config, project: first_project }
+    let!(:second_pipefy_config) { Fabricate :pipefy_config, project: second_project }
+
     describe '.waiting_projects_starting_within_week' do
       it { expect(Project.waiting_projects_starting_within_week).to match_array [first_project, second_project] }
     end
@@ -127,7 +130,9 @@ RSpec.describe Project, type: :model do
       it { expect(Project.active).to match_array [first_project, second_project, third_project, fourth_project] }
     end
 
-    pending '.no_pipefy_config'
+    describe '.no_pipefy_config' do
+      it { expect(Project.no_pipefy_config).to match_array [third_project, fourth_project, fifth_project, sixth_project] }
+    end
   end
 
   describe '#total_days' do

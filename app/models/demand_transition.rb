@@ -28,4 +28,18 @@ class DemandTransition < ApplicationRecord
   belongs_to :stage
 
   validates :demand, :stage, :last_time_in, presence: true
+
+  after_save :set_dates, on: %i[create update]
+
+  private
+
+  def set_dates
+    if stage.commitment_point?
+      demand.update(commitment_date: last_time_in)
+    elsif stage.end_point?
+      demand.update(end_date: last_time_in)
+    elsif demand.demand_transitions.count == 1
+      demand.update(created_date: last_time_in)
+    end
+  end
 end
