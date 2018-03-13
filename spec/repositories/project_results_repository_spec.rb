@@ -150,8 +150,6 @@ RSpec.describe ProjectResultsRepository, type: :repository do
     end
   end
 
-  pending '#delivered_until_week'
-
   describe '#average_demand_cost_in_week_for_projects' do
     let(:team) { Fabricate :team }
     let!(:team_member) { Fabricate :team_member, team: team, monthly_payment: 100 }
@@ -172,28 +170,47 @@ RSpec.describe ProjectResultsRepository, type: :repository do
     end
   end
 
-  describe '#create_empty_project_result' do
+  describe '#create_project_result!' do
     let(:company) { Fabricate :company }
     let(:team) { Fabricate :team, company: company }
     let(:customer) { Fabricate :customer, company: company }
     let(:project) { Fabricate :project, customer: customer }
     let(:demand) { Fabricate :demand, project: project }
+    let!(:demand_transition) { Fabricate :demand_transition, demand: demand, last_time_in: Time.zone.iso8601('2018-02-15T23:01:46') }
 
     context 'when there is no project result to the date' do
-      before { ProjectResultsRepository.instance.create_empty_project_result(demand, team, Time.zone.iso8601('2018-02-15T23:01:46')) }
+      before { ProjectResultsRepository.instance.create_project_result!(demand, team) }
       it { expect(ProjectResult.count).to eq 1 }
     end
     context 'when there is project result to the date' do
-      let!(:project_result) { Fabricate :project_result, project: project, result_date: Time.zone.iso8601('2018-02-15T23:01:46') }
-      before { ProjectResultsRepository.instance.create_empty_project_result(demand, team, Time.zone.iso8601('2018-02-15T23:01:46')) }
+      let!(:project_result) { Fabricate :project_result, project: project, result_date: Time.zone.iso8601('2018-02-15T23:01:46').utc.to_date }
+      before { ProjectResultsRepository.instance.create_project_result!(demand, team) }
       it { expect(ProjectResult.count).to eq 1 }
     end
-    context 'when there is project result to other date' do
-      let!(:project_result) { Fabricate :project_result, project: project, result_date: Time.zone.iso8601('2018-02-14T23:01:46').to_date }
-      before { ProjectResultsRepository.instance.create_empty_project_result(demand, team, Time.zone.iso8601('2018-02-15T23:01:46')) }
+    context 'when there is project result to another date' do
+      let!(:project_result) { Fabricate :project_result, project: project, result_date: Time.zone.iso8601('2018-02-14T23:01:46').utc.to_date }
+      before { ProjectResultsRepository.instance.create_project_result!(demand, team) }
       it { expect(ProjectResult.count).to eq 2 }
     end
   end
 
-  pending '#last_manual_entry'
+  describe '#last_manual_entry' do
+    let(:company) { Fabricate :company }
+    let(:team) { Fabricate :team, company: company }
+    let(:customer) { Fabricate :customer, company: company }
+    let(:project) { Fabricate :project, customer: customer }
+    let(:demand) { Fabricate :demand, project: project }
+    let!(:demand_transition) { Fabricate :demand_transition, demand: demand, last_time_in: Time.zone.iso8601('2018-02-15T23:01:46') }
+    let!(:project_result) { Fabricate :project_result, project: project, demands: [demand], result_date: Time.zone.iso8601('2018-02-15T23:01:46') }
+
+    context 'when there is a manual project result before the last automatic one' do
+      let!(:manual_project_result) { Fabricate :project_result, project: project, result_date: Time.zone.iso8601('2018-02-10T23:01:46') }
+      it { expect(ProjectResultsRepository.instance.last_manual_entry(project).result_date).to eq Date.new(2018, 2, 10) }
+    end
+
+    context 'when there is a manual project result after the last automatic one' do
+      let!(:manual_project_result) { Fabricate :project_result, project: project, result_date: Time.zone.iso8601('2018-02-18T23:01:46') }
+      it { expect(ProjectResultsRepository.instance.last_manual_entry(project).result_date).to eq Date.new(2018, 2, 18) }
+    end
+  end
 end

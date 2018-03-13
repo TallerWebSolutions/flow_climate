@@ -55,10 +55,6 @@ class ProjectResultsRepository
     build_hash_data_with_sum(projects, :throughput)
   end
 
-  def delivered_until_week(projects, week, year)
-    ProjectResult.until_week(week, year).where(project_id: projects.pluck(:id)).sum(:throughput)
-  end
-
   def average_demand_cost_in_week_for_projects(projects)
     cost_in_month = build_hash_data_with_average(projects, :cost_in_month)
     throughput_hash = build_hash_data_with_sum(projects, :throughput)
@@ -72,23 +68,14 @@ class ProjectResultsRepository
     average_demand_cost_hash
   end
 
-  def create_empty_project_result(demand, team, result_date)
-    project_results = ProjectResult.where(result_date: result_date, project: demand.project)
-    return create_new_empty_project_result(demand, team, result_date) if project_results.blank?
-    project_results.first
-  end
-
-  def create_empty_project_result_using_transition(demand, team)
+  def create_project_result!(demand, team)
     first_transition = demand.demand_transitions.order(:last_time_in).first
     return if first_transition.blank?
 
-    previous_result = demand.project_result
-
-    previous_result.remove_demand!(demand) if previous_result.present?
-
     result_date = define_result_date(demand, first_transition).utc.to_date
-    project_result = ProjectResultsRepository.instance.create_empty_project_result(demand, team, result_date)
+    project_result = create_empty_project_result(demand, team, result_date)
     project_result.add_demand!(demand)
+    project_result
   end
 
   def last_manual_entry(project)
@@ -96,6 +83,12 @@ class ProjectResultsRepository
   end
 
   private
+
+  def create_empty_project_result(demand, team, result_date)
+    project_results = ProjectResult.where(result_date: result_date, project: demand.project)
+    return create_new_empty_project_result(demand, team, result_date) if project_results.blank?
+    project_results.first
+  end
 
   def build_hash_data_with_sum(projects, field)
     grouped_project_results(projects).sum(field)
@@ -118,7 +111,7 @@ class ProjectResultsRepository
   end
 
   def create_new_empty_project_result(demand, team, result_date)
-    project_result = demand.project.project_results.where(result_date: result_date)
+    project_result = demand.project.project_results.find_by(result_date: result_date)
     return project_result if project_result.present?
     ProjectResult.create(project: demand.project, result_date: result_date, known_scope: 0, throughput: 0, qty_hours_upstream: 0,
                          qty_hours_downstream: 0, qty_hours_bug: 0, qty_bugs_closed: 0, qty_bugs_opened: 0,

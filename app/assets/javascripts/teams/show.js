@@ -32,16 +32,24 @@ $('#nav-item-members').on('click', function(){
     $('#nav-item-members').addClass('active');
 });
 
+$('#nav-item-settings').on('click', function(){
+    hideAllComponents();
+    $('#settings').show();
+    $('#nav-item-settings').addClass('active');
+});
+
 function hideAllComponents() {
     $('#stamps').hide();
     $('#project-list').hide();
     $('#charts').hide();
     $('#strategic').hide();
     $('#members-table').hide();
+    $('#settings').hide();
 
     $('#nav-item-stamps').removeClass('active');
     $('#nav-item-list').removeClass('active');
     $('#nav-item-charts').removeClass('active');
     $('#nav-item-strategic').removeClass('active');
     $('#nav-item-members').removeClass('active');
+    $('#nav-item-settings').removeClass('active');
 }

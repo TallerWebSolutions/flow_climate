@@ -10,6 +10,7 @@ class TeamsController < AuthenticatedController
     @projects_summary = ProjectsSummaryObject.new(@team.projects)
     @report_data = ReportData.new(@team_projects) if @team_projects.present?
     @strategic_report_data = StrategicReportData.new(@company, @team.projects, @team.active_available_hours_for_billable_types(@team.projects.pluck(:project_type).uniq))
+    @pipefy_team_configs = @team.pipefy_team_configs.order(:username)
   end
 
   def new

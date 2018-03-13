@@ -50,6 +50,7 @@ Metrics/ClassLength:
   Exclude:
     - 'app/models/project.rb'
     - 'app/repositories/project_results_repository.rb'
+    - 'app/services/pipefy_reader.rb'
 
 Metrics/CyclomaticComplexity:
   Exclude:

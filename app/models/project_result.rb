@@ -75,21 +75,23 @@ class ProjectResult < ApplicationRecord
 
   def add_demand!(demand)
     demands << demand unless demands.include?(demand)
-    save
+    demand.update(project_result: self)
     compute_flow_metrics!
   end
 
   def remove_demand!(demand)
     demands.delete(demand) if demands.include?(demand)
+    demand.update(project_result: nil)
     return destroy if demands.count.zero?
     compute_flow_metrics!
   end
 
   def compute_flow_metrics!
-    finished_in_date = project.demands.finished_in_date(result_date)
-    finished_bugs = project.demands.bug.finished_in_date(result_date)
+    finished_demands = demands.finished
+    finished_bugs = demands.bug.finished
+    open_bugs = demands.bug.opened_in_date(result_date)
 
-    update_result!(finished_bugs, finished_in_date)
+    update_result!(finished_demands, finished_bugs, open_bugs)
   end
 
   private
@@ -103,11 +105,11 @@ class ProjectResult < ApplicationRecord
     DemandsRepository.instance.known_scope_to_date(project, result_date) + last_manual_scope
   end
 
-  def update_result!(finished_bugs, finished_demands)
+  def update_result!(finished_demands, finished_bugs, opened_bugs)
     known_scope = compute_known_scope
     remaining_days = project.remaining_days(result_date)
     update(known_scope: known_scope, throughput: finished_demands.count, qty_hours_upstream: 0, qty_hours_downstream: finished_demands.sum(&:effort),
-           qty_hours_bug: finished_bugs.sum(&:effort), qty_bugs_closed: finished_bugs.count, qty_bugs_opened: project.demands.bugs_opened_in_date_count(result_date),
+           qty_hours_bug: finished_bugs.sum(&:effort), qty_bugs_closed: finished_bugs.count, qty_bugs_opened: opened_bugs.count,
            remaining_days: remaining_days, flow_pressure: compute_flow_pressure(finished_demands, remaining_days), average_demand_cost: calculate_average_demand_cost(finished_demands))
   end
 

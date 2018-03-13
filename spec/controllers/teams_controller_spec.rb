@@ -40,6 +40,10 @@ RSpec.describe TeamsController, type: :controller do
       let(:second_team_member) { Fabricate :team_member, team: team }
       let(:third_team_member) { Fabricate :team_member, team: team }
 
+      let!(:first_pipefy_team_config) { Fabricate :pipefy_team_config, team: team, username: 'zzz' }
+      let!(:second_pipefy_team_config) { Fabricate :pipefy_team_config, team: team, username: 'aaa' }
+      let!(:third_pipefy_team_config) { Fabricate :pipefy_team_config, username: 'aaa' }
+
       let(:customer) { Fabricate :customer, company: company }
 
       let!(:first_project) { Fabricate :project, customer: customer, status: :executing, start_date: Time.zone.today, end_date: Time.zone.now }
@@ -59,6 +63,7 @@ RSpec.describe TeamsController, type: :controller do
             expect(assigns(:team_projects)).to eq [second_project, first_project]
             expect(assigns(:strategic_report_data).array_of_months).to eq [[Time.zone.today.month, Time.zone.today.year], [1.month.from_now.to_date.month, 1.month.from_now.to_date.year]]
             expect(assigns(:strategic_report_data).active_projects_count_data).to eq [1, 1]
+            expect(assigns(:pipefy_team_configs)).to eq [second_pipefy_team_config, first_pipefy_team_config]
           end
         end
         context 'having no data' do

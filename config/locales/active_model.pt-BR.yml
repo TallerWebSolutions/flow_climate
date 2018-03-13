@@ -105,6 +105,9 @@ pt-BR:
       demand_transition:
         one: Transição da Demanda
         other: Transições da Demanda
+      pipefy_team_config:
+        one: Configuração de Time no Pipefy
+        other: Configurações de Time no Pipefy
     attributes:
       user:
         first_name: Nome
@@ -274,6 +277,17 @@ pt-BR:
         stage: Etapa
         last_time_in: Primeira vez na etapa
         last_time_out: Última saída da etapa
+      pipefy_team_config:
+        team: Time
+        integration_id: Id na Integração
+        username: Nome do Usuário
+        member_type: Tipo de Membro
+        enums:
+          member_type:
+            developer: Desenvolvedor
+            analyst: Analista
+            designer: Designer
+            customer: Cliente
   product:
     name:
       uniqueness: "Não deve repetir nome de produto para o mesmo cliente."

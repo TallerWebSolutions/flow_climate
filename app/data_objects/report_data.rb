@@ -78,9 +78,11 @@ class ReportData
   def mount_burnup_data
     @weeks.each_with_index do |week_year, index|
       @ideal << ideal_burn(index)
-      total_delivered = ProjectResultsRepository.instance.delivered_until_week(projects, week_year[0], week_year[1])
+      week = week_year[0]
+      year = week_year[1]
+      total_delivered = ProjectResult.until_week(week, year).where(project_id: projects.pluck(:id)).sum(:throughput)
       @current << total_delivered if add_data_to_chart?(week_year)
-      @scope << ProjectResultsRepository.instance.scope_in_week_for_projects(projects, week_year[0], week_year[1])
+      @scope << ProjectResultsRepository.instance.scope_in_week_for_projects(projects, week, year)
     end
   end
 

@@ -3,6 +3,7 @@ SET lock_timeout = 0;
 SET idle_in_transaction_session_timeout = 0;
 SET client_encoding = 'UTF8';
 SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
 SET check_function_bodies = false;
 SET client_min_messages = warning;
 SET row_security = off;
@@ -21,8 +22,6 @@ CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
 COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
 
 
-SET search_path = public, pg_catalog;
-
 SET default_tablespace = '';
 
 SET default_with_oids = false;
@@ -31,7 +30,7 @@ SET default_with_oids = false;
 -- Name: ar_internal_metadata; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE ar_internal_metadata (
+CREATE TABLE public.ar_internal_metadata (
     key character varying NOT NULL,
     value character varying,
     created_at timestamp without time zone NOT NULL,
@@ -43,7 +42,7 @@ CREATE TABLE ar_internal_metadata (
 -- Name: companies; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE companies (
+CREATE TABLE public.companies (
     id bigint NOT NULL,
     name character varying NOT NULL,
     created_at timestamp without time zone NOT NULL,
@@ -57,7 +56,7 @@ CREATE TABLE companies (
 -- Name: companies_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE companies_id_seq
+CREATE SEQUENCE public.companies_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -69,14 +68,14 @@ CREATE SEQUENCE companies_id_seq
 -- Name: companies_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE companies_id_seq OWNED BY companies.id;
+ALTER SEQUENCE public.companies_id_seq OWNED BY public.companies.id;
 
 
 --
 -- Name: companies_users; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE companies_users (
+CREATE TABLE public.companies_users (
     user_id integer,
     company_id integer,
     created_at timestamp without time zone NOT NULL,
@@ -88,7 +87,7 @@ CREATE TABLE companies_users (
 -- Name: company_settings; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE company_settings (
+CREATE TABLE public.company_settings (
     id bigint NOT NULL,
     company_id integer NOT NULL,
     max_active_parallel_projects integer NOT NULL,
@@ -102,7 +101,7 @@ CREATE TABLE company_settings (
 -- Name: company_settings_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE company_settings_id_seq
+CREATE SEQUENCE public.company_settings_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -114,14 +113,14 @@ CREATE SEQUENCE company_settings_id_seq
 -- Name: company_settings_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE company_settings_id_seq OWNED BY company_settings.id;
+ALTER SEQUENCE public.company_settings_id_seq OWNED BY public.company_settings.id;
 
 
 --
 -- Name: customers; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE customers (
+CREATE TABLE public.customers (
     id bigint NOT NULL,
     company_id integer NOT NULL,
     name character varying NOT NULL,
@@ -136,7 +135,7 @@ CREATE TABLE customers (
 -- Name: customers_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE customers_id_seq
+CREATE SEQUENCE public.customers_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -148,14 +147,14 @@ CREATE SEQUENCE customers_id_seq
 -- Name: customers_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE customers_id_seq OWNED BY customers.id;
+ALTER SEQUENCE public.customers_id_seq OWNED BY public.customers.id;
 
 
 --
 -- Name: demand_blocks; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE demand_blocks (
+CREATE TABLE public.demand_blocks (
     id bigint NOT NULL,
     demand_id integer NOT NULL,
     demand_block_id integer NOT NULL,
@@ -175,7 +174,7 @@ CREATE TABLE demand_blocks (
 -- Name: demand_blocks_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE demand_blocks_id_seq
+CREATE SEQUENCE public.demand_blocks_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -187,14 +186,14 @@ CREATE SEQUENCE demand_blocks_id_seq
 -- Name: demand_blocks_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE demand_blocks_id_seq OWNED BY demand_blocks.id;
+ALTER SEQUENCE public.demand_blocks_id_seq OWNED BY public.demand_blocks.id;
 
 
 --
 -- Name: demand_transitions; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE demand_transitions (
+CREATE TABLE public.demand_transitions (
     id bigint NOT NULL,
     demand_id integer NOT NULL,
     stage_id integer NOT NULL,
@@ -209,7 +208,7 @@ CREATE TABLE demand_transitions (
 -- Name: demand_transitions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE demand_transitions_id_seq
+CREATE SEQUENCE public.demand_transitions_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -221,14 +220,14 @@ CREATE SEQUENCE demand_transitions_id_seq
 -- Name: demand_transitions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE demand_transitions_id_seq OWNED BY demand_transitions.id;
+ALTER SEQUENCE public.demand_transitions_id_seq OWNED BY public.demand_transitions.id;
 
 
 --
 -- Name: demands; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE demands (
+CREATE TABLE public.demands (
     id bigint NOT NULL,
     project_result_id integer,
     demand_id character varying NOT NULL,
@@ -251,7 +250,7 @@ CREATE TABLE demands (
 -- Name: demands_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE demands_id_seq
+CREATE SEQUENCE public.demands_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -263,14 +262,14 @@ CREATE SEQUENCE demands_id_seq
 -- Name: demands_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE demands_id_seq OWNED BY demands.id;
+ALTER SEQUENCE public.demands_id_seq OWNED BY public.demands.id;
 
 
 --
 -- Name: financial_informations; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE financial_informations (
+CREATE TABLE public.financial_informations (
     id bigint NOT NULL,
     company_id integer NOT NULL,
     finances_date date NOT NULL,
@@ -285,7 +284,7 @@ CREATE TABLE financial_informations (
 -- Name: financial_informations_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE financial_informations_id_seq
+CREATE SEQUENCE public.financial_informations_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -297,14 +296,48 @@ CREATE SEQUENCE financial_informations_id_seq
 -- Name: financial_informations_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE financial_informations_id_seq OWNED BY financial_informations.id;
+ALTER SEQUENCE public.financial_informations_id_seq OWNED BY public.financial_informations.id;
+
+
+--
+-- Name: integration_errors; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.integration_errors (
+    id bigint NOT NULL,
+    company_id integer NOT NULL,
+    occured_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    integration_type integer NOT NULL,
+    integration_error_text character varying NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: integration_errors_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.integration_errors_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: integration_errors_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.integration_errors_id_seq OWNED BY public.integration_errors.id;
 
 
 --
 -- Name: operation_results; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE operation_results (
+CREATE TABLE public.operation_results (
     id bigint NOT NULL,
     company_id integer NOT NULL,
     result_date date NOT NULL,
@@ -324,7 +357,7 @@ CREATE TABLE operation_results (
 -- Name: operation_results_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE operation_results_id_seq
+CREATE SEQUENCE public.operation_results_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -336,14 +369,14 @@ CREATE SEQUENCE operation_results_id_seq
 -- Name: operation_results_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE operation_results_id_seq OWNED BY operation_results.id;
+ALTER SEQUENCE public.operation_results_id_seq OWNED BY public.operation_results.id;
 
 
 --
 -- Name: pipefy_configs; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE pipefy_configs (
+CREATE TABLE public.pipefy_configs (
     id bigint NOT NULL,
     project_id integer NOT NULL,
     team_id integer NOT NULL,
@@ -359,7 +392,7 @@ CREATE TABLE pipefy_configs (
 -- Name: pipefy_configs_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE pipefy_configs_id_seq
+CREATE SEQUENCE public.pipefy_configs_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -371,14 +404,48 @@ CREATE SEQUENCE pipefy_configs_id_seq
 -- Name: pipefy_configs_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE pipefy_configs_id_seq OWNED BY pipefy_configs.id;
+ALTER SEQUENCE public.pipefy_configs_id_seq OWNED BY public.pipefy_configs.id;
+
+
+--
+-- Name: pipefy_team_configs; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.pipefy_team_configs (
+    id bigint NOT NULL,
+    team_id integer NOT NULL,
+    integration_id character varying NOT NULL,
+    username character varying NOT NULL,
+    member_type integer DEFAULT 0,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: pipefy_team_configs_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.pipefy_team_configs_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: pipefy_team_configs_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.pipefy_team_configs_id_seq OWNED BY public.pipefy_team_configs.id;
 
 
 --
 -- Name: products; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE products (
+CREATE TABLE public.products (
     id bigint NOT NULL,
     customer_id integer NOT NULL,
     name character varying NOT NULL,
@@ -392,7 +459,7 @@ CREATE TABLE products (
 -- Name: products_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE products_id_seq
+CREATE SEQUENCE public.products_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -404,14 +471,14 @@ CREATE SEQUENCE products_id_seq
 -- Name: products_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE products_id_seq OWNED BY products.id;
+ALTER SEQUENCE public.products_id_seq OWNED BY public.products.id;
 
 
 --
 -- Name: project_results; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE project_results (
+CREATE TABLE public.project_results (
     id bigint NOT NULL,
     project_id integer NOT NULL,
     result_date date NOT NULL,
@@ -441,7 +508,7 @@ CREATE TABLE project_results (
 -- Name: project_results_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE project_results_id_seq
+CREATE SEQUENCE public.project_results_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -453,14 +520,14 @@ CREATE SEQUENCE project_results_id_seq
 -- Name: project_results_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE project_results_id_seq OWNED BY project_results.id;
+ALTER SEQUENCE public.project_results_id_seq OWNED BY public.project_results.id;
 
 
 --
 -- Name: project_risk_alerts; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE project_risk_alerts (
+CREATE TABLE public.project_risk_alerts (
     id bigint NOT NULL,
     project_id integer NOT NULL,
     project_risk_config_id integer NOT NULL,
@@ -475,7 +542,7 @@ CREATE TABLE project_risk_alerts (
 -- Name: project_risk_alerts_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE project_risk_alerts_id_seq
+CREATE SEQUENCE public.project_risk_alerts_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -487,14 +554,14 @@ CREATE SEQUENCE project_risk_alerts_id_seq
 -- Name: project_risk_alerts_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE project_risk_alerts_id_seq OWNED BY project_risk_alerts.id;
+ALTER SEQUENCE public.project_risk_alerts_id_seq OWNED BY public.project_risk_alerts.id;
 
 
 --
 -- Name: project_risk_configs; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE project_risk_configs (
+CREATE TABLE public.project_risk_configs (
     id bigint NOT NULL,
     risk_type integer NOT NULL,
     high_yellow_value numeric NOT NULL,
@@ -510,7 +577,7 @@ CREATE TABLE project_risk_configs (
 -- Name: project_risk_configs_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE project_risk_configs_id_seq
+CREATE SEQUENCE public.project_risk_configs_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -522,14 +589,14 @@ CREATE SEQUENCE project_risk_configs_id_seq
 -- Name: project_risk_configs_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE project_risk_configs_id_seq OWNED BY project_risk_configs.id;
+ALTER SEQUENCE public.project_risk_configs_id_seq OWNED BY public.project_risk_configs.id;
 
 
 --
 -- Name: projects; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE projects (
+CREATE TABLE public.projects (
     id bigint NOT NULL,
     customer_id integer NOT NULL,
     name character varying NOT NULL,
@@ -551,7 +618,7 @@ CREATE TABLE projects (
 -- Name: projects_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE projects_id_seq
+CREATE SEQUENCE public.projects_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -563,14 +630,14 @@ CREATE SEQUENCE projects_id_seq
 -- Name: projects_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE projects_id_seq OWNED BY projects.id;
+ALTER SEQUENCE public.projects_id_seq OWNED BY public.projects.id;
 
 
 --
 -- Name: projects_stages; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE projects_stages (
+CREATE TABLE public.projects_stages (
     id bigint NOT NULL,
     project_id integer NOT NULL,
     stage_id integer NOT NULL,
@@ -583,7 +650,7 @@ CREATE TABLE projects_stages (
 -- Name: projects_stages_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE projects_stages_id_seq
+CREATE SEQUENCE public.projects_stages_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -595,14 +662,14 @@ CREATE SEQUENCE projects_stages_id_seq
 -- Name: projects_stages_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE projects_stages_id_seq OWNED BY projects_stages.id;
+ALTER SEQUENCE public.projects_stages_id_seq OWNED BY public.projects_stages.id;
 
 
 --
 -- Name: schema_migrations; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE schema_migrations (
+CREATE TABLE public.schema_migrations (
     version character varying NOT NULL
 );
 
@@ -611,7 +678,7 @@ CREATE TABLE schema_migrations (
 -- Name: stages; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE stages (
+CREATE TABLE public.stages (
     id bigint NOT NULL,
     integration_id character varying NOT NULL,
     name character varying NOT NULL,
@@ -631,7 +698,7 @@ CREATE TABLE stages (
 -- Name: stages_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE stages_id_seq
+CREATE SEQUENCE public.stages_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -643,14 +710,14 @@ CREATE SEQUENCE stages_id_seq
 -- Name: stages_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE stages_id_seq OWNED BY stages.id;
+ALTER SEQUENCE public.stages_id_seq OWNED BY public.stages.id;
 
 
 --
 -- Name: team_members; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE team_members (
+CREATE TABLE public.team_members (
     id bigint NOT NULL,
     name character varying NOT NULL,
     monthly_payment numeric NOT NULL,
@@ -670,7 +737,7 @@ CREATE TABLE team_members (
 -- Name: team_members_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE team_members_id_seq
+CREATE SEQUENCE public.team_members_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -682,14 +749,14 @@ CREATE SEQUENCE team_members_id_seq
 -- Name: team_members_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE team_members_id_seq OWNED BY team_members.id;
+ALTER SEQUENCE public.team_members_id_seq OWNED BY public.team_members.id;
 
 
 --
 -- Name: teams; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE teams (
+CREATE TABLE public.teams (
     id bigint NOT NULL,
     company_id integer NOT NULL,
     name character varying NOT NULL,
@@ -702,7 +769,7 @@ CREATE TABLE teams (
 -- Name: teams_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE teams_id_seq
+CREATE SEQUENCE public.teams_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -714,14 +781,14 @@ CREATE SEQUENCE teams_id_seq
 -- Name: teams_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE teams_id_seq OWNED BY teams.id;
+ALTER SEQUENCE public.teams_id_seq OWNED BY public.teams.id;
 
 
 --
 -- Name: users; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE users (
+CREATE TABLE public.users (
     id integer NOT NULL,
     first_name character varying NOT NULL,
     last_name character varying NOT NULL,
@@ -747,7 +814,7 @@ CREATE TABLE users (
 -- Name: users_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE users_id_seq
+CREATE SEQUENCE public.users_id_seq
     AS integer
     START WITH 1
     INCREMENT BY 1
@@ -760,147 +827,161 @@ CREATE SEQUENCE users_id_seq
 -- Name: users_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE users_id_seq OWNED BY users.id;
+ALTER SEQUENCE public.users_id_seq OWNED BY public.users.id;
 
 
 --
 -- Name: companies id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY companies ALTER COLUMN id SET DEFAULT nextval('companies_id_seq'::regclass);
+ALTER TABLE ONLY public.companies ALTER COLUMN id SET DEFAULT nextval('public.companies_id_seq'::regclass);
 
 
 --
 -- Name: company_settings id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY company_settings ALTER COLUMN id SET DEFAULT nextval('company_settings_id_seq'::regclass);
+ALTER TABLE ONLY public.company_settings ALTER COLUMN id SET DEFAULT nextval('public.company_settings_id_seq'::regclass);
 
 
 --
 -- Name: customers id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY customers ALTER COLUMN id SET DEFAULT nextval('customers_id_seq'::regclass);
+ALTER TABLE ONLY public.customers ALTER COLUMN id SET DEFAULT nextval('public.customers_id_seq'::regclass);
 
 
 --
 -- Name: demand_blocks id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY demand_blocks ALTER COLUMN id SET DEFAULT nextval('demand_blocks_id_seq'::regclass);
+ALTER TABLE ONLY public.demand_blocks ALTER COLUMN id SET DEFAULT nextval('public.demand_blocks_id_seq'::regclass);
 
 
 --
 -- Name: demand_transitions id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY demand_transitions ALTER COLUMN id SET DEFAULT nextval('demand_transitions_id_seq'::regclass);
+ALTER TABLE ONLY public.demand_transitions ALTER COLUMN id SET DEFAULT nextval('public.demand_transitions_id_seq'::regclass);
 
 
 --
 -- Name: demands id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY demands ALTER COLUMN id SET DEFAULT nextval('demands_id_seq'::regclass);
+ALTER TABLE ONLY public.demands ALTER COLUMN id SET DEFAULT nextval('public.demands_id_seq'::regclass);
 
 
 --
 -- Name: financial_informations id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY financial_informations ALTER COLUMN id SET DEFAULT nextval('financial_informations_id_seq'::regclass);
+ALTER TABLE ONLY public.financial_informations ALTER COLUMN id SET DEFAULT nextval('public.financial_informations_id_seq'::regclass);
+
+
+--
+-- Name: integration_errors id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.integration_errors ALTER COLUMN id SET DEFAULT nextval('public.integration_errors_id_seq'::regclass);
 
 
 --
 -- Name: operation_results id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY operation_results ALTER COLUMN id SET DEFAULT nextval('operation_results_id_seq'::regclass);
+ALTER TABLE ONLY public.operation_results ALTER COLUMN id SET DEFAULT nextval('public.operation_results_id_seq'::regclass);
 
 
 --
 -- Name: pipefy_configs id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY pipefy_configs ALTER COLUMN id SET DEFAULT nextval('pipefy_configs_id_seq'::regclass);
+ALTER TABLE ONLY public.pipefy_configs ALTER COLUMN id SET DEFAULT nextval('public.pipefy_configs_id_seq'::regclass);
+
+
+--
+-- Name: pipefy_team_configs id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.pipefy_team_configs ALTER COLUMN id SET DEFAULT nextval('public.pipefy_team_configs_id_seq'::regclass);
 
 
 --
 -- Name: products id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY products ALTER COLUMN id SET DEFAULT nextval('products_id_seq'::regclass);
+ALTER TABLE ONLY public.products ALTER COLUMN id SET DEFAULT nextval('public.products_id_seq'::regclass);
 
 
 --
 -- Name: project_results id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY project_results ALTER COLUMN id SET DEFAULT nextval('project_results_id_seq'::regclass);
+ALTER TABLE ONLY public.project_results ALTER COLUMN id SET DEFAULT nextval('public.project_results_id_seq'::regclass);
 
 
 --
 -- Name: project_risk_alerts id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY project_risk_alerts ALTER COLUMN id SET DEFAULT nextval('project_risk_alerts_id_seq'::regclass);
+ALTER TABLE ONLY public.project_risk_alerts ALTER COLUMN id SET DEFAULT nextval('public.project_risk_alerts_id_seq'::regclass);
 
 
 --
 -- Name: project_risk_configs id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY project_risk_configs ALTER COLUMN id SET DEFAULT nextval('project_risk_configs_id_seq'::regclass);
+ALTER TABLE ONLY public.project_risk_configs ALTER COLUMN id SET DEFAULT nextval('public.project_risk_configs_id_seq'::regclass);
 
 
 --
 -- Name: projects id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY projects ALTER COLUMN id SET DEFAULT nextval('projects_id_seq'::regclass);
+ALTER TABLE ONLY public.projects ALTER COLUMN id SET DEFAULT nextval('public.projects_id_seq'::regclass);
 
 
 --
 -- Name: projects_stages id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY projects_stages ALTER COLUMN id SET DEFAULT nextval('projects_stages_id_seq'::regclass);
+ALTER TABLE ONLY public.projects_stages ALTER COLUMN id SET DEFAULT nextval('public.projects_stages_id_seq'::regclass);
 
 
 --
 -- Name: stages id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY stages ALTER COLUMN id SET DEFAULT nextval('stages_id_seq'::regclass);
+ALTER TABLE ONLY public.stages ALTER COLUMN id SET DEFAULT nextval('public.stages_id_seq'::regclass);
 
 
 --
 -- Name: team_members id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY team_members ALTER COLUMN id SET DEFAULT nextval('team_members_id_seq'::regclass);
+ALTER TABLE ONLY public.team_members ALTER COLUMN id SET DEFAULT nextval('public.team_members_id_seq'::regclass);
 
 
 --
 -- Name: teams id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY teams ALTER COLUMN id SET DEFAULT nextval('teams_id_seq'::regclass);
+ALTER TABLE ONLY public.teams ALTER COLUMN id SET DEFAULT nextval('public.teams_id_seq'::regclass);
 
 
 --
 -- Name: users id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY users ALTER COLUMN id SET DEFAULT nextval('users_id_seq'::regclass);
+ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_id_seq'::regclass);
 
 
 --
 -- Name: ar_internal_metadata ar_internal_metadata_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY ar_internal_metadata
+ALTER TABLE ONLY public.ar_internal_metadata
     ADD CONSTRAINT ar_internal_metadata_pkey PRIMARY KEY (key);
 
 
@@ -908,7 +989,7 @@ ALTER TABLE ONLY ar_internal_metadata
 -- Name: companies companies_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY companies
+ALTER TABLE ONLY public.companies
     ADD CONSTRAINT companies_pkey PRIMARY KEY (id);
 
 
@@ -916,7 +997,7 @@ ALTER TABLE ONLY companies
 -- Name: company_settings company_settings_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY company_settings
+ALTER TABLE ONLY public.company_settings
     ADD CONSTRAINT company_settings_pkey PRIMARY KEY (id);
 
 
@@ -924,7 +1005,7 @@ ALTER TABLE ONLY company_settings
 -- Name: customers customers_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY customers
+ALTER TABLE ONLY public.customers
     ADD CONSTRAINT customers_pkey PRIMARY KEY (id);
 
 
@@ -932,7 +1013,7 @@ ALTER TABLE ONLY customers
 -- Name: demand_blocks demand_blocks_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY demand_blocks
+ALTER TABLE ONLY public.demand_blocks
     ADD CONSTRAINT demand_blocks_pkey PRIMARY KEY (id);
 
 
@@ -940,7 +1021,7 @@ ALTER TABLE ONLY demand_blocks
 -- Name: demand_transitions demand_transitions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY demand_transitions
+ALTER TABLE ONLY public.demand_transitions
     ADD CONSTRAINT demand_transitions_pkey PRIMARY KEY (id);
 
 
@@ -948,7 +1029,7 @@ ALTER TABLE ONLY demand_transitions
 -- Name: demands demands_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY demands
+ALTER TABLE ONLY public.demands
     ADD CONSTRAINT demands_pkey PRIMARY KEY (id);
 
 
@@ -956,15 +1037,23 @@ ALTER TABLE ONLY demands
 -- Name: financial_informations financial_informations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY financial_informations
+ALTER TABLE ONLY public.financial_informations
     ADD CONSTRAINT financial_informations_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: integration_errors integration_errors_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.integration_errors
+    ADD CONSTRAINT integration_errors_pkey PRIMARY KEY (id);
 
 
 --
 -- Name: operation_results operation_results_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY operation_results
+ALTER TABLE ONLY public.operation_results
     ADD CONSTRAINT operation_results_pkey PRIMARY KEY (id);
 
 
@@ -972,15 +1061,23 @@ ALTER TABLE ONLY operation_results
 -- Name: pipefy_configs pipefy_configs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY pipefy_configs
+ALTER TABLE ONLY public.pipefy_configs
     ADD CONSTRAINT pipefy_configs_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: pipefy_team_configs pipefy_team_configs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.pipefy_team_configs
+    ADD CONSTRAINT pipefy_team_configs_pkey PRIMARY KEY (id);
 
 
 --
 -- Name: products products_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY products
+ALTER TABLE ONLY public.products
     ADD CONSTRAINT products_pkey PRIMARY KEY (id);
 
 
@@ -988,7 +1085,7 @@ ALTER TABLE ONLY products
 -- Name: project_results project_results_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY project_results
+ALTER TABLE ONLY public.project_results
     ADD CONSTRAINT project_results_pkey PRIMARY KEY (id);
 
 
@@ -996,7 +1093,7 @@ ALTER TABLE ONLY project_results
 -- Name: project_risk_alerts project_risk_alerts_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY project_risk_alerts
+ALTER TABLE ONLY public.project_risk_alerts
     ADD CONSTRAINT project_risk_alerts_pkey PRIMARY KEY (id);
 
 
@@ -1004,7 +1101,7 @@ ALTER TABLE ONLY project_risk_alerts
 -- Name: project_risk_configs project_risk_configs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY project_risk_configs
+ALTER TABLE ONLY public.project_risk_configs
     ADD CONSTRAINT project_risk_configs_pkey PRIMARY KEY (id);
 
 
@@ -1012,7 +1109,7 @@ ALTER TABLE ONLY project_risk_configs
 -- Name: projects projects_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY projects
+ALTER TABLE ONLY public.projects
     ADD CONSTRAINT projects_pkey PRIMARY KEY (id);
 
 
@@ -1020,7 +1117,7 @@ ALTER TABLE ONLY projects
 -- Name: projects_stages projects_stages_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY projects_stages
+ALTER TABLE ONLY public.projects_stages
     ADD CONSTRAINT projects_stages_pkey PRIMARY KEY (id);
 
 
@@ -1028,7 +1125,7 @@ ALTER TABLE ONLY projects_stages
 -- Name: schema_migrations schema_migrations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY schema_migrations
+ALTER TABLE ONLY public.schema_migrations
     ADD CONSTRAINT schema_migrations_pkey PRIMARY KEY (version);
 
 
@@ -1036,7 +1133,7 @@ ALTER TABLE ONLY schema_migrations
 -- Name: stages stages_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY stages
+ALTER TABLE ONLY public.stages
     ADD CONSTRAINT stages_pkey PRIMARY KEY (id);
 
 
@@ -1044,7 +1141,7 @@ ALTER TABLE ONLY stages
 -- Name: team_members team_members_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY team_members
+ALTER TABLE ONLY public.team_members
     ADD CONSTRAINT team_members_pkey PRIMARY KEY (id);
 
 
@@ -1052,7 +1149,7 @@ ALTER TABLE ONLY team_members
 -- Name: teams teams_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY teams
+ALTER TABLE ONLY public.teams
     ADD CONSTRAINT teams_pkey PRIMARY KEY (id);
 
 
@@ -1060,7 +1157,7 @@ ALTER TABLE ONLY teams
 -- Name: users users_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY users
+ALTER TABLE ONLY public.users
     ADD CONSTRAINT users_pkey PRIMARY KEY (id);
 
 
@@ -1068,389 +1165,440 @@ ALTER TABLE ONLY users
 -- Name: index_companies_users_on_company_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_companies_users_on_company_id ON companies_users USING btree (company_id);
+CREATE INDEX index_companies_users_on_company_id ON public.companies_users USING btree (company_id);
 
 
 --
 -- Name: index_companies_users_on_user_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_companies_users_on_user_id ON companies_users USING btree (user_id);
+CREATE INDEX index_companies_users_on_user_id ON public.companies_users USING btree (user_id);
 
 
 --
 -- Name: index_company_settings_on_company_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_company_settings_on_company_id ON company_settings USING btree (company_id);
+CREATE INDEX index_company_settings_on_company_id ON public.company_settings USING btree (company_id);
 
 
 --
 -- Name: index_customers_on_company_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_customers_on_company_id ON customers USING btree (company_id);
+CREATE INDEX index_customers_on_company_id ON public.customers USING btree (company_id);
 
 
 --
 -- Name: index_customers_on_company_id_and_name; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX index_customers_on_company_id_and_name ON customers USING btree (company_id, name);
+CREATE UNIQUE INDEX index_customers_on_company_id_and_name ON public.customers USING btree (company_id, name);
 
 
 --
 -- Name: index_demand_blocks_on_demand_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_demand_blocks_on_demand_id ON demand_blocks USING btree (demand_id);
+CREATE INDEX index_demand_blocks_on_demand_id ON public.demand_blocks USING btree (demand_id);
 
 
 --
 -- Name: index_demand_transitions_on_demand_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_demand_transitions_on_demand_id ON demand_transitions USING btree (demand_id);
+CREATE INDEX index_demand_transitions_on_demand_id ON public.demand_transitions USING btree (demand_id);
 
 
 --
 -- Name: index_demand_transitions_on_stage_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_demand_transitions_on_stage_id ON demand_transitions USING btree (stage_id);
+CREATE INDEX index_demand_transitions_on_stage_id ON public.demand_transitions USING btree (stage_id);
 
 
 --
 -- Name: index_demands_on_project_result_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_demands_on_project_result_id ON demands USING btree (project_result_id);
+CREATE INDEX index_demands_on_project_result_id ON public.demands USING btree (project_result_id);
 
 
 --
 -- Name: index_financial_informations_on_company_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_financial_informations_on_company_id ON financial_informations USING btree (company_id);
+CREATE INDEX index_financial_informations_on_company_id ON public.financial_informations USING btree (company_id);
+
+
+--
+-- Name: index_integration_errors_on_company_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_integration_errors_on_company_id ON public.integration_errors USING btree (company_id);
+
+
+--
+-- Name: index_integration_errors_on_integration_type; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_integration_errors_on_integration_type ON public.integration_errors USING btree (integration_type);
 
 
 --
 -- Name: index_pipefy_configs_on_project_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_pipefy_configs_on_project_id ON pipefy_configs USING btree (project_id);
+CREATE INDEX index_pipefy_configs_on_project_id ON public.pipefy_configs USING btree (project_id);
 
 
 --
 -- Name: index_pipefy_configs_on_team_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_pipefy_configs_on_team_id ON pipefy_configs USING btree (team_id);
+CREATE INDEX index_pipefy_configs_on_team_id ON public.pipefy_configs USING btree (team_id);
+
+
+--
+-- Name: index_pipefy_team_configs_on_integration_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_pipefy_team_configs_on_integration_id ON public.pipefy_team_configs USING btree (integration_id);
+
+
+--
+-- Name: index_pipefy_team_configs_on_team_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_pipefy_team_configs_on_team_id ON public.pipefy_team_configs USING btree (team_id);
+
+
+--
+-- Name: index_pipefy_team_configs_on_username; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_pipefy_team_configs_on_username ON public.pipefy_team_configs USING btree (username);
 
 
 --
 -- Name: index_products_on_customer_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_products_on_customer_id ON products USING btree (customer_id);
+CREATE INDEX index_products_on_customer_id ON public.products USING btree (customer_id);
 
 
 --
 -- Name: index_products_on_customer_id_and_name; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX index_products_on_customer_id_and_name ON products USING btree (customer_id, name);
+CREATE UNIQUE INDEX index_products_on_customer_id_and_name ON public.products USING btree (customer_id, name);
 
 
 --
 -- Name: index_project_results_on_project_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_project_results_on_project_id ON project_results USING btree (project_id);
+CREATE INDEX index_project_results_on_project_id ON public.project_results USING btree (project_id);
 
 
 --
 -- Name: index_project_risk_alerts_on_project_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_project_risk_alerts_on_project_id ON project_risk_alerts USING btree (project_id);
+CREATE INDEX index_project_risk_alerts_on_project_id ON public.project_risk_alerts USING btree (project_id);
 
 
 --
 -- Name: index_project_risk_alerts_on_project_risk_config_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_project_risk_alerts_on_project_risk_config_id ON project_risk_alerts USING btree (project_risk_config_id);
+CREATE INDEX index_project_risk_alerts_on_project_risk_config_id ON public.project_risk_alerts USING btree (project_risk_config_id);
 
 
 --
 -- Name: index_projects_on_customer_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_projects_on_customer_id ON projects USING btree (customer_id);
+CREATE INDEX index_projects_on_customer_id ON public.projects USING btree (customer_id);
 
 
 --
 -- Name: index_projects_on_product_id_and_name; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX index_projects_on_product_id_and_name ON projects USING btree (product_id, name);
+CREATE UNIQUE INDEX index_projects_on_product_id_and_name ON public.projects USING btree (product_id, name);
 
 
 --
 -- Name: index_projects_stages_on_project_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_projects_stages_on_project_id ON projects_stages USING btree (project_id);
+CREATE INDEX index_projects_stages_on_project_id ON public.projects_stages USING btree (project_id);
 
 
 --
 -- Name: index_projects_stages_on_stage_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_projects_stages_on_stage_id ON projects_stages USING btree (stage_id);
+CREATE INDEX index_projects_stages_on_stage_id ON public.projects_stages USING btree (stage_id);
 
 
 --
 -- Name: index_stages_on_integration_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_stages_on_integration_id ON stages USING btree (integration_id);
+CREATE INDEX index_stages_on_integration_id ON public.stages USING btree (integration_id);
 
 
 --
 -- Name: index_stages_on_name; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_stages_on_name ON stages USING btree (name);
+CREATE INDEX index_stages_on_name ON public.stages USING btree (name);
 
 
 --
 -- Name: index_teams_on_company_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_teams_on_company_id ON teams USING btree (company_id);
+CREATE INDEX index_teams_on_company_id ON public.teams USING btree (company_id);
 
 
 --
 -- Name: index_teams_on_company_id_and_name; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX index_teams_on_company_id_and_name ON teams USING btree (company_id, name);
+CREATE UNIQUE INDEX index_teams_on_company_id_and_name ON public.teams USING btree (company_id, name);
 
 
 --
 -- Name: index_users_on_email; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX index_users_on_email ON users USING btree (email);
+CREATE UNIQUE INDEX index_users_on_email ON public.users USING btree (email);
 
 
 --
 -- Name: index_users_on_reset_password_token; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX index_users_on_reset_password_token ON users USING btree (reset_password_token);
+CREATE UNIQUE INDEX index_users_on_reset_password_token ON public.users USING btree (reset_password_token);
 
 
 --
 -- Name: pipefy_configs fk_rails_0732eff170; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY pipefy_configs
-    ADD CONSTRAINT fk_rails_0732eff170 FOREIGN KEY (project_id) REFERENCES projects(id);
+ALTER TABLE ONLY public.pipefy_configs
+    ADD CONSTRAINT fk_rails_0732eff170 FOREIGN KEY (project_id) REFERENCES public.projects(id);
 
 
 --
 -- Name: demand_blocks fk_rails_0c8fa8d3a7; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY demand_blocks
-    ADD CONSTRAINT fk_rails_0c8fa8d3a7 FOREIGN KEY (demand_id) REFERENCES demands(id);
+ALTER TABLE ONLY public.demand_blocks
+    ADD CONSTRAINT fk_rails_0c8fa8d3a7 FOREIGN KEY (demand_id) REFERENCES public.demands(id);
 
 
 --
 -- Name: team_members fk_rails_194b5b076d; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY team_members
-    ADD CONSTRAINT fk_rails_194b5b076d FOREIGN KEY (team_id) REFERENCES teams(id);
+ALTER TABLE ONLY public.team_members
+    ADD CONSTRAINT fk_rails_194b5b076d FOREIGN KEY (team_id) REFERENCES public.teams(id);
 
 
 --
 -- Name: demands fk_rails_19bdd8aa1e; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY demands
-    ADD CONSTRAINT fk_rails_19bdd8aa1e FOREIGN KEY (project_id) REFERENCES projects(id);
+ALTER TABLE ONLY public.demands
+    ADD CONSTRAINT fk_rails_19bdd8aa1e FOREIGN KEY (project_id) REFERENCES public.projects(id);
 
 
 --
 -- Name: projects fk_rails_21e11c2480; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY projects
-    ADD CONSTRAINT fk_rails_21e11c2480 FOREIGN KEY (product_id) REFERENCES products(id);
+ALTER TABLE ONLY public.projects
+    ADD CONSTRAINT fk_rails_21e11c2480 FOREIGN KEY (product_id) REFERENCES public.products(id);
 
 
 --
 -- Name: products fk_rails_252452a41b; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY products
-    ADD CONSTRAINT fk_rails_252452a41b FOREIGN KEY (customer_id) REFERENCES customers(id);
+ALTER TABLE ONLY public.products
+    ADD CONSTRAINT fk_rails_252452a41b FOREIGN KEY (customer_id) REFERENCES public.customers(id);
 
 
 --
 -- Name: companies_users fk_rails_27539b2fc9; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY companies_users
-    ADD CONSTRAINT fk_rails_27539b2fc9 FOREIGN KEY (user_id) REFERENCES users(id);
+ALTER TABLE ONLY public.companies_users
+    ADD CONSTRAINT fk_rails_27539b2fc9 FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --
 -- Name: demand_transitions fk_rails_2a5bc4c3f8; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY demand_transitions
-    ADD CONSTRAINT fk_rails_2a5bc4c3f8 FOREIGN KEY (demand_id) REFERENCES demands(id);
+ALTER TABLE ONLY public.demand_transitions
+    ADD CONSTRAINT fk_rails_2a5bc4c3f8 FOREIGN KEY (demand_id) REFERENCES public.demands(id);
+
+
+--
+-- Name: integration_errors fk_rails_3505c123da; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.integration_errors
+    ADD CONSTRAINT fk_rails_3505c123da FOREIGN KEY (company_id) REFERENCES public.companies(id);
 
 
 --
 -- Name: pipefy_configs fk_rails_3895e626a7; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY pipefy_configs
-    ADD CONSTRAINT fk_rails_3895e626a7 FOREIGN KEY (company_id) REFERENCES companies(id);
+ALTER TABLE ONLY public.pipefy_configs
+    ADD CONSTRAINT fk_rails_3895e626a7 FOREIGN KEY (company_id) REFERENCES public.companies(id);
 
 
 --
 -- Name: pipefy_configs fk_rails_429f1ebe04; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY pipefy_configs
-    ADD CONSTRAINT fk_rails_429f1ebe04 FOREIGN KEY (team_id) REFERENCES teams(id);
+ALTER TABLE ONLY public.pipefy_configs
+    ADD CONSTRAINT fk_rails_429f1ebe04 FOREIGN KEY (team_id) REFERENCES public.teams(id);
 
 
 --
 -- Name: project_risk_alerts fk_rails_4685dfa1bb; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY project_risk_alerts
-    ADD CONSTRAINT fk_rails_4685dfa1bb FOREIGN KEY (project_id) REFERENCES projects(id);
+ALTER TABLE ONLY public.project_risk_alerts
+    ADD CONSTRAINT fk_rails_4685dfa1bb FOREIGN KEY (project_id) REFERENCES public.projects(id);
 
 
 --
 -- Name: projects fk_rails_47c768ed16; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY projects
-    ADD CONSTRAINT fk_rails_47c768ed16 FOREIGN KEY (customer_id) REFERENCES customers(id);
+ALTER TABLE ONLY public.projects
+    ADD CONSTRAINT fk_rails_47c768ed16 FOREIGN KEY (customer_id) REFERENCES public.customers(id);
 
 
 --
 -- Name: financial_informations fk_rails_573f757bcf; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY financial_informations
-    ADD CONSTRAINT fk_rails_573f757bcf FOREIGN KEY (company_id) REFERENCES companies(id);
+ALTER TABLE ONLY public.financial_informations
+    ADD CONSTRAINT fk_rails_573f757bcf FOREIGN KEY (company_id) REFERENCES public.companies(id);
 
 
 --
 -- Name: company_settings fk_rails_6434bf6768; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY company_settings
-    ADD CONSTRAINT fk_rails_6434bf6768 FOREIGN KEY (company_id) REFERENCES companies(id);
+ALTER TABLE ONLY public.company_settings
+    ADD CONSTRAINT fk_rails_6434bf6768 FOREIGN KEY (company_id) REFERENCES public.companies(id);
 
 
 --
 -- Name: companies_users fk_rails_667cd952fb; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY companies_users
-    ADD CONSTRAINT fk_rails_667cd952fb FOREIGN KEY (company_id) REFERENCES companies(id);
+ALTER TABLE ONLY public.companies_users
+    ADD CONSTRAINT fk_rails_667cd952fb FOREIGN KEY (company_id) REFERENCES public.companies(id);
+
+
+--
+-- Name: pipefy_team_configs fk_rails_6b009afec0; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.pipefy_team_configs
+    ADD CONSTRAINT fk_rails_6b009afec0 FOREIGN KEY (team_id) REFERENCES public.teams(id);
 
 
 --
 -- Name: users fk_rails_971bf2d9a1; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY users
-    ADD CONSTRAINT fk_rails_971bf2d9a1 FOREIGN KEY (last_company_id) REFERENCES companies(id);
+ALTER TABLE ONLY public.users
+    ADD CONSTRAINT fk_rails_971bf2d9a1 FOREIGN KEY (last_company_id) REFERENCES public.companies(id);
 
 
 --
 -- Name: project_results fk_rails_b11de7d28e; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY project_results
-    ADD CONSTRAINT fk_rails_b11de7d28e FOREIGN KEY (team_id) REFERENCES teams(id);
+ALTER TABLE ONLY public.project_results
+    ADD CONSTRAINT fk_rails_b11de7d28e FOREIGN KEY (team_id) REFERENCES public.teams(id);
 
 
 --
 -- Name: project_risk_alerts fk_rails_b8b501e2eb; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY project_risk_alerts
-    ADD CONSTRAINT fk_rails_b8b501e2eb FOREIGN KEY (project_risk_config_id) REFERENCES project_risk_configs(id);
+ALTER TABLE ONLY public.project_risk_alerts
+    ADD CONSTRAINT fk_rails_b8b501e2eb FOREIGN KEY (project_risk_config_id) REFERENCES public.project_risk_configs(id);
 
 
 --
 -- Name: project_results fk_rails_c3c9938173; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY project_results
-    ADD CONSTRAINT fk_rails_c3c9938173 FOREIGN KEY (project_id) REFERENCES projects(id);
+ALTER TABLE ONLY public.project_results
+    ADD CONSTRAINT fk_rails_c3c9938173 FOREIGN KEY (project_id) REFERENCES public.projects(id);
 
 
 --
 -- Name: projects_stages fk_rails_c4e86d5c86; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY projects_stages
-    ADD CONSTRAINT fk_rails_c4e86d5c86 FOREIGN KEY (stage_id) REFERENCES stages(id);
+ALTER TABLE ONLY public.projects_stages
+    ADD CONSTRAINT fk_rails_c4e86d5c86 FOREIGN KEY (stage_id) REFERENCES public.stages(id);
 
 
 --
 -- Name: demand_transitions fk_rails_c63024fc81; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY demand_transitions
-    ADD CONSTRAINT fk_rails_c63024fc81 FOREIGN KEY (stage_id) REFERENCES stages(id);
+ALTER TABLE ONLY public.demand_transitions
+    ADD CONSTRAINT fk_rails_c63024fc81 FOREIGN KEY (stage_id) REFERENCES public.stages(id);
 
 
 --
 -- Name: projects_stages fk_rails_ca4af19a4f; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY projects_stages
-    ADD CONSTRAINT fk_rails_ca4af19a4f FOREIGN KEY (project_id) REFERENCES projects(id);
+ALTER TABLE ONLY public.projects_stages
+    ADD CONSTRAINT fk_rails_ca4af19a4f FOREIGN KEY (project_id) REFERENCES public.projects(id);
 
 
 --
 -- Name: operation_results fk_rails_dbd0ae3c1c; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY operation_results
-    ADD CONSTRAINT fk_rails_dbd0ae3c1c FOREIGN KEY (company_id) REFERENCES companies(id);
+ALTER TABLE ONLY public.operation_results
+    ADD CONSTRAINT fk_rails_dbd0ae3c1c FOREIGN KEY (company_id) REFERENCES public.companies(id);
 
 
 --
 -- Name: teams fk_rails_e080df8a94; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY teams
-    ADD CONSTRAINT fk_rails_e080df8a94 FOREIGN KEY (company_id) REFERENCES companies(id);
+ALTER TABLE ONLY public.teams
+    ADD CONSTRAINT fk_rails_e080df8a94 FOREIGN KEY (company_id) REFERENCES public.companies(id);
 
 
 --
 -- Name: customers fk_rails_ef51a916ef; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY customers
-    ADD CONSTRAINT fk_rails_ef51a916ef FOREIGN KEY (company_id) REFERENCES companies(id);
+ALTER TABLE ONLY public.customers
+    ADD CONSTRAINT fk_rails_ef51a916ef FOREIGN KEY (company_id) REFERENCES public.companies(id);
 
 
 --
@@ -1505,6 +1653,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20180302152036'),
 ('20180302225234'),
 ('20180303002459'),
-('20180306142224');
+('20180306142224'),
+('20180307203657'),
+('20180312220710');
 
 
