@@ -8,6 +8,6 @@ class DemandsRepository
   end
 
   def known_scope_to_date(project, date)
-    Demand.joins(:demand_transitions).where('project_id = :project_id AND (SELECT MIN(DATE(demand_transitions.last_time_in)) FROM demand_transitions WHERE demand_transitions.demand_id = demands.id) <= :cut_date', project_id: project.id, cut_date: date).uniq.count
+    Demand.where('project_id = :project_id AND created_date::timestamp::date <= :cut_date', project_id: project.id, cut_date: date).uniq.count
   end
 end

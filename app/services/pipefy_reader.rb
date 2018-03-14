@@ -9,17 +9,15 @@ class PipefyReader
     return if name_in_pipefy.blank?
 
     project = ProjectsRepository.instance.search_project_by_full_name(name_in_pipefy)
-    return if project.blank?
+    return unless project&.pipefy_config&.active?
 
     create_assignees!(team, response_data)
 
     demand = create_demand(team, project, response_data)
-    previous_result = demand.project_result
-    previous_result.remove_demand!(demand) if previous_result.present?
 
-    read_phases_transitions(demand, response_data)
-    read_blocks(demand, response_data)
-    process_demand(demand, team)
+    read_phases_transitions(demand.reload, response_data)
+    read_blocks(demand.reload, response_data)
+    process_demand(demand.reload, team)
     project
   end
 
@@ -27,8 +25,10 @@ class PipefyReader
 
   def process_demand(demand, team)
     demand.update_effort!
+    demand.update_created_date!
     project_result = ProjectResultsRepository.instance.create_project_result!(demand, team)
-    IntegrationError.create(company: team.company, integration_type: :pipefy, integration_error_text: project_result.errors.full_messages.join(', ')) unless project_result.valid?
+    return IntegrationError.create(company: team.company, integration_type: :pipefy, integration_error_text: project_result.errors.full_messages.join(', ')) unless project_result.valid?
+    ProjectResult.reset_counters(project_result.id, :demands_count)
   end
 
   def create_assignees!(team, response_data)
@@ -51,9 +51,16 @@ class PipefyReader
     assignees_count = compute_assignees_count(team, response_data)
     url = response_data.try(:[], 'card').try(:[], 'url')
 
-    demand = Demand.where(project: project, demand_id: demand_id).first_or_initialize
-    demand.update(created_date: Time.zone.now, demand_type: read_demand_type(response_data), class_of_service: read_class_of_service(response_data), assignees_count: assignees_count, url: url)
-    demand
+    destroy_demand_if_exists!(demand_id, project)
+    Demand.create(project: project, demand_id: demand_id, created_date: Time.zone.now, demand_type: read_demand_type(response_data), class_of_service: read_class_of_service(response_data), assignees_count: assignees_count, url: url)
+  end
+
+  def destroy_demand_if_exists!(demand_id, project)
+    demand = Demand.where(project: project, demand_id: demand_id).first
+    return if demand.blank?
+    previous_result = demand.project_result
+    previous_result.remove_demand!(demand) if previous_result.present?
+    demand.destroy
   end
 
   def compute_assignees_count(team, response_data)

@@ -51,6 +51,11 @@ class Demand < ApplicationRecord
     update(effort: (effort - time_blocked) * assignee_effort_computation)
   end
 
+  def update_created_date!
+    create_transition = demand_transitions.order(:last_time_in).first
+    update(created_date: create_transition.last_time_in)
+  end
+
   private
 
   def assignee_effort_computation

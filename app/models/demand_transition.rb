@@ -38,8 +38,6 @@ class DemandTransition < ApplicationRecord
       demand.update(commitment_date: last_time_in)
     elsif stage.end_point?
       demand.update(end_date: last_time_in)
-    elsif demand.demand_transitions.count == 1
-      demand.update(created_date: last_time_in)
     end
   end
 end
