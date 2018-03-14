@@ -17,7 +17,7 @@ RSpec.describe PipefyReader, type: :service do
     let!(:other_end_stage) { Fabricate :stage, integration_id: '2480504', compute_effort: false, end_point: true }
 
     let(:first_card_response) { { data: { card: { id: '5140999', assignees: [{ id: '101381', username: 'xpto' }, { id: '101381', username: 'xpto' }, { id: '101382', username: 'bla' }, { id: '101321', username: 'mambo' }], comments: [{ created_at: '2018-03-01T18:39:46-03:00', author: { username: 'sbbrubles' }, text: '[BLOCKED]: xpto of bla having foo.' }], fields: [{ name: 'Descrição da pesquisa', value: 'teste' }, { name: 'Title', value: 'Página dos colunistas' }, { name: 'Type', value: 'bUG' }, { name: 'JiraKey', value: 'PD-46' }, { name: 'Class of Service', value: 'Padrão' }, { name: 'Project', value: 'bLa | XpTO | FASE 1' }], phases_history: [{ phase: { id: '2481595' }, firstTimeIn: '2018-02-22T17:09:58-03:00', lastTimeOut: '2018-02-26T17:09:58-03:00' }, { phase: { id: '2481597' }, firstTimeIn: '2018-02-23T17:09:58-03:00', lastTimeOut: nil }], pipe: { id: '356355' }, url: 'http://app.pipefy.com/pipes/356355#cards/5140999' } } }.with_indifferent_access }
-    let(:second_card_response) { { data: { card: { id: '5141010', assignees: [], comments: [{ created_at: '2018-02-18T18:39:46-03:00', author: { username: 'sbbrubles' }, text: '[BLOCKED][1]: xpto of bla having foo in the block 1.' }, { created_at: '2018-02-18T18:39:46-03:00', author: { username: 'sbbrubles' }, text: '[BLOCKED][2]: xpto of bla having foo.' }, { created_at: '2018-02-20T18:39:46-03:00', author: { username: 'sbbrubles' }, text: '[UNBLOCKED][2]: there is no more xpto of bla having foo.' }], fields: [{ name: 'Title', value: 'Simplicação dos passos para cadastrar um novo artigo pelo colunista' }, { name: 'Type', value: 'chORE' }, { name: 'JiraKey', value: 'PD-119' }, { name: 'Class of Service', value: 'Expedição' }, { name: 'Project', value: 'bLa | XpTO | FASE 2' }], phases_history: [{ phase: { id: '2481595' }, firstTimeIn: '2018-02-23T17:10:40-03:00', lastTimeOut: '2018-02-27T17:10:40-03:00' }, { phase: { id: '2481597' }, firstTimeIn: '2018-02-23T17:10:40-03:00', lastTimeOut: nil }], pipe: { id: '356355' }, url: 'http://app.pipefy.com/pipes/356355#cards/5141010' } } }.with_indifferent_access }
+    let(:second_card_response) { { data: { card: { id: '5141010', assignees: [], comments: [{ created_at: '2018-02-18T18:39:46-03:00', author: { username: 'sbbrubles' }, text: '[BLOCKED][1]: xpto of bla having foo in the block 1.' }, { created_at: '2018-02-18T18:39:46-03:00', author: { username: 'sbbrubles' }, text: '[BLOCKED][2]: xpto of bla having foo.' }, { created_at: '2018-02-19T14:39:46-03:00', author: { username: 'sbbrubles' }, text: '[UNBLOCKED][2]: there is no more xpto of bla having foo.' }], fields: [{ name: 'Title', value: 'Simplicação dos passos para cadastrar um novo artigo pelo colunista' }, { name: 'Type', value: 'chORE' }, { name: 'JiraKey', value: 'PD-119' }, { name: 'Class of Service', value: 'Expedição' }, { name: 'Project', value: 'bLa | XpTO | FASE 2' }], phases_history: [{ phase: { id: '2481595' }, firstTimeIn: '2018-02-23T17:10:40-03:00', lastTimeOut: '2018-02-27T17:10:40-03:00' }, { phase: { id: '2481597' }, firstTimeIn: '2018-02-27T17:10:40-03:00', lastTimeOut: nil }], pipe: { id: '356355' }, url: 'http://app.pipefy.com/pipes/356355#cards/5141010' } } }.with_indifferent_access }
     let(:third_card_response) { { data: { card: { id: '5141022', comments: [], fields: [{ name: 'Title', value: 'Agendamento de artigo do colunista' }, { name: 'Type', value: 'Nova Funcionalidade' }, { name: 'JiraKey', value: 'PD-124' }, { name: 'Class of Service', value: 'Data Fixa' }, { name: 'Project', value: 'Foo | BaR | FASE 1' }], phases_history: [{ phase: { id: '2480502' }, firstTimeIn: '2018-02-23T17:11:23-03:00', lastTimeOut: '2018-02-23T17:11:23-03:00' }, { phase: { id: '2480504' }, firstTimeIn: '2018-02-23T17:11:23-03:00', lastTimeOut: nil }], pipe: { id: '356355' }, url: 'http://app.pipefy.com/pipes/356355#cards/5141022' } } }.with_indifferent_access }
     let(:pipe_response) { { data: { pipe: { phases: [{ cards: { edges: [{ node: { id: '4648389', title: 'ateste' } }] } }, { cards: { edges: [] } }, { cards: { edges: [{ node: { id: '4648391', title: 'teste 2' } }] } }] } } }.with_indifferent_access }
 
@@ -30,17 +30,20 @@ RSpec.describe PipefyReader, type: :service do
       end
     end
     context 'having pipefy_config' do
-      let!(:pipefy_config) { Fabricate :pipefy_config, project: first_project, team: team, pipe_id: '356528' }
+      let!(:first_pipefy_config) { Fabricate :pipefy_config, project: first_project, team: team, pipe_id: '356528', active: true }
+      let!(:second_pipefy_config) { Fabricate :pipefy_config, project: second_project, team: team, pipe_id: '356528', active: true }
+      let!(:third_pipefy_config) { Fabricate :pipefy_config, project: third_project, team: team, pipe_id: '356528', active: true }
+
       let!(:first_pipefy_team_config) { Fabricate :pipefy_team_config, team: team, integration_id: '101381', username: 'xpto', member_type: :developer }
       let!(:second_pipefy_team_config) { Fabricate :pipefy_team_config, team: team, integration_id: '101382', username: 'bla', member_type: :analyst }
 
       context 'when the demand exists' do
         context 'and the project result is in another date' do
-          let!(:first_demand) { Fabricate :demand, project: first_project, project_result: nil }
-          let!(:second_demand) { Fabricate :demand, project: first_project, project_result: nil, demand_id: '5140999' }
+          let!(:first_demand) { Fabricate :demand, project: first_project, project_result: nil, effort: 50 }
+          let!(:second_demand) { Fabricate :demand, project: first_project, project_result: nil, demand_id: '5140999', effort: 30, created_date: Time.zone.parse('2018-02-17') }
           let!(:first_transition) { Fabricate :demand_transition, stage: end_stage, demand: first_demand, last_time_in: '2018-02-14T01:01:41-02:00', last_time_out: '2018-02-16T01:01:41-02:00' }
           let!(:second_transition) { Fabricate :demand_transition, stage: end_stage, demand: second_demand, last_time_in: '2018-02-16T01:01:41-02:00', last_time_out: '2018-02-16T01:42:41-02:00' }
-          let!(:project_result) { Fabricate :project_result, project: first_project, demands: [first_demand, second_demand], result_date: Date.new(2018, 2, 15) }
+          let!(:project_result) { Fabricate :project_result, project: first_project, demands: [first_demand, second_demand], result_date: Date.new(2018, 2, 15), demands_count: 2 }
 
           context 'when the card has only one block not unblocked' do
             it 'processes the card updating the demand, creating the project result and creating the new block' do
@@ -64,7 +67,7 @@ RSpec.describe PipefyReader, type: :service do
               expect(updated_demand.demand_type).to eq 'bug'
               expect(updated_demand.demand_id).to eq '5140999'
               expect(updated_demand.assignees_count).to eq 2
-              expect(updated_demand.effort.to_f).to eq 23.0
+              expect(updated_demand.effort.to_f).to eq 18.0
 
               expect(DemandBlock.count).to eq 1
               block = Demand.last.demand_blocks.first
@@ -75,12 +78,24 @@ RSpec.describe PipefyReader, type: :service do
 
               expect(ProjectResult.count).to eq 2
 
-              created_result = ProjectResult.last
-              expect(created_result.result_date).to eq Date.new(2018, 2, 16)
-              expect(created_result.known_scope).to eq 1
-              expect(created_result.qty_hours_downstream).to eq 23
+              updated_result = first_demand.reload.project_result
+              expect(updated_result.result_date).to eq Date.new(2018, 2, 15)
+              expect(updated_result.known_scope).to eq 1
+              expect(updated_result.qty_hours_downstream).to eq 50
+              expect(updated_result.qty_hours_upstream).to eq 0
+              expect(updated_result.qty_hours_bug).to eq 0
+              expect(updated_result.demands).to eq [first_demand]
+              expect(updated_result.demands_count).to eq 1
+
+              updated_demand = Demand.find_by(demand_id: '5140999')
+              created_result = updated_demand.project_result
+              expect(created_result.result_date).to eq Date.new(2018, 2, 23)
+              expect(created_result.known_scope).to eq 2
+              expect(created_result.qty_hours_downstream).to eq 18
               expect(created_result.qty_hours_upstream).to eq 0
-              expect(created_result.qty_hours_bug).to eq 23
+              expect(created_result.qty_hours_bug).to eq 18
+              expect(created_result.demands).to eq [updated_demand]
+              expect(created_result.demands_count).to eq 1
             end
           end
 
@@ -105,7 +120,7 @@ RSpec.describe PipefyReader, type: :service do
               expect(second_block.unblocker_username).to eq 'johndoe'
               expect(second_block.unblock_time).to eq Time.zone.iso8601('2018-02-20T18:39:46-03:00')
               expect(second_block.unblock_reason).to eq '[UNBLOCKED][2]: there is no more xpto of bla having foo.'
-              expect(second_block.block_duration).to eq 13
+              expect(second_block.block_duration).to eq 12
             end
           end
         end
@@ -139,7 +154,7 @@ RSpec.describe PipefyReader, type: :service do
             expect(created_demand.bug?).to be true
             expect(created_demand.demand_id).to eq '5140999'
             expect(created_demand.assignees_count).to eq 2
-            expect(created_demand.effort.to_f).to eq 23.0
+            expect(created_demand.effort.to_f).to eq 18.0
             expect(created_demand.class_of_service).to eq 'standard'
             expect(created_demand.url).to eq 'http://app.pipefy.com/pipes/356355#cards/5140999'
           end
@@ -152,7 +167,7 @@ RSpec.describe PipefyReader, type: :service do
             expect(created_demand.chore?).to be true
             expect(created_demand.demand_id).to eq '5141010'
             expect(created_demand.assignees_count).to eq 1
-            expect(created_demand.effort.to_f).to eq 2.33333333333333
+            expect(created_demand.effort.to_f).to eq 6.0
             expect(created_demand.class_of_service).to eq 'expedite'
             expect(created_demand.url).to eq 'http://app.pipefy.com/pipes/356355#cards/5141010'
           end
@@ -193,6 +208,7 @@ RSpec.describe PipefyReader, type: :service do
         let!(:end_stage) { Fabricate :stage, projects: [first_project], integration_id: '2481597', compute_effort: false, end_point: true }
         let!(:other_end_stage) { Fabricate :stage, integration_id: '2480504', compute_effort: false, end_point: true }
         let(:first_card_response) { { data: { card: { id: '5140999', assignees: [{ id: '101381', username: 'xpto' }, { id: '101381', username: 'xpto' }, { id: '101382', username: 'bla' }, { id: '101321', username: 'mambo' }], comments: [{ created_at: '2018-03-01T18:39:46-03:00', author: { username: 'sbbrubles' }, text: '[BLOCKED]: xpto of bla having foo.' }], fields: [{ name: 'Descrição da pesquisa', value: 'teste' }, { name: 'Title', value: 'Página dos colunistas' }, { name: 'Type', value: 'bUG' }, { name: 'JiraKey', value: 'PD-46' }, { name: 'Class of Service', value: 'Padrão' }, { name: 'Project', value: 'bLa | XpTO | FASE 1' }], phases_history: [{ phase: { id: '2481595' }, firstTimeIn: '2018-02-22T17:09:58-03:00', lastTimeOut: '2018-02-26T17:09:58-03:00' }, { phase: { id: '2481597' }, firstTimeIn: '2018-02-23T17:09:58-03:00', lastTimeOut: nil }], pipe: { id: '356355' }, url: 'http://app.pipefy.com/pipes/356355#cards/5140999' } } }.with_indifferent_access }
+        let!(:first_pipefy_config) { Fabricate :pipefy_config, project: first_project, team: team, pipe_id: '356528', active: true }
 
         it 'adds integration error' do
           PipefyReader.instance.process_card(team, first_card_response)

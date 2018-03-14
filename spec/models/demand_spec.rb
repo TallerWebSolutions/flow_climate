@@ -58,7 +58,7 @@ RSpec.describe Demand, type: :model do
         let!(:demand_transition) { Fabricate :demand_transition, demand: demand, stage: effort_stage, last_time_in: Time.zone.parse('2018-03-05 22:00'), last_time_out: Time.zone.parse('2018-03-06 13:00') }
 
         before { demand.update_effort! }
-        it { expect(demand.effort.to_f).to eq 5.0 }
+        it { expect(demand.effort.to_f).to eq 6.0 }
       end
       context 'having blockings' do
         let(:demand) { Fabricate :demand, project: project, assignees_count: 1 }
@@ -67,7 +67,7 @@ RSpec.describe Demand, type: :model do
         let!(:second_demand_block) { Fabricate :demand_block, demand: demand, block_duration: 1.0 }
 
         before { demand.update_effort! }
-        it { expect(demand.effort.to_f).to eq 2.0 }
+        it { expect(demand.effort.to_f).to eq 3.0 }
       end
 
       context 'having no transition in the effort stage' do
@@ -85,7 +85,7 @@ RSpec.describe Demand, type: :model do
         let!(:demand_transition) { Fabricate :demand_transition, demand: demand, stage: effort_stage, last_time_in: Time.zone.parse('2018-03-05 22:00'), last_time_out: Time.zone.parse('2018-03-06 13:00') }
 
         before { demand.update_effort! }
-        it { expect(demand.effort.to_f).to eq 7.5 }
+        it { expect(demand.effort.to_f).to eq 9.0 }
       end
       context 'having blockings' do
         let!(:demand_transition) { Fabricate :demand_transition, demand: demand, stage: effort_stage, last_time_in: Time.zone.parse('2018-03-05 22:00'), last_time_out: Time.zone.parse('2018-03-06 13:00') }
@@ -93,7 +93,7 @@ RSpec.describe Demand, type: :model do
         let!(:second_demand_block) { Fabricate :demand_block, demand: demand, block_duration: 1.0 }
 
         before { demand.update_effort! }
-        it { expect(demand.effort.to_f).to eq 3.0 }
+        it { expect(demand.effort.to_f).to eq 4.5 }
       end
 
       context 'having no transition in the effort stage' do

@@ -35,27 +35,5 @@ RSpec.describe DemandTransition, type: :model do
         expect(demand.reload.end_date).to eq transition_date
       end
     end
-    context 'when the stage is not an end_point nor commitment_point' do
-      let(:stage) { Fabricate :stage, commitment_point: false, end_point: false }
-      let(:demand) { Fabricate :demand, created_date: Time.zone.parse('2018-02-04 12:00:00') }
-      let(:transition_date) { Time.zone.parse('2018-03-13 12:00:00') }
-      context 'and it is the first transition for the demand' do
-        before { Fabricate :demand_transition, stage: stage, demand: demand, last_time_in: transition_date }
-        it 'sets the created date and do not touch in the others' do
-          expect(demand.reload.commitment_date).to be_nil
-          expect(demand.reload.created_date).to eq transition_date
-          expect(demand.reload.end_date).to be_nil
-        end
-      end
-      context 'and it is not the first transition for the demand' do
-        let!(:transition) { Fabricate :demand_transition, stage: stage, demand: demand, last_time_in: Time.zone.parse('2018-01-20 12:00:00') }
-        before { Fabricate :demand_transition, stage: stage, demand: demand, last_time_in: transition_date }
-        it 'does not change any dates' do
-          expect(demand.reload.commitment_date).to be_nil
-          expect(demand.reload.created_date).to eq Time.zone.parse('2018-01-20 12:00:00')
-          expect(demand.reload.end_date).to be_nil
-        end
-      end
-    end
   end
 end
