@@ -15,8 +15,8 @@ class ProcessPipefyPipeJob < ApplicationJob
     Demand.joins(project: :pipefy_config).joins(:demand_transitions).where('demands.demand_id IS NOT NULL AND pipefy_configs.active = true').uniq.each do |demand|
       project = demand.project
       pipefy_response = PipefyApiService.request_card_details(demand.demand_id)
-      card_response = JSON.parse(pipefy_response.body)
       next if pipefy_response.code != 200
+      card_response = JSON.parse(pipefy_response.body)
       process_card_response(card_response, demand, project)
       processed_projects << project unless processed_projects.include?(project)
     end
