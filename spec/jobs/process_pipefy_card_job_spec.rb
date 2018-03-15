@@ -10,7 +10,7 @@ RSpec.describe ProcessPipefyCardJob, type: :active_job do
 
   context 'having no params' do
     it 'returns doing nothing' do
-      expect(PipefyReader.instance).to receive(:process_card).never
+      expect(PipefyReader.instance).to receive(:create_card!).never
       ProcessPipefyCardJob.perform_now({})
     end
   end
@@ -33,15 +33,18 @@ RSpec.describe ProcessPipefyCardJob, type: :active_job do
 
     context 'and a pipefy config' do
       let!(:pipefy_config) { Fabricate :pipefy_config, project: project, team: team, pipe_id: '356528' }
+      let(:demand) { Fabricate :demand }
       it 'updates the demand and the project result' do
-        expect(PipefyReader.instance).to receive(:process_card).with(team, card_response).once
+        expect(PipefyReader.instance).to receive(:create_card!).with(team, card_response).once
+        expect(Demand).to receive(:find_by) { demand }
+        expect(PipefyReader.instance).to receive(:update_card!).with(team, demand, card_response).once
         ProcessPipefyCardJob.perform_now(params)
       end
     end
 
     context 'and no pipefy config' do
       it 'updates the demand and the project result' do
-        expect(PipefyReader.instance).to receive(:process_card).with(team, card_response).never
+        expect(PipefyReader.instance).to receive(:create_card!).with(team, card_response).never
         ProcessPipefyCardJob.perform_now(params)
       end
     end

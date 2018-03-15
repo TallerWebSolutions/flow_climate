@@ -2,34 +2,59 @@
 
 class ProcessPipefyPipeJob < ApplicationJob
   def perform(full_reading)
-    pipefy_configs = PipefyConfig.select('pipe_id, team_id').where(active: true).group(:pipe_id, :team_id)
-    processed_projects = process_pipe(full_reading, pipefy_configs)
+    process_pipe_and_create_cards!(full_reading)
+
+    processed_projects = read_demands_in_pipefy!
     processed_projects.uniq.each { |updated_project| updated_project.project_results.order(:result_date).joins(demands: :demand_transitions).map(&:compute_flow_metrics!) if updated_project.present? }
   end
 
   private
 
-  def process_pipe(full_reading, pipefy_configs)
+  def read_demands_in_pipefy!
     processed_projects = []
-    pipefy_configs.map { |pc| [pc] }.flatten.each do |config|
-      pipe_response = PipefyApiService.request_pipe_details_with_card_summary(config.pipe_id)
-      next if pipe_response.code != 200
-      processed_projects.concat(process_success_pipe_response(config, full_reading, pipe_response))
+    Demand.joins(project: :pipefy_config).joins(:demand_transitions).where('demands.demand_id IS NOT NULL AND pipefy_configs.active = true').uniq.each do |demand|
+      project = demand.project
+      pipefy_response = PipefyApiService.request_card_details(demand.demand_id)
+      card_response = JSON.parse(pipefy_response.body)
+      next if pipefy_response.code != 200
+      process_card_response(card_response, demand, project)
+      processed_projects << project unless processed_projects.include?(project)
     end
     processed_projects
   end
 
-  def process_success_pipe_response(config, full_reading, pipe_response)
+  def process_card_response(card_response, demand, project)
+    deleted_demands = []
+    if card_response['data']['card'].blank?
+      project_result = demand.project_result
+      project_result.remove_demand!(demand) if project_result.present?
+      deleted_demands << demand.demand_id
+      demand.destroy
+    else
+      PipefyReader.instance.update_card!(project.pipefy_config.team, demand, card_response)
+    end
+
+    deleted_demands
+  end
+
+  def process_pipe_and_create_cards!(full_reading)
+    PipefyConfig.select(:pipe_id).where(active: true).group(:pipe_id).map(&:pipe_id).each do |pipe_id|
+      pipe_response = PipefyApiService.request_pipe_details_with_card_summary(pipe_id)
+      next if pipe_response.code != 200
+      team = PipefyConfig.find_by(pipe_id: pipe_id).team
+      process_succeeded_pipe_response(team, full_reading, pipe_response)
+    end
+  end
+
+  def process_succeeded_pipe_response(team, full_reading, pipe_response)
     cards_in_pipe = read_cards_from_pipe_response(JSON.parse(pipe_response.body), full_reading)
 
-    processed_projects = []
     cards_in_pipe.sort.reverse.each do |card_id|
+      next if Demand.find_by(demand_id: card_id).present?
       card_response = PipefyApiService.request_card_details(card_id)
       next if card_response.code != 200
-      processed_project = PipefyReader.instance.process_card(config.team, JSON.parse(card_response.body))
-      processed_projects << processed_project unless processed_projects.include?(processed_project)
+      PipefyReader.instance.create_card!(team, JSON.parse(card_response.body))
     end
-    processed_projects
   end
 
   def read_cards_from_pipe_response(pipe_response, full_read)

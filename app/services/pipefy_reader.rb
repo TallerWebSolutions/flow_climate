@@ -3,7 +3,7 @@
 class PipefyReader
   include Singleton
 
-  def process_card(team, card_response)
+  def create_card!(team, card_response)
     response_data = card_response['data']
     name_in_pipefy = read_project_name_from_pipefy_data(response_data)
     return if name_in_pipefy.blank?
@@ -13,20 +13,26 @@ class PipefyReader
 
     create_assignees!(team, response_data)
 
-    demand = create_demand(team, project, response_data)
+    create_demand!(team, project, response_data)
+    project
+  end
+
+  def update_card!(team, demand, card_response)
+    response_data = card_response['data']
+    create_assignees!(team, response_data)
 
     read_phases_transitions(demand.reload, response_data)
     read_blocks(demand.reload, response_data)
+    update_demand!(team, demand, response_data)
     process_demand(demand.reload, team)
-    project
   end
 
   private
 
   def process_demand(demand, team)
     demand.update_effort!
-    demand.update_created_date!
-    project_result = ProjectResultsRepository.instance.create_project_result!(demand, team)
+    demand.update_created_date! if demand.demand_transitions.present?
+    project_result = ProjectResultsRepository.instance.update_project_results_for_demand!(demand, team)
     return IntegrationError.create(company: team.company, integration_type: :pipefy, integration_error_text: project_result.errors.full_messages.join(', ')) unless project_result.valid?
     ProjectResult.reset_counters(project_result.id, :demands_count)
   end
@@ -46,21 +52,23 @@ class PipefyReader
   end
 
   # TODO: move to DemandsRepository
-  def create_demand(team, project, response_data)
+  def create_demand!(team, project, response_data)
     demand_id = response_data.try(:[], 'card').try(:[], 'id')
     assignees_count = compute_assignees_count(team, response_data)
     url = response_data.try(:[], 'card').try(:[], 'url')
 
-    destroy_demand_if_exists!(demand_id, project)
+    demand = Demand.find_by(demand_id: demand_id)
+    return demand if demand.present?
+
     Demand.create(project: project, demand_id: demand_id, created_date: Time.zone.now, demand_type: read_demand_type(response_data), class_of_service: read_class_of_service(response_data), assignees_count: assignees_count, url: url)
   end
 
-  def destroy_demand_if_exists!(demand_id, project)
-    demand = Demand.where(project: project, demand_id: demand_id).first
-    return if demand.blank?
-    previous_result = demand.project_result
-    previous_result.remove_demand!(demand) if previous_result.present?
-    demand.destroy
+  def update_demand!(team, demand, response_data)
+    demand_id = response_data.try(:[], 'card').try(:[], 'id')
+    assignees_count = compute_assignees_count(team, response_data)
+    url = response_data.try(:[], 'card').try(:[], 'url')
+
+    demand.update(demand_id: demand_id, demand_type: read_demand_type(response_data), class_of_service: read_class_of_service(response_data), assignees_count: assignees_count, url: url)
   end
 
   def compute_assignees_count(team, response_data)
@@ -76,7 +84,7 @@ class PipefyReader
   end
 
   def read_phases_transitions(demand, response_data)
-    demand.demand_transitions.destroy_all
+    demand.demand_transitions.map(&:destroy)
     response_data.try(:[], 'card').try(:[], 'phases_history')&.each do |phase|
       create_transition_for_phase_and_demand(phase, demand)
     end
@@ -85,6 +93,7 @@ class PipefyReader
   def create_transition_for_phase_and_demand(phase, demand)
     phase_id = phase['phase']['id']
     stage = Stage.where(integration_id: phase_id).first
+
     return if stage.blank? || demand.blank?
     last_time_out = nil
     last_time_out = Time.iso8601(phase['lastTimeOut']) if phase['lastTimeOut'].present?
