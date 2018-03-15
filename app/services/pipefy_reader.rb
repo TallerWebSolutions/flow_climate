@@ -33,7 +33,7 @@ class PipefyReader
     demand.update_effort!
     demand.update_created_date! if demand.demand_transitions.present?
     project_result = ProjectResultsRepository.instance.update_project_results_for_demand!(demand, team)
-    return IntegrationError.create(company: team.company, integration_type: :pipefy, integration_error_text: project_result.errors.full_messages.join(', ')) unless project_result.valid?
+    return IntegrationError.create!(company: team.company, project: project_result.project, project_result: project_result, integration_type: :pipefy, integration_error_text: "[#{project_result.errors.full_messages.join(', ')}][result_date: [#{project_result.result_date}]") unless project_result.valid?
     ProjectResult.reset_counters(project_result.id, :demands_count)
   end
 

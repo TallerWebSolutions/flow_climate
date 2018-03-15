@@ -7,6 +7,8 @@ RSpec.describe IntegrationError, type: :model do
 
   context 'associations' do
     it { is_expected.to belong_to :company }
+    it { is_expected.to belong_to :project }
+    it { is_expected.to belong_to :project_result }
   end
 
   context 'validations' do

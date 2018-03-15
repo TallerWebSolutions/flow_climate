@@ -132,7 +132,7 @@ class ProjectResult < ApplicationRecord
   end
 
   def current_flow_pressure
-    return 0 if project.remaining_days(result_date).zero?
+    return 0 if project.remaining_days(result_date).zero? || current_gap.to_f <= 0
     current_gap.to_f / project.remaining_days(result_date).to_f
   end
 
