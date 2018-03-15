@@ -14,7 +14,7 @@ RSpec.describe DemandBlock, type: :model do
     it { is_expected.to validate_presence_of :block_reason }
   end
 
-  context '#callbacks' do
+  context 'callbacks' do
     describe '#before_update' do
       let(:demand_block) { Fabricate :demand_block, block_time: Time.zone.yesterday }
       context 'when there is unblock_time' do
@@ -25,6 +25,16 @@ RSpec.describe DemandBlock, type: :model do
         before { demand_block.update(block_time: Time.zone.now) }
         it { expect(demand_block.reload.block_duration).to be_nil }
       end
+    end
+  end
+
+  context 'scopes' do
+    describe '.for_date_interval' do
+      let!(:first_demand_block) { Fabricate :demand_block, block_time: Time.zone.parse('2018-03-05 23:00'), unblock_time: Time.zone.parse('2018-03-06 00:00') }
+      let!(:second_demand_block) { Fabricate :demand_block, block_time: Time.zone.parse('2018-03-06 10:00'), unblock_time: Time.zone.parse('2018-03-06 12:00') }
+      let!(:out_demand_block) { Fabricate :demand_block, block_time: Time.zone.parse('2018-03-06 14:00'), unblock_time: Time.zone.parse('2018-03-06 15:00') }
+
+      it { expect(DemandBlock.for_date_interval(Time.zone.parse('2018-03-05 23:00'), Time.zone.parse('2018-03-06 13:00'))).to match_array [first_demand_block, second_demand_block] }
     end
   end
 end

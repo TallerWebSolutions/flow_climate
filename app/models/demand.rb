@@ -47,7 +47,7 @@ class Demand < ApplicationRecord
     effort_transition = demand_transitions.joins(:stage).find_by('stages.compute_effort = true')
     return if effort_transition.blank?
     effort = TimeService.instance.compute_working_hours_for_dates(effort_transition.last_time_in, effort_transition.last_time_out)
-    time_blocked = demand_blocks.sum(:block_duration)
+    time_blocked = demand_blocks.for_date_interval(effort_transition.last_time_in, effort_transition.last_time_out).sum(:block_duration)
     update(effort: (effort - time_blocked) * assignee_effort_computation)
   end
 

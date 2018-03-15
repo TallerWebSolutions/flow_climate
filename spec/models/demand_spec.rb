@@ -63,8 +63,9 @@ RSpec.describe Demand, type: :model do
       context 'having blockings' do
         let(:demand) { Fabricate :demand, project: project, assignees_count: 1 }
         let!(:demand_transition) { Fabricate :demand_transition, demand: demand, stage: effort_stage, last_time_in: Time.zone.parse('2018-03-05 22:00'), last_time_out: Time.zone.parse('2018-03-06 13:00') }
-        let!(:first_demand_block) { Fabricate :demand_block, demand: demand, block_duration: 2.0 }
-        let!(:second_demand_block) { Fabricate :demand_block, demand: demand, block_duration: 1.0 }
+        let!(:first_demand_block) { Fabricate :demand_block, demand: demand, block_duration: 2.0, block_time: Time.zone.parse('2018-03-05 23:00'), unblock_time: Time.zone.parse('2018-03-06 00:00') }
+        let!(:second_demand_block) { Fabricate :demand_block, demand: demand, block_duration: 1.0, block_time: Time.zone.parse('2018-03-06 10:00'), unblock_time: Time.zone.parse('2018-03-06 12:00') }
+        let!(:out_demand_block) { Fabricate :demand_block, demand: demand, block_duration: 5.0, block_time: Time.zone.parse('2018-03-06 14:00'), unblock_time: Time.zone.parse('2018-03-06 15:00') }
 
         before { demand.update_effort! }
         it { expect(demand.effort.to_f).to eq 3.0 }
@@ -89,8 +90,9 @@ RSpec.describe Demand, type: :model do
       end
       context 'having blockings' do
         let!(:demand_transition) { Fabricate :demand_transition, demand: demand, stage: effort_stage, last_time_in: Time.zone.parse('2018-03-05 22:00'), last_time_out: Time.zone.parse('2018-03-06 13:00') }
-        let!(:first_demand_block) { Fabricate :demand_block, demand: demand, block_duration: 2.0 }
-        let!(:second_demand_block) { Fabricate :demand_block, demand: demand, block_duration: 1.0 }
+        let!(:first_demand_block) { Fabricate :demand_block, demand: demand, block_duration: 2.0, block_time: Time.zone.parse('2018-03-05 22:00'), unblock_time: Time.zone.parse('2018-03-06 13:00') }
+        let!(:second_demand_block) { Fabricate :demand_block, demand: demand, block_duration: 1.0, block_time: Time.zone.parse('2018-03-06 10:00'), unblock_time: Time.zone.parse('2018-03-06 13:00') }
+        let!(:out_demand_block) { Fabricate :demand_block, demand: demand, block_duration: 1.0, block_time: Time.zone.parse('2018-03-06 22:00'), unblock_time: Time.zone.parse('2018-03-06 23:00') }
 
         before { demand.update_effort! }
         it { expect(demand.effort.to_f).to eq 4.5 }
