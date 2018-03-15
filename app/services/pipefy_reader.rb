@@ -19,6 +19,12 @@ class PipefyReader
 
   def update_card!(team, demand, card_response)
     response_data = card_response['data']
+    name_in_pipefy = read_project_name_from_pipefy_data(response_data)
+    return if name_in_pipefy.blank?
+
+    project = ProjectsRepository.instance.search_project_by_full_name(name_in_pipefy)
+    demand.update(project: project)
+
     create_assignees!(team, response_data)
 
     read_phases_transitions(demand.reload, response_data)

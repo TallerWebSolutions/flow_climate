@@ -71,8 +71,7 @@ class ProjectResultsRepository
   def update_project_results_for_demand!(demand, team)
     return if demand.created_date.blank?
 
-    result_date = (demand.end_date || demand.commitment_date || demand.created_date).utc.to_date
-    project_result = create_new_empty_project_result(demand, team, result_date)
+    project_result = create_new_empty_project_result(demand, team, demand.result_date)
     demand.reload.update_project_result_for_demand!(project_result)
     project_result
   end

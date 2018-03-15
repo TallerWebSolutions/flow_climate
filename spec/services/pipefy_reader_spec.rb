@@ -181,41 +181,60 @@ RSpec.describe PipefyReader, type: :service do
       let!(:second_pipefy_team_config) { Fabricate :pipefy_team_config, team: team, integration_id: '101382', username: 'bla', member_type: :analyst }
 
       let!(:first_demand) { Fabricate :demand, project: first_project, project_result: nil, effort: 50 }
-      let!(:second_demand) { Fabricate :demand, project: first_project, project_result: nil, demand_id: '5140999', effort: 30, created_date: Time.zone.parse('2018-02-17') }
+      let!(:second_demand) { Fabricate :demand, project: first_project, project_result: nil, demand_id: '5141010', effort: 30, created_date: Time.zone.parse('2018-02-17') }
       let!(:first_transition) { Fabricate :demand_transition, stage: end_stage, demand: first_demand, last_time_in: '2018-02-14T01:01:41-02:00', last_time_out: '2018-02-16T01:01:41-02:00' }
       let!(:second_transition) { Fabricate :demand_transition, stage: end_stage, demand: second_demand, last_time_in: '2018-02-16T01:01:41-02:00', last_time_out: '2018-02-16T01:42:41-02:00' }
       let!(:project_result) { Fabricate :project_result, project: first_project, demands: [first_demand, second_demand], result_date: Date.new(2018, 2, 15), demands_count: 2 }
 
       context 'blocked but not unblocked' do
         it 'creates the demand and the project result' do
-          PipefyReader.instance.update_card!(team, second_demand, first_card_response)
+          PipefyReader.instance.update_card!(team, second_demand, second_card_response)
 
           expect(Demand.count).to eq 2
 
-          created_demand = Demand.find_by(demand_id: '5140999')
-          expect(created_demand.class_of_service).to eq 'standard'
-          expect(created_demand.demand_type).to eq 'bug'
-          expect(created_demand.demand_id).to eq '5140999'
-          expect(created_demand.assignees_count).to eq 2
-          expect(created_demand.effort.to_f).to eq 18.0
+          updated_demand = Demand.find_by(demand_id: '5141010')
+          expect(updated_demand.class_of_service).to eq 'expedite'
+          expect(updated_demand.demand_type).to eq 'chore'
+          expect(updated_demand.assignees_count).to eq 1
+          expect(updated_demand.effort.to_f).to eq 6.0
+          expect(updated_demand.project).to eq second_project
 
-          expect(DemandBlock.count).to eq 1
-          block = Demand.last.demand_blocks.first
-          expect(block.demand_block_id).to eq 1
-          expect(block.block_reason).to eq '[BLOCKED]: xpto of bla having foo.'
-          expect(block.block_time).to eq Time.zone.iso8601('2018-03-01T18:39:46-03:00')
-          expect(block.blocker_username).to eq 'sbbrubles'
+          expect(DemandBlock.count).to eq 2
+          first_block = Demand.last.demand_blocks.first
+          expect(first_block.demand_block_id).to eq 1
+          expect(first_block.block_reason).to eq '[BLOCKED][1]: xpto of bla having foo in the block 1.'
+          expect(first_block.block_time).to eq Time.zone.iso8601('2018-02-18T18:39:46-03:00')
+          expect(first_block.blocker_username).to eq 'sbbrubles'
+          expect(first_block.unblocker_username).to be_nil
+          expect(first_block.unblock_time).to be_nil
+          expect(first_block.unblock_reason).to be_nil
+
+          second_block = Demand.last.demand_blocks.second
+          expect(second_block.demand_block_id).to eq 2
+          expect(second_block.block_reason).to eq '[BLOCKED][2]: xpto of bla having foo.'
+          expect(second_block.block_time).to eq Time.zone.iso8601('2018-02-18T18:39:46-03:00')
+          expect(second_block.blocker_username).to eq 'sbbrubles'
+          expect(second_block.unblocker_username).to eq 'sbbrubles'
+          expect(second_block.unblock_time).to eq Time.zone.iso8601('2018-02-19T14:39:46-03:00')
+          expect(second_block.unblock_reason).to eq '[UNBLOCKED][2]: there is no more xpto of bla having foo.'
 
           expect(ProjectResult.count).to eq 2
 
-          created_result = created_demand.project_result
-          expect(created_result.result_date).to eq Date.new(2018, 2, 23)
-          expect(created_result.known_scope).to eq 2
-          expect(created_result.qty_hours_downstream).to eq 18
+          created_result = updated_demand.project_result
+          expect(created_result.project).to eq second_project
+          expect(created_result.result_date).to eq Date.new(2018, 2, 27)
+          expect(created_result.known_scope).to eq 1
+          expect(created_result.qty_hours_downstream).to eq 6
           expect(created_result.qty_hours_upstream).to eq 0
-          expect(created_result.qty_hours_bug).to eq 18
-          expect(created_result.demands).to eq [created_demand]
+          expect(created_result.qty_hours_bug).to eq 0
+          expect(created_result.demands).to eq [updated_demand]
           expect(created_result.demands_count).to eq 1
+
+          expect(first_project.reload.demands).to eq [first_demand]
+          expect(first_project.reload.project_results).to eq [project_result]
+          expect(second_project.reload.project_results).to eq [created_result]
+
+          expect(project_result.reload.demands).to eq [first_demand]
         end
       end
 

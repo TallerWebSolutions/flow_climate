@@ -5,6 +5,7 @@ RSpec.describe ProjectResult, type: :model do
     it { is_expected.to belong_to :team }
     it { is_expected.to belong_to :project }
     it { is_expected.to have_many(:demands).dependent(:destroy) }
+    it { is_expected.to have_many(:integration_errors).dependent(:destroy) }
   end
 
   context 'validations' do

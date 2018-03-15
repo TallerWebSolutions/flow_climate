@@ -104,4 +104,20 @@ RSpec.describe Demand, type: :model do
       end
     end
   end
+
+  describe '#result_date' do
+    context 'having end_date' do
+      let!(:demand) { Fabricate :demand, end_date: Time.zone.parse('2018-03-15 16:24:41 -3') }
+      it { expect(demand.result_date).to eq Date.new(2018, 3, 15) }
+    end
+    context 'having no end_date' do
+      let!(:demand) { Fabricate :demand, end_date: nil }
+      it { expect(demand.result_date).to eq demand.created_date.to_date }
+    end
+
+    context 'having the end_date in the edge of timezone' do
+      let!(:demand) { Fabricate :demand, end_date: Time.zone.parse('2018-03-15 23:24:41 -3') }
+      it { expect(demand.result_date).to eq Date.new(2018, 3, 16) }
+    end
+  end
 end
