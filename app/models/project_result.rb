@@ -41,6 +41,7 @@ class ProjectResult < ApplicationRecord
   belongs_to :team
   belongs_to :project
   has_many :demands, dependent: :destroy
+  has_many :integration_errors, dependent: :destroy
 
   validates :project, :team, :known_scope, :qty_hours_upstream, :qty_hours_downstream, :qty_hours_bug, :qty_bugs_closed, :qty_bugs_opened, :throughput, :result_date, presence: true
 

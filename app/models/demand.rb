@@ -64,6 +64,10 @@ class Demand < ApplicationRecord
     new_project_result.add_demand!(self)
   end
 
+  def result_date
+    end_date&.utc&.to_date || created_date.utc.to_date
+  end
+
   private
 
   def assignee_effort_computation
