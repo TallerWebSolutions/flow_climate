@@ -188,9 +188,9 @@ RSpec.describe ProjectResult, type: :model do
 
     let(:result) { Fabricate :project_result, project: project, result_date: Time.zone.today, known_scope: 2032, cost_in_month: 30_000, throughput: 0, flow_pressure: 2 }
 
-    let(:first_demand) { Fabricate :demand, project_result: result, project: project, effort: 50 }
-    let(:second_demand) { Fabricate :demand, project: project, demand_type: :bug, effort: 100 }
-    let(:third_demand) { Fabricate :demand, project_result: result, project: project, demand_type: :feature, effort: 70 }
+    let!(:first_demand) { Fabricate :demand, project_result: result, project: project, effort: 50 }
+    let!(:second_demand) { Fabricate :demand, project: project, demand_type: :bug, effort: 100 }
+    let!(:third_demand) { Fabricate :demand, project_result: result, project: project, demand_type: :feature, effort: 70 }
 
     let!(:first_demand_transition) { Fabricate :demand_transition, stage: stage, demand: first_demand, last_time_in: Time.zone.today }
     let!(:second_demand_transition) { Fabricate :demand_transition, stage: stage, demand: second_demand, last_time_in: Time.zone.today }
