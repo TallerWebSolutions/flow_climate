@@ -127,7 +127,7 @@ class Project < ApplicationRecord
   end
 
   def flow_pressure(date = Time.zone.today)
-    return 0 if finished? || cancelled?
+    return 0.0 if no_pressure_set(date)
     days = remaining_days(date) || total_days
     total_gap(date).to_f / days.to_f
   end
@@ -237,6 +237,10 @@ class Project < ApplicationRecord
   end
 
   private
+
+  def no_pressure_set(date)
+    finished? || cancelled? || remaining_days(date).zero? || total_days.zero? || total_gap(date).zero?
+  end
 
   def locate_last_results_for_date(date = Time.zone.today)
     @locate_last_results_for_date ||= project_results.until_week(date.to_date.cweek, date.to_date.cwyear).order(:result_date).last(2)

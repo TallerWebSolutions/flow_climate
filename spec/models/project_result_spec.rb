@@ -130,12 +130,19 @@ RSpec.describe ProjectResult, type: :model do
         expect(result.reload.available_hours.to_f).to eq 1.1
       end
     end
-    context 'when the remaining days is zero' do
+    context 'when the project ends in the date of the result' do
       let(:project) { Fabricate :project, start_date: 2.days.ago, end_date: Time.zone.yesterday }
       let(:result) { Fabricate :project_result, project: project, result_date: Time.zone.yesterday, known_scope: 50, throughput: 10 }
       before { result.define_automatic_attributes! }
       it { expect(result.remaining_days).to eq 1 }
       it { expect(result.flow_pressure.to_f).to eq 40.0 }
+    end
+    context 'when the current gap is zero' do
+      let(:project) { Fabricate :project, start_date: 2.days.ago, end_date: Time.zone.yesterday }
+      let(:result) { Fabricate :project_result, project: project, result_date: Time.zone.yesterday, known_scope: 50, throughput: 50 }
+      before { result.define_automatic_attributes! }
+      it { expect(result.remaining_days).to eq 1 }
+      it { expect(result.flow_pressure.to_f).to eq 0.0 }
     end
   end
 

@@ -269,7 +269,8 @@ RSpec.describe PipefyReader, type: :service do
           PipefyReader.instance.update_card!(team, first_demand, first_card_response)
 
           expect(IntegrationError.first.integration_type).to eq 'pipefy'
-          expect(IntegrationError.first.integration_error_text).to eq 'Data A data do resultado deve ser maior ou igual a data de início do projeto.'
+          expect(IntegrationError.first.project).to eq first_project
+          expect(IntegrationError.first.integration_error_text).to eq '[Data A data do resultado deve ser maior ou igual a data de início do projeto.][result_date: [2018-02-23]'
         end
       end
     end

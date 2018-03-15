@@ -310,7 +310,9 @@ CREATE TABLE public.integration_errors (
     integration_type integer NOT NULL,
     integration_error_text character varying NOT NULL,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    project_id integer,
+    project_result_id integer
 );
 
 
@@ -1506,6 +1508,14 @@ ALTER TABLE ONLY public.company_settings
 
 
 --
+-- Name: integration_errors fk_rails_6533e9d0da; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.integration_errors
+    ADD CONSTRAINT fk_rails_6533e9d0da FOREIGN KEY (project_id) REFERENCES public.projects(id);
+
+
+--
 -- Name: companies_users fk_rails_667cd952fb; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1575,6 +1585,14 @@ ALTER TABLE ONLY public.demand_transitions
 
 ALTER TABLE ONLY public.projects_stages
     ADD CONSTRAINT fk_rails_ca4af19a4f FOREIGN KEY (project_id) REFERENCES public.projects(id);
+
+
+--
+-- Name: integration_errors fk_rails_ca4f27942f; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.integration_errors
+    ADD CONSTRAINT fk_rails_ca4f27942f FOREIGN KEY (project_result_id) REFERENCES public.project_results(id);
 
 
 --
@@ -1656,6 +1674,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20180306142224'),
 ('20180307203657'),
 ('20180312220710'),
-('20180313152829');
+('20180313152829'),
+('20180315163004');
 
 
