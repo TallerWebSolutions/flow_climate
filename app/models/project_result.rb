@@ -40,7 +40,7 @@
 class ProjectResult < ApplicationRecord
   belongs_to :team
   belongs_to :project
-  has_many :demands, dependent: :nullify
+  has_many :demands, dependent: :destroy
 
   validates :project, :team, :known_scope, :qty_hours_upstream, :qty_hours_downstream, :qty_hours_bug, :qty_bugs_closed, :qty_bugs_opened, :throughput, :result_date, presence: true
 
@@ -80,8 +80,7 @@ class ProjectResult < ApplicationRecord
   end
 
   def remove_demand!(demand)
-    demands.delete(demand) if demands.include?(demand)
-    demand.update(project_result: nil)
+    demand.update(project_result: nil) if demands.include?(demand)
     return destroy if demands.count.zero?
     compute_flow_metrics!
   end

@@ -52,8 +52,16 @@ class Demand < ApplicationRecord
   end
 
   def update_created_date!
+    Rails.logger.info("Updating created date card_id [#{demand_id}]")
+
     create_transition = demand_transitions.order(:last_time_in).first
     update(created_date: create_transition.last_time_in)
+  end
+
+  def update_project_result_for_demand!(new_project_result)
+    return if project_result == new_project_result
+    project_result.remove_demand!(self) if project_result.present?
+    new_project_result.add_demand!(self)
   end
 
   private

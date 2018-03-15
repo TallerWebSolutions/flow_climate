@@ -178,17 +178,17 @@ RSpec.describe ProjectResultsRepository, type: :repository do
     let(:demand) { Fabricate :demand, project: project, created_date: Time.zone.parse('2018-02-14 12:00:00') }
 
     context 'when there is no project result to the date' do
-      before { ProjectResultsRepository.instance.create_project_result!(demand, team) }
+      before { ProjectResultsRepository.instance.update_project_results_for_demand!(demand, team) }
       it { expect(ProjectResult.count).to eq 1 }
     end
     context 'when there is project result to the date' do
       let!(:project_result) { Fabricate :project_result, project: project, result_date: Date.new(2018, 2, 14) }
-      before { ProjectResultsRepository.instance.create_project_result!(demand, team) }
+      before { ProjectResultsRepository.instance.update_project_results_for_demand!(demand, team) }
       it { expect(ProjectResult.count).to eq 1 }
     end
     context 'when there is project result to another date' do
       let!(:project_result) { Fabricate :project_result, project: project, result_date: Date.new(2018, 2, 13) }
-      before { ProjectResultsRepository.instance.create_project_result!(demand, team) }
+      before { ProjectResultsRepository.instance.update_project_results_for_demand!(demand, team) }
       it { expect(ProjectResult.count).to eq 2 }
     end
   end
