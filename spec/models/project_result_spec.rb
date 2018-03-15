@@ -23,24 +23,6 @@ RSpec.describe ProjectResult, type: :model do
     end
 
     context 'complex ones' do
-      describe '#result_date_less_than_project_start_date' do
-        let(:project) { Fabricate :project, start_date: 2.days.ago, end_date: 3.days.from_now }
-        context 'when the result date is less than the start date' do
-          let!(:result) { Fabricate.build :project_result, project: project, result_date: 3.days.ago }
-          it 'does not validate the model and add the error to the correct attribute' do
-            expect(result.valid?).to be false
-            expect(result.errors_on(:result_date)).to eq [I18n.t('project_result.validations.result_date_less_than_project_start_date')]
-          end
-        end
-        context 'when the result date is equal to the start date' do
-          let!(:result) { Fabricate.build :project_result, project: project, result_date: 2.days.ago }
-          it { expect(result.valid?).to be true }
-        end
-        context 'when the result date is greater than to the start date' do
-          let!(:result) { Fabricate.build :project_result, project: project, result_date: 1.day.ago }
-          it { expect(result.valid?).to be true }
-        end
-      end
       describe '#result_date_greater_than_project_start_date' do
         let(:project) { Fabricate :project, start_date: 2.days.ago, end_date: 3.days.from_now }
         context 'when the result date is greater than to the end date' do

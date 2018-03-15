@@ -276,7 +276,7 @@ RSpec.describe PipefyReader, type: :service do
 
     context 'with invalid' do
       context 'project_result' do
-        let(:first_project) { Fabricate :project, customer: customer, product: product, name: 'Fase 1', start_date: Date.new(2018, 4, 7), end_date: Date.new(2018, 4, 25) }
+        let(:first_project) { Fabricate :project, customer: customer, product: product, name: 'Fase 1', start_date: Date.new(2018, 1, 7), end_date: Date.new(2018, 1, 25) }
         let!(:stage) { Fabricate :stage, projects: [first_project], integration_id: '2481595', compute_effort: true }
         let!(:end_stage) { Fabricate :stage, projects: [first_project], integration_id: '2481597', compute_effort: false, end_point: true }
         let!(:other_end_stage) { Fabricate :stage, integration_id: '2480504', compute_effort: false, end_point: true }
@@ -289,7 +289,7 @@ RSpec.describe PipefyReader, type: :service do
 
           expect(IntegrationError.first.integration_type).to eq 'pipefy'
           expect(IntegrationError.first.project).to eq first_project
-          expect(IntegrationError.first.integration_error_text).to eq '[Data A data do resultado deve ser maior ou igual a data de início do projeto.][result_date: [2018-02-23]'
+          expect(IntegrationError.first.integration_error_text).to eq '[Data A data do resultado deve ser menor ou igual a data final do projeto.][result_date: [2018-02-23]'
         end
       end
     end
