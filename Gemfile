@@ -17,6 +17,8 @@ gem 'uglifier'
 gem 'yui-compressor'
 gem 'httparty'
 gem 'webmock'
+gem 'rollbar'
+gem 'oj', '~> 2.16.1'
 
 group :test, :development do
   gem 'brakeman'
@@ -40,10 +42,6 @@ end
 group :test do
   gem 'rails-controller-testing'
   gem 'rspec_junit_formatter'
-end
-
-group :production, :development do
-  gem 'airbrake-ruby', '~> 2.8'
 end
 
 group :production do
