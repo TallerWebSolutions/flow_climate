@@ -6,7 +6,7 @@ class TeamsController < AuthenticatedController
 
   def show
     @team_members = @team.team_members.order(:name)
-    @team_projects = @team.projects.order(end_date: :desc)
+    @team_projects = ProjectsRepository.instance.all_projects_for_team(@team)
     @projects_summary = ProjectsSummaryObject.new(@team.projects)
     @report_data = ReportData.new(@team_projects) if @team_projects.present?
     @strategic_report_data = StrategicReportData.new(@company, @team.projects, @team.active_available_hours_for_billable_types(@team.projects.pluck(:project_type).uniq))

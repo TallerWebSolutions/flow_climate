@@ -51,7 +51,7 @@ class ProductsController < AuthenticatedController
   private
 
   def product_params
-    params.require(:product).permit(:customer_id, :name)
+    params.require(:product).permit(:customer_id, :team_id, :name)
   end
 
   def assign_product

@@ -146,6 +146,7 @@ pt-BR:
         customer: Cliente
         name: Nome
         projects: Projetos
+        team: Time
       project:
         product: Produto
         project_results: Resultados de Projeto
@@ -201,6 +202,7 @@ pt-BR:
         total_accumulated_closed_bugs: Acumulado de Bugs Fechados
       team:
         name: Nome
+        company: Empresa
       demand:
         demand_id: Id da Demanda
         effort: Esforço

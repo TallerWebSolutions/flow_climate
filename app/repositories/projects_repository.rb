@@ -38,6 +38,10 @@ class ProjectsRepository
     Project.all.select { |p| p.full_name.casecmp(full_name.downcase).zero? }.first
   end
 
+  def all_projects_for_team(team)
+    Project.left_outer_joins(:project_results).left_outer_joins(:product).where('project_results.team_id = :team_id OR products.team_id = :team_id', team_id: team.id).order(end_date: :desc)
+  end
+
   private
 
   def where_by_start_end_dates(projects, required_date)

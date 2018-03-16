@@ -27,6 +27,7 @@ class Team < ApplicationRecord
   has_many :team_members, dependent: :restrict_with_error
   has_many :project_results, dependent: :restrict_with_error
   has_many :projects, -> { distinct }, through: :project_results
+  has_many :products, dependent: :restrict_with_error
   has_many :pipefy_team_configs, dependent: :destroy
 
   validates :company, :name, presence: true

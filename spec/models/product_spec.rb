@@ -3,6 +3,7 @@
 RSpec.describe Product, type: :model do
   context 'associations' do
     it { is_expected.to belong_to :customer }
+    it { is_expected.to belong_to :team }
     it { is_expected.to have_many(:projects).dependent(:restrict_with_error) }
   end
 
