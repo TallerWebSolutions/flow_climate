@@ -213,6 +213,7 @@ pt-BR:
         end_date: Data da Entrega
         created_date: Data de Criação
         assignees_count: Qtd Atribuídos
+        leadtime: Leadtime
         enums:
           demand_type:
             bug: Bug

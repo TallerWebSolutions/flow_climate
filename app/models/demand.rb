@@ -68,6 +68,11 @@ class Demand < ApplicationRecord
     end_date&.utc&.to_date || created_date.utc.to_date
   end
 
+  def leadtime
+    return 0 if commitment_date.blank? || end_date.blank?
+    end_date - commitment_date
+  end
+
   private
 
   def assignee_effort_computation
