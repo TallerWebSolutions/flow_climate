@@ -69,4 +69,26 @@ RSpec.describe ProjectsRepository, type: :repository do
       it { expect(ProjectsRepository.instance.money_to_month(company.projects, 3.months.ago.to_date)).to eq 0 }
     end
   end
+
+  describe '#all_projects_for_team' do
+    let(:other_customer) { Fabricate :customer }
+    let(:team) { Fabricate :team, company: company }
+    let!(:product) { Fabricate :product, customer: customer, team: team }
+
+    let!(:first_project) { Fabricate :project, customer: customer, start_date: 1.week.ago, end_date: 2.months.from_now, status: :executing }
+    let!(:second_project) { Fabricate :project, customer: customer, start_date: 1.month.from_now, end_date: 3.months.from_now, status: :maintenance }
+    let!(:third_project) { Fabricate :project, customer: customer, start_date: 2.months.from_now, end_date: 2.months.from_now, status: :waiting }
+    let!(:fourth_project) { Fabricate :project, customer: customer, product: product, start_date: 2.months.from_now, end_date: 2.months.from_now, status: :maintenance }
+    let!(:fifth_project) { Fabricate :project, customer: customer, product: product, start_date: 1.week.from_now, end_date: 1.month.from_now, status: :finished }
+    let!(:sixth_project) { Fabricate :project, customer: customer, product: product, start_date: 3.months.from_now, end_date: 4.months.from_now, status: :cancelled }
+
+    let!(:seventh_project) { Fabricate :project, customer: other_customer, start_date: 1.month.from_now, end_date: 3.months.from_now, status: :executing }
+    let!(:eigth_project) { Fabricate :project, customer: customer, start_date: 1.month.from_now, end_date: 3.months.from_now, status: :executing }
+
+    let!(:first_project_result) { Fabricate :project_result, project: first_project, team: team }
+    let!(:second_project_result) { Fabricate :project_result, project: second_project, team: team }
+    let!(:third_project_result) { Fabricate :project_result, project: third_project, team: team }
+
+    it { expect(ProjectsRepository.instance.all_projects_for_team(team)).to match_array [first_project, second_project, third_project, fourth_project, fifth_project, sixth_project] }
+  end
 end

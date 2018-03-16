@@ -61,8 +61,8 @@ class ReportData
   end
 
   def projects_weeks
-    min_date = projects.minimum(:start_date)
-    max_date = projects.maximum(:end_date)
+    min_date = projects.active.minimum(:start_date)
+    max_date = projects.active.maximum(:end_date)
     array_of_weeks = []
 
     return [] if min_date.blank? || max_date.blank?

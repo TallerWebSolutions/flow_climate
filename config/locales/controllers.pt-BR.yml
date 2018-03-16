@@ -205,7 +205,7 @@ pt-BR:
       title: "Lista de Clientes"
       no_customers_message: "Você ainda não tem times."
     show:
-      total_value: "Valor Total de Projetos"
+      total_value: "Valor Total em Projetos"
   customer:
     edit:
       title: "Editar Cliente"
