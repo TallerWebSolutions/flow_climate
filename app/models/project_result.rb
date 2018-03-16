@@ -87,9 +87,9 @@ class ProjectResult < ApplicationRecord
   end
 
   def compute_flow_metrics!
-    finished_demands = demands.finished
-    finished_bugs = demands.bug.finished
-    open_bugs = demands.bug.opened_in_date(result_date)
+    finished_demands = demands.finished.uniq
+    finished_bugs = demands.bug.finished.uniq
+    open_bugs = demands.bug.opened_in_date(result_date).uniq
 
     update_result!(finished_demands, finished_bugs, open_bugs)
   end
