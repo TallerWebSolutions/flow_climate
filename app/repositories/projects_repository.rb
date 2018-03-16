@@ -39,7 +39,7 @@ class ProjectsRepository
   end
 
   def all_projects_for_team(team)
-    Project.left_outer_joins(:project_results).left_outer_joins(:product).where('project_results.team_id = :team_id OR products.team_id = :team_id', team_id: team.id).order(end_date: :desc)
+    Project.left_outer_joins(:project_results).left_outer_joins(:product).where('project_results.team_id = :team_id OR products.team_id = :team_id', team_id: team.id).order(end_date: :desc).distinct
   end
 
   private

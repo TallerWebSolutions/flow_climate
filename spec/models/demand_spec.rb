@@ -122,4 +122,19 @@ RSpec.describe Demand, type: :model do
       it { expect(demand.result_date).to eq Date.new(2018, 3, 16) }
     end
   end
+
+  describe '#leadtime' do
+    context 'having commitment and end dates' do
+      let(:demand) { Fabricate :demand, commitment_date: 2.days.ago, end_date: 1.hour.ago }
+      it { expect(demand.leadtime).to be_within(0.001).of(169_200.001) }
+    end
+    context 'having no commitment date but having end date' do
+      let(:demand) { Fabricate :demand, commitment_date: nil, end_date: 1.hour.ago }
+      it { expect(demand.leadtime).to eq 0 }
+    end
+    context 'having commitment date but no end date' do
+      let(:demand) { Fabricate :demand, commitment_date: 2.days.ago, end_date: nil }
+      it { expect(demand.leadtime).to eq 0 }
+    end
+  end
 end
