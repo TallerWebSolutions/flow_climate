@@ -10,6 +10,7 @@
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null
 #  projects_count :integer          default(0)
+#  team_id        :integer
 #
 # Indexes
 #
@@ -19,12 +20,14 @@
 # Foreign Keys
 #
 #  fk_rails_...  (customer_id => customers.id)
+#  fk_rails_...  (team_id => teams.id)
 #
 
 class Product < ApplicationRecord
   include ProjectAggregator
 
   belongs_to :customer, counter_cache: true
+  belongs_to :team
   has_many :projects, dependent: :restrict_with_error
 
   validates :name, :customer, presence: true

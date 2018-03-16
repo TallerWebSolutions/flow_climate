@@ -4,6 +4,7 @@ RSpec.describe Team, type: :model do
   context 'associations' do
     it { is_expected.to belong_to :company }
     it { is_expected.to have_many(:team_members).dependent(:restrict_with_error) }
+    it { is_expected.to have_many(:products).dependent(:restrict_with_error) }
     it { is_expected.to have_many(:project_results).dependent(:restrict_with_error) }
     it { is_expected.to have_many(:projects).through(:project_results) }
     it { is_expected.to have_many(:pipefy_team_configs).dependent(:destroy) }
