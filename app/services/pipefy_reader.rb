@@ -110,15 +110,24 @@ class PipefyReader
     demand_type_in_response = :feature
     response_data.try(:[], 'card').try(:[], 'fields')&.each do |field|
       next unless field['name'].casecmp('type').zero?
-      demand_type_in_response = if field['value'].casecmp('bug').zero?
-                                  :bug
-                                elsif field['value'].casecmp('nova funcionalidade').zero?
-                                  :feature
-                                else
-                                  :chore
-                                end
+      demand_type_in_response = define_demand_type(field['value'])
+      break
     end
     demand_type_in_response
+  end
+
+  def define_demand_type(demand_type)
+    if demand_type.casecmp('bug').zero?
+      :bug
+    elsif demand_type.casecmp('melhoria performance').zero?
+      :performance_improvement
+    elsif demand_type.casecmp('melhoria ux').zero?
+      :ux_improvement
+    elsif demand_type.casecmp('chore').zero?
+      :chore
+    else
+      :feature
+    end
   end
 
   def read_class_of_service(response_data)

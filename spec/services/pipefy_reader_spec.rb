@@ -115,43 +115,78 @@ RSpec.describe PipefyReader, type: :service do
       end
 
       context 'when the demand does not exist' do
-        context 'when it is bug' do
-          it 'processes the card creating the demand and project result' do
-            PipefyReader.instance.create_card!(team, first_card_response)
-            created_demand = Demand.last
-            expect(created_demand.bug?).to be true
-            expect(created_demand.demand_id).to eq '5140999'
-            expect(created_demand.assignees_count).to eq 2
-            expect(created_demand.effort.to_f).to eq 0.0
-            expect(created_demand.class_of_service).to eq 'standard'
-            expect(created_demand.url).to eq 'http://app.pipefy.com/pipes/356355#cards/5140999'
-          end
-        end
-
-        context 'when it is feature' do
-          it 'processes the card creating the demand' do
-            PipefyReader.instance.create_card!(team, second_card_response)
-            created_demand = Demand.last
-            expect(created_demand.chore?).to be true
-            expect(created_demand.demand_id).to eq '5141010'
-            expect(created_demand.assignees_count).to eq 1
-            expect(created_demand.effort.to_f).to eq 0.0
-            expect(created_demand.class_of_service).to eq 'expedite'
-            expect(created_demand.url).to eq 'http://app.pipefy.com/pipes/356355#cards/5141010'
-          end
-        end
-
-        context 'when it is chore' do
-          it 'processes the card creating the demand' do
-            PipefyReader.instance.create_card!(team, third_card_response)
+        context 'when it is unknown to the system' do
+          let(:card_response) { { data: { card: { id: '5141022', comments: [], fields: [{ name: 'Title', value: 'Agendamento de artigo do colunista' }, { name: 'Type', value: 'sbbrubles' }, { name: 'JiraKey', value: 'PD-124' }, { name: 'Class of Service', value: 'Intangível' }, { name: 'Project', value: 'Foo | BaR | FASE 1' }], phases_history: [{ phase: { id: '2480502' }, firstTimeIn: '2018-02-23T17:11:23-03:00', lastTimeOut: '2018-02-23T17:11:23-03:00' }, { phase: { id: '2480504' }, firstTimeIn: '2018-02-23T17:11:23-03:00', lastTimeOut: nil }], pipe: { id: '356355' }, url: 'http://app.pipefy.com/pipes/356355#cards/5141022' } } }.with_indifferent_access }
+          it 'processes the card creating the demand as feature and project result' do
+            PipefyReader.instance.create_card!(team, card_response)
             created_demand = Demand.last
             expect(created_demand.feature?).to be true
             expect(created_demand.demand_id).to eq '5141022'
             expect(created_demand.assignees_count).to eq 1
-            expect(created_demand.effort.to_f).to eq 0
-            expect(created_demand.class_of_service).to eq 'fixed_date'
+            expect(created_demand.effort.to_f).to eq 0.0
+            expect(created_demand.class_of_service).to eq 'intangible'
             expect(created_demand.url).to eq 'http://app.pipefy.com/pipes/356355#cards/5141022'
           end
+        end
+
+        context 'when it is bug' do
+          let(:card_response) { { data: { card: { id: '5141022', comments: [], fields: [{ name: 'Title', value: 'Agendamento de artigo do colunista' }, { name: 'Type', value: 'buG' }, { name: 'JiraKey', value: 'PD-124' }, { name: 'Class of Service', value: 'Intangível' }, { name: 'Project', value: 'Foo | BaR | FASE 1' }], phases_history: [{ phase: { id: '2480502' }, firstTimeIn: '2018-02-23T17:11:23-03:00', lastTimeOut: '2018-02-23T17:11:23-03:00' }, { phase: { id: '2480504' }, firstTimeIn: '2018-02-23T17:11:23-03:00', lastTimeOut: nil }], pipe: { id: '356355' }, url: 'http://app.pipefy.com/pipes/356355#cards/5141022' } } }.with_indifferent_access }
+          before { PipefyReader.instance.create_card!(team, card_response) }
+          it { expect(Demand.last.bug?).to be true }
+        end
+
+        context 'when it is feature' do
+          let(:card_response) { { data: { card: { id: '5141022', comments: [], fields: [{ name: 'Title', value: 'Agendamento de artigo do colunista' }, { name: 'Type', value: 'feaTURE' }, { name: 'JiraKey', value: 'PD-124' }, { name: 'Class of Service', value: 'Intangível' }, { name: 'Project', value: 'Foo | BaR | FASE 1' }], phases_history: [{ phase: { id: '2480502' }, firstTimeIn: '2018-02-23T17:11:23-03:00', lastTimeOut: '2018-02-23T17:11:23-03:00' }, { phase: { id: '2480504' }, firstTimeIn: '2018-02-23T17:11:23-03:00', lastTimeOut: nil }], pipe: { id: '356355' }, url: 'http://app.pipefy.com/pipes/356355#cards/5141022' } } }.with_indifferent_access }
+          before { PipefyReader.instance.create_card!(team, card_response) }
+          it { expect(Demand.last.feature?).to be true }
+        end
+
+        context 'when it is chore' do
+          let(:card_response) { { data: { card: { id: '5141022', comments: [], fields: [{ name: 'Title', value: 'Agendamento de artigo do colunista' }, { name: 'Type', value: 'chORE' }, { name: 'JiraKey', value: 'PD-124' }, { name: 'Class of Service', value: 'Intangível' }, { name: 'Project', value: 'Foo | BaR | FASE 1' }], phases_history: [{ phase: { id: '2480502' }, firstTimeIn: '2018-02-23T17:11:23-03:00', lastTimeOut: '2018-02-23T17:11:23-03:00' }, { phase: { id: '2480504' }, firstTimeIn: '2018-02-23T17:11:23-03:00', lastTimeOut: nil }], pipe: { id: '356355' }, url: 'http://app.pipefy.com/pipes/356355#cards/5141022' } } }.with_indifferent_access }
+          before { PipefyReader.instance.create_card!(team, card_response) }
+          it { expect(Demand.last.chore?).to be true }
+        end
+
+        context 'when it is ux_improvement' do
+          let(:card_response) { { data: { card: { id: '5141022', comments: [], fields: [{ name: 'Title', value: 'Agendamento de artigo do colunista' }, { name: 'Type', value: 'MelhOrIa uX' }, { name: 'JiraKey', value: 'PD-124' }, { name: 'Class of Service', value: 'Intangível' }, { name: 'Project', value: 'Foo | BaR | FASE 1' }], phases_history: [{ phase: { id: '2480502' }, firstTimeIn: '2018-02-23T17:11:23-03:00', lastTimeOut: '2018-02-23T17:11:23-03:00' }, { phase: { id: '2480504' }, firstTimeIn: '2018-02-23T17:11:23-03:00', lastTimeOut: nil }], pipe: { id: '356355' }, url: 'http://app.pipefy.com/pipes/356355#cards/5141022' } } }.with_indifferent_access }
+          before { PipefyReader.instance.create_card!(team, card_response) }
+          it { expect(Demand.last.ux_improvement?).to be true }
+        end
+
+        context 'when it is ux_improvement' do
+          let(:card_response) { { data: { card: { id: '5141022', comments: [], fields: [{ name: 'Title', value: 'Agendamento de artigo do colunista' }, { name: 'Type', value: 'MelhOrIa perforMANcE' }, { name: 'JiraKey', value: 'PD-124' }, { name: 'Class of Service', value: 'Intangível' }, { name: 'Project', value: 'Foo | BaR | FASE 1' }], phases_history: [{ phase: { id: '2480502' }, firstTimeIn: '2018-02-23T17:11:23-03:00', lastTimeOut: '2018-02-23T17:11:23-03:00' }, { phase: { id: '2480504' }, firstTimeIn: '2018-02-23T17:11:23-03:00', lastTimeOut: nil }], pipe: { id: '356355' }, url: 'http://app.pipefy.com/pipes/356355#cards/5141022' } } }.with_indifferent_access }
+          before { PipefyReader.instance.create_card!(team, card_response) }
+          it { expect(Demand.last.performance_improvement?).to be true }
+        end
+
+        context 'when its class of service is unknown' do
+          let(:card_response) { { data: { card: { id: '5141022', comments: [], fields: [{ name: 'Title', value: 'Agendamento de artigo do colunista' }, { name: 'Type', value: 'MelhOrIa perforMANcE' }, { name: 'JiraKey', value: 'PD-124' }, { name: 'Class of Service', value: 'sbbrubles' }, { name: 'Project', value: 'Foo | BaR | FASE 1' }], phases_history: [{ phase: { id: '2480502' }, firstTimeIn: '2018-02-23T17:11:23-03:00', lastTimeOut: '2018-02-23T17:11:23-03:00' }, { phase: { id: '2480504' }, firstTimeIn: '2018-02-23T17:11:23-03:00', lastTimeOut: nil }], pipe: { id: '356355' }, url: 'http://app.pipefy.com/pipes/356355#cards/5141022' } } }.with_indifferent_access }
+          before { PipefyReader.instance.create_card!(team, card_response) }
+          it { expect(Demand.last.standard?).to be true }
+        end
+
+        context 'when its class of service is standard' do
+          let(:card_response) { { data: { card: { id: '5141022', comments: [], fields: [{ name: 'Title', value: 'Agendamento de artigo do colunista' }, { name: 'Type', value: 'MelhOrIa perforMANcE' }, { name: 'JiraKey', value: 'PD-124' }, { name: 'Class of Service', value: 'stanDARD' }, { name: 'Project', value: 'Foo | BaR | FASE 1' }], phases_history: [{ phase: { id: '2480502' }, firstTimeIn: '2018-02-23T17:11:23-03:00', lastTimeOut: '2018-02-23T17:11:23-03:00' }, { phase: { id: '2480504' }, firstTimeIn: '2018-02-23T17:11:23-03:00', lastTimeOut: nil }], pipe: { id: '356355' }, url: 'http://app.pipefy.com/pipes/356355#cards/5141022' } } }.with_indifferent_access }
+          before { PipefyReader.instance.create_card!(team, card_response) }
+          it { expect(Demand.last.standard?).to be true }
+        end
+
+        context 'when its class of service is expedite' do
+          let(:card_response) { { data: { card: { id: '5141022', comments: [], fields: [{ name: 'Title', value: 'Agendamento de artigo do colunista' }, { name: 'Type', value: 'MelhOrIa perforMANcE' }, { name: 'JiraKey', value: 'PD-124' }, { name: 'Class of Service', value: 'exPEDição' }, { name: 'Project', value: 'Foo | BaR | FASE 1' }], phases_history: [{ phase: { id: '2480502' }, firstTimeIn: '2018-02-23T17:11:23-03:00', lastTimeOut: '2018-02-23T17:11:23-03:00' }, { phase: { id: '2480504' }, firstTimeIn: '2018-02-23T17:11:23-03:00', lastTimeOut: nil }], pipe: { id: '356355' }, url: 'http://app.pipefy.com/pipes/356355#cards/5141022' } } }.with_indifferent_access }
+          before { PipefyReader.instance.create_card!(team, card_response) }
+          it { expect(Demand.last.expedite?).to be true }
+        end
+
+        context 'when its class of service is intangible' do
+          let(:card_response) { { data: { card: { id: '5141022', comments: [], fields: [{ name: 'Title', value: 'Agendamento de artigo do colunista' }, { name: 'Type', value: 'MelhOrIa perforMANcE' }, { name: 'JiraKey', value: 'PD-124' }, { name: 'Class of Service', value: 'inTANgível' }, { name: 'Project', value: 'Foo | BaR | FASE 1' }], phases_history: [{ phase: { id: '2480502' }, firstTimeIn: '2018-02-23T17:11:23-03:00', lastTimeOut: '2018-02-23T17:11:23-03:00' }, { phase: { id: '2480504' }, firstTimeIn: '2018-02-23T17:11:23-03:00', lastTimeOut: nil }], pipe: { id: '356355' }, url: 'http://app.pipefy.com/pipes/356355#cards/5141022' } } }.with_indifferent_access }
+          before { PipefyReader.instance.create_card!(team, card_response) }
+          it { expect(Demand.last.intangible?).to be true }
+        end
+
+        context 'when its class of service is fixed_date' do
+          let(:card_response) { { data: { card: { id: '5141022', comments: [], fields: [{ name: 'Title', value: 'Agendamento de artigo do colunista' }, { name: 'Type', value: 'MelhOrIa perforMANcE' }, { name: 'JiraKey', value: 'PD-124' }, { name: 'Class of Service', value: 'data FIXA' }, { name: 'Project', value: 'Foo | BaR | FASE 1' }], phases_history: [{ phase: { id: '2480502' }, firstTimeIn: '2018-02-23T17:11:23-03:00', lastTimeOut: '2018-02-23T17:11:23-03:00' }, { phase: { id: '2480504' }, firstTimeIn: '2018-02-23T17:11:23-03:00', lastTimeOut: nil }], pipe: { id: '356355' }, url: 'http://app.pipefy.com/pipes/356355#cards/5141022' } } }.with_indifferent_access }
+          before { PipefyReader.instance.create_card!(team, card_response) }
+          it { expect(Demand.last.fixed_date?).to be true }
         end
 
         context 'when it is class of service intangible' do
