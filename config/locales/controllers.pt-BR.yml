@@ -280,3 +280,8 @@ pt-BR:
   pipefy_team_configs:
     index:
       title: "Configurações de Time no Pipefy"
+  stages:
+    new:
+      title: "Nova Etapa"
+    index:
+      title: "Etapas Configuradas"

@@ -11,6 +11,7 @@ RSpec.describe Company, type: :model do
     it { is_expected.to have_many(:operation_results).dependent(:restrict_with_error) }
     it { is_expected.to have_one(:company_settings).dependent(:destroy) }
     it { is_expected.to have_many(:pipefy_configs).dependent(:destroy) }
+    it { is_expected.to have_many(:stages).dependent(:restrict_with_error) }
   end
 
   context 'validations' do

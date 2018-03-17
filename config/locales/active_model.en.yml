@@ -53,6 +53,24 @@ en:
       company_settings:
         max_flow_pressure: Maximum Total Flow Pressure
         max_active_parallel_projects: Maximum Parallel Active Projects
+      stage:
+        commitment_point: Commitment Point?
+        end_point: End Point?
+        compute_effort: Compute Effort?
+        effort_percentage: "% of Effort Considered?"
+        enums:
+          stage_type:
+            backlog: Backlog
+            design: Design
+            analysis: Analysis
+            development: Development
+            test: Test
+            homologation: Homologation
+            ready_to_deploy: Ready to Deploy
+            delivered: Delivered
+          stage_stream:
+            upstream: Upstream
+            downstream: Downstream
     errors:
       messages:
         record_invalid: 'Validation failed: %{errors}'

@@ -277,3 +277,8 @@ en:
   pipefy_team_configs:
     index:
       title: "Pipefy Team Configurations"
+  stages:
+    new:
+      title: "New Stage"
+    index:
+      title: "Configured Stages"

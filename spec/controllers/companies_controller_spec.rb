@@ -72,12 +72,16 @@ RSpec.describe CompaniesController, type: :controller do
           let!(:first_project) { Fabricate :project, customer: customer, status: :executing, start_date: Time.zone.today, end_date: Time.zone.now }
           let!(:second_project) { Fabricate :project, customer: customer, status: :maintenance, start_date: 1.month.from_now, end_date: 1.month.from_now }
 
+          let!(:stage) { Fabricate :stage, company: company, integration_id: '3' }
+          let!(:other_stage) { Fabricate :stage, company: company, integration_id: '1' }
+
           before { get :show, params: { id: company.id } }
           it 'assigns the instance variable and renders the template' do
             expect(response).to render_template :show
             expect(assigns(:company)).to eq company
             expect(assigns(:financial_informations)).to eq [other_finances, finances]
             expect(assigns(:teams)).to eq [team]
+            expect(assigns(:stages_list)).to eq [other_stage, stage]
             expect(assigns(:company_projects)).to eq [second_project, first_project]
             expect(assigns(:strategic_report_data).array_of_months).to eq [[Time.zone.today.month, Time.zone.today.year], [1.month.from_now.to_date.month, 1.month.from_now.to_date.year]]
             expect(assigns(:strategic_report_data).active_projects_count_data).to eq [1, 1]

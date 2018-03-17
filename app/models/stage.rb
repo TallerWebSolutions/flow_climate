@@ -16,16 +16,23 @@
 #  percentage_effort :decimal(, )
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
+#  company_id        :integer          not null
 #
 # Indexes
 #
 #  index_stages_on_integration_id  (integration_id)
 #  index_stages_on_name            (name)
 #
+# Foreign Keys
+#
+#  fk_rails_...  (company_id => companies.id)
+#
 
 class Stage < ApplicationRecord
   enum stage_type: { backlog: 0, design: 1, analysis: 2, development: 3, test: 4, homologation: 5, ready_to_deploy: 6, delivered: 7 }
   enum stage_stream: { upstream: 0, downstream: 1 }
+
+  belongs_to :company
 
   has_and_belongs_to_many :projects
   has_many :demand_transitions, dependent: :restrict_with_error

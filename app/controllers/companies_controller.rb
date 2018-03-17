@@ -2,6 +2,7 @@
 
 class CompaniesController < AuthenticatedController
   before_action :assign_company, except: %i[new create index]
+  before_action :assign_stages_list, only: %i[show update_settings]
 
   def index
     @companies = current_user.companies.order(:name)
@@ -60,6 +61,10 @@ class CompaniesController < AuthenticatedController
   end
 
   private
+
+  def assign_stages_list
+    @stages_list = @company.stages.order(:integration_id)
+  end
 
   def assign_users_in_company
     @users_in_company = @company.users.order(:first_name, :last_name)
