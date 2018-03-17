@@ -66,6 +66,8 @@ Rails.application.routes.draw do
     end
 
     resources :pipefy_configs, only: %i[new create destroy edit update]
+
+    resources :stages, only: %i[new create]
   end
 
   root 'companies#index'

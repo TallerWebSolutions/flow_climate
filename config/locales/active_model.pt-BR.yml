@@ -262,6 +262,10 @@ pt-BR:
         name: Nome
         stage_type: Tipo da Etapa
         stage_stream: Tipo do Stream
+        commitment_point: Ponto de Comprometimento?
+        end_point: Etapa Final?
+        compute_effort: Considera Esforço?
+        effort_percentage: "% de Esforço Considerado?"
         enums:
           stage_type:
             backlog: Backlog
@@ -271,7 +275,7 @@ pt-BR:
             test: Teste
             homologation: Homologação
             ready_to_deploy: Pronto para Entrega
-            deployed: Entregue
+            delivered: Entregue
           stage_stream:
             upstream: Upstream
             downstream: Downstream

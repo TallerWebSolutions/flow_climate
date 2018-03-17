@@ -1,0 +1,56 @@
+<div class="row">
+  <div class="col-xs-6">
+    <h2><%= t('stages.index.title') %></h2>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-xs-3">
+    <%= link_to t('stages.new.title'), new_company_stage_path(@company), class: 'btn btn-sm btn-primary bottom-spaced-component' %>
+  </div>
+</div>
+
+<table class="table table-index table-striped">
+  <tr>
+    <th><%= Stage.human_attribute_name :name %></th>
+    <th><%= Stage.human_attribute_name :integration_id %></th>
+    <th><%= Stage.human_attribute_name :stage_type %></th>
+    <th><%= Stage.human_attribute_name :stage_stream %></th>
+    <th class="center"><%= Stage.human_attribute_name :queue %></th>
+    <th class="center"><%= Stage.human_attribute_name :commitment_point %></th>
+    <th class="center"><%= Stage.human_attribute_name :end_point %></th>
+    <th class="center"><%= Stage.human_attribute_name :compute_effort %></th>
+    <th><%= Stage.human_attribute_name :percentage_effort %></th>
+    <th><%= t('general.table.actions') %></th>
+  </tr>
+  <% stages_list.each do |stage| %>
+    <tr>
+      <td><%= stage.name %></td>
+      <td><%= stage.integration_id %></td>
+      <td><%= t("activerecord.attributes.stage.enums.stage_type.#{stage.stage_type}") %></td>
+      <td><%= t("activerecord.attributes.stage.enums.stage_stream.#{stage.stage_stream}") %></td>
+      <td class="center">
+        <% if stage.queue? %>
+          <i class="fa fa-check" aria-hidden="true"></i>
+        <% end %>
+      </td>
+      <td class="center">
+        <% if stage.commitment_point? %>
+          <i class="fa fa-check" aria-hidden="true"></i>
+        <% end %>
+      </td>
+      <td class="center">
+        <% if stage.end_point? %>
+          <i class="fa fa-check" aria-hidden="true"></i>
+        <% end %>
+      </td>
+      <td class="center">
+        <% if stage.compute_effort? %>
+          <i class="fa fa-check" aria-hidden="true"></i>
+        <% end %>
+      </td>
+      <td class="center"><%= number_with_precision(stage.percentage_effort, precision: 2) %></td>
+      <td></td>
+    </tr>
+  <% end %>
+</table>

@@ -693,7 +693,8 @@ CREATE TABLE public.stages (
     compute_effort boolean DEFAULT false,
     percentage_effort numeric,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    company_id integer NOT NULL
 );
 
 
@@ -1629,6 +1630,14 @@ ALTER TABLE ONLY public.customers
 
 
 --
+-- Name: stages fk_rails_ffd4cca0d4; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.stages
+    ADD CONSTRAINT fk_rails_ffd4cca0d4 FOREIGN KEY (company_id) REFERENCES public.companies(id);
+
+
+--
 -- PostgreSQL database dump complete
 --
 
@@ -1685,6 +1694,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20180312220710'),
 ('20180313152829'),
 ('20180315163004'),
-('20180316131931');
+('20180316131931'),
+('20180316210405');
 
 
