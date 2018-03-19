@@ -282,3 +282,5 @@ en:
       title: "New Stage"
     index:
       title: "Configured Stages"
+    edit:
+      title: "Edit Stage"

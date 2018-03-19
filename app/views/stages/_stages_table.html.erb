@@ -50,7 +50,11 @@
         <% end %>
       </td>
       <td class="center"><%= number_with_precision(stage.percentage_effort, precision: 2) %></td>
-      <td></td>
+      <td>
+        <%= link_to edit_company_stage_path(@company, stage) do %>
+          <i class="fa fa-pencil"></i>
+        <% end %>
+      </td>
     </tr>
   <% end %>
 </table>

@@ -285,3 +285,5 @@ pt-BR:
       title: "Nova Etapa"
     index:
       title: "Etapas Configuradas"
+    edit:
+      title: "Editar Etapa"

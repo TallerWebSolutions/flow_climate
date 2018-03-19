@@ -265,7 +265,7 @@ pt-BR:
         commitment_point: Ponto de Comprometimento?
         end_point: Etapa Final?
         compute_effort: Considera Esforço?
-        effort_percentage: "% de Esforço Considerado?"
+        percentage_effort: "% de Esforço Considerado?"
         enums:
           stage_type:
             backlog: Backlog
