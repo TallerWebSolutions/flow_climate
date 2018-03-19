@@ -2,6 +2,7 @@
 
 class StagesController < AuthenticatedController
   before_action :assign_company
+  before_action :assign_stage, only: %i[edit update]
 
   def new
     @stage = Stage.new
@@ -13,9 +14,20 @@ class StagesController < AuthenticatedController
     render :new
   end
 
+  def edit; end
+
+  def update
+    return redirect_to company_path(@company) if @stage.update(stages_params)
+    render :edit
+  end
+
   private
 
   def stages_params
     params.require(:stage).permit(:integration_id, :name, :stage_type, :stage_stream, :commitment_point, :end_point, :queue, :compute_effort, :percentage_effort)
+  end
+
+  def assign_stage
+    @stage = @company.stages.find(params[:id])
   end
 end
