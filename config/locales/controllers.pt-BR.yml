@@ -220,6 +220,12 @@ pt-BR:
       title: "Editar Demanda"
     show:
       no_demand_blocks: "Bloqueios da Demanda"
+      sync_pipefy: "Sincronize com o Pipefy"
+      no_demand_transitions: "Esta demanda não tem transições."
+      last_update: "Última atualização: %{last_update_date}"
+    sync:
+      enqueued: "Sua solicitação foi colocada na fila. Será processada em breve."
+      done: "Sua sincronização foi realizada."
   project_risk_configs:
     new:
       title: "Nova Configuração de Risco"
@@ -294,3 +300,6 @@ pt-BR:
   demand_blocks:
     index:
       title: "Bloqueios de Demanda"
+  demand_transitions:
+    total_time_in_transition: "Tempo total na transição"
+    working_time_in_transition: "Tempo útil na transição"

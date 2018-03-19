@@ -105,6 +105,9 @@ pt-BR:
       demand_transition:
         one: Transição da Demanda
         other: Transições da Demanda
+      demand_block:
+        one: Bloqueio da Demanda
+        other: Bloqueios da Demanda
       pipefy_team_config:
         one: Configuração de Time no Pipefy
         other: Configurações de Time no Pipefy
@@ -284,6 +287,16 @@ pt-BR:
         stage: Etapa
         last_time_in: Primeira vez na etapa
         last_time_out: Última saída da etapa
+      demand_block:
+        demand: Demanda
+        demand_block_id: Id do Bloqueio
+        blocker_username: Bloqueado por
+        block_time: Bloqueado em
+        block_reason: Motivo do bloqueio
+        unblocker_username: Desbloqueado por
+        unblock_time: Desbloqueado em
+        unblock_reason: Motivo do desbloqueio
+        block_duration: Duração Útil do Bloqueio
       pipefy_team_config:
         team: Time
         integration_id: Id na Integração

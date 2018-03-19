@@ -44,3 +44,11 @@
 .top-button {
     width: 100%;
 }
+
+.detailed {
+    vertical-align: super;
+    font-size: smaller;
+    color: lightgray;
+    margin-left: 5px;
+    font-style: italic;
+}

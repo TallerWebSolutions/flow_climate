@@ -1,0 +1,44 @@
+<div class="container-fluid">
+  <% if demand_transitions_list.empty? %>
+    <%= t('demands.show.no_demand_transitions') %>
+  <% else %>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th><%= DemandTransition.human_attribute_name :stage %></th>
+          <th class="center"><%= t('activerecord.attributes.stage.compute_effort') %></th>
+          <th><%= DemandTransition.human_attribute_name :last_time_in %></th>
+          <th><%= DemandTransition.human_attribute_name :last_time_out %></th>
+          <th><%= t('demand_transitions.total_time_in_transition') %></th>
+          <th><%= t('demand_transitions.working_time_in_transition') %></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% demand_transitions_list.each do |transition| %>
+          <tr>
+            <td><%= transition.stage_name %></td>
+            <td class="center">
+              <% if transition.stage_compute_effort %>
+                <i class="fa fa-check" aria-hidden="true"></i>
+              <% end %>
+            </td>
+            <td><%= l(transition.last_time_in, format: :short) %></td>
+            <td><%= l(transition.last_time_out, format: :short) if transition.last_time_out.present? %></td>
+            <td><%= time_ago_in_words(transition.total_time_in_transition.hours.ago) %></td>
+            <td><%= time_ago_in_words(transition.working_time_in_transition.hours.ago) %></td>
+          </tr>
+        <% end %>
+      </tbody>
+      <tfoot>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+      </tfoot>
+    </table>
+  <% end %>
+</div>

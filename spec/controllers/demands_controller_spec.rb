@@ -322,5 +322,52 @@ RSpec.describe DemandsController, type: :controller do
         end
       end
     end
+
+    describe 'PUT #synchronize_pipefy' do
+      let(:company) { Fabricate :company, users: [user] }
+
+      let(:customer) { Fabricate :customer, company: company }
+      let(:project) { Fabricate :project, customer: customer }
+      let!(:pipefy_config) { Fabricate :pipefy_config, project: project }
+
+      let(:project_result) { Fabricate :project_result, project: project }
+      let!(:demand) { Fabricate :demand, project_result: project_result }
+
+      context 'passing valid parameters' do
+        it 'calls the services and the reader' do
+          expect(PipefyApiService).to(receive(:request_card_details).with(demand.demand_id).once { 'response' })
+          expect(PipefyReader.instance).to receive(:update_card!).with(project.pipefy_config.team, demand, 'response').once
+          put :synchronize_pipefy, params: { company_id: company, project_id: project, project_result_id: project_result, id: demand }
+          expect(response).to redirect_to company_project_project_result_demand_path(company, project, project_result, demand)
+          expect(flash[:notice]).to eq I18n.t('demands.sync.done')
+        end
+      end
+
+      context 'invalid' do
+        context 'demand' do
+          before { put :synchronize_pipefy, params: { company_id: company, project_id: project, project_result_id: project_result, id: 'foo' } }
+          it { expect(response).to have_http_status :not_found }
+        end
+        context 'project' do
+          before { put :synchronize_pipefy, params: { company_id: company, project_id: 'foo', project_result_id: project_result, id: demand } }
+          it { expect(response).to have_http_status :not_found }
+        end
+        context 'project_result' do
+          before { put :synchronize_pipefy, params: { company_id: company, project_id: project, project_result_id: 'foo', id: demand } }
+          it { expect(response).to have_http_status :not_found }
+        end
+        context 'company' do
+          context 'non-existent' do
+            before { put :synchronize_pipefy, params: { company_id: 'foo', project_id: project, project_result_id: project_result, id: demand } }
+            it { expect(response).to have_http_status :not_found }
+          end
+          context 'not-permitted' do
+            let(:company) { Fabricate :company, users: [] }
+            before { put :synchronize_pipefy, params: { company_id: company, project_id: project, project_result_id: project_result, id: demand } }
+            it { expect(response).to have_http_status :not_found }
+          end
+        end
+      end
+    end
   end
 end

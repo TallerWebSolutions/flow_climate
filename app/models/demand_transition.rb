@@ -29,11 +29,24 @@ class DemandTransition < ApplicationRecord
 
   validates :demand, :stage, :last_time_in, presence: true
 
-  after_save :set_dates, on: %i[create update]
+  delegate :name, to: :stage, prefix: true
+  delegate :compute_effort, to: :stage, prefix: true
+
+  after_save :set_demand_dates, on: %i[create update]
+
+  def total_time_in_transition
+    return 0 if last_time_out.blank?
+    (last_time_out - last_time_in) / 1.hour
+  end
+
+  def working_time_in_transition
+    return 0 if last_time_out.blank?
+    TimeService.instance.compute_working_hours_for_dates(last_time_in, last_time_out)
+  end
 
   private
 
-  def set_dates
+  def set_demand_dates
     if stage.commitment_point?
       demand.update(commitment_date: last_time_in)
     elsif stage.end_point?

@@ -17,13 +17,13 @@ class ProcessPipefyPipeJob < ApplicationJob
       pipefy_response = PipefyApiService.request_card_details(demand.demand_id)
       next if pipefy_response.code != 200
       card_response = JSON.parse(pipefy_response.body)
-      process_card_response(card_response, demand, project)
+      process_card_response(demand, card_response)
       processed_projects << project unless processed_projects.include?(project)
     end
     processed_projects
   end
 
-  def process_card_response(card_response, demand, project)
+  def process_card_response(demand, card_response)
     deleted_demands = []
     if card_response['data']['card'].blank?
       project_result = demand.project_result
@@ -31,7 +31,7 @@ class ProcessPipefyPipeJob < ApplicationJob
       deleted_demands << demand.demand_id
       demand.destroy
     else
-      PipefyReader.instance.update_card!(project.pipefy_config.team, demand, card_response)
+      PipefyReader.instance.update_card!(demand.project.pipefy_config.team, demand, card_response)
     end
 
     deleted_demands
