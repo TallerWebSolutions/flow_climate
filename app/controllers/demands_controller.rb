@@ -4,7 +4,7 @@ class DemandsController < AuthenticatedController
   before_action :assign_company
   before_action :assign_project
   before_action :assign_project_result
-  before_action :assign_demand, only: %i[edit update]
+  before_action :assign_demand, only: %i[edit update show]
 
   def new
     @demand = Demand.new
@@ -34,6 +34,10 @@ class DemandsController < AuthenticatedController
     end
 
     render :edit
+  end
+
+  def show
+    @demand_blocks = @demand.demand_blocks.order(:block_time)
   end
 
   private

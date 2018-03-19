@@ -1,0 +1,17 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="row">
+      <div class="col-xs-12">
+        <ul class="breadcrumb">
+          <li><%= link_to t('general.home.title'), root_path %></li>
+          <li><%= link_to @company.abbreviation&.upcase, company_path(@company) %></li>
+          <li><%= link_to @project.full_name, company_project_path(@company, @project) %></li>
+          <li><%= link_to l(@project_result.result_date), company_project_project_result_path(@company, @project, @project_result) %></li>
+          <li><%= @demand.demand_id %></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <%= render 'demand_blocks/demand_blocks_table', demand_blocks_list: @demand_blocks %>
+</div>

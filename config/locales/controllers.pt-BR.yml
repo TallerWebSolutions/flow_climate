@@ -218,6 +218,8 @@ pt-BR:
       blocked_working_time: "Tempo Útil Bloqueada"
     edit:
       title: "Editar Demanda"
+    show:
+      no_demand_blocks: "Bloqueios da Demanda"
   project_risk_configs:
     new:
       title: "Nova Configuração de Risco"
@@ -289,3 +291,6 @@ pt-BR:
       title: "Etapas Configuradas"
     edit:
       title: "Editar Etapa"
+  demand_blocks:
+    index:
+      title: "Bloqueios de Demanda"

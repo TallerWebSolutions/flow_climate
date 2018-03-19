@@ -217,6 +217,8 @@ en:
       blocked_working_time: "Blocked Working Time"
     edit:
       title: "Edit Demand"
+    show:
+      no_demand_blocks: "Demands Block"
   project_risk_configs:
     new:
       title: "New Risk Configuration"
@@ -286,3 +288,6 @@ en:
       title: "Configured Stages"
     edit:
       title: "Edit Stage"
+  demand_blocks:
+    index:
+      title: "Demand Blocks"

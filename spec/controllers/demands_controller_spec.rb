@@ -270,5 +270,57 @@ RSpec.describe DemandsController, type: :controller do
         end
       end
     end
+
+    describe 'GET #show' do
+      let(:company) { Fabricate :company, users: [user] }
+      let(:customer) { Fabricate :customer, company: company }
+      let(:product) { Fabricate :product, customer: customer }
+      let!(:project) { Fabricate :project, customer: product.customer, product: product, end_date: 5.days.from_now }
+      let!(:project_result) { Fabricate :project_result, project: project }
+      let!(:first_demand) { Fabricate :demand, project_result: project_result }
+      let!(:second_demand) { Fabricate :demand, project_result: project_result }
+      let(:first_block) { Fabricate :demand_block, demand: first_demand, block_time: Time.zone.today }
+      let(:second_block) { Fabricate :demand_block, demand: first_demand, block_time: 2.days.ago }
+      let(:out_block) { Fabricate :demand_block, demand: second_demand }
+
+      context 'passing a valid ID' do
+        context 'having data' do
+          before { get :show, params: { company_id: company, project_id: project, project_result_id: project_result, id: first_demand } }
+          it 'assigns the instance variable and renders the template' do
+            expect(response).to render_template :show
+            expect(assigns(:company)).to eq company
+            expect(assigns(:project)).to eq project
+            expect(assigns(:project_result)).to eq project_result
+            expect(assigns(:demand)).to eq first_demand
+            expect(assigns(:demand_blocks)).to eq [second_block, first_block]
+          end
+        end
+        context 'having no demand_blocks' do
+          let!(:demand) { Fabricate :demand, project: project }
+          before { get :show, params: { company_id: company, project_id: project, project_result_id: project_result, id: first_demand } }
+          it 'assigns the instance variable and renders the template' do
+            expect(response).to render_template :show
+            expect(assigns(:company)).to eq company
+            expect(assigns(:project)).to eq project
+            expect(assigns(:demand_blocks)).to eq []
+          end
+        end
+      end
+      context 'passing invalid parameters' do
+        context 'non-existent company' do
+          before { get :show, params: { company_id: 'foo', project_id: project, project_result_id: project_result, id: first_demand } }
+          it { expect(response).to have_http_status :not_found }
+        end
+        context 'non-existent project_result' do
+          before { get :show, params: { company_id: company, project_id: project, project_result_id: project_result, id: 'foo' } }
+          it { expect(response).to have_http_status :not_found }
+        end
+        context 'not permitted' do
+          let(:company) { Fabricate :company, users: [] }
+          before { get :show, params: { company_id: company, project_id: project, project_result_id: project_result, id: first_demand } }
+          it { expect(response).to have_http_status :not_found }
+        end
+      end
+    end
   end
 end
