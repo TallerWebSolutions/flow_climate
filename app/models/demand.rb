@@ -46,9 +46,7 @@ class Demand < ApplicationRecord
   def update_effort!
     effort_transition = demand_transitions.joins(:stage).find_by('stages.compute_effort = true')
     return if effort_transition.blank?
-    effort = TimeService.instance.compute_working_hours_for_dates(effort_transition.last_time_in, effort_transition.last_time_out)
-    time_blocked = demand_blocks.for_date_interval(effort_transition.last_time_in, effort_transition.last_time_out).sum(:block_duration)
-    update(effort: (effort - time_blocked) * assignee_effort_computation)
+    update(effort: (total_working_time - blocked_working_time))
   end
 
   def update_created_date!
@@ -71,6 +69,18 @@ class Demand < ApplicationRecord
   def leadtime
     return 0 if commitment_date.blank? || end_date.blank?
     end_date - commitment_date
+  end
+
+  def total_working_time
+    @effort_transition ||= demand_transitions.joins(:stage).find_by('stages.compute_effort = true')
+    return 0 if @effort_transition.blank?
+    TimeService.instance.compute_working_hours_for_dates(@effort_transition.last_time_in, @effort_transition.last_time_out) * assignee_effort_computation
+  end
+
+  def blocked_working_time
+    @effort_transition ||= demand_transitions.joins(:stage).find_by('stages.compute_effort = true')
+    return 0 if @effort_transition.blank?
+    demand_blocks.for_date_interval(@effort_transition.last_time_in, @effort_transition.last_time_out).sum(:block_duration)
   end
 
   private
