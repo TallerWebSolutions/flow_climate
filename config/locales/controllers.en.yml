@@ -213,6 +213,8 @@ en:
       title: "New Demand"
     index:
       title: "Demands in this Result"
+      total_working_time: "Total Working Time"
+      blocked_working_time: "Blocked Working Time"
     edit:
       title: "Edit Demand"
   project_risk_configs:

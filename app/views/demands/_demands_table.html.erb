@@ -23,6 +23,9 @@
     <th><%= Demand.human_attribute_name :commitment_date %></th>
     <th><%= Demand.human_attribute_name :end_date %></th>
     <th><%= Demand.human_attribute_name :leadtime %></th>
+    <th><%= Demand.human_attribute_name :assignees_count %></th>
+    <th><%= t('demands.index.total_working_time') %></th>
+    <th><%= t('demands.index.blocked_working_time') %></th>
     <th><%= Demand.human_attribute_name :effort %></th>
     <th><%= Demand.human_attribute_name(:url).upcase %></th>
     <th><%= t('general.table.actions') %></th>
@@ -51,6 +54,9 @@
       <td><%= l(demand.commitment_date, format: :short) if demand.commitment_date.present? %></td>
       <td><%= l(demand.end_date, format: :short) if demand.end_date.present? %></td>
       <td><%= time_ago_in_words(demand.leadtime.seconds.ago) if demand.leadtime.present? %></td>
+      <td><%= demand.assignees_count %></td>
+      <td><%= number_with_precision(demand.total_working_time, precision: 2) %></td>
+      <td><%= number_with_precision(demand.blocked_working_time, precision: 2) %></td>
       <td><%= number_with_precision(demand.effort, precision: 2) %></td>
       <td><%= link_to demand.url, demand.url %></td>
       <td>

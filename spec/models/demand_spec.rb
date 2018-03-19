@@ -95,7 +95,7 @@ RSpec.describe Demand, type: :model do
         let!(:out_demand_block) { Fabricate :demand_block, demand: demand, block_duration: 1.0, block_time: Time.zone.parse('2018-03-06 22:00'), unblock_time: Time.zone.parse('2018-03-06 23:00') }
 
         before { demand.update_effort! }
-        it { expect(demand.effort.to_f).to eq 4.5 }
+        it { expect(demand.effort.to_f).to eq 6.0 }
       end
 
       context 'having no transition in the effort stage' do
@@ -135,6 +135,49 @@ RSpec.describe Demand, type: :model do
     context 'having commitment date but no end date' do
       let(:demand) { Fabricate :demand, commitment_date: 2.days.ago, end_date: nil }
       it { expect(demand.leadtime).to eq 0 }
+    end
+  end
+
+  describe '#total_working_time' do
+    let(:company) { Fabricate :company }
+    let(:customer) { Fabricate :customer, company: company }
+    let(:project) { Fabricate :project, customer: customer }
+    let(:effort_stage) { Fabricate :stage, projects: [project], compute_effort: true }
+
+    context 'having only one assined' do
+      let(:demand) { Fabricate :demand, project: project, assignees_count: 1 }
+      let!(:demand_transition) { Fabricate :demand_transition, demand: demand, stage: effort_stage, last_time_in: Time.zone.parse('2018-03-05 22:00'), last_time_out: Time.zone.parse('2018-03-06 13:00') }
+
+      it { expect(demand.total_working_time.to_f).to eq 6.0 }
+    end
+
+    context 'having a pair assined' do
+      let(:demand) { Fabricate :demand, project: project, assignees_count: 2, effort: 0 }
+      let!(:demand_transition) { Fabricate :demand_transition, demand: demand, stage: effort_stage, last_time_in: Time.zone.parse('2018-03-05 22:00'), last_time_out: Time.zone.parse('2018-03-06 13:00') }
+
+      it { expect(demand.total_working_time.to_f).to eq 9.0 }
+    end
+  end
+
+  describe '#blocked_working_time' do
+    let(:company) { Fabricate :company }
+    let(:customer) { Fabricate :customer, company: company }
+    let(:project) { Fabricate :project, customer: customer }
+    let(:effort_stage) { Fabricate :stage, projects: [project], compute_effort: true }
+    let(:demand) { Fabricate :demand, project: project, assignees_count: 1 }
+
+    context 'having no blockings' do
+      let!(:demand_transition) { Fabricate :demand_transition, demand: demand, stage: effort_stage, last_time_in: Time.zone.parse('2018-03-05 22:00'), last_time_out: Time.zone.parse('2018-03-06 13:00') }
+
+      it { expect(demand.blocked_working_time.to_f).to eq 0.0 }
+    end
+    context 'having blockings' do
+      let!(:demand_transition) { Fabricate :demand_transition, demand: demand, stage: effort_stage, last_time_in: Time.zone.parse('2018-03-05 22:00'), last_time_out: Time.zone.parse('2018-03-06 13:00') }
+      let!(:first_demand_block) { Fabricate :demand_block, demand: demand, block_duration: 2.0, block_time: Time.zone.parse('2018-03-05 22:00'), unblock_time: Time.zone.parse('2018-03-06 13:00') }
+      let!(:second_demand_block) { Fabricate :demand_block, demand: demand, block_duration: 1.0, block_time: Time.zone.parse('2018-03-06 10:00'), unblock_time: Time.zone.parse('2018-03-06 13:00') }
+      let!(:out_demand_block) { Fabricate :demand_block, demand: demand, block_duration: 1.0, block_time: Time.zone.parse('2018-03-06 22:00'), unblock_time: Time.zone.parse('2018-03-06 23:00') }
+
+      it { expect(demand.blocked_working_time.to_f).to eq 3.0 }
     end
   end
 end

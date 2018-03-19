@@ -214,6 +214,8 @@ pt-BR:
       title: "Nova Demanda"
     index:
       title: "Demandas neste Resultado"
+      total_working_time: "Tempo Útil Total"
+      blocked_working_time: "Tempo Útil Bloqueada"
     edit:
       title: "Editar Demanda"
   project_risk_configs:
