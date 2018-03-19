@@ -148,21 +148,27 @@ class PipefyReader
   end
 
   def read_blocks(demand, response_data)
+    demand.demand_blocks.map(&:destroy)
     response_data.try(:[], 'card').try(:[], 'comments')&.each do |comment_pipefy|
       comment_text = comment_pipefy['text']
       demand_block_id = '1'
       demand_block_id = comment_text.scan(/\[[0-9a-f]\]/).first.delete('[').delete(']').strip if /\[[0-9a-f]\]/.match?(comment_text)
 
-      persist_block(demand, comment_pipefy, demand_block_id, comment_text)
+      if comment_text.start_with?('[BLOCKED]')
+        persist_block(demand, comment_pipefy, demand_block_id, comment_text)
+      elsif comment_text.start_with?('[UNBLOCKED]')
+        persist_unblock(demand, comment_pipefy, demand_block_id, comment_text)
+      end
     end
   end
 
   def persist_block(demand, comment_pipefy, demand_block_id, comment_text)
-    if comment_text.start_with?('[BLOCKED]')
-      DemandBlock.create(demand: demand, demand_block_id: demand_block_id, blocker_username: comment_pipefy['author']['username'], block_time: comment_pipefy['created_at'], block_reason: comment_text.strip)
-    elsif comment_text.start_with?('[UNBLOCKED]')
-      demand_block = DemandBlock.where(demand: demand, demand_block_id: demand_block_id).first
-      demand_block.update(unblocker_username: comment_pipefy['author']['username'], unblock_time: comment_pipefy['created_at'], unblock_reason: comment_text.strip)
-    end
+    demand_block = demand.demand_blocks.where(demand_block_id: demand_block_id, block_time: Time.zone.iso8601(comment_pipefy['created_at'])).first_or_initialize
+    demand_block.update(demand: demand, demand_block_id: demand_block_id, blocker_username: comment_pipefy['author']['username'], block_time: comment_pipefy['created_at'], block_reason: comment_text.strip)
+  end
+
+  def persist_unblock(demand, comment_pipefy, demand_block_id, comment_text)
+    demand_block = demand.demand_blocks.active.where(demand: demand, demand_block_id: demand_block_id).first
+    demand_block.update(unblocker_username: comment_pipefy['author']['username'], unblock_time: comment_pipefy['created_at'], unblock_reason: comment_text.strip)
   end
 end

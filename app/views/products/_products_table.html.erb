@@ -21,7 +21,7 @@
         <td><%= number_with_precision(product.total_flow_pressure, precision: 3) %></td>
         <td>
           <%= link_to edit_company_product_path(@company, product) do %>
-            <i class="fa fa-pencil"></i>
+            <i class="fas fa-edit"></i>
           <% end %>
           <%= link_to company_product_path(@company, product), method: :delete do %>
             <i class="fa fa-times"></i>

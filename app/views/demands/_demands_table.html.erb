@@ -37,7 +37,7 @@
           <i class="fa fa-times" aria-hidden="true"></i>
         <% end %>
         <%= link_to edit_company_project_project_result_demand_path(@company, @project, @project_result, demand) do %>
-          <i class="fa fa-pencil"></i>
+          <i class="fas fa-edit"></i>
         <% end %>
       </td>
       <td><%= link_to @project.customer_name, company_customer_path(@company, @project.customer) %></td>
@@ -47,7 +47,7 @@
         <% end %>
       </td>
       <td><%= link_to @project.name, company_project_path(@company, @project) %></td>
-      <td><%= demand.demand_id %></td>
+      <td><%= link_to demand.demand_id, company_project_project_result_demand_path(@company, @project, @project_result, demand) %></td>
       <td><%= t("activerecord.attributes.demand.enums.demand_type.#{demand.demand_type}") %></td>
       <td><%= t("activerecord.attributes.demand.enums.class_of_service.#{demand.class_of_service}") %></td>
       <td><%= l(demand.created_date, format: :short) if demand.created_date.present? %></td>
@@ -64,7 +64,7 @@
           <i class="fa fa-times" aria-hidden="true"></i>
         <% end %>
         <%= link_to edit_company_project_project_result_demand_path(@company, @project, @project_result, demand) do %>
-          <i class="fa fa-pencil"></i>
+          <i class="fas fa-edit"></i>
         <% end %>
       </td>
     </tr>

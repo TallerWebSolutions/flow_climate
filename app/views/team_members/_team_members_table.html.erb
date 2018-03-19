@@ -26,7 +26,7 @@
       <td><%= t(member.active.to_s) %></td>
       <td>
         <%= link_to edit_company_team_team_member_path(@company, @team, member) do %>
-          <i class="fa fa-pencil"></i>
+          <i class="fas fa-edit"></i>
         <% end %>
         <% if member.active? %>
           <%= link_to deactivate_company_team_team_member_path(@company, @team, member), method: :patch do %>

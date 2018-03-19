@@ -4,7 +4,7 @@ class DemandsController < AuthenticatedController
   before_action :assign_company
   before_action :assign_project
   before_action :assign_project_result
-  before_action :assign_demand, only: %i[edit update]
+  before_action :assign_demand, only: %i[edit update show synchronize_pipefy]
 
   def new
     @demand = Demand.new
@@ -34,6 +34,18 @@ class DemandsController < AuthenticatedController
     end
 
     render :edit
+  end
+
+  def show
+    @demand_blocks = @demand.demand_blocks.order(:block_time)
+    @demand_transitions = @demand.demand_transitions.order(:last_time_in)
+  end
+
+  def synchronize_pipefy
+    pipefy_response = PipefyApiService.request_card_details(@demand.demand_id)
+    PipefyReader.instance.update_card!(@project.pipefy_config.team, @demand, pipefy_response)
+    flash[:notice] = t('demands.sync.done')
+    redirect_to company_project_project_result_demand_path(@company, @project, @project_result, @demand)
   end
 
   private

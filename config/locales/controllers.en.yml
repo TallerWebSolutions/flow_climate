@@ -217,6 +217,14 @@ en:
       blocked_working_time: "Blocked Working Time"
     edit:
       title: "Edit Demand"
+    show:
+      no_demand_blocks: "Demands Block"
+      sync_pipefy: "Sync with pipefy"
+      no_demand_transitions: "No transitions to this demand."
+      last_update: "Last update: %{last_update_date}"
+    sync:
+      enqueued: "Your request was enqueued. It will be processed soon."
+      done: "The sync is done."
   project_risk_configs:
     new:
       title: "New Risk Configuration"
@@ -286,3 +294,9 @@ en:
       title: "Configured Stages"
     edit:
       title: "Edit Stage"
+  demand_blocks:
+    index:
+      title: "Demand Blocks"
+  demand_transitions:
+    total_time_in_transition: "Total time in transition"
+    working_time_in_transition: "Working time in transition"

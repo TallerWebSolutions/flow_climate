@@ -1,0 +1,46 @@
+<div class="container-fluid">
+  <% if demand_blocks_list.empty? %>
+    <%= t('demands.show.no_demand_blocks') %>
+  <% else %>
+    <table class="table table-striped table-index">
+      <thead>
+        <tr>
+          <th><%= DemandBlock.human_attribute_name :demand_block_id %></th>
+          <th><%= DemandBlock.human_attribute_name :block_duration %></th>
+          <th><%= DemandBlock.human_attribute_name :blocker_username %></th>
+          <th><%= DemandBlock.human_attribute_name :block_time %></th>
+          <th><%= DemandBlock.human_attribute_name :block_reason %></th>
+          <th><%= DemandBlock.human_attribute_name :unblocker_username %></th>
+          <th><%= DemandBlock.human_attribute_name :unblock_time %></th>
+          <th><%= DemandBlock.human_attribute_name :unblock_reason %></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% demand_blocks_list.each do |block| %>
+          <tr>
+            <td><%= block.demand_block_id %></td>
+            <td><%= time_ago_in_words(block.block_duration.hours.ago) if block.block_duration.present? %></td>
+            <td><%= block.blocker_username %></td>
+            <td><%= l(block.block_time, format: :short) %></td>
+            <td><%= block.block_reason %></td>
+            <td><%= block.unblocker_username %></td>
+            <td><%= l(block.unblock_time, format: :short) if block.unblock_time.present? %></td>
+            <td><%= block.unblock_reason %></td>
+          </tr>
+        <% end %>
+      </tbody>
+      <tfoot>
+        <tr>
+          <td></td>
+          <td><%= time_ago_in_words(demand_blocks_list.sum(:block_duration).hours.ago) %></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+      </tfoot>
+    </table>
+  <% end %>
+</div>

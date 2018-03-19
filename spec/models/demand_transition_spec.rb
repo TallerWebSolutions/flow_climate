@@ -12,6 +12,11 @@ RSpec.describe DemandTransition, type: :model do
     it { is_expected.to validate_presence_of :last_time_in }
   end
 
+  context 'delegations' do
+    it { is_expected.to delegate_method(:name).to(:stage).with_prefix }
+    it { is_expected.to delegate_method(:compute_effort).to(:stage).with_prefix }
+  end
+
   describe '#set_dates' do
     context 'when the stage is a commitment_point' do
       let(:stage) { Fabricate :stage, commitment_point: true, end_point: false }
@@ -34,6 +39,34 @@ RSpec.describe DemandTransition, type: :model do
         expect(demand.reload.created_date).to eq Time.zone.parse('2018-02-04 12:00:00')
         expect(demand.reload.end_date).to eq transition_date
       end
+    end
+  end
+
+  describe '#total_time_in_transition' do
+    let(:stage) { Fabricate :stage, commitment_point: true, end_point: false }
+    let(:demand) { Fabricate :demand, created_date: Time.zone.parse('2018-02-04 12:00:00') }
+
+    context 'when there is last_time_out' do
+      let(:demand_transition) { Fabricate :demand_transition, stage: stage, demand: demand, last_time_in: Time.zone.parse('2018-03-15 12:00:00'), last_time_out: Time.zone.parse('2018-03-19 12:00:00') }
+      it { expect(demand_transition.total_time_in_transition).to eq 96.0 }
+    end
+    context 'when there is no last_time_out' do
+      let(:demand_transition) { Fabricate :demand_transition, stage: stage, demand: demand, last_time_in: Time.zone.parse('2018-03-13 12:00:00') }
+      it { expect(demand_transition.total_time_in_transition).to eq 0 }
+    end
+  end
+
+  describe '#working_time_in_transition' do
+    let(:stage) { Fabricate :stage, commitment_point: true, end_point: false }
+    let(:demand) { Fabricate :demand, created_date: Time.zone.parse('2018-02-04 12:00:00') }
+
+    context 'when there is last_time_out' do
+      let(:demand_transition) { Fabricate :demand_transition, stage: stage, demand: demand, last_time_in: Time.zone.parse('2018-03-15 12:00:00'), last_time_out: Time.zone.parse('2018-03-19 12:00:00') }
+      it { expect(demand_transition.working_time_in_transition).to eq 12 }
+    end
+    context 'when there is no last_time_out' do
+      let(:demand_transition) { Fabricate :demand_transition, stage: stage, demand: demand, last_time_in: Time.zone.parse('2018-03-13 12:00:00') }
+      it { expect(demand_transition.working_time_in_transition).to eq 0 }
     end
   end
 end

@@ -51,7 +51,9 @@ Rails.application.routes.draw do
 
     resources :projects do
       resources :project_results do
-        resources :demands, only: %i[new create destroy edit update]
+        resources :demands do
+          put :synchronize_pipefy, on: :member
+        end
       end
 
       resources :project_risk_configs, only: %i[new create destroy] do
