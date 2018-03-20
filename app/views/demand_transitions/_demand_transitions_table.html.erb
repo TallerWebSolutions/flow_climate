@@ -1,6 +1,16 @@
 <div class="container-fluid">
+  <div class="row">
+    <div class="col-xs-12">
+      <h3><%= t('demand_transitions.index.title') %></h3>
+    </div>
+  </div>
+
   <% if demand_transitions_list.empty? %>
-    <%= t('demands.show.no_demand_transitions') %>
+    <div class="row">
+      <div class="col-xs-12">
+        <%= t('demands.show.no_demand_transitions') %>
+      </div>
+    </div>
   <% else %>
     <table class="table table-striped">
       <thead>
@@ -24,8 +34,8 @@
             </td>
             <td><%= l(transition.last_time_in, format: :short) %></td>
             <td><%= l(transition.last_time_out, format: :short) if transition.last_time_out.present? %></td>
-            <td><%= time_ago_in_words(transition.total_time_in_transition.hours.ago) %></td>
-            <td><%= time_ago_in_words(transition.working_time_in_transition.hours.ago) %></td>
+            <td><%= "#{number_with_precision(transition.total_time_in_transition, precision: 4)} hs" %></td>
+            <td><%= "#{transition.working_time_in_transition} hs" %></td>
           </tr>
         <% end %>
       </tbody>

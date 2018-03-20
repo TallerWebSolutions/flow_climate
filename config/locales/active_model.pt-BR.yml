@@ -208,6 +208,7 @@ pt-BR:
         company: Empresa
       demand:
         demand_id: Id da Demanda
+        project: Projeto
         effort: Esforço
         demand_type: Tipo da Demanda
         class_of_service: Classe de Serviço
@@ -297,6 +298,7 @@ pt-BR:
         unblock_time: Desbloqueado em
         unblock_reason: Motivo do desbloqueio
         block_duration: Duração Útil do Bloqueio
+        active: Ativo?
       pipefy_team_config:
         team: Time
         integration_id: Id na Integração

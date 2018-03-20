@@ -53,6 +53,13 @@ Rails.application.routes.draw do
       resources :project_results do
         resources :demands do
           put :synchronize_pipefy, on: :member
+
+          resources :demand_blocks, only: [] do
+            member do
+              patch :activate
+              patch :deactivate
+            end
+          end
         end
       end
 

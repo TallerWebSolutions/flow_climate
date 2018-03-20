@@ -80,7 +80,7 @@ class Demand < ApplicationRecord
   def blocked_working_time
     @effort_transition ||= demand_transitions.joins(:stage).find_by('stages.compute_effort = true')
     return 0 if @effort_transition.blank?
-    demand_blocks.closed.for_date_interval(@effort_transition.last_time_in, @effort_transition.last_time_out).sum(:block_duration)
+    demand_blocks.closed.active.for_date_interval(@effort_transition.last_time_in, @effort_transition.last_time_out).sum(:block_duration)
   end
 
   private

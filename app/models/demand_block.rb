@@ -16,6 +16,7 @@
 #  block_duration     :integer
 #  created_at         :datetime         not null
 #  updated_at         :datetime         not null
+#  active             :boolean          default(TRUE), not null
 #
 # Indexes
 #
@@ -34,8 +35,17 @@ class DemandBlock < ApplicationRecord
   before_update :update_computed_fields!
 
   scope :for_date_interval, ->(start_date, end_date) { where('block_time BETWEEN :last_time_in AND :last_time_out', last_time_in: start_date, last_time_out: end_date) }
-  scope :active, -> { where('unblock_time IS NULL') }
+  scope :open, -> { where('unblock_time IS NULL') }
   scope :closed, -> { where('unblock_time IS NOT NULL') }
+  scope :active, -> { where(active: true) }
+
+  def activate!
+    update(active: true)
+  end
+
+  def deactivate!
+    update(active: false)
+  end
 
   private
 
