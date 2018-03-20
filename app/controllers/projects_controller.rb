@@ -11,7 +11,7 @@ class ProjectsController < AuthenticatedController
   end
 
   def index
-    @projects = Project.joins(:customer).where('customers.company_id = ?', @company.id).order(end_date: :desc)
+    @projects = add_status_filter(Project.joins(:customer).where('customers.company_id = ?', @company.id)).order(end_date: :desc)
     @projects_summary = ProjectsSummaryObject.new(@projects)
   end
 
@@ -81,5 +81,10 @@ class ProjectsController < AuthenticatedController
 
   def assign_project
     @project = Project.find(params[:id])
+  end
+
+  def add_status_filter(projects)
+    return projects if params[:status_filter].blank? || projects.blank?
+    projects.where(status: params[:status_filter])
   end
 end

@@ -94,9 +94,9 @@ RSpec.describe ProjectsController, type: :controller do
 
     describe 'GET #index' do
       context 'having projects' do
+        let(:customer) { Fabricate :customer, company: company }
+        let(:product) { Fabricate :product, customer: customer, name: 'zzz' }
         context 'not passing status filter' do
-          let(:customer) { Fabricate :customer, company: company }
-          let(:product) { Fabricate :product, customer: customer, name: 'zzz' }
           let!(:project) { Fabricate :project, customer: customer, product: product, end_date: 2.days.from_now }
           let!(:other_project) { Fabricate :project, customer: customer, project_type: :consulting, product: nil, end_date: 5.days.from_now }
           let!(:other_company_project) { Fabricate :project, end_date: 2.days.from_now }
@@ -110,6 +110,21 @@ RSpec.describe ProjectsController, type: :controller do
             expect(assigns(:projects_summary).projects).to eq [other_project, project]
           end
         end
+
+        context 'passing filter' do
+          context 'status waiting' do
+            let!(:first_project) { Fabricate :project, customer: customer, product: product, status: :waiting, end_date: 2.days.from_now }
+            let!(:second_project) { Fabricate :project, customer: customer, product: product, status: :waiting, end_date: 3.days.from_now }
+            let!(:third_project) { Fabricate :project, customer: customer, product: product, status: :executing, end_date: 4.days.from_now }
+            before { get :index, params: { company_id: company, status_filter: :waiting } }
+            it { expect(assigns(:projects_summary).projects).to eq [second_project, first_project] }
+          end
+        end
+      end
+
+      context 'having no projects' do
+        before { get :index, params: { company_id: company, status_filter: :waiting } }
+        it { expect(assigns(:projects_summary).projects).to eq [] }
       end
     end
 
