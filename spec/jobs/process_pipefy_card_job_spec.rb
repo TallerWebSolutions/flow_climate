@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe ProcessPipefyCardJob, type: :active_job do
-  describe '.perform_later' do
+  describe '.perform' do
     it 'enqueues after calling perform_later' do
       ProcessPipefyCardJob.perform_later(bla: 'foo')
       expect(ProcessPipefyCardJob).to have_been_enqueued.on_queue('default')
@@ -33,12 +33,22 @@ RSpec.describe ProcessPipefyCardJob, type: :active_job do
 
     context 'and a pipefy config' do
       let!(:pipefy_config) { Fabricate :pipefy_config, project: project, team: team, pipe_id: '356528' }
-      let(:demand) { Fabricate :demand }
-      it 'updates the demand and the project result' do
-        expect(PipefyReader.instance).to receive(:create_card!).with(team, card_response).once
-        expect(Demand).to receive(:find_by) { demand }
-        expect(PipefyReader.instance).to receive(:update_card!).with(team, demand, card_response).once
-        ProcessPipefyCardJob.perform_now(params)
+      context 'and demand' do
+        let(:demand) { Fabricate :demand }
+        it 'updates the demand and the project result' do
+          expect(PipefyReader.instance).to receive(:create_card!).with(team, card_response).once
+          expect(Demand).to receive(:find_by) { demand }
+          expect(PipefyReader.instance).to receive(:update_card!).with(team, demand, card_response).once
+          ProcessPipefyCardJob.perform_now(params)
+        end
+      end
+      context 'and no demand' do
+        it 'updates the demand and the project result' do
+          expect(PipefyReader.instance).to receive(:create_card!).with(team, card_response).once
+          expect(Demand).to receive(:find_by) { nil }
+          expect(PipefyReader.instance).to receive(:update_card!).never
+          ProcessPipefyCardJob.perform_now(params)
+        end
       end
     end
 

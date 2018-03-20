@@ -16,6 +16,6 @@ class ProcessPipefyCardJob < ApplicationJob
   def process_card!(card_response, demand_id, pipefy_config)
     PipefyReader.instance.create_card!(pipefy_config.team, card_response)
     demand = Demand.find_by(demand_id: demand_id)
-    PipefyReader.instance.update_card!(pipefy_config.team, demand, card_response)
+    PipefyReader.instance.update_card!(pipefy_config.team, demand, card_response) if demand.present?
   end
 end
