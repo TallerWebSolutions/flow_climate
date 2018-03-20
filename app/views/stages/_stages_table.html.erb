@@ -54,6 +54,9 @@
         <%= link_to edit_company_stage_path(@company, stage) do %>
           <i class="fas fa-edit"></i>
         <% end %>
+        <%= link_to company_stage_path(@company, stage), method: :delete do %>
+          <i class="fa fa-times" aria-hidden="true"></i>
+        <% end %>
       </td>
     </tr>
   <% end %>

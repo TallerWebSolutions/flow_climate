@@ -1,7 +1,7 @@
-<%= link_to company_project_path(@company, project), method: :delete do %>
-  <i class="fa fa-times" aria-hidden="true"></i>
-<% end %>
-
 <%= link_to edit_company_project_path(@company, project) do %>
   <i class="fas fa-edit"></i>
+<% end %>
+
+<%= link_to company_project_path(@company, project), method: :delete do %>
+  <i class="fa fa-times" aria-hidden="true"></i>
 <% end %>

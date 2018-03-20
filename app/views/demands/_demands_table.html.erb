@@ -33,11 +33,11 @@
   <% demands_list.each do |demand| %>
     <tr>
       <td>
-        <%= link_to company_project_project_result_demand_path(@company, @project, @project_result, demand), method: :delete do %>
-          <i class="fa fa-times" aria-hidden="true"></i>
-        <% end %>
         <%= link_to edit_company_project_project_result_demand_path(@company, @project, @project_result, demand) do %>
           <i class="fas fa-edit"></i>
+        <% end %>
+        <%= link_to company_project_project_result_demand_path(@company, @project, @project_result, demand), method: :delete do %>
+          <i class="fa fa-times" aria-hidden="true"></i>
         <% end %>
       </td>
       <td><%= link_to @project.customer_name, company_customer_path(@company, @project.customer) %></td>
