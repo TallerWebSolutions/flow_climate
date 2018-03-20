@@ -724,4 +724,15 @@ RSpec.describe Project, type: :model do
       it { expect(first_project.total_throughput_until(1.week.ago)).to eq 0 }
     end
   end
+
+  describe '#manual?' do
+    let(:project) { Fabricate :project }
+    context 'having integration' do
+      let!(:pipefy_config) { Fabricate :pipefy_config, project: project }
+      it { expect(project.manual?).to be false }
+    end
+    context 'having no integration' do
+      it { expect(project.manual?).to be true }
+    end
+  end
 end
