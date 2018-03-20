@@ -20,11 +20,11 @@
           <td><%= pipefy_config.project_full_name %></td>
           <td><%= pipefy_config.pipe_id %></td>
           <td>
-            <%= link_to company_pipefy_config_path(@company, pipefy_config), method: :delete do %>
-              <i class="fa fa-times" aria-hidden="true"></i>
-            <% end %>
             <%= link_to edit_company_pipefy_config_path(@company, pipefy_config) do %>
               <i class="fas fa-edit"></i>
+            <% end %>
+            <%= link_to company_pipefy_config_path(@company, pipefy_config), method: :delete do %>
+              <i class="fa fa-times" aria-hidden="true"></i>
             <% end %>
           </td>
         </tr>
