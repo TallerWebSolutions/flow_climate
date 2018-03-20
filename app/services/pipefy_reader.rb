@@ -13,7 +13,9 @@ class PipefyReader
 
     create_assignees!(team, response_data)
 
-    create_demand!(team, project, response_data)
+    demand = create_demand!(team, project, response_data)
+    read_phases_transitions(demand.reload, response_data)
+
     project
   end
 
@@ -148,7 +150,6 @@ class PipefyReader
   end
 
   def read_blocks(demand, response_data)
-    demand.demand_blocks.map(&:destroy)
     response_data.try(:[], 'card').try(:[], 'comments')&.each do |comment_pipefy|
       comment_text = comment_pipefy['text']
       demand_block_id = '1'
@@ -168,7 +169,8 @@ class PipefyReader
   end
 
   def persist_unblock(demand, comment_pipefy, demand_block_id, comment_text)
-    demand_block = demand.demand_blocks.active.where(demand: demand, demand_block_id: demand_block_id).first
+    demand_block = demand.demand_blocks.open.where(demand: demand, demand_block_id: demand_block_id).first
+    return if demand_block.blank?
     demand_block.update(unblocker_username: comment_pipefy['author']['username'], unblock_time: comment_pipefy['created_at'], unblock_reason: comment_text.strip)
   end
 end

@@ -166,7 +166,8 @@ CREATE TABLE public.demand_blocks (
     unblock_reason character varying,
     block_duration integer,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    active boolean DEFAULT true NOT NULL
 );
 
 
@@ -1695,6 +1696,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20180313152829'),
 ('20180315163004'),
 ('20180316131931'),
-('20180316210405');
+('20180316210405'),
+('20180320180443');
 
 

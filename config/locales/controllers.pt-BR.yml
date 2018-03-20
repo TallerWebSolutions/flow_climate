@@ -219,7 +219,7 @@ pt-BR:
     edit:
       title: "Editar Demanda"
     show:
-      no_demand_blocks: "Bloqueios da Demanda"
+      no_demand_blocks: "Não existem bloqueios na demanda"
       sync_pipefy: "Sincronize com o Pipefy"
       no_demand_transitions: "Esta demanda não tem transições."
       last_update: "Última atualização: %{last_update_date}"
@@ -303,3 +303,5 @@ pt-BR:
   demand_transitions:
     total_time_in_transition: "Tempo total na transição"
     working_time_in_transition: "Tempo útil na transição"
+    index:
+      title: "Transições da Demanda"

@@ -5,17 +5,17 @@
   <% end %>
   <div class="pull-right">
     <%= link_to :destroy_user_session, method: :patch do %>
-      <i class="fa fa-sign-out fa-2x" aria-hidden="true"></i>
+      <i class="fa fa-sign-out-alt fa-2x" aria-hidden="true"></i>
     <% end %>
   </div>
   <div class="pull-right">
     <% if current_user.email_notifications? %>
       <%= link_to deactivate_email_notifications_users_path, method: :patch, remote: true do %>
-        <i class="fa fa-bell-o fa-2x" aria-hidden="true"></i>
+        <i class="fa fa-bell fa-2x" aria-hidden="true"></i>
       <% end %>
     <% else %>
       <%= link_to activate_email_notifications_users_path, method: :patch, remote: true do %>
-        <i class="fa fa-bell-slash-o fa-2x" aria-hidden="true"></i>
+        <i class="fa fa-bell-slash fa-2x" aria-hidden="true"></i>
       <% end %>
     <% end %>
   </div>

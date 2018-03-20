@@ -218,7 +218,7 @@ en:
     edit:
       title: "Edit Demand"
     show:
-      no_demand_blocks: "Demands Block"
+      no_demand_blocks: "There is no demand blocks"
       sync_pipefy: "Sync with pipefy"
       no_demand_transitions: "No transitions to this demand."
       last_update: "Last update: %{last_update_date}"
@@ -300,3 +300,5 @@ en:
   demand_transitions:
     total_time_in_transition: "Total time in transition"
     working_time_in_transition: "Working time in transition"
+    index:
+      title: "Demand Transitions"

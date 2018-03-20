@@ -11,6 +11,10 @@
     </div>
   </div>
 
+  <div class="bottom-spaced-component">
+    <%= render 'demand_stamps', demand: @demand %>
+  </div>
+
   <div class="row">
     <div class="col-xs-6">
       <%= link_to synchronize_pipefy_company_project_project_result_demand_path(@company, @project, @project_result, @demand), method: :put do %>
