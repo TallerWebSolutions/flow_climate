@@ -236,6 +236,10 @@ class Project < ApplicationRecord
     value / (total_days.to_f / 30)
   end
 
+  def manual?
+    pipefy_config.blank?
+  end
+
   private
 
   def no_pressure_set(date)
