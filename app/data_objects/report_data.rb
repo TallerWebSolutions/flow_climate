@@ -94,9 +94,15 @@ class ReportData
     weekly_data = ProjectResultsRepository.instance.flow_pressure_in_week_for_projects(@projects)
 
     @weeks.each do |week_year|
+      begining_of_week = Date.commercial(week_year[1], week_year[0], 1)
       keys_matching = weekly_data.keys.select { |key| hash_key_matching?(key, week_year) }
-      @flow_pressure_data << (weekly_data[keys_matching.first].to_f || 0.0)
+      add_actual_or_projected_data(begining_of_week, keys_matching, weekly_data)
     end
+  end
+
+  def add_actual_or_projected_data(begining_of_week, keys_matching, weekly_data)
+    @flow_pressure_data << (weekly_data[keys_matching.first].to_f || 0.0) if keys_matching.present? || begining_of_week <= Time.zone.today
+    @flow_pressure_data << @projects.sum { |p| p.flow_pressure(begining_of_week) } / @projects.count.to_f if begining_of_week.future?
   end
 
   def add_data_to_chart?(week_year)

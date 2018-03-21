@@ -65,7 +65,7 @@ class PipefyReader
     assignees_count = compute_assignees_count(team, response_data)
     url = response_data.try(:[], 'card').try(:[], 'url')
 
-    demand = Demand.find_by(demand_id: demand_id)
+    demand = Demand.find_by(demand_id: demand_id, project: project)
     return demand if demand.present?
 
     Demand.create!(project: project, demand_id: demand_id, created_date: Time.zone.now, demand_type: read_demand_type(response_data), class_of_service: read_class_of_service(response_data), assignees_count: assignees_count, url: url)
@@ -92,7 +92,6 @@ class PipefyReader
   end
 
   def read_phases_transitions(demand, response_data)
-    demand.demand_transitions.map(&:destroy)
     response_data.try(:[], 'card').try(:[], 'phases_history')&.each do |phase|
       create_transition_for_phase_and_demand(phase, demand)
     end

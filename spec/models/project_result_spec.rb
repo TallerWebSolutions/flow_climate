@@ -4,7 +4,7 @@ RSpec.describe ProjectResult, type: :model do
   context 'associations' do
     it { is_expected.to belong_to :team }
     it { is_expected.to belong_to :project }
-    it { is_expected.to have_many(:demands).dependent(:destroy) }
+    it { is_expected.to have_many(:demands).dependent(:restrict_with_error) }
     it { is_expected.to have_many(:integration_errors).dependent(:destroy) }
   end
 
@@ -161,7 +161,7 @@ RSpec.describe ProjectResult, type: :model do
         expect(result.reload.qty_hours_bug).to eq 100
         expect(result.reload.qty_bugs_closed).to eq 1
         expect(result.reload.qty_bugs_opened).to eq 1
-        expect(result.reload.flow_pressure.to_f).to eq 0.0161290322580645
+        expect(result.reload.flow_pressure.to_f).to be_within(0.001).of(32.774)
         expect(result.reload.average_demand_cost.to_f).to eq 500.0
       end
     end
@@ -200,7 +200,7 @@ RSpec.describe ProjectResult, type: :model do
         expect(result.reload.qty_hours_bug).to eq 0
         expect(result.reload.qty_bugs_closed).to eq 0
         expect(result.reload.qty_bugs_opened).to eq 0
-        expect(result.reload.flow_pressure.to_f).to eq 0.032258064516129
+        expect(result.reload.flow_pressure.to_f).to be_within(0.001).of(32.774)
         expect(result.reload.average_demand_cost.to_f).to eq 1000
       end
     end
