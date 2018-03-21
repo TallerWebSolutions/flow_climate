@@ -92,6 +92,7 @@ class PipefyReader
   end
 
   def read_phases_transitions(demand, response_data)
+    demand.demand_transitions.map(&:destroy)
     response_data.try(:[], 'card').try(:[], 'phases_history')&.each do |phase|
       create_transition_for_phase_and_demand(phase, demand)
     end
@@ -104,7 +105,7 @@ class PipefyReader
     return if stage.blank? || demand.blank?
     last_time_out = nil
     last_time_out = Time.iso8601(phase['lastTimeOut']) if phase['lastTimeOut'].present?
-    DemandTransition.where(stage: stage, demand: demand, last_time_in: phase['firstTimeIn'], last_time_out: last_time_out).first_or_create
+    DemandTransition.where(stage: stage, demand: demand, last_time_in: Time.iso8601(phase['firstTimeIn']), last_time_out: last_time_out).first_or_create
   end
 
   def read_demand_type(response_data)
