@@ -8,8 +8,9 @@ class TeamsController < AuthenticatedController
     @team_members = @team.team_members.order(:name)
     @team_projects = ProjectsRepository.instance.all_projects_for_team(@team)
     @projects_summary = ProjectsSummaryObject.new(@team.projects)
-    @report_data = ReportData.new(@team_projects) if @team_projects.present?
+    @report_data = ReportData.new(@team_projects)
     @strategic_report_data = StrategicReportData.new(@company, @team.projects, @team.active_available_hours_for_billable_types(@team.projects.pluck(:project_type).uniq))
+    @projects_risk_alert_data = ProjectRiskData.new(@team_projects)
     @pipefy_team_configs = @team.pipefy_team_configs.order(:username)
   end
 

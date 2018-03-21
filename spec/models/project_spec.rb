@@ -673,8 +673,8 @@ RSpec.describe Project, type: :model do
     end
     context 'having a green alert as the last alert for the project' do
       let(:project) { Fabricate :project, end_date: 3.days.from_now }
-      let!(:first_alert) { Fabricate :project_risk_alert, project: project, alert_color: :green, created_at: Time.zone.now }
-      let!(:second_alert) { Fabricate :project_risk_alert, project: project, alert_color: :red, created_at: 1.hour.ago }
+      let!(:first_alert) { Fabricate :project_risk_alert, project_risk_config: first_risk_config, project: project, alert_color: :green, created_at: Time.zone.now }
+      let!(:second_alert) { Fabricate :project_risk_alert, project_risk_config: first_risk_config, project: project, alert_color: :red, created_at: 1.hour.ago }
 
       it { expect(project.red?).to be false }
     end

@@ -38,6 +38,7 @@ class ProjectResultsRepository
   end
 
   def hours_per_demand_in_time_for_projects(projects)
+    return {} if projects.blank?
     hours_upstream_hash = build_hash_data_with_sum(projects, :qty_hours_upstream)
     hours_downstream_hash = build_hash_data_with_sum(projects, :qty_hours_downstream)
     throughput_hash = build_hash_data_with_sum(projects, :throughput)
@@ -56,6 +57,8 @@ class ProjectResultsRepository
   end
 
   def average_demand_cost_in_week_for_projects(projects)
+    return {} if projects.blank?
+
     cost_in_month = build_hash_data_with_average(projects, :cost_in_month)
     throughput_hash = build_hash_data_with_sum(projects, :throughput)
 
@@ -87,10 +90,12 @@ class ProjectResultsRepository
   end
 
   def build_hash_data_with_average(projects, field)
+    return 0 if projects.blank?
     grouped_project_results(projects).average(field)
   end
 
   def grouped_project_results(projects)
+    return [] if projects.blank?
     ProjectResult.select("date_trunc('week', result_date) AS week").where(project_id: projects.pluck(:id)).order("date_trunc('week', result_date)").group("date_trunc('week', result_date)")
   end
 

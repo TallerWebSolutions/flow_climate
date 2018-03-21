@@ -75,6 +75,11 @@ RSpec.describe CompaniesController, type: :controller do
           let!(:stage) { Fabricate :stage, company: company, integration_id: '3' }
           let!(:other_stage) { Fabricate :stage, company: company, integration_id: '1' }
 
+          let(:first_risk_config) { Fabricate :project_risk_config, project: first_project, risk_type: :no_money_to_deadline }
+          let(:second_risk_config) { Fabricate :project_risk_config, project: first_project, risk_type: :backlog_growth_rate }
+          let!(:first_alert) { Fabricate :project_risk_alert, project_risk_config: first_risk_config, project: first_project, alert_color: :green, created_at: Time.zone.now }
+          let!(:second_alert) { Fabricate :project_risk_alert, project_risk_config: second_risk_config, project: first_project, alert_color: :red, created_at: 1.hour.ago }
+
           before { get :show, params: { id: company.id } }
           it 'assigns the instance variable and renders the template' do
             expect(response).to render_template :show
@@ -85,6 +90,8 @@ RSpec.describe CompaniesController, type: :controller do
             expect(assigns(:company_projects)).to eq [second_project, first_project]
             expect(assigns(:strategic_report_data).array_of_months).to eq [[Time.zone.today.month, Time.zone.today.year], [1.month.from_now.to_date.month, 1.month.from_now.to_date.year]]
             expect(assigns(:strategic_report_data).active_projects_count_data).to eq [1, 1]
+            expect(assigns(:projects_risk_alert_data).backlog_risk_alert_data).to eq [{ name: 'Vermelho', y: 1, color: '#FB283D' }]
+            expect(assigns(:projects_risk_alert_data).money_risk_alert_data).to eq [{ name: 'Verde', y: 1, color: '#179A02' }]
             expect(assigns(:company_settings)).to be_a_new CompanySettings
             expect(assigns(:company_projects)).to eq [second_project, first_project]
             expect(assigns(:projects_summary).total_initial_scope).to eq 60

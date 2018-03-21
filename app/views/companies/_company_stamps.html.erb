@@ -76,16 +76,7 @@
 </div>
 
 <div class="row">
-  <div class="col-xs-6">
-    <div id="hours-gauge"
-         class="flow-chart"
-         data-title='<%= t('charts.hours_available.title') %>'
-         data-suffix='<%= t('charts.hours_available.suffix') %>'
-         data-max='<%= @company.total_active_hours %>'
-         data-value='<%= @company.total_active_consumed_hours %>'>
-    </div>
-  </div>
-  <div class="col-xs-6">
+  <div class="col-xs-12">
     <h3>
       <ul>
         <li><%= FlowAnalytic.new(@company).best_month_to_start_a_project(Time.zone.today).html_safe %></li>
@@ -94,3 +85,9 @@
     </h3>
   </div>
 </div>
+
+<%= render 'charts/risks_and_hours_gauge_charts',
+           max_hours_gauge: @company.total_active_hours,
+           consumed_hours: @company.total_active_consumed_hours,
+           projects_risk_alert_data: @projects_risk_alert_data
+%>
