@@ -40,7 +40,7 @@
 class ProjectResult < ApplicationRecord
   belongs_to :team
   belongs_to :project
-  has_many :demands, dependent: :destroy
+  has_many :demands, dependent: :restrict_with_error
   has_many :integration_errors, dependent: :destroy
 
   validates :project, :team, :known_scope, :qty_hours_upstream, :qty_hours_downstream, :qty_hours_bug, :qty_bugs_closed, :qty_bugs_opened, :throughput, :result_date, presence: true
@@ -110,11 +110,7 @@ class ProjectResult < ApplicationRecord
     remaining_days = project.remaining_days(result_date)
     update(known_scope: known_scope, throughput: finished_demands.count, qty_hours_upstream: 0, qty_hours_downstream: finished_demands.sum(&:effort),
            qty_hours_bug: finished_bugs.sum(&:effort), qty_bugs_closed: finished_bugs.count, qty_bugs_opened: opened_bugs.count,
-           remaining_days: remaining_days, flow_pressure: compute_flow_pressure(finished_demands, remaining_days), average_demand_cost: calculate_average_demand_cost(finished_demands))
-  end
-
-  def compute_flow_pressure(finished_demands, remaining_days)
-    (compute_known_scope - finished_demands.count).to_f / remaining_days.to_f
+           remaining_days: remaining_days, flow_pressure: current_flow_pressure, average_demand_cost: calculate_average_demand_cost(finished_demands))
   end
 
   def cost_per_day
@@ -129,7 +125,7 @@ class ProjectResult < ApplicationRecord
   end
 
   def current_gap
-    known_scope - project.project_results.for_week(result_date.cweek, result_date.cwyear).sum(&:throughput)
+    known_scope - project.total_throughput_until(result_date)
   end
 
   def current_flow_pressure
