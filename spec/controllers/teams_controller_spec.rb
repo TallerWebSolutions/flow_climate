@@ -54,10 +54,15 @@ RSpec.describe TeamsController, type: :controller do
       let!(:first_result) { Fabricate :project_result, project: first_project, team: team }
       let!(:second_result) { Fabricate :project_result, project: second_project, team: team, result_date: 1.week.from_now }
 
+      let(:first_risk_config) { Fabricate :project_risk_config, project: first_project, risk_type: :no_money_to_deadline }
+      let(:second_risk_config) { Fabricate :project_risk_config, project: first_project, risk_type: :backlog_growth_rate }
+      let!(:first_alert) { Fabricate :project_risk_alert, project_risk_config: first_risk_config, project: first_project, alert_color: :green, created_at: Time.zone.now }
+      let!(:second_alert) { Fabricate :project_risk_alert, project_risk_config: second_risk_config, project: first_project, alert_color: :red, created_at: 1.hour.ago }
+
       context 'passing a valid ID' do
         context 'having data' do
-          before { get :show, params: { company_id: company, id: team.id } }
           it 'assigns the instance variables and renders the template' do
+            get :show, params: { company_id: company, id: team.id }
             expect(response).to render_template :show
             expect(assigns(:company)).to eq company
             expect(assigns(:team)).to eq team
@@ -65,6 +70,8 @@ RSpec.describe TeamsController, type: :controller do
             expect(assigns(:team_projects)).to eq [third_project, second_project, first_project]
             expect(assigns(:strategic_report_data).array_of_months).to eq [[Time.zone.today.month, Time.zone.today.year], [1.month.from_now.to_date.month, 1.month.from_now.to_date.year], [2.months.from_now.to_date.month, 2.months.from_now.to_date.year]]
             expect(assigns(:strategic_report_data).active_projects_count_data).to eq [1, 1, 1]
+            expect(assigns(:projects_risk_alert_data).backlog_risk_alert_data).to eq [{ name: 'Vermelho', y: 1, color: '#FB283D' }]
+            expect(assigns(:projects_risk_alert_data).money_risk_alert_data).to eq [{ name: 'Verde', y: 1, color: '#179A02' }]
             expect(assigns(:pipefy_team_configs)).to eq [second_pipefy_team_config, first_pipefy_team_config]
           end
         end
@@ -77,7 +84,7 @@ RSpec.describe TeamsController, type: :controller do
             expect(response).to render_template :show
             expect(assigns(:company)).to eq other_company
             expect(assigns(:team)).to eq empty_team
-            expect(assigns(:report_data)).to be_nil
+            expect(assigns(:report_data)).to be_a ReportData
             expect(assigns(:team_projects)).to eq []
           end
         end

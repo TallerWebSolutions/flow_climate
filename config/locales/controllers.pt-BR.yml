@@ -271,6 +271,8 @@ pt-BR:
       suffix: "Horas Consumidas"
     team_hours_available:
       title: "Horas Disponíveis"
+    risk_alert_color:
+      title: "Riscos em %{risk_type}"
   pipefy_configs:
     new:
       title: "Nova Configuração do Pipefy"

@@ -15,6 +15,7 @@ class CompaniesController < AuthenticatedController
     @strategic_report_data = StrategicReportData.new(@company, @company.projects, @company.total_available_hours)
     @company_settings = @company.company_settings || CompanySettings.new(company: @company)
     @company_projects = @company.projects.order(end_date: :desc)
+    @projects_risk_alert_data = ProjectRiskData.new(@company_projects)
     @projects_summary = ProjectsSummaryObject.new(@company_projects)
   end
 
