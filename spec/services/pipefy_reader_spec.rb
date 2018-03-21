@@ -41,8 +41,8 @@ RSpec.describe PipefyReader, type: :service do
         context 'and the project result is in another date' do
           let!(:first_demand) { Fabricate :demand, project: first_project, project_result: nil, effort: 50 }
           let!(:second_demand) { Fabricate :demand, project: first_project, project_result: nil, demand_id: '5140999', effort: 30, created_date: Time.zone.parse('2018-02-17') }
-          let!(:first_transition) { Fabricate :demand_transition, stage: end_stage, demand: first_demand, last_time_in: '2018-02-14T01:01:41-02:00', last_time_out: '2018-02-16T01:01:41-02:00' }
-          let!(:second_transition) { Fabricate :demand_transition, stage: end_stage, demand: second_demand, last_time_in: '2018-02-16T01:01:41-02:00', last_time_out: '2018-02-16T01:42:41-02:00' }
+          let!(:first_transition) { Fabricate :demand_transition, stage: end_stage, demand: first_demand, last_time_in: '2018-02-23T17:09:58-03:00', last_time_out: nil }
+          let!(:second_transition) { Fabricate :demand_transition, stage: end_stage, demand: second_demand, last_time_in: '2018-02-23T17:09:58-03:00', last_time_out: nil }
           let!(:project_result) { Fabricate :project_result, project: first_project, demands: [first_demand, second_demand], result_date: Date.new(2018, 2, 15), demands_count: 2 }
 
           context 'when the card has only one block not unblocked' do
@@ -71,6 +71,7 @@ RSpec.describe PipefyReader, type: :service do
 
               expect(DemandBlock.count).to eq 0
               expect(ProjectResult.count).to eq 1
+              expect(DemandTransition.count).to eq 3
             end
           end
         end
