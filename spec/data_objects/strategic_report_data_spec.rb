@@ -39,7 +39,7 @@ RSpec.describe StrategicReportData, type: :service do
         expect(strategic_data.sold_hours_in_month).to eq [1406.25, 1406.25, 0, 0, 2129.032258064516, 7004.032258064516, 4875.0]
         expect(strategic_data.consumed_hours_per_month).to eq [100, 0, 0, 0, 100, 100, 0]
         expect(strategic_data.available_hours_per_month).to eq [180, 180, 180, 180, 180, 180, 180]
-        expect(strategic_data.flow_pressure_per_month_data.map { |pressure| pressure.round(2) }).to eq [8.0, 0.0, 0.0, 0.0, 1.1, 5.85, 3.87]
+        expect(strategic_data.flow_pressure_per_month_data.map { |pressure| pressure.round(2) }).to eq [8.0, 0.0, 0.0, 0.0, 1.1, 5.72, 3.75]
         expect(strategic_data.money_per_month_data.map { |money| money.round(2) }).to eq [3_237_581.25, 3_237_581.25, 0.0, 0.0, 10_354.84, 10_657.65, 302.81]
         expect(strategic_data.expenses_per_month_data.map { |expense| expense.round(2) }).to eq [300.0, 300.0, 200.0, 200.0, 200.0, 100.0, 100.0]
       end

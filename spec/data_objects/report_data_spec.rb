@@ -28,7 +28,7 @@ RSpec.describe ReportData, type: :data_object do
         expect(report_data.ideal).to eq [11.833333333333334, 23.666666666666668, 35.5, 47.333333333333336, 59.16666666666667, 71.0]
         expect(report_data.current).to eq [23, 23, 33]
         expect(report_data.scope).to eq [70, 70, 80, 71, 60, 66]
-        expect(report_data.flow_pressure_data).to eq [4.0, 0.0, 1.0, 7.0, 0.2698412698412699, 1.0, 1.5238095238095237, 10.0, 0.8888888888888888]
+        expect(report_data.flow_pressure_data).to eq [4.0, 0.0, 1.0, 7.0, 0.4166666666666667, 1.0, 1.25, 10.0, 0.6666666666666666]
         expect(report_data.throughput_per_week).to eq [23, 0, 10]
       end
     end
