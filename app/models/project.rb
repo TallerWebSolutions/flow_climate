@@ -77,7 +77,7 @@ class Project < ApplicationRecord
 
   def remaining_days(from_date = Time.zone.today)
     return 0 if end_date < from_date || end_date < from_date
-    return (end_date - start_date).to_i if start_date > from_date.to_date
+    return (end_date - start_date).to_i + 1 if start_date > from_date.to_date
     (end_date - from_date.to_date).to_i + 1
   end
 
@@ -183,7 +183,7 @@ class Project < ApplicationRecord
   end
 
   def avg_hours_per_demand
-    return 0 if project_results.empty?
+    return 0 if project_results.empty? || total_hours_consumed.zero? || total_throughput.zero?
     (total_hours_consumed.to_f / total_throughput.to_f)
   end
 

@@ -151,7 +151,7 @@ RSpec.describe Project, type: :model do
     end
     context 'when the start date is in the future' do
       let(:project) { Fabricate :project, start_date: 2.days.from_now, end_date: 3.days.from_now }
-      it { expect(project.remaining_days).to eq 1 }
+      it { expect(project.remaining_days).to eq 2 }
     end
     context 'passing from_date as parameter' do
       let(:project) { Fabricate :project, start_date: 2.days.from_now, end_date: 10.days.from_now }
