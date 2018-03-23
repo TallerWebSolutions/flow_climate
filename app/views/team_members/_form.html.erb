@@ -2,23 +2,26 @@
 
   <% if @team_member.persisted? %>
     <div class="row">
-      <div class='col-xs-4 form-group <%= 'has-error' if @team_member.errors[:team].present? %>'>
+      <div class='col-xs-12 form-group <%= 'has-error' if @team_member.errors[:team].present? %>'>
         <%= f.label :team, class: 'control-label' %>
         <%= f.select :team, @company.teams.map { |team| [team.name, team.id] }, { include_blank: t('general.select'), selected: @team_member.team_id }, class: 'form-control' %>
         <span class="help-block"><%= @team_member.errors[:team].join(', ') %></span>
       </div>
-      <div class='col-xs-4 form-group <%= 'has-error' if @team_member.errors[:name].present? %>'>
-        <%= f.label :name, class: 'control-label required' %>
-        <%= f.text_field :name, class: 'form-control', autofocus: true %>
-        <span class="help-block"><%= @team_member.errors[:name].join(', ') %></span>
-      </div>
-      <div class='col-xs-4 form-group <%= 'has-error' if @team_member.errors[:billable_type].present? %>'>
-        <%= f.label :billable_type, class: 'control-label' %>
-        <%= f.select :billable_type, TeamMember.billable_types.map { |key, _value| [t("activerecord.attributes.team_member.enums.billable_type.#{key}"), key] }, { include_blank: t('general.select'), selected: @team_member.billable_type }, class: 'form-control' %>
-        <span class="help-block"><%= @team_member.errors[:billable_type].join(', ') %></span>
-      </div>
     </div>
   <% end %>
+
+  <div class="row">
+    <div class='col-xs-6 form-group <%= 'has-error' if @team_member.errors[:name].present? %>'>
+      <%= f.label :name, class: 'control-label required' %>
+      <%= f.text_field :name, class: 'form-control', autofocus: true %>
+      <span class="help-block"><%= @team_member.errors[:name].join(', ') %></span>
+    </div>
+    <div class='col-xs-6 form-group <%= 'has-error' if @team_member.errors[:billable_type].present? %>'>
+      <%= f.label :billable_type, class: 'control-label' %>
+      <%= f.select :billable_type, TeamMember.billable_types.map { |key, _value| [t("activerecord.attributes.team_member.enums.billable_type.#{key}"), key] }, { include_blank: t('general.select'), selected: @team_member.billable_type }, class: 'form-control' %>
+      <span class="help-block"><%= @team_member.errors[:billable_type].join(', ') %></span>
+    </div>
+  </div>
 
   <div class="row">
     <div class='col-xs-3 form-group <%= 'has-error' if @team_member.errors[:monthly_payment].present? %>'>
