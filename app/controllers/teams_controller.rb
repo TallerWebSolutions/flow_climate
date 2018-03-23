@@ -33,7 +33,7 @@ class TeamsController < AuthenticatedController
   end
 
   def search_for_projects
-    @projects = @team.projects.order(end_date: :desc)
+    @projects = ProjectsRepository.instance.all_projects_for_team(@team).order(end_date: :desc)
     add_queries_to_projects
   end
 
