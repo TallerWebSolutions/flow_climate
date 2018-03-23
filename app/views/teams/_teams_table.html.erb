@@ -1,27 +1,31 @@
 <h2><%= t('teams.index.title') %></h2>
 <%= link_to t('teams.new.title'), new_company_team_path(@company), class: 'btn btn-sm btn-primary bottom-spaced-component' %>
 
-<table class="table table-index">
-  <tr>
-    <th><%= Team.human_attribute_name :name %></th>
-    <th><%= t('customers.show.total_value') %></th>
-    <th><%= t('projects.index.remaining_money') %></th>
-    <th><%= t('projects.show.avg_hours_per_demand') %></th>
-    <th><%= t('projects.index.flow_pressure') %></th>
-    <th><%= t('general.table.actions') %></th>
-  </tr>
-  <% @teams.each do |team| %>
+<table class="table table-striped">
+  <thead>
     <tr>
-      <td><%= link_to team.name, company_team_path(@company, team) %></td>
-      <td><%= number_to_currency(team.total_value) %></td>
-      <td><%= number_to_currency(team.remaining_money) %></td>
-      <td><%= number_with_precision(team.avg_hours_per_demand, precision: 2) %></td>
-      <td><%= number_with_precision(team.total_flow_pressure, precision: 3) %></td>
-      <td>
-        <%= link_to edit_company_team_path(@company, team) do %>
-          <i class="fas fa-edit"></i>
-        <% end %>
-      </td>
+      <th><%= Team.human_attribute_name :name %></th>
+      <th><%= t('customers.show.total_value') %></th>
+      <th><%= t('projects.index.remaining_money') %></th>
+      <th><%= t('projects.show.avg_hours_per_demand') %></th>
+      <th><%= t('projects.index.flow_pressure') %></th>
+      <th><%= t('general.table.actions') %></th>
     </tr>
-  <% end %>
+  </thead>
+  <tbody>
+    <% @teams.each do |team| %>
+      <tr>
+        <td><%= link_to team.name, company_team_path(@company, team) %></td>
+        <td><%= number_to_currency(team.total_value) %></td>
+        <td><%= number_to_currency(team.remaining_money) %></td>
+        <td><%= number_with_precision(team.avg_hours_per_demand, precision: 2) %></td>
+        <td><%= number_with_precision(team.total_flow_pressure, precision: 3) %></td>
+        <td>
+          <%= link_to edit_company_team_path(@company, team) do %>
+            <i class="fas fa-edit"></i>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
 </table>

@@ -3,41 +3,45 @@
 <%= link_to t('team_members.new.title'), new_company_team_team_member_path(@company, @team), class: 'btn btn-sm btn-primary bottom-spaced-component' %>
 
 <table class="table">
-  <tr>
-    <th><%= TeamMember.human_attribute_name :name %></th>
-    <th><%= TeamMember.human_attribute_name :monthly_payment %></th>
-    <th><%= TeamMember.human_attribute_name :hours_per_month %></th>
-    <th><%= TeamMember.human_attribute_name :hour_value %></th>
-    <th><%= TeamMember.human_attribute_name :total_monthly_payment %></th>
-    <th><%= TeamMember.human_attribute_name :billable %></th>
-    <th><%= TeamMember.human_attribute_name :billable_type %></th>
-    <th><%= TeamMember.human_attribute_name :active %></th>
-    <th><%= t('general.table.actions') %></th>
-  </tr>
-  <% @team_members.each do |member| %>
+  <thead>
     <tr>
-      <td><%= member.name %></td>
-      <td><%= number_to_currency(member.monthly_payment) %></td>
-      <td><%= member.hours_per_month %></td>
-      <td><%= number_to_currency(member.hour_value) %></td>
-      <td><%= number_to_currency(member.total_monthly_payment) %></td>
-      <td><%= t(member.billable&.to_s) %></td>
-      <td><%= member.billable_type&.capitalize %></td>
-      <td><%= t(member.active.to_s) %></td>
-      <td>
-        <%= link_to edit_company_team_team_member_path(@company, @team, member) do %>
-          <i class="fas fa-edit"></i>
-        <% end %>
-        <% if member.active? %>
-          <%= link_to deactivate_company_team_team_member_path(@company, @team, member), method: :patch do %>
-            <i class="fa fa-power-off"></i>
-          <% end %>
-        <% else %>
-          <%= link_to activate_company_team_team_member_path(@company, @team, member), method: :patch do %>
-            <i class="fa fa-check"></i>
-          <% end %>
-        <% end %>
-      </td>
+      <th><%= TeamMember.human_attribute_name :name %></th>
+      <th><%= TeamMember.human_attribute_name :monthly_payment %></th>
+      <th><%= TeamMember.human_attribute_name :hours_per_month %></th>
+      <th><%= TeamMember.human_attribute_name :hour_value %></th>
+      <th><%= TeamMember.human_attribute_name :total_monthly_payment %></th>
+      <th><%= TeamMember.human_attribute_name :billable %></th>
+      <th><%= TeamMember.human_attribute_name :billable_type %></th>
+      <th><%= TeamMember.human_attribute_name :active %></th>
+      <th><%= t('general.table.actions') %></th>
     </tr>
-  <% end %>
+  </thead>
+  <tbody>
+    <% @team_members.each do |member| %>
+      <tr>
+        <td><%= member.name %></td>
+        <td><%= number_to_currency(member.monthly_payment) %></td>
+        <td><%= member.hours_per_month %></td>
+        <td><%= number_to_currency(member.hour_value) %></td>
+        <td><%= number_to_currency(member.total_monthly_payment) %></td>
+        <td><%= t(member.billable&.to_s) %></td>
+        <td><%= member.billable_type&.capitalize %></td>
+        <td><%= t(member.active.to_s) %></td>
+        <td>
+          <%= link_to edit_company_team_team_member_path(@company, @team, member) do %>
+            <i class="fas fa-edit"></i>
+          <% end %>
+          <% if member.active? %>
+            <%= link_to deactivate_company_team_team_member_path(@company, @team, member), method: :patch do %>
+              <i class="fa fa-power-off"></i>
+            <% end %>
+          <% else %>
+            <%= link_to activate_company_team_team_member_path(@company, @team, member), method: :patch do %>
+              <i class="fa fa-check"></i>
+            <% end %>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
 </table>

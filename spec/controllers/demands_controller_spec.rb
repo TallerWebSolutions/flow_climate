@@ -329,17 +329,30 @@ RSpec.describe DemandsController, type: :controller do
       let(:customer) { Fabricate :customer, company: company }
       let(:project) { Fabricate :project, customer: customer }
       let!(:pipefy_config) { Fabricate :pipefy_config, project: project }
-
       let(:project_result) { Fabricate :project_result, project: project }
-      let!(:demand) { Fabricate :demand, project_result: project_result }
+      let!(:demand) { Fabricate :demand, project: project, project_result: project_result }
 
       context 'passing valid parameters' do
-        it 'calls the services and the reader' do
-          expect(PipefyApiService).to(receive(:request_card_details).with(demand.demand_id).once { 'response' })
-          expect(PipefyReader.instance).to receive(:update_card!).with(project.pipefy_config.team, demand, 'response').once
-          put :synchronize_pipefy, params: { company_id: company, project_id: project, project_result_id: project_result, id: demand }
-          expect(response).to redirect_to company_project_project_result_demand_path(company, project, project_result, demand)
-          expect(flash[:notice]).to eq I18n.t('demands.sync.done')
+        context 'when there is no project change' do
+          it 'calls the services and the reader' do
+            expect(PipefyApiService).to(receive(:request_card_details).with(demand.demand_id).once { 'response' })
+            expect(PipefyReader.instance).to receive(:update_card!).with(pipefy_config.team, demand, 'response').once
+            put :synchronize_pipefy, params: { company_id: company, project_id: project, project_result_id: project_result, id: demand }
+            expect(response).to redirect_to company_project_project_result_demand_path(company, project, project_result, demand)
+            expect(flash[:notice]).to eq I18n.t('demands.sync.done')
+          end
+        end
+        context 'when there is no project change' do
+          let(:other_project) { Fabricate :project, customer: customer }
+          let(:other_project_result) { Fabricate :project_result, project: other_project }
+          let!(:demand) { Fabricate :demand, project: other_project, project_result: other_project_result }
+          it 'calls the services and the reader' do
+            expect(PipefyApiService).to(receive(:request_card_details).with(demand.demand_id).once { 'response' })
+            expect(PipefyReader.instance).to receive(:update_card!).with(pipefy_config.team, demand, 'response').once
+            put :synchronize_pipefy, params: { company_id: company, project_id: project, project_result_id: project_result, id: demand }
+            expect(response).to redirect_to company_project_project_result_path(company, project, project_result)
+            expect(flash[:notice]).to eq I18n.t('demands.sync.done')
+          end
         end
       end
 
