@@ -15,6 +15,7 @@ RSpec.describe Project, type: :model do
     it { is_expected.to have_many(:demands).dependent(:restrict_with_error) }
     it { is_expected.to have_and_belong_to_many(:stages) }
     it { is_expected.to have_one(:pipefy_config).dependent(:destroy) }
+    it { is_expected.to have_many(:integration_errors).dependent(:destroy) }
   end
 
   context 'validations' do

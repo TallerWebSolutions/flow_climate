@@ -41,6 +41,7 @@ class Project < ApplicationRecord
   has_many :project_risk_configs, dependent: :destroy
   has_many :project_risk_alerts, dependent: :destroy
   has_many :demands, dependent: :restrict_with_error
+  has_many :integration_errors, dependent: :destroy
   has_one :pipefy_config, dependent: :destroy, autosave: true
   has_and_belongs_to_many :stages
 
