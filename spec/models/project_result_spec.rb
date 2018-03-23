@@ -167,7 +167,7 @@ RSpec.describe ProjectResult, type: :model do
     end
     context 'when it does already have the demand' do
       before { result.add_demand!(first_demand) }
-      it { expect(result.reload.demands).to eq [first_demand, third_demand] }
+      it { expect(result.reload.demands).to match_array [first_demand, third_demand] }
     end
   end
 
