@@ -10,10 +10,10 @@ RSpec.describe PipefyApiService, type: :service do
       PipefyApiService.request_card_details('222')
     end
   end
-  describe '.request_pipe_details_with_card_summary' do
+  describe '.request_pipe_details' do
     it 'calls HTTParty' do
       expect(HTTParty).to receive(:post).with(base_uri, body: { query: PipefyProtocol.pipe_show_request_body(222) }, headers: headers).once
-      PipefyApiService.request_pipe_details_with_card_summary('222')
+      PipefyApiService.request_pipe_details('222')
     end
   end
   describe '.request_cards_to_phase' do

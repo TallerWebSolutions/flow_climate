@@ -37,4 +37,6 @@ RSpec.describe DemandsRepository, type: :repository do
 
     it { expect(DemandsRepository.instance.known_scope_to_date(first_project, 2.days.ago)).to eq 3 }
   end
+
+  pending '.full_demand_destroy!'
 end

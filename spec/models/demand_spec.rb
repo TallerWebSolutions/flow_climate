@@ -44,6 +44,8 @@ RSpec.describe Demand, type: :model do
 
       it { expect(Demand.finished).to match_array [first_demand, second_demand] }
     end
+
+    pending '.demands_with_integration'
   end
 
   describe '#update_effort!' do
