@@ -22,6 +22,10 @@ RSpec.describe DemandsController, type: :controller do
       before { put :update, params: { company_id: 'foo', project_id: 'bar', project_result_id: 'xpto', id: 'sbbrubles' } }
       it { expect(response).to redirect_to new_user_session_path }
     end
+    describe 'PUT #synchronize_pipefy' do
+      before { put :synchronize_pipefy, params: { company_id: 'foo', project_id: 'bar', project_result_id: 'xpto', id: 'bla' } }
+      it { expect(response).to redirect_to new_user_session_path }
+    end
   end
 
   context 'authenticated' do

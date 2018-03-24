@@ -50,6 +50,8 @@ Rails.application.routes.draw do
     end
 
     resources :projects do
+      put :synchronize_pipefy, on: :member
+
       resources :project_results do
         resources :demands do
           put :synchronize_pipefy, on: :member

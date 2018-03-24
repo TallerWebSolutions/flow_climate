@@ -30,6 +30,7 @@ en:
     last_week_scope: "Last Week Scope"
     select: "Select"
     user_not_found: "User not found"
+    enqueued: "Your request was enqueued. In a few minutes it will be done."
   header:
     logout: Logout
     explore: Explore
