@@ -7,20 +7,24 @@
     Você ainda não tem empresas.
   <% else %>
     <table class="table">
-      <tr>
-        <th><%= Company.human_attribute_name :name %></th>
-        <th><%= t('general.table.actions') %></th>
-      </tr>
-      <% @companies.each do |company| %>
+      <thead>
         <tr>
-          <td><%= link_to company.name, company_path(company) %></td>
-          <td>
-            <%= link_to edit_company_path(company) do %>
-              <i class="fas fa-edit"></i>
-            <% end %>
-          </td>
+          <th><%= Company.human_attribute_name :name %></th>
+          <th><%= t('general.table.actions') %></th>
         </tr>
-    <% end %>
+      </thead>
+      <tbody>
+        <% @companies.each do |company| %>
+          <tr>
+            <td><%= link_to company.name, company_path(company) %></td>
+            <td>
+              <%= link_to edit_company_path(company) do %>
+                <i class="fas fa-edit"></i>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
     </table>
   <% end %>
 </div>

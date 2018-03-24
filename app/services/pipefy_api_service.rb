@@ -12,7 +12,7 @@ class PipefyApiService
     )
   end
 
-  def self.request_pipe_details_with_card_summary(pipe_id)
+  def self.request_pipe_details(pipe_id)
     HTTParty.post(
       "#{BASE_URI}/queries",
       body: { query: PipefyProtocol.pipe_show_request_body(pipe_id) },

@@ -31,6 +31,7 @@ pt-BR:
     last_week_scope: "Escopo Última Semana"
     select: "Selecione"
     user_not_found: "Usuário não encontrado"
+    enqueued: "Sua solicitação foi colocada na fila. Em poucos minutos estará pronta."
   header:
     logout: Sair
     sign_up: Cadastre-se

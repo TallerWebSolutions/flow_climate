@@ -42,6 +42,7 @@ class Demand < ApplicationRecord
 
   scope :opened_in_date, ->(result_date) { where('created_date::timestamp::date = :result_date', result_date: result_date) }
   scope :finished, -> { joins(demand_transitions: :stage).where('stages.end_point = true') }
+  scope :demands_with_integration, -> { joins(project: :pipefy_config).joins(:demand_transitions).where('demands.demand_id IS NOT NULL AND pipefy_configs.active = true').uniq }
 
   def update_effort!
     effort_transition = demand_transitions.joins(:stage).find_by('stages.compute_effort = true')

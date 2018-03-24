@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe ProcessPipefyPipeJob, type: :active_job do
+RSpec.describe ProcessPipefyProjectJob, type: :active_job do
   let(:team) { Fabricate :team }
   let(:project) { Fabricate :project, start_date: Time.zone.iso8601('2017-01-01T23:01:46-02:00'), end_date: Time.zone.iso8601('2018-02-25T23:01:46-02:00') }
   let!(:stage) { Fabricate :stage, projects: [project], integration_id: '2481595', compute_effort: true }
@@ -17,65 +17,43 @@ RSpec.describe ProcessPipefyPipeJob, type: :active_job do
 
   describe '.perform_later' do
     it 'enqueues after calling perform_later' do
-      ProcessPipefyPipeJob.perform_later
-      expect(ProcessPipefyPipeJob).to have_been_enqueued.on_queue('default')
+      ProcessPipefyProjectJob.perform_later(project)
+      expect(ProcessPipefyProjectJob).to have_been_enqueued.on_queue('default')
     end
   end
 
-  context 'having no pipe_config' do
+  context 'having no pipefy_config' do
     it 'returns doing nothing' do
-      expect_any_instance_of(ProcessPipefyPipeJob).to receive(:read_cards_inside_phases).never
-      ProcessPipefyPipeJob.perform_now
+      expect(PipefyApiService).to receive(:request_card_details).never
+      ProcessPipefyProjectJob.perform_now(project)
     end
   end
 
   context 'having params' do
     context 'and a pipefy config' do
       let!(:pipefy_config) { Fabricate :pipefy_config, project: project, team: team, pipe_id: '356528' }
-      let!(:demand) { Fabricate :demand, project: project, demand_id: '4648391' }
-      let!(:other_demand) { Fabricate :demand, project: project, demand_id: '4648389' }
-      let!(:demand_transition) { Fabricate :demand_transition, demand: demand }
-      let!(:other_demand_transition) { Fabricate :demand_transition, demand: other_demand }
+      let!(:first_demand) { Fabricate :demand, project: project, demand_id: '4648391' }
+      let!(:second_demand) { Fabricate :demand, project: project, demand_id: '4648389' }
+      let!(:third_demand) { Fabricate :demand, demand_id: '343343' }
+      let!(:first_transition) { Fabricate :demand_transition, demand: first_demand }
+      let!(:second_transition) { Fabricate :demand_transition, demand: second_demand }
+      let!(:third_transition) { Fabricate :demand_transition, demand: second_demand }
 
       context 'returning success' do
-        context 'having one page' do
-          before do
-            stub_request(:post, 'https://app.pipefy.com/queries').with(headers: headers, body: /4648391/).to_return(status: 200, body: card_response.to_json, headers: {})
-            stub_request(:post, 'https://app.pipefy.com/queries').with(headers: headers, body: /4648389/).to_return(status: 200, body: other_card_response.to_json, headers: {})
-            stub_request(:post, 'https://app.pipefy.com/queries').with(headers: headers, body: /356528/).to_return(status: 200, body: pipe_response.to_json, headers: {})
-            stub_request(:post, 'https://app.pipefy.com/queries').with(headers: headers, body: /2481594/).to_return(status: 200, body: phase_response.to_json, headers: {})
-            stub_request(:post, 'https://app.pipefy.com/queries').with(headers: headers, body: /2481595/).to_return(status: 200, body: phase_response.to_json, headers: {})
-            stub_request(:post, 'https://app.pipefy.com/queries').with(headers: headers, body: /2481596/).to_return(status: 200, body: phase_response.to_json, headers: {})
-            stub_request(:post, 'https://app.pipefy.com/queries').with(headers: headers, body: /2481597/).to_return(status: 200, body: phase_response.to_json, headers: {})
-          end
-
-          it 'updates the demands and the project_result for the demand end_date' do
-            expect(PipefyReader.instance).to receive(:update_card!).with(team, demand, card_response).once
-            expect(PipefyReader.instance).to receive(:update_card!).with(team, other_demand, other_card_response).once
-            ProcessPipefyPipeJob.perform_now
-          end
+        before do
+          stub_request(:post, 'https://app.pipefy.com/queries').with(headers: headers, body: /4648391/).to_return(status: 200, body: card_response.to_json, headers: {})
+          stub_request(:post, 'https://app.pipefy.com/queries').with(headers: headers, body: /4648389/).to_return(status: 200, body: other_card_response.to_json, headers: {})
+          stub_request(:post, 'https://app.pipefy.com/queries').with(headers: headers, body: /356528/).to_return(status: 200, body: pipe_response.to_json, headers: {})
+          stub_request(:post, 'https://app.pipefy.com/queries').with(headers: headers, body: /2481594/).to_return(status: 200, body: phase_response.to_json, headers: {})
+          stub_request(:post, 'https://app.pipefy.com/queries').with(headers: headers, body: /2481595/).to_return(status: 200, body: phase_response.to_json, headers: {})
+          stub_request(:post, 'https://app.pipefy.com/queries').with(headers: headers, body: /2481596/).to_return(status: 200, body: phase_response.to_json, headers: {})
+          stub_request(:post, 'https://app.pipefy.com/queries').with(headers: headers, body: /2481597/).to_return(status: 200, body: phase_response.to_json, headers: {})
         end
-        context 'having more than one page' do
-          let(:phase_with_pages_response) { { data: { phase: { cards: { pageInfo: { endCursor: 'WzUxNDEwNDdd', hasNextPage: true }, edges: [{ node: { id: '4648391' } }] } } } }.with_indifferent_access }
-          let(:phase_without_pages_response) { { data: { phase: { cards: { pageInfo: { endCursor: '388jjssjxgt2', hasNextPage: false }, edges: [{ node: { id: '4648389' } }] } } } }.with_indifferent_access }
-          let(:with_page_response) { double('Response', code: 200, body: phase_with_pages_response.to_json) }
-          let(:without_pages_response) { double('Response', code: 200, body: phase_without_pages_response.to_json) }
-          before do
-            stub_request(:post, 'https://app.pipefy.com/queries').with(headers: headers, body: /4648391/).to_return(status: 200, body: card_response.to_json, headers: {})
-            stub_request(:post, 'https://app.pipefy.com/queries').with(headers: headers, body: /4648389/).to_return(status: 200, body: other_card_response.to_json, headers: {})
-            stub_request(:post, 'https://app.pipefy.com/queries').with(headers: headers, body: /356528/).to_return(status: 200, body: pipe_response.to_json, headers: {})
-            stub_request(:post, 'https://app.pipefy.com/queries').with(headers: headers, body: /2481594/).to_return(status: 200, body: phase_with_pages_response.to_json, headers: {})
-            stub_request(:post, 'https://app.pipefy.com/queries').with(headers: headers, body: /2481595/).to_return(status: 200, body: phase_without_pages_response.to_json, headers: {})
-            stub_request(:post, 'https://app.pipefy.com/queries').with(headers: headers, body: /2481596/).to_return(status: 200, body: phase_without_pages_response.to_json, headers: {})
-            stub_request(:post, 'https://app.pipefy.com/queries').with(headers: headers, body: /2481597/).to_return(status: 200, body: phase_without_pages_response.to_json, headers: {})
-          end
 
-          it 'paginates the call' do
-            expect(PipefyReader.instance).to receive(:update_card!).with(team, demand, card_response).once
-            expect(PipefyReader.instance).to receive(:update_card!).with(team, other_demand, other_card_response).once
-            expect(PipefyApiService).to receive(:request_next_page_cards_to_phase) { without_pages_response }
-            ProcessPipefyPipeJob.perform_now
-          end
+        it 'calls the methods to update the demand' do
+          expect(PipefyReader.instance).to receive(:update_card!).with(team, first_demand, card_response).once
+          expect(PipefyReader.instance).to receive(:update_card!).with(team, second_demand, other_card_response).once
+          ProcessPipefyProjectJob.perform_now(project)
         end
       end
 
@@ -93,9 +71,9 @@ RSpec.describe ProcessPipefyPipeJob, type: :active_job do
             stub_request(:post, 'https://app.pipefy.com/queries').with(headers: headers, body: /2481597/).to_return(status: 200, body: phase_response.to_json, headers: {})
           end
           it 'process nothing for the error response, but process the success ones' do
-            expect(PipefyReader.instance).to receive(:update_card!).with(team, demand, card_response).never
-            expect(PipefyReader.instance).to receive(:update_card!).with(team, other_demand, other_card_response).once
-            ProcessPipefyPipeJob.perform_now
+            expect(PipefyReader.instance).to receive(:update_card!).with(team, first_demand, card_response).never
+            expect(PipefyReader.instance).to receive(:update_card!).with(team, second_demand, other_card_response).once
+            ProcessPipefyProjectJob.perform_now(project)
           end
         end
 
@@ -113,7 +91,7 @@ RSpec.describe ProcessPipefyPipeJob, type: :active_job do
           it 'process nothing for the error response, but process the success ones' do
             expect(PipefyReader.instance).to receive(:create_card!).with(team, card_response).never
             expect(PipefyReader.instance).to receive(:create_card!).with(team, other_card_response).never
-            ProcessPipefyPipeJob.perform_now
+            ProcessPipefyProjectJob.perform_now(project)
           end
         end
         context 'in the phase response' do
@@ -130,7 +108,7 @@ RSpec.describe ProcessPipefyPipeJob, type: :active_job do
           it 'process nothing for the error response, but process the success ones' do
             expect(PipefyReader.instance).to receive(:create_card!).with(team, card_response).never
             expect(PipefyReader.instance).to receive(:create_card!).with(team, other_card_response).never
-            ProcessPipefyPipeJob.perform_now
+            ProcessPipefyProjectJob.perform_now(project)
           end
         end
       end
@@ -140,7 +118,7 @@ RSpec.describe ProcessPipefyPipeJob, type: :active_job do
       context 'when there is no demand and project result' do
         it 'creates the demand the project_result for the card end_date' do
           expect(PipefyReader.instance).to receive(:create_card!).never
-          ProcessPipefyPipeJob.perform_now
+          ProcessPipefyProjectJob.perform_now(project)
         end
       end
     end
@@ -162,7 +140,7 @@ RSpec.describe ProcessPipefyPipeJob, type: :active_job do
     end
 
     it 'process nothing for the error response, but process the success ones' do
-      ProcessPipefyPipeJob.perform_now
+      ProcessPipefyProjectJob.perform_now(project)
       expect(Demand.find_by(demand_id: '4648391')).to be_nil
     end
   end

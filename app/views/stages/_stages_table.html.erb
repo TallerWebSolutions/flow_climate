@@ -11,53 +11,57 @@
 </div>
 
 <table class="table table-index table-striped">
-  <tr>
-    <th><%= Stage.human_attribute_name :name %></th>
-    <th><%= Stage.human_attribute_name :integration_id %></th>
-    <th><%= Stage.human_attribute_name :stage_type %></th>
-    <th><%= Stage.human_attribute_name :stage_stream %></th>
-    <th class="center"><%= Stage.human_attribute_name :queue %></th>
-    <th class="center"><%= Stage.human_attribute_name :commitment_point %></th>
-    <th class="center"><%= Stage.human_attribute_name :end_point %></th>
-    <th class="center"><%= Stage.human_attribute_name :compute_effort %></th>
-    <th><%= Stage.human_attribute_name :percentage_effort %></th>
-    <th><%= t('general.table.actions') %></th>
-  </tr>
-  <% stages_list.each do |stage| %>
+  <thead>
     <tr>
-      <td><%= stage.name %></td>
-      <td><%= stage.integration_id %></td>
-      <td><%= t("activerecord.attributes.stage.enums.stage_type.#{stage.stage_type}") %></td>
-      <td><%= t("activerecord.attributes.stage.enums.stage_stream.#{stage.stage_stream}") %></td>
-      <td class="center">
-        <% if stage.queue? %>
-          <i class="fa fa-check" aria-hidden="true"></i>
-        <% end %>
-      </td>
-      <td class="center">
-        <% if stage.commitment_point? %>
-          <i class="fa fa-check" aria-hidden="true"></i>
-        <% end %>
-      </td>
-      <td class="center">
-        <% if stage.end_point? %>
-          <i class="fa fa-check" aria-hidden="true"></i>
-        <% end %>
-      </td>
-      <td class="center">
-        <% if stage.compute_effort? %>
-          <i class="fa fa-check" aria-hidden="true"></i>
-        <% end %>
-      </td>
-      <td class="center"><%= number_with_precision(stage.percentage_effort, precision: 2) %></td>
-      <td>
-        <%= link_to edit_company_stage_path(@company, stage) do %>
-          <i class="fas fa-edit"></i>
-        <% end %>
-        <%= link_to company_stage_path(@company, stage), method: :delete do %>
-          <i class="fa fa-times" aria-hidden="true"></i>
-        <% end %>
-      </td>
+      <th><%= Stage.human_attribute_name :name %></th>
+      <th><%= Stage.human_attribute_name :integration_id %></th>
+      <th><%= Stage.human_attribute_name :stage_type %></th>
+      <th><%= Stage.human_attribute_name :stage_stream %></th>
+      <th class="center"><%= Stage.human_attribute_name :queue %></th>
+      <th class="center"><%= Stage.human_attribute_name :commitment_point %></th>
+      <th class="center"><%= Stage.human_attribute_name :end_point %></th>
+      <th class="center"><%= Stage.human_attribute_name :compute_effort %></th>
+      <th><%= Stage.human_attribute_name :percentage_effort %></th>
+      <th><%= t('general.table.actions') %></th>
     </tr>
-  <% end %>
+  </thead>
+  <tbody>
+    <% stages_list.each do |stage| %>
+      <tr>
+        <td><%= stage.name %></td>
+        <td><%= stage.integration_id %></td>
+        <td><%= t("activerecord.attributes.stage.enums.stage_type.#{stage.stage_type}") %></td>
+        <td><%= t("activerecord.attributes.stage.enums.stage_stream.#{stage.stage_stream}") %></td>
+        <td class="center">
+          <% if stage.queue? %>
+            <i class="fa fa-check" aria-hidden="true"></i>
+          <% end %>
+        </td>
+        <td class="center">
+          <% if stage.commitment_point? %>
+            <i class="fa fa-check" aria-hidden="true"></i>
+          <% end %>
+        </td>
+        <td class="center">
+          <% if stage.end_point? %>
+            <i class="fa fa-check" aria-hidden="true"></i>
+          <% end %>
+        </td>
+        <td class="center">
+          <% if stage.compute_effort? %>
+            <i class="fa fa-check" aria-hidden="true"></i>
+          <% end %>
+        </td>
+        <td class="center"><%= number_with_precision(stage.percentage_effort, precision: 2) %></td>
+        <td>
+          <%= link_to edit_company_stage_path(@company, stage) do %>
+            <i class="fas fa-edit"></i>
+          <% end %>
+          <%= link_to company_stage_path(@company, stage), method: :delete do %>
+            <i class="fa fa-times" aria-hidden="true"></i>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
 </table>

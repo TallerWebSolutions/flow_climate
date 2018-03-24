@@ -20,10 +20,23 @@ class PipefyReader
   end
 
   def update_card!(team, demand, card_response)
+    return if card_response.blank?
+
+    if card_response['data']['card'].blank?
+      DemandsRepository.instance.full_demand_destroy!(demand)
+      return
+    end
+
     response_data = card_response['data']
     name_in_pipefy = read_project_name_from_pipefy_data(response_data)
     return if name_in_pipefy.blank?
 
+    process_update!(demand, name_in_pipefy, response_data, team)
+  end
+
+  private
+
+  def process_update!(demand, name_in_pipefy, response_data, team)
     project = ProjectsRepository.instance.search_project_by_full_name(name_in_pipefy)
     demand.update(project: project)
 
@@ -34,8 +47,6 @@ class PipefyReader
     update_demand!(team, demand, response_data)
     process_demand(demand.reload, team)
   end
-
-  private
 
   def process_demand(demand, team)
     demand.update_effort!

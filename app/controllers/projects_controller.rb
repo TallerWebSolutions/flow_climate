@@ -2,7 +2,7 @@
 
 class ProjectsController < AuthenticatedController
   before_action :assign_company
-  before_action :assign_project, only: %i[show edit update destroy]
+  before_action :assign_project, only: %i[show edit update destroy synchronize_pipefy]
 
   def show
     @ordered_project_results = @project.project_results.order(:result_date)
@@ -54,6 +54,12 @@ class ProjectsController < AuthenticatedController
   def destroy
     return redirect_to company_projects_path(@company) if @project.destroy
     redirect_to(company_projects_path(@company), flash: { error: @project.errors.full_messages.join(',') })
+  end
+
+  def synchronize_pipefy
+    ProcessPipefyProjectJob.perform_later(@project)
+    flash[:notice] = t('general.enqueued')
+    redirect_to company_project_path(@company, @project)
   end
 
   private

@@ -30,6 +30,7 @@ en:
     last_week_scope: "Last Week Scope"
     select: "Select"
     user_not_found: "User not found"
+    enqueued: "Your request was enqueued. In a few minutes it will be done."
   header:
     logout: Logout
     explore: Explore
@@ -304,3 +305,10 @@ en:
     working_time_in_transition: "Working time in transition"
     index:
       title: "Demand Transitions"
+  financial_informations:
+    index:
+      throughput: "Throughput"
+      project_delivered_hours_count: "Total Hours (Projects)"
+      delivered_hours: "Delivered Hours"
+      hours_per_demand: "Hours/Demand"
+      cost_per_hour: "Cost/Hour"

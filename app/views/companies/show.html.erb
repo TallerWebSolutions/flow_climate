@@ -20,16 +20,16 @@
     <%= render 'company_stamps' %>
   </div>
 
-  <div id="project-list">
-    <%= render 'projects/projects_table', projects_list: @company.projects %>
-  </div>
-
   <div id="teams">
     <%= render 'teams/teams_table' %>
   </div>
 
   <div id="finance">
     <%= render 'financial_informations/financial_informations_table' %>
+  </div>
+
+  <div id="project-list">
+    <%= render 'projects/projects_table', projects_list: @company.projects %>
   </div>
 
   <div id="strategic">
