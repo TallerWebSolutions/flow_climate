@@ -48,6 +48,11 @@ RSpec.describe Demand, type: :model do
     pending '.demands_with_integration'
   end
 
+  context 'delegations' do
+    it { is_expected.to delegate_method(:company).to(:project) }
+    it { is_expected.to delegate_method(:full_name).to(:project).with_prefix }
+  end
+
   describe '#update_effort!' do
     let(:company) { Fabricate :company }
     let(:customer) { Fabricate :customer, company: company }

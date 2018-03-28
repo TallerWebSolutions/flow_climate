@@ -28,3 +28,6 @@ dump.rdb
 logfile
 # Ignore application configuration
 /config/application.yml
+
+.ruby-gemset
+.ruby-version

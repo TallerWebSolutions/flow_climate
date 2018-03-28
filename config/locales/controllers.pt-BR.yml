@@ -227,6 +227,13 @@ pt-BR:
     sync:
       enqueued: "Sua solicitação foi colocada na fila. Será processada em breve."
       done: "Sua sincronização foi realizada."
+    charts:
+      processing_rate:
+        title: "Processamento de demandas na última semana para %{name}"
+        ylabel: "Demandas"
+        tooltipsufix: "demandas entregues"
+        arrived: "Total Entrada"
+        processed: "Total Processada"
   project_risk_configs:
     new:
       title: "Nova Configuração de Risco"
@@ -241,6 +248,7 @@ pt-BR:
     strategic: "Informações Estratégicas"
     finance: "Informações Financeiras"
     teams: "Times"
+    flow: "Fluxo"
   charts:
     xlabel:
       months: "Meses"

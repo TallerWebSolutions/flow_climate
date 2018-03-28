@@ -18,6 +18,7 @@
       <%= link_to t('navbar.projects_list'), '#', id: 'nav-item-list' %>
       <%= link_to t('navbar.strategic'), '#', id: 'nav-item-strategic' %>
       <%= link_to t('navbar.charts'), '#', id: 'nav-item-charts' %>
+      <%= link_to t('navbar.flow'), '#', id: 'nav-item-flow' %>
       <%= link_to t('navbar.settings'), '#', id: 'nav-item-settings' %>
     </div>
   </div>
@@ -67,6 +68,10 @@
     <% end %>
   </div>
 
+  <div id="flow">
+    <%= render 'teams/flow' %>
+  </div>
+
   <div id="settings">
     <%= render 'pipefy_team_configs/pipefy_team_configs_table' %>
   </div>
@@ -92,6 +97,8 @@
   <%= javascript_include_tag 'companies/hours_per_month_chart' %>
   <%= javascript_include_tag 'companies/flow_pressure_chart' %>
   <%= javascript_include_tag 'companies/money_chart' %>
+
+  <%= javascript_include_tag 'demands/column_throughput_week' %>
 
   <%= javascript_include_tag 'projects/risk_alert_color_chart' %>
 <% end %>

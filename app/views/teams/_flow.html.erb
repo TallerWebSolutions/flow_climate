@@ -1,0 +1,16 @@
+<div class="col-xs-6">
+  <div id="last-week-throughput-column"
+       class="flow-chart"
+       data-title='<%= t('demands.charts.processing_rate.title', name: @team.name) %>'
+       data-xcategories='<%= @flow_report_data.projects_in_chart.map(&:full_name) %>'
+       data-xtitle='<%= t('charts.ylabel.projects.text') %>'
+       data-ytitle='<%= t('demands.charts.processing_rate.ylabel') %>'
+       data-tooltipsufix='<%= t('demands.charts.processing_rate.tooltipsufix') %>'
+       data-series='<%= @flow_report_data.column_chart_data.to_json %>'
+       data-decimals='0'>
+  </div>
+</div>
+
+<div class="col-xs-6">
+  <%= render 'demands/grouped_per_project_demands_table', grouped_per_project_demand_list: @flow_report_data.processing_rate_data %>
+</div>

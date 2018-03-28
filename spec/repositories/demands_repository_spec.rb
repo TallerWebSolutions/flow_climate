@@ -38,5 +38,41 @@ RSpec.describe DemandsRepository, type: :repository do
     it { expect(DemandsRepository.instance.known_scope_to_date(first_project, 2.days.ago)).to eq 3 }
   end
 
-  pending '.full_demand_destroy!'
+  pending '#full_demand_destroy!'
+
+  describe '#selected_grouped_by_project_and_week' do
+    let(:first_project) { Fabricate :project, start_date: 3.weeks.ago }
+    let(:second_project) { Fabricate :project, start_date: 3.weeks.ago }
+
+    context 'having data' do
+      let!(:first_demand) { Fabricate :demand, project: first_project, commitment_date: 3.weeks.ago }
+      let!(:second_demand) { Fabricate :demand, project: first_project, commitment_date: 2.weeks.ago }
+      let!(:third_demand) { Fabricate :demand, project: first_project, commitment_date: 1.week.ago }
+      let!(:fourth_demand) { Fabricate :demand, project: first_project, commitment_date: 1.week.ago }
+      let!(:fifth_demand) { Fabricate :demand, project: second_project, commitment_date: 1.week.ago }
+
+      it { expect(DemandsRepository.instance.selected_grouped_by_project_and_week(Project.all, 1.week.ago.to_date.cweek, 1.week.ago.to_date.cwyear)).to match_array [third_demand, fourth_demand, fifth_demand] }
+    end
+    context 'having no data' do
+      it { expect(DemandsRepository.instance.selected_grouped_by_project_and_week(Project.all, 1.week.ago.to_date.cweek, 1.week.ago.to_date.cwyear)).to eq [] }
+    end
+  end
+
+  describe '#throughput_grouped_by_project_and_week' do
+    let(:first_project) { Fabricate :project, start_date: 3.weeks.ago }
+    let(:second_project) { Fabricate :project, start_date: 3.weeks.ago }
+
+    context 'having data' do
+      let!(:first_demand) { Fabricate :demand, project: first_project, end_date: 3.weeks.ago }
+      let!(:second_demand) { Fabricate :demand, project: first_project, end_date: 2.weeks.ago }
+      let!(:third_demand) { Fabricate :demand, project: first_project, end_date: 1.week.ago }
+      let!(:fourth_demand) { Fabricate :demand, project: first_project, end_date: 1.week.ago }
+      let!(:fifth_demand) { Fabricate :demand, project: second_project, end_date: 1.week.ago }
+
+      it { expect(DemandsRepository.instance.throughput_grouped_by_project_and_week(Project.all, 1.week.ago.to_date.cweek, 1.week.ago.to_date.cwyear)).to match_array [third_demand, fourth_demand, fifth_demand] }
+    end
+    context 'having no data' do
+      it { expect(DemandsRepository.instance.throughput_grouped_by_project_and_week(Project.all, 1.week.ago.to_date.cweek, 1.week.ago.to_date.cwyear)).to eq [] }
+    end
+  end
 end

@@ -4,14 +4,6 @@
   </div>
 </div>
 
-<% if @project.manual? %>
-  <div class="row">
-    <div class="col-xs-3">
-      <%= link_to t('demands.new.title'), new_company_project_project_result_demand_path(@company, @project, @project_result), class: 'btn btn-sm btn-primary bottom-spaced-component' %>
-    </div>
-  </div>
-<% end %>
-
 <table class="table table-index">
   <thead>
     <tr>
@@ -38,21 +30,21 @@
     <% demands_list.each do |demand| %>
       <tr>
         <td>
-          <%= link_to edit_company_project_project_result_demand_path(@company, @project, @project_result, demand) do %>
+          <%= link_to edit_company_project_project_result_demand_path(demand.company, demand.project, demand.project_result, demand) do %>
             <i class="fas fa-edit"></i>
           <% end %>
-          <%= link_to company_project_project_result_demand_path(@company, @project, @project_result, demand), method: :delete do %>
+          <%= link_to company_project_project_result_demand_path(demand.company, demand.project, demand.project_result, demand), method: :delete do %>
             <i class="fa fa-times" aria-hidden="true"></i>
           <% end %>
         </td>
-        <td><%= link_to @project.customer_name, company_customer_path(@company, @project.customer) %></td>
+        <td><%= link_to demand.project.customer_name, company_customer_path(demand.company, demand.project.customer) %></td>
         <td>
-          <% if @project.product.present? %>
-            <%= link_to @project.product_name, company_product_path(@company, @project.product) %>
+          <% if demand.project.product.present? %>
+            <%= link_to demand.project.product_name, company_product_path(demand.company, demand.project.product) %>
           <% end %>
         </td>
-        <td><%= link_to @project.name, company_project_path(@company, @project) %></td>
-        <td><%= link_to demand.demand_id, company_project_project_result_demand_path(@company, @project, @project_result, demand) %></td>
+        <td><%= link_to demand.project.name, company_project_path(demand.company, demand.project) %></td>
+        <td><%= link_to demand.demand_id, company_project_project_result_demand_path(demand.company, demand.project, demand.project_result, demand) %></td>
         <td><%= t("activerecord.attributes.demand.enums.demand_type.#{demand.demand_type}") %></td>
         <td><%= t("activerecord.attributes.demand.enums.class_of_service.#{demand.class_of_service}") %></td>
         <td><%= l(demand.created_date, format: :short) if demand.created_date.present? %></td>
@@ -65,10 +57,10 @@
         <td><%= number_with_precision(demand.effort, precision: 2) %></td>
         <td><%= link_to demand.url, demand.url %></td>
         <td>
-          <%= link_to company_project_project_result_demand_path(@company, @project, @project_result, demand), method: :delete do %>
+          <%= link_to company_project_project_result_demand_path(demand.company, demand.project, demand.project_result, demand), method: :delete do %>
             <i class="fa fa-times" aria-hidden="true"></i>
           <% end %>
-          <%= link_to edit_company_project_project_result_demand_path(@company, @project, @project_result, demand) do %>
+          <%= link_to edit_company_project_project_result_demand_path(demand.company, demand.project, demand.project_result, demand) do %>
             <i class="fas fa-edit"></i>
           <% end %>
         </td>

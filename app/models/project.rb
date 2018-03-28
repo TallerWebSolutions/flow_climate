@@ -51,6 +51,7 @@ class Project < ApplicationRecord
 
   delegate :name, to: :customer, prefix: true
   delegate :name, to: :product, prefix: true, allow_nil: true
+  delegate :company, to: :customer
 
   scope :waiting_projects_starting_within_week, -> { waiting.where('EXTRACT(week FROM start_date) = :week AND EXTRACT(year FROM start_date) = :year', week: Time.zone.today.cweek, year: Time.zone.today.cwyear) }
   scope :running_projects_finishing_within_week, -> { running.where('EXTRACT(week FROM end_date) = :week AND EXTRACT(year FROM end_date) = :year', week: Time.zone.today.cweek, year: Time.zone.today.cwyear) }

@@ -226,6 +226,13 @@ en:
     sync:
       enqueued: "Your request was enqueued. It will be processed soon."
       done: "The sync is done."
+    charts:
+      processing_rate:
+        title: "Processing rate for the last week for %{name}"
+        ylabel: "Demands"
+        tooltipsufix: "delivered demands"
+        processed: "Total Processed"
+        arrived: "Total Arrived"
   project_risk_configs:
     new:
       title: "New Risk Configuration"
@@ -240,6 +247,7 @@ en:
     strategic: "Strategic Informations"
     finance: "Financial Informations"
     teams: "Teams"
+    flow: "Flow"
   charts:
     xlabel:
       months: "Months"

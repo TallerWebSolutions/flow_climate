@@ -44,6 +44,9 @@ class Demand < ApplicationRecord
   scope :finished, -> { joins(demand_transitions: :stage).where('stages.end_point = true') }
   scope :demands_with_integration, -> { joins(project: :pipefy_config).joins(:demand_transitions).where('demands.demand_id IS NOT NULL AND pipefy_configs.active = true').uniq }
 
+  delegate :company, to: :project
+  delegate :full_name, to: :project, prefix: true
+
   def update_effort!
     effort_transition = demand_transitions.joins(:stage).find_by('stages.compute_effort = true')
     return if effort_transition.blank?
