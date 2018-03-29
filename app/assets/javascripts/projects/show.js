@@ -43,6 +43,7 @@ function hideAllComponents() {
     $('#nav-item-stamps').removeClass('active');
     $('#project-results').hide();
     $('#nav-item-results').removeClass('active');
+    $('#delivered-demands').hide();
     $('#nav-item-delivered').removeClass('active');
     $('#project-risk-alerts-table').hide();
     $('#nav-item-charts').removeClass('active');

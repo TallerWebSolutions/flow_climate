@@ -266,8 +266,8 @@ RSpec.describe ProjectResultsController, type: :controller do
       let(:product) { Fabricate :product, customer: customer }
       let!(:project) { Fabricate :project, customer: product.customer, product: product, end_date: 5.days.from_now }
       let!(:project_result) { Fabricate :project_result, project: project }
-      let!(:first_demand) { Fabricate :demand, project_result: project_result, demand_id: 'ZZZ' }
-      let!(:second_demand) { Fabricate :demand, project_result: project_result, demand_id: 'AAA' }
+      let!(:first_demand) { Fabricate :demand, project_result: project_result, end_date: Time.zone.today, demand_id: 'ZZZ' }
+      let!(:second_demand) { Fabricate :demand, project_result: project_result, end_date: Time.zone.today, demand_id: 'AAA' }
 
       context 'passing a valid ID' do
         context 'having data' do
@@ -277,7 +277,7 @@ RSpec.describe ProjectResultsController, type: :controller do
             expect(assigns(:company)).to eq company
             expect(assigns(:project)).to eq project
             expect(assigns(:project_result)).to eq project_result
-            expect(assigns(:demands)).to eq [second_demand, first_demand]
+            expect(assigns(:demands)).to eq([Time.zone.today.cwyear, Time.zone.today.month] => [second_demand, first_demand])
           end
         end
         context 'having no data' do
@@ -288,7 +288,7 @@ RSpec.describe ProjectResultsController, type: :controller do
             expect(assigns(:company)).to eq company
             expect(assigns(:project)).to eq project
             expect(assigns(:project_result)).to eq empty_project_result
-            expect(assigns(:demands)).to eq []
+            expect(assigns(:demands)).to eq({})
           end
         end
       end
