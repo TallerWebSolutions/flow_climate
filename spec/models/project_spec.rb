@@ -238,8 +238,10 @@ RSpec.describe Project, type: :model do
   end
 
   describe '#current_team' do
-    let(:project) { Fabricate :project }
     context 'having teams' do
+      let(:product_team) { Fabricate :team }
+      let(:product) { Fabricate :product, team: product_team }
+      let(:project) { Fabricate :project, product: product }
       let(:team) { Fabricate :team }
       let(:other_team) { Fabricate :team }
       let!(:result) { Fabricate :project_result, project: project, result_date: 1.day.ago, known_scope: 10, team: team }
@@ -247,7 +249,16 @@ RSpec.describe Project, type: :model do
       it { expect(project.current_team).to eq other_team }
     end
     context 'having no results' do
-      it { expect(project.current_team).to be_nil }
+      context 'but having a team to the product' do
+        let(:team) { Fabricate :team }
+        let(:product) { Fabricate :product, team: team }
+        let!(:project) { Fabricate :project, product: product }
+        it { expect(project.current_team).to eq team }
+      end
+      context 'having no team to the product' do
+        let(:project) { Fabricate :project, project_type: :consulting, product: nil }
+        it { expect(project.current_team).to be_nil }
+      end
     end
   end
 

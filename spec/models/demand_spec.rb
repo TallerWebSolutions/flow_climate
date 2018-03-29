@@ -189,4 +189,23 @@ RSpec.describe Demand, type: :model do
       it { expect(demand.blocked_working_time.to_f).to eq 3.0 }
     end
   end
+
+  describe '#downstream?' do
+    let(:company) { Fabricate :company }
+    let(:customer) { Fabricate :customer, company: company }
+    let(:project) { Fabricate :project, customer: customer }
+    let(:downstream_stage) { Fabricate :stage, projects: [project], stage_stream: :downstream }
+    let(:upstream_stage) { Fabricate :stage, projects: [project], stage_stream: :upstream }
+    let(:demand) { Fabricate :demand, project: project, assignees_count: 1 }
+
+    context 'having transition in the downstream' do
+      let!(:demand_transition) { Fabricate :demand_transition, demand: demand, stage: downstream_stage }
+      it { expect(demand.downstream?).to be true }
+    end
+
+    context 'having no transitions in the downstream' do
+      let!(:demand_transition) { Fabricate :demand_transition, demand: demand, stage: upstream_stage }
+      it { expect(demand.downstream?).to be false }
+    end
+  end
 end

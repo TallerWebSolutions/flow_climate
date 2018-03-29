@@ -217,9 +217,10 @@ pt-BR:
     new:
       title: "Nova Demanda"
     index:
-      title: "Demandas neste Resultado"
+      title: "Lista de Demandas"
       total_working_time: "Tempo Útil Total"
       blocked_working_time: "Tempo Útil Bloqueada"
+      downstream: "Downstream?"
     edit:
       title: "Editar Demanda"
     show:
@@ -252,6 +253,7 @@ pt-BR:
     finance: "Informações Financeiras"
     teams: "Times"
     flow: "Fluxo"
+    delivered_demands: "Demandas Entregues"
   charts:
     xlabel:
       months: "Meses"

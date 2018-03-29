@@ -155,14 +155,14 @@ RSpec.describe ProjectResult, type: :model do
         expect(ProjectResult.count).to eq 1
         expect(result.reload.demands).to match_array [first_demand, second_demand, third_demand]
         expect(result.reload.known_scope).to eq 3
-        expect(result.reload.throughput).to eq 2
+        expect(result.reload.throughput).to eq 3
         expect(result.reload.qty_hours_upstream).to eq 0
-        expect(result.reload.qty_hours_downstream).to eq 150
+        expect(result.reload.qty_hours_downstream).to eq 220
         expect(result.reload.qty_hours_bug).to eq 100
         expect(result.reload.qty_bugs_closed).to eq 1
         expect(result.reload.qty_bugs_opened).to eq 1
         expect(result.reload.flow_pressure.to_f).to be_within(0.001).of(32.774)
-        expect(result.reload.average_demand_cost.to_f).to eq 500.0
+        expect(result.reload.average_demand_cost.to_f).to eq 333.3333333333333
       end
     end
     context 'when it does already have the demand' do

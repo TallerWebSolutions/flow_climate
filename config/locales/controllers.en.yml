@@ -216,9 +216,10 @@ en:
     new:
       title: "New Demand"
     index:
-      title: "Demands in this Result"
+      title: "Demands List"
       total_working_time: "Total Working Time"
       blocked_working_time: "Blocked Working Time"
+      downstream: "Downstream?"
     edit:
       title: "Edit Demand"
     show:
@@ -251,6 +252,7 @@ en:
     finance: "Financial Informations"
     teams: "Teams"
     flow: "Flow"
+    delivered_demands: "Delivered Demands"
   charts:
     xlabel:
       months: "Months"

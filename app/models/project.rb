@@ -125,7 +125,7 @@ class Project < ApplicationRecord
   end
 
   def current_team
-    project_results.order(result_date: :desc)&.first&.team
+    project_results.order(result_date: :desc)&.first&.team || product&.team
   end
 
   def flow_pressure(date = Time.zone.today)

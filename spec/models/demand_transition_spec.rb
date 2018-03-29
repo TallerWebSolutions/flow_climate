@@ -12,6 +12,24 @@ RSpec.describe DemandTransition, type: :model do
     it { is_expected.to validate_presence_of :last_time_in }
   end
 
+  context 'scopes' do
+    describe '.downstream_transitions' do
+      let(:stage) { Fabricate :stage, stage_stream: :downstream }
+      let(:other_stage) { Fabricate :stage, stage_stream: :upstream }
+
+      context 'having data' do
+        let(:demand_transition) { Fabricate :demand_transition, stage: stage }
+        let(:other_demand_transition) { Fabricate :demand_transition, stage: stage }
+        let(:upstream_demand_transition) { Fabricate :demand_transition, stage: stage }
+
+        it { expect(DemandTransition.downstream_transitions).to match_array [demand_transition, other_demand_transition] }
+      end
+      context 'having no data' do
+        it { expect(DemandTransition.downstream_transitions).to match_array [] }
+      end
+    end
+  end
+
   context 'delegations' do
     it { is_expected.to delegate_method(:name).to(:stage).with_prefix }
     it { is_expected.to delegate_method(:compute_effort).to(:stage).with_prefix }

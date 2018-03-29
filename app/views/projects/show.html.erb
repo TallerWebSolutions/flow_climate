@@ -14,6 +14,7 @@
     <div class="topnav">
       <%= link_to t('navbar.details'), '#', id: 'nav-item-stamps', class: 'active' %>
       <%= link_to t('navbar.project_results'), '#', id: 'nav-item-results' %>
+      <%= link_to t('navbar.delivered_demands'), '#', id: 'nav-item-delivered' %>
       <%= link_to t('navbar.charts'), '#', id: 'nav-item-charts' %>
       <%= link_to t('navbar.risk_alerts'), '#', id: 'nav-item-risk' %>
       <%= link_to t('navbar.settings'), '#', id: 'nav-item-settings' %>
@@ -26,6 +27,10 @@
 
   <div id="project-results">
     <%= render 'projects/projects_results_table', project: @project, project_results: @ordered_project_results  %>
+  </div>
+
+  <div id="delivered-demands">
+    <%= render 'demands/demands_table', demands_list: @project_delivered_demands %>
   </div>
 
   <div id="project-risk-alerts-table">

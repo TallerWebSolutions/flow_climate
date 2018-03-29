@@ -1,0 +1,6 @@
+<%= link_to company_project_demand_path(demand.company, demand.project, demand), method: :delete do %>
+  <i class="fa fa-times" aria-hidden="true"></i>
+<% end %>
+<%= link_to edit_company_project_demand_path(demand.company, demand.project, demand) do %>
+  <i class="fas fa-edit"></i>
+<% end %>
