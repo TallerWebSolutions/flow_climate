@@ -1,16 +1,43 @@
-<div class="col-xs-6">
-  <div id="last-week-throughput-column"
-       class="flow-chart"
-       data-title='<%= t('demands.charts.processing_rate.title', name: @team.name) %>'
-       data-xcategories='<%= @flow_report_data.projects_in_chart.map(&:full_name) %>'
-       data-xtitle='<%= t('charts.ylabel.projects.text') %>'
-       data-ytitle='<%= t('demands.charts.processing_rate.ylabel') %>'
-       data-tooltipsufix='<%= t('demands.charts.processing_rate.tooltipsufix') %>'
-       data-series='<%= @flow_report_data.column_chart_data.to_json %>'
-       data-decimals='0'>
+<%= form_tag search_demands_to_flow_charts_company_team_path(@company, @team), method: :get, remote: true, class: 'form-horizontal bottom-spaced-component' do %>
+  <div class="row bottom-spaced-component">
+    <div class="col-xs-3 col-xs-offset-3">
+      <%= label_tag t('general.year') %>
+      <%= select_tag :year, options_for_select([2017, 2018], params[:year] || Time.zone.today.cwyear), class: 'form-control' %>
+    </div>
+    <div class="col-xs-3">
+      <%= label_tag t('general.week') %>
+      <%= select_tag :week, options_for_select((1..52).to_a, params[:week] || Time.zone.today.cweek), class: 'form-control' %>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-3 col-xs-offset-3">
+      <%= submit_tag t('general.search'), class: 'btn btn-success' %>
+    </div>
+  </div>
+<% end %>
+
+<div class="row bottom-spaced-component">
+  <div class="col-xs-12 center">
+    <% week_in_date = Date.commercial((params[:year]&.to_i || Time.zone.today.cwyear), (params[:week]&.to_i || Time.zone.today.cweek), 1) %>
+    <h3><%= t('teams.show.processed_demands.title', start_date: l(week_in_date.beginning_of_week), end_date: l(week_in_date.end_of_week)) %></h3>
   </div>
 </div>
 
-<div class="col-xs-6">
-  <%= render 'demands/grouped_per_project_demands_table', grouped_per_project_demand_list: @flow_report_data.processing_rate_data %>
+<div class="row">
+  <div class="col-xs-6">
+    <div id="last-week-throughput-column"
+         class="flow-chart"
+         data-title='<%= t('demands.charts.processing_rate.title', name: team.name) %>'
+         data-xcategories='<%= flow_report_data.projects_in_chart.map(&:full_name) %>'
+         data-xtitle='<%= t('charts.ylabel.projects.text') %>'
+         data-ytitle='<%= t('demands.charts.processing_rate.ylabel') %>'
+         data-tooltipsufix='<%= t('demands.charts.processing_rate.tooltipsufix') %>'
+         data-series='<%= flow_report_data.column_chart_data.to_json %>'
+         data-decimals='0'>
+    </div>
+  </div>
+
+  <div class="col-xs-6">
+    <%= render 'demands/grouped_per_project_demands_table', grouped_per_project_demand_list: flow_report_data.processing_rate_data %>
+  </div>
 </div>

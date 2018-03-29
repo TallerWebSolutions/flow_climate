@@ -24,9 +24,9 @@ RSpec.describe FlowReportData, type: :data_object do
     describe '.initialize' do
       let(:selected_demands) { DemandsRepository.instance.selected_grouped_by_project_and_week(Project.all, 1.week.ago.to_date.cweek, 1.week.ago.to_date.cwyear).group_by(&:project) }
       let(:processed_demands) { DemandsRepository.instance.throughput_grouped_by_project_and_week(Project.all, 1.week.ago.to_date.cweek, 1.week.ago.to_date.cwyear).group_by(&:project) }
-      subject(:flow_data) { FlowReportData.new(Project.all, 1.week.ago.to_date.cweek, 1.week.ago.to_date.cwyear) }
 
       it 'extracts the information of flow' do
+        flow_data = FlowReportData.new(Project.all, 1.week.ago.to_date.cweek, 1.week.ago.to_date.cwyear)
         expect(flow_data.projects_in_chart).to match_array [first_project, second_project, third_project]
         expect(flow_data.total_arrived).to eq [2, 2, 1]
         expect(flow_data.total_processed).to eq [2, 2, 1]
@@ -39,9 +39,9 @@ RSpec.describe FlowReportData, type: :data_object do
         expect(flow_data.projects_demands_processed[second_project]).to match_array [third_demand, fourth_demand]
         expect(flow_data.projects_demands_processed[third_project]).to match_array [fifth_demand]
 
-        expect(flow_data.processing_rate_data[first_project]).to match_array [first_demand, second_demand]
-        expect(flow_data.processing_rate_data[second_project]).to match_array [third_demand, fourth_demand]
-        expect(flow_data.processing_rate_data[third_project]).to eq [fifth_demand]
+        expect(flow_data.processing_rate_data[first_project]).to match_array [first_demand, second_demand, sixth_demand, eigth_demand]
+        expect(flow_data.processing_rate_data[second_project]).to match_array [third_demand, fourth_demand, seventh_demand, nineth_demand]
+        expect(flow_data.processing_rate_data[third_project]).to match_array [fifth_demand, tenth_demand]
 
         expect(flow_data.column_chart_data).to eq([{ name: I18n.t('demands.charts.processing_rate.arrived'), data: [2, 2, 1] }, { name: I18n.t('demands.charts.processing_rate.processed'), data: [2, 2, 1] }])
       end

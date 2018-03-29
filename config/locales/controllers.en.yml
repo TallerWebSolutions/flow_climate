@@ -175,6 +175,9 @@ en:
       title: "Teams"
     new:
       title: "New Team"
+    show:
+      processed_demands:
+        title: "Demands selected or delivered between %{start_date} and %{end_date}"
   project:
     new:
       title: "New Project"
@@ -228,9 +231,9 @@ en:
       done: "The sync is done."
     charts:
       processing_rate:
-        title: "Processing rate for the last week for %{name}"
+        title: "Processing rate for %{name}"
         ylabel: "Demands"
-        tooltipsufix: "delivered demands"
+        tooltipsufix: "demands"
         processed: "Total Processed"
         arrived: "Total Arrived"
   project_risk_configs:

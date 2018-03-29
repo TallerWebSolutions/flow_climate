@@ -177,6 +177,9 @@ pt-BR:
       title: "Times"
     new:
       title: "Novo Time"
+    show:
+      processed_demands:
+        title: "Mostrando demandas selecionadas ou entregues entre os dias %{start_date} e %{end_date}"
   project:
     new:
       title: "Novo Projeto"
@@ -229,9 +232,9 @@ pt-BR:
       done: "Sua sincronização foi realizada."
     charts:
       processing_rate:
-        title: "Processamento de demandas na última semana para %{name}"
+        title: "Processamento de demandas para %{name}"
         ylabel: "Demandas"
-        tooltipsufix: "demandas entregues"
+        tooltipsufix: "demandas"
         arrived: "Total Entrada"
         processed: "Total Processada"
   project_risk_configs:

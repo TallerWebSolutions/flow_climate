@@ -5,16 +5,19 @@ class FlowReportData
               :column_chart_data
 
   def initialize(projects, week, year)
-    @projects_demands_selected = DemandsRepository.instance.selected_grouped_by_project_and_week(projects, week, year).group_by(&:project)
-    @projects_demands_processed = DemandsRepository.instance.throughput_grouped_by_project_and_week(projects, week, year).group_by(&:project)
-
-    @projects_in_chart = (projects_demands_selected.keys | projects_demands_processed.keys).flatten.uniq
-    @processing_rate_data = projects_demands_selected.merge(projects_demands_processed)
-
+    assign_grouped_raw_data(projects, week, year)
     build_processing_rate_data
   end
 
   private
+
+  def assign_grouped_raw_data(projects, week, year)
+    @projects_demands_selected = DemandsRepository.instance.selected_grouped_by_project_and_week(projects, week, year).group_by(&:project)
+    @projects_demands_processed = DemandsRepository.instance.throughput_grouped_by_project_and_week(projects, week, year).group_by(&:project)
+
+    @projects_in_chart = (projects_demands_selected.keys | projects_demands_processed.keys).flatten.uniq
+    @processing_rate_data = projects_demands_selected.merge(projects_demands_processed) { |_key, oldval, newval| oldval | newval }
+  end
 
   def build_processing_rate_data
     @total_arrived = []

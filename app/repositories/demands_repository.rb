@@ -18,7 +18,7 @@ class DemandsRepository
   end
 
   def selected_grouped_by_project_and_week(projects, week, year)
-    Demand.where(project_id: projects.pluck(:id)).where('EXTRACT(WEEK FROM commitment_date) = :week AND EXTRACT(YEAR FROM commitment_date) = :year', week: week, year: year)
+    Demand.where(project_id: projects.map(&:id)).where('EXTRACT(WEEK FROM commitment_date) = :week AND EXTRACT(YEAR FROM commitment_date) = :year', week: week, year: year)
   end
 
   def throughput_grouped_by_project_and_week(projects, week, year)
