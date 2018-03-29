@@ -3,34 +3,32 @@
 class DemandsController < AuthenticatedController
   before_action :assign_company
   before_action :assign_project
-  before_action :assign_project_result
+  before_action :assign_project_result, only: %i[new create]
   before_action :assign_demand, only: %i[edit update show synchronize_pipefy]
 
   def new
-    @demand = Demand.new
+    @demand = Demand.new(project: @project, project_result: @project_result)
   end
 
   def create
-    @demand = Demand.new(demand_params.merge(project: @project))
-    if @demand.save
-      @project_result.add_demand!(@demand)
-      return redirect_to company_project_project_result_path(@company, @project, @project_result)
-    end
+    project_result = ProjectResult.find(params[:project_result_id])
+    @demand = Demand.new(demand_params.merge(project: @project, project_result: project_result))
+    return redirect_to company_project_demand_path(@company, @project, @demand) if @demand.save
     render :new
   end
 
   def destroy
     demand = Demand.find(params[:id])
     demand.destroy
-    redirect_to company_project_project_result_path(@company, @project, @project_result)
+    redirect_to company_project_path(@company, @project)
   end
 
   def edit; end
 
   def update
     if @demand.update(demand_params)
-      @project_result.add_demand!(@demand)
-      return redirect_to company_project_project_result_path(@company, @project, @project_result)
+      ProjectResultsRepository.instance.update_project_results_for_demand!(@demand, @project.current_team) if @project.current_team.present?
+      return redirect_to company_project_demand_path(@company, @project, @demand)
     end
 
     render :edit
@@ -45,8 +43,8 @@ class DemandsController < AuthenticatedController
     pipefy_response = PipefyApiService.request_card_details(@demand.demand_id)
     PipefyReader.instance.update_card!(@project.pipefy_config.team, @demand, pipefy_response)
     flash[:notice] = t('demands.sync.done')
-    return redirect_to company_project_project_result_demand_path(@company, @project, @project_result, @demand) if @demand.project == @project
-    redirect_to company_project_project_result_path(@company, @project, @project_result)
+    return redirect_to company_project_demand_path(@company, @project, @demand) if @demand.project == @project
+    redirect_to company_project_path(@company, @project)
   end
 
   private

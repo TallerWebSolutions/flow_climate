@@ -7,7 +7,7 @@ class ProjectResultsController < AuthenticatedController
   before_action :assign_project_result, only: %i[destroy edit update show]
 
   def show
-    @demands = @project_result.demands.order(:demand_id)
+    @demands = @project_result.demands.sort_by(&:result_date).reverse.group_by { |demand| [demand.result_date.to_date.cwyear, demand.result_date.to_date.month] }
   end
 
   def new

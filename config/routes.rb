@@ -35,6 +35,7 @@ Rails.application.routes.draw do
       resources :pipefy_team_configs, only: %i[edit update]
 
       get 'search_for_projects/:status_filter', action: :search_for_projects, as: 'search_for_projects', on: :member
+      get 'search_demands_to_flow_charts', action: :search_demands_to_flow_charts, as: 'search_demands_to_flow_charts', on: :member
     end
 
     resources :financial_informations, only: %i[new create edit update destroy]
@@ -53,14 +54,16 @@ Rails.application.routes.draw do
       put :synchronize_pipefy, on: :member
 
       resources :project_results do
-        resources :demands do
-          put :synchronize_pipefy, on: :member
+        resources :demands, only: %i[new create]
+      end
 
-          resources :demand_blocks, only: [] do
-            member do
-              patch :activate
-              patch :deactivate
-            end
+      resources :demands, except: %i[new create] do
+        put :synchronize_pipefy, on: :member
+
+        resources :demand_blocks, only: [] do
+          member do
+            patch :activate
+            patch :deactivate
           end
         end
       end

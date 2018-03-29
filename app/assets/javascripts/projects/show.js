@@ -14,6 +14,12 @@ $('#nav-item-results').on('click', function(){
     $('#nav-item-results').addClass('active');
 });
 
+$('#nav-item-delivered').on('click', function(){
+    hideAllComponents();
+    $('#delivered-demands').show();
+    $('#nav-item-delivered').addClass('active');
+});
+
 $('#nav-item-charts').on('click', function(){
     hideAllComponents();
     $('#project-charts').show();
@@ -37,6 +43,8 @@ function hideAllComponents() {
     $('#nav-item-stamps').removeClass('active');
     $('#project-results').hide();
     $('#nav-item-results').removeClass('active');
+    $('#delivered-demands').hide();
+    $('#nav-item-delivered').removeClass('active');
     $('#project-risk-alerts-table').hide();
     $('#nav-item-charts').removeClass('active');
     $('#project-charts').hide();

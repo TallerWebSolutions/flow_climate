@@ -48,6 +48,11 @@ RSpec.describe Demand, type: :model do
     pending '.demands_with_integration'
   end
 
+  context 'delegations' do
+    it { is_expected.to delegate_method(:company).to(:project) }
+    it { is_expected.to delegate_method(:full_name).to(:project).with_prefix }
+  end
+
   describe '#update_effort!' do
     let(:company) { Fabricate :company }
     let(:customer) { Fabricate :customer, company: company }
@@ -182,6 +187,25 @@ RSpec.describe Demand, type: :model do
       let!(:out_demand_block) { Fabricate :demand_block, demand: demand, active: true, block_duration: 1.0, block_time: Time.zone.parse('2018-03-06 22:00'), unblock_time: Time.zone.parse('2018-03-06 23:00') }
 
       it { expect(demand.blocked_working_time.to_f).to eq 3.0 }
+    end
+  end
+
+  describe '#downstream?' do
+    let(:company) { Fabricate :company }
+    let(:customer) { Fabricate :customer, company: company }
+    let(:project) { Fabricate :project, customer: customer }
+    let(:downstream_stage) { Fabricate :stage, projects: [project], stage_stream: :downstream }
+    let(:upstream_stage) { Fabricate :stage, projects: [project], stage_stream: :upstream }
+    let(:demand) { Fabricate :demand, project: project, assignees_count: 1 }
+
+    context 'having transition in the downstream' do
+      let!(:demand_transition) { Fabricate :demand_transition, demand: demand, stage: downstream_stage }
+      it { expect(demand.downstream?).to be true }
+    end
+
+    context 'having no transitions in the downstream' do
+      let!(:demand_transition) { Fabricate :demand_transition, demand: demand, stage: upstream_stage }
+      it { expect(demand.downstream?).to be false }
     end
   end
 end

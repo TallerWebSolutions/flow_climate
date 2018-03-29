@@ -40,6 +40,10 @@
     white-space: nowrap;
 }
 
+.upstream {
+    font-style: italic;
+}
+
 .top-button {
     width: 100%;
 }

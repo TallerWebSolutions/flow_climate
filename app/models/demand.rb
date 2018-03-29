@@ -41,8 +41,12 @@ class Demand < ApplicationRecord
   validates :project, :created_date, :demand_id, :demand_type, :class_of_service, :assignees_count, presence: true
 
   scope :opened_in_date, ->(result_date) { where('created_date::timestamp::date = :result_date', result_date: result_date) }
-  scope :finished, -> { joins(demand_transitions: :stage).where('stages.end_point = true') }
+  scope :finished, -> { where('end_date IS NOT NULL') }
   scope :demands_with_integration, -> { joins(project: :pipefy_config).joins(:demand_transitions).where('demands.demand_id IS NOT NULL AND pipefy_configs.active = true').uniq }
+  scope :grouped_end_date_by_month, -> { finished.order(end_date: :desc).group_by { |demand| [demand.end_date.to_date.cwyear, demand.end_date.to_date.month] } }
+
+  delegate :company, to: :project
+  delegate :full_name, to: :project, prefix: true
 
   def update_effort!
     effort_transition = demand_transitions.joins(:stage).find_by('stages.compute_effort = true')
@@ -82,6 +86,10 @@ class Demand < ApplicationRecord
     @effort_transition ||= demand_transitions.joins(:stage).find_by('stages.compute_effort = true')
     return 0 if @effort_transition.blank?
     demand_blocks.closed.active.for_date_interval(@effort_transition.last_time_in, @effort_transition.last_time_out).sum(:block_duration)
+  end
+
+  def downstream?
+    demand_transitions.downstream_transitions.present?
   end
 
   private

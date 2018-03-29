@@ -175,6 +175,9 @@ en:
       title: "Teams"
     new:
       title: "New Team"
+    show:
+      processed_demands:
+        title: "Demands selected or delivered between %{start_date} and %{end_date}"
   project:
     new:
       title: "New Project"
@@ -213,9 +216,10 @@ en:
     new:
       title: "New Demand"
     index:
-      title: "Demands in this Result"
+      title: "Demands List"
       total_working_time: "Total Working Time"
       blocked_working_time: "Blocked Working Time"
+      downstream: "Downstream?"
     edit:
       title: "Edit Demand"
     show:
@@ -226,6 +230,13 @@ en:
     sync:
       enqueued: "Your request was enqueued. It will be processed soon."
       done: "The sync is done."
+    charts:
+      processing_rate:
+        title: "Processing rate for %{name}"
+        ylabel: "Demands"
+        tooltipsufix: "demands"
+        processed: "Total Processed"
+        arrived: "Total Arrived"
   project_risk_configs:
     new:
       title: "New Risk Configuration"
@@ -240,6 +251,8 @@ en:
     strategic: "Strategic Informations"
     finance: "Financial Informations"
     teams: "Teams"
+    flow: "Flow"
+    delivered_demands: "Delivered Demands"
   charts:
     xlabel:
       months: "Months"

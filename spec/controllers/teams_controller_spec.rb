@@ -26,6 +26,10 @@ RSpec.describe TeamsController, type: :controller do
       before { get :search_for_projects, params: { company_id: 'foo', id: 'foo', status_filter: :executing }, xhr: true }
       it { expect(response.status).to eq 401 }
     end
+    describe 'GET #search_demands_to_flow_charts' do
+      before { get :search_demands_to_flow_charts, params: { company_id: 'foo', id: 'foo' }, xhr: true }
+      it { expect(response.status).to eq 401 }
+    end
   end
 
   context 'authenticated' do
@@ -52,16 +56,26 @@ RSpec.describe TeamsController, type: :controller do
       let!(:project_in_product_team) { Fabricate :project, customer: customer, product: product, status: :waiting, start_date: 2.months.from_now, end_date: 3.months.from_now }
 
       let!(:first_result) { Fabricate :project_result, project: first_project, team: team }
-      let!(:second_result) { Fabricate :project_result, project: second_project, team: team, result_date: 1.week.from_now }
+      let!(:second_result) { Fabricate :project_result, project: first_project, team: team }
+      let!(:third_result) { Fabricate :project_result, project: first_project, team: team }
+      let!(:fourth_result) { Fabricate :project_result, project: first_project, team: team }
+      let!(:fifth_result) { Fabricate :project_result, project: second_project, team: team, result_date: 1.week.from_now }
 
       let(:first_risk_config) { Fabricate :project_risk_config, project: first_project, risk_type: :no_money_to_deadline }
       let(:second_risk_config) { Fabricate :project_risk_config, project: first_project, risk_type: :backlog_growth_rate }
       let!(:first_alert) { Fabricate :project_risk_alert, project_risk_config: first_risk_config, project: first_project, alert_color: :green, created_at: Time.zone.now }
       let!(:second_alert) { Fabricate :project_risk_alert, project_risk_config: second_risk_config, project: first_project, alert_color: :red, created_at: 1.hour.ago }
 
+      let!(:first_demand) { Fabricate :demand, project_result: first_result, project: first_project, commitment_date: Time.zone.today }
+      let!(:second_demand) { Fabricate :demand, project_result: second_result, project: first_project, commitment_date: Time.zone.today, end_date: Time.zone.today }
+      let!(:third_demand) { Fabricate :demand, project_result: third_result, project: first_project, end_date: Time.zone.today }
+      let!(:fourth_demand) { Fabricate :demand, project_result: fourth_result, project: first_project, end_date: Time.zone.today }
+
       context 'passing a valid ID' do
         context 'having data' do
           it 'assigns the instance variables and renders the template' do
+            expect(DemandsRepository.instance).to(receive(:selected_grouped_by_project_and_week).with([project_in_product_team, second_project, first_project], Time.zone.today.cweek, Time.zone.today.cwyear).once { [first_demand, second_demand] })
+            expect(DemandsRepository.instance).to(receive(:throughput_grouped_by_project_and_week).with([project_in_product_team, second_project, first_project], Time.zone.today.cweek, Time.zone.today.cwyear).once { [third_demand, fourth_demand] })
             get :show, params: { company_id: company, id: team.id }
             expect(response).to render_template :show
             expect(assigns(:company)).to eq company
@@ -73,6 +87,8 @@ RSpec.describe TeamsController, type: :controller do
             expect(assigns(:projects_risk_alert_data).backlog_risk_alert_data).to eq [{ name: 'Vermelho', y: 1, color: '#FB283D' }]
             expect(assigns(:projects_risk_alert_data).money_risk_alert_data).to eq [{ name: 'Verde', y: 1, color: '#179A02' }]
             expect(assigns(:pipefy_team_configs)).to eq [second_pipefy_team_config, first_pipefy_team_config]
+
+            expect(assigns(:flow_report_data)).to be_a FlowReportData
           end
         end
         context 'having no data' do
@@ -210,7 +226,7 @@ RSpec.describe TeamsController, type: :controller do
       end
     end
 
-    describe '#search_for_projects' do
+    describe 'GET #search_for_projects' do
       let(:customer) { Fabricate :customer, company: company }
       let(:team) { Fabricate :team, company: company }
       let(:other_team) { Fabricate :team, company: company }
@@ -274,6 +290,66 @@ RSpec.describe TeamsController, type: :controller do
         context 'not permitted company' do
           let(:company) { Fabricate :company, users: [] }
           before { get :search_for_projects, params: { company_id: company, id: team, status_filter: :executing }, xhr: true }
+          it { expect(response).to have_http_status :not_found }
+        end
+      end
+    end
+
+    describe 'GET #search_demands_to_flow_charts' do
+      let(:customer) { Fabricate :customer, company: company }
+      let(:team) { Fabricate :team, company: company }
+      let(:other_team) { Fabricate :team, company: company }
+      let(:product) { Fabricate :product, customer: customer, name: 'zzz', team: team }
+
+      context 'passing valid parameters' do
+        context 'having data' do
+          let!(:first_project) { Fabricate :project, customer: customer, product: product, status: :executing, end_date: 10.days.from_now }
+          let!(:second_project) { Fabricate :project, customer: customer, product: product, status: :executing, end_date: 50.days.from_now }
+
+          let!(:first_result) { Fabricate :project_result, project: first_project, team: team }
+          let!(:second_result) { Fabricate :project_result, project: first_project, team: team }
+          let!(:third_result) { Fabricate :project_result, project: first_project, team: team }
+          let!(:fourth_result) { Fabricate :project_result, project: first_project, team: team }
+          let!(:fifth_result) { Fabricate :project_result, project: second_project, team: team, result_date: 1.week.from_now }
+
+          let!(:first_demand) { Fabricate :demand, project_result: first_result, project: first_project, end_date: 3.weeks.ago }
+          let!(:second_demand) { Fabricate :demand, project_result: second_result, project: first_project, end_date: 2.weeks.ago }
+          let!(:third_demand) { Fabricate :demand, project_result: third_result, project: first_project, end_date: 1.week.ago }
+          let!(:fourth_demand) { Fabricate :demand, project_result: fourth_result, project: first_project, end_date: 1.week.ago }
+          let!(:fifth_demand) { Fabricate :demand, project_result: fifth_result, project: second_project, end_date: 1.week.ago }
+
+          context 'and passing the status filter executing' do
+            it 'assigns the instance variable and renders the template' do
+              expect(DemandsRepository.instance).to(receive(:selected_grouped_by_project_and_week).with([second_project, first_project], 1.week.ago.to_date.cweek.to_s, 1.week.ago.to_date.cwyear.to_s).once { [first_demand, second_demand] })
+              expect(DemandsRepository.instance).to(receive(:throughput_grouped_by_project_and_week).with([second_project, first_project], 1.week.ago.to_date.cweek.to_s, 1.week.ago.to_date.cwyear.to_s).once { [third_demand, fourth_demand] })
+              get :search_demands_to_flow_charts, params: { company_id: company, id: team, week: 1.week.ago.to_date.cweek, year: 1.week.ago.to_date.cwyear }, xhr: true
+
+              expect(response).to render_template 'teams/flow.js.erb'
+              expect(assigns(:flow_report_data)).to be_a FlowReportData
+            end
+          end
+        end
+        context 'having no data' do
+          it 'assigns the instance variable and renders the template' do
+            get :search_demands_to_flow_charts, params: { company_id: company, id: team, week: 1.week.ago.to_date.cweek, year: 1.week.ago.to_date.cwyear }, xhr: true
+            expect(response).to render_template 'teams/flow.js.erb'
+            expect(assigns(:flow_report_data).projects_demands_selected).to eq({})
+          end
+        end
+      end
+
+      context 'passing invalid' do
+        context 'company' do
+          before { get :search_demands_to_flow_charts, params: { company_id: 'foo', id: team }, xhr: true }
+          it { expect(response).to have_http_status :not_found }
+        end
+        context 'team' do
+          before { get :search_demands_to_flow_charts, params: { company_id: company, id: 'foo' }, xhr: true }
+          it { expect(response).to have_http_status :not_found }
+        end
+        context 'not permitted company' do
+          let(:company) { Fabricate :company, users: [] }
+          before { get :search_demands_to_flow_charts, params: { company_id: company, id: team }, xhr: true }
           it { expect(response).to have_http_status :not_found }
         end
       end

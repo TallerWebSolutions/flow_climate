@@ -5,13 +5,12 @@
         <li><%= link_to t('general.home.title'), root_path %></li>
         <li><%= link_to @company.abbreviation&.upcase, company_path(@company) %></li>
         <li><%= link_to @project.full_name, company_project_path(@company, @project) %></li>
-        <li><%= link_to ProjectResult.model_name.human.capitalize, company_project_project_result_path(@company, @project, @project_result) %></li>
         <li><%= t('demands.edit.title') %></li>
       </ul>
     </div>
   </div>
 
-  <%= form_for @demand, url: company_project_project_result_demand_url(@company, @project, @project_result, @demand), method: :put, class: 'form' do |f| %>
+  <%= form_for @demand, url: company_project_demand_url(@company, @project, @demand), method: :put, class: 'form' do |f| %>
     <div class="row bottom-spaced-component">
       <div class="col-xs-12">
         <%= render 'form', f: f %>

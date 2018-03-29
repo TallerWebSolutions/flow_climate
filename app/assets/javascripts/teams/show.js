@@ -32,6 +32,12 @@ $('#nav-item-members').on('click', function(){
     $('#nav-item-members').addClass('active');
 });
 
+$('#nav-item-flow').on('click', function(){
+    hideAllComponents();
+    $('#flow').show();
+    $('#nav-item-flow').addClass('active');
+});
+
 $('#nav-item-settings').on('click', function(){
     hideAllComponents();
     $('#settings').show();
@@ -45,6 +51,7 @@ function hideAllComponents() {
     $('#strategic').hide();
     $('#members-table').hide();
     $('#settings').hide();
+    $('#flow').hide();
 
     $('#nav-item-stamps').removeClass('active');
     $('#nav-item-list').removeClass('active');
@@ -52,4 +59,5 @@ function hideAllComponents() {
     $('#nav-item-strategic').removeClass('active');
     $('#nav-item-members').removeClass('active');
     $('#nav-item-settings').removeClass('active');
+    $('#nav-item-flow').removeClass('active');
 }
