@@ -42,6 +42,12 @@ class ProjectsRepository
     Project.left_outer_joins(:project_results).left_outer_joins(:product).where('project_results.team_id = :team_id OR products.team_id = :team_id', team_id: team.id).order(end_date: :desc).distinct
   end
 
+  def add_query_to_projects_in_status(projects, status_param)
+    projects_with_query_and_order = projects
+    projects_with_query_and_order = projects.where(status: status_param) if status_param != 'all'
+    projects_with_query_and_order.order(end_date: :desc)
+  end
+
   private
 
   def where_by_start_end_dates(projects, required_date)

@@ -91,4 +91,25 @@ RSpec.describe ProjectsRepository, type: :repository do
 
     it { expect(ProjectsRepository.instance.all_projects_for_team(team)).to match_array [first_project, second_project, third_project, fourth_project, fifth_project, sixth_project] }
   end
+
+  describe '#add_query_to_projects_in_status' do
+    let(:other_customer) { Fabricate :customer }
+    let(:team) { Fabricate :team, company: company }
+    let!(:product) { Fabricate :product, customer: customer, team: team }
+
+    context 'having data' do
+      let!(:first_project) { Fabricate :project, customer: customer, start_date: 1.week.ago, end_date: 2.months.from_now, status: :executing }
+      let!(:second_project) { Fabricate :project, customer: customer, start_date: 1.month.from_now, end_date: 3.months.from_now, status: :maintenance }
+      let!(:third_project) { Fabricate :project, customer: customer, start_date: 2.months.from_now, end_date: 2.months.from_now, status: :waiting }
+      let!(:fourth_project) { Fabricate :project, customer: customer, product: product, start_date: 2.months.from_now, end_date: 2.months.from_now, status: :maintenance }
+      let!(:fifth_project) { Fabricate :project, customer: customer, product: product, start_date: 1.week.from_now, end_date: 1.month.from_now, status: :finished }
+      let!(:sixth_project) { Fabricate :project, customer: customer, product: product, start_date: 3.months.from_now, end_date: 4.months.from_now, status: :cancelled }
+      context 'passing status filter' do
+        it { expect(ProjectsRepository.instance.add_query_to_projects_in_status(Project.all, :maintenance)).to match_array [second_project, fourth_project] }
+      end
+      context 'passing no status filter' do
+        it { expect(ProjectsRepository.instance.add_query_to_projects_in_status(Project.all, 'all')).to match_array [first_project, second_project, third_project, fourth_project, fifth_project, sixth_project] }
+      end
+    end
+  end
 end
