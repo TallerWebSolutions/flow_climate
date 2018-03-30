@@ -602,24 +602,24 @@ RSpec.describe Project, type: :model do
   end
 
   describe '#money_per_deadline' do
-    let!(:first_project) { Fabricate :project, initial_scope: 30 }
+    let!(:first_project) { Fabricate :project, initial_scope: 30, start_date: 1.week.ago, end_date: 3.weeks.from_now, value: 10_000, hour_value: 20 }
 
     context 'having data for last week' do
-      let!(:result) { Fabricate :project_result, project: first_project, result_date: 1.week.ago, known_scope: 110 }
-      let!(:other_result) { Fabricate :project_result, project: first_project, result_date: Time.zone.today, known_scope: 80 }
+      let!(:result) { Fabricate :project_result, project: first_project, result_date: 1.week.ago, known_scope: 110, qty_hours_downstream: 200, qty_hours_upstream: 10 }
+      let!(:other_result) { Fabricate :project_result, project: first_project, result_date: Time.zone.today, known_scope: 80, qty_hours_downstream: 50, qty_hours_upstream: 5 }
 
-      it { expect(first_project.money_per_deadline).to eq first_project.percentage_remaining_money / first_project.percentage_remaining_days }
+      it { expect(first_project.money_per_deadline.to_f).to be_within(0.01).of(1.61) }
     end
 
     context 'having data for 2 weeks ago' do
-      let!(:result) { Fabricate :project_result, project: first_project, result_date: 2.weeks.ago, known_scope: 110 }
-      let!(:other_result) { Fabricate :project_result, project: first_project, result_date: Time.zone.today, known_scope: 80 }
+      let!(:result) { Fabricate :project_result, project: first_project, result_date: 2.weeks.ago, known_scope: 110, qty_hours_downstream: 200, qty_hours_upstream: 10 }
+      let!(:other_result) { Fabricate :project_result, project: first_project, result_date: Time.zone.today, known_scope: 80, qty_hours_downstream: 50, qty_hours_upstream: 5 }
 
-      it { expect(first_project.money_per_deadline).to eq first_project.percentage_remaining_money / first_project.percentage_remaining_days }
+      it { expect(first_project.money_per_deadline.to_f).to be_within(0.01).of(1.61) }
     end
 
     context 'having no result' do
-      it { expect(first_project.money_per_deadline).to eq first_project.percentage_remaining_money / first_project.percentage_remaining_days }
+      it { expect(first_project.money_per_deadline.to_f).to be_within(0.01).of(0.75) }
     end
   end
 
