@@ -159,11 +159,6 @@ class Project < ApplicationRecord
     project_results.sum(&:project_delivered_hours)
   end
 
-  # Higher than 1 -> more hours required than available
-  # Equal 1 -> enough hours to finish the scope
-  # Between 0 and 1 -> more available hours than required
-  #   if we have a result of 20% (0,2) means that we have 80% over the required hours
-  #   if we have a result of 120% (1,2) means that we have 20% of the required hours over the available hours (20% is missing)
   def required_hours_per_available_hours
     required_hours.to_f / remaining_hours.to_f
   end
@@ -209,13 +204,9 @@ class Project < ApplicationRecord
   end
 
   def money_per_deadline
-    percentage_remaining_money / percentage_remaining_days
+    percentage_remaining_days / percentage_remaining_money
   end
 
-  # Determines if the backlog growth is above the throughput
-  # the rate represents how many times the growth was over the throughput
-  # One is a bad value since the project is not *burning* backlog when the rate is one.
-  # Values under one means backlog burning
   def backlog_growth_throughput_rate
     return backlog_unit_growth if total_throughput_for(Time.zone.today).to_f.zero?
     backlog_unit_growth.to_f / total_throughput_for(Time.zone.today).to_f

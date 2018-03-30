@@ -1,11 +1,11 @@
 <div class="standard-form">
 
   <div class="row">
-      <div class='col-xs-4 form-group <%= 'has-error' if @project_risk_config.errors[:risk_type].present? %>'>
-        <%= f.label :risk_type, class: 'control-label required' %>
-        <%= f.select :risk_type, ProjectRiskConfig.risk_types.map { |key, _value| [t("activerecord.attributes.project_risk_config.enums.risk_type.#{key}"), key] }, { include_blank: t('general.select'), selected: @project_risk_config.risk_type, autofocus: true }, class: 'form-control' %>
-        <span class="help-block"><%= @project_risk_config.errors[:risk_type].join(', ') %></span>
-      </div>
+    <div class='col-xs-4 form-group <%= 'has-error' if @project_risk_config.errors[:risk_type].present? %>'>
+      <%= f.label :risk_type, class: 'control-label required' %>
+      <%= f.select :risk_type, ProjectRiskConfig.risk_types.map { |key, _value| [t("activerecord.attributes.project_risk_config.enums.risk_type.#{key}"), key] }, { include_blank: t('general.select'), selected: @project_risk_config.risk_type, autofocus: true }, class: 'form-control', id: 'select_risk_type' %>
+      <span class="help-block"><%= @project_risk_config.errors[:risk_type].join(', ') %></span>
+    </div>
 
     <div class='col-xs-4 form-group <%= 'has-error' if @project_risk_config.errors[:low_yellow_value].present? %>'>
       <%= f.label :low_yellow_value, class: 'control-label required' %>
@@ -24,5 +24,147 @@
     <div class="col-xs-12">
       <%= f.submit class: 'btn btn-success' %>
     </div>
+  </div>
+</div>
+
+<div class="row" id="no_money_to_deadline">
+  <div class="col-xs-12">
+    <p><strong>Este risco monitora se existe dinheiro suficiente para cumprir o backlog restante no projeto.</strong></p>
+
+    <ol>
+      <p>Este cálculo é feito em quatro etapas:</p>
+      <li>Descobre-se quanto já se gastou no projeto, multiplicando a quantidade de horas de esforço pelo valor hora;</li>
+      <li>Encontra-se a porcentagem de dias restantes para o fim do projeto;</li>
+      <li>Encontra-se a porcentagem de dinheiro restante baseado no cáculo em [1];</li>
+      <li>Divide-se a porcentagem de dias restantes pela porcentagem de dinheiro.</li>
+    </ol>
+
+    <p>Ex:</p>
+    <ol>
+      <p>O Projeto A começou no dia 1 e vai até o dia 30. Sabendo que o valor total do projeto é de R$ 20.000,00, que o valor hora é de R$ 100,00 e que a quantidade de esforço utilizada até o dia 23 foi de 1000 horas, calcule o fator de risco de faltar dinheiro para terminar o projeto.</p>
+      <li>1000 * R$ 100,00 = R$ 10.000,00;</li>
+      <li>(30-11)/30 = 63%</li>
+      <li>(R$ 20.000,00 - R$ 10.000,00)/R$ 20.000,00 = 50%</li>
+      <li>63 / 50 = 1,26 <= fator de risco de falta de dinheiro</li>
+    </ol>
+
+    <p>No passo 3 já é possível perceber que temos um problema. O projeto ainda tem 63% do caminho a percorrer, mas só tem 50% do dinheiro.</p>
+    <p>Mesmo que não indique um problema, indica um termômetro para embasar análises sobre a saúde do projeto.</p>
+
+    <blockquote class="blockquote">
+      <p>[AMARELO] Um fator de risco igual a 1 indica que temos exatamente a quantidade de dinheiro necessária para percorrer o prazo restante, isto é, estamos gastando a quantidade de dinheiro esperada para o projeto.</p>
+      <p>[VERDE] Menor que 1 indica que o gasto de dinheiro está abaixo do esperado.</p>
+      <p>[VERMELHO] Maior que 1 indica que o gasto de dinheiro está acima do esperado.</p>
+    </blockquote>
+
+    <p>Nossa experiência indica que 0.9 e 1.1 são valores interessantes para os limites do amarelo, pois permite uma pequena variação antes de disparar qualquer alerta.</p>
+
+    <p>Seguindo essa orientação, o Projeto A do nosso exemplo estaria em alerta vermelho.</p>
+  </div>
+</div>
+
+<div class="row" id="backlog_growth_rate">
+  <div class="col-xs-12">
+    <p><strong>Este risco monitora se mais backlog está sendo criado que consumido.</strong></p>
+
+    <ol>
+      <p>Este cálculo é feito em quatro etapas, sendo n a semana atual:</p>
+      <li>Encontramos o crescimento do escopo subtraindo o escopo da semama anterior (n-1) com o escopo da semana (n-2);</li>
+      <li>Encontramos o throughput da última semana (n-1);</li>
+      <li>Dividimos [1] por [2];</li>
+    </ol>
+
+    <p>Ex:</p>
+    <ol>
+      <p>Estamos na semana 3. O backlog do Projeto A na semana 1 era de 100 histórias e na semana 2 de 120 histórias. O throughput na semana 2 foi de 10 histórias</p>
+      <li>120 - 100 = 20 histórias de crescimento;</li>
+      <li>Throughput da última semana = 10</li>
+      <li>20 / 10 = 2 <= fator de risco de crescimento do backlog</li>
+    </ol>
+
+    <blockquote class="blockquote">
+      <p>[AMARELO] Um fator de risco igual a 1 indica que o fluxo está produzindo exatamente a mesma quantidade que a entrada de trabalho.</p>
+      <p>[VERDE] Menor que 1 indica que que o fluxo está produzindo mais que a entrada de trabalho.</p>
+      <p>[VERMELHO] Maior que 1 indica que o fluxo está produzindo mais que a entrada de trabalho.</p>
+    </blockquote>
+
+    <p>Nossa experiência indica que 0.8 e 1.2 são valores interessantes para os limites do amarelo, pois permite uma pequena variação antes de disparar qualquer alerta.</p>
+
+    <p>Seguindo essa orientação, o Projeto A do nosso exemplo estaria em alerta vermelho.</p>
+  </div>
+</div>
+
+<div class="row" id="not_enough_available_hours">
+  <div class="col-xs-12">
+    <p><strong>Este risco monitora se existem horas suficientes para cumprir o backlog restante no projeto.</strong></p>
+
+    <ol>
+      <p>Este cálculo é feito em três etapas:</p>
+      <li>Descobrimos a quantidade média de horas por demanda do projeto, multiplicando o resultado pelo backlog restante;</li>
+      <li>Subtraimos o total de horas disponíveis para o projeto da quantidade de horas consumidas, encontrando as horas restantes para o projeto;</li>
+      <li>Dividimos [1] por [2];</li>
+    </ol>
+
+    <p>Ex:</p>
+    <ol>
+      <p>O Projeto A que possui 2000 horas previstas, já consumiu 500 horas, entregando 20 demandas. Sabendo que o backlog restante é de 70 histórias, qual o fator de risco para a quantidade de horas disponíveis no projeto?</p>
+      <li>500/20 = 25. 25hs * 70 histórias = 1.750 horas necessárias para finalizar o projeto.</li>
+      <li>2.000-500 = 1.500</li>
+      <li>1.750 / 1.500 = 1,16 <= fator de risco para horas necessárias para terminar o projeto</li>
+    </ol>
+
+    <blockquote class="blockquote">
+      <p>[AMARELO] Um fator de risco igual a 1 indica que temos exatamente a quantidade de horas necessárias resolver o backlog restante.</p>
+      <p>[VERDE] Menor que 1 indica que existem horas suficientes para o restante do backlog.</p>
+      <p>[VERMELHO] Maior que 1 indica que as horas restantes não serão suficientes para o restante do backlog.</p>
+    </blockquote>
+
+    <p>Nossa experiência indica que 0.8 e 1.2 são valores interessantes para os limites do amarelo, pois permite uma pequena variação antes de disparar qualquer alerta.</p>
+
+    <p>Seguindo essa orientação, o Projeto A do nosso exemplo estaria em alerta amarelo.</p>
+  </div>
+</div>
+
+<div class="row" id="profit_margin">
+  <div class="col-xs-12">
+    <p><strong>Este risco monitora se as margens de lucro esperadas para o projeto.</strong></p>
+
+    <ol>
+      <p>Este cálculo é feito em três etapas:</p>
+      <li>Descobrimos o custo/hora no momento do monitoramento;</li>
+      <li>Dividimos o valor/hora do projeto pelo custo/hora no momento da medição.</li>
+    </ol>
+
+    <p>Ex:</p>
+    <ol>
+      <p>O Projeto A foi vendido a R$ 160,00/hora. Neste momento o custo/hora está em R$ 120,00</p>
+      <li>R$ 120,00 baseado no custo da empresa / quantidade de horas produzidas</li>
+      <li>R$ 160,00 / R$ 120,00 = 1,33 <= margem de lucro</li>
+    </ol>
+
+    <blockquote class="blockquote">
+      <p>[AMARELO] O projeto está dentro da margem de lucro esperada.</p>
+      <p>[VERDE] O projeto está acima da margem de lucro esperada.</p>
+      <p>[VERMELHO] O projeto está abaixo da margem de lucro esperada.</p>
+    </blockquote>
+
+    <p>Margens de lucro são parte da estratégia de cada empresa, por isso não vamos sugerir margens neste risco.</p>
+  </div>
+</div>
+
+<div class="row" id="flow_pressure">
+  <div class="col-xs-12">
+    <p><strong>Este risco monitora se as condições de pressão do fluxo do projeto.</strong></p>
+
+    <p>A pressão do fluxo é parte de um conceito maior que é fornecido com esta aplicação.</p>
+    <p>Basicamente essa pressão é medida em demandas/dia. Mais detalhes <a href="https://blog.taller.net.br/ebook-equilibrio-portfolio-projeto/">aqui</a>.</p>
+
+    <blockquote class="blockquote">
+      <p>[AMARELO] O projeto está dentro da pressão de fluxo esperada.</p>
+      <p>[VERDE] O projeto está acima da pressão de fluxo esperada.</p>
+      <p>[VERMELHO] O projeto está abaixo da pressão de fluxo esperada.</p>
+    </blockquote>
+
+    <p>Pressão do fluxo é ainda mais sensível ao contexto, pois um alerta verde ou vermelho vai depender muito da vazão peculiar do projeto, dos acordos com clientes e outras variáveis.</p>
   </div>
 </div>
