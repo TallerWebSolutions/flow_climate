@@ -13,9 +13,12 @@ sudo: required
 services:
   - postgresql
 addons:
-  postgresql: '9.6'
+  postgresql: '10'
+  apt:
+    packages:
+    - postgresql-10
+    - postgresql-client-10
 before_script:
-  - bash install-postgres-10.sh
   - psql -c 'create database flowcontrol_test;' -U postgres
   - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
   - chmod +x ./cc-test-reporter
