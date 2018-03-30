@@ -35,7 +35,7 @@ class ProcessPipefyPipeJob < ApplicationJob
     cards_in_pipe = read_cards_inside_phases(JSON.parse(pipe_response.body))
 
     cards_response_hash = {}
-    cards_in_pipe.sort.reverse.each do |card_id|
+    cards_in_pipe.each do |card_id|
       card_response = PipefyApiService.request_card_details(card_id)
       next if card_response.code != 200
       parsed_card_response = JSON.parse(card_response.body)

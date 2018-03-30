@@ -3,6 +3,7 @@ sudo: required
 
 env:
   global:
+    - PGPORT=5433
     - CC_TEST_REPORTER_ID=70ab5420793b8b581d83df1dc8dcc49ca7c48d3deb51c9f9a8c2a5e0899c8f71
 
 language: ruby
@@ -13,14 +14,18 @@ sudo: required
 services:
   - postgresql
 addons:
-  postgresql: '9.6'
+  postgresql: '10'
+  apt:
+    packages:
+    - postgresql-10
+    - postgresql-client-10
 before_script:
-  - bash install-postgres-10.sh
-  - psql -c 'create database flowcontrol_test;' -U postgres
+  - cp config/database.yml.travis config/database.yml
   - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
   - chmod +x ./cc-test-reporter
   - ./cc-test-reporter before-build
 script:
+  - RAILS_ENV=test bundle exec rake db:create --trace
   - RAILS_ENV=test bundle exec rake db:migrate --trace
   - bundle exec rake db:test:prepare
   - bundle exec rspec spec/

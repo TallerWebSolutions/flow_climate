@@ -16,6 +16,8 @@ class ProcessPipefyCardJob < ApplicationJob
   def process_card!(card_response, demand_id, pipefy_config)
     PipefyReader.instance.create_card!(pipefy_config.team, card_response)
     demand = Demand.find_by(demand_id: demand_id)
-    PipefyReader.instance.update_card!(pipefy_config.team, demand, card_response) if demand.present?
+    return if demand.blank?
+    PipefyReader.instance.update_card!(pipefy_config.team, demand, card_response)
+    demand.project.project_results.map(&:compute_flow_metrics!)
   end
 end
