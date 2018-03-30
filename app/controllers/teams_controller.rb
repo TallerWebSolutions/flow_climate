@@ -31,8 +31,9 @@ class TeamsController < AuthenticatedController
   end
 
   def search_for_projects
-    @projects = ProjectsRepository.instance.all_projects_for_team(@team).order(end_date: :desc)
-    add_queries_to_projects
+    @projects = ProjectsRepository.instance.add_query_to_projects_in_status(ProjectsRepository.instance.all_projects_for_team(@team), params[:status_filter])
+    @projects_summary = ProjectsSummaryObject.new(@projects)
+    respond_to { |format| format.js { render file: 'projects/projects_search.js.erb' } }
   end
 
   def search_demands_to_flow_charts

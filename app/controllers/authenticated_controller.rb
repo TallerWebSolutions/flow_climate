@@ -16,12 +16,4 @@ class AuthenticatedController < ApplicationController
     @products = customer.products.order(:name) if customer.present?
     respond_to { |format| format.js { render file: render_file } }
   end
-
-  # TODO: must be removed from this class
-  def add_queries_to_projects
-    @projects = @projects.where(status: params[:status_filter]) if params[:status_filter] != 'all'
-    @projects = @projects.order(end_date: :desc)
-    @projects_summary = ProjectsSummaryObject.new(@projects)
-    respond_to { |format| format.js { render file: 'projects/projects_search.js.erb' } }
-  end
 end

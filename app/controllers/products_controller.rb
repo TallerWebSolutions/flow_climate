@@ -44,8 +44,9 @@ class ProductsController < AuthenticatedController
   end
 
   def search_for_projects
-    @projects = @product.projects.order(end_date: :desc)
-    add_queries_to_projects
+    @projects = ProjectsRepository.instance.add_query_to_projects_in_status(@product.projects, params[:status_filter])
+    @projects_summary = ProjectsSummaryObject.new(@projects)
+    respond_to { |format| format.js { render file: 'projects/projects_search.js.erb' } }
   end
 
   private
