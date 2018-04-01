@@ -4,6 +4,9 @@ RSpec.describe ProjectsRepository, type: :repository do
   let(:company) { Fabricate :company }
   let(:customer) { Fabricate :customer, company: company }
 
+  before { travel_to Time.zone.local(2018, 2, 20, 10, 0, 0) }
+  after { travel_back }
+
   describe '#active_projects_in_month' do
     let(:other_customer) { Fabricate :customer }
 
@@ -53,7 +56,7 @@ RSpec.describe ProjectsRepository, type: :repository do
         it { expect(ProjectsRepository.instance.flow_pressure_to_month(company.projects, 2.months.ago.to_date)).to eq 0 }
       end
       context 'if in the future, returns the future flow pressure to the project' do
-        it { expect(ProjectsRepository.instance.flow_pressure_to_month(company.projects, 1.month.from_now.to_date)).to eq 4.6875 }
+        it { expect(ProjectsRepository.instance.flow_pressure_to_month(company.projects, 1.month.from_now.to_date)).to be_within(0.001).of(5.172) }
       end
     end
   end

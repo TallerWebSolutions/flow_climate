@@ -479,6 +479,40 @@ ALTER SEQUENCE public.products_id_seq OWNED BY public.products.id;
 
 
 --
+-- Name: project_change_deadline_histories; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.project_change_deadline_histories (
+    id bigint NOT NULL,
+    project_id integer NOT NULL,
+    user_id integer NOT NULL,
+    previous_date date,
+    new_date date,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: project_change_deadline_histories_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.project_change_deadline_histories_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: project_change_deadline_histories_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.project_change_deadline_histories_id_seq OWNED BY public.project_change_deadline_histories.id;
+
+
+--
 -- Name: project_results; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -920,6 +954,13 @@ ALTER TABLE ONLY public.products ALTER COLUMN id SET DEFAULT nextval('public.pro
 
 
 --
+-- Name: project_change_deadline_histories id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.project_change_deadline_histories ALTER COLUMN id SET DEFAULT nextval('public.project_change_deadline_histories_id_seq'::regclass);
+
+
+--
 -- Name: project_results id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1084,6 +1125,14 @@ ALTER TABLE ONLY public.pipefy_team_configs
 
 ALTER TABLE ONLY public.products
     ADD CONSTRAINT products_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: project_change_deadline_histories project_change_deadline_histories_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.project_change_deadline_histories
+    ADD CONSTRAINT project_change_deadline_histories_pkey PRIMARY KEY (id);
 
 
 --
@@ -1300,6 +1349,20 @@ CREATE UNIQUE INDEX index_products_on_customer_id_and_name ON public.products US
 
 
 --
+-- Name: index_project_change_deadline_histories_on_project_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_project_change_deadline_histories_on_project_id ON public.project_change_deadline_histories USING btree (project_id);
+
+
+--
+-- Name: index_project_change_deadline_histories_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_project_change_deadline_histories_on_user_id ON public.project_change_deadline_histories USING btree (user_id);
+
+
+--
 -- Name: index_project_results_on_project_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1423,6 +1486,14 @@ ALTER TABLE ONLY public.demands
 
 
 --
+-- Name: project_change_deadline_histories fk_rails_1f60eef53a; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.project_change_deadline_histories
+    ADD CONSTRAINT fk_rails_1f60eef53a FOREIGN KEY (project_id) REFERENCES public.projects(id);
+
+
+--
 -- Name: projects fk_rails_21e11c2480; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1532,6 +1603,14 @@ ALTER TABLE ONLY public.companies_users
 
 ALTER TABLE ONLY public.pipefy_team_configs
     ADD CONSTRAINT fk_rails_6b009afec0 FOREIGN KEY (team_id) REFERENCES public.teams(id);
+
+
+--
+-- Name: project_change_deadline_histories fk_rails_7e0b9bce8f; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.project_change_deadline_histories
+    ADD CONSTRAINT fk_rails_7e0b9bce8f FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --
@@ -1697,6 +1776,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20180315163004'),
 ('20180316131931'),
 ('20180316210405'),
-('20180320180443');
+('20180320180443'),
+('20180331235053');
 
 

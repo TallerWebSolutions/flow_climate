@@ -37,6 +37,7 @@ class ProjectsController < AuthenticatedController
   def update
     assign_customer
     assign_product
+    check_change_in_deadline!
     @project.update(project_params.merge(customer: @customer, product: @product))
     return redirect_to company_projects_path(@company) if @project.save
     assign_products_list
@@ -94,5 +95,10 @@ class ProjectsController < AuthenticatedController
   def add_status_filter(projects)
     return projects if params[:status_filter].blank? || projects.blank?
     projects.where(status: params[:status_filter])
+  end
+
+  def check_change_in_deadline!
+    return if project_params[:end_date].blank? || @project.end_date == Date.parse(project_params[:end_date])
+    ProjectChangeDeadlineHistory.create!(user: current_user, project: @project, previous_date: @project.end_date, new_date: project_params[:end_date])
   end
 end
