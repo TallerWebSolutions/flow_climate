@@ -239,18 +239,25 @@ RSpec.describe ProjectsController, type: :controller do
       let(:project) { Fabricate :project, customer: customer, product: product }
 
       context 'passing valid parameters' do
-        before { put :update, params: { company_id: company, id: project, project: { customer_id: customer, product_id: product, name: 'foo', status: :executing, project_type: :outsourcing, start_date: 1.day.ago, end_date: 1.day.from_now, value: 100.2, qty_hours: 300, hour_value: 200, initial_scope: 1000 } } }
-        it 'updates the project and redirects to projects index' do
-          expect(Project.last.name).to eq 'foo'
-          expect(Project.last.status).to eq 'executing'
-          expect(Project.last.project_type).to eq 'outsourcing'
-          expect(Project.last.start_date).to eq 1.day.ago.to_date
-          expect(Project.last.end_date).to eq 1.day.from_now.to_date
-          expect(Project.last.value).to eq 100.2
-          expect(Project.last.qty_hours).to eq 300
-          expect(Project.last.hour_value).to eq 200
-          expect(Project.last.initial_scope).to eq 1000
-          expect(response).to redirect_to company_projects_path(company)
+        context 'changing the deadline' do
+          before { put :update, params: { company_id: company, id: project, project: { customer_id: customer, product_id: product, name: 'foo', status: :executing, project_type: :outsourcing, start_date: 1.day.ago, end_date: 1.day.from_now, value: 100.2, qty_hours: 300, hour_value: 200, initial_scope: 1000 } } }
+          it 'updates the project, register the deadline change and redirects to projects index' do
+            expect(Project.last.name).to eq 'foo'
+            expect(Project.last.status).to eq 'executing'
+            expect(Project.last.project_type).to eq 'outsourcing'
+            expect(Project.last.start_date).to eq 1.day.ago.to_date
+            expect(Project.last.end_date).to eq 1.day.from_now.to_date
+            expect(Project.last.value).to eq 100.2
+            expect(Project.last.qty_hours).to eq 300
+            expect(Project.last.hour_value).to eq 200
+            expect(Project.last.initial_scope).to eq 1000
+            expect(ProjectChangeDeadlineHistory.count).to eq 1
+            expect(response).to redirect_to company_projects_path(company)
+          end
+        end
+        context 'not changing the deadline' do
+          before { put :update, params: { company_id: company, id: project, project: { customer_id: customer, product_id: product, name: 'foo', status: :executing, project_type: :outsourcing, start_date: 1.day.ago, end_date: project.end_date, value: 100.2, qty_hours: 300, hour_value: 200, initial_scope: 1000 } } }
+          it { expect(ProjectChangeDeadlineHistory.count).to eq 0 }
         end
       end
 

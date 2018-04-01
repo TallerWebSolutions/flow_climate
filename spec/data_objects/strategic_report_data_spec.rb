@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 RSpec.describe StrategicReportData, type: :service do
+  before { travel_to Time.zone.local(2018, 2, 20, 10, 0, 0) }
+  after { travel_back }
+
   describe '.active_projects_count_per_month' do
     let(:company) { Fabricate :company }
     let!(:first_financial_information) { Fabricate :financial_information, company: company, finances_date: 3.months.ago, expenses_total: 300 }
@@ -36,11 +39,11 @@ RSpec.describe StrategicReportData, type: :service do
         strategic_data = StrategicReportData.new(company, company.projects, company.total_available_hours)
         expect(strategic_data.array_of_months).to eq [[3.months.ago.to_date.month, 3.months.ago.to_date.year], [2.months.ago.to_date.month, 2.months.ago.to_date.year], [1.month.ago.to_date.month, 1.month.ago.to_date.year], [Time.zone.today.month, Time.zone.today.year], [1.month.from_now.to_date.month, 1.month.from_now.to_date.year], [2.months.from_now.to_date.month, 2.months.from_now.to_date.year], [3.months.from_now.to_date.month, 3.months.from_now.to_date.year]]
         expect(strategic_data.active_projects_count_data).to eq [2, 2, 0, 0, 2, 4, 2]
-        expect(strategic_data.sold_hours_in_month).to eq [1406.25, 1406.25, 0, 0, 2129.032258064516, 7004.032258064516, 4875.0]
+        expect(strategic_data.sold_hours_in_month).to eq [1451.6129032258063, 1451.6129032258063, 0, 0, 2062.5, 7094.758064516129, 5032.258064516129]
         expect(strategic_data.consumed_hours_per_month).to eq [100, 0, 0, 0, 100, 100, 0]
         expect(strategic_data.available_hours_per_month).to eq [180, 180, 180, 180, 180, 180, 180]
-        expect(strategic_data.flow_pressure_per_month_data.map { |pressure| pressure.round(2) }).to eq [8.0, 0.0, 0.0, 0.0, 1.1, 5.72, 3.75]
-        expect(strategic_data.money_per_month_data.map { |money| money.round(2) }).to eq [3_237_581.25, 3_237_581.25, 0.0, 0.0, 10_354.84, 10_657.65, 302.81]
+        expect(strategic_data.flow_pressure_per_month_data.map { |pressure| pressure.round(2) }).to eq [8.0, 0.0, 0.0, 0.0, 1.1, 5.59, 3.87]
+        expect(strategic_data.money_per_month_data.map { |money| money.round(2) }).to eq [3_342_019.35, 3_342_019.35, 0.0, 0.0, 10_031.25, 10_343.83, 312.58]
         expect(strategic_data.expenses_per_month_data.map { |expense| expense.round(2) }).to eq [300.0, 300.0, 200.0, 200.0, 200.0, 100.0, 100.0]
       end
     end
