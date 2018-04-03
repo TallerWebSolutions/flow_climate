@@ -9,6 +9,7 @@ class ProjectsController < AuthenticatedController
     @report_data = ReportData.new(Project.where(id: @project.id))
     @ordered_project_risk_alerts = @project.project_risk_alerts.order(created_at: :desc)
     @project_delivered_demands = @project.demands.finished.grouped_end_date_by_month
+    @project_change_deadline_histories = @project.project_change_deadline_histories
   end
 
   def index

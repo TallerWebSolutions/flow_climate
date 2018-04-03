@@ -125,6 +125,8 @@ pt-BR:
       current_week_scope: "Escopo (atual)"
       average_demand_cost: "Custo Médio por Demanda"
       cost_in_month: "Custo Mensal"
+      deadline:
+        title: "Negociações de Prazo"
     charts:
       xlabel:
         weeks: "Semanas"
@@ -321,3 +323,6 @@ pt-BR:
     working_time_in_transition: "Tempo útil na transição"
     index:
       title: "Transições da Demanda"
+  project_change_deadline_histories:
+    index:
+      dates_difference: "Diferença (dias)"

@@ -111,6 +111,9 @@ pt-BR:
       pipefy_team_config:
         one: Configuração de Time no Pipefy
         other: Configurações de Time no Pipefy
+      project_change_deadline_history:
+        one: Neogicação de Prazo
+        other: Negociações de Prazo
     attributes:
       user:
         first_name: Nome
@@ -310,6 +313,12 @@ pt-BR:
             analyst: Analista
             designer: Designer
             customer: Cliente
+      project_change_deadline_history:
+        project: Projeto
+        user: Usuário
+        previous_date: Data Anterior
+        new_date: Nova Data
+
   product:
     name:
       uniqueness: "Não deve repetir nome de produto para o mesmo cliente."
