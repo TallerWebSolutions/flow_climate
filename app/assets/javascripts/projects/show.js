@@ -38,6 +38,12 @@ $('#nav-item-settings').on('click', function(){
     $('#nav-item-settings').addClass('active');
 });
 
+$('#nav-item-deadline').on('click', function(){
+    hideAllComponents();
+    $('#deadline-change').show();
+    $('#nav-item-deadline').addClass('active');
+});
+
 function hideAllComponents() {
     $('#project-stamps').hide();
     $('#nav-item-stamps').removeClass('active');
@@ -51,4 +57,6 @@ function hideAllComponents() {
     $('#nav-item-risk').removeClass('active');
     $('#project-settings').hide();
     $('#nav-item-settings').removeClass('active');
+    $('#deadline-change').hide();
+    $('#nav-item-deadline').removeClass('active');
 }

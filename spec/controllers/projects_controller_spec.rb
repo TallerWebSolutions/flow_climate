@@ -66,6 +66,8 @@ RSpec.describe ProjectsController, type: :controller do
         let!(:third_demand) { Fabricate :demand, project: first_project, project_result: second_result, end_date: nil }
 
         let!(:fourth_demand) { Fabricate :demand, end_date: Time.zone.today }
+        let!(:first_change_deadline) { Fabricate :project_change_deadline_history, project: first_project }
+        let!(:second_change_deadline) { Fabricate :project_change_deadline_history, project: first_project }
 
         context 'passing valid IDs' do
           before { get :show, params: { company_id: company, customer_id: customer, id: first_project } }
@@ -76,6 +78,7 @@ RSpec.describe ProjectsController, type: :controller do
             expect(assigns(:report_data)).to be_a ReportData
             expect(assigns(:ordered_project_risk_alerts)).to eq [second_alert, first_alert]
             expect(assigns(:project_delivered_demands)).to eq([2018, 3] => [second_demand, first_demand])
+            expect(assigns(:project_change_deadline_histories)).to match_array [first_change_deadline, second_change_deadline]
           end
         end
       end
