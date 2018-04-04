@@ -23,7 +23,7 @@ RSpec.describe ProcessPipefyProjectJob, type: :active_job do
 
   context 'having no pipefy_config' do
     it 'returns doing nothing' do
-      expect(PipefyApiService).to receive(:request_card_details).never
+      expect(Pipefy::PipefyApiService).to receive(:request_card_details).never
       ProcessPipefyProjectJob.perform_now(project)
     end
   end
@@ -42,10 +42,10 @@ RSpec.describe ProcessPipefyProjectJob, type: :active_job do
         end
 
         it 'calls the methods to update the demand' do
-          expect(PipefyResponseReader.instance).to(receive(:create_card!).with(project, team, card_response).once { first_demand })
-          expect(PipefyResponseReader.instance).to(receive(:create_card!).with(project, team, other_card_response).once { second_demand })
-          expect(PipefyResponseReader.instance).to receive(:update_card!).with(project, team, first_demand, card_response).once
-          expect(PipefyResponseReader.instance).to receive(:update_card!).with(project, team, second_demand, other_card_response).once
+          expect(Pipefy::PipefyResponseReader.instance).to(receive(:create_card!).with(project, team, card_response).once { first_demand })
+          expect(Pipefy::PipefyResponseReader.instance).to(receive(:create_card!).with(project, team, other_card_response).once { second_demand })
+          expect(Pipefy::PipefyResponseReader.instance).to receive(:update_card!).with(project, team, first_demand, card_response).once
+          expect(Pipefy::PipefyResponseReader.instance).to receive(:update_card!).with(project, team, second_demand, other_card_response).once
           ProcessPipefyProjectJob.perform_now(project)
         end
       end

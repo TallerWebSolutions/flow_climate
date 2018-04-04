@@ -2,7 +2,7 @@
   <div class="row">
     <div class='col-xs-4 form-group <%= 'has-error' if @pipefy_team_config.errors[:billable_type].present? %>'>
       <%= f.label :member_type, class: 'control-label' %>
-      <%= f.select :member_type, PipefyTeamConfig.member_types.map { |key, _value| [t("activerecord.attributes.pipefy_team_config.enums.member_type.#{key}"), key] }, { include_blank: t('general.select'), selected: @pipefy_team_config.member_type }, class: 'form-control' %>
+      <%= f.select :member_type, Pipefy::PipefyTeamConfig.member_types.map { |key, _value| [t("activerecord.attributes.pipefy/pipefy_team_config.enums.member_type.#{key}"), key] }, { include_blank: t('general.select'), selected: @pipefy_team_config.member_type }, class: 'form-control' %>
       <span class="help-block"><%= @pipefy_team_config.errors[:member_type].join(', ') %></span>
     </div>
     <div class='col-xs-4 form-group <%= 'has-error' if @pipefy_team_config.errors[:integration_id].present? %>'>

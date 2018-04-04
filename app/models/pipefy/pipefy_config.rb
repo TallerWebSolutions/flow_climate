@@ -25,13 +25,15 @@
 #  fk_rails_...  (team_id => teams.id)
 #
 
-class PipefyConfig < ApplicationRecord
-  belongs_to :company
-  belongs_to :project
-  belongs_to :team
+module Pipefy
+  class PipefyConfig < ApplicationRecord
+    belongs_to :company
+    belongs_to :project
+    belongs_to :team
 
-  validates :company, :project, :pipe_id, :team, presence: true
+    validates :company, :project, :pipe_id, :team, presence: true
 
-  delegate :name, to: :team, prefix: true
-  delegate :full_name, to: :project, prefix: true
+    delegate :name, to: :team, prefix: true
+    delegate :full_name, to: :project, prefix: true
+  end
 end

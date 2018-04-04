@@ -3,9 +3,9 @@
 <table class="table">
   <thead>
     <tr>
-      <th><%= PipefyTeamConfig.human_attribute_name :username %></th>
-      <th><%= PipefyTeamConfig.human_attribute_name :integration_id %></th>
-      <th><%= PipefyTeamConfig.human_attribute_name :member_type %></th>
+      <th><%= Pipefy::PipefyTeamConfig.human_attribute_name :username %></th>
+      <th><%= Pipefy::PipefyTeamConfig.human_attribute_name :integration_id %></th>
+      <th><%= Pipefy::PipefyTeamConfig.human_attribute_name :member_type %></th>
       <th><%= t('general.table.actions') %></th>
     </tr>
   </thead>
@@ -14,7 +14,7 @@
       <tr>
         <td><%= pipefy_team_config.username %></td>
         <td><%= pipefy_team_config.integration_id %></td>
-        <td><%= t("activerecord.attributes.pipefy_team_config.enums.member_type.#{pipefy_team_config.member_type}") %></td>
+        <td><%= t("activerecord.attributes.pipefy/pipefy_team_config.enums.member_type.#{pipefy_team_config.member_type}") %></td>
         <td>
           <%= link_to edit_company_team_pipefy_team_config_path(@company, @team, pipefy_team_config) do %>
             <i class="fas fa-edit"></i>

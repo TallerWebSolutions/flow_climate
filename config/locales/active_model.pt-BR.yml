@@ -96,7 +96,7 @@ pt-BR:
       company_settings:
         one: Configurações da Empresa
         other: Configurações da Empresa
-      pipefy_config:
+      pipefy/pipefy_config:
         one: Configuração do Pipefy
         other: Configurações do Pipefy
       stage:
@@ -108,7 +108,7 @@ pt-BR:
       demand_block:
         one: Bloqueio da Demanda
         other: Bloqueios da Demanda
-      pipefy_team_config:
+      pipefy/pipefy_team_config:
         one: Configuração de Time no Pipefy
         other: Configurações de Time no Pipefy
       project_change_deadline_history:
@@ -259,7 +259,7 @@ pt-BR:
       company_settings:
         max_active_parallel_projects: Qtd Máxima de Projetos Paralelos Ativos
         max_flow_pressure: Máxima Pressão Geral do Fluxo
-      pipefy_config:
+      pipefy/pipefy_config:
         pipe_id: Id do Pipe
         project: Projeto
         team: Time
@@ -303,7 +303,7 @@ pt-BR:
         unblock_reason: Motivo do desbloqueio
         block_duration: Duração Útil do Bloqueio
         active: Ativo?
-      pipefy_team_config:
+      pipefy/pipefy_team_config:
         team: Time
         integration_id: Id na Integração
         username: Nome do Usuário

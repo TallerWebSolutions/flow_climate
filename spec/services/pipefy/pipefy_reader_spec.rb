@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe PipefyReader, type: :service do
+RSpec.describe Pipefy::PipefyReader, type: :service do
   let(:headers) { { Authorization: "Bearer #{Figaro.env.pipefy_token}" } }
 
   describe '#read_phase' do
@@ -8,7 +8,7 @@ RSpec.describe PipefyReader, type: :service do
       let(:phase_response) { { data: { phase: { cards: { pageInfo: { endCursor: 'WzUxNDEwNDdd', hasNextPage: false }, edges: [{ node: { id: '4648391' } }, { node: { id: '4648389' } }] } } } }.with_indifferent_access }
       it 'reads the card in the phase' do
         stub_request(:post, 'https://app.pipefy.com/queries').with(headers: headers, body: /1234/).to_return(status: 200, body: phase_response.to_json, headers: {})
-        cards = PipefyReader.instance.read_phase('1234')
+        cards = Pipefy::PipefyReader.instance.read_phase('1234')
         expect(cards).to eq %w[4648391 4648389]
       end
     end
@@ -16,7 +16,7 @@ RSpec.describe PipefyReader, type: :service do
       let(:phase_response) { { data: { phase: { cards: { pageInfo: { endCursor: 'WzUxNDEwNDdd', hasNextPage: false }, edges: [] } } } }.with_indifferent_access }
       it 'reads the card in the phase' do
         stub_request(:post, 'https://app.pipefy.com/queries').with(headers: headers, body: /1234/).to_return(status: 200, body: phase_response.to_json, headers: {})
-        cards = PipefyReader.instance.read_phase('1234')
+        cards = Pipefy::PipefyReader.instance.read_phase('1234')
         expect(cards).to eq []
       end
     end
@@ -24,7 +24,7 @@ RSpec.describe PipefyReader, type: :service do
       let(:phase_response) { { data: { phase: nil } }.with_indifferent_access }
       it 'reads the card in the phase' do
         stub_request(:post, 'https://app.pipefy.com/queries').with(headers: headers, body: /1234/).to_return(status: 200, body: phase_response.to_json, headers: {})
-        cards = PipefyReader.instance.read_phase('1234')
+        cards = Pipefy::PipefyReader.instance.read_phase('1234')
         expect(cards).to eq []
       end
     end
@@ -41,8 +41,8 @@ RSpec.describe PipefyReader, type: :service do
       end
 
       it 'paginates the call' do
-        expect(PipefyApiService).to receive(:request_next_page_cards_to_phase) { without_pages_response }
-        cards = PipefyReader.instance.read_phase('2481594')
+        expect(Pipefy::PipefyApiService).to receive(:request_next_page_cards_to_phase) { without_pages_response }
+        cards = Pipefy::PipefyReader.instance.read_phase('2481594')
         expect(cards).to eq %w[4648391 4648389]
       end
     end

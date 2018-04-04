@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-Fabricator(:pipefy_config) do
+Fabricator(:pipefy_config, from: 'Pipefy::PipefyConfig') do
   company
   team
   project

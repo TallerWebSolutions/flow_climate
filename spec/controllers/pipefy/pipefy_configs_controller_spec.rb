@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe PipefyConfigsController, type: :controller do
+RSpec.describe Pipefy::PipefyConfigsController, type: :controller do
   context 'unauthenticated' do
     describe 'GET #new' do
       before { get :new, params: { company_id: 'foo' } }
@@ -42,7 +42,7 @@ RSpec.describe PipefyConfigsController, type: :controller do
       it 'instantiates a new Company and renders the template' do
         get :new, params: { company_id: company }
         expect(response).to render_template :new
-        expect(assigns(:pipefy_config)).to be_a_new PipefyConfig
+        expect(assigns(:pipefy_config)).to be_a_new Pipefy::PipefyConfig
         expect(assigns(:projects_to_select)).to eq [second_project, first_project]
       end
     end
@@ -57,16 +57,16 @@ RSpec.describe PipefyConfigsController, type: :controller do
         let!(:team) { Fabricate :team, company: company }
         before { post :create, params: { company_id: company, pipefy_config: { team_id: team, project_id: first_project, pipe_id: '332223' } } }
         it 'creates the new company and redirects to its show' do
-          expect(PipefyConfig.last.team).to eq team
-          expect(PipefyConfig.last.project).to eq first_project
-          expect(PipefyConfig.last.pipe_id).to eq '332223'
+          expect(Pipefy::PipefyConfig.last.team).to eq team
+          expect(Pipefy::PipefyConfig.last.project).to eq first_project
+          expect(Pipefy::PipefyConfig.last.pipe_id).to eq '332223'
           expect(response).to redirect_to company_path(company)
         end
       end
       context 'passing invalid parameters' do
         before { post :create, params: { company_id: company, pipefy_config: { pipe_id: '' } } }
         it 'does not create the company and re-render the template with the errors' do
-          expect(PipefyConfig.count).to eq 1
+          expect(Pipefy::PipefyConfig.count).to eq 1
           expect(response).to render_template :new
           expect(assigns(:projects_to_select)).to eq [second_project, first_project]
           expect(assigns(:pipefy_config).errors.full_messages).to eq ['Projeto não pode ficar em branco', 'Id do Pipe não pode ficar em branco', 'Time não pode ficar em branco']
@@ -83,7 +83,7 @@ RSpec.describe PipefyConfigsController, type: :controller do
           before { delete :destroy, params: { company_id: company, id: pipefy_config } }
           it 'deletes the customer and redirects' do
             expect(response).to redirect_to company_path(company)
-            expect(PipefyConfig.last).to be_nil
+            expect(Pipefy::PipefyConfig.last).to be_nil
           end
         end
       end
@@ -153,10 +153,10 @@ RSpec.describe PipefyConfigsController, type: :controller do
       context 'passing valid parameters' do
         before { put :update, params: { company_id: company, id: pipefy_config, pipefy_config: { project_id: first_project, team_id: team, pipe_id: '100' } } }
         it 'updates the pipefy config and redirects to company show' do
-          expect(PipefyConfig.last.company).to eq company
-          expect(PipefyConfig.last.project).to eq first_project
-          expect(PipefyConfig.last.team).to eq team
-          expect(PipefyConfig.last.pipe_id).to eq '100'
+          expect(Pipefy::PipefyConfig.last.company).to eq company
+          expect(Pipefy::PipefyConfig.last.project).to eq first_project
+          expect(Pipefy::PipefyConfig.last.team).to eq team
+          expect(Pipefy::PipefyConfig.last.pipe_id).to eq '100'
           expect(response).to redirect_to company_path(company)
         end
       end
