@@ -18,11 +18,13 @@
 #  created_at    :datetime         not null
 #  updated_at    :datetime         not null
 #  product_id    :integer
+#  nickname      :string
 #
 # Indexes
 #
-#  index_projects_on_customer_id          (customer_id)
-#  index_projects_on_product_id_and_name  (product_id,name) UNIQUE
+#  index_projects_on_customer_id               (customer_id)
+#  index_projects_on_nickname_and_customer_id  (nickname,customer_id) UNIQUE
+#  index_projects_on_product_id_and_name       (product_id,name) UNIQUE
 #
 # Foreign Keys
 #
@@ -48,6 +50,7 @@ class Project < ApplicationRecord
 
   validates :customer, :qty_hours, :project_type, :name, :status, :start_date, :end_date, :status, :initial_scope, presence: true
   validates :name, uniqueness: { scope: :product, message: I18n.t('project.name.uniqueness') }
+  validates :nickname, uniqueness: { scope: :customer, message: I18n.t('project.nickname.uniqueness') }, allow_nil: true
   validate :hour_value_project_value?, :product_required?
 
   delegate :name, to: :customer, prefix: true
@@ -70,6 +73,7 @@ class Project < ApplicationRecord
   end
 
   def full_name
+    return name if customer.blank?
     return "#{customer_name} | #{product_name} | #{name}" if product.present?
     "#{customer_name} | #{name}"
   end

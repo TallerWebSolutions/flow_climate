@@ -648,7 +648,8 @@ CREATE TABLE public.projects (
     initial_scope integer NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    product_id integer
+    product_id integer,
+    nickname character varying
 );
 
 
@@ -1391,6 +1392,13 @@ CREATE INDEX index_projects_on_customer_id ON public.projects USING btree (custo
 
 
 --
+-- Name: index_projects_on_nickname_and_customer_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_projects_on_nickname_and_customer_id ON public.projects USING btree (nickname, customer_id);
+
+
+--
 -- Name: index_projects_on_product_id_and_name; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1777,6 +1785,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20180316131931'),
 ('20180316210405'),
 ('20180320180443'),
-('20180331235053');
+('20180331235053'),
+('20180403230254');
 
 

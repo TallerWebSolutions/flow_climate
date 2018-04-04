@@ -154,6 +154,7 @@ pt-BR:
         projects: Projetos
         team: Time
       project:
+        customer: Cliente
         product: Produto
         project_results: Resultados de Projeto
         name: Nome

@@ -22,7 +22,7 @@ class PipefyReader
   def update_card!(team, demand, card_response)
     return if card_response.blank?
 
-    if card_response['data']['card'].blank?
+    if card_response['data'].blank? || card_response['data']['card'].blank?
       DemandsRepository.instance.full_demand_destroy!(demand)
       return
     end
