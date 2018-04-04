@@ -42,7 +42,7 @@ class Demand < ApplicationRecord
 
   scope :opened_in_date, ->(result_date) { where('created_date::timestamp::date = :result_date', result_date: result_date) }
   scope :finished, -> { where('end_date IS NOT NULL') }
-  scope :demands_with_integration, -> { joins(project: :pipefy_config).joins(:demand_transitions).where('demands.demand_id IS NOT NULL AND pipefy_configs.active = true').uniq }
+  scope :demands_with_transition, -> { joins(project: :pipefy_config).joins(:demand_transitions).where('demands.demand_id IS NOT NULL AND pipefy_configs.active = true').uniq }
   scope :grouped_end_date_by_month, -> { finished.order(end_date: :desc).group_by { |demand| [demand.end_date.to_date.cwyear, demand.end_date.to_date.month] } }
 
   delegate :company, to: :project
