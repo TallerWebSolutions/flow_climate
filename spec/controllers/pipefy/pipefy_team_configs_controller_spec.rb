@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe PipefyTeamConfigsController, type: :controller do
+RSpec.describe Pipefy::PipefyTeamConfigsController, type: :controller do
   context 'unauthenticated' do
     describe 'GET #edit' do
       before { get :edit, params: { company_id: 'xpto', team_id: 'bar', id: 'foo' } }
@@ -66,9 +66,9 @@ RSpec.describe PipefyTeamConfigsController, type: :controller do
       context 'passing valid parameters' do
         before { put :update, params: { company_id: company, team_id: team, id: pipefy_team_config, pipefy_team_config: { member_type: :analyst, username: 'foo', integration_id: '2221' } } }
         it 'updates the member and redirects to team show' do
-          expect(PipefyTeamConfig.last.member_type).to eq 'analyst'
-          expect(PipefyTeamConfig.last.username).to eq 'foo'
-          expect(PipefyTeamConfig.last.integration_id).to eq '2221'
+          expect(Pipefy::PipefyTeamConfig.last.member_type).to eq 'analyst'
+          expect(Pipefy::PipefyTeamConfig.last.username).to eq 'foo'
+          expect(Pipefy::PipefyTeamConfig.last.integration_id).to eq '2221'
           expect(response).to redirect_to company_team_path(company, team)
         end
       end

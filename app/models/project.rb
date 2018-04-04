@@ -45,7 +45,7 @@ class Project < ApplicationRecord
   has_many :demands, dependent: :restrict_with_error
   has_many :integration_errors, dependent: :destroy
   has_many :project_change_deadline_histories, dependent: :destroy
-  has_one :pipefy_config, dependent: :destroy, autosave: true
+  has_one :pipefy_config, class_name: 'Pipefy::PipefyConfig', dependent: :destroy, autosave: true, inverse_of: :project
   has_and_belongs_to_many :stages
 
   validates :customer, :qty_hours, :project_type, :name, :status, :start_date, :end_date, :status, :initial_scope, presence: true

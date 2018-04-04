@@ -45,7 +45,7 @@ RSpec.describe Demand, type: :model do
       it { expect(Demand.finished).to match_array [first_demand, second_demand] }
     end
 
-    pending '.demands_with_integration'
+    pending '.demands_with_transition'
   end
 
   context 'delegations' do

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe PipefyConfig, type: :model do
+RSpec.describe Pipefy::PipefyConfig, type: :model do
   context 'associations' do
     it { is_expected.to belong_to :company }
     it { is_expected.to belong_to :team }

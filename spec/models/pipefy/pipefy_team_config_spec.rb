@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe PipefyTeamConfig, type: :model do
+RSpec.describe Pipefy::PipefyTeamConfig, type: :model do
   context 'enums' do
     it { is_expected.to define_enum_for(:member_type).with(developer: 0, analyst: 1, designer: 2, customer: 3) }
   end

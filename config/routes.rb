@@ -32,7 +32,10 @@ Rails.application.routes.draw do
           patch :deactivate
         end
       end
-      resources :pipefy_team_configs, only: %i[edit update]
+
+      scope :pipefy do
+        resources :pipefy_team_configs, only: %i[edit update], module: 'pipefy'
+      end
 
       get 'search_for_projects/:status_filter', action: :search_for_projects, as: 'search_for_projects', on: :member
       get 'search_demands_to_flow_charts', action: :search_demands_to_flow_charts, as: 'search_demands_to_flow_charts', on: :member
@@ -79,7 +82,7 @@ Rails.application.routes.draw do
       get 'search_for_projects/:status_filter', action: :search_for_projects, as: 'search_for_projects', on: :collection
     end
 
-    resources :pipefy_configs, only: %i[new create destroy edit update]
+    resources :pipefy_configs, only: %i[new create destroy edit update], module: 'pipefy'
 
     resources :stages, only: %i[new create edit update destroy]
   end

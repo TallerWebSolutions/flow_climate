@@ -23,9 +23,11 @@
 #  fk_rails_...  (team_id => teams.id)
 #
 
-class PipefyTeamConfig < ApplicationRecord
-  enum member_type: { developer: 0, analyst: 1, designer: 2, customer: 3 }
-  belongs_to :team
+module Pipefy
+  class PipefyTeamConfig < ApplicationRecord
+    enum member_type: { developer: 0, analyst: 1, designer: 2, customer: 3 }
+    belongs_to :team
 
-  validates :team, :integration_id, :username, presence: true
+    validates :team, :integration_id, :username, presence: true
+  end
 end
