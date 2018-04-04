@@ -76,25 +76,48 @@ RSpec.describe Project, type: :model do
       end
 
       context 'uniqueness' do
-        let(:customer) { Fabricate :customer }
-        let(:product) { Fabricate :product, customer: customer }
-        context 'same name in same product' do
-          let!(:project) { Fabricate :project, customer: customer, product: product, name: 'zzz' }
-          let!(:other_project) { Fabricate.build :project, customer: customer, product: product, name: 'zzz' }
-          it 'does not accept the model' do
-            expect(other_project.valid?).to be false
-            expect(other_project.errors[:name]).to eq ['Não deve repetir nome de projeto para o mesmo produto.']
+        context 'name to product' do
+          let(:customer) { Fabricate :customer }
+          let(:product) { Fabricate :product, customer: customer }
+          context 'same name in same product' do
+            let!(:project) { Fabricate :project, customer: customer, product: product, name: 'zzz' }
+            let!(:other_project) { Fabricate.build :project, customer: customer, product: product, name: 'zzz' }
+            it 'does not accept the model' do
+              expect(other_project.valid?).to be false
+              expect(other_project.errors[:name]).to eq ['Não deve repetir nome de projeto para o mesmo produto.']
+            end
+          end
+          context 'different name in same product' do
+            let!(:project) { Fabricate :project, customer: customer, product: product, name: 'zzz' }
+            let!(:other_project) { Fabricate.build :project, customer: customer, product: product, name: 'aaa' }
+            it { expect(other_project.valid?).to be true }
+          end
+          context 'same name in other product' do
+            let!(:project) { Fabricate :project, customer: customer, product: product, name: 'zzz' }
+            let!(:other_project) { Fabricate.build :project, name: 'zzz' }
+            it { expect(other_project.valid?).to be true }
           end
         end
-        context 'different name in same product' do
-          let!(:project) { Fabricate :project, customer: customer, product: product, name: 'zzz' }
-          let!(:other_project) { Fabricate.build :project, customer: customer, product: product, name: 'aaa' }
-          it { expect(other_project.valid?).to be true }
-        end
-        context 'different name in same product' do
-          let!(:project) { Fabricate :project, customer: customer, product: product, name: 'zzz' }
-          let!(:other_project) { Fabricate.build :project, name: 'zzz' }
-          it { expect(other_project.valid?).to be true }
+        context 'nickname to customer' do
+          let(:customer) { Fabricate :customer }
+          context 'same name in same product' do
+            let!(:project) { Fabricate :project, customer: customer, nickname: 'zzz' }
+            let!(:other_project) { Fabricate.build :project, customer: customer, nickname: 'zzz' }
+            it 'does not accept the model' do
+              expect(other_project.valid?).to be false
+              expect(other_project.errors[:nickname]).to eq ['Não deve repetir para o mesmo cliente']
+            end
+          end
+          context 'different name in same product' do
+            let!(:project) { Fabricate :project, customer: customer, nickname: 'zzz' }
+            let!(:other_project) { Fabricate.build :project, customer: customer, nickname: 'aaa' }
+            it { expect(other_project.valid?).to be true }
+          end
+          context 'same name in other product' do
+            let!(:project) { Fabricate :project, customer: customer, nickname: 'zzz' }
+            let!(:other_project) { Fabricate.build :project, nickname: 'zzz' }
+            it { expect(other_project.valid?).to be true }
+          end
         end
       end
     end

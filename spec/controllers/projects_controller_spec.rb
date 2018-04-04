@@ -168,9 +168,10 @@ RSpec.describe ProjectsController, type: :controller do
       let(:customer) { Fabricate :customer, company: company }
 
       context 'passing valid parameters' do
-        before { post :create, params: { company_id: company, project: { customer_id: customer, product_id: product, name: 'foo', status: :executing, project_type: :outsourcing, start_date: 1.day.ago, end_date: 1.day.from_now, value: 100.2, qty_hours: 300, hour_value: 200, initial_scope: 1000 } } }
+        before { post :create, params: { company_id: company, project: { customer_id: customer, product_id: product, name: 'foo', nickname: 'bar', status: :executing, project_type: :outsourcing, start_date: 1.day.ago, end_date: 1.day.from_now, value: 100.2, qty_hours: 300, hour_value: 200, initial_scope: 1000 } } }
         it 'creates the new project and redirects to projects index' do
           expect(Project.last.name).to eq 'foo'
+          expect(Project.last.nickname).to eq 'bar'
           expect(Project.last.status).to eq 'executing'
           expect(Project.last.project_type).to eq 'outsourcing'
           expect(Project.last.start_date).to eq 1.day.ago.to_date
@@ -191,6 +192,18 @@ RSpec.describe ProjectsController, type: :controller do
             expect(response).to render_template :new
             expect(assigns(:project).errors.full_messages).to eq ['Qtd de Horas não pode ficar em branco', 'Tipo do Projeto não pode ficar em branco', 'Nome não pode ficar em branco', 'Status não pode ficar em branco', 'Data de Início não pode ficar em branco', 'Data Final não pode ficar em branco', 'Escopo inicial não pode ficar em branco', 'Valor do Projeto Valor ou Valor da hora é obrigatório', 'Valor da Hora Valor ou Valor da hora é obrigatório']
           end
+        end
+        context 'customer' do
+          let(:customer) { Fabricate :customer, company: company }
+
+          before { post :create, params: { company_id: company, project: { customer_id: 'foo', product_id: product, name: 'foo', nickname: 'bar', status: :executing, project_type: :outsourcing, start_date: 1.day.ago, end_date: 1.day.from_now, value: 100.2, qty_hours: 300, hour_value: 200, initial_scope: 1000 } } }
+          it { expect(assigns(:project).errors.full_messages).to eq ['Cliente não pode ficar em branco'] }
+        end
+        context 'product' do
+          let(:customer) { Fabricate :customer, company: company }
+
+          before { post :create, params: { company_id: company, project: { customer_id: customer, product_id: 'foo', name: 'foo', nickname: 'bar', status: :executing, project_type: :outsourcing, start_date: 1.day.ago, end_date: 1.day.from_now, value: 100.2, qty_hours: 300, hour_value: 200, initial_scope: 1000 } } }
+          it { expect(assigns(:project).errors.full_messages).to eq ['Produto é obrigatório para projeto de outsourcing'] }
         end
         context 'unpermitted company' do
           let(:company) { Fabricate :company, users: [] }
@@ -272,11 +285,24 @@ RSpec.describe ProjectsController, type: :controller do
             expect(assigns(:project).errors.full_messages).to eq ['Qtd de Horas não pode ficar em branco', 'Tipo do Projeto não pode ficar em branco', 'Nome não pode ficar em branco', 'Status não pode ficar em branco', 'Data de Início não pode ficar em branco', 'Data Final não pode ficar em branco', 'Escopo inicial não pode ficar em branco', 'Valor do Projeto Valor ou Valor da hora é obrigatório', 'Valor da Hora Valor ou Valor da hora é obrigatório']
           end
         end
-        context 'non-existent project' do
+        context 'project' do
           let(:customer) { Fabricate :customer, company: company }
 
           before { put :update, params: { company_id: company, id: 'foo', project: { customer_id: customer, product_id: product.id, name: 'foo', status: :executing, project_type: :outsourcing, start_date: 1.day.ago, end_date: 1.day.from_now, value: 100.2, qty_hours: 300, hour_value: 200, initial_scope: 1000 } } }
           it { expect(response).to have_http_status :not_found }
+        end
+
+        context 'customer' do
+          let(:customer) { Fabricate :customer, company: company }
+
+          before { put :update, params: { company_id: company, id: project, project: { customer_id: 'foo', product_id: product, name: 'foo', nickname: 'bar', status: :executing, project_type: :outsourcing, start_date: 1.day.ago, end_date: 1.day.from_now, value: 100.2, qty_hours: 300, hour_value: 200, initial_scope: 1000 } } }
+          it { expect(assigns(:project).errors.full_messages).to eq ['Cliente não pode ficar em branco'] }
+        end
+        context 'product' do
+          let(:customer) { Fabricate :customer, company: company }
+
+          before { put :update, params: { company_id: company, id: project, project: { customer_id: customer, product_id: 'foo', name: 'foo', nickname: 'bar', status: :executing, project_type: :outsourcing, start_date: 1.day.ago, end_date: 1.day.from_now, value: 100.2, qty_hours: 300, hour_value: 200, initial_scope: 1000 } } }
+          it { expect(assigns(:project).errors.full_messages).to eq ['Produto é obrigatório para projeto de outsourcing'] }
         end
         context 'unpermitted company' do
           let(:company) { Fabricate :company, users: [] }

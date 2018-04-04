@@ -8,6 +8,12 @@
       <span class="help-block"><%= @project.errors[:name].join(', ') %></span>
     </div>
 
+    <div class='col-xs-3 form-group <%= 'has-error' if @project.errors[:nickname].present? %>'>
+      <%= f.label :nickname, class: 'control-label' %>
+      <%= f.text_field :nickname, class: 'form-control' %>
+      <span class="help-block"><%= @project.errors[:nickname].join(', ') %></span>
+    </div>
+
     <div class='col-xs-3 form-group <%= 'has-error' if @project.errors[:customer].present? %>'>
       <%= label_tag :customer, Customer.model_name.human, { class: 'control-label required' } %>
       <%= f.collection_select :customer_id, @company.customers, :id, :name, { include_blank: t('general.select') }, { class: 'form-control', id: 'customer-select' } %>
@@ -19,16 +25,14 @@
       <%= f.collection_select :product_id, @products, :id, :name, { include_blank: t('general.select') }, { class: 'form-control', id: 'product-select' } %>
       <span class="help-block"><%= @project.errors[:product].join(', ') %></span>
     </div>
+  </div>
 
+  <div class="row">
     <div class='col-xs-3 form-group <%= 'has-error' if @project.errors[:name].present? %>'>
       <%= f.label :status, class: 'control-label required' %>
       <%= f.select :status, Project.statuses.map { |key, _value| [t("activerecord.attributes.project.enums.status.#{key}"), key] }, { include_blank: t('general.select'), selected: @project.status }, class: 'form-control' %>
       <span class="help-block"><%= @project.errors[:customer].join(', ') %></span>
     </div>
-
-  </div>
-
-  <div class="row">
     <div class='col-xs-3 form-group <%= 'has-error' if @project.errors[:project_type].present? %>'>
       <%= f.label :project_type, class: 'control-label required' %>
       <%= f.select :project_type, Project.project_types.map { |key, _value| [t("activerecord.attributes.project.enums.project_type.#{key}"), key] }, { include_blank: t('general.select'), selected: @project.project_type }, class: 'form-control' %>
@@ -46,14 +50,14 @@
       <span class="help-block"><%= @project.errors[:end_date].join(', ') %></span>
     </div>
 
+  </div>
+
+  <div class="row">
     <div class='col-xs-3 form-group <%= 'has-error' if @project.errors[:value].present? %>'>
       <%= f.label :value, class: 'control-label required' %>
       <%= f.number_field :value, value: @project.value, class: 'form-control', step: 0.01 %>
       <span class="help-block"><%= @project.errors[:value].join(', ') %></span>
     </div>
-  </div>
-
-  <div class="row">
     <div class='col-xs-3 form-group <%= 'has-error' if @project.errors[:initial_scope].present? %>'>
       <%= f.label :initial_scope, class: 'control-label required' %>
       <%= f.number_field :initial_scope, value: @project.initial_scope, class: 'form-control', step: 1 %>

@@ -190,6 +190,8 @@ pt-BR:
     validations:
       no_value: "Valor ou Valor da hora é obrigatório"
       product_blank: "é obrigatório para projeto de outsourcing"
+    nickname:
+      uniqueness: "Não deve repetir para o mesmo cliente"
   team_member:
     edit:
       title: "Editar Membro do Time"

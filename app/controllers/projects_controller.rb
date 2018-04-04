@@ -69,7 +69,7 @@ class ProjectsController < AuthenticatedController
   private
 
   def assign_products_list
-    @products = @project.customer.products.order(:name)
+    @products = @customer&.products&.order(:name) || []
   end
 
   def assign_product
@@ -81,7 +81,7 @@ class ProjectsController < AuthenticatedController
   end
 
   def project_params
-    params.require(:project).permit(:customer_id, :product_id, :name, :status, :project_type, :start_date, :end_date, :value, :qty_hours, :hour_value, :initial_scope)
+    params.require(:project).permit(:customer_id, :product_id, :name, :nickname, :status, :project_type, :start_date, :end_date, :value, :qty_hours, :hour_value, :initial_scope)
   end
 
   def assign_company
