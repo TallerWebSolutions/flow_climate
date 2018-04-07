@@ -296,10 +296,10 @@ RSpec.describe Pipefy::PipefyResponseReader, type: :service do
       let!(:second_project_result) { Fabricate :project_result, project: first_project, result_date: Date.new(2018, 2, 9), known_scope: 90 }
       let!(:first_demand) { Fabricate :demand, project: first_project, project_result: nil, effort: 50 }
 
-      it 'computes the last manual scope' do
+      it 'ignores the last manual scope and uses only the transition based one' do
         Pipefy::PipefyResponseReader.instance.update_card!(first_project, team, first_demand, first_card_response)
         expect(ProjectResult.count).to eq 3
-        expect(ProjectResult.last.known_scope).to eq 101
+        expect(ProjectResult.last.known_scope).to eq 1
       end
     end
 
