@@ -38,7 +38,7 @@ class TeamsController < AuthenticatedController
 
   def search_demands_to_flow_charts
     @team_projects = ProjectsRepository.instance.all_projects_for_team(@team)
-    @flow_report_data = FlowReportData.new(@team_projects, params[:week], params[:year])
+    @flow_report_data = FlowReportData.new(@team_projects, params[:week].to_i, params[:year].to_i)
     respond_to { |format| format.js { render file: 'teams/flow.js.erb' } }
   end
 

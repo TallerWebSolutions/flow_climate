@@ -1,44 +1,8 @@
+<h3><%= t('demands.flow.processed_demand') %></h3>
 <% grouped_per_project_demand_list.each_pair do |project, demands| %>
-  <h4><%= project.full_name %></h4>
+  <button class="accordion"><%= "#{project.full_name} (#{demands.count})" %></button>
 
-  <table class="table table-striped table-index">
-    <thead>
-      <tr>
-        <th><%= Demand.human_attribute_name :demand_id %></th>
-        <th><%= Demand.human_attribute_name :demand_type %></th>
-        <th><%= Demand.human_attribute_name :class_of_service %></th>
-        <th><%= t('demands.index.downstream') %></th>
-        <th><%= Demand.human_attribute_name :commitment_date %></th>
-        <th><%= Demand.human_attribute_name :end_date %></th>
-        <th><%= Demand.human_attribute_name :leadtime %></th>
-        <th><%= t('demands.index.total_working_time') %></th>
-        <th><%= t('demands.index.blocked_working_time') %></th>
-        <th><%= Demand.human_attribute_name :effort %></th>
-        <th><%= Demand.human_attribute_name(:url).upcase %></th>
-        <th><%= t('general.table.actions') %></th>
-      </tr>
-    </thead>
-    <tbody>
-      <% demands.each do |demand| %>
-        <tr class="<%= 'upstream' unless demand.downstream? %>">
-          <td><%= link_to demand.demand_id, company_project_demand_path(demand.company, demand.project, demand) %></td>
-          <td><%= t("activerecord.attributes.demand.enums.demand_type.#{demand.demand_type}") %></td>
-          <td><%= t("activerecord.attributes.demand.enums.class_of_service.#{demand.class_of_service}") %></td>
-          <td class="center">
-            <% if demand.downstream? %>
-              <i class="fa fa-check" aria-hidden="true"></i>
-            <% end %>
-          </td>
-          <td><%= l(demand.commitment_date, format: :short) if demand.commitment_date.present? %></td>
-          <td><%= l(demand.end_date, format: :short) if demand.end_date.present? %></td>
-          <td><%= time_ago_in_words(demand.leadtime.seconds.ago) if demand.leadtime.present? %></td>
-          <td><%= number_with_precision(demand.total_working_time, precision: 2) %></td>
-          <td><%= number_with_precision(demand.blocked_working_time, precision: 2) %></td>
-          <td><%= number_with_precision(demand.effort, precision: 2) %></td>
-          <td><%= link_to demand.url, demand.url %></td>
-          <td><%= render 'demands/demand_actions', demand: demand %></td>
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
+  <div class="panel">
+    <%= render 'demands/summarized_demand_list', demands: demands %>
+  </div>
 <% end %>

@@ -25,6 +25,7 @@ pt-BR:
     year: "Ano"
     table:
       actions: "Ações"
+      title: "Dados"
     current_week: "Semana Atual"
     current_year: "Ano Atual"
     penultimate_week_scope: "Escopo Penúltima Semana"
@@ -32,6 +33,8 @@ pt-BR:
     select: "Selecione"
     user_not_found: "Usuário não encontrado"
     enqueued: "Sua solicitação foi colocada na fila. Em poucos minutos estará pronta."
+    charts:
+      title: "Gráficos"
   header:
     logout: Sair
     sign_up: Cadastre-se
@@ -180,8 +183,8 @@ pt-BR:
     new:
       title: "Novo Time"
     show:
-      processed_demands:
-        title: "Mostrando demandas selecionadas ou entregues entre os dias %{start_date} e %{end_date}"
+      demands_flow:
+        title: "Fluxo entre os dias %{start_date} e %{end_date}"
   project:
     new:
       title: "Novo Projeto"
@@ -242,6 +245,13 @@ pt-BR:
         tooltipsufix: "demandas"
         arrived: "Total Entrada"
         processed: "Total Processada"
+      wip_per_day:
+        title: "Trabalho em Progresso (WiP) por dia para %{name}"
+        ylabel: "Trabalho em Progresso"
+        tooltipsufix: " demanda(s)"
+    flow:
+      processed_demand: "Demandas Processadas"
+      wip: "Trabalho em Progresso"
   project_risk_configs:
     new:
       title: "Nova Configuração de Risco"
@@ -278,6 +288,8 @@ pt-BR:
         text: "Despesas"
       incomes:
         text: "Receitas"
+      wip_per_day:
+        text: "Dias"
     tooltipsufix:
       projects:
         text: "projetos"
