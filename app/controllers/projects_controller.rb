@@ -69,7 +69,7 @@ class ProjectsController < AuthenticatedController
   private
 
   def assign_products_list
-    @products = @customer&.products&.order(:name) || []
+    @products = (@customer || @project.customer)&.products&.order(:name) || []
   end
 
   def assign_product

@@ -2,6 +2,9 @@
 
 RSpec.describe FlowReportData, type: :data_object do
   context 'having projects' do
+    before { travel_to Time.zone.local(2018, 4, 6, 10, 0, 0) }
+    after { travel_back }
+
     let(:first_project) { Fabricate :project, status: :executing, start_date: 2.weeks.ago, end_date: 1.week.from_now }
     let(:second_project) { Fabricate :project, status: :waiting, start_date: 1.week.from_now, end_date: 2.weeks.from_now }
     let(:third_project) { Fabricate :project, status: :maintenance, start_date: 2.weeks.from_now, end_date: 3.weeks.from_now }
@@ -23,7 +26,7 @@ RSpec.describe FlowReportData, type: :data_object do
 
     describe '.initialize' do
       let(:selected_demands) { DemandsRepository.instance.selected_grouped_by_project_and_week(Project.all, 1.week.ago.to_date.cweek, 1.week.ago.to_date.cwyear).group_by(&:project) }
-      let(:processed_demands) { DemandsRepository.instance.throughput_grouped_by_project_and_week(Project.all, 1.week.ago.to_date.cweek, 1.week.ago.to_date.cwyear).group_by(&:project) }
+      let(:processed_demands) { DemandsRepository.instance.throughput_by_project_and_week(Project.all, 1.week.ago.to_date.cweek, 1.week.ago.to_date.cwyear).group_by(&:project) }
 
       it 'extracts the information of flow' do
         flow_data = FlowReportData.new(Project.all, 1.week.ago.to_date.cweek, 1.week.ago.to_date.cwyear)
@@ -43,6 +46,15 @@ RSpec.describe FlowReportData, type: :data_object do
         expect(flow_data.processing_rate_data[second_project]).to match_array [third_demand, fourth_demand, seventh_demand, nineth_demand]
         expect(flow_data.processing_rate_data[third_project]).to match_array [fifth_demand, tenth_demand]
 
+        expect(flow_data.wip_per_day[0][:data]).to eq [1, 1, 1, 1, 6, 6, 6]
+        expect(flow_data.demands_in_wip[Date.new(2018, 3, 26).to_s]).to eq [out_date_selected_demand]
+        expect(flow_data.demands_in_wip[Date.new(2018, 3, 27).to_s]).to eq [out_date_selected_demand]
+        expect(flow_data.demands_in_wip[Date.new(2018, 3, 28).to_s]).to eq [out_date_selected_demand]
+        expect(flow_data.demands_in_wip[Date.new(2018, 3, 29).to_s]).to eq [out_date_selected_demand]
+        expect(flow_data.demands_in_wip[Date.new(2018, 3, 30).to_s]).to eq [out_date_selected_demand, sixth_demand, seventh_demand, eigth_demand, nineth_demand, tenth_demand]
+        expect(flow_data.demands_in_wip[Date.new(2018, 3, 31).to_s]).to eq [out_date_selected_demand, sixth_demand, seventh_demand, eigth_demand, nineth_demand, tenth_demand]
+        expect(flow_data.demands_in_wip[Date.new(2018, 4, 1).to_s]).to eq [out_date_selected_demand, sixth_demand, seventh_demand, eigth_demand, nineth_demand, tenth_demand]
+
         expect(flow_data.column_chart_data).to eq([{ name: I18n.t('demands.charts.processing_rate.arrived'), data: [2, 2, 1] }, { name: I18n.t('demands.charts.processing_rate.processed'), data: [2, 2, 1] }])
       end
     end
@@ -50,7 +62,7 @@ RSpec.describe FlowReportData, type: :data_object do
   context 'having no projects' do
     describe '.initialize' do
       let(:selected_demands) { DemandsRepository.instance.selected_grouped_by_project_and_week(Project.all, 1.week.ago.to_date.cweek, 1.week.ago.to_date.cwyear).group_by(&:project) }
-      let(:processed_demands) { DemandsRepository.instance.throughput_grouped_by_project_and_week(Project.all, 1.week.ago.to_date.cweek, 1.week.ago.to_date.cwyear).group_by(&:project) }
+      let(:processed_demands) { DemandsRepository.instance.throughput_by_project_and_week(Project.all, 1.week.ago.to_date.cweek, 1.week.ago.to_date.cwyear).group_by(&:project) }
       subject(:flow_data) { FlowReportData.new(Project.all, 1.week.ago.to_date.cweek, 1.week.ago.to_date.cwyear) }
 
       it 'extracts the information of flow' do

@@ -148,6 +148,7 @@ RSpec.describe ProjectsController, type: :controller do
         it 'instantiates a new Project and renders the template' do
           expect(response).to render_template :new
           expect(assigns(:project)).to be_a_new Project
+          expect(assigns(:products)).to eq []
         end
       end
       context 'invalid parameters' do
@@ -166,6 +167,8 @@ RSpec.describe ProjectsController, type: :controller do
 
     describe 'POST #create' do
       let(:customer) { Fabricate :customer, company: company }
+      let!(:product) { Fabricate :product, customer: customer, name: 'zzz' }
+      let!(:other_product) { Fabricate :product, customer: customer, name: 'aaa' }
 
       context 'passing valid parameters' do
         before { post :create, params: { company_id: company, project: { customer_id: customer, product_id: product, name: 'foo', nickname: 'bar', status: :executing, project_type: :outsourcing, start_date: 1.day.ago, end_date: 1.day.from_now, value: 100.2, qty_hours: 300, hour_value: 200, initial_scope: 1000 } } }
@@ -191,6 +194,7 @@ RSpec.describe ProjectsController, type: :controller do
             expect(Project.last).to be_nil
             expect(response).to render_template :new
             expect(assigns(:project).errors.full_messages).to eq ['Qtd de Horas não pode ficar em branco', 'Tipo do Projeto não pode ficar em branco', 'Nome não pode ficar em branco', 'Status não pode ficar em branco', 'Data de Início não pode ficar em branco', 'Data Final não pode ficar em branco', 'Escopo inicial não pode ficar em branco', 'Valor do Projeto Valor ou Valor da hora é obrigatório', 'Valor da Hora Valor ou Valor da hora é obrigatório']
+            expect(assigns(:products)).to eq [other_product, product]
           end
         end
         context 'customer' do
@@ -217,7 +221,8 @@ RSpec.describe ProjectsController, type: :controller do
 
     describe 'GET #edit' do
       let(:customer) { Fabricate :customer, company: company }
-      let(:product) { Fabricate :product, customer: customer, name: 'zzz' }
+      let!(:product) { Fabricate :product, customer: customer, name: 'zzz' }
+      let!(:other_product) { Fabricate :product, customer: customer, name: 'aaa' }
       let(:project) { Fabricate :project, customer: customer, product: product }
 
       context 'valid parameters' do
@@ -226,6 +231,7 @@ RSpec.describe ProjectsController, type: :controller do
           expect(response).to render_template :edit
           expect(assigns(:company)).to eq company
           expect(assigns(:project)).to eq project
+          expect(assigns(:products)).to eq [other_product, product]
         end
       end
 
@@ -251,7 +257,8 @@ RSpec.describe ProjectsController, type: :controller do
 
     describe 'PUT #update' do
       let(:customer) { Fabricate :customer, company: company }
-      let(:product) { Fabricate :product, customer: customer, name: 'zzz' }
+      let!(:product) { Fabricate :product, customer: customer, name: 'zzz' }
+      let!(:other_product) { Fabricate :product, customer: customer, name: 'aaa' }
       let(:project) { Fabricate :project, customer: customer, product: product }
 
       context 'passing valid parameters' do
@@ -282,6 +289,7 @@ RSpec.describe ProjectsController, type: :controller do
           before { put :update, params: { company_id: company, id: project, project: { customer_id: customer, product_id: product, name: '', status: nil, project_type: nil, start_date: nil, end_date: nil, value: nil, qty_hours: nil, hour_value: nil, initial_scope: nil } } }
           it 'does not update the project and re-render the template with the errors' do
             expect(response).to render_template :edit
+            expect(assigns(:products)).to eq [other_product, product]
             expect(assigns(:project).errors.full_messages).to eq ['Qtd de Horas não pode ficar em branco', 'Tipo do Projeto não pode ficar em branco', 'Nome não pode ficar em branco', 'Status não pode ficar em branco', 'Data de Início não pode ficar em branco', 'Data Final não pode ficar em branco', 'Escopo inicial não pode ficar em branco', 'Valor do Projeto Valor ou Valor da hora é obrigatório', 'Valor da Hora Valor ou Valor da hora é obrigatório']
           end
         end

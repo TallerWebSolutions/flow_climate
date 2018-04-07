@@ -255,12 +255,12 @@ RSpec.describe DemandsController, type: :controller do
       let!(:project) { Fabricate :project, customer: product.customer, product: product, end_date: 5.days.from_now }
       let!(:first_demand) { Fabricate :demand }
       let!(:second_demand) { Fabricate :demand }
-      let(:first_block) { Fabricate :demand_block, demand: first_demand, block_time: Time.zone.today }
-      let(:second_block) { Fabricate :demand_block, demand: first_demand, block_time: 2.days.ago }
-      let(:out_block) { Fabricate :demand_block, demand: second_demand }
 
       context 'passing a valid ID' do
         context 'having data' do
+          let!(:first_block) { Fabricate :demand_block, demand: first_demand, block_time: Time.zone.today, active: true }
+          let!(:second_block) { Fabricate :demand_block, demand: first_demand, block_time: 2.days.ago }
+          let!(:out_block) { Fabricate :demand_block, demand: second_demand }
           before { get :show, params: { company_id: company, project_id: project, id: first_demand } }
           it 'assigns the instance variable and renders the template' do
             expect(response).to render_template :show

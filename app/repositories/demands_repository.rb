@@ -21,7 +21,18 @@ class DemandsRepository
     Demand.where(project_id: projects.map(&:id)).where('EXTRACT(WEEK FROM commitment_date) = :week AND EXTRACT(YEAR FROM commitment_date) = :year', week: week, year: year)
   end
 
-  def throughput_grouped_by_project_and_week(projects, week, year)
+  def throughput_by_project_and_week(projects, week, year)
     Demand.where(project_id: projects.pluck(:id)).where('EXTRACT(WEEK FROM end_date) = :week AND EXTRACT(YEAR FROM end_date) = :year', week: week, year: year)
+  end
+
+  def work_in_progress_for(projects, analysed_date)
+    demands = Demand.joins(:project).where(project_id: projects.map(&:id))
+    demands_touched_in_day(demands, analysed_date).order(:commitment_date)
+  end
+
+  private
+
+  def demands_touched_in_day(demands, analysed_date)
+    demands.where('(demands.commitment_date <= :end_of_day AND demands.end_date IS NULL) OR (demands.commitment_date <= :end_of_day AND demands.end_date > :beginning_of_day)', beginning_of_day: analysed_date.beginning_of_day, end_of_day: analysed_date.end_of_day)
   end
 end

@@ -33,6 +33,9 @@ RSpec.describe TeamsController, type: :controller do
   end
 
   context 'authenticated' do
+    before { travel_to Time.zone.local(2018, 4, 6, 10, 0, 0) }
+    after { travel_back }
+
     let(:user) { Fabricate :user }
     before { sign_in user }
 
@@ -75,7 +78,7 @@ RSpec.describe TeamsController, type: :controller do
         context 'having data' do
           it 'assigns the instance variables and renders the template' do
             expect(DemandsRepository.instance).to(receive(:selected_grouped_by_project_and_week).with([project_in_product_team, second_project, first_project], Time.zone.today.cweek, Time.zone.today.cwyear).once { [first_demand, second_demand] })
-            expect(DemandsRepository.instance).to(receive(:throughput_grouped_by_project_and_week).with([project_in_product_team, second_project, first_project], Time.zone.today.cweek, Time.zone.today.cwyear).once { [third_demand, fourth_demand] })
+            expect(DemandsRepository.instance).to(receive(:throughput_by_project_and_week).with([project_in_product_team, second_project, first_project], Time.zone.today.cweek, Time.zone.today.cwyear).once { [third_demand, fourth_demand] })
             get :show, params: { company_id: company, id: team.id }
             expect(response).to render_template :show
             expect(assigns(:company)).to eq company
@@ -320,8 +323,8 @@ RSpec.describe TeamsController, type: :controller do
 
           context 'and passing the status filter executing' do
             it 'assigns the instance variable and renders the template' do
-              expect(DemandsRepository.instance).to(receive(:selected_grouped_by_project_and_week).with([second_project, first_project], 1.week.ago.to_date.cweek.to_s, 1.week.ago.to_date.cwyear.to_s).once { [first_demand, second_demand] })
-              expect(DemandsRepository.instance).to(receive(:throughput_grouped_by_project_and_week).with([second_project, first_project], 1.week.ago.to_date.cweek.to_s, 1.week.ago.to_date.cwyear.to_s).once { [third_demand, fourth_demand] })
+              expect(DemandsRepository.instance).to(receive(:selected_grouped_by_project_and_week).with([second_project, first_project], 1.week.ago.to_date.cweek, 1.week.ago.to_date.cwyear).once { [first_demand, second_demand] })
+              expect(DemandsRepository.instance).to(receive(:throughput_by_project_and_week).with([second_project, first_project], 1.week.ago.to_date.cweek, 1.week.ago.to_date.cwyear).once { [third_demand, fourth_demand] })
               get :search_demands_to_flow_charts, params: { company_id: company, id: team, week: 1.week.ago.to_date.cweek, year: 1.week.ago.to_date.cwyear }, xhr: true
 
               expect(response).to render_template 'teams/flow.js.erb'

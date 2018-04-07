@@ -3,4 +3,7 @@ $("#flow").html("<%= escape_javascript(render 'teams/flow', flow_report_data: @f
 $(function () {
     var columnDiv = $('#last-week-throughput-column');
     buildColumnChart(columnDiv);
+
+    var wipDiv = $('#wip-per-day');
+    buildColumnChart(wipDiv);
 });

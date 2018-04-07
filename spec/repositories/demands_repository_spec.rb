@@ -58,7 +58,7 @@ RSpec.describe DemandsRepository, type: :repository do
     end
   end
 
-  describe '#throughput_grouped_by_project_and_week' do
+  describe '#throughput_by_project_and_week' do
     let(:first_project) { Fabricate :project, start_date: 3.weeks.ago }
     let(:second_project) { Fabricate :project, start_date: 3.weeks.ago }
 
@@ -69,10 +69,36 @@ RSpec.describe DemandsRepository, type: :repository do
       let!(:fourth_demand) { Fabricate :demand, project: first_project, end_date: 1.week.ago }
       let!(:fifth_demand) { Fabricate :demand, project: second_project, end_date: 1.week.ago }
 
-      it { expect(DemandsRepository.instance.throughput_grouped_by_project_and_week(Project.all, 1.week.ago.to_date.cweek, 1.week.ago.to_date.cwyear)).to match_array [third_demand, fourth_demand, fifth_demand] }
+      it { expect(DemandsRepository.instance.throughput_by_project_and_week(Project.all, 1.week.ago.to_date.cweek, 1.week.ago.to_date.cwyear)).to match_array [third_demand, fourth_demand, fifth_demand] }
     end
     context 'having no data' do
-      it { expect(DemandsRepository.instance.throughput_grouped_by_project_and_week(Project.all, 1.week.ago.to_date.cweek, 1.week.ago.to_date.cwyear)).to eq [] }
+      it { expect(DemandsRepository.instance.throughput_by_project_and_week(Project.all, 1.week.ago.to_date.cweek, 1.week.ago.to_date.cwyear)).to eq [] }
+    end
+  end
+
+  describe '#working_in_progress_for' do
+    before { travel_to Time.zone.local(2018, 4, 5, 10, 0, 0) }
+    after { travel_back }
+
+    let(:project) { Fabricate :project }
+
+    context 'having demands' do
+      let!(:first_demand) { Fabricate :demand, project: project, commitment_date: Time.zone.yesterday, end_date: nil }
+      let!(:second_demand) { Fabricate :demand, project: project, commitment_date: 2.days.ago, end_date: Time.zone.tomorrow }
+      let!(:third_demand) { Fabricate :demand, project: project, commitment_date: 3.days.ago, end_date: Time.zone.local(2018, 4, 5, 20, 59, 59) }
+      let!(:fourth_demand) { Fabricate :demand, project: project, commitment_date: Time.zone.yesterday, end_date: Time.zone.yesterday }
+      let!(:fifth_demand) { Fabricate :demand, project: project, commitment_date: Time.zone.tomorrow, end_date: Time.zone.tomorrow }
+      let!(:sixth_demand) { Fabricate :demand, project: project, commitment_date: Time.zone.now, end_date: Time.zone.tomorrow }
+
+      context 'having demands in progress' do
+        it { expect(DemandsRepository.instance.work_in_progress_for([project], Time.zone.today)).to eq [third_demand, second_demand, first_demand, sixth_demand] }
+      end
+    end
+
+    context 'having no demands' do
+      context 'having demands in progress' do
+        it { expect(DemandsRepository.instance.work_in_progress_for([project], Time.zone.today)).to eq [] }
+      end
     end
   end
 end
