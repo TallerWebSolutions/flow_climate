@@ -31,8 +31,9 @@ RSpec.describe ProcessPipefyProjectJob, type: :active_job do
   context 'having params' do
     context 'and a pipefy config' do
       let!(:pipefy_config) { Fabricate :pipefy_config, project: project, team: team, pipe_id: '356528' }
-      let!(:first_demand) { Fabricate :demand, project: project, demand_id: '4648391' }
-      let!(:second_demand) { Fabricate :demand, project: project, demand_id: '4648389' }
+      let(:project_result) { Fabricate :project_result, project: project, result_date: Time.zone.iso8601('2017-01-02T23:01:46-02:00') }
+      let!(:first_demand) { Fabricate :demand, project: project, project_result: project_result, demand_id: '4648391' }
+      let!(:second_demand) { Fabricate :demand, project: project, project_result: project_result, demand_id: '4648389' }
 
       context 'returning success' do
         before do
@@ -46,6 +47,7 @@ RSpec.describe ProcessPipefyProjectJob, type: :active_job do
           expect(Pipefy::PipefyResponseReader.instance).to(receive(:create_card!).with(project, team, other_card_response).once { second_demand })
           expect(Pipefy::PipefyResponseReader.instance).to receive(:update_card!).with(project, team, first_demand, card_response).once
           expect(Pipefy::PipefyResponseReader.instance).to receive(:update_card!).with(project, team, second_demand, other_card_response).once
+          expect_any_instance_of(ProjectResult).to receive(:compute_flow_metrics!).once
           ProcessPipefyProjectJob.perform_now(project)
         end
       end

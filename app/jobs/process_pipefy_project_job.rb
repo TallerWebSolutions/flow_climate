@@ -8,6 +8,7 @@ class ProcessPipefyProjectJob < ApplicationJob
       cards_in_stage = Pipefy::PipefyReader.instance.read_phase(stage.integration_id)
       process_and_save_cards_in_phase!(project, project.pipefy_config.team, cards_in_stage)
     end
+    project.project_results.map(&:compute_flow_metrics!)
   end
 
   private

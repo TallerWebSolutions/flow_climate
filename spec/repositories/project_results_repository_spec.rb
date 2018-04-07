@@ -227,24 +227,4 @@ RSpec.describe ProjectResultsRepository, type: :repository do
       it { expect(ProjectResult.count).to eq 2 }
     end
   end
-
-  describe '#last_manual_entry' do
-    let(:company) { Fabricate :company }
-    let(:team) { Fabricate :team, company: company }
-    let(:customer) { Fabricate :customer, company: company }
-    let(:project) { Fabricate :project, customer: customer }
-    let(:demand) { Fabricate :demand, project: project }
-    let!(:demand_transition) { Fabricate :demand_transition, demand: demand, last_time_in: Time.zone.iso8601('2018-02-15T23:01:46') }
-    let!(:project_result) { Fabricate :project_result, project: project, demands: [demand], result_date: Time.zone.iso8601('2018-02-15T23:01:46') }
-
-    context 'when there is a manual project result before the last automatic one' do
-      let!(:manual_project_result) { Fabricate :project_result, project: project, result_date: Time.zone.iso8601('2018-02-10T23:01:46') }
-      it { expect(ProjectResultsRepository.instance.last_manual_entry(project).result_date).to eq Date.new(2018, 2, 10) }
-    end
-
-    context 'when there is a manual project result after the last automatic one' do
-      let!(:manual_project_result) { Fabricate :project_result, project: project, result_date: Time.zone.iso8601('2018-02-18T23:01:46') }
-      it { expect(ProjectResultsRepository.instance.last_manual_entry(project).result_date).to eq Date.new(2018, 2, 18) }
-    end
-  end
 end
