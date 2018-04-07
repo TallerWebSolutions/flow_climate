@@ -24,7 +24,7 @@ class ReportData
     result_data = []
     @weeks.each do |week_year|
       break unless add_data_to_chart?(week_year)
-      keys_matching = weekly_data.keys.select { |key| hash_key_matching?(key, week_year) }
+      keys_matching = weekly_data.keys.select { |key| date_hash_matches?(key, week_year) }
       result_data << (weekly_data[keys_matching.first] || 0)
     end
     result_data
@@ -36,7 +36,7 @@ class ReportData
     result_data = []
     @weeks.each do |week_year|
       break unless add_data_to_chart?(week_year)
-      keys_matching = weekly_data.keys.select { |key| hash_key_matching?(key, week_year) }
+      keys_matching = weekly_data.keys.select { |key| date_hash_matches?(key, week_year) }
       result_data << (weekly_data[keys_matching.first] || 0)
     end
     result_data
@@ -48,7 +48,7 @@ class ReportData
     result_data = []
     @weeks.each do |week_year|
       break unless add_data_to_chart?(week_year)
-      keys_matching = weekly_data.keys.select { |key| hash_key_matching?(key, week_year) }
+      keys_matching = weekly_data.keys.select { |key| date_hash_matches?(key, week_year) }
       result_data << (weekly_data[keys_matching.first] || 0)
     end
     result_data
@@ -56,7 +56,7 @@ class ReportData
 
   private
 
-  def hash_key_matching?(key, week_year)
+  def date_hash_matches?(key, week_year)
     key.to_date.cweek == week_year[0] && key.to_date.cwyear == week_year[1]
   end
 
@@ -95,7 +95,7 @@ class ReportData
 
     @weeks.each do |week_year|
       begining_of_week = Date.commercial(week_year[1], week_year[0], 1)
-      keys_matching = weekly_data.keys.select { |key| hash_key_matching?(key, week_year) }
+      keys_matching = weekly_data.keys.select { |key| date_hash_matches?(key, week_year) }
       add_actual_or_projected_data(begining_of_week, keys_matching, weekly_data)
     end
   end
