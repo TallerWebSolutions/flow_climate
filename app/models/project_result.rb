@@ -100,13 +100,8 @@ class ProjectResult < ApplicationRecord
     team.active_available_hours_for_billable_types(project_types).to_f / 30
   end
 
-  def compute_known_scope
-    last_manual_scope = ProjectResultsRepository.instance.last_manual_entry(project)&.known_scope || 0
-    DemandsRepository.instance.known_scope_to_date(project, result_date) + last_manual_scope
-  end
-
   def update_result!(finished_demands, finished_bugs, opened_bugs)
-    known_scope = compute_known_scope
+    known_scope = DemandsRepository.instance.known_scope_to_date(project, result_date)
     remaining_days = project.remaining_days(result_date)
     update(known_scope: known_scope, throughput: finished_demands.count, qty_hours_upstream: 0, qty_hours_downstream: finished_demands.sum(&:effort),
            qty_hours_bug: finished_bugs.sum(&:effort), qty_bugs_closed: finished_bugs.count, qty_bugs_opened: opened_bugs.count,
