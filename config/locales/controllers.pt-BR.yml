@@ -341,6 +341,10 @@ pt-BR:
       title: "Etapas Configuradas"
     edit:
       title: "Editar Etapa"
+    show:
+      not_associated_projects: "Projetos não associados"
+      stage_projects: "Projetos na Etapa"
+      transitions: "Transições"
   demand_blocks:
     index:
       title: "Bloqueios de Demanda"

@@ -338,6 +338,10 @@ en:
       title: "Configured Stages"
     edit:
       title: "Edit Stage"
+    show:
+      not_associated_projects: "Not Associated Projects"
+      stage_projects: "Stage Projects"
+      transitions: "Transitions"
   demand_blocks:
     index:
       title: "Demand Blocks"

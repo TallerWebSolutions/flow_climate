@@ -84,7 +84,9 @@ Rails.application.routes.draw do
 
     resources :pipefy_configs, only: %i[new create destroy edit update], module: 'pipefy'
 
-    resources :stages
+    resources :stages do
+      resources :demand_transitions, only: :destroy
+    end
   end
 
   root 'companies#index'

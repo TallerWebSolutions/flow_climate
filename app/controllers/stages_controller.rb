@@ -26,7 +26,11 @@ class StagesController < AuthenticatedController
     redirect_to(company_path(@company), flash: { error: @stage.errors.full_messages.join(',') })
   end
 
-  def show; end
+  def show
+    @not_associated_projects = (@company.projects - @stage.projects).sort_by(&:full_name)
+    @stage_projects = @stage.projects.sort_by(&:full_name)
+    @transitions_in_stage = @stage.demand_transitions
+  end
 
   private
 
