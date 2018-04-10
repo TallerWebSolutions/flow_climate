@@ -11,15 +11,20 @@
       <%= f.select :class_of_service, Demand.class_of_services.map { |key, _value| [t("activerecord.attributes.demand.enums.class_of_service.#{key}"), key] }, { include_blank: t('general.select'), selected: @demand.class_of_service }, class: 'form-control' %>
       <span class="help-block"><%= @demand.errors[:class_of_service].join(', ') %></span>
     </div>
-    <div class='col-xs-3 form-group <%= 'has-error' if @demand.errors[:demand_id].present? %>'>
+    <div class='col-xs-2 form-group <%= 'has-error' if @demand.errors[:demand_id].present? %>'>
       <%= f.label :demand_id, class: 'control-label required' %>
       <%= f.text_field :demand_id, class: 'form-control', autofocus: true %>
       <span class="help-block"><%= @demand.errors[:demand_id].join(', ') %></span>
     </div>
-    <div class='col-xs-3 form-group <%= 'has-error' if @demand.errors[:effort].present? %>'>
-      <%= f.label :effort, class: 'control-label required' %>
-      <%= f.number_field :effort, class: 'form-control', step: 0.01 %>
-      <span class="help-block"><%= @demand.errors[:effort].join(', ') %></span>
+    <div class='col-xs-2 form-group <%= 'has-error' if @demand.errors[:effort_upstream].present? %>'>
+      <%= f.label :effort_upstream, class: 'control-label required' %>
+      <%= f.number_field :effort_upstream, class: 'form-control', step: 0.01 %>
+      <span class="help-block"><%= @demand.errors[:effort_upstream].join(', ') %></span>
+    </div>
+    <div class='col-xs-2 form-group <%= 'has-error' if @demand.errors[:effort_downstream].present? %>'>
+      <%= f.label :effort_downstream, class: 'control-label required' %>
+      <%= f.number_field :effort_downstream, class: 'form-control', step: 0.01 %>
+      <span class="help-block"><%= @demand.errors[:effort_downstream].join(', ') %></span>
     </div>
   </div>
 

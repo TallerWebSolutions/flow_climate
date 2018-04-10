@@ -54,31 +54,31 @@ RSpec.describe ProjectResultsRepository, type: :repository do
     end
   end
 
-  describe '#throughput_in_month_for_company' do
+  describe '#upstream_throughput_in_month_for_company' do
     context 'having results' do
-      let!(:first_result) { Fabricate :project_result, project: first_project, result_date: Time.zone.iso8601('2018-01-14T23:01:46'), throughput: 30 }
-      let!(:second_result) { Fabricate :project_result, project: second_project, result_date: Time.zone.iso8601('2018-02-14T23:01:46'), throughput: 50 }
-      let!(:third_result) { Fabricate :project_result, project: third_project, result_date: Time.zone.iso8601('2018-02-11T23:01:46'), throughput: 90 }
-      let!(:out_result) { Fabricate :project_result, result_date: Time.zone.iso8601('2018-02-14T23:01:46'), throughput: 60 }
+      let!(:first_result) { Fabricate :project_result, project: first_project, result_date: Time.zone.iso8601('2018-01-14T23:01:46'), throughput_upstream: 30, throughput_downstream: 20 }
+      let!(:second_result) { Fabricate :project_result, project: second_project, result_date: Time.zone.iso8601('2018-02-14T23:01:46'), throughput_upstream: 50, throughput_downstream: 40 }
+      let!(:third_result) { Fabricate :project_result, project: third_project, result_date: Time.zone.iso8601('2018-02-11T23:01:46'), throughput_upstream: 90, throughput_downstream: 70 }
+      let!(:out_result) { Fabricate :project_result, result_date: Time.zone.iso8601('2018-02-14T23:01:46'), throughput_upstream: 60 }
 
-      it { expect(ProjectResultsRepository.instance.throughput_in_month_for_company(company, Time.zone.iso8601('2018-02-14T23:01:46'))).to eq 140 }
+      it { expect(ProjectResultsRepository.instance.upstream_throughput_in_month_for_company(company, Time.zone.iso8601('2018-02-14T23:01:46').to_date)).to eq 140 }
     end
     context 'having no results' do
-      it { expect(ProjectResultsRepository.instance.throughput_in_month_for_company(company, Time.zone.iso8601('2018-02-14T23:01:46'))).to eq 0 }
+      it { expect(ProjectResultsRepository.instance.upstream_throughput_in_month_for_company(company, Time.zone.iso8601('2018-02-14T23:01:46').to_date)).to eq 0 }
     end
   end
 
-  describe '#throughput_in_month_for_company' do
+  describe '#downstream_throughput_in_month_for_company' do
     context 'having results' do
-      let!(:first_result) { Fabricate :project_result, project: first_project, result_date: Time.zone.iso8601('2018-01-14T23:01:46'), throughput: 30 }
-      let!(:second_result) { Fabricate :project_result, project: second_project, result_date: Time.zone.iso8601('2018-02-14T23:01:46'), throughput: 50 }
-      let!(:third_result) { Fabricate :project_result, project: third_project, result_date: Time.zone.iso8601('2018-02-11T23:01:46'), throughput: 90 }
-      let!(:out_result) { Fabricate :project_result, result_date: Time.zone.iso8601('2018-02-14T23:01:46'), throughput: 60 }
+      let!(:first_result) { Fabricate :project_result, project: first_project, result_date: Time.zone.iso8601('2018-01-14T23:01:46'), throughput_upstream: 30, throughput_downstream: 20 }
+      let!(:second_result) { Fabricate :project_result, project: second_project, result_date: Time.zone.iso8601('2018-02-14T23:01:46'), throughput_upstream: 50, throughput_downstream: 40 }
+      let!(:third_result) { Fabricate :project_result, project: third_project, result_date: Time.zone.iso8601('2018-02-11T23:01:46'), throughput_upstream: 90, throughput_downstream: 70 }
+      let!(:out_result) { Fabricate :project_result, result_date: Time.zone.iso8601('2018-02-14T23:01:46'), throughput_downstream: 60 }
 
-      it { expect(ProjectResultsRepository.instance.throughput_in_month_for_company(company, Time.zone.iso8601('2018-02-14T23:01:46').to_date)).to eq 140 }
+      it { expect(ProjectResultsRepository.instance.downstream_throughput_in_month_for_company(company, Time.zone.iso8601('2018-02-14T23:01:46').to_date)).to eq 110 }
     end
     context 'having no results' do
-      it { expect(ProjectResultsRepository.instance.throughput_in_month_for_company(company, Time.zone.iso8601('2018-02-14T23:01:46').to_date)).to eq 0 }
+      it { expect(ProjectResultsRepository.instance.downstream_throughput_in_month_for_company(company, Time.zone.iso8601('2018-02-14T23:01:46').to_date)).to eq 0 }
     end
   end
 
@@ -150,18 +150,35 @@ RSpec.describe ProjectResultsRepository, type: :repository do
   end
 
   describe '#throughput_for_projects_grouped_per_week' do
-    context 'when there is data in the week' do
-      let!(:first_result) { Fabricate :project_result, project: first_project, result_date: Time.zone.iso8601('2018-02-16T23:01:46'), throughput: 20 }
-      let!(:second_result) { Fabricate :project_result, project: second_project, result_date: Time.zone.iso8601('2018-02-15T23:01:46'), throughput: 10 }
-      let!(:third_result) { Fabricate :project_result, project: third_project, result_date: Time.zone.iso8601('2018-02-11T23:01:46'), throughput: 5 }
-      let!(:out_result) { Fabricate :project_result, result_date: Time.zone.iso8601('2018-02-14T23:01:46'), flow_pressure: 4 }
+    context 'when the data is for upstream' do
+      context 'when there is data in the week' do
+        let!(:first_result) { Fabricate :project_result, project: first_project, result_date: Time.zone.iso8601('2018-02-16T23:01:46'), throughput_upstream: 20 }
+        let!(:second_result) { Fabricate :project_result, project: second_project, result_date: Time.zone.iso8601('2018-02-15T23:01:46'), throughput_upstream: 10 }
+        let!(:third_result) { Fabricate :project_result, project: third_project, result_date: Time.zone.iso8601('2018-02-11T23:01:46'), throughput_upstream: 5 }
+        let!(:out_result) { Fabricate :project_result, result_date: Time.zone.iso8601('2018-02-14T23:01:46'), flow_pressure: 4 }
 
-      it { expect(ProjectResultsRepository.instance.throughput_for_projects_grouped_per_week([first_project, second_project])).to eq(Time.iso8601('2018-02-16T23:01:46-00:00').utc.change(hour: 0).beginning_of_week => 30) }
+        it { expect(ProjectResultsRepository.instance.throughput_for_projects_grouped_per_week([first_project, second_project], :upstream)).to eq(Time.iso8601('2018-02-16T23:01:46-00:00').utc.change(hour: 0).beginning_of_week => 30) }
+      end
+      context 'when there is no data' do
+        let!(:project) { Fabricate :project, customer: customer, product: product, start_date: 1.month.ago, end_date: 1.month.from_now }
+
+        it { expect(ProjectResultsRepository.instance.throughput_for_projects_grouped_per_week([project], :upstream)).to eq({}) }
+      end
     end
-    context 'when there is no data' do
-      let!(:project) { Fabricate :project, customer: customer, product: product, start_date: 1.month.ago, end_date: 1.month.from_now }
+    context 'when the data is for downstream' do
+      context 'when there is data in the week' do
+        let!(:first_result) { Fabricate :project_result, project: first_project, result_date: Time.zone.iso8601('2018-02-16T23:01:46'), throughput_downstream: 20 }
+        let!(:second_result) { Fabricate :project_result, project: second_project, result_date: Time.zone.iso8601('2018-02-15T23:01:46'), throughput_downstream: 10 }
+        let!(:third_result) { Fabricate :project_result, project: third_project, result_date: Time.zone.iso8601('2018-02-11T23:01:46'), throughput_downstream: 5 }
+        let!(:out_result) { Fabricate :project_result, result_date: Time.zone.iso8601('2018-02-14T23:01:46'), flow_pressure: 4 }
 
-      it { expect(ProjectResultsRepository.instance.throughput_for_projects_grouped_per_week([project])).to eq({}) }
+        it { expect(ProjectResultsRepository.instance.throughput_for_projects_grouped_per_week([first_project, second_project], :downstream)).to eq(Time.iso8601('2018-02-16T23:01:46-00:00').utc.change(hour: 0).beginning_of_week => 30) }
+      end
+      context 'when there is no data' do
+        let!(:project) { Fabricate :project, customer: customer, product: product, start_date: 1.month.ago, end_date: 1.month.from_now }
+
+        it { expect(ProjectResultsRepository.instance.throughput_for_projects_grouped_per_week([project], :downstream)).to eq({}) }
+      end
     end
   end
 
@@ -171,12 +188,12 @@ RSpec.describe ProjectResultsRepository, type: :repository do
     let!(:other_team_member) { Fabricate :team_member, team: team, monthly_payment: 100 }
 
     context 'when there is data in the week' do
-      let!(:first_result) { Fabricate :project_result, project: first_project, result_date: Time.zone.iso8601('2018-02-16T23:01:46'), throughput: 20, qty_hours_downstream: 20, qty_hours_upstream: 11 }
-      let!(:second_result) { Fabricate :project_result, project: second_project, result_date: Time.zone.iso8601('2018-02-16T23:01:46'), throughput: 10, qty_hours_downstream: 20, qty_hours_upstream: 11 }
-      let!(:third_result) { Fabricate :project_result, project: third_project, result_date: Time.zone.iso8601('2018-02-11T23:01:46'), throughput: 5, qty_hours_downstream: 20, qty_hours_upstream: 11 }
+      let!(:first_result) { Fabricate :project_result, project: first_project, result_date: Time.zone.iso8601('2018-02-16T23:01:46'), throughput_upstream: 20, throughput_downstream: 10, qty_hours_downstream: 20, qty_hours_upstream: 11 }
+      let!(:second_result) { Fabricate :project_result, project: second_project, result_date: Time.zone.iso8601('2018-02-16T23:01:46'), throughput_upstream: 10, throughput_downstream: 5, qty_hours_downstream: 20, qty_hours_upstream: 11 }
+      let!(:third_result) { Fabricate :project_result, project: third_project, result_date: Time.zone.iso8601('2018-02-11T23:01:46'), throughput_upstream: 5, throughput_downstream: 7, qty_hours_downstream: 20, qty_hours_upstream: 11 }
       let!(:out_result) { Fabricate :project_result, result_date: Time.zone.iso8601('2018-02-14T23:01:46'), flow_pressure: 4 }
 
-      it { expect(ProjectResultsRepository.instance.hours_per_demand_in_time_for_projects([first_project, second_project])).to eq(Time.zone.iso8601('2018-02-16T23:01:46').localtime(0).change(hour: 0).beginning_of_week => 2.066666666666667) }
+      it { expect(ProjectResultsRepository.instance.hours_per_demand_in_time_for_projects([first_project, second_project])).to eq(Time.zone.iso8601('2018-02-16T23:01:46').localtime(0).change(hour: 0).beginning_of_week => 4.133333333333334) }
     end
     context 'when there is no data' do
       let!(:project) { Fabricate :project, customer: customer, product: product, start_date: 1.month.ago, end_date: 1.month.from_now }
@@ -191,12 +208,12 @@ RSpec.describe ProjectResultsRepository, type: :repository do
     let!(:other_team_member) { Fabricate :team_member, team: team, monthly_payment: 100 }
 
     context 'when there is data in the week' do
-      let!(:first_result) { Fabricate :project_result, project: first_project, result_date: Time.zone.iso8601('2018-02-16T23:01:46'), throughput: 20, qty_hours_downstream: 20, qty_hours_upstream: 11, cost_in_month: 100 }
-      let!(:second_result) { Fabricate :project_result, project: second_project, result_date: Time.zone.iso8601('2018-02-16T23:01:46'), throughput: 10, qty_hours_downstream: 20, qty_hours_upstream: 11, cost_in_month: 150 }
-      let!(:third_result) { Fabricate :project_result, project: third_project, result_date: Time.zone.iso8601('2018-02-11T23:01:46'), throughput: 5, qty_hours_downstream: 20, qty_hours_upstream: 11, cost_in_month: 50 }
+      let!(:first_result) { Fabricate :project_result, project: first_project, result_date: Time.zone.iso8601('2018-02-16T23:01:46'), throughput_upstream: 20, throughput_downstream: 10, qty_hours_downstream: 20, qty_hours_upstream: 11, cost_in_month: 100 }
+      let!(:second_result) { Fabricate :project_result, project: second_project, result_date: Time.zone.iso8601('2018-02-16T23:01:46'), throughput_upstream: 10, throughput_downstream: 5, qty_hours_downstream: 20, qty_hours_upstream: 11, cost_in_month: 150 }
+      let!(:third_result) { Fabricate :project_result, project: third_project, result_date: Time.zone.iso8601('2018-02-11T23:01:46'), throughput_upstream: 5, throughput_downstream: 7, qty_hours_downstream: 20, qty_hours_upstream: 11, cost_in_month: 50 }
       let!(:out_result) { Fabricate :project_result, result_date: Time.zone.iso8601('2018-02-14T23:01:46'), flow_pressure: 4, cost_in_month: 300 }
 
-      it { expect(ProjectResultsRepository.instance.average_demand_cost_in_week_for_projects([first_project, second_project])).to eq(Time.zone.iso8601('2018-02-16T23:01:46').localtime(0).change(hour: 0).beginning_of_week => 1.0416666666666667) }
+      it { expect(ProjectResultsRepository.instance.average_demand_cost_in_week_for_projects([first_project, second_project])).to eq(Time.zone.iso8601('2018-02-16T23:01:46').localtime(0).change(hour: 0).beginning_of_week => 2.0833333333333335) }
     end
     context 'when there is no data' do
       let!(:project) { Fabricate :project, customer: customer, product: product, start_date: 1.month.ago, end_date: 1.month.from_now }

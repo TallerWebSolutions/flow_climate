@@ -45,8 +45,8 @@ RSpec.describe ProjectsRepository, type: :repository do
     let!(:other_project) { Fabricate :project, customer: customer, initial_scope: 50, start_date: 2.months.ago, end_date: 1.month.from_now }
 
     context 'having project results' do
-      let!(:first_result) { Fabricate :project_result, project: project, result_date: 2.months.ago, throughput: 4, flow_pressure: 2 }
-      let!(:second_result) { Fabricate :project_result, project: other_project, result_date: 1.month.ago, throughput: 10, flow_pressure: 2 }
+      let!(:first_result) { Fabricate :project_result, project: project, result_date: 2.months.ago, flow_pressure: 2 }
+      let!(:second_result) { Fabricate :project_result, project: other_project, result_date: 1.month.ago, flow_pressure: 4 }
 
       it { expect(ProjectsRepository.instance.flow_pressure_to_month(company.projects, 2.months.ago.to_date)).to eq 2.0 }
     end

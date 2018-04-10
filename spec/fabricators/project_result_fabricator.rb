@@ -11,7 +11,8 @@ Fabricator(:project_result) do
   qty_bugs_closed { Faker::Number.number(3) }
   qty_bugs_opened { Faker::Number.number(2) }
   qty_bugs_opened { Faker::Number.number(2) }
-  throughput { Faker::Number.number(3) }
+  throughput_upstream { Faker::Number.number(3) }
+  throughput_downstream { Faker::Number.number(3) }
   leadtime { Faker::Number.decimal(2) }
   flow_pressure { Faker::Number.decimal(2) }
   remaining_days { Faker::Number.decimal(0) }

@@ -7,5 +7,6 @@ Fabricator(:demand) do
   class_of_service 0
   demand_id { Faker::Internet.domain_suffix }
   assignees_count 1
-  effort { Faker::Number.decimal }
+  effort_downstream { Faker::Number.decimal }
+  effort_upstream { Faker::Number.decimal }
 end

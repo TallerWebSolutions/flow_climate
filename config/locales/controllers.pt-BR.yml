@@ -152,6 +152,9 @@ pt-BR:
         title: "Throughput por Semana"
         tooltipsufix: " demandas"
         ylabel: "Demandas"
+        stage_stream:
+          upstream: "Upstream"
+          downstream: "Downstream"
       cmd:
         title: "Custo Médio por Deamanda para %{project_name}"
         ylabel: "Custo Médio por Demanda"
@@ -167,7 +170,8 @@ pt-BR:
   project_results:
     index:
       title: "Resultados do Projeto"
-      hours_per_demand: "Horas/Demanda"
+      hours_per_demand_upstream: "Horas/Demanda no Upstream"
+      hours_per_demand_downstream: "Horas/Demanda no Downstream"
     new:
       title: "Novo Resultado de Projeto"
     edit:
@@ -225,8 +229,10 @@ pt-BR:
       title: "Nova Demanda"
     index:
       title: "Lista de Demandas"
-      total_working_time: "Tempo Útil Total"
-      blocked_working_time: "Tempo Útil Bloqueada"
+      working_time_upstream: "Tempo Útil Total no Upstream"
+      working_time_downstream: "Tempo Útil Total no Downstream"
+      blocked_working_time_upstream: "Tempo Útil Bloqueado no Upstream"
+      blocked_working_time_downstream: "Tempo Útil Bloqueado no Downstream"
       downstream: "Downstream?"
     edit:
       title: "Editar Demanda"
@@ -245,6 +251,8 @@ pt-BR:
         tooltipsufix: "demandas"
         arrived: "Total Entrada"
         processed: "Total Processada"
+        processed_downstream: "Processadas no Downstream"
+        processed_upstream: "Processadas no Upstream"
       wip_per_day:
         title: "Trabalho em Progresso (WiP) por dia para %{name}"
         ylabel: "Trabalho em Progresso"

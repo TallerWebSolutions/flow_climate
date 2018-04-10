@@ -1,7 +1,7 @@
 $(function () {
-    var columnDiv = $('#last-week-throughput-column');
+    var columnDiv = $('#processing-rate-column');
     buildColumnChart(columnDiv);
 
-    var wipDiv = $('#wip-per-day');
+    var wipDiv = $('#wip-per-day-column');
     buildColumnChart(wipDiv);
 });

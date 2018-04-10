@@ -16,9 +16,12 @@
         <th><%= Project.human_attribute_name :product_name %></th>
         <th><%= Demand.human_attribute_name :project %></th>
         <th><%= Demand.human_attribute_name :demand_id %></th>
-        <th><%= t('demands.index.total_working_time') %></th>
-        <th><%= t('demands.index.blocked_working_time') %></th>
-        <th><%= Demand.human_attribute_name :effort %></th>
+        <th><%= t('demands.index.working_time_upstream') %></th>
+        <th><%= t('demands.index.working_time_downstream') %></th>
+        <th><%= t('demands.index.blocked_working_time_upstream') %></th>
+        <th><%= t('demands.index.blocked_working_time_downstream') %></th>
+        <th><%= Demand.human_attribute_name :effort_upstream %></th>
+        <th><%= Demand.human_attribute_name :effort_downstream %></th>
         <th><%= Demand.human_attribute_name :demand_type %></th>
         <th><%= Demand.human_attribute_name :class_of_service %></th>
         <th><%= t('demands.index.downstream') %></th>
@@ -43,9 +46,12 @@
           </td>
           <td><%= link_to demand.project.name, company_project_path(demand.company, demand.project) %></td>
           <td><%= link_to demand.demand_id, company_project_demand_path(demand.company, demand.project, demand) %></td>
-          <td><%= number_with_precision(demand.total_working_time, precision: 2) %></td>
-          <td><%= number_with_precision(demand.blocked_working_time, precision: 2) %></td>
-          <td><%= number_with_precision(demand.effort, precision: 2) %></td>
+          <td><%= number_with_precision(demand.working_time_upstream, precision: 2) %></td>
+          <td><%= number_with_precision(demand.working_time_downstream, precision: 2) %></td>
+          <td><%= number_with_precision(demand.blocked_working_time_downstream, precision: 2) %></td>
+          <td><%= number_with_precision(demand.blocked_working_time_upstream, precision: 2) %></td>
+          <td><%= number_with_precision(demand.effort_upstream, precision: 2) %></td>
+          <td><%= number_with_precision(demand.effort_downstream, precision: 2) %></td>
           <td><%= t("activerecord.attributes.demand.enums.demand_type.#{demand.demand_type}") %></td>
           <td><%= t("activerecord.attributes.demand.enums.class_of_service.#{demand.class_of_service}") %></td>
           <td class="center">

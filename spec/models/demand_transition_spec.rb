@@ -18,14 +18,29 @@ RSpec.describe DemandTransition, type: :model do
       let(:other_stage) { Fabricate :stage, stage_stream: :upstream }
 
       context 'having data' do
-        let(:demand_transition) { Fabricate :demand_transition, stage: stage }
-        let(:other_demand_transition) { Fabricate :demand_transition, stage: stage }
-        let(:upstream_demand_transition) { Fabricate :demand_transition, stage: stage }
+        let!(:demand_transition) { Fabricate :demand_transition, stage: stage }
+        let!(:other_demand_transition) { Fabricate :demand_transition, stage: stage }
+        let!(:upstream_demand_transition) { Fabricate :demand_transition, stage: other_stage }
 
         it { expect(DemandTransition.downstream_transitions).to match_array [demand_transition, other_demand_transition] }
       end
       context 'having no data' do
         it { expect(DemandTransition.downstream_transitions).to match_array [] }
+      end
+    end
+    describe '.upstream_transitions' do
+      let(:stage) { Fabricate :stage, stage_stream: :downstream }
+      let(:other_stage) { Fabricate :stage, stage_stream: :upstream }
+
+      context 'having data' do
+        let!(:demand_transition) { Fabricate :demand_transition, stage: other_stage }
+        let!(:other_demand_transition) { Fabricate :demand_transition, stage: other_stage }
+        let!(:upstream_demand_transition) { Fabricate :demand_transition, stage: stage }
+
+        it { expect(DemandTransition.upstream_transitions).to match_array [demand_transition, other_demand_transition] }
+      end
+      context 'having no data' do
+        it { expect(DemandTransition.upstream_transitions).to match_array [] }
       end
     end
   end
