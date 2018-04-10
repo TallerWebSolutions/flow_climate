@@ -1,12 +1,18 @@
 <div class="container">
   <h1><%= @stage.name %></h1>
+  <h2><%= @stage.integration_id %></h2>
 
   <div class="row">
     <div class="col-xs-6">
       <h3><%= t('stages.show.not_associated_projects') %></h3>
       <ul>
         <% @not_associated_projects.each do |project| %>
-          <li><%= project.full_name %></li>
+          <li>
+            <%= "#{project.full_name} (#{project.current_team&.name})" %>
+            <%= link_to associate_project_company_stage_path(@company, @stage, project), method: :patch do %>
+              <i class="fa fa-check"></i>
+            <% end %>
+          </li>
         <% end %>
       </ul>
     </div>
@@ -14,7 +20,12 @@
       <h3><%= t('stages.show.stage_projects') %></h3>
       <ul>
         <% @stage_projects.each do |project| %>
-          <li><%= project.full_name %></li>
+          <li>
+            <%= "#{project.full_name} (#{project.current_team&.name})" %>
+            <%= link_to dissociate_project_company_stage_path(@company, @stage, project), method: :patch do %>
+              <i class="fa fa-times"></i>
+            <% end %>
+          </li>
         <% end %>
       </ul>
     </div>
