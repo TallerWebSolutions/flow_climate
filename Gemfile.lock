@@ -60,7 +60,7 @@ GEM
     connection_pool (2.2.1)
     crack (0.4.3)
       safe_yaml (~> 1.0.0)
-    crass (1.0.3)
+    crass (1.0.4)
     database_cleaner (1.6.2)
     devise (4.4.3)
       bcrypt (~> 3.0)

@@ -314,7 +314,7 @@ CREATE TABLE public.integration_errors (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     project_id integer,
-    project_result_id integer
+    integratable_model_name character varying
 );
 
 
@@ -1688,14 +1688,6 @@ ALTER TABLE ONLY public.projects_stages
 
 
 --
--- Name: integration_errors fk_rails_ca4f27942f; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.integration_errors
-    ADD CONSTRAINT fk_rails_ca4f27942f FOREIGN KEY (project_result_id) REFERENCES public.project_results(id);
-
-
---
 -- Name: operation_results fk_rails_dbd0ae3c1c; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1789,6 +1781,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20180320180443'),
 ('20180331235053'),
 ('20180403230254'),
-('20180407032019');
+('20180407032019'),
+('20180410163615');
 
 

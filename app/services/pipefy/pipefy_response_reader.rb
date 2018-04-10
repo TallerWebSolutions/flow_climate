@@ -43,7 +43,7 @@ module Pipefy
       demand.update_effort!
       demand.update_created_date! if demand.demand_transitions.present?
       project_result = ProjectResultsRepository.instance.update_project_results_for_demand!(demand, team)
-      return IntegrationError.create!(company: team.company, project: project_result.project, project_result: project_result, integration_type: :pipefy, integration_error_text: "[#{project_result.errors.full_messages.join(', ')}][result_date: [#{project_result.result_date}]") unless project_result.valid?
+      return IntegrationError.build_integration_error(demand, project_result, :pipefy) unless project_result.valid?
       ProjectResult.reset_counters(project_result.id, :demands_count)
     end
 
@@ -92,12 +92,16 @@ module Pipefy
 
     def create_transition_for_phase_and_demand(phase, demand)
       phase_id = phase['phase']['id']
-      stage = Stage.where(integration_id: phase_id).first
+      stage = Stage.find_by(integration_id: phase_id)
 
       return if stage.blank? || demand.blank?
-      last_time_out = nil
-      last_time_out = Time.iso8601(phase['lastTimeOut']) if phase['lastTimeOut'].present?
-      DemandTransition.where(stage: stage, demand: demand, last_time_in: Time.iso8601(phase['firstTimeIn']), last_time_out: last_time_out).first_or_create
+      last_time_out = define_last_time_out(phase['lastTimeOut'])
+      demand_transition = DemandTransition.where(stage: stage, demand: demand, last_time_in: Time.iso8601(phase['firstTimeIn']), last_time_out: last_time_out).first_or_create
+      IntegrationError.build_integration_error(demand, demand_transition, :pipefy) unless demand_transition.valid?
+    end
+
+    def define_last_time_out(last_time_out_param)
+      Time.iso8601(last_time_out_param) if last_time_out_param.present?
     end
 
     def read_demand_type(response_data)

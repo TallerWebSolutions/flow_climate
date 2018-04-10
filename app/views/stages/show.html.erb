@@ -1,0 +1,36 @@
+<div class="container">
+  <h1><%= @stage.name %></h1>
+
+  <div class="row">
+    <div class="col-xs-6">
+      <h3>Projetos fora Etapa</h3>
+      <table>
+        <thead>
+          <th>Name</th>
+        </thead>
+        <tbody>
+          <% (@company.projects - @stage.projects).each do |project| %>
+            <tr>
+              <td><%= project.full_name %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+    <div class="col-xs-6">
+      <h3>Projetos na Etapa</h3>
+      <table>
+        <thead>
+          <th>Name</th>
+        </thead>
+        <tbody>
+          <% @stage.projects.each do |project| %>
+            <tr>
+              <td><%= project.full_name %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
