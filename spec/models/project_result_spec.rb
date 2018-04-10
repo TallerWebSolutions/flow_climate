@@ -108,15 +108,16 @@ RSpec.describe ProjectResult, type: :model do
       let!(:project) { Fabricate :project, customer: customer, start_date: Date.new(2018, 4, 1), end_date: Date.new(2018, 4, 7), initial_scope: 10 }
       let!(:result) { Fabricate :project_result, project: project, result_date: Date.new(2018, 4, 3), known_scope: 20, throughput_upstream: 4, throughput_downstream: 2, cost_in_month: 432_123 }
 
-      let!(:first_demand) { Fabricate :demand, project_result: result, project: project, effort_upstream: 50, effort_downstream: 30 }
-      let!(:second_demand) { Fabricate :demand, project: project, demand_type: :bug, effort_upstream: 100, effort_downstream: 120 }
-      let!(:third_demand) { Fabricate :demand, project_result: result, project: project, demand_type: :feature, effort_upstream: 70, effort_downstream: 73 }
+      let!(:first_demand) { Fabricate :demand, project_result: result, project: project, created_date: Date.new(2018, 4, 3), effort_upstream: 50, effort_downstream: 30 }
+      let!(:second_demand) { Fabricate :demand, project: project, created_date: Date.new(2018, 4, 4), demand_type: :bug, effort_upstream: 100, effort_downstream: 120 }
+      let!(:third_demand) { Fabricate :demand, project_result: result, project: project, created_date: Date.new(2018, 4, 5), demand_type: :feature, effort_upstream: 70, effort_downstream: 73 }
 
       it 'defines the computed attributes' do
         result.define_automatic_attributes!
+        expect(ProjectResult.last.known_scope).to eq 11
         expect(ProjectResult.last.remaining_days).to eq 5
-        expect(ProjectResult.last.send(:current_gap)).to eq 7
-        expect(ProjectResult.last.flow_pressure.to_f).to eq 1.4
+        expect(ProjectResult.last.send(:current_gap)).to eq 5
+        expect(ProjectResult.last.flow_pressure.to_f).to eq 1.0
         expect(ProjectResult.last.cost_in_month).to eq 0
         expect(ProjectResult.last.average_demand_cost.to_f).to eq 0.0
         expect(ProjectResult.last.available_hours.to_f).to eq 0
