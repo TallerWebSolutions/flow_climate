@@ -28,7 +28,7 @@
   <tbody>
     <% stages_list.each do |stage| %>
       <tr>
-        <td><%= stage.name %></td>
+        <td><%= link_to stage.name, company_stage_path(@company, stage) %></td>
         <td><%= stage.integration_id %></td>
         <td><%= t("activerecord.attributes.stage.enums.stage_type.#{stage.stage_type}") %></td>
         <td><%= t("activerecord.attributes.stage.enums.stage_stream.#{stage.stage_stream}") %></td>

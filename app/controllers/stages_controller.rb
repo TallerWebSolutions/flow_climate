@@ -2,7 +2,7 @@
 
 class StagesController < AuthenticatedController
   before_action :assign_company
-  before_action :assign_stage, only: %i[edit update destroy]
+  before_action :assign_stage, only: %i[edit update destroy show]
 
   def new
     @stage = Stage.new
@@ -25,6 +25,8 @@ class StagesController < AuthenticatedController
     return redirect_to company_path(@company) if @stage.destroy
     redirect_to(company_path(@company), flash: { error: @stage.errors.full_messages.join(',') })
   end
+
+  def show; end
 
   private
 
