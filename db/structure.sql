@@ -232,7 +232,6 @@ CREATE TABLE public.demands (
     id bigint NOT NULL,
     project_result_id integer,
     demand_id character varying NOT NULL,
-    effort numeric,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     demand_type integer NOT NULL,
@@ -243,7 +242,9 @@ CREATE TABLE public.demands (
     url character varying,
     class_of_service integer DEFAULT 0 NOT NULL,
     project_id integer NOT NULL,
-    assignees_count integer NOT NULL
+    assignees_count integer NOT NULL,
+    effort_downstream numeric DEFAULT 0,
+    effort_upstream numeric DEFAULT 0
 );
 
 
@@ -523,7 +524,6 @@ CREATE TABLE public.project_results (
     known_scope integer NOT NULL,
     qty_hours_upstream integer NOT NULL,
     qty_hours_downstream integer NOT NULL,
-    throughput integer NOT NULL,
     qty_bugs_opened integer NOT NULL,
     qty_bugs_closed integer NOT NULL,
     qty_hours_bug integer NOT NULL,
@@ -538,7 +538,9 @@ CREATE TABLE public.project_results (
     cost_in_month numeric NOT NULL,
     average_demand_cost numeric NOT NULL,
     available_hours numeric NOT NULL,
-    manual_input boolean DEFAULT false
+    manual_input boolean DEFAULT false,
+    throughput_upstream integer DEFAULT 0,
+    throughput_downstream integer DEFAULT 0
 );
 
 
@@ -1786,6 +1788,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20180316210405'),
 ('20180320180443'),
 ('20180331235053'),
-('20180403230254');
+('20180403230254'),
+('20180407032019');
 
 

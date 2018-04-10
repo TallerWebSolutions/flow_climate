@@ -213,7 +213,8 @@ pt-BR:
       demand:
         demand_id: Id da Demanda
         project: Projeto
-        effort: Esforço
+        effort_upstream: Esforço Upstream
+        effort_downstream: Esforço Downstream
         demand_type: Tipo da Demanda
         class_of_service: Classe de Serviço
         demand_url: URL da Demanda

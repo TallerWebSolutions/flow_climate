@@ -60,7 +60,7 @@ class Company < ApplicationRecord
   end
 
   def current_month_throughput
-    @current_month_throughput ||= ProjectResultsRepository.instance.throughput_in_month_for_company(self)
+    @current_month_throughput ||= (ProjectResultsRepository.instance.upstream_throughput_in_month_for_company(self) + ProjectResultsRepository.instance.downstream_throughput_in_month_for_company(self))
   end
 
   def last_week_scope
@@ -76,7 +76,7 @@ class Company < ApplicationRecord
   end
 
   def throughput_in_month(date = Time.zone.today)
-    ProjectResultsRepository.instance.throughput_in_month_for_company(self, date)
+    ProjectResultsRepository.instance.upstream_throughput_in_month_for_company(self, date) + ProjectResultsRepository.instance.downstream_throughput_in_month_for_company(self, date)
   end
 
   def bugs_opened_in_month(date = Time.zone.today)

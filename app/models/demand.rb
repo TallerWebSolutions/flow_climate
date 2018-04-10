@@ -7,7 +7,6 @@
 #  id                :integer          not null, primary key
 #  project_result_id :integer
 #  demand_id         :string           not null
-#  effort            :decimal(, )
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
 #  demand_type       :integer          not null
@@ -19,6 +18,8 @@
 #  class_of_service  :integer          default("standard"), not null
 #  project_id        :integer          not null
 #  assignees_count   :integer          not null
+#  effort_downstream :decimal(, )      default(0.0)
+#  effort_upstream   :decimal(, )      default(0.0)
 #
 # Indexes
 #
@@ -41,7 +42,9 @@ class Demand < ApplicationRecord
   validates :project, :created_date, :demand_id, :demand_type, :class_of_service, :assignees_count, presence: true
 
   scope :opened_in_date, ->(result_date) { where('created_date::timestamp::date = :result_date', result_date: result_date) }
+  scope :finished_in_stream, ->(stage_stream) { joins(demand_transitions: :stage).where('stages.end_point = true AND stages.stage_stream = :stage_stream', stage_stream: stage_stream).uniq }
   scope :finished, -> { where('end_date IS NOT NULL') }
+  scope :finished_bugs, -> { bug.finished }
   scope :demands_with_transition, -> { joins(project: :pipefy_config).joins(:demand_transitions).where('demands.demand_id IS NOT NULL AND pipefy_configs.active = true').uniq }
   scope :grouped_end_date_by_month, -> { finished.order(end_date: :desc).group_by { |demand| [demand.end_date.to_date.cwyear, demand.end_date.to_date.month] } }
 
@@ -49,9 +52,7 @@ class Demand < ApplicationRecord
   delegate :full_name, to: :project, prefix: true
 
   def update_effort!
-    effort_transition = demand_transitions.joins(:stage).find_by('stages.compute_effort = true')
-    return if effort_transition.blank?
-    update(effort: (total_working_time - blocked_working_time))
+    update(effort_downstream: (working_time_downstream - blocked_working_time_downstream), effort_upstream: (working_time_upstream - blocked_working_time_upstream))
   end
 
   def update_created_date!
@@ -76,16 +77,24 @@ class Demand < ApplicationRecord
     end_date - commitment_date
   end
 
-  def total_working_time
-    @effort_transition ||= demand_transitions.joins(:stage).find_by('stages.compute_effort = true')
-    return 0 if @effort_transition.blank?
-    TimeService.instance.compute_working_hours_for_dates(@effort_transition.last_time_in, @effort_transition.last_time_out) * assignee_effort_computation
+  def working_time_upstream
+    effort_transitions = demand_transitions.upstream_transitions.joins(:stage).where('stages.compute_effort = true')
+    sum_effort(effort_transitions, 1)
   end
 
-  def blocked_working_time
-    @effort_transition ||= demand_transitions.joins(:stage).find_by('stages.compute_effort = true')
-    return 0 if @effort_transition.blank?
-    demand_blocks.closed.active.for_date_interval(@effort_transition.last_time_in, @effort_transition.last_time_out).sum(:block_duration)
+  def working_time_downstream
+    effort_transitions = demand_transitions.downstream_transitions.joins(:stage).where('stages.compute_effort = true')
+    sum_effort(effort_transitions, assignee_effort_computation)
+  end
+
+  def blocked_working_time_downstream
+    effort_transitions = demand_transitions.downstream_transitions.joins(:stage).where('stages.compute_effort = true')
+    sum_blocked_effort(effort_transitions)
+  end
+
+  def blocked_working_time_upstream
+    effort_transitions = demand_transitions.upstream_transitions.joins(:stage).where('stages.compute_effort = true')
+    sum_blocked_effort(effort_transitions)
   end
 
   def downstream?
@@ -93,6 +102,22 @@ class Demand < ApplicationRecord
   end
 
   private
+
+  def sum_blocked_effort(effort_transitions)
+    total_blocked = 0
+    effort_transitions.each do |transition|
+      total_blocked += demand_blocks.closed.active.for_date_interval(transition.last_time_in, transition.last_time_out).sum(:block_duration)
+    end
+    total_blocked
+  end
+
+  def sum_effort(effort_transitions, assigned_people)
+    total_effort = 0
+    effort_transitions.each do |transition|
+      total_effort += TimeService.instance.compute_working_hours_for_dates(transition.last_time_in, transition.last_time_out) * assigned_people
+    end
+    total_effort
+  end
 
   def assignee_effort_computation
     return assignees_count if assignees_count == 1

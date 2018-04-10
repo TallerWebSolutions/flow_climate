@@ -152,6 +152,9 @@ en:
         title: "Throughput per Week"
         tooltipsufix: " demands"
         ylabel: "Demands"
+        stage_stream:
+          downstream: "Downstream"
+          upstream: "Upstream"
       cmd:
         title: "Average Demand Cost to %{project_name}"
         ylabel: "Average Demand Cost"
@@ -165,7 +168,8 @@ en:
   project_results:
     index:
       title: "Project results"
-      hours_per_demand: "Hours/Demand"
+      hours_per_demand_upstream: "Hours/Demand In Upstream"
+      hours_per_demand_downstream: "Hours/Demand In Downstream"
     new:
       title: "New Project Result"
     edit:
@@ -224,8 +228,10 @@ en:
       title: "New Demand"
     index:
       title: "Demands List"
-      total_working_time: "Total Working Time"
-      blocked_working_time: "Blocked Working Time"
+      working_time_upstream: "Total Working Time in Upstream"
+      working_time_downstream: "Total Working Time in Downstream"
+      blocked_working_time_upstream: "Blocked Working Time in Upstream"
+      blocked_working_time_downstream: "Blocked Working Time in Downstream"
       downstream: "Downstream?"
     edit:
       title: "Edit Demand"
@@ -244,6 +250,8 @@ en:
         tooltipsufix: "demands"
         processed: "Total Processed"
         arrived: "Total Arrived"
+        processed_downstream: "Downstream Processed"
+        processed_upstream: "Upstream Processed"
       wip_per_day:
         title: "Work in Progress per day for %{name}"
         ylabel: "Work in Progress"

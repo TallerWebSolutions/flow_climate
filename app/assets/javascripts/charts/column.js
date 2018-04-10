@@ -36,10 +36,11 @@ function buildColumnChart(columnDiv) {
             }
         },
         legend: {
-            layout: 'vertical',
-            align: 'right',
-            verticalAlign: 'middle',
-            borderWidth: 0
+            type: 'line',
+            align: 'center',
+            verticalAlign: 'bottom',
+            x: 0,
+            y: 0
         },
         plotOptions: {
             column: {
@@ -49,7 +50,8 @@ function buildColumnChart(columnDiv) {
                     formatter: function () {
                         return Highcharts.numberFormat(this.y, columnDiv.data('decimals'), '.');
                     }
-                }
+                },
+                stacking: columnDiv.data('stacking')
             }
         },
         series: columnDiv.data('series')

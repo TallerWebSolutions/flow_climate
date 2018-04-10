@@ -169,6 +169,9 @@ RSpec.describe Team, type: :model do
   end
 
   describe '#consumed_hours_in_month' do
+    before { travel_to Time.zone.local(2018, 4, 6, 10, 0, 0) }
+    after { travel_back }
+
     let(:team) { Fabricate :team }
     context 'having project results' do
       let!(:project_result) { Fabricate :project_result, team: team, qty_hours_downstream: 200, qty_hours_upstream: 87 }

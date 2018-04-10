@@ -83,8 +83,8 @@ class Project < ApplicationRecord
   end
 
   def remaining_days(from_date = Time.zone.today)
-    return 0 if end_date < from_date || end_date < from_date
-    return (end_date - start_date).to_i + 1 if start_date > from_date.to_date
+    return 0 if end_date < from_date || end_date < start_date
+    return (end_date - start_date) + 1 if start_date > from_date.to_date
     (end_date - from_date.to_date).to_i + 1
   end
 
@@ -140,16 +140,24 @@ class Project < ApplicationRecord
   end
 
   def total_throughput
-    project_results.sum(&:throughput)
+    project_results.sum(&:throughput_downstream) + project_results.sum(&:throughput_upstream)
+  end
+
+  def total_throughput_upstream
+    project_results.sum(&:throughput_upstream)
+  end
+
+  def total_throughput_downstream
+    project_results.sum(&:throughput_downstream)
   end
 
   def total_throughput_for(date = Time.zone.today)
-    project_results.for_week(date.to_date.cweek, date.to_date.cwyear).sum(:throughput)
+    project_results.for_week(date.to_date.cweek, date.to_date.cwyear).sum(:throughput_downstream) + project_results.for_week(date.to_date.cweek, date.to_date.cwyear).sum(:throughput_upstream)
   end
 
   def total_throughput_until(date)
     return total_throughput if date.blank?
-    project_results.until_week(date.to_date.cweek, date.to_date.cwyear).sum(:throughput)
+    project_results.until_week(date.to_date.cweek, date.to_date.cwyear).sum(:throughput_downstream) + project_results.until_week(date.to_date.cweek, date.to_date.cwyear).sum(:throughput_upstream)
   end
 
   def total_hours_upstream
@@ -189,10 +197,20 @@ class Project < ApplicationRecord
     (total_hours_consumed.to_f / total_throughput.to_f)
   end
 
+  def avg_hours_per_demand_upstream
+    return 0 if project_results.empty? || total_hours_upstream.zero? || total_throughput.zero?
+    (total_hours_upstream.to_f / total_throughput_upstream.to_f)
+  end
+
+  def avg_hours_per_demand_downstream
+    return 0 if project_results.empty? || total_hours_downstream.zero? || total_throughput_downstream.zero?
+    (total_hours_downstream.to_f / total_throughput_downstream.to_f)
+  end
+
   def total_gap(date = Time.zone.today)
     last_results = locate_last_results_for_date(date)
-    analysed_scope = last_results.last&.known_scope || initial_scope
-    analysed_scope - total_throughput_until(date)
+    known_scope = last_results.last&.known_scope || initial_scope
+    known_scope - total_throughput_until(date)
   end
 
   def required_hours

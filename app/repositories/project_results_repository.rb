@@ -11,8 +11,12 @@ class ProjectResultsRepository
     project_result_joins.where('customers.company_id = :company_id AND EXTRACT(MONTH FROM result_date) = :month AND EXTRACT(YEAR FROM result_date) = :year', company_id: company.id, month: date.month, year: date.year).sum(&:project_delivered_hours)
   end
 
-  def throughput_in_month_for_company(company, date = Time.zone.today)
-    project_result_joins.where('customers.company_id = :company_id AND EXTRACT(MONTH FROM result_date) = :month AND EXTRACT(YEAR FROM result_date) = :year', company_id: company.id, month: date.month, year: date.year).sum(&:throughput)
+  def upstream_throughput_in_month_for_company(company, date = Time.zone.today)
+    project_result_joins.where('customers.company_id = :company_id AND EXTRACT(MONTH FROM result_date) = :month AND EXTRACT(YEAR FROM result_date) = :year', company_id: company.id, month: date.month, year: date.year).sum(&:throughput_upstream)
+  end
+
+  def downstream_throughput_in_month_for_company(company, date = Time.zone.today)
+    project_result_joins.where('customers.company_id = :company_id AND EXTRACT(MONTH FROM result_date) = :month AND EXTRACT(YEAR FROM result_date) = :year', company_id: company.id, month: date.month, year: date.year).sum(&:throughput_downstream)
   end
 
   def bugs_opened_in_month(company, date = Time.zone.today)
@@ -41,7 +45,10 @@ class ProjectResultsRepository
     return {} if projects.blank?
     hours_upstream_hash = build_hash_data_with_sum(projects, :qty_hours_upstream)
     hours_downstream_hash = build_hash_data_with_sum(projects, :qty_hours_downstream)
-    throughput_hash = build_hash_data_with_sum(projects, :throughput)
+    upstream_throughput_hash = build_hash_data_with_sum(projects, :throughput_upstream)
+    downstream_throughput_hash = build_hash_data_with_sum(projects, :throughput_downstream)
+
+    throughput_hash = upstream_throughput_hash.merge(downstream_throughput_hash)
 
     hours_per_demand_hash = {}
     throughput_hash.each do |key, value|
@@ -52,15 +59,19 @@ class ProjectResultsRepository
     hours_per_demand_hash
   end
 
-  def throughput_for_projects_grouped_per_week(projects)
-    build_hash_data_with_sum(projects, :throughput)
+  def throughput_for_projects_grouped_per_week(projects, stage_stream)
+    return build_hash_data_with_sum(projects, :throughput_upstream) if stage_stream == :upstream
+    build_hash_data_with_sum(projects, :throughput_downstream)
   end
 
   def average_demand_cost_in_week_for_projects(projects)
     return {} if projects.blank?
 
     cost_in_month = build_hash_data_with_average(projects, :cost_in_month)
-    throughput_hash = build_hash_data_with_sum(projects, :throughput)
+    upstream_throughput_hash = build_hash_data_with_sum(projects, :throughput_upstream)
+    downstream_throughput_hash = build_hash_data_with_sum(projects, :throughput_downstream)
+
+    throughput_hash = upstream_throughput_hash.merge(downstream_throughput_hash)
 
     average_demand_cost_hash = {}
     throughput_hash.each do |key, value|
@@ -106,8 +117,8 @@ class ProjectResultsRepository
   def create_new_empty_project_result(demand, team, result_date)
     project_result = demand.project.project_results.find_by(result_date: result_date)
     return project_result if project_result.present?
-    ProjectResult.create(project: demand.project, result_date: result_date, known_scope: 0, throughput: 0, qty_hours_upstream: 0,
-                         qty_hours_downstream: 0, qty_hours_bug: 0, qty_bugs_closed: 0, qty_bugs_opened: 0,
+    ProjectResult.create(project: demand.project, result_date: result_date, known_scope: 0, throughput_upstream: 0, throughput_downstream: 0,
+                         qty_hours_upstream: 0, qty_hours_downstream: 0, qty_hours_bug: 0, qty_bugs_closed: 0, qty_bugs_opened: 0,
                          team: team, flow_pressure: 0, remaining_days: demand.project.remaining_days(result_date),
                          cost_in_month: team.active_cost_for_billable_types([demand.project.project_type]), average_demand_cost: 0,
                          available_hours: team.active_available_hours_for_billable_types([demand.project.project_type]))

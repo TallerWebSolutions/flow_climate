@@ -1,10 +1,15 @@
 # frozen_string_literal: true
 
 class FlowReportData
-  attr_reader :projects_in_chart, :total_arrived, :total_processed, :projects_demands_selected, :projects_demands_processed,
-              :processing_rate_data, :column_chart_data, :wip_per_day, :demands_in_wip
+  attr_reader :projects_in_chart, :total_arrived, :total_processed_upstream, :total_processed_downstream,
+              :projects_demands_selected, :projects_demands_processed, :processing_rate_data, :column_chart_data,
+              :wip_per_day, :demands_in_wip
 
   def initialize(projects, week, year)
+    @total_arrived = []
+    @total_processed_upstream = []
+    @total_processed_downstream = []
+
     assign_grouped_raw_data(projects, week, year)
     build_processing_rate_data
     group_wip_data(projects, week, year)
@@ -33,14 +38,18 @@ class FlowReportData
   end
 
   def build_processing_rate_data
-    @total_arrived = []
-    @total_processed = []
-
     projects_in_chart.each do |project_id|
-      @total_arrived << (projects_demands_selected[project_id]&.count || 0)
-      @total_processed << (projects_demands_processed[project_id]&.count || 0)
+      @total_arrived << (@projects_demands_selected[project_id]&.count || 0)
+      @total_processed_upstream << (@projects_demands_processed[project_id]&.select { |demand| !demand.downstream? }&.count || 0)
+      @total_processed_downstream << (@projects_demands_processed[project_id]&.select(&:downstream?)&.count || 0)
     end
 
-    @column_chart_data = [{ name: I18n.t('demands.charts.processing_rate.arrived'), data: @total_arrived }, { name: I18n.t('demands.charts.processing_rate.processed'), data: @total_processed }]
+    build_processed_demand_column_data
+  end
+
+  def build_processed_demand_column_data
+    @column_chart_data = [{ name: I18n.t('demands.charts.processing_rate.arrived'), data: @total_arrived, stack: 0, yaxis: 0 },
+                          { name: I18n.t('demands.charts.processing_rate.processed_downstream'), data: @total_processed_downstream, stack: 1, yaxis: 1 },
+                          { name: I18n.t('demands.charts.processing_rate.processed_upstream'), data: @total_processed_upstream, stack: 1, yaxis: 1 }]
   end
 end

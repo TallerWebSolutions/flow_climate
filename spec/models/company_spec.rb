@@ -241,13 +241,13 @@ RSpec.describe Company, type: :model do
     let(:other_customer_project) { Fabricate :project, customer: other_product.customer, product: other_product }
     let(:other_company_project) { Fabricate :project, customer: other_company_product.customer, product: other_company_product }
 
-    let!(:first_result) { Fabricate :project_result, project: project, result_date: 1.month.ago, throughput: 10 }
-    let!(:second_result) { Fabricate :project_result, project: project, result_date: 1.month.ago, throughput: 20 }
-    let!(:third_result) { Fabricate :project_result, project: other_project, result_date: Time.zone.today, throughput: 5 }
-    let!(:fourth_result) { Fabricate :project_result, project: other_customer_project, result_date: Time.zone.today, throughput: 50 }
-    let!(:fifth_result) { Fabricate :project_result, project: other_company_project, result_date: Time.zone.today, throughput: 100 }
+    let!(:first_result) { Fabricate :project_result, project: project, result_date: 1.month.ago, throughput_upstream: 10, throughput_downstream: 15 }
+    let!(:second_result) { Fabricate :project_result, project: project, result_date: 1.month.ago, throughput_upstream: 20, throughput_downstream: 25 }
+    let!(:third_result) { Fabricate :project_result, project: other_project, result_date: Time.zone.today, throughput_upstream: 5, throughput_downstream: 7 }
+    let!(:fourth_result) { Fabricate :project_result, project: other_customer_project, result_date: Time.zone.today, throughput_upstream: 50, throughput_downstream: 55 }
+    let!(:fifth_result) { Fabricate :project_result, project: other_company_project, result_date: Time.zone.today, throughput_upstream: 100, throughput_downstream: 105 }
 
-    it { expect(company.throughput_in_month(1.month.ago.to_date)).to eq 30 }
+    it { expect(company.throughput_in_month(1.month.ago.to_date)).to eq 70 }
   end
 
   describe '#products_count' do
@@ -272,10 +272,10 @@ RSpec.describe Company, type: :model do
     let!(:second_project) { Fabricate :project, customer: other_customer, status: :executing, initial_scope: 40, start_date: 2.weeks.ago.to_date, end_date: 5.days.from_now }
     let!(:third_project) { Fabricate :project, customer: other_customer, status: :executing, initial_scope: 30, start_date: 2.weeks.ago.to_date, end_date: 6.days.from_now }
 
-    let!(:first_project_result) { Fabricate :project_result, result_date: 1.week.ago.to_date, project: first_project, throughput: 20, known_scope: first_project.initial_scope }
-    let!(:second_project_result) { Fabricate :project_result, result_date: 2.weeks.ago.to_date, project: first_project, throughput: 60, known_scope: first_project.initial_scope }
-    let!(:third_project_result) { Fabricate :project_result, result_date: 1.week.ago.to_date, project: second_project, throughput: 10, known_scope: second_project.initial_scope }
-    let!(:fourth_project_result) { Fabricate :project_result, result_date: 1.week.ago.to_date, project: third_project, throughput: 40, known_scope: third_project.initial_scope }
+    let!(:first_project_result) { Fabricate :project_result, result_date: 1.week.ago.to_date, project: first_project, throughput_upstream: 20, throughput_downstream: 10, known_scope: first_project.initial_scope }
+    let!(:second_project_result) { Fabricate :project_result, result_date: 2.weeks.ago.to_date, project: first_project, throughput_upstream: 60, throughput_downstream: 1, known_scope: first_project.initial_scope }
+    let!(:third_project_result) { Fabricate :project_result, result_date: 1.week.ago.to_date, project: second_project, throughput_upstream: 10, throughput_downstream: 12, known_scope: second_project.initial_scope }
+    let!(:fourth_project_result) { Fabricate :project_result, result_date: 1.week.ago.to_date, project: third_project, throughput_upstream: 40, throughput_downstream: 18, known_scope: third_project.initial_scope }
   end
 
   describe '#top_three_flow_pressure' do

@@ -58,10 +58,10 @@ RSpec.describe TeamsController, type: :controller do
       let!(:second_project) { Fabricate :project, customer: customer, status: :maintenance, start_date: 1.month.from_now, end_date: 2.months.from_now }
       let!(:project_in_product_team) { Fabricate :project, customer: customer, product: product, status: :waiting, start_date: 2.months.from_now, end_date: 3.months.from_now }
 
-      let!(:first_result) { Fabricate :project_result, project: first_project, team: team }
-      let!(:second_result) { Fabricate :project_result, project: first_project, team: team }
-      let!(:third_result) { Fabricate :project_result, project: first_project, team: team }
-      let!(:fourth_result) { Fabricate :project_result, project: first_project, team: team }
+      let!(:first_result) { Fabricate :project_result, project: first_project, team: team, result_date: Time.zone.today }
+      let!(:second_result) { Fabricate :project_result, project: first_project, team: team, result_date: Time.zone.today }
+      let!(:third_result) { Fabricate :project_result, project: first_project, team: team, result_date: Time.zone.today }
+      let!(:fourth_result) { Fabricate :project_result, project: first_project, team: team, result_date: Time.zone.today }
       let!(:fifth_result) { Fabricate :project_result, project: second_project, team: team, result_date: 1.week.from_now }
 
       let(:first_risk_config) { Fabricate :project_risk_config, project: first_project, risk_type: :no_money_to_deadline }

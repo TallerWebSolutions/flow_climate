@@ -36,7 +36,7 @@
   <p>
   <div class="row">
     <div class="col-xs-6">
-      <div id="last-week-throughput-column"
+      <div id="processing-rate-column"
            class="flow-chart"
            data-title='<%= t('demands.charts.processing_rate.title', name: team.name) %>'
            data-xcategories='<%= flow_report_data.projects_in_chart.map(&:full_name) %>'
@@ -44,12 +44,13 @@
            data-ytitle='<%= t('demands.charts.processing_rate.ylabel') %>'
            data-tooltipsufix='<%= t('demands.charts.processing_rate.tooltipsufix') %>'
            data-series='<%= flow_report_data.column_chart_data.to_json %>'
+           data-stacking='normal'
            data-decimals='0'>
       </div>
     </div>
 
     <div class="col-xs-6">
-      <div id="wip-per-day"
+      <div id="wip-per-day-column"
            class="flow-chart"
            data-title='<%= t('demands.charts.wip_per_day.title', name: team.name) %>'
            data-xcategories='<%= flow_report_data.demands_in_wip.keys %>'

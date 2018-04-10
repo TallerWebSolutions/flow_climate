@@ -14,7 +14,8 @@ en:
     no_project_starting_week: "No project starting this week"
     bulletin:
       title: "Weekly Bulletin for %{company_name}"
-      demand_effort: "effort: "
+      demand_effort_upstream: "effort upstream: "
+      demand_effort_downstream: "effort downstream: "
       starting_title: "Starting projects in the next week:"
     no_top_three_flow_pressure: "There is no projects"
     no_demands_delivered: "No delivered demands registered in last week."

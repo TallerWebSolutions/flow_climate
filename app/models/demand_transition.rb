@@ -33,6 +33,7 @@ class DemandTransition < ApplicationRecord
   delegate :compute_effort, to: :stage, prefix: true
 
   scope :downstream_transitions, -> { joins(:stage).where('stages.stage_stream = :stream', stream: Stage.stage_streams[:downstream]) }
+  scope :upstream_transitions, -> { joins(:stage).where('stages.stage_stream = :stream', stream: Stage.stage_streams[:upstream]) }
 
   after_save :set_demand_dates, on: %i[create update]
 
