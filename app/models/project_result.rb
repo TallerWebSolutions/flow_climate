@@ -72,7 +72,7 @@ class ProjectResult < ApplicationRecord
   def define_automatic_attributes!
     available_hours = available_hours_per_day([project.project_type])
     team_cost_in_month = team.active_cost_for_billable_types([project.project_type])
-    update(remaining_days: project.remaining_days(result_date), flow_pressure: current_flow_pressure, cost_in_month: team_cost_in_month, available_hours: available_hours,
+    update(known_scope: current_scope, remaining_days: project.remaining_days(result_date), flow_pressure: current_flow_pressure, cost_in_month: team_cost_in_month, available_hours: available_hours,
            average_demand_cost: team_cost_in_month / 30 / current_scope.to_f)
   end
 
