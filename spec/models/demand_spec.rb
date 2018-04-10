@@ -22,6 +22,8 @@ RSpec.describe Demand, type: :model do
   end
 
   context 'scopes' do
+    let(:project) { Fabricate :project }
+
     describe '.opened_in_date' do
       let!(:first_demand) { Fabricate :demand, created_date: Time.zone.parse('2018-02-03 11:00') }
       let!(:second_demand) { Fabricate :demand, created_date: Time.zone.parse('2018-02-03 11:00') }
@@ -31,12 +33,12 @@ RSpec.describe Demand, type: :model do
     end
 
     describe '.finished' do
-      let!(:first_demand) { Fabricate :demand }
-      let!(:second_demand) { Fabricate :demand }
-      let!(:third_demand) { Fabricate :demand }
+      let!(:first_demand) { Fabricate :demand, project: project }
+      let!(:second_demand) { Fabricate :demand, project: project }
+      let!(:third_demand) { Fabricate :demand, project: project }
 
-      let(:not_end_stage) { Fabricate :stage, commitment_point: false, end_point: false }
-      let(:end_stage) { Fabricate :stage, commitment_point: false, end_point: true }
+      let(:not_end_stage) { Fabricate :stage, commitment_point: false, end_point: false, projects: [project] }
+      let(:end_stage) { Fabricate :stage, commitment_point: false, end_point: true, projects: [project] }
 
       let!(:first_demand_transition) { Fabricate :demand_transition, demand: first_demand, stage: end_stage }
       let!(:second_demand_transition) { Fabricate :demand_transition, demand: second_demand, stage: end_stage }

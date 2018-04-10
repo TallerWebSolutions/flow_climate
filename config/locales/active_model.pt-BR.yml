@@ -50,12 +50,12 @@ pt-BR:
             base:
               restrict_dependent_destroy:
                 has_many: Não é possível excluir o registro pois existem registros dependentes
-        prospect:
-          errors:
-            blank: Oops! Este campo é requerido
           attributes:
             email:
               invalid: Este não é um email válido
+        demand_transition:
+          stage:
+            not_same: "A fase deve ser a mesma do projeto da demanda"
     models:
       user:
         one: Usuários

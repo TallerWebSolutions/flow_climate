@@ -7,20 +7,46 @@ RSpec.describe DemandTransition, type: :model do
   end
 
   context 'validations' do
-    it { is_expected.to validate_presence_of :demand }
-    it { is_expected.to validate_presence_of :stage }
-    it { is_expected.to validate_presence_of :last_time_in }
+    context 'simple ones' do
+      it { is_expected.to validate_presence_of :demand }
+      it { is_expected.to validate_presence_of :stage }
+      it { is_expected.to validate_presence_of :last_time_in }
+    end
+
+    context 'complex ones' do
+      context 'same_stage_project?' do
+        let(:project) { Fabricate :project }
+        let!(:stage) { Fabricate :stage, stage_stream: :downstream, projects: [project] }
+        let!(:other_stage) { Fabricate :stage, stage_stream: :upstream }
+        let(:demand) { Fabricate :demand, project: project }
+
+        context 'having the same stage' do
+          let(:demand_transition) { Fabricate.build :demand_transition, stage: stage, demand: demand }
+          it { expect(demand_transition.valid?).to be true }
+        end
+
+        context 'having other stage' do
+          let(:demand_transition) { Fabricate.build :demand_transition, stage: stage }
+          it 'responds invalid' do
+            expect(demand_transition.valid?).to be false
+            expect(demand_transition.errors[:stage]).to eq ['A fase deve ser a mesma do projeto da demanda']
+          end
+        end
+      end
+    end
   end
 
   context 'scopes' do
     describe '.downstream_transitions' do
-      let(:stage) { Fabricate :stage, stage_stream: :downstream }
-      let(:other_stage) { Fabricate :stage, stage_stream: :upstream }
+      let(:project) { Fabricate :project }
+      let!(:stage) { Fabricate :stage, stage_stream: :downstream, projects: [project] }
+      let(:other_stage) { Fabricate :stage, stage_stream: :upstream, projects: [project] }
+      let(:demand) { Fabricate :demand, project: project }
 
       context 'having data' do
-        let!(:demand_transition) { Fabricate :demand_transition, stage: stage }
-        let!(:other_demand_transition) { Fabricate :demand_transition, stage: stage }
-        let!(:upstream_demand_transition) { Fabricate :demand_transition, stage: other_stage }
+        let!(:demand_transition) { Fabricate :demand_transition, demand: demand, stage: stage }
+        let!(:other_demand_transition) { Fabricate :demand_transition, demand: demand, stage: stage }
+        let!(:upstream_demand_transition) { Fabricate :demand_transition, demand: demand, stage: other_stage }
 
         it { expect(DemandTransition.downstream_transitions).to match_array [demand_transition, other_demand_transition] }
       end
@@ -29,13 +55,15 @@ RSpec.describe DemandTransition, type: :model do
       end
     end
     describe '.upstream_transitions' do
-      let(:stage) { Fabricate :stage, stage_stream: :downstream }
-      let(:other_stage) { Fabricate :stage, stage_stream: :upstream }
+      let(:project) { Fabricate :project }
+      let!(:stage) { Fabricate :stage, stage_stream: :downstream, projects: [project] }
+      let(:other_stage) { Fabricate :stage, stage_stream: :upstream, projects: [project] }
+      let(:demand) { Fabricate :demand, project: project }
 
       context 'having data' do
-        let!(:demand_transition) { Fabricate :demand_transition, stage: other_stage }
-        let!(:other_demand_transition) { Fabricate :demand_transition, stage: other_stage }
-        let!(:upstream_demand_transition) { Fabricate :demand_transition, stage: stage }
+        let!(:demand_transition) { Fabricate :demand_transition, demand: demand, stage: other_stage }
+        let!(:other_demand_transition) { Fabricate :demand_transition, demand: demand, stage: other_stage }
+        let!(:upstream_demand_transition) { Fabricate :demand_transition, demand: demand, stage: stage }
 
         it { expect(DemandTransition.upstream_transitions).to match_array [demand_transition, other_demand_transition] }
       end
@@ -52,9 +80,11 @@ RSpec.describe DemandTransition, type: :model do
 
   describe '#set_dates' do
     context 'when the stage is a commitment_point' do
-      let(:stage) { Fabricate :stage, commitment_point: true, end_point: false }
-      let(:demand) { Fabricate :demand, created_date: Time.zone.parse('2018-02-04 12:00:00') }
+      let(:project) { Fabricate :project }
+      let(:stage) { Fabricate :stage, commitment_point: true, end_point: false, projects: [project] }
+      let(:demand) { Fabricate :demand, project: project, created_date: Time.zone.parse('2018-02-04 12:00:00') }
       let(:transition_date) { Time.zone.parse('2018-03-13 12:00:00') }
+
       before { Fabricate :demand_transition, stage: stage, demand: demand, last_time_in: transition_date }
       it 'sets the commitment date and do not touch in the others' do
         expect(demand.reload.commitment_date).to eq transition_date
@@ -63,9 +93,12 @@ RSpec.describe DemandTransition, type: :model do
       end
     end
     context 'when the stage is an end_point' do
-      let(:stage) { Fabricate :stage, commitment_point: false, end_point: true }
-      let(:demand) { Fabricate :demand, created_date: Time.zone.parse('2018-02-04 12:00:00') }
+      let(:project) { Fabricate :project }
+
+      let(:stage) { Fabricate :stage, commitment_point: false, end_point: true, projects: [project] }
+      let(:demand) { Fabricate :demand, project: project, created_date: Time.zone.parse('2018-02-04 12:00:00') }
       let(:transition_date) { Time.zone.parse('2018-03-13 12:00:00') }
+
       before { Fabricate :demand_transition, stage: stage, demand: demand, last_time_in: transition_date }
       it 'sets the commitment date and do not touch in the others' do
         expect(demand.reload.commitment_date).to be_nil
@@ -76,8 +109,9 @@ RSpec.describe DemandTransition, type: :model do
   end
 
   describe '#total_time_in_transition' do
-    let(:stage) { Fabricate :stage, commitment_point: true, end_point: false }
-    let(:demand) { Fabricate :demand, created_date: Time.zone.parse('2018-02-04 12:00:00') }
+    let(:project) { Fabricate :project }
+    let(:stage) { Fabricate :stage, commitment_point: true, end_point: false, projects: [project] }
+    let(:demand) { Fabricate :demand, project: project, created_date: Time.zone.parse('2018-02-04 12:00:00') }
 
     context 'when there is last_time_out' do
       let(:demand_transition) { Fabricate :demand_transition, stage: stage, demand: demand, last_time_in: Time.zone.parse('2018-03-15 12:00:00'), last_time_out: Time.zone.parse('2018-03-19 12:00:00') }
@@ -90,8 +124,9 @@ RSpec.describe DemandTransition, type: :model do
   end
 
   describe '#working_time_in_transition' do
-    let(:stage) { Fabricate :stage, commitment_point: true, end_point: false }
-    let(:demand) { Fabricate :demand, created_date: Time.zone.parse('2018-02-04 12:00:00') }
+    let(:project) { Fabricate :project }
+    let(:stage) { Fabricate :stage, commitment_point: true, end_point: false, projects: [project] }
+    let(:demand) { Fabricate :demand, project: project, created_date: Time.zone.parse('2018-02-04 12:00:00') }
 
     context 'when there is last_time_out' do
       let(:demand_transition) { Fabricate :demand_transition, stage: stage, demand: demand, last_time_in: Time.zone.parse('2018-03-15 12:00:00'), last_time_out: Time.zone.parse('2018-03-19 12:00:00') }

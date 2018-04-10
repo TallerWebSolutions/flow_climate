@@ -4,15 +4,15 @@
 #
 # Table name: integration_errors
 #
-#  id                     :integer          not null, primary key
-#  company_id             :integer          not null
-#  occured_at             :datetime         not null
-#  integration_type       :integer          not null
-#  integration_error_text :string           not null
-#  created_at             :datetime         not null
-#  updated_at             :datetime         not null
-#  project_id             :integer
-#  project_result_id      :integer
+#  id                      :integer          not null, primary key
+#  company_id              :integer          not null
+#  occured_at              :datetime         not null
+#  integration_type        :integer          not null
+#  integration_error_text  :string           not null
+#  created_at              :datetime         not null
+#  updated_at              :datetime         not null
+#  project_id              :integer
+#  integratable_model_name :string
 #
 # Indexes
 #
@@ -23,7 +23,6 @@
 #
 #  fk_rails_...  (company_id => companies.id)
 #  fk_rails_...  (project_id => projects.id)
-#  fk_rails_...  (project_result_id => project_results.id)
 #
 
 class IntegrationError < ApplicationRecord
@@ -31,7 +30,10 @@ class IntegrationError < ApplicationRecord
 
   belongs_to :company
   belongs_to :project
-  belongs_to :project_result
 
   validates :company, :integration_type, :integration_error_text, presence: true
+
+  def self.build_integration_error(demand, integratable, integration_type)
+    IntegrationError.create!(company: demand.company, integratable_model_name: integratable.model_name, project: demand.project, integration_type: integration_type, integration_error_text: "[#{integratable.errors.full_messages.join(', ')}]")
+  end
 end

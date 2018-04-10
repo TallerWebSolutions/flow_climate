@@ -28,6 +28,7 @@ class DemandTransition < ApplicationRecord
   belongs_to :stage
 
   validates :demand, :stage, :last_time_in, presence: true
+  validate :same_stage_project?
 
   delegate :name, to: :stage, prefix: true
   delegate :compute_effort, to: :stage, prefix: true
@@ -55,5 +56,10 @@ class DemandTransition < ApplicationRecord
     elsif stage.end_point?
       demand.update!(end_date: last_time_in)
     end
+  end
+
+  def same_stage_project?
+    return if stage.blank? || stage.projects.include?(demand.project)
+    errors.add(:stage, I18n.t('activerecord.errors.models.demand_transition.stage.not_same'))
   end
 end

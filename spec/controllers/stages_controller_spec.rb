@@ -174,8 +174,10 @@ RSpec.describe StagesController, type: :controller do
           end
         end
         context 'having dependencies' do
-          let!(:stage) { Fabricate :stage, company: company }
-          let!(:demand_transition) { Fabricate :demand_transition, stage: stage }
+          let(:project) { Fabricate :project }
+          let!(:stage) { Fabricate :stage, company: company, projects: [project] }
+          let(:demand) { Fabricate :demand, project: project }
+          let!(:demand_transition) { Fabricate :demand_transition, stage: stage, demand: demand }
           before { delete :destroy, params: { company_id: company, id: stage } }
 
           it 'does not delete the stage and show the errors' do

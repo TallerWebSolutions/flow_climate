@@ -77,6 +77,10 @@ en:
         restrict_dependent_destroy:
           has_one: Cannot delete record because a dependent %{record} exists
           has_many: Cannot delete record because dependent %{record} exist
+      models:
+        demand_transition:
+          stage:
+            not_same: "The stage needs to be the same as the stage in project"
   product:
     name:
       uniqueness: "Should have only one to the same customer."

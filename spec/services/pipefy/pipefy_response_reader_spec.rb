@@ -319,21 +319,31 @@ RSpec.describe Pipefy::PipefyResponseReader, type: :service do
     end
 
     context 'with invalid' do
-      context 'project_result' do
-        let(:first_project) { Fabricate :project, customer: customer, product: product, name: 'Fase 1', start_date: Date.new(2018, 1, 7), end_date: Date.new(2018, 1, 25) }
-        let!(:stage) { Fabricate :stage, projects: [first_project], integration_id: '2481595', compute_effort: true }
-        let!(:end_stage) { Fabricate :stage, projects: [first_project], integration_id: '2481597', compute_effort: false, end_point: true }
-        let!(:other_end_stage) { Fabricate :stage, integration_id: '2480504', compute_effort: false, end_point: true }
-        let(:first_card_response) { { data: { card: { id: '5140999', assignees: [{ id: '101381', username: 'xpto' }, { id: '101381', username: 'xpto' }, { id: '101382', username: 'bla' }, { id: '101321', username: 'mambo' }], comments: [{ created_at: '2018-03-01T18:39:46-03:00', author: { username: 'sbbrubles' }, text: '[BLOCKED]: xpto of bla having foo.' }], fields: [{ name: 'Descrição da pesquisa', value: 'teste' }, { name: 'Title', value: 'Página dos colunistas' }, { name: 'Type', value: 'bUG' }, { name: 'JiraKey', value: 'PD-46' }, { name: 'Class of Service', value: 'Padrão' }, { name: 'Project', value: 'bLa | XpTO | FASE 1' }], phases_history: [{ phase: { id: '2481595' }, firstTimeIn: '2018-02-22T17:09:58-03:00', lastTimeOut: '2018-02-26T17:09:58-03:00' }, { phase: { id: '2481597' }, firstTimeIn: '2018-02-23T17:09:58-03:00', lastTimeOut: nil }], pipe: { id: '356355' }, url: 'http://app.pipefy.com/pipes/356355#cards/5140999' } } }.with_indifferent_access }
-        let!(:first_pipefy_config) { Fabricate :pipefy_config, project: first_project, team: team, pipe_id: '356528', active: true }
-        let!(:first_demand) { Fabricate :demand, project: first_project, project_result: nil }
+      let(:first_project) { Fabricate :project, customer: customer, product: product, name: 'Fase 1', start_date: Date.new(2018, 1, 7), end_date: Date.new(2018, 1, 25) }
+      let!(:stage) { Fabricate :stage, projects: [first_project], integration_id: '2481595', compute_effort: true }
+      let!(:end_stage) { Fabricate :stage, projects: [first_project], integration_id: '2481597', compute_effort: false, end_point: true }
+      let!(:other_end_stage) { Fabricate :stage, integration_id: '2480504', compute_effort: false, end_point: true }
+      let(:first_card_response) { { data: { card: { id: '5140999', assignees: [{ id: '101381', username: 'xpto' }, { id: '101381', username: 'xpto' }, { id: '101382', username: 'bla' }, { id: '101321', username: 'mambo' }], comments: [{ created_at: '2018-03-01T18:39:46-03:00', author: { username: 'sbbrubles' }, text: '[BLOCKED]: xpto of bla having foo.' }], fields: [{ name: 'Descrição da pesquisa', value: 'teste' }, { name: 'Title', value: 'Página dos colunistas' }, { name: 'Type', value: 'bUG' }, { name: 'JiraKey', value: 'PD-46' }, { name: 'Class of Service', value: 'Padrão' }, { name: 'Project', value: 'bLa | XpTO | FASE 1' }], phases_history: [{ phase: { id: '2481595' }, firstTimeIn: '2018-02-22T17:09:58-03:00', lastTimeOut: '2018-02-26T17:09:58-03:00' }, { phase: { id: '2481597' }, firstTimeIn: '2018-02-23T17:09:58-03:00', lastTimeOut: nil }], pipe: { id: '356355' }, url: 'http://app.pipefy.com/pipes/356355#cards/5140999' } } }.with_indifferent_access }
+      let!(:first_pipefy_config) { Fabricate :pipefy_config, project: first_project, team: team, pipe_id: '356528', active: true }
 
+      context 'project_result' do
+        let!(:first_demand) { Fabricate :demand, project: first_project, project_result: nil }
         it 'adds integration error' do
           Pipefy::PipefyResponseReader.instance.update_card!(first_project, team, first_demand, first_card_response)
 
           expect(IntegrationError.first.integration_type).to eq 'pipefy'
           expect(IntegrationError.first.project).to eq first_project
-          expect(IntegrationError.first.integration_error_text).to eq '[Data A data do resultado deve ser menor ou igual a data final do projeto.][result_date: [2018-02-23]'
+          expect(IntegrationError.first.integration_error_text).to eq '[Data A data do resultado deve ser menor ou igual a data final do projeto.]'
+        end
+      end
+      context 'demand_transition' do
+        let!(:first_demand) { Fabricate :demand, project_result: nil }
+        it 'adds integration error' do
+          Pipefy::PipefyResponseReader.instance.update_card!(first_project, team, first_demand, first_card_response)
+
+          expect(IntegrationError.first.integration_type).to eq 'pipefy'
+          expect(IntegrationError.first.project).to eq first_project
+          expect(IntegrationError.first.integration_error_text).to eq '[Data A data do resultado deve ser menor ou igual a data final do projeto.]'
         end
       end
     end
