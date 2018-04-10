@@ -36,7 +36,7 @@ RSpec.describe ProcessPipefyCardJob, type: :active_job do
     context 'and a pipefy config' do
       let!(:pipefy_config) { Fabricate :pipefy_config, project: project, team: team, pipe_id: '356528' }
       context 'and demand' do
-        let(:demand) { Fabricate :demand, project: project, project_result: project_result }
+        let!(:demand) { Fabricate :demand, project: project, project_result: project_result }
         it 'updates the demand and the project result' do
           expect(Pipefy::PipefyResponseReader.instance).to(receive(:create_card!).with(project, team, card_response).once { demand })
           expect(Pipefy::PipefyResponseReader.instance).to receive(:update_card!).with(project, team, demand, card_response).once

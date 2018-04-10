@@ -213,12 +213,23 @@ RSpec.describe StagesController, type: :controller do
 
     describe 'GET #show' do
       let(:company) { Fabricate :company, users: [user] }
+      let(:customer) { Fabricate :customer, company: company, name: 'aaa' }
+      let(:product) { Fabricate :product, customer: customer, name: 'aaa' }
+      let(:other_product) { Fabricate :product, customer: customer, name: 'zzz' }
       let(:stage) { Fabricate :stage, company: company }
+
+      let!(:first_project) { Fabricate :project, customer: customer, product: product, stages: [stage], name: 'zzz' }
+      let!(:second_project) { Fabricate :project, customer: customer, product: product, stages: [stage], name: 'aaa' }
+      let!(:third_project) { Fabricate :project, customer: customer, product: other_product, name: 'zzz' }
+      let!(:fourth_project) { Fabricate :project, customer: customer, product: other_product, name: 'aaa' }
+
       context 'passing valid parameters' do
         it 'assigns the instance variables and renders the template' do
           get :show, params: { company_id: company, id: stage }
           expect(response).to render_template :show
           expect(assigns(:stage)).to eq stage
+          expect(assigns(:stage_projects)).to eq [second_project, first_project]
+          expect(assigns(:not_associated_projects)).to eq [fourth_project, third_project]
         end
       end
     end
