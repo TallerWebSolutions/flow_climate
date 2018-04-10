@@ -18,4 +18,32 @@ RSpec.describe Stage, type: :model do
     it { is_expected.to validate_presence_of :stage_type }
     it { is_expected.to validate_presence_of :stage_stream }
   end
+
+  describe '#add_project!' do
+    let(:project) { Fabricate :project }
+    context 'when the stage does not have the project yet' do
+      let(:stage) { Fabricate :stage }
+      before { stage.add_project!(project) }
+      it { expect(stage.reload.projects).to eq [project] }
+    end
+    context 'when the stage has the project' do
+      let(:stage) { Fabricate :stage, projects: [project] }
+      before { stage.add_project!(project) }
+      it { expect(stage.reload.projects).to eq [project] }
+    end
+  end
+
+  describe '#remove_project!' do
+    let(:project) { Fabricate :project }
+    context 'when the stage does not have the project yet' do
+      let(:stage) { Fabricate :stage }
+      before { stage.remove_project!(project) }
+      it { expect(stage.reload.projects).to eq [] }
+    end
+    context 'when the stage has the project' do
+      let(:stage) { Fabricate :stage, projects: [project] }
+      before { stage.remove_project!(project) }
+      it { expect(stage.reload.projects).to eq [] }
+    end
+  end
 end

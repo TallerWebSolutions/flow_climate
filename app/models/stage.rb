@@ -38,4 +38,14 @@ class Stage < ApplicationRecord
   has_many :demand_transitions, dependent: :restrict_with_error
 
   validates :integration_id, :name, :stage_type, :stage_stream, presence: true
+
+  def add_project!(project)
+    projects << project unless projects.include?(project)
+    save
+  end
+
+  def remove_project!(project)
+    projects.delete(project) if projects.include?(project)
+    save
+  end
 end

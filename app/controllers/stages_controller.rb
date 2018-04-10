@@ -2,7 +2,7 @@
 
 class StagesController < AuthenticatedController
   before_action :assign_company
-  before_action :assign_stage, only: %i[edit update destroy show]
+  before_action :assign_stage, except: %i[new create]
 
   def new
     @stage = Stage.new
@@ -30,6 +30,18 @@ class StagesController < AuthenticatedController
     @not_associated_projects = (@company.projects - @stage.projects).sort_by(&:full_name)
     @stage_projects = @stage.projects.sort_by(&:full_name)
     @transitions_in_stage = @stage.demand_transitions
+  end
+
+  def associate_project
+    project = Project.find(params[:project_id])
+    @stage.add_project!(project)
+    redirect_to company_stage_path(@company, @stage)
+  end
+
+  def dissociate_project
+    project = Project.find(params[:project_id])
+    @stage.remove_project!(project)
+    redirect_to company_stage_path(@company, @stage)
   end
 
   private

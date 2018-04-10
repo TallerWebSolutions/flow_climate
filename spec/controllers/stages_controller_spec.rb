@@ -192,7 +192,7 @@ RSpec.describe StagesController, type: :controller do
         end
       end
 
-      context 'passing an invalid ID' do
+      context 'passing an invalid' do
         context 'non-existent stage' do
           before { delete :destroy, params: { company_id: company, id: 'foo' } }
           it { expect(response).to have_http_status :not_found }
@@ -230,6 +230,98 @@ RSpec.describe StagesController, type: :controller do
           expect(assigns(:stage)).to eq stage
           expect(assigns(:stage_projects)).to eq [second_project, first_project]
           expect(assigns(:not_associated_projects)).to eq [fourth_project, third_project]
+        end
+      end
+
+      context 'passing an invalid' do
+        context 'non-existent stage' do
+          before { get :show, params: { company_id: company, id: 'foo' } }
+          it { expect(response).to have_http_status :not_found }
+        end
+        context 'company' do
+          context 'non-existent' do
+            before { get :show, params: { company_id: 'foo', id: stage } }
+            it { expect(response).to have_http_status :not_found }
+          end
+          context 'not permitted' do
+            let(:company) { Fabricate :company, users: [] }
+            before { get :show, params: { company_id: company, id: stage } }
+            it { expect(response).to have_http_status :not_found }
+          end
+        end
+      end
+    end
+
+    describe 'PATCH #associate_project' do
+      let(:company) { Fabricate :company, users: [user] }
+      let!(:stage) { Fabricate :stage, company: company }
+
+      let!(:project) { Fabricate :project, stages: [stage] }
+
+      context 'passing valid parameters' do
+        it 'assigns the instance variables and renders the template' do
+          patch :associate_project, params: { company_id: company, id: stage, project_id: project }
+          expect(response).to redirect_to company_stage_path(company, stage)
+          expect(stage.reload.projects).to eq [project]
+        end
+      end
+
+      context 'passing an invalid' do
+        context 'non-existent stage' do
+          before { patch :associate_project, params: { company_id: company, id: 'foo', project_id: project } }
+          it { expect(response).to have_http_status :not_found }
+        end
+        context 'non-existent project' do
+          before { patch :associate_project, params: { company_id: company, id: 'foo', project_id: 'foo' } }
+          it { expect(response).to have_http_status :not_found }
+        end
+        context 'company' do
+          context 'non-existent' do
+            before { patch :associate_project, params: { company_id: 'foo', id: stage, project_id: project } }
+            it { expect(response).to have_http_status :not_found }
+          end
+          context 'not permitted' do
+            let(:company) { Fabricate :company, users: [] }
+            before { patch :associate_project, params: { company_id: company, id: stage, project_id: project } }
+            it { expect(response).to have_http_status :not_found }
+          end
+        end
+      end
+    end
+
+    describe 'PATCH #dissociate_project' do
+      let(:company) { Fabricate :company, users: [user] }
+      let!(:stage) { Fabricate :stage, company: company }
+
+      let!(:project) { Fabricate :project, stages: [stage] }
+
+      context 'passing valid parameters' do
+        it 'assigns the instance variables and renders the template' do
+          patch :dissociate_project, params: { company_id: company, id: stage, project_id: project }
+          expect(response).to redirect_to company_stage_path(company, stage)
+          expect(stage.reload.projects).to eq []
+        end
+      end
+
+      context 'passing an invalid' do
+        context 'non-existent stage' do
+          before { patch :dissociate_project, params: { company_id: company, id: 'foo', project_id: project } }
+          it { expect(response).to have_http_status :not_found }
+        end
+        context 'non-existent project' do
+          before { patch :dissociate_project, params: { company_id: company, id: 'foo', project_id: 'foo' } }
+          it { expect(response).to have_http_status :not_found }
+        end
+        context 'company' do
+          context 'non-existent' do
+            before { patch :dissociate_project, params: { company_id: 'foo', id: stage, project_id: project } }
+            it { expect(response).to have_http_status :not_found }
+          end
+          context 'not permitted' do
+            let(:company) { Fabricate :company, users: [] }
+            before { patch :dissociate_project, params: { company_id: company, id: stage, project_id: project } }
+            it { expect(response).to have_http_status :not_found }
+          end
         end
       end
     end

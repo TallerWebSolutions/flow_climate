@@ -85,6 +85,11 @@ Rails.application.routes.draw do
     resources :pipefy_configs, only: %i[new create destroy edit update], module: 'pipefy'
 
     resources :stages do
+      member do
+        patch 'associate_project/:project_id', action: :associate_project, as: 'associate_project'
+        patch 'dissociate_project/:project_id', action: :dissociate_project, as: 'dissociate_project'
+      end
+
       resources :demand_transitions, only: :destroy
     end
   end
