@@ -130,6 +130,10 @@ pt-BR:
       cost_in_month: "Custo Mensal"
       deadline:
         title: "Negociações de Prazo"
+      deadline_countdown:
+        first_part: "Faltam "
+        second_part: " para o fim do projeto"
+        days: "%{remaining_days} dia(s)"
     charts:
       xlabel:
         weeks: "Semanas"
