@@ -130,6 +130,10 @@ en:
       cost_in_month: "Monthly Cost"
       deadline:
         title: "Deadline Negotiations"
+      deadline_countdown:
+        first_part: "Only "
+        second_part: " till D-day!"
+        days: "%{remaining_days} day(s)"
     charts:
       xlabel:
         weeks: "Weeks"
