@@ -32,17 +32,21 @@
   </div>
 </div>
 <div class="row">
-  <div class="col-xs-4 stamp">
+  <div class="col-xs-3 stamp">
     <div class="stamp-title"><%= t('projects.show.initial_scope') %></div>
     <div class="stamp-content"><%= project.initial_scope %></div>
   </div>
-  <div class="col-xs-4 stamp">
+  <div class="col-xs-3 stamp">
     <div class="stamp-title"><%= t('projects.show.last_week_scope') %></div>
     <div class="stamp-content"><%= project.last_week_scope %></div>
   </div>
-  <div class="col-xs-4 stamp">
+  <div class="col-xs-3 stamp">
     <div class="stamp-title"><%= t('projects.show.delivered_scope') %></div>
     <div class="stamp-content"><%= project.total_throughput %></div>
+  </div>
+  <div class="col-xs-3 stamp">
+    <div class="stamp-title"><%= t('projects.show.cmd') %></div>
+    <div class="stamp-content"><%= number_to_currency(project.average_demand_cost) %></div>
   </div>
 </div>
 
