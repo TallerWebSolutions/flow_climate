@@ -4,7 +4,7 @@ source 'https://rubygems.org'
 
 ruby '2.4.3'
 
-gem 'rails', '~> 5.1.5'
+gem 'rails'
 
 gem 'coffee-rails'
 gem 'devise'
