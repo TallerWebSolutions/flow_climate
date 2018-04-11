@@ -30,6 +30,7 @@ class StagesController < AuthenticatedController
     @not_associated_projects = (@company.projects - @stage.projects).sort_by(&:full_name)
     @stage_projects = @stage.projects.sort_by(&:full_name)
     @transitions_in_stage = @stage.demand_transitions
+    @provider_stages = (@company.stages - [@stage]).sort_by(&:name)
   end
 
   def associate_project
@@ -41,6 +42,12 @@ class StagesController < AuthenticatedController
   def dissociate_project
     project = Project.find(params[:project_id])
     @stage.remove_project!(project)
+    redirect_to company_stage_path(@company, @stage)
+  end
+
+  def copy_projects_from
+    provider_stage = Stage.find(params[:provider_stage_id])
+    @stage.update(projects: provider_stage.projects)
     redirect_to company_stage_path(@company, @stage)
   end
 
