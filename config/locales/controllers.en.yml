@@ -336,12 +336,14 @@ en:
       title: "New Stage"
     index:
       title: "Configured Stages"
+      project_count: "Qty Projects"
     edit:
       title: "Edit Stage"
     show:
       not_associated_projects: "Not Associated Projects"
       stage_projects: "Stage Projects"
       transitions: "Transitions"
+      import_projects: "Import Projetct from Stage"
   demand_blocks:
     index:
       title: "Demand Blocks"

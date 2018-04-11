@@ -339,12 +339,14 @@ pt-BR:
       title: "Nova Etapa"
     index:
       title: "Etapas Configuradas"
+      project_count: "Qtd Projetos"
     edit:
       title: "Editar Etapa"
     show:
       not_associated_projects: "Projetos não associados"
       stage_projects: "Projetos na Etapa"
       transitions: "Transições"
+      import_projects: "Importar Projetos da Etapa"
   demand_blocks:
     index:
       title: "Bloqueios de Demanda"
