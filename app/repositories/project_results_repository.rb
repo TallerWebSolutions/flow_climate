@@ -103,7 +103,7 @@ class ProjectResultsRepository
 
   def grouped_project_results(projects)
     return [] if projects.blank?
-    ProjectResult.select("date_trunc('week', result_date) AS week").where(project_id: projects.pluck(:id)).order("date_trunc('week', result_date)").group("date_trunc('week', result_date)")
+    ProjectResult.select("date_trunc('week', result_date) AS week").where(project_id: projects.pluck(:id)).order(Arel.sql("date_trunc('week', result_date)")).group("date_trunc('week', result_date)")
   end
 
   def results_until_week(project, week, year)

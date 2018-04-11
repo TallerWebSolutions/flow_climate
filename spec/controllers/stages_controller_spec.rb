@@ -69,10 +69,11 @@ RSpec.describe StagesController, type: :controller do
 
     describe 'POST #create' do
       context 'passing valid parameters' do
-        before { post :create, params: { company_id: company, stage: { name: 'foo', integration_id: '332231', stage_type: :analysis, stage_stream: :downstream, commitment_point: true, end_point: true, queue: true, compute_effort: true, percentage_effort: 30.3 } } }
+        before { post :create, params: { company_id: company, stage: { order: 2, name: 'foo', integration_id: '332231', stage_type: :analysis, stage_stream: :downstream, commitment_point: true, end_point: true, queue: true, compute_effort: true, percentage_effort: 30.3 } } }
         it 'creates the new financial information to the company and redirects to its show' do
           created_stage = Stage.last
           expect(created_stage.company).to eq company
+          expect(created_stage.order).to eq 2
           expect(created_stage.name).to eq 'foo'
           expect(created_stage.stage_type).to eq 'analysis'
           expect(created_stage.stage_stream).to eq 'downstream'
@@ -139,9 +140,10 @@ RSpec.describe StagesController, type: :controller do
 
       context 'passing valid parameters' do
         it 'updates the demand and redirects to projects index' do
-          put :update, params: { company_id: company, id: stage, stage: { name: 'foo', integration_id: '332231', stage_type: :analysis, stage_stream: :downstream, commitment_point: true, end_point: true, queue: true, compute_effort: true, percentage_effort: 30.3 } }
+          put :update, params: { company_id: company, id: stage, stage: { order: 2, name: 'foo', integration_id: '332231', stage_type: :analysis, stage_stream: :downstream, commitment_point: true, end_point: true, queue: true, compute_effort: true, percentage_effort: 30.3 } }
           updated_stage = stage.reload
           expect(updated_stage.company).to eq company
+          expect(updated_stage.order).to eq 2
           expect(updated_stage.name).to eq 'foo'
           expect(updated_stage.stage_type).to eq 'analysis'
           expect(updated_stage.stage_stream).to eq 'downstream'
