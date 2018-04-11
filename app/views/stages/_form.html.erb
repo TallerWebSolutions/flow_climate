@@ -1,12 +1,16 @@
 <div class="standard-form">
 
   <div class="row">
+    <div class='col-xs-1 form-group'>
+      <%= f.label :order, class: 'control-label' %>
+      <%= f.number_field :order, class: 'form-control', autofocus: true, step: 1 %>
+    </div>
     <div class='col-xs-3 form-group <%= 'has-error' if @stage.errors[:name].present? %>'>
       <%= f.label :name, class: 'control-label required' %>
-      <%= f.text_field :name, class: 'form-control', autofocus: true %>
+      <%= f.text_field :name, class: 'form-control' %>
       <span class="help-block"><%= @stage.errors[:name].join(', ') %></span>
     </div>
-    <div class='col-xs-3 form-group <%= 'has-error' if @stage.errors[:integration_id].present? %>'>
+    <div class='col-xs-2 form-group <%= 'has-error' if @stage.errors[:integration_id].present? %>'>
       <%= f.label :integration_id, class: 'control-label required' %>
       <%= f.text_field :integration_id, class: 'form-control', autofocus: true %>
       <span class="help-block"><%= @stage.errors[:integration_id].join(', ') %></span>

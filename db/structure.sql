@@ -732,7 +732,8 @@ CREATE TABLE public.stages (
     percentage_effort numeric,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    company_id integer NOT NULL
+    company_id integer NOT NULL,
+    "order" integer DEFAULT 0 NOT NULL
 );
 
 
@@ -1782,6 +1783,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20180331235053'),
 ('20180403230254'),
 ('20180407032019'),
-('20180410163615');
+('20180410163615'),
+('20180411164401');
 
 
