@@ -36,7 +36,7 @@ module Pipefy
     private
 
     def pipefy_config_params
-      params.require(:pipefy_config).permit(:project_id, :team_id, :pipe_id)
+      params.require(:pipefy_pipefy_config).permit(:project_id, :team_id, :pipe_id)
     end
 
     def assign_pipefy_config
