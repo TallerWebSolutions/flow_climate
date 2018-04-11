@@ -134,6 +134,7 @@ en:
         first_part: "Only "
         second_part: " till D-day!"
         days: "%{remaining_days} day(s)"
+      cmd: "Average Demand Cost"
     charts:
       xlabel:
         weeks: "Weeks"

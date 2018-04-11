@@ -134,6 +134,7 @@ pt-BR:
         first_part: "Faltam "
         second_part: " para o fim do projeto"
         days: "%{remaining_days} dia(s)"
+      cmd: "CMD"
     charts:
       xlabel:
         weeks: "Semanas"
