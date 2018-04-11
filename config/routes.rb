@@ -88,6 +88,7 @@ Rails.application.routes.draw do
       member do
         patch 'associate_project/:project_id', action: :associate_project, as: 'associate_project'
         patch 'dissociate_project/:project_id', action: :dissociate_project, as: 'dissociate_project'
+        patch :copy_projects_from
       end
 
       resources :demand_transitions, only: :destroy

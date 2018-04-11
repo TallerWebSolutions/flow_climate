@@ -26,6 +26,18 @@ RSpec.describe StagesController, type: :controller do
       before { get :show, params: { company_id: 'foo', id: 'sbbrubles' } }
       it { expect(response).to redirect_to new_user_session_path }
     end
+    describe 'PATCH #associate_project' do
+      before { patch :associate_project, params: { company_id: 'foo', id: 'sbbrubles', project_id: 'bla' } }
+      it { expect(response).to redirect_to new_user_session_path }
+    end
+    describe 'PATCH #dissociate_project' do
+      before { patch :dissociate_project, params: { company_id: 'foo', id: 'sbbrubles', project_id: 'bla' } }
+      it { expect(response).to redirect_to new_user_session_path }
+    end
+    describe 'PATCH #copy_projects_from' do
+      before { patch :copy_projects_from, params: { company_id: 'foo', id: 'sbbrubles', provider_stage_id: 'bla' } }
+      it { expect(response).to redirect_to new_user_session_path }
+    end
   end
 
   context 'authenticated' do
@@ -320,6 +332,50 @@ RSpec.describe StagesController, type: :controller do
           context 'not permitted' do
             let(:company) { Fabricate :company, users: [] }
             before { patch :dissociate_project, params: { company_id: company, id: stage, project_id: project } }
+            it { expect(response).to have_http_status :not_found }
+          end
+        end
+      end
+    end
+
+    describe 'PATCH #copy_projects_from' do
+      let(:company) { Fabricate :company, users: [user] }
+      let!(:provider_stage) { Fabricate :stage, company: company }
+
+      let!(:first_project) { Fabricate :project, stages: [provider_stage] }
+      let!(:second_project) { Fabricate :project, stages: [provider_stage] }
+      let!(:third_project) { Fabricate :project, stages: [provider_stage] }
+
+      let!(:fourth_project) { Fabricate :project }
+
+      let!(:receiver_stage) { Fabricate :stage, company: company }
+      let!(:fifth_project) { Fabricate :project, stages: [receiver_stage] }
+
+      context 'passing valid parameters' do
+        it 'assigns the instance variables and renders the template' do
+          patch :copy_projects_from, params: { company_id: company, id: receiver_stage, provider_stage_id: provider_stage }
+          expect(response).to redirect_to company_stage_path(company, receiver_stage)
+          expect(receiver_stage.reload.projects).to match_array [first_project, second_project, third_project]
+        end
+      end
+
+      context 'passing an invalid' do
+        context 'non-existent stage' do
+          before { patch :copy_projects_from, params: { company_id: company, id: 'foo', provider_stage_id: provider_stage } }
+          it { expect(response).to have_http_status :not_found }
+        end
+        context 'non-existent provider_stage' do
+          before { patch :copy_projects_from, params: { company_id: company, id: receiver_stage, provider_stage_id: 'foo' } }
+          it { expect(response).to have_http_status :not_found }
+        end
+        context 'company' do
+          context 'non-existent' do
+            before { patch :copy_projects_from, params: { company_id: 'foo', id: receiver_stage, provider_stage_id: provider_stage } }
+            it { expect(response).to have_http_status :not_found }
+          end
+          context 'not permitted' do
+            let(:company) { Fabricate :company, users: [] }
+            before { patch :copy_projects_from, params: { company_id: company, id: receiver_stage, provider_stage_id: provider_stage } }
             it { expect(response).to have_http_status :not_found }
           end
         end
