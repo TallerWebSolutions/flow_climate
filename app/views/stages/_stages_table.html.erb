@@ -15,6 +15,7 @@
     <tr>
       <th><%= Stage.human_attribute_name :name %></th>
       <th><%= Stage.human_attribute_name :integration_id %></th>
+      <th><%= t('stages.index.project_count') %></th>
       <th><%= Stage.human_attribute_name :stage_type %></th>
       <th><%= Stage.human_attribute_name :stage_stream %></th>
       <th class="center"><%= Stage.human_attribute_name :queue %></th>
@@ -30,6 +31,7 @@
       <tr>
         <td><%= link_to stage.name, company_stage_path(@company, stage) %></td>
         <td><%= stage.integration_id %></td>
+        <td><%= stage.projects.count %></td>
         <td><%= t("activerecord.attributes.stage.enums.stage_type.#{stage.stage_type}") %></td>
         <td><%= t("activerecord.attributes.stage.enums.stage_stream.#{stage.stage_stream}") %></td>
         <td class="center">
