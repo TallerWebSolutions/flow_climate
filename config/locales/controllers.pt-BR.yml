@@ -115,6 +115,7 @@ pt-BR:
       remaining_hours: "Horas Restantes"
       risk_alerts: "Alertas de Risco"
       maintenance_filter: "Manutenção"
+      passed_time: "Tempo Decorrido"
     show:
       initial_scope: "Escopo Inicial"
       last_team: "Time atual"
@@ -139,6 +140,7 @@ pt-BR:
       xlabel:
         weeks: "Semanas"
         projects: "Projetos"
+        days: "Dias"
       burnup:
         ylabel: "Demandas"
         tooltipsufix: " demandas"
@@ -154,7 +156,7 @@ pt-BR:
       flow_pressure_per_project:
         ylabel: "Pressão do Fluxo"
       throughput_per_week:
-        title: "Throughput por Semana"
+        title: "Throughput por Semana para %{target_name}"
         tooltipsufix: " demandas"
         ylabel: "Demandas"
         stage_stream:
@@ -165,6 +167,10 @@ pt-BR:
         ylabel: "Custo Médio por Demanda"
         tooltipsufix: "reais"
         tooltip_prefix: "R$ "
+      delivered:
+        title: "Entregue vs Restante para %{target_name}"
+      deadline:
+        title: "Prazo para %{target_name}"
     project_risk_alert_table: "Alertas de risco para o projeto"
     portfolio_bulletin:
       delivered_demands: "Demandas entregues na última semana"
@@ -281,6 +287,7 @@ pt-BR:
     teams: "Times"
     flow: "Fluxo"
     delivered_demands: "Demandas Entregues"
+    status_report: "Status Report"
   charts:
     xlabel:
       months: "Meses"

@@ -75,3 +75,4 @@ function hideAllComponents() {
     $('#project-status-report').hide();
     $('#nav-item-statusreport').removeClass('active');
 }
+;

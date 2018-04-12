@@ -23,6 +23,7 @@ RSpec.describe ReportData, type: :data_object do
         expect(report_data.scope).to eq [170, 170, 170, 566, 566]
         expect(report_data.flow_pressure_data).to eq [4.0, 0.0, 0.0, 4.75, 0.0]
         expect(report_data.throughput_per_week).to eq([{ name: I18n.t('projects.charts.throughput_per_week.stage_stream.upstream'), data: [23, 0, 0, 47, 0] }, { name: I18n.t('projects.charts.throughput_per_week.stage_stream.downstream'), data: [2, 0, 0, 129, 0] }])
+        expect(report_data.delivered_vs_remaining).to eq([{ name: I18n.t('projects.show.delivered_scope'), data: [201] }, { name: I18n.t('projects.show.scope_gap'), data: [365] }])
       end
     end
     describe '#projects_names' do
@@ -48,6 +49,7 @@ RSpec.describe ReportData, type: :data_object do
         expect(report_data.scope).to eq []
         expect(report_data.flow_pressure_data).to eq []
         expect(report_data.throughput_per_week).to eq([{ name: I18n.t('projects.charts.throughput_per_week.stage_stream.upstream'), data: [] }, { name: I18n.t('projects.charts.throughput_per_week.stage_stream.downstream'), data: [] }])
+        expect(report_data.delivered_vs_remaining).to eq([{ name: I18n.t('projects.show.delivered_scope'), data: [0] }, { name: I18n.t('projects.show.scope_gap'), data: [0] }])
       end
     end
 

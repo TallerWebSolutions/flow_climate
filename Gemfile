@@ -19,6 +19,7 @@ gem 'httparty'
 gem 'webmock'
 gem 'rollbar'
 gem 'oj', '~> 2.16.1'
+gem 'histogram'
 
 group :test, :development do
   gem 'brakeman'

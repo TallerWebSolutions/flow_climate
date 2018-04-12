@@ -17,6 +17,7 @@
       <%= link_to t('navbar.delivered_demands'), '#', id: 'nav-item-delivered' %>
       <%= link_to t('projects.show.deadline.title'), '#', id: 'nav-item-deadline' %>
       <%= link_to t('navbar.charts'), '#', id: 'nav-item-charts' %>
+      <%= link_to t('navbar.status_report'), '#', id: 'nav-item-statusreport' %>
       <%= link_to t('navbar.risk_alerts'), '#', id: 'nav-item-risk' %>
       <%= link_to t('navbar.settings'), '#', id: 'nav-item-settings' %>
     </div>
@@ -54,18 +55,23 @@
                categories: @report_data.weeks %>
   </div>
 
+  <div id="project-status-report">
+    <%= render 'charts/project_status_report_charts',
+               target_name: @project.full_name,
+               report_data: @report_data
+    %>
+  </div>
+
   <div id="project-settings">
     <%= render 'projects/settings', project_risk_configs: @project.project_risk_configs %>
   </div>
 </div>
 
 <% content_for :javascript do %>
-  <%= javascript_include_tag 'projects/show' %>
   <%= javascript_include_tag 'charts/burnup' %>
   <%= javascript_include_tag 'charts/column' %>
+  <%= javascript_include_tag 'charts/bar' %>
   <%= javascript_include_tag 'charts/line' %>
-  <%= javascript_include_tag 'projects/column_hours_demand_chart' %>
-  <%= javascript_include_tag 'projects/column_flow_pressure_chart' %>
-  <%= javascript_include_tag 'projects/column_throughput_per_week_chart' %>
-  <%= javascript_include_tag 'projects/column_cmd' %>
+  <%= javascript_include_tag 'projects/show' %>
+  <%= javascript_include_tag 'projects/charts' %>
 <% end %>

@@ -37,6 +37,18 @@ class ReportData
     throughput_chart_data(downstream_th_weekly_data, upstream_th_weekly_data)
   end
 
+  def delivered_vs_remaining
+    [{ name: I18n.t('projects.show.delivered_scope'), data: [@projects.sum(&:total_throughput)] }, { name: I18n.t('projects.show.scope_gap'), data: [@projects.sum(&:total_gap)] }]
+  end
+
+  def deadline
+    min_date = @projects.minimum(:start_date)
+    max_date = @projects.maximum(:end_date)
+    passed_time = (Time.zone.today - min_date).to_i + 1
+    remaining_days = (max_date - Time.zone.today).to_i + 1
+    [{ name: I18n.t('projects.index.total_remaining_days'), data: [remaining_days] }, { name: I18n.t('projects.index.passed_time'), data: [passed_time], color: '#F45830' }]
+  end
+
   def average_demand_cost
     weekly_data = ProjectResultsRepository.instance.average_demand_cost_in_week_for_projects(@projects)
 

@@ -85,6 +85,7 @@ GEM
     globalid (0.4.1)
       activesupport (>= 4.2.0)
     hashdiff (0.3.7)
+    histogram (0.2.4.1)
     httparty (0.16.2)
       multi_xml (>= 0.5.2)
     i18n (1.0.0)
@@ -263,6 +264,7 @@ DEPENDENCIES
   fabrication
   faker
   figaro
+  histogram
   httparty
   jquery-rails
   listen
