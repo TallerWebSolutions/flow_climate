@@ -18,7 +18,7 @@ module Stats
         monte_carlo_date_hash = {}
         hits_sum = dates_and_hits_hash.sum { |_predicted_date, hits| hits }
         predicted_dates.sort_by { |predicted_date, _hits| predicted_date }.each do |predicted_date|
-          monte_carlo_date_hash[predicted_date[0]] = predicted_date[1].to_d / hits_sum
+          monte_carlo_date_hash[Time.zone.at(predicted_date[0]).to_date] = predicted_date[1].to_d / hits_sum
         end
         self.monte_carlo_date_hash = monte_carlo_date_hash
       end

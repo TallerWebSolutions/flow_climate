@@ -26,3 +26,5 @@ en:
     ylabel:
       hours:
         text: "Hours"
+    date_odds:
+      title: "Date Odds for %{target_name}"

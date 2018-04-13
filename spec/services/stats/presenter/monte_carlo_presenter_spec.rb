@@ -21,7 +21,7 @@ RSpec.describe Stats::Presenter::MonteCarloPresenter, type: :presenter do
 
       it 'provides the correct monte carlo properties' do
         expect(presenter.dates_and_hits_hash).to eq(1_524_614_400 => 1000)
-        expect(presenter.monte_carlo_date_hash).to eq(1_524_614_400 => 1)
+        expect(presenter.monte_carlo_date_hash).to eq(Date.new(2018, 4, 24) => 1)
         expect(presenter.predicted_dates).to eq [[1_524_614_400, 1000]]
       end
     end

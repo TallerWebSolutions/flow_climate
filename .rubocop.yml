@@ -65,7 +65,7 @@ Metrics/AbcSize:
   Exclude:
     - 'app/routes/**/*'
     - 'db/migrate/**/*'
-  Max: 17.5
+  Max: 18.5
 
 Metrics/ParameterLists:
   Enabled: false

@@ -171,6 +171,8 @@ en:
         title: "Delivered vs Remaining Scope to %{target_name}"
       deadline:
         title: "Deadline for %{target_name}"
+      date_odds:
+        tooltipsufix: "chance"
     project_risk_alert_table: "Risk alerts to the project"
     project_risk_configs:
       title: "Risk Configurations"

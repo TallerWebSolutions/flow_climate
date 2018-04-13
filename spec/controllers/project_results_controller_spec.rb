@@ -81,10 +81,10 @@ RSpec.describe ProjectResultsController, type: :controller do
       let(:company) { Fabricate :company, users: [user] }
       let(:team) { Fabricate :team, company: company }
       let(:other_team) { Fabricate :team, company: company }
-      let!(:team_member) { Fabricate(:team_member, team: team, monthly_payment: 100, total_monthly_payment: 100) }
+      let!(:team_member) { Fabricate(:team_member, team: team, monthly_payment: 100, total_monthly_payment: 100, billable_type: :outsourcing) }
       let(:customer) { Fabricate :customer, company: company }
       let(:product) { Fabricate :product, customer: customer, name: 'zzz' }
-      let!(:project) { Fabricate :project, customer: customer, product: product, end_date: 2.days.from_now }
+      let!(:project) { Fabricate :project, customer: customer, product: product, end_date: 2.days.from_now, project_type: :outsourcing }
 
       context 'passing valid parameters' do
         before { post :create, params: { company_id: company, project_id: project, project_result: { team: team.id, result_date: Time.zone.today, known_scope: 100, qty_hours_upstream: 10, qty_hours_downstream: 13, throughput_upstream: 5, throughput_downstream: 7, monte_carlo_date: 1.month.from_now, qty_bugs_opened: 0, qty_bugs_closed: 3, qty_hours_bug: 7, leadtime: 10.5 } } }
@@ -102,10 +102,9 @@ RSpec.describe ProjectResultsController, type: :controller do
           expect(result.qty_bugs_opened).to eq 0
           expect(result.qty_bugs_closed).to eq 3
           expect(result.qty_hours_bug).to eq 7
-          expect(result.leadtime).to eq 10.5
           expect(result.flow_pressure.to_f).to eq 10.0
           expect(result.remaining_days).to eq 3
-          expect(result.average_demand_cost.to_f).to be_within(0.01).of(0.11)
+          expect(result.average_demand_cost.to_f).to eq 0
           expect(result.cost_in_month.to_f).to eq 100.0
         end
       end
@@ -212,7 +211,10 @@ RSpec.describe ProjectResultsController, type: :controller do
 
       let(:customer) { Fabricate :customer, company: company }
       let(:project) { Fabricate :project, customer: customer, start_date: Date.new(2018, 4, 3), end_date: Date.new(2018, 4, 6) }
-      let!(:project_result) { Fabricate :project_result, project: project, result_date: Date.new(2018, 4, 3) }
+      let!(:project_result) { Fabricate :project_result, project: project, result_date: Date.new(2018, 4, 3), cost_in_month: 100 }
+
+      let!(:demand) { Fabricate :demand, project: project, project_result: project_result, end_date: project_result.result_date, leadtime: 2 }
+      let!(:other_demand) { Fabricate :demand, project: project, project_result: project_result, end_date: project_result.result_date, leadtime: 1 }
 
       context 'passing valid parameters' do
         before { put :update, params: { company_id: company, project_id: project, id: project_result, project_result: { team: team.id, result_date: Date.new(2018, 4, 4), known_scope: 100, qty_hours_upstream: 10, qty_hours_downstream: 13, throughput_upstream: 5, throughput_downstream: 7, monte_carlo_date: 1.month.from_now, qty_bugs_opened: 0, qty_bugs_closed: 3, qty_hours_bug: 7, leadtime: 10.5 } } }
@@ -229,10 +231,10 @@ RSpec.describe ProjectResultsController, type: :controller do
           expect(result.qty_bugs_opened).to eq 0
           expect(result.qty_bugs_closed).to eq 3
           expect(result.qty_hours_bug).to eq 7
-          expect(result.leadtime).to eq 10.5
-          expect(result.flow_pressure.to_f).to eq 6
+          expect(result.leadtime).to eq 1.5
+          expect(result.flow_pressure.to_f).to be_within(0.01).of(6.66)
           expect(result.remaining_days).to eq 3
-          expect(result.average_demand_cost.to_f).to be_within(0.01).of(0.11)
+          expect(result.average_demand_cost.to_f).to be_within(0.01).of(0.27)
           expect(result.cost_in_month.to_f).to eq 100.0
           expect(response).to redirect_to company_project_path(company, project)
         end
@@ -279,7 +281,7 @@ RSpec.describe ProjectResultsController, type: :controller do
             expect(assigns(:company)).to eq company
             expect(assigns(:project)).to eq project
             expect(assigns(:project_result)).to eq project_result
-            expect(assigns(:demands)).to eq([Time.zone.today.cwyear, Time.zone.today.month] => [second_demand, first_demand])
+            expect(assigns(:demands)[[Time.zone.today.cwyear, Time.zone.today.month]]).to match_array [second_demand, first_demand]
           end
         end
         context 'having no data' do

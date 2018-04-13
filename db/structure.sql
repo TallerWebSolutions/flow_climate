@@ -244,7 +244,8 @@ CREATE TABLE public.demands (
     project_id integer NOT NULL,
     assignees_count integer NOT NULL,
     effort_downstream numeric DEFAULT 0,
-    effort_upstream numeric DEFAULT 0
+    effort_upstream numeric DEFAULT 0,
+    leadtime numeric
 );
 
 
@@ -1784,6 +1785,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20180403230254'),
 ('20180407032019'),
 ('20180410163615'),
-('20180411164401');
+('20180411164401'),
+('20180412202504');
 
 

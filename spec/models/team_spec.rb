@@ -44,7 +44,7 @@ RSpec.describe Team, type: :model do
     it { is_expected.to delegate_method(:count).to(:projects).with_prefix }
   end
 
-  describe '#active_cost_for_billable_types' do
+  describe '#active_monthly_cost_for_billable_types' do
     let(:company) { Fabricate :company }
     let(:team) { Fabricate :team, company: company }
     let!(:members) { Fabricate.times(4, :team_member, team: team, billable_type: :outsourcing) }
@@ -53,7 +53,7 @@ RSpec.describe Team, type: :model do
     let!(:not_billable_members) { Fabricate.times(10, :team_member, team: team, billable: false, billable_type: nil) }
     let!(:not_active_members) { Fabricate.times(3, :team_member, team: team, billable: true, billable_type: :outsourcing, active: false) }
 
-    it { expect(team.active_cost_for_billable_types(%i[outsourcing consulting])).to eq(members.concat(consulting_members).sum(&:total_monthly_payment)) }
+    it { expect(team.active_monthly_cost_for_billable_types(%i[outsourcing consulting])).to eq(members.concat(consulting_members).sum(&:total_monthly_payment)) }
   end
 
   describe '#active_members_count_for_billable_types' do
@@ -68,7 +68,7 @@ RSpec.describe Team, type: :model do
     it { expect(team.active_members_count_for_billable_types(%i[consulting outsourcing])).to eq 6 }
   end
 
-  describe '#active_available_hours_for_billable_types' do
+  describe '#active_monthly_available_hours_for_billable_types' do
     let(:company) { Fabricate :company }
     let(:team) { Fabricate :team, company: company }
     let!(:members) { Fabricate.times(4, :team_member, team: team, billable_type: :outsourcing) }
@@ -77,7 +77,7 @@ RSpec.describe Team, type: :model do
     let!(:not_billable_members) { Fabricate.times(10, :team_member, team: team, billable: false, billable_type: nil) }
     let!(:not_active_members) { Fabricate.times(3, :team_member, team: team, billable_type: :outsourcing, active: false) }
 
-    it { expect(team.active_available_hours_for_billable_types(%i[outsourcing consulting])).to eq members.concat(consulting_members).sum(&:hours_per_month) }
+    it { expect(team.active_monthly_available_hours_for_billable_types(%i[outsourcing consulting])).to eq members.concat(consulting_members).sum(&:hours_per_month) }
   end
 
   RSpec.shared_context 'consolidations data for team', shared_context: :metadata do

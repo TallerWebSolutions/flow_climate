@@ -24,6 +24,9 @@ RSpec.describe ReportData, type: :data_object do
         expect(report_data.flow_pressure_data).to eq [4.0, 0.0, 0.0, 4.75, 0.0]
         expect(report_data.throughput_per_week).to eq([{ name: I18n.t('projects.charts.throughput_per_week.stage_stream.upstream'), data: [23, 0, 0, 47, 0] }, { name: I18n.t('projects.charts.throughput_per_week.stage_stream.downstream'), data: [2, 0, 0, 129, 0] }])
         expect(report_data.delivered_vs_remaining).to eq([{ name: I18n.t('projects.show.delivered_scope'), data: [201] }, { name: I18n.t('projects.show.scope_gap'), data: [365] }])
+        expect(report_data.dates_and_odds).to eq(Date.new(2018, 3, 22) => [nil], Time.zone.today => [0.1e1])
+        expect(report_data.montecarlo_dates.dates_and_hits_hash).to eq(Time.zone.today.to_time.to_i => 500)
+        expect(report_data.montecarlo_dates.monte_carlo_date_hash).to eq(Time.zone.today => 1)
       end
     end
     describe '#projects_names' do

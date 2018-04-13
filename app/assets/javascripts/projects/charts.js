@@ -19,4 +19,10 @@ $(function () {
 
     var statusReportDeadlineDiv = $('#status-report-deadline-bar');
     buildBarChart(statusReportDeadlineDiv);
+
+    var statusReportDatesOddsDiv = $('#status-report-dates-odds-column');
+    buildColumnChart(statusReportDatesOddsDiv);
+
+    var statusReportMonteCarloDiv = $('#status-report-montecarlo-column');
+    buildColumnChart(statusReportMonteCarloDiv);
 });

@@ -33,21 +33,12 @@ RSpec.describe Demand, type: :model do
     end
 
     describe '.finished' do
-      let!(:first_demand) { Fabricate :demand, project: project }
-      let!(:second_demand) { Fabricate :demand, project: project }
-      let!(:third_demand) { Fabricate :demand, project: project }
-
-      let(:not_end_stage) { Fabricate :stage, commitment_point: false, end_point: false, projects: [project] }
-      let(:end_stage) { Fabricate :stage, commitment_point: false, end_point: true, projects: [project] }
-
-      let!(:first_demand_transition) { Fabricate :demand_transition, demand: first_demand, stage: end_stage }
-      let!(:second_demand_transition) { Fabricate :demand_transition, demand: second_demand, stage: end_stage }
-      let!(:third_demand_transition) { Fabricate :demand_transition, demand: third_demand, stage: not_end_stage }
+      let!(:first_demand) { Fabricate :demand, project: project, end_date: Time.zone.now }
+      let!(:second_demand) { Fabricate :demand, project: project, end_date: Time.zone.now }
+      let!(:third_demand) { Fabricate :demand, project: project, end_date: nil }
 
       it { expect(Demand.finished).to match_array [first_demand, second_demand] }
     end
-
-    pending '.demands_with_transition'
   end
 
   context 'delegations' do
@@ -138,6 +129,23 @@ RSpec.describe Demand, type: :model do
     end
   end
 
+  context 'computed fields' do
+    context 'leadtime' do
+      context 'having commitment and end dates' do
+        let!(:demand) { Fabricate :demand, commitment_date: 2.days.ago, end_date: 1.hour.ago }
+        it { expect(demand.leadtime).to be_within(0.001).of(169_200.001) }
+      end
+      context 'having no commitment date but having end date' do
+        let!(:demand) { Fabricate :demand, commitment_date: nil, end_date: 1.hour.ago }
+        it { expect(demand.leadtime).to eq nil }
+      end
+      context 'having commitment date but no end date' do
+        let(:demand) { Fabricate :demand, commitment_date: 2.days.ago, end_date: nil }
+        it { expect(demand.leadtime).to eq nil }
+      end
+    end
+  end
+
   describe '#result_date' do
     context 'having end_date' do
       let!(:demand) { Fabricate :demand, end_date: Time.zone.parse('2018-03-15 16:24:41 -3') }
@@ -151,21 +159,6 @@ RSpec.describe Demand, type: :model do
     context 'having the end_date in the edge of timezone' do
       let!(:demand) { Fabricate :demand, end_date: Time.zone.parse('2018-03-15 23:24:41 -3') }
       it { expect(demand.result_date).to eq Date.new(2018, 3, 16) }
-    end
-  end
-
-  describe '#leadtime' do
-    context 'having commitment and end dates' do
-      let(:demand) { Fabricate :demand, commitment_date: 2.days.ago, end_date: 1.hour.ago }
-      it { expect(demand.leadtime).to be_within(0.001).of(169_200.001) }
-    end
-    context 'having no commitment date but having end date' do
-      let(:demand) { Fabricate :demand, commitment_date: nil, end_date: 1.hour.ago }
-      it { expect(demand.leadtime).to eq 0 }
-    end
-    context 'having commitment date but no end date' do
-      let(:demand) { Fabricate :demand, commitment_date: 2.days.ago, end_date: nil }
-      it { expect(demand.leadtime).to eq 0 }
     end
   end
 

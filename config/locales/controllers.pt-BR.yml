@@ -171,6 +171,8 @@ pt-BR:
         title: "Entregue vs Restante para %{target_name}"
       deadline:
         title: "Prazo para %{target_name}"
+      date_odds:
+        tooltipsufix: "chance"
     project_risk_alert_table: "Alertas de risco para o projeto"
     portfolio_bulletin:
       delivered_demands: "Demandas entregues na última semana"
@@ -323,6 +325,8 @@ pt-BR:
       title: "Horas Disponíveis"
     risk_alert_color:
       title: "Riscos em %{risk_type}"
+    date_odds:
+      title: "Probabilidade das datas para %{target_name}"
   pipefy_configs:
     new:
       title: "Nova Configuração do Pipefy"

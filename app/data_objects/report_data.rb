@@ -61,7 +61,43 @@ class ReportData
     result_data
   end
 
+  def dates_and_odds
+    project = @projects.first
+    monte_carlo_data = Stats::StatisticsService.instance.run_montecarlo(project.demands.count,
+                                                                        ProjectsRepository.instance.leadtime_per_week([project]).values,
+                                                                        ProjectsRepository.instance.throughput_per_week([project]).values,
+                                                                        500)
+
+    mount_deadline_odds_data(monte_carlo_data, project).sort_by { |keys, _values| keys }.to_h
+  end
+
+  def montecarlo_dates
+    project = @projects.first
+    Stats::StatisticsService.instance.run_montecarlo(project.demands.count,
+                                                     ProjectsRepository.instance.leadtime_per_week([project]).values,
+                                                     ProjectsRepository.instance.throughput_per_week([project]).values,
+                                                     500)
+  end
+
   private
+
+  def mount_deadline_odds_data(monte_carlo_data, project)
+    all_montecarlo_dates = monte_carlo_data.monte_carlo_date_hash.keys
+    most_likely_montecarlo_date = all_montecarlo_dates.first
+    most_likely_montecarlo_odd = monte_carlo_data.monte_carlo_date_hash.values.first
+
+    project_deadline = project.end_date
+    project_deadline_odd = monte_carlo_data.monte_carlo_date_hash[project_deadline]
+    project_deadline_odd = most_likely_montecarlo_odd if project_deadline >= most_likely_montecarlo_date
+
+    nearest_montecarlo_date = CollectionsService.find_nearest(all_montecarlo_dates, project_deadline)
+    nearest_montecarlo_odd = monte_carlo_data.monte_carlo_date_hash[project_deadline]
+
+    montecarlo_dates_hash = { project_deadline => [project_deadline_odd], most_likely_montecarlo_date => [most_likely_montecarlo_odd] }
+    montecarlo_dates_hash.merge(nearest_montecarlo_date => nearest_montecarlo_odd)
+
+    montecarlo_dates_hash
+  end
 
   def throughput_chart_data(downstream_th_weekly_data, upstream_th_weekly_data)
     upstream_result_data = []

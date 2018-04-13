@@ -222,12 +222,14 @@ RSpec.describe ProjectResultsRepository, type: :repository do
     end
   end
 
-  describe '#create_project_result!' do
+  describe '#update_project_results_for_demand!' do
     let(:company) { Fabricate :company }
     let(:team) { Fabricate :team, company: company }
     let(:customer) { Fabricate :customer, company: company }
     let(:project) { Fabricate :project, customer: customer }
     let(:demand) { Fabricate :demand, project: project, created_date: Time.zone.parse('2018-02-14 12:00:00') }
+
+    pending 'test other attributes and the monte carlo date'
 
     context 'when there is no project result to the date' do
       before { ProjectResultsRepository.instance.update_project_results_for_demand!(demand, team) }

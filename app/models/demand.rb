@@ -20,6 +20,7 @@
 #  assignees_count   :integer          not null
 #  effort_downstream :decimal(, )      default(0.0)
 #  effort_upstream   :decimal(, )      default(0.0)
+#  leadtime          :decimal(, )
 #
 # Indexes
 #
@@ -45,11 +46,12 @@ class Demand < ApplicationRecord
   scope :finished_in_stream, ->(stage_stream) { joins(demand_transitions: :stage).where('stages.end_point = true AND stages.stage_stream = :stage_stream', stage_stream: stage_stream).uniq }
   scope :finished, -> { where('end_date IS NOT NULL') }
   scope :finished_bugs, -> { bug.finished }
-  scope :demands_with_transition, -> { joins(project: :pipefy_config).joins(:demand_transitions).where('demands.demand_id IS NOT NULL AND pipefy_configs.active = true').uniq }
   scope :grouped_end_date_by_month, -> { finished.order(end_date: :desc).group_by { |demand| [demand.end_date.to_date.cwyear, demand.end_date.to_date.month] } }
 
   delegate :company, to: :project
   delegate :full_name, to: :project, prefix: true
+
+  before_save :compute_and_update_automatic_fields
 
   def update_effort!
     update(effort_downstream: (working_time_downstream - blocked_working_time_downstream), effort_upstream: (working_time_upstream - blocked_working_time_upstream))
@@ -70,11 +72,6 @@ class Demand < ApplicationRecord
 
   def result_date
     end_date&.utc&.to_date || created_date.utc.to_date
-  end
-
-  def leadtime
-    return 0 if commitment_date.blank? || end_date.blank?
-    end_date - commitment_date
   end
 
   def working_time_upstream
@@ -122,5 +119,10 @@ class Demand < ApplicationRecord
   def assignee_effort_computation
     return assignees_count if assignees_count == 1
     assignees_count * 0.75
+  end
+
+  def compute_and_update_automatic_fields
+    return if commitment_date.blank? || end_date.blank?
+    self.leadtime = end_date - commitment_date
   end
 end

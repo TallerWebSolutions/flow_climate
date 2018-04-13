@@ -54,7 +54,7 @@ class TeamsController < AuthenticatedController
 
   def assign_report_data(week, year)
     @report_data = ReportData.new(@team_projects)
-    @strategic_report_data = StrategicReportData.new(@company, @team.projects, @team.active_available_hours_for_billable_types(@team.projects.pluck(:project_type).uniq))
+    @strategic_report_data = StrategicReportData.new(@company, @team.projects, @team.active_monthly_available_hours_for_billable_types(@team.projects.pluck(:project_type).uniq))
     @projects_risk_alert_data = ProjectRiskData.new(@team_projects)
     @flow_report_data = FlowReportData.new(@team_projects, week, year)
   end

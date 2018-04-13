@@ -33,25 +33,19 @@
   </div>
 
   <div class="row">
-    <div class='col-xs-3 form-group <%= 'has-error' if @project_result.errors[:throughput_upstream].present? %>'>
+    <div class='col-xs-4 form-group <%= 'has-error' if @project_result.errors[:throughput_upstream].present? %>'>
       <%= f.label :throughput_upstream, class: 'control-label required' %>
       <%= f.number_field :throughput_upstream, value: @project_result.throughput_upstream, class: 'form-control', step: 1 %>
       <span class="help-block"><%= @project_result.errors[:throughput_upstream].join(', ') %></span>
     </div>
 
-    <div class='col-xs-3 form-group <%= 'has-error' if @project_result.errors[:throughput_downstream].present? %>'>
+    <div class='col-xs-4 form-group <%= 'has-error' if @project_result.errors[:throughput_downstream].present? %>'>
       <%= f.label :throughput_downstream, class: 'control-label required' %>
       <%= f.number_field :throughput_downstream, value: @project_result.throughput_downstream, class: 'form-control', step: 1 %>
       <span class="help-block"><%= @project_result.errors[:throughput_downstream].join(', ') %></span>
     </div>
 
-    <div class='col-xs-3 form-group <%= 'has-error' if @project_result.errors[:monte_carlo_date].present? %>'>
-      <%= f.label :monte_carlo_date, class: 'control-label' %>
-      <%= f.date_field :monte_carlo_date, value: @project_result.monte_carlo_date, class: 'form-control' %>
-      <span class="help-block"><%= @project_result.errors[:monte_carlo_date].join(', ') %></span>
-    </div>
-
-    <div class='col-xs-3 form-group <%= 'has-error' if @project_result.errors[:leadtime].present? %>'>
+    <div class='col-xs-4 form-group <%= 'has-error' if @project_result.errors[:leadtime].present? %>'>
       <%= f.label :leadtime, class: 'control-label' %>
       <%= f.number_field :leadtime, value: @project_result.leadtime, class: 'form-control', step: 0.01 %>
       <span class="help-block"><%= @project_result.errors[:leadtime].join(', ') %></span>

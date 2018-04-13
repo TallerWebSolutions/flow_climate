@@ -45,7 +45,7 @@ module Stats
       new_prediction_interval = 0
       remaining_backlog_count.times do
         chosen_value = choose_weighted(create_histogram_data(leadtime_histogram_data_array))
-        new_prediction_interval += chosen_value if chosen_value.positive?
+        new_prediction_interval += chosen_value / 86_400 if chosen_value.positive?
       end
       slots_for_paralelism = choose_weighted(create_histogram_data(throughput_histogram_data_array))
       slots_for_paralelism = 1 unless slots_for_paralelism.positive?
