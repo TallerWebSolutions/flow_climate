@@ -46,7 +46,7 @@
          data-ytitle='<%= t('projects.charts.xlabel.days') %>'
          data-tooltipsufix='<%= t('projects.charts.date_odds.tooltipsufix') %>'
          data-series='<%= [{ name: 'deadlines', data: report_data.dates_and_odds.values.flatten.map(&:to_f) }].to_json %>'
-         data-decimals='0'>
+         data-decimals='3'>
     </div>
   </div>
 
@@ -61,7 +61,7 @@
          data-ytitle='<%= t('projects.charts.xlabel.days') %>'
          data-tooltipsufix='<%= t('projects.charts.throughput_per_week.tooltipsufix') %>'
          data-series='<%= [{ name: 'monte carlo dates', data: @montecarlo_dates.monte_carlo_date_hash.values.flatten.map(&:to_f) }].to_json %>'
-         data-decimals='0'>
+         data-decimals='3'>
     </div>
   </div>
 </div>

@@ -119,12 +119,14 @@ RSpec.describe ProjectsRepository, type: :repository do
   describe '#throughput_per_week' do
     let!(:project) { Fabricate :project, customer: customer, start_date: 2.weeks.ago, end_date: 1.week.from_now, status: :executing }
 
-    let!(:first_demand) { Fabricate :demand, project: project, end_date: Time.zone.parse('2018-04-05 22:00') }
-    let!(:second_demand) { Fabricate :demand, project: project, end_date: Time.zone.parse('2018-04-06 22:00') }
-    let!(:third_demand) { Fabricate :demand, project: project, end_date: Time.zone.parse('2018-03-30 22:00') }
-    let!(:fourth_demand) { Fabricate :demand, project: project }
+    context 'having enough data from the project' do
+      let!(:first_demand) { Fabricate :demand, project: project, end_date: Time.zone.parse('2018-04-05 22:00') }
+      let!(:second_demand) { Fabricate :demand, project: project, end_date: Time.zone.parse('2018-04-06 22:00') }
+      let!(:third_demand) { Fabricate :demand, project: project, end_date: Time.zone.parse('2018-03-30 22:00') }
+      let!(:fourth_demand) { Fabricate :demand, project: project }
 
-    it { expect(ProjectsRepository.instance.throughput_per_week([project])).to eq(Date.new(2018, 3, 26) => 1, Date.new(2018, 4, 2) => 2, Date.new(2018, 4, 9) => 0) }
+      it { expect(ProjectsRepository.instance.throughput_per_week([project])).to eq(Date.new(2018, 3, 26) => 1, Date.new(2018, 4, 2) => 2, Date.new(2018, 4, 9) => 0) }
+    end
   end
 
   describe '#leadtime_per_week' do

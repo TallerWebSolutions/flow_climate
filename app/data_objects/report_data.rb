@@ -63,23 +63,29 @@ class ReportData
 
   def dates_and_odds
     project = @projects.first
-    monte_carlo_data = Stats::StatisticsService.instance.run_montecarlo(project.demands.count,
-                                                                        ProjectsRepository.instance.leadtime_per_week([project]).values,
-                                                                        ProjectsRepository.instance.throughput_per_week([project]).values,
-                                                                        500)
+    monte_carlo_data = Stats::StatisticsService.instance.run_montecarlo(project.demands.count, gather_leadtime_data(project), gather_throughput_data(project), 500)
 
     mount_deadline_odds_data(monte_carlo_data, project).sort_by { |keys, _values| keys }.to_h
   end
 
   def montecarlo_dates
     project = @projects.first
-    Stats::StatisticsService.instance.run_montecarlo(project.demands.count,
-                                                     ProjectsRepository.instance.leadtime_per_week([project]).values,
-                                                     ProjectsRepository.instance.throughput_per_week([project]).values,
-                                                     500)
+    Stats::StatisticsService.instance.run_montecarlo(project.demands.count, gather_leadtime_data(project), gather_throughput_data(project), 500)
   end
 
   private
+
+  def gather_leadtime_data(project)
+    leadtime_data_array = ProjectsRepository.instance.leadtime_per_week([project]).values
+    leadtime_data_array = ProjectsRepository.instance.leadtime_per_week(project.product.projects).values if leadtime_data_array.size < 10
+    leadtime_data_array
+  end
+
+  def gather_throughput_data(project)
+    throughput_data_array = ProjectsRepository.instance.throughput_per_week([project]).values
+    throughput_data_array = ProjectsRepository.instance.throughput_per_week(project.product.projects).values if throughput_data_array.size < 10
+    throughput_data_array
+  end
 
   def mount_deadline_odds_data(monte_carlo_data, project)
     all_montecarlo_dates = monte_carlo_data.monte_carlo_date_hash.keys

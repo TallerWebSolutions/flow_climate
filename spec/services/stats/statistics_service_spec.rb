@@ -28,13 +28,15 @@ RSpec.describe Stats::StatisticsService, type: :service do
 
   describe '#run_montecarlo' do
     context 'having data' do
-      subject(:monte_carlo_simulation_data) { Stats::StatisticsService.instance.run_montecarlo(30, [1.23, 2.34, 4.2, 3.5, 1.15, 2.40, 5.10, 2.20, 3.45, 4.1], [10, 15, 12, 15, 7, 10, 18, 11, 14, 13], 100) }
+      subject(:monte_carlo_simulation_data) { Stats::StatisticsService.instance.run_montecarlo(30, [963_436.0, 460_879.0, 37_221.0, 472_033.0], [10, 15, 12, 15], 100) }
       it 'computes and provides the data' do
-        expect(monte_carlo_simulation_data.dates_and_hits_hash.keys[0]).to be_within(5.days).of(1_523_502_000)
-        expect(monte_carlo_simulation_data.dates_and_hits_hash.values[0]).to be_within(30).of(100)
-        expect(monte_carlo_simulation_data.monte_carlo_date_hash.keys[0].to_time.to_i).to be_within(6.days).of(1_523_847_600)
-        expect(monte_carlo_simulation_data.monte_carlo_date_hash.values[0].to_f).to eq 1
-        expect(monte_carlo_simulation_data.predicted_dates.size).to be >= 1
+        expect(monte_carlo_simulation_data.dates_and_hits_hash.keys.count).to be_within(1).of(6)
+        expect(monte_carlo_simulation_data.dates_and_hits_hash.values.count).to be_within(1).of(6)
+
+        expect(monte_carlo_simulation_data.monte_carlo_date_hash.keys.count).to be_within(1).of(6)
+        expect(monte_carlo_simulation_data.monte_carlo_date_hash.values.count).to be_within(1).of(6)
+
+        expect(monte_carlo_simulation_data.predicted_dates.size).to be_within(1).of(6)
       end
     end
     context 'having no data' do
