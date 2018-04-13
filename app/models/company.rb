@@ -117,7 +117,7 @@ class Company < ApplicationRecord
 
   def total_available_hours
     total_available = 0
-    teams.sum { |team| total_available += team.active_available_hours_for_billable_types(projects.pluck(:project_type).uniq) }
+    teams.sum { |team| total_available += team.active_monthly_available_hours_for_billable_types(projects.pluck(:project_type).uniq) }
     total_available
   end
 

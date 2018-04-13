@@ -51,6 +51,7 @@ Metrics/ClassLength:
     - 'app/models/project.rb'
     - 'app/repositories/project_results_repository.rb'
     - 'app/services/pipefy/pipefy_response_reader.rb'
+    - 'app/data_objects/report_data.rb'
 
 Metrics/CyclomaticComplexity:
   Exclude:
@@ -64,7 +65,7 @@ Metrics/AbcSize:
   Exclude:
     - 'app/routes/**/*'
     - 'db/migrate/**/*'
-  Max: 17.5
+  Max: 18.5
 
 Metrics/ParameterLists:
   Enabled: false

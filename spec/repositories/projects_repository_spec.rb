@@ -4,7 +4,7 @@ RSpec.describe ProjectsRepository, type: :repository do
   let(:company) { Fabricate :company }
   let(:customer) { Fabricate :customer, company: company }
 
-  before { travel_to Time.zone.local(2018, 2, 20, 10, 0, 0) }
+  before { travel_to Time.zone.local(2018, 4, 13, 10, 0, 0) }
   after { travel_back }
 
   describe '#active_projects_in_month' do
@@ -56,7 +56,7 @@ RSpec.describe ProjectsRepository, type: :repository do
         it { expect(ProjectsRepository.instance.flow_pressure_to_month(company.projects, 2.months.ago.to_date)).to eq 0 }
       end
       context 'if in the future, returns the future flow pressure to the project' do
-        it { expect(ProjectsRepository.instance.flow_pressure_to_month(company.projects, 1.month.from_now.to_date)).to be_within(0.001).of(5.172) }
+        it { expect(ProjectsRepository.instance.flow_pressure_to_month(company.projects, 1.month.from_now.to_date)).to be_within(0.001).of(4.838) }
       end
     end
   end
@@ -65,7 +65,7 @@ RSpec.describe ProjectsRepository, type: :repository do
     let!(:project) { Fabricate :project, customer: customer, value: 100, start_date: 2.months.ago, end_date: 1.month.from_now }
     let!(:other_project) { Fabricate :project, customer: customer, value: 50, start_date: 2.months.ago, end_date: 1.month.from_now }
     context 'having projects in the month' do
-      it { expect(ProjectsRepository.instance.money_to_month(company.projects, 2.months.ago.to_date).to_f).to eq 49.45054945054945 }
+      it { expect(ProjectsRepository.instance.money_to_month(company.projects, 2.months.ago.to_date).to_f).to eq 50.0 }
     end
 
     context 'having no projects in the month' do
@@ -114,5 +114,29 @@ RSpec.describe ProjectsRepository, type: :repository do
         it { expect(ProjectsRepository.instance.add_query_to_projects_in_status(Project.all, 'all')).to match_array [first_project, second_project, third_project, fourth_project, fifth_project, sixth_project] }
       end
     end
+  end
+
+  describe '#throughput_per_week' do
+    let!(:project) { Fabricate :project, customer: customer, start_date: 2.weeks.ago, end_date: 1.week.from_now, status: :executing }
+
+    context 'having enough data from the project' do
+      let!(:first_demand) { Fabricate :demand, project: project, end_date: Time.zone.parse('2018-04-05 22:00') }
+      let!(:second_demand) { Fabricate :demand, project: project, end_date: Time.zone.parse('2018-04-06 22:00') }
+      let!(:third_demand) { Fabricate :demand, project: project, end_date: Time.zone.parse('2018-03-30 22:00') }
+      let!(:fourth_demand) { Fabricate :demand, project: project }
+
+      it { expect(ProjectsRepository.instance.throughput_per_week([project])).to eq(Date.new(2018, 3, 26) => 1, Date.new(2018, 4, 2) => 2, Date.new(2018, 4, 9) => 0) }
+    end
+  end
+
+  describe '#leadtime_per_week' do
+    let!(:project) { Fabricate :project, customer: customer, start_date: 1.week.ago, end_date: 2.months.from_now, status: :executing }
+
+    let!(:first_demand) { Fabricate :demand, project: project, end_date: Time.zone.parse('2018-04-05 22:00'), leadtime: 2.0 }
+    let!(:second_demand) { Fabricate :demand, project: project, end_date: Time.zone.parse('2018-04-06 22:00'), leadtime: 1.0 }
+    let!(:third_demand) { Fabricate :demand, project: project, end_date: Time.zone.parse('2018-03-30 22:00'), leadtime: 5.0 }
+    let!(:fourth_demand) { Fabricate :demand, project: project }
+
+    it { expect(ProjectsRepository.instance.leadtime_per_week([project])).to eq(Date.new(2018, 4, 2) => 1.5, Date.new(2018, 4, 9) => 0.0) }
   end
 end

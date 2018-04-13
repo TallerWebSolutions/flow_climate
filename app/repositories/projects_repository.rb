@@ -48,7 +48,28 @@ class ProjectsRepository
     projects_with_query_and_order.order(end_date: :desc)
   end
 
+  def throughput_per_week(projects)
+    throughput_per_week_grouped = Demand.where(project_id: projects.pluck(:id)).finished.group('EXTRACT(WEEK FROM end_date)', 'EXTRACT(YEAR FROM end_date)').count
+    extract_data_for_week(projects, throughput_per_week_grouped)
+  end
+
+  def leadtime_per_week(projects)
+    leadtime_per_week_grouped = Demand.where(project_id: projects.pluck(:id)).finished.group('EXTRACT(WEEK FROM end_date)', 'EXTRACT(YEAR FROM end_date)').average(:leadtime)
+    extract_data_for_week(projects, leadtime_per_week_grouped)
+  end
+
   private
+
+  def extract_data_for_week(projects, leadtime_per_week_grouped)
+    start_date = projects.map(&:start_date).min
+    end_date = [projects.map(&:end_date).max, Time.zone.today].min
+
+    data_grouped_hash = {}
+    (start_date..end_date).each do |date|
+      data_grouped_hash[date.beginning_of_week] = leadtime_per_week_grouped[[date.to_date.cweek.to_f, date.to_date.cwyear.to_f]] || 0
+    end
+    data_grouped_hash
+  end
 
   def where_by_start_end_dates(projects, required_date)
     projects.where('(start_date <= :end_date AND end_date >= :start_date) OR (start_date >= :start_date AND end_date <= :end_date) OR (start_date <= :end_date AND start_date >= :start_date)', start_date: required_date.beginning_of_month, end_date: required_date.end_of_month)

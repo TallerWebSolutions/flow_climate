@@ -118,7 +118,7 @@ RSpec.describe ProjectResult, type: :model do
         expect(ProjectResult.last.send(:current_gap)).to eq 5
         expect(ProjectResult.last.flow_pressure.to_f).to eq 1.0
         expect(ProjectResult.last.cost_in_month).to eq 0
-        expect(ProjectResult.last.average_demand_cost.to_f).to eq 0.0
+        expect(ProjectResult.last.average_demand_cost.to_f).to eq 2400.6833333333334
         expect(ProjectResult.last.available_hours.to_f).to eq 0
       end
     end
@@ -127,11 +127,11 @@ RSpec.describe ProjectResult, type: :model do
       let!(:team_member) { Fabricate :team_member, active: true, billable_type: :outsourcing, billable: true, team: team, monthly_payment: 100, hours_per_month: 22, total_monthly_payment: 100 }
       let!(:other_team_member) { Fabricate :team_member, active: true, billable_type: :outsourcing, billable: true, team: team, monthly_payment: 100, hours_per_month: 11, total_monthly_payment: 100 }
       let!(:project) { Fabricate :project, customer: customer, start_date: Date.new(2018, 4, 1), end_date: Date.new(2018, 4, 7), initial_scope: 10 }
-      let!(:result) { Fabricate :project_result, project: project, team: team, result_date: Date.new(2018, 4, 3), known_scope: 20, throughput_upstream: 4, throughput_downstream: 6 }
+      let!(:result) { Fabricate :project_result, project: project, team: team, result_date: Date.new(2018, 4, 3), known_scope: 20, throughput_upstream: 4, throughput_downstream: 6, cost_in_month: 100 }
       before { result.define_automatic_attributes! }
       it 'defines the automatic attributes' do
         expect(result.reload.cost_in_month.to_f).to eq 200.0
-        expect(result.reload.average_demand_cost.to_f).to be_within(0.01).of(0.66)
+        expect(result.reload.average_demand_cost.to_f).to be_within(0.01).of(0.33)
         expect(result.reload.available_hours.to_f).to eq 1.1
       end
     end
@@ -240,7 +240,7 @@ RSpec.describe ProjectResult, type: :model do
     end
     context 'when it does not have the demand' do
       before { result.remove_demand!(second_demand) }
-      it { expect(result.reload.demands).to eq [first_demand, third_demand] }
+      it { expect(result.reload.demands).to match_array [first_demand, third_demand] }
     end
   end
 

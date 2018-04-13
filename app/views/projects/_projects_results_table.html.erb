@@ -1,13 +1,5 @@
 <h2><%= t('project_results.index.title') %></h2>
 
-<% if project.manual? %>
-  <div class="row">
-    <div class="col-xs-6">
-      <%= link_to t('project_results.new.title'), new_company_project_project_result_path(@company, project), class: 'btn btn-primary btn-list bottom-spaced-component' %>
-    </div>
-  </div>
-<% end %>
-
 <table class="table table-index table-striped">
   <thead>
     <tr>

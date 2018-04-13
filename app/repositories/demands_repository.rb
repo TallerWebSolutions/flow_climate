@@ -30,6 +30,14 @@ class DemandsRepository
     demands_touched_in_day(demands, analysed_date).order(:commitment_date)
   end
 
+  def grouped_by_effort_upstream_per_month(array_of_projects)
+    Demand.finished.where(project_id: array_of_projects).order(Arel.sql('EXTRACT(YEAR from end_date), EXTRACT(MONTH from end_date)')).group('EXTRACT(YEAR from end_date)', 'EXTRACT(MONTH from end_date)').sum(:effort_upstream)
+  end
+
+  def grouped_by_effort_downstream_per_month(array_of_projects)
+    Demand.finished.where(project_id: array_of_projects).order(Arel.sql('EXTRACT(YEAR from end_date), EXTRACT(MONTH from end_date)')).group('EXTRACT(YEAR from end_date)', 'EXTRACT(MONTH from end_date)').sum(:effort_downstream)
+  end
+
   private
 
   def demands_touched_in_day(demands, analysed_date)

@@ -115,6 +115,7 @@ pt-BR:
       remaining_hours: "Horas Restantes"
       risk_alerts: "Alertas de Risco"
       maintenance_filter: "Manutenção"
+      passed_time: "Tempo Decorrido"
     show:
       initial_scope: "Escopo Inicial"
       last_team: "Time atual"
@@ -139,6 +140,7 @@ pt-BR:
       xlabel:
         weeks: "Semanas"
         projects: "Projetos"
+        days: "Dias"
       burnup:
         ylabel: "Demandas"
         tooltipsufix: " demandas"
@@ -154,7 +156,7 @@ pt-BR:
       flow_pressure_per_project:
         ylabel: "Pressão do Fluxo"
       throughput_per_week:
-        title: "Throughput por Semana"
+        title: "Throughput por Semana para %{target_name}"
         tooltipsufix: " demandas"
         ylabel: "Demandas"
         stage_stream:
@@ -165,6 +167,15 @@ pt-BR:
         ylabel: "Custo Médio por Demanda"
         tooltipsufix: "reais"
         tooltip_prefix: "R$ "
+      delivered:
+        title: "Entregue vs Restante para %{target_name}"
+      deadline:
+        title: "Prazo para %{target_name}"
+      date_odds:
+        tooltipsufix: "chance"
+      hours_per_month:
+        ylabel: "Horas"
+        title: "Horas por Mês de Esforço para %{target_name}"
     project_risk_alert_table: "Alertas de risco para o projeto"
     portfolio_bulletin:
       delivered_demands: "Demandas entregues na última semana"
@@ -172,6 +183,9 @@ pt-BR:
     no_demands_delivered: "Nenhuma demanda registrada para a semana passada."
     project_risk_configs:
       title: "Configurações de Risco"
+    general:
+      deadline: "Data do Prazo"
+      scope: "Escopo"
   project_results:
     index:
       title: "Resultados do Projeto"
@@ -281,6 +295,7 @@ pt-BR:
     teams: "Times"
     flow: "Fluxo"
     delivered_demands: "Demandas Entregues"
+    status_report: "Status Report"
   charts:
     xlabel:
       months: "Meses"
@@ -316,6 +331,19 @@ pt-BR:
       title: "Horas Disponíveis"
     risk_alert_color:
       title: "Riscos em %{risk_type}"
+    date_odds:
+      title: "Probabilidade das datas para %{target_name}"
+      ytitle: "Probabilidades"
+      xtitle: "Datas"
+      project_date: "%{project_deadline} (Projeto)"
+      montecarlo_date: "%{montecarlo_deadline} (Monte Carlo)"
+      nearest_montecarlo_date: "%{montecarlo_deadline} (Monte Carlo mais próxima)"
+    montecarlo:
+      title: "Datas de Monte Carlo para %{target_name}"
+    projections:
+      title: "Projeções"
+    current_situation:
+      title: "Situação Atual"
   pipefy_configs:
     new:
       title: "Nova Configuração do Pipefy"

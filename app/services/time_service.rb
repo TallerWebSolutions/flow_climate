@@ -8,6 +8,12 @@ class TimeService
     compute_working_hours(start_date, end_date)
   end
 
+  def skip_weekends(date, increment)
+    date += increment.round.days
+    date += 1.day while (date.wday % 7).zero? || (date.wday % 7 == 6)
+    date
+  end
+
   private
 
   def compute_working_hours(start_time, end_time)
