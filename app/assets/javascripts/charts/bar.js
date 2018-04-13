@@ -42,8 +42,8 @@ function buildBarChart(barDiv) {
             }
         },
         tooltip: {
-            formatter: function() {
-                return 'The value for <b>' + this.x + '</b> is <b>' + this.y + '</b>, in series '+ this.series.name;
+            formatter: function () {
+                return Highcharts.numberFormat(this.y, barDiv.data('decimals'), '.') + ' ' + barDiv.data('ysuffix');
             }
         },
         series: barDiv.data('series')

@@ -13,11 +13,11 @@ RSpec.describe ReportData, type: :data_object do
     let!(:fifth_project_result) { Fabricate(:project_result, project: third_project, result_date: Time.zone.parse('2018-03-13'), known_scope: 125, throughput_upstream: 10, throughput_downstream: 62, qty_hours_upstream: 87, qty_hours_downstream: 16, flow_pressure: 10) }
 
     let!(:opened_demands) { Fabricate.times(20, :demand, project: first_project, project_result: first_project_result, created_date: Time.zone.parse('2018-02-21')) }
-    let!(:first_demand) { Fabricate :demand, project: first_project, project_result: first_project_result, end_date: Time.zone.parse('2018-02-21'), leadtime: 2 * 86_400 }
-    let!(:second_demand) { Fabricate :demand, project: first_project, project_result: first_project_result, end_date: Time.zone.parse('2018-02-21'), leadtime: 3 * 86_400 }
-    let!(:third_demand) { Fabricate :demand, project: first_project, project_result: second_project_result, end_date: Time.zone.parse('2018-03-18'), leadtime: 1 * 86_400 }
-    let!(:fourth_demand) { Fabricate :demand, project: first_project, project_result: second_project_result, end_date: Time.zone.parse('2018-03-18'), leadtime: 1 * 86_400 }
-    let!(:fifth_demand) { Fabricate :demand, project: first_project, project_result: third_project_result, end_date: Time.zone.parse('2018-03-13'), leadtime: 4 * 86_400 }
+    let!(:first_demand) { Fabricate :demand, project: first_project, project_result: first_project_result, end_date: Time.zone.parse('2018-02-21'), leadtime: 2 * 86_400, effort_upstream: 10, effort_downstream: 5 }
+    let!(:second_demand) { Fabricate :demand, project: first_project, project_result: first_project_result, end_date: Time.zone.parse('2018-02-21'), leadtime: 3 * 86_400, effort_upstream: 12, effort_downstream: 20 }
+    let!(:third_demand) { Fabricate :demand, project: first_project, project_result: second_project_result, end_date: Time.zone.parse('2018-03-18'), leadtime: 1 * 86_400, effort_upstream: 27, effort_downstream: 40 }
+    let!(:fourth_demand) { Fabricate :demand, project: first_project, project_result: second_project_result, end_date: Time.zone.parse('2018-03-18'), leadtime: 1 * 86_400, effort_upstream: 80, effort_downstream: 34 }
+    let!(:fifth_demand) { Fabricate :demand, project: first_project, project_result: third_project_result, end_date: Time.zone.parse('2018-03-13'), leadtime: 4 * 86_400, effort_upstream: 56, effort_downstream: 25 }
 
     describe '.initialize' do
       subject(:report_data) { ReportData.new(Project.all) }
@@ -32,8 +32,9 @@ RSpec.describe ReportData, type: :data_object do
         expect(report_data.throughput_per_week).to eq([{ name: I18n.t('projects.charts.throughput_per_week.stage_stream.upstream'), data: [23, 0, 0, 47, 0] }, { name: I18n.t('projects.charts.throughput_per_week.stage_stream.downstream'), data: [2, 0, 0, 129, 0] }])
         expect(report_data.delivered_vs_remaining).to eq([{ name: I18n.t('projects.show.delivered_scope'), data: [201] }, { name: I18n.t('projects.show.scope_gap'), data: [365] }])
         expect(report_data.dates_and_odds.keys.count).to be >= 1
-        expect(report_data.montecarlo_dates.dates_and_hits_hash.keys.count).to be >= 1
-        expect(report_data.montecarlo_dates.monte_carlo_date_hash.keys.count).to be >= 1
+        expect(report_data.monte_carlo_data.dates_and_hits_hash.keys.count).to be >= 1
+        expect(report_data.monte_carlo_data.monte_carlo_date_hash.keys.count).to be >= 1
+        expect(report_data.effort_hours_per_month).to eq(keys: [[2018.0, 2.0], [2018.0, 3.0]], data: { upstream: [22.0, 163.0], downstream: [25.0, 99.0] })
       end
     end
     describe '#projects_names' do

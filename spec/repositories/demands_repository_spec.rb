@@ -101,4 +101,58 @@ RSpec.describe DemandsRepository, type: :repository do
       end
     end
   end
+
+  describe '#grouped_by_effort_upstream_per_month' do
+    before { travel_to Time.zone.local(2018, 4, 5, 10, 0, 0) }
+    after { travel_back }
+
+    let(:project) { Fabricate :project, start_date: 2.months.ago, end_date: 2.months.from_now }
+
+    context 'having demands' do
+      let!(:first_demand) { Fabricate :demand, project: project, commitment_date: 60.days.ago, end_date: 57.days.ago, effort_upstream: 10, effort_downstream: 5 }
+      let!(:second_demand) { Fabricate :demand, project: project, commitment_date: 58.days.ago, end_date: 55.days.ago, effort_upstream: 12, effort_downstream: 20 }
+      let!(:third_demand) { Fabricate :demand, project: project, commitment_date: 30.days.ago, end_date: 24.days.ago, effort_upstream: 27, effort_downstream: 40 }
+      let!(:fourth_demand) { Fabricate :demand, project: project, commitment_date: 29.days.ago, end_date: 22.days.ago, effort_upstream: 80, effort_downstream: 34 }
+      let!(:fifth_demand) { Fabricate :demand, project: project, commitment_date: 10.days.ago, end_date: 7.days.ago, effort_upstream: 56, effort_downstream: 25 }
+      let!(:sixth_demand) { Fabricate :demand, project: project, commitment_date: 10.days.ago, end_date: 5.days.ago, effort_upstream: 32, effort_downstream: 87 }
+      let!(:seventh_demand) { Fabricate :demand, project: project, commitment_date: 10.days.ago, end_date: nil, effort_upstream: 32, effort_downstream: 87 }
+
+      context 'having demands in progress' do
+        it { expect(DemandsRepository.instance.grouped_by_effort_upstream_per_month([project])).to eq([2018.0, 2.0] => 22.0, [2018.0, 3.0] => 195.0) }
+      end
+    end
+
+    context 'having no demands' do
+      context 'having demands in progress' do
+        it { expect(DemandsRepository.instance.grouped_by_effort_upstream_per_month([project])).to eq({}) }
+      end
+    end
+  end
+
+  describe '#grouped_by_effort_downstream_per_month' do
+    before { travel_to Time.zone.local(2018, 4, 5, 10, 0, 0) }
+    after { travel_back }
+
+    let(:project) { Fabricate :project, start_date: 2.months.ago, end_date: 2.months.from_now }
+
+    context 'having demands' do
+      let!(:first_demand) { Fabricate :demand, project: project, commitment_date: 60.days.ago, end_date: 57.days.ago, effort_upstream: 10, effort_downstream: 5 }
+      let!(:second_demand) { Fabricate :demand, project: project, commitment_date: 58.days.ago, end_date: 55.days.ago, effort_upstream: 12, effort_downstream: 20 }
+      let!(:third_demand) { Fabricate :demand, project: project, commitment_date: 30.days.ago, end_date: 24.days.ago, effort_upstream: 27, effort_downstream: 40 }
+      let!(:fourth_demand) { Fabricate :demand, project: project, commitment_date: 29.days.ago, end_date: 22.days.ago, effort_upstream: 80, effort_downstream: 34 }
+      let!(:fifth_demand) { Fabricate :demand, project: project, commitment_date: 10.days.ago, end_date: 7.days.ago, effort_upstream: 56, effort_downstream: 25 }
+      let!(:sixth_demand) { Fabricate :demand, project: project, commitment_date: 10.days.ago, end_date: 5.days.ago, effort_upstream: 32, effort_downstream: 87 }
+      let!(:seventh_demand) { Fabricate :demand, project: project, commitment_date: 10.days.ago, end_date: nil, effort_upstream: 32, effort_downstream: 87 }
+
+      context 'having demands in progress' do
+        it { expect(DemandsRepository.instance.grouped_by_effort_downstream_per_month([project])).to eq([2018.0, 2.0] => 25.0, [2018.0, 3.0] => 186.0) }
+      end
+    end
+
+    context 'having no demands' do
+      context 'having demands in progress' do
+        it { expect(DemandsRepository.instance.grouped_by_effort_downstream_per_month([project])).to eq({}) }
+      end
+    end
+  end
 end

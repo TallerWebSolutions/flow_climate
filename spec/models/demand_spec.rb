@@ -268,4 +268,9 @@ RSpec.describe Demand, type: :model do
       it { expect(demand.downstream?).to be false }
     end
   end
+
+  describe '#total_effort' do
+    let(:demand) { Fabricate :demand, effort_upstream: 10, effort_downstream: 20 }
+    it { expect(demand.total_effort).to eq 30 }
+  end
 end

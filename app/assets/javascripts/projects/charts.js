@@ -25,4 +25,7 @@ $(function () {
 
     var statusReportMonteCarloDiv = $('#status-report-montecarlo-column');
     buildColumnChart(statusReportMonteCarloDiv);
+
+    var statusReportHoursDiv = $('#status-report-hours-column');
+    buildColumnChart(statusReportHoursDiv);
 });

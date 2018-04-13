@@ -30,9 +30,12 @@ function buildColumnChart(columnDiv) {
             }
         },
         tooltip: {
-            valueSuffix: ' ' + columnDiv.data('ytitle'),
             formatter: function () {
-                return Highcharts.numberFormat(this.y, columnDiv.data('decimals'), '.');
+                if (!columnDiv.data('ysuffix')) {
+                    return Highcharts.numberFormat(this.y, columnDiv.data('decimals'), '.');
+                } else {
+                    return Highcharts.numberFormat(this.y, columnDiv.data('decimals'), '.') + ' ' + columnDiv.data('ysuffix');
+                }
             }
         },
         legend: {
@@ -48,7 +51,11 @@ function buildColumnChart(columnDiv) {
                     enabled: true,
                     color: 'black',
                     formatter: function () {
-                        return Highcharts.numberFormat(this.y, columnDiv.data('decimals'), '.');
+                        if (!columnDiv.data('ysuffix')) {
+                            return Highcharts.numberFormat(this.y, columnDiv.data('decimals'), '.');
+                        } else {
+                            return Highcharts.numberFormat(this.y, columnDiv.data('decimals'), '.') + ' ' + columnDiv.data('ysuffix');
+                        }
                     }
                 },
                 stacking: columnDiv.data('stacking')

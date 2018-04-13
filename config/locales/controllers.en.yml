@@ -173,11 +173,17 @@ en:
         title: "Deadline for %{target_name}"
       date_odds:
         tooltipsufix: "chance"
+      hours_per_month:
+        ylabel: "Hours"
+        title: "Effort Hours per Month to %{target_name}"
     project_risk_alert_table: "Risk alerts to the project"
     project_risk_configs:
       title: "Risk Configurations"
     portfolio_bulletin:
       red_projects: "Red Alert Projects"
+    general:
+      scope: "Scope"
+      deadline: "Deadline"
   project_results:
     index:
       title: "Project results"
@@ -322,6 +328,18 @@ en:
       title: "Available Hours"
     risk_alert_color:
       title: "Risks on %{risk_type}"
+    montecarlo:
+      title: "Monte Carlo Dates to %{target_name}"
+    date_odds:
+      ytitle: "Odds"
+      xtitle: "Dates"
+      project_date: "{project_deadline} (Project)"
+      montecarlo_date: "{montecarlo_deadline} (Monte Carlo)"
+      nearest_montecarlo_date: "%{montecarlo_deadline} (Nearest Monte Carlo)"
+    projections:
+      title: "Projections"
+    current_situation:
+      title: "Current Situation"
   pipefy_configs:
     new:
       title: "New Pipefy Config"

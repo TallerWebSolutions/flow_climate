@@ -173,6 +173,9 @@ pt-BR:
         title: "Prazo para %{target_name}"
       date_odds:
         tooltipsufix: "chance"
+      hours_per_month:
+        ylabel: "Horas"
+        title: "Horas por Mês de Esforço para %{target_name}"
     project_risk_alert_table: "Alertas de risco para o projeto"
     portfolio_bulletin:
       delivered_demands: "Demandas entregues na última semana"
@@ -180,6 +183,9 @@ pt-BR:
     no_demands_delivered: "Nenhuma demanda registrada para a semana passada."
     project_risk_configs:
       title: "Configurações de Risco"
+    general:
+      deadline: "Data do Prazo"
+      scope: "Escopo"
   project_results:
     index:
       title: "Resultados do Projeto"
@@ -327,6 +333,17 @@ pt-BR:
       title: "Riscos em %{risk_type}"
     date_odds:
       title: "Probabilidade das datas para %{target_name}"
+      ytitle: "Probabilidades"
+      xtitle: "Datas"
+      project_date: "%{project_deadline} (Projeto)"
+      montecarlo_date: "%{montecarlo_deadline} (Monte Carlo)"
+      nearest_montecarlo_date: "%{montecarlo_deadline} (Monte Carlo mais próxima)"
+    montecarlo:
+      title: "Datas de Monte Carlo para %{target_name}"
+    projections:
+      title: "Projeções"
+    current_situation:
+      title: "Situação Atual"
   pipefy_configs:
     new:
       title: "Nova Configuração do Pipefy"

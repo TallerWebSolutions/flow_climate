@@ -20,7 +20,7 @@ module Stats
         predicted_dates.sort_by { |predicted_date, _hits| predicted_date }.each do |predicted_date|
           monte_carlo_date_hash[Time.zone.at(predicted_date[0]).to_date] = predicted_date[1].to_d / hits_sum
         end
-        self.monte_carlo_date_hash = monte_carlo_date_hash
+        self.monte_carlo_date_hash = monte_carlo_date_hash.sort_by { |_keys, values| values }.reverse.to_h
       end
     end
   end
