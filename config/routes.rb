@@ -55,6 +55,7 @@ Rails.application.routes.draw do
 
     resources :projects do
       put :synchronize_pipefy, on: :member
+      patch :finish_project, on: :member
 
       resources :project_results do
         resources :demands, only: %i[new create]

@@ -42,6 +42,10 @@ RSpec.describe ProjectsController, type: :controller do
       before { put :synchronize_pipefy, params: { company_id: 'foo', id: 'bar' } }
       it { expect(response).to redirect_to new_user_session_path }
     end
+    describe 'PATCH #finish_project' do
+      before { put :finish_project, params: { company_id: 'foo', id: 'bar' } }
+      it { expect(response).to redirect_to new_user_session_path }
+    end
   end
 
   context 'authenticated' do
@@ -483,6 +487,40 @@ RSpec.describe ProjectsController, type: :controller do
           context 'not-permitted' do
             let(:company) { Fabricate :company, users: [] }
             before { put :synchronize_pipefy, params: { company_id: company, id: project } }
+            it { expect(response).to have_http_status :not_found }
+          end
+        end
+      end
+    end
+
+    describe 'PATCH #finish_project' do
+      let(:company) { Fabricate :company, users: [user] }
+
+      let(:customer) { Fabricate :customer, company: company }
+      let(:project) { Fabricate :project, customer: customer }
+
+      context 'passing valid parameters' do
+        it 'finishes the project' do
+          patch :finish_project, params: { company_id: company, id: project }
+          expect(response).to redirect_to company_project_path(company, project)
+          expect(flash[:notice]).to eq I18n.t('projects.finish_project.success_message')
+          expect(project.reload.finished?).to be true
+        end
+      end
+
+      context 'invalid' do
+        context 'project' do
+          before { patch :finish_project, params: { company_id: company, id: 'foo' } }
+          it { expect(response).to have_http_status :not_found }
+        end
+        context 'company' do
+          context 'non-existent' do
+            before { patch :finish_project, params: { company_id: 'foo', id: project } }
+            it { expect(response).to have_http_status :not_found }
+          end
+          context 'not-permitted' do
+            let(:company) { Fabricate :company, users: [] }
+            before { patch :finish_project, params: { company_id: company, id: project } }
             it { expect(response).to have_http_status :not_found }
           end
         end

@@ -84,7 +84,7 @@ class Project < ApplicationRecord
 
   def remaining_days(from_date = Time.zone.today)
     return 0 if end_date < from_date || end_date < start_date
-    return (end_date - start_date) + 1 if start_date > from_date.to_date
+    return (end_date - start_date).to_i + 1 if start_date > from_date.to_date
     (end_date - from_date.to_date).to_i + 1
   end
 
