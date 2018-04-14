@@ -136,6 +136,7 @@ en:
         second_part: " till D-day!"
         days: "%{remaining_days} day(s)"
       cmd: "Average Demand Cost"
+      status_information_html: "This project is <b>%{status_description}</b>"
     charts:
       xlabel:
         weeks: "Weeks"
@@ -184,6 +185,15 @@ en:
     general:
       scope: "Scope"
       deadline: "Deadline"
+    finish_project:
+      success_message: "Project finished."
+    actions:
+      edit:
+        tooltip: "Edit Project"
+      delete:
+        tooltip: "Delete Project"
+      finish:
+        tooltip: "Finish Project"
   project_results:
     index:
       title: "Project results"

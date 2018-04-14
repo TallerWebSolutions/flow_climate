@@ -136,6 +136,7 @@ pt-BR:
         second_part: " para o fim do projeto"
         days: "%{remaining_days} dia(s)"
       cmd: "CMD"
+      status_information_html: "Este projeto está <i>%{status_description}</i>"
     charts:
       xlabel:
         weeks: "Semanas"
@@ -186,6 +187,15 @@ pt-BR:
     general:
       deadline: "Data do Prazo"
       scope: "Escopo"
+    finish_project:
+      success_message: "Projeto finalizado."
+    actions:
+      edit:
+        tooltip: "Editar Projeto"
+      delete:
+        tooltip: "Excluir Projeto"
+      finish:
+        tooltip: "Finalizar Projeto"
   project_results:
     index:
       title: "Resultados do Projeto"

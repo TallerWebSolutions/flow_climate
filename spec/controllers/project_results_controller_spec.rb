@@ -232,7 +232,7 @@ RSpec.describe ProjectResultsController, type: :controller do
           expect(result.qty_bugs_closed).to eq 3
           expect(result.qty_hours_bug).to eq 7
           expect(result.leadtime).to eq 1.5
-          expect(result.flow_pressure.to_f).to be_within(0.01).of(6.66)
+          expect(result.flow_pressure.to_f).to be_within(0.4).of(6.66)
           expect(result.remaining_days).to eq 3
           expect(result.average_demand_cost.to_f).to be_within(0.01).of(0.27)
           expect(result.cost_in_month.to_f).to eq 100.0

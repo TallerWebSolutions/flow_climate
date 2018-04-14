@@ -13,7 +13,6 @@
 //= require jquery_ujs
 
 $(document).ready(function(){
-    $('[data-toggle="tooltip"]').tooltip();
     $('.table').DataTable( {
         paging: false
     });
