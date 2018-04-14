@@ -85,19 +85,24 @@ module Pipefy
     end
 
     def read_phases_transitions(demand, response_data)
+      last_time_out = nil
       response_data.try(:[], 'card').try(:[], 'phases_history')&.each do |phase|
-        create_transition_for_phase_and_demand(phase, demand)
+        last_time_out = Time.iso8601(phase['firstTimeIn']) if last_time_out.blank?
+
+        last_time_out = create_transition_for_phase_and_demand(phase, demand, last_time_out)
       end
     end
 
-    def create_transition_for_phase_and_demand(phase, demand)
+    def create_transition_for_phase_and_demand(phase, demand, last_time_in)
       phase_id = phase['phase']['id']
       stage = Stage.find_by(integration_id: phase_id)
 
       return if stage.blank? || demand.blank?
       last_time_out = define_last_time_out(phase['lastTimeOut'])
-      demand_transition = DemandTransition.where(stage: stage, demand: demand, last_time_in: Time.iso8601(phase['firstTimeIn']), last_time_out: last_time_out).first_or_create
+      DemandTransition.where(stage: stage, demand: demand).map(&:destroy)
+      demand_transition = DemandTransition.create(stage: stage, demand: demand, last_time_in: last_time_in, last_time_out: last_time_out)
       IntegrationError.build_integration_error(demand, demand_transition, :pipefy) unless demand_transition.valid?
+      last_time_out
     end
 
     def define_last_time_out(last_time_out_param)

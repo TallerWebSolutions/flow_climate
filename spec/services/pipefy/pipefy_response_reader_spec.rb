@@ -37,7 +37,7 @@ RSpec.describe Pipefy::PipefyResponseReader, type: :service do
           let!(:second_transition) { Fabricate :demand_transition, stage: end_stage, demand: second_demand, last_time_in: '2018-02-23T17:09:58-03:00', last_time_out: nil }
           let!(:project_result) { Fabricate :project_result, project: first_project, demands: [first_demand, second_demand], result_date: Date.new(2018, 2, 15), demands_count: 2 }
 
-          context 'when the card has only one block not unblocked' do
+          context 'when the card has one block not unblocked' do
             it 'does not change the demand' do
               Pipefy::PipefyResponseReader.instance.create_card!(first_project, team, first_card_response)
 
