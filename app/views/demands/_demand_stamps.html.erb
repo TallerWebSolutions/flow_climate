@@ -18,11 +18,15 @@
 </div>
 
 <div class="row">
-  <div class="col-xs-6 stamp">
+  <div class="col-xs-4 stamp">
+    <div class="stamp-title"><%= Demand.human_attribute_name :assignees_count %></div>
+    <div class="stamp-content"><%= demand.assignees_count %></div>
+  </div>
+  <div class="col-xs-4 stamp">
     <div class="stamp-title"><%= Demand.human_attribute_name :effort_upstream %></div>
     <div class="stamp-content"><%= number_with_precision(demand.effort_upstream, precision: 3)  %></div>
   </div>
-  <div class="col-xs-6 stamp">
+  <div class="col-xs-4 stamp">
     <div class="stamp-title"><%= Demand.human_attribute_name :effort_downstream %></div>
     <div class="stamp-content"><%= number_with_precision(demand.effort_downstream, precision: 3)  %></div>
   </div>
