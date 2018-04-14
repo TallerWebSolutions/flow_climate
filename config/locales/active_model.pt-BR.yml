@@ -221,7 +221,7 @@ pt-BR:
         commitment_date: Data do Comprometimento
         end_date: Data da Entrega
         created_date: Data de Criação
-        assignees_count: Qtd Atribuídos
+        assignees_count: Qtd Responsáveis
         leadtime: Leadtime
         enums:
           demand_type:
