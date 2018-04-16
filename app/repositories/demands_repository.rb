@@ -8,7 +8,7 @@ class DemandsRepository
   end
 
   def known_scope_to_date(project, analysed_date)
-    Demand.where('project_id = :project_id AND created_date::timestamp::date <= :analysed_date', project_id: project.id, analysed_date: analysed_date).uniq.count
+    Demand.where('project_id = :project_id AND DATE(created_date) <= :analysed_date', project_id: project.id, analysed_date: analysed_date).uniq.count
   end
 
   def full_demand_destroy!(demand)

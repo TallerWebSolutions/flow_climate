@@ -35,6 +35,11 @@ pt-BR:
     enqueued: "Sua solicitação foi colocada na fila. Em poucos minutos estará pronta."
     charts:
       title: "Gráficos"
+    stamps:
+      cmd:
+        title: "Custo Médio por Demanda"
+      flow_pressure: "Pressão do Fluxo"
+      hours_per_demand: "Horas por Demanda"
   header:
     logout: Sair
     sign_up: Cadastre-se

@@ -241,7 +241,8 @@ class Project < ApplicationRecord
 
   def average_demand_cost
     return 0 if project_results.blank?
-    project_results.order(:result_date).last.average_demand_cost
+    results_with_avg_demand_cost = ProjectResult.where('average_demand_cost > 0')
+    results_with_avg_demand_cost.sum(&:average_demand_cost) / results_with_avg_demand_cost.count
   end
 
   def hours_per_month

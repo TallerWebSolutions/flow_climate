@@ -72,7 +72,7 @@ class ProjectResult < ApplicationRecord
     available_hours = team.active_daily_available_hours_for_billable_types([project.project_type])
     team_cost_in_month = team.active_monthly_cost_for_billable_types([project.project_type])
     update(known_scope: current_scope, remaining_days: project.remaining_days(result_date), flow_pressure: current_flow_pressure, cost_in_month: team_cost_in_month,
-           available_hours: available_hours, average_demand_cost: calculate_average_demand_cost, leadtime: demands.finished.average(:leadtime))
+           available_hours: available_hours, average_demand_cost: compute_average_demand_cost, leadtime: demands.finished.average(:leadtime))
   end
 
   def total_hours
@@ -108,7 +108,7 @@ class ProjectResult < ApplicationRecord
     remaining_days = project.remaining_days(result_date)
     update(known_scope: current_scope, throughput_upstream: finished_upstream_demands.count, throughput_downstream: finished_downstream_demands.count, qty_hours_upstream: finished_upstream_demands.sum(&:effort_upstream),
            qty_hours_downstream: finished_downstream_demands.sum(&:effort_downstream), qty_hours_bug: finished_bugs.sum(&:effort_downstream), qty_bugs_closed: finished_bugs.count, qty_bugs_opened: opened_bugs.count,
-           remaining_days: remaining_days, flow_pressure: current_flow_pressure, average_demand_cost: calculate_average_demand_cost(finished_upstream_demands + finished_downstream_demands),
+           remaining_days: remaining_days, flow_pressure: current_flow_pressure, average_demand_cost: compute_average_demand_cost(finished_upstream_demands + finished_downstream_demands),
            leadtime: demands.finished.average(:leadtime))
   end
 
@@ -117,7 +117,7 @@ class ProjectResult < ApplicationRecord
     cost_in_month / 30
   end
 
-  def calculate_average_demand_cost(finished_demands = nil)
+  def compute_average_demand_cost(finished_demands = nil)
     throughput_for_result = throughput_upstream + throughput_downstream
     throughput_for_result = finished_demands.count if finished_demands.present?
     return 0 if cost_per_day.zero? || throughput_for_result.zero?

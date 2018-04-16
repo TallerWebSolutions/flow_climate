@@ -87,10 +87,11 @@ RSpec.describe Customer, type: :model do
     let(:project) { Fabricate :project, customer: customer, product: product, start_date: 2.weeks.ago, end_date: 2.weeks.from_now }
     let(:other_project) { Fabricate :project, customer: customer, product: product }
     let(:other_customer_project) { Fabricate :project, customer: other_customer, product: other_product }
+    let(:blank_project) { Fabricate :project, customer: customer, product: other_product }
 
-    let!(:first_result) { Fabricate :project_result, project: project, result_date: 1.week.ago, known_scope: 10 }
-    let!(:second_result) { Fabricate :project_result, project: project, result_date: 1.week.ago, known_scope: 20 }
-    let!(:third_result) { Fabricate :project_result, project: other_project, result_date: 1.week.ago, known_scope: 5 }
+    let!(:first_result) { Fabricate :project_result, project: project, result_date: 1.week.ago, known_scope: 10, qty_hours_upstream: 17, qty_hours_downstream: 20, throughput_upstream: 2, throughput_downstream: 10 }
+    let!(:second_result) { Fabricate :project_result, project: project, result_date: 1.week.ago, known_scope: 20, qty_hours_upstream: 12, qty_hours_downstream: 23, throughput_upstream: 1, throughput_downstream: 2 }
+    let!(:third_result) { Fabricate :project_result, project: other_project, result_date: 1.week.ago, known_scope: 5, qty_hours_upstream: 9, qty_hours_downstream: 8, throughput_upstream: 1, throughput_downstream: 14 }
     let!(:fourth_result) { Fabricate :project_result, project: other_customer_project, result_date: 1.week.ago, known_scope: 50 }
   end
 
@@ -101,7 +102,7 @@ RSpec.describe Customer, type: :model do
 
   describe '#avg_hours_per_demand' do
     include_context 'consolidations variables data for customer'
-    it { expect(customer.avg_hours_per_demand).to eq customer.projects.sum(&:avg_hours_per_demand) / customer.projects_count.to_f }
+    it { expect(customer.avg_hours_per_demand).to eq 2.966666666666667 }
   end
 
   describe '#total_value' do
