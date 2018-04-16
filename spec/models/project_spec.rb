@@ -735,8 +735,9 @@ RSpec.describe Project, type: :model do
       let!(:first_result) { Fabricate :project_result, project: first_project, result_date: 1.week.ago, cost_in_month: 110, average_demand_cost: 20 }
       let!(:second_result) { Fabricate :project_result, project: first_project, result_date: 2.weeks.ago, cost_in_month: 80, average_demand_cost: 10 }
       let!(:third_result) { Fabricate :project_result, project: first_project, result_date: Time.zone.today, cost_in_month: 80, average_demand_cost: 25 }
+      let!(:fourth_result) { Fabricate :project_result, project: first_project, result_date: Time.zone.today, cost_in_month: 80, average_demand_cost: 0 }
 
-      it { expect(first_project.average_demand_cost.to_f).to eq 25.0 }
+      it { expect(first_project.average_demand_cost.to_f).to be_within(0.01).of(18.33) }
     end
 
     context 'having no data to required weeks' do

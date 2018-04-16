@@ -70,6 +70,7 @@ module Pipefy
       url = response_data.try(:[], 'card').try(:[], 'url')
 
       demand.update!(demand_id: demand_id, demand_type: read_demand_type(response_data), class_of_service: read_class_of_service(response_data), assignees_count: assignees_count, url: url)
+      demand.project_result&.compute_flow_metrics!
     end
 
     def compute_assignees_count(team, response_data)

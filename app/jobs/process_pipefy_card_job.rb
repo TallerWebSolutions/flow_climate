@@ -3,8 +3,9 @@
 class ProcessPipefyCardJob < ApplicationJob
   def perform(data)
     return if data.empty?
-    demand_id = data.try(:[], 'data').try(:[], 'card').try(:[], 'id')
-    card_response = JSON.parse(Pipefy::PipefyApiService.request_card_details(demand_id).body)
+    pipefy_response = Pipefy::PipefyApiService.request_card_details(data.try(:[], 'data').try(:[], 'card').try(:[], 'id'))
+    return unless pipefy_response.code == 200
+    card_response = JSON.parse(pipefy_response.body)
     pipefy_config = Pipefy::PipefyConfig.where(pipe_id: card_response['data']['card']['pipe']['id']).first
     return if pipefy_config.blank?
 

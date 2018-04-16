@@ -60,5 +60,12 @@ RSpec.describe ProcessPipefyCardJob, type: :active_job do
         ProcessPipefyCardJob.perform_now(params)
       end
     end
+    context 'invalid pipefy response' do
+      it 'returns doing nothing' do
+        stub_request(:post, 'https://app.pipefy.com/queries').to_return(status: [500, 'Internal Server Error'])
+        expect(Pipefy::PipefyConfig).to receive(:where).never
+        ProcessPipefyCardJob.perform_now(params)
+      end
+    end
   end
 end

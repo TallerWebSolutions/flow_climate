@@ -34,6 +34,11 @@ en:
     enqueued: "Your request was enqueued. In a few minutes it will be done."
     charts:
       title: "Charts"
+    stamps:
+      cmd:
+        title: "Avg Demand Cost"
+      flow_pressure: "Flow Pressure"
+      hours_per_demand: "Hours per Demand"
   header:
     logout: Logout
     explore: Explore
