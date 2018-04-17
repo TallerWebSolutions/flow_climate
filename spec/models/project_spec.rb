@@ -731,18 +731,25 @@ RSpec.describe Project, type: :model do
   describe '#average_demand_cost' do
     let!(:first_project) { Fabricate :project, initial_scope: 30 }
 
-    context 'having data for last week and 2 weeks ago' do
-      let!(:first_result) { Fabricate :project_result, project: first_project, result_date: 1.week.ago, cost_in_month: 110, average_demand_cost: 20 }
-      let!(:second_result) { Fabricate :project_result, project: first_project, result_date: 2.weeks.ago, cost_in_month: 80, average_demand_cost: 10 }
-      let!(:third_result) { Fabricate :project_result, project: first_project, result_date: Time.zone.today, cost_in_month: 80, average_demand_cost: 25 }
-      let!(:fourth_result) { Fabricate :project_result, project: first_project, result_date: Time.zone.today, cost_in_month: 80, average_demand_cost: 0 }
+    context 'having project_result and throughput' do
+      let!(:result) { Fabricate :project_result, project: first_project, result_date: 1.week.ago, known_scope: 110, cost_in_month: 400, throughput_upstream: 20, throughput_downstream: 10 }
+      let!(:other_result) { Fabricate :project_result, project: first_project, result_date: Time.zone.today, known_scope: 80, cost_in_month: 400, throughput_upstream: 25, throughput_downstream: 1 }
 
-      it { expect(first_project.average_demand_cost.to_f).to be_within(0.01).of(18.33) }
+      it { expect(first_project.average_demand_cost.to_f).to be_within(0.01).of(7.14) }
     end
 
-    context 'having no data to required weeks' do
-      let!(:other_result) { Fabricate :project_result, result_date: Time.zone.today, known_scope: 80, throughput_upstream: 25, throughput_downstream: 10 }
+    context 'having no project_result' do
       it { expect(first_project.average_demand_cost.to_d).to eq 0 }
+    end
+
+    context 'having no throughput' do
+      let!(:result) { Fabricate :project_result, project: first_project, result_date: 1.week.ago, known_scope: 110, cost_in_month: 400, throughput_upstream: 0, throughput_downstream: 0 }
+      it { expect(first_project.average_demand_cost.to_d).to eq 400 }
+    end
+
+    context 'having throughput 1' do
+      let!(:result) { Fabricate :project_result, project: first_project, result_date: 1.week.ago, known_scope: 110, cost_in_month: 400, throughput_upstream: 0, throughput_downstream: 1 }
+      it { expect(first_project.average_demand_cost.to_d).to eq 400 }
     end
   end
 
@@ -819,6 +826,19 @@ RSpec.describe Project, type: :model do
     end
     context 'having no integration' do
       it { expect(project.manual?).to be true }
+    end
+  end
+
+  describe '#current_cost' do
+    let(:project) { Fabricate :project }
+
+    context 'having project_result' do
+      let!(:result) { Fabricate :project_result, project: project, result_date: 2.weeks.ago, cost_in_month: 100 }
+      let!(:other_result) { Fabricate :project_result, project: project, result_date: Time.zone.today, cost_in_month: 150 }
+      it { expect(project.current_cost).to eq 150 }
+    end
+    context 'having no project_result' do
+      it { expect(project.current_cost).to eq 0 }
     end
   end
 end

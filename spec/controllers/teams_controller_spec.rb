@@ -237,13 +237,14 @@ RSpec.describe TeamsController, type: :controller do
 
       context 'passing valid parameters' do
         context 'having data' do
-          let!(:first_project) { Fabricate :project, customer: customer, product: product, status: :executing, end_date: 10.days.from_now }
-          let!(:first_project_result) { Fabricate :project_result, project: first_project, team: team }
-          let!(:second_project) { Fabricate :project, customer: customer, product: product, status: :executing, end_date: 50.days.from_now }
-          let!(:second_project_result) { Fabricate :project_result, project: second_project, team: team }
-          let!(:third_project) { Fabricate :project, customer: customer, product: product, status: :waiting, end_date: 15.days.from_now }
-          let!(:third_project_result) { Fabricate :project_result, project: third_project, team: team }
+          let!(:first_project) { Fabricate :project, customer: customer, product: product, status: :executing, start_date: Time.zone.yesterday, end_date: 10.days.from_now }
+          let!(:second_project) { Fabricate :project, customer: customer, product: product, status: :executing, start_date: Time.zone.yesterday, end_date: 50.days.from_now }
+          let!(:third_project) { Fabricate :project, customer: customer, product: product, status: :waiting, start_date: Time.zone.yesterday, end_date: 15.days.from_now }
           let!(:project_in_product_team) { Fabricate :project, customer: customer, product: product, status: :waiting, start_date: 2.months.from_now, end_date: 70.days.from_now }
+
+          let!(:first_project_result) { Fabricate :project_result, project: first_project, team: team, result_date: Time.zone.today }
+          let!(:second_project_result) { Fabricate :project_result, project: second_project, team: team, result_date: Time.zone.today }
+          let!(:third_project_result) { Fabricate :project_result, project: third_project, team: team, result_date: Time.zone.today }
 
           let!(:other_team_project) { Fabricate :project, status: :executing }
           let!(:other_team_project_result) { Fabricate :project_result, project: other_team_project, team: other_team }
@@ -306,13 +307,13 @@ RSpec.describe TeamsController, type: :controller do
 
       context 'passing valid parameters' do
         context 'having data' do
-          let!(:first_project) { Fabricate :project, customer: customer, product: product, status: :executing, end_date: 10.days.from_now }
-          let!(:second_project) { Fabricate :project, customer: customer, product: product, status: :executing, end_date: 50.days.from_now }
+          let!(:first_project) { Fabricate :project, customer: customer, product: product, status: :executing, start_date: Time.zone.yesterday, end_date: 10.days.from_now }
+          let!(:second_project) { Fabricate :project, customer: customer, product: product, status: :executing, start_date: Time.zone.yesterday, end_date: 50.days.from_now }
 
-          let!(:first_result) { Fabricate :project_result, project: first_project, team: team }
-          let!(:second_result) { Fabricate :project_result, project: first_project, team: team }
-          let!(:third_result) { Fabricate :project_result, project: first_project, team: team }
-          let!(:fourth_result) { Fabricate :project_result, project: first_project, team: team }
+          let!(:first_result) { Fabricate :project_result, project: first_project, team: team, result_date: Time.zone.today }
+          let!(:second_result) { Fabricate :project_result, project: first_project, team: team, result_date: Time.zone.today }
+          let!(:third_result) { Fabricate :project_result, project: first_project, team: team, result_date: Time.zone.today }
+          let!(:fourth_result) { Fabricate :project_result, project: first_project, team: team, result_date: Time.zone.today }
           let!(:fifth_result) { Fabricate :project_result, project: second_project, team: team, result_date: 1.week.from_now }
 
           let!(:first_demand) { Fabricate :demand, project_result: first_result, project: first_project, end_date: 3.weeks.ago }
