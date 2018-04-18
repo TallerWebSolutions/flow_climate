@@ -9,12 +9,17 @@ class ProjectResultService
 
     new_result_date = (demand.end_date || demand.created_date).to_date
     new_result = ProjectResult.where(team: team, project: demand.project, result_date: new_result_date).first_or_create
-
     define_initial_attributes(team, demand, new_result)
     new_result.add_demand!(demand)
 
+    return new_result unless new_result.valid?
+
     results_to_update = ProjectResult.where('result_date >= :new_result_date', new_result_date: new_result_date)
     results_to_update.map(&:compute_flow_metrics!)
+
+    ProjectResult.reset_counters(new_result.id, :demands_count)
+
+    new_result
   end
 
   private

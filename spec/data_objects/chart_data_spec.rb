@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe ReportData, type: :data_object do
+RSpec.describe ChartData, type: :data_object do
   context 'having projects' do
     let(:first_project) { Fabricate :project, status: :executing, start_date: Time.zone.parse('2018-02-20'), end_date: Time.zone.parse('2018-03-22') }
     let(:second_project) { Fabricate :project, status: :waiting, start_date: Time.zone.parse('2018-03-13'), end_date: Time.zone.parse('2018-03-21') }
@@ -20,58 +20,23 @@ RSpec.describe ReportData, type: :data_object do
     let!(:fifth_demand) { Fabricate :demand, project: first_project, project_result: third_project_result, end_date: Time.zone.parse('2018-03-13'), leadtime: 4 * 86_400, effort_upstream: 56, effort_downstream: 25 }
 
     describe '.initialize' do
-      subject(:report_data) { ReportData.new(Project.all) }
+      subject(:chart_data) { ChartData.new(Project.all) }
 
       it 'do the math and provides the correct information' do
-        expect(report_data.projects).to eq Project.all
-        expect(report_data.weeks).to eq [[8, 2018], [9, 2018], [10, 2018], [11, 2018], [12, 2018]]
-        expect(report_data.demands_burnup_data.ideal).to eq [113.2, 226.4, 339.6, 452.8, 566.0]
-        expect(report_data.demands_burnup_data.current).to eq [25, 25, 25, 201, 201]
-        expect(report_data.demands_burnup_data.scope).to eq [170, 170, 170, 566, 566]
-        expect(report_data.flow_pressure_data).to eq [4.0, 0.0, 0.0, 4.75, 0.0]
-        expect(report_data.throughput_per_week).to eq([{ name: I18n.t('projects.charts.throughput_per_week.stage_stream.upstream'), data: [23, 0, 0, 47, 0] }, { name: I18n.t('projects.charts.throughput_per_week.stage_stream.downstream'), data: [2, 0, 0, 129, 0] }])
-        expect(report_data.delivered_vs_remaining).to eq([{ name: I18n.t('projects.show.delivered_scope'), data: [201] }, { name: I18n.t('projects.show.scope_gap'), data: [365] }])
-        expect(report_data.dates_and_odds.keys.count).to be >= 1
-        expect(report_data.monte_carlo_data.dates_and_hits_hash.keys.count).to be >= 1
-        expect(report_data.monte_carlo_data.monte_carlo_date_hash.keys.count).to be >= 1
-        expect(report_data.effort_hours_per_month).to eq(keys: [[2018.0, 2.0], [2018.0, 3.0]], data: { upstream: [22.0, 163.0], downstream: [25.0, 99.0] })
+        expect(chart_data.projects).to eq Project.all
+        expect(chart_data.weeks).to eq [[8, 2018], [9, 2018], [10, 2018], [11, 2018], [12, 2018]]
       end
-    end
-    describe '#projects_names' do
-      subject(:report_data) { ReportData.new(Project.all) }
-      it { expect(report_data.projects_names).to eq [first_project.full_name, second_project.full_name, third_project.full_name] }
-    end
-
-    describe '#hours_per_demand_per_week' do
-      subject(:report_data) { ReportData.new(Project.all) }
-      it { expect(report_data.hours_per_demand_per_week).to eq [15.0, 0, 0, 1.6589147286821706, 0] }
     end
   end
 
   context 'having no projects' do
     describe '.initialize' do
-      subject(:report_data) { ReportData.new(Project.all) }
+      subject(:chart_data) { ChartData.new(Project.all) }
 
       it 'returns empty arrays' do
-        expect(report_data.projects).to eq []
-        expect(report_data.weeks).to eq []
-        expect(report_data.demands_burnup_data.ideal).to eq []
-        expect(report_data.demands_burnup_data.current).to eq []
-        expect(report_data.demands_burnup_data.scope).to eq []
-        expect(report_data.flow_pressure_data).to eq []
-        expect(report_data.throughput_per_week).to eq([{ name: I18n.t('projects.charts.throughput_per_week.stage_stream.upstream'), data: [] }, { name: I18n.t('projects.charts.throughput_per_week.stage_stream.downstream'), data: [] }])
-        expect(report_data.delivered_vs_remaining).to eq([{ name: I18n.t('projects.show.delivered_scope'), data: [0] }, { name: I18n.t('projects.show.scope_gap'), data: [0] }])
+        expect(chart_data.projects).to eq []
+        expect(chart_data.weeks).to eq []
       end
-    end
-
-    describe '#projects_names' do
-      subject(:report_data) { ReportData.new(Project.all) }
-      it { expect(report_data.projects_names).to eq [] }
-    end
-
-    describe '#hours_per_demand_per_week' do
-      subject(:report_data) { ReportData.new(Project.all) }
-      it { expect(report_data.hours_per_demand_per_week).to eq [] }
     end
   end
 end
