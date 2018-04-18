@@ -13,13 +13,5 @@
     </div>
   </div>
 
-  <% if @project.manual? %>
-    <div class="row">
-      <div class="col-xs-3">
-        <%= link_to t('demands.new.title'), new_company_project_project_result_demand_path(@company, @project, @project_result), class: 'btn btn-sm btn-primary bottom-spaced-component' %>
-      </div>
-    </div>
-  <% end %>
-
   <%= render 'demands/demands_table', demands_list: @demands %>
 </div>

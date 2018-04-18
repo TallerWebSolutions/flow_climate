@@ -15,8 +15,6 @@ RSpec.describe ProjectResult, type: :model do
       it { is_expected.to validate_presence_of :known_scope }
       it { is_expected.to validate_presence_of :qty_hours_downstream }
       it { is_expected.to validate_presence_of :qty_hours_upstream }
-      it { is_expected.to validate_presence_of :throughput_upstream }
-      it { is_expected.to validate_presence_of :throughput_downstream }
       it { is_expected.to validate_presence_of :qty_bugs_opened }
       it { is_expected.to validate_presence_of :qty_bugs_closed }
       it { is_expected.to validate_presence_of :qty_hours_bug }
@@ -166,40 +164,41 @@ RSpec.describe ProjectResult, type: :model do
 
   describe '#add_demand!' do
     let(:project) { Fabricate :project, start_date: 2.days.ago, end_date: 3.days.from_now, initial_scope: 2 }
-    let!(:stage) { Fabricate :stage, projects: [project], end_point: true, compute_effort: true, stage_stream: :downstream }
-    let!(:other_stage) { Fabricate :stage, projects: [project], stage_stream: :upstream, compute_effort: true, end_point: true }
+    let!(:downstream_stage) { Fabricate :stage, projects: [project], end_point: true, compute_effort: true, stage_stream: :downstream }
+    let!(:upstream_stage) { Fabricate :stage, projects: [project], stage_stream: :upstream, compute_effort: true, end_point: true }
 
     let!(:result) { Fabricate :project_result, project: project, result_date: Date.new(2018, 4, 3), known_scope: 2032, cost_in_month: 30_000, throughput_upstream: 0, throughput_downstream: 0, flow_pressure: 2 }
 
     let!(:first_demand) { Fabricate :demand, project_result: result, project: project, created_date: Date.new(2018, 4, 2), end_date: Date.new(2018, 4, 3), effort_upstream: 50, effort_downstream: 12 }
     let!(:second_demand) { Fabricate :demand, project: project, created_date: Date.new(2018, 4, 3), end_date: Date.new(2018, 4, 3), demand_type: :bug, effort_upstream: 100, effort_downstream: 20 }
     let!(:third_demand) { Fabricate :demand, project_result: result, project: project, created_date: Date.new(2018, 4, 1), end_date: Date.new(2018, 4, 2), demand_type: :feature, effort_upstream: 70, effort_downstream: 10 }
+    let!(:fourth_demand) { Fabricate :demand, project_result: result, project: project, created_date: Date.new(2018, 4, 1), end_date: Date.new(2018, 4, 2), demand_type: :feature, effort_downstream: 10, downstream: true }
 
-    let!(:first_demand_transition) { Fabricate :demand_transition, stage: stage, demand: first_demand, last_time_in: Date.new(2018, 4, 2), last_time_out: Date.new(2018, 4, 3) }
-    let!(:second_demand_transition) { Fabricate :demand_transition, stage: stage, demand: second_demand, last_time_in: Date.new(2018, 4, 3), last_time_out: Date.new(2018, 4, 4) }
-    let!(:third_demand_transition) { Fabricate :demand_transition, stage: other_stage, demand: third_demand, last_time_in: Date.new(2018, 4, 4), last_time_out: Date.new(2018, 4, 6) }
+    let!(:first_demand_transition) { Fabricate :demand_transition, stage: downstream_stage, demand: first_demand, last_time_in: Date.new(2018, 4, 2), last_time_out: Date.new(2018, 4, 3) }
+    let!(:second_demand_transition) { Fabricate :demand_transition, stage: downstream_stage, demand: second_demand, last_time_in: Date.new(2018, 4, 3), last_time_out: Date.new(2018, 4, 4) }
+    let!(:third_demand_transition) { Fabricate :demand_transition, stage: upstream_stage, demand: third_demand, last_time_in: Date.new(2018, 4, 4), last_time_out: Date.new(2018, 4, 6) }
 
     context 'when it does not have the demand yet' do
       it 'adds the demand and compute the flow metrics in the result' do
         expect(ProjectResult).to receive(:reset_counters).once
         result.add_demand!(second_demand)
         expect(ProjectResult.count).to eq 1
-        expect(result.reload.demands).to match_array [first_demand, second_demand, third_demand]
-        expect(result.reload.known_scope).to eq 5
+        expect(result.reload.demands).to match_array [first_demand, second_demand, third_demand, fourth_demand]
+        expect(result.reload.known_scope).to eq 6
         expect(result.reload.throughput_upstream).to eq 1
-        expect(result.reload.throughput_downstream).to eq 2
+        expect(result.reload.throughput_downstream).to eq 3
         expect(result.reload.qty_hours_upstream).to eq 70
-        expect(result.reload.qty_hours_downstream).to eq 32
+        expect(result.reload.qty_hours_downstream).to eq 42
         expect(result.reload.qty_hours_bug).to eq 20
         expect(result.reload.qty_bugs_closed).to eq 1
         expect(result.reload.qty_bugs_opened).to eq 1
-        expect(result.reload.flow_pressure.to_f).to be_within(0.01).of(0.83)
-        expect(result.reload.average_demand_cost.to_f).to eq 333.3333333333333
+        expect(result.reload.flow_pressure.to_f).to eq 1.0
+        expect(result.reload.average_demand_cost.to_f).to eq 250.0
       end
     end
     context 'when it does already have the demand' do
       before { result.add_demand!(first_demand) }
-      it { expect(result.reload.demands).to match_array [first_demand, third_demand] }
+      it { expect(result.reload.demands).to match_array [first_demand, third_demand, fourth_demand] }
     end
   end
 

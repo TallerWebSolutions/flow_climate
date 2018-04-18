@@ -39,6 +39,20 @@ RSpec.describe Demand, type: :model do
 
       it { expect(Demand.finished).to match_array [first_demand, second_demand] }
     end
+    describe '.upstream_flag' do
+      let!(:first_demand) { Fabricate :demand, downstream: false }
+      let!(:second_demand) { Fabricate :demand, downstream: false }
+      let!(:third_demand) { Fabricate :demand, downstream: true }
+
+      it { expect(Demand.upstream_flag).to match_array [first_demand, second_demand] }
+    end
+    describe '.downstream_flag' do
+      let!(:first_demand) { Fabricate :demand, downstream: true }
+      let!(:second_demand) { Fabricate :demand, downstream: true }
+      let!(:third_demand) { Fabricate :demand, downstream: false }
+
+      it { expect(Demand.downstream_flag).to match_array [first_demand, second_demand] }
+    end
   end
 
   context 'delegations' do

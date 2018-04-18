@@ -3,7 +3,6 @@
 class DemandsController < AuthenticatedController
   before_action :assign_company
   before_action :assign_project
-  before_action :assign_project_result, only: %i[new create]
   before_action :assign_demand, only: %i[edit update show synchronize_pipefy]
 
   def new
@@ -11,10 +10,10 @@ class DemandsController < AuthenticatedController
   end
 
   def create
-    project_result = ProjectResult.find(params[:project_result_id])
-    @demand = Demand.new(demand_params.merge(project: @project, project_result: project_result))
-    return redirect_to company_project_demand_path(@company, @project, @demand) if @demand.save
-    render :new
+    @demand = Demand.new(demand_params.merge(project: @project))
+    return render :new unless @demand.save
+    ProjectResultService.instance.compute_demand!(@project.current_team, @demand)
+    redirect_to company_project_demand_path(@company, @project, @demand)
   end
 
   def destroy
@@ -50,15 +49,11 @@ class DemandsController < AuthenticatedController
   private
 
   def demand_params
-    params.require(:demand).permit(:demand_id, :demand_type, :class_of_service, :assignees_count, :effort_upstream, :effort_downstream, :created_date, :commitment_date, :end_date)
+    params.require(:demand).permit(:demand_id, :demand_type, :downstream, :class_of_service, :assignees_count, :effort_upstream, :effort_downstream, :created_date, :commitment_date, :end_date)
   end
 
   def assign_project
     @project = Project.find(params[:project_id])
-  end
-
-  def assign_project_result
-    @project_result = ProjectResult.find(params[:project_result_id])
   end
 
   def assign_demand

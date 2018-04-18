@@ -32,9 +32,10 @@ RSpec.describe DemandsController, type: :controller do
     let(:user) { Fabricate :user }
     let(:company) { Fabricate :company, users: [user] }
     let(:customer) { Fabricate :customer, company: company }
-    let(:product) { Fabricate :product, customer: customer }
+    let(:team) { Fabricate :team, company: company }
+    let(:product) { Fabricate :product, customer: customer, team: team }
     let(:project) { Fabricate :project, customer: customer, product: product }
-    let(:project_result) { Fabricate :project_result, project: project }
+    let(:project_result) { Fabricate :project_result, team: team, project: project }
 
     before { sign_in user }
 
@@ -58,10 +59,6 @@ RSpec.describe DemandsController, type: :controller do
           before { get :new, params: { company_id: company, project_result_id: project_result, project_id: 'foo' } }
           it { expect(response).to have_http_status :not_found }
         end
-        context 'project_result' do
-          before { get :new, params: { company_id: company, project_result_id: 'foo', project_id: project } }
-          it { expect(response).to have_http_status :not_found }
-        end
         context 'and not permitted company' do
           let(:company) { Fabricate :company }
           before { get :new, params: { company_id: company, project_result_id: project_result, project_id: project } }
@@ -74,7 +71,8 @@ RSpec.describe DemandsController, type: :controller do
       context 'passing valid parameters' do
         let(:date_to_demand) { 1.day.ago.change(usec: 0) }
         it 'creates the new demand and redirects' do
-          post :create, params: { company_id: company, project_id: project, project_result_id: project_result, demand: { demand_id: 'xpto', demand_type: 'bug', class_of_service: 'expedite', assignees_count: 3, effort_upstream: 5, effort_downstream: 2, created_date: date_to_demand, commitment_date: date_to_demand, end_date: date_to_demand } }
+          expect(ProjectResultService.instance).to receive(:compute_demand!).with(project.current_team, instance_of(Demand)).once
+          post :create, params: { company_id: company, project_id: project, demand: { demand_id: 'xpto', demand_type: 'bug', downstream: false, class_of_service: 'expedite', assignees_count: 3, effort_upstream: 5, effort_downstream: 2, created_date: date_to_demand, commitment_date: date_to_demand, end_date: date_to_demand } }
 
           expect(assigns(:company)).to eq company
           expect(assigns(:project)).to eq project
@@ -82,6 +80,7 @@ RSpec.describe DemandsController, type: :controller do
           expect(created_demand.demand_id).to eq 'xpto'
           expect(created_demand.demand_type).to eq 'bug'
           expect(created_demand.class_of_service).to eq 'expedite'
+          expect(created_demand.downstream).to be false
           expect(created_demand.assignees_count).to eq 3
           expect(created_demand.effort_upstream).to eq 5
           expect(created_demand.effort_downstream.to_f).to eq 2
@@ -93,7 +92,7 @@ RSpec.describe DemandsController, type: :controller do
       end
       context 'invalid' do
         context 'parameters' do
-          before { post :create, params: { company_id: company, project_id: project, project_result_id: project_result, demand: { finances: nil, income_total: nil, expenses_total: nil } } }
+          before { post :create, params: { company_id: company, project_id: project, demand: { finances: nil, income_total: nil, expenses_total: nil } } }
           it 'does not create the demand and re-render the template with the errors' do
             expect(Demand.last).to be_nil
             expect(response).to render_template :new
@@ -101,20 +100,16 @@ RSpec.describe DemandsController, type: :controller do
           end
         end
         context 'company' do
-          before { post :create, params: { company_id: 'foo', project_id: project, project_result_id: project_result, demand: { finances_date: Time.zone.today, income_total: 10, expenses_total: 5 } } }
+          before { post :create, params: { company_id: 'foo', project_id: project, demand: { finances_date: Time.zone.today, income_total: 10, expenses_total: 5 } } }
           it { expect(response).to have_http_status :not_found }
         end
         context 'project' do
-          before { post :create, params: { company_id: company, project_id: 'foo', project_result_id: project_result } }
-          it { expect(response).to have_http_status :not_found }
-        end
-        context 'project_result' do
-          before { post :create, params: { company_id: company, project_id: project, project_result_id: 'foo' } }
+          before { post :create, params: { company_id: company, project_id: 'foo' } }
           it { expect(response).to have_http_status :not_found }
         end
         context 'and not permitted company' do
           let(:company) { Fabricate :company }
-          before { post :create, params: { company_id: company, project_id: project, project_result_id: project_result, demand: { finances_date: Time.zone.today, income_total: 10, expenses_total: 5 } } }
+          before { post :create, params: { company_id: company, project_id: project, demand: { finances_date: Time.zone.today, income_total: 10, expenses_total: 5 } } }
           it { expect(response).to have_http_status :not_found }
         end
       end

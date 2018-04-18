@@ -35,7 +35,7 @@ RSpec.describe DemandsRepository, type: :repository do
     let!(:fourth_demand) { Fabricate :demand, project: first_project, created_date: 1.day.ago }
     let!(:fifth_demand) { Fabricate :demand, project: second_project, created_date: 2.days.ago }
 
-    it { expect(DemandsRepository.instance.known_scope_to_date(first_project, 2.days.ago)).to eq 3 }
+    it { expect(DemandsRepository.instance.known_scope_to_date(first_project, 2.days.ago.to_date)).to eq 3 }
   end
 
   pending '#full_demand_destroy!'

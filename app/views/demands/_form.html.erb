@@ -1,12 +1,12 @@
 <div class="standard-form">
 
   <div class="row">
-    <div class='col-xs-3 form-group <%= 'has-error' if @demand.errors[:demand_type].present? %>'>
+    <div class='col-xs-2 form-group <%= 'has-error' if @demand.errors[:demand_type].present? %>'>
       <%= f.label :demand_type, class: 'control-label' %>
       <%= f.select :demand_type, Demand.demand_types.map { |key, _value| [t("activerecord.attributes.demand.enums.demand_type.#{key}"), key] }, {include_blank: t('general.select'), selected: @demand.demand_type }, class: 'form-control' %>
       <span class="help-block"><%= @demand.errors[:demand_type].join(', ') %></span>
     </div>
-    <div class='col-xs-3 form-group <%= 'has-error' if @demand.errors[:class_of_service].present? %>'>
+    <div class='col-xs-2 form-group <%= 'has-error' if @demand.errors[:class_of_service].present? %>'>
       <%= f.label :class_of_service, class: 'control-label' %>
       <%= f.select :class_of_service, Demand.class_of_services.map { |key, _value| [t("activerecord.attributes.demand.enums.class_of_service.#{key}"), key] }, { include_blank: t('general.select'), selected: @demand.class_of_service }, class: 'form-control' %>
       <span class="help-block"><%= @demand.errors[:class_of_service].join(', ') %></span>
@@ -15,6 +15,10 @@
       <%= f.label :demand_id, class: 'control-label required' %>
       <%= f.text_field :demand_id, class: 'form-control', autofocus: true %>
       <span class="help-block"><%= @demand.errors[:demand_id].join(', ') %></span>
+    </div>
+    <div class='col-xs-2 form-check bottom-spaced-component'>
+      <%= f.check_box :downstream, class: 'form-check-input', checked: true %>
+      <%= f.label :downstream, class: 'form-check-label' %>
     </div>
     <div class='col-xs-2 form-group <%= 'has-error' if @demand.errors[:effort_upstream].present? %>'>
       <%= f.label :effort_upstream, class: 'control-label required' %>
