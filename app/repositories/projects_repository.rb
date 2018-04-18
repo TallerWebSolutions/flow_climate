@@ -14,6 +14,13 @@ class ProjectsRepository
     total_consumed
   end
 
+  def hours_consumed_per_week(projects, required_date)
+    active_projects = active_projects_in_month(projects, required_date)
+    total_consumed = 0
+    active_projects.each { |project| total_consumed += project.project_results.for_week(required_date.cweek, required_date.cwyear).sum(&:total_hours) }
+    total_consumed
+  end
+
   def flow_pressure_to_month(projects, required_date)
     active_projects = active_projects_in_month(projects, required_date)
     total_flow_pressure = 0

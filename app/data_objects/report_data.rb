@@ -1,16 +1,14 @@
 # frozen_string_literal: true
 
 class ReportData < ChartData
-  attr_reader :demands_burnup_data, :flow_pressure_data, :monte_carlo_data
+  attr_reader :demands_burnup_data, :hours_burnup_data, :flow_pressure_data, :monte_carlo_data
 
   def initialize(projects)
     @projects = projects
     @weeks = projects_weeks
-    @ideal = []
-    @current = []
-    @scope = []
     @flow_pressure_data = []
-    @demands_burnup_data = BurnupData.new(@projects, @weeks, mount_scope_data, mount_throughput_data)
+    @demands_burnup_data = BurnupData.new(@weeks, mount_demands_scope_data, mount_demands_throughput_data)
+    @hours_burnup_data = BurnupData.new(@weeks, mount_hours_scope_data, mount_hours_throughput_data)
 
     project = projects.first
     @monte_carlo_data = Stats::StatisticsService.instance.run_montecarlo(project.demands.count, gather_leadtime_data(project), gather_throughput_data(project), 500) if project.present?
@@ -166,7 +164,15 @@ class ReportData < ChartData
     @flow_pressure_data << projects.sum { |p| p.flow_pressure(begining_of_week) } / projects.count.to_f if begining_of_week.future?
   end
 
-  def mount_throughput_data
+  def mount_demands_scope_data
+    scope_per_week = []
+    @weeks.each do |week_year|
+      scope_per_week << ProjectResultsRepository.instance.scope_in_week_for_projects(projects, week_year[0], week_year[1])
+    end
+    scope_per_week
+  end
+
+  def mount_demands_throughput_data
     throughput_per_week = []
     @weeks.each do |week_year|
       week = week_year[0]
@@ -178,11 +184,21 @@ class ReportData < ChartData
     throughput_per_week
   end
 
-  def mount_scope_data
+  def mount_hours_scope_data
     scope_per_week = []
-    @weeks.each do |week_year|
-      scope_per_week << ProjectResultsRepository.instance.scope_in_week_for_projects(projects, week_year[0], week_year[1])
-    end
+    @weeks.each { |_week_year| scope_per_week << @projects.sum(:qty_hours).to_f }
     scope_per_week
+  end
+
+  def mount_hours_throughput_data
+    throughput_per_week = []
+    @weeks.each do |week_year|
+      week = week_year[0]
+      year = week_year[1]
+      upstream_total_delivered = throughput_to_projects_and_stream(week, year, projects, :throughput_upstream)
+      downstream_total_delivered = throughput_to_projects_and_stream(week, year, projects, :throughput_downstream)
+      throughput_per_week << upstream_total_delivered + downstream_total_delivered if add_data_to_chart?(week_year)
+    end
+    throughput_per_week
   end
 end

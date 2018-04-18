@@ -3,8 +3,7 @@
 class BurnupData < ChartData
   attr_reader :weeks, :ideal_per_week, :current_per_week, :scope_per_week
 
-  def initialize(projects, weeks, scope_per_week, current_per_week)
-    @projects = projects
+  def initialize(weeks, scope_per_week, current_per_week)
     @weeks = weeks
     @scope_per_week = scope_per_week
     @current_per_week = current_per_week
