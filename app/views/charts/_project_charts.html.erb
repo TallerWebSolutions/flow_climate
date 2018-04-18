@@ -1,16 +1,16 @@
 <% if report_data.present? && hours_per_demand_data.present? %>
   <div class="row">
     <div class="col-xs-12">
-      <div id="burnup"
+      <div id="burnup-demands"
            class="flow-chart"
            data-title='<%= t('projects.charts.burnup.title', project_name: target_name) %>'
            data-weeks='<%= report_data.weeks %>'
            data-xtitle='<%= t('projects.charts.xlabel.weeks') %>'
            data-ytitle='<%= t('projects.charts.burnup.ylabel') %>'
            data-tooltipsufix='<%= t('projects.charts.burnup.tooltipsufix') %>'
-           data-ideal='<%= report_data.demands_burnup_data.ideal %>'
-           data-current='<%= report_data.demands_burnup_data.current %>'
-           data-scope='<%= report_data.demands_burnup_data.scope %>'>
+           data-ideal='<%= report_data.demands_burnup_data.ideal_per_week %>'
+           data-current='<%= report_data.demands_burnup_data.current_per_week %>'
+           data-scope='<%= report_data.demands_burnup_data.scope_per_week %>'>
       </div>
     </div>
   </div>

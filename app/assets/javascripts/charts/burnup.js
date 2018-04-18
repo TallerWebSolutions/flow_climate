@@ -1,9 +1,7 @@
-$(function () {
-    var burnupDiv = $('#burnup');
-
+function buildBurnupChart(burnupDiv) {
     new Highcharts.Chart({
         chart: {
-            renderTo: 'burnup',
+            renderTo: burnupDiv.attr('id'),
             zoomType: 'x'
         },
         plotOptions: {
@@ -59,4 +57,4 @@ $(function () {
             data: burnupDiv.data('current')
         }]
     });
-});
+}

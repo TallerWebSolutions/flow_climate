@@ -2,6 +2,12 @@ $(function () {
     var throughputDiv = $('#throughput-column');
     buildColumnChart(throughputDiv);
 
+    var burnupDemands = $('#burnup-demands');
+    buildBurnupChart(burnupDemands);
+
+    var burnupHours = $('#burnup-hours');
+    buildBurnupChart(burnupHours);
+
     var flowPressureDiv = $('#flowpressure-column');
     buildColumnChart(flowPressureDiv);
 

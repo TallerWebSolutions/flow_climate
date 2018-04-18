@@ -61,7 +61,7 @@
     <div id="status-report-dates-odds-column"
          class="flow-chart"
          data-xcategories=<%= [t('charts.date_odds.xtitle')] %>
-         data-title='<%= t('charts.date_odds.title', target_name: target_name) %>'
+             data-title='<%= t('charts.date_odds.title', target_name: target_name) %>'
          data-ytitle='<%= t('charts.date_odds.ytitle') %>'
          data-ysuffix="%"
          data-tooltipsufix='<%= t('projects.charts.date_odds.tooltipsufix') %>'
@@ -79,6 +79,22 @@
          data-tooltipsufix='<%= t('projects.charts.throughput_per_week.tooltipsufix') %>'
          data-series='<%= [{ name: 'monte carlo dates', data: @montecarlo_dates.monte_carlo_date_hash.values.flatten.map(&:to_f).map { |value| value * 100 } }].to_json %>'
          data-decimals='3'>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-xs-6">
+    <div id="burnup-hours"
+         class="flow-chart"
+         data-title='<%= t('projects.charts.burnup.title', project_name: target_name) %>'
+         data-weeks='<%= report_data.weeks %>'
+         data-xtitle='<%= t('projects.charts.xlabel.weeks') %>'
+         data-ytitle='<%= t('projects.charts.burnup.ylabel') %>'
+         data-tooltipsufix='<%= t('projects.charts.burnup.tooltipsufix') %>'
+         data-ideal='<%= report_data.demands_burnup_data.ideal_per_week %>'
+         data-current='<%= report_data.demands_burnup_data.current_per_week %>'
+         data-scope='<%= report_data.demands_burnup_data.scope_per_week %>'>
     </div>
   </div>
 </div>
