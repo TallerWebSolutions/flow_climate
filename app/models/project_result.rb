@@ -43,7 +43,8 @@ class ProjectResult < ApplicationRecord
   belongs_to :project
   has_many :demands, dependent: :restrict_with_error
 
-  validates :project, :team, :known_scope, :qty_hours_upstream, :qty_hours_downstream, :qty_hours_bug, :qty_bugs_closed, :qty_bugs_opened, :throughput_upstream, :throughput_downstream, :result_date, presence: true
+  validates :project, :team, :known_scope, :qty_hours_upstream, :qty_hours_downstream, :qty_hours_bug, :qty_bugs_closed, :qty_bugs_opened,
+            :result_date, :cost_in_month, :available_hours, presence: true
 
   scope :for_week, ->(week, year) { where('EXTRACT(WEEK FROM result_date) = :week AND EXTRACT(YEAR FROM result_date) = :year', week: week, year: year) }
   scope :until_week, ->(week, year) { where('(EXTRACT(WEEK FROM result_date) <= :week AND EXTRACT(YEAR FROM result_date) <= :year) OR (EXTRACT(YEAR FROM result_date) < :year)', week: week, year: year) }
@@ -94,12 +95,10 @@ class ProjectResult < ApplicationRecord
   end
 
   def compute_flow_metrics!
-    finished_upstream_demands = demands.finished_in_stream(Stage.stage_streams[:upstream])
-    finished_downstream_demands = demands.finished_in_stream(Stage.stage_streams[:downstream])
     finished_bugs = demands.finished_bugs.uniq
     open_bugs = demands.bug.opened_in_date(result_date).uniq
 
-    update_result!(finished_upstream_demands, finished_downstream_demands, finished_bugs, open_bugs)
+    update_result!(compute_throughput_upstream, compute_throughput_downstream, finished_bugs, open_bugs)
   end
 
   private
@@ -140,5 +139,13 @@ class ProjectResult < ApplicationRecord
 
   def current_scope
     DemandsRepository.instance.known_scope_to_date(project, result_date) + project.initial_scope
+  end
+
+  def compute_throughput_upstream
+    demands.finished_in_stream(Stage.stage_streams[:upstream]) | demands.finished.upstream_flag
+  end
+
+  def compute_throughput_downstream
+    demands.finished_in_stream(Stage.stage_streams[:downstream]) | demands.finished.downstream_flag
   end
 end

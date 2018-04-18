@@ -8,7 +8,7 @@ class DemandsRepository
   end
 
   def known_scope_to_date(project, analysed_date)
-    Demand.where('project_id = :project_id AND DATE(created_date) <= :analysed_date', project_id: project.id, analysed_date: analysed_date).uniq.count
+    Demand.where('project_id = :project_id AND DATE(created_date::TIMESTAMPTZ AT TIME ZONE INTERVAL :interval_value::INTERVAL) <= :analysed_date', project_id: project.id, interval_value: Time.zone.now.formatted_offset, analysed_date: analysed_date).uniq.count
   end
 
   def full_demand_destroy!(demand)
@@ -22,7 +22,7 @@ class DemandsRepository
   end
 
   def throughput_by_project_and_week(projects, week, year)
-    Demand.where(project_id: projects.pluck(:id)).where('EXTRACT(WEEK FROM end_date) = :week AND EXTRACT(YEAR FROM end_date) = :year', week: week, year: year)
+    Demand.where(project_id: projects.map(&:id)).where('EXTRACT(WEEK FROM end_date) = :week AND EXTRACT(YEAR FROM end_date) = :year', week: week, year: year)
   end
 
   def work_in_progress_for(projects, analysed_date)

@@ -241,8 +241,8 @@ class Project < ApplicationRecord
 
   def average_demand_cost
     return 0 if project_results.blank?
-    results_with_avg_demand_cost = ProjectResult.where('average_demand_cost > 0')
-    results_with_avg_demand_cost.sum(&:average_demand_cost) / results_with_avg_demand_cost.count
+    return current_cost if total_throughput.zero? || total_throughput == 1
+    current_cost / total_throughput
   end
 
   def hours_per_month
@@ -255,6 +255,11 @@ class Project < ApplicationRecord
 
   def manual?
     pipefy_config.blank?
+  end
+
+  def current_cost
+    return 0 if project_results.blank?
+    project_results.order(:result_date).last.cost_in_month
   end
 
   private

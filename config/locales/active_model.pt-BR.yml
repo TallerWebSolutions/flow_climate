@@ -198,6 +198,11 @@ pt-BR:
         demands_count: Qtd de Demandas
         flow_pressure: Pressão do Fluxo
         remaining_days: Dias Restantes
+        cost_in_month: Custo no Mês
+        available_hours: Horas Disponíveis
+        throughput_upstream: Throughput no Upstream
+        throughput_downstream: Throughput no Downstream
+        average_demand_cost: Custo Médio por Demanda
       operation_result:
         result_date: Data
         people_billable_count: Qtd de Pessoas Faturáveis

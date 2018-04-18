@@ -21,6 +21,7 @@
 #  effort_downstream :decimal(, )      default(0.0)
 #  effort_upstream   :decimal(, )      default(0.0)
 #  leadtime          :decimal(, )
+#  downstream        :boolean          default(TRUE)
 #
 # Indexes
 #
@@ -47,6 +48,8 @@ class Demand < ApplicationRecord
   scope :finished, -> { where('end_date IS NOT NULL') }
   scope :finished_bugs, -> { bug.finished }
   scope :grouped_end_date_by_month, -> { finished.order(end_date: :desc).group_by { |demand| [demand.end_date.to_date.cwyear, demand.end_date.to_date.month] } }
+  scope :upstream_flag, -> { where(downstream: false) }
+  scope :downstream_flag, -> { where(downstream: true) }
 
   delegate :company, to: :project
   delegate :full_name, to: :project, prefix: true
@@ -126,7 +129,6 @@ class Demand < ApplicationRecord
   end
 
   def compute_and_update_automatic_fields
-    return if commitment_date.blank? || end_date.blank?
-    self.leadtime = end_date - commitment_date
+    self.leadtime = end_date - commitment_date if commitment_date.present? && end_date.present?
   end
 end
