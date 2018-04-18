@@ -1,19 +1,18 @@
 # frozen_string_literal: true
 
-class ReportData
-  attr_reader :projects, :weeks, :ideal, :current, :scope, :flow_pressure_data, :monte_carlo_data
+class ReportData < ChartData
+  attr_reader :demands_burnup_data, :hours_burnup_data, :flow_pressure_data, :monte_carlo_data
 
   def initialize(projects)
     @projects = projects
     @weeks = projects_weeks
-    @ideal = []
-    @current = []
-    @scope = []
     @flow_pressure_data = []
+    @demands_burnup_data = BurnupData.new(@weeks, mount_demands_scope_data, mount_demands_throughput_data)
+    @hours_burnup_data = BurnupData.new(@weeks, mount_hours_scope_data, mount_hours_throughput_data)
+
     project = projects.first
     @monte_carlo_data = Stats::StatisticsService.instance.run_montecarlo(project.demands.count, gather_leadtime_data(project), gather_throughput_data(project), 500) if project.present?
     mount_flow_pressure_array
-    mount_burnup_data
   end
 
   def projects_names
@@ -150,41 +149,6 @@ class ReportData
     key.to_date.cweek == week_year[0] && key.to_date.cwyear == week_year[1]
   end
 
-  def projects_weeks
-    min_date = projects.active.minimum(:start_date)
-    max_date = projects.active.maximum(:end_date)
-    array_of_weeks = []
-
-    return [] if min_date.blank? || max_date.blank?
-
-    while min_date <= max_date
-      array_of_weeks << [min_date.cweek, min_date.cwyear]
-      min_date += 7.days
-    end
-
-    array_of_weeks
-  end
-
-  def mount_burnup_data
-    @weeks.each_with_index do |week_year, index|
-      @ideal << ideal_burn(index)
-      week = week_year[0]
-      year = week_year[1]
-      upstream_total_delivered = throughput_to_projects_and_stream(week, year, projects, :throughput_upstream)
-      downstream_total_delivered = throughput_to_projects_and_stream(week, year, projects, :throughput_downstream)
-      @current << upstream_total_delivered + downstream_total_delivered if add_data_to_chart?(week_year)
-      @scope << ProjectResultsRepository.instance.scope_in_week_for_projects(projects, week, year)
-    end
-  end
-
-  def throughput_to_projects_and_stream(week, year, projects, throughput_field)
-    ProjectResult.until_week(week, year).where(project_id: projects.pluck(:id)).sum(throughput_field)
-  end
-
-  def ideal_burn(index)
-    (projects.sum(&:last_week_scope).to_f / @weeks.count.to_f) * (index + 1)
-  end
-
   def mount_flow_pressure_array
     weekly_data = ProjectResultsRepository.instance.flow_pressure_in_week_for_projects(projects)
 
@@ -200,7 +164,41 @@ class ReportData
     @flow_pressure_data << projects.sum { |p| p.flow_pressure(begining_of_week) } / projects.count.to_f if begining_of_week.future?
   end
 
-  def add_data_to_chart?(week_year)
-    week_year[1] < Time.zone.today.cwyear || (week_year[0] <= Time.zone.today.cweek && week_year[1] <= Time.zone.today.cwyear)
+  def mount_demands_scope_data
+    scope_per_week = []
+    @weeks.each do |week_year|
+      scope_per_week << ProjectResultsRepository.instance.scope_in_week_for_projects(projects, week_year[0], week_year[1])
+    end
+    scope_per_week
+  end
+
+  def mount_demands_throughput_data
+    throughput_per_week = []
+    @weeks.each do |week_year|
+      week = week_year[0]
+      year = week_year[1]
+      upstream_total_delivered = throughput_to_projects_and_stream(week, year, projects, :throughput_upstream)
+      downstream_total_delivered = throughput_to_projects_and_stream(week, year, projects, :throughput_downstream)
+      throughput_per_week << upstream_total_delivered + downstream_total_delivered if add_data_to_chart?(week_year)
+    end
+    throughput_per_week
+  end
+
+  def mount_hours_scope_data
+    scope_per_week = []
+    @weeks.each { |_week_year| scope_per_week << @projects.sum(:qty_hours).to_f }
+    scope_per_week
+  end
+
+  def mount_hours_throughput_data
+    throughput_per_week = []
+    @weeks.each do |week_year|
+      week = week_year[0]
+      year = week_year[1]
+      upstream_total_delivered = throughput_to_projects_and_stream(week, year, projects, :throughput_upstream)
+      downstream_total_delivered = throughput_to_projects_and_stream(week, year, projects, :throughput_downstream)
+      throughput_per_week << upstream_total_delivered + downstream_total_delivered if add_data_to_chart?(week_year)
+    end
+    throughput_per_week
   end
 end

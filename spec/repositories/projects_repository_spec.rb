@@ -40,6 +40,24 @@ RSpec.describe ProjectsRepository, type: :repository do
     end
   end
 
+  describe '#hours_consumed_per_week' do
+    let!(:project) { Fabricate :project, customer: customer, start_date: 2.weeks.ago, end_date: 1.week.from_now }
+    let!(:other_project) { Fabricate :project, customer: customer, start_date: 2.weeks.ago, end_date: 1.week.from_now }
+
+    context 'having project results' do
+      let!(:first_result) { Fabricate :project_result, project: project, result_date: 1.day.ago, qty_hours_upstream: 0, qty_hours_downstream: 30 }
+      let!(:second_result) { Fabricate :project_result, project: other_project, result_date: 1.day.ago, qty_hours_upstream: 0, qty_hours_downstream: 50 }
+      let!(:third_result) { Fabricate :project_result, project: other_project, result_date: 2.weeks.ago, qty_hours_upstream: 0, qty_hours_downstream: 90 }
+      let!(:out_result) { Fabricate :project_result, result_date: 1.day.ago, qty_hours_downstream: 60 }
+
+      it { expect(ProjectsRepository.instance.hours_consumed_per_week(company.projects, 2.weeks.ago.to_date)).to eq 90 }
+    end
+
+    context 'having no project results' do
+      it { expect(ProjectsRepository.instance.hours_consumed_per_week(company.projects, 2.weeks.ago.to_date)).to eq 0 }
+    end
+  end
+
   describe '#flow_pressure_to_month' do
     let!(:project) { Fabricate :project, customer: customer, initial_scope: 100, start_date: 2.months.ago, end_date: 1.month.from_now }
     let!(:other_project) { Fabricate :project, customer: customer, initial_scope: 50, start_date: 2.months.ago, end_date: 1.month.from_now }

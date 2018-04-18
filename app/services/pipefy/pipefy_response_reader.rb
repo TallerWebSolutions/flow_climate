@@ -42,9 +42,8 @@ module Pipefy
     def process_demand(demand, team)
       demand.update_effort!
       demand.update_created_date! if demand.demand_transitions.present?
-      project_result = ProjectResultsRepository.instance.update_project_results_for_demand!(demand, team)
-      return IntegrationError.build_integration_error(demand, project_result, :pipefy) unless project_result.valid?
-      ProjectResult.reset_counters(project_result.id, :demands_count)
+      project_result = ProjectResultService.instance.compute_demand!(team, demand)
+      IntegrationError.build_integration_error(demand, project_result, :pipefy) unless project_result.valid?
     end
 
     def create_assignees!(team, response_data)

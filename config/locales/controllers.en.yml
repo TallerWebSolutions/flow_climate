@@ -150,7 +150,10 @@ en:
       burnup:
         ylabel: "Demands"
         tooltipsufix: " demands"
-        title: "Burnup for %{project_name}"
+        demands:
+          title: "Demands Burnup for %{project_name}"
+        hours:
+          title: "Hours Burnup for %{project_name}"
       hours_per_demand:
         title: "Hours per demand on time for %{project_name}"
         ylabel: "Hours/Demand"
