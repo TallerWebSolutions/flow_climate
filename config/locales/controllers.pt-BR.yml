@@ -199,7 +199,7 @@ pt-BR:
       success_message: "Projeto finalizado."
     actions:
       edit:
-        tooltip: "Editar Projeto"
+        title: "Editar"
       delete:
         tooltip: "Excluir Projeto"
       finish:
@@ -263,7 +263,7 @@ pt-BR:
       title: "Editar Cliente"
   demands:
     new:
-      title: "Nova Demanda"
+      title: "Criar Demanda"
     index:
       title: "Lista de Demandas"
       working_time_upstream: "Tempo Útil Total no Upstream"
@@ -275,7 +275,7 @@ pt-BR:
       title: "Editar Demanda"
     show:
       no_demand_blocks: "Não existem bloqueios na demanda"
-      sync_pipefy: "Sincronize com o Pipefy"
+      sync_pipefy: "Sincronizar"
       no_demand_transitions: "Esta demanda não tem transições."
       last_update: "Última atualização: %{last_update_date}"
     sync:

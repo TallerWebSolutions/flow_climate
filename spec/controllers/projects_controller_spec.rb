@@ -279,7 +279,7 @@ RSpec.describe ProjectsController, type: :controller do
             expect(Project.last.hour_value).to eq 200
             expect(Project.last.initial_scope).to eq 1000
             expect(ProjectChangeDeadlineHistory.count).to eq 1
-            expect(response).to redirect_to company_projects_path(company)
+            expect(response).to redirect_to company_project_path(company, project)
           end
         end
         context 'not changing the deadline' do

@@ -1,7 +1,3 @@
-<%= link_to edit_company_project_path(@company, project) do %>
-  <i class="fas fa-edit" title='<%= t('projects.actions.edit.tooltip') %>'></i>
-<% end %>
-
 <%= link_to company_project_path(@company, project), method: :delete do %>
   <i class="fa fa-times" title='<%= t('projects.actions.delete.tooltip') %>'></i>
 <% end %>
