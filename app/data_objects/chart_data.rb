@@ -28,8 +28,4 @@ class ChartData
 
     array_of_weeks
   end
-
-  def throughput_to_projects_and_stream(week, year, projects, throughput_field)
-    ProjectResult.until_week(week, year).where(project_id: projects.pluck(:id)).sum(throughput_field)
-  end
 end

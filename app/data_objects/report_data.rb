@@ -177,8 +177,8 @@ class ReportData < ChartData
     @weeks.each do |week_year|
       week = week_year[0]
       year = week_year[1]
-      upstream_total_delivered = throughput_to_projects_and_stream(week, year, projects, :throughput_upstream)
-      downstream_total_delivered = throughput_to_projects_and_stream(week, year, projects, :throughput_downstream)
+      upstream_total_delivered = delivered_to_projects_and_stream_until_week(week, year, projects, :throughput_upstream)
+      downstream_total_delivered = delivered_to_projects_and_stream_until_week(week, year, projects, :throughput_downstream)
       throughput_per_week << upstream_total_delivered + downstream_total_delivered if add_data_to_chart?(week_year)
     end
     throughput_per_week
@@ -195,10 +195,14 @@ class ReportData < ChartData
     @weeks.each do |week_year|
       week = week_year[0]
       year = week_year[1]
-      upstream_total_delivered = throughput_to_projects_and_stream(week, year, projects, :throughput_upstream)
-      downstream_total_delivered = throughput_to_projects_and_stream(week, year, projects, :throughput_downstream)
+      upstream_total_delivered = delivered_to_projects_and_stream_until_week(week, year, projects, :qty_hours_upstream)
+      downstream_total_delivered = delivered_to_projects_and_stream_until_week(week, year, projects, :qty_hours_downstream)
       throughput_per_week << upstream_total_delivered + downstream_total_delivered if add_data_to_chart?(week_year)
     end
     throughput_per_week
+  end
+
+  def delivered_to_projects_and_stream_until_week(week, year, projects, metric_field)
+    ProjectResult.until_week(week, year).where(project_id: projects.pluck(:id)).sum(metric_field)
   end
 end
