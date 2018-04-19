@@ -197,7 +197,7 @@ en:
       success_message: "Project finished."
     actions:
       edit:
-        tooltip: "Edit Project"
+        title: "Edit"
       delete:
         tooltip: "Delete Project"
       finish:
@@ -262,7 +262,7 @@ en:
       title: "Edit Customer"
   demands:
     new:
-      title: "New Demand"
+      title: "Create Demand"
     index:
       title: "Demands List"
       working_time_upstream: "Total Working Time in Upstream"
@@ -274,7 +274,7 @@ en:
       title: "Edit Demand"
     show:
       no_demand_blocks: "There is no demand blocks"
-      sync_pipefy: "Sync with pipefy"
+      sync_pipefy: "Synchronize"
       no_demand_transitions: "No transitions to this demand."
       last_update: "Last update: %{last_update_date}"
     sync:

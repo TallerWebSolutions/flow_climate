@@ -41,7 +41,7 @@ class ProjectsController < AuthenticatedController
     assign_product
     check_change_in_deadline!
     @project.update(project_params.merge(customer: @customer, product: @product))
-    return redirect_to company_projects_path(@company) if @project.save
+    return redirect_to company_project_path(@company, @project) if @project.save
     assign_products_list
     render :edit
   end
