@@ -29,7 +29,7 @@ RSpec.describe ReportData, type: :data_object do
         expect(report_data.demands_burnup_data.current_per_week).to eq [25, 25, 25, 201, 201]
         expect(report_data.demands_burnup_data.scope_per_week).to eq [170, 170, 170, 566, 566]
         expect(report_data.hours_burnup_data.ideal_per_week).to eq [440.0, 880.0, 1320.0, 1760.0, 2200.0]
-        expect(report_data.hours_burnup_data.current_per_week).to eq [25, 25, 25, 201, 201]
+        expect(report_data.hours_burnup_data.current_per_week).to eq [30, 30, 30, 244, 244]
         expect(report_data.hours_burnup_data.scope_per_week).to eq [2200.0, 2200.0, 2200.0, 2200.0, 2200.0]
         expect(report_data.flow_pressure_data).to eq [4.0, 0.0, 0.0, 4.75, 0.0]
         expect(report_data.throughput_per_week).to eq([{ name: I18n.t('projects.charts.throughput_per_week.stage_stream.upstream'), data: [23, 0, 0, 47, 0] }, { name: I18n.t('projects.charts.throughput_per_week.stage_stream.downstream'), data: [2, 0, 0, 129, 0] }])
