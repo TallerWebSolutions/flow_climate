@@ -55,16 +55,18 @@ RSpec.describe TeamsController, type: :controller do
       let!(:product) { Fabricate :product, customer: customer, team: team }
 
       let!(:first_project) { Fabricate :project, customer: customer, status: :executing, start_date: Time.zone.today, end_date: Time.zone.today }
-      let!(:second_project) { Fabricate :project, customer: customer, status: :maintenance, start_date: 1.month.from_now, end_date: 2.months.from_now }
+      let!(:second_project) { Fabricate :project, customer: customer, status: :maintenance, start_date: 32.days.from_now, end_date: 34.days.from_now }
       let!(:third_project) { Fabricate :project, customer: customer, status: :waiting, start_date: 1.month.from_now, end_date: 2.months.from_now }
-      let!(:fourth_project) { Fabricate :project, customer: customer, product: product, status: :cancelled, start_date: 1.month.from_now, end_date: 3.months.from_now }
-      let!(:fifth_project) { Fabricate :project, customer: customer, product: product, status: :finished, start_date: 1.month.from_now, end_date: 4.months.from_now }
-      let!(:project_in_product_team) { Fabricate :project, customer: customer, product: product, status: :waiting, start_date: 2.months.from_now, end_date: 3.months.from_now }
+      let!(:fourth_project) { Fabricate :project, customer: customer, product: product, status: :cancelled, start_date: 35.days.from_now, end_date: 37.days.from_now }
+      let!(:fifth_project) { Fabricate :project, customer: customer, product: product, status: :finished, start_date: 38.days.from_now, end_date: 39.days.from_now }
+
+      let!(:project_in_product_team) { Fabricate :project, customer: customer, product: product, status: :waiting, start_date: 40.days.from_now, end_date: 42.days.from_now }
+
       let!(:first_result) { Fabricate :project_result, project: first_project, team: team, result_date: Time.zone.today }
-      let!(:second_result) { Fabricate :project_result, project: first_project, team: team, result_date: Time.zone.today }
-      let!(:third_result) { Fabricate :project_result, project: first_project, team: team, result_date: Time.zone.today }
-      let!(:fourth_result) { Fabricate :project_result, project: first_project, team: team, result_date: Time.zone.today }
-      let!(:fifth_result) { Fabricate :project_result, project: second_project, team: team, result_date: 1.week.from_now }
+      let!(:second_result) { Fabricate :project_result, project: second_project, team: team, result_date: 33.days.from_now }
+      let!(:third_result) { Fabricate :project_result, project: third_project, team: team, result_date: 34.days.from_now }
+      let!(:fourth_result) { Fabricate :project_result, project: fourth_project, team: team, result_date: 36.days.from_now }
+      let!(:fifth_result) { Fabricate :project_result, project: fifth_project, team: team, result_date: 39.days.from_now }
 
       let(:first_risk_config) { Fabricate :project_risk_config, project: first_project, risk_type: :no_money_to_deadline }
       let(:second_risk_config) { Fabricate :project_risk_config, project: first_project, risk_type: :backlog_growth_rate }
@@ -79,18 +81,18 @@ RSpec.describe TeamsController, type: :controller do
       context 'passing a valid ID' do
         context 'having data' do
           it 'assigns the instance variables and renders the template' do
-            expect(DemandsRepository.instance).to(receive(:selected_grouped_by_project_and_week).with([project_in_product_team, second_project, first_project], Time.zone.today.cweek, Time.zone.today.cwyear).once { [first_demand, second_demand] })
-            expect(DemandsRepository.instance).to(receive(:throughput_by_project_and_week).with([project_in_product_team, second_project, first_project], Time.zone.today.cweek, Time.zone.today.cwyear).once { [third_demand, fourth_demand] })
+            expect(DemandsRepository.instance).to(receive(:selected_grouped_by_project_and_week).with([third_project, project_in_product_team, second_project, first_project], Time.zone.today.cweek, Time.zone.today.cwyear).once { [first_demand, second_demand] })
+            expect(DemandsRepository.instance).to(receive(:throughput_by_project_and_week).with([third_project, project_in_product_team, second_project, first_project], Time.zone.today.cweek, Time.zone.today.cwyear).once { [third_demand, fourth_demand] })
             get :show, params: { company_id: company, id: team.id }
 
             expect(response).to render_template :show
             expect(assigns(:company)).to eq company
             expect(assigns(:team)).to eq team
             expect(assigns(:report_data)).to be_a ReportData
-            expect(assigns(:team_projects)).to eq [fifth_project, fourth_project, project_in_product_team, second_project, first_project]
-            expect(assigns(:active_team_projects)).to eq [project_in_product_team, second_project, first_project]
-            expect(assigns(:strategic_report_data).array_of_months).to eq [[Time.zone.today.month, Time.zone.today.year], [1.month.from_now.to_date.month, 1.month.from_now.to_date.year], [2.months.from_now.to_date.month, 2.months.from_now.to_date.year]]
-            expect(assigns(:strategic_report_data).active_projects_count_data).to eq [1, 1, 2]
+            expect(assigns(:team_projects)).to eq [third_project, project_in_product_team, fifth_project, fourth_project, second_project, first_project]
+            expect(assigns(:active_team_projects)).to eq [third_project, project_in_product_team, second_project, first_project]
+            expect(assigns(:strategic_report_data).array_of_months).to eq [[Time.zone.today.month, Time.zone.today.year], [1.month.from_now.to_date.month, 1.month.from_now.to_date.year]]
+            expect(assigns(:strategic_report_data).active_projects_count_data).to eq [1, 3]
             expect(assigns(:projects_risk_alert_data).backlog_risk_alert_data).to eq [{ name: 'Vermelho', y: 1, color: '#FB283D' }]
             expect(assigns(:projects_risk_alert_data).money_risk_alert_data).to eq [{ name: 'Verde', y: 1, color: '#179A02' }]
             expect(assigns(:pipefy_team_configs)).to eq [second_pipefy_team_config, first_pipefy_team_config]
