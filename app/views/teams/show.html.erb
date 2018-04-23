@@ -78,15 +78,14 @@
 </div>
 
 <% content_for :javascript do %>
-  <%= javascript_include_tag 'teams/show' %>
-
   <%= javascript_include_tag 'charts/burnup' %>
   <%= javascript_include_tag 'charts/column' %>
+  <%= javascript_include_tag 'charts/bar' %>
   <%= javascript_include_tag 'charts/line' %>
+  <%= javascript_include_tag 'charts/donut' %>
   <%= javascript_include_tag 'charts/column-line' %>
   <%= javascript_include_tag 'charts/gauge' %>
-  <%= javascript_include_tag 'charts/donut' %>
-
+  <%= javascript_include_tag 'teams/show' %>
   <%= javascript_include_tag 'projects/charts' %>
 
   <%= javascript_include_tag 'companies/hours_gauge_chart' %>

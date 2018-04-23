@@ -293,6 +293,8 @@ en:
         title: "Work in Progress per day for %{name}"
         ylabel: "Work in Progress"
         tooltipsufix: " demand(s)"
+      hours_per_month:
+        title: "Hours per Month for %{name}"
     flow:
       processed_demand: "Processed Demands"
       wip: "Work in Progress"
