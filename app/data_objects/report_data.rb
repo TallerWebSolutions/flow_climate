@@ -11,7 +11,7 @@ class ReportData < ChartData
     @hours_burnup_data = BurnupData.new(@weeks, mount_hours_scope_data, mount_hours_throughput_data)
 
     project = projects.first
-    @monte_carlo_data = Stats::StatisticsService.instance.run_montecarlo(project.demands.count, gather_leadtime_data(project), gather_throughput_data(project), 500) if project.present?
+    @monte_carlo_data = Stats::StatisticsService.instance.run_montecarlo(project.demands.count, gather_leadtime_data(project), gather_throughput_data(project), 100) if project.present?
     mount_flow_pressure_array
   end
 
