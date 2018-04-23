@@ -64,7 +64,7 @@ class ReportData < ChartData
 
   def dates_and_odds
     project = @projects.first
-    mount_deadline_odds_data(monte_carlo_data, project)
+    build_deadline_odds_data(monte_carlo_data, project)
   end
 
   def effort_hours_per_month
@@ -102,7 +102,7 @@ class ReportData < ChartData
     throughput_data_array
   end
 
-  def mount_deadline_odds_data(monte_carlo_data, project)
+  def build_deadline_odds_data(monte_carlo_data, project)
     all_montecarlo_dates = monte_carlo_data.monte_carlo_date_hash.keys
     most_likely_montecarlo_date = all_montecarlo_dates.first
     most_likely_montecarlo_odd = monte_carlo_data.monte_carlo_date_hash.values.first

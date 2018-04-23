@@ -1,28 +1,37 @@
 # frozen_string_literal: true
 
 class FlowReportData
-  attr_reader :projects_in_chart, :total_arrived, :total_processed_upstream, :total_processed_downstream,
+  attr_reader :projects_in_chart, :x_axis_month_data, :total_arrived, :total_processed_upstream, :total_processed_downstream,
               :projects_demands_selected, :projects_demands_processed, :processing_rate_data, :column_chart_data,
-              :wip_per_day, :demands_in_wip
+              :wip_per_day, :demands_in_wip, :hours_per_project_per_month
 
   def initialize(projects, week, year)
     @total_arrived = []
     @total_processed_upstream = []
     @total_processed_downstream = []
 
-    assign_grouped_raw_data(projects, week, year)
+    assign_grouped_throughput_raw_data(projects, week, year)
     build_processing_rate_data
     group_wip_data(projects, week, year)
+    assign_grouped_hours_per_month_raw_data(projects)
   end
 
   private
 
-  def assign_grouped_raw_data(projects, week, year)
+  def assign_grouped_throughput_raw_data(projects, week, year)
     @projects_demands_selected = DemandsRepository.instance.selected_grouped_by_project_and_week(projects, week, year).group_by(&:project)
     @projects_demands_processed = DemandsRepository.instance.throughput_by_project_and_week(projects, week, year).group_by(&:project)
 
     @projects_in_chart = (projects_demands_selected.keys | projects_demands_processed.keys).flatten.uniq
     @processing_rate_data = projects_demands_selected.merge(projects_demands_processed) { |_key, oldval, newval| oldval | newval }
+  end
+
+  def assign_grouped_hours_per_month_raw_data(projects)
+    upstream_hours_per_project_per_month = ProjectResultsRepository.instance.sum_field_in_grouped_per_month_project_results(projects, :qty_hours_upstream)
+    downstream_hours_per_project_per_month = ProjectResultsRepository.instance.sum_field_in_grouped_per_month_project_results(projects, :qty_hours_downstream)
+    merged_grouped_values = upstream_hours_per_project_per_month.merge(downstream_hours_per_project_per_month) { |_index, upstream, downstream| upstream + downstream }
+    @x_axis_month_data = merged_grouped_values.keys
+    @hours_per_project_per_month = merged_grouped_values.values
   end
 
   def group_wip_data(projects, week, year)

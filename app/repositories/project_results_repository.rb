@@ -82,6 +82,10 @@ class ProjectResultsRepository
     average_demand_cost_hash
   end
 
+  def sum_field_in_grouped_per_month_project_results(projects, field_to_sum)
+    ProjectResult.where(project_id: projects.map(&:id)).group('EXTRACT(YEAR FROM result_date)', 'EXTRACT(MONTH FROM result_date)').order(Arel.sql('EXTRACT(YEAR FROM result_date)'), Arel.sql('EXTRACT(MONTH FROM result_date)')).sum(field_to_sum)
+  end
+
   def update_project_results_for_demand!(demand, team)
     return if demand.created_date.blank?
 
@@ -102,17 +106,17 @@ class ProjectResultsRepository
   end
 
   def build_hash_data_with_sum(projects, field)
-    grouped_project_results(projects).sum(field)
+    grouped_per_week_project_results_to_projects(projects).sum(field)
   end
 
   def build_hash_data_with_average(projects, field)
     return 0 if projects.blank?
-    grouped_project_results(projects).average(field)
+    grouped_per_week_project_results_to_projects(projects).average(field)
   end
 
-  def grouped_project_results(projects)
+  def grouped_per_week_project_results_to_projects(projects)
     return [] if projects.blank?
-    ProjectResult.select("date_trunc('week', result_date) AS week").where(project_id: projects.pluck(:id)).order(Arel.sql("date_trunc('week', result_date)")).group("date_trunc('week', result_date)")
+    ProjectResult.where(project_id: projects.pluck(:id)).order(Arel.sql("DATE_TRUNC('WEEK', result_date)")).group("DATE_TRUNC('WEEK', result_date)")
   end
 
   def results_until_week(project, week, year)

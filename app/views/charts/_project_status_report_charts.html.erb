@@ -40,18 +40,6 @@
          data-decimals='0'>
     </div>
   </div>
-  <div class="col-xs-6">
-    <div id="status-report-hours-column"
-         class="flow-chart"
-         data-xcategories='<%= report_data.effort_hours_per_month[:keys].map { |year, month| Date.new(year, month, 1).to_s } %>'
-         data-title='<%= t('projects.charts.hours_per_month.title', target_name: target_name) %>'
-         data-ytitle='<%= t('projects.charts.hours_per_month.ylabel') %>'
-         data-ysuffix='<%= t('projects.charts.hours_per_month.ylabel') %>'
-         data-series='<%= [{ name: I18n.t('projects.charts.throughput_per_week.stage_stream.upstream'), data: report_data.effort_hours_per_month[:data][:upstream]&.map(&:to_f) }, { name: I18n.t('projects.charts.throughput_per_week.stage_stream.downstream'), data: report_data.effort_hours_per_month[:data][:downstream]&.map(&:to_f) }].to_json %>'
-         data-stacking='normal'
-         data-decimals='0'>
-    </div>
-  </div>
 </div>
 
 <div class="row">

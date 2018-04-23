@@ -294,6 +294,8 @@ pt-BR:
         title: "Trabalho em Progresso (WiP) por dia para %{name}"
         ylabel: "Trabalho em Progresso"
         tooltipsufix: " demanda(s)"
+      hours_per_month:
+        title: "Horas por Mês para %{name}"
     flow:
       processed_demand: "Demandas Processadas"
       wip: "Trabalho em Progresso"
