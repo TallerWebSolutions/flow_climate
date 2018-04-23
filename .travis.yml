@@ -1,18 +1,15 @@
 dist: trusty
 sudo: required
-
 env:
   global:
-    - PGPORT=5433
-    - CC_TEST_REPORTER_ID=70ab5420793b8b581d83df1dc8dcc49ca7c48d3deb51c9f9a8c2a5e0899c8f71
-
+  - PGPORT=5433
+  - CC_TEST_REPORTER_ID=70ab5420793b8b581d83df1dc8dcc49ca7c48d3deb51c9f9a8c2a5e0899c8f71
 language: ruby
 cache: bundler
 rvm:
-  - 2.4.3
-sudo: required
+- 2.4.3
 services:
-  - postgresql
+- postgresql
 addons:
   postgresql: '10'
   apt:
@@ -20,26 +17,27 @@ addons:
     - postgresql-10
     - postgresql-client-10
 before_script:
-  - cp config/database.yml.travis config/database.yml
-  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
-  - chmod +x ./cc-test-reporter
-  - ./cc-test-reporter before-build
+- cp config/database.yml.travis config/database.yml
+- curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64
+  > ./cc-test-reporter
+- chmod +x ./cc-test-reporter
+- "./cc-test-reporter before-build"
 script:
-  - RAILS_ENV=test bundle exec rake db:create --trace
-  - RAILS_ENV=test bundle exec rake db:migrate --trace
-  - bundle exec rake db:test:prepare
-  - bundle exec rspec spec/
-  - bundle exec rubocop -DR
-  - bundle exec rake assets:precompile
-  - git add public/assets
-  - git commit -am 'assets precompiled'
+- RAILS_ENV=test bundle exec rake db:create --trace
+- RAILS_ENV=test bundle exec rake db:migrate --trace
+- bundle exec rake db:test:prepare
+- bundle exec rspec spec/
+- bundle exec rubocop -DR
+- bundle exec rake assets:precompile
+- git add public/assets
+- git commit -am 'assets precompiled'
 after_script:
-  - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
+- "./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT"
 deploy:
   provider: heroku
   api_key:
-    secure: F6rNNWybkhXeEFRKHqkEWC97qkmNLN6jNm1WF5EqK7EbkkkFK40FDw3+EnjAWe7bCcHHPN1x2nuOetcOpWd/7aawo0gcmehj7bhbSaaRAY8MB79RXU0tLJzoEo83rcibxwxNZG/h+5aQ1F2/3Zeu1KIlnscaC6991afcGtL7UsRZTV1pJfmL/9EfBZOTG47ZIk0G4sGNSlITutKJBEdaSJ0yNm+uX5V2N26uSP2+i6yNP0LkPFSRXqHBVoMVCLYjMRTIIQQQiQ8mC3os/kxkmaX6tH1d2GQeFqLT5oDnA3LtecAItu6EeYU7scz6wIsm4j4uYKXSO1FJqi0NVPXrlM6MlXb+uVTK2BWkC9vdnqYguTTDc9QoINOAB8e86fzfSGjBhqJKGrDxwX7jQAtX1DOsVn4PwE66vflXfcZXHvDOUsKsfs0+mk9SLnqMgDoMxJ6l1D0soFXFDD4Uz78wk3c9TT4Vwx2c6bgdjwHtJKLPpc9LJJ4BbtZNrsAYQuhtFfzn2y1S7yd8o8LdPouoRVqO1a76eXY1UnxaTcPcYE6WzER4hJHuuHrnSY+Pb8f8TgbJVEtalEYcfwi+GfRIToUevwDgcHJ8UPD0WIw0JcyFlvsg30jRx9pAEgEbWYi3r7nOzLduk53g3Lel96b2PPH/J9OHC5iYaHG92jK6ioQ=
-  run: "rake db:migrate"
+    secure: JLHHB2TL1q8JAUcRHyEWUa5Seup+oYWjCB7yVZKABvH/CgJyCYDZOHsYTd3NOt54iD8VNwyMSDqu34xmM8is7GgOuGycPQZUvlD6Y0XvdGVTmY6KFLrOlls+wz2B37HA24cM7L2MLGWETJ5IInff6YF81etiQ9SxdG5tPFXMuRoay6OSLhTfA4+d1UbdfoXy9RCa7ezi2O/HwAMZv6fMdFkWasXuL+Pzwl3YpzXuAFpliPwtoOK2v6ZRu51m3vuNzdszgvCsuNXtH73jEU3MsaCx1wo+Uc8ypZ5iQT3F/MWrsT5GsCCHJtHhru71unwP+/gW9neC1yhyW48xAjrnqpKB31gbLBls/BYa/TyzzcY7WDOjf/koxjkP9GSPHRWjtR/q5k1dsAecKFTMy2Uf3rx3ZFTfvxSBy/fBm7H+lWBqBrktAWCryHHi29AvOdqY4nrFXm9JKtpdgC4KnANyHlumA94AeJx0V2rts2amcbq2prXmuQnIydi5HSlKbjrfel8Q1nvZPQRaldw19V19Def2Ks3pblXk3DGR80VWs7y+l0PaajUONsE/c1dtRs3MU4eVkBLC8uok6YQvgLIipcb+wobY876BPnZfP3vnevyP4cIFiTNRce31z7u1E7hhWCVhSI0cDvyOCcmoGx7WBqA7xL0a+01uLuRQmwqx+fY=
+  run: rake db:migrate
   app:
     develop: flowclimatestaging
     master: flowclimateapp
