@@ -7,12 +7,12 @@ class ReportData < ChartData
     @projects = projects
     @weeks = projects_weeks
     @flow_pressure_data = []
-    @demands_burnup_data = BurnupData.new(@weeks, mount_demands_scope_data, mount_demands_throughput_data)
-    @hours_burnup_data = BurnupData.new(@weeks, mount_hours_scope_data, mount_hours_throughput_data)
+    @demands_burnup_data = BurnupData.new(@weeks, build_demands_scope_data, build_demands_throughput_data)
+    @hours_burnup_data = BurnupData.new(@weeks, build_hours_scope_data, build_hours_throughput_data)
 
     project = projects.first
     @monte_carlo_data = Stats::StatisticsService.instance.run_montecarlo(project.demands.count, gather_leadtime_data(project), gather_throughput_data(project), 100) if project.present?
-    mount_flow_pressure_array
+    build_flow_pressure_array
   end
 
   def projects_names
@@ -149,7 +149,7 @@ class ReportData < ChartData
     key.to_date.cweek == week_year[0] && key.to_date.cwyear == week_year[1]
   end
 
-  def mount_flow_pressure_array
+  def build_flow_pressure_array
     weekly_data = ProjectResultsRepository.instance.flow_pressure_in_week_for_projects(projects)
 
     @weeks.each do |week_year|
@@ -164,7 +164,7 @@ class ReportData < ChartData
     @flow_pressure_data << projects.sum { |p| p.flow_pressure(begining_of_week) } / projects.count.to_f if begining_of_week.future?
   end
 
-  def mount_demands_scope_data
+  def build_demands_scope_data
     scope_per_week = []
     @weeks.each do |week_year|
       scope_per_week << ProjectResultsRepository.instance.scope_in_week_for_projects(projects, week_year[0], week_year[1])
@@ -172,7 +172,7 @@ class ReportData < ChartData
     scope_per_week
   end
 
-  def mount_demands_throughput_data
+  def build_demands_throughput_data
     throughput_per_week = []
     @weeks.each do |week_year|
       week = week_year[0]
@@ -184,13 +184,13 @@ class ReportData < ChartData
     throughput_per_week
   end
 
-  def mount_hours_scope_data
+  def build_hours_scope_data
     scope_per_week = []
     @weeks.each { |_week_year| scope_per_week << @projects.sum(:qty_hours).to_f }
     scope_per_week
   end
 
-  def mount_hours_throughput_data
+  def build_hours_throughput_data
     throughput_per_week = []
     @weeks.each do |week_year|
       week = week_year[0]

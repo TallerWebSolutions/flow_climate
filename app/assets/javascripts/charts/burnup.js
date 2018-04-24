@@ -37,7 +37,7 @@ function buildBurnupChart(burnupDiv) {
         tooltip: {
             valueSuffix: burnupDiv.data('tooltipsufix'),
             formatter: function () {
-                return Highcharts.numberFormat(this.y, 3, '.');
+                return Highcharts.numberFormat(this.y, burnupDiv.data('decimals'), '.');
             }
         },
         legend: {
