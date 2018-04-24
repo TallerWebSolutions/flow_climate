@@ -105,10 +105,14 @@ class ProjectResult < ApplicationRecord
 
   def update_result!(finished_upstream_demands, finished_downstream_demands, finished_bugs, opened_bugs)
     remaining_days = project.remaining_days(result_date)
-    update(known_scope: current_scope, throughput_upstream: finished_upstream_demands.count, throughput_downstream: finished_downstream_demands.count, qty_hours_upstream: finished_upstream_demands.sum(&:effort_upstream),
-           qty_hours_downstream: finished_downstream_demands.sum(&:effort_downstream), qty_hours_bug: finished_bugs.sum(&:effort_downstream), qty_bugs_closed: finished_bugs.count, qty_bugs_opened: opened_bugs.count,
+    update(known_scope: current_scope, throughput_upstream: finished_upstream_demands.count, throughput_downstream: finished_downstream_demands.count, qty_hours_upstream: sum_effort(:effort_upstream),
+           qty_hours_downstream: sum_effort(:effort_downstream), qty_hours_bug: finished_bugs.sum(&:effort_downstream), qty_bugs_closed: finished_bugs.count, qty_bugs_opened: opened_bugs.count,
            remaining_days: remaining_days, flow_pressure: current_flow_pressure, average_demand_cost: compute_average_demand_cost(finished_upstream_demands + finished_downstream_demands),
            leadtime: demands.finished.average(:leadtime))
+  end
+
+  def sum_effort(field)
+    demands.finished.sum(field)
   end
 
   def cost_per_day

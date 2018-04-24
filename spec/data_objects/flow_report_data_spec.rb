@@ -13,17 +13,17 @@ RSpec.describe FlowReportData, type: :data_object do
     let(:second_project_result) { Fabricate :project_result, project: second_project, result_date: 1.week.ago }
     let(:third_project_result) { Fabricate :project_result, project: second_project, result_date: 1.week.ago }
 
-    let!(:first_demand) { Fabricate :demand, project: first_project, end_date: 1.week.ago, downstream: false, effort_upstream: 1000 }
-    let!(:second_demand) { Fabricate :demand, project: first_project, end_date: 1.week.ago, effort_downstream: 120 }
-    let!(:third_demand) { Fabricate :demand, project: second_project, end_date: 1.week.ago, effort_downstream: 20 }
-    let!(:fourth_demand) { Fabricate :demand, project: second_project, end_date: 1.week.ago, effort_downstream: 60 }
-    let!(:fifth_demand) { Fabricate :demand, project: third_project, end_date: 1.week.ago, effort_downstream: 12 }
+    let!(:first_demand) { Fabricate :demand, project: first_project, end_date: 1.week.ago, downstream: false, effort_downstream: 111, effort_upstream: 1000 }
+    let!(:second_demand) { Fabricate :demand, project: first_project, end_date: 1.week.ago, effort_downstream: 120, effort_upstream: 12 }
+    let!(:third_demand) { Fabricate :demand, project: second_project, end_date: 1.week.ago, effort_downstream: 20, effort_upstream: 111 }
+    let!(:fourth_demand) { Fabricate :demand, project: second_project, end_date: 1.week.ago, effort_downstream: 60, effort_upstream: 155 }
+    let!(:fifth_demand) { Fabricate :demand, project: third_project, end_date: 1.week.ago, effort_downstream: 12, effort_upstream: 107 }
 
-    let!(:sixth_demand) { Fabricate :demand, project: first_project, commitment_date: 1.week.ago, effort_downstream: 16 }
-    let!(:seventh_demand) { Fabricate :demand, project: second_project, commitment_date: 1.week.ago, effort_downstream: 7 }
-    let!(:eigth_demand) { Fabricate :demand, project: first_project, commitment_date: 1.week.ago, effort_downstream: 11 }
-    let!(:nineth_demand) { Fabricate :demand, project: second_project, commitment_date: 1.week.ago, effort_downstream: 32 }
-    let!(:tenth_demand) { Fabricate :demand, project: third_project, commitment_date: 1.week.ago, effort_downstream: 76 }
+    let!(:sixth_demand) { Fabricate :demand, project: first_project, commitment_date: 1.week.ago, effort_downstream: 16, effort_upstream: 123 }
+    let!(:seventh_demand) { Fabricate :demand, project: second_project, commitment_date: 1.week.ago, effort_downstream: 7, effort_upstream: 221 }
+    let!(:eigth_demand) { Fabricate :demand, project: first_project, commitment_date: 1.week.ago, effort_downstream: 11, effort_upstream: 76 }
+    let!(:nineth_demand) { Fabricate :demand, project: second_project, commitment_date: 1.week.ago, effort_downstream: 32, effort_upstream: 332 }
+    let!(:tenth_demand) { Fabricate :demand, project: third_project, commitment_date: 1.week.ago, effort_downstream: 76, effort_upstream: 12 }
 
     let!(:out_date_processed_demand) { Fabricate :demand, project: third_project, end_date: 2.weeks.ago }
     let!(:out_date_selected_demand) { Fabricate :demand, project: third_project, commitment_date: 2.weeks.ago }
@@ -75,7 +75,7 @@ RSpec.describe FlowReportData, type: :data_object do
         expect(flow_data.column_chart_data).to eq([{ name: 'Total Entrada', data: [2, 2, 1], stack: 0, yaxis: 0 }, { name: 'Processadas no Downstream', data: [1, 2, 1], stack: 1, yaxis: 1 }, { name: 'Processadas no Upstream', data: [1, 0, 0], stack: 1, yaxis: 1 }])
 
         expect(flow_data.x_axis_month_data).to eq [[2018.0, 3.0]]
-        expect(flow_data.hours_per_project_per_month).to eq [1212]
+        expect(flow_data.hours_per_project_per_month).to eq [1708]
       end
     end
   end
