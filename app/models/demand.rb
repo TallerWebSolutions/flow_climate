@@ -97,8 +97,8 @@ class Demand < ApplicationRecord
     sum_blocked_effort(effort_transitions)
   end
 
-  def downstream?
-    demand_transitions.downstream_transitions.present?
+  def downstream_demand?
+    demand_transitions.downstream_transitions.present? || downstream?
   end
 
   def total_effort

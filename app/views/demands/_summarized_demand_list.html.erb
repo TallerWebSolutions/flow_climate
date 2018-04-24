@@ -20,12 +20,12 @@
   </thead>
   <tbody>
   <% demands.each do |demand| %>
-    <tr class="<%= 'upstream' unless demand.downstream? %>">
+    <tr class="<%= 'upstream' unless demand.downstream_demand? %>">
       <td><%= link_to demand.demand_id, company_project_demand_path(demand.company, demand.project, demand) %></td>
       <td><%= t("activerecord.attributes.demand.enums.demand_type.#{demand.demand_type}") %></td>
       <td><%= t("activerecord.attributes.demand.enums.class_of_service.#{demand.class_of_service}") %></td>
       <td class="center">
-        <% if demand.downstream? %>
+        <% if demand.downstream_demand? %>
           <i class="fa fa-check" aria-hidden="true"></i>
         <% end %>
       </td>

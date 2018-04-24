@@ -49,8 +49,8 @@ class FlowReportData
   def build_processing_rate_data
     projects_in_chart.each do |project_id|
       @total_arrived << (@projects_demands_selected[project_id]&.count || 0)
-      @total_processed_upstream << (@projects_demands_processed[project_id]&.select { |demand| !demand.downstream? }&.count || 0)
-      @total_processed_downstream << (@projects_demands_processed[project_id]&.select(&:downstream?)&.count || 0)
+      @total_processed_upstream << (@projects_demands_processed[project_id]&.select { |demand| !demand.downstream_demand? }&.count || 0)
+      @total_processed_downstream << (@projects_demands_processed[project_id]&.select(&:downstream_demand?)&.count || 0)
     end
 
     build_processed_demand_column_data

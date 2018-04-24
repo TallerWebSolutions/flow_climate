@@ -264,7 +264,7 @@ RSpec.describe Demand, type: :model do
     end
   end
 
-  describe '#downstream?' do
+  describe '#downstream_demand?' do
     let(:company) { Fabricate :company }
     let(:customer) { Fabricate :customer, company: company }
     let(:project) { Fabricate :project, customer: customer }
@@ -274,12 +274,12 @@ RSpec.describe Demand, type: :model do
 
     context 'having transition in the downstream' do
       let!(:demand_transition) { Fabricate :demand_transition, demand: demand, stage: downstream_stage }
-      it { expect(demand.downstream?).to be true }
+      it { expect(demand.downstream_demand?).to be true }
     end
 
     context 'having no transitions in the downstream' do
       let!(:demand_transition) { Fabricate :demand_transition, demand: demand, stage: upstream_stage }
-      it { expect(demand.downstream?).to be false }
+      it { expect(demand.downstream_demand?).to be false }
     end
   end
 
