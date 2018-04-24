@@ -48,8 +48,8 @@ RSpec.describe FlowReportData, type: :data_object do
         flow_data = FlowReportData.new(Project.all, 1.week.ago.to_date.cweek, 1.week.ago.to_date.cwyear)
         expect(flow_data.projects_in_chart).to match_array [first_project, second_project, third_project]
         expect(flow_data.total_arrived).to eq [2, 2, 1]
-        expect(flow_data.total_processed_upstream).to eq [2, 2, 1]
-        expect(flow_data.total_processed_downstream).to eq [0, 0, 0]
+        expect(flow_data.total_processed_upstream).to eq [1, 0, 0]
+        expect(flow_data.total_processed_downstream).to eq [1, 2, 1]
 
         expect(flow_data.projects_demands_selected[first_project]).to match_array [sixth_demand, eigth_demand]
         expect(flow_data.projects_demands_selected[second_project]).to match_array [seventh_demand, nineth_demand]
@@ -72,7 +72,7 @@ RSpec.describe FlowReportData, type: :data_object do
         expect(flow_data.demands_in_wip[Date.new(2018, 3, 31).to_s]).to eq [out_date_selected_demand, sixth_demand, seventh_demand, eigth_demand, nineth_demand, tenth_demand]
         expect(flow_data.demands_in_wip[Date.new(2018, 4, 1).to_s]).to eq [out_date_selected_demand, sixth_demand, seventh_demand, eigth_demand, nineth_demand, tenth_demand]
 
-        expect(flow_data.column_chart_data).to eq([{ name: I18n.t('demands.charts.processing_rate.arrived'), data: [2, 2, 1], stack: 0, yaxis: 0 }, { name: I18n.t('demands.charts.processing_rate.processed_downstream'), data: [0, 0, 0], stack: 1, yaxis: 1 }, { name: I18n.t('demands.charts.processing_rate.processed_upstream'), data: [2, 2, 1], stack: 1, yaxis: 1 }])
+        expect(flow_data.column_chart_data).to eq([{ name: 'Total Entrada', data: [2, 2, 1], stack: 0, yaxis: 0 }, { name: 'Processadas no Downstream', data: [1, 2, 1], stack: 1, yaxis: 1 }, { name: 'Processadas no Upstream', data: [1, 0, 0], stack: 1, yaxis: 1 }])
 
         expect(flow_data.x_axis_month_data).to eq [[2018.0, 3.0]]
         expect(flow_data.hours_per_project_per_month).to eq [1212]

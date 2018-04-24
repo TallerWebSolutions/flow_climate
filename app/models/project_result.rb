@@ -146,6 +146,6 @@ class ProjectResult < ApplicationRecord
   end
 
   def compute_throughput_downstream
-    demands.finished_in_stream(Stage.stage_streams[:downstream]) | demands.finished.downstream_flag
+    (demands.finished_in_stream(Stage.stage_streams[:downstream]) | demands.finished.downstream_flag) - compute_throughput_upstream
   end
 end
