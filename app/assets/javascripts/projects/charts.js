@@ -2,6 +2,9 @@ $(function () {
     var throughputDiv = $('#throughput-column');
     buildColumnChart(throughputDiv);
 
+    var hoursPerDemandDiv = $('#hours-column');
+    buildColumnChart(hoursPerDemandDiv);
+
     var burnupDemands = $('#burnup-demands');
     buildBurnupChart(burnupDemands);
 
