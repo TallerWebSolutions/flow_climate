@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 class ReportData < ChartData
-  attr_reader :demands_burnup_data, :hours_burnup_data, :flow_pressure_data, :monte_carlo_data
+  attr_reader :demands_burnup_data, :hours_burnup_data, :flow_pressure_data, :monte_carlo_data,
+              :dispersion_source, :percentile_95_data, :percentile_80_data, :percentile_60_data
 
   def initialize(projects)
     @projects = projects
@@ -13,6 +14,7 @@ class ReportData < ChartData
     project = projects.first
     @monte_carlo_data = Stats::StatisticsService.instance.run_montecarlo(project.demands.count, gather_leadtime_data(project), gather_throughput_data(project), 100) if project.present?
     build_flow_pressure_array
+    build_lead_time_control_chart
   end
 
   def projects_names
@@ -145,10 +147,6 @@ class ReportData < ChartData
     [{ name: I18n.t('projects.charts.throughput_per_week.stage_stream.upstream'), data: upstream_result_data }, { name: I18n.t('projects.charts.throughput_per_week.stage_stream.downstream'), data: downstream_result_data }]
   end
 
-  def date_hash_matches?(key, week_year)
-    key.to_date.cweek == week_year[0] && key.to_date.cwyear == week_year[1]
-  end
-
   def build_flow_pressure_array
     weekly_data = ProjectResultsRepository.instance.flow_pressure_in_week_for_projects(projects)
 
@@ -157,6 +155,10 @@ class ReportData < ChartData
       keys_matching = weekly_data.keys.select { |key| date_hash_matches?(key, week_year) }
       add_actual_or_projected_data(begining_of_week, keys_matching, weekly_data)
     end
+  end
+
+  def date_hash_matches?(key, week_year)
+    key.to_date.cweek == week_year[0] && key.to_date.cwyear == week_year[1]
   end
 
   def add_actual_or_projected_data(begining_of_week, keys_matching, weekly_data)
@@ -204,5 +206,20 @@ class ReportData < ChartData
 
   def delivered_to_projects_and_stream_until_week(week, year, projects, metric_field)
     ProjectResult.until_week(week, year).where(project_id: projects.pluck(:id)).sum(metric_field)
+  end
+
+  def build_lead_time_control_chart
+    @dispersion_source = finished_demands.map { |demand| [demand.demand_id, (demand.leadtime / 86_400).to_f] }
+    @percentile_95_data = Stats::StatisticsService.instance.percentile(95, demand_data)
+    @percentile_80_data = Stats::StatisticsService.instance.percentile(80, demand_data)
+    @percentile_60_data = Stats::StatisticsService.instance.percentile(60, demand_data)
+  end
+
+  def demand_data
+    @demand_data ||= finished_demands.map { |demand| (demand.leadtime / 86_400).to_f }
+  end
+
+  def finished_demands
+    @finished_demands ||= @projects.map { |project| project.demands.finished }.flatten.sort_by(&:end_date)
   end
 end

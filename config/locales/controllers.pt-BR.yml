@@ -79,7 +79,7 @@ pt-BR:
       hours_per_month:
         title: "Horas dos Projetos por Mês para %{project_name}"
       flowpressure_per_month:
-        title: "Pressão de Fluxo para %{project_name}"
+        title: "Pressão do Fluxo para %{project_name}"
       money_per_month:
         title: "Distribuição de Dinheiro de Projetos por Competência para %{project_name}"
   financial_informations:
@@ -185,6 +185,9 @@ pt-BR:
       hours_per_month:
         ylabel: "Horas"
         title: "Horas por Mês de Esforço para %{target_name}"
+      lead_time_chart:
+        title: "Control chart do lead time para %{target_name}"
+        ylabel: "dias"
     project_risk_alert_table: "Alertas de risco para o projeto"
     portfolio_bulletin:
       delivered_demands: "Demandas entregues na última semana"
