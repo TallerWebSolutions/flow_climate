@@ -220,6 +220,6 @@ class ReportData < ChartData
   end
 
   def finished_demands
-    @finished_demands ||= @projects.map { |project| project.demands.finished }.flatten.sort_by(&:end_date)
+    @finished_demands ||= @projects.map { |project| project.demands.finished_with_leadtime }.flatten.sort_by(&:end_date)
   end
 end
