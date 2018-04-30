@@ -39,6 +39,13 @@ RSpec.describe Demand, type: :model do
 
       it { expect(Demand.finished).to match_array [first_demand, second_demand] }
     end
+    describe '.finished_with_leadtime' do
+      let!(:first_demand) { Fabricate :demand, project: project, end_date: Time.zone.now, leadtime: 2 }
+      let!(:second_demand) { Fabricate :demand, project: project, end_date: Time.zone.now, leadtime: 3 }
+      let!(:third_demand) { Fabricate :demand, project: project, end_date: Time.zone.now }
+
+      it { expect(Demand.finished_with_leadtime).to match_array [first_demand, second_demand] }
+    end
     describe '.upstream_flag' do
       let!(:first_demand) { Fabricate :demand, downstream: false }
       let!(:second_demand) { Fabricate :demand, downstream: false }
