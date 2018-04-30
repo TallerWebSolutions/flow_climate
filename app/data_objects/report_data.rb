@@ -145,10 +145,6 @@ class ReportData < ChartData
     [{ name: I18n.t('projects.charts.throughput_per_week.stage_stream.upstream'), data: upstream_result_data }, { name: I18n.t('projects.charts.throughput_per_week.stage_stream.downstream'), data: downstream_result_data }]
   end
 
-  def date_hash_matches?(key, week_year)
-    key.to_date.cweek == week_year[0] && key.to_date.cwyear == week_year[1]
-  end
-
   def build_flow_pressure_array
     weekly_data = ProjectResultsRepository.instance.flow_pressure_in_week_for_projects(projects)
 
@@ -157,6 +153,10 @@ class ReportData < ChartData
       keys_matching = weekly_data.keys.select { |key| date_hash_matches?(key, week_year) }
       add_actual_or_projected_data(begining_of_week, keys_matching, weekly_data)
     end
+  end
+
+  def date_hash_matches?(key, week_year)
+    key.to_date.cweek == week_year[0] && key.to_date.cwyear == week_year[1]
   end
 
   def add_actual_or_projected_data(begining_of_week, keys_matching, weekly_data)
