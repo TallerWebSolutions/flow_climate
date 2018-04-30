@@ -147,6 +147,7 @@ pt-BR:
         weeks: "Semanas"
         projects: "Projetos"
         days: "Dias"
+        demands_per_week: "Demandas por Semana"
       burnup:
         ylabel: "Demandas"
         tooltipsufix: " demandas"
@@ -188,6 +189,12 @@ pt-BR:
       lead_time_chart:
         title: "Control chart do lead time para %{target_name}"
         ylabel: "dias"
+      leadtime_histogram:
+        title: "Histograma de lead time para %{target_name}"
+        ylabel: "frequência"
+      throughput_histogram:
+        title: "Histograma de Throughput para %{target_name}"
+        ylabel: "Frequências"
     project_risk_alert_table: "Alertas de risco para o projeto"
     portfolio_bulletin:
       delivered_demands: "Demandas entregues na última semana"
@@ -367,6 +374,8 @@ pt-BR:
       title: "Projeções"
     current_situation:
       title: "Situação Atual"
+    demand:
+      title: "demanda(s)"
   pipefy_configs:
     new:
       title: "Nova Configuração do Pipefy"

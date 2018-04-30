@@ -42,6 +42,10 @@ RSpec.describe ReportData, type: :data_object do
         expect(report_data.percentile_95_data).to eq 3.8
         expect(report_data.percentile_80_data).to eq 3.2
         expect(report_data.percentile_60_data).to eq 2.4
+        expect(report_data.leadtime_bins).to eq ['1.75 Dias', '3.25 Dias']
+        expect(report_data.leadtime_histogram_data).to eq [3.0, 2.0]
+        expect(report_data.throughput_bins).to eq ['0.5 demanda(s)', '1.5 demanda(s)']
+        expect(report_data.throughput_histogram_data).to eq [2.0, 3.0]
       end
     end
     describe '#projects_names' do

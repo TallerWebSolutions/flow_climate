@@ -16,4 +16,10 @@ $(function () {
 
     var leadtimeControlChart = $('#leadtime-control-chart');
     buildScatterChart(leadtimeControlChart);
+
+    var leadtimeHistogramChart = $('#leadtime-histogram');
+    buildColumnChart(leadtimeHistogramChart);
+
+    var throughputHistogramChart = $('#throughput-histogram');
+    buildColumnChart(throughputHistogramChart);
 });
