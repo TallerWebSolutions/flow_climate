@@ -13,4 +13,7 @@ $(function () {
 
     var cmdDiv = $('#cmd-column');
     buildColumnChart(cmdDiv);
+
+    var leadtimeControlChart = $('#leadtime-control-chart');
+    buildScatterChart(leadtimeControlChart);
 });

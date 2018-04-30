@@ -74,9 +74,9 @@ RSpec.describe TeamsController, type: :controller do
       let!(:second_alert) { Fabricate :project_risk_alert, project_risk_config: second_risk_config, project: first_project, alert_color: :red, created_at: 1.hour.ago }
 
       let!(:first_demand) { Fabricate :demand, project_result: first_result, project: first_project, commitment_date: Time.zone.today }
-      let!(:second_demand) { Fabricate :demand, project_result: second_result, project: first_project, commitment_date: Time.zone.today, end_date: Time.zone.today }
-      let!(:third_demand) { Fabricate :demand, project_result: third_result, project: first_project, end_date: Time.zone.today }
-      let!(:fourth_demand) { Fabricate :demand, project_result: fourth_result, project: first_project, end_date: Time.zone.today }
+      let!(:second_demand) { Fabricate :demand, project_result: second_result, project: first_project, commitment_date: Time.zone.today, end_date: Time.zone.today, leadtime: 2003 }
+      let!(:third_demand) { Fabricate :demand, project_result: third_result, project: first_project, end_date: Time.zone.today, leadtime: 2203 }
+      let!(:fourth_demand) { Fabricate :demand, project_result: fourth_result, project: first_project, end_date: Time.zone.today, leadtime: 3003 }
 
       context 'passing a valid ID' do
         context 'having data' do

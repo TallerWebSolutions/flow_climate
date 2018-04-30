@@ -185,6 +185,9 @@ en:
       hours_per_month:
         ylabel: "Hours"
         title: "Effort Hours per Month to %{target_name}"
+      lead_time_chart:
+        title: "Lead time control chart for %{target_name}"
+        ylabel: "days"
     project_risk_alert_table: "Risk alerts to the project"
     project_risk_configs:
       title: "Risk Configurations"
