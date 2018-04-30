@@ -188,6 +188,12 @@ en:
       lead_time_chart:
         title: "Lead time control chart for %{target_name}"
         ylabel: "days"
+      leadtime_histogram:
+        title: "Leadtime histogram for %{target_name}"
+        ylabel: "hits"
+      throughput_histogram:
+        title: "Throughput Histogram for %{target_name}"
+        ylabel: "hits"
     project_risk_alert_table: "Risk alerts to the project"
     project_risk_configs:
       title: "Risk Configurations"
@@ -363,6 +369,8 @@ en:
       title: "Projections"
     current_situation:
       title: "Current Situation"
+    demand:
+      title: "demand(s)"
   pipefy_configs:
     new:
       title: "New Pipefy Config"

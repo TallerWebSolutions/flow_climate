@@ -64,7 +64,7 @@
       <div id="cmd-column"
            class="flow-chart"
            data-title='<%= t('projects.charts.cmd.title', project_name: target_name) %>'
-           data-xcategories='<%= @report_data.weeks %>'
+           data-xcategories='<%= report_data.weeks %>'
            data-xtitle='<%= t('projects.charts.xlabel.weeks') %>'
            data-ytitle='<%= t('projects.charts.cmd.ylabel') %>'
            data-prefix='<%= t('projects.charts.cmd.tooltip_prefix') %>'
@@ -98,6 +98,34 @@
            data-percentile95='<%= report_data.percentile_95_data %>'
            data-percentile80='<%= report_data.percentile_80_data %>'
            data-percentile60='<%= report_data.percentile_60_data %>'>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12">
+      <div id="leadtime-histogram"
+           class="flow-chart"
+           data-title='<%= t('projects.charts.leadtime_histogram.title', target_name: target_name) %>'
+           data-xcategories='<%= report_data.leadtime_bins %>'
+           data-xtitle='<%= t('projects.charts.xlabel.days') %>'
+           data-ytitle='<%= t('projects.charts.leadtime_histogram.ylabel') %>'
+           data-prefix=''
+           data-series='<%= [{ name: I18n.t('projects.charts.leadtime_histogram.ylabel'), data: report_data.leadtime_histogram_data }].to_json %>'
+           data-decimals='2'>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12">
+      <div id="throughput-histogram"
+           class="flow-chart"
+           data-title='<%= t('projects.charts.throughput_histogram.title', target_name: target_name) %>'
+           data-xcategories='<%= report_data.throughput_bins %>'
+           data-xtitle='<%= t('projects.charts.xlabel.demands_per_week') %>'
+           data-ytitle='<%= t('projects.charts.throughput_histogram.ylabel') %>'
+           data-prefix=''
+           data-series='<%= [{ name: I18n.t('projects.charts.throughput_histogram.ylabel'), data: report_data.throughput_histogram_data }].to_json %>'
+           data-decimals='2'>
       </div>
     </div>
   </div>

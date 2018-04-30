@@ -31,6 +31,14 @@ module Stats
 
     private
 
+    def create_histogram_data(data_array)
+      intervals = Math.sqrt(data_array.length).round
+      bins, frequencies = data_array.histogram(intervals, min: data_array.min, max: data_array.max)
+      histogram_data = {}
+      bins.each_with_index { |bin, index| histogram_data[bin] = frequencies[index] }
+      histogram_data
+    end
+
     def compute_probability_of_dates(remaining_backlog_count, leadtime_histogram_data_array, throughput_histogram_data, qty_cycles)
       date_hits_hash = {}
       qty_cycles.times do
@@ -50,14 +58,6 @@ module Stats
       slots_for_paralelism = choose_weighted(create_histogram_data(throughput_histogram_data_array))
       slots_for_paralelism = 1 unless slots_for_paralelism.positive?
       TimeService.instance.skip_weekends(Time.zone.today, new_prediction_interval / slots_for_paralelism)
-    end
-
-    def create_histogram_data(data_array)
-      intervals = Math.sqrt(data_array.length).round
-      bins, frequencies = data_array.histogram(intervals, min: data_array.min, max: data_array.max)
-      histogram_data = {}
-      bins.each_with_index { |bin, index| histogram_data[bin] = frequencies[index] }
-      histogram_data
     end
 
     def compute_percentile(desired_percentile, population)

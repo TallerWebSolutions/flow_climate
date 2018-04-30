@@ -28,3 +28,7 @@ en:
         text: "Hours"
     date_odds:
       title: "Date Odds for %{target_name}"
+  projects:
+    charts:
+      xlabel:
+        demands_per_week: "Demands per Week"

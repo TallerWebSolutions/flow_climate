@@ -2,7 +2,8 @@
 
 class ReportData < ChartData
   attr_reader :demands_burnup_data, :hours_burnup_data, :flow_pressure_data, :monte_carlo_data,
-              :dispersion_source, :percentile_95_data, :percentile_80_data, :percentile_60_data
+              :dispersion_source, :percentile_95_data, :percentile_80_data, :percentile_60_data,
+              :leadtime_bins, :leadtime_histogram_data, :throughput_bins, :throughput_histogram_data
 
   def initialize(projects)
     @projects = projects
@@ -14,7 +15,7 @@ class ReportData < ChartData
     project = projects.first
     @monte_carlo_data = Stats::StatisticsService.instance.run_montecarlo(project.demands.count, gather_leadtime_data(project), gather_throughput_data(project), 100) if project.present?
     build_flow_pressure_array
-    build_lead_time_control_chart
+    build_statistics_charts
   end
 
   def projects_names
@@ -91,6 +92,12 @@ class ReportData < ChartData
   end
 
   private
+
+  def build_statistics_charts
+    build_lead_time_control_chart
+    build_leadtime_histogram
+    build_throughput_histogram
+  end
 
   def gather_leadtime_data(project)
     leadtime_data_array = ProjectsRepository.instance.leadtime_per_week([project]).values
@@ -213,6 +220,18 @@ class ReportData < ChartData
     @percentile_95_data = Stats::StatisticsService.instance.percentile(95, demand_data)
     @percentile_80_data = Stats::StatisticsService.instance.percentile(80, demand_data)
     @percentile_60_data = Stats::StatisticsService.instance.percentile(60, demand_data)
+  end
+
+  def build_leadtime_histogram
+    histogram_data = Stats::StatisticsService.instance.leadtime_histogram_hash(finished_demands.map(&:leadtime).flatten)
+    @leadtime_bins = histogram_data.keys.map { |leadtime| "#{(leadtime / 86_400).round(2)} #{I18n.t('projects.charts.xlabel.days')}" }
+    @leadtime_histogram_data = histogram_data.values
+  end
+
+  def build_throughput_histogram
+    histogram_data = Stats::StatisticsService.instance.throughput_histogram_hash(ProjectsRepository.instance.throughput_per_week(projects).values)
+    @throughput_bins = histogram_data.keys.map { |th| "#{th} #{I18n.t('charts.demand.title')}" }
+    @throughput_histogram_data = histogram_data.values
   end
 
   def demand_data
