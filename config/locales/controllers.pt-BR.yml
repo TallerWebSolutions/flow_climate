@@ -191,7 +191,7 @@ pt-BR:
         ylabel: "dias"
       leadtime_histogram:
         title: "Histograma de lead time para %{target_name}"
-        ylabel: "frequência"
+        ylabel: "frequências"
       throughput_histogram:
         title: "Histograma de Throughput para %{target_name}"
         ylabel: "Frequências"

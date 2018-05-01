@@ -1,4 +1,4 @@
-<% if report_data.present? && hours_per_demand_data.present? %>
+<% if report_data.present? %>
   <div class="row">
     <div class="col-xs-12">
       <div id="burnup-demands"
@@ -24,7 +24,7 @@
            data-xtitle='<%= t('projects.charts.xlabel.weeks') %>'
            data-ytitle='<%= t('projects.charts.hours_per_demand.ylabel') %>'
            data-tooltipsufix='<%= t('projects.charts.hours_per_demand.tooltipsufix') %>'
-           data-series='<%= hours_per_demand_data.to_json %>'
+           data-series='<%= [{ name: I18n.t('projects.charts.hours_per_demand.ylabel'), data: report_data.hours_per_demand_per_week }].to_json %>'
            data-decimals='3'>
       </div>
     </div>
@@ -35,11 +35,11 @@
       <div id="flowpressure-column"
            class="flow-chart"
            data-title='<%= t('projects.charts.flow_pressure.title', project_name: target_name) %>'
-           data-xcategories='<%= report_data.projects_names %>'
-           data-xtitle='<%= xlabel %>'
+           data-xcategories='<%= report_data.weeks %>'
+           data-xtitle='<%= t('projects.charts.xlabel.weeks') %>'
            data-ytitle='<%= t('projects.charts.flow_pressure.ylabel') %>'
            data-tooltipsufix='<%= t('projects.charts.flow_pressure.tooltipsufix') %>'
-           data-series='<%= flow_pressure_data.to_json %>'
+           data-series='<%= [{ name: I18n.t('projects.charts.flow_pressure.ylabel'), data: report_data.flow_pressure_data }].to_json %>'
            data-decimals='3'>
       </div>
     </div>
@@ -53,7 +53,7 @@
            data-xtitle='<%= t('projects.charts.xlabel.weeks') %>'
            data-ytitle='<%= t('projects.charts.throughput_per_week.ylabel') %>'
            data-tooltipsufix='<%= t('projects.charts.throughput_per_week.tooltipsufix') %>'
-           data-series='<%= throughput_data.to_json %>'
+           data-series='<%= report_data.throughput_per_week.to_json %>'
            data-stacking='normal'
            data-decimals='0'>
       </div>
@@ -68,7 +68,7 @@
            data-xtitle='<%= t('projects.charts.xlabel.weeks') %>'
            data-ytitle='<%= t('projects.charts.cmd.ylabel') %>'
            data-prefix='<%= t('projects.charts.cmd.tooltip_prefix') %>'
-           data-series='<%= cmd_data.to_json %>'
+           data-series='<%= [{ name: I18n.t('projects.charts.cmd.ylabel'), data: report_data.average_demand_cost }].to_json %>'
            data-decimals='2'>
       </div>
     </div>
