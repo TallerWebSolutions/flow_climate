@@ -4,7 +4,7 @@
       <div id="burnup-demands"
            class="flow-chart"
            data-title='<%= t('projects.charts.burnup.demands.title', project_name: target_name) %>'
-           data-weeks='<%= report_data.weeks %>'
+           data-weeks='<%= report_data.active_weeks %>'
            data-xtitle='<%= t('projects.charts.xlabel.weeks') %>'
            data-ytitle='<%= t('projects.charts.burnup.ylabel') %>'
            data-tooltipsufix='<%= t('projects.charts.burnup.tooltipsufix') %>'
@@ -20,7 +20,7 @@
       <div id="hours-column"
            class="flow-chart"
            data-title='<%= t('projects.charts.hours_per_demand.title', project_name: target_name) %>'
-           data-xcategories='<%= report_data.weeks %>'
+           data-xcategories='<%= report_data.active_weeks %>'
            data-xtitle='<%= t('projects.charts.xlabel.weeks') %>'
            data-ytitle='<%= t('projects.charts.hours_per_demand.ylabel') %>'
            data-tooltipsufix='<%= t('projects.charts.hours_per_demand.tooltipsufix') %>'
@@ -35,7 +35,7 @@
       <div id="flowpressure-column"
            class="flow-chart"
            data-title='<%= t('projects.charts.flow_pressure.title', project_name: target_name) %>'
-           data-xcategories='<%= report_data.weeks %>'
+           data-xcategories='<%= report_data.all_projects_weeks %>'
            data-xtitle='<%= t('projects.charts.xlabel.weeks') %>'
            data-ytitle='<%= t('projects.charts.flow_pressure.ylabel') %>'
            data-tooltipsufix='<%= t('projects.charts.flow_pressure.tooltipsufix') %>'
@@ -49,7 +49,7 @@
       <div id="throughput-column"
            class="flow-chart"
            data-title='<%= t('projects.charts.throughput_per_week.title', target_name: target_name) %>'
-           data-xcategories='<%= report_data.weeks %>'
+           data-xcategories='<%= report_data.all_projects_weeks %>'
            data-xtitle='<%= t('projects.charts.xlabel.weeks') %>'
            data-ytitle='<%= t('projects.charts.throughput_per_week.ylabel') %>'
            data-tooltipsufix='<%= t('projects.charts.throughput_per_week.tooltipsufix') %>'
@@ -64,7 +64,7 @@
       <div id="cmd-column"
            class="flow-chart"
            data-title='<%= t('projects.charts.cmd.title', project_name: target_name) %>'
-           data-xcategories='<%= report_data.weeks %>'
+           data-xcategories='<%= report_data.all_projects_weeks %>'
            data-xtitle='<%= t('projects.charts.xlabel.weeks') %>'
            data-ytitle='<%= t('projects.charts.cmd.ylabel') %>'
            data-prefix='<%= t('projects.charts.cmd.tooltip_prefix') %>'
@@ -78,7 +78,7 @@
     <div class="col-xs-12">
       <div id="status-report-hours-column"
            class="flow-chart"
-           data-xcategories='<%= report_data.effort_hours_per_month[:keys].map {|year, month| Date.new(year, month, 1).to_s} %>'
+           data-xcategories='<%= report_data.effort_hours_per_month[:keys].map { |year, month| Date.new(year, month, 1).to_s } %>'
            data-title='<%= t('projects.charts.hours_per_month.title', target_name: target_name) %>'
            data-ytitle='<%= t('projects.charts.hours_per_month.ylabel') %>'
            data-ysuffix='<%= t('projects.charts.hours_per_month.ylabel') %>'

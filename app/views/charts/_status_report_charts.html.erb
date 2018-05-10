@@ -1,3 +1,4 @@
+
 <h3 class="center"><%= t('charts.current_situation.title') %></h3>
 
 <div class="row">
@@ -5,7 +6,7 @@
     <div id="status-report-throughput-column"
          class="flow-chart"
          data-title='<%= t('projects.charts.throughput_per_week.title', target_name: target_name) %>'
-         data-xcategories='<%= report_data.weeks %>'
+         data-xcategories='<%= report_data.all_projects_weeks %>'
          data-xtitle='<%= t('projects.charts.xlabel.weeks') %>'
          data-ytitle='<%= t('projects.charts.throughput_per_week.ylabel') %>'
          data-ysuffix=''
@@ -45,7 +46,7 @@
     <div id="burnup-hours"
          class="flow-chart"
          data-title='<%= t('projects.charts.burnup.hours.title', project_name: target_name) %>'
-         data-weeks='<%= report_data.weeks %>'
+         data-weeks='<%= report_data.all_projects_weeks %>'
          data-xtitle='<%= t('projects.charts.xlabel.weeks') %>'
          data-ytitle='<%= t('projects.charts.burnup.ylabel') %>'
          data-tooltipsufix='<%= t('projects.charts.burnup.tooltipsufix') %>'
@@ -53,35 +54,6 @@
          data-current='<%= report_data.hours_burnup_data.current_per_week %>'
          data-scope='<%= report_data.hours_burnup_data.scope_per_week %>'
          data-decimals='0'>
-    </div>
-  </div>
-</div>
-
-<h3 class="center"><%= t('charts.projections.title') %></h3>
-
-<div class="row">
-  <div class="col-xs-6">
-    <div id="status-report-dates-odds-column"
-         class="flow-chart"
-         data-xcategories=<%= [t('charts.date_odds.xtitle')] %>
-             data-title='<%= t('charts.date_odds.title', target_name: target_name) %>'
-         data-ytitle='<%= t('charts.date_odds.ytitle') %>'
-         data-ysuffix="%"
-         data-tooltipsufix='<%= t('projects.charts.date_odds.tooltipsufix') %>'
-         data-series='<%= report_data.dates_and_odds[:chart].to_json %>'
-         data-decimals='3'>
-    </div>
-  </div>
-  <div class="col-xs-6">
-    <div id="status-report-montecarlo-column"
-         class="flow-chart"
-         data-xcategories='<%= @montecarlo_dates.monte_carlo_date_hash.keys.map(&:to_s) %>'
-         data-title='<%= t('charts.montecarlo.title', target_name: target_name) %>'
-         data-ytitle='<%= t('charts.date_odds.ytitle') %>'
-         data-ysuffix="%"
-         data-tooltipsufix='<%= t('projects.charts.throughput_per_week.tooltipsufix') %>'
-         data-series='<%= [{ name: 'monte carlo dates', data: @montecarlo_dates.monte_carlo_date_hash.values.flatten.map(&:to_f).map { |value| value * 100 } }].to_json %>'
-         data-decimals='3'>
     </div>
   </div>
 </div>

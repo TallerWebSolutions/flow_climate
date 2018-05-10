@@ -23,8 +23,10 @@ RSpec.describe ReportData, type: :data_object do
       subject(:report_data) { ReportData.new(Project.all) }
 
       it 'do the math and provides the correct information' do
-        expect(report_data.projects).to eq Project.all
-        expect(report_data.weeks).to eq [[8, 2018], [9, 2018], [10, 2018], [11, 2018], [12, 2018]]
+        expect(report_data.all_projects).to eq Project.all
+        expect(report_data.active_projects).to eq Project.active
+        expect(report_data.all_projects_weeks).to eq [[8, 2018], [9, 2018], [10, 2018], [11, 2018], [12, 2018]]
+        expect(report_data.active_weeks).to eq [[8, 2018], [9, 2018], [10, 2018], [11, 2018], [12, 2018]]
         expect(report_data.demands_burnup_data.ideal_per_week).to eq [113.2, 226.4, 339.6, 452.8, 566.0]
         expect(report_data.demands_burnup_data.current_per_week).to eq [25, 25, 25, 201, 201]
         expect(report_data.demands_burnup_data.scope_per_week).to eq [170, 170, 170, 566, 566]
@@ -48,11 +50,6 @@ RSpec.describe ReportData, type: :data_object do
         expect(report_data.throughput_histogram_data).to eq [2.0, 3.0]
       end
     end
-    describe '#projects_names' do
-      subject(:report_data) { ReportData.new(Project.all) }
-      it { expect(report_data.projects_names).to eq [first_project.full_name, second_project.full_name, third_project.full_name] }
-    end
-
     describe '#hours_per_demand_per_week' do
       subject(:report_data) { ReportData.new(Project.all) }
       it { expect(report_data.hours_per_demand_per_week).to eq [15.0, 0, 0, 1.6589147286821706, 0] }
@@ -64,8 +61,10 @@ RSpec.describe ReportData, type: :data_object do
       subject(:report_data) { ReportData.new(Project.all) }
 
       it 'returns empty arrays' do
-        expect(report_data.projects).to eq []
-        expect(report_data.weeks).to eq []
+        expect(report_data.all_projects).to eq []
+        expect(report_data.active_projects).to eq []
+        expect(report_data.active_weeks).to eq []
+        expect(report_data.all_projects_weeks).to eq []
         expect(report_data.demands_burnup_data.ideal_per_week).to eq []
         expect(report_data.demands_burnup_data.current_per_week).to eq []
         expect(report_data.demands_burnup_data.scope_per_week).to eq []
@@ -73,11 +72,6 @@ RSpec.describe ReportData, type: :data_object do
         expect(report_data.throughput_per_week).to eq([{ name: I18n.t('projects.charts.throughput_per_week.stage_stream.upstream'), data: [] }, { name: I18n.t('projects.charts.throughput_per_week.stage_stream.downstream'), data: [] }])
         expect(report_data.delivered_vs_remaining).to eq([{ name: I18n.t('projects.show.delivered_scope'), data: [0] }, { name: I18n.t('projects.show.scope_gap'), data: [0] }])
       end
-    end
-
-    describe '#projects_names' do
-      subject(:report_data) { ReportData.new(Project.all) }
-      it { expect(report_data.projects_names).to eq [] }
     end
 
     describe '#hours_per_demand_per_week' do

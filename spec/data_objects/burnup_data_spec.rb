@@ -23,8 +23,10 @@ RSpec.describe BurnupData, type: :data_object do
       subject(:burnup_data) { ChartData.new(Project.all) }
 
       it 'do the math and provides the correct information' do
-        expect(burnup_data.projects).to eq Project.all
-        expect(burnup_data.weeks).to eq [[8, 2018], [9, 2018], [10, 2018], [11, 2018], [12, 2018]]
+        expect(burnup_data.all_projects).to eq Project.all
+        expect(burnup_data.active_projects).to eq Project.active
+        expect(burnup_data.all_projects_weeks).to eq [[8, 2018], [9, 2018], [10, 2018], [11, 2018], [12, 2018]]
+        expect(burnup_data.active_weeks).to eq [[8, 2018], [9, 2018], [10, 2018], [11, 2018], [12, 2018]]
       end
     end
   end
@@ -34,8 +36,10 @@ RSpec.describe BurnupData, type: :data_object do
       subject(:burnup_data) { ChartData.new(Project.all) }
 
       it 'returns empty arrays' do
-        expect(burnup_data.projects).to eq []
-        expect(burnup_data.weeks).to eq []
+        expect(burnup_data.all_projects).to eq []
+        expect(burnup_data.active_projects).to eq []
+        expect(burnup_data.all_projects_weeks).to eq []
+        expect(burnup_data.active_weeks).to eq []
       end
     end
   end

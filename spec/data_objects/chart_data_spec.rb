@@ -23,8 +23,10 @@ RSpec.describe ChartData, type: :data_object do
       subject(:chart_data) { ChartData.new(Project.all) }
 
       it 'do the math and provides the correct information' do
-        expect(chart_data.projects).to eq Project.all
-        expect(chart_data.weeks).to eq [[8, 2018], [9, 2018], [10, 2018], [11, 2018], [12, 2018]]
+        expect(chart_data.all_projects).to eq Project.all
+        expect(chart_data.active_projects).to eq Project.active
+        expect(chart_data.active_weeks).to eq [[8, 2018], [9, 2018], [10, 2018], [11, 2018], [12, 2018]]
+        expect(chart_data.all_projects_weeks).to eq [[8, 2018], [9, 2018], [10, 2018], [11, 2018], [12, 2018]]
       end
     end
   end
@@ -34,8 +36,10 @@ RSpec.describe ChartData, type: :data_object do
       subject(:chart_data) { ChartData.new(Project.all) }
 
       it 'returns empty arrays' do
-        expect(chart_data.projects).to eq []
-        expect(chart_data.weeks).to eq []
+        expect(chart_data.all_projects).to eq []
+        expect(chart_data.active_projects).to eq []
+        expect(chart_data.active_weeks).to eq []
+        expect(chart_data.all_projects_weeks).to eq []
       end
     end
   end
