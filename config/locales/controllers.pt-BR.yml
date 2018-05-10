@@ -40,6 +40,7 @@ pt-BR:
         title: "Custo Médio por Demanda"
       flow_pressure: "Pressão do Fluxo"
       hours_per_demand: "Horas por Demanda"
+    no_data: "Não existem dados para essa exibição"
   header:
     logout: Sair
     sign_up: Cadastre-se

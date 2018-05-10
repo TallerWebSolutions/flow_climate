@@ -1,0 +1,62 @@
+<% if report_data.present? && report_data.all_projects.present? %>
+  <h3 class="center"><%= t('charts.current_situation.title') %></h3>
+
+  <div class="row">
+    <div class="col-xs-6">
+      <div id="status-report-throughput-column"
+           class="flow-chart"
+           data-title='<%= t('projects.charts.throughput_per_week.title', target_name: target_name) %>'
+           data-xcategories='<%= report_data.all_projects_weeks %>'
+           data-xtitle='<%= t('projects.charts.xlabel.weeks') %>'
+           data-ytitle='<%= t('projects.charts.throughput_per_week.ylabel') %>'
+           data-ysuffix=''
+           data-series='<%= report_data.throughput_per_week.to_json %>'
+           data-stacking='normal'
+           data-decimals='0'>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div id="status-report-delivered-column"
+           class="flow-chart"
+           data-xcategories='<%= ['Scope'] %>'
+           data-title='<%= t('projects.charts.delivered.title', target_name: target_name) %>'
+           data-ytitle='<%= t('projects.charts.throughput_per_week.ylabel') %>'
+           data-ysuffix='<%= t('projects.charts.throughput_per_week.ylabel') %>'
+           data-series='<%= report_data.delivered_vs_remaining.to_json %>'
+           data-decimals='0'>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-xs-6">
+      <div id="status-report-deadline-bar"
+           class="flow-chart"
+           data-xcategories='<%= [t('projects.general.deadline')] %>'
+           data-title='<%= t('projects.charts.deadline.title', target_name: target_name) %>'
+           data-ytitle='<%= t('projects.charts.xlabel.days') %>'
+           data-ysuffix='<%= t('projects.charts.xlabel.days') %>'
+           data-series='<%= report_data.deadline.to_json %>'
+           data-stacking='normal'
+           data-decimals='0'>
+      </div>
+    </div>
+
+    <div class="col-xs-6">
+      <div id="burnup-hours"
+           class="flow-chart"
+           data-title='<%= t('projects.charts.burnup.hours.title', project_name: target_name) %>'
+           data-weeks='<%= report_data.all_projects_weeks %>'
+           data-xtitle='<%= t('projects.charts.xlabel.weeks') %>'
+           data-ytitle='<%= t('projects.charts.burnup.ylabel') %>'
+           data-tooltipsufix='<%= t('projects.charts.burnup.tooltipsufix') %>'
+           data-ideal='<%= report_data.hours_burnup_data.ideal_per_week %>'
+           data-current='<%= report_data.hours_burnup_data.current_per_week %>'
+           data-scope='<%= report_data.hours_burnup_data.scope_per_week %>'
+           data-decimals='0'>
+      </div>
+    </div>
+  </div>
+<% else %>
+  <%= t('general.no_data') %>
+<% end %>

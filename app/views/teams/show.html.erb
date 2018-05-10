@@ -17,6 +17,7 @@
       <%= link_to t('navbar.members_table'), '#', id: 'nav-item-members' %>
       <%= link_to t('navbar.projects_list'), '#', id: 'nav-item-list' %>
       <%= link_to t('navbar.strategic'), '#', id: 'nav-item-strategic' %>
+      <%= link_to t('navbar.status_report'), '#', id: 'nav-item-statusreport' %>
       <%= link_to t('navbar.charts'), '#', id: 'nav-item-charts' %>
       <%= link_to t('navbar.flow'), '#', id: 'nav-item-flow' %>
       <%= link_to t('navbar.settings'), '#', id: 'nav-item-settings' %>
@@ -54,6 +55,10 @@
     <%= render 'companies/strategic_table', model_name: @team.name, strategic_report_data: @strategic_report_data %>
   </div>
 
+  <div id="project-status-report">
+    <%= render 'charts/status_report_charts', target_name: @team.name, report_data: @report_data %>
+  </div>
+
   <div id="charts">
     <% if @report_data.present? %>
       <%= render 'charts/project_charts', target_name: @team.name, report_data: @report_data %>
@@ -78,8 +83,10 @@
   <%= javascript_include_tag 'charts/column-line' %>
   <%= javascript_include_tag 'charts/gauge' %>
   <%= javascript_include_tag 'charts/scatter' %>
+
   <%= javascript_include_tag 'teams/show' %>
   <%= javascript_include_tag 'projects/charts' %>
+  <%= javascript_include_tag 'projects/status_report_current' %>
 
   <%= javascript_include_tag 'companies/hours_gauge_chart' %>
   <%= javascript_include_tag 'companies/column_active_projects_count_chart' %>

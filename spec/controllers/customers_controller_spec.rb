@@ -178,17 +178,29 @@ RSpec.describe CustomersController, type: :controller do
 
     describe 'GET #show' do
       let(:customer) { Fabricate :customer, company: company }
-      let!(:first_project) { Fabricate :project, customer: customer, end_date: 5.days.from_now }
-      let!(:second_project) { Fabricate :project, customer: customer, end_date: 7.days.from_now }
 
       context 'passing a valid ID' do
-        before { get :show, params: { company_id: company, id: customer.id } }
-        it 'assigns the instance variable and renders the template' do
-          expect(response).to render_template :show
-          expect(assigns(:company)).to eq company
-          expect(assigns(:customer)).to eq customer
-          expect(assigns(:report_data)).to be_a ReportData
-          expect(assigns(:customer_projects)).to eq [second_project, first_project]
+        context 'having projects' do
+          let!(:first_project) { Fabricate :project, customer: customer, end_date: 5.days.from_now }
+          let!(:second_project) { Fabricate :project, customer: customer, end_date: 7.days.from_now }
+          before { get :show, params: { company_id: company, id: customer.id } }
+          it 'assigns the instance variable and renders the template' do
+            expect(response).to render_template :show
+            expect(assigns(:company)).to eq company
+            expect(assigns(:customer)).to eq customer
+            expect(assigns(:report_data)).to be_a ReportData
+            expect(assigns(:customer_projects)).to eq [second_project, first_project]
+          end
+        end
+        context 'having no projects' do
+          before { get :show, params: { company_id: company, id: customer.id } }
+          it 'assigns the instance variable and renders the template' do
+            expect(response).to render_template :show
+            expect(assigns(:company)).to eq company
+            expect(assigns(:customer)).to eq customer
+            expect(assigns(:report_data)).to be_a ReportData
+            expect(assigns(:customer_projects)).to eq []
+          end
         end
       end
       context 'passing invalid parameters' do

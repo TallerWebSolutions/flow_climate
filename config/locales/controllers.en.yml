@@ -39,6 +39,7 @@ en:
         title: "Avg Demand Cost"
       flow_pressure: "Flow Pressure"
       hours_per_demand: "Hours per Demand"
+    no_data: "There is no data to show yet."
   header:
     logout: Logout
     explore: Explore
