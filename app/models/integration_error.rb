@@ -4,15 +4,15 @@
 #
 # Table name: integration_errors
 #
-#  id                      :integer          not null, primary key
-#  company_id              :integer          not null
-#  occured_at              :datetime         not null
-#  integration_type        :integer          not null
-#  integration_error_text  :string           not null
+#  company_id              :integer          not null, indexed
 #  created_at              :datetime         not null
-#  updated_at              :datetime         not null
-#  project_id              :integer
+#  id                      :bigint(8)        not null, primary key
 #  integratable_model_name :string
+#  integration_error_text  :string           not null
+#  integration_type        :integer          not null, indexed
+#  occured_at              :datetime         not null
+#  project_id              :integer
+#  updated_at              :datetime         not null
 #
 # Indexes
 #
@@ -21,8 +21,8 @@
 #
 # Foreign Keys
 #
-#  fk_rails_...  (company_id => companies.id)
-#  fk_rails_...  (project_id => projects.id)
+#  fk_rails_3505c123da  (company_id => companies.id)
+#  fk_rails_6533e9d0da  (project_id => projects.id)
 #
 
 class IntegrationError < ApplicationRecord

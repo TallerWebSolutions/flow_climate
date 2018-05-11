@@ -718,6 +718,42 @@ CREATE TABLE public.schema_migrations (
 
 
 --
+-- Name: stage_project_configs; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.stage_project_configs (
+    id bigint NOT NULL,
+    project_id integer NOT NULL,
+    stage_id integer NOT NULL,
+    compute_effort boolean DEFAULT false,
+    stage_percentage integer,
+    management_percentage integer,
+    pairing_percentage integer,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: stage_project_configs_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.stage_project_configs_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: stage_project_configs_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.stage_project_configs_id_seq OWNED BY public.stage_project_configs.id;
+
+
+--
 -- Name: stages; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -730,8 +766,6 @@ CREATE TABLE public.stages (
     commitment_point boolean DEFAULT false,
     end_point boolean DEFAULT false,
     queue boolean DEFAULT false,
-    compute_effort boolean DEFAULT false,
-    percentage_effort numeric,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     company_id integer NOT NULL,
@@ -1002,6 +1036,13 @@ ALTER TABLE ONLY public.projects_stages ALTER COLUMN id SET DEFAULT nextval('pub
 
 
 --
+-- Name: stage_project_configs id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.stage_project_configs ALTER COLUMN id SET DEFAULT nextval('public.stage_project_configs_id_seq'::regclass);
+
+
+--
 -- Name: stages id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1187,6 +1228,14 @@ ALTER TABLE ONLY public.projects_stages
 
 ALTER TABLE ONLY public.schema_migrations
     ADD CONSTRAINT schema_migrations_pkey PRIMARY KEY (version);
+
+
+--
+-- Name: stage_project_configs stage_project_configs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.stage_project_configs
+    ADD CONSTRAINT stage_project_configs_pkey PRIMARY KEY (id);
 
 
 --
@@ -1425,6 +1474,27 @@ CREATE INDEX index_projects_stages_on_stage_id ON public.projects_stages USING b
 
 
 --
+-- Name: index_stage_project_configs_on_project_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_stage_project_configs_on_project_id ON public.stage_project_configs USING btree (project_id);
+
+
+--
+-- Name: index_stage_project_configs_on_project_id_and_stage_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_stage_project_configs_on_project_id_and_stage_id ON public.stage_project_configs USING btree (project_id, stage_id);
+
+
+--
+-- Name: index_stage_project_configs_on_stage_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_stage_project_configs_on_stage_id ON public.stage_project_configs USING btree (stage_id);
+
+
+--
 -- Name: index_stages_on_integration_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1619,6 +1689,14 @@ ALTER TABLE ONLY public.pipefy_team_configs
 
 
 --
+-- Name: stage_project_configs fk_rails_713ceb31a3; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.stage_project_configs
+    ADD CONSTRAINT fk_rails_713ceb31a3 FOREIGN KEY (project_id) REFERENCES public.projects(id);
+
+
+--
 -- Name: project_change_deadline_histories fk_rails_7e0b9bce8f; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1648,6 +1726,14 @@ ALTER TABLE ONLY public.products
 
 ALTER TABLE ONLY public.project_results
     ADD CONSTRAINT fk_rails_b11de7d28e FOREIGN KEY (team_id) REFERENCES public.teams(id);
+
+
+--
+-- Name: stage_project_configs fk_rails_b25c287b60; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.stage_project_configs
+    ADD CONSTRAINT fk_rails_b25c287b60 FOREIGN KEY (stage_id) REFERENCES public.stages(id);
 
 
 --
@@ -1788,6 +1874,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20180410163615'),
 ('20180411164401'),
 ('20180412202504'),
-('20180417193029');
+('20180417193029'),
+('20180510203203');
 
 

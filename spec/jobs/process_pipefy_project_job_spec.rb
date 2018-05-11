@@ -3,7 +3,9 @@
 RSpec.describe ProcessPipefyProjectJob, type: :active_job do
   let(:team) { Fabricate :team }
   let(:project) { Fabricate :project, start_date: Time.zone.iso8601('2017-01-01T23:01:46-02:00'), end_date: Time.zone.iso8601('2018-02-25T23:01:46-02:00') }
-  let!(:stage) { Fabricate :stage, projects: [project], integration_id: '2481595', compute_effort: true }
+  let!(:stage) { Fabricate :stage, integration_id: '2481595' }
+
+  let!(:first_stage_project_config) { Fabricate :stage_project_config, project: project, stage: stage, compute_effort: true }
 
   let(:headers) { { Authorization: "Bearer #{Figaro.env.pipefy_token}" } }
   let(:params) { { data: { action: 'card.done', done_by: { id: 101_381, name: 'Foo Bar', username: 'foo', email: 'foo@bar.com', avatar_url: 'gravatar' }, card: { id: 4_648_391, pipe_id: '5fc4VmAE' } } }.with_indifferent_access }

@@ -114,6 +114,9 @@ pt-BR:
       project_change_deadline_history:
         one: Neogicação de Prazo
         other: Negociações de Prazo
+      stage_project_config:
+        one: Configuração de Stage para Projeto
+        other: Configurações de Stage para Projeto
     attributes:
       user:
         first_name: Nome
@@ -278,8 +281,6 @@ pt-BR:
         stage_stream: Tipo do Stream
         commitment_point: Ponto de Comprometimento?
         end_point: Etapa Final?
-        compute_effort: Considera Esforço?
-        percentage_effort: "% de Esforço Considerado?"
         enums:
           stage_type:
             backlog: Backlog
@@ -325,7 +326,13 @@ pt-BR:
         user: Usuário
         previous_date: Data Anterior
         new_date: Nova Data
-
+      stage_project_config:
+        project: Projeto
+        stage: Etapa
+        compute_effort: Computar Esforço?
+        stage_percentage: Porcentagem da Etapa
+        pairing_percentage: Porcentagem de Pareamento
+        management_percentage: Porcentagem de Gestão
   product:
     name:
       uniqueness: "Não deve repetir nome de produto para o mesmo cliente."
@@ -345,3 +352,7 @@ pt-BR:
   projects:
     portfolio_bulletin:
       top_three_throughput: "Top 3 Throughput"
+  stage_project_config:
+    validations:
+      stage_project_unique:
+        message: "Você só pode ter uma configuração por projeto e etapa."

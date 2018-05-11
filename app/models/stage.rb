@@ -4,20 +4,18 @@
 #
 # Table name: stages
 #
-#  id                :integer          not null, primary key
-#  integration_id    :string           not null
-#  name              :string           not null
-#  stage_type        :integer          not null
-#  stage_stream      :integer          not null
-#  commitment_point  :boolean          default(FALSE)
-#  end_point         :boolean          default(FALSE)
-#  queue             :boolean          default(FALSE)
-#  compute_effort    :boolean          default(FALSE)
-#  percentage_effort :decimal(, )
-#  created_at        :datetime         not null
-#  updated_at        :datetime         not null
-#  company_id        :integer          not null
-#  order             :integer          default(0), not null
+#  commitment_point :boolean          default(FALSE)
+#  company_id       :integer          not null
+#  created_at       :datetime         not null
+#  end_point        :boolean          default(FALSE)
+#  id               :bigint(8)        not null, primary key
+#  integration_id   :string           not null, indexed
+#  name             :string           not null, indexed
+#  order            :integer          default(0), not null
+#  queue            :boolean          default(FALSE)
+#  stage_stream     :integer          not null
+#  stage_type       :integer          not null
+#  updated_at       :datetime         not null
 #
 # Indexes
 #
@@ -26,7 +24,7 @@
 #
 # Foreign Keys
 #
-#  fk_rails_...  (company_id => companies.id)
+#  fk_rails_ffd4cca0d4  (company_id => companies.id)
 #
 
 class Stage < ApplicationRecord
@@ -35,7 +33,8 @@ class Stage < ApplicationRecord
 
   belongs_to :company
 
-  has_and_belongs_to_many :projects
+  has_many :stage_project_configs, dependent: :destroy
+  has_many :projects, through: :stage_project_configs
   has_many :demand_transitions, dependent: :restrict_with_error
 
   validates :integration_id, :name, :stage_type, :stage_stream, presence: true

@@ -4,14 +4,14 @@
 #
 # Table name: pipefy_configs
 #
-#  id         :integer          not null, primary key
-#  project_id :integer          not null
-#  team_id    :integer          not null
-#  pipe_id    :string           not null
-#  created_at :datetime         not null
-#  updated_at :datetime         not null
-#  company_id :integer          not null
 #  active     :boolean          default(TRUE)
+#  company_id :integer          not null
+#  created_at :datetime         not null
+#  id         :bigint(8)        not null, primary key
+#  pipe_id    :string           not null
+#  project_id :integer          not null, indexed
+#  team_id    :integer          not null, indexed
+#  updated_at :datetime         not null
 #
 # Indexes
 #
@@ -20,9 +20,9 @@
 #
 # Foreign Keys
 #
-#  fk_rails_...  (company_id => companies.id)
-#  fk_rails_...  (project_id => projects.id)
-#  fk_rails_...  (team_id => teams.id)
+#  fk_rails_0732eff170  (project_id => projects.id)
+#  fk_rails_3895e626a7  (company_id => companies.id)
+#  fk_rails_429f1ebe04  (team_id => teams.id)
 #
 
 module Pipefy

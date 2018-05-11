@@ -71,6 +71,8 @@ RSpec.describe DemandTransition, type: :model do
         it { expect(DemandTransition.upstream_transitions).to match_array [] }
       end
     end
+
+    pending '.effort_transitions_to_project'
   end
 
   context 'delegations' do

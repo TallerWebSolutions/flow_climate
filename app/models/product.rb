@@ -4,13 +4,13 @@
 #
 # Table name: products
 #
-#  id             :integer          not null, primary key
-#  customer_id    :integer          not null
-#  name           :string           not null
 #  created_at     :datetime         not null
-#  updated_at     :datetime         not null
+#  customer_id    :integer          not null, indexed, indexed => [name]
+#  id             :bigint(8)        not null, primary key
+#  name           :string           not null, indexed => [customer_id]
 #  projects_count :integer          default(0)
 #  team_id        :integer
+#  updated_at     :datetime         not null
 #
 # Indexes
 #
@@ -19,8 +19,8 @@
 #
 # Foreign Keys
 #
-#  fk_rails_...  (customer_id => customers.id)
-#  fk_rails_...  (team_id => teams.id)
+#  fk_rails_252452a41b  (customer_id => customers.id)
+#  fk_rails_a551b9b235  (team_id => teams.id)
 #
 
 class Product < ApplicationRecord

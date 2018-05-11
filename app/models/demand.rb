@@ -4,24 +4,24 @@
 #
 # Table name: demands
 #
-#  id                :integer          not null, primary key
-#  project_result_id :integer
-#  demand_id         :string           not null
+#  assignees_count   :integer          not null
+#  class_of_service  :integer          default("standard"), not null
+#  commitment_date   :datetime
 #  created_at        :datetime         not null
-#  updated_at        :datetime         not null
+#  created_date      :datetime         not null
+#  demand_id         :string           not null
 #  demand_type       :integer          not null
 #  demand_url        :string
-#  commitment_date   :datetime
-#  end_date          :datetime
-#  created_date      :datetime         not null
-#  url               :string
-#  class_of_service  :integer          default("standard"), not null
-#  project_id        :integer          not null
-#  assignees_count   :integer          not null
+#  downstream        :boolean          default(TRUE)
 #  effort_downstream :decimal(, )      default(0.0)
 #  effort_upstream   :decimal(, )      default(0.0)
+#  end_date          :datetime
+#  id                :bigint(8)        not null, primary key
 #  leadtime          :decimal(, )
-#  downstream        :boolean          default(TRUE)
+#  project_id        :integer          not null
+#  project_result_id :integer          indexed
+#  updated_at        :datetime         not null
+#  url               :string
 #
 # Indexes
 #
@@ -29,7 +29,7 @@
 #
 # Foreign Keys
 #
-#  fk_rails_...  (project_id => projects.id)
+#  fk_rails_19bdd8aa1e  (project_id => projects.id)
 #
 
 class Demand < ApplicationRecord
@@ -79,22 +79,22 @@ class Demand < ApplicationRecord
   end
 
   def working_time_upstream
-    effort_transitions = demand_transitions.upstream_transitions.joins(:stage).where('stages.compute_effort = true')
+    effort_transitions = demand_transitions.upstream_transitions.effort_transitions_to_project(project_id)
     sum_effort(effort_transitions, 1)
   end
 
   def working_time_downstream
-    effort_transitions = demand_transitions.downstream_transitions.joins(:stage).where('stages.compute_effort = true')
+    effort_transitions = demand_transitions.downstream_transitions.effort_transitions_to_project(project_id)
     sum_effort(effort_transitions, assignee_effort_computation)
   end
 
   def blocked_working_time_downstream
-    effort_transitions = demand_transitions.downstream_transitions.joins(:stage).where('stages.compute_effort = true')
+    effort_transitions = demand_transitions.downstream_transitions.effort_transitions_to_project(project_id)
     sum_blocked_effort(effort_transitions)
   end
 
   def blocked_working_time_upstream
-    effort_transitions = demand_transitions.upstream_transitions.joins(:stage).where('stages.compute_effort = true')
+    effort_transitions = demand_transitions.upstream_transitions.effort_transitions_to_project(project_id)
     sum_blocked_effort(effort_transitions)
   end
 

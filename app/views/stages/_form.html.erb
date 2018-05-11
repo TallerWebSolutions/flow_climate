@@ -28,26 +28,17 @@
   </div>
 
   <div class="row">
-    <div class='col-xs-2 form-check bottom-spaced-component'>
+    <div class='col-xs-4 form-check bottom-spaced-component'>
       <%= f.check_box :queue, class: 'form-check-input', checked: false %>
       <%= f.label :queue, class: 'form-check-label' %>
     </div>
-    <div class='col-xs-2 form-check bottom-spaced-component'>
+    <div class='col-xs-4 form-check bottom-spaced-component'>
       <%= f.check_box :commitment_point, class: 'form-check-input', checked: false %>
       <%= f.label :commitment_point, class: 'form-check-label' %>
     </div>
-    <div class='col-xs-2 form-check bottom-spaced-component'>
+    <div class='col-xs-4 form-check bottom-spaced-component'>
       <%= f.check_box :end_point, class: 'form-check-input', checked: false %>
       <%= f.label :end_point, class: 'form-check-label' %>
-    </div>
-    <div class='col-xs-3 form-check bottom-spaced-component'>
-      <%= f.check_box :compute_effort, class: 'form-check-input', checked: false %>
-      <%= f.label :compute_effort, class: 'form-check-label' %>
-    </div>
-    <div class='col-xs-3 form-group <%= 'has-error' if @stage.errors[:percentage_effort].present? %>'>
-      <%= f.label :percentage_effort, class: 'control-label required' %>
-      <%= f.number_field :percentage_effort, class: 'form-control', step: 0.01 %>
-      <span class="help-block"><%= @stage.errors[:percentage_effort].join(', ') %></span>
     </div>
   </div>
 
