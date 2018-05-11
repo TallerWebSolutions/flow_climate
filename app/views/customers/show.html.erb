@@ -1,14 +1,12 @@
 <div class="container-fluid">
   <div class="row">
-    <div class="row">
-      <div class="col-xs-12">
-        <ul class="breadcrumb">
-          <li><%= link_to t('general.home.title'), root_path %></li>
-          <li><%= link_to @company.abbreviation&.upcase, company_path(@company) %></li>
-          <li><%= link_to Customer.model_name.human.pluralize, company_customers_path(@company) %></li>
-          <li><%= @customer.name %></li>
-        </ul>
-      </div>
+    <div class="col-xs-12">
+      <ul class="breadcrumb">
+        <li><%= link_to t('general.home.title'), root_path %></li>
+        <li><%= link_to @company.abbreviation&.upcase, company_path(@company) %></li>
+        <li><%= link_to Customer.model_name.human.pluralize, company_customers_path(@company) %></li>
+        <li><%= @customer.name %></li>
+      </ul>
     </div>
   </div>
 

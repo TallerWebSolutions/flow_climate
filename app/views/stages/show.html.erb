@@ -1,18 +1,25 @@
 <div class="container">
-  <h1><%= @stage.name %></h1>
-  <h2><%= @stage.integration_id %></h2>
-
-  <%= form_tag copy_projects_from_company_stage_url(@company, @stage), method: :patch, class: 'form-inline' do %>
-    <div class="row">
-      <div class='col-xs-6 form-group'>
-        <%= select_tag :provider_stage_id, options_from_collection_for_select(@provider_stages, :id, :name, params[:provider_stage_id]), class: 'form-control' %>
-      </div>
-
-      <div class="col-xs-6 form-group">
-        <%= submit_tag t('stages.show.import_projects'), class: 'btn btn-success' %>
-      </div>
+  <div class="row">
+    <div class="col-xs-12">
+      <ul class="breadcrumb">
+        <li><%= link_to t('general.home.title'), root_path %></li>
+        <li><%= link_to @company.abbreviation&.upcase, company_path(@company) %></li>
+        <li><%= @stage.name %></li>
+      </ul>
     </div>
-  <% end %>
+  </div>
+
+  <div class="row">
+    <div class="col-xs-12">
+
+      <h2><%= "#{Stage.human_attribute_name(:integration_id)}: #{@stage.integration_id}" %></h2>
+
+      <%= form_tag copy_projects_from_company_stage_url(@company, @stage), method: :patch, class: 'form-inline' do %>
+        <%= select_tag :provider_stage_id, options_from_collection_for_select(@provider_stages, :id, :name, params[:provider_stage_id]), class: 'form-control' %>
+        <%= submit_tag t('stages.show.import_projects'), class: 'btn btn-success' %>
+      <% end %>
+    </div>
+  </div>
 
   <div class="row">
     <div class="col-xs-6">
@@ -33,7 +40,7 @@
       <ul>
         <% @stage_projects.each do |project| %>
           <li>
-            <%= "#{project.full_name} (#{project.current_team&.name})" %>
+            <%= link_to "#{project.full_name} (#{project.current_team&.name})", edit_company_stage_stage_project_config_path(@company, @stage, project.stage_project_configs.find_by(stage: @stage)) %>
             <%= link_to dissociate_project_company_stage_path(@company, @stage, project), method: :patch do %>
               <i class="fa fa-times"></i>
             <% end %>

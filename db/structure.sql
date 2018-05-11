@@ -677,38 +677,6 @@ ALTER SEQUENCE public.projects_id_seq OWNED BY public.projects.id;
 
 
 --
--- Name: projects_stages; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.projects_stages (
-    id bigint NOT NULL,
-    project_id integer NOT NULL,
-    stage_id integer NOT NULL,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
-);
-
-
---
--- Name: projects_stages_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.projects_stages_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: projects_stages_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.projects_stages_id_seq OWNED BY public.projects_stages.id;
-
-
---
 -- Name: schema_migrations; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1029,13 +997,6 @@ ALTER TABLE ONLY public.projects ALTER COLUMN id SET DEFAULT nextval('public.pro
 
 
 --
--- Name: projects_stages id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.projects_stages ALTER COLUMN id SET DEFAULT nextval('public.projects_stages_id_seq'::regclass);
-
-
---
 -- Name: stage_project_configs id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1212,14 +1173,6 @@ ALTER TABLE ONLY public.project_risk_configs
 
 ALTER TABLE ONLY public.projects
     ADD CONSTRAINT projects_pkey PRIMARY KEY (id);
-
-
---
--- Name: projects_stages projects_stages_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.projects_stages
-    ADD CONSTRAINT projects_stages_pkey PRIMARY KEY (id);
 
 
 --
@@ -1457,20 +1410,6 @@ CREATE UNIQUE INDEX index_projects_on_nickname_and_customer_id ON public.project
 --
 
 CREATE UNIQUE INDEX index_projects_on_product_id_and_name ON public.projects USING btree (product_id, name);
-
-
---
--- Name: index_projects_stages_on_project_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_projects_stages_on_project_id ON public.projects_stages USING btree (project_id);
-
-
---
--- Name: index_projects_stages_on_stage_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_projects_stages_on_stage_id ON public.projects_stages USING btree (stage_id);
 
 
 --
@@ -1753,27 +1692,11 @@ ALTER TABLE ONLY public.project_results
 
 
 --
--- Name: projects_stages fk_rails_c4e86d5c86; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.projects_stages
-    ADD CONSTRAINT fk_rails_c4e86d5c86 FOREIGN KEY (stage_id) REFERENCES public.stages(id);
-
-
---
 -- Name: demand_transitions fk_rails_c63024fc81; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.demand_transitions
     ADD CONSTRAINT fk_rails_c63024fc81 FOREIGN KEY (stage_id) REFERENCES public.stages(id);
-
-
---
--- Name: projects_stages fk_rails_ca4af19a4f; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.projects_stages
-    ADD CONSTRAINT fk_rails_ca4af19a4f FOREIGN KEY (project_id) REFERENCES public.projects(id);
 
 
 --

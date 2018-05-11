@@ -91,6 +91,7 @@ Rails.application.routes.draw do
       end
 
       resources :demand_transitions, only: :destroy
+      resources :stage_project_configs, only: %i[edit update]
     end
   end
 

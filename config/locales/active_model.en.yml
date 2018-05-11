@@ -56,8 +56,6 @@ en:
       stage:
         commitment_point: Commitment Point?
         end_point: End Point?
-        compute_effort: Compute Effort?
-        effort_percentage: "% of Effort Considered?"
         enums:
           stage_type:
             backlog: Backlog
