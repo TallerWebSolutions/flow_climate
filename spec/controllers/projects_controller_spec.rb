@@ -81,7 +81,8 @@ RSpec.describe ProjectsController, type: :controller do
             expect(assigns(:project)).to eq first_project
             expect(assigns(:report_data)).to be_a ReportData
             expect(assigns(:ordered_project_risk_alerts)).to eq [second_alert, first_alert]
-            expect(assigns(:project_delivered_demands)).to eq([2018, 3] => [second_demand, first_demand])
+            expect(assigns(:grouped_project_delivered_demands)).to eq([2018, 3] => [second_demand, first_demand])
+            expect(assigns(:project_delivered_demands)).to eq [second_demand, first_demand]
             expect(assigns(:project_change_deadline_histories)).to match_array [first_change_deadline, second_change_deadline]
           end
         end

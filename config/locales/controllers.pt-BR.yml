@@ -127,7 +127,9 @@ pt-BR:
       last_team: "Time atual"
       last_week_scope: "Escopo da Última Sem."
       current_team: "Time Atual"
-      delivered_scope: "Escopo Entregue"
+      delivered_scope:
+        text: "Escopo Entregue"
+        grouped_by_month_check_box: "Agrupado por mês?"
       avg_hours_per_demand: "Média Horas/Demanda"
       scope_gap: "Restante do escopo"
       scope_growth: "Crescimento do Escopo (%)"

@@ -127,7 +127,9 @@ en:
       last_team: "Current team"
       last_week_scope: "Last week scope"
       current_team: "Current Team"
-      delivered_scope: "Delivered Scope"
+      delivered_scope:
+        text: "Delivered Scope"
+        grouped_by_month_check_box: "Grouped by month?"
       avg_hours_per_demand: "Avg Hours/Demand"
       scope_gap: "Scope Gap"
       scope_growth: "Scope Growth (%)"

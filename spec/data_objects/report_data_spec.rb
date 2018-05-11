@@ -35,7 +35,7 @@ RSpec.describe ReportData, type: :data_object do
         expect(report_data.hours_burnup_data.scope_per_week).to eq [2200.0, 2200.0, 2200.0, 2200.0, 2200.0]
         expect(report_data.flow_pressure_data).to eq [4.0, 0.0, 0.0, 4.75, 0.0]
         expect(report_data.throughput_per_week).to eq([{ name: I18n.t('projects.charts.throughput_per_week.stage_stream.upstream'), data: [23, 0, 0, 47, 0] }, { name: I18n.t('projects.charts.throughput_per_week.stage_stream.downstream'), data: [2, 0, 0, 129, 0] }])
-        expect(report_data.delivered_vs_remaining).to eq([{ name: I18n.t('projects.show.delivered_scope'), data: [201] }, { name: I18n.t('projects.show.scope_gap'), data: [365] }])
+        expect(report_data.delivered_vs_remaining).to eq([{ name: I18n.t('projects.show.delivered_scope.text'), data: [201] }, { name: I18n.t('projects.show.scope_gap'), data: [365] }])
         expect(report_data.dates_and_odds.keys.count).to be >= 1
         expect(report_data.monte_carlo_data.dates_and_hits_hash.keys.count).to be >= 1
         expect(report_data.monte_carlo_data.monte_carlo_date_hash.keys.count).to be >= 1
@@ -70,7 +70,7 @@ RSpec.describe ReportData, type: :data_object do
         expect(report_data.demands_burnup_data.scope_per_week).to eq []
         expect(report_data.flow_pressure_data).to eq []
         expect(report_data.throughput_per_week).to eq([{ name: I18n.t('projects.charts.throughput_per_week.stage_stream.upstream'), data: [] }, { name: I18n.t('projects.charts.throughput_per_week.stage_stream.downstream'), data: [] }])
-        expect(report_data.delivered_vs_remaining).to eq([{ name: I18n.t('projects.show.delivered_scope'), data: [0] }, { name: I18n.t('projects.show.scope_gap'), data: [0] }])
+        expect(report_data.delivered_vs_remaining).to eq([{ name: I18n.t('projects.show.delivered_scope.text'), data: [0] }, { name: I18n.t('projects.show.scope_gap'), data: [0] }])
       end
     end
 

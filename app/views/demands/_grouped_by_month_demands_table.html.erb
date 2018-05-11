@@ -1,0 +1,6 @@
+<% demands_list.each do |year_month, demands| %>
+
+  <h2><%= l(Date.new(year_month[0], year_month[1], 1), format: :month_year) %></h2>
+
+  <%= render 'demands/demands_table_flat', demands: demands %>
+<% end %>

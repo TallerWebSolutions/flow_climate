@@ -8,7 +8,8 @@ class ProjectsController < AuthenticatedController
     @ordered_project_results = @project.project_results.order(:result_date)
     @report_data = ReportData.new(Project.where(id: @project.id))
     @ordered_project_risk_alerts = @project.project_risk_alerts.order(created_at: :desc)
-    @project_delivered_demands = @project.demands.finished.grouped_end_date_by_month
+    @project_delivered_demands = @project.demands.finished.order(end_date: :desc)
+    @grouped_project_delivered_demands = @project.demands.grouped_end_date_by_month
     @project_change_deadline_histories = @project.project_change_deadline_histories
     @montecarlo_dates = @report_data.monte_carlo_data
   end
