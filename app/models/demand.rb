@@ -62,8 +62,6 @@ class Demand < ApplicationRecord
   end
 
   def update_created_date!
-    Rails.logger.info("Updating created date card_id [#{demand_id}]")
-
     create_transition = demand_transitions.order(:last_time_in).first
     update(created_date: create_transition.last_time_in)
   end
@@ -80,12 +78,12 @@ class Demand < ApplicationRecord
 
   def working_time_upstream
     effort_transitions = demand_transitions.upstream_transitions.effort_transitions_to_project(project_id)
-    sum_effort(effort_transitions, 1)
+    sum_effort(effort_transitions)
   end
 
   def working_time_downstream
     effort_transitions = demand_transitions.downstream_transitions.effort_transitions_to_project(project_id)
-    sum_effort(effort_transitions, assignee_effort_computation)
+    sum_effort(effort_transitions)
   end
 
   def blocked_working_time_downstream
@@ -116,17 +114,23 @@ class Demand < ApplicationRecord
     total_blocked
   end
 
-  def sum_effort(effort_transitions, assigned_people)
+  def sum_effort(effort_transitions)
     total_effort = 0
     effort_transitions.each do |transition|
-      total_effort += TimeService.instance.compute_working_hours_for_dates(transition.last_time_in, transition.last_time_out) * assigned_people
+      stage_config = transition.stage.stage_project_configs.find_by(project: project)
+      total_effort += ((compute_effort_in_transition(transition, stage_config) * pairing_value(stage_config))) * (1 + (stage_config.management_percentage / 100.0))
     end
     total_effort
   end
 
-  def assignee_effort_computation
+  def compute_effort_in_transition(transition, stage_config)
+    TimeService.instance.compute_working_hours_for_dates(transition.last_time_in, transition.last_time_out) * (stage_config.stage_percentage / 100.0)
+  end
+
+  def pairing_value(stage_config)
     return assignees_count if assignees_count == 1
-    assignees_count * 0.75
+    pair_count = assignees_count - 1
+    1 + (pair_count * (stage_config.pairing_percentage / 100.0))
   end
 
   def compute_and_update_automatic_fields

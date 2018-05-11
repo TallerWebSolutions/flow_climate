@@ -16,9 +16,9 @@ RSpec.describe Pipefy::PipefyResponseReader, type: :service do
   let!(:end_stage) { Fabricate :stage, integration_id: '2481597', end_point: true }
   let!(:other_end_stage) { Fabricate :stage, integration_id: '2480504', end_point: true }
 
-  let!(:first_stage_project_config) { Fabricate :stage_project_config, project: first_project, stage: stage, compute_effort: true }
-  let!(:second_stage_project_config) { Fabricate :stage_project_config, project: second_project, stage: stage, compute_effort: true }
-  let!(:third_stage_project_config) { Fabricate :stage_project_config, project: third_project, stage: stage, compute_effort: true }
+  let!(:first_stage_project_config) { Fabricate :stage_project_config, project: first_project, stage: stage, compute_effort: true, pairing_percentage: 60, stage_percentage: 100, management_percentage: 10 }
+  let!(:second_stage_project_config) { Fabricate :stage_project_config, project: second_project, stage: stage, compute_effort: true, pairing_percentage: 60, stage_percentage: 100, management_percentage: 10 }
+  let!(:third_stage_project_config) { Fabricate :stage_project_config, project: third_project, stage: stage, compute_effort: true, pairing_percentage: 60, stage_percentage: 100, management_percentage: 10 }
 
   let!(:fourth_stage_project_config) { Fabricate :stage_project_config, project: first_project, stage: end_stage, compute_effort: false }
   let!(:fifth_stage_project_config) { Fabricate :stage_project_config, project: second_project, stage: end_stage, compute_effort: false }
@@ -239,7 +239,7 @@ RSpec.describe Pipefy::PipefyResponseReader, type: :service do
           expect(updated_demand.class_of_service).to eq 'expedite'
           expect(updated_demand.demand_type).to eq 'chore'
           expect(updated_demand.assignees_count).to eq 1
-          expect(updated_demand.effort_upstream.to_f).to eq 6.0
+          expect(updated_demand.effort_upstream.to_f).to eq 7.2
           expect(updated_demand.effort_downstream.to_f).to eq 0.0
           expect(updated_demand.project).to eq second_project
 
@@ -269,7 +269,7 @@ RSpec.describe Pipefy::PipefyResponseReader, type: :service do
           expect(created_result.result_date).to eq Date.new(2018, 2, 27)
           expect(created_result.known_scope).to eq 31
           expect(created_result.qty_hours_downstream).to eq 0
-          expect(created_result.qty_hours_upstream).to eq 6
+          expect(created_result.qty_hours_upstream).to eq 7
           expect(created_result.qty_hours_bug).to eq 0
           expect(created_result.demands).to eq [updated_demand]
           expect(created_result.demands_count).to eq 1
