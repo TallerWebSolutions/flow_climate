@@ -232,15 +232,15 @@ RSpec.describe ProjectResult, type: :model do
         expect(ProjectResult.count).to eq 1
         expect(result.reload.demands).to match_array [first_demand, third_demand, fourth_demand]
         expect(result.reload.known_scope).to eq 6
-        expect(result.reload.throughput_upstream).to eq 1
+        expect(result.reload.throughput_upstream).to eq 0
         expect(result.reload.throughput_downstream).to eq 1
-        expect(result.reload.qty_hours_upstream).to eq 55
-        expect(result.reload.qty_hours_downstream).to eq 40
+        expect(result.reload.qty_hours_upstream).to eq 50
+        expect(result.reload.qty_hours_downstream).to eq 30
         expect(result.reload.qty_hours_bug).to eq 0
         expect(result.reload.qty_bugs_closed).to eq 0
         expect(result.reload.qty_bugs_opened).to eq 0
         expect(result.reload.flow_pressure.to_f).to eq 1.5
-        expect(result.reload.average_demand_cost.to_f).to eq 500.0
+        expect(result.reload.average_demand_cost.to_f).to eq 1000.0
       end
     end
     context 'when it does not have the demand' do

@@ -57,6 +57,8 @@ class DemandTransition < ApplicationRecord
       demand.update!(commitment_date: last_time_in)
     elsif stage.end_point?
       demand.update!(end_date: last_time_in)
+    else
+      demand.update!(end_date: nil)
     end
   end
 
