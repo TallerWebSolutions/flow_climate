@@ -67,6 +67,21 @@ RSpec.describe Demand, type: :model do
     it { is_expected.to delegate_method(:full_name).to(:project).with_prefix }
   end
 
+  describe '.to_csv' do
+    let!(:demand) { Fabricate :demand }
+    let!(:other_demand) { Fabricate :demand }
+
+    it 'builds the CSV structure' do
+      generated_csv = CSV.generate do |csv|
+        csv << Demand.column_names
+        Demand.all.find_each do |demand|
+          csv << demand.attributes.values_at(*Demand.column_names)
+        end
+      end
+      expect(Demand.to_csv).to eq generated_csv
+    end
+  end
+
   describe '#update_effort!' do
     let(:company) { Fabricate :company }
     let(:customer) { Fabricate :customer, company: company }

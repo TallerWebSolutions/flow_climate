@@ -46,6 +46,11 @@ RSpec.describe ProjectsController, type: :controller do
       before { put :finish_project, params: { company_id: 'foo', id: 'bar' } }
       it { expect(response).to redirect_to new_user_session_path }
     end
+
+    describe 'GET #delivered_demands_csv' do
+      before { get :delivered_demands_csv, params: { company_id: 'xpto', id: 'foo' }, format: :csv }
+      it { expect(response).to have_http_status 401 }
+    end
   end
 
   context 'authenticated' do
@@ -522,6 +527,40 @@ RSpec.describe ProjectsController, type: :controller do
           context 'not-permitted' do
             let(:company) { Fabricate :company, users: [] }
             before { patch :finish_project, params: { company_id: company, id: project } }
+            it { expect(response).to have_http_status :not_found }
+          end
+        end
+      end
+    end
+
+    describe 'GET #delivered_demands_csv' do
+      let(:company) { Fabricate :company, users: [user] }
+
+      let(:customer) { Fabricate :customer, company: company }
+      let(:project) { Fabricate :project, customer: customer }
+      let!(:demand) { Fabricate :demand, project: project }
+
+      context 'valid parameters' do
+        it 'calls the to_csv and responds success' do
+          expect(Demand).to receive(:to_csv)
+          get :delivered_demands_csv, params: { company_id: company, id: project }, format: :csv
+          expect(response).to have_http_status 200
+        end
+      end
+
+      context 'invalid' do
+        context 'project' do
+          before { get :delivered_demands_csv, params: { company_id: company, id: 'foo' }, format: :csv }
+          it { expect(response).to have_http_status :not_found }
+        end
+        context 'company' do
+          context 'non-existent' do
+            before { get :delivered_demands_csv, params: { company_id: 'foo', id: project }, format: :csv }
+            it { expect(response).to have_http_status :not_found }
+          end
+          context 'not-permitted' do
+            let(:company) { Fabricate :company, users: [] }
+            before { get :delivered_demands_csv, params: { company_id: company, id: project }, format: :csv }
             it { expect(response).to have_http_status :not_found }
           end
         end

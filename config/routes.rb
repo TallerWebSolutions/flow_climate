@@ -54,8 +54,11 @@ Rails.application.routes.draw do
     end
 
     resources :projects do
-      put :synchronize_pipefy, on: :member
-      patch :finish_project, on: :member
+      member do
+        put :synchronize_pipefy
+        patch :finish_project
+        get :delivered_demands_csv
+      end
 
       resources :project_results, except: %i[new create]
 

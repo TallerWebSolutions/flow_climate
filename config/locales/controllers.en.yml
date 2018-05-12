@@ -40,6 +40,7 @@ en:
       flow_pressure: "Flow Pressure"
       hours_per_demand: "Hours per Demand"
     no_data: "There is no data to show yet."
+    download_csv: "Download CSV"
   header:
     logout: Logout
     explore: Explore

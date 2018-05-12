@@ -2,7 +2,7 @@
 
 class ProjectsController < AuthenticatedController
   before_action :assign_company
-  before_action :assign_project, only: %i[show edit update destroy synchronize_pipefy finish_project]
+  before_action :assign_project, only: %i[show edit update destroy synchronize_pipefy finish_project delivered_demands_csv]
 
   def show
     @ordered_project_results = @project.project_results.order(:result_date)
@@ -72,6 +72,14 @@ class ProjectsController < AuthenticatedController
     @project.update(status: :finished)
     flash[:notice] = t('projects.finish_project.success_message')
     redirect_to company_project_path(@company, @project)
+  end
+
+  def delivered_demands_csv
+    @project_delivered_demands = @project.demands.finished.order(end_date: :desc)
+
+    respond_to do |format|
+      format.csv { send_data @project_delivered_demands.to_csv, filename: "demands-#{Time.zone.now}.csv" }
+    end
   end
 
   private
