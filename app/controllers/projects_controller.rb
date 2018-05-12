@@ -2,13 +2,14 @@
 
 class ProjectsController < AuthenticatedController
   before_action :assign_company
-  before_action :assign_project, only: %i[show edit update destroy synchronize_pipefy finish_project]
+  before_action :assign_project, only: %i[show edit update destroy synchronize_pipefy finish_project delivered_demands_csv]
 
   def show
     @ordered_project_results = @project.project_results.order(:result_date)
     @report_data = ReportData.new(Project.where(id: @project.id))
     @ordered_project_risk_alerts = @project.project_risk_alerts.order(created_at: :desc)
-    @project_delivered_demands = @project.demands.finished.grouped_end_date_by_month
+    @project_delivered_demands = @project.demands.finished.order(end_date: :desc)
+    @grouped_project_delivered_demands = @project.demands.grouped_end_date_by_month
     @project_change_deadline_histories = @project.project_change_deadline_histories
     @montecarlo_dates = @report_data.monte_carlo_data
   end
@@ -71,6 +72,14 @@ class ProjectsController < AuthenticatedController
     @project.update(status: :finished)
     flash[:notice] = t('projects.finish_project.success_message')
     redirect_to company_project_path(@company, @project)
+  end
+
+  def delivered_demands_csv
+    @project_delivered_demands = @project.demands.finished.order(end_date: :desc)
+
+    respond_to do |format|
+      format.csv { send_data @project_delivered_demands.to_csv, filename: "demands-#{Time.zone.now}.csv" }
+    end
   end
 
   private

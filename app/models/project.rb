@@ -4,21 +4,21 @@
 #
 # Table name: projects
 #
-#  id            :integer          not null, primary key
-#  customer_id   :integer          not null
-#  name          :string           not null
-#  status        :integer          not null
-#  project_type  :integer          not null
-#  start_date    :date             not null
-#  end_date      :date             not null
-#  value         :decimal(, )
-#  qty_hours     :decimal(, )
-#  hour_value    :decimal(, )
-#  initial_scope :integer          not null
 #  created_at    :datetime         not null
+#  customer_id   :integer          not null, indexed, indexed => [nickname]
+#  end_date      :date             not null
+#  hour_value    :decimal(, )
+#  id            :bigint(8)        not null, primary key
+#  initial_scope :integer          not null
+#  name          :string           not null, indexed => [product_id]
+#  nickname      :string           indexed => [customer_id]
+#  product_id    :integer          indexed => [name]
+#  project_type  :integer          not null
+#  qty_hours     :decimal(, )
+#  start_date    :date             not null
+#  status        :integer          not null
 #  updated_at    :datetime         not null
-#  product_id    :integer
-#  nickname      :string
+#  value         :decimal(, )
 #
 # Indexes
 #
@@ -28,8 +28,8 @@
 #
 # Foreign Keys
 #
-#  fk_rails_...  (customer_id => customers.id)
-#  fk_rails_...  (product_id => products.id)
+#  fk_rails_21e11c2480  (product_id => products.id)
+#  fk_rails_47c768ed16  (customer_id => customers.id)
 #
 
 class Project < ApplicationRecord
@@ -45,8 +45,9 @@ class Project < ApplicationRecord
   has_many :demands, dependent: :restrict_with_error
   has_many :integration_errors, dependent: :destroy
   has_many :project_change_deadline_histories, dependent: :destroy
+  has_many :stage_project_configs, dependent: :destroy
+  has_many :stages, through: :stage_project_configs
   has_one :pipefy_config, class_name: 'Pipefy::PipefyConfig', dependent: :destroy, autosave: true, inverse_of: :project
-  has_and_belongs_to_many :stages
 
   validates :customer, :qty_hours, :project_type, :name, :status, :start_date, :end_date, :status, :initial_scope, presence: true
   validates :name, uniqueness: { scope: :product, message: I18n.t('project.name.uniqueness') }

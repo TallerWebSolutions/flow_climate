@@ -40,6 +40,7 @@ en:
       flow_pressure: "Flow Pressure"
       hours_per_demand: "Hours per Demand"
     no_data: "There is no data to show yet."
+    download_csv: "Download CSV"
   header:
     logout: Logout
     explore: Explore
@@ -127,7 +128,9 @@ en:
       last_team: "Current team"
       last_week_scope: "Last week scope"
       current_team: "Current Team"
-      delivered_scope: "Delivered Scope"
+      delivered_scope:
+        text: "Delivered Scope"
+        grouped_by_month_check_box: "Grouped by month?"
       avg_hours_per_demand: "Avg Hours/Demand"
       scope_gap: "Scope Gap"
       scope_growth: "Scope Growth (%)"
@@ -422,3 +425,8 @@ en:
   project_change_deadline_histories:
     index:
       dates_difference: "Difference (days)"
+  stage_project_config:
+    edit:
+      title: "Edit Configuration to Stage and Project"
+      project_list: "Projects with configuration on the stage"
+      replicate_to_projects: "Replicate to others projects in this stage?"

@@ -4,19 +4,19 @@
 #
 # Table name: demand_blocks
 #
-#  id                 :integer          not null, primary key
-#  demand_id          :integer          not null
-#  demand_block_id    :integer          not null
-#  blocker_username   :string           not null
-#  block_time         :datetime         not null
-#  block_reason       :string           not null
-#  unblocker_username :string
-#  unblock_time       :datetime
-#  unblock_reason     :string
-#  block_duration     :integer
-#  created_at         :datetime         not null
-#  updated_at         :datetime         not null
 #  active             :boolean          default(TRUE), not null
+#  block_duration     :integer
+#  block_reason       :string           not null
+#  block_time         :datetime         not null
+#  blocker_username   :string           not null
+#  created_at         :datetime         not null
+#  demand_block_id    :integer          not null
+#  demand_id          :integer          not null, indexed
+#  id                 :bigint(8)        not null, primary key
+#  unblock_reason     :string
+#  unblock_time       :datetime
+#  unblocker_username :string
+#  updated_at         :datetime         not null
 #
 # Indexes
 #
@@ -24,7 +24,7 @@
 #
 # Foreign Keys
 #
-#  fk_rails_...  (demand_id => demands.id)
+#  fk_rails_0c8fa8d3a7  (demand_id => demands.id)
 #
 
 class DemandBlock < ApplicationRecord

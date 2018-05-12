@@ -18,14 +18,16 @@
 <div class="row">
   <table class="table">
     <thead>
-      <th><%= CompanySettings.human_attribute_name :max_active_parallel_projects %></th>
-      <th><%= CompanySettings.human_attribute_name :max_flow_pressure %></th>
+      <tr>
+        <th><%= CompanySettings.human_attribute_name :max_active_parallel_projects %></th>
+        <th><%= CompanySettings.human_attribute_name :max_flow_pressure %></th>
+      </tr>
     </thead>
     <tbody>
-        <tr>
-          <td><%= @company.company_settings.max_active_parallel_projects %></td>
-          <td><%= number_with_precision(@company.company_settings.max_flow_pressure, precision: 3) %></td>
-        </tr>
+      <tr>
+        <td><%= @company.company_settings.max_active_parallel_projects %></td>
+        <td><%= number_with_precision(@company.company_settings.max_flow_pressure, precision: 3) %></td>
+      </tr>
     </tbody>
   </table>
 </div>

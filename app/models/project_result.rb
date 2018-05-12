@@ -4,29 +4,29 @@
 #
 # Table name: project_results
 #
-#  id                    :integer          not null, primary key
-#  project_id            :integer          not null
-#  result_date           :date             not null
-#  known_scope           :integer          not null
-#  qty_hours_upstream    :integer          not null
-#  qty_hours_downstream  :integer          not null
-#  qty_bugs_opened       :integer          not null
-#  qty_bugs_closed       :integer          not null
-#  qty_hours_bug         :integer          not null
-#  leadtime              :decimal(, )
+#  available_hours       :decimal(, )      not null
+#  average_demand_cost   :decimal(, )      not null
+#  cost_in_month         :decimal(, )      not null
 #  created_at            :datetime         not null
-#  updated_at            :datetime         not null
-#  team_id               :integer          not null
-#  monte_carlo_date      :date
 #  demands_count         :integer
 #  flow_pressure         :decimal(, )      not null
-#  remaining_days        :integer          not null
-#  cost_in_month         :decimal(, )      not null
-#  average_demand_cost   :decimal(, )      not null
-#  available_hours       :decimal(, )      not null
+#  id                    :bigint(8)        not null, primary key
+#  known_scope           :integer          not null
+#  leadtime              :decimal(, )
 #  manual_input          :boolean          default(FALSE)
-#  throughput_upstream   :integer          default(0)
+#  monte_carlo_date      :date
+#  project_id            :integer          not null, indexed
+#  qty_bugs_closed       :integer          not null
+#  qty_bugs_opened       :integer          not null
+#  qty_hours_bug         :integer          not null
+#  qty_hours_downstream  :integer          not null
+#  qty_hours_upstream    :integer          not null
+#  remaining_days        :integer          not null
+#  result_date           :date             not null
+#  team_id               :integer          not null
 #  throughput_downstream :integer          default(0)
+#  throughput_upstream   :integer          default(0)
+#  updated_at            :datetime         not null
 #
 # Indexes
 #
@@ -34,8 +34,8 @@
 #
 # Foreign Keys
 #
-#  fk_rails_...  (project_id => projects.id)
-#  fk_rails_...  (team_id => teams.id)
+#  fk_rails_b11de7d28e  (team_id => teams.id)
+#  fk_rails_c3c9938173  (project_id => projects.id)
 #
 
 class ProjectResult < ApplicationRecord

@@ -28,8 +28,11 @@ RSpec.describe ProcessPipefyCardJob, type: :active_job do
       stub_request(:post, 'https://app.pipefy.com/queries').with(headers: headers, body: /356528/).to_return(status: 200, body: pipe_response.to_json, headers: {})
     end
 
-    let!(:stage) { Fabricate :stage, projects: [project], integration_id: '2481595', compute_effort: true }
-    let!(:end_stage) { Fabricate :stage, projects: [project], integration_id: '2481597', compute_effort: false, end_point: true }
+    let!(:stage) { Fabricate :stage, integration_id: '2481595' }
+    let!(:end_stage) { Fabricate :stage, integration_id: '2481597', end_point: true }
+
+    let!(:first_stage_project_config) { Fabricate :stage_project_config, project: project, stage: stage, compute_effort: true }
+    let!(:second_stage_project_config) { Fabricate :stage_project_config, project: project, stage: end_stage, compute_effort: false }
 
     let(:team) { Fabricate :team }
 

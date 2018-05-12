@@ -50,6 +50,16 @@ $('#nav-item-statusreport').on('click', function(){
     $('#nav-item-statusreport').addClass('active');
 });
 
+$('#demands-grouped-check').on('change', function(){
+    if($(this).is(":checked")) {
+        $('#demands-grouped-per-month-div').show();
+        $('#flat-demands-div').hide();
+    } else {
+        $('#demands-grouped-per-month-div').hide();
+        $('#flat-demands-div').show();
+    }
+});
+
 function hideAllComponents() {
     $('#project-stamps').hide();
     $('#nav-item-stamps').removeClass('active');
@@ -74,4 +84,7 @@ function hideAllComponents() {
 
     $('#project-status-report').hide();
     $('#nav-item-statusreport').removeClass('active');
+
+    $('#demands-grouped-per-month-div').show();
+    $('#flat-demands-div').hide();
 }

@@ -4,12 +4,12 @@
 #
 # Table name: demand_transitions
 #
-#  id            :integer          not null, primary key
-#  demand_id     :integer          not null
-#  stage_id      :integer          not null
+#  created_at    :datetime         not null
+#  demand_id     :integer          not null, indexed
+#  id            :bigint(8)        not null, primary key
 #  last_time_in  :datetime         not null
 #  last_time_out :datetime
-#  created_at    :datetime         not null
+#  stage_id      :integer          not null, indexed
 #  updated_at    :datetime         not null
 #
 # Indexes
@@ -19,8 +19,8 @@
 #
 # Foreign Keys
 #
-#  fk_rails_...  (demand_id => demands.id)
-#  fk_rails_...  (stage_id => stages.id)
+#  fk_rails_2a5bc4c3f8  (demand_id => demands.id)
+#  fk_rails_c63024fc81  (stage_id => stages.id)
 #
 
 class DemandTransition < ApplicationRecord
@@ -35,6 +35,7 @@ class DemandTransition < ApplicationRecord
 
   scope :upstream_transitions, -> { joins(:stage).where('stages.stage_stream = :stream', stream: Stage.stage_streams[:upstream]) }
   scope :downstream_transitions, -> { joins(:stage).where('stages.stage_stream = :stream', stream: Stage.stage_streams[:downstream]) }
+  scope :effort_transitions_to_project, ->(project_id) { joins(stage: :stage_project_configs).where('stage_project_configs.compute_effort = true AND stage_project_configs.project_id = :project_id', project_id: project_id) }
 
   after_save :set_demand_dates, on: %i[create update]
   after_save :set_demand_stream, on: %i[create update]
@@ -56,6 +57,8 @@ class DemandTransition < ApplicationRecord
       demand.update!(commitment_date: last_time_in)
     elsif stage.end_point?
       demand.update!(end_date: last_time_in)
+    else
+      demand.update!(end_date: nil)
     end
   end
 

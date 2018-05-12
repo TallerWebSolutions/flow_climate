@@ -41,6 +41,7 @@ pt-BR:
       flow_pressure: "Pressão do Fluxo"
       hours_per_demand: "Horas por Demanda"
     no_data: "Não existem dados para essa exibição"
+    download_csv: "Download CSV"
   header:
     logout: Sair
     sign_up: Cadastre-se
@@ -127,7 +128,9 @@ pt-BR:
       last_team: "Time atual"
       last_week_scope: "Escopo da Última Sem."
       current_team: "Time Atual"
-      delivered_scope: "Escopo Entregue"
+      delivered_scope:
+        text: "Escopo Entregue"
+        grouped_by_month_check_box: "Agrupado por mês?"
       avg_hours_per_demand: "Média Horas/Demanda"
       scope_gap: "Restante do escopo"
       scope_growth: "Crescimento do Escopo (%)"
@@ -420,3 +423,8 @@ pt-BR:
   project_change_deadline_histories:
     index:
       dates_difference: "Diferença (dias)"
+  stage_project_config:
+    edit:
+      title: "Editar Configuração para Etapa e Projeto"
+      project_list: "Projetos configurados nesta etapa"
+      replicate_to_projects: "Replicar para os outros projetos desta etapa?"

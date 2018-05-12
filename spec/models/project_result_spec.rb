@@ -164,8 +164,11 @@ RSpec.describe ProjectResult, type: :model do
 
   describe '#add_demand!' do
     let(:project) { Fabricate :project, start_date: 2.days.ago, end_date: 3.days.from_now, initial_scope: 2 }
-    let!(:downstream_stage) { Fabricate :stage, projects: [project], end_point: true, compute_effort: true, stage_stream: :downstream }
-    let!(:upstream_stage) { Fabricate :stage, projects: [project], stage_stream: :upstream, compute_effort: true, end_point: true }
+    let!(:downstream_stage) { Fabricate :stage, end_point: true, stage_stream: :downstream }
+    let!(:upstream_stage) { Fabricate :stage, stage_stream: :upstream, end_point: true }
+
+    let!(:first_stage_project_config) { Fabricate :stage_project_config, project: project, stage: downstream_stage, compute_effort: true }
+    let!(:second_stage_project_config) { Fabricate :stage_project_config, project: project, stage: upstream_stage, compute_effort: true }
 
     let!(:result) { Fabricate :project_result, project: project, result_date: Date.new(2018, 4, 3), known_scope: 2032, cost_in_month: 30_000, throughput_upstream: 0, throughput_downstream: 0, flow_pressure: 2 }
 
@@ -229,15 +232,15 @@ RSpec.describe ProjectResult, type: :model do
         expect(ProjectResult.count).to eq 1
         expect(result.reload.demands).to match_array [first_demand, third_demand, fourth_demand]
         expect(result.reload.known_scope).to eq 6
-        expect(result.reload.throughput_upstream).to eq 1
+        expect(result.reload.throughput_upstream).to eq 0
         expect(result.reload.throughput_downstream).to eq 1
-        expect(result.reload.qty_hours_upstream).to eq 55
-        expect(result.reload.qty_hours_downstream).to eq 40
+        expect(result.reload.qty_hours_upstream).to eq 50
+        expect(result.reload.qty_hours_downstream).to eq 30
         expect(result.reload.qty_hours_bug).to eq 0
         expect(result.reload.qty_bugs_closed).to eq 0
         expect(result.reload.qty_bugs_opened).to eq 0
         expect(result.reload.flow_pressure.to_f).to eq 1.5
-        expect(result.reload.average_demand_cost.to_f).to eq 500.0
+        expect(result.reload.average_demand_cost.to_f).to eq 1000.0
       end
     end
     context 'when it does not have the demand' do

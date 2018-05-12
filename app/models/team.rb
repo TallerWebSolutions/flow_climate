@@ -4,10 +4,10 @@
 #
 # Table name: teams
 #
-#  id         :integer          not null, primary key
-#  company_id :integer          not null
-#  name       :string           not null
+#  company_id :integer          not null, indexed, indexed => [name]
 #  created_at :datetime         not null
+#  id         :bigint(8)        not null, primary key
+#  name       :string           not null, indexed => [company_id]
 #  updated_at :datetime         not null
 #
 # Indexes
@@ -17,7 +17,7 @@
 #
 # Foreign Keys
 #
-#  fk_rails_...  (company_id => companies.id)
+#  fk_rails_e080df8a94  (company_id => companies.id)
 #
 
 class Team < ApplicationRecord

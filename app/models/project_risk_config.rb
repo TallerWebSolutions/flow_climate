@@ -4,7 +4,7 @@
 #
 # Table name: project_risk_configs
 #
-#  id                :integer          not null, primary key
+#  id                :bigint(8)        not null, primary key
 #  risk_type         :integer          not null
 #  high_yellow_value :decimal(, )      not null
 #  low_yellow_value  :decimal(, )      not null

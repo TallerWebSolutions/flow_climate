@@ -4,13 +4,13 @@
 #
 # Table name: pipefy_team_configs
 #
-#  id             :integer          not null, primary key
-#  team_id        :integer          not null
-#  integration_id :string           not null
-#  username       :string           not null
-#  member_type    :integer          default("developer")
 #  created_at     :datetime         not null
+#  id             :bigint(8)        not null, primary key
+#  integration_id :string           not null, indexed
+#  member_type    :integer          default("developer")
+#  team_id        :integer          not null, indexed
 #  updated_at     :datetime         not null
+#  username       :string           not null, indexed
 #
 # Indexes
 #
@@ -20,7 +20,7 @@
 #
 # Foreign Keys
 #
-#  fk_rails_...  (team_id => teams.id)
+#  fk_rails_6b009afec0  (team_id => teams.id)
 #
 
 module Pipefy

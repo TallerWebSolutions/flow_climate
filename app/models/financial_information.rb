@@ -4,12 +4,12 @@
 #
 # Table name: financial_informations
 #
-#  id             :integer          not null, primary key
-#  company_id     :integer          not null
-#  finances_date  :date             not null
-#  income_total   :decimal(, )      not null
-#  expenses_total :decimal(, )      not null
+#  company_id     :integer          not null, indexed
 #  created_at     :datetime         not null
+#  expenses_total :decimal(, )      not null
+#  finances_date  :date             not null
+#  id             :bigint(8)        not null, primary key
+#  income_total   :decimal(, )      not null
 #  updated_at     :datetime         not null
 #
 # Indexes
@@ -18,7 +18,7 @@
 #
 # Foreign Keys
 #
-#  fk_rails_...  (company_id => companies.id)
+#  fk_rails_573f757bcf  (company_id => companies.id)
 #
 
 class FinancialInformation < ApplicationRecord

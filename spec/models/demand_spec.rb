@@ -67,12 +67,30 @@ RSpec.describe Demand, type: :model do
     it { is_expected.to delegate_method(:full_name).to(:project).with_prefix }
   end
 
+  describe '.to_csv' do
+    let!(:demand) { Fabricate :demand }
+    let!(:other_demand) { Fabricate :demand }
+
+    it 'builds the CSV structure' do
+      generated_csv = CSV.generate do |csv|
+        csv << Demand.column_names
+        Demand.all.find_each do |demand|
+          csv << demand.attributes.values_at(*Demand.column_names)
+        end
+      end
+      expect(Demand.to_csv).to eq generated_csv
+    end
+  end
+
   describe '#update_effort!' do
     let(:company) { Fabricate :company }
     let(:customer) { Fabricate :customer, company: company }
     let(:project) { Fabricate :project, customer: customer }
-    let(:upstream_effort_stage) { Fabricate :stage, projects: [project], compute_effort: true, stage_stream: :upstream }
-    let(:downstream_effort_stage) { Fabricate :stage, projects: [project], compute_effort: true, stage_stream: :downstream }
+    let(:upstream_effort_stage) { Fabricate :stage, stage_stream: :upstream }
+    let(:downstream_effort_stage) { Fabricate :stage, stage_stream: :downstream }
+
+    let!(:stage_project_config) { Fabricate :stage_project_config, project: project, stage: upstream_effort_stage, compute_effort: true, pairing_percentage: 60, stage_percentage: 100, management_percentage: 10 }
+    let!(:other_stage_project_config) { Fabricate :stage_project_config, project: project, stage: downstream_effort_stage, compute_effort: true, pairing_percentage: 20, stage_percentage: 90, management_percentage: 15 }
 
     context 'having only one assined' do
       context 'having no blockings' do
@@ -82,8 +100,8 @@ RSpec.describe Demand, type: :model do
 
         it 'changes the effort informations' do
           demand.update_effort!
-          expect(demand.effort_upstream.to_f).to eq 6.0
-          expect(demand.effort_downstream.to_f).to eq 2.0
+          expect(demand.effort_upstream.to_f).to eq 6.6
+          expect(demand.effort_downstream.to_f).to eq 2.07
         end
       end
       context 'having blockings' do
@@ -96,7 +114,7 @@ RSpec.describe Demand, type: :model do
 
         it 'changes the effort informations' do
           demand.update_effort!
-          expect(demand.effort_upstream.to_f).to eq 3.0
+          expect(demand.effort_upstream.to_f).to eq 3.6
           expect(demand.effort_downstream.to_f).to eq 0.0
         end
       end
@@ -121,8 +139,8 @@ RSpec.describe Demand, type: :model do
 
         it 'changes the effort informations' do
           demand.update_effort!
-          expect(demand.effort_upstream.to_f).to eq 6.0
-          expect(demand.effort_downstream.to_f).to eq 3.0
+          expect(demand.effort_upstream.to_f).to eq 10.56
+          expect(demand.effort_downstream.to_f).to eq 2.484
         end
       end
       context 'having blockings' do
@@ -133,7 +151,7 @@ RSpec.describe Demand, type: :model do
 
         it 'changes the effort informations' do
           demand.update_effort!
-          expect(demand.effort_upstream.to_f).to eq 3.0
+          expect(demand.effort_upstream.to_f).to eq 7.56
           expect(demand.effort_downstream.to_f).to eq 0.0
         end
       end
@@ -187,20 +205,26 @@ RSpec.describe Demand, type: :model do
     let(:company) { Fabricate :company }
     let(:customer) { Fabricate :customer, company: company }
     let(:project) { Fabricate :project, customer: customer }
-    let(:effort_stage) { Fabricate :stage, projects: [project], compute_effort: true, stage_stream: :upstream }
+    let(:other_project) { Fabricate :project, customer: customer }
+    let(:effort_stage) { Fabricate :stage, stage_stream: :upstream }
+    let!(:stage_project_config) { Fabricate :stage_project_config, project: project, stage: effort_stage, compute_effort: true, pairing_percentage: 60, stage_percentage: 90, management_percentage: 20 }
+    let!(:other_stage_project_config) { Fabricate :stage_project_config, project: other_project, stage: effort_stage, compute_effort: true, pairing_percentage: 40, stage_percentage: 100, management_percentage: 10 }
 
     context 'having only one assined' do
       let(:demand) { Fabricate :demand, project: project, assignees_count: 1 }
       let!(:demand_transition) { Fabricate :demand_transition, demand: demand, stage: effort_stage, last_time_in: Time.zone.parse('2018-03-05 22:00'), last_time_out: Time.zone.parse('2018-03-06 13:00') }
 
-      it { expect(demand.working_time_upstream.to_f).to eq 6.0 }
+      let(:other_demand) { Fabricate :demand, project: other_project, assignees_count: 1 }
+      let!(:other_demand_transition) { Fabricate :demand_transition, demand: other_demand, stage: effort_stage, last_time_in: Time.zone.parse('2018-03-08 22:00'), last_time_out: Time.zone.parse('2018-03-20 20:00') }
+
+      it { expect(demand.working_time_upstream.to_f).to eq 6.48 }
     end
 
     context 'having a pair assined' do
       let(:demand) { Fabricate :demand, project: project, assignees_count: 2, effort_upstream: 0, effort_downstream: 0 }
       let!(:demand_transition) { Fabricate :demand_transition, demand: demand, stage: effort_stage, last_time_in: Time.zone.parse('2018-03-05 22:00'), last_time_out: Time.zone.parse('2018-03-06 13:00') }
 
-      it { expect(demand.working_time_upstream.to_f).to eq 6.0 }
+      it { expect(demand.working_time_upstream.to_f).to eq 10.368 }
     end
   end
 
@@ -208,20 +232,26 @@ RSpec.describe Demand, type: :model do
     let(:company) { Fabricate :company }
     let(:customer) { Fabricate :customer, company: company }
     let(:project) { Fabricate :project, customer: customer }
-    let(:effort_stage) { Fabricate :stage, projects: [project], compute_effort: true, stage_stream: :downstream }
+    let(:other_project) { Fabricate :project, customer: customer }
+    let(:effort_stage) { Fabricate :stage, stage_stream: :downstream }
+    let!(:stage_project_config) { Fabricate :stage_project_config, project: project, stage: effort_stage, compute_effort: true, pairing_percentage: 80, stage_percentage: 100, management_percentage: 10 }
+    let!(:other_stage_project_config) { Fabricate :stage_project_config, project: other_project, stage: effort_stage, compute_effort: true, pairing_percentage: 30, stage_percentage: 90, management_percentage: 10 }
 
     context 'having only one assined' do
       let(:demand) { Fabricate :demand, project: project, assignees_count: 1 }
       let!(:demand_transition) { Fabricate :demand_transition, demand: demand, stage: effort_stage, last_time_in: Time.zone.parse('2018-03-05 22:00'), last_time_out: Time.zone.parse('2018-03-06 13:00') }
 
-      it { expect(demand.working_time_downstream.to_f).to eq 6.0 }
+      let(:other_demand) { Fabricate :demand, project: other_project, assignees_count: 1 }
+      let!(:other_demand_transition) { Fabricate :demand_transition, demand: other_demand, stage: effort_stage, last_time_in: Time.zone.parse('2018-03-08 22:00'), last_time_out: Time.zone.parse('2018-03-20 20:00') }
+
+      it { expect(demand.working_time_downstream.to_f).to eq 6.6000000000000005 }
     end
 
     context 'having a pair assined' do
       let(:demand) { Fabricate :demand, project: project, assignees_count: 2, effort_upstream: 0, effort_downstream: 0 }
       let!(:demand_transition) { Fabricate :demand_transition, demand: demand, stage: effort_stage, last_time_in: Time.zone.parse('2018-03-05 22:00'), last_time_out: Time.zone.parse('2018-03-06 13:00') }
 
-      it { expect(demand.working_time_downstream.to_f).to eq 9.0 }
+      it { expect(demand.working_time_downstream.to_f).to eq 11.880000000000003 }
     end
   end
 
@@ -229,7 +259,8 @@ RSpec.describe Demand, type: :model do
     let(:company) { Fabricate :company }
     let(:customer) { Fabricate :customer, company: company }
     let(:project) { Fabricate :project, customer: customer }
-    let(:effort_stage) { Fabricate :stage, projects: [project], compute_effort: true, stage_stream: :upstream }
+    let(:effort_stage) { Fabricate :stage, stage_stream: :upstream }
+    let!(:stage_project_config) { Fabricate :stage_project_config, project: project, stage: effort_stage, compute_effort: true }
     let(:demand) { Fabricate :demand, project: project, assignees_count: 1 }
 
     context 'having no blockings' do
@@ -252,7 +283,8 @@ RSpec.describe Demand, type: :model do
     let(:company) { Fabricate :company }
     let(:customer) { Fabricate :customer, company: company }
     let(:project) { Fabricate :project, customer: customer }
-    let(:effort_stage) { Fabricate :stage, projects: [project], compute_effort: true, stage_stream: :downstream }
+    let(:effort_stage) { Fabricate :stage, stage_stream: :downstream }
+    let!(:stage_project_config) { Fabricate :stage_project_config, project: project, stage: effort_stage, compute_effort: true }
     let(:demand) { Fabricate :demand, project: project, assignees_count: 1 }
 
     context 'having no blockings' do
@@ -275,8 +307,12 @@ RSpec.describe Demand, type: :model do
     let(:company) { Fabricate :company }
     let(:customer) { Fabricate :customer, company: company }
     let(:project) { Fabricate :project, customer: customer }
-    let(:downstream_stage) { Fabricate :stage, projects: [project], stage_stream: :downstream }
-    let(:upstream_stage) { Fabricate :stage, projects: [project], stage_stream: :upstream }
+    let(:downstream_stage) { Fabricate :stage, stage_stream: :downstream }
+    let(:upstream_stage) { Fabricate :stage, stage_stream: :upstream }
+
+    let!(:stage_project_config) { Fabricate :stage_project_config, project: project, stage: upstream_stage }
+    let!(:other_stage_project_config) { Fabricate :stage_project_config, project: project, stage: downstream_stage }
+
     let(:demand) { Fabricate :demand, project: project, assignees_count: 1 }
 
     context 'having transition in the downstream' do

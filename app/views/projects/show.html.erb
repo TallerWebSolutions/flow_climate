@@ -32,7 +32,24 @@
   </div>
 
   <div id="delivered-demands">
-    <%= render 'demands/demands_table', demands_list: @project_delivered_demands %>
+    <div class="row">
+      <div class="col-xs-6">
+        <h1><%= t('demands.index.title') %></h1>
+      </div>
+    </div>
+    <div class="form-group">
+      <%= check_box_tag :grouped_per_month, nil, true, id: 'demands-grouped-check' %>
+      <%= label_tag t('projects.show.delivered_scope.grouped_by_month_check_box'), nil, class: 'control-label' %>
+    </div>
+    <div class="form-group">
+      <%= link_to t('general.download_csv'), delivered_demands_csv_company_project_path(@company, @project, format: :csv), class: 'btn btn-sm btn-success' %>
+    </div>
+    <div id="demands-grouped-per-month-div">
+      <%= render 'demands/grouped_by_month_demands_table', demands_list: @grouped_project_delivered_demands %>
+    </div>
+    <div id="flat-demands-div">
+      <%= render 'demands/demands_table_flat', demands: @project_delivered_demands %>
+    </div>
   </div>
 
   <div id="deadline-change">

@@ -677,23 +677,36 @@ ALTER SEQUENCE public.projects_id_seq OWNED BY public.projects.id;
 
 
 --
--- Name: projects_stages; Type: TABLE; Schema: public; Owner: -
+-- Name: schema_migrations; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.projects_stages (
+CREATE TABLE public.schema_migrations (
+    version character varying NOT NULL
+);
+
+
+--
+-- Name: stage_project_configs; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.stage_project_configs (
     id bigint NOT NULL,
     project_id integer NOT NULL,
     stage_id integer NOT NULL,
+    compute_effort boolean DEFAULT false,
+    stage_percentage integer,
+    management_percentage integer,
+    pairing_percentage integer,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL
 );
 
 
 --
--- Name: projects_stages_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: stage_project_configs_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.projects_stages_id_seq
+CREATE SEQUENCE public.stage_project_configs_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -702,19 +715,10 @@ CREATE SEQUENCE public.projects_stages_id_seq
 
 
 --
--- Name: projects_stages_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+-- Name: stage_project_configs_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.projects_stages_id_seq OWNED BY public.projects_stages.id;
-
-
---
--- Name: schema_migrations; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.schema_migrations (
-    version character varying NOT NULL
-);
+ALTER SEQUENCE public.stage_project_configs_id_seq OWNED BY public.stage_project_configs.id;
 
 
 --
@@ -730,8 +734,6 @@ CREATE TABLE public.stages (
     commitment_point boolean DEFAULT false,
     end_point boolean DEFAULT false,
     queue boolean DEFAULT false,
-    compute_effort boolean DEFAULT false,
-    percentage_effort numeric,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     company_id integer NOT NULL,
@@ -995,10 +997,10 @@ ALTER TABLE ONLY public.projects ALTER COLUMN id SET DEFAULT nextval('public.pro
 
 
 --
--- Name: projects_stages id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: stage_project_configs id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.projects_stages ALTER COLUMN id SET DEFAULT nextval('public.projects_stages_id_seq'::regclass);
+ALTER TABLE ONLY public.stage_project_configs ALTER COLUMN id SET DEFAULT nextval('public.stage_project_configs_id_seq'::regclass);
 
 
 --
@@ -1174,19 +1176,19 @@ ALTER TABLE ONLY public.projects
 
 
 --
--- Name: projects_stages projects_stages_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.projects_stages
-    ADD CONSTRAINT projects_stages_pkey PRIMARY KEY (id);
-
-
---
 -- Name: schema_migrations schema_migrations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.schema_migrations
     ADD CONSTRAINT schema_migrations_pkey PRIMARY KEY (version);
+
+
+--
+-- Name: stage_project_configs stage_project_configs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.stage_project_configs
+    ADD CONSTRAINT stage_project_configs_pkey PRIMARY KEY (id);
 
 
 --
@@ -1411,17 +1413,24 @@ CREATE UNIQUE INDEX index_projects_on_product_id_and_name ON public.projects USI
 
 
 --
--- Name: index_projects_stages_on_project_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_stage_project_configs_on_project_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_projects_stages_on_project_id ON public.projects_stages USING btree (project_id);
+CREATE INDEX index_stage_project_configs_on_project_id ON public.stage_project_configs USING btree (project_id);
 
 
 --
--- Name: index_projects_stages_on_stage_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_stage_project_configs_on_project_id_and_stage_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_projects_stages_on_stage_id ON public.projects_stages USING btree (stage_id);
+CREATE UNIQUE INDEX index_stage_project_configs_on_project_id_and_stage_id ON public.stage_project_configs USING btree (project_id, stage_id);
+
+
+--
+-- Name: index_stage_project_configs_on_stage_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_stage_project_configs_on_stage_id ON public.stage_project_configs USING btree (stage_id);
 
 
 --
@@ -1619,6 +1628,14 @@ ALTER TABLE ONLY public.pipefy_team_configs
 
 
 --
+-- Name: stage_project_configs fk_rails_713ceb31a3; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.stage_project_configs
+    ADD CONSTRAINT fk_rails_713ceb31a3 FOREIGN KEY (project_id) REFERENCES public.projects(id);
+
+
+--
 -- Name: project_change_deadline_histories fk_rails_7e0b9bce8f; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1651,6 +1668,14 @@ ALTER TABLE ONLY public.project_results
 
 
 --
+-- Name: stage_project_configs fk_rails_b25c287b60; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.stage_project_configs
+    ADD CONSTRAINT fk_rails_b25c287b60 FOREIGN KEY (stage_id) REFERENCES public.stages(id);
+
+
+--
 -- Name: project_risk_alerts fk_rails_b8b501e2eb; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1667,27 +1692,11 @@ ALTER TABLE ONLY public.project_results
 
 
 --
--- Name: projects_stages fk_rails_c4e86d5c86; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.projects_stages
-    ADD CONSTRAINT fk_rails_c4e86d5c86 FOREIGN KEY (stage_id) REFERENCES public.stages(id);
-
-
---
 -- Name: demand_transitions fk_rails_c63024fc81; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.demand_transitions
     ADD CONSTRAINT fk_rails_c63024fc81 FOREIGN KEY (stage_id) REFERENCES public.stages(id);
-
-
---
--- Name: projects_stages fk_rails_ca4af19a4f; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.projects_stages
-    ADD CONSTRAINT fk_rails_ca4af19a4f FOREIGN KEY (project_id) REFERENCES public.projects(id);
 
 
 --
@@ -1788,6 +1797,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20180410163615'),
 ('20180411164401'),
 ('20180412202504'),
-('20180417193029');
+('20180417193029'),
+('20180510203203');
 
 

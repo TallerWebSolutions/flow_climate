@@ -4,13 +4,13 @@
 #
 # Table name: project_change_deadline_histories
 #
-#  id            :integer          not null, primary key
-#  project_id    :integer          not null
-#  user_id       :integer          not null
-#  previous_date :date
-#  new_date      :date
 #  created_at    :datetime         not null
+#  id            :bigint(8)        not null, primary key
+#  new_date      :date
+#  previous_date :date
+#  project_id    :integer          not null, indexed
 #  updated_at    :datetime         not null
+#  user_id       :integer          not null, indexed
 #
 # Indexes
 #
@@ -19,8 +19,8 @@
 #
 # Foreign Keys
 #
-#  fk_rails_...  (project_id => projects.id)
-#  fk_rails_...  (user_id => users.id)
+#  fk_rails_1f60eef53a  (project_id => projects.id)
+#  fk_rails_7e0b9bce8f  (user_id => users.id)
 #
 
 class ProjectChangeDeadlineHistory < ApplicationRecord

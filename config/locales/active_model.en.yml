@@ -56,8 +56,6 @@ en:
       stage:
         commitment_point: Commitment Point?
         end_point: End Point?
-        compute_effort: Compute Effort?
-        effort_percentage: "% of Effort Considered?"
         enums:
           stage_type:
             backlog: Backlog
@@ -100,3 +98,7 @@ en:
     validations:
       result_date_less_than_project_start_date: "The result data should be greater or equal the project start date."
       result_date_greater_than_project_start_date: "The result data should be less or equal the project start date."
+  stage_project_config:
+    validations:
+      stage_project_unique:
+        message: "You can have only one configuration to stage and project."

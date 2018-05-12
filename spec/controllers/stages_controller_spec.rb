@@ -69,7 +69,7 @@ RSpec.describe StagesController, type: :controller do
 
     describe 'POST #create' do
       context 'passing valid parameters' do
-        before { post :create, params: { company_id: company, stage: { order: 2, name: 'foo', integration_id: '332231', stage_type: :analysis, stage_stream: :downstream, commitment_point: true, end_point: true, queue: true, compute_effort: true, percentage_effort: 30.3 } } }
+        before { post :create, params: { company_id: company, stage: { order: 2, name: 'foo', integration_id: '332231', stage_type: :analysis, stage_stream: :downstream, commitment_point: true, end_point: true, queue: true } } }
         it 'creates the new financial information to the company and redirects to its show' do
           created_stage = Stage.last
           expect(created_stage.company).to eq company
@@ -80,14 +80,12 @@ RSpec.describe StagesController, type: :controller do
           expect(created_stage.commitment_point?).to be true
           expect(created_stage.end_point?).to be true
           expect(created_stage.queue?).to be true
-          expect(created_stage.compute_effort?).to be true
-          expect(created_stage.percentage_effort).to eq 30.3
           expect(response).to redirect_to company_path(Company.last)
         end
       end
       context 'passing invalid parameters' do
         context 'invalid attributes' do
-          before { post :create, params: { company_id: company, stage: { name: nil, integration_id: nil, stage_type: nil, stage_stream: nil, commitment_point: nil, end_point: nil, queue: nil, compute_effort: nil, percentage_effort: nil } } }
+          before { post :create, params: { company_id: company, stage: { name: nil, integration_id: nil, stage_type: nil, stage_stream: nil, commitment_point: nil, end_point: nil, queue: nil } } }
           it 'does not create the company and re-render the template with the errors' do
             expect(Stage.last).to be_nil
             expect(response).to render_template :new
@@ -95,12 +93,12 @@ RSpec.describe StagesController, type: :controller do
           end
         end
         context 'inexistent company' do
-          before { post :create, params: { company_id: 'foo', stage: { name: 'foo', integration_id: '332231', stage_type: :analysis, stage_stream: :downstream, commitment_point: true, end_point: true, queue: true, compute_effort: true, percentage_effort: 30.3 } } }
+          before { post :create, params: { company_id: 'foo', stage: { name: 'foo', integration_id: '332231', stage_type: :analysis, stage_stream: :downstream, commitment_point: true, end_point: true, queue: true } } }
           it { expect(response).to have_http_status :not_found }
         end
         context 'and not permitted company' do
           let(:company) { Fabricate :company }
-          before { post :create, params: { company_id: company, stage: { name: 'foo', integration_id: '332231', stage_type: :analysis, stage_stream: :downstream, commitment_point: true, end_point: true, queue: true, compute_effort: true, percentage_effort: 30.3 } } }
+          before { post :create, params: { company_id: company, stage: { name: 'foo', integration_id: '332231', stage_type: :analysis, stage_stream: :downstream, commitment_point: true, end_point: true, queue: true } } }
           it { expect(response).to have_http_status :not_found }
         end
       end
@@ -140,7 +138,7 @@ RSpec.describe StagesController, type: :controller do
 
       context 'passing valid parameters' do
         it 'updates the demand and redirects to projects index' do
-          put :update, params: { company_id: company, id: stage, stage: { order: 2, name: 'foo', integration_id: '332231', stage_type: :analysis, stage_stream: :downstream, commitment_point: true, end_point: true, queue: true, compute_effort: true, percentage_effort: 30.3 } }
+          put :update, params: { company_id: company, id: stage, stage: { order: 2, name: 'foo', integration_id: '332231', stage_type: :analysis, stage_stream: :downstream, commitment_point: true, end_point: true, queue: true } }
           updated_stage = stage.reload
           expect(updated_stage.company).to eq company
           expect(updated_stage.order).to eq 2
@@ -150,15 +148,13 @@ RSpec.describe StagesController, type: :controller do
           expect(updated_stage.commitment_point?).to be true
           expect(updated_stage.end_point?).to be true
           expect(updated_stage.queue?).to be true
-          expect(updated_stage.compute_effort?).to be true
-          expect(updated_stage.percentage_effort).to eq 30.3
           expect(response).to redirect_to company_path(Company.last)
         end
       end
 
       context 'passing invalid' do
         context 'parameters' do
-          before { put :update, params: { company_id: company, id: stage, stage: { name: nil, integration_id: nil, stage_type: nil, stage_stream: nil, commitment_point: nil, end_point: nil, queue: nil, compute_effort: nil, percentage_effort: nil } } }
+          before { put :update, params: { company_id: company, id: stage, stage: { name: nil, integration_id: nil, stage_type: nil, stage_stream: nil, commitment_point: nil, end_point: nil, queue: nil } } }
           it { expect(assigns(:stage).errors.full_messages).to match_array ['Id na Integração não pode ficar em branco', 'Nome não pode ficar em branco', 'Tipo da Etapa não pode ficar em branco', 'Tipo do Stream não pode ficar em branco'] }
         end
         context 'non-stage' do

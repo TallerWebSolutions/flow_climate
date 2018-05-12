@@ -9,8 +9,11 @@ RSpec.describe ProjectResultsRepository, type: :repository do
   let!(:second_project) { Fabricate :project, customer: customer, product: product, start_date: Time.zone.iso8601('2018-01-10T23:01:46'), end_date: Time.zone.iso8601('2018-03-16T23:01:46') }
   let!(:third_project) { Fabricate :project, customer: customer, product: product, start_date: Time.zone.iso8601('2018-01-04T23:01:46'), end_date: Time.zone.iso8601('2018-03-16T23:01:46') }
 
-  let!(:stage) { Fabricate :stage, projects: [first_project], integration_id: '2481595', compute_effort: true }
-  let!(:end_stage) { Fabricate :stage, projects: [first_project], integration_id: '2481597', compute_effort: false, end_point: true }
+  let!(:stage) { Fabricate :stage, integration_id: '2481595' }
+  let!(:end_stage) { Fabricate :stage, integration_id: '2481597', end_point: true }
+
+  let!(:first_stage_project_config) { Fabricate :stage_project_config, project: first_project, stage: stage, compute_effort: true }
+  let!(:second_stage_project_config) { Fabricate :stage_project_config, project: first_project, stage: end_stage, compute_effort: false }
 
   describe '#project_results_for_company_month' do
     context 'having results' do
