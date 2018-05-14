@@ -96,16 +96,29 @@ RSpec.describe DemandTransition, type: :model do
     end
     context 'when the stage is an end_point' do
       let(:project) { Fabricate :project }
-
       let(:stage) { Fabricate :stage, commitment_point: false, end_point: true, projects: [project] }
-      let(:demand) { Fabricate :demand, project: project, created_date: Time.zone.parse('2018-02-04 12:00:00') }
-      let(:transition_date) { Time.zone.parse('2018-03-13 12:00:00') }
 
-      before { Fabricate :demand_transition, stage: stage, demand: demand, last_time_in: transition_date }
-      it 'sets the commitment date and do not touch in the others' do
-        expect(demand.reload.commitment_date).to be_nil
-        expect(demand.reload.created_date).to eq Time.zone.parse('2018-02-04 12:00:00')
-        expect(demand.reload.end_date).to eq transition_date
+      context 'and there is no end_date defined' do
+        let(:demand) { Fabricate :demand, project: project, created_date: Time.zone.parse('2018-02-04 12:00:00') }
+        let(:transition_date) { Time.zone.parse('2018-03-13 12:00:00') }
+
+        before { Fabricate :demand_transition, stage: stage, demand: demand, last_time_in: transition_date }
+        it 'sets the commitment date and do not touch in the others' do
+          expect(demand.reload.commitment_date).to be_nil
+          expect(demand.reload.created_date).to eq Time.zone.parse('2018-02-04 12:00:00')
+          expect(demand.reload.end_date).to eq transition_date
+        end
+      end
+      context 'and there is an end_date defined' do
+        let(:demand) { Fabricate :demand, project: project, created_date: Time.zone.parse('2018-02-04 12:00:00'), end_date: Time.zone.parse('2018-02-05 12:00:00') }
+        let(:transition_date) { Time.zone.parse('2018-03-13 12:00:00') }
+
+        before { Fabricate :demand_transition, stage: stage, demand: demand, last_time_in: transition_date }
+        it 'sets the commitment date and do not touch in the others' do
+          expect(demand.reload.commitment_date).to be_nil
+          expect(demand.reload.created_date).to eq Time.zone.parse('2018-02-04 12:00:00')
+          expect(demand.reload.end_date).to eq Time.zone.parse('2018-02-05 12:00:00')
+        end
       end
     end
     context 'when the stage is a wip and the demand has end_date' do
