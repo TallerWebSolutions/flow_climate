@@ -1,10 +1,5 @@
 AllCops:
   TargetRubyVersion: 2.4
-  Include:
-    - '**/Rakefile'
-    - '**/config.ru'
-    - '**/application.rb'
-    - '**/Rakefile'
   Exclude:
     # You could specify set of files or dirs while you want to be ignored by rubocop
     - 'vendor/**/*'
