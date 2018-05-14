@@ -41,7 +41,9 @@ class ProjectsController < AuthenticatedController
     assign_customer
     assign_product
     check_change_in_deadline!
+    previous_scope_value = @project.initial_scope
     @project.update(project_params.merge(customer: @customer, product: @product))
+    check_change_in_initial_scope!(previous_scope_value)
     return redirect_to company_project_path(@company, @project) if @project.save
     assign_products_list
     render :edit
@@ -76,10 +78,7 @@ class ProjectsController < AuthenticatedController
 
   def delivered_demands_csv
     @project_delivered_demands = @project.demands.finished.order(end_date: :desc)
-
-    respond_to do |format|
-      format.csv { send_data @project_delivered_demands.to_csv, filename: "demands-#{Time.zone.now}.csv" }
-    end
+    respond_to { |format| format.csv { send_data @project_delivered_demands.to_csv, filename: "demands-#{Time.zone.now}.csv" } }
   end
 
   private
@@ -117,5 +116,10 @@ class ProjectsController < AuthenticatedController
   def check_change_in_deadline!
     return if project_params[:end_date].blank? || @project.end_date == Date.parse(project_params[:end_date])
     ProjectChangeDeadlineHistory.create!(user: current_user, project: @project, previous_date: @project.end_date, new_date: project_params[:end_date])
+  end
+
+  def check_change_in_initial_scope!(previous_scope_param)
+    return if project_params[:initial_scope].blank? || previous_scope_param == project_params[:initial_scope].to_i
+    @project.project_results.order(:result_date).map(&:compute_flow_metrics!)
   end
 end

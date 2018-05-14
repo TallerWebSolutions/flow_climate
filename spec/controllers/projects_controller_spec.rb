@@ -269,12 +269,14 @@ RSpec.describe ProjectsController, type: :controller do
       let(:customer) { Fabricate :customer, company: company }
       let!(:product) { Fabricate :product, customer: customer, name: 'zzz' }
       let!(:other_product) { Fabricate :product, customer: customer, name: 'aaa' }
-      let(:project) { Fabricate :project, customer: customer, product: product }
+      let(:project) { Fabricate :project, customer: customer, product: product, start_date: 1.day.ago, end_date: 7.weeks.from_now, initial_scope: 100 }
+      let!(:project_result) { Fabricate :project_result, project: project, result_date: Time.zone.today, known_scope: 120 }
+      let!(:other_project_result) { Fabricate :project_result, project: project, result_date: Time.zone.tomorrow, known_scope: 400 }
 
       context 'passing valid parameters' do
-        context 'changing the deadline' do
+        context 'changing the deadline and the initial scope' do
           before { put :update, params: { company_id: company, id: project, project: { customer_id: customer, product_id: product, name: 'foo', status: :executing, project_type: :outsourcing, start_date: 1.day.ago, end_date: 1.day.from_now, value: 100.2, qty_hours: 300, hour_value: 200, initial_scope: 1000 } } }
-          it 'updates the project, register the deadline change and redirects to projects index' do
+          it 'updates the project, register the deadline change, compute the results again and redirects to projects index' do
             expect(Project.last.name).to eq 'foo'
             expect(Project.last.status).to eq 'executing'
             expect(Project.last.project_type).to eq 'outsourcing'
@@ -284,13 +286,20 @@ RSpec.describe ProjectsController, type: :controller do
             expect(Project.last.qty_hours).to eq 300
             expect(Project.last.hour_value).to eq 200
             expect(Project.last.initial_scope).to eq 1000
+            expect(ProjectResult.first.known_scope).to eq 1000
+            expect(ProjectResult.last.known_scope).to eq 1000
             expect(ProjectChangeDeadlineHistory.count).to eq 1
             expect(response).to redirect_to company_project_path(company, project)
           end
         end
-        context 'not changing the deadline' do
-          before { put :update, params: { company_id: company, id: project, project: { customer_id: customer, product_id: product, name: 'foo', status: :executing, project_type: :outsourcing, start_date: 1.day.ago, end_date: project.end_date, value: 100.2, qty_hours: 300, hour_value: 200, initial_scope: 1000 } } }
-          it { expect(ProjectChangeDeadlineHistory.count).to eq 0 }
+        context 'not changing the deadline nor the initial scope' do
+          it 'does not register any change in deadline and do not computes again the project results' do
+            expect_any_instance_of(ProjectResult).to receive(:compute_flow_metrics!).never
+            put :update, params: { company_id: company, id: project, project: { customer_id: customer, product_id: product, name: 'foo', status: :executing, project_type: :outsourcing, start_date: 1.day.ago, end_date: project.end_date, value: 100.2, qty_hours: 300, hour_value: 200, initial_scope: 100 } }
+            expect(ProjectChangeDeadlineHistory.count).to eq 0
+            expect(ProjectResult.first.known_scope).to eq 120
+            expect(ProjectResult.last.known_scope).to eq 400
+          end
         end
       end
 
@@ -372,7 +381,7 @@ RSpec.describe ProjectsController, type: :controller do
       end
     end
 
-    describe '#search_for_projects' do
+    describe 'GET #search_for_projects' do
       let(:customer) { Fabricate :customer, company: company }
       let(:product) { Fabricate :product, customer: customer, name: 'zzz' }
 

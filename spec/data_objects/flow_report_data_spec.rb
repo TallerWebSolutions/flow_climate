@@ -47,9 +47,9 @@ RSpec.describe FlowReportData, type: :data_object do
 
         flow_data = FlowReportData.new(Project.all, 1.week.ago.to_date.cweek, 1.week.ago.to_date.cwyear)
         expect(flow_data.projects_in_chart).to match_array [first_project, second_project, third_project]
-        expect(flow_data.total_arrived).to eq [2, 2, 1]
-        expect(flow_data.total_processed_upstream).to eq [1, 0, 0]
-        expect(flow_data.total_processed_downstream).to eq [1, 2, 1]
+        expect(flow_data.total_arrived).to match_array [2, 2, 1]
+        expect(flow_data.total_processed_upstream).to match_array [1, 0, 0]
+        expect(flow_data.total_processed_downstream).to match_array [1, 2, 1]
 
         expect(flow_data.projects_demands_selected[first_project]).to match_array [sixth_demand, eigth_demand]
         expect(flow_data.projects_demands_selected[second_project]).to match_array [seventh_demand, nineth_demand]
