@@ -2,8 +2,8 @@
 
 class ReportData < ChartData
   attr_reader :demands_burnup_data, :hours_burnup_data, :flow_pressure_data, :monte_carlo_data,
-              :dispersion_source, :percentile_95_data, :percentile_80_data, :percentile_60_data,
-              :leadtime_bins, :leadtime_histogram_data, :throughput_bins, :throughput_histogram_data
+              :leadtime_bins, :leadtime_histogram_data, :throughput_bins, :throughput_histogram_data,
+              :lead_time_control_chart
 
   def initialize(projects)
     super(projects)
@@ -210,10 +210,12 @@ class ReportData < ChartData
   end
 
   def build_lead_time_control_chart
-    @dispersion_source = finished_demands.map { |demand| [demand.demand_id, (demand.leadtime / 86_400).to_f] }
-    @percentile_95_data = Stats::StatisticsService.instance.percentile(95, demand_data)
-    @percentile_80_data = Stats::StatisticsService.instance.percentile(80, demand_data)
-    @percentile_60_data = Stats::StatisticsService.instance.percentile(60, demand_data)
+    @lead_time_control_chart = {}
+    @lead_time_control_chart[:xcategories] = finished_demands.map(&:demand_id)
+    @lead_time_control_chart[:dispersion_source] = finished_demands.map { |demand| [demand.demand_id, (demand.leadtime / 86_400).to_f] }
+    @lead_time_control_chart[:percentile_95_data] = Stats::StatisticsService.instance.percentile(95, demand_data)
+    @lead_time_control_chart[:percentile_80_data] = Stats::StatisticsService.instance.percentile(80, demand_data)
+    @lead_time_control_chart[:percentile_60_data] = Stats::StatisticsService.instance.percentile(60, demand_data)
   end
 
   def build_leadtime_histogram

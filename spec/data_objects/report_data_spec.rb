@@ -40,10 +40,10 @@ RSpec.describe ReportData, type: :data_object do
         expect(report_data.monte_carlo_data.dates_and_hits_hash.keys.count).to be >= 1
         expect(report_data.monte_carlo_data.monte_carlo_date_hash.keys.count).to be >= 1
         expect(report_data.effort_hours_per_month).to eq(keys: [[2018.0, 2.0], [2018.0, 3.0]], data: { upstream: [22.0, 163.0], downstream: [25.0, 99.0] })
-        expect(report_data.dispersion_source).to eq [[first_demand.demand_id, (first_demand.leadtime / 86_400).to_f], [second_demand.demand_id, (second_demand.leadtime / 86_400).to_f], [fifth_demand.demand_id, (fifth_demand.leadtime / 86_400).to_f], [fourth_demand.demand_id, (fourth_demand.leadtime / 86_400).to_f], [third_demand.demand_id, (third_demand.leadtime / 86_400).to_f]]
-        expect(report_data.percentile_95_data).to eq 3.8
-        expect(report_data.percentile_80_data).to eq 3.2
-        expect(report_data.percentile_60_data).to eq 2.4
+        expect(report_data.lead_time_control_chart[:dispersion_source]).to eq [[first_demand.demand_id, (first_demand.leadtime / 86_400).to_f], [second_demand.demand_id, (second_demand.leadtime / 86_400).to_f], [fifth_demand.demand_id, (fifth_demand.leadtime / 86_400).to_f], [fourth_demand.demand_id, (fourth_demand.leadtime / 86_400).to_f], [third_demand.demand_id, (third_demand.leadtime / 86_400).to_f]]
+        expect(report_data.lead_time_control_chart[:percentile_95_data]).to eq 3.8
+        expect(report_data.lead_time_control_chart[:percentile_80_data]).to eq 3.2
+        expect(report_data.lead_time_control_chart[:percentile_60_data]).to eq 2.4
         expect(report_data.leadtime_bins).to eq ['1.75 Dias', '3.25 Dias']
         expect(report_data.leadtime_histogram_data).to eq [3.0, 2.0]
         expect(report_data.throughput_bins).to eq ['0.5 demanda(s)', '1.5 demanda(s)']

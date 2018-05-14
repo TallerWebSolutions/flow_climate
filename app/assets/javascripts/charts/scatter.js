@@ -13,6 +13,7 @@ function buildScatterChart(scatterDiv) {
             text: 'Source: Flow Climate'
         },
         xAxis: {
+            categories: scatterDiv.data('xcategories'),
             title: { text: scatterDiv.data('xtitle') }
         },
         yAxis: {
@@ -55,10 +56,10 @@ function buildScatterChart(scatterDiv) {
             }]
         },
         tooltip: {
-            enabled: true,
-            valuePrefix: scatterDiv.data('ysuffix'),
-            valueDecimals: scatterDiv.data('decimals'),
-            shared: true
+            formatter:function(){
+                console.log(this);
+                return this.key + ': ' + this.y.toFixed(2) + ' ' + scatterDiv.data('ysuffix');
+            }
         },
         legend: {
             layout: 'vertical',
