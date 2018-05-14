@@ -117,7 +117,7 @@ GEM
     nio4r (2.3.1)
     nokogiri (1.8.2)
       mini_portile2 (~> 2.3.0)
-    oj (2.16.1)
+    oj (3.6.0)
     orm_adapter (0.5.0)
     parallel (1.12.1)
     parser (2.5.1.0)
@@ -268,7 +268,7 @@ DEPENDENCIES
   httparty
   jquery-rails
   listen
-  oj (~> 2.16.1)
+  oj
   parser
   pg
   puma
@@ -290,7 +290,7 @@ DEPENDENCIES
   yui-compressor
 
 RUBY VERSION
-   ruby 2.4.3p205
+   ruby 2.5.1p57
 
 BUNDLED WITH
    1.16.1

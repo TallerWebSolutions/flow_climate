@@ -2,7 +2,7 @@
 
 source 'https://rubygems.org'
 
-ruby '2.4.3'
+ruby '2.5.1'
 
 gem 'rails'
 
@@ -18,7 +18,7 @@ gem 'yui-compressor'
 gem 'httparty'
 gem 'webmock'
 gem 'rollbar'
-gem 'oj', '~> 2.16.1'
+gem 'oj'
 gem 'histogram'
 
 group :test, :development do

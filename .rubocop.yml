@@ -1,5 +1,5 @@
 AllCops:
-  TargetRubyVersion: 2.4
+  TargetRubyVersion: 2.5
   Exclude:
     # You could specify set of files or dirs while you want to be ignored by rubocop
     - 'vendor/**/*'
