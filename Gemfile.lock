@@ -51,7 +51,7 @@ GEM
     ast (2.4.0)
     bcrypt (3.1.11)
     bindex (0.5.0)
-    brakeman (4.2.1)
+    brakeman (4.3.0)
     builder (3.2.3)
     coffee-rails (4.2.2)
       coffee-script (>= 2.2.0)
@@ -117,7 +117,7 @@ GEM
     nio4r (2.3.1)
     nokogiri (1.8.2)
       mini_portile2 (~> 2.3.0)
-    oj (2.16.1)
+    oj (3.6.0)
     orm_adapter (0.5.0)
     parallel (1.12.1)
     parser (2.5.1.0)
@@ -197,7 +197,7 @@ GEM
     rspec-support (3.7.1)
     rspec_junit_formatter (0.3.0)
       rspec-core (>= 2, < 4, != 2.12.0)
-    rubocop (0.55.0)
+    rubocop (0.56.0)
       parallel (~> 1.10)
       parser (>= 2.5)
       powerpack (~> 0.1)
@@ -268,7 +268,7 @@ DEPENDENCIES
   httparty
   jquery-rails
   listen
-  oj (~> 2.16.1)
+  oj
   parser
   pg
   puma
@@ -290,7 +290,7 @@ DEPENDENCIES
   yui-compressor
 
 RUBY VERSION
-   ruby 2.4.3p205
+   ruby 2.5.1p57
 
 BUNDLED WITH
    1.16.1
