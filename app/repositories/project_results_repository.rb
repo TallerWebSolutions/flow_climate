@@ -27,6 +27,14 @@ class ProjectResultsRepository
     project_result_joins.where('customers.company_id = :company_id AND EXTRACT(MONTH FROM result_date) = :month AND EXTRACT(YEAR FROM result_date) = :year', company_id: company.id, month: date.month, year: date.year).sum(&:qty_bugs_closed)
   end
 
+  def bugs_opened_in_week(company, date = Time.zone.today)
+    project_result_joins.where('customers.company_id = :company_id AND EXTRACT(WEEK FROM result_date) = :week AND EXTRACT(YEAR FROM result_date) = :year', company_id: company.id, week: date.cweek, year: date.year).sum(&:qty_bugs_opened)
+  end
+
+  def bugs_closed_in_week(company, date = Time.zone.today)
+    project_result_joins.where('customers.company_id = :company_id AND EXTRACT(WEEK FROM result_date) = :week AND EXTRACT(YEAR FROM result_date) = :year', company_id: company.id, week: date.cweek, year: date.cwyear).sum(&:qty_bugs_closed)
+  end
+
   def scope_in_week_for_projects(projects, week, year)
     total_scope = 0
     projects.each do |project|
