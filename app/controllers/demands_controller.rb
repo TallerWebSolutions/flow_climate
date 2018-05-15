@@ -18,7 +18,7 @@ class DemandsController < AuthenticatedController
 
   def destroy
     demand = Demand.find(params[:id])
-    demand.destroy
+    DemandsRepository.instance.full_demand_destroy!(demand)
     redirect_to company_project_path(@company, @project)
   end
 
@@ -26,7 +26,7 @@ class DemandsController < AuthenticatedController
 
   def update
     if @demand.update(demand_params)
-      ProjectResultsRepository.instance.update_project_results_for_demand!(@demand, @project.current_team) if @project.current_team.present?
+      ProjectResultService.instance.compute_demand!(@project.current_team, @demand) if @project.current_team.present?
       return redirect_to company_project_demand_path(@company, @project, @demand)
     end
 
@@ -49,7 +49,7 @@ class DemandsController < AuthenticatedController
   private
 
   def demand_params
-    params.require(:demand).permit(:demand_id, :demand_type, :downstream, :class_of_service, :assignees_count, :effort_upstream, :effort_downstream, :created_date, :commitment_date, :end_date)
+    params.require(:demand).permit(:demand_id, :demand_type, :downstream, :manual_effort, :class_of_service, :assignees_count, :effort_upstream, :effort_downstream, :created_date, :commitment_date, :end_date)
   end
 
   def assign_project

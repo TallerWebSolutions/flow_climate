@@ -15,6 +15,7 @@
       <th><%= Demand.human_attribute_name :demand_type %></th>
       <th><%= Demand.human_attribute_name :class_of_service %></th>
       <th><%= t('demands.index.downstream') %></th>
+      <th><%= t('demands.index.manual_effort') %></th>
       <th><%= Demand.human_attribute_name :created_date %></th>
       <th><%= Demand.human_attribute_name :commitment_date %></th>
       <th><%= Demand.human_attribute_name :end_date %></th>
@@ -46,6 +47,11 @@
         <td><%= t("activerecord.attributes.demand.enums.class_of_service.#{demand.class_of_service}") %></td>
         <td class="center">
           <% if demand.downstream_demand? %>
+            <i class="fa fa-check" aria-hidden="true"></i>
+          <% end %>
+        </td>
+        <td class="center">
+          <% if demand.manual_effort? %>
             <i class="fa fa-check" aria-hidden="true"></i>
           <% end %>
         </td>

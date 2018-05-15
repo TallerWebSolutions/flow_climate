@@ -38,7 +38,7 @@ class DemandTransition < ApplicationRecord
   scope :effort_transitions_to_project, ->(project_id) { joins(stage: :stage_project_configs).where('stage_project_configs.compute_effort = true AND stage_project_configs.project_id = :project_id', project_id: project_id) }
 
   after_save :set_demand_dates, on: %i[create update]
-  after_save :set_demand_stream, on: %i[create update]
+  after_save :set_demand_computed_fields, on: %i[create update]
 
   def total_time_in_transition
     return 0 if last_time_out.blank?
@@ -62,8 +62,9 @@ class DemandTransition < ApplicationRecord
     end
   end
 
-  def set_demand_stream
+  def set_demand_computed_fields
     demand.update(downstream: stage.downstream?)
+    demand.update_effort!
   end
 
   def same_stage_project?

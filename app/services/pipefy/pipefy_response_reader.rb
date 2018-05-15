@@ -40,7 +40,6 @@ module Pipefy
     end
 
     def process_demand(demand, team)
-      demand.update_effort!
       demand.update_created_date! if demand.demand_transitions.present?
       project_result = ProjectResultService.instance.compute_demand!(team, demand)
       IntegrationError.build_integration_error(demand, project_result, :pipefy) unless project_result.valid?
@@ -85,28 +84,29 @@ module Pipefy
     end
 
     def read_phases_transitions(demand, response_data)
-      last_time_out = nil
+      transitions = []
       response_data.try(:[], 'card').try(:[], 'phases_history')&.each do |phase|
-        last_time_out = Time.iso8601(phase['firstTimeIn']) if last_time_out.blank?
+        transition_data = {}
+        transition_data[:phase_id] = phase['phase']['id']
+        transition_data[:first_time_in] = Time.iso8601(phase['firstTimeIn'])
+        transition_data[:last_time_out] = Time.iso8601(phase['lastTimeOut']) if phase['lastTimeOut'].present?
 
-        last_time_out = create_transition_for_phase_and_demand(phase, demand, last_time_out)
+        transitions << transition_data
       end
+      create_transition_for_phase_and_demand(demand, transitions.sort_by { |hash| hash[:first_time_in] })
     end
 
-    def create_transition_for_phase_and_demand(phase, demand, last_time_in)
-      phase_id = phase['phase']['id']
-      stage = Stage.find_by(integration_id: phase_id)
-
-      return if stage.blank? || demand.blank?
-      last_time_out = define_last_time_out(phase['lastTimeOut'])
-      DemandTransition.where(stage: stage, demand: demand).map(&:destroy)
-      demand_transition = DemandTransition.create(stage: stage, demand: demand, last_time_in: last_time_in, last_time_out: last_time_out)
-      IntegrationError.build_integration_error(demand, demand_transition, :pipefy) unless demand_transition.valid?
-      last_time_out
-    end
-
-    def define_last_time_out(last_time_out_param)
-      Time.iso8601(last_time_out_param) if last_time_out_param.present?
+    def create_transition_for_phase_and_demand(demand, transitions)
+      last_transition_out = nil
+      transitions.each do |transition_hash|
+        last_transition_out = transition_hash[:first_time_in] if last_transition_out.blank?
+        stage = Stage.find_by(integration_id: transition_hash[:phase_id])
+        next if stage.blank? || demand.blank?
+        DemandTransition.where(stage: stage, demand: demand).map(&:destroy)
+        demand_transition = DemandTransition.create(stage: stage, demand: demand, last_time_in: last_transition_out, last_time_out: transition_hash[:last_time_out])
+        last_transition_out = transition_hash[:last_time_out]
+        IntegrationError.build_integration_error(demand, demand_transition, :pipefy) unless demand_transition.valid?
+      end
     end
 
     def read_demand_type(response_data)

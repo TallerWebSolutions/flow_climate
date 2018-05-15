@@ -225,31 +225,6 @@ RSpec.describe ProjectResultsRepository, type: :repository do
     end
   end
 
-  describe '#update_project_results_for_demand!' do
-    let(:company) { Fabricate :company }
-    let(:team) { Fabricate :team, company: company }
-    let(:customer) { Fabricate :customer, company: company }
-    let(:project) { Fabricate :project, customer: customer }
-    let(:demand) { Fabricate :demand, project: project, created_date: Time.zone.parse('2018-02-14 12:00:00') }
-
-    pending 'test other attributes and the monte carlo date'
-
-    context 'when there is no project result to the date' do
-      before { ProjectResultsRepository.instance.update_project_results_for_demand!(demand, team) }
-      it { expect(ProjectResult.count).to eq 1 }
-    end
-    context 'when there is project result to the date' do
-      let!(:project_result) { Fabricate :project_result, project: project, result_date: Date.new(2018, 2, 14) }
-      before { ProjectResultsRepository.instance.update_project_results_for_demand!(demand, team) }
-      it { expect(ProjectResult.count).to eq 1 }
-    end
-    context 'when there is project result to another date' do
-      let!(:project_result) { Fabricate :project_result, project: project, result_date: Date.new(2018, 2, 13) }
-      before { ProjectResultsRepository.instance.update_project_results_for_demand!(demand, team) }
-      it { expect(ProjectResult.count).to eq 2 }
-    end
-  end
-
   describe '#sum_field_in_grouped_per_month_project_results' do
     context 'when there is data in the week' do
       let!(:first_result) { Fabricate :project_result, project: first_project, result_date: Time.zone.iso8601('2018-02-16T23:01:46'), qty_hours_upstream: 20, qty_hours_downstream: 10 }

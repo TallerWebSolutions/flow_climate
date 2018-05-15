@@ -98,7 +98,7 @@ class ProjectResult < ApplicationRecord
     finished_bugs = demands.finished_bugs.uniq
     open_bugs = demands.bug.opened_in_date(result_date).uniq
 
-    update_result!(compute_throughput_upstream, compute_throughput_downstream, finished_bugs, open_bugs)
+    update_result!(delivered_demands_upstream, delivered_demands_downstream, finished_bugs, open_bugs)
   end
 
   private
@@ -145,11 +145,11 @@ class ProjectResult < ApplicationRecord
     DemandsRepository.instance.known_scope_to_date(project, result_date) + project.initial_scope
   end
 
-  def compute_throughput_upstream
+  def delivered_demands_upstream
     demands.finished_in_stream(Stage.stage_streams[:upstream]) | demands.finished.upstream_flag
   end
 
-  def compute_throughput_downstream
-    (demands.finished_in_stream(Stage.stage_streams[:downstream]) | demands.finished.downstream_flag) - compute_throughput_upstream
+  def delivered_demands_downstream
+    (demands.finished_in_stream(Stage.stage_streams[:downstream]) | demands.finished.downstream_flag) - delivered_demands_upstream
   end
 end

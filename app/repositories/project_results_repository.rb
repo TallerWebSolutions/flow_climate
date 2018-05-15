@@ -86,24 +86,7 @@ class ProjectResultsRepository
     ProjectResult.where(project_id: projects.map(&:id)).group('EXTRACT(YEAR FROM result_date)', 'EXTRACT(MONTH FROM result_date)').order(Arel.sql('EXTRACT(YEAR FROM result_date)'), Arel.sql('EXTRACT(MONTH FROM result_date)')).sum(field_to_sum)
   end
 
-  def update_project_results_for_demand!(demand, team)
-    return if demand.created_date.blank?
-
-    project_result = create_new_empty_project_result(demand, team, demand.result_date)
-    demand.reload.update_project_result_for_demand!(project_result)
-    save_monte_carlo_date!(project_result, 100)
-    project_result
-  end
-
   private
-
-  def save_monte_carlo_date!(project_result, qty_cycles)
-    monte_carlo_data = Stats::StatisticsService.instance.run_montecarlo(project_result.project.demands.count,
-                                                                        ProjectsRepository.instance.leadtime_per_week([project_result.project]).values,
-                                                                        ProjectsRepository.instance.throughput_per_week([project_result.project]).values,
-                                                                        qty_cycles)
-    project_result.update(monte_carlo_date: monte_carlo_data.monte_carlo_date_hash.keys.first)
-  end
 
   def build_hash_data_with_sum(projects, field)
     grouped_per_week_project_results_to_projects(projects).sum(field)
@@ -125,15 +108,5 @@ class ProjectResultsRepository
 
   def project_result_joins
     ProjectResult.joins(project: [{ product: :customer }])
-  end
-
-  def create_new_empty_project_result(demand, team, result_date)
-    project_result = demand.project.project_results.find_by(result_date: result_date)
-    return project_result if project_result.present?
-    ProjectResult.create(project: demand.project, result_date: result_date, known_scope: 0, throughput_upstream: 0, throughput_downstream: 0,
-                         qty_hours_upstream: 0, qty_hours_downstream: 0, qty_hours_bug: 0, qty_bugs_closed: 0, qty_bugs_opened: 0,
-                         team: team, flow_pressure: 0, remaining_days: demand.project.remaining_days(result_date),
-                         cost_in_month: team.active_monthly_cost_for_billable_types([demand.project.project_type]), average_demand_cost: 0,
-                         available_hours: team.active_monthly_available_hours_for_billable_types([demand.project.project_type]))
   end
 end
