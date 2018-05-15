@@ -19,6 +19,8 @@ class ProjectResultService
 
     ProjectResult.reset_counters(new_result.id, :demands_count)
 
+    save_monte_carlo_date!(new_result, 100)
+
     new_result
   end
 
@@ -27,5 +29,13 @@ class ProjectResultService
   def define_initial_attributes(team, demand, project_result)
     project_result.update(cost_in_month: team.active_monthly_cost_for_billable_types([demand.project.project_type]),
                           available_hours: team.active_monthly_available_hours_for_billable_types([demand.project.project_type]))
+  end
+
+  def save_monte_carlo_date!(project_result, qty_cycles)
+    monte_carlo_data = Stats::StatisticsService.instance.run_montecarlo(project_result.project.demands.count,
+                                                                        ProjectsRepository.instance.leadtime_per_week([project_result.project]).values,
+                                                                        ProjectsRepository.instance.throughput_per_week([project_result.project]).values,
+                                                                        qty_cycles)
+    project_result.update(monte_carlo_date: monte_carlo_data.monte_carlo_date_hash.keys.first)
   end
 end

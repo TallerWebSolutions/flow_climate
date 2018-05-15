@@ -246,7 +246,8 @@ CREATE TABLE public.demands (
     effort_downstream numeric DEFAULT 0,
     effort_upstream numeric DEFAULT 0,
     leadtime numeric,
-    downstream boolean DEFAULT true
+    downstream boolean DEFAULT true,
+    manual_effort boolean DEFAULT false
 );
 
 
@@ -1798,6 +1799,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20180411164401'),
 ('20180412202504'),
 ('20180417193029'),
-('20180510203203');
+('20180510203203'),
+('20180514210852');
 
 

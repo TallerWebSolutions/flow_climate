@@ -165,6 +165,17 @@ RSpec.describe Demand, type: :model do
           expect(demand.effort_downstream.to_f).to eq 0.0
         end
       end
+
+      context 'when the demand has manual effort' do
+        let(:demand) { Fabricate :demand, project: project, assignees_count: 2, effort_upstream: 30, effort_downstream: 23, manual_effort: true }
+        let!(:demand_transition) { Fabricate :demand_transition, demand: demand, last_time_in: Time.zone.parse('2018-03-05 22:00'), last_time_out: Time.zone.parse('2018-03-06 13:00') }
+
+        it 'does not change the effort informations' do
+          demand.update_effort!
+          expect(demand.effort_upstream.to_f).to eq 30.0
+          expect(demand.effort_downstream.to_f).to eq 23.0
+        end
+      end
     end
   end
 

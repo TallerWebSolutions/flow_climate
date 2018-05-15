@@ -18,6 +18,7 @@
 #  end_date          :datetime
 #  id                :bigint(8)        not null, primary key
 #  leadtime          :decimal(, )
+#  manual_effort     :boolean          default(FALSE)
 #  project_id        :integer          not null
 #  project_result_id :integer          indexed
 #  updated_at        :datetime         not null
@@ -67,18 +68,13 @@ class Demand < ApplicationRecord
   end
 
   def update_effort!
+    return if manual_effort?
     update(effort_downstream: (working_time_downstream - blocked_working_time_downstream), effort_upstream: (working_time_upstream - blocked_working_time_upstream))
   end
 
   def update_created_date!
     create_transition = demand_transitions.order(:last_time_in).first
     update(created_date: create_transition.last_time_in)
-  end
-
-  def update_project_result_for_demand!(new_project_result)
-    return if project_result == new_project_result
-    project_result.remove_demand!(self) if project_result.present?
-    new_project_result.add_demand!(self)
   end
 
   def result_date
