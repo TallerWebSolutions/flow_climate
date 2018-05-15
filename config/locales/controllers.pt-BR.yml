@@ -285,6 +285,7 @@ pt-BR:
       blocked_working_time_upstream: "Tempo Útil Bloqueado no Upstream"
       blocked_working_time_downstream: "Tempo Útil Bloqueado no Downstream"
       downstream: "Downstream?"
+      manual_effort: "Esforço Atualizado Manualmente?"
     edit:
       title: "Editar Demanda"
     show:

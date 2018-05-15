@@ -283,6 +283,7 @@ en:
       blocked_working_time_upstream: "Blocked Working Time in Upstream"
       blocked_working_time_downstream: "Blocked Working Time in Downstream"
       downstream: "Downstream?"
+      manual_effort: "Effort Updated Manually"
     edit:
       title: "Edit Demand"
     show:
