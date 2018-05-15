@@ -20,34 +20,67 @@ RSpec.describe ReportData, type: :data_object do
     let!(:fifth_demand) { Fabricate :demand, project: first_project, project_result: third_project_result, end_date: Time.zone.parse('2018-03-13'), leadtime: 4 * 86_400, effort_upstream: 56, effort_downstream: 25 }
 
     describe '.initialize' do
-      subject(:report_data) { ReportData.new(Project.all) }
+      context 'having projects' do
+        subject(:report_data) { ReportData.new(Project.all) }
 
-      it 'do the math and provides the correct information' do
-        expect(report_data.all_projects).to eq Project.all
-        expect(report_data.active_projects).to eq Project.active
-        expect(report_data.all_projects_weeks).to eq [[8, 2018], [9, 2018], [10, 2018], [11, 2018], [12, 2018]]
-        expect(report_data.active_weeks).to eq [[8, 2018], [9, 2018], [10, 2018], [11, 2018], [12, 2018]]
-        expect(report_data.demands_burnup_data.ideal_per_week).to eq [113.2, 226.4, 339.6, 452.8, 566.0]
-        expect(report_data.demands_burnup_data.current_per_week).to eq [25, 25, 25, 201, 201]
-        expect(report_data.demands_burnup_data.scope_per_week).to eq [170, 170, 170, 566, 566]
-        expect(report_data.hours_burnup_data.ideal_per_week).to eq [440.0, 880.0, 1320.0, 1760.0, 2200.0]
-        expect(report_data.hours_burnup_data.current_per_week).to eq [30, 30, 30, 244, 244]
-        expect(report_data.hours_burnup_data.scope_per_week).to eq [2200.0, 2200.0, 2200.0, 2200.0, 2200.0]
-        expect(report_data.flow_pressure_data).to eq [4.0, 0.0, 0.0, 4.75, 0.0]
-        expect(report_data.throughput_per_week).to eq([{ name: I18n.t('projects.charts.throughput_per_week.stage_stream.upstream'), data: [23, 0, 0, 47, 0] }, { name: I18n.t('projects.charts.throughput_per_week.stage_stream.downstream'), data: [2, 0, 0, 129, 0] }])
-        expect(report_data.delivered_vs_remaining).to eq([{ name: I18n.t('projects.show.delivered_scope.text'), data: [201] }, { name: I18n.t('projects.show.scope_gap'), data: [365] }])
-        expect(report_data.dates_and_odds.keys.count).to be >= 1
-        expect(report_data.monte_carlo_data.dates_and_hits_hash.keys.count).to be >= 1
-        expect(report_data.monte_carlo_data.monte_carlo_date_hash.keys.count).to be >= 1
-        expect(report_data.effort_hours_per_month).to eq(keys: [[2018.0, 2.0], [2018.0, 3.0]], data: { upstream: [22.0, 163.0], downstream: [25.0, 99.0] })
-        expect(report_data.lead_time_control_chart[:dispersion_source]).to eq [[first_demand.demand_id, (first_demand.leadtime / 86_400).to_f], [second_demand.demand_id, (second_demand.leadtime / 86_400).to_f], [fifth_demand.demand_id, (fifth_demand.leadtime / 86_400).to_f], [fourth_demand.demand_id, (fourth_demand.leadtime / 86_400).to_f], [third_demand.demand_id, (third_demand.leadtime / 86_400).to_f]]
-        expect(report_data.lead_time_control_chart[:percentile_95_data]).to eq 3.8
-        expect(report_data.lead_time_control_chart[:percentile_80_data]).to eq 3.2
-        expect(report_data.lead_time_control_chart[:percentile_60_data]).to eq 2.4
-        expect(report_data.leadtime_bins).to eq ['1.75 Dias', '3.25 Dias']
-        expect(report_data.leadtime_histogram_data).to eq [3.0, 2.0]
-        expect(report_data.throughput_bins).to eq ['0.5 demanda(s)', '1.5 demanda(s)']
-        expect(report_data.throughput_histogram_data).to eq [2.0, 3.0]
+        it 'do the math and provides the correct information' do
+          expect(report_data.all_projects).to eq Project.all
+          expect(report_data.active_projects).to eq Project.active
+          expect(report_data.all_projects_weeks).to eq [[8, 2018], [9, 2018], [10, 2018], [11, 2018], [12, 2018]]
+          expect(report_data.active_weeks).to eq [[8, 2018], [9, 2018], [10, 2018], [11, 2018], [12, 2018]]
+          expect(report_data.demands_burnup_data.ideal_per_week).to eq [113.2, 226.4, 339.6, 452.8, 566.0]
+          expect(report_data.demands_burnup_data.current_per_week).to eq [25, 25, 25, 201, 201]
+          expect(report_data.demands_burnup_data.scope_per_week).to eq [170, 170, 170, 566, 566]
+          expect(report_data.hours_burnup_data.ideal_per_week).to eq [440.0, 880.0, 1320.0, 1760.0, 2200.0]
+          expect(report_data.hours_burnup_data.current_per_week).to eq [30, 30, 30, 244, 244]
+          expect(report_data.hours_burnup_data.scope_per_week).to eq [2200.0, 2200.0, 2200.0, 2200.0, 2200.0]
+          expect(report_data.flow_pressure_data).to eq [4.0, 0.0, 0.0, 4.75, 0.0]
+          expect(report_data.throughput_per_week).to eq([{ name: I18n.t('projects.charts.throughput_per_week.stage_stream.upstream'), data: [23, 0, 0, 47, 0] }, { name: I18n.t('projects.charts.throughput_per_week.stage_stream.downstream'), data: [2, 0, 0, 129, 0] }])
+          expect(report_data.delivered_vs_remaining).to eq([{ name: I18n.t('projects.show.delivered_scope.text'), data: [201] }, { name: I18n.t('projects.show.scope_gap'), data: [365] }])
+          expect(report_data.dates_and_odds.keys.count).to be >= 1
+          expect(report_data.monte_carlo_data.dates_and_hits_hash.keys.count).to be >= 1
+          expect(report_data.monte_carlo_data.monte_carlo_date_hash.keys.count).to be >= 1
+          expect(report_data.effort_hours_per_month).to eq(keys: [[2018.0, 2.0], [2018.0, 3.0]], data: { upstream: [22.0, 163.0], downstream: [25.0, 99.0] })
+          expect(report_data.lead_time_control_chart[:dispersion_source]).to eq [[first_demand.demand_id, (first_demand.leadtime / 86_400).to_f], [second_demand.demand_id, (second_demand.leadtime / 86_400).to_f], [fifth_demand.demand_id, (fifth_demand.leadtime / 86_400).to_f], [fourth_demand.demand_id, (fourth_demand.leadtime / 86_400).to_f], [third_demand.demand_id, (third_demand.leadtime / 86_400).to_f]]
+          expect(report_data.lead_time_control_chart[:percentile_95_data]).to eq 3.8
+          expect(report_data.lead_time_control_chart[:percentile_80_data]).to eq 3.2
+          expect(report_data.lead_time_control_chart[:percentile_60_data]).to eq 2.4
+          expect(report_data.leadtime_bins).to eq ['1.75 Dias', '3.25 Dias']
+          expect(report_data.leadtime_histogram_data).to eq [3.0, 2.0]
+          expect(report_data.throughput_bins).to eq ['0.5 demanda(s)', '1.5 demanda(s)']
+          expect(report_data.throughput_histogram_data).to eq [2.0, 3.0]
+        end
+      end
+      context 'having no projects' do
+        subject(:report_data) { ReportData.new(Project.none) }
+
+        it 'do the math and provides the correct information' do
+          expect(report_data.all_projects).to eq []
+          expect(report_data.active_projects).to eq []
+          expect(report_data.all_projects_weeks).to eq []
+          expect(report_data.active_weeks).to eq []
+          expect(report_data.demands_burnup_data.ideal_per_week).to eq []
+          expect(report_data.demands_burnup_data.current_per_week).to eq []
+          expect(report_data.demands_burnup_data.scope_per_week).to eq []
+          expect(report_data.hours_burnup_data.ideal_per_week).to eq []
+          expect(report_data.hours_burnup_data.current_per_week).to eq []
+          expect(report_data.hours_burnup_data.scope_per_week).to eq []
+          expect(report_data.flow_pressure_data).to eq []
+          expect(report_data.throughput_per_week).to eq([{ name: 'Upstream', data: [] }, { name: 'Downstream', data: [] }])
+          expect(report_data.delivered_vs_remaining).to eq([{ name: 'Escopo Entregue', data: [0] }, { name: 'Restante do escopo', data: [0] }])
+          expect(report_data.dates_and_odds.keys.count).to eq 0
+          expect(report_data.monte_carlo_data.dates_and_hits_hash.keys.count).to eq 0
+          expect(report_data.monte_carlo_data.monte_carlo_date_hash.keys.count).to eq 0
+          expect(report_data.effort_hours_per_month).to eq(keys: [], data: { upstream: [], downstream: [] })
+          expect(report_data.lead_time_control_chart[:dispersion_source]).to eq []
+          expect(report_data.lead_time_control_chart[:percentile_95_data]).to eq 0
+          expect(report_data.lead_time_control_chart[:percentile_80_data]).to eq 0
+          expect(report_data.lead_time_control_chart[:percentile_60_data]).to eq 0
+          expect(report_data.leadtime_bins).to eq []
+          expect(report_data.leadtime_histogram_data).to eq []
+          expect(report_data.throughput_bins).to eq []
+          expect(report_data.throughput_histogram_data).to eq []
+        end
       end
     end
     describe '#hours_per_demand_per_week' do

@@ -199,6 +199,11 @@ pt-BR:
       throughput_histogram:
         title: "Histograma de Throughput para %{target_name}"
         ylabel: "Frequências"
+      bugs_in_time:
+        title: "Bugs no tempo para %{target_name}"
+        opened: "Bugs Abertos"
+        closed: "Bugs Fechados"
+        ylabel: "bugs"
     project_risk_alert_table: "Alertas de risco para o projeto"
     portfolio_bulletin:
       delivered_demands: "Demandas entregues na última semana"

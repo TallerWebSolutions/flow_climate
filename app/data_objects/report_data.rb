@@ -3,7 +3,7 @@
 class ReportData < ChartData
   attr_reader :demands_burnup_data, :hours_burnup_data, :flow_pressure_data, :monte_carlo_data,
               :leadtime_bins, :leadtime_histogram_data, :throughput_bins, :throughput_histogram_data,
-              :lead_time_control_chart
+              :lead_time_control_chart, :weeekly_bugs_count_hash
 
   def initialize(projects)
     super(projects)
@@ -12,7 +12,12 @@ class ReportData < ChartData
     @hours_burnup_data = BurnupData.new(@all_projects_weeks, build_hours_scope_data, build_hours_throughput_data)
 
     project = projects.first
-    @monte_carlo_data = Stats::StatisticsService.instance.run_montecarlo(project.demands.count, gather_leadtime_data(project), gather_throughput_data(project), 100) if project.present?
+    @monte_carlo_data = if project.present?
+                          Stats::StatisticsService.instance.run_montecarlo(project.demands.count, gather_leadtime_data(project), gather_throughput_data(project), 100)
+                        else
+                          Stats::Presenter::MonteCarloPresenter.new({})
+                        end
+    build_weeekly_bugs_count_hash
     build_flow_pressure_array
     build_statistics_charts
   end
@@ -61,6 +66,7 @@ class ReportData < ChartData
   end
 
   def dates_and_odds
+    return {} if @active_projects.blank?
     project = @active_projects.first
     build_deadline_odds_data(monte_carlo_data, project)
   end
@@ -216,6 +222,19 @@ class ReportData < ChartData
     @lead_time_control_chart[:percentile_95_data] = Stats::StatisticsService.instance.percentile(95, demand_data)
     @lead_time_control_chart[:percentile_80_data] = Stats::StatisticsService.instance.percentile(80, demand_data)
     @lead_time_control_chart[:percentile_60_data] = Stats::StatisticsService.instance.percentile(60, demand_data)
+  end
+
+  def build_weeekly_bugs_count_hash
+    dates_array = []
+    bugs_opened_count_array = []
+    bugs_closed_count_array = []
+    @all_projects_weeks.each do |week_year|
+      date = Date.commercial(week_year[1], week_year[0], 1)
+      dates_array << date.to_s
+      bugs_opened_count_array << ProjectResultsRepository.instance.bugs_opened_in_week(@all_projects, date)
+      bugs_closed_count_array << ProjectResultsRepository.instance.bugs_closed_in_week(@all_projects, date)
+    end
+    @weeekly_bugs_count_hash = { dates_array: dates_array, bugs_opened_count_array: bugs_opened_count_array, bugs_closed_count_array: bugs_closed_count_array }
   end
 
   def build_leadtime_histogram

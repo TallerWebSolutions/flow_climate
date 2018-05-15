@@ -69,6 +69,10 @@ en:
           stage_stream:
             upstream: Upstream
             downstream: Downstream
+      demand:
+        enums:
+          demand_type:
+            bug: "Bug"
     errors:
       messages:
         record_invalid: 'Validation failed: %{errors}'

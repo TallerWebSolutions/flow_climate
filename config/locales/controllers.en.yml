@@ -198,6 +198,11 @@ en:
       throughput_histogram:
         title: "Throughput Histogram for %{target_name}"
         ylabel: "hits"
+      bugs_in_time:
+        title: "Bugs in time for %{target_name}"
+        opened: "Bugs Opened"
+        closed: "Bugs Closed"
+        ylabel: "bugs"
     project_risk_alert_table: "Risk alerts to the project"
     project_risk_configs:
       title: "Risk Configurations"

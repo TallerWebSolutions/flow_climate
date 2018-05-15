@@ -2,6 +2,9 @@ $(function () {
     var throughputDiv = $('#throughput-column');
     buildColumnChart(throughputDiv);
 
+    var bugsInTimeDiv = $('#bugs-in-time');
+    buildColumnChart(bugsInTimeDiv);
+
     var hoursPerDemandDiv = $('#hours-column');
     buildColumnChart(hoursPerDemandDiv);
 
