@@ -40,6 +40,50 @@ RSpec.describe DemandsRepository, type: :repository do
 
   pending '#full_demand_destroy!'
 
+  describe '#total_queue_time_for' do
+    let(:company) { Fabricate :company }
+    let(:customer) { Fabricate :customer, company: company }
+    let(:project) { Fabricate :project, customer: customer }
+
+    let(:first_stage) { Fabricate :stage, company: company, projects: [project], stage_stream: :downstream, queue: true }
+    let(:second_stage) { Fabricate :stage, company: company, projects: [project], stage_stream: :downstream, queue: true }
+    let(:third_stage) { Fabricate :stage, company: company, projects: [project], stage_stream: :downstream, queue: false }
+    let(:fourth_stage) { Fabricate :stage, company: company, projects: [project], stage_stream: :upstream, queue: true }
+    let(:fifth_stage) { Fabricate :stage, company: company, projects: [project], stage_stream: :upstream, queue: true }
+
+    let(:demand) { Fabricate :demand, project: project }
+
+    let!(:first_transition) { Fabricate :demand_transition, stage: first_stage, demand: demand, last_time_in: '2018-02-27T17:09:58-03:00', last_time_out: '2018-03-02T17:09:58-03:00' }
+    let!(:second_transition) { Fabricate :demand_transition, stage: second_stage, demand: demand, last_time_in: '2018-02-02T17:09:58-03:00', last_time_out: '2018-02-10T17:09:58-03:00' }
+    let!(:third_transition) { Fabricate :demand_transition, stage: third_stage, demand: demand, last_time_in: '2018-04-02T17:09:58-03:00', last_time_out: '2018-04-20T17:09:58-03:00' }
+    let!(:fourth_transition) { Fabricate :demand_transition, stage: fourth_stage, demand: demand, last_time_in: '2018-01-08T17:09:58-03:00', last_time_out: '2018-02-02T17:09:58-03:00' }
+    let!(:fifth_transition) { Fabricate :demand_transition, stage: fifth_stage, demand: demand, last_time_in: '2018-03-08T17:09:58-03:00', last_time_out: '2018-04-02T17:09:58-03:00' }
+
+    it { expect(DemandsRepository.instance.total_queue_time_for(demand)).to eq 264.0 }
+  end
+
+  describe '#total_touch_time_for' do
+    let(:company) { Fabricate :company }
+    let(:customer) { Fabricate :customer, company: company }
+    let(:project) { Fabricate :project, customer: customer }
+
+    let(:first_stage) { Fabricate :stage, company: company, projects: [project], stage_stream: :downstream, queue: false }
+    let(:second_stage) { Fabricate :stage, company: company, projects: [project], stage_stream: :downstream, queue: false }
+    let(:third_stage) { Fabricate :stage, company: company, projects: [project], stage_stream: :downstream, queue: true }
+    let(:fourth_stage) { Fabricate :stage, company: company, projects: [project], stage_stream: :upstream, queue: false }
+    let(:fifth_stage) { Fabricate :stage, company: company, projects: [project], stage_stream: :upstream, queue: false }
+
+    let(:demand) { Fabricate :demand, project: project }
+
+    let!(:first_transition) { Fabricate :demand_transition, stage: first_stage, demand: demand, last_time_in: '2018-02-27T17:09:58-03:00', last_time_out: '2018-03-02T17:09:58-03:00' }
+    let!(:second_transition) { Fabricate :demand_transition, stage: second_stage, demand: demand, last_time_in: '2018-02-02T17:09:58-03:00', last_time_out: '2018-02-10T17:09:58-03:00' }
+    let!(:third_transition) { Fabricate :demand_transition, stage: third_stage, demand: demand, last_time_in: '2018-04-02T17:09:58-03:00', last_time_out: '2018-04-20T17:09:58-03:00' }
+    let!(:fourth_transition) { Fabricate :demand_transition, stage: fourth_stage, demand: demand, last_time_in: '2018-01-08T17:09:58-03:00', last_time_out: '2018-02-02T17:09:58-03:00' }
+    let!(:fifth_transition) { Fabricate :demand_transition, stage: fifth_stage, demand: demand, last_time_in: '2018-03-08T17:09:58-03:00', last_time_out: '2018-04-02T17:09:58-03:00' }
+
+    it { expect(DemandsRepository.instance.total_touch_time_for(demand)).to eq 264.0 }
+  end
+
   describe '#selected_grouped_by_project_and_week' do
     let(:first_project) { Fabricate :project, start_date: 3.weeks.ago }
     let(:second_project) { Fabricate :project, start_date: 3.weeks.ago }

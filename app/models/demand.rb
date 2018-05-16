@@ -21,6 +21,8 @@
 #  manual_effort     :boolean          default(FALSE)
 #  project_id        :integer          not null
 #  project_result_id :integer          indexed
+#  total_queue_time  :integer          default(0)
+#  total_touch_time  :integer          default(0)
 #  updated_at        :datetime         not null
 #  url               :string
 #

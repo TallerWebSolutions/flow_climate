@@ -63,7 +63,7 @@ class DemandTransition < ApplicationRecord
   end
 
   def set_demand_computed_fields
-    demand.update(downstream: stage.downstream?)
+    demand.update(downstream: stage.downstream?, total_queue_time: DemandsRepository.instance.total_queue_time_for(demand), total_touch_time: DemandsRepository.instance.total_touch_time_for(demand))
     demand.update_effort!
   end
 
