@@ -2,6 +2,12 @@ $(function () {
     var throughputDiv = $('#throughput-column');
     buildColumnChart(throughputDiv);
 
+    var bugsInTimeDiv = $('#bugs-in-time');
+    buildColumnChart(bugsInTimeDiv);
+
+    var shareBugsInTimeDiv = $('#line-share-bug');
+    buildLineChart(shareBugsInTimeDiv);
+
     var hoursPerDemandDiv = $('#hours-column');
     buildColumnChart(hoursPerDemandDiv);
 

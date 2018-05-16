@@ -81,8 +81,8 @@ RSpec.describe TeamsController, type: :controller do
       context 'passing a valid ID' do
         context 'having data' do
           it 'assigns the instance variables and renders the template' do
-            expect(DemandsRepository.instance).to(receive(:selected_grouped_by_project_and_week).with([third_project, project_in_product_team, second_project, first_project], Time.zone.today.cweek, Time.zone.today.cwyear).once { [first_demand, second_demand] })
-            expect(DemandsRepository.instance).to(receive(:throughput_by_project_and_week).with([third_project, project_in_product_team, second_project, first_project], Time.zone.today.cweek, Time.zone.today.cwyear).once { [third_demand, fourth_demand] })
+            expect(DemandsRepository.instance).to(receive(:selected_grouped_by_project_and_week).with(team.projects, Time.zone.today.cweek, Time.zone.today.cwyear).once { [first_demand, second_demand] })
+            expect(DemandsRepository.instance).to(receive(:throughput_by_project_and_week).with(team.projects, Time.zone.today.cweek, Time.zone.today.cwyear).once { [third_demand, fourth_demand] })
             get :show, params: { company_id: company, id: team.id }
 
             expect(response).to render_template :show
@@ -92,7 +92,7 @@ RSpec.describe TeamsController, type: :controller do
             expect(assigns(:team_projects)).to eq [third_project, project_in_product_team, fifth_project, fourth_project, second_project, first_project]
             expect(assigns(:active_team_projects)).to eq [third_project, project_in_product_team, second_project, first_project]
             expect(assigns(:strategic_report_data).array_of_months).to eq [[Time.zone.today.month, Time.zone.today.year], [1.month.from_now.to_date.month, 1.month.from_now.to_date.year]]
-            expect(assigns(:strategic_report_data).active_projects_count_data).to eq [1, 3]
+            expect(assigns(:strategic_report_data).active_projects_count_data).to eq [1, 2]
             expect(assigns(:projects_risk_alert_data).backlog_risk_alert_data).to eq [{ name: 'Vermelho', y: 1, color: '#FB283D' }]
             expect(assigns(:projects_risk_alert_data).money_risk_alert_data).to eq [{ name: 'Verde', y: 1, color: '#179A02' }]
             expect(assigns(:pipefy_team_configs)).to eq [second_pipefy_team_config, first_pipefy_team_config]

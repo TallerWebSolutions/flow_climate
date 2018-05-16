@@ -42,6 +42,9 @@ pt-BR:
       hours_per_demand: "Horas por Demanda"
     no_data: "Não existem dados para essa exibição"
     download_csv: "Download CSV"
+    percentage:
+      symbol: "%"
+      title: "Porcentagem"
   header:
     logout: Sair
     sign_up: Cadastre-se
@@ -199,6 +202,14 @@ pt-BR:
       throughput_histogram:
         title: "Histograma de Throughput para %{target_name}"
         ylabel: "Frequências"
+      bugs_in_time:
+        title: "Bugs no tempo para %{target_name}"
+        opened: "Bugs Abertos"
+        closed: "Bugs Fechados"
+        ylabel: "bugs"
+        share: "Porcentagem de Bugs"
+      bugs_percentage_in_time:
+        title: "Porcentagem de Bugs no Tempo para %{target_name}"
     project_risk_alert_table: "Alertas de risco para o projeto"
     portfolio_bulletin:
       delivered_demands: "Demandas entregues na última semana"

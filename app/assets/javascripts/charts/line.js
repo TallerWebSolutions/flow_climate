@@ -1,23 +1,23 @@
-function buildLineChart(columnDiv) {
+function buildLineChart(lineDiv) {
     new Highcharts.Chart({
         chart: {
             type: 'line',
-            renderTo: columnDiv.attr('id')
+            renderTo: lineDiv.attr('id')
         },
         title: {
-            text: columnDiv.data('title'),
+            text: lineDiv.data('title'),
             x: -20 //center
         },
         subtitle: {
             text: 'Source: Flow Climate'
         },
         xAxis: {
-            categories: columnDiv.data('xcategories'),
-            title: {text: columnDiv.data('xtitle')}
+            categories: lineDiv.data('xcategories'),
+            title: { text: lineDiv.data('xtitle') }
         },
         yAxis: [{
             title: {
-                text: columnDiv.data('ylinetitle')
+                text: lineDiv.data('ytitle')
             },
             plotLines: [{
                 value: 0,
@@ -26,13 +26,13 @@ function buildLineChart(columnDiv) {
             }],
             stackLabels: {
                 enabled: true
-            },
-            opposite: true
+            }
         }],
         tooltip: {
             enabled: true,
-            valuePrefix: columnDiv.data('prefix'),
-            valueDecimals: columnDiv.data('decimals'),
+            valuePrefix: lineDiv.data('prefix'),
+            valueSuffix: lineDiv.data('suffix'),
+            valueDecimals: lineDiv.data('decimals'),
             shared: true
         },
         legend: {
@@ -47,11 +47,11 @@ function buildLineChart(columnDiv) {
                     enabled: true,
                     color: 'black',
                     formatter: function () {
-                        return columnDiv.data('prefix') + Highcharts.numberFormat(this.y, columnDiv.data('decimals'), '.');
+                        return lineDiv.data('prefix') + Highcharts.numberFormat(this.y, lineDiv.data('decimals'), '.') + ' ' + lineDiv.data('suffix');
                     }
                 }
             }
         },
-        series: columnDiv.data('series')
+        series: lineDiv.data('series')
     });
 }

@@ -80,11 +80,11 @@ class Company < ApplicationRecord
   end
 
   def bugs_opened_in_month(date = Time.zone.today)
-    ProjectResultsRepository.instance.bugs_opened_in_month(self, date)
+    ProjectResultsRepository.instance.bugs_opened_in_month(projects, date)
   end
 
   def bugs_closed_in_month(date = Time.zone.today)
-    ProjectResultsRepository.instance.bugs_closed_in_month(self, date)
+    ProjectResultsRepository.instance.bugs_closed_in_month(projects, date)
   end
 
   def top_three_flow_pressure
