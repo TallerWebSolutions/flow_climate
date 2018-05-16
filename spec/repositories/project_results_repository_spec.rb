@@ -92,10 +92,10 @@ RSpec.describe ProjectResultsRepository, type: :repository do
       let!(:third_result) { Fabricate :project_result, project: third_project, result_date: Time.zone.iso8601('2018-02-11T23:01:46'), qty_bugs_opened: 90 }
       let!(:out_result) { Fabricate :project_result, result_date: Time.zone.iso8601('2018-02-14T23:01:46'), qty_bugs_opened: 60 }
 
-      it { expect(ProjectResultsRepository.instance.bugs_opened_in_month(company, Time.zone.iso8601('2018-02-14T23:01:46').to_date)).to eq 140 }
+      it { expect(ProjectResultsRepository.instance.bugs_opened_in_month(company.projects, Time.zone.iso8601('2018-02-14T23:01:46').to_date)).to eq 140 }
     end
     context 'having no results' do
-      it { expect(ProjectResultsRepository.instance.bugs_opened_in_month(company, Time.zone.iso8601('2018-02-14T23:01:46').to_date)).to eq 0 }
+      it { expect(ProjectResultsRepository.instance.bugs_opened_in_month(company.projects, Time.zone.iso8601('2018-02-14T23:01:46').to_date)).to eq 0 }
     end
   end
 
@@ -106,10 +106,10 @@ RSpec.describe ProjectResultsRepository, type: :repository do
       let!(:third_result) { Fabricate :project_result, project: third_project, result_date: Time.zone.iso8601('2018-02-11T23:01:46'), qty_bugs_closed: 90 }
       let!(:out_result) { Fabricate :project_result, result_date: Time.zone.iso8601('2018-02-14T23:01:46'), qty_bugs_closed: 60 }
 
-      it { expect(ProjectResultsRepository.instance.bugs_closed_in_month(company, Time.zone.iso8601('2018-02-14T23:01:46').to_date)).to eq 140 }
+      it { expect(ProjectResultsRepository.instance.bugs_closed_in_month(company.projects, Time.zone.iso8601('2018-02-14T23:01:46').to_date)).to eq 140 }
     end
     context 'having no results' do
-      it { expect(ProjectResultsRepository.instance.bugs_closed_in_month(company, Time.zone.iso8601('2018-02-14T23:01:46').to_date)).to eq 0 }
+      it { expect(ProjectResultsRepository.instance.bugs_closed_in_month(company.projects, Time.zone.iso8601('2018-02-14T23:01:46').to_date)).to eq 0 }
     end
   end
 

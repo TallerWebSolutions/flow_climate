@@ -75,6 +75,21 @@
   </div>
   <div class="row">
     <div class="col-xs-12">
+      <div id="line-share-bug"
+           class="flow-chart"
+           data-title='<%= t('projects.charts.bugs_percentage_in_time.title', target_name: target_name) %>'
+           data-xcategories='<%= report_data.weeekly_bugs_share_hash[:dates_array] %>'
+           data-xtitle='<%= t('projects.charts.xlabel.weeks') %>'
+           data-ytitle='<%= t('general.percentage.title') %>'
+           data-prefix=''
+           data-suffix='<%= t('general.percentage.symbol') %>'
+           data-series='<%= [{ name: I18n.t('projects.charts.bugs_in_time.share'), data: report_data.weeekly_bugs_share_hash[:bugs_opened_share_array] }].to_json %>'
+           data-decimals='2'>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12">
       <div id="cmd-column"
            class="flow-chart"
            data-title='<%= t('projects.charts.cmd.title', project_name: target_name) %>'

@@ -19,16 +19,20 @@ class ProjectResultsRepository
     project_result_joins.where('customers.company_id = :company_id AND EXTRACT(MONTH FROM result_date) = :month AND EXTRACT(YEAR FROM result_date) = :year', company_id: company.id, month: date.month, year: date.year).sum(&:throughput_downstream)
   end
 
-  def bugs_opened_in_month(company, date = Time.zone.today)
-    project_result_joins.where('customers.company_id = :company_id AND EXTRACT(MONTH FROM result_date) = :month AND EXTRACT(YEAR FROM result_date) = :year', company_id: company.id, month: date.month, year: date.year).sum(&:qty_bugs_opened)
+  def bugs_opened_in_month(projects, date = Time.zone.today)
+    ProjectResult.where(project_id: projects).where('EXTRACT(MONTH FROM result_date) = :month AND EXTRACT(YEAR FROM result_date) = :year', month: date.month, year: date.year).sum(&:qty_bugs_opened)
   end
 
-  def bugs_closed_in_month(company, date = Time.zone.today)
-    project_result_joins.where('customers.company_id = :company_id AND EXTRACT(MONTH FROM result_date) = :month AND EXTRACT(YEAR FROM result_date) = :year', company_id: company.id, month: date.month, year: date.year).sum(&:qty_bugs_closed)
+  def bugs_closed_in_month(projects, date = Time.zone.today)
+    ProjectResult.where(project_id: projects).where('EXTRACT(MONTH FROM result_date) = :month AND EXTRACT(YEAR FROM result_date) = :year', month: date.month, year: date.year).sum(&:qty_bugs_closed)
   end
 
   def bugs_opened_in_week(projects, date = Time.zone.today)
-    project_result_joins.where(project_id: projects).where('EXTRACT(WEEK FROM result_date) = :week AND EXTRACT(YEAR FROM result_date) = :year', week: date.cweek, year: date.cwyear).sum(&:qty_bugs_opened)
+    ProjectResult.where(project_id: projects).where('EXTRACT(WEEK FROM result_date) = :week AND EXTRACT(YEAR FROM result_date) = :year', week: date.cweek, year: date.cwyear).sum(&:qty_bugs_opened)
+  end
+
+  def bugs_opened_until_week(projects, date = Time.zone.today)
+    ProjectResult.where(project_id: projects).where('(EXTRACT(WEEK FROM result_date) <= :week AND EXTRACT(YEAR FROM result_date) <= :year) OR (EXTRACT(YEAR FROM result_date) < :year)', week: date.cweek, year: date.cwyear).sum(&:qty_bugs_opened)
   end
 
   def bugs_closed_in_week(projects, date = Time.zone.today)
