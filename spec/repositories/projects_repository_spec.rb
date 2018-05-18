@@ -157,4 +157,58 @@ RSpec.describe ProjectsRepository, type: :repository do
 
     it { expect(ProjectsRepository.instance.leadtime_per_week([project])).to eq(Date.new(2018, 4, 2) => 1.5, Date.new(2018, 4, 9) => 0.0) }
   end
+
+  describe '#total_queue_time_for' do
+    before { travel_back }
+
+    let(:company) { Fabricate :company }
+    let(:customer) { Fabricate :customer, company: company }
+    let(:project) { Fabricate :project, customer: customer }
+
+    let(:first_stage) { Fabricate :stage, company: company, projects: [project], stage_stream: :downstream, queue: false }
+    let(:second_stage) { Fabricate :stage, company: company, projects: [project], stage_stream: :downstream, queue: false }
+    let(:fourth_stage) { Fabricate :stage, company: company, projects: [project], stage_stream: :upstream, queue: false }
+
+    let(:third_stage) { Fabricate :stage, company: company, projects: [project], stage_stream: :downstream, queue: true }
+    let(:fifth_stage) { Fabricate :stage, company: company, projects: [project], stage_stream: :downstream, queue: true }
+
+    let(:demand) { Fabricate :demand, project: project }
+
+    let!(:first_transition) { Fabricate :demand_transition, stage: first_stage, demand: demand, last_time_in: '2018-02-27T17:09:58-03:00', last_time_out: '2018-03-02T17:09:58-03:00' }
+    let!(:second_transition) { Fabricate :demand_transition, stage: second_stage, demand: demand, last_time_in: '2018-02-02T17:09:58-03:00', last_time_out: '2018-02-09T17:09:58-03:00' }
+    let!(:fourth_transition) { Fabricate :demand_transition, stage: fourth_stage, demand: demand, last_time_in: '2018-01-08T17:09:58-03:00', last_time_out: '2018-02-02T17:09:58-03:00' }
+
+    let!(:third_transition) { Fabricate :demand_transition, stage: third_stage, demand: demand, last_time_in: '2018-04-02T17:09:58-03:00', last_time_out: '2018-05-15T17:09:58-03:00' }
+    let!(:fifth_transition) { Fabricate :demand_transition, stage: fifth_stage, demand: demand, last_time_in: '2018-03-08T17:09:58-03:00', last_time_out: '2018-04-02T17:09:58-03:00' }
+
+    it { expect(ProjectsRepository.instance.total_queue_time_for(Project.all)).to eq 1632.0 }
+    it { expect(ProjectsRepository.instance.total_queue_time_for(Project.all, Date.new(2018, 4, 10))).to eq 600.0 }
+  end
+
+  describe '#total_touch_time_for' do
+    before { travel_back }
+
+    let(:company) { Fabricate :company }
+    let(:customer) { Fabricate :customer, company: company }
+    let(:project) { Fabricate :project, customer: customer }
+
+    let(:first_stage) { Fabricate :stage, company: company, projects: [project], stage_stream: :downstream, queue: false }
+    let(:second_stage) { Fabricate :stage, company: company, projects: [project], stage_stream: :downstream, queue: false }
+    let(:fourth_stage) { Fabricate :stage, company: company, projects: [project], stage_stream: :upstream, queue: false }
+
+    let(:third_stage) { Fabricate :stage, company: company, projects: [project], stage_stream: :downstream, queue: true }
+    let(:fifth_stage) { Fabricate :stage, company: company, projects: [project], stage_stream: :upstream, queue: true }
+
+    let(:demand) { Fabricate :demand, project: project }
+
+    let!(:first_transition) { Fabricate :demand_transition, stage: first_stage, demand: demand, last_time_in: '2018-02-27T17:09:58-03:00', last_time_out: '2018-03-02T17:09:58-03:00' }
+    let!(:second_transition) { Fabricate :demand_transition, stage: second_stage, demand: demand, last_time_in: '2018-02-02T17:09:58-03:00', last_time_out: '2018-02-09T17:09:58-03:00' }
+    let!(:fourth_transition) { Fabricate :demand_transition, stage: fourth_stage, demand: demand, last_time_in: '2018-01-08T17:09:58-03:00', last_time_out: '2018-02-02T17:09:58-03:00' }
+
+    let!(:third_transition) { Fabricate :demand_transition, stage: third_stage, demand: demand, last_time_in: '2018-04-02T17:09:58-03:00', last_time_out: '2018-04-20T17:09:58-03:00' }
+    let!(:fifth_transition) { Fabricate :demand_transition, stage: fifth_stage, demand: demand, last_time_in: '2018-03-08T17:09:58-03:00', last_time_out: '2018-04-02T17:09:58-03:00' }
+
+    it { expect(ProjectsRepository.instance.total_touch_time_for(Project.all)).to eq 240.0 }
+    it { expect(ProjectsRepository.instance.total_touch_time_for(Project.all, Date.new(2018, 2, 16))).to eq 168.0 }
+  end
 end

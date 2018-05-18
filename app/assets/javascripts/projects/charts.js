@@ -8,6 +8,12 @@ $(function () {
     var shareBugsInTimeDiv = $('#line-share-bug');
     buildLineChart(shareBugsInTimeDiv);
 
+    var queueTouchCountDiv = $('#queue-touch-in-time');
+    buildColumnChart(queueTouchCountDiv);
+
+    var flowEfficiencyDiv = $('#flow-efficiency-bug');
+    buildLineChart(flowEfficiencyDiv);
+
     var hoursPerDemandDiv = $('#hours-column');
     buildColumnChart(hoursPerDemandDiv);
 

@@ -18,11 +18,11 @@ class DemandsRepository
   end
 
   def total_queue_time_for(demand)
-    demand.demand_transitions.joins(:stage).where('stages.queue = true  AND stages.stage_stream = 1').sum(&:total_time_in_transition)
+    demand.demand_transitions.joins(:stage).where('stages.queue = true AND stages.stage_stream = 1').sum(&:total_hours_in_transition)
   end
 
   def total_touch_time_for(demand)
-    demand.demand_transitions.joins(:stage).where('stages.queue = false AND stages.stage_stream = 1').sum(&:total_time_in_transition)
+    demand.demand_transitions.joins(:stage).where('stages.queue = false AND stages.stage_stream = 1').sum(&:total_hours_in_transition)
   end
 
   def selected_grouped_by_project_and_week(projects, week, year)
