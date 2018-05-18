@@ -209,6 +209,14 @@ en:
         share: "Percentage of Bugs"
       bugs_percentage_in_time:
         title: "Percentage of Bugs in Time for %{target_name}"
+      queue_touch_time:
+        title: "Queue x Touch Times for %{target_name}"
+        ylabel: "hours"
+        queue: "Queue"
+        touch: "Touch"
+      flow_efficiency:
+        title: "Flow Efficiency for %{target_name}"
+        share: "Flow Efficiency"
     project_risk_alert_table: "Risk alerts to the project"
     project_risk_configs:
       title: "Risk Configurations"
@@ -423,7 +431,7 @@ en:
     index:
       title: "Demand Blocks"
   demand_transitions:
-    total_time_in_transition: "Total time in transition"
+    total_hours_in_transition: "Total hours in transition"
     working_time_in_transition: "Working time in transition"
     index:
       title: "Demand Transitions"

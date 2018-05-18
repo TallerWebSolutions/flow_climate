@@ -221,6 +221,8 @@ pt-BR:
       demand:
         demand_id: Id da Demanda
         project: Projeto
+        total_queue_time: Tempo Total de Fila
+        total_touch_time: Tempo Total de Trabalho
         effort_upstream: Esforço Upstream
         effort_downstream: Esforço Downstream
         demand_type: Tipo da Demanda

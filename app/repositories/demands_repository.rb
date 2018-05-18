@@ -17,6 +17,14 @@ class DemandsRepository
     demand.destroy
   end
 
+  def total_queue_time_for(demand)
+    demand.demand_transitions.joins(:stage).where('stages.queue = true AND stages.stage_stream = 1').sum(&:total_hours_in_transition)
+  end
+
+  def total_touch_time_for(demand)
+    demand.demand_transitions.joins(:stage).where('stages.queue = false AND stages.stage_stream = 1').sum(&:total_hours_in_transition)
+  end
+
   def selected_grouped_by_project_and_week(projects, week, year)
     Demand.where(project_id: projects.map(&:id)).where('EXTRACT(WEEK FROM commitment_date) = :week AND EXTRACT(YEAR FROM commitment_date) = :year', week: week, year: year)
   end

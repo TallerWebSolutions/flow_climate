@@ -3,7 +3,8 @@
 class ReportData < ChartData
   attr_reader :demands_burnup_data, :hours_burnup_data, :flow_pressure_data, :monte_carlo_data,
               :leadtime_bins, :leadtime_histogram_data, :throughput_bins, :throughput_histogram_data,
-              :lead_time_control_chart, :weeekly_bugs_count_hash, :weeekly_bugs_share_hash
+              :lead_time_control_chart, :weeekly_bugs_count_hash, :weeekly_bugs_share_hash, :weeekly_queue_touch_count_hash,
+              :weeekly_queue_touch_share_hash
 
   def initialize(projects)
     super(projects)
@@ -15,6 +16,8 @@ class ReportData < ChartData
     build_montecarlo_data(project)
     build_weeekly_bugs_count_hash
     build_weeekly_bugs_share_hash
+    build_weeekly_queue_touch_count_hash
+    build_weeekly_queue_touch_share_hash
     build_flow_pressure_array
     build_statistics_charts
   end
@@ -80,8 +83,8 @@ class ReportData < ChartData
     data_downstream = []
 
     hours_per_month_data_hash[:keys].each do |month|
-      data_upstream << grouped_hours_to_upstream[month] || 0
-      data_downstream << grouped_hours_to_downstream[month] || 0
+      data_upstream << grouped_hours_to_upstream[month]&.to_f || 0
+      data_downstream << grouped_hours_to_downstream[month]&.to_f || 0
     end
 
     hours_per_month_data_hash[:data] = { upstream: data_upstream, downstream: data_downstream }
@@ -255,8 +258,36 @@ class ReportData < ChartData
     @weeekly_bugs_share_hash = { dates_array: dates_array, bugs_opened_share_array: bugs_opened_share_array }
   end
 
-  def compute_percentage(bugs_in_week, scope_in_week)
-    (bugs_in_week.to_f / (bugs_in_week.to_f + scope_in_week.to_f) * 100)
+  def build_weeekly_queue_touch_count_hash
+    dates_array = []
+    queue_times = []
+    touch_times = []
+    @all_projects_weeks.each do |week_year|
+      date = Date.commercial(week_year[1], week_year[0], 1)
+      dates_array << date.to_s
+      queue_times << ProjectsRepository.instance.total_queue_time_for(@all_projects, date)
+      touch_times << ProjectsRepository.instance.total_touch_time_for(@all_projects, date)
+    end
+    @weeekly_queue_touch_count_hash = { dates_array: dates_array, queue_times: queue_times, touch_times: touch_times }
+  end
+
+  def build_weeekly_queue_touch_share_hash
+    dates_array = []
+    flow_efficiency_array = []
+    @all_projects_weeks.each do |week_year|
+      date = Date.commercial(week_year[1], week_year[0], 1)
+      dates_array << date.to_s
+
+      queue_time = ProjectsRepository.instance.total_queue_time_for(@all_projects, date)
+      touch_time = ProjectsRepository.instance.total_touch_time_for(@all_projects, date)
+      flow_efficiency_array << compute_percentage(touch_time, queue_time)
+    end
+    @weeekly_queue_touch_share_hash = { dates_array: dates_array, flow_efficiency_array: flow_efficiency_array }
+  end
+
+  def compute_percentage(data_count_analysed, data_count_remaining)
+    return 0 if data_count_remaining.zero?
+    (data_count_analysed.to_f / (data_count_analysed.to_f + data_count_remaining.to_f) * 100)
   end
 
   def build_leadtime_histogram
