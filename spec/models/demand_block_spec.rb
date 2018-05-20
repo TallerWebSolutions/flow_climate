@@ -16,10 +16,12 @@ RSpec.describe DemandBlock, type: :model do
 
   context 'callbacks' do
     describe '#before_update' do
+      before { travel_to Time.zone.local(2018, 5, 18, 10, 0, 0) }
+      after { travel_back }
       let(:demand_block) { Fabricate :demand_block, block_time: Time.zone.yesterday }
       context 'when there is unblock_time' do
         before { demand_block.update(unblock_time: Time.zone.now) }
-        it { expect(demand_block.reload.block_duration).not_to eq 0 }
+        it { expect(demand_block.reload.block_duration).to eq 12 }
       end
       context 'when there is no unblock_time' do
         before { demand_block.update(block_time: Time.zone.now) }
