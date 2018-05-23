@@ -1,13 +1,15 @@
 hideAllComponents();
 $('#stamps').show();
-$('#nav-item-stamps').addClass('active');
+
+var stampsDiv = $('#nav-item-stamps');
+stampsDiv.addClass('active');
 
 var company_id = $("#company_id").val();
 var team_id = $("#team_id").val();
 
 $(".loader").hide();
 
-$('#nav-item-stamps').on('click', function(){
+stampsDiv.on('click', function(){
     hideAllComponents();
     $('#stamps').show();
     $('#nav-item-stamps').addClass('active');
@@ -19,10 +21,12 @@ $('#nav-item-list').on('click', function(){
     $('#nav-item-list').addClass('active');
 });
 
+
 $('#nav-item-statusreport').on('click', function(){
     hideAllComponents();
-    $('#project-status-report').show();
-    $('#nav-item-statusreport').addClass('active');
+    $(".loader").show();
+
+    buildStatusReportCharts(company_id, team_id)
 });
 
 $('#nav-item-charts').on('click', function(){
@@ -32,11 +36,10 @@ $('#nav-item-charts').on('click', function(){
 
     buildOperationalCharts(company_id, team_id);
 });
-
 $('#nav-item-strategic').on('click', function(){
     hideAllComponents();
-    $('#strategic').show();
-    $('#nav-item-strategic').addClass('active');
+    $(".loader").show();
+    buildStrategicCharts(company_id, team_id);
 });
 
 $('#nav-item-members').on('click', function(){

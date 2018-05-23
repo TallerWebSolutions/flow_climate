@@ -41,6 +41,8 @@ Rails.application.routes.draw do
         get 'search_for_projects/:status_filter', action: :search_for_projects, as: 'search_for_projects'
         get 'search_demands_to_flow_charts', action: :search_demands_to_flow_charts, as: 'search_demands_to_flow_charts'
         get :build_operational_charts
+        get :build_strategic_charts
+        get :build_status_report_charts
       end
     end
 

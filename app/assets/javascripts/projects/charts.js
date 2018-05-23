@@ -1,7 +1,3 @@
-$(function () {
-    buildOperationalHighcharts();
-});
-
 function buildOperationalHighcharts() {
     var throughputDiv = $('#throughput-column');
     buildColumnChart(throughputDiv);
@@ -38,4 +34,7 @@ function buildOperationalHighcharts() {
 
     var throughputHistogramChart = $('#throughput-histogram');
     buildColumnChart(throughputHistogramChart);
+
+    var hoursConsumedColumnDiv = $('#hours-consumed-column');
+    buildColumnChart(hoursConsumedColumnDiv);
 }

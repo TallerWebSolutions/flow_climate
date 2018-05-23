@@ -1,4 +1,4 @@
-$(function () {
+function buildStatusReportCurrentCharts() {
     var burnupHours = $('#burnup-hours');
     buildBurnupChart(burnupHours);
 
@@ -10,7 +10,4 @@ $(function () {
 
     var statusReportDeadlineDiv = $('#status-report-deadline-bar');
     buildBarChart(statusReportDeadlineDiv);
-
-    var statusReportHoursDiv = $('#status-report-hours-column');
-    buildColumnChart(statusReportHoursDiv);
-});
+}

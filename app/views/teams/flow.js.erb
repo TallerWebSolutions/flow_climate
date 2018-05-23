@@ -1,15 +1,7 @@
 var flow_div = $('#flow');
 flow_div.html("<%= escape_javascript(render 'teams/flow', flow_report_data: @flow_report_data, team: @team).html_safe %>");
 
-$(function () {
-    var columnDiv = $('#processing-rate-column');
-    buildColumnChart(columnDiv);
-
-    var wipDiv = $('#wip-per-day-column');
-    buildColumnChart(wipDiv);
-
-    accordionBehaviour();
-});
+buildFlowDemandsCharts();
 
 $(".loader").hide();
 flow_div.show();

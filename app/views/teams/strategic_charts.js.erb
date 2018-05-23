@@ -1,0 +1,13 @@
+$("#strategic").html("<%= escape_javascript(render 'companies/strategic_table', model_name: @team.name, strategic_report_data: @strategic_report_data).html_safe %>");
+
+buildStatusReportCurrentCharts();
+buildMoneyChart();
+buildFlowPressurePerMonth();
+buildFlowPressurePerMonth();
+buildActiveColumnChart();
+buildHourPerMonthChart();
+
+$('#strategic').show();
+$('#nav-item-strategic').addClass('active');
+
+$(".loader").hide();

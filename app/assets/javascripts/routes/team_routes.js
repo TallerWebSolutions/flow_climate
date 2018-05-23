@@ -13,3 +13,17 @@ function searchDemandsToFlowCharts(company_id, team_id, week, year) {
         data: 'year=' + year +'&week=' + week
     });
 }
+
+function buildStrategicCharts(company_id, team_id) {
+    jQuery.ajax({
+        url: "/companies/" + company_id + "/teams/" + team_id + "/build_strategic_charts" + ".js",
+        type: "GET"
+    });
+}
+
+function buildStatusReportCharts(company_id, team_id) {
+    jQuery.ajax({
+        url: "/companies/" + company_id + "/teams/" + team_id + "/build_status_report_charts" + ".js",
+        type: "GET"
+    });
+}
