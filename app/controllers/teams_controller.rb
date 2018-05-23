@@ -2,7 +2,7 @@
 
 class TeamsController < AuthenticatedController
   before_action :assign_company
-  before_action :assign_team, only: %i[show edit update search_for_projects search_demands_to_flow_charts]
+  before_action :assign_team, only: %i[show edit update search_for_projects search_demands_to_flow_charts build_operational_charts]
 
   def show
     @team_members = @team.team_members.order(:name)
@@ -10,6 +10,7 @@ class TeamsController < AuthenticatedController
     @active_team_projects = @team_projects.active
     @projects_summary = ProjectsSummaryObject.new(@team.projects)
     @pipefy_team_configs = @team.pipefy_team_configs.order(:username)
+    @projects_risk_alert_data = ProjectRiskData.new(@team.projects)
     assign_report_data(Time.zone.today.cweek, Time.zone.today.to_date.cwyear)
   end
 
@@ -43,6 +44,11 @@ class TeamsController < AuthenticatedController
     respond_to { |format| format.js { render file: 'teams/flow.js.erb' } }
   end
 
+  def build_operational_charts
+    @report_data = ReportData.new(@team.projects)
+    respond_to { |format| format.js { render file: 'teams/operational_charts.js.erb' } }
+  end
+
   private
 
   def assign_team
@@ -54,9 +60,6 @@ class TeamsController < AuthenticatedController
   end
 
   def assign_report_data(week, year)
-    @report_data = ReportData.new(@team.projects)
-    @strategic_report_data = StrategicReportData.new(@company, @team.projects, @team.active_monthly_available_hours_for_billable_types(@team.projects.pluck(:project_type).uniq))
-    @projects_risk_alert_data = ProjectRiskData.new(@team.projects)
-    @flow_report_data = FlowReportData.new(@team.projects, week, year)
+    # @strategic_report_data = StrategicReportData.new(@company, @team.projects, @team.active_monthly_available_hours_for_billable_types(@team.projects.pluck(:project_type).uniq))
   end
 end
