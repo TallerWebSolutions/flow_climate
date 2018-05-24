@@ -65,8 +65,8 @@
   </div>
 
   <div id="project-status-report">
-    <%= render 'charts/status_report_charts', target_name: @project.full_name, report_data: @report_data %>
-    <%= render 'charts/status_report_projection_charts', target_name: @project.full_name, report_data: @report_data %>
+    <%= render 'charts/status_report_charts', target_name: @project.full_name, status_report_data: @status_report_data %>
+    <%= render 'charts/status_report_projection_charts', target_name: @project.full_name, status_report_data: @status_report_data %>
   </div>
 
   <div id="project-settings">
@@ -81,8 +81,8 @@
   <%= javascript_include_tag 'charts/line' %>
   <%= javascript_include_tag 'charts/scatter' %>
 
-  <%= javascript_include_tag 'projects/show' %>
   <%= javascript_include_tag 'projects/charts' %>
   <%= javascript_include_tag 'projects/status_report_current' %>
   <%= javascript_include_tag 'projects/status_report_projection' %>
+  <%= javascript_include_tag 'projects/show' %>
 <% end %>

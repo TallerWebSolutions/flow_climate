@@ -12,6 +12,7 @@ class ProductsController < AuthenticatedController
     @product_projects = @product.projects.order(end_date: :desc)
     @projects_summary = ProjectsSummaryObject.new(@product.projects)
     @report_data = ReportData.new(@product_projects) if @product_projects.present?
+    @status_report_data = StatusReportData.new(@product_projects) if @product_projects.present?
   end
 
   def new

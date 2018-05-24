@@ -40,9 +40,6 @@ Rails.application.routes.draw do
       member do
         get 'search_for_projects/:status_filter', action: :search_for_projects, as: 'search_for_projects'
         get 'search_demands_to_flow_charts', action: :search_demands_to_flow_charts, as: 'search_demands_to_flow_charts'
-        get :build_operational_charts
-        get :build_strategic_charts
-        get :build_status_report_charts
       end
     end
 
@@ -100,6 +97,12 @@ Rails.application.routes.draw do
 
       resources :demand_transitions, only: :destroy
       resources :stage_project_configs, only: %i[edit update]
+    end
+
+    controller :charts do
+      get :build_operational_charts # team product customer project
+      get :build_strategic_charts # team company
+      get :build_status_report_charts # team product customer project
     end
   end
 

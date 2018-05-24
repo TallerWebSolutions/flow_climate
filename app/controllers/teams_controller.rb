@@ -2,7 +2,7 @@
 
 class TeamsController < AuthenticatedController
   before_action :assign_company
-  before_action :assign_team, only: %i[show edit update search_for_projects search_demands_to_flow_charts build_operational_charts build_strategic_charts build_status_report_charts]
+  before_action :assign_team, only: %i[show edit update search_for_projects search_demands_to_flow_charts]
 
   def show
     @team_members = @team.team_members.order(:name)
@@ -41,21 +41,6 @@ class TeamsController < AuthenticatedController
     @team_projects = ProjectsRepository.instance.all_projects_for_team(@team)
     @flow_report_data = FlowReportData.new(@team_projects, params[:week].to_i, params[:year].to_i)
     respond_to { |format| format.js { render file: 'teams/flow.js.erb' } }
-  end
-
-  def build_operational_charts
-    @report_data = ReportData.new(@team.projects)
-    respond_to { |format| format.js { render file: 'teams/operational_charts.js.erb' } }
-  end
-
-  def build_strategic_charts
-    @strategic_report_data = StrategicReportData.new(@company, @team.projects, @team.active_monthly_available_hours_for_billable_types(@team.projects.pluck(:project_type).uniq))
-    respond_to { |format| format.js { render file: 'teams/strategic_charts.js.erb' } }
-  end
-
-  def build_status_report_charts
-    @report_data = ReportData.new(@team.projects)
-    respond_to { |format| format.js { render file: 'teams/status_report_charts.js.erb' } }
   end
 
   private

@@ -12,8 +12,6 @@ class ReportData < ChartData
     @demands_burnup_data = BurnupData.new(@active_weeks, build_demands_scope_data, build_demands_throughput_data)
     @hours_burnup_data = BurnupData.new(@all_projects_weeks, build_hours_scope_data, build_hours_throughput_data)
 
-    project = projects.first
-    build_montecarlo_data(project)
     build_weeekly_bugs_count_hash
     build_weeekly_bugs_share_hash
     build_weeekly_queue_touch_count_hash
@@ -41,18 +39,6 @@ class ReportData < ChartData
     throughput_chart_data(downstream_th_weekly_data, upstream_th_weekly_data)
   end
 
-  def delivered_vs_remaining
-    [{ name: I18n.t('projects.show.delivered_scope.text'), data: [@all_projects.sum(&:total_throughput)] }, { name: I18n.t('projects.show.scope_gap'), data: [@all_projects.sum(&:total_gap)] }]
-  end
-
-  def deadline
-    min_date = all_projects.minimum(:start_date)
-    max_date = all_projects.maximum(:end_date)
-    passed_time = (Time.zone.today - min_date).to_i + 1
-    remaining_days = (max_date - Time.zone.today).to_i + 1
-    [{ name: I18n.t('projects.index.total_remaining_days'), data: [remaining_days] }, { name: I18n.t('projects.index.passed_time'), data: [passed_time], color: '#F45830' }]
-  end
-
   def average_demand_cost
     weekly_data = ProjectResultsRepository.instance.average_demand_cost_in_week_for_projects(all_projects)
 
@@ -63,12 +49,6 @@ class ReportData < ChartData
       result_data << (weekly_data[keys_matching.first] || 0)
     end
     result_data
-  end
-
-  def dates_and_odds
-    return {} if @active_projects.blank?
-    project = @active_projects.first
-    build_deadline_odds_data(monte_carlo_data, project)
   end
 
   def effort_hours_per_month
@@ -93,59 +73,10 @@ class ReportData < ChartData
 
   private
 
-  def build_montecarlo_data(project)
-    @monte_carlo_data = if project.present?
-                          Stats::StatisticsService.instance.run_montecarlo(project.demands.count, gather_leadtime_data(project), gather_throughput_data(project), 100)
-                        else
-                          Stats::Presenter::MonteCarloPresenter.new({})
-                        end
-  end
-
   def build_statistics_charts
     build_lead_time_control_chart
     build_leadtime_histogram
     build_throughput_histogram
-  end
-
-  def gather_leadtime_data(project)
-    leadtime_data_array = ProjectsRepository.instance.leadtime_per_week([project]).values
-    leadtime_data_array = ProjectsRepository.instance.leadtime_per_week(project.product.projects).values if leadtime_data_array.size < 10
-    leadtime_data_array
-  end
-
-  def gather_throughput_data(project)
-    throughput_data_array = ProjectsRepository.instance.throughput_per_week([project]).values
-    throughput_data_array = ProjectsRepository.instance.throughput_per_week(project.product.projects).values if throughput_data_array.size < 10
-    throughput_data_array
-  end
-
-  def build_deadline_odds_data(monte_carlo_data, project)
-    all_montecarlo_dates = monte_carlo_data.monte_carlo_date_hash.keys
-    most_likely_montecarlo_date = all_montecarlo_dates.first
-    most_likely_montecarlo_odd = monte_carlo_data.monte_carlo_date_hash.values.first
-
-    project_deadline = project.end_date
-    project_deadline_odd = monte_carlo_data.monte_carlo_date_hash[project_deadline]
-    project_deadline_odd = most_likely_montecarlo_odd if project_deadline_odd.blank? && project_deadline >= most_likely_montecarlo_date
-
-    nearest_montecarlo_date = CollectionsService.find_nearest(all_montecarlo_dates, project_deadline)
-    nearest_montecarlo_odd = monte_carlo_data.monte_carlo_date_hash[project_deadline]
-
-    extract_data_and_mount_montecarlo_structure(most_likely_montecarlo_date, most_likely_montecarlo_odd, nearest_montecarlo_date, nearest_montecarlo_odd, project_deadline, project_deadline_odd)
-  end
-
-  def extract_data_and_mount_montecarlo_structure(most_likely_montecarlo_date, most_likely_montecarlo_odd, nearest_montecarlo_date, nearest_montecarlo_odd, project_deadline, project_deadline_odd)
-    montecarlo_dates_hash = { I18n.t('charts.date_odds.project_date', project_deadline: project_deadline.to_s) => [project_deadline_odd], I18n.t('charts.date_odds.montecarlo_date', montecarlo_deadline: most_likely_montecarlo_date) => [most_likely_montecarlo_odd] }
-    montecarlo_dates_hash.merge(I18n.t('charts.date_odds.nearest_montecarlo_date', montecarlo_deadline: nearest_montecarlo_date) => nearest_montecarlo_odd)
-
-    montecarlo_dates_chart_array = []
-    montecarlo_dates_hash.sort_by { |key, _value| key }.each do |key, values|
-      montecarlo_dates_chart_hash = {}
-      montecarlo_dates_chart_hash[:name] = key.to_s
-      montecarlo_dates_chart_hash[:data] = values.map { |value| value.to_f * 100 }
-      montecarlo_dates_chart_array << montecarlo_dates_chart_hash
-    end
-    { keys: montecarlo_dates_hash.keys, chart: montecarlo_dates_chart_array }
   end
 
   def throughput_chart_data(downstream_th_weekly_data, upstream_th_weekly_data)

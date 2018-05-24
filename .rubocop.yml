@@ -47,6 +47,7 @@ Metrics/ClassLength:
     - 'app/repositories/project_results_repository.rb'
     - 'app/services/pipefy/pipefy_response_reader.rb'
     - 'app/data_objects/report_data.rb'
+    - 'app/data_objects/status_report_data.rb'
 
 Metrics/CyclomaticComplexity:
   Exclude:

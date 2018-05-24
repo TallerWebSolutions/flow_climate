@@ -44,13 +44,11 @@
   </div>
 
   <div id="project-status-report">
-    <%= render 'charts/status_report_charts', target_name: @product.name, report_data: @report_data %>
+    <%= render 'charts/status_report_charts', target_name: @product.name, status_report_data: @status_report_data %>
   </div>
 
   <div id="charts">
-    <% if @report_data.present? %>
-      <%= render 'charts/project_charts', target_name: @product.name, report_data: @report_data %>
-    <% end %>
+    <%= render 'charts/project_charts', target_name: @product.name, report_data: @report_data %>
   </div>
 </div>
 
@@ -61,7 +59,7 @@
   <%= javascript_include_tag 'charts/line' %>
   <%= javascript_include_tag 'charts/scatter' %>
 
-  <%= javascript_include_tag 'products/show' %>
-  <%= javascript_include_tag 'projects/charts' %>
   <%= javascript_include_tag 'projects/status_report_current' %>
+  <%= javascript_include_tag 'projects/charts' %>
+  <%= javascript_include_tag 'products/show' %>
 <% end %>

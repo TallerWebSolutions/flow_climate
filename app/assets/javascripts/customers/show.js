@@ -2,6 +2,9 @@ hideAllComponents();
 $('#stamps').show();
 $('#nav-item-stamps').addClass('active');
 
+buildOperationalHighcharts();
+buildStatusReportCurrentCharts();
+
 $('#nav-item-stamps').on('click', function(){
     hideAllComponents();
     $('#stamps').show();

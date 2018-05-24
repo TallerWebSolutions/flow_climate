@@ -2,16 +2,20 @@
 
 class ProjectsController < AuthenticatedController
   before_action :assign_company
+  before_action :assign_customer, only: %i[create update]
+  before_action :assign_product, only: %i[create update]
   before_action :assign_project, only: %i[show edit update destroy synchronize_pipefy finish_project delivered_demands_csv]
 
   def show
     @ordered_project_results = @project.project_results.order(:result_date)
-    @report_data = ReportData.new(Project.where(id: @project.id))
+    projects = Project.where(id: @project.id)
+    @report_data = ReportData.new(projects)
+    @status_report_data = StatusReportData.new(projects)
     @ordered_project_risk_alerts = @project.project_risk_alerts.order(created_at: :desc)
     @project_delivered_demands = @project.demands.finished.order(end_date: :desc)
     @grouped_project_delivered_demands = @project.demands.grouped_end_date_by_month
     @project_change_deadline_histories = @project.project_change_deadline_histories
-    @montecarlo_dates = @report_data.monte_carlo_data
+    @montecarlo_dates = @status_report_data.monte_carlo_data
   end
 
   def index
@@ -25,8 +29,6 @@ class ProjectsController < AuthenticatedController
   end
 
   def create
-    assign_customer
-    assign_product
     @project = Project.new(project_params.merge(customer: @customer, product: @product))
     return redirect_to company_projects_path(@company) if @project.save
     assign_products_list
@@ -38,8 +40,6 @@ class ProjectsController < AuthenticatedController
   end
 
   def update
-    assign_customer
-    assign_product
     check_change_in_deadline!
     previous_scope_value = @project.initial_scope
     @project.update(project_params.merge(customer: @customer, product: @product))
