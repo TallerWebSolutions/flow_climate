@@ -155,6 +155,7 @@ pt-BR:
         projects: "Projetos"
         days: "Dias"
         demands_per_week: "Demandas por Semana"
+        months: "Meses"
       burnup:
         ylabel: "Demandas"
         tooltipsufix: " demandas"

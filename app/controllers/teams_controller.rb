@@ -10,7 +10,7 @@ class TeamsController < AuthenticatedController
     @active_team_projects = @team_projects.active
     @projects_summary = ProjectsSummaryObject.new(@team.projects)
     @pipefy_team_configs = @team.pipefy_team_configs.order(:username)
-    assign_report_data(Time.zone.today.cweek, Time.zone.today.to_date.cwyear)
+    @projects_risk_alert_data = ProjectRiskData.new(@team.projects)
   end
 
   def new
@@ -51,12 +51,5 @@ class TeamsController < AuthenticatedController
 
   def team_params
     params.require(:team).permit(:name)
-  end
-
-  def assign_report_data(week, year)
-    @report_data = ReportData.new(@team.projects)
-    @strategic_report_data = StrategicReportData.new(@company, @team.projects, @team.active_monthly_available_hours_for_billable_types(@team.projects.pluck(:project_type).uniq))
-    @projects_risk_alert_data = ProjectRiskData.new(@team.projects)
-    @flow_report_data = FlowReportData.new(@team.projects, week, year)
   end
 end

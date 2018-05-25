@@ -27,6 +27,8 @@ RSpec.describe ChartData, type: :data_object do
         expect(chart_data.active_projects).to eq Project.active
         expect(chart_data.active_weeks).to eq [[8, 2018], [9, 2018], [10, 2018], [11, 2018], [12, 2018]]
         expect(chart_data.all_projects_weeks).to eq [[8, 2018], [9, 2018], [10, 2018], [11, 2018], [12, 2018]]
+        expect(chart_data.active_months).to eq [[2, 2018], [3, 2018]]
+        expect(chart_data.all_projects_months).to eq [[2, 2018], [3, 2018]]
       end
     end
   end
@@ -40,6 +42,8 @@ RSpec.describe ChartData, type: :data_object do
         expect(chart_data.active_projects).to eq []
         expect(chart_data.active_weeks).to eq []
         expect(chart_data.all_projects_weeks).to eq []
+        expect(chart_data.active_months).to eq []
+        expect(chart_data.all_projects_months).to eq []
       end
     end
   end

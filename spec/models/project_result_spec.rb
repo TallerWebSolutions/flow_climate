@@ -56,6 +56,13 @@ RSpec.describe ProjectResult, type: :model do
       let!(:fourth_result) { Fabricate :project_result, result_date: Time.zone.today }
       it { expect(ProjectResult.until_week(1.week.ago.to_date.cweek, 1.week.ago.to_date.cwyear)).to match_array [first_result, second_result, third_result] }
     end
+    describe '.until_month' do
+      let!(:first_result) { Fabricate :project_result, result_date: 2.months.ago }
+      let!(:second_result) { Fabricate :project_result, result_date: 1.month.ago }
+      let!(:third_result) { Fabricate :project_result, result_date: 3.months.ago }
+      let!(:fourth_result) { Fabricate :project_result, result_date: Time.zone.today }
+      it { expect(ProjectResult.until_month(1.month.ago.to_date.month, 1.month.ago.to_date.year)).to match_array [first_result, second_result, third_result] }
+    end
 
     describe '.in_month' do
       let(:first_result) { Fabricate :project_result, result_date: 2.months.ago }

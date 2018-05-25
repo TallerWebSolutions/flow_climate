@@ -1,4 +1,4 @@
-$(function () {
+function buildFlowDemandsCharts() {
     var processingRateDiv = $('#processing-rate-column');
     buildColumnChart(processingRateDiv);
 
@@ -7,4 +7,4 @@ $(function () {
 
     var hoursPerMonthDiv = $('#hours-per-month-column');
     buildColumnChart(hoursPerMonthDiv);
-});
+}

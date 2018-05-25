@@ -1,6 +1,9 @@
-$(function () {
-    var burnupHours = $('#burnup-hours');
-    buildBurnupChart(burnupHours);
+function buildStatusReportCurrentCharts() {
+    var burnupHoursPerWeek = $('#burnup-hours-per-week');
+    buildBurnupChart(burnupHoursPerWeek);
+
+    var burnupHoursPerMonth = $('#burnup-hours-per-month');
+    buildBurnupChart(burnupHoursPerMonth);
 
     var statusReportThroughputDiv = $('#status-report-throughput-column');
     buildColumnChart(statusReportThroughputDiv);
@@ -10,7 +13,4 @@ $(function () {
 
     var statusReportDeadlineDiv = $('#status-report-deadline-bar');
     buildBarChart(statusReportDeadlineDiv);
-
-    var statusReportHoursDiv = $('#status-report-hours-column');
-    buildColumnChart(statusReportHoursDiv);
-});
+}

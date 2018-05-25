@@ -12,6 +12,7 @@ class CustomersController < AuthenticatedController
     @customer_projects = @customer.projects.order(end_date: :desc)
     @projects_summary = ProjectsSummaryObject.new(@customer.projects)
     @report_data = ReportData.new(@customer_projects)
+    @status_report_data = StatusReportData.new(@customer_projects)
   end
 
   def new

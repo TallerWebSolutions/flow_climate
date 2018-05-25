@@ -8,9 +8,9 @@
            data-xtitle='<%= t('projects.charts.xlabel.weeks') %>'
            data-ytitle='<%= t('projects.charts.burnup.ylabel') %>'
            data-tooltipsufix='<%= t('projects.charts.burnup.tooltipsufix') %>'
-           data-ideal='<%= report_data.demands_burnup_data.ideal_per_week %>'
-           data-current='<%= report_data.demands_burnup_data.current_per_week %>'
-           data-scope='<%= report_data.demands_burnup_data.scope_per_week %>'>
+           data-ideal='<%= report_data.demands_burnup_data.ideal_per_period %>'
+           data-current='<%= report_data.demands_burnup_data.current_per_period %>'
+           data-scope='<%= report_data.demands_burnup_data.scope_per_period %>'>
       </div>
     </div>
   </div>
@@ -134,7 +134,7 @@
 
   <div class="row">
     <div class="col-xs-12">
-      <div id="status-report-hours-column"
+      <div id="hours-consumed-column"
            class="flow-chart"
            data-xcategories='<%= report_data.effort_hours_per_month[:keys].map { |year, month| Date.new(year, month, 1).to_s } %>'
            data-title='<%= t('projects.charts.hours_per_month.title', target_name: target_name) %>'
@@ -189,4 +189,6 @@
       </div>
     </div>
   </div>
+<% else %>
+  <%= t('general.no_data') %>
 <% end %>

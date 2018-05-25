@@ -1,11 +1,14 @@
-$("#flow").html("<%= escape_javascript(render 'teams/flow', flow_report_data: @flow_report_data, team: @team).html_safe %>");
+var flow_div = $('#flow');
+flow_div.html("<%= escape_javascript(render 'teams/flow', flow_report_data: @flow_report_data, team: @team).html_safe %>");
 
-$(function () {
-    var columnDiv = $('#processing-rate-column');
-    buildColumnChart(columnDiv);
+buildFlowDemandsCharts();
 
-    var wipDiv = $('#wip-per-day-column');
-    buildColumnChart(wipDiv);
+$(".loader").hide();
+flow_div.show();
+$('#nav-item-flow').addClass('active');
 
-    accodionBehaviour();
+$('#search_week').on('click', function () {
+    flow_div.show();
+    $(".loader").show();
+    searchDemandsToFlowCharts($('#company_id').val(), $('#team_id').val(), $('#week').val(), $('#year').val());
 });
