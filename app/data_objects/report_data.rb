@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class ReportData < ChartData
-  attr_reader :demands_burnup_data, :hours_burnup_data, :flow_pressure_data, :monte_carlo_data,
+  attr_reader :demands_burnup_data, :hours_burnup_per_week_data, :flow_pressure_data, :monte_carlo_data,
               :leadtime_bins, :leadtime_histogram_data, :throughput_bins, :throughput_histogram_data,
               :lead_time_control_chart, :weeekly_bugs_count_hash, :weeekly_bugs_share_hash, :weeekly_queue_touch_count_hash,
               :weeekly_queue_touch_share_hash
@@ -10,7 +10,7 @@ class ReportData < ChartData
     super(projects)
     @flow_pressure_data = []
     @demands_burnup_data = BurnupData.new(@active_weeks, build_demands_scope_data, build_demands_throughput_data)
-    @hours_burnup_data = BurnupData.new(@all_projects_weeks, build_hours_scope_data, build_hours_throughput_data)
+    @hours_burnup_per_week_data = BurnupData.new(@all_projects_weeks, build_hours_scope_data, build_hours_throughput_data)
 
     build_weeekly_bugs_count_hash
     build_weeekly_bugs_share_hash

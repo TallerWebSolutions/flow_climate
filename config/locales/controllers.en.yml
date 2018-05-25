@@ -154,6 +154,7 @@ en:
         weeks: "Weeks"
         projects: "Projects"
         days: "Days"
+        months: "Months"
       burnup:
         ylabel: "Demands"
         tooltipsufix: " demands"

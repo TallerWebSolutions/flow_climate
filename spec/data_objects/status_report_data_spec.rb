@@ -49,9 +49,12 @@ RSpec.describe StatusReportData, type: :data_object do
           expect(report_data.active_projects).to eq Project.active
           expect(report_data.all_projects_weeks).to eq [[8, 2018], [9, 2018], [10, 2018], [11, 2018], [12, 2018], [13, 2018], [14, 2018], [15, 2018], [16, 2018], [17, 2018], [18, 2018], [19, 2018]]
           expect(report_data.active_weeks).to eq [[8, 2018], [9, 2018], [10, 2018], [11, 2018], [12, 2018], [13, 2018], [14, 2018], [15, 2018], [16, 2018], [17, 2018], [18, 2018], [19, 2018]]
-          expect(report_data.hours_burnup_data.ideal_per_week).to eq [183.33333333333334, 366.6666666666667, 550.0, 733.3333333333334, 916.6666666666667, 1100.0, 1283.3333333333335, 1466.6666666666667, 1650.0, 1833.3333333333335, 2016.6666666666667, 2200.0]
-          expect(report_data.hours_burnup_data.current_per_week).to eq [30, 30, 30, 244, 244, 244, 244, 244, 244, 244, 244, 244]
-          expect(report_data.hours_burnup_data.scope_per_week).to eq [2200.0, 2200.0, 2200.0, 2200.0, 2200.0, 2200.0, 2200.0, 2200.0, 2200.0, 2200.0, 2200.0, 2200.0]
+          expect(report_data.hours_burnup_per_week_data.ideal_per_period).to eq [183.33333333333334, 366.6666666666667, 550.0, 733.3333333333334, 916.6666666666667, 1100.0, 1283.3333333333335, 1466.6666666666667, 1650.0, 1833.3333333333335, 2016.6666666666667, 2200.0]
+          expect(report_data.hours_burnup_per_week_data.current_per_period).to eq [30, 30, 30, 244, 244, 244, 244, 244, 244, 244, 244, 244]
+          expect(report_data.hours_burnup_per_week_data.scope_per_period).to eq [2200.0, 2200.0, 2200.0, 2200.0, 2200.0, 2200.0, 2200.0, 2200.0, 2200.0, 2200.0, 2200.0, 2200.0]
+          expect(report_data.hours_burnup_per_month_data.ideal_per_period).to eq [733.3333333333334, 1466.6666666666667, 2200.0]
+          expect(report_data.hours_burnup_per_month_data.current_per_period).to eq [30, 244, 244]
+          expect(report_data.hours_burnup_per_month_data.scope_per_period).to eq [2200.0, 2200.0, 2200.0]
           expect(report_data.throughput_per_week).to eq([{ name: I18n.t('projects.charts.throughput_per_week.stage_stream.upstream'), data: [23, 0, 0, 47, 0, 0, 0, 0, 0, 0, 0, 0] }, { name: I18n.t('projects.charts.throughput_per_week.stage_stream.downstream'), data: [2, 0, 0, 129, 0, 0, 0, 0, 0, 0, 0, 0] }])
           expect(report_data.delivered_vs_remaining).to eq([{ name: I18n.t('projects.show.delivered_scope.text'), data: [201] }, { name: I18n.t('projects.show.scope_gap'), data: [365] }])
           expect(report_data.dates_and_odds.keys.count).to be >= 1
@@ -67,9 +70,12 @@ RSpec.describe StatusReportData, type: :data_object do
           expect(report_data.active_projects).to eq []
           expect(report_data.all_projects_weeks).to eq []
           expect(report_data.active_weeks).to eq []
-          expect(report_data.hours_burnup_data.ideal_per_week).to eq []
-          expect(report_data.hours_burnup_data.current_per_week).to eq []
-          expect(report_data.hours_burnup_data.scope_per_week).to eq []
+          expect(report_data.hours_burnup_per_week_data.ideal_per_period).to eq []
+          expect(report_data.hours_burnup_per_week_data.current_per_period).to eq []
+          expect(report_data.hours_burnup_per_week_data.scope_per_period).to eq []
+          expect(report_data.hours_burnup_per_month_data.ideal_per_period).to eq []
+          expect(report_data.hours_burnup_per_month_data.current_per_period).to eq []
+          expect(report_data.hours_burnup_per_month_data.scope_per_period).to eq []
           expect(report_data.throughput_per_week).to eq([{ name: 'Upstream', data: [] }, { name: 'Downstream', data: [] }])
           expect(report_data.delivered_vs_remaining).to eq([{ name: 'Escopo Entregue', data: [0] }, { name: 'Restante do escopo', data: [0] }])
           expect(report_data.dates_and_odds.keys.count).to eq 0

@@ -49,9 +49,9 @@ RSpec.describe ReportData, type: :data_object do
           expect(report_data.active_projects).to eq Project.active
           expect(report_data.all_projects_weeks).to eq [[8, 2018], [9, 2018], [10, 2018], [11, 2018], [12, 2018], [13, 2018], [14, 2018], [15, 2018], [16, 2018], [17, 2018], [18, 2018], [19, 2018]]
           expect(report_data.active_weeks).to eq [[8, 2018], [9, 2018], [10, 2018], [11, 2018], [12, 2018], [13, 2018], [14, 2018], [15, 2018], [16, 2018], [17, 2018], [18, 2018], [19, 2018]]
-          expect(report_data.demands_burnup_data.ideal_per_week).to eq [47.166666666666664, 94.33333333333333, 141.5, 188.66666666666666, 235.83333333333331, 283.0, 330.16666666666663, 377.3333333333333, 424.5, 471.66666666666663, 518.8333333333333, 566.0]
-          expect(report_data.demands_burnup_data.current_per_week).to eq [25, 25, 25, 201, 201, 201, 201, 201, 201, 201, 201, 201]
-          expect(report_data.demands_burnup_data.scope_per_week).to eq [170, 170, 170, 566, 566, 566, 566, 566, 566, 566, 566, 566]
+          expect(report_data.demands_burnup_data.ideal_per_period).to eq [47.166666666666664, 94.33333333333333, 141.5, 188.66666666666666, 235.83333333333331, 283.0, 330.16666666666663, 377.3333333333333, 424.5, 471.66666666666663, 518.8333333333333, 566.0]
+          expect(report_data.demands_burnup_data.current_per_period).to eq [25, 25, 25, 201, 201, 201, 201, 201, 201, 201, 201, 201]
+          expect(report_data.demands_burnup_data.scope_per_period).to eq [170, 170, 170, 566, 566, 566, 566, 566, 566, 566, 566, 566]
           expect(report_data.flow_pressure_data).to eq [4.0, 0.0, 0.0, 4.75, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
           expect(report_data.throughput_per_week).to eq([{ name: I18n.t('projects.charts.throughput_per_week.stage_stream.upstream'), data: [23, 0, 0, 47, 0, 0, 0, 0, 0, 0, 0, 0] }, { name: I18n.t('projects.charts.throughput_per_week.stage_stream.downstream'), data: [2, 0, 0, 129, 0, 0, 0, 0, 0, 0, 0, 0] }])
           expect(report_data.effort_hours_per_month).to eq(keys: [[2018.0, 2.0], [2018.0, 3.0]], data: { upstream: [0.0, 237.6], downstream: [59.4, 92.4] })
@@ -77,9 +77,9 @@ RSpec.describe ReportData, type: :data_object do
           expect(report_data.active_projects).to eq []
           expect(report_data.all_projects_weeks).to eq []
           expect(report_data.active_weeks).to eq []
-          expect(report_data.demands_burnup_data.ideal_per_week).to eq []
-          expect(report_data.demands_burnup_data.current_per_week).to eq []
-          expect(report_data.demands_burnup_data.scope_per_week).to eq []
+          expect(report_data.demands_burnup_data.ideal_per_period).to eq []
+          expect(report_data.demands_burnup_data.current_per_period).to eq []
+          expect(report_data.demands_burnup_data.scope_per_period).to eq []
           expect(report_data.flow_pressure_data).to eq []
           expect(report_data.throughput_per_week).to eq([{ name: 'Upstream', data: [] }, { name: 'Downstream', data: [] }])
           expect(report_data.effort_hours_per_month).to eq(keys: [], data: { upstream: [], downstream: [] })
@@ -109,9 +109,9 @@ RSpec.describe ReportData, type: :data_object do
         expect(report_data.active_projects).to eq []
         expect(report_data.active_weeks).to eq []
         expect(report_data.all_projects_weeks).to eq []
-        expect(report_data.demands_burnup_data.ideal_per_week).to eq []
-        expect(report_data.demands_burnup_data.current_per_week).to eq []
-        expect(report_data.demands_burnup_data.scope_per_week).to eq []
+        expect(report_data.demands_burnup_data.ideal_per_period).to eq []
+        expect(report_data.demands_burnup_data.current_per_period).to eq []
+        expect(report_data.demands_burnup_data.scope_per_period).to eq []
         expect(report_data.flow_pressure_data).to eq []
         expect(report_data.throughput_per_week).to eq([{ name: I18n.t('projects.charts.throughput_per_week.stage_stream.upstream'), data: [] }, { name: I18n.t('projects.charts.throughput_per_week.stage_stream.downstream'), data: [] }])
       end

@@ -30,6 +30,38 @@
 
   <div class="row">
     <div class="col-xs-6">
+      <div id="burnup-hours-per-week"
+           class="flow-chart"
+           data-title='<%= t('projects.charts.burnup.hours.title', project_name: target_name) %>'
+           data-weeks='<%= status_report_data.all_projects_weeks %>'
+           data-xtitle='<%= t('projects.charts.xlabel.weeks') %>'
+           data-ytitle='<%= t('projects.charts.burnup.ylabel') %>'
+           data-tooltipsufix='<%= t('projects.charts.burnup.tooltipsufix') %>'
+           data-ideal='<%= status_report_data.hours_burnup_per_week_data.ideal_per_period %>'
+           data-current='<%= status_report_data.hours_burnup_per_week_data.current_per_period %>'
+           data-scope='<%= status_report_data.hours_burnup_per_week_data.scope_per_period %>'
+           data-decimals='0'>
+      </div>
+    </div>
+
+    <div class="col-xs-6">
+      <div id="burnup-hours-per-month"
+           class="flow-chart"
+           data-title='<%= t('projects.charts.burnup.hours.title', project_name: target_name) %>'
+           data-weeks='<%= status_report_data.all_projects_months %>'
+           data-xtitle='<%= t('projects.charts.xlabel.months') %>'
+           data-ytitle='<%= t('projects.charts.burnup.ylabel') %>'
+           data-tooltipsufix='<%= t('projects.charts.burnup.tooltipsufix') %>'
+           data-ideal='<%= status_report_data.hours_burnup_per_month_data.ideal_per_period %>'
+           data-current='<%= status_report_data.hours_burnup_per_month_data.current_per_period %>'
+           data-scope='<%= status_report_data.hours_burnup_per_month_data.scope_per_period %>'
+           data-decimals='0'>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-xs-6">
       <div id="status-report-deadline-bar"
            class="flow-chart"
            data-xcategories='<%= [t('projects.general.deadline')] %>'
@@ -38,21 +70,6 @@
            data-ysuffix='<%= t('projects.charts.xlabel.days') %>'
            data-series='<%= status_report_data.deadline.to_json %>'
            data-stacking='normal'
-           data-decimals='0'>
-      </div>
-    </div>
-
-    <div class="col-xs-6">
-      <div id="burnup-hours"
-           class="flow-chart"
-           data-title='<%= t('projects.charts.burnup.hours.title', project_name: target_name) %>'
-           data-weeks='<%= status_report_data.all_projects_weeks %>'
-           data-xtitle='<%= t('projects.charts.xlabel.weeks') %>'
-           data-ytitle='<%= t('projects.charts.burnup.ylabel') %>'
-           data-tooltipsufix='<%= t('projects.charts.burnup.tooltipsufix') %>'
-           data-ideal='<%= status_report_data.hours_burnup_data.ideal_per_week %>'
-           data-current='<%= status_report_data.hours_burnup_data.current_per_week %>'
-           data-scope='<%= status_report_data.hours_burnup_data.scope_per_week %>'
            data-decimals='0'>
       </div>
     </div>

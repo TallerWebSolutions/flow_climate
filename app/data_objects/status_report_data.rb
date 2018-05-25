@@ -1,11 +1,12 @@
 # frozen_string_literal: true
 
 class StatusReportData < ChartData
-  attr_reader :hours_burnup_data, :monte_carlo_data
+  attr_reader :hours_burnup_per_week_data, :hours_burnup_per_month_data, :monte_carlo_data
 
   def initialize(projects)
     super(projects)
-    @hours_burnup_data = BurnupData.new(@all_projects_weeks, build_hours_scope_data, build_hours_throughput_data)
+    @hours_burnup_per_week_data = BurnupData.new(@all_projects_weeks, build_hours_scope_data_per_week, build_hours_throughput_data_week)
+    @hours_burnup_per_month_data = BurnupData.new(@all_projects_months, build_hours_scope_data_per_month, build_hours_throughput_data_month)
 
     project = projects.first
     build_montecarlo_data(project)
@@ -105,13 +106,19 @@ class StatusReportData < ChartData
     key.to_date.cweek == week_year[0] && key.to_date.cwyear == week_year[1]
   end
 
-  def build_hours_scope_data
+  def build_hours_scope_data_per_week
     scope_per_week = []
     @all_projects_weeks.each { |_week_year| scope_per_week << @all_projects.sum(:qty_hours).to_f }
     scope_per_week
   end
 
-  def build_hours_throughput_data
+  def build_hours_scope_data_per_month
+    scope_per_month = []
+    @all_projects_months.each { |_week_year| scope_per_month << @all_projects.sum(:qty_hours).to_f }
+    scope_per_month
+  end
+
+  def build_hours_throughput_data_week
     throughput_per_week = []
     @all_projects_weeks.each do |week_year|
       week = week_year[0]
@@ -123,7 +130,23 @@ class StatusReportData < ChartData
     throughput_per_week
   end
 
+  def build_hours_throughput_data_month
+    throughput_per_month = []
+    @all_projects_months.each do |month_year|
+      month = month_year[0]
+      year = month_year[1]
+      upstream_total_delivered = delivered_to_projects_and_stream_until_month(month, year, all_projects, :qty_hours_upstream)
+      downstream_total_delivered = delivered_to_projects_and_stream_until_month(month, year, all_projects, :qty_hours_downstream)
+      throughput_per_month << upstream_total_delivered + downstream_total_delivered if add_month_data_to_chart?(month_year)
+    end
+    throughput_per_month
+  end
+
   def delivered_to_projects_and_stream_until_week(week, year, projects, metric_field)
     ProjectResult.until_week(week, year).where(project_id: projects.map(&:id)).sum(metric_field)
+  end
+
+  def delivered_to_projects_and_stream_until_month(month, year, projects, metric_field)
+    ProjectResult.until_month(month, year).where(project_id: projects.map(&:id)).sum(metric_field)
   end
 end
