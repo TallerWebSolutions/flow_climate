@@ -32,3 +32,6 @@ en:
     charts:
       xlabel:
         demands_per_week: "Demands per Week"
+  devise:
+    passwords:
+      minimum: "%{minimum_length_value}  characters minimum"

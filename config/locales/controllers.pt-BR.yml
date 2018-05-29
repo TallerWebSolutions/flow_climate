@@ -450,3 +450,8 @@ pt-BR:
       title: "Editar Configuração para Etapa e Projeto"
       project_list: "Projetos configurados nesta etapa"
       replicate_to_projects: "Replicar para os outros projetos desta etapa?"
+  devise:
+    passwords:
+      minimum: "mínimo de %{minimum_length_value} caracteres"
+    registrations:
+      change_password: "Mudar Senha"
