@@ -45,6 +45,7 @@
       <%= link_to t('general.download_csv'), delivered_demands_csv_company_project_path(@company, @project, format: :csv), class: 'btn btn-sm btn-success' %>
     </div>
     <div id="demands-grouped-per-month-div">
+      <h4><%= t('demands.index.count', demands_count: @grouped_project_delivered_demands.map { |demands_hash| demands_hash[1].count }.sum) %></h4>
       <%= render 'demands/grouped_by_month_demands_table', demands_list: @grouped_project_delivered_demands %>
     </div>
     <div id="flat-demands-div">

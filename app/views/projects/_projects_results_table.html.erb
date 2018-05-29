@@ -25,7 +25,7 @@
       <th><%= ProjectResult.human_attribute_name :qty_hours_bug %></th>
       <th><%= ProjectResult.human_attribute_name :leadtime %></th>
       <th><%= ProjectResult.human_attribute_name :demands_count %></th>
-      <th colspan="2"><%= t('general.table.actions') %></th>
+      <th><%= t('general.table.actions') %></th>
     </tr>
   </thead>
   <tbody>
@@ -57,8 +57,6 @@
           <%= link_to edit_company_project_project_result_path(@company, project, result) do %>
             <i class="fas fa-edit"></i>
           <% end %>
-        </td>
-        <td>
           <%= link_to company_project_project_result_path(@company, project, result), method: :delete do %>
             <i class="fa fa-times" aria-hidden="true"></i>
           <% end %>
@@ -66,34 +64,4 @@
       </tr>
     <% end %>
   </tbody>
-  <tfoot>
-    <tr>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td><%= number_with_precision(project.total_hours_upstream, precision: 0) %></td>
-      <td><%= number_with_precision(project.total_hours_downstream, precision: 0) %></td>
-      <td><%= number_with_precision(project.total_hours_consumed, precision: 0) %></td>
-      <td><%= number_with_precision(project.total_throughput_upstream, precision: 0) %></td>
-      <td><%= number_with_precision(project.total_throughput_downstream, precision: 0) %></td>
-      <td><%= number_with_precision(project.avg_hours_per_demand_upstream, precision: 3) %></td>
-      <td><%= number_with_precision(project.avg_hours_per_demand_downstream, precision: 3) %></td>
-      <td><%= number_with_precision(project.total_bugs_opened, precision: 0) %></td>
-      <td><%= number_with_precision(project.total_bugs_closed, precision: 0) %></td>
-      <td><%= number_with_precision(project.total_hours_bug, precision: 0) %></td>
-      <td><%= number_with_precision(project.avg_leadtime, precision: 4) %></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-    </tr>
-  </tfoot>
 </table>

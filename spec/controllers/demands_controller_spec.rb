@@ -306,7 +306,7 @@ RSpec.describe DemandsController, type: :controller do
         context 'when there is no project change' do
           it 'calls the services and the reader' do
             expect(Pipefy::PipefyApiService).to(receive(:request_card_details).with(demand.demand_id).once { 'response' })
-            expect(Pipefy::PipefyResponseReader.instance).to receive(:update_card!).with(project, pipefy_config.team, demand, 'response').once
+            expect(Pipefy::PipefyCardResponseReader.instance).to receive(:update_card!).with(project, pipefy_config.team, demand, 'response').once
             put :synchronize_pipefy, params: { company_id: company, project_id: project, id: demand }
             expect(response).to redirect_to company_project_demand_path(company, project, demand)
             expect(flash[:notice]).to eq I18n.t('demands.sync.done')
@@ -317,7 +317,7 @@ RSpec.describe DemandsController, type: :controller do
           let!(:demand) { Fabricate :demand, project: other_project }
           it 'calls the services and the reader' do
             expect(Pipefy::PipefyApiService).to(receive(:request_card_details).with(demand.demand_id).once { 'response' })
-            expect(Pipefy::PipefyResponseReader.instance).to receive(:update_card!).with(project, pipefy_config.team, demand, 'response').once
+            expect(Pipefy::PipefyCardResponseReader.instance).to receive(:update_card!).with(project, pipefy_config.team, demand, 'response').once
             put :synchronize_pipefy, params: { company_id: company, project_id: project, id: demand }
             expect(response).to redirect_to company_project_path(company, project)
             expect(flash[:notice]).to eq I18n.t('demands.sync.done')

@@ -306,6 +306,7 @@ pt-BR:
       blocked_working_time_downstream: "Tempo Útil Bloqueado no Downstream"
       downstream: "Downstream?"
       manual_effort: "Esforço Atualizado Manualmente?"
+      count: "%{demands_count} demandas"
     edit:
       title: "Editar Demanda"
     show:
