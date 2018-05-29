@@ -4,7 +4,7 @@
     | <%= link_to company.abbreviation&.upcase, company_path(company) %>
   <% end %>
   <div class="pull-right">
-    <%= link_to :destroy_user_session, method: :patch do %>
+    <%= link_to :destroy_user_session, method: :delete do %>
       <i class="fa fa-sign-out-alt fa-2x" aria-hidden="true"></i>
     <% end %>
   </div>
