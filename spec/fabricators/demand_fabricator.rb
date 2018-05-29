@@ -2,6 +2,7 @@
 
 Fabricator(:demand) do
   project
+  demand_title { Faker::FunnyName.two_word_name }
   created_date { Faker::Date.backward }
   demand_type 0
   class_of_service 0

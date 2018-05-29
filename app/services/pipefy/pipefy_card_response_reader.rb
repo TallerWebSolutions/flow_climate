@@ -56,19 +56,21 @@ module Pipefy
       return if demand_id.blank?
       assignees_count = compute_assignees_count(team, response_data)
       url = response_data.try(:[], 'card').try(:[], 'url')
+      demand_title = response_data.try(:[], 'card').try(:[], 'title')
 
       demand = Demand.find_by(demand_id: demand_id, project: project)
       return demand if demand.present?
 
-      Demand.create(project: project, demand_id: demand_id, created_date: Time.zone.now, demand_type: read_demand_type(response_data), class_of_service: read_class_of_service(response_data), assignees_count: assignees_count, url: url)
+      Demand.create(project: project, demand_id: demand_id, demand_title: demand_title, created_date: Time.zone.now, demand_type: read_demand_type(response_data), class_of_service: read_class_of_service(response_data), assignees_count: assignees_count, url: url)
     end
 
     def update_demand!(team, demand, response_data)
       demand_id = response_data.try(:[], 'card').try(:[], 'id')
       assignees_count = compute_assignees_count(team, response_data)
       url = response_data.try(:[], 'card').try(:[], 'url')
+      demand_title = response_data.try(:[], 'card').try(:[], 'title')
 
-      demand.update!(demand_id: demand_id, demand_type: read_demand_type(response_data), class_of_service: read_class_of_service(response_data), assignees_count: assignees_count, url: url)
+      demand.update!(demand_id: demand_id, demand_title: demand_title, demand_type: read_demand_type(response_data), class_of_service: read_class_of_service(response_data), assignees_count: assignees_count, url: url)
       demand.project_result&.compute_flow_metrics!
     end
 
