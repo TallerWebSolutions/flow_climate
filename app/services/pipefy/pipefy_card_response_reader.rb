@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Pipefy
-  class PipefyResponseReader
+  class PipefyCardResponseReader
     include Singleton
 
     def create_card!(project, team, card_response)
@@ -10,13 +10,13 @@ module Pipefy
       create_assignees!(team, response_data)
 
       demand = create_demand!(team, project, response_data)
-      read_phases_transitions(demand.reload, response_data)
+      read_phases_transitions(demand.reload, response_data) if demand.present?
 
       demand
     end
 
     def update_card!(project, team, demand, card_response)
-      return if card_response.blank?
+      return if card_response.blank? || card_response['data'].blank?
 
       if card_response['data']['card'].blank?
         DemandsRepository.instance.full_demand_destroy!(demand)
@@ -53,13 +53,14 @@ module Pipefy
     # TODO: move to DemandsRepository
     def create_demand!(team, project, response_data)
       demand_id = response_data.try(:[], 'card').try(:[], 'id')
+      return if demand_id.blank?
       assignees_count = compute_assignees_count(team, response_data)
       url = response_data.try(:[], 'card').try(:[], 'url')
 
       demand = Demand.find_by(demand_id: demand_id, project: project)
       return demand if demand.present?
 
-      Demand.create!(project: project, demand_id: demand_id, created_date: Time.zone.now, demand_type: read_demand_type(response_data), class_of_service: read_class_of_service(response_data), assignees_count: assignees_count, url: url)
+      Demand.create(project: project, demand_id: demand_id, created_date: Time.zone.now, demand_type: read_demand_type(response_data), class_of_service: read_class_of_service(response_data), assignees_count: assignees_count, url: url)
     end
 
     def update_demand!(team, demand, response_data)

@@ -34,6 +34,6 @@ class IntegrationError < ApplicationRecord
   validates :company, :integration_type, :integration_error_text, presence: true
 
   def self.build_integration_error(demand, integratable, integration_type)
-    IntegrationError.create!(company: demand.company, integratable_model_name: integratable.model_name, project: demand.project, integration_type: integration_type, integration_error_text: "[#{integratable.errors.full_messages.join(', ')}]")
+    IntegrationError.create(company: demand.company, integratable_model_name: integratable.model_name, project: demand.project, integration_type: integration_type, integration_error_text: "[#{integratable.errors.full_messages.join(', ')}]")
   end
 end

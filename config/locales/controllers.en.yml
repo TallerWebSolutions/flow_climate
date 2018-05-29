@@ -304,6 +304,7 @@ en:
       blocked_working_time_downstream: "Blocked Working Time in Downstream"
       downstream: "Downstream?"
       manual_effort: "Effort Updated Manually"
+      count: "%{demands_count} demands"
     edit:
       title: "Edit Demand"
     show:
