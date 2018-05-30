@@ -31,6 +31,7 @@ class StagesController < AuthenticatedController
     @stage_projects = @stage.projects.sort_by(&:full_name)
     @transitions_in_stage = @stage.demand_transitions
     @provider_stages = (@company.stages - [@stage]).sort_by(&:name)
+    @stage_analytic_data = StageAnalyticData.new(@stage)
   end
 
   def associate_project

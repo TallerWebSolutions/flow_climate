@@ -35,6 +35,9 @@ pt-BR:
     enqueued: "Sua solicitação foi colocada na fila. Em poucos minutos estará pronta."
     charts:
       title: "Gráficos"
+      xlabel:
+        weekdays: "Dias da Semana"
+      hours: "horas"
     stamps:
       cmd:
         title: "Custo Médio por Demanda"
@@ -434,6 +437,18 @@ pt-BR:
       stage_projects: "Projetos na Etapa"
       transitions: "Transições"
       import_projects: "Importar Projetos da Etapa"
+    charts:
+      entrances_per_weekday:
+        ylabel: "demandas chegando"
+        tooltip_prefix: "demandas chegando"
+        title: "Demandas Chegando para %{target_name}"
+      avg_hours_in_stage:
+        title: "Média de Horas em %{target_name}"
+        ylabel: "média de horas na etapa"
+      out_per_weekday:
+        title: "Demandas Saindo de %{target_name}"
+        ylabel: "demandas saindo"
+        tooltip_prefix: "demandas saindo"
   demand_blocks:
     index:
       title: "Bloqueios de Demanda"
