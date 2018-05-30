@@ -34,6 +34,9 @@ en:
     enqueued: "Your request was enqueued. In a few minutes it will be done."
     charts:
       title: "Charts"
+      xlabel:
+        weekdays: "Weekdays"
+      hours: "hours"
     stamps:
       cmd:
         title: "Avg Demand Cost"
@@ -429,6 +432,18 @@ en:
       stage_projects: "Stage Projects"
       transitions: "Transitions"
       import_projects: "Import Projetct from Stage"
+    charts:
+      entrances_per_weekday:
+        ylabel: "demands in"
+        tooltip_prefix: "demands in"
+        title: "Demands In for %{target_name}"
+      avg_hours_in_stage:
+        title: "Average Hours in %{target_name}"
+        ylabel: "avg of hours in the stage"
+      out_per_weekday:
+        title: "Demands Out of %{target_name}"
+        ylabel: "demands out"
+        tooltip_prefix: "demands_out"
   demand_blocks:
     index:
       title: "Demand Blocks"

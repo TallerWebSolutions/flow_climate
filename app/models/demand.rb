@@ -10,6 +10,7 @@
 #  created_at        :datetime         not null
 #  created_date      :datetime         not null
 #  demand_id         :string           not null
+#  demand_title      :string
 #  demand_type       :integer          not null
 #  demand_url        :string
 #  downstream        :boolean          default(TRUE)

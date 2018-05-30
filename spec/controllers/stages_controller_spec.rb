@@ -238,6 +238,7 @@ RSpec.describe StagesController, type: :controller do
           get :show, params: { company_id: company, id: stage }
           expect(response).to render_template :show
           expect(assigns(:stage)).to eq stage
+          expect(assigns(:stage_analytic_data)).to be_a StageAnalyticData
           expect(assigns(:stage_projects)).to eq [second_project, first_project]
           expect(assigns(:not_associated_projects)).to eq [fourth_project, third_project]
         end

@@ -6,7 +6,7 @@ function buildLineChart(lineDiv) {
         },
         title: {
             text: lineDiv.data('title'),
-            x: -20 //center
+            x: -20
         },
         subtitle: {
             text: 'Source: Flow Climate'
@@ -37,8 +37,8 @@ function buildLineChart(lineDiv) {
         },
         legend: {
             layout: 'vertical',
-            align: 'right',
-            verticalAlign: 'middle',
+            align: 'center',
+            verticalAlign: 'bottom',
             borderWidth: 0
         },
         plotOptions: {
