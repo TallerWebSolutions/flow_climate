@@ -16,7 +16,7 @@ class StagesRepository
   end
 
   def average_seconds_in_stage_per_month(stage)
-    stage.demand_transitions.select('EXTRACT(YEAR FROM last_time_in) AS YEAR, EXTRACT(MONTH FROM last_time_in) AS month, EXTRACT (EPOCH FROM AVG(demand_transitions.last_time_out - demand_transitions.last_time_in)::interval) AS avg_duration').group('EXTRACT(YEAR FROM last_time_in)', 'EXTRACT(MONTH FROM last_time_in)').order(Arel.sql('EXTRACT(YEAR FROM last_time_in)'), Arel.sql('EXTRACT(MONTH FROM last_time_in)')).map { |avg| [avg.year, avg.month, avg.avg_duration] }
+    stage.demand_transitions.select('EXTRACT(YEAR FROM last_time_in) AS year, EXTRACT(MONTH FROM last_time_in) AS month, EXTRACT(EPOCH FROM AVG(demand_transitions.last_time_out - demand_transitions.last_time_in)::INTERVAL) AS avg_duration').group('EXTRACT(YEAR FROM last_time_in)', 'EXTRACT(MONTH FROM last_time_in)').order(Arel.sql('EXTRACT(YEAR FROM last_time_in)'), Arel.sql('EXTRACT(MONTH FROM last_time_in)')).map { |avg| [avg.year, avg.month, avg.avg_duration] }
   end
 
   private

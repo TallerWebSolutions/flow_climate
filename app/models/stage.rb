@@ -4,18 +4,19 @@
 #
 # Table name: stages
 #
-#  commitment_point :boolean          default(FALSE)
-#  company_id       :integer          not null
-#  created_at       :datetime         not null
-#  end_point        :boolean          default(FALSE)
-#  id               :bigint(8)        not null, primary key
-#  integration_id   :string           not null, indexed
-#  name             :string           not null, indexed
-#  order            :integer          default(0), not null
-#  queue            :boolean          default(FALSE)
-#  stage_stream     :integer          not null
-#  stage_type       :integer          not null
-#  updated_at       :datetime         not null
+#  commitment_point    :boolean          default(FALSE)
+#  company_id          :integer          not null
+#  created_at          :datetime         not null
+#  end_point           :boolean          default(FALSE)
+#  id                  :bigint(8)        not null, primary key
+#  integration_id      :string           not null, indexed
+#  integration_pipe_id :string
+#  name                :string           not null, indexed
+#  order               :integer          default(0), not null
+#  queue               :boolean          default(FALSE)
+#  stage_stream        :integer          not null
+#  stage_type          :integer          not null
+#  updated_at          :datetime         not null
 #
 # Indexes
 #
@@ -47,5 +48,20 @@ class Stage < ApplicationRecord
   def remove_project!(project)
     projects.delete(project) if projects.include?(project)
     save
+  end
+
+  def first_end_stage_in_pipe?
+    done_stage_in_pipe&.id == id
+  end
+
+  def before_end_point?
+    return true if done_stage_in_pipe.blank?
+    order < done_stage_in_pipe.order
+  end
+
+  private
+
+  def done_stage_in_pipe
+    company.stages.where(integration_pipe_id: integration_pipe_id, end_point: true).order(:order).first
   end
 end

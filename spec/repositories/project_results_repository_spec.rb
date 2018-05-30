@@ -43,6 +43,20 @@ RSpec.describe ProjectResultsRepository, type: :repository do
     end
   end
 
+  describe '#consumed_hours_in_week' do
+    context 'having results' do
+      let!(:first_result) { Fabricate :project_result, project: first_project, result_date: Time.zone.iso8601('2018-01-14T23:01:46'), qty_hours_upstream: 0, qty_hours_downstream: 30 }
+      let!(:second_result) { Fabricate :project_result, project: second_project, result_date: Time.zone.iso8601('2018-02-14T23:01:46'), qty_hours_upstream: 0, qty_hours_downstream: 50 }
+      let!(:third_result) { Fabricate :project_result, project: third_project, result_date: Time.zone.iso8601('2018-02-11T23:01:46'), qty_hours_upstream: 0, qty_hours_downstream: 90 }
+      let!(:out_result) { Fabricate :project_result, result_date: Time.zone.iso8601('2018-02-14T23:01:46'), qty_hours_downstream: 60 }
+
+      it { expect(ProjectResultsRepository.instance.consumed_hours_in_week([first_project, second_project, third_project])).to eq [[2018.0, 2.0, 30], [2018.0, 6.0, 90], [2018.0, 7.0, 50]] }
+    end
+    context 'having no results' do
+      it {  expect(ProjectResultsRepository.instance.consumed_hours_in_week([first_project, second_project, third_project])).to eq [] }
+    end
+  end
+
   describe '#consumed_hours_in_month' do
     context 'having results' do
       let!(:first_result) { Fabricate :project_result, project: first_project, result_date: Time.zone.iso8601('2018-01-14T23:01:46'), qty_hours_upstream: 0, qty_hours_downstream: 30 }

@@ -11,6 +11,13 @@ class ProjectResultsRepository
     project_result_joins.where('customers.company_id = :company_id AND EXTRACT(MONTH FROM result_date) = :month AND EXTRACT(YEAR FROM result_date) = :year', company_id: company.id, month: date.month, year: date.year).sum(&:project_delivered_hours)
   end
 
+  def consumed_hours_in_week(projects)
+    ProjectResult
+      .where(project_id: projects.map(&:id)).select('EXTRACT(ISOYEAR FROM result_date) AS year, EXTRACT(WEEK FROM result_date) AS week, SUM((qty_hours_upstream + qty_hours_downstream)) AS week_delivered_hours')
+      .group('EXTRACT(ISOYEAR FROM result_date)', 'EXTRACT(WEEK FROM result_date)')
+      .order(Arel.sql('EXTRACT(ISOYEAR FROM result_date)'), Arel.sql('EXTRACT(WEEK FROM result_date)')).map { |delivered_hours| [delivered_hours.year, delivered_hours.week, delivered_hours.week_delivered_hours] }
+  end
+
   def upstream_throughput_in_month_for_company(company, date = Time.zone.today)
     project_result_joins.where('customers.company_id = :company_id AND EXTRACT(MONTH FROM result_date) = :month AND EXTRACT(YEAR FROM result_date) = :year', company_id: company.id, month: date.month, year: date.year).sum(&:throughput_upstream)
   end
