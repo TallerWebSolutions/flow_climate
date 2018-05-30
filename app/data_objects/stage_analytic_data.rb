@@ -53,7 +53,7 @@ class StageAnalyticData
     avg_per_month = StagesRepository.instance.average_seconds_in_stage_per_month(stage)
 
     avg_per_month.each do |year, month, seconds_avg_in_month|
-      @avg_time_in_stage_per_month["#{I18n.t('date.month_names')[month]}/#{year.to_i}"] = { y: seconds_avg_in_month / 1.hour }
+      @avg_time_in_stage_per_month["#{I18n.t('date.month_names')[month]}/#{year.to_i}"] = { y: (seconds_avg_in_month || 0) / 1.hour }
     end
   end
 end
