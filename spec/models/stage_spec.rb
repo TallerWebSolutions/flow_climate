@@ -47,4 +47,56 @@ RSpec.describe Stage, type: :model do
       it { expect(stage.reload.projects).to eq [] }
     end
   end
+
+  describe '#first_end_stage_in_pipe?' do
+    let(:company) { Fabricate :company }
+    let(:customer) { Fabricate :customer, company: company }
+    let(:project) { Fabricate :project, customer: customer }
+
+    context 'having data' do
+      let!(:first_stage) { Fabricate :stage, company: company, projects: [project], integration_pipe_id: '321', order: 2 }
+      let!(:second_stage) { Fabricate :stage, company: company, projects: [project], integration_pipe_id: '321', order: 1 }
+      let!(:third_stage) { Fabricate :stage, company: company, projects: [project], integration_pipe_id: '321', order: 4, end_point: true }
+      let!(:fourth_stage) { Fabricate :stage, company: company, projects: [project], integration_pipe_id: '321', order: 3, end_point: true }
+      let!(:fifth_stage) { Fabricate :stage, company: company, projects: [project], integration_pipe_id: '123', order: 2, end_point: true }
+
+      it { expect(first_stage.first_end_stage_in_pipe?).to be false }
+      it { expect(second_stage.first_end_stage_in_pipe?).to be false }
+      it { expect(third_stage.first_end_stage_in_pipe?).to be false }
+      it { expect(fourth_stage.first_end_stage_in_pipe?).to be true }
+      it { expect(fifth_stage.first_end_stage_in_pipe?).to be true }
+    end
+
+    context 'having no data' do
+      let!(:first_stage) { Fabricate :stage, company: company }
+
+      it { expect(first_stage.first_end_stage_in_pipe?).to be false }
+    end
+  end
+
+  describe '#before_end_point?' do
+    let(:company) { Fabricate :company }
+    let(:customer) { Fabricate :customer, company: company }
+    let(:project) { Fabricate :project, customer: customer }
+
+    context 'having data' do
+      let!(:first_stage) { Fabricate :stage, company: company, projects: [project], integration_pipe_id: '321', order: 2 }
+      let!(:second_stage) { Fabricate :stage, company: company, projects: [project], integration_pipe_id: '321', order: 1 }
+      let!(:third_stage) { Fabricate :stage, company: company, projects: [project], integration_pipe_id: '321', order: 4, end_point: true }
+      let!(:fourth_stage) { Fabricate :stage, company: company, projects: [project], integration_pipe_id: '321', order: 3, end_point: true }
+      let!(:fifth_stage) { Fabricate :stage, company: company, projects: [project], integration_pipe_id: '123', order: 2, end_point: true }
+
+      it { expect(first_stage.before_end_point?).to be true }
+      it { expect(second_stage.before_end_point?).to be true }
+      it { expect(third_stage.before_end_point?).to be false }
+      it { expect(fourth_stage.before_end_point?).to be false }
+      it { expect(fifth_stage.before_end_point?).to be false }
+    end
+
+    context 'having no data' do
+      let!(:first_stage) { Fabricate :stage, company: company }
+
+      it { expect(first_stage.before_end_point?).to be true }
+    end
+  end
 end

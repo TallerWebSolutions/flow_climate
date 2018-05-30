@@ -741,7 +741,8 @@ CREATE TABLE public.stages (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     company_id integer NOT NULL,
-    "order" integer DEFAULT 0 NOT NULL
+    "order" integer DEFAULT 0 NOT NULL,
+    integration_pipe_id character varying
 );
 
 
@@ -1805,6 +1806,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20180510203203'),
 ('20180514210852'),
 ('20180516150858'),
-('20180529194024');
+('20180529194024'),
+('20180530210436');
 
 

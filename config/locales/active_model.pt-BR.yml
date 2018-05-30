@@ -277,6 +277,7 @@ pt-BR:
       stage:
         projects: Projetos
         demand_transitions: Transições de Demanda
+        integration_pipe_id: Id do Pipe na Integração
         integration_id: Id na Integração
         name: Nome
         stage_type: Tipo da Etapa
