@@ -158,6 +158,7 @@ en:
         projects: "Projects"
         days: "Days"
         months: "Months"
+        demands_per_week: "Demands per week"
       burnup:
         ylabel: "Demands"
         tooltipsufix: " demands"
@@ -394,6 +395,7 @@ en:
       project_date: "{project_deadline} (Project)"
       montecarlo_date: "{montecarlo_deadline} (Monte Carlo)"
       nearest_montecarlo_date: "%{montecarlo_deadline} (Nearest Monte Carlo)"
+      title: "Date Odds for %{target_name}"
     projections:
       title: "Projections"
     current_situation:
@@ -467,6 +469,3 @@ en:
       title: "Edit Configuration to Stage and Project"
       project_list: "Projects with configuration on the stage"
       replicate_to_projects: "Replicate to others projects in this stage?"
-  devise:
-    registrations:
-      change_password: "Change Password"

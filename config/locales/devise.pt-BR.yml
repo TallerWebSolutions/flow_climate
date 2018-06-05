@@ -53,6 +53,7 @@ pt-BR:
       updated_not_active: "Sua senha foi alterada com sucesso."
       reset_instructions_text: "Foi solicitada a alteração da sua senha. Você poderá completar a operação através do link abaixo."
       reset_instructions: "Me envie as instruções para criar uma nova senha"
+      minimum: "mínimo de %{minimum_length_value} caracteres"
     registrations:
       destroyed: "Sua conta foi cancelada com sucesso. Esperamos vê-lo novamente em breve."
       signed_up: "Login efetuado com sucesso. Se não foi autorizado, a confirmação será enviada por e-mail."
@@ -66,6 +67,7 @@ pt-BR:
         title: "Editar %{model_name}"
         password_info: "Precisamos da sua senha atual para confirmar as alterações"
       sign_up: "Registro"
+      change_password: "Mudar Senha"
     sessions:
       login: "Login"
       signed_in: "Login efetuado com sucesso!"

@@ -55,7 +55,7 @@ pt-BR:
               invalid: Este não é um email válido
         demand_transition:
           stage:
-            not_same: "A fase deve ser a mesma do projeto da demanda"
+            not_same: "A etapa deve ser a mesma do projeto da demanda"
     models:
       user:
         one: Usuários

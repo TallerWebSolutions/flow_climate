@@ -104,72 +104,12 @@ RSpec.describe ProjectResult, type: :model do
     end
   end
 
-  describe '#define_automatic_attributes!' do
-    let(:company) { Fabricate :company }
-    let(:customer) { Fabricate :customer, company: company }
-
-    context 'when the remaining days is different of zero and has no team yet' do
-      let!(:project) { Fabricate :project, customer: customer, start_date: Date.new(2018, 4, 1), end_date: Date.new(2018, 4, 7), initial_scope: 10 }
-      let!(:result) { Fabricate :project_result, project: project, result_date: Date.new(2018, 4, 3), known_scope: 20, throughput_upstream: 4, throughput_downstream: 2, cost_in_month: 432_123 }
-
-      let!(:first_demand) { Fabricate :demand, project_result: result, project: project, created_date: Date.new(2018, 4, 3), effort_upstream: 50, effort_downstream: 30 }
-      let!(:second_demand) { Fabricate :demand, project: project, created_date: Date.new(2018, 4, 4), demand_type: :bug, effort_upstream: 100, effort_downstream: 120 }
-      let!(:third_demand) { Fabricate :demand, project_result: result, project: project, created_date: Date.new(2018, 4, 5), demand_type: :feature, effort_upstream: 70, effort_downstream: 73 }
-
-      it 'defines the computed attributes' do
-        result.define_automatic_attributes!
-        expect(ProjectResult.last.known_scope).to eq 11
-        expect(ProjectResult.last.remaining_days).to eq 5
-        expect(ProjectResult.last.send(:current_gap)).to eq 5
-        expect(ProjectResult.last.flow_pressure.to_f).to eq 1.0
-        expect(ProjectResult.last.cost_in_month).to eq 0
-        expect(ProjectResult.last.average_demand_cost.to_f).to eq 2400.6833333333334
-        expect(ProjectResult.last.available_hours.to_f).to eq 0
-      end
-    end
-    context 'when the project already has a team and a cost' do
-      let(:team) { Fabricate :team }
-      let!(:team_member) { Fabricate :team_member, active: true, billable_type: :outsourcing, billable: true, team: team, monthly_payment: 100, hours_per_month: 22, total_monthly_payment: 100 }
-      let!(:other_team_member) { Fabricate :team_member, active: true, billable_type: :outsourcing, billable: true, team: team, monthly_payment: 100, hours_per_month: 11, total_monthly_payment: 100 }
-      let!(:project) { Fabricate :project, customer: customer, start_date: Date.new(2018, 4, 1), end_date: Date.new(2018, 4, 7), initial_scope: 10 }
-      let!(:result) { Fabricate :project_result, project: project, team: team, result_date: Date.new(2018, 4, 3), known_scope: 20, throughput_upstream: 4, throughput_downstream: 6, cost_in_month: 100 }
-      before { result.define_automatic_attributes! }
-      it 'defines the automatic attributes' do
-        expect(result.reload.cost_in_month.to_f).to eq 200.0
-        expect(result.reload.average_demand_cost.to_f).to be_within(0.01).of(0.33)
-        expect(result.reload.available_hours.to_f).to eq 1.1
-      end
-    end
-    context 'when the project ends in the date of the result' do
-      let(:project) { Fabricate :project, start_date: 2.days.ago, end_date: Time.zone.yesterday, initial_scope: 5 }
-      let(:result) { Fabricate :project_result, project: project, result_date: Time.zone.yesterday, known_scope: 50, throughput_upstream: 1, throughput_downstream: 2 }
-      let!(:first_demand) { Fabricate :demand, project_result: result, project: project, created_date: Time.zone.today }
-      let!(:second_demand) { Fabricate :demand, project: project, created_date: Time.zone.today, end_date: Time.zone.today }
-      let!(:third_demand) { Fabricate :demand, project_result: result, project: project, created_date: Time.zone.today, end_date: Time.zone.today }
-
-      it 'defines the automatic attributes' do
-        result.define_automatic_attributes!
-        expect(result.remaining_days).to eq 1
-        expect(result.flow_pressure.to_f).to eq 2.0
-      end
-    end
-    context 'when the current gap is zero' do
-      let(:project) { Fabricate :project, start_date: 2.days.ago, end_date: Time.zone.yesterday, initial_scope: 2 }
-      let(:result) { Fabricate :project_result, project: project, result_date: Time.zone.yesterday, known_scope: 50, throughput_upstream: 50, throughput_downstream: 27 }
-      it 'defines the automatic attributes' do
-        result.define_automatic_attributes!
-        expect(result.remaining_days).to eq 1
-        expect(result.flow_pressure.to_f).to eq 0.0
-      end
-    end
-  end
-
   describe '#total_hours' do
     let(:result) { Fabricate :project_result, qty_hours_upstream: 100, qty_hours_downstream: 50 }
     it { expect(result.total_hours).to eq 150 }
   end
 
-  context 'demand dealears' do
+  context 'demand dealers' do
     let(:project) { Fabricate :project, start_date: 2.days.ago, end_date: 3.days.from_now, initial_scope: 2 }
     let!(:downstream_stage) { Fabricate :stage, end_point: true, stage_stream: :downstream }
     let!(:upstream_stage) { Fabricate :stage, stage_stream: :upstream, end_point: true }

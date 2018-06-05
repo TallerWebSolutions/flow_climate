@@ -134,6 +134,10 @@ class Project < ApplicationRecord
     project_results.order(result_date: :desc)&.first&.team || product&.team
   end
 
+  def update_team_in_product(team)
+    product.update(team: team) if product.present?
+  end
+
   def flow_pressure(date = Time.zone.today)
     return 0.0 if no_pressure_set(date)
     days = remaining_days(date) || total_days

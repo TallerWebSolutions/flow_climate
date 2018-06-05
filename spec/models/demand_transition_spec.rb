@@ -29,7 +29,7 @@ RSpec.describe DemandTransition, type: :model do
           let(:demand_transition) { Fabricate.build :demand_transition, stage: stage }
           it 'responds invalid' do
             expect(demand_transition.valid?).to be false
-            expect(demand_transition.errors[:stage]).to eq ['A fase deve ser a mesma do projeto da demanda']
+            expect(demand_transition.errors[:stage]).to eq ['A etapa deve ser a mesma do projeto da demanda']
           end
         end
       end

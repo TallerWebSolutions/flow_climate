@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class ReportData < ChartData
-  attr_reader :demands_burnup_data, :hours_burnup_per_week_data, :flow_pressure_data, :monte_carlo_data,
+  attr_reader :demands_burnup_data, :hours_burnup_per_week_data, :flow_pressure_data,
               :leadtime_bins, :leadtime_histogram_data, :throughput_bins, :throughput_histogram_data,
               :lead_time_control_chart, :weeekly_bugs_count_hash, :weeekly_bugs_share_hash, :weeekly_queue_touch_count_hash,
               :weeekly_queue_touch_share_hash
@@ -184,7 +184,7 @@ class ReportData < ChartData
       dates_array << date.to_s
       scope_in_week = ProjectResultsRepository.instance.scope_in_week_for_projects(@all_projects, week_year[0], week_year[1])
       bugs_in_week = ProjectResultsRepository.instance.bugs_opened_until_week(@all_projects, date)
-      bugs_opened_share_array << compute_percentage(bugs_in_week, scope_in_week)
+      bugs_opened_share_array << Stats::StatisticsService.instance.compute_percentage(bugs_in_week, scope_in_week)
     end
     @weeekly_bugs_share_hash = { dates_array: dates_array, bugs_opened_share_array: bugs_opened_share_array }
   end
@@ -211,14 +211,9 @@ class ReportData < ChartData
 
       queue_time = ProjectsRepository.instance.total_queue_time_for(@all_projects, date)
       touch_time = ProjectsRepository.instance.total_touch_time_for(@all_projects, date)
-      flow_efficiency_array << compute_percentage(touch_time, queue_time)
+      flow_efficiency_array << Stats::StatisticsService.instance.compute_percentage(touch_time, queue_time)
     end
     @weeekly_queue_touch_share_hash = { dates_array: dates_array, flow_efficiency_array: flow_efficiency_array }
-  end
-
-  def compute_percentage(data_count_analysed, data_count_remaining)
-    return 0 if data_count_remaining.zero?
-    (data_count_analysed.to_f / (data_count_analysed.to_f + data_count_remaining.to_f) * 100)
   end
 
   def build_leadtime_histogram

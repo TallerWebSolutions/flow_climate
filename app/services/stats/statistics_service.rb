@@ -29,6 +29,11 @@ module Stats
       Presenter::MonteCarloPresenter.new(dates_and_hits_hash)
     end
 
+    def compute_percentage(data_count_analysed, data_count_remaining)
+      return 0 if data_count_remaining.zero? && data_count_analysed.zero?
+      (data_count_analysed.to_f / (data_count_analysed.to_f + data_count_remaining.to_f) * 100)
+    end
+
     private
 
     def create_histogram_data(data_array)
