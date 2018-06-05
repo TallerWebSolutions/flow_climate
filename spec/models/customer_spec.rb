@@ -90,7 +90,7 @@ RSpec.describe Customer, type: :model do
     let(:blank_project) { Fabricate :project, customer: customer, product: other_product }
 
     let!(:first_result) { Fabricate :project_result, project: project, result_date: 1.week.ago, known_scope: 10, qty_hours_upstream: 17, qty_hours_downstream: 20, throughput_upstream: 2, throughput_downstream: 10 }
-    let!(:second_result) { Fabricate :project_result, project: project, result_date: 1.week.ago, known_scope: 20, qty_hours_upstream: 12, qty_hours_downstream: 23, throughput_upstream: 1, throughput_downstream: 2 }
+    let!(:second_result) { Fabricate :project_result, project: project, result_date: 2.weeks.ago, known_scope: 20, qty_hours_upstream: 12, qty_hours_downstream: 23, throughput_upstream: 1, throughput_downstream: 2 }
     let!(:third_result) { Fabricate :project_result, project: other_project, result_date: 1.week.ago, known_scope: 5, qty_hours_upstream: 9, qty_hours_downstream: 8, throughput_upstream: 1, throughput_downstream: 14 }
     let!(:fourth_result) { Fabricate :project_result, project: other_customer_project, result_date: 1.week.ago, known_scope: 50 }
   end

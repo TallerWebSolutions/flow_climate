@@ -17,10 +17,20 @@ class ProjectResultService
     update_results_cascading!(new_result, old_result)
     save_monte_carlo_date!(new_result.reload, 100)
 
+    demand.project.update_team_in_product(team)
+
     new_result.reload
   end
 
   private
+
+  def define_initial_attributes!(team, demand, project_result)
+    available_hours = team.active_daily_available_hours_for_billable_types([demand.project.project_type])
+    team_cost_in_month = ProjectFinancesService.instance.compute_cost_for_average_demand_cost(demand.project, project_result.result_date)
+    effort_share_in_month = ProjectFinancesService.instance.effort_share_in_month(demand.project, project_result.result_date)
+
+    project_result.update(cost_in_month: team_cost_in_month, available_hours: available_hours, effort_share_in_month: effort_share_in_month)
+  end
 
   def update_results_cascading!(new_result, old_result)
     bottom_limit_to_update_result = new_result.result_date
@@ -31,11 +41,6 @@ class ProjectResultService
 
     ProjectResult.reset_counters(new_result.id, :demands_count)
     ProjectResult.reset_counters(old_result.id, :demands_count) if old_result.present? && old_result.persisted?
-  end
-
-  def define_initial_attributes!(team, demand, project_result)
-    project_result.update(cost_in_month: team.active_monthly_cost_for_billable_types([demand.project.project_type]),
-                          available_hours: team.active_monthly_available_hours_for_billable_types([demand.project.project_type]))
   end
 
   def save_monte_carlo_date!(project_result, qty_cycles)

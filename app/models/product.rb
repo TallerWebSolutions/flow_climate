@@ -35,10 +35,6 @@ class Product < ApplicationRecord
 
   delegate :name, to: :customer, prefix: true
 
-  def last_week_scope
-    projects.sum(&:last_week_scope)
-  end
-
   def regressive_avg_hours_per_demand
     return avg_hours_per_demand if avg_hours_per_demand.positive?
     customer.regressive_avg_hours_per_demand

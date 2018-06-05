@@ -2,10 +2,18 @@
 
 RSpec.describe ProjectResultService, type: :service do
   describe '#compute_demand!' do
-    let(:team) { Fabricate :team }
+    let(:company) { Fabricate :company }
+    let(:customer) { Fabricate :customer, company: company }
+    let(:previous_team) { Fabricate :team, company: company }
+    let!(:previous_team_member) { Fabricate :team_member, team: previous_team, total_monthly_payment: 200, hours_per_month: 40 }
+
+    let(:team) { Fabricate :team, company: company }
     let!(:team_member) { Fabricate :team_member, team: team, total_monthly_payment: 100, hours_per_month: 40 }
     let!(:other_team_member) { Fabricate :team_member, team: team, total_monthly_payment: 300, hours_per_month: 50 }
-    let(:project) { Fabricate :project, initial_scope: 10, start_date: 1.week.ago, end_date: 1.week.from_now }
+
+    let(:product) { Fabricate :product, customer: customer, team: previous_team }
+    let(:project) { Fabricate :project, product: product, customer: customer, initial_scope: 10, start_date: 1.week.ago, end_date: 1.week.from_now }
+
     let(:existent_project_result) { Fabricate :project_result, project: project }
     let(:other_existent_project_result) { Fabricate :project_result }
 
@@ -29,11 +37,13 @@ RSpec.describe ProjectResultService, type: :service do
             expect(ProjectResult).to receive(:reset_counters).once
 
             ProjectResultService.instance.compute_demand!(team, demand)
+
             project_result = ProjectResult.last
             expect(project_result.demands).to eq [demand]
+            expect(project_result.team).to eq team
             expect(project_result.result_date).to eq 2.days.ago.to_date
-            expect(project_result.cost_in_month).to eq 400
-            expect(project_result.available_hours).to eq 90
+            expect(project_result.cost_in_month).to eq 0
+            expect(project_result.available_hours.to_f).to eq 3.0
             expect(project_result.throughput_upstream).to eq 0
             expect(project_result.throughput_downstream).to eq 0
             expect(project_result.known_scope).to eq 11
@@ -42,6 +52,8 @@ RSpec.describe ProjectResultService, type: :service do
             expect(project_result.qty_hours_bug).to eq 0
             expect(project_result.qty_bugs_closed).to eq 0
             expect(project_result.remaining_days).to eq 10
+
+            expect(product.reload.team).to eq team
           end
         end
         context 'and having an end_date' do
@@ -52,8 +64,8 @@ RSpec.describe ProjectResultService, type: :service do
             project_result = ProjectResult.last
             expect(project_result.demands).to eq [demand]
             expect(project_result.result_date).to eq 1.day.from_now.to_date
-            expect(project_result.cost_in_month).to eq 400
-            expect(project_result.available_hours).to eq 90
+            expect(project_result.cost_in_month).to eq 200
+            expect(project_result.available_hours.to_f).to eq 3.0
             expect(project_result.throughput_upstream).to eq 0
             expect(project_result.throughput_downstream).to eq 1
             expect(project_result.known_scope).to eq 11
@@ -62,6 +74,8 @@ RSpec.describe ProjectResultService, type: :service do
             expect(project_result.qty_hours_bug).to eq 0
             expect(project_result.qty_bugs_closed).to eq 0
             expect(project_result.remaining_days).to eq 7
+
+            expect(product.reload.team).to eq team
           end
         end
       end
@@ -98,6 +112,8 @@ RSpec.describe ProjectResultService, type: :service do
               expect(after_result_reload.known_scope).to eq 11
 
               expect(ProjectResult.count).to eq 4
+
+              expect(product.reload.team).to eq team
             end
           end
 
@@ -134,6 +150,8 @@ RSpec.describe ProjectResultService, type: :service do
                 expect(after_result_reload.known_scope).to eq 13
 
                 expect(ProjectResult.count).to eq 5
+
+                expect(product.reload.team).to eq team
               end
             end
             context 'and the new result exists' do
@@ -151,6 +169,8 @@ RSpec.describe ProjectResultService, type: :service do
                 expect(updated_project_result.demands).to match_array [second_demand, third_demand]
 
                 expect(ProjectResult.count).to eq 5
+
+                expect(product.reload.team).to eq team
               end
             end
           end
@@ -162,6 +182,7 @@ RSpec.describe ProjectResultService, type: :service do
           ProjectResultService.instance.compute_demand!(team, demand)
           expect(ProjectResult.count).to eq 0
           expect(demand.reload.project_result).to eq nil
+          expect(product.reload.team).to eq previous_team
         end
       end
     end

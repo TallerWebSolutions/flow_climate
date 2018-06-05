@@ -287,6 +287,23 @@ RSpec.describe Project, type: :model do
     end
   end
 
+  describe '#update_team_in_product' do
+    context 'having teams' do
+      let(:product_team) { Fabricate :team }
+      let(:product) { Fabricate :product, team: product_team }
+      let(:project) { Fabricate :project, product: product }
+      let(:team) { Fabricate :team }
+      before { project.update_team_in_product(team) }
+      it { expect(product.reload.team).to eq team }
+    end
+    context 'having no product' do
+      let(:team) { Fabricate :team }
+      let!(:project) { Fabricate :project, project_type: :consulting, product: nil }
+      before { project.update_team_in_product(team) }
+      it { expect { project.update_team_in_product(team) }.not_to raise_error(Exception) }
+    end
+  end
+
   describe '#flow_pressure' do
     context 'and the start and finish dates are in different days' do
       let(:project) { Fabricate :project, initial_scope: 30, start_date: Time.zone.parse('2018-03-05 22:00'), end_date: Time.zone.parse('2018-03-07 10:00') }

@@ -9,6 +9,7 @@
 #  cost_in_month         :decimal(, )      not null
 #  created_at            :datetime         not null
 #  demands_count         :integer
+#  effort_share_in_month :decimal(, )
 #  flow_pressure         :decimal(, )      not null
 #  id                    :bigint(8)        not null, primary key
 #  known_scope           :integer          not null
@@ -68,13 +69,6 @@ class ProjectResult < ApplicationRecord
   def hours_per_demand_downstream
     return 0 if throughput_downstream.zero?
     qty_hours_downstream.to_f / throughput_downstream.to_f
-  end
-
-  def define_automatic_attributes!
-    available_hours = team.active_daily_available_hours_for_billable_types([project.project_type])
-    team_cost_in_month = team.active_monthly_cost_for_billable_types([project.project_type])
-    update(known_scope: current_scope, remaining_days: project.remaining_days(result_date), flow_pressure: current_flow_pressure, cost_in_month: team_cost_in_month,
-           available_hours: available_hours, average_demand_cost: compute_average_demand_cost, leadtime: demands.finished.average(:leadtime))
   end
 
   def total_hours

@@ -94,7 +94,7 @@ RSpec.describe Team, type: :model do
     let(:other_customer_project) { Fabricate :project }
 
     let!(:first_result) { Fabricate :project_result, project: project, team: team, result_date: 1.week.ago, known_scope: 10 }
-    let!(:second_result) { Fabricate :project_result, project: project, team: team, result_date: 1.week.ago, known_scope: 20 }
+    let!(:second_result) { Fabricate :project_result, project: project, team: team, result_date: 2.weeks.ago, known_scope: 20 }
     let!(:third_result) { Fabricate :project_result, project: other_project, team: team, result_date: 1.week.ago, known_scope: 5 }
     let!(:fourth_result) { Fabricate :project_result, project: other_customer_project, team: other_team, result_date: 1.week.ago, known_scope: 50 }
   end

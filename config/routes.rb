@@ -62,7 +62,7 @@ Rails.application.routes.draw do
         get :delivered_demands_csv
       end
 
-      resources :project_results, except: %i[new create]
+      resources :project_results, only: :show
 
       resources :demands do
         put :synchronize_pipefy, on: :member

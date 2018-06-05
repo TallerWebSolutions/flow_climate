@@ -29,7 +29,7 @@ function buildScatterChart(scatterDiv) {
                     style: {
                         color: 'green'
                     },
-                    text: 'percentile 95% (' + scatterDiv.data('percentile95') + ' ' + scatterDiv.data('ysuffix') + ')'
+                    text: 'percentile 95% (' + scatterDiv.data('percentile95').toFixed(2) + ' ' + scatterDiv.data('ysuffix') + ')'
                 }
             },{
                 value: scatterDiv.data('percentile80'),
@@ -40,7 +40,7 @@ function buildScatterChart(scatterDiv) {
                     style: {
                         color: 'yellow'
                     },
-                    text: 'percentile 80% (' + scatterDiv.data('percentile80') + ' ' + scatterDiv.data('ysuffix') + ')'
+                    text: 'percentile 80% (' + scatterDiv.data('percentile80').toFixed(2) + ' ' + scatterDiv.data('ysuffix') + ')'
                 }
             },{
                 value: scatterDiv.data('percentile60'),
@@ -51,7 +51,7 @@ function buildScatterChart(scatterDiv) {
                     style: {
                         color: 'red'
                     },
-                    text: 'percentile 60% (' + scatterDiv.data('percentile60') + ' ' + scatterDiv.data('ysuffix') + ')'
+                    text: 'percentile 60% (' + scatterDiv.data('percentile60').toFixed(2) + ' ' + scatterDiv.data('ysuffix') + ')'
                 }
             }]
         },

@@ -48,4 +48,6 @@ RSpec.describe Stats::StatisticsService, type: :service do
       end
     end
   end
+
+  pending '#compute_percentage'
 end

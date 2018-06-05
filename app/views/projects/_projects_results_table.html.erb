@@ -25,7 +25,6 @@
       <th><%= ProjectResult.human_attribute_name :qty_hours_bug %></th>
       <th><%= ProjectResult.human_attribute_name :leadtime %></th>
       <th><%= ProjectResult.human_attribute_name :demands_count %></th>
-      <th><%= t('general.table.actions') %></th>
     </tr>
   </thead>
   <tbody>
@@ -53,14 +52,6 @@
         <td><%= number_with_precision(result.qty_hours_bug, precision: 0) %></td>
         <td><%= number_with_precision(result.leadtime, precision: 4) %></td>
         <td><%= result.demands_count %></td>
-        <td>
-          <%= link_to edit_company_project_project_result_path(@company, project, result) do %>
-            <i class="fas fa-edit"></i>
-          <% end %>
-          <%= link_to company_project_project_result_path(@company, project, result), method: :delete do %>
-            <i class="fa fa-times" aria-hidden="true"></i>
-          <% end %>
-        </td>
       </tr>
     <% end %>
   </tbody>
