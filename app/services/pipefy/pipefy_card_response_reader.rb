@@ -56,7 +56,7 @@ module Pipefy
       return if demand_id.blank?
       assignees_count = compute_assignees_count(team, response_data)
       url = response_data.try(:[], 'card').try(:[], 'url')
-      demand_title = response_data.try(:[], 'card').try(:[], 'title')
+      demand_title = read_demand_title(response_data)
 
       demand = Demand.find_by(demand_id: demand_id, project: project)
       return demand if demand.present?
@@ -68,7 +68,7 @@ module Pipefy
       demand_id = response_data.try(:[], 'card').try(:[], 'id')
       assignees_count = compute_assignees_count(team, response_data)
       url = response_data.try(:[], 'card').try(:[], 'url')
-      demand_title = response_data.try(:[], 'card').try(:[], 'title')
+      demand_title = read_demand_title(response_data)
 
       demand.update!(demand_id: demand_id, demand_title: demand_title, demand_type: read_demand_type(response_data), class_of_service: read_class_of_service(response_data), assignees_count: assignees_count, url: url)
       demand.project_result&.compute_flow_metrics!
@@ -151,6 +151,15 @@ module Pipefy
                                   end
       end
       demand_class_of_service
+    end
+
+    def read_demand_title(response_data)
+      demand_title = ''
+      response_data.try(:[], 'card').try(:[], 'fields')&.each do |field|
+        next unless field['name'].casecmp('Title').zero?
+        demand_title = field['value']
+      end
+      demand_title
     end
 
     def read_blocks(demand, response_data)

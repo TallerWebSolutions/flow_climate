@@ -21,6 +21,11 @@ $('#nav-item-list').on('click', function(){
     $('#nav-item-list').addClass('active');
 });
 
+$('#nav-item-delivered').on('click', function(){
+    hideAllComponents();
+    $('#delivered-demands').show();
+    $('#nav-item-delivered').addClass('active');
+});
 
 $('#nav-item-statusreport').on('click', function(){
     hideAllComponents();
@@ -63,6 +68,7 @@ $('#nav-item-settings').on('click', function(){
 function hideAllComponents() {
     $('#stamps').hide();
     $('#project-list').hide();
+    $('#delivered-demands').hide();
     $('#project-status-report').hide();
     $('#charts').hide();
     $('#strategic').hide();
@@ -72,6 +78,7 @@ function hideAllComponents() {
 
     $('#nav-item-stamps').removeClass('active');
     $('#nav-item-list').removeClass('active');
+    $('#nav-item-delivered').removeClass('active');
     $('#nav-item-statusreport').removeClass('active');
     $('#nav-item-charts').removeClass('active');
     $('#nav-item-strategic').removeClass('active');

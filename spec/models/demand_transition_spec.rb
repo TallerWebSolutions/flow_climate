@@ -98,15 +98,15 @@ RSpec.describe DemandTransition, type: :model do
       end
     end
     context 'when the stage is an end_point' do
-      let!(:first_stage) { Fabricate :stage, company: company, commitment_point: false, end_point: true, projects: [project], order: 0, integration_pipe_id: '123' }
-      let!(:second_stage) { Fabricate :stage, company: company, commitment_point: false, end_point: true, projects: [project], order: 1, integration_pipe_id: '123' }
+      let!(:first_stage) { Fabricate :stage, company: company, commitment_point: false, end_point: true, projects: [project], order: 0, integration_pipe_id: '123', stage_stream: :downstream }
+      let!(:second_stage) { Fabricate :stage, company: company, commitment_point: false, end_point: true, projects: [project], order: 1, integration_pipe_id: '123', stage_stream: :downstream }
 
       context 'and there is no end_date defined' do
         let(:demand) { Fabricate :demand, project: project, created_date: Time.zone.parse('2018-02-04 12:00:00') }
         let(:transition_date) { Time.zone.parse('2018-03-13 12:00:00') }
 
         before { Fabricate :demand_transition, stage: first_stage, demand: demand, last_time_in: transition_date }
-        it 'sets the commitment date and do not touch in the others' do
+        it 'sets the end_date and do not touch in the others' do
           expect(demand.reload.commitment_date).to be_nil
           expect(demand.reload.created_date).to eq Time.zone.parse('2018-02-04 12:00:00')
           expect(demand.reload.end_date).to eq transition_date
@@ -117,7 +117,7 @@ RSpec.describe DemandTransition, type: :model do
         let(:transition_date) { Time.zone.parse('2018-03-13 12:00:00') }
 
         before { Fabricate :demand_transition, stage: second_stage, demand: demand, last_time_in: transition_date }
-        it 'sets the commitment date and do not touch in the others' do
+        it 'do not touch the dates' do
           expect(demand.reload.commitment_date).to be_nil
           expect(demand.reload.created_date).to eq Time.zone.parse('2018-02-04 12:00:00')
           expect(demand.reload.end_date).to eq Time.zone.parse('2018-02-05 12:00:00')
@@ -141,8 +141,8 @@ RSpec.describe DemandTransition, type: :model do
       end
 
       context 'and the stage of the transition is after the end_point' do
-        let!(:stage) { Fabricate :stage, company: company, commitment_point: false, end_point: false, projects: [project], integration_pipe_id: '123', order: 1 }
-        let!(:other_stage) { Fabricate :stage, company: company, commitment_point: false, end_point: true, projects: [project], integration_pipe_id: '123', order: 0 }
+        let!(:stage) { Fabricate :stage, company: company, commitment_point: false, end_point: false, projects: [project], integration_pipe_id: '123', order: 1, stage_stream: :downstream }
+        let!(:other_stage) { Fabricate :stage, company: company, commitment_point: false, end_point: true, projects: [project], integration_pipe_id: '123', order: 0, stage_stream: :downstream }
 
         let(:demand) { Fabricate :demand, project: project, created_date: Time.zone.parse('2018-02-04 12:00:00'), end_date: 2.weeks.from_now }
         let(:transition_date) { Time.zone.parse('2018-03-13 12:00:00') }

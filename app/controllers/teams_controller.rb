@@ -11,6 +11,8 @@ class TeamsController < AuthenticatedController
     @projects_summary = ProjectsSummaryObject.new(@team.projects)
     @pipefy_team_configs = @team.pipefy_team_configs.order(:username)
     @projects_risk_alert_data = ProjectRiskData.new(@team.projects)
+    @team_delivered_demands = DemandsRepository.instance.demands_finished_per_projects(@team_projects).order(end_date: :desc)
+    @grouped_team_delivered_demands = @team_delivered_demands.grouped_end_date_by_month
   end
 
   def new

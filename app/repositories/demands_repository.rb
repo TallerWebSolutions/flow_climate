@@ -39,11 +39,15 @@ class DemandsRepository
   end
 
   def grouped_by_effort_upstream_per_month(array_of_projects)
-    Demand.finished.where(project_id: array_of_projects.map(&:id)).order(Arel.sql('EXTRACT(YEAR from end_date), EXTRACT(MONTH from end_date)')).group('EXTRACT(YEAR from end_date)', 'EXTRACT(MONTH from end_date)').sum(:effort_upstream)
+    demands_finished_per_projects(array_of_projects).order(Arel.sql('EXTRACT(YEAR from end_date), EXTRACT(MONTH from end_date)')).group('EXTRACT(YEAR from end_date)', 'EXTRACT(MONTH from end_date)').sum(:effort_upstream)
   end
 
   def grouped_by_effort_downstream_per_month(array_of_projects)
-    Demand.finished.where(project_id: array_of_projects.map(&:id)).order(Arel.sql('EXTRACT(YEAR from end_date), EXTRACT(MONTH from end_date)')).group('EXTRACT(YEAR from end_date)', 'EXTRACT(MONTH from end_date)').sum(:effort_downstream)
+    demands_finished_per_projects(array_of_projects).order(Arel.sql('EXTRACT(YEAR from end_date), EXTRACT(MONTH from end_date)')).group('EXTRACT(YEAR from end_date)', 'EXTRACT(MONTH from end_date)').sum(:effort_downstream)
+  end
+
+  def demands_finished_per_projects(array_of_projects)
+    Demand.finished.where(project_id: array_of_projects.map(&:id))
   end
 
   private

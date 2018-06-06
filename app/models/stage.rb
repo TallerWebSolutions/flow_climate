@@ -50,18 +50,19 @@ class Stage < ApplicationRecord
     save
   end
 
-  def first_end_stage_in_pipe?
-    done_stage_in_pipe&.id == id
+  def first_end_stage_in_pipe?(demand)
+    done_stage_in_pipe(demand)&.id == id
   end
 
-  def before_end_point?
-    return true if done_stage_in_pipe.blank?
-    order < done_stage_in_pipe.order
+  def before_end_point?(demand)
+    return true if done_stage_in_pipe(demand).blank?
+    order < done_stage_in_pipe(demand).order
   end
 
   private
 
-  def done_stage_in_pipe
+  def done_stage_in_pipe(demand)
+    return company.stages.where(integration_pipe_id: integration_pipe_id, end_point: true, stage_stream: :downstream).order(:order).first if demand.downstream_demand?
     company.stages.where(integration_pipe_id: integration_pipe_id, end_point: true).order(:order).first
   end
 end
