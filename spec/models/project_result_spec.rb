@@ -110,24 +110,26 @@ RSpec.describe ProjectResult, type: :model do
   end
 
   context 'demand dealers' do
-    let(:project) { Fabricate :project, start_date: 2.days.ago, end_date: 3.days.from_now, initial_scope: 2 }
-    let!(:downstream_stage) { Fabricate :stage, end_point: true, stage_stream: :downstream }
-    let!(:upstream_stage) { Fabricate :stage, stage_stream: :upstream, end_point: true }
+    let(:company) { Fabricate :company }
+    let(:customer) { Fabricate :customer, company: company }
+    let(:project) { Fabricate :project, customer: customer, start_date: 2.days.ago, end_date: 3.days.from_now, initial_scope: 2 }
+    let!(:downstream_stage) { Fabricate :stage, company: company, stage_stream: :downstream, end_point: true, order: 1, integration_pipe_id: '123' }
+    let!(:upstream_stage) { Fabricate :stage, company: company, stage_stream: :upstream, end_point: true, order: 0, integration_pipe_id: '123' }
 
     let!(:first_stage_project_config) { Fabricate :stage_project_config, project: project, stage: downstream_stage, compute_effort: true, pairing_percentage: 60, stage_percentage: 100, management_percentage: 10 }
     let!(:second_stage_project_config) { Fabricate :stage_project_config, project: project, stage: upstream_stage, compute_effort: true, pairing_percentage: 60, stage_percentage: 100, management_percentage: 10 }
 
     let!(:result) { Fabricate :project_result, project: project, result_date: Date.new(2018, 4, 3), known_scope: 2032, cost_in_month: 30_000, throughput_upstream: 0, throughput_downstream: 0, flow_pressure: 2 }
 
-    let!(:first_demand) { Fabricate :demand, project_result: result, project: project, created_date: Date.new(2018, 4, 2), end_date: Date.new(2018, 4, 3), effort_upstream: 50, effort_downstream: 12 }
-    let!(:second_demand) { Fabricate :demand, project: project, created_date: Date.new(2018, 4, 3), end_date: Date.new(2018, 4, 3), demand_type: :bug, effort_upstream: 100, effort_downstream: 20 }
-    let!(:third_demand) { Fabricate :demand, project_result: result, project: project, created_date: Date.new(2018, 4, 1), end_date: Date.new(2018, 4, 2), demand_type: :feature, effort_upstream: 70, effort_downstream: 10 }
-    let!(:fourth_demand) { Fabricate :demand, project_result: result, project: project, created_date: Date.new(2018, 4, 1), end_date: Date.new(2018, 4, 2), demand_type: :feature, effort_upstream: 5, effort_downstream: 10, downstream: true }
+    let!(:first_demand) { Fabricate :demand, project_result: result, project: project, created_date: Date.new(2018, 4, 2), end_date: Date.new(2018, 4, 3), effort_upstream: 50, effort_downstream: 12, downstream: false }
+    let!(:second_demand) { Fabricate :demand, project: project, created_date: Date.new(2018, 4, 3), end_date: Date.new(2018, 4, 3), demand_type: :bug, effort_upstream: 100, effort_downstream: 20, downstream: false }
+    let!(:third_demand) { Fabricate :demand, project_result: result, project: project, created_date: Date.new(2018, 4, 1), end_date: Date.new(2018, 4, 2), demand_type: :feature, effort_upstream: 70, effort_downstream: 10, downstream: false }
+    let!(:fourth_demand) { Fabricate :demand, project_result: result, project: project, created_date: Date.new(2018, 4, 1), end_date: Date.new(2018, 4, 2), demand_type: :feature, effort_upstream: 5, effort_downstream: 10, downstream: false }
 
-    let!(:first_demand_transition) { Fabricate :demand_transition, stage: downstream_stage, demand: first_demand, last_time_in: '2018-04-02T01:01:41-02:00', last_time_out: '2018-04-04T01:01:41-02:00' }
-    let!(:second_demand_transition) { Fabricate :demand_transition, stage: downstream_stage, demand: second_demand, last_time_in: '2018-04-02T01:01:41-02:00', last_time_out: '2018-04-04T01:01:41-02:00' }
-    let!(:third_demand_transition) { Fabricate :demand_transition, stage: upstream_stage, demand: third_demand, last_time_in: '2018-04-02T01:01:41-02:00', last_time_out: '2018-04-04T01:01:41-02:00' }
-    let!(:fourth_demand_transition) { Fabricate :demand_transition, stage: upstream_stage, demand: fourth_demand, last_time_in: '2018-04-04T01:01:41-02:00', last_time_out: '2018-04-06T01:01:41-02:00' }
+    let!(:first_demand_transition) { Fabricate :demand_transition, stage: downstream_stage, demand: first_demand, last_time_in: '2018-04-02T01:01:41-02:00', last_time_out: '2018-05-04T01:01:41-02:00' }
+    let!(:second_demand_transition) { Fabricate :demand_transition, stage: downstream_stage, demand: second_demand, last_time_in: '2018-04-02T01:01:41-02:00', last_time_out: '2018-05-20T01:01:41-02:00' }
+    let!(:third_demand_transition) { Fabricate :demand_transition, stage: downstream_stage, demand: third_demand, last_time_in: '2018-04-02T01:01:41-02:00', last_time_out: '2018-04-15T01:01:41-02:00' }
+    let!(:fourth_demand_transition) { Fabricate :demand_transition, stage: upstream_stage, demand: fourth_demand, last_time_in: '2018-04-04T01:01:41-02:00', last_time_out: '2018-04-20T01:01:41-02:00' }
 
     describe '#add_demand!' do
       context 'when it does not have the demand yet' do
@@ -137,11 +139,11 @@ RSpec.describe ProjectResult, type: :model do
           expect(ProjectResult.count).to eq 1
           expect(result.reload.demands).to match_array [first_demand, second_demand, third_demand, fourth_demand]
           expect(result.reload.known_scope).to eq 6
-          expect(result.reload.throughput_upstream).to eq 2
-          expect(result.reload.throughput_downstream).to eq 2
-          expect(result.reload.qty_hours_upstream).to eq 26
-          expect(result.reload.qty_hours_downstream).to eq 26
-          expect(result.reload.qty_hours_bug).to eq 13
+          expect(result.reload.throughput_upstream).to eq 1
+          expect(result.reload.throughput_downstream).to eq 3
+          expect(result.reload.qty_hours_upstream).to eq 79
+          expect(result.reload.qty_hours_downstream).to eq 455
+          expect(result.reload.qty_hours_bug).to eq 231
           expect(result.reload.qty_bugs_closed).to eq 1
           expect(result.reload.qty_bugs_opened).to eq 1
           expect(result.reload.flow_pressure.to_f).to eq 1.0
@@ -164,10 +166,10 @@ RSpec.describe ProjectResult, type: :model do
           expect(ProjectResult.count).to eq 1
           expect(result.reload.demands).to match_array [first_demand, third_demand, fourth_demand]
           expect(result.reload.known_scope).to eq 6
-          expect(result.reload.throughput_upstream).to eq 2
-          expect(result.reload.throughput_downstream).to eq 1
-          expect(result.reload.qty_hours_upstream).to eq 26
-          expect(result.reload.qty_hours_downstream).to eq 13
+          expect(result.reload.throughput_upstream).to eq 1
+          expect(result.reload.throughput_downstream).to eq 2
+          expect(result.reload.qty_hours_upstream).to eq 79
+          expect(result.reload.qty_hours_downstream).to eq 224
           expect(result.reload.qty_hours_bug).to eq 0
           expect(result.reload.qty_bugs_closed).to eq 0
           expect(result.reload.qty_bugs_opened).to eq 0

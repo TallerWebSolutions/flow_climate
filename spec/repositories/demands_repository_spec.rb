@@ -38,6 +38,22 @@ RSpec.describe DemandsRepository, type: :repository do
     it { expect(DemandsRepository.instance.known_scope_to_date(first_project, 2.days.ago.to_date)).to eq 3 }
   end
 
+  describe '#demands_finished_per_projects' do
+    let(:company) { Fabricate :company }
+    let(:customer) { Fabricate :customer, company: company }
+
+    let(:first_project) { Fabricate :project, customer: customer, start_date: 1.week.ago }
+    let(:second_project) { Fabricate :project, customer: customer, start_date: 1.week.ago }
+
+    let!(:first_demand) { Fabricate :demand, project: first_project, created_date: 3.days.ago, end_date: 3.days.ago }
+    let!(:second_demand) { Fabricate :demand, project: first_project, created_date: 2.days.ago, end_date: 2.days.ago }
+    let!(:third_demand) { Fabricate :demand, project: first_project, created_date: 2.days.ago, end_date: 2.days.ago }
+    let!(:fourth_demand) { Fabricate :demand, project: second_project, created_date: 1.day.ago, end_date: 1.day.ago }
+    let!(:fifth_demand) { Fabricate :demand, project: second_project, created_date: 2.days.ago, end_date: 2.days.ago }
+
+    it { expect(DemandsRepository.instance.demands_finished_per_projects([first_project])).to match_array [first_demand, second_demand, third_demand] }
+  end
+
   pending '#full_demand_destroy!'
 
   describe '#total_queue_time_for' do
