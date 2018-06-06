@@ -1,19 +1,17 @@
-<div class="container-fluid">
-  <div class="row">
+<div class="row">
+  <div class="col-xs-12">
+    <ul class="breadcrumb">
+      <li><%= link_to t('general.home.title'), root_path %></li>
+      <li><%= link_to @company.abbreviation&.upcase, company_path(@company) %></li>
+      <li><%= t('customer.edit.title') %></li>
+    </ul>
+  </div>
+</div>
+
+<%= form_for @customer, url: company_customer_path(@company, @customer), method: :put, class: 'form' do |f| %>
+  <div class="row bottom-spaced-component">
     <div class="col-xs-12">
-      <ul class="breadcrumb">
-        <li><%= link_to t('general.home.title'), root_path %></li>
-        <li><%= link_to @company.abbreviation&.upcase, company_path(@company) %></li>
-        <li><%= t('customer.edit.title') %></li>
-      </ul>
+      <%= render 'form', f: f %>
     </div>
   </div>
-
-  <%= form_for @customer, url: company_customer_path(@company, @customer), method: :put, class: 'form' do |f| %>
-    <div class="row bottom-spaced-component">
-      <div class="col-xs-12">
-        <%= render 'form', f: f %>
-      </div>
-    </div>
-  <% end %>
-</div>
+<% end %>

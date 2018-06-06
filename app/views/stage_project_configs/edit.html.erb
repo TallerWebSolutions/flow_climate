@@ -1,53 +1,51 @@
-<div class="container-fluid">
-  <div class="row">
+<div class="row">
+  <div class="col-xs-12">
+    <ul class="breadcrumb">
+      <li><%= link_to t('general.home.title'), root_path %></li>
+      <li><%= link_to @company.abbreviation&.upcase, company_path(@company) %></li>
+      <li><%= link_to @stage.name, company_stage_path(@company, @stage) %></li>
+      <li><%= t('stage_project_config.edit.title') %></li>
+    </ul>
+  </div>
+</div>
+
+<%= form_for @stage_project_config, url: company_stage_stage_project_config_url(@company, @stage, @stage_project_config), method: :put, class: 'form' do |f| %>
+  <div class="row bottom-spaced-component">
     <div class="col-xs-12">
-      <ul class="breadcrumb">
-        <li><%= link_to t('general.home.title'), root_path %></li>
-        <li><%= link_to @company.abbreviation&.upcase, company_path(@company) %></li>
-        <li><%= link_to @stage.name, company_stage_path(@company, @stage) %></li>
-        <li><%= t('stage_project_config.edit.title') %></li>
-      </ul>
+      <%= render 'form', f: f %>
     </div>
   </div>
+<% end %>
 
-  <%= form_for @stage_project_config, url: company_stage_stage_project_config_url(@company, @stage, @stage_project_config), method: :put, class: 'form' do |f| %>
-    <div class="row bottom-spaced-component">
-      <div class="col-xs-12">
-        <%= render 'form', f: f %>
-      </div>
-    </div>
-  <% end %>
-
-  <div class="row">
-    <div class="col-xs-12">
-      <h2><%= t('stage_project_config.edit.project_list') %></h2>
-      <table class="table">
-        <thead>
+<div class="row">
+  <div class="col-xs-12">
+    <h2><%= t('stage_project_config.edit.project_list') %></h2>
+    <table class="table">
+      <thead>
+        <tr>
+          <th><%= Project.model_name %></th>
+          <th class="center"><%= StageProjectConfig.human_attribute_name(:compute_effort) %></th>
+          <th><%= StageProjectConfig.human_attribute_name(:stage_percentage) %></th>
+          <th><%= StageProjectConfig.human_attribute_name(:pairing_percentage) %></th>
+          <th><%= StageProjectConfig.human_attribute_name(:management_percentage) %></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @stage_project_config.stage.projects.sort_by(&:full_name).each do |project| %>
           <tr>
-            <th><%= Project.model_name %></th>
-            <th class="center"><%= StageProjectConfig.human_attribute_name(:compute_effort) %></th>
-            <th><%= StageProjectConfig.human_attribute_name(:stage_percentage) %></th>
-            <th><%= StageProjectConfig.human_attribute_name(:pairing_percentage) %></th>
-            <th><%= StageProjectConfig.human_attribute_name(:management_percentage) %></th>
+            <td><%= project.full_name %></td>
+            <% stage_config_to_project = project.stage_project_configs.find_by(stage: @stage) %>
+            <td class="center">
+              <% if stage_config_to_project&.compute_effort? %>
+                <i class="fa fa-check" aria-hidden="true"></i>
+              <% end %>
+            </td>
+            <td><%= number_with_precision(stage_config_to_project&.stage_percentage, precision: 2) %></td>
+            <td><%= number_with_precision(stage_config_to_project&.pairing_percentage, precision: 2) %></td>
+            <td><%= number_with_precision(stage_config_to_project&.management_percentage, precision: 2) %></td>
           </tr>
-        </thead>
-        <tbody>
-          <% @stage_project_config.stage.projects.sort_by(&:full_name).each do |project| %>
-            <tr>
-              <td><%= project.full_name %></td>
-              <% stage_config_to_project = project.stage_project_configs.find_by(stage: @stage) %>
-              <td class="center">
-                <% if stage_config_to_project&.compute_effort? %>
-                  <i class="fa fa-check" aria-hidden="true"></i>
-                <% end %>
-              </td>
-              <td><%= number_with_precision(stage_config_to_project&.stage_percentage, precision: 2) %></td>
-              <td><%= number_with_precision(stage_config_to_project&.pairing_percentage, precision: 2) %></td>
-              <td><%= number_with_precision(stage_config_to_project&.management_percentage, precision: 2) %></td>
-            </tr>
-          <% end %>
-        </tbody>
-      </table>
-    </div>
+        <% end %>
+      </tbody>
+    </table>
   </div>
 </div>

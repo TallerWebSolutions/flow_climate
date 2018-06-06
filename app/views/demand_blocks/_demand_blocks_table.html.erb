@@ -1,75 +1,82 @@
-<div class="container-fluid">
+<div class="row">
+  <div class="col-xs-12">
+    <h3><%= t('demand_blocks.index.title') %></h3>
+  </div>
+</div>
+<div class="row stamp bottom-spaced-component">
+  <div class="col-xs-6">
+    <%= "#{I18n.t('demands.index.blocked_working_time_upstream')}: #{number_with_precision(@demand.blocked_working_time_upstream, precision: 2)} h" %>
+  </div>
+  <div class="col-xs-6">
+    <%= "#{I18n.t('demands.index.blocked_working_time_downstream')}: #{number_with_precision(@demand.blocked_working_time_downstream, precision: 2)} h" %>
+  </div>
+</div>
+
+<% if demand_blocks_list.empty? %>
   <div class="row">
     <div class="col-xs-12">
-      <h3><%= t('demand_blocks.index.title') %></h3>
+      <%= t('demands.show.no_demand_blocks') %>
     </div>
   </div>
-  <% if demand_blocks_list.empty? %>
-    <div class="row">
-      <div class="col-xs-12">
-        <%= t('demands.show.no_demand_blocks') %>
-      </div>
-    </div>
-  <% else %>
-    <table class="table table-striped table-index">
-      <thead>
+<% else %>
+  <table class="table table-striped table-index">
+    <thead>
+      <tr>
+        <th><%= DemandBlock.human_attribute_name :demand_block_id %></th>
+        <th><%= DemandBlock.human_attribute_name :block_duration %></th>
+        <th><%= DemandBlock.human_attribute_name :blocker_username %></th>
+        <th><%= DemandBlock.human_attribute_name :block_time %></th>
+        <th><%= DemandBlock.human_attribute_name :block_reason %></th>
+        <th><%= DemandBlock.human_attribute_name :unblocker_username %></th>
+        <th><%= DemandBlock.human_attribute_name :unblock_time %></th>
+        <th><%= DemandBlock.human_attribute_name :unblock_reason %></th>
+        <th class="center"><%= DemandBlock.human_attribute_name :active %></th>
+        <th class="center"><%= t('general.table.actions') %></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% demand_blocks_list.each do |block| %>
         <tr>
-          <th><%= DemandBlock.human_attribute_name :demand_block_id %></th>
-          <th><%= DemandBlock.human_attribute_name :block_duration %></th>
-          <th><%= DemandBlock.human_attribute_name :blocker_username %></th>
-          <th><%= DemandBlock.human_attribute_name :block_time %></th>
-          <th><%= DemandBlock.human_attribute_name :block_reason %></th>
-          <th><%= DemandBlock.human_attribute_name :unblocker_username %></th>
-          <th><%= DemandBlock.human_attribute_name :unblock_time %></th>
-          <th><%= DemandBlock.human_attribute_name :unblock_reason %></th>
-          <th class="center"><%= DemandBlock.human_attribute_name :active %></th>
-          <th class="center"><%= t('general.table.actions') %></th>
-        </tr>
-      </thead>
-      <tbody>
-        <% demand_blocks_list.each do |block| %>
-          <tr>
-            <td><%= block.demand_block_id %></td>
-            <td><%= "#{block.block_duration} hs" if block.block_duration.present? %></td>
-            <td><%= block.blocker_username %></td>
-            <td><%= l(block.block_time, format: :short) %></td>
-            <td><%= block.block_reason %></td>
-            <td><%= block.unblocker_username %></td>
-            <td><%= l(block.unblock_time, format: :short) if block.unblock_time.present? %></td>
-            <td><%= block.unblock_reason %></td>
-            <td class="center">
-              <% if block.active? %>
-                <i class="fa fa-check" aria-hidden="true"></i>
+          <td><%= block.demand_block_id %></td>
+          <td><%= "#{block.block_duration} hs" if block.block_duration.present? %></td>
+          <td><%= block.blocker_username %></td>
+          <td><%= l(block.block_time, format: :short) %></td>
+          <td><%= block.block_reason %></td>
+          <td><%= block.unblocker_username %></td>
+          <td><%= l(block.unblock_time, format: :short) if block.unblock_time.present? %></td>
+          <td><%= block.unblock_reason %></td>
+          <td class="center">
+            <% if block.active? %>
+              <i class="fa fa-check" aria-hidden="true"></i>
+            <% end %>
+          </td>
+          <td>
+            <% if block.active? %>
+              <%= link_to deactivate_company_project_demand_demand_block_path(@company, @project, @demand, block), method: :patch do %>
+                <i class="fa fa-ban"></i>
               <% end %>
-            </td>
-            <td>
-              <% if block.active? %>
-                <%= link_to deactivate_company_project_demand_demand_block_path(@company, @project, @demand, block), method: :patch do %>
-                  <i class="fa fa-ban"></i>
-                <% end %>
-              <% else %>
-                <%= link_to activate_company_project_project_result_demand_demand_block_path(@company, @project, @demand, block), method: :patch do %>
-                  <i class="fa fa-check"></i>
-                <% end %>
+            <% else %>
+              <%= link_to activate_company_project_project_result_demand_demand_block_path(@company, @project, @demand, block), method: :patch do %>
+                <i class="fa fa-check"></i>
               <% end %>
-            </td>
-          </tr>
-        <% end %>
-      </tbody>
-      <tfoot>
-        <tr>
-          <td></td>
-          <td><%= "#{demand_blocks_list.sum(:block_duration)} hs" %></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
+            <% end %>
+          </td>
         </tr>
-      </tfoot>
-    </table>
-  <% end %>
-</div>
+      <% end %>
+    </tbody>
+    <tfoot>
+      <tr>
+        <td></td>
+        <td><%= "#{demand_blocks_list.sum(:block_duration)} hs" %></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+    </tfoot>
+  </table>
+<% end %>

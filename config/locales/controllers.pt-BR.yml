@@ -317,6 +317,8 @@ pt-BR:
       sync_pipefy: "Sincronizar"
       no_demand_transitions: "Esta demanda não tem transições."
       last_update: "Última atualização: %{last_update_date}"
+      progress_bars:
+        streams: "Streams do Fluxo"
     sync:
       enqueued: "Sua solicitação foi colocada na fila. Será processada em breve."
       done: "Sua sincronização foi realizada."

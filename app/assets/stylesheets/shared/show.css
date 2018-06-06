@@ -1,3 +1,37 @@
+.queue-progress {
+    width: 100%;
+    background-color: lightgrey;
+    border: 1px solid;
+}
+
+.queue-bar {
+    width: 0;
+    height: 20px;
+    background-color: lightcoral;
+    text-align: center;
+    position: relative;
+    display: table;
+    vertical-align: middle;
+    font-weight: bold;
+}
+
+.general-progress {
+    width: 100%;
+    background-color: lightblue;
+    border: 1px solid;
+}
+
+.general-bar {
+    width: 0;
+    height: 20px;
+    background-color: lightgreen;
+    text-align: center;
+    position: relative;
+    display: table;
+    vertical-align: middle;
+    font-weight: bold;
+}
+
 .stamp {
     padding: 10px;
     background-color: lightskyblue;

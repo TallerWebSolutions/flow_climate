@@ -316,6 +316,8 @@ en:
       sync_pipefy: "Synchronize"
       no_demand_transitions: "No transitions to this demand."
       last_update: "Last update: %{last_update_date}"
+      progress_bars:
+        streams: "Flow Streams Occupation"
     sync:
       enqueued: "Your request was enqueued. It will be processed soon."
       done: "The sync is done."

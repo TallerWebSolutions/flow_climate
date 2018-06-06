@@ -1,23 +1,21 @@
-<div class="container-fluid">
-  <div class="row">
+<div class="row">
+  <div class="col-xs-12">
+    <ul class="breadcrumb">
+      <li><%= link_to t('general.home.title'), root_path %></li>
+      <li><%= link_to @company.abbreviation&.upcase, company_path(@company) %></li>
+      <li><%= link_to @team.name, company_team_path(@company, @team) %></li>
+      <li><%= t('team_member.edit.title') %></li>
+    </ul>
+  </div>
+</div>
+
+<%= form_for @team_member, url: company_team_team_member_path(@company, @team, @team_member), method: :put, class: 'form' do |f| %>
+  <div class="row bottom-spaced-component">
     <div class="col-xs-12">
-      <ul class="breadcrumb">
-        <li><%= link_to t('general.home.title'), root_path %></li>
-        <li><%= link_to @company.abbreviation&.upcase, company_path(@company) %></li>
-        <li><%= link_to @team.name, company_team_path(@company, @team) %></li>
-        <li><%= t('team_member.edit.title') %></li>
-      </ul>
+      <%= render 'form', f: f %>
     </div>
   </div>
-
-  <%= form_for @team_member, url: company_team_team_member_path(@company, @team, @team_member), method: :put, class: 'form' do |f| %>
-    <div class="row bottom-spaced-component">
-      <div class="col-xs-12">
-        <%= render 'form', f: f %>
-      </div>
-    </div>
-  <% end %>
-</div>
+<% end %>
 
 <% content_for :javascript do %>
   <%= javascript_include_tag 'team_members/member_payment_value' %>

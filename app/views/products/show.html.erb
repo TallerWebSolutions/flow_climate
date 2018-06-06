@@ -1,55 +1,53 @@
-<div class="container-fluid">
+<div class="row">
   <div class="row">
-    <div class="row">
-      <div class="col-xs-12">
-        <ul class="breadcrumb">
-          <li><%= link_to t('general.home.title'), root_path %></li>
-          <li><%= link_to @company.abbreviation&.upcase, company_path(@company) %></li>
-          <li><%= link_to Product.model_name.human.pluralize, company_products_path(@company) %></li>
-          <li><%= @product.name %></li>
-        </ul>
-      </div>
+    <div class="col-xs-12">
+      <ul class="breadcrumb">
+        <li><%= link_to t('general.home.title'), root_path %></li>
+        <li><%= link_to @company.abbreviation&.upcase, company_path(@company) %></li>
+        <li><%= link_to Product.model_name.human.pluralize, company_products_path(@company) %></li>
+        <li><%= @product.name %></li>
+      </ul>
     </div>
   </div>
+</div>
 
+<div class="row">
+  <div class="topnav">
+    <%= link_to t('navbar.details'), '#', id: 'nav-item-stamps', class: 'active' %>
+    <%= link_to t('navbar.projects_list'), '#', id: 'nav-item-list' %>
+    <%= link_to t('navbar.status_report'), '#', id: 'nav-item-statusreport' %>
+    <%= link_to t('navbar.charts'), '#', id: 'nav-item-charts' %>
+  </div>
+</div>
+
+<div id="stamps">
+  <%= render 'product_stamps', company: @company, product: @product %>
+</div>
+
+<div id="project-list">
+  <h2><%= t('projects.index.title') %></h2>
   <div class="row">
-    <div class="topnav">
-      <%= link_to t('navbar.details'), '#', id: 'nav-item-stamps', class: 'active' %>
-      <%= link_to t('navbar.projects_list'), '#', id: 'nav-item-list' %>
-      <%= link_to t('navbar.status_report'), '#', id: 'nav-item-statusreport' %>
-      <%= link_to t('navbar.charts'), '#', id: 'nav-item-charts' %>
+    <div class="col-xs-12">
+      <%= link_to t('projects.index.all_filter'), search_for_projects_company_product_path(company_id: @company, product_id: @product, status_filter: :all), remote: true, class: 'btn btn-sm btn-info bottom-spaced-component' %>
+      <%= link_to t('projects.index.waiting_filter'), search_for_projects_company_product_path(company_id: @company, product_id: @product, status_filter: :waiting), remote: true, class: 'btn btn-sm btn-info bottom-spaced-component' %>
+      <%= link_to t('projects.index.executing_filter'), search_for_projects_company_product_path(company_id: @company, product_id: @product, status_filter: :executing), remote: true, class: 'btn btn-sm btn-info bottom-spaced-component' %>
+      <%= link_to t('projects.index.maintenance_filter'), search_for_projects_company_product_path(company_id: @company, product_id: @product, status_filter: :maintenance), remote: true, class: 'btn btn-sm btn-info bottom-spaced-component' %>
+      <%= link_to t('projects.index.finished_filter'), search_for_projects_company_product_path(company_id: @company, product_id: @product, status_filter: :finished), remote: true, class: 'btn btn-sm btn-info bottom-spaced-component' %>
+      <%= link_to t('projects.index.cancelled_filter'), search_for_projects_company_product_path(company_id: @company, product_id: @product, status_filter: :cancelled), remote: true, class: 'btn btn-sm btn-info bottom-spaced-component' %>
     </div>
   </div>
 
-  <div id="stamps">
-    <%= render 'product_stamps', company: @company, product: @product %>
+  <div id="projects-table">
+    <%= render 'projects/projects_table', projects_list: @product_projects %>
   </div>
+</div>
 
-  <div id="project-list">
-    <h2><%= t('projects.index.title') %></h2>
-    <div class="row">
-      <div class="col-xs-12">
-        <%= link_to t('projects.index.all_filter'), search_for_projects_company_product_path(company_id: @company, product_id: @product, status_filter: :all), remote: true, class: 'btn btn-sm btn-info bottom-spaced-component' %>
-        <%= link_to t('projects.index.waiting_filter'), search_for_projects_company_product_path(company_id: @company, product_id: @product, status_filter: :waiting), remote: true, class: 'btn btn-sm btn-info bottom-spaced-component' %>
-        <%= link_to t('projects.index.executing_filter'), search_for_projects_company_product_path(company_id: @company, product_id: @product, status_filter: :executing), remote: true, class: 'btn btn-sm btn-info bottom-spaced-component' %>
-        <%= link_to t('projects.index.maintenance_filter'), search_for_projects_company_product_path(company_id: @company, product_id: @product, status_filter: :maintenance), remote: true, class: 'btn btn-sm btn-info bottom-spaced-component' %>
-        <%= link_to t('projects.index.finished_filter'), search_for_projects_company_product_path(company_id: @company, product_id: @product, status_filter: :finished), remote: true, class: 'btn btn-sm btn-info bottom-spaced-component' %>
-        <%= link_to t('projects.index.cancelled_filter'), search_for_projects_company_product_path(company_id: @company, product_id: @product, status_filter: :cancelled), remote: true, class: 'btn btn-sm btn-info bottom-spaced-component' %>
-      </div>
-    </div>
+<div id="project-status-report">
+  <%= render 'charts/status_report_charts', target_name: @product.name, status_report_data: @status_report_data %>
+</div>
 
-    <div id="projects-table">
-      <%= render 'projects/projects_table', projects_list: @product_projects %>
-    </div>
-  </div>
-
-  <div id="project-status-report">
-    <%= render 'charts/status_report_charts', target_name: @product.name, status_report_data: @status_report_data %>
-  </div>
-
-  <div id="charts">
-    <%= render 'charts/project_charts', target_name: @product.name, report_data: @report_data %>
-  </div>
+<div id="charts">
+  <%= render 'charts/project_charts', target_name: @product.name, report_data: @report_data %>
 </div>
 
 <% content_for :javascript do %>
