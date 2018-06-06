@@ -1,22 +1,21 @@
-<div class="container-fluid">
-  <div class="row">
-    <div class="col-xs-12">
-      <ul class="breadcrumb">
-        <li><%= link_to t('general.home.title'), root_path %></li>
-        <li><%= link_to @company.abbreviation&.upcase, company_path(@company) %></li>
-        <li><%= t('operation_results.index.title') %></li>
-      </ul>
-    </div>
+<div class="row">
+  <div class="col-xs-12">
+    <ul class="breadcrumb">
+      <li><%= link_to t('general.home.title'), root_path %></li>
+      <li><%= link_to @company.abbreviation&.upcase, company_path(@company) %></li>
+      <li><%= t('operation_results.index.title') %></li>
+    </ul>
   </div>
+</div>
 
-  <div class="row">
-    <div class="col-xs-3">
-      <%= link_to t('operation_results.new.title'), new_company_operation_result_path(@company), class: 'btn btn-sm btn-primary bottom-spaced-component' %>
-    </div>
+<div class="row">
+  <div class="col-xs-3">
+    <%= link_to t('operation_results.new.title'), new_company_operation_result_path(@company), class: 'btn btn-sm btn-primary bottom-spaced-component' %>
   </div>
+</div>
 
-  <table class="table">
-    <thead>
+<table class="table">
+  <thead>
     <tr>
       <th><%= OperationResult.human_attribute_name :result_date %></th>
       <th><%= t('general.week') %></th>
@@ -30,8 +29,8 @@
       <th><%= OperationResult.human_attribute_name :total_accumulated_closed_bugs %></th>
       <th><%= t('general.table.actions') %></th>
     </tr>
-    </thead>
-    <tbody>
+  </thead>
+  <tbody>
     <% @operation_results.each do |result| %>
       <tr>
         <td><%= l result.result_date %></td>
@@ -51,7 +50,6 @@
         </td>
       </tr>
     <% end %>
-    </tbody>
-    </tbody>
-  </table>
-</div>
+  </tbody>
+  </tbody>
+</table>

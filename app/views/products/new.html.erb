@@ -1,25 +1,23 @@
-<div class="container-fluid">
-  <div class="row">
+<div class="row">
+  <div class="col-xs-12">
+    <ul class="breadcrumb">
+      <li><%= link_to t('general.home.title'), root_path %></li>
+      <li><%= link_to @company.abbreviation&.upcase, company_path(@company) %></li>
+      <li><%= t('products.new.title') %></li>
+    </ul>
+  </div>
+</div>
+
+<%= form_for [@company, @product] do |f| %>
+  <div class="row bottom-spaced-component">
     <div class="col-xs-12">
-      <ul class="breadcrumb">
-        <li><%= link_to t('general.home.title'), root_path %></li>
-        <li><%= link_to @company.abbreviation&.upcase, company_path(@company) %></li>
-        <li><%= t('products.new.title') %></li>
-      </ul>
+      <%= render 'form', f: f %>
     </div>
   </div>
+<% end %>
 
-  <%= form_for [@company, @product] do |f| %>
-    <div class="row bottom-spaced-component">
-      <div class="col-xs-12">
-        <%= render 'form', f: f %>
-      </div>
-    </div>
-  <% end %>
-
-  <div id="products-table">
-    <%= render 'products/products_table', products_list: @products %>
-  </div>
+<div id="products-table">
+  <%= render 'products/products_table', products_list: @products %>
 </div>
 
 <% content_for :javascript do %>

@@ -1,46 +1,44 @@
-<div class="container-fluid">
-  <div class="row">
-    <div class="col-xs-10">
-      <h1><%= @company.name %></h1>
-    </div>
+<div class="row">
+  <div class="col-xs-10">
+    <h1><%= @company.name %></h1>
   </div>
+</div>
 
-  <div class="row">
-    <div class="topnav">
-      <%= link_to t('navbar.details'), '#', id: 'nav-item-stamps', class: 'active' %>
-      <%= link_to t('navbar.projects_list'), '#', id: 'nav-item-list' %>
-      <%= link_to t('navbar.teams'), '#', id: 'nav-item-teams' %>
-      <%= link_to t('navbar.finance'), '#', id: 'nav-item-finance' %>
-      <%= link_to t('navbar.strategic'), '#', id: 'nav-item-strategic' %>
-      <%= link_to t('navbar.settings'), '#', id: 'nav-item-settings' %>
-    </div>
+<div class="row">
+  <div class="topnav">
+    <%= link_to t('navbar.details'), '#', id: 'nav-item-stamps', class: 'active' %>
+    <%= link_to t('navbar.projects_list'), '#', id: 'nav-item-list' %>
+    <%= link_to t('navbar.teams'), '#', id: 'nav-item-teams' %>
+    <%= link_to t('navbar.finance'), '#', id: 'nav-item-finance' %>
+    <%= link_to t('navbar.strategic'), '#', id: 'nav-item-strategic' %>
+    <%= link_to t('navbar.settings'), '#', id: 'nav-item-settings' %>
   </div>
+</div>
 
-  <div id="stamps">
-    <%= render 'company_stamps' %>
-  </div>
+<div id="stamps">
+  <%= render 'company_stamps' %>
+</div>
 
-  <div id="teams">
-    <%= render 'teams/teams_table' %>
-  </div>
+<div id="teams">
+  <%= render 'teams/teams_table' %>
+</div>
 
-  <div id="finance">
-    <%= render 'financial_informations/financial_informations_table' %>
-  </div>
+<div id="finance">
+  <%= render 'financial_informations/financial_informations_table' %>
+</div>
 
-  <div id="project-list">
-    <%= render 'projects/projects_table', projects_list: @company.projects %>
-  </div>
+<div id="project-list">
+  <%= render 'projects/projects_table', projects_list: @company.projects %>
+</div>
 
-  <div id="strategic">
-    <%= render 'companies/strategic_table', model_name: @company.name, strategic_report_data: @strategic_report_data %>
-  </div>
+<div id="strategic">
+  <%= render 'companies/strategic_table', model_name: @company.name, strategic_report_data: @strategic_report_data %>
+</div>
 
-  <div id="settings">
-    <%= render 'company_settings' %>
-    <hr>
-    <%= render 'pipefy_configs' %>
-  </div>
+<div id="settings">
+  <%= render 'company_settings' %>
+  <hr>
+  <%= render 'pipefy_configs' %>
 </div>
 
 <% content_for :javascript do %>

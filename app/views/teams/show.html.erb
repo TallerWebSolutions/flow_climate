@@ -1,102 +1,102 @@
-<div class="container-fluid">
+<div class="row">
+  <div class="col-xs-12">
+    <ul class="breadcrumb">
+      <li><%= link_to t('general.home.title'), root_path %></li>
+      <li><%= link_to @company.abbreviation&.upcase, company_path(@company) %></li>
+      <li><%= @team.name %></li>
+    </ul>
+  </div>
+</div>
+
+<%= hidden_field_tag :company_id, @company.id %>
+<%= hidden_field_tag :team_id, @team.id %>
+
+<div class="row">
+  <div class="topnav">
+    <%= link_to t('navbar.details'), '#', id: 'nav-item-stamps', class: 'active' %>
+    <%= link_to t('navbar.members_table'), '#', id: 'nav-item-members' %>
+    <%= link_to t('navbar.projects_list'), '#', id: 'nav-item-list' %>
+    <%= link_to t('navbar.delivered_demands'), '#', id: 'nav-item-delivered' %>
+    <%= link_to t('navbar.strategic'), '#', id: 'nav-item-strategic' %>
+    <%= link_to t('navbar.status_report'), '#', id: 'nav-item-statusreport' %>
+    <%= link_to t('navbar.charts'), '#', id: 'nav-item-charts' %>
+    <%= link_to t('navbar.flow'), '#', id: 'nav-item-flow' %>
+    <%= link_to t('navbar.settings'), '#', id: 'nav-item-settings' %>
+  </div>
+</div>
+
+<div id="stamps">
+  <%= render 'team_stamps', team: @team %>
+</div>
+
+<%= render 'commons/loader_spinner' %>
+
+<div id="project-list">
+  <h2><%= t('projects.index.title') %></h2>
+
   <div class="row">
-    <div class="row">
-      <div class="col-xs-12">
-        <ul class="breadcrumb">
-          <li><%= link_to t('general.home.title'), root_path %></li>
-          <li><%= link_to @company.abbreviation&.upcase, company_path(@company) %></li>
-          <li><%= @team.name %></li>
-        </ul>
-      </div>
+    <div class="col-xs-12">
+      <%= link_to t('projects.index.all_filter'), search_for_projects_company_team_path(company_id: @company, team_id: @team, status_filter: :all), remote: true, class: 'btn btn-sm btn-info' %>
+      <%= link_to t('projects.index.waiting_filter'), search_for_projects_company_team_path(company_id: @company, team_id: @team, status_filter: :waiting), remote: true, class: 'btn btn-sm btn-info' %>
+      <%= link_to t('projects.index.executing_filter'), search_for_projects_company_team_path(company_id: @company, team_id: @team, status_filter: :executing), remote: true, class: 'btn btn-sm btn-info' %>
+      <%= link_to t('projects.index.maintenance_filter'), search_for_projects_company_team_path(company_id: @company, team_id: @team, status_filter: :maintenance), remote: true, class: 'btn btn-sm btn-info' %>
+      <%= link_to t('projects.index.finished_filter'), search_for_projects_company_team_path(company_id: @company, team_id: @team, status_filter: :finished), remote: true, class: 'btn btn-sm btn-info' %>
+      <%= link_to t('projects.index.cancelled_filter'), search_for_projects_company_team_path(company_id: @company, team_id: @team, status_filter: :cancelled), remote: true, class: 'btn btn-sm btn-info' %>
     </div>
   </div>
 
-  <%= hidden_field_tag :company_id, @company.id %>
-  <%= hidden_field_tag :team_id, @team.id %>
+  <div id="projects-table">
+    <%= render 'projects/projects_table', projects_list: @team_projects %>
+  </div>
+</div>
 
+<div id="delivered-demands">
   <div class="row">
-    <div class="topnav">
-      <%= link_to t('navbar.details'), '#', id: 'nav-item-stamps', class: 'active' %>
-      <%= link_to t('navbar.members_table'), '#', id: 'nav-item-members' %>
-      <%= link_to t('navbar.projects_list'), '#', id: 'nav-item-list' %>
-      <%= link_to t('navbar.delivered_demands'), '#', id: 'nav-item-delivered' %>
-      <%= link_to t('navbar.strategic'), '#', id: 'nav-item-strategic' %>
-      <%= link_to t('navbar.status_report'), '#', id: 'nav-item-statusreport' %>
-      <%= link_to t('navbar.charts'), '#', id: 'nav-item-charts' %>
-      <%= link_to t('navbar.flow'), '#', id: 'nav-item-flow' %>
-      <%= link_to t('navbar.settings'), '#', id: 'nav-item-settings' %>
+    <div class="col-xs-12">
+      <h1><%= t('demands.index.title') %></h1>
     </div>
   </div>
-
-  <div id="stamps">
-    <%= render 'team_stamps', team: @team %>
-  </div>
-
-  <%= render 'commons/loader_spinner' %>
-
-  <div id="project-list">
-    <h2><%= t('projects.index.title') %></h2>
-
-    <div class="row">
-      <div class="col-xs-12">
-        <%= link_to t('projects.index.all_filter'), search_for_projects_company_team_path(company_id: @company, team_id: @team, status_filter: :all), remote: true, class: 'btn btn-sm btn-info' %>
-        <%= link_to t('projects.index.waiting_filter'), search_for_projects_company_team_path(company_id: @company, team_id: @team, status_filter: :waiting), remote: true, class: 'btn btn-sm btn-info' %>
-        <%= link_to t('projects.index.executing_filter'), search_for_projects_company_team_path(company_id: @company, team_id: @team, status_filter: :executing), remote: true, class: 'btn btn-sm btn-info' %>
-        <%= link_to t('projects.index.maintenance_filter'), search_for_projects_company_team_path(company_id: @company, team_id: @team, status_filter: :maintenance), remote: true, class: 'btn btn-sm btn-info' %>
-        <%= link_to t('projects.index.finished_filter'), search_for_projects_company_team_path(company_id: @company, team_id: @team, status_filter: :finished), remote: true, class: 'btn btn-sm btn-info' %>
-        <%= link_to t('projects.index.cancelled_filter'), search_for_projects_company_team_path(company_id: @company, team_id: @team, status_filter: :cancelled), remote: true, class: 'btn btn-sm btn-info' %>
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="form-group">
+        <%= check_box_tag :grouped_per_month, nil, true, id: 'demands-grouped-check' %>
+        <%= label_tag t('projects.show.delivered_scope.grouped_by_month_check_box'), nil, class: 'control-label' %>
+      </div>
+      <div id="demands-grouped-per-month-div">
+        <h4><%= t('demands.index.count', demands_count: @grouped_team_delivered_demands.map { |demands_hash| demands_hash[1].count }.sum) %></h4>
+        <%= render 'demands/grouped_by_month_demands_table', demands_list: @grouped_team_delivered_demands %>
+      </div>
+      <div id="flat-demands-div">
+        <%= render 'demands/demands_table_flat', demands: @team_delivered_demands %>
       </div>
     </div>
-
-    <div id="projects-table">
-      <%= render 'projects/projects_table', projects_list: @team_projects %>
-    </div>
   </div>
+</div>
 
-  <div id="delivered-demands">
-    <div class="row">
-      <div class="col-xs-6">
-        <h1><%= t('demands.index.title') %></h1>
-      </div>
-    </div>
-    <div class="form-group">
-      <%= check_box_tag :grouped_per_month, nil, true, id: 'demands-grouped-check' %>
-      <%= label_tag t('projects.show.delivered_scope.grouped_by_month_check_box'), nil, class: 'control-label' %>
-    </div>
-    <div id="demands-grouped-per-month-div">
-      <h4><%= t('demands.index.count', demands_count: @grouped_team_delivered_demands.map { |demands_hash| demands_hash[1].count }.sum) %></h4>
-      <%= render 'demands/grouped_by_month_demands_table', demands_list: @grouped_team_delivered_demands %>
-    </div>
-    <div id="flat-demands-div">
-      <%= render 'demands/demands_table_flat', demands: @team_delivered_demands %>
-    </div>
-  </div>
+<div id="members-table">
+  <%= render 'team_members/team_members_table' %>
+</div>
 
-  <div id="members-table">
-    <%= render 'team_members/team_members_table' %>
-  </div>
+<div id="strategic">
+  <%= render 'companies/strategic_table', model_name: @team.name, strategic_report_data: @strategic_report_data %>
+</div>
 
-  <div id="strategic">
-    <%= render 'companies/strategic_table', model_name: @team.name, strategic_report_data: @strategic_report_data %>
-  </div>
+<div id="project-status-report">
+  <%= render 'charts/status_report_charts', target_name: @team.name, status_report_data: @status_report_data %>
+</div>
 
-  <div id="project-status-report">
-    <%= render 'charts/status_report_charts', target_name: @team.name, status_report_data: @status_report_data %>
-  </div>
+<div id="charts">
+  <% if @report_data.present? %>
+    <%= render 'charts/project_charts', target_name: @team.name, report_data: @report_data %>
+  <% end %>
+</div>
 
-  <div id="charts">
-    <% if @report_data.present? %>
-      <%= render 'charts/project_charts', target_name: @team.name, report_data: @report_data %>
-    <% end %>
-  </div>
+<div id="flow">
+  <%= render 'teams/flow', flow_report_data: @flow_report_data, team: @team %>
+</div>
 
-  <div id="flow">
-    <%= render 'teams/flow', flow_report_data: @flow_report_data, team: @team %>
-  </div>
-
-  <div id="settings">
-    <%= render 'pipefy/pipefy_team_configs/pipefy_team_configs_table' %>
-  </div>
+<div id="settings">
+  <%= render 'pipefy/pipefy_team_configs/pipefy_team_configs_table' %>
 </div>
 
 <% content_for :javascript do %>

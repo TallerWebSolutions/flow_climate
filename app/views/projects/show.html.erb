@@ -1,78 +1,76 @@
-<div class="container-fluid">
+<div class="row">
+  <div class="col-xs-12">
+    <ul class="breadcrumb">
+      <li><%= link_to t('general.home.title'), root_path %></li>
+      <li><%= link_to @company.abbreviation&.upcase, company_path(@company) %></li>
+      <li><%= link_to Project.model_name.human.pluralize, company_projects_path(@company) %></li>
+      <li><%= @project.full_name %></li>
+    </ul>
+  </div>
+</div>
+
+<div class="row">
+  <div class="topnav">
+    <%= link_to t('navbar.details'), '#', id: 'nav-item-stamps', class: 'active' %>
+    <%= link_to t('navbar.project_results'), '#', id: 'nav-item-results' %>
+    <%= link_to t('navbar.delivered_demands'), '#', id: 'nav-item-delivered' %>
+    <%= link_to t('projects.show.deadline.title'), '#', id: 'nav-item-deadline' %>
+    <%= link_to t('navbar.charts'), '#', id: 'nav-item-charts' %>
+    <%= link_to t('navbar.status_report'), '#', id: 'nav-item-statusreport' %>
+    <%= link_to t('navbar.risk_alerts'), '#', id: 'nav-item-risk' %>
+    <%= link_to t('navbar.settings'), '#', id: 'nav-item-settings' %>
+  </div>
+</div>
+
+<div id="project-stamps">
+  <%= render 'project_stamps', project: @project %>
+</div>
+
+<div id="project-results">
+  <%= render 'projects/projects_results_table', project: @project, project_results: @ordered_project_results  %>
+</div>
+
+<div id="delivered-demands">
   <div class="row">
-    <div class="col-xs-12">
-      <ul class="breadcrumb">
-        <li><%= link_to t('general.home.title'), root_path %></li>
-        <li><%= link_to @company.abbreviation&.upcase, company_path(@company) %></li>
-        <li><%= link_to Project.model_name.human.pluralize, company_projects_path(@company) %></li>
-        <li><%= @project.full_name %></li>
-      </ul>
+    <div class="col-xs-6">
+      <h1><%= t('demands.index.title') %></h1>
     </div>
   </div>
-
-  <div class="row">
-    <div class="topnav">
-      <%= link_to t('navbar.details'), '#', id: 'nav-item-stamps', class: 'active' %>
-      <%= link_to t('navbar.project_results'), '#', id: 'nav-item-results' %>
-      <%= link_to t('navbar.delivered_demands'), '#', id: 'nav-item-delivered' %>
-      <%= link_to t('projects.show.deadline.title'), '#', id: 'nav-item-deadline' %>
-      <%= link_to t('navbar.charts'), '#', id: 'nav-item-charts' %>
-      <%= link_to t('navbar.status_report'), '#', id: 'nav-item-statusreport' %>
-      <%= link_to t('navbar.risk_alerts'), '#', id: 'nav-item-risk' %>
-      <%= link_to t('navbar.settings'), '#', id: 'nav-item-settings' %>
-    </div>
+  <div class="form-group">
+    <%= check_box_tag :grouped_per_month, nil, true, id: 'demands-grouped-check' %>
+    <%= label_tag t('projects.show.delivered_scope.grouped_by_month_check_box'), nil, class: 'control-label' %>
   </div>
-
-  <div id="project-stamps">
-    <%= render 'project_stamps', project: @project %>
+  <div class="form-group">
+    <%= link_to t('general.download_csv'), delivered_demands_csv_company_project_path(@company, @project, format: :csv), class: 'btn btn-sm btn-success' %>
   </div>
-
-  <div id="project-results">
-    <%= render 'projects/projects_results_table', project: @project, project_results: @ordered_project_results  %>
+  <div id="demands-grouped-per-month-div">
+    <h4><%= t('demands.index.count', demands_count: @grouped_project_delivered_demands.map { |demands_hash| demands_hash[1].count }.sum) %></h4>
+    <%= render 'demands/grouped_by_month_demands_table', demands_list: @grouped_project_delivered_demands %>
   </div>
-
-  <div id="delivered-demands">
-    <div class="row">
-      <div class="col-xs-6">
-        <h1><%= t('demands.index.title') %></h1>
-      </div>
-    </div>
-    <div class="form-group">
-      <%= check_box_tag :grouped_per_month, nil, true, id: 'demands-grouped-check' %>
-      <%= label_tag t('projects.show.delivered_scope.grouped_by_month_check_box'), nil, class: 'control-label' %>
-    </div>
-    <div class="form-group">
-      <%= link_to t('general.download_csv'), delivered_demands_csv_company_project_path(@company, @project, format: :csv), class: 'btn btn-sm btn-success' %>
-    </div>
-    <div id="demands-grouped-per-month-div">
-      <h4><%= t('demands.index.count', demands_count: @grouped_project_delivered_demands.map { |demands_hash| demands_hash[1].count }.sum) %></h4>
-      <%= render 'demands/grouped_by_month_demands_table', demands_list: @grouped_project_delivered_demands %>
-    </div>
-    <div id="flat-demands-div">
-      <%= render 'demands/demands_table_flat', demands: @project_delivered_demands %>
-    </div>
+  <div id="flat-demands-div">
+    <%= render 'demands/demands_table_flat', demands: @project_delivered_demands %>
   </div>
+</div>
 
-  <div id="deadline-change">
-    <%= render 'projects/deadlines', project_change_deadline_histories: @project_change_deadline_histories %>
-  </div>
+<div id="deadline-change">
+  <%= render 'projects/deadlines', project_change_deadline_histories: @project_change_deadline_histories %>
+</div>
 
-  <div id="project-risk-alerts-table">
-    <%= render 'project_risk_alerts/project_risk_alerts_table' %>
-  </div>
+<div id="project-risk-alerts-table">
+  <%= render 'project_risk_alerts/project_risk_alerts_table' %>
+</div>
 
-  <div id="project-charts">
-    <%= render 'charts/project_charts', target_name: @project.full_name, report_data: @report_data %>
-  </div>
+<div id="project-charts">
+  <%= render 'charts/project_charts', target_name: @project.full_name, report_data: @report_data %>
+</div>
 
-  <div id="project-status-report">
-    <%= render 'charts/status_report_charts', target_name: @project.full_name, status_report_data: @status_report_data %>
-    <%= render 'charts/status_report_projection_charts', target_name: @project.full_name, status_report_data: @status_report_data %>
-  </div>
+<div id="project-status-report">
+  <%= render 'charts/status_report_charts', target_name: @project.full_name, status_report_data: @status_report_data %>
+  <%= render 'charts/status_report_projection_charts', target_name: @project.full_name, status_report_data: @status_report_data %>
+</div>
 
-  <div id="project-settings">
-    <%= render 'projects/settings', project_risk_configs: @project.project_risk_configs %>
-  </div>
+<div id="project-settings">
+  <%= render 'projects/settings', project_risk_configs: @project.project_risk_configs %>
 </div>
 
 <% content_for :javascript do %>

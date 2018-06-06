@@ -1,28 +1,65 @@
-<div class="container-fluid">
-  <div class="row">
-    <div class="col-xs-12">
-      <ul class="breadcrumb">
-        <li><%= link_to t('general.home.title'), root_path %></li>
-        <li><%= link_to @company.abbreviation&.upcase, company_path(@company) %></li>
-        <li><%= link_to @project.full_name, company_project_path(@company, @project) %></li>
-        <li><%= @demand.demand_id %></li>
-      </ul>
-    </div>
+<div class="row">
+  <div class="col-xs-12">
+    <ul class="breadcrumb">
+      <li><%= link_to t('general.home.title'), root_path %></li>
+      <li><%= link_to @company.abbreviation&.upcase, company_path(@company) %></li>
+      <li><%= link_to @project.full_name, company_project_path(@company, @project) %></li>
+      <li><%= @demand.demand_id %></li>
+    </ul>
   </div>
-
-  <div class="bottom-spaced-component">
-    <%= render 'demand_stamps', demand: @demand %>
-  </div>
-
-  <div class="row">
-    <div class="col-xs-6">
-      <%= link_to synchronize_pipefy_company_project_demand_path(@company, @project, @demand), method: :put do %>
-        <span class="btn btn-sm"><i class="fas fa-sync-alt"></i></span><span><%= t('demands.show.sync_pipefy') %></span>
-      <% end %>
-      <span class="detailed"><%= "(#{t('demands.show.last_update', last_update_date: l(@demand.updated_at, format: :short))})" %></span>
-    </div>
-  </div>
-
-  <%= render 'demand_blocks/demand_blocks_table', demand_blocks_list: @demand_blocks %>
-  <%= render 'demand_transitions/demand_transitions_table', demand_transitions_list: @demand_transitions %>
 </div>
+
+<div class="bottom-spaced-component">
+  <%= render 'demand_stamps', demand: @demand %>
+</div>
+
+<div class="row bottom-spaced-component">
+  <div class="col-xs-6">
+    <%= link_to synchronize_pipefy_company_project_demand_path(@company, @project, @demand), method: :put do %>
+      <span class="btn btn-sm"><i class="fas fa-sync-alt"></i></span><span><%= t('demands.show.sync_pipefy') %></span>
+    <% end %>
+    <span class="detailed"><%= "(#{t('demands.show.last_update', last_update_date: l(@demand.updated_at, format: :short))})" %></span>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-xs-6">
+    <%= "#{I18n.t('projects.charts.queue_touch_time.queue')}: #{number_with_precision(@demand.total_queue_time, precision: 2)} h (#{number_with_precision(@queue_percentage, precision: 2)}%)" %>
+  </div>
+  <div class="col-xs-6">
+    <%= "#{I18n.t('projects.charts.queue_touch_time.touch')}: #{number_with_precision(@demand.total_touch_time, precision: 2)} h (#{number_with_precision(@touch_percentage, precision: 2)}%)" %>
+  </div>
+</div>
+<div class="row bottom-spaced-component">
+  <div class="col-xs-12">
+    <div id="queue-progress" class="queue-progress">
+      <%= hidden_field_tag :queue_percentage, @queue_percentage %>
+      <div id="queue-bar" class="queue-bar"></div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-xs-6">
+    <%= "#{I18n.t('projects.charts.throughput_per_week.stage_stream.upstream')}: #{number_with_precision(@demand.working_time_upstream, precision: 2)} h (#{number_with_precision(@upstream_percentage, precision: 2)}%)" %>
+  </div>
+  <div class="col-xs-6">
+    <%= "#{I18n.t('projects.charts.throughput_per_week.stage_stream.downstream')}: #{number_with_precision(@demand.working_time_downstream, precision: 2)} h (#{number_with_precision(@downstream_percentage, precision: 2)}%)" %>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-xs-12">
+    <div id="stream-progress" class="general-progress">
+      <%= hidden_field_tag :upstream_percentage, @upstream_percentage %>
+      <div id="stream-bar" class="general-bar"></div>
+    </div>
+  </div>
+</div>
+
+<%= render 'demand_blocks/demand_blocks_table', demand_blocks_list: @demand_blocks %>
+<%= render 'demand_transitions/demand_transitions_table', demand_transitions_list: @demand_transitions %>
+
+<% content_for :javascript do %>
+  <%= javascript_include_tag 'demands/show' %>
+<% end %>

@@ -1,19 +1,17 @@
-<div class="container-fluid">
-  <div class="row">
+<div class="row">
+  <div class="col-xs-12">
+    <ul class="breadcrumb">
+      <li><%= link_to t('general.home.title'), root_path %></li>
+      <li><%= link_to @company.abbreviation.upcase, company_path(@company) %></li>
+      <li><%= t('pipefy_configs.new.title') %></li>
+    </ul>
+  </div>
+</div>
+
+<%= form_for [@company, @pipefy_config], url: company_pipefy_configs_url(@company, @pipefy_config) do |f| %>
+  <div class="row bottom-spaced-component">
     <div class="col-xs-12">
-      <ul class="breadcrumb">
-        <li><%= link_to t('general.home.title'), root_path %></li>
-        <li><%= link_to @company.abbreviation.upcase, company_path(@company) %></li>
-        <li><%= t('pipefy_configs.new.title') %></li>
-      </ul>
+      <%= render 'form', f: f %>
     </div>
   </div>
-
-  <%= form_for [@company, @pipefy_config], url: company_pipefy_configs_url(@company, @pipefy_config) do |f| %>
-    <div class="row bottom-spaced-component">
-      <div class="col-xs-12">
-        <%= render 'form', f: f %>
-      </div>
-    </div>
-  <% end %>
-</div>
+<% end %>
