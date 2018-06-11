@@ -124,7 +124,17 @@ class Demand < ApplicationRecord
     current_stage.order > current_stage.flow_start_point.order
   end
 
+  def committed?
+    return false if (current_stage.blank? && commitment_date.blank?) || end_date.present?
+    return true if committed_manually
+    current_stage.inside_commitment_area?
+  end
+
   private
+
+  def committed_manually
+    current_stage.blank? && commitment_date.present? && end_date.blank?
+  end
 
   def sum_blocked_effort(effort_transitions)
     total_blocked = 0

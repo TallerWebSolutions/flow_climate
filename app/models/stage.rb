@@ -63,6 +63,13 @@ class Stage < ApplicationRecord
     company.stages.where(integration_pipe_id: integration_pipe_id).order(:order).first
   end
 
+  def inside_commitment_area?
+    return false if end_point?
+    commitment_point_stage = company.stages.find_by(integration_pipe_id: integration_pipe_id, commitment_point: true)
+    return false if commitment_point_stage.blank?
+    order >= commitment_point_stage.order
+  end
+
   private
 
   def done_stage_in_pipe(demand)

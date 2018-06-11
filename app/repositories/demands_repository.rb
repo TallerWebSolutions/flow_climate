@@ -58,6 +58,10 @@ class DemandsRepository
     Demand.where(project_id: array_of_projects.map(&:id)).reject(&:started_flowing?)
   end
 
+  def committed_demands(array_of_projects)
+    Demand.where(project_id: array_of_projects.map(&:id)).select(&:committed?)
+  end
+
   private
 
   def demands_touched_in_day(demands, analysed_date)

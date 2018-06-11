@@ -439,4 +439,73 @@ RSpec.describe Demand, type: :model do
       end
     end
   end
+
+  describe '#committed?' do
+    context 'having transitions' do
+      context 'and it went to the commitment area and returned' do
+        let(:company) { Fabricate :company }
+        let(:customer) { Fabricate :customer, company: company }
+        let(:project) { Fabricate :project, customer: customer }
+        let(:stage) { Fabricate :stage, company: company, projects: [project], order: 0 }
+        let(:other_stage) { Fabricate :stage, company: company, projects: [project], order: 1, commitment_point: true }
+
+        let(:demand) { Fabricate :demand, project: project }
+        let!(:demand_transition) { Fabricate :demand_transition, demand: demand, stage: stage, last_time_in: Time.zone.now }
+        let!(:other_demand_transition) { Fabricate :demand_transition, demand: demand, stage: other_stage, last_time_in: 1.day.ago }
+
+        it { expect(demand.committed?).to be false }
+      end
+      context 'and it was committed' do
+        let(:company) { Fabricate :company }
+        let(:customer) { Fabricate :customer, company: company }
+        let(:project) { Fabricate :project, customer: customer }
+        let(:stage) { Fabricate :stage, company: company, projects: [project], order: 0 }
+        let(:other_stage) { Fabricate :stage, company: company, projects: [project], order: 1, commitment_point: true }
+
+        let(:demand) { Fabricate :demand, project: project }
+        let!(:first_demand_transition) { Fabricate :demand_transition, demand: demand, stage: stage, last_time_in: 2.days.ago }
+        let!(:second_demand_transition) { Fabricate :demand_transition, demand: demand, stage: other_stage, last_time_in: 1.day.ago }
+        let!(:third_demand_transition) { Fabricate :demand_transition, demand: demand, stage: other_stage, last_time_in: Time.zone.now }
+
+        it { expect(demand.committed?).to be true }
+      end
+      context 'and it was committed and finished' do
+        let(:company) { Fabricate :company }
+        let(:customer) { Fabricate :customer, company: company }
+        let(:project) { Fabricate :project, customer: customer }
+        let(:stage) { Fabricate :stage, company: company, projects: [project], order: 0 }
+        let(:other_stage) { Fabricate :stage, company: company, projects: [project], order: 1, commitment_point: true }
+        let(:end_stage) { Fabricate :stage, company: company, projects: [project], order: 1, end_point: true }
+
+        let(:demand) { Fabricate :demand, project: project }
+        let!(:first_demand_transition) { Fabricate :demand_transition, demand: demand, stage: stage, last_time_in: 2.days.ago }
+        let!(:second_demand_transition) { Fabricate :demand_transition, demand: demand, stage: other_stage, last_time_in: 1.day.ago }
+        let!(:third_demand_transition) { Fabricate :demand_transition, demand: demand, stage: other_stage, last_time_in: 4.hours.ago }
+        let!(:fourth_demand_transition) { Fabricate :demand_transition, demand: demand, stage: end_stage, last_time_in: Time.zone.now }
+
+        it { expect(demand.committed?).to be false }
+      end
+    end
+
+    context 'having no transitions' do
+      let(:company) { Fabricate :company }
+      let(:customer) { Fabricate :customer, company: company }
+      let(:project) { Fabricate :project, customer: customer }
+
+      context 'and the demand has no commitment date' do
+        let(:demand) { Fabricate :demand, project: project }
+        it { expect(demand.committed?).to be false }
+      end
+
+      context 'and the demand has commitment date' do
+        let(:demand) { Fabricate :demand, project: project, commitment_date: Time.zone.now }
+        it { expect(demand.committed?).to be true }
+      end
+
+      context 'and the demand has commitment date and end_date' do
+        let(:demand) { Fabricate :demand, project: project, commitment_date: Time.zone.now, end_date: 1.hour.from_now }
+        it { expect(demand.committed?).to be false }
+      end
+    end
+  end
 end
