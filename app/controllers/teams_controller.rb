@@ -2,7 +2,7 @@
 
 class TeamsController < AuthenticatedController
   before_action :assign_company
-  before_action :assign_team, only: %i[show edit update search_for_projects search_demands_to_flow_charts]
+  before_action :assign_team, only: %i[show edit update search_for_projects search_demands_to_flow_charts search_demands_by_flow_status]
 
   def show
     @team_members = @team.team_members.order(:name)
@@ -11,8 +11,8 @@ class TeamsController < AuthenticatedController
     @projects_summary = ProjectsSummaryObject.new(@team.projects)
     @pipefy_team_configs = @team.pipefy_team_configs.order(:username)
     @projects_risk_alert_data = ProjectRiskData.new(@team.projects)
-    @team_delivered_demands = DemandsRepository.instance.demands_finished_per_projects(@team_projects).order(end_date: :desc)
-    @grouped_team_delivered_demands = @team_delivered_demands.grouped_end_date_by_month
+    @team_demands = DemandsRepository.instance.demands_per_projects(@team_projects)
+    assign_grouped_demands_informations
   end
 
   def new
@@ -45,7 +45,21 @@ class TeamsController < AuthenticatedController
     respond_to { |format| format.js { render file: 'teams/flow.js.erb' } }
   end
 
+  def search_demands_by_flow_status
+    @team_projects = ProjectsRepository.instance.all_projects_for_team(@team)
+    demands_for_query_ids = DemandsRepository.instance.not_started_demands(@team_projects)
+    @team_demands = Demand.where(id: demands_for_query_ids.map(&:id))
+    assign_grouped_demands_informations
+    respond_to { |format| format.js { render file: 'teams/search_demands_by_flow_status.js.erb' } }
+  end
+
   private
+
+  def assign_grouped_demands_informations
+    @team_delivered_demands = DemandsRepository.instance.demands_finished_per_projects(@team_projects).order(end_date: :desc)
+    @grouped_delivered_demands = @team_delivered_demands.grouped_end_date_by_month
+    @grouped_customer_demands = @team_demands.grouped_by_customer
+  end
 
   def assign_team
     @team = Team.find(params[:id])

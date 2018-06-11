@@ -50,6 +50,14 @@ class DemandsRepository
     Demand.finished.where(project_id: array_of_projects.map(&:id))
   end
 
+  def demands_per_projects(array_of_projects)
+    Demand.where(project_id: array_of_projects.map(&:id))
+  end
+
+  def not_started_demands(array_of_projects)
+    Demand.where(project_id: array_of_projects.map(&:id)).reject(&:started_flowing?)
+  end
+
   private
 
   def demands_touched_in_day(demands, analysed_date)

@@ -46,6 +46,11 @@
     text-align: center;
 }
 
+.div-parent-check-group {
+    border: 1px solid;
+    background-color: rgba(11, 110, 154, 0.57);
+}
+
 #popup {
     height: 50px;
     width: 200px;

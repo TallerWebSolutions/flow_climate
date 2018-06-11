@@ -23,7 +23,7 @@ $('#nav-item-list').on('click', function(){
 
 $('#nav-item-delivered').on('click', function(){
     hideAllComponents();
-    $('#delivered-demands').show();
+    $('#demands-list').show();
     $('#nav-item-delivered').addClass('active');
 });
 
@@ -68,7 +68,7 @@ $('#nav-item-settings').on('click', function(){
 function hideAllComponents() {
     $('#stamps').hide();
     $('#project-list').hide();
-    $('#delivered-demands').hide();
+    $('#demands-list').hide();
     $('#project-status-report').hide();
     $('#charts').hide();
     $('#strategic').hide();

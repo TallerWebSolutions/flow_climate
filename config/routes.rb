@@ -40,6 +40,7 @@ Rails.application.routes.draw do
       member do
         get 'search_for_projects/:status_filter', action: :search_for_projects, as: 'search_for_projects'
         get 'search_demands_to_flow_charts', action: :search_demands_to_flow_charts, as: 'search_demands_to_flow_charts'
+        get 'search_demands_by_flow_status', action: :search_demands_by_flow_status, as: 'search_demands_by_flow_status'
       end
     end
 

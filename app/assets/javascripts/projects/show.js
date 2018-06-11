@@ -19,7 +19,7 @@ $('#nav-item-results').on('click', function(){
 
 $('#nav-item-delivered').on('click', function(){
     hideAllComponents();
-    $('#delivered-demands').show();
+    $('#demands-list').show();
     $('#nav-item-delivered').addClass('active');
 });
 
@@ -53,16 +53,6 @@ $('#nav-item-statusreport').on('click', function(){
     $('#nav-item-statusreport').addClass('active');
 });
 
-$('#demands-grouped-check').on('change', function(){
-    if($(this).is(":checked")) {
-        $('#demands-grouped-per-month-div').show();
-        $('#flat-demands-div').hide();
-    } else {
-        $('#demands-grouped-per-month-div').hide();
-        $('#flat-demands-div').show();
-    }
-});
-
 function hideAllComponents() {
     $('#project-stamps').hide();
     $('#nav-item-stamps').removeClass('active');
@@ -70,7 +60,7 @@ function hideAllComponents() {
     $('#project-results').hide();
     $('#nav-item-results').removeClass('active');
 
-    $('#delivered-demands').hide();
+    $('#demands-list').hide();
     $('#nav-item-delivered').removeClass('active');
 
     $('#project-risk-alerts-table').hide();

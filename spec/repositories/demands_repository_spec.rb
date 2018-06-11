@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 RSpec.describe DemandsRepository, type: :repository do
-  describe '#demands_for_company_and_week' do
-    let(:company) { Fabricate :company }
-    let(:customer) { Fabricate :customer, company: company }
+  let(:company) { Fabricate :company }
+  let(:customer) { Fabricate :customer, company: company }
 
+  describe '#demands_for_company_and_week' do
     let(:first_project) { Fabricate :project, customer: customer, start_date: 1.week.ago }
     let(:second_project) { Fabricate :project, customer: customer, start_date: 1.week.ago }
     let(:third_project) { Fabricate :project, customer: customer, end_date: 1.week.from_now }
@@ -23,9 +23,6 @@ RSpec.describe DemandsRepository, type: :repository do
   end
 
   describe '#known_scope_to_date' do
-    let(:company) { Fabricate :company }
-    let(:customer) { Fabricate :customer, company: company }
-
     let(:first_project) { Fabricate :project, customer: customer, start_date: 1.week.ago }
     let(:second_project) { Fabricate :project, customer: customer, start_date: 1.week.ago }
 
@@ -39,9 +36,6 @@ RSpec.describe DemandsRepository, type: :repository do
   end
 
   describe '#demands_finished_per_projects' do
-    let(:company) { Fabricate :company }
-    let(:customer) { Fabricate :customer, company: company }
-
     let(:first_project) { Fabricate :project, customer: customer, start_date: 1.week.ago }
     let(:second_project) { Fabricate :project, customer: customer, start_date: 1.week.ago }
 
@@ -54,11 +48,22 @@ RSpec.describe DemandsRepository, type: :repository do
     it { expect(DemandsRepository.instance.demands_finished_per_projects([first_project])).to match_array [first_demand, second_demand, third_demand] }
   end
 
+  describe '#demands_per_projects' do
+    let(:first_project) { Fabricate :project, customer: customer, start_date: 1.week.ago }
+    let(:second_project) { Fabricate :project, customer: customer, start_date: 1.week.ago }
+
+    let!(:first_demand) { Fabricate :demand, project: first_project, created_date: 3.days.ago, end_date: 3.days.ago }
+    let!(:second_demand) { Fabricate :demand, project: first_project, created_date: 2.days.ago, end_date: 2.days.ago }
+    let!(:third_demand) { Fabricate :demand, project: first_project, created_date: 2.days.ago }
+    let!(:fourth_demand) { Fabricate :demand, project: second_project, created_date: 1.day.ago, end_date: 1.day.ago }
+    let!(:fifth_demand) { Fabricate :demand, project: second_project, created_date: 2.days.ago, end_date: 2.days.ago }
+
+    it { expect(DemandsRepository.instance.demands_per_projects([first_project])).to match_array [first_demand, second_demand, third_demand] }
+  end
+
   pending '#full_demand_destroy!'
 
   describe '#total_queue_time_for' do
-    let(:company) { Fabricate :company }
-    let(:customer) { Fabricate :customer, company: company }
     let(:project) { Fabricate :project, customer: customer }
 
     let(:first_stage) { Fabricate :stage, company: company, projects: [project], stage_stream: :downstream, queue: true }
@@ -79,8 +84,6 @@ RSpec.describe DemandsRepository, type: :repository do
   end
 
   describe '#total_touch_time_for' do
-    let(:company) { Fabricate :company }
-    let(:customer) { Fabricate :customer, company: company }
     let(:project) { Fabricate :project, customer: customer }
 
     let(:first_stage) { Fabricate :stage, company: company, projects: [project], stage_stream: :downstream, queue: false }
@@ -212,6 +215,43 @@ RSpec.describe DemandsRepository, type: :repository do
     context 'having no demands' do
       context 'having demands in progress' do
         it { expect(DemandsRepository.instance.grouped_by_effort_downstream_per_month([project])).to eq({}) }
+      end
+    end
+  end
+
+  describe '#not_started_demands' do
+    before { travel_to Time.zone.local(2018, 4, 5, 10, 0, 0) }
+    after { travel_back }
+
+    let(:first_project) { Fabricate :project, start_date: 2.months.ago, end_date: 2.months.from_now }
+    let(:second_project) { Fabricate :project, start_date: 2.months.ago, end_date: 2.months.from_now }
+
+    context 'having demands' do
+      let(:first_stage) { Fabricate :stage, company: company, projects: [first_project], integration_pipe_id: '123', order: 0 }
+      let(:second_stage) { Fabricate :stage, company: company, projects: [first_project], integration_pipe_id: '123', order: 1 }
+      let(:third_stage) { Fabricate :stage, company: company, projects: [second_project], integration_pipe_id: '543', order: 0 }
+
+      let!(:first_demand) { Fabricate :demand, project: first_project }
+      let!(:second_demand) { Fabricate :demand, project: first_project }
+      let!(:third_demand) { Fabricate :demand, project: first_project }
+      let!(:fourth_demand) { Fabricate :demand, project: first_project, commitment_date: nil }
+      let!(:fifth_demand) { Fabricate :demand, project: first_project, commitment_date: Time.zone.today }
+      let!(:sixth_demand) { Fabricate :demand, project: second_project }
+
+      let!(:first_transition) { Fabricate :demand_transition, stage: first_stage, demand: first_demand, last_time_in: '2018-02-27T17:09:58-03:00', last_time_out: '2018-02-28T17:09:58-03:00' }
+      let!(:second_transition) { Fabricate :demand_transition, stage: second_stage, demand: first_demand, last_time_in: '2018-02-28T17:09:58-03:00' }
+      let!(:third_transition) { Fabricate :demand_transition, stage: first_stage, demand: second_demand, last_time_in: '2018-04-03T17:09:58-03:00', last_time_out: '2018-04-03T17:09:58-03:00' }
+      let!(:fourth_transition) { Fabricate :demand_transition, stage: second_stage, demand: second_demand, last_time_in: '2018-04-03T17:09:58-03:00', last_time_out: '2018-04-04T17:09:58-03:00' }
+      let!(:fifth_transition) { Fabricate :demand_transition, stage: first_stage, demand: second_demand, last_time_in: '2018-04-04T17:09:58-03:00' }
+      let!(:sixth_transition) { Fabricate :demand_transition, stage: first_stage, demand: third_demand, last_time_in: '2018-04-04T17:09:58-03:00' }
+      let!(:seventh_transition) { Fabricate :demand_transition, stage: third_stage, demand: sixth_demand, last_time_in: '2018-04-04T17:09:58-03:00' }
+
+      it { expect(DemandsRepository.instance.not_started_demands([first_project])).to match_array [second_demand, third_demand, fourth_demand] }
+    end
+
+    context 'having no demands' do
+      context 'having no demands' do
+        it { expect(DemandsRepository.instance.not_started_demands([first_project])).to eq [] }
       end
     end
   end

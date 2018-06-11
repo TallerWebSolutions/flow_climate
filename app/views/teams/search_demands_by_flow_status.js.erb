@@ -1,0 +1,1 @@
+$('#flow').html("<%= escape_javascript(render 'demands/demands_list', grouped_delivered_demands: @grouped_delivered_demands, grouped_customer_demands: @grouped_customer_demands, demands: @team_demands).html_safe %>");

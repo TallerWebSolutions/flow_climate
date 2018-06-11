@@ -20,7 +20,7 @@ class StatusReportData < ChartData
   end
 
   def delivered_vs_remaining
-    [{ name: I18n.t('projects.show.delivered_scope.text'), data: [@all_projects.sum(&:total_throughput)] }, { name: I18n.t('projects.show.scope_gap'), data: [@all_projects.sum(&:total_gap)] }]
+    [{ name: I18n.t('projects.show.delivered_demands.text'), data: [@all_projects.sum(&:total_throughput)] }, { name: I18n.t('projects.show.scope_gap'), data: [@all_projects.sum(&:total_gap)] }]
   end
 
   def deadline

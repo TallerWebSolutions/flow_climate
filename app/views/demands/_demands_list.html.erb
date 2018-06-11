@@ -1,0 +1,67 @@
+<div class="row">
+  <div class="col-xs-6">
+    <h2><%= t('demands.index.title') %></h2>
+  </div>
+</div>
+
+<div class="row div-parent-check-group bottom-spaced-component">
+  <div class="col-xs-4">
+    <div class="form-group">
+      <%= check_box_tag :no_grouping, nil, true, id: 'demands-no-grouping-check' %>
+      <%= label_tag t('projects.show.demands.no_grouping_check_box'), nil, class: 'control-label' %>
+    </div>
+  </div>
+  <div class="col-xs-4">
+    <div class="form-group">
+      <%= check_box_tag :grouped_per_month, nil, false, id: 'demands-grouped-by-month-check' %>
+      <%= label_tag t('projects.show.demands.grouped_by_month_check_box'), nil, class: 'control-label' %>
+    </div>
+  </div>
+  <div class="col-xs-4">
+    <div class="form-group">
+      <%= check_box_tag :grouped_per_customer, nil, false, id: 'demands-grouped-by-customer-check' %>
+      <%= label_tag t('projects.show.demands.grouped_by_customer'), nil, class: 'control-label' %>
+    </div>
+  </div>
+</div>
+
+<div class="row div-parent-check-group bottom-spaced-component">
+  <div class="col-xs-4">
+    <div class="form-group">
+      <%= check_box_tag :not_started, nil, false, id: 'demands-not-started-check', class: 'filter-check-box' %>
+      <%= label_tag t('projects.show.demands.demands_not_started'), nil, class: 'control-label' %>
+    </div>
+  </div>
+
+  <div class="col-xs-4">
+    <div class="form-group">
+      <%= check_box_tag :work_in_progress, nil, false, id: 'demands-work-in-progress-check', class: 'filter-check-box' %>
+      <%= label_tag t('projects.show.demands.work_in_progress'), nil, class: 'control-label' %>
+    </div>
+  </div>
+
+  <div class="col-xs-4">
+    <div class="form-group">
+      <%= check_box_tag :delivered_demands, nil, false, id: 'demands-delivered-demands-check', class: 'filter-check-box' %>
+      <%= label_tag t('projects.show.demands.delivered_demands'), nil, class: 'control-label' %>
+    </div>
+  </div>
+</div>
+
+<div id="demands-grouped-per-month-div">
+  <h4><%= t('demands.index.count', demands_count: grouped_delivered_demands.map { |demands_hash| demands_hash[1].count }.sum) %></h4>
+  <%= render 'demands/grouped_by_month_demands_table', demands_list: grouped_delivered_demands %>
+</div>
+
+<div id="demands-grouped-per-customer-div">
+  <h4><%= t('demands.index.count', demands_count: grouped_customer_demands.map { |demands_hash| demands_hash[1].count }.sum) %></h4>
+  <%= render 'demands/grouped_by_customer_demands_table', demands_list: grouped_customer_demands %>
+</div>
+
+<div id="flat-demands-div">
+  <%= render 'demands/demands_table_flat', demands: demands %>
+</div>
+
+<% content_for :javascript do %>
+  <%= javascript_include_tag 'demands/demands_list' %>
+<% end %>

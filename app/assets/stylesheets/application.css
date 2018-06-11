@@ -13,3 +13,7 @@
  *= require_tree .
  *= require_self
  */
+
+input[type=checkbox] {
+    transform: scale(1.5);
+}

@@ -134,9 +134,14 @@ en:
       last_team: "Current team"
       last_week_scope: "Last week scope"
       current_team: "Current Team"
-      delivered_scope:
-        text: "Delivered Scope"
-        grouped_by_month_check_box: "Grouped by month?"
+      demands:
+        text: "Demands"
+        grouped_by_month_check_box: "Grouped by delivered month"
+        demands_not_started: "Not Started"
+        work_in_progress: "Work In Progress"
+        delivered_demands: "Delivered"
+        grouped_by_customer: "Grouped by Customer"
+        no_grouping_check_box: "Not Grouped"
       avg_hours_per_demand: "Avg Hours/Demand"
       scope_gap: "Scope Gap"
       scope_growth: "Scope Growth (%)"
@@ -152,6 +157,8 @@ en:
         days: "%{remaining_days} day(s)"
       cmd: "Average Demand Cost"
       status_information_html: "This project is <b>%{status_description}</b>"
+      delivered_demands:
+        text: "Delivered Scope"
     charts:
       xlabel:
         weeks: "Weeks"
@@ -309,6 +316,7 @@ en:
       downstream: "Downstream?"
       manual_effort: "Effort Updated Manually"
       count: "%{demands_count} demands"
+      current_stage: "Current Stage"
     edit:
       title: "Edit Demand"
     show:
@@ -354,7 +362,7 @@ en:
     finance: "Financial Informations"
     teams: "Teams"
     flow: "Flow"
-    delivered_demands: "Delivered Demands"
+    demands: "Demands"
     status_report: "Status Report"
   charts:
     xlabel:

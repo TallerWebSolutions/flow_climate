@@ -12,8 +12,9 @@ class ProjectsController < AuthenticatedController
     @report_data = ReportData.new(projects)
     @status_report_data = StatusReportData.new(projects)
     @ordered_project_risk_alerts = @project.project_risk_alerts.order(created_at: :desc)
-    @project_delivered_demands = @project.demands.finished.order(end_date: :desc)
-    @grouped_project_delivered_demands = @project.demands.grouped_end_date_by_month
+    @project_demands = DemandsRepository.instance.demands_per_projects(projects)
+    @grouped_delivered_demands = @project_demands.grouped_end_date_by_month
+    @grouped_customer_demands = @project_demands.grouped_by_customer
     @project_change_deadline_histories = @project.project_change_deadline_histories
     @montecarlo_dates = @status_report_data.monte_carlo_data
   end

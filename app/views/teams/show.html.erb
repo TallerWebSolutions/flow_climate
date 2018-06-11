@@ -16,7 +16,7 @@
     <%= link_to t('navbar.details'), '#', id: 'nav-item-stamps', class: 'active' %>
     <%= link_to t('navbar.members_table'), '#', id: 'nav-item-members' %>
     <%= link_to t('navbar.projects_list'), '#', id: 'nav-item-list' %>
-    <%= link_to t('navbar.delivered_demands'), '#', id: 'nav-item-delivered' %>
+    <%= link_to t('navbar.demands'), '#', id: 'nav-item-delivered' %>
     <%= link_to t('navbar.strategic'), '#', id: 'nav-item-strategic' %>
     <%= link_to t('navbar.status_report'), '#', id: 'nav-item-statusreport' %>
     <%= link_to t('navbar.charts'), '#', id: 'nav-item-charts' %>
@@ -50,27 +50,8 @@
   </div>
 </div>
 
-<div id="delivered-demands">
-  <div class="row">
-    <div class="col-xs-12">
-      <h1><%= t('demands.index.title') %></h1>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-xs-12">
-      <div class="form-group">
-        <%= check_box_tag :grouped_per_month, nil, true, id: 'demands-grouped-check' %>
-        <%= label_tag t('projects.show.delivered_scope.grouped_by_month_check_box'), nil, class: 'control-label' %>
-      </div>
-      <div id="demands-grouped-per-month-div">
-        <h4><%= t('demands.index.count', demands_count: @grouped_team_delivered_demands.map { |demands_hash| demands_hash[1].count }.sum) %></h4>
-        <%= render 'demands/grouped_by_month_demands_table', demands_list: @grouped_team_delivered_demands %>
-      </div>
-      <div id="flat-demands-div">
-        <%= render 'demands/demands_table_flat', demands: @team_delivered_demands %>
-      </div>
-    </div>
-  </div>
+<div id="demands-list">
+  <%= render 'demands/demands_list', grouped_delivered_demands: @grouped_delivered_demands, grouped_customer_demands: @grouped_customer_demands, demands: @team_demands %>
 </div>
 
 <div id="members-table">

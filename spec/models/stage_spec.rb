@@ -132,4 +132,35 @@ RSpec.describe Stage, type: :model do
       it { expect(first_stage.before_end_point?(demand)).to be true }
     end
   end
+
+  describe '#flow_start_point' do
+    let(:company) { Fabricate :company }
+    let(:customer) { Fabricate :customer, company: company }
+    let(:project) { Fabricate :project, customer: customer }
+
+    context 'having data' do
+      let!(:first_stage) { Fabricate :stage, company: company, projects: [project], integration_pipe_id: '321', order: 2 }
+      let!(:second_stage) { Fabricate :stage, company: company, projects: [project], integration_pipe_id: '321', order: 1 }
+      let!(:third_stage) { Fabricate :stage, company: company, projects: [project], integration_pipe_id: '321', order: 4, end_point: true }
+      let!(:fourth_stage) { Fabricate :stage, company: company, projects: [project], integration_pipe_id: '321', order: 3, end_point: true }
+      let!(:fifth_stage) { Fabricate :stage, company: company, projects: [project], integration_pipe_id: '123', order: 2, end_point: true }
+
+      let(:demand) { Fabricate :demand, project: project }
+
+      let!(:first_demand_transition) { Fabricate :demand_transition, stage: first_stage, demand: demand }
+      let!(:second_demand_transition) { Fabricate :demand_transition, stage: second_stage, demand: demand }
+      let!(:third_demand_transition) { Fabricate :demand_transition, stage: third_stage, demand: demand }
+      let!(:fourth_demand_transition) { Fabricate :demand_transition, stage: fourth_stage, demand: demand }
+      let!(:fifth_demand_transition) { Fabricate :demand_transition, stage: fifth_stage, demand: demand }
+
+      it { expect(first_stage.flow_start_point).to eq second_stage }
+    end
+
+    context 'having only one stage' do
+      let!(:first_stage) { Fabricate :stage, company: company }
+      let(:demand) { Fabricate :demand, project: project }
+
+      it { expect(first_stage.flow_start_point).to eq first_stage }
+    end
+  end
 end
