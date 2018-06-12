@@ -162,24 +162,44 @@ RSpec.describe Stage, type: :model do
     let(:project) { Fabricate :project, customer: customer }
 
     context 'having data' do
-      let!(:first_stage) { Fabricate :stage, company: company, projects: [project], integration_pipe_id: '321', order: 2, commitment_point: true }
-      let!(:second_stage) { Fabricate :stage, company: company, projects: [project], integration_pipe_id: '321', order: 1 }
-      let!(:third_stage) { Fabricate :stage, company: company, projects: [project], integration_pipe_id: '321', order: 4, end_point: true }
-      let!(:fourth_stage) { Fabricate :stage, company: company, projects: [project], integration_pipe_id: '321', order: 3 }
-      let!(:fifth_stage) { Fabricate :stage, company: company, projects: [project], integration_pipe_id: '123', order: 2 }
+      let!(:first_stage) { Fabricate :stage, company: company, projects: [project], stage_stream: :downstream, integration_pipe_id: '321', order: 2, commitment_point: true }
+      let!(:second_stage) { Fabricate :stage, company: company, projects: [project], stage_stream: :downstream, integration_pipe_id: '321', order: 1 }
+      let!(:third_stage) { Fabricate :stage, company: company, projects: [project], stage_stream: :downstream, integration_pipe_id: '321', order: 5, end_point: true }
+      let!(:fourth_stage) { Fabricate :stage, company: company, projects: [project], stage_stream: :upstream, integration_pipe_id: '321', order: 3, end_point: true }
+      let!(:fifth_stage) { Fabricate :stage, company: company, projects: [project], stage_stream: :downstream, integration_pipe_id: '321', order: 4 }
+      let!(:sixth_stage) { Fabricate :stage, company: company, projects: [project], stage_stream: :downstream, integration_pipe_id: '123', order: 2 }
+      let!(:seventh_stage) { Fabricate :stage, company: company, projects: [project], stage_stream: :downstream, integration_pipe_id: '321', order: 6 }
 
-      it { expect(first_stage.inside_commitment_area?).to be true }
-      it { expect(second_stage.inside_commitment_area?).to be false }
-      it { expect(third_stage.inside_commitment_area?).to be false }
-      it { expect(fourth_stage.inside_commitment_area?).to be true }
-      it { expect(fifth_stage.inside_commitment_area?).to be false }
+      context 'commitment stages' do
+        it 'returns true' do
+          expect(first_stage.inside_commitment_area?).to be true
+          expect(fifth_stage.inside_commitment_area?).to be true
+        end
+      end
+      context 'not commitment stages' do
+        it 'returns false' do
+          expect(fourth_stage.inside_commitment_area?).to be false
+          expect(second_stage.inside_commitment_area?).to be false
+          expect(third_stage.inside_commitment_area?).to be false
+          expect(sixth_stage.inside_commitment_area?).to be false
+          expect(seventh_stage.inside_commitment_area?).to be false
+        end
+      end
     end
 
     context 'having only one stage' do
-      let!(:first_stage) { Fabricate :stage, company: company }
-      let(:demand) { Fabricate :demand, project: project }
+      context 'and it is not the commitment point' do
+        let!(:first_stage) { Fabricate :stage, company: company }
+        let(:demand) { Fabricate :demand, project: project }
 
-      it { expect(first_stage.inside_commitment_area?).to be false }
+        it { expect(first_stage.inside_commitment_area?).to be false }
+      end
+      context 'and it is the commitment point' do
+        let!(:first_stage) { Fabricate :stage, company: company, commitment_point: true }
+        let(:demand) { Fabricate :demand, project: project }
+
+        it { expect(first_stage.inside_commitment_area?).to be true }
+      end
     end
   end
 end

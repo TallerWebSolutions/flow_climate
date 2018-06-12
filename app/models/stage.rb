@@ -67,7 +67,8 @@ class Stage < ApplicationRecord
     return false if end_point?
     commitment_point_stage = company.stages.find_by(integration_pipe_id: integration_pipe_id, commitment_point: true)
     return false if commitment_point_stage.blank?
-    order >= commitment_point_stage.order
+    return true if end_point_in_downstream.blank?
+    order >= commitment_point_stage.order && order < end_point_in_downstream.order
   end
 
   private
@@ -75,5 +76,9 @@ class Stage < ApplicationRecord
   def done_stage_in_pipe(demand)
     return company.stages.where(integration_pipe_id: integration_pipe_id, end_point: true, stage_stream: :downstream).order(:order).first if demand.downstream_demand?
     company.stages.where(integration_pipe_id: integration_pipe_id, end_point: true).order(:order).first
+  end
+
+  def end_point_in_downstream
+    @end_point_in_downstream ||= company.stages.order(:order).find_by(integration_pipe_id: integration_pipe_id, stage_stream: :downstream, end_point: true)
   end
 end

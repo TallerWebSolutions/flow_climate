@@ -27,8 +27,8 @@ class FlowReportData
   end
 
   def assign_grouped_hours_per_month_raw_data(projects)
-    upstream_hours_per_project_per_month = ProjectResultsRepository.instance.sum_field_in_grouped_per_month_project_results(projects, :qty_hours_upstream)
-    downstream_hours_per_project_per_month = ProjectResultsRepository.instance.sum_field_in_grouped_per_month_project_results(projects, :qty_hours_downstream)
+    upstream_hours_per_project_per_month = ProjectResultsRepository.instance.sum_field_in_grouped_by_month_project_results(projects, :qty_hours_upstream)
+    downstream_hours_per_project_per_month = ProjectResultsRepository.instance.sum_field_in_grouped_by_month_project_results(projects, :qty_hours_downstream)
     merged_grouped_values = upstream_hours_per_project_per_month.merge(downstream_hours_per_project_per_month) { |_index, upstream, downstream| upstream + downstream }
     @x_axis_month_data = merged_grouped_values.keys
     @hours_per_project_per_month = merged_grouped_values.values

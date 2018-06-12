@@ -55,7 +55,7 @@ class DemandsRepository
   end
 
   def not_started_demands(array_of_projects)
-    Demand.where(project_id: array_of_projects.map(&:id)).reject(&:started_flowing?)
+    Demand.where(project_id: array_of_projects.map(&:id)).reject(&:flowing?).reject { |demand| demand.end_date.present? }
   end
 
   def committed_demands(array_of_projects)

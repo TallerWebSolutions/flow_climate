@@ -101,7 +101,7 @@ class ProjectResultsRepository
     average_demand_cost_hash
   end
 
-  def sum_field_in_grouped_per_month_project_results(projects, field_to_sum)
+  def sum_field_in_grouped_by_month_project_results(projects, field_to_sum)
     ProjectResult.where(project_id: projects.map(&:id)).group('EXTRACT(YEAR FROM result_date)', 'EXTRACT(MONTH FROM result_date)').order(Arel.sql('EXTRACT(YEAR FROM result_date)'), Arel.sql('EXTRACT(MONTH FROM result_date)')).sum(field_to_sum)
   end
 

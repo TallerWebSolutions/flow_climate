@@ -392,7 +392,7 @@ RSpec.describe Demand, type: :model do
     end
   end
 
-  describe '#started_flowing?' do
+  describe '#flowing?' do
     context 'having transitions' do
       context 'and it started to flow and returned to backlog' do
         let(:company) { Fabricate :company }
@@ -405,7 +405,7 @@ RSpec.describe Demand, type: :model do
         let!(:demand_transition) { Fabricate :demand_transition, demand: demand, stage: stage, last_time_in: Time.zone.now }
         let!(:other_demand_transition) { Fabricate :demand_transition, demand: demand, stage: other_stage, last_time_in: 1.day.ago }
 
-        it { expect(demand.started_flowing?).to be false }
+        it { expect(demand.flowing?).to be false }
       end
       context 'and it started to flow' do
         let(:company) { Fabricate :company }
@@ -419,7 +419,19 @@ RSpec.describe Demand, type: :model do
         let!(:second_demand_transition) { Fabricate :demand_transition, demand: demand, stage: other_stage, last_time_in: 1.day.ago }
         let!(:third_demand_transition) { Fabricate :demand_transition, demand: demand, stage: other_stage, last_time_in: Time.zone.now }
 
-        it { expect(demand.started_flowing?).to be true }
+        it { expect(demand.flowing?).to be true }
+      end
+
+      context 'and it has ended' do
+        let(:company) { Fabricate :company }
+        let(:customer) { Fabricate :customer, company: company }
+        let(:project) { Fabricate :project, customer: customer }
+        let(:stage) { Fabricate :stage, company: company, projects: [project], order: 0 }
+        let(:other_stage) { Fabricate :stage, company: company, projects: [project], order: 1 }
+
+        let(:demand) { Fabricate :demand, project: project, end_date: Time.zone.now }
+
+        it { expect(demand.flowing?).to be false }
       end
     end
 
@@ -430,12 +442,12 @@ RSpec.describe Demand, type: :model do
 
       context 'and the demand has no commitment date' do
         let(:demand) { Fabricate :demand, project: project }
-        it { expect(demand.started_flowing?).to be false }
+        it { expect(demand.flowing?).to be false }
       end
 
       context 'and the demand has commitment date' do
         let(:demand) { Fabricate :demand, project: project, commitment_date: Time.zone.now }
-        it { expect(demand.started_flowing?).to be true }
+        it { expect(demand.flowing?).to be true }
       end
     end
   end
@@ -446,12 +458,14 @@ RSpec.describe Demand, type: :model do
         let(:company) { Fabricate :company }
         let(:customer) { Fabricate :customer, company: company }
         let(:project) { Fabricate :project, customer: customer }
-        let(:stage) { Fabricate :stage, company: company, projects: [project], order: 0 }
-        let(:other_stage) { Fabricate :stage, company: company, projects: [project], order: 1, commitment_point: true }
+        let(:stage) { Fabricate :stage, company: company, projects: [project], stage_stream: :downstream, order: 0 }
+        let(:commitment_stage) { Fabricate :stage, company: company, projects: [project], stage_stream: :downstream, order: 1, commitment_point: true }
+        let(:end_stage) { Fabricate :stage, company: company, projects: [project], stage_stream: :downstream, order: 2, end_point: true }
 
         let(:demand) { Fabricate :demand, project: project }
         let!(:demand_transition) { Fabricate :demand_transition, demand: demand, stage: stage, last_time_in: Time.zone.now }
-        let!(:other_demand_transition) { Fabricate :demand_transition, demand: demand, stage: other_stage, last_time_in: 1.day.ago }
+        let!(:commitment_demand_transition) { Fabricate :demand_transition, demand: demand, stage: commitment_stage, last_time_in: 1.day.ago }
+        let!(:end_demand_transition) { Fabricate :demand_transition, demand: demand, stage: end_stage, last_time_in: Time.zone.tomorrow }
 
         it { expect(demand.committed?).to be false }
       end

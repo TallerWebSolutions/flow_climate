@@ -118,8 +118,8 @@ class Demand < ApplicationRecord
     demand_transitions.order(last_time_in: :desc)&.first&.stage
   end
 
-  def started_flowing?
-    return false if current_stage.blank? && commitment_date.blank?
+  def flowing?
+    return false if (current_stage.blank? && commitment_date.blank?) || end_date.present?
     return true if current_stage.blank? && commitment_date.present?
     current_stage.order > current_stage.flow_start_point.order
   end

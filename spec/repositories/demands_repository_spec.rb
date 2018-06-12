@@ -292,7 +292,9 @@ RSpec.describe DemandsRepository, type: :repository do
       let!(:eigth_transition) { Fabricate :demand_transition, stage: third_stage, demand: sixth_demand, last_time_in: '2018-04-04T17:09:58-03:00' }
       let!(:nineth_transition) { Fabricate :demand_transition, stage: fourth_stage, demand: seventh_demand, last_time_in: '2018-04-04T17:09:58-03:00' }
 
-      it { expect(DemandsRepository.instance.committed_demands([first_project, second_project])).to match_array [second_demand, fifth_demand, sixth_demand] }
+      it do
+        expect(DemandsRepository.instance.committed_demands([first_project, second_project])).to match_array [first_demand, second_demand, third_demand, fifth_demand, sixth_demand]
+      end
     end
 
     context 'having no demands' do
