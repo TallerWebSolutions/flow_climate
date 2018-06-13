@@ -44,6 +44,7 @@ class Demand < ApplicationRecord
   belongs_to :project_result, counter_cache: true
   has_many :demand_transitions, dependent: :destroy
   has_many :demand_blocks, dependent: :destroy
+  has_many :stages, -> { distinct }, through: :demand_transitions
 
   validates :project, :created_date, :demand_id, :demand_type, :class_of_service, :assignees_count, presence: true
 
@@ -53,6 +54,7 @@ class Demand < ApplicationRecord
   scope :finished_with_leadtime, -> { where('end_date IS NOT NULL AND leadtime IS NOT NULL') }
   scope :finished_bugs, -> { bug.finished }
   scope :grouped_end_date_by_month, -> { finished.order(end_date: :desc).group_by { |demand| [demand.end_date.to_date.cwyear, demand.end_date.to_date.month] } }
+  scope :grouped_by_customer, -> { joins(project: :customer).order('customers.name').group_by { |demand| demand.project.customer.name } }
   scope :upstream_flag, -> { where(downstream: false) }
   scope :downstream_flag, -> { where(downstream: true) }
 
@@ -112,7 +114,27 @@ class Demand < ApplicationRecord
     effort_upstream + effort_downstream
   end
 
+  def current_stage
+    demand_transitions.order(last_time_in: :desc)&.first&.stage
+  end
+
+  def flowing?
+    return false if (current_stage.blank? && commitment_date.blank?) || end_date.present?
+    return true if current_stage.blank? && commitment_date.present?
+    current_stage.order > current_stage.flow_start_point.order
+  end
+
+  def committed?
+    return false if (current_stage.blank? && commitment_date.blank?) || end_date.present?
+    return true if committed_manually
+    current_stage.inside_commitment_area?
+  end
+
   private
+
+  def committed_manually
+    current_stage.blank? && commitment_date.present? && end_date.blank?
+  end
 
   def sum_blocked_effort(effort_transitions)
     total_blocked = 0

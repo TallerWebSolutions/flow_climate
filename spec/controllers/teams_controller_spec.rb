@@ -30,6 +30,10 @@ RSpec.describe TeamsController, type: :controller do
       before { get :search_demands_to_flow_charts, params: { company_id: 'foo', id: 'foo' }, xhr: true }
       it { expect(response.status).to eq 401 }
     end
+    describe 'GET #search_demands_by_flow_status' do
+      before { get :search_demands_by_flow_status, params: { company_id: 'foo', id: 'foo' }, xhr: true }
+      it { expect(response.status).to eq 401 }
+    end
   end
 
   context 'authenticated' do
@@ -90,8 +94,9 @@ RSpec.describe TeamsController, type: :controller do
             expect(assigns(:projects_risk_alert_data).backlog_risk_alert_data).to eq [{ name: 'Vermelho', y: 1, color: '#FB283D' }]
             expect(assigns(:projects_risk_alert_data).money_risk_alert_data).to eq [{ name: 'Verde', y: 1, color: '#179A02' }]
             expect(assigns(:pipefy_team_configs)).to eq [second_pipefy_team_config, first_pipefy_team_config]
-            expect(assigns(:team_delivered_demands)).to eq [fourth_demand, third_demand, second_demand]
-            expect(assigns(:grouped_team_delivered_demands)).to eq([2018, 4] => [fourth_demand, third_demand, second_demand])
+            expect(assigns(:team_demands)).to eq [first_demand, second_demand, third_demand, fourth_demand]
+            expect(assigns(:grouped_delivered_demands)).to be_nil
+            expect(assigns(:grouped_customer_demands)).to be_nil
           end
         end
         context 'having no data' do
@@ -320,8 +325,8 @@ RSpec.describe TeamsController, type: :controller do
           let!(:fourth_demand) { Fabricate :demand, project_result: fourth_result, project: first_project, end_date: 1.week.ago }
           let!(:fifth_demand) { Fabricate :demand, project_result: fifth_result, project: second_project, end_date: 1.week.ago }
 
-          context 'and passing the status filter executing' do
-            it 'assigns the instance variable and renders the template' do
+          context 'and passing week and year as parameters' do
+            it 'call the repository and renders the JS' do
               expect(DemandsRepository.instance).to(receive(:selected_grouped_by_project_and_week).with([second_project, first_project], 1.week.ago.to_date.cweek, 1.week.ago.to_date.cwyear).once { [first_demand, second_demand] })
               expect(DemandsRepository.instance).to(receive(:throughput_by_project_and_week).with([second_project, first_project], 1.week.ago.to_date.cweek, 1.week.ago.to_date.cwyear).once { [third_demand, fourth_demand] })
               get :search_demands_to_flow_charts, params: { company_id: company, id: team, week: 1.week.ago.to_date.cweek, year: 1.week.ago.to_date.cwyear }, xhr: true
@@ -332,7 +337,7 @@ RSpec.describe TeamsController, type: :controller do
           end
         end
         context 'having no data' do
-          it 'assigns the instance variable and renders the template' do
+          it 'renders the JS empty' do
             get :search_demands_to_flow_charts, params: { company_id: company, id: team, week: 1.week.ago.to_date.cweek, year: 1.week.ago.to_date.cwyear }, xhr: true
             expect(response).to render_template 'teams/flow.js.erb'
             expect(assigns(:flow_report_data).projects_demands_selected).to eq({})
@@ -352,6 +357,186 @@ RSpec.describe TeamsController, type: :controller do
         context 'not permitted company' do
           let(:company) { Fabricate :company, users: [] }
           before { get :search_demands_to_flow_charts, params: { company_id: company, id: team }, xhr: true }
+          it { expect(response).to have_http_status :not_found }
+        end
+      end
+    end
+
+    describe 'GET #search_demands_by_flow_status' do
+      let(:customer) { Fabricate :customer, company: company }
+      let(:other_customer) { Fabricate :customer, company: company }
+      let(:team) { Fabricate :team, company: company }
+      let(:other_team) { Fabricate :team, company: company }
+      let(:product) { Fabricate :product, customer: customer, name: 'zzz', team: team }
+      let(:other_product) { Fabricate :product, customer: other_customer, name: 'aaa', team: team }
+
+      context 'passing valid parameters' do
+        context 'having data' do
+          let!(:first_project) { Fabricate :project, customer: customer, product: product, status: :executing, start_date: Time.zone.yesterday, end_date: 10.days.from_now }
+          let!(:first_demand) { Fabricate :demand, project: first_project, commitment_date: nil, end_date: nil }
+          let!(:second_demand) { Fabricate :demand, project: first_project, commitment_date: Time.zone.today, end_date: nil, leadtime: 2003 }
+          let!(:third_demand) { Fabricate :demand, project: first_project, end_date: 1.day.ago, leadtime: 2203 }
+          let!(:fourth_demand) { Fabricate :demand, project: first_project, end_date: Time.zone.today, leadtime: 3003 }
+
+          let!(:second_project) { Fabricate :project, customer: other_customer, product: other_product, status: :executing, start_date: Time.zone.yesterday, end_date: 50.days.from_now }
+          let!(:fifth_demand) { Fabricate :demand, project: second_project, commitment_date: nil, end_date: nil }
+          let!(:sixth_demand) { Fabricate :demand, project: second_project, commitment_date: Time.zone.today, end_date: nil, leadtime: 43 }
+          let!(:seventh_demand) { Fabricate :demand, project: second_project, end_date: 1.day.ago, leadtime: 3432 }
+          let!(:eigth_demand) { Fabricate :demand, project: second_project, end_date: Time.zone.today, leadtime: 1223 }
+
+          context 'and passing the flow status all  filters false' do
+            context 'not grouped' do
+              it 'finds the correct demands and responds with the correct JS' do
+                get :search_demands_by_flow_status, params: { company_id: company, id: team, no_grouping: 'true', grouped_by_month: 'false', grouped_by_customer: 'false', not_started: 'false', wip: 'false', delivered: 'false' }, xhr: true
+
+                expect(response).to render_template 'teams/search_demands_by_flow_status.js.erb'
+                expect(assigns(:team_demands)).to match_array [first_demand, second_demand, third_demand, fourth_demand, fifth_demand, sixth_demand, seventh_demand, eigth_demand]
+                expect(assigns(:grouped_delivered_demands)).to be_nil
+                expect(assigns(:grouped_customer_demands)).to be_nil
+              end
+            end
+            context 'grouped_delivered_demands' do
+              it 'finds the correct demands and responds with the correct JS' do
+                get :search_demands_by_flow_status, params: { company_id: company, id: team, no_grouping: 'false', grouped_by_month: 'true', grouped_by_customer: 'false', not_started: 'false', wip: 'false', delivered: 'false' }, xhr: true
+
+                expect(response).to render_template 'teams/search_demands_by_flow_status.js.erb'
+                expect(assigns(:team_demands)).to match_array [first_demand, second_demand, third_demand, fourth_demand, fifth_demand, sixth_demand, seventh_demand, eigth_demand]
+                expect(assigns(:grouped_delivered_demands)[[2018, 4]]).to match_array [third_demand, fourth_demand, seventh_demand, eigth_demand]
+                expect(assigns(:grouped_customer_demands)).to be_nil
+              end
+            end
+            context 'grouped_delivered_demands' do
+              it 'finds the correct demands and responds with the correct JS' do
+                get :search_demands_by_flow_status, params: { company_id: company, id: team, no_grouping: 'false', grouped_by_month: 'false', grouped_by_customer: 'true', not_started: 'false', wip: 'false', delivered: 'false' }, xhr: true
+
+                expect(response).to render_template 'teams/search_demands_by_flow_status.js.erb'
+                expect(assigns(:team_demands)).to match_array [first_demand, second_demand, third_demand, fourth_demand, fifth_demand, sixth_demand, seventh_demand, eigth_demand]
+                expect(assigns(:grouped_delivered_demands)).to be_nil
+                expect(assigns(:grouped_customer_demands)[customer.name]).to match_array [first_demand, second_demand, third_demand, fourth_demand]
+                expect(assigns(:grouped_customer_demands)[other_customer.name]).to match_array [fifth_demand, sixth_demand, seventh_demand, eigth_demand]
+              end
+            end
+          end
+          context 'and passing the flow status filter not started' do
+            context 'not grouped' do
+              it 'finds the correct demands and responds with the correct JS' do
+                get :search_demands_by_flow_status, params: { company_id: company, id: team, no_grouping: 'true', grouped_by_month: 'false', grouped_by_customer: 'false', not_started: 'true', wip: 'false', delivered: 'false' }, xhr: true
+
+                expect(response).to render_template 'teams/search_demands_by_flow_status.js.erb'
+                expect(assigns(:team_demands)).to match_array [first_demand, fifth_demand]
+                expect(assigns(:grouped_delivered_demands)).to be_nil
+                expect(assigns(:grouped_customer_demands)).to be_nil
+              end
+            end
+            context 'grouped_delivered_demands' do
+              it 'finds the correct demands and responds with the correct JS' do
+                get :search_demands_by_flow_status, params: { company_id: company, id: team, no_grouping: 'false', grouped_by_month: 'true', grouped_by_customer: 'false', not_started: 'true', wip: 'false', delivered: 'false' }, xhr: true
+
+                expect(response).to render_template 'teams/search_demands_by_flow_status.js.erb'
+                expect(assigns(:team_demands)).to match_array [first_demand, fifth_demand]
+                expect(assigns(:grouped_delivered_demands)).to eq({})
+                expect(assigns(:grouped_customer_demands)).to be_nil
+              end
+            end
+            context 'grouped_delivered_demands' do
+              it 'finds the correct demands and responds with the correct JS' do
+                get :search_demands_by_flow_status, params: { company_id: company, id: team, no_grouping: 'false', grouped_by_month: 'false', grouped_by_customer: 'true', not_started: 'true', wip: 'false', delivered: 'false' }, xhr: true
+
+                expect(response).to render_template 'teams/search_demands_by_flow_status.js.erb'
+                expect(assigns(:team_demands)).to match_array [first_demand, fifth_demand]
+                expect(assigns(:grouped_delivered_demands)).to be_nil
+                expect(assigns(:grouped_customer_demands)[customer.name]).to eq [first_demand]
+                expect(assigns(:grouped_customer_demands)[other_customer.name]).to eq [fifth_demand]
+              end
+            end
+          end
+          context 'and passing the flow status filter committed' do
+            context 'not grouped' do
+              it 'finds the correct demands and responds with the correct JS' do
+                get :search_demands_by_flow_status, params: { company_id: company, id: team, no_grouping: 'true', grouped_by_month: 'false', grouped_by_customer: 'false', not_started: 'false', wip: 'true', delivered: 'false' }, xhr: true
+
+                expect(response).to render_template 'teams/search_demands_by_flow_status.js.erb'
+                expect(assigns(:team_demands)).to match_array [second_demand, sixth_demand]
+                expect(assigns(:grouped_delivered_demands)).to be_nil
+                expect(assigns(:grouped_customer_demands)).to be_nil
+              end
+            end
+            context 'grouped_delivered_demands' do
+              it 'finds the correct demands and responds with the correct JS' do
+                get :search_demands_by_flow_status, params: { company_id: company, id: team, no_grouping: 'false', grouped_by_month: 'true', grouped_by_customer: 'false', not_started: 'false', wip: 'true', delivered: 'false' }, xhr: true
+
+                expect(response).to render_template 'teams/search_demands_by_flow_status.js.erb'
+                expect(assigns(:team_demands)).to match_array [second_demand, sixth_demand]
+                expect(assigns(:grouped_delivered_demands)).to eq({})
+                expect(assigns(:grouped_customer_demands)).to be_nil
+              end
+            end
+            context 'grouped_delivered_demands' do
+              it 'finds the correct demands and responds with the correct JS' do
+                get :search_demands_by_flow_status, params: { company_id: company, id: team, no_grouping: 'false', grouped_by_month: 'false', grouped_by_customer: 'true', not_started: 'false', wip: 'true', delivered: 'false' }, xhr: true
+
+                expect(response).to render_template 'teams/search_demands_by_flow_status.js.erb'
+                expect(assigns(:team_demands)).to match_array [second_demand, sixth_demand]
+                expect(assigns(:grouped_delivered_demands)).to be_nil
+                expect(assigns(:grouped_customer_demands)[customer.name]).to eq [second_demand]
+                expect(assigns(:grouped_customer_demands)[other_customer.name]).to eq [sixth_demand]
+              end
+            end
+          end
+          context 'and passing the flow status filter delivered' do
+            context 'not grouped' do
+              it 'finds the correct demands and responds with the correct JS' do
+                get :search_demands_by_flow_status, params: { company_id: company, id: team, no_grouping: 'true', grouped_by_month: 'false', grouped_by_customer: 'false', not_started: 'false', wip: 'false', delivered: 'true' }, xhr: true
+
+                expect(response).to render_template 'teams/search_demands_by_flow_status.js.erb'
+                expect(assigns(:team_demands)).to match_array [third_demand, fourth_demand, seventh_demand, eigth_demand]
+                expect(assigns(:grouped_delivered_demands)).to be_nil
+                expect(assigns(:grouped_customer_demands)).to be_nil
+              end
+            end
+            context 'grouped_delivered_demands' do
+              it 'finds the correct demands and responds with the correct JS' do
+                get :search_demands_by_flow_status, params: { company_id: company, id: team, no_grouping: 'false', grouped_by_month: 'true', grouped_by_customer: 'false', not_started: 'false', wip: 'false', delivered: 'true' }, xhr: true
+
+                expect(response).to render_template 'teams/search_demands_by_flow_status.js.erb'
+                expect(assigns(:team_demands)).to match_array [third_demand, fourth_demand, seventh_demand, eigth_demand]
+                expect(assigns(:grouped_delivered_demands)[[2018, 4]]).to match_array [fourth_demand, third_demand, eigth_demand, seventh_demand]
+                expect(assigns(:grouped_customer_demands)).to be_nil
+              end
+            end
+            context 'grouped_delivered_demands' do
+              it 'finds the correct demands and responds with the correct JS' do
+                get :search_demands_by_flow_status, params: { company_id: company, id: team, no_grouping: 'false', grouped_by_month: 'false', grouped_by_customer: 'true', not_started: 'false', wip: 'false', delivered: 'true' }, xhr: true
+
+                expect(response).to render_template 'teams/search_demands_by_flow_status.js.erb'
+                expect(assigns(:team_demands)).to match_array [third_demand, fourth_demand, seventh_demand, eigth_demand]
+                expect(assigns(:grouped_delivered_demands)).to be_nil
+                expect(assigns(:grouped_customer_demands)[customer.name]).to match_array [fourth_demand, third_demand]
+                expect(assigns(:grouped_customer_demands)[other_customer.name]).to match_array [eigth_demand, seventh_demand]
+              end
+            end
+          end
+        end
+        context 'having no data' do
+          it 'assigns the instance variable and renders the template' do
+            get :search_demands_by_flow_status, params: { company_id: company, id: team, not_started: 'true', wip: 'false', delivered: 'false' }, xhr: true
+            expect(response).to render_template 'teams/search_demands_by_flow_status.js.erb'
+          end
+        end
+      end
+
+      context 'passing invalid' do
+        context 'company' do
+          before { get :search_demands_by_flow_status, params: { company_id: 'foo', id: team }, xhr: true }
+          it { expect(response).to have_http_status :not_found }
+        end
+        context 'team' do
+          before { get :search_demands_by_flow_status, params: { company_id: company, id: 'foo' }, xhr: true }
+          it { expect(response).to have_http_status :not_found }
+        end
+        context 'not permitted company' do
+          let(:company) { Fabricate :company, users: [] }
+          before { get :search_demands_by_flow_status, params: { company_id: company, id: team }, xhr: true }
           it { expect(response).to have_http_status :not_found }
         end
       end

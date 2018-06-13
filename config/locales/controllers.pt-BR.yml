@@ -134,9 +134,15 @@ pt-BR:
       last_team: "Time atual"
       last_week_scope: "Escopo da Última Sem."
       current_team: "Time Atual"
-      delivered_scope:
-        text: "Escopo Entregue"
-        grouped_by_month_check_box: "Agrupado por mês?"
+      demands:
+        text: "Escopo"
+        grouped_by_month_check_box: "Agrupado por mês de entrega"
+        demands_not_started: "Não Iniciadas"
+        work_in_progress: "Comprometido Em Progresso"
+        delivered_demands: "Entregues"
+        grouped_by_customer: "Agrupado por Cliente"
+        no_grouping_check_box: "Não Agrupado"
+        all_demands: "Todas as Demandas"
       avg_hours_per_demand: "Média Horas/Demanda"
       scope_gap: "Restante do escopo"
       scope_growth: "Crescimento do Escopo (%)"
@@ -152,6 +158,8 @@ pt-BR:
         days: "%{remaining_days} dia(s)"
       cmd: "CMD"
       status_information_html: "Este projeto está <i>%{status_description}</i>"
+      delivered_demands:
+        text: "Escopo Entregue"
     charts:
       xlabel:
         weeks: "Semanas"
@@ -310,6 +318,7 @@ pt-BR:
       downstream: "Downstream?"
       manual_effort: "Esforço Atualizado Manualmente?"
       count: "%{demands_count} demandas"
+      current_stage: "Etapa Atual"
     edit:
       title: "Editar Demanda"
     show:
@@ -355,7 +364,7 @@ pt-BR:
     finance: "Informações Financeiras"
     teams: "Times"
     flow: "Fluxo"
-    delivered_demands: "Demandas Entregues"
+    demands: "Demandas"
     status_report: "Status Report"
   charts:
     xlabel:

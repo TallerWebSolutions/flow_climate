@@ -269,20 +269,20 @@ RSpec.describe ProjectResultsRepository, type: :repository do
     end
   end
 
-  describe '#sum_field_in_grouped_per_month_project_results' do
+  describe '#sum_field_in_grouped_by_month_project_results' do
     context 'when there is data in the week' do
       let!(:first_result) { Fabricate :project_result, project: first_project, result_date: Time.zone.iso8601('2018-02-16T23:01:46'), qty_hours_upstream: 20, qty_hours_downstream: 10 }
       let!(:second_result) { Fabricate :project_result, project: second_project, result_date: Time.zone.iso8601('2018-02-15T23:01:46'), qty_hours_upstream: 11, qty_hours_downstream: 13 }
       let!(:third_result) { Fabricate :project_result, project: third_project, result_date: Time.zone.iso8601('2018-02-11T23:01:46'), qty_hours_upstream: 23, qty_hours_downstream: 11 }
       let!(:out_result) { Fabricate :project_result, result_date: Time.zone.iso8601('2018-02-14T23:01:46'), flow_pressure: 4 }
 
-      it { expect(ProjectResultsRepository.instance.sum_field_in_grouped_per_month_project_results([first_project, second_project], :qty_hours_upstream)).to eq([2018.0, 2.0] => 31) }
-      it { expect(ProjectResultsRepository.instance.sum_field_in_grouped_per_month_project_results([first_project, second_project], :qty_hours_downstream)).to eq([2018.0, 2.0] => 23) }
+      it { expect(ProjectResultsRepository.instance.sum_field_in_grouped_by_month_project_results([first_project, second_project], :qty_hours_upstream)).to eq([2018.0, 2.0] => 31) }
+      it { expect(ProjectResultsRepository.instance.sum_field_in_grouped_by_month_project_results([first_project, second_project], :qty_hours_downstream)).to eq([2018.0, 2.0] => 23) }
     end
     context 'when there is no data' do
       let!(:project) { Fabricate :project, customer: customer, product: product, start_date: 1.month.ago, end_date: 1.month.from_now }
 
-      it { expect(ProjectResultsRepository.instance.sum_field_in_grouped_per_month_project_results([project], :qty_hours_downstream)).to eq({}) }
+      it { expect(ProjectResultsRepository.instance.sum_field_in_grouped_by_month_project_results([project], :qty_hours_downstream)).to eq({}) }
     end
   end
 end
