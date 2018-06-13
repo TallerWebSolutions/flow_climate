@@ -314,7 +314,7 @@ RSpec.describe DemandsController, type: :controller do
         context 'when there is no project change' do
           it 'calls the services and the reader' do
             expect(Pipefy::PipefyApiService).to(receive(:request_card_details).with(demand.demand_id).once { 'response' })
-            expect(Pipefy::PipefyCardResponseReader.instance).to receive(:update_card!).with(project, pipefy_config.team, demand, 'response').once
+            expect(Pipefy::PipefyCardResponseReader.instance).to(receive(:update_card!).with(project, pipefy_config.team, demand, 'response').once { demand })
             put :synchronize_pipefy, params: { company_id: company, project_id: project, id: demand }
             expect(response).to redirect_to company_project_demand_path(company, project, demand)
             expect(flash[:notice]).to eq I18n.t('demands.sync.done')
@@ -327,6 +327,16 @@ RSpec.describe DemandsController, type: :controller do
             expect(Pipefy::PipefyApiService).to(receive(:request_card_details).with(demand.demand_id).once { 'response' })
             expect(Pipefy::PipefyCardResponseReader.instance).to receive(:update_card!).with(project, pipefy_config.team, demand, 'response').once
             put :synchronize_pipefy, params: { company_id: company, project_id: project, id: demand }
+            expect(response).to redirect_to company_project_path(company, project)
+            expect(flash[:notice]).to eq I18n.t('demands.sync.done')
+          end
+        end
+        context 'when the demand was deleted in the source' do
+          let!(:demand) { Fabricate :demand, project: project }
+          it 'deletes the card in the climate' do
+            expect(Pipefy::PipefyApiService).to(receive(:request_card_details).with(demand.demand_id).once { { data: { card: nil } }.with_indifferent_access })
+            put :synchronize_pipefy, params: { company_id: company, project_id: project, id: demand }
+            expect(Demand.find_by(id: demand.id)).to be_nil
             expect(response).to redirect_to company_project_path(company, project)
             expect(flash[:notice]).to eq I18n.t('demands.sync.done')
           end

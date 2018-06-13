@@ -233,11 +233,10 @@ RSpec.describe Pipefy::PipefyCardResponseReader, type: :service do
 
       context 'blocked but not unblocked' do
         it 'creates the demand and the project result' do
-          Pipefy::PipefyCardResponseReader.instance.update_card!(second_project, team, second_demand, second_card_response)
+          updated_demand = Pipefy::PipefyCardResponseReader.instance.update_card!(second_project, team, second_demand, second_card_response)
 
           expect(Demand.count).to eq 2
 
-          updated_demand = Demand.find_by(demand_id: '5141010')
           expect(updated_demand.demand_title).to eq 'Simplicação dos passos para cadastrar um novo artigo pelo colunista'
           expect(updated_demand.class_of_service).to eq 'expedite'
           expect(updated_demand.demand_type).to eq 'chore'
