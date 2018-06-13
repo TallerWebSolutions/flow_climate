@@ -77,7 +77,4 @@ function hideAllComponents() {
 
     $('#project-status-report').hide();
     $('#nav-item-statusreport').removeClass('active');
-
-    $('#demands-grouped-per-month-div').show();
-    $('#flat-demands-div').hide();
 }

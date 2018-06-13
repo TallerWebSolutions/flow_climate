@@ -51,7 +51,7 @@
 </div>
 
 <div id="demands-list">
-  <%= render 'demands/demands_list', grouped_delivered_demands: @grouped_delivered_demands, grouped_customer_demands: @grouped_customer_demands, demands: @team_demands %>
+  <%= render 'demands/demands_list', grouped_delivered_demands: @grouped_delivered_demands, grouped_customer_demands: @grouped_customer_demands, demands: @demands %>
 </div>
 
 <div id="members-table">
@@ -90,6 +90,7 @@
   <%= javascript_include_tag 'charts/gauge' %>
   <%= javascript_include_tag 'charts/scatter' %>
 
+  <%= javascript_include_tag 'teams/demands_list' %>
   <%= javascript_include_tag 'components/components' %>
   <%= javascript_include_tag 'components/dates' %>
   <%= javascript_include_tag 'routes/team_routes' %>

@@ -1,4 +1,3 @@
-
 <div class="row">
   <div class="col-xs-12">
     <ul class="breadcrumb">
@@ -9,6 +8,9 @@
     </ul>
   </div>
 </div>
+
+<%= hidden_field_tag :company_id, @company.id %>
+<%= hidden_field_tag :project_id, @project.id %>
 
 <div class="row">
   <div class="topnav">
@@ -35,7 +37,7 @@
   <div class="form-group">
     <%= link_to t('general.download_csv'), delivered_demands_csv_company_project_path(@company, @project, format: :csv), class: 'btn btn-sm btn-success' %>
   </div>
-  <%= render 'demands/demands_list', grouped_delivered_demands: @grouped_delivered_demands, grouped_customer_demands: @grouped_customer_demands, demands: @project_demands %>
+  <%= render 'demands/demands_list', grouped_delivered_demands: @grouped_delivered_demands, grouped_customer_demands: @grouped_customer_demands, demands: @demands %>
 </div>
 
 <div id="deadline-change">
@@ -66,6 +68,8 @@
   <%= javascript_include_tag 'charts/line' %>
   <%= javascript_include_tag 'charts/scatter' %>
 
+  <%= javascript_include_tag 'projects/demands_list' %>
+  <%= javascript_include_tag 'routes/project_routes' %>
   <%= javascript_include_tag 'projects/charts' %>
   <%= javascript_include_tag 'projects/status_report_current' %>
   <%= javascript_include_tag 'projects/status_report_projection' %>

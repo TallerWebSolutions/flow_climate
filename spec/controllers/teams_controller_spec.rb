@@ -94,7 +94,7 @@ RSpec.describe TeamsController, type: :controller do
             expect(assigns(:projects_risk_alert_data).backlog_risk_alert_data).to eq [{ name: 'Vermelho', y: 1, color: '#FB283D' }]
             expect(assigns(:projects_risk_alert_data).money_risk_alert_data).to eq [{ name: 'Verde', y: 1, color: '#179A02' }]
             expect(assigns(:pipefy_team_configs)).to eq [second_pipefy_team_config, first_pipefy_team_config]
-            expect(assigns(:team_demands)).to eq [first_demand, second_demand, third_demand, fourth_demand]
+            expect(assigns(:demands)).to eq [first_demand, second_demand, third_demand, fourth_demand]
             expect(assigns(:grouped_delivered_demands)).to be_nil
             expect(assigns(:grouped_customer_demands)).to be_nil
           end
@@ -384,13 +384,13 @@ RSpec.describe TeamsController, type: :controller do
           let!(:seventh_demand) { Fabricate :demand, project: second_project, end_date: 1.day.ago, leadtime: 3432 }
           let!(:eigth_demand) { Fabricate :demand, project: second_project, end_date: Time.zone.today, leadtime: 1223 }
 
-          context 'and passing the flow status all  filters false' do
+          context 'and passing the flow status all filters false' do
             context 'not grouped' do
               it 'finds the correct demands and responds with the correct JS' do
                 get :search_demands_by_flow_status, params: { company_id: company, id: team, no_grouping: 'true', grouped_by_month: 'false', grouped_by_customer: 'false', not_started: 'false', wip: 'false', delivered: 'false' }, xhr: true
 
-                expect(response).to render_template 'teams/search_demands_by_flow_status.js.erb'
-                expect(assigns(:team_demands)).to match_array [first_demand, second_demand, third_demand, fourth_demand, fifth_demand, sixth_demand, seventh_demand, eigth_demand]
+                expect(response).to render_template 'demands/search_demands_by_flow_status.js.erb'
+                expect(assigns(:demands)).to match_array [first_demand, second_demand, third_demand, fourth_demand, fifth_demand, sixth_demand, seventh_demand, eigth_demand]
                 expect(assigns(:grouped_delivered_demands)).to be_nil
                 expect(assigns(:grouped_customer_demands)).to be_nil
               end
@@ -399,8 +399,8 @@ RSpec.describe TeamsController, type: :controller do
               it 'finds the correct demands and responds with the correct JS' do
                 get :search_demands_by_flow_status, params: { company_id: company, id: team, no_grouping: 'false', grouped_by_month: 'true', grouped_by_customer: 'false', not_started: 'false', wip: 'false', delivered: 'false' }, xhr: true
 
-                expect(response).to render_template 'teams/search_demands_by_flow_status.js.erb'
-                expect(assigns(:team_demands)).to match_array [first_demand, second_demand, third_demand, fourth_demand, fifth_demand, sixth_demand, seventh_demand, eigth_demand]
+                expect(response).to render_template 'demands/search_demands_by_flow_status.js.erb'
+                expect(assigns(:demands)).to match_array [first_demand, second_demand, third_demand, fourth_demand, fifth_demand, sixth_demand, seventh_demand, eigth_demand]
                 expect(assigns(:grouped_delivered_demands)[[2018, 4]]).to match_array [third_demand, fourth_demand, seventh_demand, eigth_demand]
                 expect(assigns(:grouped_customer_demands)).to be_nil
               end
@@ -409,8 +409,8 @@ RSpec.describe TeamsController, type: :controller do
               it 'finds the correct demands and responds with the correct JS' do
                 get :search_demands_by_flow_status, params: { company_id: company, id: team, no_grouping: 'false', grouped_by_month: 'false', grouped_by_customer: 'true', not_started: 'false', wip: 'false', delivered: 'false' }, xhr: true
 
-                expect(response).to render_template 'teams/search_demands_by_flow_status.js.erb'
-                expect(assigns(:team_demands)).to match_array [first_demand, second_demand, third_demand, fourth_demand, fifth_demand, sixth_demand, seventh_demand, eigth_demand]
+                expect(response).to render_template 'demands/search_demands_by_flow_status.js.erb'
+                expect(assigns(:demands)).to match_array [first_demand, second_demand, third_demand, fourth_demand, fifth_demand, sixth_demand, seventh_demand, eigth_demand]
                 expect(assigns(:grouped_delivered_demands)).to be_nil
                 expect(assigns(:grouped_customer_demands)[customer.name]).to match_array [first_demand, second_demand, third_demand, fourth_demand]
                 expect(assigns(:grouped_customer_demands)[other_customer.name]).to match_array [fifth_demand, sixth_demand, seventh_demand, eigth_demand]
@@ -422,8 +422,8 @@ RSpec.describe TeamsController, type: :controller do
               it 'finds the correct demands and responds with the correct JS' do
                 get :search_demands_by_flow_status, params: { company_id: company, id: team, no_grouping: 'true', grouped_by_month: 'false', grouped_by_customer: 'false', not_started: 'true', wip: 'false', delivered: 'false' }, xhr: true
 
-                expect(response).to render_template 'teams/search_demands_by_flow_status.js.erb'
-                expect(assigns(:team_demands)).to match_array [first_demand, fifth_demand]
+                expect(response).to render_template 'demands/search_demands_by_flow_status.js.erb'
+                expect(assigns(:demands)).to match_array [first_demand, fifth_demand]
                 expect(assigns(:grouped_delivered_demands)).to be_nil
                 expect(assigns(:grouped_customer_demands)).to be_nil
               end
@@ -432,8 +432,8 @@ RSpec.describe TeamsController, type: :controller do
               it 'finds the correct demands and responds with the correct JS' do
                 get :search_demands_by_flow_status, params: { company_id: company, id: team, no_grouping: 'false', grouped_by_month: 'true', grouped_by_customer: 'false', not_started: 'true', wip: 'false', delivered: 'false' }, xhr: true
 
-                expect(response).to render_template 'teams/search_demands_by_flow_status.js.erb'
-                expect(assigns(:team_demands)).to match_array [first_demand, fifth_demand]
+                expect(response).to render_template 'demands/search_demands_by_flow_status.js.erb'
+                expect(assigns(:demands)).to match_array [first_demand, fifth_demand]
                 expect(assigns(:grouped_delivered_demands)).to eq({})
                 expect(assigns(:grouped_customer_demands)).to be_nil
               end
@@ -442,8 +442,8 @@ RSpec.describe TeamsController, type: :controller do
               it 'finds the correct demands and responds with the correct JS' do
                 get :search_demands_by_flow_status, params: { company_id: company, id: team, no_grouping: 'false', grouped_by_month: 'false', grouped_by_customer: 'true', not_started: 'true', wip: 'false', delivered: 'false' }, xhr: true
 
-                expect(response).to render_template 'teams/search_demands_by_flow_status.js.erb'
-                expect(assigns(:team_demands)).to match_array [first_demand, fifth_demand]
+                expect(response).to render_template 'demands/search_demands_by_flow_status.js.erb'
+                expect(assigns(:demands)).to match_array [first_demand, fifth_demand]
                 expect(assigns(:grouped_delivered_demands)).to be_nil
                 expect(assigns(:grouped_customer_demands)[customer.name]).to eq [first_demand]
                 expect(assigns(:grouped_customer_demands)[other_customer.name]).to eq [fifth_demand]
@@ -455,8 +455,8 @@ RSpec.describe TeamsController, type: :controller do
               it 'finds the correct demands and responds with the correct JS' do
                 get :search_demands_by_flow_status, params: { company_id: company, id: team, no_grouping: 'true', grouped_by_month: 'false', grouped_by_customer: 'false', not_started: 'false', wip: 'true', delivered: 'false' }, xhr: true
 
-                expect(response).to render_template 'teams/search_demands_by_flow_status.js.erb'
-                expect(assigns(:team_demands)).to match_array [second_demand, sixth_demand]
+                expect(response).to render_template 'demands/search_demands_by_flow_status.js.erb'
+                expect(assigns(:demands)).to match_array [second_demand, sixth_demand]
                 expect(assigns(:grouped_delivered_demands)).to be_nil
                 expect(assigns(:grouped_customer_demands)).to be_nil
               end
@@ -465,8 +465,8 @@ RSpec.describe TeamsController, type: :controller do
               it 'finds the correct demands and responds with the correct JS' do
                 get :search_demands_by_flow_status, params: { company_id: company, id: team, no_grouping: 'false', grouped_by_month: 'true', grouped_by_customer: 'false', not_started: 'false', wip: 'true', delivered: 'false' }, xhr: true
 
-                expect(response).to render_template 'teams/search_demands_by_flow_status.js.erb'
-                expect(assigns(:team_demands)).to match_array [second_demand, sixth_demand]
+                expect(response).to render_template 'demands/search_demands_by_flow_status.js.erb'
+                expect(assigns(:demands)).to match_array [second_demand, sixth_demand]
                 expect(assigns(:grouped_delivered_demands)).to eq({})
                 expect(assigns(:grouped_customer_demands)).to be_nil
               end
@@ -475,8 +475,8 @@ RSpec.describe TeamsController, type: :controller do
               it 'finds the correct demands and responds with the correct JS' do
                 get :search_demands_by_flow_status, params: { company_id: company, id: team, no_grouping: 'false', grouped_by_month: 'false', grouped_by_customer: 'true', not_started: 'false', wip: 'true', delivered: 'false' }, xhr: true
 
-                expect(response).to render_template 'teams/search_demands_by_flow_status.js.erb'
-                expect(assigns(:team_demands)).to match_array [second_demand, sixth_demand]
+                expect(response).to render_template 'demands/search_demands_by_flow_status.js.erb'
+                expect(assigns(:demands)).to match_array [second_demand, sixth_demand]
                 expect(assigns(:grouped_delivered_demands)).to be_nil
                 expect(assigns(:grouped_customer_demands)[customer.name]).to eq [second_demand]
                 expect(assigns(:grouped_customer_demands)[other_customer.name]).to eq [sixth_demand]
@@ -488,8 +488,8 @@ RSpec.describe TeamsController, type: :controller do
               it 'finds the correct demands and responds with the correct JS' do
                 get :search_demands_by_flow_status, params: { company_id: company, id: team, no_grouping: 'true', grouped_by_month: 'false', grouped_by_customer: 'false', not_started: 'false', wip: 'false', delivered: 'true' }, xhr: true
 
-                expect(response).to render_template 'teams/search_demands_by_flow_status.js.erb'
-                expect(assigns(:team_demands)).to match_array [third_demand, fourth_demand, seventh_demand, eigth_demand]
+                expect(response).to render_template 'demands/search_demands_by_flow_status.js.erb'
+                expect(assigns(:demands)).to match_array [third_demand, fourth_demand, seventh_demand, eigth_demand]
                 expect(assigns(:grouped_delivered_demands)).to be_nil
                 expect(assigns(:grouped_customer_demands)).to be_nil
               end
@@ -498,8 +498,8 @@ RSpec.describe TeamsController, type: :controller do
               it 'finds the correct demands and responds with the correct JS' do
                 get :search_demands_by_flow_status, params: { company_id: company, id: team, no_grouping: 'false', grouped_by_month: 'true', grouped_by_customer: 'false', not_started: 'false', wip: 'false', delivered: 'true' }, xhr: true
 
-                expect(response).to render_template 'teams/search_demands_by_flow_status.js.erb'
-                expect(assigns(:team_demands)).to match_array [third_demand, fourth_demand, seventh_demand, eigth_demand]
+                expect(response).to render_template 'demands/search_demands_by_flow_status.js.erb'
+                expect(assigns(:demands)).to match_array [third_demand, fourth_demand, seventh_demand, eigth_demand]
                 expect(assigns(:grouped_delivered_demands)[[2018, 4]]).to match_array [fourth_demand, third_demand, eigth_demand, seventh_demand]
                 expect(assigns(:grouped_customer_demands)).to be_nil
               end
@@ -508,8 +508,8 @@ RSpec.describe TeamsController, type: :controller do
               it 'finds the correct demands and responds with the correct JS' do
                 get :search_demands_by_flow_status, params: { company_id: company, id: team, no_grouping: 'false', grouped_by_month: 'false', grouped_by_customer: 'true', not_started: 'false', wip: 'false', delivered: 'true' }, xhr: true
 
-                expect(response).to render_template 'teams/search_demands_by_flow_status.js.erb'
-                expect(assigns(:team_demands)).to match_array [third_demand, fourth_demand, seventh_demand, eigth_demand]
+                expect(response).to render_template 'demands/search_demands_by_flow_status.js.erb'
+                expect(assigns(:demands)).to match_array [third_demand, fourth_demand, seventh_demand, eigth_demand]
                 expect(assigns(:grouped_delivered_demands)).to be_nil
                 expect(assigns(:grouped_customer_demands)[customer.name]).to match_array [fourth_demand, third_demand]
                 expect(assigns(:grouped_customer_demands)[other_customer.name]).to match_array [eigth_demand, seventh_demand]
@@ -520,7 +520,7 @@ RSpec.describe TeamsController, type: :controller do
         context 'having no data' do
           it 'assigns the instance variable and renders the template' do
             get :search_demands_by_flow_status, params: { company_id: company, id: team, not_started: 'true', wip: 'false', delivered: 'false' }, xhr: true
-            expect(response).to render_template 'teams/search_demands_by_flow_status.js.erb'
+            expect(response).to render_template 'demands/search_demands_by_flow_status.js.erb'
           end
         end
       end
