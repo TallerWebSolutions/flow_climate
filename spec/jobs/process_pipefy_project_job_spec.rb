@@ -40,8 +40,10 @@ RSpec.describe ProcessPipefyProjectJob, type: :active_job do
       let!(:third_demand) { Fabricate :demand, project: project, project_result: project_result, demand_id: 'xpto' }
       let!(:fourth_demand) { Fabricate :demand, project: project, project_result: project_result, demand_id: 'foobar', effort_upstream: 20, effort_downstream: 10 }
 
-      let!(:demand_transition) { Fabricate :demand_transition, stage: stage, demand: third_demand }
-      let!(:other_demand_transition) { Fabricate :demand_transition, stage: stage, demand: third_demand }
+      let!(:first_demand_transition) { Fabricate :demand_transition, stage: stage, demand: third_demand }
+      let!(:second_demand_transition) { Fabricate :demand_transition, stage: stage, demand: third_demand }
+      let!(:third_demand_transition) { Fabricate :demand_transition, stage: stage, demand: first_demand }
+      let!(:foruth_demand_transition) { Fabricate :demand_transition, stage: stage, demand: second_demand }
 
       context 'returning success' do
         before do
@@ -55,10 +57,11 @@ RSpec.describe ProcessPipefyProjectJob, type: :active_job do
         it 'calls the methods to update the demand' do
           expect(Pipefy::PipefyCardResponseReader.instance).to(receive(:create_card!).with(project, team, card_response).once { first_demand })
           expect(Pipefy::PipefyCardResponseReader.instance).to(receive(:create_card!).with(project, team, other_card_response).once { second_demand })
-          expect(Pipefy::PipefyCardResponseReader.instance).to(receive(:create_card!).with(project, team, blank_card_response).once {})
+
           expect(Pipefy::PipefyCardResponseReader.instance).to receive(:update_card!).with(project, team, first_demand, card_response).once
           expect(Pipefy::PipefyCardResponseReader.instance).to receive(:update_card!).with(project, team, second_demand, other_card_response).once
           expect(Pipefy::PipefyCardResponseReader.instance).to receive(:update_card!).with(project, team, third_demand, blank_card_response).once.and_call_original
+
           expect_any_instance_of(ProjectResult).to receive(:compute_flow_metrics!).once
           expect(DemandsRepository.instance).to receive(:full_demand_destroy!).with(third_demand).once
           ProcessPipefyProjectJob.perform_now(project)

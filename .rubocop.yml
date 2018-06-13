@@ -49,6 +49,7 @@ Metrics/ClassLength:
     - 'app/data_objects/report_data.rb'
     - 'app/data_objects/status_report_data.rb'
     - 'app/models/demand.rb'
+    - 'app/controllers/projects_controller.rb'
 
 Metrics/CyclomaticComplexity:
   Exclude:
