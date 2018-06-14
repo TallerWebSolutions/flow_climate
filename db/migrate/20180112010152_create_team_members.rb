@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class CreateTeamMembers < ActiveRecord::Migration[5.1]
-  def change
+  def up
     create_table :team_members do |t|
       t.integer :company_id, null: false, index: true
       t.string :name, null: false
@@ -15,5 +15,9 @@ class CreateTeamMembers < ActiveRecord::Migration[5.1]
     end
 
     add_foreign_key :team_members, :companies, column: :company_id
+  end
+
+  def down
+    drop_table :team_members
   end
 end

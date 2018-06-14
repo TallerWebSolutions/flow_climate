@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class CreateTeams < ActiveRecord::Migration[5.1]
-  def change
+  def up
     create_table :teams do |t|
       t.integer :company_id, null: false, index: true
       t.string :name, null: false
@@ -21,5 +21,16 @@ class CreateTeams < ActiveRecord::Migration[5.1]
     end
     add_foreign_key :projects_teams, :projects, column: :project_id
     add_foreign_key :projects_teams, :projects, column: :team_id
+  end
+
+  def down
+    drop_table :projects_teams
+
+    change_table :team_members, bulk: true do |t|
+      t.remove :team_id
+      t.integer :company_id
+    end
+
+    drop_table :teams
   end
 end
