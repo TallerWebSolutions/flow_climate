@@ -14,7 +14,7 @@ class DemandsRepository
   def full_demand_destroy!(demand)
     project_result = demand.project_result
     project_result.remove_demand!(demand) if project_result.present?
-    demand.destroy
+    demand.destroy!
   end
 
   def total_queue_time_for(demand)

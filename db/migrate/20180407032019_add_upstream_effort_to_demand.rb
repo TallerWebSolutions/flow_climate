@@ -1,15 +1,34 @@
 # frozen_string_literal: true
 
 class AddUpstreamEffortToDemand < ActiveRecord::Migration[5.1]
-  def change
-    add_column :demands, :effort_downstream, :decimal, default: 0
-    add_column :demands, :effort_upstream, :decimal, default: 0
+  def up
+    change_table :demands, bulk: true do |t|
+      t.decimal :effort_downstream, default: 0
+      t.decimal :effort_upstream, :decimal, default: 0
 
-    remove_column :demands, :effort, :decimal
+      t.remove :effort
+    end
 
-    add_column :project_results, :throughput_upstream, :integer, default: 0
-    add_column :project_results, :throughput_downstream, :integer, default: 0
+    change_table :project_results, bulk: true do |t|
+      t.integer :throughput_upstream, default: 0
+      t.integer :throughput_downstream, default: 0
+      t.remove :throughput
+    end
+  end
 
-    remove_column :project_results, :throughput, :integer
+  def down
+    change_table :demands, bulk: true do |t|
+      t.remove :effort_downstream
+      t.remove :effort_upstream
+
+      t.decimal :effort, default: 0
+    end
+
+    change_table :project_results, bulk: true do |t|
+      t.remove :throughput_upstream
+      t.remove :throughput_downstream
+
+      t.integer :throughput
+    end
   end
 end

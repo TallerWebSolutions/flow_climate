@@ -61,6 +61,7 @@ Rails.application.routes.draw do
         put :synchronize_pipefy
         patch :finish_project
         get :delivered_demands_csv
+        get 'search_demands_by_flow_status', action: :search_demands_by_flow_status, as: 'search_demands_by_flow_status'
       end
 
       resources :project_results, only: :show

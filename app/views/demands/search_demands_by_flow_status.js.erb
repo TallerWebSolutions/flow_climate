@@ -15,7 +15,7 @@ var flatDemands = $('#flat-demands-div');
   demandsGroupedPerCustomer.show();
 
 <% else %>
-  flatDemands.html("<%= escape_javascript(render 'demands/demands_table_flat', demands: @team_demands).html_safe %>");
+  flatDemands.html("<%= escape_javascript(render 'demands/demands_table_flat', demands: @demands).html_safe %>");
   flatDemands.show();
   demandsGroupedPerMonth.hide();
   demandsGroupedPerCustomer.hide();

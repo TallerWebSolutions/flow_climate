@@ -2,7 +2,9 @@
 
 class AddAverageDemandCostToProjectResult < ActiveRecord::Migration[5.1]
   def change
-    add_column :project_results, :cost_in_week, :decimal, null: false
-    add_column :project_results, :average_demand_cost, :decimal, null: false
+    change_table :project_results, bulk: true do |t|
+      t.decimal :cost_in_week, null: false
+      t.decimal :average_demand_cost, null: false
+    end
   end
 end

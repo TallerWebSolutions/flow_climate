@@ -4,21 +4,23 @@ class ProcessPipefyProjectJob < ApplicationJob
   def perform(project_id)
     project = Project.find_by(id: project_id)
     return if project.pipefy_config.blank?
-    all_ids_cards_in_stages = []
     project.stages.each do |stage|
       ids_cards_in_stage = Pipefy::PipefyReader.instance.read_phase(stage.integration_id)
       process_cards_in_pipefy_and_update_informations!(project, project.pipefy_config.team, ids_cards_in_stage)
-      all_ids_cards_in_stages = (all_ids_cards_in_stages + ids_cards_in_stage).flatten.uniq
     end
-    process_not_updated_demands(all_ids_cards_in_stages, project)
+    process_project_demands(project)
     project.project_results.map(&:compute_flow_metrics!)
   end
 
   private
 
-  def process_not_updated_demands(all_ids_cards_in_stages, project)
-    demands_not_updated = project.demands.joins(:demand_transitions).map(&:demand_id).uniq - all_ids_cards_in_stages
-    process_cards_in_pipefy_and_update_informations!(project, project.pipefy_config.team, demands_not_updated)
+  def process_project_demands(project)
+    project.demands.joins(:demand_transitions).uniq.each do |demand|
+      pipefy_card_response = Pipefy::PipefyApiService.request_card_details(demand.demand_id)
+      next if pipefy_card_response.code != 200
+      card_response = JSON.parse(pipefy_card_response.body)
+      Pipefy::PipefyCardResponseReader.instance.update_card!(project, project.pipefy_config.team, demand, card_response)
+    end
   end
 
   def process_cards_in_pipefy_and_update_informations!(project, team, cards_to_check)
@@ -29,8 +31,7 @@ class ProcessPipefyProjectJob < ApplicationJob
       project_name_in_pipefy = Pipefy::PipefyReader.instance.read_project_name_from_pipefy_data(card_response['data'])
       updated_project = ProjectsRepository.instance.search_project_by_full_name(project_name_in_pipefy) || project
       known_demand = project.demands.find_by(demand_id: card_id)
-      demand = Pipefy::PipefyCardResponseReader.instance.create_card!(updated_project, team, card_response) || known_demand
-      Pipefy::PipefyCardResponseReader.instance.update_card!(updated_project, team, demand, card_response)
+      Pipefy::PipefyCardResponseReader.instance.create_card!(updated_project, team, card_response) || known_demand
     end
   end
 end

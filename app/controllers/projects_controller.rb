@@ -4,7 +4,7 @@ class ProjectsController < AuthenticatedController
   before_action :assign_company
   before_action :assign_customer, only: %i[create update]
   before_action :assign_product, only: %i[create update]
-  before_action :assign_project, only: %i[show edit update destroy synchronize_pipefy finish_project delivered_demands_csv]
+  before_action :assign_project, only: %i[show edit update destroy synchronize_pipefy finish_project delivered_demands_csv search_demands_by_flow_status]
 
   def show
     @ordered_project_results = @project.project_results.order(:result_date)
@@ -12,9 +12,8 @@ class ProjectsController < AuthenticatedController
     @report_data = ReportData.new(projects)
     @status_report_data = StatusReportData.new(projects)
     @ordered_project_risk_alerts = @project.project_risk_alerts.order(created_at: :desc)
-    @project_demands = DemandsRepository.instance.demands_per_projects(projects)
-    @grouped_delivered_demands = @project_demands.grouped_end_date_by_month
-    @grouped_customer_demands = @project_demands.grouped_by_customer
+    @demands = DemandsRepository.instance.demands_per_projects(projects)
+    assign_grouped_demands_informations(@demands)
     @project_change_deadline_histories = @project.project_change_deadline_histories
     @montecarlo_dates = @status_report_data.monte_carlo_data
   end
@@ -82,6 +81,14 @@ class ProjectsController < AuthenticatedController
     respond_to { |format| format.csv { send_data @project_delivered_demands.to_csv, filename: "demands-#{Time.zone.now}.csv" } }
   end
 
+  def search_demands_by_flow_status
+    projects = Project.where(id: @project.id)
+    demands_for_query_ids = build_demands_query(projects)
+    @demands = Demand.where(id: demands_for_query_ids.map(&:id))
+    assign_grouped_demands_informations(@demands)
+    respond_to { |format| format.js { render file: 'demands/search_demands_by_flow_status.js.erb' } }
+  end
+
   private
 
   def assign_products_list
@@ -122,5 +129,17 @@ class ProjectsController < AuthenticatedController
   def check_change_in_initial_scope!(previous_scope_param)
     return if project_params[:initial_scope].blank? || previous_scope_param == project_params[:initial_scope].to_i
     @project.project_results.order(:result_date).map(&:compute_flow_metrics!)
+  end
+
+  def build_demands_query(projects)
+    return DemandsRepository.instance.not_started_demands(projects) if params[:not_started] == 'true'
+    return DemandsRepository.instance.committed_demands(projects) if params[:wip] == 'true'
+    return DemandsRepository.instance.demands_finished_per_projects(projects) if params[:delivered] == 'true'
+    DemandsRepository.instance.demands_per_projects(projects)
+  end
+
+  def assign_grouped_demands_informations(demands)
+    @grouped_delivered_demands = demands.grouped_end_date_by_month if params[:grouped_by_month] == 'true'
+    @grouped_customer_demands = demands.grouped_by_customer if params[:grouped_by_customer] == 'true'
   end
 end

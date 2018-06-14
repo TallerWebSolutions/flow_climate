@@ -2,7 +2,9 @@
 
 class AddQueueInformationToDemand < ActiveRecord::Migration[5.2]
   def change
-    add_column :demands, :total_queue_time, :integer, default: 0
-    add_column :demands, :total_touch_time, :integer, default: 0
+    change_table :demands, bulk: true do |t|
+      t.integer :total_queue_time, default: 0
+      t.integer :total_touch_time, default: 0
+    end
   end
 end

@@ -106,9 +106,9 @@ RSpec.describe ProjectsRepository, type: :repository do
     let!(:seventh_project) { Fabricate :project, customer: other_customer, start_date: 1.month.from_now, end_date: 3.months.from_now, status: :executing }
     let!(:eigth_project) { Fabricate :project, customer: customer, start_date: 1.month.from_now, end_date: 3.months.from_now, status: :executing }
 
-    let!(:first_project_result) { Fabricate :project_result, project: first_project, team: team }
-    let!(:second_project_result) { Fabricate :project_result, project: second_project, team: team }
-    let!(:third_project_result) { Fabricate :project_result, project: third_project, team: team }
+    let!(:first_project_result) { Fabricate :project_result, project: first_project, result_date: 2.days.ago, team: team }
+    let!(:second_project_result) { Fabricate :project_result, project: second_project, result_date: 1.day.ago, team: team }
+    let!(:third_project_result) { Fabricate :project_result, project: third_project, result_date: Time.zone.today, team: team }
 
     it { expect(ProjectsRepository.instance.all_projects_for_team(team)).to match_array [first_project, second_project, third_project, fourth_project, fifth_project, sixth_project] }
   end

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class CreateDemands < ActiveRecord::Migration[5.1]
-  def change
+  def up
     create_table :demands do |t|
       t.integer :project_result_id, null: false, index: true
       t.string :demand_id, null: false
@@ -10,8 +10,18 @@ class CreateDemands < ActiveRecord::Migration[5.1]
       t.timestamps
     end
 
-    remove_column :project_results, :demands_ids, :string
+    change_table :project_results, bulk: true do |t|
+      t.remove :demands_ids
+      t.integer :demands_count
+    end
+  end
 
-    add_column :project_results, :demands_count, :integer
+  def down
+    drop_table :demands
+
+    change_table :project_results, bulk: true do |t|
+      t.string :demands_ids
+      t.remove :demands_count
+    end
   end
 end

@@ -11,7 +11,7 @@ class TeamsController < AuthenticatedController
     @projects_summary = ProjectsSummaryObject.new(@team.projects)
     @pipefy_team_configs = @team.pipefy_team_configs.order(:username)
     @projects_risk_alert_data = ProjectRiskData.new(@team.projects)
-    @team_demands = DemandsRepository.instance.demands_per_projects(@team_projects)
+    @demands = DemandsRepository.instance.demands_per_projects(@team_projects)
     assign_grouped_demands_informations
   end
 
@@ -48,9 +48,9 @@ class TeamsController < AuthenticatedController
   def search_demands_by_flow_status
     @team_projects = ProjectsRepository.instance.all_projects_for_team(@team)
     demands_for_query_ids = build_demands_query
-    @team_demands = Demand.where(id: demands_for_query_ids.map(&:id))
+    @demands = Demand.where(id: demands_for_query_ids.map(&:id))
     assign_grouped_demands_informations
-    respond_to { |format| format.js { render file: 'teams/search_demands_by_flow_status.js.erb' } }
+    respond_to { |format| format.js { render file: 'demands/search_demands_by_flow_status.js.erb' } }
   end
 
   private
@@ -63,8 +63,8 @@ class TeamsController < AuthenticatedController
   end
 
   def assign_grouped_demands_informations
-    @grouped_delivered_demands = @team_demands.grouped_end_date_by_month if params[:grouped_by_month] == 'true'
-    @grouped_customer_demands = @team_demands.grouped_by_customer if params[:grouped_by_customer] == 'true'
+    @grouped_delivered_demands = @demands.grouped_end_date_by_month if params[:grouped_by_month] == 'true'
+    @grouped_customer_demands = @demands.grouped_by_customer if params[:grouped_by_customer] == 'true'
   end
 
   def assign_team
