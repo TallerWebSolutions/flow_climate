@@ -60,7 +60,6 @@ RSpec.describe ProcessPipefyProjectJob, type: :active_job do
 
           expect(Pipefy::PipefyCardResponseReader.instance).to receive(:update_card!).with(project, team, first_demand, card_response).once
           expect(Pipefy::PipefyCardResponseReader.instance).to receive(:update_card!).with(project, team, second_demand, other_card_response).once
-          expect(Pipefy::PipefyCardResponseReader.instance).to receive(:update_card!).with(project, team, third_demand, blank_card_response).once.and_call_original
 
           expect_any_instance_of(ProjectResult).to receive(:compute_flow_metrics!).once
           expect(DemandsRepository.instance).to receive(:full_demand_destroy!).with(third_demand).once

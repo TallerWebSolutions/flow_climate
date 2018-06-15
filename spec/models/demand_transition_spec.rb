@@ -41,11 +41,13 @@ RSpec.describe DemandTransition, type: :model do
       let(:project) { Fabricate :project }
       let!(:stage) { Fabricate :stage, stage_stream: :downstream, projects: [project] }
       let(:other_stage) { Fabricate :stage, stage_stream: :upstream, projects: [project] }
+      let!(:end_stage) { Fabricate :stage, stage_stream: :downstream, projects: [project], end_point: true }
       let(:demand) { Fabricate :demand, project: project }
 
       context 'having data' do
         let!(:demand_transition) { Fabricate :demand_transition, demand: demand, stage: stage }
         let!(:other_demand_transition) { Fabricate :demand_transition, demand: demand, stage: stage }
+        let!(:done_downstream_transition) { Fabricate :demand_transition, demand: demand, stage: end_stage }
         let!(:upstream_demand_transition) { Fabricate :demand_transition, demand: demand, stage: other_stage }
 
         it { expect(DemandTransition.downstream_transitions).to match_array [demand_transition, other_demand_transition] }
