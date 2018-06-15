@@ -60,7 +60,7 @@ class Stage < ApplicationRecord
   end
 
   def flow_start_point
-    company.stages.where(integration_pipe_id: integration_pipe_id).order(:order).first
+    company.stages.where(integration_pipe_id: integration_pipe_id).where('stages.order >= 0').order(:order).first
   end
 
   def inside_commitment_area?
