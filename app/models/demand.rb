@@ -107,7 +107,7 @@ class Demand < ApplicationRecord
   end
 
   def downstream_demand?
-    demand_transitions.downstream_transitions.present? || downstream?
+    demand_transitions.joins(:stage).downstream_transitions.present? || downstream?
   end
 
   def total_effort
