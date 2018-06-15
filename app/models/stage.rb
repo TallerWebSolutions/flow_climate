@@ -71,6 +71,12 @@ class Stage < ApplicationRecord
     order >= commitment_point_stage.order && order < end_point_in_downstream.order
   end
 
+  def before_commitment_point?
+    commitment_point = company.stages.find_by(integration_pipe_id: integration_pipe_id, commitment_point: true)
+    return false if commitment_point.blank?
+    order < commitment_point.order
+  end
+
   private
 
   def done_stage_in_pipe(demand)

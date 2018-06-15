@@ -202,4 +202,34 @@ RSpec.describe Stage, type: :model do
       end
     end
   end
+
+  describe '#before_commitment_point?' do
+    let(:company) { Fabricate :company }
+    let(:customer) { Fabricate :customer, company: company }
+    let(:project) { Fabricate :project, customer: customer }
+
+    let!(:first_stage) { Fabricate :stage, company: company, projects: [project], stage_stream: :downstream, integration_pipe_id: '321', order: 2, commitment_point: true }
+    let!(:second_stage) { Fabricate :stage, company: company, projects: [project], stage_stream: :downstream, integration_pipe_id: '321', order: 1 }
+    let!(:third_stage) { Fabricate :stage, company: company, projects: [project], stage_stream: :downstream, integration_pipe_id: '321', order: 5, end_point: true }
+    let!(:fourth_stage) { Fabricate :stage, company: company, projects: [project], stage_stream: :upstream, integration_pipe_id: '321', order: 3, end_point: true }
+    let!(:fifth_stage) { Fabricate :stage, company: company, projects: [project], stage_stream: :downstream, integration_pipe_id: '321', order: 4 }
+    let!(:sixth_stage) { Fabricate :stage, company: company, projects: [project], stage_stream: :downstream, integration_pipe_id: '123', order: 2 }
+    let!(:seventh_stage) { Fabricate :stage, company: company, projects: [project], stage_stream: :downstream, integration_pipe_id: '321', order: 6 }
+
+    context 'after commitment stages' do
+      it 'returns true' do
+        expect(first_stage.before_commitment_point?).to be false
+        expect(fifth_stage.before_commitment_point?).to be false
+        expect(fourth_stage.before_commitment_point?).to be false
+        expect(third_stage.before_commitment_point?).to be false
+        expect(sixth_stage.before_commitment_point?).to be false
+        expect(seventh_stage.before_commitment_point?).to be false
+      end
+    end
+    context 'before commitment stages' do
+      it 'returns false' do
+        expect(second_stage.before_commitment_point?).to be true
+      end
+    end
+  end
 end
