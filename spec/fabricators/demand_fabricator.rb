@@ -6,7 +6,7 @@ Fabricator(:demand) do
   created_date { Faker::Date.backward }
   demand_type 0
   class_of_service 0
-  demand_id { Faker::Internet.domain_suffix }
+  demand_id { Random.new.rand(3000..10_000) }
   assignees_count 1
   effort_downstream { Faker::Number.decimal }
   effort_upstream { Faker::Number.decimal }

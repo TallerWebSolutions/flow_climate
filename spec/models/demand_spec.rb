@@ -14,11 +14,35 @@ RSpec.describe Demand, type: :model do
   end
 
   context 'validations' do
-    it { is_expected.to validate_presence_of :project }
-    it { is_expected.to validate_presence_of :demand_id }
-    it { is_expected.to validate_presence_of :created_date }
-    it { is_expected.to validate_presence_of :demand_type }
-    it { is_expected.to validate_presence_of :class_of_service }
+    context 'simple ones' do
+      it { is_expected.to validate_presence_of :project }
+      it { is_expected.to validate_presence_of :demand_id }
+      it { is_expected.to validate_presence_of :created_date }
+      it { is_expected.to validate_presence_of :demand_type }
+      it { is_expected.to validate_presence_of :class_of_service }
+    end
+
+    context 'complex ones' do
+      context 'demand_id uniqueness' do
+        let!(:project) { Fabricate :project }
+        let!(:demand) { Fabricate :demand, project: project, demand_id: 'zzz' }
+        context 'same demand_id in same project' do
+          let!(:other_demand) { Fabricate.build :demand, project: project, demand_id: 'zzz' }
+          it 'does not accept the model' do
+            expect(other_demand.valid?).to be false
+            expect(other_demand.errors[:demand_id]).to eq [I18n.t('demand.validations.demand_id_unique.message')]
+          end
+        end
+        context 'different demand_id in same customer' do
+          let!(:other_demand) { Fabricate.build :demand, project: project, demand_id: 'aaa' }
+          it { expect(other_demand.valid?).to be true }
+        end
+        context 'same demand_id in different project' do
+          let!(:other_demand) { Fabricate.build :demand, demand_id: 'zzz' }
+          it { expect(other_demand.valid?).to be true }
+        end
+      end
+    end
   end
 
   context 'scopes' do

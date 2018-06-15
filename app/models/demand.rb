@@ -9,7 +9,7 @@
 #  commitment_date   :datetime
 #  created_at        :datetime         not null
 #  created_date      :datetime         not null
-#  demand_id         :string           not null
+#  demand_id         :string           not null, indexed => [project_id]
 #  demand_title      :string
 #  demand_type       :integer          not null
 #  demand_url        :string
@@ -20,7 +20,7 @@
 #  id                :bigint(8)        not null, primary key
 #  leadtime          :decimal(, )
 #  manual_effort     :boolean          default(FALSE)
-#  project_id        :integer          not null
+#  project_id        :integer          not null, indexed => [demand_id]
 #  project_result_id :integer          indexed
 #  total_queue_time  :integer          default(0)
 #  total_touch_time  :integer          default(0)
@@ -29,7 +29,8 @@
 #
 # Indexes
 #
-#  index_demands_on_project_result_id  (project_result_id)
+#  index_demands_on_demand_id_and_project_id  (demand_id,project_id) UNIQUE
+#  index_demands_on_project_result_id         (project_result_id)
 #
 # Foreign Keys
 #
@@ -47,6 +48,7 @@ class Demand < ApplicationRecord
   has_many :stages, -> { distinct }, through: :demand_transitions
 
   validates :project, :created_date, :demand_id, :demand_type, :class_of_service, :assignees_count, presence: true
+  validates :demand_id, uniqueness: { scope: :project_id, message: I18n.t('demand.validations.demand_id_unique.message') }
 
   scope :opened_in_date, ->(result_date) { where('created_date::timestamp::date = :result_date', result_date: result_date) }
   scope :finished_in_stream, ->(stage_stream) { joins(demand_transitions: :stage).where('stages.end_point = true AND stages.stage_stream = :stage_stream', stage_stream: stage_stream).uniq }

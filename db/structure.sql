@@ -22,6 +22,20 @@ CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
 COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
 
 
+--
+-- Name: pg_stat_statements; Type: EXTENSION; Schema: -; Owner: -
+--
+
+CREATE EXTENSION IF NOT EXISTS pg_stat_statements WITH SCHEMA public;
+
+
+--
+-- Name: EXTENSION pg_stat_statements; Type: COMMENT; Schema: -; Owner: -
+--
+
+COMMENT ON EXTENSION pg_stat_statements IS 'track execution statistics of all SQL statements executed';
+
+
 SET default_tablespace = '';
 
 SET default_with_oids = false;
@@ -245,7 +259,6 @@ CREATE TABLE public.demands (
     assignees_count integer NOT NULL,
     effort_downstream numeric DEFAULT 0,
     effort_upstream numeric DEFAULT 0,
-    "decimal" numeric DEFAULT 0,
     leadtime numeric,
     downstream boolean DEFAULT true,
     manual_effort boolean DEFAULT false,
@@ -1287,6 +1300,13 @@ CREATE INDEX index_demand_transitions_on_stage_id ON public.demand_transitions U
 
 
 --
+-- Name: index_demands_on_demand_id_and_project_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_demands_on_demand_id_and_project_id ON public.demands USING btree (demand_id, project_id);
+
+
+--
 -- Name: index_demands_on_project_result_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1810,6 +1830,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20180516150858'),
 ('20180529194024'),
 ('20180530210436'),
-('20180604224141');
+('20180604224141'),
+('20180615182356');
 
 
