@@ -20,7 +20,7 @@ module Pipefy
       return if card_response.blank? || card_response['data'].blank?
       response_data = card_response['data']
 
-      if response_data['card'].blank?
+      if response_data['card'].blank? && demand.persisted?
         DemandsRepository.instance.full_demand_destroy!(demand)
         return
       end

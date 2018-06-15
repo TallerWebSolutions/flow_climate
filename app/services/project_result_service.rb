@@ -39,7 +39,7 @@ class ProjectResultService
     results_to_update = ProjectResult.where('result_date >= :new_result_date', new_result_date: bottom_limit_to_update_result)
     results_to_update.map(&:compute_flow_metrics!)
 
-    ProjectResult.reset_counters(new_result.id, :demands_count)
+    ProjectResult.reset_counters(new_result.id, :demands_count) if new_result.present? && new_result.persisted?
     ProjectResult.reset_counters(old_result.id, :demands_count) if old_result.present? && old_result.persisted?
   end
 
