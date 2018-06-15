@@ -143,7 +143,8 @@ RSpec.describe Stage, type: :model do
       let!(:second_stage) { Fabricate :stage, company: company, projects: [project], integration_pipe_id: '321', order: 1 }
       let!(:third_stage) { Fabricate :stage, company: company, projects: [project], integration_pipe_id: '321', order: 4, end_point: true }
       let!(:fourth_stage) { Fabricate :stage, company: company, projects: [project], integration_pipe_id: '321', order: 3, end_point: true }
-      let!(:fifth_stage) { Fabricate :stage, company: company, projects: [project], integration_pipe_id: '123', order: 2, end_point: true }
+      let!(:fifth_stage) { Fabricate :stage, company: company, projects: [project], integration_pipe_id: '321', order: -1, end_point: true }
+      let!(:sixth_stage) { Fabricate :stage, company: company, projects: [project], integration_pipe_id: '123', order: 2, end_point: true }
 
       it { expect(first_stage.flow_start_point).to eq second_stage }
     end
