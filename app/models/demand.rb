@@ -115,7 +115,7 @@ class Demand < ApplicationRecord
   end
 
   def current_stage
-    demand_transitions.order(last_time_in: :desc)&.first&.stage
+    demand_transitions.where(last_time_out: nil).order(:last_time_in).last&.stage || demand_transitions.order(:last_time_in)&.last&.stage
   end
 
   def flowing?
@@ -128,6 +128,10 @@ class Demand < ApplicationRecord
     return false if (current_stage.blank? && commitment_date.blank?) || end_date.present?
     return true if committed_manually
     current_stage.inside_commitment_area?
+  end
+
+  def update_commitment_date!
+    update(commitment_date: nil) if current_stage&.before_commitment_point?
   end
 
   private

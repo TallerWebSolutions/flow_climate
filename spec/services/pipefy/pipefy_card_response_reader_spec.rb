@@ -124,6 +124,7 @@ RSpec.describe Pipefy::PipefyCardResponseReader, type: :service do
         context 'when it is unknown to the system' do
           let(:card_response) { { data: { card: { id: '5141022', comments: [], fields: [{ name: 'Title', value: '[XPTO] Agendamento de artigo do colunista' }, { name: 'Type', value: 'sbbrubles' }, { name: 'JiraKey', value: 'PD-124' }, { name: 'Class of Service', value: 'Intangível' }, { name: 'Project', value: 'Foo | BaR | FASE 1' }], phases_history: [{ phase: { id: '2480502' }, firstTimeIn: '2018-02-23T17:11:23-03:00', lastTimeOut: '2018-02-23T17:11:23-03:00' }, { phase: { id: '2480504' }, firstTimeIn: '2018-02-23T17:11:23-03:00', lastTimeOut: nil }], pipe: { id: '356355' }, url: 'http://app.pipefy.com/pipes/356355#cards/5141022' } } }.with_indifferent_access }
           it 'processes the card creating the demand as feature and project result' do
+            expect_any_instance_of(Demand).to receive(:update_commitment_date!).once
             Pipefy::PipefyCardResponseReader.instance.create_card!(first_project, team, card_response)
             created_demand = Demand.last
             expect(created_demand.feature?).to be true
@@ -233,6 +234,8 @@ RSpec.describe Pipefy::PipefyCardResponseReader, type: :service do
 
       context 'blocked but not unblocked' do
         it 'creates the demand and the project result' do
+          expect_any_instance_of(Demand).to receive(:update_commitment_date!).once
+
           updated_demand = Pipefy::PipefyCardResponseReader.instance.update_card!(second_project, team, second_demand, second_card_response)
 
           expect(Demand.count).to eq 2

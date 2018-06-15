@@ -377,10 +377,20 @@ RSpec.describe Demand, type: :model do
       let(:other_stage) { Fabricate :stage, company: company, projects: [project] }
 
       let(:demand) { Fabricate :demand, project: project }
-      let!(:demand_transition) { Fabricate :demand_transition, demand: demand, stage: other_stage, last_time_in: Time.zone.now }
-      let!(:other_demand_transition) { Fabricate :demand_transition, demand: demand, stage: stage, last_time_in: 1.day.ago }
 
-      it { expect(demand.current_stage).to eq other_stage }
+      context 'and it is defined by the last time in' do
+        let!(:demand_transition) { Fabricate :demand_transition, demand: demand, stage: other_stage, last_time_in: Time.zone.now }
+        let!(:other_demand_transition) { Fabricate :demand_transition, demand: demand, stage: stage, last_time_in: 1.day.ago }
+
+        it { expect(demand.current_stage).to eq other_stage }
+      end
+
+      context 'and it is defined by the non existence of last time out' do
+        let!(:demand_transition) { Fabricate :demand_transition, demand: demand, stage: other_stage, last_time_in: Time.zone.now, last_time_out: Time.zone.tomorrow }
+        let!(:other_demand_transition) { Fabricate :demand_transition, demand: demand, stage: stage, last_time_in: 1.day.ago, last_time_out: nil }
+
+        it { expect(demand.current_stage).to eq stage }
+      end
     end
     context 'having no transitions' do
       let(:company) { Fabricate :company }
@@ -519,6 +529,54 @@ RSpec.describe Demand, type: :model do
       context 'and the demand has commitment date and end_date' do
         let(:demand) { Fabricate :demand, project: project, commitment_date: Time.zone.now, end_date: 1.hour.from_now }
         it { expect(demand.committed?).to be false }
+      end
+    end
+  end
+
+  describe '#update_commitment_date!' do
+    let(:company) { Fabricate :company }
+    let(:customer) { Fabricate :customer, company: company }
+    let(:project) { Fabricate :project, customer: customer }
+    let(:stage) { Fabricate :stage, company: company, projects: [project], order: 0 }
+    let(:other_stage) { Fabricate :stage, company: company, projects: [project], order: 1, commitment_point: true }
+
+    context 'having stages' do
+      context 'and the demand is inside commitment area' do
+        let(:demand) { Fabricate :demand, project: project, commitment_date: Time.zone.now }
+        let!(:first_demand_transition) { Fabricate :demand_transition, demand: demand, stage: stage, last_time_in: 2.days.ago, last_time_out: 1.day.ago }
+        let!(:second_demand_transition) { Fabricate :demand_transition, demand: demand, stage: other_stage, last_time_in: 1.day.ago, last_time_out: Time.zone.now }
+
+        before { demand.update_commitment_date! }
+
+        it { expect(demand.commitment_date).not_to be_nil }
+      end
+
+      context 'and the demand went to outside commitment area' do
+        let(:demand) { Fabricate :demand, project: project, commitment_date: Time.zone.now }
+        let!(:first_demand_transition) { Fabricate :demand_transition, demand: demand, stage: stage, last_time_in: 2.days.ago, last_time_out: 1.day.ago }
+        let!(:second_demand_transition) { Fabricate :demand_transition, demand: demand, stage: other_stage, last_time_in: 1.day.ago, last_time_out: Time.zone.now }
+        let!(:third_demand_transition) { Fabricate :demand_transition, demand: demand, stage: stage, last_time_in: Time.zone.now, last_time_out: Time.zone.tomorrow }
+
+        before { demand.update_commitment_date! }
+
+        it { expect(demand.commitment_date).to be_nil }
+      end
+
+      context 'and the demand went to outside commitment area via last time out nil' do
+        let(:demand) { Fabricate :demand, project: project, commitment_date: Time.zone.now }
+        let!(:first_demand_transition) { Fabricate :demand_transition, demand: demand, stage: stage, last_time_in: 2.days.ago, last_time_out: nil }
+        let!(:second_demand_transition) { Fabricate :demand_transition, demand: demand, stage: other_stage, last_time_in: 1.day.ago, last_time_out: Time.zone.now }
+
+        before { demand.update_commitment_date! }
+
+        it { expect(demand.commitment_date).to be_nil }
+      end
+    end
+
+    context 'having no stages' do
+      context 'and the demand is inside commitment area' do
+        let(:demand) { Fabricate :demand, project: project, commitment_date: Time.zone.now }
+        it { expect { demand.update_commitment_date! }.not_to raise_error Exception }
       end
     end
   end

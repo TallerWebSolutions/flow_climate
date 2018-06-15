@@ -11,19 +11,22 @@ module Pipefy
 
       demand = create_demand!(team, project, response_data)
       read_phases_transitions(demand.reload, response_data) if demand.present?
+      demand.update_commitment_date! if demand.present?
 
       demand
     end
 
     def update_card!(project, team, demand, card_response)
       return if card_response.blank? || card_response['data'].blank?
+      response_data = card_response['data']
 
-      if card_response['data']['card'].blank?
+      if response_data['card'].blank?
         DemandsRepository.instance.full_demand_destroy!(demand)
         return
       end
 
-      process_update!(project, demand, card_response['data'], team)
+      read_phases_transitions(demand.reload, response_data) if demand.present?
+      process_update!(project, demand, response_data, team)
     end
 
     private
@@ -41,6 +44,7 @@ module Pipefy
 
     def process_demand(demand, team)
       demand.update_created_date! if demand.demand_transitions.present?
+      demand.update_commitment_date!
       project_result = ProjectResultService.instance.compute_demand!(team, demand)
       IntegrationError.build_integration_error(demand, project_result, :pipefy) unless project_result.valid?
       demand.reload
