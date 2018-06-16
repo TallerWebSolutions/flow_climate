@@ -73,6 +73,10 @@ class ProjectsRepository
     DemandTransition.joins(demand: :project).joins(:stage).where(demands: { project_id: projects.map(&:id) }).where('stages.queue = false AND stages.stage_stream = 1 AND ((EXTRACT(WEEK FROM demand_transitions.last_time_out) <= :week AND EXTRACT(YEAR FROM demand_transitions.last_time_out) <= :year) OR (EXTRACT(YEAR FROM demand_transitions.last_time_out) < :year))', week: date.cweek, year: date.cwyear).uniq.sum(&:total_hours_in_transition)
   end
 
+  def finish_project!(project)
+    project.demands.not_finished.each { |demand| demand.update(end_date: Time.zone.now) }
+  end
+
   private
 
   def extract_data_for_week(projects, leadtime_per_week_grouped)

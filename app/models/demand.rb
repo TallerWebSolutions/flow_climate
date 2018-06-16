@@ -55,6 +55,7 @@ class Demand < ApplicationRecord
   scope :finished, -> { where('end_date IS NOT NULL') }
   scope :finished_with_leadtime, -> { where('end_date IS NOT NULL AND leadtime IS NOT NULL') }
   scope :finished_bugs, -> { bug.finished }
+  scope :not_finished, -> { where('end_date IS NULL') }
   scope :grouped_end_date_by_month, -> { finished.order(end_date: :desc).group_by { |demand| [demand.end_date.to_date.cwyear, demand.end_date.to_date.month] } }
   scope :grouped_by_customer, -> { joins(project: :customer).order('customers.name').group_by { |demand| demand.project.customer.name } }
   scope :upstream_flag, -> { where(downstream: false) }

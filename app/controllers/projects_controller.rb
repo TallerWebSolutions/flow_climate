@@ -71,7 +71,7 @@ class ProjectsController < AuthenticatedController
   end
 
   def finish_project
-    @project.update(status: :finished)
+    ProjectsRepository.instance.finish_project!(@project)
     flash[:notice] = t('projects.finish_project.success_message')
     redirect_to company_project_path(@company, @project)
   end

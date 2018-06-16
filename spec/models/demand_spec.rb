@@ -55,7 +55,6 @@ RSpec.describe Demand, type: :model do
 
       it { expect(Demand.opened_in_date(Date.new(2018, 2, 3))).to match_array [first_demand, second_demand] }
     end
-
     describe '.finished' do
       let!(:first_demand) { Fabricate :demand, project: project, end_date: Time.zone.now }
       let!(:second_demand) { Fabricate :demand, project: project, end_date: Time.zone.now }
@@ -69,6 +68,13 @@ RSpec.describe Demand, type: :model do
       let!(:third_demand) { Fabricate :demand, project: project, end_date: Time.zone.now }
 
       it { expect(Demand.finished_with_leadtime).to match_array [first_demand, second_demand] }
+    end
+    describe '.not_finished' do
+      let!(:first_demand) { Fabricate :demand, project: project, end_date: nil }
+      let!(:second_demand) { Fabricate :demand, project: project, end_date: nil }
+      let!(:third_demand) { Fabricate :demand, project: project, end_date: Time.zone.now }
+
+      it { expect(Demand.not_finished).to match_array [first_demand, second_demand] }
     end
     describe '.upstream_flag' do
       let!(:first_demand) { Fabricate :demand, downstream: false }

@@ -518,10 +518,10 @@ RSpec.describe ProjectsController, type: :controller do
 
       context 'passing valid parameters' do
         it 'finishes the project' do
+          expect(ProjectsRepository.instance).to receive(:finish_project!).with(project).once
           patch :finish_project, params: { company_id: company, id: project }
           expect(response).to redirect_to company_project_path(company, project)
           expect(flash[:notice]).to eq I18n.t('projects.finish_project.success_message')
-          expect(project.reload.finished?).to be true
         end
       end
 
