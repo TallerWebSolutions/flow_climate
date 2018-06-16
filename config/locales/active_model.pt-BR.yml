@@ -359,3 +359,7 @@ pt-BR:
     validations:
       stage_project_unique:
         message: "Você só pode ter uma configuração por projeto e etapa."
+  demand:
+    validations:
+      demand_id_unique:
+        message: "Só pode haver um ID da Demanda por Projeto."

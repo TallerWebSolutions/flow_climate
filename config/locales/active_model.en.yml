@@ -106,3 +106,7 @@ en:
     validations:
       stage_project_unique:
         message: "You can have only one configuration to stage and project."
+  demand:
+    validations:
+      demand_id_unique:
+        message: "You can have only one demand id per project."
