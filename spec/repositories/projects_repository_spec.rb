@@ -211,4 +211,26 @@ RSpec.describe ProjectsRepository, type: :repository do
     it { expect(ProjectsRepository.instance.total_touch_time_for(Project.all)).to eq 240.0 }
     it { expect(ProjectsRepository.instance.total_touch_time_for(Project.all, Date.new(2018, 2, 16))).to eq 168.0 }
   end
+
+  describe '#finish_project!' do
+    let(:project) { Fabricate :project, status: :executing }
+    let(:other_project) { Fabricate :project, status: :executing }
+    let(:previous_end_date) { 1.day.ago }
+    context 'having ongoing demands' do
+      let!(:first_demand) { Fabricate :demand, project: project, end_date: previous_end_date }
+      let!(:second_demand) { Fabricate :demand, project: project, end_date: nil }
+      let!(:third_demand) { Fabricate :demand, project: project, end_date: nil }
+
+      before { ProjectsRepository.instance.finish_project!(project) }
+      it { expect(first_demand.reload.end_date).to eq previous_end_date }
+      it { expect(second_demand.reload.end_date).not_to be_nil }
+      it { expect(third_demand.reload.end_date).not_to be_nil }
+    end
+    context 'having no demands' do
+      let!(:first_demand) { Fabricate :demand, project: project, end_date: previous_end_date }
+
+      before { ProjectsRepository.instance.finish_project!(project) }
+      it { expect(first_demand.reload.end_date).to eq previous_end_date }
+    end
+  end
 end
