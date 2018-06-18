@@ -56,7 +56,7 @@ RSpec.describe Pipefy::PipefyCardResponseReader, type: :service do
 
           context 'when the card has one block not unblocked' do
             it 'does not change the demand' do
-              Pipefy::PipefyCardResponseReader.instance.create_card!(first_project, team, first_card_response)
+              Pipefy::PipefyCardResponseReader.instance.create_card!(team, first_card_response)
 
               expect(Pipefy::PipefyTeamConfig.count).to eq 3
               expect(Pipefy::PipefyTeamConfig.first.integration_id).to eq '101381'
@@ -91,7 +91,7 @@ RSpec.describe Pipefy::PipefyCardResponseReader, type: :service do
           let!(:project_result) { Fabricate :project_result, project: first_project, demands: [demand], result_date: Date.new(2018, 2, 23), known_scope: 5 }
 
           it 'processes the card updating the demand and project result' do
-            Pipefy::PipefyCardResponseReader.instance.create_card!(first_project, team, first_card_response)
+            Pipefy::PipefyCardResponseReader.instance.create_card!(team, first_card_response)
             expect(Demand.count).to eq 1
             expect(ProjectResult.count).to eq 1
           end
@@ -104,7 +104,7 @@ RSpec.describe Pipefy::PipefyCardResponseReader, type: :service do
 
           it 'processes the card deleting the demand and project result' do
             expect(Pipefy::PipefyTeamConfig).to receive(:where).never
-            Pipefy::PipefyCardResponseReader.instance.create_card!(first_project, team, blank_card_response)
+            Pipefy::PipefyCardResponseReader.instance.create_card!(team, blank_card_response)
             expect(Demand.count).to eq 1
           end
         end
@@ -114,7 +114,7 @@ RSpec.describe Pipefy::PipefyCardResponseReader, type: :service do
         let!(:first_project_result) { Fabricate :project_result, project: first_project, result_date: Date.new(2018, 2, 10), known_scope: 100 }
         let!(:second_project_result) { Fabricate :project_result, project: first_project, result_date: Date.new(2018, 2, 9), known_scope: 90 }
         it 'computes the last manual scope' do
-          Pipefy::PipefyCardResponseReader.instance.create_card!(first_project, team, first_card_response)
+          Pipefy::PipefyCardResponseReader.instance.create_card!(team, first_card_response)
           expect(ProjectResult.count).to eq 2
           expect(ProjectResult.last.known_scope).to eq 90
         end
@@ -125,7 +125,7 @@ RSpec.describe Pipefy::PipefyCardResponseReader, type: :service do
           let(:card_response) { { data: { card: { id: '5141022', comments: [], fields: [{ name: 'Title', value: '[XPTO] Agendamento de artigo do colunista' }, { name: 'Type', value: 'sbbrubles' }, { name: 'JiraKey', value: 'PD-124' }, { name: 'Class of Service', value: 'Intangível' }, { name: 'Project', value: 'Foo | BaR | FASE 1' }], phases_history: [{ phase: { id: '2480502' }, firstTimeIn: '2018-02-23T17:11:23-03:00', lastTimeOut: '2018-02-23T17:11:23-03:00' }, { phase: { id: '2480504' }, firstTimeIn: '2018-02-23T17:11:23-03:00', lastTimeOut: nil }], pipe: { id: '356355' }, url: 'http://app.pipefy.com/pipes/356355#cards/5141022' } } }.with_indifferent_access }
           it 'processes the card creating the demand as feature and project result' do
             expect_any_instance_of(Demand).to receive(:update_commitment_date!).once
-            Pipefy::PipefyCardResponseReader.instance.create_card!(first_project, team, card_response)
+            Pipefy::PipefyCardResponseReader.instance.create_card!(team, card_response)
             created_demand = Demand.last
             expect(created_demand.feature?).to be true
             expect(created_demand.demand_id).to eq '5141022'
@@ -140,68 +140,68 @@ RSpec.describe Pipefy::PipefyCardResponseReader, type: :service do
 
         context 'when it is bug' do
           let(:card_response) { { data: { card: { id: '5141022', comments: [], fields: [{ name: 'Title', value: 'Agendamento de artigo do colunista' }, { name: 'Type', value: 'buG' }, { name: 'JiraKey', value: 'PD-124' }, { name: 'Class of Service', value: 'Intangível' }, { name: 'Project', value: 'Foo | BaR | FASE 1' }], phases_history: [{ phase: { id: '2480502' }, firstTimeIn: '2018-02-23T17:11:23-03:00', lastTimeOut: '2018-02-23T17:11:23-03:00' }, { phase: { id: '2480504' }, firstTimeIn: '2018-02-23T17:11:23-03:00', lastTimeOut: nil }], pipe: { id: '356355' }, url: 'http://app.pipefy.com/pipes/356355#cards/5141022' } } }.with_indifferent_access }
-          before { Pipefy::PipefyCardResponseReader.instance.create_card!(first_project, team, card_response) }
+          before { Pipefy::PipefyCardResponseReader.instance.create_card!(team, card_response) }
           it { expect(Demand.last.bug?).to be true }
         end
 
         context 'when it is feature' do
           let(:card_response) { { data: { card: { id: '5141022', comments: [], fields: [{ name: 'Title', value: 'Agendamento de artigo do colunista' }, { name: 'Type', value: 'feaTURE' }, { name: 'JiraKey', value: 'PD-124' }, { name: 'Class of Service', value: 'Intangível' }, { name: 'Project', value: 'Foo | BaR | FASE 1' }], phases_history: [{ phase: { id: '2480502' }, firstTimeIn: '2018-02-23T17:11:23-03:00', lastTimeOut: '2018-02-23T17:11:23-03:00' }, { phase: { id: '2480504' }, firstTimeIn: '2018-02-23T17:11:23-03:00', lastTimeOut: nil }], pipe: { id: '356355' }, url: 'http://app.pipefy.com/pipes/356355#cards/5141022' } } }.with_indifferent_access }
-          before { Pipefy::PipefyCardResponseReader.instance.create_card!(first_project, team, card_response) }
+          before { Pipefy::PipefyCardResponseReader.instance.create_card!(team, card_response) }
           it { expect(Demand.last.feature?).to be true }
         end
 
         context 'when it is chore' do
           let(:card_response) { { data: { card: { id: '5141022', comments: [], fields: [{ name: 'Title', value: 'Agendamento de artigo do colunista' }, { name: 'Type', value: 'chORE' }, { name: 'JiraKey', value: 'PD-124' }, { name: 'Class of Service', value: 'Intangível' }, { name: 'Project', value: 'Foo | BaR | FASE 1' }], phases_history: [{ phase: { id: '2480502' }, firstTimeIn: '2018-02-23T17:11:23-03:00', lastTimeOut: '2018-02-23T17:11:23-03:00' }, { phase: { id: '2480504' }, firstTimeIn: '2018-02-23T17:11:23-03:00', lastTimeOut: nil }], pipe: { id: '356355' }, url: 'http://app.pipefy.com/pipes/356355#cards/5141022' } } }.with_indifferent_access }
-          before { Pipefy::PipefyCardResponseReader.instance.create_card!(first_project, team, card_response) }
+          before { Pipefy::PipefyCardResponseReader.instance.create_card!(team, card_response) }
           it { expect(Demand.last.chore?).to be true }
         end
 
         context 'when it is ux_improvement' do
           let(:card_response) { { data: { card: { id: '5141022', comments: [], fields: [{ name: 'Title', value: 'Agendamento de artigo do colunista' }, { name: 'Type', value: 'MelhOrIa uX' }, { name: 'JiraKey', value: 'PD-124' }, { name: 'Class of Service', value: 'Intangível' }, { name: 'Project', value: 'Foo | BaR | FASE 1' }], phases_history: [{ phase: { id: '2480502' }, firstTimeIn: '2018-02-23T17:11:23-03:00', lastTimeOut: '2018-02-23T17:11:23-03:00' }, { phase: { id: '2480504' }, firstTimeIn: '2018-02-23T17:11:23-03:00', lastTimeOut: nil }], pipe: { id: '356355' }, url: 'http://app.pipefy.com/pipes/356355#cards/5141022' } } }.with_indifferent_access }
-          before { Pipefy::PipefyCardResponseReader.instance.create_card!(first_project, team, card_response) }
+          before { Pipefy::PipefyCardResponseReader.instance.create_card!(team, card_response) }
           it { expect(Demand.last.ux_improvement?).to be true }
         end
 
         context 'when it is ux_improvement' do
           let(:card_response) { { data: { card: { id: '5141022', comments: [], fields: [{ name: 'Title', value: 'Agendamento de artigo do colunista' }, { name: 'Type', value: 'MelhOrIa perforMANcE' }, { name: 'JiraKey', value: 'PD-124' }, { name: 'Class of Service', value: 'Intangível' }, { name: 'Project', value: 'Foo | BaR | FASE 1' }], phases_history: [{ phase: { id: '2480502' }, firstTimeIn: '2018-02-23T17:11:23-03:00', lastTimeOut: '2018-02-23T17:11:23-03:00' }, { phase: { id: '2480504' }, firstTimeIn: '2018-02-23T17:11:23-03:00', lastTimeOut: nil }], pipe: { id: '356355' }, url: 'http://app.pipefy.com/pipes/356355#cards/5141022' } } }.with_indifferent_access }
-          before { Pipefy::PipefyCardResponseReader.instance.create_card!(first_project, team, card_response) }
+          before { Pipefy::PipefyCardResponseReader.instance.create_card!(team, card_response) }
           it { expect(Demand.last.performance_improvement?).to be true }
         end
 
         context 'when its class of service is unknown' do
           let(:card_response) { { data: { card: { id: '5141022', comments: [], fields: [{ name: 'Title', value: 'Agendamento de artigo do colunista' }, { name: 'Type', value: 'MelhOrIa perforMANcE' }, { name: 'JiraKey', value: 'PD-124' }, { name: 'Class of Service', value: 'sbbrubles' }, { name: 'Project', value: 'Foo | BaR | FASE 1' }], phases_history: [{ phase: { id: '2480502' }, firstTimeIn: '2018-02-23T17:11:23-03:00', lastTimeOut: '2018-02-23T17:11:23-03:00' }, { phase: { id: '2480504' }, firstTimeIn: '2018-02-23T17:11:23-03:00', lastTimeOut: nil }], pipe: { id: '356355' }, url: 'http://app.pipefy.com/pipes/356355#cards/5141022' } } }.with_indifferent_access }
-          before { Pipefy::PipefyCardResponseReader.instance.create_card!(first_project, team, card_response) }
+          before { Pipefy::PipefyCardResponseReader.instance.create_card!(team, card_response) }
           it { expect(Demand.last.standard?).to be true }
         end
 
         context 'when its class of service is standard' do
           let(:card_response) { { data: { card: { id: '5141022', comments: [], fields: [{ name: 'Title', value: 'Agendamento de artigo do colunista' }, { name: 'Type', value: 'MelhOrIa perforMANcE' }, { name: 'JiraKey', value: 'PD-124' }, { name: 'Class of Service', value: 'stanDARD' }, { name: 'Project', value: 'Foo | BaR | FASE 1' }], phases_history: [{ phase: { id: '2480502' }, firstTimeIn: '2018-02-23T17:11:23-03:00', lastTimeOut: '2018-02-23T17:11:23-03:00' }, { phase: { id: '2480504' }, firstTimeIn: '2018-02-23T17:11:23-03:00', lastTimeOut: nil }], pipe: { id: '356355' }, url: 'http://app.pipefy.com/pipes/356355#cards/5141022' } } }.with_indifferent_access }
-          before { Pipefy::PipefyCardResponseReader.instance.create_card!(first_project, team, card_response) }
+          before { Pipefy::PipefyCardResponseReader.instance.create_card!(team, card_response) }
           it { expect(Demand.last.standard?).to be true }
         end
 
         context 'when its class of service is expedite' do
           let(:card_response) { { data: { card: { id: '5141022', comments: [], fields: [{ name: 'Title', value: 'Agendamento de artigo do colunista' }, { name: 'Type', value: 'MelhOrIa perforMANcE' }, { name: 'JiraKey', value: 'PD-124' }, { name: 'Class of Service', value: 'exPEDição' }, { name: 'Project', value: 'Foo | BaR | FASE 1' }], phases_history: [{ phase: { id: '2480502' }, firstTimeIn: '2018-02-23T17:11:23-03:00', lastTimeOut: '2018-02-23T17:11:23-03:00' }, { phase: { id: '2480504' }, firstTimeIn: '2018-02-23T17:11:23-03:00', lastTimeOut: nil }], pipe: { id: '356355' }, url: 'http://app.pipefy.com/pipes/356355#cards/5141022' } } }.with_indifferent_access }
-          before { Pipefy::PipefyCardResponseReader.instance.create_card!(first_project, team, card_response) }
+          before { Pipefy::PipefyCardResponseReader.instance.create_card!(team, card_response) }
           it { expect(Demand.last.expedite?).to be true }
         end
 
         context 'when its class of service is intangible' do
           let(:card_response) { { data: { card: { id: '5141022', comments: [], fields: [{ name: 'Title', value: 'Agendamento de artigo do colunista' }, { name: 'Type', value: 'MelhOrIa perforMANcE' }, { name: 'JiraKey', value: 'PD-124' }, { name: 'Class of Service', value: 'inTANgível' }, { name: 'Project', value: 'Foo | BaR | FASE 1' }], phases_history: [{ phase: { id: '2480502' }, firstTimeIn: '2018-02-23T17:11:23-03:00', lastTimeOut: '2018-02-23T17:11:23-03:00' }, { phase: { id: '2480504' }, firstTimeIn: '2018-02-23T17:11:23-03:00', lastTimeOut: nil }], pipe: { id: '356355' }, url: 'http://app.pipefy.com/pipes/356355#cards/5141022' } } }.with_indifferent_access }
-          before { Pipefy::PipefyCardResponseReader.instance.create_card!(first_project, team, card_response) }
+          before { Pipefy::PipefyCardResponseReader.instance.create_card!(team, card_response) }
           it { expect(Demand.last.intangible?).to be true }
         end
 
         context 'when its class of service is fixed_date' do
           let(:card_response) { { data: { card: { id: '5141022', comments: [], fields: [{ name: 'Title', value: 'Agendamento de artigo do colunista' }, { name: 'Type', value: 'MelhOrIa perforMANcE' }, { name: 'JiraKey', value: 'PD-124' }, { name: 'Class of Service', value: 'data FIXA' }, { name: 'Project', value: 'Foo | BaR | FASE 1' }], phases_history: [{ phase: { id: '2480502' }, firstTimeIn: '2018-02-23T17:11:23-03:00', lastTimeOut: '2018-02-23T17:11:23-03:00' }, { phase: { id: '2480504' }, firstTimeIn: '2018-02-23T17:11:23-03:00', lastTimeOut: nil }], pipe: { id: '356355' }, url: 'http://app.pipefy.com/pipes/356355#cards/5141022' } } }.with_indifferent_access }
-          before { Pipefy::PipefyCardResponseReader.instance.create_card!(first_project, team, card_response) }
+          before { Pipefy::PipefyCardResponseReader.instance.create_card!(team, card_response) }
           it { expect(Demand.last.fixed_date?).to be true }
         end
 
         context 'when it is class of service intangible' do
           let(:card_response) { { data: { card: { id: '5141022', comments: [], fields: [{ name: 'Title', value: 'Agendamento de artigo do colunista' }, { name: 'Type', value: 'Nova Funcionalidade' }, { name: 'JiraKey', value: 'PD-124' }, { name: 'Class of Service', value: 'Intangível' }, { name: 'Project', value: 'Foo | BaR | FASE 1' }], phases_history: [{ phase: { id: '2480502' }, firstTimeIn: '2018-02-23T17:11:23-03:00', lastTimeOut: '2018-02-23T17:11:23-03:00' }, { phase: { id: '2480504' }, firstTimeIn: '2018-02-23T17:11:23-03:00', lastTimeOut: nil }], pipe: { id: '356355' }, url: 'http://app.pipefy.com/pipes/356355#cards/5141022' } } }.with_indifferent_access }
           it 'processes the card creating the demand' do
-            Pipefy::PipefyCardResponseReader.instance.create_card!(first_project, team, card_response)
+            Pipefy::PipefyCardResponseReader.instance.create_card!(team, card_response)
             created_demand = Demand.last
             expect(created_demand.feature?).to be true
             expect(created_demand.demand_id).to eq '5141022'
@@ -216,7 +216,7 @@ RSpec.describe Pipefy::PipefyCardResponseReader, type: :service do
     end
   end
 
-  describe '#update_card!' do
+  describe '#process_card_response!' do
     context 'having pipefy_config' do
       let!(:first_pipefy_config) { Fabricate :pipefy_config, project: first_project, team: team, pipe_id: '356528', active: true }
       let!(:second_pipefy_config) { Fabricate :pipefy_config, project: second_project, team: team, pipe_id: '356528', active: true }
@@ -236,7 +236,7 @@ RSpec.describe Pipefy::PipefyCardResponseReader, type: :service do
         it 'creates the demand and the project result' do
           expect_any_instance_of(Demand).to receive(:update_commitment_date!).once
 
-          updated_demand = Pipefy::PipefyCardResponseReader.instance.update_card!(second_project, team, second_demand, second_card_response)
+          updated_demand = Pipefy::PipefyCardResponseReader.instance.process_card_response!(team, second_demand, second_card_response)
 
           expect(Demand.count).to eq 2
 
@@ -292,7 +292,7 @@ RSpec.describe Pipefy::PipefyCardResponseReader, type: :service do
         let!(:demand_block) { Fabricate :demand_block, demand: first_demand, demand_block_id: 1, block_time: Time.zone.iso8601('2018-02-18T18:39:46-03:00') }
         let(:card_response) { { data: { card: { id: '5140999', assignees: [], comments: [{ created_at: '2018-02-18T18:39:46-03:00', author: { username: 'sbbrubles' }, text: '[BLOCKED][1]: xpto of bla having foo in the block 1.' }, { created_at: '2018-02-18T19:55:46-03:00', author: { username: 'sbbrubles' }, text: '[BLOCKED][2]: xpto of bla having foo.' }, { created_at: '2018-02-24T22:10:46-03:00', author: { username: 'johndoe' }, text: '[UNBLOCKED][2]: there is no more xpto of bla having foo.' }, { created_at: '2018-02-24T22:10:46-03:00', author: { username: 'johndoe' }, text: '[UNBLOCKED][5]: this unblock was not blocked.' }], fields: [{ name: 'Title', value: 'Simplicação dos passos para cadastrar um novo artigo pelo colunista' }, { name: 'Type', value: 'chORE' }, { name: 'JiraKey', value: 'PD-119' }, { name: 'Class of Service', value: 'Expedição' }, { name: 'Project', value: 'bLa | XpTO | FASE 2' }], phases_history: [{ phase: { id: '2481595' }, firstTimeIn: '2018-02-23T17:10:40-03:00', lastTimeOut: '2018-02-27T17:10:40-03:00' }, { phase: { id: '2481597' }, firstTimeIn: '2018-02-23T17:10:40-03:00', lastTimeOut: nil }], pipe: { id: '356355' }, url: 'http://app.pipefy.com/pipes/356355#cards/5141010' } } }.with_indifferent_access }
         it 'processes the card creating and updating the blocks' do
-          Pipefy::PipefyCardResponseReader.instance.update_card!(first_project, team, first_demand, card_response)
+          Pipefy::PipefyCardResponseReader.instance.process_card_response!(team, first_demand, card_response)
           expect(DemandBlock.count).to eq 2
           first_block = DemandBlock.where(demand: first_demand, demand_block_id: '1').first
           expect(first_block.block_reason).to eq '[BLOCKED][1]: xpto of bla having foo in the block 1.'
@@ -319,7 +319,7 @@ RSpec.describe Pipefy::PipefyCardResponseReader, type: :service do
       let!(:first_demand) { Fabricate :demand, project: first_project, project_result: nil, effort_upstream: 50, effort_downstream: 10 }
 
       it 'ignores the last manual scope and uses only the transition based one' do
-        Pipefy::PipefyCardResponseReader.instance.update_card!(first_project, team, first_demand, first_card_response)
+        Pipefy::PipefyCardResponseReader.instance.process_card_response!(team, first_demand, first_card_response)
         expect(ProjectResult.count).to eq 3
         expect(ProjectResult.last.known_scope).to eq 31
       end
@@ -329,7 +329,7 @@ RSpec.describe Pipefy::PipefyCardResponseReader, type: :service do
       let!(:first_demand) { Fabricate :demand, project: first_project, project_result: nil }
       let(:card_response) { { data: { card: nil } }.with_indifferent_access }
       it 'deletes the demand' do
-        Pipefy::PipefyCardResponseReader.instance.update_card!(first_project, team, first_demand, card_response)
+        Pipefy::PipefyCardResponseReader.instance.process_card_response!(team, first_demand, card_response)
         expect(ProjectResult.count).to eq 0
         expect(Demand.count).to eq 0
       end
@@ -344,7 +344,7 @@ RSpec.describe Pipefy::PipefyCardResponseReader, type: :service do
       context 'project_result' do
         let!(:first_demand) { Fabricate :demand, project: first_project, demand_id: '5140999', project_result: nil }
         it 'adds integration error' do
-          Pipefy::PipefyCardResponseReader.instance.update_card!(first_project, team, first_demand, first_card_response)
+          Pipefy::PipefyCardResponseReader.instance.process_card_response!(team, first_demand, first_card_response)
 
           expect(IntegrationError.first.integration_type).to eq 'pipefy'
           expect(IntegrationError.first.project).to eq first_project
@@ -354,7 +354,7 @@ RSpec.describe Pipefy::PipefyCardResponseReader, type: :service do
       context 'demand_transition' do
         let!(:first_demand) { Fabricate :demand, project: first_project, demand_id: '5140999', project_result: nil }
         it 'adds integration error' do
-          Pipefy::PipefyCardResponseReader.instance.update_card!(first_project, team, first_demand, first_card_response)
+          Pipefy::PipefyCardResponseReader.instance.process_card_response!(team, first_demand, first_card_response)
 
           expect(IntegrationError.first.integration_type).to eq 'pipefy'
           expect(IntegrationError.first.project).to eq first_project

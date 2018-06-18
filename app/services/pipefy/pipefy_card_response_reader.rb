@@ -4,32 +4,41 @@ module Pipefy
   class PipefyCardResponseReader
     include Singleton
 
-    def create_card!(project, team, card_response)
-      response_data = card_response['data']
+    def create_card!(team, card_response)
+      card_response_data = card_response['data']
+      project = process_project_in_response_data(card_response_data)
+      return if project.blank?
 
-      create_assignees!(team, response_data)
+      create_assignees!(team, card_response_data)
 
-      demand = create_demand!(team, project, response_data)
-      read_phases_transitions(demand.reload, response_data) if demand.present?
+      demand = create_demand!(team, project, card_response_data)
+      read_phases_transitions(demand.reload, card_response_data) if demand.present?
       demand.update_commitment_date! if demand.present?
 
       demand
     end
 
-    def update_card!(project, team, demand, card_response)
+    def process_card_response!(team, demand, card_response)
       return if card_response.blank? || card_response['data'].blank?
-      response_data = card_response['data']
+      card_response_data = card_response['data']
 
-      if response_data['card'].blank? && demand.persisted?
+      if card_response_data['card'].blank? && demand.persisted?
         DemandsRepository.instance.full_demand_destroy!(demand)
         return
       end
 
-      read_phases_transitions(demand.reload, response_data) if demand.present?
-      process_update!(project, demand, response_data, team)
+      update_card!(team, demand, card_response_data)
     end
 
     private
+
+    def update_card!(team, demand, card_response_data)
+      project = process_project_in_response_data(card_response_data)
+      return if project.blank?
+
+      read_phases_transitions(demand.reload, card_response_data) if demand.present?
+      process_update!(project, demand, card_response_data, team)
+    end
 
     def process_update!(project, demand, response_data, team)
       demand.update(project: project)
@@ -40,6 +49,14 @@ module Pipefy
       read_blocks(demand.reload, response_data)
       update_demand!(team, demand, response_data)
       process_demand(demand.reload, team)
+    end
+
+    def process_project_in_response_data(card_response_data)
+      project_full_name = Pipefy::PipefyReader.instance.read_project_name_from_pipefy_data(card_response_data)
+      return if project_full_name.blank?
+      project = ProjectsRepository.instance.search_project_by_full_name(project_full_name)
+      return if project.blank?
+      project
     end
 
     def process_demand(demand, team)

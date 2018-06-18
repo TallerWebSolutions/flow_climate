@@ -44,7 +44,7 @@ class DemandsController < AuthenticatedController
 
   def synchronize_pipefy
     pipefy_response = Pipefy::PipefyApiService.request_card_details(@demand.demand_id)
-    @demand = Pipefy::PipefyCardResponseReader.instance.update_card!(@project, @project.pipefy_config.team, @demand, pipefy_response)
+    @demand = Pipefy::PipefyCardResponseReader.instance.process_card_response!(@project.pipefy_config.team, @demand, pipefy_response)
     flash[:notice] = t('demands.sync.done')
     return redirect_to company_project_demand_path(@company, @project, @demand) if (@demand&.project == @project) || @demand.present?
     redirect_to company_project_path(@company, @project)
