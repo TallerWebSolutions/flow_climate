@@ -45,9 +45,12 @@ class DemandsController < AuthenticatedController
   def synchronize_pipefy
     pipefy_response = Pipefy::PipefyApiService.request_card_details(@demand.demand_id)
     @demand = Pipefy::PipefyCardResponseReader.instance.process_card_response!(@project.pipefy_config.team, @demand, pipefy_response)
-    flash[:notice] = t('demands.sync.done')
-    return redirect_to company_project_demand_path(@company, @project, @demand) if (@demand&.project == @project) || @demand.present?
-    redirect_to company_project_path(@company, @project)
+    if @demand.blank? || @demand.valid?
+      process_succeeded_sync
+    else
+      flash[:error] = @demand.errors.full_messages.join(', ')
+      redirect_to company_project_demand_path(@company, @project, @demand)
+    end
   end
 
   private
@@ -62,5 +65,11 @@ class DemandsController < AuthenticatedController
 
   def assign_demand
     @demand = Demand.find(params[:id])
+  end
+
+  def process_succeeded_sync
+    flash[:notice] = t('demands.sync.done')
+    return redirect_to company_project_demand_path(@company, @project, @demand) if @demand&.project == @project
+    redirect_to company_project_path(@company, @project)
   end
 end

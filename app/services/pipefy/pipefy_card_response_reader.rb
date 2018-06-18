@@ -6,7 +6,7 @@ module Pipefy
 
     def create_card!(team, card_response)
       card_response_data = card_response['data']
-      project = process_project_in_response_data(card_response_data)
+      project = read_project_in_response_data(card_response_data)
       return if project.blank?
 
       create_assignees!(team, card_response_data)
@@ -33,7 +33,7 @@ module Pipefy
     private
 
     def update_card!(team, demand, card_response_data)
-      project = process_project_in_response_data(card_response_data)
+      project = read_project_in_response_data(card_response_data)
       return if project.blank?
 
       read_phases_transitions(demand.reload, card_response_data) if demand.present?
@@ -42,6 +42,7 @@ module Pipefy
 
     def process_update!(project, demand, response_data, team)
       demand.update(project: project)
+      return demand unless demand.valid?
 
       create_assignees!(team, response_data)
 
@@ -51,7 +52,7 @@ module Pipefy
       process_demand(demand.reload, team)
     end
 
-    def process_project_in_response_data(card_response_data)
+    def read_project_in_response_data(card_response_data)
       project_full_name = Pipefy::PipefyReader.instance.read_project_name_from_pipefy_data(card_response_data)
       return if project_full_name.blank?
       project = ProjectsRepository.instance.search_project_by_full_name(project_full_name)
