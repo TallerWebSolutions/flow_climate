@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
 RSpec.describe DemandBlock, type: :model do
+  context 'enums' do
+    it { is_expected.to define_enum_for(:block_type).with(coding_needed: 0, specification_needed: 1, waiting_external_supplier: 2, customer_low_urgency: 3, integration_needed: 4, customer_unavailable: 5) }
+  end
+
   context 'associations' do
     it { is_expected.to belong_to(:demand) }
   end
@@ -12,6 +16,7 @@ RSpec.describe DemandBlock, type: :model do
     it { is_expected.to validate_presence_of :blocker_username }
     it { is_expected.to validate_presence_of :block_time }
     it { is_expected.to validate_presence_of :block_reason }
+    it { is_expected.to validate_presence_of :block_type }
   end
 
   context 'callbacks' do

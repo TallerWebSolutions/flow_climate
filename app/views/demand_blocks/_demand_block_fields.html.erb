@@ -1,0 +1,28 @@
+<td><%= block.demand_block_id %></td>
+<td><%= t("activerecord.attributes.demand_block.enums.block_type.#{block.block_type}") %></td>
+<td><%= "#{block.block_duration} hs" if block.block_duration.present? %></td>
+<td><%= block.blocker_username %></td>
+<td><%= l(block.block_time, format: :short) %></td>
+<td><%= block.block_reason %></td>
+<td><%= block.unblocker_username %></td>
+<td><%= l(block.unblock_time, format: :short) if block.unblock_time.present? %></td>
+<td><%= block.unblock_reason %></td>
+<td class="center">
+  <% if block.active? %>
+    <i class="fa fa-check" aria-hidden="true"></i>
+  <% end %>
+</td>
+<td>
+  <% if block.active? %>
+    <%= link_to deactivate_company_project_demand_demand_block_path(@company, @project, @demand, block), method: :patch do %>
+      <i class="fa fa-ban"></i>
+    <% end %>
+  <% else %>
+    <%= link_to activate_company_project_project_result_demand_demand_block_path(@company, @project, @demand, block), method: :patch do %>
+      <i class="fa fa-check"></i>
+    <% end %>
+  <% end %>
+  <%= link_to edit_company_project_demand_demand_block_path(@company, @project, @demand, block), class: 'edit-block', remote: true do %>
+    <i class="fas fa-edit"></i>
+  <% end %>
+</td>

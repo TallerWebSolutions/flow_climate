@@ -313,6 +313,15 @@ pt-BR:
         unblock_reason: Motivo do desbloqueio
         block_duration: Duração Útil do Bloqueio
         active: Ativo?
+        block_type: Tipo do Bloqueio
+        enums:
+          block_type:
+            coding_needed: Necessidade de Código
+            specification_needed: Necessidade de Especificação
+            waiting_external_supplier: Esperando Fornecedor Externo
+            customer_low_urgency: Urgência Baixa do Cliente
+            integration_needed: Integração Necessária
+            customer_unavailable: Cliente Indisponível
       pipefy/pipefy_team_config:
         team: Time
         integration_id: Id na Integração

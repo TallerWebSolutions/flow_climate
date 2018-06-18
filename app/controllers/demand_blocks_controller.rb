@@ -16,7 +16,22 @@ class DemandBlocksController < AuthenticatedController
     redirect_to company_project_demand_path(@company, @project, @demand)
   end
 
+  def edit
+    respond_to do |format|
+      format.js
+    end
+  end
+
+  def update
+    @demand_block.update(demand_block_params)
+    render 'demand_blocks/update'
+  end
+
   private
+
+  def demand_block_params
+    params.require(:demand_block).permit(:block_type, :unblock_reason, :block_reason)
+  end
 
   def assign_project
     @project = Project.find(params[:project_id])
