@@ -8,6 +8,7 @@
 #  block_duration     :integer
 #  block_reason       :string           not null
 #  block_time         :datetime         not null
+#  block_type         :integer          default(0), not null
 #  blocker_username   :string           not null
 #  created_at         :datetime         not null
 #  demand_block_id    :integer          not null
@@ -28,9 +29,11 @@
 #
 
 class DemandBlock < ApplicationRecord
+  enum block_type: { coding_needed: 0, specification_needed: 1, waiting_external_supplier: 2, customer_low_urgency: 3, integration_needed: 4, customer_unavailable: 5 }
+
   belongs_to :demand
 
-  validates :demand, :demand_id, :demand_block_id, :blocker_username, :block_time, :block_reason, presence: true
+  validates :demand, :demand_id, :demand_block_id, :blocker_username, :block_time, :block_reason, :block_type, presence: true
 
   before_update :update_computed_fields!
 

@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 RSpec.describe DemandsRepository, type: :repository do
+  before { travel_to Time.zone.local(2018, 4, 5, 10, 0, 0) }
+  after { travel_back }
+
   let(:company) { Fabricate :company }
   let(:customer) { Fabricate :customer, company: company }
 
@@ -140,9 +143,6 @@ RSpec.describe DemandsRepository, type: :repository do
   end
 
   describe '#working_in_progress_for' do
-    before { travel_to Time.zone.local(2018, 4, 5, 10, 0, 0) }
-    after { travel_back }
-
     let(:project) { Fabricate :project }
 
     context 'having demands' do
@@ -166,9 +166,6 @@ RSpec.describe DemandsRepository, type: :repository do
   end
 
   describe '#grouped_by_effort_upstream_per_month' do
-    before { travel_to Time.zone.local(2018, 4, 5, 10, 0, 0) }
-    after { travel_back }
-
     let(:project) { Fabricate :project, start_date: 2.months.ago, end_date: 2.months.from_now }
 
     context 'having demands' do
@@ -193,9 +190,6 @@ RSpec.describe DemandsRepository, type: :repository do
   end
 
   describe '#grouped_by_effort_downstream_per_month' do
-    before { travel_to Time.zone.local(2018, 4, 5, 10, 0, 0) }
-    after { travel_back }
-
     let(:project) { Fabricate :project, start_date: 2.months.ago, end_date: 2.months.from_now }
 
     context 'having demands' do
@@ -220,9 +214,6 @@ RSpec.describe DemandsRepository, type: :repository do
   end
 
   describe '#not_started_demands' do
-    before { travel_to Time.zone.local(2018, 4, 5, 10, 0, 0) }
-    after { travel_back }
-
     let(:first_project) { Fabricate :project, start_date: 2.months.ago, end_date: 2.months.from_now }
     let(:second_project) { Fabricate :project, start_date: 2.months.ago, end_date: 2.months.from_now }
     let(:third_project) { Fabricate :project, start_date: 2.months.ago, end_date: 2.months.from_now }
@@ -261,9 +252,6 @@ RSpec.describe DemandsRepository, type: :repository do
   end
 
   describe '#committed_demands' do
-    before { travel_to Time.zone.local(2018, 4, 5, 10, 0, 0) }
-    after { travel_back }
-
     let(:first_project) { Fabricate :project, start_date: 2.months.ago, end_date: 2.months.from_now }
     let(:second_project) { Fabricate :project, start_date: 2.months.ago, end_date: 2.months.from_now }
     let(:third_project) { Fabricate :project, start_date: 2.months.ago, end_date: 2.months.from_now }

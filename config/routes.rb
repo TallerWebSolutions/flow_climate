@@ -69,7 +69,7 @@ Rails.application.routes.draw do
       resources :demands do
         put :synchronize_pipefy, on: :member
 
-        resources :demand_blocks, only: [] do
+        resources :demand_blocks, only: %i[edit update] do
           member do
             patch :activate
             patch :deactivate

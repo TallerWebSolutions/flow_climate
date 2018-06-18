@@ -69,10 +69,24 @@ en:
           stage_stream:
             upstream: Upstream
             downstream: Downstream
-      demand:
+      demand_block:
+        demand: Demand
+        demand_block_id: Block Id
+        blocker_username: Blocked by
+        block_time: Blocked at
+        block_reason: Block Reason
+        unblocker_username: Unblocked by
+        unblock_time: Unblocked at
+        unblock_reason: Unblock reason
+        block_duration: Block Duration
+        active: Active?
         enums:
-          demand_type:
-            bug: "Bug"
+          coding_needed: Coding Needed
+          specification_needed: Specification Needed
+          waiting_external_supplier: Waiting for External Supplier
+          customer_low_urgency: Customer Low Urgency
+          integration_needed: Integration Needed
+          customer_unavailable: Customer Unavailable
     errors:
       messages:
         record_invalid: 'Validation failed: %{errors}'
