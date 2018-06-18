@@ -75,6 +75,7 @@ class ProjectsRepository
 
   def finish_project!(project)
     project.demands.not_finished.each { |demand| demand.update(end_date: Time.zone.now) }
+    project.update(status: :finished)
   end
 
   private

@@ -222,6 +222,7 @@ RSpec.describe ProjectsRepository, type: :repository do
       let!(:third_demand) { Fabricate :demand, project: project, end_date: nil }
 
       before { ProjectsRepository.instance.finish_project!(project) }
+      it { expect(project.reload.status).to eq 'finished' }
       it { expect(first_demand.reload.end_date).to eq previous_end_date }
       it { expect(second_demand.reload.end_date).not_to be_nil }
       it { expect(third_demand.reload.end_date).not_to be_nil }
@@ -231,6 +232,7 @@ RSpec.describe ProjectsRepository, type: :repository do
 
       before { ProjectsRepository.instance.finish_project!(project) }
       it { expect(first_demand.reload.end_date).to eq previous_end_date }
+      it { expect(project.reload.status).to eq 'finished' }
     end
   end
 end

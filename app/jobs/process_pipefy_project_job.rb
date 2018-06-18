@@ -29,7 +29,7 @@ class ProcessPipefyProjectJob < ApplicationJob
     if card_response['data']['card'].blank?
       demands_id_to_delete << demand.id
     else
-      Pipefy::PipefyCardResponseReader.instance.update_card!(project, project.pipefy_config.team, demand, card_response)
+      Pipefy::PipefyCardResponseReader.instance.process_card_response!(project.pipefy_config.team, demand, card_response)
     end
   end
 
@@ -38,10 +38,8 @@ class ProcessPipefyProjectJob < ApplicationJob
       pipefy_card_response = Pipefy::PipefyApiService.request_card_details(card_id)
       next if pipefy_card_response.code != 200
       card_response = JSON.parse(pipefy_card_response.body)
-      project_name_in_pipefy = Pipefy::PipefyReader.instance.read_project_name_from_pipefy_data(card_response['data'])
-      updated_project = ProjectsRepository.instance.search_project_by_full_name(project_name_in_pipefy) || project
       known_demand = project.demands.find_by(demand_id: card_id)
-      Pipefy::PipefyCardResponseReader.instance.create_card!(updated_project, team, card_response) || known_demand
+      Pipefy::PipefyCardResponseReader.instance.create_card!(team, card_response) || known_demand
     end
   end
 end

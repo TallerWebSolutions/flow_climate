@@ -42,8 +42,8 @@ RSpec.describe ProcessPipefyCardJob, type: :active_job do
         context 'and demand' do
           let!(:demand) { Fabricate :demand, project: project, project_result: project_result }
           it 'updates the demand and the project result' do
-            expect(Pipefy::PipefyCardResponseReader.instance).to(receive(:create_card!).with(project, team, card_response).once { demand })
-            expect(Pipefy::PipefyCardResponseReader.instance).to receive(:update_card!).with(project, team, demand, card_response).once
+            expect(Pipefy::PipefyCardResponseReader.instance).to(receive(:create_card!).with(team, card_response).once { demand })
+            expect(Pipefy::PipefyCardResponseReader.instance).to receive(:process_card_response!).with(team, demand, card_response).once
             expect(project).to receive(:project_results) { [project_result] }
             expect(project_result).to receive(:compute_flow_metrics!).once
             ProcessPipefyCardJob.perform_now(params)
@@ -51,8 +51,8 @@ RSpec.describe ProcessPipefyCardJob, type: :active_job do
         end
         context 'and no demand' do
           it 'updates the demand and the project result' do
-            expect(Pipefy::PipefyCardResponseReader.instance).to receive(:create_card!).with(project, team, card_response).once
-            expect(Pipefy::PipefyCardResponseReader.instance).to receive(:update_card!).never
+            expect(Pipefy::PipefyCardResponseReader.instance).to receive(:create_card!).with(team, card_response).once
+            expect(Pipefy::PipefyCardResponseReader.instance).to receive(:process_card_response!).never
             ProcessPipefyCardJob.perform_now(params)
           end
         end
@@ -66,7 +66,7 @@ RSpec.describe ProcessPipefyCardJob, type: :active_job do
           stub_request(:post, 'https://app.pipefy.com/queries').with(headers: headers, body: /356528/).to_return(status: 200, body: pipe_response.to_json, headers: {})
         end
         it 'returns doing nothing' do
-          expect(Pipefy::PipefyCardResponseReader.instance).to receive(:create_card!).with(project, team, card_response).never
+          expect(Pipefy::PipefyCardResponseReader.instance).to receive(:create_card!).with(team, card_response).never
           ProcessPipefyCardJob.perform_now(params)
         end
       end
@@ -76,7 +76,7 @@ RSpec.describe ProcessPipefyCardJob, type: :active_job do
           stub_request(:post, 'https://app.pipefy.com/queries').with(headers: headers, body: /356528/).to_return(status: 200, body: pipe_response.to_json, headers: {})
         end
         it 'returns doing nothing' do
-          expect(Pipefy::PipefyCardResponseReader.instance).to receive(:create_card!).with(project, team, card_response).never
+          expect(Pipefy::PipefyCardResponseReader.instance).to receive(:create_card!).with(team, card_response).never
           ProcessPipefyCardJob.perform_now(params)
         end
       end
