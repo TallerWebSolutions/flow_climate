@@ -104,7 +104,7 @@
   </div>
   <div class="row">
     <div class="col-xs-12">
-      <div id="flow-efficiency-bug"
+      <div id="flow-efficiency"
            class="flow-chart"
            data-title='<%= t('projects.charts.flow_efficiency.title', target_name: target_name) %>'
            data-xcategories='<%= report_data.weeekly_bugs_share_hash[:dates_array] %>'
@@ -171,6 +171,21 @@
            data-ytitle='<%= t('projects.charts.leadtime_histogram.ylabel') %>'
            data-prefix=''
            data-series='<%= [{ name: I18n.t('projects.charts.leadtime_histogram.ylabel'), data: report_data.leadtime_histogram_data }].to_json %>'
+           data-decimals='2'>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12">
+      <div id="leadtime-evolution"
+           class="flow-chart"
+           data-title='<%= t('projects.charts.leadtime_evolution.title', target_name: target_name) %>'
+           data-xcategories='<%= report_data.leadtime_percentiles_on_time[:xcategories] %>'
+           data-series='<%= [{ name: t('projects.charts.leadtime_evolution.legend.leadtime_80_confidence'), color: 'rgb(51, 51, 255)', data: report_data.leadtime_percentiles_on_time[:leadtime_80_confidence] }].to_json %>'
+           data-xtitle='<%= t('projects.charts.xlabel.weeks') %>'
+           data-ytitle='<%= t('projects.charts.leadtime_evolution.ylabel') %>'
+           data-suffix='<%= t('projects.charts.leadtime_evolution.ylabel') %>'
+           data-prefix=''
            data-decimals='2'>
       </div>
     </div>

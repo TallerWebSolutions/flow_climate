@@ -1,30 +1,6 @@
 # frozen_string_literal: true
 
 describe ProjectsSummaryObject, type: :data_object do
-  describe '#percentage_hours_consumed' do
-    context 'when the total hours is different of zero' do
-      let!(:project) { Fabricate :project }
-      let!(:project_result) { Fabricate :project_result, project: project }
-      let!(:other_project_result) { Fabricate :project_result, project: project }
-
-      let!(:second_project) { Fabricate :project }
-      let!(:second_project_result) { Fabricate :project_result, project: second_project }
-
-      subject(:projects_summary) { ProjectsSummaryObject.new(Project.all) }
-
-      it { expect(projects_summary.percentage_hours_consumed).to eq((projects_summary.total_consumed_hours.to_f / projects_summary.total_hours.to_f) * 100) }
-    end
-    context 'when the total hours is zero' do
-      let!(:project) { Fabricate :project, qty_hours: 0 }
-      let!(:project_result) { Fabricate :project_result, project: project }
-      let!(:other_project_result) { Fabricate :project_result, project: project }
-
-      subject(:projects_summary) { ProjectsSummaryObject.new(Project.all) }
-
-      it { expect(projects_summary.percentage_hours_consumed).to eq 0 }
-    end
-  end
-
   describe '#percentage_remaining_money' do
     context 'when the total hours is different of zero' do
       let!(:project) { Fabricate :project }
@@ -85,21 +61,6 @@ describe ProjectsSummaryObject, type: :data_object do
       subject(:projects_summary) { ProjectsSummaryObject.new(Project.all) }
 
       it { expect(projects_summary.total_gap).to eq(projects_summary.total_last_week_scope - projects_summary.total_delivered_scope) }
-    end
-  end
-
-  describe '#total_remaining_hours' do
-    context 'when the total hours is different of zero' do
-      let!(:project) { Fabricate :project }
-      let!(:project_result) { Fabricate :project_result, project: project }
-      let!(:other_project_result) { Fabricate :project_result, project: project }
-
-      let!(:second_project) { Fabricate :project }
-      let!(:second_project_result) { Fabricate :project_result, project: second_project }
-
-      subject(:projects_summary) { ProjectsSummaryObject.new(Project.all) }
-
-      it { expect(projects_summary.total_remaining_hours).to eq(projects_summary.total_hours - projects_summary.total_consumed_hours) }
     end
   end
 end

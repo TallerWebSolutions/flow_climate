@@ -12,7 +12,6 @@
       <thead>
         <tr>
           <th><%= t('general.table.actions') %></th>
-          <th colspan="5" class="center"><%= t('projects.index.risk_alerts') %></th>
           <th><%= Project.human_attribute_name :customer_name %></th>
           <th><%= Project.human_attribute_name :product_name %></th>
           <th><%= Project.model_name.human %></th>
@@ -21,14 +20,15 @@
           <th><%= Project.human_attribute_name :end_date %></th>
           <th><%= Project.human_attribute_name :status %></th>
           <th><%= Project.human_attribute_name :project_type %></th>
+          <th><%= t('projects.show.leadtime_80_confidence') %></th>
           <th><%= t('projects.show.throughput') %></th>
           <th><%= t('projects.show.scope_gap') %></th>
-          <th><%= t('projects.show.leadtime_80_confidence') %></th>
           <th><%= Project.human_attribute_name :value %></th>
           <th><%= t('projects.index.remaining_money') %></th>
           <th><%= t('projects.index.total_remaining_days') %></th>
           <th><%= t('projects.index.flow_pressure') %></th>
           <th><%= t('projects.index.percentage_flow_pressure') %></th>
+          <th colspan="5" class="center"><%= t('projects.index.risk_alerts') %></th>
           <th><%= t('general.table.actions') %></th>
         </tr>
       </thead>
@@ -36,7 +36,6 @@
         <% projects_list.each do |project| %>
           <tr>
             <td><%= render 'projects/project_actions', project: project %></td>
-            <%= render 'projects/project_risk_indicators', project: project %>
             <td><%= link_to project.customer_name, company_customer_path(@company, project.customer) %></td>
             <td>
               <% if project.product.present? %>
@@ -49,14 +48,15 @@
             <td><%= l(project.end_date) %></td>
             <td><%= t("activerecord.attributes.project.enums.status.#{project.status}") %></td>
             <td><%= t("activerecord.attributes.project.enums.project_type.#{project.project_type}") %></td>
+            <td><%= time_distance_in_words(project.current_leadtime_80_confidence) %></td>
             <td><%= number_with_precision(project.total_throughput_for(1.week.ago), precision: 0) %></td>
             <td><%= number_with_precision(project.total_gap, precision: 0) %></td>
-            <td><%= time_distance_in_words(project.current_leadtime_80_confidence) %></td>
             <td><%= number_to_currency(project.value) %></td>
             <td><%= number_to_currency(project.remaining_money) %></td>
             <td><%= project.remaining_days %></td>
             <td><%= number_with_precision(project.flow_pressure, precision: 3) %></td>
             <td><%= number_to_percentage((project.flow_pressure.to_f / @projects_summary.total_flow_pressure) * 100, precision: 2) %></td>
+            <%= render 'projects/project_risk_indicators', project: project %>
             <td><%= render 'projects/project_actions', project: project %></td>
           </tr>
         <% end %>

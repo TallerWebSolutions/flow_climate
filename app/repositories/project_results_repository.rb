@@ -46,6 +46,10 @@ class ProjectResultsRepository
     ProjectResult.where(project_id: projects).where('EXTRACT(WEEK FROM result_date) = :week AND EXTRACT(YEAR FROM result_date) = :year', week: date.cweek, year: date.cwyear).sum(&:qty_bugs_closed)
   end
 
+  def leadtime_80_in_week(projects, date = Time.zone.today)
+    last_project_result_until_week(date, projects)&.leadtime_80_confidence || 0
+  end
+
   def scope_in_week_for_projects(projects, week, year)
     total_scope = 0
     projects.each do |project|
@@ -106,6 +110,10 @@ class ProjectResultsRepository
   end
 
   private
+
+  def last_project_result_until_week(date, projects)
+    ProjectResult.where(project_id: projects.map(&:id)).where('(EXTRACT(WEEK FROM result_date) <= :week AND EXTRACT(YEAR FROM result_date) <= :year) OR (EXTRACT(YEAR FROM result_date) < :year)', week: date.cweek, year: date.cwyear).order(:result_date).last
+  end
 
   def build_hash_data_with_sum(projects, field)
     grouped_per_week_project_results_to_projects(projects).sum(field)

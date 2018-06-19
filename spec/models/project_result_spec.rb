@@ -116,8 +116,9 @@ RSpec.describe ProjectResult, type: :model do
 
     let!(:result) { Fabricate :project_result, project: project, result_date: Date.new(2018, 4, 3), known_scope: 2032, cost_in_month: 30_000, throughput_upstream: 0, throughput_downstream: 0, flow_pressure: 2 }
 
-    let!(:first_demand) { Fabricate :demand, project_result: result, project: project, created_date: Date.new(2018, 4, 2), end_date: Date.new(2018, 4, 3), effort_upstream: 50, effort_downstream: 12, downstream: true }
-    let!(:second_demand) { Fabricate :demand, project: project, created_date: Date.new(2018, 4, 3), end_date: Date.new(2018, 4, 3), demand_type: :bug, effort_upstream: 100, effort_downstream: 20, downstream: true }
+    let!(:after_result_demand) { Fabricate :demand, project: project, created_date: Date.new(2018, 4, 5), end_date: Date.new(2018, 4, 6), effort_upstream: 50, effort_downstream: 12, downstream: true, leadtime: 20_000 }
+    let!(:first_demand) { Fabricate :demand, project_result: result, project: project, created_date: Date.new(2018, 4, 2), end_date: Date.new(2018, 4, 3), effort_upstream: 50, effort_downstream: 12, downstream: true, leadtime: 100 }
+    let!(:second_demand) { Fabricate :demand, project: project, created_date: Date.new(2018, 4, 3), end_date: Date.new(2018, 4, 3), demand_type: :bug, effort_upstream: 100, effort_downstream: 20, downstream: true, leadtime: 40 }
     let!(:third_demand) { Fabricate :demand, project_result: result, project: project, created_date: Date.new(2018, 4, 1), end_date: Date.new(2018, 4, 2), demand_type: :feature, effort_upstream: 70, effort_downstream: 10, downstream: false }
     let!(:fourth_demand) { Fabricate :demand, project_result: result, project: project, created_date: Date.new(2018, 4, 1), end_date: Date.new(2018, 4, 2), demand_type: :feature, effort_upstream: 5, effort_downstream: 10, downstream: false }
 
@@ -138,6 +139,9 @@ RSpec.describe ProjectResult, type: :model do
           expect(result.reload.qty_bugs_opened).to eq 1
           expect(result.reload.flow_pressure.to_f).to eq 1.0
           expect(result.reload.average_demand_cost.to_f).to eq 250.0
+          expect(result.reload.leadtime_60_confidence.to_f).to eq 76.0
+          expect(result.reload.leadtime_80_confidence.to_f).to eq 88.0
+          expect(result.reload.leadtime_95_confidence.to_f).to eq 97.0
         end
       end
       context 'when it does already have the demand' do

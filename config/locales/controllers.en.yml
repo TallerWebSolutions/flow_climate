@@ -116,7 +116,6 @@ en:
       total_days: "Days (total)"
       total_remaining_days: "Days (remaining)"
       consumed_hours: "Consumed Hours"
-      percentage_hours_consumed: "% Hours Consumed"
       percentage_remaining_days: "% Time Remaining"
       remaining_money: "Remaining ($$)"
       percentage_remaining_money: "% Remaining ($$)"
@@ -232,6 +231,11 @@ en:
       flow_efficiency:
         title: "Flow Efficiency for %{target_name}"
         share: "Flow Efficiency"
+      leadtime_evolution:
+        title: "Leadtime confidence evolution for %{target_name}"
+        ylabel: "Hours"
+        legend:
+          leadtime_80_confidence: "80% Confidence"
     project_risk_alert_table: "Risk alerts to the project"
     project_risk_configs:
       title: "Risk Configurations"

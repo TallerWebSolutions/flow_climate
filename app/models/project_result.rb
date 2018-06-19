@@ -112,7 +112,7 @@ class ProjectResult < ApplicationRecord
   end
 
   def compute_and_save_leadtimes!
-    demands_leadtime = project.demands.finished_with_leadtime.map(&:leadtime)
+    demands_leadtime = project.demands.finished_with_leadtime.where('end_date <= :limit_date', limit_date: result_date.end_of_day).map(&:leadtime)
     percentile95 = Stats::StatisticsService.instance.percentile(95, demands_leadtime)
     percentile80 = Stats::StatisticsService.instance.percentile(80, demands_leadtime)
     percentile60 = Stats::StatisticsService.instance.percentile(60, demands_leadtime)
