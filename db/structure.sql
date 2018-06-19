@@ -22,6 +22,20 @@ CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
 COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
 
 
+--
+-- Name: pg_stat_statements; Type: EXTENSION; Schema: -; Owner: -
+--
+
+CREATE EXTENSION IF NOT EXISTS pg_stat_statements WITH SCHEMA public;
+
+
+--
+-- Name: EXTENSION pg_stat_statements; Type: COMMENT; Schema: -; Owner: -
+--
+
+COMMENT ON EXTENSION pg_stat_statements IS 'track execution statistics of all SQL statements executed';
+
+
 SET default_tablespace = '';
 
 SET default_with_oids = false;
@@ -246,7 +260,6 @@ CREATE TABLE public.demands (
     assignees_count integer NOT NULL,
     effort_downstream numeric DEFAULT 0,
     effort_upstream numeric DEFAULT 0,
-    "decimal" numeric DEFAULT 0,
     leadtime numeric,
     downstream boolean DEFAULT true,
     manual_effort boolean DEFAULT false,
@@ -535,7 +548,7 @@ CREATE TABLE public.project_results (
     qty_bugs_opened integer NOT NULL,
     qty_bugs_closed integer NOT NULL,
     qty_hours_bug integer NOT NULL,
-    leadtime numeric,
+    leadtime_95_confidence numeric,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     team_id integer NOT NULL,
@@ -549,7 +562,10 @@ CREATE TABLE public.project_results (
     manual_input boolean DEFAULT false,
     throughput_upstream integer DEFAULT 0,
     throughput_downstream integer DEFAULT 0,
-    effort_share_in_month numeric
+    effort_share_in_month numeric,
+    leadtime_80_confidence numeric,
+    leadtime_60_confidence numeric,
+    leadtime_average numeric
 );
 
 
@@ -1820,6 +1836,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20180530210436'),
 ('20180604224141'),
 ('20180615182356'),
-('20180618185639');
+('20180618185639'),
+('20180619150458');
 
 

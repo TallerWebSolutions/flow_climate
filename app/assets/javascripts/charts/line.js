@@ -26,6 +26,9 @@ function buildLineChart(lineDiv) {
             }],
             stackLabels: {
                 enabled: true
+            },
+            labels: {
+                format: '{value:.2f}'
             }
         }],
         tooltip: {

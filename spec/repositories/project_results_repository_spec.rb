@@ -285,4 +285,28 @@ RSpec.describe ProjectResultsRepository, type: :repository do
       it { expect(ProjectResultsRepository.instance.sum_field_in_grouped_by_month_project_results([project], :qty_hours_downstream)).to eq({}) }
     end
   end
+
+  describe '#leadtime_80_in_week' do
+    context 'when there is data in the week' do
+      let!(:first_result) { Fabricate :project_result, project: first_project, result_date: Time.zone.iso8601('2018-02-16T23:01:46') }
+      let!(:second_result) { Fabricate :project_result, project: second_project, result_date: Time.zone.iso8601('2018-02-15T23:01:46') }
+      let!(:third_result) { Fabricate :project_result, project: third_project, result_date: Time.zone.iso8601('2018-02-11T23:01:46') }
+      let!(:out_result) { Fabricate :project_result, result_date: Time.zone.iso8601('2018-02-14T23:01:46'), flow_pressure: 4 }
+
+      it { expect(ProjectResultsRepository.instance.leadtime_80_in_week([first_project, second_project], Date.new(2018, 2, 15))).to eq first_result.leadtime_80_confidence }
+    end
+    context 'when there is data in the past week' do
+      let!(:first_result) { Fabricate :project_result, project: first_project, result_date: Time.zone.iso8601('2018-02-16T23:01:46') }
+      let!(:second_result) { Fabricate :project_result, project: second_project, result_date: Time.zone.iso8601('2018-02-15T23:01:46') }
+      let!(:third_result) { Fabricate :project_result, project: third_project, result_date: Time.zone.iso8601('2018-02-11T23:01:46') }
+      let!(:out_result) { Fabricate :project_result, result_date: Time.zone.iso8601('2018-02-14T23:01:46'), flow_pressure: 4 }
+
+      it { expect(ProjectResultsRepository.instance.leadtime_80_in_week([first_project, second_project], Date.new(2018, 3, 30))).to eq first_result.leadtime_80_confidence }
+    end
+    context 'having no project result' do
+      let!(:project) { Fabricate :project, customer: customer, product: product, start_date: 1.month.ago, end_date: 1.month.from_now }
+
+      it { expect(ProjectResultsRepository.instance.leadtime_80_in_week([project], Date.new(2018, 2, 15))).to eq 0 }
+    end
+  end
 end

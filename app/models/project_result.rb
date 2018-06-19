@@ -4,30 +4,33 @@
 #
 # Table name: project_results
 #
-#  available_hours       :decimal(, )      not null
-#  average_demand_cost   :decimal(, )      not null
-#  cost_in_month         :decimal(, )      not null
-#  created_at            :datetime         not null
-#  demands_count         :integer
-#  effort_share_in_month :decimal(, )
-#  flow_pressure         :decimal(, )      not null
-#  id                    :bigint(8)        not null, primary key
-#  known_scope           :integer          not null
-#  leadtime              :decimal(, )
-#  manual_input          :boolean          default(FALSE)
-#  monte_carlo_date      :date
-#  project_id            :integer          not null, indexed
-#  qty_bugs_closed       :integer          not null
-#  qty_bugs_opened       :integer          not null
-#  qty_hours_bug         :integer          not null
-#  qty_hours_downstream  :integer          not null
-#  qty_hours_upstream    :integer          not null
-#  remaining_days        :integer          not null
-#  result_date           :date             not null
-#  team_id               :integer          not null
-#  throughput_downstream :integer          default(0)
-#  throughput_upstream   :integer          default(0)
-#  updated_at            :datetime         not null
+#  available_hours        :decimal(, )      not null
+#  average_demand_cost    :decimal(, )      not null
+#  cost_in_month          :decimal(, )      not null
+#  created_at             :datetime         not null
+#  demands_count          :integer
+#  effort_share_in_month  :decimal(, )
+#  flow_pressure          :decimal(, )      not null
+#  id                     :bigint(8)        not null, primary key
+#  known_scope            :integer          not null
+#  leadtime_60_confidence :decimal(, )
+#  leadtime_80_confidence :decimal(, )
+#  leadtime_95_confidence :decimal(, )
+#  leadtime_average       :decimal(, )
+#  manual_input           :boolean          default(FALSE)
+#  monte_carlo_date       :date
+#  project_id             :integer          not null, indexed
+#  qty_bugs_closed        :integer          not null
+#  qty_bugs_opened        :integer          not null
+#  qty_hours_bug          :integer          not null
+#  qty_hours_downstream   :integer          not null
+#  qty_hours_upstream     :integer          not null
+#  remaining_days         :integer          not null
+#  result_date            :date             not null
+#  team_id                :integer          not null
+#  throughput_downstream  :integer          default(0)
+#  throughput_upstream    :integer          default(0)
+#  updated_at             :datetime         not null
 #
 # Indexes
 #
@@ -100,10 +103,22 @@ class ProjectResult < ApplicationRecord
 
   def update_result!(finished_upstream_demands, finished_downstream_demands, finished_bugs, opened_bugs)
     remaining_days = project.remaining_days(result_date)
+
     update(known_scope: current_scope, throughput_upstream: finished_upstream_demands.count, throughput_downstream: finished_downstream_demands.count, qty_hours_upstream: sum_effort(:effort_upstream),
            qty_hours_downstream: sum_effort(:effort_downstream), qty_hours_bug: finished_bugs.sum(&:effort_downstream), qty_bugs_closed: finished_bugs.count, qty_bugs_opened: opened_bugs.count,
-           remaining_days: remaining_days, flow_pressure: current_flow_pressure, average_demand_cost: compute_average_demand_cost(finished_upstream_demands + finished_downstream_demands),
-           leadtime: demands.finished.average(:leadtime))
+           remaining_days: remaining_days, flow_pressure: current_flow_pressure, average_demand_cost: compute_average_demand_cost(finished_upstream_demands + finished_downstream_demands))
+
+    compute_and_save_leadtimes!
+  end
+
+  def compute_and_save_leadtimes!
+    demands_leadtime = project.demands.finished_with_leadtime.where('end_date <= :limit_date', limit_date: result_date.end_of_day).map(&:leadtime)
+    percentile95 = Stats::StatisticsService.instance.percentile(95, demands_leadtime)
+    percentile80 = Stats::StatisticsService.instance.percentile(80, demands_leadtime)
+    percentile60 = Stats::StatisticsService.instance.percentile(60, demands_leadtime)
+    leadtime_average = Stats::StatisticsService.instance.mean(demands_leadtime)
+
+    update(leadtime_60_confidence: percentile60, leadtime_80_confidence: percentile80, leadtime_95_confidence: percentile95, leadtime_average: leadtime_average)
   end
 
   def sum_effort(field)

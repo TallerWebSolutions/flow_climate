@@ -459,12 +459,48 @@ RSpec.describe Project, type: :model do
   describe '#avg_leadtime' do
     let(:project) { Fabricate :project, initial_scope: 30, start_date: 1.day.ago, end_date: 1.week.from_now }
     context 'having results' do
-      let!(:result) { Fabricate :project_result, project: project, result_date: 1.day.ago, known_scope: 10 }
-      let!(:other_result) { Fabricate :project_result, project: project, result_date: Time.zone.today, known_scope: 20 }
-      it { expect(project.avg_leadtime).to eq((result.leadtime + other_result.leadtime) / 2) }
+      let!(:result) { Fabricate :project_result, project: project, result_date: 1.day.ago }
+      let!(:other_result) { Fabricate :project_result, project: project, result_date: Time.zone.today }
+      it { expect(project.avg_leadtime).to eq other_result.leadtime_average }
     end
     context 'having no results' do
-      it { expect(project.avg_leadtime).to eq nil }
+      it { expect(project.avg_leadtime).to eq 0 }
+    end
+  end
+
+  describe '#current_leadtime_60_confidence' do
+    let(:project) { Fabricate :project, initial_scope: 30, start_date: 1.day.ago, end_date: 1.week.from_now }
+    context 'having results' do
+      let!(:result) { Fabricate :project_result, project: project, result_date: 1.day.ago }
+      let!(:other_result) { Fabricate :project_result, project: project, result_date: Time.zone.today }
+      it { expect(project.current_leadtime_60_confidence).to eq other_result.leadtime_60_confidence }
+    end
+    context 'having no results' do
+      it { expect(project.current_leadtime_60_confidence).to eq 0 }
+    end
+  end
+
+  describe '#current_leadtime_80_confidence' do
+    let(:project) { Fabricate :project, initial_scope: 30, start_date: 1.day.ago, end_date: 1.week.from_now }
+    context 'having results' do
+      let!(:result) { Fabricate :project_result, project: project, result_date: 1.day.ago }
+      let!(:other_result) { Fabricate :project_result, project: project, result_date: Time.zone.today }
+      it { expect(project.current_leadtime_80_confidence).to eq other_result.leadtime_80_confidence }
+    end
+    context 'having no results' do
+      it { expect(project.current_leadtime_80_confidence).to eq 0 }
+    end
+  end
+
+  describe '#current_leadtime_95_confidence' do
+    let(:project) { Fabricate :project, initial_scope: 30, start_date: 1.day.ago, end_date: 1.week.from_now }
+    context 'having results' do
+      let!(:result) { Fabricate :project_result, project: project, result_date: 1.day.ago }
+      let!(:other_result) { Fabricate :project_result, project: project, result_date: Time.zone.today }
+      it { expect(project.current_leadtime_95_confidence).to eq other_result.leadtime_95_confidence }
+    end
+    context 'having no results' do
+      it { expect(project.current_leadtime_95_confidence).to eq 0 }
     end
   end
 

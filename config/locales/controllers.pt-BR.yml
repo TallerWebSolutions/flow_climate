@@ -116,7 +116,6 @@ pt-BR:
       total_days: "Dias (total)"
       total_remaining_days: "Dias (restantes)"
       consumed_hours: "Horas Consumidas"
-      percentage_hours_consumed: "% Horas consumidas"
       percentage_remaining_days: "% Tempo Restante"
       remaining_money: "Restante ($$)"
       percentage_remaining_money: "% Restante ($$)"
@@ -160,6 +159,8 @@ pt-BR:
       status_information_html: "Este projeto está <i>%{status_description}</i>"
       delivered_demands:
         text: "Escopo Entregue"
+      throughput: "Throughput Semana Anterior"
+      leadtime_80_confidence: "Leadtime 80%"
     charts:
       xlabel:
         weeks: "Semanas"
@@ -230,6 +231,11 @@ pt-BR:
       flow_efficiency:
         title: "Eficiência de Fluxo para %{target_name}"
         share: "Eficiência de Fluxo"
+      leadtime_evolution:
+        title: "Evolução da Confiança do Leadtime para %{target_name}"
+        ylabel: "Horas"
+        legend:
+          leadtime_80_confidence: "80% de Confiança"
     project_risk_alert_table: "Alertas de risco para o projeto"
     portfolio_bulletin:
       delivered_demands: "Demandas entregues na última semana"

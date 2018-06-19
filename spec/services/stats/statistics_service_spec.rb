@@ -50,4 +50,8 @@ RSpec.describe Stats::StatisticsService, type: :service do
   end
 
   pending '#compute_percentage'
+
+  describe '#mean' do
+    it { expect(Stats::StatisticsService.instance.mean([10, 30])).to eq 20 }
+  end
 end

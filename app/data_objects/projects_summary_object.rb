@@ -19,11 +19,6 @@ class ProjectsSummaryObject
     @total_flow_pressure = projects&.sum(&:flow_pressure)
   end
 
-  def percentage_hours_consumed
-    return 0 if @total_hours.zero?
-    (@total_consumed_hours.to_f / @total_hours.to_f) * 100
-  end
-
   def percentage_remaining_money
     return 0 if @total_value.zero?
     (@total_remaining_money.to_f / @total_value.to_f) * 100
@@ -36,9 +31,5 @@ class ProjectsSummaryObject
 
   def total_gap
     @total_last_week_scope - @total_delivered_scope
-  end
-
-  def total_remaining_hours
-    @total_hours - @total_consumed_hours
   end
 end

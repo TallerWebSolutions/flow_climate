@@ -3,7 +3,7 @@
 class ReportData < ChartData
   attr_reader :demands_burnup_data, :hours_burnup_per_week_data, :flow_pressure_data,
               :leadtime_bins, :leadtime_histogram_data, :throughput_bins, :throughput_histogram_data,
-              :lead_time_control_chart, :weeekly_bugs_count_hash, :weeekly_bugs_share_hash, :weeekly_queue_touch_count_hash,
+              :lead_time_control_chart, :leadtime_percentiles_on_time, :weeekly_bugs_count_hash, :weeekly_bugs_share_hash, :weeekly_queue_touch_count_hash,
               :weeekly_queue_touch_share_hash
 
   def initialize(projects)
@@ -18,6 +18,7 @@ class ReportData < ChartData
     build_weeekly_queue_touch_share_hash
     build_flow_pressure_array
     build_statistics_charts
+    build_leadtime_percentiles_on_time
   end
 
   def hours_per_demand_per_week
@@ -161,6 +162,12 @@ class ReportData < ChartData
     @lead_time_control_chart[:percentile_95_data] = Stats::StatisticsService.instance.percentile(95, demand_data)
     @lead_time_control_chart[:percentile_80_data] = Stats::StatisticsService.instance.percentile(80, demand_data)
     @lead_time_control_chart[:percentile_60_data] = Stats::StatisticsService.instance.percentile(60, demand_data)
+  end
+
+  def build_leadtime_percentiles_on_time
+    @leadtime_percentiles_on_time = {}
+    @leadtime_percentiles_on_time[:xcategories] = @all_projects_weeks
+    @leadtime_percentiles_on_time[:leadtime_80_confidence] = @all_projects_weeks.map { |week_year| (ProjectResultsRepository.instance.leadtime_80_in_week(@all_projects, Date.commercial(week_year[1], week_year[0], 1))&.to_f || 0) / 3600 }
   end
 
   def build_weeekly_bugs_count_hash

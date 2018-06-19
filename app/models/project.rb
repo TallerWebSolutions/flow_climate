@@ -194,7 +194,19 @@ class Project < ApplicationRecord
   end
 
   def avg_leadtime
-    project_results.average(:leadtime)
+    project_results&.order(:result_date)&.last&.leadtime_average || 0
+  end
+
+  def current_leadtime_60_confidence
+    project_results&.order(:result_date)&.last&.leadtime_60_confidence || 0
+  end
+
+  def current_leadtime_80_confidence
+    project_results&.order(:result_date)&.last&.leadtime_80_confidence || 0
+  end
+
+  def current_leadtime_95_confidence
+    project_results&.order(:result_date)&.last&.leadtime_95_confidence || 0
   end
 
   def avg_hours_per_demand

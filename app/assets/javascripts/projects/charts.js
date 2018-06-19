@@ -11,7 +11,7 @@ function buildOperationalHighcharts() {
     var queueTouchCountDiv = $('#queue-touch-in-time');
     buildColumnChart(queueTouchCountDiv);
 
-    var flowEfficiencyDiv = $('#flow-efficiency-bug');
+    var flowEfficiencyDiv = $('#flow-efficiency');
     buildLineChart(flowEfficiencyDiv);
 
     var hoursPerDemandDiv = $('#hours-column');
@@ -31,6 +31,9 @@ function buildOperationalHighcharts() {
 
     var leadtimeHistogramChart = $('#leadtime-histogram');
     buildColumnChart(leadtimeHistogramChart);
+
+    var leadtimeEvolution = $('#leadtime-evolution');
+    buildLineChart(leadtimeEvolution);
 
     var throughputHistogramChart = $('#throughput-histogram');
     buildColumnChart(throughputHistogramChart);

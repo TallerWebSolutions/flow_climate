@@ -22,3 +22,27 @@
 en:
   "true": Yes
   "false": No
+
+  datetime:
+    date_attributes:
+      day:
+        one: dia
+        other: dias
+      hour:
+        one: hora
+        other: horas
+      minute:
+        one: minuto
+        other: minutos
+      month:
+        one: mês
+        other: meses
+      second:
+        one: segundo
+        other: segundos
+      year:
+        one: ano
+        other: anos
+  geenral:
+    connector:
+      and: "and"
