@@ -13,7 +13,10 @@ Fabricator(:project_result) do
   qty_bugs_opened { Faker::Number.number(2) }
   throughput_upstream { Faker::Number.number(3) }
   throughput_downstream { Faker::Number.number(3) }
-  leadtime { Faker::Number.decimal(2) }
+  leadtime_average { Faker::Number.decimal(2) }
+  leadtime_60_confidence { Faker::Number.decimal(2) }
+  leadtime_80_confidence { Faker::Number.decimal(2) }
+  leadtime_95_confidence { Faker::Number.decimal(2) }
   flow_pressure { Faker::Number.decimal(2) }
   remaining_days { Faker::Number.decimal(0) }
   cost_in_month { Faker::Number.decimal(2) }

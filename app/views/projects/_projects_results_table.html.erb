@@ -50,7 +50,7 @@
         <td><%= number_with_precision(result.qty_bugs_opened, precision: 0) %></td>
         <td><%= number_with_precision(result.qty_bugs_closed, precision: 0) %></td>
         <td><%= number_with_precision(result.qty_hours_bug, precision: 0) %></td>
-        <td><%= number_with_precision(result.leadtime, precision: 4) %></td>
+        <td><%= number_with_precision(result.leadtime_average, precision: 4) %></td>
         <td><%= result.demands_count %></td>
       </tr>
     <% end %>

@@ -99,6 +99,25 @@ pt-BR:
       month: Mês
       second: Segundo
       year: Ano
+    date_attributes:
+      day:
+        one: dia
+        other: dias
+      hour:
+        one: hora
+        other: horas
+      minute:
+        one: minuto
+        other: minutos
+      month:
+        one: mês
+        other: meses
+      second:
+        one: segundo
+        other: segundos
+      year:
+        one: ano
+        other: anos
 
   helpers:
     select:
@@ -175,3 +194,6 @@ pt-BR:
       long: "%d de %B de %Y, %H:%M"
       short: "%d/%m/%Y %H:%M"
     pm: ''
+  geenral:
+    connector:
+      and: "e"

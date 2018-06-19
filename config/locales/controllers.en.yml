@@ -160,6 +160,8 @@ en:
       status_information_html: "This project is <b>%{status_description}</b>"
       delivered_demands:
         text: "Delivered Scope"
+      throughput: "Last Week Throughput"
+      leadtime_80_confidence: "Leadtime 80%"
     charts:
       xlabel:
         weeks: "Weeks"

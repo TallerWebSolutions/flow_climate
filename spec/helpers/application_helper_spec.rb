@@ -1,27 +1,50 @@
 # frozen_string_literal: true
 
-RSpec.describe ApplicationController, type: :controller do
-  describe '#record_not_found' do
-    controller do
-      def inexistent_model
-        raise ActiveRecord::RecordNotFound
+RSpec.describe ApplicationHelper, type: :helper do
+  include Shoulda::Matchers::ActionController
+
+  describe '#notice' do
+    context 'having flash notice' do
+      it 'calls the render to the template' do
+        flash[:notice] = 'bla'
+        expect(helper.notice).to render_template 'layouts/_notice'
       end
     end
-
-    it 'responds to html' do
-      routes.draw { get 'inexistent_model' => 'anonymous#inexistent_model' }
-
-      get :inexistent_model
-      expect(response.status).to eq 404
-      expect(response.body).to include "The page you were looking for doesn't exist (404)"
+    context 'having no flash notice' do
+      it 'calls the render to the template' do
+        flash[:notice] = nil
+        expect(helper.notice).to be_nil
+      end
     end
+  end
 
-    it 'responds to ajax' do
-      routes.draw { get 'inexistent_model' => 'anonymous#inexistent_model' }
+  describe '#alert' do
+    context 'having flash notice' do
+      it 'calls the render to the template' do
+        flash[:alert] = 'bla'
+        expect(helper.alert).to render_template 'layouts/_alert'
+      end
+    end
+    context 'having no flash notice' do
+      it 'calls the render to the template' do
+        flash[:alert] = nil
+        expect(helper.alert).to be_nil
+      end
+    end
+  end
 
-      get :inexistent_model, xhr: true, format: :js
-      expect(response.status).to eq 404
-      expect(response.body).to eq('404 Not Found')
+  describe '#error' do
+    context 'having flash notice' do
+      it 'calls the render to the template' do
+        flash[:error] = 'bla'
+        expect(helper.error).to render_template 'layouts/_error'
+      end
+    end
+    context 'having no flash notice' do
+      it 'calls the render to the template' do
+        flash[:error] = nil
+        expect(helper.error).to be_nil
+      end
     end
   end
 end

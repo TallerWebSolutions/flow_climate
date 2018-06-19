@@ -21,25 +21,12 @@
           <th><%= Project.human_attribute_name :end_date %></th>
           <th><%= Project.human_attribute_name :status %></th>
           <th><%= Project.human_attribute_name :project_type %></th>
-          <th><%= Project.human_attribute_name :qty_hours %></th>
-          <th><%= t('projects.index.consumed_hours') %></th>
-          <th><%= t('projects.index.remaining_hours') %></th>
-          <th><%= t('projects.index.percentage_hours_consumed') %></th>
-          <th><%= Project.human_attribute_name :hour_value %></th>
-          <th><%= Project.human_attribute_name :initial_scope %></th>
-          <th><%= t('projects.show.last_week_scope') %></th>
-          <th><%= t('projects.show.current_week_scope') %></th>
-          <th><%= t('projects.show.scope_unit_growth') %></th>
-          <th><%= t('projects.show.scope_growth') %></th>
-          <th><%= t('projects.show.demands.text') %></th>
+          <th><%= t('projects.show.throughput') %></th>
           <th><%= t('projects.show.scope_gap') %></th>
-          <th><%= t('projects.show.average_demand_cost') %></th>
+          <th><%= t('projects.show.leadtime_80_confidence') %></th>
           <th><%= Project.human_attribute_name :value %></th>
           <th><%= t('projects.index.remaining_money') %></th>
-          <th><%= t('projects.index.percentage_remaining_money') %></th>
-          <th><%= t('projects.index.total_days') %></th>
           <th><%= t('projects.index.total_remaining_days') %></th>
-          <th><%= t('projects.index.percentage_remaining_days') %></th>
           <th><%= t('projects.index.flow_pressure') %></th>
           <th><%= t('projects.index.percentage_flow_pressure') %></th>
           <th><%= t('general.table.actions') %></th>
@@ -62,73 +49,18 @@
             <td><%= l(project.end_date) %></td>
             <td><%= t("activerecord.attributes.project.enums.status.#{project.status}") %></td>
             <td><%= t("activerecord.attributes.project.enums.project_type.#{project.project_type}") %></td>
-            <td><%= number_with_precision(project.qty_hours, precision: 2) %></td>
-            <td><%= number_with_precision(project.consumed_hours, precision: 2) %></td>
-            <td><%= number_with_precision(project.remaining_hours, precision: 2) %></td>
-            <td><%= number_to_percentage((project.consumed_hours/project.qty_hours) * 100, precision: 2) %></td>
-            <td><%= number_to_currency(project.hour_value) %></td>
-            <td><%= project.initial_scope %></td>
-            <td><%= number_with_precision(project.penultimate_week_scope, precision: 0) %></td>
-            <td><%= number_with_precision(project.last_week_scope, precision: 0) %></td>
-            <td><%= number_with_precision(project.backlog_unit_growth, precision: 0) %></td>
-            <td><%= number_to_percentage(project.backlog_growth_rate * 100, precision: 2) %></td>
-            <td><%= number_with_precision(project.total_throughput_until(Time.zone.today), precision: 0) %></td>
+            <td><%= number_with_precision(project.total_throughput_for(1.week.ago), precision: 0) %></td>
             <td><%= number_with_precision(project.total_gap, precision: 0) %></td>
-            <td><%= number_to_currency(project.average_demand_cost) %></td>
+            <td><%= time_distance_in_words(project.current_leadtime_80_confidence) %></td>
             <td><%= number_to_currency(project.value) %></td>
             <td><%= number_to_currency(project.remaining_money) %></td>
-            <td><%= number_to_percentage((project.remaining_money / project.value) * 100, precision: 2) if project.value > 0 %></td>
-            <td><%= project.total_days %></td>
             <td><%= project.remaining_days %></td>
-            <td><%= number_to_percentage((project.remaining_days.to_f / project.total_days.to_f) * 100, precision: 2) %></td>
             <td><%= number_with_precision(project.flow_pressure, precision: 3) %></td>
             <td><%= number_to_percentage((project.flow_pressure.to_f / @projects_summary.total_flow_pressure) * 100, precision: 2) %></td>
             <td><%= render 'projects/project_actions', project: project %></td>
           </tr>
         <% end %>
       </tbody>
-      <% unless projects_list.empty? %>
-        <tfoot>
-          <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td><%= number_with_precision(@projects_summary.total_hours, precision: 2) %></td>
-            <td><%= number_with_precision(@projects_summary.total_consumed_hours, precision: 2) %></td>
-            <td><%= number_with_precision(@projects_summary.total_remaining_hours, precision: 2) %></td>
-            <td><%= number_to_percentage(@projects_summary.percentage_hours_consumed, precision: 2) %></td>
-            <td><%= number_to_currency(@projects_summary.average_hour_value) %></td>
-            <td><%= number_with_precision(@projects_summary.total_initial_scope, precision: 0) %></td>
-            <td></td>
-            <td><%= number_with_precision(@projects_summary.total_last_week_scope, precision: 0) %></td>
-            <td></td>
-            <td></td>
-            <td><%= number_with_precision(@projects_summary.total_delivered_scope, precision: 0) %></td>
-            <td><%= number_with_precision(@projects_summary.total_gap, precision: 0) %></td>
-            <td></td>
-            <td><%= number_to_currency(@projects_summary.total_value) %></td>
-            <td><%= number_to_currency(@projects_summary.total_remaining_money) %></td>
-            <td><%= number_to_percentage(@projects_summary.percentage_remaining_money, precision: 2) %></td>
-            <td><%= @projects_summary.total_days %></td>
-            <td><%= @projects_summary.total_remaining_days %></td>
-            <td><%= number_to_percentage(@projects_summary.percentage_remaining_days, precision: 2) %></td>
-            <td><%= number_with_precision(@projects_summary.total_flow_pressure, precision: 3) %></td>
-            <td></td>
-            <td></td>
-          </tr>
-        </tfoot>
-      <% end %>
     </table>
   </div>
 <% end %>

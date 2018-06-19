@@ -16,6 +16,10 @@ module Stats
       compute_percentile(desired_percentile, population)
     end
 
+    def mean(population)
+      population.sum.to_f / population.count.to_f
+    end
+
     def leadtime_histogram_hash(leadtime_data_array)
       create_histogram_data(leadtime_data_array)
     end

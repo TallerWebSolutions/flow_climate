@@ -160,6 +160,8 @@ pt-BR:
       status_information_html: "Este projeto está <i>%{status_description}</i>"
       delivered_demands:
         text: "Escopo Entregue"
+      throughput: "Throughput Semana Anterior"
+      leadtime_80_confidence: "Leadtime 80%"
     charts:
       xlabel:
         weeks: "Semanas"

@@ -8,7 +8,7 @@
 #  block_duration     :integer
 #  block_reason       :string           not null
 #  block_time         :datetime         not null
-#  block_type         :integer          default(0), not null
+#  block_type         :integer          default("coding_needed"), not null
 #  blocker_username   :string           not null
 #  created_at         :datetime         not null
 #  demand_block_id    :integer          not null
