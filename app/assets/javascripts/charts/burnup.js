@@ -35,9 +35,8 @@ function buildBurnupChart(burnupDiv) {
             }]
         },
         tooltip: {
-            valueSuffix: burnupDiv.data('tooltipsufix'),
             formatter: function () {
-                return Highcharts.numberFormat(this.y, burnupDiv.data('decimals'), '.');
+                return burnupDiv.data('prefix') + ' ' + Highcharts.numberFormat(this.y, burnupDiv.data('decimals'), '.') + ' ' + burnupDiv.data('suffix');
             }
         },
         legend: {

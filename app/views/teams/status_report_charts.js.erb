@@ -1,10 +1,8 @@
 $("#project-status-report").html("<%= escape_javascript(render 'charts/status_report_charts', target_name: @target_name, status_report_data: @status_report_data).html_safe %>");
 
-console.log('loaded div');
-
 buildStatusReportCurrentCharts();
 
 $('#project-status-report').show();
 $('#nav-item-statusreport').addClass('active');
 
-$(".loader").hide();
+enableTabs();

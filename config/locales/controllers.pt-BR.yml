@@ -183,6 +183,7 @@ pt-BR:
         title: "Pressão do Fluxo para %{project_name}"
         ylabel: "Pressão do Fluxo"
         tooltipsufix: " demandas/dia"
+        data_suffix: "demandas/dia"
       flow_pressure_per_project:
         ylabel: "Pressão do Fluxo"
       throughput_per_week:

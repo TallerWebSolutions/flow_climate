@@ -53,3 +53,5 @@ function hideAllComponents() {
     $('#nav-item-settings').removeClass('active');
     $('#nav-item-teams').removeClass('active');
 }
+
+buildStrategicHighcharts();
