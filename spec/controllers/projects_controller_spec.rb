@@ -183,7 +183,7 @@ RSpec.describe ProjectsController, type: :controller do
       let!(:other_product) { Fabricate :product, customer: customer, name: 'aaa' }
 
       context 'passing valid parameters' do
-        before { post :create, params: { company_id: company, project: { customer_id: customer, product_id: product, name: 'foo', nickname: 'bar', status: :executing, project_type: :outsourcing, start_date: 1.day.ago, end_date: 1.day.from_now, value: 100.2, qty_hours: 300, hour_value: 200, initial_scope: 1000 } } }
+        before { post :create, params: { company_id: company, project: { customer_id: customer, product_id: product, name: 'foo', nickname: 'bar', status: :executing, project_type: :outsourcing, start_date: 1.day.ago, end_date: 1.day.from_now, value: 100.2, qty_hours: 300, hour_value: 200, initial_scope: 1000, percentage_effort_to_bugs: 20 } } }
         it 'creates the new project and redirects to projects index' do
           expect(Project.last.name).to eq 'foo'
           expect(Project.last.nickname).to eq 'bar'
@@ -195,6 +195,7 @@ RSpec.describe ProjectsController, type: :controller do
           expect(Project.last.qty_hours).to eq 300
           expect(Project.last.hour_value).to eq 200
           expect(Project.last.initial_scope).to eq 1000
+          expect(Project.last.percentage_effort_to_bugs).to eq 20
           expect(response).to redirect_to company_projects_path(company)
         end
       end
@@ -277,7 +278,7 @@ RSpec.describe ProjectsController, type: :controller do
 
       context 'passing valid parameters' do
         context 'changing the deadline and the initial scope' do
-          before { put :update, params: { company_id: company, id: project, project: { customer_id: customer, product_id: product, name: 'foo', status: :executing, project_type: :outsourcing, start_date: 1.day.ago, end_date: 1.day.from_now, value: 100.2, qty_hours: 300, hour_value: 200, initial_scope: 1000 } } }
+          before { put :update, params: { company_id: company, id: project, project: { customer_id: customer, product_id: product, name: 'foo', status: :executing, project_type: :outsourcing, start_date: 1.day.ago, end_date: 1.day.from_now, value: 100.2, qty_hours: 300, hour_value: 200, initial_scope: 1000, percentage_effort_to_bugs: 10 } } }
           it 'updates the project, register the deadline change, compute the results again and redirects to projects index' do
             expect(Project.last.name).to eq 'foo'
             expect(Project.last.status).to eq 'executing'
@@ -288,6 +289,7 @@ RSpec.describe ProjectsController, type: :controller do
             expect(Project.last.qty_hours).to eq 300
             expect(Project.last.hour_value).to eq 200
             expect(Project.last.initial_scope).to eq 1000
+            expect(Project.last.percentage_effort_to_bugs).to eq 10
             expect(ProjectResult.first.known_scope).to eq 1000
             expect(ProjectResult.last.known_scope).to eq 1000
             expect(ProjectChangeDeadlineHistory.count).to eq 1

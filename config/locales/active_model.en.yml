@@ -39,6 +39,8 @@ en:
         other: "%{count} errors prohibited this %{model} from being saved"
   activerecord:
     attributes:
+      project:
+        percentage_effort_to_bugs: "% Effort Charged in Bugs"
       project_result:
         monte_carlo_date: Monte Carlo Forecast
         demands_count: Qty Demands

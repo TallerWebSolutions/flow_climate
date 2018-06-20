@@ -4,21 +4,22 @@
 #
 # Table name: projects
 #
-#  created_at    :datetime         not null
-#  customer_id   :integer          not null, indexed, indexed => [nickname]
-#  end_date      :date             not null
-#  hour_value    :decimal(, )
-#  id            :bigint(8)        not null, primary key
-#  initial_scope :integer          not null
-#  name          :string           not null, indexed => [product_id]
-#  nickname      :string           indexed => [customer_id]
-#  product_id    :integer          indexed => [name]
-#  project_type  :integer          not null
-#  qty_hours     :decimal(, )
-#  start_date    :date             not null
-#  status        :integer          not null
-#  updated_at    :datetime         not null
-#  value         :decimal(, )
+#  created_at                :datetime         not null
+#  customer_id               :integer          not null, indexed, indexed => [nickname]
+#  end_date                  :date             not null
+#  hour_value                :decimal(, )
+#  id                        :bigint(8)        not null, primary key
+#  initial_scope             :integer          not null
+#  name                      :string           not null, indexed => [product_id]
+#  nickname                  :string           indexed => [customer_id]
+#  percentage_effort_to_bugs :integer          default(0), not null
+#  product_id                :integer          indexed => [name]
+#  project_type              :integer          not null
+#  qty_hours                 :decimal(, )
+#  start_date                :date             not null
+#  status                    :integer          not null
+#  updated_at                :datetime         not null
+#  value                     :decimal(, )
 #
 # Indexes
 #
@@ -49,7 +50,7 @@ class Project < ApplicationRecord
   has_many :stages, through: :stage_project_configs
   has_one :pipefy_config, class_name: 'Pipefy::PipefyConfig', dependent: :destroy, autosave: true, inverse_of: :project
 
-  validates :customer, :qty_hours, :project_type, :name, :status, :start_date, :end_date, :status, :initial_scope, presence: true
+  validates :customer, :qty_hours, :project_type, :name, :status, :start_date, :end_date, :status, :initial_scope, :percentage_effort_to_bugs, presence: true
   validates :name, uniqueness: { scope: :product, message: I18n.t('project.name.uniqueness') }
   validates :nickname, uniqueness: { scope: :customer, message: I18n.t('project.nickname.uniqueness') }, allow_nil: true
   validate :hour_value_project_value?, :product_required?

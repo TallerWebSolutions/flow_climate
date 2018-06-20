@@ -78,7 +78,7 @@ class Demand < ApplicationRecord
 
   def update_effort!
     return if manual_effort?
-    update(effort_downstream: (working_time_downstream - blocked_working_time_downstream), effort_upstream: (working_time_upstream - blocked_working_time_upstream))
+    update(effort_downstream: compute_effort_downstream, effort_upstream: compute_effort_upstream)
   end
 
   def update_created_date!
@@ -139,6 +139,18 @@ class Demand < ApplicationRecord
   end
 
   private
+
+  def compute_effort_upstream
+    valid_effort = (working_time_upstream - blocked_working_time_upstream)
+    valid_effort *= (project.percentage_effort_to_bugs / 100.0) if bug?
+    valid_effort
+  end
+
+  def compute_effort_downstream
+    valid_effort = (working_time_downstream - blocked_working_time_downstream)
+    valid_effort *= (project.percentage_effort_to_bugs / 100.0) if bug?
+    valid_effort
+  end
 
   def committed_manually
     current_stage.blank? && commitment_date.present? && end_date.blank?

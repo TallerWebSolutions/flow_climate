@@ -148,7 +148,7 @@ RSpec.describe Demand, type: :model do
   describe '#update_effort!' do
     let(:company) { Fabricate :company }
     let(:customer) { Fabricate :customer, company: company }
-    let(:project) { Fabricate :project, customer: customer }
+    let(:project) { Fabricate :project, customer: customer, percentage_effort_to_bugs: 20 }
     let(:upstream_effort_stage) { Fabricate :stage, stage_stream: :upstream }
     let(:downstream_effort_stage) { Fabricate :stage, stage_stream: :downstream }
 
@@ -194,7 +194,7 @@ RSpec.describe Demand, type: :model do
       end
     end
 
-    context 'having a pair assined' do
+    context 'having a pair assigned' do
       let(:demand) { Fabricate :demand, project: project, assignees_count: 2, effort_upstream: 0, effort_downstream: 0 }
       context 'having no blockings' do
         let!(:upstream_demand_transition) { Fabricate :demand_transition, demand: demand, stage: upstream_effort_stage, last_time_in: Time.zone.parse('2018-03-05 22:00'), last_time_out: Time.zone.parse('2018-03-06 13:00') }
@@ -237,6 +237,18 @@ RSpec.describe Demand, type: :model do
           demand.update_effort!
           expect(demand.effort_upstream.to_f).to eq 30.0
           expect(demand.effort_downstream.to_f).to eq 23.0
+        end
+      end
+
+      context 'when the demand is a bug' do
+        let(:demand) { Fabricate :demand, project: project, demand_type: :bug, assignees_count: 2, effort_upstream: 30, effort_downstream: 23, manual_effort: false }
+        let!(:upstream_demand_transition) { Fabricate :demand_transition, demand: demand, stage: upstream_effort_stage, last_time_in: Time.zone.parse('2018-03-05 22:00'), last_time_out: Time.zone.parse('2018-03-20 13:00') }
+        let!(:downstream_demand_transition) { Fabricate :demand_transition, demand: demand, stage: downstream_effort_stage, last_time_in: Time.zone.parse('2018-03-06 13:00'), last_time_out: Time.zone.parse('2018-03-14 15:00') }
+
+        it 'changes the effort based on the bug configuration' do
+          demand.update_effort!
+          expect(demand.effort_upstream.to_f).to eq 23.232
+          expect(demand.effort_downstream.to_f).to eq 9.4392
         end
       end
     end
