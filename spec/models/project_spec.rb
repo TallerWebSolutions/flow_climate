@@ -31,6 +31,7 @@ RSpec.describe Project, type: :model do
       it { is_expected.to validate_presence_of :status }
       it { is_expected.to validate_presence_of :initial_scope }
       it { is_expected.to validate_presence_of :qty_hours }
+      it { is_expected.to validate_presence_of :percentage_effort_to_bugs }
     end
     context 'complex ones' do
       context 'values' do

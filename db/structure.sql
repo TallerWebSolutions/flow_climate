@@ -676,7 +676,8 @@ CREATE TABLE public.projects (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     product_id integer,
-    nickname character varying
+    nickname character varying,
+    percentage_effort_to_bugs integer DEFAULT 0 NOT NULL
 );
 
 
@@ -1837,6 +1838,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20180604224141'),
 ('20180615182356'),
 ('20180618185639'),
-('20180619150458');
+('20180619150458'),
+('20180620014718');
 
 
