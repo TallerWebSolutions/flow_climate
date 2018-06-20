@@ -183,6 +183,7 @@ en:
         title: "Flow Pressure for %{project_name}"
         ylabel: "Flow Pressure"
         tooltipsufix: " demands/day"
+        data_suffix: "demands/day"
       flow_pressure_per_project:
         ylabel: "Flow Pressure"
       throughput_per_week:
@@ -391,6 +392,8 @@ en:
         text: "Incomes"
       wip_per_day:
         text: "Days"
+      hours:
+        text: "Hours"
     tooltipsufix:
       projects:
         text: "projects"

@@ -13,25 +13,25 @@
 
 <div class="row">
   <div class="topnav">
-    <%= link_to t('navbar.details'), '#', id: 'nav-item-stamps', class: 'nav-item active' %>
-    <%= link_to t('navbar.members_table'), '#', id: 'nav-item-members', class: 'nav-item' %>
-    <%= link_to t('navbar.projects_list'), '#', id: 'nav-item-list', class: 'nav-item' %>
-    <%= link_to t('navbar.demands'), '#', id: 'nav-item-delivered', class: 'nav-item' %>
-    <%= link_to t('navbar.strategic'), '#', id: 'nav-item-strategic', class: 'nav-item' %>
-    <%= link_to t('navbar.status_report'), '#', id: 'nav-item-statusreport', class: 'nav-item' %>
-    <%= link_to t('navbar.charts'), '#', id: 'nav-item-charts', class: 'nav-item' %>
-    <%= link_to t('navbar.flow'), '#', id: 'nav-item-flow', class: 'nav-item' %>
-    <%= link_to t('navbar.settings'), '#', id: 'nav-item-settings', class: 'nav-item' %>
+    <%= link_to t('navbar.details'), '#', id: 'nav-item-stamps', class: 'nav-item active', data: { container: '#stamps' } %>
+    <%= link_to t('navbar.members_table'), '#', id: 'nav-item-members', class: 'nav-item', data: { container: '#members-table' } %>
+    <%= link_to t('navbar.projects_list'), '#', id: 'nav-item-list', class: 'nav-item', data: { container: '#project-list' } %>
+    <%= link_to t('navbar.demands'), '#', id: 'nav-item-delivered', class: 'nav-item', data: { container: '#demands-list' } %>
+    <%= link_to t('navbar.strategic'), '#', id: 'nav-item-strategic', class: 'nav-item', data: { container: '#strategic' } %>
+    <%= link_to t('navbar.status_report'), '#', id: 'nav-item-statusreport', class: 'nav-item', data: { container: '#project-status-report' } %>
+    <%= link_to t('navbar.charts'), '#', id: 'nav-item-charts', class: 'nav-item', data: { container: '#charts' } %>
+    <%= link_to t('navbar.flow'), '#', id: 'nav-item-flow', class: 'nav-item', data: { container: '#flow' } %>
+    <%= link_to t('navbar.settings'), '#', id: 'nav-item-settings', class: 'nav-item', data: { container: '#settings' } %>
   </div>
 </div>
 
-<div id="stamps">
+<div id="stamps" class="tab-container">
   <%= render 'team_stamps', team: @team %>
 </div>
 
 <%= render 'commons/loader_spinner' %>
 
-<div id="project-list">
+<div id="project-list" class="tab-container">
   <h2><%= t('projects.index.title') %></h2>
 
   <div class="row">
@@ -50,33 +50,31 @@
   </div>
 </div>
 
-<div id="demands-list">
+<div id="demands-list" class="tab-container">
   <%= render 'demands/demands_list', grouped_delivered_demands: @grouped_delivered_demands, grouped_customer_demands: @grouped_customer_demands, demands: @demands %>
 </div>
 
-<div id="members-table">
+<div id="members-table" class="tab-container">
   <%= render 'team_members/team_members_table' %>
 </div>
 
-<div id="strategic">
+<div id="strategic" class="tab-container">
   <%= render 'companies/strategic_table', model_name: @team.name, strategic_report_data: @strategic_report_data %>
 </div>
 
-<div id="project-status-report">
+<div id="project-status-report" class="tab-container">
   <%= render 'charts/status_report_charts', target_name: @team.name, status_report_data: @status_report_data %>
 </div>
 
-<div id="charts">
-  <% if @report_data.present? %>
-    <%= render 'charts/project_charts', target_name: @team.name, report_data: @report_data %>
-  <% end %>
+<div id="charts" class="tab-container">
+  <%= render 'charts/project_charts', target_name: @team.name, report_data: @report_data %>
 </div>
 
-<div id="flow">
+<div id="flow" class="tab-container">
   <%= render 'teams/flow', flow_report_data: @flow_report_data, team: @team %>
 </div>
 
-<div id="settings">
+<div id="settings" class="tab-container">
   <%= render 'pipefy/pipefy_team_configs/pipefy_team_configs_table' %>
 </div>
 
@@ -90,20 +88,20 @@
   <%= javascript_include_tag 'charts/gauge' %>
   <%= javascript_include_tag 'charts/scatter' %>
 
-  <%= javascript_include_tag 'teams/demands_list' %>
   <%= javascript_include_tag 'components/components' %>
   <%= javascript_include_tag 'components/dates' %>
+
   <%= javascript_include_tag 'routes/team_routes' %>
+
   <%= javascript_include_tag 'top_navigation/tab-navigation' %>
-  <%= javascript_include_tag 'teams/show' %>
+
   <%= javascript_include_tag 'projects/charts' %>
   <%= javascript_include_tag 'projects/status_report_current' %>
 
-  <%= javascript_include_tag 'companies/hours_gauge_chart' %>
-  <%= javascript_include_tag 'companies/column_active_projects_count_chart' %>
-  <%= javascript_include_tag 'companies/hours_per_month_chart' %>
-  <%= javascript_include_tag 'companies/flow_pressure_chart' %>
-  <%= javascript_include_tag 'companies/money_chart' %>
+  <%= javascript_include_tag 'companies/strategic_charts' %>
+
+  <%= javascript_include_tag 'teams/show' %>
+  <%= javascript_include_tag 'teams/demands_list' %>
 
   <%= javascript_include_tag 'demands/column_throughput_week' %>
 

@@ -7,7 +7,8 @@
            data-weeks='<%= report_data.active_weeks %>'
            data-xtitle='<%= t('projects.charts.xlabel.weeks') %>'
            data-ytitle='<%= t('projects.charts.burnup.ylabel') %>'
-           data-tooltipsufix='<%= t('projects.charts.burnup.tooltipsufix') %>'
+           data-suffix='<%= t('projects.charts.burnup.tooltipsufix') %>'
+           data-prefix=''
            data-ideal='<%= report_data.demands_burnup_data.ideal_per_period %>'
            data-current='<%= report_data.demands_burnup_data.current_per_period %>'
            data-scope='<%= report_data.demands_burnup_data.scope_per_period %>'>

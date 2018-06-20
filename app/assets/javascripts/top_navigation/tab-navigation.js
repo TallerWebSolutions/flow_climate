@@ -1,15 +1,9 @@
 function disableTabs() {
-    $(".loader").show();
-
-    var navitem = $('.nav-item');
-    navitem.attr("disabled", true);
-    navitem.off('click');
+    $('.loader').show();
+    $('.nav-item').attr('disabled', 'disabled');
 }
 
 function enableTabs() {
     $(".loader").hide();
-
-    var navitem = $('.nav-item');
-    navitem.attr("disabled", false);
-    navitem.on('click')
+    $('.nav-item').removeAttr('disabled');
 }
