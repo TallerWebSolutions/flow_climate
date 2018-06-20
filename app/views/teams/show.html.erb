@@ -13,15 +13,15 @@
 
 <div class="row">
   <div class="topnav">
-    <%= link_to t('navbar.details'), '#', id: 'nav-item-stamps', class: 'active' %>
-    <%= link_to t('navbar.members_table'), '#', id: 'nav-item-members' %>
-    <%= link_to t('navbar.projects_list'), '#', id: 'nav-item-list' %>
-    <%= link_to t('navbar.demands'), '#', id: 'nav-item-delivered' %>
-    <%= link_to t('navbar.strategic'), '#', id: 'nav-item-strategic' %>
-    <%= link_to t('navbar.status_report'), '#', id: 'nav-item-statusreport' %>
-    <%= link_to t('navbar.charts'), '#', id: 'nav-item-charts' %>
-    <%= link_to t('navbar.flow'), '#', id: 'nav-item-flow' %>
-    <%= link_to t('navbar.settings'), '#', id: 'nav-item-settings' %>
+    <%= link_to t('navbar.details'), '#', id: 'nav-item-stamps', class: 'nav-item active' %>
+    <%= link_to t('navbar.members_table'), '#', id: 'nav-item-members', class: 'nav-item' %>
+    <%= link_to t('navbar.projects_list'), '#', id: 'nav-item-list', class: 'nav-item' %>
+    <%= link_to t('navbar.demands'), '#', id: 'nav-item-delivered', class: 'nav-item' %>
+    <%= link_to t('navbar.strategic'), '#', id: 'nav-item-strategic', class: 'nav-item' %>
+    <%= link_to t('navbar.status_report'), '#', id: 'nav-item-statusreport', class: 'nav-item' %>
+    <%= link_to t('navbar.charts'), '#', id: 'nav-item-charts', class: 'nav-item' %>
+    <%= link_to t('navbar.flow'), '#', id: 'nav-item-flow', class: 'nav-item' %>
+    <%= link_to t('navbar.settings'), '#', id: 'nav-item-settings', class: 'nav-item' %>
   </div>
 </div>
 
@@ -94,6 +94,7 @@
   <%= javascript_include_tag 'components/components' %>
   <%= javascript_include_tag 'components/dates' %>
   <%= javascript_include_tag 'routes/team_routes' %>
+  <%= javascript_include_tag 'top_navigation/tab-navigation' %>
   <%= javascript_include_tag 'teams/show' %>
   <%= javascript_include_tag 'projects/charts' %>
   <%= javascript_include_tag 'projects/status_report_current' %>

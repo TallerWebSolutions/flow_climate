@@ -3,7 +3,6 @@ flow_div.html("<%= escape_javascript(render 'teams/flow', flow_report_data: @flo
 
 buildFlowDemandsCharts();
 
-$(".loader").hide();
 flow_div.show();
 $('#nav-item-flow').addClass('active');
 
@@ -12,3 +11,5 @@ $('#search_week').on('click', function () {
     $(".loader").show();
     searchDemandsToFlowCharts($('#company_id').val(), $('#team_id').val(), $('#week').val(), $('#year').val());
 });
+
+enableTabs();

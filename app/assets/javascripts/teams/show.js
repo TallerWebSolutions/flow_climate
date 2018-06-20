@@ -29,21 +29,21 @@ $('#nav-item-delivered').on('click', function(){
 
 $('#nav-item-statusreport').on('click', function(){
     hideAllComponents();
-    $(".loader").show();
+    disableTabs();
 
     buildStatusReportCharts(company_id, team_id)
 });
 
 $('#nav-item-charts').on('click', function(){
     hideAllComponents();
-    $('#charts').show();
-    $('#nav-item-charts').addClass('active');
+    disableTabs();
 
     buildOperationalCharts(company_id, team_id);
 });
 $('#nav-item-strategic').on('click', function(){
     hideAllComponents();
-    $(".loader").show();
+    disableTabs();
+
     buildStrategicCharts(company_id, team_id);
 });
 
@@ -55,7 +55,7 @@ $('#nav-item-members').on('click', function(){
 
 $('#nav-item-flow').on('click', function(){
     hideAllComponents();
-    $(".loader").show();
+    disableTabs();
     searchDemandsToFlowCharts(company_id, team_id, ISO8601_week_no(new Date()), (new Date()).getFullYear());
 });
 
