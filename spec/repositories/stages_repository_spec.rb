@@ -88,7 +88,7 @@ RSpec.describe StagesRepository, type: :repository do
     end
   end
 
-  describe '#average_time_per_month' do
+  describe '#average_seconds_in_stage_per_month' do
     before { travel_to Time.zone.local(2018, 5, 29, 18, 25, 0) }
     after { travel_back }
 

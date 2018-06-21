@@ -9,7 +9,6 @@ var team_id = $("#team_id").val();
 
 $(".loader").hide();
 
-
 $('.nav-item').on('click', function(event){
     hideAllComponents();
     var disabled = $(this).attr('disabled');

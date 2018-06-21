@@ -73,6 +73,10 @@ class ProjectsRepository
     DemandTransition.joins(demand: :project).joins(:stage).where(demands: { project_id: projects.map(&:id) }).where('stages.queue = false AND stages.stage_stream = 1 AND ((EXTRACT(WEEK FROM demand_transitions.last_time_out) <= :week AND EXTRACT(YEAR FROM demand_transitions.last_time_out) <= :year) OR (EXTRACT(YEAR FROM demand_transitions.last_time_out) < :year))', week: date.cweek, year: date.cwyear).uniq.sum(&:total_hours_in_transition)
   end
 
+  def hours_per_stage(projects)
+    DemandTransition.joins(:demand).joins(:stage).select('stages.name, stages.order, SUM(EXTRACT(EPOCH FROM (last_time_out - last_time_in))) AS sum_duration').where(demands: { project_id: projects.map(&:id) }).where('stages.end_point = false').group('stages.name, stages.order').order('stages.name, stages.order').map { |group_sum| [group_sum.name, group_sum.order, group_sum.sum_duration] }
+  end
+
   def finish_project!(project)
     project.demands.not_finished.each { |demand| demand.update(end_date: Time.zone.now) }
     project.update(status: :finished)
