@@ -194,14 +194,14 @@ RSpec.describe ProjectsRepository, type: :repository do
       let(:project) { Fabricate :project, customer: customer }
       let(:other_project) { Fabricate :project, customer: customer }
 
-      let(:first_stage) { Fabricate :stage, company: company, projects: [project], stage_stream: :downstream, name: 'first_stage', queue: false }
-      let(:second_stage) { Fabricate :stage, company: company, projects: [project], stage_stream: :downstream, name: 'second_stage', queue: false }
-      let(:fourth_stage) { Fabricate :stage, company: company, projects: [project], stage_stream: :upstream, name: 'fourth_stage', queue: false }
+      let(:first_stage) { Fabricate :stage, company: company, projects: [project], stage_stream: :downstream, name: 'first_stage', queue: false, order: 2 }
+      let(:second_stage) { Fabricate :stage, company: company, projects: [project], stage_stream: :downstream, name: 'second_stage', queue: false, order: 1 }
+      let(:fourth_stage) { Fabricate :stage, company: company, projects: [project], stage_stream: :upstream, name: 'fourth_stage', queue: false, order: 0 }
 
-      let(:third_stage) { Fabricate :stage, company: company, projects: [other_project], stage_stream: :downstream, name: 'third_stage', queue: true }
-      let(:fifth_stage) { Fabricate :stage, company: company, projects: [project], stage_stream: :downstream, name: 'fifth_stage', queue: true }
+      let(:third_stage) { Fabricate :stage, company: company, projects: [other_project], stage_stream: :downstream, name: 'third_stage', queue: true, order: 4 }
+      let(:fifth_stage) { Fabricate :stage, company: company, projects: [project], stage_stream: :downstream, name: 'fifth_stage', queue: true, order: 3 }
 
-      let(:sixth_stage) { Fabricate :stage, company: company, projects: [project], stage_stream: :downstream, name: 'fifth_stage', end_point: true }
+      let(:sixth_stage) { Fabricate :stage, company: company, projects: [project], stage_stream: :downstream, name: 'fifth_stage', end_point: true, order: 5 }
 
       let(:demand) { Fabricate :demand, project: project }
       let(:other_demand) { Fabricate :demand, project: other_project }
@@ -215,7 +215,7 @@ RSpec.describe ProjectsRepository, type: :repository do
 
       let!(:sixth_transition) { Fabricate :demand_transition, stage: sixth_stage, demand: demand, last_time_in: '2018-03-08T17:09:58-03:00', last_time_out: '2018-04-02T17:09:58-03:00' }
 
-      it { expect(ProjectsRepository.instance.hours_per_stage(Project.all)).to match_array([['fifth_stage', 0, 2_160_000.0], ['first_stage', 0, 259_200.0], ['fourth_stage', 0, 2_160_000.0], ['second_stage', 0, 604_800.0], ['third_stage', 0, 3_715_200.0]]) }
+      it { expect(ProjectsRepository.instance.hours_per_stage(Project.all)).to eq([['fourth_stage', 0, 2_160_000.0], ['second_stage', 1, 604_800.0], ['first_stage', 2, 259_200.0], ['fifth_stage', 3, 2_160_000.0], ['third_stage', 4, 3_715_200.0]]) }
     end
 
     context 'having no transitions' do

@@ -13,4 +13,7 @@ function buildStatusReportCurrentCharts() {
 
     var statusReportDeadlineDiv = $('#status-report-deadline-bar');
     buildBarChart(statusReportDeadlineDiv);
+
+    var statusReportHoursPerStageDiv = $('#status-report-hours-per-stage');
+    buildColumnChart(statusReportHoursPerStageDiv);
 }

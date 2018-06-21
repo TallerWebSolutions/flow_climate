@@ -31,10 +31,10 @@ function buildColumnChart(columnDiv) {
         },
         tooltip: {
             formatter: function () {
-                if (!columnDiv.data('ysuffix')) {
+                if (!columnDiv.data('suffix')) {
                     return Highcharts.numberFormat(this.y, columnDiv.data('decimals'), '.');
                 } else {
-                    return Highcharts.numberFormat(this.y, columnDiv.data('decimals'), '.') + ' ' + columnDiv.data('ysuffix');
+                    return Highcharts.numberFormat(this.y, columnDiv.data('decimals'), '.') + ' ' + columnDiv.data('suffix');
                 }
             }
         },
@@ -51,10 +51,10 @@ function buildColumnChart(columnDiv) {
                     enabled: true,
                     color: 'black',
                     formatter: function () {
-                        if (!columnDiv.data('ysuffix')) {
+                        if (!columnDiv.data('suffix')) {
                             return Highcharts.numberFormat(this.y, columnDiv.data('decimals'), '.');
                         } else {
-                            return Highcharts.numberFormat(this.y, columnDiv.data('decimals'), '.') + ' ' + columnDiv.data('ysuffix');
+                            return Highcharts.numberFormat(this.y, columnDiv.data('decimals'), '.') + ' ' + columnDiv.data('suffix');
                         }
                     }
                 },

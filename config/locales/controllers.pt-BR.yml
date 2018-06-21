@@ -256,6 +256,13 @@ pt-BR:
         tooltip: "Excluir Projeto"
       finish:
         tooltip: "Finalizar Projeto"
+    status_report_chart:
+      hours_per_stage:
+        series:
+          hours_per_stage: "Horas por Etapa"
+        labels:
+          y: "Horas na Etapa"
+        title: "Horas por Etapa para %{target_name}"
   project_results:
     index:
       title: "Resultados do Projeto"

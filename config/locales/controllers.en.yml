@@ -254,6 +254,13 @@ en:
         tooltip: "Delete Project"
       finish:
         tooltip: "Finish Project"
+    status_report_chart:
+      hours_per_stage:
+        series:
+          hours_per_stage: "Hours per Stage"
+        labels:
+          y: "Hours in Stage"
+        title: "Hours per Stage for %{target_name}"
   project_results:
     index:
       title: "Project results"

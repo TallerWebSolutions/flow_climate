@@ -15,6 +15,8 @@ RSpec.describe StatusReportData, type: :data_object do
     let(:fourth_stage) { Fabricate :stage, company: company, stage_stream: :upstream, queue: false, end_point: true }
     let(:fifth_stage) { Fabricate :stage, company: company, stage_stream: :upstream, queue: true, end_point: true }
 
+    let(:sixth_stage) { Fabricate :stage, company: company, projects: [first_project, second_project, third_project], stage_stream: :upstream, end_point: false }
+
     let!(:first_stage_project_config) { Fabricate :stage_project_config, project: first_project, stage: first_stage, compute_effort: true, pairing_percentage: 60, stage_percentage: 100, management_percentage: 10 }
     let!(:second_stage_project_config) { Fabricate :stage_project_config, project: first_project, stage: second_stage, compute_effort: true, pairing_percentage: 60, stage_percentage: 100, management_percentage: 10 }
     let!(:third_stage_project_config) { Fabricate :stage_project_config, project: second_project, stage: third_stage, compute_effort: true, pairing_percentage: 60, stage_percentage: 100, management_percentage: 10 }
@@ -40,6 +42,12 @@ RSpec.describe StatusReportData, type: :data_object do
     let!(:fourth_transition) { Fabricate :demand_transition, stage: fourth_stage, demand: fourth_demand, last_time_in: Time.zone.iso8601('2018-01-08T17:09:58-03:00'), last_time_out: Time.zone.iso8601('2018-02-02T17:09:58-03:00') }
     let!(:fifth_transition) { Fabricate :demand_transition, stage: fifth_stage, demand: fifth_demand, last_time_in: Time.zone.iso8601('2018-03-08T17:09:58-03:00'), last_time_out: Time.zone.iso8601('2018-04-02T17:09:58-03:00') }
 
+    let!(:sixth_transition) { Fabricate :demand_transition, stage: sixth_stage, demand: first_demand, last_time_in: Time.zone.iso8601('2018-02-27T17:09:58-03:00'), last_time_out: Time.zone.iso8601('2018-03-02T17:09:58-03:00') }
+    let!(:seventh_transition) { Fabricate :demand_transition, stage: sixth_stage, demand: second_demand, last_time_in: Time.zone.iso8601('2018-02-02T17:09:58-03:00'), last_time_out: Time.zone.iso8601('2018-02-10T17:09:58-03:00') }
+    let!(:eigth_transition) { Fabricate :demand_transition, stage: sixth_stage, demand: third_demand, last_time_in: Time.zone.iso8601('2018-04-02T17:09:58-03:00'), last_time_out: Time.zone.iso8601('2018-04-20T17:09:58-03:00') }
+    let!(:nineth_transition) { Fabricate :demand_transition, stage: sixth_stage, demand: fourth_demand, last_time_in: Time.zone.iso8601('2018-01-08T17:09:58-03:00'), last_time_out: Time.zone.iso8601('2018-02-02T17:09:58-03:00') }
+    let!(:tenth_transition) { Fabricate :demand_transition, stage: sixth_stage, demand: fifth_demand, last_time_in: Time.zone.iso8601('2018-03-08T17:09:58-03:00'), last_time_out: Time.zone.iso8601('2018-04-02T17:09:58-03:00') }
+
     describe '.initialize' do
       context 'having projects' do
         subject(:report_data) { StatusReportData.new(Project.all) }
@@ -60,6 +68,7 @@ RSpec.describe StatusReportData, type: :data_object do
           expect(report_data.dates_and_odds.keys.count).to be >= 1
           expect(report_data.monte_carlo_data.dates_and_hits_hash.keys.count).to be >= 1
           expect(report_data.monte_carlo_data.monte_carlo_date_hash.keys.count).to be >= 1
+          expect(report_data.hours_per_stage).to eq(xcategories: [sixth_stage.name], hours_per_stage: [1896.0])
         end
       end
       context 'having no projects' do

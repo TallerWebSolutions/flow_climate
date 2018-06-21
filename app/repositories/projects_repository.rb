@@ -74,7 +74,7 @@ class ProjectsRepository
   end
 
   def hours_per_stage(projects)
-    DemandTransition.joins(:demand).joins(:stage).select('stages.name, stages.order, SUM(EXTRACT(EPOCH FROM (last_time_out - last_time_in))) AS sum_duration').where(demands: { project_id: projects.map(&:id) }).where('stages.end_point = false').group('stages.name, stages.order').order('stages.name, stages.order').map { |group_sum| [group_sum.name, group_sum.order, group_sum.sum_duration] }
+    DemandTransition.joins(:demand).joins(:stage).select('stages.name, stages.order, SUM(EXTRACT(EPOCH FROM (last_time_out - last_time_in))) AS sum_duration').where(demands: { project_id: projects.map(&:id) }).where('stages.end_point = false').group('stages.name, stages.order').order('stages.order, stages.name').map { |group_sum| [group_sum.name, group_sum.order, group_sum.sum_duration] }
   end
 
   def finish_project!(project)
