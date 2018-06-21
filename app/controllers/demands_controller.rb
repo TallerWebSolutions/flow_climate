@@ -3,7 +3,7 @@
 class DemandsController < AuthenticatedController
   before_action :assign_company
   before_action :assign_project
-  before_action :assign_demand, only: %i[edit update show synchronize_pipefy]
+  before_action :assign_demand, only: %i[edit update show synchronize_pipefy destroy]
 
   def new
     @demand = Demand.new(project: @project, project_result: @project_result)
@@ -17,9 +17,8 @@ class DemandsController < AuthenticatedController
   end
 
   def destroy
-    demand = Demand.find(params[:id])
-    DemandsRepository.instance.full_demand_destroy!(demand)
-    redirect_to company_project_path(@company, @project)
+    DemandsRepository.instance.full_demand_destroy!(@demand)
+    render 'demands/destroy.js.erb'
   end
 
   def edit; end

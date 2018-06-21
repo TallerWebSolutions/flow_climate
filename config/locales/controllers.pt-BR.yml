@@ -48,6 +48,8 @@ pt-BR:
     percentage:
       symbol: "%"
       title: "Porcentagem"
+    destroy:
+      confirm: "Confirma a exclusão do registro?"
   header:
     logout: Sair
     sign_up: Cadastre-se
