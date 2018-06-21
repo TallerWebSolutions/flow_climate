@@ -8,9 +8,9 @@ class TeamsController < AuthenticatedController
     @team_members = @team.team_members.order(:name)
     @team_projects = ProjectsRepository.instance.all_projects_for_team(@team)
     @active_team_projects = @team_projects.active
-    @projects_summary = ProjectsSummaryObject.new(@team.projects)
+    @projects_summary = ProjectsSummaryData.new(@team.projects)
     @pipefy_team_configs = @team.pipefy_team_configs.order(:username)
-    @projects_risk_alert_data = ProjectRiskData.new(@team.projects)
+    @projects_risk_alert_data = Highchart::ProjectRiskChartsAdapter.new(@team.projects)
     @demands = DemandsRepository.instance.demands_per_projects(@team_projects)
     assign_grouped_demands_informations
   end
@@ -35,13 +35,13 @@ class TeamsController < AuthenticatedController
 
   def search_for_projects
     @projects = ProjectsRepository.instance.add_query_to_projects_in_status(ProjectsRepository.instance.all_projects_for_team(@team), params[:status_filter])
-    @projects_summary = ProjectsSummaryObject.new(@projects)
+    @projects_summary = ProjectsSummaryData.new(@projects)
     respond_to { |format| format.js { render file: 'projects/projects_search.js.erb' } }
   end
 
   def search_demands_to_flow_charts
     @team_projects = ProjectsRepository.instance.all_projects_for_team(@team)
-    @flow_report_data = FlowReportData.new(@team_projects, params[:week].to_i, params[:year].to_i)
+    @flow_report_data = Highchart::FlowChartsAdapter.new(@team_projects, params[:week].to_i, params[:year].to_i)
     respond_to { |format| format.js { render file: 'teams/flow.js.erb' } }
   end
 

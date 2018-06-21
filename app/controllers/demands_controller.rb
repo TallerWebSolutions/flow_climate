@@ -43,7 +43,7 @@ class DemandsController < AuthenticatedController
 
   def synchronize_pipefy
     pipefy_response = Pipefy::PipefyApiService.request_card_details(@demand.demand_id)
-    @demand = Pipefy::PipefyCardResponseReader.instance.process_card_response!(@project.pipefy_config.team, @demand, pipefy_response)
+    @demand = Pipefy::PipefyCardAdapter.instance.process_card_response!(@project.pipefy_config.team, @demand, pipefy_response)
     if @demand.blank? || @demand.valid?
       process_succeeded_sync
     else

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe ProjectRiskData, type: :data_object do
+RSpec.describe Highchart::ProjectRiskChartsAdapter, type: :data_object do
   context 'having projects' do
     let(:first_project) { Fabricate :project, status: :executing, start_date: 2.weeks.ago, end_date: 1.week.from_now }
     let(:second_project) { Fabricate :project, status: :waiting, start_date: 1.week.from_now, end_date: 2.weeks.from_now }
@@ -23,7 +23,7 @@ RSpec.describe ProjectRiskData, type: :data_object do
     let!(:seventh_alert) { Fabricate :project_risk_alert, project_risk_config: six_risk_config, project: third_project, alert_color: :yellow, created_at: 30.minutes.ago }
 
     describe '.initialize' do
-      subject(:risk_data) { ProjectRiskData.new(Project.all) }
+      subject(:risk_data) { Highchart::ProjectRiskChartsAdapter.new(Project.all) }
 
       it 'retrieves the last risk alert informations and mounts the data to the charts' do
         expect(risk_data.backlog_risk_alert_data).to eq [{ name: 'Vermelho', y: 1, color: '#FB283D' }]

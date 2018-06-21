@@ -12,11 +12,11 @@ class CompaniesController < AuthenticatedController
     @financial_informations = @company.financial_informations.order(finances_date: :desc)
     @teams = @company.teams.order(:name)
     @company_projects = @company.projects.order(end_date: :desc)
-    @strategic_report_data = StrategicReportData.new(@company, @company.projects, @company.total_available_hours)
+    @strategic_report_data = Highchart::StrategicChartsAdapter.new(@company, @company.projects, @company.total_available_hours)
     @company_settings = @company.company_settings || CompanySettings.new(company: @company)
     @company_projects = @company.projects.order(end_date: :desc)
-    @projects_risk_alert_data = ProjectRiskData.new(@company_projects)
-    @projects_summary = ProjectsSummaryObject.new(@company_projects)
+    @projects_risk_alert_data = Highchart::ProjectRiskChartsAdapter.new(@company_projects)
+    @projects_summary = ProjectsSummaryData.new(@company_projects)
   end
 
   def new

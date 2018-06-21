@@ -86,8 +86,8 @@ RSpec.describe ProjectsController, type: :controller do
             expect(response).to render_template :show
             expect(assigns(:company)).to eq company
             expect(assigns(:project)).to eq first_project
-            expect(assigns(:report_data)).to be_a ReportData
-            expect(assigns(:status_report_data)).to be_a StatusReportData
+            expect(assigns(:report_data)).to be_a Highchart::OperationalChartsAdapter
+            expect(assigns(:status_report_data)).to be_a Highchart::StatusReportChartsAdapter
             expect(assigns(:ordered_project_risk_alerts)).to eq [second_alert, first_alert]
             expect(assigns(:demands)).to match_array [second_demand, first_demand, third_demand]
             expect(assigns(:project_change_deadline_histories)).to match_array [first_change_deadline, second_change_deadline]
@@ -132,7 +132,7 @@ RSpec.describe ProjectsController, type: :controller do
             expect(response).to render_template :index
             projects = assigns(:projects)
             expect(projects).to eq [other_project, project]
-            expect(assigns(:projects_summary)).to be_a ProjectsSummaryObject
+            expect(assigns(:projects_summary)).to be_a ProjectsSummaryData
             expect(assigns(:projects_summary).projects).to eq [other_project, project]
           end
         end

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe ChartData, type: :data_object do
+RSpec.describe Highchart::HighchartAdapter, type: :data_object do
   context 'having projects' do
     let(:first_project) { Fabricate :project, status: :executing, start_date: Time.zone.parse('2018-02-20'), end_date: Time.zone.parse('2018-03-22') }
     let(:second_project) { Fabricate :project, status: :waiting, start_date: Time.zone.parse('2018-03-13'), end_date: Time.zone.parse('2018-03-21') }
@@ -20,7 +20,7 @@ RSpec.describe ChartData, type: :data_object do
     let!(:fifth_demand) { Fabricate :demand, project: first_project, project_result: third_project_result, end_date: Time.zone.parse('2018-03-13'), leadtime: 4 * 86_400, effort_upstream: 56, effort_downstream: 25 }
 
     describe '.initialize' do
-      subject(:chart_data) { ChartData.new(Project.all) }
+      subject(:chart_data) { Highchart::HighchartAdapter.new(Project.all) }
 
       it 'do the math and provides the correct information' do
         expect(chart_data.all_projects).to eq Project.all
@@ -35,7 +35,7 @@ RSpec.describe ChartData, type: :data_object do
 
   context 'having no projects' do
     describe '.initialize' do
-      subject(:chart_data) { ChartData.new(Project.all) }
+      subject(:chart_data) { Highchart::HighchartAdapter.new(Project.all) }
 
       it 'returns empty arrays' do
         expect(chart_data.all_projects).to eq []

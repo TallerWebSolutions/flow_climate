@@ -15,9 +15,9 @@ class ProcessPipefyCardJob < ApplicationJob
   private
 
   def process_card!(team, card_response)
-    demand = Pipefy::PipefyCardResponseReader.instance.create_card!(team, card_response)
+    demand = Pipefy::PipefyCardAdapter.instance.create_card!(team, card_response)
     return if demand.blank?
-    Pipefy::PipefyCardResponseReader.instance.process_card_response!(team, demand, card_response)
+    Pipefy::PipefyCardAdapter.instance.process_card_response!(team, demand, card_response)
     demand.project.project_results.map(&:compute_flow_metrics!)
   end
 end

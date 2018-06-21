@@ -79,8 +79,8 @@
   <div class="col-xs-12">
     <h3>
       <ul>
-        <li><%= FlowAnalytic.new(@company).best_month_to_start_a_project(Time.zone.today).html_safe %></li>
-        <li><%= FlowAnalytic.new(@company).financial_debt_to_sold_projects(Time.zone.today).html_safe %></li>
+        <li><%= FlowAnalyticData.new(@company).best_month_to_start_a_project(Time.zone.today).html_safe %></li>
+        <li><%= FlowAnalyticData.new(@company).financial_debt_to_sold_projects(Time.zone.today).html_safe %></li>
       </ul>
     </h3>
   </div>

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Pipefy
-  class PipefyCardResponseReader
+  class PipefyCardAdapter
     include Singleton
 
     def create_card!(team, card_response)

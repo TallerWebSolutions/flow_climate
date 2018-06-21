@@ -196,8 +196,8 @@ RSpec.describe ProductsController, type: :controller do
             expect(response).to render_template :show
             expect(assigns(:company)).to eq company
             expect(assigns(:product)).to eq product
-            expect(assigns(:report_data)).to be_a ReportData
-            expect(assigns(:status_report_data)).to be_a StatusReportData
+            expect(assigns(:report_data)).to be_a Highchart::OperationalChartsAdapter
+            expect(assigns(:status_report_data)).to be_a Highchart::StatusReportChartsAdapter
             expect(assigns(:product_projects)).to eq [second_project, first_project]
             expect(assigns(:projects_summary).total_initial_scope).to eq 60
           end

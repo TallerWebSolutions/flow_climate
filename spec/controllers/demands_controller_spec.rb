@@ -320,7 +320,7 @@ RSpec.describe DemandsController, type: :controller do
           let(:first_card_response) { { data: { card: { id: '5140999', assignees: [{ id: '101381', username: 'xpto' }, { id: '101381', username: 'xpto' }, { id: '101382', username: 'bla' }, { id: '101321', username: 'mambo' }], comments: [{ created_at: '2018-02-22T18:39:46-03:00', author: { username: 'sbbrubles' }, text: '[BLOCKED]: xpto of bla having foo.' }], fields: [{ name: 'Descrição da pesquisa', value: 'teste' }, { name: 'Title', value: 'Página dos colunistas' }, { name: 'Type', value: 'bUG' }, { name: 'JiraKey', value: 'PD-46' }, { name: 'Class of Service', value: 'Padrão' }, { name: 'Project', value: project.full_name }], phases_history: [{ phase: { id: '2481595' }, firstTimeIn: '2018-02-22T17:09:58-03:00', lastTimeOut: '2018-02-26T17:09:58-03:00' }, { phase: { id: '3481595' }, firstTimeIn: '2018-02-15T17:10:40-03:00', lastTimeOut: '2018-02-17T17:10:40-03:00' }, { phase: { id: '2481597' }, firstTimeIn: '2018-02-27T17:09:58-03:00', lastTimeOut: nil }], pipe: { id: '356355' }, url: 'http://app.pipefy.com/pipes/356355#cards/5140999' } } }.with_indifferent_access }
           it 'calls the services and the reader' do
             expect(Pipefy::PipefyApiService).to(receive(:request_card_details).with(demand.demand_id).once { first_card_response })
-            expect(Pipefy::PipefyCardResponseReader.instance).to(receive(:process_card_response!).with(pipefy_config.team, demand, first_card_response).and_call_original)
+            expect(Pipefy::PipefyCardAdapter.instance).to(receive(:process_card_response!).with(pipefy_config.team, demand, first_card_response).and_call_original)
             put :synchronize_pipefy, params: { company_id: company, project_id: project, id: demand }
             expect(response).to redirect_to company_project_demand_path(company, project, demand)
             expect(demand.reload.project).to eq project
@@ -335,7 +335,7 @@ RSpec.describe DemandsController, type: :controller do
 
             it 'calls the services and the reader' do
               expect(Pipefy::PipefyApiService).to(receive(:request_card_details).with(demand.demand_id).once { first_card_response })
-              expect(Pipefy::PipefyCardResponseReader.instance).to(receive(:process_card_response!).with(pipefy_config.team, demand, first_card_response).once.and_call_original)
+              expect(Pipefy::PipefyCardAdapter.instance).to(receive(:process_card_response!).with(pipefy_config.team, demand, first_card_response).once.and_call_original)
               put :synchronize_pipefy, params: { company_id: company, project_id: project, id: demand }
               expect(response).to redirect_to company_project_path(company, project)
               expect(flash[:notice]).to eq I18n.t('demands.sync.done')
@@ -350,7 +350,7 @@ RSpec.describe DemandsController, type: :controller do
 
             it 'calls the services and the reader' do
               expect(Pipefy::PipefyApiService).to(receive(:request_card_details).with(demand.demand_id).once { first_card_response })
-              expect(Pipefy::PipefyCardResponseReader.instance).to(receive(:process_card_response!).with(pipefy_config.team, demand, first_card_response).once.and_call_original)
+              expect(Pipefy::PipefyCardAdapter.instance).to(receive(:process_card_response!).with(pipefy_config.team, demand, first_card_response).once.and_call_original)
               put :synchronize_pipefy, params: { company_id: company, project_id: project, id: demand }
               demand_updated = assigns(:demand)
               expect(response).to redirect_to company_project_demand_path(company, project, demand)
