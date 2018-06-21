@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe StatusReportData, type: :data_object do
+RSpec.describe Highchart::StatusReportChartsAdapter, type: :data_object do
   context 'having projects' do
     let(:company) { Fabricate :company }
     let(:customer) { Fabricate :customer, company: company }
@@ -50,7 +50,7 @@ RSpec.describe StatusReportData, type: :data_object do
 
     describe '.initialize' do
       context 'having projects' do
-        subject(:report_data) { StatusReportData.new(Project.all) }
+        subject(:report_data) { Highchart::StatusReportChartsAdapter.new(Project.all) }
 
         it 'do the math and provides the correct information' do
           expect(report_data.all_projects).to eq Project.all
@@ -72,7 +72,7 @@ RSpec.describe StatusReportData, type: :data_object do
         end
       end
       context 'having no projects' do
-        subject(:report_data) { StatusReportData.new(Project.none) }
+        subject(:report_data) { Highchart::StatusReportChartsAdapter.new(Project.none) }
 
         it 'do the math and provides the correct information' do
           expect(report_data.all_projects).to eq []
@@ -97,7 +97,7 @@ RSpec.describe StatusReportData, type: :data_object do
 
   context 'having no projects' do
     describe '.initialize' do
-      subject(:report_data) { StatusReportData.new(Project.all) }
+      subject(:report_data) { Highchart::StatusReportChartsAdapter.new(Project.all) }
 
       it 'returns empty arrays' do
         expect(report_data.all_projects).to eq []

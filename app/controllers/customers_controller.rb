@@ -10,9 +10,9 @@ class CustomersController < AuthenticatedController
 
   def show
     @customer_projects = @customer.projects.order(end_date: :desc)
-    @projects_summary = ProjectsSummaryObject.new(@customer.projects)
-    @report_data = ReportData.new(@customer_projects)
-    @status_report_data = StatusReportData.new(@customer_projects)
+    @projects_summary = ProjectsSummaryData.new(@customer.projects)
+    @report_data = Highchart::OperationalChartsAdapter.new(@customer_projects)
+    @status_report_data = Highchart::StatusReportChartsAdapter.new(@customer_projects)
   end
 
   def new
@@ -40,7 +40,7 @@ class CustomersController < AuthenticatedController
 
   def search_for_projects
     @projects = ProjectsRepository.instance.add_query_to_projects_in_status(@customer.projects, params[:status_filter])
-    @projects_summary = ProjectsSummaryObject.new(@projects)
+    @projects_summary = ProjectsSummaryData.new(@projects)
     respond_to { |format| format.js { render file: 'projects/projects_search.js.erb' } }
   end
 

@@ -55,11 +55,11 @@ RSpec.describe ProcessPipefyProjectJob, type: :active_job do
         end
 
         it 'calls the methods to update the demand' do
-          expect(Pipefy::PipefyCardResponseReader.instance).to(receive(:create_card!).with(team, card_response).once { first_demand })
-          expect(Pipefy::PipefyCardResponseReader.instance).to(receive(:create_card!).with(team, other_card_response).once { second_demand })
+          expect(Pipefy::PipefyCardAdapter.instance).to(receive(:create_card!).with(team, card_response).once { first_demand })
+          expect(Pipefy::PipefyCardAdapter.instance).to(receive(:create_card!).with(team, other_card_response).once { second_demand })
 
-          expect(Pipefy::PipefyCardResponseReader.instance).to receive(:process_card_response!).with(team, first_demand, card_response).once
-          expect(Pipefy::PipefyCardResponseReader.instance).to receive(:process_card_response!).with(team, second_demand, other_card_response).once
+          expect(Pipefy::PipefyCardAdapter.instance).to receive(:process_card_response!).with(team, first_demand, card_response).once
+          expect(Pipefy::PipefyCardAdapter.instance).to receive(:process_card_response!).with(team, second_demand, other_card_response).once
 
           expect_any_instance_of(ProjectResult).to receive(:compute_flow_metrics!).once
           expect(DemandsRepository.instance).to receive(:full_demand_destroy!).with(third_demand).once

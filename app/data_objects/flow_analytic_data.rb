@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class FlowAnalytic
+class FlowAnalyticData
   attr_reader :company
 
   def initialize(company)

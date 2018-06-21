@@ -49,7 +49,7 @@ RSpec.describe ChartsController, type: :controller do
           it 'builds the operation report and respond the JS render the template' do
             get :build_operational_charts, params: { company_id: company, team_id: team.id }, xhr: true
             expect(response).to render_template 'teams/operational_charts.js.erb'
-            expect(assigns(:report_data)).to be_a ReportData
+            expect(assigns(:report_data)).to be_a Highchart::OperationalChartsAdapter
             expect(assigns(:report_data).all_projects).to match_array [first_project, second_project]
           end
         end
@@ -123,7 +123,7 @@ RSpec.describe ChartsController, type: :controller do
         it 'builds the operation report and respond the JS render the template' do
           get :build_status_report_charts, params: { company_id: company, team_id: team.id }, xhr: true
           expect(response).to render_template 'teams/status_report_charts.js.erb'
-          expect(assigns(:status_report_data)).to be_a StatusReportData
+          expect(assigns(:status_report_data)).to be_a Highchart::StatusReportChartsAdapter
         end
       end
 

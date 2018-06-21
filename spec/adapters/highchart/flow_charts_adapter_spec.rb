@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe FlowReportData, type: :data_object do
+RSpec.describe Highchart::FlowChartsAdapter, type: :data_object do
   context 'having projects' do
     before { travel_to Time.zone.local(2018, 4, 6, 10, 0, 0) }
     after { travel_back }
@@ -45,7 +45,7 @@ RSpec.describe FlowReportData, type: :data_object do
         second_project_result.add_demand!(nineth_demand)
         third_project_result.add_demand!(tenth_demand)
 
-        flow_data = FlowReportData.new(Project.all, 1.week.ago.to_date.cweek, 1.week.ago.to_date.cwyear)
+        flow_data = Highchart::FlowChartsAdapter.new(Project.all, 1.week.ago.to_date.cweek, 1.week.ago.to_date.cwyear)
         expect(flow_data.projects_in_chart).to match_array [first_project, second_project, third_project]
         expect(flow_data.total_arrived).to match_array [2, 2, 1]
         expect(flow_data.total_processed_upstream).to match_array [1, 0, 0]
@@ -83,7 +83,7 @@ RSpec.describe FlowReportData, type: :data_object do
     describe '.initialize' do
       let(:selected_demands) { DemandsRepository.instance.selected_grouped_by_project_and_week(Project.all, 1.week.ago.to_date.cweek, 1.week.ago.to_date.cwyear).group_by(&:project) }
       let(:processed_demands) { DemandsRepository.instance.throughput_by_project_and_week(Project.all, 1.week.ago.to_date.cweek, 1.week.ago.to_date.cwyear).group_by(&:project) }
-      subject(:flow_data) { FlowReportData.new(Project.all, 1.week.ago.to_date.cweek, 1.week.ago.to_date.cwyear) }
+      subject(:flow_data) { Highchart::FlowChartsAdapter.new(Project.all, 1.week.ago.to_date.cweek, 1.week.ago.to_date.cwyear) }
 
       it 'extracts the information of flow' do
         expect(flow_data.projects_in_chart).to eq []

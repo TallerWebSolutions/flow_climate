@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class ProjectsSummaryObject
+class ProjectsSummaryData
   attr_reader :projects, :total_initial_scope, :total_last_week_scope, :total_delivered_scope, :total_hours, :total_consumed_hours, :average_hour_value, :total_value,
               :total_days, :total_remaining_money, :total_remaining_days, :total_flow_pressure
 

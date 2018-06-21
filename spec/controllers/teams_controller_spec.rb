@@ -332,7 +332,7 @@ RSpec.describe TeamsController, type: :controller do
               get :search_demands_to_flow_charts, params: { company_id: company, id: team, week: 1.week.ago.to_date.cweek, year: 1.week.ago.to_date.cwyear }, xhr: true
 
               expect(response).to render_template 'teams/flow.js.erb'
-              expect(assigns(:flow_report_data)).to be_a FlowReportData
+              expect(assigns(:flow_report_data)).to be_a Highchart::FlowChartsAdapter
             end
           end
         end

@@ -9,8 +9,8 @@ class ProjectsController < AuthenticatedController
   def show
     @ordered_project_results = @project.project_results.order(:result_date)
     projects = Project.where(id: @project.id)
-    @report_data = ReportData.new(projects)
-    @status_report_data = StatusReportData.new(projects)
+    @report_data = Highchart::OperationalChartsAdapter.new(projects)
+    @status_report_data = Highchart::StatusReportChartsAdapter.new(projects)
     @ordered_project_risk_alerts = @project.project_risk_alerts.order(created_at: :desc)
     @demands = DemandsRepository.instance.demands_per_projects(projects)
     assign_grouped_demands_informations(@demands)
@@ -20,7 +20,7 @@ class ProjectsController < AuthenticatedController
 
   def index
     @projects = add_status_filter(Project.joins(:customer).where('customers.company_id = ?', @company.id)).order(end_date: :desc)
-    @projects_summary = ProjectsSummaryObject.new(@projects)
+    @projects_summary = ProjectsSummaryData.new(@projects)
   end
 
   def new
@@ -55,7 +55,7 @@ class ProjectsController < AuthenticatedController
 
   def search_for_projects
     @projects = ProjectsRepository.instance.add_query_to_projects_in_status(@company.projects.joins(:customer), params[:status_filter])
-    @projects_summary = ProjectsSummaryObject.new(@projects)
+    @projects_summary = ProjectsSummaryData.new(@projects)
     respond_to { |format| format.js { render file: 'projects/projects_search.js.erb' } }
   end
 
