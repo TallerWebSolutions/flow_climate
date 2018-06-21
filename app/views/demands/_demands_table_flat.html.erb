@@ -1,4 +1,6 @@
-<h4><%= t('demands.index.count', demands_count: demands.count) %></h4>
+<div id="demands_count">
+  <h4><%= t('demands.index.count', demands_count: demands.count) %></h4>
+</div>
 
 <table class="table table-index table-striped">
   <thead>
@@ -20,7 +22,7 @@
   </thead>
   <tbody>
     <% demands.each do |demand| %>
-      <tr class="<%= 'upstream' unless demand.downstream_demand? %>">
+      <tr id='demand_<%= demand.id %>' class="<%= 'upstream' unless demand.downstream_demand? %>">
         <td><%= render 'demands/demand_actions', demand: demand %></td>
         <td><%= demand.project.full_name %></td>
         <td><%= link_to demand.demand_id, company_project_demand_path(demand.company, demand.project, demand) %></td>

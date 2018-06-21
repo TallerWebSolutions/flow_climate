@@ -47,6 +47,8 @@ en:
     percentage:
       symbol: "%"
       title: "Percentage"
+    destroy:
+      confirm: "You are about to delete a record. Are you sure?"
   header:
     logout: Logout
     explore: Explore

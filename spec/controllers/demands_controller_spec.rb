@@ -11,8 +11,8 @@ RSpec.describe DemandsController, type: :controller do
       it { expect(response).to redirect_to new_user_session_path }
     end
     describe 'DELETE #destroy' do
-      before { delete :destroy, params: { company_id: 'foo', project_id: 'bar', id: 'sbbrubles' } }
-      it { expect(response).to redirect_to new_user_session_path }
+      before { delete :destroy, params: { company_id: 'foo', project_id: 'bar', id: 'sbbrubles' }, xhr: true }
+      it { expect(response).to have_http_status :unauthorized }
     end
     describe 'GET #edit' do
       before { get :edit, params: { company_id: 'foo', project_id: 'bar', id: 'sbbrubles' } }
@@ -121,26 +121,27 @@ RSpec.describe DemandsController, type: :controller do
       let(:demand) { Fabricate :demand }
 
       context 'passing valid IDs' do
-        before { delete :destroy, params: { company_id: company, project_id: project, id: demand } }
         it 'assigns the instance variable and renders the template' do
-          expect(response).to redirect_to company_project_path(company, project)
+          expect(DemandsRepository.instance).to receive(:full_demand_destroy!).with(demand).once.and_call_original
+          delete :destroy, params: { company_id: company, project_id: project, id: demand }, xhr: true
+          expect(response).to render_template 'demands/destroy.js.erb'
           expect(Demand.last).to be_nil
         end
       end
 
       context 'passing an invalid ID' do
         context 'non-existent company' do
-          before { delete :destroy, params: { company_id: 'foo', project_id: project, id: demand } }
+          before { delete :destroy, params: { company_id: 'foo', project_id: project, id: demand }, xhr: true }
           it { expect(response).to have_http_status :not_found }
         end
         context 'non-existent project' do
-          before { delete :destroy, params: { company_id: company, project_id: 'foo', id: demand } }
+          before { delete :destroy, params: { company_id: company, project_id: 'foo', id: demand }, xhr: true }
           it { expect(response).to have_http_status :not_found }
         end
         context 'not permitted' do
           let(:company) { Fabricate :company, users: [] }
 
-          before { delete :destroy, params: { company_id: company, project_id: project, id: demand } }
+          before { delete :destroy, params: { company_id: company, project_id: project, id: demand }, xhr: true }
           it { expect(response).to have_http_status :not_found }
         end
       end

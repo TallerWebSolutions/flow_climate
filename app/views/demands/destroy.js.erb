@@ -1,0 +1,8 @@
+var destroyedRow = $('#demand_<%= @demand.id %>');
+
+destroyedRow.fadeOut(600, function(){
+    destroyedRow.remove();
+});
+
+
+$('#demands_count').html("<h4><%= t('demands.index.count', demands_count: @project.demands.count) %></h4>")
