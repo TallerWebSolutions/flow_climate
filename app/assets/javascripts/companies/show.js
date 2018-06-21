@@ -54,4 +54,7 @@ function hideAllComponents() {
     $('#nav-item-teams').removeClass('active');
 }
 
+var hoursGauge = $('#hours-gauge');
+buildGaugeChart(hoursGauge);
+
 buildStrategicHighcharts();

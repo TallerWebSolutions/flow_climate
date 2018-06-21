@@ -31,6 +31,14 @@ class StatusReportData < ChartData
     [{ name: I18n.t('projects.index.total_remaining_days'), data: [remaining_days] }, { name: I18n.t('projects.index.passed_time'), data: [passed_time], color: '#F45830' }]
   end
 
+  def hours_per_stage
+    hours_per_stage_distribution = ProjectsRepository.instance.hours_per_stage(@all_projects)
+    hours_per_stage_chart_hash = {}
+    hours_per_stage_chart_hash[:xcategories] = hours_per_stage_distribution.map { |hours_per_stage_array| hours_per_stage_array[0] }
+    hours_per_stage_chart_hash[:hours_per_stage] = hours_per_stage_distribution.map { |hours_per_stage_array| hours_per_stage_array[2] / 3600 }
+    hours_per_stage_chart_hash
+  end
+
   def dates_and_odds
     return {} if @active_projects.blank?
     project = @active_projects.first

@@ -43,7 +43,7 @@ function buildBarChart(barDiv) {
         },
         tooltip: {
             formatter: function () {
-                return Highcharts.numberFormat(this.y, barDiv.data('decimals'), '.') + ' ' + barDiv.data('ysuffix');
+                return Highcharts.numberFormat(this.y, barDiv.data('decimals'), '.') + ' ' + barDiv.data('suffix');
             }
         },
         series: barDiv.data('series')

@@ -185,6 +185,44 @@ RSpec.describe ProjectsRepository, type: :repository do
     it { expect(ProjectsRepository.instance.total_queue_time_for(Project.all, Date.new(2018, 4, 10))).to eq 600.0 }
   end
 
+  describe '#hours_per_stage' do
+    after { travel_back }
+
+    context 'having transitions' do
+      let(:company) { Fabricate :company }
+      let(:customer) { Fabricate :customer, company: company }
+      let(:project) { Fabricate :project, customer: customer }
+      let(:other_project) { Fabricate :project, customer: customer }
+
+      let(:first_stage) { Fabricate :stage, company: company, projects: [project], stage_stream: :downstream, name: 'first_stage', queue: false, order: 2 }
+      let(:second_stage) { Fabricate :stage, company: company, projects: [project], stage_stream: :downstream, name: 'second_stage', queue: false, order: 1 }
+      let(:fourth_stage) { Fabricate :stage, company: company, projects: [project], stage_stream: :upstream, name: 'fourth_stage', queue: false, order: 0 }
+
+      let(:third_stage) { Fabricate :stage, company: company, projects: [other_project], stage_stream: :downstream, name: 'third_stage', queue: true, order: 4 }
+      let(:fifth_stage) { Fabricate :stage, company: company, projects: [project], stage_stream: :downstream, name: 'fifth_stage', queue: true, order: 3 }
+
+      let(:sixth_stage) { Fabricate :stage, company: company, projects: [project], stage_stream: :downstream, name: 'fifth_stage', end_point: true, order: 5 }
+
+      let(:demand) { Fabricate :demand, project: project }
+      let(:other_demand) { Fabricate :demand, project: other_project }
+
+      let!(:first_transition) { Fabricate :demand_transition, stage: first_stage, demand: demand, last_time_in: '2018-02-27T17:09:58-03:00', last_time_out: '2018-03-02T17:09:58-03:00' }
+      let!(:second_transition) { Fabricate :demand_transition, stage: second_stage, demand: demand, last_time_in: '2018-02-02T17:09:58-03:00', last_time_out: '2018-02-09T17:09:58-03:00' }
+      let!(:fourth_transition) { Fabricate :demand_transition, stage: fourth_stage, demand: demand, last_time_in: '2018-01-08T17:09:58-03:00', last_time_out: '2018-02-02T17:09:58-03:00' }
+
+      let!(:third_transition) { Fabricate :demand_transition, stage: third_stage, demand: other_demand, last_time_in: '2018-04-02T17:09:58-03:00', last_time_out: '2018-05-15T17:09:58-03:00' }
+      let!(:fifth_transition) { Fabricate :demand_transition, stage: fifth_stage, demand: demand, last_time_in: '2018-03-08T17:09:58-03:00', last_time_out: '2018-04-02T17:09:58-03:00' }
+
+      let!(:sixth_transition) { Fabricate :demand_transition, stage: sixth_stage, demand: demand, last_time_in: '2018-03-08T17:09:58-03:00', last_time_out: '2018-04-02T17:09:58-03:00' }
+
+      it { expect(ProjectsRepository.instance.hours_per_stage(Project.all)).to eq([['fourth_stage', 0, 2_160_000.0], ['second_stage', 1, 604_800.0], ['first_stage', 2, 259_200.0], ['fifth_stage', 3, 2_160_000.0], ['third_stage', 4, 3_715_200.0]]) }
+    end
+
+    context 'having no transitions' do
+      it { expect(ProjectsRepository.instance.hours_per_stage(Project.all)).to eq [] }
+    end
+  end
+
   describe '#total_touch_time_for' do
     before { travel_back }
 
