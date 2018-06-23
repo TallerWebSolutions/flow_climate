@@ -20,22 +20,22 @@ RSpec.describe Highchart::HighchartAdapter, type: :data_object do
     let!(:fifth_demand) { Fabricate :demand, project: first_project, project_result: third_project_result, end_date: Time.zone.parse('2018-03-13'), leadtime: 4 * 86_400, effort_upstream: 56, effort_downstream: 25 }
 
     describe '.initialize' do
-      subject(:chart_data) { Highchart::HighchartAdapter.new(Project.all) }
+      subject(:chart_data) { Highchart::HighchartAdapter.new(Project.all, 'all') }
 
       it 'do the math and provides the correct information' do
-        expect(chart_data.all_projects).to eq Project.all
+        expect(chart_data.all_projects).to match_array Project.all
         expect(chart_data.active_projects).to eq Project.active
-        expect(chart_data.active_weeks).to eq [[8, 2018], [9, 2018], [10, 2018], [11, 2018], [12, 2018]]
-        expect(chart_data.all_projects_weeks).to eq [[8, 2018], [9, 2018], [10, 2018], [11, 2018], [12, 2018]]
-        expect(chart_data.active_months).to eq [[2, 2018], [3, 2018]]
-        expect(chart_data.all_projects_months).to eq [[2, 2018], [3, 2018]]
+        expect(chart_data.active_weeks).to eq [Date.new(2018, 2, 19), Date.new(2018, 2, 26), Date.new(2018, 3, 5), Date.new(2018, 3, 12), Date.new(2018, 3, 19)]
+        expect(chart_data.all_projects_weeks).to eq [Date.new(2018, 2, 19), Date.new(2018, 2, 26), Date.new(2018, 3, 5), Date.new(2018, 3, 12), Date.new(2018, 3, 19)]
+        expect(chart_data.active_months).to eq [Date.new(2018, 2, 1), Date.new(2018, 3, 1)]
+        expect(chart_data.all_projects_months).to eq [Date.new(2018, 2, 1), Date.new(2018, 3, 1)]
       end
     end
   end
 
   context 'having no projects' do
     describe '.initialize' do
-      subject(:chart_data) { Highchart::HighchartAdapter.new(Project.all) }
+      subject(:chart_data) { Highchart::HighchartAdapter.new(Project.all, 'all') }
 
       it 'returns empty arrays' do
         expect(chart_data.all_projects).to eq []

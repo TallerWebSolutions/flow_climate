@@ -24,11 +24,11 @@ function buildStrategicCharts(company_id, team_id) {
     });
 }
 
-function buildStatusReportCharts(company_id, team_id) {
+function buildStatusReportCharts(company_id, team_id, period) {
     jQuery.ajax({
         url: "/companies/" + company_id + "/build_status_report_charts" + ".js",
         type: "GET",
-        data: 'team_id=' + team_id
+        data: 'team_id=' + team_id + '&period=' + period
     });
 }
 

@@ -52,8 +52,8 @@ RSpec.describe Highchart::OperationalChartsAdapter, type: :data_object do
         it 'do the math and provides the correct information' do
           expect(report_data.all_projects).to eq Project.all
           expect(report_data.active_projects).to eq Project.active
-          expect(report_data.all_projects_weeks).to eq [[8, 2018], [9, 2018], [10, 2018], [11, 2018], [12, 2018], [13, 2018], [14, 2018], [15, 2018], [16, 2018], [17, 2018], [18, 2018], [19, 2018]]
-          expect(report_data.active_weeks).to eq [[8, 2018], [9, 2018], [10, 2018], [11, 2018], [12, 2018], [13, 2018], [14, 2018], [15, 2018], [16, 2018], [17, 2018], [18, 2018], [19, 2018]]
+          expect(report_data.all_projects_weeks).to eq [Date.new(2018, 2, 19), Date.new(2018, 2, 26), Date.new(2018, 3, 5), Date.new(2018, 3, 12), Date.new(2018, 3, 19), Date.new(2018, 3, 26), Date.new(2018, 4, 2), Date.new(2018, 4, 9), Date.new(2018, 4, 16), Date.new(2018, 4, 23), Date.new(2018, 4, 30), Date.new(2018, 5, 7)]
+          expect(report_data.active_weeks).to eq [Date.new(2018, 2, 19), Date.new(2018, 2, 26), Date.new(2018, 3, 5), Date.new(2018, 3, 12), Date.new(2018, 3, 19), Date.new(2018, 3, 26), Date.new(2018, 4, 2), Date.new(2018, 4, 9), Date.new(2018, 4, 16), Date.new(2018, 4, 23), Date.new(2018, 4, 30), Date.new(2018, 5, 7)]
           expect(report_data.demands_burnup_data.ideal_per_period).to eq [47.166666666666664, 94.33333333333333, 141.5, 188.66666666666666, 235.83333333333331, 283.0, 330.16666666666663, 377.3333333333333, 424.5, 471.66666666666663, 518.8333333333333, 566.0]
           expect(report_data.demands_burnup_data.current_per_period).to eq [25, 25, 25, 201, 201, 201, 201, 201, 201, 201, 201, 201]
           expect(report_data.demands_burnup_data.scope_per_period).to eq [170, 170, 170, 566, 566, 566, 566, 566, 566, 566, 566, 566]
@@ -64,7 +64,7 @@ RSpec.describe Highchart::OperationalChartsAdapter, type: :data_object do
           expect(report_data.lead_time_control_chart[:percentile_95_data]).to eq 3.8
           expect(report_data.lead_time_control_chart[:percentile_80_data]).to eq 3.2
           expect(report_data.lead_time_control_chart[:percentile_60_data]).to eq 2.4
-          expect(report_data.leadtime_percentiles_on_time[:xcategories]).to eq [[8, 2018], [9, 2018], [10, 2018], [11, 2018], [12, 2018], [13, 2018], [14, 2018], [15, 2018], [16, 2018], [17, 2018], [18, 2018], [19, 2018]]
+          expect(report_data.leadtime_percentiles_on_time[:xcategories]).to eq [Date.new(2018, 2, 19), Date.new(2018, 2, 26), Date.new(2018, 3, 5), Date.new(2018, 3, 12), Date.new(2018, 3, 19), Date.new(2018, 3, 26), Date.new(2018, 4, 2), Date.new(2018, 4, 9), Date.new(2018, 4, 16), Date.new(2018, 4, 23), Date.new(2018, 4, 30), Date.new(2018, 5, 7)]
           expect(report_data.leadtime_percentiles_on_time[:leadtime_80_confidence]).to eq [0.35555555555555557, 0.35555555555555557, 0.35555555555555557, 1.2180555555555554, 1.2180555555555554, 1.2180555555555554, 1.2180555555555554, 1.2180555555555554, 1.2180555555555554, 1.2180555555555554, 1.2180555555555554, 1.2180555555555554]
           expect(report_data.leadtime_bins).to eq ['1.75 Dias', '3.25 Dias']
           expect(report_data.leadtime_histogram_data).to eq [3.0, 2.0]

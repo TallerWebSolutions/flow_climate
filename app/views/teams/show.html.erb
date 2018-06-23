@@ -63,7 +63,7 @@
 </div>
 
 <div id="project-status-report" class="tab-container">
-  <%= render 'charts/status_report_charts', target_name: @team.name, status_report_data: @status_report_data %>
+  <%= render 'teams/status_report_tab', target_name: @team.name, status_report_data: @status_report_data %>
 </div>
 
 <div id="charts" class="tab-container">
@@ -100,8 +100,9 @@
 
   <%= javascript_include_tag 'companies/strategic_charts' %>
 
-  <%= javascript_include_tag 'teams/show' %>
+  <%= javascript_include_tag 'teams/team_navigation_behaviour' %>
   <%= javascript_include_tag 'teams/demands_list' %>
+  <%= javascript_include_tag 'teams/show' %>
 
   <%= javascript_include_tag 'demands/column_throughput_week' %>
 

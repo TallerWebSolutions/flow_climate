@@ -15,7 +15,7 @@ class ChartsController < AuthenticatedController
   end
 
   def build_status_report_charts
-    @status_report_data = Highchart::StatusReportChartsAdapter.new(@projects)
+    @status_report_data = Highchart::StatusReportChartsAdapter.new(@projects, params[:period])
     respond_to { |format| format.js { render file: 'teams/status_report_charts.js.erb' } }
   end
 

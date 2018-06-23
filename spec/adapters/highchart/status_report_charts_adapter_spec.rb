@@ -50,13 +50,13 @@ RSpec.describe Highchart::StatusReportChartsAdapter, type: :data_object do
 
     describe '.initialize' do
       context 'having projects' do
-        subject(:report_data) { Highchart::StatusReportChartsAdapter.new(Project.all) }
+        subject(:report_data) { Highchart::StatusReportChartsAdapter.new(Project.all, 'all') }
 
         it 'do the math and provides the correct information' do
-          expect(report_data.all_projects).to eq Project.all
-          expect(report_data.active_projects).to eq Project.active
-          expect(report_data.all_projects_weeks).to eq [[8, 2018], [9, 2018], [10, 2018], [11, 2018], [12, 2018], [13, 2018], [14, 2018], [15, 2018], [16, 2018], [17, 2018], [18, 2018], [19, 2018]]
-          expect(report_data.active_weeks).to eq [[8, 2018], [9, 2018], [10, 2018], [11, 2018], [12, 2018], [13, 2018], [14, 2018], [15, 2018], [16, 2018], [17, 2018], [18, 2018], [19, 2018]]
+          expect(report_data.all_projects).to match_array Project.all
+          expect(report_data.active_projects).to match_array Project.active
+          expect(report_data.all_projects_weeks).to eq [Date.new(2018, 2, 19), Date.new(2018, 2, 26), Date.new(2018, 3, 5), Date.new(2018, 3, 12), Date.new(2018, 3, 19), Date.new(2018, 3, 26), Date.new(2018, 4, 2), Date.new(2018, 4, 9), Date.new(2018, 4, 16), Date.new(2018, 4, 23), Date.new(2018, 4, 30), Date.new(2018, 5, 7)]
+          expect(report_data.active_weeks).to eq [Date.new(2018, 2, 19), Date.new(2018, 2, 26), Date.new(2018, 3, 5), Date.new(2018, 3, 12), Date.new(2018, 3, 19), Date.new(2018, 3, 26), Date.new(2018, 4, 2), Date.new(2018, 4, 9), Date.new(2018, 4, 16), Date.new(2018, 4, 23), Date.new(2018, 4, 30), Date.new(2018, 5, 7)]
           expect(report_data.hours_burnup_per_week_data.ideal_per_period).to eq [183.33333333333334, 366.6666666666667, 550.0, 733.3333333333334, 916.6666666666667, 1100.0, 1283.3333333333335, 1466.6666666666667, 1650.0, 1833.3333333333335, 2016.6666666666667, 2200.0]
           expect(report_data.hours_burnup_per_week_data.current_per_period).to eq [30, 30, 30, 244, 244, 244, 244, 244, 244, 244, 244, 244]
           expect(report_data.hours_burnup_per_week_data.scope_per_period).to eq [2200.0, 2200.0, 2200.0, 2200.0, 2200.0, 2200.0, 2200.0, 2200.0, 2200.0, 2200.0, 2200.0, 2200.0]
@@ -72,7 +72,7 @@ RSpec.describe Highchart::StatusReportChartsAdapter, type: :data_object do
         end
       end
       context 'having no projects' do
-        subject(:report_data) { Highchart::StatusReportChartsAdapter.new(Project.none) }
+        subject(:report_data) { Highchart::StatusReportChartsAdapter.new(Project.none, 'all') }
 
         it 'do the math and provides the correct information' do
           expect(report_data.all_projects).to eq []
@@ -97,7 +97,7 @@ RSpec.describe Highchart::StatusReportChartsAdapter, type: :data_object do
 
   context 'having no projects' do
     describe '.initialize' do
-      subject(:report_data) { Highchart::StatusReportChartsAdapter.new(Project.all) }
+      subject(:report_data) { Highchart::StatusReportChartsAdapter.new(Project.all, 'all') }
 
       it 'returns empty arrays' do
         expect(report_data.all_projects).to eq []
