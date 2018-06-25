@@ -23,7 +23,7 @@ module Highchart
     end
 
     def hours_per_demand_per_week
-      weekly_data = ProjectResultsRepository.instance.hours_per_demand_in_time_for_projects(all_projects, all_projects_weeks[0])
+      weekly_data = ProjectResultsRepository.instance.hours_per_demand_in_time_for_projects(all_projects, lower_limit_date_to_charts)
 
       result_data = []
       @all_projects_weeks.each do |date|
@@ -35,14 +35,14 @@ module Highchart
     end
 
     def throughput_per_week
-      upstream_th_weekly_data = ProjectResultsRepository.instance.throughput_for_projects_grouped_per_week(all_projects, all_projects_weeks[0], :upstream)
-      downstream_th_weekly_data = ProjectResultsRepository.instance.throughput_for_projects_grouped_per_week(all_projects, all_projects_weeks[0], :downstream)
+      upstream_th_weekly_data = ProjectResultsRepository.instance.throughput_for_projects_grouped_per_week(all_projects, lower_limit_date_to_charts, :upstream)
+      downstream_th_weekly_data = ProjectResultsRepository.instance.throughput_for_projects_grouped_per_week(all_projects, lower_limit_date_to_charts, :downstream)
 
       throughput_chart_data(downstream_th_weekly_data, upstream_th_weekly_data)
     end
 
     def average_demand_cost
-      weekly_data = ProjectResultsRepository.instance.average_demand_cost_in_week_for_projects(all_projects, all_projects_weeks[0])
+      weekly_data = ProjectResultsRepository.instance.average_demand_cost_in_week_for_projects(all_projects, lower_limit_date_to_charts)
 
       result_data = []
       @all_projects_weeks.each do |date|
@@ -206,7 +206,7 @@ module Highchart
     end
 
     def build_throughput_histogram
-      histogram_data = Stats::StatisticsService.instance.throughput_histogram_hash(ProjectsRepository.instance.throughput_per_week(all_projects).values)
+      histogram_data = Stats::StatisticsService.instance.throughput_histogram_hash(ProjectsRepository.instance.throughput_per_week(all_projects, lower_limit_date_to_charts).values)
       @throughput_bins = histogram_data.keys.map { |th| "#{th} #{I18n.t('charts.demand.title')}" }
       @throughput_histogram_data = histogram_data.values
     end

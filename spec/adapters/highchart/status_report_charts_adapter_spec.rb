@@ -68,7 +68,7 @@ RSpec.describe Highchart::StatusReportChartsAdapter, type: :data_object do
           expect(report_data.dates_and_odds.keys.count).to be >= 1
           expect(report_data.monte_carlo_data.dates_and_hits_hash.keys.count).to be >= 1
           expect(report_data.monte_carlo_data.monte_carlo_date_hash.keys.count).to be >= 1
-          expect(report_data.hours_per_stage).to eq(xcategories: [sixth_stage.name], hours_per_stage: [1896.0])
+          expect(report_data.hours_per_stage).to eq(xcategories: [sixth_stage.name], hours_per_stage: [1104.0])
         end
       end
       context 'having no projects' do

@@ -90,5 +90,13 @@ module Highchart
                               3.months.ago.to_date
                             end
     end
+
+    def lower_limit_date_to_charts
+      @all_projects_weeks[0] || Time.zone.today
+    end
+
+    def upper_limit_date_to_charts
+      @all_projects_weeks.last || Time.zone.today
+    end
   end
 end

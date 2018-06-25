@@ -135,15 +135,16 @@ RSpec.describe ProjectsRepository, type: :repository do
   end
 
   describe '#throughput_per_week' do
-    let!(:project) { Fabricate :project, customer: customer, start_date: 2.weeks.ago, end_date: 1.week.from_now, status: :executing }
+    let!(:project) { Fabricate :project, customer: customer, start_date: Date.new(2018, 3, 29), end_date: Date.new(2018, 4, 15), status: :executing }
 
     context 'having enough data from the project' do
-      let!(:first_demand) { Fabricate :demand, project: project, end_date: Time.zone.parse('2018-04-05 22:00') }
-      let!(:second_demand) { Fabricate :demand, project: project, end_date: Time.zone.parse('2018-04-06 22:00') }
-      let!(:third_demand) { Fabricate :demand, project: project, end_date: Time.zone.parse('2018-03-30 22:00') }
+      let!(:first_demand) { Fabricate :demand, project: project, demand_type: :feature, end_date: Time.zone.parse('2018-04-05 22:00') }
+      let!(:second_demand) { Fabricate :demand, project: project, demand_type: :feature, end_date: Time.zone.parse('2018-04-06 22:00') }
+      let!(:third_demand) { Fabricate :demand, project: project, demand_type: :feature, end_date: Time.zone.parse('2018-03-30 22:00') }
       let!(:fourth_demand) { Fabricate :demand, project: project }
 
-      it { expect(ProjectsRepository.instance.throughput_per_week([project])).to eq(Date.new(2018, 3, 26) => 1, Date.new(2018, 4, 2) => 2, Date.new(2018, 4, 9) => 0) }
+      it { expect(ProjectsRepository.instance.throughput_per_week([project], Date.new(2018, 3, 30))).to eq(Date.new(2018, 3, 26) => 1, Date.new(2018, 4, 2) => 2, Date.new(2018, 4, 9) => 0) }
+      it { expect(ProjectsRepository.instance.throughput_per_week([project], Date.new(2018, 4, 6))).to eq(Date.new(2018, 3, 26) => 0, Date.new(2018, 4, 2) => 1, Date.new(2018, 4, 9) => 0) }
     end
   end
 
@@ -155,7 +156,8 @@ RSpec.describe ProjectsRepository, type: :repository do
     let!(:third_demand) { Fabricate :demand, project: project, end_date: Time.zone.parse('2018-03-30 22:00'), leadtime: 5.0 }
     let!(:fourth_demand) { Fabricate :demand, project: project }
 
-    it { expect(ProjectsRepository.instance.leadtime_per_week([project])).to eq(Date.new(2018, 4, 2) => 1.5, Date.new(2018, 4, 9) => 0.0) }
+    it { expect(ProjectsRepository.instance.leadtime_per_week([project], Date.new(2018, 3, 30))).to eq(Date.new(2018, 4, 2) => 1.5, Date.new(2018, 4, 9) => 0.0) }
+    it { expect(ProjectsRepository.instance.leadtime_per_week([project], Date.new(2018, 4, 6))).to eq(Date.new(2018, 4, 2) => 1.0, Date.new(2018, 4, 9) => 0.0) }
   end
 
   describe '#total_queue_time_for' do
@@ -201,7 +203,9 @@ RSpec.describe ProjectsRepository, type: :repository do
       let(:third_stage) { Fabricate :stage, company: company, projects: [other_project], stage_stream: :downstream, name: 'third_stage', queue: true, order: 4 }
       let(:fifth_stage) { Fabricate :stage, company: company, projects: [project], stage_stream: :downstream, name: 'fifth_stage', queue: true, order: 3 }
 
-      let(:sixth_stage) { Fabricate :stage, company: company, projects: [project], stage_stream: :downstream, name: 'fifth_stage', end_point: true, order: 5 }
+      let(:sixth_stage) { Fabricate :stage, company: company, projects: [project], stage_stream: :downstream, name: 'sixth_stage', end_point: true, order: 5 }
+
+      let!(:seventh_stage) { Fabricate :stage, company: company, projects: [project], stage_stream: :downstream, name: 'seventh_stage', end_point: false, order: 5 }
 
       let(:demand) { Fabricate :demand, project: project }
       let(:other_demand) { Fabricate :demand, project: other_project }
@@ -215,11 +219,14 @@ RSpec.describe ProjectsRepository, type: :repository do
 
       let!(:sixth_transition) { Fabricate :demand_transition, stage: sixth_stage, demand: demand, last_time_in: '2018-03-08T17:09:58-03:00', last_time_out: '2018-04-02T17:09:58-03:00' }
 
-      it { expect(ProjectsRepository.instance.hours_per_stage(Project.all)).to eq([['fourth_stage', 0, 2_160_000.0], ['second_stage', 1, 604_800.0], ['first_stage', 2, 259_200.0], ['fifth_stage', 3, 2_160_000.0], ['third_stage', 4, 3_715_200.0]]) }
+      let!(:seventh_transition) { Fabricate :demand_transition, stage: seventh_stage, demand: demand, last_time_in: '2018-03-08T17:09:58-03:00', last_time_out: nil }
+
+      it { expect(ProjectsRepository.instance.hours_per_stage(Project.all, Date.new(2018, 1, 1))).to eq([['fourth_stage', 0, 2_160_000.0], ['second_stage', 1, 604_800.0], ['first_stage', 2, 259_200.0], ['fifth_stage', 3, 2_160_000.0], ['third_stage', 4, 3_715_200.0]]) }
+      it { expect(ProjectsRepository.instance.hours_per_stage(Project.all, Date.new(2018, 2, 2))).to eq([['second_stage', 1, 604_800.0], ['first_stage', 2, 259_200.0], ['fifth_stage', 3, 2_160_000.0], ['third_stage', 4, 3_715_200.0]]) }
     end
 
     context 'having no transitions' do
-      it { expect(ProjectsRepository.instance.hours_per_stage(Project.all)).to eq [] }
+      it { expect(ProjectsRepository.instance.hours_per_stage(Project.all, Date.new(2018, 1, 1))).to eq [] }
     end
   end
 

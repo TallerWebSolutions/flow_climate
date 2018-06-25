@@ -12,8 +12,6 @@ $('.nav-item').on('click', function(event){
     var disabled = $(this).attr('disabled');
     var period = $('#status-report-period').val();
 
-    console.log(period);
-
     if (disabled === 'disabled') {
         event.preventDefault();
     } else {

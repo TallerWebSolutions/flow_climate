@@ -20,15 +20,45 @@ RSpec.describe Highchart::HighchartAdapter, type: :data_object do
     let!(:fifth_demand) { Fabricate :demand, project: first_project, project_result: third_project_result, end_date: Time.zone.parse('2018-03-13'), leadtime: 4 * 86_400, effort_upstream: 56, effort_downstream: 25 }
 
     describe '.initialize' do
-      subject(:chart_data) { Highchart::HighchartAdapter.new(Project.all, 'all') }
+      context 'querying all the time' do
+        subject(:chart_data) { Highchart::HighchartAdapter.new(Project.all, 'all') }
 
-      it 'do the math and provides the correct information' do
-        expect(chart_data.all_projects).to match_array Project.all
-        expect(chart_data.active_projects).to eq Project.active
-        expect(chart_data.active_weeks).to eq [Date.new(2018, 2, 19), Date.new(2018, 2, 26), Date.new(2018, 3, 5), Date.new(2018, 3, 12), Date.new(2018, 3, 19)]
-        expect(chart_data.all_projects_weeks).to eq [Date.new(2018, 2, 19), Date.new(2018, 2, 26), Date.new(2018, 3, 5), Date.new(2018, 3, 12), Date.new(2018, 3, 19)]
-        expect(chart_data.active_months).to eq [Date.new(2018, 2, 1), Date.new(2018, 3, 1)]
-        expect(chart_data.all_projects_months).to eq [Date.new(2018, 2, 1), Date.new(2018, 3, 1)]
+        it 'do the math and provides the correct information' do
+          expect(chart_data.all_projects).to match_array Project.all
+          expect(chart_data.active_projects).to eq Project.active
+          expect(chart_data.active_weeks).to eq [Date.new(2018, 2, 19), Date.new(2018, 2, 26), Date.new(2018, 3, 5), Date.new(2018, 3, 12), Date.new(2018, 3, 19)]
+          expect(chart_data.all_projects_weeks).to eq [Date.new(2018, 2, 19), Date.new(2018, 2, 26), Date.new(2018, 3, 5), Date.new(2018, 3, 12), Date.new(2018, 3, 19)]
+          expect(chart_data.active_months).to eq [Date.new(2018, 2, 1), Date.new(2018, 3, 1)]
+          expect(chart_data.all_projects_months).to eq [Date.new(2018, 2, 1), Date.new(2018, 3, 1)]
+        end
+      end
+      context 'querying the quarter' do
+        before { travel_to Time.zone.local(2018, 5, 30, 10, 0, 0) }
+        after { travel_back }
+        subject(:chart_data) { Highchart::HighchartAdapter.new(Project.all, 'quarter') }
+
+        it 'do the math and provides the correct information' do
+          expect(chart_data.all_projects).to match_array Project.all
+          expect(chart_data.active_projects).to match_array Project.active
+          expect(chart_data.active_weeks).to eq [Date.new(2018, 2, 26), Date.new(2018, 3, 5), Date.new(2018, 3, 12), Date.new(2018, 3, 19)]
+          expect(chart_data.all_projects_weeks).to eq [Date.new(2018, 2, 26), Date.new(2018, 3, 5), Date.new(2018, 3, 12), Date.new(2018, 3, 19)]
+          expect(chart_data.active_months).to eq [Date.new(2018, 2, 1)]
+          expect(chart_data.all_projects_months).to eq [Date.new(2018, 2, 1)]
+        end
+      end
+      context 'querying the month' do
+        before { travel_to Time.zone.local(2018, 3, 30, 10, 0, 0) }
+        after { travel_back }
+        subject(:chart_data) { Highchart::HighchartAdapter.new(Project.all, 'month') }
+
+        it 'do the math and provides the correct information' do
+          expect(chart_data.all_projects).to match_array Project.all
+          expect(chart_data.active_projects).to match_array Project.active
+          expect(chart_data.active_weeks).to eq [Date.new(2018, 2, 26), Date.new(2018, 3, 5), Date.new(2018, 3, 12), Date.new(2018, 3, 19)]
+          expect(chart_data.all_projects_weeks).to eq [Date.new(2018, 2, 26), Date.new(2018, 3, 5), Date.new(2018, 3, 12), Date.new(2018, 3, 19)]
+          expect(chart_data.active_months).to eq [Date.new(2018, 2, 1)]
+          expect(chart_data.all_projects_months).to eq [Date.new(2018, 2, 1)]
+        end
       end
     end
   end

@@ -14,8 +14,8 @@ module Highchart
     end
 
     def throughput_per_week
-      upstream_th_weekly_data = ProjectResultsRepository.instance.throughput_for_projects_grouped_per_week(@all_projects, @all_projects_weeks[0], :upstream)
-      downstream_th_weekly_data = ProjectResultsRepository.instance.throughput_for_projects_grouped_per_week(@all_projects, @all_projects_weeks[0], :downstream)
+      upstream_th_weekly_data = ProjectResultsRepository.instance.throughput_for_projects_grouped_per_week(@all_projects, lower_limit_date_to_charts, :upstream)
+      downstream_th_weekly_data = ProjectResultsRepository.instance.throughput_for_projects_grouped_per_week(@all_projects, lower_limit_date_to_charts, :downstream)
 
       throughput_chart_data(downstream_th_weekly_data, upstream_th_weekly_data)
     end
@@ -25,8 +25,8 @@ module Highchart
     end
 
     def deadline
-      min_date = @all_projects_weeks[0]
-      max_date = @all_projects_weeks.last
+      min_date = lower_limit_date_to_charts
+      max_date = upper_limit_date_to_charts
       return [] if min_date.blank?
       passed_time = (Time.zone.today - min_date).to_i + 1
       remaining_days = (max_date - Time.zone.today).to_i + 1
@@ -34,7 +34,7 @@ module Highchart
     end
 
     def hours_per_stage
-      hours_per_stage_distribution = ProjectsRepository.instance.hours_per_stage(@all_projects)
+      hours_per_stage_distribution = ProjectsRepository.instance.hours_per_stage(@all_projects, lower_limit_date_to_charts)
       hours_per_stage_chart_hash = {}
       hours_per_stage_chart_hash[:xcategories] = hours_per_stage_distribution.map { |hours_per_stage_array| hours_per_stage_array[0] }
       hours_per_stage_chart_hash[:hours_per_stage] = hours_per_stage_distribution.map { |hours_per_stage_array| hours_per_stage_array[2] / 3600 }
@@ -58,14 +58,14 @@ module Highchart
     end
 
     def gather_leadtime_data(project)
-      leadtime_data_array = ProjectsRepository.instance.leadtime_per_week([project]).values
-      leadtime_data_array = ProjectsRepository.instance.leadtime_per_week(project.product.projects).values if leadtime_data_array.size < 10
+      leadtime_data_array = ProjectsRepository.instance.leadtime_per_week([project], lower_limit_date_to_charts).values
+      leadtime_data_array = ProjectsRepository.instance.leadtime_per_week(project.product.projects, lower_limit_date_to_charts).values if leadtime_data_array.size < 10
       leadtime_data_array
     end
 
     def gather_throughput_data(project)
-      throughput_data_array = ProjectsRepository.instance.throughput_per_week([project]).values
-      throughput_data_array = ProjectsRepository.instance.throughput_per_week(project.product.projects).values if throughput_data_array.size < 10
+      throughput_data_array = ProjectsRepository.instance.throughput_per_week([project], lower_limit_date_to_charts).values
+      throughput_data_array = ProjectsRepository.instance.throughput_per_week(project.product.projects, lower_limit_date_to_charts).values if throughput_data_array.size < 10
       throughput_data_array
     end
 
