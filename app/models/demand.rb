@@ -50,11 +50,13 @@ class Demand < ApplicationRecord
   validates :project, :created_date, :demand_id, :demand_type, :class_of_service, :assignees_count, presence: true
   validates :demand_id, uniqueness: { scope: :project_id, message: I18n.t('demand.validations.demand_id_unique.message') }
 
-  scope :opened_in_date, ->(result_date) { where('created_date::timestamp::date = :result_date', result_date: result_date) }
+  scope :opened_in_date, ->(date) { where('created_date::timestamp::date = :date', date: date) }
+  scope :opened_after_date, ->(date) { where('created_date >= :date', date: date.beginning_of_day) }
   scope :finished_in_stream, ->(stage_stream) { joins(demand_transitions: :stage).where('stages.end_point = true AND stages.stage_stream = :stage_stream', stage_stream: stage_stream).uniq }
   scope :finished, -> { where('end_date IS NOT NULL') }
   scope :finished_with_leadtime, -> { where('end_date IS NOT NULL AND leadtime IS NOT NULL') }
   scope :finished_until_date_with_leadtime, ->(limit_date) { finished_with_leadtime.where('demands.end_date <= :limit_date', limit_date: limit_date) }
+  scope :finished_after_date, ->(limit_date) { finished.where('demands.end_date >= :limit_date', limit_date: limit_date.beginning_of_day) }
   scope :finished_bugs, -> { bug.finished }
   scope :not_finished, -> { where('end_date IS NULL') }
   scope :grouped_end_date_by_month, -> { finished.order(end_date: :desc).group_by { |demand| [demand.end_date.to_date.cwyear, demand.end_date.to_date.month] } }
