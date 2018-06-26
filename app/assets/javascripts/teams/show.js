@@ -17,3 +17,16 @@ $('#status-report-period').on('change', function(event){
 
     buildStatusReportCharts(companyId, teamId, period)
 });
+
+$('#operational-charts-period').on('change', function(event){
+    $(".loader").show();
+    $('#operational-charts-div').hide();
+
+    event.preventDefault();
+
+    var companyId = $("#company_id").val();
+    var teamId = $("#team_id").val();
+    var period = $('#operational-charts-period').val();
+
+    buildOperationalCharts(companyId, teamId, period)
+});

@@ -24,8 +24,8 @@ class ProjectFinancesService
   private
 
   def total_effort_to_month(projects, year, month)
-    amount_effort_upstream_project = DemandsRepository.instance.grouped_by_effort_upstream_per_month(projects)[[year.to_f, month.to_f]] || 0
-    amount_effort_downstream_project = DemandsRepository.instance.grouped_by_effort_downstream_per_month(projects)[[year.to_f, month.to_f]] || 0
+    amount_effort_upstream_project = DemandsRepository.instance.grouped_by_effort_upstream_per_month(projects, projects.map(&:start_date).min)[[year.to_f, month.to_f]] || 0
+    amount_effort_downstream_project = DemandsRepository.instance.grouped_by_effort_downstream_per_month(projects, projects.map(&:start_date).min)[[year.to_f, month.to_f]] || 0
     amount_effort_upstream_project + amount_effort_downstream_project
   end
 end

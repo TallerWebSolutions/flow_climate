@@ -7,8 +7,8 @@ module Highchart
                 :lead_time_control_chart, :leadtime_percentiles_on_time, :weeekly_bugs_count_hash, :weeekly_bugs_share_hash, :weeekly_queue_touch_count_hash,
                 :weeekly_queue_touch_share_hash
 
-    def initialize(projects)
-      super(projects, 'all')
+    def initialize(projects, period)
+      super(projects, period)
       @flow_pressure_data = []
       @demands_burnup_data = Highchart::BurnupChartsAdapter.new(@active_weeks, build_demands_scope_data, build_demands_throughput_data)
       @hours_burnup_per_week_data = Highchart::BurnupChartsAdapter.new(@active_weeks, build_hours_scope_data, build_hours_throughput_data)
@@ -54,8 +54,8 @@ module Highchart
     end
 
     def effort_hours_per_month
-      grouped_hours_to_upstream = DemandsRepository.instance.grouped_by_effort_upstream_per_month(all_projects)
-      grouped_hours_to_downstream = DemandsRepository.instance.grouped_by_effort_downstream_per_month(all_projects)
+      grouped_hours_to_upstream = DemandsRepository.instance.grouped_by_effort_upstream_per_month(all_projects, lower_limit_date_to_charts)
+      grouped_hours_to_downstream = DemandsRepository.instance.grouped_by_effort_downstream_per_month(all_projects, lower_limit_date_to_charts)
 
       hours_per_month_data_hash = {}
 

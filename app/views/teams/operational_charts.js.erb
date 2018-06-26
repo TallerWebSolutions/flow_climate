@@ -1,4 +1,4 @@
-$("#charts").html("<%= escape_javascript(render 'charts/project_charts', target_name: @target_name, report_data: @report_data).html_safe %>");
+$("#charts").html("<%= escape_javascript(render 'charts/operational_charts_tab', target_name: @target_name, report_data: @report_data).html_safe %>");
 
 $('#charts').show();
 $('#nav-item-charts').addClass('active');

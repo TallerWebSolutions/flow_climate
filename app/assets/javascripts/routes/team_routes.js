@@ -1,10 +1,10 @@
-function buildOperationalCharts(company_id, team_id) {
+function buildOperationalCharts(company_id, team_id, period) {
     $(".loader").show();
 
     jQuery.ajax({
         url: "/companies/" + company_id + "/build_operational_charts" + ".js",
         type: "GET",
-        data: 'team_id=' + team_id
+        data: 'team_id=' + team_id + '&period=' + period
     });
 }
 

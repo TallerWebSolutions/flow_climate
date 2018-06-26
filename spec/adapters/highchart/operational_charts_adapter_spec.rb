@@ -47,7 +47,7 @@ RSpec.describe Highchart::OperationalChartsAdapter, type: :data_object do
 
     describe '.initialize' do
       context 'having projects' do
-        subject(:report_data) { Highchart::OperationalChartsAdapter.new(Project.all) }
+        subject(:report_data) { Highchart::OperationalChartsAdapter.new(Project.all, 'all') }
 
         it 'do the math and provides the correct information' do
           expect(report_data.all_projects).to eq Project.all
@@ -77,7 +77,7 @@ RSpec.describe Highchart::OperationalChartsAdapter, type: :data_object do
         end
       end
       context 'having no projects' do
-        subject(:report_data) { Highchart::OperationalChartsAdapter.new(Project.none) }
+        subject(:report_data) { Highchart::OperationalChartsAdapter.new(Project.none, 'all') }
 
         it 'do the math and provides the correct information' do
           expect(report_data.all_projects).to eq []
@@ -102,14 +102,14 @@ RSpec.describe Highchart::OperationalChartsAdapter, type: :data_object do
       end
     end
     describe '#hours_per_demand_per_week' do
-      subject(:report_data) { Highchart::OperationalChartsAdapter.new(Project.all) }
+      subject(:report_data) { Highchart::OperationalChartsAdapter.new(Project.all, 'all') }
       it { expect(report_data.hours_per_demand_per_week).to eq [15.0, 0, 0, 1.6589147286821706, 0, 0, 0, 0, 0, 0, 0, 0] }
     end
   end
 
   context 'having no projects' do
     describe '.initialize' do
-      subject(:report_data) { Highchart::OperationalChartsAdapter.new(Project.all) }
+      subject(:report_data) { Highchart::OperationalChartsAdapter.new(Project.all, 'all') }
 
       it 'returns empty arrays' do
         expect(report_data.all_projects).to eq []
@@ -125,7 +125,7 @@ RSpec.describe Highchart::OperationalChartsAdapter, type: :data_object do
     end
 
     describe '#hours_per_demand_per_week' do
-      subject(:report_data) { Highchart::OperationalChartsAdapter.new(Project.all) }
+      subject(:report_data) { Highchart::OperationalChartsAdapter.new(Project.all, 'all') }
       it { expect(report_data.hours_per_demand_per_week).to eq [] }
     end
   end

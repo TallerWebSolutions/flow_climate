@@ -178,13 +178,14 @@ RSpec.describe DemandsRepository, type: :repository do
       let!(:seventh_demand) { Fabricate :demand, project: project, commitment_date: 10.days.ago, end_date: nil, effort_upstream: 32, effort_downstream: 87 }
 
       context 'having demands in progress' do
-        it { expect(DemandsRepository.instance.grouped_by_effort_upstream_per_month([project])).to eq([2018.0, 2.0] => 22.0, [2018.0, 3.0] => 195.0) }
+        it { expect(DemandsRepository.instance.grouped_by_effort_upstream_per_month([project], 57.days.ago.to_date)).to eq([2018.0, 2.0] => 22.0, [2018.0, 3.0] => 195.0) }
+        it { expect(DemandsRepository.instance.grouped_by_effort_upstream_per_month([project], 24.days.ago.to_date)).to eq([2018.0, 3.0] => 195.0) }
       end
     end
 
     context 'having no demands' do
       context 'having demands in progress' do
-        it { expect(DemandsRepository.instance.grouped_by_effort_upstream_per_month([project])).to eq({}) }
+        it { expect(DemandsRepository.instance.grouped_by_effort_upstream_per_month([project], Time.zone.today)).to eq({}) }
       end
     end
   end
@@ -202,13 +203,14 @@ RSpec.describe DemandsRepository, type: :repository do
       let!(:seventh_demand) { Fabricate :demand, project: project, commitment_date: 10.days.ago, end_date: nil, effort_upstream: 32, effort_downstream: 87 }
 
       context 'having demands in progress' do
-        it { expect(DemandsRepository.instance.grouped_by_effort_downstream_per_month([project])).to eq([2018.0, 2.0] => 25.0, [2018.0, 3.0] => 186.0) }
+        it { expect(DemandsRepository.instance.grouped_by_effort_downstream_per_month([project], 57.days.ago.to_date)).to eq([2018.0, 2.0] => 25.0, [2018.0, 3.0] => 186.0) }
+        it { expect(DemandsRepository.instance.grouped_by_effort_downstream_per_month([project], 24.days.ago.to_date)).to eq([2018.0, 3.0] => 186.0) }
       end
     end
 
     context 'having no demands' do
       context 'having demands in progress' do
-        it { expect(DemandsRepository.instance.grouped_by_effort_downstream_per_month([project])).to eq({}) }
+        it { expect(DemandsRepository.instance.grouped_by_effort_downstream_per_month([project], Time.zone.today)).to eq({}) }
       end
     end
   end
