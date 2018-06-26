@@ -162,6 +162,8 @@ pt-BR:
       status_information_html: "Este projeto está <i>%{status_description}</i>"
       delivered_demands:
         text: "Escopo Entregue"
+        opened_in_period: "Abertas no Período"
+        delivered: "Entregues no Período"
       throughput: "Throughput Semana Anterior"
       leadtime_80_confidence: "Leadtime 80%"
     charts:

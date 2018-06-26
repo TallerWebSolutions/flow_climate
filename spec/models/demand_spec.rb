@@ -55,6 +55,14 @@ RSpec.describe Demand, type: :model do
 
       it { expect(Demand.opened_in_date(Date.new(2018, 2, 3))).to match_array [first_demand, second_demand] }
     end
+
+    describe '.opened_after_date' do
+      let!(:first_demand) { Fabricate :demand, created_date: Time.zone.parse('2018-02-02 11:00') }
+      let!(:second_demand) { Fabricate :demand, created_date: Time.zone.parse('2018-02-03 11:00') }
+      let!(:third_demand) { Fabricate :demand, created_date: Time.zone.parse('2018-02-05 11:00') }
+
+      it { expect(Demand.opened_after_date(Date.new(2018, 2, 3))).to match_array [second_demand, third_demand] }
+    end
     describe '.finished' do
       let!(:first_demand) { Fabricate :demand, project: project, end_date: Time.zone.now }
       let!(:second_demand) { Fabricate :demand, project: project, end_date: Time.zone.now }
@@ -75,6 +83,13 @@ RSpec.describe Demand, type: :model do
       let!(:third_demand) { Fabricate :demand, project: project, end_date: Time.zone.now }
 
       it { expect(Demand.finished_until_date_with_leadtime(1.day.ago)).to match_array [first_demand, second_demand] }
+    end
+    describe '.finished_after_date' do
+      let!(:first_demand) { Fabricate :demand, project: project, end_date: 2.days.ago, leadtime: 2 }
+      let!(:second_demand) { Fabricate :demand, project: project, end_date: 1.day.ago, leadtime: 3 }
+      let!(:third_demand) { Fabricate :demand, project: project, end_date: Time.zone.now }
+
+      it { expect(Demand.finished_after_date(1.day.ago)).to match_array [second_demand, third_demand] }
     end
     describe '.not_finished' do
       let!(:first_demand) { Fabricate :demand, project: project, end_date: nil }

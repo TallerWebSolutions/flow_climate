@@ -30,11 +30,11 @@ RSpec.describe Highchart::StatusReportChartsAdapter, type: :data_object do
     let!(:fifth_project_result) { Fabricate(:project_result, project: third_project, result_date: Time.zone.parse('2018-03-13'), known_scope: 125, throughput_upstream: 10, throughput_downstream: 62, qty_hours_upstream: 87, qty_hours_downstream: 16, flow_pressure: 10, qty_bugs_opened: 8, qty_bugs_closed: 9) }
 
     let!(:opened_demands) { Fabricate.times(20, :demand, project: first_project, project_result: first_project_result, created_date: Time.zone.iso8601('2018-02-21T23:01:46-02:00')) }
-    let!(:first_demand) { Fabricate :demand, project: first_project, project_result: first_project_result, end_date: Time.zone.iso8601('2018-02-21T23:01:46-02:00'), leadtime: 2 * 86_400, effort_upstream: 10, effort_downstream: 5 }
-    let!(:second_demand) { Fabricate :demand, project: first_project, project_result: first_project_result, end_date: Time.zone.iso8601('2018-02-22T23:01:46-02:00'), leadtime: 3 * 86_400, effort_upstream: 12, effort_downstream: 20 }
-    let!(:third_demand) { Fabricate :demand, project: second_project, project_result: second_project_result, end_date: Time.zone.iso8601('2018-03-19T23:01:46-02:00'), leadtime: 1 * 86_400, effort_upstream: 27, effort_downstream: 40 }
-    let!(:fourth_demand) { Fabricate :demand, project: second_project, project_result: second_project_result, end_date: Time.zone.iso8601('2018-03-18T23:01:46-02:00'), leadtime: 1 * 86_400, effort_upstream: 80, effort_downstream: 34 }
-    let!(:fifth_demand) { Fabricate :demand, project: third_project, project_result: third_project_result, end_date: Time.zone.iso8601('2018-03-13T23:01:46-02:00'), leadtime: 4 * 86_400, effort_upstream: 56, effort_downstream: 25 }
+    let!(:first_demand) { Fabricate :demand, project: first_project, project_result: first_project_result, created_date: Time.zone.iso8601('2018-02-10T23:01:46-02:00'), end_date: Time.zone.iso8601('2018-02-21T23:01:46-02:00'), leadtime: 2 * 86_400, effort_upstream: 10, effort_downstream: 5 }
+    let!(:second_demand) { Fabricate :demand, project: first_project, project_result: first_project_result, created_date: Time.zone.iso8601('2018-02-21T23:01:46-02:00'), end_date: Time.zone.iso8601('2018-02-22T23:01:46-02:00'), leadtime: 3 * 86_400, effort_upstream: 12, effort_downstream: 20 }
+    let!(:third_demand) { Fabricate :demand, project: second_project, project_result: second_project_result, created_date: Time.zone.iso8601('2018-02-15T23:01:46-02:00'), end_date: Time.zone.iso8601('2018-03-19T23:01:46-02:00'), leadtime: 1 * 86_400, effort_upstream: 27, effort_downstream: 40 }
+    let!(:fourth_demand) { Fabricate :demand, project: second_project, project_result: second_project_result, created_date: Time.zone.iso8601('2018-02-05T23:01:46-02:00'), end_date: Time.zone.iso8601('2018-03-18T23:01:46-02:00'), leadtime: 1 * 86_400, effort_upstream: 80, effort_downstream: 34 }
+    let!(:fifth_demand) { Fabricate :demand, project: third_project, project_result: third_project_result, created_date: Time.zone.iso8601('2018-02-21T23:01:46-02:00'), end_date: Time.zone.iso8601('2018-03-13T23:01:46-02:00'), leadtime: 4 * 86_400, effort_upstream: 56, effort_downstream: 25 }
 
     let!(:first_transition) { Fabricate :demand_transition, stage: first_stage, demand: first_demand, last_time_in: Time.zone.iso8601('2018-02-27T17:09:58-03:00'), last_time_out: Time.zone.iso8601('2018-03-02T17:09:58-03:00') }
     let!(:second_transition) { Fabricate :demand_transition, stage: second_stage, demand: second_demand, last_time_in: Time.zone.iso8601('2018-02-02T17:09:58-03:00'), last_time_out: Time.zone.iso8601('2018-02-10T17:09:58-03:00') }
@@ -64,7 +64,7 @@ RSpec.describe Highchart::StatusReportChartsAdapter, type: :data_object do
           expect(report_data.hours_burnup_per_month_data.current_per_period).to eq [30, 244, 244]
           expect(report_data.hours_burnup_per_month_data.scope_per_period).to eq [2200.0, 2200.0, 2200.0]
           expect(report_data.throughput_per_week).to eq([{ name: I18n.t('projects.charts.throughput_per_week.stage_stream.upstream'), data: [23, 0, 0, 47, 0, 0, 0, 0, 0, 0, 0, 0] }, { name: I18n.t('projects.charts.throughput_per_week.stage_stream.downstream'), data: [2, 0, 0, 129, 0, 0, 0, 0, 0, 0, 0, 0] }])
-          expect(report_data.delivered_vs_remaining).to eq([{ name: I18n.t('projects.show.delivered_demands.text'), data: [201] }, { name: I18n.t('projects.show.scope_gap'), data: [365] }])
+          expect(report_data.delivered_vs_remaining).to eq([{ name: I18n.t('projects.show.delivered_demands.opened_in_period'), data: [22] }, { name: I18n.t('projects.show.delivered_demands.delivered'), data: [5] }, { name: I18n.t('projects.show.scope_gap'), data: [365] }])
           expect(report_data.dates_and_odds.keys.count).to be >= 1
           expect(report_data.monte_carlo_data.dates_and_hits_hash.keys.count).to be >= 1
           expect(report_data.monte_carlo_data.monte_carlo_date_hash.keys.count).to be >= 1
@@ -86,7 +86,7 @@ RSpec.describe Highchart::StatusReportChartsAdapter, type: :data_object do
           expect(report_data.hours_burnup_per_month_data.current_per_period).to eq []
           expect(report_data.hours_burnup_per_month_data.scope_per_period).to eq []
           expect(report_data.throughput_per_week).to eq([{ name: 'Upstream', data: [] }, { name: 'Downstream', data: [] }])
-          expect(report_data.delivered_vs_remaining).to eq([{ name: 'Escopo Entregue', data: [0] }, { name: 'Restante do escopo', data: [0] }])
+          expect(report_data.delivered_vs_remaining).to eq([{ name: I18n.t('projects.show.delivered_demands.opened_in_period'), data: [0] }, { name: I18n.t('projects.show.delivered_demands.delivered'), data: [0] }, { name: I18n.t('projects.show.scope_gap'), data: [0] }])
           expect(report_data.dates_and_odds.keys.count).to eq 0
           expect(report_data.monte_carlo_data.dates_and_hits_hash.keys.count).to eq 0
           expect(report_data.monte_carlo_data.monte_carlo_date_hash.keys.count).to eq 0
@@ -105,7 +105,7 @@ RSpec.describe Highchart::StatusReportChartsAdapter, type: :data_object do
         expect(report_data.active_weeks).to eq []
         expect(report_data.all_projects_weeks).to eq []
         expect(report_data.throughput_per_week).to eq([{ name: I18n.t('projects.charts.throughput_per_week.stage_stream.upstream'), data: [] }, { name: I18n.t('projects.charts.throughput_per_week.stage_stream.downstream'), data: [] }])
-        expect(report_data.delivered_vs_remaining).to eq([{ name: I18n.t('projects.show.delivered_demands.text'), data: [0] }, { name: I18n.t('projects.show.scope_gap'), data: [0] }])
+        expect(report_data.delivered_vs_remaining).to eq([{ name: I18n.t('projects.show.delivered_demands.opened_in_period'), data: [0] }, { name: I18n.t('projects.show.delivered_demands.delivered'), data: [0] }, { name: I18n.t('projects.show.scope_gap'), data: [0] }])
       end
     end
   end
