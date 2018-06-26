@@ -207,7 +207,7 @@ module Highchart
 
     def build_throughput_histogram
       histogram_data = Stats::StatisticsService.instance.throughput_histogram_hash(ProjectsRepository.instance.throughput_per_week(all_projects, lower_limit_date_to_charts).values)
-      @throughput_bins = histogram_data.keys.map { |th| "#{th} #{I18n.t('charts.demand.title')}" }
+      @throughput_bins = histogram_data.keys.map { |th| "#{th.round(2)} #{I18n.t('charts.demand.title')}" }
       @throughput_histogram_data = histogram_data.values
     end
 

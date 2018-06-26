@@ -53,22 +53,17 @@
   </div>
 
   <div class="row">
-    <div class='col-xs-3 form-group <%= 'has-error' if @project.errors[:value].present? %>'>
-      <%= f.label :value, class: 'control-label required' %>
-      <%= f.number_field :value, value: @project.value, class: 'form-control', step: 0.01 %>
-      <span class="help-block"><%= @project.errors[:value].join(', ') %></span>
-    </div>
-    <div class='col-xs-3 form-group <%= 'has-error' if @project.errors[:initial_scope].present? %>'>
+    <div class='col-xs-4 form-group <%= 'has-error' if @project.errors[:initial_scope].present? %>'>
       <%= f.label :initial_scope, class: 'control-label required' %>
       <%= f.number_field :initial_scope, value: @project.initial_scope, class: 'form-control', step: 1 %>
       <span class="help-block"><%= @project.errors[:initial_scope].join(', ') %></span>
     </div>
-    <div class='col-xs-3 form-group <%= 'has-error' if @project.errors[:qty_hours].present? %>'>
+    <div class='col-xs-4 form-group <%= 'has-error' if @project.errors[:qty_hours].present? %>'>
       <%= f.label :qty_hours, class: 'control-label required' %>
       <%= f.number_field :qty_hours, value: @project.qty_hours, class: 'form-control', step: 0.01 %>
       <span class="help-block"><%= @project.errors[:qty_hours].join(', ') %></span>
     </div>
-    <div class='col-xs-3 form-group <%= 'has-error' if @project.errors[:hour_value].present? %>'>
+    <div class='col-xs-4 form-group <%= 'has-error' if @project.errors[:hour_value].present? %>'>
       <%= f.label :hour_value, class: 'control-label required' %>
       <%= f.number_field :hour_value, value: @project.hour_value, class: 'form-control', step: 0.01 %>
       <span class="help-block"><%= @project.errors[:hour_value].join(', ') %></span>
