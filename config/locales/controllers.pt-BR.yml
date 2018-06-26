@@ -50,6 +50,7 @@ pt-BR:
       title: "Porcentagem"
     destroy:
       confirm: "Confirma a exclusão do registro?"
+    period: "Período"
   header:
     logout: Sair
     sign_up: Cadastre-se

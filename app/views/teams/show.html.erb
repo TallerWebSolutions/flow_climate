@@ -31,6 +31,10 @@
 
 <%= render 'commons/loader_spinner' %>
 
+<div id="members-table" class="tab-container">
+  <%= render 'team_members/team_members_table' %>
+</div>
+
 <div id="project-list" class="tab-container">
   <h2><%= t('projects.index.title') %></h2>
 
@@ -50,20 +54,18 @@
   </div>
 </div>
 
+
 <div id="demands-list" class="tab-container">
   <%= render 'demands/demands_list', grouped_delivered_demands: @grouped_delivered_demands, grouped_customer_demands: @grouped_customer_demands, demands: @demands %>
 </div>
 
-<div id="members-table" class="tab-container">
-  <%= render 'team_members/team_members_table' %>
-</div>
 
 <div id="strategic" class="tab-container">
   <%= render 'companies/strategic_table', model_name: @team.name, strategic_report_data: @strategic_report_data %>
 </div>
 
 <div id="project-status-report" class="tab-container">
-  <%= render 'charts/status_report_charts', target_name: @team.name, status_report_data: @status_report_data %>
+  <%= render 'teams/status_report_tab', target_name: @team.name, status_report_data: @status_report_data %>
 </div>
 
 <div id="charts" class="tab-container">
@@ -100,8 +102,9 @@
 
   <%= javascript_include_tag 'companies/strategic_charts' %>
 
-  <%= javascript_include_tag 'teams/show' %>
+  <%= javascript_include_tag 'teams/team_navigation_behaviour' %>
   <%= javascript_include_tag 'teams/demands_list' %>
+  <%= javascript_include_tag 'teams/show' %>
 
   <%= javascript_include_tag 'demands/column_throughput_week' %>
 

@@ -1,4 +1,4 @@
-$("#project-status-report").html("<%= escape_javascript(render 'charts/status_report_charts', target_name: @target_name, status_report_data: @status_report_data).html_safe %>");
+$("#status-report-charts-div").html("<%= escape_javascript(render 'charts/status_report_charts', target_name: @target_name, status_report_data: @status_report_data).html_safe %>");
 
 buildStatusReportCurrentCharts();
 

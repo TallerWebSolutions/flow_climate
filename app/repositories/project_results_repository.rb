@@ -60,16 +60,16 @@ class ProjectResultsRepository
     total_scope
   end
 
-  def flow_pressure_in_week_for_projects(projects)
-    build_hash_data_with_average(projects, :flow_pressure)
+  def flow_pressure_in_week_for_projects(projects, limit_date)
+    build_hash_data_with_average(projects, limit_date, :flow_pressure)
   end
 
-  def hours_per_demand_in_time_for_projects(projects)
+  def hours_per_demand_in_time_for_projects(projects, limit_date)
     return {} if projects.blank?
-    hours_upstream_hash = build_hash_data_with_sum(projects, :qty_hours_upstream)
-    hours_downstream_hash = build_hash_data_with_sum(projects, :qty_hours_downstream)
-    upstream_throughput_hash = build_hash_data_with_sum(projects, :throughput_upstream)
-    downstream_throughput_hash = build_hash_data_with_sum(projects, :throughput_downstream)
+    hours_upstream_hash = build_hash_data_with_sum(projects, limit_date, :qty_hours_upstream)
+    hours_downstream_hash = build_hash_data_with_sum(projects, limit_date, :qty_hours_downstream)
+    upstream_throughput_hash = build_hash_data_with_sum(projects, limit_date, :throughput_upstream)
+    downstream_throughput_hash = build_hash_data_with_sum(projects, limit_date, :throughput_downstream)
 
     throughput_hash = upstream_throughput_hash.merge(downstream_throughput_hash)
 
@@ -82,17 +82,17 @@ class ProjectResultsRepository
     hours_per_demand_hash
   end
 
-  def throughput_for_projects_grouped_per_week(projects, stage_stream)
-    return build_hash_data_with_sum(projects, :throughput_upstream) if stage_stream == :upstream
-    build_hash_data_with_sum(projects, :throughput_downstream)
+  def throughput_for_projects_grouped_per_week(projects, limit_date, stage_stream)
+    return build_hash_data_with_sum(projects, limit_date, :throughput_upstream) if stage_stream == :upstream
+    build_hash_data_with_sum(projects, limit_date, :throughput_downstream)
   end
 
-  def average_demand_cost_in_week_for_projects(projects)
+  def average_demand_cost_in_week_for_projects(projects, limit_date)
     return {} if projects.blank?
 
-    cost_in_month = build_hash_data_with_average(projects, :cost_in_month)
-    upstream_throughput_hash = build_hash_data_with_sum(projects, :throughput_upstream)
-    downstream_throughput_hash = build_hash_data_with_sum(projects, :throughput_downstream)
+    cost_in_month = build_hash_data_with_average(projects, limit_date, :cost_in_month)
+    upstream_throughput_hash = build_hash_data_with_sum(projects, limit_date, :throughput_upstream)
+    downstream_throughput_hash = build_hash_data_with_sum(projects, limit_date, :throughput_downstream)
 
     throughput_hash = upstream_throughput_hash.merge(downstream_throughput_hash)
 
@@ -115,18 +115,18 @@ class ProjectResultsRepository
     ProjectResult.where(project_id: projects.map(&:id)).where('(EXTRACT(WEEK FROM result_date) <= :week AND EXTRACT(YEAR FROM result_date) <= :year) OR (EXTRACT(YEAR FROM result_date) < :year)', week: date.cweek, year: date.cwyear).order(:result_date).last
   end
 
-  def build_hash_data_with_sum(projects, field)
-    grouped_per_week_project_results_to_projects(projects).sum(field)
+  def build_hash_data_with_sum(projects, limit_date, field)
+    grouped_per_week_project_results_to_projects(projects, limit_date).sum(field)
   end
 
-  def build_hash_data_with_average(projects, field)
+  def build_hash_data_with_average(projects, limit_date, field)
     return 0 if projects.blank?
-    grouped_per_week_project_results_to_projects(projects).average(field)
+    grouped_per_week_project_results_to_projects(projects, limit_date).average(field)
   end
 
-  def grouped_per_week_project_results_to_projects(projects)
+  def grouped_per_week_project_results_to_projects(projects, limit_date)
     return [] if projects.blank?
-    ProjectResult.where(project_id: projects.map(&:id)).order(Arel.sql("DATE_TRUNC('WEEK', result_date)")).group("DATE_TRUNC('WEEK', result_date)")
+    ProjectResult.where(project_id: projects.map(&:id)).where('result_date >= :limit_date', limit_date: limit_date).order(Arel.sql("DATE_TRUNC('WEEK', result_date)")).group("DATE_TRUNC('WEEK', result_date)")
   end
 
   def results_until_week(project, week, year)

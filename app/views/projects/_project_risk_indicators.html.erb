@@ -1,35 +1,37 @@
-<td>
-  <% if project.last_alert_for(:no_money_to_deadline).present? %>
-    <figure title="<%= t('activerecord.attributes.project_risk_config.enums.risk_type.no_money_to_deadline') %>" data-toggle="tooltip" data-placement="top" class='circle-<%=project.last_alert_for(:no_money_to_deadline).alert_color %>'></figure>
-  <% else %>
-    <figure title="<%= t('activerecord.attributes.project_risk_config.enums.risk_type.no_money_to_deadline') %>" data-toggle="tooltip" data-placement="top" class="circle-transparent"></figure>
-  <% end %>
-</td>
-<td>
-  <% if project.last_alert_for(:backlog_growth_rate).present? %>
-    <figure title="<%= t('activerecord.attributes.project_risk_config.enums.risk_type.backlog_growth_rate') %>" data-toggle="tooltip" data-placement="top" class='circle-<%=project.last_alert_for(:backlog_growth_rate).alert_color %>'></figure>
-  <% else %>
-    <figure title="<%= t('activerecord.attributes.project_risk_config.enums.risk_type.backlog_growth_rate') %>" data-toggle="tooltip" data-placement="top" class="circle-transparent"></figure>
-  <% end %>
-</td>
-<td>
-  <% if project.last_alert_for(:not_enough_available_hours).present? %>
-    <figure title="<%= t('activerecord.attributes.project_risk_config.enums.risk_type.not_enough_available_hours') %>" data-toggle="tooltip" data-placement="top" class='circle-<%=project.last_alert_for(:not_enough_available_hours).alert_color %>'></figure>
-  <% else %>
-    <figure title="<%= t('activerecord.attributes.project_risk_config.enums.risk_type.not_enough_available_hours') %>" data-toggle="tooltip" data-placement="top" class="circle-transparent"></figure>
-  <% end %>
-</td>
-<td>
-  <% if project.last_alert_for(:profit_margin).present? %>
-    <figure title="<%= t('activerecord.attributes.project_risk_config.enums.risk_type.profit_margin') %>" data-toggle="tooltip" data-placement="top" class='circle-<%=project.last_alert_for(:profit_margin).alert_color %>'></figure>
-  <% else %>
-    <figure title="<%= t('activerecord.attributes.project_risk_config.enums.risk_type.profit_margin') %>" data-toggle="tooltip" data-placement="top" class="circle-transparent"></figure>
-  <% end %>
-</td>
-<td>
-  <% if project.last_alert_for(:flow_pressure).present? %>
-    <figure title="<%= t('activerecord.attributes.project_risk_config.enums.risk_type.flow_pressure') %>" data-toggle="tooltip" data-placement="top" class='circle-<%=project.last_alert_for(:flow_pressure).alert_color %>'></figure>
-  <% else %>
-    <figure title="<%= t('activerecord.attributes.project_risk_config.enums.risk_type.flow_pressure') %>" data-toggle="tooltip" data-placement="top" class="circle-transparent"></figure>
-  <% end %>
-</td>
+<div class="row">
+  <div class="col-xs-1">
+    <% if project.last_alert_for(:no_money_to_deadline).present? %>
+      <figure title="<%= t('activerecord.attributes.project_risk_config.enums.risk_type.no_money_to_deadline') %>" data-toggle="tooltip" data-placement="top" class='circle-<%=project.last_alert_for(:no_money_to_deadline).alert_color %>'></figure>
+    <% else %>
+      <figure title="<%= t('activerecord.attributes.project_risk_config.enums.risk_type.no_money_to_deadline') %>" data-toggle="tooltip" data-placement="top" class="circle-transparent"></figure>
+    <% end %>
+  </div>
+  <div class="col-xs-1">
+    <% if project.last_alert_for(:backlog_growth_rate).present? %>
+      <figure title="<%= t('activerecord.attributes.project_risk_config.enums.risk_type.backlog_growth_rate') %>" data-toggle="tooltip" data-placement="top" class='circle-<%=project.last_alert_for(:backlog_growth_rate).alert_color %>'></figure>
+    <% else %>
+      <figure title="<%= t('activerecord.attributes.project_risk_config.enums.risk_type.backlog_growth_rate') %>" data-toggle="tooltip" data-placement="top" class="circle-transparent"></figure>
+    <% end %>
+  </div>
+  <div class="col-xs-1">
+    <% if project.last_alert_for(:not_enough_available_hours).present? %>
+      <figure title="<%= t('activerecord.attributes.project_risk_config.enums.risk_type.not_enough_available_hours') %>" data-toggle="tooltip" data-placement="top" class='circle-<%=project.last_alert_for(:not_enough_available_hours).alert_color %>'></figure>
+    <% else %>
+      <figure title="<%= t('activerecord.attributes.project_risk_config.enums.risk_type.not_enough_available_hours') %>" data-toggle="tooltip" data-placement="top" class="circle-transparent"></figure>
+    <% end %>
+  </div>
+  <div class="col-xs-1">
+    <% if project.last_alert_for(:profit_margin).present? %>
+      <figure title="<%= t('activerecord.attributes.project_risk_config.enums.risk_type.profit_margin') %>" data-toggle="tooltip" data-placement="top" class='circle-<%=project.last_alert_for(:profit_margin).alert_color %>'></figure>
+    <% else %>
+      <figure title="<%= t('activerecord.attributes.project_risk_config.enums.risk_type.profit_margin') %>" data-toggle="tooltip" data-placement="top" class="circle-transparent"></figure>
+    <% end %>
+  </div>
+  <div class="col-xs-1">
+    <% if project.last_alert_for(:flow_pressure).present? %>
+      <figure title="<%= t('activerecord.attributes.project_risk_config.enums.risk_type.flow_pressure') %>" data-toggle="tooltip" data-placement="top" class='circle-<%=project.last_alert_for(:flow_pressure).alert_color %>'></figure>
+    <% else %>
+      <figure title="<%= t('activerecord.attributes.project_risk_config.enums.risk_type.flow_pressure') %>" data-toggle="tooltip" data-placement="top" class="circle-transparent"></figure>
+    <% end %>
+  </div>
+</div>

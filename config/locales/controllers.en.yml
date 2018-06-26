@@ -49,6 +49,7 @@ en:
       title: "Percentage"
     destroy:
       confirm: "You are about to delete a record. Are you sure?"
+    period: "Period"
   header:
     logout: Logout
     explore: Explore
