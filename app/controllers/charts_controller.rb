@@ -5,7 +5,7 @@ class ChartsController < AuthenticatedController
   before_action :assign_projects
 
   def build_operational_charts
-    @report_data = Highchart::OperationalChartsAdapter.new(@projects)
+    @report_data = Highchart::OperationalChartsAdapter.new(@projects, params[:period])
     respond_to { |format| format.js { render file: 'teams/operational_charts.js.erb' } }
   end
 

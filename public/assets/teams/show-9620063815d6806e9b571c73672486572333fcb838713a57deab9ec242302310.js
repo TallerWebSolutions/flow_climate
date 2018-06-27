@@ -18,7 +18,8 @@ $('#status-report-period').on('change', function(event){
     buildStatusReportCharts(companyId, teamId, period)
 });
 
-$('#operational-charts-period').change(function(event){
+$('#operational-charts-period').on('change', function(event){
+    console.log('changed');
     $(".loader").show();
     $('#operational-charts-div').hide();
 

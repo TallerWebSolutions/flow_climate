@@ -9,7 +9,7 @@ class ProjectsController < AuthenticatedController
   def show
     @ordered_project_results = @project.project_results.order(:result_date)
     projects = Project.where(id: @project.id)
-    @report_data = Highchart::OperationalChartsAdapter.new(projects)
+    @report_data = Highchart::OperationalChartsAdapter.new(projects, 'all')
     @status_report_data = Highchart::StatusReportChartsAdapter.new(projects, 'all')
     @ordered_project_risk_alerts = @project.project_risk_alerts.order(created_at: :desc)
     @demands = DemandsRepository.instance.demands_per_projects(projects)

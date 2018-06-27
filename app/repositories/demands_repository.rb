@@ -38,12 +38,12 @@ class DemandsRepository
     demands_touched_in_day(demands, analysed_date).order(:commitment_date)
   end
 
-  def grouped_by_effort_upstream_per_month(array_of_projects)
-    demands_finished_per_projects(array_of_projects).order(Arel.sql('EXTRACT(YEAR from end_date), EXTRACT(MONTH from end_date)')).group('EXTRACT(YEAR from end_date)', 'EXTRACT(MONTH from end_date)').sum(:effort_upstream)
+  def grouped_by_effort_upstream_per_month(array_of_projects, limit_date)
+    demands_finished_per_projects(array_of_projects).where('end_date >= :limit_date', limit_date: limit_date).order(Arel.sql('EXTRACT(YEAR from end_date), EXTRACT(MONTH from end_date)')).group('EXTRACT(YEAR from end_date)', 'EXTRACT(MONTH from end_date)').sum(:effort_upstream)
   end
 
-  def grouped_by_effort_downstream_per_month(array_of_projects)
-    demands_finished_per_projects(array_of_projects).order(Arel.sql('EXTRACT(YEAR from end_date), EXTRACT(MONTH from end_date)')).group('EXTRACT(YEAR from end_date)', 'EXTRACT(MONTH from end_date)').sum(:effort_downstream)
+  def grouped_by_effort_downstream_per_month(array_of_projects, limit_date)
+    demands_finished_per_projects(array_of_projects).where('end_date >= :limit_date', limit_date: limit_date).order(Arel.sql('EXTRACT(YEAR from end_date), EXTRACT(MONTH from end_date)')).group('EXTRACT(YEAR from end_date)', 'EXTRACT(MONTH from end_date)').sum(:effort_downstream)
   end
 
   def demands_finished_per_projects(array_of_projects)

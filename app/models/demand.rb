@@ -57,6 +57,7 @@ class Demand < ApplicationRecord
   scope :finished_with_leadtime, -> { where('end_date IS NOT NULL AND leadtime IS NOT NULL') }
   scope :finished_until_date_with_leadtime, ->(limit_date) { finished_with_leadtime.where('demands.end_date <= :limit_date', limit_date: limit_date) }
   scope :finished_after_date, ->(limit_date) { finished.where('demands.end_date >= :limit_date', limit_date: limit_date.beginning_of_day) }
+  scope :finished_with_leadtime_after_date, ->(limit_date) { finished_with_leadtime.where('demands.end_date >= :limit_date', limit_date: limit_date.beginning_of_day) }
   scope :finished_bugs, -> { bug.finished }
   scope :not_finished, -> { where('end_date IS NULL') }
   scope :grouped_end_date_by_month, -> { finished.order(end_date: :desc).group_by { |demand| [demand.end_date.to_date.cwyear, demand.end_date.to_date.month] } }

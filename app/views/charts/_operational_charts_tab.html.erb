@@ -1,0 +1,12 @@
+<div class="row">
+  <div class="col-xs-3">
+    <%= label_tag t('general.period') %>
+    <%= select_tag :period, options_for_select([['Último Mês', 'month'], ['Último Trimestre', 'quarter'], ['Todo o Período', 'all']], 'Último Mês'), class: 'form-control', id: 'operational-charts-period' %>
+  </div>
+</div>
+
+<hr>
+
+<div id="operational-charts-div">
+  <%= render 'charts/operational_charts', target_name: target_name, report_data: report_data %>
+</div>

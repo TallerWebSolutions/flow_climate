@@ -11,7 +11,7 @@ class CustomersController < AuthenticatedController
   def show
     @customer_projects = @customer.projects.order(end_date: :desc)
     @projects_summary = ProjectsSummaryData.new(@customer.projects)
-    @report_data = Highchart::OperationalChartsAdapter.new(@customer_projects)
+    @report_data = Highchart::OperationalChartsAdapter.new(@customer_projects, 'all')
     @status_report_data = Highchart::StatusReportChartsAdapter.new(@customer_projects, 'all')
   end
 
