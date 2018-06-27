@@ -1,8 +1,12 @@
-$("#charts").html("<%= escape_javascript(render 'charts/operational_charts_tab', target_name: @target_name, report_data: @report_data).html_safe %>");
+var operationalCharts = $("#operational-charts-div");
 
-$('#charts').show();
+operationalCharts.html("<%= escape_javascript(render 'charts/operational_charts', target_name: @target_name, report_data: @report_data).html_safe %>");
+
 $('#nav-item-charts').addClass('active');
 
 buildOperationalHighcharts();
 
 enableTabs();
+
+operationalCharts.show();
+$('#charts').show();
