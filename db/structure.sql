@@ -216,7 +216,8 @@ CREATE TABLE public.demand_transitions (
     last_time_in timestamp without time zone NOT NULL,
     last_time_out timestamp without time zone,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    discarded_at timestamp without time zone
 );
 
 
@@ -265,7 +266,8 @@ CREATE TABLE public.demands (
     manual_effort boolean DEFAULT false,
     total_queue_time integer DEFAULT 0,
     total_touch_time integer DEFAULT 0,
-    demand_title character varying
+    demand_title character varying,
+    discarded_at timestamp without time zone
 );
 
 
@@ -1298,6 +1300,13 @@ CREATE INDEX index_demand_transitions_on_demand_id ON public.demand_transitions 
 
 
 --
+-- Name: index_demand_transitions_on_discarded_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_demand_transitions_on_discarded_at ON public.demand_transitions USING btree (discarded_at);
+
+
+--
 -- Name: index_demand_transitions_on_stage_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1309,6 +1318,13 @@ CREATE INDEX index_demand_transitions_on_stage_id ON public.demand_transitions U
 --
 
 CREATE UNIQUE INDEX index_demands_on_demand_id_and_project_id ON public.demands USING btree (demand_id, project_id);
+
+
+--
+-- Name: index_demands_on_discarded_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_demands_on_discarded_at ON public.demands USING btree (discarded_at);
 
 
 --
@@ -1839,6 +1855,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20180615182356'),
 ('20180618185639'),
 ('20180619150458'),
-('20180620014718');
+('20180620014718'),
+('20180627232834');
 
 

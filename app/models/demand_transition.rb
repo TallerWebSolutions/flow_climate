@@ -6,6 +6,7 @@
 #
 #  created_at    :datetime         not null
 #  demand_id     :integer          not null, indexed
+#  discarded_at  :datetime         indexed
 #  id            :bigint(8)        not null, primary key
 #  last_time_in  :datetime         not null
 #  last_time_out :datetime
@@ -14,8 +15,9 @@
 #
 # Indexes
 #
-#  index_demand_transitions_on_demand_id  (demand_id)
-#  index_demand_transitions_on_stage_id   (stage_id)
+#  index_demand_transitions_on_demand_id     (demand_id)
+#  index_demand_transitions_on_discarded_at  (discarded_at)
+#  index_demand_transitions_on_stage_id      (stage_id)
 #
 # Foreign Keys
 #
@@ -24,6 +26,8 @@
 #
 
 class DemandTransition < ApplicationRecord
+  include Discard::Model
+
   belongs_to :demand
   belongs_to :stage
 

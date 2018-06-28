@@ -20,6 +20,7 @@ gem 'webmock'
 gem 'rollbar'
 gem 'oj'
 gem 'histogram'
+gem 'discard'
 
 group :test, :development do
   gem 'brakeman'
