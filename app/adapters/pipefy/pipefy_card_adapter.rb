@@ -9,9 +9,11 @@ module Pipefy
       project = read_project_in_response_data(card_response_data)
       return if project.blank?
 
+      demand = create_demand!(team, project, card_response_data)
+      return demand if demand.discarded?
+
       create_assignees!(team, card_response_data)
 
-      demand = create_demand!(team, project, card_response_data)
       read_phases_transitions(demand.reload, card_response_data) if demand.present?
       demand.update_commitment_date! if demand.present?
 
@@ -19,7 +21,7 @@ module Pipefy
     end
 
     def process_card_response!(team, demand, card_response)
-      return if card_response.blank? || card_response['data'].blank?
+      return if card_response.blank? || card_response['data'].blank? || demand.discarded?
       card_response_data = card_response['data']
 
       if card_response_data['card'].blank? && demand.persisted?
@@ -77,12 +79,13 @@ module Pipefy
     def create_demand!(team, project, response_data)
       demand_id = response_data.try(:[], 'card').try(:[], 'id')
       return if demand_id.blank?
+
+      demand = Demand.find_by(demand_id: demand_id, project: project)
+      return demand if demand.present? || (demand.present? && demand.discarded?)
+
       assignees_count = compute_assignees_count(team, response_data)
       url = response_data.try(:[], 'card').try(:[], 'url')
       demand_title = read_demand_title(response_data)
-
-      demand = Demand.find_by(demand_id: demand_id, project: project)
-      return demand if demand.present?
 
       Demand.create(project: project, demand_id: demand_id, demand_title: demand_title, created_date: Time.zone.now, demand_type: read_demand_type(response_data), class_of_service: read_class_of_service(response_data), assignees_count: assignees_count, url: url)
     end

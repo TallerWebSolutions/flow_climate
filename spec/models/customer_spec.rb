@@ -43,11 +43,11 @@ RSpec.describe Customer, type: :model do
     let(:customer) { Fabricate :customer }
     let(:product) { Fabricate :product, customer: customer, name: 'zzz' }
 
-    let!(:active_project) { Fabricate :project, customer: customer, product: product, status: :executing }
-    let!(:other_active_project) { Fabricate :project, customer: customer, product: product, status: :maintenance }
-    let!(:waiting_project) { Fabricate :project, customer: customer, product: product, status: :waiting }
-    let!(:finished_project) { Fabricate :project, customer: customer, product: product, status: :finished }
-    let!(:cancelled_project) { Fabricate :project, customer: customer, product: product, status: :cancelled }
+    let!(:active_project) { Fabricate :project, start_date: 4.weeks.ago, customer: customer, product: product, status: :executing }
+    let!(:other_active_project) { Fabricate :project, start_date: 4.weeks.ago, customer: customer, product: product, status: :maintenance }
+    let!(:waiting_project) { Fabricate :project, start_date: 4.weeks.ago, customer: customer, product: product, status: :waiting }
+    let!(:finished_project) { Fabricate :project, start_date: 4.weeks.ago, customer: customer, product: product, status: :finished }
+    let!(:cancelled_project) { Fabricate :project, start_date: 4.weeks.ago, customer: customer, product: product, status: :cancelled }
 
     it { expect(customer.active_projects).to match_array [active_project, other_active_project] }
   end
@@ -56,11 +56,11 @@ RSpec.describe Customer, type: :model do
     let(:customer) { Fabricate :customer }
     let(:product) { Fabricate :product, customer: customer, name: 'zzz' }
 
-    let!(:active_project) { Fabricate :project, customer: customer, product: product, status: :executing }
-    let!(:waiting_project) { Fabricate :project, customer: customer, product: product, status: :waiting }
-    let!(:other_waiting_project) { Fabricate :project, customer: customer, product: product, status: :waiting }
-    let!(:finished_project) { Fabricate :project, customer: customer, product: product, status: :finished }
-    let!(:cancelled_project) { Fabricate :project, customer: customer, product: product, status: :cancelled }
+    let!(:active_project) { Fabricate :project, start_date: 4.weeks.ago, customer: customer, product: product, status: :executing }
+    let!(:waiting_project) { Fabricate :project, start_date: 4.weeks.ago, customer: customer, product: product, status: :waiting }
+    let!(:other_waiting_project) { Fabricate :project, start_date: 4.weeks.ago, customer: customer, product: product, status: :waiting }
+    let!(:finished_project) { Fabricate :project, start_date: 4.weeks.ago, customer: customer, product: product, status: :finished }
+    let!(:cancelled_project) { Fabricate :project, start_date: 4.weeks.ago, customer: customer, product: product, status: :cancelled }
 
     it { expect(customer.waiting_projects).to match_array [waiting_project, other_waiting_project] }
   end
@@ -68,11 +68,11 @@ RSpec.describe Customer, type: :model do
     let(:customer) { Fabricate :customer }
     let(:product) { Fabricate :product, customer: customer, name: 'zzz' }
 
-    let!(:active_project) { Fabricate :project, customer: customer, product: product, status: :executing }
-    let!(:waiting_project) { Fabricate :project, customer: customer, product: product, status: :waiting }
-    let!(:other_waiting_project) { Fabricate :project, customer: customer, product: product, status: :waiting }
-    let!(:finished_project) { Fabricate :project, customer: customer, product: product, status: :finished }
-    let!(:cancelled_project) { Fabricate :project, customer: customer, product: product, status: :cancelled }
+    let!(:active_project) { Fabricate :project, start_date: 4.weeks.ago, customer: customer, product: product, status: :executing }
+    let!(:waiting_project) { Fabricate :project, start_date: 4.weeks.ago, customer: customer, product: product, status: :waiting }
+    let!(:other_waiting_project) { Fabricate :project, start_date: 4.weeks.ago, customer: customer, product: product, status: :waiting }
+    let!(:finished_project) { Fabricate :project, start_date: 4.weeks.ago, customer: customer, product: product, status: :finished }
+    let!(:cancelled_project) { Fabricate :project, start_date: 4.weeks.ago, customer: customer, product: product, status: :cancelled }
 
     it { expect(customer.waiting_projects).to match_array [waiting_project, other_waiting_project] }
   end
@@ -85,9 +85,9 @@ RSpec.describe Customer, type: :model do
     let(:other_product) { Fabricate :product, customer: other_customer, name: 'zzz' }
 
     let(:project) { Fabricate :project, customer: customer, product: product, start_date: 2.weeks.ago, end_date: 2.weeks.from_now }
-    let(:other_project) { Fabricate :project, customer: customer, product: product }
-    let(:other_customer_project) { Fabricate :project, customer: other_customer, product: other_product }
-    let(:blank_project) { Fabricate :project, customer: customer, product: other_product }
+    let(:other_project) { Fabricate :project, start_date: 4.weeks.ago, customer: customer, product: product }
+    let(:other_customer_project) { Fabricate :project, start_date: 4.weeks.ago, customer: other_customer, product: other_product }
+    let(:blank_project) { Fabricate :project, start_date: 4.weeks.ago, customer: customer, product: other_product }
 
     let!(:first_result) { Fabricate :project_result, project: project, result_date: 1.week.ago, known_scope: 10, qty_hours_upstream: 17, qty_hours_downstream: 20, throughput_upstream: 2, throughput_downstream: 10 }
     let!(:second_result) { Fabricate :project_result, project: project, result_date: 2.weeks.ago, known_scope: 20, qty_hours_upstream: 12, qty_hours_downstream: 23, throughput_upstream: 1, throughput_downstream: 2 }

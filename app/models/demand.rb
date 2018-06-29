@@ -54,8 +54,6 @@ class Demand < ApplicationRecord
   validates :project, :created_date, :demand_id, :demand_type, :class_of_service, :assignees_count, presence: true
   validates :demand_id, uniqueness: { scope: :project_id, message: I18n.t('demand.validations.demand_id_unique.message') }
 
-  default_scope -> { kept }
-
   scope :opened_in_date, ->(date) { where('created_date::timestamp::date = :date', date: date) }
   scope :opened_after_date, ->(date) { where('created_date >= :date', date: date.beginning_of_day) }
   scope :finished_in_stream, ->(stage_stream) { joins(demand_transitions: :stage).where('stages.end_point = true AND stages.stage_stream = :stage_stream', stage_stream: stage_stream).uniq }
@@ -70,6 +68,7 @@ class Demand < ApplicationRecord
   scope :grouped_by_customer, -> { joins(project: :customer).order('customers.name').group_by { |demand| demand.project.customer.name } }
   scope :upstream_flag, -> { where(downstream: false) }
   scope :downstream_flag, -> { where(downstream: true) }
+  scope :not_discarded_until_date, ->(limit_date) { where('demands.discarded_at IS NULL OR demands.discarded_at > :limit_date', limit_date: limit_date.end_of_day) }
 
   delegate :company, to: :project
   delegate :full_name, to: :project, prefix: true

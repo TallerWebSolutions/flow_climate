@@ -117,10 +117,20 @@ RSpec.describe ProjectResult, type: :model do
     let!(:result) { Fabricate :project_result, project: project, result_date: Date.new(2018, 4, 3), known_scope: 2032, cost_in_month: 30_000, throughput_upstream: 0, throughput_downstream: 0, flow_pressure: 2 }
 
     let!(:after_result_demand) { Fabricate :demand, project: project, created_date: Date.new(2018, 4, 5), end_date: Date.new(2018, 4, 6), effort_upstream: 50, effort_downstream: 12, downstream: true, leadtime: 20_000 }
+
     let!(:first_demand) { Fabricate :demand, project_result: result, project: project, created_date: Date.new(2018, 4, 2), end_date: Date.new(2018, 4, 3), effort_upstream: 50, effort_downstream: 12, downstream: true, leadtime: 100 }
     let!(:second_demand) { Fabricate :demand, project: project, created_date: Date.new(2018, 4, 3), end_date: Date.new(2018, 4, 3), demand_type: :bug, effort_upstream: 100, effort_downstream: 20, downstream: true, leadtime: 40 }
     let!(:third_demand) { Fabricate :demand, project_result: result, project: project, created_date: Date.new(2018, 4, 1), end_date: Date.new(2018, 4, 2), demand_type: :feature, effort_upstream: 70, effort_downstream: 10, downstream: false }
     let!(:fourth_demand) { Fabricate :demand, project_result: result, project: project, created_date: Date.new(2018, 4, 1), end_date: Date.new(2018, 4, 2), demand_type: :feature, effort_upstream: 5, effort_downstream: 10, downstream: false }
+
+    let!(:fifth_demand) { Fabricate :demand, project_result: result, project: project, created_date: Date.new(2018, 4, 1), end_date: Date.new(2018, 4, 3), demand_type: :feature, effort_upstream: 5, effort_downstream: 10, downstream: true, discarded_at: Date.new(2018, 4, 3) }
+    let!(:sixth_demand) { Fabricate :demand, project_result: result, project: project, created_date: Date.new(2018, 4, 1), end_date: Date.new(2018, 4, 3), demand_type: :feature, effort_upstream: 5, effort_downstream: 10, downstream: false, discarded_at: Date.new(2018, 4, 3) }
+
+    let!(:seventh_demand) { Fabricate :demand, project_result: result, project: project, created_date: Date.new(2018, 4, 1), end_date: Date.new(2018, 4, 3), demand_type: :feature, effort_upstream: 5, effort_downstream: 10, downstream: true, discarded_at: Date.new(2018, 4, 2) }
+    let!(:eigth_demand) { Fabricate :demand, project_result: result, project: project, created_date: Date.new(2018, 4, 1), end_date: Date.new(2018, 4, 3), demand_type: :feature, effort_upstream: 5, effort_downstream: 10, downstream: false, discarded_at: Date.new(2018, 4, 2) }
+
+    let!(:nineth_demand) { Fabricate :demand, project_result: result, project: project, created_date: Date.new(2018, 4, 1), end_date: Date.new(2018, 4, 3), demand_type: :feature, effort_upstream: 5, effort_downstream: 10, downstream: true, discarded_at: Date.new(2018, 4, 4) }
+    let!(:tenth_demand) { Fabricate :demand, project_result: result, project: project, created_date: Date.new(2018, 4, 1), end_date: Date.new(2018, 4, 3), demand_type: :feature, effort_upstream: 5, effort_downstream: 10, downstream: false, discarded_at: Date.new(2018, 4, 4) }
 
     describe '#add_demand!' do
       context 'when it does not have the demand yet' do
@@ -128,25 +138,26 @@ RSpec.describe ProjectResult, type: :model do
           expect(ProjectResult).to receive(:reset_counters).once
           result.add_demand!(second_demand)
           expect(ProjectResult.count).to eq 1
-          expect(result.reload.demands).to match_array [first_demand, second_demand, third_demand, fourth_demand]
-          expect(result.reload.known_scope).to eq 6
-          expect(result.reload.throughput_upstream).to eq 2
-          expect(result.reload.throughput_downstream).to eq 2
-          expect(result.reload.qty_hours_upstream).to eq 225
-          expect(result.reload.qty_hours_downstream).to eq 52
-          expect(result.reload.qty_hours_bug).to eq 20
-          expect(result.reload.qty_bugs_closed).to eq 1
-          expect(result.reload.qty_bugs_opened).to eq 1
-          expect(result.reload.flow_pressure.to_f).to eq 1.0
-          expect(result.reload.average_demand_cost.to_f).to eq 250.0
-          expect(result.reload.leadtime_60_confidence.to_f).to eq 76.0
-          expect(result.reload.leadtime_80_confidence.to_f).to eq 88.0
-          expect(result.reload.leadtime_95_confidence.to_f).to eq 97.0
+          result_updated = result.reload
+          expect(result_updated.demands).to match_array [first_demand, second_demand, third_demand, fourth_demand, fifth_demand, sixth_demand, seventh_demand, eigth_demand, nineth_demand, tenth_demand]
+          expect(result_updated.known_scope).to eq 8
+          expect(result_updated.throughput_upstream).to eq 3
+          expect(result_updated.throughput_downstream).to eq 3
+          expect(result_updated.qty_hours_upstream).to eq 255
+          expect(result_updated.qty_hours_downstream).to eq 112
+          expect(result_updated.qty_hours_bug).to eq 20
+          expect(result_updated.qty_bugs_closed).to eq 1
+          expect(result_updated.qty_bugs_opened).to eq 1
+          expect(result_updated.flow_pressure.to_f).to eq 1.33333333333333
+          expect(result_updated.average_demand_cost.to_f).to eq 166.66666666666666
+          expect(result_updated.leadtime_60_confidence.to_f).to eq 76.0
+          expect(result_updated.leadtime_80_confidence.to_f).to eq 88.0
+          expect(result_updated.leadtime_95_confidence.to_f).to eq 97.0
         end
       end
       context 'when it does already have the demand' do
         before { result.add_demand!(first_demand) }
-        it { expect(result.reload.demands).to match_array [first_demand, third_demand, fourth_demand] }
+        it { expect(result.reload.demands).to match_array [first_demand, third_demand, fourth_demand, fifth_demand, sixth_demand, seventh_demand, eigth_demand, nineth_demand, tenth_demand] }
       end
     end
 
@@ -157,22 +168,22 @@ RSpec.describe ProjectResult, type: :model do
           result.remove_demand!(second_demand)
 
           expect(ProjectResult.count).to eq 1
-          expect(result.reload.demands).to match_array [first_demand, third_demand, fourth_demand]
-          expect(result.reload.known_scope).to eq 6
-          expect(result.reload.throughput_upstream).to eq 2
-          expect(result.reload.throughput_downstream).to eq 1
-          expect(result.reload.qty_hours_upstream).to eq 125
-          expect(result.reload.qty_hours_downstream).to eq 32
+          expect(result.reload.demands).to match_array [first_demand, third_demand, fourth_demand, fifth_demand, sixth_demand, seventh_demand, eigth_demand, nineth_demand, tenth_demand]
+          expect(result.reload.known_scope).to eq 8
+          expect(result.reload.throughput_upstream).to eq 3
+          expect(result.reload.throughput_downstream).to eq 2
+          expect(result.reload.qty_hours_upstream).to eq 155
+          expect(result.reload.qty_hours_downstream).to eq 92
           expect(result.reload.qty_hours_bug).to eq 0
           expect(result.reload.qty_bugs_closed).to eq 0
           expect(result.reload.qty_bugs_opened).to eq 0
-          expect(result.reload.flow_pressure.to_f).to eq 1.0
-          expect(result.reload.average_demand_cost.to_f).to eq 333.3333333333333
+          expect(result.reload.flow_pressure.to_f).to eq 1.33333333333333
+          expect(result.reload.average_demand_cost.to_f).to eq 200.0
         end
       end
       context 'when it does not have the demand' do
         before { result.remove_demand!(second_demand) }
-        it { expect(result.reload.demands).to match_array [first_demand, third_demand, fourth_demand] }
+        it { expect(result.reload.demands).to match_array [first_demand, third_demand, fourth_demand, fifth_demand, sixth_demand, seventh_demand, eigth_demand, nineth_demand, tenth_demand] }
       end
     end
   end

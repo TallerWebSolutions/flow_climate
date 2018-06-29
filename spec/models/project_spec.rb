@@ -199,7 +199,7 @@ RSpec.describe Project, type: :model do
   end
 
   describe '#consumed_hours' do
-    let(:project) { Fabricate :project }
+    let(:project) { Fabricate :project, end_date: 4.weeks.from_now }
     let!(:result) { Fabricate :project_result, project: project }
     let!(:other_result) { Fabricate :project_result, project: project }
     it { expect(project.consumed_hours).to eq result.project_delivered_hours + other_result.project_delivered_hours }
@@ -213,7 +213,7 @@ RSpec.describe Project, type: :model do
       it { expect(project.remaining_money.to_f).to eq 97_000 }
     end
     context 'having no hour_value' do
-      let(:project) { Fabricate :project, qty_hours: 1000, value: 100_000, hour_value: nil }
+      let(:project) { Fabricate :project, start_date: 4.months.ago, qty_hours: 1000, value: 100_000, hour_value: nil }
       let!(:result) { Fabricate :project_result, project: project, qty_hours_upstream: 0, qty_hours_downstream: 10 }
       let!(:other_result) { Fabricate :project_result, project: project, qty_hours_upstream: 0, qty_hours_downstream: 20 }
       it { expect(project.remaining_money.to_f).to eq 97_000 }
@@ -222,7 +222,7 @@ RSpec.describe Project, type: :model do
 
   describe '#percentage_remaining_money' do
     context 'total_days is higher than 0' do
-      let(:project) { Fabricate :project, qty_hours: 1000, value: 100_000, hour_value: 100 }
+      let(:project) { Fabricate :project, start_date: 4.months.ago, qty_hours: 1000, value: 100_000, hour_value: 100 }
       let!(:result) { Fabricate :project_result, project: project, qty_hours_upstream: 0, qty_hours_downstream: 10 }
       let!(:other_result) { Fabricate :project_result, project: project, qty_hours_upstream: 0, qty_hours_downstream: 20 }
       it { expect(project.percentage_remaining_money).to eq((project.remaining_money / project.value) * 100) }
@@ -234,7 +234,7 @@ RSpec.describe Project, type: :model do
   end
 
   describe '#last_week_scope' do
-    let(:project) { Fabricate :project, initial_scope: 65 }
+    let(:project) { Fabricate :project, initial_scope: 65, end_date: 4.weeks.from_now }
     context 'having data in the week' do
       let!(:first_result) { Fabricate :project_result, project: project, result_date: 3.weeks.ago, known_scope: 5 }
       let!(:second_result) { Fabricate :project_result, project: project, result_date: 2.weeks.ago, known_scope: 10 }
@@ -249,7 +249,7 @@ RSpec.describe Project, type: :model do
   end
 
   describe '#penultimate_week_scope' do
-    let(:project) { Fabricate :project, initial_scope: 65 }
+    let(:project) { Fabricate :project, initial_scope: 65, end_date: 4.weeks.from_now }
     context 'having data in the week' do
       let!(:first_result) { Fabricate :project_result, project: project, result_date: 3.weeks.ago, known_scope: 5 }
       let!(:second_result) { Fabricate :project_result, project: project, result_date: 2.weeks.ago, known_scope: 10 }
@@ -267,7 +267,7 @@ RSpec.describe Project, type: :model do
     context 'having teams' do
       let(:product_team) { Fabricate :team }
       let(:product) { Fabricate :product, team: product_team }
-      let(:project) { Fabricate :project, product: product }
+      let(:project) { Fabricate :project, product: product, end_date: 4.weeks.from_now }
       let(:team) { Fabricate :team }
       let(:other_team) { Fabricate :team }
       let!(:result) { Fabricate :project_result, project: project, result_date: 1.day.ago, known_scope: 10, team: team }
@@ -615,7 +615,7 @@ RSpec.describe Project, type: :model do
   end
 
   describe '#required_hours_per_available_hours' do
-    let!(:first_project) { Fabricate :project }
+    let!(:first_project) { Fabricate :project, end_date: 4.weeks.from_now }
 
     context 'having data' do
       let!(:result) { Fabricate :project_result, project: first_project, result_date: 1.day.ago, known_scope: 10 }
@@ -629,7 +629,7 @@ RSpec.describe Project, type: :model do
   end
 
   describe '#risk_color' do
-    let(:project) { Fabricate :project }
+    let(:project) { Fabricate :project, end_date: 4.weeks.from_now }
     context 'having alerts' do
       let!(:risk_alert) { Fabricate :project_risk_alert, project: project, alert_color: :red, created_at: Time.zone.today }
       let!(:other_risk_alert) { Fabricate :project_risk_alert, project: project, alert_color: :green, created_at: 1.day.ago }
@@ -641,7 +641,7 @@ RSpec.describe Project, type: :model do
   end
 
   describe '#backlog_unit_growth' do
-    let!(:first_project) { Fabricate :project, initial_scope: 30 }
+    let!(:first_project) { Fabricate :project, end_date: 4.weeks.from_now, initial_scope: 30 }
 
     context 'having data for last week and 2 weeks ago' do
       let!(:first_result) { Fabricate :project_result, project: first_project, result_date: Time.zone.today, known_scope: 110, throughput_upstream: 20, throughput_downstream: 10 }
@@ -657,7 +657,7 @@ RSpec.describe Project, type: :model do
   end
 
   describe '#backlog_growth_rate' do
-    let!(:first_project) { Fabricate :project, initial_scope: 30 }
+    let!(:first_project) { Fabricate :project, end_date: 4.weeks.from_now, initial_scope: 30 }
 
     context 'having data for last week and 2 weeks ago' do
       let!(:first_result) { Fabricate :project_result, project: first_project, result_date: Time.zone.today, known_scope: 110, throughput_upstream: 20, throughput_downstream: 6 }
@@ -681,7 +681,7 @@ RSpec.describe Project, type: :model do
   end
 
   describe '#backlog_for' do
-    let!(:first_project) { Fabricate :project, initial_scope: 30 }
+    let!(:first_project) { Fabricate :project, end_date: 4.weeks.from_now, initial_scope: 30 }
 
     context 'having data for last week' do
       let!(:result) { Fabricate :project_result, project: first_project, result_date: 1.week.ago, known_scope: 110 }
@@ -707,7 +707,7 @@ RSpec.describe Project, type: :model do
   end
 
   describe '#total_throughput_for' do
-    let!(:first_project) { Fabricate :project, initial_scope: 30 }
+    let!(:first_project) { Fabricate :project, end_date: 4.weeks.from_now, initial_scope: 30 }
 
     context 'having data for last week' do
       let!(:result) { Fabricate :project_result, project: first_project, result_date: 1.week.ago, known_scope: 110, throughput_upstream: 20, throughput_downstream: 10 }
@@ -729,7 +729,7 @@ RSpec.describe Project, type: :model do
   end
 
   describe '#money_per_deadline' do
-    let!(:first_project) { Fabricate :project, initial_scope: 30, start_date: 1.week.ago, end_date: 3.weeks.from_now, value: 10_000, hour_value: 20 }
+    let!(:first_project) { Fabricate :project, start_date: 1.week.ago, initial_scope: 30, end_date: 3.weeks.from_now, value: 10_000, hour_value: 20 }
 
     context 'having data for last week' do
       let!(:result) { Fabricate :project_result, project: first_project, result_date: 1.week.ago, known_scope: 110, qty_hours_downstream: 200, qty_hours_upstream: 10 }
@@ -751,7 +751,7 @@ RSpec.describe Project, type: :model do
   end
 
   describe '#backlog_growth_throughput_rate' do
-    let!(:first_project) { Fabricate :project, initial_scope: 30 }
+    let!(:first_project) { Fabricate :project, end_date: 4.weeks.from_now, initial_scope: 30 }
 
     context 'having data for last week and 2 weeks ago' do
       let!(:first_result) { Fabricate :project_result, project: first_project, result_date: Time.zone.today, known_scope: 110, throughput_upstream: 20, throughput_downstream: 10 }
@@ -767,7 +767,7 @@ RSpec.describe Project, type: :model do
   end
 
   describe '#last_alert_for' do
-    let(:project) { Fabricate :project }
+    let(:project) { Fabricate :project, end_date: 4.weeks.from_now }
     let(:first_risk_config) { Fabricate :project_risk_config, risk_type: :no_money_to_deadline }
     let(:second_risk_config) { Fabricate :project_risk_config, risk_type: :flow_pressure }
     let(:third_risk_config) { Fabricate :project_risk_config, risk_type: :not_enough_available_hours }
@@ -784,7 +784,7 @@ RSpec.describe Project, type: :model do
   end
 
   describe '#average_demand_cost' do
-    let!(:first_project) { Fabricate :project, initial_scope: 30 }
+    let!(:first_project) { Fabricate :project, end_date: 4.weeks.from_now, initial_scope: 30 }
 
     context 'having project_result and throughput' do
       let!(:result) { Fabricate :project_result, project: first_project, result_date: 1.week.ago, known_scope: 110, cost_in_month: 400, throughput_upstream: 20, throughput_downstream: 10 }
@@ -813,21 +813,21 @@ RSpec.describe Project, type: :model do
     let(:second_risk_config) { Fabricate :project_risk_config, project: project, risk_type: :backlog_growth_rate }
 
     context 'having a red alert as the last alert for the project' do
-      let(:project) { Fabricate :project, end_date: 3.days.from_now }
+      let(:project) { Fabricate :project, start_date: 4.weeks.ago, end_date: 3.days.from_now }
       let!(:first_alert) { Fabricate :project_risk_alert, project_risk_config: first_risk_config, project: project, alert_color: :red, created_at: Time.zone.now }
       let!(:second_alert) { Fabricate :project_risk_alert, project_risk_config: second_risk_config, project: project, alert_color: :green, created_at: 1.hour.ago }
 
       it { expect(project.red?).to be true }
     end
     context 'having a green alert as the last alert for the project' do
-      let(:project) { Fabricate :project, end_date: 3.days.from_now }
+      let(:project) { Fabricate :project, start_date: 4.weeks.ago, end_date: 3.days.from_now }
       let!(:first_alert) { Fabricate :project_risk_alert, project_risk_config: first_risk_config, project: project, alert_color: :green, created_at: Time.zone.now }
       let!(:second_alert) { Fabricate :project_risk_alert, project_risk_config: first_risk_config, project: project, alert_color: :red, created_at: 1.hour.ago }
 
       it { expect(project.red?).to be false }
     end
     context 'having a green alert as one type and a red as another type' do
-      let(:project) { Fabricate :project, end_date: 3.days.from_now }
+      let(:project) { Fabricate :project, start_date: 4.weeks.ago, end_date: 3.days.from_now }
       let!(:first_alert) { Fabricate :project_risk_alert, project_risk_config: first_risk_config, project: project, alert_color: :green, created_at: Time.zone.now }
       let!(:second_alert) { Fabricate :project_risk_alert, project_risk_config: second_risk_config, project: project, alert_color: :red, created_at: 1.hour.ago }
 
@@ -835,7 +835,7 @@ RSpec.describe Project, type: :model do
     end
 
     context 'having no alerts' do
-      let(:project) { Fabricate :project, end_date: 3.days.from_now }
+      let(:project) { Fabricate :project, start_date: 4.weeks.ago, end_date: 3.days.from_now }
 
       it { expect(project.red?).to be false }
     end
@@ -852,7 +852,7 @@ RSpec.describe Project, type: :model do
   end
 
   describe '#total_throughput_until' do
-    let!(:first_project) { Fabricate :project, initial_scope: 30 }
+    let!(:first_project) { Fabricate :project, end_date: 4.weeks.from_now, initial_scope: 30 }
 
     context 'having data for last week' do
       let!(:result) { Fabricate :project_result, project: first_project, result_date: 1.week.ago, known_scope: 110, throughput_upstream: 20, throughput_downstream: 10 }
@@ -874,7 +874,7 @@ RSpec.describe Project, type: :model do
   end
 
   describe '#manual?' do
-    let(:project) { Fabricate :project }
+    let(:project) { Fabricate :project, end_date: 4.weeks.from_now }
     context 'having integration' do
       let!(:pipefy_config) { Fabricate :pipefy_config, project: project }
       it { expect(project.manual?).to be false }
@@ -885,7 +885,7 @@ RSpec.describe Project, type: :model do
   end
 
   describe '#current_cost' do
-    let(:project) { Fabricate :project }
+    let(:project) { Fabricate :project, end_date: 4.weeks.from_now }
 
     context 'having project_result' do
       let!(:result) { Fabricate :project_result, project: project, result_date: 2.weeks.ago, cost_in_month: 100 }

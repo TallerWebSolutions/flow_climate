@@ -55,7 +55,7 @@ RSpec.describe Pipefy::PipefyCardAdapter, type: :service do
           let!(:project_result) { Fabricate :project_result, project: first_project, demands: [first_demand, second_demand], result_date: Date.new(2018, 2, 15), demands_count: 2 }
 
           context 'when the card has one block not unblocked' do
-            it 'does not change the demand' do
+            it 'updates the demand accordingly' do
               Pipefy::PipefyCardAdapter.instance.create_card!(team, first_card_response)
 
               expect(Pipefy::PipefyTeamConfig.count).to eq 3
@@ -106,6 +106,19 @@ RSpec.describe Pipefy::PipefyCardAdapter, type: :service do
             expect(Pipefy::PipefyTeamConfig).to receive(:where).never
             Pipefy::PipefyCardAdapter.instance.create_card!(team, blank_card_response)
             expect(Demand.count).to eq 1
+          end
+        end
+
+        context 'and the demand was discarded' do
+          let!(:demand) { Fabricate :demand, project: first_project, project_result: nil, demand_id: '5140999', created_at: Time.zone.local(2018, 5, 20, 10, 0, 0), discarded_at: Time.zone.today }
+          let!(:project_result) { Fabricate :project_result, project: first_project, demands: [demand], result_date: Date.new(2018, 2, 23), known_scope: 5 }
+
+          it 'does nothing' do
+            expect(Pipefy::PipefyTeamConfig).to receive(:where).never
+            Pipefy::PipefyCardAdapter.instance.create_card!(team, first_card_response)
+            expect(Demand.count).to eq 1
+            expect(Demand.kept.count).to eq 0
+            expect(Demand.last.discarded_at).not_to be_nil
           end
         end
       end
@@ -233,7 +246,7 @@ RSpec.describe Pipefy::PipefyCardAdapter, type: :service do
       let!(:project_result) { Fabricate :project_result, project: first_project, demands: [first_demand, second_demand], result_date: Date.new(2018, 2, 15), demands_count: 2 }
 
       context 'blocked but not unblocked' do
-        it 'creates the demand and the project result' do
+        it 'updates the demand and the project result' do
           expect_any_instance_of(Demand).to receive(:update_commitment_date!).once
 
           updated_demand = Pipefy::PipefyCardAdapter.instance.process_card_response!(team, second_demand, second_card_response)
@@ -331,7 +344,22 @@ RSpec.describe Pipefy::PipefyCardAdapter, type: :service do
       it 'deletes the demand' do
         Pipefy::PipefyCardAdapter.instance.process_card_response!(team, first_demand, card_response)
         expect(ProjectResult.count).to eq 0
-        expect(Demand.count).to eq 0
+        expect(Demand.kept.count).to eq 0
+        expect(Demand.count).to eq 1
+        expect(Demand.last.discarded_at).not_to be_nil
+      end
+    end
+
+    context 'and the demand was discarded' do
+      let!(:demand) { Fabricate :demand, project: first_project, project_result: nil, demand_id: '5140999', created_at: Time.zone.local(2018, 5, 20, 10, 0, 0), discarded_at: Time.zone.today }
+      let!(:project_result) { Fabricate :project_result, project: first_project, demands: [demand], result_date: Date.new(2018, 2, 23), known_scope: 5 }
+
+      it 'does nothing' do
+        expect(Pipefy::PipefyReader.instance).to receive(:read_project_name_from_pipefy_data).never
+        Pipefy::PipefyCardAdapter.instance.process_card_response!(team, demand, first_card_response)
+        expect(Demand.count).to eq 1
+        expect(Demand.kept.count).to eq 0
+        expect(Demand.last.discarded_at).not_to be_nil
       end
     end
 

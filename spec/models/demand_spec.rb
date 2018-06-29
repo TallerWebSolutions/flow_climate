@@ -138,6 +138,15 @@ RSpec.describe Demand, type: :model do
       it { expect(Demand.grouped_by_customer[customer.name]).to match_array [first_demand, second_demand] }
       it { expect(Demand.grouped_by_customer[other_customer.name]).to match_array [third_demand, fourth_demand] }
     end
+
+    describe '.not_discarded_until_date' do
+      let!(:first_demand) { Fabricate :demand, discarded_at: 2.weeks.ago.end_of_day }
+      let!(:second_demand) { Fabricate :demand, discarded_at: 1.week.ago.end_of_day }
+      let!(:third_demand) { Fabricate :demand, discarded_at: 3.days.ago.end_of_day }
+      let!(:fourth_demand) { Fabricate :demand, discarded_at: Time.zone.now }
+
+      it { expect(Demand.not_discarded_until_date(1.week.ago)).to match_array [third_demand, fourth_demand] }
+    end
   end
 
   context 'delegations' do
