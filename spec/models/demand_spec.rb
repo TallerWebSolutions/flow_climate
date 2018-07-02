@@ -136,13 +136,47 @@ RSpec.describe Demand, type: :model do
       let!(:fourth_demand) { Fabricate :demand, project: third_project }
 
       it { expect(Demand.grouped_by_customer[customer.name]).to match_array [first_demand, second_demand] }
-      it { expect(Demand.grouped_by_customer[other_customer.name]).to eq [third_demand, fourth_demand] }
+      it { expect(Demand.grouped_by_customer[other_customer.name]).to match_array [third_demand, fourth_demand] }
+    end
+
+    describe '.not_discarded_until_date' do
+      let!(:first_demand) { Fabricate :demand, discarded_at: 2.weeks.ago.end_of_day }
+      let!(:second_demand) { Fabricate :demand, discarded_at: 1.week.ago.end_of_day }
+      let!(:third_demand) { Fabricate :demand, discarded_at: 3.days.ago.end_of_day }
+      let!(:fourth_demand) { Fabricate :demand, discarded_at: Time.zone.now }
+
+      it { expect(Demand.not_discarded_until_date(1.week.ago)).to match_array [third_demand, fourth_demand] }
     end
   end
 
   context 'delegations' do
     it { is_expected.to delegate_method(:company).to(:project) }
     it { is_expected.to delegate_method(:full_name).to(:project).with_prefix }
+  end
+
+  context 'soft deletion' do
+    let(:demand) { Fabricate :demand }
+    let!(:demand_transtion) { Fabricate :demand_transition, demand: demand }
+    let!(:other_demand_transtion) { Fabricate :demand_transition, demand: demand }
+
+    describe '#discard' do
+      it 'also discards the transitions' do
+        demand.discard
+        expect(demand.reload.discarded_at).not_to be_nil
+        expect(demand_transtion.reload.discarded_at).not_to be_nil
+        expect(other_demand_transtion.reload.discarded_at).not_to be_nil
+      end
+    end
+
+    describe '#undiscard' do
+      before { demand.discard }
+      it 'also undiscards the transitions' do
+        demand.undiscard
+        expect(demand.reload.discarded_at).to be_nil
+        expect(demand_transtion.reload.discarded_at).to be_nil
+        expect(other_demand_transtion.reload.discarded_at).to be_nil
+      end
+    end
   end
 
   describe '.to_csv' do

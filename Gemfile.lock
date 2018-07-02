@@ -73,6 +73,8 @@ GEM
       responders
       warden (~> 1.2.3)
     diff-lcs (1.3)
+    discard (1.0.0)
+      activerecord (>= 4.2, < 6)
     docile (1.3.1)
     erubi (1.7.1)
     execjs (2.7.0)
@@ -263,6 +265,7 @@ DEPENDENCIES
   coffee-rails
   database_cleaner
   devise
+  discard
   fabrication
   faker
   figaro

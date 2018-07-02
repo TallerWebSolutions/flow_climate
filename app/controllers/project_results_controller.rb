@@ -6,7 +6,7 @@ class ProjectResultsController < AuthenticatedController
   before_action :assign_project_result
 
   def show
-    @demands = @project_result.demands.sort_by(&:result_date).reverse.group_by { |demand| [demand.result_date.to_date.cwyear, demand.result_date.to_date.month] }
+    @demands = @project_result.demands.kept.sort_by(&:result_date).reverse.group_by { |demand| [demand.result_date.to_date.cwyear, demand.result_date.to_date.month] }
   end
 
   private

@@ -20,6 +20,7 @@ RSpec.describe ProjectResultsController, type: :controller do
       let!(:project_result) { Fabricate :project_result, project: project }
       let!(:first_demand) { Fabricate :demand, project_result: project_result, end_date: Time.zone.today, demand_id: 'ZZZ' }
       let!(:second_demand) { Fabricate :demand, project_result: project_result, end_date: Time.zone.today, demand_id: 'AAA' }
+      let!(:third_demand) { Fabricate :demand, project_result: project_result, end_date: Time.zone.today, demand_id: 'BBB', discarded_at: Time.zone.now }
 
       context 'passing a valid ID' do
         context 'having data' do

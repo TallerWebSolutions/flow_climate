@@ -156,10 +156,12 @@ class ProjectResult < ApplicationRecord
   end
 
   def delivered_demands_upstream
-    demands.finished_in_stream(Stage.stage_streams[:upstream]) | demands.finished.upstream_flag
+    valid_demands = demands.not_discarded_until_date(result_date)
+    valid_demands.finished_in_stream(Stage.stage_streams[:upstream]) | valid_demands.finished.upstream_flag
   end
 
   def delivered_demands_downstream
-    (demands.finished_in_stream(Stage.stage_streams[:downstream]) | demands.finished.downstream_flag) - delivered_demands_upstream
+    valid_demands = demands.not_discarded_until_date(result_date)
+    (valid_demands.finished_in_stream(Stage.stage_streams[:downstream]) | valid_demands.finished.downstream_flag) - delivered_demands_upstream
   end
 end

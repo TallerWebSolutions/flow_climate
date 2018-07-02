@@ -125,7 +125,7 @@ RSpec.describe DemandsController, type: :controller do
           expect(DemandsRepository.instance).to receive(:full_demand_destroy!).with(demand).once.and_call_original
           delete :destroy, params: { company_id: company, project_id: project, id: demand }, xhr: true
           expect(response).to render_template 'demands/destroy.js.erb'
-          expect(Demand.last).to be_nil
+          expect(Demand.last.discarded_at).not_to be_nil
         end
       end
 
@@ -363,7 +363,9 @@ RSpec.describe DemandsController, type: :controller do
           it 'deletes the card in the climate' do
             expect(Pipefy::PipefyApiService).to(receive(:request_card_details).with(demand.demand_id).once { { data: { card: nil } }.with_indifferent_access })
             put :synchronize_pipefy, params: { company_id: company, project_id: project, id: demand }
-            expect(Demand.find_by(id: demand.id)).to be_nil
+            expect(Demand.kept.find_by(id: demand.id)).to be_nil
+            expect(Demand.find_by(id: demand.id)).to eq demand.reload
+            expect(Demand.find_by(id: demand.id).discarded_at).not_to be_nil
             expect(response).to redirect_to company_project_path(company, project)
             expect(flash[:notice]).to eq I18n.t('demands.sync.done')
           end

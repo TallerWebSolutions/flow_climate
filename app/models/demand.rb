@@ -13,6 +13,7 @@
 #  demand_title      :string
 #  demand_type       :integer          not null
 #  demand_url        :string
+#  discarded_at      :datetime         indexed
 #  downstream        :boolean          default(TRUE)
 #  effort_downstream :decimal(, )      default(0.0)
 #  effort_upstream   :decimal(, )      default(0.0)
@@ -30,6 +31,7 @@
 # Indexes
 #
 #  index_demands_on_demand_id_and_project_id  (demand_id,project_id) UNIQUE
+#  index_demands_on_discarded_at              (discarded_at)
 #  index_demands_on_project_result_id         (project_result_id)
 #
 # Foreign Keys
@@ -38,6 +40,8 @@
 #
 
 class Demand < ApplicationRecord
+  include Discard::Model
+
   enum demand_type: { feature: 0, bug: 1, performance_improvement: 2, ux_improvement: 3, chore: 4 }
   enum class_of_service: { standard: 0, expedite: 1, fixed_date: 2, intangible: 3 }
 
@@ -64,11 +68,14 @@ class Demand < ApplicationRecord
   scope :grouped_by_customer, -> { joins(project: :customer).order('customers.name').group_by { |demand| demand.project.customer.name } }
   scope :upstream_flag, -> { where(downstream: false) }
   scope :downstream_flag, -> { where(downstream: true) }
+  scope :not_discarded_until_date, ->(limit_date) { where('demands.discarded_at IS NULL OR demands.discarded_at > :limit_date', limit_date: limit_date.end_of_day) }
 
   delegate :company, to: :project
   delegate :full_name, to: :project, prefix: true
 
   before_save :compute_and_update_automatic_fields
+  after_discard :discard_transitions
+  after_undiscard :undiscard_transitions
 
   def self.to_csv
     CSV.generate do |csv|
@@ -188,5 +195,13 @@ class Demand < ApplicationRecord
 
   def compute_and_update_automatic_fields
     self.leadtime = end_date - commitment_date if commitment_date.present? && end_date.present?
+  end
+
+  def discard_transitions
+    demand_transitions.discard_all
+  end
+
+  def undiscard_transitions
+    demand_transitions.undiscard_all
   end
 end

@@ -84,10 +84,10 @@ module Highchart
     def build_minimum_date(period)
       @minimum_date_limit = if period == 'all'
                               nil
-                            elsif period == 'month'
-                              1.month.ago.to_date
-                            else
+                            elsif period == 'quarter'
                               3.months.ago.to_date
+                            else
+                              1.month.ago.to_date
                             end
     end
 
