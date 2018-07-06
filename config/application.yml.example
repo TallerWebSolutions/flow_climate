@@ -1,5 +1,10 @@
 # Add configuration values here, as shown below.
 #
 
-pipefy_token: 'XPTO'
-perform_full_pipefy_read: false
+secret_key_base: 'xpto'
+secret_key_32_encoded: 'xpto'
+pipefy_token: 'xpto'
+perform_full_pipefy_read: 'xpto'
+rollbar_access_token: 'xpto'
+sendgrid_username: 'xpto'
+sendgrid_password: 'xpto'

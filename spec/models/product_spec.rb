@@ -71,11 +71,11 @@ RSpec.describe Product, type: :model do
     let(:customer) { Fabricate :customer }
     let(:product) { Fabricate :product, customer: customer, name: 'zzz' }
 
-    let!(:active_project) { Fabricate :project, start_date: 4.weeks.ago, customer: customer, product: product, status: :executing }
-    let!(:waiting_project) { Fabricate :project, start_date: 4.weeks.ago, customer: customer, product: product, status: :waiting }
-    let!(:other_waiting_project) { Fabricate :project, start_date: 4.weeks.ago, customer: customer, product: product, status: :waiting }
-    let!(:finished_project) { Fabricate :project, start_date: 4.weeks.ago, customer: customer, product: product, status: :finished }
-    let!(:cancelled_project) { Fabricate :project, start_date: 4.weeks.ago, customer: customer, product: product, status: :cancelled }
+    let!(:active_project) { Fabricate :project, start_date: 4.weeks.ago, end_date: 3.weeks.from_now, customer: customer, product: product, status: :executing }
+    let!(:waiting_project) { Fabricate :project, start_date: 4.weeks.ago, end_date: 3.weeks.from_now, customer: customer, product: product, status: :waiting }
+    let!(:other_waiting_project) { Fabricate :project, start_date: 4.weeks.ago, end_date: 3.weeks.from_now, customer: customer, product: product, status: :waiting }
+    let!(:finished_project) { Fabricate :project, start_date: 4.weeks.ago, end_date: 3.weeks.from_now, customer: customer, product: product, status: :finished }
+    let!(:cancelled_project) { Fabricate :project, start_date: 4.weeks.ago, end_date: 3.weeks.from_now, customer: customer, product: product, status: :cancelled }
 
     it { expect(product.waiting_projects).to match_array [waiting_project, other_waiting_project] }
   end
@@ -84,7 +84,7 @@ RSpec.describe Product, type: :model do
     let(:product) { Fabricate :product, name: 'zzz' }
     let(:other_product) { Fabricate :product, name: 'zzz' }
 
-    let(:project) { Fabricate :project, start_date: 4.weeks.ago, customer: product.customer, product: product }
+    let(:project) { Fabricate :project, start_date: 4.weeks.ago, end_date: 3.weeks.from_now, customer: product.customer, product: product }
     let(:other_project) { Fabricate :project, customer: product.customer, product: product }
     let(:other_product_project) { Fabricate :project, customer: other_product.customer, product: other_product }
 

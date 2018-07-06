@@ -22,6 +22,7 @@ class Company < ApplicationRecord
   has_many :operation_results, dependent: :restrict_with_error
   has_many :pipefy_configs, class_name: 'Pipefy::PipefyConfig', dependent: :destroy, inverse_of: :company
   has_many :stages, dependent: :restrict_with_error
+  has_many :jira_accounts, class_name: 'Jira::JiraAccount', dependent: :destroy, inverse_of: :company
   has_one :company_settings, dependent: :destroy
 
   validates :name, :abbreviation, presence: true

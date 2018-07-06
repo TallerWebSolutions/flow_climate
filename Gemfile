@@ -21,6 +21,8 @@ gem 'rollbar'
 gem 'oj'
 gem 'histogram'
 gem 'discard'
+gem 'jira-ruby', require: false
+gem 'attr_encrypted'
 
 group :test, :development do
   gem 'brakeman'

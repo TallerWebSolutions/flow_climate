@@ -6,7 +6,7 @@ class WebhookIntegrationsController < ApplicationController
   def pipefy_webhook
     return head :bad_request if request.headers['Content-Type'] != 'application/json'
     data = JSON.parse(request.body.read)
-    ProcessPipefyCardJob.perform_later(data)
+    Pipefy::ProcessPipefyCardJob.perform_later(data)
     head :ok
   end
 end

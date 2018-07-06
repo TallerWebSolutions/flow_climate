@@ -65,7 +65,7 @@ class ProjectsController < AuthenticatedController
   end
 
   def synchronize_pipefy
-    ProcessPipefyProjectJob.perform_later(@project)
+    Pipefy::ProcessPipefyProjectJob.perform_later(@project)
     flash[:notice] = t('general.enqueued')
     redirect_to company_project_path(@company, @project)
   end

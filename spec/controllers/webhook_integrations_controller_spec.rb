@@ -12,7 +12,7 @@ RSpec.describe WebhookIntegrationsController, type: :controller do
     context 'when the content type is application/json' do
       it 'enqueues the job' do
         request.headers['Content-Type'] = 'application/json'
-        expect(ProcessPipefyCardJob).to receive(:perform_later).once
+        expect(Pipefy::ProcessPipefyCardJob).to receive(:perform_later).once
         post :pipefy_webhook
         expect(response).to have_http_status :ok
       end

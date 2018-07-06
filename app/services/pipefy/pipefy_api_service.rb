@@ -8,7 +8,7 @@ module Pipefy
     def self.request_card_details(card_id)
       HTTParty.post(
         "#{BASE_URI}/queries",
-        body: { query: PipefyProtocol.card_show_request_body(card_id) },
+        body: { query: Pipefy::PipefyProtocol.card_show_request_body(card_id) },
         headers: HEADERS
       )
     end
@@ -16,7 +16,7 @@ module Pipefy
     def self.request_pipe_details(pipe_id)
       HTTParty.post(
         "#{BASE_URI}/queries",
-        body: { query: PipefyProtocol.pipe_show_request_body(pipe_id) },
+        body: { query: Pipefy::PipefyProtocol.pipe_show_request_body(pipe_id) },
         headers: HEADERS
       )
     end
@@ -24,7 +24,7 @@ module Pipefy
     def self.request_cards_to_phase(phase_id)
       HTTParty.post(
         "#{BASE_URI}/queries",
-        body: { query: PipefyProtocol.phase_cards_request_pages(phase_id) },
+        body: { query: Pipefy::PipefyProtocol.phase_cards_request_pages(phase_id) },
         headers: HEADERS
       )
     end
@@ -32,7 +32,7 @@ module Pipefy
     def self.request_next_page_cards_to_phase(phase_id, cursor)
       HTTParty.post(
         "#{BASE_URI}/queries",
-        body: { query: PipefyProtocol.phase_cards_paginated(phase_id, cursor) },
+        body: { query: Pipefy::PipefyProtocol.phase_cards_paginated(phase_id, cursor) },
         headers: HEADERS
       )
     end

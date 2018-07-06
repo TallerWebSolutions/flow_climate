@@ -486,7 +486,7 @@ RSpec.describe ProjectsController, type: :controller do
 
       context 'passing valid parameters' do
         it 'calls the services and the reader' do
-          expect(ProcessPipefyProjectJob).to receive(:perform_later).with(project).once
+          expect(Pipefy::ProcessPipefyProjectJob).to receive(:perform_later).with(project).once
           put :synchronize_pipefy, params: { company_id: company, id: project }
           expect(response).to redirect_to company_project_path(company, project)
           expect(flash[:notice]).to eq I18n.t('general.enqueued')

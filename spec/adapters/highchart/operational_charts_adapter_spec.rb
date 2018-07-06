@@ -79,6 +79,7 @@ RSpec.describe Highchart::OperationalChartsAdapter, type: :data_object do
         end
         context 'and filtering by last month' do
           before { travel_to Time.zone.local(2018, 5, 30, 10, 0, 0) }
+          after { travel_back }
 
           subject(:report_data) { Highchart::OperationalChartsAdapter.new(Project.all, 'month') }
 
@@ -112,6 +113,7 @@ RSpec.describe Highchart::OperationalChartsAdapter, type: :data_object do
 
         context 'and filtering by last month' do
           before { travel_to Time.zone.local(2018, 6, 29, 10, 0, 0) }
+          after { travel_back }
 
           subject(:report_data) { Highchart::OperationalChartsAdapter.new(Project.all, 'quarter') }
 
