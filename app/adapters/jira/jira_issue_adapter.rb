@@ -91,7 +91,7 @@ module Jira
         transition_from.update(last_time_in: last_time_out, last_time_out: transition_created_at)
 
         transition_to = DemandTransition.where(demand: demand, stage: stage_to).first_or_initialize
-        transition_to.update(last_time_in: transition_created_at)
+        transition_to.update(last_time_in: transition_created_at, last_time_out: nil)
 
         last_time_out = transition_created_at
       end
