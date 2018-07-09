@@ -16,6 +16,15 @@ module Jira
 
       return if jira_account.blank?
 
+      update_issue!(demand, jira_account, jira_issue, project)
+      process_transitions!(demand, jira_issue.changelog) if jira_issue.respond_to?(:changelog)
+
+      demand
+    end
+
+    private
+
+    def update_issue!(demand, jira_account, jira_issue, project)
       demand.update(
         project: project,
         created_date: issue_fields(jira_issue)['created'],
@@ -24,11 +33,7 @@ module Jira
         demand_title: jira_issue.attrs['summary'],
         assignees_count: compute_assignees_count(jira_account, jira_issue)
       )
-
-      demand
     end
-
-    private
 
     def issue_fields(jira_issue)
       jira_issue.attrs['fields']
@@ -71,6 +76,25 @@ module Jira
       responsibles = jira_issue.attrs['fields'][responsibles_custom_field_name]
 
       responsibles.count
+    end
+
+    def process_transitions!(demand, issue_changelog)
+      histories = issue_changelog['histories']
+      last_time_out = demand.created_date
+      histories.sort_by { |history_hash| history_hash['id'] }.each do |history|
+        transition_created_at = history['created']
+
+        stage_from = Stage.find_by(integration_id: history['from'])
+        stage_to = Stage.find_by(integration_id: history['to'])
+
+        transition_from = DemandTransition.where(demand: demand, stage: stage_from).first_or_initialize
+        transition_from.update(last_time_in: last_time_out, last_time_out: transition_created_at)
+
+        transition_to = DemandTransition.where(demand: demand, stage: stage_to).first_or_initialize
+        transition_to.update(last_time_in: transition_created_at)
+
+        last_time_out = transition_created_at
+      end
     end
   end
 end

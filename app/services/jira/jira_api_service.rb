@@ -10,7 +10,7 @@ module Jira
 
     def request_issue_details(issue_id)
       client = JIRA::Client.new(@connection_parameters)
-      client.Issue.find(issue_id)
+      client.Issue.find(issue_id, expand: 'changelog')
     rescue JIRA::HTTPError => _error
       client.Issue.build
     end
