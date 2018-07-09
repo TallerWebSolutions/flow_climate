@@ -98,10 +98,38 @@ RSpec.describe Jira::JiraIssueAdapter, type: :service do
             end
           end
 
-          context 'and the issue returned to a previous stage and advanced again' do
+          context 'and it was blocked' do
+            let!(:jira_issue) { client.Issue.build({ id: '10000', summary: 'foo of bar', fields: { created: '2018-07-03T11:20:18.998-0300', issuetype: { name: 'chore' }, project: { id: first_project.integration_id }, customfield_10024: [{ name: 'foo' }, { name: 'bar' }], customfield_10028: { value: 'sTandard' }, comment: { comments: [{ body: '(flagoff) o bla do xpto foi resolvido de boa', created: '2018-07-07T17:00:18.399-0300', author: { name: 'bla' } }, { body: '(flag) Flag added\n\nbla do xpto passando pelo foo até o bar.', created: '2018-07-06T17:00:18.399-0300', author: { name: 'sbbrubles' } }, { body: '(flag) Flag added\n\nbla do xpto resolvido nada.. vai ter que refazer essa bagaça..', created: '2018-07-08T17:00:18.399-0300', author: { name: 'soul' } }, { body: 'Comentário que não é um bloqueio modafucka', created: '2018-07-09T17:00:18.399-0300', author: { name: 'mor' } }] } } }.with_indifferent_access) }
+            let!(:project_jira_config) { Fabricate :project_jira_config, project: first_project, jira_account: jira_account }
+
+            it 'creates the demand and the blocks information' do
+              Jira::JiraIssueAdapter.instance.process_issue!(jira_issue)
+              demand_created = Demand.last
+              expect(demand_created.demand_blocks.count).to eq 2
+              first_demand_block = demand_created.demand_blocks.first
+              expect(first_demand_block.blocker_username).to eq 'sbbrubles'
+              expect(first_demand_block.block_time).to eq '2018-07-06T17:00:18.399-0300'
+              expect(first_demand_block.block_reason).to eq 'bla do xpto passando pelo foo até o bar.'
+
+              expect(first_demand_block.unblocker_username).to eq 'bla'
+              expect(first_demand_block.unblock_time).to eq '2018-07-07T17:00:18.399-0300'
+              expect(first_demand_block.unblock_reason).to eq 'o bla do xpto foi resolvido de boa'
+
+              second_demand_block = demand_created.demand_blocks.second
+              expect(second_demand_block.blocker_username).to eq 'soul'
+              expect(second_demand_block.block_time).to eq '2018-07-08T17:00:18.399-0300'
+              expect(second_demand_block.block_reason).to eq 'bla do xpto resolvido nada.. vai ter que refazer essa bagaça..'
+
+              expect(second_demand_block.unblocker_username).to be_nil
+              expect(second_demand_block.unblock_time).to be_nil
+              expect(second_demand_block.unblock_reason).to be_nil
+            end
+          end
+
+          context 'and the issue returned to a previous stage and went forward again' do
             let!(:jira_issue) { client.Issue.build({ id: '10000', summary: 'foo of bar', fields: { created: '2018-07-02T11:20:18.998-0300', issuetype: { name: 'Story' }, customfield_10028: { value: 'Expedite' }, project: { id: first_project.integration_id }, customfield_10024: [{ name: 'foo' }, { name: 'bar' }] }, changelog: { startAt: 0, maxResults: 2, total: 2, histories: [{ id: '10041', from: 'first_stage', to: 'second_stage', created: '2018-07-09T23:34:47.440-0300' }, { id: '10040', from: 'second_stage', to: 'first_stage', created: '2018-07-09T22:34:47.440-0300' }, { id: '10039', from: 'first_stage', to: 'second_stage', created: '2018-07-08T22:34:47.440-0300' }, { id: '10038', from: 'third_stage', to: 'first_stage', created: '2018-07-06T09:40:43.886-0300' }] } }.with_indifferent_access) }
             let!(:project_jira_config) { Fabricate :project_jira_config, project: first_project, jira_account: jira_account }
-            it 'creates the demand' do
+            it 'creates the demand and the transitions using the last time it passed in the stage' do
               Jira::JiraIssueAdapter.instance.process_issue!(jira_issue)
 
               expect(DemandTransition.count).to eq 3

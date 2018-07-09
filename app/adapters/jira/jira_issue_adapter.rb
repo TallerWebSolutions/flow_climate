@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Jira
-  class JiraIssueAdapter
+  class JiraIssueAdapter < BaseFlowAdapter
     include Singleton
 
     def process_issue!(jira_issue)
@@ -17,7 +17,6 @@ module Jira
       return if jira_account.blank?
 
       update_issue!(demand, jira_account, jira_issue, project)
-      process_transitions!(demand, jira_issue.changelog) if jira_issue.respond_to?(:changelog)
 
       demand
     end
@@ -25,14 +24,11 @@ module Jira
     private
 
     def update_issue!(demand, jira_account, jira_issue, project)
-      demand.update(
-        project: project,
-        created_date: issue_fields(jira_issue)['created'],
-        demand_type: translate_issue_type(issue_fields(jira_issue)['issuetype']['name']),
-        class_of_service: translate_class_of_service(jira_account, jira_issue),
-        demand_title: jira_issue.attrs['summary'],
-        assignees_count: compute_assignees_count(jira_account, jira_issue)
-      )
+      demand.update(project: project, created_date: issue_fields(jira_issue)['created'], demand_type: translate_issue_type(issue_fields(jira_issue)['issuetype']['name']),
+                    class_of_service: translate_class_of_service(jira_account, jira_issue), demand_title: jira_issue.attrs['summary'], assignees_count: compute_assignees_count(jira_account, jira_issue))
+
+      translate_blocks!(demand, jira_issue.comment['comments']) if jira_issue.respond_to?(:comment)
+      process_transitions!(demand, jira_issue.changelog) if jira_issue.respond_to?(:changelog)
     end
 
     def issue_fields(jira_issue)
@@ -76,6 +72,24 @@ module Jira
       responsibles = jira_issue.attrs['fields'][responsibles_custom_field_name]
 
       responsibles.count
+    end
+
+    def translate_blocks!(demand, comment_array)
+      comment_array.sort_by { |comment_hash| Time.zone.parse(comment_hash['created']) }.each do |comment|
+        comment_text = comment['body']
+        created = comment['created']
+        author = comment['author']['name']
+
+        if comment_text.downcase.start_with?('(flag)')
+          persist_block!(demand, author, created, 1, remove_noise_from_comment_text(comment_text))
+        elsif comment_text.downcase.start_with?('(flagoff)')
+          persist_unblock!(demand, author, created, 1, remove_noise_from_comment_text(comment_text))
+        end
+      end
+    end
+
+    def remove_noise_from_comment_text(comment_text)
+      comment_text.gsub('(flag) Flag added\\n\\n', '').gsub('(flagoff)', '').strip
     end
 
     def process_transitions!(demand, issue_changelog)
