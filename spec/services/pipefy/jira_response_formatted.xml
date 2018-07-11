@@ -1,11 +1,136 @@
-[{
-    "id"=>"10038",
-    "from"=>"third_stage",
-    "to"=>"first_stage",
-    "created"=>"2018-07-06T09:40:43.886-0300"},
-  {
-    "id"=>"10039",
-    "from"=>"first_stage",
-    "to"=>"second_stage",
-    "created"=>"2018-07-08T22:34:47.440-0300"
-    }, {"id"=>"10040", "from"=>"second_stage", "to"=>"first_stage", "created"=>"2018-07-09T22:34:47.440-0300"}, {"id"=>"10041", "from"=>"second_stage", "to"=>"first_stage", "created"=>"2018-07-09T23:34:47.440-0300"}]
+{
+  "timestamp" => 1531332116156, "webhookEvent" => "jira:issue_updated", "issue_event_type_name" => "issue_updated", "user" => {
+    "self" => "https://tallerflow.atlassian.net/rest/api/2/user?username=celso",
+    "name" => "celso",
+    "key" => "celso",
+    "accountId" => "557058:65bf1bee-3dcb-46a3-8afd-664590346c4e",
+    "emailAddress" => "celso@taller.net.br",
+    "avatarUrls" => {
+      "48x48" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=48&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D48%26noRedirect%3Dtrue",
+      "24x24" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=24&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D24%26noRedirect%3Dtrue",
+      "16x16" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=16&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D16%26noRedirect%3Dtrue",
+      "32x32" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=32&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D32%26noRedirect%3Dtrue"
+    },
+    "displayName" => "Celso Martins",
+    "active" => true,
+    "timeZone" => "America/Sao_Paulo"
+  }, "issue" => {
+    "id" => "10011",
+    "self" => "https://tallerflow.atlassian.net/rest/api/2/issue/10011",
+    "key" => "FC-6",
+    "fields" => {
+      "issuetype" => {
+        "self" => "https://tallerflow.atlassian.net/rest/api/2/issuetype/10005",
+        "id" => "10005",
+        "description" => "",
+        "iconUrl" => "https://tallerflow.atlassian.net/secure/viewavatar?size=xsmall&avatarId=10512&avatarType=issuetype",
+        "name" => "Chore",
+        "subtask" => false,
+        "avatarId" => 10512
+      },
+      "timespent" => nil,
+      "timeoriginalestimate" => nil,
+      "description" => nil,
+      "project" => {
+        "self" => "https://tallerflow.atlassian.net/rest/api/2/project/10000",
+        "id" => "10000",
+        "key" => "FC",
+        "name" => "Flow Climate",
+        "projectTypeKey" => "software",
+        "avatarUrls" => {
+          "48x48" => "https://tallerflow.atlassian.net/secure/projectavatar?avatarId=10324",
+          "24x24" => "https://tallerflow.atlassian.net/secure/projectavatar?size=small&avatarId=10324",
+          "16x16" => "https://tallerflow.atlassian.net/secure/projectavatar?size=xsmall&avatarId=10324",
+          "32x32" => "https://tallerflow.atlassian.net/secure/projectavatar?size=medium&avatarId=10324"
+        }
+      },
+      "fixVersions" => [],
+      "aggregatetimespent" => nil,
+      "customfield_10013" => nil,
+      "customfield_10014" => nil,
+      "customfield_10015" => nil,
+      "customfield_10027" => nil,
+      "customfield_10028" => {
+        "self" => "https://tallerflow.atlassian.net/rest/api/2/customFieldOption/10022",
+        "value" => "Fixed Date",
+        "id" => "10022"
+      },
+      "customfield_10029" => nil,
+      "attachment" => [],
+      "aggregatetimeestimate" => nil,
+      "resolutiondate" => nil,
+      "workratio" => -1,
+      "summary" => "Trying to put webhooks to work",
+      "lastViewed" => "2018-07-11T15:01:55.498-0300",
+      "watches" => {
+        "self" => "https://tallerflow.atlassian.net/rest/api/2/issue/FC-6/watchers",
+        "watchCount" => 1,
+        "isWatching" => true
+      },
+      "creator" => {
+        "self" => "https://tallerflow.atlassian.net/rest/api/2/user?username=celso",
+        "name" => "celso",
+        "key" => "celso",
+        "accountId" => "557058:65bf1bee-3dcb-46a3-8afd-664590346c4e",
+        "emailAddress" => "celso@taller.net.br",
+        "avatarUrls" => {
+          "48x48" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=48&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D48%26noRedirect%3Dtrue",
+          "24x24" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=24&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D24%26noRedirect%3Dtrue",
+          "16x16" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=16&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D16%26noRedirect%3Dtrue",
+          "32x32" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=32&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D32%26noRedirect%3Dtrue"
+        },
+        "displayName" => "Celso Martins",
+        "active" => true,
+        "timeZone" => "America/Sao_Paulo"
+      },
+      "subtasks" => [],
+      "created" => "2018-07-09T20:23:06.866-0300",
+      "customfield_10000" => "{}",
+      "aggregateprogress" => {
+        "progress" => 0,
+        "total" => 0
+      },
+      "customfield_10001" => nil,
+      "customfield_10023" => nil,
+      "customfield_10024" => nil,
+      "customfield_10002" => nil,
+      "labels" => [],
+      "customfield_10016" => [],
+      "customfield_10017" => "0|i0001r:",
+      "environment" => nil,
+      "aggregatetimeoriginalestimate" => nil,
+      "timeestimate" => nil,
+      "duedate" => nil,
+      "progress" => {
+        "progress" => 0,
+        "total" => 0
+      },
+      "issuelinks" => [],
+      "updated" => "2018-07-11T15:01:56.131-0300",
+      "status" => {
+        "self" => "https://tallerflow.atlassian.net/rest/api/2/status/10006",
+        "iconUrl" => "https://lh6.googleusercontent.com/AdRgKxlPSXrW7-6zu6o23ylT6-U3HV1BE6piwHo5-yNaI_yY2RIurthGxl1zrEJU2_631tNcp0s7BENAQ-Zs=w2560-h947",
+        "name" => "Ready to Deploy",
+        "id" => "10006",
+        "statusCategory" => {
+          "self" => "https://tallerflow.atlassian.net/rest/api/2/statuscategory/2",
+          "id" => 2,
+          "key" => "new",
+          "colorName" => "blue-gray",
+          "name" => "New"
+        }
+      }
+    }
+  }, "changelog" => {
+    "id" => "10079",
+    "items" => [{
+      "field" => "summary",
+      "fieldtype" => "jira",
+      "fieldId" => "summary",
+      "from" => nil,
+      "fromString" => "Trying to put webhooks to work - Local",
+      "to" => nil,
+      "toString" => "Trying to put webhooks to work"
+    }]
+  }
+}

@@ -5,4 +5,5 @@ Fabricator(:jira_account, from: 'Jira::JiraAccount') do
   username { Faker::Internet.user_name }
   password { Faker::Internet.password }
   base_uri { Faker::Internet.url }
+  customer_domain { Faker::Internet.url }
 end

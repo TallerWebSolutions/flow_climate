@@ -370,6 +370,7 @@ CREATE TABLE public.jira_accounts (
     username character varying NOT NULL,
     encrypted_password character varying NOT NULL,
     base_uri character varying NOT NULL,
+    customer_domain character varying NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL
 );
@@ -609,9 +610,10 @@ ALTER SEQUENCE public.project_change_deadline_histories_id_seq OWNED BY public.p
 
 CREATE TABLE public.project_jira_configs (
     id bigint NOT NULL,
-    jira_account_id integer NOT NULL,
     project_id integer NOT NULL,
     team_id integer NOT NULL,
+    jira_account_domain character varying NOT NULL,
+    jira_project_key character varying NOT NULL,
     active boolean DEFAULT true NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL
@@ -780,8 +782,7 @@ CREATE TABLE public.projects (
     updated_at timestamp without time zone NOT NULL,
     product_id integer,
     nickname character varying,
-    percentage_effort_to_bugs integer DEFAULT 0 NOT NULL,
-    integration_id character varying
+    percentage_effort_to_bugs integer DEFAULT 0 NOT NULL
 );
 
 
@@ -1510,6 +1511,13 @@ CREATE INDEX index_jira_accounts_on_company_id ON public.jira_accounts USING btr
 
 
 --
+-- Name: index_jira_accounts_on_customer_domain; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_jira_accounts_on_customer_domain ON public.jira_accounts USING btree (customer_domain);
+
+
+--
 -- Name: index_jira_custom_field_mappings_on_jira_account_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1580,10 +1588,17 @@ CREATE INDEX index_project_change_deadline_histories_on_user_id ON public.projec
 
 
 --
--- Name: index_project_jira_configs_on_jira_account_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_project_jira_configs_on_jira_account_domain; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_project_jira_configs_on_jira_account_id ON public.project_jira_configs USING btree (jira_account_id);
+CREATE INDEX index_project_jira_configs_on_jira_account_domain ON public.project_jira_configs USING btree (jira_account_domain);
+
+
+--
+-- Name: index_project_jira_configs_on_jira_project_key; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_project_jira_configs_on_jira_project_key ON public.project_jira_configs USING btree (jira_project_key);
 
 
 --
@@ -1710,6 +1725,13 @@ CREATE UNIQUE INDEX index_users_on_reset_password_token ON public.users USING bt
 --
 
 CREATE UNIQUE INDEX unique_custom_field_to_jira_account ON public.jira_custom_field_mappings USING btree (jira_account_id, demand_field);
+
+
+--
+-- Name: unique_jira_project_key_to_jira_account_domain; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX unique_jira_project_key_to_jira_account_domain ON public.project_jira_configs USING btree (jira_project_key, jira_account_domain);
 
 
 --
@@ -1990,14 +2012,6 @@ ALTER TABLE ONLY public.teams
 
 ALTER TABLE ONLY public.customers
     ADD CONSTRAINT fk_rails_ef51a916ef FOREIGN KEY (company_id) REFERENCES public.companies(id);
-
-
---
--- Name: project_jira_configs fk_rails_feeb7c589a; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.project_jira_configs
-    ADD CONSTRAINT fk_rails_feeb7c589a FOREIGN KEY (jira_account_id) REFERENCES public.jira_accounts(id);
 
 
 --

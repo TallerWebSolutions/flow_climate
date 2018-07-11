@@ -10,7 +10,6 @@
 #  hour_value                :decimal(, )
 #  id                        :bigint(8)        not null, primary key
 #  initial_scope             :integer          not null
-#  integration_id            :string
 #  name                      :string           not null, indexed => [product_id]
 #  nickname                  :string           indexed => [customer_id]
 #  percentage_effort_to_bugs :integer          default(0), not null

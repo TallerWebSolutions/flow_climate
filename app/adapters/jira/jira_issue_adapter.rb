@@ -4,20 +4,12 @@ module Jira
   class JiraIssueAdapter < BaseFlowAdapter
     include Singleton
 
-    def process_issue!(jira_issue)
-      demand_id = jira_issue.attrs[:id]
-      return if demand_id.blank?
+    def process_issue!(jira_account, project, jira_issue)
+      issue_key = jira_issue.attrs[:key]
+      return if issue_key.blank?
 
-      demand = Demand.where(demand_id: demand_id).first_or_create
-
-      project = project_in_issue(jira_issue)
-      return if project.blank? || project.project_jira_config.blank?
-      jira_account = project.project_jira_config.jira_account
-
-      return if jira_account.blank?
-
+      demand = Demand.where(project_id: project.id, demand_id: issue_key).first_or_create
       update_issue!(demand, jira_account, jira_issue, project)
-
       demand
     end
 
@@ -33,11 +25,6 @@ module Jira
 
     def issue_fields(jira_issue)
       jira_issue.attrs['fields']
-    end
-
-    def project_in_issue(jira_issue)
-      project_id = issue_fields(jira_issue)['project']['id']
-      Project.find_by(integration_id: project_id)
     end
 
     def translate_issue_type(issue_type_name)

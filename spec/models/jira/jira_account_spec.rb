@@ -3,15 +3,28 @@
 RSpec.describe Jira::JiraAccount, type: :model do
   context 'associations' do
     it { is_expected.to belong_to :company }
-    it { is_expected.to have_many(:project_jira_configs).dependent(:destroy) }
     it { is_expected.to have_many(:jira_custom_field_mappings).dependent(:destroy) }
   end
 
   context 'validations' do
-    it { is_expected.to validate_presence_of :company }
-    it { is_expected.to validate_presence_of :username }
-    it { is_expected.to validate_presence_of :password }
-    it { is_expected.to validate_presence_of :base_uri }
+    context 'simple ones' do
+      it { is_expected.to validate_presence_of :company }
+      it { is_expected.to validate_presence_of :username }
+      it { is_expected.to validate_presence_of :password }
+      it { is_expected.to validate_presence_of :base_uri }
+      it { is_expected.to validate_presence_of :customer_domain }
+    end
+
+    context 'complex ones' do
+      context 'customer_domain' do
+        let!(:jira_account) { Fabricate :jira_account, customer_domain: 'foo' }
+        let!(:other_jira_account) { Fabricate.build :jira_account, customer_domain: 'foo' }
+        it 'responds invalid with an error message' do
+          expect(other_jira_account).not_to be_valid
+          expect(other_jira_account.errors.full_messages).to eq ['Customer domain já está em uso']
+        end
+      end
+    end
   end
 
   context 'attr encryption' do
