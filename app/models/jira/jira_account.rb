@@ -4,14 +4,15 @@
 #
 # Table name: jira_accounts
 #
-#  base_uri           :string           not null
-#  company_id         :integer          not null, indexed
-#  created_at         :datetime         not null
-#  customer_domain    :string           not null, indexed
-#  encrypted_password :string           not null
-#  id                 :bigint(8)        not null, primary key
-#  updated_at         :datetime         not null
-#  username           :string           not null
+#  base_uri              :string           not null
+#  company_id            :integer          not null, indexed
+#  created_at            :datetime         not null
+#  customer_domain       :string           not null, indexed
+#  encrypted_password    :string           not null
+#  encrypted_password_iv :string           not null
+#  id                    :bigint(8)        not null, primary key
+#  updated_at            :datetime         not null
+#  username              :string           not null
 #
 # Indexes
 #

@@ -6,6 +6,7 @@ class CreateProjectJiraConfigs < ActiveRecord::Migration[5.2]
       t.integer :company_id, index: true, null: false
       t.string :username, null: false
       t.string :encrypted_password, null: false
+      t.string :encrypted_password_iv, null: false
       t.string :base_uri, null: false
       t.string :customer_domain, null: false
 

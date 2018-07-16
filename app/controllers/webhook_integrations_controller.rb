@@ -20,11 +20,15 @@ class WebhookIntegrationsController < ApplicationController
 
     jira_account = Jira::JiraAccount.find_by(customer_domain: jira_account_domain)
 
-    Jira::ProcessJiraIssueJob.perform_later(jira_account, project_jira_config.project, data['issue'])
+    Jira::ProcessJiraIssueJob.perform_later(jira_account, project_jira_config.project, issue_key(data))
     head :ok
   end
 
   private
+
+  def issue_key(data)
+    data['issue']['key']
+  end
 
   def invalid_content_type?
     request.headers['Content-Type'].include?('application/json')

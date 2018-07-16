@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'jira-ruby'
+
 module Jira
   class JiraApiService
     attr_reader :connection_parameters

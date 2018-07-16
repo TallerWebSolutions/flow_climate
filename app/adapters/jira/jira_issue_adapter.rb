@@ -5,7 +5,7 @@ module Jira
     include Singleton
 
     def process_issue!(jira_account, project, jira_issue)
-      issue_key = jira_issue.attrs[:key]
+      issue_key = jira_issue.attrs['key']
       return if issue_key.blank?
 
       demand = Demand.where(project_id: project.id, demand_id: issue_key).first_or_create
@@ -80,13 +80,13 @@ module Jira
     end
 
     def process_transitions!(demand, issue_changelog)
-      histories = issue_changelog['histories']
       last_time_out = demand.created_date
-      histories.sort_by { |history_hash| history_hash['id'] }.each do |history|
+      issue_changelog['histories'].sort_by { |history_hash| history_hash['id'] }.each do |history|
+        next unless transition_history?(history)
         transition_created_at = history['created']
 
-        stage_from = Stage.find_by(integration_id: history['from'])
-        stage_to = Stage.find_by(integration_id: history['to'])
+        stage_from = Stage.find_by(integration_id: from_id(history))
+        stage_to = Stage.find_by(integration_id: to_id(history))
 
         transition_from = DemandTransition.where(demand: demand, stage: stage_from).first_or_initialize
         transition_from.update(last_time_in: last_time_out, last_time_out: transition_created_at)
@@ -96,6 +96,18 @@ module Jira
 
         last_time_out = transition_created_at
       end
+    end
+
+    def to_id(history)
+      history['items'].first['to']
+    end
+
+    def from_id(history)
+      history['items'].first['from']
+    end
+
+    def transition_history?(history)
+      history['items'].present? && history['items'].first['field'].casecmp('status').zero?
     end
   end
 end

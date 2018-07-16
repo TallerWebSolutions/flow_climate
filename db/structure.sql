@@ -22,20 +22,6 @@ CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
 COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
 
 
---
--- Name: pg_stat_statements; Type: EXTENSION; Schema: -; Owner: -
---
-
-CREATE EXTENSION IF NOT EXISTS pg_stat_statements WITH SCHEMA public;
-
-
---
--- Name: EXTENSION pg_stat_statements; Type: COMMENT; Schema: -; Owner: -
---
-
-COMMENT ON EXTENSION pg_stat_statements IS 'track execution statistics of all SQL statements executed';
-
-
 SET default_tablespace = '';
 
 SET default_with_oids = false;
@@ -261,6 +247,7 @@ CREATE TABLE public.demands (
     assignees_count integer NOT NULL,
     effort_downstream numeric DEFAULT 0,
     effort_upstream numeric DEFAULT 0,
+    "decimal" numeric DEFAULT 0,
     leadtime numeric,
     downstream boolean DEFAULT true,
     manual_effort boolean DEFAULT false,
@@ -369,6 +356,7 @@ CREATE TABLE public.jira_accounts (
     company_id integer NOT NULL,
     username character varying NOT NULL,
     encrypted_password character varying NOT NULL,
+    encrypted_password_iv character varying NOT NULL,
     base_uri character varying NOT NULL,
     customer_domain character varying NOT NULL,
     created_at timestamp without time zone NOT NULL,
