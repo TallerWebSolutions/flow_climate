@@ -84,18 +84,20 @@ module Jira
       issue_changelog['histories'].sort_by { |history_hash| history_hash['id'] }.each do |history|
         next unless transition_history?(history)
         transition_created_at = history['created']
-
-        stage_from = Stage.find_by(integration_id: from_id(history))
-        stage_to = Stage.find_by(integration_id: to_id(history))
-
-        transition_from = DemandTransition.where(demand: demand, stage: stage_from).first_or_initialize
-        transition_from.update(last_time_in: last_time_out, last_time_out: transition_created_at)
-
-        transition_to = DemandTransition.where(demand: demand, stage: stage_to).first_or_initialize
-        transition_to.update(last_time_in: transition_created_at, last_time_out: nil)
-
+        create_transitions!(demand, history, last_time_out, transition_created_at)
         last_time_out = transition_created_at
       end
+    end
+
+    def create_transitions!(demand, history, last_time_out, transition_created_at)
+      stage_from = demand.project.stages.find_by(integration_id: from_id(history))
+      stage_to = demand.project.stages.find_by(integration_id: to_id(history))
+
+      transition_from = DemandTransition.where(demand: demand, stage: stage_from).first_or_initialize
+      transition_from.update(last_time_in: last_time_out, last_time_out: transition_created_at)
+
+      transition_to = DemandTransition.where(demand: demand, stage: stage_to).first_or_initialize
+      transition_to.update(last_time_in: transition_created_at, last_time_out: nil)
     end
 
     def to_id(history)

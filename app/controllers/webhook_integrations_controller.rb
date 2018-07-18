@@ -15,16 +15,28 @@ class WebhookIntegrationsController < ApplicationController
     data = JSON.parse(request.body.read)
 
     jira_account_domain = extract_account_domain(project_url(data))
-    project_jira_config = Jira::ProjectJiraConfig.find_by(jira_account_domain: jira_account_domain, jira_project_key: project_key(data))
-    return head :ok if project_jira_config.blank?
 
-    jira_account = Jira::JiraAccount.find_by(customer_domain: jira_account_domain)
+    project = define_project(data, jira_account_domain)
+    return head :ok if project.blank?
 
-    Jira::ProcessJiraIssueJob.perform_later(jira_account, project_jira_config.project, issue_key(data))
+    jira_account = define_jira_account(jira_account_domain)
+    return head :ok if jira_account.blank?
+
+    Jira::ProcessJiraIssueJob.perform_later(jira_account, project, issue_key(data))
     head :ok
   end
 
   private
+
+  def define_jira_account(jira_account_domain)
+    Jira::JiraAccount.find_by(customer_domain: jira_account_domain)
+  end
+
+  def define_project(data, jira_account_domain)
+    jira_config = Jira::ProjectJiraConfig.find_by(jira_account_domain: jira_account_domain, jira_project_key: project_key(data))
+    return if jira_config.blank?
+    jira_config.project
+  end
 
   def issue_key(data)
     data['issue']['key']
