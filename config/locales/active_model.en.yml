@@ -126,3 +126,6 @@ en:
     validations:
       demand_id_unique:
         message: "You can have only one demand id per project."
+  jira_custom_field_mapping:
+    uniqueness:
+      demand_field: "Should have only one demand field per Jira account."

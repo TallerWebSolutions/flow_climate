@@ -1,0 +1,1214 @@
+# < JIRA::Resource::Issue: 0x00007fcbdfd84ea8 @client = # < JIRA::Client: 0x00007fcbdfd857e0 @options = {: site => "https://tallerflow.atlassian.net/",
+  : context_path => "/",
+  : rest_base_path => "//rest/api/2",
+  : ssl_verify_mode => 1,
+  : use_ssl => true,
+  : use_client_cert => false,
+  : auth_type =>: basic,
+  : http_debug => false,
+  : username => "celso@taller.net.br",
+  : password => "roots1981",
+  : read_timeout => 120
+}, @request_client = # < JIRA::HttpClient: 0x00007fcbdfd85678 @options = {: username => "celso@taller.net.br",
+  : password => "roots1981",
+  : site => "https://tallerflow.atlassian.net/",
+  : context_path => "/",
+  : rest_base_path => "//rest/api/2",
+  : ssl_verify_mode => 1,
+  : use_ssl => true,
+  : use_client_cert => false,
+  : auth_type =>: basic,
+  : http_debug => false,
+  : read_timeout => 120
+}, @cookies = {}, @authenticated = true > , @http_debug = false, @cache = # < OpenStruct >> , @attrs = {
+  "id" => "10011",
+  "expand" => "renderedFields,names,schema,operations,editmeta,changelog,versionedRepresentations",
+  "self" => "https://tallerflow.atlassian.net/rest/api/2/issue/10011",
+  "key" => "FC-6",
+  "changelog" => {
+    "startAt" => 0, "maxResults" => 65, "total" => 65, "histories" => [{
+      "id" => "10112",
+      "author" => {
+        "self" => "https://tallerflow.atlassian.net/rest/api/2/user?username=celso", "name" => "celso", "key" => "celso", "accountId" => "557058:65bf1bee-3dcb-46a3-8afd-664590346c4e", "emailAddress" => "celso@taller.net.br", "avatarUrls" => {
+          "48x48" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=48&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D48%26noRedirect%3Dtrue", "24x24" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=24&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D24%26noRedirect%3Dtrue", "16x16" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=16&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D16%26noRedirect%3Dtrue", "32x32" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=32&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D32%26noRedirect%3Dtrue"
+        }, "displayName" => "Celso Martins", "active" => true, "timeZone" => "America/Sao_Paulo"
+      },
+      "created" => "2018-07-16T18:07:53.276-0300",
+      "items" => [{
+        "field" => "summary",
+        "fieldtype" => "jira",
+        "fieldId" => "summary",
+        "from" => nil,
+        "fromString" => "Trying to put webhooks to work.",
+        "to" => nil,
+        "toString" => "Trying to put webhooks to work"
+      }]
+    }, {
+      "id" => "10111",
+      "author" => {
+        "self" => "https://tallerflow.atlassian.net/rest/api/2/user?username=celso", "name" => "celso", "key" => "celso", "accountId" => "557058:65bf1bee-3dcb-46a3-8afd-664590346c4e", "emailAddress" => "celso@taller.net.br", "avatarUrls" => {
+          "48x48" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=48&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D48%26noRedirect%3Dtrue", "24x24" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=24&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D24%26noRedirect%3Dtrue", "16x16" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=16&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D16%26noRedirect%3Dtrue", "32x32" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=32&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D32%26noRedirect%3Dtrue"
+        }, "displayName" => "Celso Martins", "active" => true, "timeZone" => "America/Sao_Paulo"
+      },
+      "created" => "2018-07-13T17:38:49.919-0300",
+      "items" => [{
+        "field" => "summary",
+        "fieldtype" => "jira",
+        "fieldId" => "summary",
+        "from" => nil,
+        "fromString" => "Trying to put webhooks to work",
+        "to" => nil,
+        "toString" => "Trying to put webhooks to work."
+      }]
+    }, {
+      "id" => "10110",
+      "author" => {
+        "self" => "https://tallerflow.atlassian.net/rest/api/2/user?username=celso", "name" => "celso", "key" => "celso", "accountId" => "557058:65bf1bee-3dcb-46a3-8afd-664590346c4e", "emailAddress" => "celso@taller.net.br", "avatarUrls" => {
+          "48x48" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=48&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D48%26noRedirect%3Dtrue", "24x24" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=24&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D24%26noRedirect%3Dtrue", "16x16" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=16&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D16%26noRedirect%3Dtrue", "32x32" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=32&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D32%26noRedirect%3Dtrue"
+        }, "displayName" => "Celso Martins", "active" => true, "timeZone" => "America/Sao_Paulo"
+      },
+      "created" => "2018-07-13T17:01:25.436-0300",
+      "items" => [{
+        "field" => "status",
+        "fieldtype" => "jira",
+        "fieldId" => "status",
+        "from" => "10002",
+        "fromString" => "Done",
+        "to" => "6",
+        "toString" => "Closed"
+      }]
+    }, {
+      "id" => "10109",
+      "author" => {
+        "self" => "https://tallerflow.atlassian.net/rest/api/2/user?username=celso", "name" => "celso", "key" => "celso", "accountId" => "557058:65bf1bee-3dcb-46a3-8afd-664590346c4e", "emailAddress" => "celso@taller.net.br", "avatarUrls" => {
+          "48x48" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=48&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D48%26noRedirect%3Dtrue", "24x24" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=24&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D24%26noRedirect%3Dtrue", "16x16" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=16&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D16%26noRedirect%3Dtrue", "32x32" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=32&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D32%26noRedirect%3Dtrue"
+        }, "displayName" => "Celso Martins", "active" => true, "timeZone" => "America/Sao_Paulo"
+      },
+      "created" => "2018-07-13T17:00:45.081-0300",
+      "items" => [{
+        "field" => "status",
+        "fieldtype" => "jira",
+        "fieldId" => "status",
+        "from" => "10006",
+        "fromString" => "Ready to Deploy",
+        "to" => "10002",
+        "toString" => "Done"
+      }]
+    }, {
+      "id" => "10108",
+      "author" => {
+        "self" => "https://tallerflow.atlassian.net/rest/api/2/user?username=celso", "name" => "celso", "key" => "celso", "accountId" => "557058:65bf1bee-3dcb-46a3-8afd-664590346c4e", "emailAddress" => "celso@taller.net.br", "avatarUrls" => {
+          "48x48" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=48&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D48%26noRedirect%3Dtrue", "24x24" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=24&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D24%26noRedirect%3Dtrue", "16x16" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=16&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D16%26noRedirect%3Dtrue", "32x32" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=32&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D32%26noRedirect%3Dtrue"
+        }, "displayName" => "Celso Martins", "active" => true, "timeZone" => "America/Sao_Paulo"
+      },
+      "created" => "2018-07-13T16:48:02.870-0300",
+      "items" => [{
+        "field" => "summary",
+        "fieldtype" => "jira",
+        "fieldId" => "summary",
+        "from" => nil,
+        "fromString" => "Trying to put webhooks to work.",
+        "to" => nil,
+        "toString" => "Trying to put webhooks to work"
+      }]
+    }, {
+      "id" => "10106",
+      "author" => {
+        "self" => "https://tallerflow.atlassian.net/rest/api/2/user?username=celso", "name" => "celso", "key" => "celso", "accountId" => "557058:65bf1bee-3dcb-46a3-8afd-664590346c4e", "emailAddress" => "celso@taller.net.br", "avatarUrls" => {
+          "48x48" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=48&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D48%26noRedirect%3Dtrue", "24x24" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=24&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D24%26noRedirect%3Dtrue", "16x16" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=16&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D16%26noRedirect%3Dtrue", "32x32" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=32&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D32%26noRedirect%3Dtrue"
+        }, "displayName" => "Celso Martins", "active" => true, "timeZone" => "America/Sao_Paulo"
+      },
+      "created" => "2018-07-13T13:02:13.873-0300",
+      "items" => [{
+        "field" => "summary",
+        "fieldtype" => "jira",
+        "fieldId" => "summary",
+        "from" => nil,
+        "fromString" => "Trying to put webhooks to work",
+        "to" => nil,
+        "toString" => "Trying to put webhooks to work."
+      }]
+    }, {
+      "id" => "10105",
+      "author" => {
+        "self" => "https://tallerflow.atlassian.net/rest/api/2/user?username=celso", "name" => "celso", "key" => "celso", "accountId" => "557058:65bf1bee-3dcb-46a3-8afd-664590346c4e", "emailAddress" => "celso@taller.net.br", "avatarUrls" => {
+          "48x48" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=48&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D48%26noRedirect%3Dtrue", "24x24" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=24&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D24%26noRedirect%3Dtrue", "16x16" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=16&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D16%26noRedirect%3Dtrue", "32x32" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=32&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D32%26noRedirect%3Dtrue"
+        }, "displayName" => "Celso Martins", "active" => true, "timeZone" => "America/Sao_Paulo"
+      },
+      "created" => "2018-07-13T12:57:13.016-0300",
+      "items" => [{
+        "field" => "summary",
+        "fieldtype" => "jira",
+        "fieldId" => "summary",
+        "from" => nil,
+        "fromString" => "Trying to put webhooks to work.",
+        "to" => nil,
+        "toString" => "Trying to put webhooks to work"
+      }]
+    }, {
+      "id" => "10104",
+      "author" => {
+        "self" => "https://tallerflow.atlassian.net/rest/api/2/user?username=celso", "name" => "celso", "key" => "celso", "accountId" => "557058:65bf1bee-3dcb-46a3-8afd-664590346c4e", "emailAddress" => "celso@taller.net.br", "avatarUrls" => {
+          "48x48" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=48&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D48%26noRedirect%3Dtrue", "24x24" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=24&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D24%26noRedirect%3Dtrue", "16x16" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=16&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D16%26noRedirect%3Dtrue", "32x32" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=32&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D32%26noRedirect%3Dtrue"
+        }, "displayName" => "Celso Martins", "active" => true, "timeZone" => "America/Sao_Paulo"
+      },
+      "created" => "2018-07-13T12:43:27.505-0300",
+      "items" => [{
+        "field" => "summary",
+        "fieldtype" => "jira",
+        "fieldId" => "summary",
+        "from" => nil,
+        "fromString" => "Trying to put webhooks to work",
+        "to" => nil,
+        "toString" => "Trying to put webhooks to work."
+      }]
+    }, {
+      "id" => "10103",
+      "author" => {
+        "self" => "https://tallerflow.atlassian.net/rest/api/2/user?username=celso", "name" => "celso", "key" => "celso", "accountId" => "557058:65bf1bee-3dcb-46a3-8afd-664590346c4e", "emailAddress" => "celso@taller.net.br", "avatarUrls" => {
+          "48x48" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=48&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D48%26noRedirect%3Dtrue", "24x24" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=24&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D24%26noRedirect%3Dtrue", "16x16" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=16&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D16%26noRedirect%3Dtrue", "32x32" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=32&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D32%26noRedirect%3Dtrue"
+        }, "displayName" => "Celso Martins", "active" => true, "timeZone" => "America/Sao_Paulo"
+      },
+      "created" => "2018-07-13T12:37:58.109-0300",
+      "items" => [{
+        "field" => "summary",
+        "fieldtype" => "jira",
+        "fieldId" => "summary",
+        "from" => nil,
+        "fromString" => "Trying to put webhooks to work.",
+        "to" => nil,
+        "toString" => "Trying to put webhooks to work"
+      }]
+    }, {
+      "id" => "10102",
+      "author" => {
+        "self" => "https://tallerflow.atlassian.net/rest/api/2/user?username=celso", "name" => "celso", "key" => "celso", "accountId" => "557058:65bf1bee-3dcb-46a3-8afd-664590346c4e", "emailAddress" => "celso@taller.net.br", "avatarUrls" => {
+          "48x48" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=48&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D48%26noRedirect%3Dtrue", "24x24" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=24&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D24%26noRedirect%3Dtrue", "16x16" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=16&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D16%26noRedirect%3Dtrue", "32x32" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=32&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D32%26noRedirect%3Dtrue"
+        }, "displayName" => "Celso Martins", "active" => true, "timeZone" => "America/Sao_Paulo"
+      },
+      "created" => "2018-07-13T11:59:03.437-0300",
+      "items" => [{
+        "field" => "summary",
+        "fieldtype" => "jira",
+        "fieldId" => "summary",
+        "from" => nil,
+        "fromString" => "Trying to put webhooks to work",
+        "to" => nil,
+        "toString" => "Trying to put webhooks to work."
+      }]
+    }, {
+      "id" => "10101",
+      "author" => {
+        "self" => "https://tallerflow.atlassian.net/rest/api/2/user?username=celso", "name" => "celso", "key" => "celso", "accountId" => "557058:65bf1bee-3dcb-46a3-8afd-664590346c4e", "emailAddress" => "celso@taller.net.br", "avatarUrls" => {
+          "48x48" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=48&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D48%26noRedirect%3Dtrue", "24x24" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=24&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D24%26noRedirect%3Dtrue", "16x16" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=16&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D16%26noRedirect%3Dtrue", "32x32" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=32&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D32%26noRedirect%3Dtrue"
+        }, "displayName" => "Celso Martins", "active" => true, "timeZone" => "America/Sao_Paulo"
+      },
+      "created" => "2018-07-13T11:53:51.252-0300",
+      "items" => [{
+        "field" => "summary",
+        "fieldtype" => "jira",
+        "fieldId" => "summary",
+        "from" => nil,
+        "fromString" => "Trying to put webhooks to work.",
+        "to" => nil,
+        "toString" => "Trying to put webhooks to work"
+      }]
+    }, {
+      "id" => "10100",
+      "author" => {
+        "self" => "https://tallerflow.atlassian.net/rest/api/2/user?username=celso", "name" => "celso", "key" => "celso", "accountId" => "557058:65bf1bee-3dcb-46a3-8afd-664590346c4e", "emailAddress" => "celso@taller.net.br", "avatarUrls" => {
+          "48x48" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=48&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D48%26noRedirect%3Dtrue", "24x24" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=24&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D24%26noRedirect%3Dtrue", "16x16" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=16&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D16%26noRedirect%3Dtrue", "32x32" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=32&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D32%26noRedirect%3Dtrue"
+        }, "displayName" => "Celso Martins", "active" => true, "timeZone" => "America/Sao_Paulo"
+      },
+      "created" => "2018-07-13T11:53:11.785-0300",
+      "items" => [{
+        "field" => "summary",
+        "fieldtype" => "jira",
+        "fieldId" => "summary",
+        "from" => nil,
+        "fromString" => "Trying to put webhooks to work",
+        "to" => nil,
+        "toString" => "Trying to put webhooks to work."
+      }]
+    }, {
+      "id" => "10099",
+      "author" => {
+        "self" => "https://tallerflow.atlassian.net/rest/api/2/user?username=celso", "name" => "celso", "key" => "celso", "accountId" => "557058:65bf1bee-3dcb-46a3-8afd-664590346c4e", "emailAddress" => "celso@taller.net.br", "avatarUrls" => {
+          "48x48" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=48&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D48%26noRedirect%3Dtrue", "24x24" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=24&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D24%26noRedirect%3Dtrue", "16x16" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=16&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D16%26noRedirect%3Dtrue", "32x32" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=32&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D32%26noRedirect%3Dtrue"
+        }, "displayName" => "Celso Martins", "active" => true, "timeZone" => "America/Sao_Paulo"
+      },
+      "created" => "2018-07-13T11:52:35.525-0300",
+      "items" => [{
+        "field" => "summary",
+        "fieldtype" => "jira",
+        "fieldId" => "summary",
+        "from" => nil,
+        "fromString" => "Trying to put webhooks to work.",
+        "to" => nil,
+        "toString" => "Trying to put webhooks to work"
+      }]
+    }, {
+      "id" => "10098",
+      "author" => {
+        "self" => "https://tallerflow.atlassian.net/rest/api/2/user?username=celso", "name" => "celso", "key" => "celso", "accountId" => "557058:65bf1bee-3dcb-46a3-8afd-664590346c4e", "emailAddress" => "celso@taller.net.br", "avatarUrls" => {
+          "48x48" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=48&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D48%26noRedirect%3Dtrue", "24x24" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=24&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D24%26noRedirect%3Dtrue", "16x16" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=16&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D16%26noRedirect%3Dtrue", "32x32" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=32&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D32%26noRedirect%3Dtrue"
+        }, "displayName" => "Celso Martins", "active" => true, "timeZone" => "America/Sao_Paulo"
+      },
+      "created" => "2018-07-13T11:42:15.209-0300",
+      "items" => [{
+        "field" => "summary",
+        "fieldtype" => "jira",
+        "fieldId" => "summary",
+        "from" => nil,
+        "fromString" => "Trying to put webhooks to work",
+        "to" => nil,
+        "toString" => "Trying to put webhooks to work."
+      }]
+    }, {
+      "id" => "10097",
+      "author" => {
+        "self" => "https://tallerflow.atlassian.net/rest/api/2/user?username=celso", "name" => "celso", "key" => "celso", "accountId" => "557058:65bf1bee-3dcb-46a3-8afd-664590346c4e", "emailAddress" => "celso@taller.net.br", "avatarUrls" => {
+          "48x48" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=48&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D48%26noRedirect%3Dtrue", "24x24" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=24&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D24%26noRedirect%3Dtrue", "16x16" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=16&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D16%26noRedirect%3Dtrue", "32x32" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=32&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D32%26noRedirect%3Dtrue"
+        }, "displayName" => "Celso Martins", "active" => true, "timeZone" => "America/Sao_Paulo"
+      },
+      "created" => "2018-07-13T11:40:40.267-0300",
+      "items" => [{
+        "field" => "summary",
+        "fieldtype" => "jira",
+        "fieldId" => "summary",
+        "from" => nil,
+        "fromString" => "Trying to put webhooks to work.",
+        "to" => nil,
+        "toString" => "Trying to put webhooks to work"
+      }]
+    }, {
+      "id" => "10096",
+      "author" => {
+        "self" => "https://tallerflow.atlassian.net/rest/api/2/user?username=celso", "name" => "celso", "key" => "celso", "accountId" => "557058:65bf1bee-3dcb-46a3-8afd-664590346c4e", "emailAddress" => "celso@taller.net.br", "avatarUrls" => {
+          "48x48" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=48&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D48%26noRedirect%3Dtrue", "24x24" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=24&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D24%26noRedirect%3Dtrue", "16x16" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=16&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D16%26noRedirect%3Dtrue", "32x32" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=32&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D32%26noRedirect%3Dtrue"
+        }, "displayName" => "Celso Martins", "active" => true, "timeZone" => "America/Sao_Paulo"
+      },
+      "created" => "2018-07-13T11:24:30.703-0300",
+      "items" => [{
+        "field" => "summary",
+        "fieldtype" => "jira",
+        "fieldId" => "summary",
+        "from" => nil,
+        "fromString" => "Trying to put webhooks to work",
+        "to" => nil,
+        "toString" => "Trying to put webhooks to work."
+      }]
+    }, {
+      "id" => "10095",
+      "author" => {
+        "self" => "https://tallerflow.atlassian.net/rest/api/2/user?username=celso", "name" => "celso", "key" => "celso", "accountId" => "557058:65bf1bee-3dcb-46a3-8afd-664590346c4e", "emailAddress" => "celso@taller.net.br", "avatarUrls" => {
+          "48x48" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=48&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D48%26noRedirect%3Dtrue", "24x24" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=24&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D24%26noRedirect%3Dtrue", "16x16" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=16&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D16%26noRedirect%3Dtrue", "32x32" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=32&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D32%26noRedirect%3Dtrue"
+        }, "displayName" => "Celso Martins", "active" => true, "timeZone" => "America/Sao_Paulo"
+      },
+      "created" => "2018-07-13T11:20:36.948-0300",
+      "items" => [{
+        "field" => "summary",
+        "fieldtype" => "jira",
+        "fieldId" => "summary",
+        "from" => nil,
+        "fromString" => "Trying to put webhooks to work.",
+        "to" => nil,
+        "toString" => "Trying to put webhooks to work"
+      }]
+    }, {
+      "id" => "10094",
+      "author" => {
+        "self" => "https://tallerflow.atlassian.net/rest/api/2/user?username=celso", "name" => "celso", "key" => "celso", "accountId" => "557058:65bf1bee-3dcb-46a3-8afd-664590346c4e", "emailAddress" => "celso@taller.net.br", "avatarUrls" => {
+          "48x48" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=48&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D48%26noRedirect%3Dtrue", "24x24" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=24&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D24%26noRedirect%3Dtrue", "16x16" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=16&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D16%26noRedirect%3Dtrue", "32x32" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=32&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D32%26noRedirect%3Dtrue"
+        }, "displayName" => "Celso Martins", "active" => true, "timeZone" => "America/Sao_Paulo"
+      },
+      "created" => "2018-07-12T12:14:10.108-0300",
+      "items" => [{
+        "field" => "summary",
+        "fieldtype" => "jira",
+        "fieldId" => "summary",
+        "from" => nil,
+        "fromString" => "Trying to put webhooks to work",
+        "to" => nil,
+        "toString" => "Trying to put webhooks to work."
+      }]
+    }, {
+      "id" => "10093",
+      "author" => {
+        "self" => "https://tallerflow.atlassian.net/rest/api/2/user?username=celso", "name" => "celso", "key" => "celso", "accountId" => "557058:65bf1bee-3dcb-46a3-8afd-664590346c4e", "emailAddress" => "celso@taller.net.br", "avatarUrls" => {
+          "48x48" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=48&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D48%26noRedirect%3Dtrue", "24x24" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=24&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D24%26noRedirect%3Dtrue", "16x16" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=16&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D16%26noRedirect%3Dtrue", "32x32" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=32&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D32%26noRedirect%3Dtrue"
+        }, "displayName" => "Celso Martins", "active" => true, "timeZone" => "America/Sao_Paulo"
+      },
+      "created" => "2018-07-12T12:12:32.276-0300",
+      "items" => [{
+        "field" => "summary",
+        "fieldtype" => "jira",
+        "fieldId" => "summary",
+        "from" => nil,
+        "fromString" => "Trying to put webhooks to work.",
+        "to" => nil,
+        "toString" => "Trying to put webhooks to work"
+      }]
+    }, {
+      "id" => "10092",
+      "author" => {
+        "self" => "https://tallerflow.atlassian.net/rest/api/2/user?username=celso", "name" => "celso", "key" => "celso", "accountId" => "557058:65bf1bee-3dcb-46a3-8afd-664590346c4e", "emailAddress" => "celso@taller.net.br", "avatarUrls" => {
+          "48x48" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=48&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D48%26noRedirect%3Dtrue", "24x24" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=24&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D24%26noRedirect%3Dtrue", "16x16" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=16&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D16%26noRedirect%3Dtrue", "32x32" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=32&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D32%26noRedirect%3Dtrue"
+        }, "displayName" => "Celso Martins", "active" => true, "timeZone" => "America/Sao_Paulo"
+      },
+      "created" => "2018-07-12T12:11:35.052-0300",
+      "items" => [{
+        "field" => "summary",
+        "fieldtype" => "jira",
+        "fieldId" => "summary",
+        "from" => nil,
+        "fromString" => "Trying to put webhooks to work",
+        "to" => nil,
+        "toString" => "Trying to put webhooks to work."
+      }]
+    }, {
+      "id" => "10091",
+      "author" => {
+        "self" => "https://tallerflow.atlassian.net/rest/api/2/user?username=celso", "name" => "celso", "key" => "celso", "accountId" => "557058:65bf1bee-3dcb-46a3-8afd-664590346c4e", "emailAddress" => "celso@taller.net.br", "avatarUrls" => {
+          "48x48" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=48&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D48%26noRedirect%3Dtrue", "24x24" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=24&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D24%26noRedirect%3Dtrue", "16x16" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=16&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D16%26noRedirect%3Dtrue", "32x32" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=32&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D32%26noRedirect%3Dtrue"
+        }, "displayName" => "Celso Martins", "active" => true, "timeZone" => "America/Sao_Paulo"
+      },
+      "created" => "2018-07-12T12:09:36.786-0300",
+      "items" => [{
+        "field" => "summary",
+        "fieldtype" => "jira",
+        "fieldId" => "summary",
+        "from" => nil,
+        "fromString" => "Trying to put webhooks to work.",
+        "to" => nil,
+        "toString" => "Trying to put webhooks to work"
+      }]
+    }, {
+      "id" => "10090",
+      "author" => {
+        "self" => "https://tallerflow.atlassian.net/rest/api/2/user?username=celso", "name" => "celso", "key" => "celso", "accountId" => "557058:65bf1bee-3dcb-46a3-8afd-664590346c4e", "emailAddress" => "celso@taller.net.br", "avatarUrls" => {
+          "48x48" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=48&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D48%26noRedirect%3Dtrue", "24x24" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=24&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D24%26noRedirect%3Dtrue", "16x16" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=16&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D16%26noRedirect%3Dtrue", "32x32" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=32&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D32%26noRedirect%3Dtrue"
+        }, "displayName" => "Celso Martins", "active" => true, "timeZone" => "America/Sao_Paulo"
+      },
+      "created" => "2018-07-12T12:08:21.938-0300",
+      "items" => [{
+        "field" => "summary",
+        "fieldtype" => "jira",
+        "fieldId" => "summary",
+        "from" => nil,
+        "fromString" => "Trying to put webhooks to work",
+        "to" => nil,
+        "toString" => "Trying to put webhooks to work."
+      }]
+    }, {
+      "id" => "10089",
+      "author" => {
+        "self" => "https://tallerflow.atlassian.net/rest/api/2/user?username=celso", "name" => "celso", "key" => "celso", "accountId" => "557058:65bf1bee-3dcb-46a3-8afd-664590346c4e", "emailAddress" => "celso@taller.net.br", "avatarUrls" => {
+          "48x48" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=48&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D48%26noRedirect%3Dtrue", "24x24" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=24&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D24%26noRedirect%3Dtrue", "16x16" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=16&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D16%26noRedirect%3Dtrue", "32x32" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=32&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D32%26noRedirect%3Dtrue"
+        }, "displayName" => "Celso Martins", "active" => true, "timeZone" => "America/Sao_Paulo"
+      },
+      "created" => "2018-07-12T12:03:05.492-0300",
+      "items" => [{
+        "field" => "summary",
+        "fieldtype" => "jira",
+        "fieldId" => "summary",
+        "from" => nil,
+        "fromString" => "Trying to put webhooks to work.",
+        "to" => nil,
+        "toString" => "Trying to put webhooks to work"
+      }]
+    }, {
+      "id" => "10088",
+      "author" => {
+        "self" => "https://tallerflow.atlassian.net/rest/api/2/user?username=celso", "name" => "celso", "key" => "celso", "accountId" => "557058:65bf1bee-3dcb-46a3-8afd-664590346c4e", "emailAddress" => "celso@taller.net.br", "avatarUrls" => {
+          "48x48" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=48&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D48%26noRedirect%3Dtrue", "24x24" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=24&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D24%26noRedirect%3Dtrue", "16x16" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=16&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D16%26noRedirect%3Dtrue", "32x32" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=32&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D32%26noRedirect%3Dtrue"
+        }, "displayName" => "Celso Martins", "active" => true, "timeZone" => "America/Sao_Paulo"
+      },
+      "created" => "2018-07-12T11:55:06.136-0300",
+      "items" => [{
+        "field" => "summary",
+        "fieldtype" => "jira",
+        "fieldId" => "summary",
+        "from" => nil,
+        "fromString" => "Trying to put webhooks to work",
+        "to" => nil,
+        "toString" => "Trying to put webhooks to work."
+      }]
+    }, {
+      "id" => "10087",
+      "author" => {
+        "self" => "https://tallerflow.atlassian.net/rest/api/2/user?username=celso", "name" => "celso", "key" => "celso", "accountId" => "557058:65bf1bee-3dcb-46a3-8afd-664590346c4e", "emailAddress" => "celso@taller.net.br", "avatarUrls" => {
+          "48x48" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=48&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D48%26noRedirect%3Dtrue", "24x24" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=24&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D24%26noRedirect%3Dtrue", "16x16" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=16&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D16%26noRedirect%3Dtrue", "32x32" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=32&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D32%26noRedirect%3Dtrue"
+        }, "displayName" => "Celso Martins", "active" => true, "timeZone" => "America/Sao_Paulo"
+      },
+      "created" => "2018-07-12T11:52:00.940-0300",
+      "items" => [{
+        "field" => "summary",
+        "fieldtype" => "jira",
+        "fieldId" => "summary",
+        "from" => nil,
+        "fromString" => "Trying to put webhooks to work.",
+        "to" => nil,
+        "toString" => "Trying to put webhooks to work"
+      }]
+    }, {
+      "id" => "10086",
+      "author" => {
+        "self" => "https://tallerflow.atlassian.net/rest/api/2/user?username=celso", "name" => "celso", "key" => "celso", "accountId" => "557058:65bf1bee-3dcb-46a3-8afd-664590346c4e", "emailAddress" => "celso@taller.net.br", "avatarUrls" => {
+          "48x48" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=48&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D48%26noRedirect%3Dtrue", "24x24" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=24&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D24%26noRedirect%3Dtrue", "16x16" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=16&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D16%26noRedirect%3Dtrue", "32x32" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=32&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D32%26noRedirect%3Dtrue"
+        }, "displayName" => "Celso Martins", "active" => true, "timeZone" => "America/Sao_Paulo"
+      },
+      "created" => "2018-07-12T11:46:14.174-0300",
+      "items" => [{
+        "field" => "summary",
+        "fieldtype" => "jira",
+        "fieldId" => "summary",
+        "from" => nil,
+        "fromString" => "Trying to put webhooks to work",
+        "to" => nil,
+        "toString" => "Trying to put webhooks to work."
+      }]
+    }, {
+      "id" => "10085",
+      "author" => {
+        "self" => "https://tallerflow.atlassian.net/rest/api/2/user?username=celso", "name" => "celso", "key" => "celso", "accountId" => "557058:65bf1bee-3dcb-46a3-8afd-664590346c4e", "emailAddress" => "celso@taller.net.br", "avatarUrls" => {
+          "48x48" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=48&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D48%26noRedirect%3Dtrue", "24x24" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=24&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D24%26noRedirect%3Dtrue", "16x16" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=16&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D16%26noRedirect%3Dtrue", "32x32" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=32&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D32%26noRedirect%3Dtrue"
+        }, "displayName" => "Celso Martins", "active" => true, "timeZone" => "America/Sao_Paulo"
+      },
+      "created" => "2018-07-12T11:45:24.711-0300",
+      "items" => [{
+        "field" => "summary",
+        "fieldtype" => "jira",
+        "fieldId" => "summary",
+        "from" => nil,
+        "fromString" => "Trying to put webhooks to work.",
+        "to" => nil,
+        "toString" => "Trying to put webhooks to work"
+      }]
+    }, {
+      "id" => "10084",
+      "author" => {
+        "self" => "https://tallerflow.atlassian.net/rest/api/2/user?username=celso", "name" => "celso", "key" => "celso", "accountId" => "557058:65bf1bee-3dcb-46a3-8afd-664590346c4e", "emailAddress" => "celso@taller.net.br", "avatarUrls" => {
+          "48x48" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=48&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D48%26noRedirect%3Dtrue", "24x24" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=24&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D24%26noRedirect%3Dtrue", "16x16" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=16&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D16%26noRedirect%3Dtrue", "32x32" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=32&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D32%26noRedirect%3Dtrue"
+        }, "displayName" => "Celso Martins", "active" => true, "timeZone" => "America/Sao_Paulo"
+      },
+      "created" => "2018-07-12T11:44:34.418-0300",
+      "items" => [{
+        "field" => "summary",
+        "fieldtype" => "jira",
+        "fieldId" => "summary",
+        "from" => nil,
+        "fromString" => "Trying to put webhooks to work",
+        "to" => nil,
+        "toString" => "Trying to put webhooks to work."
+      }]
+    }, {
+      "id" => "10083",
+      "author" => {
+        "self" => "https://tallerflow.atlassian.net/rest/api/2/user?username=celso", "name" => "celso", "key" => "celso", "accountId" => "557058:65bf1bee-3dcb-46a3-8afd-664590346c4e", "emailAddress" => "celso@taller.net.br", "avatarUrls" => {
+          "48x48" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=48&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D48%26noRedirect%3Dtrue", "24x24" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=24&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D24%26noRedirect%3Dtrue", "16x16" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=16&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D16%26noRedirect%3Dtrue", "32x32" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=32&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D32%26noRedirect%3Dtrue"
+        }, "displayName" => "Celso Martins", "active" => true, "timeZone" => "America/Sao_Paulo"
+      },
+      "created" => "2018-07-12T11:44:00.465-0300",
+      "items" => [{
+        "field" => "summary",
+        "fieldtype" => "jira",
+        "fieldId" => "summary",
+        "from" => nil,
+        "fromString" => "Trying to put webhooks to work - Local",
+        "to" => nil,
+        "toString" => "Trying to put webhooks to work"
+      }]
+    }, {
+      "id" => "10082",
+      "author" => {
+        "self" => "https://tallerflow.atlassian.net/rest/api/2/user?username=celso", "name" => "celso", "key" => "celso", "accountId" => "557058:65bf1bee-3dcb-46a3-8afd-664590346c4e", "emailAddress" => "celso@taller.net.br", "avatarUrls" => {
+          "48x48" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=48&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D48%26noRedirect%3Dtrue", "24x24" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=24&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D24%26noRedirect%3Dtrue", "16x16" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=16&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D16%26noRedirect%3Dtrue", "32x32" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=32&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D32%26noRedirect%3Dtrue"
+        }, "displayName" => "Celso Martins", "active" => true, "timeZone" => "America/Sao_Paulo"
+      },
+      "created" => "2018-07-11T22:44:43.000-0300",
+      "items" => [{
+        "field" => "summary",
+        "fieldtype" => "jira",
+        "fieldId" => "summary",
+        "from" => nil,
+        "fromString" => "Trying to put webhooks to work - Loca",
+        "to" => nil,
+        "toString" => "Trying to put webhooks to work - Local"
+      }]
+    }, {
+      "id" => "10081",
+      "author" => {
+        "self" => "https://tallerflow.atlassian.net/rest/api/2/user?username=celso", "name" => "celso", "key" => "celso", "accountId" => "557058:65bf1bee-3dcb-46a3-8afd-664590346c4e", "emailAddress" => "celso@taller.net.br", "avatarUrls" => {
+          "48x48" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=48&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D48%26noRedirect%3Dtrue", "24x24" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=24&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D24%26noRedirect%3Dtrue", "16x16" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=16&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D16%26noRedirect%3Dtrue", "32x32" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=32&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D32%26noRedirect%3Dtrue"
+        }, "displayName" => "Celso Martins", "active" => true, "timeZone" => "America/Sao_Paulo"
+      },
+      "created" => "2018-07-11T22:42:57.425-0300",
+      "items" => [{
+        "field" => "summary",
+        "fieldtype" => "jira",
+        "fieldId" => "summary",
+        "from" => nil,
+        "fromString" => "Trying to put webhooks to work - Local",
+        "to" => nil,
+        "toString" => "Trying to put webhooks to work - Loca"
+      }]
+    }, {
+      "id" => "10080",
+      "author" => {
+        "self" => "https://tallerflow.atlassian.net/rest/api/2/user?username=celso", "name" => "celso", "key" => "celso", "accountId" => "557058:65bf1bee-3dcb-46a3-8afd-664590346c4e", "emailAddress" => "celso@taller.net.br", "avatarUrls" => {
+          "48x48" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=48&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D48%26noRedirect%3Dtrue", "24x24" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=24&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D24%26noRedirect%3Dtrue", "16x16" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=16&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D16%26noRedirect%3Dtrue", "32x32" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=32&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D32%26noRedirect%3Dtrue"
+        }, "displayName" => "Celso Martins", "active" => true, "timeZone" => "America/Sao_Paulo"
+      },
+      "created" => "2018-07-11T22:42:26.230-0300",
+      "items" => [{
+        "field" => "summary",
+        "fieldtype" => "jira",
+        "fieldId" => "summary",
+        "from" => nil,
+        "fromString" => "Trying to put webhooks to work",
+        "to" => nil,
+        "toString" => "Trying to put webhooks to work - Local"
+      }]
+    }, {
+      "id" => "10079",
+      "author" => {
+        "self" => "https://tallerflow.atlassian.net/rest/api/2/user?username=celso", "name" => "celso", "key" => "celso", "accountId" => "557058:65bf1bee-3dcb-46a3-8afd-664590346c4e", "emailAddress" => "celso@taller.net.br", "avatarUrls" => {
+          "48x48" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=48&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D48%26noRedirect%3Dtrue", "24x24" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=24&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D24%26noRedirect%3Dtrue", "16x16" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=16&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D16%26noRedirect%3Dtrue", "32x32" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=32&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D32%26noRedirect%3Dtrue"
+        }, "displayName" => "Celso Martins", "active" => true, "timeZone" => "America/Sao_Paulo"
+      },
+      "created" => "2018-07-11T15:01:56.142-0300",
+      "items" => [{
+        "field" => "summary",
+        "fieldtype" => "jira",
+        "fieldId" => "summary",
+        "from" => nil,
+        "fromString" => "Trying to put webhooks to work - Local",
+        "to" => nil,
+        "toString" => "Trying to put webhooks to work"
+      }]
+    }, {
+      "id" => "10078",
+      "author" => {
+        "self" => "https://tallerflow.atlassian.net/rest/api/2/user?username=celso", "name" => "celso", "key" => "celso", "accountId" => "557058:65bf1bee-3dcb-46a3-8afd-664590346c4e", "emailAddress" => "celso@taller.net.br", "avatarUrls" => {
+          "48x48" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=48&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D48%26noRedirect%3Dtrue", "24x24" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=24&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D24%26noRedirect%3Dtrue", "16x16" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=16&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D16%26noRedirect%3Dtrue", "32x32" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=32&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D32%26noRedirect%3Dtrue"
+        }, "displayName" => "Celso Martins", "active" => true, "timeZone" => "America/Sao_Paulo"
+      },
+      "created" => "2018-07-11T14:58:48.542-0300",
+      "items" => [{
+        "field" => "summary",
+        "fieldtype" => "jira",
+        "fieldId" => "summary",
+        "from" => nil,
+        "fromString" => "Trying to put webhooks to work",
+        "to" => nil,
+        "toString" => "Trying to put webhooks to work - Local"
+      }]
+    }, {
+      "id" => "10077",
+      "author" => {
+        "self" => "https://tallerflow.atlassian.net/rest/api/2/user?username=celso", "name" => "celso", "key" => "celso", "accountId" => "557058:65bf1bee-3dcb-46a3-8afd-664590346c4e", "emailAddress" => "celso@taller.net.br", "avatarUrls" => {
+          "48x48" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=48&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D48%26noRedirect%3Dtrue", "24x24" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=24&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D24%26noRedirect%3Dtrue", "16x16" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=16&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D16%26noRedirect%3Dtrue", "32x32" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=32&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D32%26noRedirect%3Dtrue"
+        }, "displayName" => "Celso Martins", "active" => true, "timeZone" => "America/Sao_Paulo"
+      },
+      "created" => "2018-07-11T14:58:29.958-0300",
+      "items" => [{
+        "field" => "summary",
+        "fieldtype" => "jira",
+        "fieldId" => "summary",
+        "from" => nil,
+        "fromString" => "Trying to put webhooks to work - Local",
+        "to" => nil,
+        "toString" => "Trying to put webhooks to work"
+      }]
+    }, {
+      "id" => "10076",
+      "author" => {
+        "self" => "https://tallerflow.atlassian.net/rest/api/2/user?username=celso", "name" => "celso", "key" => "celso", "accountId" => "557058:65bf1bee-3dcb-46a3-8afd-664590346c4e", "emailAddress" => "celso@taller.net.br", "avatarUrls" => {
+          "48x48" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=48&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D48%26noRedirect%3Dtrue", "24x24" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=24&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D24%26noRedirect%3Dtrue", "16x16" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=16&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D16%26noRedirect%3Dtrue", "32x32" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=32&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D32%26noRedirect%3Dtrue"
+        }, "displayName" => "Celso Martins", "active" => true, "timeZone" => "America/Sao_Paulo"
+      },
+      "created" => "2018-07-11T14:57:30.975-0300",
+      "items" => [{
+        "field" => "summary",
+        "fieldtype" => "jira",
+        "fieldId" => "summary",
+        "from" => nil,
+        "fromString" => "Trying to put webhooks to work",
+        "to" => nil,
+        "toString" => "Trying to put webhooks to work - Local"
+      }]
+    }, {
+      "id" => "10075",
+      "author" => {
+        "self" => "https://tallerflow.atlassian.net/rest/api/2/user?username=celso", "name" => "celso", "key" => "celso", "accountId" => "557058:65bf1bee-3dcb-46a3-8afd-664590346c4e", "emailAddress" => "celso@taller.net.br", "avatarUrls" => {
+          "48x48" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=48&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D48%26noRedirect%3Dtrue", "24x24" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=24&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D24%26noRedirect%3Dtrue", "16x16" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=16&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D16%26noRedirect%3Dtrue", "32x32" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=32&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D32%26noRedirect%3Dtrue"
+        }, "displayName" => "Celso Martins", "active" => true, "timeZone" => "America/Sao_Paulo"
+      },
+      "created" => "2018-07-11T14:57:16.713-0300",
+      "items" => [{
+        "field" => "status",
+        "fieldtype" => "jira",
+        "fieldId" => "status",
+        "from" => "10007",
+        "fromString" => "Homologating",
+        "to" => "10006",
+        "toString" => "Ready to Deploy"
+      }]
+    }, {
+      "id" => "10074",
+      "author" => {
+        "self" => "https://tallerflow.atlassian.net/rest/api/2/user?username=celso", "name" => "celso", "key" => "celso", "accountId" => "557058:65bf1bee-3dcb-46a3-8afd-664590346c4e", "emailAddress" => "celso@taller.net.br", "avatarUrls" => {
+          "48x48" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=48&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D48%26noRedirect%3Dtrue", "24x24" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=24&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D24%26noRedirect%3Dtrue", "16x16" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=16&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D16%26noRedirect%3Dtrue", "32x32" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=32&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D32%26noRedirect%3Dtrue"
+        }, "displayName" => "Celso Martins", "active" => true, "timeZone" => "America/Sao_Paulo"
+      },
+      "created" => "2018-07-11T14:57:13.974-0300",
+      "items" => [{
+        "field" => "status",
+        "fieldtype" => "jira",
+        "fieldId" => "status",
+        "from" => "10005",
+        "fromString" => "Ready to HMG",
+        "to" => "10007",
+        "toString" => "Homologating"
+      }]
+    }, {
+      "id" => "10073",
+      "author" => {
+        "self" => "https://tallerflow.atlassian.net/rest/api/2/user?username=celso", "name" => "celso", "key" => "celso", "accountId" => "557058:65bf1bee-3dcb-46a3-8afd-664590346c4e", "emailAddress" => "celso@taller.net.br", "avatarUrls" => {
+          "48x48" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=48&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D48%26noRedirect%3Dtrue", "24x24" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=24&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D24%26noRedirect%3Dtrue", "16x16" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=16&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D16%26noRedirect%3Dtrue", "32x32" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=32&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D32%26noRedirect%3Dtrue"
+        }, "displayName" => "Celso Martins", "active" => true, "timeZone" => "America/Sao_Paulo"
+      },
+      "created" => "2018-07-11T14:57:11.963-0300",
+      "items" => [{
+        "field" => "status",
+        "fieldtype" => "jira",
+        "fieldId" => "status",
+        "from" => "10003",
+        "fromString" => "Developing",
+        "to" => "10005",
+        "toString" => "Ready to HMG"
+      }]
+    }, {
+      "id" => "10072",
+      "author" => {
+        "self" => "https://tallerflow.atlassian.net/rest/api/2/user?username=celso", "name" => "celso", "key" => "celso", "accountId" => "557058:65bf1bee-3dcb-46a3-8afd-664590346c4e", "emailAddress" => "celso@taller.net.br", "avatarUrls" => {
+          "48x48" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=48&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D48%26noRedirect%3Dtrue", "24x24" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=24&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D24%26noRedirect%3Dtrue", "16x16" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=16&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D16%26noRedirect%3Dtrue", "32x32" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=32&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D32%26noRedirect%3Dtrue"
+        }, "displayName" => "Celso Martins", "active" => true, "timeZone" => "America/Sao_Paulo"
+      },
+      "created" => "2018-07-11T14:57:09.423-0300",
+      "items" => [{
+        "field" => "status",
+        "fieldtype" => "jira",
+        "fieldId" => "status",
+        "from" => "10001",
+        "fromString" => "Ready to Dev",
+        "to" => "10003",
+        "toString" => "Developing"
+      }]
+    }, {
+      "id" => "10071",
+      "author" => {
+        "self" => "https://tallerflow.atlassian.net/rest/api/2/user?username=celso", "name" => "celso", "key" => "celso", "accountId" => "557058:65bf1bee-3dcb-46a3-8afd-664590346c4e", "emailAddress" => "celso@taller.net.br", "avatarUrls" => {
+          "48x48" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=48&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D48%26noRedirect%3Dtrue", "24x24" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=24&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D24%26noRedirect%3Dtrue", "16x16" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=16&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D16%26noRedirect%3Dtrue", "32x32" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=32&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D32%26noRedirect%3Dtrue"
+        }, "displayName" => "Celso Martins", "active" => true, "timeZone" => "America/Sao_Paulo"
+      },
+      "created" => "2018-07-11T14:57:06.641-0300",
+      "items" => [{
+        "field" => "Flagged",
+        "fieldtype" => "custom",
+        "fieldId" => "customfield_10023",
+        "from" => "[10019]",
+        "fromString" => "Impediment",
+        "to" => "",
+        "toString" => ""
+      }]
+    }, {
+      "id" => "10070",
+      "author" => {
+        "self" => "https://tallerflow.atlassian.net/rest/api/2/user?username=celso", "name" => "celso", "key" => "celso", "accountId" => "557058:65bf1bee-3dcb-46a3-8afd-664590346c4e", "emailAddress" => "celso@taller.net.br", "avatarUrls" => {
+          "48x48" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=48&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D48%26noRedirect%3Dtrue", "24x24" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=24&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D24%26noRedirect%3Dtrue", "16x16" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=16&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D16%26noRedirect%3Dtrue", "32x32" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=32&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D32%26noRedirect%3Dtrue"
+        }, "displayName" => "Celso Martins", "active" => true, "timeZone" => "America/Sao_Paulo"
+      },
+      "created" => "2018-07-11T14:56:55.339-0300",
+      "items" => [{
+        "field" => "Flagged",
+        "fieldtype" => "custom",
+        "fieldId" => "customfield_10023",
+        "from" => nil,
+        "fromString" => nil,
+        "to" => "[10019]",
+        "toString" => "Impediment"
+      }]
+    }, {
+      "id" => "10069",
+      "author" => {
+        "self" => "https://tallerflow.atlassian.net/rest/api/2/user?username=celso", "name" => "celso", "key" => "celso", "accountId" => "557058:65bf1bee-3dcb-46a3-8afd-664590346c4e", "emailAddress" => "celso@taller.net.br", "avatarUrls" => {
+          "48x48" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=48&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D48%26noRedirect%3Dtrue", "24x24" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=24&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D24%26noRedirect%3Dtrue", "16x16" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=16&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D16%26noRedirect%3Dtrue", "32x32" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=32&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D32%26noRedirect%3Dtrue"
+        }, "displayName" => "Celso Martins", "active" => true, "timeZone" => "America/Sao_Paulo"
+      },
+      "created" => "2018-07-11T14:56:42.555-0300",
+      "items" => [{
+        "field" => "status",
+        "fieldtype" => "jira",
+        "fieldId" => "status",
+        "from" => "10008",
+        "fromString" => "Options Inventory",
+        "to" => "10001",
+        "toString" => "Ready to Dev"
+      }]
+    }, {
+      "id" => "10068",
+      "author" => {
+        "self" => "https://tallerflow.atlassian.net/rest/api/2/user?username=celso", "name" => "celso", "key" => "celso", "accountId" => "557058:65bf1bee-3dcb-46a3-8afd-664590346c4e", "emailAddress" => "celso@taller.net.br", "avatarUrls" => {
+          "48x48" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=48&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D48%26noRedirect%3Dtrue", "24x24" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=24&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D24%26noRedirect%3Dtrue", "16x16" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=16&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D16%26noRedirect%3Dtrue", "32x32" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=32&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D32%26noRedirect%3Dtrue"
+        }, "displayName" => "Celso Martins", "active" => true, "timeZone" => "America/Sao_Paulo"
+      },
+      "created" => "2018-07-09T23:08:47.731-0300",
+      "items" => [{
+        "field" => "summary",
+        "fieldtype" => "jira",
+        "fieldId" => "summary",
+        "from" => nil,
+        "fromString" => "Trying to put webhooks to work - Local",
+        "to" => nil,
+        "toString" => "Trying to put webhooks to work"
+      }]
+    }, {
+      "id" => "10064",
+      "author" => {
+        "self" => "https://tallerflow.atlassian.net/rest/api/2/user?username=celso", "name" => "celso", "key" => "celso", "accountId" => "557058:65bf1bee-3dcb-46a3-8afd-664590346c4e", "emailAddress" => "celso@taller.net.br", "avatarUrls" => {
+          "48x48" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=48&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D48%26noRedirect%3Dtrue", "24x24" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=24&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D24%26noRedirect%3Dtrue", "16x16" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=16&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D16%26noRedirect%3Dtrue", "32x32" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=32&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D32%26noRedirect%3Dtrue"
+        }, "displayName" => "Celso Martins", "active" => true, "timeZone" => "America/Sao_Paulo"
+      },
+      "created" => "2018-07-09T22:49:48.526-0300",
+      "items" => [{
+        "field" => "summary",
+        "fieldtype" => "jira",
+        "fieldId" => "summary",
+        "from" => nil,
+        "fromString" => "Trying to put webhooks to work",
+        "to" => nil,
+        "toString" => "Trying to put webhooks to work - Local"
+      }]
+    }, {
+      "id" => "10063",
+      "author" => {
+        "self" => "https://tallerflow.atlassian.net/rest/api/2/user?username=celso", "name" => "celso", "key" => "celso", "accountId" => "557058:65bf1bee-3dcb-46a3-8afd-664590346c4e", "emailAddress" => "celso@taller.net.br", "avatarUrls" => {
+          "48x48" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=48&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D48%26noRedirect%3Dtrue", "24x24" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=24&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D24%26noRedirect%3Dtrue", "16x16" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=16&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D16%26noRedirect%3Dtrue", "32x32" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=32&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D32%26noRedirect%3Dtrue"
+        }, "displayName" => "Celso Martins", "active" => true, "timeZone" => "America/Sao_Paulo"
+      },
+      "created" => "2018-07-09T22:33:07.538-0300",
+      "items" => [{
+        "field" => "summary",
+        "fieldtype" => "jira",
+        "fieldId" => "summary",
+        "from" => nil,
+        "fromString" => "Trying to put webhooks to work - Local",
+        "to" => nil,
+        "toString" => "Trying to put webhooks to work"
+      }]
+    }, {
+      "id" => "10062",
+      "author" => {
+        "self" => "https://tallerflow.atlassian.net/rest/api/2/user?username=celso", "name" => "celso", "key" => "celso", "accountId" => "557058:65bf1bee-3dcb-46a3-8afd-664590346c4e", "emailAddress" => "celso@taller.net.br", "avatarUrls" => {
+          "48x48" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=48&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D48%26noRedirect%3Dtrue", "24x24" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=24&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D24%26noRedirect%3Dtrue", "16x16" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=16&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D16%26noRedirect%3Dtrue", "32x32" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=32&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D32%26noRedirect%3Dtrue"
+        }, "displayName" => "Celso Martins", "active" => true, "timeZone" => "America/Sao_Paulo"
+      },
+      "created" => "2018-07-09T22:32:16.907-0300",
+      "items" => [{
+        "field" => "summary",
+        "fieldtype" => "jira",
+        "fieldId" => "summary",
+        "from" => nil,
+        "fromString" => "Trying to put webhooks to work",
+        "to" => nil,
+        "toString" => "Trying to put webhooks to work - Local"
+      }]
+    }, {
+      "id" => "10061",
+      "author" => {
+        "self" => "https://tallerflow.atlassian.net/rest/api/2/user?username=celso", "name" => "celso", "key" => "celso", "accountId" => "557058:65bf1bee-3dcb-46a3-8afd-664590346c4e", "emailAddress" => "celso@taller.net.br", "avatarUrls" => {
+          "48x48" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=48&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D48%26noRedirect%3Dtrue", "24x24" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=24&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D24%26noRedirect%3Dtrue", "16x16" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=16&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D16%26noRedirect%3Dtrue", "32x32" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=32&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D32%26noRedirect%3Dtrue"
+        }, "displayName" => "Celso Martins", "active" => true, "timeZone" => "America/Sao_Paulo"
+      },
+      "created" => "2018-07-09T22:31:39.684-0300",
+      "items" => [{
+        "field" => "summary",
+        "fieldtype" => "jira",
+        "fieldId" => "summary",
+        "from" => nil,
+        "fromString" => "Trying to put webhooks to work - Local",
+        "to" => nil,
+        "toString" => "Trying to put webhooks to work"
+      }]
+    }, {
+      "id" => "10060",
+      "author" => {
+        "self" => "https://tallerflow.atlassian.net/rest/api/2/user?username=celso", "name" => "celso", "key" => "celso", "accountId" => "557058:65bf1bee-3dcb-46a3-8afd-664590346c4e", "emailAddress" => "celso@taller.net.br", "avatarUrls" => {
+          "48x48" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=48&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D48%26noRedirect%3Dtrue", "24x24" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=24&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D24%26noRedirect%3Dtrue", "16x16" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=16&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D16%26noRedirect%3Dtrue", "32x32" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=32&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D32%26noRedirect%3Dtrue"
+        }, "displayName" => "Celso Martins", "active" => true, "timeZone" => "America/Sao_Paulo"
+      },
+      "created" => "2018-07-09T22:29:04.903-0300",
+      "items" => [{
+        "field" => "summary",
+        "fieldtype" => "jira",
+        "fieldId" => "summary",
+        "from" => nil,
+        "fromString" => "Trying to put webhooks to work",
+        "to" => nil,
+        "toString" => "Trying to put webhooks to work - Local"
+      }]
+    }, {
+      "id" => "10059",
+      "author" => {
+        "self" => "https://tallerflow.atlassian.net/rest/api/2/user?username=celso", "name" => "celso", "key" => "celso", "accountId" => "557058:65bf1bee-3dcb-46a3-8afd-664590346c4e", "emailAddress" => "celso@taller.net.br", "avatarUrls" => {
+          "48x48" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=48&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D48%26noRedirect%3Dtrue", "24x24" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=24&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D24%26noRedirect%3Dtrue", "16x16" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=16&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D16%26noRedirect%3Dtrue", "32x32" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=32&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D32%26noRedirect%3Dtrue"
+        }, "displayName" => "Celso Martins", "active" => true, "timeZone" => "America/Sao_Paulo"
+      },
+      "created" => "2018-07-09T22:27:46.794-0300",
+      "items" => [{
+        "field" => "summary",
+        "fieldtype" => "jira",
+        "fieldId" => "summary",
+        "from" => nil,
+        "fromString" => "Trying to put webhooks to work - Local",
+        "to" => nil,
+        "toString" => "Trying to put webhooks to work"
+      }]
+    }, {
+      "id" => "10058",
+      "author" => {
+        "self" => "https://tallerflow.atlassian.net/rest/api/2/user?username=celso", "name" => "celso", "key" => "celso", "accountId" => "557058:65bf1bee-3dcb-46a3-8afd-664590346c4e", "emailAddress" => "celso@taller.net.br", "avatarUrls" => {
+          "48x48" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=48&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D48%26noRedirect%3Dtrue", "24x24" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=24&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D24%26noRedirect%3Dtrue", "16x16" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=16&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D16%26noRedirect%3Dtrue", "32x32" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=32&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D32%26noRedirect%3Dtrue"
+        }, "displayName" => "Celso Martins", "active" => true, "timeZone" => "America/Sao_Paulo"
+      },
+      "created" => "2018-07-09T22:22:59.474-0300",
+      "items" => [{
+        "field" => "summary",
+        "fieldtype" => "jira",
+        "fieldId" => "summary",
+        "from" => nil,
+        "fromString" => "Trying to put webhooks to work",
+        "to" => nil,
+        "toString" => "Trying to put webhooks to work - Local"
+      }]
+    }, {
+      "id" => "10057",
+      "author" => {
+        "self" => "https://tallerflow.atlassian.net/rest/api/2/user?username=celso", "name" => "celso", "key" => "celso", "accountId" => "557058:65bf1bee-3dcb-46a3-8afd-664590346c4e", "emailAddress" => "celso@taller.net.br", "avatarUrls" => {
+          "48x48" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=48&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D48%26noRedirect%3Dtrue", "24x24" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=24&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D24%26noRedirect%3Dtrue", "16x16" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=16&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D16%26noRedirect%3Dtrue", "32x32" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=32&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D32%26noRedirect%3Dtrue"
+        }, "displayName" => "Celso Martins", "active" => true, "timeZone" => "America/Sao_Paulo"
+      },
+      "created" => "2018-07-09T22:22:41.335-0300",
+      "items" => [{
+        "field" => "summary",
+        "fieldtype" => "jira",
+        "fieldId" => "summary",
+        "from" => nil,
+        "fromString" => "Trying to put webhooks to work - Local",
+        "to" => nil,
+        "toString" => "Trying to put webhooks to work"
+      }]
+    }, {
+      "id" => "10056",
+      "author" => {
+        "self" => "https://tallerflow.atlassian.net/rest/api/2/user?username=celso", "name" => "celso", "key" => "celso", "accountId" => "557058:65bf1bee-3dcb-46a3-8afd-664590346c4e", "emailAddress" => "celso@taller.net.br", "avatarUrls" => {
+          "48x48" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=48&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D48%26noRedirect%3Dtrue", "24x24" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=24&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D24%26noRedirect%3Dtrue", "16x16" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=16&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D16%26noRedirect%3Dtrue", "32x32" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=32&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D32%26noRedirect%3Dtrue"
+        }, "displayName" => "Celso Martins", "active" => true, "timeZone" => "America/Sao_Paulo"
+      },
+      "created" => "2018-07-09T22:22:09.022-0300",
+      "items" => [{
+        "field" => "summary",
+        "fieldtype" => "jira",
+        "fieldId" => "summary",
+        "from" => nil,
+        "fromString" => "Trying to put webhooks to work",
+        "to" => nil,
+        "toString" => "Trying to put webhooks to work - Local"
+      }]
+    }, {
+      "id" => "10055",
+      "author" => {
+        "self" => "https://tallerflow.atlassian.net/rest/api/2/user?username=celso", "name" => "celso", "key" => "celso", "accountId" => "557058:65bf1bee-3dcb-46a3-8afd-664590346c4e", "emailAddress" => "celso@taller.net.br", "avatarUrls" => {
+          "48x48" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=48&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D48%26noRedirect%3Dtrue", "24x24" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=24&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D24%26noRedirect%3Dtrue", "16x16" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=16&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D16%26noRedirect%3Dtrue", "32x32" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=32&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D32%26noRedirect%3Dtrue"
+        }, "displayName" => "Celso Martins", "active" => true, "timeZone" => "America/Sao_Paulo"
+      },
+      "created" => "2018-07-09T22:21:45.533-0300",
+      "items" => [{
+        "field" => "summary",
+        "fieldtype" => "jira",
+        "fieldId" => "summary",
+        "from" => nil,
+        "fromString" => "Trying to put webhooks to work - Local",
+        "to" => nil,
+        "toString" => "Trying to put webhooks to work"
+      }]
+    }, {
+      "id" => "10054",
+      "author" => {
+        "self" => "https://tallerflow.atlassian.net/rest/api/2/user?username=celso", "name" => "celso", "key" => "celso", "accountId" => "557058:65bf1bee-3dcb-46a3-8afd-664590346c4e", "emailAddress" => "celso@taller.net.br", "avatarUrls" => {
+          "48x48" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=48&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D48%26noRedirect%3Dtrue", "24x24" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=24&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D24%26noRedirect%3Dtrue", "16x16" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=16&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D16%26noRedirect%3Dtrue", "32x32" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=32&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D32%26noRedirect%3Dtrue"
+        }, "displayName" => "Celso Martins", "active" => true, "timeZone" => "America/Sao_Paulo"
+      },
+      "created" => "2018-07-09T21:34:24.355-0300",
+      "items" => [{
+        "field" => "summary",
+        "fieldtype" => "jira",
+        "fieldId" => "summary",
+        "from" => nil,
+        "fromString" => "Trying to put webhooks to work",
+        "to" => nil,
+        "toString" => "Trying to put webhooks to work - Local"
+      }]
+    }, {
+      "id" => "10053",
+      "author" => {
+        "self" => "https://tallerflow.atlassian.net/rest/api/2/user?username=celso", "name" => "celso", "key" => "celso", "accountId" => "557058:65bf1bee-3dcb-46a3-8afd-664590346c4e", "emailAddress" => "celso@taller.net.br", "avatarUrls" => {
+          "48x48" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=48&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D48%26noRedirect%3Dtrue", "24x24" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=24&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D24%26noRedirect%3Dtrue", "16x16" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=16&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D16%26noRedirect%3Dtrue", "32x32" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=32&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D32%26noRedirect%3Dtrue"
+        }, "displayName" => "Celso Martins", "active" => true, "timeZone" => "America/Sao_Paulo"
+      },
+      "created" => "2018-07-09T21:28:27.674-0300",
+      "items" => [{
+        "field" => "summary",
+        "fieldtype" => "jira",
+        "fieldId" => "summary",
+        "from" => nil,
+        "fromString" => "Trying to put webhooks to work - Local",
+        "to" => nil,
+        "toString" => "Trying to put webhooks to work"
+      }]
+    }, {
+      "id" => "10052",
+      "author" => {
+        "self" => "https://tallerflow.atlassian.net/rest/api/2/user?username=celso", "name" => "celso", "key" => "celso", "accountId" => "557058:65bf1bee-3dcb-46a3-8afd-664590346c4e", "emailAddress" => "celso@taller.net.br", "avatarUrls" => {
+          "48x48" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=48&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D48%26noRedirect%3Dtrue", "24x24" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=24&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D24%26noRedirect%3Dtrue", "16x16" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=16&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D16%26noRedirect%3Dtrue", "32x32" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=32&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D32%26noRedirect%3Dtrue"
+        }, "displayName" => "Celso Martins", "active" => true, "timeZone" => "America/Sao_Paulo"
+      },
+      "created" => "2018-07-09T21:08:26.505-0300",
+      "items" => [{
+        "field" => "summary",
+        "fieldtype" => "jira",
+        "fieldId" => "summary",
+        "from" => nil,
+        "fromString" => "Trying to put webhooks to work",
+        "to" => nil,
+        "toString" => "Trying to put webhooks to work - Local"
+      }]
+    }, {
+      "id" => "10051",
+      "author" => {
+        "self" => "https://tallerflow.atlassian.net/rest/api/2/user?username=celso", "name" => "celso", "key" => "celso", "accountId" => "557058:65bf1bee-3dcb-46a3-8afd-664590346c4e", "emailAddress" => "celso@taller.net.br", "avatarUrls" => {
+          "48x48" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=48&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D48%26noRedirect%3Dtrue", "24x24" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=24&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D24%26noRedirect%3Dtrue", "16x16" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=16&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D16%26noRedirect%3Dtrue", "32x32" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=32&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D32%26noRedirect%3Dtrue"
+        }, "displayName" => "Celso Martins", "active" => true, "timeZone" => "America/Sao_Paulo"
+      },
+      "created" => "2018-07-09T21:02:31.419-0300",
+      "items" => [{
+        "field" => "summary",
+        "fieldtype" => "jira",
+        "fieldId" => "summary",
+        "from" => nil,
+        "fromString" => "Trying to put webhooks to work - Local",
+        "to" => nil,
+        "toString" => "Trying to put webhooks to work"
+      }]
+    }, {
+      "id" => "10050",
+      "author" => {
+        "self" => "https://tallerflow.atlassian.net/rest/api/2/user?username=celso", "name" => "celso", "key" => "celso", "accountId" => "557058:65bf1bee-3dcb-46a3-8afd-664590346c4e", "emailAddress" => "celso@taller.net.br", "avatarUrls" => {
+          "48x48" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=48&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D48%26noRedirect%3Dtrue", "24x24" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=24&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D24%26noRedirect%3Dtrue", "16x16" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=16&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D16%26noRedirect%3Dtrue", "32x32" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=32&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D32%26noRedirect%3Dtrue"
+        }, "displayName" => "Celso Martins", "active" => true, "timeZone" => "America/Sao_Paulo"
+      },
+      "created" => "2018-07-09T20:58:27.238-0300",
+      "items" => [{
+        "field" => "summary",
+        "fieldtype" => "jira",
+        "fieldId" => "summary",
+        "from" => nil,
+        "fromString" => "Trying to put webhooks to work",
+        "to" => nil,
+        "toString" => "Trying to put webhooks to work - Local"
+      }]
+    }, {
+      "id" => "10049",
+      "author" => {
+        "self" => "https://tallerflow.atlassian.net/rest/api/2/user?username=celso", "name" => "celso", "key" => "celso", "accountId" => "557058:65bf1bee-3dcb-46a3-8afd-664590346c4e", "emailAddress" => "celso@taller.net.br", "avatarUrls" => {
+          "48x48" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=48&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D48%26noRedirect%3Dtrue", "24x24" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=24&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D24%26noRedirect%3Dtrue", "16x16" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=16&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D16%26noRedirect%3Dtrue", "32x32" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=32&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D32%26noRedirect%3Dtrue"
+        }, "displayName" => "Celso Martins", "active" => true, "timeZone" => "America/Sao_Paulo"
+      },
+      "created" => "2018-07-09T20:58:06.182-0300",
+      "items" => [{
+        "field" => "summary",
+        "fieldtype" => "jira",
+        "fieldId" => "summary",
+        "from" => nil,
+        "fromString" => "Trying to put webhooks to work - Local",
+        "to" => nil,
+        "toString" => "Trying to put webhooks to work"
+      }]
+    }, {
+      "id" => "10048",
+      "author" => {
+        "self" => "https://tallerflow.atlassian.net/rest/api/2/user?username=celso", "name" => "celso", "key" => "celso", "accountId" => "557058:65bf1bee-3dcb-46a3-8afd-664590346c4e", "emailAddress" => "celso@taller.net.br", "avatarUrls" => {
+          "48x48" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=48&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D48%26noRedirect%3Dtrue", "24x24" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=24&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D24%26noRedirect%3Dtrue", "16x16" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=16&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D16%26noRedirect%3Dtrue", "32x32" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=32&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D32%26noRedirect%3Dtrue"
+        }, "displayName" => "Celso Martins", "active" => true, "timeZone" => "America/Sao_Paulo"
+      },
+      "created" => "2018-07-09T20:55:15.921-0300",
+      "items" => [{
+        "field" => "summary",
+        "fieldtype" => "jira",
+        "fieldId" => "summary",
+        "from" => nil,
+        "fromString" => "Trying to put webhooks to work",
+        "to" => nil,
+        "toString" => "Trying to put webhooks to work - Local"
+      }]
+    }, {
+      "id" => "10047",
+      "author" => {
+        "self" => "https://tallerflow.atlassian.net/rest/api/2/user?username=celso", "name" => "celso", "key" => "celso", "accountId" => "557058:65bf1bee-3dcb-46a3-8afd-664590346c4e", "emailAddress" => "celso@taller.net.br", "avatarUrls" => {
+          "48x48" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=48&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D48%26noRedirect%3Dtrue", "24x24" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=24&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D24%26noRedirect%3Dtrue", "16x16" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=16&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D16%26noRedirect%3Dtrue", "32x32" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=32&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D32%26noRedirect%3Dtrue"
+        }, "displayName" => "Celso Martins", "active" => true, "timeZone" => "America/Sao_Paulo"
+      },
+      "created" => "2018-07-09T20:46:27.088-0300",
+      "items" => [{
+        "field" => "summary",
+        "fieldtype" => "jira",
+        "fieldId" => "summary",
+        "from" => nil,
+        "fromString" => "Trying to put webhooks to work - Local",
+        "to" => nil,
+        "toString" => "Trying to put webhooks to work"
+      }]
+    }, {
+      "id" => "10046",
+      "author" => {
+        "self" => "https://tallerflow.atlassian.net/rest/api/2/user?username=celso", "name" => "celso", "key" => "celso", "accountId" => "557058:65bf1bee-3dcb-46a3-8afd-664590346c4e", "emailAddress" => "celso@taller.net.br", "avatarUrls" => {
+          "48x48" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=48&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D48%26noRedirect%3Dtrue", "24x24" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=24&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D24%26noRedirect%3Dtrue", "16x16" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=16&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D16%26noRedirect%3Dtrue", "32x32" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=32&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D32%26noRedirect%3Dtrue"
+        }, "displayName" => "Celso Martins", "active" => true, "timeZone" => "America/Sao_Paulo"
+      },
+      "created" => "2018-07-09T20:27:44.404-0300",
+      "items" => [{
+        "field" => "summary",
+        "fieldtype" => "jira",
+        "fieldId" => "summary",
+        "from" => nil,
+        "fromString" => "Trying to put webhooks to work",
+        "to" => nil,
+        "toString" => "Trying to put webhooks to work - Local"
+      }]
+    }, {
+      "id" => "10045",
+      "author" => {
+        "self" => "https://tallerflow.atlassian.net/rest/api/2/user?username=celso", "name" => "celso", "key" => "celso", "accountId" => "557058:65bf1bee-3dcb-46a3-8afd-664590346c4e", "emailAddress" => "celso@taller.net.br", "avatarUrls" => {
+          "48x48" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=48&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D48%26noRedirect%3Dtrue", "24x24" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=24&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D24%26noRedirect%3Dtrue", "16x16" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=16&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D16%26noRedirect%3Dtrue", "32x32" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=32&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D32%26noRedirect%3Dtrue"
+        }, "displayName" => "Celso Martins", "active" => true, "timeZone" => "America/Sao_Paulo"
+      },
+      "created" => "2018-07-09T20:27:21.724-0300",
+      "items" => [{
+        "field" => "summary",
+        "fieldtype" => "jira",
+        "fieldId" => "summary",
+        "from" => nil,
+        "fromString" => "Trying to put webhooks to work - Local",
+        "to" => nil,
+        "toString" => "Trying to put webhooks to work"
+      }]
+    }, {
+      "id" => "10044",
+      "author" => {
+        "self" => "https://tallerflow.atlassian.net/rest/api/2/user?username=celso", "name" => "celso", "key" => "celso", "accountId" => "557058:65bf1bee-3dcb-46a3-8afd-664590346c4e", "emailAddress" => "celso@taller.net.br", "avatarUrls" => {
+          "48x48" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=48&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D48%26noRedirect%3Dtrue", "24x24" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=24&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D24%26noRedirect%3Dtrue", "16x16" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=16&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D16%26noRedirect%3Dtrue", "32x32" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=32&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D32%26noRedirect%3Dtrue"
+        }, "displayName" => "Celso Martins", "active" => true, "timeZone" => "America/Sao_Paulo"
+      },
+      "created" => "2018-07-09T20:25:05.148-0300",
+      "items" => [{
+        "field" => "summary",
+        "fieldtype" => "jira",
+        "fieldId" => "summary",
+        "from" => nil,
+        "fromString" => "Trying to put webhooks to work",
+        "to" => nil,
+        "toString" => "Trying to put webhooks to work - Local"
+      }]
+    }]
+  },
+  "fields" => {
+    "issuetype" => {
+      "self" => "https://tallerflow.atlassian.net/rest/api/2/issuetype/10005", "id" => "10005", "description" => "", "iconUrl" => "https://tallerflow.atlassian.net/secure/viewavatar?size=xsmall&avatarId=10512&avatarType=issuetype", "name" => "Chore", "subtask" => false, "avatarId" => 10512
+    }, "timespent" => nil, "timeoriginalestimate" => nil, "customfield_10030" => nil, "project" => {
+      "self" => "https://tallerflow.atlassian.net/rest/api/2/project/10000", "id" => "10000", "key" => "FC", "name" => "Flow Climate", "projectTypeKey" => "software", "avatarUrls" => {
+        "48x48" => "https://tallerflow.atlassian.net/secure/projectavatar?avatarId=10324", "24x24" => "https://tallerflow.atlassian.net/secure/projectavatar?size=small&avatarId=10324", "16x16" => "https://tallerflow.atlassian.net/secure/projectavatar?size=xsmall&avatarId=10324", "32x32" => "https://tallerflow.atlassian.net/secure/projectavatar?size=medium&avatarId=10324"
+      }
+    }, "description" => nil, "fixVersions" => [], "aggregatetimespent" => nil, "customfield_10013" => nil, "customfield_10014" => nil, "customfield_10015" => nil, "customfield_10027" => nil, "customfield_10028" => {
+      "self" => "https://tallerflow.atlassian.net/rest/api/2/customFieldOption/10022", "value" => "Fixed Date", "id" => "10022"
+    }, "customfield_10029" => nil, "attachment" => [], "aggregatetimeestimate" => nil, "resolutiondate" => nil, "workratio" => -1, "summary" => "Trying to put webhooks to work", "lastViewed" => "2018-07-16T18:07:53.209-0300", "watches" => {
+      "self" => "https://tallerflow.atlassian.net/rest/api/2/issue/FC-6/watchers", "watchCount" => 1, "isWatching" => true
+    }, "creator" => {
+      "self" => "https://tallerflow.atlassian.net/rest/api/2/user?username=celso", "name" => "celso", "key" => "celso", "accountId" => "557058:65bf1bee-3dcb-46a3-8afd-664590346c4e", "emailAddress" => "celso@taller.net.br", "avatarUrls" => {
+        "48x48" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=48&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D48%26noRedirect%3Dtrue", "24x24" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=24&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D24%26noRedirect%3Dtrue", "16x16" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=16&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D16%26noRedirect%3Dtrue", "32x32" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=32&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D32%26noRedirect%3Dtrue"
+      }, "displayName" => "Celso Martins", "active" => true, "timeZone" => "America/Sao_Paulo"
+    }, "subtasks" => [], "created" => "2018-07-09T20:23:06.866-0300", "customfield_10000" => "{}", "aggregateprogress" => {
+      "progress" => 0, "total" => 0
+    }, "customfield_10023" => nil, "customfield_10001" => nil, "customfield_10002" => nil, "customfield_10024" => nil, "labels" => [], "customfield_10016" => [], "customfield_10017" => "0|i0001r:", "environment" => nil, "aggregatetimeoriginalestimate" => nil, "timeestimate" => nil, "duedate" => nil, "progress" => {
+      "progress" => 0, "total" => 0
+    }, "issuelinks" => [], "comment" => {
+      "comments" => [{
+        "self" => "https://tallerflow.atlassian.net/rest/api/2/issue/10011/comment/10006",
+        "id" => "10006",
+        "author" => {
+          "self" => "https://tallerflow.atlassian.net/rest/api/2/user?username=celso", "name" => "celso", "key" => "celso", "accountId" => "557058:65bf1bee-3dcb-46a3-8afd-664590346c4e", "emailAddress" => "celso@taller.net.br", "avatarUrls" => {
+            "48x48" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=48&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D48%26noRedirect%3Dtrue", "24x24" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=24&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D24%26noRedirect%3Dtrue", "16x16" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=16&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D16%26noRedirect%3Dtrue", "32x32" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=32&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D32%26noRedirect%3Dtrue"
+          }, "displayName" => "Celso Martins", "active" => true, "timeZone" => "America/Sao_Paulo"
+        },
+        "body" => "(flag) Flag added\n\nflagging the demand",
+        "updateAuthor" => {
+          "self" => "https://tallerflow.atlassian.net/rest/api/2/user?username=celso", "name" => "celso", "key" => "celso", "accountId" => "557058:65bf1bee-3dcb-46a3-8afd-664590346c4e", "emailAddress" => "celso@taller.net.br", "avatarUrls" => {
+            "48x48" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=48&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D48%26noRedirect%3Dtrue", "24x24" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=24&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D24%26noRedirect%3Dtrue", "16x16" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=16&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D16%26noRedirect%3Dtrue", "32x32" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=32&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D32%26noRedirect%3Dtrue"
+          }, "displayName" => "Celso Martins", "active" => true, "timeZone" => "America/Sao_Paulo"
+        },
+        "created" => "2018-07-11T14:56:55.406-0300",
+        "updated" => "2018-07-11T14:56:55.406-0300",
+        "jsdPublic" => true
+      }, {
+        "self" => "https://tallerflow.atlassian.net/rest/api/2/issue/10011/comment/10007",
+        "id" => "10007",
+        "author" => {
+          "self" => "https://tallerflow.atlassian.net/rest/api/2/user?username=celso", "name" => "celso", "key" => "celso", "accountId" => "557058:65bf1bee-3dcb-46a3-8afd-664590346c4e", "emailAddress" => "celso@taller.net.br", "avatarUrls" => {
+            "48x48" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=48&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D48%26noRedirect%3Dtrue", "24x24" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=24&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D24%26noRedirect%3Dtrue", "16x16" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=16&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D16%26noRedirect%3Dtrue", "32x32" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=32&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D32%26noRedirect%3Dtrue"
+          }, "displayName" => "Celso Martins", "active" => true, "timeZone" => "America/Sao_Paulo"
+        },
+        "body" => "(flagoff) Flag removed\n\nunflagged it",
+        "updateAuthor" => {
+          "self" => "https://tallerflow.atlassian.net/rest/api/2/user?username=celso", "name" => "celso", "key" => "celso", "accountId" => "557058:65bf1bee-3dcb-46a3-8afd-664590346c4e", "emailAddress" => "celso@taller.net.br", "avatarUrls" => {
+            "48x48" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=48&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D48%26noRedirect%3Dtrue", "24x24" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=24&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D24%26noRedirect%3Dtrue", "16x16" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=16&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D16%26noRedirect%3Dtrue", "32x32" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=32&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D32%26noRedirect%3Dtrue"
+          }, "displayName" => "Celso Martins", "active" => true, "timeZone" => "America/Sao_Paulo"
+        },
+        "created" => "2018-07-11T14:57:06.735-0300",
+        "updated" => "2018-07-11T14:57:06.735-0300",
+        "jsdPublic" => true
+      }, {
+        "self" => "https://tallerflow.atlassian.net/rest/api/2/issue/10011/comment/10008",
+        "id" => "10008",
+        "author" => {
+          "self" => "https://tallerflow.atlassian.net/rest/api/2/user?username=celso", "name" => "celso", "key" => "celso", "accountId" => "557058:65bf1bee-3dcb-46a3-8afd-664590346c4e", "emailAddress" => "celso@taller.net.br", "avatarUrls" => {
+            "48x48" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=48&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D48%26noRedirect%3Dtrue", "24x24" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=24&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D24%26noRedirect%3Dtrue", "16x16" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=16&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D16%26noRedirect%3Dtrue", "32x32" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=32&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D32%26noRedirect%3Dtrue"
+          }, "displayName" => "Celso Martins", "active" => true, "timeZone" => "America/Sao_Paulo"
+        },
+        "body" => "this comment is not a block nor transition",
+        "updateAuthor" => {
+          "self" => "https://tallerflow.atlassian.net/rest/api/2/user?username=celso", "name" => "celso", "key" => "celso", "accountId" => "557058:65bf1bee-3dcb-46a3-8afd-664590346c4e", "emailAddress" => "celso@taller.net.br", "avatarUrls" => {
+            "48x48" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=48&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D48%26noRedirect%3Dtrue", "24x24" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=24&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D24%26noRedirect%3Dtrue", "16x16" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=16&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D16%26noRedirect%3Dtrue", "32x32" => "https://avatar-cdn.atlassian.com/509751c4de4b5433c831fbc1e529eb0e?s=32&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F509751c4de4b5433c831fbc1e529eb0e%3Fd%3Dmm%26s%3D32%26noRedirect%3Dtrue"
+          }, "displayName" => "Celso Martins", "active" => true, "timeZone" => "America/Sao_Paulo"
+        },
+        "created" => "2018-07-11T14:59:44.490-0300",
+        "updated" => "2018-07-11T14:59:44.490-0300",
+        "jsdPublic" => true
+      }], "maxResults" => 3, "total" => 3, "startAt" => 0
+    }, "updated" => "2018-07-16T18:07:53.236-0300", "status" => {
+      "self" => "https://tallerflow.atlassian.net/rest/api/2/status/6", "description" => "The issue is considered finished, the resolution is correct. Issues which are closed can be reopened.", "iconUrl" => "https://tallerflow.atlassian.net/images/icons/statuses/closed.png", "name" => "Closed", "id" => "6", "statusCategory" => {
+        "self" => "https://tallerflow.atlassian.net/rest/api/2/statuscategory/3", "id" => 3, "key" => "done", "colorName" => "green", "name" => "Done"
+      }
+    }
+  }
+}, @expanded = true, @deleted = false >

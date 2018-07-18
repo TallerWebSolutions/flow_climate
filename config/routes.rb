@@ -3,7 +3,10 @@
 require 'sidekiq/web'
 
 Rails.application.routes.draw do
-  post 'pipefy_webhook' => 'webhook_integrations#pipefy_webhook'
+  controller :webhook_integrations do
+    post 'pipefy_webhook'
+    post 'jira_webhook'
+  end
 
   authenticate :user do
     mount Sidekiq::Web => '/sidekiq'

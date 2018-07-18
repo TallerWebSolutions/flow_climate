@@ -361,6 +361,75 @@ ALTER SEQUENCE public.integration_errors_id_seq OWNED BY public.integration_erro
 
 
 --
+-- Name: jira_accounts; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.jira_accounts (
+    id bigint NOT NULL,
+    company_id integer NOT NULL,
+    username character varying NOT NULL,
+    encrypted_password character varying NOT NULL,
+    encrypted_password_iv character varying NOT NULL,
+    base_uri character varying NOT NULL,
+    customer_domain character varying NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: jira_accounts_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.jira_accounts_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: jira_accounts_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.jira_accounts_id_seq OWNED BY public.jira_accounts.id;
+
+
+--
+-- Name: jira_custom_field_mappings; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.jira_custom_field_mappings (
+    id bigint NOT NULL,
+    jira_account_id integer NOT NULL,
+    demand_field integer NOT NULL,
+    custom_field_machine_name character varying NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: jira_custom_field_mappings_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.jira_custom_field_mappings_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: jira_custom_field_mappings_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.jira_custom_field_mappings_id_seq OWNED BY public.jira_custom_field_mappings.id;
+
+
+--
 -- Name: operation_results; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -534,6 +603,41 @@ CREATE SEQUENCE public.project_change_deadline_histories_id_seq
 --
 
 ALTER SEQUENCE public.project_change_deadline_histories_id_seq OWNED BY public.project_change_deadline_histories.id;
+
+
+--
+-- Name: project_jira_configs; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.project_jira_configs (
+    id bigint NOT NULL,
+    project_id integer NOT NULL,
+    team_id integer NOT NULL,
+    jira_account_domain character varying NOT NULL,
+    jira_project_key character varying NOT NULL,
+    active boolean DEFAULT true NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: project_jira_configs_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.project_jira_configs_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: project_jira_configs_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.project_jira_configs_id_seq OWNED BY public.project_jira_configs.id;
 
 
 --
@@ -961,6 +1065,20 @@ ALTER TABLE ONLY public.integration_errors ALTER COLUMN id SET DEFAULT nextval('
 
 
 --
+-- Name: jira_accounts id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.jira_accounts ALTER COLUMN id SET DEFAULT nextval('public.jira_accounts_id_seq'::regclass);
+
+
+--
+-- Name: jira_custom_field_mappings id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.jira_custom_field_mappings ALTER COLUMN id SET DEFAULT nextval('public.jira_custom_field_mappings_id_seq'::regclass);
+
+
+--
 -- Name: operation_results id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -993,6 +1111,13 @@ ALTER TABLE ONLY public.products ALTER COLUMN id SET DEFAULT nextval('public.pro
 --
 
 ALTER TABLE ONLY public.project_change_deadline_histories ALTER COLUMN id SET DEFAULT nextval('public.project_change_deadline_histories_id_seq'::regclass);
+
+
+--
+-- Name: project_jira_configs id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.project_jira_configs ALTER COLUMN id SET DEFAULT nextval('public.project_jira_configs_id_seq'::regclass);
 
 
 --
@@ -1131,6 +1256,22 @@ ALTER TABLE ONLY public.integration_errors
 
 
 --
+-- Name: jira_accounts jira_accounts_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.jira_accounts
+    ADD CONSTRAINT jira_accounts_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: jira_custom_field_mappings jira_custom_field_mappings_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.jira_custom_field_mappings
+    ADD CONSTRAINT jira_custom_field_mappings_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: operation_results operation_results_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1168,6 +1309,14 @@ ALTER TABLE ONLY public.products
 
 ALTER TABLE ONLY public.project_change_deadline_histories
     ADD CONSTRAINT project_change_deadline_histories_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: project_jira_configs project_jira_configs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.project_jira_configs
+    ADD CONSTRAINT project_jira_configs_pkey PRIMARY KEY (id);
 
 
 --
@@ -1356,6 +1505,27 @@ CREATE INDEX index_integration_errors_on_integration_type ON public.integration_
 
 
 --
+-- Name: index_jira_accounts_on_company_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_jira_accounts_on_company_id ON public.jira_accounts USING btree (company_id);
+
+
+--
+-- Name: index_jira_accounts_on_customer_domain; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_jira_accounts_on_customer_domain ON public.jira_accounts USING btree (customer_domain);
+
+
+--
+-- Name: index_jira_custom_field_mappings_on_jira_account_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_jira_custom_field_mappings_on_jira_account_id ON public.jira_custom_field_mappings USING btree (jira_account_id);
+
+
+--
 -- Name: index_pipefy_configs_on_project_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1416,6 +1586,34 @@ CREATE INDEX index_project_change_deadline_histories_on_project_id ON public.pro
 --
 
 CREATE INDEX index_project_change_deadline_histories_on_user_id ON public.project_change_deadline_histories USING btree (user_id);
+
+
+--
+-- Name: index_project_jira_configs_on_jira_account_domain; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_project_jira_configs_on_jira_account_domain ON public.project_jira_configs USING btree (jira_account_domain);
+
+
+--
+-- Name: index_project_jira_configs_on_jira_project_key; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_project_jira_configs_on_jira_project_key ON public.project_jira_configs USING btree (jira_project_key);
+
+
+--
+-- Name: index_project_jira_configs_on_project_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_project_jira_configs_on_project_id ON public.project_jira_configs USING btree (project_id);
+
+
+--
+-- Name: index_project_jira_configs_on_team_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_project_jira_configs_on_team_id ON public.project_jira_configs USING btree (team_id);
 
 
 --
@@ -1524,6 +1722,20 @@ CREATE UNIQUE INDEX index_users_on_reset_password_token ON public.users USING bt
 
 
 --
+-- Name: unique_custom_field_to_jira_account; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX unique_custom_field_to_jira_account ON public.jira_custom_field_mappings USING btree (jira_account_id, demand_field);
+
+
+--
+-- Name: unique_jira_project_key_to_jira_account_domain; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX unique_jira_project_key_to_jira_account_domain ON public.project_jira_configs USING btree (jira_project_key, jira_account_domain);
+
+
+--
 -- Name: pipefy_configs fk_rails_0732eff170; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1553,6 +1765,14 @@ ALTER TABLE ONLY public.team_members
 
 ALTER TABLE ONLY public.demands
     ADD CONSTRAINT fk_rails_19bdd8aa1e FOREIGN KEY (project_id) REFERENCES public.projects(id);
+
+
+--
+-- Name: jira_custom_field_mappings fk_rails_1c34addc50; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.jira_custom_field_mappings
+    ADD CONSTRAINT fk_rails_1c34addc50 FOREIGN KEY (jira_account_id) REFERENCES public.jira_accounts(id);
 
 
 --
@@ -1644,6 +1864,14 @@ ALTER TABLE ONLY public.financial_informations
 
 
 --
+-- Name: project_jira_configs fk_rails_5de62c9ca2; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.project_jira_configs
+    ADD CONSTRAINT fk_rails_5de62c9ca2 FOREIGN KEY (project_id) REFERENCES public.projects(id);
+
+
+--
 -- Name: company_settings fk_rails_6434bf6768; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1716,11 +1944,27 @@ ALTER TABLE ONLY public.project_results
 
 
 --
+-- Name: jira_accounts fk_rails_b16d2de302; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.jira_accounts
+    ADD CONSTRAINT fk_rails_b16d2de302 FOREIGN KEY (company_id) REFERENCES public.companies(id);
+
+
+--
 -- Name: stage_project_configs fk_rails_b25c287b60; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.stage_project_configs
     ADD CONSTRAINT fk_rails_b25c287b60 FOREIGN KEY (stage_id) REFERENCES public.stages(id);
+
+
+--
+-- Name: project_jira_configs fk_rails_b2aa7aacef; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.project_jira_configs
+    ADD CONSTRAINT fk_rails_b2aa7aacef FOREIGN KEY (team_id) REFERENCES public.teams(id);
 
 
 --
@@ -1856,6 +2100,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20180618185639'),
 ('20180619150458'),
 ('20180620014718'),
-('20180627232834');
+('20180627232834'),
+('20180703233113');
 
 

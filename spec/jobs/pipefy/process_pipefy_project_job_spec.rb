@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe ProcessPipefyProjectJob, type: :active_job do
+RSpec.describe Pipefy::ProcessPipefyProjectJob, type: :active_job do
   let(:team) { Fabricate :team }
   let(:project) { Fabricate :project, start_date: Time.zone.iso8601('2017-01-01T23:01:46-02:00'), end_date: Time.zone.iso8601('2018-02-25T23:01:46-02:00') }
   let!(:stage) { Fabricate :stage, integration_id: '2481595' }
@@ -19,15 +19,15 @@ RSpec.describe ProcessPipefyProjectJob, type: :active_job do
 
   describe '.perform_later' do
     it 'enqueues after calling perform_later' do
-      ProcessPipefyProjectJob.perform_later(project)
-      expect(ProcessPipefyProjectJob).to have_been_enqueued.on_queue('default')
+      Pipefy::ProcessPipefyProjectJob.perform_later(project)
+      expect(Pipefy::ProcessPipefyProjectJob).to have_been_enqueued.on_queue('default')
     end
   end
 
   context 'having no pipefy_config' do
     it 'returns doing nothing' do
       expect(Pipefy::PipefyApiService).to receive(:request_card_details).never
-      ProcessPipefyProjectJob.perform_now(project)
+      Pipefy::ProcessPipefyProjectJob.perform_now(project)
     end
   end
 
@@ -63,7 +63,7 @@ RSpec.describe ProcessPipefyProjectJob, type: :active_job do
 
           expect_any_instance_of(ProjectResult).to receive(:compute_flow_metrics!).once
           expect(DemandsRepository.instance).to receive(:full_demand_destroy!).with(third_demand).once
-          ProcessPipefyProjectJob.perform_now(project)
+          Pipefy::ProcessPipefyProjectJob.perform_now(project)
           expect(fourth_demand).to eq fourth_demand.reload
         end
       end

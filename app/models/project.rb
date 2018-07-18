@@ -49,6 +49,7 @@ class Project < ApplicationRecord
   has_many :stage_project_configs, dependent: :destroy
   has_many :stages, through: :stage_project_configs
   has_one :pipefy_config, class_name: 'Pipefy::PipefyConfig', dependent: :destroy, autosave: true, inverse_of: :project
+  has_one :project_jira_config, class_name: 'Jira::ProjectJiraConfig', dependent: :destroy, autosave: true, inverse_of: :project
 
   validates :customer, :qty_hours, :project_type, :name, :status, :start_date, :end_date, :status, :initial_scope, :percentage_effort_to_bugs, presence: true
   validates :name, uniqueness: { scope: :product, message: I18n.t('project.name.uniqueness') }
@@ -132,7 +133,7 @@ class Project < ApplicationRecord
   end
 
   def current_team
-    project_results.order(result_date: :desc)&.first&.team || product&.team
+    project_results.order(result_date: :desc)&.first&.team || product&.team || project_jira_config&.team
   end
 
   def update_team_in_product(team)

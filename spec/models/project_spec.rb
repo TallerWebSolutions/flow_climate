@@ -18,6 +18,7 @@ RSpec.describe Project, type: :model do
     it { is_expected.to have_one(:pipefy_config).dependent(:destroy) }
     it { is_expected.to have_many(:integration_errors).dependent(:destroy) }
     it { is_expected.to have_many(:project_change_deadline_histories).dependent(:destroy) }
+    it { is_expected.to have_one(:project_jira_config).dependent(:destroy) }
   end
 
   context 'validations' do
@@ -264,25 +265,39 @@ RSpec.describe Project, type: :model do
   end
 
   describe '#current_team' do
+    let(:product_team) { Fabricate :team }
+    let(:team) { Fabricate :team }
+    let(:other_team) { Fabricate :team }
+
     context 'having teams' do
-      let(:product_team) { Fabricate :team }
       let(:product) { Fabricate :product, team: product_team }
       let(:project) { Fabricate :project, product: product, end_date: 4.weeks.from_now }
-      let(:team) { Fabricate :team }
-      let(:other_team) { Fabricate :team }
       let!(:result) { Fabricate :project_result, project: project, result_date: 1.day.ago, known_scope: 10, team: team }
       let!(:other_result) { Fabricate :project_result, project: project, result_date: Time.zone.today, known_scope: 20, team: other_team }
+      let!(:project_jira_config) { Fabricate :project_jira_config, project: project, team: team }
+
       it { expect(project.current_team).to eq other_team }
     end
+
     context 'having no results' do
       context 'but having a team to the product' do
-        let(:team) { Fabricate :team }
-        let(:product) { Fabricate :product, team: team }
+        let(:product) { Fabricate :product, team: product_team }
         let!(:project) { Fabricate :project, product: product }
+        let!(:project_jira_config) { Fabricate :project_jira_config, project: project, team: team }
+
+        it { expect(project.current_team).to eq product_team }
+      end
+      context 'having no team to the product but having a configuration to Jira' do
+        let(:product) { Fabricate :product, team: nil }
+        let(:project) { Fabricate :project, product: product, project_type: :outsourcing }
+        let!(:project_jira_config) { Fabricate :project_jira_config, project: project, team: team }
+
         it { expect(project.current_team).to eq team }
       end
-      context 'having no team to the product' do
-        let(:project) { Fabricate :project, project_type: :consulting, product: nil }
+      context 'having no team to the product and no configuration to Jira' do
+        let(:product) { Fabricate :product, team: nil }
+        let(:project) { Fabricate :project, product: product, project_type: :outsourcing }
+
         it { expect(project.current_team).to be_nil }
       end
     end

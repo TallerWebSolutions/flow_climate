@@ -1,17 +1,17 @@
 # frozen_string_literal: true
 
-RSpec.describe ProcessPipefyCardJob, type: :active_job do
+RSpec.describe Pipefy::ProcessPipefyCardJob, type: :active_job do
   describe '.perform' do
     it 'enqueues after calling perform_later' do
-      ProcessPipefyCardJob.perform_later(bla: 'foo')
-      expect(ProcessPipefyCardJob).to have_been_enqueued.on_queue('default')
+      Pipefy::ProcessPipefyCardJob.perform_later(bla: 'foo')
+      expect(Pipefy::ProcessPipefyCardJob).to have_been_enqueued.on_queue('default')
     end
   end
 
   context 'having no params' do
     it 'returns doing nothing' do
       expect(Pipefy::PipefyCardAdapter.instance).to receive(:create_card!).never
-      ProcessPipefyCardJob.perform_now({})
+      Pipefy::ProcessPipefyCardJob.perform_now({})
     end
   end
   context 'having params' do
@@ -46,14 +46,14 @@ RSpec.describe ProcessPipefyCardJob, type: :active_job do
             expect(Pipefy::PipefyCardAdapter.instance).to receive(:process_card_response!).with(team, demand, card_response).once
             expect(project).to receive(:project_results) { [project_result] }
             expect(project_result).to receive(:compute_flow_metrics!).once
-            ProcessPipefyCardJob.perform_now(params)
+            Pipefy::ProcessPipefyCardJob.perform_now(params)
           end
         end
         context 'and no demand' do
           it 'updates the demand and the project result' do
             expect(Pipefy::PipefyCardAdapter.instance).to receive(:create_card!).with(team, card_response).once
             expect(Pipefy::PipefyCardAdapter.instance).to receive(:process_card_response!).never
-            ProcessPipefyCardJob.perform_now(params)
+            Pipefy::ProcessPipefyCardJob.perform_now(params)
           end
         end
       end
@@ -67,7 +67,7 @@ RSpec.describe ProcessPipefyCardJob, type: :active_job do
         end
         it 'returns doing nothing' do
           expect(Pipefy::PipefyCardAdapter.instance).to receive(:create_card!).with(team, card_response).never
-          ProcessPipefyCardJob.perform_now(params)
+          Pipefy::ProcessPipefyCardJob.perform_now(params)
         end
       end
       context 'and blank card response' do
@@ -77,14 +77,14 @@ RSpec.describe ProcessPipefyCardJob, type: :active_job do
         end
         it 'returns doing nothing' do
           expect(Pipefy::PipefyCardAdapter.instance).to receive(:create_card!).with(team, card_response).never
-          ProcessPipefyCardJob.perform_now(params)
+          Pipefy::ProcessPipefyCardJob.perform_now(params)
         end
       end
       context 'invalid pipefy response' do
         it 'returns doing nothing' do
           stub_request(:post, 'https://app.pipefy.com/queries').to_return(status: [500, 'Internal Server Error'])
           expect(Pipefy::PipefyConfig).to receive(:where).never
-          ProcessPipefyCardJob.perform_now(params)
+          Pipefy::ProcessPipefyCardJob.perform_now(params)
         end
       end
     end
