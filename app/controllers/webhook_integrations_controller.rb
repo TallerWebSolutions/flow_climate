@@ -4,14 +4,14 @@ class WebhookIntegrationsController < ApplicationController
   skip_before_action :verify_authenticity_token
 
   def pipefy_webhook
-    return head :bad_request unless invalid_content_type?
+    return head :bad_request unless valid_content_type?
     data = JSON.parse(request.body.read)
     Pipefy::ProcessPipefyCardJob.perform_later(data)
     head :ok
   end
 
   def jira_webhook
-    return head :bad_request unless invalid_content_type?
+    return head :bad_request unless valid_content_type?
     data = JSON.parse(request.body.read)
 
     jira_account_domain = extract_account_domain(project_url(data))
@@ -42,7 +42,7 @@ class WebhookIntegrationsController < ApplicationController
     data['issue']['key']
   end
 
-  def invalid_content_type?
+  def valid_content_type?
     request.headers['Content-Type'].include?('application/json')
   end
 
