@@ -9,10 +9,10 @@ RSpec.describe Project, type: :model do
   context 'associations' do
     it { is_expected.to belong_to :customer }
     it { is_expected.to belong_to :product }
-    it { is_expected.to have_many(:project_results).dependent(:restrict_with_error) }
+    it { is_expected.to have_many(:project_results).dependent(:destroy) }
     it { is_expected.to have_many(:project_risk_configs).dependent(:destroy) }
     it { is_expected.to have_many(:project_risk_alerts).dependent(:destroy) }
-    it { is_expected.to have_many(:demands).dependent(:restrict_with_error) }
+    it { is_expected.to have_many(:demands).dependent(:destroy) }
     it { is_expected.to have_many(:stage_project_configs) }
     it { is_expected.to have_many(:stages).through(:stage_project_configs) }
     it { is_expected.to have_one(:pipefy_config).dependent(:destroy) }
