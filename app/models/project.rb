@@ -40,10 +40,10 @@ class Project < ApplicationRecord
   belongs_to :customer, counter_cache: true
   belongs_to :product, counter_cache: true
 
-  has_many :project_results, dependent: :restrict_with_error
+  has_many :project_results, dependent: :destroy
   has_many :project_risk_configs, dependent: :destroy
   has_many :project_risk_alerts, dependent: :destroy
-  has_many :demands, dependent: :restrict_with_error
+  has_many :demands, dependent: :destroy
   has_many :integration_errors, dependent: :destroy
   has_many :project_change_deadline_histories, dependent: :destroy
   has_many :stage_project_configs, dependent: :destroy

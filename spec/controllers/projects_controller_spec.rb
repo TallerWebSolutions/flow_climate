@@ -452,10 +452,10 @@ RSpec.describe ProjectsController, type: :controller do
           let!(:project_result) { Fabricate :project_result, project: project }
           before { delete :destroy, params: { company_id: company, id: project } }
 
-          it 'does not delete the project and show the error' do
+          it 'does delete the project and the dependecies' do
             expect(response).to redirect_to company_projects_path(company)
-            expect(Project.last).to eq project
-            expect(flash[:error]).to eq assigns(:project).errors.full_messages.join(',')
+            expect(Project.last).to be_nil
+            expect(flash[:error]).to be_blank
           end
         end
       end

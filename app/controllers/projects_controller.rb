@@ -60,8 +60,8 @@ class ProjectsController < AuthenticatedController
   end
 
   def destroy
-    return redirect_to company_projects_path(@company) if @project.destroy
-    redirect_to(company_projects_path(@company), flash: { error: @project.errors.full_messages.join(',') })
+    @project.destroy
+    redirect_to company_projects_path(@company)
   end
 
   def synchronize_pipefy

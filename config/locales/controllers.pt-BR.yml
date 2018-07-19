@@ -166,6 +166,7 @@ pt-BR:
         delivered: "Entregues no Período"
       throughput: "Throughput Semana Anterior"
       leadtime_80_confidence: "Leadtime 80%"
+      demands_count: "Qtd de Demandas"
     charts:
       xlabel:
         weeks: "Semanas"
@@ -300,6 +301,8 @@ pt-BR:
       product_blank: "é obrigatório para projeto de outsourcing"
     nickname:
       uniqueness: "Não deve repetir para o mesmo cliente"
+    destroy:
+      confirm: "Tem certeza que deseja apagar o projeto? Todas as demandas deste projeto também serão excluídas."
   team_member:
     edit:
       title: "Editar Membro do Time"
