@@ -1,4 +1,8 @@
 function buildScatterChart(scatterDiv) {
+    // console.log(scatterDiv.data('percentile95'));
+    // console.log(scatterDiv.data('percentile80'));
+    // console.log(scatterDiv.data('percentile60'));
+
     new Highcharts.Chart({
         chart: {
             type: 'scatter',
@@ -29,7 +33,7 @@ function buildScatterChart(scatterDiv) {
                     style: {
                         color: 'green'
                     },
-                    text: 'percentile 95% (' + scatterDiv.data('percentile95').toFixed(2) + ' ' + scatterDiv.data('suffix') + ')'
+                    text: 'percentile 95% (' + parseFloat(scatterDiv.data('percentile95')).toFixed(2) + ' ' + scatterDiv.data('suffix') + ')'
                 }
             },{
                 value: scatterDiv.data('percentile80'),
@@ -40,7 +44,7 @@ function buildScatterChart(scatterDiv) {
                     style: {
                         color: 'yellow'
                     },
-                    text: 'percentile 80% (' + scatterDiv.data('percentile80').toFixed(2) + ' ' + scatterDiv.data('suffix') + ')'
+                    text: 'percentile 80% (' + parseFloat(scatterDiv.data('percentile80')).toFixed(2) + ' ' + scatterDiv.data('suffix') + ')'
                 }
             },{
                 value: scatterDiv.data('percentile60'),
@@ -51,7 +55,7 @@ function buildScatterChart(scatterDiv) {
                     style: {
                         color: 'red'
                     },
-                    text: 'percentile 60% (' + scatterDiv.data('percentile60').toFixed(2) + ' ' + scatterDiv.data('suffix') + ')'
+                    text: 'percentile 60% (' + parseFloat(scatterDiv.data('percentile60')).toFixed(2) + ' ' + scatterDiv.data('suffix') + ')'
                 }
             }]
         },

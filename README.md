@@ -1,6 +1,7 @@
 [![Maintainability](https://api.codeclimate.com/v1/badges/bd4ed58b6b08523b837a/maintainability)](https://codeclimate.com/github/TallerWebSolutions/flow_climate/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/bd4ed58b6b08523b837a/test_coverage)](https://codeclimate.com/github/TallerWebSolutions/flow_climate/test_coverage)
 [![Build Status](https://travis-ci.org/TallerWebSolutions/flow_climate.svg?branch=develop)](https://travis-ci.org/TallerWebSolutions/flow_climate)
+[![sponsored by Taller](https://raw.githubusercontent.com/TallerWebSolutions/tallerwebsolutions.github.io/master/sponsored-by-taller.png)](https://taller.net.br/en/)
 
 
 # Flow Climate
