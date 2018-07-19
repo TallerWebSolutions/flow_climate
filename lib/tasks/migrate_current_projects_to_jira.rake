@@ -3,9 +3,6 @@
 namespace :project_migration do
   desc 'Notifications for the user'
   task migrate_current_projects_to_jira: :environment do
-    c = Company.find(1)
-    Fabricate :jira_account, base_uri: 'https://tallerflow.atlassian.net/', username: 'celso@taller.net.br', password: 'roots1981', company: c, customer_domain: 'tallerflow'
-
     ### Vingadores
 
     ## Projetos
