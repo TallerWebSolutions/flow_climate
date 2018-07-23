@@ -34,7 +34,7 @@ RSpec.describe WebhookIntegrationsController, type: :controller do
         it 'enqueues the job' do
           request.headers['Content-Type'] = 'application/json'
           expect(Jira::ProcessJiraIssueJob).to receive(:perform_later).once
-          post :jira_webhook, params: { issue: { key: 'FC-6', fields: { project: { key: 'foo', self: 'http://bar.atlassian.com' } } }.with_indifferent_access }
+          post :jira_webhook, params: { issue: { key: 'FC-6', fields: { project: { key: 'foo', self: 'http://bar.atlassian.com' }, fixVersions: [{ id: 'foo' }] } }.with_indifferent_access }
           expect(response).to have_http_status :ok
         end
       end
@@ -44,7 +44,7 @@ RSpec.describe WebhookIntegrationsController, type: :controller do
         it 'enqueues the job' do
           request.headers['Content-Type'] = 'application/json'
           expect(Jira::ProcessJiraIssueJob).to receive(:perform_later).never
-          post :jira_webhook, params: { issue: { key: 'FC-6', fields: { project: { key: 'foo', self: 'http://bar.atlassian.com' } } }.with_indifferent_access }
+          post :jira_webhook, params: { issue: { key: 'FC-6', fields: { project: { key: 'foo', self: 'http://bar.atlassian.com' }, fixVersions: [{ id: 'foo' }] } }.with_indifferent_access }
           expect(response).to have_http_status :ok
         end
       end
@@ -54,7 +54,7 @@ RSpec.describe WebhookIntegrationsController, type: :controller do
         it 'enqueues the job' do
           request.headers['Content-Type'] = 'application/json'
           expect(Jira::ProcessJiraIssueJob).to receive(:perform_later).never
-          post :jira_webhook, params: { issue: { key: 'FC-6', fields: { project: { key: 'foo', self: 'http://bar.atlassian.com' } } }.with_indifferent_access }
+          post :jira_webhook, params: { issue: { key: 'FC-6', fields: { project: { key: 'foo', self: 'http://bar.atlassian.com' }, fixVersions: [{ id: 'foo' }] } }.with_indifferent_access }
           expect(response).to have_http_status :ok
         end
       end

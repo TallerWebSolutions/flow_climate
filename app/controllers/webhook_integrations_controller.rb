@@ -47,7 +47,7 @@ class WebhookIntegrationsController < ApplicationController
   end
 
   def project_key(data)
-    data['issue']['fields']['project']['key']
+    data['issue']['fields']['fixVersions'][0]['id']
   end
 
   def project_url(data)
