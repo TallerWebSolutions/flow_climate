@@ -678,4 +678,22 @@ RSpec.describe Demand, type: :model do
       end
     end
   end
+
+  describe '#archived?' do
+    let(:project) { Fabricate :project }
+
+    let!(:not_archived) { Fabricate :stage, stage_type: :development, projects: [project] }
+    let(:demand) { Fabricate :demand, project: project }
+    let!(:demand_transition) { Fabricate :demand_transition, stage: not_archived, demand: demand }
+
+    context 'having transition in an archived stage' do
+      let!(:archived_stage) { Fabricate :stage, stage_type: :archived, projects: [project] }
+      let!(:archived_demand_transition) { Fabricate :demand_transition, stage: archived_stage, demand: demand }
+      it { expect(demand.reload).to be_archived }
+    end
+
+    context 'having no transition in an archived stage' do
+      it { expect(demand.reload).not_to be_archived }
+    end
+  end
 end

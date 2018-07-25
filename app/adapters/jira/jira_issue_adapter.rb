@@ -8,7 +8,9 @@ module Jira
       issue_key = jira_issue.attrs['key']
       return if issue_key.blank?
 
-      demand = Demand.where(project_id: project.id, demand_id: issue_key).first_or_create
+      demand = Demand.where(project_id: project.id, demand_id: issue_key).first_or_initialize
+      return demand if demand.archived?
+
       update_issue!(demand, jira_account, jira_issue, project)
       demand
     end

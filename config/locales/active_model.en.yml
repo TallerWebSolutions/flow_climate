@@ -68,6 +68,7 @@ en:
             homologation: Homologation
             ready_to_deploy: Ready to Deploy
             delivered: Delivered
+            archived: Archived
           stage_stream:
             upstream: Upstream
             downstream: Downstream

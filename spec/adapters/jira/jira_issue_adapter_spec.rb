@@ -145,16 +145,30 @@ RSpec.describe Jira::JiraIssueAdapter, type: :service do
     context 'when the demand exists' do
       let!(:jira_account) { Fabricate :jira_account, company: company }
       let!(:jira_custom_field_mapping) { Fabricate :jira_custom_field_mapping, jira_account: jira_account, demand_field: :responsibles, custom_field_machine_name: 'customfield_10024' }
-      let(:demand) { Fabricate :demand, demand_id: '10000' }
+      let!(:demand) { Fabricate :demand, project: first_project, demand_id: '10000' }
 
       let!(:jira_issue) { client.Issue.build({ key: '10000', summary: 'foo of bar', fields: { created: '2018-07-02T11:20:18.998-0300', issuetype: { name: 'Story' }, customfield_10028: { value: 'Expedite' }, project: { key: 'foo' }, customfield_10024: [{ name: 'foo' }, { name: 'bar' }] }, changelog: { startAt: 0, maxResults: 2, total: 2, histories: [{ id: '10039', from: 'first_stage', to: 'second_stage', created: '2018-07-08T22:34:47.440-0300' }, { id: '10038', from: 'third_stage', to: 'first_stage', created: '2018-07-06T09:40:43.886-0300' }] } }.with_indifferent_access) }
 
-      it 'updates the demand' do
-        Jira::JiraIssueAdapter.instance.process_issue!(jira_account, first_project, jira_issue)
-        expect(Demand.count).to eq 1
-        expect(Demand.last.assignees_count).to eq 2
-        expect(Demand.last.demand_title).to eq 'foo of bar'
-        expect(Demand.last.created_date).to eq Time.zone.parse('2018-07-02T11:20:18.998-0300')
+      context 'and the demand is not archived' do
+        it 'updates the demand' do
+          Jira::JiraIssueAdapter.instance.process_issue!(jira_account, first_project, jira_issue)
+          expect(Demand.count).to eq 1
+          expect(Demand.last.assignees_count).to eq 2
+          expect(Demand.last.demand_title).to eq 'foo of bar'
+          expect(Demand.last.created_date).to eq Time.zone.parse('2018-07-02T11:20:18.998-0300')
+        end
+      end
+      context 'and the demand was archived' do
+        let!(:archived_stage) { Fabricate :stage, stage_type: :archived, projects: [first_project] }
+        let!(:archived_demand_transition) { Fabricate :demand_transition, stage: archived_stage, demand: demand }
+
+        it 'updates the demand' do
+          Jira::JiraIssueAdapter.instance.process_issue!(jira_account, first_project, jira_issue)
+          expect(Demand.count).to eq 1
+          expect(Demand.last.assignees_count).to eq 1
+          expect(Demand.last.demand_title).to eq demand.demand_title
+          expect(Demand.last.created_date).to eq demand.created_date
+        end
       end
     end
   end

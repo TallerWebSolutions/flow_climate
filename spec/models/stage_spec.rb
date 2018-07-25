@@ -2,7 +2,7 @@
 
 RSpec.describe Stage, type: :model do
   context 'enums' do
-    it { is_expected.to define_enum_for(:stage_type).with(backlog: 0, design: 1, analysis: 2, development: 3, test: 4, homologation: 5, ready_to_deploy: 6, delivered: 7) }
+    it { is_expected.to define_enum_for(:stage_type).with(backlog: 0, design: 1, analysis: 2, development: 3, test: 4, homologation: 5, ready_to_deploy: 6, delivered: 7, archived: 8) }
     it { is_expected.to define_enum_for(:stage_stream).with(upstream: 0, downstream: 1) }
   end
 
