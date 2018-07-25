@@ -6,15 +6,16 @@ RSpec.describe ProjectFinancesService, type: :service do
 
   describe '#compute_cost_for_average_demand_cost' do
     let(:company) { Fabricate :company }
-    let(:team) { Fabricate :team, company: company }
+    let!(:team) { Fabricate :team, company: company }
     let!(:team_member) { Fabricate :team_member, active: true, billable_type: :outsourcing, billable: true, team: team, monthly_payment: 100, hours_per_month: 22, total_monthly_payment: 10_000 }
 
     let(:customer) { Fabricate :customer, company: company }
-    let(:product) { Fabricate :product, customer: customer, team: team }
 
     context 'when the projects have a team' do
-      let(:first_project) { Fabricate :project, product: product, customer: customer, project_type: :outsourcing }
-      let(:second_project) { Fabricate :project, product: product, customer: customer, project_type: :outsourcing }
+      let!(:product) { Fabricate :product, customer: customer, team: team }
+
+      let(:first_project) { Fabricate :project, product: product, customer: customer, project_type: :outsourcing, start_date: 1.month.ago }
+      let(:second_project) { Fabricate :project, product: product, customer: customer, project_type: :outsourcing, start_date: 1.month.ago }
 
       let!(:first_demand) { Fabricate :demand, project: first_project, end_date: 1.month.ago, effort_downstream: 100, effort_upstream: 50 }
       let!(:second_demand) { Fabricate :demand, project: first_project, end_date: 1.month.ago, effort_downstream: 200, effort_upstream: 230 }
@@ -34,7 +35,7 @@ RSpec.describe ProjectFinancesService, type: :service do
     end
 
     context 'when the projects have no team' do
-      let(:first_project) { Fabricate :project }
+      let(:first_project) { Fabricate :project, project_type: :outsourcing, start_date: 1.month.ago }
 
       it 'returns 0 to the used cost' do
         expect(ProjectFinancesService.instance.compute_cost_for_average_demand_cost(first_project, 1.month.ago)).to eq 0
@@ -45,15 +46,15 @@ RSpec.describe ProjectFinancesService, type: :service do
 
   describe '#effort_share_in_month' do
     let(:company) { Fabricate :company }
-    let(:team) { Fabricate :team, company: company }
+    let!(:team) { Fabricate :team, company: company }
     let!(:team_member) { Fabricate :team_member, active: true, billable_type: :outsourcing, billable: true, team: team, monthly_payment: 100, hours_per_month: 22, total_monthly_payment: 10_000 }
 
     let(:customer) { Fabricate :customer, company: company }
-    let(:product) { Fabricate :product, customer: customer, team: team }
 
     context 'when the projects have a team' do
-      let(:first_project) { Fabricate :project, product: product, customer: customer, project_type: :outsourcing }
-      let(:second_project) { Fabricate :project, product: product, customer: customer, project_type: :outsourcing }
+      let!(:product) { Fabricate :product, customer: customer, team: team }
+      let(:first_project) { Fabricate :project, product: product, customer: customer, project_type: :outsourcing, start_date: 1.month.ago }
+      let(:second_project) { Fabricate :project, product: product, customer: customer, project_type: :outsourcing, start_date: 1.month.ago }
 
       let!(:first_demand) { Fabricate :demand, project: first_project, end_date: 1.month.ago, effort_downstream: 100, effort_upstream: 50 }
       let!(:second_demand) { Fabricate :demand, project: first_project, end_date: 1.month.ago, effort_downstream: 200, effort_upstream: 230 }
@@ -73,7 +74,7 @@ RSpec.describe ProjectFinancesService, type: :service do
     end
 
     context 'when the projects have no team' do
-      let(:first_project) { Fabricate :project }
+      let(:first_project) { Fabricate :project, project_type: :outsourcing, start_date: 1.month.ago }
 
       it 'returns 0 to the share of the used effort' do
         expect(ProjectFinancesService.instance.effort_share_in_month(first_project, 1.month.ago)).to eq 0
