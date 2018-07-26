@@ -7,8 +7,10 @@ namespace :project_migration do
 
     ## Projetos
     # NSC
-    Jira::ProjectJiraConfig.create(project: Project.find(59), team: Project.find(59).current_team, jira_account_domain: 'tallerflow', jira_project_key: 'NSCT')
-    Jira::ProjectJiraConfig.create(project: Project.find(60), team: Project.find(60).current_team, jira_account_domain: 'tallerflow', jira_project_key: 'NXCF')
+    Jira::ProjectJiraConfig.create(project: Project.find(59), team: Project.find(59).current_team, jira_account_domain: 'tallerflow', jira_project_key: '10001')
+
+    # NxCF
+    Jira::ProjectJiraConfig.create(project: Project.find(60), team: Project.find(60).current_team, jira_account_domain: 'tallerflow', jira_project_key: '10002')
 
     ## Phases
     Stage.find(12).update(integration_id: '10012')

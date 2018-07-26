@@ -29,7 +29,7 @@
 #
 
 class Stage < ApplicationRecord
-  enum stage_type: { backlog: 0, design: 1, analysis: 2, development: 3, test: 4, homologation: 5, ready_to_deploy: 6, delivered: 7 }
+  enum stage_type: { backlog: 0, design: 1, analysis: 2, development: 3, test: 4, homologation: 5, ready_to_deploy: 6, delivered: 7, archived: 8 }
   enum stage_stream: { upstream: 0, downstream: 1 }
 
   belongs_to :company

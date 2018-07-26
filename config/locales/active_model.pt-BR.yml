@@ -295,6 +295,7 @@ pt-BR:
             homologation: Homologação
             ready_to_deploy: Pronto para Entrega
             delivered: Entregue
+            archived: Arquivado
           stage_stream:
             upstream: Upstream
             downstream: Downstream

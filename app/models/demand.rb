@@ -144,6 +144,10 @@ class Demand < ApplicationRecord
     current_stage.inside_commitment_area?
   end
 
+  def archived?
+    stages.archived.present?
+  end
+
   def update_commitment_date!
     update(commitment_date: nil) if current_stage&.before_commitment_point?
   end
