@@ -636,8 +636,8 @@ CREATE TABLE public.project_results (
     project_id integer NOT NULL,
     result_date date NOT NULL,
     known_scope integer NOT NULL,
-    qty_hours_upstream integer NOT NULL,
-    qty_hours_downstream integer NOT NULL,
+    qty_hours_upstream numeric NOT NULL,
+    qty_hours_downstream numeric NOT NULL,
     qty_bugs_opened integer NOT NULL,
     qty_bugs_closed integer NOT NULL,
     qty_hours_bug integer NOT NULL,
@@ -2088,6 +2088,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20180619150458'),
 ('20180620014718'),
 ('20180627232834'),
-('20180703233113');
+('20180703233113'),
+('20180731181345');
 
 

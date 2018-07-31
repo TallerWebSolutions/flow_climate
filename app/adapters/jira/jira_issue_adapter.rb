@@ -12,6 +12,8 @@ module Jira
       return demand if demand.archived?
 
       update_issue!(demand, jira_account, jira_issue, project)
+      ProjectResultService.instance.compute_demand!(project.current_team, demand)
+      project.project_results.order(:result_date).map(&:compute_flow_metrics!)
       demand
     end
 

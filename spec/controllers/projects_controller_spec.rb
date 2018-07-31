@@ -551,13 +551,25 @@ RSpec.describe ProjectsController, type: :controller do
 
       let(:customer) { Fabricate :customer, company: company }
       let(:project) { Fabricate :project, customer: customer }
-      let!(:demand) { Fabricate :demand, project: project }
+      let!(:demand) { Fabricate :demand, project: project, end_date: Time.zone.today }
+      let!(:deleted_demand) { Fabricate :demand, project: project, end_date: Time.zone.today, discarded_at: Time.zone.yesterday }
 
       context 'valid parameters' do
         it 'calls the to_csv and responds success' do
-          expect(Demand).to receive(:to_csv)
           get :delivered_demands_csv, params: { company_id: company, id: project }, format: :csv
           expect(response).to have_http_status 200
+
+          csv = CSV.parse(response.body, headers: true)
+          expect(csv.count).to eq 1
+          expect(csv.first[0].to_i).to eq demand.id
+          expect(csv.first[1]).to eq demand.demand_id
+          expect(csv.first[2]).to eq 'feature'
+          expect(csv.first[3]).to eq 'standard'
+          expect(csv.first[4].to_f).to eq demand.effort_downstream.to_f
+          expect(csv.first[5].to_f).to eq demand.effort_upstream.to_f
+          expect(csv.first[6]).to eq demand.created_date.to_s
+          expect(csv.first[7]).to be_nil
+          expect(csv.first[8]).to eq demand.end_date.to_s
         end
       end
 

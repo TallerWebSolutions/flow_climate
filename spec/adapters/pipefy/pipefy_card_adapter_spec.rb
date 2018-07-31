@@ -287,8 +287,8 @@ RSpec.describe Pipefy::PipefyCardAdapter, type: :service do
           expect(created_result.project).to eq second_project
           expect(created_result.result_date).to eq Date.new(2018, 2, 21)
           expect(created_result.known_scope).to eq 31
-          expect(created_result.qty_hours_downstream).to eq 19
-          expect(created_result.qty_hours_upstream).to eq 13
+          expect(created_result.qty_hours_downstream.to_f).to eq 19.8
+          expect(created_result.qty_hours_upstream.to_f).to eq 13.2
           expect(created_result.qty_hours_bug).to eq 0
           expect(created_result.demands).to eq [updated_demand]
           expect(created_result.demands_count).to eq 1

@@ -23,8 +23,8 @@
 #  qty_bugs_closed        :integer          not null
 #  qty_bugs_opened        :integer          not null
 #  qty_hours_bug          :integer          not null
-#  qty_hours_downstream   :integer          not null
-#  qty_hours_upstream     :integer          not null
+#  qty_hours_downstream   :decimal(, )      not null
+#  qty_hours_upstream     :decimal(, )      not null
 #  remaining_days         :integer          not null
 #  result_date            :date             not null
 #  team_id                :integer          not null
@@ -122,7 +122,7 @@ class ProjectResult < ApplicationRecord
   end
 
   def sum_effort(field)
-    demands.finished.sum(field)
+    demands.kept.finished.sum(field)
   end
 
   def cost_per_day
@@ -156,12 +156,12 @@ class ProjectResult < ApplicationRecord
   end
 
   def delivered_demands_upstream
-    valid_demands = demands.not_discarded_until_date(result_date)
-    valid_demands.finished_in_stream(Stage.stage_streams[:upstream]) | valid_demands.finished.upstream_flag
+    not_discarded_demands = demands.not_discarded_until_date(result_date)
+    not_discarded_demands.finished_in_stream(Stage.stage_streams[:upstream]) | not_discarded_demands.finished.upstream_flag
   end
 
   def delivered_demands_downstream
-    valid_demands = demands.not_discarded_until_date(result_date)
-    (valid_demands.finished_in_stream(Stage.stage_streams[:downstream]) | valid_demands.finished.downstream_flag) - delivered_demands_upstream
+    not_discarded_demands = demands.not_discarded_until_date(result_date)
+    (not_discarded_demands.finished_in_stream(Stage.stage_streams[:downstream]) | not_discarded_demands.finished.downstream_flag) - delivered_demands_upstream
   end
 end
