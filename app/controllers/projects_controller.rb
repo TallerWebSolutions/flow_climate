@@ -77,8 +77,13 @@ class ProjectsController < AuthenticatedController
   end
 
   def delivered_demands_csv
-    @project_delivered_demands = @project.demands.finished.order(end_date: :desc)
-    respond_to { |format| format.csv { send_data @project_delivered_demands.to_csv, filename: "demands-#{Time.zone.now}.csv" } }
+    @project_delivered_demands = @project.demands.kept.finished.order(end_date: :desc)
+    attributes = %w[id demand_id demand_type class_of_service effort_downstream effort_upstream created_date commitment_date end_date]
+    demands_csv = CSV.generate(headers: true) do |csv|
+      csv << attributes
+      @project_delivered_demands.each { |demand| csv << attributes.map { |attr| demand.send(attr) } }
+    end
+    respond_to { |format| format.csv { send_data demands_csv, filename: "demands-#{Time.zone.now}.csv" } }
   end
 
   def search_demands_by_flow_status

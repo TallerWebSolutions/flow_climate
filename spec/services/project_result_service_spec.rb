@@ -95,8 +95,8 @@ RSpec.describe ProjectResultService, type: :service do
               expect(new_project_result.id).not_to eq project_result.id
               expect(new_project_result.result_date).to eq Time.zone.today
               expect(new_project_result.demands).to eq [demand]
-              expect(new_project_result.qty_hours_downstream).to eq demand.effort_downstream.to_i
-              expect(new_project_result.qty_hours_upstream).to eq demand.effort_upstream.to_i
+              expect(new_project_result.qty_hours_downstream).to eq demand.effort_downstream
+              expect(new_project_result.qty_hours_upstream).to eq demand.effort_upstream
               expect(new_project_result.known_scope).to eq 11
 
               expect(ProjectResult.find_by(id: first_project_result.id)).to eq first_project_result
@@ -133,8 +133,8 @@ RSpec.describe ProjectResultService, type: :service do
                 expect(new_project_result.id).not_to eq project_result.id
                 expect(new_project_result.result_date).to eq Time.zone.today
                 expect(new_project_result.demands).to eq [first_demand]
-                expect(new_project_result.qty_hours_downstream).to eq first_demand.effort_downstream.to_i
-                expect(new_project_result.qty_hours_upstream).to eq first_demand.effort_upstream.to_i
+                expect(new_project_result.qty_hours_downstream).to eq first_demand.effort_downstream
+                expect(new_project_result.qty_hours_upstream).to eq first_demand.effort_upstream
                 expect(new_project_result.known_scope).to eq 13
 
                 expect(ProjectResult.find_by(id: first_project_result.id)).to eq first_project_result

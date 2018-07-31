@@ -143,8 +143,8 @@ RSpec.describe ProjectResult, type: :model do
           expect(result_updated.known_scope).to eq 8
           expect(result_updated.throughput_upstream).to eq 3
           expect(result_updated.throughput_downstream).to eq 3
-          expect(result_updated.qty_hours_upstream).to eq 255
-          expect(result_updated.qty_hours_downstream).to eq 112
+          expect(result_updated.qty_hours_upstream.to_f).to eq 225.0
+          expect(result_updated.qty_hours_downstream.to_f).to eq 52.0
           expect(result_updated.qty_hours_bug).to eq 20
           expect(result_updated.qty_bugs_closed).to eq 1
           expect(result_updated.qty_bugs_opened).to eq 1
@@ -172,8 +172,8 @@ RSpec.describe ProjectResult, type: :model do
           expect(result.reload.known_scope).to eq 8
           expect(result.reload.throughput_upstream).to eq 3
           expect(result.reload.throughput_downstream).to eq 2
-          expect(result.reload.qty_hours_upstream).to eq 155
-          expect(result.reload.qty_hours_downstream).to eq 92
+          expect(result.reload.qty_hours_upstream.to_f).to eq 125.0
+          expect(result.reload.qty_hours_downstream.to_f).to eq 32.0
           expect(result.reload.qty_hours_bug).to eq 0
           expect(result.reload.qty_bugs_closed).to eq 0
           expect(result.reload.qty_bugs_opened).to eq 0
