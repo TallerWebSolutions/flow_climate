@@ -70,8 +70,8 @@
              class="flow-chart"
              data-title='<%= t('demands.charts.hours_per_month.title', name: team.name) %>'
              data-xcategories='<%= flow_report_data.x_axis_month_data %>'
-             data-xtitle='<%= t('charts.ylabel.projects.text') %>'
-             data-ytitle='<%= t('demands.charts.processing_rate.ylabel') %>'
+             data-xtitle='<%= t('projects.charts.hours_per_month.xlabel') %>'
+             data-ytitle='<%= t('projects.charts.hours_per_month.ylabel') %>'
              data-tooltipsufix='<%= t('demands.charts.processing_rate.tooltipsufix') %>'
              data-series='<%= [{ name: 'Horas Totais', data: flow_report_data.hours_per_project_per_month }].to_json %>'
              data-stacking='normal'
