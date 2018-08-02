@@ -211,8 +211,9 @@ pt-BR:
       date_odds:
         tooltipsufix: "chance"
       hours_per_month:
-        ylabel: "Horas"
+        ylabel: "Horas Produzidas"
         title: "Horas por Mês de Esforço para %{target_name}"
+        xlabel: "Meses"
       lead_time_chart:
         title: "Control chart do lead time para %{target_name}"
         ylabel: "dias"
