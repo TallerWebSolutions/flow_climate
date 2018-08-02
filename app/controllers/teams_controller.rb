@@ -12,7 +12,7 @@ class TeamsController < AuthenticatedController
     @pipefy_team_configs = @team.pipefy_team_configs.order(:username)
     @projects_risk_alert_data = Highchart::ProjectRiskChartsAdapter.new(@team.projects)
     @demands = DemandsRepository.instance.demands_per_projects(@team_projects)
-    assign_grouped_demands_informations
+    assign_chart_informations
   end
 
   def new
@@ -49,7 +49,7 @@ class TeamsController < AuthenticatedController
     @team_projects = ProjectsRepository.instance.all_projects_for_team(@team)
     demands_for_query_ids = build_demands_query
     @demands = Demand.where(id: demands_for_query_ids.map(&:id))
-    assign_grouped_demands_informations
+    assign_chart_informations
     respond_to { |format| format.js { render file: 'demands/search_demands_by_flow_status.js.erb' } }
   end
 
@@ -62,9 +62,10 @@ class TeamsController < AuthenticatedController
     DemandsRepository.instance.demands_per_projects(@team_projects)
   end
 
-  def assign_grouped_demands_informations
+  def assign_chart_informations
     @grouped_delivered_demands = @demands.grouped_end_date_by_month if params[:grouped_by_month] == 'true'
     @grouped_customer_demands = @demands.grouped_by_customer if params[:grouped_by_customer] == 'true'
+    @flow_report_data = Highchart::FlowChartsAdapter.new(@team_projects, Time.zone.today.cweek, Time.zone.today.cwyear)
   end
 
   def assign_team
