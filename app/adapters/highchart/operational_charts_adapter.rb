@@ -160,8 +160,8 @@ module Highchart
       bugs_closed_count_array = []
       @all_projects_weeks.each do |date|
         dates_array << date.to_s
-        bugs_opened_count_array << ProjectResultsRepository.instance.bugs_opened_in_week(@all_projects, date)
-        bugs_closed_count_array << ProjectResultsRepository.instance.bugs_closed_in_week(@all_projects, date)
+        bugs_opened_count_array << ProjectResultsRepository.instance.bugs_opened_until_week(@all_projects, date)
+        bugs_closed_count_array << ProjectResultsRepository.instance.bugs_closed_until_week(@all_projects, date)
       end
       @weeekly_bugs_count_hash = { dates_array: dates_array, bugs_opened_count_array: bugs_opened_count_array, bugs_closed_count_array: bugs_closed_count_array }
     end

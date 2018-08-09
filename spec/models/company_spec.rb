@@ -357,54 +357,6 @@ RSpec.describe Company, type: :model do
     end
   end
 
-  describe '#bugs_opened_in_month' do
-    let(:company) { Fabricate :company }
-    let(:customer) { Fabricate :customer, company: company }
-    let(:other_customer) { Fabricate :customer, company: company }
-    let(:other_company_customer) { Fabricate :customer }
-
-    let(:product) { Fabricate :product, customer: customer, name: 'zzz' }
-    let(:other_product) { Fabricate :product, customer: other_customer, name: 'zzz' }
-    let(:other_company_product) { Fabricate :product, customer: other_company_customer, name: 'zzz' }
-
-    let(:project) { Fabricate :project, end_date: 4.weeks.from_now, customer: customer, product: product }
-    let(:other_project) { Fabricate :project, end_date: 4.weeks.from_now, customer: customer, product: product }
-    let(:other_customer_project) { Fabricate :project, end_date: 4.weeks.from_now, customer: other_product.customer, product: other_product }
-    let(:other_company_project) { Fabricate :project, end_date: 4.weeks.from_now, customer: other_company_product.customer, product: other_company_product }
-
-    let!(:first_result) { Fabricate :project_result, project: project, result_date: 1.month.ago, qty_bugs_opened: 10 }
-    let!(:second_result) { Fabricate :project_result, project: project, result_date: 1.month.ago, qty_bugs_opened: 20 }
-    let!(:third_result) { Fabricate :project_result, project: other_project, result_date: Time.zone.today, qty_bugs_opened: 5 }
-    let!(:fourth_result) { Fabricate :project_result, project: other_customer_project, result_date: Time.zone.today, qty_bugs_opened: 50 }
-    let!(:fifth_result) { Fabricate :project_result, project: other_company_project, result_date: Time.zone.today, qty_bugs_opened: 100 }
-
-    it { expect(company.bugs_opened_in_month(1.month.ago.to_date)).to eq 30 }
-  end
-
-  describe '#bugs_closed_in_month' do
-    let(:company) { Fabricate :company }
-    let(:customer) { Fabricate :customer, company: company }
-    let(:other_customer) { Fabricate :customer, company: company }
-    let(:other_company_customer) { Fabricate :customer }
-
-    let(:product) { Fabricate :product, customer: customer, name: 'zzz' }
-    let(:other_product) { Fabricate :product, customer: other_customer, name: 'zzz' }
-    let(:other_company_product) { Fabricate :product, customer: other_company_customer, name: 'zzz' }
-
-    let(:project) { Fabricate :project, end_date: 4.weeks.from_now, customer: customer, product: product }
-    let(:other_project) { Fabricate :project, end_date: 4.weeks.from_now, customer: customer, product: product }
-    let(:other_customer_project) { Fabricate :project, end_date: 4.weeks.from_now, customer: other_product.customer, product: other_product }
-    let(:other_company_project) { Fabricate :project, end_date: 4.weeks.from_now, customer: other_company_product.customer, product: other_company_product }
-
-    let!(:first_result) { Fabricate :project_result, project: project, result_date: 1.month.ago, qty_bugs_closed: 10 }
-    let!(:second_result) { Fabricate :project_result, project: project, result_date: 1.month.ago, qty_bugs_closed: 20 }
-    let!(:third_result) { Fabricate :project_result, project: other_project, result_date: Time.zone.today, qty_bugs_closed: 5 }
-    let!(:fourth_result) { Fabricate :project_result, project: other_customer_project, result_date: Time.zone.today, qty_bugs_closed: 50 }
-    let!(:fifth_result) { Fabricate :project_result, project: other_company_project, result_date: Time.zone.today, qty_bugs_closed: 100 }
-
-    it { expect(company.bugs_closed_in_month(1.month.ago.to_date)).to eq 30 }
-  end
-
   describe '#total_available_hours' do
     let(:company) { Fabricate :company }
     let(:customer) { Fabricate :customer, company: company }
