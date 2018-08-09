@@ -24,29 +24,17 @@ module Highchart
     def assign_attributes(projects, total_available_hours)
       assign_months_by_projects_dates(projects)
       assign_active_projects_count_data(projects)
-      assign_sold_hours_per_month(projects)
-      assign_consumed_hours_per_month(projects)
-      assign_available_hours_per_month(total_available_hours)
+      build_hours_per_month_analysis(projects, total_available_hours)
       assign_flow_pressure_per_month_data(projects)
       assign_money_per_month_data(projects)
       assign_expenses_per_month_data
     end
 
-    def assign_consumed_hours_per_month(projects)
+    def build_hours_per_month_analysis(projects, available_hours)
       @array_of_months.each do |month_year|
-        @consumed_hours_per_month << ProjectsRepository.instance.hours_consumed_per_month(projects, Date.new(month_year[1], month_year[0], 1))
-      end
-    end
-
-    def assign_available_hours_per_month(available_hours)
-      @array_of_months.each do
-        @available_hours_per_month << available_hours
-      end
-    end
-
-    def assign_sold_hours_per_month(projects)
-      @array_of_months.each do |month_year|
+        @consumed_hours_per_month << ProjectsRepository.instance.hours_consumed_per_month(projects, Date.new(month_year[1], month_year[0], 1))&.to_f
         @sold_hours_in_month << ProjectsRepository.instance.active_projects_in_month(projects, Date.new(month_year[1], month_year[0], 1)).sum(&:hours_per_month)
+        @available_hours_per_month << available_hours
       end
     end
 
