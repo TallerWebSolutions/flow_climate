@@ -5,7 +5,9 @@
       <h4 class="modal-title" id="myModalLabel"><%= t('demand_blocks.edit.title') %></h4>
     </div>
     <div class="modal-body">
-      <%= render 'demand_blocks/form', company_id: company_id, project_id: project_id, demand_id: demand_id, block_id: block_id %>
+      <%= form_for @stage, url: company_stage_url(@company, @stage), remote: true, method: :put, class: 'form' do |f| %>
+        <%= render 'stages/form', company_id: company_id, stage_id: stage_id, form: f %>
+      <% end %>
     </div>
   </div>
 </div>

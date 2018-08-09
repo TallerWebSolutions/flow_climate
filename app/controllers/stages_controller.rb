@@ -14,11 +14,13 @@ class StagesController < AuthenticatedController
     render :new
   end
 
-  def edit; end
+  def edit
+    respond_to { |format| format.js }
+  end
 
   def update
-    return redirect_to company_path(@company) if @stage.update(stages_params)
-    render :edit
+    @stage.update(stages_params)
+    render 'stages/update'
   end
 
   def destroy

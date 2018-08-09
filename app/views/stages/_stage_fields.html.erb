@@ -1,0 +1,30 @@
+<td><%= stage.order %></td>
+<td><%= link_to stage.name, company_stage_path(@company, stage) %></td>
+<td><%= stage.integration_id %></td>
+<td><%= stage.integration_pipe_id %></td>
+<td><%= stage.projects.count %></td>
+<td><%= t("activerecord.attributes.stage.enums.stage_type.#{stage.stage_type}") %></td>
+<td><%= t("activerecord.attributes.stage.enums.stage_stream.#{stage.stage_stream}") %></td>
+<td class="center">
+  <% if stage.queue? %>
+    <i class="fa fa-check" aria-hidden="true"></i>
+  <% end %>
+</td>
+<td class="center">
+  <% if stage.commitment_point? %>
+    <i class="fa fa-check" aria-hidden="true"></i>
+  <% end %>
+</td>
+<td class="center">
+  <% if stage.end_point? %>
+    <i class="fa fa-check" aria-hidden="true"></i>
+  <% end %>
+</td>
+<td>
+  <%= link_to edit_company_stage_path(@company, stage), class: 'edit-stage', remote: true do %>
+    <i class="fas fa-edit"></i>
+  <% end %>
+  <%= link_to company_stage_path(@company, stage), method: :delete do %>
+    <i class="fa fa-times" aria-hidden="true"></i>
+  <% end %>
+</td>
