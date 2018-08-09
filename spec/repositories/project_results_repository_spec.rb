@@ -99,61 +99,32 @@ RSpec.describe ProjectResultsRepository, type: :repository do
     end
   end
 
-  describe '#bugs_opened_in_month' do
+  describe '#bugs_opened_until_week' do
     context 'having results' do
       let!(:first_result) { Fabricate :project_result, project: first_project, result_date: Time.zone.iso8601('2018-01-14T23:01:46'), qty_bugs_opened: 30 }
       let!(:second_result) { Fabricate :project_result, project: second_project, result_date: Time.zone.iso8601('2018-02-14T23:01:46'), qty_bugs_opened: 50 }
       let!(:third_result) { Fabricate :project_result, project: third_project, result_date: Time.zone.iso8601('2018-02-11T23:01:46'), qty_bugs_opened: 90 }
       let!(:out_result) { Fabricate :project_result, result_date: Time.zone.iso8601('2018-02-14T23:01:46'), qty_bugs_opened: 60 }
 
-      it { expect(ProjectResultsRepository.instance.bugs_opened_in_month(company.projects, Time.zone.iso8601('2018-02-14T23:01:46').to_date)).to eq 140 }
+      it { expect(ProjectResultsRepository.instance.bugs_opened_until_week(company.projects, Time.zone.iso8601('2018-02-14T23:01:46').to_date)).to eq 170 }
     end
     context 'having no results' do
-      it { expect(ProjectResultsRepository.instance.bugs_opened_in_month(company.projects, Time.zone.iso8601('2018-02-14T23:01:46').to_date)).to eq 0 }
+      it { expect(ProjectResultsRepository.instance.bugs_opened_until_week(company.projects, Time.zone.iso8601('2018-02-14T23:01:46').to_date)).to eq 0 }
     end
   end
 
-  describe '#bugs_closed_in_month' do
-    context 'having results' do
-      let!(:first_result) { Fabricate :project_result, project: first_project, result_date: Time.zone.iso8601('2018-01-14T23:01:46'), qty_bugs_closed: 30 }
-      let!(:second_result) { Fabricate :project_result, project: second_project, result_date: Time.zone.iso8601('2018-02-14T23:01:46'), qty_bugs_closed: 50 }
-      let!(:third_result) { Fabricate :project_result, project: third_project, result_date: Time.zone.iso8601('2018-02-11T23:01:46'), qty_bugs_closed: 90 }
-      let!(:out_result) { Fabricate :project_result, result_date: Time.zone.iso8601('2018-02-14T23:01:46'), qty_bugs_closed: 60 }
-
-      it { expect(ProjectResultsRepository.instance.bugs_closed_in_month(company.projects, Time.zone.iso8601('2018-02-14T23:01:46').to_date)).to eq 140 }
-    end
-    context 'having no results' do
-      it { expect(ProjectResultsRepository.instance.bugs_closed_in_month(company.projects, Time.zone.iso8601('2018-02-14T23:01:46').to_date)).to eq 0 }
-    end
-  end
-
-  describe '#bugs_opened_in_week' do
-    context 'having results' do
-      let!(:first_result) { Fabricate :project_result, project: first_project, result_date: Time.zone.iso8601('2018-01-08T23:01:46'), qty_bugs_opened: 30 }
-      let!(:second_result) { Fabricate :project_result, project: second_project, result_date: Time.zone.iso8601('2018-01-10T23:01:46'), qty_bugs_opened: 50 }
-      let!(:third_result) { Fabricate :project_result, project: third_project, result_date: Time.zone.iso8601('2018-01-15T23:01:46'), qty_bugs_opened: 90 }
-      let!(:out_result) { Fabricate :project_result, result_date: Time.zone.iso8601('2018-02-14T23:01:46'), qty_bugs_opened: 60 }
-
-      it { expect(ProjectResultsRepository.instance.bugs_opened_in_week(company.projects, Time.zone.iso8601('2018-01-09T23:01:46').to_date)).to eq 80 }
-      it { expect(ProjectResultsRepository.instance.bugs_opened_in_week(company.projects, Time.zone.iso8601('2018-01-16T23:01:46').to_date)).to eq 90 }
-    end
-    context 'having no results' do
-      it { expect(ProjectResultsRepository.instance.bugs_opened_in_week(company.projects, Time.zone.iso8601('2018-02-14T23:01:46').to_date)).to eq 0 }
-    end
-  end
-
-  describe '#bugs_closed_per_week' do
+  describe '#bugs_closed_until_week' do
     context 'having results' do
       let!(:first_result) { Fabricate :project_result, project: first_project, result_date: Time.zone.iso8601('2018-01-08T23:01:46'), qty_bugs_closed: 30 }
       let!(:second_result) { Fabricate :project_result, project: second_project, result_date: Time.zone.iso8601('2018-01-10T23:01:46'), qty_bugs_closed: 50 }
       let!(:third_result) { Fabricate :project_result, project: third_project, result_date: Time.zone.iso8601('2018-01-15T23:01:46'), qty_bugs_closed: 90 }
       let!(:out_result) { Fabricate :project_result, result_date: Time.zone.iso8601('2018-02-14T23:01:46'), qty_bugs_closed: 60 }
 
-      it { expect(ProjectResultsRepository.instance.bugs_closed_in_week(company.projects, Time.zone.iso8601('2018-01-09T23:01:46').to_date)).to eq 80 }
-      it { expect(ProjectResultsRepository.instance.bugs_closed_in_week(company.projects, Time.zone.iso8601('2018-01-16T23:01:46').to_date)).to eq 90 }
+      it { expect(ProjectResultsRepository.instance.bugs_closed_until_week(company.projects, Time.zone.iso8601('2018-01-09T23:01:46').to_date)).to eq 80 }
+      it { expect(ProjectResultsRepository.instance.bugs_closed_until_week(company.projects, Time.zone.iso8601('2018-01-16T23:01:46').to_date)).to eq 170 }
     end
     context 'having no results' do
-      it { expect(ProjectResultsRepository.instance.bugs_closed_in_week(company.projects, Time.zone.iso8601('2018-02-14T23:01:46').to_date)).to eq 0 }
+      it { expect(ProjectResultsRepository.instance.bugs_closed_until_week(company.projects, Time.zone.iso8601('2018-02-14T23:01:46').to_date)).to eq 0 }
     end
   end
 

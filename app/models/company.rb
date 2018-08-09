@@ -80,14 +80,6 @@ class Company < ApplicationRecord
     ProjectResultsRepository.instance.upstream_throughput_in_month_for_company(self, date) + ProjectResultsRepository.instance.downstream_throughput_in_month_for_company(self, date)
   end
 
-  def bugs_opened_in_month(date = Time.zone.today)
-    ProjectResultsRepository.instance.bugs_opened_in_month(projects, date)
-  end
-
-  def bugs_closed_in_month(date = Time.zone.today)
-    ProjectResultsRepository.instance.bugs_closed_in_month(projects, date)
-  end
-
   def top_three_flow_pressure
     projects.running.sort_by(&:flow_pressure).reverse.first(3)
   end
