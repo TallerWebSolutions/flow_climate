@@ -11,11 +11,11 @@ RSpec.describe StagesController, type: :controller do
       it { expect(response).to redirect_to new_user_session_path }
     end
     describe 'GET #edit' do
-      before { get :edit, params: { company_id: 'foo', id: 'sbbrubles' } }
+      before { get :edit, params: { company_id: 'foo', id: 'sbbrubles', xhr: true } }
       it { expect(response).to redirect_to new_user_session_path }
     end
     describe 'PUT #update' do
-      before { put :update, params: { company_id: 'foo', id: 'sbbrubles' } }
+      before { put :update, params: { company_id: 'foo', id: 'sbbrubles', xhr: true } }
       it { expect(response).to redirect_to new_user_session_path }
     end
     describe 'DELETE #destroy' do
@@ -111,9 +111,9 @@ RSpec.describe StagesController, type: :controller do
       let(:stage) { Fabricate :stage, company: company }
 
       context 'valid parameters' do
-        before { get :edit, params: { company_id: company, id: stage } }
+        before { get :edit, params: { company_id: company, id: stage }, xhr: true }
         it 'assigns the instance variables and renders the template' do
-          expect(response).to render_template :edit
+          expect(response).to render_template 'stages/edit'
           expect(assigns(:company)).to eq company
           expect(assigns(:stage)).to eq stage
         end
@@ -122,12 +122,12 @@ RSpec.describe StagesController, type: :controller do
       context 'invalid' do
         context 'company' do
           context 'non-existent' do
-            before { get :edit, params: { company_id: 'foo', id: stage } }
+            before { get :edit, params: { company_id: 'foo', id: stage }, xhr: true }
             it { expect(response).to have_http_status :not_found }
           end
           context 'not-permitted' do
             let(:company) { Fabricate :company, users: [] }
-            before { get :edit, params: { company_id: company, id: stage } }
+            before { get :edit, params: { company_id: company, id: stage }, xhr: true }
             it { expect(response).to have_http_status :not_found }
           end
         end
@@ -140,7 +140,7 @@ RSpec.describe StagesController, type: :controller do
 
       context 'passing valid parameters' do
         it 'updates the demand and redirects to projects index' do
-          put :update, params: { company_id: company, id: stage, stage: { order: 2, name: 'foo', integration_id: '332231', integration_pipe_id: '441271', stage_type: :analysis, stage_stream: :downstream, commitment_point: true, end_point: true, queue: true } }
+          put :update, params: { company_id: company, id: stage, stage: { order: 2, name: 'foo', integration_id: '332231', integration_pipe_id: '441271', stage_type: :analysis, stage_stream: :downstream, commitment_point: true, end_point: true, queue: true } }, xhr: true
           updated_stage = stage.reload
           expect(updated_stage.company).to eq company
           expect(updated_stage.order).to eq 2
@@ -152,27 +152,27 @@ RSpec.describe StagesController, type: :controller do
           expect(updated_stage.commitment_point?).to be true
           expect(updated_stage.end_point?).to be true
           expect(updated_stage.queue?).to be true
-          expect(response).to redirect_to company_path(Company.last)
+          expect(response).to render_template 'stages/update'
         end
       end
 
       context 'passing invalid' do
         context 'parameters' do
-          before { put :update, params: { company_id: company, id: stage, stage: { name: nil, integration_id: nil, stage_type: nil, stage_stream: nil, commitment_point: nil, end_point: nil, queue: nil } } }
+          before { put :update, params: { company_id: company, id: stage, stage: { name: nil, integration_id: nil, stage_type: nil, stage_stream: nil, commitment_point: nil, end_point: nil, queue: nil } }, xhr: true }
           it { expect(assigns(:stage).errors.full_messages).to match_array ['Id na Integração não pode ficar em branco', 'Nome não pode ficar em branco', 'Tipo da Etapa não pode ficar em branco', 'Tipo do Stream não pode ficar em branco'] }
         end
         context 'non-stage' do
-          before { put :update, params: { company_id: company, id: 'foo', stage: { name: 'foo' } } }
+          before { put :update, params: { company_id: company, id: 'foo', stage: { name: 'foo' } }, xhr: true }
           it { expect(response).to have_http_status :not_found }
         end
         context 'company' do
           context 'non-existent' do
-            before { put :update, params: { company_id: 'foo', id: stage, stage: { name: 'foo' } } }
+            before { put :update, params: { company_id: 'foo', id: stage, stage: { name: 'foo' } }, xhr: true }
             it { expect(response).to have_http_status :not_found }
           end
           context 'not-permitted' do
             let(:company) { Fabricate :company, users: [] }
-            before { put :update, params: { company_id: company, id: stage, stage: { name: 'foo' } } }
+            before { put :update, params: { company_id: company, id: stage, stage: { name: 'foo' } }, xhr: true }
             it { expect(response).to have_http_status :not_found }
           end
         end

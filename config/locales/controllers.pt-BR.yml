@@ -486,6 +486,8 @@ pt-BR:
   demand_blocks:
     index:
       title: "Bloqueios de Demanda"
+    edit:
+      title: "Editar Bloqueio"
   demand_transitions:
     total_hours_in_transition: "Horas totais na transição"
     working_time_in_transition: "Tempo útil na transição"

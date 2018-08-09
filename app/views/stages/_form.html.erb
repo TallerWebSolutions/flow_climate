@@ -1,57 +1,61 @@
 <div class="standard-form">
-
   <div class="row">
-    <div class='col-xs-2 form-group'>
-      <%= f.label :order, class: 'control-label' %>
-      <%= f.number_field :order, class: 'form-control', autofocus: true, step: 1 %>
+    <div class='col-xs-6 form-group'>
+      <%= form.label :order, class: 'control-label' %>
+      <%= form.number_field :order, class: 'form-control', autofocus: true, step: 1 %>
     </div>
-    <div class='col-xs-4 form-group <%= 'has-error' if @stage.errors[:name].present? %>'>
-      <%= f.label :name, class: 'control-label required' %>
-      <%= f.text_field :name, class: 'form-control' %>
+    <div class='col-xs-6 form-group <%= 'has-error' if @stage.errors[:name].present? %>'>
+      <%= form.label :name, class: 'control-label required' %>
+      <%= form.text_field :name, class: 'form-control' %>
       <span class="help-block"><%= @stage.errors[:name].join(', ') %></span>
     </div>
-    <div class='col-xs-3 form-group <%= 'has-error' if @stage.errors[:integration_id].present? %>'>
-      <%= f.label :integration_id, class: 'control-label required' %>
-      <%= f.text_field :integration_id, class: 'form-control', autofocus: true %>
+  </div>
+  <div class="row">
+    <div class='col-xs-6 form-group <%= 'has-error' if @stage.errors[:integration_id].present? %>'>
+      <%= form.label :integration_id, class: 'control-label required' %>
+      <%= form.text_field :integration_id, class: 'form-control', autofocus: true %>
       <span class="help-block"><%= @stage.errors[:integration_id].join(', ') %></span>
     </div>
-    <div class='col-xs-3 form-group <%= 'has-error' if @stage.errors[:integration_pipe_id].present? %>'>
-      <%= f.label :integration_pipe_id, class: 'control-label required' %>
-      <%= f.text_field :integration_pipe_id, class: 'form-control', autofocus: true %>
+    <div class='col-xs-6 form-group <%= 'has-error' if @stage.errors[:integration_pipe_id].present? %>'>
+      <%= form.label :integration_pipe_id, class: 'control-label required' %>
+      <%= form.text_field :integration_pipe_id, class: 'form-control', autofocus: true %>
       <span class="help-block"><%= @stage.errors[:integration_pipe_id].join(', ') %></span>
     </div>
   </div>
   <div class="row">
     <div class='col-xs-6 form-group <%= 'has-error' if @stage.errors[:stage_type].present? %>'>
-      <%= f.label :stage_type, class: 'control-label' %>
-      <%= f.select :stage_type, Stage.stage_types.map { |key, _value| [t("activerecord.attributes.stage.enums.stage_type.#{key}"), key] }, { include_blank: t('general.select'), selected: @stage.stage_type }, class: 'form-control' %>
+      <%= form.label :stage_type, class: 'control-label' %>
+      <%= form.select :stage_type, Stage.stage_types.map { |key, _value| [t("activerecord.attributes.stage.enums.stage_type.#{key}"), key] }, { include_blank: t('general.select'), selected: @stage.stage_type }, class: 'form-control' %>
       <span class="help-block"><%= @stage.errors[:stage_type].join(', ') %></span>
     </div>
     <div class='col-xs-6 form-group <%= 'has-error' if @stage.errors[:stage_stream].present? %>'>
-      <%= f.label :stage_stream, class: 'control-label' %>
-      <%= f.select :stage_stream, Stage.stage_streams.map { |key, _value| [t("activerecord.attributes.stage.enums.stage_stream.#{key}"), key] }, { include_blank: t('general.select'), selected: @stage.stage_stream }, class: 'form-control' %>
+      <%= form.label :stage_stream, class: 'control-label' %>
+      <%= form.select :stage_stream, Stage.stage_streams.map { |key, _value| [t("activerecord.attributes.stage.enums.stage_stream.#{key}"), key] }, { include_blank: t('general.select'), selected: @stage.stage_stream }, class: 'form-control' %>
       <span class="help-block"><%= @stage.errors[:stage_stream].join(', ') %></span>
     </div>
   </div>
 
   <div class="row">
-    <div class='col-xs-4 form-check bottom-spaced-component'>
-      <%= f.check_box :queue, class: 'form-check-input' %>
-      <%= f.label :queue, class: 'form-check-label' %>
+    <div class='col-xs-6 form-check bottom-spaced-component'>
+      <%= form.check_box :queue, class: 'form-check-input' %>
+      <%= form.label :queue, class: 'form-check-label' %>
     </div>
-    <div class='col-xs-4 form-check bottom-spaced-component'>
-      <%= f.check_box :commitment_point, class: 'form-check-input' %>
-      <%= f.label :commitment_point, class: 'form-check-label' %>
+    <div class='col-xs-6 form-check bottom-spaced-component'>
+      <%= form.check_box :end_point, class: 'form-check-input' %>
+      <%= form.label :end_point, class: 'form-check-label' %>
     </div>
-    <div class='col-xs-4 form-check bottom-spaced-component'>
-      <%= f.check_box :end_point, class: 'form-check-input' %>
-      <%= f.label :end_point, class: 'form-check-label' %>
+  </div>
+
+  <div class="row">
+    <div class='col-xs-12 form-check bottom-spaced-component'>
+      <%= form.check_box :commitment_point, class: 'form-check-input' %>
+      <%= form.label :commitment_point, class: 'form-check-label' %>
     </div>
   </div>
 
   <div class="row">
     <div class="col-xs-12">
-      <%= f.submit class: 'btn btn-success' %>
+      <%= form.submit class: 'btn btn-success' %>
     </div>
   </div>
 </div>

@@ -485,6 +485,8 @@ en:
   demand_blocks:
     index:
       title: "Demand Blocks"
+    edit:
+      title: "Edit Block"
   demand_transitions:
     total_hours_in_transition: "Total hours in transition"
     working_time_in_transition: "Working time in transition"

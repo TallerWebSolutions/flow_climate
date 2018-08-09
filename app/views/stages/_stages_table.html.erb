@@ -1,4 +1,5 @@
-<div class="row">
+<div class="r
+ow">
   <div class="col-xs-6">
     <h2><%= t('stages.index.title') %></h2>
   </div>
@@ -28,38 +29,13 @@
   </thead>
   <tbody>
     <% stages_list.each do |stage| %>
-      <tr>
-        <td><%= stage.order %></td>
-        <td><%= link_to stage.name, company_stage_path(@company, stage) %></td>
-        <td><%= stage.integration_id %></td>
-        <td><%= stage.integration_pipe_id %></td>
-        <td><%= stage.projects.count %></td>
-        <td><%= t("activerecord.attributes.stage.enums.stage_type.#{stage.stage_type}") %></td>
-        <td><%= t("activerecord.attributes.stage.enums.stage_stream.#{stage.stage_stream}") %></td>
-        <td class="center">
-          <% if stage.queue? %>
-            <i class="fa fa-check" aria-hidden="true"></i>
-          <% end %>
-        </td>
-        <td class="center">
-          <% if stage.commitment_point? %>
-            <i class="fa fa-check" aria-hidden="true"></i>
-          <% end %>
-        </td>
-        <td class="center">
-          <% if stage.end_point? %>
-            <i class="fa fa-check" aria-hidden="true"></i>
-          <% end %>
-        </td>
-        <td>
-          <%= link_to edit_company_stage_path(@company, stage) do %>
-            <i class="fas fa-edit"></i>
-          <% end %>
-          <%= link_to company_stage_path(@company, stage), method: :delete do %>
-            <i class="fa fa-times" aria-hidden="true"></i>
-          <% end %>
-        </td>
-      </tr>
+      <tr id="stage_row_<%= stage.id %>"><%= render 'stages/stage_fields', stage: stage %></tr>
     <% end %>
   </tbody>
 </table>
+
+<div class="modal fade" id="edit-stage-form" tabindex="-1" role="dialog" aria-labelledby="edit-stage-form" aria-hidden="true"></div>
+
+<% content_for :javascript do %>
+  <%= javascript_include_tag 'stages/form_modal' %>
+<% end %>
