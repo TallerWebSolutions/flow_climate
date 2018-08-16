@@ -240,7 +240,8 @@ pt-BR:
             feature: Nova Funcionalidade
             chore: Manutenção Técnica
             performance_improvement: Melhoria de Performance
-            ux_improvement: Melhoria de UX
+            ui: UI
+            wireframe: Wireframe
           class_of_service:
             standard: Padrão
             expedite: Expedição

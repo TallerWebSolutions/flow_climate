@@ -153,8 +153,10 @@ module Pipefy
         :bug
       elsif demand_type.casecmp('melhoria performance').zero?
         :performance_improvement
-      elsif demand_type.casecmp('melhoria ux').zero?
-        :ux_improvement
+      elsif demand_type.casecmp('ui').zero?
+        :ui
+      elsif demand_type.casecmp('wireframe').zero?
+        :wireframe
       elsif demand_type.casecmp('chore').zero?
         :chore
       else
