@@ -21,7 +21,7 @@ module Jira
 
     def update_issue!(demand, jira_account, jira_issue, project)
       demand.update(project: project, created_date: issue_fields(jira_issue)['created'], demand_type: translate_issue_type(issue_fields(jira_issue)['issuetype']['name']),
-                    class_of_service: translate_class_of_service(jira_account, jira_issue), demand_title: jira_issue.attrs['summary'], assignees_count: compute_assignees_count(jira_account, jira_issue))
+                    class_of_service: translate_class_of_service(jira_account, jira_issue), demand_title: issue_fields(jira_issue)['summary'], assignees_count: compute_assignees_count(jira_account, jira_issue))
 
       translate_blocks!(demand, jira_issue.comment['comments']) if jira_issue.respond_to?(:comment)
       process_transitions!(demand, jira_issue.changelog) if jira_issue.respond_to?(:changelog)

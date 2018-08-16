@@ -6,6 +6,7 @@ Rails.application.routes.draw do
   controller :webhook_integrations do
     post 'pipefy_webhook'
     post 'jira_webhook'
+    post 'jira_delete_card_webhook'
   end
 
   authenticate :user do
