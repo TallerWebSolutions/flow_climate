@@ -2,16 +2,15 @@
 
 class WebhookIntegrationsController < ApplicationController
   skip_before_action :verify_authenticity_token
+  before_action :check_request
 
   def pipefy_webhook
-    return head :bad_request unless valid_content_type?
     data = JSON.parse(request.body.read)
     Pipefy::ProcessPipefyCardJob.perform_later(data)
     head :ok
   end
 
   def jira_webhook
-    return head :bad_request unless valid_content_type?
     data = JSON.parse(request.body.read)
 
     jira_account_domain = extract_account_domain(project_url(data))
@@ -26,7 +25,21 @@ class WebhookIntegrationsController < ApplicationController
     head :ok
   end
 
+  def jira_delete_card_webhook
+    data = JSON.parse(request.body.read)
+    jira_account_domain = extract_account_domain(project_url(data))
+    project = define_project(data, jira_account_domain)
+    return head :ok if project.blank?
+    demand = Demand.find_by(project: project, demand_id: data['issue']['key'])
+    DemandsRepository.instance.full_demand_destroy!(demand)
+    head :ok
+  end
+
   private
+
+  def check_request
+    return head :bad_request unless valid_content_type?
+  end
 
   def define_jira_account(jira_account_domain)
     Jira::JiraAccount.find_by(customer_domain: jira_account_domain)
@@ -47,7 +60,7 @@ class WebhookIntegrationsController < ApplicationController
   end
 
   def project_key(data)
-    data['issue']['fields']['fixVersions'][0]['id']
+    data['issue']['fields']['fixVersions'][0]['name']
   end
 
   def project_url(data)

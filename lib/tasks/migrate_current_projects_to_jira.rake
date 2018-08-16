@@ -33,7 +33,7 @@ namespace :project_migration do
 
     ## Flow Climate
 
-    Jira::ProjectJiraConfig.create(project: Project.find(82), team: Project.find(82).current_team, jira_account_domain: 'tallerflow', jira_project_key: 'FC')
+    Jira::ProjectJiraConfig.create(project: Project.find(82), team: Project.find(82).current_team, jira_account_domain: 'tallerflow', jira_project_key: 'Fase 3')
 
     # Stages
     Stage.find(3).update(integration_id: '10012')
