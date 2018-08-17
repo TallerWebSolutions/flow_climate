@@ -30,41 +30,15 @@ module Highchart
     def build_active_projects_periods
       min_date = [active_projects.minimum(:start_date), @minimum_date_limit].compact.max
       max_date = active_projects.maximum(:end_date)
-      @active_weeks = build_weeks_array(min_date, max_date)
-      @active_months = build_months_array(min_date, max_date)
+      @active_weeks = TimeService.instance.weeks_between_of(min_date, max_date)
+      @active_months = TimeService.instance.months_between_of(min_date, max_date)
     end
 
     def build_all_projects_periods
       min_date = [all_projects.minimum(:start_date), @minimum_date_limit].compact.max
       max_date = all_projects.maximum(:end_date)
-      @all_projects_weeks = build_weeks_array(min_date, max_date)
-      @all_projects_months = build_months_array(min_date, max_date)
-    end
-
-    def build_weeks_array(min_date, max_date)
-      array_of_weeks = []
-
-      return [] if min_date.blank? || max_date.blank?
-
-      while min_date <= max_date
-        array_of_weeks << min_date.beginning_of_week
-        min_date += 7.days
-      end
-
-      array_of_weeks
-    end
-
-    def build_months_array(min_date, max_date)
-      array_of_months = []
-
-      return [] if min_date.blank? || max_date.blank?
-
-      while min_date <= max_date
-        array_of_months << Date.new(min_date.year, min_date.month, 1)
-        min_date += 1.month
-      end
-
-      array_of_months
+      @all_projects_weeks = TimeService.instance.weeks_between_of(min_date, max_date)
+      @all_projects_months = TimeService.instance.months_between_of(min_date, max_date)
     end
 
     def throughput_chart_data(downstream_th_weekly_data, upstream_th_weekly_data)

@@ -32,4 +32,26 @@ RSpec.describe TimeService, type: :service do
       it { expect(TimeService.instance.compute_working_hours_for_dates(nil, nil)).to eq 0 }
     end
   end
+
+  describe '#weeks_between_of' do
+    it 'returns the weeks between the dates' do
+      start_date = Date.new(2018, 7, 15)
+      end_date = Date.new(2018, 8, 21)
+
+      weeks_year = TimeService.instance.weeks_between_of(start_date, end_date)
+
+      expect(weeks_year).to eq [Date.new(2018, 7, 9), Date.new(2018, 7, 16), Date.new(2018, 7, 23), Date.new(2018, 7, 30), Date.new(2018, 8, 6), Date.new(2018, 8, 13)]
+    end
+  end
+
+  describe '#months_between_of' do
+    it 'returns the months between the dates' do
+      start_date = Date.new(2018, 7, 15)
+      end_date = Date.new(2018, 8, 21)
+
+      weeks_year = TimeService.instance.months_between_of(start_date, end_date)
+
+      expect(weeks_year).to eq [Date.new(2018, 7, 1), Date.new(2018, 8, 1)]
+    end
+  end
 end

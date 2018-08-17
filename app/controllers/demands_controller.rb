@@ -2,7 +2,7 @@
 
 class DemandsController < AuthenticatedController
   before_action :assign_company
-  before_action :assign_project
+  before_action :assign_project, except: [:demands_csv]
   before_action :assign_demand, only: %i[edit update show synchronize_pipefy destroy]
 
   def new
@@ -50,6 +50,16 @@ class DemandsController < AuthenticatedController
       flash[:error] = @demand.errors.full_messages.join(', ')
       redirect_to company_project_demand_path(@company, @project, @demand)
     end
+  end
+
+  def demands_csv
+    @demands_in_csv = Demand.where(id: params['demands_ids'].split(',')).kept.finished.order(end_date: :desc)
+    attributes = %w[id demand_id demand_type class_of_service effort_downstream effort_upstream created_date commitment_date end_date]
+    demands_csv = CSV.generate(headers: true) do |csv|
+      csv << attributes
+      @demands_in_csv.each { |demand| csv << attributes.map { |attr| demand.send(attr) } }
+    end
+    respond_to { |format| format.csv { send_data demands_csv, filename: "demands-#{Time.zone.now}.csv" } }
   end
 
   private

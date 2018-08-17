@@ -4,7 +4,7 @@ class ProjectsController < AuthenticatedController
   before_action :assign_company
   before_action :assign_customer, only: %i[create update]
   before_action :assign_product, only: %i[create update]
-  before_action :assign_project, only: %i[show edit update destroy synchronize_pipefy finish_project delivered_demands_csv search_demands_by_flow_status]
+  before_action :assign_project, only: %i[show edit update destroy synchronize_pipefy finish_project search_demands_by_flow_status]
 
   def show
     @ordered_project_results = @project.project_results.order(:result_date)
@@ -16,6 +16,7 @@ class ProjectsController < AuthenticatedController
     assign_grouped_demands_informations(@demands)
     @project_change_deadline_histories = @project.project_change_deadline_histories
     @montecarlo_dates = @status_report_data.monte_carlo_data
+    @demands_count_per_week = DemandService.instance.quantitative_consolidation_per_week_to_projects([@project])
   end
 
   def index
@@ -74,16 +75,6 @@ class ProjectsController < AuthenticatedController
     ProjectsRepository.instance.finish_project!(@project)
     flash[:notice] = t('projects.finish_project.success_message')
     redirect_to company_project_path(@company, @project)
-  end
-
-  def delivered_demands_csv
-    @project_delivered_demands = @project.demands.kept.finished.order(end_date: :desc)
-    attributes = %w[id demand_id demand_type class_of_service effort_downstream effort_upstream created_date commitment_date end_date]
-    demands_csv = CSV.generate(headers: true) do |csv|
-      csv << attributes
-      @project_delivered_demands.each { |demand| csv << attributes.map { |attr| demand.send(attr) } }
-    end
-    respond_to { |format| format.csv { send_data demands_csv, filename: "demands-#{Time.zone.now}.csv" } }
   end
 
   def search_demands_by_flow_status

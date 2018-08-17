@@ -1,0 +1,16 @@
+<div class="row">
+  <div class="col-xs-12">
+    <div class="tab">
+      <button class="tablinks" onclick="openTab(event, 'content-demand-list')"><%= t('demands.data_analysis.demand_list') %></button>
+      <button class="tablinks" onclick="openTab(event, 'content-consolidation')"><%= t('demands.data_analysis.consolidation') %></button>
+    </div>
+  </div>
+</div>
+
+<div id="content-demand-list" class="tabcontent">
+  <%= render 'demands/demand_list', demands: demands, grouped_delivered_demands: grouped_delivered_demands, grouped_customer_demands: grouped_customer_demands %>
+</div>
+
+<div id="content-consolidation" class="tabcontent">
+  <%= render 'demands/demands_week_consolidation', demands_count_per_week: @demands_count_per_week %>
+</div>

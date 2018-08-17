@@ -51,6 +51,7 @@ pt-BR:
     destroy:
       confirm: "Confirma a exclusão do registro?"
     period: "Período"
+    throughput: "Vazão"
   header:
     logout: Sair
     sign_up: Cadastre-se
@@ -372,6 +373,14 @@ pt-BR:
     flow:
       processed_demand: "Demandas Processadas"
       wip: "Trabalho em Progresso"
+      committed_with: "Comprometeu-se com"
+      real_throughput: "Vazão Real"
+    data_analysis:
+      demand_list: "Lista de Demandas"
+      consolidation: "Consolidação"
+    stats:
+      std_throughput: "Desvio Padrão Vazão"
+      std_committed_with: "Desvio Padrão Comprometido"
   project_risk_configs:
     new:
       title: "Nova Configuração de Risco"

@@ -34,10 +34,7 @@
 </div>
 
 <div id="demands-list">
-  <div class="form-group">
-    <%= link_to t('general.download_csv'), delivered_demands_csv_company_project_path(@company, @project, format: :csv), class: 'btn btn-sm btn-success' %>
-  </div>
-  <%= render 'demands/demands_list', grouped_delivered_demands: @grouped_delivered_demands, grouped_customer_demands: @grouped_customer_demands, demands: @demands %>
+  <%= render 'demands/demands_info', grouped_delivered_demands: @grouped_delivered_demands, grouped_customer_demands: @grouped_customer_demands, demands: @demands %>
 </div>
 
 <div id="deadline-change">
@@ -67,6 +64,7 @@
   <%= javascript_include_tag 'charts/bar' %>
   <%= javascript_include_tag 'charts/line' %>
   <%= javascript_include_tag 'charts/scatter' %>
+  <%= javascript_include_tag 'components/components' %>
 
   <%= javascript_include_tag 'projects/demands_list' %>
   <%= javascript_include_tag 'routes/project_routes' %>

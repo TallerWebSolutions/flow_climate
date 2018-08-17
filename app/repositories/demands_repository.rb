@@ -25,7 +25,7 @@ class DemandsRepository
     demand.demand_transitions.kept.joins(:stage).where('stages.queue = false AND stages.end_point = false AND stages.stage_stream = :stream', stream: Stage.stage_streams[:downstream]).sum(&:total_hours_in_transition)
   end
 
-  def selected_grouped_by_project_and_week(projects, week, year)
+  def committed_demands_by_project_and_week(projects, week, year)
     Demand.kept.where(project_id: projects.map(&:id)).where('EXTRACT(WEEK FROM commitment_date) = :week AND EXTRACT(YEAR FROM commitment_date) = :year', week: week, year: year)
   end
 

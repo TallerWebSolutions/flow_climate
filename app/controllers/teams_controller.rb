@@ -13,6 +13,7 @@ class TeamsController < AuthenticatedController
     @projects_risk_alert_data = Highchart::ProjectRiskChartsAdapter.new(@team.projects)
     @demands = DemandsRepository.instance.demands_per_projects(@team_projects)
     assign_chart_informations
+    @demands_count_per_week = DemandService.instance.quantitative_consolidation_per_week_to_projects(@active_team_projects)
   end
 
   def new

@@ -1,5 +1,17 @@
-<div id="demands_count">
-  <h4><%= t('demands.index.count', demands_count: demands.count) %></h4>
+<div class="row">
+  <div class="col-xs-12">
+    <div id="demands_count">
+      <h4><%= t('demands.index.count', demands_count: demands.count) %></h4>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-xs-12">
+    <div class="form-group">
+      <%= link_to t('general.download_csv'), demands_csv_company_demands_path(@company, demands.map(&:id).to_csv, format: :csv), class: 'btn btn-sm btn-success' %>
+    </div>
+  </div>
 </div>
 
 <table class="table table-index table-striped">

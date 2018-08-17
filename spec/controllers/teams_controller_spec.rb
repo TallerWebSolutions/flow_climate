@@ -327,7 +327,7 @@ RSpec.describe TeamsController, type: :controller do
 
           context 'and passing week and year as parameters' do
             it 'call the repository and renders the JS' do
-              expect(DemandsRepository.instance).to(receive(:selected_grouped_by_project_and_week).with([second_project, first_project], 1.week.ago.to_date.cweek, 1.week.ago.to_date.cwyear).once { [first_demand, second_demand] })
+              expect(DemandsRepository.instance).to(receive(:committed_demands_by_project_and_week).with([second_project, first_project], 1.week.ago.to_date.cweek, 1.week.ago.to_date.cwyear).once { [first_demand, second_demand] })
               expect(DemandsRepository.instance).to(receive(:throughput_by_project_and_week).with([second_project, first_project], 1.week.ago.to_date.cweek, 1.week.ago.to_date.cwyear).once { [third_demand, fourth_demand] })
               get :search_demands_to_flow_charts, params: { company_id: company, id: team, week: 1.week.ago.to_date.cweek, year: 1.week.ago.to_date.cwyear }, xhr: true
 

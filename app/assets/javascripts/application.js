@@ -13,7 +13,7 @@
 //= require jquery_ujs
 
 $(document).ready(function(){
-    $('.table').DataTable( {
+    $('.table-ordered').DataTable( {
         paging: false
     });
 });
