@@ -4,9 +4,9 @@ operationalCharts.html("<%= escape_javascript(render 'charts/operational_charts'
 
 $('#nav-item-charts').addClass('active');
 
+operationalCharts.show();
+$('#operational-charts').show();
+
 buildOperationalHighcharts();
 
 enableTabs();
-
-operationalCharts.show();
-$('#charts').show();

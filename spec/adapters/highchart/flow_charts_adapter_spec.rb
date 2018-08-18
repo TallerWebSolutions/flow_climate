@@ -29,7 +29,7 @@ RSpec.describe Highchart::FlowChartsAdapter, type: :data_object do
     let!(:out_date_selected_demand) { Fabricate :demand, project: third_project, commitment_date: 2.weeks.ago }
 
     describe '.initialize' do
-      let(:selected_demands) { DemandsRepository.instance.selected_grouped_by_project_and_week(Project.all, 1.week.ago.to_date.cweek, 1.week.ago.to_date.cwyear).group_by(&:project) }
+      let(:selected_demands) { DemandsRepository.instance.committed_demands_by_project_and_week(Project.all, 1.week.ago.to_date.cweek, 1.week.ago.to_date.cwyear).group_by(&:project) }
       let(:processed_demands) { DemandsRepository.instance.throughput_by_project_and_week(Project.all, 1.week.ago.to_date.cweek, 1.week.ago.to_date.cwyear).group_by(&:project) }
 
       it 'extracts the information of flow' do
@@ -81,7 +81,7 @@ RSpec.describe Highchart::FlowChartsAdapter, type: :data_object do
   end
   context 'having no projects' do
     describe '.initialize' do
-      let(:selected_demands) { DemandsRepository.instance.selected_grouped_by_project_and_week(Project.all, 1.week.ago.to_date.cweek, 1.week.ago.to_date.cwyear).group_by(&:project) }
+      let(:selected_demands) { DemandsRepository.instance.committed_demands_by_project_and_week(Project.all, 1.week.ago.to_date.cweek, 1.week.ago.to_date.cwyear).group_by(&:project) }
       let(:processed_demands) { DemandsRepository.instance.throughput_by_project_and_week(Project.all, 1.week.ago.to_date.cweek, 1.week.ago.to_date.cwyear).group_by(&:project) }
       subject(:flow_data) { Highchart::FlowChartsAdapter.new(Project.all, 1.week.ago.to_date.cweek, 1.week.ago.to_date.cwyear) }
 

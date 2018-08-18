@@ -94,9 +94,6 @@ RSpec.describe TeamsController, type: :controller do
             expect(assigns(:projects_risk_alert_data).backlog_risk_alert_data).to eq [{ name: 'Vermelho', y: 1, color: '#FB283D' }]
             expect(assigns(:projects_risk_alert_data).money_risk_alert_data).to eq [{ name: 'Verde', y: 1, color: '#179A02' }]
             expect(assigns(:pipefy_team_configs)).to eq [second_pipefy_team_config, first_pipefy_team_config]
-            expect(assigns(:demands)).to match_array [first_demand, second_demand, third_demand, fourth_demand]
-            expect(assigns(:grouped_delivered_demands)).to be_nil
-            expect(assigns(:grouped_customer_demands)).to be_nil
           end
         end
         context 'having no data' do
@@ -327,7 +324,7 @@ RSpec.describe TeamsController, type: :controller do
 
           context 'and passing week and year as parameters' do
             it 'call the repository and renders the JS' do
-              expect(DemandsRepository.instance).to(receive(:selected_grouped_by_project_and_week).with([second_project, first_project], 1.week.ago.to_date.cweek, 1.week.ago.to_date.cwyear).once { [first_demand, second_demand] })
+              expect(DemandsRepository.instance).to(receive(:committed_demands_by_project_and_week).with([second_project, first_project], 1.week.ago.to_date.cweek, 1.week.ago.to_date.cwyear).once { [first_demand, second_demand] })
               expect(DemandsRepository.instance).to(receive(:throughput_by_project_and_week).with([second_project, first_project], 1.week.ago.to_date.cweek, 1.week.ago.to_date.cwyear).once { [third_demand, fourth_demand] })
               get :search_demands_to_flow_charts, params: { company_id: company, id: team, week: 1.week.ago.to_date.cweek, year: 1.week.ago.to_date.cwyear }, xhr: true
 

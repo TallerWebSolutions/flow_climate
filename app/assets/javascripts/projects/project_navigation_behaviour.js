@@ -5,7 +5,7 @@ stampsDiv.addClass('active');
 $('#stamps').show();
 
 var company_id = $("#company_id").val();
-var team_id = $("#team_id").val();
+var project_id = $("#project_id").val();
 var projects_ids = $("#projects_ids").val();
 var target_name = $("#target_name").val();
 

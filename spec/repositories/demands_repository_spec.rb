@@ -122,7 +122,7 @@ RSpec.describe DemandsRepository, type: :repository do
     it { expect(DemandsRepository.instance.total_touch_time_for(demand)).to eq 672.0 }
   end
 
-  describe '#selected_grouped_by_project_and_week' do
+  describe '#committed_demands_by_project_and_week' do
     let(:first_project) { Fabricate :project, start_date: 3.weeks.ago }
     let(:second_project) { Fabricate :project, start_date: 3.weeks.ago }
 
@@ -134,10 +134,10 @@ RSpec.describe DemandsRepository, type: :repository do
       let!(:fifth_demand) { Fabricate :demand, project: second_project, commitment_date: 1.week.ago }
       let!(:sixth_demand) { Fabricate :demand, project: first_project, commitment_date: 1.week.ago, discarded_at: Time.zone.today }
 
-      it { expect(DemandsRepository.instance.selected_grouped_by_project_and_week(Project.all, 1.week.ago.to_date.cweek, 1.week.ago.to_date.cwyear)).to match_array [third_demand, fourth_demand, fifth_demand] }
+      it { expect(DemandsRepository.instance.committed_demands_by_project_and_week(Project.all, 1.week.ago.to_date.cweek, 1.week.ago.to_date.cwyear)).to match_array [third_demand, fourth_demand, fifth_demand] }
     end
     context 'having no data' do
-      it { expect(DemandsRepository.instance.selected_grouped_by_project_and_week(Project.all, 1.week.ago.to_date.cweek, 1.week.ago.to_date.cwyear)).to eq [] }
+      it { expect(DemandsRepository.instance.committed_demands_by_project_and_week(Project.all, 1.week.ago.to_date.cweek, 1.week.ago.to_date.cwyear)).to eq [] }
     end
   end
 

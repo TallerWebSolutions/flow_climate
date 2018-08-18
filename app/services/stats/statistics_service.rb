@@ -38,6 +38,10 @@ module Stats
       (data_count_analysed.to_f / (data_count_analysed.to_f + data_count_remaining.to_f) * 100)
     end
 
+    def standard_deviation(population_array)
+      Math.sqrt(variance(population_array))
+    end
+
     private
 
     def create_histogram_data(data_array)
@@ -91,6 +95,13 @@ module Stats
     def date_frequency(date_hits_hash, new_prediction)
       return date_hits_hash[new_prediction.beginning_of_day.to_i] + 1 if date_hits_hash.key?(new_prediction.beginning_of_day.to_i)
       1
+    end
+
+    def variance(population_array)
+      return 0 if population_array.size == 1
+      mean = population_array.sum / population_array.count.to_f
+      sum = population_array.inject(0) { |accum, i| accum + (i - mean)**2 }
+      sum / (population_array.length - 1).to_f
     end
   end
 end

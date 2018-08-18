@@ -14,6 +14,36 @@ class TimeService
     date
   end
 
+  def weeks_between_of(start_date, end_date)
+    array_of_weeks = []
+
+    return [] if start_date.blank? || end_date.blank?
+
+    min_date = start_date
+
+    while min_date <= end_date
+      array_of_weeks << min_date.beginning_of_week
+      min_date += 7.days
+    end
+
+    array_of_weeks
+  end
+
+  def months_between_of(start_date, end_date)
+    array_of_months = []
+
+    return [] if start_date.blank? || end_date.blank?
+
+    min_date = start_date
+
+    while min_date <= end_date
+      array_of_months << Date.new(min_date.year, min_date.month, 1)
+      min_date += 1.month
+    end
+
+    array_of_months
+  end
+
   private
 
   def compute_working_hours(start_time, end_time)

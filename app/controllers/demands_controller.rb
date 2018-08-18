@@ -2,7 +2,7 @@
 
 class DemandsController < AuthenticatedController
   before_action :assign_company
-  before_action :assign_project
+  before_action :assign_project, except: %i[demands_csv demands_to_projects]
   before_action :assign_demand, only: %i[edit update show synchronize_pipefy destroy]
 
   def new
@@ -52,6 +52,24 @@ class DemandsController < AuthenticatedController
     end
   end
 
+  def demands_csv
+    @demands_in_csv = Demand.where(id: params['demands_ids'].split(',')).kept.finished.order(end_date: :desc)
+    attributes = %w[id demand_id demand_type class_of_service effort_downstream effort_upstream created_date commitment_date end_date]
+    demands_csv = CSV.generate(headers: true) do |csv|
+      csv << attributes
+      @demands_in_csv.each { |demand| csv << attributes.map { |attr| demand.send(attr) } }
+    end
+    respond_to { |format| format.csv { send_data demands_csv, filename: "demands-#{Time.zone.now}.csv" } }
+  end
+
+  def demands_to_projects
+    projects = Project.where(id: params[:projects_ids].split(','))
+    @demands_count_per_week = DemandService.instance.quantitative_consolidation_per_week_to_projects(projects)
+    @demands = DemandsRepository.instance.demands_per_projects(projects)
+    assign_grouped_demands_informations(@demands)
+    respond_to { |format| format.js { render file: 'demands/demands_list.js.erb' } }
+  end
+
   private
 
   def demand_params
@@ -70,5 +88,10 @@ class DemandsController < AuthenticatedController
     flash[:notice] = t('demands.sync.done')
     return redirect_to company_project_demand_path(@company, @project, @demand) if @demand&.project == @project
     redirect_to company_project_path(@company, @project)
+  end
+
+  def assign_grouped_demands_informations(demands)
+    @grouped_delivered_demands = demands.grouped_end_date_by_month if params[:grouped_by_month] == 'true'
+    @grouped_customer_demands = demands.grouped_by_customer if params[:grouped_by_customer] == 'true'
   end
 end

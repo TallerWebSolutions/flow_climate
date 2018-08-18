@@ -54,4 +54,13 @@ RSpec.describe Stats::StatisticsService, type: :service do
   describe '#mean' do
     it { expect(Stats::StatisticsService.instance.mean([10, 30])).to eq 20 }
   end
+
+  describe '#standard_deviation' do
+    context 'having two or more units in the population' do
+      it { expect(Stats::StatisticsService.instance.standard_deviation([10, 30])).to eq 14.142135623730951 }
+    end
+    context 'having one unit in the population' do
+      it { expect(Stats::StatisticsService.instance.standard_deviation([10])).to eq 0 }
+    end
+  end
 end

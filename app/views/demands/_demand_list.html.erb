@@ -4,12 +4,10 @@
   </div>
 </div>
 
-<div class="row div-parent-check-group bottom-spaced-component">
+<div class="row">
   <div class="col-xs-4">
-    <div class="form-group">
-      <%= radio_button_tag :grouping, :no_grouping, true, class: 'filter-checks' %>
-      <%= label_tag t('projects.show.demands.no_grouping_check_box'), nil, class: 'control-label' %>
-    </div>
+    <%= radio_button_tag :grouping, :no_grouping, true, class: 'filter-checks' %>
+    <%= label_tag t('projects.show.demands.no_grouping_check_box'), nil, class: 'control-label' %>
   </div>
   <div class="col-xs-4">
     <div class="form-group">
@@ -25,7 +23,7 @@
   </div>
 </div>
 
-<div class="row div-parent-check-group bottom-spaced-component">
+<div class="row">
   <div class="col-xs-3">
     <div class="form-group">
       <%= radio_button_tag :searching, :all_demands, true, class: 'filter-checks' %>

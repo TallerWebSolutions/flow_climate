@@ -26,6 +26,14 @@ RSpec.describe DemandsController, type: :controller do
       before { put :synchronize_pipefy, params: { company_id: 'foo', project_id: 'bar', id: 'bla' } }
       it { expect(response).to redirect_to new_user_session_path }
     end
+    describe 'GET #demands_csv' do
+      before { get :demands_csv, params: { company_id: 'xpto' }, format: :csv }
+      it { expect(response).to have_http_status 401 }
+    end
+    describe 'GET #demands_to_projects' do
+      before { get :demands_to_projects, params: { company_id: 'xpto' }, xhr: true }
+      it { expect(response).to have_http_status 401 }
+    end
   end
 
   context 'authenticated' do
@@ -391,6 +399,79 @@ RSpec.describe DemandsController, type: :controller do
             before { put :synchronize_pipefy, params: { company_id: company, project_id: project, id: demand } }
             it { expect(response).to have_http_status :not_found }
           end
+        end
+      end
+    end
+
+    describe 'GET #demands_csv' do
+      let(:company) { Fabricate :company, users: [user] }
+
+      let(:customer) { Fabricate :customer, company: company }
+      let(:project) { Fabricate :project, customer: customer }
+      let!(:demand) { Fabricate :demand, project: project, end_date: Time.zone.today }
+      let!(:deleted_demand) { Fabricate :demand, project: project, end_date: Time.zone.today, discarded_at: Time.zone.yesterday }
+
+      context 'valid parameters' do
+        it 'calls the to_csv and responds success' do
+          get :demands_csv, params: { company_id: company, demands_ids: Demand.all.map(&:id).to_csv }, format: :csv
+          expect(response).to have_http_status 200
+
+          csv = CSV.parse(response.body, headers: true)
+          expect(csv.count).to eq 1
+          expect(csv.first[0].to_i).to eq demand.id
+          expect(csv.first[1]).to eq demand.demand_id
+          expect(csv.first[2]).to eq 'feature'
+          expect(csv.first[3]).to eq 'standard'
+          expect(csv.first[4].to_f).to eq demand.effort_downstream.to_f
+          expect(csv.first[5].to_f).to eq demand.effort_upstream.to_f
+          expect(csv.first[6]).to eq demand.created_date.to_s
+          expect(csv.first[7]).to be_nil
+          expect(csv.first[8]).to eq demand.end_date.to_s
+        end
+      end
+
+      context 'invalid' do
+        context 'company' do
+          context 'non-existent' do
+            before { get :demands_csv, params: { company_id: 'foo' }, format: :csv }
+            it { expect(response).to have_http_status :not_found }
+          end
+          context 'not-permitted' do
+            let(:company) { Fabricate :company, users: [] }
+            before { get :demands_csv, params: { company_id: company }, format: :csv }
+            it { expect(response).to have_http_status :not_found }
+          end
+        end
+      end
+    end
+
+    describe 'GET #demands_to_projects' do
+      context 'passing valid parameters' do
+        context 'for team' do
+          let(:first_project) { Fabricate :project, customer: customer, product: product }
+          let(:second_project) { Fabricate :project, customer: customer, product: product }
+
+          let!(:first_demand) { Fabricate :demand, project: first_project }
+          let!(:second_demand) { Fabricate :demand, project: second_project }
+
+          it 'builds the operation report and respond the JS render the template' do
+            get :demands_to_projects, params: { company_id: company, projects_ids: [first_project, second_project].map(&:id).to_csv }, xhr: true
+            expect(response).to render_template 'demands/demands_list.js.erb'
+            expect(assigns(:demands)).to match_array [first_demand, second_demand]
+            expect(assigns(:demands_count_per_week)[first_project.start_date.beginning_of_week]).to eq(arrived_in_week: [], std_dev_arrived: 0.0, std_dev_throughput: 0.0, throughput_in_week: [])
+          end
+        end
+      end
+
+      context 'passing invalid' do
+        context 'company' do
+          before { get :demands_to_projects, params: { company_id: 'foo' }, xhr: true }
+          it { expect(response).to have_http_status :not_found }
+        end
+        context 'not permitted company' do
+          let(:company) { Fabricate :company, users: [] }
+          before { get :demands_to_projects, params: { company_id: company }, xhr: true }
+          it { expect(response).to have_http_status :not_found }
         end
       end
     end

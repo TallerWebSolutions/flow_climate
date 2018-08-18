@@ -64,7 +64,6 @@ Rails.application.routes.draw do
       member do
         put :synchronize_pipefy
         patch :finish_project
-        get :delivered_demands_csv
         get 'search_demands_by_flow_status', action: :search_demands_by_flow_status, as: 'search_demands_by_flow_status'
       end
 
@@ -105,10 +104,17 @@ Rails.application.routes.draw do
       resources :stage_project_configs, only: %i[edit update]
     end
 
+    resources :demands, only: [] do
+      collection do
+        get 'demands_csv/(:demands_ids)', action: :demands_csv, as: 'demands_csv'
+        get :demands_to_projects
+      end
+    end
+
     controller :charts do
-      get :build_operational_charts # team product customer project
-      get :build_strategic_charts # team company
-      get :build_status_report_charts # team product customer project
+      get 'build_operational_charts', action: :build_operational_charts # team product customer project
+      get 'build_strategic_charts', action: :build_strategic_charts # team company
+      get 'build_status_report_charts', action: :build_status_report_charts # team product customer project
     end
   end
 

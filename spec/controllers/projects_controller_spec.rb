@@ -46,10 +46,6 @@ RSpec.describe ProjectsController, type: :controller do
       before { put :finish_project, params: { company_id: 'foo', id: 'bar' } }
       it { expect(response).to redirect_to new_user_session_path }
     end
-    describe 'GET #delivered_demands_csv' do
-      before { get :delivered_demands_csv, params: { company_id: 'xpto', id: 'foo' }, format: :csv }
-      it { expect(response).to have_http_status 401 }
-    end
   end
 
   context 'authenticated' do
@@ -82,14 +78,11 @@ RSpec.describe ProjectsController, type: :controller do
 
         context 'passing valid IDs' do
           before { get :show, params: { company_id: company, customer_id: customer, id: first_project } }
-          it 'assigns the instance variable and renders the template' do
+          it 'assigns the instance variables and renders the template' do
             expect(response).to render_template :show
             expect(assigns(:company)).to eq company
             expect(assigns(:project)).to eq first_project
-            expect(assigns(:report_data)).to be_a Highchart::OperationalChartsAdapter
-            expect(assigns(:status_report_data)).to be_a Highchart::StatusReportChartsAdapter
             expect(assigns(:ordered_project_risk_alerts)).to eq [second_alert, first_alert]
-            expect(assigns(:demands)).to match_array [second_demand, first_demand, third_demand]
             expect(assigns(:project_change_deadline_histories)).to match_array [first_change_deadline, second_change_deadline]
           end
         end
@@ -540,52 +533,6 @@ RSpec.describe ProjectsController, type: :controller do
           context 'not-permitted' do
             let(:company) { Fabricate :company, users: [] }
             before { patch :finish_project, params: { company_id: company, id: project } }
-            it { expect(response).to have_http_status :not_found }
-          end
-        end
-      end
-    end
-
-    describe 'GET #delivered_demands_csv' do
-      let(:company) { Fabricate :company, users: [user] }
-
-      let(:customer) { Fabricate :customer, company: company }
-      let(:project) { Fabricate :project, customer: customer }
-      let!(:demand) { Fabricate :demand, project: project, end_date: Time.zone.today }
-      let!(:deleted_demand) { Fabricate :demand, project: project, end_date: Time.zone.today, discarded_at: Time.zone.yesterday }
-
-      context 'valid parameters' do
-        it 'calls the to_csv and responds success' do
-          get :delivered_demands_csv, params: { company_id: company, id: project }, format: :csv
-          expect(response).to have_http_status 200
-
-          csv = CSV.parse(response.body, headers: true)
-          expect(csv.count).to eq 1
-          expect(csv.first[0].to_i).to eq demand.id
-          expect(csv.first[1]).to eq demand.demand_id
-          expect(csv.first[2]).to eq 'feature'
-          expect(csv.first[3]).to eq 'standard'
-          expect(csv.first[4].to_f).to eq demand.effort_downstream.to_f
-          expect(csv.first[5].to_f).to eq demand.effort_upstream.to_f
-          expect(csv.first[6]).to eq demand.created_date.to_s
-          expect(csv.first[7]).to be_nil
-          expect(csv.first[8]).to eq demand.end_date.to_s
-        end
-      end
-
-      context 'invalid' do
-        context 'project' do
-          before { get :delivered_demands_csv, params: { company_id: company, id: 'foo' }, format: :csv }
-          it { expect(response).to have_http_status :not_found }
-        end
-        context 'company' do
-          context 'non-existent' do
-            before { get :delivered_demands_csv, params: { company_id: 'foo', id: project }, format: :csv }
-            it { expect(response).to have_http_status :not_found }
-          end
-          context 'not-permitted' do
-            let(:company) { Fabricate :company, users: [] }
-            before { get :delivered_demands_csv, params: { company_id: company, id: project }, format: :csv }
             it { expect(response).to have_http_status :not_found }
           end
         end

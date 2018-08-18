@@ -50,6 +50,7 @@ en:
     destroy:
       confirm: "You are about to delete a record. Are you sure?"
     period: "Period"
+    throughput: "Throughput"
   header:
     logout: Logout
     explore: Explore
@@ -371,6 +372,14 @@ en:
     flow:
       processed_demand: "Processed Demands"
       wip: "Work in Progress"
+      committed_with: "Committed With"
+      real_throughput: "Throughput Real"
+    data_analysis:
+      demand_list: "Demand List"
+      consolidation: "Consolidation"
+    stats:
+      std_committed_with: "STD Committed with"
+      std_throughput: "STD Throughput"
   project_risk_configs:
     new:
       title: "New Risk Configuration"

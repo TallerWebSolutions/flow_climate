@@ -11,53 +11,53 @@
 
 <%= hidden_field_tag :company_id, @company.id %>
 <%= hidden_field_tag :project_id, @project.id %>
+<%= hidden_field_tag :projects_ids, @project.id %>
+<%= hidden_field_tag :target_name, @project.full_name %>
 
 <div class="row">
   <div class="topnav">
-    <%= link_to t('navbar.details'), '#', id: 'nav-item-stamps', class: 'active' %>
-    <%= link_to t('navbar.project_results'), '#', id: 'nav-item-results' %>
-    <%= link_to t('navbar.demands'), '#', id: 'nav-item-delivered' %>
-    <%= link_to t('projects.show.deadline.title'), '#', id: 'nav-item-deadline' %>
-    <%= link_to t('navbar.charts'), '#', id: 'nav-item-charts' %>
-    <%= link_to t('navbar.status_report'), '#', id: 'nav-item-statusreport' %>
-    <%= link_to t('navbar.risk_alerts'), '#', id: 'nav-item-risk' %>
-    <%= link_to t('navbar.settings'), '#', id: 'nav-item-settings' %>
+    <%= link_to t('navbar.details'), '#', id: 'nav-item-stamps', class: 'nav-item active', data: { container: '#stamps' } %>
+    <%= link_to t('navbar.project_results'), '#', id: 'nav-item-results', class: 'nav-item', data: { container: '#project-results' } %>
+    <%= link_to t('navbar.demands'), '#', id: 'nav-item-delivered', class: 'nav-item', data: { container: '#demands-list' } %>
+    <%= link_to t('projects.show.deadline.title'), '#', id: 'nav-item-deadline', class: 'nav-item', data: { container: '#deadline-change' } %>
+    <%= link_to t('navbar.charts'), '#', id: 'nav-item-charts', class: 'nav-item', data: { container: '#operational-charts' } %>
+    <%= link_to t('navbar.status_report'), '#', id: 'nav-item-statusreport', class: 'nav-item', data: { container: '#project-status-report' } %>
+    <%= link_to t('navbar.risk_alerts'), '#', id: 'nav-item-risk', class: 'nav-item', data: { container: '#project-risk-alerts-table' } %>
+    <%= link_to t('navbar.settings'), '#', id: 'nav-item-settings', class: 'nav-item', data: { container: '#project-settings' } %>
   </div>
 </div>
 
-<div id="project-stamps">
+<%= render 'commons/loader_spinner' %>
+
+<div id="stamps" class="tab-container">
   <%= render 'project_stamps', project: @project %>
 </div>
 
-<div id="project-results">
+<div id="project-results" class="tab-container">
   <%= render 'project_results/projects_results_table', project: @project, project_results: @ordered_project_results  %>
 </div>
 
-<div id="demands-list">
-  <div class="form-group">
-    <%= link_to t('general.download_csv'), delivered_demands_csv_company_project_path(@company, @project, format: :csv), class: 'btn btn-sm btn-success' %>
-  </div>
-  <%= render 'demands/demands_list', grouped_delivered_demands: @grouped_delivered_demands, grouped_customer_demands: @grouped_customer_demands, demands: @demands %>
+<div id="demands-list" class="tab-container">
+  <%= render 'demands/demands_info', grouped_delivered_demands: @grouped_delivered_demands, grouped_customer_demands: @grouped_customer_demands, demands: @demands, demands_count_per_week: @demands_count_per_week %>
 </div>
 
-<div id="deadline-change">
+<div id="deadline-change" class="tab-container">
   <%= render 'projects/deadlines', project_change_deadline_histories: @project_change_deadline_histories %>
 </div>
 
-<div id="project-risk-alerts-table">
+<div id="project-risk-alerts-table" class="tab-container">
   <%= render 'project_risk_alerts/project_risk_alerts_table' %>
 </div>
 
-<div id="project-charts">
-  <%= render 'charts/operational_charts', target_name: @project.full_name, report_data: @report_data %>
+<div id="operational-charts" class="tab-container">
+  <%= render 'charts/operational_charts_tab', target_name: @project.full_name, report_data: @report_data %>
 </div>
 
-<div id="project-status-report">
-  <%= render 'charts/status_report_charts', target_name: @project.full_name, status_report_data: @status_report_data %>
-  <%= render 'charts/status_report_projection_charts', target_name: @project.full_name, status_report_data: @status_report_data %>
+<div id="project-status-report" class="tab-container">
+  <%= render 'charts/status_report_tab', target_name: @project.full_name, status_report_data: @status_report_data, montecarlo_dates: @montecarlo_dates %>
 </div>
 
-<div id="project-settings">
+<div id="project-settings" class="tab-container">
   <%= render 'projects/settings', project_risk_configs: @project.project_risk_configs %>
 </div>
 
@@ -67,9 +67,15 @@
   <%= javascript_include_tag 'charts/bar' %>
   <%= javascript_include_tag 'charts/line' %>
   <%= javascript_include_tag 'charts/scatter' %>
+  <%= javascript_include_tag 'components/components' %>
+
+  <%= javascript_include_tag 'top_navigation/tab-navigation' %>
+  <%= javascript_include_tag 'projects/project_navigation_behaviour' %>
 
   <%= javascript_include_tag 'projects/demands_list' %>
   <%= javascript_include_tag 'routes/project_routes' %>
+  <%= javascript_include_tag 'routes/chart_routes' %>
+  <%= javascript_include_tag 'routes/demand_routes' %>
   <%= javascript_include_tag 'projects/charts' %>
   <%= javascript_include_tag 'projects/status_report_current' %>
   <%= javascript_include_tag 'projects/status_report_projection' %>
