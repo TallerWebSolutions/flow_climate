@@ -1,26 +1,30 @@
-<h3>Consolidações</h3>
+<% if demands_count_per_week.present? %>
+  <h3>Consolidações</h3>
 
-<table class="table table-striped">
-  <thead>
-    <tr>
-      <th><%= t('general.week') %></th>
-      <th><%= t('demands.flow.committed_with') %></th>
-      <th><%= t('general.throughput') %></th>
-      <th><%= t('demands.flow.real_throughput') %></th>
-      <th><%= t('demands.stats.std_committed_with') %></th>
-      <th><%= t('demands.stats.std_throughput') %></th>
-    </tr>
-  </thead>
-  <tbody>
-    <% demands_count_per_week.each do |week, behaviour_data| %>
+  <table class="table table-striped">
+    <thead>
       <tr>
-        <td><%= l(week, format: :default) %></td>
-        <td><%= behaviour_data[:arrived_in_week].count %></td>
-        <td><%= behaviour_data[:throughput_in_week].count %></td>
-        <td><%= behaviour_data[:throughput_in_week].count - behaviour_data[:arrived_in_week].count %></td>
-        <td><%= number_with_precision(behaviour_data[:std_dev_arrived], precision: 2) %></td>
-        <td><%= number_with_precision(behaviour_data[:std_dev_throughput], precision: 2) %></td>
+        <th><%= t('general.week') %></th>
+        <th><%= t('demands.flow.committed_with') %></th>
+        <th><%= t('general.throughput') %></th>
+        <th><%= t('demands.flow.real_throughput') %></th>
+        <th><%= t('demands.stats.std_committed_with') %></th>
+        <th><%= t('demands.stats.std_throughput') %></th>
       </tr>
-    <% end %>
-  </tbody>
-</table>
+    </thead>
+    <tbody>
+      <% demands_count_per_week.each do |week, behaviour_data| %>
+        <tr>
+          <td><%= l(week, format: :default) %></td>
+          <td><%= behaviour_data[:arrived_in_week].count %></td>
+          <td><%= behaviour_data[:throughput_in_week].count %></td>
+          <td><%= behaviour_data[:throughput_in_week].count - behaviour_data[:arrived_in_week].count %></td>
+          <td><%= number_with_precision(behaviour_data[:std_dev_arrived], precision: 2) %></td>
+          <td><%= number_with_precision(behaviour_data[:std_dev_throughput], precision: 2) %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <%= 'There is no data' %>
+<% end %>

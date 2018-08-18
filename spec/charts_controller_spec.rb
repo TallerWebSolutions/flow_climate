@@ -47,8 +47,8 @@ RSpec.describe ChartsController, type: :controller do
           let!(:second_project_result) { Fabricate :project_result, project: second_project, team: team }
 
           it 'builds the operation report and respond the JS render the template' do
-            get :build_operational_charts, params: { company_id: company, team_id: team.id }, xhr: true
-            expect(response).to render_template 'teams/operational_charts.js.erb'
+            get :build_operational_charts, params: { company_id: company, projects_ids: team.projects.map(&:id).to_csv }, xhr: true
+            expect(response).to render_template 'charts/operational_charts.js.erb'
             expect(assigns(:report_data)).to be_a Highchart::OperationalChartsAdapter
             expect(assigns(:report_data).all_projects).to match_array [first_project, second_project]
           end
@@ -57,16 +57,12 @@ RSpec.describe ChartsController, type: :controller do
 
       context 'passing invalid' do
         context 'company' do
-          before { get :build_operational_charts, params: { company_id: 'foo', team_id: team }, xhr: true }
-          it { expect(response).to have_http_status :not_found }
-        end
-        context 'team' do
-          before { get :build_operational_charts, params: { company_id: company, team_id: 'foo' }, xhr: true }
+          before { get :build_operational_charts, params: { company_id: 'foo', projects_ids: team.projects.map(&:id).to_csv }, xhr: true }
           it { expect(response).to have_http_status :not_found }
         end
         context 'not permitted company' do
           let(:company) { Fabricate :company, users: [] }
-          before { get :build_operational_charts, params: { company_id: company, team_id: team }, xhr: true }
+          before { get :build_operational_charts, params: { company_id: company, projects_ids: team.projects.map(&:id).to_csv }, xhr: true }
           it { expect(response).to have_http_status :not_found }
         end
       end
@@ -92,8 +88,8 @@ RSpec.describe ChartsController, type: :controller do
         let!(:fifth_demand) { Fabricate :demand, project_result: fifth_result, project: second_project, end_date: 1.week.ago }
 
         it 'builds the operation report and respond the JS render the template' do
-          get :build_strategic_charts, params: { company_id: company, team_id: team }, xhr: true
-          expect(response).to render_template 'teams/strategic_charts.js.erb'
+          get :build_strategic_charts, params: { company_id: company, projects_ids: team.projects.map(&:id).to_csv }, xhr: true
+          expect(response).to render_template 'charts/strategic_charts.js.erb'
           expect(assigns(:strategic_report_data).array_of_months).to eq [[Time.zone.today.month, Time.zone.today.year], [1.month.from_now.to_date.month, 1.month.from_now.to_date.year]]
           expect(assigns(:strategic_report_data).active_projects_count_data).to eq [2, 1]
         end
@@ -101,16 +97,12 @@ RSpec.describe ChartsController, type: :controller do
 
       context 'passing invalid' do
         context 'company' do
-          before { get :build_strategic_charts, params: { company_id: 'foo', team_id: team.id }, xhr: true }
-          it { expect(response).to have_http_status :not_found }
-        end
-        context 'team' do
-          before { get :build_strategic_charts, params: { company_id: company, team_id: 'foo' }, xhr: true }
+          before { get :build_strategic_charts, params: { company_id: 'foo', projects_ids: team.projects.map(&:id).to_csv }, xhr: true }
           it { expect(response).to have_http_status :not_found }
         end
         context 'not permitted company' do
           let(:company) { Fabricate :company, users: [] }
-          before { get :build_strategic_charts, params: { company_id: company, team_id: team.id }, xhr: true }
+          before { get :build_strategic_charts, params: { company_id: company, projects_ids: team.projects.map(&:id).to_csv }, xhr: true }
           it { expect(response).to have_http_status :not_found }
         end
       end
@@ -118,27 +110,36 @@ RSpec.describe ChartsController, type: :controller do
 
     describe 'GET #build_status_report_charts' do
       let(:team) { Fabricate :team, company: company }
+      let(:customer) { Fabricate :customer, company: company }
+      let!(:product) { Fabricate :product, customer: customer, team: team }
 
       context 'passing valid parameters' do
-        it 'builds the operation report and respond the JS render the template' do
-          get :build_status_report_charts, params: { company_id: company, team_id: team.id }, xhr: true
-          expect(response).to render_template 'teams/status_report_charts.js.erb'
-          expect(assigns(:status_report_data)).to be_a Highchart::StatusReportChartsAdapter
+        context 'having projects' do
+          let!(:project) { Fabricate :project, product: product }
+          let!(:other_project) { Fabricate :project, product: product }
+          it 'builds the operation report and respond the JS render the template' do
+            get :build_status_report_charts, params: { company_id: company, projects_ids: Project.all.map(&:id).to_csv }, xhr: true
+            expect(response).to render_template 'charts/status_report_charts.js.erb'
+            expect(assigns(:status_report_data)).to be_a Highchart::StatusReportChartsAdapter
+          end
+        end
+        context 'having no projects' do
+          it 'builds the operation report and respond the JS render the template' do
+            get :build_status_report_charts, params: { company_id: company, projects_ids: Project.all.map(&:id).to_csv }, xhr: true
+            expect(response).to render_template 'charts/status_report_charts.js.erb'
+            expect(assigns(:status_report_data)).to be_a Highchart::StatusReportChartsAdapter
+          end
         end
       end
 
       context 'passing invalid' do
         context 'company' do
-          before { get :build_status_report_charts, params: { company_id: 'foo', team_id: team.id }, xhr: true }
-          it { expect(response).to have_http_status :not_found }
-        end
-        context 'team' do
-          before { get :build_status_report_charts, params: { company_id: company, team_id: 'foo' }, xhr: true }
+          before { get :build_status_report_charts, params: { company_id: 'foo', projects_ids: team.projects.map(&:id).to_csv }, xhr: true }
           it { expect(response).to have_http_status :not_found }
         end
         context 'not permitted company' do
           let(:company) { Fabricate :company, users: [] }
-          before { get :build_status_report_charts, params: { company_id: company, team_id: team.id }, xhr: true }
+          before { get :build_status_report_charts, params: { company_id: company, projects_ids: team.projects.map(&:id).to_csv }, xhr: true }
           it { expect(response).to have_http_status :not_found }
         end
       end

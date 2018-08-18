@@ -94,9 +94,6 @@ RSpec.describe TeamsController, type: :controller do
             expect(assigns(:projects_risk_alert_data).backlog_risk_alert_data).to eq [{ name: 'Vermelho', y: 1, color: '#FB283D' }]
             expect(assigns(:projects_risk_alert_data).money_risk_alert_data).to eq [{ name: 'Verde', y: 1, color: '#179A02' }]
             expect(assigns(:pipefy_team_configs)).to eq [second_pipefy_team_config, first_pipefy_team_config]
-            expect(assigns(:demands)).to match_array [first_demand, second_demand, third_demand, fourth_demand]
-            expect(assigns(:grouped_delivered_demands)).to be_nil
-            expect(assigns(:grouped_customer_demands)).to be_nil
           end
         end
         context 'having no data' do

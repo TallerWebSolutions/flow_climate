@@ -8,15 +8,8 @@ class ProjectsController < AuthenticatedController
 
   def show
     @ordered_project_results = @project.project_results.order(:result_date)
-    projects = Project.where(id: @project.id)
-    @report_data = Highchart::OperationalChartsAdapter.new(projects, 'all')
-    @status_report_data = Highchart::StatusReportChartsAdapter.new(projects, 'all')
     @ordered_project_risk_alerts = @project.project_risk_alerts.order(created_at: :desc)
-    @demands = DemandsRepository.instance.demands_per_projects(projects)
-    assign_grouped_demands_informations(@demands)
     @project_change_deadline_histories = @project.project_change_deadline_histories
-    @montecarlo_dates = @status_report_data.monte_carlo_data
-    @demands_count_per_week = DemandService.instance.quantitative_consolidation_per_week_to_projects([@project])
   end
 
   def index

@@ -5,6 +5,10 @@
   </div>
 </div>
 
-<div id="status-report-charts-div">
+<div id="status-report-charts-current-div">
   <%= render 'charts/status_report_charts', target_name: target_name, status_report_data: status_report_data %>
+</div>
+
+<div id="status-report-charts-projection-div">
+  <%= render 'charts/status_report_projection_charts', target_name: target_name, status_report_data: status_report_data, montecarlo_dates: montecarlo_dates %>
 </div>

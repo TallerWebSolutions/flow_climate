@@ -105,13 +105,16 @@ Rails.application.routes.draw do
     end
 
     resources :demands, only: [] do
-      get 'demands_csv/(:demands_ids)', action: :demands_csv, as: 'demands_csv', on: :collection
+      collection do
+        get 'demands_csv/(:demands_ids)', action: :demands_csv, as: 'demands_csv'
+        get :demands_to_projects
+      end
     end
 
     controller :charts do
-      get :build_operational_charts # team product customer project
-      get :build_strategic_charts # team company
-      get :build_status_report_charts # team product customer project
+      get 'build_operational_charts', action: :build_operational_charts # team product customer project
+      get 'build_strategic_charts', action: :build_strategic_charts # team company
+      get 'build_status_report_charts', action: :build_status_report_charts # team product customer project
     end
   end
 

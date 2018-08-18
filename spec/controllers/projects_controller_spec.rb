@@ -78,14 +78,11 @@ RSpec.describe ProjectsController, type: :controller do
 
         context 'passing valid IDs' do
           before { get :show, params: { company_id: company, customer_id: customer, id: first_project } }
-          it 'assigns the instance variable and renders the template' do
+          it 'assigns the instance variables and renders the template' do
             expect(response).to render_template :show
             expect(assigns(:company)).to eq company
             expect(assigns(:project)).to eq first_project
-            expect(assigns(:report_data)).to be_a Highchart::OperationalChartsAdapter
-            expect(assigns(:status_report_data)).to be_a Highchart::StatusReportChartsAdapter
             expect(assigns(:ordered_project_risk_alerts)).to eq [second_alert, first_alert]
-            expect(assigns(:demands)).to match_array [second_demand, first_demand, third_demand]
             expect(assigns(:project_change_deadline_histories)).to match_array [first_change_deadline, second_change_deadline]
           end
         end

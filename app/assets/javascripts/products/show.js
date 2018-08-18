@@ -3,6 +3,7 @@ $('#stamps').show();
 $('#nav-item-stamps').addClass('active');
 buildOperationalHighcharts();
 buildStatusReportCurrentCharts();
+buildStatusReportProjectionCharts();
 
 $('#nav-item-stamps').on('click', function(){
     hideAllComponents();
@@ -24,7 +25,7 @@ $('#nav-item-statusreport').on('click', function(){
 
 $('#nav-item-charts').on('click', function(){
     hideAllComponents();
-    $('#charts').show();
+    $('#operational-charts').show();
     $('#nav-item-charts').addClass('active');
 });
 
@@ -32,7 +33,7 @@ function hideAllComponents() {
     $('#stamps').hide();
     $('#project-list').hide();
     $('#project-status-report').hide();
-    $('#charts').hide();
+    $('#operational-charts').hide();
 
     $('#nav-item-stamps').removeClass('active');
     $('#nav-item-list').removeClass('active');

@@ -1,0 +1,14 @@
+var demandsList = $("#content-demand-list");
+demandsList.html("<%= escape_javascript(render 'demands/demand_list', demands: @demands, grouped_delivered_demands: @grouped_delivered_demands, grouped_customer_demands: @grouped_customer_demands).html_safe %>");
+
+var consolidation = $("#content-consolidation");
+consolidation.html("<%= escape_javascript(render 'demands/demands_week_consolidation', demands_count_per_week: @demands_count_per_week).html_safe %>");
+
+$('#nav-item-delivered').addClass('active');
+
+demandsList.show();
+consolidation.show();
+$('#demands-list').show();
+
+
+enableTabs();
