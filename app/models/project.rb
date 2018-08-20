@@ -281,6 +281,21 @@ class Project < ApplicationRecord
     project_results.order(:result_date).last.cost_in_month
   end
 
+  def percentage_bugs
+    return 0 if demands.kept.count.zero?
+    (demands.kept.bug.count.to_f / demands.kept.count.to_f) * 100
+  end
+
+  def percentage_features
+    return 0 if demands.kept.count.zero?
+    (demands.kept.feature.count.to_f / demands.kept.count.to_f) * 100
+  end
+
+  def percentage_chores
+    return 0 if demands.kept.count.zero?
+    (demands.kept.chore.count.to_f / demands.kept.count.to_f) * 100
+  end
+
   private
 
   def no_pressure_set(date)

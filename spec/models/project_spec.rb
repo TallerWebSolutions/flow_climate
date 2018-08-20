@@ -911,4 +911,67 @@ RSpec.describe Project, type: :model do
       it { expect(project.current_cost).to eq 0 }
     end
   end
+
+  describe '#percentage_bugs' do
+    let(:project) { Fabricate :project }
+    context 'when there is no bugs' do
+      let!(:feature_demand) { Fabricate :demand, demand_type: :feature, project: project }
+      let!(:chore_demand) { Fabricate :demand, demand_type: :chore, project: project }
+
+      it { expect(project.percentage_bugs).to eq 0 }
+    end
+    context 'when there is no demands' do
+      it { expect(project.percentage_bugs).to eq 0 }
+    end
+    context 'when there is bugs' do
+      let!(:feature_demand) { Fabricate :demand, demand_type: :feature, project: project }
+      let!(:other_feature_demand) { Fabricate :demand, demand_type: :feature, project: project }
+      let!(:chore_demand) { Fabricate :demand, demand_type: :chore, project: project }
+      let!(:bug_demand) { Fabricate :demand, demand_type: :bug, project: project }
+
+      it { expect(project.percentage_bugs).to eq 25 }
+    end
+  end
+
+  describe '#percentage_features' do
+    let(:project) { Fabricate :project }
+    context 'when there is no features' do
+      let!(:bug_demand) { Fabricate :demand, demand_type: :bug, project: project }
+      let!(:chore_demand) { Fabricate :demand, demand_type: :chore, project: project }
+
+      it { expect(project.percentage_features).to eq 0 }
+    end
+    context 'when there is no demands' do
+      it { expect(project.percentage_features).to eq 0 }
+    end
+    context 'when there is bugs' do
+      let!(:feature_demand) { Fabricate :demand, demand_type: :feature, project: project }
+      let!(:other_feature_demand) { Fabricate :demand, demand_type: :feature, project: project }
+      let!(:chore_demand) { Fabricate :demand, demand_type: :chore, project: project }
+      let!(:bug_demand) { Fabricate :demand, demand_type: :bug, project: project }
+
+      it { expect(project.percentage_features).to eq 50 }
+    end
+  end
+
+  describe '#percentage_chores' do
+    let(:project) { Fabricate :project }
+    context 'when there is no features' do
+      let!(:bug_demand) { Fabricate :demand, demand_type: :bug, project: project }
+      let!(:feature_demand) { Fabricate :demand, demand_type: :feature, project: project }
+
+      it { expect(project.percentage_chores).to eq 0 }
+    end
+    context 'when there is no demands' do
+      it { expect(project.percentage_chores).to eq 0 }
+    end
+    context 'when there is bugs' do
+      let!(:feature_demand) { Fabricate :demand, demand_type: :feature, project: project }
+      let!(:other_feature_demand) { Fabricate :demand, demand_type: :feature, project: project }
+      let!(:chore_demand) { Fabricate :demand, demand_type: :chore, project: project }
+      let!(:bug_demand) { Fabricate :demand, demand_type: :bug, project: project }
+
+      it { expect(project.percentage_chores).to eq 25 }
+    end
+  end
 end

@@ -168,6 +168,9 @@ pt-BR:
       throughput: "Throughput Semana Anterior"
       leadtime_80_confidence: "Leadtime 80%"
       demands_count: "Qtd de Demandas"
+      bugs_count: "Qtd de Bugs"
+      features_count: "Qtd Features"
+      chore_count: "Qtd Tarefas Técnicas"
     charts:
       xlabel:
         weeks: "Semanas"
