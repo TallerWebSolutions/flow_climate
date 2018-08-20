@@ -74,14 +74,14 @@ en:
             downstream: Downstream
       demand_block:
         demand: Demand
-        demand_block_id: Block Id
+        demand_block_id: Id
         blocker_username: Blocked by
         block_time: Blocked at
         block_reason: Block Reason
         unblocker_username: Unblocked by
         unblock_time: Unblocked at
         unblock_reason: Unblock reason
-        block_duration: Block Duration
+        block_duration: Duration
         active: Active?
         enums:
           coding_needed: Coding Needed

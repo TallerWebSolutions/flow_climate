@@ -18,6 +18,10 @@ RSpec.describe DemandBlocksController, type: :controller do
       before { put :update, params: { company_id: 'xpto', project_id: 'bar', project_result_id: 'bla', demand_id: 'foo', id: 'sbbrubles' } }
       it { expect(response).to redirect_to new_user_session_path }
     end
+    describe 'GET #index' do
+      before { put :index, params: { company_id: 'xpto', project_id: 'bar' } }
+      it { expect(response).to redirect_to new_user_session_path }
+    end
   end
 
   context 'authenticated' do
@@ -157,6 +161,33 @@ RSpec.describe DemandBlocksController, type: :controller do
         end
         context 'demand_block' do
           before { put :update, params: { company_id: company, project_id: project, demand_id: demand, id: 'foo' }, xhr: true }
+          it { expect(response).to have_http_status :not_found }
+        end
+      end
+    end
+
+    describe 'GET #index' do
+      let(:company) { Fabricate :company, users: [user] }
+      let(:customer) { Fabricate :customer, company: company }
+      let!(:project) { Fabricate :project, customer: customer }
+      let(:demand) { Fabricate :demand, project: project }
+      let!(:demand_block) { Fabricate :demand_block, demand: demand, active: true }
+
+      context 'passing valid parameters' do
+        before { get :index, params: { company_id: company, project_id: project }, xhr: true }
+        it 'assigns the instance variable and renders the template' do
+          expect(project).to eq project
+          expect(company).to eq company
+          expect(response).to render_template 'demand_blocks/index'
+        end
+      end
+      context 'passing invalid' do
+        context 'company' do
+          before { get :index, params: { company_id: 'foo', project_id: project }, xhr: true }
+          it { expect(response).to have_http_status :not_found }
+        end
+        context 'project' do
+          before { get :index, params: { company_id: company, project_id: 'foo' }, xhr: true }
           it { expect(response).to have_http_status :not_found }
         end
       end

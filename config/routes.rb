@@ -87,6 +87,8 @@ Rails.application.routes.draw do
         end
       end
 
+      resources :demand_blocks, only: :index
+
       get 'product_options_for_customer/(:customer_id)', action: :product_options_for_customer, on: :collection
       get 'search_for_projects/:status_filter', action: :search_for_projects, as: 'search_for_projects', on: :collection
     end

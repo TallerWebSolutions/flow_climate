@@ -307,14 +307,14 @@ pt-BR:
         last_time_out: Última saída da etapa
       demand_block:
         demand: Demanda
-        demand_block_id: Id do Bloqueio
+        demand_block_id: Id
         blocker_username: Bloqueado por
         block_time: Bloqueado em
         block_reason: Motivo do bloqueio
         unblocker_username: Desbloqueado por
         unblock_time: Desbloqueado em
         unblock_reason: Motivo do desbloqueio
-        block_duration: Duração Útil do Bloqueio
+        block_duration: Duração Útil
         active: Ativo?
         block_type: Tipo do Bloqueio
         enums:

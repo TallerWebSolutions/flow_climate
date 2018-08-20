@@ -3,8 +3,8 @@
 class DemandBlocksController < AuthenticatedController
   before_action :assign_company
   before_action :assign_project
-  before_action :assign_demand
-  before_action :assign_demand_block
+  before_action :assign_demand, except: :index
+  before_action :assign_demand_block, except: :index
 
   def activate
     @demand_block.activate!
@@ -23,6 +23,10 @@ class DemandBlocksController < AuthenticatedController
   def update
     @demand_block.update(demand_block_params)
     render 'demand_blocks/update'
+  end
+
+  def index
+    respond_to { |format| format.js }
   end
 
   private

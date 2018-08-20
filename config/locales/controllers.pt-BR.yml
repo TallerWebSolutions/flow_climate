@@ -171,6 +171,7 @@ pt-BR:
       bugs_count: "Qtd de Bugs"
       features_count: "Qtd Features"
       chore_count: "Qtd Tarefas Técnicas"
+      demand_blocks_count: "Qtd Bloqueios"
     charts:
       xlabel:
         weeks: "Semanas"

@@ -53,6 +53,10 @@ class DemandBlock < ApplicationRecord
     update(active: false)
   end
 
+  def unblocked?
+    unblock_time.present?
+  end
+
   private
 
   def update_computed_fields!
