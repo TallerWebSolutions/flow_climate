@@ -4,7 +4,7 @@ class ProjectsController < AuthenticatedController
   before_action :assign_company
   before_action :assign_customer, only: %i[create update]
   before_action :assign_product, only: %i[create update]
-  before_action :assign_project, only: %i[show edit update destroy synchronize_pipefy finish_project search_demands_by_flow_status]
+  before_action :assign_project, only: %i[show edit update destroy synchronize_pipefy finish_project search_demands_by_flow_status statistics]
 
   def show
     @ordered_project_results = @project.project_results.order(:result_date)
@@ -76,6 +76,10 @@ class ProjectsController < AuthenticatedController
     @demands = Demand.where(id: demands_for_query_ids.map(&:id))
     assign_grouped_demands_informations(@demands)
     respond_to { |format| format.js { render file: 'demands/search_demands_by_flow_status.js.erb' } }
+  end
+
+  def statistics
+    respond_to { |format| format.js { render file: 'projects/project_statistics.js.erb' } }
   end
 
   private

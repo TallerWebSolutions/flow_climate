@@ -5,3 +5,7 @@
 <%= link_to finish_project_company_project_path(@company, project), method: :patch do %>
   <i class="far fa-calendar-check" title='<%= t('projects.actions.finish.tooltip') %>'></i>
 <% end %>
+
+<%= link_to statistics_company_project_path(@company, project), class: 'statistics-project', remote: true do %>
+  <i class="fas fa-superscript" title='<%= t('projects.actions.statistics.tooltip') %>'></i>
+<% end %>

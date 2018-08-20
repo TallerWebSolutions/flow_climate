@@ -90,6 +90,13 @@ en:
           customer_low_urgency: Customer Low Urgency
           integration_needed: Integration Needed
           customer_unavailable: Customer Unavailable
+      demand:
+        enums:
+          class_of_service:
+            expedite: "Expedite"
+            standard: "Standard"
+            fixed_date: "Fixed Date"
+            intangible: "Intangible"
     errors:
       messages:
         record_invalid: 'Validation failed: %{errors}'

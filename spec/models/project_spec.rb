@@ -485,42 +485,6 @@ RSpec.describe Project, type: :model do
     end
   end
 
-  describe '#current_leadtime_60_confidence' do
-    let(:project) { Fabricate :project, initial_scope: 30, start_date: 1.day.ago, end_date: 1.week.from_now }
-    context 'having results' do
-      let!(:result) { Fabricate :project_result, project: project, result_date: 1.day.ago }
-      let!(:other_result) { Fabricate :project_result, project: project, result_date: Time.zone.today }
-      it { expect(project.current_leadtime_60_confidence).to eq other_result.leadtime_60_confidence }
-    end
-    context 'having no results' do
-      it { expect(project.current_leadtime_60_confidence).to eq 0 }
-    end
-  end
-
-  describe '#current_leadtime_80_confidence' do
-    let(:project) { Fabricate :project, initial_scope: 30, start_date: 1.day.ago, end_date: 1.week.from_now }
-    context 'having results' do
-      let!(:result) { Fabricate :project_result, project: project, result_date: 1.day.ago }
-      let!(:other_result) { Fabricate :project_result, project: project, result_date: Time.zone.today }
-      it { expect(project.current_leadtime_80_confidence).to eq other_result.leadtime_80_confidence }
-    end
-    context 'having no results' do
-      it { expect(project.current_leadtime_80_confidence).to eq 0 }
-    end
-  end
-
-  describe '#current_leadtime_95_confidence' do
-    let(:project) { Fabricate :project, initial_scope: 30, start_date: 1.day.ago, end_date: 1.week.from_now }
-    context 'having results' do
-      let!(:result) { Fabricate :project_result, project: project, result_date: 1.day.ago }
-      let!(:other_result) { Fabricate :project_result, project: project, result_date: Time.zone.today }
-      it { expect(project.current_leadtime_95_confidence).to eq other_result.leadtime_95_confidence }
-    end
-    context 'having no results' do
-      it { expect(project.current_leadtime_95_confidence).to eq 0 }
-    end
-  end
-
   describe '#avg_hours_per_demand' do
     let(:project) { Fabricate :project, initial_scope: 30, start_date: 1.day.ago, end_date: 1.week.from_now }
     context 'having results' do
@@ -995,6 +959,24 @@ RSpec.describe Project, type: :model do
       let!(:discarded_demand_block) { Fabricate :demand_block, demand: demand, discarded_at: 1.day.ago, block_duration: 100 }
 
       it { expect(project.percentage_chores).to eq 0 }
+    end
+  end
+
+  describe '#leadtime_for_class_of_service' do
+    let(:project) { Fabricate :project }
+
+    context 'having demands' do
+      let!(:expedite_demand) { Fabricate :demand, class_of_service: :expedite, project: project, end_date: Time.zone.today, leadtime: 100 }
+      let!(:other_expedite_demand) { Fabricate :demand, class_of_service: :expedite, project: project, end_date: Time.zone.today, leadtime: 80 }
+      let!(:standard_demand) { Fabricate :demand, class_of_service: :standard, project: project, end_date: Time.zone.today, leadtime: 80 }
+      it { expect(project.leadtime_for_class_of_service(:expedite).to_f).to eq 96.0 }
+      it { expect(project.leadtime_for_class_of_service(:expedite, 60).to_f).to eq 92.0 }
+    end
+    context 'having no demands' do
+      let!(:expedite_demand) { Fabricate :demand, class_of_service: :expedite, project: project, end_date: Time.zone.today, leadtime: 100 }
+      let!(:other_expedite_demand) { Fabricate :demand, class_of_service: :expedite, project: project, end_date: Time.zone.today, leadtime: 80 }
+
+      it { expect(project.leadtime_for_class_of_service(:standard)).to eq 0 }
     end
   end
 end

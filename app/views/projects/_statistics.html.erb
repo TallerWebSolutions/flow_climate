@@ -1,0 +1,47 @@
+<div class="modal-dialog">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+      <h4 class="modal-title" id="indexBlocks"><%= t('project.modal.statistics', project_name: @project.full_name) %></h4>
+    </div>
+    <div class="modal-body">
+      <h5>Leadtime em dias</h5>
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th><%= Demand.human_attribute_name :class_of_service %></th>
+            <th>60%</th>
+            <th>80%</th>
+            <th>95%</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><%= t('activerecord.attributes.demand.enums.class_of_service.standard') %></td>
+            <td><%= number_with_precision(@project.leadtime_for_class_of_service(:standard, 60) / 86_400.0, precision: 2) %></td>
+            <td><%= number_with_precision(@project.leadtime_for_class_of_service(:standard, 80) / 86_400.0, precision: 2) %></td>
+            <td><%= number_with_precision(@project.leadtime_for_class_of_service(:standard, 95) / 86_400.0, precision: 2) %></td>
+          </tr>
+          <tr>
+            <td><%= t('activerecord.attributes.demand.enums.class_of_service.expedite') %></td>
+            <td><%= number_with_precision(@project.leadtime_for_class_of_service(:expedite, 60) / 86_400.0, precision: 2) %></td>
+            <td><%= number_with_precision(@project.leadtime_for_class_of_service(:expedite, 80) / 86_400.0, precision: 2) %></td>
+            <td><%= number_with_precision(@project.leadtime_for_class_of_service(:expedite, 95) / 86_400.0, precision: 2) %></td>
+          </tr>
+          <tr>
+            <td><%= t('activerecord.attributes.demand.enums.class_of_service.fixed_date') %></td>
+            <td><%= number_with_precision(@project.leadtime_for_class_of_service(:fixed_date, 60) / 86_400.0, precision: 2) %></td>
+            <td><%= number_with_precision(@project.leadtime_for_class_of_service(:fixed_date, 80) / 86_400.0, precision: 2) %></td>
+            <td><%= number_with_precision(@project.leadtime_for_class_of_service(:fixed_date, 95) / 86_400.0, precision: 2) %></td>
+          </tr>
+          <tr>
+            <td><%= t('activerecord.attributes.demand.enums.class_of_service.intangible') %></td>
+            <td><%= number_with_precision(@project.leadtime_for_class_of_service(:intangible, 60) / 86_400.0, precision: 2) %></td>
+            <td><%= number_with_precision(@project.leadtime_for_class_of_service(:intangible, 80) / 86_400.0, precision: 2) %></td>
+            <td><%= number_with_precision(@project.leadtime_for_class_of_service(:intangible, 95) / 86_400.0, precision: 2) %></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

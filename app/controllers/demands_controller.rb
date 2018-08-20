@@ -2,7 +2,7 @@
 
 class DemandsController < AuthenticatedController
   before_action :assign_company
-  before_action :assign_project, except: %i[demands_csv demands_to_projects]
+  before_action :assign_project, except: %i[demands_csv demands_in_projects]
   before_action :assign_demand, only: %i[edit update show synchronize_pipefy destroy]
 
   def new
@@ -62,7 +62,7 @@ class DemandsController < AuthenticatedController
     respond_to { |format| format.csv { send_data demands_csv, filename: "demands-#{Time.zone.now}.csv" } }
   end
 
-  def demands_to_projects
+  def demands_in_projects
     projects = Project.where(id: params[:projects_ids].split(','))
     @demands_count_per_week = DemandService.instance.quantitative_consolidation_per_week_to_projects(projects)
     @demands = DemandsRepository.instance.demands_per_projects(projects)
