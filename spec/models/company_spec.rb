@@ -103,10 +103,10 @@ RSpec.describe Company, type: :model do
       let(:other_product) { Fabricate :product, customer: other_customer, name: 'zzz' }
       let(:other_company_product) { Fabricate :product, customer: other_company_customer, name: 'zzz' }
 
-      let(:project) { Fabricate :project, start_date: Date.new(2018, 1, 25), customer: customer, product: product }
-      let(:other_project) { Fabricate :project, start_date: Date.new(2018, 1, 25), customer: customer, product: product }
-      let(:other_customer_project) { Fabricate :project, start_date: Date.new(2018, 1, 25), customer: other_customer, product: other_product }
-      let(:other_company_project) { Fabricate :project, start_date: Date.new(2018, 1, 25), customer: other_company_customer, product: other_company_product }
+      let(:project) { Fabricate :project, start_date: Date.new(2018, 1, 25), end_date: Date.new(2018, 4, 25), customer: customer, product: product }
+      let(:other_project) { Fabricate :project, start_date: Date.new(2018, 1, 25), end_date: Date.new(2018, 4, 25), customer: customer, product: product }
+      let(:other_customer_project) { Fabricate :project, start_date: Date.new(2018, 1, 25), end_date: Date.new(2018, 4, 25), customer: other_customer, product: other_product }
+      let(:other_company_project) { Fabricate :project, start_date: Date.new(2018, 1, 25), end_date: Date.new(2018, 4, 25), customer: other_company_customer, product: other_company_product }
 
       let!(:first_result) { Fabricate :project_result, project: project, result_date: Date.new(2018, 3, 2), qty_hours_downstream: 10, qty_hours_upstream: 20 }
       let!(:second_result) { Fabricate :project_result, project: project, result_date: Date.new(2018, 3, 1), qty_hours_downstream: 20, qty_hours_upstream: 30 }
@@ -135,10 +135,10 @@ RSpec.describe Company, type: :model do
       let(:other_product) { Fabricate :product, customer: other_customer, name: 'zzz' }
       let(:other_company_product) { Fabricate :product, customer: other_company_customer, name: 'zzz' }
 
-      let(:project) { Fabricate :project, start_date: 4.months.ago, customer: customer, product: product }
-      let(:other_project) { Fabricate :project, start_date: 4.months.ago, customer: customer, product: product }
-      let(:other_customer_project) { Fabricate :project, start_date: 4.months.ago, customer: other_customer, product: other_product }
-      let(:other_company_project) { Fabricate :project, start_date: 4.months.ago, customer: other_company_customer, product: other_company_product }
+      let(:project) { Fabricate :project, start_date: 4.months.ago, end_date: 4.weeks.from_now, customer: customer, product: product }
+      let(:other_project) { Fabricate :project, start_date: 4.months.ago, end_date: 4.weeks.from_now, customer: customer, product: product }
+      let(:other_customer_project) { Fabricate :project, start_date: 4.months.ago, end_date: 4.weeks.from_now, customer: other_customer, product: other_product }
+      let(:other_company_project) { Fabricate :project, start_date: 4.months.ago, end_date: 4.weeks.from_now, customer: other_company_customer, product: other_company_product }
 
       let!(:first_result) { Fabricate :project_result, project: project, result_date: 1.month.ago, qty_hours_upstream: 0, qty_hours_downstream: 10 }
       let!(:second_result) { Fabricate :project_result, project: project, result_date: 1.month.ago, qty_hours_upstream: 0, qty_hours_downstream: 20 }
@@ -165,10 +165,10 @@ RSpec.describe Company, type: :model do
     let(:other_product) { Fabricate :product, customer: other_customer, name: 'zzz' }
     let(:other_company_product) { Fabricate :product, customer: other_company_customer, name: 'zzz' }
 
-    let(:project) { Fabricate :project, start_date: 4.weeks.ago, customer: customer, product: product }
-    let(:other_project) { Fabricate :project, start_date: 4.weeks.ago, customer: customer, product: product }
-    let(:other_customer_project) { Fabricate :project, start_date: 4.weeks.ago, customer: other_customer, product: other_product }
-    let(:other_company_project) { Fabricate :project, start_date: 4.weeks.ago, customer: other_company_customer, product: other_company_product }
+    let(:project) { Fabricate :project, start_date: 4.weeks.ago, end_date: 4.weeks.from_now, customer: customer, product: product }
+    let(:other_project) { Fabricate :project, start_date: 4.weeks.ago, end_date: 4.weeks.from_now, customer: customer, product: product }
+    let(:other_customer_project) { Fabricate :project, start_date: 4.weeks.ago, end_date: 4.weeks.from_now, customer: other_customer, product: other_product }
+    let(:other_company_project) { Fabricate :project, start_date: 4.weeks.ago, end_date: 4.weeks.from_now, customer: other_company_customer, product: other_company_product }
 
     let!(:first_result) { Fabricate :project_result, project: project, result_date: 1.week.ago, known_scope: 10 }
     let!(:second_result) { Fabricate :project_result, project: project, result_date: 2.weeks.ago, known_scope: 20 }
@@ -189,10 +189,10 @@ RSpec.describe Company, type: :model do
     let(:other_product) { Fabricate :product, customer: other_customer, name: 'zzz' }
     let(:other_company_product) { Fabricate :product, customer: other_company_customer, name: 'zzz' }
 
-    let(:project) { Fabricate :project, end_date: 4.weeks.from_now, customer: customer, product: product }
-    let(:other_project) { Fabricate :project, start_date: 4.weeks.ago, customer: customer, product: product }
-    let(:other_customer_project) { Fabricate :project, end_date: 4.weeks.from_now, customer: other_customer, product: other_product }
-    let(:other_company_project) { Fabricate :project, end_date: 4.weeks.from_now, customer: other_company_customer, product: other_company_product }
+    let(:project) { Fabricate :project, start_date: 4.weeks.ago, end_date: 4.weeks.from_now, customer: customer, product: product }
+    let(:other_project) { Fabricate :project, start_date: 4.weeks.ago, end_date: 4.weeks.from_now, customer: customer, product: product }
+    let(:other_customer_project) { Fabricate :project, start_date: 4.weeks.ago, end_date: 4.weeks.from_now, customer: other_customer, product: other_product }
+    let(:other_company_project) { Fabricate :project, start_date: 4.weeks.ago, end_date: 4.weeks.from_now, customer: other_company_customer, product: other_company_product }
 
     let!(:first_result) { Fabricate :project_result, project: project, result_date: 1.day.ago, known_scope: 10 }
     let!(:second_result) { Fabricate :project_result, project: project, result_date: Time.zone.today, known_scope: 20 }
@@ -237,10 +237,10 @@ RSpec.describe Company, type: :model do
     let(:other_product) { Fabricate :product, customer: other_customer, name: 'zzz' }
     let(:other_company_product) { Fabricate :product, customer: other_company_customer, name: 'zzz' }
 
-    let(:project) { Fabricate :project, start_date: 4.months.ago, customer: customer, product: product }
-    let(:other_project) { Fabricate :project, start_date: 4.months.ago, customer: customer, product: product }
-    let(:other_customer_project) { Fabricate :project, start_date: 4.months.ago, customer: other_product.customer, product: other_product }
-    let(:other_company_project) { Fabricate :project, start_date: 4.months.ago, customer: other_company_product.customer, product: other_company_product }
+    let(:project) { Fabricate :project, start_date: 4.months.ago, end_date: 4.weeks.from_now, customer: customer, product: product }
+    let(:other_project) { Fabricate :project, start_date: 4.months.ago, end_date: 4.weeks.from_now, customer: customer, product: product }
+    let(:other_customer_project) { Fabricate :project, start_date: 4.months.ago, end_date: 4.weeks.from_now, customer: other_product.customer, product: other_product }
+    let(:other_company_project) { Fabricate :project, start_date: 4.months.ago, end_date: 4.weeks.from_now, customer: other_company_product.customer, product: other_company_product }
 
     let!(:first_result) { Fabricate :project_result, project: project, result_date: 1.month.ago, throughput_upstream: 10, throughput_downstream: 15 }
     let!(:second_result) { Fabricate :project_result, project: project, result_date: 1.month.ago, throughput_upstream: 20, throughput_downstream: 25 }

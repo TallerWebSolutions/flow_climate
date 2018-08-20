@@ -44,6 +44,7 @@ class Project < ApplicationRecord
   has_many :project_risk_configs, dependent: :destroy
   has_many :project_risk_alerts, dependent: :destroy
   has_many :demands, dependent: :destroy
+  has_many :demand_blocks, through: :demands
   has_many :integration_errors, dependent: :destroy
   has_many :project_change_deadline_histories, dependent: :destroy
   has_many :stage_project_configs, dependent: :destroy
@@ -294,6 +295,11 @@ class Project < ApplicationRecord
   def percentage_chores
     return 0 if demands.kept.count.zero?
     (demands.kept.chore.count.to_f / demands.kept.count.to_f) * 100
+  end
+
+  def average_block_duration
+    return 0 if demands.blank? || demand_blocks.blank?
+    demand_blocks.kept.average(:block_duration)
   end
 
   private

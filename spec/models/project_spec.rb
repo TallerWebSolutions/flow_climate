@@ -13,6 +13,7 @@ RSpec.describe Project, type: :model do
     it { is_expected.to have_many(:project_risk_configs).dependent(:destroy) }
     it { is_expected.to have_many(:project_risk_alerts).dependent(:destroy) }
     it { is_expected.to have_many(:demands).dependent(:destroy) }
+    it { is_expected.to have_many(:demand_blocks).through(:demands) }
     it { is_expected.to have_many(:stage_project_configs) }
     it { is_expected.to have_many(:stages).through(:stage_project_configs) }
     it { is_expected.to have_one(:pipefy_config).dependent(:destroy) }
@@ -972,6 +973,28 @@ RSpec.describe Project, type: :model do
       let!(:bug_demand) { Fabricate :demand, demand_type: :bug, project: project }
 
       it { expect(project.percentage_chores).to eq 25 }
+    end
+  end
+
+  describe '#average_block_duration' do
+    let(:project) { Fabricate :project }
+
+    context 'having blocks' do
+      let(:demand) { Fabricate :demand, demand_type: :bug, project: project }
+      let!(:discarded_demand_block) { Fabricate :demand_block, demand: demand, discarded_at: 1.day.ago, block_duration: 100 }
+      let!(:demand_block) { Fabricate :demand_block, demand: demand, block_duration: 10 }
+      let!(:other_demand_block) { Fabricate :demand_block, demand: demand, block_duration: 20 }
+
+      it { expect(project.average_block_duration).to eq 15 }
+    end
+    context 'having no demands' do
+      it { expect(project.average_block_duration).to eq 0 }
+    end
+    context 'having no valid blocks' do
+      let(:demand) { Fabricate :demand, demand_type: :bug, project: project }
+      let!(:discarded_demand_block) { Fabricate :demand_block, demand: demand, discarded_at: 1.day.ago, block_duration: 100 }
+
+      it { expect(project.percentage_chores).to eq 0 }
     end
   end
 end

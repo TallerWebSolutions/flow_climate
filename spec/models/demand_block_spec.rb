@@ -77,4 +77,15 @@ RSpec.describe DemandBlock, type: :model do
     before { demand_block.deactivate! }
     it { expect(demand_block.active?).to be false }
   end
+
+  describe '#unblocked?' do
+    context 'when it was unblocked' do
+      let(:demand_block) { Fabricate :demand_block, active: true, unblock_time: Time.zone.now }
+      it { expect(demand_block.unblocked?).to be true }
+    end
+    context 'when it still blocked' do
+      let(:demand_block) { Fabricate :demand_block, active: true, unblock_time: nil }
+      it { expect(demand_block.unblocked?).to be false }
+    end
+  end
 end

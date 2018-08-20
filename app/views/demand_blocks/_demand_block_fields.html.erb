@@ -14,15 +14,15 @@
 </td>
 <td>
   <% if block.active? %>
-    <%= link_to deactivate_company_project_demand_demand_block_path(@company, @project, @demand, block), method: :patch do %>
+    <%= link_to deactivate_company_project_demand_demand_block_path(@company, @project, block.demand, block), method: :patch do %>
       <i class="fa fa-ban"></i>
     <% end %>
   <% else %>
-    <%= link_to activate_company_project_project_result_demand_demand_block_path(@company, @project, @demand, block), method: :patch do %>
+    <%= link_to activate_company_project_project_result_demand_demand_block_path(@company, @project, block.demand, block), method: :patch do %>
       <i class="fa fa-check"></i>
     <% end %>
   <% end %>
-  <%= link_to edit_company_project_demand_demand_block_path(@company, @project, @demand, block), class: 'edit-block', remote: true do %>
+  <%= link_to edit_company_project_demand_demand_block_path(@company, @project, block.demand, block), class: 'edit-block', remote: true do %>
     <i class="fas fa-edit"></i>
   <% end %>
 </td>

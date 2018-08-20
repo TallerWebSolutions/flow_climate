@@ -168,7 +168,8 @@ CREATE TABLE public.demand_blocks (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     active boolean DEFAULT true NOT NULL,
-    block_type integer DEFAULT 0 NOT NULL
+    block_type integer DEFAULT 0 NOT NULL,
+    discarded_at timestamp without time zone
 );
 
 
@@ -2089,6 +2090,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20180620014718'),
 ('20180627232834'),
 ('20180703233113'),
-('20180731181345');
+('20180731181345'),
+('20180820175021');
 
 

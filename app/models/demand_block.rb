@@ -13,6 +13,7 @@
 #  created_at         :datetime         not null
 #  demand_block_id    :integer          not null
 #  demand_id          :integer          not null, indexed
+#  discarded_at       :datetime
 #  id                 :bigint(8)        not null, primary key
 #  unblock_reason     :string
 #  unblock_time       :datetime
@@ -29,6 +30,8 @@
 #
 
 class DemandBlock < ApplicationRecord
+  include Discard::Model
+
   enum block_type: { coding_needed: 0, specification_needed: 1, waiting_external_supplier: 2, customer_low_urgency: 3, integration_needed: 4, customer_unavailable: 5 }
 
   belongs_to :demand
@@ -48,6 +51,10 @@ class DemandBlock < ApplicationRecord
 
   def deactivate!
     update(active: false)
+  end
+
+  def unblocked?
+    unblock_time.present?
   end
 
   private

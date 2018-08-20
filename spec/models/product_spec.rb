@@ -85,8 +85,8 @@ RSpec.describe Product, type: :model do
     let(:other_product) { Fabricate :product, name: 'zzz' }
 
     let(:project) { Fabricate :project, start_date: 4.weeks.ago, end_date: 3.weeks.from_now, customer: product.customer, product: product }
-    let(:other_project) { Fabricate :project, customer: product.customer, product: product }
-    let(:other_product_project) { Fabricate :project, customer: other_product.customer, product: other_product }
+    let(:other_project) { Fabricate :project, start_date: 4.weeks.ago, end_date: 3.weeks.from_now, customer: product.customer, product: product }
+    let(:other_product_project) { Fabricate :project, customer: other_product.customer, product: other_product, start_date: 4.weeks.ago, end_date: 3.weeks.from_now }
 
     let!(:first_result) { Fabricate :project_result, project: project, result_date: 1.week.ago, known_scope: 10 }
     let!(:second_result) { Fabricate :project_result, project: project, result_date: Time.zone.today, known_scope: 20 }

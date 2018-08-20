@@ -158,6 +158,8 @@ RSpec.describe Demand, type: :model do
     let(:demand) { Fabricate :demand }
     let!(:demand_transtion) { Fabricate :demand_transition, demand: demand }
     let!(:other_demand_transtion) { Fabricate :demand_transition, demand: demand }
+    let!(:demand_block) { Fabricate :demand_block, demand: demand }
+    let!(:other_demand_block) { Fabricate :demand_block, demand: demand }
 
     describe '#discard' do
       it 'also discards the transitions' do
@@ -165,6 +167,9 @@ RSpec.describe Demand, type: :model do
         expect(demand.reload.discarded_at).not_to be_nil
         expect(demand_transtion.reload.discarded_at).not_to be_nil
         expect(other_demand_transtion.reload.discarded_at).not_to be_nil
+
+        expect(demand_block.reload.discarded_at).not_to be_nil
+        expect(other_demand_block.reload.discarded_at).not_to be_nil
       end
     end
 
@@ -173,8 +178,12 @@ RSpec.describe Demand, type: :model do
       it 'also undiscards the transitions' do
         demand.undiscard
         expect(demand.reload.discarded_at).to be_nil
+
         expect(demand_transtion.reload.discarded_at).to be_nil
         expect(other_demand_transtion.reload.discarded_at).to be_nil
+
+        expect(demand_block.reload.discarded_at).to be_nil
+        expect(other_demand_block.reload.discarded_at).to be_nil
       end
     end
   end

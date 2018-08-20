@@ -1,0 +1,11 @@
+<div class="modal-dialog modal-lg">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+      <h4 class="modal-title" id="indexBlocks"><%= t('demand_blocks.index.title') %></h4>
+    </div>
+    <div class="modal-body">
+      <%= render 'demand_blocks/demand_blocks_table_reduced', demand_blocks_list: @project.demand_blocks %>
+    </div>
+  </div>
+</div>

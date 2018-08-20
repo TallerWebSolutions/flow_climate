@@ -19,6 +19,8 @@
         <th><%= Project.human_attribute_name :end_date %></th>
         <th><%= Project.human_attribute_name :status %></th>
         <th><%= Project.human_attribute_name :project_type %></th>
+        <th><%= t('projects.show.demand_blocks_count') %></th>
+        <th><%= t('projects.show.demand_blocks_duration_average') %></th>
         <th><%= t('projects.show.demands_count') %></th>
         <th><%= t('projects.show.features_count') %></th>
         <th><%= t('projects.show.bugs_count') %></th>
@@ -51,6 +53,12 @@
           <td><%= l(project.end_date) %></td>
           <td><%= t("activerecord.attributes.project.enums.status.#{project.status}") %></td>
           <td><%= t("activerecord.attributes.project.enums.project_type.#{project.project_type}") %></td>
+          <td>
+            <%= link_to company_project_demand_blocks_path(@company, project), class: 'list-block', remote: true do %>
+              <%= project.demand_blocks.kept.count %>
+            <% end %>
+          </td>
+          <td><%= number_with_precision(project.average_block_duration, precision: 2) %>h</td>
           <td><%= project.demands.kept.count %></td>
           <td><%= project.demands.kept.feature.count %><small> (<%= number_with_precision(project.percentage_features, precision: 2) %>%)</small></td>
           <td><%= project.demands.kept.bug.count %><small> (<%= number_with_precision(project.percentage_bugs, precision: 2) %>%)</small></td>
@@ -69,4 +77,10 @@
       <% end %>
     </tbody>
   </table>
+<% end %>
+
+<div class="modal fade" id="list-blocks-page" tabindex="-1" role="dialog" aria-labelledby="list-blocks-page" aria-hidden="true"></div>
+
+<% content_for :javascript do %>
+  <%= javascript_include_tag 'demand_blocks/list_modal' %>
 <% end %>
