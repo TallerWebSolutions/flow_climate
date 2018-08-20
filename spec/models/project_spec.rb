@@ -975,4 +975,26 @@ RSpec.describe Project, type: :model do
       it { expect(project.percentage_chores).to eq 25 }
     end
   end
+
+  describe '#average_block_duration' do
+    let(:project) { Fabricate :project }
+
+    context 'having blocks' do
+      let(:demand) { Fabricate :demand, demand_type: :bug, project: project }
+      let!(:discarded_demand_block) { Fabricate :demand_block, demand: demand, discarded_at: 1.day.ago, block_duration: 100 }
+      let!(:demand_block) { Fabricate :demand_block, demand: demand, block_duration: 10 }
+      let!(:other_demand_block) { Fabricate :demand_block, demand: demand, block_duration: 20 }
+
+      it { expect(project.average_block_duration).to eq 15 }
+    end
+    context 'having no demands' do
+      it { expect(project.average_block_duration).to eq 0 }
+    end
+    context 'having no valid blocks' do
+      let(:demand) { Fabricate :demand, demand_type: :bug, project: project }
+      let!(:discarded_demand_block) { Fabricate :demand_block, demand: demand, discarded_at: 1.day.ago, block_duration: 100 }
+
+      it { expect(project.percentage_chores).to eq 0 }
+    end
+  end
 end

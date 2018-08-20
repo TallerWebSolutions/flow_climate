@@ -297,6 +297,11 @@ class Project < ApplicationRecord
     (demands.kept.chore.count.to_f / demands.kept.count.to_f) * 100
   end
 
+  def average_block_duration
+    return 0 if demands.blank? || demand_blocks.blank?
+    demand_blocks.kept.average(:block_duration)
+  end
+
   private
 
   def no_pressure_set(date)

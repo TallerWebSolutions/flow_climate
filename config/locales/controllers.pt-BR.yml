@@ -172,6 +172,7 @@ pt-BR:
       features_count: "Qtd Features"
       chore_count: "Qtd Tarefas Técnicas"
       demand_blocks_count: "Qtd Bloqueios"
+      demand_blocks_duration_average: "Duração Média dos Bloqueios"
     charts:
       xlabel:
         weeks: "Semanas"
