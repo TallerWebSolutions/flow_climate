@@ -74,8 +74,8 @@ class Demand < ApplicationRecord
   delegate :full_name, to: :project, prefix: true
 
   before_save :compute_and_update_automatic_fields
-  after_discard :discard_transitions
-  after_undiscard :undiscard_transitions
+  after_discard :discard_transitions_and_blocks
+  after_undiscard :undiscard_transitions_and_blocks
 
   def self.to_csv
     CSV.generate do |csv|
@@ -201,11 +201,13 @@ class Demand < ApplicationRecord
     self.leadtime = end_date - commitment_date if commitment_date.present? && end_date.present?
   end
 
-  def discard_transitions
+  def discard_transitions_and_blocks
     demand_transitions.discard_all
+    demand_blocks.discard_all
   end
 
-  def undiscard_transitions
+  def undiscard_transitions_and_blocks
     demand_transitions.undiscard_all
+    demand_blocks.undiscard_all
   end
 end

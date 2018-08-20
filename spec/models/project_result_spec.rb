@@ -43,32 +43,34 @@ RSpec.describe ProjectResult, type: :model do
   end
 
   context 'scopes' do
+    let(:project) { Fabricate :project, start_date: 4.weeks.ago, end_date: 3.months.from_now }
+
     describe '.for_week' do
-      let!(:first_result) { Fabricate :project_result, result_date: 2.weeks.ago }
-      let!(:second_result) { Fabricate :project_result, result_date: 2.weeks.ago }
-      let!(:third_result) { Fabricate :project_result, result_date: 1.week.ago }
+      let!(:first_result) { Fabricate :project_result, project: project, result_date: 2.weeks.ago }
+      let!(:second_result) { Fabricate :project_result, project: project, result_date: 2.weeks.ago }
+      let!(:third_result) { Fabricate :project_result, project: project, result_date: 1.week.ago }
       it { expect(ProjectResult.for_week(2.weeks.ago.to_date.cweek, 2.weeks.ago.to_date.cwyear)).to match_array [first_result, second_result] }
     end
     describe '.until_week' do
-      let!(:first_result) { Fabricate :project_result, result_date: 2.weeks.ago }
-      let!(:second_result) { Fabricate :project_result, result_date: 1.week.ago }
-      let!(:third_result) { Fabricate :project_result, result_date: 3.weeks.ago }
-      let!(:fourth_result) { Fabricate :project_result, result_date: Time.zone.today }
+      let!(:first_result) { Fabricate :project_result, project: project, result_date: 2.weeks.ago }
+      let!(:second_result) { Fabricate :project_result, project: project, result_date: 1.week.ago }
+      let!(:third_result) { Fabricate :project_result, project: project, result_date: 3.weeks.ago }
+      let!(:fourth_result) { Fabricate :project_result, project: project, result_date: Time.zone.today }
       it { expect(ProjectResult.until_week(1.week.ago.to_date.cweek, 1.week.ago.to_date.cwyear)).to match_array [first_result, second_result, third_result] }
     end
     describe '.until_month' do
-      let!(:first_result) { Fabricate :project_result, result_date: 2.months.ago }
-      let!(:second_result) { Fabricate :project_result, result_date: 1.month.ago }
-      let!(:third_result) { Fabricate :project_result, result_date: 3.months.ago }
-      let!(:fourth_result) { Fabricate :project_result, result_date: Time.zone.today }
+      let!(:first_result) { Fabricate :project_result, project: project, result_date: 2.months.ago }
+      let!(:second_result) { Fabricate :project_result, project: project, result_date: 1.month.ago }
+      let!(:third_result) { Fabricate :project_result, project: project, result_date: 3.months.ago }
+      let!(:fourth_result) { Fabricate :project_result, project: project, result_date: Time.zone.today }
       it { expect(ProjectResult.until_month(1.month.ago.to_date.month, 1.month.ago.to_date.year)).to match_array [first_result, second_result, third_result] }
     end
 
     describe '.in_month' do
-      let(:first_result) { Fabricate :project_result, result_date: 2.months.ago }
-      let(:second_result) { Fabricate :project_result, result_date: 1.month.ago }
-      let(:third_result) { Fabricate :project_result, result_date: 1.month.ago }
-      let(:fourth_result) { Fabricate :project_result, result_date: 3.months.ago }
+      let(:first_result) { Fabricate :project_result, project: project, result_date: 2.months.ago }
+      let(:second_result) { Fabricate :project_result, project: project, result_date: 1.month.ago }
+      let(:third_result) { Fabricate :project_result, project: project, result_date: 1.month.ago }
+      let(:fourth_result) { Fabricate :project_result, project: project, result_date: 3.months.ago }
       it { expect(ProjectResult.in_month(1.month.ago)).to match_array [second_result, third_result] }
     end
   end
