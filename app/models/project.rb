@@ -295,6 +295,11 @@ class Project < ApplicationRecord
     Stats::StatisticsService.instance.percentile(desired_percentile, demands_in_class_of_service.map(&:leadtime))
   end
 
+  def leadtime_for_demand_type(demand_type, desired_percentile = 80)
+    demands_in_type = demands.kept.send(demand_type).finished
+    Stats::StatisticsService.instance.percentile(desired_percentile, demands_in_type.map(&:leadtime))
+  end
+
   private
 
   def no_pressure_set(date)

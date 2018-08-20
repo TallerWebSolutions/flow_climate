@@ -132,6 +132,8 @@ pt-BR:
       risk_alerts: "Alertas de Risco"
       maintenance_filter: "Manutenção"
       passed_time: "Tempo Decorrido"
+      leadtime:
+        title: "Leadtime em dias"
     show:
       initial_scope: "Escopo Inicial"
       last_team: "Time atual"

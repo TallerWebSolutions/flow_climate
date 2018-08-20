@@ -97,6 +97,13 @@ en:
             standard: "Standard"
             fixed_date: "Fixed Date"
             intangible: "Intangible"
+          demand_type:
+            feature: "Feature"
+            bug: "Bug"
+            performance_improvement: "Performance Improvement"
+            chore: "Chore"
+            ui: "UI"
+            wireframe: "Wireframe"
     errors:
       messages:
         record_invalid: 'Validation failed: %{errors}'

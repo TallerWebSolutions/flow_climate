@@ -34,6 +34,10 @@ RSpec.describe ProjectsController, type: :controller do
       before { get :search_for_projects, params: { company_id: 'foo', status_filter: :executing }, xhr: true }
       it { expect(response.status).to eq 401 }
     end
+    describe 'GET #statistics' do
+      before { get :statistics, params: { company_id: 'foo', id: 'foo' }, xhr: true }
+      it { expect(response.status).to eq 401 }
+    end
     describe 'DELETE #destroy' do
       before { delete :destroy, params: { company_id: 'foo', id: 'bar' } }
       it { expect(response).to redirect_to new_user_session_path }
@@ -710,6 +714,31 @@ RSpec.describe ProjectsController, type: :controller do
         context 'not permitted company' do
           let(:company) { Fabricate :company, users: [] }
           before { get :search_demands_by_flow_status, params: { company_id: company, id: first_project }, xhr: true }
+          it { expect(response).to have_http_status :not_found }
+        end
+      end
+    end
+
+    describe 'GET #statistics' do
+      let(:company) { Fabricate :company, users: [user] }
+      let(:customer) { Fabricate :customer, company: company }
+      let!(:project) { Fabricate :project, customer: customer }
+
+      context 'passing valid parameters' do
+        before { get :statistics, params: { company_id: company, id: project }, xhr: true }
+        it 'assigns the instance variable and renders the template' do
+          expect(project).to eq project
+          expect(company).to eq company
+          expect(response).to render_template 'projects/project_statistics.js.erb'
+        end
+      end
+      context 'passing invalid' do
+        context 'company' do
+          before { get :statistics, params: { company_id: 'foo', id: project }, xhr: true }
+          it { expect(response).to have_http_status :not_found }
+        end
+        context 'project' do
+          before { get :statistics, params: { company_id: company, id: 'foo' }, xhr: true }
           it { expect(response).to have_http_status :not_found }
         end
       end

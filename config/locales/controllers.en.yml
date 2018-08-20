@@ -132,6 +132,8 @@ en:
       risk_alerts: "Risk Alerts"
       maintenance_filter: "Maintenance"
       passed_time: "Time Passed"
+      leadtime:
+        title: "Leadtime in days"
     show:
       initial_scope: "Initial Scope"
       last_team: "Current team"

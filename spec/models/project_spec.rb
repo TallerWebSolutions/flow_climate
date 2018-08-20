@@ -979,4 +979,22 @@ RSpec.describe Project, type: :model do
       it { expect(project.leadtime_for_class_of_service(:standard)).to eq 0 }
     end
   end
+
+  describe '#leadtime_for_demand_type' do
+    let(:project) { Fabricate :project }
+
+    context 'having demands' do
+      let!(:expedite_demand) { Fabricate :demand, demand_type: :bug, project: project, end_date: Time.zone.today, leadtime: 100 }
+      let!(:other_expedite_demand) { Fabricate :demand, demand_type: :bug, project: project, end_date: Time.zone.today, leadtime: 80 }
+      let!(:standard_demand) { Fabricate :demand, demand_type: :feature, project: project, end_date: Time.zone.today, leadtime: 80 }
+      it { expect(project.leadtime_for_demand_type(:bug).to_f).to eq 96.0 }
+      it { expect(project.leadtime_for_demand_type(:bug, 60).to_f).to eq 92.0 }
+    end
+    context 'having no demands' do
+      let!(:expedite_demand) { Fabricate :demand, demand_type: :bug, project: project, end_date: Time.zone.today, leadtime: 100 }
+      let!(:other_expedite_demand) { Fabricate :demand, demand_type: :bug, project: project, end_date: Time.zone.today, leadtime: 80 }
+
+      it { expect(project.leadtime_for_demand_type(:feature)).to eq 0 }
+    end
+  end
 end
