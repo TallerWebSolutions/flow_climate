@@ -20,6 +20,9 @@
         <th><%= Project.human_attribute_name :status %></th>
         <th><%= Project.human_attribute_name :project_type %></th>
         <th><%= t('projects.show.demands_count') %></th>
+        <th><%= t('projects.show.features_count') %></th>
+        <th><%= t('projects.show.bugs_count') %></th>
+        <th><%= t('projects.show.chore_count') %></th>
         <th><%= t('projects.show.leadtime_80_confidence') %></th>
         <th><%= t('projects.show.throughput') %></th>
         <th><%= t('projects.show.scope_gap') %></th>
@@ -49,6 +52,9 @@
           <td><%= t("activerecord.attributes.project.enums.status.#{project.status}") %></td>
           <td><%= t("activerecord.attributes.project.enums.project_type.#{project.project_type}") %></td>
           <td><%= project.demands.kept.count %></td>
+          <td><%= project.demands.kept.feature.count %><small> (<%= number_with_precision(project.percentage_features, precision: 2) %>%)</small></td>
+          <td><%= project.demands.kept.bug.count %><small> (<%= number_with_precision(project.percentage_bugs, precision: 2) %>%)</small></td>
+          <td><%= project.demands.kept.chore.count %><small> (<%= number_with_precision(project.percentage_chores, precision: 2) %>%)</small></td>
           <td><%= time_distance_in_words(project.current_leadtime_80_confidence) %></td>
           <td><%= number_with_precision(project.total_throughput_for(1.week.ago), precision: 0) %></td>
           <td><%= number_with_precision(project.total_gap, precision: 0) %></td>

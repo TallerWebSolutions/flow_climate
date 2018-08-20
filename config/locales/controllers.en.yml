@@ -168,6 +168,9 @@ en:
       throughput: "Last Week Throughput"
       leadtime_80_confidence: "Leadtime 80%"
       demands_count: "Demands Count"
+      bugs_count: "Bugs Count"
+      features_count: "Features Count"
+      chore_count: "Chore Count"
     charts:
       xlabel:
         weeks: "Weeks"
