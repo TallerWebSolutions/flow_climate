@@ -252,6 +252,8 @@ en:
         ylabel: "Hours"
         legend:
           leadtime_80_confidence: "80% Confidence"
+      class_of_service_pie:
+        title: "Share of Classes of Service"
     project_risk_alert_table: "Risk alerts to the project"
     project_risk_configs:
       title: "Risk Configurations"

@@ -304,6 +304,26 @@ class Project < ApplicationRecord
     demand_blocks.kept.active
   end
 
+  def percentage_expedite
+    return 0 if demands.kept.count.zero?
+    (demands.kept.expedite.count.to_f / demands.kept.count.to_f) * 100
+  end
+
+  def percentage_standard
+    return 0 if demands.kept.count.zero?
+    (demands.kept.standard.count.to_f / demands.kept.count.to_f) * 100
+  end
+
+  def percentage_fixed_date
+    return 0 if demands.kept.count.zero?
+    (demands.kept.fixed_date.count.to_f / demands.kept.count.to_f) * 100
+  end
+
+  def percentage_intangible
+    return 0 if demands.kept.count.zero?
+    (demands.kept.intangible.count.to_f / demands.kept.count.to_f) * 100
+  end
+
   private
 
   def no_pressure_set(date)

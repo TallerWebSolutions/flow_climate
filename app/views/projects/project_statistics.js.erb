@@ -1,1 +1,11 @@
-$("#project-statistics-page").html("<%= escape_javascript(render 'projects/statistics', company_id: @company, project_id: @project) %>");
+var statsModal = $("#project-statistics-page").modal({
+    show: false
+});
+
+statsModal.html("<%= escape_javascript(render 'projects/statistics', company_id: @company, project_id: @project) %>");
+
+statsModal.on('show.bs.modal', function(){
+    buildDemandClassificationHighcharts();
+});
+
+statsModal.modal("show");
