@@ -2,7 +2,8 @@ function buildDonutChart(donutDiv) {
     new Highcharts.Chart({
         chart: {
             renderTo: donutDiv.attr('id'),
-            type: 'pie'
+            type: 'pie',
+            height: donutDiv.data('chart_height')
         },
         title: {
             text: donutDiv.data('title')
@@ -21,14 +22,19 @@ function buildDonutChart(donutDiv) {
                 allowPointSelect: true,
                 cursor: 'pointer',
                 dataLabels: {
-                    enabled: false
+                    enabled: true,
+                    format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                    style: {
+                        color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                    }
                 }
             }
         },
         series: [{
             name: donutDiv.data('seriesname'),
+            colorByPoint: true,
             data: donutDiv.data('series'),
-            size: '100%',
+            size: '80%',
             innerSize: '40%'
         }]
     })

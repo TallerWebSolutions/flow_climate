@@ -13,6 +13,15 @@ namespace :project_migration do
     ## NxCF
     Jira::ProjectJiraConfig.create(project: Project.find(60), team: Project.find(60).current_team, jira_account_domain: 'tallerflow', jira_project_key: '10002')
 
+    ## ADF
+    Jira::ProjectJiraConfig.create(project: Project.find(68), team: Project.find(68).current_team, jira_account_domain: 'tallerflow', jira_project_key: '')
+
+    # UNICEF
+    Jira::ProjectJiraConfig.create(project: Project.find(117), team: Project.find(68).current_team, jira_account_domain: 'tallerflow', jira_project_key: '10006')
+
+    # COBNET
+    Jira::ProjectJiraConfig.create(project: Project.find(36), team: Project.find(36).current_team, jira_account_domain: 'tallerflow', jira_project_key: '10004')
+
     ## Stages
     Stage.find(12).update(integration_id: '10012')
     Stage.find(14).update(integration_id: '10014')

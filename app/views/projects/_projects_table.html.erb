@@ -81,6 +81,7 @@
 <div class="modal fade" id="project-statistics-page" tabindex="-1" role="dialog" aria-labelledby="project-statistics-page" aria-hidden="true"></div>
 
 <% content_for :javascript do %>
+  <%= javascript_include_tag 'charts/donut' %>
+  <%= javascript_include_tag 'projects/demand_classification_charts' %>
   <%= javascript_include_tag 'demand_blocks/list_modal' %>
-  <%= javascript_include_tag 'projects/statistics_modal' %>
 <% end %>

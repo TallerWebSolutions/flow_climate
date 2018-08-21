@@ -252,6 +252,8 @@ pt-BR:
         ylabel: "Horas"
         legend:
           leadtime_80_confidence: "80% de Confiança"
+      class_of_service_pie:
+        title: "Percentual das Classes de Serviço"
     project_risk_alert_table: "Alertas de risco para o projeto"
     portfolio_bulletin:
       delivered_demands: "Demandas entregues na última semana"

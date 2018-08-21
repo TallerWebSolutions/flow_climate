@@ -921,7 +921,7 @@ RSpec.describe Project, type: :model do
 
   describe '#percentage_chores' do
     let(:project) { Fabricate :project }
-    context 'when there is no features' do
+    context 'when there is no chores' do
       let!(:bug_demand) { Fabricate :demand, demand_type: :bug, project: project }
       let!(:feature_demand) { Fabricate :demand, demand_type: :feature, project: project }
 
@@ -930,7 +930,7 @@ RSpec.describe Project, type: :model do
     context 'when there is no demands' do
       it { expect(project.percentage_chores).to eq 0 }
     end
-    context 'when there is bugs' do
+    context 'when there is chores' do
       let!(:feature_demand) { Fabricate :demand, demand_type: :feature, project: project }
       let!(:other_feature_demand) { Fabricate :demand, demand_type: :feature, project: project }
       let!(:chore_demand) { Fabricate :demand, demand_type: :chore, project: project }
@@ -1023,6 +1023,90 @@ RSpec.describe Project, type: :model do
 
     context 'having no blocks' do
       it { expect(project.active_and_kept_blocks).to eq [] }
+    end
+  end
+
+  describe '#percentage_expedite' do
+    let(:project) { Fabricate :project }
+    context 'when there is no expedites' do
+      let!(:intangible_demand) { Fabricate :demand, class_of_service: :intangible, project: project }
+      let!(:fixed_date_demand) { Fabricate :demand, class_of_service: :fixed_date, project: project }
+
+      it { expect(project.percentage_expedite).to eq 0 }
+    end
+    context 'when there is no demands' do
+      it { expect(project.percentage_expedite).to eq 0 }
+    end
+    context 'when there is expedites' do
+      let!(:intangible_demand) { Fabricate :demand, class_of_service: :intangible, project: project }
+      let!(:fixed_date_demand) { Fabricate :demand, class_of_service: :fixed_date, project: project }
+      let!(:standard_demand) { Fabricate :demand, class_of_service: :standard, project: project }
+      let!(:expedite_demand) { Fabricate :demand, class_of_service: :expedite, project: project }
+
+      it { expect(project.percentage_expedite).to eq 25 }
+    end
+  end
+
+  describe '#percentage_standard' do
+    let(:project) { Fabricate :project }
+    context 'when there is no standards' do
+      let!(:intangible_demand) { Fabricate :demand, class_of_service: :intangible, project: project }
+      let!(:fixed_date_demand) { Fabricate :demand, class_of_service: :fixed_date, project: project }
+
+      it { expect(project.percentage_standard).to eq 0 }
+    end
+    context 'when there is no demands' do
+      it { expect(project.percentage_standard).to eq 0 }
+    end
+    context 'when there is standard' do
+      let!(:intangible_demand) { Fabricate :demand, class_of_service: :intangible, project: project }
+      let!(:fixed_date_demand) { Fabricate :demand, class_of_service: :fixed_date, project: project }
+      let!(:standard_demand) { Fabricate :demand, class_of_service: :standard, project: project }
+      let!(:expedite_demand) { Fabricate :demand, class_of_service: :expedite, project: project }
+
+      it { expect(project.percentage_standard).to eq 25 }
+    end
+  end
+
+  describe '#percentage_intangible' do
+    let(:project) { Fabricate :project }
+    context 'when there is no intangibles' do
+      let!(:standard_demand) { Fabricate :demand, class_of_service: :standard, project: project }
+      let!(:fixed_date_demand) { Fabricate :demand, class_of_service: :fixed_date, project: project }
+
+      it { expect(project.percentage_intangible).to eq 0 }
+    end
+    context 'when there is no demands' do
+      it { expect(project.percentage_intangible).to eq 0 }
+    end
+    context 'when there is intangible' do
+      let!(:intangible_demand) { Fabricate :demand, class_of_service: :intangible, project: project }
+      let!(:fixed_date_demand) { Fabricate :demand, class_of_service: :fixed_date, project: project }
+      let!(:standard_demand) { Fabricate :demand, class_of_service: :standard, project: project }
+      let!(:expedite_demand) { Fabricate :demand, class_of_service: :expedite, project: project }
+
+      it { expect(project.percentage_intangible).to eq 25 }
+    end
+  end
+
+  describe '#percentage_fixed_date' do
+    let(:project) { Fabricate :project }
+    context 'when there is no fixed_dates' do
+      let!(:standard_demand) { Fabricate :demand, class_of_service: :standard, project: project }
+      let!(:intangible_demand) { Fabricate :demand, class_of_service: :intangible, project: project }
+
+      it { expect(project.percentage_fixed_date).to eq 0 }
+    end
+    context 'when there is no demands' do
+      it { expect(project.percentage_fixed_date).to eq 0 }
+    end
+    context 'when there is fixed dates' do
+      let!(:intangible_demand) { Fabricate :demand, class_of_service: :intangible, project: project }
+      let!(:fixed_date_demand) { Fabricate :demand, class_of_service: :fixed_date, project: project }
+      let!(:standard_demand) { Fabricate :demand, class_of_service: :standard, project: project }
+      let!(:expedite_demand) { Fabricate :demand, class_of_service: :expedite, project: project }
+
+      it { expect(project.percentage_fixed_date).to eq 25 }
     end
   end
 end
