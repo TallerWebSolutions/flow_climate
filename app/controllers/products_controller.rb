@@ -11,8 +11,10 @@ class ProductsController < AuthenticatedController
   def show
     @product_projects = @product.projects.order(end_date: :desc)
     @projects_summary = ProjectsSummaryData.new(@product.projects)
-    @report_data = Highchart::OperationalChartsAdapter.new(@product_projects, 'all') if @product_projects.present?
-    @status_report_data = Highchart::StatusReportChartsAdapter.new(@product_projects, 'all') if @product_projects.present?
+    return render :show if @product_projects.blank?
+    @report_data = Highchart::OperationalChartsAdapter.new(@product_projects, 'all')
+    @status_report_data = Highchart::StatusReportChartsAdapter.new(@product_projects, 'all')
+    @montecarlo_dates = @status_report_data.monte_carlo_data
   end
 
   def new
