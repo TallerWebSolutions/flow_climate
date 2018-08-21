@@ -54,7 +54,7 @@
           <td><%= t("activerecord.attributes.project.enums.project_type.#{project.project_type}") %></td>
           <td>
             <%= link_to company_project_demand_blocks_path(@company, project), class: 'list-block', remote: true do %>
-              <%= project.demand_blocks.kept.count %>
+              <%= project.active_and_kept_blocks.count %>
             <% end %>
           </td>
           <td><%= number_with_precision(project.average_block_duration, precision: 2) %>h</td>
