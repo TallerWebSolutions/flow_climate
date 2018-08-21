@@ -287,7 +287,7 @@ class Project < ApplicationRecord
 
   def average_block_duration
     return 0 if demands.blank? || demand_blocks.blank?
-    demand_blocks.kept.average(:block_duration)
+    active_and_kept_blocks.average(:block_duration)
   end
 
   def leadtime_for_class_of_service(class_of_service, desired_percentile = 80)
@@ -298,6 +298,10 @@ class Project < ApplicationRecord
   def leadtime_for_demand_type(demand_type, desired_percentile = 80)
     demands_in_type = demands.kept.send(demand_type).finished
     Stats::StatisticsService.instance.percentile(desired_percentile, demands_in_type.map(&:leadtime))
+  end
+
+  def active_and_kept_blocks
+    demand_blocks.kept.active
   end
 
   private
