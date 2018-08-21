@@ -16,5 +16,12 @@ module Jira
     rescue JIRA::HTTPError => _error
       client.Issue.build
     end
+
+    def request_project(project_key)
+      client = JIRA::Client.new(@connection_parameters)
+      client.Project.find(project_key)
+    rescue JIRA::HTTPError => _error
+      client.Project.build
+    end
   end
 end
