@@ -30,8 +30,8 @@ RSpec.describe DemandsController, type: :controller do
       before { get :demands_csv, params: { company_id: 'xpto' }, format: :csv }
       it { expect(response).to have_http_status 401 }
     end
-    describe 'GET #demands_to_projects' do
-      before { get :demands_to_projects, params: { company_id: 'xpto' }, xhr: true }
+    describe 'GET #demands_in_projects' do
+      before { get :demands_in_projects, params: { company_id: 'xpto' }, xhr: true }
       it { expect(response).to have_http_status 401 }
     end
   end
@@ -445,7 +445,7 @@ RSpec.describe DemandsController, type: :controller do
       end
     end
 
-    describe 'GET #demands_to_projects' do
+    describe 'GET #demands_in_projects' do
       context 'passing valid parameters' do
         context 'for team' do
           let(:first_project) { Fabricate :project, customer: customer, product: product }
@@ -455,7 +455,7 @@ RSpec.describe DemandsController, type: :controller do
           let!(:second_demand) { Fabricate :demand, project: second_project }
 
           it 'builds the operation report and respond the JS render the template' do
-            get :demands_to_projects, params: { company_id: company, projects_ids: [first_project, second_project].map(&:id).to_csv }, xhr: true
+            get :demands_in_projects, params: { company_id: company, projects_ids: [first_project, second_project].map(&:id).to_csv }, xhr: true
             expect(response).to render_template 'demands/demands_list.js.erb'
             expect(assigns(:demands)).to match_array [first_demand, second_demand]
             expect(assigns(:demands_count_per_week)[first_project.start_date.beginning_of_week]).to eq(arrived_in_week: [], std_dev_arrived: 0.0, std_dev_throughput: 0.0, throughput_in_week: [])
@@ -465,12 +465,12 @@ RSpec.describe DemandsController, type: :controller do
 
       context 'passing invalid' do
         context 'company' do
-          before { get :demands_to_projects, params: { company_id: 'foo' }, xhr: true }
+          before { get :demands_in_projects, params: { company_id: 'foo' }, xhr: true }
           it { expect(response).to have_http_status :not_found }
         end
         context 'not permitted company' do
           let(:company) { Fabricate :company, users: [] }
-          before { get :demands_to_projects, params: { company_id: company }, xhr: true }
+          before { get :demands_in_projects, params: { company_id: company }, xhr: true }
           it { expect(response).to have_http_status :not_found }
         end
       end

@@ -132,6 +132,8 @@ en:
       risk_alerts: "Risk Alerts"
       maintenance_filter: "Maintenance"
       passed_time: "Time Passed"
+      leadtime:
+        title: "Leadtime in days"
     show:
       initial_scope: "Initial Scope"
       last_team: "Current team"
@@ -267,6 +269,8 @@ en:
         tooltip: "Delete Project"
       finish:
         tooltip: "Finish Project"
+      statistics:
+        tooltip: "Statistics"
     status_report_chart:
       hours_per_stage:
         series:
@@ -309,6 +313,8 @@ en:
       uniqueness: "Should have only one to the same customer"
     destroy:
       confirm: "Are you sure? All demands in this project will be deleted as well."
+    modal:
+      statistics: "Statistics for %{project_name}"
   team_member:
     edit:
       title: "Edit Team Member"

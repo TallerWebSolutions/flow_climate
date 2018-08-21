@@ -13,6 +13,7 @@ class CustomersController < AuthenticatedController
     @projects_summary = ProjectsSummaryData.new(@customer.projects)
     @report_data = Highchart::OperationalChartsAdapter.new(@customer_projects, 'all')
     @status_report_data = Highchart::StatusReportChartsAdapter.new(@customer_projects, 'all')
+    @montecarlo_dates = @status_report_data.monte_carlo_data
   end
 
   def new

@@ -200,18 +200,6 @@ class Project < ApplicationRecord
     project_results&.order(:result_date)&.last&.leadtime_average || 0
   end
 
-  def current_leadtime_60_confidence
-    project_results&.order(:result_date)&.last&.leadtime_60_confidence || 0
-  end
-
-  def current_leadtime_80_confidence
-    project_results&.order(:result_date)&.last&.leadtime_80_confidence || 0
-  end
-
-  def current_leadtime_95_confidence
-    project_results&.order(:result_date)&.last&.leadtime_95_confidence || 0
-  end
-
   def avg_hours_per_demand
     return 0 if project_results.empty? || total_hours_consumed.zero? || total_throughput.zero?
     (total_hours_consumed.to_f / total_throughput.to_f)
@@ -300,6 +288,16 @@ class Project < ApplicationRecord
   def average_block_duration
     return 0 if demands.blank? || demand_blocks.blank?
     demand_blocks.kept.average(:block_duration)
+  end
+
+  def leadtime_for_class_of_service(class_of_service, desired_percentile = 80)
+    demands_in_class_of_service = demands.kept.send(class_of_service).finished
+    Stats::StatisticsService.instance.percentile(desired_percentile, demands_in_class_of_service.map(&:leadtime))
+  end
+
+  def leadtime_for_demand_type(demand_type, desired_percentile = 80)
+    demands_in_type = demands.kept.send(demand_type).finished
+    Stats::StatisticsService.instance.percentile(desired_percentile, demands_in_type.map(&:leadtime))
   end
 
   private

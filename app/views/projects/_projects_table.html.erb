@@ -25,7 +25,6 @@
         <th><%= t('projects.show.features_count') %></th>
         <th><%= t('projects.show.bugs_count') %></th>
         <th><%= t('projects.show.chore_count') %></th>
-        <th><%= t('projects.show.leadtime_80_confidence') %></th>
         <th><%= t('projects.show.throughput') %></th>
         <th><%= t('projects.show.scope_gap') %></th>
         <th><%= Project.human_attribute_name :value %></th>
@@ -63,7 +62,6 @@
           <td><%= project.demands.kept.feature.count %><small> (<%= number_with_precision(project.percentage_features, precision: 2) %>%)</small></td>
           <td><%= project.demands.kept.bug.count %><small> (<%= number_with_precision(project.percentage_bugs, precision: 2) %>%)</small></td>
           <td><%= project.demands.kept.chore.count %><small> (<%= number_with_precision(project.percentage_chores, precision: 2) %>%)</small></td>
-          <td><%= time_distance_in_words(project.current_leadtime_80_confidence) %></td>
           <td><%= number_with_precision(project.total_throughput_for(1.week.ago), precision: 0) %></td>
           <td><%= number_with_precision(project.total_gap, precision: 0) %></td>
           <td><%= number_to_currency(project.value) %></td>
@@ -80,7 +78,9 @@
 <% end %>
 
 <div class="modal fade" id="list-blocks-page" tabindex="-1" role="dialog" aria-labelledby="list-blocks-page" aria-hidden="true"></div>
+<div class="modal fade" id="project-statistics-page" tabindex="-1" role="dialog" aria-labelledby="project-statistics-page" aria-hidden="true"></div>
 
 <% content_for :javascript do %>
   <%= javascript_include_tag 'demand_blocks/list_modal' %>
+  <%= javascript_include_tag 'projects/statistics_modal' %>
 <% end %>

@@ -132,6 +132,8 @@ pt-BR:
       risk_alerts: "Alertas de Risco"
       maintenance_filter: "Manutenção"
       passed_time: "Tempo Decorrido"
+      leadtime:
+        title: "Leadtime em dias"
     show:
       initial_scope: "Escopo Inicial"
       last_team: "Time atual"
@@ -269,6 +271,8 @@ pt-BR:
         tooltip: "Excluir Projeto"
       finish:
         tooltip: "Finalizar Projeto"
+      statistics:
+        tooltip: "Estatísticas"
     status_report_chart:
       hours_per_stage:
         series:
@@ -310,6 +314,8 @@ pt-BR:
       uniqueness: "Não deve repetir para o mesmo cliente"
     destroy:
       confirm: "Tem certeza que deseja apagar o projeto? Todas as demandas deste projeto também serão excluídas."
+    modal:
+      statistics: "Estatísticas de %{project_name}"
   team_member:
     edit:
       title: "Editar Membro do Time"

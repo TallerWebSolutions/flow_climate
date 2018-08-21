@@ -89,8 +89,12 @@ Rails.application.routes.draw do
 
       resources :demand_blocks, only: :index
 
-      get 'product_options_for_customer/(:customer_id)', action: :product_options_for_customer, on: :collection
-      get 'search_for_projects/:status_filter', action: :search_for_projects, as: 'search_for_projects', on: :collection
+      collection do
+        get 'product_options_for_customer/(:customer_id)', action: :product_options_for_customer
+        get 'search_for_projects/:status_filter', action: :search_for_projects, as: 'search_for_projects'
+      end
+
+      get :statistics, on: :member
     end
 
     resources :pipefy_configs, only: %i[new create destroy edit update], module: 'pipefy'
@@ -109,7 +113,7 @@ Rails.application.routes.draw do
     resources :demands, only: [] do
       collection do
         get 'demands_csv/(:demands_ids)', action: :demands_csv, as: 'demands_csv'
-        get :demands_to_projects
+        get :demands_in_projects
       end
     end
 

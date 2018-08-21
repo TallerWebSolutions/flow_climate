@@ -43,7 +43,7 @@
 </div>
 
 <div id="project-status-report">
-  <%= render 'charts/status_report_charts', target_name: @product.name, status_report_data: @status_report_data %>
+  <%= render 'charts/status_report_tab', target_name: @product.name, status_report_data: @status_report_data, montecarlo_dates: @montecarlo_dates %>
 </div>
 
 <div id="operational-charts">
@@ -58,6 +58,7 @@
   <%= javascript_include_tag 'charts/scatter' %>
 
   <%= javascript_include_tag 'projects/status_report_current' %>
+  <%= javascript_include_tag 'projects/status_report_projection' %>
   <%= javascript_include_tag 'projects/charts' %>
   <%= javascript_include_tag 'products/show' %>
 <% end %>
