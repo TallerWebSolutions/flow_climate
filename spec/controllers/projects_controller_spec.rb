@@ -42,8 +42,8 @@ RSpec.describe ProjectsController, type: :controller do
       before { delete :destroy, params: { company_id: 'foo', id: 'bar' } }
       it { expect(response).to redirect_to new_user_session_path }
     end
-    describe 'PUT #synchronize_pipefy' do
-      before { put :synchronize_pipefy, params: { company_id: 'foo', id: 'bar' } }
+    describe 'PUT #synchronize_jira' do
+      before { put :synchronize_jira, params: { company_id: 'foo', id: 'bar' } }
       it { expect(response).to redirect_to new_user_session_path }
     end
     describe 'PATCH #finish_project' do
@@ -474,17 +474,17 @@ RSpec.describe ProjectsController, type: :controller do
       end
     end
 
-    describe 'PUT #synchronize_pipefy' do
+    describe 'PUT #synchronize_jira' do
       let(:company) { Fabricate :company, users: [user] }
 
       let(:customer) { Fabricate :customer, company: company }
       let(:project) { Fabricate :project, customer: customer }
-      let!(:pipefy_config) { Fabricate :pipefy_config, project: project }
+      let!(:jira_config) { Fabricate :project_jira_config, project: project }
 
       context 'passing valid parameters' do
         it 'calls the services and the reader' do
-          expect(Pipefy::ProcessPipefyProjectJob).to receive(:perform_later).with(project).once
-          put :synchronize_pipefy, params: { company_id: company, id: project }
+          expect(Jira::ProcessJiraProjectJob).to receive(:perform_later).once
+          put :synchronize_jira, params: { company_id: company, id: project }
           expect(response).to redirect_to company_project_path(company, project)
           expect(flash[:notice]).to eq I18n.t('general.enqueued')
         end
@@ -492,17 +492,17 @@ RSpec.describe ProjectsController, type: :controller do
 
       context 'invalid' do
         context 'project' do
-          before { put :synchronize_pipefy, params: { company_id: company, id: 'foo' } }
+          before { put :synchronize_jira, params: { company_id: company, id: 'foo' } }
           it { expect(response).to have_http_status :not_found }
         end
         context 'company' do
           context 'non-existent' do
-            before { put :synchronize_pipefy, params: { company_id: 'foo', id: project } }
+            before { put :synchronize_jira, params: { company_id: 'foo', id: project } }
             it { expect(response).to have_http_status :not_found }
           end
           context 'not-permitted' do
             let(:company) { Fabricate :company, users: [] }
-            before { put :synchronize_pipefy, params: { company_id: company, id: project } }
+            before { put :synchronize_jira, params: { company_id: company, id: project } }
             it { expect(response).to have_http_status :not_found }
           end
         end

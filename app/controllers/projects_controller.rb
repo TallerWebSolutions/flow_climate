@@ -4,7 +4,7 @@ class ProjectsController < AuthenticatedController
   before_action :assign_company
   before_action :assign_customer, only: %i[create update]
   before_action :assign_product, only: %i[create update]
-  before_action :assign_project, only: %i[show edit update destroy synchronize_pipefy finish_project search_demands_by_flow_status statistics]
+  before_action :assign_project, only: %i[show edit update destroy synchronize_jira finish_project search_demands_by_flow_status statistics]
 
   def show
     @ordered_project_results = @project.project_results.order(:result_date)
@@ -58,8 +58,9 @@ class ProjectsController < AuthenticatedController
     redirect_to company_projects_path(@company)
   end
 
-  def synchronize_pipefy
-    Pipefy::ProcessPipefyProjectJob.perform_later(@project)
+  def synchronize_jira
+    jira_account = Jira::JiraAccount.find_by(customer_domain: @project.project_jira_config.jira_account_domain)
+    Jira::ProcessJiraProjectJob.perform_later(jira_account, @project.project_jira_config.jira_project_key)
     flash[:notice] = t('general.enqueued')
     redirect_to company_project_path(@company, @project)
   end

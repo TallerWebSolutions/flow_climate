@@ -19,7 +19,7 @@ RSpec.describe Jira::ProcessJiraIssueJob, type: :active_job do
       let(:team) { Fabricate :team }
 
       context 'valid responses' do
-        context 'and a pipefy config' do
+        context 'and a jira config' do
           context 'and demand' do
             it 'calls the adapter to translation' do
               expect_any_instance_of(Jira::JiraApiService).to(receive(:request_issue_details).with('foo') { jira_issue })
