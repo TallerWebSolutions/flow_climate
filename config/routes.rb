@@ -62,7 +62,7 @@ Rails.application.routes.draw do
 
     resources :projects do
       member do
-        put :synchronize_pipefy
+        put :synchronize_jira
         patch :finish_project
         get 'search_demands_by_flow_status', action: :search_demands_by_flow_status, as: 'search_demands_by_flow_status'
       end
@@ -70,7 +70,7 @@ Rails.application.routes.draw do
       resources :project_results, only: :show
 
       resources :demands do
-        put :synchronize_pipefy, on: :member
+        put :synchronize_jira, on: :member
 
         resources :demand_blocks, only: %i[edit update] do
           member do

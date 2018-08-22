@@ -22,8 +22,8 @@ RSpec.describe DemandsController, type: :controller do
       before { put :update, params: { company_id: 'foo', project_id: 'bar', id: 'sbbrubles' } }
       it { expect(response).to redirect_to new_user_session_path }
     end
-    describe 'PUT #synchronize_pipefy' do
-      before { put :synchronize_pipefy, params: { company_id: 'foo', project_id: 'bar', id: 'bla' } }
+    describe 'PUT #synchronize_jira' do
+      before { put :synchronize_jira, params: { company_id: 'foo', project_id: 'bar', id: 'bla' } }
       it { expect(response).to redirect_to new_user_session_path }
     end
     describe 'GET #demands_csv' do
@@ -311,92 +311,48 @@ RSpec.describe DemandsController, type: :controller do
       end
     end
 
-    describe 'PUT #synchronize_pipefy' do
+    describe 'PUT #synchronize_jira' do
       let(:company) { Fabricate :company, users: [user] }
 
       let(:customer) { Fabricate :customer, company: company }
       let(:other_customer) { Fabricate :customer, company: company }
       let(:project) { Fabricate :project, customer: customer }
       let(:other_project) { Fabricate :project, customer: other_customer }
-      let!(:pipefy_config) { Fabricate :pipefy_config, project: project }
+      let!(:project_jira_config) { Fabricate :project_jira_config, project: project }
       let!(:demand) { Fabricate :demand, project: project }
 
-      let(:first_card_response) { { data: { card: { id: '5140999', assignees: [{ id: '101381', username: 'xpto' }, { id: '101381', username: 'xpto' }, { id: '101382', username: 'bla' }, { id: '101321', username: 'mambo' }], comments: [{ created_at: '2018-02-22T18:39:46-03:00', author: { username: 'sbbrubles' }, text: '[BLOCKED]: xpto of bla having foo.' }], fields: [{ name: 'Descrição da pesquisa', value: 'teste' }, { name: 'Title', value: 'Página dos colunistas' }, { name: 'Type', value: 'bUG' }, { name: 'JiraKey', value: 'PD-46' }, { name: 'Class of Service', value: 'Padrão' }, { name: 'Project', value: other_project.full_name }], phases_history: [{ phase: { id: '2481595' }, firstTimeIn: '2018-02-22T17:09:58-03:00', lastTimeOut: '2018-02-26T17:09:58-03:00' }, { phase: { id: '3481595' }, firstTimeIn: '2018-02-15T17:10:40-03:00', lastTimeOut: '2018-02-17T17:10:40-03:00' }, { phase: { id: '2481597' }, firstTimeIn: '2018-02-27T17:09:58-03:00', lastTimeOut: nil }], pipe: { id: '356355' }, url: 'http://app.pipefy.com/pipes/356355#cards/5140999' } } }.with_indifferent_access }
+      let(:first_card_response) { { data: { card: { id: '5140999', assignees: [{ id: '101381', username: 'xpto' }, { id: '101381', username: 'xpto' }, { id: '101382', username: 'bla' }, { id: '101321', username: 'mambo' }], comments: [{ created_at: '2018-02-22T18:39:46-03:00', author: { username: 'sbbrubles' }, text: '[BLOCKED]: xpto of bla having foo.' }], fields: [{ name: 'Descrição da pesquisa', value: 'teste' }, { name: 'Title', value: 'Página dos colunistas' }, { name: 'Type', value: 'bUG' }, { name: 'JiraKey', value: 'PD-46' }, { name: 'Class of Service', value: 'Padrão' }, { name: 'Project', value: other_project.full_name }], phases_history: [{ phase: { id: '2481595' }, firstTimeIn: '2018-02-22T17:09:58-03:00', lastTimeOut: '2018-02-26T17:09:58-03:00' }, { phase: { id: '3481595' }, firstTimeIn: '2018-02-15T17:10:40-03:00', lastTimeOut: '2018-02-17T17:10:40-03:00' }, { phase: { id: '2481597' }, firstTimeIn: '2018-02-27T17:09:58-03:00', lastTimeOut: nil }], pipe: { id: '356355' }, url: 'http://app.jira.com/pipes/356355#cards/5140999' } } }.with_indifferent_access }
 
       context 'passing valid parameters' do
         context 'when there is no project change' do
-          let(:first_card_response) { { data: { card: { id: '5140999', assignees: [{ id: '101381', username: 'xpto' }, { id: '101381', username: 'xpto' }, { id: '101382', username: 'bla' }, { id: '101321', username: 'mambo' }], comments: [{ created_at: '2018-02-22T18:39:46-03:00', author: { username: 'sbbrubles' }, text: '[BLOCKED]: xpto of bla having foo.' }], fields: [{ name: 'Descrição da pesquisa', value: 'teste' }, { name: 'Title', value: 'Página dos colunistas' }, { name: 'Type', value: 'bUG' }, { name: 'JiraKey', value: 'PD-46' }, { name: 'Class of Service', value: 'Padrão' }, { name: 'Project', value: project.full_name }], phases_history: [{ phase: { id: '2481595' }, firstTimeIn: '2018-02-22T17:09:58-03:00', lastTimeOut: '2018-02-26T17:09:58-03:00' }, { phase: { id: '3481595' }, firstTimeIn: '2018-02-15T17:10:40-03:00', lastTimeOut: '2018-02-17T17:10:40-03:00' }, { phase: { id: '2481597' }, firstTimeIn: '2018-02-27T17:09:58-03:00', lastTimeOut: nil }], pipe: { id: '356355' }, url: 'http://app.pipefy.com/pipes/356355#cards/5140999' } } }.with_indifferent_access }
+          let(:first_card_response) { { data: { card: { id: '5140999', assignees: [{ id: '101381', username: 'xpto' }, { id: '101381', username: 'xpto' }, { id: '101382', username: 'bla' }, { id: '101321', username: 'mambo' }], comments: [{ created_at: '2018-02-22T18:39:46-03:00', author: { username: 'sbbrubles' }, text: '[BLOCKED]: xpto of bla having foo.' }], fields: [{ name: 'Descrição da pesquisa', value: 'teste' }, { name: 'Title', value: 'Página dos colunistas' }, { name: 'Type', value: 'bUG' }, { name: 'JiraKey', value: 'PD-46' }, { name: 'Class of Service', value: 'Padrão' }, { name: 'Project', value: project.full_name }], phases_history: [{ phase: { id: '2481595' }, firstTimeIn: '2018-02-22T17:09:58-03:00', lastTimeOut: '2018-02-26T17:09:58-03:00' }, { phase: { id: '3481595' }, firstTimeIn: '2018-02-15T17:10:40-03:00', lastTimeOut: '2018-02-17T17:10:40-03:00' }, { phase: { id: '2481597' }, firstTimeIn: '2018-02-27T17:09:58-03:00', lastTimeOut: nil }], pipe: { id: '356355' }, url: 'http://app.jira.com/pipes/356355#cards/5140999' } } }.with_indifferent_access }
           it 'calls the services and the reader' do
-            expect(Pipefy::PipefyApiService).to(receive(:request_card_details).with(demand.demand_id).once { first_card_response })
-            expect(Pipefy::PipefyCardAdapter.instance).to(receive(:process_card_response!).with(pipefy_config.team, demand, first_card_response).and_call_original)
-            put :synchronize_pipefy, params: { company_id: company, project_id: project, id: demand }
+            expect(Jira::ProcessJiraIssueJob).to receive(:perform_later)
+            put :synchronize_jira, params: { company_id: company, project_id: project, id: demand }
             expect(response).to redirect_to company_project_demand_path(company, project, demand)
             expect(demand.reload.project).to eq project
-            expect(flash[:notice]).to eq I18n.t('demands.sync.done')
-          end
-        end
-        context 'when there is a project change' do
-          context 'and there is no other demand with the same demand_id in the target project' do
-            let(:other_project) { Fabricate :project, customer: other_customer }
-            let!(:demand) { Fabricate :demand, project: project, demand_id: '5140999' }
-            let(:first_card_response) { { data: { card: { id: '5140999', assignees: [{ id: '101381', username: 'xpto' }, { id: '101381', username: 'xpto' }, { id: '101382', username: 'bla' }, { id: '101321', username: 'mambo' }], comments: [{ created_at: '2018-02-22T18:39:46-03:00', author: { username: 'sbbrubles' }, text: '[BLOCKED]: xpto of bla having foo.' }], fields: [{ name: 'Descrição da pesquisa', value: 'teste' }, { name: 'Title', value: 'Página dos colunistas' }, { name: 'Type', value: 'bUG' }, { name: 'JiraKey', value: 'PD-46' }, { name: 'Class of Service', value: 'Padrão' }, { name: 'Project', value: other_project.full_name }], phases_history: [{ phase: { id: '2481595' }, firstTimeIn: '2018-02-22T17:09:58-03:00', lastTimeOut: '2018-02-26T17:09:58-03:00' }, { phase: { id: '3481595' }, firstTimeIn: '2018-02-15T17:10:40-03:00', lastTimeOut: '2018-02-17T17:10:40-03:00' }, { phase: { id: '2481597' }, firstTimeIn: '2018-02-27T17:09:58-03:00', lastTimeOut: nil }], pipe: { id: '356355' }, url: 'http://app.pipefy.com/pipes/356355#cards/5140999' } } }.with_indifferent_access }
-
-            it 'calls the services and the reader' do
-              expect(Pipefy::PipefyApiService).to(receive(:request_card_details).with(demand.demand_id).once { first_card_response })
-              expect(Pipefy::PipefyCardAdapter.instance).to(receive(:process_card_response!).with(pipefy_config.team, demand, first_card_response).once.and_call_original)
-              put :synchronize_pipefy, params: { company_id: company, project_id: project, id: demand }
-              expect(response).to redirect_to company_project_path(company, project)
-              expect(flash[:notice]).to eq I18n.t('demands.sync.done')
-            end
-          end
-
-          context 'and there is another demand with the same demand_id in the target project' do
-            let(:other_project) { Fabricate :project, customer: other_customer }
-            let!(:demand) { Fabricate :demand, project: project, demand_id: '5140999' }
-            let!(:other_demand) { Fabricate :demand, project: other_project, demand_id: '5140999' }
-            let(:first_card_response) { { data: { card: { id: '5140999', assignees: [{ id: '101381', username: 'xpto' }, { id: '101381', username: 'xpto' }, { id: '101382', username: 'bla' }, { id: '101321', username: 'mambo' }], comments: [{ created_at: '2018-02-22T18:39:46-03:00', author: { username: 'sbbrubles' }, text: '[BLOCKED]: xpto of bla having foo.' }], fields: [{ name: 'Descrição da pesquisa', value: 'teste' }, { name: 'Title', value: 'Página dos colunistas' }, { name: 'Type', value: 'bUG' }, { name: 'JiraKey', value: 'PD-46' }, { name: 'Class of Service', value: 'Padrão' }, { name: 'Project', value: other_project.full_name }], phases_history: [{ phase: { id: '2481595' }, firstTimeIn: '2018-02-22T17:09:58-03:00', lastTimeOut: '2018-02-26T17:09:58-03:00' }, { phase: { id: '3481595' }, firstTimeIn: '2018-02-15T17:10:40-03:00', lastTimeOut: '2018-02-17T17:10:40-03:00' }, { phase: { id: '2481597' }, firstTimeIn: '2018-02-27T17:09:58-03:00', lastTimeOut: nil }], pipe: { id: '356355' }, url: 'http://app.pipefy.com/pipes/356355#cards/5140999' } } }.with_indifferent_access }
-
-            it 'calls the services and the reader' do
-              expect(Pipefy::PipefyApiService).to(receive(:request_card_details).with(demand.demand_id).once { first_card_response })
-              expect(Pipefy::PipefyCardAdapter.instance).to(receive(:process_card_response!).with(pipefy_config.team, demand, first_card_response).once.and_call_original)
-              put :synchronize_pipefy, params: { company_id: company, project_id: project, id: demand }
-              demand_updated = assigns(:demand)
-              expect(response).to redirect_to company_project_demand_path(company, project, demand)
-              expect(flash[:error]).to eq demand_updated.errors.full_messages.join(', ')
-            end
-          end
-        end
-        context 'when the demand was deleted in the source' do
-          let!(:demand) { Fabricate :demand, project: project }
-          it 'deletes the card in the climate' do
-            expect(Pipefy::PipefyApiService).to(receive(:request_card_details).with(demand.demand_id).once { { data: { card: nil } }.with_indifferent_access })
-            put :synchronize_pipefy, params: { company_id: company, project_id: project, id: demand }
-            expect(Demand.kept.find_by(id: demand.id)).to be_nil
-            expect(Demand.find_by(id: demand.id)).to eq demand.reload
-            expect(Demand.find_by(id: demand.id).discarded_at).not_to be_nil
-            expect(response).to redirect_to company_project_path(company, project)
-            expect(flash[:notice]).to eq I18n.t('demands.sync.done')
+            expect(flash[:notice]).to eq I18n.t('general.enqueued')
           end
         end
       end
 
       context 'invalid' do
         context 'demand' do
-          before { put :synchronize_pipefy, params: { company_id: company, project_id: project, id: 'foo' } }
+          before { put :synchronize_jira, params: { company_id: company, project_id: project, id: 'foo' } }
           it { expect(response).to have_http_status :not_found }
         end
         context 'project' do
-          before { put :synchronize_pipefy, params: { company_id: company, project_id: 'foo', id: demand } }
+          before { put :synchronize_jira, params: { company_id: company, project_id: 'foo', id: demand } }
           it { expect(response).to have_http_status :not_found }
         end
         context 'company' do
           context 'non-existent' do
-            before { put :synchronize_pipefy, params: { company_id: 'foo', project_id: project, id: demand } }
+            before { put :synchronize_jira, params: { company_id: 'foo', project_id: project, id: demand } }
             it { expect(response).to have_http_status :not_found }
           end
           context 'not-permitted' do
             let(:company) { Fabricate :company, users: [] }
-            before { put :synchronize_pipefy, params: { company_id: company, project_id: project, id: demand } }
+            before { put :synchronize_jira, params: { company_id: company, project_id: project, id: demand } }
             it { expect(response).to have_http_status :not_found }
           end
         end

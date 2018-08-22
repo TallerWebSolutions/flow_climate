@@ -3,7 +3,7 @@
 class DemandsController < AuthenticatedController
   before_action :assign_company
   before_action :assign_project, except: %i[demands_csv demands_in_projects]
-  before_action :assign_demand, only: %i[edit update show synchronize_pipefy destroy]
+  before_action :assign_demand, only: %i[edit update show synchronize_jira destroy]
 
   def new
     @demand = Demand.new(project: @project, project_result: @project_result)
@@ -41,15 +41,11 @@ class DemandsController < AuthenticatedController
     @downstream_percentage = 100 - @upstream_percentage
   end
 
-  def synchronize_pipefy
-    pipefy_response = Pipefy::PipefyApiService.request_card_details(@demand.demand_id)
-    @demand = Pipefy::PipefyCardAdapter.instance.process_card_response!(@project.pipefy_config.team, @demand, pipefy_response)
-    if @demand.blank? || @demand.valid?
-      process_succeeded_sync
-    else
-      flash[:error] = @demand.errors.full_messages.join(', ')
-      redirect_to company_project_demand_path(@company, @project, @demand)
-    end
+  def synchronize_jira
+    jira_account = Jira::JiraAccount.find_by(customer_domain: @project.project_jira_config.jira_account_domain)
+    Jira::ProcessJiraIssueJob.perform_later(jira_account, @project, @demand.demand_id)
+    flash[:notice] = t('general.enqueued')
+    redirect_to company_project_demand_path(@company, @project, @demand)
   end
 
   def demands_csv
@@ -82,12 +78,6 @@ class DemandsController < AuthenticatedController
 
   def assign_demand
     @demand = Demand.find(params[:id])
-  end
-
-  def process_succeeded_sync
-    flash[:notice] = t('demands.sync.done')
-    return redirect_to company_project_demand_path(@company, @project, @demand) if @demand&.project == @project
-    redirect_to company_project_path(@company, @project)
   end
 
   def assign_grouped_demands_informations(demands)

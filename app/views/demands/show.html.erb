@@ -15,7 +15,7 @@
 
 <div class="row bottom-spaced-component">
   <div class="col-xs-6">
-    <%= link_to synchronize_pipefy_company_project_demand_path(@company, @project, @demand), method: :put do %>
+    <%= link_to synchronize_jira_company_project_demand_path(@company, @project, @demand), method: :put do %>
       <span class="btn btn-sm"><i class="fas fa-sync-alt"></i></span><span><%= t('demands.show.sync_pipefy') %></span>
     <% end %>
     <span class="detailed"><%= "(#{t('demands.show.last_update', last_update_date: l(@demand.updated_at, format: :short))})" %></span>
