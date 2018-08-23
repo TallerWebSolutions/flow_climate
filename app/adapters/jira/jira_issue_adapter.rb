@@ -11,7 +11,7 @@ module Jira
       demand = Demand.where(project_id: project.id, demand_id: issue_key).first_or_initialize
       return demand if demand.archived?
 
-      update_issue!(demand, jira_account, jira_issue, project)
+      update_demand!(demand, jira_account, jira_issue, project)
       ProjectResultService.instance.compute_demand!(project.current_team, demand)
       project.project_results.order(:result_date).map(&:compute_flow_metrics!)
       demand
@@ -19,19 +19,25 @@ module Jira
 
     private
 
-    def update_issue!(demand, jira_account, jira_issue, project)
-      demand.update(project: project, created_date: issue_fields(jira_issue)['created'], demand_type: translate_issue_type(issue_fields(jira_issue)['issuetype']['name']),
-                    class_of_service: translate_class_of_service(jira_account, jira_issue), demand_title: issue_fields(jira_issue)['summary'], assignees_count: compute_assignees_count(jira_account, jira_issue))
+    def update_demand!(demand, jira_account, jira_issue, project)
+      demand.update(project: project, created_date: issue_fields_value(jira_issue, 'created'), demand_type: translate_issue_type(jira_issue),
+                    class_of_service: translate_class_of_service(jira_account, jira_issue), demand_title: issue_fields_value(jira_issue, 'summary'),
+                    assignees_count: compute_assignees_count(jira_account, jira_issue), url: build_jira_url(jira_account, project_jira_key(jira_issue), demand.demand_id))
 
       translate_blocks!(demand, jira_issue.comment['comments']) if jira_issue.respond_to?(:comment)
       process_transitions!(demand, jira_issue.changelog) if jira_issue.respond_to?(:changelog)
     end
 
-    def issue_fields(jira_issue)
-      jira_issue.attrs['fields']
+    def project_jira_key(jira_issue)
+      jira_issue.attrs['fields']['project']['key']
     end
 
-    def translate_issue_type(issue_type_name)
+    def issue_fields_value(jira_issue, field_name)
+      jira_issue.attrs['fields'][field_name]
+    end
+
+    def translate_issue_type(jira_issue)
+      issue_type_name = jira_issue.attrs['fields']['issuetype']['name']
       return :feature if issue_type_name.casecmp('story').zero?
       return :chore if issue_type_name.casecmp('chore').zero?
       :bug
@@ -116,6 +122,10 @@ module Jira
 
     def transition_history?(history)
       history['items'].present? && history['items'].first['field'].casecmp('status').zero?
+    end
+
+    def build_jira_url(jira_account, project_key, issue_key)
+      "#{jira_account.base_uri}/projects/#{project_key}/issues/#{issue_key}"
     end
   end
 end
