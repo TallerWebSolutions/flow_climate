@@ -22,6 +22,20 @@ CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
 COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
 
 
+--
+-- Name: pg_stat_statements; Type: EXTENSION; Schema: -; Owner: -
+--
+
+CREATE EXTENSION IF NOT EXISTS pg_stat_statements WITH SCHEMA public;
+
+
+--
+-- Name: EXTENSION pg_stat_statements; Type: COMMENT; Schema: -; Owner: -
+--
+
+COMMENT ON EXTENSION pg_stat_statements IS 'track execution statistics of all SQL statements executed';
+
+
 SET default_tablespace = '';
 
 SET default_with_oids = false;
@@ -248,7 +262,6 @@ CREATE TABLE public.demands (
     assignees_count integer NOT NULL,
     effort_downstream numeric DEFAULT 0,
     effort_upstream numeric DEFAULT 0,
-    "decimal" numeric DEFAULT 0,
     leadtime numeric,
     downstream boolean DEFAULT true,
     manual_effort boolean DEFAULT false,
@@ -605,7 +618,8 @@ CREATE TABLE public.project_jira_configs (
     jira_project_key character varying NOT NULL,
     active boolean DEFAULT true NOT NULL,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    fix_version_name character varying
 );
 
 
@@ -2091,6 +2105,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20180627232834'),
 ('20180703233113'),
 ('20180731181345'),
-('20180820175021');
+('20180820175021'),
+('20180822231503');
 
 

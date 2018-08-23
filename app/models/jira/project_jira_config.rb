@@ -6,6 +6,7 @@
 #
 #  active              :boolean          default(TRUE), not null
 #  created_at          :datetime         not null
+#  fix_version_name    :string
 #  id                  :bigint(8)        not null, primary key
 #  jira_account_domain :string           not null, indexed, indexed => [jira_project_key]
 #  jira_project_key    :string           not null, indexed, indexed => [jira_account_domain]
