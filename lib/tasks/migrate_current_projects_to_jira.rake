@@ -3,6 +3,11 @@
 namespace :project_migration do
   desc 'Notifications for the user'
   task migrate_current_projects_to_jira: :environment do
+    #### General
+    # Update the custom field to class of service in Jira Account
+    Jira::JiraCustomFieldMapping.create(jira_account: jira_account, demand_field: :class_of_service, custom_field_machine_name: 'customfield_10028')
+    Jira::JiraCustomFieldMapping.create(jira_account: jira_account, demand_field: :responsibles, custom_field_machine_name: 'customfield_10024')
+
     #### Vingadores
 
     ### Projetos
@@ -45,7 +50,7 @@ namespace :project_migration do
     Jira::ProjectJiraConfig.create(project: Project.find(108), team: Project.find(108).current_team, jira_account_domain: 'tallerflow', jira_project_key: 'FC', fix_version_name: 'Fase 3')
 
     # Stages
-    Stage.find(3).update(integration_id: '10012')
+    Stage.find(3).update(integration_id: '10001')
     Stage.find(8).update(integration_id: '10002')
     Stage.find(9).update(integration_id: '10017')
     Stage.find(5).update(integration_id: '10005')

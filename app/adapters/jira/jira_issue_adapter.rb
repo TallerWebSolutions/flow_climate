@@ -62,6 +62,8 @@ module Jira
 
       responsibles = jira_issue.attrs['fields'][responsibles_custom_field_name]
 
+      return 0 if responsibles.blank?
+
       responsibles.count
     end
 
