@@ -61,7 +61,7 @@ class DemandsController < AuthenticatedController
   def demands_in_projects
     projects = Project.where(id: params[:projects_ids].split(','))
     @demands_count_per_week = DemandService.instance.quantitative_consolidation_per_week_to_projects(projects)
-    @demands = DemandsRepository.instance.demands_per_projects(projects)
+    @demands = DemandsRepository.instance.demands_per_projects(projects).order(end_date: :desc, commitment_date: :desc, created_date: :desc)
     assign_grouped_demands_informations(@demands)
     respond_to { |format| format.js { render file: 'demands/demands_list.js.erb' } }
   end
