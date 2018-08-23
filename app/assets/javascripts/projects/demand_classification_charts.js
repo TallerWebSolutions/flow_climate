@@ -1,4 +1,7 @@
 function buildDemandClassificationHighcharts() {
-    var donutDiv = $('#class-of-services-donut');
-    buildDonutChart(donutDiv);
+    var donutClassesOfServiceDiv = $('#class-of-services-donut');
+    buildDonutChart(donutClassesOfServiceDiv);
+
+    var donutDemandTypeDiv = $('#demand-type-donut');
+    buildDonutChart(donutDemandTypeDiv);
 }
