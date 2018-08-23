@@ -74,7 +74,7 @@ class ProjectsController < AuthenticatedController
   def search_demands_by_flow_status
     projects = Project.where(id: @project.id)
     demands_for_query_ids = build_demands_query(projects)
-    @demands = Demand.where(id: demands_for_query_ids.map(&:id))
+    @demands = Demand.where(id: demands_for_query_ids.map(&:id)).order(end_date: :desc, commitment_date: :desc, created_date: :desc)
     assign_grouped_demands_informations(@demands)
     respond_to { |format| format.js { render file: 'demands/search_demands_by_flow_status.js.erb' } }
   end
