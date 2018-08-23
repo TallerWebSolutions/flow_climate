@@ -270,23 +270,13 @@ class Project < ApplicationRecord
     project_results.order(:result_date).last.cost_in_month
   end
 
-  def percentage_bugs
+  def percentage_of_demand_type(demand_type)
     return 0 if demands.kept.count.zero?
-    (demands.kept.bug.count.to_f / demands.kept.count.to_f) * 100
-  end
-
-  def percentage_features
-    return 0 if demands.kept.count.zero?
-    (demands.kept.feature.count.to_f / demands.kept.count.to_f) * 100
-  end
-
-  def percentage_chores
-    return 0 if demands.kept.count.zero?
-    (demands.kept.chore.count.to_f / demands.kept.count.to_f) * 100
+    (demands.kept.send(demand_type).count.to_f / demands.kept.count.to_f) * 100
   end
 
   def average_block_duration
-    return 0 if demands.blank? || demand_blocks.blank?
+    return 0 if demands.kept.blank? || demand_blocks.kept.blank?
     active_and_kept_blocks.average(:block_duration)
   end
 

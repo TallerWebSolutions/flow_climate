@@ -59,9 +59,9 @@
           </td>
           <td><%= number_with_precision(project.average_block_duration, precision: 2) %>h</td>
           <td><%= project.demands.kept.count %></td>
-          <td><%= project.demands.kept.feature.count %><small> (<%= number_with_precision(project.percentage_features, precision: 2) %>%)</small></td>
-          <td><%= project.demands.kept.bug.count %><small> (<%= number_with_precision(project.percentage_bugs, precision: 2) %>%)</small></td>
-          <td><%= project.demands.kept.chore.count %><small> (<%= number_with_precision(project.percentage_chores, precision: 2) %>%)</small></td>
+          <td><%= project.demands.kept.feature.count %><small> (<%= number_with_precision(project.percentage_of_demand_type(:feature), precision: 2) %>%)</small></td>
+          <td><%= project.demands.kept.bug.count %><small> (<%= number_with_precision(project.percentage_of_demand_type(:bug), precision: 2) %>%)</small></td>
+          <td><%= project.demands.kept.chore.count %><small> (<%= number_with_precision(project.percentage_of_demand_type(:chore), precision: 2) %>%)</small></td>
           <td><%= number_with_precision(project.total_throughput_for(1.week.ago), precision: 0) %></td>
           <td><%= number_with_precision(project.total_gap, precision: 0) %></td>
           <td><%= number_to_currency(project.value) %></td>

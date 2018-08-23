@@ -27,7 +27,7 @@ namespace :project_migration do
     Jira::ProjectJiraConfig.create(project: Project.find(114), team: Project.find(114).current_team, jira_account_domain: 'tallerflow', jira_project_key: '10005', fix_version_name: '')
 
     # UNICEF
-    Jira::ProjectJiraConfig.create(project: Project.find(117), team: Project.find(68).current_team, jira_account_domain: 'tallerflow', jira_project_key: '10008', fix_version_name: 'Fase 1')
+    Jira::ProjectJiraConfig.create(project: Project.find(117), team: Project.find(68).current_team, jira_account_domain: 'tallerflow', jira_project_key: '10008', fix_version_name: 'Fase 2')
 
     # COBNET
     Jira::ProjectJiraConfig.create(project: Project.find(36), team: Project.find(36).current_team, jira_account_domain: 'tallerflow', jira_project_key: '10004', fix_version_name: 'Fase 4')
