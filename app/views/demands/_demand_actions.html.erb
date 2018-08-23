@@ -4,6 +4,8 @@
 <%= link_to edit_company_project_demand_path(demand.company, demand.project, demand) do %>
   <i class="fas fa-edit"></i>
 <% end %>
-<%= link_to demand.url do %>
-  <i class="fas fa-external-link-alt"></i>
+<% if demand.url.present? %>
+  <%= link_to demand.url do %>
+    <i class="fas fa-external-link-alt"></i>
+  <% end %>
 <% end %>
