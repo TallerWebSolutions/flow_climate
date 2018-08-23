@@ -30,7 +30,7 @@ RSpec.describe WebhookIntegrationsController, type: :controller do
       context 'and the project has a valid registration' do
         let!(:jira_account) { Fabricate :jira_account, base_uri: 'http://foo.bar', username: 'foo', password: 'bar', customer_domain: 'bar' }
         let(:project) { Fabricate :project }
-        let!(:project_jira_config) { Fabricate :project_jira_config, project: project, jira_account_domain: 'bar', jira_project_key: 'foo' }
+        let!(:project_jira_config) { Fabricate :project_jira_config, project: project, jira_account_domain: 'bar', jira_project_key: 'foo', fix_version_name: 'foo' }
         it 'enqueues the job' do
           request.headers['Content-Type'] = 'application/json'
           expect(Jira::ProcessJiraIssueJob).to receive(:perform_later).once
@@ -50,7 +50,7 @@ RSpec.describe WebhookIntegrationsController, type: :controller do
       end
       context 'and the project has an invalid registration without jira account' do
         let(:project) { Fabricate :project }
-        let!(:project_jira_config) { Fabricate :project_jira_config, project: project, jira_account_domain: 'bar', jira_project_key: 'foo' }
+        let!(:project_jira_config) { Fabricate :project_jira_config, project: project, jira_account_domain: 'bar', jira_project_key: 'Fc-6', fix_version_name: 'foo' }
         it 'does not enqueue the job' do
           request.headers['Content-Type'] = 'application/json'
           expect(Jira::ProcessJiraIssueJob).to receive(:perform_later).never
@@ -73,14 +73,14 @@ RSpec.describe WebhookIntegrationsController, type: :controller do
       context 'and the project has a valid registration' do
         let!(:jira_account) { Fabricate :jira_account, base_uri: 'http://foo.bar', username: 'foo', password: 'bar', customer_domain: 'bar' }
         let(:project) { Fabricate :project }
-        let!(:project_jira_config) { Fabricate :project_jira_config, project: project, jira_account_domain: 'bar', jira_project_key: 'foo' }
+        let!(:project_jira_config) { Fabricate :project_jira_config, project: project, jira_account_domain: 'bar', jira_project_key: 'foo', fix_version_name: 'bar' }
 
         context 'when the demand exists' do
           let!(:demand) { Fabricate :demand, project: project, demand_id: 'FC-6' }
           it 'deletes the demand' do
             request.headers['Content-Type'] = 'application/json'
             expect(DemandsRepository.instance).to receive(:full_demand_destroy!).with(demand).once
-            post :jira_delete_card_webhook, params: { issue: { key: 'FC-6', fields: { project: { key: 'foo', self: 'http://bar.atlassian.com' }, fixVersions: [{ name: 'foo' }] } }.with_indifferent_access }
+            post :jira_delete_card_webhook, params: { issue: { key: 'FC-6', fields: { project: { key: 'foo', self: 'http://bar.atlassian.com' }, fixVersions: [{ name: 'bar' }] } }.with_indifferent_access }
             expect(response).to have_http_status :ok
           end
         end
@@ -88,7 +88,7 @@ RSpec.describe WebhookIntegrationsController, type: :controller do
           it 'does nothing' do
             request.headers['Content-Type'] = 'application/json'
             expect(DemandsRepository.instance).to receive(:full_demand_destroy!).with(nil).once
-            post :jira_delete_card_webhook, params: { issue: { key: 'FC-6', fields: { project: { key: 'foo', self: 'http://bar.atlassian.com' }, fixVersions: [{ name: 'foo' }] } }.with_indifferent_access }
+            post :jira_delete_card_webhook, params: { issue: { key: 'FC-6', fields: { project: { key: 'foo', self: 'http://bar.atlassian.com' }, fixVersions: [{ name: 'bar' }] } }.with_indifferent_access }
             expect(response).to have_http_status :ok
           end
         end
@@ -99,7 +99,7 @@ RSpec.describe WebhookIntegrationsController, type: :controller do
         it 'does nothing' do
           request.headers['Content-Type'] = 'application/json'
           expect(DemandsRepository.instance).to receive(:full_demand_destroy!).never
-          post :jira_delete_card_webhook, params: { issue: { key: 'FC-6', fields: { project: { key: 'foo', self: 'http://bar.atlassian.com' }, fixVersions: [{ name: 'foo' }] } }.with_indifferent_access }
+          post :jira_delete_card_webhook, params: { issue: { key: 'FC-6', fields: { project: { key: 'foo', self: 'http://bar.atlassian.com' }, fixVersions: [{ name: 'bar' }] } }.with_indifferent_access }
           expect(response).to have_http_status :ok
         end
       end

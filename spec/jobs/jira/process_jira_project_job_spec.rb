@@ -25,11 +25,10 @@ RSpec.describe Jira::ProcessJiraProjectJob, type: :active_job do
         context 'and a jira config' do
           context 'and demand' do
             it 'calls the adapter to translation' do
-              expect_any_instance_of(Jira::JiraApiService).to(receive(:request_project).with('FC') { jira_project })
-              expect_any_instance_of(JIRA::Resource::Project).to(receive(:issues) { [jira_issue] })
+              expect_any_instance_of(Jira::JiraApiService).to(receive(:request_issues_by_fix_version) { [jira_issue] })
               expect_any_instance_of(Jira::JiraApiService).to(receive(:request_issue_details).with('10000') { jira_issue })
               expect(Jira::JiraIssueAdapter.instance).to receive(:process_issue!).with(jira_account, project, jira_issue).once
-              Jira::ProcessJiraProjectJob.perform_now(jira_account, 'FC')
+              Jira::ProcessJiraProjectJob.perform_now(jira_account, jira_config)
             end
           end
         end
@@ -39,11 +38,10 @@ RSpec.describe Jira::ProcessJiraProjectJob, type: :active_job do
         context 'and blank issue response' do
           let(:jira_issue) { client.Issue.build }
           it 'returns doing nothing' do
-            expect_any_instance_of(Jira::JiraApiService).to(receive(:request_project).with('FC') { jira_project })
-            expect_any_instance_of(JIRA::Resource::Project).to(receive(:issues) { [jira_issue] })
+            expect_any_instance_of(Jira::JiraApiService).to(receive(:request_issues_by_fix_version) { [jira_issue] })
             expect_any_instance_of(Jira::JiraApiService).to(receive(:request_issue_details).never)
             expect(Jira::JiraIssueAdapter.instance).to receive(:process_issue!).never
-            Jira::ProcessJiraProjectJob.perform_now(jira_account, 'FC')
+            Jira::ProcessJiraProjectJob.perform_now(jira_account, jira_config)
           end
         end
       end

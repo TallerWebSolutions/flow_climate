@@ -6,7 +6,7 @@ RSpec.describe Jira::JiraApiService, type: :service do
 
   let(:jira_account) { Fabricate :jira_account, base_uri: 'https://foo.atlassian.net/', username: 'foo', password: 'bar' }
 
-  describe '.request_issue_details' do
+  describe '#request_issue_details' do
     context 'when the issue exists' do
       it 'returns the issue details' do
         returned_issue = client.Issue.build(summary: 'foo of bar')
@@ -33,28 +33,26 @@ RSpec.describe Jira::JiraApiService, type: :service do
     end
   end
 
-  describe '.request_project' do
+  describe '#request_issues_by_fix_version' do
     context 'when the project exists' do
       it 'returns the project' do
-        returned_project = client.Project.build(key: 'EX', name: 'Example', projectTypeKey: 'business', lead: 'username')
-        expect(JIRA::Resource::Project).to(receive(:find).once { returned_project })
+        returned_issue = client.Issue.build(summary: 'foo of bar')
+        expect(JIRA::Resource::Issue).to(receive(:jql).once { [returned_issue] })
 
         # WebMock.disable!
 
-        project = Jira::JiraApiService.new(jira_account).request_project('FC')
-
-        expect(project.attrs[:name]).to eq 'Example'
+        Jira::JiraApiService.new(jira_account).request_issues_by_fix_version('fix version name', 'FC')
       end
     end
 
     context 'when the issue does not exist' do
       it 'returns an empty Issue' do
         response = Net::HTTPResponse.new(1.0, 404, 'not found')
-        expect(JIRA::Resource::Project).to(receive(:find).once.and_raise(JIRA::HTTPError.new(response)))
+        expect(JIRA::Resource::Issue).to(receive(:jql).once.and_raise(JIRA::HTTPError.new(response)))
 
-        project = Jira::JiraApiService.new(jira_account).request_project('EX')
+        issues_returned = Jira::JiraApiService.new(jira_account).request_issues_by_fix_version('fix version name', 'EX')
 
-        expect(project.attrs[:name]).to be_nil
+        expect(issues_returned).to be_empty
       end
     end
   end

@@ -38,7 +38,7 @@ class WebhookIntegrationsController < ApplicationController
   private
 
   def check_request
-    return head :bad_request unless valid_content_type?
+    head :bad_request unless valid_content_type?
   end
 
   def define_jira_account(jira_account_domain)
@@ -46,7 +46,7 @@ class WebhookIntegrationsController < ApplicationController
   end
 
   def define_project(data, jira_account_domain)
-    jira_config = Jira::ProjectJiraConfig.find_by(jira_account_domain: jira_account_domain, jira_project_key: project_key(data))
+    jira_config = Jira::ProjectJiraConfig.find_by(jira_account_domain: jira_account_domain, jira_project_key: project_jira_key(data), fix_version_name: fix_version_name(data))
     return if jira_config.blank?
     jira_config.project
   end
@@ -59,8 +59,12 @@ class WebhookIntegrationsController < ApplicationController
     request.headers['Content-Type'].include?('application/json')
   end
 
-  def project_key(data)
+  def fix_version_name(data)
     data['issue']['fields']['fixVersions'][0]['name']
+  end
+
+  def project_jira_key(data)
+    data['issue']['fields']['project']['key']
   end
 
   def project_url(data)
