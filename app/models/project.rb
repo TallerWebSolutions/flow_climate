@@ -144,7 +144,7 @@ class Project < ApplicationRecord
   def flow_pressure(date = Time.zone.today)
     return 0.0 if no_pressure_set(date)
     days = remaining_days(date) || total_days
-    total_gap(date).to_f / days.to_f
+    backlog_remaining(date).to_f / days.to_f
   end
 
   def total_throughput
@@ -165,7 +165,7 @@ class Project < ApplicationRecord
 
   def total_throughput_until(date)
     return total_throughput if date.blank?
-    project_results.until_week(date.to_date.cweek, date.to_date.cwyear).sum(:throughput_downstream) + project_results.until_week(date.to_date.cweek, date.to_date.cwyear).sum(:throughput_upstream)
+    demands.kept.finished_until_date(date).count
   end
 
   def total_hours_upstream
@@ -185,11 +185,11 @@ class Project < ApplicationRecord
   end
 
   def total_bugs_opened
-    project_results.sum(&:qty_bugs_opened)
+    demands.kept.bug.not_finished.count
   end
 
   def total_bugs_closed
-    project_results.sum(&:qty_bugs_closed)
+    demands.kept.bug.finished.count
   end
 
   def total_hours_bug
@@ -215,14 +215,13 @@ class Project < ApplicationRecord
     (total_hours_downstream.to_f / total_throughput_downstream.to_f)
   end
 
-  def total_gap(date = Time.zone.today)
-    last_results = locate_last_results_for_date(date)
-    known_scope = last_results.last&.known_scope || initial_scope
+  def backlog_remaining(date = Time.zone.today)
+    known_scope = DemandsRepository.instance.known_scope_to_date(self, date) + initial_scope
     known_scope - total_throughput_until(date)
   end
 
   def required_hours
-    total_gap * regressive_hours_per_demand
+    backlog_remaining * regressive_hours_per_demand
   end
 
   def remaining_hours
@@ -317,7 +316,7 @@ class Project < ApplicationRecord
   private
 
   def no_pressure_set(date)
-    finished? || cancelled? || remaining_days(date).zero? || total_days.zero? || total_gap(date).zero?
+    finished? || cancelled? || remaining_days(date).zero? || total_days.zero? || backlog_remaining(date).zero?
   end
 
   def locate_last_results_for_date(date = Time.zone.today)

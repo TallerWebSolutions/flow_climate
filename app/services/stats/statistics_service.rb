@@ -28,8 +28,8 @@ module Stats
       create_histogram_data(throughput_data_array)
     end
 
-    def run_montecarlo(remaining_backlog_count, leadtime_histogram_data_array, throughput_histogram_data, qty_cycles)
-      dates_and_hits_hash = compute_probability_of_dates(remaining_backlog_count, leadtime_histogram_data_array, throughput_histogram_data, qty_cycles)
+    def run_montecarlo(remaining_backlog_count, leadtime_in_days_histogram_data_array, throughput_per_week_histogram_data, qty_cycles)
+      dates_and_hits_hash = compute_probability_of_dates(remaining_backlog_count, leadtime_in_days_histogram_data_array, throughput_per_week_histogram_data, qty_cycles)
       Presenter::MonteCarloPresenter.new(dates_and_hits_hash)
     end
 
@@ -52,21 +52,22 @@ module Stats
       histogram_data
     end
 
-    def compute_probability_of_dates(remaining_backlog_count, leadtime_histogram_data_array, throughput_histogram_data, qty_cycles)
+    def compute_probability_of_dates(remaining_backlog_count, leadtime_in_days_histogram_data_array, throughput_histogram_data, qty_cycles)
       date_hits_hash = {}
       qty_cycles.times do
-        new_prediction = run_montecarlo_cycle(remaining_backlog_count, leadtime_histogram_data_array, throughput_histogram_data)
+        new_prediction = run_montecarlo_cycle(remaining_backlog_count, leadtime_in_days_histogram_data_array, throughput_histogram_data)
         date_hits_hash[new_prediction.beginning_of_day.to_i] = date_frequency(date_hits_hash, new_prediction)
       end
 
       date_hits_hash
     end
 
-    def run_montecarlo_cycle(remaining_backlog_count, leadtime_histogram_data_array, throughput_histogram_data_array)
+    def run_montecarlo_cycle(remaining_backlog_count, leadtime_in_days_histogram_data_array, throughput_histogram_data_array)
       new_prediction_interval = 0
+      leadtime_in_days_histogram_data = create_histogram_data(leadtime_in_days_histogram_data_array)
       remaining_backlog_count.times do
-        chosen_value = choose_weighted(create_histogram_data(leadtime_histogram_data_array))
-        new_prediction_interval += chosen_value / 86_400 if chosen_value.positive?
+        chosen_value = choose_weighted(leadtime_in_days_histogram_data)
+        new_prediction_interval += chosen_value if chosen_value.positive?
       end
       slots_for_paralelism = choose_weighted(create_histogram_data(throughput_histogram_data_array))
       slots_for_paralelism = 1 unless slots_for_paralelism.positive?

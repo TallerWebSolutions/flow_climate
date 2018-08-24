@@ -21,7 +21,7 @@ module Highchart
     end
 
     def delivered_vs_remaining
-      [{ name: I18n.t('projects.show.delivered_demands.opened_in_period'), data: [@all_projects.sum { |project| project.demands.opened_after_date(lower_limit_date_to_charts).count }] }, { name: I18n.t('projects.show.delivered_demands.delivered'), data: [@all_projects.sum { |project| project.demands.finished_after_date(lower_limit_date_to_charts).count }] }, { name: I18n.t('projects.show.scope_gap'), data: [@all_projects.sum(&:total_gap)] }]
+      [{ name: I18n.t('projects.show.delivered_demands.opened_in_period'), data: [@all_projects.sum { |project| project.demands.opened_after_date(lower_limit_date_to_charts).count }] }, { name: I18n.t('projects.show.delivered_demands.delivered'), data: [@all_projects.sum { |project| project.demands.finished_after_date(lower_limit_date_to_charts).count }] }, { name: I18n.t('projects.show.scope_gap'), data: [@all_projects.sum(&:backlog_remaining)] }]
     end
 
     def deadline
@@ -51,22 +51,22 @@ module Highchart
 
     def build_montecarlo_data(project)
       @monte_carlo_data = if project.present?
-                            Stats::StatisticsService.instance.run_montecarlo(project.demands.count, gather_leadtime_data(project), gather_throughput_data(project), 100)
+                            Stats::StatisticsService.instance.run_montecarlo(project.backlog_remaining, gather_leadtime_data(project), gather_throughput_data(project), 100)
                           else
                             Stats::Presenter::MonteCarloPresenter.new({})
                           end
     end
 
     def gather_leadtime_data(project)
-      leadtime_data_array = ProjectsRepository.instance.leadtime_per_week([project], lower_limit_date_to_charts).values
-      leadtime_data_array = ProjectsRepository.instance.leadtime_per_week(project.product.projects, lower_limit_date_to_charts).values if leadtime_data_array.size < 10
-      leadtime_data_array
+      leadtime_data_array = ProjectsRepository.instance.leadtime_per_week([project], project.start_date).values
+      leadtime_data_array = ProjectsRepository.instance.leadtime_per_week(project.product.projects, project.product.projects.minimum(:start_date)).values if leadtime_data_array.size < 10
+      leadtime_data_array.map { |leadtime| leadtime.to_f / 86_400 }.last(10)
     end
 
     def gather_throughput_data(project)
-      throughput_data_array = ProjectsRepository.instance.throughput_per_week([project], lower_limit_date_to_charts).values
-      throughput_data_array = ProjectsRepository.instance.throughput_per_week(project.product.projects, lower_limit_date_to_charts).values if throughput_data_array.size < 10
-      throughput_data_array
+      throughput_data_array = ProjectsRepository.instance.throughput_per_week([project], project.start_date).values
+      throughput_data_array = ProjectsRepository.instance.throughput_per_week(project.product.projects, project.product.projects.minimum(:start_date)).values if throughput_data_array.size < 10
+      throughput_data_array.last(10)
     end
 
     def build_deadline_odds_data(monte_carlo_data, project)

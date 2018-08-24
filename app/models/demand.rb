@@ -59,7 +59,8 @@ class Demand < ApplicationRecord
   scope :finished_in_stream, ->(stage_stream) { joins(demand_transitions: :stage).where('stages.end_point = true AND stages.stage_stream = :stage_stream', stage_stream: stage_stream).uniq }
   scope :finished, -> { where('end_date IS NOT NULL') }
   scope :finished_with_leadtime, -> { where('end_date IS NOT NULL AND leadtime IS NOT NULL') }
-  scope :finished_until_date_with_leadtime, ->(limit_date) { finished_with_leadtime.where('demands.end_date <= :limit_date', limit_date: limit_date) }
+  scope :finished_until_date, ->(limit_date) { finished.where('demands.end_date <= :limit_date', limit_date: limit_date) }
+  scope :finished_until_date_with_leadtime, ->(limit_date) { finished_with_leadtime.finished_until_date(limit_date) }
   scope :finished_after_date, ->(limit_date) { finished.where('demands.end_date >= :limit_date', limit_date: limit_date.beginning_of_day) }
   scope :finished_with_leadtime_after_date, ->(limit_date) { finished_with_leadtime.where('demands.end_date >= :limit_date', limit_date: limit_date.beginning_of_day) }
   scope :finished_bugs, -> { bug.finished }

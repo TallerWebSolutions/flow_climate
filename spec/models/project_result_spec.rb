@@ -150,7 +150,7 @@ RSpec.describe ProjectResult, type: :model do
           expect(result_updated.qty_hours_bug).to eq 20
           expect(result_updated.qty_bugs_closed).to eq 1
           expect(result_updated.qty_bugs_opened).to eq 1
-          expect(result_updated.flow_pressure.to_f).to eq 1.33333333333333
+          expect(result_updated.flow_pressure.to_f).to eq 1.0
           expect(result_updated.average_demand_cost.to_f).to eq 166.66666666666666
           expect(result_updated.leadtime_60_confidence.to_f).to eq 76.0
           expect(result_updated.leadtime_80_confidence.to_f).to eq 88.0
@@ -179,7 +179,7 @@ RSpec.describe ProjectResult, type: :model do
           expect(result.reload.qty_hours_bug).to eq 0
           expect(result.reload.qty_bugs_closed).to eq 0
           expect(result.reload.qty_bugs_opened).to eq 0
-          expect(result.reload.flow_pressure.to_f).to eq 1.33333333333333
+          expect(result.reload.flow_pressure.to_f).to eq 1.0
           expect(result.reload.average_demand_cost.to_f).to eq 200.0
         end
       end
