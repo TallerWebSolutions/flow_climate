@@ -46,10 +46,11 @@ class ProjectResultService
   end
 
   def save_monte_carlo_date!(project_result, qty_cycles, limit_date)
-    monte_carlo_data = Stats::StatisticsService.instance.run_montecarlo(project_result.project.demands.count,
-                                                                        ProjectsRepository.instance.leadtime_per_week([project_result.project], limit_date).values,
-                                                                        ProjectsRepository.instance.throughput_per_week([project_result.project], limit_date).values,
-                                                                        qty_cycles)
-    project_result.update(monte_carlo_date: monte_carlo_data.monte_carlo_date_hash.keys.first)
+    montecarlo_durations = Stats::StatisticsService.instance.run_montecarlo(project_result.project.demands.count,
+                                                                            ProjectsRepository.instance.throughput_per_week([project_result.project], limit_date).values,
+                                                                            qty_cycles)
+    confidence_80_duration = Stats::StatisticsService.instance.percentile(80, montecarlo_durations)
+    date_with_80_percentile = Time.zone.today + confidence_80_duration.weeks
+    project_result.update(monte_carlo_date: date_with_80_percentile)
   end
 end

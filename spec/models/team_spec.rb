@@ -132,15 +132,15 @@ RSpec.describe Team, type: :model do
     end
   end
 
-  describe '#total_gap' do
+  describe '#backlog_remaining' do
     include_context 'consolidations data for team'
-    it { expect(team.total_gap).to eq team.projects.sum(&:total_gap) }
+    it { expect(team.backlog_remaining).to eq team.projects.sum(&:backlog_remaining) }
   end
 
   describe '#percentage_remaining_scope' do
     context 'having data' do
       include_context 'consolidations data for team'
-      it { expect(team.percentage_remaining_scope).to eq((team.total_gap.to_f / team.last_week_scope.to_f) * 100) }
+      it { expect(team.percentage_remaining_scope).to eq((team.backlog_remaining.to_f / team.last_week_scope.to_f) * 100) }
     end
     context 'having no data' do
       let(:company) { Fabricate :company }

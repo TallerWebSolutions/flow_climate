@@ -126,7 +126,7 @@ pt-BR:
       flow_pressure: "Pressão do Fluxo"
       percentage_flow_pressure: "% Pressão do Fluxo"
       percentage_remaining_scope: "% Escopo Restante"
-      total_gap: "Gap Total"
+      backlog_remaining: "Backlog Remaining"
       no_data: "Não há projetos aqui. Cadastre um."
       remaining_hours: "Horas Restantes"
       risk_alerts: "Alertas de Risco"
@@ -134,6 +134,7 @@ pt-BR:
       passed_time: "Tempo Decorrido"
       leadtime:
         title: "Leadtime em dias"
+      total_remaining_weeks: "Semanas Restantes"
     show:
       initial_scope: "Escopo Inicial"
       last_team: "Time atual"
@@ -217,7 +218,7 @@ pt-BR:
       deadline:
         title: "Prazo para %{target_name}"
       date_odds:
-        tooltipsufix: "chance"
+        tooltipsufix: "semanas"
       hours_per_month:
         ylabel: "Horas Produzidas"
         title: "Horas por Mês de Esforço para %{target_name}"
@@ -254,6 +255,15 @@ pt-BR:
           leadtime_80_confidence: "80% de Confiança"
       class_of_service_pie:
         title: "Percentual das Classes de Serviço"
+      deadline_vs_montecarlo_durations:
+        confidence_95: "95% Confiança"
+        confidence_80: "80% de Confiança"
+        confidence_60: "60% de Confiança"
+      montecarlo_dates:
+        project_date: "Prazo do Projeto"
+        confidence_95: "Data com 95% de Confiança"
+        confidence_80: "Data com 80% de Confiança"
+        confidence_60: "Data com 60% de Confiança"
     project_risk_alert_table: "Alertas de risco para o projeto"
     portfolio_bulletin:
       delivered_demands: "Demandas entregues na última semana"
@@ -447,12 +457,11 @@ pt-BR:
     risk_alert_color:
       title: "Riscos em %{risk_type}"
     date_odds:
-      title: "Probabilidade das datas para %{target_name}"
-      ytitle: "Probabilidades"
+      title: "Confiança nas Durações em Semanas"
+      ytitle: "Duração em Semanas"
       xtitle: "Datas"
       project_date: "%{project_deadline} (Projeto)"
       montecarlo_date: "%{montecarlo_deadline} (Monte Carlo)"
-      nearest_montecarlo_date: "%{montecarlo_deadline} (Monte Carlo mais próxima)"
     montecarlo:
       title: "Datas de Monte Carlo para %{target_name}"
     projections:

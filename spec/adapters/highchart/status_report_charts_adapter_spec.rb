@@ -64,17 +64,18 @@ RSpec.describe Highchart::StatusReportChartsAdapter, type: :data_object do
           expect(report_data.hours_burnup_per_month_data.current_per_period).to eq [30, 244, 244]
           expect(report_data.hours_burnup_per_month_data.scope_per_period).to eq [2200.0, 2200.0, 2200.0]
           expect(report_data.throughput_per_week).to eq([{ name: I18n.t('projects.charts.throughput_per_week.stage_stream.upstream'), data: [23, 0, 0, 47, 0, 0, 0, 0, 0, 0, 0, 0] }, { name: I18n.t('projects.charts.throughput_per_week.stage_stream.downstream'), data: [2, 0, 0, 129, 0, 0, 0, 0, 0, 0, 0, 0] }])
-          expect(report_data.delivered_vs_remaining).to eq([{ name: I18n.t('projects.show.delivered_demands.opened_in_period'), data: [22] }, { name: I18n.t('projects.show.delivered_demands.delivered'), data: [5] }, { name: I18n.t('projects.show.scope_gap'), data: [365] }])
-          expect(report_data.dates_and_odds.keys.count).to be >= 1
-          expect(report_data.monte_carlo_data.dates_and_hits_hash.keys.count).to be >= 1
-          expect(report_data.monte_carlo_data.monte_carlo_date_hash.keys.count).to be >= 1
+          expect(report_data.delivered_vs_remaining).to eq([{ name: I18n.t('projects.show.delivered_demands.opened_in_period'), data: [22] }, { name: I18n.t('projects.show.delivered_demands.delivered'), data: [5] }, { name: I18n.t('projects.show.scope_gap'), data: [110] }])
+          expect(report_data.dates_to_montecarlo_duration).not_to be_empty
+          expect(report_data.confidence_95_duration).to be_within(6).of(306)
+          expect(report_data.confidence_80_duration).to be_within(6).of(286)
+          expect(report_data.confidence_60_duration).to be_within(6).of(269)
           expect(report_data.hours_per_stage).to eq(xcategories: [sixth_stage.name], hours_per_stage: [1104.0])
         end
       end
       context 'having no projects' do
         subject(:report_data) { Highchart::StatusReportChartsAdapter.new(Project.none, 'all') }
 
-        it 'do the math and provides the correct information' do
+        it 'return empty sets' do
           expect(report_data.all_projects).to eq []
           expect(report_data.active_projects).to eq []
           expect(report_data.all_projects_weeks).to eq []
@@ -87,9 +88,10 @@ RSpec.describe Highchart::StatusReportChartsAdapter, type: :data_object do
           expect(report_data.hours_burnup_per_month_data.scope_per_period).to eq []
           expect(report_data.throughput_per_week).to eq([{ name: 'Upstream', data: [] }, { name: 'Downstream', data: [] }])
           expect(report_data.delivered_vs_remaining).to eq([{ name: I18n.t('projects.show.delivered_demands.opened_in_period'), data: [0] }, { name: I18n.t('projects.show.delivered_demands.delivered'), data: [0] }, { name: I18n.t('projects.show.scope_gap'), data: [0] }])
-          expect(report_data.dates_and_odds.keys.count).to eq 0
-          expect(report_data.monte_carlo_data.dates_and_hits_hash.keys.count).to eq 0
-          expect(report_data.monte_carlo_data.monte_carlo_date_hash.keys.count).to eq 0
+          expect(report_data.dates_to_montecarlo_duration).to eq []
+          expect(report_data.confidence_95_duration).to eq 0
+          expect(report_data.confidence_80_duration).to eq 0
+          expect(report_data.confidence_60_duration).to eq 0
         end
       end
     end

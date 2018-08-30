@@ -39,13 +39,13 @@ module ProjectAggregator
     (remaining_money / total_value) * 100
   end
 
-  def total_gap
-    projects.sum(&:total_gap)
+  def backlog_remaining
+    projects.sum(&:backlog_remaining)
   end
 
   def percentage_remaining_scope
     return 0 if last_week_scope.zero?
-    (total_gap.to_f / last_week_scope.to_f) * 100
+    (backlog_remaining.to_f / last_week_scope.to_f) * 100
   end
 
   def total_flow_pressure

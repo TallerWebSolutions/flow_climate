@@ -16,7 +16,6 @@ class ChartsController < AuthenticatedController
 
   def build_status_report_charts
     @status_report_data = Highchart::StatusReportChartsAdapter.new(@projects, params[:period])
-    @montecarlo_dates = @status_report_data.monte_carlo_data
     respond_to { |format| format.js { render file: 'charts/status_report_charts.js.erb' } }
   end
 

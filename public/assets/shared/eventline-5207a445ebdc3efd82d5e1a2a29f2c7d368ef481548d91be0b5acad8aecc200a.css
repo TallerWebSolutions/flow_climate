@@ -1,0 +1,188 @@
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+body {
+    line-height: 1;
+    font-family: 'Helvetica', 'Arial', sans-serif;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+.timeline-container {
+    position: relative;
+    background-color: #f8f8f8;
+    height: 140px;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+.timeline-nav {
+    position: absolute;
+    top: 55px;
+    bottom: auto;
+    color: #dfdfdf;
+    border: 2px solid #dfdfdf;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    text-align: center;
+    vertical-align: middle;
+    padding: 5px;
+}
+.timeline-nav:hover {
+    color: #808;
+    border: 2px solid #808;
+    cursor: pointer;
+}
+.nav-future {
+    right: 10px;
+}
+.nav-past {
+    left: 10px;
+}
+.timeline-nav.inactive:hover {
+    color: #dfdfdf;
+    border: 2px solid #dfdfdf;
+    cursor: not-allowed;
+}
+#timelineWrapper {
+    position: relative;
+    height: 100%;
+    margin: 0 50px;
+    overflow: hidden;
+}
+#timelineWrapper::before, #timelineWrapper::after {
+    content: '';
+    position: absolute;
+    z-index: 2;
+    top: 0;
+    height: 100%;
+    width: 20px;
+}
+#timelineWrapper::before {
+    left: 0;
+    background-image: -webkit-linear-gradient( left , #f8f8f8, rgba(248, 248, 248, 0));
+    background-image: linear-gradient(to right, #f8f8f8, rgba(248, 248, 248, 0));
+}
+
+#timelineWrapper::after {
+    right: 0;
+    background-image: -webkit-linear-gradient( right , #f8f8f8, rgba(248, 248, 248, 0));
+    background-image: linear-gradient(to left, #f8f8f8, rgba(248, 248, 248, 0));
+}
+#timeline {
+    position: absolute;
+    z-index: 1;
+    top: 69px;
+    min-width: 900px;
+    height: 2px;
+    background-color: #dfdfdf;
+    -webkit-transition: all 0.5s ease-in-out;
+    -moz-transition: all 0.5s ease-in-out;
+    -o-transition: all 0.5s ease-in-out;
+    transition: all 0.5s ease-in-out;
+}
+.event-marker {
+    position: absolute;
+    top: -6px;
+    width: 10px;
+    height: 10px;
+    background-color: #f8f8f8;
+    border: 2px solid #dfdfdf;
+    border-radius: 50%;
+    -webkit-transition: all 0.5s ease-in-out;
+    -moz-transition: all 0.5s ease-in-out;
+    -o-transition: all 0.5s ease-in-out;
+    transition: all 0.5s ease-in-out;
+}
+.event-marker.selected {
+    transform: scale(1.2);
+    background-color: #808;
+    border: 2px solid #808;
+}
+.event-marker:hover {
+    transform: scale(1.2);
+    background-color: #808;
+    border: 2px solid #808;
+}
+.event-date{
+    position: relative;
+    bottom: 25px;
+    width: 30px;
+}
+.timeline-tick {
+    position: absolute;
+    bottom: 0;
+    width: 2px;
+    height: 20px;
+    background-color: #dfdfdf;
+}
+.tick-label {
+    position: absolute;
+    bottom: 35px;
+    font-size: 7pt;
+    font-weight: bold;
+}
+.event-detail-container {
+    min-height: 150px;
+    background-color: #f8f8f8;
+    padding: 20px;
+}
+.selected-event {
+    width: 60%;
+    font-family: 'Helvetica', 'Arial', sans-serif;
+    font-size: 12px;
+}
+.event-title {
+    font-family: 'Georgia', serif;
+    font-size: 20px;
+}
+.event-date-range {
+    margin-top: 10px;
+}
+.event-start-date {
+    display: inline-block;
+}
+.separator {
+    display: inline-block;
+}
+.event-end-date {
+    display: inline-block;
+}
+.event-notes {
+    margin-top: 10px;
+}

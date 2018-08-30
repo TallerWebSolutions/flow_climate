@@ -54,4 +54,13 @@ RSpec.describe TimeService, type: :service do
       expect(weeks_year).to eq [Date.new(2018, 7, 1), Date.new(2018, 8, 1)]
     end
   end
+
+  describe '#add_weeks_to_today' do
+    before { travel_to Date.new(2018, 8, 30) }
+    it 'returns the new date x weeks later than today' do
+      control_date_5_weeks_later = TimeService.instance.add_weeks_to_today(5)
+
+      expect(control_date_5_weeks_later).to eq Date.new(2018, 10, 4)
+    end
+  end
 end

@@ -33,12 +33,12 @@ namespace :project_migration do
     Jira::ProjectJiraConfig.create(project: Project.find(36), team: Project.find(36).current_team, jira_account_domain: 'tallerflow', jira_project_key: '10004', fix_version_name: 'Fase 4')
 
     ## Stages
-    Stage.find(12).update(integration_id: '10012')
+    Stage.find(12).update(integration_id: '10012') # Ready to design
     Stage.find(14).update(integration_id: '10014')
     Stage.find(15).update(integration_id: '10015')
     Stage.find(17).update(integration_id: '10009')
     Stage.find(19).update(integration_id: '10008')
-    Stage.find(20).update(integration_id: '10001')
+    Stage.find(20).update(integration_id: '10001') # Ready to dev
     Stage.find(13).update(integration_id: '10013')
     Stage.find(18).update(integration_id: '10010')
     Stage.find(22).update(integration_id: '10005')
@@ -55,7 +55,7 @@ namespace :project_migration do
     Jira::ProjectJiraConfig.create(project: Project.find(108), team: Project.find(108).current_team, jira_account_domain: 'tallerflow', jira_project_key: 'FC', fix_version_name: 'Fase 3')
 
     # Stages
-    Stage.find(3).update(integration_id: '10001')
+    Stage.find(3).update(integration_id: '10001') # Ready to dev
     Stage.find(8).update(integration_id: '10002')
     Stage.find(9).update(integration_id: '10017')
     Stage.find(5).update(integration_id: '10005')
