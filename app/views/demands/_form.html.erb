@@ -1,74 +1,82 @@
 <div class="standard-form">
 
   <div class="row">
-    <div class='col-xs-2 form-group <%= 'has-error' if @demand.errors[:demand_type].present? %>'>
-      <%= f.label :demand_type, class: 'control-label' %>
-      <%= f.select :demand_type, Demand.demand_types.map { |key, _value| [t("activerecord.attributes.demand.enums.demand_type.#{key}"), key] }, {include_blank: t('general.select'), selected: @demand.demand_type }, class: 'form-control' %>
+    <div class='col-xs-6 form-group <%= 'has-error' if @demand.errors[:demand_type].present? %>'>
+      <%= form.label :demand_type, class: 'control-label' %>
+      <%= form.select :demand_type, Demand.demand_types.map { |key, _value| [t("activerecord.attributes.demand.enums.demand_type.#{key}"), key] }, {include_blank: t('general.select'), selected: @demand.demand_type }, class: 'form-control' %>
       <span class="help-block"><%= @demand.errors[:demand_type].join(', ') %></span>
     </div>
-    <div class='col-xs-2 form-group <%= 'has-error' if @demand.errors[:class_of_service].present? %>'>
-      <%= f.label :class_of_service, class: 'control-label' %>
-      <%= f.select :class_of_service, Demand.class_of_services.map { |key, _value| [t("activerecord.attributes.demand.enums.class_of_service.#{key}"), key] }, { include_blank: t('general.select'), selected: @demand.class_of_service }, class: 'form-control' %>
+    <div class='col-xs-6 form-group <%= 'has-error' if @demand.errors[:class_of_service].present? %>'>
+      <%= form.label :class_of_service, class: 'control-label' %>
+      <%= form.select :class_of_service, Demand.class_of_services.map { |key, _value| [t("activerecord.attributes.demand.enums.class_of_service.#{key}"), key] }, { include_blank: t('general.select'), selected: @demand.class_of_service }, class: 'form-control' %>
       <span class="help-block"><%= @demand.errors[:class_of_service].join(', ') %></span>
     </div>
-    <div class='col-xs-2 form-group <%= 'has-error' if @demand.errors[:demand_id].present? %>'>
-      <%= f.label :demand_id, class: 'control-label required' %>
-      <%= f.text_field :demand_id, class: 'form-control', autofocus: true %>
+  </div>
+
+  <div class="row">
+    <div class='col-xs-6 form-group <%= 'has-error' if @demand.errors[:demand_id].present? %>'>
+      <%= form.label :demand_id, class: 'control-label required' %>
+      <%= form.text_field :demand_id, class: 'form-control', autofocus: true %>
       <span class="help-block"><%= @demand.errors[:demand_id].join(', ') %></span>
     </div>
-    <div class='col-xs-1 form-check bottom-spaced-component'>
-      <%= f.check_box :downstream, class: 'form-check-input', checked: true %>
-      <%= f.label :downstream, class: 'form-check-label' %>
+    <div class='col-xs-3 form-check bottom-spaced-component'>
+      <%= form.check_box :downstream, class: 'form-check-input', checked: true %>
+      <%= form.label :downstream, class: 'form-check-label' %>
     </div>
-    <div class='col-xs-1 form-check bottom-spaced-component'>
-      <%= f.check_box :manual_effort, class: 'form-check-input', checked: true %>
-      <%= f.label :manual_effort, class: 'form-check-label' %>
+    <div class='col-xs-3 form-check bottom-spaced-component'>
+      <%= form.check_box :manual_effort, class: 'form-check-input', checked: true %>
+      <%= form.label :manual_effort, class: 'form-check-label' %>
     </div>
-    <div class='col-xs-2 form-group <%= 'has-error' if @demand.errors[:effort_upstream].present? %>'>
-      <%= f.label :effort_upstream, class: 'control-label required' %>
-      <%= f.number_field :effort_upstream, class: 'form-control', step: 0.01 %>
+  </div>
+
+  <div class="row">
+    <div class='col-xs-6 form-group <%= 'has-error' if @demand.errors[:effort_upstream].present? %>'>
+      <%= form.label :effort_upstream, class: 'control-label required' %>
+      <%= form.number_field :effort_upstream, class: 'form-control', step: 0.01 %>
       <span class="help-block"><%= @demand.errors[:effort_upstream].join(', ') %></span>
     </div>
-    <div class='col-xs-2 form-group <%= 'has-error' if @demand.errors[:effort_downstream].present? %>'>
-      <%= f.label :effort_downstream, class: 'control-label required' %>
-      <%= f.number_field :effort_downstream, class: 'form-control', step: 0.01 %>
+    <div class='col-xs-6 form-group <%= 'has-error' if @demand.errors[:effort_downstream].present? %>'>
+      <%= form.label :effort_downstream, class: 'control-label required' %>
+      <%= form.number_field :effort_downstream, class: 'form-control', step: 0.01 %>
       <span class="help-block"><%= @demand.errors[:effort_downstream].join(', ') %></span>
     </div>
   </div>
 
   <div class="row">
-    <div class='col-xs-3 form-group <%= 'has-error' if @demand.errors[:assignees_count].present? %>'>
-      <%= f.label :assignees_count, class: 'control-label required' %>
-      <%= f.number_field :assignees_count, class: 'form-control', step: 1 %>
-      <span class="help-block"><%= @demand.errors[:assignees_count].join(', ') %></span>
-    </div>
-    <div class='col-xs-3 form-group <%= 'has-error' if @demand.errors[:created_date].present? %>'>
-      <%= f.label :created_date, class: 'control-label required' %>
-      <%= f.date_field :created_date, class: 'form-control' %>
+    <div class='col-xs-6 form-group <%= 'has-error' if @demand.errors[:created_date].present? %>'>
+      <%= form.label :created_date, class: 'control-label required' %>
+      <%= form.date_field :created_date, class: 'form-control' %>
       <span class="help-block"><%= @demand.errors[:created_date].join(', ') %></span>
     </div>
-    <div class='col-xs-3 form-group <%= 'has-error' if @demand.errors[:commitment_date].present? %>'>
-      <%= f.label :commitment_date, class: 'control-label' %>
-      <%= f.date_field :commitment_date, class: 'form-control' %>
+    <div class='col-xs-6 form-group <%= 'has-error' if @demand.errors[:commitment_date].present? %>'>
+      <%= form.label :commitment_date, class: 'control-label' %>
+      <%= form.date_field :commitment_date, class: 'form-control' %>
       <span class="help-block"><%= @demand.errors[:commitment_date].join(', ') %></span>
     </div>
-    <div class='col-xs-3 form-group <%= 'has-error' if @demand.errors[:end_date].present? %>'>
-      <%= f.label :end_date, class: 'control-label' %>
-      <%= f.date_field :end_date, class: 'form-control' %>
+  </div>
+  <div class="row">
+    <div class='col-xs-6 form-group <%= 'has-error' if @demand.errors[:end_date].present? %>'>
+      <%= form.label :end_date, class: 'control-label' %>
+      <%= form.date_field :end_date, class: 'form-control' %>
       <span class="help-block"><%= @demand.errors[:end_date].join(', ') %></span>
+    </div>
+    <div class='col-xs-6 form-group <%= 'has-error' if @demand.errors[:assignees_count].present? %>'>
+      <%= form.label :assignees_count, class: 'control-label required' %>
+      <%= form.number_field :assignees_count, class: 'form-control', step: 1 %>
+      <span class="help-block"><%= @demand.errors[:assignees_count].join(', ') %></span>
     </div>
   </div>
 
   <div class="row">
     <div class='col-xs-12 form-group'>
-      <%= f.label :url, class: 'control-label required' %>
-      <%= f.text_field :url, class: 'form-control' %>
+      <%= form.label :url, class: 'control-label required' %>
+      <%= form.text_field :url, class: 'form-control' %>
     </div>
   </div>
 
   <div class="row">
     <div class="col-xs-12">
-      <%= f.submit class: 'btn btn-success' %>
+      <%= form.submit class: 'btn btn-success' %>
     </div>
   </div>
 </div>

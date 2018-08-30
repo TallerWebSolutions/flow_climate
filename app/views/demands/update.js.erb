@@ -1,0 +1,8 @@
+var updatedRow = $('#demand_<%= @demand.id %>');
+updatedRow.html("<%= escape_javascript(render 'demands/demand_fields', demand: @demand).html_safe %>");
+
+$("#edit-demand-form").modal('toggle');
+$('body').removeClass('modal-open');
+$('.modal-backdrop').remove();
+
+updatedRow.effect("highlight", { color: "lightgreen" }, 2000);
