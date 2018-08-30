@@ -21,15 +21,13 @@ class DemandsController < AuthenticatedController
     render 'demands/destroy.js.erb'
   end
 
-  def edit; end
+  def edit
+    respond_to { |format| format.js }
+  end
 
   def update
-    if @demand.update(demand_params)
-      ProjectResultService.instance.compute_demand!(@project.current_team, @demand) if @project.current_team.present?
-      return redirect_to company_project_demand_path(@company, @project, @demand)
-    end
-
-    render :edit
+    @demand.update(demand_params)
+    render 'demands/update'
   end
 
   def show

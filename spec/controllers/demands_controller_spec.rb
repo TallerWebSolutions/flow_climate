@@ -15,12 +15,12 @@ RSpec.describe DemandsController, type: :controller do
       it { expect(response).to have_http_status :unauthorized }
     end
     describe 'GET #edit' do
-      before { get :edit, params: { company_id: 'foo', project_id: 'bar', id: 'sbbrubles' } }
-      it { expect(response).to redirect_to new_user_session_path }
+      before { get :edit, params: { company_id: 'foo', project_id: 'bar', id: 'sbbrubles' }, xhr: true }
+      it { expect(response).to have_http_status 401 }
     end
     describe 'PUT #update' do
-      before { put :update, params: { company_id: 'foo', project_id: 'bar', id: 'sbbrubles' } }
-      it { expect(response).to redirect_to new_user_session_path }
+      before { put :update, params: { company_id: 'foo', project_id: 'bar', id: 'sbbrubles' }, xhr: true }
+      it { expect(response).to have_http_status 401 }
     end
     describe 'PUT #synchronize_jira' do
       before { put :synchronize_jira, params: { company_id: 'foo', project_id: 'bar', id: 'bla' } }
@@ -163,34 +163,34 @@ RSpec.describe DemandsController, type: :controller do
       let!(:demand) { Fabricate :demand }
 
       context 'valid parameters' do
-        before { get :edit, params: { company_id: company, project_id: project, id: demand } }
+        before { get :edit, params: { company_id: company, project_id: project, id: demand }, xhr: true }
         it 'assigns the instance variables and renders the template' do
-          expect(response).to render_template :edit
           expect(assigns(:company)).to eq company
           expect(assigns(:project)).to eq project
           expect(assigns(:demand)).to eq demand
+          expect(response).to render_template 'demands/edit'
         end
       end
 
       context 'invalid' do
         context 'project' do
-          before { get :edit, params: { company_id: company, project_id: 'foo', id: demand } }
+          before { get :edit, params: { company_id: company, project_id: 'foo', id: demand }, xhr: true }
           it { expect(response).to have_http_status :not_found }
         end
 
         context 'demand' do
-          before { get :edit, params: { company_id: company, project_id: project, id: 'bar' } }
+          before { get :edit, params: { company_id: company, project_id: project, id: 'bar' }, xhr: true }
           it { expect(response).to have_http_status :not_found }
         end
 
         context 'company' do
           context 'non-existent' do
-            before { get :edit, params: { company_id: 'foo', project_id: project, id: demand } }
+            before { get :edit, params: { company_id: 'foo', project_id: project, id: demand }, xhr: true }
             it { expect(response).to have_http_status :not_found }
           end
           context 'not-permitted' do
             let(:company) { Fabricate :company, users: [] }
-            before { get :edit, params: { company_id: company, project_id: project, id: demand } }
+            before { get :edit, params: { company_id: company, project_id: project, id: demand }, xhr: true }
             it { expect(response).to have_http_status :not_found }
           end
         end
@@ -212,7 +212,7 @@ RSpec.describe DemandsController, type: :controller do
 
       context 'passing valid parameters' do
         it 'updates the demand and redirects to projects index' do
-          put :update, params: { company_id: company, project_id: project, id: demand, demand: { demand_id: 'xpto', demand_type: 'bug', downstream: true, manual_effort: true, class_of_service: 'expedite', effort_upstream: 5, effort_downstream: 2, created_date: created_date, commitment_date: created_date, end_date: end_date } }
+          put :update, params: { company_id: company, project_id: project, id: demand, demand: { demand_id: 'xpto', demand_type: 'bug', downstream: true, manual_effort: true, class_of_service: 'expedite', effort_upstream: 5, effort_downstream: 2, created_date: created_date, commitment_date: created_date, end_date: end_date } }, xhr: true
           updated_demand = Demand.last
           expect(updated_demand.demand_id).to eq 'xpto'
           expect(updated_demand.demand_type).to eq 'bug'
@@ -224,26 +224,26 @@ RSpec.describe DemandsController, type: :controller do
           expect(updated_demand.created_date).to eq created_date
           expect(updated_demand.commitment_date).to eq created_date
           expect(updated_demand.end_date).to eq end_date
-          expect(response).to redirect_to company_project_demand_path(company, project, updated_demand)
+          expect(response).to render_template 'demands/update'
         end
       end
 
       context 'passing invalid' do
         context 'project' do
-          before { put :update, params: { company_id: company, project_id: 'foo', id: demand } }
+          before { put :update, params: { company_id: company, project_id: 'foo', id: demand }, xhr: true }
           it { expect(response).to have_http_status :not_found }
         end
 
         context 'demand parameters' do
-          before { put :update, params: { company_id: company, project_id: project, id: demand, demand: { demand_id: '', demand_type: '', effort: nil, created_date: nil, commitment_date: nil, end_date: nil } } }
+          before { put :update, params: { company_id: company, project_id: project, id: demand, demand: { demand_id: '', demand_type: '', effort: nil, created_date: nil, commitment_date: nil, end_date: nil } }, xhr: true }
           it 'does not update the demand and re-render the template with the errors' do
-            expect(response).to render_template :edit
+            expect(response).to render_template 'demands/update'
             expect(assigns(:demand).errors.full_messages).to match_array ['Data de Criação não pode ficar em branco', 'Id da Demanda não pode ficar em branco', 'Tipo da Demanda não pode ficar em branco']
           end
         end
 
         context 'demand' do
-          before { put :update, params: { company_id: company, project_id: project, id: 'bar' } }
+          before { put :update, params: { company_id: company, project_id: project, id: 'bar' }, xhr: true }
           it { expect(response).to have_http_status :not_found }
         end
 
@@ -251,7 +251,7 @@ RSpec.describe DemandsController, type: :controller do
           let(:company) { Fabricate :company, users: [] }
           let(:customer) { Fabricate :customer, company: company }
 
-          before { put :update, params: { company_id: company, project_id: project, id: demand, demand: { customer_id: customer, name: 'foo' } } }
+          before { put :update, params: { company_id: company, project_id: project, id: demand, demand: { customer_id: customer, name: 'foo' } }, xhr: true }
           it { expect(response).to have_http_status :not_found }
         end
       end

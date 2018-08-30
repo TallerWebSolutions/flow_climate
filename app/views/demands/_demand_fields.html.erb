@@ -1,0 +1,13 @@
+<td><%= render 'demands/demand_actions', demand: demand %></td>
+<td><%= demand.project.full_name %></td>
+<td><%= link_to demand.demand_id, company_project_demand_path(demand.company, demand.project, demand) %></td>
+<td><%= t("activerecord.attributes.demand.enums.demand_type.#{demand.demand_type}") %></td>
+<td><%= t("activerecord.attributes.demand.enums.class_of_service.#{demand.class_of_service}") %></td>
+<td><%= demand.current_stage&.name %></td>
+<td><%= l(demand.created_date, format: :short) if demand.created_date.present? %></td>
+<td><%= l(demand.commitment_date, format: :short) if demand.commitment_date.present? %></td>
+<td><%= l(demand.end_date, format: :short) if demand.end_date.present? %></td>
+<td><%= number_with_precision(demand.effort_upstream, precision: 2) %></td>
+<td><%= number_with_precision(demand.effort_downstream, precision: 2) %></td>
+<td><%= time_ago_in_words(demand.leadtime.seconds.ago) if demand.leadtime.present? %></td>
+<td><%= render 'demands/demand_actions', demand: demand %></td>
