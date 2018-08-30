@@ -8,7 +8,6 @@ RSpec.describe Company, type: :model do
     it { is_expected.to have_many(:products).through(:customers) }
     it { is_expected.to have_many(:projects).through(:customers) }
     it { is_expected.to have_many(:teams).dependent(:restrict_with_error) }
-    it { is_expected.to have_many(:operation_results).dependent(:restrict_with_error) }
     it { is_expected.to have_one(:company_settings).dependent(:destroy) }
     it { is_expected.to have_many(:pipefy_configs).dependent(:destroy) }
     it { is_expected.to have_many(:jira_accounts).dependent(:destroy) }
@@ -382,5 +381,23 @@ RSpec.describe Company, type: :model do
     let!(:third_result) { Fabricate :project_result, project: other_customer_project, team: third_team }
 
     it { expect(company.total_available_hours).to eq 340 }
+  end
+
+  describe '#delivered_hours_for_month' do
+    let(:company) { Fabricate :company }
+    let(:customer) { Fabricate :customer, company: company }
+    let(:other_customer) { Fabricate :customer, company: company }
+    let(:other_company_customer) { Fabricate :customer }
+
+    let!(:project) { Fabricate :project, end_date: 4.weeks.from_now, customer: customer }
+    let!(:other_project) { Fabricate :project, end_date: 4.weeks.from_now, customer: customer }
+    let!(:other_customer_project) { Fabricate :project, end_date: 4.weeks.from_now, customer: other_customer }
+    let!(:other_company_project) { Fabricate :project, end_date: 4.weeks.from_now, customer: other_company_customer }
+
+    let!(:first_result) { Fabricate :project_result, project: project, qty_hours_downstream: 20, qty_hours_upstream: 10 }
+    let!(:second_result) { Fabricate :project_result, project: other_project, qty_hours_downstream: 15, qty_hours_upstream: 12 }
+    let!(:third_result) { Fabricate :project_result, project: other_customer_project, qty_hours_downstream: 45, qty_hours_upstream: 23 }
+
+    it { expect(company.delivered_hours_for_month(Time.zone.today)).to eq 125 }
   end
 end

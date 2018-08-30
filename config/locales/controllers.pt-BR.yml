@@ -104,6 +104,7 @@ pt-BR:
       delivered_hours: "Horas Entregues (Operação)"
       throughput: "Throughput"
       hours_per_demand: "Horas/Demanda"
+      income_per_hour: "Entradas por Hora"
   team_members:
     index:
       title: "Membros do Time"

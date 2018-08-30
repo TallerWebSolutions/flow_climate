@@ -33,23 +33,26 @@ class FinancialInformation < ApplicationRecord
   end
 
   def cost_per_hour
-    expenses_total / hours_delivered_operation_result
+    return 0 if project_delivered_hours.zero?
+    expenses_total / project_delivered_hours
+  end
+
+  def income_per_hour
+    return 0 if project_delivered_hours.zero?
+    income_total / project_delivered_hours
   end
 
   def hours_per_demand
-    hours_delivered_operation_result.to_f / throughput_operation_result.to_f
+    return 0 if throughput_in_month.zero?
+    project_delivered_hours.to_f / throughput_in_month.to_f
   end
 
   def project_delivered_hours
-    ProjectResultsRepository.instance.project_results_for_company_month(company, finances_date).sum(&:project_delivered_hours)
+    company.delivered_hours_for_month(finances_date).to_f
   end
 
-  def hours_delivered_operation_result
-    OperationResultsRepository.instance.operation_results_for_company_month(company, finances_date.month, finances_date.year).sum(&:delivered_hours)
-  end
-
-  def throughput_operation_result
-    OperationResultsRepository.instance.operation_results_for_company_month(company, finances_date.month, finances_date.year).sum(&:total_th)
+  def throughput_in_month
+    company.throughput_in_month(finances_date)
   end
 
   def red?

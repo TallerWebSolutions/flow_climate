@@ -530,6 +530,7 @@ en:
       delivered_hours: "Delivered Hours"
       hours_per_demand: "Hours/Demand"
       cost_per_hour: "Cost/Hour"
+      income_per_hour: "Income per Hour"
   project_change_deadline_histories:
     index:
       dates_difference: "Difference (days)"

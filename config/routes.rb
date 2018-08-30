@@ -49,7 +49,6 @@ Rails.application.routes.draw do
     end
 
     resources :financial_informations, only: %i[new create edit update destroy]
-    resources :operation_results, only: %i[index destroy new create]
 
     resources :customers do
       get 'search_for_projects/:status_filter', action: :search_for_projects, as: 'search_for_projects', on: :member

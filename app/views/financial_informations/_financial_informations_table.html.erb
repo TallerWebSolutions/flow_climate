@@ -19,8 +19,8 @@
       <th><%= FinancialInformation.human_attribute_name :expenses_total %></th>
       <th><%= t('financial_informations.index.throughput') %></th>
       <th><%= t('financial_informations.index.project_delivered_hours_count') %></th>
-      <th><%= t('financial_informations.index.delivered_hours') %></th>
       <th><%= t('financial_informations.index.hours_per_demand') %></th>
+      <th><%= t('financial_informations.index.income_per_hour') %></th>
       <th><%= t('financial_informations.index.cost_per_hour') %></th>
       <th><%= t('general.result') %></th>
       <th><%= t('general.table.actions') %></th>
@@ -33,10 +33,10 @@
         <td><%= l(finance.finances_date, format: :month_year) %></td>
         <td><%= number_to_currency(finance.income_total) %></td>
         <td><%= number_to_currency(finance.expenses_total) %></td>
-        <td><%= finance.throughput_operation_result %></td>
+        <td><%= finance.throughput_in_month %></td>
         <td><%= finance.project_delivered_hours %></td>
-        <td><%= finance.hours_delivered_operation_result %></td>
         <td><%= number_with_precision(finance.hours_per_demand, precision: 2) %></td>
+        <td><%= number_to_currency(finance.income_per_hour) %></td>
         <td><%= number_to_currency(finance.cost_per_hour) %></td>
         <td><%= number_to_currency(finance.financial_result) %></td>
         <td>

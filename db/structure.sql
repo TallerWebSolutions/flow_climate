@@ -418,45 +418,6 @@ ALTER SEQUENCE public.jira_custom_field_mappings_id_seq OWNED BY public.jira_cus
 
 
 --
--- Name: operation_results; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.operation_results (
-    id bigint NOT NULL,
-    company_id integer NOT NULL,
-    result_date date NOT NULL,
-    people_billable_count integer NOT NULL,
-    operation_week_value numeric NOT NULL,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
-    available_hours integer NOT NULL,
-    delivered_hours integer NOT NULL,
-    total_th integer NOT NULL,
-    total_opened_bugs integer NOT NULL,
-    total_accumulated_closed_bugs integer NOT NULL
-);
-
-
---
--- Name: operation_results_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.operation_results_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: operation_results_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.operation_results_id_seq OWNED BY public.operation_results.id;
-
-
---
 -- Name: pipefy_configs; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1068,13 +1029,6 @@ ALTER TABLE ONLY public.jira_custom_field_mappings ALTER COLUMN id SET DEFAULT n
 
 
 --
--- Name: operation_results id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.operation_results ALTER COLUMN id SET DEFAULT nextval('public.operation_results_id_seq'::regclass);
-
-
---
 -- Name: pipefy_configs id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1258,14 +1212,6 @@ ALTER TABLE ONLY public.jira_accounts
 
 ALTER TABLE ONLY public.jira_custom_field_mappings
     ADD CONSTRAINT jira_custom_field_mappings_pkey PRIMARY KEY (id);
-
-
---
--- Name: operation_results operation_results_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.operation_results
-    ADD CONSTRAINT operation_results_pkey PRIMARY KEY (id);
 
 
 --
@@ -1981,14 +1927,6 @@ ALTER TABLE ONLY public.demand_transitions
 
 
 --
--- Name: operation_results fk_rails_dbd0ae3c1c; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.operation_results
-    ADD CONSTRAINT fk_rails_dbd0ae3c1c FOREIGN KEY (company_id) REFERENCES public.companies(id);
-
-
---
 -- Name: teams fk_rails_e080df8a94; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2093,6 +2031,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20180703233113'),
 ('20180731181345'),
 ('20180820175021'),
-('20180822231503');
+('20180822231503'),
+('20180830205543');
 
 

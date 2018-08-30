@@ -19,7 +19,6 @@ class Company < ApplicationRecord
   has_many :products, through: :customers
   has_many :projects, through: :customers
   has_many :teams, dependent: :restrict_with_error
-  has_many :operation_results, dependent: :restrict_with_error
   has_many :pipefy_configs, class_name: 'Pipefy::PipefyConfig', dependent: :destroy, inverse_of: :company
   has_many :stages, dependent: :restrict_with_error
   has_many :jira_accounts, class_name: 'Jira::JiraAccount', dependent: :destroy, inverse_of: :company
@@ -112,6 +111,10 @@ class Company < ApplicationRecord
     total_available = 0
     teams.sum { |team| total_available += team.active_monthly_available_hours_for_billable_types(projects.pluck(:project_type).uniq) }
     total_available
+  end
+
+  def delivered_hours_for_month(month)
+    ProjectResultsRepository.instance.project_results_for_company_month(self, month).sum(&:project_delivered_hours)
   end
 
   private
