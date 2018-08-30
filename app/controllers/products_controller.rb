@@ -14,7 +14,7 @@ class ProductsController < AuthenticatedController
     return render :show if @product_projects.blank?
     @report_data = Highchart::OperationalChartsAdapter.new(@product_projects, 'all')
     @status_report_data = Highchart::StatusReportChartsAdapter.new(@product_projects, 'all')
-    @montecarlo_dates = @status_report_data.monte_carlo_data
+    @montecarlo_durations = @status_report_data.deadline_vs_montecarlo_durations
   end
 
   def new

@@ -1,0 +1,395 @@
+.accordion {
+    background-color: #eee;
+    color: #444;
+    cursor: pointer;
+    padding: 18px;
+    width: 100%;
+    border: none;
+    text-align: left;
+    outline: none;
+    font-size: 15px;
+    transition: 0.4s;
+}
+
+.active, .accordion:hover {
+    background-color: #ccc;
+}
+
+.panel {
+    padding: 0 18px;
+    display: none;
+    background-color: white;
+    overflow: hidden;
+}
+.cd-timeline {
+    overflow: hidden;
+    margin: 2em auto;
+}
+
+.cd-timeline__container {
+    position: relative;
+    width: 90%;
+    max-width: 1170px;
+    margin: 0 auto;
+    padding: 2em 0;
+}
+
+.cd-timeline__container::before {
+    /* this is the vertical line */
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 18px;
+    height: 100%;
+    width: 4px;
+    background: #d7e4ed;
+}
+.help-block {
+    margin-bottom: 0;
+
+    font-size: 1.2rem;
+    text-align: left;
+}
+
+.has-error {
+    border: 2px solid lighten(#EE1C3A, 10%) !important;
+    box-shadow: none;
+}
+
+.no-data {font-style: italic;}
+
+.header-link {
+    text-align: right;
+    text-transform: uppercase;
+}
+
+.bottom-spaced-component {margin-bottom: 8px;}
+
+label.required:after{content: " *"}
+
+.label-hint { color: #768899; }
+
+.data-red {
+    color: #EE1C3A;
+}
+
+.data-yellow {
+    color: #EEE1B7;
+}
+
+h1 {font-size: xx-large;}
+
+h2 {
+    font-size: large;
+    margin-bottom: 15px;
+    font-weight: bold;
+}
+
+tfoot {
+    display: table-footer-group;
+    vertical-align: middle;
+    border-color: inherit;
+    font-weight: bolder;
+}
+.header {
+    padding: 10px;
+    background-color: #8fa9df;
+    margin-bottom: 15px;
+}
+
+/* Style the list */
+ul.breadcrumb {
+    list-style: none;
+    background-color: transparent;
+}
+
+/* Display list items side by side */
+ul.breadcrumb li {
+    display: inline;
+    font-size: large;
+}
+
+/* Add a slash symbol (/) before/behind each list item */
+ul.breadcrumb li+li:before {
+    color: black;
+    content: "\2192";
+}
+
+/* Add a color to all links inside the list */
+ul.breadcrumb li a {
+    text-decoration: none;
+}
+
+/* Add a color on mouse-over */
+ul.breadcrumb li a:hover {
+    text-decoration: underline;
+}
+.red-project {
+    background-color: #f0cbcf;
+}
+
+.circle-red {
+    display: block;
+    background: red;
+    border: 1px solid black;
+    border-radius: 50%;
+    height: 15px;
+    width: 15px;
+    margin: 0;
+}
+
+.circle-green {
+    display: block;
+    background: green;
+    border: 1px solid black;
+    border-radius: 50%;
+    height: 15px;
+    width: 15px;
+    margin: 0;
+}
+
+.circle-yellow {
+    display: block;
+    background: yellow;
+    border: 1px solid black;
+    border-radius: 50%;
+    height: 15px;
+    width: 15px;
+    margin: 0;
+}
+
+.circle-transparent {
+    display: block;
+    background: transparent;
+    border: 1px solid black;
+    border-radius: 50%;
+    height: 15px;
+    width: 15px;
+    margin: 0;
+}
+
+.center {
+    text-align: center;
+}
+
+.div-parent-check-group {
+    border: 1px solid;
+    background-color: rgba(11, 110, 154, 0.57);
+}
+
+#popup {
+    height: 50px;
+    width: 200px;
+    text-align: center;
+    vertical-align:middle;
+    background-color: cornflowerblue;
+    color: white;
+    display: none;
+    padding-top: 8px;
+    position: absolute;
+}
+.tab {
+    overflow: hidden;
+    border: 1px solid #ccc;
+    background-color: #f1f1f1;
+}
+
+/* Style the buttons inside the tab */
+.tab button {
+    background-color: inherit;
+    float: left;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 14px 16px;
+    transition: 0.3s;
+    font-size: 17px;
+}
+
+/* Change background color of buttons on hover */
+.tab button:hover {
+    background-color: #ddd;
+}
+
+/* Create an active/current tablink class */
+.tab button.active {
+    background-color: #ccc;
+}
+
+/* Style the tab content */
+.tabcontent {
+    display: none;
+    padding: 6px 12px;
+    border: 1px solid #ccc;
+    border-top: none;
+}
+.queue-progress {
+    width: 100%;
+    background-color: lightgrey;
+    border: 1px solid;
+}
+
+.queue-bar {
+    width: 0;
+    height: 20px;
+    background-color: lightcoral;
+    text-align: center;
+    position: relative;
+    display: table;
+    vertical-align: middle;
+    font-weight: bold;
+}
+
+.general-progress {
+    width: 100%;
+    background-color: lightblue;
+    border: 1px solid;
+}
+
+.general-bar {
+    width: 0;
+    height: 20px;
+    background-color: lightgreen;
+    text-align: center;
+    position: relative;
+    display: table;
+    vertical-align: middle;
+    font-weight: bold;
+}
+
+.stamp {
+    padding: 10px;
+    background-color: lightskyblue;
+    font-weight: bold;
+    border: thin solid;
+}
+
+.red-stamp {
+    background-color: #f0cbcf;
+    padding: 10px;
+    font-weight: bold;
+    border: thin solid;
+}
+
+.green-stamp {
+    background-color: #a0f0e0;
+    padding: 10px;
+    font-weight: bold;
+    border: thin solid;
+}
+
+.stamp-title {
+    font-size: x-small;
+}
+
+.stamp-content {
+    font-size: large;
+    min-height: 25px;
+}
+
+.standard-form {
+    background-color: #f3f6fc;
+    margin-top: 10px;
+    padding: 10px;
+}
+
+.table-index {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+}
+
+.upstream {
+    font-style: italic;
+}
+
+.top-button {
+    width: 100%;
+}
+
+.detailed {
+    vertical-align: super;
+    font-size: smaller;
+    color: lightgray;
+    margin-left: 5px;
+    font-style: italic;
+}
+
+.countdown {
+    background-color: yellow;
+    font-size: larger;
+    padding: 5px;
+    border: solid medium #730E15;
+}
+
+.loader {
+    position: fixed;
+    z-index: 999;
+    overflow: show;
+    margin: auto;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+
+    border: 5px solid #f3f3f3;
+    border-top: 5px solid #3498db;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 600ms linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+/* Add a black background color to the top navigation */
+
+.topnav {
+    background-color: #333;
+    overflow: hidden;
+    margin-bottom: 8px;
+}
+
+/* Style the links inside the navigation bar */
+.topnav a {
+    float: left;
+    color: #f2f2f2;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 17px;
+}
+
+/* Change the color of links on hover */
+.topnav a:hover {
+    background-color: #ddd;
+    color: black;
+}
+
+/* Add a color to the active/current link */
+.topnav a.active {
+    background-color: #4CAF50;
+    color: white;
+}
+/*
+ * This is a manifest file that'll be compiled into application.css, which will include all the files
+ * listed below.
+ *
+ * Any CSS and SCSS file within this directory, lib/assets/stylesheets, vendor/assets/stylesheets,
+ * or any plugin's vendor/assets/stylesheets directory can be referenced here using a relative path.
+ *
+ * You're free to add application-wide styles to this file and they'll appear at the bottom of the
+ * compiled file so the styles you add here take precedence over styles defined in any other CSS/SCSS
+ * files in this directory. Styles in this file should be added after the last require_* statement.
+ * It is generally better to create a new file per style scope.
+ *
+
+
+ */
+
+
+input[type=radio] {
+    transform: scale(1.5);
+}

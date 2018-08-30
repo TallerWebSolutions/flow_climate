@@ -134,6 +134,7 @@ en:
       passed_time: "Time Passed"
       leadtime:
         title: "Leadtime in days"
+      total_remaining_weeks: "Remaining Weeks"
     show:
       initial_scope: "Initial Scope"
       last_team: "Current team"
@@ -217,7 +218,7 @@ en:
       deadline:
         title: "Deadline for %{target_name}"
       date_odds:
-        tooltipsufix: "chance"
+        tooltipsufix: "weeks"
       hours_per_month:
         ylabel: "Produced Hours"
         title: "Effort Hours per Month to %{target_name}"
@@ -254,6 +255,15 @@ en:
           leadtime_80_confidence: "80% Confidence"
       class_of_service_pie:
         title: "Share of Classes of Service"
+      deadline_vs_montecarlo_durations:
+        confidence_95: "95% of Confidence"
+        confidence_80: "80% of Confidence"
+        confidence_60: "60% of Confidence"
+      montecarlo_dates:
+        project_date: "Project Deadline"
+        confidence_95: "Date having 95% of Confidence"
+        confidence_80: "Date having 80% of Confidence"
+        confidence_60: "Date having 60% of Confidence"
     project_risk_alert_table: "Risk alerts to the project"
     project_risk_configs:
       title: "Risk Configurations"
@@ -448,12 +458,11 @@ en:
     montecarlo:
       title: "Monte Carlo Dates to %{target_name}"
     date_odds:
-      ytitle: "Odds"
+      ytitle: "Durations in Weeks"
       xtitle: "Dates"
       project_date: "{project_deadline} (Project)"
       montecarlo_date: "{montecarlo_deadline} (Monte Carlo)"
-      nearest_montecarlo_date: "%{montecarlo_deadline} (Nearest Monte Carlo)"
-      title: "Date Odds for %{target_name}"
+      title: "Durations with Confidence"
     projections:
       title: "Projections"
     current_situation:

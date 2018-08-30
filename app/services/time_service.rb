@@ -8,12 +8,6 @@ class TimeService
     compute_working_hours(start_date, end_date)
   end
 
-  def skip_weekends(date, increment)
-    date += increment.round.days
-    date += 1.day while (date.wday % 7).zero? || (date.wday % 7 == 6)
-    date
-  end
-
   def weeks_between_of(start_date, end_date)
     array_of_weeks = []
 
@@ -42,6 +36,10 @@ class TimeService
     end
 
     array_of_months
+  end
+
+  def add_weeks_to_today(weeks)
+    Time.zone.today + weeks.weeks
   end
 
   private
