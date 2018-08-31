@@ -130,8 +130,8 @@ pt-BR:
         abbreviation: Sigla
       financial_information:
         finances_date: Data das Finanças
-        income_total: Receitas totais
-        expenses_total: Despesas totais
+        income_total: Entradas totais
+        expenses_total: Saídas totais
       team_member:
         name: Nome
         monthly_payment: Pagamento mensal

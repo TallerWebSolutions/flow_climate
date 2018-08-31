@@ -43,5 +43,5 @@
 <%= render 'charts/risks_and_hours_gauge_charts',
            max_hours_gauge: @team.active_monthly_available_hours_for_billable_types(@team.projects.pluck(:project_type).uniq),
            consumed_hours: @team.consumed_hours_in_month(Time.zone.today),
-           projects_risk_alert_data: @projects_risk_alert_data
+           projects_risk_chart_data: @projects_risk_chart_data
 %>

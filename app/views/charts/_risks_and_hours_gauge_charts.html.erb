@@ -1,4 +1,4 @@
-<% if projects_risk_alert_data.blank? %>
+<% if projects_risk_chart_data.blank? %>
   <%= t('general.no_data') %>
 
 <% else %>
@@ -18,7 +18,7 @@
            data-title='<%= t('charts.risk_alert_color.title', risk_type: t('activerecord.attributes.project_risk_config.enums.risk_type.backlog_growth_rate')) %>'
            data-ytitle='<%= t('charts.risk_alert_color.title') %>'
            data-seriesname='<%= "#{Project.model_name.human}(s)" %>'
-           data-series='<%= projects_risk_alert_data.backlog_risk_alert_data.to_json %>'
+           data-series='<%= projects_risk_chart_data.backlog_risk_alert_data.to_json %>'
            data-decimals='0'>
       </div>
     </div>
@@ -31,7 +31,7 @@
            data-title='<%= t('charts.risk_alert_color.title', risk_type: t('activerecord.attributes.project_risk_config.enums.risk_type.flow_pressure')) %>'
            data-ytitle='<%= t('charts.risk_alert_color.title') %>'
            data-seriesname='<%= "#{Project.model_name.human}(s)" %>'
-           data-series='<%= projects_risk_alert_data.flowpressure_risk_alert_data.to_json %>'
+           data-series='<%= projects_risk_chart_data.flowpressure_risk_alert_data.to_json %>'
            data-decimals='0'>
       </div>
     </div>
@@ -41,7 +41,7 @@
            data-title='<%= t('charts.risk_alert_color.title', risk_type: t('activerecord.attributes.project_risk_config.enums.risk_type.no_money_to_deadline')) %>'
            data-ytitle='<%= t('charts.risk_alert_color.title') %>'
            data-seriesname='<%= "#{Project.model_name.human}(s)" %>'
-           data-series='<%= projects_risk_alert_data.money_risk_alert_data.to_json %>'
+           data-series='<%= projects_risk_chart_data.money_risk_alert_data.to_json %>'
            data-decimals='0'>
       </div>
     </div>
@@ -54,7 +54,7 @@
            data-title='<%= t('charts.risk_alert_color.title', risk_type: t('activerecord.attributes.project_risk_config.enums.risk_type.not_enough_available_hours')) %>'
            data-ytitle='<%= t('charts.risk_alert_color.title') %>'
            data-seriesname='<%= "#{Project.model_name.human}(s)" %>'
-           data-series='<%= projects_risk_alert_data.hours_risk_alert_data.to_json %>'
+           data-series='<%= projects_risk_chart_data.hours_risk_alert_data.to_json %>'
            data-decimals='0'>
       </div>
     </div>
@@ -64,7 +64,7 @@
            data-title='<%= t('charts.risk_alert_color.title', risk_type: t('activerecord.attributes.project_risk_config.enums.risk_type.profit_margin')) %>'
            data-ytitle='<%= t('charts.risk_alert_color.title') %>'
            data-seriesname='<%= "#{Project.model_name.human}(s)" %>'
-           data-series='<%= projects_risk_alert_data.profit_risk_alert_data.to_json %>'
+           data-series='<%= projects_risk_chart_data.profit_risk_alert_data.to_json %>'
            data-decimals='0'>
       </div>
     </div>

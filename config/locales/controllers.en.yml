@@ -531,6 +531,13 @@ en:
       hours_per_demand: "Hours/Demand"
       cost_per_hour: "Cost/Hour"
       income_per_hour: "Income per Hour"
+      monthly_cash_balance: "Monthly Cash Balance"
+      title: "Financial Informations"
+      total_income_in_period: "Total Incomes in Period"
+      total_outcome_in_period: "Total Outcomes in Period"
+      total_balance_in_period: "Balance in Period"
+    new:
+      title: "New Financial Information"
   project_change_deadline_histories:
     index:
       dates_difference: "Difference (days)"

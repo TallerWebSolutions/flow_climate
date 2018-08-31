@@ -1,4 +1,4 @@
-<% if strategic_report_data.blank? %>
+<% if strategic_chart_data.blank? %>
   <%= t('general.no_data') %>
 
 <% else %>
@@ -7,14 +7,14 @@
       <div id="projects-count-column"
            class="flow-chart"
            data-title='<%= t('companies.charts.active_projects.title', project_name: model_name) %>'
-           data-xcategories='<%= strategic_report_data.array_of_months %>'
+           data-xcategories='<%= strategic_chart_data.array_of_months %>'
            data-xtitle='<%= t('charts.xlabel.months') %>'
            data-ytitle='<%= t('charts.ylabel.projects.text') %>'
            data-ylinetitle='<%= t('charts.ylabel.total_hours.text') %>'
            data-columnname='<%= t('charts.ylabel.projects.text') %>'
-           data-seriescolumndata='<%= strategic_report_data.active_projects_count_data %>'
+           data-seriescolumndata='<%= strategic_chart_data.active_projects_count_data %>'
            data-linename='<%= t('charts.ylabel.total_hours.text') %>'
-           data-serieslinedata='<%= strategic_report_data.sold_hours_in_month %>'
+           data-serieslinedata='<%= strategic_chart_data.sold_hours_in_month %>'
            data-decimals='0'>
       </div>
     </div>
@@ -23,16 +23,16 @@
       <div id="hours-per-month-line"
            class="flow-chart"
            data-title='<%= t('companies.charts.hours_per_month.title', project_name: model_name) %>'
-           data-xcategories='<%= strategic_report_data.array_of_months %>'
+           data-xcategories='<%= strategic_chart_data.array_of_months %>'
            data-xtitle='<%= t('charts.xlabel.months') %>'
            data-ytitle='<%= t('charts.ylabel.hours.text') %>'
            data-prefix=''
            data-suffix='<%= t('general.charts.hours') %>'
            data-ylinetitle='<%= t('charts.ylabel.total_hours.text') %>'
            data-series='<%= [
-                                { name: t('charts.series.consumed_hours.text'), data: strategic_report_data.consumed_hours_per_month },
-                                { name: t('charts.ylabel.total_hours.text'), data: strategic_report_data.sold_hours_in_month },
-                                { name: t('charts.ylabel.available.text'), data: strategic_report_data.available_hours_per_month }].to_json %>'
+                                { name: t('charts.series.consumed_hours.text'), data: strategic_chart_data.consumed_hours_per_month },
+                                { name: t('charts.ylabel.total_hours.text'), data: strategic_chart_data.sold_hours_in_month },
+                                { name: t('charts.ylabel.available.text'), data: strategic_chart_data.available_hours_per_month }].to_json %>'
            data-decimals='0'>
       </div>
     </div>
@@ -43,11 +43,11 @@
       <div id="flowpressure-per-month-line"
            class="flow-chart"
            data-title='<%= t('companies.charts.flowpressure_per_month.title', project_name: model_name) %>'
-           data-xcategories='<%= strategic_report_data.array_of_months %>'
+           data-xcategories='<%= strategic_chart_data.array_of_months %>'
            data-xtitle='<%= t('charts.xlabel.months') %>'
            data-ytitle='<%= t('charts.ylabel.hours.text') %>'
            data-ylinetitle='<%= t('charts.ylabel.flow_pressure.text') %>'
-           data-series='<%= [ { name: t('charts.ylabel.flow_pressure.text'), data: strategic_report_data.flow_pressure_per_month_data }].to_json %>'
+           data-series='<%= [ { name: t('charts.ylabel.flow_pressure.text'), data: strategic_chart_data.flow_pressure_per_month_data }].to_json %>'
            data-prefix=''
            data-suffix='<%= t('projects.charts.flow_pressure.data_suffix') %>'
            data-decimals='3'>
@@ -57,13 +57,13 @@
       <div id="money-per-month-line"
            class="flow-chart"
            data-title='<%= t('companies.charts.money_per_month.title', project_name: model_name) %>'
-           data-xcategories='<%= strategic_report_data.array_of_months %>'
+           data-xcategories='<%= strategic_chart_data.array_of_months %>'
            data-xtitle='<%= t('charts.xlabel.months') %>'
            data-ytitle='<%= t('charts.ylabel.hours.text') %>'
            data-ylinetitle='<%= t('charts.ylabel.money.text') %>'
            data-series='<%= [
-                                { name: t('charts.ylabel.incomes.text'), color: '#81ea90', data: strategic_report_data.money_per_month_data },
-                                { name: t('charts.ylabel.expenses.text'), color: '#f90000', data: strategic_report_data.expenses_per_month_data }
+                                { name: t('charts.ylabel.incomes.text'), color: '#81ea90', data: strategic_chart_data.money_per_month_data },
+                                { name: t('charts.ylabel.expenses.text'), color: '#f90000', data: strategic_chart_data.expenses_per_month_data }
                             ].to_json %>'
            data-prefix='<%= t('projects.charts.cmd.tooltip_prefix') %>'
            data-suffix=''

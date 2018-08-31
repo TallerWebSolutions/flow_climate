@@ -91,8 +91,8 @@ RSpec.describe TeamsController, type: :controller do
             expect(assigns(:team)).to eq team
             expect(assigns(:team_projects)).to eq [third_project, project_in_product_team, fifth_project, fourth_project, second_project, first_project]
             expect(assigns(:active_team_projects)).to eq [third_project, project_in_product_team, second_project, first_project]
-            expect(assigns(:projects_risk_alert_data).backlog_risk_alert_data).to eq [{ name: 'Vermelho', y: 1, color: '#FB283D' }]
-            expect(assigns(:projects_risk_alert_data).money_risk_alert_data).to eq [{ name: 'Verde', y: 1, color: '#179A02' }]
+            expect(assigns(:projects_risk_chart_data).backlog_risk_alert_data).to eq [{ name: 'Vermelho', y: 1, color: '#FB283D' }]
+            expect(assigns(:projects_risk_chart_data).money_risk_alert_data).to eq [{ name: 'Verde', y: 1, color: '#179A02' }]
             expect(assigns(:pipefy_team_configs)).to eq [second_pipefy_team_config, first_pipefy_team_config]
           end
         end

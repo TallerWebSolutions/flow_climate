@@ -9,14 +9,13 @@ class CompaniesController < AuthenticatedController
   end
 
   def show
-    @financial_informations = @company.financial_informations.order(finances_date: :desc)
+    @financial_informations = @company.financial_informations.for_year(Time.zone.today.year).order(finances_date: :desc)
     @teams = @company.teams.order(:name)
     @company_projects = @company.projects.order(end_date: :desc)
-    @strategic_report_data = Highchart::StrategicChartsAdapter.new(@company, @company.projects, @company.total_available_hours)
-    @company_settings = @company.company_settings || CompanySettings.new(company: @company)
     @company_projects = @company.projects.order(end_date: :desc)
-    @projects_risk_alert_data = Highchart::ProjectRiskChartsAdapter.new(@company_projects)
     @projects_summary = ProjectsSummaryData.new(@company_projects)
+    assign_company_settings
+    build_charts_data
   end
 
   def new
@@ -62,6 +61,15 @@ class CompaniesController < AuthenticatedController
   end
 
   private
+
+  def assign_company_settings
+    @company_settings = @company.company_settings || CompanySettings.new(company: @company)
+  end
+
+  def build_charts_data
+    @projects_risk_chart_data = Highchart::ProjectRiskChartsAdapter.new(@company_projects)
+    @strategic_chart_data = Highchart::StrategicChartsAdapter.new(@company, @company.projects, @company.total_available_hours)
+  end
 
   def assign_stages_list
     @stages_list = @company.stages.order(:integration_pipe_id, :order)

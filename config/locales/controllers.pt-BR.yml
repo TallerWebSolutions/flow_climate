@@ -105,6 +105,10 @@ pt-BR:
       throughput: "Throughput"
       hours_per_demand: "Horas/Demanda"
       income_per_hour: "Entradas por Hora"
+      monthly_cash_balance: "Fluxo de Caixa Mensal"
+      total_income_in_period: "Total de Entradas no Período"
+      total_outcome_in_period: "Total de Saídas no Período"
+      total_balance_in_period: "Saldo do Período"
   team_members:
     index:
       title: "Membros do Time"
