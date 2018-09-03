@@ -33,7 +33,7 @@ RSpec.describe FinancialInformation, type: :model do
     let(:company) { Fabricate :company }
     let!(:finances) { Fabricate :financial_information, company: company, finances_date: 1.month.ago, income_total: 20.4, expenses_total: 12.2 }
     let!(:customer) { Fabricate :customer, company: company }
-    let!(:project) { Fabricate :project, customer: customer }
+    let!(:project) { Fabricate :project, customer: customer, start_date: 2.months.ago, end_date: 3.months.from_now }
     let!(:project_result) { Fabricate :project_result, project: project, result_date: 1.month.ago, qty_hours_downstream: 20, qty_hours_upstream: 10 }
     let!(:other_project_result) { Fabricate :project_result, project: project, result_date: 1.month.ago, qty_hours_downstream: 30, qty_hours_upstream: 20 }
     let!(:out_project_result) { Fabricate :project_result, project: project, result_date: 2.months.ago, qty_hours_downstream: 130, qty_hours_upstream: 202 }
@@ -45,7 +45,7 @@ RSpec.describe FinancialInformation, type: :model do
     let(:company) { Fabricate :company }
     let!(:finances) { Fabricate :financial_information, company: company, finances_date: 1.month.ago, income_total: 20.4, expenses_total: 12.2 }
     let!(:customer) { Fabricate :customer, company: company }
-    let!(:project) { Fabricate :project, customer: customer }
+    let!(:project) { Fabricate :project, customer: customer, start_date: 2.months.ago, end_date: 3.months.from_now }
     let!(:project_result) { Fabricate :project_result, project: project, result_date: 1.month.ago, qty_hours_downstream: 20, qty_hours_upstream: 10 }
     let!(:other_project_result) { Fabricate :project_result, project: project, result_date: 1.month.ago, qty_hours_downstream: 30, qty_hours_upstream: 20 }
     let!(:out_project_result) { Fabricate :project_result, project: project, result_date: 2.months.ago, qty_hours_downstream: 130, qty_hours_upstream: 202 }
@@ -70,7 +70,7 @@ RSpec.describe FinancialInformation, type: :model do
   describe '#throughput_in_month' do
     let(:company) { Fabricate :company }
     let!(:customer) { Fabricate :customer, company: company }
-    let!(:project) { Fabricate :project, customer: customer }
+    let!(:project) { Fabricate :project, customer: customer, start_date: 2.months.ago, end_date: 3.months.from_now }
     let!(:finances) { Fabricate :financial_information, company: company, finances_date: 1.month.ago, income_total: 20.4, expenses_total: 12.2 }
 
     let!(:project_result) { Fabricate :project_result, project: project, result_date: 1.month.ago, throughput_downstream: 20, throughput_upstream: 10 }
@@ -83,7 +83,7 @@ RSpec.describe FinancialInformation, type: :model do
   describe '#hours_per_demand' do
     let(:company) { Fabricate :company }
     let!(:customer) { Fabricate :customer, company: company }
-    let!(:project) { Fabricate :project, customer: customer }
+    let!(:project) { Fabricate :project, customer: customer, start_date: 2.months.ago, end_date: 3.months.from_now }
     let!(:finances) { Fabricate :financial_information, company: company, finances_date: 1.month.ago, income_total: 20.4, expenses_total: 12.2 }
 
     let!(:project_result) { Fabricate :project_result, project: project, result_date: 1.month.ago, throughput_downstream: 20, throughput_upstream: 10, qty_hours_downstream: 50, qty_hours_upstream: 70 }

@@ -389,10 +389,10 @@ RSpec.describe Company, type: :model do
     let(:other_customer) { Fabricate :customer, company: company }
     let(:other_company_customer) { Fabricate :customer }
 
-    let!(:project) { Fabricate :project, end_date: 4.weeks.from_now, customer: customer }
-    let!(:other_project) { Fabricate :project, end_date: 4.weeks.from_now, customer: customer }
-    let!(:other_customer_project) { Fabricate :project, end_date: 4.weeks.from_now, customer: other_customer }
-    let!(:other_company_project) { Fabricate :project, end_date: 4.weeks.from_now, customer: other_company_customer }
+    let!(:project) { Fabricate :project, start_date: 2.months.ago, end_date: 3.months.from_now, customer: customer }
+    let!(:other_project) { Fabricate :project, start_date: 2.months.ago, end_date: 3.months.from_now, customer: customer }
+    let!(:other_customer_project) { Fabricate :project, start_date: 2.months.ago, end_date: 3.months.from_now, customer: other_customer }
+    let!(:other_company_project) { Fabricate :project, start_date: 2.months.ago, end_date: 3.months.from_now, customer: other_company_customer }
 
     let!(:first_result) { Fabricate :project_result, project: project, qty_hours_downstream: 20, qty_hours_upstream: 10 }
     let!(:second_result) { Fabricate :project_result, project: other_project, qty_hours_downstream: 15, qty_hours_upstream: 12 }

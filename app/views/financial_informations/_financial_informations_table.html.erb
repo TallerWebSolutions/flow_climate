@@ -25,38 +25,50 @@
   </div>
 </div>
 
-<table class="table table-striped">
-  <thead>
+<table class="table table-striped table-index">
+  <thead class="thead-light">
     <tr>
       <th><%= t('general.month') %></th>
       <th><%= FinancialInformation.human_attribute_name :income_total %></th>
+      <th><%= t('financial_informations.index.std_dev_income') %></th>
       <th><%= FinancialInformation.human_attribute_name :expenses_total %></th>
+      <th><%= t('financial_informations.index.std_dev_expenses') %></th>
       <th><%= t('financial_informations.index.throughput') %></th>
       <th><%= t('financial_informations.index.project_delivered_hours_count') %></th>
       <th><%= t('financial_informations.index.hours_per_demand') %></th>
       <th><%= t('financial_informations.index.income_per_hour') %></th>
       <th><%= t('financial_informations.index.cost_per_hour') %></th>
+      <th><%= t('financial_informations.index.mean_cost_per_hour') %></th>
+      <th><%= t('financial_informations.index.std_dev_cost_per_hour') %></th>
+      <th><%= t('financial_informations.index.tail_events_after') %></th>
       <th><%= t('financial_informations.index.monthly_cash_balance') %></th>
+      <th><%= t('financial_informations.index.accumulated_financial_result') %></th>
       <th><%= t('general.table.actions') %></th>
     </tr>
   </thead>
   <tbody>
-    <% @financial_informations.each do |finance| %>
-      <tr class='<%= 'red-data' if finance.red? %>'>
-        <td><%= l(finance.finances_date, format: :month_year) %></td>
-        <td><%= number_to_currency(finance.income_total) %></td>
-        <td><%= number_to_currency(finance.expenses_total) %></td>
-        <td><%= finance.throughput_in_month %></td>
-        <td><%= number_with_precision(finance.project_delivered_hours, precision: 2) %></td>
-        <td><%= number_with_precision(finance.hours_per_demand, precision: 2) %></td>
-        <td><%= number_to_currency(finance.income_per_hour) %></td>
-        <td><%= number_to_currency(finance.cost_per_hour) %></td>
-        <td><%= number_to_currency(finance.financial_result) %></td>
+    <% @finances_hash_with_computed_informations.sort_by { |finances_hash| finances_hash['finances_date'] }.reverse.each do |finance_hash| %>
+      <tr>
+        <td><%= l(finance_hash['finances_date'], format: :month_year) %></td>
+        <td><%= number_to_currency(finance_hash['income_total']) %></td>
+        <td><%= number_to_currency(finance_hash['std_dev_income']) %></td>
+        <td><%= number_to_currency(finance_hash['expenses_total']) %></td>
+        <td><%= number_to_currency(finance_hash['std_dev_expenses']) %></td>
+        <td><%= finance_hash['throughput_in_month'] %></td>
+        <td><%= number_with_precision(finance_hash['project_delivered_hours'], precision: 2) %></td>
+        <td><%= number_with_precision(finance_hash['hours_per_demand'], precision: 2) %></td>
+        <td><%= number_to_currency(finance_hash['income_per_hour']) %></td>
+        <td><%= number_to_currency(finance_hash['cost_per_hour']) %></td>
+        <td><%= number_to_currency(finance_hash['mean_cost_per_hour']) %></td>
+        <td><%= number_to_currency(finance_hash['std_dev_cost_per_hour']) %></td>
+        <td><%= number_to_currency(finance_hash['tail_events_after']) %></td>
+        <td><%= number_to_currency(finance_hash['financial_result']) %></td>
+        <td><%= number_to_currency(finance_hash['accumulated_financial_result']) %></td>
         <td>
-          <%= link_to edit_company_financial_information_path(@company, finance) do %>
+          <%= link_to edit_company_financial_information_path(@company, finance_hash['id']) do %>
             <i class="fas fa-edit"></i>
           <% end %>
-          <%= link_to company_financial_information_path(@company, finance), method: :delete do %>
+          <%= link_to company_financial_information_path(@company, finance_hash['id']), method: :delete do %>
             <i class="fa fa-times" aria-hidden="true"></i>
           <% end %>
         </td>

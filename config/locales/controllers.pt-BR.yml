@@ -109,6 +109,12 @@ pt-BR:
       total_income_in_period: "Total de Entradas no Período"
       total_outcome_in_period: "Total de Saídas no Período"
       total_balance_in_period: "Saldo do Período"
+      accumulated_financial_result: "Saldo Mensal Acumulado"
+      std_dev_cost_per_hour: "Std Dev Custo/Hora"
+      mean_cost_per_hour: "Média do Custo/Hora"
+      tail_events_after: "Eventos de Cauda Depois de"
+      std_dev_expenses: "Std Dev Despesas"
+      std_dev_income: "Std Dev Receitas"
   team_members:
     index:
       title: "Membros do Time"

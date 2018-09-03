@@ -536,6 +536,12 @@ en:
       total_income_in_period: "Total Incomes in Period"
       total_outcome_in_period: "Total Outcomes in Period"
       total_balance_in_period: "Balance in Period"
+      accumulated_financial_result: "Accumulated Financial Result"
+      std_dev_cost_per_hour: "Std Dev Cost/Hour"
+      mean_cost_per_hour: "Mean Cost/Hour"
+      tail_events_after: "Tail Events After"
+      std_dev_expenses: "Std Dev Expenses"
+      std_dev_income: "Std Dev Incomes"
     new:
       title: "New Financial Information"
   project_change_deadline_histories:
