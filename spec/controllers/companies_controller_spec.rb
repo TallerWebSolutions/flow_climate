@@ -59,6 +59,9 @@ RSpec.describe CompaniesController, type: :controller do
 
     describe 'GET #show' do
       context 'passing valid parameters' do
+        before { travel_to Date.new(2018, 8, 31) }
+        after { travel_back }
+
         let(:company) { Fabricate :company, users: [user] }
         context 'and the company has no settings yet' do
           let(:customer) { Fabricate :customer, company: company }
@@ -66,6 +69,8 @@ RSpec.describe CompaniesController, type: :controller do
           let(:team) { Fabricate :team, company: company }
           let!(:finances) { Fabricate :financial_information, company: company, finances_date: 2.days.ago }
           let!(:other_finances) { Fabricate :financial_information, company: company, finances_date: Time.zone.today }
+          let!(:out_finances) { Fabricate :financial_information, company: company, finances_date: 1.year.ago }
+
           let!(:team_member) { Fabricate :team_member, team: team, name: 'zzz' }
           let!(:other_team_member) { Fabricate :team_member, team: team, name: 'aaa' }
 
@@ -85,14 +90,14 @@ RSpec.describe CompaniesController, type: :controller do
           it 'assigns the instance variable and renders the template' do
             expect(response).to render_template :show
             expect(assigns(:company)).to eq company
-            expect(assigns(:financial_informations)).to eq [other_finances, finances]
+            expect(assigns(:financial_informations)).to match_array [other_finances, finances]
             expect(assigns(:teams)).to eq [team]
             expect(assigns(:stages_list)).to eq [third_stage, second_stage, first_stage]
             expect(assigns(:company_projects)).to eq [second_project, first_project]
-            expect(assigns(:strategic_report_data).array_of_months).to eq [[Time.zone.today.month, Time.zone.today.year], [1.month.from_now.to_date.month, 1.month.from_now.to_date.year]]
-            expect(assigns(:strategic_report_data).active_projects_count_data).to eq [1, 1]
-            expect(assigns(:projects_risk_alert_data).backlog_risk_alert_data).to eq [{ name: 'Vermelho', y: 1, color: '#FB283D' }]
-            expect(assigns(:projects_risk_alert_data).money_risk_alert_data).to eq [{ name: 'Verde', y: 1, color: '#179A02' }]
+            expect(assigns(:strategic_chart_data).array_of_months).to eq [[Time.zone.today.month, Time.zone.today.year], [1.month.from_now.to_date.month, 1.month.from_now.to_date.year]]
+            expect(assigns(:strategic_chart_data).active_projects_count_data).to eq [1, 1]
+            expect(assigns(:projects_risk_chart_data).backlog_risk_alert_data).to eq [{ name: 'Vermelho', y: 1, color: '#FB283D' }]
+            expect(assigns(:projects_risk_chart_data).money_risk_alert_data).to eq [{ name: 'Verde', y: 1, color: '#179A02' }]
             expect(assigns(:company_settings)).to be_a_new CompanySettings
             expect(assigns(:company_projects)).to eq [second_project, first_project]
             expect(assigns(:projects_summary).total_initial_scope).to eq 60

@@ -32,6 +32,7 @@ Metrics/MethodLength:
   Exclude:
     - 'app/routes/**/*'
     - 'db/migrate/**/*'
+    - 'app/adapters/highchart/finances_charts_adapter.rb'
   Max: 15
 
 Metrics/BlockLength:
@@ -49,6 +50,7 @@ Metrics/ClassLength:
     - 'app/adapters/pipefy/pipefy_card_adapter.rb'
     - 'app/adapters/highchart/operational_charts_adapter.rb'
     - 'app/adapters/highchart/status_report_charts_adapter.rb'
+    - 'app/adapters/highchart/finances_charts_adapter.rb'
     - 'app/models/demand.rb'
     - 'app/controllers/projects_controller.rb'
 

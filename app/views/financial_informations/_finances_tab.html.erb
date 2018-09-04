@@ -1,0 +1,21 @@
+<div class="row">
+  <div class="col-xs-12">
+    <div class="tab">
+      <button class="tablinks" onclick="openTab(event, 'content-finances-list')"><%= t('financial_informations.index.tabs.finances_list') %></button>
+      <button class="tablinks" onclick="openTab(event, 'content-finances-stats')"><%= t('financial_informations.index.tabs.finances_stats') %></button>
+      <button class="tablinks" onclick="openTab(event, 'content-finances-charts')"><%= t('financial_informations.index.tabs.finances_charts') %></button>
+    </div>
+  </div>
+</div>
+
+<div id="content-finances-list" class="tabcontent">
+  <%= render 'financial_informations/finances_list', finances: finances %>
+</div>
+
+<div id="content-finances-stats" class="tabcontent">
+  <%= render 'financial_informations/statistics_list', finances: finances, finances_hash: @finances_hash_with_computed_informations %>
+</div>
+
+<div id="content-finances-charts" class="tabcontent">
+  <%= render 'financial_informations/finances_charts', finances_hash: @finances_hash_with_computed_informations %>
+</div>

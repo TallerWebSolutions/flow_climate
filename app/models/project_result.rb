@@ -61,7 +61,7 @@ class ProjectResult < ApplicationRecord
   validate :result_date_greater_than_project_end_date
 
   def project_delivered_hours
-    qty_hours_upstream + qty_hours_downstream
+    (qty_hours_upstream + qty_hours_downstream).to_f
   end
 
   def hours_per_demand_upstream

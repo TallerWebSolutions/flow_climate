@@ -1,0 +1,38 @@
+<% if finances_hash.present? %>
+  <div class="row">
+    <div class="col-xs-6">
+      <div id="finances-balance-div"
+           data-title='<%= t('finances.charts.finance_result.title') %>'
+           data-xcategories='<%= finances_hash.map { |hash| hash['finances_date'] }.to_json %>'
+           data-xtitle='<%= t('charts.xlabel.months') %>'
+           data-ytitle='<%= t('finances.charts.finance_result.ylabel') %>'
+           data-ylinetitle='<%= t('finances.charts.finance_result.line_title') %>'
+           data-series='<%= [
+                                { type: 'column', yAxis: 1, color: '#0066ff', name: t('finances.charts.finance_result.income_column_name'), data: finances_hash.map { |hash| hash['income_total'].to_f } },
+                                { type: 'column', yAxis: 1, color: '#f90000', name: t('finances.charts.finance_result.expense_column_name'), data: finances_hash.map { |hash| hash['expenses_total'].to_f } },
+                                { type: 'spline', name: t('finances.charts.finance_result.line_name'), data: finances_hash.map { |hash| hash['accumulated_financial_result'] } }
+
+                            ].to_json %>'
+           data-decimals='0'>
+      </div>
+    </div>
+
+    <div class="col-xs-6">
+      <div id="finances-income-outcome-per-hour-div"
+           data-title='<%= t('finances.charts.finance.cost_income_per_hour') %>'
+           data-xcategories='<%= finances_hash.map { |hash| hash['finances_date'] }.to_json %>'
+           data-xtitle='<%= t('charts.xlabel.months') %>'
+           data-ytitle='<%= t('charts.ylabel.money.text') %>'
+           data-prefix=''
+           data-suffix=''
+           data-series='<%= [
+                                { color: '#0066ff', name: I18n.t('finances.charts.finance.income_per_hour'), data: finances_hash.map { |hash| hash['income_per_hour'].to_f } },
+                                { color: '#f90000', name: I18n.t('finances.charts.finance.cost_per_hour'), data: finances_hash.map { |hash| hash['cost_per_hour'].to_f } }
+                            ].to_json %>'
+           data-decimals='2'>
+      </div>
+    </div>
+  </div>
+<% else %>
+  <%= t('general.no_data') %>
+<% end %>

@@ -49,7 +49,17 @@ RSpec.describe Stats::StatisticsService, type: :service do
     end
   end
 
-  pending '#compute_percentage'
+  describe '#compute_percentage' do
+    context 'when the data count remaining is zero' do
+      it { expect(Stats::StatisticsService.instance.compute_percentage(10, 0)).to eq 100.0 }
+    end
+    context 'when both are zero' do
+      it { expect(Stats::StatisticsService.instance.compute_percentage(0, 0)).to eq 0.0 }
+    end
+    context 'when none is zero' do
+      it { expect(Stats::StatisticsService.instance.compute_percentage(10, 40)).to eq 20.0 }
+    end
+  end
 
   describe '#mean' do
     it { expect(Stats::StatisticsService.instance.mean([10, 30])).to eq 20 }
@@ -61,6 +71,18 @@ RSpec.describe Stats::StatisticsService, type: :service do
     end
     context 'having one unit in the population' do
       it { expect(Stats::StatisticsService.instance.standard_deviation([10])).to eq 0 }
+    end
+  end
+
+  describe '#tail_events_boundary' do
+    context 'having two or more units in the population' do
+      it { expect(Stats::StatisticsService.instance.tail_events_boundary([10, 30, 20, 5, 100])).to eq 187.66091943344964 }
+    end
+    context 'having one unit in the population' do
+      it { expect(Stats::StatisticsService.instance.tail_events_boundary([10])).to eq 10.0 }
+    end
+    context 'having nothing in the population' do
+      it { expect(Stats::StatisticsService.instance.tail_events_boundary([])).to eq 0 }
     end
   end
 end

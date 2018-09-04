@@ -10,7 +10,7 @@ class ChartsController < AuthenticatedController
   end
 
   def build_strategic_charts
-    @strategic_report_data = Highchart::StrategicChartsAdapter.new(@company, @projects, @available_hours_in_month)
+    @strategic_chart_data = Highchart::StrategicChartsAdapter.new(@company, @projects, @available_hours_in_month)
     respond_to { |format| format.js { render file: 'charts/strategic_charts.js.erb' } }
   end
 

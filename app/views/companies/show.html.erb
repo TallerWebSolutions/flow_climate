@@ -24,7 +24,7 @@
 </div>
 
 <div id="finance">
-  <%= render 'financial_informations/financial_informations_table' %>
+  <%= render 'financial_informations/finances_tab', finances: @finances %>
 </div>
 
 <div id="project-list">
@@ -32,7 +32,7 @@
 </div>
 
 <div id="strategic">
-  <%= render 'companies/strategic_table', model_name: @company.name, strategic_report_data: @strategic_report_data %>
+  <%= render 'companies/strategic_table', model_name: @company.name, strategic_chart_data: @strategic_chart_data %>
 </div>
 
 <div id="settings">
@@ -45,10 +45,13 @@
   <%= javascript_include_tag 'charts/column-line' %>
   <%= javascript_include_tag 'charts/line' %>
   <%= javascript_include_tag 'charts/gauge' %>
-  <%= javascript_include_tag 'charts/donut' %>
+
+  <%= javascript_include_tag 'components/components' %>
 
   <%= javascript_include_tag 'companies/strategic_charts' %>
   <%= javascript_include_tag 'projects/risk_alert_color_chart' %>
+
+  <%= javascript_include_tag 'finances/chart_builder' %>
 
   <%= javascript_include_tag 'companies/show' %>
 <% end %>

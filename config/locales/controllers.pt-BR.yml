@@ -104,6 +104,21 @@ pt-BR:
       delivered_hours: "Horas Entregues (Operação)"
       throughput: "Throughput"
       hours_per_demand: "Horas/Demanda"
+      income_per_hour: "Entradas por Hora"
+      monthly_cash_balance: "Fluxo de Caixa Mensal"
+      total_income_in_period: "Total de Entradas no Período"
+      total_outcome_in_period: "Total de Saídas no Período"
+      total_balance_in_period: "Saldo do Período"
+      accumulated_financial_result: "Saldo Mensal Acumulado"
+      std_dev_cost_per_hour: "Std Dev Custo/Hora"
+      mean_cost_per_hour: "Média do Custo/Hora"
+      tail_events_after: "Eventos de Cauda Depois de"
+      std_dev_expenses: "Std Dev Despesas"
+      std_dev_income: "Std Dev Receitas"
+      tabs:
+        finances_list: "Listagem"
+        finances_charts: "Gráficos"
+        finances_stats: "Estatísticas"
   team_members:
     index:
       title: "Membros do Time"
@@ -534,3 +549,20 @@ pt-BR:
       replicate_to_projects: "Replicar para os outros projetos desta etapa?"
     registrations:
       change_password: "Mudar Senha"
+  finances:
+    charts:
+      finance_result:
+        title: "Resultado Financeiro para o Período"
+        ylabel: "Dinheiro"
+        line_title: "Saldo Mensal"
+        income_column_name: "Entradas Totais"
+        line_name: "Saldo Mensal"
+        expense_column_name: "Despesas Totais"
+      finance:
+        cost_per_hour: "Saídas por Hora"
+        income_per_hour: "Entradas por Hora"
+        cost_income_per_hour: "Entradas e Saídas por Hora"
+        std_dev_income_per_hour: "Desvio Padrão das Entradas"
+        std_dev_cost_per_hour: "Desvio Padrão das Saídas"
+        std_dev_income_outcome: "Desvio Padrão das Entradas e Saídas"
+        mean_cost_per_hour: "Evolução da Média do Custo por Hora"

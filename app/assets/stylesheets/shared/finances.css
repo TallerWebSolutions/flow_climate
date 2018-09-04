@@ -1,0 +1,27 @@
+.incomes-div {
+    min-height: 40px;
+    background-color: lightblue;
+    padding: 4px;
+}
+
+.outcomes-div {
+    min-height: 40px;
+    background-color: #FFCDD2;
+    padding: 4px;
+}
+
+.finances-consolidation-value {
+    margin-top: 5px;
+    font-weight: bold;
+
+}
+
+.finances-consolidation-row {
+    padding: 3px;
+}
+
+.balance-div {
+    min-height: 40px;
+    background-color: #EEFF41;
+    padding: 4px;
+}

@@ -41,6 +41,13 @@ module Stats
       Math.sqrt(variance(population_array))
     end
 
+    def tail_events_boundary(population_array)
+      return 0 if population_array.blank?
+      std_dev = standard_deviation(population_array)
+      mean = mean(population_array)
+      mean + (4 * std_dev)
+    end
+
     private
 
     def create_histogram_data(data_array)

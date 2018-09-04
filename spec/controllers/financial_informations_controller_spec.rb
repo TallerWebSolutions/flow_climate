@@ -68,7 +68,7 @@ RSpec.describe FinancialInformationsController, type: :controller do
           it 'does not create the company and re-render the template with the errors' do
             expect(FinancialInformation.last).to be_nil
             expect(response).to render_template :new
-            expect(assigns(:financial_information).errors.full_messages).to eq ['Data das Finanças não pode ficar em branco', 'Receitas totais não pode ficar em branco', 'Despesas totais não pode ficar em branco']
+            expect(assigns(:financial_information).errors.full_messages).to eq ['Data das Finanças não pode ficar em branco', 'Entradas totais não pode ficar em branco', 'Saídas totais não pode ficar em branco']
           end
         end
         context 'inexistent company' do
@@ -135,7 +135,7 @@ RSpec.describe FinancialInformationsController, type: :controller do
           before { put :update, params: { company_id: company, id: financial_information, financial_information: { finances_date: nil, income_total: nil, expenses_total: nil } } }
           it 'does not update the financial_information and re-render the template with the errors' do
             expect(response).to render_template :edit
-            expect(assigns(:financial_information).errors.full_messages).to match_array ['Data das Finanças não pode ficar em branco', 'Despesas totais não pode ficar em branco', 'Receitas totais não pode ficar em branco']
+            expect(assigns(:financial_information).errors.full_messages).to match_array ['Data das Finanças não pode ficar em branco', 'Entradas totais não pode ficar em branco', 'Saídas totais não pode ficar em branco']
           end
         end
         context 'non-existent financial_information' do

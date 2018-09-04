@@ -85,7 +85,7 @@ RSpec.describe Highchart::FlowChartsAdapter, type: :data_object do
       let(:processed_demands) { DemandsRepository.instance.throughput_by_project_and_week(Project.all, 1.week.ago.to_date.cweek, 1.week.ago.to_date.cwyear).group_by(&:project) }
       subject(:flow_data) { Highchart::FlowChartsAdapter.new(Project.all, 1.week.ago.to_date.cweek, 1.week.ago.to_date.cwyear) }
 
-      it 'extracts the information of flow' do
+      it 'returns an empty set' do
         expect(flow_data.projects_in_chart).to eq []
         expect(flow_data.total_arrived).to eq []
         expect(flow_data.total_processed_upstream).to eq []

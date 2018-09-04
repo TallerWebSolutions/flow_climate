@@ -1,43 +1,43 @@
 function buildOperationalHighcharts() {
-    var throughputDiv = $('#throughput-column');
+    const throughputDiv = $('#throughput-column');
     buildColumnChart(throughputDiv);
 
-    var bugsInTimeDiv = $('#bugs-in-time');
+    const bugsInTimeDiv = $('#bugs-in-time');
     buildColumnChart(bugsInTimeDiv);
 
-    var shareBugsInTimeDiv = $('#line-share-bug');
+    const shareBugsInTimeDiv = $('#line-share-bug');
     buildLineChart(shareBugsInTimeDiv);
 
-    var queueTouchCountDiv = $('#queue-touch-in-time');
+    const queueTouchCountDiv = $('#queue-touch-in-time');
     buildColumnChart(queueTouchCountDiv);
 
-    var flowEfficiencyDiv = $('#flow-efficiency');
+    const flowEfficiencyDiv = $('#flow-efficiency');
     buildLineChart(flowEfficiencyDiv);
 
-    var hoursPerDemandDiv = $('#hours-column');
+    const hoursPerDemandDiv = $('#hours-column');
     buildColumnChart(hoursPerDemandDiv);
 
-    var burnupDemands = $('#burnup-demands');
+    const burnupDemands = $('#burnup-demands');
     buildBurnupChart(burnupDemands);
 
-    var flowPressureDiv = $('#flowpressure-column');
+    const flowPressureDiv = $('#flowpressure-column');
     buildColumnChart(flowPressureDiv);
 
-    var cmdDiv = $('#cmd-column');
+    const cmdDiv = $('#cmd-column');
     buildColumnChart(cmdDiv);
 
-    var leadtimeControlChart = $('#leadtime-control-chart');
+    const leadtimeControlChart = $('#leadtime-control-chart');
     buildScatterChart(leadtimeControlChart);
 
-    var leadtimeHistogramChart = $('#leadtime-histogram');
+    const leadtimeHistogramChart = $('#leadtime-histogram');
     buildColumnChart(leadtimeHistogramChart);
 
-    var leadtimeEvolution = $('#leadtime-evolution');
+    const leadtimeEvolution = $('#leadtime-evolution');
     buildLineChart(leadtimeEvolution);
 
-    var throughputHistogramChart = $('#throughput-histogram');
+    const throughputHistogramChart = $('#throughput-histogram');
     buildColumnChart(throughputHistogramChart);
 
-    var hoursConsumedColumnDiv = $('#hours-consumed-column');
+    const hoursConsumedColumnDiv = $('#hours-consumed-column');
     buildColumnChart(hoursConsumedColumnDiv);
 }
