@@ -556,6 +556,7 @@ en:
       title: "Edit Configuration to Stage and Project"
       project_list: "Projects with configuration on the stage"
       replicate_to_projects: "Replicate to others projects in this stage?"
+      recompute_manual_efforts: "Recompute Manual Efforts"
   finances:
     charts:
       finance_result:

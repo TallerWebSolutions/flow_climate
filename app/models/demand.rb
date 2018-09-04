@@ -87,8 +87,8 @@ class Demand < ApplicationRecord
     end
   end
 
-  def update_effort!
-    return if manual_effort?
+  def update_effort!(update_manual_effort = false)
+    return if manual_effort? && !update_manual_effort
     update(effort_downstream: compute_effort_downstream, effort_upstream: compute_effort_upstream)
   end
 

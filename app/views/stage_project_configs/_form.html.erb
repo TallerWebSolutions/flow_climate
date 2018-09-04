@@ -2,25 +2,29 @@
 
 <div class="standard-form">
   <div class="row">
-    <div class='col-xs-3 form-group'>
+    <div class='col-xs-4 form-group'>
       <%= f.check_box :compute_effort %>
       <%= f.label StageProjectConfig.human_attribute_name(:compute_effort), class: 'control-label' %>
     </div>
-    <div class='col-xs-3 form-group'>
+    <div class='col-xs-4 form-group'>
       <%= check_box_tag :replicate_to_projects %>
       <%= label_tag t('stage_project_config.edit.replicate_to_projects'), nil, class: 'control-label' %>
     </div>
-    <div class='col-xs-6 form-group'>
-      <%= f.label StageProjectConfig.human_attribute_name(:stage_percentage), class: 'control-label' %>
-      <%= f.text_field :stage_percentage, class: 'form-control' %>
+    <div class='col-xs-4 form-group'>
+      <%= check_box_tag :recompute_manual_efforts %>
+      <%= label_tag t('stage_project_config.edit.recompute_manual_efforts'), nil, class: 'control-label' %>
     </div>
   </div>
   <div class="row">
-    <div class='col-xs-6 form-group'>
+    <div class='col-xs-4 form-group'>
+      <%= f.label StageProjectConfig.human_attribute_name(:stage_percentage), class: 'control-label' %>
+      <%= f.text_field :stage_percentage, class: 'form-control' %>
+    </div>
+    <div class='col-xs-4 form-group'>
       <%= f.label StageProjectConfig.human_attribute_name(:pairing_percentage), class: 'control-label' %>
       <%= f.text_field :pairing_percentage, class: 'form-control' %>
     </div>
-    <div class='col-xs-6 form-group'>
+    <div class='col-xs-4 form-group'>
       <%= f.label StageProjectConfig.human_attribute_name(:management_percentage), class: 'control-label' %>
       <%= f.text_field :management_percentage, class: 'form-control' %>
     </div>
