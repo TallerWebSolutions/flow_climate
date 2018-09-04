@@ -394,9 +394,9 @@ RSpec.describe Company, type: :model do
     let!(:other_customer_project) { Fabricate :project, start_date: 2.months.ago, end_date: 3.months.from_now, customer: other_customer }
     let!(:other_company_project) { Fabricate :project, start_date: 2.months.ago, end_date: 3.months.from_now, customer: other_company_customer }
 
-    let!(:first_result) { Fabricate :project_result, project: project, qty_hours_downstream: 20, qty_hours_upstream: 10 }
-    let!(:second_result) { Fabricate :project_result, project: other_project, qty_hours_downstream: 15, qty_hours_upstream: 12 }
-    let!(:third_result) { Fabricate :project_result, project: other_customer_project, qty_hours_downstream: 45, qty_hours_upstream: 23 }
+    let!(:first_result) { Fabricate :project_result, project: project, result_date: Time.zone.today, qty_hours_downstream: 20, qty_hours_upstream: 10 }
+    let!(:second_result) { Fabricate :project_result, project: other_project, result_date: Time.zone.today, qty_hours_downstream: 15, qty_hours_upstream: 12 }
+    let!(:third_result) { Fabricate :project_result, project: other_customer_project, result_date: Time.zone.today, qty_hours_downstream: 45, qty_hours_upstream: 23 }
 
     it { expect(company.delivered_hours_for_month(Time.zone.today)).to eq 125 }
   end
