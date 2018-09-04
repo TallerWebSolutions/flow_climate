@@ -16,6 +16,10 @@
 
 }
 
+.finances-consolidation-row {
+    padding: 3px;
+}
+
 .balance-div {
     min-height: 40px;
     background-color: #EEFF41;

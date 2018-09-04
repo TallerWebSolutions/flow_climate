@@ -69,15 +69,6 @@ function buildColumnLineChart(columnDiv) {
                 }
             }
         },
-        series: [{
-            type: 'column',
-            name: columnDiv.data('columnname'),
-            yAxis: 1,
-            data: columnDiv.data('seriescolumndata')
-        }, {
-            type: 'spline',
-            name: columnDiv.data('linename'),
-            data: columnDiv.data('serieslinedata')
-        }]
+        series: columnDiv.data('series')
     });
 }

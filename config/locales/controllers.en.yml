@@ -542,6 +542,10 @@ en:
       tail_events_after: "Tail Events After"
       std_dev_expenses: "Std Dev Expenses"
       std_dev_income: "Std Dev Incomes"
+      tabs:
+        finances_list: "List"
+        finances_charts: "Charts"
+        finances_stats: "Statistics"
     new:
       title: "New Financial Information"
   project_change_deadline_histories:
@@ -552,3 +556,20 @@ en:
       title: "Edit Configuration to Stage and Project"
       project_list: "Projects with configuration on the stage"
       replicate_to_projects: "Replicate to others projects in this stage?"
+  finances:
+    charts:
+      finance_result:
+        title: "Finances Result for the Period"
+        ylabel: "Money"
+        line_title: "Monthly Balance"
+        income_column_name: "Incomes Total"
+        line_name: "Monthly Balance"
+        expense_column_name: "Expenses Total"
+      finance:
+        cost_per_hour: "Outcomes per Hour"
+        income_per_hour: "Incomes per Hour"
+        cost_income_per_hour: "Income and Outcome per Hour"
+        std_dev_cost_per_hour: "Std Dev Outcomes"
+        std_dev_income_per_hour: "Std Dev Incomes"
+        std_dev_income_outcome: "Std Dev Income and Outcome"
+        mean_cost_per_hour: "Mean of Cost per Hour in Time"

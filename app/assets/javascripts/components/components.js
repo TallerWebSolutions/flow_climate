@@ -1,11 +1,11 @@
 function accordionBehaviour() {
-    var acc = document.getElementsByClassName("accordion");
-    var i;
+    const acc = document.getElementsByClassName("accordion");
+    let i;
 
     for (i = 0; i < acc.length; i++) {
         acc[i].addEventListener("click", function() {
             this.classList.toggle("active");
-            var panel = this.nextElementSibling;
+            const panel = this.nextElementSibling;
             if (panel.style.display === "block") {
                 panel.style.display = "none";
             } else {
@@ -16,7 +16,7 @@ function accordionBehaviour() {
 }
 
 function openTab(evt, tabName) {
-    var i, tabcontent, tablinks;
+    let i, tabcontent, tablinks;
     tabcontent = document.getElementsByClassName("tabcontent");
     for (i = 0; i < tabcontent.length; i++) {
         tabcontent[i].style.display = "none";

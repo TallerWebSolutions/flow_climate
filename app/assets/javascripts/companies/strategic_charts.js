@@ -1,13 +1,13 @@
 function buildStrategicHighcharts() {
-    var projectsCountDiv = $('#projects-count-column');
+    const projectsCountDiv = $('#projects-count-column');
     buildColumnLineChart(projectsCountDiv);
 
-    var flowPressureDiv = $('#flowpressure-per-month-line');
+    const flowPressureDiv = $('#flowpressure-per-month-line');
     buildLineChart(flowPressureDiv);
 
-    var hoursPerMonth = $('#hours-per-month-line');
+    const hoursPerMonth = $('#hours-per-month-line');
     buildLineChart(hoursPerMonth);
 
-    var moneyPerMonth = $('#money-per-month-line');
+    const moneyPerMonth = $('#money-per-month-line');
     buildLineChart(moneyPerMonth);
 }

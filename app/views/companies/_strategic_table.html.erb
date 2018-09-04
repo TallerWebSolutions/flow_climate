@@ -11,10 +11,11 @@
            data-xtitle='<%= t('charts.xlabel.months') %>'
            data-ytitle='<%= t('charts.ylabel.projects.text') %>'
            data-ylinetitle='<%= t('charts.ylabel.total_hours.text') %>'
-           data-columnname='<%= t('charts.ylabel.projects.text') %>'
-           data-seriescolumndata='<%= strategic_chart_data.active_projects_count_data %>'
-           data-linename='<%= t('charts.ylabel.total_hours.text') %>'
-           data-serieslinedata='<%= strategic_chart_data.sold_hours_in_month %>'
+           data-series='<%= [
+                                { type: 'column', yAxis: 1, name: t('charts.ylabel.projects.text'), data: strategic_chart_data.active_projects_count_data },
+                                { type: 'spline', name: t('charts.ylabel.total_hours.text'), data: strategic_chart_data.sold_hours_in_month }
+
+                            ].to_json %>'
            data-decimals='0'>
       </div>
     </div>

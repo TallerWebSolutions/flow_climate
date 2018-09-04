@@ -4,28 +4,7 @@
   </div>
 </div>
 
-<div class="row">
-  <div class="col-xs-3">
-    <%= link_to t('financial_informations.new.title'), new_company_financial_information_path(@company), class: 'btn btn-sm btn-primary bottom-spaced-component' %>
-  </div>
-</div>
-
-<div class="row">
-  <div class="col-xs-4 incomes-div">
-    <sup><%= t('financial_informations.index.total_income_in_period') %></sup>
-    <div class="finances-consolidation-value"><%= number_to_currency(@financial_informations.sum(&:income_total)) %></div>
-  </div>
-  <div class="col-xs-4 outcomes-div">
-    <sup><%= t('financial_informations.index.total_outcome_in_period') %></sup>
-    <div class="finances-consolidation-value"><%= number_to_currency(@financial_informations.sum(&:expenses_total)) %></div>
-  </div>
-  <div class="col-xs-4 balance-div">
-    <sup><%= t('financial_informations.index.total_balance_in_period') %></sup>
-    <div class="finances-consolidation-value"><%= number_to_currency(@financial_informations.sum(&:income_total) - @financial_informations.sum(&:expenses_total)) %></div>
-  </div>
-</div>
-
-<table class="table table-striped table-index">
+<table class="table table-striped table-condensed table-index">
   <thead class="thead-light">
     <tr>
       <th><%= t('general.month') %></th>
@@ -76,3 +55,38 @@
     <% end %>
   </tbody>
 </table>
+
+<% if finances_hash.present? %>
+  <div class="row">
+    <div class="col-xs-6">
+      <div id="finances-std-dev-income-outcome-div"
+           data-title='<%= t('finances.charts.finance.std_dev_income_outcome') %>'
+           data-xcategories='<%= finances_hash.map { |hash| hash['finances_date'] }.to_json %>'
+           data-xtitle='<%= t('charts.xlabel.months') %>'
+           data-ytitle='<%= t('charts.ylabel.money.text') %>'
+           data-prefix=''
+           data-suffix=''
+           data-series='<%= [
+                                { color: '#0066ff', name: I18n.t('finances.charts.finance.std_dev_income_per_hour'), data: finances_hash.map { |hash| hash['std_dev_income'].to_f } },
+                                { color: '#f90000', name: I18n.t('finances.charts.finance.std_dev_cost_per_hour'), data: finances_hash.map { |hash| hash['std_dev_expenses'].to_f } }
+                            ].to_json %>'
+           data-decimals='2'>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div id="finances-mean-cost-per-hour-div"
+           data-title='<%= t('finances.charts.finance.mean_cost_per_hour') %>'
+           data-xcategories='<%= finances_hash.map { |hash| hash['finances_date'] }.to_json %>'
+           data-xtitle='<%= t('charts.xlabel.months') %>'
+           data-ytitle='<%= t('charts.ylabel.money.text') %>'
+           data-prefix=''
+           data-suffix=''
+           data-series='<%= [{ color: '#0066ff', name: I18n.t('finances.charts.finance.mean_cost_per_hour'), data: finances_hash.map { |hash| hash['mean_cost_per_hour'].to_f } }].to_json %>'
+           data-decimals='2'>
+      </div>
+    </div>
+  </div>
+<% else %>
+  <%= t('general.no_data') %>
+<% end %>
+

@@ -58,3 +58,4 @@ const hoursGauge = $('#hours-gauge');
 buildGaugeChart(hoursGauge);
 
 buildStrategicHighcharts();
+buildFinancesHighcharts();
