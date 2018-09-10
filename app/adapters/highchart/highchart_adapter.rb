@@ -16,6 +16,7 @@ module Highchart
 
     def search_projects(projects)
       return projects if @minimum_date_limit.blank?
+
       projects.where('end_date IS NULL OR end_date >= :limit_date', limit_date: @minimum_date_limit)
     end
 
@@ -46,6 +47,7 @@ module Highchart
       downstream_result_data = []
       @all_projects_weeks.each do |date|
         break unless add_data_to_chart?(date)
+
         upstream_keys_matching = upstream_th_weekly_data.keys.select { |key| key == date }
         upstream_result_data << (upstream_th_weekly_data[upstream_keys_matching.first] || 0)
 

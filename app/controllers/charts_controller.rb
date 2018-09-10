@@ -24,6 +24,7 @@ class ChartsController < AuthenticatedController
   def assign_projects
     @projects = Project.where(id: params[:projects_ids].split(','))
     return if @projects.blank?
+
     team = @projects.last.current_team
     @target_name = params[:target_name]
     @available_hours_in_month = team.active_monthly_available_hours_for_billable_types(team.projects.pluck(:project_type).uniq)

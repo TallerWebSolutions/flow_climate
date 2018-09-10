@@ -66,11 +66,13 @@ class ProjectResult < ApplicationRecord
 
   def hours_per_demand_upstream
     return 0 if throughput_upstream.zero?
+
     qty_hours_upstream.to_f / throughput_upstream.to_f
   end
 
   def hours_per_demand_downstream
     return 0 if throughput_downstream.zero?
+
     qty_hours_downstream.to_f / throughput_downstream.to_f
   end
 
@@ -89,6 +91,7 @@ class ProjectResult < ApplicationRecord
     demand.update(project_result: nil) if demands.include?(demand)
     ProjectResult.reset_counters(id, :demands_count)
     return destroy if demands.count.zero?
+
     compute_flow_metrics!
   end
 
@@ -127,6 +130,7 @@ class ProjectResult < ApplicationRecord
 
   def cost_per_day
     return 0 if cost_in_month.blank?
+
     cost_in_month / 30
   end
 
@@ -134,6 +138,7 @@ class ProjectResult < ApplicationRecord
     throughput_for_result = throughput_upstream + throughput_downstream
     throughput_for_result = finished_demands.count if finished_demands.present?
     return 0 if cost_per_day.zero? || throughput_for_result.zero?
+
     cost_per_day / throughput_for_result.to_f
   end
 
@@ -143,11 +148,13 @@ class ProjectResult < ApplicationRecord
 
   def current_flow_pressure
     return 0 if project.remaining_days(result_date).zero? || current_gap.to_f <= 0
+
     current_gap.to_f / project.remaining_days(result_date).to_f
   end
 
   def result_date_greater_than_project_end_date
     return true if (result_date.blank? || project.start_date.blank?) || (result_date <= project.end_date)
+
     errors.add(:result_date, I18n.t('project_result.validations.result_date_greater_than_project_start_date'))
   end
 

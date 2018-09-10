@@ -21,11 +21,13 @@ class ProjectsSummaryData
 
   def percentage_remaining_money
     return 0 if @total_value.zero?
+
     (@total_remaining_money.to_f / @total_value.to_f) * 100
   end
 
   def percentage_remaining_days
     return 0 if @total_days.zero?
+
     (@total_remaining_days.to_f / @total_days.to_f) * 100
   end
 

@@ -18,11 +18,13 @@ module ProjectAggregator
   def avg_hours_per_demand
     projects_with_data = projects.select { |p| p.avg_hours_per_demand.positive? }
     return 0 if projects_with_data.size.zero?
+
     projects_with_data.sum(&:avg_hours_per_demand) / projects_with_data.size.to_f
   end
 
   def average_demand_cost
     return 0 if projects_count.zero?
+
     projects.sum(&:average_demand_cost) / projects_count.to_f
   end
 
@@ -36,6 +38,7 @@ module ProjectAggregator
 
   def percentage_remaining_money
     return 0 if total_value.zero?
+
     (remaining_money / total_value) * 100
   end
 
@@ -45,6 +48,7 @@ module ProjectAggregator
 
   def percentage_remaining_scope
     return 0 if last_week_scope.zero?
+
     (backlog_remaining.to_f / last_week_scope.to_f) * 100
   end
 

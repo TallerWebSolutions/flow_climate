@@ -7,6 +7,7 @@ module Jira
 
       project_issues.each do |jira_issue|
         next if jira_issue.attrs['key'].blank?
+
         jira_issue_with_transitions = Jira::JiraApiService.new(jira_account).request_issue_details(jira_issue.attrs['key'])
         Jira::JiraIssueAdapter.instance.process_issue!(jira_account, project_jira_config.project, jira_issue_with_transitions)
       end

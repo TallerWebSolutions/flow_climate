@@ -11,6 +11,7 @@ module Pipefy
     def update
       @pipefy_team_config.update(pipefy_team_config_params.merge(team: @team))
       return redirect_to company_team_path(@company, @team) if @pipefy_team_config.save
+
       render :edit
     end
 

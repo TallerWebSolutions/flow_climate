@@ -23,6 +23,7 @@ class CustomersController < AuthenticatedController
   def create
     @customer = Customer.new(customer_params.merge(company: @company))
     return redirect_to company_customers_path(@company) if @customer.save
+
     render :new
   end
 
@@ -31,11 +32,13 @@ class CustomersController < AuthenticatedController
   def update
     @customer.update(customer_params.merge(company: @company))
     return redirect_to company_customers_path(@company) if @customer.save
+
     render :edit
   end
 
   def destroy
     return redirect_to company_customers_path(@company) if @customer.destroy
+
     redirect_to(company_customers_path(@company), flash: { error: @customer.errors.full_messages.join(',') })
   end
 

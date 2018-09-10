@@ -5,6 +5,7 @@ class TimeService
 
   def compute_working_hours_for_dates(start_date, end_date)
     return 0 if start_date.blank? || end_date.blank?
+
     compute_working_hours(start_date, end_date)
   end
 
@@ -52,6 +53,7 @@ class TimeService
       initial_time += 1.hour
     end
     return total_hours if total_hours <= 6
+
     working_hours_greather_than_a_day(total_hours)
   end
 

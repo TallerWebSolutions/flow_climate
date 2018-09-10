@@ -10,6 +10,7 @@ module Highchart
 
     def finances_hash_with_computed_informations
       return [] if @finances.empty?
+
       finances_data = []
       cost_per_hour_population = []
       expenses_population = []

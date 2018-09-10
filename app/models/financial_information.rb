@@ -35,16 +35,19 @@ class FinancialInformation < ApplicationRecord
 
   def cost_per_hour
     return 0 if project_delivered_hours.zero?
+
     expenses_total / project_delivered_hours
   end
 
   def income_per_hour
     return 0 if project_delivered_hours.zero?
+
     income_total / project_delivered_hours
   end
 
   def hours_per_demand
     return 0 if throughput_in_month.zero?
+
     project_delivered_hours.to_f / throughput_in_month.to_f
   end
 

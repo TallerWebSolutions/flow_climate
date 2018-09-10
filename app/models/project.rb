@@ -79,6 +79,7 @@ class Project < ApplicationRecord
   def full_name
     return name if customer.blank?
     return "#{customer_name} | #{product_name} | #{name}" if product.present?
+
     "#{customer_name} | #{name}"
   end
 
@@ -89,11 +90,13 @@ class Project < ApplicationRecord
   def remaining_days(from_date = Time.zone.today)
     return 0 if end_date < from_date || end_date < start_date
     return (end_date - start_date).to_i + 1 if start_date > from_date.to_date
+
     (end_date - from_date.to_date).to_i + 1
   end
 
   def percentage_remaining_days
     return 0 if total_days.zero?
+
     (remaining_days.to_f / total_days.to_f) * 100
   end
 
@@ -108,6 +111,7 @@ class Project < ApplicationRecord
 
   def percentage_remaining_money
     return 0 if value.zero?
+
     (remaining_money / value) * 100
   end
 
@@ -125,11 +129,13 @@ class Project < ApplicationRecord
 
   def backlog_growth_rate
     return 0 if locate_last_results_for_date.first.blank? || locate_last_results_for_date.first.known_scope.zero?
+
     backlog_unit_growth.to_f / locate_last_results_for_date.first.known_scope.to_f
   end
 
   def backlog_for(date = Time.zone.today)
     return initial_scope if date.blank?
+
     project_results.for_week(date.to_date.cweek, date.to_date.cwyear).last&.known_scope || initial_scope
   end
 
@@ -143,6 +149,7 @@ class Project < ApplicationRecord
 
   def flow_pressure(date = Time.zone.today)
     return 0.0 if no_pressure_set(date)
+
     days = remaining_days(date) || total_days
     backlog_remaining(date).to_f / days.to_f
   end
@@ -165,6 +172,7 @@ class Project < ApplicationRecord
 
   def total_throughput_until(date)
     return total_throughput if date.blank?
+
     demands.kept.finished_until_date(date).count
   end
 
@@ -202,16 +210,19 @@ class Project < ApplicationRecord
 
   def avg_hours_per_demand
     return 0 if project_results.empty? || total_hours_consumed.zero? || total_throughput.zero?
+
     (total_hours_consumed.to_f / total_throughput.to_f)
   end
 
   def avg_hours_per_demand_upstream
     return 0 if project_results.empty? || total_hours_upstream.zero? || total_throughput.zero?
+
     (total_hours_upstream.to_f / total_throughput_upstream.to_f)
   end
 
   def avg_hours_per_demand_downstream
     return 0 if project_results.empty? || total_hours_downstream.zero? || total_throughput_downstream.zero?
+
     (total_hours_downstream.to_f / total_throughput_downstream.to_f)
   end
 
@@ -230,6 +241,7 @@ class Project < ApplicationRecord
 
   def risk_color
     return 'green' if project_risk_alerts.empty?
+
     project_risk_alerts.order(:created_at).last.alert_color
   end
 
@@ -239,6 +251,7 @@ class Project < ApplicationRecord
 
   def backlog_growth_throughput_rate
     return backlog_unit_growth if total_throughput_for(Time.zone.today).to_f.zero?
+
     backlog_unit_growth.to_f / total_throughput_for(Time.zone.today).to_f
   end
 
@@ -249,6 +262,7 @@ class Project < ApplicationRecord
   def average_demand_cost
     return 0 if project_results.blank?
     return current_cost if total_throughput.zero? || total_throughput == 1
+
     current_cost / total_throughput
   end
 
@@ -266,16 +280,19 @@ class Project < ApplicationRecord
 
   def current_cost
     return 0 if project_results.blank?
+
     project_results.order(:result_date).last.cost_in_month
   end
 
   def percentage_of_demand_type(demand_type)
     return 0 if demands.kept.count.zero?
+
     (demands.kept.send(demand_type).count.to_f / demands.kept.count.to_f) * 100
   end
 
   def average_block_duration
     return 0 if demands.kept.blank? || demand_blocks.kept.blank?
+
     active_and_kept_blocks.average(:block_duration)
   end
 
@@ -295,21 +312,25 @@ class Project < ApplicationRecord
 
   def percentage_expedite
     return 0 if demands.kept.count.zero?
+
     (demands.kept.expedite.count.to_f / demands.kept.count.to_f) * 100
   end
 
   def percentage_standard
     return 0 if demands.kept.count.zero?
+
     (demands.kept.standard.count.to_f / demands.kept.count.to_f) * 100
   end
 
   def percentage_fixed_date
     return 0 if demands.kept.count.zero?
+
     (demands.kept.fixed_date.count.to_f / demands.kept.count.to_f) * 100
   end
 
   def percentage_intangible
     return 0 if demands.kept.count.zero?
+
     (demands.kept.intangible.count.to_f / demands.kept.count.to_f) * 100
   end
 
@@ -325,17 +346,20 @@ class Project < ApplicationRecord
 
   def regressive_hours_per_demand
     return avg_hours_per_demand if avg_hours_per_demand.positive?
+
     product.regressive_avg_hours_per_demand
   end
 
   def hour_value_project_value?
     return true if hour_value.present? || value.present?
+
     errors.add(:value, I18n.t('project.validations.no_value'))
     errors.add(:hour_value, I18n.t('project.validations.no_value'))
   end
 
   def product_required?
     return true if consulting? || training?
+
     errors.add(:product, I18n.t('project.validations.product_blank')) if outsourcing? && product.blank?
   end
 end

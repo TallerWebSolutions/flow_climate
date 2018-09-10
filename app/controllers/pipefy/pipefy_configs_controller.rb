@@ -13,6 +13,7 @@ module Pipefy
     def create
       @pipefy_config = Pipefy::PipefyConfig.new(pipefy_config_params.merge(company: @company))
       return redirect_to company_path(@company) if @pipefy_config.save
+
       assign_projects_to_select
       render :new
     end
@@ -29,6 +30,7 @@ module Pipefy
     def update
       @pipefy_config.update(pipefy_config_params.merge(company: @company))
       return redirect_to company_path(@company) if @pipefy_config.save
+
       assign_projects_to_select
       render :edit
     end

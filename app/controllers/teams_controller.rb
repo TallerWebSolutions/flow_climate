@@ -21,6 +21,7 @@ class TeamsController < AuthenticatedController
   def create
     @team = Team.new(team_params.merge(company: @company))
     return redirect_to company_team_path(@company, @team) if @team.save
+
     render :new
   end
 
@@ -29,6 +30,7 @@ class TeamsController < AuthenticatedController
   def update
     @team.update(team_params.merge(company: @company))
     return redirect_to company_path(@company) if @team.save
+
     render :edit
   end
 
@@ -58,6 +60,7 @@ class TeamsController < AuthenticatedController
     return DemandsRepository.instance.not_started_demands(@team_projects) if params[:not_started] == 'true'
     return DemandsRepository.instance.committed_demands(@team_projects) if params[:wip] == 'true'
     return DemandsRepository.instance.demands_finished_per_projects(@team_projects) if params[:delivered] == 'true'
+
     DemandsRepository.instance.demands_per_projects(@team_projects)
   end
 

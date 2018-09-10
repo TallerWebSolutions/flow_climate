@@ -31,6 +31,7 @@ module Highchart
       min_date = @all_projects.minimum(:start_date)
       max_date = @all_projects.maximum(:end_date)
       return [] if min_date.blank?
+
       passed_time = (Time.zone.today - min_date).to_i + 1
       remaining_days = (max_date - Time.zone.today).to_i + 1
       [{ name: I18n.t('projects.index.total_remaining_days'), data: [remaining_days] }, { name: I18n.t('projects.index.passed_time'), data: [passed_time], color: '#F45830' }]
@@ -38,6 +39,7 @@ module Highchart
 
     def deadline_vs_montecarlo_durations
       return [] if @all_projects.blank?
+
       max_date = @all_projects.maximum(:end_date)
       remaining_weeks = ((max_date - Time.zone.today).to_i / 7) + 1
 
@@ -62,6 +64,7 @@ module Highchart
     def build_dates_to_montecarlo_duration
       @dates_to_montecarlo_duration = []
       return if @active_projects.blank?
+
       @dates_to_montecarlo_duration << { name: I18n.t('projects.charts.montecarlo_dates.project_date'), date: @active_projects.maximum(:end_date), color: '#1E8449' }
       @dates_to_montecarlo_duration << { name: I18n.t('projects.charts.montecarlo_dates.confidence_95'), date: TimeService.instance.add_weeks_to_today(@confidence_95_duration), color: '#B7950B' }
       @dates_to_montecarlo_duration << { name: I18n.t('projects.charts.montecarlo_dates.confidence_80'), date: TimeService.instance.add_weeks_to_today(@confidence_80_duration), color: '#F4D03F' }
@@ -70,6 +73,7 @@ module Highchart
 
     def gather_throughput_data
       return [] if @active_projects.blank?
+
       build_throughput_array.last(15)
     end
 

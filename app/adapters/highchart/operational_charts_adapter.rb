@@ -28,6 +28,7 @@ module Highchart
       result_data = []
       @all_projects_weeks.each do |date|
         break unless add_data_to_chart?(date)
+
         keys_matching = weekly_data.keys.select { |key| key == date }
         result_data << (weekly_data[keys_matching.first] || 0)
       end
@@ -47,6 +48,7 @@ module Highchart
       result_data = []
       @all_projects_weeks.each do |date|
         break unless add_data_to_chart?(date)
+
         keys_matching = weekly_data.keys.select { |key| key == date }
         result_data << (weekly_data[keys_matching.first] || 0)
       end

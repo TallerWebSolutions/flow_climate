@@ -12,6 +12,7 @@ class TeamMembersController < AuthenticatedController
   def create
     @team_member = TeamMember.new(team_member_params.merge(team: @team))
     return redirect_to company_team_path(@company, @team) if @team_member.save
+
     render :new
   end
 
@@ -21,6 +22,7 @@ class TeamMembersController < AuthenticatedController
     team = @company.teams.find_by(id: team_member_params[:team])
     @team_member.update(team_member_params.merge(team: team))
     return redirect_to company_team_path(@company, @team) if @team_member.save
+
     render :edit
   end
 

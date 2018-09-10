@@ -25,6 +25,7 @@ class ProjectsController < AuthenticatedController
   def create
     @project = Project.new(project_params.merge(customer: @customer, product: @product))
     return redirect_to company_projects_path(@company) if @project.save
+
     assign_products_list
     render :new
   end
@@ -39,6 +40,7 @@ class ProjectsController < AuthenticatedController
     @project.update(project_params.merge(customer: @customer, product: @product))
     check_change_in_initial_scope!(previous_scope_value)
     return redirect_to company_project_path(@company, @project) if @project.save
+
     assign_products_list
     render :edit
   end
@@ -112,16 +114,19 @@ class ProjectsController < AuthenticatedController
 
   def add_status_filter(projects)
     return projects if params[:status_filter].blank? || projects.blank?
+
     projects.where(status: params[:status_filter])
   end
 
   def check_change_in_deadline!
     return if project_params[:end_date].blank? || @project.end_date == Date.parse(project_params[:end_date])
+
     ProjectChangeDeadlineHistory.create!(user: current_user, project: @project, previous_date: @project.end_date, new_date: project_params[:end_date])
   end
 
   def check_change_in_initial_scope!(previous_scope_param)
     return if project_params[:initial_scope].blank? || previous_scope_param == project_params[:initial_scope].to_i
+
     @project.project_results.order(:result_date).map(&:compute_flow_metrics!)
   end
 
@@ -129,6 +134,7 @@ class ProjectsController < AuthenticatedController
     return DemandsRepository.instance.not_started_demands(projects) if params[:not_started] == 'true'
     return DemandsRepository.instance.committed_demands(projects) if params[:wip] == 'true'
     return DemandsRepository.instance.demands_finished_per_projects(projects) if params[:delivered] == 'true'
+
     DemandsRepository.instance.demands_per_projects(projects)
   end
 

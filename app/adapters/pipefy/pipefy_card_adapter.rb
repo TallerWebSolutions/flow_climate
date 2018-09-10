@@ -22,6 +22,7 @@ module Pipefy
 
     def process_card_response!(team, demand, card_response)
       return if card_response.blank? || card_response['data'].blank? || demand.discarded?
+
       card_response_data = card_response['data']
 
       if card_response_data['card'].blank? && demand.persisted?
@@ -57,8 +58,10 @@ module Pipefy
     def read_project_in_response_data(card_response_data)
       project_full_name = Pipefy::PipefyReader.instance.read_project_name_from_pipefy_data(card_response_data)
       return if project_full_name.blank?
+
       project = ProjectsRepository.instance.search_project_by_full_name(project_full_name)
       return if project.blank?
+
       project
     end
 
@@ -72,6 +75,7 @@ module Pipefy
 
     def create_assignees!(team, response_data)
       return if empty_assignees?(response_data)
+
       response_data['card']['assignees'].uniq.each { |assignee| Pipefy::PipefyTeamConfig.where(team: team, integration_id: assignee['id'], username: assignee['username']).first_or_create }
     end
 
@@ -131,6 +135,7 @@ module Pipefy
         last_transition_out = transition_hash[:first_time_in] if last_transition_out.blank?
         stage = Stage.find_by(integration_id: transition_hash[:phase_id])
         next if stage.blank? || demand.blank?
+
         DemandTransition.where(stage: stage, demand: demand).map(&:destroy)
         demand_transition = DemandTransition.create(stage: stage, demand: demand, last_time_in: last_transition_out, last_time_out: transition_hash[:last_time_out])
         last_transition_out = transition_hash[:last_time_out]
@@ -142,6 +147,7 @@ module Pipefy
       demand_type_in_response = :feature
       response_data.try(:[], 'card').try(:[], 'fields')&.each do |field|
         next unless field['name'].casecmp('type').zero?
+
         demand_type_in_response = define_demand_type(field['value'])
         break
       end
@@ -168,6 +174,7 @@ module Pipefy
       demand_class_of_service = :standard
       response_data.try(:[], 'card').try(:[], 'fields')&.each do |field|
         next unless field['name'].casecmp('class of service').zero?
+
         demand_class_of_service = if field['value'].casecmp('expedição').zero?
                                     :expedite
                                   elsif field['value'].casecmp('data fixa').zero?
@@ -185,6 +192,7 @@ module Pipefy
       demand_title = ''
       response_data.try(:[], 'card').try(:[], 'fields')&.each do |field|
         next unless field['name'].casecmp('Title').zero?
+
         demand_title = field['value']
       end
       demand_title

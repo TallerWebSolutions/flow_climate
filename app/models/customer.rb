@@ -34,6 +34,7 @@ class Customer < ApplicationRecord
 
   def regressive_avg_hours_per_demand
     return avg_hours_per_demand if avg_hours_per_demand.positive?
+
     company.avg_hours_per_demand
   end
 end
