@@ -5,11 +5,11 @@ RSpec.describe ProjectResultService, type: :service do
     let(:company) { Fabricate :company }
     let(:customer) { Fabricate :customer, company: company }
     let(:previous_team) { Fabricate :team, company: company }
-    let!(:previous_team_member) { Fabricate :team_member, team: previous_team, total_monthly_payment: 200, hours_per_month: 40 }
+    let!(:previous_team_member) { Fabricate :team_member, team: previous_team, monthly_payment: 200, hours_per_month: 40, hour_value: 20 }
 
     let(:team) { Fabricate :team, company: company }
-    let!(:team_member) { Fabricate :team_member, team: team, total_monthly_payment: 100, hours_per_month: 40 }
-    let!(:other_team_member) { Fabricate :team_member, team: team, total_monthly_payment: 300, hours_per_month: 50 }
+    let!(:team_member) { Fabricate :team_member, team: team, monthly_payment: 100, hours_per_month: 40, hour_value: 23 }
+    let!(:other_team_member) { Fabricate :team_member, team: team, monthly_payment: 300, hours_per_month: 50, hour_value: 30 }
 
     let(:product) { Fabricate :product, customer: customer, team: previous_team }
     let(:project) { Fabricate :project, product: product, customer: customer, initial_scope: 10, start_date: 1.week.ago, end_date: 1.week.from_now }
@@ -64,7 +64,7 @@ RSpec.describe ProjectResultService, type: :service do
             project_result = ProjectResult.last
             expect(project_result.demands).to eq [demand]
             expect(project_result.result_date).to eq 1.day.from_now.to_date
-            expect(project_result.cost_in_month).to eq 200
+            expect(project_result.cost_in_month).to eq 0.1e4
             expect(project_result.available_hours.to_f).to eq 3.0
             expect(project_result.throughput_upstream).to eq 0
             expect(project_result.throughput_downstream).to eq 1

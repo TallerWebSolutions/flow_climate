@@ -27,7 +27,17 @@ class TeamMember < ApplicationRecord
 
   belongs_to :team
 
-  validates :team, :name, :monthly_payment, :hours_per_month, presence: true
+  validates :team, :name, :monthly_payment, :hours_per_month, :total_monthly_payment, presence: true
 
   scope :active, -> { where active: true }
+
+  before_validation :update_total_monthly_payment
+
+  private
+
+  def update_total_monthly_payment
+    return if hour_value.blank? || hours_per_month.blank?
+
+    self.total_monthly_payment = monthly_payment + (hour_value * hours_per_month)
+  end
 end
