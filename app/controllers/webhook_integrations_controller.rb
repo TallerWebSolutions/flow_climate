@@ -30,6 +30,7 @@ class WebhookIntegrationsController < ApplicationController
     jira_account_domain = extract_account_domain(project_url(data))
     project = define_project(data, jira_account_domain)
     return head :ok if project.blank?
+
     demand = Demand.find_by(project: project, demand_id: data['issue']['key'])
     DemandsRepository.instance.full_demand_destroy!(demand)
     head :ok
@@ -48,6 +49,7 @@ class WebhookIntegrationsController < ApplicationController
   def define_project(data, jira_account_domain)
     jira_config = Jira::ProjectJiraConfig.find_by(jira_account_domain: jira_account_domain, jira_project_key: project_jira_key(data), fix_version_name: fix_version_name(data))
     return if jira_config.blank?
+
     jira_config.project
   end
 

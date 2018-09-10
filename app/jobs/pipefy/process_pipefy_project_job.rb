@@ -5,6 +5,7 @@ module Pipefy
     def perform(project_id)
       project = Project.find_by(id: project_id)
       return if project.pipefy_config.blank?
+
       project.stages.each do |stage|
         ids_cards_in_stage = Pipefy::PipefyReader.instance.read_phase(stage.integration_id)
         process_cards_in_pipefy_and_update_informations!(project, project.pipefy_config.team, ids_cards_in_stage)
@@ -20,6 +21,7 @@ module Pipefy
       project.demands.joins(:demand_transitions).uniq.each do |demand|
         pipefy_card_response = Pipefy::PipefyApiService.request_card_details(demand.demand_id)
         next if pipefy_card_response.code != 200
+
         process_card_response!(demand, demands_id_to_delete, pipefy_card_response, project)
       end
       demands_id_to_delete.each { |id| DemandsRepository.instance.full_demand_destroy!(Demand.find(id)) }
@@ -38,6 +40,7 @@ module Pipefy
       cards_to_check.each do |card_id|
         pipefy_card_response = Pipefy::PipefyApiService.request_card_details(card_id)
         next if pipefy_card_response.code != 200
+
         card_response = JSON.parse(pipefy_card_response.body)
         known_demand = project.demands.find_by(demand_id: card_id)
         Pipefy::PipefyCardAdapter.instance.create_card!(team, card_response) || known_demand

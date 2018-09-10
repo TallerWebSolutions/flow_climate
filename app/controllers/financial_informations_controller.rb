@@ -11,6 +11,7 @@ class FinancialInformationsController < AuthenticatedController
   def create
     @financial_information = FinancialInformation.new(finances_params.merge(company: @company))
     return redirect_to company_path(@company) if @financial_information.save
+
     render :new
   end
 
@@ -19,6 +20,7 @@ class FinancialInformationsController < AuthenticatedController
   def update
     @financial_information.update(finances_params)
     return redirect_to company_path(@company) if @financial_information.save
+
     render :edit
   end
 

@@ -65,6 +65,7 @@ class ProjectRiskMonitorJob < ApplicationJob
   def process_red_alert(project, risk, alert_value)
     last_alert_color = project.project_risk_alerts.where(project_risk_config: risk).order(:updated_at).last&.alert_color
     return if last_alert_color == 'red'
+
     UserNotifierMailer.notify_new_red_alert(project, risk, last_alert_color, alert_value).deliver
   end
 end

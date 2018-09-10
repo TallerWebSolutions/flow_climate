@@ -46,11 +46,13 @@ class DemandTransition < ApplicationRecord
 
   def total_hours_in_transition
     return 0 if last_time_out.blank?
+
     (last_time_out - last_time_in) / 1.hour
   end
 
   def working_time_in_transition
     return 0 if last_time_out.blank?
+
     TimeService.instance.compute_working_hours_for_dates(last_time_in, last_time_out)
   end
 
@@ -73,6 +75,7 @@ class DemandTransition < ApplicationRecord
 
   def same_stage_project?
     return if stage.blank? || stage.projects.include?(demand.project)
+
     errors.add(:stage, I18n.t('activerecord.errors.models.demand_transition.stage.not_same'))
   end
 end

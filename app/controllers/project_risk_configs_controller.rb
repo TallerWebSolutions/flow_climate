@@ -12,6 +12,7 @@ class ProjectRiskConfigsController < AuthenticatedController
   def create
     @project_risk_config = ProjectRiskConfig.new(project_risk_configs_params.merge(project: @project))
     return redirect_to company_project_path(@company, @project) if @project_risk_config.save
+
     render :new
   end
 
@@ -27,6 +28,7 @@ class ProjectRiskConfigsController < AuthenticatedController
 
   def destroy
     return redirect_to company_project_path(@company, @project) if @project_risk_config.destroy
+
     redirect_to(company_project_path(@company, @project), flash: { error: @project_risk_config.errors.full_messages.join(',') })
   end
 

@@ -12,6 +12,7 @@ class ProductsController < AuthenticatedController
     @product_projects = @product.projects.order(end_date: :desc)
     @projects_summary = ProjectsSummaryData.new(@product.projects)
     return render :show if @product_projects.blank?
+
     @report_data = Highchart::OperationalChartsAdapter.new(@product_projects, 'all')
     @status_report_data = Highchart::StatusReportChartsAdapter.new(@product_projects, 'all')
     @montecarlo_durations = @status_report_data.deadline_vs_montecarlo_durations
@@ -27,6 +28,7 @@ class ProductsController < AuthenticatedController
     customer = Customer.find_by(id: product_params[:customer_id])
     @product.update(product_params.merge(customer: customer))
     return redirect_to company_products_path(@company) if @product.save
+
     render :edit
   end
 
@@ -34,6 +36,7 @@ class ProductsController < AuthenticatedController
     customer = Customer.find_by(id: product_params[:customer_id])
     @product = Product.new(product_params.merge(customer: customer))
     return redirect_to company_products_path(@company) if @product.save
+
     render :new
   end
 
@@ -43,6 +46,7 @@ class ProductsController < AuthenticatedController
 
   def destroy
     return redirect_to company_products_path(@company) if @product.destroy
+
     redirect_to(company_products_path(@company), flash: { error: @product.errors.full_messages.join(',') })
   end
 

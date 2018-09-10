@@ -11,6 +11,7 @@ class BaseFlowAdapter
   def persist_unblock!(demand, author, unblock_time, demand_block_id, unblock_reason)
     demand_block = demand.demand_blocks.open.where(demand: demand, demand_block_id: demand_block_id).first
     return if demand_block.blank?
+
     demand_block.update(unblocker_username: author, unblock_time: unblock_time, unblock_reason: unblock_reason.strip)
   end
 end

@@ -12,6 +12,7 @@ class DemandsController < AuthenticatedController
   def create
     @demand = Demand.new(demand_params.merge(project: @project))
     return render :new unless @demand.save
+
     ProjectResultService.instance.compute_demand!(@project.current_team, @demand)
     redirect_to company_project_demand_path(@company, @project, @demand)
   end

@@ -8,6 +8,7 @@ module Pipefy
       cards_in_pipe = []
       phase_response = Pipefy::PipefyApiService.request_cards_to_phase(phase_id)
       return [] if phase_response.code != 200
+
       cards_in_pipe.concat(read_phase_response(phase_id, phase_response))
       cards_in_pipe
     end
@@ -16,6 +17,7 @@ module Pipefy
       project_pipefy_name = ''
       response_data.try(:[], 'card').try(:[], 'fields')&.each do |field|
         next unless field['name'].casecmp('project').zero?
+
         project_pipefy_name = field['value']
       end
       project_pipefy_name
@@ -27,6 +29,7 @@ module Pipefy
       cards_in_pipe = []
       cards_in_phase = JSON.parse(phase_response.body)
       return [] if cards_in_phase['data']['phase'].blank?
+
       root_cards = cards_in_phase['data']['phase']['cards']
       cards_in_pipe.concat(root_cards['edges'].map { |edge| edge['node']['id'] })
       cards_in_pipe.concat(read_all_the_cards_in_phase(phase_id, root_cards)) if root_cards['pageInfo']['hasNextPage']

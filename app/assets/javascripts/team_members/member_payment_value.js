@@ -15,11 +15,11 @@ $('#hour_value').on('keyup', function(){
 });
 
 
-var computeTotalPayment = function() {
-    var monthlyPayment = $('#monthly_payment');
-    var hoursPerMonth = $('#hours_per_month');
-    var hourValue = $('#hour_value');
-    var totalMonthlyPayment = $('#total_monthly_payment');
+function computeTotalPayment() {
+    const monthlyPayment = $('#monthly_payment');
+    const hoursPerMonth = $('#hours_per_month');
+    const hourValue = $('#hour_value');
+    const totalMonthlyPayment = $('#total_monthly_payment');
 
     if (monthlyPayment.val().length === 0 && hourValue.val().length === 0 && hoursPerMonth.val().length === 0) {
         totalMonthlyPayment.val(0.00);
@@ -29,9 +29,9 @@ var computeTotalPayment = function() {
         return
     }
 
-    var monthlyPaymentValue = parseFloat(monthlyPayment.val());
-    var hour_value = parseFloat(hourValue.val());
-    var hours_per_month = parseFloat(hoursPerMonth.val());
+    const monthlyPaymentValue = parseFloat(monthlyPayment.val());
+    const parsedHourValue = parseFloat(hourValue.val());
+    const parsedHoursPerMonth = parseFloat(hoursPerMonth.val());
 
-    totalMonthlyPayment.val((monthlyPaymentValue + (hour_value * hours_per_month)).toFixed(2));
-};
+    totalMonthlyPayment.val((monthlyPaymentValue + (parsedHourValue * parsedHoursPerMonth)).toFixed(2));
+}

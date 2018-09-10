@@ -89,6 +89,7 @@ class Demand < ApplicationRecord
 
   def update_effort!(update_manual_effort = false)
     return if manual_effort? && !update_manual_effort
+
     update(effort_downstream: compute_effort_downstream, effort_upstream: compute_effort_upstream)
   end
 
@@ -136,12 +137,14 @@ class Demand < ApplicationRecord
   def flowing?
     return false if (current_stage.blank? && commitment_date.blank?) || end_date.present?
     return true if current_stage.blank? && commitment_date.present?
+
     current_stage.order > current_stage.flow_start_point.order
   end
 
   def committed?
     return false if (current_stage.blank? && commitment_date.blank?) || end_date.present?
     return true if committed_manually
+
     current_stage.inside_commitment_area?
   end
 
@@ -194,6 +197,7 @@ class Demand < ApplicationRecord
 
   def pairing_value(stage_config)
     return assignees_count if assignees_count == 1
+
     pair_count = assignees_count - 1
     1 + (pair_count * (stage_config.pairing_percentage / 100.0))
   end

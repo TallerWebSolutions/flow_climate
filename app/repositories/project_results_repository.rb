@@ -54,6 +54,7 @@ class ProjectResultsRepository
 
   def hours_per_demand_in_time_for_projects(projects, limit_date)
     return {} if projects.blank?
+
     hours_upstream_hash = build_hash_data_with_sum(projects, limit_date, :qty_hours_upstream)
     hours_downstream_hash = build_hash_data_with_sum(projects, limit_date, :qty_hours_downstream)
     upstream_throughput_hash = build_hash_data_with_sum(projects, limit_date, :throughput_upstream)
@@ -72,6 +73,7 @@ class ProjectResultsRepository
 
   def throughput_for_projects_grouped_per_week(projects, limit_date, stage_stream)
     return build_hash_data_with_sum(projects, limit_date, :throughput_upstream) if stage_stream == :upstream
+
     build_hash_data_with_sum(projects, limit_date, :throughput_downstream)
   end
 
@@ -109,11 +111,13 @@ class ProjectResultsRepository
 
   def build_hash_data_with_average(projects, limit_date, field)
     return 0 if projects.blank?
+
     grouped_per_week_project_results_to_projects(projects, limit_date).average(field)
   end
 
   def grouped_per_week_project_results_to_projects(projects, limit_date)
     return [] if projects.blank?
+
     ProjectResult.where(project_id: projects.map(&:id)).where('result_date >= :limit_date', limit_date: limit_date).order(Arel.sql("DATE_TRUNC('WEEK', result_date)")).group("DATE_TRUNC('WEEK', result_date)")
   end
 

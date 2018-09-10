@@ -28,6 +28,7 @@ class Company < ApplicationRecord
 
   def add_user(user)
     return if users.include?(user)
+
     users << user
   end
 
@@ -51,6 +52,7 @@ class Company < ApplicationRecord
     finance = financial_informations.where('finances_date <= current_date').order(finances_date: :desc).first
     return 0 if finance.blank?
     return compute_current_cost_per_hour(finance) if consumed_hours_in_month.positive?
+
     finance.expenses_total
   end
 

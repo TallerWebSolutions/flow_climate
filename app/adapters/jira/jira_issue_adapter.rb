@@ -40,12 +40,14 @@ module Jira
       issue_type_name = jira_issue.attrs['fields']['issuetype']['name']
       return :feature if issue_type_name.casecmp('story').zero?
       return :chore if issue_type_name.casecmp('chore').zero?
+
       :bug
     end
 
     def translate_class_of_service(jira_account, jira_issue)
       class_of_service_custom_field_name = jira_account.class_of_service_custom_field&.custom_field_machine_name
       return :standard if class_of_service_custom_field_name.blank?
+
       class_of_service_hash = jira_issue.attrs['fields'][class_of_service_custom_field_name]
       return :standard if class_of_service_hash.blank?
 
@@ -95,6 +97,7 @@ module Jira
       last_time_out = demand.created_date
       issue_changelog['histories'].sort_by { |history_hash| history_hash['id'] }.each do |history|
         next unless transition_history?(history)
+
         transition_created_at = history['created']
         create_transitions!(demand, history, last_time_out, transition_created_at)
         last_time_out = transition_created_at

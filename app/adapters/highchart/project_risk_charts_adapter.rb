@@ -25,6 +25,7 @@ module Highchart
     def define_color_hex(alert_color)
       return '#F9FB28' if alert_color == 'yellow'
       return '#FB283D' if alert_color == 'red'
+
       '#179A02'
     end
   end

@@ -34,6 +34,7 @@ module Stats
 
     def compute_percentage(data_count_analysed, data_count_remaining)
       return 0 if data_count_remaining.zero? && data_count_analysed.zero?
+
       (data_count_analysed.to_f / (data_count_analysed.to_f + data_count_remaining.to_f) * 100)
     end
 
@@ -43,6 +44,7 @@ module Stats
 
     def tail_events_boundary(population_array)
       return 0 if population_array.blank?
+
       std_dev = standard_deviation(population_array)
       mean = mean(population_array)
       mean + (4 * std_dev)
@@ -60,6 +62,7 @@ module Stats
 
     def compute_durations_in_weeks_array(remaining_backlog_count, throughput_histogram_data, qty_cycles)
       return [] if throughput_histogram_data.sum.zero?
+
       durations_array = []
       qty_cycles.times { durations_array << run_montecarlo_cycle(remaining_backlog_count, throughput_histogram_data) }
       durations_array
@@ -87,6 +90,7 @@ module Stats
 
     def variance(population_array)
       return 0 if population_array.size == 1
+
       mean = population_array.sum / population_array.count.to_f
       sum = population_array.inject(0) { |accum, i| accum + (i - mean)**2 }
       sum / (population_array.length - 1).to_f

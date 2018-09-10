@@ -11,6 +11,7 @@ class StagesController < AuthenticatedController
   def create
     @stage = Stage.new(stages_params.merge(company: @company))
     return redirect_to company_path(@company) if @stage.save
+
     render :new
   end
 
@@ -25,6 +26,7 @@ class StagesController < AuthenticatedController
 
   def destroy
     return redirect_to company_path(@company) if @stage.destroy
+
     redirect_to(company_path(@company), flash: { error: @stage.errors.full_messages.join(',') })
   end
 

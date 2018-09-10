@@ -86,6 +86,7 @@ class ProjectsRepository
 
   def extract_data_for_week(projects, leadtime_per_week_grouped)
     return {} if projects.blank?
+
     start_date = projects.map(&:start_date).min
     end_date = [projects.map(&:end_date).max, Time.zone.today].min
 
