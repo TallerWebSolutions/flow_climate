@@ -19,6 +19,8 @@
         <th><%= Project.human_attribute_name :end_date %></th>
         <th><%= Project.human_attribute_name :status %></th>
         <th><%= Project.human_attribute_name :project_type %></th>
+        <th><%= Project.human_attribute_name :qty_hours %></th>
+        <th><%= t('projects.index.consumed_hours') %></th>
         <th><%= t('projects.show.demand_blocks_count') %></th>
         <th><%= t('projects.show.demand_blocks_duration_average') %></th>
         <th><%= t('projects.show.demands_count') %></th>
@@ -52,6 +54,8 @@
           <td><%= l(project.end_date) %></td>
           <td><%= t("activerecord.attributes.project.enums.status.#{project.status}") %></td>
           <td><%= t("activerecord.attributes.project.enums.project_type.#{project.project_type}") %></td>
+          <td><%= number_with_precision(project.qty_hours, precision: 2) %></td>
+          <td><%= number_with_precision(project.consumed_hours, precision: 2) %></td>
           <td>
             <%= link_to company_project_demand_blocks_path(@company, project), class: 'list-block', remote: true do %>
               <%= project.active_and_kept_blocks.count %>
