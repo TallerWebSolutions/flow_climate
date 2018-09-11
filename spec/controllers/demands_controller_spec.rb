@@ -212,6 +212,8 @@ RSpec.describe DemandsController, type: :controller do
 
       context 'passing valid parameters' do
         it 'updates the demand and redirects to projects index' do
+          expect(ProjectResultService.instance).to receive(:compute_demand!).with(project.current_team, instance_of(Demand)).once
+
           put :update, params: { company_id: company, project_id: project, id: demand, demand: { demand_id: 'xpto', demand_type: 'bug', downstream: true, manual_effort: true, class_of_service: 'expedite', effort_upstream: 5, effort_downstream: 2, created_date: created_date, commitment_date: created_date, end_date: end_date } }, xhr: true
           updated_demand = Demand.last
           expect(updated_demand.demand_id).to eq 'xpto'
@@ -235,8 +237,9 @@ RSpec.describe DemandsController, type: :controller do
         end
 
         context 'demand parameters' do
-          before { put :update, params: { company_id: company, project_id: project, id: demand, demand: { demand_id: '', demand_type: '', effort: nil, created_date: nil, commitment_date: nil, end_date: nil } }, xhr: true }
           it 'does not update the demand and re-render the template with the errors' do
+            expect(ProjectResultService.instance).to receive(:compute_demand!).never
+            put :update, params: { company_id: company, project_id: project, id: demand, demand: { demand_id: '', demand_type: '', effort: nil, created_date: nil, commitment_date: nil, end_date: nil } }, xhr: true
             expect(response).to render_template 'demands/update'
             expect(assigns(:demand).errors.full_messages).to match_array ['Data de Criação não pode ficar em branco', 'Id da Demanda não pode ficar em branco', 'Tipo da Demanda não pode ficar em branco']
           end

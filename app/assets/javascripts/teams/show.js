@@ -1,6 +1,6 @@
 $(".loader").hide();
 
-var hoursGauge = $('#hours-gauge');
+const hoursGauge = $('#hours-gauge');
 buildGaugeChart(hoursGauge);
 
 accordionBehaviour();
@@ -11,9 +11,9 @@ $('#status-report-period').on('change', function(event){
 
     event.preventDefault();
 
-    var companyId = $("#company_id").val();
-    var teamId = $("#team_id").val();
-    var period = $('#status-report-period').val();
+    const companyId = $("#company_id").val();
+    const teamId = $("#team_id").val();
+    const period = $('#status-report-period').val();
 
     buildStatusReportCharts(companyId, teamId, period)
 });
@@ -24,15 +24,15 @@ $('#operational-charts-period').change(function(event){
 
     event.preventDefault();
 
-    var companyId = $("#company_id").val();
-    var teamId = $("#team_id").val();
-    var period = $('#operational-charts-period').val();
+    const companyId = $("#company_id").val();
+    const teamId = $("#team_id").val();
+    const period = $('#operational-charts-period').val();
 
     buildOperationalCharts(companyId, teamId, period)
 });
 
 $('#search_week').on('click', function () {
-    var flow_div = $('#flow');
+    const flow_div = $('#flow');
     flow_div.hide();
     $(".loader").show();
     searchDemandsToFlowCharts($('#company_id').val(), $('#team_id').val(), $('#week').val(), $('#year').val());
