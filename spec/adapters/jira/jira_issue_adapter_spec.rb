@@ -29,7 +29,7 @@ RSpec.describe Jira::JiraIssueAdapter, type: :service do
 
         it 'creates the demand' do
           expect(ProjectResultService.instance).to receive(:compute_demand!).once.and_call_original
-          expect_any_instance_of(ProjectResult).to receive(:compute_flow_metrics!).once
+          expect_any_instance_of(ProjectResult).to receive(:compute_flow_metrics!).twice
           Jira::JiraIssueAdapter.instance.process_issue!(jira_account, first_project, jira_issue)
           expect(Demand.count).to eq 1
           expect(Demand.last.assignees_count).to eq 2

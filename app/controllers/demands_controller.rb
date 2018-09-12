@@ -28,6 +28,7 @@ class DemandsController < AuthenticatedController
 
   def update
     @demand.update(demand_params)
+    ProjectResultService.instance.compute_demand!(@project.current_team, @demand) if @demand.valid?
     render 'demands/update'
   end
 
