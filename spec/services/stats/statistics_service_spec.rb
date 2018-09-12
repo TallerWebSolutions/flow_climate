@@ -6,15 +6,31 @@ RSpec.describe Stats::StatisticsService, type: :service do
 
   describe '#percentile' do
     let(:empty_population) { [] }
-    let(:population) { [2, 4, 10, 56, 5, 4, 4, 89, 2] }
 
-    it 'computes the values' do
-      expect(Stats::StatisticsService.instance.percentile(90, empty_population)).to eq 0
+    context 'having no nil value in the population' do
+      let(:population) { [2, 4, 10, 56, 5, 4, 4, 89, 2] }
 
-      expect(Stats::StatisticsService.instance.percentile(100, population)).to eq 89
-      expect(Stats::StatisticsService.instance.percentile(90, population)).to be_within(0.01).of(62.60)
-      expect(Stats::StatisticsService.instance.percentile(60, population)).to be_within(0.01).of(4.8)
-      expect(Stats::StatisticsService.instance.percentile(40, population)).to be_within(0.01).of(4.0)
+      it 'computes the values' do
+        expect(Stats::StatisticsService.instance.percentile(90, empty_population)).to eq 0
+
+        expect(Stats::StatisticsService.instance.percentile(100, population)).to eq 89
+        expect(Stats::StatisticsService.instance.percentile(90, population)).to be_within(0.01).of(62.60)
+        expect(Stats::StatisticsService.instance.percentile(60, population)).to be_within(0.01).of(4.8)
+        expect(Stats::StatisticsService.instance.percentile(40, population)).to be_within(0.01).of(4.0)
+      end
+    end
+
+    context 'having nil values in the population' do
+      let(:population) { [2, 4, nil, 10, 56, 5, nil, 4, 4, 89, 2] }
+
+      it 'computes the values after nil removal' do
+        expect(Stats::StatisticsService.instance.percentile(90, empty_population)).to eq 0
+
+        expect(Stats::StatisticsService.instance.percentile(100, population)).to eq 89
+        expect(Stats::StatisticsService.instance.percentile(90, population)).to be_within(0.01).of(62.60)
+        expect(Stats::StatisticsService.instance.percentile(60, population)).to be_within(0.01).of(4.8)
+        expect(Stats::StatisticsService.instance.percentile(40, population)).to be_within(0.01).of(4.0)
+      end
     end
   end
 
