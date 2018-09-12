@@ -7,13 +7,14 @@ module Stats
     include Singleton
 
     def percentile(desired_percentile, population)
-      return 0 if population.empty?
-      return population.first if population.size == 1
+      processed_population = population.compact
+      return 0 if processed_population.empty?
+      return processed_population.first if processed_population.size == 1
 
-      population.sort!
-      return population.last if desired_percentile == 100
+      processed_population.sort!
+      return processed_population.last if desired_percentile == 100
 
-      compute_percentile(desired_percentile, population)
+      compute_percentile(desired_percentile, processed_population)
     end
 
     def mean(population)
