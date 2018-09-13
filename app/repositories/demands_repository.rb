@@ -38,28 +38,28 @@ class DemandsRepository
     demands_touched_in_day(demands, analysed_date).order(:commitment_date)
   end
 
-  def grouped_by_effort_upstream_per_month(array_of_projects, limit_date)
-    demands_finished_per_projects(array_of_projects).where('end_date >= :limit_date', limit_date: limit_date).order(Arel.sql('EXTRACT(YEAR from end_date), EXTRACT(MONTH from end_date)')).group('EXTRACT(YEAR from end_date)', 'EXTRACT(MONTH from end_date)').sum(:effort_upstream)
+  def grouped_by_effort_upstream_per_month(array_of_demands_ids, limit_date)
+    demands_finished(array_of_demands_ids).where('end_date >= :limit_date', limit_date: limit_date).order(Arel.sql('EXTRACT(YEAR from end_date), EXTRACT(MONTH from end_date)')).group('EXTRACT(YEAR from end_date)', 'EXTRACT(MONTH from end_date)').sum(:effort_upstream)
   end
 
-  def grouped_by_effort_downstream_per_month(array_of_projects, limit_date)
-    demands_finished_per_projects(array_of_projects).where('end_date >= :limit_date', limit_date: limit_date).order(Arel.sql('EXTRACT(YEAR from end_date), EXTRACT(MONTH from end_date)')).group('EXTRACT(YEAR from end_date)', 'EXTRACT(MONTH from end_date)').sum(:effort_downstream)
+  def grouped_by_effort_downstream_per_month(array_of_demands_ids, limit_date)
+    demands_finished(array_of_demands_ids).where('end_date >= :limit_date', limit_date: limit_date).order(Arel.sql('EXTRACT(YEAR from end_date), EXTRACT(MONTH from end_date)')).group('EXTRACT(YEAR from end_date)', 'EXTRACT(MONTH from end_date)').sum(:effort_downstream)
   end
 
-  def demands_finished_per_projects(array_of_projects)
-    Demand.kept.finished.where(project_id: array_of_projects.map(&:id))
+  def demands_finished(array_of_demands_ids)
+    Demand.kept.finished.where(id: array_of_demands_ids)
   end
 
   def demands_per_projects(array_of_projects)
     Demand.kept.where(project_id: array_of_projects.map(&:id))
   end
 
-  def not_started_demands(array_of_projects)
-    Demand.kept.where(project_id: array_of_projects.map(&:id)).reject(&:flowing?).reject { |demand| demand.end_date.present? }
+  def not_started_demands(array_of_demands_ids)
+    Demand.kept.where(id: array_of_demands_ids).reject(&:flowing?).reject { |demand| demand.end_date.present? }
   end
 
-  def committed_demands(array_of_projects)
-    Demand.kept.where(project_id: array_of_projects.map(&:id)).select(&:committed?)
+  def committed_demands(array_of_demands_ids)
+    Demand.kept.where(id: array_of_demands_ids).select(&:committed?)
   end
 
   private

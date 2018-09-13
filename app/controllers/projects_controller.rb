@@ -4,7 +4,7 @@ class ProjectsController < AuthenticatedController
   before_action :assign_company
   before_action :assign_customer, only: %i[create update]
   before_action :assign_product, only: %i[create update]
-  before_action :assign_project, only: %i[show edit update destroy synchronize_jira finish_project search_demands_by_flow_status statistics]
+  before_action :assign_project, only: %i[show edit update destroy synchronize_jira finish_project statistics]
 
   def show
     @ordered_project_results = @project.project_results.order(:result_date)
@@ -73,14 +73,6 @@ class ProjectsController < AuthenticatedController
     redirect_to company_project_path(@company, @project)
   end
 
-  def search_demands_by_flow_status
-    projects = Project.where(id: @project.id)
-    demands_for_query_ids = build_demands_query(projects)
-    @demands = Demand.where(id: demands_for_query_ids.map(&:id)).order(end_date: :desc, commitment_date: :desc, created_date: :desc)
-    assign_grouped_demands_informations(@demands)
-    respond_to { |format| format.js { render file: 'demands/search_demands_by_flow_status.js.erb' } }
-  end
-
   def statistics
     respond_to { |format| format.js { render file: 'projects/project_statistics.js.erb' } }
   end
@@ -128,18 +120,5 @@ class ProjectsController < AuthenticatedController
     return if project_params[:initial_scope].blank? || previous_scope_param == project_params[:initial_scope].to_i
 
     @project.project_results.order(:result_date).map(&:compute_flow_metrics!)
-  end
-
-  def build_demands_query(projects)
-    return DemandsRepository.instance.not_started_demands(projects) if params[:not_started] == 'true'
-    return DemandsRepository.instance.committed_demands(projects) if params[:wip] == 'true'
-    return DemandsRepository.instance.demands_finished_per_projects(projects) if params[:delivered] == 'true'
-
-    DemandsRepository.instance.demands_per_projects(projects)
-  end
-
-  def assign_grouped_demands_informations(demands)
-    @grouped_delivered_demands = demands.grouped_end_date_by_month if params[:grouped_by_month] == 'true'
-    @grouped_customer_demands = demands.grouped_by_customer if params[:grouped_by_customer] == 'true'
   end
 end

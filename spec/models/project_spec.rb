@@ -1108,4 +1108,25 @@ RSpec.describe Project, type: :model do
       it { expect(project.percentage_fixed_date).to eq 25 }
     end
   end
+
+  describe '#kept_demands_ids' do
+    let(:project) { Fabricate :project }
+
+    context 'having demands' do
+      let!(:demand) { Fabricate :demand, project: project }
+      let!(:other_demand) { Fabricate :demand, project: project }
+
+      let!(:other_project_demand) { Fabricate :demand }
+
+      let!(:not_kept_demand) { Fabricate :demand, project: project, discarded_at: Time.zone.today }
+
+      it { expect(project.kept_demands_ids).to match_array [demand.id, other_demand.id] }
+    end
+
+    context 'having no demands' do
+      let(:not_kept_demand) { Fabricate :demand, project: project, discarded_at: Time.zone.today }
+
+      it { expect(project.kept_demands_ids).to match_array [] }
+    end
+  end
 end

@@ -2,7 +2,7 @@
 
 class DemandsController < AuthenticatedController
   before_action :assign_company
-  before_action :assign_project, except: %i[demands_csv demands_in_projects]
+  before_action :assign_project, except: %i[demands_csv demands_in_projects search_demands_by_flow_status]
   before_action :assign_demand, only: %i[edit update show synchronize_jira destroy]
 
   def new
@@ -66,6 +66,17 @@ class DemandsController < AuthenticatedController
     respond_to { |format| format.js { render file: 'demands/demands_list.js.erb' } }
   end
 
+  def search_demands_by_flow_status
+    if params[:demands_ids].present?
+      filtered_demands = build_demands_query(params[:demands_ids].split(',').map(&:strip).map(&:to_i))
+      @demands = Demand.where(id: filtered_demands.map(&:id)).order(end_date: :desc, commitment_date: :desc, created_date: :desc)
+      assign_grouped_demands_informations(@demands)
+    else
+      @demands = []
+    end
+    respond_to { |format| format.js { render file: 'demands/search_demands_by_flow_status.js.erb' } }
+  end
+
   private
 
   def demand_params
@@ -83,5 +94,13 @@ class DemandsController < AuthenticatedController
   def assign_grouped_demands_informations(demands)
     @grouped_delivered_demands = demands.grouped_end_date_by_month if params[:grouped_by_month] == 'true'
     @grouped_customer_demands = demands.grouped_by_customer if params[:grouped_by_customer] == 'true'
+  end
+
+  def build_demands_query(array_of_demands_ids)
+    return DemandsRepository.instance.not_started_demands(array_of_demands_ids) if params[:not_started] == 'true'
+    return DemandsRepository.instance.committed_demands(array_of_demands_ids) if params[:wip] == 'true'
+    return DemandsRepository.instance.demands_finished(array_of_demands_ids) if params[:delivered] == 'true'
+
+    Demand.where(id: array_of_demands_ids)
   end
 end
