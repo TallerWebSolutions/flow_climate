@@ -44,7 +44,7 @@ RSpec.describe DemandsRepository, type: :repository do
     it { expect(DemandsRepository.instance.known_scope_to_date(first_project, 2.days.ago.to_date)).to eq 5 }
   end
 
-  describe '#demands_finished_per_projects' do
+  describe '#demands_finished' do
     let(:first_project) { Fabricate :project, customer: customer, start_date: 1.week.ago }
     let(:second_project) { Fabricate :project, customer: customer, start_date: 1.week.ago }
 
@@ -52,11 +52,11 @@ RSpec.describe DemandsRepository, type: :repository do
     let!(:second_demand) { Fabricate :demand, project: first_project, created_date: 2.days.ago, end_date: 2.days.ago }
     let!(:third_demand) { Fabricate :demand, project: first_project, created_date: 2.days.ago, end_date: 2.days.ago }
     let!(:fourth_demand) { Fabricate :demand, project: second_project, created_date: 1.day.ago, end_date: 1.day.ago }
-    let!(:fifth_demand) { Fabricate :demand, project: second_project, created_date: 2.days.ago, end_date: 2.days.ago }
+    let!(:fifth_demand) { Fabricate :demand, project: second_project, created_date: 2.days.ago, end_date: nil }
 
     let!(:sixth_demand) { Fabricate :demand, project: first_project, demand_id: 'sss', discarded_at: Time.zone.today }
 
-    it { expect(DemandsRepository.instance.demands_finished_per_projects([first_project])).to match_array [first_demand, second_demand, third_demand] }
+    it { expect(DemandsRepository.instance.demands_finished(Demand.all.map(&:id))).to match_array [first_demand, second_demand, third_demand, fourth_demand] }
   end
 
   describe '#demands_per_projects' do
@@ -197,16 +197,14 @@ RSpec.describe DemandsRepository, type: :repository do
       let!(:seventh_demand) { Fabricate :demand, project: project, commitment_date: 10.days.ago, end_date: nil, effort_upstream: 32, effort_downstream: 87 }
       let!(:eigth_demand) { Fabricate :demand, project: project, commitment_date: 29.days.ago, end_date: 22.days.ago, effort_upstream: 80, effort_downstream: 34, discarded_at: Time.zone.today }
 
-      context 'having demands in progress' do
-        it { expect(DemandsRepository.instance.grouped_by_effort_upstream_per_month([project], 57.days.ago.to_date)).to eq([2018.0, 2.0] => 22.0, [2018.0, 3.0] => 195.0) }
-        it { expect(DemandsRepository.instance.grouped_by_effort_upstream_per_month([project], 24.days.ago.to_date)).to eq([2018.0, 3.0] => 195.0) }
+      context 'having demands' do
+        it { expect(DemandsRepository.instance.grouped_by_effort_upstream_per_month(Demand.all.map(&:id), 57.days.ago.to_date)).to eq([2018.0, 2.0] => 22.0, [2018.0, 3.0] => 195.0) }
+        it { expect(DemandsRepository.instance.grouped_by_effort_upstream_per_month(Demand.all.map(&:id), 24.days.ago.to_date)).to eq([2018.0, 3.0] => 195.0) }
       end
     end
 
     context 'having no demands' do
-      context 'having demands in progress' do
-        it { expect(DemandsRepository.instance.grouped_by_effort_upstream_per_month([project], Time.zone.today)).to eq({}) }
-      end
+      it { expect(DemandsRepository.instance.grouped_by_effort_upstream_per_month(Demand.all.map(&:id), Time.zone.today)).to eq({}) }
     end
   end
 
@@ -224,14 +222,14 @@ RSpec.describe DemandsRepository, type: :repository do
       let!(:eigth_demand) { Fabricate :demand, project: project, commitment_date: 29.days.ago, end_date: 22.days.ago, effort_upstream: 80, effort_downstream: 34, discarded_at: Time.zone.today }
 
       context 'having demands in progress' do
-        it { expect(DemandsRepository.instance.grouped_by_effort_downstream_per_month([project], 57.days.ago.to_date)).to eq([2018.0, 2.0] => 25.0, [2018.0, 3.0] => 186.0) }
-        it { expect(DemandsRepository.instance.grouped_by_effort_downstream_per_month([project], 24.days.ago.to_date)).to eq([2018.0, 3.0] => 186.0) }
+        it { expect(DemandsRepository.instance.grouped_by_effort_downstream_per_month(Demand.all.map(&:id), 57.days.ago.to_date)).to eq([2018.0, 2.0] => 25.0, [2018.0, 3.0] => 186.0) }
+        it { expect(DemandsRepository.instance.grouped_by_effort_downstream_per_month(Demand.all.map(&:id), 24.days.ago.to_date)).to eq([2018.0, 3.0] => 186.0) }
       end
     end
 
     context 'having no demands' do
       context 'having demands in progress' do
-        it { expect(DemandsRepository.instance.grouped_by_effort_downstream_per_month([project], Time.zone.today)).to eq({}) }
+        it { expect(DemandsRepository.instance.grouped_by_effort_downstream_per_month(Demand.all.map(&:id), Time.zone.today)).to eq({}) }
       end
     end
   end
@@ -265,12 +263,12 @@ RSpec.describe DemandsRepository, type: :repository do
       let!(:seventh_transition) { Fabricate :demand_transition, stage: third_stage, demand: sixth_demand, last_time_in: '2018-04-04T17:09:58-03:00' }
       let!(:eigth_transition) { Fabricate :demand_transition, stage: fourth_stage, demand: seventh_demand, last_time_in: '2018-04-04T17:09:58-03:00' }
 
-      it { expect(DemandsRepository.instance.not_started_demands([first_project, second_project])).to match_array [second_demand, third_demand, fourth_demand, sixth_demand] }
+      it { expect(DemandsRepository.instance.not_started_demands(Demand.all.map(&:id))).to match_array [second_demand, third_demand, fourth_demand, sixth_demand, seventh_demand] }
     end
 
     context 'having no demands' do
       context 'having no demands' do
-        it { expect(DemandsRepository.instance.not_started_demands([first_project])).to eq [] }
+        it { expect(DemandsRepository.instance.not_started_demands(Demand.all.map(&:id))).to eq [] }
       end
     end
   end
@@ -306,7 +304,7 @@ RSpec.describe DemandsRepository, type: :repository do
       let!(:eigth_transition) { Fabricate :demand_transition, stage: third_stage, demand: sixth_demand, last_time_in: '2018-04-04T17:09:58-03:00' }
       let!(:nineth_transition) { Fabricate :demand_transition, stage: fourth_stage, demand: seventh_demand, last_time_in: '2018-04-04T17:09:58-03:00' }
 
-      it { expect(DemandsRepository.instance.committed_demands([first_project, second_project])).to match_array [first_demand, second_demand, third_demand, fifth_demand, sixth_demand] }
+      it { expect(DemandsRepository.instance.committed_demands(Demand.all.map(&:id))).to match_array [first_demand, second_demand, third_demand, fifth_demand, sixth_demand] }
     end
 
     context 'having no demands' do

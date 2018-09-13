@@ -14,18 +14,22 @@ class ProjectFinancesService
     team = project.current_team
     return 0 if team.blank?
 
-    other_team_projects = team.product_projects - [project]
+    other_project_in_team = team.product_projects - [project]
 
-    total_effort_project = total_effort_to_month([project], date.year, date.month)
-    total_effort_other_team_projects = total_effort_to_month(other_team_projects, date.year, date.month)
-    Stats::StatisticsService.instance.compute_percentage(total_effort_project, total_effort_other_team_projects) / 100
+    compute_effort_share(date, other_project_in_team, project)
   end
 
   private
 
-  def total_effort_to_month(projects, year, month)
-    amount_effort_upstream_project = DemandsRepository.instance.grouped_by_effort_upstream_per_month(projects, projects.map(&:start_date).min)[[year.to_f, month.to_f]] || 0
-    amount_effort_downstream_project = DemandsRepository.instance.grouped_by_effort_downstream_per_month(projects, projects.map(&:start_date).min)[[year.to_f, month.to_f]] || 0
+  def compute_effort_share(date, other_project_in_team, project)
+    total_effort_project = total_effort_to_month(project.kept_demands_ids, project.start_date, date.year, date.month)
+    total_effort_other_team_projects = total_effort_to_month(other_project_in_team.map(&:kept_demands_ids).flatten, other_project_in_team.map(&:start_date).min, date.year, date.month)
+    Stats::StatisticsService.instance.compute_percentage(total_effort_project, total_effort_other_team_projects) / 100
+  end
+
+  def total_effort_to_month(array_of_demands_ids, start_date, year, month)
+    amount_effort_upstream_project = DemandsRepository.instance.grouped_by_effort_upstream_per_month(array_of_demands_ids, start_date)[[year.to_f, month.to_f]] || 0
+    amount_effort_downstream_project = DemandsRepository.instance.grouped_by_effort_downstream_per_month(array_of_demands_ids, start_date)[[year.to_f, month.to_f]] || 0
     amount_effort_upstream_project + amount_effort_downstream_project
   end
 end

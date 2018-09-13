@@ -2,7 +2,7 @@
 
 class TeamsController < AuthenticatedController
   before_action :assign_company
-  before_action :assign_team, only: %i[show edit update search_for_projects search_demands_to_flow_charts search_demands_by_flow_status]
+  before_action :assign_team, only: %i[show edit update search_for_projects search_demands_to_flow_charts]
 
   def show
     @team_members = @team.team_members.order(:name)
@@ -46,23 +46,7 @@ class TeamsController < AuthenticatedController
     respond_to { |format| format.js { render file: 'teams/flow.js.erb' } }
   end
 
-  def search_demands_by_flow_status
-    @team_projects = ProjectsRepository.instance.all_projects_for_team(@team)
-    demands_for_query_ids = build_demands_query
-    @demands = Demand.where(id: demands_for_query_ids.map(&:id))
-    assign_chart_informations
-    respond_to { |format| format.js { render file: 'demands/search_demands_by_flow_status.js.erb' } }
-  end
-
   private
-
-  def build_demands_query
-    return DemandsRepository.instance.not_started_demands(@team_projects) if params[:not_started] == 'true'
-    return DemandsRepository.instance.committed_demands(@team_projects) if params[:wip] == 'true'
-    return DemandsRepository.instance.demands_finished_per_projects(@team_projects) if params[:delivered] == 'true'
-
-    DemandsRepository.instance.demands_per_projects(@team_projects)
-  end
 
   def assign_chart_informations
     @grouped_delivered_demands = @demands.grouped_end_date_by_month if params[:grouped_by_month] == 'true'

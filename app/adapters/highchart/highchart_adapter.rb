@@ -2,12 +2,15 @@
 
 module Highchart
   class HighchartAdapter
-    attr_reader :all_projects, :active_projects, :all_projects_weeks, :active_weeks, :all_projects_months, :active_months, :minimum_date_limit
+    attr_reader :all_projects, :active_projects, :all_projects_weeks, :active_weeks, :all_projects_months, :active_months, :all_projects_demands_ids,
+                :active_projects_demands_ids, :minimum_date_limit
 
     def initialize(projects, period)
       build_minimum_date(period)
       @all_projects = search_projects(projects)
+      @all_projects_demands_ids = @all_projects.map(&:kept_demands_ids).flatten
       @active_projects = @all_projects.active
+      @active_projects_demands_ids = @active_projects.map(&:kept_demands_ids).flatten
       build_all_projects_periods
       build_active_projects_periods
     end

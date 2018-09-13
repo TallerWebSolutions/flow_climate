@@ -334,6 +334,10 @@ class Project < ApplicationRecord
     (demands.kept.intangible.count.to_f / demands.kept.count.to_f) * 100
   end
 
+  def kept_demands_ids
+    demands.kept.map(&:id)
+  end
+
   private
 
   def no_pressure_set(date)
