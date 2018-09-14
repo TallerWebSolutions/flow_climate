@@ -86,6 +86,10 @@ Rails.application.routes.draw do
 
       resources :demand_blocks, only: :index
 
+      scope :jira do
+        resources :project_jira_configs, only: %i[new create], module: 'jira'
+      end
+
       collection do
         get 'product_options_for_customer/(:customer_id)', action: :product_options_for_customer
         get 'search_for_projects/:status_filter', action: :search_for_projects, as: 'search_for_projects'

@@ -102,12 +102,26 @@ RSpec.describe CustomersController, type: :controller do
           expect(response).to redirect_to company_customers_path(company)
         end
       end
-      context 'passing invalid parameters' do
-        before { post :create, params: { company_id: company, customer: { name: '' } } }
-        it 'does not create the customer and re-render the template with the errors' do
-          expect(Customer.last).to be_nil
-          expect(response).to render_template :new
-          expect(assigns(:customer).errors.full_messages).to eq ['Nome não pode ficar em branco']
+
+      context 'passing invalid' do
+        context 'parameters' do
+          before { post :create, params: { company_id: company, customer: { name: '' } } }
+          it 'does not create the customer and re-render the template with the errors' do
+            expect(Customer.last).to be_nil
+            expect(response).to render_template :new
+            expect(assigns(:customer).errors.full_messages).to eq ['Nome não pode ficar em branco']
+          end
+        end
+        context 'company' do
+          context 'non-existent' do
+            before { post :create, params: { company_id: 'bar', customer: { name: 'foo' } } }
+            it { expect(response).to have_http_status :not_found }
+          end
+          context 'not permitted' do
+            let(:company) { Fabricate :company, users: [] }
+            before { post :create, params: { company_id: company, customer: { name: 'foo' } } }
+            it { expect(response).to have_http_status :not_found }
+          end
         end
       end
     end
@@ -205,16 +219,16 @@ RSpec.describe CustomersController, type: :controller do
           end
         end
       end
-      context 'passing invalid parameters' do
-        context 'non-existent company' do
+      context 'passing invalid' do
+        context 'company' do
           before { get :show, params: { company_id: 'foo', id: customer } }
           it { expect(response).to have_http_status :not_found }
         end
-        context 'non-existent customer' do
+        context 'customer' do
           before { get :show, params: { company_id: company, id: 'foo' } }
           it { expect(response).to have_http_status :not_found }
         end
-        context 'not permitted' do
+        context 'not permitted company' do
           let(:company) { Fabricate :company, users: [] }
           before { get :show, params: { company_id: company, id: customer } }
           it { expect(response).to have_http_status :not_found }
@@ -247,19 +261,21 @@ RSpec.describe CustomersController, type: :controller do
         end
       end
 
-      context 'passing an invalid ID' do
-        context 'non-existent customer' do
+      context 'passing invalid' do
+        context 'customer' do
           before { delete :destroy, params: { company_id: company, id: 'foo' } }
           it { expect(response).to have_http_status :not_found }
         end
-        context 'non-existent company' do
-          before { delete :destroy, params: { company_id: 'foo', id: customer } }
-          it { expect(response).to have_http_status :not_found }
-        end
-        context 'not permitted' do
-          let(:company) { Fabricate :company, users: [] }
-          before { delete :destroy, params: { company_id: company, id: customer } }
-          it { expect(response).to have_http_status :not_found }
+        context 'company' do
+          context 'non-existent' do
+            before { delete :destroy, params: { company_id: 'foo', id: customer } }
+            it { expect(response).to have_http_status :not_found }
+          end
+          context 'not permitted' do
+            let(:company) { Fabricate :company, users: [] }
+            before { delete :destroy, params: { company_id: company, id: customer } }
+            it { expect(response).to have_http_status :not_found }
+          end
         end
       end
     end

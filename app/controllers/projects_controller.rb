@@ -95,11 +95,6 @@ class ProjectsController < AuthenticatedController
     params.require(:project).permit(:customer_id, :product_id, :name, :nickname, :status, :project_type, :start_date, :end_date, :value, :qty_hours, :hour_value, :initial_scope, :percentage_effort_to_bugs)
   end
 
-  def assign_company
-    @company = Company.find(params[:company_id])
-    not_found unless current_user.companies.include?(@company)
-  end
-
   def assign_project
     @project = Project.find(params[:id])
   end

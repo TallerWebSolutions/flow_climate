@@ -117,6 +117,9 @@ pt-BR:
       stage_project_config:
         one: Configuração de Stage para Projeto
         other: Configurações de Stage para Projeto
+      jira/project_jira_config:
+        one: Configuração do Jira para o Projeto
+        other: Configurações do Jira para o Projeto
     attributes:
       user:
         first_name: Nome
@@ -348,6 +351,12 @@ pt-BR:
         stage_percentage: Porcentagem da Etapa
         pairing_percentage: Porcentagem de Pareamento
         management_percentage: Porcentagem de Gestão
+      jira/project_jira_config:
+        team: Time
+        jira_account_domain: Domínio da Conta no Jira
+        jira_project_key: Chave do Projeto no Jira
+        active: Ativo?
+        project: Projeto
   product:
     name:
       uniqueness: "Não deve repetir nome de produto para o mesmo cliente."
