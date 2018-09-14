@@ -1,18 +1,18 @@
 hideAllComponents();
 
-var stampsDiv = $('#nav-item-stamps');
+const stampsDiv = $('#nav-item-stamps');
 stampsDiv.addClass('active');
 $('#stamps').show();
 
-var company_id = $("#company_id").val();
-var team_id = $("#team_id").val();
-var projects_ids = $("#projects_ids").val();
-var target_name = $("#target_name").val();
+const company_id = $("#company_id").val();
+const team_id = $("#team_id").val();
+const projects_ids = $("#projects_ids").val();
+const target_name = $("#target_name").val();
 
 $('.nav-item').on('click', function(event){
     hideAllComponents();
-    var disabled = $(this).attr('disabled');
-    var period = $('#status-report-period').val();
+    const disabled = $(this).attr('disabled');
+    const period = $('#status-report-period').val();
 
     if (disabled === 'disabled') {
         event.preventDefault();
