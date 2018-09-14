@@ -1,8 +1,9 @@
+$(".loader").hide();
 
-var statusReportChartsCurrentDiv = $("#status-report-charts-current-div");
+const statusReportChartsCurrentDiv = $("#status-report-charts-current-div");
 statusReportChartsCurrentDiv.html("<%= escape_javascript(render 'charts/status_report_charts', target_name: @target_name, status_report_data: @status_report_data).html_safe %>");
 
-var statusReportChartsProjectionDiv = $("#status-report-charts-projection-div");
+const statusReportChartsProjectionDiv = $("#status-report-charts-projection-div");
 statusReportChartsProjectionDiv.html("<%= escape_javascript(render 'charts/status_report_projection_charts', target_name: @target_name, status_report_data: @status_report_data, montecarlo_durations: @montecarlo_durations).html_safe %>");
 
 statusReportChartsCurrentDiv.show();
