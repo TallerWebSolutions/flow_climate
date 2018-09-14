@@ -25,10 +25,10 @@ $('#operational-charts-period').change(function(event){
     event.preventDefault();
 
     const companyId = $("#company_id").val();
-    const teamId = $("#team_id").val();
     const period = $('#operational-charts-period').val();
+    const projects_ids = $("#projects_ids").val();
 
-    buildOperationalCharts(companyId, teamId, period)
+    buildOperationalCharts(companyId, projects_ids, period)
 });
 
 $('#search_week').on('click', function () {

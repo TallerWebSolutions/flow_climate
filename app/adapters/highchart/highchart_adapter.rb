@@ -39,8 +39,8 @@ module Highchart
     end
 
     def build_all_projects_periods
-      min_date = [all_projects.minimum(:start_date), @minimum_date_limit].compact.max
-      max_date = all_projects.maximum(:end_date)
+      min_date = [@all_projects.minimum(:start_date), @minimum_date_limit].compact.max
+      max_date = @all_projects.maximum(:end_date)
       @all_projects_weeks = TimeService.instance.weeks_between_of(min_date, max_date)
       @all_projects_months = TimeService.instance.months_between_of(min_date, max_date)
     end
@@ -70,8 +70,8 @@ module Highchart
                             end
     end
 
-    def lower_limit_date_to_charts
-      @all_projects_weeks[0] || Time.zone.today
+    def charts_data_bottom_limit_date
+      @minimum_date_limit || all_projects_weeks[0] || Time.zone.today
     end
   end
 end

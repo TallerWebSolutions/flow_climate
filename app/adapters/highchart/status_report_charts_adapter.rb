@@ -17,14 +17,14 @@ module Highchart
     end
 
     def throughput_per_week
-      upstream_th_weekly_data = ProjectResultsRepository.instance.throughput_for_projects_grouped_per_week(@all_projects, lower_limit_date_to_charts, :upstream)
-      downstream_th_weekly_data = ProjectResultsRepository.instance.throughput_for_projects_grouped_per_week(@all_projects, lower_limit_date_to_charts, :downstream)
+      upstream_th_weekly_data = ProjectResultsRepository.instance.throughput_for_projects_grouped_per_week(@all_projects, charts_data_bottom_limit_date, :upstream)
+      downstream_th_weekly_data = ProjectResultsRepository.instance.throughput_for_projects_grouped_per_week(@all_projects, charts_data_bottom_limit_date, :downstream)
 
       throughput_chart_data(downstream_th_weekly_data, upstream_th_weekly_data)
     end
 
     def delivered_vs_remaining
-      [{ name: I18n.t('projects.show.delivered_demands.opened_in_period'), data: [@all_projects.sum { |project| project.demands.opened_after_date(lower_limit_date_to_charts).count }] }, { name: I18n.t('projects.show.delivered_demands.delivered'), data: [@all_projects.sum { |project| project.demands.finished_after_date(lower_limit_date_to_charts).count }] }, { name: I18n.t('projects.show.scope_gap'), data: [@all_projects.sum(&:backlog_remaining)] }]
+      [{ name: I18n.t('projects.show.delivered_demands.opened_in_period'), data: [@all_projects.sum { |project| project.demands.opened_after_date(charts_data_bottom_limit_date).count }] }, { name: I18n.t('projects.show.delivered_demands.delivered'), data: [@all_projects.sum { |project| project.demands.finished_after_date(charts_data_bottom_limit_date).count }] }, { name: I18n.t('projects.show.scope_gap'), data: [@all_projects.sum(&:backlog_remaining)] }]
     end
 
     def deadline
@@ -52,7 +52,7 @@ module Highchart
     end
 
     def hours_per_stage
-      hours_per_stage_distribution = ProjectsRepository.instance.hours_per_stage(@all_projects, lower_limit_date_to_charts)
+      hours_per_stage_distribution = ProjectsRepository.instance.hours_per_stage(@all_projects, charts_data_bottom_limit_date)
       hours_per_stage_chart_hash = {}
       hours_per_stage_chart_hash[:xcategories] = hours_per_stage_distribution.map { |hours_per_stage_array| hours_per_stage_array[0] }
       hours_per_stage_chart_hash[:hours_per_stage] = hours_per_stage_distribution.map { |hours_per_stage_array| hours_per_stage_array[2] / 3600 }

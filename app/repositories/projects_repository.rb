@@ -65,16 +65,16 @@ class ProjectsRepository
     extract_data_for_week(projects, leadtime_per_week_grouped)
   end
 
-  def total_queue_time_for(projects, date = Time.zone.today)
-    DemandTransition.joins(demand: :project).joins(:stage).where(demands: { project_id: projects.map(&:id) }).where('stages.queue = true AND stages.stage_stream = 1 AND ((EXTRACT(WEEK FROM demand_transitions.last_time_out) <= :week AND EXTRACT(YEAR FROM demand_transitions.last_time_out) <= :year) OR (EXTRACT(YEAR FROM demand_transitions.last_time_out) < :year))', week: date.cweek, year: date.cwyear).uniq.sum(&:total_hours_in_transition)
+  def total_queue_time_for(projects)
+    build_hash_total_duration_to_time_type(projects, true)
   end
 
-  def total_touch_time_for(projects, date = Time.zone.today)
-    DemandTransition.joins(demand: :project).joins(:stage).where(demands: { project_id: projects.map(&:id) }).where('stages.queue = false AND stages.stage_stream = 1 AND ((EXTRACT(WEEK FROM demand_transitions.last_time_out) <= :week AND EXTRACT(YEAR FROM demand_transitions.last_time_out) <= :year) OR (EXTRACT(YEAR FROM demand_transitions.last_time_out) < :year))', week: date.cweek, year: date.cwyear).uniq.sum(&:total_hours_in_transition)
+  def total_touch_time_for(projects)
+    build_hash_total_duration_to_time_type(projects, false)
   end
 
   def hours_per_stage(projects, limit_date)
-    DemandTransition.joins(:demand).joins(:stage).select('stages.name, stages.order, SUM(EXTRACT(EPOCH FROM (last_time_out - last_time_in))) AS sum_duration').where(demands: { project_id: projects.map(&:id) }).where('stages.end_point = false AND last_time_in >= :limit_date AND last_time_out IS NOT NULL', limit_date: limit_date.beginning_of_day).group('stages.name, stages.order').order('stages.order, stages.name').map { |group_sum| [group_sum.name, group_sum.order, group_sum.sum_duration] }
+    DemandTransition.kept.joins(:demand).joins(:stage).select('stages.name, stages.order, SUM(EXTRACT(EPOCH FROM (last_time_out - last_time_in))) AS sum_duration').where(demands: { project_id: projects.map(&:id) }).where('stages.end_point = false AND last_time_in >= :limit_date AND last_time_out IS NOT NULL', limit_date: limit_date.beginning_of_day).group('stages.name, stages.order').order('stages.order, stages.name').map { |group_sum| [group_sum.name, group_sum.order, group_sum.sum_duration] }
   end
 
   def finish_project!(project)
@@ -83,6 +83,26 @@ class ProjectsRepository
   end
 
   private
+
+  def build_hash_total_duration_to_time_type(projects, queue = true)
+    query_result_array = DemandTransition.kept
+                                         .select('EXTRACT(WEEK FROM last_time_out) AS sum_week', 'EXTRACT(YEAR FROM last_time_out) AS sum_year, SUM(EXTRACT(EPOCH FROM (last_time_out - last_time_in))) AS sum_duration')
+                                         .joins(demand: :project)
+                                         .joins(:stage)
+                                         .where(demands: { project_id: projects.map(&:id) })
+                                         .where('stages.queue = :queue AND stages.stage_stream = 1', queue: queue)
+                                         .order(Arel.sql('EXTRACT(WEEK FROM last_time_out), EXTRACT(YEAR FROM last_time_out)'))
+                                         .group('EXTRACT(WEEK FROM last_time_out)', 'EXTRACT(YEAR FROM last_time_out)')
+                                         .map { |group_sum| [group_sum.sum_week.to_i, group_sum.sum_year.to_i, group_sum.sum_duration] }
+
+    build_hash_to_total_duration_query_result(query_result_array)
+  end
+
+  def build_hash_to_total_duration_query_result(query_result_array)
+    query_result_hash = {}
+    query_result_array.each { |single_result| query_result_hash[[single_result[0], single_result[1]]] = single_result[2].to_f }
+    query_result_hash
+  end
 
   def extract_data_for_week(projects, leadtime_per_week_grouped)
     return {} if projects.blank?
