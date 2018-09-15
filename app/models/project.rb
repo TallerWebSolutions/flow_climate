@@ -18,6 +18,7 @@
 #  qty_hours                 :decimal(, )
 #  start_date                :date             not null
 #  status                    :integer          not null
+#  team_id                   :integer
 #  updated_at                :datetime         not null
 #  value                     :decimal(, )
 #
@@ -31,6 +32,7 @@
 #
 #  fk_rails_21e11c2480  (product_id => products.id)
 #  fk_rails_47c768ed16  (customer_id => customers.id)
+#  fk_rails_ecc227a0c2  (team_id => teams.id)
 #
 
 class Project < ApplicationRecord
@@ -39,6 +41,7 @@ class Project < ApplicationRecord
 
   belongs_to :customer, counter_cache: true
   belongs_to :product, counter_cache: true
+  belongs_to :team
 
   has_many :project_results, dependent: :destroy
   has_many :project_risk_configs, dependent: :destroy
@@ -140,7 +143,7 @@ class Project < ApplicationRecord
   end
 
   def current_team
-    project_results.order(result_date: :desc)&.first&.team || product&.team || project_jira_config&.team
+    team || project_results.order(result_date: :desc)&.first&.team || product&.team || project_jira_config&.team
   end
 
   def update_team_in_product(team)

@@ -3,10 +3,10 @@
 RSpec.describe Team, type: :model do
   context 'associations' do
     it { is_expected.to belong_to :company }
-    it { is_expected.to have_many(:team_members).dependent(:restrict_with_error) }
+    it { is_expected.to have_many(:team_members).dependent(:destroy) }
     it { is_expected.to have_many(:products).dependent(:restrict_with_error) }
     it { is_expected.to have_many(:project_results).dependent(:restrict_with_error) }
-    it { is_expected.to have_many(:projects).through(:project_results) }
+    it { is_expected.to have_many(:projects) }
     it { is_expected.to have_many(:pipefy_team_configs).dependent(:destroy) }
   end
 
@@ -89,9 +89,9 @@ RSpec.describe Team, type: :model do
     let(:product) { Fabricate :product, name: 'zzz' }
     let(:other_product) { Fabricate :product, name: 'zzz' }
 
-    let(:project) { Fabricate :project, end_date: 4.weeks.from_now }
-    let(:other_project) { Fabricate :project, end_date: 4.weeks.from_now }
-    let(:other_customer_project) { Fabricate :project, end_date: 4.weeks.from_now }
+    let(:project) { Fabricate :project, team: team, end_date: 4.weeks.from_now }
+    let(:other_project) { Fabricate :project, team: team, end_date: 4.weeks.from_now }
+    let(:other_customer_project) { Fabricate :project, team: other_team, end_date: 4.weeks.from_now }
 
     let!(:first_result) { Fabricate :project_result, project: project, team: team, result_date: 1.week.ago, known_scope: 10 }
     let!(:second_result) { Fabricate :project_result, project: project, team: team, result_date: 2.weeks.ago, known_scope: 20 }

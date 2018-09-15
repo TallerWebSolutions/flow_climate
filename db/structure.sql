@@ -733,7 +733,8 @@ CREATE TABLE public.projects (
     updated_at timestamp without time zone NOT NULL,
     product_id integer,
     nickname character varying,
-    percentage_effort_to_bugs integer DEFAULT 0 NOT NULL
+    percentage_effort_to_bugs integer DEFAULT 0 NOT NULL,
+    team_id integer
 );
 
 
@@ -1935,6 +1936,14 @@ ALTER TABLE ONLY public.teams
 
 
 --
+-- Name: projects fk_rails_ecc227a0c2; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.projects
+    ADD CONSTRAINT fk_rails_ecc227a0c2 FOREIGN KEY (team_id) REFERENCES public.teams(id);
+
+
+--
 -- Name: customers fk_rails_ef51a916ef; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2032,6 +2041,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20180731181345'),
 ('20180820175021'),
 ('20180822231503'),
-('20180830205543');
+('20180830205543'),
+('20180915020210');
 
 

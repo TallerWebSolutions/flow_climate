@@ -53,11 +53,11 @@ RSpec.describe TeamsController, type: :controller do
     let(:product) { Fabricate :product, customer: customer, team: team }
 
     describe 'GET #show' do
-      let!(:first_project) { Fabricate :project, customer: customer, status: :executing, start_date: Time.zone.today, end_date: Time.zone.today }
-      let!(:second_project) { Fabricate :project, customer: customer, status: :maintenance, start_date: 32.days.from_now, end_date: 34.days.from_now }
-      let!(:third_project) { Fabricate :project, customer: customer, status: :waiting, start_date: 1.month.from_now, end_date: 2.months.from_now }
-      let!(:fourth_project) { Fabricate :project, customer: customer, product: product, status: :cancelled, start_date: 35.days.from_now, end_date: 37.days.from_now }
-      let!(:fifth_project) { Fabricate :project, customer: customer, product: product, status: :finished, start_date: 38.days.from_now, end_date: 39.days.from_now }
+      let!(:first_project) { Fabricate :project, customer: customer, team: team, status: :executing, start_date: Time.zone.today, end_date: Time.zone.today }
+      let!(:second_project) { Fabricate :project, customer: customer, team: team, status: :maintenance, start_date: 32.days.from_now, end_date: 34.days.from_now }
+      let!(:third_project) { Fabricate :project, customer: customer, team: team, status: :waiting, start_date: 1.month.from_now, end_date: 2.months.from_now }
+      let!(:fourth_project) { Fabricate :project, customer: customer, team: team, product: product, status: :cancelled, start_date: 35.days.from_now, end_date: 37.days.from_now }
+      let!(:fifth_project) { Fabricate :project, customer: customer, team: team, product: product, status: :finished, start_date: 38.days.from_now, end_date: 39.days.from_now }
 
       let!(:project_in_product_team) { Fabricate :project, customer: customer, product: product, status: :waiting, start_date: 40.days.from_now, end_date: 42.days.from_now }
 
@@ -80,7 +80,7 @@ RSpec.describe TeamsController, type: :controller do
       context 'passing a valid ID' do
         context 'having data' do
           it 'assigns the instance variables and renders the template' do
-            get :show, params: { company_id: company, id: team.id }
+            get :show, params: { company_id: company, id: team }
 
             expect(response).to render_template :show
             expect(assigns(:company)).to eq company
