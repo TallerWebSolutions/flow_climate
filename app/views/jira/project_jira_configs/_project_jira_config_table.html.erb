@@ -1,0 +1,42 @@
+<div class="row">
+  <div class="col-xs-12">
+    <div class="pull-right bottom-spaced-component">
+      <%= link_to t('project_jira_configs.new.title'), new_company_project_project_jira_config_path(company, project), class: 'btn btn-sm btn-success new-jira-config-button', remote: true %>
+    </div>
+  </div>
+</div>
+
+<% if project.project_jira_config.present? %>
+  <div class="row">
+    <div class="col-xs-12">
+      <table class="table table-bordered">
+        <thead>
+          <th><%= Jira::ProjectJiraConfig.human_attribute_name :team %></th>
+          <th><%= Jira::ProjectJiraConfig.human_attribute_name :jira_account_domain %></th>
+          <th><%= Jira::ProjectJiraConfig.human_attribute_name :jira_project_key %></th>
+          <th><%= Jira::ProjectJiraConfig.human_attribute_name :fix_version_name %></th>
+          <th></th>
+        </thead>
+        <tbody>
+          <tr>
+            <td><%= project.project_jira_config.team.name %></td>
+            <td><%= project.project_jira_config.jira_account_domain %></td>
+            <td><%= project.project_jira_config.jira_project_key %></td>
+            <td><%= project.project_jira_config.fix_version_name %></td>
+            <td>
+              <%= link_to company_project_project_jira_config_path(company, project, project.project_jira_config), method: :delete, data: { confirm: I18n.t('general.destroy.confirm') }, remote: true do %>
+                <i class="fa fa-times" aria-hidden="true"></i>
+              <% end %>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+<% else %>
+  <div class="no-data">
+    <%= t('general.no_data') %>
+  </div>
+<% end %>
+
+<div class="modal fade" id="new-project-jira-config-form" tabindex="-1" role="dialog" aria-labelledby="new-project-jira-config-form" aria-hidden="true"></div>

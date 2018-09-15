@@ -87,7 +87,7 @@ Rails.application.routes.draw do
       resources :demand_blocks, only: :index
 
       scope :jira do
-        resources :project_jira_configs, only: %i[new create], module: 'jira'
+        resources :project_jira_configs, only: %i[new create destroy], module: 'jira'
       end
 
       collection do

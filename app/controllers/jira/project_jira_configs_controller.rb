@@ -7,19 +7,26 @@ module Jira
 
     def new
       @project_jira_config = ProjectJiraConfig.new
+      respond_to { |format| format.js }
     end
 
     def create
-      @project_jira_config = ProjectJiraConfig.new(project_jira_config_params.merge(project: @project))
-      return redirect_to company_project_path(@company, @project) if @project_jira_config.save
+      team = Team.find_by(id: project_jira_config_params[:team])
+      @project_jira_config = ProjectJiraConfig.new(project_jira_config_params.merge(project: @project, team: team))
+      @project_jira_config.save
+      render 'jira/project_jira_configs/create'
+    end
 
-      render :new
+    def destroy
+      @project_jira_config = ProjectJiraConfig.find(params[:id])
+      @project_jira_config.destroy
+      render 'jira/project_jira_configs/destroy'
     end
 
     private
 
     def project_jira_config_params
-      params.require(:project_jira_config).permit(:jira_account_domain, :jira_project_key, :fix_version_name, :team_id)
+      params.require(:jira_project_jira_config).permit(:jira_account_domain, :jira_project_key, :fix_version_name, :team)
     end
 
     def assign_project

@@ -307,6 +307,10 @@ pt-BR:
         labels:
           y: "Horas na Etapa"
         title: "Horas por Etapa para %{target_name}"
+    settings:
+      risks: "Riscos"
+      stages: "Etapas"
+      jira: "Jira"
   project_results:
     index:
       title: "Resultados do Projeto"
@@ -567,3 +571,6 @@ pt-BR:
         std_dev_cost_per_hour: "Desvio Padrão das Saídas"
         std_dev_income_outcome: "Desvio Padrão das Entradas e Saídas"
         mean_cost_per_hour: "Evolução da Média do Custo por Hora"
+  project_jira_configs:
+    new:
+      title: "Nova Configuração do Jira"
