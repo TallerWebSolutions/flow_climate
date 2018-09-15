@@ -9,6 +9,8 @@ RSpec.describe Project, type: :model do
   context 'associations' do
     it { is_expected.to belong_to :customer }
     it { is_expected.to belong_to :product }
+    it { is_expected.to belong_to :team }
+
     it { is_expected.to have_many(:project_results).dependent(:destroy) }
     it { is_expected.to have_many(:project_risk_configs).dependent(:destroy) }
     it { is_expected.to have_many(:project_risk_alerts).dependent(:destroy) }
@@ -267,13 +269,22 @@ RSpec.describe Project, type: :model do
 
   describe '#current_team' do
     let(:product_team) { Fabricate :team }
+    let(:project_team) { Fabricate :team }
     let(:team) { Fabricate :team }
     let(:other_team) { Fabricate :team }
 
-    context 'having teams' do
+    context 'having a defined team to the project' do
+      let(:product) { Fabricate :product, team: product_team }
+      let(:project) { Fabricate :project, product: product, team: project_team, end_date: 4.weeks.from_now }
+      let!(:result) { Fabricate :project_result, project: project, result_date: 1.day.ago, known_scope: 10, team: team }
+      let!(:project_jira_config) { Fabricate :project_jira_config, project: project, team: other_team }
+
+      it { expect(project.current_team).to eq project_team }
+    end
+
+    context 'having team in results' do
       let(:product) { Fabricate :product, team: product_team }
       let(:project) { Fabricate :project, product: product, end_date: 4.weeks.from_now }
-      let!(:result) { Fabricate :project_result, project: project, result_date: 1.day.ago, known_scope: 10, team: team }
       let!(:other_result) { Fabricate :project_result, project: project, result_date: Time.zone.today, known_scope: 20, team: other_team }
       let!(:project_jira_config) { Fabricate :project_jira_config, project: project, team: team }
 

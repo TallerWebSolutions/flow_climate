@@ -40,8 +40,8 @@ RSpec.describe ChartsController, type: :controller do
       context 'passing valid parameters' do
         context 'for team' do
           let(:team) { Fabricate :team, company: company }
-          let(:first_project) { Fabricate :project, customer: customer, product: product }
-          let(:second_project) { Fabricate :project, customer: customer, product: product }
+          let(:first_project) { Fabricate :project, customer: customer, product: product, team: team }
+          let(:second_project) { Fabricate :project, customer: customer, product: product, team: team }
 
           let!(:first_project_result) { Fabricate :project_result, project: first_project, team: team }
           let!(:second_project_result) { Fabricate :project_result, project: second_project, team: team }
@@ -72,8 +72,8 @@ RSpec.describe ChartsController, type: :controller do
       let(:team) { Fabricate :team, company: company }
 
       context 'passing valid parameters' do
-        let!(:first_project) { Fabricate :project, customer: customer, product: product, status: :executing, start_date: Time.zone.yesterday, end_date: 10.days.from_now }
-        let!(:second_project) { Fabricate :project, customer: customer, product: product, status: :executing, start_date: Time.zone.yesterday, end_date: 50.days.from_now }
+        let!(:first_project) { Fabricate :project, customer: customer, product: product, team: team, status: :executing, start_date: Time.zone.yesterday, end_date: 10.days.from_now }
+        let!(:second_project) { Fabricate :project, customer: customer, product: product, team: team, status: :executing, start_date: Time.zone.yesterday, end_date: 50.days.from_now }
 
         let!(:first_result) { Fabricate :project_result, project: first_project, team: team, result_date: Time.zone.today }
         let!(:second_result) { Fabricate :project_result, project: first_project, team: team, result_date: Time.zone.today }

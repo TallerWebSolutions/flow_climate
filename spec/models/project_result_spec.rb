@@ -79,6 +79,22 @@ RSpec.describe ProjectResult, type: :model do
     it { is_expected.to delegate_method(:name).to(:team).with_prefix }
   end
 
+  context 'callbacks' do
+    describe '#after_save' do
+      let(:team) { Fabricate :team }
+      context 'when the project has no team defined' do
+        let(:project) { Fabricate :project, team: nil }
+        let!(:project_result) { Fabricate :project_result, project: project, team: team }
+        it { expect(project.team).to eq team }
+      end
+      context 'when the project has a team defined' do
+        let(:project) { Fabricate :project, team: team }
+        let!(:project_result) { Fabricate :project_result, project: project }
+        it { expect(project.team).to eq team }
+      end
+    end
+  end
+
   describe '#project_delivered_hours' do
     let(:result) { Fabricate :project_result }
     it { expect(result.project_delivered_hours).to eq result.qty_hours_upstream + result.qty_hours_downstream }

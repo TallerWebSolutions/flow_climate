@@ -60,6 +60,8 @@ class ProjectResult < ApplicationRecord
 
   validate :result_date_greater_than_project_end_date
 
+  after_save :define_team_in_project
+
   def project_delivered_hours
     (qty_hours_upstream + qty_hours_downstream).to_f
   end
@@ -170,5 +172,11 @@ class ProjectResult < ApplicationRecord
   def delivered_demands_downstream
     not_discarded_demands = demands.not_discarded_until_date(result_date)
     (not_discarded_demands.finished_in_stream(Stage.stage_streams[:downstream]) | not_discarded_demands.finished.downstream_flag) - delivered_demands_upstream
+  end
+
+  def define_team_in_project
+    return if project.team.present?
+
+    project.update(team: team)
   end
 end

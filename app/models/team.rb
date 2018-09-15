@@ -24,9 +24,9 @@ class Team < ApplicationRecord
   include ProjectAggregator
 
   belongs_to :company
-  has_many :team_members, dependent: :restrict_with_error
+  has_many :team_members, dependent: :destroy
   has_many :project_results, dependent: :restrict_with_error
-  has_many :projects, -> { distinct }, through: :project_results
+  has_many :projects, dependent: :restrict_with_error
   has_many :products, dependent: :restrict_with_error
   has_many :product_projects, -> { distinct }, through: :products, source: :projects
   has_many :pipefy_team_configs, class_name: 'Pipefy::PipefyTeamConfig', dependent: :destroy, inverse_of: :team
