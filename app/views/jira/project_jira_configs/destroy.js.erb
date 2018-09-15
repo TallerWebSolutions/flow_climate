@@ -1,0 +1,1 @@
+$('#content-project-jira').html("<%= escape_javascript(render 'jira/project_jira_configs/project_jira_config_table', company: @company, project: @project.reload, project_jira_config: @project_jira_config) %>");

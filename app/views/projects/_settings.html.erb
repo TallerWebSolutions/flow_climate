@@ -10,6 +10,28 @@
   </div>
 </div>
 
-<%= render 'project_risk_settings', project_risk_configs: project_risk_configs %>
+<div class="row">
+  <div class="col-xs-12">
+    <div class="tab">
+      <button class="tablinks" id="tab-project-risks" onclick="openTab(event, 'content-project-risks')"><%= t('projects.settings.risks') %></button>
+      <button class="tablinks" id="tab-project-stages" onclick="openTab(event, 'content-project-stages')"><%= t('projects.settings.stages') %></button>
+      <button class="tablinks" id="tab-project-jira" onclick="openTab(event, 'content-project-jira')"><%= t('projects.settings.jira') %></button>
+    </div>
+  </div>
+</div>
 
-<%= render 'stages/stages_table', stages_list: @project.stages %>
+<div id="content-project-risks" class="tabcontent">
+  <%= render 'projects/project_risk_settings', project_risk_configs: project_risk_configs %>
+</div>
+
+<div id="content-project-stages" class="tabcontent">
+  <%= render 'stages/stages_table', stages_list: @project.stages %>
+</div>
+
+<div id="content-project-jira" class="tabcontent">
+  <%= render 'jira/project_jira_configs/project_jira_config_table', company: @company, project: @project %>
+</div>
+
+<% content_for :javascript do %>
+  <%= javascript_include_tag 'project_jira_configs/form_modal' %>
+<% end %>

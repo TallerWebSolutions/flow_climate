@@ -290,6 +290,10 @@ en:
         labels:
           y: "Hours in Stage"
         title: "Hours per Stage for %{target_name}"
+    settings:
+      risks: "Risks"
+      stages: "Stages"
+      jira: "Jira"
   project_results:
     index:
       title: "Project results"
@@ -574,3 +578,6 @@ en:
         std_dev_income_per_hour: "Std Dev Incomes"
         std_dev_income_outcome: "Std Dev Income and Outcome"
         mean_cost_per_hour: "Mean of Cost per Hour in Time"
+  project_jira_configs:
+    new:
+      title: "New Jira Config"
