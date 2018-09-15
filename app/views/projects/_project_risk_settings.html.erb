@@ -5,6 +5,7 @@
   </div>
 </div>
 
+<% if project_risk_configs.present? %>
 <table class="table">
   <thead>
     <tr>
@@ -38,3 +39,8 @@
     <% end %>
   </tbody>
 </table>
+<% else %>
+  <div class="no-data">
+    <%= t('general.no_data') %>
+  </div>
+<% end %>

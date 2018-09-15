@@ -77,9 +77,9 @@ RSpec.describe CompaniesController, type: :controller do
           let!(:first_project) { Fabricate :project, customer: customer, status: :executing, start_date: Time.zone.today, end_date: Time.zone.now }
           let!(:second_project) { Fabricate :project, customer: customer, status: :maintenance, start_date: 1.month.from_now, end_date: 1.month.from_now }
 
-          let!(:first_stage) { Fabricate :stage, company: company, integration_pipe_id: 'zzz', order: 2 }
-          let!(:second_stage) { Fabricate :stage, company: company, integration_pipe_id: 'zzz', order: 1 }
-          let!(:third_stage) { Fabricate :stage, company: company, integration_pipe_id: 'aaa', order: 1 }
+          let!(:first_stage) { Fabricate :stage, company: company, name: 'zzz', order: 2 }
+          let!(:second_stage) { Fabricate :stage, company: company, name: 'zzz', order: 1 }
+          let!(:third_stage) { Fabricate :stage, company: company, name: 'aaa', order: 1 }
 
           let(:first_risk_config) { Fabricate :project_risk_config, project: first_project, risk_type: :no_money_to_deadline }
           let(:second_risk_config) { Fabricate :project_risk_config, project: first_project, risk_type: :backlog_growth_rate }
