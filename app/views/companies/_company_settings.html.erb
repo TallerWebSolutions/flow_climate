@@ -58,5 +58,11 @@
 </div>
 
 <div class="row">
+  <div class="row">
+    <div class="col-xs-3">
+      <%= link_to t('stages.new.title'), new_company_stage_path(@company), class: 'btn btn-sm btn-primary bottom-spaced-component' %>
+    </div>
+  </div>
+
   <%= render 'stages/stages_table', stages_list: @stages_list %>
 </div>

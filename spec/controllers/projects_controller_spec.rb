@@ -50,6 +50,10 @@ RSpec.describe ProjectsController, type: :controller do
       before { put :finish_project, params: { company_id: 'foo', id: 'bar' } }
       it { expect(response).to redirect_to new_user_session_path }
     end
+    describe 'PATCH #copy_stages_from' do
+      before { patch :copy_stages_from, params: { company_id: 'foo', id: 'sbbrubles', project_to_copy_stages_from: 'bla' } }
+      it { expect(response).to redirect_to new_user_session_path }
+    end
   end
 
   context 'authenticated' do
@@ -564,6 +568,56 @@ RSpec.describe ProjectsController, type: :controller do
         context 'project' do
           before { get :statistics, params: { company_id: company, id: 'foo' }, xhr: true }
           it { expect(response).to have_http_status :not_found }
+        end
+      end
+    end
+
+    describe 'PATCH #copy_stages_from' do
+      let(:company) { Fabricate :company, users: [user] }
+      let!(:stage_in_first_project) { Fabricate :stage, company: company }
+      let!(:second_stage_in_first_project) { Fabricate :stage, company: company }
+      let!(:stage_in_second_project) { Fabricate :stage, company: company }
+
+      let!(:first_project) { Fabricate :project, stages: [stage_in_first_project, second_stage_in_first_project] }
+      let!(:second_project) { Fabricate :project, stages: [stage_in_second_project] }
+      let!(:third_project) { Fabricate :project, stages: [] }
+
+      context 'passing valid parameters' do
+        context 'when there is no stages set in the receiver project' do
+          it 'makes the copy of the stages to the receiver project' do
+            patch :copy_stages_from, params: { company_id: company, id: third_project, project_to_copy_stages_from: first_project }, xhr: true
+            expect(response).to render_template 'projects/copy_stages_from.js.erb'
+            expect(third_project.reload.stages).to match_array [stage_in_first_project, second_stage_in_first_project]
+          end
+        end
+        context 'when there is stages already set in the receiver project' do
+          it 'does nothing' do
+            patch :copy_stages_from, params: { company_id: company, id: second_project, project_to_copy_stages_from: first_project }, xhr: true
+            expect(response).to render_template 'projects/copy_stages_from.js.erb'
+            expect(second_project.reload.stages).to match_array [stage_in_second_project]
+          end
+        end
+      end
+
+      context 'passing an invalid' do
+        context 'non-existent project' do
+          before { patch :copy_stages_from, params: { company_id: company, id: 'foo', project_to_copy_stages_from: third_project }, xhr: true }
+          it { expect(response).to have_http_status :not_found }
+        end
+        context 'non-existent provider_stage' do
+          before { patch :copy_stages_from, params: { company_id: company, id: third_project, project_to_copy_stages_from: 'foo' }, xhr: true }
+          it { expect(response).to have_http_status :not_found }
+        end
+        context 'company' do
+          context 'non-existent' do
+            before { patch :copy_stages_from, params: { company_id: 'foo', id: third_project, project_to_copy_stages_from: third_project }, xhr: true }
+            it { expect(response).to have_http_status :not_found }
+          end
+          context 'not permitted' do
+            let(:company) { Fabricate :company, users: [] }
+            before { patch :copy_stages_from, params: { company_id: company, id: third_project, project_to_copy_stages_from: third_project }, xhr: true }
+            it { expect(response).to have_http_status :not_found }
+          end
         end
       end
     end

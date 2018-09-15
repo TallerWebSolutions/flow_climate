@@ -59,11 +59,6 @@ Rails.application.routes.draw do
     end
 
     resources :projects do
-      member do
-        put :synchronize_jira
-        patch :finish_project
-      end
-
       resources :project_results, only: :show
 
       resources :demands do
@@ -95,7 +90,12 @@ Rails.application.routes.draw do
         get 'search_for_projects/:status_filter', action: :search_for_projects, as: 'search_for_projects'
       end
 
-      get :statistics, on: :member
+      member do
+        put :synchronize_jira
+        patch :finish_project
+        get :statistics
+        patch :copy_stages_from
+      end
     end
 
     resources :pipefy_configs, only: %i[new create destroy edit update], module: 'pipefy'

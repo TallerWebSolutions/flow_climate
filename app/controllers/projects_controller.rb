@@ -4,12 +4,14 @@ class ProjectsController < AuthenticatedController
   before_action :assign_company
   before_action :assign_customer, only: %i[create update]
   before_action :assign_product, only: %i[create update]
-  before_action :assign_project, only: %i[show edit update destroy synchronize_jira finish_project statistics]
+  before_action :assign_project, only: %i[show edit update destroy synchronize_jira finish_project statistics copy_stages_from]
 
   def show
     @ordered_project_results = @project.project_results.order(:result_date)
     @ordered_project_risk_alerts = @project.project_risk_alerts.order(created_at: :desc)
     @project_change_deadline_histories = @project.project_change_deadline_histories
+    @project_stages = @project.stages.order(:order, :name)
+    @projects_to_copy_stages_from = (@company.projects - [@project]).sort_by(&:full_name)
   end
 
   def index
@@ -75,6 +77,15 @@ class ProjectsController < AuthenticatedController
 
   def statistics
     respond_to { |format| format.js { render file: 'projects/project_statistics.js.erb' } }
+  end
+
+  def copy_stages_from
+    @project_to_copy_stages_from = Project.find(params[:project_to_copy_stages_from])
+    if @project.stages.empty?
+      @project.update(stages: @project_to_copy_stages_from.stages)
+    end
+    @project_stages = @project.reload.stages.order(:order, :name)
+    respond_to { |format| format.js { render file: 'projects/copy_stages_from.js.erb' } }
   end
 
   private

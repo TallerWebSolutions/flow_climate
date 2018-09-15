@@ -25,7 +25,7 @@
 </div>
 
 <div id="content-project-stages" class="tabcontent">
-  <%= render 'stages/stages_table', stages_list: @project.stages %>
+  <%= render 'projects/projects_stages_tab', company: @company, project: @project, project_stages: @project_stages, projects_to_copy_stages_from: @projects_to_copy_stages_from %>
 </div>
 
 <div id="content-project-jira" class="tabcontent">
