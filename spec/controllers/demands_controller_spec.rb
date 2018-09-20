@@ -83,7 +83,7 @@ RSpec.describe DemandsController, type: :controller do
       context 'passing valid parameters' do
         let(:date_to_demand) { 1.day.ago.change(usec: 0) }
         it 'creates the new demand and redirects' do
-          expect(ProjectResultService.instance).to receive(:compute_demand!).with(project.current_team, instance_of(Demand)).once
+          expect(ComputeDemandUpdateJob).to receive(:perform_later).with(project.current_team.id, instance_of(Integer)).once
           post :create, params: { company_id: company, project_id: project, demand: { demand_id: 'xpto', demand_type: 'bug', downstream: false, manual_effort: true, class_of_service: 'expedite', assignees_count: 3, effort_upstream: 5, effort_downstream: 2, created_date: date_to_demand, commitment_date: date_to_demand, end_date: date_to_demand } }
 
           expect(assigns(:company)).to eq company
@@ -211,12 +211,13 @@ RSpec.describe DemandsController, type: :controller do
       let!(:team_member) { Fabricate(:team_member, monthly_payment: 100, team: team) }
 
       let(:customer) { Fabricate :customer, company: company }
-      let(:project) { Fabricate :project, customer: customer }
-      let!(:demand) { Fabricate :demand, created_date: created_date }
+      let(:product) { Fabricate :product, customer: customer, team: team }
+      let(:project) { Fabricate :project, customer: customer, product: product }
+      let!(:demand) { Fabricate :demand, project: project, created_date: created_date }
 
       context 'passing valid parameters' do
         it 'updates the demand and redirects to projects index' do
-          expect(ProjectResultService.instance).to receive(:compute_demand!).with(project.current_team, instance_of(Demand)).once
+          expect(ComputeDemandUpdateJob).to receive(:perform_later).with(project.current_team.id, demand.id).once
 
           put :update, params: { company_id: company, project_id: project, id: demand, demand: { demand_id: 'xpto', demand_type: 'bug', downstream: true, manual_effort: true, class_of_service: 'expedite', effort_upstream: 5, effort_downstream: 2, created_date: created_date, commitment_date: created_date, end_date: end_date } }, xhr: true
           updated_demand = Demand.last
