@@ -26,23 +26,23 @@ en:
   datetime:
     date_attributes:
       day:
-        one: dia
-        other: dias
+        one: day
+        other: days
       hour:
-        one: hora
-        other: horas
+        one: hour
+        other: hours
       minute:
-        one: minuto
-        other: minutos
+        one: minute
+        other: minutes
       month:
-        one: mês
-        other: meses
+        one: month
+        other: months
       second:
-        one: segundo
-        other: segundos
+        one: seconds
+        other: seconds
       year:
-        one: ano
-        other: anos
+        one: year
+        other: year
   geenral:
     connector:
       and: "and"

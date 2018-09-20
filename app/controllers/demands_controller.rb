@@ -13,7 +13,7 @@ class DemandsController < AuthenticatedController
     @demand = Demand.new(demand_params.merge(project: @project))
     return render :new unless @demand.save
 
-    ProjectResultService.instance.compute_demand!(@project.current_team, @demand)
+    ComputeDemandUpdateJob.perform_later(@project.current_team.id, @demand.id) if @demand.valid?
     redirect_to company_project_demand_path(@company, @project, @demand)
   end
 
@@ -28,7 +28,7 @@ class DemandsController < AuthenticatedController
 
   def update
     @demand.update(demand_params)
-    ProjectResultService.instance.compute_demand!(@project.current_team, @demand) if @demand.valid?
+    ComputeDemandUpdateJob.perform_later(@project.current_team.id, @demand.id) if @demand.valid?
     render 'demands/update'
   end
 
