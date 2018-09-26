@@ -53,7 +53,7 @@ class DemandsController < AuthenticatedController
     attributes = %w[id demand_id demand_type class_of_service effort_downstream effort_upstream created_date commitment_date end_date]
     demands_csv = CSV.generate(headers: true) do |csv|
       csv << attributes
-      @demands_in_csv.each { |demand| csv << attributes.map { |attr| demand.send(attr) } }
+      @demands_in_csv.each { |demand| csv << demand.csv_array }
     end
     respond_to { |format| format.csv { send_data demands_csv, filename: "demands-#{Time.zone.now}.csv" } }
   end
