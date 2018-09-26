@@ -46,3 +46,6 @@ en:
   geenral:
     connector:
       and: "and"
+  number:
+    format:
+      separator: "."

@@ -78,13 +78,18 @@ class Demand < ApplicationRecord
   after_discard :discard_transitions_and_blocks
   after_undiscard :undiscard_transitions_and_blocks
 
-  def self.to_csv
-    CSV.generate do |csv|
-      csv << column_names
-      all.find_each do |demand|
-        csv << demand.attributes.values_at(*column_names)
-      end
-    end
+  def csv_array
+    [
+      id,
+      demand_id,
+      demand_type,
+      class_of_service,
+      decimal_value_to_csv(effort_downstream),
+      decimal_value_to_csv(effort_upstream),
+      created_date&.iso8601,
+      commitment_date&.iso8601,
+      end_date&.iso8601
+    ]
   end
 
   def update_effort!(update_manual_effort = false)
@@ -157,6 +162,10 @@ class Demand < ApplicationRecord
   end
 
   private
+
+  def decimal_value_to_csv(value)
+    value.to_f.to_s.gsub('.', I18n.t('number.format.separator'))
+  end
 
   def compute_effort_upstream
     valid_effort = (working_time_upstream - blocked_working_time_upstream)

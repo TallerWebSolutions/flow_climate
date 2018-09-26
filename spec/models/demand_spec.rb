@@ -195,21 +195,6 @@ RSpec.describe Demand, type: :model do
     end
   end
 
-  describe '.to_csv' do
-    let!(:demand) { Fabricate :demand }
-    let!(:other_demand) { Fabricate :demand }
-
-    it 'builds the CSV structure' do
-      generated_csv = CSV.generate do |csv|
-        csv << Demand.column_names
-        Demand.all.find_each do |demand|
-          csv << demand.attributes.values_at(*Demand.column_names)
-        end
-      end
-      expect(Demand.to_csv).to eq generated_csv
-    end
-  end
-
   describe '#update_effort!' do
     let(:company) { Fabricate :company }
     let(:customer) { Fabricate :customer, company: company }
@@ -711,5 +696,10 @@ RSpec.describe Demand, type: :model do
     context 'having no transition in an archived stage' do
       it { expect(demand.reload).not_to be_archived }
     end
+  end
+
+  describe '#csv_array' do
+    let!(:demand) { Fabricate :demand, effort_downstream: nil }
+    it { expect(demand.csv_array).to eq [demand.id, demand.demand_id, demand.demand_type, demand.class_of_service, demand.effort_downstream.to_f.to_s.gsub('.', I18n.t('number.format.separator')), demand.effort_upstream.to_f.to_s.gsub('.', I18n.t('number.format.separator')), demand.created_date&.iso8601, demand.commitment_date&.iso8601, demand.end_date&.iso8601] }
   end
 end
