@@ -1668,7 +1668,7 @@ CREATE UNIQUE INDEX unique_custom_field_to_jira_account ON public.jira_custom_fi
 -- Name: unique_jira_project_key_to_jira_account_domain; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX unique_jira_project_key_to_jira_account_domain ON public.project_jira_configs USING btree (jira_project_key, jira_account_domain);
+CREATE UNIQUE INDEX unique_jira_project_key_to_jira_account_domain ON public.project_jira_configs USING btree (jira_project_key, jira_account_domain, fix_version_name);
 
 
 --
@@ -2042,6 +2042,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20180820175021'),
 ('20180822231503'),
 ('20180830205543'),
-('20180915020210');
+('20180915020210'),
+('20181008191022');
 
 

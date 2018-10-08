@@ -387,3 +387,7 @@ pt-BR:
   jira_custom_field_mapping:
     uniqueness:
       demand_field: "Apenas uma configuração de campo é permitida por conta do Jira."
+  project_jira_config:
+    validations:
+      jira_project_key_uniqueness:
+        message: "Deve have apenas uma chave de projeto no jira para cada domínio de conta e nome da fix version"
