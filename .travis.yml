@@ -7,10 +7,10 @@ env:
 language: ruby
 cache: bundler
 rvm:
-- 2.5.1
+  - 2.5.1
 before_install: gem install bundler
 services:
-- postgresql
+  - postgresql
 addons:
   postgresql: '10'
   apt:
@@ -18,22 +18,21 @@ addons:
     - postgresql-10
     - postgresql-client-10
 before_script:
-- cp config/database.yml.travis config/database.yml
-- curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64
-  > ./cc-test-reporter
-- chmod +x ./cc-test-reporter
-- "./cc-test-reporter before-build"
+  - cp config/database.yml.travis config/database.yml
+  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+  - chmod +x ./cc-test-reporter
+  - "./cc-test-reporter before-build"
 script:
-- RAILS_ENV=test bundle exec rake db:create --trace
-- RAILS_ENV=test bundle exec rake db:migrate --trace
-- bundle exec rake db:test:prepare
-- bundle exec rspec spec/
-- bundle exec rubocop -DR
-- bundle exec rake assets:precompile
-- git add public/assets
-- git commit -am 'assets precompiled'
+  - RAILS_ENV=test bundle exec rake db:create --trace
+  - RAILS_ENV=test bundle exec rake db:migrate --trace
+  - bundle exec rake db:test:prepare
+  - bundle exec rspec spec/
+  - bundle exec rubocop -DR
+  - bundle exec rake assets:precompile
+  - git add public/assets
+  - git commit -am 'assets precompiled'
 after_script:
-- "./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT"
+  - "./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT"
 deploy:
   provider: heroku
   api_key:
