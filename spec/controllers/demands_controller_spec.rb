@@ -441,6 +441,9 @@ RSpec.describe DemandsController, type: :controller do
     end
 
     describe 'GET #search_demands_by_flow_status' do
+      before { travel_to Date.new(2018, 9, 20) }
+      after { travel_back }
+
       let(:customer) { Fabricate :customer, company: company }
       let(:other_customer) { Fabricate :customer, company: company }
       let(:team) { Fabricate :team, company: company }

@@ -5,4 +5,4 @@ destroyedRow.fadeOut(600, function(){
 });
 
 
-$('#demands_count').html("<h4><%= t('demands.index.count', demands_count: @project.demands.count) %></h4>")
+$('#demands_count').html("<h4><%= t('demands.index.count', demands_count: @project.demands.kept.count) %></h4>")
