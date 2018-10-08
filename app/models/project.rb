@@ -104,7 +104,7 @@ class Project < ApplicationRecord
   end
 
   def consumed_hours
-    project_results.sum(&:project_delivered_hours)
+    demands.kept.sum(&:total_effort)
   end
 
   def remaining_money

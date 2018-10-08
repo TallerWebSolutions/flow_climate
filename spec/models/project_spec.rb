@@ -204,23 +204,24 @@ RSpec.describe Project, type: :model do
 
   describe '#consumed_hours' do
     let(:project) { Fabricate :project, end_date: 4.weeks.from_now }
-    let!(:result) { Fabricate :project_result, project: project }
-    let!(:other_result) { Fabricate :project_result, project: project }
-    it { expect(project.consumed_hours).to eq result.project_delivered_hours + other_result.project_delivered_hours }
+    let!(:demand) { Fabricate :demand, project: project, effort_downstream: 200, effort_upstream: 10, end_date: 2.weeks.ago }
+    let!(:other_demand) { Fabricate :demand, project: project, effort_downstream: 200, effort_upstream: 10, end_date: 2.weeks.ago }
+    it { expect(project.consumed_hours.to_f).to eq 420 }
   end
 
   describe '#remaining_money' do
     context 'having hour_value' do
       let(:project) { Fabricate :project, qty_hours: 1000, value: 100_000, hour_value: 100 }
-      let!(:result) { Fabricate :project_result, project: project, qty_hours_upstream: 0, qty_hours_downstream: 10 }
-      let!(:other_result) { Fabricate :project_result, project: project, qty_hours_upstream: 0, qty_hours_downstream: 20 }
-      it { expect(project.remaining_money.to_f).to eq 97_000 }
+      let!(:demand) { Fabricate :demand, project: project, effort_downstream: 200, effort_upstream: 10, end_date: 2.weeks.ago }
+      let!(:other_demand) { Fabricate :demand, project: project, effort_downstream: 200, effort_upstream: 10, end_date: 2.weeks.ago }
+
+      it { expect(project.remaining_money.to_f).to eq 58_000.0 }
     end
     context 'having no hour_value' do
       let(:project) { Fabricate :project, start_date: 4.months.ago, qty_hours: 1000, value: 100_000, hour_value: nil }
-      let!(:result) { Fabricate :project_result, project: project, qty_hours_upstream: 0, qty_hours_downstream: 10 }
-      let!(:other_result) { Fabricate :project_result, project: project, qty_hours_upstream: 0, qty_hours_downstream: 20 }
-      it { expect(project.remaining_money.to_f).to eq 97_000 }
+      let!(:demand) { Fabricate :demand, project: project, effort_downstream: 200, effort_upstream: 10, end_date: 2.weeks.ago }
+      let!(:other_demand) { Fabricate :demand, project: project, effort_downstream: 200, effort_upstream: 10, end_date: 2.weeks.ago }
+      it { expect(project.remaining_money.to_f).to eq 58_000.0 }
     end
   end
 
@@ -729,17 +730,17 @@ RSpec.describe Project, type: :model do
     let!(:first_project) { Fabricate :project, start_date: 1.week.ago, initial_scope: 30, end_date: 3.weeks.from_now, value: 10_000, hour_value: 20 }
 
     context 'having data for last week' do
-      let!(:result) { Fabricate :project_result, project: first_project, result_date: 1.week.ago, known_scope: 110, qty_hours_downstream: 200, qty_hours_upstream: 10 }
-      let!(:other_result) { Fabricate :project_result, project: first_project, result_date: Time.zone.today, known_scope: 80, qty_hours_downstream: 50, qty_hours_upstream: 5 }
+      let!(:demand) { Fabricate :demand, project: first_project, effort_downstream: 200, effort_upstream: 10, end_date: 1.week.ago }
+      let!(:other_demand) { Fabricate :demand, project: first_project, effort_downstream: 200, effort_upstream: 10, end_date: 1.week.ago }
 
-      it { expect(first_project.money_per_deadline.to_f).to be_within(0.01).of(1.61) }
+      it { expect(first_project.money_per_deadline.to_f).to be_within(0.01).of(4.74) }
     end
 
     context 'having data for 2 weeks ago' do
-      let!(:result) { Fabricate :project_result, project: first_project, result_date: 2.weeks.ago, known_scope: 110, qty_hours_downstream: 200, qty_hours_upstream: 10 }
-      let!(:other_result) { Fabricate :project_result, project: first_project, result_date: Time.zone.today, known_scope: 80, qty_hours_downstream: 50, qty_hours_upstream: 5 }
+      let!(:demand) { Fabricate :demand, project: first_project, effort_downstream: 200, effort_upstream: 10, end_date: 2.weeks.ago }
+      let!(:other_demand) { Fabricate :demand, project: first_project, effort_downstream: 200, effort_upstream: 10, end_date: 2.weeks.ago }
 
-      it { expect(first_project.money_per_deadline.to_f).to be_within(0.01).of(1.61) }
+      it { expect(first_project.money_per_deadline.to_f).to be_within(0.01).of(4.74) }
     end
 
     context 'having no result' do
