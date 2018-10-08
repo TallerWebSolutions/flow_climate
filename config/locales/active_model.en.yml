@@ -144,3 +144,7 @@ en:
   jira_custom_field_mapping:
     uniqueness:
       demand_field: "Should have only one demand field per Jira account."
+  project_jira_config:
+    validations:
+      jira_project_key_uniqueness:
+        message: "Should have only one Jira Project Key per account domain and fix version name"
