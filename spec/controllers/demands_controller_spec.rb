@@ -373,6 +373,9 @@ RSpec.describe DemandsController, type: :controller do
       let(:customer) { Fabricate :customer, company: company }
       let(:project) { Fabricate :project, customer: customer }
       let!(:demand) { Fabricate :demand, project: project, end_date: Time.zone.today }
+      let!(:stage) { Fabricate :stage, company: company, projects: [project], end_point: false, commitment_point: false, stage_stream: :downstream, order: 0 }
+      let!(:end_stage) { Fabricate :stage, company: company, projects: [project], commitment_point: false, end_point: true, order: 1, stage_stream: :downstream }
+      let!(:demand_transition) { Fabricate :demand_transition, demand: demand, stage: end_stage }
       let!(:deleted_demand) { Fabricate :demand, project: project, end_date: Time.zone.today, discarded_at: Time.zone.yesterday }
 
       context 'valid parameters' do
@@ -383,14 +386,15 @@ RSpec.describe DemandsController, type: :controller do
           csv = CSV.parse(response.body, headers: true)
           expect(csv.count).to eq 1
           expect(csv.first[0].to_i).to eq demand.id
-          expect(csv.first[1]).to eq demand.demand_id
-          expect(csv.first[2]).to eq 'feature'
-          expect(csv.first[3]).to eq 'standard'
-          expect(csv.first[4]).to eq demand.effort_downstream.to_f.to_s.gsub('.', I18n.t('number.format.separator'))
-          expect(csv.first[5]).to eq demand.effort_upstream.to_f.to_s.gsub('.', I18n.t('number.format.separator'))
-          expect(csv.first[6]).to eq demand.created_date.iso8601
-          expect(csv.first[7]).to be_nil
-          expect(csv.first[8]).to eq demand.end_date.iso8601
+          expect(csv.first[1]).to eq demand.current_stage.name
+          expect(csv.first[2]).to eq demand.demand_id
+          expect(csv.first[3]).to eq 'feature'
+          expect(csv.first[4]).to eq 'standard'
+          expect(csv.first[5]).to eq demand.effort_downstream.to_f.to_s.gsub('.', I18n.t('number.format.separator'))
+          expect(csv.first[6]).to eq demand.effort_upstream.to_f.to_s.gsub('.', I18n.t('number.format.separator'))
+          expect(csv.first[7]).to eq demand.created_date.iso8601
+          expect(csv.first[8]).to be_nil
+          expect(csv.first[9]).to eq demand.end_date.iso8601
         end
       end
 

@@ -699,7 +699,21 @@ RSpec.describe Demand, type: :model do
   end
 
   describe '#csv_array' do
-    let!(:demand) { Fabricate :demand, effort_downstream: nil }
-    it { expect(demand.csv_array).to eq [demand.id, demand.demand_id, demand.demand_type, demand.class_of_service, demand.effort_downstream.to_f.to_s.gsub('.', I18n.t('number.format.separator')), demand.effort_upstream.to_f.to_s.gsub('.', I18n.t('number.format.separator')), demand.created_date&.iso8601, demand.commitment_date&.iso8601, demand.end_date&.iso8601] }
+    context 'having no stages' do
+      let!(:demand) { Fabricate :demand, effort_downstream: nil, end_date: Time.zone.today }
+      it { expect(demand.csv_array).to eq [demand.id, nil, demand.demand_id, demand.demand_type, demand.class_of_service, demand.effort_downstream.to_f.to_s.gsub('.', I18n.t('number.format.separator')), demand.effort_upstream.to_f.to_s.gsub('.', I18n.t('number.format.separator')), demand.created_date&.iso8601, demand.commitment_date&.iso8601, demand.end_date&.iso8601] }
+    end
+
+    context 'having a stage and no end date' do
+      let(:company) { Fabricate :company }
+      let(:customer) { Fabricate :customer, company: company }
+      let(:product) { Fabricate :product, customer: customer }
+      let(:project) { Fabricate :project, product: product }
+      let!(:stage) { Fabricate :stage, company: company, projects: [project], end_point: false, commitment_point: false, stage_stream: :downstream, order: 0 }
+      let!(:demand_transition) { Fabricate :demand_transition, demand: demand, stage: stage }
+      let!(:demand) { Fabricate :demand, project: project, effort_downstream: nil }
+
+      it { expect(demand.csv_array).to eq [demand.id, stage.name, demand.demand_id, demand.demand_type, demand.class_of_service, demand.effort_downstream.to_f.to_s.gsub('.', I18n.t('number.format.separator')), demand.effort_upstream.to_f.to_s.gsub('.', I18n.t('number.format.separator')), demand.created_date&.iso8601, demand.commitment_date&.iso8601, nil] }
+    end
   end
 end
