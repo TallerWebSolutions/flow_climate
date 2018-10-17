@@ -51,13 +51,13 @@ class Stage < ApplicationRecord
   end
 
   def first_end_stage_in_pipe?(demand)
-    done_stage_in_pipe(demand)&.id == id
+    first_done_stage_in_pipe(demand)&.id == id
   end
 
   def before_end_point?(demand)
-    return true if done_stage_in_pipe(demand).blank?
+    return true if first_done_stage_in_pipe(demand).blank?
 
-    order < done_stage_in_pipe(demand).order
+    order < first_done_stage_in_pipe(demand).order
   end
 
   def flow_start_point
@@ -83,7 +83,7 @@ class Stage < ApplicationRecord
 
   private
 
-  def done_stage_in_pipe(demand)
+  def first_done_stage_in_pipe(demand)
     return company.stages.where(integration_pipe_id: integration_pipe_id, end_point: true, stage_stream: :downstream).order(:order).first if demand.downstream_demand?
 
     company.stages.where(integration_pipe_id: integration_pipe_id, end_point: true).order(:order).first

@@ -81,6 +81,7 @@ class Demand < ApplicationRecord
   def csv_array
     [
       id,
+      current_stage&.name,
       demand_id,
       demand_type,
       class_of_service,

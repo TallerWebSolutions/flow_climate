@@ -49,8 +49,8 @@ class DemandsController < AuthenticatedController
   end
 
   def demands_csv
-    @demands_in_csv = Demand.where(id: params['demands_ids'].split(',')).kept.finished.order(end_date: :desc)
-    attributes = %w[id demand_id demand_type class_of_service effort_downstream effort_upstream created_date commitment_date end_date]
+    @demands_in_csv = Demand.where(id: params['demands_ids'].split(',')).kept.order(end_date: :desc)
+    attributes = %w[id current_stage demand_id demand_type class_of_service effort_downstream effort_upstream created_date commitment_date end_date]
     demands_csv = CSV.generate(headers: true) do |csv|
       csv << attributes
       @demands_in_csv.each { |demand| csv << demand.csv_array }
