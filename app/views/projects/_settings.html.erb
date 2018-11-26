@@ -3,7 +3,7 @@
     <%= link_to t('projects.actions.edit.title'), edit_company_project_path(@company, @project), class: 'btn btn-primary btn-block bottom-spaced-component' %>
   </div>
   <div class="col-xs-4">
-    <%= link_to t('demands.show.sync_pipefy'), synchronize_jira_company_project_path(@company, @project), method: :put, class: 'btn btn-primary btn-block bottom-spaced-component' %>
+    <%= link_to t('demands.show.sync_jira'), synchronize_jira_company_project_path(@company, @project), method: :put, class: 'btn btn-primary btn-block bottom-spaced-component' %>
   </div>
   <div class="col-xs-4">
     <%= link_to t('demands.new.title'), new_company_project_demand_path(@company, @project), class: 'btn btn-primary btn-block bottom-spaced-component' %>

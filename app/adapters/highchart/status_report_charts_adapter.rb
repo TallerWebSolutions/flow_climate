@@ -17,10 +17,7 @@ module Highchart
     end
 
     def throughput_per_week
-      upstream_th_weekly_data = ProjectResultsRepository.instance.throughput_for_projects_grouped_per_week(@all_projects, charts_data_bottom_limit_date, :upstream)
-      downstream_th_weekly_data = ProjectResultsRepository.instance.throughput_for_projects_grouped_per_week(@all_projects, charts_data_bottom_limit_date, :downstream)
-
-      throughput_chart_data(downstream_th_weekly_data, upstream_th_weekly_data)
+      throughput_chart_data
     end
 
     def delivered_vs_remaining
@@ -98,10 +95,8 @@ module Highchart
     def build_hours_throughput_data_week
       throughput_per_week = []
       @active_weeks.each do |date|
-        week = date.cweek
-        year = date.cwyear
-        upstream_total_delivered = delivered_to_projects_and_stream_until_week(week, year, active_projects, :qty_hours_upstream)
-        downstream_total_delivered = delivered_to_projects_and_stream_until_week(week, year, active_projects, :qty_hours_downstream)
+        upstream_total_delivered = DemandsRepository.instance.delivered_until_date_to_projects_in_upstream(active_projects, date).count
+        downstream_total_delivered = DemandsRepository.instance.delivered_until_date_to_projects_in_downstream(active_projects, date).count
         throughput_per_week << upstream_total_delivered + downstream_total_delivered if add_data_to_chart?(date)
       end
       throughput_per_week
@@ -110,21 +105,12 @@ module Highchart
     def build_hours_throughput_data_month
       throughput_per_month = []
       @active_months.each do |date|
-        month = date.month
-        year = date.year
-        upstream_total_delivered = delivered_to_projects_and_stream_until_month(month, year, active_projects, :qty_hours_upstream)
-        downstream_total_delivered = delivered_to_projects_and_stream_until_month(month, year, active_projects, :qty_hours_downstream)
+        upstream_total_delivered = DemandsRepository.instance.delivered_until_date_to_projects_in_upstream(active_projects, date).count
+        downstream_total_delivered = DemandsRepository.instance.delivered_until_date_to_projects_in_downstream(active_projects, date).count
+
         throughput_per_month << upstream_total_delivered + downstream_total_delivered if add_month_data_to_chart?(date)
       end
       throughput_per_month
-    end
-
-    def delivered_to_projects_and_stream_until_week(week, year, projects, metric_field)
-      ProjectResult.until_week(week, year).where(project_id: projects.map(&:id)).sum(metric_field)
-    end
-
-    def delivered_to_projects_and_stream_until_month(month, year, projects, metric_field)
-      ProjectResult.until_month(month, year).where(project_id: projects.map(&:id)).sum(metric_field)
     end
   end
 end

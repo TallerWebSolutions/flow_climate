@@ -48,7 +48,7 @@ module Highchart
       new_built_hash['project_delivered_hours'] = financial_information.project_delivered_hours
       new_built_hash['hours_per_demand'] = financial_information.hours_per_demand
       new_built_hash['income_per_hour'] = financial_information.income_per_hour
-      new_built_hash['throughput_in_month'] = financial_information.throughput_in_month
+      new_built_hash['throughput_in_month'] = financial_information.throughput_in_month.count
 
       new_built_hash.merge(build_statistics_data(cost_per_hour_population, expenses_population, incomes_population))
     end

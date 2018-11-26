@@ -5,6 +5,7 @@ Fabricator(:demand) do
   demand_title { Faker::FunnyName.two_word_name }
   created_date { Faker::Date.backward }
   demand_type 0
+  downstream true
   class_of_service 0
   demand_id { Random.new.rand(3000..1_000_000) }
   assignees_count 1

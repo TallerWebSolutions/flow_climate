@@ -10,30 +10,21 @@ class ProjectsRepository
   def hours_consumed_per_month(projects, required_date)
     active_projects = active_projects_in_month(projects, required_date)
     total_consumed = 0
-    active_projects.each { |project| total_consumed += project.project_results.in_month(required_date).sum(&:total_hours) }
+    active_projects.each { |project| total_consumed += project.demands.finished_in_month(required_date.to_date.month, required_date.to_date.year).sum(&:total_effort) }
     total_consumed
   end
 
   def hours_consumed_per_week(projects, required_date)
     active_projects = active_projects_in_month(projects, required_date)
     total_consumed = 0
-    active_projects.each { |project| total_consumed += project.project_results.for_week(required_date.cweek, required_date.cwyear).sum(&:total_hours) }
+    active_projects.each { |project| total_consumed += project.demands.finished_in_week(required_date.cweek, required_date.cwyear).sum(&:total_effort) }
     total_consumed
   end
 
   def flow_pressure_to_month(projects, required_date)
     active_projects = active_projects_in_month(projects, required_date)
     total_flow_pressure = 0
-    active_projects.each do |project|
-      results = project.project_results.in_month(required_date)
-      total_flow_pressure += if results.present?
-                               results.average(:flow_pressure).to_f
-                             elsif required_date >= Time.zone.today.beginning_of_month
-                               project.flow_pressure.to_f
-                             else
-                               0.0
-                             end
-    end
+    active_projects.each { |project| total_flow_pressure += project.flow_pressure }
     total_flow_pressure
   end
 
@@ -41,12 +32,8 @@ class ProjectsRepository
     active_projects_in_month(projects, required_date).sum(&:money_per_month)
   end
 
-  def search_project_by_full_name(full_name)
-    Project.all.select { |p| p.full_name.casecmp(full_name.downcase).zero? }.first
-  end
-
   def all_projects_for_team(team)
-    Project.left_outer_joins(:project_results).left_outer_joins(:product).where('project_results.team_id = :team_id OR products.team_id = :team_id', team_id: team.id).order(end_date: :desc).distinct
+    Project.where('team_id = :team_id', team_id: team.id).order(end_date: :desc)
   end
 
   def add_query_to_projects_in_status(projects, status_param)
@@ -66,11 +53,11 @@ class ProjectsRepository
   end
 
   def total_queue_time_for(projects)
-    build_hash_total_duration_to_time_type(projects, true)
+    build_hash_total_duration_to_time_and_type(projects, true)
   end
 
   def total_touch_time_for(projects)
-    build_hash_total_duration_to_time_type(projects, false)
+    build_hash_total_duration_to_time_and_type(projects, false)
   end
 
   def hours_per_stage(projects, limit_date)
@@ -84,7 +71,7 @@ class ProjectsRepository
 
   private
 
-  def build_hash_total_duration_to_time_type(projects, queue = true)
+  def build_hash_total_duration_to_time_and_type(projects, queue = true)
     query_result_array = DemandTransition.kept
                                          .select('EXTRACT(WEEK FROM last_time_out) AS sum_week', 'EXTRACT(YEAR FROM last_time_out) AS sum_year, SUM(EXTRACT(EPOCH FROM (last_time_out - last_time_in))) AS sum_duration')
                                          .joins(demand: :project)

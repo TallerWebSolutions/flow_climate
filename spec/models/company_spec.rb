@@ -7,9 +7,9 @@ RSpec.describe Company, type: :model do
     it { is_expected.to have_many(:customers).dependent(:restrict_with_error) }
     it { is_expected.to have_many(:products).through(:customers) }
     it { is_expected.to have_many(:projects).through(:customers) }
+    it { is_expected.to have_many(:demands).through(:projects) }
     it { is_expected.to have_many(:teams).dependent(:restrict_with_error) }
     it { is_expected.to have_one(:company_settings).dependent(:destroy) }
-    it { is_expected.to have_many(:pipefy_configs).dependent(:destroy) }
     it { is_expected.to have_many(:jira_accounts).dependent(:destroy) }
     it { is_expected.to have_many(:stages).dependent(:restrict_with_error) }
   end
@@ -32,6 +32,42 @@ RSpec.describe Company, type: :model do
       before { company.add_user(user) }
       it { expect(company.users).to eq [user] }
     end
+  end
+
+  RSpec.shared_context 'demands with effort for company', shared_context: :metadata do
+    let(:company) { Fabricate :company }
+    let!(:customer) { Fabricate :customer, company: company }
+    let!(:product) { Fabricate :product, customer: customer }
+    let!(:team) { Fabricate :team, company: company }
+    let!(:team_member) { Fabricate :team_member, team: team, hours_per_month: 100, hour_value: 10, monthly_payment: 1200, total_monthly_payment: 1300 }
+
+    let!(:active_project) { Fabricate :project, start_date: 4.weeks.ago, customer: customer, product: product, status: :executing, qty_hours: 200 }
+    let!(:other_active_project) { Fabricate :project, start_date: 4.weeks.ago, customer: customer, product: product, status: :executing, qty_hours: 260 }
+    let!(:other_customer_active_project) { Fabricate :project, start_date: 4.weeks.ago, customer: product.customer, product: product, status: :executing, qty_hours: 300 }
+
+    let!(:waiting_project) { Fabricate :project, start_date: 4.weeks.ago, customer: customer, product: product, status: :waiting, qty_hours: 872 }
+    let!(:finished_project) { Fabricate :project, start_date: 4.weeks.ago, customer: customer, product: product, status: :finished }
+    let!(:cancelled_project) { Fabricate :project, start_date: 4.weeks.ago, customer: customer, product: product, status: :cancelled }
+
+    let(:first_stage) { Fabricate :stage, company: company, stage_stream: :downstream, queue: false, end_point: false }
+    let(:second_stage) { Fabricate :stage, company: company, stage_stream: :downstream, queue: false, end_point: true }
+    let(:third_stage) { Fabricate :stage, company: company, stage_stream: :upstream, queue: false, end_point: true }
+
+    let!(:first_stage_project_config) { Fabricate :stage_project_config, project: active_project, stage: first_stage, compute_effort: true, pairing_percentage: 80, stage_percentage: 100, management_percentage: 10 }
+    let!(:second_stage_project_config) { Fabricate :stage_project_config, project: active_project, stage: second_stage, compute_effort: true, pairing_percentage: 80, stage_percentage: 100, management_percentage: 10 }
+    let!(:third_stage_project_config) { Fabricate :stage_project_config, project: active_project, stage: third_stage, compute_effort: true, pairing_percentage: 80, stage_percentage: 100, management_percentage: 10 }
+
+    let!(:first_demand) { Fabricate :demand, project: active_project, created_date: 2.weeks.ago, end_date: 1.week.ago, demand_type: :bug }
+    let!(:second_demand) { Fabricate :demand, project: active_project, created_date: 2.weeks.ago, end_date: 1.week.ago }
+    let!(:third_demand) { Fabricate :demand, project: active_project, created_date: 1.week.ago, end_date: 2.days.ago }
+
+    let!(:first_transition) { Fabricate :demand_transition, stage: first_stage, demand: first_demand, last_time_in: 1.month.ago, last_time_out: 2.weeks.ago }
+    let!(:second_transition) { Fabricate :demand_transition, stage: first_stage, demand: second_demand, last_time_in: 1.month.ago, last_time_out: 3.weeks.ago }
+
+    let!(:third_transition) { Fabricate :demand_transition, stage: second_stage, demand: first_demand, last_time_in: Time.zone.today }
+    let!(:fourth_transition) { Fabricate :demand_transition, stage: second_stage, demand: second_demand, last_time_in: Time.zone.today }
+
+    let!(:fifth_transition) { Fabricate :demand_transition, stage: third_stage, demand: third_demand, last_time_in: 2.months.ago, last_time_out: 5.weeks.ago }
   end
 
   describe '#active_projects_count' do
@@ -89,32 +125,18 @@ RSpec.describe Company, type: :model do
 
   describe '#current_cost_per_hour' do
     context 'having finances' do
+      before { travel_to Time.zone.local(2018, 11, 19, 10, 0, 0) }
+      after { travel_back }
+
       let(:company) { Fabricate :company }
       let!(:first_finance) { Fabricate :financial_information, company: company, finances_date: 1.month.ago, expenses_total: 300 }
       let!(:second_finance) { Fabricate :financial_information, company: company, finances_date: 1.week.ago, expenses_total: 200 }
       let!(:third_finance) { Fabricate :financial_information, company: company, finances_date: 1.month.from_now, expenses_total: 100 }
 
-      let(:customer) { Fabricate :customer, company: company }
-      let(:other_customer) { Fabricate :customer, company: company }
-      let(:other_company_customer) { Fabricate :customer }
+      include_context 'demands with effort for company'
+      it { expect(company.current_cost_per_hour.to_f).to eq 1.2626262626262625 }
 
-      let(:product) { Fabricate :product, customer: customer, name: 'zzz' }
-      let(:other_product) { Fabricate :product, customer: other_customer, name: 'zzz' }
-      let(:other_company_product) { Fabricate :product, customer: other_company_customer, name: 'zzz' }
-
-      let(:project) { Fabricate :project, start_date: Date.new(2018, 1, 25), end_date: Date.new(2018, 4, 25), customer: customer, product: product }
-      let(:other_project) { Fabricate :project, start_date: Date.new(2018, 1, 25), end_date: Date.new(2018, 4, 25), customer: customer, product: product }
-      let(:other_customer_project) { Fabricate :project, start_date: Date.new(2018, 1, 25), end_date: Date.new(2018, 4, 25), customer: other_customer, product: other_product }
-      let(:other_company_project) { Fabricate :project, start_date: Date.new(2018, 1, 25), end_date: Date.new(2018, 4, 25), customer: other_company_customer, product: other_company_product }
-
-      let!(:first_result) { Fabricate :project_result, project: project, result_date: Date.new(2018, 3, 2), qty_hours_downstream: 10, qty_hours_upstream: 20 }
-      let!(:second_result) { Fabricate :project_result, project: project, result_date: Date.new(2018, 3, 1), qty_hours_downstream: 20, qty_hours_upstream: 30 }
-      let!(:third_result) { Fabricate :project_result, project: other_project, result_date: Date.new(2018, 2, 25), qty_hours_downstream: 5, qty_hours_upstream: 40 }
-      let!(:fourth_result) { Fabricate :project_result, project: other_customer_project, result_date: Date.new(2018, 2, 28), qty_hours_downstream: 50, qty_hours_upstream: 10 }
-      let!(:fifth_result) { Fabricate :project_result, project: other_company_project, result_date: Date.new(2018, 1, 25), qty_hours_downstream: 100, qty_hours_upstream: 50 }
-
-      before { allow(Time.zone).to receive(:today) { Date.new(2018, 3, 2) } }
-      it { expect(company.current_cost_per_hour.to_f).to eq 2.5 }
+      pending 'having no efforts'
     end
 
     context 'having no finances' do
@@ -124,130 +146,49 @@ RSpec.describe Company, type: :model do
   end
 
   describe '#current_hours_per_demand' do
+    before { travel_to Date.new(2018, 11, 19) }
+    after { travel_back }
+
     context 'having finances' do
-      let(:company) { Fabricate :company }
-      let(:customer) { Fabricate :customer, company: company }
-      let(:other_customer) { Fabricate :customer, company: company }
-      let(:other_company_customer) { Fabricate :customer }
+      include_context 'demands with effort for company'
 
-      let(:product) { Fabricate :product, customer: customer, name: 'zzz' }
-      let(:other_product) { Fabricate :product, customer: other_customer, name: 'zzz' }
-      let(:other_company_product) { Fabricate :product, customer: other_company_customer, name: 'zzz' }
-
-      let(:project) { Fabricate :project, start_date: 4.months.ago, end_date: 4.weeks.from_now, customer: customer, product: product }
-      let(:other_project) { Fabricate :project, start_date: 4.months.ago, end_date: 4.weeks.from_now, customer: customer, product: product }
-      let(:other_customer_project) { Fabricate :project, start_date: 4.months.ago, end_date: 4.weeks.from_now, customer: other_customer, product: other_product }
-      let(:other_company_project) { Fabricate :project, start_date: 4.months.ago, end_date: 4.weeks.from_now, customer: other_company_customer, product: other_company_product }
-
-      let!(:first_result) { Fabricate :project_result, project: project, result_date: 1.month.ago, qty_hours_upstream: 0, qty_hours_downstream: 10 }
-      let!(:second_result) { Fabricate :project_result, project: project, result_date: 1.month.ago, qty_hours_upstream: 0, qty_hours_downstream: 20 }
-      let!(:third_result) { Fabricate :project_result, project: other_project, result_date: Time.zone.today, qty_hours_upstream: 0, qty_hours_downstream: 5 }
-      let!(:fourth_result) { Fabricate :project_result, project: other_customer_project, result_date: Time.zone.today, qty_hours_upstream: 0, qty_hours_downstream: 50 }
-      let!(:fifth_result) { Fabricate :project_result, project: other_company_project, result_date: Time.zone.today, qty_hours_upstream: 0, qty_hours_downstream: 100 }
-
-      it { expect(company.current_hours_per_demand).to eq 55 }
+      it { expect(company.current_hours_per_demand.to_f).to eq 158.4 }
     end
 
     context 'having no finances' do
       let(:company) { Fabricate :company }
-      it { expect(company.current_hours_per_demand).to eq 0 }
+      it { expect(company.current_hours_per_demand.to_f).to eq 0 }
     end
   end
 
   describe '#last_week_scope' do
-    let(:company) { Fabricate :company }
-    let(:customer) { Fabricate :customer, company: company }
-    let(:other_customer) { Fabricate :customer, company: company }
-    let(:other_company_customer) { Fabricate :customer }
+    include_context 'demands with effort for company'
 
-    let(:product) { Fabricate :product, customer: customer, name: 'zzz' }
-    let(:other_product) { Fabricate :product, customer: other_customer, name: 'zzz' }
-    let(:other_company_product) { Fabricate :product, customer: other_company_customer, name: 'zzz' }
-
-    let(:project) { Fabricate :project, start_date: 4.weeks.ago, end_date: 4.weeks.from_now, customer: customer, product: product }
-    let(:other_project) { Fabricate :project, start_date: 4.weeks.ago, end_date: 4.weeks.from_now, customer: customer, product: product }
-    let(:other_customer_project) { Fabricate :project, start_date: 4.weeks.ago, end_date: 4.weeks.from_now, customer: other_customer, product: other_product }
-    let(:other_company_project) { Fabricate :project, start_date: 4.weeks.ago, end_date: 4.weeks.from_now, customer: other_company_customer, product: other_company_product }
-
-    let!(:first_result) { Fabricate :project_result, project: project, result_date: 1.week.ago, known_scope: 10 }
-    let!(:second_result) { Fabricate :project_result, project: project, result_date: 2.weeks.ago, known_scope: 20 }
-    let!(:third_result) { Fabricate :project_result, project: other_project, result_date: 1.week.ago, known_scope: 5 }
-    let!(:fourth_result) { Fabricate :project_result, project: other_customer_project, result_date: 1.week.ago, known_scope: 50 }
-    let!(:fifth_result) { Fabricate :project_result, project: other_company_project, result_date: 1.week.ago, known_scope: 100 }
-
-    it { expect(company.last_week_scope).to eq 65 }
+    it { expect(company.last_week_scope).to eq 182 }
   end
 
   describe '#avg_hours_per_demand' do
-    let(:company) { Fabricate :company }
-    let(:customer) { Fabricate :customer, company: company }
-    let(:other_customer) { Fabricate :customer, company: company }
-    let(:other_company_customer) { Fabricate :customer }
+    before { travel_to Date.new(2018, 11, 19) }
+    after { travel_back }
 
-    let(:product) { Fabricate :product, customer: customer, name: 'zzz' }
-    let(:other_product) { Fabricate :product, customer: other_customer, name: 'zzz' }
-    let(:other_company_product) { Fabricate :product, customer: other_company_customer, name: 'zzz' }
+    include_context 'demands with effort for company'
 
-    let(:project) { Fabricate :project, start_date: 4.weeks.ago, end_date: 4.weeks.from_now, customer: customer, product: product }
-    let(:other_project) { Fabricate :project, start_date: 4.weeks.ago, end_date: 4.weeks.from_now, customer: customer, product: product }
-    let(:other_customer_project) { Fabricate :project, start_date: 4.weeks.ago, end_date: 4.weeks.from_now, customer: other_customer, product: other_product }
-    let(:other_company_project) { Fabricate :project, start_date: 4.weeks.ago, end_date: 4.weeks.from_now, customer: other_company_customer, product: other_company_product }
-
-    let!(:first_result) { Fabricate :project_result, project: project, result_date: 1.day.ago, known_scope: 10 }
-    let!(:second_result) { Fabricate :project_result, project: project, result_date: Time.zone.today, known_scope: 20 }
-    let!(:third_result) { Fabricate :project_result, project: other_project, result_date: 1.day.ago, known_scope: 5 }
-    let!(:fourth_result) { Fabricate :project_result, project: other_customer_project, result_date: 1.day.ago, known_scope: 50 }
-    let!(:fifth_result) { Fabricate :project_result, project: other_company_project, result_date: 1.day.ago, known_scope: 100 }
-
-    it { expect(company.avg_hours_per_demand).to eq company.customers.sum(&:avg_hours_per_demand) / company.customers.count }
+    it { expect(company.avg_hours_per_demand).to eq 52.800000000000004 }
   end
 
   describe '#consumed_hours_in_month' do
-    let(:company) { Fabricate :company }
-    let(:customer) { Fabricate :customer, company: company }
-    let(:other_customer) { Fabricate :customer, company: company }
-    let(:other_company_customer) { Fabricate :customer }
+    before { travel_to Date.new(2018, 11, 19) }
+    after { travel_back }
 
-    let(:product) { Fabricate :product, customer: customer, name: 'zzz' }
-    let(:other_product) { Fabricate :product, customer: other_customer, name: 'zzz' }
-    let(:other_company_product) { Fabricate :product, customer: other_company_customer, name: 'zzz' }
+    include_context 'demands with effort for company'
 
-    let(:project) { Fabricate :project, end_date: 4.weeks.from_now, customer: customer, product: product }
-    let(:other_project) { Fabricate :project, end_date: 4.weeks.from_now, customer: customer, product: product }
-    let(:other_customer_project) { Fabricate :project, end_date: 4.weeks.from_now, customer: other_product.customer, product: other_product }
-    let(:other_company_project) { Fabricate :project, end_date: 4.weeks.from_now, customer: other_company_product.customer, product: other_company_product }
-
-    let!(:first_result) { Fabricate :project_result, project: project, result_date: 1.month.ago, qty_hours_upstream: 0, qty_hours_downstream: 10 }
-    let!(:second_result) { Fabricate :project_result, project: project, result_date: 1.month.ago, qty_hours_upstream: 0, qty_hours_downstream: 20 }
-    let!(:third_result) { Fabricate :project_result, project: other_project, result_date: Time.zone.today, qty_hours_upstream: 0, qty_hours_downstream: 5 }
-    let!(:fourth_result) { Fabricate :project_result, project: other_customer_project, result_date: Time.zone.today, qty_hours_upstream: 0, qty_hours_downstream: 50 }
-    let!(:fifth_result) { Fabricate :project_result, project: other_company_project, result_date: Time.zone.today, qty_hours_upstream: 0, qty_hours_downstream: 100 }
-
-    it { expect(company.consumed_hours_in_month(1.month.ago.to_date)).to eq 30 }
+    it { expect(company.consumed_hours_in_month.to_f).to eq 158.4 }
   end
 
   describe '#throughput_in_month' do
-    let(:company) { Fabricate :company }
-    let(:customer) { Fabricate :customer, company: company }
-    let(:other_customer) { Fabricate :customer, company: company }
-    let(:other_company_customer) { Fabricate :customer }
+    include_context 'demands with effort for company'
 
-    let(:product) { Fabricate :product, customer: customer, name: 'zzz' }
-    let(:other_product) { Fabricate :product, customer: other_customer, name: 'zzz' }
-    let(:other_company_product) { Fabricate :product, customer: other_company_customer, name: 'zzz' }
-
-    let(:project) { Fabricate :project, start_date: 4.months.ago, end_date: 4.weeks.from_now, customer: customer, product: product }
-    let(:other_project) { Fabricate :project, start_date: 4.months.ago, end_date: 4.weeks.from_now, customer: customer, product: product }
-    let(:other_customer_project) { Fabricate :project, start_date: 4.months.ago, end_date: 4.weeks.from_now, customer: other_product.customer, product: other_product }
-    let(:other_company_project) { Fabricate :project, start_date: 4.months.ago, end_date: 4.weeks.from_now, customer: other_company_product.customer, product: other_company_product }
-
-    let!(:first_result) { Fabricate :project_result, project: project, result_date: 1.month.ago, throughput_upstream: 10, throughput_downstream: 15 }
-    let!(:second_result) { Fabricate :project_result, project: project, result_date: 1.month.ago, throughput_upstream: 20, throughput_downstream: 25 }
-    let!(:third_result) { Fabricate :project_result, project: other_project, result_date: Time.zone.today, throughput_upstream: 5, throughput_downstream: 7 }
-    let!(:fourth_result) { Fabricate :project_result, project: other_customer_project, result_date: Time.zone.today, throughput_upstream: 50, throughput_downstream: 55 }
-    let!(:fifth_result) { Fabricate :project_result, project: other_company_project, result_date: Time.zone.today, throughput_upstream: 100, throughput_downstream: 105 }
-
-    it { expect(company.throughput_in_month(1.month.ago.to_date)).to eq 70 }
+    it { expect(company.throughput_in_month.count).to eq 3 }
   end
 
   describe '#products_count' do
@@ -267,15 +208,18 @@ RSpec.describe Company, type: :model do
     let(:customer) { Fabricate :customer, company: company }
     let(:other_customer) { Fabricate :customer, company: company }
 
-    let!(:starting_project) { Fabricate :project, customer: customer, status: :waiting, initial_scope: 5, start_date: 2.weeks.ago.to_date, end_date: 3.days.from_now }
     let!(:first_project) { Fabricate :project, customer: customer, status: :executing, initial_scope: 10, start_date: 2.weeks.ago.to_date, end_date: 4.days.from_now }
     let!(:second_project) { Fabricate :project, customer: other_customer, status: :executing, initial_scope: 40, start_date: 2.weeks.ago.to_date, end_date: 5.days.from_now }
     let!(:third_project) { Fabricate :project, customer: other_customer, status: :executing, initial_scope: 30, start_date: 2.weeks.ago.to_date, end_date: 6.days.from_now }
 
-    let!(:first_project_result) { Fabricate :project_result, result_date: 1.week.ago.to_date, project: first_project, throughput_upstream: 20, throughput_downstream: 10, known_scope: first_project.initial_scope }
-    let!(:second_project_result) { Fabricate :project_result, result_date: 2.weeks.ago.to_date, project: first_project, throughput_upstream: 60, throughput_downstream: 1, known_scope: first_project.initial_scope }
-    let!(:third_project_result) { Fabricate :project_result, result_date: 1.week.ago.to_date, project: second_project, throughput_upstream: 10, throughput_downstream: 12, known_scope: second_project.initial_scope }
-    let!(:fourth_project_result) { Fabricate :project_result, result_date: 1.week.ago.to_date, project: third_project, throughput_upstream: 40, throughput_downstream: 18, known_scope: third_project.initial_scope }
+    let!(:waiting_project) { Fabricate :project, customer: customer, status: :waiting, initial_scope: 5, start_date: 2.weeks.ago.to_date, end_date: 3.days.from_now }
+
+    let!(:first_demand) { Fabricate :demand, project: first_project, created_date: 2.weeks.ago, end_date: 1.week.ago, demand_type: :bug }
+    let!(:second_demand) { Fabricate :demand, project: second_project, created_date: 2.weeks.ago, end_date: 1.week.ago }
+    let!(:third_demand) { Fabricate :demand, project: third_project, created_date: 1.week.ago, end_date: 2.days.ago }
+    let!(:fourth_demand) { Fabricate :demand, project: second_project, created_date: 2.weeks.ago, end_date: 1.week.ago }
+    let!(:fifth_demand) { Fabricate :demand, project: second_project, created_date: 1.week.ago, end_date: 2.days.ago }
+    let!(:sixth_demand) { Fabricate :demand, project: third_project, created_date: 1.week.ago, end_date: 2.days.ago }
   end
 
   describe '#top_three_flow_pressure' do
@@ -284,13 +228,16 @@ RSpec.describe Company, type: :model do
   end
 
   describe '#top_three_throughput' do
+    before { travel_to Date.new(2018, 11, 19) }
+    after { travel_back }
+
     include_context 'projects to company bulletin'
-    it { expect(company.top_three_throughput).to eq [third_project, first_project, second_project] }
+    it { expect(company.top_three_throughput).to eq [third_project, second_project, first_project] }
   end
 
   describe '#next_starting_project' do
     include_context 'projects to company bulletin'
-    it { expect(company.next_starting_project).to eq starting_project }
+    it { expect(company.next_starting_project).to eq waiting_project }
   end
 
   describe '#next_finishing_project' do
@@ -307,97 +254,40 @@ RSpec.describe Company, type: :model do
   end
 
   describe '#total_active_hours' do
-    let(:company) { Fabricate :company }
-    let(:customer) { Fabricate :customer, company: company }
-
-    context 'having active projects' do
-      let!(:first_project) { Fabricate :project, end_date: 4.weeks.from_now, customer: customer, status: :executing, qty_hours: 20 }
-      let!(:second_project) { Fabricate :project, end_date: 4.weeks.from_now, customer: customer, status: :maintenance, qty_hours: 25 }
-      let!(:third_project) { Fabricate :project, end_date: 4.weeks.from_now, customer: customer, status: :cancelled, qty_hours: 40 }
-      let!(:fourth_project) { Fabricate :project, end_date: 4.weeks.from_now, customer: customer, status: :finished, qty_hours: 35 }
-      let!(:fifth_project) { Fabricate :project, end_date: 4.weeks.from_now, customer: customer, status: :waiting, qty_hours: 10 }
-
-      it { expect(company.total_active_hours).to eq 55 }
+    context 'having data' do
+      include_context 'demands with effort for company'
+      it { expect(company.total_active_hours).to eq 0.1632e4 }
     end
-    context 'having no active projects' do
-      let!(:first_project) { Fabricate :project, customer: customer, status: :cancelled, qty_hours: 40 }
-      let!(:second_project) { Fabricate :project, customer: customer, status: :finished, qty_hours: 35 }
+    context 'having no data' do
+      let(:company) { Fabricate :company }
       it { expect(company.total_active_hours).to eq 0 }
     end
   end
 
   describe '#total_active_consumed_hours' do
-    let(:company) { Fabricate :company }
-    let(:customer) { Fabricate :customer, company: company }
+    before { travel_to Date.new(2018, 11, 19) }
+    after { travel_back }
 
-    context 'having active projects' do
-      let(:first_project) { Fabricate :project, end_date: 4.weeks.from_now, customer: customer, status: :executing, qty_hours: 20 }
-      let(:second_project) { Fabricate :project, end_date: 4.weeks.from_now, customer: customer, status: :maintenance, qty_hours: 25 }
-      let(:third_project) { Fabricate :project, end_date: 4.weeks.from_now, customer: customer, status: :cancelled, qty_hours: 40 }
-      let(:fourth_project) { Fabricate :project, end_date: 4.weeks.from_now, customer: customer, status: :finished, qty_hours: 35 }
-      let(:fifth_project) { Fabricate :project, end_date: 4.weeks.from_now, customer: customer, status: :waiting, qty_hours: 10 }
-
-      let!(:first_result) { Fabricate :project_result, project: first_project, qty_hours_downstream: 10, qty_hours_upstream: 20 }
-      let!(:second_result) { Fabricate :project_result, project: second_project, qty_hours_downstream: 10, qty_hours_upstream: 20 }
-      let!(:third_result) { Fabricate :project_result, project: third_project, qty_hours_downstream: 10, qty_hours_upstream: 20 }
-      let!(:third_result) { Fabricate :project_result, project: fourth_project, qty_hours_downstream: 10, qty_hours_upstream: 20 }
-      let!(:fifth_result) { Fabricate :project_result, project: fifth_project, qty_hours_downstream: 10, qty_hours_upstream: 20 }
-
-      it { expect(company.total_active_consumed_hours).to eq 90 }
+    context 'having data' do
+      include_context 'demands with effort for company'
+      it { expect(company.total_active_consumed_hours.to_f).to eq 158.4 }
     end
 
-    context 'having no active projects' do
-      let!(:first_project) { Fabricate :project, end_date: 4.weeks.from_now, customer: customer, status: :cancelled, qty_hours: 40 }
-      let!(:second_project) { Fabricate :project, end_date: 4.weeks.from_now, customer: customer, status: :finished, qty_hours: 35 }
-      let!(:first_result) { Fabricate :project_result, project: first_project, qty_hours_downstream: 10, qty_hours_upstream: 20 }
-      let!(:second_result) { Fabricate :project_result, project: second_project, qty_hours_downstream: 10, qty_hours_upstream: 20 }
-
+    context 'having no data' do
+      let(:company) { Fabricate :company }
       it { expect(company.total_active_consumed_hours).to eq 0 }
     end
   end
 
   describe '#total_available_hours' do
-    let(:company) { Fabricate :company }
-    let(:customer) { Fabricate :customer, company: company }
-    let(:other_customer) { Fabricate :customer, company: company }
-    let(:other_company_customer) { Fabricate :customer }
+    context 'having data' do
+      include_context 'demands with effort for company'
+      it { expect(company.total_available_hours).to eq 100 }
+    end
 
-    let(:first_team) { Fabricate :team, company: company }
-    let(:second_team) { Fabricate :team, company: company }
-    let(:third_team) { Fabricate :team, company: other_company_customer.company }
-
-    let!(:first_member) { Fabricate :team_member, team: first_team, hours_per_month: 160, billable: true, active: true, billable_type: :outsourcing }
-    let!(:second_member) { Fabricate :team_member, team: first_team, hours_per_month: 40, billable: true, active: true, billable_type: :consulting }
-    let!(:third_member) { Fabricate :team_member, team: second_team, hours_per_month: 140, billable: true, active: true, billable_type: :training }
-    let!(:fourth_member) { Fabricate :team_member, team: third_team, hours_per_month: 20, billable: true, active: true, billable_type: :outsourcing }
-
-    let!(:project) { Fabricate :project, end_date: 4.weeks.from_now, customer: customer, project_type: first_member.billable_type }
-    let!(:other_project) { Fabricate :project, end_date: 4.weeks.from_now, customer: customer, project_type: second_member.billable_type }
-    let!(:other_customer_project) { Fabricate :project, end_date: 4.weeks.from_now, customer: other_customer, project_type: third_member.billable_type }
-    let!(:other_company_project) { Fabricate :project, end_date: 4.weeks.from_now, customer: other_company_customer, project_type: fourth_member.billable_type }
-
-    let!(:first_result) { Fabricate :project_result, project: project, team: first_team }
-    let!(:second_result) { Fabricate :project_result, project: other_project, team: second_team }
-    let!(:third_result) { Fabricate :project_result, project: other_customer_project, team: third_team }
-
-    it { expect(company.total_available_hours).to eq 340 }
-  end
-
-  describe '#delivered_hours_for_month' do
-    let(:company) { Fabricate :company }
-    let(:customer) { Fabricate :customer, company: company }
-    let(:other_customer) { Fabricate :customer, company: company }
-    let(:other_company_customer) { Fabricate :customer }
-
-    let!(:project) { Fabricate :project, start_date: 2.months.ago, end_date: 3.months.from_now, customer: customer }
-    let!(:other_project) { Fabricate :project, start_date: 2.months.ago, end_date: 3.months.from_now, customer: customer }
-    let!(:other_customer_project) { Fabricate :project, start_date: 2.months.ago, end_date: 3.months.from_now, customer: other_customer }
-    let!(:other_company_project) { Fabricate :project, start_date: 2.months.ago, end_date: 3.months.from_now, customer: other_company_customer }
-
-    let!(:first_result) { Fabricate :project_result, project: project, result_date: Time.zone.today, qty_hours_downstream: 20, qty_hours_upstream: 10 }
-    let!(:second_result) { Fabricate :project_result, project: other_project, result_date: Time.zone.today, qty_hours_downstream: 15, qty_hours_upstream: 12 }
-    let!(:third_result) { Fabricate :project_result, project: other_customer_project, result_date: Time.zone.today, qty_hours_downstream: 45, qty_hours_upstream: 23 }
-
-    it { expect(company.delivered_hours_for_month(Time.zone.today)).to eq 125 }
+    context 'having no data' do
+      let(:company) { Fabricate :company }
+      it { expect(company.total_active_consumed_hours).to eq 0 }
+    end
   end
 end

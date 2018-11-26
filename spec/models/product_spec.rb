@@ -84,19 +84,16 @@ RSpec.describe Product, type: :model do
     let(:product) { Fabricate :product, name: 'zzz' }
     let(:other_product) { Fabricate :product, name: 'zzz' }
 
-    let(:project) { Fabricate :project, start_date: 4.weeks.ago, end_date: 3.weeks.from_now, customer: product.customer, product: product }
-    let(:other_project) { Fabricate :project, start_date: 4.weeks.ago, end_date: 3.weeks.from_now, customer: product.customer, product: product }
-    let(:other_product_project) { Fabricate :project, customer: other_product.customer, product: other_product, start_date: 4.weeks.ago, end_date: 3.weeks.from_now }
+    let!(:project) { Fabricate :project, start_date: 4.weeks.ago, end_date: 3.weeks.from_now, customer: product.customer, product: product, value: 2000, qty_hours: 5000, hour_value: 2.5 }
+    let!(:other_project) { Fabricate :project, start_date: 4.weeks.ago, end_date: 3.weeks.from_now, customer: product.customer, product: product, value: 5000, qty_hours: 10_000, hour_value: 2 }
+    let!(:other_product_project) { Fabricate :project, customer: other_product.customer, product: other_product, start_date: 4.weeks.ago, end_date: 3.weeks.from_now, value: 22_000, qty_hours: 50_000, hour_value: 0.44 }
 
-    let!(:first_result) { Fabricate :project_result, project: project, result_date: 1.week.ago, known_scope: 10 }
-    let!(:second_result) { Fabricate :project_result, project: project, result_date: Time.zone.today, known_scope: 20 }
-    let!(:third_result) { Fabricate :project_result, project: other_project, result_date: Time.zone.today, known_scope: 5 }
-    let!(:fourth_result) { Fabricate :project_result, project: other_product_project, result_date: 1.week.ago, known_scope: 50 }
+    let!(:demand) { Fabricate :demand, project: project, effort_downstream: 900, effort_upstream: 50 }
   end
 
   describe '#last_week_scope' do
     include_context 'consolidations variables data for product'
-    it { expect(product.last_week_scope).to eq 25 }
+    it { expect(product.last_week_scope).to eq 61 }
   end
 
   describe '#avg_hours_per_demand' do
@@ -116,7 +113,7 @@ RSpec.describe Product, type: :model do
 
   describe '#percentage_remaining_money' do
     include_context 'consolidations variables data for product'
-    it { expect(product.percentage_remaining_money).to eq((product.remaining_money / product.total_value) * 100) }
+    it { expect(product.percentage_remaining_money.to_f).to eq 66.07142857142857 }
   end
 
   describe '#backlog_remaining' do
@@ -148,8 +145,6 @@ RSpec.describe Product, type: :model do
     let!(:second_project) { Fabricate :project, initial_scope: 100, customer: customer, product: product, start_date: 1.week.ago, end_date: 1.week.from_now }
 
     context 'having results' do
-      let!(:result) { Fabricate :project_result, project: first_project, result_date: 1.day.ago, known_scope: 10 }
-      let!(:other_result) { Fabricate :project_result, project: second_project, result_date: Time.zone.today, known_scope: 20 }
       it { expect(product.regressive_avg_hours_per_demand).to eq product.avg_hours_per_demand }
     end
 
@@ -159,8 +154,6 @@ RSpec.describe Product, type: :model do
 
         let!(:second_project) { Fabricate :project, initial_scope: 100, customer: customer, product: other_product, start_date: 1.week.ago, end_date: 1.week.from_now }
         let!(:third_project) { Fabricate :project, initial_scope: 100, customer: customer, product: other_product, start_date: 1.week.ago, end_date: 1.week.from_now }
-        let!(:result) { Fabricate :project_result, project: second_project, result_date: 1.day.ago, known_scope: 10 }
-        let!(:other_result) { Fabricate :project_result, project: third_project, result_date: Time.zone.today, known_scope: 20 }
 
         it { expect(product.regressive_avg_hours_per_demand).to eq customer.avg_hours_per_demand }
       end
@@ -170,8 +163,6 @@ RSpec.describe Product, type: :model do
 
         let!(:second_project) { Fabricate :project, initial_scope: 100, customer: other_customer, product: other_product, start_date: 1.week.ago, end_date: 1.week.from_now }
         let!(:third_project) { Fabricate :project, initial_scope: 100, customer: other_customer, product: other_product, start_date: 1.week.ago, end_date: 1.week.from_now }
-        let!(:result) { Fabricate :project_result, project: second_project, result_date: 1.day.ago, known_scope: 10 }
-        let!(:other_result) { Fabricate :project_result, project: third_project, result_date: Time.zone.today, known_scope: 20 }
 
         it { expect(product.regressive_avg_hours_per_demand).to eq company.avg_hours_per_demand }
       end

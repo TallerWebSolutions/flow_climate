@@ -4,7 +4,6 @@ require 'sidekiq/web'
 
 Rails.application.routes.draw do
   controller :webhook_integrations do
-    post 'pipefy_webhook'
     post 'jira_webhook'
     post 'jira_delete_card_webhook'
   end
@@ -37,10 +36,6 @@ Rails.application.routes.draw do
         end
       end
 
-      scope :pipefy do
-        resources :pipefy_team_configs, only: %i[edit update], module: 'pipefy'
-      end
-
       member do
         get 'search_for_projects/:status_filter', action: :search_for_projects, as: 'search_for_projects'
         get 'search_demands_to_flow_charts', action: :search_demands_to_flow_charts, as: 'search_demands_to_flow_charts'
@@ -59,8 +54,6 @@ Rails.application.routes.draw do
     end
 
     resources :projects do
-      resources :project_results, only: :show
-
       resources :demands do
         put :synchronize_jira, on: :member
 
@@ -97,8 +90,6 @@ Rails.application.routes.draw do
         patch :copy_stages_from
       end
     end
-
-    resources :pipefy_configs, only: %i[new create destroy edit update], module: 'pipefy'
 
     resources :stages do
       member do

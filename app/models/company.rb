@@ -18,8 +18,8 @@ class Company < ApplicationRecord
   has_many :customers, dependent: :restrict_with_error
   has_many :products, through: :customers
   has_many :projects, through: :customers
+  has_many :demands, through: :projects
   has_many :teams, dependent: :restrict_with_error
-  has_many :pipefy_configs, class_name: 'Pipefy::PipefyConfig', dependent: :destroy, inverse_of: :company
   has_many :stages, dependent: :restrict_with_error
   has_many :jira_accounts, class_name: 'Jira::JiraAccount', dependent: :destroy, inverse_of: :company
   has_one :company_settings, dependent: :destroy
@@ -62,7 +62,7 @@ class Company < ApplicationRecord
   end
 
   def current_month_throughput
-    @current_month_throughput ||= (ProjectResultsRepository.instance.upstream_throughput_in_month_for_company(self) + ProjectResultsRepository.instance.downstream_throughput_in_month_for_company(self))
+    @current_month_throughput ||= (DemandsRepository.instance.upstream_throughput_in_month_for_projects(projects).count + DemandsRepository.instance.downstream_throughput_in_month_for_projects(projects).count)
   end
 
   def last_week_scope
@@ -74,19 +74,19 @@ class Company < ApplicationRecord
   end
 
   def consumed_hours_in_month(date = Time.zone.today)
-    @consumed_hours_in_month ||= ProjectResultsRepository.instance.consumed_hours_in_month(self, date)
+    @consumed_hours_in_month ||= DemandsRepository.instance.delivered_hours_in_month_for_projects(projects, date)
   end
 
   def throughput_in_month(date = Time.zone.today)
-    ProjectResultsRepository.instance.upstream_throughput_in_month_for_company(self, date) + ProjectResultsRepository.instance.downstream_throughput_in_month_for_company(self, date)
+    DemandsRepository.instance.downstream_throughput_in_month_for_projects(projects, date) + DemandsRepository.instance.upstream_throughput_in_month_for_projects(projects, date)
   end
 
   def top_three_flow_pressure
     projects.running.sort_by(&:flow_pressure).reverse.first(3)
   end
 
-  def top_three_throughput
-    projects.sort_by { |project| project.total_throughput_for(1.week.ago.to_date) }.reverse.first(3)
+  def top_three_throughput(date = Time.zone.today)
+    projects.running.sort_by { |project| project.total_throughput_for(date) }.reverse.first(3)
   end
 
   def next_starting_project
@@ -113,10 +113,6 @@ class Company < ApplicationRecord
     total_available = 0
     teams.sum { |team| total_available += team.active_monthly_available_hours_for_billable_types(projects.pluck(:project_type).uniq) }
     total_available
-  end
-
-  def delivered_hours_for_month(month)
-    ProjectResultsRepository.instance.project_results_for_company_month(self, month).sum(&:project_delivered_hours)
   end
 
   private

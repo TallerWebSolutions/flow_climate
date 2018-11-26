@@ -5,13 +5,9 @@ RSpec.describe Highchart::FlowChartsAdapter, type: :data_object do
     before { travel_to Time.zone.local(2018, 4, 6, 10, 0, 0) }
     after { travel_back }
 
-    let(:first_project) { Fabricate :project, status: :executing, start_date: 2.weeks.ago, end_date: 1.week.from_now }
-    let(:second_project) { Fabricate :project, status: :waiting, start_date: 1.week.from_now, end_date: 2.weeks.from_now }
-    let(:third_project) { Fabricate :project, status: :maintenance, start_date: 2.weeks.from_now, end_date: 3.weeks.from_now }
-
-    let(:first_project_result) { Fabricate :project_result, project: first_project, result_date: 2.weeks.ago }
-    let(:second_project_result) { Fabricate :project_result, project: second_project, result_date: 1.week.ago }
-    let(:third_project_result) { Fabricate :project_result, project: second_project, result_date: 1.week.ago }
+    let(:first_project) { Fabricate :project, status: :executing, start_date: 2.weeks.ago, end_date: 1.week.from_now, qty_hours: 100 }
+    let(:second_project) { Fabricate :project, status: :waiting, start_date: 1.week.from_now, end_date: 2.weeks.from_now, qty_hours: 200 }
+    let(:third_project) { Fabricate :project, status: :maintenance, start_date: 2.weeks.from_now, end_date: 3.weeks.from_now, qty_hours: 300 }
 
     let!(:first_demand) { Fabricate :demand, project: first_project, end_date: 1.week.ago, downstream: false, effort_downstream: 111, effort_upstream: 1000 }
     let!(:second_demand) { Fabricate :demand, project: first_project, end_date: 1.week.ago, effort_downstream: 120, effort_upstream: 12 }
@@ -25,26 +21,14 @@ RSpec.describe Highchart::FlowChartsAdapter, type: :data_object do
     let!(:nineth_demand) { Fabricate :demand, project: second_project, commitment_date: 1.week.ago, effort_downstream: 32, effort_upstream: 332 }
     let!(:tenth_demand) { Fabricate :demand, project: third_project, commitment_date: 1.week.ago, effort_downstream: 76, effort_upstream: 12 }
 
-    let!(:out_date_processed_demand) { Fabricate :demand, project: third_project, end_date: 2.weeks.ago }
-    let!(:out_date_selected_demand) { Fabricate :demand, project: third_project, commitment_date: 2.weeks.ago }
+    let!(:out_date_processed_demand) { Fabricate :demand, project: third_project, end_date: Time.zone.today, effort_downstream: 32, effort_upstream: 332 }
+    let!(:out_date_selected_demand) { Fabricate :demand, project: third_project, commitment_date: 2.months.ago, effort_downstream: 7, effort_upstream: 221 }
 
     describe '.initialize' do
       let(:selected_demands) { DemandsRepository.instance.committed_demands_by_project_and_week(Project.all, 1.week.ago.to_date.cweek, 1.week.ago.to_date.cwyear).group_by(&:project) }
       let(:processed_demands) { DemandsRepository.instance.throughput_by_project_and_week(Project.all, 1.week.ago.to_date.cweek, 1.week.ago.to_date.cwyear).group_by(&:project) }
 
       it 'extracts the information of flow' do
-        first_project_result.add_demand!(first_demand)
-        first_project_result.add_demand!(second_demand)
-        second_project_result.add_demand!(third_demand)
-        second_project_result.add_demand!(fourth_demand)
-        third_project_result.add_demand!(fifth_demand)
-
-        first_project_result.add_demand!(sixth_demand)
-        second_project_result.add_demand!(seventh_demand)
-        first_project_result.add_demand!(eigth_demand)
-        second_project_result.add_demand!(nineth_demand)
-        third_project_result.add_demand!(tenth_demand)
-
         flow_data = Highchart::FlowChartsAdapter.new(Project.all, 1.week.ago.to_date.cweek, 1.week.ago.to_date.cwyear)
         expect(flow_data.projects_in_chart).to match_array [first_project, second_project, third_project]
         expect(flow_data.total_arrived).to match_array [2, 2, 1]
@@ -74,8 +58,8 @@ RSpec.describe Highchart::FlowChartsAdapter, type: :data_object do
 
         expect(flow_data.column_chart_data).to match_array([{ name: 'Total Entrada', data: [1, 2, 2], stack: 0, yaxis: 0 }, { name: 'Processadas no Downstream', data: [1, 2, 1], stack: 1, yaxis: 1 }, { name: 'Processadas no Upstream', data: [0, 0, 1], stack: 1, yaxis: 1 }])
 
-        expect(flow_data.x_axis_month_data).to eq [[2018.0, 3.0]]
-        expect(flow_data.hours_per_project_per_month).to eq [1708]
+        expect(flow_data.x_axis_month_data).to eq [[2018.0, 3.0], [2018.0, 4.0]]
+        expect(flow_data.hours_per_project_per_month).to eq [1708.0, 364.0]
       end
     end
   end

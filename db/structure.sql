@@ -22,6 +22,20 @@ CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
 COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
 
 
+--
+-- Name: pg_stat_statements; Type: EXTENSION; Schema: -; Owner: -
+--
+
+CREATE EXTENSION IF NOT EXISTS pg_stat_statements WITH SCHEMA public;
+
+
+--
+-- Name: EXTENSION pg_stat_statements; Type: COMMENT; Schema: -; Owner: -
+--
+
+COMMENT ON EXTENSION pg_stat_statements IS 'track execution statistics of all SQL statements executed';
+
+
 SET default_tablespace = '';
 
 SET default_with_oids = false;
@@ -233,7 +247,6 @@ ALTER SEQUENCE public.demand_transitions_id_seq OWNED BY public.demand_transitio
 
 CREATE TABLE public.demands (
     id bigint NOT NULL,
-    project_result_id integer,
     demand_id character varying NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
@@ -248,7 +261,6 @@ CREATE TABLE public.demands (
     assignees_count integer NOT NULL,
     effort_downstream numeric DEFAULT 0,
     effort_upstream numeric DEFAULT 0,
-    "decimal" numeric DEFAULT 0,
     leadtime numeric,
     downstream boolean DEFAULT true,
     manual_effort boolean DEFAULT false,
@@ -591,60 +603,6 @@ ALTER SEQUENCE public.project_jira_configs_id_seq OWNED BY public.project_jira_c
 
 
 --
--- Name: project_results; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.project_results (
-    id bigint NOT NULL,
-    project_id integer NOT NULL,
-    result_date date NOT NULL,
-    known_scope integer NOT NULL,
-    qty_hours_upstream numeric NOT NULL,
-    qty_hours_downstream numeric NOT NULL,
-    qty_bugs_opened integer NOT NULL,
-    qty_bugs_closed integer NOT NULL,
-    qty_hours_bug integer NOT NULL,
-    leadtime_95_confidence numeric,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
-    team_id integer NOT NULL,
-    monte_carlo_date date,
-    demands_count integer,
-    flow_pressure numeric NOT NULL,
-    remaining_days integer NOT NULL,
-    cost_in_month numeric NOT NULL,
-    average_demand_cost numeric NOT NULL,
-    available_hours numeric NOT NULL,
-    manual_input boolean DEFAULT false,
-    throughput_upstream integer DEFAULT 0,
-    throughput_downstream integer DEFAULT 0,
-    effort_share_in_month numeric,
-    leadtime_80_confidence numeric,
-    leadtime_60_confidence numeric,
-    leadtime_average numeric
-);
-
-
---
--- Name: project_results_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.project_results_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: project_results_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.project_results_id_seq OWNED BY public.project_results.id;
-
-
---
 -- Name: project_risk_alerts; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -711,6 +669,39 @@ CREATE SEQUENCE public.project_risk_configs_id_seq
 --
 
 ALTER SEQUENCE public.project_risk_configs_id_seq OWNED BY public.project_risk_configs.id;
+
+
+--
+-- Name: project_weekly_costs; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.project_weekly_costs (
+    id bigint NOT NULL,
+    project_id integer,
+    date_beggining_of_week date,
+    monthly_cost_value numeric,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: project_weekly_costs_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.project_weekly_costs_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: project_weekly_costs_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.project_weekly_costs_id_seq OWNED BY public.project_weekly_costs.id;
 
 
 --
@@ -1065,13 +1056,6 @@ ALTER TABLE ONLY public.project_jira_configs ALTER COLUMN id SET DEFAULT nextval
 
 
 --
--- Name: project_results id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.project_results ALTER COLUMN id SET DEFAULT nextval('public.project_results_id_seq'::regclass);
-
-
---
 -- Name: project_risk_alerts id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1083,6 +1067,13 @@ ALTER TABLE ONLY public.project_risk_alerts ALTER COLUMN id SET DEFAULT nextval(
 --
 
 ALTER TABLE ONLY public.project_risk_configs ALTER COLUMN id SET DEFAULT nextval('public.project_risk_configs_id_seq'::regclass);
+
+
+--
+-- Name: project_weekly_costs id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.project_weekly_costs ALTER COLUMN id SET DEFAULT nextval('public.project_weekly_costs_id_seq'::regclass);
 
 
 --
@@ -1256,14 +1247,6 @@ ALTER TABLE ONLY public.project_jira_configs
 
 
 --
--- Name: project_results project_results_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.project_results
-    ADD CONSTRAINT project_results_pkey PRIMARY KEY (id);
-
-
---
 -- Name: project_risk_alerts project_risk_alerts_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1277,6 +1260,14 @@ ALTER TABLE ONLY public.project_risk_alerts
 
 ALTER TABLE ONLY public.project_risk_configs
     ADD CONSTRAINT project_risk_configs_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: project_weekly_costs project_weekly_costs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.project_weekly_costs
+    ADD CONSTRAINT project_weekly_costs_pkey PRIMARY KEY (id);
 
 
 --
@@ -1413,13 +1404,6 @@ CREATE INDEX index_demands_on_discarded_at ON public.demands USING btree (discar
 
 
 --
--- Name: index_demands_on_project_result_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_demands_on_project_result_id ON public.demands USING btree (project_result_id);
-
-
---
 -- Name: index_financial_informations_on_company_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1553,13 +1537,6 @@ CREATE INDEX index_project_jira_configs_on_team_id ON public.project_jira_config
 
 
 --
--- Name: index_project_results_on_project_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_project_results_on_project_id ON public.project_results USING btree (project_id);
-
-
---
 -- Name: index_project_risk_alerts_on_project_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1571,6 +1548,13 @@ CREATE INDEX index_project_risk_alerts_on_project_id ON public.project_risk_aler
 --
 
 CREATE INDEX index_project_risk_alerts_on_project_risk_config_id ON public.project_risk_alerts USING btree (project_risk_config_id);
+
+
+--
+-- Name: index_project_weekly_costs_on_project_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_project_weekly_costs_on_project_id ON public.project_weekly_costs USING btree (project_id);
 
 
 --
@@ -1872,14 +1856,6 @@ ALTER TABLE ONLY public.products
 
 
 --
--- Name: project_results fk_rails_b11de7d28e; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.project_results
-    ADD CONSTRAINT fk_rails_b11de7d28e FOREIGN KEY (team_id) REFERENCES public.teams(id);
-
-
---
 -- Name: jira_accounts fk_rails_b16d2de302; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1912,14 +1888,6 @@ ALTER TABLE ONLY public.project_risk_alerts
 
 
 --
--- Name: project_results fk_rails_c3c9938173; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.project_results
-    ADD CONSTRAINT fk_rails_c3c9938173 FOREIGN KEY (project_id) REFERENCES public.projects(id);
-
-
---
 -- Name: demand_transitions fk_rails_c63024fc81; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1933,6 +1901,14 @@ ALTER TABLE ONLY public.demand_transitions
 
 ALTER TABLE ONLY public.teams
     ADD CONSTRAINT fk_rails_e080df8a94 FOREIGN KEY (company_id) REFERENCES public.companies(id);
+
+
+--
+-- Name: project_weekly_costs fk_rails_eafbb59099; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.project_weekly_costs
+    ADD CONSTRAINT fk_rails_eafbb59099 FOREIGN KEY (project_id) REFERENCES public.projects(id);
 
 
 --
@@ -2043,6 +2019,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20180822231503'),
 ('20180830205543'),
 ('20180915020210'),
-('20181008191022');
+('20181008191022'),
+('20181022220910');
 
 

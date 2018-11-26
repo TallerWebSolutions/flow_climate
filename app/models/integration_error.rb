@@ -26,7 +26,7 @@
 #
 
 class IntegrationError < ApplicationRecord
-  enum integration_type: { pipefy: 0 }
+  enum integration_type: { jira: 0 }
 
   belongs_to :company
   belongs_to :project

@@ -28,7 +28,6 @@ pt-BR:
       title: "Dados"
     current_week: "Semana Atual"
     current_year: "Ano Atual"
-    penultimate_week_scope: "Escopo Penúltima Semana"
     last_week_scope: "Escopo Última Semana"
     select: "Selecione"
     user_not_found: "Usuário não encontrado"
@@ -169,7 +168,6 @@ pt-BR:
       scope_growth: "Crescimento do Escopo (%)"
       scope_unit_growth: "Crescimento do Escopo (un.)"
       current_week_scope: "Escopo (atual)"
-      average_demand_cost: "Custo Médio por Demanda"
       cost_in_month: "Custo Mensal"
       deadline:
         title: "Negociações de Prazo"
@@ -312,20 +310,6 @@ pt-BR:
       risks: "Riscos"
       stages: "Etapas"
       jira: "Jira"
-  project_results:
-    index:
-      title: "Resultados do Projeto"
-      hours_per_demand_upstream: "Horas/Demanda no Upstream"
-      hours_per_demand_downstream: "Horas/Demanda no Downstream"
-    new:
-      title: "Novo Resultado de Projeto"
-    edit:
-      title: "Editar Resultado de Projeto"
-  operation_results:
-    index:
-      title: "Resultados da Operação"
-    new:
-      title: "Novo Resultado"
   teams:
     index:
       title: "Times"
@@ -390,11 +374,11 @@ pt-BR:
       title: "Editar Demanda"
     show:
       no_demand_blocks: "Não existem bloqueios na demanda"
-      sync_pipefy: "Sincronizar"
       no_demand_transitions: "Esta demanda não tem transições."
       last_update: "Última atualização: %{last_update_date}"
       progress_bars:
         streams: "Streams do Fluxo"
+      sync_jira: "Sincronizar Demanda"
     sync:
       enqueued: "Sua solicitação foi colocada na fila. Será processada em breve."
       done: "Sua sincronização foi realizada."
@@ -429,7 +413,6 @@ pt-BR:
       title: "Nova Configuração de Risco"
   navbar:
     details: "Detalhes"
-    project_results: "Resultados do Projeto"
     charts: "Gráficos"
     risk_alerts: "Alertas de Risco"
     settings: "Configurações"
@@ -490,25 +473,9 @@ pt-BR:
       title: "Situação Atual"
     demand:
       title: "demanda(s)"
-  pipefy_configs:
-    new:
-      title: "Nova Configuração do Pipefy"
-    index:
-      title: "Integrações com o Pipefy"
-    edit:
-      title: "Editar Configuração do Pipefy"
-  pipeconfigs:
-    new:
-      title: "Nova Configuração do Pipefy"
   finances_params:
     edit:
       title: "Editar Informação Financeira"
-  pipefy_team_config:
-    edit:
-      title: "Editar Config de Membro do Pipefy"
-  pipefy_team_configs:
-    index:
-      title: "Configurações de Time no Pipefy"
   stages:
     new:
       title: "Nova Etapa"

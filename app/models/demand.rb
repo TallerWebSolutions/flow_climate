@@ -22,7 +22,6 @@
 #  leadtime          :decimal(, )
 #  manual_effort     :boolean          default(FALSE)
 #  project_id        :integer          not null, indexed => [demand_id]
-#  project_result_id :integer          indexed
 #  total_queue_time  :integer          default(0)
 #  total_touch_time  :integer          default(0)
 #  updated_at        :datetime         not null
@@ -32,7 +31,6 @@
 #
 #  index_demands_on_demand_id_and_project_id  (demand_id,project_id) UNIQUE
 #  index_demands_on_discarded_at              (discarded_at)
-#  index_demands_on_project_result_id         (project_result_id)
 #
 # Foreign Keys
 #
@@ -46,7 +44,6 @@ class Demand < ApplicationRecord
   enum class_of_service: { standard: 0, expedite: 1, fixed_date: 2, intangible: 3 }
 
   belongs_to :project
-  belongs_to :project_result, counter_cache: true
   has_many :demand_transitions, dependent: :destroy
   has_many :demand_blocks, dependent: :destroy
   has_many :stages, -> { distinct }, through: :demand_transitions
@@ -54,21 +51,23 @@ class Demand < ApplicationRecord
   validates :project, :created_date, :demand_id, :demand_type, :class_of_service, :assignees_count, presence: true
   validates :demand_id, uniqueness: { scope: :project_id, message: I18n.t('demand.validations.demand_id_unique.message') }
 
-  scope :opened_in_date, ->(date) { where('created_date::timestamp::date = :date', date: date) }
-  scope :opened_after_date, ->(date) { where('created_date >= :date', date: date.beginning_of_day) }
-  scope :finished_in_stream, ->(stage_stream) { joins(demand_transitions: :stage).where('stages.end_point = true AND stages.stage_stream = :stage_stream', stage_stream: stage_stream).uniq }
-  scope :finished, -> { where('end_date IS NOT NULL') }
-  scope :finished_with_leadtime, -> { where('end_date IS NOT NULL AND leadtime IS NOT NULL') }
+  scope :opened_in_date, ->(date) { kept.where('created_date::timestamp::date = :date', date: date) }
+  scope :opened_after_date, ->(date) { kept.where('created_date >= :date', date: date.beginning_of_day) }
+  scope :finished_in_stream, ->(stage_stream) { kept.where('demands.downstream = :downstream', downstream: stage_stream == 'downstream') }
+  scope :finished, -> { kept.where('demands.end_date IS NOT NULL') }
+  scope :finished_with_leadtime, -> { kept.where('end_date IS NOT NULL AND leadtime IS NOT NULL') }
   scope :finished_until_date, ->(limit_date) { finished.where('demands.end_date <= :limit_date', limit_date: limit_date) }
   scope :finished_until_date_with_leadtime, ->(limit_date) { finished_with_leadtime.finished_until_date(limit_date) }
   scope :finished_after_date, ->(limit_date) { finished.where('demands.end_date >= :limit_date', limit_date: limit_date.beginning_of_day) }
   scope :finished_with_leadtime_after_date, ->(limit_date) { finished_with_leadtime.where('demands.end_date >= :limit_date', limit_date: limit_date.beginning_of_day) }
   scope :finished_bugs, -> { bug.finished }
-  scope :not_finished, -> { where('end_date IS NULL') }
-  scope :grouped_end_date_by_month, -> { finished.order(end_date: :desc).group_by { |demand| [demand.end_date.to_date.cwyear, demand.end_date.to_date.month] } }
-  scope :grouped_by_customer, -> { joins(project: :customer).order('customers.name').group_by { |demand| demand.project.customer.name } }
-  scope :upstream_flag, -> { where(downstream: false) }
-  scope :downstream_flag, -> { where(downstream: true) }
+  scope :finished_in_month, ->(month, year) { finished.where('EXTRACT(month FROM end_date) = :month AND EXTRACT(year FROM end_date) = :year', month: month, year: year) }
+  scope :finished_in_week, ->(week, year) { finished.where('EXTRACT(week FROM end_date) = :week AND EXTRACT(year FROM end_date) = :year', week: week, year: year) }
+  scope :not_finished, -> { kept.where('end_date IS NULL') }
+  scope :grouped_end_date_by_month, -> { kept.finished.order(end_date: :desc).group_by { |demand| [demand.end_date.to_date.cwyear, demand.end_date.to_date.month] } }
+  scope :grouped_by_customer, -> { kept.joins(project: :customer).order('customers.name').group_by { |demand| demand.project.customer.name } }
+  scope :upstream_flag, -> { kept.where(downstream: false) }
+  scope :downstream_flag, -> { kept.where(downstream: true) }
   scope :not_discarded_until_date, ->(limit_date) { where('demands.discarded_at IS NULL OR demands.discarded_at > :limit_date', limit_date: limit_date.end_of_day) }
 
   delegate :company, to: :project
@@ -97,11 +96,6 @@ class Demand < ApplicationRecord
     return if manual_effort? && !update_manual_effort
 
     update(effort_downstream: compute_effort_downstream, effort_upstream: compute_effort_upstream)
-  end
-
-  def update_created_date!
-    create_transition = demand_transitions.order(:last_time_in).first
-    update(created_date: create_transition.last_time_in)
   end
 
   def result_date

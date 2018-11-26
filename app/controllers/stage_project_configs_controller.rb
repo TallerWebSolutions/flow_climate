@@ -21,13 +21,7 @@ class StageProjectConfigsController < AuthenticatedController
     stage = @stage_project_config.stage
     transitions = stage.demand_transitions.joins(demand: :project).where('demands.project_id = :project_id', project_id: project.id)
     demands = transitions.map(&:demand).flatten.uniq
-    update_demands_and_results_efforts(demands)
-  end
-
-  def update_demands_and_results_efforts(demands)
     demands.map { |demand| demand.update_effort!(params['recompute_manual_efforts'] == '1') }
-    project_results = demands.map(&:project_result).flatten.uniq.compact
-    project_results.sort_by(&:result_date).map(&:compute_flow_metrics!)
   end
 
   def replicate_to_other_projects

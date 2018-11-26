@@ -3,19 +3,19 @@
 RSpec.describe DemandBlocksController, type: :controller do
   context 'unauthenticated' do
     describe 'PATCH #activate' do
-      before { patch :activate, params: { company_id: 'xpto', project_id: 'bar', project_result_id: 'bla', demand_id: 'foo', id: 'sbbrubles' } }
+      before { patch :activate, params: { company_id: 'xpto', project_id: 'bar', demand_id: 'foo', id: 'sbbrubles' } }
       it { expect(response).to redirect_to new_user_session_path }
     end
     describe 'PATCH #deactivate' do
-      before { patch :deactivate, params: { company_id: 'xpto', project_id: 'bar', project_result_id: 'bla', demand_id: 'foo', id: 'sbbrubles' } }
+      before { patch :deactivate, params: { company_id: 'xpto', project_id: 'bar', demand_id: 'foo', id: 'sbbrubles' } }
       it { expect(response).to redirect_to new_user_session_path }
     end
     describe 'GET #edit' do
-      before { get :edit, params: { company_id: 'xpto', project_id: 'bar', project_result_id: 'bla', demand_id: 'foo', id: 'sbbrubles' } }
+      before { get :edit, params: { company_id: 'xpto', project_id: 'bar', demand_id: 'foo', id: 'sbbrubles' } }
       it { expect(response).to redirect_to new_user_session_path }
     end
     describe 'PUT #update' do
-      before { put :update, params: { company_id: 'xpto', project_id: 'bar', project_result_id: 'bla', demand_id: 'foo', id: 'sbbrubles' } }
+      before { put :update, params: { company_id: 'xpto', project_id: 'bar', demand_id: 'foo', id: 'sbbrubles' } }
       it { expect(response).to redirect_to new_user_session_path }
     end
     describe 'GET #index' do

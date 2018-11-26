@@ -9,7 +9,6 @@ AllCops:
     - 'Gemfile.lock'
     - !ruby/regexp /old_and_unused\.rb$/
     - 'app/helpers/**/*'
-    - 'lib/tasks/seed.rake'
     - 'lib/tasks/migrate_current_projects_to_jira.rake'
     - 'config/environments/**/*'
 
@@ -46,8 +45,6 @@ Metrics/BlockLength:
 Metrics/ClassLength:
   Exclude:
     - 'app/models/project.rb'
-    - 'app/repositories/project_results_repository.rb'
-    - 'app/adapters/pipefy/pipefy_card_adapter.rb'
     - 'app/adapters/highchart/operational_charts_adapter.rb'
     - 'app/adapters/highchart/status_report_charts_adapter.rb'
     - 'app/adapters/highchart/finances_charts_adapter.rb'

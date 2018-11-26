@@ -7,6 +7,7 @@ class UserNotifierMailer < ApplicationMailer
     @company = company
     assign_project_informations(company)
     emails = users.to_notify_email.pluck(:email)
+    @demands_delivered_last_week = Demand.kept.where('EXTRACT(week FROM end_date) = :week AND EXTRACT(year FROM end_date) = :year', week: 1.week.ago.to_date.cweek, year: 1.week.ago.to_date.cwyear)
     Rails.logger.info("Notifying users #{emails}")
     mail(to: emails, subject: t('projects.portfolio_bulletin.subject'))
   end

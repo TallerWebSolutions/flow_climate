@@ -8,7 +8,6 @@ RSpec.describe Demand, type: :model do
 
   context 'associations' do
     it { is_expected.to belong_to :project }
-    it { is_expected.to belong_to :project_result }
     it { is_expected.to have_many(:demand_transitions).dependent(:destroy) }
     it { is_expected.to have_many(:demand_blocks).dependent(:destroy) }
   end
@@ -153,6 +152,32 @@ RSpec.describe Demand, type: :model do
       let!(:fourth_demand) { Fabricate :demand, discarded_at: Time.zone.now }
 
       it { expect(Demand.not_discarded_until_date(1.week.ago)).to match_array [third_demand, fourth_demand] }
+    end
+
+    describe '.finished_in_month' do
+      before { travel_to Date.new(2018, 10, 23) }
+      after { travel_back }
+      let(:first_demand) { Fabricate :demand, end_date: 2.months.ago }
+      let(:second_demand) { Fabricate :demand, end_date: 1.month.ago }
+      let(:third_demand) { Fabricate :demand, end_date: 1.month.ago }
+      let(:fourth_demand) { Fabricate :demand, end_date: Time.zone.today }
+
+      it { expect(Demand.finished_in_month(2.months.ago.to_date.month, 2.months.ago.to_date.year)).to eq [first_demand] }
+      it { expect(Demand.finished_in_month(1.month.ago.to_date.month, 1.month.ago.to_date.year)).to match_array [second_demand, third_demand] }
+      it { expect(Demand.finished_in_month(Time.zone.today.to_date.month, Time.zone.today.to_date.year)).to eq [fourth_demand] }
+    end
+
+    describe '.finished_in_week' do
+      before { travel_to Date.new(2018, 10, 23) }
+      after { travel_back }
+      let(:first_demand) { Fabricate :demand, end_date: 2.weeks.ago }
+      let(:second_demand) { Fabricate :demand, end_date: 1.week.ago }
+      let(:third_demand) { Fabricate :demand, end_date: 1.week.ago }
+      let(:fourth_demand) { Fabricate :demand, end_date: Time.zone.today }
+
+      it { expect(Demand.finished_in_week(2.weeks.ago.to_date.cweek, 2.weeks.ago.to_date.cwyear)).to eq [first_demand] }
+      it { expect(Demand.finished_in_week(1.week.ago.to_date.cweek, 1.week.ago.to_date.cwyear)).to match_array [second_demand, third_demand] }
+      it { expect(Demand.finished_in_week(Time.zone.today.to_date.cweek, Time.zone.today.to_date.cwyear)).to eq [fourth_demand] }
     end
   end
 
