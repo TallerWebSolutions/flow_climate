@@ -156,6 +156,12 @@ class Demand < ApplicationRecord
     update(commitment_date: nil) if current_stage&.before_commitment_point?
   end
 
+  def leadtime_in_days
+    return 0.0 if leadtime.blank?
+
+    leadtime / 86_400
+  end
+
   private
 
   def decimal_value_to_csv(value)

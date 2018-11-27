@@ -35,18 +35,11 @@ module Highchart
 
         throughput_total = upstream_throughput + downstream_throughput
 
-        if throughput_total.zero? || upstream_keys_matching.blank? || downstream_keys_matching.blank?
-          chart_data << 0
-        else
-          hours_for_week_upstream_data = upstream_operational_data_for_week(upstream_keys_matching, :total_effort_upstream)
-          hours_for_week_downstream_data = downstream_operational_data_for_week(upstream_keys_matching, :total_effort_upstream) + downstream_operational_data_for_week(upstream_keys_matching, :total_effort_downstream)
-
-          hours_of_effort_total = hours_for_week_upstream_data + hours_for_week_downstream_data
-
-          hours_per_demand = hours_of_effort_total.to_f / throughput_total.to_f
-
-          chart_data << hours_per_demand
-        end
+        chart_data << if throughput_total.zero? || upstream_keys_matching.blank? || downstream_keys_matching.blank?
+                        0
+                      else
+                        compute_hour_per_demand(throughput_total, upstream_keys_matching)
+                      end
       end
 
       chart_data
@@ -77,6 +70,15 @@ module Highchart
     end
 
     private
+
+    def compute_hour_per_demand(throughput_total, upstream_keys_matching)
+      hours_for_week_upstream_data = upstream_operational_data_for_week(upstream_keys_matching, :total_effort_upstream)
+      hours_for_week_downstream_data = downstream_operational_data_for_week(upstream_keys_matching, :total_effort_upstream) + downstream_operational_data_for_week(upstream_keys_matching, :total_effort_downstream)
+
+      hours_of_effort_total = hours_for_week_upstream_data + hours_for_week_downstream_data
+
+      hours_of_effort_total.to_f / throughput_total.to_f
+    end
 
     def group_all_keys(grouped_hours_to_downstream, grouped_hours_to_upstream)
       grouped_hours_to_upstream.keys | grouped_hours_to_downstream.keys
@@ -132,10 +134,10 @@ module Highchart
     def build_lead_time_control_chart
       @lead_time_control_chart = {}
       @lead_time_control_chart[:xcategories] = finished_demands_with_leadtime.map(&:demand_id)
-      @lead_time_control_chart[:dispersion_source] = finished_demands_with_leadtime.map { |demand| [demand.demand_id, (demand.leadtime / 86_400).to_f] }
-      @lead_time_control_chart[:percentile_95_data] = Stats::StatisticsService.instance.percentile(95, demand_data).to_f
-      @lead_time_control_chart[:percentile_80_data] = Stats::StatisticsService.instance.percentile(80, demand_data).to_f
-      @lead_time_control_chart[:percentile_60_data] = Stats::StatisticsService.instance.percentile(60, demand_data).to_f
+      @lead_time_control_chart[:dispersion_source] = finished_demands_with_leadtime.map { |demand| [demand.demand_id, demand.leadtime_in_days.to_f] }
+      @lead_time_control_chart[:percentile_95_data] = Stats::StatisticsService.instance.percentile(95, demand_data)
+      @lead_time_control_chart[:percentile_80_data] = Stats::StatisticsService.instance.percentile(80, demand_data)
+      @lead_time_control_chart[:percentile_60_data] = Stats::StatisticsService.instance.percentile(60, demand_data)
     end
 
     def build_leadtime_percentiles_on_time
@@ -206,8 +208,8 @@ module Highchart
     end
 
     def build_leadtime_histogram
-      histogram_data = Stats::StatisticsService.instance.leadtime_histogram_hash(finished_demands_with_leadtime.map(&:leadtime).flatten)
-      @leadtime_bins = histogram_data.keys.map { |leadtime| "#{(leadtime / 86_400).round(2)} #{I18n.t('projects.charts.xlabel.days')}" }
+      histogram_data = Stats::StatisticsService.instance.leadtime_histogram_hash(finished_demands_with_leadtime.map(&:leadtime_in_days).flatten)
+      @leadtime_bins = histogram_data.keys.map { |leadtime| "#{leadtime.round(2)} #{I18n.t('projects.charts.xlabel.days')}" }
       @leadtime_histogram_data = histogram_data.values
     end
 
@@ -218,7 +220,7 @@ module Highchart
     end
 
     def demand_data
-      @demand_data ||= finished_demands_with_leadtime.map { |demand| (demand.leadtime / 86_400).to_f }
+      @demand_data ||= finished_demands_with_leadtime.map { |demand| demand.leadtime_in_days.to_f }
     end
 
     def finished_demands_with_leadtime

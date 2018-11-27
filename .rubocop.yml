@@ -44,10 +44,11 @@ Metrics/BlockLength:
 
 Metrics/ClassLength:
   Exclude:
-    - 'app/models/project.rb'
     - 'app/adapters/highchart/operational_charts_adapter.rb'
     - 'app/adapters/highchart/status_report_charts_adapter.rb'
     - 'app/adapters/highchart/finances_charts_adapter.rb'
+    - 'app/repositories/demands_repository.rb'
+    - 'app/models/project.rb'
     - 'app/models/demand.rb'
     - 'app/controllers/projects_controller.rb'
 

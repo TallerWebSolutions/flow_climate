@@ -576,9 +576,12 @@ RSpec.describe Project, type: :model do
   end
 
   describe '#required_hours' do
+    before { travel_to Time.zone.local(2018, 11, 19, 10, 0, 0) }
+    after { travel_back }
+
     context 'having data' do
       include_context 'demands with effort'
-      it { expect(project.required_hours).to eq 2499.2000000000003 }
+      it { expect(project.required_hours).to eq 2464.0 }
     end
     context 'having no data' do
       let!(:project) { Fabricate :project, end_date: 4.weeks.from_now, initial_scope: 30 }

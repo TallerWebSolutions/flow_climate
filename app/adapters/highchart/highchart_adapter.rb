@@ -13,8 +13,8 @@ module Highchart
       @active_projects_demands_ids = @active_projects.map(&:kept_demands_ids).flatten
       build_all_projects_periods
       build_active_projects_periods
-      @upstream_operational_weekly_data = DemandsRepository.instance.operational_data_per_week_to_projects(@all_projects, false, charts_data_bottom_limit_date)
-      @downstream_operational_weekly_data = DemandsRepository.instance.operational_data_per_week_to_projects(@all_projects, true, charts_data_bottom_limit_date)
+      @upstream_operational_weekly_data = DemandsRepository.instance.operational_data_per_week_to_projects(@all_projects.map(&:id), false, charts_data_bottom_limit_date)
+      @downstream_operational_weekly_data = DemandsRepository.instance.operational_data_per_week_to_projects(@all_projects.map(&:id), true, charts_data_bottom_limit_date)
     end
 
     private

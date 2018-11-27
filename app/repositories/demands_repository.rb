@@ -106,36 +106,31 @@ class DemandsRepository
     demands_for_projects_finished_in_month(projects, date).finished_in_stream('downstream')
   end
 
-  def operational_data_per_week_to_projects(projects, downstream, date = Time.zone.today)
+  def operational_data_per_week_to_projects(projects_ids, downstream, date = Time.zone.today)
     operational_weekly_data = {}
 
-    Demand.kept
-          .select('EXTRACT(YEAR from end_date) AS year, ' \
-                      'EXTRACT(WEEK from end_date) AS week, ' \
-                      'SUM(effort_downstream) AS total_effort_downstream, ' \
-                      'SUM(effort_upstream) AS total_effort_upstream, ' \
-                      'COUNT(1) AS throughput, ' \
-                      'SUM(total_queue_time) AS sum_total_queue_time, '\
-                      'SUM(total_touch_time) AS sum_total_touch_time')
-          .where(downstream: downstream)
-          .where(project_id: projects.map(&:id))
-          .where('end_date >= :limit_date', limit_date: date)
-          .order('year, week')
-          .group('year, week')
-          .map do |operational_data_to_week|
-            operational_weekly_data[Date.commercial(operational_data_to_week.year, operational_data_to_week.week, 1)] = {
-              total_effort_upstream: operational_data_to_week.total_effort_upstream.to_f,
-              total_effort_downstream: operational_data_to_week.total_effort_downstream.to_f,
-              throughput: operational_data_to_week.throughput,
-              total_queue_time: operational_data_to_week.sum_total_queue_time.to_f,
-              total_touch_time: operational_data_to_week.sum_total_queue_time.to_f
-            }
-          end
+    base_query_to_operational_data(date, downstream, projects_ids)
+      .map do |operational_data_to_week|
+      operational_weekly_data[Date.commercial(operational_data_to_week.year, operational_data_to_week.week, 1)] = {
+        total_effort_upstream: operational_data_to_week.total_effort_upstream.to_f,
+        total_effort_downstream: operational_data_to_week.total_effort_downstream.to_f,
+        throughput: operational_data_to_week.throughput,
+        total_queue_time: operational_data_to_week.sum_total_queue_time.to_f,
+        total_touch_time: operational_data_to_week.sum_total_queue_time.to_f
+      }
+    end
 
     operational_weekly_data
   end
 
   private
+
+  def base_query_to_operational_data(date, downstream, projects_ids)
+    Demand.kept.select('EXTRACT(YEAR from end_date) AS year, EXTRACT(WEEK from end_date) AS week, SUM(effort_downstream) AS total_effort_downstream, SUM(effort_upstream) AS total_effort_upstream, COUNT(1) AS throughput, SUM(total_queue_time) AS sum_total_queue_time, SUM(total_touch_time) AS sum_total_touch_time')
+          .where(downstream: downstream, project_id: projects_ids)
+          .where('end_date >= :limit_date', limit_date: date)
+          .order('year, week').group('year, week')
+  end
 
   def demands_for_projects_finished_in_month(projects, date)
     Demand.where(project_id: projects).where('EXTRACT(MONTH FROM end_date) = :month AND EXTRACT(YEAR FROM end_date) = :year', month: date.month, year: date.year)

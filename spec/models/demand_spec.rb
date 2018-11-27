@@ -741,4 +741,15 @@ RSpec.describe Demand, type: :model do
       it { expect(demand.csv_array).to eq [demand.id, stage.name, demand.demand_id, demand.demand_type, demand.class_of_service, demand.effort_downstream.to_f.to_s.gsub('.', I18n.t('number.format.separator')), demand.effort_upstream.to_f.to_s.gsub('.', I18n.t('number.format.separator')), demand.created_date&.iso8601, demand.commitment_date&.iso8601, nil] }
     end
   end
+
+  describe '#leadtime_in_days' do
+    context 'having leadtime' do
+      let!(:demand) { Fabricate :demand, leadtime: 453_223 }
+      it { expect(demand.leadtime_in_days.to_f).to eq 5.245636574074074 }
+    end
+    context 'having no leadtime' do
+      let!(:demand) { Fabricate :demand, leadtime: nil }
+      it { expect(demand.leadtime_in_days.to_f).to eq 0 }
+    end
+  end
 end

@@ -49,6 +49,9 @@ RSpec.describe Highchart::OperationalChartsAdapter, type: :data_object do
     let!(:eigth_transition) { Fabricate :demand_transition, stage: touch_ongoing_stage, demand: sixth_demand, last_time_in: Time.zone.iso8601('2018-03-30T17:09:58-03:00'), last_time_out: Time.zone.iso8601('2018-04-04T17:09:58-03:00') }
 
     describe '.initialize' do
+      before { travel_to Date.new(2018, 11, 19) }
+      after { travel_back }
+
       context 'having projects' do
         context 'and filtering by all periods' do
           subject(:report_data) { Highchart::OperationalChartsAdapter.new(Project.all, 'all') }
@@ -64,14 +67,14 @@ RSpec.describe Highchart::OperationalChartsAdapter, type: :data_object do
             expect(report_data.flow_pressure_data).to eq [0.24959890766342377, 0.25747141150366953, 0.26293004657059954, 0.27047795820837295, 0.2841974926171185, 0.30247540274572593, 0.3329607760496245, 0.38589196109470353, 0.5079180747649569, 0.47299928316147705, 0.45164436997363716, 0.45368987882504036]
             expect(report_data.throughput_per_week).to eq([{ name: I18n.t('projects.charts.throughput_per_week.stage_stream.upstream'), data: [0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0] }, { name: I18n.t('projects.charts.throughput_per_week.stage_stream.downstream'), data: [1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 5, 0] }])
             expect(report_data.effort_hours_per_month).to eq(keys: [[2018.0, 2.0], [2018.0, 3.0], [2018.0, 5.0]], data: { upstream: [0.0, 0.0, 224.0], downstream: [39.6, 0.0, 284.8] })
-            expect(report_data.lead_time_control_chart[:dispersion_source]).to match_array [[fourth_demand.demand_id, (fourth_demand.leadtime / 86_400).to_f], [second_demand.demand_id, (second_demand.leadtime / 86_400).to_f], [first_demand.demand_id, (first_demand.leadtime / 86_400).to_f], [fifth_demand.demand_id, (fifth_demand.leadtime / 86_400).to_f], [third_demand.demand_id, (third_demand.leadtime / 86_400).to_f], [sixth_demand.demand_id, (sixth_demand.leadtime / 86_400).to_f], [first_bug.demand_id, (first_bug.leadtime / 86_400).to_f], [second_bug.demand_id, (second_bug.leadtime / 86_400).to_f], [third_bug.demand_id, (third_bug.leadtime / 86_400).to_f], [fourth_bug.demand_id, (fourth_bug.leadtime / 86_400).to_f]]
+            expect(report_data.lead_time_control_chart[:dispersion_source]).to match_array [[fourth_demand.demand_id, fourth_demand.leadtime_in_days.to_f], [second_demand.demand_id, (second_demand.leadtime / 86_400).to_f], [first_demand.demand_id, (first_demand.leadtime / 86_400).to_f], [fifth_demand.demand_id, (fifth_demand.leadtime / 86_400).to_f], [third_demand.demand_id, (third_demand.leadtime / 86_400).to_f], [sixth_demand.demand_id, (sixth_demand.leadtime / 86_400).to_f], [first_bug.demand_id, (first_bug.leadtime / 86_400).to_f], [second_bug.demand_id, (second_bug.leadtime / 86_400).to_f], [third_bug.demand_id, (third_bug.leadtime / 86_400).to_f], [fourth_bug.demand_id, (fourth_bug.leadtime / 86_400).to_f]]
             expect(report_data.lead_time_control_chart[:percentile_95_data]).to eq 4.0
             expect(report_data.lead_time_control_chart[:percentile_80_data]).to eq 4.0
             expect(report_data.lead_time_control_chart[:percentile_60_data]).to eq 4.0
             expect(report_data.leadtime_percentiles_on_time[:xcategories]).to eq [Date.new(2018, 2, 19), Date.new(2018, 2, 26), Date.new(2018, 3, 5), Date.new(2018, 3, 12), Date.new(2018, 3, 19), Date.new(2018, 3, 26), Date.new(2018, 4, 2), Date.new(2018, 4, 9), Date.new(2018, 4, 16), Date.new(2018, 4, 23), Date.new(2018, 4, 30), Date.new(2018, 5, 7)]
             expect(report_data.leadtime_percentiles_on_time[:leadtime_80_confidence]).to eq [0.0, 259_200.0, 241_920.0, 241_920.0, 311_040.0, 276_480.0, 276_480.0, 276_480.0, 276_480.0, 276_480.0, 276_480.0, 345_600.0]
             expect(report_data.leadtime_bins).to eq ['1.5 Dias', '2.5 Dias', '3.5 Dias']
-            expect(report_data.leadtime_histogram_data).to eq [3.0, 1.0, 6.0]
+            expect(report_data.leadtime_histogram_data).to eq [2.0, 1.0, 7.0]
             expect(report_data.throughput_bins).to eq ['0.83 demanda(s)', '2.5 demanda(s)', '4.17 demanda(s)']
             expect(report_data.throughput_histogram_data).to eq [10.0, 1.0, 1.0]
             expect(report_data.weeekly_bugs_count_hash).to eq(dates_array: %w[2018-02-19 2018-02-26 2018-03-05 2018-03-12 2018-03-19 2018-03-26 2018-04-02 2018-04-09 2018-04-16 2018-04-23 2018-04-30 2018-05-07], bugs_opened_count_array: [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4], bugs_closed_count_array: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4])
