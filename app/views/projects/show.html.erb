@@ -17,7 +17,6 @@
 <div class="row">
   <div class="topnav">
     <%= link_to t('navbar.details'), '#', id: 'nav-item-stamps', class: 'nav-item active', data: { container: '#stamps' } %>
-    <%= link_to t('navbar.project_results'), '#', id: 'nav-item-results', class: 'nav-item', data: { container: '#project-results' } %>
     <%= link_to t('navbar.demands'), '#', id: 'nav-item-delivered', class: 'nav-item', data: { container: '#demands-list' } %>
     <%= link_to t('projects.show.deadline.title'), '#', id: 'nav-item-deadline', class: 'nav-item', data: { container: '#deadline-change' } %>
     <%= link_to t('navbar.charts'), '#', id: 'nav-item-charts', class: 'nav-item', data: { container: '#operational-charts' } %>
@@ -31,10 +30,6 @@
 
 <div id="stamps" class="tab-container">
   <%= render 'project_stamps', project: @project %>
-</div>
-
-<div id="project-results" class="tab-container">
-  <%= render 'project_results/projects_results_table', project: @project, project_results: @ordered_project_results  %>
 </div>
 
 <div id="demands-list" class="tab-container">

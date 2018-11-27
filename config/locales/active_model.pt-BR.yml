@@ -75,9 +75,6 @@ pt-BR:
       project:
         one: Projeto
         other: Projetos
-      project_result:
-        one: Resultado de Projeto
-        other: Resultados de Projeto
       project_risk_config:
         one: Configuração de Risco
         other: Configurações de Risco
@@ -96,9 +93,6 @@ pt-BR:
       company_settings:
         one: Configurações da Empresa
         other: Configurações da Empresa
-      pipefy/pipefy_config:
-        one: Configuração do Pipefy
-        other: Configurações do Pipefy
       stage:
         one: Etapa
         other: Etapas
@@ -108,9 +102,6 @@ pt-BR:
       demand_block:
         one: Bloqueio da Demanda
         other: Bloqueios da Demanda
-      pipefy/pipefy_team_config:
-        one: Configuração de Time no Pipefy
-        other: Configurações de Time no Pipefy
       project_change_deadline_history:
         one: Neogicação de Prazo
         other: Negociações de Prazo
@@ -162,7 +153,6 @@ pt-BR:
       project:
         customer: Cliente
         product: Produto
-        project_results: Resultados de Projeto
         name: Nome
         qty_hours: Qtd de Horas
         value: Valor do Projeto
@@ -189,36 +179,6 @@ pt-BR:
             consulting: Consultoria
             training: Treinamento
             domestic_product: Produto Interno
-      project_result:
-        team: Time
-        known_scope: Escopo Conhecido
-        result_date: Data
-        qty_hours_upstream: Horas no Upstream
-        qty_hours_downstream: Horas no Downstream
-        qty_hours_total: Horas (total)
-        throughput: Throughput
-        qty_bugs_opened: Bugs Abertos
-        qty_bugs_closed: Bugs Fechados
-        qty_hours_bug: Horas em Bugs
-        leadtime: Leadtime
-        monte_carlo_date: Previsão Monte Carlo
-        demands_count: Qtd de Demandas
-        flow_pressure: Pressão do Fluxo
-        remaining_days: Dias Restantes
-        cost_in_month: Custo no Mês
-        available_hours: Horas Disponíveis
-        throughput_upstream: Throughput no Upstream
-        throughput_downstream: Throughput no Downstream
-        average_demand_cost: Custo Médio por Demanda
-      operation_result:
-        result_date: Data
-        people_billable_count: Qtd de Pessoas Faturáveis
-        operation_week_value: Valor da Operação na Semana
-        available_hours: Horas Disponíveis
-        delivered_hours: Horas Consumidas
-        total_th: Throughput Total
-        total_opened_bugs: Bugs Abertos
-        total_accumulated_closed_bugs: Acumulado de Bugs Fechados
       team:
         name: Nome
         company: Empresa
@@ -275,10 +235,6 @@ pt-BR:
       company_settings:
         max_active_parallel_projects: Qtd Máxima de Projetos Paralelos Ativos
         max_flow_pressure: Máxima Pressão Geral do Fluxo
-      pipefy/pipefy_config:
-        pipe_id: Id do Pipe
-        project: Projeto
-        team: Time
       stage:
         projects: Projetos
         demand_transitions: Transições de Demanda
@@ -328,17 +284,6 @@ pt-BR:
             customer_low_urgency: Urgência Baixa do Cliente
             integration_needed: Integração Necessária
             customer_unavailable: Cliente Indisponível
-      pipefy/pipefy_team_config:
-        team: Time
-        integration_id: Id na Integração
-        username: Nome do Usuário
-        member_type: Tipo de Membro
-        enums:
-          member_type:
-            developer: Desenvolvedor
-            analyst: Analista
-            designer: Designer
-            customer: Cliente
       project_change_deadline_history:
         project: Projeto
         user: Usuário
@@ -369,13 +314,6 @@ pt-BR:
   customer:
     name:
       uniqueness: "Não deve repetir nome de cliente para a mesma empresa."
-  project_result:
-    validations:
-      result_date_less_than_project_start_date: "A data do resultado deve ser maior ou igual a data de início do projeto."
-      result_date_greater_than_project_start_date: "A data do resultado deve ser menor ou igual a data final do projeto."
-  projects:
-    portfolio_bulletin:
-      top_three_throughput: "Top 3 Throughput"
   stage_project_config:
     validations:
       stage_project_unique:

@@ -9,7 +9,6 @@ class TeamsController < AuthenticatedController
     @team_projects = ProjectsRepository.instance.all_projects_for_team(@team)
     @active_team_projects = @team_projects.active
     @projects_summary = ProjectsSummaryData.new(@team.projects)
-    @pipefy_team_configs = @team.pipefy_team_configs.order(:username)
     @projects_risk_chart_data = Highchart::ProjectRiskChartsAdapter.new(@team.projects)
     assign_chart_informations
   end

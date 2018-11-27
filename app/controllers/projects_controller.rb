@@ -7,7 +7,6 @@ class ProjectsController < AuthenticatedController
   before_action :assign_project, only: %i[show edit update destroy synchronize_jira finish_project statistics copy_stages_from]
 
   def show
-    @ordered_project_results = @project.project_results.order(:result_date)
     @ordered_project_risk_alerts = @project.project_risk_alerts.order(created_at: :desc)
     @project_change_deadline_histories = @project.project_change_deadline_histories
     @project_stages = @project.stages.order(:order, :name)
@@ -38,9 +37,7 @@ class ProjectsController < AuthenticatedController
 
   def update
     check_change_in_deadline!
-    previous_scope_value = @project.initial_scope
     @project.update(project_params.merge(customer: @customer, product: @product))
-    check_change_in_initial_scope!(previous_scope_value)
     return redirect_to company_project_path(@company, @project) if @project.save
 
     assign_products_list
@@ -120,11 +117,5 @@ class ProjectsController < AuthenticatedController
     return if project_params[:end_date].blank? || @project.end_date == Date.parse(project_params[:end_date])
 
     ProjectChangeDeadlineHistory.create!(user: current_user, project: @project, previous_date: @project.end_date, new_date: project_params[:end_date])
-  end
-
-  def check_change_in_initial_scope!(previous_scope_param)
-    return if project_params[:initial_scope].blank? || previous_scope_param == project_params[:initial_scope].to_i
-
-    @project.project_results.order(:result_date).map(&:compute_flow_metrics!)
   end
 end

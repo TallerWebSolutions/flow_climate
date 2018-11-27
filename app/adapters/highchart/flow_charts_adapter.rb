@@ -11,7 +11,7 @@ module Highchart
       @total_processed_upstream = []
       @total_processed_downstream = []
 
-      assign_grouped_throughput_raw_data(projects, week, year)
+      define_project_in_chart_data(projects, week, year)
       build_processing_rate_data
       group_wip_data(projects, week, year)
       assign_grouped_hours_per_month_raw_data(projects)
@@ -19,7 +19,7 @@ module Highchart
 
     private
 
-    def assign_grouped_throughput_raw_data(projects, week, year)
+    def define_project_in_chart_data(projects, week, year)
       @projects_demands_selected = DemandsRepository.instance.committed_demands_by_project_and_week(projects, week, year).group_by(&:project)
       @projects_demands_processed = DemandsRepository.instance.throughput_by_project_and_week(projects, week, year).group_by(&:project)
 
@@ -28,8 +28,11 @@ module Highchart
     end
 
     def assign_grouped_hours_per_month_raw_data(projects)
-      upstream_hours_per_project_per_month = ProjectResultsRepository.instance.sum_field_in_grouped_by_month_project_results(projects, :qty_hours_upstream)
-      downstream_hours_per_project_per_month = ProjectResultsRepository.instance.sum_field_in_grouped_by_month_project_results(projects, :qty_hours_downstream)
+      limit_date = projects.minimum(:start_date)
+
+      upstream_hours_per_project_per_month = DemandsRepository.instance.grouped_by_effort_upstream_per_month(projects, limit_date)
+      downstream_hours_per_project_per_month = DemandsRepository.instance.grouped_by_effort_downstream_per_month(projects, limit_date)
+
       merged_grouped_values = upstream_hours_per_project_per_month.merge(downstream_hours_per_project_per_month) { |_index, upstream, downstream| upstream + downstream }
       @x_axis_month_data = merged_grouped_values.keys
       @hours_per_project_per_month = merged_grouped_values.values.map(&:to_f)

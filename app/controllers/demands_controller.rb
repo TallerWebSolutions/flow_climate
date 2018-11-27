@@ -6,19 +6,18 @@ class DemandsController < AuthenticatedController
   before_action :assign_demand, only: %i[edit update show synchronize_jira destroy]
 
   def new
-    @demand = Demand.new(project: @project, project_result: @project_result)
+    @demand = Demand.new(project: @project)
   end
 
   def create
     @demand = Demand.new(demand_params.merge(project: @project))
     return render :new unless @demand.save
 
-    ComputeDemandUpdateJob.perform_later(@project.current_team.id, @demand.id) if @demand.valid?
     redirect_to company_project_demand_path(@company, @project, @demand)
   end
 
   def destroy
-    DemandsRepository.instance.full_demand_destroy!(@demand)
+    @demand.discard
     render 'demands/destroy.js.erb'
   end
 
@@ -28,7 +27,6 @@ class DemandsController < AuthenticatedController
 
   def update
     @demand.update(demand_params)
-    ComputeDemandUpdateJob.perform_later(@project.current_team.id, @demand.id) if @demand.valid?
     render 'demands/update'
   end
 

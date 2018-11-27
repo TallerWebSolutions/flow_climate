@@ -4,7 +4,7 @@ class AddUpstreamEffortToDemand < ActiveRecord::Migration[5.1]
   def up
     change_table :demands, bulk: true do |t|
       t.decimal :effort_downstream, default: 0
-      t.decimal :effort_upstream, :decimal, default: 0
+      t.decimal :effort_upstream, default: 0
 
       t.remove :effort
     end

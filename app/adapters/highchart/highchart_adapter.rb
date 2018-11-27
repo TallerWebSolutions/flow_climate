@@ -3,7 +3,7 @@
 module Highchart
   class HighchartAdapter
     attr_reader :all_projects, :active_projects, :all_projects_weeks, :active_weeks, :all_projects_months, :active_months, :all_projects_demands_ids,
-                :active_projects_demands_ids, :minimum_date_limit
+                :active_projects_demands_ids, :minimum_date_limit, :upstream_operational_weekly_data, :downstream_operational_weekly_data
 
     def initialize(projects, period)
       build_minimum_date(period)
@@ -13,6 +13,8 @@ module Highchart
       @active_projects_demands_ids = @active_projects.map(&:kept_demands_ids).flatten
       build_all_projects_periods
       build_active_projects_periods
+      @upstream_operational_weekly_data = DemandsRepository.instance.operational_data_per_week_to_projects(@all_projects.map(&:id), false, charts_data_bottom_limit_date)
+      @downstream_operational_weekly_data = DemandsRepository.instance.operational_data_per_week_to_projects(@all_projects.map(&:id), true, charts_data_bottom_limit_date)
     end
 
     private
@@ -45,19 +47,35 @@ module Highchart
       @all_projects_months = TimeService.instance.months_between_of(min_date, max_date)
     end
 
-    def throughput_chart_data(downstream_th_weekly_data, upstream_th_weekly_data)
+    def throughput_chart_data
       upstream_result_data = []
       downstream_result_data = []
       @all_projects_weeks.each do |date|
         break unless add_data_to_chart?(date)
 
-        upstream_keys_matching = upstream_th_weekly_data.keys.select { |key| key == date }
-        upstream_result_data << (upstream_th_weekly_data[upstream_keys_matching.first] || 0)
+        upstream_keys_matching = @upstream_operational_weekly_data.keys.select { |key| key == date }
+        upstream_result_data << upstream_operational_data_for_week(upstream_keys_matching, :throughput)
 
-        downstream_keys_matching = downstream_th_weekly_data.keys.select { |key| key == date }
-        downstream_result_data << (downstream_th_weekly_data[downstream_keys_matching.first] || 0)
+        downstream_keys_matching = @downstream_operational_weekly_data.keys.select { |key| key == date }
+        downstream_result_data << downstream_operational_data_for_week(downstream_keys_matching, :throughput)
       end
       [{ name: I18n.t('projects.charts.throughput_per_week.stage_stream.upstream'), data: upstream_result_data }, { name: I18n.t('projects.charts.throughput_per_week.stage_stream.downstream'), data: downstream_result_data }]
+    end
+
+    def upstream_operational_data_for_week(upstream_keys_matching, data_required)
+      if upstream_keys_matching.blank? || @upstream_operational_weekly_data[upstream_keys_matching.first][data_required].blank?
+        0
+      else
+        @upstream_operational_weekly_data[upstream_keys_matching.first][:throughput]
+      end
+    end
+
+    def downstream_operational_data_for_week(downstream_keys_matching, data_required)
+      if downstream_keys_matching.blank? || @downstream_operational_weekly_data[downstream_keys_matching.first][data_required].blank?
+        0
+      else
+        @downstream_operational_weekly_data[downstream_keys_matching.first][:throughput]
+      end
     end
 
     def build_minimum_date(period)

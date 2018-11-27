@@ -76,10 +76,6 @@
   <%= render 'teams/flow', flow_report_data: @flow_report_data, team: @team %>
 </div>
 
-<div id="settings" class="tab-container">
-  <%= render 'pipefy/pipefy_team_configs/pipefy_team_configs_table' %>
-</div>
-
 <% content_for :javascript do %>
   <%= javascript_include_tag 'charts/burnup' %>
   <%= javascript_include_tag 'charts/column' %>

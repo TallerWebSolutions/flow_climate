@@ -8,14 +8,9 @@ RSpec.describe Highchart::FinancesChartsAdapter, type: :data_object do
     let(:company) { Fabricate :company }
     let(:customer) { Fabricate :customer, company: company }
 
-    let(:first_project) { Fabricate :project, customer: customer, status: :executing, start_date: 2.weeks.ago, end_date: 1.week.from_now }
-    let(:second_project) { Fabricate :project, customer: customer, status: :waiting, start_date: 1.week.from_now, end_date: 2.weeks.from_now }
-    let(:third_project) { Fabricate :project, customer: customer, status: :maintenance, start_date: 2.weeks.from_now, end_date: 3.weeks.from_now }
-
-    let(:first_project_result) { Fabricate :project_result, project: first_project, result_date: 3.months.ago }
-    let(:second_project_result) { Fabricate :project_result, project: second_project, result_date: 2.months.ago }
-    let(:third_project_result) { Fabricate :project_result, project: second_project, result_date: 1.month.ago }
-    let(:fourth_project_result) { Fabricate :project_result, project: second_project, result_date: Time.zone.today }
+    let(:first_project) { Fabricate :project, customer: customer, status: :executing, start_date: 4.months.ago, end_date: 1.week.from_now }
+    let(:second_project) { Fabricate :project, customer: customer, status: :waiting, start_date: 5.months.ago, end_date: 2.weeks.from_now }
+    let(:third_project) { Fabricate :project, customer: customer, status: :maintenance, start_date: 3.months.ago, end_date: 3.weeks.from_now }
 
     let!(:first_demand) { Fabricate :demand, project: first_project, commitment_date: 4.months.ago, end_date: 3.months.ago, effort_downstream: 16, effort_upstream: 123 }
     let!(:second_demand) { Fabricate :demand, project: second_project, commitment_date: 5.months.ago, end_date: 3.months.ago, effort_downstream: 7, effort_upstream: 221 }
@@ -29,12 +24,6 @@ RSpec.describe Highchart::FinancesChartsAdapter, type: :data_object do
 
     describe '.initialize' do
       it 'computes and extracts the information of finances' do
-        first_project_result.add_demand!(first_demand)
-        first_project_result.add_demand!(second_demand)
-        second_project_result.add_demand!(third_demand)
-        third_project_result.add_demand!(fourth_demand)
-        fourth_project_result.add_demand!(fifth_demand)
-
         finances_hash = Highchart::FinancesChartsAdapter.new(FinancialInformation.all).finances_hash_with_computed_informations
 
         expect(finances_hash[0]['income_total']).to eq 430.0

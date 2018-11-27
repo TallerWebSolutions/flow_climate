@@ -2,7 +2,7 @@
 
 RSpec.describe IntegrationError, type: :model do
   context 'enums' do
-    it { is_expected.to define_enum_for(:integration_type).with(pipefy: 0) }
+    it { is_expected.to define_enum_for(:integration_type).with(jira: 0) }
   end
 
   context 'associations' do
@@ -21,9 +21,9 @@ RSpec.describe IntegrationError, type: :model do
     let(:demand_transition) { Fabricate :demand_transition, demand: demand }
     it 'creates the integration error' do
       demand_transition.errors.add(:stage, 'error')
-      integration_error = IntegrationError.build_integration_error(demand, demand_transition, :pipefy)
+      integration_error = IntegrationError.build_integration_error(demand, demand_transition, :jira)
       expect(integration_error).to be_persisted
-      expect(integration_error.integration_type).to eq 'pipefy'
+      expect(integration_error.integration_type).to eq 'jira'
       expect(integration_error.integration_error_text).to eq "[#{DemandTransition.human_attribute_name :stage} error]"
       expect(integration_error.integratable_model_name).to eq 'DemandTransition'
     end

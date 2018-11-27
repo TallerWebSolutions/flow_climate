@@ -22,6 +22,20 @@ CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
 COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
 
 
+--
+-- Name: pg_stat_statements; Type: EXTENSION; Schema: -; Owner: -
+--
+
+CREATE EXTENSION IF NOT EXISTS pg_stat_statements WITH SCHEMA public;
+
+
+--
+-- Name: EXTENSION pg_stat_statements; Type: COMMENT; Schema: -; Owner: -
+--
+
+COMMENT ON EXTENSION pg_stat_statements IS 'track execution statistics of all SQL statements executed';
+
+
 SET default_tablespace = '';
 
 SET default_with_oids = false;
@@ -233,7 +247,6 @@ ALTER SEQUENCE public.demand_transitions_id_seq OWNED BY public.demand_transitio
 
 CREATE TABLE public.demands (
     id bigint NOT NULL,
-    project_result_id integer,
     demand_id character varying NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
@@ -248,7 +261,6 @@ CREATE TABLE public.demands (
     assignees_count integer NOT NULL,
     effort_downstream numeric DEFAULT 0,
     effort_upstream numeric DEFAULT 0,
-    "decimal" numeric DEFAULT 0,
     leadtime numeric,
     downstream boolean DEFAULT true,
     manual_effort boolean DEFAULT false,
@@ -418,75 +430,6 @@ ALTER SEQUENCE public.jira_custom_field_mappings_id_seq OWNED BY public.jira_cus
 
 
 --
--- Name: pipefy_configs; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.pipefy_configs (
-    id bigint NOT NULL,
-    project_id integer NOT NULL,
-    team_id integer NOT NULL,
-    pipe_id character varying NOT NULL,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
-    company_id integer NOT NULL,
-    active boolean DEFAULT true
-);
-
-
---
--- Name: pipefy_configs_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.pipefy_configs_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: pipefy_configs_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.pipefy_configs_id_seq OWNED BY public.pipefy_configs.id;
-
-
---
--- Name: pipefy_team_configs; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.pipefy_team_configs (
-    id bigint NOT NULL,
-    team_id integer NOT NULL,
-    integration_id character varying NOT NULL,
-    username character varying NOT NULL,
-    member_type integer DEFAULT 0,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
-);
-
-
---
--- Name: pipefy_team_configs_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.pipefy_team_configs_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: pipefy_team_configs_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.pipefy_team_configs_id_seq OWNED BY public.pipefy_team_configs.id;
-
-
---
 -- Name: products; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -591,60 +534,6 @@ ALTER SEQUENCE public.project_jira_configs_id_seq OWNED BY public.project_jira_c
 
 
 --
--- Name: project_results; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.project_results (
-    id bigint NOT NULL,
-    project_id integer NOT NULL,
-    result_date date NOT NULL,
-    known_scope integer NOT NULL,
-    qty_hours_upstream numeric NOT NULL,
-    qty_hours_downstream numeric NOT NULL,
-    qty_bugs_opened integer NOT NULL,
-    qty_bugs_closed integer NOT NULL,
-    qty_hours_bug integer NOT NULL,
-    leadtime_95_confidence numeric,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
-    team_id integer NOT NULL,
-    monte_carlo_date date,
-    demands_count integer,
-    flow_pressure numeric NOT NULL,
-    remaining_days integer NOT NULL,
-    cost_in_month numeric NOT NULL,
-    average_demand_cost numeric NOT NULL,
-    available_hours numeric NOT NULL,
-    manual_input boolean DEFAULT false,
-    throughput_upstream integer DEFAULT 0,
-    throughput_downstream integer DEFAULT 0,
-    effort_share_in_month numeric,
-    leadtime_80_confidence numeric,
-    leadtime_60_confidence numeric,
-    leadtime_average numeric
-);
-
-
---
--- Name: project_results_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.project_results_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: project_results_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.project_results_id_seq OWNED BY public.project_results.id;
-
-
---
 -- Name: project_risk_alerts; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -711,6 +600,39 @@ CREATE SEQUENCE public.project_risk_configs_id_seq
 --
 
 ALTER SEQUENCE public.project_risk_configs_id_seq OWNED BY public.project_risk_configs.id;
+
+
+--
+-- Name: project_weekly_costs; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.project_weekly_costs (
+    id bigint NOT NULL,
+    project_id integer,
+    date_beggining_of_week date,
+    monthly_cost_value numeric,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: project_weekly_costs_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.project_weekly_costs_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: project_weekly_costs_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.project_weekly_costs_id_seq OWNED BY public.project_weekly_costs.id;
 
 
 --
@@ -1030,20 +952,6 @@ ALTER TABLE ONLY public.jira_custom_field_mappings ALTER COLUMN id SET DEFAULT n
 
 
 --
--- Name: pipefy_configs id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.pipefy_configs ALTER COLUMN id SET DEFAULT nextval('public.pipefy_configs_id_seq'::regclass);
-
-
---
--- Name: pipefy_team_configs id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.pipefy_team_configs ALTER COLUMN id SET DEFAULT nextval('public.pipefy_team_configs_id_seq'::regclass);
-
-
---
 -- Name: products id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1065,13 +973,6 @@ ALTER TABLE ONLY public.project_jira_configs ALTER COLUMN id SET DEFAULT nextval
 
 
 --
--- Name: project_results id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.project_results ALTER COLUMN id SET DEFAULT nextval('public.project_results_id_seq'::regclass);
-
-
---
 -- Name: project_risk_alerts id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1083,6 +984,13 @@ ALTER TABLE ONLY public.project_risk_alerts ALTER COLUMN id SET DEFAULT nextval(
 --
 
 ALTER TABLE ONLY public.project_risk_configs ALTER COLUMN id SET DEFAULT nextval('public.project_risk_configs_id_seq'::regclass);
+
+
+--
+-- Name: project_weekly_costs id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.project_weekly_costs ALTER COLUMN id SET DEFAULT nextval('public.project_weekly_costs_id_seq'::regclass);
 
 
 --
@@ -1216,22 +1124,6 @@ ALTER TABLE ONLY public.jira_custom_field_mappings
 
 
 --
--- Name: pipefy_configs pipefy_configs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.pipefy_configs
-    ADD CONSTRAINT pipefy_configs_pkey PRIMARY KEY (id);
-
-
---
--- Name: pipefy_team_configs pipefy_team_configs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.pipefy_team_configs
-    ADD CONSTRAINT pipefy_team_configs_pkey PRIMARY KEY (id);
-
-
---
 -- Name: products products_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1256,14 +1148,6 @@ ALTER TABLE ONLY public.project_jira_configs
 
 
 --
--- Name: project_results project_results_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.project_results
-    ADD CONSTRAINT project_results_pkey PRIMARY KEY (id);
-
-
---
 -- Name: project_risk_alerts project_risk_alerts_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1277,6 +1161,14 @@ ALTER TABLE ONLY public.project_risk_alerts
 
 ALTER TABLE ONLY public.project_risk_configs
     ADD CONSTRAINT project_risk_configs_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: project_weekly_costs project_weekly_costs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.project_weekly_costs
+    ADD CONSTRAINT project_weekly_costs_pkey PRIMARY KEY (id);
 
 
 --
@@ -1413,13 +1305,6 @@ CREATE INDEX index_demands_on_discarded_at ON public.demands USING btree (discar
 
 
 --
--- Name: index_demands_on_project_result_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_demands_on_project_result_id ON public.demands USING btree (project_result_id);
-
-
---
 -- Name: index_financial_informations_on_company_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1459,41 +1344,6 @@ CREATE UNIQUE INDEX index_jira_accounts_on_customer_domain ON public.jira_accoun
 --
 
 CREATE INDEX index_jira_custom_field_mappings_on_jira_account_id ON public.jira_custom_field_mappings USING btree (jira_account_id);
-
-
---
--- Name: index_pipefy_configs_on_project_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_pipefy_configs_on_project_id ON public.pipefy_configs USING btree (project_id);
-
-
---
--- Name: index_pipefy_configs_on_team_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_pipefy_configs_on_team_id ON public.pipefy_configs USING btree (team_id);
-
-
---
--- Name: index_pipefy_team_configs_on_integration_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_pipefy_team_configs_on_integration_id ON public.pipefy_team_configs USING btree (integration_id);
-
-
---
--- Name: index_pipefy_team_configs_on_team_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_pipefy_team_configs_on_team_id ON public.pipefy_team_configs USING btree (team_id);
-
-
---
--- Name: index_pipefy_team_configs_on_username; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_pipefy_team_configs_on_username ON public.pipefy_team_configs USING btree (username);
 
 
 --
@@ -1553,13 +1403,6 @@ CREATE INDEX index_project_jira_configs_on_team_id ON public.project_jira_config
 
 
 --
--- Name: index_project_results_on_project_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_project_results_on_project_id ON public.project_results USING btree (project_id);
-
-
---
 -- Name: index_project_risk_alerts_on_project_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1571,6 +1414,13 @@ CREATE INDEX index_project_risk_alerts_on_project_id ON public.project_risk_aler
 --
 
 CREATE INDEX index_project_risk_alerts_on_project_risk_config_id ON public.project_risk_alerts USING btree (project_risk_config_id);
+
+
+--
+-- Name: index_project_weekly_costs_on_project_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_project_weekly_costs_on_project_id ON public.project_weekly_costs USING btree (project_id);
 
 
 --
@@ -1672,14 +1522,6 @@ CREATE UNIQUE INDEX unique_jira_project_key_to_jira_account_domain ON public.pro
 
 
 --
--- Name: pipefy_configs fk_rails_0732eff170; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.pipefy_configs
-    ADD CONSTRAINT fk_rails_0732eff170 FOREIGN KEY (project_id) REFERENCES public.projects(id);
-
-
---
 -- Name: demand_blocks fk_rails_0c8fa8d3a7; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1760,22 +1602,6 @@ ALTER TABLE ONLY public.integration_errors
 
 
 --
--- Name: pipefy_configs fk_rails_3895e626a7; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.pipefy_configs
-    ADD CONSTRAINT fk_rails_3895e626a7 FOREIGN KEY (company_id) REFERENCES public.companies(id);
-
-
---
--- Name: pipefy_configs fk_rails_429f1ebe04; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.pipefy_configs
-    ADD CONSTRAINT fk_rails_429f1ebe04 FOREIGN KEY (team_id) REFERENCES public.teams(id);
-
-
---
 -- Name: project_risk_alerts fk_rails_4685dfa1bb; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1832,14 +1658,6 @@ ALTER TABLE ONLY public.companies_users
 
 
 --
--- Name: pipefy_team_configs fk_rails_6b009afec0; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.pipefy_team_configs
-    ADD CONSTRAINT fk_rails_6b009afec0 FOREIGN KEY (team_id) REFERENCES public.teams(id);
-
-
---
 -- Name: stage_project_configs fk_rails_713ceb31a3; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1869,14 +1687,6 @@ ALTER TABLE ONLY public.users
 
 ALTER TABLE ONLY public.products
     ADD CONSTRAINT fk_rails_a551b9b235 FOREIGN KEY (team_id) REFERENCES public.teams(id);
-
-
---
--- Name: project_results fk_rails_b11de7d28e; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.project_results
-    ADD CONSTRAINT fk_rails_b11de7d28e FOREIGN KEY (team_id) REFERENCES public.teams(id);
 
 
 --
@@ -1912,14 +1722,6 @@ ALTER TABLE ONLY public.project_risk_alerts
 
 
 --
--- Name: project_results fk_rails_c3c9938173; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.project_results
-    ADD CONSTRAINT fk_rails_c3c9938173 FOREIGN KEY (project_id) REFERENCES public.projects(id);
-
-
---
 -- Name: demand_transitions fk_rails_c63024fc81; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1933,6 +1735,14 @@ ALTER TABLE ONLY public.demand_transitions
 
 ALTER TABLE ONLY public.teams
     ADD CONSTRAINT fk_rails_e080df8a94 FOREIGN KEY (company_id) REFERENCES public.companies(id);
+
+
+--
+-- Name: project_weekly_costs fk_rails_eafbb59099; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.project_weekly_costs
+    ADD CONSTRAINT fk_rails_eafbb59099 FOREIGN KEY (project_id) REFERENCES public.projects(id);
 
 
 --
@@ -2043,6 +1853,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20180822231503'),
 ('20180830205543'),
 ('20180915020210'),
-('20181008191022');
+('20181008191022'),
+('20181022220910');
 
 

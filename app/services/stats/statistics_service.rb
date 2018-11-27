@@ -9,12 +9,12 @@ module Stats
     def percentile(desired_percentile, population)
       processed_population = population.compact
       return 0 if processed_population.empty?
-      return processed_population.first if processed_population.size == 1
+      return processed_population.first.to_f if processed_population.size == 1
 
       processed_population.sort!
-      return processed_population.last if desired_percentile == 100
+      return processed_population.last.to_f if desired_percentile == 100
 
-      compute_percentile(desired_percentile, processed_population)
+      compute_percentile(desired_percentile, processed_population).to_f
     end
 
     def mean(population)

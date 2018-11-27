@@ -9,8 +9,14 @@ class DropTableOperationResults < ActiveRecord::Migration[5.2]
     create_table :operation_results do |t|
       t.integer :company_id, null: false
       t.date :result_date, null: false
-      t.integer :billable_count, null: false
+      t.integer :people_billable_count, null: false
       t.decimal :operation_week_value, null: false
+
+      t.integer :available_hours, null: false
+      t.integer :delivered_hours, null: false
+      t.integer :total_th, null: false
+      t.integer :total_opened_bugs, null: false
+      t.integer :total_accumulated_closed_bugs, null: false
 
       t.timestamps
     end

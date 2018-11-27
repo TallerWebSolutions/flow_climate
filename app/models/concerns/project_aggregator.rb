@@ -22,12 +22,6 @@ module ProjectAggregator
     projects_with_data.sum(&:avg_hours_per_demand) / projects_with_data.size.to_f
   end
 
-  def average_demand_cost
-    return 0 if projects_count.zero?
-
-    projects.sum(&:average_demand_cost) / projects_count.to_f
-  end
-
   def total_value
     projects.sum(&:value)
   end

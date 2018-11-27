@@ -15,14 +15,10 @@ RSpec.describe UserNotifierMailer, type: :mailer do
     let(:third_project) { Fabricate :project, customer: customer, start_date: 2.months.ago, end_date: 1.month.from_now }
     let(:fourth_project) { Fabricate :project, customer: customer, start_date: 2.months.ago, end_date: 1.month.from_now }
 
-    let(:first_project_result) { Fabricate :project_result, project: first_project, result_date: 1.week.ago }
-    let(:second_project_result) { Fabricate :project_result, project: second_project, result_date: 1.week.ago }
-    let(:third_project_result) { Fabricate :project_result, project: third_project, result_date: Time.zone.today }
-
-    let!(:first_demand) { Fabricate :demand, project_result: first_project_result }
-    let!(:second_demand) { Fabricate :demand, project_result: first_project_result }
-    let!(:third_demand) { Fabricate :demand, project_result: second_project_result }
-    let!(:fourth_demand) { Fabricate :demand, project_result: third_project_result }
+    let!(:first_demand) { Fabricate :demand, discarded_at: nil, end_date: 1.week.ago }
+    let!(:second_demand) { Fabricate :demand, discarded_at: nil, end_date: 1.week.ago }
+    let!(:third_demand) { Fabricate :demand }
+    let!(:fourth_demand) { Fabricate :demand }
 
     let(:red_project) { Fabricate :project, customer: customer, status: :maintenance, end_date: 3.days.from_now, name: 'maintenance_red' }
     let!(:first_alert) { Fabricate :project_risk_alert, project: red_project, alert_color: :red, created_at: Time.zone.now }

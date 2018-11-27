@@ -26,16 +26,13 @@ RSpec.describe ProjectsRepository, type: :repository do
     let!(:project) { Fabricate :project, customer: customer, start_date: 2.months.ago, end_date: 1.month.from_now }
     let!(:other_project) { Fabricate :project, customer: customer, start_date: 2.months.ago, end_date: 1.month.from_now }
 
-    context 'having project results' do
-      let!(:first_result) { Fabricate :project_result, project: project, result_date: 1.day.ago, qty_hours_upstream: 0, qty_hours_downstream: 30 }
-      let!(:second_result) { Fabricate :project_result, project: other_project, result_date: 1.day.ago, qty_hours_upstream: 0, qty_hours_downstream: 50 }
-      let!(:third_result) { Fabricate :project_result, project: other_project, result_date: 2.months.ago, qty_hours_upstream: 0, qty_hours_downstream: 90 }
-      let!(:out_result) { Fabricate :project_result, result_date: 1.day.ago, qty_hours_downstream: 60 }
-
-      it { expect(ProjectsRepository.instance.hours_consumed_per_month(company.projects, 2.months.ago.to_date)).to eq 90 }
+    context 'having data' do
+      let!(:first_demand) { Fabricate :demand, project: project, downstream: true, created_date: 3.months.ago.to_date, end_date: 2.months.ago.to_date, leadtime: 2 * 86_400, effort_upstream: 10, effort_downstream: 5 }
+      let!(:second_demand) { Fabricate :demand, project: other_project, downstream: false, created_date: 4.months.ago.to_date, end_date: 2.months.ago, leadtime: 1 * 86_400, effort_upstream: 27, effort_downstream: 40 }
+      it { expect(ProjectsRepository.instance.hours_consumed_per_month(company.projects, 2.months.ago.to_date)).to eq 0.82e2 }
     end
 
-    context 'having no project results' do
+    context 'having no data' do
       it { expect(ProjectsRepository.instance.hours_consumed_per_month(company.projects, 2.months.ago.to_date)).to eq 0 }
     end
   end
@@ -44,16 +41,13 @@ RSpec.describe ProjectsRepository, type: :repository do
     let!(:project) { Fabricate :project, customer: customer, start_date: 2.weeks.ago, end_date: 1.week.from_now }
     let!(:other_project) { Fabricate :project, customer: customer, start_date: 2.weeks.ago, end_date: 1.week.from_now }
 
-    context 'having project results' do
-      let!(:first_result) { Fabricate :project_result, project: project, result_date: 1.day.ago, qty_hours_upstream: 0, qty_hours_downstream: 30 }
-      let!(:second_result) { Fabricate :project_result, project: other_project, result_date: 1.day.ago, qty_hours_upstream: 0, qty_hours_downstream: 50 }
-      let!(:third_result) { Fabricate :project_result, project: other_project, result_date: 2.weeks.ago, qty_hours_upstream: 0, qty_hours_downstream: 90 }
-      let!(:out_result) { Fabricate :project_result, result_date: 1.day.ago, qty_hours_downstream: 60 }
-
-      it { expect(ProjectsRepository.instance.hours_consumed_per_week(company.projects, 2.weeks.ago.to_date)).to eq 90 }
+    context 'having data' do
+      let!(:first_demand) { Fabricate :demand, project: project, downstream: true, created_date: 3.months.ago.to_date, end_date: 2.weeks.ago.to_date, leadtime: 2 * 86_400, effort_upstream: 10, effort_downstream: 5 }
+      let!(:second_demand) { Fabricate :demand, project: other_project, downstream: false, created_date: 4.months.ago.to_date, end_date: 2.weeks.ago, leadtime: 1 * 86_400, effort_upstream: 27, effort_downstream: 40 }
+      it { expect(ProjectsRepository.instance.hours_consumed_per_week(company.projects, 2.weeks.ago.to_date)).to eq 0.82e2 }
     end
 
-    context 'having no project results' do
+    context 'having no data' do
       it { expect(ProjectsRepository.instance.hours_consumed_per_week(company.projects, 2.weeks.ago.to_date)).to eq 0 }
     end
   end
@@ -62,20 +56,8 @@ RSpec.describe ProjectsRepository, type: :repository do
     let!(:project) { Fabricate :project, customer: customer, initial_scope: 100, start_date: 2.months.ago, end_date: 1.month.from_now }
     let!(:other_project) { Fabricate :project, customer: customer, initial_scope: 50, start_date: 2.months.ago, end_date: 1.month.from_now }
 
-    context 'having project results' do
-      let!(:first_result) { Fabricate :project_result, project: project, result_date: 2.months.ago, flow_pressure: 2 }
-      let!(:second_result) { Fabricate :project_result, project: other_project, result_date: 1.month.ago, flow_pressure: 4 }
-
-      it { expect(ProjectsRepository.instance.flow_pressure_to_month(company.projects, 2.months.ago.to_date)).to eq 2.0 }
-    end
-
-    context 'having no project results' do
-      context 'if in the past, returns zero' do
-        it { expect(ProjectsRepository.instance.flow_pressure_to_month(company.projects, 2.months.ago.to_date)).to eq 0 }
-      end
-      context 'if in the future, returns the future flow pressure to the project' do
-        it { expect(ProjectsRepository.instance.flow_pressure_to_month(company.projects, 1.month.from_now.to_date)).to be_within(0.001).of(4.838) }
-      end
+    context 'having data' do
+      it { expect(ProjectsRepository.instance.flow_pressure_to_month(company.projects, 2.months.ago.to_date)).to eq 4.838709677419354 }
     end
   end
 
@@ -94,23 +76,20 @@ RSpec.describe ProjectsRepository, type: :repository do
   describe '#all_projects_for_team' do
     let(:other_customer) { Fabricate :customer }
     let(:team) { Fabricate :team, company: company }
+    let(:other_team) { Fabricate :team, company: company }
     let!(:product) { Fabricate :product, customer: customer, team: team }
 
-    let!(:first_project) { Fabricate :project, customer: customer, start_date: 1.week.ago, end_date: 2.months.from_now, status: :executing }
-    let!(:second_project) { Fabricate :project, customer: customer, start_date: 1.month.from_now, end_date: 3.months.from_now, status: :maintenance }
-    let!(:third_project) { Fabricate :project, customer: customer, start_date: 2.months.from_now, end_date: 2.months.from_now, status: :waiting }
-    let!(:fourth_project) { Fabricate :project, customer: customer, product: product, start_date: 2.months.from_now, end_date: 2.months.from_now, status: :maintenance }
-    let!(:fifth_project) { Fabricate :project, customer: customer, product: product, start_date: 1.week.from_now, end_date: 1.month.from_now, status: :finished }
-    let!(:sixth_project) { Fabricate :project, customer: customer, product: product, start_date: 3.months.from_now, end_date: 4.months.from_now, status: :cancelled }
+    let!(:first_project) { Fabricate :project, team: team, start_date: 1.week.ago, end_date: 2.months.from_now, status: :executing }
+    let!(:second_project) { Fabricate :project, team: team, start_date: 1.month.from_now, end_date: 3.months.from_now, status: :maintenance }
+    let!(:third_project) { Fabricate :project, team: team, start_date: 2.months.from_now, end_date: 2.months.from_now, status: :waiting }
+    let!(:fourth_project) { Fabricate :project, team: other_team, start_date: 2.months.from_now, end_date: 2.months.from_now, status: :maintenance }
+    let!(:fifth_project) { Fabricate :project, team: other_team, start_date: 1.week.from_now, end_date: 1.month.from_now, status: :finished }
+    let!(:sixth_project) { Fabricate :project, team: other_team, start_date: 3.months.from_now, end_date: 4.months.from_now, status: :cancelled }
 
     let!(:seventh_project) { Fabricate :project, customer: other_customer, start_date: 1.month.from_now, end_date: 3.months.from_now, status: :executing }
     let!(:eigth_project) { Fabricate :project, customer: customer, start_date: 1.month.from_now, end_date: 3.months.from_now, status: :executing }
 
-    let!(:first_project_result) { Fabricate :project_result, project: first_project, result_date: 2.days.ago, team: team }
-    let!(:second_project_result) { Fabricate :project_result, project: second_project, result_date: 1.day.ago, team: team }
-    let!(:third_project_result) { Fabricate :project_result, project: third_project, result_date: Time.zone.today, team: team }
-
-    it { expect(ProjectsRepository.instance.all_projects_for_team(team)).to match_array [first_project, second_project, third_project, fourth_project, fifth_project, sixth_project] }
+    it { expect(ProjectsRepository.instance.all_projects_for_team(team)).to match_array [first_project, second_project, third_project] }
   end
 
   describe '#add_query_to_projects_in_status' do

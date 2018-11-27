@@ -28,8 +28,6 @@ RSpec.describe Jira::JiraIssueAdapter, type: :service do
         let!(:jira_issue) { client.Issue.build({ key: '10000', fields: { created: '2018-07-02T11:20:18.998-0300', summary: 'foo of bar', issuetype: { name: 'Story' }, customfield_10028: { value: 'Expedite' }, project: { key: 'foo' }, customfield_10024: [{ name: 'foo' }, { name: 'bar' }] }, changelog: { startAt: 0, maxResults: 2, total: 2, histories: [{ id: '10039', created: '2018-07-08T22:34:47.440-0300', items: [{ field: 'status', from: 'first_stage', to: 'second_stage' }] }, { id: '10038', created: '2018-07-06T09:40:43.886-0300', items: [{ field: 'status', from: 'third_stage', to: 'first_stage' }] }] } }.with_indifferent_access) }
 
         it 'creates the demand' do
-          expect(ProjectResultService.instance).to receive(:compute_demand!).once.and_call_original
-          expect_any_instance_of(ProjectResult).to receive(:compute_flow_metrics!).twice
           Jira::JiraIssueAdapter.instance.process_issue!(jira_account, first_project, jira_issue)
           expect(Demand.count).to eq 1
           expect(Demand.last.assignees_count).to eq 2

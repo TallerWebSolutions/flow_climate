@@ -27,3 +27,5 @@ en:
       risk_type: "Risk type: %{risk_type}"
       previous_color: "Previous alert color: %{previous_color}"
     no_top_three_throughput: "There is no projects"
+    no_red_projects: "No red projects"
+

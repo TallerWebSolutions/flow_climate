@@ -61,20 +61,16 @@ RSpec.describe StageProjectConfigsController, type: :controller do
         let!(:second_stage_project_config) { Fabricate :stage_project_config, project: second_project, stage: upstream_stage, stage_percentage: 7, pairing_percentage: 21, management_percentage: 27 }
         let!(:third_stage_project_config) { Fabricate :stage_project_config, project: second_project, stage: downstream_stage, stage_percentage: 18, pairing_percentage: 26, management_percentage: 33 }
 
-        let(:project_result) { Fabricate :project_result, project: project }
-        let(:second_project_result) { Fabricate :project_result, project: second_project }
-
-        let!(:first_demand) { Fabricate :demand, project: project, project_result: project_result, effort_downstream: 23, effort_upstream: 17, manual_effort: true }
+        let!(:first_demand) { Fabricate :demand, project: project, effort_downstream: 23, effort_upstream: 17, manual_effort: true }
         let!(:first_demand_transition) { Fabricate :demand_transition, demand: first_demand, stage: upstream_stage, last_time_in: Time.zone.local(2018, 7, 25, 10, 0, 0), last_time_out: Time.zone.local(2018, 8, 1, 10, 0, 0) }
         let!(:second_demand_transition) { Fabricate :demand_transition, demand: first_demand, stage: downstream_stage, last_time_in: Time.zone.local(2018, 8, 3, 10, 0, 0), last_time_out: Time.zone.local(2018, 8, 10, 10, 0, 0) }
 
-        let!(:second_demand) { Fabricate :demand, project: second_project, project_result: second_project_result, effort_downstream: 20, effort_upstream: 10, manual_effort: true }
+        let!(:second_demand) { Fabricate :demand, project: second_project, effort_downstream: 20, effort_upstream: 10, manual_effort: true }
         let!(:third_demand_transition) { Fabricate :demand_transition, demand: second_demand, stage: upstream_stage, last_time_in: Time.zone.local(2018, 7, 25, 10, 0, 0), last_time_out: Time.zone.local(2018, 8, 1, 10, 0, 0) }
         let!(:fourth_demand_transition) { Fabricate :demand_transition, demand: second_demand, stage: downstream_stage, last_time_in: Time.zone.local(2018, 8, 11, 10, 0, 0), last_time_out: Time.zone.local(2018, 8, 21, 10, 0, 0) }
 
         context 'not updating the manual effort' do
           it 'assign the instances variables and renders the template' do
-            expect_any_instance_of(ProjectResult).to receive(:compute_flow_metrics!).once
             put :update, params: { company_id: company, stage_id: upstream_stage, id: stage_project_config, recompute_manual_efforts: '0', stage_project_config: { stage_percentage: 20, pairing_percentage: 40, management_percentage: 25 } }
             expect(assigns(:company)).to eq company
             expect(assigns(:stage)).to eq upstream_stage
@@ -92,7 +88,6 @@ RSpec.describe StageProjectConfigsController, type: :controller do
 
         context 'updating the manual effort' do
           it 'assign the instances variables and renders the template' do
-            expect_any_instance_of(ProjectResult).to receive(:compute_flow_metrics!).once
             put :update, params: { company_id: company, stage_id: upstream_stage, id: stage_project_config, recompute_manual_efforts: '1', stage_project_config: { stage_percentage: 20, pairing_percentage: 40, management_percentage: 25 } }
             expect(assigns(:company)).to eq company
             expect(assigns(:stage)).to eq upstream_stage

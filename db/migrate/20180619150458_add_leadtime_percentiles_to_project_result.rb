@@ -14,10 +14,12 @@ class AddLeadtimePercentilesToProjectResult < ActiveRecord::Migration[5.2]
 
   def down
     change_table :project_results, bulk: true do |t|
-      t.rename :leadtime_95_confidence, :leadtime
+      t.remove :leadtime_95_confidence
       t.remove :leadtime_80_confidence
       t.remove :leadtime_60_confidence
       t.remove :leadtime_average
+
+      t.decimal :leadtime
     end
   end
 end

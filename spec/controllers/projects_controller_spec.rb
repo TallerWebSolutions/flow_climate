@@ -71,14 +71,12 @@ RSpec.describe ProjectsController, type: :controller do
       let!(:first_project) { Fabricate :project, customer: customer, product: product, start_date: 2.weeks.ago, end_date: Time.zone.today }
 
       context 'having results' do
-        let!(:first_result) { Fabricate :project_result, project: first_project, result_date: 2.weeks.ago }
-        let!(:second_result) { Fabricate :project_result, project: first_project, result_date: 1.week.ago }
         let!(:first_alert) { Fabricate :project_risk_alert, project: first_project, created_at: 1.week.ago }
         let!(:second_alert) { Fabricate :project_risk_alert, project: first_project, created_at: Time.zone.now }
 
-        let!(:first_demand) { Fabricate :demand, project: first_project, project_result: first_result, end_date: Date.new(2018, 3, 10), leadtime: 2000 }
-        let!(:second_demand) { Fabricate :demand, project: first_project, project_result: first_result, end_date: Date.new(2018, 3, 25), leadtime: 6000 }
-        let!(:third_demand) { Fabricate :demand, project: first_project, project_result: second_result, end_date: nil }
+        let!(:first_demand) { Fabricate :demand, project: first_project, end_date: Date.new(2018, 3, 10), leadtime: 2000 }
+        let!(:second_demand) { Fabricate :demand, project: first_project, end_date: Date.new(2018, 3, 25), leadtime: 6000 }
+        let!(:third_demand) { Fabricate :demand, project: first_project, end_date: nil }
 
         let!(:fourth_demand) { Fabricate :demand, end_date: Time.zone.today }
         let!(:first_change_deadline) { Fabricate :project_change_deadline_history, project: first_project }
@@ -276,8 +274,6 @@ RSpec.describe ProjectsController, type: :controller do
       let!(:product) { Fabricate :product, customer: customer, name: 'zzz' }
       let!(:other_product) { Fabricate :product, customer: customer, name: 'aaa' }
       let(:project) { Fabricate :project, customer: customer, product: product, start_date: 1.day.ago, end_date: 7.weeks.from_now, initial_scope: 100 }
-      let!(:project_result) { Fabricate :project_result, project: project, result_date: Time.zone.today, known_scope: 120 }
-      let!(:other_project_result) { Fabricate :project_result, project: project, result_date: Time.zone.tomorrow, known_scope: 400 }
       let!(:team) { Fabricate :team, company: company }
 
       context 'passing valid parameters' do
@@ -294,8 +290,6 @@ RSpec.describe ProjectsController, type: :controller do
             expect(Project.last.hour_value).to eq 200
             expect(Project.last.initial_scope).to eq 1000
             expect(Project.last.percentage_effort_to_bugs).to eq 10
-            expect(ProjectResult.first.known_scope).to eq 1000
-            expect(ProjectResult.last.known_scope).to eq 1000
             expect(ProjectChangeDeadlineHistory.count).to eq 1
             expect(Project.last.team).to eq team
             expect(response).to redirect_to company_project_path(company, project)
@@ -303,11 +297,8 @@ RSpec.describe ProjectsController, type: :controller do
         end
         context 'not changing the deadline nor the initial scope' do
           it 'does not register any change in deadline and do not computes again the project results' do
-            expect_any_instance_of(ProjectResult).to receive(:compute_flow_metrics!).never
             put :update, params: { company_id: company, id: project, project: { customer_id: customer, product_id: product, name: 'foo', status: :executing, project_type: :outsourcing, start_date: 1.day.ago, end_date: project.end_date, value: 100.2, qty_hours: 300, hour_value: 200, initial_scope: 100 } }
             expect(ProjectChangeDeadlineHistory.count).to eq 0
-            expect(ProjectResult.first.known_scope).to eq 120
-            expect(ProjectResult.last.known_scope).to eq 400
           end
         end
       end
@@ -454,7 +445,6 @@ RSpec.describe ProjectsController, type: :controller do
         end
         context 'having dependencies' do
           let!(:project) { Fabricate :project, customer: customer }
-          let!(:project_result) { Fabricate :project_result, project: project }
           before { delete :destroy, params: { company_id: company, id: project } }
 
           it 'does delete the project and the dependecies' do

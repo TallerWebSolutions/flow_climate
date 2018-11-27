@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class CreateProjectJiraConfigs < ActiveRecord::Migration[5.2]
-  def change
+  def up
     create_table :jira_accounts do |t|
       t.integer :company_id, index: true, null: false
       t.string :username, null: false
@@ -41,5 +41,11 @@ class CreateProjectJiraConfigs < ActiveRecord::Migration[5.2]
 
     add_foreign_key :project_jira_configs, :projects, column: :project_id
     add_foreign_key :project_jira_configs, :teams, column: :team_id
+  end
+
+  def down
+    drop_table :project_jira_configs
+    drop_table :jira_custom_field_mappings
+    drop_table :jira_accounts
   end
 end

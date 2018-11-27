@@ -28,3 +28,42 @@ function openTab(evt, tabName) {
     document.getElementById(tabName).style.display = "block";
     evt.currentTarget.className += " active";
 }
+
+function searchWeekBehaviour() {
+    $('#search-week').on('click', function () {
+        const flow_div = $('#flow');
+        flow_div.hide();
+        $(".loader").show();
+        searchDemandsToFlowCharts($('#company_id').val(), $('#team_id').val(), $('#week').val(), $('#year').val());
+    });
+}
+
+function operationalChartsPeriodBehaviour() {
+    $('#operational-charts-period').change(function(event){
+        $(".loader").show();
+        $('#operational-charts-div').hide();
+
+        event.preventDefault();
+
+        const companyId = $("#company_id").val();
+        const period = $('#operational-charts-period').val();
+        const projects_ids = $("#projects_ids").val();
+
+        buildOperationalCharts(companyId, projects_ids, period)
+    });
+}
+
+function statusReportPeriodBehaviour(){
+    $('#status-report-period').on('change', function(event){
+        $(".loader").show();
+        $('#project-status-report').hide();
+
+        event.preventDefault();
+
+        const companyId = $("#company_id").val();
+        const period = $('#status-report-period').val();
+        const projects_ids = $("#projects_ids").val();
+
+        buildStatusReportCharts(companyId, projects_ids, period);
+    });
+}

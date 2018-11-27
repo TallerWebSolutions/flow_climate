@@ -36,21 +36,17 @@
     <div class="stamp-title"><%= t('projects.show.initial_scope') %></div>
     <div class="stamp-content"><%= project.initial_scope %></div>
   </div>
-  <div class="col-xs-2 stamp">
+  <div class="col-xs-3 stamp">
     <div class="stamp-title"><%= t('projects.show.last_week_scope') %></div>
     <div class="stamp-content"><%= project.last_week_scope %></div>
   </div>
-  <div class="col-xs-2 stamp">
+  <div class="col-xs-3 stamp">
     <div class="stamp-title"><%= t('projects.show.demands.text') %></div>
     <div class="stamp-content"><%= project.total_throughput %></div>
   </div>
-  <div class="col-xs-2 stamp">
+  <div class="col-xs-3 stamp">
     <div class="stamp-title"><%= t('general.stamps.flow_pressure') %></div>
     <div class="stamp-content"><%= number_with_precision(project.flow_pressure, precision: 3) %></div>
-  </div>
-  <div class="col-xs-3 stamp">
-    <div class="stamp-title"><%= t('projects.show.cmd') %></div>
-    <div class="stamp-content"><%= number_to_currency(project.average_demand_cost) %></div>
   </div>
 </div>
 

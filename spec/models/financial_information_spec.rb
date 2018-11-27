@@ -29,68 +29,95 @@ RSpec.describe FinancialInformation, type: :model do
     it { expect(finances.financial_result).to eq 8.2 }
   end
 
-  describe '#cost_per_hour' do
+  describe '#throughput_in_month' do
+    before { travel_to Date.new(2018, 10, 25) }
+    after { travel_back }
+
     let(:company) { Fabricate :company }
+    let(:customer) { Fabricate :customer, company: company }
+    let(:project) { Fabricate :project, customer: customer, start_date: 2.months.ago, end_date: 3.months.from_now }
+
+    let(:first_stage) { Fabricate :stage, company: company, projects: [project], stage_stream: :downstream, queue: false, end_point: true }
+
+    let!(:first_demand) { Fabricate :demand, project: project }
+    let!(:second_demand) { Fabricate :demand, project: project }
+    let!(:third_demand) { Fabricate :demand, project: project }
+
+    let!(:first_transition) { Fabricate :demand_transition, stage: first_stage, demand: first_demand, last_time_in: 1.month.ago }
+    let!(:second_transition) { Fabricate :demand_transition, stage: first_stage, demand: second_demand, last_time_in: 1.month.ago }
+    let!(:third_transition) { Fabricate :demand_transition, stage: first_stage, demand: third_demand, last_time_in: 2.months.ago }
+
     let!(:finances) { Fabricate :financial_information, company: company, finances_date: 1.month.ago, income_total: 20.4, expenses_total: 12.2 }
+
+    it { expect(finances.throughput_in_month.count).to eq 2 }
+  end
+
+  RSpec.shared_context 'demands with effort for finances', shared_context: :metadata do
+    let(:company) { Fabricate :company }
     let!(:customer) { Fabricate :customer, company: company }
     let!(:project) { Fabricate :project, customer: customer, start_date: 2.months.ago, end_date: 3.months.from_now }
-    let!(:project_result) { Fabricate :project_result, project: project, result_date: 1.month.ago, qty_hours_downstream: 20, qty_hours_upstream: 10 }
-    let!(:other_project_result) { Fabricate :project_result, project: project, result_date: 1.month.ago, qty_hours_downstream: 30, qty_hours_upstream: 20 }
-    let!(:out_project_result) { Fabricate :project_result, project: project, result_date: 2.months.ago, qty_hours_downstream: 130, qty_hours_upstream: 202 }
 
-    it { expect(finances.cost_per_hour.to_f).to eq finances.expenses_total / 80 }
+    let(:first_stage) { Fabricate :stage, company: company, stage_stream: :downstream, queue: false, end_point: false }
+    let(:second_stage) { Fabricate :stage, company: company, stage_stream: :downstream, queue: false, end_point: true }
+
+    let!(:first_stage_project_config) { Fabricate :stage_project_config, project: project, stage: first_stage, compute_effort: true, pairing_percentage: 80, stage_percentage: 100, management_percentage: 10 }
+    let!(:second_stage_project_config) { Fabricate :stage_project_config, project: project, stage: second_stage, compute_effort: true, pairing_percentage: 80, stage_percentage: 100, management_percentage: 10 }
+
+    let!(:first_demand) { Fabricate :demand, project: project, end_date: 1.month.ago }
+    let!(:second_demand) { Fabricate :demand, project: project, end_date: 1.month.ago }
+    let!(:third_demand) { Fabricate :demand, project: project, end_date: 2.months.ago }
+
+    let!(:first_transition) { Fabricate :demand_transition, stage: first_stage, demand: first_demand, last_time_in: 1.month.ago, last_time_out: 2.weeks.ago }
+    let!(:second_transition) { Fabricate :demand_transition, stage: first_stage, demand: second_demand, last_time_in: 1.month.ago, last_time_out: 3.weeks.ago }
+    let!(:third_transition) { Fabricate :demand_transition, stage: first_stage, demand: third_demand, last_time_in: 2.months.ago, last_time_out: 6.weeks.ago }
+
+    let!(:fourth_transition) { Fabricate :demand_transition, stage: second_stage, demand: first_demand, last_time_in: 1.month.ago, last_time_out: 2.weeks.ago }
+    let!(:fifth_transition) { Fabricate :demand_transition, stage: second_stage, demand: second_demand, last_time_in: 1.month.ago, last_time_out: 3.weeks.ago }
+    let!(:sixth_transition) { Fabricate :demand_transition, stage: second_stage, demand: third_demand, last_time_in: 2.months.ago, last_time_out: 6.weeks.ago }
   end
 
   describe '#income_per_hour' do
-    let(:company) { Fabricate :company }
-    let!(:finances) { Fabricate :financial_information, company: company, finances_date: 1.month.ago, income_total: 20.4, expenses_total: 12.2 }
-    let!(:customer) { Fabricate :customer, company: company }
-    let!(:project) { Fabricate :project, customer: customer, start_date: 2.months.ago, end_date: 3.months.from_now }
-    let!(:project_result) { Fabricate :project_result, project: project, result_date: 1.month.ago, qty_hours_downstream: 20, qty_hours_upstream: 10 }
-    let!(:other_project_result) { Fabricate :project_result, project: project, result_date: 1.month.ago, qty_hours_downstream: 30, qty_hours_upstream: 20 }
-    let!(:out_project_result) { Fabricate :project_result, project: project, result_date: 2.months.ago, qty_hours_downstream: 130, qty_hours_upstream: 202 }
+    before { travel_to Date.new(2018, 11, 19) }
+    after { travel_back }
 
-    it { expect(finances.income_per_hour.to_f).to eq finances.income_total / 80 }
+    include_context 'demands with effort for finances'
+
+    let!(:finances) { Fabricate :financial_information, company: company, finances_date: 1.month.ago, income_total: 20.4, expenses_total: 12.2 }
+
+    it { expect(finances.income_per_hour.to_f).to eq 0.18181818181818182 }
+  end
+
+  describe '#cost_per_hour' do
+    before { travel_to Date.new(2018, 11, 19) }
+    after { travel_back }
+
+    include_context 'demands with effort for finances'
+
+    let!(:finances) { Fabricate :financial_information, company: company, finances_date: 1.month.ago, income_total: 20.4, expenses_total: 12.2 }
+
+    it { expect(finances.cost_per_hour.to_f).to eq 0.10873440285204991 }
   end
 
   describe '#project_delivered_hours' do
-    let!(:finances) { Fabricate :financial_information, income_total: 20.4, expenses_total: 12.2 }
-    let(:customer) { Fabricate :customer, company: finances.company }
-    let(:product) { Fabricate :product, customer: customer, name: 'zzz' }
-    let!(:project) { Fabricate :project, customer: customer, product: product, start_date: 4.weeks.ago, end_date: 3.weeks.from_now }
-    let!(:other_project) { Fabricate :project, customer: customer, product: product, start_date: 4.weeks.ago, end_date: 3.weeks.from_now }
-    let!(:out_project) { Fabricate :project, start_date: 4.weeks.ago, end_date: 3.weeks.from_now }
-    let!(:result) { Fabricate :project_result, project: project, result_date: finances.finances_date, qty_hours_upstream: 0, qty_hours_downstream: 30 }
-    let!(:other_result) { Fabricate :project_result, project: other_project, result_date: finances.finances_date, qty_hours_upstream: 0, qty_hours_downstream: 50 }
-    let!(:out_result) { Fabricate :project_result, project: out_project, result_date: finances.finances_date, qty_hours_upstream: 0, qty_hours_downstream: 60 }
+    before { travel_to Date.new(2018, 11, 19) }
+    after { travel_back }
 
-    it { expect(finances.project_delivered_hours).to eq 80 }
-  end
+    include_context 'demands with effort for finances'
 
-  describe '#throughput_in_month' do
-    let(:company) { Fabricate :company }
-    let!(:customer) { Fabricate :customer, company: company }
-    let!(:project) { Fabricate :project, customer: customer, start_date: 2.months.ago, end_date: 3.months.from_now }
     let!(:finances) { Fabricate :financial_information, company: company, finances_date: 1.month.ago, income_total: 20.4, expenses_total: 12.2 }
 
-    let!(:project_result) { Fabricate :project_result, project: project, result_date: 1.month.ago, throughput_downstream: 20, throughput_upstream: 10 }
-    let!(:other_project_result) { Fabricate :project_result, project: project, result_date: 1.month.ago, throughput_downstream: 30, throughput_upstream: 20 }
-    let!(:out_project_result) { Fabricate :project_result, project: project, result_date: 2.months.ago, throughput_downstream: 130, throughput_upstream: 202 }
-
-    it { expect(finances.throughput_in_month).to eq 80 }
+    it { expect(finances.project_delivered_hours).to eq 112.2 }
   end
 
   describe '#hours_per_demand' do
-    let(:company) { Fabricate :company }
-    let!(:customer) { Fabricate :customer, company: company }
-    let!(:project) { Fabricate :project, customer: customer, start_date: 2.months.ago, end_date: 3.months.from_now }
+    before { travel_to Date.new(2018, 11, 19) }
+    after { travel_back }
+
+    include_context 'demands with effort for finances'
+
     let!(:finances) { Fabricate :financial_information, company: company, finances_date: 1.month.ago, income_total: 20.4, expenses_total: 12.2 }
 
-    let!(:project_result) { Fabricate :project_result, project: project, result_date: 1.month.ago, throughput_downstream: 20, throughput_upstream: 10, qty_hours_downstream: 50, qty_hours_upstream: 70 }
-    let!(:other_project_result) { Fabricate :project_result, project: project, result_date: 1.month.ago, throughput_downstream: 30, throughput_upstream: 20, qty_hours_downstream: 10, qty_hours_upstream: 30 }
-    let!(:out_project_result) { Fabricate :project_result, project: project, result_date: 2.months.ago, throughput_downstream: 130, throughput_upstream: 202, qty_hours_downstream: 22, qty_hours_upstream: 56 }
-
-    it { expect(finances.hours_per_demand).to eq 2 }
+    it { expect(finances.hours_per_demand).to eq 56.1 }
   end
 
   describe '#red?' do

@@ -7,6 +7,7 @@ pt-BR:
       next_finishing_project: "Próximo projeto a terminar"
       next_starting_project: "Próximo projeto a começar"
       top_three_flow_pressure: "Top 3 pressões do fluxo"
+      top_three_throughput: "Top 3 Throughput"
     no_project_finishing: "Nenhum projeto acabando"
     no_project_finishing_week: "Nenhum projeto acabando nesta semana"
     no_project_starting: "Nenhum projeto iniciando"
@@ -25,3 +26,4 @@ pt-BR:
       risk_type: "Tipo do Risco: %{risk_type}"
       previous_color: "Cor do alerta anterior: %{previous_color}"
     no_top_three_throughput: "Não foram encontrados projetos"
+    no_red_projects: "Sem projetos vermelhos"

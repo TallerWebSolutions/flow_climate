@@ -46,13 +46,13 @@ class FinancialInformation < ApplicationRecord
   end
 
   def hours_per_demand
-    return 0 if throughput_in_month.zero?
+    return 0 if throughput_in_month.count.zero?
 
-    project_delivered_hours.to_f / throughput_in_month.to_f
+    project_delivered_hours.to_f / throughput_in_month.count.to_f
   end
 
   def project_delivered_hours
-    company.delivered_hours_for_month(finances_date).to_f
+    company.consumed_hours_in_month(finances_date).to_f
   end
 
   def throughput_in_month

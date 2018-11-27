@@ -43,16 +43,15 @@ class Project < ApplicationRecord
   belongs_to :product, counter_cache: true
   belongs_to :team
 
-  has_many :project_results, dependent: :destroy
   has_many :project_risk_configs, dependent: :destroy
   has_many :project_risk_alerts, dependent: :destroy
   has_many :demands, dependent: :destroy
-  has_many :demand_blocks, through: :demands
+  has_many :project_weekly_costs, dependent: :destroy
   has_many :integration_errors, dependent: :destroy
   has_many :project_change_deadline_histories, dependent: :destroy
   has_many :stage_project_configs, dependent: :destroy
+  has_many :demand_blocks, through: :demands
   has_many :stages, through: :stage_project_configs
-  has_one :pipefy_config, class_name: 'Pipefy::PipefyConfig', dependent: :destroy, autosave: true, inverse_of: :project
   has_one :project_jira_config, class_name: 'Jira::ProjectJiraConfig', dependent: :destroy, autosave: true, inverse_of: :project
 
   validates :customer, :qty_hours, :project_type, :name, :status, :start_date, :end_date, :status, :initial_scope, :percentage_effort_to_bugs, presence: true
@@ -68,7 +67,6 @@ class Project < ApplicationRecord
   scope :running_projects_finishing_within_week, -> { running.where('EXTRACT(week FROM end_date) = :week AND EXTRACT(year FROM end_date) = :year', week: Time.zone.today.cweek, year: Time.zone.today.cwyear) }
   scope :running, -> { where('status = 1 OR status = 2') }
   scope :active, -> { where('status = 0 OR status = 1 OR status = 2') }
-  scope :no_pipefy_config, -> { left_outer_joins(:pipefy_config).where('pipefy_configs.id IS NULL') }
 
   def red?
     project_risk_configs.each do |risk_config|
@@ -118,32 +116,28 @@ class Project < ApplicationRecord
     (remaining_money / value) * 100
   end
 
-  def penultimate_week_scope
-    locate_last_results_for_date.first&.known_scope || initial_scope
-  end
-
   def last_week_scope
-    locate_last_results_for_date.last&.known_scope || initial_scope
+    backlog_for(1.week.ago.to_date)
   end
 
   def backlog_unit_growth
-    last_week_scope - penultimate_week_scope
+    backlog_for(Time.zone.today) - last_week_scope
   end
 
   def backlog_growth_rate
-    return 0 if locate_last_results_for_date.first.blank? || locate_last_results_for_date.first.known_scope.zero?
+    return 0 if demands.blank? || last_week_scope.zero?
 
-    backlog_unit_growth.to_f / locate_last_results_for_date.first.known_scope.to_f
+    backlog_unit_growth.to_f / last_week_scope
   end
 
   def backlog_for(date = Time.zone.today)
-    return initial_scope if date.blank?
+    return demands.kept.count if date.blank?
 
-    project_results.for_week(date.to_date.cweek, date.to_date.cwyear).last&.known_scope || initial_scope
+    demands.kept.where('created_date <= :limit_date', limit_date: date).count + initial_scope
   end
 
   def current_team
-    team || project_results.order(result_date: :desc)&.first&.team || product&.team || project_jira_config&.team
+    team || product&.team || project_jira_config&.team
   end
 
   def update_team_in_product(team)
@@ -158,19 +152,19 @@ class Project < ApplicationRecord
   end
 
   def total_throughput
-    project_results.sum(&:throughput_downstream) + project_results.sum(&:throughput_upstream)
+    demands.kept.finished.count
   end
 
   def total_throughput_upstream
-    project_results.sum(&:throughput_upstream)
+    demands.kept.finished.reject(&:downstream_demand?)
   end
 
   def total_throughput_downstream
-    project_results.sum(&:throughput_downstream)
+    demands.kept.finished.select(&:downstream_demand?)
   end
 
   def total_throughput_for(date = Time.zone.today)
-    project_results.for_week(date.to_date.cweek, date.to_date.cwyear).sum(:throughput_downstream) + project_results.for_week(date.to_date.cweek, date.to_date.cwyear).sum(:throughput_upstream)
+    demands.kept.finished.where('EXTRACT(week FROM end_date) = :week AND EXTRACT(year FROM end_date) = :year', week: date.to_date.cweek, year: date.to_date.cwyear).count
   end
 
   def total_throughput_until(date)
@@ -180,15 +174,15 @@ class Project < ApplicationRecord
   end
 
   def total_hours_upstream
-    project_results.sum(&:qty_hours_upstream)
+    demands.kept.finished.sum(&:effort_upstream)
   end
 
   def total_hours_downstream
-    project_results.sum(&:qty_hours_downstream)
+    demands.kept.finished.sum(&:effort_downstream)
   end
 
   def total_hours_consumed
-    project_results.sum(&:project_delivered_hours)
+    total_hours_upstream + total_hours_downstream
   end
 
   def required_hours_per_available_hours
@@ -204,29 +198,25 @@ class Project < ApplicationRecord
   end
 
   def total_hours_bug
-    project_results.sum(&:qty_hours_bug)
-  end
-
-  def avg_leadtime
-    project_results&.order(:result_date)&.last&.leadtime_average || 0
+    demands.kept.bug.finished.sum(&:effort_upstream) + demands.kept.bug.finished.sum(&:effort_downstream)
   end
 
   def avg_hours_per_demand
-    return 0 if project_results.empty? || total_hours_consumed.zero? || total_throughput.zero?
+    return 0 if total_hours_consumed.zero? || total_throughput.zero?
 
     (total_hours_consumed.to_f / total_throughput.to_f)
   end
 
   def avg_hours_per_demand_upstream
-    return 0 if project_results.empty? || total_hours_upstream.zero? || total_throughput.zero?
+    return 0 if total_hours_upstream.zero? || total_throughput_upstream.count.zero?
 
-    (total_hours_upstream.to_f / total_throughput_upstream.to_f)
+    (total_hours_upstream.to_f / total_throughput_upstream.count.to_f)
   end
 
   def avg_hours_per_demand_downstream
-    return 0 if project_results.empty? || total_hours_downstream.zero? || total_throughput_downstream.zero?
+    return 0 if total_hours_downstream.zero? || total_throughput_downstream.count.zero?
 
-    (total_hours_downstream.to_f / total_throughput_downstream.to_f)
+    (total_hours_downstream.to_f / total_throughput_downstream.count.to_f)
   end
 
   def backlog_remaining(date = Time.zone.today)
@@ -249,7 +239,7 @@ class Project < ApplicationRecord
   end
 
   def money_per_deadline
-    percentage_remaining_days / percentage_remaining_money
+    remaining_money.to_f / remaining_days.to_f
   end
 
   def backlog_growth_throughput_rate
@@ -262,13 +252,6 @@ class Project < ApplicationRecord
     project_risk_alerts.joins(:project_risk_config).where('project_risk_configs.risk_type = :risk_type', risk_type: ProjectRiskConfig.risk_types[risk_type]).order(created_at: :desc).first
   end
 
-  def average_demand_cost
-    return 0 if project_results.blank?
-    return current_cost if total_throughput.zero? || total_throughput == 1
-
-    current_cost / total_throughput
-  end
-
   def hours_per_month
     qty_hours.to_f / (total_days.to_f / 30)
   end
@@ -277,14 +260,10 @@ class Project < ApplicationRecord
     value / (total_days.to_f / 30)
   end
 
-  def manual?
-    pipefy_config.blank?
-  end
-
   def current_cost
-    return 0 if project_results.blank?
+    return 0 if current_team.blank?
 
-    project_results.order(:result_date).last.cost_in_month
+    current_team.active_monthly_cost_for_billable_types(project_type)
   end
 
   def percentage_of_demand_type(demand_type)
@@ -345,10 +324,6 @@ class Project < ApplicationRecord
 
   def no_pressure_set(date)
     finished? || cancelled? || remaining_days(date).zero? || total_days.zero? || backlog_remaining(date).zero?
-  end
-
-  def locate_last_results_for_date(date = Time.zone.today)
-    @locate_last_results_for_date ||= project_results.until_week(date.to_date.cweek, date.to_date.cwyear).order(:result_date).last(2)
   end
 
   def regressive_hours_per_demand

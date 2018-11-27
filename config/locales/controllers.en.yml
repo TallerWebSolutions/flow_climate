@@ -154,7 +154,6 @@ en:
       scope_growth: "Scope Growth (%)"
       scope_unit_growth: "Scope Growth (unity)"
       current_week_scope: "Scope (current)"
-      average_demand_cost: "Average Demand Cost"
       cost_in_month: "Monthly Cost"
       deadline:
         title: "Deadline Negotiations"
@@ -295,28 +294,6 @@ en:
       risks: "Risks"
       stages: "Stages"
       jira: "Jira"
-  project_results:
-    index:
-      title: "Project results"
-      hours_per_demand_upstream: "Hours/Demand In Upstream"
-      hours_per_demand_downstream: "Hours/Demand In Downstream"
-    new:
-      title: "New Project Result"
-    edit:
-      title: "Edit Project Result"
-  operation_results:
-    index:
-      title: "Operation Results"
-    new:
-      title: "New Result"
-  teams:
-    index:
-      title: "Teams"
-    new:
-      title: "New Team"
-    show:
-      demands_flow:
-        title: "Flow between %{start_date} and %{end_date}"
   project:
     new:
       title: "New Project"
@@ -374,11 +351,11 @@ en:
       title: "Edit Demand"
     show:
       no_demand_blocks: "There is no demand blocks"
-      sync_pipefy: "Synchronize"
       no_demand_transitions: "No transitions to this demand."
       last_update: "Last update: %{last_update_date}"
       progress_bars:
         streams: "Flow Streams Occupation"
+      sync_jira: "Sync Demand"
     sync:
       enqueued: "Your request was enqueued. It will be processed soon."
       done: "The sync is done."
@@ -413,7 +390,6 @@ en:
       title: "New Risk Configuration"
   navbar:
     details: "Details"
-    project_results: "Project Results"
     charts: "Project Charts"
     risk_alerts: "Project Risk Alerts"
     settings: "Project Settings"
@@ -474,25 +450,9 @@ en:
       title: "Current Situation"
     demand:
       title: "demand(s)"
-  pipefy_configs:
-    new:
-      title: "New Pipefy Config"
-    index:
-      title: "Pipefy Integrations"
-    edit:
-      title: "Edit Pipefy Config"
-  pipeconfigs:
-    new:
-      title: "New Pipefy Config"
   finances_params:
     edit:
       title: "Edit Financial Information"
-  pipefy_team_config:
-    edit:
-      title: "Edit Pipefy Team Config"
-  pipefy_team_configs:
-    index:
-      title: "Pipefy Team Configurations"
   stages:
     new:
       title: "New Stage"

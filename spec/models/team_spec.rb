@@ -5,9 +5,7 @@ RSpec.describe Team, type: :model do
     it { is_expected.to belong_to :company }
     it { is_expected.to have_many(:team_members).dependent(:destroy) }
     it { is_expected.to have_many(:products).dependent(:restrict_with_error) }
-    it { is_expected.to have_many(:project_results).dependent(:restrict_with_error) }
     it { is_expected.to have_many(:projects) }
-    it { is_expected.to have_many(:pipefy_team_configs).dependent(:destroy) }
   end
 
   context 'validations' do
@@ -89,19 +87,18 @@ RSpec.describe Team, type: :model do
     let(:product) { Fabricate :product, name: 'zzz' }
     let(:other_product) { Fabricate :product, name: 'zzz' }
 
-    let(:project) { Fabricate :project, team: team, end_date: 4.weeks.from_now }
+    let(:project) { Fabricate :project, team: team, end_date: 4.weeks.from_now, qty_hours: 2000 }
     let(:other_project) { Fabricate :project, team: team, end_date: 4.weeks.from_now }
     let(:other_customer_project) { Fabricate :project, team: other_team, end_date: 4.weeks.from_now }
 
-    let!(:first_result) { Fabricate :project_result, project: project, team: team, result_date: 1.week.ago, known_scope: 10 }
-    let!(:second_result) { Fabricate :project_result, project: project, team: team, result_date: 2.weeks.ago, known_scope: 20 }
-    let!(:third_result) { Fabricate :project_result, project: other_project, team: team, result_date: 1.week.ago, known_scope: 5 }
-    let!(:fourth_result) { Fabricate :project_result, project: other_customer_project, team: other_team, result_date: 1.week.ago, known_scope: 50 }
+    let!(:first_demand) { Fabricate :demand, project: project, created_date: 2.weeks.ago, end_date: 1.week.ago, demand_type: :bug, effort_downstream: 20, effort_upstream: 30 }
+    let!(:second_demand) { Fabricate :demand, project: project, created_date: 2.weeks.ago, end_date: 1.week.ago, effort_downstream: 40, effort_upstream: 35 }
+    let!(:third_demand) { Fabricate :demand, project: project, created_date: 1.week.ago, end_date: 2.days.ago, effort_downstream: 10, effort_upstream: 78 }
   end
 
   describe '#last_week_scope' do
     include_context 'consolidations data for team'
-    it { expect(team.last_week_scope).to eq 15 }
+    it { expect(team.last_week_scope).to eq 32 }
   end
 
   describe '#avg_hours_per_demand' do
@@ -173,15 +170,12 @@ RSpec.describe Team, type: :model do
     after { travel_back }
 
     let(:team) { Fabricate :team }
-    context 'having project results' do
-      let(:project) { Fabricate :project, start_date: Date.new(2018, 4, 1), end_date: Date.new(2018, 4, 10) }
-      let!(:project_result) { Fabricate :project_result, team: team, result_date: Date.new(2018, 4, 3), qty_hours_downstream: 200, qty_hours_upstream: 87 }
-      let!(:other_project_result) { Fabricate :project_result, team: team, result_date: Date.new(2018, 4, 4), qty_hours_downstream: 130, qty_hours_upstream: 65 }
-
-      it { expect(team.consumed_hours_in_month(Date.new(2018, 4, 5))).to eq 482 }
+    context 'having data' do
+      include_context 'consolidations data for team'
+      it { expect(team.consumed_hours_in_month(Date.new(2018, 4, 5))).to eq 0.88e2 }
     end
 
-    context 'having no project results' do
+    context 'having no data' do
       it { expect(team.consumed_hours_in_month(Date.new(2018, 4, 5))).to eq 0 }
     end
   end

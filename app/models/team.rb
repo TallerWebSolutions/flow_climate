@@ -25,11 +25,10 @@ class Team < ApplicationRecord
 
   belongs_to :company
   has_many :team_members, dependent: :destroy
-  has_many :project_results, dependent: :restrict_with_error
   has_many :projects, dependent: :restrict_with_error
   has_many :products, dependent: :restrict_with_error
   has_many :product_projects, -> { distinct }, through: :products, source: :projects
-  has_many :pipefy_team_configs, class_name: 'Pipefy::PipefyTeamConfig', dependent: :destroy, inverse_of: :team
+  has_many :demands, -> { distinct }, through: :projects
 
   validates :company, :name, presence: true
   validates :name, uniqueness: { scope: :company, message: I18n.t('team.name.uniqueness') }
@@ -48,15 +47,11 @@ class Team < ApplicationRecord
     team_members.active.where(billable: true, billable_type: billable_type).sum(&:hours_per_month)
   end
 
-  def active_daily_available_hours_for_billable_types(billable_type)
-    active_monthly_available_hours_for_billable_types(billable_type) / 30.0
-  end
-
   def total_cost
     team_members.active.sum(&:total_monthly_payment)
   end
 
   def consumed_hours_in_month(required_date)
-    project_results.in_month(required_date).sum(&:total_hours)
+    demands.kept.where('EXTRACT(YEAR from demands.end_date) = :year AND EXTRACT(MONTH from demands.end_date) = :month', year: required_date.to_date.cwyear, month: required_date.to_date.month).sum(&:total_effort)
   end
 end
