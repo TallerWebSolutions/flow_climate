@@ -23,9 +23,6 @@ function buildOperationalHighcharts() {
     const flowPressureDiv = $('#flowpressure-column');
     buildColumnChart(flowPressureDiv);
 
-    const cmdDiv = $('#cmd-column');
-    buildColumnChart(cmdDiv);
-
     const leadtimeControlChart = $('#leadtime-control-chart');
     buildScatterChart(leadtimeControlChart);
 
