@@ -92,6 +92,9 @@ RSpec.describe Product, type: :model do
   end
 
   describe '#last_week_scope' do
+    before { travel_to Time.zone.local(2018, 11, 19, 10, 0, 0) }
+    after { travel_back }
+
     include_context 'consolidations variables data for product'
     it { expect(product.last_week_scope).to eq 61 }
   end
