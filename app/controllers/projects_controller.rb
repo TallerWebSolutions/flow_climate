@@ -78,9 +78,7 @@ class ProjectsController < AuthenticatedController
 
   def copy_stages_from
     @project_to_copy_stages_from = Project.find(params[:project_to_copy_stages_from])
-    if @project.stages.empty?
-      @project.update(stages: @project_to_copy_stages_from.stages)
-    end
+    @project.update(stages: @project_to_copy_stages_from.stages) if @project.stages.empty?
     @project_stages = @project.reload.stages.order(:order, :name)
     respond_to { |format| format.js { render file: 'projects/copy_stages_from.js.erb' } }
   end

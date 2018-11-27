@@ -9,7 +9,6 @@ AllCops:
     - 'Gemfile.lock'
     - !ruby/regexp /old_and_unused\.rb$/
     - 'app/helpers/**/*'
-    - 'lib/tasks/migrate_current_projects_to_jira.rake'
     - 'config/environments/**/*'
 
 Rails:
