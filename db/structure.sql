@@ -22,20 +22,6 @@ CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
 COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
 
 
---
--- Name: pg_stat_statements; Type: EXTENSION; Schema: -; Owner: -
---
-
-CREATE EXTENSION IF NOT EXISTS pg_stat_statements WITH SCHEMA public;
-
-
---
--- Name: EXTENSION pg_stat_statements; Type: COMMENT; Schema: -; Owner: -
---
-
-COMMENT ON EXTENSION pg_stat_statements IS 'track execution statistics of all SQL statements executed';
-
-
 SET default_tablespace = '';
 
 SET default_with_oids = false;
@@ -427,75 +413,6 @@ CREATE SEQUENCE public.jira_custom_field_mappings_id_seq
 --
 
 ALTER SEQUENCE public.jira_custom_field_mappings_id_seq OWNED BY public.jira_custom_field_mappings.id;
-
-
---
--- Name: pipefy_configs; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.pipefy_configs (
-    id bigint NOT NULL,
-    project_id integer NOT NULL,
-    team_id integer NOT NULL,
-    pipe_id character varying NOT NULL,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
-    company_id integer NOT NULL,
-    active boolean DEFAULT true
-);
-
-
---
--- Name: pipefy_configs_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.pipefy_configs_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: pipefy_configs_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.pipefy_configs_id_seq OWNED BY public.pipefy_configs.id;
-
-
---
--- Name: pipefy_team_configs; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.pipefy_team_configs (
-    id bigint NOT NULL,
-    team_id integer NOT NULL,
-    integration_id character varying NOT NULL,
-    username character varying NOT NULL,
-    member_type integer DEFAULT 0,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
-);
-
-
---
--- Name: pipefy_team_configs_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.pipefy_team_configs_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: pipefy_team_configs_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.pipefy_team_configs_id_seq OWNED BY public.pipefy_team_configs.id;
 
 
 --
@@ -1021,20 +938,6 @@ ALTER TABLE ONLY public.jira_custom_field_mappings ALTER COLUMN id SET DEFAULT n
 
 
 --
--- Name: pipefy_configs id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.pipefy_configs ALTER COLUMN id SET DEFAULT nextval('public.pipefy_configs_id_seq'::regclass);
-
-
---
--- Name: pipefy_team_configs id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.pipefy_team_configs ALTER COLUMN id SET DEFAULT nextval('public.pipefy_team_configs_id_seq'::regclass);
-
-
---
 -- Name: products id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1204,22 +1107,6 @@ ALTER TABLE ONLY public.jira_accounts
 
 ALTER TABLE ONLY public.jira_custom_field_mappings
     ADD CONSTRAINT jira_custom_field_mappings_pkey PRIMARY KEY (id);
-
-
---
--- Name: pipefy_configs pipefy_configs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.pipefy_configs
-    ADD CONSTRAINT pipefy_configs_pkey PRIMARY KEY (id);
-
-
---
--- Name: pipefy_team_configs pipefy_team_configs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.pipefy_team_configs
-    ADD CONSTRAINT pipefy_team_configs_pkey PRIMARY KEY (id);
 
 
 --
@@ -1446,41 +1333,6 @@ CREATE INDEX index_jira_custom_field_mappings_on_jira_account_id ON public.jira_
 
 
 --
--- Name: index_pipefy_configs_on_project_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_pipefy_configs_on_project_id ON public.pipefy_configs USING btree (project_id);
-
-
---
--- Name: index_pipefy_configs_on_team_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_pipefy_configs_on_team_id ON public.pipefy_configs USING btree (team_id);
-
-
---
--- Name: index_pipefy_team_configs_on_integration_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_pipefy_team_configs_on_integration_id ON public.pipefy_team_configs USING btree (integration_id);
-
-
---
--- Name: index_pipefy_team_configs_on_team_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_pipefy_team_configs_on_team_id ON public.pipefy_team_configs USING btree (team_id);
-
-
---
--- Name: index_pipefy_team_configs_on_username; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_pipefy_team_configs_on_username ON public.pipefy_team_configs USING btree (username);
-
-
---
 -- Name: index_products_on_customer_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1656,14 +1508,6 @@ CREATE UNIQUE INDEX unique_jira_project_key_to_jira_account_domain ON public.pro
 
 
 --
--- Name: pipefy_configs fk_rails_0732eff170; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.pipefy_configs
-    ADD CONSTRAINT fk_rails_0732eff170 FOREIGN KEY (project_id) REFERENCES public.projects(id);
-
-
---
 -- Name: demand_blocks fk_rails_0c8fa8d3a7; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1744,22 +1588,6 @@ ALTER TABLE ONLY public.integration_errors
 
 
 --
--- Name: pipefy_configs fk_rails_3895e626a7; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.pipefy_configs
-    ADD CONSTRAINT fk_rails_3895e626a7 FOREIGN KEY (company_id) REFERENCES public.companies(id);
-
-
---
--- Name: pipefy_configs fk_rails_429f1ebe04; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.pipefy_configs
-    ADD CONSTRAINT fk_rails_429f1ebe04 FOREIGN KEY (team_id) REFERENCES public.teams(id);
-
-
---
 -- Name: project_risk_alerts fk_rails_4685dfa1bb; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1813,14 +1641,6 @@ ALTER TABLE ONLY public.integration_errors
 
 ALTER TABLE ONLY public.companies_users
     ADD CONSTRAINT fk_rails_667cd952fb FOREIGN KEY (company_id) REFERENCES public.companies(id);
-
-
---
--- Name: pipefy_team_configs fk_rails_6b009afec0; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.pipefy_team_configs
-    ADD CONSTRAINT fk_rails_6b009afec0 FOREIGN KEY (team_id) REFERENCES public.teams(id);
 
 
 --
