@@ -8,34 +8,6 @@ SET check_function_bodies = false;
 SET client_min_messages = warning;
 SET row_security = off;
 
---
--- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: -
---
-
-CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
-
-
---
--- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: -
---
-
-COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
-
-
---
--- Name: pg_stat_statements; Type: EXTENSION; Schema: -; Owner: -
---
-
-CREATE EXTENSION IF NOT EXISTS pg_stat_statements WITH SCHEMA public;
-
-
---
--- Name: EXTENSION pg_stat_statements; Type: COMMENT; Schema: -; Owner: -
---
-
-COMMENT ON EXTENSION pg_stat_statements IS 'track execution statistics of all SQL statements executed';
-
-
 SET default_tablespace = '';
 
 SET default_with_oids = false;
@@ -836,6 +808,73 @@ ALTER SEQUENCE public.teams_id_seq OWNED BY public.teams.id;
 
 
 --
+-- Name: user_project_downloads; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.user_project_downloads (
+    id bigint NOT NULL,
+    user_id integer NOT NULL,
+    project_id integer NOT NULL,
+    first_id_downloaded integer NOT NULL,
+    last_id_downloaded integer NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: user_project_downloads_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.user_project_downloads_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: user_project_downloads_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.user_project_downloads_id_seq OWNED BY public.user_project_downloads.id;
+
+
+--
+-- Name: user_project_roles; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.user_project_roles (
+    id bigint NOT NULL,
+    user_id integer NOT NULL,
+    project_id integer NOT NULL,
+    role_in_project integer DEFAULT 0 NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: user_project_roles_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.user_project_roles_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: user_project_roles_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.user_project_roles_id_seq OWNED BY public.user_project_roles.id;
+
+
+--
 -- Name: users; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1029,6 +1068,20 @@ ALTER TABLE ONLY public.teams ALTER COLUMN id SET DEFAULT nextval('public.teams_
 
 
 --
+-- Name: user_project_downloads id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.user_project_downloads ALTER COLUMN id SET DEFAULT nextval('public.user_project_downloads_id_seq'::regclass);
+
+
+--
+-- Name: user_project_roles id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.user_project_roles ALTER COLUMN id SET DEFAULT nextval('public.user_project_roles_id_seq'::regclass);
+
+
+--
 -- Name: users id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1217,6 +1270,22 @@ ALTER TABLE ONLY public.team_members
 
 ALTER TABLE ONLY public.teams
     ADD CONSTRAINT teams_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: user_project_downloads user_project_downloads_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.user_project_downloads
+    ADD CONSTRAINT user_project_downloads_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: user_project_roles user_project_roles_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.user_project_roles
+    ADD CONSTRAINT user_project_roles_pkey PRIMARY KEY (id);
 
 
 --
@@ -1494,6 +1563,48 @@ CREATE UNIQUE INDEX index_teams_on_company_id_and_name ON public.teams USING btr
 
 
 --
+-- Name: index_user_project_downloads_on_first_id_downloaded; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_user_project_downloads_on_first_id_downloaded ON public.user_project_downloads USING btree (first_id_downloaded);
+
+
+--
+-- Name: index_user_project_downloads_on_last_id_downloaded; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_user_project_downloads_on_last_id_downloaded ON public.user_project_downloads USING btree (last_id_downloaded);
+
+
+--
+-- Name: index_user_project_downloads_on_project_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_user_project_downloads_on_project_id ON public.user_project_downloads USING btree (project_id);
+
+
+--
+-- Name: index_user_project_downloads_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_user_project_downloads_on_user_id ON public.user_project_downloads USING btree (user_id);
+
+
+--
+-- Name: index_user_project_roles_on_project_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_user_project_roles_on_project_id ON public.user_project_roles USING btree (project_id);
+
+
+--
+-- Name: index_user_project_roles_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_user_project_roles_on_user_id ON public.user_project_roles USING btree (user_id);
+
+
+--
 -- Name: index_users_on_email; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1527,6 +1638,14 @@ CREATE UNIQUE INDEX unique_jira_project_key_to_jira_account_domain ON public.pro
 
 ALTER TABLE ONLY public.demand_blocks
     ADD CONSTRAINT fk_rails_0c8fa8d3a7 FOREIGN KEY (demand_id) REFERENCES public.demands(id);
+
+
+--
+-- Name: user_project_downloads fk_rails_0f08531a34; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.user_project_downloads
+    ADD CONSTRAINT fk_rails_0f08531a34 FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --
@@ -1618,6 +1737,14 @@ ALTER TABLE ONLY public.projects
 
 
 --
+-- Name: user_project_roles fk_rails_4bed04fd76; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.user_project_roles
+    ADD CONSTRAINT fk_rails_4bed04fd76 FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
 -- Name: financial_informations fk_rails_573f757bcf; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1631,6 +1758,14 @@ ALTER TABLE ONLY public.financial_informations
 
 ALTER TABLE ONLY public.project_jira_configs
     ADD CONSTRAINT fk_rails_5de62c9ca2 FOREIGN KEY (project_id) REFERENCES public.projects(id);
+
+
+--
+-- Name: user_project_downloads fk_rails_626b44cbc6; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.user_project_downloads
+    ADD CONSTRAINT fk_rails_626b44cbc6 FOREIGN KEY (project_id) REFERENCES public.projects(id);
 
 
 --
@@ -1663,6 +1798,14 @@ ALTER TABLE ONLY public.companies_users
 
 ALTER TABLE ONLY public.stage_project_configs
     ADD CONSTRAINT fk_rails_713ceb31a3 FOREIGN KEY (project_id) REFERENCES public.projects(id);
+
+
+--
+-- Name: user_project_roles fk_rails_7402a518b4; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.user_project_roles
+    ADD CONSTRAINT fk_rails_7402a518b4 FOREIGN KEY (project_id) REFERENCES public.projects(id);
 
 
 --
@@ -1854,6 +1997,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20180830205543'),
 ('20180915020210'),
 ('20181008191022'),
-('20181022220910');
+('20181022220910'),
+('20181210181733');
 
 

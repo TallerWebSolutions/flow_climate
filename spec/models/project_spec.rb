@@ -20,6 +20,11 @@ RSpec.describe Project, type: :model do
     it { is_expected.to have_many(:integration_errors).dependent(:destroy) }
     it { is_expected.to have_many(:project_change_deadline_histories).dependent(:destroy) }
     it { is_expected.to have_one(:project_jira_config).dependent(:destroy) }
+
+    it { is_expected.to have_many(:user_project_roles).dependent(:destroy) }
+    it { is_expected.to have_many(:users).through(:user_project_roles) }
+
+    it { is_expected.to have_many(:user_project_downloads).dependent(:destroy) }
   end
 
   context 'validations' do
@@ -1006,6 +1011,21 @@ RSpec.describe Project, type: :model do
       let(:not_kept_demand) { Fabricate :demand, project: project, discarded_at: Time.zone.today }
 
       it { expect(project.kept_demands_ids).to match_array [] }
+    end
+  end
+
+  describe '#add_user' do
+    context 'when already has the user' do
+      let(:user) { Fabricate :user }
+      let!(:project) { Fabricate :project }
+      before { project.add_user(user) }
+      it { expect(project.users).to eq [user] }
+    end
+    context 'when does not have the user' do
+      let(:user) { Fabricate :user }
+      let!(:project) { Fabricate :project }
+      before { project.add_user(user) }
+      it { expect(project.users).to eq [user] }
     end
   end
 end

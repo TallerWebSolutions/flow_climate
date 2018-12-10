@@ -54,6 +54,11 @@ class Project < ApplicationRecord
   has_many :stages, through: :stage_project_configs
   has_one :project_jira_config, class_name: 'Jira::ProjectJiraConfig', dependent: :destroy, autosave: true, inverse_of: :project
 
+  has_many :user_project_roles, dependent: :destroy
+  has_many :users, through: :user_project_roles
+
+  has_many :user_project_downloads, dependent: :destroy
+
   validates :customer, :qty_hours, :project_type, :name, :status, :start_date, :end_date, :status, :initial_scope, :percentage_effort_to_bugs, presence: true
   validates :name, uniqueness: { scope: :product, message: I18n.t('project.name.uniqueness') }
   validates :nickname, uniqueness: { scope: :customer, message: I18n.t('project.nickname.uniqueness') }, allow_nil: true
@@ -67,6 +72,12 @@ class Project < ApplicationRecord
   scope :running_projects_finishing_within_week, -> { running.where('EXTRACT(week FROM end_date) = :week AND EXTRACT(year FROM end_date) = :year', week: Time.zone.today.cweek, year: Time.zone.today.cwyear) }
   scope :running, -> { where('status = 1 OR status = 2') }
   scope :active, -> { where('status = 0 OR status = 1 OR status = 2') }
+
+  def add_user(user)
+    return if users.include?(user)
+
+    users << user
+  end
 
   def red?
     project_risk_configs.each do |risk_config|
