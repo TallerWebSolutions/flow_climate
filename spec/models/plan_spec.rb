@@ -2,7 +2,7 @@
 
 RSpec.describe Plan, type: :model do
   context 'enums' do
-    it { is_expected.to define_enum_for(:plan_type).with(standard: 0, gold: 1) }
+    it { is_expected.to define_enum_for(:plan_type).with(trial: 0, lite: 1, standard: 2, gold: 3) }
   end
 
   context 'associations' do

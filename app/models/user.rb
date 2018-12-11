@@ -42,8 +42,37 @@ class User < ApplicationRecord
   has_many :projects, through: :user_project_roles
 
   has_many :user_project_downloads, dependent: :destroy
+  has_many :user_plans, dependent: :destroy
 
   validates :first_name, :last_name, :email, presence: true
 
   scope :to_notify_email, -> { where email_notifications: true }
+
+  def current_plan
+    user_plans.valid_plans.first&.plan
+  end
+
+  def lite?
+    return false if current_plan.blank?
+
+    current_plan.lite?
+  end
+
+  def standard?
+    return false if current_plan.blank?
+
+    current_plan.standard?
+  end
+
+  def gold?
+    return false if current_plan.blank?
+
+    current_plan.gold?
+  end
+
+  def no_plan?
+    return true if current_plan.blank?
+
+    false
+  end
 end

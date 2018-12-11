@@ -10,6 +10,7 @@ AllCops:
     - !ruby/regexp /old_and_unused\.rb$/
     - 'app/helpers/**/*'
     - 'config/environments/**/*'
+    - 'app/jobs/**/*'
 
 Rails:
   Enabled: true
@@ -31,6 +32,7 @@ Metrics/MethodLength:
     - 'app/routes/**/*'
     - 'db/migrate/**/*'
     - 'app/adapters/highchart/finances_charts_adapter.rb'
+    - 'app/controllers/exports_controller.rb'
   Max: 15
 
 Metrics/BlockLength:
@@ -63,6 +65,7 @@ Metrics/AbcSize:
   Exclude:
     - 'app/routes/**/*'
     - 'db/migrate/**/*'
+    - 'app/controllers/exports_controller.rb'
   Max: 18.5
 
 Metrics/ParameterLists:

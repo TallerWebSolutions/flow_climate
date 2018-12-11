@@ -542,3 +542,6 @@ en:
   project_jira_configs:
     new:
       title: "New Jira Config"
+  exports:
+    request_project_information:
+      title: "Receive informations from Jira"

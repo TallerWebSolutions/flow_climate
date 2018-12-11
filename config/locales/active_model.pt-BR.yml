@@ -302,6 +302,13 @@ pt-BR:
         jira_project_key: Chave do Projeto no Jira
         active: Ativo?
         project: Projeto
+      jira/jira_account:
+        username: Nome de usuário
+        password: Senha
+        base_uri: URI base
+        company: Empresa
+        jira_custom_field_mappings: Meapeamento de Campos Customizados
+        customer_domain: Domínio do Usuário
   product:
     name:
       uniqueness: "Não deve repetir nome de produto para o mesmo cliente."

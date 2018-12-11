@@ -14,6 +14,17 @@ Rails.application.routes.draw do
 
   devise_for :users, controllers: { registrations: 'devise_custom/registrations' }
 
+  controller :home do
+    get :show
+    get :no_plan
+    get :no_company
+  end
+
+  controller :exports do
+    get :request_project_information
+    post :process_requested_information
+  end
+
   resources :users, only: [] do
     collection do
       patch :activate_email_notifications
@@ -117,5 +128,5 @@ Rails.application.routes.draw do
     end
   end
 
-  root 'companies#index'
+  root 'home#show'
 end

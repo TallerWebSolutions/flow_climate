@@ -32,4 +32,8 @@ class UserPlan < ApplicationRecord
   belongs_to :plan
 
   validates :user, :plan, :plan_billing_period, :start_at, :finish_at, presence: true
+
+  scope :valid_plans, -> { where('finish_at >= current_date AND start_at <= current_date AND active = true') }
+
+  delegate :lite?, to: :plan
 end

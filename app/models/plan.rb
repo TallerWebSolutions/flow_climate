@@ -13,7 +13,7 @@
 #
 
 class Plan < ApplicationRecord
-  enum plan_type: { standard: 0, gold: 1 }
+  enum plan_type: { trial: 0, lite: 1, standard: 2, gold: 3 }
 
   has_many :user_plans, dependent: :destroy
 
