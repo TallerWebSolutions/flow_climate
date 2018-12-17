@@ -1,36 +1,40 @@
 <div class="col-xs-4 col-xs-offset-4">
   <h1><%= t('exports.request_project_information.title') %></h1>
 
-  <%= form_tag process_requested_information_path(format: :csv), method: :post, class: 'form' do %>
+  <%= form_tag process_requested_information_path(format: [:csv, :html]), method: :post, class: 'form' do %>
     <div class="standard-form">
       <div class="row">
         <div class='col-xs-6 form-group'>
           <%= label_tag Jira::JiraAccount.human_attribute_name(:username), nil, class: 'control-label required' %>
-          <%= text_field_tag :username, nil, class: 'form-control' %>
+          <%= text_field_tag :username, params[:username], class: 'form-control' %>
         </div>
         <div class='col-xs-6 form-group'>
           <%= label_tag Jira::JiraAccount.human_attribute_name(:password), nil, class: 'control-label required' %>
-          <%= password_field_tag :password, nil, class: 'form-control' %>
+          <%= password_field_tag :password, params[:password], class: 'form-control' %>
         </div>
       </div>
       <div class="row">
         <div class='col-xs-6 form-group'>
           <%= label_tag Jira::JiraAccount.human_attribute_name(:base_uri), nil, class: 'control-label required' %>
-          <%= text_field_tag :base_uri, nil, class: 'form-control' %>
+          <%= text_field_tag :base_uri, params[:base_uri], class: 'form-control' %>
         </div>
         <div class='col-xs-6 form-group'>
           <%= label_tag Jira::JiraAccount.human_attribute_name(:customer_domain), nil, class: 'control-label required' %>
-          <%= text_field_tag :customer_domain, nil, class: 'form-control' %>
+          <%= text_field_tag :customer_domain, params[:password], class: 'form-control' %>
         </div>
       </div>
       <div class="row">
-        <div class='col-xs-6 form-group'>
-          <%= label_tag :fix_version_name, nil, class: 'control-label required' %>
-          <%= text_field_tag :fix_version_name, nil, class: 'form-control' %>
+        <div class='col-xs-4 form-group'>
+          <%= label_tag :project_name, nil, class: 'control-label' %>
+          <%= text_field_tag :project_name, nil, class: 'form-control' %>
         </div>
-        <div class='col-xs-6 form-group'>
+        <div class='col-xs-4 form-group'>
           <%= label_tag :jira_project_key, nil, class: 'control-label required' %>
           <%= text_field_tag :jira_project_key, nil, class: 'form-control' %>
+        </div>
+        <div class='col-xs-4 form-group'>
+          <%= label_tag :fix_version_name, nil, class: 'control-label' %>
+          <%= text_field_tag :fix_version_name, nil, class: 'form-control' %>
         </div>
       </div>
       <div class="row">

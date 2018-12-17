@@ -23,8 +23,6 @@ RSpec.describe Project, type: :model do
 
     it { is_expected.to have_many(:user_project_roles).dependent(:destroy) }
     it { is_expected.to have_many(:users).through(:user_project_roles) }
-
-    it { is_expected.to have_many(:user_project_downloads).dependent(:destroy) }
   end
 
   context 'validations' do
@@ -439,9 +437,11 @@ RSpec.describe Project, type: :model do
   end
 
   describe '#avg_hours_per_demand_upstream' do
+    before { travel_to Date.new(2018, 11, 19) }
+    after { travel_back }
     context 'having results' do
       include_context 'demands with effort'
-      it { expect(project.avg_hours_per_demand_upstream).to eq 119.9 }
+      it { expect(project.avg_hours_per_demand_upstream).to eq 118.8 }
     end
     context 'having no results' do
       let(:project) { Fabricate :project, initial_scope: 30, start_date: 1.day.ago, end_date: 1.week.from_now }
@@ -517,6 +517,9 @@ RSpec.describe Project, type: :model do
   end
 
   describe '#total_throughput_downstream' do
+    before { travel_to Date.new(2018, 11, 19) }
+    after { travel_back }
+
     context 'having data' do
       include_context 'demands with effort'
       it { expect(project.total_throughput_downstream).to match_array [first_demand, second_demand] }
@@ -528,9 +531,12 @@ RSpec.describe Project, type: :model do
   end
 
   describe '#total_hours_upstream' do
+    before { travel_to Date.new(2018, 11, 19) }
+    after { travel_back }
+
     context 'having data' do
       include_context 'demands with effort'
-      it { expect(project.total_hours_upstream).to eq 0.1199e3 }
+      it { expect(project.total_hours_upstream).to eq 118.8 }
     end
     context 'having no data' do
       let(:project) { Fabricate :project, initial_scope: 30, start_date: 1.day.ago, end_date: 1.week.from_now, qty_hours: 5000 }
@@ -621,6 +627,9 @@ RSpec.describe Project, type: :model do
   end
 
   describe '#total_throughput_for' do
+    before { travel_to Time.zone.local(2018, 11, 19, 10, 0, 0) }
+    after { travel_back }
+
     context 'having data' do
       include_context 'demands with effort'
       it { expect(project.total_throughput_for(Time.zone.today)).to eq 2 }
@@ -663,6 +672,9 @@ RSpec.describe Project, type: :model do
   end
 
   describe '#backlog_growth_throughput_rate' do
+    before { travel_to Time.zone.local(2018, 11, 19, 10, 0, 0) }
+    after { travel_back }
+
     context 'having data' do
       include_context 'demands with effort'
       it { expect(project.backlog_growth_throughput_rate).to eq 0.5 }

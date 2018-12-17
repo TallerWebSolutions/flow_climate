@@ -5,7 +5,7 @@ RSpec.describe User, type: :model do
     it { is_expected.to have_and_belong_to_many :companies }
     it { is_expected.to have_many(:user_project_roles).dependent(:destroy) }
     it { is_expected.to have_many(:projects).through(:user_project_roles) }
-    it { is_expected.to have_many(:user_project_downloads).dependent(:destroy) }
+    it { is_expected.to have_many(:demand_data_processments).dependent(:destroy) }
     it { is_expected.to have_many(:user_plans).dependent(:destroy) }
   end
 
@@ -30,6 +30,23 @@ RSpec.describe User, type: :model do
     end
   end
 
+  describe '#trial?' do
+    context 'having no plans' do
+      let(:plan) { Fabricate :plan, plan_type: :trial }
+      let(:user) { Fabricate :user }
+      let!(:user_plan) { Fabricate :user_plan, user: user, plan: plan, active: true, finish_at: Time.zone.yesterday }
+
+      it { expect(user.trial?).to be false }
+    end
+    context 'when it is trial' do
+      let(:plan) { Fabricate :plan, plan_type: :trial }
+      let(:user) { Fabricate :user }
+      let!(:user_plan) { Fabricate :user_plan, user: user, plan: plan, active: true }
+
+      it { expect(user.trial?).to be true }
+    end
+  end
+
   describe '#lite?' do
     context 'having no plans' do
       let(:plan) { Fabricate :plan, plan_type: :lite }
@@ -44,23 +61,6 @@ RSpec.describe User, type: :model do
       let!(:user_plan) { Fabricate :user_plan, user: user, plan: plan, active: true }
 
       it { expect(user.lite?).to be true }
-    end
-  end
-
-  describe '#standard?' do
-    context 'having no plans' do
-      let(:plan) { Fabricate :plan, plan_type: :standard }
-      let(:user) { Fabricate :user }
-      let!(:user_plan) { Fabricate :user_plan, user: user, plan: plan, active: false }
-
-      it { expect(user.standard?).to be false }
-    end
-    context 'when it is standard' do
-      let(:plan) { Fabricate :plan, plan_type: :standard }
-      let(:user) { Fabricate :user }
-      let!(:user_plan) { Fabricate :user_plan, user: user, plan: plan, active: true }
-
-      it { expect(user.standard?).to be true }
     end
   end
 
@@ -95,6 +95,39 @@ RSpec.describe User, type: :model do
       let!(:user_plan) { Fabricate :user_plan, user: user, plan: plan, active: true }
 
       it { expect(user.no_plan?).to be false }
+    end
+  end
+
+  describe '#current_plan' do
+    context 'having plans' do
+      let(:user) { Fabricate :user }
+      let(:plan) { Fabricate :plan }
+      let!(:user_plan) { Fabricate :user_plan, plan: plan, user: user, active: true }
+
+      it { expect(user.current_plan).to eq plan }
+    end
+    context 'having no plans' do
+      let(:user) { Fabricate :user }
+      let(:plan) { Fabricate :plan }
+      let!(:user_plan) { Fabricate :user_plan, plan: plan, user: user, active: false }
+
+      it { expect(user.current_plan).to be_nil }
+    end
+  end
+  describe '#current_user_plan' do
+    context 'having plans' do
+      let(:user) { Fabricate :user }
+      let(:plan) { Fabricate :plan }
+      let!(:user_plan) { Fabricate :user_plan, plan: plan, user: user, active: true }
+
+      it { expect(user.current_user_plan).to eq user_plan }
+    end
+    context 'having no plans' do
+      let(:user) { Fabricate :user }
+      let(:plan) { Fabricate :plan }
+      let!(:user_plan) { Fabricate :user_plan, plan: plan, user: user, active: false }
+
+      it { expect(user.current_user_plan).to be_nil }
     end
   end
 end

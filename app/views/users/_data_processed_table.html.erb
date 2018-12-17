@@ -1,0 +1,15 @@
+<h3><%= t('user_profile.show.data_processed_table') %></h3>
+<table class="table">
+  <thead>
+    <tr>
+      <th><%= DemandDataProcessment.human_attribute_name(:created_at) %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @demand_data_processment.each do |user_plan| %>
+      <tr>
+        <td><%= user_plan.description %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

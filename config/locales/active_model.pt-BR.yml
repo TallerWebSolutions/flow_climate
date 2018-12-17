@@ -50,7 +50,6 @@ pt-BR:
             base:
               restrict_dependent_destroy:
                 has_many: Não é possível excluir o registro pois existem registros dependentes
-          attributes:
             email:
               invalid: Este não é um email válido
         demand_transition:
@@ -108,6 +107,12 @@ pt-BR:
       stage_project_config:
         one: Configuração de Stage para Projeto
         other: Configurações de Stage para Projeto
+      plan:
+        one: Plano
+        other: Planos
+      user_plan:
+        one: Plano de Usuário
+        other: Planos de Usuário
       jira/project_jira_config:
         one: Configuração do Jira para o Projeto
         other: Configurações do Jira para o Projeto
@@ -296,6 +301,25 @@ pt-BR:
         stage_percentage: Porcentagem da Etapa
         pairing_percentage: Porcentagem de Pareamento
         management_percentage: Porcentagem de Gestão
+      plan:
+        plan_type: Tipo do Plano
+        plan_period: Período Mensal ou Anual
+        plan_details: Detalhes do Plano
+        plan_value: Valor do Plano
+        max_days_in_history: Dias de Histórico
+        max_number_of_downloads: Número Máx de Downloads
+        max_number_of_users: Número de Usuários
+        extra_download_value: Valor do Download Extra
+      user_plan:
+        user: Usuário
+        plan: Plano
+        demand_data_processments: Processamentos de Demandas
+        plan_billing_period: Período de Cobrança do Plano
+        start_at: Inicia Em
+        finish_at: Finaliza Em
+        paid: Pago?
+        plan_value: Valor do Plano
+        active: Ativo?
       jira/project_jira_config:
         team: Time
         jira_account_domain: Domínio da Conta no Jira
@@ -336,3 +360,6 @@ pt-BR:
     validations:
       jira_project_key_uniqueness:
         message: "Deve have apenas uma chave de projeto no jira para cada domínio de conta e nome da fix version"
+  user_plan:
+    validations:
+      user_plan_active: "You already have a plan to this period."

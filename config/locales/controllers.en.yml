@@ -12,6 +12,7 @@ en:
       i_am_done: I'm done
       send: Send
       import: "Import"
+      sign_up: "Sign Up"
     no_records: You have no %{record} yet! Why not create your first?
     messages:
       saved: Saved!
@@ -59,6 +60,8 @@ en:
   users:
     change_last_company:
       title: "Change to this company"
+    show:
+      title: "User Profile"
   companies:
     index:
       title: "Companies"
@@ -545,3 +548,14 @@ en:
   exports:
     request_project_information:
       title: "Receive informations from Jira"
+      no_result_alert: "Your query returned no results. Review the informations."
+  plans:
+    buttons:
+      inactive_plan_present: "You're already have an inactive plan"
+  user_plans:
+    index:
+      table:
+        title: "All Plans"
+  user_profile:
+    show:
+      data_processed_table: "Data Processed"

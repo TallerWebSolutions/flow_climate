@@ -5,8 +5,22 @@ class ExportsController < AuthenticatedController
 
   def process_requested_information
     jira_api_service = Jira::JiraApiService.new(params[:username], params[:password], params[:base_uri])
-    project_issues = jira_api_service.request_issues_by_fix_version(params[:jira_project_key], params[:fix_version_name])
+    project_issues = retrieve_issues(params[:project_name], params[:jira_project_key], params[:fix_version_name], jira_api_service)
 
+    if project_issues.blank?
+      flash[:alert] = I18n.t('exports.request_project_information.no_result_alert')
+      redirect_to request_project_information_path(username: params[:username], password: params[:password],
+                                                   base_uri: params[:base_uri], customer_domain: params[:customer_domain],
+                                                   project_name: params[:project_name], jira_project_key: params[:jira_project_key],
+                                                   fix_version_name: params[:fix_version_name], class_of_service_field: params[:class_of_service_field])
+    else
+      process_valid_parameters(jira_api_service, project_issues)
+    end
+  end
+
+  private
+
+  def process_valid_parameters(jira_api_service, project_issues)
     array_of_jira_issues_keys = []
     array_of_project_keys = []
     array_of_issue_types = []
@@ -16,13 +30,17 @@ class ExportsController < AuthenticatedController
     history_data_hash = {}
     history_fields = []
 
+    project_key = ''
+
     project_issues.each do |jira_issue|
       next if jira_issue.attrs['key'].blank?
 
       jira_issue_with_transitions = jira_api_service.request_issue_details(jira_issue.attrs['key'])
 
       array_of_jira_issues_keys << jira_issue_with_transitions.attrs['key']
-      array_of_project_keys << jira_issue_with_transitions.attrs['fields'].try(:[], 'project').try(:[], 'key')
+      project_key = jira_issue_with_transitions.attrs['fields'].try(:[], 'project').try(:[], 'key') if project_key.blank?
+
+      array_of_project_keys << project_key
       array_of_issue_types << jira_issue_with_transitions.attrs['fields'].try(:[], 'issuetype').try(:[], 'name')
       array_of_class_of_services << jira_issue_with_transitions.attrs['fields'].try(:[], class_of_service_field_name).try(:[], 'value')
       array_of_created_date << jira_issue_with_transitions.attrs['fields'].try(:[], 'created')
@@ -54,10 +72,14 @@ class ExportsController < AuthenticatedController
 
     demands_as_csv = basic_fields_to_csv + values_to_csv_fields
 
+    save_processed_data(demands_as_csv, project_key)
+
     respond_to { |format| format.csv { send_data demands_as_csv, filename: "demands-#{Time.zone.now}.csv" } }
   end
 
-  private
+  def save_processed_data(demands_as_csv, project_key)
+    DemandDataProcessment.create(downloaded_content: demands_as_csv, user: current_user, project_key: project_key, user_plan: current_user.current_user_plan)
+  end
 
   def class_of_service_field_name
     params['class_of_service_field']
@@ -65,5 +87,12 @@ class ExportsController < AuthenticatedController
 
   def transition_history?(history)
     history['items'].present? && history['items'].first['field'].casecmp('status').zero?
+  end
+
+  def retrieve_issues(project_name, project_key, project_fix_version, jira_api_service)
+    return jira_api_service.request_issues_by_fix_version(project_key, project_fix_version) if project_key.present? && project_fix_version.present?
+    return [] if project_name.blank?
+
+    jira_api_service.request_project(project_name).issues
   end
 end

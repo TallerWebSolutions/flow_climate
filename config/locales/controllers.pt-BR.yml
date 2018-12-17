@@ -12,6 +12,7 @@ pt-BR:
       i_am_done: 'Pronto!'
       send: Enviar
       import: "Importar"
+      sign_up: "Assinar"
     no_records: Você ainda não tem %{record}! Que tal criar o seu primeiro?
     messages:
       saved: Salvo!
@@ -58,6 +59,8 @@ pt-BR:
   users:
     change_last_company:
       title: "Mudar para esta empresa"
+    show:
+      title: "Perfil do Usuário"
   companies:
     index:
       title: "Empresas"
@@ -545,3 +548,14 @@ pt-BR:
   exports:
     request_project_information:
       title: "Receber Informações do Jira"
+      no_result_alert: "Sua busca não retornou resultados, revise os campos"
+  plans:
+    buttons:
+      inactive_plan_present: "Você já tem um plano inativo"
+  user_plans:
+    index:
+      table:
+        title: "Todos os planos"
+  user_profile:
+    show:
+      data_processed_table: "Dados Processados"

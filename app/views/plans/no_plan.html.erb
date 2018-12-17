@@ -1,0 +1,46 @@
+<h1>No Plan - Planos abaixo meramente ilustrativos</h1>
+
+<% Plan.order(:plan_type).each do |plan| %>
+  <div class="columns">
+    <ul class="price">
+      <li class="header"><%= plan.plan_type.capitalize %></li>
+      <li class="grey">
+        <% if plan.plan_value.positive? %>
+          <%= "#{number_to_currency(plan.plan_value)} por mês" %>
+        <% else %>
+          <%= 'Grátis' %>
+        <% end %>
+      </li>
+
+      <% if plan.max_days_in_history.positive? %>
+        <li><%="#{plan.max_days_in_history} dias de histórico" %></li>
+      <% else %>
+        <li>Não guarda histórico</li>
+      <% end %>
+      <% if plan.max_number_of_downloads.positive? %>
+        <li><%="#{plan.max_number_of_downloads} downloads" %></li>
+      <% else %>
+        <li>Não permite downloads</li>
+      <% end %>
+      <% if plan.extra_download_value.positive? %>
+        <li><%="#{number_to_currency(plan.extra_download_value)} por download extra" %></li>
+      <% else %>
+        <li>Não são permitidos downloads extras</li>
+      <% end %>
+
+      <li><%= plan.plan_details %></li>
+
+      <li class="grey">
+        <% if @inactive_plans.count.positive? %>
+          <%= label_tag t('plans.buttons.inactive_plan_present') %>
+        <% elsif plan.free? %>
+          <%= link_to t('general.buttons.sign_up'), plan_choose_path(plan_id: plan.id, period: :monthly), method: :post, class: 'btn btn-success' %>
+        <% else %>
+          <%= link_to "#{number_to_currency(plan.monthly_value)} por mês", plan_choose_path(plan_id: plan.id, period: :monthly), method: :post, class: 'btn btn-success' %>
+          <%= link_to "#{number_to_currency(plan.yearly_value)} por ano", plan_choose_path(plan_id: plan.id, period: :yearly), method: :post, class: 'btn btn-success' %>
+        <% end %>
+      </li>
+    </ul>
+  </div>
+<% end %>
+

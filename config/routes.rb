@@ -16,7 +16,6 @@ Rails.application.routes.draw do
 
   controller :home do
     get :show
-    get :no_plan
     get :no_company
   end
 
@@ -25,7 +24,12 @@ Rails.application.routes.draw do
     post :process_requested_information
   end
 
-  resources :users, only: [] do
+  controller :plans do
+    get :no_plan
+    post :plan_choose
+  end
+
+  resources :users, only: :show do
     collection do
       patch :activate_email_notifications
       patch :deactivate_email_notifications

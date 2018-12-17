@@ -1,0 +1,43 @@
+<h3><%= t('user_plans.index.table.title') %></h3>
+<table class="table">
+  <thead>
+    <tr>
+      <th><%= UserPlan.human_attribute_name(:plan) %></th>
+      <th><%= UserPlan.human_attribute_name(:start_at) %></th>
+      <th><%= UserPlan.human_attribute_name(:finish_at) %></th>
+      <th><%= UserPlan.human_attribute_name(:plan_billing_period) %></th>
+      <th><%= UserPlan.human_attribute_name(:plan_value) %></th>
+      <th><%= UserPlan.human_attribute_name(:demand_data_processments) %></th>
+      <th><%= Plan.human_attribute_name(:max_number_of_downloads) %></th>
+      <th><%= Plan.human_attribute_name(:extra_download_value) %></th>
+      <th><%= Plan.human_attribute_name(:max_days_in_history) %></th>
+      <th><%= UserPlan.human_attribute_name(:paid) %></th>
+      <th><%= UserPlan.human_attribute_name(:active) %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @user_plans.each do |user_plan| %>
+      <tr>
+        <td><%= user_plan.description %></td>
+        <td><%= l(user_plan.start_at, format: :short) %></td>
+        <td><%= l(user_plan.finish_at, format: :short) %></td>
+        <td><%= user_plan.plan_billing_period.capitalize %></td>
+        <td><%= number_to_currency(user_plan.plan_value) %></td>
+        <td><%= user_plan.demand_data_processments.count %></td>
+        <td><%= "#{user_plan.plan.max_number_of_downloads} por mês" %></td>
+        <td><%= number_to_currency(user_plan.plan.extra_download_value) %></td>
+        <td><%= "#{user_plan.plan.max_days_in_history} dias" %></td>
+        <td class="center">
+          <% if user_plan.paid? %>
+            <i class="fa fa-check" aria-hidden="true"></i>
+          <% end %>
+        </td>
+        <td class="center">
+          <% if user_plan.active? %>
+            <i class="fa fa-check" aria-hidden="true"></i>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-
 # == Schema Information
 #
 # Table name: users
@@ -22,6 +21,7 @@
 #  reset_password_token   :string           indexed
 #  sign_in_count          :integer          default(0), not null
 #  updated_at             :datetime         not null
+#  user_money_credits     :decimal(, )      default(0.0), not null
 #
 # Indexes
 #
@@ -41,7 +41,7 @@ class User < ApplicationRecord
   has_many :user_project_roles, dependent: :destroy
   has_many :projects, through: :user_project_roles
 
-  has_many :user_project_downloads, dependent: :destroy
+  has_many :demand_data_processments, dependent: :destroy
   has_many :user_plans, dependent: :destroy
 
   validates :first_name, :last_name, :email, presence: true
@@ -49,19 +49,23 @@ class User < ApplicationRecord
   scope :to_notify_email, -> { where email_notifications: true }
 
   def current_plan
-    user_plans.valid_plans.first&.plan
+    current_user_plan&.plan
+  end
+
+  def current_user_plan
+    user_plans.valid_plans.first
+  end
+
+  def trial?
+    return false if current_plan.blank?
+
+    current_plan.trial?
   end
 
   def lite?
     return false if current_plan.blank?
 
     current_plan.lite?
-  end
-
-  def standard?
-    return false if current_plan.blank?
-
-    current_plan.standard?
   end
 
   def gold?

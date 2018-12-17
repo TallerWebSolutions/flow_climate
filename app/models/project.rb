@@ -57,8 +57,6 @@ class Project < ApplicationRecord
   has_many :user_project_roles, dependent: :destroy
   has_many :users, through: :user_project_roles
 
-  has_many :user_project_downloads, dependent: :destroy
-
   validates :customer, :qty_hours, :project_type, :name, :status, :start_date, :end_date, :status, :initial_scope, :percentage_effort_to_bugs, presence: true
   validates :name, uniqueness: { scope: :product, message: I18n.t('project.name.uniqueness') }
   validates :nickname, uniqueness: { scope: :customer, message: I18n.t('project.nickname.uniqueness') }, allow_nil: true

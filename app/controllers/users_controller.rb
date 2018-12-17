@@ -10,4 +10,9 @@ class UsersController < AuthenticatedController
     current_user.update(email_notifications: false)
     respond_to { |format| format.js { render file: 'users/reload_notifications.js.erb' } }
   end
+
+  def show
+    @user = User.find(params[:id])
+    @user_plans = @user.user_plans.order(finish_at: :desc)
+  end
 end

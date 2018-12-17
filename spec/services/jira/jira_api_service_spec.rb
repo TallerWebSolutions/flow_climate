@@ -52,4 +52,26 @@ RSpec.describe Jira::JiraApiService, type: :service do
       end
     end
   end
+
+  describe '#request_project' do
+    context 'when the project exists' do
+      it 'returns the project' do
+        returned_project = client.Project.build(key: 'bar', name: 'bar')
+        expect(JIRA::Resource::Project).to(receive(:find).once { [returned_project] })
+
+        Jira::JiraApiService.new(jira_account.username, jira_account.password, jira_account.base_uri).request_project('flow climate')
+      end
+    end
+
+    context 'when the issue does not exist' do
+      it 'returns an empty Issue' do
+        response = Net::HTTPResponse.new(1.0, 404, 'not found')
+        expect(JIRA::Resource::Project).to(receive(:find).once.and_raise(JIRA::HTTPError.new(response)))
+
+        project_returned = Jira::JiraApiService.new(jira_account.username, jira_account.password, jira_account.base_uri).request_project('EX')
+
+        expect(project_returned.attrs).to be_empty
+      end
+    end
+  end
 end

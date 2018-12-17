@@ -22,6 +22,12 @@ module Jira
       []
     end
 
+    def request_project(project_name)
+      client.Project.find(project_name)
+    rescue JIRA::HTTPError => _error
+      client.Project.build
+    end
+
     private
 
     def client

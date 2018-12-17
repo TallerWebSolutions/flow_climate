@@ -1,20 +1,20 @@
 # frozen_string_literal: true
-
 # == Schema Information
 #
 # Table name: user_project_roles
 #
 #  created_at      :datetime         not null
 #  id              :bigint(8)        not null, primary key
-#  project_id      :integer          not null, indexed
+#  project_id      :integer          not null, indexed, indexed => [user_id]
 #  role_in_project :integer          default("user"), not null
 #  updated_at      :datetime         not null
-#  user_id         :integer          not null, indexed
+#  user_id         :integer          not null, indexed, indexed => [project_id]
 #
 # Indexes
 #
-#  index_user_project_roles_on_project_id  (project_id)
-#  index_user_project_roles_on_user_id     (user_id)
+#  index_user_project_roles_on_project_id              (project_id)
+#  index_user_project_roles_on_user_id                 (user_id)
+#  index_user_project_roles_on_user_id_and_project_id  (user_id,project_id) UNIQUE
 #
 # Foreign Keys
 #
@@ -29,4 +29,5 @@ class UserProjectRole < ApplicationRecord
   belongs_to :project
 
   validates :user, :project, :role_in_project, presence: true
+  validates :user, uniqueness: { scope: :project }
 end

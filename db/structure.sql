@@ -193,6 +193,40 @@ ALTER SEQUENCE public.demand_blocks_id_seq OWNED BY public.demand_blocks.id;
 
 
 --
+-- Name: demand_data_processments; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.demand_data_processments (
+    id bigint NOT NULL,
+    user_id integer NOT NULL,
+    project_key character varying NOT NULL,
+    downloaded_content text NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    user_plan_id integer NOT NULL
+);
+
+
+--
+-- Name: demand_data_processments_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.demand_data_processments_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: demand_data_processments_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.demand_data_processments_id_seq OWNED BY public.demand_data_processments.id;
+
+
+--
 -- Name: demand_transitions; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -421,9 +455,14 @@ ALTER SEQUENCE public.jira_custom_field_mappings_id_seq OWNED BY public.jira_cus
 
 CREATE TABLE public.plans (
     id bigint NOT NULL,
-    plan_value integer,
-    plan_type integer,
+    plan_value integer NOT NULL,
+    plan_type integer NOT NULL,
+    plan_period integer NOT NULL,
+    plan_details character varying NOT NULL,
     max_number_of_downloads integer NOT NULL,
+    max_number_of_users integer NOT NULL,
+    max_days_in_history integer NOT NULL,
+    extra_download_value numeric NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL
 );
@@ -863,9 +902,11 @@ CREATE TABLE public.user_plans (
     user_id integer NOT NULL,
     plan_id integer NOT NULL,
     plan_billing_period integer DEFAULT 0 NOT NULL,
+    plan_value numeric DEFAULT 0 NOT NULL,
     start_at timestamp without time zone NOT NULL,
     finish_at timestamp without time zone NOT NULL,
     active boolean DEFAULT false NOT NULL,
+    paid boolean DEFAULT false NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL
 );
@@ -888,40 +929,6 @@ CREATE SEQUENCE public.user_plans_id_seq
 --
 
 ALTER SEQUENCE public.user_plans_id_seq OWNED BY public.user_plans.id;
-
-
---
--- Name: user_project_downloads; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.user_project_downloads (
-    id bigint NOT NULL,
-    user_id integer NOT NULL,
-    project_id integer NOT NULL,
-    first_id_downloaded integer NOT NULL,
-    last_id_downloaded integer NOT NULL,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
-);
-
-
---
--- Name: user_project_downloads_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.user_project_downloads_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: user_project_downloads_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.user_project_downloads_id_seq OWNED BY public.user_project_downloads.id;
 
 
 --
@@ -979,7 +986,8 @@ CREATE TABLE public.users (
     updated_at timestamp without time zone NOT NULL,
     admin boolean DEFAULT false NOT NULL,
     last_company_id integer,
-    email_notifications boolean DEFAULT false NOT NULL
+    email_notifications boolean DEFAULT false NOT NULL,
+    user_money_credits numeric DEFAULT 0 NOT NULL
 );
 
 
@@ -1029,6 +1037,13 @@ ALTER TABLE ONLY public.customers ALTER COLUMN id SET DEFAULT nextval('public.cu
 --
 
 ALTER TABLE ONLY public.demand_blocks ALTER COLUMN id SET DEFAULT nextval('public.demand_blocks_id_seq'::regclass);
+
+
+--
+-- Name: demand_data_processments id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.demand_data_processments ALTER COLUMN id SET DEFAULT nextval('public.demand_data_processments_id_seq'::regclass);
 
 
 --
@@ -1165,13 +1180,6 @@ ALTER TABLE ONLY public.user_plans ALTER COLUMN id SET DEFAULT nextval('public.u
 
 
 --
--- Name: user_project_downloads id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.user_project_downloads ALTER COLUMN id SET DEFAULT nextval('public.user_project_downloads_id_seq'::regclass);
-
-
---
 -- Name: user_project_roles id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1223,6 +1231,14 @@ ALTER TABLE ONLY public.customers
 
 ALTER TABLE ONLY public.demand_blocks
     ADD CONSTRAINT demand_blocks_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: demand_data_processments demand_data_processments_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.demand_data_processments
+    ADD CONSTRAINT demand_data_processments_pkey PRIMARY KEY (id);
 
 
 --
@@ -1386,14 +1402,6 @@ ALTER TABLE ONLY public.user_plans
 
 
 --
--- Name: user_project_downloads user_project_downloads_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.user_project_downloads
-    ADD CONSTRAINT user_project_downloads_pkey PRIMARY KEY (id);
-
-
---
 -- Name: user_project_roles user_project_roles_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1449,6 +1457,13 @@ CREATE UNIQUE INDEX index_customers_on_company_id_and_name ON public.customers U
 --
 
 CREATE INDEX index_demand_blocks_on_demand_id ON public.demand_blocks USING btree (demand_id);
+
+
+--
+-- Name: index_demand_data_processments_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_demand_data_processments_on_user_id ON public.demand_data_processments USING btree (user_id);
 
 
 --
@@ -1690,34 +1705,6 @@ CREATE INDEX index_user_plans_on_user_id ON public.user_plans USING btree (user_
 
 
 --
--- Name: index_user_project_downloads_on_first_id_downloaded; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_user_project_downloads_on_first_id_downloaded ON public.user_project_downloads USING btree (first_id_downloaded);
-
-
---
--- Name: index_user_project_downloads_on_last_id_downloaded; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_user_project_downloads_on_last_id_downloaded ON public.user_project_downloads USING btree (last_id_downloaded);
-
-
---
--- Name: index_user_project_downloads_on_project_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_user_project_downloads_on_project_id ON public.user_project_downloads USING btree (project_id);
-
-
---
--- Name: index_user_project_downloads_on_user_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_user_project_downloads_on_user_id ON public.user_project_downloads USING btree (user_id);
-
-
---
 -- Name: index_user_project_roles_on_project_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1729,6 +1716,13 @@ CREATE INDEX index_user_project_roles_on_project_id ON public.user_project_roles
 --
 
 CREATE INDEX index_user_project_roles_on_user_id ON public.user_project_roles USING btree (user_id);
+
+
+--
+-- Name: index_user_project_roles_on_user_id_and_project_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_user_project_roles_on_user_id_and_project_id ON public.user_project_roles USING btree (user_id, project_id);
 
 
 --
@@ -1768,14 +1762,6 @@ ALTER TABLE ONLY public.demand_blocks
 
 
 --
--- Name: user_project_downloads fk_rails_0f08531a34; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.user_project_downloads
-    ADD CONSTRAINT fk_rails_0f08531a34 FOREIGN KEY (user_id) REFERENCES public.users(id);
-
-
---
 -- Name: team_members fk_rails_194b5b076d; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1797,6 +1783,14 @@ ALTER TABLE ONLY public.demands
 
 ALTER TABLE ONLY public.jira_custom_field_mappings
     ADD CONSTRAINT fk_rails_1c34addc50 FOREIGN KEY (jira_account_id) REFERENCES public.jira_accounts(id);
+
+
+--
+-- Name: demand_data_processments fk_rails_1e9a84a8ab; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.demand_data_processments
+    ADD CONSTRAINT fk_rails_1e9a84a8ab FOREIGN KEY (user_plan_id) REFERENCES public.user_plans(id);
 
 
 --
@@ -1837,6 +1831,14 @@ ALTER TABLE ONLY public.companies_users
 
 ALTER TABLE ONLY public.demand_transitions
     ADD CONSTRAINT fk_rails_2a5bc4c3f8 FOREIGN KEY (demand_id) REFERENCES public.demands(id);
+
+
+--
+-- Name: demand_data_processments fk_rails_337e2008a8; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.demand_data_processments
+    ADD CONSTRAINT fk_rails_337e2008a8 FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --
@@ -1893,14 +1895,6 @@ ALTER TABLE ONLY public.financial_informations
 
 ALTER TABLE ONLY public.project_jira_configs
     ADD CONSTRAINT fk_rails_5de62c9ca2 FOREIGN KEY (project_id) REFERENCES public.projects(id);
-
-
---
--- Name: user_project_downloads fk_rails_626b44cbc6; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.user_project_downloads
-    ADD CONSTRAINT fk_rails_626b44cbc6 FOREIGN KEY (project_id) REFERENCES public.projects(id);
 
 
 --
