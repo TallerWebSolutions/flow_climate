@@ -38,6 +38,9 @@ module Jira
       issue_type_name = jira_issue.attrs['fields']['issuetype']['name']
       return :feature if issue_type_name.casecmp('story').zero?
       return :chore if issue_type_name.casecmp('chore').zero?
+      return :performance_improvement if issue_type_name.casecmp('performance improvement').zero?
+      return :wireframe if issue_type_name.casecmp('wireframes').zero?
+      return :ui if issue_type_name.casecmp('ui').zero?
 
       :bug
     end

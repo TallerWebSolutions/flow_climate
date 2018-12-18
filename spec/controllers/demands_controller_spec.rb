@@ -380,15 +380,17 @@ RSpec.describe DemandsController, type: :controller do
           csv = CSV.parse(response.body, headers: true)
           expect(csv.count).to eq 1
           expect(csv.first[0].to_i).to eq demand.id
-          expect(csv.first[1]).to eq demand.current_stage.name
-          expect(csv.first[2]).to eq demand.demand_id
-          expect(csv.first[3]).to eq 'feature'
-          expect(csv.first[4]).to eq 'standard'
-          expect(csv.first[5]).to eq demand.effort_downstream.to_f.to_s.gsub('.', I18n.t('number.format.separator'))
-          expect(csv.first[6]).to eq demand.effort_upstream.to_f.to_s.gsub('.', I18n.t('number.format.separator'))
-          expect(csv.first[7]).to eq demand.created_date.iso8601
-          expect(csv.first[8]).to be_nil
-          expect(csv.first[9]).to eq demand.end_date.iso8601
+          expect(csv.first[1]).to eq demand.demand_id
+          expect(csv.first[2]).to eq demand.demand_title
+          expect(csv.first[3]).to eq demand.current_stage.name
+          expect(csv.first[4]).to eq demand.demand_id
+          expect(csv.first[5]).to eq 'feature'
+          expect(csv.first[6]).to eq 'standard'
+          expect(csv.first[7]).to eq demand.effort_downstream.to_f.to_s.gsub('.', I18n.t('number.format.separator'))
+          expect(csv.first[8]).to eq demand.effort_upstream.to_f.to_s.gsub('.', I18n.t('number.format.separator'))
+          expect(csv.first[9]).to eq demand.created_date.iso8601
+          expect(csv.first[10]).to be_nil
+          expect(csv.first[11]).to eq demand.end_date.iso8601
         end
       end
 
