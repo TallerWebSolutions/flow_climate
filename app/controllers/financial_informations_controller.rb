@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class FinancialInformationsController < AuthenticatedController
+  before_action :user_plan_check
+
   before_action :assign_company
   before_action :assign_financial_information, only: %i[edit update destroy]
 

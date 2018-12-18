@@ -14,5 +14,6 @@ class UsersController < AuthenticatedController
   def show
     @user = User.find(params[:id])
     @user_plans = @user.user_plans.order(finish_at: :desc)
+    @demand_data_processment = @user.demand_data_processments.order(created_at: :desc)
   end
 end

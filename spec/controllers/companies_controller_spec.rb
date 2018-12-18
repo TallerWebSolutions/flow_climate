@@ -52,8 +52,10 @@ RSpec.describe CompaniesController, type: :controller do
         let(:company) { Fabricate :company, users: [user], name: 'zzz' }
         let(:other_company) { Fabricate :company, users: [user], name: 'aaa' }
         let(:out_company) { Fabricate :company }
-        before { get :index }
+
         it 'assigns the instance variable and renders the template' do
+          expect_any_instance_of(AuthenticatedController).to(receive(:user_plan_check).once { true })
+          get :index
           expect(response).to render_template :index
           expect(assigns(:companies)).to eq [other_company, company]
         end

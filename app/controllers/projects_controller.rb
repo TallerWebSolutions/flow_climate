@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class ProjectsController < AuthenticatedController
+  before_action :user_plan_check
+
   before_action :assign_company
   before_action :assign_customer, only: %i[create update]
   before_action :assign_product, only: %i[create update]

@@ -6,8 +6,10 @@ class AuthenticatedController < ApplicationController
   private
 
   def user_plan_check
+    return true if current_user.admin?
+
     user_plan = current_user.current_user_plan
-    return unless user_plan.blank? || user_plan.lite? || user_plan.trial?
+    return true unless user_plan.blank? || user_plan.lite? || user_plan.trial?
 
     no_gold_plan_to_access
   end

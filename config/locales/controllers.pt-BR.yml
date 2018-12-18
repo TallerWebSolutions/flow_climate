@@ -43,7 +43,7 @@ pt-BR:
         title: "Custo Médio por Demanda"
       flow_pressure: "Pressão do Fluxo"
       hours_per_demand: "Horas por Demanda"
-    no_data: "Não existem dados para essa exibição"
+    no_data: "Não existem dados para essa exibição: %{missing_data}"
     download_csv: "Download CSV"
     percentage:
       symbol: "%"

@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class DemandTransitionsController < AuthenticatedController
+  before_action :user_plan_check
+
   before_action :assign_company
   before_action :assign_stage
   before_action :assign_demand_transition

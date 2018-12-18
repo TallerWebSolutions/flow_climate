@@ -56,8 +56,11 @@ RSpec.describe ProjectsController, type: :controller do
     end
   end
 
-  context 'authenticated' do
-    let(:user) { Fabricate :user }
+  context 'authenticated as gold' do
+    let(:plan) { Fabricate :plan, plan_type: :gold }
+    let(:user) { Fabricate :user, first_name: 'zzz' }
+    let!(:user_plan) { Fabricate :user_plan, user: user, plan: plan, active: true, paid: true, finish_at: 1.week.from_now }
+
     before { sign_in user }
 
     before { travel_to Time.zone.local(2018, 4, 6, 10, 0, 0) }

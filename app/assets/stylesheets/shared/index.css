@@ -51,6 +51,14 @@
     background-color: rgba(11, 110, 154, 0.57);
 }
 
+.no-data {
+    font-size: large;
+    font-style: italic;
+    text-align: center;
+    width: 100%;
+}
+
+
 #popup {
     height: 50px;
     width: 200px;

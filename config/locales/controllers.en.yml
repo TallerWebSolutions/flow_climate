@@ -43,7 +43,7 @@ en:
         title: "Avg Demand Cost"
       flow_pressure: "Flow Pressure"
       hours_per_demand: "Hours per Demand"
-    no_data: "There is no data to show yet."
+    no_data: "There is no data to show yet: %{missing_data}"
     download_csv: "Download CSV"
     percentage:
       symbol: "%"
@@ -561,3 +561,7 @@ en:
   user_profile:
     show:
       data_processed_table: "Data Processed"
+  teams:
+    show:
+      demands_flow:
+        title: "Flow between %{start_date} and %{end_date}"

@@ -42,7 +42,7 @@ RSpec.describe UserPlan, type: :model do
         let(:plan) { Fabricate :plan, plan_type: :lite }
         let(:user) { Fabricate :user }
         let!(:finished_user_plan) { Fabricate :user_plan, user: user, plan: plan, active: false, finish_at: 1.week.ago }
-        let!(:user_plan) { Fabricate :user_plan, user: user, plan: plan, active: true }
+        let!(:user_plan) { Fabricate :user_plan, user: user, plan: plan, paid: true, active: true }
 
         it { expect(user.user_plans.valid_plans).to eq [user_plan] }
       end

@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class TeamMembersController < AuthenticatedController
+  before_action :user_plan_check
+
   before_action :assign_company
   before_action :assign_team
   before_action :assign_team_member, only: %i[edit update activate deactivate]

@@ -113,6 +113,9 @@ pt-BR:
       user_plan:
         one: Plano de Usuário
         other: Planos de Usuário
+      demand_data_processment:
+          one: Processamento de Demandas
+          other: Processamentos de Demandas
       jira/project_jira_config:
         one: Configuração do Jira para o Projeto
         other: Configurações do Jira para o Projeto

@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class TeamsController < AuthenticatedController
+  before_action :user_plan_check
+
   before_action :assign_company
   before_action :assign_team, only: %i[show edit update search_for_projects search_demands_to_flow_charts]
 

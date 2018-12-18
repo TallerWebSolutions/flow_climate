@@ -16,7 +16,7 @@
     </tr>
   </thead>
   <tbody>
-    <% @user_plans.each do |user_plan| %>
+    <% user_plans.each do |user_plan| %>
       <tr>
         <td><%= user_plan.description %></td>
         <td><%= l(user_plan.start_at, format: :short) %></td>

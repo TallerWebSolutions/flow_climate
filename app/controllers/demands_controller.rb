@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class DemandsController < AuthenticatedController
+  before_action :user_plan_check
+
   before_action :assign_company
   before_action :assign_project, except: %i[demands_csv demands_in_projects search_demands_by_flow_status]
   before_action :assign_demand, only: %i[edit update show synchronize_jira destroy]

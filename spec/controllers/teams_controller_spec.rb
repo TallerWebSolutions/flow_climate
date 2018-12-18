@@ -32,11 +32,14 @@ RSpec.describe TeamsController, type: :controller do
     end
   end
 
-  context 'authenticated' do
+  context 'authenticated as gold' do
     before { travel_to Time.zone.local(2018, 4, 6, 10, 0, 0) }
     after { travel_back }
 
-    let(:user) { Fabricate :user }
+    let(:plan) { Fabricate :plan, plan_type: :gold }
+    let(:user) { Fabricate :user, first_name: 'zzz' }
+    let!(:user_plan) { Fabricate :user_plan, user: user, plan: plan, active: true, paid: true, finish_at: 1.week.from_now }
+
     before { sign_in user }
 
     let(:company) { Fabricate :company, users: [user] }
@@ -68,6 +71,7 @@ RSpec.describe TeamsController, type: :controller do
       context 'passing a valid ID' do
         context 'having data' do
           it 'assigns the instance variables and renders the template' do
+            expect_any_instance_of(AuthenticatedController).to(receive(:user_plan_check).once { true })
             get :show, params: { company_id: company, id: team }
 
             expect(response).to render_template :show
@@ -83,8 +87,9 @@ RSpec.describe TeamsController, type: :controller do
           let(:other_company) { Fabricate :company, users: [user] }
           let(:empty_team) { Fabricate :team, company: other_company }
 
-          before { get :show, params: { company_id: other_company, id: empty_team } }
           it 'assigns the empty instance variables and renders the template' do
+            expect_any_instance_of(AuthenticatedController).to(receive(:user_plan_check).once { true })
+            get :show, params: { company_id: other_company, id: empty_team }
             expect(response).to render_template :show
             expect(assigns(:company)).to eq other_company
             expect(assigns(:team)).to eq empty_team
@@ -93,6 +98,7 @@ RSpec.describe TeamsController, type: :controller do
         end
       end
       context 'passing invalid parameters' do
+        before { expect_any_instance_of(AuthenticatedController).to(receive(:user_plan_check).once { true }) }
         context 'non-existent company' do
           before { get :show, params: { company_id: 'foo', id: team } }
           it { expect(response).to have_http_status :not_found }
@@ -111,13 +117,15 @@ RSpec.describe TeamsController, type: :controller do
 
     describe 'GET #new' do
       context 'valid parameters' do
-        before { get :new, params: { company_id: company } }
         it 'instantiates a new Team and renders the template' do
+          expect_any_instance_of(AuthenticatedController).to(receive(:user_plan_check).once { true })
+          get :new, params: { company_id: company }
           expect(response).to render_template :new
           expect(assigns(:team)).to be_a_new Team
         end
       end
       context 'invalid parameters' do
+        before { expect_any_instance_of(AuthenticatedController).to(receive(:user_plan_check).once { true }) }
         context 'non-existent company' do
           before { get :new, params: { company_id: 'foo' } }
           it { expect(response).to have_http_status :not_found }
@@ -133,15 +141,17 @@ RSpec.describe TeamsController, type: :controller do
 
     describe 'POST #create' do
       context 'passing valid parameters' do
-        before { post :create, params: { company_id: company, team: { name: 'foo' } } }
         it 'creates the new team and redirects to its show' do
+          expect_any_instance_of(AuthenticatedController).to(receive(:user_plan_check).once { true })
+          post :create, params: { company_id: company, team: { name: 'foo' } }
           expect(Team.last.name).to eq 'foo'
           expect(response).to redirect_to company_team_path(company, Team.last)
         end
       end
       context 'passing invalid parameters' do
-        before { post :create, params: { company_id: company, team: { name: '' } } }
         it 'does not create the team and re-render the template with the errors' do
+          expect_any_instance_of(AuthenticatedController).to(receive(:user_plan_check).once { true })
+          post :create, params: { company_id: company, team: { name: '' } }
           expect(response).to render_template :new
           expect(assigns(:team).errors.full_messages).to eq ['Nome não pode ficar em branco']
         end
@@ -152,8 +162,9 @@ RSpec.describe TeamsController, type: :controller do
       let(:team) { Fabricate :team, company: company }
 
       context 'valid parameters' do
-        before { get :edit, params: { company_id: company, id: team } }
         it 'assigns the instance variables and renders the template' do
+          expect_any_instance_of(AuthenticatedController).to(receive(:user_plan_check).once { true })
+          get :edit, params: { company_id: company, id: team }
           expect(response).to render_template :edit
           expect(assigns(:company)).to eq company
           expect(assigns(:team)).to eq team
@@ -161,6 +172,7 @@ RSpec.describe TeamsController, type: :controller do
       end
 
       context 'invalid' do
+        before { expect_any_instance_of(AuthenticatedController).to(receive(:user_plan_check).once { true }) }
         context 'team' do
           before { get :edit, params: { company_id: company, id: 'foo' } }
           it { expect(response).to have_http_status :not_found }
@@ -184,14 +196,16 @@ RSpec.describe TeamsController, type: :controller do
       let(:team) { Fabricate :team, company: company }
 
       context 'passing valid parameters' do
-        before { put :update, params: { company_id: company, id: team, team: { name: 'foo' } } }
         it 'updates the team and redirects to company show' do
+          expect_any_instance_of(AuthenticatedController).to(receive(:user_plan_check).once { true })
+          put :update, params: { company_id: company, id: team, team: { name: 'foo' } }
           expect(team.reload.name).to eq 'foo'
           expect(response).to redirect_to company_path(company)
         end
       end
 
       context 'passing invalid' do
+        before { expect_any_instance_of(AuthenticatedController).to(receive(:user_plan_check).once { true }) }
         context 'team parameters' do
           before { put :update, params: { company_id: company, id: team, team: { name: nil } } }
           it 'does not update the team and re-render the template with the errors' do
@@ -228,22 +242,25 @@ RSpec.describe TeamsController, type: :controller do
           let!(:other_team_project) { Fabricate :project, status: :executing }
 
           context 'and passing the status filter executing' do
-            before { get :search_for_projects, params: { company_id: company, id: team, status_filter: :executing }, xhr: true }
             it 'assigns the instance variable and renders the template' do
+              expect_any_instance_of(AuthenticatedController).to(receive(:user_plan_check).once { true })
+              get :search_for_projects, params: { company_id: company, id: team, status_filter: :executing }, xhr: true
               expect(response).to render_template 'projects/projects_search.js.erb'
               expect(assigns(:projects)).to eq [second_project, first_project]
             end
           end
           context 'and passing the status filter waiting' do
-            before { get :search_for_projects, params: { company_id: company, id: team, status_filter: :waiting }, xhr: true }
             it 'assigns the instance variable and renders the template' do
+              expect_any_instance_of(AuthenticatedController).to(receive(:user_plan_check).once { true })
+              get :search_for_projects, params: { company_id: company, id: team, status_filter: :waiting }, xhr: true
               expect(response).to render_template 'projects/projects_search.js.erb'
               expect(assigns(:projects)).to eq [project_in_product_team, third_project]
             end
           end
           context 'and passing no status filter' do
-            before { get :search_for_projects, params: { company_id: company, id: team, status_filter: :all }, xhr: true }
             it 'assigns the instance variable and renders the template' do
+              expect_any_instance_of(AuthenticatedController).to(receive(:user_plan_check).once { true })
+              get :search_for_projects, params: { company_id: company, id: team, status_filter: :all }, xhr: true
               expect(response).to render_template 'projects/projects_search.js.erb'
               expect(assigns(:projects)).to eq [project_in_product_team, second_project, third_project, first_project]
             end
@@ -252,8 +269,9 @@ RSpec.describe TeamsController, type: :controller do
         context 'having no data' do
           let!(:other_company_project) { Fabricate :project, status: :executing }
 
-          before { get :search_for_projects, params: { company_id: company, id: team, status_filter: :executing }, xhr: true }
           it 'assigns the instance variable and renders the template' do
+            expect_any_instance_of(AuthenticatedController).to(receive(:user_plan_check).once { true })
+            get :search_for_projects, params: { company_id: company, id: team, status_filter: :executing }, xhr: true
             expect(response).to render_template 'projects/projects_search.js.erb'
             expect(assigns(:projects)).to eq []
           end
@@ -261,6 +279,7 @@ RSpec.describe TeamsController, type: :controller do
       end
 
       context 'passing invalid' do
+        before { expect_any_instance_of(AuthenticatedController).to(receive(:user_plan_check).once { true }) }
         context 'company' do
           before { get :search_for_projects, params: { company_id: 'foo', id: team, status_filter: :executing }, xhr: true }
           it { expect(response).to have_http_status :not_found }
@@ -295,6 +314,7 @@ RSpec.describe TeamsController, type: :controller do
 
           context 'and passing week and year as parameters' do
             it 'call the repository and renders the JS' do
+              expect_any_instance_of(AuthenticatedController).to(receive(:user_plan_check).once { true })
               expect(DemandsRepository.instance).to(receive(:committed_demands_by_project_and_week).with([second_project, first_project], 1.week.ago.to_date.cweek, 1.week.ago.to_date.cwyear).once { [first_demand, second_demand] })
               expect(DemandsRepository.instance).to(receive(:throughput_by_project_and_week).with([second_project, first_project], 1.week.ago.to_date.cweek, 1.week.ago.to_date.cwyear).once { [third_demand, fourth_demand] })
               get :search_demands_to_flow_charts, params: { company_id: company, id: team, week: 1.week.ago.to_date.cweek, year: 1.week.ago.to_date.cwyear }, xhr: true
@@ -306,6 +326,7 @@ RSpec.describe TeamsController, type: :controller do
         end
         context 'having no data' do
           it 'renders the JS empty' do
+            expect_any_instance_of(AuthenticatedController).to(receive(:user_plan_check).once { true })
             get :search_demands_to_flow_charts, params: { company_id: company, id: team, week: 1.week.ago.to_date.cweek, year: 1.week.ago.to_date.cwyear }, xhr: true
             expect(response).to render_template 'teams/flow.js.erb'
             expect(assigns(:flow_report_data).projects_demands_selected).to eq({})
@@ -314,6 +335,8 @@ RSpec.describe TeamsController, type: :controller do
       end
 
       context 'passing invalid' do
+        before { expect_any_instance_of(AuthenticatedController).to(receive(:user_plan_check).once { true }) }
+
         context 'company' do
           before { get :search_demands_to_flow_charts, params: { company_id: 'foo', id: team }, xhr: true }
           it { expect(response).to have_http_status :not_found }
