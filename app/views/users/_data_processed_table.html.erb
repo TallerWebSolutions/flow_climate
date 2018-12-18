@@ -5,6 +5,7 @@
       <th><%= DemandDataProcessment.human_attribute_name(:created_at) %></th>
       <th><%= DemandDataProcessment.human_attribute_name(:user) %></th>
       <th><%= DemandDataProcessment.human_attribute_name(:project_key) %></th>
+      <th></th>
     </tr>
   </thead>
   <tbody>
@@ -13,6 +14,11 @@
         <td><%= l(demand_data_processment.created_at, format: :short) %></td>
         <td><%= demand_data_processment.user.full_name %></td>
         <td><%= demand_data_processment.project_key %></td>
+        <td>
+          <%= link_to send_csv_data_by_email_path(demand_data_processment_id: demand_data_processment.id), method: :post do %>
+            <i class="far fa-envelope"></i>
+          <% end %>
+        </td>
       </tr>
     <% end %>
   </tbody>

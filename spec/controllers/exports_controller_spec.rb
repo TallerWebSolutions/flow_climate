@@ -10,6 +10,10 @@ RSpec.describe ExportsController, type: :controller do
       before { post :process_requested_information }
       it { expect(response).to redirect_to new_user_session_path }
     end
+    describe 'GET #send_csv_data_by_email' do
+      before { post :process_requested_information }
+      it { expect(response).to redirect_to new_user_session_path }
+    end
   end
 
   context 'authenticated' do
@@ -26,51 +30,82 @@ RSpec.describe ExportsController, type: :controller do
         let(:plan) { Fabricate :plan }
         let!(:user_plan) { Fabricate :user_plan, plan: plan, user: user, active: true }
 
-        context 'missing fields' do
-          it 'returns the empty CSV to download' do
-            expect(JIRA::Resource::Issue).to(receive(:find).never)
-            expect(JIRA::Resource::Issue).to(receive(:jql).never)
-
-            post :process_requested_information, params: { project_name: nil, jira_project_key: nil, fix_version_name: nil }, format: :csv
-
-            expect(response).to redirect_to request_project_information_path(fix_version_name: '', jira_project_key: '', project_name: '')
-
-            expect(flash[:alert]).to eq I18n.t('exports.request_project_information.no_result_alert')
+        context 'having all fields' do
+          it 'returns the CSV to download' do
+            expect(Jira::JiraDataToCsvJob).to receive(:perform_later).once
+            post :process_requested_information, params: { project_name: 'foo', jira_project_key: 'key', fix_version_name: 'bar' }, format: :csv
+            expect(response).to redirect_to request_project_information_path(project_name: 'foo', jira_project_key: 'key', fix_version_name: 'bar')
+            expect(flash[:notice]).to eq I18n.t('exports.request_project_information.queued')
           end
         end
+      end
+    end
+
+    describe 'POST #send_csv_data_by_email' do
+      context 'having a gold plan' do
+        let(:plan) { Fabricate :plan }
+        let!(:user_plan) { Fabricate :user_plan, plan: plan, user: user, active: true, paid: true }
+        let!(:demand_data_processment) { Fabricate :demand_data_processment, user_plan: user_plan, user: user }
+
         context 'having all fields' do
-          context 'passing project key and fix version' do
-            it 'returns the CSV to download' do
-              returned_issue = client.Issue.build({ key: '10000', fields: { created: '2018-07-02T11:20:18.998-0300', summary: 'foo of bar', issuetype: { name: 'Story' }, customfield_10028: { value: 'Expedite' }, project: { key: 'foo' }, customfield_10024: [{ name: 'foo' }, { name: 'bar' }] }, changelog: { startAt: 0, maxResults: 3, total: 3, histories: [{ id: '10039', created: '2018-07-08T22:34:47.440-0300', items: [{ field: 'status', fromString: 'first_stage', toString: 'second_stage' }] }, { id: '10038', created: '2018-07-06T09:40:43.886-0300', items: [{ field: 'status', fromString: 'third_stage', toString: 'first_stage' }] }, { id: '10038', created: '2018-07-05T09:40:43.886-0300', items: [{ field: 'status', fromString: 'third_stage', toString: 'first_stage' }] }] } }.with_indifferent_access)
-              expect(JIRA::Resource::Issue).to(receive(:find).once { returned_issue })
-              expect(JIRA::Resource::Issue).to(receive(:jql).once { [returned_issue] })
+          it 'returns the CSV to download' do
+            expect(UserNotifierMailer).to receive(:jira_requested_csv).once
+            post :send_csv_data_by_email, params: { demand_data_processment_id: demand_data_processment }, format: :csv
+            expect(response).to redirect_to user_path(user)
+            expect(flash[:notice]).to eq I18n.t('exports.demand_data_processment.email_sent')
 
-              post :process_requested_information, params: { project_name: nil, jira_project_key: 'key', fix_version_name: 'bar' }, format: :csv
-
-              CSV.parse(response.body, headers: true) do |row|
-                expect(row.headers).to eq %w[jira_key project_key issue_type class_of_service created_date first_stage second_stage]
-                expect(row.to_csv).to eq "10000,foo,Story,,2018-07-02T11:20:18.998-0300,2018-07-05T09:40:43.886-0300,2018-07-08T22:34:47.440-0300\n"
-              end
-            end
+            expect(DemandDataProcessment.count).to eq 2
           end
-          context 'passing project name' do
-            it 'returns the CSV to download' do
-              returned_issue = client.Issue.build({ key: '10000', fields: { created: '2018-07-02T11:20:18.998-0300', summary: 'foo of bar', issuetype: { name: 'Story' }, customfield_10028: { value: 'Expedite' }, project: { key: 'foo' }, customfield_10024: [{ name: 'foo' }, { name: 'bar' }] }, changelog: { startAt: 0, maxResults: 3, total: 3, histories: [{ id: '10039', created: '2018-07-08T22:34:47.440-0300', items: [{ field: 'status', fromString: 'first_stage', toString: 'second_stage' }] }, { id: '10038', created: '2018-07-06T09:40:43.886-0300', items: [{ field: 'status', fromString: 'third_stage', toString: 'first_stage' }] }, { id: '10038', created: '2018-07-05T09:40:43.886-0300', items: [{ field: 'status', fromString: 'third_stage', toString: 'first_stage' }] }] } }.with_indifferent_access)
-              returned_project = client.Project.build({ fields: { key: 'FC', name: 'flow climate' } }.with_indifferent_access)
-              expect(JIRA::Resource::Project).to(receive(:find).once { returned_project })
-              expect_any_instance_of(JIRA::Resource::Project).to(receive(:issues).once { [returned_issue] })
-              expect(JIRA::Resource::Issue).to(receive(:find).once { returned_issue })
+        end
+      end
 
-              expect(JIRA::Resource::Issue).to(receive(:jql).never)
+      context 'having a lite plan' do
+        let(:plan) { Fabricate :plan }
+        let!(:user_plan) { Fabricate :user_plan, plan: plan, user: user, active: true, paid: true }
+        let!(:demand_data_processment) { Fabricate :demand_data_processment, user_plan: user_plan, user: user }
 
-              post :process_requested_information, params: { project_name: 'foo', jira_project_key: nil, fix_version_name: nil }, format: :csv
+        context 'having all fields' do
+          it 'returns the CSV to download' do
+            expect(UserNotifierMailer).to receive(:jira_requested_csv).once
+            post :send_csv_data_by_email, params: { demand_data_processment_id: demand_data_processment }, format: :csv
+            expect(response).to redirect_to user_path(user)
+            expect(flash[:notice]).to eq I18n.t('exports.demand_data_processment.email_sent')
 
-              CSV.parse(response.body, headers: true) do |row|
-                expect(row.headers).to eq %w[jira_key project_key issue_type class_of_service created_date first_stage second_stage]
-                expect(row.to_csv).to eq "10000,foo,Story,,2018-07-02T11:20:18.998-0300,2018-07-05T09:40:43.886-0300,2018-07-08T22:34:47.440-0300\n"
-              end
-            end
+            expect(DemandDataProcessment.count).to eq 2
           end
+        end
+      end
+
+      context 'having no active plan' do
+        let(:plan) { Fabricate :plan, plan_type: :gold }
+        let!(:user_plan) { Fabricate :user_plan, plan: plan, user: user, active: false, paid: true }
+        let!(:demand_data_processment) { Fabricate :demand_data_processment, user_plan: user_plan, user: user }
+        before { post :send_csv_data_by_email, params: { demand_data_processment_id: demand_data_processment }, format: :csv }
+        it 'redirect to the user profile with an alert' do
+          expect(response).to redirect_to user_path(user)
+          expect(flash[:alert]).to eq I18n.t('plans.validations.no_lite_plan')
+        end
+      end
+
+      context 'having no paid plan' do
+        let(:plan) { Fabricate :plan, plan_type: :gold }
+        let!(:user_plan) { Fabricate :user_plan, plan: plan, user: user, active: true, paid: false }
+        let!(:demand_data_processment) { Fabricate :demand_data_processment, user_plan: user_plan, user: user }
+        before { post :send_csv_data_by_email, params: { demand_data_processment_id: demand_data_processment }, format: :csv }
+        it 'redirect to the user profile with an alert' do
+          expect(response).to redirect_to user_path(user)
+          expect(flash[:alert]).to eq I18n.t('plans.validations.no_lite_plan')
+        end
+      end
+
+      context 'having a trial plan' do
+        let(:plan) { Fabricate :plan, plan_type: :trial }
+        let!(:user_plan) { Fabricate :user_plan, plan: plan, user: user, active: true, paid: false }
+        let!(:demand_data_processment) { Fabricate :demand_data_processment, user_plan: user_plan, user: user }
+        before { post :send_csv_data_by_email, params: { demand_data_processment_id: demand_data_processment }, format: :csv }
+        it 'redirect to the user profile with an alert' do
+          expect(response).to redirect_to user_path(user)
+          expect(flash[:alert]).to eq I18n.t('plans.validations.no_lite_plan')
         end
       end
     end

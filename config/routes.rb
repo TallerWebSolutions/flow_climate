@@ -22,6 +22,8 @@ Rails.application.routes.draw do
   controller :exports do
     get :request_project_information
     post :process_requested_information
+
+    post :send_csv_data_by_email
   end
 
   controller :plans do

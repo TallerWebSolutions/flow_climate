@@ -30,7 +30,7 @@ RSpec.describe AuthenticatedController, type: :controller do
     end
   end
 
-  describe '#user_plan_check' do
+  describe '#user_gold_check' do
     context 'when it is a gold plan' do
       let(:plan) { Fabricate :plan, plan_type: :gold }
       let(:user) { Fabricate :user, first_name: 'zzz' }
@@ -38,18 +38,18 @@ RSpec.describe AuthenticatedController, type: :controller do
 
       before { sign_in user }
 
-      it { expect(controller.send(:user_plan_check)).to eq true }
+      it { expect(controller.send(:user_gold_check)).to eq true }
     end
 
     context 'when user is an admin' do
       let(:user) { Fabricate :user, first_name: 'zzz', admin: true }
       before { sign_in user }
-      it { expect(controller.send(:user_plan_check)).to eq true }
+      it { expect(controller.send(:user_gold_check)).to eq true }
     end
 
     context 'when it is not a gold plan' do
       controller do
-        before_action :user_plan_check
+        before_action :user_gold_check
         def some_action
           render plain: 'success'
         end

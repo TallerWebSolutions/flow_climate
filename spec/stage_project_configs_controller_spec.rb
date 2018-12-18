@@ -26,7 +26,7 @@ RSpec.describe StageProjectConfigsController, type: :controller do
 
       context 'passing valid IDs' do
         it 'assigns the instance variable and renders the template' do
-          expect_any_instance_of(AuthenticatedController).to(receive(:user_plan_check).once { true })
+          expect_any_instance_of(AuthenticatedController).to(receive(:user_gold_check).once { true })
           get :edit, params: { company_id: company, stage_id: stage, id: stage_project_config }
           expect(response).to render_template :edit
           expect(assigns(:company)).to eq company
@@ -35,7 +35,7 @@ RSpec.describe StageProjectConfigsController, type: :controller do
         end
       end
       context 'passing an invalid' do
-        before { expect_any_instance_of(AuthenticatedController).to(receive(:user_plan_check).once { true }) }
+        before { expect_any_instance_of(AuthenticatedController).to(receive(:user_gold_check).once { true }) }
 
         context 'non-existent stage_project_config' do
           before { get :edit, params: { company_id: company, stage_id: stage, id: 'foo' } }
@@ -66,7 +66,7 @@ RSpec.describe StageProjectConfigsController, type: :controller do
       context 'passing valid parameters' do
         context 'and replicating the update to the other projects' do
           it 'updates the config and replicates the values to the other projects' do
-            expect_any_instance_of(AuthenticatedController).to(receive(:user_plan_check).once { true })
+            expect_any_instance_of(AuthenticatedController).to(receive(:user_gold_check).once { true })
             put :update, params: { company_id: company, stage_id: stage, id: stage_project_config, replicate_to_projects: '1', stage_project_config: { compute_effort: true, stage_percentage: 10, pairing_percentage: 20, management_percentage: 30 } }
             expect(response).to redirect_to edit_company_stage_stage_project_config_path(company, stage, stage_project_config)
 
@@ -85,7 +85,7 @@ RSpec.describe StageProjectConfigsController, type: :controller do
         end
         context 'and no replication to other projects' do
           it 'updates the config and does not replicate the values to the other projects' do
-            expect_any_instance_of(AuthenticatedController).to(receive(:user_plan_check).once { true })
+            expect_any_instance_of(AuthenticatedController).to(receive(:user_gold_check).once { true })
             put :update, params: { company_id: company, stage_id: stage, id: stage_project_config, replicate_to_projects: '0', stage_project_config: { compute_effort: true, stage_percentage: 10, pairing_percentage: 20, management_percentage: 30 } }
             expect(response).to redirect_to edit_company_stage_stage_project_config_path(company, stage, stage_project_config)
 
@@ -104,7 +104,7 @@ RSpec.describe StageProjectConfigsController, type: :controller do
         end
       end
       context 'passing invalid' do
-        before { expect_any_instance_of(AuthenticatedController).to(receive(:user_plan_check).once { true }) }
+        before { expect_any_instance_of(AuthenticatedController).to(receive(:user_gold_check).once { true }) }
         context 'company' do
           before { put :update, params: { company_id: 'foo', stage_id: stage, id: stage_project_config, stage_project_config: { compute_effort: true, stage_percentage: 10, pairing_percentage: 20, management_percentage: 30 } } }
           it { expect(response).to have_http_status :not_found }

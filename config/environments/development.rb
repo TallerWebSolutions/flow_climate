@@ -19,8 +19,6 @@ Rails.application.configure do
     config.cache_store = :null_store
   end
 
-  config.action_mailer.raise_delivery_errors = false
-  config.action_mailer.perform_caching = false
   config.active_support.deprecation = :log
   config.active_record.migration_error = :page_load
   config.assets.debug = true
@@ -29,7 +27,9 @@ Rails.application.configure do
 
   host = 'http://127.0.0.1'
   config.action_mailer.default_url_options = { host: host, port: 3000 }
-  config.action_mailer.asset_host = host
+  config.action_mailer.raise_delivery_errors = true
+  config.action_mailer.perform_deliveries = true
+  config.action_mailer.delivery_method = :smtp
 
   logger = ActiveSupport::Logger.new(STDOUT)
   logger.formatter = config.log_formatter

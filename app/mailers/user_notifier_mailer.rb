@@ -22,6 +22,15 @@ class UserNotifierMailer < ApplicationMailer
     mail(to: emails, subject: t('projects.red_alert.subject', project_name: project.full_name))
   end
 
+  def jira_requested_csv(user, content)
+    @user = user
+    emails = [user.email]
+    now_to_filename = Time.zone.now
+    attachments["demands-#{now_to_filename}.csv"] = { mime_type: 'text/csv', content: content }
+    Rails.logger.info("Sending csv to the user #{emails}")
+    mail(to: emails, subject: I18n.t('exports.jira_requested_csv.subject'))
+  end
+
   private
 
   def assign_project_informations(company)

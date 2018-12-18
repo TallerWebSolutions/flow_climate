@@ -5,13 +5,22 @@ class AuthenticatedController < ApplicationController
 
   private
 
-  def user_plan_check
+  def user_gold_check
     return true if current_user.admin?
 
     user_plan = current_user.current_user_plan
     return true unless user_plan.blank? || user_plan.lite? || user_plan.trial?
 
-    no_gold_plan_to_access
+    no_plan_to_access(:gold)
+  end
+
+  def user_lite_check
+    return true if current_user.admin?
+
+    user_plan = current_user.current_user_plan
+    return true unless user_plan.blank? || user_plan.trial?
+
+    no_plan_to_access(:lite)
   end
 
   def assign_company
@@ -26,8 +35,10 @@ class AuthenticatedController < ApplicationController
     respond_to { |format| format.js { render file: render_file } }
   end
 
-  def no_gold_plan_to_access
-    flash[:alert] = I18n.t('plans.validations.no_gold_plan')
+  def no_plan_to_access(plan_type)
+    flash[:alert] = I18n.t('plans.validations.no_lite_plan')
+
+    flash[:alert] = I18n.t('plans.validations.no_gold_plan') if plan_type == :gold
     redirect_to user_path(current_user)
   end
 end

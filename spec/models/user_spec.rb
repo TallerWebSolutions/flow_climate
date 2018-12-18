@@ -34,14 +34,14 @@ RSpec.describe User, type: :model do
     context 'having no plans' do
       let(:plan) { Fabricate :plan, plan_type: :trial }
       let(:user) { Fabricate :user }
-      let!(:user_plan) { Fabricate :user_plan, user: user, plan: plan, active: true, finish_at: Time.zone.yesterday }
+      let!(:user_plan) { Fabricate :user_plan, user: user, plan: plan, active: true, paid: true, finish_at: Time.zone.yesterday }
 
       it { expect(user.trial?).to be false }
     end
     context 'when it is trial' do
       let(:plan) { Fabricate :plan, plan_type: :trial }
       let(:user) { Fabricate :user }
-      let!(:user_plan) { Fabricate :user_plan, user: user, plan: plan, active: true }
+      let!(:user_plan) { Fabricate :user_plan, user: user, plan: plan, active: true, paid: true }
 
       it { expect(user.trial?).to be true }
     end
@@ -58,7 +58,7 @@ RSpec.describe User, type: :model do
     context 'when it is lite' do
       let(:plan) { Fabricate :plan, plan_type: :lite }
       let(:user) { Fabricate :user }
-      let!(:user_plan) { Fabricate :user_plan, user: user, plan: plan, active: true }
+      let!(:user_plan) { Fabricate :user_plan, user: user, plan: plan, active: true, paid: true }
 
       it { expect(user.lite?).to be true }
     end
@@ -75,7 +75,7 @@ RSpec.describe User, type: :model do
     context 'when it is gold' do
       let(:plan) { Fabricate :plan, plan_type: :gold }
       let(:user) { Fabricate :user }
-      let!(:user_plan) { Fabricate :user_plan, user: user, plan: plan, active: true }
+      let!(:user_plan) { Fabricate :user_plan, user: user, plan: plan, active: true, paid: true }
 
       it { expect(user.gold?).to be true }
     end
@@ -92,7 +92,7 @@ RSpec.describe User, type: :model do
     context 'when it is lite' do
       let(:plan) { Fabricate :plan, plan_type: :lite }
       let(:user) { Fabricate :user }
-      let!(:user_plan) { Fabricate :user_plan, user: user, plan: plan, active: true }
+      let!(:user_plan) { Fabricate :user_plan, user: user, plan: plan, active: true, paid: true }
 
       it { expect(user.no_plan?).to be false }
     end
@@ -102,7 +102,7 @@ RSpec.describe User, type: :model do
     context 'having plans' do
       let(:user) { Fabricate :user }
       let(:plan) { Fabricate :plan }
-      let!(:user_plan) { Fabricate :user_plan, plan: plan, user: user, active: true }
+      let!(:user_plan) { Fabricate :user_plan, plan: plan, user: user, active: true, paid: true }
 
       it { expect(user.current_plan).to eq plan }
     end
@@ -119,14 +119,14 @@ RSpec.describe User, type: :model do
     context 'having plans' do
       let(:user) { Fabricate :user }
       let(:plan) { Fabricate :plan }
-      let!(:user_plan) { Fabricate :user_plan, plan: plan, user: user, active: true }
+      let!(:user_plan) { Fabricate :user_plan, plan: plan, user: user, active: true, paid: true }
 
       it { expect(user.current_user_plan).to eq user_plan }
     end
     context 'having no plans' do
       let(:user) { Fabricate :user }
       let(:plan) { Fabricate :plan }
-      let!(:user_plan) { Fabricate :user_plan, plan: plan, user: user, active: false }
+      let!(:user_plan) { Fabricate :user_plan, plan: plan, user: user, active: false, paid: false }
 
       it { expect(user.current_user_plan).to be_nil }
     end
