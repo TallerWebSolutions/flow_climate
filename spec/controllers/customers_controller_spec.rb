@@ -37,7 +37,9 @@ RSpec.describe CustomersController, type: :controller do
   end
 
   context 'authenticated' do
+    let(:plan) { Fabricate :plan, plan_type: :gold }
     let(:user) { Fabricate :user }
+    let!(:user_plan) { Fabricate :user_plan, user: user, plan: plan, active: true, paid: true, finish_at: 1.week.from_now }
     before { sign_in user }
 
     let(:company) { Fabricate :company, users: [user] }
