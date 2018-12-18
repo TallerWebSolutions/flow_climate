@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: user_plans
@@ -40,7 +41,7 @@ class UserPlan < ApplicationRecord
   scope :valid_plans, -> { where('finish_at >= current_date AND start_at <= current_date AND active = true') }
   scope :inactive_in_period, ->(period_limit_date) { where('finish_at >= :limit_date AND active = false', limit_date: period_limit_date) }
 
-  delegate :lite?, to: :plan
+  delegate :lite?, :trial?, to: :plan
 
   def description
     "#{plan.plan_type.capitalize} #{plan_billing_period.capitalize}"
@@ -49,7 +50,7 @@ class UserPlan < ApplicationRecord
   private
 
   def user_plan_uniqueness
-    existent_user_plans = UserPlan.where(user: user, plan: plan).where('finish_at >= current_timestamp')
+    existent_user_plans = UserPlan.where(user: user, plan: plan).where('finish_at >= :finish_at', finish_at: finish_at)
     errors.add(:user, I18n.t('user_plan.validations.user_plan_active')) if existent_user_plans.present?
   end
 end

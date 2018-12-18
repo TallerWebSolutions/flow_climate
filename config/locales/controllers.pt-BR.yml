@@ -552,6 +552,8 @@ pt-BR:
   plans:
     buttons:
       inactive_plan_present: "Você já tem um plano inativo"
+    validations:
+      no_gold_plan: "Você precisa do plano gold para acessar essa área."
   user_plans:
     index:
       table:

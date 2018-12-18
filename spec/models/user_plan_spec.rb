@@ -22,13 +22,12 @@ RSpec.describe UserPlan, type: :model do
       user = Fabricate :user
       plan = Fabricate :plan
 
-
       Fabricate(:user_plan, user: user, plan: plan, active: true, finish_at: 2.weeks.from_now)
 
-      expect(Fabricate.build(:user_plan, user: user, plan: plan, active: true)).not_to be_valid
-      expect(Fabricate.build(:user_plan, user: user, plan: plan, active: false)).not_to be_valid
-      expect(Fabricate.build(:user_plan, user: user, active: true)).to be_valid
-      expect(Fabricate.build(:user_plan, plan: plan, active: true)).to be_valid
+      expect(Fabricate.build(:user_plan, user: user, plan: plan, active: true, finish_at: Time.zone.now)).not_to be_valid
+      expect(Fabricate.build(:user_plan, user: user, plan: plan, active: false, finish_at: Time.zone.now)).not_to be_valid
+      expect(Fabricate.build(:user_plan, user: user, active: true, finish_at: Time.zone.now)).to be_valid
+      expect(Fabricate.build(:user_plan, plan: plan, active: true, finish_at: Time.zone.now)).to be_valid
 
       other_user = Fabricate :user
       other_plan = Fabricate :plan
@@ -42,9 +41,8 @@ RSpec.describe UserPlan, type: :model do
       context 'having plans' do
         let(:plan) { Fabricate :plan, plan_type: :lite }
         let(:user) { Fabricate :user }
-        let!(:user_plan) { Fabricate :user_plan, user: user, plan: plan, active: true }
-        let!(:inactive_user_plan) { Fabricate :user_plan, user: user, plan: plan, active: false }
         let!(:finished_user_plan) { Fabricate :user_plan, user: user, plan: plan, active: false, finish_at: 1.week.ago }
+        let!(:user_plan) { Fabricate :user_plan, user: user, plan: plan, active: true }
 
         it { expect(user.user_plans.valid_plans).to eq [user_plan] }
       end
@@ -53,9 +51,9 @@ RSpec.describe UserPlan, type: :model do
       context 'having inactive in period user plans' do
         let(:plan) { Fabricate :plan, plan_type: :lite }
         let(:user) { Fabricate :user }
+        let!(:finished_user_plan) { Fabricate :user_plan, user: user, plan: plan, active: false, finish_at: 1.week.ago }
         let!(:user_plan) { Fabricate :user_plan, user: user, plan: plan, active: false, finish_at: 2.weeks.from_now }
         let!(:other_user_plan) { Fabricate :user_plan, user: user, plan: plan, active: true, finish_at: 2.weeks.from_now }
-        let!(:finished_user_plan) { Fabricate :user_plan, user: user, plan: plan, active: false, finish_at: 1.week.ago }
 
         it { expect(user.user_plans.inactive_in_period(1.week.from_now)).to eq [user_plan] }
       end
@@ -64,6 +62,7 @@ RSpec.describe UserPlan, type: :model do
 
   context 'delegations' do
     it { is_expected.to delegate_method(:lite?).to(:plan) }
+    it { is_expected.to delegate_method(:trial?).to(:plan) }
   end
 
   describe '#description' do

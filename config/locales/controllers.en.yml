@@ -552,6 +552,8 @@ en:
   plans:
     buttons:
       inactive_plan_present: "You're already have an inactive plan"
+    validations:
+      no_gold_plan: "You need a gold plan to access this section."
   user_plans:
     index:
       table:

@@ -5,6 +5,13 @@ class AuthenticatedController < ApplicationController
 
   private
 
+  def user_plan_check
+    user_plan = current_user.current_user_plan
+    return unless user_plan.blank? || user_plan.lite? || user_plan.trial?
+
+    no_gold_plan_to_access
+  end
+
   def assign_company
     @company = Company.find(params[:company_id])
     not_found unless current_user.companies.include?(@company)
@@ -15,5 +22,10 @@ class AuthenticatedController < ApplicationController
     customer = Customer.find_by(id: customer_id)
     @products = customer.products.order(:name) if customer.present?
     respond_to { |format| format.js { render file: render_file } }
+  end
+
+  def no_gold_plan_to_access
+    flash[:alert] = I18n.t('plans.validations.no_gold_plan')
+    redirect_to user_path(current_user)
   end
 end
