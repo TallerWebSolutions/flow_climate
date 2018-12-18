@@ -8,9 +8,8 @@
   <%= render 'users/user_plans_table', user_plans: @user_plans %>
 <% end %>
 
-<% if @user_plans.blank? %>
+<% if @demand_data_processment.blank? %>
   <%= render 'layouts/no_data', missing_data: DemandDataProcessment.model_name.human %>
 <% else %>
   <%= render 'users/data_processed_table', demand_data_processment: @demand_data_processment %>
 <% end %>
-

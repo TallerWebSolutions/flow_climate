@@ -323,6 +323,10 @@ pt-BR:
         paid: Pago?
         plan_value: Valor do Plano
         active: Ativo?
+      demand_data_processment:
+        created_at: Criado em
+        project_key: Chave do Projeto
+        user: Usuário
       jira/project_jira_config:
         team: Time
         jira_account_domain: Domínio da Conta no Jira

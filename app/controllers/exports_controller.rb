@@ -9,13 +9,14 @@ class ExportsController < AuthenticatedController
 
     if project_issues.blank?
       flash[:alert] = I18n.t('exports.request_project_information.no_result_alert')
-      redirect_to request_project_information_path(username: params[:username], password: params[:password],
-                                                   base_uri: params[:base_uri], customer_domain: params[:customer_domain],
-                                                   project_name: params[:project_name], jira_project_key: params[:jira_project_key],
-                                                   fix_version_name: params[:fix_version_name], class_of_service_field: params[:class_of_service_field])
     else
       process_valid_parameters(jira_api_service, project_issues)
     end
+
+    redirect_to request_project_information_path(username: params[:username], password: params[:password],
+                                                 base_uri: params[:base_uri], customer_domain: params[:customer_domain],
+                                                 project_name: params[:project_name], jira_project_key: params[:jira_project_key],
+                                                 fix_version_name: params[:fix_version_name], class_of_service_field: params[:class_of_service_field])
   end
 
   private

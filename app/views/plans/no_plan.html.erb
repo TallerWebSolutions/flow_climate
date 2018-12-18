@@ -34,10 +34,10 @@
         <% if @inactive_plans.count.positive? %>
           <%= label_tag t('plans.buttons.inactive_plan_present') %>
         <% elsif plan.free? %>
-          <%= link_to t('general.buttons.sign_up'), plan_choose_path(plan_id: plan.id, period: :monthly), method: :post, class: 'btn btn-success' %>
+          <%= link_to t('general.buttons.sign_up'), plan_choose_path(plan_id: plan.id, period: :monthly, plan_value: plan.plan_value), method: :post, class: 'btn btn-success' %>
         <% else %>
-          <%= link_to "#{number_to_currency(plan.monthly_value)} por mês", plan_choose_path(plan_id: plan.id, period: :monthly), method: :post, class: 'btn btn-success' %>
-          <%= link_to "#{number_to_currency(plan.yearly_value)} por ano", plan_choose_path(plan_id: plan.id, period: :yearly), method: :post, class: 'btn btn-success' %>
+          <%= link_to "#{number_to_currency(plan.monthly_value)} por mês", plan_choose_path(plan_id: plan.id, period: :monthly, plan_value: plan.monthly_value), method: :post, class: 'btn btn-success' %>
+          <%= link_to "#{number_to_currency(plan.yearly_value)} por ano", plan_choose_path(plan_id: plan.id, period: :yearly, plan_value: plan.yearly_value), method: :post, class: 'btn btn-success' %>
         <% end %>
       </li>
     </ul>

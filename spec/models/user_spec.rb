@@ -114,6 +114,7 @@ RSpec.describe User, type: :model do
       it { expect(user.current_plan).to be_nil }
     end
   end
+
   describe '#current_user_plan' do
     context 'having plans' do
       let(:user) { Fabricate :user }
@@ -129,5 +130,10 @@ RSpec.describe User, type: :model do
 
       it { expect(user.current_user_plan).to be_nil }
     end
+  end
+
+  describe '#full_name' do
+    let(:user) { Fabricate :user }
+    it { expect(user.full_name).to eq "#{user.last_name}, #{user.first_name}" }
   end
 end

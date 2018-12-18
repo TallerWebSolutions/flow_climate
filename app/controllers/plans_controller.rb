@@ -13,14 +13,14 @@ class PlansController < AuthenticatedController
       return redirect_to user_path(current_user)
     end
 
-    build_plan_to_user(plan)
+    build_plan_to_user(plan, params[:plan_value])
     redirect_to root_path
   end
 
   private
 
-  def build_plan_to_user(plan)
-    UserPlan.create(plan: plan, user: current_user, plan_billing_period: params[:period], plan_value: plan.plan_value, start_at: Time.zone.now, finish_at: plan_finish_date, active: false, paid: false)
+  def build_plan_to_user(plan, plan_value)
+    UserPlan.create(plan: plan, user: current_user, plan_billing_period: params[:period], plan_value: plan_value, start_at: Time.zone.now, finish_at: plan_finish_date, active: false, paid: false)
   end
 
   def inactive_plans_in_period

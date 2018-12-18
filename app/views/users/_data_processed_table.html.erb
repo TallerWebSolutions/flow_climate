@@ -3,12 +3,16 @@
   <thead>
     <tr>
       <th><%= DemandDataProcessment.human_attribute_name(:created_at) %></th>
+      <th><%= DemandDataProcessment.human_attribute_name(:user) %></th>
+      <th><%= DemandDataProcessment.human_attribute_name(:project_key) %></th>
     </tr>
   </thead>
   <tbody>
-    <% demand_data_processment.each do |user_plan| %>
+    <% demand_data_processment.each do |demand_data_processment| %>
       <tr>
-        <td><%= user_plan.description %></td>
+        <td><%= l(demand_data_processment.created_at, format: :short) %></td>
+        <td><%= demand_data_processment.user.full_name %></td>
+        <td><%= demand_data_processment.project_key %></td>
       </tr>
     <% end %>
   </tbody>

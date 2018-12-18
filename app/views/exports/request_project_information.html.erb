@@ -1,7 +1,7 @@
 <div class="col-xs-4 col-xs-offset-4">
   <h1><%= t('exports.request_project_information.title') %></h1>
 
-  <%= form_tag process_requested_information_path(format: [:csv, :html]), method: :post, class: 'form' do %>
+  <%= form_tag process_requested_information_path(format: :csv), method: :post, class: 'form' do %>
     <div class="standard-form">
       <div class="row">
         <div class='col-xs-6 form-group'>
