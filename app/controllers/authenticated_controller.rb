@@ -41,4 +41,10 @@ class AuthenticatedController < ApplicationController
     flash[:alert] = I18n.t('plans.validations.no_gold_plan') if plan_type == :gold
     redirect_to user_path(current_user)
   end
+
+  def check_admin
+    return true if current_user.admin?
+
+    redirect_to root_path
+  end
 end

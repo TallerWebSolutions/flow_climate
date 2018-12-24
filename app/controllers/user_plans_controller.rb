@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class UserPlansController < AuthenticatedController
+  before_action :check_admin
   before_action :assign_user
   before_action :assign_user_plan
 

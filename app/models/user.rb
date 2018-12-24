@@ -84,4 +84,10 @@ class User < ApplicationRecord
   def full_name
     "#{last_name}, #{first_name}"
   end
+
+  def toggle_admin
+    return update(admin: false) if admin?
+
+    update(admin: true)
+  end
 end

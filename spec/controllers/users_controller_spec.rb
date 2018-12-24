@@ -10,14 +10,32 @@ RSpec.describe UsersController, type: :controller do
       before { patch :deactivate_email_notifications }
       it { expect(response).to redirect_to new_user_session_path }
     end
+    describe 'PATCH #toggle_admin' do
+      before { patch :toggle_admin, params: { id: 'foo' } }
+      it { expect(response).to redirect_to new_user_session_path }
+    end
     describe 'GET #show' do
       before { get :show, params: { id: 'foo' } }
       it { expect(response).to redirect_to new_user_session_path }
     end
   end
 
-  context 'authenticated' do
-    let(:user) { Fabricate :user }
+  context 'authenticated as admin' do
+    let(:user) { Fabricate :user, admin: true }
+    before { sign_in user }
+
+    describe 'PATCH #toggle_admin' do
+      let(:tested_user) { Fabricate :user, admin: true }
+      before { patch :toggle_admin, params: { id: tested_user } }
+      it 'toggles admin and redirects to the users_path' do
+        expect(tested_user.reload).not_to be_admin
+        expect(response).to redirect_to users_path
+      end
+    end
+  end
+
+  context 'authenticated as noraml user' do
+    let(:user) { Fabricate :user, admin: false }
     before { sign_in user }
 
     describe 'PATCH #activate_email_notifications' do
@@ -63,6 +81,11 @@ RSpec.describe UsersController, type: :controller do
           end
         end
       end
+    end
+
+    describe 'PATCH #toggle_admin' do
+      before { patch :toggle_admin, params: { id: 'foo' } }
+      it { expect(response).to redirect_to root_path }
     end
   end
 end

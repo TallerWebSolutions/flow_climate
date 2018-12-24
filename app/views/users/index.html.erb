@@ -21,14 +21,23 @@
         <td><%= user.sign_in_count %></td>
         <td><%= user.projects.count %></td>
         <td class="center">
-          <% if user.admin? %>
-            <i class="fa fa-check" aria-hidden="true"></i>
+          <% if current_user.admin? %>
+            <%= link_to toggle_admin_user_path(user), method: :patch do %>
+              <% if user.admin? %>
+                <i class="fas fa-toggle-on fa-2x"></i>
+              <% else %>
+                <i class="fas fa-toggle-off fa-2x"></i>
+              <% end %>
+            <% end %>
+          <% else %>
+            <% if user.admin? %>
+              <i class="fas fa-toggle-on fa-2x"></i>
+            <% else %>
+              <i class="fas fa-toggle-off fa-2x"></i>
+            <% end %>
           <% end %>
         </td>
       </tr>
-
     <% end %>
-
   </tbody>
-
 </table>

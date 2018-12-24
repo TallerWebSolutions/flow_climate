@@ -11,6 +11,41 @@ RSpec.describe UserPlansController, type: :controller do
       before { patch :deactivate_user_plan, params: { user_id: 'foo', id: 'bar' } }
       it { expect(response).to redirect_to new_user_session_path }
     end
+
+    describe 'PATCH #pay_plan' do
+      before { patch :pay_plan, params: { user_id: 'foo', id: 'bar' } }
+      it { expect(response).to redirect_to new_user_session_path }
+    end
+
+    describe 'PATCH #unpay_plan' do
+      before { patch :pay_plan, params: { user_id: 'foo', id: 'bar' } }
+      it { expect(response).to redirect_to new_user_session_path }
+    end
+  end
+
+  context 'authenticated as normal user' do
+    let(:user) { Fabricate :user, admin: false }
+    before { sign_in user }
+
+    describe 'PATCH #activate_user_plan' do
+      before { patch :activate_user_plan, params: { user_id: 'foo', id: 'bar' } }
+      it { expect(response).to redirect_to root_path }
+    end
+
+    describe 'PATCH #deactivate_user_plan' do
+      before { patch :deactivate_user_plan, params: { user_id: 'foo', id: 'bar' } }
+      it { expect(response).to redirect_to root_path }
+    end
+
+    describe 'PATCH #pay_plan' do
+      before { patch :pay_plan, params: { user_id: 'foo', id: 'bar' } }
+      it { expect(response).to redirect_to root_path }
+    end
+
+    describe 'PATCH #unpay_plan' do
+      before { patch :pay_plan, params: { user_id: 'foo', id: 'bar' } }
+      it { expect(response).to redirect_to root_path }
+    end
   end
 
   context 'authenticated as admin' do

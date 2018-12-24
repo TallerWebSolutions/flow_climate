@@ -36,6 +36,7 @@ Rails.application.routes.draw do
       patch :activate_email_notifications
       patch :deactivate_email_notifications
     end
+    patch :toggle_admin, on: :member
 
     resources :user_plans, only: [] do
       member do

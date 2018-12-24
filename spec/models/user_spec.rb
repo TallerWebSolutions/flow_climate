@@ -132,6 +132,19 @@ RSpec.describe User, type: :model do
     end
   end
 
+  describe '#toggle_admin' do
+    context 'admin' do
+      let(:user) { Fabricate :user, admin: true }
+      before { user.toggle_admin }
+      it { expect(user).not_to be_admin }
+    end
+    context 'not admin' do
+      let(:user) { Fabricate :user, admin: false }
+      before { user.toggle_admin }
+      it { expect(user).to be_admin }
+    end
+  end
+
   describe '#full_name' do
     let(:user) { Fabricate :user }
     it { expect(user.full_name).to eq "#{user.last_name}, #{user.first_name}" }
