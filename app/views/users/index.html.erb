@@ -1,0 +1,43 @@
+<h1><%= t('users.index.title') %></h1>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th><%= User.human_attribute_name(:first_name) %></th>
+      <th><%= User.human_attribute_name(:created_at) %></th>
+      <th><%= User.human_attribute_name(:user_money_credits) %></th>
+      <th><%= User.human_attribute_name(:sign_in_count) %></th>
+      <th><%= User.human_attribute_name(:projects) %></th>
+      <th class="center"><%= User.human_attribute_name(:admin) %></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% User.all.order(:last_name, :first_name).each do |user| %>
+      <tr>
+        <td><%= link_to user.full_name, user_path(user) %></td>
+        <td><%= l(user.created_at, format: :short) %></td>
+        <td><%= number_to_currency(user.user_money_credits) %></td>
+        <td><%= user.sign_in_count %></td>
+        <td><%= user.projects.count %></td>
+        <td class="center">
+          <% if current_user.admin? %>
+            <%= link_to toggle_admin_user_path(user), method: :patch do %>
+              <% if user.admin? %>
+                <i class="fas fa-toggle-on fa-2x"></i>
+              <% else %>
+                <i class="fas fa-toggle-off fa-2x"></i>
+              <% end %>
+            <% end %>
+          <% else %>
+            <% if user.admin? %>
+              <i class="fas fa-toggle-on fa-2x"></i>
+            <% else %>
+              <i class="fas fa-toggle-off fa-2x"></i>
+            <% end %>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

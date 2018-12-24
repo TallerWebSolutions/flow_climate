@@ -134,7 +134,7 @@ RSpec.describe Company, type: :model do
       let!(:third_finance) { Fabricate :financial_information, company: company, finances_date: 1.month.from_now, expenses_total: 100 }
 
       include_context 'demands with effort for company'
-      it { expect(company.current_cost_per_hour.to_f).to eq 1.2626262626262625 }
+      it { expect(company.current_cost_per_hour.to_f).to eq 0.6313131313131313 }
 
       pending 'having no efforts'
     end

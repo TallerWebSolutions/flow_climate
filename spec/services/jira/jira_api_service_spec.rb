@@ -12,9 +12,7 @@ RSpec.describe Jira::JiraApiService, type: :service do
         returned_issue = client.Issue.build(summary: 'foo of bar')
         expect(JIRA::Resource::Issue).to(receive(:find).once { returned_issue })
 
-        # WebMock.disable!
-
-        issue_details = Jira::JiraApiService.new(jira_account).request_issue_details('FC-3')
+        issue_details = Jira::JiraApiService.new(jira_account.username, jira_account.password, jira_account.base_uri).request_issue_details('FC-3')
 
         expect(issue_details.attrs[:summary]).to eq 'foo of bar'
       end
@@ -25,7 +23,7 @@ RSpec.describe Jira::JiraApiService, type: :service do
         response = Net::HTTPResponse.new(1.0, 404, 'not found')
         expect(JIRA::Resource::Issue).to(receive(:find).once.and_raise(JIRA::HTTPError.new(response)))
 
-        issue_details = Jira::JiraApiService.new(jira_account).request_issue_details('FC-1')
+        issue_details = Jira::JiraApiService.new(jira_account.username, jira_account.password, jira_account.base_uri).request_issue_details('FC-1')
 
         expect(issue_details.attrs[:summary]).to be_nil
         expect(issue_details.id).to be_nil
@@ -39,9 +37,7 @@ RSpec.describe Jira::JiraApiService, type: :service do
         returned_issue = client.Issue.build(summary: 'foo of bar')
         expect(JIRA::Resource::Issue).to(receive(:jql).once { [returned_issue] })
 
-        # WebMock.disable!
-
-        Jira::JiraApiService.new(jira_account).request_issues_by_fix_version('fix version name', 'FC')
+        Jira::JiraApiService.new(jira_account.username, jira_account.password, jira_account.base_uri).request_issues_by_fix_version('fix version name', 'FC')
       end
     end
 
@@ -50,9 +46,31 @@ RSpec.describe Jira::JiraApiService, type: :service do
         response = Net::HTTPResponse.new(1.0, 404, 'not found')
         expect(JIRA::Resource::Issue).to(receive(:jql).once.and_raise(JIRA::HTTPError.new(response)))
 
-        issues_returned = Jira::JiraApiService.new(jira_account).request_issues_by_fix_version('fix version name', 'EX')
+        issues_returned = Jira::JiraApiService.new(jira_account.username, jira_account.password, jira_account.base_uri).request_issues_by_fix_version('fix version name', 'EX')
 
         expect(issues_returned).to be_empty
+      end
+    end
+  end
+
+  describe '#request_project' do
+    context 'when the project exists' do
+      it 'returns the project' do
+        returned_project = client.Project.build(key: 'bar', name: 'bar')
+        expect(JIRA::Resource::Project).to(receive(:find).once { [returned_project] })
+
+        Jira::JiraApiService.new(jira_account.username, jira_account.password, jira_account.base_uri).request_project('flow climate')
+      end
+    end
+
+    context 'when the issue does not exist' do
+      it 'returns an empty Issue' do
+        response = Net::HTTPResponse.new(1.0, 404, 'not found')
+        expect(JIRA::Resource::Project).to(receive(:find).once.and_raise(JIRA::HTTPError.new(response)))
+
+        project_returned = Jira::JiraApiService.new(jira_account.username, jira_account.password, jira_account.base_uri).request_project('EX')
+
+        expect(project_returned.attrs).to be_empty
       end
     end
   end

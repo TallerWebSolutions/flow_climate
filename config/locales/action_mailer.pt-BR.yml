@@ -27,3 +27,9 @@ pt-BR:
       previous_color: "Cor do alerta anterior: %{previous_color}"
     no_top_three_throughput: "Não foram encontrados projetos"
     no_red_projects: "Sem projetos vermelhos"
+  exports:
+    jira_requested_csv:
+      subject: Informação Solicitada
+  plans:
+    request:
+      subject: "Um novo plano foi solicitado"

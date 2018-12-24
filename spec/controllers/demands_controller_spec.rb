@@ -40,8 +40,11 @@ RSpec.describe DemandsController, type: :controller do
     end
   end
 
-  context 'authenticated' do
-    let(:user) { Fabricate :user }
+  context 'authenticated as gold' do
+    let(:plan) { Fabricate :plan, plan_type: :gold }
+    let(:user) { Fabricate :user, first_name: 'zzz' }
+    let!(:user_plan) { Fabricate :user_plan, user: user, plan: plan, active: true, paid: true, finish_at: 1.week.from_now }
+
     let(:company) { Fabricate :company, users: [user] }
     let(:customer) { Fabricate :customer, company: company }
     let(:team) { Fabricate :team, company: company }

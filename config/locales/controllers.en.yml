@@ -12,6 +12,7 @@ en:
       i_am_done: I'm done
       send: Send
       import: "Import"
+      sign_up: "Sign Up"
     no_records: You have no %{record} yet! Why not create your first?
     messages:
       saved: Saved!
@@ -42,7 +43,7 @@ en:
         title: "Avg Demand Cost"
       flow_pressure: "Flow Pressure"
       hours_per_demand: "Hours per Demand"
-    no_data: "There is no data to show yet."
+    no_data: "There is no data to show yet: %{missing_data}"
     download_csv: "Download CSV"
     percentage:
       symbol: "%"
@@ -59,6 +60,10 @@ en:
   users:
     change_last_company:
       title: "Change to this company"
+    show:
+      title: "User Profile"
+    index:
+      title: "Users"
   companies:
     index:
       title: "Companies"
@@ -542,3 +547,33 @@ en:
   project_jira_configs:
     new:
       title: "New Jira Config"
+  exports:
+    request_project_information:
+      title: "Receive informations from Jira"
+      no_result_alert: "Your query returned no results. Review the informations."
+      queued: "Your request was queued. You'll receive an email having the data and you also can download it through your profile page."
+      csv_attached: "The information you requested is attached."
+      address_in_web: "You can also find it here."
+    demand_data_processment:
+      email_sent: "The content was sent."
+  plans:
+    buttons:
+      inactive_plan_present: "You're already have an inactive plan"
+    validations:
+      no_gold_plan: "You need a gold plan to access this section."
+      no_lite_plan: "You need at least the lite plan to access it."
+  user_plans:
+    index:
+      table:
+        title: "All Plans"
+  user_profile:
+    show:
+      data_processed_table: "Data Processed"
+  teams:
+    show:
+      demands_flow:
+        title: "Flow between %{start_date} and %{end_date}"
+    new:
+      title: "New Team"
+    index:
+      title: "Teams"

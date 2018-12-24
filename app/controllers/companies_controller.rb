@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class CompaniesController < AuthenticatedController
+  before_action :user_gold_check
   before_action :assign_company, except: %i[new create index]
   before_action :assign_stages_list, only: %i[show update_settings]
 

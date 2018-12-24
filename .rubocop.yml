@@ -10,6 +10,7 @@ AllCops:
     - !ruby/regexp /old_and_unused\.rb$/
     - 'app/helpers/**/*'
     - 'config/environments/**/*'
+    - 'app/jobs/**/*'
 
 Rails:
   Enabled: true
@@ -63,6 +64,7 @@ Metrics/AbcSize:
   Exclude:
     - 'app/routes/**/*'
     - 'db/migrate/**/*'
+    - 'app/controllers/home_controller.rb'
   Max: 18.5
 
 Metrics/ParameterLists:

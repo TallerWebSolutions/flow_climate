@@ -28,4 +28,10 @@ en:
       previous_color: "Previous alert color: %{previous_color}"
     no_top_three_throughput: "There is no projects"
     no_red_projects: "No red projects"
+  exports:
+    jira_requested_csv:
+      subject: "Requested Information"
+  plans:
+    request:
+      subject: "A new plan was requested"
 

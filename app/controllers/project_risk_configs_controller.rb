@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class ProjectRiskConfigsController < AuthenticatedController
+  before_action :user_gold_check
+
   before_action :assign_company
   before_action :assign_project
   before_action :assign_project_risk_config, only: %i[activate deactivate destroy]

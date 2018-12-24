@@ -14,10 +14,37 @@ Rails.application.routes.draw do
 
   devise_for :users, controllers: { registrations: 'devise_custom/registrations' }
 
-  resources :users, only: [] do
+  controller :home do
+    get :show
+    get :no_company
+  end
+
+  controller :exports do
+    get :request_project_information
+    post :process_requested_information
+
+    post :send_csv_data_by_email
+  end
+
+  controller :plans do
+    get :no_plan
+    post :plan_choose
+  end
+
+  resources :users, only: %i[show index] do
     collection do
       patch :activate_email_notifications
       patch :deactivate_email_notifications
+    end
+    patch :toggle_admin, on: :member
+
+    resources :user_plans, only: [] do
+      member do
+        patch :activate_user_plan
+        patch :deactivate_user_plan
+        patch :pay_plan
+        patch :unpay_plan
+      end
     end
   end
 
@@ -117,5 +144,5 @@ Rails.application.routes.draw do
     end
   end
 
-  root 'companies#index'
+  root 'home#show'
 end

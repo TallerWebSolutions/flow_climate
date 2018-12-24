@@ -61,7 +61,7 @@ class DropTableProjectResults < ActiveRecord::Migration[5.2]
       t.timestamps
     end
 
-    add_column :demands, :project_result_id, :integer, null: false, index: true
+    add_column :demands, :project_result_id, :integer, index: true
     add_foreign_key :demands, :project_results, column: :project_result_id
 
     add_foreign_key :project_results, :teams, column: :team_id

@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 RSpec.describe UserNotifierMailer, type: :mailer do
+  before { travel_to Date.new(2018, 11, 19) }
+  after { travel_back }
+
   describe '#company_weekly_bulletin' do
     let(:first_user) { Fabricate :user, email_notifications: true }
     let(:second_user) { Fabricate :user, email_notifications: true }
@@ -38,8 +41,6 @@ RSpec.describe UserNotifierMailer, type: :mailer do
       expect(mail.body.encoded).to match second_project.full_name
       expect(mail.body.encoded).to match third_project.full_name
       expect(mail.body.encoded).to match fourth_project.full_name
-      expect(mail.body.encoded).to match first_demand.demand_id
-      expect(mail.body.encoded).to match second_demand.demand_id
       expect(mail.body.encoded).to match red_project.full_name
       expect(mail.body.encoded).to match other_red_project.full_name
     end
@@ -67,6 +68,50 @@ RSpec.describe UserNotifierMailer, type: :mailer do
       expect(mail.from).to eq(['no-reply@taller.net.br'])
       expect(mail.body.encoded).to match first_project.full_name
       expect(mail.body.encoded).to match I18n.t("activerecord.attributes.project_risk_config.enums.risk_type.#{first_risk_config.risk_type}")
+    end
+  end
+
+  describe '#jira_requested_csv' do
+    let(:user) { Fabricate :user, email_notifications: true }
+
+    subject(:mail) { UserNotifierMailer.jira_requested_csv(user, 'bla').deliver_now }
+
+    it 'renders the email' do
+      expect(mail.subject).to eq I18n.t('exports.jira_requested_csv.subject')
+      expect(mail.body.encoded).to match I18n.t('exports.request_project_information.csv_attached')
+    end
+  end
+
+  describe '#jira_requested_csv' do
+    let(:user) { Fabricate :user, email_notifications: true }
+
+    subject(:mail) { UserNotifierMailer.jira_requested_csv(user, 'bla').deliver_now }
+
+    it 'renders the email' do
+      expect(mail.subject).to eq I18n.t('exports.jira_requested_csv.subject')
+      expect(mail.body.encoded).to match I18n.t('exports.request_project_information.csv_attached')
+    end
+  end
+
+  describe '#plan_requested' do
+    let(:user) { Fabricate :user, admin: true }
+    let(:user_plan) { Fabricate :user_plan, user: user }
+
+    subject(:mail) { UserNotifierMailer.plan_requested(user, user_plan).deliver_now }
+
+    it 'renders the email' do
+      expect(mail.subject).to eq I18n.t('plans.request.subject')
+    end
+  end
+
+  describe '#jira_requested_csv' do
+    let(:user) { Fabricate :user, email_notifications: true }
+
+    subject(:mail) { UserNotifierMailer.jira_requested_csv(user, 'bla').deliver_now }
+
+    it 'renders the email' do
+      expect(mail.subject).to eq I18n.t('exports.jira_requested_csv.subject')
+      expect(mail.body.encoded).to match I18n.t('exports.request_project_information.csv_attached')
     end
   end
 end

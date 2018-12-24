@@ -12,6 +12,7 @@ pt-BR:
       i_am_done: 'Pronto!'
       send: Enviar
       import: "Importar"
+      sign_up: "Assinar"
     no_records: Você ainda não tem %{record}! Que tal criar o seu primeiro?
     messages:
       saved: Salvo!
@@ -42,7 +43,7 @@ pt-BR:
         title: "Custo Médio por Demanda"
       flow_pressure: "Pressão do Fluxo"
       hours_per_demand: "Horas por Demanda"
-    no_data: "Não existem dados para essa exibição"
+    no_data: "Não existem dados para essa exibição: %{missing_data}"
     download_csv: "Download CSV"
     percentage:
       symbol: "%"
@@ -58,6 +59,10 @@ pt-BR:
   users:
     change_last_company:
       title: "Mudar para esta empresa"
+    show:
+      title: "Perfil do Usuário"
+    index:
+      title: "Usuários"
   companies:
     index:
       title: "Empresas"
@@ -542,3 +547,25 @@ pt-BR:
   project_jira_configs:
     new:
       title: "Nova Configuração do Jira"
+  exports:
+    request_project_information:
+      title: "Receber Informações do Jira"
+      no_result_alert: "Sua busca não retornou resultados, revise os campos"
+      queued: "Seu pedido foi enfileirado. Você receberá um email com os dados e também poderá baixá-los através da página do seu perfil."
+      csv_attached: ""
+      address_in_web: "Você também pode encontrar essa informação aqui."
+    demand_data_processment:
+      email_sent: "O conteúdo foi enviado."
+  plans:
+    buttons:
+      inactive_plan_present: "Você já tem um plano inativo"
+    validations:
+      no_gold_plan: "Você precisa do plano gold para acessar essa área."
+      no_lite_plan: "Você precisa do plano lite no mínimo para acessar isso."
+  user_plans:
+    index:
+      table:
+        title: "Todos os planos"
+  user_profile:
+    show:
+      data_processed_table: "Dados Processados"

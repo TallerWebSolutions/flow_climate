@@ -1,7 +1,11 @@
 <% if user_signed_in? %>
-  <%= "#{current_user&.first_name}" %>
+  <%= link_to "#{current_user&.first_name}", user_path(current_user) %>
   <% current_user.companies.each do |company| %>
     | <%= link_to company.abbreviation&.upcase, company_path(company) %>
+  <% end %>
+  | <%= number_to_currency(current_user.user_money_credits) %>
+  <% if current_user.admin? %>
+    | <%= link_to 'Admin Dashboard', users_path %>
   <% end %>
   <div class="pull-right">
     <%= link_to :destroy_user_session, method: :delete do %>

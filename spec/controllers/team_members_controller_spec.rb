@@ -29,7 +29,10 @@ RSpec.describe TeamMembersController, type: :controller do
   end
 
   context 'authenticated' do
-    let(:user) { Fabricate :user }
+    let(:plan) { Fabricate :plan, plan_type: :gold }
+    let(:user) { Fabricate :user, first_name: 'zzz' }
+    let!(:user_plan) { Fabricate :user_plan, user: user, plan: plan, active: true, paid: true, finish_at: 1.week.from_now }
+
     before { sign_in user }
 
     let(:company) { Fabricate :company, users: [user] }

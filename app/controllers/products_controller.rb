@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class ProductsController < AuthenticatedController
+  before_action :user_gold_check
+
   before_action :assign_company
   before_action :assign_product, only: %i[show edit update destroy search_for_projects]
 

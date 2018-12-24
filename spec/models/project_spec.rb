@@ -20,6 +20,9 @@ RSpec.describe Project, type: :model do
     it { is_expected.to have_many(:integration_errors).dependent(:destroy) }
     it { is_expected.to have_many(:project_change_deadline_histories).dependent(:destroy) }
     it { is_expected.to have_one(:project_jira_config).dependent(:destroy) }
+
+    it { is_expected.to have_many(:user_project_roles).dependent(:destroy) }
+    it { is_expected.to have_many(:users).through(:user_project_roles) }
   end
 
   context 'validations' do
@@ -434,9 +437,11 @@ RSpec.describe Project, type: :model do
   end
 
   describe '#avg_hours_per_demand_upstream' do
+    before { travel_to Date.new(2018, 11, 19) }
+    after { travel_back }
     context 'having results' do
       include_context 'demands with effort'
-      it { expect(project.avg_hours_per_demand_upstream).to eq 119.9 }
+      it { expect(project.avg_hours_per_demand_upstream).to eq 118.8 }
     end
     context 'having no results' do
       let(:project) { Fabricate :project, initial_scope: 30, start_date: 1.day.ago, end_date: 1.week.from_now }
@@ -512,6 +517,9 @@ RSpec.describe Project, type: :model do
   end
 
   describe '#total_throughput_downstream' do
+    before { travel_to Date.new(2018, 11, 19) }
+    after { travel_back }
+
     context 'having data' do
       include_context 'demands with effort'
       it { expect(project.total_throughput_downstream).to match_array [first_demand, second_demand] }
@@ -523,9 +531,12 @@ RSpec.describe Project, type: :model do
   end
 
   describe '#total_hours_upstream' do
+    before { travel_to Date.new(2018, 11, 19) }
+    after { travel_back }
+
     context 'having data' do
       include_context 'demands with effort'
-      it { expect(project.total_hours_upstream).to eq 0.1199e3 }
+      it { expect(project.total_hours_upstream).to eq 118.8 }
     end
     context 'having no data' do
       let(:project) { Fabricate :project, initial_scope: 30, start_date: 1.day.ago, end_date: 1.week.from_now, qty_hours: 5000 }
@@ -616,6 +627,9 @@ RSpec.describe Project, type: :model do
   end
 
   describe '#total_throughput_for' do
+    before { travel_to Time.zone.local(2018, 11, 19, 10, 0, 0) }
+    after { travel_back }
+
     context 'having data' do
       include_context 'demands with effort'
       it { expect(project.total_throughput_for(Time.zone.today)).to eq 2 }
@@ -658,6 +672,9 @@ RSpec.describe Project, type: :model do
   end
 
   describe '#backlog_growth_throughput_rate' do
+    before { travel_to Time.zone.local(2018, 11, 19, 10, 0, 0) }
+    after { travel_back }
+
     context 'having data' do
       include_context 'demands with effort'
       it { expect(project.backlog_growth_throughput_rate).to eq 0.5 }
@@ -1006,6 +1023,21 @@ RSpec.describe Project, type: :model do
       let(:not_kept_demand) { Fabricate :demand, project: project, discarded_at: Time.zone.today }
 
       it { expect(project.kept_demands_ids).to match_array [] }
+    end
+  end
+
+  describe '#add_user' do
+    context 'when already has the user' do
+      let(:user) { Fabricate :user }
+      let!(:project) { Fabricate :project }
+      before { project.add_user(user) }
+      it { expect(project.users).to eq [user] }
+    end
+    context 'when does not have the user' do
+      let(:user) { Fabricate :user }
+      let!(:project) { Fabricate :project }
+      before { project.add_user(user) }
+      it { expect(project.users).to eq [user] }
     end
   end
 end

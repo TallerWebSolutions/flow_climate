@@ -22,6 +22,7 @@
 #  reset_password_token   :string           indexed
 #  sign_in_count          :integer          default(0), not null
 #  updated_at             :datetime         not null
+#  user_money_credits     :decimal(, )      default(0.0), not null
 #
 # Indexes
 #
@@ -34,14 +35,60 @@
 #
 
 class User < ApplicationRecord
-  # Include default devise modules. Others available are:
-  # :confirmable, :lockable, :timeoutable and :omniauthable
-  devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :trackable, :validatable
+  devise :database_authenticatable, :registerable, :recoverable, :rememberable, :trackable, :validatable
 
   has_and_belongs_to_many :companies
+
+  has_many :user_project_roles, dependent: :destroy
+  has_many :projects, through: :user_project_roles
+
+  has_many :demand_data_processments, dependent: :destroy
+  has_many :user_plans, dependent: :destroy
 
   validates :first_name, :last_name, :email, presence: true
 
   scope :to_notify_email, -> { where email_notifications: true }
+  scope :admins, -> { where admin: true }
+
+  def current_plan
+    current_user_plan&.plan
+  end
+
+  def current_user_plan
+    user_plans.valid_plans.first
+  end
+
+  def trial?
+    return false if current_plan.blank?
+
+    current_plan.trial?
+  end
+
+  def lite?
+    return false if current_plan.blank?
+
+    current_plan.lite?
+  end
+
+  def gold?
+    return false if current_plan.blank?
+
+    current_plan.gold?
+  end
+
+  def no_plan?
+    return true if current_plan.blank?
+
+    false
+  end
+
+  def full_name
+    "#{last_name}, #{first_name}"
+  end
+
+  def toggle_admin
+    return update(admin: false) if admin?
+
+    update(admin: true)
+  end
 end

@@ -40,8 +40,11 @@ RSpec.describe CompaniesController, type: :controller do
     end
   end
 
-  context 'authenticated' do
+  context 'authenticated having a gold plan' do
+    let(:plan) { Fabricate :plan, plan_type: :gold }
     let(:user) { Fabricate :user, first_name: 'zzz' }
+    let!(:user_plan) { Fabricate :user_plan, user: user, plan: plan, active: true, paid: true, finish_at: 1.week.from_now }
+
     before { sign_in user }
 
     describe 'GET #index' do
@@ -49,8 +52,10 @@ RSpec.describe CompaniesController, type: :controller do
         let(:company) { Fabricate :company, users: [user], name: 'zzz' }
         let(:other_company) { Fabricate :company, users: [user], name: 'aaa' }
         let(:out_company) { Fabricate :company }
-        before { get :index }
+
         it 'assigns the instance variable and renders the template' do
+          expect_any_instance_of(AuthenticatedController).to(receive(:user_gold_check).once { true })
+          get :index
           expect(response).to render_template :index
           expect(assigns(:companies)).to eq [other_company, company]
         end
@@ -309,6 +314,244 @@ RSpec.describe CompaniesController, type: :controller do
             it { expect(response.status).to eq 404 }
           end
         end
+      end
+    end
+  end
+
+  context 'authenticated having no plan' do
+    let(:user) { Fabricate :user, first_name: 'zzz' }
+
+    before { sign_in user }
+
+    describe 'GET #index' do
+      before { get :index }
+      it 'redirects to the user profile with an alert' do
+        expect(response).to redirect_to user_path(user)
+        flash[:alert] = I18n.t('plans.validations.no_gold_plan')
+      end
+    end
+
+    describe 'GET #show' do
+      before { get :show, params: { id: 'foo' } }
+      it 'redirects to the user profile with an alert' do
+        expect(response).to redirect_to user_path(user)
+        flash[:alert] = I18n.t('plans.validations.no_gold_plan')
+      end
+    end
+
+    describe 'GET #new' do
+      before { get :new }
+      it 'redirects to the user profile with an alert' do
+        expect(response).to redirect_to user_path(user)
+        flash[:alert] = I18n.t('plans.validations.no_gold_plan')
+      end
+    end
+
+    describe 'POST #create' do
+      before { post :create }
+      it 'redirects to the user profile with an alert' do
+        expect(response).to redirect_to user_path(user)
+        flash[:alert] = I18n.t('plans.validations.no_gold_plan')
+      end
+    end
+
+    describe 'GET #edit' do
+      before { get :edit, params: { id: 'foo' } }
+      it 'redirects to the user profile with an alert' do
+        expect(response).to redirect_to user_path(user)
+        flash[:alert] = I18n.t('plans.validations.no_gold_plan')
+      end
+    end
+
+    describe 'PUT #update' do
+      before { put :update, params: { id: 'foo' } }
+      it 'redirects to the user profile with an alert' do
+        expect(response).to redirect_to user_path(user)
+        flash[:alert] = I18n.t('plans.validations.no_gold_plan')
+      end
+    end
+
+    describe 'PATCH #add_user' do
+      before { patch :add_user, params: { id: 'foo' } }
+      it 'redirects to the user profile with an alert' do
+        expect(response).to redirect_to user_path(user)
+        flash[:alert] = I18n.t('plans.validations.no_gold_plan')
+      end
+    end
+
+    describe 'GET #send_company_bulletin' do
+      before { get :send_company_bulletin, params: { id: 'foo' } }
+      it 'redirects to the user profile with an alert' do
+        expect(response).to redirect_to user_path(user)
+        flash[:alert] = I18n.t('plans.validations.no_gold_plan')
+      end
+    end
+
+    describe 'POST #update_settings' do
+      before { post :update_settings, params: { id: 'xpto' }, xhr: true }
+      it 'redirects to the user profile with an alert' do
+        expect(response).to redirect_to user_path(user)
+        flash[:alert] = I18n.t('plans.validations.no_gold_plan')
+      end
+    end
+  end
+
+  context 'authenticated having a lite plan' do
+    let(:plan) { Fabricate :plan, plan_type: :lite }
+    let(:user) { Fabricate :user, first_name: 'zzz' }
+    let!(:user_plan) { Fabricate :user_plan, user: user, plan: plan, active: true, paid: true, finish_at: 1.week.from_now }
+
+    before { sign_in user }
+
+    describe 'GET #index' do
+      before { get :index }
+      it 'redirects to the user profile with an alert' do
+        expect(response).to redirect_to user_path(user)
+        flash[:alert] = I18n.t('plans.validations.no_gold_plan')
+      end
+    end
+
+    describe 'GET #show' do
+      before { get :show, params: { id: 'foo' } }
+      it 'redirects to the user profile with an alert' do
+        expect(response).to redirect_to user_path(user)
+        flash[:alert] = I18n.t('plans.validations.no_gold_plan')
+      end
+    end
+
+    describe 'GET #new' do
+      before { get :new }
+      it 'redirects to the user profile with an alert' do
+        expect(response).to redirect_to user_path(user)
+        flash[:alert] = I18n.t('plans.validations.no_gold_plan')
+      end
+    end
+
+    describe 'POST #create' do
+      before { post :create }
+      it 'redirects to the user profile with an alert' do
+        expect(response).to redirect_to user_path(user)
+        flash[:alert] = I18n.t('plans.validations.no_gold_plan')
+      end
+    end
+
+    describe 'GET #edit' do
+      before { get :edit, params: { id: 'foo' } }
+      it 'redirects to the user profile with an alert' do
+        expect(response).to redirect_to user_path(user)
+        flash[:alert] = I18n.t('plans.validations.no_gold_plan')
+      end
+    end
+
+    describe 'PUT #update' do
+      before { put :update, params: { id: 'foo' } }
+      it 'redirects to the user profile with an alert' do
+        expect(response).to redirect_to user_path(user)
+        flash[:alert] = I18n.t('plans.validations.no_gold_plan')
+      end
+    end
+
+    describe 'PATCH #add_user' do
+      before { patch :add_user, params: { id: 'foo' } }
+      it 'redirects to the user profile with an alert' do
+        expect(response).to redirect_to user_path(user)
+        flash[:alert] = I18n.t('plans.validations.no_gold_plan')
+      end
+    end
+
+    describe 'GET #send_company_bulletin' do
+      before { get :send_company_bulletin, params: { id: 'foo' } }
+      it 'redirects to the user profile with an alert' do
+        expect(response).to redirect_to user_path(user)
+        flash[:alert] = I18n.t('plans.validations.no_gold_plan')
+      end
+    end
+
+    describe 'POST #update_settings' do
+      before { post :update_settings, params: { id: 'xpto' }, xhr: true }
+      it 'redirects to the user profile with an alert' do
+        expect(response).to redirect_to user_path(user)
+        flash[:alert] = I18n.t('plans.validations.no_gold_plan')
+      end
+    end
+  end
+
+  context 'authenticated having a trial plan' do
+    let(:plan) { Fabricate :plan, plan_type: :trial }
+    let(:user) { Fabricate :user, first_name: 'zzz' }
+    let!(:user_plan) { Fabricate :user_plan, user: user, plan: plan, active: true, paid: true, finish_at: 1.week.from_now }
+
+    before { sign_in user }
+
+    describe 'GET #index' do
+      before { get :index }
+      it 'redirects to the user profile with an alert' do
+        expect(response).to redirect_to user_path(user)
+        flash[:alert] = I18n.t('plans.validations.no_gold_plan')
+      end
+    end
+
+    describe 'GET #show' do
+      before { get :show, params: { id: 'foo' } }
+      it 'redirects to the user profile with an alert' do
+        expect(response).to redirect_to user_path(user)
+        flash[:alert] = I18n.t('plans.validations.no_gold_plan')
+      end
+    end
+
+    describe 'GET #new' do
+      before { get :new }
+      it 'redirects to the user profile with an alert' do
+        expect(response).to redirect_to user_path(user)
+        flash[:alert] = I18n.t('plans.validations.no_gold_plan')
+      end
+    end
+
+    describe 'POST #create' do
+      before { post :create }
+      it 'redirects to the user profile with an alert' do
+        expect(response).to redirect_to user_path(user)
+        flash[:alert] = I18n.t('plans.validations.no_gold_plan')
+      end
+    end
+
+    describe 'GET #edit' do
+      before { get :edit, params: { id: 'foo' } }
+      it 'redirects to the user profile with an alert' do
+        expect(response).to redirect_to user_path(user)
+        flash[:alert] = I18n.t('plans.validations.no_gold_plan')
+      end
+    end
+
+    describe 'PUT #update' do
+      before { put :update, params: { id: 'foo' } }
+      it 'redirects to the user profile with an alert' do
+        expect(response).to redirect_to user_path(user)
+        flash[:alert] = I18n.t('plans.validations.no_gold_plan')
+      end
+    end
+
+    describe 'PATCH #add_user' do
+      before { patch :add_user, params: { id: 'foo' } }
+      it 'redirects to the user profile with an alert' do
+        expect(response).to redirect_to user_path(user)
+        flash[:alert] = I18n.t('plans.validations.no_gold_plan')
+      end
+    end
+
+    describe 'GET #send_company_bulletin' do
+      before { get :send_company_bulletin, params: { id: 'foo' } }
+      it 'redirects to the user profile with an alert' do
+        expect(response).to redirect_to user_path(user)
+        flash[:alert] = I18n.t('plans.validations.no_gold_plan')
+      end
+    end
+
+    describe 'POST #update_settings' do
+      before { post :update_settings, params: { id: 'xpto' }, xhr: true }
+      it 'redirects to the user profile with an alert' do
+        expect(response).to redirect_to user_path(user)
+        flash[:alert] = I18n.t('plans.validations.no_gold_plan')
       end
     end
   end

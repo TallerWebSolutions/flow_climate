@@ -38,7 +38,16 @@ en:
         one: 1 error prohibited this %{model} from being saved
         other: "%{count} errors prohibited this %{model} from being saved"
   activerecord:
+    plan:
+      one: Plan
+      other: Plans
+      user_plan:
+        one: User Plan
+        other: User Plans
     attributes:
+      user:
+        created_at: Joined At
+        sign_in_count: Sign in Count
       project:
         percentage_effort_to_bugs: "% Effort Charged in Bugs"
       project_risk_config:
@@ -141,3 +150,6 @@ en:
     validations:
       jira_project_key_uniqueness:
         message: "Should have only one Jira Project Key per account domain and fix version name"
+  user_plan:
+    validations:
+      user_plan_active: "Você já tem um plano para o período."
