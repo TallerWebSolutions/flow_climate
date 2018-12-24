@@ -127,6 +127,8 @@ pt-BR:
         password: Senha
         password_confirmation: Confirmação de senha
         remember_me: Lembrar
+        created_at: Chegou em
+        sign_in_count: Qty Logins
       company:
         name: Nome
         abbreviation: Sigla

@@ -47,6 +47,22 @@ class UserPlan < ApplicationRecord
     "#{plan.plan_type.capitalize} #{plan_billing_period.capitalize}"
   end
 
+  def activate
+    update(active: true)
+  end
+
+  def deactivate
+    update(active: false)
+  end
+
+  def pay
+    update(paid: true)
+  end
+
+  def unpay
+    update(paid: false)
+  end
+
   private
 
   def user_plan_uniqueness

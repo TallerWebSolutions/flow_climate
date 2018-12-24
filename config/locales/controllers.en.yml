@@ -62,6 +62,8 @@ en:
       title: "Change to this company"
     show:
       title: "User Profile"
+    index:
+      title: "Users"
   companies:
     index:
       title: "Companies"
@@ -571,3 +573,7 @@ en:
     show:
       demands_flow:
         title: "Flow between %{start_date} and %{end_date}"
+    new:
+      title: "New Team"
+    index:
+      title: "Teams"

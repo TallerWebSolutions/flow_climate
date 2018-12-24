@@ -45,6 +45,9 @@ en:
         one: User Plan
         other: User Plans
     attributes:
+      user:
+        created_at: Joined At
+        sign_in_count: Sign in Count
       project:
         percentage_effort_to_bugs: "% Effort Charged in Bugs"
       project_risk_config:

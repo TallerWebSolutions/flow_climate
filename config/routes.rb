@@ -31,10 +31,19 @@ Rails.application.routes.draw do
     post :plan_choose
   end
 
-  resources :users, only: :show do
+  resources :users, only: %i[show index] do
     collection do
       patch :activate_email_notifications
       patch :deactivate_email_notifications
+    end
+
+    resources :user_plans, only: [] do
+      member do
+        patch :activate_user_plan
+        patch :deactivate_user_plan
+        patch :pay_plan
+        patch :unpay_plan
+      end
     end
   end
 

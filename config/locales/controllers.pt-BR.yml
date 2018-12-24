@@ -61,6 +61,8 @@ pt-BR:
       title: "Mudar para esta empresa"
     show:
       title: "Perfil do Usuário"
+    index:
+      title: "Usuários"
   companies:
     index:
       title: "Empresas"

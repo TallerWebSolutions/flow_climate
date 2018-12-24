@@ -13,6 +13,7 @@
       <th><%= Plan.human_attribute_name(:max_days_in_history) %></th>
       <th><%= UserPlan.human_attribute_name(:paid) %></th>
       <th><%= UserPlan.human_attribute_name(:active) %></th>
+      <th></th>
     </tr>
   </thead>
   <tbody>
@@ -29,12 +30,40 @@
         <td><%= "#{user_plan.plan.max_days_in_history} dias" %></td>
         <td class="center">
           <% if user_plan.paid? %>
-            <i class="fa fa-check" aria-hidden="true"></i>
+            <% if current_user.admin? %>
+              <%= link_to unpay_plan_user_user_plan_path(@user, user_plan), method: :patch do %>
+                <i class="fas fa-toggle-on fa-2x"></i>
+              <% end %>
+            <% else %>
+              <i class="fas fa-toggle-on fa-2x"></i>
+            <% end %>
+          <% else %>
+            <% if current_user.admin? %>
+              <%= link_to pay_plan_user_user_plan_path(@user, user_plan), method: :patch do %>
+                <i class="fas fa-toggle-off fa-2x"></i>
+              <% end %>
+            <% else %>
+              <i class="fas fa-toggle-off fa-2x"></i>
+            <% end %>
           <% end %>
         </td>
-        <td class="center">
+        <td>
           <% if user_plan.active? %>
-            <i class="fa fa-check" aria-hidden="true"></i>
+            <% if current_user.admin? %>
+              <%= link_to deactivate_user_plan_user_user_plan_path(@user, user_plan), method: :patch do %>
+                <i class="fas fa-toggle-on fa-2x"></i>
+              <% end %>
+            <% else %>
+              <i class="fas fa-toggle-on fa-2x"></i>
+            <% end %>
+          <% else %>
+            <% if current_user.admin? %>
+              <%= link_to activate_user_plan_user_user_plan_path(@user, user_plan), method: :patch do %>
+                <i class="fas fa-toggle-off fa-2x"></i>
+              <% end %>
+            <% else %>
+              <i class="fas fa-toggle-off fa-2x"></i>
+            <% end %>
           <% end %>
         </td>
       </tr>

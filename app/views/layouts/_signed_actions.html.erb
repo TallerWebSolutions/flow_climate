@@ -4,6 +4,9 @@
     | <%= link_to company.abbreviation&.upcase, company_path(company) %>
   <% end %>
   | <%= number_to_currency(current_user.user_money_credits) %>
+  <% if current_user.admin? %>
+    | <%= link_to 'Admin Dashboard', users_path %>
+  <% end %>
   <div class="pull-right">
     <%= link_to :destroy_user_session, method: :delete do %>
       <i class="fa fa-sign-out-alt fa-2x" aria-hidden="true"></i>
