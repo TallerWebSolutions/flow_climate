@@ -14,7 +14,7 @@ class ExportsController < AuthenticatedController
 
   def send_csv_data_by_email
     demand_data_processment = DemandDataProcessment.find(params[:demand_data_processment_id])
-    UserNotifierMailer.jira_requested_csv(current_user, demand_data_processment.downloaded_content)
+    UserNotifierMailer.jira_requested_csv(current_user, demand_data_processment.downloaded_content).deliver
     DemandDataProcessment.create(user: current_user, user_plan: current_user.current_user_plan, downloaded_content: demand_data_processment.downloaded_content, project_key: demand_data_processment.project_key)
     flash[:notice] = I18n.t('exports.demand_data_processment.email_sent')
     redirect_to user_path(current_user)

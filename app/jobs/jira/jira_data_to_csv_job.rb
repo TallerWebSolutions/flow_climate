@@ -58,7 +58,7 @@ module Jira
       demands_as_csv = basic_fields_to_csv + values_to_csv_fields
 
       save_processed_data(demands_as_csv, project_key, user)
-      UserNotifierMailer.jira_requested_csv(user, demands_as_csv)
+      UserNotifierMailer.jira_requested_csv(user, demands_as_csv).deliver
     end
 
     private

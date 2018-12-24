@@ -9,7 +9,7 @@ RSpec.describe Jira::JiraDataToCsvJob, type: :active_job do
   end
 
   describe '.perform' do
-    let(:user) { Fabricate :user }
+    let(:user) { Fabricate :user, admin: true }
     let(:plan) { Fabricate :plan }
     let!(:user_plan) { Fabricate :user_plan, plan: plan, user: user, active: true, paid: true }
 
@@ -27,7 +27,7 @@ RSpec.describe Jira::JiraDataToCsvJob, type: :active_job do
           expect(JIRA::Resource::Issue).to(receive(:find).once { returned_issue })
           expect(JIRA::Resource::Issue).to(receive(:jql).once { [returned_issue] })
 
-          expect(UserNotifierMailer).to receive(:jira_requested_csv).once
+          expect(UserNotifierMailer).to receive(:jira_requested_csv).once.and_call_original
 
           Jira::JiraDataToCsvJob.perform_now('foo', 'bar', 'https://foo.atlassian.net/', 'NSC', 'NSCT', 'Fase 1', 'class_of_service_field', user.id)
 
