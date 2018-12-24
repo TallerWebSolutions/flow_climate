@@ -22,6 +22,7 @@ RSpec.describe ExportsController, type: :controller do
 
     let(:jira_account) { Fabricate :jira_account, base_uri: 'https://foo.atlassian.net/', username: 'foo', password: 'bar' }
 
+    let!(:admin_user) { Fabricate :user, admin: true }
     let(:user) { Fabricate :user }
     before { sign_in user }
 
@@ -49,7 +50,7 @@ RSpec.describe ExportsController, type: :controller do
 
         context 'having all fields' do
           it 'returns the CSV to download' do
-            expect(UserNotifierMailer).to receive(:jira_requested_csv).once
+            expect(UserNotifierMailer).to receive(:jira_requested_csv).once.and_call_original
             post :send_csv_data_by_email, params: { demand_data_processment_id: demand_data_processment }, format: :csv
             expect(response).to redirect_to user_path(user)
             expect(flash[:notice]).to eq I18n.t('exports.demand_data_processment.email_sent')
@@ -66,7 +67,7 @@ RSpec.describe ExportsController, type: :controller do
 
         context 'having all fields' do
           it 'returns the CSV to download' do
-            expect(UserNotifierMailer).to receive(:jira_requested_csv).once
+            expect(UserNotifierMailer).to receive(:jira_requested_csv).once.and_call_original
             post :send_csv_data_by_email, params: { demand_data_processment_id: demand_data_processment }, format: :csv
             expect(response).to redirect_to user_path(user)
             expect(flash[:notice]).to eq I18n.t('exports.demand_data_processment.email_sent')

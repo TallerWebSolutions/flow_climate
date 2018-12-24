@@ -7,6 +7,7 @@ class PlansController < AuthenticatedController
 
   def plan_choose
     plan = Plan.find(params[:plan_id])
+    @user = User.find(params[:user_id])
 
     if @inactive_plans.count.positive?
       flash[:alert] = 'Você já tem um plano'
@@ -14,14 +15,12 @@ class PlansController < AuthenticatedController
     end
 
     build_plan_to_user(plan, params[:plan_value])
-    UserNotifierMailer.plan_requested(@user, @user_plan)
     redirect_to root_path
   end
 
-  private
-
   def build_plan_to_user(plan, plan_value)
-    UserPlan.create(plan: plan, user: current_user, plan_billing_period: params[:period], plan_value: plan_value, start_at: Time.zone.now, finish_at: plan_finish_date, active: false, paid: false)
+    @user_plan = UserPlan.create(plan: plan, user: current_user, plan_billing_period: params[:period], plan_value: plan_value, start_at: Time.zone.now, finish_at: plan_finish_date, active: false, paid: false)
+    UserNotifierMailer.plan_requested(@user, @user_plan).deliver
   end
 
   def inactive_plans_in_period
