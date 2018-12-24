@@ -25,7 +25,20 @@ RSpec.describe User, type: :model do
         it { expect(User.to_notify_email).to match_array [first_user, second_user] }
       end
       context 'having no data' do
-        it { expect(User.to_notify_email).to match_array [] }
+        it { expect(User.to_notify_email).to eq [] }
+      end
+    end
+
+    describe '.admins' do
+      context 'having data' do
+        let(:first_user) { Fabricate :user, admin: true }
+        let(:second_user) { Fabricate :user, admin: true }
+        let(:third_user) { Fabricate :user, admin: false }
+
+        it { expect(User.admins).to match_array [first_user, second_user] }
+      end
+      context 'having no data' do
+        it { expect(User.admins).to eq [] }
       end
     end
   end

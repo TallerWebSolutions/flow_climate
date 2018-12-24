@@ -31,4 +31,7 @@ en:
   exports:
     jira_requested_csv:
       subject: "Requested Information"
+  plans:
+    request:
+      subject: "A new plan was requested"
 

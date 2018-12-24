@@ -30,3 +30,6 @@ pt-BR:
   exports:
     jira_requested_csv:
       subject: Informação Solicitada
+  plans:
+    request:
+      subject: "Um novo plano foi solicitado"

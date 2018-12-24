@@ -28,8 +28,9 @@ RSpec.describe PlansController, type: :controller do
     describe 'POST #plan_choose' do
       let!(:plan) { Fabricate :plan }
       context 'having no inactive plans' do
-        before { post :plan_choose, params: { plan_id: plan.id, period: :monthly, plan_value: 10 } }
         it 'creates the plan to the user and redirects to the root path' do
+          expect(UserNotifierMailer).to receive(:plan_requested).once
+          post :plan_choose, params: { plan_id: plan.id, period: :monthly, plan_value: 10 }
           expect(UserPlan.last).not_to be_nil
           expect(UserPlan.last.plan).to eq plan
           expect(UserPlan.last.user).to eq user

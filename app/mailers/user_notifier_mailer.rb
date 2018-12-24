@@ -31,6 +31,14 @@ class UserNotifierMailer < ApplicationMailer
     mail(to: emails, subject: I18n.t('exports.jira_requested_csv.subject'))
   end
 
+  def plan_requested(user, user_plan)
+    @user = user
+    @user_plan = user_plan
+    emails = User.admins.map(&:email)
+    Rails.logger.info("New plan requested email sent to #{emails}")
+    mail(to: emails, subject: I18n.t('plans.request.subject'))
+  end
+
   private
 
   def assign_project_informations(company)

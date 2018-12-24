@@ -48,6 +48,7 @@ class User < ApplicationRecord
   validates :first_name, :last_name, :email, presence: true
 
   scope :to_notify_email, -> { where email_notifications: true }
+  scope :admins, -> { where admin: true }
 
   def current_plan
     current_user_plan&.plan

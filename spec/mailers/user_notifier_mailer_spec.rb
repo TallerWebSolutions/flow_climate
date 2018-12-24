@@ -81,4 +81,37 @@ RSpec.describe UserNotifierMailer, type: :mailer do
       expect(mail.body.encoded).to match I18n.t('exports.request_project_information.csv_attached')
     end
   end
+
+  describe '#jira_requested_csv' do
+    let(:user) { Fabricate :user, email_notifications: true }
+
+    subject(:mail) { UserNotifierMailer.jira_requested_csv(user, 'bla').deliver_now }
+
+    it 'renders the email' do
+      expect(mail.subject).to eq I18n.t('exports.jira_requested_csv.subject')
+      expect(mail.body.encoded).to match I18n.t('exports.request_project_information.csv_attached')
+    end
+  end
+
+  describe '#plan_requested' do
+    let(:user) { Fabricate :user, admin: true }
+    let(:user_plan) { Fabricate :user_plan, user: user }
+
+    subject(:mail) { UserNotifierMailer.plan_requested(user, user_plan).deliver_now }
+
+    it 'renders the email' do
+      expect(mail.subject).to eq I18n.t('plans.request.subject')
+    end
+  end
+
+  describe '#jira_requested_csv' do
+    let(:user) { Fabricate :user, email_notifications: true }
+
+    subject(:mail) { UserNotifierMailer.jira_requested_csv(user, 'bla').deliver_now }
+
+    it 'renders the email' do
+      expect(mail.subject).to eq I18n.t('exports.jira_requested_csv.subject')
+      expect(mail.body.encoded).to match I18n.t('exports.request_project_information.csv_attached')
+    end
+  end
 end

@@ -14,6 +14,7 @@ class PlansController < AuthenticatedController
     end
 
     build_plan_to_user(plan, params[:plan_value])
+    UserNotifierMailer.plan_requested(@user, @user_plan)
     redirect_to root_path
   end
 
