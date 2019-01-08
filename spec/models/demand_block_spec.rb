@@ -2,7 +2,7 @@
 
 RSpec.describe DemandBlock, type: :model do
   context 'enums' do
-    it { is_expected.to define_enum_for(:block_type).with(coding_needed: 0, specification_needed: 1, waiting_external_supplier: 2, customer_low_urgency: 3, integration_needed: 4, customer_unavailable: 5) }
+    it { is_expected.to define_enum_for(:block_type).with_values(coding_needed: 0, specification_needed: 1, waiting_external_supplier: 2, customer_low_urgency: 3, integration_needed: 4, customer_unavailable: 5) }
   end
 
   context 'associations' do

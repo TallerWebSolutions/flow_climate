@@ -2,8 +2,8 @@
 
 RSpec.describe Demand, type: :model do
   context 'enums' do
-    it { is_expected.to define_enum_for(:demand_type).with(feature: 0, bug: 1, performance_improvement: 2, ui: 3, chore: 4, wireframe: 5) }
-    it { is_expected.to define_enum_for(:class_of_service).with(standard: 0, expedite: 1, fixed_date: 2, intangible: 3) }
+    it { is_expected.to define_enum_for(:demand_type).with_values(feature: 0, bug: 1, performance_improvement: 2, ui: 3, chore: 4, wireframe: 5) }
+    it { is_expected.to define_enum_for(:class_of_service).with_values(standard: 0, expedite: 1, fixed_date: 2, intangible: 3) }
   end
 
   context 'associations' do
@@ -726,7 +726,7 @@ RSpec.describe Demand, type: :model do
   describe '#csv_array' do
     context 'having no stages' do
       let!(:demand) { Fabricate :demand, effort_downstream: nil, end_date: Time.zone.today }
-      it { expect(demand.csv_array).to eq [demand.id, demand.demand_id, demand.demand_title, nil, demand.demand_id, demand.demand_type, demand.class_of_service, demand.effort_downstream.to_f.to_s.gsub('.', I18n.t('number.format.separator')), demand.effort_upstream.to_f.to_s.gsub('.', I18n.t('number.format.separator')), demand.created_date&.iso8601, demand.commitment_date&.iso8601, demand.end_date&.iso8601] }
+      it { expect(demand.csv_array).to eq [demand.id, demand.current_stage&.name, demand.demand_id, demand.demand_title, demand.demand_type, demand.class_of_service, demand.effort_downstream.to_f.to_s.gsub('.', I18n.t('number.format.separator')), demand.effort_upstream.to_f.to_s.gsub('.', I18n.t('number.format.separator')), demand.created_date&.iso8601, demand.commitment_date&.iso8601, demand.end_date&.iso8601] }
     end
 
     context 'having a stage and no end date' do
@@ -738,7 +738,7 @@ RSpec.describe Demand, type: :model do
       let!(:demand_transition) { Fabricate :demand_transition, demand: demand, stage: stage }
       let!(:demand) { Fabricate :demand, project: project, effort_downstream: nil }
 
-      it { expect(demand.csv_array).to eq [demand.id, demand.demand_id, demand.demand_title, stage.name, demand.demand_id, demand.demand_type, demand.class_of_service, demand.effort_downstream.to_f.to_s.gsub('.', I18n.t('number.format.separator')), demand.effort_upstream.to_f.to_s.gsub('.', I18n.t('number.format.separator')), demand.created_date&.iso8601, demand.commitment_date&.iso8601, nil] }
+      it { expect(demand.csv_array).to eq [demand.id, demand.current_stage&.name, demand.demand_id, demand.demand_title, demand.demand_type, demand.class_of_service, demand.effort_downstream.to_f.to_s.gsub('.', I18n.t('number.format.separator')), demand.effort_upstream.to_f.to_s.gsub('.', I18n.t('number.format.separator')), demand.created_date&.iso8601, demand.commitment_date&.iso8601, nil] }
     end
   end
 

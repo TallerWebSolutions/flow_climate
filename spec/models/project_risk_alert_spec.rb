@@ -2,7 +2,7 @@
 
 RSpec.describe ProjectRiskAlert, type: :model do
   context 'enums' do
-    it { is_expected.to define_enum_for(:alert_color).with(green: 0, yellow: 1, red: 2) }
+    it { is_expected.to define_enum_for(:alert_color).with_values(green: 0, yellow: 1, red: 2) }
   end
 
   context 'associations' do

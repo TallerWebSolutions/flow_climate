@@ -7,7 +7,7 @@
       <div id="projects-count-column"
            class="flow-chart"
            data-title='<%= t('companies.charts.active_projects.title', project_name: model_name) %>'
-           data-xcategories='<%= strategic_chart_data.array_of_months %>'
+           data-xcategories='<%= strategic_chart_data.array_of_months.to_json %>'
            data-xtitle='<%= t('charts.xlabel.months') %>'
            data-ytitle='<%= t('charts.ylabel.projects.text') %>'
            data-ylinetitle='<%= t('charts.ylabel.total_hours.text') %>'
@@ -24,7 +24,7 @@
       <div id="hours-per-month-line"
            class="flow-chart"
            data-title='<%= t('companies.charts.hours_per_month.title', project_name: model_name) %>'
-           data-xcategories='<%= strategic_chart_data.array_of_months %>'
+           data-xcategories='<%= strategic_chart_data.array_of_months.to_json %>'
            data-xtitle='<%= t('charts.xlabel.months') %>'
            data-ytitle='<%= t('charts.ylabel.hours.text') %>'
            data-prefix=''
@@ -44,7 +44,7 @@
       <div id="flowpressure-per-month-line"
            class="flow-chart"
            data-title='<%= t('companies.charts.flowpressure_per_month.title', project_name: model_name) %>'
-           data-xcategories='<%= strategic_chart_data.array_of_months %>'
+           data-xcategories='<%= strategic_chart_data.array_of_months.to_json %>'
            data-xtitle='<%= t('charts.xlabel.months') %>'
            data-ytitle='<%= t('charts.ylabel.hours.text') %>'
            data-ylinetitle='<%= t('charts.ylabel.flow_pressure.text') %>'
@@ -58,7 +58,7 @@
       <div id="money-per-month-line"
            class="flow-chart"
            data-title='<%= t('companies.charts.money_per_month.title', project_name: model_name) %>'
-           data-xcategories='<%= strategic_chart_data.array_of_months %>'
+           data-xcategories='<%= strategic_chart_data.array_of_months.to_json %>'
            data-xtitle='<%= t('charts.xlabel.months') %>'
            data-ytitle='<%= t('charts.ylabel.hours.text') %>'
            data-ylinetitle='<%= t('charts.ylabel.money.text') %>'

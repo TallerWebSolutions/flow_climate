@@ -2,7 +2,7 @@
 
 RSpec.describe UserPlan, type: :model do
   context 'enums' do
-    it { is_expected.to define_enum_for(:plan_billing_period).with(monthly: 0, yearly: 1) }
+    it { is_expected.to define_enum_for(:plan_billing_period).with_values(monthly: 0, yearly: 1) }
   end
 
   context 'associations' do

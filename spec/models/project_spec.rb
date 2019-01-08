@@ -2,8 +2,8 @@
 
 RSpec.describe Project, type: :model do
   context 'enums' do
-    it { is_expected.to define_enum_for(:status).with(waiting: 0, executing: 1, maintenance: 2, finished: 3, cancelled: 4, negotiating: 5) }
-    it { is_expected.to define_enum_for(:project_type).with(outsourcing: 0, consulting: 1, training: 2, domestic_product: 3) }
+    it { is_expected.to define_enum_for(:status).with_values(waiting: 0, executing: 1, maintenance: 2, finished: 3, cancelled: 4, negotiating: 5) }
+    it { is_expected.to define_enum_for(:project_type).with_values(outsourcing: 0, consulting: 1, training: 2, domestic_product: 3) }
   end
 
   context 'associations' do
