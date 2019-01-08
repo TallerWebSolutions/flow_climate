@@ -2,7 +2,7 @@
 
 RSpec.describe IntegrationError, type: :model do
   context 'enums' do
-    it { is_expected.to define_enum_for(:integration_type).with(jira: 0) }
+    it { is_expected.to define_enum_for(:integration_type).with_values(jira: 0) }
   end
 
   context 'associations' do

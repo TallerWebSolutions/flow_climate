@@ -146,7 +146,7 @@ RSpec.describe Company, type: :model do
   end
 
   describe '#current_hours_per_demand' do
-    before { travel_to Date.new(2018, 11, 19) }
+    before { travel_to Time.zone.local(2018, 11, 19, 10, 0, 0) }
     after { travel_back }
 
     context 'having finances' do
@@ -168,7 +168,7 @@ RSpec.describe Company, type: :model do
   end
 
   describe '#avg_hours_per_demand' do
-    before { travel_to Date.new(2018, 11, 19) }
+    before { travel_to Time.zone.local(2018, 11, 19, 10, 0, 0) }
     after { travel_back }
 
     include_context 'demands with effort for company'
@@ -177,7 +177,7 @@ RSpec.describe Company, type: :model do
   end
 
   describe '#consumed_hours_in_month' do
-    before { travel_to Date.new(2018, 11, 19) }
+    before { travel_to Time.zone.local(2018, 11, 19, 10, 0, 0) }
     after { travel_back }
 
     include_context 'demands with effort for company'
@@ -228,7 +228,7 @@ RSpec.describe Company, type: :model do
   end
 
   describe '#top_three_throughput' do
-    before { travel_to Date.new(2018, 11, 19) }
+    before { travel_to Time.zone.local(2018, 11, 19, 10, 0, 0) }
     after { travel_back }
 
     include_context 'projects to company bulletin'
@@ -265,7 +265,7 @@ RSpec.describe Company, type: :model do
   end
 
   describe '#total_active_consumed_hours' do
-    before { travel_to Date.new(2018, 11, 19) }
+    before { travel_to Time.zone.local(2018, 11, 19, 10, 0, 0) }
     after { travel_back }
 
     context 'having data' do

@@ -80,10 +80,9 @@ class Demand < ApplicationRecord
   def csv_array
     [
       id,
-      demand_id,
-      demand_title,
       current_stage&.name,
       demand_id,
+      demand_title,
       demand_type,
       class_of_service,
       decimal_value_to_csv(effort_downstream),

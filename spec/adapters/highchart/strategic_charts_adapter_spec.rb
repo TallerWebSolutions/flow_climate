@@ -32,7 +32,7 @@ RSpec.describe Highchart::StrategicChartsAdapter, type: :service do
 
       it 'mounts the data structure to the active project counts in months' do
         strategic_data = Highchart::StrategicChartsAdapter.new(company, company.projects, company.total_available_hours)
-        expect(strategic_data.array_of_months).to eq [[3.months.ago.to_date.month, 3.months.ago.to_date.year], [2.months.ago.to_date.month, 2.months.ago.to_date.year], [1.month.ago.to_date.month, 1.month.ago.to_date.year], [Time.zone.today.month, Time.zone.today.year], [1.month.from_now.to_date.month, 1.month.from_now.to_date.year], [2.months.from_now.to_date.month, 2.months.from_now.to_date.year], [3.months.from_now.to_date.month, 3.months.from_now.to_date.year]]
+        expect(strategic_data.array_of_months).to eq [3.months.ago.to_date.beginning_of_month, 2.months.ago.to_date.beginning_of_month, 1.month.ago.to_date.beginning_of_month, Time.zone.today.beginning_of_month, 1.month.from_now.to_date.beginning_of_month, 2.months.from_now.to_date.beginning_of_month, 3.months.from_now.to_date.beginning_of_month]
         expect(strategic_data.active_projects_count_data).to eq [2, 2, 1, 0, 2, 4, 2]
         expect(strategic_data.sold_hours_in_month).to eq [1209.6774193548385, 1209.6774193548385, 241.93548387096772, 0, 2062.5, 7094.758064516129, 5032.258064516129]
         expect(strategic_data.consumed_hours_per_month).to eq [0.0, 210.0, 530.0, 0.0, 0.0, 120.0, 0.0]

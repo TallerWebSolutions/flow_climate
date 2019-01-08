@@ -2,8 +2,8 @@
 
 RSpec.describe Plan, type: :model do
   context 'enums' do
-    it { is_expected.to define_enum_for(:plan_type).with(trial: 0, lite: 1, gold: 3) }
-    it { is_expected.to define_enum_for(:plan_period).with(monthly: 0, yearly: 1) }
+    it { is_expected.to define_enum_for(:plan_type).with_values(trial: 0, lite: 1, gold: 3) }
+    it { is_expected.to define_enum_for(:plan_period).with_values(monthly: 0, yearly: 1) }
   end
 
   context 'associations' do

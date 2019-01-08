@@ -99,7 +99,7 @@ RSpec.describe CompaniesController, type: :controller do
             expect(assigns(:teams)).to eq [team]
             expect(assigns(:stages_list)).to eq [third_stage, second_stage, first_stage]
             expect(assigns(:company_projects)).to eq [second_project, first_project]
-            expect(assigns(:strategic_chart_data).array_of_months).to eq [[Time.zone.today.month, Time.zone.today.year], [1.month.from_now.to_date.month, 1.month.from_now.to_date.year]]
+            expect(assigns(:strategic_chart_data).array_of_months).to eq [Time.zone.today.beginning_of_month, 1.month.from_now.to_date.beginning_of_month]
             expect(assigns(:strategic_chart_data).active_projects_count_data).to eq [1, 1]
             expect(assigns(:projects_risk_chart_data).backlog_risk_alert_data).to eq [{ name: 'Vermelho', y: 1, color: '#FB283D' }]
             expect(assigns(:projects_risk_chart_data).money_risk_alert_data).to eq [{ name: 'Verde', y: 1, color: '#179A02' }]

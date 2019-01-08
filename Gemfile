@@ -2,7 +2,7 @@
 
 source 'https://rubygems.org'
 
-ruby '2.5.3'
+ruby '2.6.0'
 
 gem 'rails'
 
@@ -33,8 +33,10 @@ group :test, :development do
   gem 'rspec-collection_matchers'
   gem 'rspec-rails'
   gem 'rubocop'
-  gem 'shoulda-matchers'
+  gem 'shoulda-matchers', '4.0.0.rc1'
   gem 'simplecov', require: false
+  gem 'ruby-debug-ide', '~> 0.7.0.beta7'
+  gem 'debase', '~> 0.2.3.beta3'
 end
 
 group :development do

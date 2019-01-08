@@ -2,7 +2,7 @@
 
 RSpec.describe Jira::JiraCustomFieldMapping, type: :model do
   context 'enums' do
-    it { is_expected.to define_enum_for(:demand_field).with(class_of_service: 0, responsibles: 1) }
+    it { is_expected.to define_enum_for(:demand_field).with_values(class_of_service: 0, responsibles: 1) }
   end
 
   context 'associations' do

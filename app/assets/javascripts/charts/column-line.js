@@ -11,6 +11,11 @@ function buildColumnLineChart(columnDiv) {
             text: 'Source: Flow Climate'
         },
         xAxis: {
+            type: 'datetime',
+            dateTimeLabelFormats: { // don't display the dummy year
+                month: '%e. %b',
+                year: '%b'
+            },
             categories: columnDiv.data('xcategories'),
             title: {text: columnDiv.data('xtitle')}
         },
