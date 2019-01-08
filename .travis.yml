@@ -38,6 +38,7 @@ after_script:
 - "./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT"
 deploy:
   provider: heroku
+  skip_cleanup: true
   api_key:
     secure: XY8CQWB/azNrdrwOvPgs3lRrdoeKjnt4mKtzr/R6Mp6PU3+TfMdsqXuz/8eirPKQ9fOYh/NVbNyrk6/VzZ2PP2JvFvctDRVnNf6fRUWM0PQoQxTiJ6BzQsm62IBPobl9uHlVlwc+eCQWntRL9OOcsR6yhIxUwRD3JlXpyWWOwwlCldc2XB/H1oxjMa+YTt8TCOD/Tqb2G5qunpQQsllMDeO9PiatYvpkQl1bOcWdnrgl2Tmzlz6kYOBh8fEZY0t6AXX5Eb1ba2eRWnsPSUS3ehdTt8x5ZK2wm06GAARQRlI1ENxuGCtp8VwMXh+2T4hKA0Fl6Dl3LMraLvsr2Q0KGFpGiZg62rQ7SaHWA/wMRSRZpQemw0kBNUhl2hvt2mVSmFYojhnYNrOSbYbA61iEXKK/OXcKQaLzVZl9CK7VWQCErBCpnb78bNZoSkziTRBtb8MwnuYGNsDBnNZ1KGq0Lx8CnWTwcvjWjHLu1yh2Ffo6Q++0nTf/PVOmG/5EqyB8crcU3wRl1sT9Gb/1kzMTyv2TzhhSpUIA977xfVRx9XsTLZ5P991qjAtMHO5QpZvqGGMBTGK64J4Jzh3XxYw48JSb0PDg1YgS4npNBziM+Ti/WK8Aw+OCMbMwbEwAT1KYYLtfVS+cmWA7vmBEmb7wSIzsj3iggxb8H2dBxB2a7/U=
   run: rake db:migrate
