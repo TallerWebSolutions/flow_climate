@@ -29,7 +29,7 @@ script:
 - RAILS_ENV=test bundle exec rake db:create --trace
 - RAILS_ENV=test bundle exec rake db:migrate --trace
 - bundle exec rake db:test:prepare
-- bundle exec rspec spec/
+- bundle exec rspec spec/ --seed 5641
 - bundle exec rubocop -DR
 - bundle exec rake assets:precompile
 - git add public/assets
