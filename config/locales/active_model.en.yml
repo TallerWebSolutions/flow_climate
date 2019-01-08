@@ -110,6 +110,10 @@ en:
             chore: "Chore"
             ui: "UI"
             wireframe: "Wireframe"
+          artifact_type:
+            story: Story
+            epic: Epic
+            theme: Theme
     errors:
       messages:
         record_invalid: 'Validation failed: %{errors}'

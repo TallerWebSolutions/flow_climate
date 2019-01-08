@@ -2,14 +2,18 @@
 
 RSpec.describe Demand, type: :model do
   context 'enums' do
+    it { is_expected.to define_enum_for(:artifact_type).with_values(story: 0, epic: 1, theme: 2) }
     it { is_expected.to define_enum_for(:demand_type).with_values(feature: 0, bug: 1, performance_improvement: 2, ui: 3, chore: 4, wireframe: 5) }
     it { is_expected.to define_enum_for(:class_of_service).with_values(standard: 0, expedite: 1, fixed_date: 2, intangible: 3) }
   end
 
   context 'associations' do
     it { is_expected.to belong_to :project }
+    it { is_expected.to belong_to(:parent).class_name('Demand').inverse_of(:children) }
+    it { is_expected.to have_many(:children).class_name('Demand').inverse_of(:parent).dependent(:destroy) }
     it { is_expected.to have_many(:demand_transitions).dependent(:destroy) }
     it { is_expected.to have_many(:demand_blocks).dependent(:destroy) }
+    it { is_expected.to have_many(:stages).through(:demand_transitions) }
   end
 
   context 'validations' do

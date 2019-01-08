@@ -69,6 +69,14 @@ RSpec.describe Jira::JiraIssueAdapter, type: :service do
           expect(Demand.last).to be_standard
         end
       end
+      context 'and it is an epic' do
+        let!(:jira_issue) { client.Issue.build({ key: '10000', summary: 'foo of bar', fields: { created: '2018-07-03T11:20:18.998-0300', issuetype: { name: 'ePIc' }, project: { key: 'foo' }, customfield_10024: [{ name: 'foo' }, { name: 'bar' }] } }.with_indifferent_access) }
+        it 'creates the demand as chore as type and standard as class of service' do
+          Jira::JiraIssueAdapter.instance.process_issue!(jira_account, first_project, jira_issue)
+          expect(Demand.last).to be_feature
+          expect(Demand.last).to be_epic
+        end
+      end
       context 'and it is a class of service fixed date' do
         let!(:jira_issue) { client.Issue.build({ key: '10000', summary: 'foo of bar', fields: { created: '2018-07-03T11:20:18.998-0300', issuetype: { name: 'fixed date' }, project: { key: 'foo' }, customfield_10024: [{ name: 'foo' }, { name: 'bar' }], customfield_10028: { value: 'FixEd DatE' } } }.with_indifferent_access) }
         it 'creates the demand as fixed date class of service' do

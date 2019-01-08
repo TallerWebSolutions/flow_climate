@@ -18,7 +18,7 @@ module Jira
     private
 
     def update_demand!(demand, jira_account, jira_issue, project)
-      demand.update(project: project, created_date: issue_fields_value(jira_issue, 'created'), demand_type: translate_issue_type(jira_issue),
+      demand.update(project: project, created_date: issue_fields_value(jira_issue, 'created'), demand_type: translate_issue_type(jira_issue), artifact_type: translate_artifact_type(jira_issue),
                     class_of_service: translate_class_of_service(jira_account, jira_issue), demand_title: issue_fields_value(jira_issue, 'summary'),
                     assignees_count: compute_assignees_count(jira_account, jira_issue), url: build_jira_url(jira_account, project_jira_key(jira_issue), demand.demand_id))
 
@@ -36,13 +36,20 @@ module Jira
 
     def translate_issue_type(jira_issue)
       issue_type_name = jira_issue.attrs['fields']['issuetype']['name']
-      return :feature if issue_type_name.casecmp('story').zero?
+      return :feature if issue_type_name.casecmp('story').zero? || issue_type_name.casecmp('epic').zero?
       return :chore if issue_type_name.casecmp('chore').zero?
       return :performance_improvement if issue_type_name.casecmp('performance improvement').zero?
       return :wireframe if issue_type_name.casecmp('wireframes').zero?
       return :ui if issue_type_name.casecmp('ui').zero?
 
       :bug
+    end
+
+    def translate_artifact_type(jira_issue)
+      issue_type_name = jira_issue.attrs['fields']['issuetype']['name']
+      return :epic if issue_type_name.casecmp('epic').zero?
+
+      :story
     end
 
     def translate_class_of_service(jira_account, jira_issue)

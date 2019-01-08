@@ -207,6 +207,7 @@ pt-BR:
         created_date: Data de Criação
         assignees_count: Qtd Responsáveis
         leadtime: Leadtime
+        artifact_type: Tipo do Artefato
         enums:
           demand_type:
             bug: Bug
@@ -215,6 +216,10 @@ pt-BR:
             performance_improvement: Melhoria de Performance
             ui: UI
             wireframe: Wireframe
+          artifact_type:
+            story: História
+            epic: Épico
+            theme: Tema
           class_of_service:
             standard: Padrão
             expedite: Expedição

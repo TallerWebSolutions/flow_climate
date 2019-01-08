@@ -287,7 +287,9 @@ CREATE TABLE public.demands (
     total_queue_time integer DEFAULT 0,
     total_touch_time integer DEFAULT 0,
     demand_title character varying,
-    discarded_at timestamp without time zone
+    discarded_at timestamp without time zone,
+    artifact_type integer DEFAULT 0,
+    parent_id integer
 );
 
 
@@ -1778,6 +1780,14 @@ ALTER TABLE ONLY public.demands
 
 
 --
+-- Name: demands fk_rails_1abfdc9ca0; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.demands
+    ADD CONSTRAINT fk_rails_1abfdc9ca0 FOREIGN KEY (parent_id) REFERENCES public.demands(id);
+
+
+--
 -- Name: jira_custom_field_mappings fk_rails_1c34addc50; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2136,6 +2146,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20181008191022'),
 ('20181022220910'),
 ('20181210181733'),
-('20181210193253');
+('20181210193253'),
+('20190108182426');
 
 

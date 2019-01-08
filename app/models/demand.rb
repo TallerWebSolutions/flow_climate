@@ -4,6 +4,7 @@
 #
 # Table name: demands
 #
+#  artifact_type     :integer          default(0)
 #  assignees_count   :integer          not null
 #  class_of_service  :integer          default("standard"), not null
 #  commitment_date   :datetime
@@ -21,6 +22,7 @@
 #  id                :bigint(8)        not null, primary key
 #  leadtime          :decimal(, )
 #  manual_effort     :boolean          default(FALSE)
+#  parent_id         :integer
 #  project_id        :integer          not null, indexed => [demand_id]
 #  total_queue_time  :integer          default(0)
 #  total_touch_time  :integer          default(0)
@@ -35,15 +37,21 @@
 # Foreign Keys
 #
 #  fk_rails_19bdd8aa1e  (project_id => projects.id)
+#  fk_rails_1abfdc9ca0  (parent_id => demands.id)
 #
 
 class Demand < ApplicationRecord
   include Discard::Model
 
+  enum artifact_type: { story: 0, epic: 1, theme: 2 }
   enum demand_type: { feature: 0, bug: 1, performance_improvement: 2, ui: 3, chore: 4, wireframe: 5 }
   enum class_of_service: { standard: 0, expedite: 1, fixed_date: 2, intangible: 3 }
 
   belongs_to :project
+
+  belongs_to :parent, class_name: 'Demand', foreign_key: :parent_id, inverse_of: :children
+  has_many :children, class_name: 'Demand', foreign_key: :parent_id, inverse_of: :parent, dependent: :destroy
+
   has_many :demand_transitions, dependent: :destroy
   has_many :demand_blocks, dependent: :destroy
   has_many :stages, -> { distinct }, through: :demand_transitions
