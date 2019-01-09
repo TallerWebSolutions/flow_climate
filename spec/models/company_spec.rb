@@ -220,6 +220,7 @@ RSpec.describe Company, type: :model do
     let!(:fourth_demand) { Fabricate :demand, project: second_project, created_date: 2.weeks.ago, end_date: 1.week.ago, demand_type: :feature }
     let!(:fifth_demand) { Fabricate :demand, project: second_project, created_date: 1.week.ago, end_date: 2.days.ago, demand_type: :feature }
     let!(:sixth_demand) { Fabricate :demand, project: third_project, created_date: 1.week.ago, end_date: 2.days.ago, demand_type: :feature }
+    let!(:seventh_demand) { Fabricate :demand, project: third_project, created_date: 1.week.ago, end_date: 2.days.ago, demand_type: :feature }
   end
 
   describe '#top_three_flow_pressure' do
