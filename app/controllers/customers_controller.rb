@@ -3,7 +3,7 @@
 class CustomersController < AuthenticatedController
   before_action :user_gold_check
   before_action :assign_company
-  before_action :assign_customer, only: %i[edit update show destroy search_for_projects]
+  before_action :assign_customer, only: %i[edit update show destroy]
 
   def index
     @customers = @company.customers.sort_by(&:total_flow_pressure).reverse
@@ -41,12 +41,6 @@ class CustomersController < AuthenticatedController
     return redirect_to company_customers_path(@company) if @customer.destroy
 
     redirect_to(company_customers_path(@company), flash: { error: @customer.errors.full_messages.join(',') })
-  end
-
-  def search_for_projects
-    @projects = ProjectsRepository.instance.add_query_to_projects_in_status(@customer.projects, params[:status_filter])
-    @projects_summary = ProjectsSummaryData.new(@projects)
-    respond_to { |format| format.js { render file: 'projects/projects_search.js.erb' } }
   end
 
   private

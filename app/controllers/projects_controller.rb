@@ -88,8 +88,21 @@ class ProjectsController < AuthenticatedController
   private
 
   def assign_projects
-    projects_parent = @company
+    projects_parent = customer || product || team || @company
+
     @projects = ProjectsRepository.instance.add_query_to_projects_in_status(projects_parent.projects.joins(:customer), params[:status_filter])
+  end
+
+  def customer
+    @customer ||= Customer.find(params[:customer_id]) if params[:customer_id].present?
+  end
+
+  def product
+    @product ||= Product.find(params[:product_id]) if params[:product_id].present?
+  end
+
+  def team
+    @team ||= Team.find(params[:team_id]) if params[:team_id].present?
   end
 
   def assign_products_list

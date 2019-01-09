@@ -22,10 +22,6 @@ RSpec.describe TeamsController, type: :controller do
       before { put :update, params: { company_id: 'xpto', id: 'foo' } }
       it { expect(response).to redirect_to new_user_session_path }
     end
-    describe 'GET #search_for_projects' do
-      before { get :search_for_projects, params: { company_id: 'foo', id: 'foo', status_filter: :executing }, xhr: true }
-      it { expect(response.status).to eq 401 }
-    end
     describe 'GET #search_demands_to_flow_charts' do
       before { get :search_demands_to_flow_charts, params: { company_id: 'foo', id: 'foo' }, xhr: true }
       it { expect(response.status).to eq 401 }
@@ -221,76 +217,6 @@ RSpec.describe TeamsController, type: :controller do
           let(:company) { Fabricate :company, users: [] }
 
           before { put :update, params: { company_id: company, id: team, team: { name: 'foo' } } }
-          it { expect(response).to have_http_status :not_found }
-        end
-      end
-    end
-
-    describe 'GET #search_for_projects' do
-      let(:customer) { Fabricate :customer, company: company }
-      let(:team) { Fabricate :team, company: company }
-      let(:other_team) { Fabricate :team, company: company }
-      let(:product) { Fabricate :product, customer: customer, name: 'zzz', team: team }
-
-      context 'passing valid parameters' do
-        context 'having data' do
-          let!(:first_project) { Fabricate :project, customer: customer, team: team, status: :executing, start_date: Time.zone.yesterday, end_date: 10.days.from_now }
-          let!(:second_project) { Fabricate :project, customer: customer, team: team, status: :executing, start_date: Time.zone.yesterday, end_date: 50.days.from_now }
-          let!(:third_project) { Fabricate :project, customer: customer, team: team, status: :waiting, start_date: Time.zone.yesterday, end_date: 15.days.from_now }
-          let!(:project_in_product_team) { Fabricate :project, customer: customer, team: team, status: :waiting, start_date: 2.months.from_now, end_date: 70.days.from_now }
-
-          let!(:other_team_project) { Fabricate :project, status: :executing }
-
-          context 'and passing the status filter executing' do
-            it 'assigns the instance variable and renders the template' do
-              expect_any_instance_of(AuthenticatedController).to(receive(:user_gold_check).once { true })
-              get :search_for_projects, params: { company_id: company, id: team, status_filter: :executing }, xhr: true
-              expect(response).to render_template 'projects/projects_search.js.erb'
-              expect(assigns(:projects)).to eq [second_project, first_project]
-            end
-          end
-          context 'and passing the status filter waiting' do
-            it 'assigns the instance variable and renders the template' do
-              expect_any_instance_of(AuthenticatedController).to(receive(:user_gold_check).once { true })
-              get :search_for_projects, params: { company_id: company, id: team, status_filter: :waiting }, xhr: true
-              expect(response).to render_template 'projects/projects_search.js.erb'
-              expect(assigns(:projects)).to eq [project_in_product_team, third_project]
-            end
-          end
-          context 'and passing no status filter' do
-            it 'assigns the instance variable and renders the template' do
-              expect_any_instance_of(AuthenticatedController).to(receive(:user_gold_check).once { true })
-              get :search_for_projects, params: { company_id: company, id: team, status_filter: :all }, xhr: true
-              expect(response).to render_template 'projects/projects_search.js.erb'
-              expect(assigns(:projects)).to eq [project_in_product_team, second_project, third_project, first_project]
-            end
-          end
-        end
-        context 'having no data' do
-          let!(:other_company_project) { Fabricate :project, status: :executing }
-
-          it 'assigns the instance variable and renders the template' do
-            expect_any_instance_of(AuthenticatedController).to(receive(:user_gold_check).once { true })
-            get :search_for_projects, params: { company_id: company, id: team, status_filter: :executing }, xhr: true
-            expect(response).to render_template 'projects/projects_search.js.erb'
-            expect(assigns(:projects)).to eq []
-          end
-        end
-      end
-
-      context 'passing invalid' do
-        before { expect_any_instance_of(AuthenticatedController).to(receive(:user_gold_check).once { true }) }
-        context 'company' do
-          before { get :search_for_projects, params: { company_id: 'foo', id: team, status_filter: :executing }, xhr: true }
-          it { expect(response).to have_http_status :not_found }
-        end
-        context 'team' do
-          before { get :search_for_projects, params: { company_id: company, id: 'foo', status_filter: :executing }, xhr: true }
-          it { expect(response).to have_http_status :not_found }
-        end
-        context 'not permitted company' do
-          let(:company) { Fabricate :company, users: [] }
-          before { get :search_for_projects, params: { company_id: company, id: team, status_filter: :executing }, xhr: true }
           it { expect(response).to have_http_status :not_found }
         end
       end

@@ -386,13 +386,14 @@ RSpec.describe ProjectsController, type: :controller do
 
     describe 'GET #search_for_projects' do
       let(:customer) { Fabricate :customer, company: company }
+      let(:other_customer) { Fabricate :customer, company: company }
       let(:product) { Fabricate :product, customer: customer, name: 'zzz' }
 
       context 'passing valid parameters' do
         context 'having data' do
-          let!(:first_project) { Fabricate :project, customer: customer, product: product, status: :executing, end_date: 10.days.from_now }
-          let!(:second_project) { Fabricate :project, customer: customer, product: product, status: :executing, end_date: 50.days.from_now }
-          let!(:third_project) { Fabricate :project, customer: customer, product: product, status: :waiting, end_date: 15.days.from_now }
+          let!(:first_project) { Fabricate :project, customer: customer, status: :executing, end_date: 10.days.from_now }
+          let!(:second_project) { Fabricate :project, customer: customer, status: :executing, end_date: 50.days.from_now }
+          let!(:third_project) { Fabricate :project, customer: other_customer, status: :waiting, end_date: 15.days.from_now }
           let!(:other_company_project) { Fabricate :project, status: :executing }
 
           context 'and passing a status filter' do
@@ -407,6 +408,37 @@ RSpec.describe ProjectsController, type: :controller do
             it 'assigns the instance variable and renders the template' do
               expect(response).to render_template 'projects/projects_search.js.erb'
               expect(assigns(:projects)).to eq [second_project, third_project, first_project]
+            end
+          end
+
+          context 'and passing a team id' do
+            let(:team) { Fabricate :team, company: company }
+            let!(:first_team_project) { Fabricate :project, team: team, status: :executing, end_date: 10.days.from_now }
+            let!(:second_team_project) { Fabricate :project, team: team, status: :executing, end_date: 50.days.from_now }
+
+            before { get :search_for_projects, params: { company_id: company, team_id: team.id, status_filter: :executing }, xhr: true }
+            it 'assigns the instance variable and renders the template' do
+              expect(response).to render_template 'projects/projects_search.js.erb'
+              expect(assigns(:projects)).to eq [second_team_project, first_team_project]
+            end
+          end
+
+          context 'and passing a product id' do
+            let!(:first_product_project) { Fabricate :project, product: product, status: :executing, end_date: 10.days.from_now }
+            let!(:second_product_project) { Fabricate :project, product: product, status: :executing, end_date: 50.days.from_now }
+
+            before { get :search_for_projects, params: { company_id: company, product_id: product.id, status_filter: :executing }, xhr: true }
+            it 'assigns the instance variable and renders the template' do
+              expect(response).to render_template 'projects/projects_search.js.erb'
+              expect(assigns(:projects)).to eq [second_product_project, first_product_project]
+            end
+          end
+
+          context 'and passing a customer id' do
+            before { get :search_for_projects, params: { company_id: company, customer_id: other_customer.id, status_filter: :waiting }, xhr: true }
+            it 'assigns the instance variable and renders the template' do
+              expect(response).to render_template 'projects/projects_search.js.erb'
+              expect(assigns(:projects)).to eq [third_project]
             end
           end
         end

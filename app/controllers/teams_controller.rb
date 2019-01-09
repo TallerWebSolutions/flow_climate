@@ -4,7 +4,7 @@ class TeamsController < AuthenticatedController
   before_action :user_gold_check
 
   before_action :assign_company
-  before_action :assign_team, only: %i[show edit update search_for_projects search_demands_to_flow_charts]
+  before_action :assign_team, only: %i[show edit update search_demands_to_flow_charts]
 
   def show
     @team_members = @team.team_members.order(:name)
@@ -33,12 +33,6 @@ class TeamsController < AuthenticatedController
     return redirect_to company_path(@company) if @team.save
 
     render :edit
-  end
-
-  def search_for_projects
-    @projects = ProjectsRepository.instance.add_query_to_projects_in_status(ProjectsRepository.instance.all_projects_for_team(@team), params[:status_filter])
-    @projects_summary = ProjectsSummaryData.new(@projects)
-    respond_to { |format| format.js { render file: 'projects/projects_search.js.erb' } }
   end
 
   def search_demands_to_flow_charts
