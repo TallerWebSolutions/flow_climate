@@ -51,7 +51,7 @@ class ProjectsController < AuthenticatedController
   end
 
   def search_for_projects
-    @projects = ProjectsRepository.instance.add_query_to_projects_in_status(@company.projects.joins(:customer), params[:status_filter])
+    assign_projects
     @projects_summary = ProjectsSummaryData.new(@projects)
     respond_to { |format| format.js { render file: 'projects/projects_search.js.erb' } }
   end
@@ -86,6 +86,11 @@ class ProjectsController < AuthenticatedController
   end
 
   private
+
+  def assign_projects
+    projects_parent = @company
+    @projects = ProjectsRepository.instance.add_query_to_projects_in_status(projects_parent.projects.joins(:customer), params[:status_filter])
+  end
 
   def assign_products_list
     @products = (@customer || @project.customer)&.products&.order(:name) || []

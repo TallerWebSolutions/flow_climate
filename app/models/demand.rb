@@ -4,7 +4,7 @@
 #
 # Table name: demands
 #
-#  artifact_type     :integer          default(0)
+#  artifact_type     :integer          default("story")
 #  assignees_count   :integer          not null
 #  class_of_service  :integer          default("standard"), not null
 #  commitment_date   :datetime
