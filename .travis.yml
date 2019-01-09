@@ -36,8 +36,6 @@ script:
   - git commit -am 'assets precompiled'
 after_script:
   - "./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT"
-  - rm -rf ./cc-test-reporter
-  - git reset --hard HEAD
 deploy:
   provider: heroku
   api_key:
