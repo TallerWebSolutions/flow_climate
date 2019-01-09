@@ -33,6 +33,16 @@ Released under the MIT license
 
   (function() {
     (function() {
+      var cspNonce;
+
+      cspNonce = Rails.cspNonce = function() {
+        var meta;
+        meta = document.querySelector('meta[name=csp-nonce]');
+        return meta && meta.content;
+      };
+
+    }).call(this);
+    (function() {
       var expando, m;
 
       m = Element.prototype.matches || Element.prototype.matchesSelector || Element.prototype.mozMatchesSelector || Element.prototype.msMatchesSelector || Element.prototype.oMatchesSelector || Element.prototype.webkitMatchesSelector;
@@ -102,7 +112,7 @@ Released under the MIT license
 
     }).call(this);
     (function() {
-      var CustomEvent, fire, matches;
+      var CustomEvent, fire, matches, preventDefault;
 
       matches = Rails.matches;
 
@@ -116,6 +126,19 @@ Released under the MIT license
           return evt;
         };
         CustomEvent.prototype = window.Event.prototype;
+        preventDefault = CustomEvent.prototype.preventDefault;
+        CustomEvent.prototype.preventDefault = function() {
+          var result;
+          result = preventDefault.call(this);
+          if (this.cancelable && !this.defaultPrevented) {
+            Object.defineProperty(this, 'defaultPrevented', {
+              get: function() {
+                return true;
+              }
+            });
+          }
+          return result;
+        };
       }
 
       fire = Rails.fire = function(obj, name, data) {
@@ -152,9 +175,9 @@ Released under the MIT license
 
     }).call(this);
     (function() {
-      var AcceptHeaders, CSRFProtection, createXHR, fire, prepareOptions, processResponse;
+      var AcceptHeaders, CSRFProtection, createXHR, cspNonce, fire, prepareOptions, processResponse;
 
-      CSRFProtection = Rails.CSRFProtection, fire = Rails.fire;
+      cspNonce = Rails.cspNonce, CSRFProtection = Rails.CSRFProtection, fire = Rails.fire;
 
       AcceptHeaders = {
         '*': '*/*',
@@ -169,8 +192,8 @@ Released under the MIT license
         var xhr;
         options = prepareOptions(options);
         xhr = createXHR(options, function() {
-          var response;
-          response = processResponse(xhr.response, xhr.getResponseHeader('Content-Type'));
+          var ref, response;
+          response = processResponse((ref = xhr.response) != null ? ref : xhr.responseText, xhr.getResponseHeader('Content-Type'));
           if (Math.floor(xhr.status / 100) === 2) {
             if (typeof options.success === "function") {
               options.success(response, xhr.statusText, xhr);
@@ -182,13 +205,11 @@ Released under the MIT license
           }
           return typeof options.complete === "function" ? options.complete(xhr, xhr.statusText) : void 0;
         });
-        if (typeof options.beforeSend === "function") {
-          options.beforeSend(xhr, options);
+        if ((options.beforeSend != null) && !options.beforeSend(xhr, options)) {
+          return false;
         }
         if (xhr.readyState === XMLHttpRequest.OPENED) {
           return xhr.send(options.data);
-        } else {
-          return fire(document, 'ajaxStop');
         }
       };
 
@@ -242,6 +263,7 @@ Released under the MIT license
             } catch (error) {}
           } else if (type.match(/\b(?:java|ecma)script\b/)) {
             script = document.createElement('script');
+            script.setAttribute('nonce', cspNonce());
             script.text = response;
             document.head.appendChild(script).parentNode.removeChild(script);
           } else if (type.match(/\b(xml|html|svg)\b/)) {
@@ -291,7 +313,7 @@ Released under the MIT license
         }
         params = [];
         inputs.forEach(function(input) {
-          if (!input.name) {
+          if (!input.name || input.disabled) {
             return;
           }
           if (matches(input, 'select')) {
@@ -553,7 +575,7 @@ Released under the MIT license
               return fire(element, 'ajax:send', [xhr]);
             } else {
               fire(element, 'ajax:stopped');
-              return xhr.abort();
+              return false;
             }
           },
           success: function() {
@@ -612,7 +634,10 @@ Released under the MIT license
 
       fire = Rails.fire, delegate = Rails.delegate, getData = Rails.getData, $ = Rails.$, refreshCSRFTokens = Rails.refreshCSRFTokens, CSRFProtection = Rails.CSRFProtection, enableElement = Rails.enableElement, disableElement = Rails.disableElement, handleDisabledElement = Rails.handleDisabledElement, handleConfirm = Rails.handleConfirm, handleRemote = Rails.handleRemote, formSubmitButtonClick = Rails.formSubmitButtonClick, handleMetaClick = Rails.handleMetaClick, handleMethod = Rails.handleMethod;
 
-      if ((typeof jQuery !== "undefined" && jQuery !== null) && (jQuery.ajax != null) && !jQuery.rails) {
+      if ((typeof jQuery !== "undefined" && jQuery !== null) && (jQuery.ajax != null)) {
+        if (jQuery.rails) {
+          throw new Error('If you load both jquery_ujs and rails-ujs, use rails-ujs only.');
+        }
         jQuery.rails = Rails;
         jQuery.ajaxPrefilter(function(options, originalOptions, xhr) {
           if (!options.crossDomain) {
