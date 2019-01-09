@@ -4,7 +4,7 @@ class ProductsController < AuthenticatedController
   before_action :user_gold_check
 
   before_action :assign_company
-  before_action :assign_product, only: %i[show edit update destroy search_for_projects]
+  before_action :assign_product, only: %i[show edit update destroy]
 
   def index
     @products = @company.products.order(:name)
@@ -50,12 +50,6 @@ class ProductsController < AuthenticatedController
     return redirect_to company_products_path(@company) if @product.destroy
 
     redirect_to(company_products_path(@company), flash: { error: @product.errors.full_messages.join(',') })
-  end
-
-  def search_for_projects
-    @projects = ProjectsRepository.instance.add_query_to_projects_in_status(@product.projects, params[:status_filter])
-    @projects_summary = ProjectsSummaryData.new(@projects)
-    respond_to { |format| format.js { render file: 'projects/projects_search.js.erb' } }
   end
 
   private

@@ -63,21 +63,15 @@ Rails.application.routes.draw do
         end
       end
 
-      member do
-        get 'search_for_projects/:status_filter', action: :search_for_projects, as: 'search_for_projects'
-        get 'search_demands_to_flow_charts', action: :search_demands_to_flow_charts, as: 'search_demands_to_flow_charts'
-      end
+      get 'search_demands_to_flow_charts', action: :search_demands_to_flow_charts, as: 'search_demands_to_flow_charts', on: :member
     end
 
     resources :financial_informations, only: %i[new create edit update destroy]
 
-    resources :customers do
-      get 'search_for_projects/:status_filter', action: :search_for_projects, as: 'search_for_projects', on: :member
-    end
+    resources :customers
 
     resources :products do
       get 'products_for_customer/(:customer_id)', action: :products_for_customer, on: :collection
-      get 'search_for_projects/:status_filter', action: :search_for_projects, as: 'search_for_projects', on: :member
     end
 
     resources :projects do

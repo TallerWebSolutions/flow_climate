@@ -2,8 +2,8 @@ dist: trusty
 sudo: required
 env:
   global:
-  - PGPORT=5433
-  - CC_TEST_REPORTER_ID=70ab5420793b8b581d83df1dc8dcc49ca7c48d3deb51c9f9a8c2a5e0899c8f71
+    - PGPORT=5433
+    - CC_TEST_REPORTER_ID=70ab5420793b8b581d83df1dc8dcc49ca7c48d3deb51c9f9a8c2a5e0899c8f71
 language: ruby
 cache: bundler
 rvm:
@@ -12,7 +12,7 @@ before_install:
   - gem update --system
   - gem install bundler
 services:
-  - postgresql
+- postgresql
 addons:
   postgresql: '10'
   apt:
@@ -21,7 +21,8 @@ addons:
     - postgresql-client-10
 before_script:
   - cp config/database.yml.travis config/database.yml
-  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64
+    > ./cc-test-reporter
   - chmod +x ./cc-test-reporter
   - "./cc-test-reporter before-build"
 script:
@@ -36,10 +37,9 @@ script:
 after_script:
   - "./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT"
   - rm -rf ./cc-test-reporter
+  - git reset --hard HEAD
 deploy:
   provider: heroku
-  skip_cleanup: true
-  strategy: git
   api_key:
     secure: XY8CQWB/azNrdrwOvPgs3lRrdoeKjnt4mKtzr/R6Mp6PU3+TfMdsqXuz/8eirPKQ9fOYh/NVbNyrk6/VzZ2PP2JvFvctDRVnNf6fRUWM0PQoQxTiJ6BzQsm62IBPobl9uHlVlwc+eCQWntRL9OOcsR6yhIxUwRD3JlXpyWWOwwlCldc2XB/H1oxjMa+YTt8TCOD/Tqb2G5qunpQQsllMDeO9PiatYvpkQl1bOcWdnrgl2Tmzlz6kYOBh8fEZY0t6AXX5Eb1ba2eRWnsPSUS3ehdTt8x5ZK2wm06GAARQRlI1ENxuGCtp8VwMXh+2T4hKA0Fl6Dl3LMraLvsr2Q0KGFpGiZg62rQ7SaHWA/wMRSRZpQemw0kBNUhl2hvt2mVSmFYojhnYNrOSbYbA61iEXKK/OXcKQaLzVZl9CK7VWQCErBCpnb78bNZoSkziTRBtb8MwnuYGNsDBnNZ1KGq0Lx8CnWTwcvjWjHLu1yh2Ffo6Q++0nTf/PVOmG/5EqyB8crcU3wRl1sT9Gb/1kzMTyv2TzhhSpUIA977xfVRx9XsTLZ5P991qjAtMHO5QpZvqGGMBTGK64J4Jzh3XxYw48JSb0PDg1YgS4npNBziM+Ti/WK8Aw+OCMbMwbEwAT1KYYLtfVS+cmWA7vmBEmb7wSIzsj3iggxb8H2dBxB2a7/U=
   run: rake db:migrate

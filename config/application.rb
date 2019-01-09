@@ -40,7 +40,5 @@ module FlowControl
 
     config.active_job.queue_adapter = :sidekiq
     config.action_mailer.delivery_method = :smtp
-
-    Faker::Config.locale = :en
   end
 end
