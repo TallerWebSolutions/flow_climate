@@ -189,10 +189,14 @@ module Highchart
 
       @all_projects_weeks.each do |date|
         dates_array << date.to_s
-        queue_times << (queue_times_per_week_hash[[date.cweek, date.cwyear]] || 0)
-        touch_times << (touch_times_per_week_hash[[date.cweek, date.cwyear]] || 0)
+        queue_times << compute_time_in_seconds_to_hours(date, queue_times_per_week_hash)
+        touch_times << compute_time_in_seconds_to_hours(date, touch_times_per_week_hash)
       end
       @weekly_queue_touch_count_hash = { dates_array: dates_array, queue_times: queue_times, touch_times: touch_times }
+    end
+
+    def compute_time_in_seconds_to_hours(date, times_per_week_hash)
+      (times_per_week_hash[[date.cweek, date.cwyear]] || 0) / (60 * 60)
     end
 
     def build_weekly_queue_touch_share_hash
