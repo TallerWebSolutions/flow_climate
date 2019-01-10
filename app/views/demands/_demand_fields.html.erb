@@ -5,6 +5,9 @@
 <td><%= t("activerecord.attributes.demand.enums.demand_type.#{demand.demand_type}") %></td>
 <td><%= t("activerecord.attributes.demand.enums.class_of_service.#{demand.class_of_service}") %></td>
 <td><%= demand.current_stage&.name %></td>
+<td><%= demand.demand_blocks.count %></td>
+<td><%= number_with_precision(demand.sum_queue_blocked_time / (60 * 60), precision: 2) %></td>
+<td><%= number_with_precision(demand.sum_touch_blocked_time / (60 * 60), precision: 2) %></td>
 <td><%= l(demand.created_date, format: :short) if demand.created_date.present? %></td>
 <td><%= l(demand.commitment_date, format: :short) if demand.commitment_date.present? %></td>
 <td><%= l(demand.end_date, format: :short) if demand.end_date.present? %></td>

@@ -737,6 +737,7 @@ RSpec.describe Demand, type: :model do
       let(:company) { Fabricate :company }
       let(:customer) { Fabricate :customer, company: company }
       let(:product) { Fabricate :product, customer: customer }
+
       let(:project) { Fabricate :project, product: product }
       let!(:stage) { Fabricate :stage, company: company, projects: [project], end_point: false, commitment_point: false, stage_stream: :downstream, order: 0 }
       let!(:demand_transition) { Fabricate :demand_transition, demand: demand, stage: stage }
@@ -754,6 +755,56 @@ RSpec.describe Demand, type: :model do
     context 'having no leadtime' do
       let!(:demand) { Fabricate :demand, leadtime: nil }
       it { expect(demand.leadtime_in_days.to_f).to eq 0 }
+    end
+  end
+
+  describe '#sum_touch_blocked_time' do
+    context 'having transitions and blocks' do
+      let(:company) { Fabricate :company }
+      let(:customer) { Fabricate :customer, company: company }
+      let(:product) { Fabricate :product, customer: customer }
+      let(:project) { Fabricate :project, product: product }
+
+      let!(:queue_stage) { Fabricate :stage, company: company, projects: [project], end_point: false, commitment_point: false, queue: false }
+      let!(:touch_stage) { Fabricate :stage, company: company, projects: [project], end_point: false, commitment_point: false, queue: true }
+
+      let!(:demand) { Fabricate :demand, project: project, leadtime: 453_223 }
+      let!(:first_demand_transition) { Fabricate :demand_transition, demand: demand, stage: queue_stage, last_time_in: 2.days.ago, last_time_out: 5.hours.ago }
+      let!(:second_demand_transition) { Fabricate :demand_transition, demand: demand, stage: touch_stage, last_time_in: 1.day.ago, last_time_out: Time.zone.now }
+
+      let!(:first_demand_block) { Fabricate :demand_block, demand: demand, block_time: 40.hours.ago, unblock_time: 20.hours.ago }
+      let!(:second_demand_block) { Fabricate :demand_block, demand: demand, block_time: 15.hours.ago, unblock_time: 10.hours.ago }
+
+      it { expect(demand.sum_touch_blocked_time.to_i).to eq 90_000 }
+    end
+    context 'having no transitions' do
+      let!(:demand) { Fabricate :demand, leadtime: nil }
+      it { expect(demand.sum_touch_blocked_time.to_f).to eq 0 }
+    end
+  end
+
+  describe '#sum_queue_blocked_time' do
+    context 'having transitions and blocks' do
+      let(:company) { Fabricate :company }
+      let(:customer) { Fabricate :customer, company: company }
+      let(:product) { Fabricate :product, customer: customer }
+      let(:project) { Fabricate :project, product: product }
+
+      let!(:queue_stage) { Fabricate :stage, company: company, projects: [project], end_point: false, commitment_point: false, queue: false }
+      let!(:touch_stage) { Fabricate :stage, company: company, projects: [project], end_point: false, commitment_point: false, queue: true }
+
+      let!(:demand) { Fabricate :demand, project: project, leadtime: 453_223 }
+      let!(:first_demand_transition) { Fabricate :demand_transition, demand: demand, stage: queue_stage, last_time_in: 2.days.ago, last_time_out: 5.hours.ago }
+      let!(:second_demand_transition) { Fabricate :demand_transition, demand: demand, stage: touch_stage, last_time_in: 1.day.ago, last_time_out: Time.zone.now }
+
+      let!(:first_demand_block) { Fabricate :demand_block, demand: demand, block_time: 40.hours.ago, unblock_time: 20.hours.ago }
+      let!(:second_demand_block) { Fabricate :demand_block, demand: demand, block_time: 15.hours.ago, unblock_time: 10.hours.ago }
+
+      it { expect(demand.sum_queue_blocked_time.to_i).to eq 18_000 }
+    end
+    context 'having no transitions' do
+      let!(:demand) { Fabricate :demand, leadtime: nil }
+      it { expect(demand.sum_queue_blocked_time.to_f).to eq 0 }
     end
   end
 end

@@ -233,7 +233,7 @@ RSpec.describe Company, type: :model do
     after { travel_back }
 
     include_context 'projects to company bulletin'
-    it { expect(company.top_three_throughput).to eq [third_project, second_project, first_project] }
+    it { expect(company.top_three_throughput(1.day.ago)).to eq [third_project, second_project, first_project] }
   end
 
   describe '#next_starting_project' do

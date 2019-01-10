@@ -352,6 +352,9 @@ en:
       manual_effort: "Effort Updated Manually"
       count: "%{demands_count} demands"
       current_stage: "Current Stage"
+      qty_blocks: "Qty Blocks"
+      hours_blocks_queue: "Hours Blocked in Queues"
+      hours_blocks_touch: "Hours Blocked in Queues"
     edit:
       title: "Edit Demand"
     show:
