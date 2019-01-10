@@ -6,14 +6,12 @@ module Highchart
 
     def initialize(projects, period)
       super(projects, period)
-      montecarlo_durations = Stats::StatisticsService.instance.run_montecarlo(@active_projects.sum(&:backlog_remaining), gather_throughput_data, 500)
-      @confidence_95_duration = Stats::StatisticsService.instance.percentile(95, montecarlo_durations)
-      @confidence_80_duration = Stats::StatisticsService.instance.percentile(80, montecarlo_durations)
-      @confidence_60_duration = Stats::StatisticsService.instance.percentile(60, montecarlo_durations)
+      montecarlo_durations = Stats::StatisticsService.instance.run_montecarlo(@all_projects.active.sum(&:backlog_remaining), gather_throughput_data, 500)
+      build_montecarlo_perecentage_confidences(montecarlo_durations)
       build_dates_to_montecarlo_duration
 
-      @hours_burnup_per_week_data = Highchart::BurnupChartsAdapter.new(@active_weeks, build_hours_scope_data_per_week, build_hours_throughput_data_week)
-      @hours_burnup_per_month_data = Highchart::BurnupChartsAdapter.new(@active_months, build_hours_scope_data_per_month, build_hours_throughput_data_month)
+      @hours_burnup_per_week_data = Highchart::BurnupChartsAdapter.new(@all_projects_weeks, build_hours_scope_data_per_week, build_hours_throughput_data_week)
+      @hours_burnup_per_month_data = Highchart::BurnupChartsAdapter.new(@all_projects_months, build_hours_scope_data_per_month, build_hours_throughput_data_month)
     end
 
     def throughput_per_week
@@ -58,45 +56,52 @@ module Highchart
 
     private
 
+    def build_montecarlo_perecentage_confidences(montecarlo_durations)
+      @confidence_95_duration = Stats::StatisticsService.instance.percentile(95, montecarlo_durations)
+      @confidence_80_duration = Stats::StatisticsService.instance.percentile(80, montecarlo_durations)
+      @confidence_60_duration = Stats::StatisticsService.instance.percentile(60, montecarlo_durations)
+    end
+
     def build_dates_to_montecarlo_duration
       @dates_to_montecarlo_duration = []
-      return if @active_projects.blank?
+      active_projects = @all_projects.active
+      return if active_projects.blank?
 
-      @dates_to_montecarlo_duration << { name: I18n.t('projects.charts.montecarlo_dates.project_date'), date: @active_projects.maximum(:end_date), color: '#1E8449' }
+      @dates_to_montecarlo_duration << { name: I18n.t('projects.charts.montecarlo_dates.project_date'), date: active_projects.maximum(:end_date), color: '#1E8449' }
       @dates_to_montecarlo_duration << { name: I18n.t('projects.charts.montecarlo_dates.confidence_95'), date: TimeService.instance.add_weeks_to_today(@confidence_95_duration), color: '#B7950B' }
       @dates_to_montecarlo_duration << { name: I18n.t('projects.charts.montecarlo_dates.confidence_80'), date: TimeService.instance.add_weeks_to_today(@confidence_80_duration), color: '#F4D03F' }
       @dates_to_montecarlo_duration << { name: I18n.t('projects.charts.montecarlo_dates.confidence_60'), date: TimeService.instance.add_weeks_to_today(@confidence_60_duration), color: '#CB4335' }
     end
 
     def gather_throughput_data
-      return [] if @active_projects.blank?
+      return [] if @all_projects.blank?
 
       build_throughput_array.last(15)
     end
 
     def build_throughput_array
-      throughput_data_array = ProjectsRepository.instance.throughput_per_week(@active_projects, @active_projects.minimum(:start_date)).values
-      throughput_data_array = ProjectsRepository.instance.throughput_per_week(@active_projects.first.product.projects, @active_projects.first.product.projects.minimum(:start_date)).values if throughput_data_array.size < 15 && @active_projects.count == 1
+      throughput_data_array = ProjectsRepository.instance.throughput_per_week(@all_projects, @all_projects.minimum(:start_date)).values
+      throughput_data_array = ProjectsRepository.instance.throughput_per_week(@all_projects.first.product.projects, @all_projects.first.product.projects.minimum(:start_date)).values if throughput_data_array.size < 15 && @all_projects.count == 1
       throughput_data_array
     end
 
     def build_hours_scope_data_per_week
       scope_per_week = []
-      @active_weeks.each { |_week_year| scope_per_week << @active_projects.sum(:qty_hours).to_f }
+      @all_projects_weeks.each { |_week_year| scope_per_week << @all_projects.sum(:qty_hours).to_f }
       scope_per_week
     end
 
     def build_hours_scope_data_per_month
       scope_per_month = []
-      @active_months.each { |_month_year| scope_per_month << @active_projects.sum(:qty_hours).to_f }
+      @all_projects_months.each { |_month_year| scope_per_month << @all_projects.sum(:qty_hours).to_f }
       scope_per_month
     end
 
     def build_hours_throughput_data_week
       throughput_per_week = []
-      @active_weeks.each do |date|
-        upstream_total_delivered = DemandsRepository.instance.delivered_until_date_to_projects_in_upstream(active_projects, date).count
-        downstream_total_delivered = DemandsRepository.instance.delivered_until_date_to_projects_in_downstream(active_projects, date).count
+      @all_projects_weeks.each do |date|
+        upstream_total_delivered = DemandsRepository.instance.delivered_until_date_to_projects_in_upstream(@all_projects, date).sum(&:total_effort)
+        downstream_total_delivered = DemandsRepository.instance.delivered_until_date_to_projects_in_downstream(@all_projects, date).sum(&:total_effort)
         throughput_per_week << upstream_total_delivered + downstream_total_delivered if add_data_to_chart?(date)
       end
       throughput_per_week
@@ -104,9 +109,9 @@ module Highchart
 
     def build_hours_throughput_data_month
       throughput_per_month = []
-      @active_months.each do |date|
-        upstream_total_delivered = DemandsRepository.instance.delivered_until_date_to_projects_in_upstream(active_projects, date).count
-        downstream_total_delivered = DemandsRepository.instance.delivered_until_date_to_projects_in_downstream(active_projects, date).count
+      @all_projects_months.each do |date|
+        upstream_total_delivered = DemandsRepository.instance.delivered_until_date_to_projects_in_upstream(all_projects, date).sum(&:total_effort)
+        downstream_total_delivered = DemandsRepository.instance.delivered_until_date_to_projects_in_downstream(all_projects, date).sum(&:total_effort)
 
         throughput_per_month << upstream_total_delivered + downstream_total_delivered if add_month_data_to_chart?(date)
       end

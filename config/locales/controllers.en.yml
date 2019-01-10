@@ -92,13 +92,13 @@ en:
       button: "Send Bulletin to Me"
     charts:
       active_projects:
-        title: "Active Projects Count to Months for %{project_name}"
+        title: "Active Projects Count to Months for %{target_name}"
       hours_per_month:
-        title: "Project Hours per Month for %{project_name}"
+        title: "Project Hours per Month for %{target_name}"
       flowpressure_per_month:
-        title: "Flow Pressure for %{project_name}"
+        title: "Flow Pressure for %{target_name}"
       money_per_month:
-        title: "Money Distribution by Competency for %{project_name}"
+        title: "Money Distribution by Competency for %{target_name}"
     new:
       title: "New Financial Information"
     index:
@@ -192,15 +192,15 @@ en:
         ylabel: "Demands"
         tooltipsufix: " demands"
         demands:
-          title: "Demands Burnup for %{project_name}"
+          title: "Demands Burnup for %{target_name}"
         hours:
-          title: "Hours Burnup for %{project_name}"
+          title: "Hours Burnup for %{target_name}"
       hours_per_demand:
-        title: "Hours per demand on time for %{project_name}"
+        title: "Hours per demand on time for %{target_name}"
         ylabel: "Hours/Demand"
         tooltipsufix: " hours per demand"
       flow_pressure:
-        title: "Flow Pressure for %{project_name}"
+        title: "Flow Pressure for %{target_name}"
         ylabel: "Flow Pressure"
         tooltipsufix: " demands/day"
         data_suffix: "demands/day"
@@ -214,7 +214,7 @@ en:
           downstream: "Downstream"
           upstream: "Upstream"
       cmd:
-        title: "Average Demand Cost to %{project_name}"
+        title: "Average Demand Cost to %{target_name}"
         ylabel: "Average Demand Cost"
         tooltipsufix: "dollars"
         tooltip_prefix: "$ "
@@ -313,7 +313,7 @@ en:
     destroy:
       confirm: "Are you sure? All demands in this project will be deleted as well."
     modal:
-      statistics: "Statistics for %{project_name}"
+      statistics: "Statistics for %{target_name}"
   team_member:
     edit:
       title: "Edit Team Member"

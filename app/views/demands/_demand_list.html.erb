@@ -6,17 +6,19 @@
 
 <div class="row">
   <div class="col-xs-4">
-    <%= radio_button_tag :grouping, :no_grouping, true, class: 'filter-checks' %>
-    <%= label_tag t('projects.show.demands.no_grouping_check_box'), nil, class: 'control-label' %>
+    <div class="form-group radio-inline">
+      <%= radio_button_tag :grouping, :no_grouping, true, class: 'filter-checks' %>
+      <%= label_tag t('projects.show.demands.no_grouping_check_box'), nil, class: 'control-label' %>
+    </div>
   </div>
   <div class="col-xs-4">
-    <div class="form-group">
+    <div class="form-group radio-inline">
       <%= radio_button_tag :grouping, :grouped_by_month, false, class: 'filter-checks' %>
       <%= label_tag t('projects.show.demands.grouped_by_month_check_box'), nil, class: 'control-label' %>
     </div>
   </div>
   <div class="col-xs-4">
-    <div class="form-group">
+    <div class="form-group radio-inline">
       <%= radio_button_tag :grouping, :grouped_by_customer, false, class: 'filter-checks' %>
       <%= label_tag t('projects.show.demands.grouped_by_customer'), nil, class: 'control-label' %>
     </div>
@@ -25,28 +27,28 @@
 
 <div class="row">
   <div class="col-xs-3">
-    <div class="form-group">
+    <div class="form-group radio-inline">
       <%= radio_button_tag :searching, :all_demands, true, class: 'filter-checks' %>
       <%= label_tag t('projects.show.demands.all_demands'), nil, class: 'control-label' %>
     </div>
   </div>
 
   <div class="col-xs-3">
-    <div class="form-group">
+    <div class="form-group radio-inline">
       <%= radio_button_tag :searching, :not_started, false, class: 'filter-checks' %>
       <%= label_tag t('projects.show.demands.demands_not_started'), nil, class: 'control-label' %>
     </div>
   </div>
 
   <div class="col-xs-3">
-    <div class="form-group">
+    <div class="form-group radio-inline">
       <%= radio_button_tag :searching, :work_in_progress, false, class: 'filter-checks' %>
       <%= label_tag t('projects.show.demands.work_in_progress'), nil, class: 'control-label' %>
     </div>
   </div>
 
   <div class="col-xs-3">
-    <div class="form-group">
+    <div class="form-group radio-inline">
       <%= radio_button_tag :searching, :delivered_demands, false, class: 'filter-checks' %>
       <%= label_tag t('projects.show.demands.delivered_demands'), nil, class: 'control-label' %>
     </div>

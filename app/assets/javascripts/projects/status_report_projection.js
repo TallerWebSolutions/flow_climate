@@ -1,4 +1,6 @@
 function buildStatusReportProjectionCharts() {
     const statusReportDatesOddsDiv = $('#status-report-dates-odds-column');
-    buildColumnChart(statusReportDatesOddsDiv);
+    if (statusReportDatesOddsDiv.length) {
+        buildColumnChart(statusReportDatesOddsDiv);
+    }
 }

@@ -63,7 +63,7 @@ RSpec.describe UserNotifierMailer, type: :mailer do
     subject(:mail) { UserNotifierMailer.notify_new_red_alert(first_project, first_risk_config, 'green', 30.0).deliver_now }
 
     it 'renders the email' do
-      expect(mail.subject).to eq I18n.t('projects.red_alert.subject', project_name: first_project.full_name)
+      expect(mail.subject).to eq I18n.t('projects.red_alert.subject', target_name: first_project.full_name)
       expect(mail.to).to match_array [first_user.email, second_user.email]
       expect(mail.from).to eq(['no-reply@taller.net.br'])
       expect(mail.body.encoded).to match first_project.full_name

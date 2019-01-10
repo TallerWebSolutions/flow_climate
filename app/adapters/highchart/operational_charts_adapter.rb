@@ -10,8 +10,8 @@ module Highchart
     def initialize(projects, period)
       super(projects, period)
       @flow_pressure_data = []
-      @demands_burnup_data = Highchart::BurnupChartsAdapter.new(@active_weeks, build_demands_scope_data, build_demands_throughput_data)
-      @hours_burnup_per_week_data = Highchart::BurnupChartsAdapter.new(@active_weeks, build_hours_scope_data, build_hours_throughput_data)
+      @demands_burnup_data = Highchart::BurnupChartsAdapter.new(@all_projects_weeks, build_demands_scope_data, build_demands_throughput_data)
+      @hours_burnup_per_week_data = Highchart::BurnupChartsAdapter.new(@all_projects_weeks, build_hours_scope_data, build_hours_throughput_data)
 
       build_weeekly_bugs_count_hash
       build_weeekly_bugs_share_hash
@@ -27,19 +27,7 @@ module Highchart
       @all_projects_weeks.each do |date|
         break unless add_data_to_chart?(date)
 
-        upstream_keys_matching = @upstream_operational_weekly_data.keys.select { |key| key == date }
-        upstream_throughput = upstream_operational_data_for_week(upstream_keys_matching, :throughput)
-
-        downstream_keys_matching = @downstream_operational_weekly_data.keys.select { |key| key == date }
-        downstream_throughput = downstream_operational_data_for_week(downstream_keys_matching, :throughput)
-
-        throughput_total = upstream_throughput + downstream_throughput
-
-        chart_data << if throughput_total.zero? || upstream_keys_matching.blank? || downstream_keys_matching.blank?
-                        0
-                      else
-                        compute_hour_per_demand(throughput_total, upstream_keys_matching)
-                      end
+        chart_data << build_chart_data(date)
       end
 
       chart_data
@@ -71,6 +59,22 @@ module Highchart
 
     private
 
+    def build_chart_data(date)
+      upstream_keys_matching = @upstream_operational_weekly_data.keys.select { |key| key == date }
+      upstream_throughput = upstream_operational_data_for_week(upstream_keys_matching, :throughput)
+
+      downstream_keys_matching = @downstream_operational_weekly_data.keys.select { |key| key == date }
+      downstream_throughput = downstream_operational_data_for_week(downstream_keys_matching, :throughput)
+
+      throughput_total = upstream_throughput + downstream_throughput
+
+      if throughput_total.zero? || (upstream_keys_matching.blank? && downstream_keys_matching.blank?)
+        0
+      else
+        compute_hour_per_demand(throughput_total, (upstream_keys_matching + downstream_keys_matching).uniq)
+      end
+    end
+
     def compute_hour_per_demand(throughput_total, upstream_keys_matching)
       hours_for_week_upstream_data = upstream_operational_data_for_week(upstream_keys_matching, :total_effort_upstream)
       hours_for_week_downstream_data = downstream_operational_data_for_week(upstream_keys_matching, :total_effort_upstream) + downstream_operational_data_for_week(upstream_keys_matching, :total_effort_downstream)
@@ -93,22 +97,22 @@ module Highchart
     def build_flow_pressure_array
       array_of_flow_pressures = []
       @all_projects_weeks.each do |date|
-        all_projects.each { |project| array_of_flow_pressures << project.flow_pressure(date) }
+        @all_projects.each { |project| array_of_flow_pressures << project.flow_pressure(date) }
         @flow_pressure_data << array_of_flow_pressures.sum.to_f / array_of_flow_pressures.count.to_f
       end
     end
 
     def build_demands_scope_data
       scope_per_week = []
-      @active_weeks.each { |date| scope_per_week << DemandsRepository.instance.scope_in_week_for_projects(active_projects, date.cweek, date.cwyear) }
+      @all_projects_weeks.each { |date| scope_per_week << DemandsRepository.instance.scope_in_week_for_projects(all_projects, date.cweek, date.cwyear) }
       scope_per_week
     end
 
     def build_demands_throughput_data
       throughput_per_week = []
-      @active_weeks.each do |date|
-        upstream_total_delivered = DemandsRepository.instance.delivered_until_date_to_projects_in_upstream(active_projects, date).count
-        downstream_total_delivered = DemandsRepository.instance.delivered_until_date_to_projects_in_downstream(active_projects, date).count
+      @all_projects_weeks.each do |date|
+        upstream_total_delivered = DemandsRepository.instance.delivered_until_date_to_projects_in_upstream(@all_projects, date).count
+        downstream_total_delivered = DemandsRepository.instance.delivered_until_date_to_projects_in_downstream(@all_projects, date).count
         throughput_per_week << upstream_total_delivered + downstream_total_delivered if add_data_to_chart?(date)
       end
       throughput_per_week
@@ -116,15 +120,15 @@ module Highchart
 
     def build_hours_scope_data
       scope_per_week = []
-      @active_weeks.each { |_week_year| scope_per_week << active_projects.sum(:qty_hours).to_f }
+      @all_projects_weeks.each { |_week_year| scope_per_week << @all_projects.sum(:qty_hours).to_f }
       scope_per_week
     end
 
     def build_hours_throughput_data
       throughput_hours_per_week = []
-      @active_weeks.each do |date|
-        upstream_total_hours_delivered = DemandsRepository.instance.delivered_until_date_to_projects_in_upstream(active_projects, date).sum(&:effort_upstream)
-        downstream_total_hours_delivered = DemandsRepository.instance.delivered_until_date_to_projects_in_downstream(active_projects, date).sum(&:effort_downstream)
+      @all_projects_weeks.each do |date|
+        upstream_total_hours_delivered = DemandsRepository.instance.delivered_until_date_to_projects_in_upstream(@all_projects, date).sum(&:effort_upstream)
+        downstream_total_hours_delivered = DemandsRepository.instance.delivered_until_date_to_projects_in_downstream(@all_projects, date).sum(&:effort_downstream)
 
         throughput_hours_per_week << upstream_total_hours_delivered + downstream_total_hours_delivered if add_data_to_chart?(date)
       end

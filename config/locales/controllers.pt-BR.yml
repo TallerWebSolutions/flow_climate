@@ -91,13 +91,13 @@ pt-BR:
       button: "Me Enviar Boletim"
     charts:
       active_projects:
-        title: "Contagem de Projetos Ativos no Mês para %{project_name}"
+        title: "Contagem de Projetos Ativos no Mês para %{target_name}"
       hours_per_month:
-        title: "Horas dos Projetos por Mês para %{project_name}"
+        title: "Horas dos Projetos por Mês para %{target_name}"
       flowpressure_per_month:
-        title: "Pressão do Fluxo para %{project_name}"
+        title: "Pressão do Fluxo para %{target_name}"
       money_per_month:
-        title: "Distribuição de Dinheiro de Projetos por Competência para %{project_name}"
+        title: "Distribuição de Dinheiro de Projetos por Competência para %{target_name}"
   financial_informations:
     new:
       title: "Nova Informação Financeira"
@@ -206,15 +206,15 @@ pt-BR:
         ylabel: "Demandas"
         tooltipsufix: " demandas"
         demands:
-          title: "Burnup para %{project_name}"
+          title: "Burnup para %{target_name}"
         hours:
-          title: "Burnup de Horas para %{project_name}"
+          title: "Burnup de Horas para %{target_name}"
       hours_per_demand:
-        title: "Horas por demanda no tempo para %{project_name}"
+        title: "Horas por demanda no tempo para %{target_name}"
         ylabel: "Horas/Demanda"
         tooltipsufix: " horas por demanda"
       flow_pressure:
-        title: "Pressão do Fluxo para %{project_name}"
+        title: "Pressão do Fluxo para %{target_name}"
         ylabel: "Pressão do Fluxo"
         tooltipsufix: " demandas/dia"
         data_suffix: "demandas/dia"
@@ -228,7 +228,7 @@ pt-BR:
           upstream: "Upstream"
           downstream: "Downstream"
       cmd:
-        title: "Custo Médio por Deamanda para %{project_name}"
+        title: "Custo Médio por Deamanda para %{target_name}"
         ylabel: "Custo Médio por Demanda"
         tooltipsufix: "reais"
         tooltip_prefix: "R$ "
@@ -336,7 +336,7 @@ pt-BR:
     destroy:
       confirm: "Tem certeza que deseja apagar o projeto? Todas as demandas deste projeto também serão excluídas."
     modal:
-      statistics: "Estatísticas de %{project_name}"
+      statistics: "Estatísticas de %{target_name}"
   team_member:
     edit:
       title: "Editar Membro do Time"

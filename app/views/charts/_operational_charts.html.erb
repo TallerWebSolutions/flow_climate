@@ -3,8 +3,8 @@
     <div class="col-xs-12">
       <div id="burnup-demands"
            class="flow-chart"
-           data-title='<%= t('projects.charts.burnup.demands.title', project_name: target_name) %>'
-           data-weeks='<%= report_data.active_weeks.to_json %>'
+           data-title='<%= t('projects.charts.burnup.demands.title', target_name: target_name) %>'
+           data-weeks='<%= report_data.all_projects_weeks.to_json %>'
            data-xtitle='<%= t('projects.charts.xlabel.weeks') %>'
            data-ytitle='<%= t('projects.charts.burnup.ylabel') %>'
            data-suffix='<%= t('projects.charts.burnup.tooltipsufix') %>'
@@ -20,7 +20,7 @@
     <div class="col-xs-12">
       <div id="hours-column"
            class="flow-chart"
-           data-title='<%= t('projects.charts.hours_per_demand.title', project_name: target_name) %>'
+           data-title='<%= t('projects.charts.hours_per_demand.title', target_name: target_name) %>'
            data-xcategories='<%= report_data.all_projects_weeks.to_json %>'
            data-xtitle='<%= t('projects.charts.xlabel.weeks') %>'
            data-ytitle='<%= t('projects.charts.hours_per_demand.ylabel') %>'
@@ -35,7 +35,7 @@
     <div class="col-xs-12">
       <div id="flowpressure-column"
            class="flow-chart"
-           data-title='<%= t('projects.charts.flow_pressure.title', project_name: target_name) %>'
+           data-title='<%= t('projects.charts.flow_pressure.title', target_name: target_name) %>'
            data-xcategories='<%= report_data.all_projects_weeks.to_json %>'
            data-xtitle='<%= t('projects.charts.xlabel.weeks') %>'
            data-ytitle='<%= t('projects.charts.flow_pressure.ylabel') %>'

@@ -208,9 +208,9 @@ RSpec.describe Company, type: :model do
     let(:customer) { Fabricate :customer, company: company }
     let(:other_customer) { Fabricate :customer, company: company }
 
-    let!(:first_project) { Fabricate :project, customer: customer, status: :executing, initial_scope: 10, start_date: 2.weeks.ago.to_date, end_date: 4.days.from_now }
-    let!(:second_project) { Fabricate :project, customer: other_customer, status: :executing, initial_scope: 40, start_date: 2.weeks.ago.to_date, end_date: 5.days.from_now }
-    let!(:third_project) { Fabricate :project, customer: other_customer, status: :executing, initial_scope: 30, start_date: 2.weeks.ago.to_date, end_date: 6.days.from_now }
+    let!(:first_project) { Fabricate :project, customer: customer, name: 'first_project', status: :executing, initial_scope: 10, start_date: 2.weeks.ago.to_date, end_date: 4.days.from_now }
+    let!(:second_project) { Fabricate :project, customer: other_customer, name: 'second_project', status: :executing, initial_scope: 40, start_date: 2.weeks.ago.to_date, end_date: 5.days.from_now }
+    let!(:third_project) { Fabricate :project, customer: other_customer, name: 'third_project', status: :executing, initial_scope: 30, start_date: 2.weeks.ago.to_date, end_date: 6.days.from_now }
 
     let!(:waiting_project) { Fabricate :project, customer: customer, status: :waiting, initial_scope: 5, start_date: 2.weeks.ago.to_date, end_date: 3.days.from_now }
 

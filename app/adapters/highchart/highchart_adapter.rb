@@ -2,24 +2,28 @@
 
 module Highchart
   class HighchartAdapter
-    attr_reader :all_projects, :active_projects, :all_projects_weeks, :active_weeks, :all_projects_months, :active_months, :all_projects_demands_ids,
+    attr_reader :all_projects, :all_projects_weeks, :all_projects_months, :all_projects_demands_ids,
                 :active_projects_demands_ids, :minimum_date_limit, :upstream_operational_weekly_data, :downstream_operational_weekly_data
 
     def initialize(projects, period)
+      @all_projects = projects
       build_minimum_date(period)
-      @all_projects = search_projects(projects)
+      @all_projects = search_projects_by_minimum_date(projects)
       @all_projects_demands_ids = @all_projects.map(&:kept_demands_ids).flatten
-      @active_projects = @all_projects.active
-      @active_projects_demands_ids = @active_projects.map(&:kept_demands_ids).flatten
       build_all_projects_periods
-      build_active_projects_periods
       @upstream_operational_weekly_data = DemandsRepository.instance.operational_data_per_week_to_projects(@all_projects.map(&:id), false, charts_data_bottom_limit_date)
       @downstream_operational_weekly_data = DemandsRepository.instance.operational_data_per_week_to_projects(@all_projects.map(&:id), true, charts_data_bottom_limit_date)
     end
 
+    def running_projects_in_the_list?
+      return false if @all_projects.blank?
+
+      @all_projects.map(&:status).flatten.include?(:executing)
+    end
+
     private
 
-    def search_projects(projects)
+    def search_projects_by_minimum_date(projects)
       return projects if @minimum_date_limit.blank?
 
       projects.where('end_date IS NULL OR end_date >= :limit_date', limit_date: @minimum_date_limit)
@@ -31,13 +35,6 @@ module Highchart
 
     def add_month_data_to_chart?(date)
       date.year < Time.zone.today.year || (date.month <= Time.zone.today.month && date.year <= Time.zone.today.year)
-    end
-
-    def build_active_projects_periods
-      min_date = [active_projects.minimum(:start_date), @minimum_date_limit].compact.max
-      max_date = active_projects.maximum(:end_date)
-      @active_weeks = TimeService.instance.weeks_between_of(min_date, max_date)
-      @active_months = TimeService.instance.months_between_of(min_date, max_date)
     end
 
     def build_all_projects_periods
@@ -63,28 +60,26 @@ module Highchart
     end
 
     def upstream_operational_data_for_week(upstream_keys_matching, data_required)
-      if upstream_keys_matching.blank? || @upstream_operational_weekly_data[upstream_keys_matching.first][data_required].blank?
-        0
-      else
-        @upstream_operational_weekly_data[upstream_keys_matching.first][:throughput]
-      end
+      return @upstream_operational_weekly_data[upstream_keys_matching.first][data_required] if upstream_keys_matching.present? && @upstream_operational_weekly_data.try(:[], upstream_keys_matching.first).try(:[], data_required).present?
+
+      0
     end
 
     def downstream_operational_data_for_week(downstream_keys_matching, data_required)
-      if downstream_keys_matching.blank? || @downstream_operational_weekly_data[downstream_keys_matching.first][data_required].blank?
-        0
-      else
-        @downstream_operational_weekly_data[downstream_keys_matching.first][:throughput]
-      end
+      return @downstream_operational_weekly_data[downstream_keys_matching.first][data_required] if downstream_keys_matching.present? && @downstream_operational_weekly_data.try(:[], downstream_keys_matching.first).try(:[], data_required).present?
+
+      0
     end
 
     def build_minimum_date(period)
+      base_date = @all_projects.map(&:end_date).flatten.max
+      base_date = Time.zone.now if @all_projects.blank? || running_projects_in_the_list?
       @minimum_date_limit = if period == 'all'
                               nil
                             elsif period == 'quarter'
-                              3.months.ago.to_date
+                              base_date - 3.months
                             else
-                              1.month.ago.to_date
+                              base_date - 1.month
                             end
     end
 

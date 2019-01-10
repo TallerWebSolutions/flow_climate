@@ -332,7 +332,7 @@ class Project < ApplicationRecord
   private
 
   def no_pressure_set(date)
-    finished? || cancelled? || remaining_days(date).zero? || total_days.zero? || backlog_remaining(date).zero?
+    remaining_days(date).zero? || total_days.zero? || backlog_remaining(date).zero?
   end
 
   def regressive_hours_per_demand

@@ -3,6 +3,7 @@
 class ChartsController < AuthenticatedController
   before_action :assign_company
   before_action :assign_projects
+  before_action :assign_target_name
 
   def build_operational_charts
     @report_data = Highchart::OperationalChartsAdapter.new(@projects, params[:period])
@@ -28,5 +29,9 @@ class ChartsController < AuthenticatedController
     team = @projects.last.current_team
     @target_name = params[:target_name]
     @available_hours_in_month = team.active_monthly_available_hours_for_billable_types(team.projects.pluck(:project_type).uniq)
+  end
+
+  def assign_target_name
+    @target_name = params[:target_name]
   end
 end

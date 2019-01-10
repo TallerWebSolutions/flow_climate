@@ -9,6 +9,8 @@
   <%= render 'charts/status_report_charts', target_name: target_name, status_report_data: status_report_data %>
 </div>
 
-<div id="status-report-charts-projection-div">
-  <%= render 'charts/status_report_projection_charts', target_name: target_name, status_report_data: status_report_data, montecarlo_durations: montecarlo_durations %>
-</div>
+<% if status_report_data&.running_projects_in_the_list? %>
+  <div id="status-report-charts-projection-div">
+    <%= render 'charts/status_report_projection_charts', target_name: target_name, status_report_data: status_report_data, montecarlo_durations: montecarlo_durations %>
+  </div>
+<% end %>

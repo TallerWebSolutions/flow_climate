@@ -21,6 +21,11 @@ function buildBurnupChart(burnupDiv) {
             text: 'Source: Flow Climate'
         },
         xAxis: {
+            type: 'datetime',
+            dateTimeLabelFormats: { // don't display the dummy year
+                month: '%e. %b',
+                year: '%b'
+            },
             categories: burnupDiv.data('weeks'),
             title: { text: burnupDiv.data('xtitle') }
         },
