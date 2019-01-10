@@ -48,8 +48,9 @@ function operationalChartsPeriodBehaviour() {
         const companyId = $("#company_id").val();
         const period = $('#operational-charts-period').val();
         const projects_ids = $("#projects_ids").val();
+        const target_name = $("#target_name").val();
 
-        buildOperationalCharts(companyId, projects_ids, period)
+        buildOperationalCharts(companyId, projects_ids, period, target_name)
     });
 }
 
@@ -63,7 +64,8 @@ function statusReportPeriodBehaviour(){
         const companyId = $("#company_id").val();
         const period = $('#status-report-period').val();
         const projects_ids = $("#projects_ids").val();
+        const target_name = $("#target_name").val();
 
-        buildStatusReportCharts(companyId, projects_ids, period);
+        buildStatusReportCharts(companyId, projects_ids, period, target_name);
     });
 }

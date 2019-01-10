@@ -19,9 +19,9 @@ pt-BR:
       starting_title: "Projetos iniciando nesta semana:"
     no_top_three_flow_pressure: "Não foram encontrados projetos"
     red_alert:
-      subject: "[Ação Requerida] O projeto %{project_name} entrou em alerta vermelho."
+      subject: "[Ação Requerida] O projeto %{target_name} entrou em alerta vermelho."
     notify_new_red_alert:
-      red_alert_text: "O projeto %{project_name} ficou vermelho. Sua ação é necessária!"
+      red_alert_text: "O projeto %{target_name} ficou vermelho. Sua ação é necessária!"
       alert_value: "Valor que disparou o alerta: %{alert_value}"
       risk_type: "Tipo do Risco: %{risk_type}"
       previous_color: "Cor do alerta anterior: %{previous_color}"

@@ -20,13 +20,13 @@ $('.nav-item').on('click', function(event){
         disableTabs();
 
         if ($(this).attr('id') === 'nav-item-statusreport') {
-            buildStatusReportCharts(company_id, projects_ids, period)
+            buildStatusReportCharts(company_id, projects_ids, period, target_name)
 
         } else if ($(this).attr('id') === 'nav-item-charts') {
             buildOperationalCharts(company_id, projects_ids, period, target_name);
 
         } else if ($(this).attr('id') === 'nav-item-strategic') {
-            buildStrategicCharts(company_id, projects_ids);
+            buildStrategicCharts(company_id, projects_ids, target_name);
 
         } else if ($(this).attr('id') === 'nav-item-delivered') {
             getDemands(company_id, projects_ids);

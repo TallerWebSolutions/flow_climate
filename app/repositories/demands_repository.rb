@@ -136,8 +136,8 @@ class DemandsRepository
     Demand.where(project_id: projects).where('EXTRACT(MONTH FROM end_date) = :month AND EXTRACT(YEAR FROM end_date) = :year', month: date.month, year: date.year)
   end
 
-  def demands_for_projects_and_finished_until_limit_date(projects, date)
-    Demand.where(project_id: projects).where('(EXTRACT(WEEK FROM end_date) <= :week AND EXTRACT(YEAR FROM end_date) <= :year) OR (EXTRACT(YEAR FROM end_date) < :year)', week: date.cweek, year: date.cwyear)
+  def demands_for_projects_and_finished_until_limit_date(projects, limit_date)
+    Demand.where(project_id: projects).where('(EXTRACT(WEEK FROM end_date) <= :week AND EXTRACT(YEAR FROM end_date) <= :year) OR (EXTRACT(YEAR FROM end_date) < :year)', week: limit_date.cweek, year: limit_date.cwyear)
   end
 
   def demands_touched_in_day(demands, analysed_date)
