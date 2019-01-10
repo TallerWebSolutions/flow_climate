@@ -70,7 +70,45 @@ RSpec.describe DemandTransition, type: :model do
         it { expect(DemandTransition.upstream_transitions).to match_array [demand_transition, other_demand_transition] }
       end
       context 'having no data' do
-        it { expect(DemandTransition.upstream_transitions).to match_array [] }
+        it { expect(DemandTransition.upstream_transitions).to eq [] }
+      end
+    end
+
+    describe '.touch_transitions' do
+      let(:project) { Fabricate :project }
+      let!(:queue_stage) { Fabricate :stage, stage_stream: :downstream, queue: true, projects: [project] }
+      let!(:touch_stage) { Fabricate :stage, stage_stream: :downstream, queue: false, projects: [project] }
+      let(:other_touch_stage) { Fabricate :stage, stage_stream: :upstream, queue: false, projects: [project] }
+      let(:demand) { Fabricate :demand, project: project }
+
+      context 'having data' do
+        let!(:demand_transition) { Fabricate :demand_transition, demand: demand, stage: queue_stage }
+        let!(:touch_transition) { Fabricate :demand_transition, demand: demand, stage: touch_stage }
+        let!(:other_touch_transition) { Fabricate :demand_transition, demand: demand, stage: other_touch_stage }
+
+        it { expect(DemandTransition.touch_transitions).to match_array [touch_transition, other_touch_transition] }
+      end
+      context 'having no data' do
+        it { expect(DemandTransition.touch_transitions).to eq [] }
+      end
+    end
+
+    describe '.queue_transitions' do
+      let(:project) { Fabricate :project }
+      let!(:touch_stage) { Fabricate :stage, stage_stream: :downstream, queue: false, projects: [project] }
+      let!(:queue_stage) { Fabricate :stage, stage_stream: :downstream, queue: true, projects: [project] }
+      let(:other_queue_stage) { Fabricate :stage, stage_stream: :upstream, queue: true, projects: [project] }
+      let(:demand) { Fabricate :demand, project: project }
+
+      context 'having data' do
+        let!(:demand_transition) { Fabricate :demand_transition, demand: demand, stage: touch_stage }
+        let!(:queue_transition) { Fabricate :demand_transition, demand: demand, stage: queue_stage }
+        let!(:other_queue_transition) { Fabricate :demand_transition, demand: demand, stage: other_queue_stage }
+
+        it { expect(DemandTransition.queue_transitions).to match_array [queue_transition, other_queue_transition] }
+      end
+      context 'having no data' do
+        it { expect(DemandTransition.queue_transitions).to eq [] }
       end
     end
 

@@ -188,15 +188,20 @@ module Highchart
       touch_times_per_week_hash = ProjectsRepository.instance.total_touch_time_for(@all_projects)
 
       @all_projects_weeks.each do |date|
+        demands_touch_block_total_time = compute_demands_touch_block_total_time(date)
         dates_array << date.to_s
-        queue_times << compute_time_in_seconds_to_hours(date, queue_times_per_week_hash)
-        touch_times << compute_time_in_seconds_to_hours(date, touch_times_per_week_hash)
+        queue_times << compute_time_in_seconds_to_hours(date, queue_times_per_week_hash, demands_touch_block_total_time)
+        touch_times << compute_time_in_seconds_to_hours(date, touch_times_per_week_hash, (demands_touch_block_total_time * -1))
       end
       @weekly_queue_touch_count_hash = { dates_array: dates_array, queue_times: queue_times, touch_times: touch_times }
     end
 
-    def compute_time_in_seconds_to_hours(date, times_per_week_hash)
-      (times_per_week_hash[[date.cweek, date.cwyear]] || 0) / (60 * 60)
+    def compute_demands_touch_block_total_time(date)
+      @all_projects.map { |project| project.demands.kept.where('EXTRACT(WEEK FROM end_date) = :week AND EXTRACT(YEAR FROM end_date) = :year', week: date.cweek, year: date.cwyear).sum(&:sum_touch_blocked_time) }.sum
+    end
+
+    def compute_time_in_seconds_to_hours(date, times_per_week_hash, blocking_time)
+      ((times_per_week_hash[[date.cweek, date.cwyear]] || 0) + blocking_time) / (60 * 60)
     end
 
     def build_weekly_queue_touch_share_hash

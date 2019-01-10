@@ -171,7 +171,23 @@ class Demand < ApplicationRecord
     leadtime / 86_400
   end
 
+  def sum_touch_blocked_time
+    sum_blocked_time_for_transitions(demand_transitions.touch_transitions)
+  end
+
+  def sum_queue_blocked_time
+    sum_blocked_time_for_transitions(demand_transitions.queue_transitions)
+  end
+
   private
+
+  def sum_blocked_time_for_transitions(transitions)
+    total_blocked = 0
+    transitions.each do |transition|
+      total_blocked += demand_blocks.closed.active.for_date_interval(transition.last_time_in, transition.last_time_out).sum(&:total_blocked_time)
+    end
+    total_blocked
+  end
 
   def decimal_value_to_csv(value)
     value.to_f.to_s.gsub('.', I18n.t('number.format.separator'))

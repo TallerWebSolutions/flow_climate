@@ -88,4 +88,17 @@ RSpec.describe DemandBlock, type: :model do
       it { expect(demand_block.unblocked?).to be false }
     end
   end
+
+  describe '#total_blocked_time' do
+    context 'when it was unblocked' do
+      before { travel_to Time.zone.local(2019, 1, 10, 10, 0, 0) }
+      after { travel_back }
+      let(:demand_block) { Fabricate :demand_block, active: true, block_time: 1.day.ago, unblock_time: Time.zone.now }
+      it { expect(demand_block.total_blocked_time).to eq 86_400.0 }
+    end
+    context 'when it still blocked' do
+      let(:demand_block) { Fabricate :demand_block, active: true, unblock_time: nil }
+      it { expect(demand_block.total_blocked_time).to eq 0 }
+    end
+  end
 end

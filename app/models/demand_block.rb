@@ -57,7 +57,17 @@ class DemandBlock < ApplicationRecord
     unblock_time.present?
   end
 
+  def total_blocked_time
+    return 0 unless closed? && unblock_time > block_time
+
+    unblock_time - block_time
+  end
+
   private
+
+  def closed?
+    unblock_time.present?
+  end
 
   def update_computed_fields!
     self.block_duration = TimeService.instance.compute_working_hours_for_dates(block_time, unblock_time) if unblock_time.present?
