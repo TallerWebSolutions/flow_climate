@@ -58,7 +58,7 @@
 <div class="row bottom-spaced-component">
   <div class="col-xs-3">
     <%= label_tag t('general.period') %>
-    <%= select_tag :period, period_options(:all), class: 'form-control filter-checks', id: 'demands-table-period', selected: params[:period] %>
+    <%= select_tag :period, period_options(:month), class: 'form-control filter-checks', id: 'demands-table-period', selected: params[:period] %>
   </div>
 </div>
 
