@@ -25,7 +25,7 @@
   </div>
 </div>
 
-<div class="row">
+<div class="row bottom-spaced-component">
   <div class="col-xs-3">
     <div class="form-group radio-inline">
       <%= radio_button_tag :searching, :all_demands, true, class: 'filter-checks' %>
@@ -52,6 +52,13 @@
       <%= radio_button_tag :searching, :delivered_demands, false, class: 'filter-checks' %>
       <%= label_tag t('projects.show.demands.delivered_demands'), nil, class: 'control-label' %>
     </div>
+  </div>
+</div>
+
+<div class="row bottom-spaced-component">
+  <div class="col-xs-3">
+    <%= label_tag t('general.period') %>
+    <%= select_tag :period, period_options(:all), class: 'form-control filter-checks', id: 'demands-table-period', selected: params[:period] %>
   </div>
 </div>
 

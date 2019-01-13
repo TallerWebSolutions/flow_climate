@@ -74,13 +74,7 @@ module Highchart
     def build_minimum_date(period)
       base_date = @all_projects.map(&:end_date).flatten.max
       base_date = Time.zone.now if @all_projects.blank? || running_projects_in_the_list?
-      @minimum_date_limit = if period == 'all'
-                              nil
-                            elsif period == 'quarter'
-                              base_date - 3.months
-                            else
-                              base_date - 1.month
-                            end
+      @minimum_date_limit = TimeService.instance.limit_date_to_period(period, base_date)
     end
 
     def charts_data_bottom_limit_date

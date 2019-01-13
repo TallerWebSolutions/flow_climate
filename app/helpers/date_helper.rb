@@ -8,6 +8,7 @@ module DateHelper
     hours = ((time_in_seconds - days * seconds_in_a_day) / seconds_in_a_hour).to_i
 
     return "#{hours} #{I18n.t('datetime.date_attributes.hour', count: hours)}" if days < 1
-    "#{days} #{I18n.t('datetime.date_attributes.day', count: days)} #{I18n.t('geenral.connector.and')} #{hours} #{I18n.t('datetime.date_attributes.hour', count: hours)}"
+    return "#{days} #{I18n.t('datetime.date_attributes.day', count: days)} #{I18n.t('geenral.connector.and')} #{hours} #{I18n.t('datetime.date_attributes.hour', count: hours)}" if hours.positive?
+    "#{days} #{I18n.t('datetime.date_attributes.day', count: days)}"
   end
 end

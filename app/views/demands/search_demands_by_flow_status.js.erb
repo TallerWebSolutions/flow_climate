@@ -21,3 +21,10 @@ var flatDemands = $('#flat-demands-div');
   demandsGroupedPerCustomer.hide();
   $('#grouping_no_grouping').prop("checked", true);
 <% end %>
+
+bindDemandFilterActions();
+
+$("#general-loader").hide();
+$("#demands_table").show();
+$(".form-control").prop('disabled', false)
+$(".filter-checks").prop('disabled', false)

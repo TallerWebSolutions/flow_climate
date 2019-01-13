@@ -1,4 +1,4 @@
-$(".loader").hide();
+$("#general-loader").hide();
 
 statusReportPeriodBehaviour();
 operationalChartsPeriodBehaviour();
