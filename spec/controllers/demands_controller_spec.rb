@@ -470,7 +470,7 @@ RSpec.describe DemandsController, type: :controller do
           context 'and passing the flow status all filters false' do
             context 'not grouped' do
               it 'finds the correct demands and responds with the correct JS' do
-                get :search_demands_by_flow_status, params: { company_id: company, id: first_project, demands_ids: "#{first_demand.id}, #{second_demand.id}, #{third_demand.id}, #{fourth_demand.id}", no_grouping: 'true', grouped_by_month: 'false', grouped_by_customer: 'false', not_started: 'false', wip: 'false', delivered: 'false' }, xhr: true
+                get :search_demands_by_flow_status, params: { company_id: company, id: first_project, demands_ids: "#{first_demand.id}, #{second_demand.id}, #{third_demand.id}, #{fourth_demand.id}", no_grouping: 'true', grouped_by_month: 'false', grouped_by_customer: 'false', not_started: 'false', wip: 'false', delivered: 'false', period: :all }, xhr: true
 
                 expect(response).to render_template 'demands/search_demands_by_flow_status.js.erb'
                 expect(assigns(:demands)).to match_array [first_demand, second_demand, third_demand, fourth_demand]
@@ -480,7 +480,7 @@ RSpec.describe DemandsController, type: :controller do
             end
             context 'grouped_delivered_demands' do
               it 'finds the correct demands and responds with the correct JS' do
-                get :search_demands_by_flow_status, params: { company_id: company, id: first_project, demands_ids: "#{first_demand.id}, #{second_demand.id}, #{third_demand.id}, #{fourth_demand.id}", no_grouping: 'false', grouped_by_month: 'true', grouped_by_customer: 'false', not_started: 'false', wip: 'false', delivered: 'false' }, xhr: true
+                get :search_demands_by_flow_status, params: { company_id: company, id: first_project, demands_ids: "#{first_demand.id}, #{second_demand.id}, #{third_demand.id}, #{fourth_demand.id}", no_grouping: 'false', grouped_by_month: 'true', grouped_by_customer: 'false', not_started: 'false', wip: 'false', delivered: 'false', period: :all }, xhr: true
 
                 expect(response).to render_template 'demands/search_demands_by_flow_status.js.erb'
                 expect(assigns(:demands)).to match_array [first_demand, second_demand, third_demand, fourth_demand]
@@ -490,7 +490,7 @@ RSpec.describe DemandsController, type: :controller do
             end
             context 'grouped_delivered_demands' do
               it 'finds the correct demands and responds with the correct JS' do
-                get :search_demands_by_flow_status, params: { company_id: company, id: first_project, demands_ids: "#{first_demand.id}, #{second_demand.id}, #{third_demand.id}, #{fourth_demand.id}", no_grouping: 'false', grouped_by_month: 'false', grouped_by_customer: 'true', not_started: 'false', wip: 'false', delivered: 'false' }, xhr: true
+                get :search_demands_by_flow_status, params: { company_id: company, id: first_project, demands_ids: "#{first_demand.id}, #{second_demand.id}, #{third_demand.id}, #{fourth_demand.id}", no_grouping: 'false', grouped_by_month: 'false', grouped_by_customer: 'true', not_started: 'false', wip: 'false', delivered: 'false', period: :all }, xhr: true
 
                 expect(response).to render_template 'demands/search_demands_by_flow_status.js.erb'
                 expect(assigns(:demands)).to match_array [first_demand, second_demand, third_demand, fourth_demand]
@@ -502,7 +502,7 @@ RSpec.describe DemandsController, type: :controller do
           context 'and passing the flow status filter not started' do
             context 'not grouped' do
               it 'finds the correct demands and responds with the correct JS' do
-                get :search_demands_by_flow_status, params: { company_id: company, id: first_project, demands_ids: first_demand.id.to_s, no_grouping: 'true', grouped_by_month: 'false', grouped_by_customer: 'false', not_started: 'true', wip: 'false', delivered: 'false' }, xhr: true
+                get :search_demands_by_flow_status, params: { company_id: company, id: first_project, demands_ids: first_demand.id.to_s, no_grouping: 'true', grouped_by_month: 'false', grouped_by_customer: 'false', not_started: 'true', wip: 'false', delivered: 'false', period: :all }, xhr: true
 
                 expect(response).to render_template 'demands/search_demands_by_flow_status.js.erb'
                 expect(assigns(:demands)).to match_array [first_demand]
@@ -512,7 +512,7 @@ RSpec.describe DemandsController, type: :controller do
             end
             context 'grouped_delivered_demands' do
               it 'finds the correct demands and responds with the correct JS' do
-                get :search_demands_by_flow_status, params: { company_id: company, id: first_project, demands_ids: first_demand.id.to_s, no_grouping: 'false', grouped_by_month: 'true', grouped_by_customer: 'false', not_started: 'true', wip: 'false', delivered: 'false' }, xhr: true
+                get :search_demands_by_flow_status, params: { company_id: company, id: first_project, demands_ids: first_demand.id.to_s, no_grouping: 'false', grouped_by_month: 'true', grouped_by_customer: 'false', not_started: 'true', wip: 'false', delivered: 'false', period: 'all' }, xhr: true
 
                 expect(response).to render_template 'demands/search_demands_by_flow_status.js.erb'
                 expect(assigns(:demands)).to match_array [first_demand]
@@ -520,9 +520,9 @@ RSpec.describe DemandsController, type: :controller do
                 expect(assigns(:grouped_customer_demands)).to be_nil
               end
             end
-            context 'grouped_delivered_demands' do
+            context 'grouped_customer_demands' do
               it 'finds the correct demands and responds with the correct JS' do
-                get :search_demands_by_flow_status, params: { company_id: company, id: first_project, demands_ids: first_demand.id.to_s, no_grouping: 'false', grouped_by_month: 'false', grouped_by_customer: 'true', not_started: 'true', wip: 'false', delivered: 'false' }, xhr: true
+                get :search_demands_by_flow_status, params: { company_id: company, id: first_project, demands_ids: first_demand.id.to_s, no_grouping: 'false', grouped_by_month: 'false', grouped_by_customer: 'true', not_started: 'true', wip: 'false', delivered: 'false', period: :all }, xhr: true
 
                 expect(response).to render_template 'demands/search_demands_by_flow_status.js.erb'
                 expect(assigns(:demands)).to match_array [first_demand]
@@ -534,7 +534,7 @@ RSpec.describe DemandsController, type: :controller do
           context 'and passing the flow status filter committed' do
             context 'not grouped' do
               it 'finds the correct demands and responds with the correct JS' do
-                get :search_demands_by_flow_status, params: { company_id: company, id: first_project, demands_ids: second_demand.id.to_s, no_grouping: 'true', grouped_by_month: 'false', grouped_by_customer: 'false', not_started: 'false', wip: 'true', delivered: 'false' }, xhr: true
+                get :search_demands_by_flow_status, params: { company_id: company, id: first_project, demands_ids: second_demand.id.to_s, no_grouping: 'true', grouped_by_month: 'false', grouped_by_customer: 'false', not_started: 'false', wip: 'true', delivered: 'false', period: :all }, xhr: true
 
                 expect(response).to render_template 'demands/search_demands_by_flow_status.js.erb'
                 expect(assigns(:demands)).to match_array [second_demand]
@@ -544,7 +544,7 @@ RSpec.describe DemandsController, type: :controller do
             end
             context 'grouped_delivered_demands' do
               it 'finds the correct demands and responds with the correct JS' do
-                get :search_demands_by_flow_status, params: { company_id: company, id: first_project, demands_ids: second_demand.id.to_s, no_grouping: 'false', grouped_by_month: 'true', grouped_by_customer: 'false', not_started: 'false', wip: 'true', delivered: 'false' }, xhr: true
+                get :search_demands_by_flow_status, params: { company_id: company, id: first_project, demands_ids: second_demand.id.to_s, no_grouping: 'false', grouped_by_month: 'true', grouped_by_customer: 'false', not_started: 'false', wip: 'true', delivered: 'false', period: :all }, xhr: true
 
                 expect(response).to render_template 'demands/search_demands_by_flow_status.js.erb'
                 expect(assigns(:demands)).to match_array [second_demand]
@@ -554,7 +554,7 @@ RSpec.describe DemandsController, type: :controller do
             end
             context 'grouped_delivered_demands' do
               it 'finds the correct demands and responds with the correct JS' do
-                get :search_demands_by_flow_status, params: { company_id: company, id: first_project, demands_ids: second_demand.id.to_s, no_grouping: 'false', grouped_by_month: 'false', grouped_by_customer: 'true', not_started: 'false', wip: 'true', delivered: 'false' }, xhr: true
+                get :search_demands_by_flow_status, params: { company_id: company, id: first_project, demands_ids: second_demand.id.to_s, no_grouping: 'false', grouped_by_month: 'false', grouped_by_customer: 'true', not_started: 'false', wip: 'true', delivered: 'false', period: :all }, xhr: true
 
                 expect(response).to render_template 'demands/search_demands_by_flow_status.js.erb'
                 expect(assigns(:demands)).to match_array [second_demand]
@@ -566,7 +566,7 @@ RSpec.describe DemandsController, type: :controller do
           context 'and passing the flow status filter delivered' do
             context 'not grouped' do
               it 'finds the correct demands and responds with the correct JS' do
-                get :search_demands_by_flow_status, params: { company_id: company, id: first_project, demands_ids: "#{third_demand.id}, #{fourth_demand.id}", no_grouping: 'true', grouped_by_month: 'false', grouped_by_customer: 'false', not_started: 'false', wip: 'false', delivered: 'true' }, xhr: true
+                get :search_demands_by_flow_status, params: { company_id: company, id: first_project, demands_ids: "#{third_demand.id}, #{fourth_demand.id}", no_grouping: 'true', grouped_by_month: 'false', grouped_by_customer: 'false', not_started: 'false', wip: 'false', delivered: 'true', period: :all }, xhr: true
 
                 expect(response).to render_template 'demands/search_demands_by_flow_status.js.erb'
                 expect(assigns(:demands)).to match_array [third_demand, fourth_demand]

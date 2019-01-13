@@ -13,6 +13,7 @@ class ProjectsController < AuthenticatedController
     @project_change_deadline_histories = @project.project_change_deadline_histories
     @project_stages = @project.stages.order(:order, :name)
     @projects_to_copy_stages_from = (@company.projects - [@project]).sort_by(&:full_name)
+    params[:period] = :all
   end
 
   def index

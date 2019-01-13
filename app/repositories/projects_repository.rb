@@ -74,10 +74,11 @@ class ProjectsRepository
   def build_hash_total_duration_to_time_and_type(projects, queue = true)
     query_result_array = DemandTransition.kept
                                          .select('EXTRACT(WEEK FROM last_time_out) AS sum_week', 'EXTRACT(YEAR FROM last_time_out) AS sum_year, SUM(EXTRACT(EPOCH FROM (last_time_out - last_time_in))) AS sum_duration')
+                                         .downstream_transitions
                                          .joins(demand: :project)
                                          .joins(:stage)
                                          .where(demands: { project_id: projects.map(&:id) })
-                                         .where('stages.queue = :queue AND stages.stage_stream = 1', queue: queue)
+                                         .where('stages.queue = :queue', queue: queue)
                                          .order(Arel.sql('EXTRACT(WEEK FROM last_time_out), EXTRACT(YEAR FROM last_time_out)'))
                                          .group('EXTRACT(WEEK FROM last_time_out)', 'EXTRACT(YEAR FROM last_time_out)')
                                          .map { |group_sum| [group_sum.sum_week.to_i, group_sum.sum_year.to_i, group_sum.sum_duration] }

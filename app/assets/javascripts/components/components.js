@@ -33,14 +33,14 @@ function searchWeekBehaviour() {
     $('#search-week').on('click', function () {
         const flow_div = $('#flow');
         flow_div.hide();
-        $(".loader").show();
+        $("#general-loader").show();
         searchDemandsToFlowCharts($('#company_id').val(), $('#team_id').val(), $('#week').val(), $('#year').val());
     });
 }
 
 function operationalChartsPeriodBehaviour() {
     $('#operational-charts-period').change(function(event){
-        $(".loader").show();
+        $("#general-loader").show();
         $('#operational-charts-div').hide();
 
         event.preventDefault();
@@ -56,7 +56,7 @@ function operationalChartsPeriodBehaviour() {
 
 function statusReportPeriodBehaviour(){
     $('#status-report-period').on('change', function(event){
-        $(".loader").show();
+        $("#general-loader").show();
         $('#project-status-report').hide();
 
         event.preventDefault();

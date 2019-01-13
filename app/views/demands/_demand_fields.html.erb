@@ -13,5 +13,5 @@
 <td><%= l(demand.end_date, format: :short) if demand.end_date.present? %></td>
 <td><%= number_with_precision(demand.effort_upstream, precision: 2) %></td>
 <td><%= number_with_precision(demand.effort_downstream, precision: 2) %></td>
-<td><%= time_ago_in_words(demand.leadtime.seconds.ago) if demand.leadtime.present? %></td>
+<td><%= time_distance_in_words(demand.leadtime) if demand.leadtime.present? %></td>
 <td><%= render 'demands/demand_actions', demand: demand %></td>

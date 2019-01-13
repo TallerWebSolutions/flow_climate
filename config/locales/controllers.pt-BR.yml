@@ -52,6 +52,12 @@ pt-BR:
       confirm: "Confirma a exclusão do registro?"
     period: "Período"
     throughput: "Vazão"
+    filter:
+      period:
+        option:
+          last_month: "Último Mês"
+          last_quarter: "Último Trimestre"
+          all_period: "Todo o Período"
   header:
     logout: Sair
     sign_up: Cadastre-se
@@ -269,7 +275,7 @@ pt-BR:
         share: "Eficiência de Fluxo"
       leadtime_evolution:
         title: "Evolução da Confiança do Leadtime para %{target_name}"
-        ylabel: "Horas"
+        ylabel: "Dias"
         legend:
           leadtime_80_confidence: "80% de Confiança"
       class_of_service_pie:

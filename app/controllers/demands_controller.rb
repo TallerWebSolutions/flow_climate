@@ -63,14 +63,15 @@ class DemandsController < AuthenticatedController
     @demands_count_per_week = DemandService.instance.quantitative_consolidation_per_week_to_projects(projects)
     @demands = DemandsRepository.instance.demands_per_projects(projects).order(end_date: :desc, commitment_date: :desc, created_date: :desc)
     assign_grouped_demands_informations(@demands)
+    params[:period] = :all
     respond_to { |format| format.js { render file: 'demands/demands_list.js.erb' } }
   end
 
   def search_demands_by_flow_status
     if params[:demands_ids].present?
-      filtered_demands = build_demands_query(params[:demands_ids].split(',').map(&:strip).map(&:to_i))
-      @demands = Demand.where(id: filtered_demands.map(&:id)).order(end_date: :desc, commitment_date: :desc, created_date: :desc)
+      @demands = build_demands_query(params[:demands_ids].split(',').map(&:strip).map(&:to_i), params[:period])
       assign_grouped_demands_informations(@demands)
+      @demands = @demands.order(end_date: :desc, commitment_date: :desc, created_date: :desc)
     else
       @demands = []
     end
@@ -96,11 +97,36 @@ class DemandsController < AuthenticatedController
     @grouped_customer_demands = demands.grouped_by_customer if params[:grouped_by_customer] == 'true'
   end
 
-  def build_demands_query(array_of_demands_ids)
-    return DemandsRepository.instance.not_started_demands(array_of_demands_ids) if params[:not_started] == 'true'
-    return DemandsRepository.instance.committed_demands(array_of_demands_ids) if params[:wip] == 'true'
-    return DemandsRepository.instance.demands_finished(array_of_demands_ids) if params[:delivered] == 'true'
+  def build_demands_query(array_of_demands_ids, period)
+    filtered_demands = Demand.where(id: array_of_demands_ids)
+    filtered_demands = DemandsRepository.instance.not_started_demands(array_of_demands_ids) if not_started_param?
+    filtered_demands = DemandsRepository.instance.committed_demands(array_of_demands_ids) if wip_param?
+    filtered_demands = DemandsRepository.instance.demands_finished(array_of_demands_ids) if delivered_param?
 
-    Demand.where(id: array_of_demands_ids)
+    demands = Demand.where(id: filtered_demands.map(&:id))
+
+    bottom_date = bottom_date_limit_value(period, demands)
+    demands = demands.where('(demands.end_date IS NULL AND demands.created_date >= :bottom_date) OR (demands.end_date >= :bottom_date)', bottom_date: bottom_date) if bottom_date.present?
+
+    demands
+  end
+
+  def delivered_param?
+    params[:delivered] == 'true'
+  end
+
+  def wip_param?
+    params[:wip] == 'true'
+  end
+
+  def not_started_param?
+    params[:not_started] == 'true'
+  end
+
+  def bottom_date_limit_value(period, demands)
+    projects = demands.map(&:project).uniq
+    base_date = projects.map(&:end_date).flatten.max
+    base_date = Time.zone.now if projects.blank? || projects.map(&:status).flatten.include?(:executing)
+    TimeService.instance.limit_date_to_period(period, base_date)
   end
 end

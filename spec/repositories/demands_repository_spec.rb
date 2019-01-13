@@ -386,6 +386,4 @@ RSpec.describe DemandsRepository, type: :repository do
       end
     end
   end
-
-  pending 'throughput_per_demand_type'
 end

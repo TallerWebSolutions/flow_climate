@@ -1,9 +1,9 @@
 function disableTabs() {
-    $('.loader').show();
+    $('#general-loader').show();
     $('.nav-item').attr('disabled', 'disabled');
 }
 
 function enableTabs() {
-    $(".loader").hide();
+    $("#general-loader").hide();
     $('.nav-item').removeAttr('disabled');
 }

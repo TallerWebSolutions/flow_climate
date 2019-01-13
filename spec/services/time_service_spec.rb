@@ -57,10 +57,28 @@ RSpec.describe TimeService, type: :service do
 
   describe '#add_weeks_to_today' do
     before { travel_to Date.new(2018, 8, 30) }
+    after { travel_back }
     it 'returns the new date x weeks later than today' do
       control_date_5_weeks_later = TimeService.instance.add_weeks_to_today(5)
 
       expect(control_date_5_weeks_later).to eq Date.new(2018, 10, 4)
+    end
+  end
+
+  describe '#limit_date_to_period' do
+    before { travel_to Date.new(2018, 8, 30) }
+    after { travel_back }
+
+    context 'for period all' do
+      it { expect(TimeService.instance.limit_date_to_period('all')).to be_nil }
+    end
+
+    context 'for period quarter' do
+      it { expect(TimeService.instance.limit_date_to_period('quarter')).to be_within(1.minute).of(3.months.ago) }
+    end
+
+    context 'for period month' do
+      it { expect(TimeService.instance.limit_date_to_period('month')).to be_within(1.minute).of(1.month.ago) }
     end
   end
 end

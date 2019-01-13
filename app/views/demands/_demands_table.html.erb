@@ -16,36 +16,38 @@
 
 <%= hidden_field_tag :demands_ids, demands.map(&:id).to_csv %>
 
-<table class="table table-index table-striped">
-  <thead>
-    <tr>
-      <th><%= t('general.table.actions') %></th>
-      <th><%= Demand.human_attribute_name :project %></th>
-      <th><%= Demand.human_attribute_name :demand_id %></th>
-      <th><%= Demand.human_attribute_name :artifact_type %></th>
-      <th><%= Demand.human_attribute_name :demand_type %></th>
-      <th><%= Demand.human_attribute_name :class_of_service %></th>
-      <th><%= t('demands.index.current_stage') %></th>
-      <th><%= t('demands.index.qty_blocks') %></th>
-      <th><%= t('demands.index.hours_blocks_queue') %></th>
-      <th><%= t('demands.index.hours_blocks_touch') %></th>
-      <th><%= Demand.human_attribute_name :created_date %></th>
-      <th><%= Demand.human_attribute_name :commitment_date %></th>
-      <th><%= Demand.human_attribute_name :end_date %></th>
-      <th><%= Demand.human_attribute_name :effort_upstream %></th>
-      <th><%= Demand.human_attribute_name :effort_downstream %></th>
-      <th><%= Demand.human_attribute_name :leadtime %></th>
-      <th><%= t('general.table.actions') %></th>
-    </tr>
-  </thead>
-  <tbody>
-    <% demands.each do |demand| %>
-      <tr id='demand_<%= demand.id %>' class="<%= 'upstream' unless demand.downstream_demand? %>">
-        <%= render 'demands/demand_fields', demand: demand %>
+<div id="demands_table">
+  <table class="table table-index table-striped">
+    <thead>
+      <tr>
+        <th><%= t('general.table.actions') %></th>
+        <th><%= Demand.human_attribute_name :project %></th>
+        <th><%= Demand.human_attribute_name :demand_id %></th>
+        <th><%= Demand.human_attribute_name :artifact_type %></th>
+        <th><%= Demand.human_attribute_name :demand_type %></th>
+        <th><%= Demand.human_attribute_name :class_of_service %></th>
+        <th><%= t('demands.index.current_stage') %></th>
+        <th><%= t('demands.index.qty_blocks') %></th>
+        <th><%= t('demands.index.hours_blocks_queue') %></th>
+        <th><%= t('demands.index.hours_blocks_touch') %></th>
+        <th><%= Demand.human_attribute_name :created_date %></th>
+        <th><%= Demand.human_attribute_name :commitment_date %></th>
+        <th><%= Demand.human_attribute_name :end_date %></th>
+        <th><%= Demand.human_attribute_name :effort_upstream %></th>
+        <th><%= Demand.human_attribute_name :effort_downstream %></th>
+        <th><%= Demand.human_attribute_name :leadtime %></th>
+        <th><%= t('general.table.actions') %></th>
       </tr>
-    <% end %>
-  </tbody>
-</table>
+    </thead>
+    <tbody>
+      <% demands.each do |demand| %>
+        <tr id='demand_<%= demand.id %>' class="<%= 'upstream' unless demand.downstream_demand? %>">
+          <%= render 'demands/demand_fields', demand: demand %>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
 
 <div class="modal fade" id="edit-demand-form" tabindex="-1" role="dialog" aria-labelledby="edit-demand-form" aria-hidden="true"></div>
 

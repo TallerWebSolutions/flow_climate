@@ -22,10 +22,6 @@ RSpec.describe TeamsController, type: :controller do
       before { put :update, params: { company_id: 'xpto', id: 'foo' } }
       it { expect(response).to redirect_to new_user_session_path }
     end
-    describe 'GET #search_demands_to_flow_charts' do
-      before { get :search_demands_to_flow_charts, params: { company_id: 'foo', id: 'foo' }, xhr: true }
-      it { expect(response.status).to eq 401 }
-    end
   end
 
   context 'authenticated as gold' do
@@ -217,63 +213,6 @@ RSpec.describe TeamsController, type: :controller do
           let(:company) { Fabricate :company, users: [] }
 
           before { put :update, params: { company_id: company, id: team, team: { name: 'foo' } } }
-          it { expect(response).to have_http_status :not_found }
-        end
-      end
-    end
-
-    describe 'GET #search_demands_to_flow_charts' do
-      let(:customer) { Fabricate :customer, company: company }
-      let(:team) { Fabricate :team, company: company }
-      let(:other_team) { Fabricate :team, company: company }
-
-      context 'passing valid parameters' do
-        context 'having data' do
-          let!(:first_project) { Fabricate :project, customer: customer, team: team, status: :executing, start_date: Time.zone.yesterday, end_date: 10.days.from_now }
-          let!(:second_project) { Fabricate :project, customer: customer, team: team, status: :executing, start_date: Time.zone.yesterday, end_date: 50.days.from_now }
-
-          let!(:first_demand) { Fabricate :demand, project: first_project, end_date: 3.weeks.ago }
-          let!(:second_demand) { Fabricate :demand, project: first_project, end_date: 2.weeks.ago }
-          let!(:third_demand) { Fabricate :demand, project: first_project, end_date: 1.week.ago }
-          let!(:fourth_demand) { Fabricate :demand, project: first_project, end_date: 1.week.ago }
-          let!(:fifth_demand) { Fabricate :demand, project: second_project, end_date: 1.week.ago }
-
-          context 'and passing week and year as parameters' do
-            it 'call the repository and renders the JS' do
-              expect_any_instance_of(AuthenticatedController).to(receive(:user_gold_check).once { true })
-              expect(DemandsRepository.instance).to(receive(:committed_demands_by_project_and_week).with([second_project, first_project], 1.week.ago.to_date.cweek, 1.week.ago.to_date.cwyear).once { [first_demand, second_demand] })
-              expect(DemandsRepository.instance).to(receive(:throughput_by_project_and_week).with([second_project, first_project], 1.week.ago.to_date.cweek, 1.week.ago.to_date.cwyear).once { [third_demand, fourth_demand] })
-              get :search_demands_to_flow_charts, params: { company_id: company, id: team, week: 1.week.ago.to_date.cweek, year: 1.week.ago.to_date.cwyear }, xhr: true
-
-              expect(response).to render_template 'teams/flow.js.erb'
-              expect(assigns(:flow_report_data)).to be_a Highchart::FlowChartsAdapter
-            end
-          end
-        end
-        context 'having no data' do
-          it 'renders the JS empty' do
-            expect_any_instance_of(AuthenticatedController).to(receive(:user_gold_check).once { true })
-            get :search_demands_to_flow_charts, params: { company_id: company, id: team, week: 1.week.ago.to_date.cweek, year: 1.week.ago.to_date.cwyear }, xhr: true
-            expect(response).to render_template 'teams/flow.js.erb'
-            expect(assigns(:flow_report_data).projects_demands_selected).to eq({})
-          end
-        end
-      end
-
-      context 'passing invalid' do
-        before { expect_any_instance_of(AuthenticatedController).to(receive(:user_gold_check).once { true }) }
-
-        context 'company' do
-          before { get :search_demands_to_flow_charts, params: { company_id: 'foo', id: team }, xhr: true }
-          it { expect(response).to have_http_status :not_found }
-        end
-        context 'team' do
-          before { get :search_demands_to_flow_charts, params: { company_id: company, id: 'foo' }, xhr: true }
-          it { expect(response).to have_http_status :not_found }
-        end
-        context 'not permitted company' do
-          let(:company) { Fabricate :company, users: [] }
-          before { get :search_demands_to_flow_charts, params: { company_id: company, id: team }, xhr: true }
           it { expect(response).to have_http_status :not_found }
         end
       end

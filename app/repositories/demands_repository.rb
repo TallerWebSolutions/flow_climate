@@ -56,12 +56,12 @@ class DemandsRepository
     effort_downstream_hash
   end
 
-  def demands_finished(array_of_demands_ids)
-    Demand.kept.finished.where(id: array_of_demands_ids)
-  end
-
   def demands_per_projects(array_of_projects)
     Demand.kept.where(project_id: array_of_projects.map(&:id))
+  end
+
+  def demands_finished(array_of_demands_ids)
+    Demand.kept.finished.where(id: array_of_demands_ids)
   end
 
   def not_started_demands(array_of_demands_ids)

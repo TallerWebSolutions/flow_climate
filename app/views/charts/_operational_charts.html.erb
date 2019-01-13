@@ -1,6 +1,6 @@
 <% if report_data.present? %>
   <div class="row">
-    <div class="col-xs-12">
+    <div class="col-xs-6">
       <div id="burnup-demands"
            class="flow-chart"
            data-title='<%= t('projects.charts.burnup.demands.title', target_name: target_name) %>'
@@ -14,10 +14,7 @@
            data-scope='<%= report_data.demands_burnup_data.scope_per_period %>'>
       </div>
     </div>
-  </div>
-
-  <div class="row">
-    <div class="col-xs-12">
+    <div class="col-xs-6">
       <div id="hours-column"
            class="flow-chart"
            data-title='<%= t('projects.charts.hours_per_demand.title', target_name: target_name) %>'
@@ -32,7 +29,7 @@
   </div>
 
   <div class="row">
-    <div class="col-xs-12">
+    <div class="col-xs-6">
       <div id="flowpressure-column"
            class="flow-chart"
            data-title='<%= t('projects.charts.flow_pressure.title', target_name: target_name) %>'
@@ -44,9 +41,7 @@
            data-decimals='3'>
       </div>
     </div>
-  </div>
-  <div class="row">
-    <div class="col-xs-12">
+    <div class="col-xs-6">
       <div id="throughput-column"
            class="flow-chart"
            data-title='<%= t('projects.charts.throughput_per_week.title', target_name: target_name) %>'
@@ -60,8 +55,9 @@
       </div>
     </div>
   </div>
+
   <div class="row">
-    <div class="col-xs-12">
+    <div class="col-xs-6">
       <div id="bugs-in-time"
            class="flow-chart"
            data-title='<%= t('projects.charts.bugs_in_time.title', target_name: target_name) %>'
@@ -73,9 +69,7 @@
            data-decimals='2'>
       </div>
     </div>
-  </div>
-  <div class="row">
-    <div class="col-xs-12">
+    <div class="col-xs-6">
       <div id="line-share-bug"
            class="flow-chart"
            data-title='<%= t('projects.charts.bugs_percentage_in_time.title', target_name: target_name) %>'
@@ -89,8 +83,9 @@
       </div>
     </div>
   </div>
+
   <div class="row">
-    <div class="col-xs-12">
+    <div class="col-xs-6">
       <div id="queue-touch-in-time"
            class="flow-chart"
            data-title='<%= t('projects.charts.queue_touch_time.title', target_name: target_name) %>'
@@ -102,9 +97,7 @@
            data-decimals='2'>
       </div>
     </div>
-  </div>
-  <div class="row">
-    <div class="col-xs-12">
+    <div class="col-xs-6">
       <div id="flow-efficiency"
            class="flow-chart"
            data-title='<%= t('projects.charts.flow_efficiency.title', target_name: target_name) %>'
@@ -120,7 +113,7 @@
   </div>
 
   <div class="row">
-    <div class="col-xs-12">
+    <div class="col-xs-6">
       <div id="hours-consumed-column"
            class="flow-chart"
            data-xcategories='<%= report_data.effort_hours_per_month[:keys].map { |year, month| Date.new(year, month, 1).to_s } %>'
@@ -132,10 +125,7 @@
            data-decimals='0'>
       </div>
     </div>
-  </div>
-
-  <div class="row">
-    <div class="col-xs-12">
+    <div class="col-xs-6">
       <div id="leadtime-control-chart"
            class="flow-chart"
            data-xcategories='<%= report_data.lead_time_control_chart[:xcategories] %>'
@@ -148,8 +138,9 @@
       </div>
     </div>
   </div>
+
   <div class="row">
-    <div class="col-xs-12">
+    <div class="col-xs-6">
       <div id="leadtime-histogram"
            class="flow-chart"
            data-title='<%= t('projects.charts.leadtime_histogram.title', target_name: target_name) %>'
@@ -161,9 +152,7 @@
            data-decimals='2'>
       </div>
     </div>
-  </div>
-  <div class="row">
-    <div class="col-xs-12">
+    <div class="col-xs-6">
       <div id="leadtime-evolution"
            class="flow-chart"
            data-title='<%= t('projects.charts.leadtime_evolution.title', target_name: target_name) %>'
@@ -178,7 +167,7 @@
     </div>
   </div>
   <div class="row">
-    <div class="col-xs-12">
+    <div class="col-xs-6">
       <div id="throughput-histogram"
            class="flow-chart"
            data-title='<%= t('projects.charts.throughput_histogram.title', target_name: target_name) %>'

@@ -43,6 +43,16 @@ class TimeService
     Time.zone.today + weeks.weeks
   end
 
+  def limit_date_to_period(period, base_date = Time.zone.now)
+    if period == 'all'
+      nil
+    elsif period == 'quarter'
+      base_date - 3.months
+    else
+      base_date - 1.month
+    end
+  end
+
   private
 
   def compute_working_hours(start_time, end_time)

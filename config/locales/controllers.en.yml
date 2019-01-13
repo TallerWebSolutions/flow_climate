@@ -52,6 +52,12 @@ en:
       confirm: "You are about to delete a record. Are you sure?"
     period: "Period"
     throughput: "Throughput"
+    filter:
+      period:
+        option:
+          last_month: "Last Month"
+          last_quarter: "Last quarter"
+          all_period: "All Period"
   header:
     logout: Logout
     explore: Explore
@@ -255,7 +261,7 @@ en:
         share: "Flow Efficiency"
       leadtime_evolution:
         title: "Leadtime confidence evolution for %{target_name}"
-        ylabel: "Hours"
+        ylabel: "Days"
         legend:
           leadtime_80_confidence: "80% Confidence"
       class_of_service_pie:

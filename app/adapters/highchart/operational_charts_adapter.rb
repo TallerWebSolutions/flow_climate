@@ -148,12 +148,12 @@ module Highchart
       @leadtime_percentiles_on_time = {}
       @leadtime_percentiles_on_time[:xcategories] = @all_projects_weeks
       @leadtime_percentiles_on_time[:leadtime_80_confidence] = @all_projects_weeks.map do |date|
-        Stats::StatisticsService.instance.percentile(80, demands_for_all_projects_until_date(date).map(&:leadtime)).to_f
+        Stats::StatisticsService.instance.percentile(80, demands_for_all_projects_until_date(date).map(&:leadtime_in_days))
       end
     end
 
-    def demands_for_all_projects_until_date(date)
-      Demand.where(project_id: @all_projects.map(&:id)).where('end_date <= :limit_date', limit_date: date)
+    def demands_for_all_projects_until_date(date = Time.zone.today)
+      Demand.kept.where(project_id: @all_projects.map(&:id)).where('end_date >= :bottom_limit AND end_date <= :limit_date', bottom_limit: charts_data_bottom_limit_date, limit_date: date)
     end
 
     def build_weeekly_bugs_count_hash
@@ -237,7 +237,7 @@ module Highchart
     end
 
     def finished_demands_with_leadtime
-      @finished_demands_with_leadtime ||= @all_projects.map { |project| project.demands.finished_with_leadtime_after_date(charts_data_bottom_limit_date) }.flatten.sort_by(&:end_date)
+      @finished_demands_with_leadtime ||= Demand.kept.where(project_id: @all_projects.map(&:id)).finished_with_leadtime_after_date(charts_data_bottom_limit_date).order(:end_date)
     end
   end
 end
