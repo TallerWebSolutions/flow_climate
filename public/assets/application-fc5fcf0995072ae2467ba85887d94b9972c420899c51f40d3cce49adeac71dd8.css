@@ -21,193 +21,52 @@
     background-color: white;
     overflow: hidden;
 }
-html, body, div, span, applet, object, iframe,
-h1, h2, h3, h4, h5, h6, p, blockquote, pre,
-a, abbr, acronym, address, big, cite, code,
-del, dfn, em, img, ins, kbd, q, s, samp,
-small, strike, strong, sub, sup, tt, var,
-b, u, i, center,
-dl, dt, dd, ol, ul, li,
-fieldset, form, label, legend,
-table, caption, tbody, tfoot, thead, tr, th, td,
-article, aside, canvas, details, embed, 
-figure, figcaption, footer, header, hgroup, 
-menu, nav, output, ruby, section, summary,
-time, mark, audio, video {
-	margin: 0;
-	padding: 0;
-	border: 0;
-	font-size: 100%;
-	font: inherit;
-	vertical-align: baseline;
-}
-/* HTML5 display-role reset for older browsers */
-article, aside, details, figcaption, figure, 
-footer, header, hgroup, menu, nav, section {
-	display: block;
-}
-body {
-    line-height: 1;
-    font-family: 'Helvetica', 'Arial', sans-serif;
-}
-ol, ul {
-	list-style: none;
-}
-blockquote, q {
-	quotes: none;
-}
-blockquote:before, blockquote:after,
-q:before, q:after {
-	content: '';
-	content: none;
-}
-table {
-	border-collapse: collapse;
-	border-spacing: 0;
+.timeline {
+    background-color: #3498db;
+
 }
 
-.timeline-container {
-    position: relative;
-    background-color: #f8f8f8;
-    height: 140px;
-    max-width: 1000px;
-    margin: 0 auto;
-}
-.timeline-nav {
-    position: absolute;
-    top: 55px;
-    bottom: auto;
-    color: #dfdfdf;
-    border: 2px solid #dfdfdf;
-    border-radius: 50%;
-    width: 20px;
-    height: 20px;
+.timeline-day {
+    border: 1px solid #f0f2fb;
+    background-color: #3498db;
+    min-width: 45px;
+    display: inline-block;
     text-align: center;
-    vertical-align: middle;
-    padding: 5px;
-}
-.timeline-nav:hover {
-    color: #808;
-    border: 2px solid #808;
-    cursor: pointer;
-}
-.nav-future {
-    right: 10px;
-}
-.nav-past {
-    left: 10px;
-}
-.timeline-nav.inactive:hover {
-    color: #dfdfdf;
-    border: 2px solid #dfdfdf;
-    cursor: not-allowed;
-}
-#timelineWrapper {
-    position: relative;
-    height: 100%;
-    margin: 0 50px;
-    overflow: hidden;
-}
-#timelineWrapper::before, #timelineWrapper::after {
-    content: '';
-    position: absolute;
-    z-index: 2;
-    top: 0;
-    height: 100%;
-    width: 20px;
-}
-#timelineWrapper::before {
-    left: 0;
-    background-image: -webkit-linear-gradient( left , #f8f8f8, rgba(248, 248, 248, 0));
-    background-image: linear-gradient(to right, #f8f8f8, rgba(248, 248, 248, 0));
+    color: white;
 }
 
-#timelineWrapper::after {
-    right: 0;
-    background-image: -webkit-linear-gradient( right , #f8f8f8, rgba(248, 248, 248, 0));
-    background-image: linear-gradient(to left, #f8f8f8, rgba(248, 248, 248, 0));
+.timeline-legend {
+    min-width: 15px;
+    min-height: 15px;
+    display: inline-block;
+    margin-right: 5px;
 }
-#timeline {
-    position: absolute;
-    z-index: 1;
-    top: 69px;
-    min-width: 900px;
-    height: 2px;
-    background-color: #dfdfdf;
-    -webkit-transition: all 0.5s ease-in-out;
-    -moz-transition: all 0.5s ease-in-out;
-    -o-transition: all 0.5s ease-in-out;
-    transition: all 0.5s ease-in-out;
+.incomes-div {
+    min-height: 40px;
+    background-color: lightblue;
+    padding: 4px;
 }
-.event-marker {
-    position: absolute;
-    top: -6px;
-    width: 10px;
-    height: 10px;
-    background-color: #f8f8f8;
-    border: 2px solid #dfdfdf;
-    border-radius: 50%;
-    -webkit-transition: all 0.5s ease-in-out;
-    -moz-transition: all 0.5s ease-in-out;
-    -o-transition: all 0.5s ease-in-out;
-    transition: all 0.5s ease-in-out;
+
+.outcomes-div {
+    min-height: 40px;
+    background-color: #FFCDD2;
+    padding: 4px;
 }
-.event-marker.selected {
-    transform: scale(1.2);
-    background-color: #808;
-    border: 2px solid #808;
-}
-.event-marker:hover {
-    transform: scale(1.2);
-    background-color: #808;
-    border: 2px solid #808;
-}
-.event-date{
-    position: relative;
-    bottom: 25px;
-    width: 30px;
-}
-.timeline-tick {
-    position: absolute;
-    bottom: 0;
-    width: 2px;
-    height: 20px;
-    background-color: #dfdfdf;
-}
-.tick-label {
-    position: absolute;
-    bottom: 35px;
-    font-size: 7pt;
+
+.finances-consolidation-value {
+    margin-top: 5px;
     font-weight: bold;
+
 }
-.event-detail-container {
-    min-height: 150px;
-    background-color: #f8f8f8;
-    padding: 20px;
+
+.finances-consolidation-row {
+    padding: 3px;
 }
-.selected-event {
-    width: 60%;
-    font-family: 'Helvetica', 'Arial', sans-serif;
-    font-size: 12px;
-}
-.event-title {
-    font-family: 'Georgia', serif;
-    font-size: 20px;
-}
-.event-date-range {
-    margin-top: 10px;
-}
-.event-start-date {
-    display: inline-block;
-}
-.separator {
-    display: inline-block;
-}
-.event-end-date {
-    display: inline-block;
-}
-.event-notes {
-    margin-top: 10px;
+
+.balance-div {
+    min-height: 40px;
+    background-color: #EEFF41;
+    padding: 4px;
 }
 .help-block {
     margin-bottom: 0;
@@ -342,6 +201,14 @@ ul.breadcrumb li a:hover {
     background-color: rgba(11, 110, 154, 0.57);
 }
 
+.no-data {
+    font-size: large;
+    font-style: italic;
+    text-align: center;
+    width: 100%;
+}
+
+
 #popup {
     height: 50px;
     width: 200px;
@@ -387,6 +254,70 @@ ul.breadcrumb li a:hover {
     padding: 6px 12px;
     border: 1px solid #ccc;
     border-top: none;
+}
+* {
+    box-sizing: border-box;
+}
+
+/* Create three columns of equal width */
+.columns {
+    float: left;
+    width: 33.3%;
+    padding: 8px;
+}
+
+/* Style the list */
+.price {
+    list-style-type: none;
+    border: 1px solid #eee;
+    margin: 0;
+    padding: 0;
+    -webkit-transition: 0.3s;
+    transition: 0.3s;
+}
+
+/* Add shadows on hover */
+.price:hover {
+    box-shadow: 0 8px 12px 0 rgba(0,0,0,0.2)
+}
+
+/* Pricing header */
+.price .header {
+    background-color: #111;
+    color: white;
+    font-size: 25px;
+}
+
+/* List items */
+.price li {
+    border-bottom: 1px solid #eee;
+    padding: 20px;
+    text-align: center;
+}
+
+/* Grey list item */
+.price .grey {
+    background-color: #eee;
+    font-size: 20px;
+}
+
+/* The "Sign Up" button */
+.button {
+    background-color: #4CAF50;
+    border: none;
+    color: white;
+    padding: 10px 25px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 18px;
+}
+
+/* Change the width of the three columns to 100%
+(to stack horizontally on small screens) */
+@media only screen and (max-width: 600px) {
+    .columns {
+        width: 100%;
+    }
 }
 .queue-progress {
     width: 100%;
@@ -490,9 +421,8 @@ ul.breadcrumb li a:hover {
 .loader {
     position: fixed;
     z-index: 999;
-    overflow: show;
     margin: auto;
-    top: 0;
+    top: 50px;
     left: 0;
     bottom: 0;
     right: 0;

@@ -58,6 +58,7 @@ en:
           last_month: "Last Month"
           last_quarter: "Last quarter"
           all_period: "All Period"
+          last_week: "Last Week"
   header:
     logout: Logout
     explore: Explore

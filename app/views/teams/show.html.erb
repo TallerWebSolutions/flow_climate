@@ -10,8 +10,9 @@
 
 <%= hidden_field_tag :company_id, @company.id %>
 <%= hidden_field_tag :team_id, @team.id %>
-<%= hidden_field_tag :projects_ids, @team_projects.map(&:id).to_csv %>
+<%= hidden_field_tag :projects_ids, @team_projects.map(&:id).join(',') %>
 <%= hidden_field_tag :target_name, @team.name %>
+<%= hidden_field_tag :demands_ids, @demands_ids.join(',') %>
 
 <div class="row">
   <div class="topnav">
@@ -46,7 +47,7 @@
 </div>
 
 <div id="demands-list" class="tab-container">
-  <%= render 'demands/demands_tab', grouped_delivered_demands: @grouped_delivered_demands, grouped_customer_demands: @grouped_customer_demands, demands: @demands, demands_count_per_week: @demands_count_per_week %>
+  <%= render 'demands/demands_tab', grouped_delivered_demands: @grouped_delivered_demands, grouped_customer_demands: @grouped_customer_demands, demands_count_per_week: @demands_count_per_week %>
 </div>
 
 <div id="strategic" class="tab-container">

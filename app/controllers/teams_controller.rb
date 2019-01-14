@@ -9,6 +9,7 @@ class TeamsController < AuthenticatedController
   def show
     @team_members = @team.team_members.order(:name)
     @team_projects = ProjectsRepository.instance.all_projects_for_team(@team)
+    @demands_ids = DemandsRepository.instance.demands_to_projects(@team_projects).map(&:id)
     @active_team_projects = @team_projects.active
     @projects_summary = ProjectsSummaryData.new(@team.projects)
     @projects_risk_chart_data = Highchart::ProjectRiskChartsAdapter.new(@team.projects)

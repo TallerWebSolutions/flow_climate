@@ -421,7 +421,7 @@ RSpec.describe DemandsController, type: :controller do
           let!(:second_demand) { Fabricate :demand, project: second_project }
 
           it 'builds the operation report and respond the JS render the template' do
-            get :demands_in_projects, params: { company_id: company, projects_ids: [first_project, second_project].map(&:id).to_csv }, xhr: true
+            get :demands_in_projects, params: { company_id: company, projects_ids: [first_project, second_project].map(&:id).to_csv, demands_ids: Demand.all.map(&:id).join(','), period: :all }, xhr: true
             expect(response).to render_template 'demands/demands_list.js.erb'
             expect(assigns(:demands)).to match_array [first_demand, second_demand]
             expect(assigns(:demands_count_per_week)[first_project.start_date.beginning_of_week]).to eq(arrived_in_week: [], std_dev_arrived: 0.0, std_dev_throughput: 0.0, throughput_in_week: [])
@@ -576,7 +576,7 @@ RSpec.describe DemandsController, type: :controller do
             end
             context 'grouped_delivered_demands' do
               it 'finds the correct demands and responds with the correct JS' do
-                get :search_demands_by_flow_status, params: { company_id: company, id: first_project, demands_ids: "#{third_demand.id}, #{fourth_demand.id}", no_grouping: 'false', grouped_by_month: 'true', grouped_by_customer: 'false', not_started: 'false', wip: 'false', delivered: 'true' }, xhr: true
+                get :search_demands_by_flow_status, params: { company_id: company, id: first_project, demands_ids: "#{third_demand.id}, #{fourth_demand.id}", no_grouping: 'false', grouped_by_month: 'true', grouped_by_customer: 'false', not_started: 'false', wip: 'false', delivered: 'true', period: :all }, xhr: true
 
                 expect(response).to render_template 'demands/search_demands_by_flow_status.js.erb'
                 expect(assigns(:demands)).to match_array [third_demand, fourth_demand]
@@ -586,7 +586,7 @@ RSpec.describe DemandsController, type: :controller do
             end
             context 'grouped_delivered_demands' do
               it 'finds the correct demands and responds with the correct JS' do
-                get :search_demands_by_flow_status, params: { company_id: company, id: first_project, demands_ids: "#{third_demand.id}, #{fourth_demand.id}", no_grouping: 'false', grouped_by_month: 'false', grouped_by_customer: 'true', not_started: 'false', wip: 'false', delivered: 'true' }, xhr: true
+                get :search_demands_by_flow_status, params: { company_id: company, id: first_project, demands_ids: "#{third_demand.id}, #{fourth_demand.id}", no_grouping: 'false', grouped_by_month: 'false', grouped_by_customer: 'true', not_started: 'false', wip: 'false', delivered: 'true', period: :all }, xhr: true
 
                 expect(response).to render_template 'demands/search_demands_by_flow_status.js.erb'
                 expect(assigns(:demands)).to match_array [third_demand, fourth_demand]

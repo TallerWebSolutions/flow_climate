@@ -48,8 +48,10 @@ class TimeService
       nil
     elsif period == 'quarter'
       base_date - 3.months
-    else
+    elsif period == 'month'
       base_date - 1.month
+    else
+      base_date - 1.week
     end
   end
 

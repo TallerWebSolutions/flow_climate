@@ -1,11 +1,11 @@
 hideAllComponents();
 
-var stampsDiv = $('#nav-item-stamps');
+const stampsDiv = $('#nav-item-stamps');
 stampsDiv.addClass('active');
 $('#stamps').show();
 
 const company_id = $("#company_id").val();
-const project_id = $("#project_id").val();
+const team_id = $("#team_id").val();
 const projects_ids = $("#projects_ids").val();
 const target_name = $("#target_name").val();
 
@@ -48,3 +48,4 @@ function hideAllComponents() {
     $('.tab-container').hide();
     $('.nav-item').removeClass('active');
 }
+;

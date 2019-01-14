@@ -1,8 +1,4 @@
 function buildScatterChart(scatterDiv) {
-    // console.log(scatterDiv.data('percentile95'));
-    // console.log(scatterDiv.data('percentile80'));
-    // console.log(scatterDiv.data('percentile60'));
-
     new Highcharts.Chart({
         chart: {
             type: 'scatter',

@@ -56,7 +56,7 @@ class DemandsRepository
     effort_downstream_hash
   end
 
-  def demands_per_projects(array_of_projects)
+  def demands_to_projects(array_of_projects)
     Demand.kept.where(project_id: array_of_projects.map(&:id))
   end
 

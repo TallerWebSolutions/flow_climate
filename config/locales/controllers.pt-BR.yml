@@ -58,6 +58,7 @@ pt-BR:
           last_month: "Último Mês"
           last_quarter: "Último Trimestre"
           all_period: "Todo o Período"
+          last_week: "Última Semana"
   header:
     logout: Sair
     sign_up: Cadastre-se
