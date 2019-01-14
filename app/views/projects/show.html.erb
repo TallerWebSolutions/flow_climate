@@ -13,6 +13,7 @@
 <%= hidden_field_tag :project_id, @project.id %>
 <%= hidden_field_tag :projects_ids, @project.id %>
 <%= hidden_field_tag :target_name, @project.full_name %>
+<%= hidden_field_tag :demands_ids, @demands_ids.join(',') %>
 
 <div class="row">
   <div class="topnav">
