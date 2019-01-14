@@ -29,7 +29,8 @@ $('.nav-item').on('click', function(event){
             buildStrategicCharts(company_id, projects_ids, target_name);
 
         } else if ($(this).attr('id') === 'nav-item-delivered') {
-            getDemands(company_id, projects_ids);
+            const demandsIds = $("#demands_ids").val();
+            getDemands(company_id, projects_ids, demandsIds);
 
         } else {
             showClicked($(this).data('container'), $(this));

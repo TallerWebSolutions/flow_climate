@@ -61,24 +61,27 @@ class DemandsController < AuthenticatedController
   def demands_in_projects
     projects = Project.where(id: params[:projects_ids].split(','))
     @demands_count_per_week = DemandService.instance.quantitative_consolidation_per_week_to_projects(projects)
-    @demands = DemandsRepository.instance.demands_per_projects(projects).order(end_date: :desc, commitment_date: :desc, created_date: :desc)
-    assign_grouped_demands_informations(@demands)
-    params[:period] = :all
+    @demands = query_demands
     respond_to { |format| format.js { render file: 'demands/demands_list.js.erb' } }
   end
 
   def search_demands_by_flow_status
-    if params[:demands_ids].present?
-      @demands = build_demands_query(params[:demands_ids].split(',').map(&:strip).map(&:to_i), params[:period])
-      assign_grouped_demands_informations(@demands)
-      @demands = @demands.order(end_date: :desc, commitment_date: :desc, created_date: :desc)
-    else
-      @demands = []
-    end
+    @demands = query_demands
     respond_to { |format| format.js { render file: 'demands/search_demands_by_flow_status.js.erb' } }
   end
 
   private
+
+  def query_demands
+    demands = []
+    if params[:demands_ids].present?
+      demands = build_demands_query(params[:demands_ids].split(',').map(&:strip).map(&:to_i), params[:period])
+      assign_grouped_demands_informations(demands)
+      demands = demands.order(end_date: :desc, commitment_date: :desc, created_date: :desc)
+    end
+
+    demands
+  end
 
   def demand_params
     params.require(:demand).permit(:demand_id, :demand_type, :downstream, :manual_effort, :class_of_service, :assignees_count, :effort_upstream, :effort_downstream, :created_date, :commitment_date, :end_date)
@@ -126,7 +129,7 @@ class DemandsController < AuthenticatedController
   def bottom_date_limit_value(period, demands)
     projects = demands.map(&:project).uniq
     base_date = projects.map(&:end_date).flatten.max
-    base_date = Time.zone.now if projects.blank? || projects.map(&:status).flatten.include?(:executing)
+    base_date = Time.zone.now if projects.blank? || projects.map(&:status).flatten.include?('executing')
     TimeService.instance.limit_date_to_period(period, base_date)
   end
 end

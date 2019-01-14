@@ -4,13 +4,15 @@ var stampsDiv = $('#nav-item-stamps');
 stampsDiv.addClass('active');
 $('#stamps').show();
 
-var company_id = $("#company_id").val();
-var team_id = $("#team_id").val();
+const company_id = $("#company_id").val();
+const project_id = $("#project_id").val();
+const projects_ids = $("#projects_ids").val();
+const target_name = $("#target_name").val();
 
 $('.nav-item').on('click', function(event){
     hideAllComponents();
-    var disabled = $(this).attr('disabled');
-    var period = $('#status-report-period').val();
+    const disabled = $(this).attr('disabled');
+    const period = $('#status-report-period').val();
 
     if (disabled === 'disabled') {
         event.preventDefault();
@@ -18,13 +20,17 @@ $('.nav-item').on('click', function(event){
         disableTabs();
 
         if ($(this).attr('id') === 'nav-item-statusreport') {
-            buildStatusReportCharts(company_id, team_id, period)
+            buildStatusReportCharts(company_id, projects_ids, period, target_name)
 
         } else if ($(this).attr('id') === 'nav-item-charts') {
-            buildOperationalCharts(company_id, team_id);
+            buildOperationalCharts(company_id, projects_ids, period, target_name);
 
         } else if ($(this).attr('id') === 'nav-item-strategic') {
-            buildStrategicCharts(company_id, team_id);
+            buildStrategicCharts(company_id, projects_ids, target_name);
+
+        } else if ($(this).attr('id') === 'nav-item-delivered') {
+            const demandsIds = $("#demands_ids").val();
+            getDemands(company_id, projects_ids, demandsIds);
 
         } else {
             showClicked($(this).data('container'), $(this));

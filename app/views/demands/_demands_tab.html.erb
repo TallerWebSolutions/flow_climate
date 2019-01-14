@@ -8,7 +8,9 @@
 </div>
 
 <div id="content-demand-list" class="tabcontent">
-  <%= render 'demands/demand_list', demands: demands, grouped_delivered_demands: grouped_delivered_demands, grouped_customer_demands: grouped_customer_demands %>
+  <% if @demands.present? %>
+    <%= render 'demands/demand_list', demands: @demands, grouped_delivered_demands: grouped_delivered_demands, grouped_customer_demands: grouped_customer_demands %>
+  <% end %>
 </div>
 
 <div id="content-consolidation" class="tabcontent">

@@ -80,5 +80,13 @@ RSpec.describe TimeService, type: :service do
     context 'for period month' do
       it { expect(TimeService.instance.limit_date_to_period('month')).to be_within(1.minute).of(1.month.ago) }
     end
+
+    context 'for period week' do
+      it { expect(TimeService.instance.limit_date_to_period('week')).to be_within(1.minute).of(1.week.ago) }
+    end
+
+    context 'for period nil' do
+      it { expect(TimeService.instance.limit_date_to_period(nil)).to be_within(1.minute).of(1.week.ago) }
+    end
   end
 end

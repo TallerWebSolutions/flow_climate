@@ -52,7 +52,7 @@ RSpec.describe DemandsRepository, type: :repository do
     it { expect(DemandsRepository.instance.demands_finished(Demand.all.map(&:id))).to match_array [first_demand, second_demand, third_demand, fourth_demand] }
   end
 
-  describe '#demands_per_projects' do
+  describe '#demands_to_projects' do
     let!(:first_demand) { Fabricate :demand, project: first_project, created_date: 3.days.ago, end_date: 3.days.ago }
     let!(:second_demand) { Fabricate :demand, project: first_project, created_date: 2.days.ago, end_date: 2.days.ago }
     let!(:third_demand) { Fabricate :demand, project: first_project, created_date: 2.days.ago }
@@ -61,7 +61,7 @@ RSpec.describe DemandsRepository, type: :repository do
 
     let!(:sixth_demand) { Fabricate :demand, project: first_project, demand_id: 'sss', discarded_at: Time.zone.today }
 
-    it { expect(DemandsRepository.instance.demands_per_projects([first_project])).to match_array [first_demand, second_demand, third_demand] }
+    it { expect(DemandsRepository.instance.demands_to_projects([first_project])).to match_array [first_demand, second_demand, third_demand] }
   end
 
   describe '#total_queue_time_for' do

@@ -14,8 +14,6 @@
   </div>
 </div>
 
-<%= hidden_field_tag :demands_ids, demands.map(&:id).to_csv %>
-
 <div id="demands_table">
   <table class="table table-index table-striped">
     <thead>
@@ -51,4 +49,4 @@
 
 <div class="modal fade" id="edit-demand-form" tabindex="-1" role="dialog" aria-labelledby="edit-demand-form" aria-hidden="true"></div>
 
-<%= javascript_include_tag 'projects/demands_list' %>
+<%= javascript_include_tag 'demands/demands_list' %>

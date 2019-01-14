@@ -1,9 +1,7 @@
-$(function () {
-    var burnupDiv = $('#burnup');
-
+function buildBurnupChart(burnupDiv) {
     new Highcharts.Chart({
         chart: {
-            renderTo: 'burnup',
+            renderTo: burnupDiv.attr('id'),
             zoomType: 'x'
         },
         plotOptions: {
@@ -23,6 +21,11 @@ $(function () {
             text: 'Source: Flow Climate'
         },
         xAxis: {
+            type: 'datetime',
+            dateTimeLabelFormats: { // don't display the dummy year
+                month: '%e. %b',
+                year: '%b'
+            },
             categories: burnupDiv.data('weeks'),
             title: { text: burnupDiv.data('xtitle') }
         },
@@ -37,9 +40,8 @@ $(function () {
             }]
         },
         tooltip: {
-            valueSuffix: burnupDiv.data('tooltipsufix'),
             formatter: function () {
-                return Highcharts.numberFormat(this.y, 3, '.');
+                return burnupDiv.data('prefix') + ' ' + Highcharts.numberFormat(this.y, burnupDiv.data('decimals'), '.') + ' ' + burnupDiv.data('suffix');
             }
         },
         legend: {
@@ -59,4 +61,5 @@ $(function () {
             data: burnupDiv.data('current')
         }]
     });
-});
+}
+;
