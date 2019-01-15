@@ -1051,7 +1051,7 @@ RSpec.describe Project, type: :model do
     context 'having demands' do
       context 'and the created date of the demand is earlier than the project start date' do
         let!(:demand) { Fabricate :demand, project: project, created_date: 1.day.ago }
-        it { expect(project.min_date_in_project).to eq project.demands.first.created_date.utc.to_date }
+        it { expect(project.min_date_in_project).to eq project.demands.first.created_date.utc }
       end
       context 'and the created date of the demand is later than the project start date' do
         let!(:demand) { Fabricate :demand, project: project, created_date: 1.day.from_now }
