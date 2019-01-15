@@ -329,6 +329,12 @@ class Project < ApplicationRecord
     demands.kept.map(&:id)
   end
 
+  def min_date_in_project
+    return start_date if demands.blank?
+
+    [demands.map(&:created_date).flatten.min, start_date].min
+  end
+
   private
 
   def no_pressure_set(date)

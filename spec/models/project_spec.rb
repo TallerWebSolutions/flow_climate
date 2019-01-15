@@ -1040,4 +1040,23 @@ RSpec.describe Project, type: :model do
       it { expect(project.users).to eq [user] }
     end
   end
+
+  describe '#min_date_in_project' do
+    let!(:project) { Fabricate :project, start_date: Time.zone.today }
+
+    context 'having no demands' do
+      it { expect(project.min_date_in_project).to eq project.start_date }
+    end
+
+    context 'having demands' do
+      context 'and the created date of the demand is earlier than the project start date' do
+        let!(:demand) { Fabricate :demand, project: project, created_date: 1.day.ago }
+        it { expect(project.min_date_in_project).to eq project.demands.first.created_date.utc.to_date }
+      end
+      context 'and the created date of the demand is later than the project start date' do
+        let!(:demand) { Fabricate :demand, project: project, created_date: 1.day.from_now }
+        it { expect(project.min_date_in_project).to eq project.start_date }
+      end
+    end
+  end
 end

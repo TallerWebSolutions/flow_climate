@@ -2,7 +2,9 @@ $("#general-loader").hide();
 
 $("#status-report-charts-current-div").html("<%= escape_javascript(render 'charts/status_report_charts', target_name: @target_name, status_report_data: @status_report_data).html_safe %>");
 
-$("#status-report-charts-projection-div").html("<%= escape_javascript(render 'charts/status_report_projection_charts', target_name: @target_name, status_report_data: @status_report_data, montecarlo_durations: @montecarlo_durations).html_safe %>");
+<% if @status_report_data&.running_projects_in_the_list? %>
+  $("#status-report-charts-projection-div").html("<%= escape_javascript(render 'charts/status_report_projection_charts', target_name: @target_name, status_report_data: @status_report_data, montecarlo_durations: @montecarlo_durations).html_safe %>");
+<% end %>
 
 $("#status-report-charts-current-div").show();
 $("#status-report-charts-projection-div").show();

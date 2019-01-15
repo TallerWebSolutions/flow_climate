@@ -18,7 +18,7 @@ module Highchart
     def running_projects_in_the_list?
       return false if @all_projects.blank?
 
-      @all_projects.map(&:status).flatten.include?(:executing)
+      @all_projects.map(&:status).flatten.include?('executing')
     end
 
     private
@@ -38,8 +38,9 @@ module Highchart
     end
 
     def build_all_projects_periods
-      min_date = [@all_projects.minimum(:start_date), @minimum_date_limit].compact.max
-      max_date = @all_projects.maximum(:end_date)
+      min_date = @all_projects.map(&:min_date_in_project).min&.to_date
+      min_date = [@all_projects.map(&:min_date_in_project).min, @minimum_date_limit].compact.max.to_date if @minimum_date_limit.present?
+      max_date = @all_projects.maximum(:end_date)&.to_date
       @all_projects_weeks = TimeService.instance.weeks_between_of(min_date, max_date)
       @all_projects_months = TimeService.instance.months_between_of(min_date, max_date)
     end
@@ -48,12 +49,12 @@ module Highchart
       upstream_result_data = []
       downstream_result_data = []
       @all_projects_weeks.each do |date|
-        break unless add_data_to_chart?(date)
+        break unless add_data_to_chart?(date.to_date)
 
-        upstream_keys_matching = @upstream_operational_weekly_data.keys.select { |key| key == date }
+        upstream_keys_matching = @upstream_operational_weekly_data.keys.select { |key| key == date.to_date }
         upstream_result_data << upstream_operational_data_for_week(upstream_keys_matching, :throughput)
 
-        downstream_keys_matching = @downstream_operational_weekly_data.keys.select { |key| key == date }
+        downstream_keys_matching = @downstream_operational_weekly_data.keys.select { |key| key == date.to_date }
         downstream_result_data << downstream_operational_data_for_week(downstream_keys_matching, :throughput)
       end
       [{ name: I18n.t('projects.charts.throughput_per_week.stage_stream.upstream'), data: upstream_result_data }, { name: I18n.t('projects.charts.throughput_per_week.stage_stream.downstream'), data: downstream_result_data }]
@@ -78,7 +79,7 @@ module Highchart
     end
 
     def charts_data_bottom_limit_date
-      @minimum_date_limit || all_projects_weeks[0] || Time.zone.today
+      @minimum_date_limit || all_projects_weeks.try(:[], 0) || Time.zone.today
     end
   end
 end

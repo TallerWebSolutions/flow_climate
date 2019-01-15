@@ -100,9 +100,9 @@ module Highchart
     def build_hours_throughput_data_week
       throughput_per_week = []
       @all_projects_weeks.each do |date|
-        upstream_total_delivered = DemandsRepository.instance.delivered_until_date_to_projects_in_upstream(@all_projects, date).sum(&:total_effort)
-        downstream_total_delivered = DemandsRepository.instance.delivered_until_date_to_projects_in_downstream(@all_projects, date).sum(&:total_effort)
-        throughput_per_week << upstream_total_delivered + downstream_total_delivered if add_data_to_chart?(date)
+        upstream_total_delivered = DemandsRepository.instance.delivered_until_date_to_projects_in_upstream(@all_projects, date.to_date).sum(&:total_effort)
+        downstream_total_delivered = DemandsRepository.instance.delivered_until_date_to_projects_in_downstream(@all_projects, date.to_date).sum(&:total_effort)
+        throughput_per_week << upstream_total_delivered + downstream_total_delivered if add_data_to_chart?(date.to_date)
       end
       throughput_per_week
     end
