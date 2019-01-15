@@ -30,8 +30,8 @@ RSpec.describe Highchart::HighchartAdapter, type: :data_object do
 
         it 'do the math and provides the correct information' do
           expect(chart_data.all_projects).to match_array Project.all
-          expect(chart_data.all_projects_weeks).to eq [Date.new(2018, 2, 19), Date.new(2018, 2, 26), Date.new(2018, 3, 5), Date.new(2018, 3, 12), Date.new(2018, 3, 19)]
-          expect(chart_data.all_projects_months).to eq [Date.new(2018, 2, 1), Date.new(2018, 3, 1)]
+          expect(chart_data.all_projects_weeks).to eq [Date.new(2018, 2, 26), Date.new(2018, 3, 5), Date.new(2018, 3, 12), Date.new(2018, 3, 19)]
+          expect(chart_data.all_projects_months).to eq [Date.new(2018, 2, 1)]
         end
       end
       context 'querying the month' do
@@ -41,8 +41,8 @@ RSpec.describe Highchart::HighchartAdapter, type: :data_object do
 
         it 'do the math and provides the correct information' do
           expect(chart_data.all_projects).to match_array Project.all
-          expect(chart_data.all_projects_weeks).to eq [Date.new(2018, 2, 19), Date.new(2018, 2, 26), Date.new(2018, 3, 5), Date.new(2018, 3, 12), Date.new(2018, 3, 19)]
-          expect(chart_data.all_projects_months).to eq [Date.new(2018, 2, 1), Date.new(2018, 3, 1)]
+          expect(chart_data.all_projects_weeks).to eq [Date.new(2018, 2, 26), Date.new(2018, 3, 5), Date.new(2018, 3, 12), Date.new(2018, 3, 19)]
+          expect(chart_data.all_projects_months).to eq [Date.new(2018, 2, 1)]
         end
       end
     end

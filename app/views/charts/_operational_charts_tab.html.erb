@@ -1,7 +1,7 @@
 <div class="row">
   <div class="col-xs-3">
     <%= label_tag t('general.period') %>
-    <%= select_tag :period, period_options, class: 'form-control', id: 'operational-charts-period' %>
+    <%= select_tag :period, period_options(:week), class: 'form-control', id: 'operational-charts-period' %>
   </div>
 </div>
 

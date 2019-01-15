@@ -13,7 +13,6 @@ class ProjectsController < AuthenticatedController
     @project_change_deadline_histories = @project.project_change_deadline_histories
     @project_stages = @project.stages.order(:order, :name)
     @projects_to_copy_stages_from = (@company.projects - [@project]).sort_by(&:full_name)
-    @demands = @project.demands
     @demands_ids = DemandsRepository.instance.demands_to_projects([@project]).map(&:id)
     params[:period] = :all
   end

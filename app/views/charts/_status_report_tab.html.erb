@@ -1,7 +1,7 @@
 <div class="row">
   <div class="col-xs-3">
     <%= label_tag t('general.period') %>
-    <%= select_tag :period, options_for_select([['Último Mês', 'month'], ['Último Trimestre', 'quarter'], ['Todo o Período', 'all']], 'Último Mês'), class: 'form-control', id: 'status-report-period' %>
+    <%= select_tag :period, period_options(:week), class: 'form-control filter-checks', id: 'status-report-period', selected: params[:period] %>
   </div>
 </div>
 
@@ -9,8 +9,8 @@
   <%= render 'charts/status_report_charts', target_name: target_name, status_report_data: status_report_data %>
 </div>
 
-<% if status_report_data&.running_projects_in_the_list? %>
-  <div id="status-report-charts-projection-div">
-    <%= render 'charts/status_report_projection_charts', target_name: target_name, status_report_data: status_report_data, montecarlo_durations: montecarlo_durations %>
-  </div>
-<% end %>
+<div id="status-report-charts-projection-div">
+  <% if status_report_data&.running_projects_in_the_list? %>
+    <%= render 'charts/status_report_projection_charts', target_name: target_name, status_report_data: status_report_data %>
+  <% end %>
+</div>

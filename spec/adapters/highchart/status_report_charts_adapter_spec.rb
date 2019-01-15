@@ -48,15 +48,15 @@ RSpec.describe Highchart::StatusReportChartsAdapter, type: :data_object do
 
         it 'do the math and provides the correct information' do
           expect(report_data.all_projects).to match_array Project.all
-          expect(report_data.all_projects_weeks).to eq [Date.new(2018, 2, 19), Date.new(2018, 2, 26), Date.new(2018, 3, 5), Date.new(2018, 3, 12), Date.new(2018, 3, 19), Date.new(2018, 3, 26), Date.new(2018, 4, 2), Date.new(2018, 4, 9), Date.new(2018, 4, 16), Date.new(2018, 4, 23), Date.new(2018, 4, 30), Date.new(2018, 5, 7)]
-          expect(report_data.hours_burnup_per_week_data.ideal_per_period).to eq [183.33333333333334, 366.6666666666667, 550.0, 733.3333333333334, 916.6666666666667, 1100.0, 1283.3333333333335, 1466.6666666666667, 1650.0, 1833.3333333333335, 2016.6666666666667, 2200.0]
-          expect(report_data.hours_burnup_per_week_data.current_per_period).to eq [0.0, 0.0, 0.0, 0.1122e3, 0.2376e3, 0.2376e3, 0.2376e3, 0.2376e3, 0.2376e3, 0.2376e3, 0.2376e3, 0.2376e3]
-          expect(report_data.hours_burnup_per_week_data.scope_per_period).to eq [2200.0, 2200.0, 2200.0, 2200.0, 2200.0, 2200.0, 2200.0, 2200.0, 2200.0, 2200.0, 2200.0, 2200.0]
-          expect(report_data.hours_burnup_per_month_data.ideal_per_period).to eq [733.3333333333334, 1466.6666666666667, 2200.0]
-          expect(report_data.hours_burnup_per_month_data.current_per_period).to eq [0, 0.0, 0.2376e3]
-          expect(report_data.hours_burnup_per_month_data.scope_per_period).to eq [2200.0, 2200.0, 2200.0]
-          expect(report_data.throughput_per_week).to eq([{ name: I18n.t('projects.charts.throughput_per_week.stage_stream.upstream'), data: [0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0] }, { name: I18n.t('projects.charts.throughput_per_week.stage_stream.downstream'), data: [1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0] }])
-          expect(report_data.delivered_vs_remaining).to eq([{ name: I18n.t('projects.show.delivered_demands.opened_in_period'), data: [22] }, { name: I18n.t('projects.show.delivered_demands.delivered'), data: [5] }, { name: I18n.t('projects.show.scope_gap'), data: [110] }])
+          expect(report_data.all_projects_weeks).to eq [Date.new(2018, 2, 5), Date.new(2018, 2, 12), Date.new(2018, 2, 19), Date.new(2018, 2, 26), Date.new(2018, 3, 5), Date.new(2018, 3, 12), Date.new(2018, 3, 19), Date.new(2018, 3, 26), Date.new(2018, 4, 2), Date.new(2018, 4, 9), Date.new(2018, 4, 16), Date.new(2018, 4, 23), Date.new(2018, 4, 30), Date.new(2018, 5, 7)]
+          expect(report_data.hours_burnup_per_week_data.ideal_per_period).to eq [157.14285714285714, 314.2857142857143, 471.42857142857144, 628.5714285714286, 785.7142857142857, 942.8571428571429, 1100.0, 1257.142857142857, 1414.2857142857142, 1571.4285714285713, 1728.5714285714284, 1885.7142857142858, 2042.857142857143, 2200.0]
+          expect(report_data.hours_burnup_per_week_data.current_per_period).to eq [0, 0, 0.0, 0.0, 0.0, 0.1122e3, 0.2376e3, 0.2376e3, 0.2376e3, 0.2376e3, 0.2376e3, 0.2376e3, 0.2376e3, 0.2376e3]
+          expect(report_data.hours_burnup_per_week_data.scope_per_period).to eq [2200.0, 2200.0, 2200.0, 2200.0, 2200.0, 2200.0, 2200.0, 2200.0, 2200.0, 2200.0, 2200.0, 2200.0, 2200.0, 2200.0]
+          expect(report_data.hours_burnup_per_month_data.ideal_per_period).to eq [550.0, 1100.0, 1650.0, 2200.0]
+          expect(report_data.hours_burnup_per_month_data.current_per_period).to eq [0, 0.0, 0.2376e3, 0.2376e3]
+          expect(report_data.hours_burnup_per_month_data.scope_per_period).to eq [2200.0, 2200.0, 2200.0, 2200.0]
+          expect(report_data.throughput_per_week).to eq([{ name: I18n.t('projects.charts.throughput_per_week.stage_stream.upstream'), data: [0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0] }, { name: I18n.t('projects.charts.throughput_per_week.stage_stream.downstream'), data: [0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0] }])
+          expect(report_data.delivered_vs_remaining).to eq([{ name: I18n.t('projects.show.delivered_demands.opened_in_period'), data: [25] }, { name: I18n.t('projects.show.delivered_demands.delivered'), data: [5] }, { name: I18n.t('projects.show.scope_gap'), data: [110] }])
           expect(report_data.dates_to_montecarlo_duration).not_to be_empty
           expect(report_data.confidence_95_duration).to be_within(10).of(306)
           expect(report_data.confidence_80_duration).to be_within(10).of(286)
