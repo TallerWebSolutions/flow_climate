@@ -6,7 +6,7 @@ RSpec.describe Highchart::HighchartAdapter, type: :data_object do
     let(:second_project) { Fabricate :project, status: :waiting, start_date: Time.zone.parse('2018-03-13'), end_date: Time.zone.parse('2018-03-21') }
     let(:third_project) { Fabricate :project, status: :maintenance, start_date: Time.zone.parse('2018-03-12'), end_date: Time.zone.parse('2018-03-13') }
 
-    let!(:opened_demands) { Fabricate.times(20, :demand, project: first_project, created_date: Time.zone.parse('2018-02-21')) }
+    let!(:opened_demands) { Fabricate.times(20, :demand, project: first_project, created_date: Time.zone.parse('2018-02-21'), end_date: nil) }
     let!(:first_demand) { Fabricate :demand, project: first_project, end_date: Time.zone.parse('2018-02-21'), leadtime: 2 * 86_400, effort_upstream: 10, effort_downstream: 5 }
     let!(:second_demand) { Fabricate :demand, project: first_project, end_date: Time.zone.parse('2018-02-21'), leadtime: 3 * 86_400, effort_upstream: 12, effort_downstream: 20 }
     let!(:third_demand) { Fabricate :demand, project: first_project, end_date: Time.zone.parse('2018-03-18'), leadtime: 1 * 86_400, effort_upstream: 27, effort_downstream: 40 }
@@ -15,6 +15,9 @@ RSpec.describe Highchart::HighchartAdapter, type: :data_object do
 
     describe '.initialize' do
       context 'querying all the time' do
+        before { travel_to Time.zone.local(2018, 5, 30, 10, 0, 0) }
+        after { travel_back }
+
         subject(:chart_data) { Highchart::HighchartAdapter.new(Project.all, 'all') }
 
         it 'do the math and provides the correct information' do
