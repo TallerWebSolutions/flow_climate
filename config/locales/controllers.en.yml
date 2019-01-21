@@ -43,7 +43,7 @@ en:
         title: "Avg Demand Cost"
       flow_pressure: "Flow Pressure"
       hours_per_demand: "Hours per Demand"
-    no_data: "There is no data to show yet: %{missing_data}"
+    no_data: "There is no %{missing_data} to show yet."
     download_csv: "Download CSV"
     percentage:
       symbol: "%"
@@ -59,6 +59,7 @@ en:
           last_quarter: "Last quarter"
           all_period: "All Period"
           last_week: "Last Week"
+    total: "Total"
   header:
     logout: Logout
     explore: Explore
@@ -395,7 +396,7 @@ en:
       committed_with: "Committed With"
       real_throughput: "Throughput Real"
     data_analysis:
-      demand_list: "Demand List"
+      demands_list: "Demand List"
       consolidation: "Consolidation"
     stats:
       std_committed_with: "STD Committed with"

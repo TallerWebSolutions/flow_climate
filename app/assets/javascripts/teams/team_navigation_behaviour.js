@@ -18,6 +18,7 @@ $('.nav-item').on('click', function(event){
         event.preventDefault();
     } else {
         disableTabs();
+        showClicked($(this).data('container'), $(this));
 
         if ($(this).attr('id') === 'nav-item-statusreport') {
             buildStatusReportCharts(company_id, projects_ids, period, target_name)
@@ -28,12 +29,10 @@ $('.nav-item').on('click', function(event){
         } else if ($(this).attr('id') === 'nav-item-strategic') {
             buildStrategicCharts(company_id, projects_ids, target_name);
 
-        } else if ($(this).attr('id') === 'nav-item-delivered') {
-            const demandsIds = $("#demands_ids").val();
-            getDemands(company_id, projects_ids, demandsIds);
+        } else if ($(this).attr('id') === 'nav-item-demands') {
+            getDemands(company_id, projects_ids);
 
         } else {
-            showClicked($(this).data('container'), $(this));
             enableTabs();
         }
     }

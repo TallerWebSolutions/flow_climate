@@ -60,16 +60,12 @@ class DemandsRepository
     Demand.kept.where(project_id: array_of_projects.map(&:id))
   end
 
-  def demands_finished(array_of_demands_ids)
-    Demand.kept.finished.where(id: array_of_demands_ids)
+  def not_started_demands(demands)
+    demands.reject(&:flowing?).reject { |demand| demand.end_date.present? }
   end
 
-  def not_started_demands(array_of_demands_ids)
-    Demand.kept.where(id: array_of_demands_ids).reject(&:flowing?).reject { |demand| demand.end_date.present? }
-  end
-
-  def committed_demands(array_of_demands_ids)
-    Demand.kept.where(id: array_of_demands_ids).select(&:committed?)
+  def committed_demands(demands)
+    demands.select(&:committed?)
   end
 
   def scope_in_week_for_projects(projects, week, year)

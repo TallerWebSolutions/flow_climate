@@ -1,11 +1,12 @@
 function bindDemandFilterActions() {
-    $('#demands-grouped-per-month-div').hide();
-    $('#demands-grouped-per-customer-div').hide();
-
     const companyId = $("#company_id").val();
-    const demandsIds = $("#demands_ids").val();
+    const projectsIds = $("#projects_ids").val();
 
     $('.filter-checks').on('change', function(){
+        $('#demands-grouped-per-month-div').hide();
+        $('#demands-grouped-per-customer-div').hide();
+        $('#flat-demands-div').hide();
+
         const flatDemands = $('#grouping_no_grouping').is(":checked");
         const groupedByMonth = $('#grouping_grouped_by_month').is(":checked");
         const groupedByCustomer = $('#grouping_grouped_by_customer').is(":checked");
@@ -16,6 +17,6 @@ function bindDemandFilterActions() {
 
         const period = $('#demands-table-period').val();
 
-        searchDemandsByFlowStatus(companyId, demandsIds, flatDemands, groupedByMonth, groupedByCustomer, notStarted, committed, delivered, period)
+        searchDemandsByFlowStatus(companyId, projectsIds, flatDemands, groupedByMonth, groupedByCustomer, notStarted, committed, delivered, period)
     });
 }

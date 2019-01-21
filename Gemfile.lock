@@ -281,7 +281,6 @@ DEPENDENCIES
   annotate
   attr_encrypted
   brakeman
-  bundler (= 1.17.3)
   coffee-rails
   database_cleaner
   debase (~> 0.2.3.beta3)

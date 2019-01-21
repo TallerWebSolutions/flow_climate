@@ -1,6 +1,13 @@
-<% demands_list.each do |customer_name, demands| %>
+<% if demands.present? %>
+  <h4><%= t('demands.index.count', demands_count: demands.map { |demands_hash| demands_hash[1].count }.sum) %></h4>
+  <% demands.each do |customer_name, demands_in_month| %>
+    <h2><%= customer_name %></h2>
+    <%= render 'demands/demands_table', demands: demands_in_month %>
+  <% end %>
 
-  <h2><%= customer_name %></h2>
+<% else %>
+  <div class="no-data">
+    <%= t('general.no_data', missing_data: Demand.model_name.human.pluralize(2).downcase) %>
+  </div>
 
-  <%= render 'demands/demands_table', demands: demands %>
 <% end %>

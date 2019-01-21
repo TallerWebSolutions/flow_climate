@@ -4,6 +4,8 @@
   </div>
 </div>
 
+<%= hidden_field_tag :demands_ids, demands.map(&:id).flatten.join(',') %>
+
 <div class="row">
   <div class="col-xs-4">
     <div class="form-group radio-inline">
@@ -35,21 +37,21 @@
 
   <div class="col-xs-3">
     <div class="form-group radio-inline">
-      <%= radio_button_tag :searching, :not_started, false, class: 'filter-checks' %>
+      <%= radio_button_tag :searching, :not_started, params[:not_started], class: 'filter-checks' %>
       <%= label_tag t('projects.show.demands.demands_not_started'), nil, class: 'control-label' %>
     </div>
   </div>
 
   <div class="col-xs-3">
     <div class="form-group radio-inline">
-      <%= radio_button_tag :searching, :work_in_progress, false, class: 'filter-checks' %>
+      <%= radio_button_tag :searching, :work_in_progress, params[:wip], class: 'filter-checks' %>
       <%= label_tag t('projects.show.demands.work_in_progress'), nil, class: 'control-label' %>
     </div>
   </div>
 
   <div class="col-xs-3">
     <div class="form-group radio-inline">
-      <%= radio_button_tag :searching, :delivered_demands, false, class: 'filter-checks' %>
+      <%= radio_button_tag :searching, :delivered_demands, params[:delivered], class: 'filter-checks' %>
       <%= label_tag t('projects.show.demands.delivered_demands'), nil, class: 'control-label' %>
     </div>
   </div>
@@ -63,24 +65,17 @@
 </div>
 
 <div id="demands-grouped-per-month-div">
-  <% if grouped_delivered_demands.present? %>
-    <h4><%= t('demands.index.count', demands_count: grouped_delivered_demands.map { |demands_hash| demands_hash[1].count }.sum) %></h4>
-    <%= render 'demands/grouped_by_month_demands_table', demands_list: grouped_delivered_demands %>
-  <% end %>
+  <%= render 'demands/grouped_by_month_demands_table', demands: grouped_delivered_demands %>
 </div>
 
 <div id="demands-grouped-per-customer-div">
-  <% if grouped_customer_demands.present? %>
-    <h4><%= t('demands.index.count', demands_count: grouped_customer_demands.map { |demands_hash| demands_hash[1].count }.sum) %></h4>
-    <%= render 'demands/grouped_by_customer_demands_table', demands_list: grouped_customer_demands %>
-  <% end %>
+  <%= render 'demands/grouped_by_customer_demands_table', demands: grouped_customer_demands %>
 </div>
 
 <div id="flat-demands-div">
   <%= render 'demands/demands_table', demands: demands %>
 </div>
 
-<% content_for :javascript do %>
-  <%= javascript_include_tag 'demands/form_modal' %>
-<% end %>
-
+<%= javascript_include_tag 'demands/filter_binding' %>
+<%= javascript_include_tag 'demands/demands_list' %>
+<%= javascript_include_tag 'demands/form_modal' %>

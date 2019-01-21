@@ -9,7 +9,6 @@ class TeamsController < AuthenticatedController
   def show
     @team_members = @team.team_members.order(:name)
     @team_projects = ProjectsRepository.instance.all_projects_for_team(@team)
-    @demands_ids = DemandsRepository.instance.demands_to_projects(@team_projects).map(&:id)
     @active_team_projects = @team_projects.active
     @projects_summary = ProjectsSummaryData.new(@team.projects)
     @projects_risk_chart_data = Highchart::ProjectRiskChartsAdapter.new(@team.projects)
@@ -39,8 +38,6 @@ class TeamsController < AuthenticatedController
   private
 
   def assign_chart_informations
-    @grouped_delivered_demands = @demands.grouped_end_date_by_month if params[:grouped_by_month] == 'true'
-    @grouped_customer_demands = @demands.grouped_by_customer if params[:grouped_by_customer] == 'true'
     @flow_report_data = Highchart::FlowChartsAdapter.new(@team_projects, Time.zone.today.cweek, Time.zone.today.cwyear)
   end
 
