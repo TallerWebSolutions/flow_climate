@@ -19,21 +19,21 @@ $('.nav-item').on('click', function(event){
     } else {
         disableTabs();
 
+        showClicked($(this).data('container'), $(this));
+        
         if ($(this).attr('id') === 'nav-item-statusreport') {
+
             buildStatusReportCharts(company_id, projects_ids, period, target_name)
-
         } else if ($(this).attr('id') === 'nav-item-charts') {
+
             buildOperationalCharts(company_id, projects_ids, period, target_name);
-
         } else if ($(this).attr('id') === 'nav-item-strategic') {
+
             buildStrategicCharts(company_id, projects_ids, target_name);
+        } else if ($(this).attr('id') === 'nav-item-demands') {
 
-        } else if ($(this).attr('id') === 'nav-item-delivered') {
-            const demandsIds = $("#demands_ids").val();
-            getDemands(company_id, projects_ids, demandsIds);
-
+            getDemands(company_id, projects_ids);
         } else {
-            showClicked($(this).data('container'), $(this));
             enableTabs();
         }
     }

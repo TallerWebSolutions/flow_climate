@@ -43,7 +43,7 @@ pt-BR:
         title: "Custo Médio por Demanda"
       flow_pressure: "Pressão do Fluxo"
       hours_per_demand: "Horas por Demanda"
-    no_data: "Não existem dados para essa exibição: %{missing_data}"
+    no_data: "Não existem %{missing_data} para essa exibição"
     download_csv: "Download CSV"
     percentage:
       symbol: "%"
@@ -59,6 +59,7 @@ pt-BR:
           last_quarter: "Último Trimestre"
           all_period: "Todo o Período"
           last_week: "Última Semana"
+    total: "Total"
   header:
     logout: Sair
     sign_up: Cadastre-se
@@ -418,7 +419,7 @@ pt-BR:
       committed_with: "Comprometeu-se com"
       real_throughput: "Vazão Real"
     data_analysis:
-      demand_list: "Lista de Demandas"
+      demands_list: "Lista de Demandas"
       consolidation: "Consolidação"
     stats:
       std_throughput: "Desvio Padrão Vazão"

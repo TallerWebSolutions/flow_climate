@@ -12,14 +12,13 @@
 <%= hidden_field_tag :team_id, @team.id %>
 <%= hidden_field_tag :projects_ids, @team_projects.map(&:id).join(',') %>
 <%= hidden_field_tag :target_name, @team.name %>
-<%= hidden_field_tag :demands_ids, @demands_ids.join(',') %>
 
 <div class="row">
   <div class="topnav">
     <%= link_to t('navbar.details'), '#', id: 'nav-item-stamps', class: 'nav-item active', data: { container: '#stamps' } %>
     <%= link_to t('navbar.members_table'), '#', id: 'nav-item-members', class: 'nav-item', data: { container: '#members-table' } %>
     <%= link_to t('navbar.projects_list'), '#', id: 'nav-item-list', class: 'nav-item', data: { container: '#project-list' } %>
-    <%= link_to t('navbar.demands'), '#', id: 'nav-item-delivered', class: 'nav-item', data: { container: '#demands-list' } %>
+    <%= link_to t('navbar.demands'), '#', id: 'nav-item-demands', class: 'nav-item', data: { container: '#demands-tab' } %>
     <%= link_to t('navbar.strategic'), '#', id: 'nav-item-strategic', class: 'nav-item', data: { container: '#strategic' } %>
     <%= link_to t('navbar.status_report'), '#', id: 'nav-item-statusreport', class: 'nav-item', data: { container: '#project-status-report' } %>
     <%= link_to t('navbar.charts'), '#', id: 'nav-item-charts', class: 'nav-item', data: { container: '#operational-charts' } %>
@@ -46,8 +45,8 @@
   </div>
 </div>
 
-<div id="demands-list" class="tab-container">
-  <%= render 'demands/demands_tab', grouped_delivered_demands: @grouped_delivered_demands, grouped_customer_demands: @grouped_customer_demands, demands_count_per_week: @demands_count_per_week %>
+<div id="demands-tab" class="tab-container">
+
 </div>
 
 <div id="strategic" class="tab-container">
@@ -96,7 +95,6 @@
   <%= javascript_include_tag 'teams/team_navigation_behaviour' %>
 
   <%= javascript_include_tag 'demands/column_throughput_week' %>
-  <%= javascript_include_tag 'demands/filter_binding' %>
 
   <%= javascript_include_tag 'projects/risk_alert_color_chart' %>
 <% end %>

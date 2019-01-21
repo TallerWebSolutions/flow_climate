@@ -1,0 +1,6 @@
+var demandsTab = $('#demands-tab');
+
+demandsTab.html("<%= escape_javascript(render 'demands/demands_tab', demands: @demands, demands_count_per_week: @demands_count_per_week).html_safe %>");
+demandsTab.show();
+
+enableTabs();

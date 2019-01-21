@@ -18,7 +18,7 @@
 <div class="row">
   <div class="topnav">
     <%= link_to t('navbar.details'), '#', id: 'nav-item-stamps', class: 'nav-item active', data: { container: '#stamps' } %>
-    <%= link_to t('navbar.demands'), '#', id: 'nav-item-delivered', class: 'nav-item', data: { container: '#demands-list' } %>
+    <%= link_to t('navbar.demands'), '#', id: 'nav-item-demands', class: 'nav-item', data: { container: '#demands-tab' } %>
     <%= link_to t('projects.show.deadline.title'), '#', id: 'nav-item-deadline', class: 'nav-item', data: { container: '#deadline-change' } %>
     <%= link_to t('navbar.charts'), '#', id: 'nav-item-charts', class: 'nav-item', data: { container: '#operational-charts' } %>
     <%= link_to t('navbar.status_report'), '#', id: 'nav-item-statusreport', class: 'nav-item', data: { container: '#project-status-report' } %>
@@ -33,8 +33,8 @@
   <%= render 'project_stamps', project: @project %>
 </div>
 
-<div id="demands-list" class="tab-container">
-  <%= render 'demands/demands_tab', grouped_delivered_demands: @grouped_delivered_demands, grouped_customer_demands: @grouped_customer_demands, demands: @demands, demands_count_per_week: @demands_count_per_week %>
+<div id="demands-tab" class="tab-container">
+
 </div>
 
 <div id="deadline-change" class="tab-container">

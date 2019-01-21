@@ -1,7 +1,7 @@
 <div class="row">
   <div class="col-xs-12">
     <div id="demands_count">
-      <h4><%= t('demands.index.count', demands_count: demands.count) %></h4>
+      <h4><%= "#{t('general.total')}: #{t('demands.index.count', demands_count: demands.count)}" %></h4>
     </div>
   </div>
 </div>
@@ -48,5 +48,3 @@
 </div>
 
 <div class="modal fade" id="edit-demand-form" tabindex="-1" role="dialog" aria-labelledby="edit-demand-form" aria-hidden="true"></div>
-
-<%= javascript_include_tag 'demands/demands_list' %>

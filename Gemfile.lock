@@ -42,7 +42,7 @@ GEM
       i18n (>= 0.7, < 2)
       minitest (~> 5.1)
       tzinfo (~> 1.1)
-    addressable (2.5.2)
+    addressable (2.6.0)
       public_suffix (>= 2.0.2, < 4.0)
     annotate (2.7.4)
       activerecord (>= 3.2, < 6.0)
@@ -53,7 +53,7 @@ GEM
       encryptor (~> 3.0.0)
     bcrypt (3.1.12)
     bindex (0.5.0)
-    brakeman (4.3.1)
+    brakeman (4.4.0)
     builder (3.2.3)
     coffee-rails (4.2.2)
       coffee-script (>= 2.2.0)
@@ -136,10 +136,10 @@ GEM
     nokogiri (1.10.1)
       mini_portile2 (~> 2.4.0)
     oauth (0.5.4)
-    oj (3.7.6)
+    oj (3.7.7)
     orm_adapter (0.5.0)
-    parallel (1.12.1)
-    parser (2.5.3.0)
+    parallel (1.13.0)
+    parser (2.6.0.0)
       ast (~> 2.4.0)
     pg (1.1.4)
     powerpack (0.1.2)
@@ -205,7 +205,7 @@ GEM
     rspec-mocks (3.8.0)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.8.0)
-    rspec-rails (3.8.1)
+    rspec-rails (3.8.2)
       actionpack (>= 3.0)
       activesupport (>= 3.0)
       railties (>= 3.0)
@@ -216,7 +216,7 @@ GEM
     rspec-support (3.8.0)
     rspec_junit_formatter (0.4.1)
       rspec-core (>= 2, < 4, != 2.12.0)
-    rubocop (0.62.0)
+    rubocop (0.63.0)
       jaro_winkler (~> 1.5.1)
       parallel (~> 1.10)
       parser (>= 2.5, != 2.5.1.1)
@@ -281,7 +281,6 @@ DEPENDENCIES
   annotate
   attr_encrypted
   brakeman
-  bundler (= 1.17.3)
   coffee-rails
   database_cleaner
   debase (~> 0.2.3.beta3)

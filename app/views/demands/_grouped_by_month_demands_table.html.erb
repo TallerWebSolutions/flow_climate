@@ -1,6 +1,11 @@
-<% demands_list.each do |year_month, demands| %>
-
-  <h2><%= l(Date.new(year_month[0], year_month[1], 1), format: :month_year) %></h2>
-
-  <%= render 'demands/demands_table', demands: demands %>
+<% if demands.present? %>
+  <h4><%= t('demands.index.count', demands_count: demands.map { |demands_hash| demands_hash[1].count }.sum) %></h4>
+  <% demands.each do |year_month, demands_in_month| %>
+    <h2><%= l(Date.new(year_month[0], year_month[1], 1), format: :month_year) %></h2>
+    <%= render 'demands/demands_table', demands: demands_in_month %>
+  <% end %>
+<% else %>
+  <div class="no-data">
+    <%= t('general.no_data', missing_data: Demand.model_name.human.pluralize(2).downcase) %>
+  </div>
 <% end %>

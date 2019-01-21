@@ -5,6 +5,7 @@ class DemandsController < AuthenticatedController
 
   before_action :assign_company
   before_action :assign_project, except: %i[demands_csv demands_in_projects search_demands_by_flow_status]
+  before_action :assign_projects_for_queries, only: %i[demands_in_projects search_demands_by_flow_status]
   before_action :assign_demand, only: %i[edit update show synchronize_jira destroy]
 
   def new
@@ -59,28 +60,25 @@ class DemandsController < AuthenticatedController
   end
 
   def demands_in_projects
-    projects = Project.where(id: params[:projects_ids].split(','))
-    @demands_count_per_week = DemandService.instance.quantitative_consolidation_per_week_to_projects(projects)
-    @demands = query_demands
-    respond_to { |format| format.js { render file: 'demands/demands_list.js.erb' } }
+    filtered_demands = DemandsRepository.instance.demands_to_projects(@projects)
+    @demands = build_demands_query(filtered_demands, 'week')
+    @demands_count_per_week = DemandService.instance.quantitative_consolidation_per_week_to_projects(@projects)
+    respond_to { |format| format.js { render file: 'demands/demands_tab.js.erb' } }
   end
 
   def search_demands_by_flow_status
-    @demands = query_demands
+    @demands = query_demands(params[:period])
+    @grouped_delivered_demands = @demands.grouped_end_date_by_month if radio_param?(:grouped_by_month)
+    @grouped_customer_demands = @demands.grouped_by_customer if radio_param?(:grouped_by_customer)
+
     respond_to { |format| format.js { render file: 'demands/search_demands_by_flow_status.js.erb' } }
   end
 
   private
 
-  def query_demands
-    demands = []
-    if params[:demands_ids].present?
-      demands = build_demands_query(params[:demands_ids].split(',').map(&:strip).map(&:to_i), params[:period])
-      assign_grouped_demands_informations(demands)
-      demands = demands.order(end_date: :desc, commitment_date: :desc, created_date: :desc)
-    end
-
-    demands
+  def query_demands(period)
+    demands_to_projects = DemandsRepository.instance.demands_to_projects(@projects)
+    build_demands_query(demands_to_projects, period)
   end
 
   def demand_params
@@ -91,42 +89,33 @@ class DemandsController < AuthenticatedController
     @project = Project.find(params[:project_id])
   end
 
+  def assign_projects_for_queries
+    @projects = Project.where(id: params[:projects_ids].split(','))
+  end
+
   def assign_demand
     @demand = Demand.find(params[:id])
   end
 
-  def assign_grouped_demands_informations(demands)
-    @grouped_delivered_demands = demands.grouped_end_date_by_month if params[:grouped_by_month] == 'true'
-    @grouped_customer_demands = demands.grouped_by_customer if params[:grouped_by_customer] == 'true'
+  def build_demands_query(demands, period)
+    filtered_demands = demands
+    filtered_demands = DemandsRepository.instance.not_started_demands(demands) if radio_param?(:not_started)
+    filtered_demands = DemandsRepository.instance.committed_demands(demands) if radio_param?(:wip)
+    filtered_demands = demands.finished if radio_param?(:delivered)
+
+    result_query = Demand.where(id: filtered_demands.map(&:id))
+
+    bottom_date = bottom_date_limit_value(demands, period)
+    result_query = result_query.where('(demands.end_date IS NULL AND demands.created_date >= :bottom_date) OR (demands.end_date >= :bottom_date)', bottom_date: bottom_date) if bottom_date.present?
+
+    result_query.order(end_date: :desc, commitment_date: :desc, created_date: :desc)
   end
 
-  def build_demands_query(array_of_demands_ids, period)
-    filtered_demands = Demand.where(id: array_of_demands_ids)
-    filtered_demands = DemandsRepository.instance.not_started_demands(array_of_demands_ids) if not_started_param?
-    filtered_demands = DemandsRepository.instance.committed_demands(array_of_demands_ids) if wip_param?
-    filtered_demands = DemandsRepository.instance.demands_finished(array_of_demands_ids) if delivered_param?
-
-    demands = Demand.where(id: filtered_demands.map(&:id))
-
-    bottom_date = bottom_date_limit_value(period, demands)
-    demands = demands.where('(demands.end_date IS NULL AND demands.created_date >= :bottom_date) OR (demands.end_date >= :bottom_date)', bottom_date: bottom_date) if bottom_date.present?
-
-    demands
+  def radio_param?(param)
+    params[param] == 'true'
   end
 
-  def delivered_param?
-    params[:delivered] == 'true'
-  end
-
-  def wip_param?
-    params[:wip] == 'true'
-  end
-
-  def not_started_param?
-    params[:not_started] == 'true'
-  end
-
-  def bottom_date_limit_value(period, demands)
+  def bottom_date_limit_value(demands, period)
     projects = demands.map(&:project).uniq
     base_date = projects.map(&:end_date).flatten.max
     base_date = Time.zone.now if projects.blank? || projects.map(&:status).flatten.include?('executing')

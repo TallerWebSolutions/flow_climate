@@ -2,14 +2,16 @@ var demandsGroupedPerMonth = $('#demands-grouped-per-month-div');
 var demandsGroupedPerCustomer = $('#demands-grouped-per-customer-div')
 var flatDemands = $('#flat-demands-div');
 
+bindDemandFilterActions();
+
 <% if @grouped_delivered_demands.present? %>
-  demandsGroupedPerMonth.html("<%= escape_javascript(render 'demands/grouped_by_month_demands_table', demands_list: @grouped_delivered_demands).html_safe %>");
+  demandsGroupedPerMonth.html("<%= escape_javascript(render 'demands/grouped_by_month_demands_table', demands: @grouped_delivered_demands).html_safe %>");
   flatDemands.hide();
   demandsGroupedPerMonth.show();
   demandsGroupedPerCustomer.hide();
 
 <% elsif @grouped_customer_demands.present? %>
-  demandsGroupedPerCustomer.html("<%= escape_javascript(render 'demands/grouped_by_customer_demands_table', demands_list: @grouped_customer_demands).html_safe %>");
+  demandsGroupedPerCustomer.html("<%= escape_javascript(render 'demands/grouped_by_customer_demands_table', demands: @grouped_customer_demands).html_safe %>");
   flatDemands.hide();
   demandsGroupedPerMonth.hide();
   demandsGroupedPerCustomer.show();
@@ -20,11 +22,10 @@ var flatDemands = $('#flat-demands-div');
   demandsGroupedPerMonth.hide();
   demandsGroupedPerCustomer.hide();
   $('#grouping_no_grouping').prop("checked", true);
+
 <% end %>
 
-bindDemandFilterActions();
-
-$("#general-loader").hide();
 $("#demands_table").show();
 $(".form-control").prop('disabled', false)
 $(".filter-checks").prop('disabled', false)
+$("#general-loader").hide();
