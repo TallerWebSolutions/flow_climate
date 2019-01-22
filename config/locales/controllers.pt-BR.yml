@@ -386,6 +386,7 @@ pt-BR:
       qty_blocks: "Qty Bloqueios"
       hours_blocks_queue: "Horas Bloqueada em Filas"
       hours_blocks_touch: "Horas Bloqueadas em Trabalho"
+      total_blocked_time: "Tempo Bloqueado"
     edit:
       title: "Editar Demanda"
     show:

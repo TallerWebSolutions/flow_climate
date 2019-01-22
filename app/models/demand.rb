@@ -72,8 +72,6 @@ class Demand < ApplicationRecord
   scope :finished_in_month, ->(month, year) { finished.where('EXTRACT(month FROM end_date) = :month AND EXTRACT(year FROM end_date) = :year', month: month, year: year) }
   scope :finished_in_week, ->(week, year) { finished.where('EXTRACT(week FROM end_date) = :week AND EXTRACT(year FROM end_date) = :year', week: week, year: year) }
   scope :not_finished, -> { kept.where('end_date IS NULL') }
-  scope :grouped_end_date_by_month, -> { kept.finished.order(end_date: :desc).group_by { |demand| [demand.end_date.to_date.cwyear, demand.end_date.to_date.month] } }
-  scope :grouped_by_customer, -> { kept.joins(project: :customer).order('customers.name').group_by { |demand| demand.project.customer.name } }
   scope :upstream_flag, -> { kept.where(downstream: false) }
   scope :downstream_flag, -> { kept.where(downstream: true) }
   scope :not_discarded_until_date, ->(limit_date) { where('demands.discarded_at IS NULL OR demands.discarded_at > :limit_date', limit_date: limit_date.end_of_day) }
@@ -143,20 +141,6 @@ class Demand < ApplicationRecord
     demand_transitions.where(last_time_out: nil).order(:last_time_in).last&.stage || demand_transitions.order(:last_time_in)&.last&.stage
   end
 
-  def flowing?
-    return false if (current_stage.blank? && commitment_date.blank?) || end_date.present?
-    return true if current_stage.blank? && commitment_date.present?
-
-    current_stage.order > current_stage.flow_start_point.order
-  end
-
-  def committed?
-    return false if (current_stage.blank? && commitment_date.blank?) || end_date.present?
-    return true if committed_manually
-
-    current_stage.inside_commitment_area?
-  end
-
   def archived?
     stages.archived.present?
   end
@@ -203,10 +187,6 @@ class Demand < ApplicationRecord
     valid_effort = (working_time_downstream - blocked_working_time_downstream)
     valid_effort *= (project.percentage_effort_to_bugs / 100.0) if bug?
     valid_effort
-  end
-
-  def committed_manually
-    current_stage.blank? && commitment_date.present? && end_date.blank?
   end
 
   def sum_blocked_effort(effort_transitions)

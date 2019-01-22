@@ -23,7 +23,7 @@ module Highchart
       @projects_demands_selected = DemandsRepository.instance.committed_demands_by_project_and_week(projects, week, year).group_by(&:project)
       @projects_demands_processed = DemandsRepository.instance.throughput_by_project_and_week(projects, week, year).group_by(&:project)
 
-      @projects_in_chart = (projects_demands_selected.keys | projects_demands_processed.keys).flatten.uniq
+      @projects_in_chart = (projects_demands_selected.keys | projects_demands_processed.keys).flatten.uniq.sort_by(&:end_date)
       @processing_rate_data = projects_demands_selected.merge(projects_demands_processed) { |_key, oldval, newval| oldval | newval }
     end
 

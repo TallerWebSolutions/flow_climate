@@ -299,6 +299,36 @@ ALTER SEQUENCE public.demands_id_seq OWNED BY public.demands.id;
 
 
 --
+-- Name: demands_lists; Type: VIEW; Schema: public; Owner: -
+--
+
+CREATE VIEW public.demands_lists AS
+SELECT
+    NULL::bigint AS id,
+    NULL::character varying AS demand_id,
+    NULL::bigint AS project_id,
+    NULL::bigint AS product_id,
+    NULL::bigint AS customer_id,
+    NULL::timestamp without time zone AS created_date,
+    NULL::timestamp without time zone AS commitment_date,
+    NULL::timestamp without time zone AS end_date,
+    NULL::character varying AS product_name,
+    NULL::character varying AS project_name,
+    NULL::integer AS artifact_type,
+    NULL::integer AS demand_type,
+    NULL::integer AS class_of_service,
+    NULL::numeric AS effort_upstream,
+    NULL::numeric AS effort_downstream,
+    NULL::numeric AS leadtime,
+    NULL::character varying AS url,
+    NULL::timestamp without time zone AS discarded_at,
+    NULL::bigint AS blocks_count,
+    NULL::double precision AS blocked_time,
+    NULL::double precision AS queued_time,
+    NULL::double precision AS touch_time;
+
+
+--
 -- Name: financial_informations; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1742,6 +1772,47 @@ CREATE UNIQUE INDEX unique_jira_project_key_to_jira_account_domain ON public.pro
 
 
 --
+-- Name: demands_lists _RETURN; Type: RULE; Schema: public; Owner: -
+--
+
+CREATE OR REPLACE VIEW public.demands_lists AS
+ SELECT d.id,
+    d.demand_id,
+    proj.id AS project_id,
+    prod.id AS product_id,
+    cust.id AS customer_id,
+    d.created_date,
+    d.commitment_date,
+    d.end_date,
+    prod.name AS product_name,
+    proj.name AS project_name,
+    d.artifact_type,
+    d.demand_type,
+    d.class_of_service,
+    d.effort_upstream,
+    d.effort_downstream,
+    d.leadtime,
+    d.url,
+    d.discarded_at,
+    count(DISTINCT blocks.id) AS blocks_count,
+    sum(date_part('epoch'::text, (blocks.unblock_time - blocks.block_time))) AS blocked_time,
+    ( SELECT sum(date_part('epoch'::text, (queued_transitions.last_time_out - queued_transitions.last_time_in))) AS sum
+           FROM public.demand_transitions queued_transitions,
+            public.stages s
+          WHERE ((queued_transitions.demand_id = d.id) AND (s.id = queued_transitions.stage_id) AND (s.queue = true))) AS queued_time,
+    ( SELECT sum(date_part('epoch'::text, (touch_transitions.last_time_out - touch_transitions.last_time_in))) AS sum
+           FROM public.demand_transitions touch_transitions,
+            public.stages s
+          WHERE ((touch_transitions.demand_id = d.id) AND (s.id = touch_transitions.stage_id) AND (s.queue = false))) AS touch_time
+   FROM ((((public.demands d
+     JOIN public.projects proj ON ((d.project_id = proj.id)))
+     JOIN public.products prod ON ((proj.product_id = prod.id)))
+     JOIN public.customers cust ON ((prod.customer_id = cust.id)))
+     LEFT JOIN public.demand_blocks blocks ON (((blocks.demand_id = d.id) AND (blocks.unblock_time >= blocks.block_time) AND (blocks.active = true) AND (blocks.unblock_time IS NOT NULL))))
+  GROUP BY d.id, proj.id, prod.id, cust.id;
+
+
+--
 -- Name: demand_blocks fk_rails_0c8fa8d3a7; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2133,6 +2204,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20181022220910'),
 ('20181210181733'),
 ('20181210193253'),
-('20190108182426');
+('20190108182426'),
+('20190121231612');
 
 

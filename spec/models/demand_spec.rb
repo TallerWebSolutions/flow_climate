@@ -66,6 +66,7 @@ RSpec.describe Demand, type: :model do
 
       it { expect(Demand.opened_after_date(Date.new(2018, 2, 3))).to match_array [second_demand, third_demand] }
     end
+
     describe '.finished' do
       let!(:first_demand) { Fabricate :demand, project: project, end_date: Time.zone.now }
       let!(:second_demand) { Fabricate :demand, project: project, end_date: Time.zone.now }
@@ -73,6 +74,7 @@ RSpec.describe Demand, type: :model do
 
       it { expect(Demand.finished).to match_array [first_demand, second_demand] }
     end
+
     describe '.finished_with_leadtime' do
       let!(:first_demand) { Fabricate :demand, project: project, end_date: Time.zone.now, leadtime: 2 }
       let!(:second_demand) { Fabricate :demand, project: project, end_date: Time.zone.now, leadtime: 3 }
@@ -80,6 +82,7 @@ RSpec.describe Demand, type: :model do
 
       it { expect(Demand.finished_with_leadtime).to match_array [first_demand, second_demand] }
     end
+
     describe '.finished_until_date' do
       let!(:first_demand) { Fabricate :demand, project: project, end_date: 2.days.ago, leadtime: 2 }
       let!(:second_demand) { Fabricate :demand, project: project, end_date: 1.day.ago, leadtime: nil }
@@ -87,6 +90,7 @@ RSpec.describe Demand, type: :model do
 
       it { expect(Demand.finished_until_date(1.day.ago)).to match_array [first_demand, second_demand] }
     end
+
     describe '.finished_until_date_with_leadtime' do
       let!(:first_demand) { Fabricate :demand, project: project, end_date: 2.days.ago, leadtime: 2 }
       let!(:second_demand) { Fabricate :demand, project: project, end_date: 1.day.ago, leadtime: 3 }
@@ -94,6 +98,7 @@ RSpec.describe Demand, type: :model do
 
       it { expect(Demand.finished_until_date_with_leadtime(1.day.ago)).to match_array [first_demand, second_demand] }
     end
+
     describe '.finished_after_date' do
       let!(:first_demand) { Fabricate :demand, project: project, end_date: 2.days.ago, leadtime: 2 }
       let!(:second_demand) { Fabricate :demand, project: project, end_date: 1.day.ago, leadtime: 3 }
@@ -101,6 +106,7 @@ RSpec.describe Demand, type: :model do
 
       it { expect(Demand.finished_after_date(1.day.ago)).to match_array [second_demand, third_demand] }
     end
+
     describe '.not_finished' do
       let!(:first_demand) { Fabricate :demand, project: project, end_date: nil }
       let!(:second_demand) { Fabricate :demand, project: project, end_date: nil }
@@ -108,6 +114,7 @@ RSpec.describe Demand, type: :model do
 
       it { expect(Demand.not_finished).to match_array [first_demand, second_demand] }
     end
+
     describe '.upstream_flag' do
       let!(:first_demand) { Fabricate :demand, downstream: false }
       let!(:second_demand) { Fabricate :demand, downstream: false }
@@ -115,38 +122,13 @@ RSpec.describe Demand, type: :model do
 
       it { expect(Demand.upstream_flag).to match_array [first_demand, second_demand] }
     end
+
     describe '.downstream_flag' do
       let!(:first_demand) { Fabricate :demand, downstream: true }
       let!(:second_demand) { Fabricate :demand, downstream: true }
       let!(:third_demand) { Fabricate :demand, downstream: false }
 
       it { expect(Demand.downstream_flag).to match_array [first_demand, second_demand] }
-    end
-    describe '.grouped_end_date_by_month' do
-      let!(:first_demand) { Fabricate :demand, downstream: true, end_date: 2.months.ago }
-      let!(:second_demand) { Fabricate :demand, downstream: true, end_date: 2.months.ago }
-      let!(:third_demand) { Fabricate :demand, downstream: true, end_date: 1.month.ago }
-      let!(:fourth_demand) { Fabricate :demand, downstream: false }
-
-      it { expect(Demand.grouped_end_date_by_month[[2.months.ago.to_date.cwyear, 2.months.ago.to_date.month]]).to match_array [first_demand, second_demand] }
-      it { expect(Demand.grouped_end_date_by_month[[1.month.ago.to_date.cwyear, 1.month.ago.to_date.month]]).to eq [third_demand] }
-    end
-    describe '.grouped_by_customer' do
-      let(:company) { Fabricate :company }
-      let(:customer) { Fabricate :customer, company: company }
-      let(:other_customer) { Fabricate :customer, company: company }
-
-      let(:first_project) { Fabricate :project, customer: customer }
-      let(:second_project) { Fabricate :project, customer: other_customer }
-      let(:third_project) { Fabricate :project, customer: other_customer }
-
-      let!(:first_demand) { Fabricate :demand, project: first_project, end_date: 2.months.ago }
-      let!(:second_demand) { Fabricate :demand, project: first_project, end_date: 2.months.ago }
-      let!(:third_demand) { Fabricate :demand, project: second_project }
-      let!(:fourth_demand) { Fabricate :demand, project: third_project }
-
-      it { expect(Demand.grouped_by_customer[customer.name]).to match_array [first_demand, second_demand] }
-      it { expect(Demand.grouped_by_customer[other_customer.name]).to match_array [third_demand, fourth_demand] }
     end
 
     describe '.not_discarded_until_date' do
@@ -527,137 +509,6 @@ RSpec.describe Demand, type: :model do
 
       let(:demand) { Fabricate :demand, project: project }
       it { expect(demand.current_stage).to be_nil }
-    end
-  end
-
-  describe '#flowing?' do
-    context 'having transitions' do
-      context 'and it started to flow and returned to backlog' do
-        let(:company) { Fabricate :company }
-        let(:customer) { Fabricate :customer, company: company }
-        let(:project) { Fabricate :project, customer: customer }
-        let(:stage) { Fabricate :stage, company: company, projects: [project], order: 0 }
-        let(:other_stage) { Fabricate :stage, company: company, projects: [project], order: 1 }
-
-        let(:demand) { Fabricate :demand, project: project }
-        let!(:demand_transition) { Fabricate :demand_transition, demand: demand, stage: stage, last_time_in: Time.zone.now }
-        let!(:other_demand_transition) { Fabricate :demand_transition, demand: demand, stage: other_stage, last_time_in: 1.day.ago }
-
-        it { expect(demand.flowing?).to be false }
-      end
-      context 'and it started to flow' do
-        let(:company) { Fabricate :company }
-        let(:customer) { Fabricate :customer, company: company }
-        let(:project) { Fabricate :project, customer: customer }
-        let(:stage) { Fabricate :stage, company: company, projects: [project], order: 0 }
-        let(:other_stage) { Fabricate :stage, company: company, projects: [project], order: 1 }
-
-        let(:demand) { Fabricate :demand, project: project }
-        let!(:first_demand_transition) { Fabricate :demand_transition, demand: demand, stage: stage, last_time_in: 2.days.ago }
-        let!(:second_demand_transition) { Fabricate :demand_transition, demand: demand, stage: other_stage, last_time_in: 1.day.ago }
-        let!(:third_demand_transition) { Fabricate :demand_transition, demand: demand, stage: other_stage, last_time_in: Time.zone.now }
-
-        it { expect(demand.flowing?).to be true }
-      end
-
-      context 'and it has ended' do
-        let(:company) { Fabricate :company }
-        let(:customer) { Fabricate :customer, company: company }
-        let(:project) { Fabricate :project, customer: customer }
-        let(:stage) { Fabricate :stage, company: company, projects: [project], order: 0 }
-        let(:other_stage) { Fabricate :stage, company: company, projects: [project], order: 1 }
-
-        let(:demand) { Fabricate :demand, project: project, end_date: Time.zone.now }
-
-        it { expect(demand.flowing?).to be false }
-      end
-    end
-
-    context 'having no transitions' do
-      let(:company) { Fabricate :company }
-      let(:customer) { Fabricate :customer, company: company }
-      let(:project) { Fabricate :project, customer: customer }
-
-      context 'and the demand has no commitment date' do
-        let(:demand) { Fabricate :demand, project: project }
-        it { expect(demand.flowing?).to be false }
-      end
-
-      context 'and the demand has commitment date' do
-        let(:demand) { Fabricate :demand, project: project, commitment_date: Time.zone.now }
-        it { expect(demand.flowing?).to be true }
-      end
-    end
-  end
-
-  describe '#committed?' do
-    context 'having transitions' do
-      context 'and it went to the commitment area and returned' do
-        let(:company) { Fabricate :company }
-        let(:customer) { Fabricate :customer, company: company }
-        let(:project) { Fabricate :project, customer: customer }
-        let(:stage) { Fabricate :stage, company: company, projects: [project], stage_stream: :downstream, order: 0 }
-        let(:commitment_stage) { Fabricate :stage, company: company, projects: [project], stage_stream: :downstream, order: 1, commitment_point: true }
-        let(:end_stage) { Fabricate :stage, company: company, projects: [project], stage_stream: :downstream, order: 2, end_point: true }
-
-        let(:demand) { Fabricate :demand, project: project }
-        let!(:demand_transition) { Fabricate :demand_transition, demand: demand, stage: stage, last_time_in: Time.zone.now }
-        let!(:commitment_demand_transition) { Fabricate :demand_transition, demand: demand, stage: commitment_stage, last_time_in: 1.day.ago }
-        let!(:end_demand_transition) { Fabricate :demand_transition, demand: demand, stage: end_stage, last_time_in: Time.zone.tomorrow }
-
-        it { expect(demand.committed?).to be false }
-      end
-      context 'and it was committed' do
-        let(:company) { Fabricate :company }
-        let(:customer) { Fabricate :customer, company: company }
-        let(:project) { Fabricate :project, customer: customer }
-        let(:stage) { Fabricate :stage, company: company, projects: [project], order: 0 }
-        let(:other_stage) { Fabricate :stage, company: company, projects: [project], order: 1, commitment_point: true }
-
-        let(:demand) { Fabricate :demand, project: project }
-        let!(:first_demand_transition) { Fabricate :demand_transition, demand: demand, stage: stage, last_time_in: 2.days.ago }
-        let!(:second_demand_transition) { Fabricate :demand_transition, demand: demand, stage: other_stage, last_time_in: 1.day.ago }
-        let!(:third_demand_transition) { Fabricate :demand_transition, demand: demand, stage: other_stage, last_time_in: Time.zone.now }
-
-        it { expect(demand.committed?).to be true }
-      end
-      context 'and it was committed and finished' do
-        let(:company) { Fabricate :company }
-        let(:customer) { Fabricate :customer, company: company }
-        let(:project) { Fabricate :project, customer: customer }
-        let(:stage) { Fabricate :stage, company: company, projects: [project], order: 0 }
-        let(:other_stage) { Fabricate :stage, company: company, projects: [project], order: 1, commitment_point: true }
-        let(:end_stage) { Fabricate :stage, company: company, projects: [project], order: 1, end_point: true }
-
-        let(:demand) { Fabricate :demand, project: project }
-        let!(:first_demand_transition) { Fabricate :demand_transition, demand: demand, stage: stage, last_time_in: 2.days.ago }
-        let!(:second_demand_transition) { Fabricate :demand_transition, demand: demand, stage: other_stage, last_time_in: 1.day.ago }
-        let!(:third_demand_transition) { Fabricate :demand_transition, demand: demand, stage: other_stage, last_time_in: 4.hours.ago }
-        let!(:fourth_demand_transition) { Fabricate :demand_transition, demand: demand, stage: end_stage, last_time_in: Time.zone.now }
-
-        it { expect(demand.committed?).to be false }
-      end
-    end
-
-    context 'having no transitions' do
-      let(:company) { Fabricate :company }
-      let(:customer) { Fabricate :customer, company: company }
-      let(:project) { Fabricate :project, customer: customer }
-
-      context 'and the demand has no commitment date' do
-        let(:demand) { Fabricate :demand, project: project }
-        it { expect(demand.committed?).to be false }
-      end
-
-      context 'and the demand has commitment date' do
-        let(:demand) { Fabricate :demand, project: project, commitment_date: Time.zone.now }
-        it { expect(demand.committed?).to be true }
-      end
-
-      context 'and the demand has commitment date and end_date' do
-        let(:demand) { Fabricate :demand, project: project, commitment_date: Time.zone.now, end_date: 1.hour.from_now }
-        it { expect(demand.committed?).to be false }
-      end
     end
   end
 

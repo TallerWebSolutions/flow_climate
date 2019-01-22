@@ -30,6 +30,7 @@ class DemandsController < AuthenticatedController
 
   def update
     @demand.update(demand_params)
+    @updated_demand = DemandsList.find(@demand.id)
     render 'demands/update'
   end
 
@@ -99,14 +100,14 @@ class DemandsController < AuthenticatedController
 
   def build_demands_query(demands, period)
     filtered_demands = demands
-    filtered_demands = DemandsRepository.instance.not_started_demands(demands) if radio_param?(:not_started)
-    filtered_demands = DemandsRepository.instance.committed_demands(demands) if radio_param?(:wip)
+    filtered_demands = demands.not_started if radio_param?(:not_started)
+    filtered_demands = demands.in_wip if radio_param?(:wip)
     filtered_demands = demands.finished if radio_param?(:delivered)
 
-    result_query = Demand.where(id: filtered_demands.map(&:id))
+    result_query = DemandsList.where(id: filtered_demands.map(&:id))
 
-    bottom_date = bottom_date_limit_value(demands, period)
-    result_query = result_query.where('(demands.end_date IS NULL AND demands.created_date >= :bottom_date) OR (demands.end_date >= :bottom_date)', bottom_date: bottom_date) if bottom_date.present?
+    bottom_date = bottom_date_limit_value(period)
+    result_query = result_query.where('(demands_lists.end_date IS NULL AND demands_lists.created_date >= :bottom_date) OR (demands_lists.end_date >= :bottom_date)', bottom_date: bottom_date) if bottom_date.present?
 
     result_query.order(end_date: :desc, commitment_date: :desc, created_date: :desc)
   end
@@ -115,10 +116,9 @@ class DemandsController < AuthenticatedController
     params[param] == 'true'
   end
 
-  def bottom_date_limit_value(demands, period)
-    projects = demands.map(&:project).uniq
-    base_date = projects.map(&:end_date).flatten.max
-    base_date = Time.zone.now if projects.blank? || projects.map(&:status).flatten.include?('executing')
+  def bottom_date_limit_value(period)
+    base_date = @projects.map(&:end_date).flatten.max
+    base_date = Time.zone.now if @projects.blank? || @projects.map(&:status).flatten.include?('executing')
     TimeService.instance.limit_date_to_period(period, base_date)
   end
 end

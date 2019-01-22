@@ -1,5 +1,5 @@
-var updatedRow = $('#demand_<%= @demand.id %>');
-updatedRow.html("<%= escape_javascript(render 'demands/demand_fields', demand: @demand).html_safe %>");
+var updatedRow = $('#demand_<%= @updated_demand.id %>');
+updatedRow.html("<%= escape_javascript(render 'demands/demand_fields', demand: @updated_demand).html_safe %>");
 
 $("#edit-demand-form").modal('toggle');
 $('body').removeClass('modal-open');

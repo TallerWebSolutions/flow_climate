@@ -422,7 +422,7 @@ RSpec.describe DemandsController, type: :controller do
         it 'builds the operation report and respond the JS render the template' do
           get :demands_in_projects, params: { company_id: company, projects_ids: [first_project, second_project].map(&:id).to_csv, demands_ids: Demand.all.map(&:id).join(','), period: :all }, xhr: true
           expect(response).to render_template 'demands/demands_tab.js.erb'
-          expect(assigns(:demands)).to match_array [first_demand, second_demand]
+          expect(assigns(:demands).map(&:id)).to match_array [first_demand.id, second_demand.id]
           expect(assigns(:demands_count_per_week)[first_project.start_date.beginning_of_week]).to eq(arrived_in_week: [], std_dev_arrived: 0.0, std_dev_throughput: 0.0, throughput_in_week: [])
         end
       end
@@ -471,7 +471,7 @@ RSpec.describe DemandsController, type: :controller do
                 get :search_demands_by_flow_status, params: { company_id: company, projects_ids: Project.all.map(&:id).join(','), no_grouping: 'true', grouped_by_month: 'false', grouped_by_customer: 'false', not_started: 'false', wip: 'false', delivered: 'false', period: :all }, xhr: true
 
                 expect(response).to render_template 'demands/search_demands_by_flow_status.js.erb'
-                expect(assigns(:demands)).to eq [first_demand, fifth_demand, second_demand, sixth_demand, fourth_demand, eigth_demand, seventh_demand, third_demand]
+                expect(assigns(:demands).map(&:id)).to eq [first_demand.id, fifth_demand.id, second_demand.id, sixth_demand.id, fourth_demand.id, eigth_demand.id, seventh_demand.id, third_demand.id]
                 expect(assigns(:grouped_delivered_demands)).to be_nil
                 expect(assigns(:grouped_customer_demands)).to be_nil
               end
@@ -481,8 +481,8 @@ RSpec.describe DemandsController, type: :controller do
                 get :search_demands_by_flow_status, params: { company_id: company, projects_ids: Project.all.map(&:id).join(','), no_grouping: 'false', grouped_by_month: 'true', grouped_by_customer: 'false', not_started: 'false', wip: 'false', delivered: 'false', period: :all }, xhr: true
 
                 expect(response).to render_template 'demands/search_demands_by_flow_status.js.erb'
-                expect(assigns(:demands)).to eq [first_demand, fifth_demand, second_demand, sixth_demand, fourth_demand, eigth_demand, seventh_demand, third_demand]
-                expect(assigns(:grouped_delivered_demands)[[2018, 9]]).to eq [fourth_demand, eigth_demand, seventh_demand, third_demand]
+                expect(assigns(:demands).map(&:id)).to eq [first_demand.id, fifth_demand.id, second_demand.id, sixth_demand.id, fourth_demand.id, eigth_demand.id, seventh_demand.id, third_demand.id]
+                expect(assigns(:grouped_delivered_demands)[[2018, 9]].map(&:id)).to eq [fourth_demand.id, eigth_demand.id, seventh_demand.id, third_demand.id]
                 expect(assigns(:grouped_customer_demands)).to be_nil
               end
             end
@@ -491,9 +491,9 @@ RSpec.describe DemandsController, type: :controller do
                 get :search_demands_by_flow_status, params: { company_id: company, projects_ids: Project.all.map(&:id).join(','), no_grouping: 'false', grouped_by_month: 'false', grouped_by_customer: 'true', not_started: 'false', wip: 'false', delivered: 'false', period: :all }, xhr: true
 
                 expect(response).to render_template 'demands/search_demands_by_flow_status.js.erb'
-                expect(assigns(:demands)).to eq [first_demand, fifth_demand, second_demand, sixth_demand, fourth_demand, eigth_demand, seventh_demand, third_demand]
+                expect(assigns(:demands).map(&:id)).to eq [first_demand.id, fifth_demand.id, second_demand.id, sixth_demand.id, fourth_demand.id, eigth_demand.id, seventh_demand.id, third_demand.id]
                 expect(assigns(:grouped_delivered_demands)).to be_nil
-                expect(assigns(:grouped_customer_demands)[customer.name]).to eq [first_demand, second_demand, fourth_demand, third_demand]
+                expect(assigns(:grouped_customer_demands)[customer.name].map(&:id)).to eq [first_demand.id, second_demand.id, fourth_demand.id, third_demand.id]
               end
             end
           end
@@ -503,7 +503,7 @@ RSpec.describe DemandsController, type: :controller do
                 get :search_demands_by_flow_status, params: { company_id: company, projects_ids: Project.all.map(&:id).join(','), no_grouping: 'true', grouped_by_month: 'false', grouped_by_customer: 'false', not_started: 'true', wip: 'false', delivered: 'false', period: :all }, xhr: true
 
                 expect(response).to render_template 'demands/search_demands_by_flow_status.js.erb'
-                expect(assigns(:demands)).to eq [first_demand, fifth_demand]
+                expect(assigns(:demands).map(&:id)).to eq [first_demand.id, fifth_demand.id]
                 expect(assigns(:grouped_delivered_demands)).to be_nil
                 expect(assigns(:grouped_customer_demands)).to be_nil
               end
@@ -513,7 +513,7 @@ RSpec.describe DemandsController, type: :controller do
                 get :search_demands_by_flow_status, params: { company_id: company, projects_ids: Project.all.map(&:id).join(','), no_grouping: 'false', grouped_by_month: 'true', grouped_by_customer: 'false', not_started: 'true', wip: 'false', delivered: 'false', period: 'all' }, xhr: true
 
                 expect(response).to render_template 'demands/search_demands_by_flow_status.js.erb'
-                expect(assigns(:demands)).to eq [first_demand, fifth_demand]
+                expect(assigns(:demands).map(&:id)).to eq [first_demand.id, fifth_demand.id]
                 expect(assigns(:grouped_delivered_demands)).to eq({})
                 expect(assigns(:grouped_customer_demands)).to be_nil
               end
@@ -523,9 +523,9 @@ RSpec.describe DemandsController, type: :controller do
                 get :search_demands_by_flow_status, params: { company_id: company, projects_ids: Project.all.map(&:id).join(','), no_grouping: 'false', grouped_by_month: 'false', grouped_by_customer: 'true', not_started: 'true', wip: 'false', delivered: 'false', period: :all }, xhr: true
 
                 expect(response).to render_template 'demands/search_demands_by_flow_status.js.erb'
-                expect(assigns(:demands)).to eq [first_demand, fifth_demand]
+                expect(assigns(:demands).map(&:id)).to eq [first_demand.id, fifth_demand.id]
                 expect(assigns(:grouped_delivered_demands)).to be_nil
-                expect(assigns(:grouped_customer_demands)[customer.name]).to eq [first_demand]
+                expect(assigns(:grouped_customer_demands)[customer.name].map(&:id)).to eq [first_demand.id]
               end
             end
           end
@@ -535,7 +535,7 @@ RSpec.describe DemandsController, type: :controller do
                 get :search_demands_by_flow_status, params: { company_id: company, projects_ids: Project.all.map(&:id).join(','), no_grouping: 'true', grouped_by_month: 'false', grouped_by_customer: 'false', not_started: 'false', wip: 'true', delivered: 'false', period: :month }, xhr: true
 
                 expect(response).to render_template 'demands/search_demands_by_flow_status.js.erb'
-                expect(assigns(:demands)).to match_array [second_demand, sixth_demand]
+                expect(assigns(:demands).map(&:id)).to match_array [second_demand.id, sixth_demand.id]
                 expect(assigns(:grouped_delivered_demands)).to be_nil
                 expect(assigns(:grouped_customer_demands)).to be_nil
               end
@@ -545,7 +545,7 @@ RSpec.describe DemandsController, type: :controller do
                 get :search_demands_by_flow_status, params: { company_id: company, projects_ids: Project.all.map(&:id).join(','), no_grouping: 'false', grouped_by_month: 'true', grouped_by_customer: 'false', not_started: 'false', wip: 'true', delivered: 'false', period: :all }, xhr: true
 
                 expect(response).to render_template 'demands/search_demands_by_flow_status.js.erb'
-                expect(assigns(:demands)).to match_array [second_demand, sixth_demand]
+                expect(assigns(:demands).map(&:id)).to match_array [second_demand.id, sixth_demand.id]
                 expect(assigns(:grouped_delivered_demands)).to eq({})
                 expect(assigns(:grouped_customer_demands)).to be_nil
               end
@@ -555,9 +555,9 @@ RSpec.describe DemandsController, type: :controller do
                 get :search_demands_by_flow_status, params: { company_id: company, projects_ids: Project.all.map(&:id).join(','), no_grouping: 'false', grouped_by_month: 'false', grouped_by_customer: 'true', not_started: 'false', wip: 'true', delivered: 'false', period: :all }, xhr: true
 
                 expect(response).to render_template 'demands/search_demands_by_flow_status.js.erb'
-                expect(assigns(:demands)).to match_array [second_demand, sixth_demand]
+                expect(assigns(:demands).map(&:id)).to match_array [second_demand.id, sixth_demand.id]
                 expect(assigns(:grouped_delivered_demands)).to be_nil
-                expect(assigns(:grouped_customer_demands)[customer.name]).to eq [second_demand]
+                expect(assigns(:grouped_customer_demands)[customer.name].map(&:id)).to eq [second_demand.id]
               end
             end
           end
@@ -567,7 +567,7 @@ RSpec.describe DemandsController, type: :controller do
                 get :search_demands_by_flow_status, params: { company_id: company, projects_ids: Project.all.map(&:id).join(','), no_grouping: 'true', grouped_by_month: 'false', grouped_by_customer: 'false', not_started: 'false', wip: 'false', delivered: 'true', period: :all }, xhr: true
 
                 expect(response).to render_template 'demands/search_demands_by_flow_status.js.erb'
-                expect(assigns(:demands)).to eq [fourth_demand, eigth_demand, seventh_demand, third_demand]
+                expect(assigns(:demands).map(&:id)).to eq [fourth_demand.id, eigth_demand.id, seventh_demand.id, third_demand.id]
                 expect(assigns(:grouped_delivered_demands)).to be_nil
                 expect(assigns(:grouped_customer_demands)).to be_nil
               end
@@ -577,8 +577,8 @@ RSpec.describe DemandsController, type: :controller do
                 get :search_demands_by_flow_status, params: { company_id: company, projects_ids: Project.all.map(&:id).join(','), no_grouping: 'false', grouped_by_month: 'true', grouped_by_customer: 'false', not_started: 'false', wip: 'false', delivered: 'true', period: :all }, xhr: true
 
                 expect(response).to render_template 'demands/search_demands_by_flow_status.js.erb'
-                expect(assigns(:demands)).to eq [fourth_demand, eigth_demand, seventh_demand, third_demand]
-                expect(assigns(:grouped_delivered_demands)[[2018, 9]]).to eq [fourth_demand, eigth_demand, seventh_demand, third_demand]
+                expect(assigns(:demands).map(&:id)).to eq [fourth_demand.id, eigth_demand.id, seventh_demand.id, third_demand.id]
+                expect(assigns(:grouped_delivered_demands)[[2018, 9]].map(&:id)).to eq [fourth_demand.id, eigth_demand.id, seventh_demand.id, third_demand.id]
                 expect(assigns(:grouped_customer_demands)).to be_nil
               end
             end
@@ -587,9 +587,9 @@ RSpec.describe DemandsController, type: :controller do
                 get :search_demands_by_flow_status, params: { company_id: company, projects_ids: Project.all.map(&:id).join(','), no_grouping: 'false', grouped_by_month: 'false', grouped_by_customer: 'true', not_started: 'false', wip: 'false', delivered: 'true', period: :all }, xhr: true
 
                 expect(response).to render_template 'demands/search_demands_by_flow_status.js.erb'
-                expect(assigns(:demands)).to eq [fourth_demand, eigth_demand, seventh_demand, third_demand]
+                expect(assigns(:demands).map(&:id)).to eq [fourth_demand.id, eigth_demand.id, seventh_demand.id, third_demand.id]
                 expect(assigns(:grouped_delivered_demands)).to be_nil
-                expect(assigns(:grouped_customer_demands)[customer.name]).to eq [fourth_demand, third_demand]
+                expect(assigns(:grouped_customer_demands)[customer.name].map(&:id)).to eq [fourth_demand.id, third_demand.id]
               end
             end
           end
