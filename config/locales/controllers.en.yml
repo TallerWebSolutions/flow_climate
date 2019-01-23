@@ -363,6 +363,7 @@ en:
       qty_blocks: "Qty Blocks"
       hours_blocks_queue: "Hours Blocked in Queues"
       hours_blocks_touch: "Hours Blocked in Queues"
+      total_blocked_time: "Time Blocked"
     edit:
       title: "Edit Demand"
     show:

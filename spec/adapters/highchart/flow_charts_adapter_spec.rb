@@ -56,10 +56,10 @@ RSpec.describe Highchart::FlowChartsAdapter, type: :data_object do
         expect(flow_data.demands_in_wip[Date.new(2018, 3, 31).to_s]).to match_array [out_date_selected_demand, sixth_demand, seventh_demand, eigth_demand, nineth_demand, tenth_demand]
         expect(flow_data.demands_in_wip[Date.new(2018, 4, 1).to_s]).to match_array [out_date_selected_demand, sixth_demand, seventh_demand, eigth_demand, nineth_demand, tenth_demand]
 
-        expect(flow_data.column_chart_data).to match_array([{ name: 'Total Entrada', data: [1, 2, 2], stack: 0, yaxis: 0 }, { name: 'Processadas no Downstream', data: [1, 2, 1], stack: 1, yaxis: 1 }, { name: 'Processadas no Upstream', data: [0, 0, 1], stack: 1, yaxis: 1 }])
+        expect(flow_data.column_chart_data).to match_array([{ name: 'Total Entrada', data: [2, 2, 1], stack: 0, yaxis: 0 }, { name: 'Processadas no Downstream', data: [1, 2, 1], stack: 1, yaxis: 1 }, { name: 'Processadas no Upstream', data: [1, 0, 0], stack: 1, yaxis: 1 }])
 
         expect(flow_data.x_axis_month_data).to eq [[2018.0, 3.0], [2018.0, 4.0]]
-        expect(flow_data.hours_per_project_per_month).to eq [1708.0, 364.0]
+        expect(flow_data.hours_per_project_per_month).to eq [1708.0, 1498.0]
       end
     end
   end

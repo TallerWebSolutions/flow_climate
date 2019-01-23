@@ -321,8 +321,8 @@ RSpec.describe Project, type: :model do
     let(:project) { Fabricate :project, initial_scope: 30, start_date: 1.day.ago, end_date: 1.week.from_now }
 
     context 'having demands' do
-      let!(:opened_bugs) { Fabricate.times(20, :demand, project: project, demand_type: :bug) }
-      let!(:opened_features) { Fabricate.times(10, :demand, project: project, demand_type: :feature) }
+      let!(:opened_bugs) { Fabricate.times(20, :demand, project: project, demand_type: :bug, end_date: nil) }
+      let!(:opened_features) { Fabricate.times(10, :demand, project: project, demand_type: :feature, end_date: nil) }
       let!(:delivered_bugs) { Fabricate.times(5, :demand, project: project, demand_type: :bug, end_date: 1.week.ago) }
 
       it { expect(project.total_bugs_opened).to eq 20 }
@@ -335,8 +335,8 @@ RSpec.describe Project, type: :model do
   describe '#total_bugs_closed' do
     let(:project) { Fabricate :project, initial_scope: 30, start_date: 1.day.ago, end_date: 1.week.from_now }
     context 'having demands' do
-      let!(:opened_bugs) { Fabricate.times(20, :demand, project: project, demand_type: :bug) }
-      let!(:opened_features) { Fabricate.times(10, :demand, project: project, demand_type: :feature) }
+      let!(:opened_bugs) { Fabricate.times(20, :demand, project: project, demand_type: :bug, end_date: nil) }
+      let!(:opened_features) { Fabricate.times(10, :demand, project: project, demand_type: :feature, end_date: nil) }
       let!(:delivered_bugs) { Fabricate.times(5, :demand, project: project, demand_type: :bug, end_date: 1.week.ago) }
 
       it { expect(project.total_bugs_closed).to eq 5 }
@@ -374,7 +374,7 @@ RSpec.describe Project, type: :model do
     let!(:customer) { Fabricate :customer, company: company }
     let!(:team) { Fabricate :team, company: company }
     let!(:team_member) { Fabricate :team_member, team: team, hours_per_month: 100, hour_value: 10, monthly_payment: 1200, total_monthly_payment: 1300 }
-    let!(:project) { Fabricate :project, team: team, customer: customer, start_date: 2.months.ago, end_date: 3.months.from_now, qty_hours: 3000, value: 400_000, hour_value: 200, percentage_effort_to_bugs: 100 }
+    let!(:project) { Fabricate :project, team: team, customer: customer, start_date: 2.months.ago, end_date: 3.months.from_now, qty_hours: 3000, value: 1_000_000, hour_value: 200, percentage_effort_to_bugs: 100 }
 
     let(:first_stage) { Fabricate :stage, company: company, stage_stream: :downstream, queue: false, end_point: false }
     let(:second_stage) { Fabricate :stage, company: company, stage_stream: :downstream, queue: false, end_point: true }
@@ -384,9 +384,10 @@ RSpec.describe Project, type: :model do
     let!(:second_stage_project_config) { Fabricate :stage_project_config, project: project, stage: second_stage, compute_effort: true, pairing_percentage: 80, stage_percentage: 100, management_percentage: 10 }
     let!(:third_stage_project_config) { Fabricate :stage_project_config, project: project, stage: third_stage, compute_effort: true, pairing_percentage: 80, stage_percentage: 100, management_percentage: 10 }
 
-    let!(:first_demand) { Fabricate :demand, project: project, created_date: 2.weeks.ago, end_date: 1.week.ago, demand_type: :bug }
-    let!(:second_demand) { Fabricate :demand, project: project, created_date: 2.weeks.ago, end_date: 1.week.ago }
-    let!(:third_demand) { Fabricate :demand, project: project, created_date: 1.week.ago, end_date: 2.days.ago }
+    let!(:first_demand) { Fabricate :demand, project: project, created_date: 2.weeks.ago, commitment_date: 8.days.ago, end_date: 1.week.ago, demand_type: :bug }
+    let!(:second_demand) { Fabricate :demand, project: project, created_date: 2.weeks.ago, commitment_date: 9.days.ago, end_date: 1.week.ago }
+    let!(:third_demand) { Fabricate :demand, project: project, created_date: 1.week.ago, commitment_date: 10.days.ago, end_date: 2.days.ago }
+    let!(:fourth_demand) { Fabricate :demand, project: project, created_date: Time.zone.now, commitment_date: Time.zone.now, end_date: nil }
 
     let!(:first_transition) { Fabricate :demand_transition, stage: first_stage, demand: first_demand, last_time_in: 1.month.ago, last_time_out: 2.weeks.ago }
     let!(:second_transition) { Fabricate :demand_transition, stage: first_stage, demand: second_demand, last_time_in: 1.month.ago, last_time_out: 3.weeks.ago }
@@ -409,7 +410,7 @@ RSpec.describe Project, type: :model do
   end
 
   describe '#total_hours_bug' do
-    before { travel_to Date.new(2018, 11, 19) }
+    before { travel_to Time.zone.local(2018, 11, 19, 10, 0, 0) }
     after { travel_back }
 
     context 'having data' do
@@ -452,7 +453,7 @@ RSpec.describe Project, type: :model do
   describe '#last_week_scope' do
     context 'having data' do
       include_context 'demands with effort'
-      it { expect(project.last_week_scope).to eq 32 }
+      it { expect(project.last_week_scope).to eq 33 }
     end
     context 'having no data' do
       let(:project) { Fabricate :project, initial_scope: 65, end_date: 4.weeks.from_now }
@@ -489,7 +490,7 @@ RSpec.describe Project, type: :model do
     context 'having demands' do
       context 'specifying no date' do
         include_context 'demands with effort'
-        it { expect(project.backlog_remaining).to eq 32 }
+        it { expect(project.backlog_remaining).to eq 33 }
       end
       context 'specifying a date' do
         include_context 'demands with effort'
@@ -507,7 +508,7 @@ RSpec.describe Project, type: :model do
       include_context 'demands with effort'
       it { expect(project.backlog_for(1.week.ago)).to eq 33 }
       it { expect(project.backlog_for(2.weeks.ago)).to eq 32 }
-      it { expect(project.backlog_for).to eq 33 }
+      it { expect(project.backlog_for).to eq 34 }
     end
 
     context 'having no data' do
@@ -592,7 +593,7 @@ RSpec.describe Project, type: :model do
 
     context 'having data' do
       include_context 'demands with effort'
-      it { expect(project.required_hours).to eq 2464.0 }
+      it { expect(project.required_hours).to eq 2541.0 }
     end
     context 'having no data' do
       let!(:project) { Fabricate :project, end_date: 4.weeks.from_now, initial_scope: 30 }
@@ -606,7 +607,7 @@ RSpec.describe Project, type: :model do
 
     context 'having data' do
       include_context 'demands with effort'
-      it { expect(project.required_hours_per_available_hours).to eq 0.8898519321054532 }
+      it { expect(project.required_hours_per_available_hours).to eq 0.9176598049837487 }
     end
     context 'having no data' do
       let!(:project) { Fabricate :project, end_date: 4.weeks.from_now, initial_scope: 30 }
@@ -646,7 +647,7 @@ RSpec.describe Project, type: :model do
 
     context 'having data' do
       include_context 'demands with effort'
-      it { expect(project.backlog_growth_rate).to eq 0.03125 }
+      it { expect(project.backlog_growth_rate).to eq 0.030303030303030304 }
     end
 
     context 'having no data' do
@@ -657,12 +658,12 @@ RSpec.describe Project, type: :model do
   end
 
   describe '#money_per_deadline' do
-    before { travel_to Date.new(2018, 11, 19) }
+    before { travel_to Time.zone.local(2018, 11, 19, 10, 0, 0) }
     after { travel_back }
 
     context 'having data' do
       include_context 'demands with effort'
-      it { expect(project.money_per_deadline.to_f).to eq 3804.3010752688174 }
+      it { expect(project.money_per_deadline.to_f).to eq 10_062.36559139785 }
     end
 
     context 'having no data' do
@@ -858,14 +859,18 @@ RSpec.describe Project, type: :model do
   end
 
   describe '#leadtime_for_class_of_service' do
+    before { travel_to Time.zone.local(2018, 5, 21, 10, 0, 0) }
+    after { travel_back }
+
     let(:project) { Fabricate :project }
 
     context 'having demands' do
-      let!(:expedite_demand) { Fabricate :demand, class_of_service: :expedite, project: project, end_date: Time.zone.today, leadtime: 100 }
-      let!(:other_expedite_demand) { Fabricate :demand, class_of_service: :expedite, project: project, end_date: Time.zone.today, leadtime: 80 }
+      let!(:expedite_demand) { Fabricate :demand, class_of_service: :expedite, commitment_date: 2.days.ago, project: project, end_date: Time.zone.today }
+      let!(:other_expedite_demand) { Fabricate :demand, class_of_service: :expedite, project: project, commitment_date: 1.day.ago, end_date: Time.zone.today }
       let!(:standard_demand) { Fabricate :demand, class_of_service: :standard, project: project, end_date: Time.zone.today, leadtime: 80 }
-      it { expect(project.leadtime_for_class_of_service(:expedite).to_f).to eq 96.0 }
-      it { expect(project.leadtime_for_class_of_service(:expedite, 60).to_f).to eq 92.0 }
+
+      it { expect(project.leadtime_for_class_of_service(:expedite).to_f).to eq 119_520.0 }
+      it { expect(project.leadtime_for_class_of_service(:expedite, 60).to_f).to eq 102_240.0 }
     end
     context 'having no demands' do
       let!(:expedite_demand) { Fabricate :demand, class_of_service: :expedite, project: project, end_date: Time.zone.today, leadtime: 100 }
@@ -876,14 +881,17 @@ RSpec.describe Project, type: :model do
   end
 
   describe '#leadtime_for_demand_type' do
+    before { travel_to Time.zone.local(2018, 5, 21, 10, 0, 0) }
+    after { travel_back }
+
     let(:project) { Fabricate :project }
 
     context 'having demands' do
-      let!(:expedite_demand) { Fabricate :demand, demand_type: :bug, project: project, end_date: Time.zone.today, leadtime: 100 }
-      let!(:other_expedite_demand) { Fabricate :demand, demand_type: :bug, project: project, end_date: Time.zone.today, leadtime: 80 }
-      let!(:standard_demand) { Fabricate :demand, demand_type: :feature, project: project, end_date: Time.zone.today, leadtime: 80 }
-      it { expect(project.leadtime_for_demand_type(:bug).to_f).to eq 96.0 }
-      it { expect(project.leadtime_for_demand_type(:bug, 60).to_f).to eq 92.0 }
+      let!(:expedite_demand) { Fabricate :demand, demand_type: :bug, project: project, commitment_date: 2.days.ago, end_date: Time.zone.today }
+      let!(:other_expedite_demand) { Fabricate :demand, demand_type: :bug, project: project, commitment_date: 1.day.ago, end_date: Time.zone.today }
+      let!(:standard_demand) { Fabricate :demand, demand_type: :feature, project: project, end_date: Time.zone.today }
+      it { expect(project.leadtime_for_demand_type(:bug).to_f).to eq 119_520.0 }
+      it { expect(project.leadtime_for_demand_type(:bug, 60).to_f).to eq 102_240.0 }
     end
     context 'having no demands' do
       let!(:expedite_demand) { Fabricate :demand, demand_type: :bug, project: project, end_date: Time.zone.today, leadtime: 100 }

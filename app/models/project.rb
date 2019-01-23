@@ -142,7 +142,7 @@ class Project < ApplicationRecord
   def backlog_for(date = Time.zone.today)
     return demands.kept.count if date.blank?
 
-    demands.kept.where('created_date <= :limit_date', limit_date: date).count + initial_scope
+    demands.kept.where('created_date <= :limit_date', limit_date: date.end_of_week).count + initial_scope
   end
 
   def current_team

@@ -4,7 +4,7 @@ class TeamsController < AuthenticatedController
   before_action :user_gold_check
 
   before_action :assign_company
-  before_action :assign_team, only: %i[show edit update]
+  before_action :assign_team, only: %i[show edit update search_demands_to_flow_charts]
 
   def show
     @team_members = @team.team_members.order(:name)
@@ -33,6 +33,12 @@ class TeamsController < AuthenticatedController
     return redirect_to company_path(@company) if @team.save
 
     render :edit
+  end
+
+  def search_demands_to_flow_charts
+    @team_projects = ProjectsRepository.instance.all_projects_for_team(@team)
+    @flow_report_data = Highchart::FlowChartsAdapter.new(@team_projects, params[:week].to_i, params[:year].to_i)
+    respond_to { |format| format.js { render file: 'teams/flow.js.erb' } }
   end
 
   private

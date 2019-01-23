@@ -164,7 +164,7 @@ RSpec.describe Company, type: :model do
   describe '#last_week_scope' do
     include_context 'demands with effort for company'
 
-    it { expect(company.last_week_scope).to eq 182 }
+    it { expect(company.last_week_scope).to eq 183 }
   end
 
   describe '#avg_hours_per_demand' do

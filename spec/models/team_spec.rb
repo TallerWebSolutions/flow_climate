@@ -98,7 +98,7 @@ RSpec.describe Team, type: :model do
 
   describe '#last_week_scope' do
     include_context 'consolidations data for team'
-    it { expect(team.last_week_scope).to eq 32 }
+    it { expect(team.last_week_scope).to eq 33 }
   end
 
   describe '#avg_hours_per_demand' do
