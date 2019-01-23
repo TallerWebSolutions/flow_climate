@@ -78,7 +78,7 @@ RSpec.describe Demand, type: :model do
     describe '.finished_with_leadtime' do
       let!(:first_demand) { Fabricate :demand, project: project, end_date: Time.zone.now, leadtime: 2 }
       let!(:second_demand) { Fabricate :demand, project: project, end_date: Time.zone.now, leadtime: 3 }
-      let!(:third_demand) { Fabricate :demand, project: project, end_date: Time.zone.now }
+      let!(:third_demand) { Fabricate :demand, project: project, commitment_date: nil, end_date: Time.zone.now }
 
       it { expect(Demand.finished_with_leadtime).to match_array [first_demand, second_demand] }
     end
@@ -319,7 +319,7 @@ RSpec.describe Demand, type: :model do
     context 'leadtime' do
       context 'having commitment and end dates' do
         let!(:demand) { Fabricate :demand, commitment_date: 2.days.ago, end_date: 1.hour.ago }
-        it { expect(demand.leadtime).to be_within(0.001).of(169_200.001) }
+        it { expect(demand.leadtime.to_f).to be_within(1.second).of(169_200.001) }
       end
       context 'having no commitment date but having end date' do
         let!(:demand) { Fabricate :demand, commitment_date: nil, end_date: 1.hour.ago }
@@ -600,11 +600,11 @@ RSpec.describe Demand, type: :model do
 
   describe '#leadtime_in_days' do
     context 'having leadtime' do
-      let!(:demand) { Fabricate :demand, leadtime: 453_223 }
-      it { expect(demand.leadtime_in_days.to_f).to eq 5.245636574074074 }
+      let!(:demand) { Fabricate :demand }
+      it { expect(demand.leadtime_in_days.to_f).to be_within(1.second).of(1) }
     end
     context 'having no leadtime' do
-      let!(:demand) { Fabricate :demand, leadtime: nil }
+      let!(:demand) { Fabricate :demand, commitment_date: nil, end_date: nil, leadtime: nil }
       it { expect(demand.leadtime_in_days.to_f).to eq 0 }
     end
   end
@@ -656,6 +656,26 @@ RSpec.describe Demand, type: :model do
     context 'having no transitions' do
       let!(:demand) { Fabricate :demand, leadtime: nil }
       it { expect(demand.sum_queue_blocked_time.to_f).to eq 0 }
+    end
+  end
+
+  describe '#compute_and_update_automatic_fields' do
+    context 'when the end date and commitment date are not null' do
+      let(:demand) { Fabricate.build :demand, commitment_date: 1.day.ago, end_date: Time.zone.now }
+      before { demand.save }
+      it { expect(Demand.last.leadtime.to_f).to eq((demand.end_date - demand.commitment_date)) }
+    end
+
+    context 'when the end date is null' do
+      let(:demand) { Fabricate.build :demand, commitment_date: 1.day.ago, end_date: nil }
+      before { demand.save }
+      it { expect(Demand.last.leadtime).to be_nil }
+    end
+
+    context 'when the commitment date is null' do
+      let(:demand) { Fabricate.build :demand, commitment_date: nil, end_date: Time.zone.now }
+      before { demand.save }
+      it { expect(Demand.last.leadtime).to be_nil }
     end
   end
 end

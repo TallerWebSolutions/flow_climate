@@ -23,7 +23,7 @@ RSpec.describe Highchart::StatusReportChartsAdapter, type: :data_object do
     let!(:fourth_stage_project_config) { Fabricate :stage_project_config, project: second_project, stage: fourth_stage, compute_effort: true, pairing_percentage: 60, stage_percentage: 100, management_percentage: 10 }
     let!(:fifth_stage_project_config) { Fabricate :stage_project_config, project: third_project, stage: fifth_stage, compute_effort: true, pairing_percentage: 60, stage_percentage: 100, management_percentage: 10 }
 
-    let!(:opened_demands) { Fabricate.times(20, :demand, project: first_project, created_date: Time.zone.iso8601('2018-02-21T23:01:46-02:00')) }
+    let!(:opened_demands) { Fabricate.times(20, :demand, project: first_project, created_date: Time.zone.iso8601('2018-02-21T23:01:46-02:00'), commitment_date: nil, end_date: nil) }
     let!(:first_demand) { Fabricate :demand, project: first_project, created_date: Time.zone.iso8601('2018-02-10T23:01:46-02:00'), end_date: Time.zone.iso8601('2018-02-21T23:01:46-02:00'), leadtime: 2 * 86_400, effort_upstream: 10, effort_downstream: 5 }
     let!(:second_demand) { Fabricate :demand, project: first_project, created_date: Time.zone.iso8601('2018-02-21T23:01:46-02:00'), end_date: Time.zone.iso8601('2018-02-22T23:01:46-02:00'), leadtime: 3 * 86_400, effort_upstream: 12, effort_downstream: 20 }
     let!(:third_demand) { Fabricate :demand, project: second_project, created_date: Time.zone.iso8601('2018-02-15T23:01:46-02:00'), end_date: Time.zone.iso8601('2018-03-19T23:01:46-02:00'), leadtime: 1 * 86_400, effort_upstream: 27, effort_downstream: 40 }

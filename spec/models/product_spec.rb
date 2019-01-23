@@ -88,7 +88,7 @@ RSpec.describe Product, type: :model do
     let!(:other_project) { Fabricate :project, start_date: 4.weeks.ago, end_date: 3.weeks.from_now, customer: product.customer, product: product, value: 5000, qty_hours: 10_000, hour_value: 2 }
     let!(:other_product_project) { Fabricate :project, customer: other_product.customer, product: other_product, start_date: 4.weeks.ago, end_date: 3.weeks.from_now, value: 22_000, qty_hours: 50_000, hour_value: 0.44 }
 
-    let!(:demand) { Fabricate :demand, project: project, effort_downstream: 900, effort_upstream: 50 }
+    let!(:demand) { Fabricate :demand, project: project, created_date: Time.zone.local(2018, 11, 14, 10, 0, 0), end_date: Time.zone.now, effort_downstream: 900, effort_upstream: 50 }
   end
 
   describe '#last_week_scope' do
@@ -101,7 +101,7 @@ RSpec.describe Product, type: :model do
 
   describe '#avg_hours_per_demand' do
     include_context 'consolidations variables data for product'
-    it { expect(product.avg_hours_per_demand).to eq product.projects.sum(&:avg_hours_per_demand) / product.projects_count.to_f }
+    it { expect(product.avg_hours_per_demand).to eq 950.0 }
   end
 
   describe '#total_value' do

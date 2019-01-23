@@ -122,21 +122,21 @@ RSpec.describe ProjectsRepository, type: :repository do
       let!(:third_demand) { Fabricate :demand, project: project, demand_type: :feature, end_date: Time.zone.parse('2018-03-30 22:00') }
       let!(:fourth_demand) { Fabricate :demand, project: project }
 
-      it { expect(ProjectsRepository.instance.throughput_per_week([project], Date.new(2018, 3, 30))).to eq(Date.new(2018, 3, 26) => 1, Date.new(2018, 4, 2) => 2, Date.new(2018, 4, 9) => 0) }
-      it { expect(ProjectsRepository.instance.throughput_per_week([project], Date.new(2018, 4, 6))).to eq(Date.new(2018, 3, 26) => 0, Date.new(2018, 4, 2) => 1, Date.new(2018, 4, 9) => 0) }
+      it { expect(ProjectsRepository.instance.throughput_per_week([project], Date.new(2018, 3, 30))).to eq(Date.new(2018, 3, 26) => 1, Date.new(2018, 4, 2) => 2, Date.new(2018, 4, 9) => 1) }
+      it { expect(ProjectsRepository.instance.throughput_per_week([project], Date.new(2018, 4, 6))).to eq(Date.new(2018, 3, 26) => 0, Date.new(2018, 4, 2) => 1, Date.new(2018, 4, 9) => 1) }
     end
   end
 
   describe '#leadtime_per_week' do
     let!(:project) { Fabricate :project, customer: customer, start_date: 1.week.ago, end_date: 2.months.from_now, status: :executing }
 
-    let!(:first_demand) { Fabricate :demand, project: project, end_date: Time.zone.parse('2018-04-05 22:00'), leadtime: 2.0 }
-    let!(:second_demand) { Fabricate :demand, project: project, end_date: Time.zone.parse('2018-04-06 22:00'), leadtime: 1.0 }
-    let!(:third_demand) { Fabricate :demand, project: project, end_date: Time.zone.parse('2018-03-30 22:00'), leadtime: 5.0 }
+    let!(:first_demand) { Fabricate :demand, project: project, commitment_date: Time.zone.parse('2018-04-02 22:00'), end_date: Time.zone.parse('2018-04-05 22:00') }
+    let!(:second_demand) { Fabricate :demand, project: project, commitment_date: Time.zone.parse('2018-04-04 22:00'), end_date: Time.zone.parse('2018-04-06 22:00') }
+    let!(:third_demand) { Fabricate :demand, project: project, commitment_date: Time.zone.parse('2018-03-28 22:00'), end_date: Time.zone.parse('2018-03-30 22:00') }
     let!(:fourth_demand) { Fabricate :demand, project: project }
 
-    it { expect(ProjectsRepository.instance.leadtime_per_week([project], Date.new(2018, 3, 30))).to eq(Date.new(2018, 4, 2) => 1.5, Date.new(2018, 4, 9) => 0.0) }
-    it { expect(ProjectsRepository.instance.leadtime_per_week([project], Date.new(2018, 4, 6))).to eq(Date.new(2018, 4, 2) => 1.0, Date.new(2018, 4, 9) => 0.0) }
+    it { expect(ProjectsRepository.instance.leadtime_per_week([project], Date.new(2018, 3, 30))).to eq(Date.new(2018, 4, 2) => 0.216e6, Date.new(2018, 4, 9) => 0.864e5) }
+    it { expect(ProjectsRepository.instance.leadtime_per_week([project], Date.new(2018, 4, 6))).to eq(Date.new(2018, 4, 2) => 0.1728e6, Date.new(2018, 4, 9) => 0.864e5) }
   end
 
   describe '#total_queue_time_for' do

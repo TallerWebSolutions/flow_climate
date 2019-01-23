@@ -218,7 +218,7 @@ class Demand < ApplicationRecord
   end
 
   def compute_and_update_automatic_fields
-    self.leadtime = end_date - commitment_date if commitment_date.present? && end_date.present?
+    self.leadtime = (end_date - commitment_date if commitment_date.present? && end_date.present?)
   end
 
   def discard_transitions_and_blocks

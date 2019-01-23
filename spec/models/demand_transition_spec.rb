@@ -127,7 +127,7 @@ RSpec.describe DemandTransition, type: :model do
 
     context 'when the stage is a commitment_point' do
       let(:stage) { Fabricate :stage, company: company, commitment_point: true, end_point: false, projects: [project] }
-      let(:demand) { Fabricate :demand, project: project, created_date: Time.zone.parse('2018-02-04 12:00:00') }
+      let(:demand) { Fabricate :demand, project: project, created_date: Time.zone.parse('2018-02-04 12:00:00'), end_date: nil }
       let(:transition_date) { Time.zone.parse('2018-03-13 12:00:00') }
 
       before { Fabricate :demand_transition, stage: stage, demand: demand, last_time_in: transition_date }
@@ -142,7 +142,7 @@ RSpec.describe DemandTransition, type: :model do
       let!(:second_stage) { Fabricate :stage, company: company, commitment_point: false, end_point: true, projects: [project], order: 1, integration_pipe_id: '123', stage_stream: :downstream }
 
       context 'and there is no end_date defined' do
-        let(:demand) { Fabricate :demand, project: project, created_date: Time.zone.parse('2018-02-04 12:00:00') }
+        let(:demand) { Fabricate :demand, project: project, created_date: Time.zone.parse('2018-02-04 12:00:00'), commitment_date: nil }
         let(:transition_date) { Time.zone.parse('2018-03-13 12:00:00') }
 
         before { Fabricate :demand_transition, stage: first_stage, demand: demand, last_time_in: transition_date }
@@ -153,7 +153,7 @@ RSpec.describe DemandTransition, type: :model do
         end
       end
       context 'and there is an end_date defined by a previous stage' do
-        let(:demand) { Fabricate :demand, project: project, created_date: Time.zone.parse('2018-02-04 12:00:00'), end_date: Time.zone.parse('2018-02-05 12:00:00') }
+        let(:demand) { Fabricate :demand, project: project, created_date: Time.zone.parse('2018-02-04 12:00:00'), commitment_date: nil, end_date: Time.zone.parse('2018-02-05 12:00:00') }
         let(:transition_date) { Time.zone.parse('2018-03-13 12:00:00') }
 
         before { Fabricate :demand_transition, stage: second_stage, demand: demand, last_time_in: transition_date }
@@ -169,7 +169,7 @@ RSpec.describe DemandTransition, type: :model do
         let!(:stage) { Fabricate :stage, company: company, commitment_point: false, end_point: false, projects: [project], order: 0 }
         let!(:other_stage) { Fabricate :stage, company: company, commitment_point: false, end_point: true, projects: [project], order: 1 }
 
-        let(:demand) { Fabricate :demand, project: project, created_date: Time.zone.parse('2018-02-04 12:00:00'), end_date: 2.weeks.from_now }
+        let(:demand) { Fabricate :demand, project: project, created_date: Time.zone.parse('2018-02-04 12:00:00'), commitment_date: nil, end_date: 2.weeks.from_now }
         let(:transition_date) { Time.zone.parse('2018-03-13 12:00:00') }
 
         before { Fabricate :demand_transition, stage: stage, demand: demand, last_time_in: transition_date }
@@ -184,7 +184,7 @@ RSpec.describe DemandTransition, type: :model do
         let!(:stage) { Fabricate :stage, company: company, commitment_point: false, end_point: false, projects: [project], integration_pipe_id: '123', order: 1, stage_stream: :downstream }
         let!(:other_stage) { Fabricate :stage, company: company, commitment_point: false, end_point: true, projects: [project], integration_pipe_id: '123', order: 0, stage_stream: :downstream }
 
-        let(:demand) { Fabricate :demand, project: project, created_date: Time.zone.parse('2018-02-04 12:00:00'), end_date: 2.weeks.from_now }
+        let(:demand) { Fabricate :demand, project: project, created_date: Time.zone.parse('2018-02-04 12:00:00'), commitment_date: nil, end_date: 2.weeks.from_now }
         let(:transition_date) { Time.zone.parse('2018-03-13 12:00:00') }
 
         before { Fabricate :demand_transition, stage: stage, demand: demand, last_time_in: transition_date }

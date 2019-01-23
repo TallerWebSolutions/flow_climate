@@ -391,7 +391,7 @@ RSpec.describe DemandsController, type: :controller do
           expect(csv.first[6]).to eq demand.effort_downstream.to_f.to_s.gsub('.', I18n.t('number.format.separator'))
           expect(csv.first[7]).to eq demand.effort_upstream.to_f.to_s.gsub('.', I18n.t('number.format.separator'))
           expect(csv.first[8]).to eq demand.created_date.iso8601
-          expect(csv.first[9]).to be_nil
+          expect(csv.first[9]).to eq demand.commitment_date.iso8601
           expect(csv.first[10]).to eq demand.end_date.iso8601
         end
       end

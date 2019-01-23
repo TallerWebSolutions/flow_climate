@@ -108,7 +108,7 @@ RSpec.describe Customer, type: :model do
 
   describe '#last_week_scope' do
     include_context 'demands with effort for customer'
-    it { expect(customer.last_week_scope).to eq 32 }
+    it { expect(customer.last_week_scope).to eq 33 }
   end
 
   describe '#avg_hours_per_demand' do
