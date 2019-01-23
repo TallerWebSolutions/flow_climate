@@ -177,7 +177,7 @@ RSpec.describe Jira::JiraIssueAdapter, type: :service do
           expect(Demand.count).to eq 1
           expect(Demand.last.assignees_count).to eq 1
           expect(Demand.last.demand_title).to eq demand.demand_title
-          expect(Demand.last.created_date).to eq demand.created_date
+          expect(Demand.last.created_date.to_date).to eq demand.created_date.to_date
         end
       end
 
