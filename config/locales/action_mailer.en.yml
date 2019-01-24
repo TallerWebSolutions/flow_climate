@@ -34,4 +34,7 @@ en:
   plans:
     request:
       subject: "A new plan was requested"
+  general:
+    leadtime:
+      title: "Lead time %{percentile}"
 

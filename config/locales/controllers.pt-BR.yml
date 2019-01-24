@@ -60,6 +60,9 @@ pt-BR:
           all_period: "Todo o Período"
           last_week: "Última Semana"
     total: "Total"
+    days_text: "%{days} dia(s)"
+    leadtime:
+      title: "Lead time %{percentile}"
   header:
     logout: Sair
     sign_up: Cadastre-se

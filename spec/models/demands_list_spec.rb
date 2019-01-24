@@ -62,4 +62,17 @@ RSpec.describe DemandsList, type: :model do
       it { expect(DemandsList.grouped_by_customer[other_customer.name].map(&:id)).to match_array [third_demand.id, fourth_demand.id] }
     end
   end
+
+  describe '#leadtime_in_days' do
+    context 'having leadtime' do
+      let!(:demand) { Fabricate :demand }
+      subject(:demands_list) { DemandsList.first }
+      it { expect(demands_list.leadtime_in_days.to_f).to be_within(1.second).of(1) }
+    end
+    context 'having no leadtime' do
+      let!(:demand) { Fabricate :demand, commitment_date: nil, end_date: nil, leadtime: nil }
+      subject(:demands_list) { DemandsList.first }
+      it { expect(demands_list.leadtime_in_days.to_f).to eq 0 }
+    end
+  end
 end

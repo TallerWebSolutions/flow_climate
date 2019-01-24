@@ -60,6 +60,7 @@ en:
           all_period: "All Period"
           last_week: "Last Week"
     total: "Total"
+    days_text: "%{days} day(s)"
   header:
     logout: Logout
     explore: Explore

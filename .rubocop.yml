@@ -51,6 +51,7 @@ Metrics/ClassLength:
     - 'app/models/project.rb'
     - 'app/models/demand.rb'
     - 'app/controllers/projects_controller.rb'
+    - 'app/controllers/demands_controller.rb'
     - 'app/adapters/**/*'
 
 Metrics/CyclomaticComplexity:

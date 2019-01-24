@@ -6,6 +6,8 @@ demandsList.html("<%= escape_javascript(render 'demands/demands_list', demands: 
 var consolidation = $("#content-consolidation");
 consolidation.html("<%= escape_javascript(render 'demands/demands_week_consolidation', demands_count_per_week: @demands_count_per_week).html_safe %>");
 
+$('#container-leadtime-div').html("<%= escape_javascript(render 'demands/demands_leadtime_container', confidence_65_leadtime: @confidence_65_leadtime, confidence_80_leadtime: @confidence_80_leadtime, confidence_95_leadtime: @confidence_95_leadtime).html_safe %>");
+
 $('#nav-item-demands').addClass('active');
 
 demandsList.show();

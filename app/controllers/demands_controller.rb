@@ -64,6 +64,8 @@ class DemandsController < AuthenticatedController
     filtered_demands = DemandsRepository.instance.demands_to_projects(@projects)
     @demands = build_demands_query(filtered_demands, 'week')
     @demands_count_per_week = DemandService.instance.quantitative_consolidation_per_week_to_projects(@projects)
+    assign_leadtime_informations
+
     respond_to { |format| format.js { render file: 'demands/demands_tab.js.erb' } }
   end
 
@@ -71,6 +73,7 @@ class DemandsController < AuthenticatedController
     @demands = query_demands(params[:period])
     @grouped_delivered_demands = @demands.grouped_end_date_by_month if radio_param?(:grouped_by_month)
     @grouped_customer_demands = @demands.grouped_by_customer if radio_param?(:grouped_by_customer)
+    assign_leadtime_informations
 
     respond_to { |format| format.js { render file: 'demands/search_demands_by_flow_status.js.erb' } }
   end
@@ -120,5 +123,11 @@ class DemandsController < AuthenticatedController
     base_date = @projects.map(&:end_date).flatten.max
     base_date = Time.zone.now if @projects.blank? || @projects.map(&:status).flatten.include?('executing')
     TimeService.instance.limit_date_to_period(period, base_date)
+  end
+
+  def assign_leadtime_informations
+    @confidence_95_leadtime = Stats::StatisticsService.instance.percentile(95, @demands.map(&:leadtime_in_days))
+    @confidence_80_leadtime = Stats::StatisticsService.instance.percentile(80, @demands.map(&:leadtime_in_days))
+    @confidence_65_leadtime = Stats::StatisticsService.instance.percentile(65, @demands.map(&:leadtime_in_days))
   end
 end
