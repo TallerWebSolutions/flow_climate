@@ -115,7 +115,7 @@
 }
 
 .container-leadtime {
-    margin: 0 300px 0 300px;
+    margin: 0 100px 0 100px;
 }
 
 .leadtime-frame {
@@ -123,19 +123,23 @@
 }
 
 .leadtime-content {
-    padding: 5px 0 0 0;
+    padding: 3px 0 0 0;
     background-color: #DADADA;
-    border-bottom: 5px solid red;
+    border-bottom: 3px solid red;
     text-align: center;
 }
 
 .leadtime-title {
-    font-size: small;
+    font-size: smaller;
     font-weight: bold;
 }
 
 .leadtime-value {
-    font-size: large;
+    font-size: small;
+}
+
+.filter-button {
+    width: 100%;
 }
 
 @keyframes spin {

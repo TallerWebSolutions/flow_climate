@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe UserNotifierMailer, type: :mailer do
-  before { travel_to Date.new(2018, 11, 19) }
+  before { travel_to Time.zone.local(2018, 11, 19, 10, 0, 0) }
   after { travel_back }
 
   describe '#company_weekly_bulletin' do
@@ -12,11 +12,12 @@ RSpec.describe UserNotifierMailer, type: :mailer do
 
     let!(:company) { Fabricate :company, users: [first_user, second_user, third_user] }
     let(:customer) { Fabricate :customer, company: company }
+    let(:product) { Fabricate :product, customer: customer }
 
-    let(:first_project) { Fabricate :project, customer: customer, start_date: 2.months.ago, end_date: 1.month.from_now }
-    let(:second_project) { Fabricate :project, customer: customer, start_date: 2.months.ago, end_date: 1.month.from_now }
-    let(:third_project) { Fabricate :project, customer: customer, start_date: 2.months.ago, end_date: 1.month.from_now }
-    let(:fourth_project) { Fabricate :project, customer: customer, start_date: 2.months.ago, end_date: 1.month.from_now }
+    let!(:first_project) { Fabricate :project, customer: customer, product: product, status: :executing, start_date: 2.months.ago, end_date: Time.zone.today }
+    let!(:second_project) { Fabricate :project, customer: customer, product: product, status: :executing, start_date: 2.months.ago, end_date: 1.month.from_now }
+    let!(:third_project) { Fabricate :project, customer: customer, product: product, status: :executing, start_date: 2.months.ago, end_date: 1.month.from_now }
+    let!(:fourth_project) { Fabricate :project, customer: customer, product: product, status: :executing, start_date: 2.months.ago, end_date: 1.month.from_now }
 
     let!(:first_demand) { Fabricate :demand, discarded_at: nil, end_date: 1.week.ago }
     let!(:second_demand) { Fabricate :demand, discarded_at: nil, end_date: 1.week.ago }

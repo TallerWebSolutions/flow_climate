@@ -155,17 +155,6 @@ en:
       last_team: "Current team"
       last_week_scope: "Last week scope"
       current_team: "Current Team"
-      demands:
-        text: "Demands"
-        grouped_by_month_check_box: "Grouped by delivered month"
-        demands_not_started: "Not Started"
-        work_in_progress: "Committed Work In Progress"
-        delivered_demands: "Delivered"
-        grouped_by_customer: "Grouped by Customer"
-        no_grouping_check_box: "Not Grouped"
-        all_demands: "All Demands"
-        all_types: "All Types"
-        all_classes: "All Classes"
       avg_hours_per_demand: "Avg Hours/Demand"
       scope_gap: "Scope Gap"
       scope_growth: "Scope Growth (%)"
@@ -408,6 +397,24 @@ en:
       std_throughput: "STD Throughput"
       avg_touch: "Average Touch"
       avg_queue: "Average Queue"
+    filter:
+      grouping:
+        title: "Grouped By"
+        no_grouping: "No Grouping"
+        grouped_by_month: "Grouped By Month"
+        grouped_by_customer: "Grouped by Customer"
+      flow_status:
+        title: "Flow Status"
+        all_demands: "All Demands"
+        not_started: "Not Started"
+        work_in_progress: "Work in Progress"
+        delivered_demands: "Delivered"
+      demand_type:
+        title: "Demand Type"
+        all_types: "All Types"
+      class_of_service:
+        title: "Class of Service"
+        all_classes: "All Classes"
   project_risk_configs:
     new:
       title: "New Risk Configuration"

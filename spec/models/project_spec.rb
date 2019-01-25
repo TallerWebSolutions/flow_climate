@@ -349,11 +349,11 @@ RSpec.describe Project, type: :model do
   describe '#full_name' do
     context 'having product' do
       let(:project) { Fabricate :project, initial_scope: 30, start_date: 1.week.ago, end_date: 1.week.from_now }
-      it { expect(project.full_name).to eq "#{project.customer_name} | #{project.product_name} | #{project.name}" }
+      it { expect(project.full_name).to eq "#{project.product_name} | #{project.name}" }
     end
     context 'having no product' do
       let(:project) { Fabricate :project, project_type: :consulting, product: nil, initial_scope: 30, start_date: 1.week.ago, end_date: 1.week.from_now }
-      it { expect(project.full_name).to eq "#{project.customer_name} | #{project.name}" }
+      it { expect(project.full_name).to eq project.name }
     end
   end
 
@@ -1059,7 +1059,7 @@ RSpec.describe Project, type: :model do
     context 'having demands' do
       context 'and the created date of the demand is earlier than the project start date' do
         let!(:demand) { Fabricate :demand, project: project, created_date: 1.day.ago }
-        it { expect(project.min_date_in_project).to eq project.demands.first.created_date.utc.to_date }
+        it { expect(project.min_date_in_project.to_date).to eq project.demands.first.created_date.utc.to_date }
       end
       context 'and the created date of the demand is later than the project start date' do
         let!(:demand) { Fabricate :demand, project: project, created_date: 1.day.from_now }

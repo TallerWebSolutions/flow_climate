@@ -88,9 +88,9 @@ class Project < ApplicationRecord
 
   def full_name
     return name if customer.blank?
-    return "#{customer_name} | #{product_name} | #{name}" if product.present?
+    return "#{product_name} | #{name}" if product.present?
 
-    "#{customer_name} | #{name}"
+    name
   end
 
   def total_days
