@@ -1,5 +1,5 @@
 <td><%= render 'demands/demand_actions', demand: demand %></td>
-<td><%= demand.project_name %></td>
+<td><%= demand.project.full_name %></td>
 <td><%= link_to demand.demand_id, company_project_demand_path(@company, demand.project_id, demand.id) %></td>
 <td><%= demand.demand_title %></td>
 <td><%= t("activerecord.attributes.demand.enums.artifact_type.#{demand.artifact_type}") %></td>

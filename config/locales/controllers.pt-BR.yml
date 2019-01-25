@@ -171,17 +171,6 @@ pt-BR:
       last_team: "Time atual"
       last_week_scope: "Escopo da Última Sem."
       current_team: "Time Atual"
-      demands:
-        text: "Escopo"
-        grouped_by_month_check_box: "Agrupado por mês de entrega"
-        demands_not_started: "Não Iniciadas"
-        work_in_progress: "Comprometido Em Progresso"
-        delivered_demands: "Entregues"
-        grouped_by_customer: "Agrupado por Cliente"
-        no_grouping_check_box: "Não Agrupado"
-        all_demands: "Todas as Demandas"
-        all_types: "Todos os Tipos"
-        all_classes: "Todas as Classes"
       avg_hours_per_demand: "Média Horas/Demanda"
       scope_gap: "Restante do escopo"
       scope_growth: "Crescimento do Escopo (%)"
@@ -433,6 +422,24 @@ pt-BR:
       std_committed_with: "Desvio Padrão Comprometido"
       avg_touch: "Trabalho Médio"
       avg_queue: "Fila Média"
+    filter:
+      grouping:
+        title: "Agrupado por"
+        no_grouping: "Sem Agrupamento"
+        grouped_by_month: "Agrupado por Mês"
+        grouped_by_customer: "Agrupado por Cliente"
+      flow_status:
+        title: "Estado no Fluxo"
+        all_demands: "Todas as Demandas"
+        not_started: "Não Iniciadas"
+        work_in_progress: "Trabalho em Progresso"
+        delivered_demands: "Entregues"
+      demand_type:
+        title: "Tipo da Demanda"
+        all_types: "Todos os Tipos"
+      class_of_service:
+        title: "Classe de Serviço"
+        all_classes: "Todas as Classes"
   project_risk_configs:
     new:
       title: "Nova Configuração de Risco"

@@ -62,7 +62,7 @@ class DemandsController < AuthenticatedController
 
   def demands_in_projects
     filtered_demands = DemandsRepository.instance.demands_to_projects(@projects)
-    @demands = build_demands_query(filtered_demands, 'week')
+    @demands = build_limit_date_query(filtered_demands, 'week')
     @demands_count_per_week = DemandService.instance.quantitative_consolidation_per_week_to_projects(@projects)
     assign_consolidations
 
@@ -71,8 +71,9 @@ class DemandsController < AuthenticatedController
 
   def search_demands_by_flow_status
     @demands = query_demands(params[:period])
-    @grouped_delivered_demands = @demands.grouped_end_date_by_month if radio_param?(:grouped_by_month)
-    @grouped_customer_demands = @demands.grouped_by_customer if radio_param?(:grouped_by_customer)
+
+    build_grouping_query(@demands, params[:grouping])
+
     assign_consolidations
 
     respond_to { |format| format.js { render file: 'demands/search_demands_by_flow_status.js.erb' } }
@@ -82,7 +83,13 @@ class DemandsController < AuthenticatedController
 
   def query_demands(period)
     demands_to_projects = DemandsRepository.instance.demands_to_projects(@projects)
-    build_demands_query(demands_to_projects, period)
+    demands = build_limit_date_query(demands_to_projects, period)
+    demands = filter_text(demands)
+    demands = build_flow_status_query(demands, params[:flow_status])
+    demands = buld_demand_type_query(demands, params[:demand_type])
+    demands = build_class_of_service_query(demands, params[:demand_class_of_service])
+
+    demands
   end
 
   def demand_params
@@ -101,39 +108,47 @@ class DemandsController < AuthenticatedController
     @demand = Demand.find(params[:id])
   end
 
-  def build_demands_query(demands, period)
-    filtered_demands = filter_text(demands)
-    filtered_demands = filtered_demands.not_started if radio_param?(:not_started)
-    filtered_demands = filtered_demands.in_wip if radio_param?(:wip)
-    filtered_demands = filtered_demands.finished if radio_param?(:delivered)
-    filtered_demands = filter_demand_type(filtered_demands)
-    filtered_demands = filter_class_of_service(filtered_demands)
-
-    result_query = DemandsList.where(id: filtered_demands.map(&:id))
-
+  def build_limit_date_query(demands, period)
     bottom_date = bottom_date_limit_value(period)
-    result_query = result_query.where('(demands_lists.end_date IS NULL AND demands_lists.created_date >= :bottom_date) OR (demands_lists.end_date >= :bottom_date)', bottom_date: bottom_date) if bottom_date.present?
+    filtered_demands = demands
+    filtered_demands = demands.where('(demands_lists.end_date IS NULL AND demands_lists.created_date >= :bottom_date) OR (demands_lists.end_date >= :bottom_date)', bottom_date: bottom_date) if bottom_date.present?
 
-    result_query.order(end_date: :desc, commitment_date: :desc, created_date: :desc)
+    filtered_demands.order('demands_lists.end_date DESC, demands_lists.commitment_date DESC, demands_lists.created_date DESC')
   end
 
-  def filter_demand_type(demands)
+  def build_grouping_query(demands, params_grouping)
+    return if params[:grouping] == 'no_grouping'
+
+    @grouped_delivered_demands = demands.grouped_end_date_by_month if params_grouping == 'grouped_by_month'
+    @grouped_customer_demands = demands.grouped_by_customer if params_grouping == 'grouped_by_customer'
+  end
+
+  def build_flow_status_query(demands, params_flow_status)
     filtered_demands = demands
-    filtered_demands = filtered_demands.feature if radio_param?(:feature_type)
-    filtered_demands = filtered_demands.bug if radio_param?(:bug_type)
-    filtered_demands = filtered_demands.chore if radio_param?(:chore_type)
-    filtered_demands = filtered_demands.performance_improvement if radio_param?(:performance_improvement_type)
-    filtered_demands = filtered_demands.ui if radio_param?(:ui_type)
-    filtered_demands = filtered_demands.wireframe if radio_param?(:wireframe_type)
+    filtered_demands = filtered_demands.not_started if params_flow_status == 'not_started'
+    filtered_demands = filtered_demands.in_wip if params_flow_status == 'wip'
+    filtered_demands = filtered_demands.finished if params_flow_status == 'delivered'
+
     filtered_demands
   end
 
-  def filter_class_of_service(demands)
+  def buld_demand_type_query(demands, params_demand_type)
     filtered_demands = demands
-    filtered_demands = filtered_demands.standard if radio_param?(:standard_class)
-    filtered_demands = filtered_demands.expedite if radio_param?(:expedite_class)
-    filtered_demands = filtered_demands.fixed_date if radio_param?(:fixed_date_class)
-    filtered_demands = filtered_demands.intangible if radio_param?(:intangible_class)
+    filtered_demands = filtered_demands.feature if params_demand_type == 'feature'
+    filtered_demands = filtered_demands.bug if params_demand_type == 'bug'
+    filtered_demands = filtered_demands.chore if params_demand_type == 'chore'
+    filtered_demands = filtered_demands.performance_improvement if params_demand_type == 'performance_improvement'
+    filtered_demands = filtered_demands.ui if params_demand_type == 'ui'
+    filtered_demands = filtered_demands.wireframe if params_demand_type == 'wireframe'
+    filtered_demands
+  end
+
+  def build_class_of_service_query(demands, params_class_of_service)
+    filtered_demands = demands
+    filtered_demands = filtered_demands.standard if params_class_of_service == 'standard'
+    filtered_demands = filtered_demands.expedite if params_class_of_service == 'expedite'
+    filtered_demands = filtered_demands.fixed_date if params_class_of_service == 'fixed_date'
+    filtered_demands = filtered_demands.intangible if params_class_of_service == 'intangible'
     filtered_demands
   end
 
@@ -141,10 +156,6 @@ class DemandsController < AuthenticatedController
     return demands if params[:search_text].blank?
 
     demands.joins(project: :product).where('demand_title ILIKE :search_param OR demand_id ILIKE :search_param OR products.name ILIKE :search_param OR projects.name ILIKE :search_param', search_param: "%#{params[:search_text].downcase}%")
-  end
-
-  def radio_param?(param)
-    params[param] == 'true'
   end
 
   def bottom_date_limit_value(period)
