@@ -64,6 +64,8 @@ class DemandsController < AuthenticatedController
     filtered_demands = DemandsRepository.instance.demands_to_projects(@projects)
     @demands = build_demands_query(filtered_demands, 'week')
     @demands_count_per_week = DemandService.instance.quantitative_consolidation_per_week_to_projects(@projects)
+    assign_consolidations
+
     respond_to { |format| format.js { render file: 'demands/demands_tab.js.erb' } }
   end
 
@@ -71,6 +73,7 @@ class DemandsController < AuthenticatedController
     @demands = query_demands(params[:period])
     @grouped_delivered_demands = @demands.grouped_end_date_by_month if radio_param?(:grouped_by_month)
     @grouped_customer_demands = @demands.grouped_by_customer if radio_param?(:grouped_by_customer)
+    assign_consolidations
 
     respond_to { |format| format.js { render file: 'demands/search_demands_by_flow_status.js.erb' } }
   end
@@ -99,10 +102,12 @@ class DemandsController < AuthenticatedController
   end
 
   def build_demands_query(demands, period)
-    filtered_demands = demands
-    filtered_demands = demands.not_started if radio_param?(:not_started)
-    filtered_demands = demands.in_wip if radio_param?(:wip)
-    filtered_demands = demands.finished if radio_param?(:delivered)
+    filtered_demands = filter_text(demands)
+    filtered_demands = filtered_demands.not_started if radio_param?(:not_started)
+    filtered_demands = filtered_demands.in_wip if radio_param?(:wip)
+    filtered_demands = filtered_demands.finished if radio_param?(:delivered)
+    filtered_demands = filter_demand_type(filtered_demands)
+    filtered_demands = filter_class_of_service(filtered_demands)
 
     result_query = DemandsList.where(id: filtered_demands.map(&:id))
 
@@ -110,6 +115,32 @@ class DemandsController < AuthenticatedController
     result_query = result_query.where('(demands_lists.end_date IS NULL AND demands_lists.created_date >= :bottom_date) OR (demands_lists.end_date >= :bottom_date)', bottom_date: bottom_date) if bottom_date.present?
 
     result_query.order(end_date: :desc, commitment_date: :desc, created_date: :desc)
+  end
+
+  def filter_demand_type(demands)
+    filtered_demands = demands
+    filtered_demands = filtered_demands.feature if radio_param?(:feature_type)
+    filtered_demands = filtered_demands.bug if radio_param?(:bug_type)
+    filtered_demands = filtered_demands.chore if radio_param?(:chore_type)
+    filtered_demands = filtered_demands.performance_improvement if radio_param?(:performance_improvement_type)
+    filtered_demands = filtered_demands.ui if radio_param?(:ui_type)
+    filtered_demands = filtered_demands.wireframe if radio_param?(:wireframe_type)
+    filtered_demands
+  end
+
+  def filter_class_of_service(demands)
+    filtered_demands = demands
+    filtered_demands = filtered_demands.standard if radio_param?(:standard_class)
+    filtered_demands = filtered_demands.expedite if radio_param?(:expedite_class)
+    filtered_demands = filtered_demands.fixed_date if radio_param?(:fixed_date_class)
+    filtered_demands = filtered_demands.intangible if radio_param?(:intangible_class)
+    filtered_demands
+  end
+
+  def filter_text(demands)
+    return demands if params[:search_text].blank?
+
+    demands.joins(project: :product).where('demand_title ILIKE :search_param OR demand_id ILIKE :search_param OR products.name ILIKE :search_param OR projects.name ILIKE :search_param', search_param: "%#{params[:search_text].downcase}%")
   end
 
   def radio_param?(param)
@@ -120,5 +151,14 @@ class DemandsController < AuthenticatedController
     base_date = @projects.map(&:end_date).flatten.max
     base_date = Time.zone.now if @projects.blank? || @projects.map(&:status).flatten.include?('executing')
     TimeService.instance.limit_date_to_period(period, base_date)
+  end
+
+  def assign_consolidations
+    @confidence_95_leadtime = Stats::StatisticsService.instance.percentile(95, @demands.map(&:leadtime_in_days))
+    @confidence_80_leadtime = Stats::StatisticsService.instance.percentile(80, @demands.map(&:leadtime_in_days))
+    @confidence_65_leadtime = Stats::StatisticsService.instance.percentile(65, @demands.map(&:leadtime_in_days))
+
+    @total_queue_time = @demands.sum(&:total_queue_time)
+    @total_touch_time = @demands.sum(&:total_touch_time)
   end
 end

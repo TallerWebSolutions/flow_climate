@@ -46,10 +46,10 @@ class DemandTransition < ApplicationRecord
   after_save :set_demand_dates, on: %i[create update]
   after_save :set_demand_computed_fields, on: %i[create update]
 
-  def total_hours_in_transition
+  def total_seconds_in_transition
     return 0 if last_time_out.blank?
 
-    (last_time_out - last_time_in) / 1.hour
+    last_time_out - last_time_in
   end
 
   def working_time_in_transition
@@ -71,9 +71,21 @@ class DemandTransition < ApplicationRecord
   end
 
   def set_demand_computed_fields
-    stage_stream = demand.stages.downstream.present? || stage.downstream?
-    demand.update(downstream: stage_stream, total_queue_time: DemandsRepository.instance.total_queue_time_for(demand), total_touch_time: DemandsRepository.instance.total_touch_time_for(demand))
+    current_queue_time = demand.total_queue_time
+    current_touch_time = demand.total_touch_time
+
+    if stage.downstream? && stage.queue?
+      current_touch_time += total_seconds_in_transition
+    elsif stage.downstream?
+      current_queue_time += total_seconds_in_transition
+    end
+
+    demand.update(downstream: stage_stream_to_update_demand, total_queue_time: current_queue_time, total_touch_time: current_touch_time)
     demand.update_effort!
+  end
+
+  def stage_stream_to_update_demand
+    demand.stages.downstream.present? || stage.downstream?
   end
 
   def same_stage_project?

@@ -2,7 +2,9 @@ var demandsGroupedPerMonth = $('#demands-grouped-per-month-div');
 var demandsGroupedPerCustomer = $('#demands-grouped-per-customer-div')
 var flatDemands = $('#flat-demands-div');
 
-bindDemandFilterActions();
+<% if @demands.present? %>
+  $('#container-leadtime-div').html("<%= escape_javascript(render 'demands/demands_leadtime_container', demands: @demands, confidence_65_leadtime: @confidence_65_leadtime, confidence_80_leadtime: @confidence_80_leadtime, confidence_95_leadtime: @confidence_95_leadtime, queue_time: @total_queue_time, touch_time: @total_touch_time).html_safe %>");
+<% end %>
 
 <% if @grouped_delivered_demands.present? %>
   demandsGroupedPerMonth.html("<%= escape_javascript(render 'demands/grouped_by_month_demands_table', demands: @grouped_delivered_demands).html_safe %>");

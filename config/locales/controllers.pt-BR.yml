@@ -60,6 +60,10 @@ pt-BR:
           all_period: "Todo o Período"
           last_week: "Última Semana"
     total: "Total"
+    days_text: "%{days} dia(s)"
+    leadtime:
+      title: "Lead time %{percentile}"
+    search_text: "Procurar no nome do produto ou do projeto e no ID da demanda"
   header:
     logout: Sair
     sign_up: Cadastre-se
@@ -176,6 +180,8 @@ pt-BR:
         grouped_by_customer: "Agrupado por Cliente"
         no_grouping_check_box: "Não Agrupado"
         all_demands: "Todas as Demandas"
+        all_types: "Todos os Tipos"
+        all_classes: "Todas as Classes"
       avg_hours_per_demand: "Média Horas/Demanda"
       scope_gap: "Restante do escopo"
       scope_growth: "Crescimento do Escopo (%)"
@@ -425,6 +431,8 @@ pt-BR:
     stats:
       std_throughput: "Desvio Padrão Vazão"
       std_committed_with: "Desvio Padrão Comprometido"
+      avg_touch: "Trabalho Médio"
+      avg_queue: "Fila Média"
   project_risk_configs:
     new:
       title: "Nova Configuração de Risco"
@@ -524,7 +532,7 @@ pt-BR:
     edit:
       title: "Editar Bloqueio"
   demand_transitions:
-    total_hours_in_transition: "Horas totais na transição"
+    total_time_in_transition: "Tempo total na transição"
     working_time_in_transition: "Tempo útil na transição"
     index:
       title: "Transições da Demanda"

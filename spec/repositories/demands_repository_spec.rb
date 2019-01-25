@@ -74,7 +74,7 @@ RSpec.describe DemandsRepository, type: :repository do
     let!(:sixth_transition) { Fabricate :demand_transition, stage: fifth_stage, demand: demand, last_time_in: '2018-03-08T17:09:58-03:00', last_time_out: '2018-04-02T17:09:58-03:00', discarded_at: Time.zone.today }
     let!(:seventh_transition) { Fabricate :demand_transition, stage: sixth_stage, demand: demand, last_time_in: '2018-04-03T17:09:58-03:00', last_time_out: '2018-05-04T17:09:58-03:00' }
 
-    it { expect(DemandsRepository.instance.total_queue_time_for(demand)).to eq 1416.0 }
+    it { expect(DemandsRepository.instance.total_queue_time_for(demand)).to eq 5_097_600.0 }
   end
 
   describe '#total_touch_time_for' do
@@ -97,7 +97,7 @@ RSpec.describe DemandsRepository, type: :repository do
     let!(:sixth_transition) { Fabricate :demand_transition, stage: fifth_stage, demand: demand, last_time_in: '2018-04-03T17:09:58-03:00', last_time_out: '2018-05-04T17:09:58-03:00', discarded_at: Time.zone.today }
     let!(:seventh_transition) { Fabricate :demand_transition, stage: sixth_stage, demand: demand, last_time_in: '2018-04-03T17:09:58-03:00', last_time_out: '2018-05-04T17:09:58-03:00' }
 
-    it { expect(DemandsRepository.instance.total_touch_time_for(demand)).to eq 672.0 }
+    it { expect(DemandsRepository.instance.total_touch_time_for(demand)).to eq 2_419_200.0 }
   end
 
   describe '#committed_demands_by_project_and_week' do

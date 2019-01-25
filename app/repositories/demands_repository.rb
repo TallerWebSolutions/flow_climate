@@ -12,11 +12,11 @@ class DemandsRepository
   end
 
   def total_queue_time_for(demand)
-    demand.demand_transitions.kept.joins(:stage).where('stages.queue = true AND stages.end_point = false AND stages.stage_stream = :stream', stream: Stage.stage_streams[:downstream]).sum(&:total_hours_in_transition)
+    demand.demand_transitions.kept.joins(:stage).where('stages.queue = true AND stages.end_point = false AND stages.stage_stream = :stream', stream: Stage.stage_streams[:downstream]).sum(&:total_seconds_in_transition)
   end
 
   def total_touch_time_for(demand)
-    demand.demand_transitions.kept.joins(:stage).where('stages.queue = false AND stages.end_point = false AND stages.stage_stream = :stream', stream: Stage.stage_streams[:downstream]).sum(&:total_hours_in_transition)
+    demand.demand_transitions.kept.joins(:stage).where('stages.queue = false AND stages.end_point = false AND stages.stage_stream = :stream', stream: Stage.stage_streams[:downstream]).sum(&:total_seconds_in_transition)
   end
 
   def committed_demands_by_project_and_week(projects, week, year)

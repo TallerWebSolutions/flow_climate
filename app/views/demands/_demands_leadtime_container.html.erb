@@ -1,0 +1,32 @@
+<div class="row">
+  <div class="col-xs-2 leadtime-frame">
+    <div class="leadtime-content">
+      <p class="leadtime-title"><%= t('general.leadtime.title', percentile: '65%') %></p>
+      <p class="leadtime-value"><%= t('general.days_text', days: number_with_precision(confidence_65_leadtime, precision: 3)) %></p>
+    </div>
+  </div>
+  <div class="col-xs-3 leadtime-frame">
+    <div class="leadtime-content">
+      <p class="leadtime-title"><%= t('general.leadtime.title', percentile: '80%') %></p>
+      <p class="leadtime-value"><%= t('general.days_text', days: number_with_precision(confidence_80_leadtime, precision: 3)) %></p>
+    </div>
+  </div>
+  <div class="col-xs-3 leadtime-frame">
+    <div class="leadtime-content">
+      <p class="leadtime-title"><%= t('general.leadtime.title', percentile: '95%') %></p>
+      <p class="leadtime-value"><%= t('general.days_text', days: number_with_precision(confidence_95_leadtime, precision: 3)) %></p>
+    </div>
+  </div>
+  <div class="col-xs-2 leadtime-frame">
+    <div class="leadtime-content">
+      <p class="leadtime-title"><%= t('demands.stats.avg_queue') %></p>
+      <p class="leadtime-value"><%= time_distance_in_words(queue_time / demands.count) %></p>
+    </div>
+  </div>
+  <div class="col-xs-2 leadtime-frame">
+    <div class="leadtime-content">
+      <p class="leadtime-title"><%= t('demands.stats.avg_touch') %></p>
+      <p class="leadtime-value"><%= time_distance_in_words(touch_time / demands.count) %></p>
+    </div>
+  </div>
+</div>

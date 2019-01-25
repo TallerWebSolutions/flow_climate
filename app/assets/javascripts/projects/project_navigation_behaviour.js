@@ -31,6 +31,7 @@ $('.nav-item').on('click', function(event){
 
             buildStrategicCharts(company_id, projects_ids, target_name);
         } else if ($(this).attr('id') === 'nav-item-demands') {
+            $('#demands-tab').hide();
 
             getDemands(company_id, projects_ids);
         } else {

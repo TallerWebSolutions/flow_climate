@@ -10,7 +10,7 @@
 <%= hidden_field_tag :demands_ids_in_model, demands.map(&:id).join(',') %>
 
 <div id="demands-list" class="tabcontent">
-  <%= render 'demands/demands_list', demands: demands, grouped_delivered_demands: nil, grouped_customer_demands: nil %>
+  <%= render 'demands/demands_list', demands: demands, grouped_delivered_demands: nil, grouped_customer_demands: nil, confidence_65_leadtime: confidence_65_leadtime, confidence_80_leadtime: confidence_80_leadtime, confidence_95_leadtime: confidence_95_leadtime, queue_time: queue_time, touch_time: touch_time %>
 </div>
 
 <div id="content-consolidation" class="tabcontent">
