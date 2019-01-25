@@ -316,10 +316,13 @@ SELECT
     NULL::character varying AS project_name,
     NULL::integer AS artifact_type,
     NULL::integer AS demand_type,
+    NULL::character varying AS demand_title,
     NULL::integer AS class_of_service,
     NULL::numeric AS effort_upstream,
     NULL::numeric AS effort_downstream,
     NULL::numeric AS leadtime,
+    NULL::integer AS total_queue_time,
+    NULL::integer AS total_touch_time,
     NULL::character varying AS url,
     NULL::timestamp without time zone AS discarded_at,
     NULL::bigint AS blocks_count,
@@ -1788,10 +1791,13 @@ CREATE OR REPLACE VIEW public.demands_lists AS
     proj.name AS project_name,
     d.artifact_type,
     d.demand_type,
+    d.demand_title,
     d.class_of_service,
     d.effort_upstream,
     d.effort_downstream,
     d.leadtime,
+    d.total_queue_time,
+    d.total_touch_time,
     d.url,
     d.discarded_at,
     count(DISTINCT blocks.id) AS blocks_count,
@@ -2205,6 +2211,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20181210181733'),
 ('20181210193253'),
 ('20190108182426'),
-('20190121231612');
+('20190121231612'),
+('20190124222658');
 
 

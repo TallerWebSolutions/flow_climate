@@ -61,6 +61,7 @@ en:
           last_week: "Last Week"
     total: "Total"
     days_text: "%{days} day(s)"
+    search_text: "Search in product or project name or demand title or demand id"
   header:
     logout: Logout
     explore: Explore
@@ -163,6 +164,8 @@ en:
         grouped_by_customer: "Grouped by Customer"
         no_grouping_check_box: "Not Grouped"
         all_demands: "All Demands"
+        all_types: "All Types"
+        all_classes: "All Classes"
       avg_hours_per_demand: "Avg Hours/Demand"
       scope_gap: "Scope Gap"
       scope_growth: "Scope Growth (%)"
@@ -403,6 +406,8 @@ en:
     stats:
       std_committed_with: "STD Committed with"
       std_throughput: "STD Throughput"
+      avg_touch: "Average Touch"
+      avg_queue: "Average Queue"
   project_risk_configs:
     new:
       title: "New Risk Configuration"
@@ -502,7 +507,7 @@ en:
     edit:
       title: "Edit Block"
   demand_transitions:
-    total_hours_in_transition: "Total hours in transition"
+    total_time_in_transition: "Total time in transition"
     working_time_in_transition: "Working time in transition"
     index:
       title: "Demand Transitions"

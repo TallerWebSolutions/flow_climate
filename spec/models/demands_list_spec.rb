@@ -1,6 +1,12 @@
 # frozen_string_literal: true
 
 RSpec.describe DemandsList, type: :model do
+  context 'enums' do
+    it { is_expected.to define_enum_for(:artifact_type).with_values(story: 0, epic: 1, theme: 2) }
+    it { is_expected.to define_enum_for(:demand_type).with_values(feature: 0, bug: 1, performance_improvement: 2, ui: 3, chore: 4, wireframe: 5) }
+    it { is_expected.to define_enum_for(:class_of_service).with_values(standard: 0, expedite: 1, fixed_date: 2, intangible: 3) }
+  end
+
   context 'associations' do
     it { is_expected.to belong_to :project }
     it { is_expected.to belong_to :product }
@@ -73,6 +79,32 @@ RSpec.describe DemandsList, type: :model do
       let!(:demand) { Fabricate :demand, commitment_date: nil, end_date: nil, leadtime: nil }
       subject(:demands_list) { DemandsList.first }
       it { expect(demands_list.leadtime_in_days.to_f).to eq 0 }
+    end
+  end
+
+  describe '#touch_time_in_days' do
+    context 'having touch_time_in_days' do
+      let!(:demand) { Fabricate :demand, total_touch_time: (3 * 86_400) }
+      subject(:demands_list) { DemandsList.first }
+      it { expect(demands_list.touch_time_in_days.to_f).to eq 3 }
+    end
+    context 'having no leadtime' do
+      let!(:demand) { Fabricate :demand, commitment_date: nil, end_date: nil, leadtime: nil, total_touch_time: 0 }
+      subject(:demands_list) { DemandsList.first }
+      it { expect(demands_list.touch_time_in_days.to_f).to eq 0 }
+    end
+  end
+
+  describe '#queue_time_in_days' do
+    context 'having touch_time_in_days' do
+      let!(:demand) { Fabricate :demand, total_queue_time: (3 * 86_400) }
+      subject(:demands_list) { DemandsList.first }
+      it { expect(demands_list.queue_time_in_days.to_f).to eq 3 }
+    end
+    context 'having no leadtime' do
+      let!(:demand) { Fabricate :demand, commitment_date: nil, end_date: nil, leadtime: nil, total_queue_time: 0 }
+      subject(:demands_list) { DemandsList.first }
+      it { expect(demands_list.queue_time_in_days.to_f).to eq 0 }
     end
   end
 end

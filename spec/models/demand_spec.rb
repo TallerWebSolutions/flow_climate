@@ -339,7 +339,7 @@ RSpec.describe Demand, type: :model do
     end
     context 'having no end_date' do
       let!(:demand) { Fabricate :demand, end_date: nil }
-      it { expect(demand.result_date).to eq demand.created_date.to_date }
+      it { expect(demand.result_date).to eq demand.created_date.utc.to_date }
     end
 
     context 'having the end_date in the edge of timezone' do

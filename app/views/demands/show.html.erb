@@ -24,10 +24,10 @@
 
 <div class="row">
   <div class="col-xs-6">
-    <%= "#{I18n.t('projects.charts.queue_touch_time.queue')}: #{number_with_precision(@demand.total_queue_time, precision: 2)} h (#{number_with_precision(@queue_percentage, precision: 2)}%)" %>
+    <%= "#{I18n.t('projects.charts.queue_touch_time.queue')}: #{time_distance_in_words(@demand.total_queue_time)} (#{number_with_precision(@queue_percentage, precision: 2)}%)" %>
   </div>
   <div class="col-xs-6">
-    <%= "#{I18n.t('projects.charts.queue_touch_time.touch')}: #{number_with_precision(@demand.total_touch_time, precision: 2)} h (#{number_with_precision(@touch_percentage, precision: 2)}%)" %>
+    <%= "#{I18n.t('projects.charts.queue_touch_time.touch')}: #{time_distance_in_words(@demand.total_touch_time)} (#{number_with_precision(@touch_percentage, precision: 2)}%)" %>
   </div>
 </div>
 <div class="row bottom-spaced-component">

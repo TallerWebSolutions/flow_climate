@@ -1,72 +1,169 @@
-<div class="row">
-  <div class="col-xs-6">
-    <h2><%= t('demands.index.title') %></h2>
-  </div>
-</div>
-
 <%= hidden_field_tag :demands_ids, demands.map(&:id).flatten.join(',') %>
 
-<div class="row">
-  <div class="col-xs-4">
-    <div class="form-group radio-inline">
-      <%= radio_button_tag :grouping, :no_grouping, true, class: 'filter-checks' %>
-      <%= label_tag t('projects.show.demands.no_grouping_check_box'), nil, class: 'control-label' %>
+<div class="row bottom-spaced-component">
+  <div class="col-xs-6">
+    <p><%= 'Agrupamento' %></p>
+    <div class="col-xs-6">
+      <div class="form-group radio-inline">
+        <%= radio_button_tag :grouping, :no_grouping, true, class: 'filter-checks' %>
+        <%= label_tag t('projects.show.demands.no_grouping_check_box'), nil, class: 'control-label' %>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group radio-inline">
+        <%= radio_button_tag :grouping, :grouped_by_month, false, class: 'filter-checks' %>
+        <%= label_tag t('projects.show.demands.grouped_by_month_check_box'), nil, class: 'control-label' %>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group radio-inline">
+        <%= radio_button_tag :grouping, :grouped_by_customer, false, class: 'filter-checks' %>
+        <%= label_tag t('projects.show.demands.grouped_by_customer'), nil, class: 'control-label' %>
+      </div>
     </div>
   </div>
-  <div class="col-xs-4">
-    <div class="form-group radio-inline">
-      <%= radio_button_tag :grouping, :grouped_by_month, false, class: 'filter-checks' %>
-      <%= label_tag t('projects.show.demands.grouped_by_month_check_box'), nil, class: 'control-label' %>
+
+  <div class="col-xs-6">
+    <p><%= 'Filtro de status' %></p>
+    <div class="col-xs-6">
+      <div class="form-group radio-inline">
+        <%= radio_button_tag :searching, :all_demands, true, class: 'filter-checks' %>
+        <%= label_tag t('projects.show.demands.all_demands'), nil, class: 'control-label' %>
+      </div>
     </div>
-  </div>
-  <div class="col-xs-4">
-    <div class="form-group radio-inline">
-      <%= radio_button_tag :grouping, :grouped_by_customer, false, class: 'filter-checks' %>
-      <%= label_tag t('projects.show.demands.grouped_by_customer'), nil, class: 'control-label' %>
+
+    <div class="col-xs-6">
+      <div class="form-group radio-inline">
+        <%= radio_button_tag :searching, :not_started, params[:not_started], class: 'filter-checks' %>
+        <%= label_tag t('projects.show.demands.demands_not_started'), nil, class: 'control-label' %>
+      </div>
+    </div>
+
+    <div class="col-xs-6">
+      <div class="form-group radio-inline">
+        <%= radio_button_tag :searching, :work_in_progress, params[:wip], class: 'filter-checks' %>
+        <%= label_tag t('projects.show.demands.work_in_progress'), nil, class: 'control-label' %>
+      </div>
+    </div>
+
+    <div class="col-xs-6">
+      <div class="form-group radio-inline">
+        <%= radio_button_tag :searching, :delivered_demands, params[:delivered], class: 'filter-checks' %>
+        <%= label_tag t('projects.show.demands.delivered_demands'), nil, class: 'control-label' %>
+      </div>
     </div>
   </div>
 </div>
 
+<hr>
+
 <div class="row bottom-spaced-component">
-  <div class="col-xs-3">
-    <div class="form-group radio-inline">
-      <%= radio_button_tag :searching, :all_demands, true, class: 'filter-checks' %>
-      <%= label_tag t('projects.show.demands.all_demands'), nil, class: 'control-label' %>
+  <div class="col-xs-6">
+    <p><%= 'Filtro de tipo' %></p>
+    <div class="col-xs-6">
+      <div class="form-group radio-inline">
+        <%= radio_button_tag :demand_type, :all_types, true, class: 'filter-checks' %>
+        <%= label_tag t('projects.show.demands.all_types'), nil, class: 'control-label' %>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group radio-inline">
+        <%= radio_button_tag :demand_type, :feature, false, class: 'filter-checks' %>
+        <%= label_tag t('activerecord.attributes.demand.enums.demand_type.feature'), nil, class: 'control-label' %>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group radio-inline">
+        <%= radio_button_tag :demand_type, :bug, false, class: 'filter-checks' %>
+        <%= label_tag t('activerecord.attributes.demand.enums.demand_type.bug'), nil, class: 'control-label' %>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group radio-inline">
+        <%= radio_button_tag :demand_type, :chore, false, class: 'filter-checks' %>
+        <%= label_tag t('activerecord.attributes.demand.enums.demand_type.chore'), nil, class: 'control-label' %>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group radio-inline">
+        <%= radio_button_tag :demand_type, :performance_improvement, false, class: 'filter-checks' %>
+        <%= label_tag t('activerecord.attributes.demand.enums.demand_type.performance_improvement'), nil, class: 'control-label' %>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group radio-inline">
+        <%= radio_button_tag :demand_type, :ui, false, class: 'filter-checks' %>
+        <%= label_tag t('activerecord.attributes.demand.enums.demand_type.ui'), nil, class: 'control-label' %>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group radio-inline">
+        <%= radio_button_tag :demand_type, :wireframe, false, class: 'filter-checks' %>
+        <%= label_tag t('activerecord.attributes.demand.enums.demand_type.wireframe'), nil, class: 'control-label' %>
+      </div>
     </div>
   </div>
 
-  <div class="col-xs-3">
-    <div class="form-group radio-inline">
-      <%= radio_button_tag :searching, :not_started, params[:not_started], class: 'filter-checks' %>
-      <%= label_tag t('projects.show.demands.demands_not_started'), nil, class: 'control-label' %>
+  <div class="col-xs-6">
+    <p><%= 'Filtro de Classe de Serviço' %></p>
+    <div class="col-xs-6">
+      <div class="form-group radio-inline">
+        <%= radio_button_tag :demand_class_of_service, :all_classes, true, class: 'filter-checks' %>
+        <%= label_tag t('projects.show.demands.all_classes'), nil, class: 'control-label' %>
+      </div>
     </div>
-  </div>
-
-  <div class="col-xs-3">
-    <div class="form-group radio-inline">
-      <%= radio_button_tag :searching, :work_in_progress, params[:wip], class: 'filter-checks' %>
-      <%= label_tag t('projects.show.demands.work_in_progress'), nil, class: 'control-label' %>
+    <div class="col-xs-6">
+      <div class="form-group radio-inline">
+        <%= radio_button_tag :demand_class_of_service, :standard, false, class: 'filter-checks' %>
+        <%= label_tag t('activerecord.attributes.demand.enums.class_of_service.standard'), nil, class: 'control-label' %>
+      </div>
     </div>
-  </div>
-
-  <div class="col-xs-3">
-    <div class="form-group radio-inline">
-      <%= radio_button_tag :searching, :delivered_demands, params[:delivered], class: 'filter-checks' %>
-      <%= label_tag t('projects.show.demands.delivered_demands'), nil, class: 'control-label' %>
+    <div class="col-xs-6">
+      <div class="form-group radio-inline">
+        <%= radio_button_tag :demand_class_of_service, :expedite, false, class: 'filter-checks' %>
+        <%= label_tag t('activerecord.attributes.demand.enums.class_of_service.expedite'), nil, class: 'control-label' %>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group radio-inline">
+        <%= radio_button_tag :demand_class_of_service, :fixed_date, false, class: 'filter-checks' %>
+        <%= label_tag t('activerecord.attributes.demand.enums.class_of_service.fixed_date'), nil, class: 'control-label' %>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group radio-inline">
+        <%= radio_button_tag :demand_class_of_service, :intangible, false, class: 'filter-checks' %>
+        <%= label_tag t('activerecord.attributes.demand.enums.class_of_service.intangible'), nil, class: 'control-label' %>
+      </div>
     </div>
   </div>
 </div>
 
+<hr>
+
 <div class="row bottom-spaced-component">
-  <div class="col-xs-3">
+  <div class="col-xs-4">
     <%= label_tag t('general.period') %>
     <%= select_tag :period, period_options(:week), class: 'form-control filter-checks', id: 'demands-table-period', selected: params[:period] %>
   </div>
+  <div class="col-xs-4">
+    <%= label_tag t('general.search_text') %>
+    <%= text_field_tag :search_text, nil, class: 'form-control filter-checks', id: 'search_text' %>
+  </div>
+  <div class="col-xs-4">
+    <%= button_tag t('general.search'), class: 'btn btn-primary filter-button' %>
+  </div>
 </div>
 
-<div id="container-leadtime-div" class="container-leadtime">
-  <%= render 'demands_leadtime_container', confidence_65_leadtime: confidence_65_leadtime, confidence_80_leadtime: confidence_80_leadtime, confidence_95_leadtime: confidence_95_leadtime %>
-</div>
+<hr>
+
+<% if @demands.present? %>
+  <div id="container-leadtime-div" class="container-leadtime">
+    <%= render 'demands/demands_leadtime_container', demands: @demands, confidence_65_leadtime: confidence_65_leadtime, confidence_80_leadtime: confidence_80_leadtime, confidence_95_leadtime: confidence_95_leadtime, queue_time: queue_time, touch_time: touch_time %>
+  </div>
+<% end %>
+
+<hr>
 
 <div id="demands-grouped-per-month-div">
   <%= render 'demands/grouped_by_month_demands_table', demands: grouped_delivered_demands %>
