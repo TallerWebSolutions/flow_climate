@@ -37,4 +37,8 @@ en:
   general:
     leadtime:
       title: "Lead time %{percentile}"
+  demands:
+    charts:
+      demands:
+        title: "Demands"
 

@@ -29,6 +29,19 @@ function openTab(evt, tabName) {
     evt.currentTarget.className += " active";
 }
 
+function openDemandsDiv(evt, divId, inactiveDivId) {
+    let i, listingTabs;
+    listingTabs = document.getElementsByClassName("listing-tab");
+    for (i = 0; i < listingTabs.length; i++) {
+        listingTabs[i].className = listingTabs[i].className.replace(" btn-active", "");
+    }
+
+    document.getElementById(divId).style.display = "block";
+    document.getElementById(inactiveDivId).style.display = "none";
+
+    evt.currentTarget.className += " btn-active";
+}
+
 function searchWeekBehaviour() {
     $('#search-week').on('click', function () {
         const flow_div = $('#flow');

@@ -59,6 +59,12 @@ en:
           last_quarter: "Last quarter"
           all_period: "All Period"
           last_week: "Last Week"
+      grouping_period:
+        option:
+          day: "By Day"
+          week: "By Week"
+          month: "By Month"
+          year: "By Year"
     total: "Total"
     days_text: "%{days} day(s)"
     search_text: "Search in product or project name or demand title or demand id"
@@ -357,6 +363,7 @@ en:
       hours_blocks_queue: "Hours Blocked in Queues"
       hours_blocks_touch: "Hours Blocked in Queues"
       total_blocked_time: "Time Blocked"
+      grouping_to_charts: "Grouping to Charts"
     edit:
       title: "Edit Demand"
     show:
@@ -384,14 +391,20 @@ en:
         tooltipsufix: " demand(s)"
       hours_per_month:
         title: "Hours per Month for %{name}"
+      throughput: "Throughput for the Period"
+      creation_date: "Creation Rate"
+      commitment_date: "Commitment Date"
+      committed_date: "Committed to"
     flow:
       processed_demand: "Processed Demands"
       wip: "Work in Progress"
       committed_with: "Committed With"
       real_throughput: "Throughput Real"
     data_analysis:
-      demands_list: "Demand List"
+      demands_list: "Data"
       consolidation: "Consolidation"
+      charts: "Charts"
+      list: "List"
     stats:
       std_committed_with: "STD Committed with"
       std_throughput: "STD Throughput"
