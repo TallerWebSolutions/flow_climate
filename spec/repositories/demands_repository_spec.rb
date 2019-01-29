@@ -54,52 +54,6 @@ RSpec.describe DemandsRepository, type: :repository do
     it { expect(query_return.map(&:id)).to match_array [first_demand.id, second_demand.id, third_demand.id] }
   end
 
-  describe '#total_queue_time_for' do
-    let(:project) { Fabricate :project, customer: customer }
-
-    let(:first_stage) { Fabricate :stage, company: company, projects: [project], stage_stream: :downstream, queue: true }
-    let(:second_stage) { Fabricate :stage, company: company, projects: [project], stage_stream: :upstream, queue: true }
-    let(:third_stage) { Fabricate :stage, company: company, projects: [project], stage_stream: :downstream, queue: true, end_point: true }
-    let(:fourth_stage) { Fabricate :stage, company: company, projects: [project], stage_stream: :downstream, queue: false }
-    let(:fifth_stage) { Fabricate :stage, company: company, projects: [project], stage_stream: :downstream, queue: true }
-    let(:sixth_stage) { Fabricate :stage, company: company, projects: [project], stage_stream: :downstream, queue: true }
-
-    let(:demand) { Fabricate :demand, project: project }
-
-    let!(:first_transition) { Fabricate :demand_transition, stage: first_stage, demand: demand, last_time_in: '2018-02-27T17:09:58-03:00', last_time_out: '2018-03-02T17:09:58-03:00' }
-    let!(:second_transition) { Fabricate :demand_transition, stage: second_stage, demand: demand, last_time_in: '2018-02-02T17:09:58-03:00', last_time_out: '2018-02-10T17:09:58-03:00' }
-    let!(:third_transition) { Fabricate :demand_transition, stage: third_stage, demand: demand, last_time_in: '2018-04-02T17:09:58-03:00', last_time_out: '2018-04-20T17:09:58-03:00' }
-    let!(:fourth_transition) { Fabricate :demand_transition, stage: fourth_stage, demand: demand, last_time_in: '2018-01-08T17:09:58-03:00', last_time_out: '2018-02-02T17:09:58-03:00' }
-    let!(:fifth_transition) { Fabricate :demand_transition, stage: fifth_stage, demand: demand, last_time_in: '2018-03-08T17:09:58-03:00', last_time_out: '2018-04-02T17:09:58-03:00' }
-    let!(:sixth_transition) { Fabricate :demand_transition, stage: fifth_stage, demand: demand, last_time_in: '2018-03-08T17:09:58-03:00', last_time_out: '2018-04-02T17:09:58-03:00', discarded_at: Time.zone.today }
-    let!(:seventh_transition) { Fabricate :demand_transition, stage: sixth_stage, demand: demand, last_time_in: '2018-04-03T17:09:58-03:00', last_time_out: '2018-05-04T17:09:58-03:00' }
-
-    it { expect(DemandsRepository.instance.total_queue_time_for(demand)).to eq 5_097_600.0 }
-  end
-
-  describe '#total_touch_time_for' do
-    let(:project) { Fabricate :project, customer: customer }
-
-    let(:first_stage) { Fabricate :stage, company: company, projects: [project], stage_stream: :downstream, queue: false }
-    let(:second_stage) { Fabricate :stage, company: company, projects: [project], stage_stream: :upstream, queue: false }
-    let(:third_stage) { Fabricate :stage, company: company, projects: [project], stage_stream: :downstream, queue: false, end_point: true }
-    let(:fourth_stage) { Fabricate :stage, company: company, projects: [project], stage_stream: :downstream, queue: true }
-    let(:fifth_stage) { Fabricate :stage, company: company, projects: [project], stage_stream: :downstream, queue: false }
-    let(:sixth_stage) { Fabricate :stage, company: company, projects: [project], stage_stream: :upstream, queue: false }
-
-    let(:demand) { Fabricate :demand, project: project }
-
-    let!(:first_transition) { Fabricate :demand_transition, stage: first_stage, demand: demand, last_time_in: '2018-02-27T17:09:58-03:00', last_time_out: '2018-03-02T17:09:58-03:00' }
-    let!(:second_transition) { Fabricate :demand_transition, stage: second_stage, demand: demand, last_time_in: '2018-02-02T17:09:58-03:00', last_time_out: '2018-02-10T17:09:58-03:00' }
-    let!(:third_transition) { Fabricate :demand_transition, stage: third_stage, demand: demand, last_time_in: '2018-04-02T17:09:58-03:00', last_time_out: '2018-04-20T17:09:58-03:00' }
-    let!(:fourth_transition) { Fabricate :demand_transition, stage: fourth_stage, demand: demand, last_time_in: '2018-01-08T17:09:58-03:00', last_time_out: '2018-02-02T17:09:58-03:00' }
-    let!(:fifth_transition) { Fabricate :demand_transition, stage: fifth_stage, demand: demand, last_time_in: '2018-03-08T17:09:58-03:00', last_time_out: '2018-04-02T17:09:58-03:00' }
-    let!(:sixth_transition) { Fabricate :demand_transition, stage: fifth_stage, demand: demand, last_time_in: '2018-04-03T17:09:58-03:00', last_time_out: '2018-05-04T17:09:58-03:00', discarded_at: Time.zone.today }
-    let!(:seventh_transition) { Fabricate :demand_transition, stage: sixth_stage, demand: demand, last_time_in: '2018-04-03T17:09:58-03:00', last_time_out: '2018-05-04T17:09:58-03:00' }
-
-    it { expect(DemandsRepository.instance.total_touch_time_for(demand)).to eq 2_419_200.0 }
-  end
-
   describe '#committed_demands_by_project_and_week' do
     context 'having data' do
       let!(:first_demand) { Fabricate :demand, project: first_project, commitment_date: 3.weeks.ago }
@@ -129,30 +83,6 @@ RSpec.describe DemandsRepository, type: :repository do
     end
     context 'having no data' do
       it { expect(DemandsRepository.instance.throughput_by_project_and_week(Project.all, 1.week.ago.to_date.cweek, 1.week.ago.to_date.cwyear)).to eq [] }
-    end
-  end
-
-  describe '#working_in_progress_for' do
-    let(:project) { Fabricate :project }
-
-    context 'having demands' do
-      let!(:first_demand) { Fabricate :demand, project: project, commitment_date: Time.zone.yesterday, end_date: nil }
-      let!(:second_demand) { Fabricate :demand, project: project, commitment_date: 2.days.ago, end_date: Time.zone.tomorrow }
-      let!(:third_demand) { Fabricate :demand, project: project, commitment_date: 3.days.ago, end_date: Time.zone.local(2018, 4, 5, 20, 59, 59) }
-      let!(:fourth_demand) { Fabricate :demand, project: project, commitment_date: Time.zone.yesterday, end_date: Time.zone.yesterday }
-      let!(:fifth_demand) { Fabricate :demand, project: project, commitment_date: Time.zone.tomorrow, end_date: Time.zone.tomorrow }
-      let!(:sixth_demand) { Fabricate :demand, project: project, commitment_date: Time.zone.now, end_date: Time.zone.tomorrow }
-      let!(:seventh_demand) { Fabricate :demand, project: project, commitment_date: Time.zone.yesterday, end_date: nil, discarded_at: Time.zone.today }
-
-      context 'having demands in progress' do
-        it { expect(DemandsRepository.instance.work_in_progress_for([project], Time.zone.today)).to eq [third_demand, second_demand, first_demand, sixth_demand] }
-      end
-    end
-
-    context 'having no demands' do
-      context 'having demands in progress' do
-        it { expect(DemandsRepository.instance.work_in_progress_for([project], Time.zone.today)).to eq [] }
-      end
     end
   end
 

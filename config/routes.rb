@@ -62,8 +62,6 @@ Rails.application.routes.draw do
           patch :deactivate
         end
       end
-
-      get 'search_demands_to_flow_charts', action: :search_demands_to_flow_charts, as: 'search_demands_to_flow_charts', on: :member
     end
 
     resources :financial_informations, only: %i[new create edit update destroy]

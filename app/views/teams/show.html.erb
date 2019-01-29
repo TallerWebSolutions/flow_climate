@@ -20,9 +20,9 @@
     <%= link_to t('navbar.projects_list'), '#', id: 'nav-item-list', class: 'nav-item', data: { container: '#project-list' } %>
     <%= link_to t('navbar.demands'), '#', id: 'nav-item-demands', class: 'nav-item', data: { container: '#demands-tab' } %>
     <%= link_to t('navbar.strategic'), '#', id: 'nav-item-strategic', class: 'nav-item', data: { container: '#strategic' } %>
+    <%= link_to t('navbar.risks'), '#', id: 'nav-item-risks', class: 'nav-item', data: { container: '#risks' } %>
     <%= link_to t('navbar.status_report'), '#', id: 'nav-item-statusreport', class: 'nav-item', data: { container: '#project-status-report' } %>
     <%= link_to t('navbar.charts'), '#', id: 'nav-item-charts', class: 'nav-item', data: { container: '#operational-charts' } %>
-    <%= link_to t('navbar.flow'), '#', id: 'nav-item-flow', class: 'nav-item', data: { container: '#flow' } %>
     <%= link_to t('navbar.settings'), '#', id: 'nav-item-settings', class: 'nav-item', data: { container: '#settings' } %>
   </div>
 </div>
@@ -53,16 +53,20 @@
   <%= render 'companies/strategic_table', model_name: @team.name, strategic_chart_data: @strategic_chart_data %>
 </div>
 
+<div id="risks" class="tab-container">
+  <%= render 'charts/risks_and_hours_gauge_charts',
+             max_hours_gauge: @team.active_monthly_available_hours_for_billable_types(@team.projects.pluck(:project_type).uniq),
+             consumed_hours: @team.consumed_hours_in_month(Time.zone.today),
+             projects_risk_chart_data: @projects_risk_chart_data
+  %>
+</div>
+
 <div id="project-status-report" class="tab-container">
   <%= render 'charts/status_report_tab', target_name: @team.name, status_report_data: @status_report_data, montecarlo_durations: @montecarlo_durations %>
 </div>
 
 <div id="operational-charts" class="tab-container">
   <%= render 'charts/operational_charts_tab', target_name: @team.name, report_data: @report_data %>
-</div>
-
-<div id="flow" class="tab-container">
-  <%= render 'teams/flow', flow_report_data: @flow_report_data, team: @team %>
 </div>
 
 <% content_for :javascript do %>
@@ -80,7 +84,6 @@
 
   <%= javascript_include_tag 'teams/show' %>
 
-  <%= javascript_include_tag 'routes/team_routes' %>
   <%= javascript_include_tag 'routes/chart_routes' %>
   <%= javascript_include_tag 'routes/demand_routes' %>
 

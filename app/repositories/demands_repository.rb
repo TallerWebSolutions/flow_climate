@@ -11,25 +11,12 @@ class DemandsRepository
     Demand.where('project_id = :project_id AND DATE(created_date::TIMESTAMPTZ AT TIME ZONE INTERVAL :interval_value::INTERVAL) <= :analysed_date AND (discarded_at IS NULL OR discarded_at > :limit_date)', project_id: project.id, interval_value: Time.zone.now.formatted_offset, analysed_date: analysed_date, limit_date: analysed_date.beginning_of_day).uniq.count
   end
 
-  def total_queue_time_for(demand)
-    demand.demand_transitions.kept.joins(:stage).where('stages.queue = true AND stages.end_point = false AND stages.stage_stream = :stream', stream: Stage.stage_streams[:downstream]).sum(&:total_seconds_in_transition)
-  end
-
-  def total_touch_time_for(demand)
-    demand.demand_transitions.kept.joins(:stage).where('stages.queue = false AND stages.end_point = false AND stages.stage_stream = :stream', stream: Stage.stage_streams[:downstream]).sum(&:total_seconds_in_transition)
-  end
-
   def committed_demands_by_project_and_week(projects, week, year)
     Demand.kept.where(project_id: projects.map(&:id)).where('EXTRACT(WEEK FROM commitment_date) = :week AND EXTRACT(YEAR FROM commitment_date) = :year', week: week, year: year)
   end
 
   def throughput_by_project_and_week(projects, week, year)
     Demand.kept.where(project_id: projects.map(&:id)).where('EXTRACT(WEEK FROM end_date) = :week AND EXTRACT(YEAR FROM end_date) = :year', week: week, year: year)
-  end
-
-  def work_in_progress_for(projects, analysed_date)
-    demands = Demand.joins(:project).where(project_id: projects.map(&:id))
-    demands_touched_in_day(demands, analysed_date).order(:commitment_date)
   end
 
   def grouped_by_effort_upstream_per_month(projects, limit_date)
@@ -142,9 +129,5 @@ class DemandsRepository
 
   def demands_for_projects_and_finished_until_limit_date(projects, limit_date)
     Demand.where(project_id: projects).where('(EXTRACT(WEEK FROM end_date) <= :week AND EXTRACT(YEAR FROM end_date) <= :year) OR (EXTRACT(YEAR FROM end_date) < :year)', week: limit_date.cweek, year: limit_date.cwyear)
-  end
-
-  def demands_touched_in_day(demands, analysed_date)
-    demands.kept.where('(demands.commitment_date <= :end_of_day AND demands.end_date IS NULL) OR (demands.commitment_date <= :end_of_day AND demands.end_date > :beginning_of_day)', beginning_of_day: analysed_date.beginning_of_day, end_of_day: analysed_date.end_of_day)
   end
 end

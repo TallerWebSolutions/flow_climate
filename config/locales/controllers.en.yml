@@ -343,6 +343,7 @@ en:
       no_customers_message: "You do not have teams yet."
     show:
       total_value: "Projects Total Value"
+      active_projects_value: "Active Projects Value"
   customer:
     edit:
       title: "Edit Customer"
@@ -444,6 +445,7 @@ en:
     flow: "Flow"
     demands: "Demands"
     status_report: "Status Report"
+    risks: "Risks"
   charts:
     xlabel:
       months: "Months"
