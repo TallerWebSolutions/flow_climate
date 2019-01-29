@@ -368,6 +368,7 @@ pt-BR:
       no_customers_message: "Você ainda não tem times."
     show:
       total_value: "Valor Total em Projetos"
+      active_projects_value: "Valor dos Projetos Ativos"
   customer:
     edit:
       title: "Editar Cliente"
@@ -471,6 +472,7 @@ pt-BR:
     flow: "Fluxo"
     demands: "Demandas"
     status_report: "Status Report"
+    risks: "Riscos"
   charts:
     xlabel:
       months: "Meses"
