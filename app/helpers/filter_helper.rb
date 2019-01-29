@@ -8,7 +8,7 @@ module FilterHelper
   end
 
   def flow_status_options(selected_value = :all_demands)
-    options_for_select([[I18n.t('demands.filter.flow_status.all_demands'), :all_demands], [I18n.t('demands.filter.flow_status.not_started'), :not_started], [I18n.t('demands.filter.flow_status.work_in_progress'), :work_in_progress], [I18n.t('demands.filter.flow_status.delivered_demands'), :delivered_demands]], selected_value)
+    options_for_select([[I18n.t('demands.filter.flow_status.all_demands'), :all_demands], [I18n.t('demands.filter.flow_status.not_started'), :not_started], [I18n.t('demands.filter.flow_status.work_in_progress'), :wip], [I18n.t('demands.filter.flow_status.delivered_demands'), :delivered]], selected_value)
   end
 
   def demand_type_options(selected_value = :all_types)
@@ -17,5 +17,9 @@ module FilterHelper
 
   def class_of_service_options(selected_value = :all_classes)
     options_for_select([[I18n.t('demands.filter.class_of_service.all_classes'), :all_classes], [I18n.t('activerecord.attributes.demand.enums.class_of_service.standard'), :standard], [I18n.t('activerecord.attributes.demand.enums.class_of_service.expedite'), :expedite], [I18n.t('activerecord.attributes.demand.enums.class_of_service.fixed_date'), :fixed_date], [I18n.t('activerecord.attributes.demand.enums.class_of_service.intangible'), :intangible]], selected_value)
+  end
+
+  def grouping_period_to_charts_options(selected_value = :week)
+    options_for_select([[I18n.t('general.filter.grouping_period.option.day'), 'day'], [I18n.t('general.filter.grouping_period.option.week'), 'week'], [I18n.t('general.filter.grouping_period.option.month'), 'month'], [I18n.t('general.filter.grouping_period.option.year'), 'year'] ], selected_value)
   end
 end

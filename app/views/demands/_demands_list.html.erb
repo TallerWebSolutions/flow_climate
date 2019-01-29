@@ -31,11 +31,15 @@
 </div>
 
 <div class="row bottom-spaced-component">
-  <div class="col-xs-6">
+  <div class="col-xs-4">
     <%= label_tag t('general.period') %>
     <%= select_tag :period, period_options(:week), class: 'form-control filter-checks', id: 'demands-table-period', selected: params[:period] %>
   </div>
-  <div class="col-xs-6">
+  <div class="col-xs-4">
+    <%= label_tag t('demands.index.grouping_to_charts') %>
+    <%= select_tag :period, grouping_period_to_charts_options(:week), class: 'form-control filter-checks', id: 'demands-table-grouping-period', selected: params[:period] %>
+  </div>
+  <div class="col-xs-4">
     <%= label_tag t('general.search_text') %>
     <%= text_field_tag :search_text, nil, class: 'form-control filter-checks', id: 'search_text' %>
   </div>
@@ -49,25 +53,41 @@
 
 <hr>
 
-<% if @demands.present? %>
-  <div id="container-leadtime-div" class="container-leadtime">
-    <%= render 'demands/demands_leadtime_container', demands: @demands, confidence_65_leadtime: confidence_65_leadtime, confidence_80_leadtime: confidence_80_leadtime, confidence_95_leadtime: confidence_95_leadtime, queue_time: queue_time, touch_time: touch_time %>
+<div class="row bottom-spaced-component">
+  <div class="col-xs-12 center">
+    <button class="btn btn-default listing-tab" onclick="openDemandsDiv(event, 'listing', 'content-charts')" id="demands-table-list"><%= t('demands.data_analysis.list') %></button>
+    <button class="btn btn-default listing-tab" onclick="openDemandsDiv(event, 'content-charts', 'listing')"><%= t('demands.data_analysis.charts') %></button>
   </div>
-<% end %>
+</div>
 
 <hr>
 
-<div id="demands-grouped-per-month-div">
-  <%= render 'demands/grouped_by_month_demands_table', demands: grouped_delivered_demands %>
+<div id="listing">
+  <% if @demands.present? %>
+    <div id="container-leadtime-div" class="container-leadtime">
+      <%= render 'demands/demands_leadtime_container', demands: @demands, confidence_65_leadtime: confidence_65_leadtime, confidence_80_leadtime: confidence_80_leadtime, confidence_95_leadtime: confidence_95_leadtime, queue_time: queue_time, touch_time: touch_time %>
+    </div>
+  <% end %>
+
+  <hr>
+
+  <div id="demands-grouped-per-month-div">
+    <%= render 'demands/grouped_by_month_demands_table', demands: grouped_delivered_demands %>
+  </div>
+
+  <div id="demands-grouped-per-customer-div">
+    <%= render 'demands/grouped_by_customer_demands_table', demands: grouped_customer_demands %>
+  </div>
+
+  <div id="flat-demands-div">
+    <%= render 'demands/demands_table', demands: demands %>
+  </div>
 </div>
 
-<div id="demands-grouped-per-customer-div">
-  <%= render 'demands/grouped_by_customer_demands_table', demands: grouped_customer_demands %>
+<div id="content-charts">
+  <%= render 'demands/demands_charts', demands: demands, demands_chart_adapter: demands_chart_adapter %>
 </div>
 
-<div id="flat-demands-div">
-  <%= render 'demands/demands_table', demands: demands %>
-</div>
 
 <%= javascript_include_tag 'demands/filter_binding' %>
 <%= javascript_include_tag 'demands/demands_list' %>

@@ -412,21 +412,24 @@ RSpec.describe DemandsController, type: :controller do
     end
 
     describe 'GET #demands_in_projects' do
-      context 'passing valid parameters' do
-        let(:first_project) { Fabricate :project, customer: customer, product: product, end_date: 1.day.from_now, status: :executing }
-        let(:second_project) { Fabricate :project, customer: customer, product: product, end_date: 1.day.from_now, status: :finished }
+      before { travel_to Time.zone.local(2019, 1, 24, 10, 0, 0) }
+      after { travel_back }
 
-        let!(:first_demand) { Fabricate :demand, project: first_project, end_date: Time.zone.now }
-        let!(:second_demand) { Fabricate :demand, project: second_project, end_date: Time.zone.now }
+      context 'passing valid parameters' do
+        let(:first_project) { Fabricate :project, customer: customer, product: product, start_date: 3.days.ago, end_date: 1.day.from_now, status: :executing }
+        let(:second_project) { Fabricate :project, customer: customer, product: product, start_date: 3.days.ago, end_date: 1.day.from_now, status: :finished }
+
+        let!(:first_demand) { Fabricate :demand, project: first_project, commitment_date: 1.day.ago, end_date: Time.zone.now }
+        let!(:second_demand) { Fabricate :demand, project: second_project, commitment_date: 3.hours.ago, end_date: Time.zone.now }
 
         it 'builds the operation report and respond the JS render the template' do
-          get :demands_in_projects, params: { company_id: company, projects_ids: [first_project, second_project].map(&:id).to_csv, demands_ids: Demand.all.map(&:id).join(','), period: :all }, xhr: true
+          get :demands_in_projects, params: { company_id: company, projects_ids: [first_project, second_project].map(&:id).to_csv, period: :all }, xhr: true
           expect(response).to render_template 'demands/demands_tab.js.erb'
           expect(assigns(:demands).map(&:id)).to match_array [first_demand.id, second_demand.id]
-          expect(assigns(:demands_count_per_week)[first_project.start_date.beginning_of_week]).to eq(arrived_in_week: [], std_dev_arrived: 0.0, std_dev_throughput: 0.0, throughput_in_week: [])
-          expect(assigns(:confidence_95_leadtime)).to be_within(0.000001).of(0.9999999543263889)
-          expect(assigns(:confidence_80_leadtime)).to be_within(0.000001).of(0.9999999543263889)
-          expect(assigns(:confidence_65_leadtime)).to be_within(0.000001).of(0.9999999543263889)
+          expect(assigns(:demands_count_per_week)[first_project.start_date.beginning_of_week]).to eq(arrived_in_week: [second_demand, first_demand], std_dev_arrived: 0.0, std_dev_throughput: 0.0, throughput_in_week: [second_demand, first_demand])
+          expect(assigns(:confidence_95_leadtime).to_f).to eq 0.9562499999999999
+          expect(assigns(:confidence_80_leadtime).to_f).to eq 0.8250000000000001
+          expect(assigns(:confidence_65_leadtime).to_f).to eq 0.69375
         end
       end
 

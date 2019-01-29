@@ -24,6 +24,7 @@ function filterDemands(companyId, projectsIds) {
     const searchText = $('#search_text').val();
 
     const period = $('#demands-table-period').val();
+    const groupingPeriod = $('#demands-table-grouping-period').val();
 
-    searchDemandsByFlowStatus(companyId, projectsIds, grouping, flowStatus, demandType, demandClassOfService, searchText, period)
+    searchDemandsByFlowStatus(companyId, projectsIds, grouping, flowStatus, demandType, demandClassOfService, searchText, period, groupingPeriod)
 }

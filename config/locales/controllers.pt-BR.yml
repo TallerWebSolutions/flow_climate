@@ -59,6 +59,12 @@ pt-BR:
           last_quarter: "Último Trimestre"
           all_period: "Todo o Período"
           last_week: "Última Semana"
+      grouping_period:
+        option:
+          day: "Por Dia"
+          week: "Por Semana"
+          month: "Por Mês"
+          year: "Por Ano"
     total: "Total"
     days_text: "%{days} dia(s)"
     leadtime:
@@ -382,6 +388,7 @@ pt-BR:
       hours_blocks_queue: "Horas Bloqueada em Filas"
       hours_blocks_touch: "Horas Bloqueadas em Trabalho"
       total_blocked_time: "Tempo Bloqueado"
+      grouping_to_charts: "Agrupamento para os Gráficos"
     edit:
       title: "Editar Demanda"
     show:
@@ -409,14 +416,22 @@ pt-BR:
         tooltipsufix: " demanda(s)"
       hours_per_month:
         title: "Horas por Mês para %{name}"
+      throughput: "Vazão no Período"
+      creation_date: "Taxa de Criação"
+      demands:
+        title: "Demandas"
+      commitment_date: "Data de Compromisso"
+      committed_date: "Comprometidas"
     flow:
       processed_demand: "Demandas Processadas"
       wip: "Trabalho em Progresso"
       committed_with: "Comprometeu-se com"
       real_throughput: "Vazão Real"
     data_analysis:
-      demands_list: "Lista de Demandas"
+      demands_list: "Dados"
       consolidation: "Consolidação"
+      charts: "Gráficos"
+      list: "Listagem"
     stats:
       std_throughput: "Desvio Padrão Vazão"
       std_committed_with: "Desvio Padrão Comprometido"

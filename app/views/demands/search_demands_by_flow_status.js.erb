@@ -3,8 +3,10 @@ var demandsGroupedPerCustomer = $('#demands-grouped-per-customer-div')
 var flatDemands = $('#flat-demands-div');
 
 <% if @demands.present? %>
-  $('#container-leadtime-div').html("<%= escape_javascript(render 'demands/demands_leadtime_container', demands: @demands, confidence_65_leadtime: @confidence_65_leadtime, confidence_80_leadtime: @confidence_80_leadtime, confidence_95_leadtime: @confidence_95_leadtime, queue_time: @total_queue_time, touch_time: @total_touch_time).html_safe %>");
+  $('#container-leadtime-div').html("<%= escape_javascript(render 'demands/demands_leadtime_container', demands: @demands, demands_chart_adapter: @demands_chart_adapter, confidence_65_leadtime: @confidence_65_leadtime, confidence_80_leadtime: @confidence_80_leadtime, confidence_95_leadtime: @confidence_95_leadtime, queue_time: @total_queue_time, touch_time: @total_touch_time).html_safe %>");
 <% end %>
+
+$('#content-charts').html("<%= escape_javascript(render 'demands/demands_charts', demands: @demands, demands_chart_adapter: @demands_chart_adapter).html_safe %>");
 
 <% if @grouped_delivered_demands.present? %>
   demandsGroupedPerMonth.html("<%= escape_javascript(render 'demands/grouped_by_month_demands_table', demands: @grouped_delivered_demands).html_safe %>");
@@ -26,6 +28,15 @@ var flatDemands = $('#flat-demands-div');
   $('#grouping_no_grouping').prop("checked", true);
 
 <% end %>
+
+var demandsThroughputDiv = $('#demands-throughput-column');
+buildColumnChart(demandsThroughputDiv);
+
+var demandsCreatedDiv = $('#demands-created-column');
+buildColumnChart(demandsCreatedDiv);
+
+var demandsCommittedDiv = $('#demands-committed-column');
+buildColumnChart(demandsCommittedDiv);
 
 $("#demands_table").show();
 $(".form-control").prop('disabled', false)

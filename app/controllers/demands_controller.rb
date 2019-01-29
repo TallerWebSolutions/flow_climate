@@ -66,6 +66,8 @@ class DemandsController < AuthenticatedController
     @demands_count_per_week = DemandService.instance.quantitative_consolidation_per_week_to_projects(@projects)
     assign_consolidations
 
+    @demands_chart_adapter = Highchart::DemandsChartsAdapter.new(@demands, 'week')
+
     respond_to { |format| format.js { render file: 'demands/demands_tab.js.erb' } }
   end
 
@@ -75,6 +77,7 @@ class DemandsController < AuthenticatedController
     build_grouping_query(@demands, params[:grouping])
 
     assign_consolidations
+    @demands_chart_adapter = Highchart::DemandsChartsAdapter.new(@demands, params[:grouping_period])
 
     respond_to { |format| format.js { render file: 'demands/search_demands_by_flow_status.js.erb' } }
   end

@@ -9,34 +9,37 @@ class TimeService
     compute_working_hours(start_date, end_date)
   end
 
-  def weeks_between_of(start_date, end_date)
-    array_of_weeks = []
-
+  def days_between_of(start_date, end_date)
     return [] if start_date.blank? || end_date.blank?
 
-    min_date = start_date
+    compute_dates(start_date, end_date, 1.day)
+  end
 
-    while min_date <= end_date
-      array_of_weeks << min_date.beginning_of_week
-      min_date += 7.days
-    end
+  def weeks_between_of(start_date, end_date)
+    return [] if start_date.blank? || end_date.blank?
 
-    array_of_weeks
+    min_date = start_date.beginning_of_week
+    max_date = end_date.end_of_week
+
+    compute_dates(min_date, max_date, 1.week)
   end
 
   def months_between_of(start_date, end_date)
-    array_of_months = []
-
     return [] if start_date.blank? || end_date.blank?
 
-    min_date = start_date
+    min_date = start_date.beginning_of_month
+    max_date = end_date.end_of_month
 
-    while min_date <= end_date
-      array_of_months << Date.new(min_date.year, min_date.month, 1)
-      min_date += 1.month
-    end
+    compute_dates(min_date, max_date, 1.month)
+  end
 
-    array_of_months
+  def years_between_of(start_date, end_date)
+    return [] if start_date.blank? || end_date.blank?
+
+    min_date = start_date.beginning_of_year
+    max_date = end_date.end_of_year
+
+    compute_dates(min_date, max_date, 1.year)
   end
 
   def add_weeks_to_today(weeks)
@@ -56,6 +59,15 @@ class TimeService
   end
 
   private
+
+  def compute_dates(min_date, max_date, period_frame)
+    array_of_dates = []
+    while min_date <= max_date
+      array_of_dates << min_date
+      min_date += period_frame
+    end
+    array_of_dates
+  end
 
   def compute_working_hours(start_time, end_time)
     initial_time = start_time
