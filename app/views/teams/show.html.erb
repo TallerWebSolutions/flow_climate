@@ -22,7 +22,6 @@
     <%= link_to t('navbar.strategic'), '#', id: 'nav-item-strategic', class: 'nav-item', data: { container: '#strategic' } %>
     <%= link_to t('navbar.status_report'), '#', id: 'nav-item-statusreport', class: 'nav-item', data: { container: '#project-status-report' } %>
     <%= link_to t('navbar.charts'), '#', id: 'nav-item-charts', class: 'nav-item', data: { container: '#operational-charts' } %>
-    <%= link_to t('navbar.flow'), '#', id: 'nav-item-flow', class: 'nav-item', data: { container: '#flow' } %>
     <%= link_to t('navbar.settings'), '#', id: 'nav-item-settings', class: 'nav-item', data: { container: '#settings' } %>
   </div>
 </div>
@@ -61,10 +60,6 @@
   <%= render 'charts/operational_charts_tab', target_name: @team.name, report_data: @report_data %>
 </div>
 
-<div id="flow" class="tab-container">
-  <%= render 'teams/flow', flow_report_data: @flow_report_data, team: @team %>
-</div>
-
 <% content_for :javascript do %>
   <%= javascript_include_tag 'charts/burnup' %>
   <%= javascript_include_tag 'charts/column' %>
@@ -80,7 +75,6 @@
 
   <%= javascript_include_tag 'teams/show' %>
 
-  <%= javascript_include_tag 'routes/team_routes' %>
   <%= javascript_include_tag 'routes/chart_routes' %>
   <%= javascript_include_tag 'routes/demand_routes' %>
 
