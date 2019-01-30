@@ -14,10 +14,6 @@ $('.nav-item').on('click', function(event){
     const disabled = $(this).attr('disabled');
     const period = $('#status-report-period').val();
 
-    $('.tab-container').hide();
-
-    $(this).addClass('active');
-
     if (disabled === 'disabled') {
         event.preventDefault();
     } else {
@@ -36,9 +32,9 @@ $('.nav-item').on('click', function(event){
 
         } else {
             enableTabs();
-            $(this).show();
+            $($(this).data('container')).show();
         }
-
+        $(this).addClass('active');
     }
 });
 
