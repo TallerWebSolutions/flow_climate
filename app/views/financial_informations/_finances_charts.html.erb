@@ -34,5 +34,5 @@
     </div>
   </div>
 <% else %>
-  <%= t('general.no_data') %>
+  <%= t('general.no_data', missing_data: FinancialInformation.model_name.human.pluralize(2).downcase) %>
 <% end %>

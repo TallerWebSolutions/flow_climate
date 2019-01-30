@@ -1,71 +1,90 @@
 <% if projects_risk_chart_data.blank? %>
-  <%= t('general.no_data') %>
+  <%= t('general.no_data', missing_data: t('general.data')) %>
 
 <% else %>
+
   <div class="row">
-    <div class="col-xs-6">
-      <div id="hours-gauge"
-           class="flow-chart"
-           data-title='<%= t('charts.team_hours_available.title') %>'
-           data-suffix='<%= t('charts.hours_available.suffix') %>'
-           data-max='<%= max_hours_gauge %>'
-           data-value='<%= consumed_hours %>'>
-      </div>
-    </div>
-    <div class="col-xs-6">
-      <div id="risk-alert-color-backlog"
-           class="flow-chart"
-           data-title='<%= t('charts.risk_alert_color.title', risk_type: t('activerecord.attributes.project_risk_config.enums.risk_type.backlog_growth_rate')) %>'
-           data-ytitle='<%= t('charts.risk_alert_color.title') %>'
-           data-seriesname='<%= "#{Project.model_name.human}(s)" %>'
-           data-series='<%= projects_risk_chart_data.backlog_risk_alert_data.to_json %>'
-           data-decimals='0'>
+    <div class="col-xs-12">
+      <div class="tab">
+        <button class="tablinks" onclick="openTab(event, 'risk-scope')"><%= t('projects.data_analysis.risk_scope') %></button>
+        <button class="tablinks" onclick="openTab(event, 'risk-money')"><%= t('projects.data_analysis.risk_money') %></button>
+        <button class="tablinks" onclick="openTab(event, 'risk-deadline')"><%= t('projects.data_analysis.risk_deadline') %></button>
       </div>
     </div>
   </div>
 
-  <div class="row">
-    <div class="col-xs-6">
-      <div id="risk-alert-color-flowpressure"
-           class="flow-chart"
-           data-title='<%= t('charts.risk_alert_color.title', risk_type: t('activerecord.attributes.project_risk_config.enums.risk_type.flow_pressure')) %>'
-           data-ytitle='<%= t('charts.risk_alert_color.title') %>'
-           data-seriesname='<%= "#{Project.model_name.human}(s)" %>'
-           data-series='<%= projects_risk_chart_data.flowpressure_risk_alert_data.to_json %>'
-           data-decimals='0'>
+  <div id="risk-scope" class="tabcontent">
+    <div class="row bottom-spaced-component">
+      <div class="col-xs-6">
+        <div id="hours-gauge"
+             class="flow-chart"
+             data-title='<%= t('charts.team_hours_available.title') %>'
+             data-suffix='<%= t('charts.hours_available.suffix') %>'
+             data-max='<%= max_hours_gauge %>'
+             data-value='<%= consumed_hours %>'>
+        </div>
+      </div>
+      <div class="col-xs-6">
+        <div id="risk-alert-color-backlog"
+             class="flow-chart"
+             data-title='<%= t('charts.risk_alert_color.title', risk_type: t('activerecord.attributes.project_risk_config.enums.risk_type.backlog_growth_rate')) %>'
+             data-ytitle='<%= t('charts.risk_alert_color.title') %>'
+             data-seriesname='<%= "#{Project.model_name.human}(s)" %>'
+             data-series='<%= projects_risk_chart_data.backlog_risk_alert_data.to_json %>'
+             data-decimals='0'>
+        </div>
       </div>
     </div>
-    <div class="col-xs-6">
-      <div id="risk-alert-color-money"
-           class="flow-chart"
-           data-title='<%= t('charts.risk_alert_color.title', risk_type: t('activerecord.attributes.project_risk_config.enums.risk_type.no_money_to_deadline')) %>'
-           data-ytitle='<%= t('charts.risk_alert_color.title') %>'
-           data-seriesname='<%= "#{Project.model_name.human}(s)" %>'
-           data-series='<%= projects_risk_chart_data.money_risk_alert_data.to_json %>'
-           data-decimals='0'>
+    <div class="row">
+      <div class="col-xs-6">
+        <div id="risk-alert-color-hours"
+             class="flow-chart"
+             data-title='<%= t('charts.risk_alert_color.title', risk_type: t('activerecord.attributes.project_risk_config.enums.risk_type.not_enough_available_hours')) %>'
+             data-ytitle='<%= t('charts.risk_alert_color.title') %>'
+             data-seriesname='<%= "#{Project.model_name.human}(s)" %>'
+             data-series='<%= projects_risk_chart_data.hours_risk_alert_data.to_json %>'
+             data-decimals='0'>
+        </div>
       </div>
     </div>
   </div>
 
-  <div class="row">
-    <div class="col-xs-6">
-      <div id="risk-alert-color-hours"
-           class="flow-chart"
-           data-title='<%= t('charts.risk_alert_color.title', risk_type: t('activerecord.attributes.project_risk_config.enums.risk_type.not_enough_available_hours')) %>'
-           data-ytitle='<%= t('charts.risk_alert_color.title') %>'
-           data-seriesname='<%= "#{Project.model_name.human}(s)" %>'
-           data-series='<%= projects_risk_chart_data.hours_risk_alert_data.to_json %>'
-           data-decimals='0'>
+  <div id="risk-money" class="tabcontent">
+    <div class="row">
+      <div class="col-xs-6">
+        <div id="risk-alert-color-money"
+             class="flow-chart"
+             data-title='<%= t('charts.risk_alert_color.title', risk_type: t('activerecord.attributes.project_risk_config.enums.risk_type.no_money_to_deadline')) %>'
+             data-ytitle='<%= t('charts.risk_alert_color.title') %>'
+             data-seriesname='<%= "#{Project.model_name.human}(s)" %>'
+             data-series='<%= projects_risk_chart_data.money_risk_alert_data.to_json %>'
+             data-decimals='0'>
+        </div>
+      </div>
+      <div class="col-xs-6">
+        <div id="risk-alert-color-profit"
+             class="flow-chart"
+             data-title='<%= t('charts.risk_alert_color.title', risk_type: t('activerecord.attributes.project_risk_config.enums.risk_type.profit_margin')) %>'
+             data-ytitle='<%= t('charts.risk_alert_color.title') %>'
+             data-seriesname='<%= "#{Project.model_name.human}(s)" %>'
+             data-series='<%= projects_risk_chart_data.profit_risk_alert_data.to_json %>'
+             data-decimals='0'>
+        </div>
       </div>
     </div>
-    <div class="col-xs-6">
-      <div id="risk-alert-color-profit"
-           class="flow-chart"
-           data-title='<%= t('charts.risk_alert_color.title', risk_type: t('activerecord.attributes.project_risk_config.enums.risk_type.profit_margin')) %>'
-           data-ytitle='<%= t('charts.risk_alert_color.title') %>'
-           data-seriesname='<%= "#{Project.model_name.human}(s)" %>'
-           data-series='<%= projects_risk_chart_data.profit_risk_alert_data.to_json %>'
-           data-decimals='0'>
+  </div>
+
+  <div id="risk-deeadline" class="tabcontent">
+    <div class="row">
+      <div class="col-xs-6">
+        <div id="risk-alert-color-flowpressure"
+             class="flow-chart"
+             data-title='<%= t('charts.risk_alert_color.title', risk_type: t('activerecord.attributes.project_risk_config.enums.risk_type.flow_pressure')) %>'
+             data-ytitle='<%= t('charts.risk_alert_color.title') %>'
+             data-seriesname='<%= "#{Project.model_name.human}(s)" %>'
+             data-series='<%= projects_risk_chart_data.flowpressure_risk_alert_data.to_json %>'
+             data-decimals='0'>
+        </div>
       </div>
     </div>
   </div>

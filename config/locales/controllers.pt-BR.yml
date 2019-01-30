@@ -70,6 +70,7 @@ pt-BR:
     leadtime:
       title: "Lead time %{percentile}"
     search_text: "Procurar no nome do produto ou do projeto e no ID da demanda"
+    data: "Dados"
   header:
     logout: Sair
     sign_up: Cadastre-se
@@ -277,10 +278,11 @@ pt-BR:
         title: "Eficiência de Fluxo para %{target_name}"
         share: "Eficiência de Fluxo"
       leadtime_evolution:
-        title: "Evolução da Confiança do Leadtime para %{target_name}"
+        title: "Evolução da Confiança do Leadtime"
         ylabel: "Dias"
         legend:
           leadtime_80_confidence: "80% de Confiança"
+          leadtime_80_confidence_accumulated: "Lead time 80% acumulado"
       class_of_service_pie:
         title: "Percentual das Classes de Serviço"
       deadline_vs_montecarlo_durations:
@@ -324,6 +326,10 @@ pt-BR:
       risks: "Riscos"
       stages: "Etapas"
       jira: "Jira"
+    data_analysis:
+      risk_deadline: "Prazo"
+      risk_money: "Custo"
+      risk_scope: "Escopo"
   teams:
     index:
       title: "Times"

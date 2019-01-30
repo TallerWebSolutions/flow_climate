@@ -41,6 +41,6 @@
 </table>
 <% else %>
   <div class="no-data">
-    <%= t('general.no_data') %>
+    <%= t('general.no_data', missing_data: ProjectRiskConfig.model_name.human.pluralize(2).downcase) %>
   </div>
 <% end %>

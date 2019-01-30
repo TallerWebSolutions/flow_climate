@@ -110,6 +110,14 @@ class DemandsRepository
     end
   end
 
+  def demands_for_period(demands, bottom_date_limit, upper_date_limit)
+    Demand.kept.where(id: demands.map(&:id)).where('end_date >= :bottom_limit AND end_date <= :upper_limit', bottom_limit: bottom_date_limit, upper_limit: upper_date_limit)
+  end
+
+  def demands_for_periods_accumulated(demands, upper_date_limit)
+    Demand.kept.where(id: demands.map(&:id)).where('end_date <= :upper_limit', upper_limit: upper_date_limit)
+  end
+
   private
 
   def build_count_grouped_per_period_query(demands, select_string, base_date_field)

@@ -11,6 +11,9 @@ buildColumnChart(demandsCreatedDiv);
 var demandsCommittedDiv = $('#demands-committed-column');
 buildColumnChart(demandsCommittedDiv);
 
+var leadtimeEvolution = $('#leadtime-evolution');
+buildLineChart(leadtimeEvolution);
+
 $('#demands-table-list').addClass("btn-active");
 
 $('#demands-grouped-per-month-div').hide();

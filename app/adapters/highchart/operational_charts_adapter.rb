@@ -19,7 +19,6 @@ module Highchart
       build_weekly_queue_touch_share_hash
       build_flow_pressure_array
       build_statistics_charts
-      build_leadtime_percentiles_on_time
     end
 
     def hours_per_demand_per_week
@@ -142,18 +141,6 @@ module Highchart
       @lead_time_control_chart[:percentile_95_data] = Stats::StatisticsService.instance.percentile(95, demand_data)
       @lead_time_control_chart[:percentile_80_data] = Stats::StatisticsService.instance.percentile(80, demand_data)
       @lead_time_control_chart[:percentile_60_data] = Stats::StatisticsService.instance.percentile(60, demand_data)
-    end
-
-    def build_leadtime_percentiles_on_time
-      @leadtime_percentiles_on_time = {}
-      @leadtime_percentiles_on_time[:xcategories] = @all_projects_weeks
-      @leadtime_percentiles_on_time[:leadtime_80_confidence] = @all_projects_weeks.map do |date|
-        Stats::StatisticsService.instance.percentile(80, demands_for_all_projects_until_date(date).map(&:leadtime_in_days))
-      end
-    end
-
-    def demands_for_all_projects_until_date(date = Time.zone.today)
-      Demand.kept.where(project_id: @all_projects.map(&:id)).where('end_date >= :bottom_limit AND end_date <= :limit_date', bottom_limit: charts_data_bottom_limit_date, limit_date: date)
     end
 
     def build_weeekly_bugs_count_hash
