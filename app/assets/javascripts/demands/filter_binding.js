@@ -15,6 +15,7 @@ function filterDemands(companyId, projectsIds) {
     $('#demands-grouped-per-month-div').hide();
     $('#demands-grouped-per-customer-div').hide();
     $('#flat-demands-div').hide();
+    $('#demand-tab-content').hide();
 
     const grouping = $('#demands-table-grouping').val();
     const flowStatus = $('#demands-table-flow-status').val();

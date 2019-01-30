@@ -299,4 +299,56 @@ RSpec.describe DemandsRepository, type: :repository do
       end
     end
   end
+
+  describe '#demands_for_period' do
+    let(:first_project) { Fabricate :project, start_date: 2.months.ago, end_date: 2.months.from_now }
+    let(:second_project) { Fabricate :project, start_date: 2.months.ago, end_date: 2.months.from_now }
+    let(:third_project) { Fabricate :project, start_date: 2.months.ago, end_date: 2.months.from_now }
+
+    context 'having demands' do
+      let!(:first_demand) { Fabricate :demand, project: first_project, downstream: false, end_date: 4.days.ago, effort_upstream: 558, effort_downstream: 929 }
+      let!(:second_demand) { Fabricate :demand, project: first_project, downstream: false, end_date: 1.day.ago, effort_upstream: 932, effort_downstream: 112 }
+      let!(:third_demand) { Fabricate :demand, project: first_project, downstream: true, end_date: 3.weeks.ago, effort_upstream: 536, effort_downstream: 643 }
+      let!(:fourth_demand) { Fabricate :demand, project: first_project, downstream: true, end_date: nil, effort_upstream: 210, effort_downstream: 432 }
+      let!(:fifth_demand) { Fabricate :demand, project: first_project, downstream: false, end_date: 1.week.ago, effort_upstream: 1100, effort_downstream: 230 }
+      let!(:sixth_demand) { Fabricate :demand, project: second_project, downstream: false, end_date: 1.month.ago, effort_upstream: 100, effort_downstream: 23 }
+      let!(:seventh_demand) { Fabricate :demand, project: third_project, downstream: true, commitment_date: Time.zone.today, end_date: Time.zone.tomorrow, effort_upstream: 120, effort_downstream: 723 }
+
+      let!(:eigth_demand) { Fabricate :demand, project: second_project, commitment_date: Time.zone.today, discarded_at: Time.zone.today, effort_upstream: 54_321, effort_downstream: 15_223 }
+
+      it { expect(DemandsRepository.instance.demands_for_period(Demand.all, 4.days.ago, Time.zone.now)).to match_array [first_demand, second_demand] }
+    end
+
+    context 'having no demands' do
+      context 'having no demands' do
+        it { expect(DemandsRepository.instance.demands_for_period(Demand.all, 4.days.ago, Time.zone.now)).to eq [] }
+      end
+    end
+  end
+
+  describe '#demands_for_periods_accumulated' do
+    let(:first_project) { Fabricate :project, start_date: 2.months.ago, end_date: 2.months.from_now }
+    let(:second_project) { Fabricate :project, start_date: 2.months.ago, end_date: 2.months.from_now }
+    let(:third_project) { Fabricate :project, start_date: 2.months.ago, end_date: 2.months.from_now }
+
+    context 'having demands' do
+      let!(:first_demand) { Fabricate :demand, project: first_project, downstream: false, end_date: 4.days.ago, effort_upstream: 558, effort_downstream: 929 }
+      let!(:second_demand) { Fabricate :demand, project: first_project, downstream: false, end_date: 1.day.ago, effort_upstream: 932, effort_downstream: 112 }
+      let!(:third_demand) { Fabricate :demand, project: first_project, downstream: true, end_date: 3.weeks.ago, effort_upstream: 536, effort_downstream: 643 }
+      let!(:fourth_demand) { Fabricate :demand, project: first_project, downstream: true, end_date: nil, effort_upstream: 210, effort_downstream: 432 }
+      let!(:fifth_demand) { Fabricate :demand, project: first_project, downstream: false, end_date: 1.week.ago, effort_upstream: 1100, effort_downstream: 230 }
+      let!(:sixth_demand) { Fabricate :demand, project: second_project, downstream: false, end_date: 1.month.ago, effort_upstream: 100, effort_downstream: 23 }
+      let!(:seventh_demand) { Fabricate :demand, project: third_project, downstream: true, commitment_date: Time.zone.today, end_date: Time.zone.tomorrow, effort_upstream: 120, effort_downstream: 723 }
+
+      let!(:eigth_demand) { Fabricate :demand, project: second_project, commitment_date: Time.zone.today, discarded_at: Time.zone.today, effort_upstream: 54_321, effort_downstream: 15_223 }
+
+      it { expect(DemandsRepository.instance.demands_for_periods_accumulated(Demand.all, 1.week.ago)).to match_array [third_demand, fifth_demand, sixth_demand] }
+    end
+
+    context 'having no demands' do
+      context 'having no demands' do
+        it { expect(DemandsRepository.instance.demands_for_periods_accumulated(Demand.all, 4.days.ago)).to eq [] }
+      end
+    end
+  end
 end

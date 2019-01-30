@@ -29,9 +29,6 @@ function buildOperationalHighcharts() {
     const leadtimeHistogramChart = $('#leadtime-histogram');
     buildColumnChart(leadtimeHistogramChart);
 
-    const leadtimeEvolution = $('#leadtime-evolution');
-    buildLineChart(leadtimeEvolution);
-
     const throughputHistogramChart = $('#throughput-histogram');
     buildColumnChart(throughputHistogramChart);
 

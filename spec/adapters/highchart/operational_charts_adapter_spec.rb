@@ -69,8 +69,6 @@ RSpec.describe Highchart::OperationalChartsAdapter, type: :data_object do
             expect(report_data.lead_time_control_chart[:percentile_95_data]).to eq 7.9088125
             expect(report_data.lead_time_control_chart[:percentile_80_data]).to eq 5.559472222222222
             expect(report_data.lead_time_control_chart[:percentile_60_data]).to eq 2.799999999999999
-            expect(report_data.leadtime_percentiles_on_time[:xcategories]).to eq [Date.new(2018, 1, 15), Date.new(2018, 1, 22), Date.new(2018, 1, 29), Date.new(2018, 2, 5), Date.new(2018, 2, 12), Date.new(2018, 2, 19), Date.new(2018, 2, 26), Date.new(2018, 3, 5), Date.new(2018, 3, 12), Date.new(2018, 3, 19), Date.new(2018, 3, 26), Date.new(2018, 4, 2), Date.new(2018, 4, 9), Date.new(2018, 4, 16), Date.new(2018, 4, 23), Date.new(2018, 4, 30), Date.new(2018, 5, 7)]
-            expect(report_data.leadtime_percentiles_on_time[:leadtime_80_confidence]).to eq [0, 0, 0, 0, 0, 0, 1.0, 6.437888888888889, 6.437888888888889, 6.278416666666667, 7.837888888888889, 7.837888888888889, 7.837888888888889, 7.837888888888889, 7.837888888888889, 7.837888888888889, 5.559472222222222]
             expect(report_data.leadtime_bins).to eq ['1.78 Dias', '4.27 Dias', '6.76 Dias']
             expect(report_data.leadtime_histogram_data).to eq [6.0, 2.0, 2.0]
             expect(report_data.throughput_bins).to eq ['0.83 demanda(s)', '2.5 demanda(s)', '4.17 demanda(s)']
@@ -100,8 +98,6 @@ RSpec.describe Highchart::OperationalChartsAdapter, type: :data_object do
             expect(report_data.lead_time_control_chart[:percentile_95_data]).to eq 4.199999999999999
             expect(report_data.lead_time_control_chart[:percentile_80_data]).to eq 1.8000000000000007
             expect(report_data.lead_time_control_chart[:percentile_60_data]).to eq 1.0
-            expect(report_data.leadtime_percentiles_on_time[:xcategories]).to eq [Date.new(2018, 4, 9), Date.new(2018, 4, 16), Date.new(2018, 4, 23), Date.new(2018, 4, 30), Date.new(2018, 5, 7)]
-            expect(report_data.leadtime_percentiles_on_time[:leadtime_80_confidence]).to eq [0, 0, 0, 0, 1.8000000000000007]
             expect(report_data.leadtime_bins).to eq ['1.66 Dias', '3.89 Dias']
             expect(report_data.leadtime_histogram_data).to eq [4.0, 1.0]
             expect(report_data.throughput_bins).to eq ['0.83 demanda(s)', '2.5 demanda(s)', '4.17 demanda(s)']
@@ -132,8 +128,6 @@ RSpec.describe Highchart::OperationalChartsAdapter, type: :data_object do
             expect(report_data.lead_time_control_chart[:percentile_95_data]).to eq 7.9088125
             expect(report_data.lead_time_control_chart[:percentile_80_data]).to eq 5.559472222222222
             expect(report_data.lead_time_control_chart[:percentile_60_data]).to eq 2.799999999999999
-            expect(report_data.leadtime_percentiles_on_time[:xcategories]).to eq [Date.new(2018, 2, 19), Date.new(2018, 2, 26), Date.new(2018, 3, 5), Date.new(2018, 3, 12), Date.new(2018, 3, 19), Date.new(2018, 3, 26), Date.new(2018, 4, 2), Date.new(2018, 4, 9), Date.new(2018, 4, 16), Date.new(2018, 4, 23), Date.new(2018, 4, 30), Date.new(2018, 5, 7)]
-            expect(report_data.leadtime_percentiles_on_time[:leadtime_80_confidence]).to eq [0, 1.0, 6.437888888888889, 6.437888888888889, 6.278416666666667, 7.837888888888889, 7.837888888888889, 7.837888888888889, 7.837888888888889, 7.837888888888889, 7.837888888888889, 5.559472222222222]
             expect(report_data.leadtime_bins).to eq ['1.78 Dias', '4.27 Dias', '6.76 Dias']
             expect(report_data.leadtime_histogram_data).to eq [6.0, 2.0, 2.0]
             expect(report_data.throughput_bins).to eq ['0.83 demanda(s)', '2.5 demanda(s)', '4.17 demanda(s)']

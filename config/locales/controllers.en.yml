@@ -68,6 +68,7 @@ en:
     total: "Total"
     days_text: "%{days} day(s)"
     search_text: "Search in product or project name or demand title or demand id"
+    data: "Data"
   header:
     logout: Logout
     explore: Explore
@@ -261,10 +262,11 @@ en:
         title: "Flow Efficiency for %{target_name}"
         share: "Flow Efficiency"
       leadtime_evolution:
-        title: "Leadtime confidence evolution for %{target_name}"
+        title: "Leadtime confidence evolution"
         ylabel: "Days"
         legend:
           leadtime_80_confidence: "80% Confidence"
+          leadtime_80_confidence_accumulated: "80% lead time accumulated"
       class_of_service_pie:
         title: "Share of Classes of Service"
       deadline_vs_montecarlo_durations:
@@ -306,6 +308,10 @@ en:
       risks: "Risks"
       stages: "Stages"
       jira: "Jira"
+    data_analysis:
+      risk_deadline: "Deadline"
+      risk_money: "Cost"
+      risk_scope: "Scope"
   project:
     new:
       title: "New Project"

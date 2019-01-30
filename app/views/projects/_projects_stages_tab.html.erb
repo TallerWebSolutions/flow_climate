@@ -11,7 +11,7 @@
     </div>
   <% end %>
   <div class="no-data">
-    <%= t('general.no_data') %>
+    <%= t('general.no_data', missing_data: Stage.model_name.human.pluralize(2).downcase) %>
   </div>
 <% else %>
   <div id="stages-to-project-table">

@@ -38,7 +38,11 @@ buildColumnChart(demandsCreatedDiv);
 var demandsCommittedDiv = $('#demands-committed-column');
 buildColumnChart(demandsCommittedDiv);
 
+var leadtimeEvolution = $('#leadtime-evolution');
+buildLineChart(leadtimeEvolution);
+
 $("#demands_table").show();
 $(".form-control").prop('disabled', false)
 $(".filter-checks").prop('disabled', false)
 $("#general-loader").hide();
+$('#demand-tab-content').show();

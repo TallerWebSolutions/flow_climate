@@ -2,7 +2,7 @@
 
   <h3 class="center"><%= t('charts.current_situation.title') %></h3>
 
-  <div class="row">
+  <div class="row bottom-spaced-component">
     <div class="col-xs-6">
       <div id="status-report-throughput-column"
            class="flow-chart"
@@ -29,7 +29,7 @@
     </div>
   </div>
 
-  <div class="row">
+  <div class="row bottom-spaced-component">
     <div class="col-xs-6">
       <div id="burnup-hours-per-week"
            class="flow-chart"
@@ -63,7 +63,7 @@
     </div>
   </div>
 
-  <div class="row">
+  <div class="row bottom-spaced-component">
     <div class="col-xs-6">
       <div id="status-report-deadline-bar"
            class="flow-chart"
@@ -89,5 +89,5 @@
     </div>
   </div>
 <% else %>
-  <%= t('general.no_data') %>
+  <%= t('general.no_data', missing_data: t('general.data')) %>
 <% end %>

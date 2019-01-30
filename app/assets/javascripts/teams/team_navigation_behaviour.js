@@ -14,12 +14,14 @@ $('.nav-item').on('click', function(event){
     const disabled = $(this).attr('disabled');
     const period = $('#status-report-period').val();
 
+    $('.tab-container').hide();
+
+    $(this).addClass('active');
+
     if (disabled === 'disabled') {
         event.preventDefault();
     } else {
         disableTabs();
-        showClicked($(this).data('container'), $(this));
-
         if ($(this).attr('id') === 'nav-item-statusreport') {
             buildStatusReportCharts(company_id, projects_ids, period, target_name)
 
@@ -34,14 +36,11 @@ $('.nav-item').on('click', function(event){
 
         } else {
             enableTabs();
+            $(this).show();
         }
+
     }
 });
-
-function showClicked(containerId, navItem) {
-    $(containerId).show();
-    navItem.addClass('active');
-}
 
 function hideAllComponents() {
     $('.tab-container').hide();
