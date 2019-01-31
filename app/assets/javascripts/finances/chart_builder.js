@@ -1,13 +1,21 @@
 function buildFinancesHighcharts() {
     const balanceDiv = $('#finances-balance-div');
-    buildColumnLineChart(balanceDiv);
+    if (balanceDiv) {
+        buildColumnLineChart(balanceDiv);
+    }
 
     const costPerHourDiv = $('#finances-income-outcome-per-hour-div');
-    buildLineChart(costPerHourDiv);
+    if (costPerHourDiv) {
+        buildLineChart(costPerHourDiv);
+    }
 
     const stdDevIncomeOutcomeDiv = $('#finances-std-dev-income-outcome-div');
-    buildLineChart(stdDevIncomeOutcomeDiv);
+    if (stdDevIncomeOutcomeDiv) {
+        buildLineChart(stdDevIncomeOutcomeDiv);
+    }
 
     const meanCostPerHourDiv = $('#finances-mean-cost-per-hour-div');
-    buildLineChart(meanCostPerHourDiv);
+    if (meanCostPerHourDiv) {
+        buildLineChart(meanCostPerHourDiv);
+    }
 }

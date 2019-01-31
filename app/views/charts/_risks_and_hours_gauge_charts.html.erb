@@ -25,26 +25,39 @@
         </div>
       </div>
       <div class="col-xs-6">
-        <div id="risk-alert-color-backlog"
-             class="flow-chart"
-             data-title='<%= t('charts.risk_alert_color.title', risk_type: t('activerecord.attributes.project_risk_config.enums.risk_type.backlog_growth_rate')) %>'
-             data-ytitle='<%= t('charts.risk_alert_color.title') %>'
-             data-seriesname='<%= "#{Project.model_name.human}(s)" %>'
-             data-series='<%= projects_risk_chart_data.backlog_risk_alert_data.to_json %>'
-             data-decimals='0'>
-        </div>
+        <% if projects_risk_chart_data.backlog_risk_alert_data.blank? %>
+          <span class="no-data">
+            <%= t('general.no_data', missing_data: ProjectRiskConfig.model_name.human.pluralize(2).downcase) %>
+          </span>
+        <% else %>
+          <div id="risk-alert-color-backlog"
+               class="flow-chart"
+               data-title='<%= t('charts.risk_alert_color.title', risk_type: t('activerecord.attributes.project_risk_config.enums.risk_type.backlog_growth_rate')) %>'
+               data-ytitle='<%= t('charts.risk_alert_color.title') %>'
+               data-seriesname='<%= "#{Project.model_name.human}(s)" %>'
+               data-series='<%= projects_risk_chart_data.backlog_risk_alert_data.to_json %>'
+               data-decimals='0'>
+          </div>
+        <% end %>
       </div>
     </div>
+    <hr>
     <div class="row">
       <div class="col-xs-6">
-        <div id="risk-alert-color-hours"
-             class="flow-chart"
-             data-title='<%= t('charts.risk_alert_color.title', risk_type: t('activerecord.attributes.project_risk_config.enums.risk_type.not_enough_available_hours')) %>'
-             data-ytitle='<%= t('charts.risk_alert_color.title') %>'
-             data-seriesname='<%= "#{Project.model_name.human}(s)" %>'
-             data-series='<%= projects_risk_chart_data.hours_risk_alert_data.to_json %>'
-             data-decimals='0'>
-        </div>
+        <% if projects_risk_chart_data.hours_risk_alert_data.blank? %>
+          <div class="no-data">
+            <%= t('general.no_data', missing_data: ProjectRiskConfig.model_name.human.pluralize(2).downcase) %>
+          </div>
+        <% else %>
+          <div id="risk-alert-color-hours"
+               class="flow-chart"
+               data-title='<%= t('charts.risk_alert_color.title', risk_type: t('activerecord.attributes.project_risk_config.enums.risk_type.not_enough_available_hours')) %>'
+               data-ytitle='<%= t('charts.risk_alert_color.title') %>'
+               data-seriesname='<%= "#{Project.model_name.human}(s)" %>'
+               data-series='<%= projects_risk_chart_data.hours_risk_alert_data.to_json %>'
+               data-decimals='0'>
+          </div>
+        <% end %>
       </div>
     </div>
   </div>
@@ -52,24 +65,36 @@
   <div id="risk-money" class="tabcontent">
     <div class="row">
       <div class="col-xs-6">
-        <div id="risk-alert-color-money"
-             class="flow-chart"
-             data-title='<%= t('charts.risk_alert_color.title', risk_type: t('activerecord.attributes.project_risk_config.enums.risk_type.no_money_to_deadline')) %>'
-             data-ytitle='<%= t('charts.risk_alert_color.title') %>'
-             data-seriesname='<%= "#{Project.model_name.human}(s)" %>'
-             data-series='<%= projects_risk_chart_data.money_risk_alert_data.to_json %>'
-             data-decimals='0'>
-        </div>
+        <% if projects_risk_chart_data.money_risk_alert_data.blank? %>
+          <div class="no-data">
+            <%= t('general.no_data', missing_data: ProjectRiskConfig.model_name.human) %>
+          </div>
+        <% else %>
+          <div id="risk-alert-color-money"
+               class="flow-chart"
+               data-title='<%= t('charts.risk_alert_color.title', risk_type: t('activerecord.attributes.project_risk_config.enums.risk_type.no_money_to_deadline')) %>'
+               data-ytitle='<%= t('charts.risk_alert_color.title') %>'
+               data-seriesname='<%= "#{Project.model_name.human}(s)" %>'
+               data-series='<%= projects_risk_chart_data.money_risk_alert_data.to_json %>'
+               data-decimals='0'>
+          </div>
+        <% end %>
       </div>
       <div class="col-xs-6">
-        <div id="risk-alert-color-profit"
-             class="flow-chart"
-             data-title='<%= t('charts.risk_alert_color.title', risk_type: t('activerecord.attributes.project_risk_config.enums.risk_type.profit_margin')) %>'
-             data-ytitle='<%= t('charts.risk_alert_color.title') %>'
-             data-seriesname='<%= "#{Project.model_name.human}(s)" %>'
-             data-series='<%= projects_risk_chart_data.profit_risk_alert_data.to_json %>'
-             data-decimals='0'>
-        </div>
+        <% if projects_risk_chart_data.profit_risk_alert_data.blank? %>
+          <div class="no-data">
+            <%= t('general.no_data', missing_data: ProjectRiskConfig.model_name.human) %>
+          </div>
+        <% else %>
+          <div id="risk-alert-color-profit"
+               class="flow-chart"
+               data-title='<%= t('charts.risk_alert_color.title', risk_type: t('activerecord.attributes.project_risk_config.enums.risk_type.profit_margin')) %>'
+               data-ytitle='<%= t('charts.risk_alert_color.title') %>'
+               data-seriesname='<%= "#{Project.model_name.human}(s)" %>'
+               data-series='<%= projects_risk_chart_data.profit_risk_alert_data.to_json %>'
+               data-decimals='0'>
+          </div>
+        <% end %>
       </div>
     </div>
   </div>
@@ -77,14 +102,20 @@
   <div id="risk-deadline" class="tabcontent">
     <div class="row">
       <div class="col-xs-6">
-        <div id="risk-alert-color-flowpressure"
-             class="flow-chart"
-             data-title='<%= t('charts.risk_alert_color.title', risk_type: t('activerecord.attributes.project_risk_config.enums.risk_type.flow_pressure')) %>'
-             data-ytitle='<%= t('charts.risk_alert_color.title') %>'
-             data-seriesname='<%= "#{Project.model_name.human}(s)" %>'
-             data-series='<%= projects_risk_chart_data.flowpressure_risk_alert_data.to_json %>'
-             data-decimals='0'>
-        </div>
+        <% if projects_risk_chart_data.flowpressure_risk_alert_data.blank? %>
+          <div class="no-data">
+            <%= t('general.no_data', missing_data: ProjectRiskConfig.model_name.human) %>
+          </div>
+        <% else %>
+          <div id="risk-alert-color-flowpressure"
+               class="flow-chart"
+               data-title='<%= t('charts.risk_alert_color.title', risk_type: t('activerecord.attributes.project_risk_config.enums.risk_type.flow_pressure')) %>'
+               data-ytitle='<%= t('charts.risk_alert_color.title') %>'
+               data-seriesname='<%= "#{Project.model_name.human}(s)" %>'
+               data-series='<%= projects_risk_chart_data.flowpressure_risk_alert_data.to_json %>'
+               data-decimals='0'>
+          </div>
+        <% end %>
       </div>
     </div>
   </div>

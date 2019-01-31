@@ -1,13 +1,21 @@
 function buildStrategicHighcharts() {
     const projectsCountDiv = $('#projects-count-column');
-    buildColumnLineChart(projectsCountDiv);
+    if (projectsCountDiv) {
+        buildColumnLineChart(projectsCountDiv);
+    }
 
     const flowPressureDiv = $('#flowpressure-per-month-line');
-    buildLineChart(flowPressureDiv);
+    if (flowPressureDiv) {
+        buildLineChart(flowPressureDiv);
+    }
 
     const hoursPerMonth = $('#hours-per-month-line');
-    buildLineChart(hoursPerMonth);
+    if (hoursPerMonth) {
+        buildLineChart(hoursPerMonth);
+    }
 
     const moneyPerMonth = $('#money-per-month-line');
-    buildLineChart(moneyPerMonth);
+    if (moneyPerMonth) {
+        buildLineChart(moneyPerMonth);
+    }
 }
