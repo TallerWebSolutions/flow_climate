@@ -22,6 +22,10 @@ RSpec.describe TeamsController, type: :controller do
       before { put :update, params: { company_id: 'xpto', id: 'foo' } }
       it { expect(response).to redirect_to new_user_session_path }
     end
+    describe 'GET #replenishing_input' do
+      before { put :update, params: { company_id: 'xpto', id: 'foo' } }
+      it { expect(response).to redirect_to new_user_session_path }
+    end
   end
 
   context 'authenticated as gold' do
@@ -214,6 +218,74 @@ RSpec.describe TeamsController, type: :controller do
 
           before { put :update, params: { company_id: company, id: team, team: { name: 'foo' } } }
           it { expect(response).to have_http_status :not_found }
+        end
+      end
+    end
+    describe 'GET #replenishing_input' do
+      context 'having data' do
+        let!(:first_project) { Fabricate :project, customer: customer, team: team, name: 'first_project', status: :executing, start_date: 4.months.ago, end_date: Time.zone.today }
+        let!(:second_project) { Fabricate :project, customer: customer, team: team, name: 'second_project', status: :executing, start_date: 2.months.ago, end_date: 3.days.from_now }
+        let!(:third_project) { Fabricate :project, customer: customer, team: team, name: 'third_project', status: :executing, start_date: 1.month.ago, end_date: 1.week.from_now }
+
+        let!(:first_demand) { Fabricate :demand, project: first_project, commitment_date: 3.months.ago, end_date: 1.week.ago }
+        let!(:second_demand) { Fabricate :demand, project: first_project, commitment_date: 2.months.ago, end_date: 4.days.ago }
+        let!(:third_demand) { Fabricate :demand, project: second_project, end_date: 1.day.ago }
+        let!(:fourth_demand) { Fabricate :demand, project: third_project, end_date: Time.zone.today }
+
+        let!(:first_project_closed_demands) { Fabricate.times(6, :demand, project: first_project, commitment_date: nil, end_date: 1.week.ago) }
+        let!(:second_project_closed_demands) { Fabricate.times(2, :demand, project: second_project, commitment_date: 1.week.ago, end_date: 1.week.ago) }
+
+        let!(:first_project_opened_demands) { Fabricate.times(7, :demand, project: first_project, commitment_date: nil, end_date: nil) }
+        let!(:second_project_opened_demands) { Fabricate.times(3, :demand, project: second_project, end_date: nil) }
+
+        it 'returns the data and redirects' do
+          get :replenishing_input, params: { company_id: company, id: team }, xhr: true
+
+          replenishing_data = assigns(:replenishing_data).project_data_to_replenish
+
+          expect(replenishing_data[0][:name]).to eq first_project.full_name
+          expect(replenishing_data[0][:end_date]).to eq first_project.end_date
+          expect(replenishing_data[0][:weeks_to_end_date]).to eq first_project.remaining_weeks
+          expect(replenishing_data[0][:remaining_backlog]).to eq first_project.remaining_backlog
+          expect(replenishing_data[0][:relative_flow_pressure]).to be_within(0.00001).of(75.31806)
+          expect(replenishing_data[0][:qty_using_pressure]).to be_within(0.00001).of(1.50636)
+          expect(replenishing_data[0][:leadtime_80]).to be_within(0.00001).of(77.44166)
+          expect(replenishing_data[0][:work_in_progress]).to eq 0
+          expect(replenishing_data[0][:montecarlo_80_percent]).to be_within(10).of(118.0)
+          expect(replenishing_data[0][:throughput_last_week]).to eq 7
+          expect(replenishing_data[0][:customer_happiness]).to be_within(0.005).of(0.008)
+
+          expect(replenishing_data[1][:name]).to eq second_project.full_name
+          expect(replenishing_data[1][:end_date]).to eq second_project.end_date
+          expect(replenishing_data[1][:weeks_to_end_date]).to eq second_project.remaining_weeks
+          expect(replenishing_data[1][:remaining_backlog]).to eq second_project.remaining_backlog
+          expect(replenishing_data[1][:relative_flow_pressure]).to be_within(0.00001).of(16.79389)
+          expect(replenishing_data[1][:qty_using_pressure]).to be_within(0.00001).of(0.33587)
+          expect(replenishing_data[1][:leadtime_80]).to eq 0
+          expect(replenishing_data[1][:work_in_progress]).to eq 3
+          expect(replenishing_data[1][:montecarlo_80_percent]).to be_within(40).of(160.0)
+          expect(replenishing_data[1][:throughput_last_week]).to eq 2
+          expect(replenishing_data[1][:customer_happiness]).to be_within(0.005).of(0.008)
+
+          expect(replenishing_data[2][:name]).to eq third_project.full_name
+          expect(replenishing_data[2][:end_date]).to eq third_project.end_date
+          expect(replenishing_data[2][:weeks_to_end_date]).to eq third_project.remaining_weeks
+          expect(replenishing_data[2][:remaining_backlog]).to eq third_project.remaining_backlog
+          expect(replenishing_data[2][:relative_flow_pressure]).to be_within(0.00001).of(7.88804)
+          expect(replenishing_data[2][:qty_using_pressure]).to be_within(0.00001).of(0.15776)
+          expect(replenishing_data[2][:leadtime_80]).to be_within(0.001).of(0.58333)
+          expect(replenishing_data[2][:work_in_progress]).to eq 0
+          expect(replenishing_data[2][:montecarlo_80_percent]).to eq 0
+          expect(replenishing_data[2][:throughput_last_week]).to eq 0
+        end
+      end
+
+      context 'having no data' do
+        before { get :replenishing_input, params: { company_id: company, id: team }, xhr: true }
+        it 'returns an empty array and redirects' do
+          replenishing_data = assigns(:replenishing_data).project_data_to_replenish
+          expect(replenishing_data).to eq []
+          expect(response).to render_template 'teams/replenishing_input.js.erb'
         end
       end
     end

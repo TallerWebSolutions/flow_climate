@@ -71,8 +71,8 @@ RSpec.describe Highchart::OperationalChartsAdapter, type: :data_object do
             expect(report_data.lead_time_control_chart[:percentile_60_data]).to eq 2.799999999999999
             expect(report_data.leadtime_bins).to eq ['1.78 Dias', '4.27 Dias', '6.76 Dias']
             expect(report_data.leadtime_histogram_data).to eq [6.0, 2.0, 2.0]
-            expect(report_data.throughput_bins).to eq ['0.83 demanda(s)', '2.5 demanda(s)', '4.17 demanda(s)']
-            expect(report_data.throughput_histogram_data).to eq [10.0, 1.0, 1.0]
+            expect(report_data.throughput_bins).to eq ['0.36 demanda(s)', '1.07 demanda(s)', '1.79 demanda(s)', '2.5 demanda(s)', '3.21 demanda(s)', '3.93 demanda(s)', '4.64 demanda(s)']
+            expect(report_data.throughput_histogram_data).to eq [40.0, 3.0, 1.0, 0.0, 0.0, 0.0, 1.0]
             expect(report_data.weeekly_bugs_count_hash).to eq(dates_array: %w[2018-01-15 2018-01-22 2018-01-29 2018-02-05 2018-02-12 2018-02-19 2018-02-26 2018-03-05 2018-03-12 2018-03-19 2018-03-26 2018-04-02 2018-04-09 2018-04-16 2018-04-23 2018-04-30 2018-05-07], bugs_opened_count_array: [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4], bugs_closed_count_array: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4])
             expect(report_data.weeekly_bugs_share_hash).to eq(dates_array: %w[2018-01-15 2018-01-22 2018-01-29 2018-02-05 2018-02-12 2018-02-19 2018-02-26 2018-03-05 2018-03-12 2018-03-19 2018-03-26 2018-04-02 2018-04-09 2018-04-16 2018-04-23 2018-04-30 2018-05-07], bugs_opened_share_array: [10.256410256410255, 9.523809523809524, 9.523809523809524, 9.30232558139535, 9.30232558139535, 8.695652173913043, 8.695652173913043, 8.695652173913043, 8.695652173913043, 8.695652173913043, 8.695652173913043, 8.695652173913043, 8.695652173913043, 8.695652173913043, 8.695652173913043, 8.695652173913043, 8.695652173913043])
             expect(report_data.weekly_queue_touch_count_hash).to eq(dates_array: %w[2018-01-15 2018-01-22 2018-01-29 2018-02-05 2018-02-12 2018-02-19 2018-02-26 2018-03-05 2018-03-12 2018-03-19 2018-03-26 2018-04-02 2018-04-09 2018-04-16 2018-04-23 2018-04-30 2018-05-07], queue_times: [0, 0, 0, 0, 0, 0, 0, 0, 96.0, 0, 0, 120.0, 0, 0, 552.0, 0, 0], touch_times: [0, 0, 0, 0, 96.0, 0, 0, 0, 0, 0, 0, 240.0, 0, 0, 0, 0, 0])
@@ -100,8 +100,8 @@ RSpec.describe Highchart::OperationalChartsAdapter, type: :data_object do
             expect(report_data.lead_time_control_chart[:percentile_60_data]).to eq 1.0
             expect(report_data.leadtime_bins).to eq ['1.66 Dias', '3.89 Dias']
             expect(report_data.leadtime_histogram_data).to eq [4.0, 1.0]
-            expect(report_data.throughput_bins).to eq ['0.83 demanda(s)', '2.5 demanda(s)', '4.17 demanda(s)']
-            expect(report_data.throughput_histogram_data).to eq [11.0, 0.0, 1.0]
+            expect(report_data.throughput_bins).to eq ['1.25 demanda(s)', '3.75 demanda(s)']
+            expect(report_data.throughput_histogram_data).to eq [5.0, 1.0]
             expect(report_data.weeekly_bugs_count_hash).to eq(dates_array: %w[2018-04-09 2018-04-16 2018-04-23 2018-04-30 2018-05-07], bugs_opened_count_array: [4, 4, 4, 4, 4], bugs_closed_count_array: [0, 0, 0, 4, 4])
             expect(report_data.weeekly_bugs_share_hash).to eq(dates_array: %w[2018-04-09 2018-04-16 2018-04-23 2018-04-30 2018-05-07], bugs_opened_share_array: [11.76470588235294, 11.76470588235294, 11.76470588235294, 11.76470588235294, 11.76470588235294])
             expect(report_data.weekly_queue_touch_count_hash).to eq(dates_array: %w[2018-04-09 2018-04-16 2018-04-23 2018-04-30 2018-05-07], queue_times: [0, 0, 552.0, 0, 0], touch_times: [0, 0, 0, 0, 0])
@@ -130,8 +130,8 @@ RSpec.describe Highchart::OperationalChartsAdapter, type: :data_object do
             expect(report_data.lead_time_control_chart[:percentile_60_data]).to eq 2.799999999999999
             expect(report_data.leadtime_bins).to eq ['1.78 Dias', '4.27 Dias', '6.76 Dias']
             expect(report_data.leadtime_histogram_data).to eq [6.0, 2.0, 2.0]
-            expect(report_data.throughput_bins).to eq ['0.83 demanda(s)', '2.5 demanda(s)', '4.17 demanda(s)']
-            expect(report_data.throughput_histogram_data).to eq [10.0, 1.0, 1.0]
+            expect(report_data.throughput_bins).to eq ['0.63 demanda(s)', '1.88 demanda(s)', '3.13 demanda(s)', '4.38 demanda(s)']
+            expect(report_data.throughput_histogram_data).to eq [12.0, 1.0, 0.0, 1.0]
             expect(report_data.weeekly_bugs_count_hash).to eq(dates_array: %w[2018-02-19 2018-02-26 2018-03-05 2018-03-12 2018-03-19 2018-03-26 2018-04-02 2018-04-09 2018-04-16 2018-04-23 2018-04-30 2018-05-07], bugs_opened_count_array: [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4], bugs_closed_count_array: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4])
             expect(report_data.weeekly_bugs_share_hash).to eq(dates_array: %w[2018-02-19 2018-02-26 2018-03-05 2018-03-12 2018-03-19 2018-03-26 2018-04-02 2018-04-09 2018-04-16 2018-04-23 2018-04-30 2018-05-07], bugs_opened_share_array: [8.695652173913043, 8.695652173913043, 8.695652173913043, 8.695652173913043, 8.695652173913043, 8.695652173913043, 8.695652173913043, 8.695652173913043, 8.695652173913043, 8.695652173913043, 8.695652173913043, 8.695652173913043])
             expect(report_data.weekly_queue_touch_count_hash).to eq(dates_array: %w[2018-02-19 2018-02-26 2018-03-05 2018-03-12 2018-03-19 2018-03-26 2018-04-02 2018-04-09 2018-04-16 2018-04-23 2018-04-30 2018-05-07], queue_times: [0, 0, 0, 96.0, 0, 0, 120.0, 0, 0, 552.0, 0, 0], touch_times: [0, 0, 0, 0, 0, 0, 240.0, 0, 0, 0, 0, 0])

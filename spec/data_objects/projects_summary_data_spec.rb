@@ -37,14 +37,14 @@ describe ProjectsSummaryData, type: :data_object do
     end
   end
 
-  describe '#backlog_remaining' do
+  describe '#remaining_backlog' do
     context 'when the total hours is different of zero' do
       let!(:project) { Fabricate :project }
       let!(:second_project) { Fabricate :project }
 
       subject(:projects_summary) { ProjectsSummaryData.new(Project.all) }
 
-      it { expect(projects_summary.backlog_remaining).to eq(projects_summary.total_last_week_scope - projects_summary.total_delivered_scope) }
+      it { expect(projects_summary.remaining_backlog).to eq(projects_summary.total_last_week_scope - projects_summary.total_delivered_scope) }
     end
   end
 end

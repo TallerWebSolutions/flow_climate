@@ -1,0 +1,8 @@
+var replenishingDiv = $('#replenishing-tab');
+
+replenishingDiv.html("<%= escape_javascript(render 'teams/replenishing_tab', projects_to_replenish: @replenishing_data.project_data_to_replenish, summary_infos: @replenishing_data.summary_infos).html_safe %>");
+
+$('#general-loader').hide();
+replenishingDiv.show();
+
+enableTabs();

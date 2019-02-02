@@ -97,11 +97,18 @@ class Project < ApplicationRecord
     (end_date - start_date).to_i + 1
   end
 
-  def remaining_days(from_date = Time.zone.today)
-    return 0 if end_date < from_date || end_date < start_date
-    return (end_date - start_date).to_i + 1 if start_date > from_date.to_date
+  def remaining_weeks(from_date = Time.zone.today)
+    start_date_limit = [start_date, from_date].max
+    return 0 if end_date < start_date_limit
 
-    (end_date - from_date.to_date).to_i + 1
+    ((end_date.to_time - start_date_limit.to_time).to_i / 1.week) + 1
+  end
+
+  def remaining_days(from_date = Time.zone.today)
+    start_date_limit = [start_date, from_date].max
+    return 0 if end_date < start_date_limit
+
+    (end_date - start_date_limit.to_date).to_i + 1
   end
 
   def percentage_remaining_days
@@ -157,7 +164,11 @@ class Project < ApplicationRecord
     return 0.0 if no_pressure_set(date)
 
     days = remaining_days(date) || total_days
-    backlog_remaining(date).to_f / days.to_f
+    remaining_backlog(date).to_f / days.to_f
+  end
+
+  def relative_flow_pressure(total_pressure)
+    (flow_pressure / total_pressure) * 100
   end
 
   def total_throughput
@@ -228,13 +239,13 @@ class Project < ApplicationRecord
     (total_hours_downstream.to_f / total_throughput_downstream.count.to_f)
   end
 
-  def backlog_remaining(date = Time.zone.today)
+  def remaining_backlog(date = Time.zone.today)
     known_scope = DemandsRepository.instance.known_scope_to_date(self, date) + initial_scope
     known_scope - total_throughput_until(date)
   end
 
   def required_hours
-    backlog_remaining * regressive_hours_per_demand
+    remaining_backlog * regressive_hours_per_demand
   end
 
   def remaining_hours
@@ -297,6 +308,10 @@ class Project < ApplicationRecord
     Stats::StatisticsService.instance.percentile(desired_percentile, demands_in_type.map(&:leadtime))
   end
 
+  def general_leadtime(desired_percentile = 80)
+    Stats::StatisticsService.instance.percentile(desired_percentile, demands.finished.map(&:leadtime))
+  end
+
   def active_and_kept_blocks
     demand_blocks.kept.active
   end
@@ -338,7 +353,7 @@ class Project < ApplicationRecord
   private
 
   def no_pressure_set(date)
-    remaining_days(date).zero? || total_days.zero? || backlog_remaining(date).zero?
+    remaining_days(date).zero? || total_days.zero? || remaining_backlog(date).zero?
   end
 
   def regressive_hours_per_demand

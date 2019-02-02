@@ -58,6 +58,9 @@
     width: 100%;
 }
 
+.header-summary {
+    padding: 5px;
+}
 
 #popup {
     height: 50px;

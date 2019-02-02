@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 RSpec.describe DemandsController, type: :controller do
+  before { travel_to Time.zone.local(2019, 1, 24, 10, 0, 0) }
+  after { travel_back }
+
   context 'unauthenticated' do
     describe 'GET #new' do
       before { get :new, params: { company_id: 'foo', project_id: 'bar' } }
@@ -412,9 +415,6 @@ RSpec.describe DemandsController, type: :controller do
     end
 
     describe 'GET #demands_in_projects' do
-      before { travel_to Time.zone.local(2019, 1, 24, 10, 0, 0) }
-      after { travel_back }
-
       context 'passing valid parameters' do
         let(:first_project) { Fabricate :project, customer: customer, product: product, start_date: 3.days.ago, end_date: 1.day.from_now, status: :executing }
         let(:second_project) { Fabricate :project, customer: customer, product: product, start_date: 3.days.ago, end_date: 1.day.from_now, status: :finished }
@@ -447,9 +447,6 @@ RSpec.describe DemandsController, type: :controller do
     end
 
     describe 'GET #search_demands_by_flow_status' do
-      before { travel_to Date.new(2018, 9, 20) }
-      after { travel_back }
-
       let(:customer) { Fabricate :customer, company: company }
       let(:other_customer) { Fabricate :customer, company: company }
       let(:team) { Fabricate :team, company: company }
@@ -480,9 +477,9 @@ RSpec.describe DemandsController, type: :controller do
                 expect(assigns(:demands).map(&:id)).to eq [first_demand.id, fifth_demand.id, second_demand.id, sixth_demand.id, eigth_demand.id, fourth_demand.id, seventh_demand.id, third_demand.id]
                 expect(assigns(:grouped_delivered_demands)).to be_nil
                 expect(assigns(:grouped_customer_demands)).to be_nil
-                expect(assigns(:confidence_95_leadtime)).to be_within(0.000001).of(4.299999999999999)
-                expect(assigns(:confidence_80_leadtime)).to be_within(0.000001).of(2.200000000000001)
-                expect(assigns(:confidence_65_leadtime)).to be_within(0.000001).of(0.9999999543263889)
+                expect(assigns(:confidence_95_leadtime)).to be_within(0.00001).of(4.02916)
+                expect(assigns(:confidence_80_leadtime)).to be_within(0.00001).of(2.20000)
+                expect(assigns(:confidence_65_leadtime)).to be_within(0.00001).of(0.8125)
               end
             end
             context 'grouped_by_month' do
@@ -491,11 +488,11 @@ RSpec.describe DemandsController, type: :controller do
 
                 expect(response).to render_template 'demands/search_demands_by_flow_status.js.erb'
                 expect(assigns(:demands).map(&:id)).to eq [first_demand.id, fifth_demand.id, second_demand.id, sixth_demand.id, eigth_demand.id, fourth_demand.id, seventh_demand.id, third_demand.id]
-                expect(assigns(:grouped_delivered_demands)[[2018, 9]].map(&:id)).to eq [eigth_demand.id, fourth_demand.id, seventh_demand.id, third_demand.id]
+                expect(assigns(:grouped_delivered_demands)[[2019, 1]].map(&:id)).to eq [eigth_demand.id, fourth_demand.id, seventh_demand.id, third_demand.id]
                 expect(assigns(:grouped_customer_demands)).to be_nil
-                expect(assigns(:confidence_95_leadtime)).to be_within(0.000001).of(4.299999999999999)
-                expect(assigns(:confidence_80_leadtime)).to be_within(0.000001).of(2.200000000000001)
-                expect(assigns(:confidence_65_leadtime)).to be_within(0.000001).of(0.9999999543263889)
+                expect(assigns(:confidence_95_leadtime)).to be_within(0.00001).of(4.02916)
+                expect(assigns(:confidence_80_leadtime)).to be_within(0.00001).of(2.20000)
+                expect(assigns(:confidence_65_leadtime)).to be_within(0.0001).of(0.8125)
               end
             end
             context 'grouped_customer_demands' do
@@ -506,9 +503,9 @@ RSpec.describe DemandsController, type: :controller do
                 expect(assigns(:demands).map(&:id)).to eq [first_demand.id, fifth_demand.id, second_demand.id, sixth_demand.id, eigth_demand.id, fourth_demand.id, seventh_demand.id, third_demand.id]
                 expect(assigns(:grouped_delivered_demands)).to be_nil
                 expect(assigns(:grouped_customer_demands)[customer.name].map(&:id)).to eq [first_demand.id, second_demand.id, fourth_demand.id, third_demand.id]
-                expect(assigns(:confidence_95_leadtime)).to be_within(0.000001).of(4.299999999999999)
-                expect(assigns(:confidence_80_leadtime)).to be_within(0.000001).of(2.200000000000001)
-                expect(assigns(:confidence_65_leadtime)).to be_within(0.000001).of(0.9999999543263889)
+                expect(assigns(:confidence_95_leadtime)).to be_within(0.00001).of(4.02916)
+                expect(assigns(:confidence_80_leadtime)).to be_within(0.00001).of(2.20000)
+                expect(assigns(:confidence_65_leadtime)).to be_within(0.00001).of(0.8125)
               end
             end
           end
@@ -591,9 +588,9 @@ RSpec.describe DemandsController, type: :controller do
                 expect(assigns(:demands).map(&:id)).to eq [eigth_demand.id, fourth_demand.id, seventh_demand.id, third_demand.id]
                 expect(assigns(:grouped_delivered_demands)).to be_nil
                 expect(assigns(:grouped_customer_demands)).to be_nil
-                expect(assigns(:confidence_95_leadtime)).to be_within(0.000001).of(4.699999999999999)
-                expect(assigns(:confidence_80_leadtime)).to be_within(0.000001).of(3.8000000000000007)
-                expect(assigns(:confidence_65_leadtime)).to be_within(0.000001).of(2.9000000000000004)
+                expect(assigns(:confidence_95_leadtime)).to be_within(0.00001).of(4.34583)
+                expect(assigns(:confidence_80_leadtime)).to be_within(0.00001).of(3.63333)
+                expect(assigns(:confidence_65_leadtime)).to be_within(0.00001).of(2.9000000000000004)
               end
             end
             context 'grouped_by_month' do
@@ -602,11 +599,11 @@ RSpec.describe DemandsController, type: :controller do
 
                 expect(response).to render_template 'demands/search_demands_by_flow_status.js.erb'
                 expect(assigns(:demands).map(&:id)).to eq [eigth_demand.id, fourth_demand.id, seventh_demand.id, third_demand.id]
-                expect(assigns(:grouped_delivered_demands)[[2018, 9]].map(&:id)).to eq [eigth_demand.id, fourth_demand.id, seventh_demand.id, third_demand.id]
+                expect(assigns(:grouped_delivered_demands)[[2019, 1]].map(&:id)).to eq [eigth_demand.id, fourth_demand.id, seventh_demand.id, third_demand.id]
                 expect(assigns(:grouped_customer_demands)).to be_nil
-                expect(assigns(:confidence_95_leadtime)).to be_within(0.000001).of(4.699999999999999)
-                expect(assigns(:confidence_80_leadtime)).to be_within(0.000001).of(3.8000000000000007)
-                expect(assigns(:confidence_65_leadtime)).to be_within(0.000001).of(2.9000000000000004)
+                expect(assigns(:confidence_95_leadtime)).to be_within(0.00001).of(4.34583)
+                expect(assigns(:confidence_80_leadtime)).to be_within(0.00001).of(3.63333)
+                expect(assigns(:confidence_65_leadtime)).to be_within(0.00001).of(2.90000)
               end
             end
             context 'grouped_customer_demands' do
@@ -617,9 +614,9 @@ RSpec.describe DemandsController, type: :controller do
                 expect(assigns(:demands).map(&:id)).to eq [eigth_demand.id, fourth_demand.id, seventh_demand.id, third_demand.id]
                 expect(assigns(:grouped_delivered_demands)).to be_nil
                 expect(assigns(:grouped_customer_demands)[customer.name].map(&:id)).to eq [fourth_demand.id, third_demand.id]
-                expect(assigns(:confidence_95_leadtime)).to be_within(0.000001).of(4.699999999999999)
-                expect(assigns(:confidence_80_leadtime)).to be_within(0.000001).of(3.8000000000000007)
-                expect(assigns(:confidence_65_leadtime)).to be_within(0.000001).of(2.9000000000000004)
+                expect(assigns(:confidence_95_leadtime)).to be_within(0.00001).of(4.345833)
+                expect(assigns(:confidence_80_leadtime)).to be_within(0.00001).of(3.633333)
+                expect(assigns(:confidence_65_leadtime)).to be_within(0.00001).of(2.9000000000000004)
               end
             end
 
@@ -649,9 +646,9 @@ RSpec.describe DemandsController, type: :controller do
                   get :search_demands_by_flow_status, params: { company_id: company, projects_ids: Project.all.map(&:id).join(','), demand_type: 'chore', period: :all }, xhr: true
                   expect(response).to render_template 'demands/search_demands_by_flow_status.js.erb'
                   expect(assigns(:demands).map(&:id)).to eq [fourth_demand.id]
-                  expect(assigns(:confidence_95_leadtime)).to be_within(0.000001).of(5)
-                  expect(assigns(:confidence_80_leadtime)).to be_within(0.000001).of(5)
-                  expect(assigns(:confidence_65_leadtime)).to be_within(0.000001).of(5)
+                  expect(assigns(:confidence_95_leadtime)).to be_within(0.00001).of(4.58333)
+                  expect(assigns(:confidence_80_leadtime)).to be_within(0.00001).of(4.58333)
+                  expect(assigns(:confidence_65_leadtime)).to be_within(0.00001).of(4.58333)
                 end
               end
               context 'performance improvement' do
@@ -679,9 +676,9 @@ RSpec.describe DemandsController, type: :controller do
                   get :search_demands_by_flow_status, params: { company_id: company, projects_ids: Project.all.map(&:id).join(','), demand_type: 'wireframe', period: :all }, xhr: true
                   expect(response).to render_template 'demands/search_demands_by_flow_status.js.erb'
                   expect(assigns(:demands).map(&:id)).to eq [eigth_demand.id]
-                  expect(assigns(:confidence_95_leadtime)).to eq 1.0
-                  expect(assigns(:confidence_80_leadtime)).to eq 1.0
-                  expect(assigns(:confidence_65_leadtime)).to eq 1.0
+                  expect(assigns(:confidence_95_leadtime)).to be_within(0.00001).of(0.58333)
+                  expect(assigns(:confidence_80_leadtime)).to be_within(0.00001).of(0.58333)
+                  expect(assigns(:confidence_65_leadtime)).to be_within(0.00001).of(0.58333)
                 end
               end
             end
@@ -691,9 +688,9 @@ RSpec.describe DemandsController, type: :controller do
                   get :search_demands_by_flow_status, params: { company_id: company, projects_ids: Project.all.map(&:id).join(','), demand_class_of_service: 'standard', period: :all }, xhr: true
                   expect(response).to render_template 'demands/search_demands_by_flow_status.js.erb'
                   expect(assigns(:demands).map(&:id)).to eq [first_demand.id, sixth_demand.id, fourth_demand.id]
-                  expect(assigns(:confidence_95_leadtime)).to be_within(0.000001).of(4.5)
-                  expect(assigns(:confidence_80_leadtime)).to be_within(0.000001).of(3.0)
-                  expect(assigns(:confidence_65_leadtime)).to be_within(0.000001).of(1.5)
+                  expect(assigns(:confidence_95_leadtime)).to be_within(0.00001).of(4.12499)
+                  expect(assigns(:confidence_80_leadtime)).to be_within(0.00001).of(2.75000)
+                  expect(assigns(:confidence_65_leadtime)).to be_within(0.00001).of(1.37500)
                 end
               end
               context 'fixed date' do
@@ -701,9 +698,9 @@ RSpec.describe DemandsController, type: :controller do
                   get :search_demands_by_flow_status, params: { company_id: company, projects_ids: Project.all.map(&:id).join(','), demand_class_of_service: 'fixed_date', period: :all }, xhr: true
                   expect(response).to render_template 'demands/search_demands_by_flow_status.js.erb'
                   expect(assigns(:demands).map(&:id)).to eq [fifth_demand.id, eigth_demand.id]
-                  expect(assigns(:confidence_95_leadtime)).to eq 0.95
-                  expect(assigns(:confidence_80_leadtime)).to eq 0.8
-                  expect(assigns(:confidence_65_leadtime)).to eq 0.65
+                  expect(assigns(:confidence_95_leadtime)).to be_within(0.00001).of(0.55416)
+                  expect(assigns(:confidence_80_leadtime)).to be_within(0.00001).of(0.46666)
+                  expect(assigns(:confidence_65_leadtime)).to be_within(0.00001).of(0.37916)
                 end
               end
               context 'intangible' do
@@ -745,8 +742,8 @@ RSpec.describe DemandsController, type: :controller do
                 get :search_demands_by_flow_status, params: { company_id: company, projects_ids: Project.all.map(&:id).join(','), search_text: 'qqq', period: :all }, xhr: true
                 expect(response).to render_template 'demands/search_demands_by_flow_status.js.erb'
                 expect(assigns(:demands).map(&:id)).to eq [first_demand.id, second_demand.id, fourth_demand.id, third_demand.id]
-                expect(assigns(:confidence_95_leadtime)).to eq 4.699999999999999
-                expect(assigns(:confidence_80_leadtime)).to eq 3.8000000000000007
+                expect(assigns(:confidence_95_leadtime)).to eq 4.345833333333332
+                expect(assigns(:confidence_80_leadtime)).to eq 3.6333333333333337
                 expect(assigns(:confidence_65_leadtime)).to eq 2.8500000000000005
               end
             end
@@ -756,9 +753,9 @@ RSpec.describe DemandsController, type: :controller do
                 get :search_demands_by_flow_status, params: { company_id: company, projects_ids: Project.all.map(&:id).join(','), search_text: 'aaa', period: :all }, xhr: true
                 expect(response).to render_template 'demands/search_demands_by_flow_status.js.erb'
                 expect(assigns(:demands).map(&:id)).to eq [fifth_demand.id, sixth_demand.id, eigth_demand.id, seventh_demand.id]
-                expect(assigns(:confidence_95_leadtime)).to eq 1.0
-                expect(assigns(:confidence_80_leadtime)).to eq 1.0
-                expect(assigns(:confidence_65_leadtime)).to eq 0.9500000000000002
+                expect(assigns(:confidence_95_leadtime)).to eq 0.9374999999999998
+                expect(assigns(:confidence_80_leadtime)).to eq 0.7500000000000002
+                expect(assigns(:confidence_65_leadtime)).to eq 0.5541666666666668
               end
             end
             context 'on demand id' do

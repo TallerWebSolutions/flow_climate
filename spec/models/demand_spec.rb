@@ -165,6 +165,14 @@ RSpec.describe Demand, type: :model do
       it { expect(Demand.finished_in_week(1.week.ago.to_date.cweek, 1.week.ago.to_date.cwyear)).to match_array [second_demand, third_demand] }
       it { expect(Demand.finished_in_week(Time.zone.today.to_date.cweek, Time.zone.today.to_date.cwyear)).to eq [fourth_demand] }
     end
+
+    describe '.in_wip' do
+      let!(:first_demand) { Fabricate :demand, project: project, commitment_date: Time.zone.now, end_date: Time.zone.now }
+      let!(:second_demand) { Fabricate :demand, project: project, commitment_date: Time.zone.now, end_date: nil }
+      let!(:third_demand) { Fabricate :demand, project: project, commitment_date: Time.zone.now, end_date: nil }
+
+      it { expect(Demand.in_wip.map(&:id)).to match_array [second_demand.id, third_demand.id] }
+    end
   end
 
   context 'delegations' do

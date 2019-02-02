@@ -31,7 +31,7 @@ class ProjectsSummaryData
     (@total_remaining_days.to_f / @total_days.to_f) * 100
   end
 
-  def backlog_remaining
+  def remaining_backlog
     @total_last_week_scope - @total_delivered_scope
   end
 end

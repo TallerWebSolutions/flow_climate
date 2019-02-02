@@ -147,7 +147,7 @@ en:
       percentage_remaining_money: "% Remaining ($$)"
       flow_pressure: "Flow Pressure"
       percentage_flow_pressure: "% Flow Pressure"
-      backlog_remaining: "Backlog Restante"
+      remaining_backlog: "Backlog Remaining"
       percentage_remaining_scope: "% Remaining Scope"
       no_data: "There are no projects. Add one."
       remaining_hours: "Remaining Hours"
@@ -265,7 +265,7 @@ en:
         title: "Leadtime confidence evolution"
         ylabel: "Days"
         legend:
-          leadtime_80_confidence: "80% Confidence"
+          leadtime_80_confidence: "LT 80% Confidence"
           leadtime_80_confidence_accumulated: "80% lead time accumulated"
       class_of_service_pie:
         title: "Share of Classes of Service"
@@ -312,6 +312,15 @@ en:
       risk_deadline: "Deadline"
       risk_money: "Cost"
       risk_scope: "Scope"
+    replenishing:
+      weeks_to_finish: "Weeks to Finish"
+      weeks_montecarlo: "Weeks by Monte Carlo (80%)"
+      customer_happiness: "Customer Happiness"
+      last_four_weeks_throughput: "Last 4 Weeks Throughput"
+      average_throughput: "Avg Throughput Last 4 Weeks"
+      qty_using_pressure: "Qty Using Pressure"
+      wip: "WiP"
+      throughput_last_week: "TH Last Week"
   project:
     new:
       title: "New Project"
@@ -452,6 +461,7 @@ en:
     demands: "Demands"
     status_report: "Status Report"
     risks: "Risks"
+    replenishing: "Replenishing"
   charts:
     xlabel:
       months: "Months"
@@ -623,3 +633,5 @@ en:
       title: "New Team"
     index:
       title: "Teams"
+    replenishing:
+      title: "Flow Replenishing"

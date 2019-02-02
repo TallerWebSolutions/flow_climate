@@ -164,7 +164,7 @@ pt-BR:
       flow_pressure: "Pressão do Fluxo"
       percentage_flow_pressure: "% Pressão do Fluxo"
       percentage_remaining_scope: "% Escopo Restante"
-      backlog_remaining: "Backlog Remaining"
+      remaining_backlog: "Backlog Restante"
       no_data: "Não há projetos aqui. Cadastre um."
       remaining_hours: "Horas Restantes"
       risk_alerts: "Alertas de Risco"
@@ -281,7 +281,7 @@ pt-BR:
         title: "Evolução da Confiança do Leadtime"
         ylabel: "Dias"
         legend:
-          leadtime_80_confidence: "80% de Confiança"
+          leadtime_80_confidence: "LT 80% de Confiança"
           leadtime_80_confidence_accumulated: "Lead time 80% acumulado"
       class_of_service_pie:
         title: "Percentual das Classes de Serviço"
@@ -330,6 +330,15 @@ pt-BR:
       risk_deadline: "Prazo"
       risk_money: "Custo"
       risk_scope: "Escopo"
+    replenishing:
+      weeks_to_finish: "Semanas Restantes"
+      weeks_montecarlo: "Sem. por Monte Carlo (80%)"
+      customer_happiness: "Felicidade do Cliente"
+      last_four_weeks_throughput: "Throughput das Últimas 4 Semanas"
+      average_throughput: "Throughput Médio das Últ. 4 Semanas"
+      qty_using_pressure: "Qty pela Pressão"
+      wip: "WiP"
+      throughput_last_week: "TH Últ. Semana"
   teams:
     index:
       title: "Times"
@@ -338,6 +347,8 @@ pt-BR:
     show:
       demands_flow:
         title: "Fluxo entre os dias %{start_date} e %{end_date}"
+    replenishing:
+      title: "Reabastecimento do Fluxo"
   project:
     new:
       title: "Novo Projeto"
@@ -479,6 +490,7 @@ pt-BR:
     demands: "Demandas"
     status_report: "Status Report"
     risks: "Riscos"
+    replenishing: "Reabastecimento"
   charts:
     xlabel:
       months: "Meses"
