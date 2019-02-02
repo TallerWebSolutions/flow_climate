@@ -30,6 +30,9 @@ $('.nav-item').on('click', function(event){
         } else if ($(this).attr('id') === 'nav-item-demands') {
             getDemands(company_id, projects_ids);
 
+        } else if ($(this).attr('id') === 'nav-item-replenishingDiv') {
+            buildReplenishingMeeting(company_id, team_id);
+
         } else {
             enableTabs();
             $($(this).data('container')).show();

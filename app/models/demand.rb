@@ -76,6 +76,8 @@ class Demand < ApplicationRecord
   scope :downstream_flag, -> { kept.where(downstream: true) }
   scope :not_discarded_until_date, ->(limit_date) { where('demands.discarded_at IS NULL OR demands.discarded_at > :limit_date', limit_date: limit_date.end_of_day) }
 
+  scope :in_wip, -> { kept.where('demands.commitment_date IS NOT NULL AND demands.end_date IS NULL') }
+
   delegate :company, to: :project
   delegate :full_name, to: :project, prefix: true
 

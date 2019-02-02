@@ -134,14 +134,14 @@ RSpec.describe Customer, type: :model do
     it { expect(customer.percentage_remaining_money).to eq((customer.remaining_money / customer.total_value) * 100) }
   end
 
-  describe '#backlog_remaining' do
+  describe '#remaining_backlog' do
     include_context 'demands with effort for customer'
-    it { expect(customer.backlog_remaining).to eq customer.projects.sum(&:backlog_remaining) }
+    it { expect(customer.remaining_backlog).to eq customer.projects.sum(&:remaining_backlog) }
   end
 
   describe '#percentage_remaining_scope' do
     include_context 'demands with effort for customer'
-    it { expect(customer.percentage_remaining_scope).to eq((customer.backlog_remaining.to_f / customer.last_week_scope.to_f) * 100) }
+    it { expect(customer.percentage_remaining_scope).to eq((customer.remaining_backlog.to_f / customer.last_week_scope.to_f) * 100) }
   end
 
   describe '#total_flow_pressure' do

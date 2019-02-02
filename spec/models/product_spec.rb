@@ -119,14 +119,14 @@ RSpec.describe Product, type: :model do
     it { expect(product.percentage_remaining_money.to_f).to eq 66.07142857142857 }
   end
 
-  describe '#backlog_remaining' do
+  describe '#remaining_backlog' do
     include_context 'consolidations variables data for product'
-    it { expect(product.backlog_remaining).to eq product.projects.sum(&:backlog_remaining) }
+    it { expect(product.remaining_backlog).to eq product.projects.sum(&:remaining_backlog) }
   end
 
   describe '#percentage_remaining_scope' do
     include_context 'consolidations variables data for product'
-    it { expect(product.percentage_remaining_scope).to eq((product.backlog_remaining.to_f / product.last_week_scope.to_f) * 100) }
+    it { expect(product.percentage_remaining_scope).to eq((product.remaining_backlog.to_f / product.last_week_scope.to_f) * 100) }
   end
 
   describe '#total_flow_pressure' do

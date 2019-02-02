@@ -42,14 +42,11 @@ class ProjectsRepository
     projects_with_query_and_order.order(end_date: :desc)
   end
 
-  def throughput_per_week(projects, limit_date)
-    throughput_per_week_grouped = Demand.where(project_id: projects.pluck(:id)).finished.where('end_date >= :limit_date', limit_date: limit_date.beginning_of_day).group('EXTRACT(WEEK FROM end_date)', 'EXTRACT(YEAR FROM end_date)').count
-    extract_data_for_week(projects, throughput_per_week_grouped)
-  end
-
-  def leadtime_per_week(projects, limit_date)
-    leadtime_per_week_grouped = Demand.where(project_id: projects.pluck(:id)).finished.where('end_date >= :limit_date', limit_date: limit_date.beginning_of_day).group('EXTRACT(WEEK FROM end_date)', 'EXTRACT(YEAR FROM end_date)').average(:leadtime)
-    extract_data_for_week(projects, leadtime_per_week_grouped)
+  def throughput_per_week(projects, start_date_limit, end_date_limit = Time.zone.today)
+    beginning_of_week = start_date_limit.beginning_of_week.to_date
+    end_of_week = end_date_limit.end_of_week.to_date
+    throughput_per_week_grouped = Demand.where(project_id: projects.pluck(:id)).finished.where('end_date >= :start_date_limit AND end_date <= :end_date_limit', start_date_limit: beginning_of_week, end_date_limit: end_of_week).group('EXTRACT(WEEK FROM end_date)', 'EXTRACT(YEAR FROM end_date)').count
+    extract_data_for_week(projects, throughput_per_week_grouped, beginning_of_week, end_of_week)
   end
 
   def total_queue_time_for(projects)
@@ -92,14 +89,11 @@ class ProjectsRepository
     query_result_hash
   end
 
-  def extract_data_for_week(projects, leadtime_per_week_grouped)
+  def extract_data_for_week(projects, leadtime_per_week_grouped, start_date_limit, end_date_limit)
     return {} if projects.blank?
 
-    start_date = projects.map(&:start_date).min
-    end_date = [projects.map(&:end_date).max, Time.zone.today].min
-
     data_grouped_hash = {}
-    (start_date..end_date).each do |date|
+    (start_date_limit..end_date_limit).each do |date|
       data_grouped_hash[date.beginning_of_week] = leadtime_per_week_grouped[[date.to_date.cweek.to_f, date.to_date.cwyear.to_f]] || 0
     end
     data_grouped_hash

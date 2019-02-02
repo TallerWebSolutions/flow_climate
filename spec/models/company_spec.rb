@@ -188,7 +188,7 @@ RSpec.describe Company, type: :model do
   describe '#throughput_in_month' do
     include_context 'demands with effort for company'
 
-    it { expect(company.throughput_in_month.count).to eq 3 }
+    it { expect(company.throughput_in_month.count).to eq 2 }
   end
 
   describe '#products_count' do

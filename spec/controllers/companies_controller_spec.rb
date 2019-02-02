@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 RSpec.describe CompaniesController, type: :controller do
+  before { travel_to Time.zone.local(2018, 9, 3, 12, 20, 31) }
+  after { travel_back }
+
   context 'unauthenticated' do
     describe 'GET #index' do
       before { get :index }
@@ -64,9 +67,6 @@ RSpec.describe CompaniesController, type: :controller do
 
     describe 'GET #show' do
       context 'passing valid parameters' do
-        before { travel_to Date.new(2018, 8, 31) }
-        after { travel_back }
-
         let(:company) { Fabricate :company, users: [user] }
         context 'and the company has no settings yet' do
           let(:customer) { Fabricate :customer, company: company }

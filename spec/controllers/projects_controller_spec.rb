@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 RSpec.describe ProjectsController, type: :controller do
+  before { travel_to Time.zone.local(2018, 4, 6, 10, 0, 0) }
+  after { travel_back }
+
   context 'unauthenticated' do
     describe 'GET #show' do
       before { get :show, params: { company_id: 'xpto', id: 'foo' } }
@@ -62,9 +65,6 @@ RSpec.describe ProjectsController, type: :controller do
     let!(:user_plan) { Fabricate :user_plan, user: user, plan: plan, active: true, paid: true, finish_at: 1.week.from_now }
 
     before { sign_in user }
-
-    before { travel_to Time.zone.local(2018, 4, 6, 10, 0, 0) }
-    after { travel_back }
 
     let(:company) { Fabricate :company, users: [user] }
     let(:customer) { Fabricate :customer, company: company, name: 'zzz' }

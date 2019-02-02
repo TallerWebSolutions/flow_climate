@@ -6,7 +6,7 @@ module Highchart
 
     def initialize(projects, period)
       super(projects, period)
-      montecarlo_durations = Stats::StatisticsService.instance.run_montecarlo(@all_projects.active.sum(&:backlog_remaining), gather_throughput_data, 500)
+      montecarlo_durations = Stats::StatisticsService.instance.run_montecarlo(@all_projects.active.sum(&:remaining_backlog), gather_throughput_data, 500)
       build_montecarlo_perecentage_confidences(montecarlo_durations)
       build_dates_to_montecarlo_duration
 
@@ -19,7 +19,7 @@ module Highchart
     end
 
     def delivered_vs_remaining
-      [{ name: I18n.t('projects.show.delivered_demands.opened_in_period'), data: [@all_projects.sum { |project| project.demands.opened_after_date(charts_data_bottom_limit_date).count }] }, { name: I18n.t('projects.show.delivered_demands.delivered'), data: [@all_projects.sum { |project| project.demands.finished_after_date(charts_data_bottom_limit_date).count }] }, { name: I18n.t('projects.show.scope_gap'), data: [@all_projects.sum(&:backlog_remaining)] }]
+      [{ name: I18n.t('projects.show.delivered_demands.opened_in_period'), data: [@all_projects.sum { |project| project.demands.opened_after_date(charts_data_bottom_limit_date).count }] }, { name: I18n.t('projects.show.delivered_demands.delivered'), data: [@all_projects.sum { |project| project.demands.finished_after_date(charts_data_bottom_limit_date).count }] }, { name: I18n.t('projects.show.scope_gap'), data: [@all_projects.sum(&:remaining_backlog)] }]
     end
 
     def deadline
@@ -76,12 +76,18 @@ module Highchart
     def gather_throughput_data
       return [] if @all_projects.blank?
 
-      build_throughput_array.last(15)
+      start_date_limit = @all_projects.minimum(:start_date)
+      end_date_limit = @all_projects.maximum(:end_date)
+
+      product_start_date = @all_projects.first.product.projects.minimum(:start_date)
+      product_end_date = @all_projects.first.product.projects.maximum(:end_date)
+
+      build_throughput_array(start_date_limit, end_date_limit, product_start_date, product_end_date).last(15)
     end
 
-    def build_throughput_array
-      throughput_data_array = ProjectsRepository.instance.throughput_per_week(@all_projects, @all_projects.minimum(:start_date)).values
-      throughput_data_array = ProjectsRepository.instance.throughput_per_week(@all_projects.first.product.projects, @all_projects.first.product.projects.minimum(:start_date)).values if throughput_data_array.size < 15 && @all_projects.count == 1
+    def build_throughput_array(start_date_limit, end_date_limit, product_start_date, product_end_date)
+      throughput_data_array = ProjectsRepository.instance.throughput_per_week(@all_projects, start_date_limit, end_date_limit).values
+      throughput_data_array = ProjectsRepository.instance.throughput_per_week(@all_projects.first.product.projects, product_start_date, product_end_date).values if throughput_data_array.size < 15 && @all_projects.count == 1
       throughput_data_array
     end
 

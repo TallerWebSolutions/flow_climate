@@ -1,0 +1,68 @@
+<% if projects_to_replenish.present? && summary_infos.present? %>
+<div class="row header-summary">
+  <div class="col-xs-3 leadtime-frame col-xs-offset-3">
+    <div class="leadtime-content">
+      <p class="leadtime-title"><%= t('projects.replenishing.last_four_weeks_throughput') %></p>
+      <p class="leadtime-value"><%= summary_infos[:four_last_throughputs].join(' | ') %></p>
+    </div>
+  </div>
+  <div class="col-xs-3 leadtime-frame">
+    <div class="leadtime-content">
+      <p class="leadtime-title"><%= t('projects.replenishing.average_throughput') %></p>
+      <p class="leadtime-value"><%= summary_infos[:average_throughput] %></p>
+    </div>
+  </div>
+</div>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th><%= Project.human_attribute_name :name %></th>
+      <th><%= Project.human_attribute_name :end_date %></th>
+      <th><%= t('projects.replenishing.weeks_to_finish') %></th>
+      <th><%= t('projects.index.remaining_backlog') %></th>
+      <th><%= t('projects.index.flow_pressure') %></th>
+      <th><%= t('projects.index.percentage_flow_pressure') %></th>
+      <th><%= t('projects.replenishing.qty_using_pressure') %></th>
+      <th><%= t('projects.charts.leadtime_evolution.legend.leadtime_80_confidence') %></th>
+      <th><%= t('projects.replenishing.wip') %></th>
+      <th><%= t('projects.replenishing.throughput_last_week') %></th>
+      <th><%= t('projects.replenishing.weeks_montecarlo') %></th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% projects_to_replenish.each do |project_hash| %>
+      <tr>
+        <td><%= project_hash[:name] %></td>
+        <td><%= l(project_hash[:end_date], format: :default) %></td>
+        <td><%= project_hash[:weeks_to_end_date] %></td>
+        <td><%= project_hash[:remaining_backlog] %></td>
+        <td><%= number_with_precision(project_hash[:flow_pressure], precision: 3) %></td>
+        <td><%= number_to_percentage(project_hash[:relative_flow_pressure], precision: 2) %></td>
+        <td><%= number_with_precision(project_hash[:qty_using_pressure], precision: 1) %></td>
+        <td><%= number_with_precision(project_hash[:leadtime_80], precision: 3) %></td>
+        <td><%= project_hash[:work_in_progress] %></td>
+        <td><%= project_hash[:throughput_last_week] %></td>
+        <td><%= number_with_precision(project_hash[:montecarlo_80_percent], precision: 1) %></td>
+        <td>
+          <% if project_hash[:customer_happiness] > 2 %>
+            <i class="far fa-laugh fa-2x"></i>
+          <% elsif project_hash[:customer_happiness] > 1.2 %>
+            <i class="far fa-smile fa-2x"></i>
+          <% elsif project_hash[:customer_happiness] > 0.8 %>
+            <i class="far fa-meh fa-2x"></i>
+          <% else %>
+            <i class="far fa-sad-cry fa-2x"></i>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+<% else %>
+  <div class="no-data">
+    <%= t('general.no_data', missing_data: t('general.data')) %>
+  </div>
+<% end %>

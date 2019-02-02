@@ -4,7 +4,7 @@ class TeamsController < AuthenticatedController
   before_action :user_gold_check
 
   before_action :assign_company
-  before_action :assign_team, only: %i[show edit update]
+  before_action :assign_team, only: %i[show edit update replenishing_input]
 
   def show
     @team_members = @team.team_members.order(:name)
@@ -32,6 +32,12 @@ class TeamsController < AuthenticatedController
     return redirect_to company_path(@company) if @team.save
 
     render :edit
+  end
+
+  def replenishing_input
+    @replenishing_data = ReplenishingData.new(@team)
+
+    render 'teams/replenishing_input.js.erb'
   end
 
   private

@@ -185,6 +185,25 @@ RSpec.describe Project, type: :model do
     end
   end
 
+  describe '#remaining_weeks' do
+    context 'when the end date is in the future' do
+      let(:project) { Fabricate :project, start_date: 1.week.ago, end_date: 1.week.from_now }
+      it { expect(project.remaining_weeks).to eq 2 }
+    end
+    context 'when the end date is in the past' do
+      let(:project) { Fabricate :project, start_date: 2.weeks.ago, end_date: 1.week.ago }
+      it { expect(project.remaining_weeks).to eq 0 }
+    end
+    context 'when the start date is in the future' do
+      let(:project) { Fabricate :project, start_date: 2.weeks.from_now, end_date: 3.weeks.from_now }
+      it { expect(project.remaining_weeks).to eq 2 }
+    end
+    context 'passing from_date as parameter' do
+      let(:project) { Fabricate :project, start_date: 2.weeks.from_now, end_date: 10.weeks.from_now }
+      it { expect(project.remaining_weeks(1.week.from_now.to_date)).to eq 9 }
+    end
+  end
+
   describe '#percentage_remaining_days' do
     context 'total_days is higher than 0' do
       let(:project) { Fabricate :project, start_date: 1.day.ago, end_date: 1.day.from_now }
@@ -309,7 +328,7 @@ RSpec.describe Project, type: :model do
     context 'and the start and finish dates are in the same day' do
       let(:project) { Fabricate :project, initial_scope: 30, start_date: Time.zone.today, end_date: Time.zone.today }
       context 'having results' do
-        it { expect(project.flow_pressure).to be_within(0.01).of(project.backlog_remaining.to_f / project.remaining_days.to_f) }
+        it { expect(project.flow_pressure).to be_within(0.01).of(project.remaining_backlog.to_f / project.remaining_days.to_f) }
       end
       context 'having no results' do
         it { expect(project.flow_pressure).to eq 30 }
@@ -486,20 +505,20 @@ RSpec.describe Project, type: :model do
     end
   end
 
-  describe '#backlog_remaining' do
+  describe '#remaining_backlog' do
     context 'having demands' do
       context 'specifying no date' do
         include_context 'demands with effort'
-        it { expect(project.backlog_remaining).to eq 33 }
+        it { expect(project.remaining_backlog).to eq 33 }
       end
       context 'specifying a date' do
         include_context 'demands with effort'
-        it { expect(project.backlog_remaining(2.weeks.ago)).to eq 32 }
+        it { expect(project.remaining_backlog(2.weeks.ago)).to eq 32 }
       end
     end
     context 'having no demands' do
       let(:project) { Fabricate :project, initial_scope: 30, start_date: 1.week.ago, end_date: 1.week.from_now }
-      it { expect(project.backlog_remaining).to eq project.initial_scope }
+      it { expect(project.remaining_backlog).to eq project.initial_scope }
     end
   end
 
@@ -898,6 +917,23 @@ RSpec.describe Project, type: :model do
       let!(:other_expedite_demand) { Fabricate :demand, demand_type: :bug, project: project, end_date: Time.zone.today, leadtime: 80 }
 
       it { expect(project.leadtime_for_demand_type(:feature)).to eq 0 }
+    end
+  end
+
+  describe '#general_leadtime' do
+    before { travel_to Time.zone.local(2018, 5, 21, 10, 0, 0) }
+    after { travel_back }
+
+    let(:project) { Fabricate :project }
+
+    context 'having demands' do
+      let!(:expedite_demand) { Fabricate :demand, demand_type: :bug, project: project, commitment_date: 2.days.ago, end_date: Time.zone.today }
+      let!(:other_expedite_demand) { Fabricate :demand, demand_type: :bug, project: project, commitment_date: 1.day.ago, end_date: Time.zone.today }
+      let!(:standard_demand) { Fabricate :demand, demand_type: :feature, project: project, end_date: Time.zone.today }
+      it { expect(project.general_leadtime.to_f).to eq 102_240.00000000001 }
+    end
+    context 'having no demands' do
+      it { expect(project.general_leadtime).to eq 0 }
     end
   end
 
