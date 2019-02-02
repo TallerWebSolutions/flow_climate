@@ -64,7 +64,7 @@ RSpec.describe ReplenishingData, type: :data_objects do
         expect(project_data_to_replenish[2][:remaining_backlog]).to eq third_project.remaining_backlog
         expect(project_data_to_replenish[2][:relative_flow_pressure]).to be_within(0.00001).of(7.88804)
         expect(project_data_to_replenish[2][:qty_using_pressure]).to be_within(0.00001).of(0.15776)
-        expect(project_data_to_replenish[2][:leadtime_80]).to be_within(0.01).of(0.32)
+        expect(project_data_to_replenish[2][:leadtime_80]).to be_within(0.2).of(0.32)
         expect(project_data_to_replenish[2][:work_in_progress]).to eq 0
         expect(project_data_to_replenish[2][:montecarlo_80_percent]).to eq 0
         expect(project_data_to_replenish[2][:throughput_last_week]).to eq 0
