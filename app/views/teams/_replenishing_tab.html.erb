@@ -25,6 +25,7 @@
       <th><%= t('projects.index.percentage_flow_pressure') %></th>
       <th><%= t('projects.replenishing.qty_using_pressure') %></th>
       <th><%= t('projects.charts.leadtime_evolution.legend.leadtime_80_confidence') %></th>
+      <th><%= t('projects.replenishing.selected_last_week') %></th>
       <th><%= t('projects.replenishing.wip') %></th>
       <th><%= t('projects.replenishing.throughput_last_week') %></th>
       <th><%= t('projects.replenishing.weeks_montecarlo') %></th>
@@ -43,6 +44,7 @@
         <td><%= number_to_percentage(project_hash[:relative_flow_pressure], precision: 2) %></td>
         <td><%= number_with_precision(project_hash[:qty_using_pressure], precision: 1) %></td>
         <td><%= number_with_precision(project_hash[:leadtime_80], precision: 3) %></td>
+        <td><%= project_hash[:qty_selected_last_week] %></td>
         <td><%= project_hash[:work_in_progress] %></td>
         <td><%= project_hash[:throughput_last_week] %></td>
         <td><%= number_with_precision(project_hash[:montecarlo_80_percent], precision: 1) %></td>

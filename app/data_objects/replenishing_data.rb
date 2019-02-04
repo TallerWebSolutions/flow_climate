@@ -36,11 +36,9 @@ class ReplenishingData
     project_data_to_replenish[:remaining_backlog] = project.remaining_backlog
     project_data_to_replenish[:flow_pressure] = project.flow_pressure
     project_data_to_replenish[:relative_flow_pressure] = project.relative_flow_pressure(@total_pressure)
-    project_data_to_replenish[:qty_using_pressure] = compute_qty_using_pressure(project)
-
-    project_data_to_replenish[:work_in_progress] = project.demands.in_wip.count
 
     project_data_to_replenish = project_data_to_replenish.merge(build_stats_info(project))
+    project_data_to_replenish = project_data_to_replenish.merge(build_qty_items_info(project))
 
     project_data_to_replenish[:customer_happiness] = compute_customer_happiness(project_data_to_replenish)
     project_data_to_replenish
@@ -53,6 +51,14 @@ class ReplenishingData
     stats_hash[:throughput_last_week] = throughput_data.last(1).last
     stats_hash[:montecarlo_80_percent] = build_monte_carlo_info(project, throughput_data)
     stats_hash
+  end
+
+  def build_qty_items_info(project)
+    qty_items_hash = {}
+    qty_items_hash[:qty_using_pressure] = compute_qty_using_pressure(project)
+    qty_items_hash[:qty_selected_last_week] = DemandsRepository.instance.committed_demands_by_project_and_week([project], 1.week.ago.to_date.cweek, 1.week.ago.to_date.cwyear).count
+    qty_items_hash[:work_in_progress] = project.demands.in_wip.count
+    qty_items_hash
   end
 
   def compute_customer_happiness(project_data_to_replenish)

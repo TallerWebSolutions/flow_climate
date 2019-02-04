@@ -12,8 +12,6 @@ function activateTab() {
             const hoursGauge = $('#hours-gauge');
             buildGaugeChart(hoursGauge);
             buildStrategicHighcharts();
-        } else if ($(this).attr('id') === 'nav-item-finance') {
-
         }
     });
 }

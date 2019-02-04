@@ -321,6 +321,7 @@ en:
       qty_using_pressure: "Qty Using Pressure"
       wip: "WiP"
       throughput_last_week: "TH Last Week"
+      selected_last_week: "Selected Last Week"
   project:
     new:
       title: "New Project"
