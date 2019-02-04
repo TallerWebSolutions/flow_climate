@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 RSpec.describe Company, type: :model do
+  before { travel_to Time.zone.local(2018, 11, 19, 10, 0, 0) }
+  after { travel_back }
+
   context 'associations' do
     it { is_expected.to have_and_belong_to_many :users }
     it { is_expected.to have_many(:financial_informations).dependent(:restrict_with_error) }
@@ -125,9 +128,6 @@ RSpec.describe Company, type: :model do
 
   describe '#current_cost_per_hour' do
     context 'having finances' do
-      before { travel_to Time.zone.local(2018, 11, 19, 10, 0, 0) }
-      after { travel_back }
-
       let(:company) { Fabricate :company }
       let!(:first_finance) { Fabricate :financial_information, company: company, finances_date: 1.month.ago, expenses_total: 300 }
       let!(:second_finance) { Fabricate :financial_information, company: company, finances_date: 1.week.ago, expenses_total: 200 }
@@ -146,9 +146,6 @@ RSpec.describe Company, type: :model do
   end
 
   describe '#current_hours_per_demand' do
-    before { travel_to Time.zone.local(2018, 11, 19, 10, 0, 0) }
-    after { travel_back }
-
     context 'having finances' do
       include_context 'demands with effort for company'
 
@@ -168,18 +165,12 @@ RSpec.describe Company, type: :model do
   end
 
   describe '#avg_hours_per_demand' do
-    before { travel_to Time.zone.local(2018, 11, 19, 10, 0, 0) }
-    after { travel_back }
-
     include_context 'demands with effort for company'
 
     it { expect(company.avg_hours_per_demand).to eq 52.800000000000004 }
   end
 
   describe '#consumed_hours_in_month' do
-    before { travel_to Time.zone.local(2018, 11, 19, 10, 0, 0) }
-    after { travel_back }
-
     include_context 'demands with effort for company'
 
     it { expect(company.consumed_hours_in_month.to_f).to eq 158.4 }
@@ -188,7 +179,7 @@ RSpec.describe Company, type: :model do
   describe '#throughput_in_month' do
     include_context 'demands with effort for company'
 
-    it { expect(company.throughput_in_month.count).to eq 2 }
+    it { expect(company.throughput_in_month.count).to eq 3 }
   end
 
   describe '#products_count' do
@@ -229,9 +220,6 @@ RSpec.describe Company, type: :model do
   end
 
   describe '#top_three_throughput' do
-    before { travel_to Time.zone.local(2018, 11, 19, 10, 0, 0) }
-    after { travel_back }
-
     include_context 'projects to company bulletin'
     it { expect(company.top_three_throughput(1.day.ago)).to eq [third_project, second_project, first_project] }
   end
@@ -266,9 +254,6 @@ RSpec.describe Company, type: :model do
   end
 
   describe '#total_active_consumed_hours' do
-    before { travel_to Time.zone.local(2018, 11, 19, 10, 0, 0) }
-    after { travel_back }
-
     context 'having data' do
       include_context 'demands with effort for company'
       it { expect(company.total_active_consumed_hours.to_f).to eq 158.4 }

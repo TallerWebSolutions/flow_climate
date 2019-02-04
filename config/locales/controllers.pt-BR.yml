@@ -339,6 +339,7 @@ pt-BR:
       qty_using_pressure: "Qty pela Pressão"
       wip: "WiP"
       throughput_last_week: "TH Últ. Semana"
+      selected_last_week: "Selecionadas na Últ. Sem."
   teams:
     index:
       title: "Times"
