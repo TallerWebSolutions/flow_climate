@@ -1,8 +1,8 @@
 <% if demands.present? %>
   <h4><%= t('demands.index.count', demands_count: demands.map { |demands_hash| demands_hash[1].count }.sum) %></h4>
-  <% demands.each do |customer_name, demands_in_month| %>
+  <% demands.each do |customer_name, demands_to_customer| %>
     <h2><%= customer_name %></h2>
-    <%= render 'demands/demands_table', demands: demands_in_month %>
+    <%= render 'demands/demands_table', demands: demands_to_customer %>
   <% end %>
 
 <% else %>

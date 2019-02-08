@@ -90,9 +90,7 @@ class DemandsController < AuthenticatedController
     demands = filter_text(demands)
     demands = build_flow_status_query(demands, params[:flow_status])
     demands = buld_demand_type_query(demands, params[:demand_type])
-    demands = build_class_of_service_query(demands, params[:demand_class_of_service])
-
-    demands
+    build_class_of_service_query(demands, params[:demand_class_of_service])
   end
 
   def demand_params
@@ -124,6 +122,7 @@ class DemandsController < AuthenticatedController
 
     @grouped_delivered_demands = demands.grouped_end_date_by_month if params_grouping == 'grouped_by_month'
     @grouped_customer_demands = demands.grouped_by_customer if params_grouping == 'grouped_by_customer'
+    @grouped_by_stage_demands = DemandTransitionsRepository.instance.summed_transitions_time_grouped_by_stage_demand_for(demands.map(&:id)) if params_grouping == 'grouped_by_stage'
   end
 
   def build_flow_status_query(demands, params_flow_status)

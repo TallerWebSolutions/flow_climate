@@ -14,6 +14,7 @@ function bindDemandFilterActions() {
 function filterDemands(companyId, projectsIds) {
     $('#demands-grouped-per-month-div').hide();
     $('#demands-grouped-per-customer-div').hide();
+    $('#demands-grouped-per-stage-div').hide();
     $('#flat-demands-div').hide();
     $('#demand-tab-content').hide();
 

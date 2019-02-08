@@ -189,6 +189,7 @@ en:
       demand_blocks_count: "Blocks Count"
       demand_blocks_duration_average: "Block Duration Avg"
       import_stages: "Import Stages"
+      sync_jira: "Sync Project"
     charts:
       xlabel:
         weeks: "Weeks"
@@ -433,6 +434,7 @@ en:
         no_grouping: "No Grouping"
         grouped_by_month: "Grouped By Month"
         grouped_by_customer: "Grouped by Customer"
+        grouped_by_stage: "Grouped by Stage"
       flow_status:
         title: "Flow Status"
         all_demands: "All Demands"

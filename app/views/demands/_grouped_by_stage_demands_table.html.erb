@@ -1,0 +1,41 @@
+<% if demands.present? %>
+  <% demands.each do |stage_name, demands_in_stage| %>
+    <h4><%= stage_name %></h4>
+
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Demand ID</th>
+          <th>Tempo na Etapa</th>
+          <th>Horas na Etapa</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <% demands_in_stage[:data].each do |demand_id, time| %>
+          <% if time.present? %>
+            <tr>
+              <td><%= link_to demand_id, company_project_demand_path(@company, demand.project_id, demand_id) %></td>
+              <td><%= time_distance_in_words(time) %></td>
+              <td><%= number_with_precision((time / 1.hour), precision: 4) %></td>
+            </tr>
+          <% end %>
+        <% end %>
+      </tbody>
+
+      <tfoot>
+        <tr>
+          <td></td>
+          <td><%= time_distance_in_words(demands_in_stage[:consolidation]) %></td>
+          <td><%= number_with_precision((demands_in_stage[:consolidation] / 1.hour), precision: 4) %></td>
+        </tr>
+      </tfoot>
+    </table>
+  <% end %>
+
+<% else %>
+  <div class="no-data">
+    <%= t('general.no_data', missing_data: Demand.model_name.human.pluralize(2).downcase) %>
+  </div>
+
+<% end %>

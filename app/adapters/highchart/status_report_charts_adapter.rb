@@ -50,7 +50,7 @@ module Highchart
       hours_per_stage_distribution = ProjectsRepository.instance.hours_per_stage(@all_projects, charts_data_bottom_limit_date)
       hours_per_stage_chart_hash = {}
       hours_per_stage_chart_hash[:xcategories] = hours_per_stage_distribution.map { |hours_per_stage_array| hours_per_stage_array[0] }
-      hours_per_stage_chart_hash[:hours_per_stage] = hours_per_stage_distribution.map { |hours_per_stage_array| hours_per_stage_array[2] / 3600 }
+      hours_per_stage_chart_hash[:hours_per_stage] = hours_per_stage_distribution.map { |hours_per_stage_array| hours_per_stage_array[2] / 1.hour }
       hours_per_stage_chart_hash
     end
 
