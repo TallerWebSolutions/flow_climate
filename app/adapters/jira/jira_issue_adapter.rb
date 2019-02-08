@@ -20,14 +20,10 @@ module Jira
     def update_demand!(demand, jira_account, jira_issue, project)
       demand.update(project: project, created_date: issue_fields_value(jira_issue, 'created'), demand_type: translate_issue_type(jira_issue), artifact_type: translate_artifact_type(jira_issue),
                     class_of_service: translate_class_of_service(jira_account, jira_issue), demand_title: issue_fields_value(jira_issue, 'summary'),
-                    assignees_count: compute_assignees_count(jira_account, jira_issue), url: build_jira_url(jira_account, project_jira_key(jira_issue), demand.demand_id))
+                    assignees_count: compute_assignees_count(jira_account, jira_issue), url: build_jira_url(jira_account, demand.demand_id))
 
       translate_blocks!(demand, jira_issue.comment['comments']) if jira_issue.respond_to?(:comment)
       process_transitions!(demand, jira_issue.changelog) if jira_issue.respond_to?(:changelog)
-    end
-
-    def project_jira_key(jira_issue)
-      jira_issue.attrs['fields']['project']['key']
     end
 
     def issue_fields_value(jira_issue, field_name)
@@ -135,8 +131,8 @@ module Jira
       history['items'].present? && history['items'].first['field'].casecmp('status').zero?
     end
 
-    def build_jira_url(jira_account, project_key, issue_key)
-      "#{jira_account.base_uri}/projects/#{project_key}/issues/#{issue_key}"
+    def build_jira_url(jira_account, issue_key)
+      "#{jira_account.base_uri}browse/#{issue_key}"
     end
   end
 end
