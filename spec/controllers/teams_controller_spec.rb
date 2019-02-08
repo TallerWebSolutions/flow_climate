@@ -251,7 +251,7 @@ RSpec.describe TeamsController, type: :controller do
           expect(replenishing_data[0][:qty_using_pressure]).to be_within(0.00001).of(1.50636)
           expect(replenishing_data[0][:leadtime_80]).to be_within(0.00001).of(77.44166)
           expect(replenishing_data[0][:work_in_progress]).to eq 0
-          expect(replenishing_data[0][:montecarlo_80_percent]).to be_within(10).of(118.0)
+          expect(replenishing_data[0][:montecarlo_80_percent]).to be_within(15).of(118.0)
           expect(replenishing_data[0][:throughput_last_week]).to eq 7
           expect(replenishing_data[0][:customer_happiness]).to be_within(0.005).of(0.008)
 

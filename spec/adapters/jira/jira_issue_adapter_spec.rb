@@ -164,7 +164,7 @@ RSpec.describe Jira::JiraIssueAdapter, type: :service do
           expect(Demand.count).to eq 1
           expect(Demand.last.assignees_count).to eq 2
           expect(Demand.last.demand_title).to eq 'foo of bar'
-          expect(Demand.last.url).to eq "#{jira_account.base_uri}/projects/foo/issues/10000"
+          expect(Demand.last.url).to eq "#{jira_account.base_uri}browse/10000"
           expect(Demand.last.created_date).to eq Time.zone.parse('2018-07-02T11:20:18.998-0300')
         end
       end
