@@ -6,7 +6,7 @@ RSpec.describe FilterHelper, type: :helper do
   end
 
   describe '#grouping_options' do
-    it { expect(helper.grouping_options).to eq options_for_select([[I18n.t('demands.filter.grouping.no_grouping'), :no_grouping], [I18n.t('demands.filter.grouping.grouped_by_month'), :grouped_by_month], [I18n.t('demands.filter.grouping.grouped_by_customer'), :grouped_by_customer]], :no_grouping) }
+    it { expect(helper.grouping_options).to eq options_for_select([[I18n.t('demands.filter.grouping.no_grouping'), :no_grouping], [I18n.t('demands.filter.grouping.grouped_by_month'), :grouped_by_month], [I18n.t('demands.filter.grouping.grouped_by_customer'), :grouped_by_customer], [I18n.t('demands.filter.grouping.grouped_by_stage'), :grouped_by_stage]], :no_grouping) }
   end
 
   describe '#flow_status_options' do

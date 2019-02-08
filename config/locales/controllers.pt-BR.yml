@@ -205,6 +205,7 @@ pt-BR:
       demand_blocks_count: "Qtd Bloqueios"
       demand_blocks_duration_average: "Duração Média dos Bloqueios"
       import_stages: "Importar Etapas"
+      sync_jira: "Sincronizar Projeto"
     charts:
       xlabel:
         weeks: "Semanas"
@@ -462,6 +463,7 @@ pt-BR:
         no_grouping: "Sem Agrupamento"
         grouped_by_month: "Agrupado por Mês"
         grouped_by_customer: "Agrupado por Cliente"
+        grouped_by_stage: "Agrupado por Etapa"
       flow_status:
         title: "Estado no Fluxo"
         all_demands: "Todas as Demandas"

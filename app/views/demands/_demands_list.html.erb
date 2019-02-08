@@ -79,6 +79,10 @@
       <%= render 'demands/grouped_by_customer_demands_table', demands: grouped_customer_demands %>
     </div>
 
+    <div id="demands-grouped-per-stage-div">
+      <%= render 'demands/grouped_by_stage_demands_table', demands: grouped_stage_demands %>
+    </div>
+
     <div id="flat-demands-div">
       <%= render 'demands/demands_table', demands: demands %>
     </div>

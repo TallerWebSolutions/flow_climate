@@ -4,7 +4,7 @@ module FilterHelper
   end
 
   def grouping_options(selected_value = :no_grouping)
-    options_for_select([[I18n.t('demands.filter.grouping.no_grouping'), :no_grouping], [I18n.t('demands.filter.grouping.grouped_by_month'), :grouped_by_month], [I18n.t('demands.filter.grouping.grouped_by_customer'), :grouped_by_customer]], selected_value)
+    options_for_select([[I18n.t('demands.filter.grouping.no_grouping'), :no_grouping], [I18n.t('demands.filter.grouping.grouped_by_month'), :grouped_by_month], [I18n.t('demands.filter.grouping.grouped_by_customer'), :grouped_by_customer], [I18n.t('demands.filter.grouping.grouped_by_stage'), :grouped_by_stage]], selected_value)
   end
 
   def flow_status_options(selected_value = :all_demands)
