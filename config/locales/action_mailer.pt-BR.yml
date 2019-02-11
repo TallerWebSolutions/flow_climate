@@ -33,3 +33,13 @@ pt-BR:
   plans:
     request:
       subject: "Um novo plano foi solicitado"
+  demands:
+    sync:
+      notification:
+        subject: "A sync %{sync_title} - %{object_title} foi concluída."
+        sync_info: "A sync solicitada por você começou às %{started_at} e terminou às %{finished_at}."
+        sync_link: "Veja os resultados em "
+  general:
+    signature:
+      regards: "Atenciosamente"
+      flow_climate_team: "Time do Flow Climate"

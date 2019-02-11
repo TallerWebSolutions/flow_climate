@@ -11,6 +11,7 @@ module Jira
       demand = Demand.where(project_id: project.id, demand_id: issue_key).first_or_initialize
 
       update_demand!(demand, jira_account, jira_issue, project)
+
       demand
     end
 

@@ -65,7 +65,8 @@ class ProjectsController < AuthenticatedController
 
   def synchronize_jira
     jira_account = Jira::JiraAccount.find_by(customer_domain: @project.project_jira_config.jira_account_domain)
-    Jira::ProcessJiraProjectJob.perform_later(jira_account, @project.project_jira_config)
+    project_url = company_project_url(@company, @project)
+    Jira::ProcessJiraProjectJob.perform_later(jira_account, @project.project_jira_config, current_user.email, current_user.full_name, project_url)
     flash[:notice] = t('general.enqueued')
     redirect_to company_project_path(@company, @project)
   end
