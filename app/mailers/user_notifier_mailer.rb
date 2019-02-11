@@ -39,6 +39,18 @@ class UserNotifierMailer < ApplicationMailer
     mail(to: emails, subject: I18n.t('plans.request.subject'))
   end
 
+  def sync_finished(user_email, user_name, sync_title, object_title, sync_started_at, sync_finished_at, object_url)
+    @user_name = user_name
+    @sync_title = sync_title
+    @object_title = object_title
+    @sync_started_at = sync_started_at
+    @sync_finished_at = sync_finished_at
+    @object_url = object_url
+
+    Rails.logger.info("Sync finished email notification sent to #{user_email}")
+    mail(to: user_email, subject: I18n.t('demands.sync.notification.subject', sync_title: @sync_title, object_title: @object_title))
+  end
+
   private
 
   def assign_project_informations(company)

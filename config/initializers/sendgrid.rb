@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 ActionMailer::Base.smtp_settings = {
-  user_name: ENV['SENDGRID_USERNAME'],
-  password: ENV['SENDGRID_PASSWORD'],
+  user_name: Figaro.env.sendgrid_username,
+  password: Figaro.env.sendgrid_password,
   domain: 'taller.net.br',
   address: 'smtp.sendgrid.net',
   port: 587,
