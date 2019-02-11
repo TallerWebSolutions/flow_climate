@@ -78,6 +78,7 @@ en:
           stage_stream:
             upstream: Upstream
             downstream: Downstream
+            out_stream: Out Stream
       demand_block:
         demand: Demand
         demand_block_id: Id

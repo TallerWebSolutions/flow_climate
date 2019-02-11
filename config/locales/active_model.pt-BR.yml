@@ -274,6 +274,7 @@ pt-BR:
           stage_stream:
             upstream: Upstream
             downstream: Downstream
+            out_stream: Fora do Stream
       demand_transition:
         demand: Demanda
         stage: Etapa
