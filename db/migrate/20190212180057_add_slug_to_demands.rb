@@ -11,7 +11,7 @@ class AddSlugToDemands < ActiveRecord::Migration[5.2]
       t.integer :company_id, index: true
     end
 
-    Demand.all.each { |demand| demand.update(company_id: demand.company.id) }
+    Demand.all.each { |demand| demand.update(company_id: demand.project.company.id) }
 
     change_column_null :demands, :company_id, false
 
