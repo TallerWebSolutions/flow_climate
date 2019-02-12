@@ -91,7 +91,7 @@ RSpec.describe CompaniesController, type: :controller do
           let!(:first_alert) { Fabricate :project_risk_alert, project_risk_config: first_risk_config, project: first_project, alert_color: :green, created_at: Time.zone.now }
           let!(:second_alert) { Fabricate :project_risk_alert, project_risk_config: second_risk_config, project: first_project, alert_color: :red, created_at: 1.hour.ago }
 
-          before { get :show, params: { id: company.id } }
+          before { get :show, params: { id: company } }
           it 'assigns the instance variable and renders the template' do
             expect(response).to render_template :show
             expect(assigns(:company)).to eq company
@@ -110,7 +110,7 @@ RSpec.describe CompaniesController, type: :controller do
         end
         context 'and the company already have settings' do
           let!(:company_settings) { Fabricate :company_settings, company: company }
-          before { get :show, params: { id: company.id } }
+          before { get :show, params: { id: company } }
           it { expect(assigns(:company_settings)).to eq company.reload.company_settings }
         end
       end

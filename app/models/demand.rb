@@ -8,9 +8,10 @@
 #  assignees_count   :integer          not null
 #  class_of_service  :integer          default("standard"), not null
 #  commitment_date   :datetime
+#  company_id        :integer          not null, indexed => [demand_id]
 #  created_at        :datetime         not null
 #  created_date      :datetime         not null
-#  demand_id         :string           not null, indexed => [project_id]
+#  demand_id         :string           not null, indexed => [company_id]
 #  demand_title      :string
 #  demand_type       :integer          not null
 #  demand_url        :string
@@ -23,7 +24,8 @@
 #  leadtime          :decimal(, )
 #  manual_effort     :boolean          default(FALSE)
 #  parent_id         :integer
-#  project_id        :integer          not null, indexed => [demand_id]
+#  project_id        :integer          not null
+#  slug              :string           indexed
 #  total_queue_time  :integer          default(0)
 #  total_touch_time  :integer          default(0)
 #  updated_at        :datetime         not null
@@ -31,8 +33,9 @@
 #
 # Indexes
 #
-#  index_demands_on_demand_id_and_project_id  (demand_id,project_id) UNIQUE
+#  index_demands_on_demand_id_and_company_id  (demand_id,company_id) UNIQUE
 #  index_demands_on_discarded_at              (discarded_at)
+#  index_demands_on_slug                      (slug) UNIQUE
 #
 # Foreign Keys
 #
@@ -43,11 +46,15 @@
 class Demand < ApplicationRecord
   include Discard::Model
 
+  extend FriendlyId
+  friendly_id :demand_id, use: :slugged
+
   enum artifact_type: { story: 0, epic: 1, theme: 2 }
   enum demand_type: { feature: 0, bug: 1, performance_improvement: 2, ui: 3, chore: 4, wireframe: 5 }
   enum class_of_service: { standard: 0, expedite: 1, fixed_date: 2, intangible: 3 }
 
   belongs_to :project
+  belongs_to :company
 
   belongs_to :parent, class_name: 'Demand', foreign_key: :parent_id, inverse_of: :children
   has_many :children, class_name: 'Demand', foreign_key: :parent_id, inverse_of: :parent, dependent: :destroy
@@ -55,9 +62,10 @@ class Demand < ApplicationRecord
   has_many :demand_transitions, dependent: :destroy
   has_many :demand_blocks, dependent: :destroy
   has_many :stages, -> { distinct }, through: :demand_transitions
+  has_one :demands_list, inverse_of: :demand, dependent: :restrict_with_error
 
   validates :project, :created_date, :demand_id, :demand_type, :class_of_service, :assignees_count, presence: true
-  validates :demand_id, uniqueness: { scope: :project_id, message: I18n.t('demand.validations.demand_id_unique.message') }
+  validates :demand_id, uniqueness: { scope: :company_id, message: I18n.t('demand.validations.demand_id_unique.message') }
 
   scope :opened_in_date, ->(date) { kept.where('created_date::timestamp::date = :date', date: date) }
   scope :opened_after_date, ->(date) { kept.where('created_date >= :date', date: date.beginning_of_day) }
@@ -78,7 +86,6 @@ class Demand < ApplicationRecord
 
   scope :in_wip, -> { kept.where('demands.commitment_date IS NOT NULL AND demands.end_date IS NULL') }
 
-  delegate :company, to: :project
   delegate :full_name, to: :project, prefix: true
 
   before_save :compute_and_update_automatic_fields
@@ -163,6 +170,10 @@ class Demand < ApplicationRecord
 
   def sum_queue_blocked_time
     sum_blocked_time_for_transitions(demand_transitions.queue_transitions)
+  end
+
+  def total_bloked_working_time
+    demand_blocks.sum(&:block_duration)
   end
 
   private

@@ -41,7 +41,7 @@ RSpec.describe DemandBlocksController, type: :controller do
       context 'passing valid parameters' do
         before { patch :activate, params: { company_id: company, project_id: project, demand_id: demand, id: demand_block } }
         it 'assigns the instance variable and renders the template' do
-          expect(response).to redirect_to company_project_demand_path(company, project, demand)
+          expect(response).to redirect_to company_demand_path(company, demand)
           expect(demand_block.reload.active).to be true
         end
       end
@@ -75,7 +75,7 @@ RSpec.describe DemandBlocksController, type: :controller do
       context 'passing valid parameters' do
         before { patch :deactivate, params: { company_id: company, project_id: project, demand_id: demand, id: demand_block } }
         it 'assigns the instance variable and renders the template' do
-          expect(response).to redirect_to company_project_demand_path(company, project, demand)
+          expect(response).to redirect_to company_demand_path(company, demand)
           expect(demand_block.reload.active).to be false
         end
       end

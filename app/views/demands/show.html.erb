@@ -3,7 +3,7 @@
     <ul class="breadcrumb">
       <li><%= link_to t('general.home.title'), root_path %></li>
       <li><%= link_to @company.abbreviation&.upcase, company_path(@company) %></li>
-      <li><%= link_to @project.full_name, company_project_path(@company, @project) %></li>
+      <li><%= link_to @demand.project.full_name, company_project_path(@company, @demand.project) %></li>
       <li><%= @demand.demand_id %></li>
     </ul>
   </div>
@@ -15,7 +15,7 @@
 
 <div class="row bottom-spaced-component">
   <div class="col-xs-6">
-    <%= link_to synchronize_jira_company_project_demand_path(@company, @project, @demand), method: :put do %>
+    <%= link_to synchronize_jira_company_project_demand_path(@company, @demand.project, @demand), method: :put do %>
       <span class="btn btn-sm"><i class="fas fa-sync-alt"></i></span><span><%= t('demands.show.sync_jira') %></span>
     <% end %>
     <span class="detailed"><%= "(#{t('demands.show.last_update', last_update_date: l(@demand.updated_at, format: :short))})" %></span>

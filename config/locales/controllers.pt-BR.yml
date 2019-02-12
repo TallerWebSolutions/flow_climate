@@ -409,6 +409,7 @@ pt-BR:
       hours_blocks_touch: "Horas Bloqueadas em Trabalho"
       total_blocked_time: "Tempo Bloqueado"
       grouping_to_charts: "Agrupamento para os Gráficos"
+      total_blocked_work_time: "Tempo Útil Bloq."
     edit:
       title: "Editar Demanda"
     show:
@@ -476,6 +477,9 @@ pt-BR:
       class_of_service:
         title: "Classe de Serviço"
         all_classes: "Todas as Classes"
+    grouped_by_stage:
+      time_in_stage: "Tempo na Etapa"
+      hours_in_stage: "Horas na Etapa"
   project_risk_configs:
     new:
       title: "Nova Configuração de Risco"

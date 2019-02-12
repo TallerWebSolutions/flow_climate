@@ -10,9 +10,9 @@ class DemandTransitionsRepository
       .kept
       .joins(:stage)
       .joins(demand: :project)
-      .select('stages.name AS grouped_stage_name, demands.demand_id AS grouped_demand_id, SUM(EXTRACT(EPOCH FROM (demand_transitions.last_time_out - demand_transitions.last_time_in))) AS time_in_stage')
+      .select('stages.name AS grouped_stage_name, projects.id AS project_id, demands.demand_id AS grouped_demand_id, SUM(EXTRACT(EPOCH FROM (demand_transitions.last_time_out - demand_transitions.last_time_in))) AS time_in_stage')
       .where(demand_id: demands_ids)
-      .group('grouped_stage_name, grouped_demand_id, stages.order')
+      .group('grouped_stage_name, grouped_demand_id, projects.id, stages.order')
       .order('stages.order, grouped_demand_id')
       .map { |times| demands_grouped_in_stages = build_grouped_hash(demands_grouped_in_stages, times) }
 

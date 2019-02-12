@@ -24,7 +24,7 @@ class AuthenticatedController < ApplicationController
   end
 
   def assign_company
-    @company = Company.find(params[:company_id])
+    @company = Company.friendly.find(params[:company_id]&.downcase)
     not_found unless current_user.companies.include?(@company)
   end
 

@@ -9,9 +9,41 @@ Bringing the management to the next level.
 
 Have the ultimate management tools in your hands!
 
-Using:
+## Using:
 - Sendgrid to send emails
 - Airbrake to monitor production errors
 - RSpec as test framework
 - Fabrication as factory for specs
 - Faker to generate fake data
+
+## How to build the environment
+
+- Install rvm or rbenv - the main development team is using *rvm*
+- If you choose rvm then 
+    - Install the correct version (the examples will use the ruby-2.6.0)
+        - `rvm install ruby-2.6.0` 
+    - Create the gemset to the project under the correct version
+        - In the project folder run: 
+            - `rvm use 2.6.0@flow_climate --create`
+            - `rvm --ruby-version use 2.6.0`
+            - `gem install bundler -v 1.17.3`
+            - `bundle install`
+- Install PostgreSQL v. 10
+- Start postgresql
+    - Example on macOS (brew instalation): `pg_ctl -D /usr/local/var/postgres start`
+- In the project folder run:
+    - `rake db:create`
+    - `rake db:migrate`
+    - `rake db:create RAILS_ENV=test`
+    - `rake db:migrate RAILS_ENV=test`
+
+- CI: Travis
+    - Check `travis.yml`
+    
+- The build relies on `rspec` and `rubocop` success
+- In the project folder you should be able to run and check the output of:
+    - `rspec`
+    - `rubocop -DR`
+
+- Run console: `rails c`
+- Run server: `rails s`

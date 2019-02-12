@@ -185,6 +185,13 @@ RSpec.describe Jira::JiraIssueAdapter, type: :service do
         end
       end
 
+      context 'and the demand was discarded' do
+        let!(:discarded_demand) { Fabricate :demand, project: first_project, demand_id: '10010', discarded_at: Time.zone.yesterday }
+        let!(:jira_issue) { client.Issue.build({ key: '10010', fields: { created: '2018-07-02T11:20:18.998-0300', summary: 'foo of bar', issuetype: { name: 'Story' }, customfield_10028: { value: 'Expedite' }, project: { key: 'foo' } }, changelog: { startAt: 0, maxResults: 2, total: 2, histories: [{ id: '10039', from: 'first_stage', to: 'second_stage', created: '2018-07-08T22:34:47.440-0300' }, { id: '10038', from: 'third_stage', to: 'first_stage', created: '2018-07-06T09:40:43.886-0300' }] } }.with_indifferent_access) }
+        before { Jira::JiraIssueAdapter.instance.process_issue!(jira_account, first_project, jira_issue) }
+        it { expect(discarded_demand.reload.discarded_at).to be nil }
+      end
+
       context 'and there is config to the custom responsibles field and the json does not have the field' do
         let!(:jira_issue) { client.Issue.build({ key: '10000', fields: { created: '2018-07-02T11:20:18.998-0300', summary: 'foo of bar', issuetype: { name: 'Story' }, customfield_10028: { value: 'Expedite' }, project: { key: 'foo' } }, changelog: { startAt: 0, maxResults: 2, total: 2, histories: [{ id: '10039', from: 'first_stage', to: 'second_stage', created: '2018-07-08T22:34:47.440-0300' }, { id: '10038', from: 'third_stage', to: 'first_stage', created: '2018-07-06T09:40:43.886-0300' }] } }.with_indifferent_access) }
         it 'updates the demand throwing no errors' do

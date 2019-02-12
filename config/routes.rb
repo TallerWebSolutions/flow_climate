@@ -75,7 +75,7 @@ Rails.application.routes.draw do
     end
 
     resources :projects do
-      resources :demands do
+      resources :demands, except: :show do
         put :synchronize_jira, on: :member
 
         resources :demand_blocks, only: %i[edit update] do
@@ -136,6 +136,8 @@ Rails.application.routes.draw do
       get 'build_strategic_charts', action: :build_strategic_charts # team company
       get 'build_status_report_charts', action: :build_status_report_charts # team product customer project
     end
+
+    resources :demands, only: :show
   end
 
   root 'home#show'

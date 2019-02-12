@@ -2,6 +2,7 @@
 
 Fabricator(:demand) do
   project
+  company
   demand_title { Faker::FunnyName.two_word_name }
   created_date { 5.days.ago }
   commitment_date { 1.day.ago }

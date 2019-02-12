@@ -23,6 +23,7 @@ gem 'histogram'
 gem 'discard'
 gem 'jira-ruby', require: false
 gem 'attr_encrypted'
+gem 'friendly_id', '~> 5.2.4'
 
 group :test, :development do
   gem 'brakeman'

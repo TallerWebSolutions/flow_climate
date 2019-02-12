@@ -4,19 +4,19 @@ class DemandsController < AuthenticatedController
   before_action :user_gold_check
 
   before_action :assign_company
-  before_action :assign_project, except: %i[demands_csv demands_in_projects search_demands_by_flow_status]
-  before_action :assign_projects_for_queries, only: %i[demands_in_projects search_demands_by_flow_status]
   before_action :assign_demand, only: %i[edit update show synchronize_jira destroy]
+  before_action :assign_project, except: %i[demands_csv demands_in_projects search_demands_by_flow_status show]
+  before_action :assign_projects_for_queries, only: %i[demands_in_projects search_demands_by_flow_status]
 
   def new
     @demand = Demand.new(project: @project)
   end
 
   def create
-    @demand = Demand.new(demand_params.merge(project: @project))
+    @demand = Demand.new(demand_params.merge(project: @project, company: @company))
     return render :new unless @demand.save
 
-    redirect_to company_project_demand_path(@company, @project, @demand)
+    redirect_to company_demand_path(@company, @demand)
   end
 
   def destroy
@@ -48,7 +48,7 @@ class DemandsController < AuthenticatedController
     demand_url = company_project_demand_url(@demand.project.company, @demand.project, @demand)
     Jira::ProcessJiraIssueJob.perform_later(jira_account, @project, @demand.demand_id, current_user.email, current_user.full_name, demand_url)
     flash[:notice] = t('general.enqueued')
-    redirect_to company_project_demand_path(@company, @project, @demand)
+    redirect_to company_demand_path(@company, @demand)
   end
 
   def demands_csv
@@ -107,7 +107,7 @@ class DemandsController < AuthenticatedController
   end
 
   def assign_demand
-    @demand = Demand.find(params[:id])
+    @demand = Demand.friendly.find(params[:id]&.downcase)
   end
 
   def build_limit_date_query(demands, period)

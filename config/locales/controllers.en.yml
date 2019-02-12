@@ -382,6 +382,7 @@ en:
       hours_blocks_touch: "Hours Blocked in Queues"
       total_blocked_time: "Time Blocked"
       grouping_to_charts: "Grouping to Charts"
+      total_blocked_work_time: "Work Time Blocked"
     edit:
       title: "Edit Demand"
     show:
@@ -447,6 +448,9 @@ en:
       class_of_service:
         title: "Class of Service"
         all_classes: "All Classes"
+    grouped_by_stage:
+      time_in_stage: "Time in Stage"
+      hours_in_stage: "Hours in Stage"
   project_risk_configs:
     new:
       title: "New Risk Configuration"
@@ -638,3 +642,7 @@ en:
       title: "Teams"
     replenishing:
       title: "Flow Replenishing"
+  activerecord:
+    attributes:
+      demand:
+        demand_id: "Demand ID"

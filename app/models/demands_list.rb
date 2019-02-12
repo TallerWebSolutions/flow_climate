@@ -25,6 +25,7 @@
 #  project_id        :bigint(8)
 #  project_name      :string
 #  queued_time       :float
+#  slug              :string
 #  total_queue_time  :integer
 #  total_touch_time  :integer
 #  touch_time        :float
@@ -40,6 +41,7 @@ class DemandsList < ApplicationRecord
   enum demand_type: { feature: 0, bug: 1, performance_improvement: 2, ui: 3, chore: 4, wireframe: 5 }
   enum class_of_service: { standard: 0, expedite: 1, fixed_date: 2, intangible: 3 }
 
+  belongs_to :demand, foreign_key: :id, inverse_of: :demands_list
   belongs_to :customer
   belongs_to :product
   belongs_to :project
