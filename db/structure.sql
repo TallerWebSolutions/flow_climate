@@ -34,7 +34,8 @@ CREATE TABLE public.companies (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     abbreviation character varying NOT NULL,
-    customers_count integer DEFAULT 0
+    customers_count integer DEFAULT 0,
+    slug character varying
 );
 
 
@@ -275,7 +276,9 @@ CREATE TABLE public.demands (
     demand_title character varying,
     discarded_at timestamp without time zone,
     artifact_type integer DEFAULT 0,
-    parent_id integer
+    parent_id integer,
+    slug character varying,
+    company_id integer NOT NULL
 );
 
 
@@ -306,6 +309,7 @@ CREATE VIEW public.demands_lists AS
 SELECT
     NULL::bigint AS id,
     NULL::character varying AS demand_id,
+    NULL::character varying AS slug,
     NULL::bigint AS project_id,
     NULL::bigint AS product_id,
     NULL::bigint AS customer_id,
@@ -363,6 +367,39 @@ CREATE SEQUENCE public.financial_informations_id_seq
 --
 
 ALTER SEQUENCE public.financial_informations_id_seq OWNED BY public.financial_informations.id;
+
+
+--
+-- Name: friendly_id_slugs; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.friendly_id_slugs (
+    id bigint NOT NULL,
+    slug character varying NOT NULL,
+    sluggable_id integer NOT NULL,
+    sluggable_type character varying(50),
+    scope character varying,
+    created_at timestamp without time zone
+);
+
+
+--
+-- Name: friendly_id_slugs_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.friendly_id_slugs_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: friendly_id_slugs_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.friendly_id_slugs_id_seq OWNED BY public.friendly_id_slugs.id;
 
 
 --
@@ -1089,6 +1126,13 @@ ALTER TABLE ONLY public.financial_informations ALTER COLUMN id SET DEFAULT nextv
 
 
 --
+-- Name: friendly_id_slugs id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.friendly_id_slugs ALTER COLUMN id SET DEFAULT nextval('public.friendly_id_slugs_id_seq'::regclass);
+
+
+--
 -- Name: integration_errors id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1287,6 +1331,14 @@ ALTER TABLE ONLY public.financial_informations
 
 
 --
+-- Name: friendly_id_slugs friendly_id_slugs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.friendly_id_slugs
+    ADD CONSTRAINT friendly_id_slugs_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: integration_errors integration_errors_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1439,6 +1491,20 @@ ALTER TABLE ONLY public.users
 
 
 --
+-- Name: index_companies_on_abbreviation; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_companies_on_abbreviation ON public.companies USING btree (abbreviation);
+
+
+--
+-- Name: index_companies_on_slug; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_companies_on_slug ON public.companies USING btree (slug);
+
+
+--
 -- Name: index_companies_users_on_company_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1509,10 +1575,10 @@ CREATE INDEX index_demand_transitions_on_stage_id ON public.demand_transitions U
 
 
 --
--- Name: index_demands_on_demand_id_and_project_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_demands_on_demand_id_and_company_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX index_demands_on_demand_id_and_project_id ON public.demands USING btree (demand_id, project_id);
+CREATE UNIQUE INDEX index_demands_on_demand_id_and_company_id ON public.demands USING btree (demand_id, company_id);
 
 
 --
@@ -1523,10 +1589,38 @@ CREATE INDEX index_demands_on_discarded_at ON public.demands USING btree (discar
 
 
 --
+-- Name: index_demands_on_slug; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_demands_on_slug ON public.demands USING btree (slug);
+
+
+--
 -- Name: index_financial_informations_on_company_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_financial_informations_on_company_id ON public.financial_informations USING btree (company_id);
+
+
+--
+-- Name: index_friendly_id_slugs_on_slug_and_sluggable_type; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_friendly_id_slugs_on_slug_and_sluggable_type ON public.friendly_id_slugs USING btree (slug, sluggable_type);
+
+
+--
+-- Name: index_friendly_id_slugs_on_slug_and_sluggable_type_and_scope; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_friendly_id_slugs_on_slug_and_sluggable_type_and_scope ON public.friendly_id_slugs USING btree (slug, sluggable_type, scope);
+
+
+--
+-- Name: index_friendly_id_slugs_on_sluggable_type_and_sluggable_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_friendly_id_slugs_on_sluggable_type_and_sluggable_id ON public.friendly_id_slugs USING btree (sluggable_type, sluggable_id);
 
 
 --
@@ -1781,6 +1875,7 @@ CREATE UNIQUE INDEX unique_jira_project_key_to_jira_account_domain ON public.pro
 CREATE OR REPLACE VIEW public.demands_lists AS
  SELECT d.id,
     d.demand_id,
+    d.slug,
     proj.id AS project_id,
     prod.id AS product_id,
     cust.id AS customer_id,
@@ -2213,6 +2308,10 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190108182426'),
 ('20190121231612'),
 ('20190124222658'),
-('20190211141716');
+('20190211141716'),
+('20190212180057'),
+('20190212180201'),
+('20190212181729'),
+('20190212183127');
 
 

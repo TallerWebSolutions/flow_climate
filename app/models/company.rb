@@ -4,15 +4,24 @@
 #
 # Table name: companies
 #
+#  abbreviation    :string           not null, indexed
+#  created_at      :datetime         not null
+#  customers_count :integer          default(0)
 #  id              :bigint(8)        not null, primary key
 #  name            :string           not null
-#  created_at      :datetime         not null
+#  slug            :string           indexed
 #  updated_at      :datetime         not null
-#  abbreviation    :string           not null
-#  customers_count :integer          default(0)
+#
+# Indexes
+#
+#  index_companies_on_abbreviation  (abbreviation) UNIQUE
+#  index_companies_on_slug          (slug) UNIQUE
 #
 
 class Company < ApplicationRecord
+  extend FriendlyId
+  friendly_id :abbreviation, use: :slugged
+
   has_and_belongs_to_many :users
   has_many :financial_informations, dependent: :restrict_with_error
   has_many :customers, dependent: :restrict_with_error

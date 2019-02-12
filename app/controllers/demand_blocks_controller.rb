@@ -9,12 +9,12 @@ class DemandBlocksController < AuthenticatedController
 
   def activate
     @demand_block.activate!
-    redirect_to company_project_demand_path(@company, @project, @demand)
+    redirect_to company_demand_path(@company, @demand)
   end
 
   def deactivate
     @demand_block.deactivate!
-    redirect_to company_project_demand_path(@company, @project, @demand)
+    redirect_to company_demand_path(@company, @demand)
   end
 
   def edit
@@ -41,7 +41,7 @@ class DemandBlocksController < AuthenticatedController
   end
 
   def assign_demand
-    @demand = Demand.find(params[:demand_id])
+    @demand = Demand.friendly.find(params[:demand_id])
   end
 
   def assign_demand_block

@@ -5,9 +5,9 @@
     <table class="table table-striped">
       <thead>
         <tr>
-          <th>Demand ID</th>
-          <th>Tempo na Etapa</th>
-          <th>Horas na Etapa</th>
+          <th><%= t('activerecord.attributes.demand.demand_id') %></th>
+          <th><%= t('demands.grouped_by_stage.time_in_stage') %></th>
+          <th><%= t('demands.grouped_by_stage.hours_in_stage') %></th>
         </tr>
       </thead>
 
@@ -15,7 +15,7 @@
         <% demands_in_stage[:data].each do |demand_id, time| %>
           <% if time.present? %>
             <tr>
-              <td><%= demand_id %></td>
+              <td><%= link_to demand_id, company_demand_path(@company, demand_id) %></td>
               <td><%= time_distance_in_words(time) %></td>
               <td><%= number_with_precision((time / 1.hour), precision: 4) %></td>
             </tr>

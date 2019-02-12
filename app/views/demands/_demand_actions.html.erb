@@ -1,4 +1,4 @@
-<%= link_to company_project_demand_path(@company, demand.project_id, demand.id), method: :delete, data: { confirm: I18n.t('general.destroy.confirm') }, remote: true do %>
+<%= link_to company_demand_path(@company, demand.id), method: :delete, data: { confirm: I18n.t('general.destroy.confirm') }, remote: true do %>
   <i class="fa fa-times" aria-hidden="true"></i>
 <% end %>
 <%= link_to edit_company_project_demand_path(@company, demand.project_id, demand.id), class: 'edit-demand-button', remote: true do %>

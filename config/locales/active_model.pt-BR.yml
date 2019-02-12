@@ -367,7 +367,7 @@ pt-BR:
   demand:
     validations:
       demand_id_unique:
-        message: "Só pode haver um ID da Demanda por Projeto."
+        message: "Só pode haver um ID da Demanda por Empresa."
   jira_custom_field_mapping:
     uniqueness:
       demand_field: "Apenas uma configuração de campo é permitida por conta do Jira."

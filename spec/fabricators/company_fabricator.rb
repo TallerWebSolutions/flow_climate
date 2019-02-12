@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
 Fabricator(:company) do
-  abbreviation { Faker::Company.buzzword }
+  abbreviation { Faker::Alphanumeric.letterify('??????') }
   name { Faker::Company.name }
 end

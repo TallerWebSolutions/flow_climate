@@ -25,6 +25,10 @@ RSpec.describe DemandsController, type: :controller do
       before { put :update, params: { company_id: 'foo', project_id: 'bar', id: 'sbbrubles' }, xhr: true }
       it { expect(response).to have_http_status 401 }
     end
+    describe 'GET #show' do
+      before { get :show, params: { company_id: 'foo', id: 'sbbrubles' } }
+      it { expect(response).to redirect_to new_user_session_path }
+    end
     describe 'PUT #synchronize_jira' do
       before { put :synchronize_jira, params: { company_id: 'foo', project_id: 'bar', id: 'bla' } }
       it { expect(response).to redirect_to new_user_session_path }
@@ -104,7 +108,7 @@ RSpec.describe DemandsController, type: :controller do
           expect(created_demand.created_date).to eq date_to_demand
           expect(created_demand.commitment_date).to eq date_to_demand
           expect(created_demand.end_date).to eq date_to_demand
-          expect(response).to redirect_to company_project_demand_path(company, project, created_demand)
+          expect(response).to redirect_to company_demand_path(company, created_demand)
         end
       end
       context 'invalid' do
@@ -282,7 +286,6 @@ RSpec.describe DemandsController, type: :controller do
           it 'assigns the instance variable and renders the template' do
             expect(response).to render_template :show
             expect(assigns(:company)).to eq company
-            expect(assigns(:project)).to eq project
             expect(assigns(:demand)).to eq first_demand
             expect(assigns(:demand_blocks)).to eq [second_block, first_block]
             expect(assigns(:queue_percentage)).to eq 0
@@ -293,11 +296,10 @@ RSpec.describe DemandsController, type: :controller do
         end
         context 'having no demand_blocks' do
           let!(:demand) { Fabricate :demand, project: project }
-          before { get :show, params: { company_id: company, project_id: project, id: first_demand } }
+          before { get :show, params: { company_id: company, id: first_demand } }
           it 'assigns the instance variable and renders the template' do
             expect(response).to render_template :show
             expect(assigns(:company)).to eq company
-            expect(assigns(:project)).to eq project
             expect(assigns(:demand_blocks)).to eq []
             expect(assigns(:queue_percentage)).to eq 0
             expect(assigns(:touch_percentage)).to eq 100
@@ -308,12 +310,12 @@ RSpec.describe DemandsController, type: :controller do
       end
       context 'passing invalid parameters' do
         context 'non-existent company' do
-          before { get :show, params: { company_id: 'foo', project_id: project, id: first_demand } }
+          before { get :show, params: { company_id: 'foo', id: first_demand } }
           it { expect(response).to have_http_status :not_found }
         end
         context 'not permitted' do
           let(:company) { Fabricate :company, users: [] }
-          before { get :show, params: { company_id: company, project_id: project, id: first_demand } }
+          before { get :show, params: { company_id: company, id: first_demand } }
           it { expect(response).to have_http_status :not_found }
         end
       end
@@ -337,7 +339,7 @@ RSpec.describe DemandsController, type: :controller do
           it 'calls the services and the reader' do
             expect(Jira::ProcessJiraIssueJob).to receive(:perform_later)
             put :synchronize_jira, params: { company_id: company, project_id: project, id: demand }
-            expect(response).to redirect_to company_project_demand_path(company, project, demand)
+            expect(response).to redirect_to company_demand_path(company, demand)
             expect(demand.reload.project).to eq project
             expect(flash[:notice]).to eq I18n.t('general.enqueued')
           end

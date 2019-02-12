@@ -8,6 +8,7 @@ RSpec.describe DemandsList, type: :model do
   end
 
   context 'associations' do
+    it { is_expected.to belong_to(:demand).with_foreign_key(:id).inverse_of(:demands_list) }
     it { is_expected.to belong_to :project }
     it { is_expected.to belong_to :product }
     it { is_expected.to belong_to :customer }

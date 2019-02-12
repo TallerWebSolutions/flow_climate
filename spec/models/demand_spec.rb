@@ -8,6 +8,7 @@ RSpec.describe Demand, type: :model do
   end
 
   context 'associations' do
+    it { is_expected.to belong_to :company }
     it { is_expected.to belong_to :project }
     it { is_expected.to belong_to(:parent).class_name('Demand').inverse_of(:children) }
     it { is_expected.to have_many(:children).class_name('Demand').inverse_of(:parent).dependent(:destroy) }
@@ -28,9 +29,9 @@ RSpec.describe Demand, type: :model do
     context 'complex ones' do
       context 'demand_id uniqueness' do
         let!(:project) { Fabricate :project }
-        let!(:demand) { Fabricate :demand, project: project, demand_id: 'zzz' }
+        let!(:demand) { Fabricate :demand, project: project, company: project.company, demand_id: 'zzz' }
         context 'same demand_id in same project' do
-          let!(:other_demand) { Fabricate.build :demand, project: project, demand_id: 'zzz' }
+          let!(:other_demand) { Fabricate.build :demand, project: project, company: project.company, demand_id: 'zzz' }
           it 'does not accept the model' do
             expect(other_demand.valid?).to be false
             expect(other_demand.errors[:demand_id]).to eq [I18n.t('demand.validations.demand_id_unique.message')]
@@ -176,7 +177,6 @@ RSpec.describe Demand, type: :model do
   end
 
   context 'delegations' do
-    it { is_expected.to delegate_method(:company).to(:project) }
     it { is_expected.to delegate_method(:full_name).to(:project).with_prefix }
   end
 
