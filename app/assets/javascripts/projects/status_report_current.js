@@ -1,19 +1,25 @@
 function buildStatusReportCurrentCharts() {
-    var burnupHoursPerWeek = $('#burnup-hours-per-week');
+    const burnupHoursPerWeek = $('#burnup-hours-per-week');
     buildBurnupChart(burnupHoursPerWeek);
 
-    var burnupHoursPerMonth = $('#burnup-hours-per-month');
+    const burnupHoursPerMonth = $('#burnup-hours-per-month');
     buildBurnupChart(burnupHoursPerMonth);
 
-    var statusReportThroughputDiv = $('#status-report-throughput-column');
+    const statusReportThroughputDiv = $('#status-report-throughput-column');
     buildColumnChart(statusReportThroughputDiv);
 
-    var statusReportDeliveredDiv = $('#status-report-delivered-column');
+    const statusReportDeliveredDiv = $('#status-report-delivered-column');
     buildColumnChart(statusReportDeliveredDiv);
 
-    var statusReportDeadlineDiv = $('#status-report-deadline-bar');
+    const statusReportDeadlineDiv = $('#status-report-deadline-bar');
     buildBarChart(statusReportDeadlineDiv);
 
-    var statusReportHoursPerStageDiv = $('#status-report-hours-per-stage');
+    const statusReportHoursPerStageDiv = $('#status-report-hours-per-stage');
     buildColumnChart(statusReportHoursPerStageDiv);
+
+    const statusReportCFDDownstreamDiv = $('#cfd-downstream-area');
+    buildAreaChart(statusReportCFDDownstreamDiv);
+
+    const statusReportCFDUpstreamDiv = $('#cfd-upstream-area');
+    buildAreaChart(statusReportCFDUpstreamDiv);
 }

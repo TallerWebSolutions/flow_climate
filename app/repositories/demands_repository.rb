@@ -118,6 +118,22 @@ class DemandsRepository
     Demand.kept.where(id: demands.map(&:id)).where('end_date <= :upper_limit', upper_limit: upper_date_limit)
   end
 
+  def cumulative_flow_for_week(demands_ids, date, stream)
+    start_date = date.beginning_of_week
+    end_date = date.end_of_week
+
+    cumulative_hash = {}
+    Demand.joins(demand_transitions: :stage).select('stages.name AS stage_name, count(1) as stage_th')
+          .where(id: demands_ids)
+          .where('demand_transitions.last_time_in < :end_date', end_date: end_date)
+          .where('demands.discarded_at IS NULL OR demands.discarded_at > :start_date', start_date: start_date)
+          .where('stages.stage_stream = :stream', stream: Stage.stage_streams[stream])
+          .order('stages.order').group('stages.id, stages.order')
+          .map { |result| cumulative_hash[result['stage_name']] = result['stage_th'] }
+
+    cumulative_hash
+  end
+
   private
 
   def build_count_grouped_per_period_query(demands, select_string, base_date_field)
