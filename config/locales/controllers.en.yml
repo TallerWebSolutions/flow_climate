@@ -518,6 +518,11 @@ en:
       title: "Current Situation"
     demand:
       title: "demand(s)"
+    cfd:
+      title_downstream: "Downstream Cumulative Flow Diagram for %{target_name}"
+      title_upstream: "Upstream Cumulative Flow Diagram for %{target_name}"
+      ytitle: "Demands"
+      data_suffix: "demands"
   finances_params:
     edit:
       title: "Edit Financial Information"

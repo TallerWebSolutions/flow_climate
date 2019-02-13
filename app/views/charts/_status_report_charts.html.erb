@@ -88,6 +88,35 @@
       </div>
     </div>
   </div>
+
+  <div class="row bottom-spaced-component">
+    <div class="col-xs-6">
+      <div id="cfd-upstream-area"
+           class="flow-chart"
+           data-xcategories='<%= status_report_data.all_projects_weeks.to_json %>'
+           data-title='<%= t('charts.cfd.title_upstream', target_name: target_name) %>'
+           data-ytitle='<%= t('charts.cfd.ytitle') %>'
+           data-suffix='<%= t('charts.cfd.data_suffix') %>'
+           data-series='<%= status_report_data.cumulative_flow_diagram_upstream.to_json %>'
+           data-stacking='normal'
+           data-decimals='0'>
+      </div>
+    </div>
+
+    <div class="col-xs-6">
+      <div id="cfd-downstream-area"
+           class="flow-chart"
+           data-xcategories='<%= status_report_data.all_projects_weeks.to_json %>'
+           data-title='<%= t('charts.cfd.title_downstream', target_name: target_name) %>'
+           data-ytitle='<%= t('charts.cfd.ytitle') %>'
+           data-suffix='<%= t('charts.cfd.data_suffix') %>'
+           data-series='<%= status_report_data.cumulative_flow_diagram_downstream.to_json %>'
+           data-stacking='normal'
+           data-decimals='0'>
+      </div>
+    </div>
+  </div>
+
 <% else %>
   <%= t('general.no_data', missing_data: t('general.data')) %>
 <% end %>

@@ -327,9 +327,9 @@ RSpec.describe DemandsRepository, type: :repository do
   end
 
   describe '#demands_for_periods_accumulated' do
-    let(:first_project) { Fabricate :project, start_date: 2.months.ago, end_date: 2.months.from_now }
-    let(:second_project) { Fabricate :project, start_date: 2.months.ago, end_date: 2.months.from_now }
-    let(:third_project) { Fabricate :project, start_date: 2.months.ago, end_date: 2.months.from_now }
+    let(:first_project) { Fabricate :project, customer: customer, start_date: 2.months.ago, end_date: 2.months.from_now }
+    let(:second_project) { Fabricate :project, customer: customer, start_date: 2.months.ago, end_date: 2.months.from_now }
+    let(:third_project) { Fabricate :project, customer: customer, start_date: 2.months.ago, end_date: 2.months.from_now }
 
     context 'having demands' do
       let!(:first_demand) { Fabricate :demand, project: first_project, downstream: false, end_date: 4.days.ago, effort_upstream: 558, effort_downstream: 929 }
@@ -348,6 +348,43 @@ RSpec.describe DemandsRepository, type: :repository do
     context 'having no demands' do
       context 'having no demands' do
         it { expect(DemandsRepository.instance.demands_for_periods_accumulated(Demand.all, 4.days.ago)).to eq [] }
+      end
+    end
+  end
+
+  describe '#cumulative_flow_for_week' do
+    let(:first_stage) { Fabricate :stage, company: company, projects: [first_project, second_project], name: 'first_stage', integration_pipe_id: '123', order: 0, stage_stream: :downstream }
+    let(:second_stage) { Fabricate :stage, company: company, projects: [first_project, second_project], name: 'second_stage', integration_pipe_id: '123', order: 1, stage_stream: :downstream, end_point: true }
+
+    let(:first_project) { Fabricate :project, start_date: 2.months.ago, end_date: 2.months.from_now }
+    let(:second_project) { Fabricate :project, start_date: 2.months.ago, end_date: 2.months.from_now }
+    let(:third_project) { Fabricate :project, start_date: 2.months.ago, end_date: 2.months.from_now }
+
+    context 'having demands' do
+      let!(:first_demand) { Fabricate :demand, project: first_project, downstream: false, end_date: 4.days.ago, effort_upstream: 558, effort_downstream: 929 }
+      let!(:second_demand) { Fabricate :demand, project: first_project, downstream: false, end_date: 1.day.ago, effort_upstream: 932, effort_downstream: 112 }
+      let!(:third_demand) { Fabricate :demand, project: first_project, downstream: true, end_date: 3.weeks.ago, effort_upstream: 536, effort_downstream: 643 }
+      let!(:fourth_demand) { Fabricate :demand, project: first_project, downstream: true, end_date: nil, effort_upstream: 210, effort_downstream: 432 }
+      let!(:fifth_demand) { Fabricate :demand, project: first_project, downstream: false, end_date: 1.week.ago, effort_upstream: 1100, effort_downstream: 230 }
+      let!(:sixth_demand) { Fabricate :demand, project: second_project, downstream: false, end_date: 1.month.ago, effort_upstream: 100, effort_downstream: 23 }
+
+      let!(:seventh_demand) { Fabricate :demand, project: second_project, commitment_date: Time.zone.today, discarded_at: Time.zone.today, effort_upstream: 54_321, effort_downstream: 15_223 }
+      let!(:eigth_demand) { Fabricate :demand, project: second_project, commitment_date: Time.zone.today, discarded_at: 2.weeks.ago, effort_upstream: 54_321, effort_downstream: 15_223 }
+
+      let!(:first_transition) { Fabricate :demand_transition, stage: first_stage, demand: first_demand, last_time_in: '2018-02-27T17:09:58-03:00', last_time_out: '2018-02-28T17:09:58-03:00' }
+      let!(:second_transition) { Fabricate :demand_transition, stage: second_stage, demand: second_demand, last_time_in: '2018-03-01T17:09:58-03:00', last_time_out: '2018-03-01T17:09:58-03:00' }
+      let!(:third_transition) { Fabricate :demand_transition, stage: first_stage, demand: third_demand, last_time_in: '2018-03-04T17:09:58-03:00', last_time_out: nil }
+      let!(:fourth_transition) { Fabricate :demand_transition, stage: second_stage, demand: fourth_demand, last_time_in: '2018-03-10T17:09:58-03:00', last_time_out: nil }
+      let!(:fifth_transition) { Fabricate :demand_transition, stage: first_stage, demand: fifth_demand, last_time_in: '2018-03-15T17:09:58-03:00', last_time_out: nil }
+      let!(:sixth_transition) { Fabricate :demand_transition, stage: first_stage, demand: seventh_demand, last_time_in: '2018-03-01T17:09:58-03:00', last_time_out: nil }
+      let!(:seventh_transition) { Fabricate :demand_transition, stage: first_stage, demand: eigth_demand, last_time_in: '2018-04-01T17:09:58-03:00', last_time_out: nil }
+
+      it { expect(DemandsRepository.instance.cumulative_flow_for_week(Demand.all.map(&:id), 1.week.ago, :downstream)).to eq(first_stage.name => 4, second_stage.name => 2) }
+    end
+
+    context 'having no demands' do
+      context 'having no demands' do
+        it { expect(DemandsRepository.instance.cumulative_flow_for_week(Demand.all.map(&:id), 1.week.ago, :downstream)).to eq({}) }
       end
     end
   end

@@ -9,13 +9,13 @@ RSpec.describe Highchart::StatusReportChartsAdapter, type: :data_object do
     let(:second_project) { Fabricate :project, customer: customer, status: :waiting, start_date: Time.zone.parse('2018-03-13'), end_date: Time.zone.parse('2018-04-21'), qty_hours: 400 }
     let(:third_project) { Fabricate :project, customer: customer, status: :maintenance, start_date: Time.zone.parse('2018-03-12'), end_date: Time.zone.parse('2018-05-13'), qty_hours: 800 }
 
-    let(:first_stage) { Fabricate :stage, company: company, stage_stream: :downstream, queue: false, end_point: true }
-    let(:second_stage) { Fabricate :stage, company: company, stage_stream: :downstream, queue: false, end_point: true }
-    let(:third_stage) { Fabricate :stage, company: company, stage_stream: :downstream, queue: true, end_point: true }
-    let(:fourth_stage) { Fabricate :stage, company: company, stage_stream: :upstream, queue: false, end_point: true }
-    let(:fifth_stage) { Fabricate :stage, company: company, stage_stream: :upstream, queue: true, end_point: true }
+    let(:first_stage) { Fabricate :stage, company: company, name: 'first_stage', stage_stream: :downstream, queue: false, end_point: true }
+    let(:second_stage) { Fabricate :stage, company: company, name: 'second_stage', stage_stream: :downstream, queue: false, end_point: true }
+    let(:third_stage) { Fabricate :stage, company: company, name: 'third_stage', stage_stream: :downstream, queue: true, end_point: true }
+    let(:fourth_stage) { Fabricate :stage, company: company, name: 'fourth_stage', stage_stream: :upstream, queue: false, end_point: true }
+    let(:fifth_stage) { Fabricate :stage, company: company, name: 'fifth_stage', stage_stream: :upstream, queue: true, end_point: true }
 
-    let(:sixth_stage) { Fabricate :stage, company: company, projects: [first_project, second_project, third_project], stage_stream: :upstream, end_point: false }
+    let(:sixth_stage) { Fabricate :stage, company: company, name: 'sixth_stage', projects: [first_project, second_project, third_project], stage_stream: :upstream, end_point: false }
 
     let!(:first_stage_project_config) { Fabricate :stage_project_config, project: first_project, stage: first_stage, compute_effort: true, pairing_percentage: 60, stage_percentage: 100, management_percentage: 10 }
     let!(:second_stage_project_config) { Fabricate :stage_project_config, project: first_project, stage: second_stage, compute_effort: true, pairing_percentage: 60, stage_percentage: 100, management_percentage: 10 }
@@ -62,6 +62,8 @@ RSpec.describe Highchart::StatusReportChartsAdapter, type: :data_object do
           expect(report_data.confidence_80_duration).to be_within(10).of(286)
           expect(report_data.confidence_60_duration).to be_within(10).of(269)
           expect(report_data.hours_per_stage).to eq(xcategories: [sixth_stage.name], hours_per_stage: [1104.0])
+          expect(report_data.cumulative_flow_diagram_upstream).to eq([{ name: fourth_stage.name, data: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], marker: { enabled: false } }, { name: sixth_stage.name, data: [2, 2, 2, 3, 4, 4, 4, 4, 5, 5, 5, 5, 5, 5], marker: { enabled: false } }, { name: fifth_stage.name, data: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], marker: { enabled: false } }])
+          expect(report_data.cumulative_flow_diagram_downstream).to eq([{ name: second_stage.name, data: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], marker: { enabled: false } }, { name: first_stage.name, data: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], marker: { enabled: false } }, { name: third_stage.name, data: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], marker: { enabled: false } }])
         end
       end
       context 'having no projects' do
@@ -82,6 +84,8 @@ RSpec.describe Highchart::StatusReportChartsAdapter, type: :data_object do
           expect(report_data.confidence_95_duration).to eq 0
           expect(report_data.confidence_80_duration).to eq 0
           expect(report_data.confidence_60_duration).to eq 0
+          expect(report_data.cumulative_flow_diagram_upstream).to eq []
+          expect(report_data.cumulative_flow_diagram_downstream).to eq []
         end
       end
     end

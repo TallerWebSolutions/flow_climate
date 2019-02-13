@@ -54,7 +54,64 @@ module Highchart
       hours_per_stage_chart_hash
     end
 
+    def cumulative_flow_diagram_downstream
+      demands_ids = @all_projects.map(&:demands).flatten.map(&:id)
+      cumulative_hash = {}
+
+      @all_projects_weeks.each do |week_date|
+        break unless add_data_to_chart?(week_date)
+
+        cumulative_data_to_week = DemandsRepository.instance.cumulative_flow_for_week(demands_ids, week_date, :downstream)
+
+        cumulative_hash = cumulative_hash.merge(build_cumulative_hash(cumulative_data_to_week, cumulative_hash))
+      end
+
+      build_cumulative_array(cumulative_hash)
+    end
+
+    def cumulative_flow_diagram_upstream
+      demands_ids = @all_projects.map(&:demands).flatten.map(&:id)
+      cumulative_hash = {}
+
+      @all_projects_weeks.each do |week_date|
+        break unless add_data_to_chart?(week_date)
+
+        cumulative_data_to_week = DemandsRepository.instance.cumulative_flow_for_week(demands_ids, week_date, :upstream)
+
+        cumulative_hash = cumulative_hash.merge(build_cumulative_hash(cumulative_data_to_week, cumulative_hash))
+      end
+
+      build_cumulative_array(cumulative_hash)
+    end
+
     private
+
+    def build_cumulative_hash(cumulative_data_to_week, previous_cumulative_hash)
+      cumulative_hash = previous_cumulative_hash
+
+      cumulative_data_to_week.keys.each do |stage_name|
+        if cumulative_hash[stage_name].present?
+          cumulative_hash[stage_name] << cumulative_data_to_week[stage_name]
+        else
+          cumulative_hash[stage_name] = [cumulative_data_to_week[stage_name]]
+        end
+      end
+
+      cumulative_hash
+    end
+
+    def build_cumulative_array(cumulative_hash)
+      cumulative_array = []
+
+      max_array_size = cumulative_hash.values.map(&:size).max
+
+      cumulative_hash.each do |key, data|
+        data << data.last while data.size < max_array_size
+        cumulative_array << { name: key, data: data, marker: { enabled: false } }
+      end
+
+      cumulative_array
+    end
 
     def build_montecarlo_perecentage_confidences(montecarlo_durations)
       @confidence_95_duration = Stats::StatisticsService.instance.percentile(95, montecarlo_durations)
