@@ -108,4 +108,10 @@ RSpec.describe DemandsList, type: :model do
       it { expect(demands_list.queue_time_in_days.to_f).to eq 0 }
     end
   end
+
+  describe '#total_effort' do
+    let!(:demand) { Fabricate :demand, effort_upstream: 10, effort_downstream: 20 }
+    subject(:demands_list) { DemandsList.first }
+    it { expect(demands_list.total_effort).to eq 30 }
+  end
 end

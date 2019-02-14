@@ -49,12 +49,15 @@ class ProjectsRepository
     extract_data_for_week(projects, throughput_per_week_grouped, beginning_of_week, end_of_week)
   end
 
-  def total_queue_time_for(projects)
-    build_hash_total_duration_to_time_and_type(projects, true)
-  end
+  def total_time_for(projects, sum_field)
+    result_array = Demand.kept
+                         .select('EXTRACT(WEEK FROM end_date) AS sum_week', 'EXTRACT(YEAR FROM end_date) AS sum_year', "SUM(#{sum_field}) AS total_time")
+                         .where('end_date IS NOT NULL')
+                         .where(project_id: projects.map(&:id))
+                         .group('demands.end_date')
+                         .map { |group_sum| [group_sum.sum_week.to_i, group_sum.sum_year.to_i, group_sum.total_time] }
 
-  def total_touch_time_for(projects)
-    build_hash_total_duration_to_time_and_type(projects, false)
+    build_hash_to_total_duration_query_result(result_array)
   end
 
   def hours_per_stage(projects, limit_date)
@@ -67,21 +70,6 @@ class ProjectsRepository
   end
 
   private
-
-  def build_hash_total_duration_to_time_and_type(projects, queue = true)
-    query_result_array = DemandTransition.kept
-                                         .select('EXTRACT(WEEK FROM last_time_out) AS sum_week', 'EXTRACT(YEAR FROM last_time_out) AS sum_year, SUM(EXTRACT(EPOCH FROM (last_time_out - last_time_in))) AS sum_duration')
-                                         .downstream_transitions
-                                         .joins(demand: :project)
-                                         .joins(:stage)
-                                         .where(demands: { project_id: projects.map(&:id) })
-                                         .where('stages.queue = :queue', queue: queue)
-                                         .order(Arel.sql('EXTRACT(WEEK FROM last_time_out), EXTRACT(YEAR FROM last_time_out)'))
-                                         .group('EXTRACT(WEEK FROM last_time_out)', 'EXTRACT(YEAR FROM last_time_out)')
-                                         .map { |group_sum| [group_sum.sum_week.to_i, group_sum.sum_year.to_i, group_sum.sum_duration] }
-
-    build_hash_to_total_duration_query_result(query_result_array)
-  end
 
   def build_hash_to_total_duration_query_result(query_result_array)
     query_result_hash = {}

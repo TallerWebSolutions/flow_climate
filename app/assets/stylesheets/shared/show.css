@@ -114,10 +114,6 @@
     animation: spin 600ms linear infinite;
 }
 
-.container-leadtime {
-    margin: 0 100px 0 100px;
-}
-
 .leadtime-frame {
     padding: 0 2px 0px 2px;
 }

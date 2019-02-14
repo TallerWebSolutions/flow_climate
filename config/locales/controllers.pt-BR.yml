@@ -458,6 +458,7 @@ pt-BR:
       std_committed_with: "Desvio Padrão Comprometido"
       avg_touch: "Trabalho Médio"
       avg_queue: "Fila Média"
+      avg_work_hours_per_demand: "Média Horas Úteis por Demanda"
     filter:
       grouping:
         title: "Agrupado por"

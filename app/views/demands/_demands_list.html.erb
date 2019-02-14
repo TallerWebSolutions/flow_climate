@@ -63,11 +63,11 @@
 <div id="demand-tab-content">
   <hr>
   <div id="listing">
-    <% if @demands.present? %>
-      <div id="container-leadtime-div" class="container-leadtime">
+    <div id="container-leadtime-div" class="container-leadtime">
+      <% if @demands.present? %>
         <%= render 'demands/demands_leadtime_container', demands: @demands, confidence_65_leadtime: confidence_65_leadtime, confidence_80_leadtime: confidence_80_leadtime, confidence_95_leadtime: confidence_95_leadtime, queue_time: queue_time, touch_time: touch_time %>
-      </div>
-    <% end %>
+      <% end %>
+    </div>
 
     <hr>
 

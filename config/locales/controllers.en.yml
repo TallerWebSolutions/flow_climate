@@ -429,6 +429,7 @@ en:
       std_throughput: "STD Throughput"
       avg_touch: "Average Touch"
       avg_queue: "Average Queue"
+      avg_work_hours_per_demand: "Avg Work Hours per Demand"
     filter:
       grouping:
         title: "Grouped By"
