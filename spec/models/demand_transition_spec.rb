@@ -76,15 +76,20 @@ RSpec.describe DemandTransition, type: :model do
 
     describe '.touch_transitions' do
       let(:project) { Fabricate :project }
+
       let!(:queue_stage) { Fabricate :stage, stage_stream: :downstream, queue: true, projects: [project] }
       let!(:touch_stage) { Fabricate :stage, stage_stream: :downstream, queue: false, projects: [project] }
       let(:other_touch_stage) { Fabricate :stage, stage_stream: :upstream, queue: false, projects: [project] }
+      let(:out_stream_touch_stage) { Fabricate :stage, stage_stream: :out_stream, queue: false, projects: [project] }
+
       let(:demand) { Fabricate :demand, project: project }
 
       context 'having data' do
         let!(:demand_transition) { Fabricate :demand_transition, demand: demand, stage: queue_stage }
         let!(:touch_transition) { Fabricate :demand_transition, demand: demand, stage: touch_stage }
         let!(:other_touch_transition) { Fabricate :demand_transition, demand: demand, stage: other_touch_stage }
+
+        let!(:out_stream_touch_transition) { Fabricate :demand_transition, demand: demand, stage: out_stream_touch_stage }
 
         it { expect(DemandTransition.touch_transitions).to match_array [touch_transition, other_touch_transition] }
       end
@@ -95,15 +100,20 @@ RSpec.describe DemandTransition, type: :model do
 
     describe '.queue_transitions' do
       let(:project) { Fabricate :project }
+
       let!(:touch_stage) { Fabricate :stage, stage_stream: :downstream, queue: false, projects: [project] }
       let!(:queue_stage) { Fabricate :stage, stage_stream: :downstream, queue: true, projects: [project] }
       let(:other_queue_stage) { Fabricate :stage, stage_stream: :upstream, queue: true, projects: [project] }
+      let(:out_stream_queue_stage) { Fabricate :stage, stage_stream: :out_stream, queue: true, projects: [project] }
+
       let(:demand) { Fabricate :demand, project: project }
 
       context 'having data' do
         let!(:demand_transition) { Fabricate :demand_transition, demand: demand, stage: touch_stage }
         let!(:queue_transition) { Fabricate :demand_transition, demand: demand, stage: queue_stage }
         let!(:other_queue_transition) { Fabricate :demand_transition, demand: demand, stage: other_queue_stage }
+
+        let!(:out_stream_touch_transition) { Fabricate :demand_transition, demand: demand, stage: out_stream_queue_stage }
 
         it { expect(DemandTransition.queue_transitions).to match_array [queue_transition, other_queue_transition] }
       end
@@ -120,7 +130,7 @@ RSpec.describe DemandTransition, type: :model do
     it { is_expected.to delegate_method(:compute_effort).to(:stage).with_prefix }
   end
 
-  describe '#set_dates' do
+  describe '#set_demand_dates' do
     let(:company) { Fabricate :company }
     let(:customer) { Fabricate :customer, company: company }
     let(:project) { Fabricate :project, customer: customer }
@@ -199,13 +209,20 @@ RSpec.describe DemandTransition, type: :model do
 
   describe '#total_seconds_in_transition' do
     let(:project) { Fabricate :project }
-    let(:stage) { Fabricate :stage, commitment_point: true, end_point: false, projects: [project] }
+    let(:stage) { Fabricate :stage, commitment_point: true, end_point: false, queue: false, stage_stream: :downstream, projects: [project] }
     let(:demand) { Fabricate :demand, project: project, created_date: Time.zone.parse('2018-02-04 12:00:00') }
 
     context 'when there is last_time_out' do
-      let(:demand_transition) { Fabricate :demand_transition, stage: stage, demand: demand, last_time_in: Time.zone.parse('2018-03-15 12:00:00'), last_time_out: Time.zone.parse('2018-03-19 12:00:00') }
-      it { expect(demand_transition.total_seconds_in_transition).to eq 345_600.0 }
+      let!(:demand_transition) { Fabricate :demand_transition, stage: stage, demand: demand, last_time_in: Time.zone.parse('2018-03-15 12:00:00'), last_time_out: Time.zone.parse('2018-03-19 12:00:00') }
+      let!(:other_demand_transition) { Fabricate :demand_transition, stage: stage, demand: demand, last_time_in: Time.zone.parse('2018-03-17 12:00:00'), last_time_out: Time.zone.parse('2018-03-19 12:00:00') }
+
+      it 'compute the correct fields' do
+        expect(demand_transition.total_seconds_in_transition / 1.day).to eq 4
+        expect(other_demand_transition.total_seconds_in_transition / 1.day).to eq 2
+        expect(demand.total_touch_time / 1.day).to eq 6
+      end
     end
+
     context 'when there is no last_time_out' do
       let(:demand_transition) { Fabricate :demand_transition, stage: stage, demand: demand, last_time_in: Time.zone.parse('2018-03-13 12:00:00'), last_time_out: nil }
       it { expect(demand_transition.total_seconds_in_transition).to eq 0 }

@@ -40,8 +40,8 @@ class DemandTransition < ApplicationRecord
   scope :upstream_transitions, -> { joins(:stage).where('stages.stage_stream = :stream', stream: Stage.stage_streams[:upstream]) }
   scope :downstream_transitions, -> { joins(:stage).where('stages.stage_stream = :stream AND stages.end_point = false', stream: Stage.stage_streams[:downstream]) }
   scope :effort_transitions_to_project, ->(project_id) { joins(stage: :stage_project_configs).where('stage_project_configs.compute_effort = true AND stage_project_configs.project_id = :project_id', project_id: project_id) }
-  scope :touch_transitions, -> { joins(:stage).where('stages.queue = false AND stages.end_point = false') }
-  scope :queue_transitions, -> { joins(:stage).where('stages.queue = true AND stages.end_point = false') }
+  scope :touch_transitions, -> { joins(:stage).where('stages.queue = false AND stages.end_point = false AND stages.stage_stream <> :out_stream', out_stream: Stage.stage_streams[:out_stream]) }
+  scope :queue_transitions, -> { joins(:stage).where('stages.queue = true AND stages.end_point = false AND stages.stage_stream <> :out_stream', out_stream: Stage.stage_streams[:out_stream]) }
 
   after_save :set_demand_dates, on: %i[create update]
   after_save :set_demand_computed_fields, on: %i[create update]
@@ -71,14 +71,8 @@ class DemandTransition < ApplicationRecord
   end
 
   def set_demand_computed_fields
-    current_queue_time = demand.total_queue_time
-    current_touch_time = demand.total_touch_time
-
-    if stage.downstream? && stage.queue?
-      current_touch_time += total_seconds_in_transition
-    elsif stage.downstream?
-      current_queue_time += total_seconds_in_transition
-    end
+    current_queue_time = demand.demand_transitions.queue_transitions.sum(&:total_seconds_in_transition)
+    current_touch_time = demand.demand_transitions.touch_transitions.sum(&:total_seconds_in_transition)
 
     demand.update(downstream: stage_stream_to_update_demand, total_queue_time: current_queue_time, total_touch_time: current_touch_time)
     demand.update_effort!

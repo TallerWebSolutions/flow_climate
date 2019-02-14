@@ -70,4 +70,8 @@ class DemandsList < ApplicationRecord
 
     total_touch_time.to_f / 86_400.0
   end
+
+  def total_effort
+    effort_upstream + effort_downstream
+  end
 end
