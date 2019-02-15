@@ -1045,7 +1045,8 @@ CREATE TABLE public.users (
     admin boolean DEFAULT false NOT NULL,
     last_company_id integer,
     email_notifications boolean DEFAULT false NOT NULL,
-    user_money_credits numeric DEFAULT 0 NOT NULL
+    user_money_credits numeric DEFAULT 0 NOT NULL,
+    avatar character varying
 );
 
 
@@ -2312,6 +2313,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190212180057'),
 ('20190212180201'),
 ('20190212181729'),
-('20190212183127');
+('20190212183127'),
+('20190215153227');
 
 

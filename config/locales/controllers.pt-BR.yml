@@ -82,6 +82,8 @@ pt-BR:
       title: "Perfil do Usuário"
     index:
       title: "Usuários"
+    account:
+      self: "Minha Conta"
   companies:
     index:
       title: "Empresas"

@@ -81,6 +81,8 @@ en:
       title: "User Profile"
     index:
       title: "Users"
+    account:
+      self: "My Account"
   companies:
     index:
       title: "Companies"
