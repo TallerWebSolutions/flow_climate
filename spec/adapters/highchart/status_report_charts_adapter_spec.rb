@@ -61,6 +61,7 @@ RSpec.describe Highchart::StatusReportChartsAdapter, type: :data_object do
           expect(report_data.confidence_95_duration).to be_within(10).of(306)
           expect(report_data.confidence_80_duration).to be_within(10).of(286)
           expect(report_data.confidence_60_duration).to be_within(10).of(269)
+          expect(report_data.deadline).to eq [{ data: [-277], name: 'Dias (restantes)' }, { color: '#F45830', data: [361], name: 'Tempo Decorrido' }]
           expect(report_data.hours_per_stage_upstream).to eq(xcategories: [sixth_stage.name], hours_per_stage: [1104.0])
           expect(report_data.hours_per_stage_downstream).to eq(xcategories: [], hours_per_stage: [])
           expect(report_data.cumulative_flow_diagram_upstream).to eq([{ name: fourth_stage.name, data: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], marker: { enabled: false } }, { name: sixth_stage.name, data: [2, 2, 2, 3, 4, 4, 4, 4, 5, 5, 5, 5, 5, 5], marker: { enabled: false } }, { name: fifth_stage.name, data: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], marker: { enabled: false } }])
@@ -85,6 +86,7 @@ RSpec.describe Highchart::StatusReportChartsAdapter, type: :data_object do
           expect(report_data.confidence_95_duration).to eq 0
           expect(report_data.confidence_80_duration).to eq 0
           expect(report_data.confidence_60_duration).to eq 0
+          expect(report_data.deadline).to eq []
           expect(report_data.hours_per_stage_upstream).to eq(xcategories: [], hours_per_stage: [])
           expect(report_data.hours_per_stage_downstream).to eq(xcategories: [], hours_per_stage: [])
           expect(report_data.cumulative_flow_diagram_upstream).to eq []
