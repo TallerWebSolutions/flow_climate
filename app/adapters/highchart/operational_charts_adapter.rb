@@ -114,8 +114,8 @@ module Highchart
       @all_projects_weeks.each do |date|
         break unless add_data_to_chart?(date.to_date)
 
-        upstream_total_delivered = DemandsRepository.instance.delivered_until_date_to_projects_in_upstream(@all_projects, date).count
-        downstream_total_delivered = DemandsRepository.instance.delivered_until_date_to_projects_in_downstream(@all_projects, date).count
+        upstream_total_delivered = DemandsRepository.instance.delivered_until_date_to_projects_in_stream(@all_projects, 'upstream', date).count
+        downstream_total_delivered = DemandsRepository.instance.delivered_until_date_to_projects_in_stream(@all_projects, 'downstream', date).count
         throughput_per_week << upstream_total_delivered + downstream_total_delivered if add_data_to_chart?(date)
       end
       throughput_per_week
@@ -132,8 +132,8 @@ module Highchart
       @all_projects_weeks.each do |date|
         break unless add_data_to_chart?(date.to_date)
 
-        upstream_total_hours_delivered = DemandsRepository.instance.delivered_until_date_to_projects_in_upstream(@all_projects, date).sum(&:effort_upstream)
-        downstream_total_hours_delivered = DemandsRepository.instance.delivered_until_date_to_projects_in_downstream(@all_projects, date).sum(&:effort_downstream)
+        upstream_total_hours_delivered = DemandsRepository.instance.delivered_until_date_to_projects_in_stream(@all_projects, 'upstream', date).sum(&:effort_upstream)
+        downstream_total_hours_delivered = DemandsRepository.instance.delivered_until_date_to_projects_in_stream(@all_projects, 'downstream', date).sum(&:effort_downstream)
 
         throughput_hours_per_week << upstream_total_hours_delivered + downstream_total_hours_delivered if add_data_to_chart?(date)
       end
@@ -157,8 +157,8 @@ module Highchart
         break unless add_data_to_chart?(date.to_date)
 
         dates_array << date.to_s
-        bugs_opened_count_array << DemandsRepository.instance.bugs_opened_until_week(@all_projects, date)
-        bugs_closed_count_array << DemandsRepository.instance.bugs_closed_until_week(@all_projects, date)
+        bugs_opened_count_array << DemandsRepository.instance.bugs_opened_until_limit_date(@all_projects, date.end_of_week)
+        bugs_closed_count_array << DemandsRepository.instance.bugs_closed_until_limit_date(@all_projects, date.end_of_week)
       end
       @weeekly_bugs_count_hash = { dates_array: dates_array, bugs_opened_count_array: bugs_opened_count_array, bugs_closed_count_array: bugs_closed_count_array }
     end
@@ -171,7 +171,7 @@ module Highchart
 
         dates_array << date.to_s
         scope_in_week = DemandsRepository.instance.scope_in_week_for_projects(@all_projects, date.cweek, date.cwyear)
-        bugs_in_week = DemandsRepository.instance.bugs_opened_until_week(@all_projects, date)
+        bugs_in_week = DemandsRepository.instance.bugs_opened_until_limit_date(@all_projects, date.end_of_week)
         bugs_opened_share_array << Stats::StatisticsService.instance.compute_percentage(bugs_in_week, scope_in_week)
       end
       @weeekly_bugs_share_hash = { dates_array: dates_array, bugs_opened_share_array: bugs_opened_share_array }
