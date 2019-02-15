@@ -62,7 +62,7 @@ class DemandsRepository
   end
 
   def delivered_until_date_to_projects_in_stream(projects, stream, limit_date = Time.zone.today)
-    demands_for_projects_and_finished_until_limit_date(projects, limit_date.end_of_week).finished_in_stream(stream)
+    demands_for_projects_and_finished_until_limit_date(projects, limit_date).finished_in_stream(stream)
   end
 
   def delivered_hours_in_month_for_projects(projects, date = Time.zone.today)

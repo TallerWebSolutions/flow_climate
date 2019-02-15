@@ -219,7 +219,8 @@ pt-BR:
         demands:
           title: "Burnup para %{target_name}"
         hours:
-          title: "Burnup de Horas para %{target_name}"
+          title_per_week: "Burnup de Horas Semanal para %{target_name}"
+          title_per_month: "Burnup de Horas Mensal para %{target_name}"
       hours_per_demand:
         title: "Horas por demanda no tempo para %{target_name}"
         ylabel: "Horas/Demanda"

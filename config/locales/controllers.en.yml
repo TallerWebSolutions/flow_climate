@@ -203,7 +203,8 @@ en:
         demands:
           title: "Demands Burnup for %{target_name}"
         hours:
-          title: "Hours Burnup for %{target_name}"
+          title_per_week: "Weekly Hours Burnup for %{target_name}"
+          title_per_month: "Monthly Hours Burnup for %{target_name}"
       hours_per_demand:
         title: "Hours per demand on time for %{target_name}"
         ylabel: "Hours/Demand"

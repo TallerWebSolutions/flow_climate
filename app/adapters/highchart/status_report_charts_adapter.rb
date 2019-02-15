@@ -163,8 +163,8 @@ module Highchart
     def build_hours_throughput_data_week
       throughput_per_week = []
       @all_projects_weeks.each do |date|
-        upstream_total_delivered = DemandsRepository.instance.delivered_until_date_to_projects_in_stream(@all_projects, 'upstream', date.to_date).sum(&:total_effort)
-        downstream_total_delivered = DemandsRepository.instance.delivered_until_date_to_projects_in_stream(@all_projects, 'downstream', date.to_date).sum(&:total_effort)
+        upstream_total_delivered = DemandsRepository.instance.delivered_until_date_to_projects_in_stream(@all_projects, 'upstream', date.end_of_week).sum(&:total_effort)
+        downstream_total_delivered = DemandsRepository.instance.delivered_until_date_to_projects_in_stream(@all_projects, 'downstream', date.end_of_week).sum(&:total_effort)
         throughput_per_week << upstream_total_delivered + downstream_total_delivered if add_data_to_chart?(date.to_date)
       end
       throughput_per_week
@@ -173,8 +173,8 @@ module Highchart
     def build_hours_throughput_data_month
       throughput_per_month = []
       @all_projects_months.each do |date|
-        upstream_total_delivered = DemandsRepository.instance.delivered_until_date_to_projects_in_stream(all_projects, 'upstream', date).sum(&:total_effort)
-        downstream_total_delivered = DemandsRepository.instance.delivered_until_date_to_projects_in_stream(all_projects, 'downstream', date).sum(&:total_effort)
+        upstream_total_delivered = DemandsRepository.instance.delivered_until_date_to_projects_in_stream(all_projects, 'upstream', date.end_of_month).sum(&:total_effort)
+        downstream_total_delivered = DemandsRepository.instance.delivered_until_date_to_projects_in_stream(all_projects, 'downstream', date.end_of_month).sum(&:total_effort)
 
         throughput_per_month << upstream_total_delivered + downstream_total_delivered if add_month_data_to_chart?(date)
       end
