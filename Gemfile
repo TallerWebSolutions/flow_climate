@@ -6,38 +6,40 @@ ruby '2.6.0'
 
 gem 'rails'
 
+gem 'attr_encrypted'
+gem 'carrierwave', '~> 1.0'
 gem 'coffee-rails'
 gem 'devise'
+gem 'discard'
 gem 'figaro'
+gem 'friendly_id', '~> 5.2.4'
+gem 'histogram'
+gem 'httparty'
+gem 'jira-ruby', require: false
 gem 'jquery-rails'
+gem 'mini_magick'
+gem 'oj'
 gem 'pg'
+gem 'rollbar'
 gem 'sidekiq'
 gem 'therubyracer', platforms: :ruby
 gem 'uglifier'
-gem 'yui-compressor'
-gem 'httparty'
 gem 'webmock'
-gem 'rollbar'
-gem 'oj'
-gem 'histogram'
-gem 'discard'
-gem 'jira-ruby', require: false
-gem 'attr_encrypted'
-gem 'friendly_id', '~> 5.2.4'
+gem 'yui-compressor'
 
 group :test, :development do
   gem 'brakeman'
   gem 'database_cleaner'
+  gem 'debase', '~> 0.2.3.beta3'
   gem 'fabrication'
   gem 'faker'
   gem 'parser'
   gem 'rspec-collection_matchers'
   gem 'rspec-rails'
   gem 'rubocop'
+  gem 'ruby-debug-ide', '~> 0.7.0.beta7'
   gem 'shoulda-matchers', '4.0.0.rc1'
   gem 'simplecov', require: false
-  gem 'ruby-debug-ide', '~> 0.7.0.beta7'
-  gem 'debase', '~> 0.2.3.beta3'
 end
 
 group :development do

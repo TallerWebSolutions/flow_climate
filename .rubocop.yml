@@ -5,7 +5,6 @@ AllCops:
     - 'vendor/**/*'
     - 'bin/*'
     - 'db/schema.rb'
-    - 'Gemfile'
     - 'Gemfile.lock'
     - !ruby/regexp /old_and_unused\.rb$/
     - 'app/helpers/**/*'

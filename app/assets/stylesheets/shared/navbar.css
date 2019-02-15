@@ -33,3 +33,7 @@
     border: 1px solid #ccc;
     border-top: none;
 }
+
+.topnav-right {
+    float: right;
+}

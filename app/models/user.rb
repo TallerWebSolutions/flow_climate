@@ -5,6 +5,7 @@
 # Table name: users
 #
 #  admin                  :boolean          default(FALSE), not null
+#  avatar                 :string
 #  created_at             :datetime         not null
 #  current_sign_in_at     :datetime
 #  current_sign_in_ip     :inet
@@ -36,6 +37,8 @@
 
 class User < ApplicationRecord
   devise :database_authenticatable, :registerable, :recoverable, :rememberable, :trackable, :validatable
+
+  mount_uploader :avatar, FlowClimateImageUploader
 
   has_and_belongs_to_many :companies
 
