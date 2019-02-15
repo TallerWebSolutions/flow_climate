@@ -60,8 +60,16 @@ class ProjectsRepository
     build_hash_to_total_duration_query_result(result_array)
   end
 
-  def hours_per_stage(projects, limit_date)
-    DemandTransition.kept.joins(:demand).joins(:stage).select('stages.name, stages.order, SUM(EXTRACT(EPOCH FROM (last_time_out - last_time_in))) AS sum_duration').where(demands: { project_id: projects.map(&:id) }).where('stages.end_point = false AND last_time_in >= :limit_date AND last_time_out IS NOT NULL', limit_date: limit_date.beginning_of_day).group('stages.name, stages.order').order('stages.order, stages.name').map { |group_sum| [group_sum.name, group_sum.order, group_sum.sum_duration] }
+  def hours_per_stage(projects, stream, limit_date)
+    DemandTransition.kept
+                    .joins(:demand)
+                    .joins(:stage)
+                    .select('stages.name, stages.order, SUM(EXTRACT(EPOCH FROM (last_time_out - last_time_in))) AS sum_duration')
+                    .where(demands: { project_id: projects.map(&:id) })
+                    .where('stages.end_point = false AND last_time_in >= :limit_date AND last_time_out IS NOT NULL AND stage_stream = :stage_stream', limit_date: limit_date.beginning_of_day, stage_stream: Stage.stage_streams[stream])
+                    .group('stages.name, stages.order')
+                    .order('stages.order, stages.name')
+                    .map { |group_sum| [group_sum.name, group_sum.order, group_sum.sum_duration] }
   end
 
   def finish_project!(project)

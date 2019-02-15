@@ -14,8 +14,11 @@ function buildStatusReportCurrentCharts() {
     const statusReportDeadlineDiv = $('#status-report-deadline-bar');
     buildBarChart(statusReportDeadlineDiv);
 
-    const statusReportHoursPerStageDiv = $('#status-report-hours-per-stage');
-    buildColumnChart(statusReportHoursPerStageDiv);
+    const statusReportHoursPerStageUpstreamDiv = $('#status-report-hours-per-stage-upstream');
+    buildColumnChart(statusReportHoursPerStageUpstreamDiv);
+
+    const statusReportHoursPerStageDownstreamDiv = $('#status-report-hours-per-stage-downstream');
+    buildColumnChart(statusReportHoursPerStageDownstreamDiv);
 
     const statusReportCFDDownstreamDiv = $('#cfd-downstream-area');
     buildAreaChart(statusReportCFDDownstreamDiv);

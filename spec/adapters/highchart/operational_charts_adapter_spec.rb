@@ -60,7 +60,7 @@ RSpec.describe Highchart::OperationalChartsAdapter, type: :data_object do
             expect(report_data.all_projects).to eq Project.all
             expect(report_data.all_projects_weeks).to eq [Date.new(2018, 1, 15), Date.new(2018, 1, 22), Date.new(2018, 1, 29), Date.new(2018, 2, 5), Date.new(2018, 2, 12), Date.new(2018, 2, 19), Date.new(2018, 2, 26), Date.new(2018, 3, 5), Date.new(2018, 3, 12), Date.new(2018, 3, 19), Date.new(2018, 3, 26), Date.new(2018, 4, 2), Date.new(2018, 4, 9), Date.new(2018, 4, 16), Date.new(2018, 4, 23), Date.new(2018, 4, 30), Date.new(2018, 5, 7)]
             expect(report_data.demands_burnup_data.ideal_per_period).to eq [2.4705882352941178, 4.9411764705882355, 7.411764705882353, 9.882352941176471, 12.352941176470589, 14.823529411764707, 17.294117647058826, 19.764705882352942, 22.235294117647058, 24.705882352941178, 27.176470588235297, 29.647058823529413, 32.11764705882353, 34.58823529411765, 37.05882352941177, 39.529411764705884, 42.0]
-            expect(report_data.demands_burnup_data.current_per_period).to eq [0, 0, 0, 0, 0, 1, 2, 2, 3, 5, 5, 5, 5, 5, 5, 10, 10]
+            expect(report_data.demands_burnup_data.current_per_period).to eq [0, 0, 0, 0, 0, 0, 1, 2, 2, 3, 5, 5, 5, 5, 5, 5, 10]
             expect(report_data.demands_burnup_data.scope_per_period).to eq [35, 38, 38, 39, 39, 42, 42, 42, 42, 42, 42, 42, 42, 42, 42, 42, 42]
             expect(report_data.flow_pressure_data).to eq [0.5039255845707459, 0.51194743130227, 0.5146213802127781, 0.5252176139272914, 0.5315753541559993, 0.5419866871479775, 0.5516726403823178, 0.5600000304781411, 0.5686184868212517, 0.6672328286153171, 0.6311578590380433, 0.6076618998854022, 0.5993802152788328, 0.622893873371161, 0.5919496257284276, 0.5698337265013532, 0.5643253000124782]
             expect(report_data.throughput_per_week).to eq([{ name: I18n.t('projects.charts.throughput_per_week.stage_stream.upstream'), data: [0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0] }, { name: I18n.t('projects.charts.throughput_per_week.stage_stream.downstream'), data: [0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 5, 0] }])
@@ -89,7 +89,7 @@ RSpec.describe Highchart::OperationalChartsAdapter, type: :data_object do
             expect(report_data.all_projects).to match_array [first_project, third_project]
             expect(report_data.all_projects_weeks).to eq [Date.new(2018, 4, 9), Date.new(2018, 4, 16), Date.new(2018, 4, 23), Date.new(2018, 4, 30), Date.new(2018, 5, 7)]
             expect(report_data.demands_burnup_data.ideal_per_period).to eq [6.0, 12.0, 18.0, 24.0, 30.0]
-            expect(report_data.demands_burnup_data.current_per_period).to eq [3, 3, 3, 8, 8]
+            expect(report_data.demands_burnup_data.current_per_period).to eq [3, 3, 3, 3, 8]
             expect(report_data.demands_burnup_data.scope_per_period).to eq [30, 30, 30, 30, 30]
             expect(report_data.flow_pressure_data).to eq [0.75, 1.0714285714285714, 0.7936507936507936, 0.6845238095238095, 0.6904761904761905]
             expect(report_data.throughput_per_week).to eq([{ name: I18n.t('projects.charts.throughput_per_week.stage_stream.upstream'), data: [0, 0, 0, 0, 0] }, { name: I18n.t('projects.charts.throughput_per_week.stage_stream.downstream'), data: [0, 0, 0, 5, 0] }])
@@ -119,7 +119,7 @@ RSpec.describe Highchart::OperationalChartsAdapter, type: :data_object do
             expect(report_data.all_projects).to match_array Project.all
             expect(report_data.all_projects_weeks).to eq [Date.new(2018, 2, 19), Date.new(2018, 2, 26), Date.new(2018, 3, 5), Date.new(2018, 3, 12), Date.new(2018, 3, 19), Date.new(2018, 3, 26), Date.new(2018, 4, 2), Date.new(2018, 4, 9), Date.new(2018, 4, 16), Date.new(2018, 4, 23), Date.new(2018, 4, 30), Date.new(2018, 5, 7)]
             expect(report_data.demands_burnup_data.ideal_per_period).to eq [3.5, 7.0, 10.5, 14.0, 17.5, 21.0, 24.5, 28.0, 31.5, 35.0, 38.5, 42.0]
-            expect(report_data.demands_burnup_data.current_per_period).to eq [1, 2, 2, 3, 5, 5, 5, 5, 5, 5, 10, 10]
+            expect(report_data.demands_burnup_data.current_per_period).to eq [0, 1, 2, 2, 3, 5, 5, 5, 5, 5, 5, 10]
             expect(report_data.demands_burnup_data.scope_per_period).to eq [42, 42, 42, 42, 42, 42, 42, 42, 42, 42, 42, 42]
             expect(report_data.flow_pressure_data).to eq [0.5940433521078682, 0.601915855948114, 0.607374491015044, 0.6149224026528174, 0.8028903030746348, 0.71414327977308, 0.6620094325492614, 0.6417582534806037, 0.6736263840462509, 0.6221367615146416, 0.5872238957492414, 0.5779711107860109]
             expect(report_data.throughput_per_week).to eq([{ name: I18n.t('projects.charts.throughput_per_week.stage_stream.upstream'), data: [0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0] }, { name: I18n.t('projects.charts.throughput_per_week.stage_stream.downstream'), data: [1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 5, 0] }])

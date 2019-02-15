@@ -197,12 +197,15 @@ RSpec.describe ProjectsRepository, type: :repository do
 
       let!(:seventh_transition) { Fabricate :demand_transition, stage: seventh_stage, demand: demand, last_time_in: '2018-03-08T17:09:58-03:00', last_time_out: nil }
 
-      it { expect(ProjectsRepository.instance.hours_per_stage(Project.all, Date.new(2018, 1, 1))).to eq([['fourth_stage', 0, 2_160_000.0], ['second_stage', 1, 604_800.0], ['first_stage', 2, 259_200.0], ['fifth_stage', 3, 2_160_000.0], ['third_stage', 4, 3_715_200.0]]) }
-      it { expect(ProjectsRepository.instance.hours_per_stage(Project.all, Date.new(2018, 2, 2))).to eq([['second_stage', 1, 604_800.0], ['first_stage', 2, 259_200.0], ['fifth_stage', 3, 2_160_000.0], ['third_stage', 4, 3_715_200.0]]) }
+      it { expect(ProjectsRepository.instance.hours_per_stage(Project.all, :upstream, Date.new(2018, 1, 1))).to eq([['fourth_stage', 0, 2_160_000.0]]) }
+      it { expect(ProjectsRepository.instance.hours_per_stage(Project.all, :upstream, Date.new(2018, 2, 2))).to eq([]) }
+
+      it { expect(ProjectsRepository.instance.hours_per_stage(Project.all, :downstream, Date.new(2018, 1, 1))).to eq([['second_stage', 1, 604_800.0], ['first_stage', 2, 259_200.0], ['fifth_stage', 3, 2_160_000.0], ['third_stage', 4, 3_715_200.0]]) }
+      it { expect(ProjectsRepository.instance.hours_per_stage(Project.all, :downstream, Date.new(2018, 2, 2))).to eq([['second_stage', 1, 604_800.0], ['first_stage', 2, 259_200.0], ['fifth_stage', 3, 2_160_000.0], ['third_stage', 4, 3_715_200.0]]) }
     end
 
     context 'having no transitions' do
-      it { expect(ProjectsRepository.instance.hours_per_stage(Project.all, Date.new(2018, 1, 1))).to eq [] }
+      it { expect(ProjectsRepository.instance.hours_per_stage(Project.all, :upstream, Date.new(2018, 1, 1))).to eq [] }
     end
   end
 

@@ -203,7 +203,8 @@ en:
         demands:
           title: "Demands Burnup for %{target_name}"
         hours:
-          title: "Hours Burnup for %{target_name}"
+          title_per_week: "Weekly Hours Burnup for %{target_name}"
+          title_per_month: "Monthly Hours Burnup for %{target_name}"
       hours_per_demand:
         title: "Hours per demand on time for %{target_name}"
         ylabel: "Hours/Demand"
@@ -304,7 +305,8 @@ en:
           hours_per_stage: "Hours per Stage"
         labels:
           y: "Hours in Stage"
-        title: "Hours per Stage for %{target_name}"
+        title_upstream: "Hours per Stage in Upstream for %{target_name}"
+        title_downstream: "Hours per Stage in Downstream for %{target_name}"
     settings:
       risks: "Risks"
       stages: "Stages"

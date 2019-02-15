@@ -1,7 +1,19 @@
 <% if status_report_data.present? %>
   <h3 class="center"><%= t('charts.projections.title') %></h3>
 
-  <div class="row">
+  <div class="row bottom-spaced-component">
+    <div class="col-xs-6">
+      <div id="status-report-deadline-bar"
+           class="flow-chart"
+           data-xcategories='<%= [t('projects.general.deadline')] %>'
+           data-title='<%= t('projects.charts.deadline.title', target_name: target_name) %>'
+           data-ytitle='<%= t('projects.charts.xlabel.days') %>'
+           data-suffix='<%= t('projects.charts.xlabel.days') %>'
+           data-series='<%= status_report_data.deadline.to_json %>'
+           data-stacking='normal'
+           data-decimals='0'>
+      </div>
+    </div>
     <div class="col-xs-6">
       <div id="status-report-dates-odds-column"
            class="flow-chart"
@@ -14,15 +26,20 @@
            data-decimals='0'>
       </div>
     </div>
-    <div class="col-xs-6">
-      <% if status_report_data.dates_to_montecarlo_duration.present? %>
+  </div>
+
+  <div class="row">
+    <% if status_report_data.dates_to_montecarlo_duration.present? %>
+      <div class="col-xs-3">
         <% status_report_data.dates_to_montecarlo_duration.sort_by { |montecarlo_date_hashes| montecarlo_date_hashes[:date] }.each do |montecarlo_date_hashes| %>
           <p><span class="timeline-legend" style="background-color: <%= montecarlo_date_hashes[:color] %>"></span><span><%= montecarlo_date_hashes[:name] %></span><span class="small"> (<%= l(montecarlo_date_hashes[:date]) %>)</span></p>
         <% end %>
+      </div>
+      <div class="col-xs-9">
         <%= render 'charts/timeline', dates_for_montecarlo_array: status_report_data.dates_to_montecarlo_duration %>
-      <% else %>
-        <%= t('general.no_data', missing_data: t('general.data')) %>
-      <% end %>
-    </div>
+      </div>
+    <% else %>
+      <%= t('general.no_data', missing_data: t('general.data')) %>
+    <% end %>
   </div>
 <% end %>
