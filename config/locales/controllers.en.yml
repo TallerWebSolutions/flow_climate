@@ -83,6 +83,8 @@ en:
       title: "Users"
     account:
       self: "My Account"
+    edit:
+      title: "Edit User"
   companies:
     index:
       title: "Companies"

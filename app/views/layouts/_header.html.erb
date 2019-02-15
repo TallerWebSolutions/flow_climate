@@ -1,25 +1,3 @@
-<div class="row">
-  <div class="col-xs-12 header" id="header-controls">
-    <%= link_to "Home", root_path %>
-    | <%= render 'layouts/signed_actions' %>
-
-<!--    <div class="dropdown topnav-right">-->
-      <%# if current_user.present? && current_user.avatar.present? %>
-        <%#= image_tag current_user.avatar.url, size: '50x50', class: 'user-avatar dropdown-toggle', 'data-toggle' => 'dropdown' %>
-      <%# else %>
-        <%#= image_tag 'img-empty.png', size: '50x50', class: 'user-avatar dropdown-toggle', 'data-toggle' => 'dropdown' %>
-      <%# end %>
-
-<!--      <div class="dropdown-menu">-->
-        <%# if current_user.present? %>
-          <%#= link_to t('users.account.self'), current_user, class: 'nav-link'%>
-          <%#= link_to t('header.logout'), destroy_user_session_path, method: :delete, class: 'nav-link'%>
-        <%# else %>
-          <%#= link_to t('devise.sessions.login'), new_user_session_path, class: 'nav-link'%>
-        <%# end %>
-<!--      </div>-->
-    </div>
-  </div>
-
-
+<div class="row header" id="header">
+  <%= render 'layouts/header_menu' %>
 </div>

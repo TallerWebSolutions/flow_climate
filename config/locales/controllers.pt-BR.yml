@@ -84,6 +84,8 @@ pt-BR:
       title: "Usuários"
     account:
       self: "Minha Conta"
+    edit:
+      title: "Editar Usuário"
   companies:
     index:
       title: "Empresas"
