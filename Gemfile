@@ -8,6 +8,7 @@ gem 'rails'
 
 gem 'attr_encrypted'
 gem 'carrierwave', '~> 1.0'
+gem 'cloudinary'
 gem 'coffee-rails'
 gem 'devise'
 gem 'discard'

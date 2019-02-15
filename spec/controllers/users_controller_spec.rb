@@ -18,6 +18,10 @@ RSpec.describe UsersController, type: :controller do
       before { get :show, params: { id: 'foo' } }
       it { expect(response).to redirect_to new_user_session_path }
     end
+    describe 'PUT #update' do
+      before { put :update, params: { id: 'foo' } }
+      it { expect(response).to redirect_to new_user_session_path }
+    end
   end
 
   context 'authenticated as admin' do
@@ -44,7 +48,7 @@ RSpec.describe UsersController, type: :controller do
         it 'activates the email notifications and refresh the view' do
           expect(User.last.email_notifications?).to be true
           expect(response).to render_template 'users/reload_notifications.js.erb'
-          expect(response).to render_template 'layouts/_signed_actions'
+          expect(response).to render_template 'layouts/_header_menu'
         end
       end
     end
@@ -55,7 +59,7 @@ RSpec.describe UsersController, type: :controller do
         it 'deactivates the email notifications and refresh the view' do
           expect(User.last.email_notifications?).to be false
           expect(response).to render_template 'users/reload_notifications.js.erb'
-          expect(response).to render_template 'layouts/_signed_actions'
+          expect(response).to render_template 'layouts/_header_menu'
         end
       end
     end
@@ -86,6 +90,41 @@ RSpec.describe UsersController, type: :controller do
     describe 'PATCH #toggle_admin' do
       before { patch :toggle_admin, params: { id: 'foo' } }
       it { expect(response).to redirect_to root_path }
+    end
+
+    describe 'PUT #update' do
+      context 'with a valid user' do
+        let(:user) { Fabricate :user }
+
+        context 'and valid attributes' do
+          let(:file) { Rack::Test::UploadedFile.new(Rails.root.join('spec', 'fixtures', 'default_image.png'), 'image/png') }
+
+          it 'updates the user and redirects to the show' do
+            put :update, params: { id: user, user: { first_name: 'Bla', last_name: 'Foo', avatar: file } }
+
+            updated_user = User.last
+
+            expect(updated_user.first_name).to eq 'Bla'
+            expect(updated_user.last_name).to eq 'Foo'
+            expect(updated_user.avatar.file.file).to match 'default_image.png'
+            expect(response).to redirect_to user_path(user)
+          end
+        end
+
+        context 'and invalid attributes' do
+          it 'does not update the user and renders the show again with errors' do
+            put :update, params: { id: user, user: { first_name: nil, last_name: nil, avatar: nil } }
+
+            expect(assigns(:user).errors.full_messages).to eq ['Nome não pode ficar em branco', 'Sobrenome não pode ficar em branco']
+            expect(response).to render_template :show
+          end
+        end
+
+        context 'and invalid attributes' do
+          before { put :update, params: { id: 'foo', user: { first_name: nil, last_name: nil, avatar: nil } } }
+          it { expect(response).to have_http_status :not_found }
+        end
+      end
     end
   end
 end

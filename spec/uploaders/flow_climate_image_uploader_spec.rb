@@ -22,4 +22,10 @@ RSpec.describe FlowClimateImageUploader, type: :image_uploader do
     before { uploader.store!(File.open('spec/fixtures/default_image.png')) }
     it { expect(uploader.store_dir).to eq 'uploads/user/1' }
   end
+
+  describe '#public_id' do
+    let(:uploader) { FlowClimateImageUploader.new(User.new(id: 1)) }
+    before { uploader.store!(File.open('spec/fixtures/default_image.png')) }
+    it { expect(uploader.public_id).to eq 'usuarios' }
+  end
 end
