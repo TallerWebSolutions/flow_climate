@@ -323,7 +323,8 @@ pt-BR:
           hours_per_stage: "Horas por Etapa"
         labels:
           y: "Horas na Etapa"
-        title: "Horas por Etapa para %{target_name}"
+        title_upstream: "Horas por Etapa no Upstream para %{target_name}"
+        title_downstream: "Horas por Etapa no Downstream para %{target_name}"
     settings:
       risks: "Riscos"
       stages: "Etapas"
