@@ -22,7 +22,7 @@ module Jira
                     class_of_service: translate_class_of_service(jira_account, jira_issue), demand_title: issue_fields_value(jira_issue, 'summary'),
                     assignees_count: compute_assignees_count(jira_account, jira_issue), url: build_jira_url(jira_account, demand.demand_id), downstream: false, discarded_at: nil)
 
-      translate_blocks!(demand, jira_issue.comment['comments']) if jira_issue.respond_to?(:comment)
+      translate_blocks!(demand, jira_issue)
       process_transitions!(demand, jira_issue.changelog) if jira_issue.respond_to?(:changelog)
     end
 
@@ -79,25 +79,41 @@ module Jira
       responsibles.count
     end
 
-    def translate_blocks!(demand, comment_array)
-      comment_array.sort_by { |comment_hash| Time.zone.parse(comment_hash['created']) }.each do |comment|
-        comment_text = comment['body']
-        created = comment['created']
-        author = comment['author']['name']
+    def translate_blocks!(demand, jira_issue)
+      return unless hash_have_histories?(jira_issue)
 
-        if comment_text.downcase.start_with?('(flag)')
-          persist_block!(demand, author, created, 1, remove_noise_from_comment_text(comment_text))
-        elsif comment_text.downcase.start_with?('(flagoff)')
-          persist_unblock!(demand, author, created, 1, remove_noise_from_comment_text(comment_text))
-        end
+      history_array = jira_issue.attrs['changelog']['histories']
+
+      demand.demand_blocks.map(&:destroy)
+
+      history_array.sort_by { |history_hash| Time.zone.parse(history_hash['created']) }.each do |history|
+        next if history['items'].blank?
+
+        history_item = history['items'][0]
+        next if history_item['field'] != 'Impediment'
+
+        process_demand_block(demand, history, history_item)
       end
     end
 
-    def remove_noise_from_comment_text(comment_text)
-      comment_text.gsub('(flag) Flag added\\n\\n', '').gsub('(flagoff)', '').strip
+    def hash_have_histories?(jira_issue)
+      jira_issue.attrs['changelog'].present? && jira_issue.attrs['changelog']['histories'].present?
+    end
+
+    def process_demand_block(demand, history, history_item)
+      created = history['created']
+      author = history['author']['displayName']
+
+      if history_item['toString'] == 'Impediment'
+        persist_block!(demand, author, created)
+      elsif history_item['fromString'] == 'Impediment'
+        persist_unblock!(demand, author, created)
+      end
     end
 
     def process_transitions!(demand, issue_changelog)
+      demand.demand_transitions.map(&:destroy)
+
       last_time_out = demand.created_date
       issue_changelog['histories'].sort_by { |history_hash| history_hash['id'] }.each do |history|
         next unless transition_history?(history)

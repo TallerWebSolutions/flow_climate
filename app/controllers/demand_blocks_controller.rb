@@ -33,7 +33,7 @@ class DemandBlocksController < AuthenticatedController
   private
 
   def demand_block_params
-    params.require(:demand_block).permit(:block_type, :unblock_reason, :block_reason)
+    params.require(:demand_block).permit(:block_type, :unblock_reason)
   end
 
   def assign_project

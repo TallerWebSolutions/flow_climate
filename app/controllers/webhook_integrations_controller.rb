@@ -15,7 +15,7 @@ class WebhookIntegrationsController < ApplicationController
     jira_account = define_jira_account(jira_account_domain)
     return head :ok if jira_account.blank?
 
-    Jira::ProcessJiraIssueJob.perform_later(jira_account, project, nil, nil, issue_key(data))
+    Jira::ProcessJiraIssueJob.perform_later(jira_account, project, issue_key(data), nil, nil, nil)
     head :ok
   end
 

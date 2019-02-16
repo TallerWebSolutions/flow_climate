@@ -6,7 +6,6 @@
 #
 #  active             :boolean          default(TRUE), not null
 #  block_duration     :integer
-#  block_reason       :string           not null
 #  block_time         :datetime         not null
 #  block_type         :integer          default("coding_needed"), not null
 #  blocker_username   :string           not null
@@ -15,7 +14,6 @@
 #  demand_id          :integer          not null, indexed
 #  discarded_at       :datetime
 #  id                 :bigint(8)        not null, primary key
-#  unblock_reason     :string
 #  unblock_time       :datetime
 #  unblocker_username :string
 #  updated_at         :datetime         not null
@@ -36,7 +34,7 @@ class DemandBlock < ApplicationRecord
 
   belongs_to :demand
 
-  validates :demand, :demand_id, :demand_block_id, :blocker_username, :block_time, :block_reason, :block_type, presence: true
+  validates :demand, :demand_id, :demand_block_id, :blocker_username, :block_time, :block_type, presence: true
 
   before_update :update_computed_fields!
 

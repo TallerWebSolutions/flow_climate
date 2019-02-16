@@ -140,12 +140,10 @@ RSpec.describe DemandBlocksController, type: :controller do
       let(:demand_block) { Fabricate :demand_block, demand: demand, active: true }
 
       context 'passing valid parameters' do
-        before { put :update, params: { company_id: company, project_id: project, demand_id: demand, id: demand_block, demand_block: { block_reason: 'foo', unblock_reason: 'bla', block_type: :specification_needed } }, xhr: true }
+        before { put :update, params: { company_id: company, project_id: project, demand_id: demand, id: demand_block, demand_block: { block_type: :specification_needed } }, xhr: true }
         it 'assigns the instance variable and renders the template' do
           updated_demand_block = assigns(:demand_block)
           expect(updated_demand_block.block_type).to eq 'specification_needed'
-          expect(updated_demand_block.unblock_reason).to eq 'bla'
-          expect(updated_demand_block.block_reason).to eq 'foo'
           expect(response).to render_template 'demand_blocks/update'
         end
       end

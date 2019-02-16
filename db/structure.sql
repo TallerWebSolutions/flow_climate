@@ -147,10 +147,8 @@ CREATE TABLE public.demand_blocks (
     demand_block_id integer NOT NULL,
     blocker_username character varying NOT NULL,
     block_time timestamp without time zone NOT NULL,
-    block_reason character varying NOT NULL,
     unblocker_username character varying,
     unblock_time timestamp without time zone,
-    unblock_reason character varying,
     block_duration integer,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
@@ -2314,6 +2312,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190212180201'),
 ('20190212181729'),
 ('20190212183127'),
-('20190215153227');
+('20190215153227'),
+('20190216181219');
 
 
