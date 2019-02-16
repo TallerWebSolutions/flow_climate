@@ -8,22 +8,6 @@
   </div>
 
   <div class="row">
-    <div class='col-xs-12 form-group <%= 'has-error' if @demand_block.errors[:block_reason].present? %>'>
-      <%= f.label :block_reason, class: 'control-label required' %>
-      <%= f.text_field :block_reason, autofocus: true, class: 'form-control' %>
-      <span class="help-block"><%= @demand_block.errors[:block_reason].join(', ') %></span>
-    </div>
-  </div>
-
-  <div class="row">
-    <div class='col-xs-12 form-group <%= 'has-error' if @demand_block.errors[:unblock_reason].present? %>'>
-      <%= f.label :unblock_reason, class: 'control-label required' %>
-      <%= f.text_field :unblock_reason, autofocus: true, class: 'form-control' %>
-      <span class="help-block"><%= @demand_block.errors[:unblock_reason].join(', ') %></span>
-    </div>
-  </div>
-
-  <div class="row">
     <div class="col-xs-12">
       <div class="modal-footer">
         <button type="button" class="btn btn-danger" data-dismiss="modal"><%= t('general.buttons.cancel') %></button>

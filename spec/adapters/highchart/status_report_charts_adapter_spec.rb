@@ -44,6 +44,9 @@ RSpec.describe Highchart::StatusReportChartsAdapter, type: :data_object do
 
     describe '.initialize' do
       context 'having projects' do
+        before { travel_to Time.zone.local(2019, 2, 15, 10, 0, 0) }
+        after { travel_back }
+
         subject(:report_data) { Highchart::StatusReportChartsAdapter.new(Project.all, 'all') }
 
         it 'do the math and provides the correct information' do

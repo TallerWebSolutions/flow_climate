@@ -101,29 +101,26 @@ RSpec.describe Jira::JiraIssueAdapter, type: :service do
       end
 
       context 'and it was blocked' do
-        let!(:jira_issue) { client.Issue.build({ key: '10000', summary: 'foo of bar', fields: { created: '2018-07-03T11:20:18.998-0300', issuetype: { name: 'chore' }, project: { key: 'foo' }, customfield_10024: [{ name: 'foo' }, { name: 'bar' }], customfield_10028: { value: 'sTandard' }, comment: { comments: [{ body: '(flagoff) o bla do xpto foi resolvido de boa', created: '2018-07-07T17:00:18.399-0300', author: { name: 'bla' } }, { body: '(flag) Flag added\n\nbla do xpto passando pelo foo até o bar.', created: '2018-07-06T17:00:18.399-0300', author: { name: 'sbbrubles' } }, { body: '(flag) Flag added\n\nbla do xpto resolvido nada.. vai ter que refazer essa bagaça..', created: '2018-07-08T17:00:18.399-0300', author: { name: 'soul' } }, { body: 'Comentário que não é um bloqueio modafucka', created: '2018-07-09T17:00:18.399-0300', author: { name: 'mor' } }] } } }.with_indifferent_access) }
+        let!(:jira_issue) { client.Issue.build({ key: '10000', summary: 'foo of bar', fields: { created: '2018-07-03T11:20:18.998-0300', issuetype: { name: 'chore' }, project: { key: 'foo' }, customfield_10024: [{ name: 'foo' }, { name: 'bar' }], customfield_10028: { value: 'sTandard' } }, changelog: { comment: { comments: [{ body: '(flagoff) o bla do xpto foi resolvido de boa', created: '2018-07-07T17:00:18.399-0300', author: { name: 'bla' } }, { body: '(flag) Flag added\n\nbla do xpto passando pelo foo até o bar.', created: '2018-07-06T17:00:18.399-0300', author: { name: 'sbbrubles' } }, { body: '(flag) Flag added\n\nbla do xpto resolvido nada.. vai ter que refazer essa bagaça..', created: '2018-07-08T17:00:18.399-0300', author: { name: 'soul' } }, { body: 'Comentário que não é um bloqueio modafucka', created: '2018-07-09T17:00:18.399-0300', author: { name: 'mor' } }] }, histories: [{ id: '10038', author: { displayName: 'bla' }, created: '2018-07-06T09:40:43.886-0300', items: [{ field: 'Impediment', fromString: '', to: '10055', toString: 'Impediment' }] }, { id: '10055', author: { displayName: 'xpto' }, created: '2018-07-06T13:40:43.886-0300', items: [{ field: 'Impediment', fromString: 'Impediment', to: '10055', toString: '' }] }, { id: '10055', author: { displayName: 'foo' }, created: '2018-07-09T13:40:43.886-0300', items: [{ field: 'Impediment', fromString: '', to: '10055', toString: 'Impediment' }] }] } }.with_indifferent_access) }
 
         it 'creates the demand and the blocks information' do
           Jira::JiraIssueAdapter.instance.process_issue!(jira_account, first_project, jira_issue)
           demand_created = Demand.last
           expect(demand_created.demand_blocks.count).to eq 2
-          first_demand_block = demand_created.demand_blocks.first
-          expect(first_demand_block.blocker_username).to eq 'sbbrubles'
-          expect(first_demand_block.block_time).to eq '2018-07-06T17:00:18.399-0300'
-          expect(first_demand_block.block_reason).to eq 'bla do xpto passando pelo foo até o bar.'
 
-          expect(first_demand_block.unblocker_username).to eq 'bla'
-          expect(first_demand_block.unblock_time).to eq '2018-07-07T17:00:18.399-0300'
-          expect(first_demand_block.unblock_reason).to eq 'o bla do xpto foi resolvido de boa'
+          first_demand_block = demand_created.demand_blocks.order(created_at: :asc).first
+          expect(first_demand_block.blocker_username).to eq 'bla'
+          expect(first_demand_block.block_time).to eq '2018-07-06T09:40:43.886000000-0300'
+
+          expect(first_demand_block.unblocker_username).to eq 'xpto'
+          expect(first_demand_block.unblock_time).to eq '2018-07-06T13:40:43.886-0300'
 
           second_demand_block = demand_created.demand_blocks.second
-          expect(second_demand_block.blocker_username).to eq 'soul'
-          expect(second_demand_block.block_time).to eq '2018-07-08T17:00:18.399-0300'
-          expect(second_demand_block.block_reason).to eq 'bla do xpto resolvido nada.. vai ter que refazer essa bagaça..'
+          expect(second_demand_block.blocker_username).to eq 'foo'
+          expect(second_demand_block.block_time).to eq '2018-07-09T13:40:43.886-0300'
 
           expect(second_demand_block.unblocker_username).to be_nil
           expect(second_demand_block.unblock_time).to be_nil
-          expect(second_demand_block.unblock_reason).to be_nil
         end
       end
 
