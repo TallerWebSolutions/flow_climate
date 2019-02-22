@@ -62,6 +62,13 @@ RSpec.describe Jira::JiraIssueAdapter, type: :service do
           expect(Demand.last).to be_bug
         end
       end
+      context 'and it is a feature' do
+        let!(:jira_issue) { client.Issue.build({ key: '10000', summary: 'foo of bar', fields: { created: '2018-07-03T11:20:18.998-0300', issuetype: { name: 'FeaTurE' }, project: { key: 'foo' }, customfield_10024: [{ name: 'foo' }, { name: 'bar' }] } }.with_indifferent_access) }
+        it 'creates the demand' do
+          Jira::JiraIssueAdapter.instance.process_issue!(jira_account, first_project, jira_issue)
+          expect(Demand.last).to be_feature
+        end
+      end
       context 'and it is a chore and no class of service' do
         let!(:jira_issue) { client.Issue.build({ key: '10000', summary: 'foo of bar', fields: { created: '2018-07-03T11:20:18.998-0300', issuetype: { name: 'ChoRe' }, project: { key: 'foo' }, customfield_10024: [{ name: 'foo' }, { name: 'bar' }] } }.with_indifferent_access) }
         it 'creates the demand as chore as type and standard as class of service' do
