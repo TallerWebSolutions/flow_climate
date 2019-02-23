@@ -27,6 +27,18 @@ RSpec.describe TimeService, type: :service do
 
         it { expect(TimeService.instance.compute_working_hours_for_dates(start_date, end_date)).to eq 14 }
       end
+      context 'and there is less than one minute apart' do
+        let(:start_date) { Time.zone.local(2018, 2, 9, 14, 0, 0) }
+        let(:end_date) { Time.zone.local(2018, 2, 9, 14, 0, 30) }
+
+        it { expect(TimeService.instance.compute_working_hours_for_dates(start_date, end_date)).to eq 0 }
+      end
+      context 'and there is exactly one minute apart' do
+        let(:start_date) { Time.zone.local(2018, 2, 9, 14, 0, 0) }
+        let(:end_date) { Time.zone.local(2018, 2, 9, 14, 1, 0) }
+
+        it { expect(TimeService.instance.compute_working_hours_for_dates(start_date, end_date)).to eq 0 }
+      end
     end
     context 'when the dates are nil' do
       it { expect(TimeService.instance.compute_working_hours_for_dates(nil, nil)).to eq 0 }
