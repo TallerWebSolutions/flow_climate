@@ -4,7 +4,7 @@ class TimeService
   include Singleton
 
   def compute_working_hours_for_dates(start_date, end_date)
-    return 0 if start_date.blank? || end_date.blank?
+    return 0 if start_date.blank? || end_date.blank? || (end_date - start_date) <= 1.minute
 
     compute_working_hours(start_date, end_date)
   end
