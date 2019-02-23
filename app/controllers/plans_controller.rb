@@ -7,10 +7,10 @@ class PlansController < AuthenticatedController
 
   def plan_choose
     plan = Plan.find(params[:plan_id])
-    @user = User.find(params[:user_id])
+    @user = current_user
 
     if @inactive_plans.count.positive?
-      flash[:alert] = 'Você já tem um plano'
+      flash[:alert] = I18n.t('plans.alert.alreary_has_a_plan')
       return redirect_to user_path(current_user)
     end
 

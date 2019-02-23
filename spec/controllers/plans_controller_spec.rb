@@ -31,7 +31,7 @@ RSpec.describe PlansController, type: :controller do
       context 'having no inactive plans' do
         it 'creates the plan to the user and redirects to the root path' do
           expect(UserNotifierMailer).to receive(:plan_requested).once.and_call_original
-          post :plan_choose, params: { plan_id: plan.id, user_id: user, period: :monthly, plan_value: 10 }
+          post :plan_choose, params: { plan_id: plan.id, period: :monthly, plan_value: 10 }
           expect(UserPlan.last).not_to be_nil
           expect(UserPlan.last.plan).to eq plan
           expect(UserPlan.last.user).to eq user
@@ -43,13 +43,13 @@ RSpec.describe PlansController, type: :controller do
         end
       end
       context 'having inactive plans' do
-        let!(:user_plan) { Fabricate :user_plan, user: user, plan: plan, active: false }
+        let!(:user_plan) { Fabricate :user_plan, plan: plan, active: false }
 
-        before { post :plan_choose, params: { plan_id: plan.id, user_id: user, period: :monthly } }
+        before { post :plan_choose, params: { plan_id: plan.id, period: :monthly } }
         it 'creates the plan to the user and redirects to the root path' do
           expect(UserPlan.count).to eq 1
 
-          expect(response).to redirect_to user_path(user)
+          expect(response).to redirect_to root_path
         end
       end
     end

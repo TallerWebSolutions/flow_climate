@@ -643,6 +643,8 @@ pt-BR:
     validations:
       no_gold_plan: "Você precisa do plano gold para acessar essa área."
       no_lite_plan: "Você precisa do plano lite no mínimo para acessar isso."
+    alert:
+      alreary_has_a_plan: "Você já tem um plano"
   user_plans:
     index:
       table:
