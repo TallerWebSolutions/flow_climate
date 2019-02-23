@@ -55,7 +55,7 @@ RSpec.describe UserPlan, type: :model do
         let!(:user_plan) { Fabricate :user_plan, user: user, plan: plan, active: false, finish_at: 2.weeks.from_now }
         let!(:other_user_plan) { Fabricate :user_plan, user: user, plan: plan, active: true, finish_at: 2.weeks.from_now }
 
-        it { expect(user.user_plans.inactive_in_period(1.week.from_now)).to eq [user_plan] }
+        it { expect(user.user_plans.inactive_in_period).to eq [user_plan] }
       end
     end
   end

@@ -34,6 +34,8 @@ en:
   plans:
     request:
       subject: "A new plan was requested"
+    alert:
+      alreary_has_a_plan: "You already has a plan"
   general:
     leadtime:
       title: "Lead time %{percentile}"
