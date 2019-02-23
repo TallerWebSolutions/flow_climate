@@ -43,13 +43,13 @@ RSpec.describe PlansController, type: :controller do
         end
       end
       context 'having inactive plans' do
-        let!(:user_plan) { Fabricate :user_plan, plan: plan, active: false }
+        let!(:user_plan) { Fabricate :user_plan, user: user, plan: plan, active: false, finish_at: 1.day.from_now }
 
         before { post :plan_choose, params: { plan_id: plan.id, period: :monthly } }
         it 'creates the plan to the user and redirects to the root path' do
           expect(UserPlan.count).to eq 1
 
-          expect(response).to redirect_to root_path
+          expect(response).to redirect_to user_path(user)
         end
       end
     end

@@ -24,7 +24,7 @@ class PlansController < AuthenticatedController
   end
 
   def inactive_plans_in_period
-    @inactive_plans = current_user.user_plans.inactive_in_period(plan_finish_date)
+    @inactive_plans = current_user.user_plans.inactive_in_period
   end
 
   def plan_finish_date

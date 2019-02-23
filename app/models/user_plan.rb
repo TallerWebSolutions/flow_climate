@@ -39,7 +39,7 @@ class UserPlan < ApplicationRecord
   validate :user_plan_uniqueness
 
   scope :valid_plans, -> { where('finish_at >= :limit_date AND start_at <= :limit_date AND active = true AND paid = true', limit_date: Time.zone.now) }
-  scope :inactive_in_period, ->(period_limit_date) { where('finish_at >= :limit_date AND active = false', limit_date: period_limit_date) }
+  scope :inactive_in_period, -> { where('finish_at >= :limit_date AND active = false', limit_date: Time.zone.now) }
 
   delegate :lite?, :trial?, to: :plan
 
