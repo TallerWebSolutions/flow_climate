@@ -8,7 +8,7 @@ module Jira
       issue_key = jira_issue.attrs['key']
       return if issue_key.blank?
 
-      demand = Demand.where(project_id: project.id, demand_id: issue_key).first_or_initialize
+      demand = Demand.where(company_id: project.company.id, demand_id: issue_key).first_or_initialize
 
       update_demand!(demand, jira_account, jira_issue, project)
 
@@ -140,7 +140,7 @@ module Jira
       transition_from.update(last_time_in: last_time_out, last_time_out: transition_created_at)
 
       transition_to = DemandTransition.where(demand: demand, stage: stage_to).first_or_initialize
-      transition_to.update(last_time_in: transition_created_at, last_time_out: nil)
+      transition_to.update(demand: demand, last_time_in: transition_created_at, last_time_out: nil)
     end
 
     def to_id(history)
