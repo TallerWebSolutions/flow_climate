@@ -119,27 +119,27 @@ class Demand < ApplicationRecord
   end
 
   def working_time_upstream
-    effort_transitions = demand_transitions.upstream_transitions.effort_transitions_to_project(project_id)
+    effort_transitions = demand_transitions.kept.upstream_transitions.effort_transitions_to_project(project_id)
     sum_effort(effort_transitions)
   end
 
   def working_time_downstream
-    effort_transitions = demand_transitions.downstream_transitions.effort_transitions_to_project(project_id)
+    effort_transitions = demand_transitions.kept.downstream_transitions.effort_transitions_to_project(project_id)
     sum_effort(effort_transitions)
   end
 
   def blocked_working_time_downstream
-    effort_transitions = demand_transitions.downstream_transitions.effort_transitions_to_project(project_id)
+    effort_transitions = demand_transitions.kept.downstream_transitions.effort_transitions_to_project(project_id)
     sum_blocked_effort(effort_transitions)
   end
 
   def blocked_working_time_upstream
-    effort_transitions = demand_transitions.upstream_transitions.effort_transitions_to_project(project_id)
+    effort_transitions = demand_transitions.kept.upstream_transitions.effort_transitions_to_project(project_id)
     sum_blocked_effort(effort_transitions)
   end
 
   def downstream_demand?
-    demand_transitions.joins(:stage).downstream_transitions.present? || downstream?
+    demand_transitions.kept.joins(:stage).downstream_transitions.present? || downstream?
   end
 
   def total_effort
@@ -147,7 +147,7 @@ class Demand < ApplicationRecord
   end
 
   def current_stage
-    demand_transitions.where(last_time_out: nil).order(:last_time_in).last&.stage || demand_transitions.order(:last_time_in)&.last&.stage
+    demand_transitions.kept.where(last_time_out: nil).order(:last_time_in).last&.stage || demand_transitions.kept.order(:last_time_in)&.last&.stage
   end
 
   def archived?
@@ -165,15 +165,15 @@ class Demand < ApplicationRecord
   end
 
   def sum_touch_blocked_time
-    sum_blocked_time_for_transitions(demand_transitions.touch_transitions)
+    sum_blocked_time_for_transitions(demand_transitions.kept.touch_transitions)
   end
 
   def sum_queue_blocked_time
-    sum_blocked_time_for_transitions(demand_transitions.queue_transitions)
+    sum_blocked_time_for_transitions(demand_transitions.kept.queue_transitions)
   end
 
   def total_bloked_working_time
-    demand_blocks.sum(&:block_duration)
+    demand_blocks.kept.closed.sum(&:block_duration)
   end
 
   private
@@ -181,7 +181,7 @@ class Demand < ApplicationRecord
   def sum_blocked_time_for_transitions(transitions)
     total_blocked = 0
     transitions.each do |transition|
-      total_blocked += demand_blocks.closed.active.for_date_interval(transition.last_time_in, transition.last_time_out).sum(&:total_blocked_time)
+      total_blocked += demand_blocks.kept.closed.active.for_date_interval(transition.last_time_in, transition.last_time_out).sum(&:total_blocked_time)
     end
     total_blocked
   end
@@ -205,7 +205,7 @@ class Demand < ApplicationRecord
   def sum_blocked_effort(effort_transitions)
     total_blocked = 0
     effort_transitions.each do |transition|
-      total_blocked += demand_blocks.closed.active.for_date_interval(transition.last_time_in, transition.last_time_out).sum(:block_duration)
+      total_blocked += demand_blocks.kept.closed.active.for_date_interval(transition.last_time_in, transition.last_time_out).sum(:block_duration)
     end
     total_blocked
   end

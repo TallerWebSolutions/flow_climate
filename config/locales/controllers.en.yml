@@ -383,7 +383,7 @@ en:
       manual_effort: "Effort Updated Manually"
       count: "%{demands_count} demands"
       current_stage: "Current Stage"
-      qty_blocks: "Qty Blocks"
+      qty_closed_blocks: "Closed Blocks"
       hours_blocks_queue: "Hours Blocked in Queues"
       hours_blocks_touch: "Hours Blocked in Queues"
       total_blocked_time: "Time Blocked"
