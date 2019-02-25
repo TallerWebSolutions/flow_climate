@@ -211,7 +211,7 @@ RSpec.describe DemandsRepository, type: :repository do
 
       let!(:eigth_demand) { Fabricate :demand, project: second_project, commitment_date: Time.zone.today, discarded_at: Time.zone.today, effort_upstream: 54_321, effort_downstream: 15_223 }
 
-      it { expect(DemandsRepository.instance.delivered_hours_in_month_for_projects(Project.all).to_f).to eq 72_918.0 }
+      it { expect(DemandsRepository.instance.delivered_hours_in_month_for_projects(Project.all).to_f).to eq 3374.0 }
       it { expect(DemandsRepository.instance.delivered_hours_in_month_for_projects(Project.all, Date.new(2018, 3, 1)).to_f).to eq 2632.0 }
     end
 
@@ -383,4 +383,8 @@ RSpec.describe DemandsRepository, type: :repository do
       end
     end
   end
+
+  pending '#scope_in_week_for_projects'
+  pending '#bugs_opened_until_limit_date'
+  pending '#bugs_closed_until_limit_date'
 end

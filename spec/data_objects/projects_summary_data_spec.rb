@@ -4,7 +4,7 @@ RSpec.describe ProjectsSummaryData, type: :data_object do
   describe '#total_flow_pressure' do
     context 'having projects' do
       let!(:project) { Fabricate :project, start_date: 1.day.ago.beginning_of_day, end_date: 2.days.from_now.beginning_of_day, initial_scope: 0 }
-      let!(:second_project) { Fabricate :project, initial_scope: 0 }
+      let!(:second_project) { Fabricate :project, start_date: 1.day.ago.beginning_of_day, end_date: 1.day.from_now.beginning_of_day, initial_scope: 0 }
 
       let!(:first_demand) { Fabricate :demand, project: project, created_date: Time.zone.yesterday.beginning_of_day, end_date: nil }
       let!(:second_demand) { Fabricate :demand, project: project, created_date: 2.days.ago.beginning_of_day, end_date: nil }
@@ -13,7 +13,7 @@ RSpec.describe ProjectsSummaryData, type: :data_object do
 
       subject(:projects_summary) { ProjectsSummaryData.new(Project.all) }
 
-      it { expect(projects_summary.total_flow_pressure).to eq 0.6833333333333333 }
+      it { expect(projects_summary.total_flow_pressure).to eq 1.1666666666666665 }
     end
 
     context 'having no projects' do

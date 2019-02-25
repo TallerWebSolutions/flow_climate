@@ -54,7 +54,7 @@ class DemandsRepository
   end
 
   def bugs_opened_until_limit_date(projects, date = Time.zone.today)
-    Demand.where(project_id: projects).where('created_date < :limit_date', limit_date: date).bug.count
+    Demand.kept.where(project_id: projects).where('created_date < :limit_date', limit_date: date).bug.count
   end
 
   def bugs_closed_until_limit_date(projects, limit_date = Time.zone.today)
@@ -144,10 +144,10 @@ class DemandsRepository
   end
 
   def demands_for_projects_finished_in_period(projects, start_period, end_period)
-    Demand.where(project_id: projects).where('end_date BETWEEN :start_period AND :end_period', start_period: start_period, end_period: end_period)
+    Demand.kept.where(project_id: projects).where('end_date BETWEEN :start_period AND :end_period', start_period: start_period, end_period: end_period)
   end
 
   def demands_for_projects_and_finished_until_limit_date(projects, limit_date)
-    Demand.where(project_id: projects).where('end_date <= :limit_date', limit_date: limit_date)
+    Demand.kept.where(project_id: projects).where('end_date <= :limit_date', limit_date: limit_date)
   end
 end
