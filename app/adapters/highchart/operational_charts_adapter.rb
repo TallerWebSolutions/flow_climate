@@ -98,7 +98,7 @@ module Highchart
       @all_projects_weeks.each do |date|
         break unless add_data_to_chart?(date.to_date)
 
-        @all_projects.each { |project| array_of_flow_pressures << project.flow_pressure(date) }
+        @all_projects.each { |project| array_of_flow_pressures << project.flow_pressure(date.end_of_week) }
         @flow_pressure_data << array_of_flow_pressures.sum.to_f / array_of_flow_pressures.count.to_f
       end
     end
@@ -114,8 +114,8 @@ module Highchart
       @all_projects_weeks.each do |date|
         break unless add_data_to_chart?(date.to_date)
 
-        upstream_total_delivered = DemandsRepository.instance.delivered_until_date_to_projects_in_stream(@all_projects, 'upstream', date).count
-        downstream_total_delivered = DemandsRepository.instance.delivered_until_date_to_projects_in_stream(@all_projects, 'downstream', date).count
+        upstream_total_delivered = DemandsRepository.instance.delivered_until_date_to_projects_in_stream(@all_projects, 'upstream', date.end_of_week).count
+        downstream_total_delivered = DemandsRepository.instance.delivered_until_date_to_projects_in_stream(@all_projects, 'downstream', date.end_of_week).count
         throughput_per_week << upstream_total_delivered + downstream_total_delivered if add_data_to_chart?(date)
       end
       throughput_per_week
@@ -132,8 +132,8 @@ module Highchart
       @all_projects_weeks.each do |date|
         break unless add_data_to_chart?(date.to_date)
 
-        upstream_total_hours_delivered = DemandsRepository.instance.delivered_until_date_to_projects_in_stream(@all_projects, 'upstream', date).sum(&:effort_upstream)
-        downstream_total_hours_delivered = DemandsRepository.instance.delivered_until_date_to_projects_in_stream(@all_projects, 'downstream', date).sum(&:effort_downstream)
+        upstream_total_hours_delivered = DemandsRepository.instance.delivered_until_date_to_projects_in_stream(@all_projects, 'upstream', date.end_of_week).sum(&:effort_upstream)
+        downstream_total_hours_delivered = DemandsRepository.instance.delivered_until_date_to_projects_in_stream(@all_projects, 'downstream', date.end_of_week).sum(&:effort_downstream)
 
         throughput_hours_per_week << upstream_total_hours_delivered + downstream_total_hours_delivered if add_data_to_chart?(date)
       end
