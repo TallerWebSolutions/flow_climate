@@ -198,7 +198,7 @@ RSpec.describe ProductsController, type: :controller do
             expect(assigns(:report_data)).to be_a Highchart::OperationalChartsAdapter
             expect(assigns(:status_report_data)).to be_a Highchart::StatusReportChartsAdapter
             expect(assigns(:product_projects)).to eq [second_project, first_project]
-            expect(assigns(:projects_summary).total_initial_scope).to eq 60
+            expect(assigns(:projects_summary).total_flow_pressure).to eq 8.75
           end
         end
         context 'having no data' do

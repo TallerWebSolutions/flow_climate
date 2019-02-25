@@ -74,7 +74,6 @@ RSpec.describe CompaniesController, type: :controller do
           let(:team) { Fabricate :team, company: company }
           let!(:finances) { Fabricate :financial_information, company: company, finances_date: 2.days.ago }
           let!(:other_finances) { Fabricate :financial_information, company: company, finances_date: Time.zone.today }
-          let!(:out_finances) { Fabricate :financial_information, company: company, finances_date: 1.year.ago }
 
           let!(:team_member) { Fabricate :team_member, team: team, name: 'zzz' }
           let!(:other_team_member) { Fabricate :team_member, team: team, name: 'aaa' }
@@ -105,7 +104,7 @@ RSpec.describe CompaniesController, type: :controller do
             expect(assigns(:projects_risk_chart_data).money_risk_alert_data).to eq [{ name: 'Verde', y: 1, color: '#179A02' }]
             expect(assigns(:company_settings)).to be_a_new CompanySettings
             expect(assigns(:company_projects)).to eq [second_project, first_project]
-            expect(assigns(:projects_summary).total_initial_scope).to eq 60
+            expect(assigns(:projects_summary).total_flow_pressure).to eq 60
           end
         end
         context 'and the company already have settings' do

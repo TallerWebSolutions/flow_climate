@@ -8,10 +8,4 @@
   </div>
 </div>
 
-<div class="row">
-  <div class="col-xs-12">
-    <%= link_to t('products.new.title'), new_company_product_path(@company), class: 'btn btn-sm btn-primary bottom-spaced-component' %>
-  </div>
-</div>
-
 <%= render 'products_table', products_list: @products %>
