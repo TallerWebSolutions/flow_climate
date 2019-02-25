@@ -505,6 +505,8 @@ pt-BR:
     status_report: "Status Report"
     risks: "Riscos"
     replenishing: "Reabastecimento"
+    customers_list: "Clientes"
+    products_list: "Produtos"
   charts:
     xlabel:
       months: "Meses"

@@ -476,6 +476,8 @@ en:
     status_report: "Status Report"
     risks: "Risks"
     replenishing: "Replenishing"
+    customers_list: "Customers"
+    products_list: "Products"
   charts:
     xlabel:
       months: "Months"

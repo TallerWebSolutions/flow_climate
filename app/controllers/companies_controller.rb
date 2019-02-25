@@ -10,10 +10,12 @@ class CompaniesController < AuthenticatedController
   end
 
   def show
-    @financial_informations = @company.financial_informations.select(:id, :finances_date, :income_total, :expenses_total).for_year(Time.zone.today.year)
+    @financial_informations = @company.financial_informations.select(:id, :finances_date, :income_total, :expenses_total)
     @finances_hash_with_computed_informations = Highchart::FinancesChartsAdapter.new(@financial_informations).finances_hash_with_computed_informations
     @teams = @company.teams.order(:name)
     @company_projects = @company.projects.order(end_date: :desc)
+    @products_list = @company.products.order(name: :asc)
+    @customers_list = @company.customers.order(name: :asc)
     @projects_summary = ProjectsSummaryData.new(@company_projects)
     assign_company_settings
     build_charts_data

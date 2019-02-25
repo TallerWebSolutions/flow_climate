@@ -10,59 +10,64 @@
   </div>
 </div>
 
-<div class="row finances-consolidation-row">
-  <div class="col-xs-4 incomes-div">
-    <sup><%= t('financial_informations.index.total_income_in_period') %></sup>
-    <div class="finances-consolidation-value"><%= number_to_currency(@financial_informations.sum(&:income_total)) %></div>
-  </div>
-  <div class="col-xs-4 outcomes-div">
-    <sup><%= t('financial_informations.index.total_outcome_in_period') %></sup>
-    <div class="finances-consolidation-value"><%= number_to_currency(@financial_informations.sum(&:expenses_total)) %></div>
-  </div>
-  <div class="col-xs-4 balance-div">
-    <sup><%= t('financial_informations.index.total_balance_in_period') %></sup>
-    <div class="finances-consolidation-value"><%= number_to_currency(@financial_informations.sum(&:income_total) - @financial_informations.sum(&:expenses_total)) %></div>
-  </div>
-</div>
 
-<table class="table table-striped">
-  <thead class="thead-light">
-    <tr>
-      <th><%= t('general.month') %></th>
-      <th><%= FinancialInformation.human_attribute_name :income_total %></th>
-      <th><%= FinancialInformation.human_attribute_name :expenses_total %></th>
-      <th><%= t('financial_informations.index.throughput') %></th>
-      <th><%= t('financial_informations.index.project_delivered_hours_count') %></th>
-      <th><%= t('financial_informations.index.hours_per_demand') %></th>
-      <th><%= t('financial_informations.index.income_per_hour') %></th>
-      <th><%= t('financial_informations.index.cost_per_hour') %></th>
-      <th><%= t('financial_informations.index.monthly_cash_balance') %></th>
-      <th><%= t('financial_informations.index.accumulated_financial_result') %></th>
-      <th><%= t('general.table.actions') %></th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @finances_hash_with_computed_informations.sort_by { |finances_hash| finances_hash['finances_date'] }.reverse.each do |finance_hash| %>
+<% if @finances_hash_with_computed_informations.present? %>
+  <div class="row finances-consolidation-row">
+    <div class="col-xs-4 incomes-div">
+      <sup><%= t('financial_informations.index.total_income_in_period') %></sup>
+      <div class="finances-consolidation-value"><%= number_to_currency(@financial_informations.sum(&:income_total)) %></div>
+    </div>
+    <div class="col-xs-4 outcomes-div">
+      <sup><%= t('financial_informations.index.total_outcome_in_period') %></sup>
+      <div class="finances-consolidation-value"><%= number_to_currency(@financial_informations.sum(&:expenses_total)) %></div>
+    </div>
+    <div class="col-xs-4 balance-div">
+      <sup><%= t('financial_informations.index.total_balance_in_period') %></sup>
+      <div class="finances-consolidation-value"><%= number_to_currency(@financial_informations.sum(&:income_total) - @financial_informations.sum(&:expenses_total)) %></div>
+    </div>
+  </div>
+
+  <table class="table table-striped">
+    <thead class="thead-light">
       <tr>
-        <td><%= l(finance_hash['finances_date'], format: :month_year) %></td>
-        <td><%= number_to_currency(finance_hash['income_total']) %></td>
-        <td><%= number_to_currency(finance_hash['expenses_total']) %></td>
-        <td><%= finance_hash['throughput_in_month'] %></td>
-        <td><%= number_with_precision(finance_hash['project_delivered_hours'], precision: 2) %></td>
-        <td><%= number_with_precision(finance_hash['hours_per_demand'], precision: 2) %></td>
-        <td><%= number_to_currency(finance_hash['income_per_hour']) %></td>
-        <td><%= number_to_currency(finance_hash['cost_per_hour']) %></td>
-        <td><%= number_to_currency(finance_hash['financial_result']) %></td>
-        <td><%= number_to_currency(finance_hash['accumulated_financial_result']) %></td>
-        <td>
-          <%= link_to edit_company_financial_information_path(@company, finance_hash['id']) do %>
-            <i class="fas fa-edit"></i>
-          <% end %>
-          <%= link_to company_financial_information_path(@company, finance_hash['id']), method: :delete do %>
-            <i class="fa fa-times" aria-hidden="true"></i>
-          <% end %>
-        </td>
+        <th><%= t('general.month') %></th>
+        <th><%= FinancialInformation.human_attribute_name :income_total %></th>
+        <th><%= FinancialInformation.human_attribute_name :expenses_total %></th>
+        <th><%= t('financial_informations.index.throughput') %></th>
+        <th><%= t('financial_informations.index.project_delivered_hours_count') %></th>
+        <th><%= t('financial_informations.index.hours_per_demand') %></th>
+        <th><%= t('financial_informations.index.income_per_hour') %></th>
+        <th><%= t('financial_informations.index.cost_per_hour') %></th>
+        <th><%= t('financial_informations.index.monthly_cash_balance') %></th>
+        <th><%= t('financial_informations.index.accumulated_financial_result') %></th>
+        <th><%= t('general.table.actions') %></th>
       </tr>
-    <% end %>
-  </tbody>
-</table>
+    </thead>
+    <tbody>
+      <% @finances_hash_with_computed_informations.sort_by { |finances_hash| finances_hash['finances_date'] }.reverse.each do |finance_hash| %>
+        <tr>
+          <td><%= l(finance_hash['finances_date'], format: :month_year) %></td>
+          <td><%= number_to_currency(finance_hash['income_total']) %></td>
+          <td><%= number_to_currency(finance_hash['expenses_total']) %></td>
+          <td><%= finance_hash['throughput_in_month'] %></td>
+          <td><%= number_with_precision(finance_hash['project_delivered_hours'], precision: 2) %></td>
+          <td><%= number_with_precision(finance_hash['hours_per_demand'], precision: 2) %></td>
+          <td><%= number_to_currency(finance_hash['income_per_hour']) %></td>
+          <td><%= number_to_currency(finance_hash['cost_per_hour']) %></td>
+          <td><%= number_to_currency(finance_hash['financial_result']) %></td>
+          <td><%= number_to_currency(finance_hash['accumulated_financial_result']) %></td>
+          <td>
+            <%= link_to edit_company_financial_information_path(@company, finance_hash['id']) do %>
+              <i class="fas fa-edit"></i>
+            <% end %>
+            <%= link_to company_financial_information_path(@company, finance_hash['id']), method: :delete do %>
+              <i class="fa fa-times" aria-hidden="true"></i>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <%= t('general.no_data', missing_data: FinancialInformation.model_name.human.pluralize.downcase) %>
+<% end %>
