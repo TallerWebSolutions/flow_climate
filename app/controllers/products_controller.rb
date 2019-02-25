@@ -22,15 +22,19 @@ class ProductsController < AuthenticatedController
 
   def new
     @product = Product.new
+    assign_customers
   end
 
-  def edit; end
+  def edit
+    assign_customers
+  end
 
   def update
     customer = Customer.find_by(id: product_params[:customer_id])
     @product.update(product_params.merge(customer: customer))
     return redirect_to company_products_path(@company) if @product.save
 
+    assign_customers
     render :edit
   end
 
@@ -39,6 +43,7 @@ class ProductsController < AuthenticatedController
     @product = Product.new(product_params.merge(customer: customer))
     return redirect_to company_products_path(@company) if @product.save
 
+    assign_customers
     render :new
   end
 

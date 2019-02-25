@@ -67,10 +67,11 @@ RSpec.describe ProjectsController, type: :controller do
     before { sign_in user }
 
     let(:company) { Fabricate :company, users: [user] }
-    let(:customer) { Fabricate :customer, company: company, name: 'zzz' }
-    let(:product) { Fabricate :product, customer: customer, name: 'zzz' }
+    let!(:customer) { Fabricate :customer, company: company, name: 'zzz' }
+    let!(:other_customer) { Fabricate :customer, company: company, name: 'aaa' }
 
     describe 'GET #show' do
+      let!(:product) { Fabricate :product, customer: customer }
       let!(:first_project) { Fabricate :project, customer: customer, product: product, start_date: 2.weeks.ago, end_date: Time.zone.today }
 
       context 'having results' do
@@ -163,6 +164,7 @@ RSpec.describe ProjectsController, type: :controller do
           expect(response).to render_template :new
           expect(assigns(:project)).to be_a_new Project
           expect(assigns(:products)).to eq []
+          expect(assigns(:company_customers)).to eq [other_customer, customer]
         end
       end
       context 'invalid parameters' do
@@ -180,7 +182,6 @@ RSpec.describe ProjectsController, type: :controller do
     end
 
     describe 'POST #create' do
-      let(:customer) { Fabricate :customer, company: company }
       let!(:product) { Fabricate :product, customer: customer, name: 'zzz' }
       let!(:other_product) { Fabricate :product, customer: customer, name: 'aaa' }
       let!(:team) { Fabricate :team, company: company }
@@ -212,6 +213,7 @@ RSpec.describe ProjectsController, type: :controller do
             expect(response).to render_template :new
             expect(assigns(:project).errors.full_messages).to eq ['Qtd de Horas não pode ficar em branco', 'Tipo do Projeto não pode ficar em branco', 'Nome não pode ficar em branco', 'Status não pode ficar em branco', 'Data de Início não pode ficar em branco', 'Data Final não pode ficar em branco', 'Escopo inicial não pode ficar em branco', 'Valor do Projeto Valor ou Valor da hora é obrigatório', 'Valor da Hora Valor ou Valor da hora é obrigatório']
             expect(assigns(:products)).to eq [other_product, product]
+            expect(assigns(:company_customers)).to eq [other_customer, customer]
           end
         end
         context 'customer' do
@@ -237,7 +239,6 @@ RSpec.describe ProjectsController, type: :controller do
     end
 
     describe 'GET #edit' do
-      let(:customer) { Fabricate :customer, company: company }
       let!(:product) { Fabricate :product, customer: customer, name: 'zzz' }
       let!(:other_product) { Fabricate :product, customer: customer, name: 'aaa' }
       let(:project) { Fabricate :project, customer: customer, product: product }
@@ -249,6 +250,7 @@ RSpec.describe ProjectsController, type: :controller do
           expect(assigns(:company)).to eq company
           expect(assigns(:project)).to eq project
           expect(assigns(:products)).to eq [other_product, product]
+          expect(assigns(:company_customers)).to eq [other_customer, customer]
         end
       end
 
@@ -273,7 +275,6 @@ RSpec.describe ProjectsController, type: :controller do
     end
 
     describe 'PUT #update' do
-      let(:customer) { Fabricate :customer, company: company }
       let!(:product) { Fabricate :product, customer: customer, name: 'zzz' }
       let!(:other_product) { Fabricate :product, customer: customer, name: 'aaa' }
       let(:project) { Fabricate :project, customer: customer, product: product, start_date: 1.day.ago, end_date: 7.weeks.from_now, initial_scope: 100 }
@@ -311,6 +312,7 @@ RSpec.describe ProjectsController, type: :controller do
           before { put :update, params: { company_id: company, id: project, project: { customer_id: customer, product_id: product, name: '', status: nil, project_type: nil, start_date: nil, end_date: nil, value: nil, qty_hours: nil, hour_value: nil, initial_scope: nil } } }
           it 'does not update the project and re-render the template with the errors' do
             expect(response).to render_template :edit
+            expect(assigns(:company_customers)).to eq [other_customer, customer]
             expect(assigns(:products)).to eq [other_product, product]
             expect(assigns(:project).errors.full_messages).to eq ['Qtd de Horas não pode ficar em branco', 'Tipo do Projeto não pode ficar em branco', 'Nome não pode ficar em branco', 'Status não pode ficar em branco', 'Data de Início não pode ficar em branco', 'Data Final não pode ficar em branco', 'Escopo inicial não pode ficar em branco', 'Valor do Projeto Valor ou Valor da hora é obrigatório', 'Valor da Hora Valor ou Valor da hora é obrigatório']
           end
