@@ -42,8 +42,8 @@ RSpec.describe ProductsController, type: :controller do
 
     describe 'GET #index' do
       context 'having data' do
-        let(:customer) { Fabricate :customer, company: company }
-        let(:other_customer) { Fabricate :customer, company: company }
+        let(:customer) { Fabricate :customer, company: company, name: 'zzz' }
+        let(:other_customer) { Fabricate :customer, company: company, name: 'aaa' }
 
         let!(:product) { Fabricate :product, customer: customer, name: 'zzz' }
         let!(:other_product) { Fabricate :product, customer: other_customer, name: 'aaa' }
@@ -89,7 +89,9 @@ RSpec.describe ProductsController, type: :controller do
 
     describe 'POST #create' do
       context 'passing valid parameters' do
-        let(:customer) { Fabricate :customer, company: company }
+        let(:customer) { Fabricate :customer, company: company, name: 'zzz' }
+        let(:other_customer) { Fabricate :customer, company: company, name: 'aaa' }
+
         let(:team) { Fabricate :team, company: company }
 
         before { post :create, params: { company_id: company, product: { team_id: team, customer_id: customer, name: 'foo' } } }
@@ -111,7 +113,9 @@ RSpec.describe ProductsController, type: :controller do
     end
 
     describe 'GET #edit' do
-      let(:customer) { Fabricate :customer, company: company }
+      let(:customer) { Fabricate :customer, company: company, name: 'zzz' }
+      let!(:other_customer) { Fabricate :customer, company: company, name: 'aaa' }
+
       let(:product) { Fabricate :product, customer: customer }
 
       context 'valid parameters' do
@@ -120,6 +124,7 @@ RSpec.describe ProductsController, type: :controller do
           expect(response).to render_template :edit
           expect(assigns(:company)).to eq company
           expect(assigns(:product)).to eq product
+          expect(assigns(:company_customers)).to eq [other_customer, customer]
         end
       end
 
@@ -144,7 +149,9 @@ RSpec.describe ProductsController, type: :controller do
     end
 
     describe 'PUT #update' do
-      let(:customer) { Fabricate :customer, company: company }
+      let(:customer) { Fabricate :customer, company: company, name: 'zzz' }
+      let!(:other_customer) { Fabricate :customer, company: company, name: 'aaa' }
+
       let(:team) { Fabricate :team, company: company }
       let(:product) { Fabricate :product, customer: customer }
 
@@ -154,6 +161,7 @@ RSpec.describe ProductsController, type: :controller do
           expect(Product.last.customer).to eq customer
           expect(Product.last.team).to eq team
           expect(Product.last.name).to eq 'foo'
+
           expect(response).to redirect_to company_products_path(company)
         end
       end
@@ -161,8 +169,10 @@ RSpec.describe ProductsController, type: :controller do
       context 'passing invalid' do
         context 'product parameters' do
           before { put :update, params: { company_id: company, id: product, product: { customer_id: 'foo', name: '' } } }
+
           it 'does not update the product and re-render the template with the errors' do
             expect(response).to render_template :edit
+            expect(assigns(:company_customers)).to eq [other_customer, customer]
             expect(assigns(:product).errors.full_messages).to match_array ['Cliente não pode ficar em branco', 'Nome não pode ficar em branco']
           end
         end
@@ -183,8 +193,10 @@ RSpec.describe ProductsController, type: :controller do
     end
 
     describe 'GET #show' do
-      let(:customer) { Fabricate :customer, company: company }
+      let(:customer) { Fabricate :customer, company: company, name: 'zzz' }
+
       let(:product) { Fabricate :product, customer: customer }
+
       let!(:first_project) { Fabricate :project, customer: product.customer, product: product, end_date: 5.days.from_now }
       let!(:second_project) { Fabricate :project, customer: product.customer, product: product, end_date: 7.days.from_now }
 

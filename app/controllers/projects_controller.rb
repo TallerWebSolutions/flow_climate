@@ -23,6 +23,7 @@ class ProjectsController < AuthenticatedController
   end
 
   def new
+    assign_customers
     @project = Project.new
     @products = []
   end
@@ -32,10 +33,12 @@ class ProjectsController < AuthenticatedController
     return redirect_to company_projects_path(@company) if @project.save
 
     assign_products_list
+    assign_customers
     render :new
   end
 
   def edit
+    assign_customers
     assign_products_list
   end
 
@@ -44,6 +47,7 @@ class ProjectsController < AuthenticatedController
     @project.update(project_params.merge(customer: @customer, product: @product))
     return redirect_to company_project_path(@company, @project) if @project.save
 
+    assign_customers
     assign_products_list
     render :edit
   end

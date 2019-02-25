@@ -16,7 +16,7 @@
 
     <div class='col-xs-3 form-group <%= 'has-error' if @project.errors[:customer].present? %>'>
       <%= label_tag :customer, Customer.model_name.human, { class: 'control-label required' } %>
-      <%= f.select :customer_id, @company.customers.map { |customer| [customer.name, customer.id] }, { include_blank: t('general.select'), selected: @project.customer_id }, { class: 'form-control', id: 'customer-select' } %>
+      <%= f.select :customer_id, @company_customers.map { |customer| [customer.name, customer.id] }, { include_blank: t('general.select'), selected: @project.customer_id }, { class: 'form-control', id: 'customer-select' } %>
       <span class="help-block"><%= @project.errors[:customer].join(', ') %></span>
     </div>
 
