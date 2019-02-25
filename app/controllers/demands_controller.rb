@@ -5,7 +5,7 @@ class DemandsController < AuthenticatedController
 
   before_action :assign_company
   before_action :assign_demand, only: %i[edit update show synchronize_jira destroy]
-  before_action :assign_project, except: %i[demands_csv demands_in_projects search_demands_by_flow_status show]
+  before_action :assign_project, except: %i[demands_csv demands_in_projects search_demands_by_flow_status show destroy]
   before_action :assign_projects_for_queries, only: %i[demands_in_projects search_demands_by_flow_status]
 
   def new

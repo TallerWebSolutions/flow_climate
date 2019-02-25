@@ -410,7 +410,7 @@ pt-BR:
       manual_effort: "Esforço Atualizado Manualmente?"
       count: "%{demands_count} demandas"
       current_stage: "Etapa Atual"
-      qty_blocks: "Qty Bloqueios"
+      qty_closed_blocks: "Bloqueios Resolvidos"
       hours_blocks_queue: "Horas Bloqueada em Filas"
       hours_blocks_touch: "Horas Bloqueadas em Trabalho"
       total_blocked_time: "Tempo Bloqueado"

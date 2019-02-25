@@ -94,10 +94,14 @@ module Jira
         next if history['items'].blank?
 
         history_item = history['items'][0]
-        next if history_item['field'] != 'Impediment'
+        next unless impediment_field?(history_item)
 
         process_demand_block(demand, history, history_item)
       end
+    end
+
+    def impediment_field?(history_item)
+      history_item['field'].casecmp('impediment').zero? || history_item['field'].casecmp('flagged').zero?
     end
 
     def hash_have_histories?(jira_issue)
@@ -108,9 +112,9 @@ module Jira
       created = history['created']
       author = history['author']['displayName']
 
-      if history_item['toString'] == 'Impediment'
+      if history_item['toString'].casecmp('impediment').zero? || history_item['toString'].casecmp('impedimento').zero?
         persist_block!(demand, author, created)
-      elsif history_item['fromString'] == 'Impediment'
+      elsif history_item['fromString'].casecmp('impediment').zero? || history_item['fromString'].casecmp('impedimento').zero?
         persist_unblock!(demand, author, created)
       end
     end
