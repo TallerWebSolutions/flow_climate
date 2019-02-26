@@ -13,7 +13,9 @@ RSpec.describe ApplicationController, type: :controller do
 
       get :inexistent_model
       expect(response.status).to eq 404
-      expect(response.body).to include 'The page you were looking for doesn\'t exist (404)'
+      expect(response.body).to include I18n.t('general.error.not_found.title')
+      expect(response.body).to include I18n.t('general.error.not_found.page_title')
+      expect(response.body).to include I18n.t('general.error.not_found.back')
     end
 
     it 'responds to ajax' do

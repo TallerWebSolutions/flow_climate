@@ -1,0 +1,17 @@
+<html>
+  <head>
+    <%= t('general.error.not_found.page_title') %>
+    <%= stylesheet_link_tag 'shared/error_404', media: 'all' %>
+  </head>
+
+  <body>
+    <div id="main">
+      <div class="fof">
+        <h1><%= t('general.error.not_found.title') %></h1>
+        <h2><%= t('general.error.not_found.desc') %></h2>
+        <p><%= link_to(t('general.error.not_found.back'), root_path) %></p>
+      </div>
+    </div>
+  </body>
+
+</html>
