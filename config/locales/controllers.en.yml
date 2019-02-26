@@ -69,6 +69,12 @@ en:
     days_text: "%{days} day(s)"
     search_text: "Search in product or project name or demand title or demand id"
     data: "Data"
+    error:
+      not_found:
+        title: "Error 404"
+        desc: "Page not found"
+        back: "Back to the path"
+        page_title: "The page you're looking for does not exist"
   header:
     logout: Logout
     explore: Explore

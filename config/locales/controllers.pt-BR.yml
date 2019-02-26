@@ -71,6 +71,12 @@ pt-BR:
       title: "Lead time %{percentile}"
     search_text: "Procurar no nome do produto ou do projeto e no ID da demanda"
     data: "Dados"
+    error:
+      not_found:
+        title: "Erro 404"
+        desc: "Página não encontrada"
+        back: "Volte para trilha"
+        page_title: "A página que você está procurando não existe"
   header:
     logout: Sair
     sign_up: Cadastre-se
