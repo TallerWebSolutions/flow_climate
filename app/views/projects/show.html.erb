@@ -22,6 +22,7 @@
     <%= link_to t('projects.show.deadline.title'), '#', id: 'nav-item-deadline', class: 'nav-item', data: { container: '#deadline-change' } %>
     <%= link_to t('navbar.charts'), '#', id: 'nav-item-charts', class: 'nav-item', data: { container: '#operational-charts' } %>
     <%= link_to t('navbar.status_report'), '#', id: 'nav-item-statusreport', class: 'nav-item', data: { container: '#project-status-report' } %>
+    <%= link_to t('navbar.statistics'), '#', id: 'nav-item-statistics', class: 'nav-item', data: { container: '#project-statistics' } %>
     <%= link_to t('navbar.risk_alerts'), '#', id: 'nav-item-risk', class: 'nav-item', data: { container: '#project-risk-alerts-table' } %>
     <%= link_to t('navbar.settings'), '#', id: 'nav-item-settings', class: 'nav-item', data: { container: '#project-settings' } %>
   </div>
@@ -47,6 +48,10 @@
 
 <div id="operational-charts" class="tab-container">
   <%= render 'charts/operational_charts_tab', target_name: @project.full_name, report_data: @report_data %>
+</div>
+
+<div id="project-statistics" class="tab-container">
+  <%= render 'projects/statistics', project_statistics: @project_statistics %>
 </div>
 
 <div id="project-status-report" class="tab-container">

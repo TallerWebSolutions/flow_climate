@@ -67,11 +67,11 @@ class Demand < ApplicationRecord
   validates :project, :created_date, :demand_id, :demand_type, :class_of_service, :assignees_count, presence: true
   validates :demand_id, uniqueness: { scope: :company_id, message: I18n.t('demand.validations.demand_id_unique.message') }
 
-  scope :opened_in_date, ->(date) { kept.where('created_date::timestamp::date = :date', date: date) }
-  scope :opened_after_date, ->(date) { kept.where('created_date >= :date', date: date.beginning_of_day) }
-  scope :finished_in_stream, ->(stage_stream) { kept.where('demands.downstream = :downstream', downstream: stage_stream == 'downstream') }
-  scope :finished, -> { kept.where('demands.end_date IS NOT NULL') }
-  scope :finished_with_leadtime, -> { kept.where('end_date IS NOT NULL AND leadtime IS NOT NULL') }
+  scope :opened_in_date, ->(date) { kept.story.where('created_date::timestamp::date = :date', date: date) }
+  scope :opened_after_date, ->(date) { kept.story.where('created_date >= :date', date: date.beginning_of_day) }
+  scope :finished_in_stream, ->(stage_stream) { kept.story.where('demands.downstream = :downstream', downstream: stage_stream == 'downstream') }
+  scope :finished, -> { kept.story.where('demands.end_date IS NOT NULL') }
+  scope :finished_with_leadtime, -> { kept.story.where('end_date IS NOT NULL AND leadtime IS NOT NULL') }
   scope :finished_until_date, ->(limit_date) { finished.where('demands.end_date <= :limit_date', limit_date: limit_date) }
   scope :finished_until_date_with_leadtime, ->(limit_date) { finished_with_leadtime.finished_until_date(limit_date) }
   scope :finished_after_date, ->(limit_date) { finished.where('demands.end_date >= :limit_date', limit_date: limit_date.beginning_of_day) }
@@ -79,12 +79,12 @@ class Demand < ApplicationRecord
   scope :finished_bugs, -> { bug.finished }
   scope :finished_in_month, ->(month, year) { finished.where('EXTRACT(month FROM end_date) = :month AND EXTRACT(year FROM end_date) = :year', month: month, year: year) }
   scope :finished_in_week, ->(week, year) { finished.where('EXTRACT(week FROM end_date) = :week AND EXTRACT(year FROM end_date) = :year', week: week, year: year) }
-  scope :not_finished, -> { kept.where('end_date IS NULL') }
-  scope :upstream_flag, -> { kept.where(downstream: false) }
-  scope :downstream_flag, -> { kept.where(downstream: true) }
-  scope :not_discarded_until_date, ->(limit_date) { where('demands.discarded_at IS NULL OR demands.discarded_at > :limit_date', limit_date: limit_date.end_of_day) }
+  scope :not_finished, -> { kept.story.where('end_date IS NULL') }
+  scope :upstream_flag, -> { kept.story.where(downstream: false) }
+  scope :downstream_flag, -> { kept.story.where(downstream: true) }
+  scope :not_discarded_until_date, ->(limit_date) { story.where('demands.discarded_at IS NULL OR demands.discarded_at > :limit_date', limit_date: limit_date.end_of_day) }
 
-  scope :in_wip, -> { kept.where('demands.commitment_date IS NOT NULL AND demands.end_date IS NULL') }
+  scope :in_wip, -> { kept.story.where('demands.commitment_date IS NOT NULL AND demands.end_date IS NULL') }
 
   delegate :full_name, to: :project, prefix: true
 

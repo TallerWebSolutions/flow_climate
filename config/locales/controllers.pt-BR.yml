@@ -513,6 +513,7 @@ pt-BR:
     replenishing: "Reabastecimento"
     customers_list: "Clientes"
     products_list: "Produtos"
+    statistics: "Estatísticas"
   charts:
     xlabel:
       months: "Meses"

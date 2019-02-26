@@ -484,6 +484,7 @@ en:
     replenishing: "Replenishing"
     customers_list: "Customers"
     products_list: "Products"
+    statistics: ""
   charts:
     xlabel:
       months: "Months"

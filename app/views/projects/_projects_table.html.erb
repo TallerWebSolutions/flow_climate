@@ -69,7 +69,7 @@
           <td><%= number_with_precision(project.consumed_hours, precision: 2) %></td>
           <td>
             <%= link_to company_project_demand_blocks_path(@company, project), class: 'list-block', remote: true do %>
-              <%= project.active_and_kept_blocks.count %>
+              <%= project.active_kept_closed_blocks.count %>
             <% end %>
           </td>
           <td><%= number_with_precision(project.average_block_duration, precision: 2) %>h</td>
