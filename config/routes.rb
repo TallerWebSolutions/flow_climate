@@ -109,6 +109,7 @@ Rails.application.routes.draw do
         patch :finish_project
         get :statistics
         patch :copy_stages_from
+        get :statistics_tab
       end
     end
 

@@ -51,6 +51,12 @@ module Stats
       mean + (4 * std_dev)
     end
 
+    def compute_percentage_variation(initial_value, last_value)
+      start_value = initial_value
+      start_value = 1 if initial_value.zero?
+      (last_value.to_f - initial_value.to_f) / start_value.to_f
+    end
+
     private
 
     def create_histogram_data(data_array)

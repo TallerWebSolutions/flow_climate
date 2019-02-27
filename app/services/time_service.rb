@@ -12,7 +12,7 @@ class TimeService
   def days_between_of(start_date, end_date)
     return [] if start_date.blank? || end_date.blank?
 
-    compute_dates(start_date, end_date, 1.day)
+    compute_dates(start_date.beginning_of_day, end_date.end_of_day, 1.day)
   end
 
   def weeks_between_of(start_date, end_date)
@@ -63,7 +63,7 @@ class TimeService
   def compute_dates(min_date, max_date, period_frame)
     array_of_dates = []
     while min_date <= max_date
-      array_of_dates << min_date
+      array_of_dates << min_date.to_date
       min_date += period_frame
     end
     array_of_dates

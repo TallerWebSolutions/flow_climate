@@ -1,0 +1,10 @@
+var projectStatsDiv = $('#project-statistics')
+
+projectStatsDiv.html("<%= escape_javascript(render 'projects/project_statistics', project_statistics_chart_adapter: @project_statistics_chart_adapter, period_variation: @period_variation) %>");
+
+buildProjectStatistics();
+
+$('#general-loader').hide();
+projectStatsDiv.show();
+
+enableTabs();

@@ -77,6 +77,11 @@ pt-BR:
         desc: "Página não encontrada"
         back: "Volte para trilha"
         page_title: "A página que você está procurando não existe"
+    monthly: "Mensal"
+    weekly: "Semanal"
+    daily: "Diário"
+    start: "Início"
+    finish: "Fim"
   header:
     logout: Sair
     sign_up: Cadastre-se
@@ -306,6 +311,8 @@ pt-BR:
         confidence_95: "Data com 95% de Confiança"
         confidence_80: "Data com 80% de Confiança"
         confidence_60: "Data com 60% de Confiança"
+      scope_variation:
+        title: "Variação do escopo no tempo"
     project_risk_alert_table: "Alertas de risco para o projeto"
     portfolio_bulletin:
       delivered_demands: "Demandas entregues na última semana"
@@ -568,6 +575,8 @@ pt-BR:
       title_upstream: "Upstream Cumulative Flow Diagram para %{target_name}"
       ytitle: ""
       data_suffix: "demandas"
+    period:
+      label: "Período"
   finances_params:
     edit:
       title: "Editar Informação Financeira"
@@ -661,3 +670,6 @@ pt-BR:
   user_profile:
     show:
       data_processed_table: "Dados Processados"
+  stats:
+    period:
+      variation: "Variação no Período"

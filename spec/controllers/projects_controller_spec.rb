@@ -57,6 +57,10 @@ RSpec.describe ProjectsController, type: :controller do
       before { patch :copy_stages_from, params: { company_id: 'foo', id: 'sbbrubles', project_to_copy_stages_from: 'bla' } }
       it { expect(response).to redirect_to new_user_session_path }
     end
+    describe 'GET #statistics_tab' do
+      before { get :statistics_tab, params: { company_id: 'foo', id: 'sbbrubles' } }
+      it { expect(response).to redirect_to new_user_session_path }
+    end
   end
 
   context 'authenticated as gold' do
@@ -648,6 +652,28 @@ RSpec.describe ProjectsController, type: :controller do
             let(:company) { Fabricate :company, users: [] }
             before { patch :copy_stages_from, params: { company_id: company, id: third_project, project_to_copy_stages_from: third_project }, xhr: true }
             it { expect(response).to have_http_status :not_found }
+          end
+        end
+      end
+    end
+
+    describe 'GET #statistics_tab' do
+      let!(:project) { Fabricate :project, customer: customer, start_date: 2.weeks.ago, end_date: Time.zone.today }
+
+      context 'passing valid parameters' do
+        context 'no start nor end dates nor period' do
+          it 'builds the statistic adapter and renders the view using the dates in project to a monthly period' do
+            expect(Highchart::ProjectStatisticsChartsAdapter).to receive(:new).with(project, 2.weeks.ago.to_date, Time.zone.today, 'month').and_call_original
+            get :statistics_tab, params: { company_id: company, id: project }, xhr: true
+            expect(response).to render_template 'projects/statistics_tab.js.erb'
+            expect(response).to render_template 'projects/_project_statistics'
+          end
+        end
+        context 'and a start and end dates' do
+          it 'builds the statistic adapter and renders the view using the parameters' do
+            get :statistics_tab, params: { company_id: company, id: project, start_date: 1.week.ago, end_date: Time.zone.today, period: 'month' }, xhr: true
+            expect(response).to render_template 'projects/statistics_tab.js.erb'
+            expect(response).to render_template 'projects/_project_statistics'
           end
         end
       end
