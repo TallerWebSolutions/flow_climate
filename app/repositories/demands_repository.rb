@@ -4,24 +4,25 @@ class DemandsRepository
   include Singleton
 
   def demands_for_company_and_week(company, required_date)
-    Demand.kept.joins(project: :customer).where('customers.company_id = :company_id AND EXTRACT(week FROM demands.created_date) = :week AND EXTRACT(year FROM demands.created_date) = :year', company_id: company.id, week: required_date.cweek, year: required_date.cwyear)
+    Demand.story.kept.joins(project: :customer).where('customers.company_id = :company_id AND EXTRACT(week FROM demands.created_date) = :week AND EXTRACT(year FROM demands.created_date) = :year', company_id: company.id, week: required_date.cweek, year: required_date.cwyear)
   end
 
   def known_scope_to_date(project, analysed_date)
-    Demand.where('project_id = :project_id AND DATE(created_date::TIMESTAMPTZ AT TIME ZONE INTERVAL :interval_value::INTERVAL) <= :analysed_date AND (discarded_at IS NULL OR discarded_at > :limit_date)', project_id: project.id, interval_value: Time.zone.now.formatted_offset, analysed_date: analysed_date, limit_date: analysed_date.beginning_of_day).uniq.count
+    Demand.story.where('project_id = :project_id AND DATE(created_date::TIMESTAMPTZ AT TIME ZONE INTERVAL :interval_value::INTERVAL) <= :analysed_date AND (discarded_at IS NULL OR discarded_at > :limit_date)', project_id: project.id, interval_value: Time.zone.now.formatted_offset, analysed_date: analysed_date, limit_date: analysed_date.beginning_of_day).uniq.count
   end
 
   def committed_demands_by_project_and_week(projects, week, year)
-    Demand.kept.where(project_id: projects.map(&:id)).where('EXTRACT(WEEK FROM commitment_date) = :week AND EXTRACT(YEAR FROM commitment_date) = :year', week: week, year: year)
+    Demand.kept.story.where(project_id: projects.map(&:id)).where('EXTRACT(WEEK FROM commitment_date) = :week AND EXTRACT(YEAR FROM commitment_date) = :year', week: week, year: year)
   end
 
   def throughput_by_project_and_week(projects, start_period, end_period)
-    Demand.kept.where(project_id: projects.map(&:id)).where('end_date BETWEEN :start_period AND :end_period', start_period: start_period, end_period: end_period)
+    Demand.kept.story.where(project_id: projects.map(&:id)).where('end_date BETWEEN :start_period AND :end_period', start_period: start_period, end_period: end_period)
   end
 
   def grouped_by_effort_upstream_per_month(projects, limit_date)
     effort_upstream_hash = {}
     Demand.kept
+          .story
           .select('EXTRACT(YEAR from end_date) AS year, EXTRACT(MONTH from end_date) AS month, SUM(effort_upstream) AS computed_sum_effort')
           .where(project_id: projects.map(&:id))
           .where('end_date >= :limit_date', limit_date: limit_date)
@@ -34,6 +35,7 @@ class DemandsRepository
   def grouped_by_effort_downstream_per_month(projects, limit_date)
     effort_downstream_hash = {}
     Demand.kept
+          .story
           .select('EXTRACT(YEAR from end_date) AS year, EXTRACT(MONTH from end_date) AS month, SUM(effort_downstream) AS computed_sum_effort')
           .where(project_id: projects.map(&:id))
           .where('end_date >= :limit_date', limit_date: limit_date)
@@ -44,7 +46,7 @@ class DemandsRepository
   end
 
   def demands_to_projects(array_of_projects)
-    DemandsList.kept.where(project_id: array_of_projects.map(&:id))
+    DemandsList.kept.story.where(project_id: array_of_projects.map(&:id))
   end
 
   def scope_in_week_for_projects(projects, week, year)
@@ -54,7 +56,7 @@ class DemandsRepository
   end
 
   def bugs_opened_until_limit_date(projects, date = Time.zone.today)
-    Demand.kept.where(project_id: projects).where('created_date < :limit_date', limit_date: date).bug.count
+    Demand.kept.story.where(project_id: projects).where('created_date < :limit_date', limit_date: date).bug.count
   end
 
   def bugs_closed_until_limit_date(projects, limit_date = Time.zone.today)
@@ -107,11 +109,11 @@ class DemandsRepository
   end
 
   def demands_for_period(demands, start_period, end_period)
-    Demand.kept.where(id: demands.map(&:id)).where('end_date >= :bottom_limit AND end_date <= :upper_limit', bottom_limit: start_period, upper_limit: end_period)
+    Demand.kept.story.where(id: demands.map(&:id)).where('end_date >= :bottom_limit AND end_date <= :upper_limit', bottom_limit: start_period, upper_limit: end_period)
   end
 
   def demands_for_periods_accumulated(demands, upper_date_limit)
-    Demand.kept.where(id: demands.map(&:id)).where('end_date <= :upper_limit', upper_limit: upper_date_limit)
+    Demand.kept.story.where(id: demands.map(&:id)).where('end_date <= :upper_limit', upper_limit: upper_date_limit)
   end
 
   def cumulative_flow_for_week(demands_ids, date, stream)
@@ -119,7 +121,7 @@ class DemandsRepository
     end_date = date.end_of_week
 
     cumulative_hash = {}
-    Demand.joins(demand_transitions: :stage).select('stages.name AS stage_name, count(1) as stage_th')
+    Demand.story.joins(demand_transitions: :stage).select('stages.name AS stage_name, count(1) as stage_th')
           .where(id: demands_ids)
           .where('demand_transitions.last_time_in < :end_date', end_date: end_date)
           .where('demands.discarded_at IS NULL OR demands.discarded_at > :start_date', start_date: start_date)
@@ -133,21 +135,21 @@ class DemandsRepository
   private
 
   def build_count_grouped_per_period_query(demands, select_string, base_date_field)
-    Demand.kept.select(select_string).where(id: demands.map(&:id)).where("#{base_date_field} IS NOT NULL").order(Arel.sql(select_string)).group(select_string)
+    Demand.kept.story.select(select_string).where(id: demands.map(&:id)).where("#{base_date_field} IS NOT NULL").order(Arel.sql(select_string)).group(select_string)
   end
 
   def base_query_to_operational_data(date, downstream, projects_ids)
-    Demand.kept.select('EXTRACT(YEAR from end_date) AS year, EXTRACT(WEEK from end_date) AS week, SUM(effort_downstream) AS total_effort_downstream, SUM(effort_upstream) AS total_effort_upstream, COUNT(1) AS throughput, SUM(total_queue_time) AS sum_total_queue_time, SUM(total_touch_time) AS sum_total_touch_time')
+    Demand.kept.story.select('EXTRACT(YEAR from end_date) AS year, EXTRACT(WEEK from end_date) AS week, SUM(effort_downstream) AS total_effort_downstream, SUM(effort_upstream) AS total_effort_upstream, COUNT(1) AS throughput, SUM(total_queue_time) AS sum_total_queue_time, SUM(total_touch_time) AS sum_total_touch_time')
           .where(downstream: downstream, project_id: projects_ids)
           .where('end_date >= :limit_date', limit_date: date)
           .order('year, week').group('year, week')
   end
 
   def demands_for_projects_finished_in_period(projects, start_period, end_period)
-    Demand.kept.where(project_id: projects).where('end_date BETWEEN :start_period AND :end_period', start_period: start_period, end_period: end_period)
+    Demand.kept.story.where(project_id: projects).where('end_date BETWEEN :start_period AND :end_period', start_period: start_period, end_period: end_period)
   end
 
   def demands_for_projects_and_finished_until_limit_date(projects, limit_date)
-    Demand.kept.where(project_id: projects).where('end_date <= :limit_date', limit_date: limit_date)
+    Demand.kept.story.where(project_id: projects).where('end_date <= :limit_date', limit_date: limit_date)
   end
 end

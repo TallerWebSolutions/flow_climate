@@ -4,10 +4,10 @@ var stampsDiv = $('#nav-item-stamps');
 stampsDiv.addClass('active');
 $('#stamps').show();
 
-const company_id = $("#company_id").val();
-const project_id = $("#project_id").val();
-const projects_ids = $("#projects_ids").val();
-const target_name = $("#target_name").val();
+const companyId = $("#company_id").val();
+const projectId = $("#project_id").val();
+const projectsIds = $("#projects_ids").val();
+const targetName = $("#target_name").val();
 
 $('.nav-item').on('click', function(event){
     hideAllComponents();
@@ -21,17 +21,21 @@ $('.nav-item').on('click', function(event){
 
         if ($(this).attr('id') === 'nav-item-statusreport') {
 
-            buildStatusReportCharts(company_id, projects_ids, period, target_name)
+            buildStatusReportCharts(companyId, projectsIds, period, targetName)
         } else if ($(this).attr('id') === 'nav-item-charts') {
 
-            buildOperationalCharts(company_id, projects_ids, period, target_name);
+            buildOperationalCharts(companyId, projectsIds, period, targetName);
         } else if ($(this).attr('id') === 'nav-item-strategic') {
 
-            buildStrategicCharts(company_id, projects_ids, target_name);
+            buildStrategicCharts(companyId, projectsIds, targetName);
         } else if ($(this).attr('id') === 'nav-item-demands') {
             $('#demands-tab').hide();
 
-            getDemands(company_id, projects_ids);
+            getDemands(companyId, projectsIds);
+        } else if ($(this).attr('id') === 'nav-item-statistics') {
+            $('#demands-tab').hide();
+
+            getProjectStatistics(companyId, projectId, $("#start_date").val(), $("#end_date").val(), $("#period").val());
         } else {
             enableTabs();
             $($(this).data('container')).show();

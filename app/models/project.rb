@@ -141,15 +141,15 @@ class Project < ApplicationRecord
   end
 
   def backlog_growth_rate
-    return 0 if demands.blank? || last_week_scope.zero?
+    return 0 if demands.kept.story.blank? || last_week_scope.zero?
 
     backlog_unit_growth.to_f / last_week_scope
   end
 
   def backlog_for(date = Time.zone.today)
-    return demands.kept.count if date.blank?
+    return demands.kept.story.count if date.blank?
 
-    demands.kept.where('created_date <= :limit_date', limit_date: date.end_of_week).count + initial_scope
+    demands.kept.story.where('created_date <= :limit_date', limit_date: date.end_of_week).count + initial_scope
   end
 
   def current_team
@@ -172,33 +172,33 @@ class Project < ApplicationRecord
   end
 
   def total_throughput
-    demands.kept.finished.count
+    demands.kept.story.finished.count
   end
 
   def total_throughput_upstream
-    demands.kept.finished.reject(&:downstream_demand?)
+    demands.kept.story.finished.reject(&:downstream_demand?)
   end
 
   def total_throughput_downstream
-    demands.kept.finished.select(&:downstream_demand?)
+    demands.kept.story.finished.select(&:downstream_demand?)
   end
 
   def total_throughput_for(date = Time.zone.today)
-    demands.kept.finished.where('EXTRACT(week FROM end_date) = :week AND EXTRACT(year FROM end_date) = :year', week: date.to_date.cweek, year: date.to_date.cwyear).count
+    demands.kept.story.finished.where('EXTRACT(week FROM end_date) = :week AND EXTRACT(year FROM end_date) = :year', week: date.to_date.cweek, year: date.to_date.cwyear).count
   end
 
   def total_throughput_until(date)
     return total_throughput if date.blank?
 
-    demands.kept.finished_until_date(date).count
+    demands.kept.story.finished_until_date(date).count
   end
 
   def total_hours_upstream
-    demands.kept.finished.sum(&:effort_upstream)
+    demands.kept.story.finished.sum(&:effort_upstream)
   end
 
   def total_hours_downstream
-    demands.kept.finished.sum(&:effort_downstream)
+    demands.kept.story.finished.sum(&:effort_downstream)
   end
 
   def total_hours_consumed
@@ -210,15 +210,15 @@ class Project < ApplicationRecord
   end
 
   def total_bugs_opened
-    demands.kept.bug.not_finished.count
+    demands.kept.story.bug.not_finished.count
   end
 
   def total_bugs_closed
-    demands.kept.bug.finished.count
+    demands.kept.story.bug.finished.count
   end
 
   def total_hours_bug
-    demands.kept.bug.finished.sum(&:effort_upstream) + demands.kept.bug.finished.sum(&:effort_downstream)
+    demands.kept.story.bug.finished.sum(&:effort_upstream) + demands.kept.story.bug.finished.sum(&:effort_downstream)
   end
 
   def avg_hours_per_demand
@@ -287,19 +287,19 @@ class Project < ApplicationRecord
   end
 
   def percentage_of_demand_type(demand_type)
-    return 0 if demands.kept.count.zero?
+    return 0 if demands.kept.story.count.zero?
 
-    (demands.kept.send(demand_type).count.to_f / demands.kept.count.to_f) * 100
+    (demands.kept.story.send(demand_type).count.to_f / demands.kept.story.count.to_f) * 100
   end
 
   def average_block_duration
-    return 0 if demands.kept.blank? || demand_blocks.kept.blank?
+    return 0 if demands.kept.story.blank? || demand_blocks.kept.blank?
 
-    active_and_kept_blocks.average(:block_duration)
+    active_kept_closed_blocks.average(:block_duration)
   end
 
   def leadtime_for_class_of_service(class_of_service, desired_percentile = 80)
-    demands_in_class_of_service = demands.kept.send(class_of_service).finished
+    demands_in_class_of_service = demands.kept.story.send(class_of_service).finished
     Stats::StatisticsService.instance.percentile(desired_percentile, demands_in_class_of_service.map(&:leadtime))
   end
 
@@ -312,36 +312,36 @@ class Project < ApplicationRecord
     Stats::StatisticsService.instance.percentile(desired_percentile, demands.finished.map(&:leadtime))
   end
 
-  def active_and_kept_blocks
-    demand_blocks.kept.active
+  def active_kept_closed_blocks
+    demand_blocks.kept.active.closed
   end
 
   def percentage_expedite
-    return 0 if demands.kept.count.zero?
+    return 0 if demands.kept.story.count.zero?
 
-    (demands.kept.expedite.count.to_f / demands.kept.count.to_f) * 100
+    (demands.kept.story.expedite.count.to_f / demands.kept.story.count.to_f) * 100
   end
 
   def percentage_standard
-    return 0 if demands.kept.count.zero?
+    return 0 if demands.kept.story.count.zero?
 
-    (demands.kept.standard.count.to_f / demands.kept.count.to_f) * 100
+    (demands.kept.story.standard.count.to_f / demands.kept.story.count.to_f) * 100
   end
 
   def percentage_fixed_date
-    return 0 if demands.kept.count.zero?
+    return 0 if demands.kept.story.count.zero?
 
-    (demands.kept.fixed_date.count.to_f / demands.kept.count.to_f) * 100
+    (demands.kept.story.fixed_date.count.to_f / demands.kept.story.count.to_f) * 100
   end
 
   def percentage_intangible
-    return 0 if demands.kept.count.zero?
+    return 0 if demands.kept.story.count.zero?
 
-    (demands.kept.intangible.count.to_f / demands.kept.count.to_f) * 100
+    (demands.kept.story.intangible.count.to_f / demands.kept.story.count.to_f) * 100
   end
 
   def kept_demands_ids
-    demands.kept.map(&:id)
+    demands.kept.story.map(&:id)
   end
 
   private

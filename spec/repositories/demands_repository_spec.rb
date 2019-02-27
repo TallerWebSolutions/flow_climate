@@ -22,6 +22,8 @@ RSpec.describe DemandsRepository, type: :repository do
 
     let!(:sixth_demand) { Fabricate :demand, project: first_project, discarded_at: Time.zone.today, created_date: 1.week.ago }
 
+    let!(:first_epic) { Fabricate :demand, project: first_project, artifact_type: :epic }
+
     it { expect(DemandsRepository.instance.demands_for_company_and_week(company, 1.week.ago.to_date)).to match_array [second_demand, third_demand, first_demand] }
   end
 
@@ -37,6 +39,8 @@ RSpec.describe DemandsRepository, type: :repository do
 
     let!(:eigth_demand) { Fabricate :demand, project: second_project, created_date: 2.days.ago, discarded_at: nil }
 
+    let!(:first_epic) { Fabricate :demand, project: first_project, artifact_type: :epic }
+
     it { expect(DemandsRepository.instance.known_scope_to_date(first_project, 2.days.ago.to_date)).to eq 5 }
   end
 
@@ -48,6 +52,8 @@ RSpec.describe DemandsRepository, type: :repository do
     let!(:fifth_demand) { Fabricate :demand, project: second_project, demand_id: 'fifth_demand', created_date: 2.days.ago, end_date: 2.days.ago, discarded_at: nil }
 
     let!(:sixth_demand) { Fabricate :demand, project: first_project, demand_id: 'sixth_demand', discarded_at: Time.zone.today }
+
+    let!(:first_epic) { Fabricate :demand, project: first_project, artifact_type: :epic }
 
     subject(:query_return) { DemandsRepository.instance.demands_to_projects([first_project]) }
 
@@ -62,6 +68,8 @@ RSpec.describe DemandsRepository, type: :repository do
       let!(:fourth_demand) { Fabricate :demand, project: first_project, commitment_date: 1.week.ago }
       let!(:fifth_demand) { Fabricate :demand, project: second_project, commitment_date: 1.week.ago }
       let!(:sixth_demand) { Fabricate :demand, project: first_project, commitment_date: 1.week.ago, discarded_at: Time.zone.today }
+
+      let!(:first_epic) { Fabricate :demand, project: first_project, artifact_type: :epic }
 
       it { expect(DemandsRepository.instance.committed_demands_by_project_and_week(Project.all, 1.week.ago.to_date.cweek, 1.week.ago.to_date.cwyear)).to match_array [third_demand, fourth_demand, fifth_demand] }
     end
@@ -78,6 +86,8 @@ RSpec.describe DemandsRepository, type: :repository do
       let!(:fourth_demand) { Fabricate :demand, project: first_project, end_date: 1.week.ago }
       let!(:fifth_demand) { Fabricate :demand, project: second_project, end_date: 1.week.ago }
       let!(:sixth_demand) { Fabricate :demand, project: first_project, end_date: 1.week.ago, discarded_at: Time.zone.today }
+
+      let!(:first_epic) { Fabricate :demand, project: first_project, artifact_type: :epic }
 
       it { expect(DemandsRepository.instance.throughput_by_project_and_week(Project.all, 1.week.ago.beginning_of_week, 1.week.ago.end_of_week)).to match_array [third_demand, fourth_demand, fifth_demand] }
     end
@@ -98,6 +108,8 @@ RSpec.describe DemandsRepository, type: :repository do
       let!(:sixth_demand) { Fabricate :demand, project: project, commitment_date: 10.days.ago, end_date: 5.days.ago, effort_upstream: 32, effort_downstream: 87 }
       let!(:seventh_demand) { Fabricate :demand, project: project, commitment_date: 10.days.ago, end_date: nil, effort_upstream: 32, effort_downstream: 87 }
       let!(:eigth_demand) { Fabricate :demand, project: project, commitment_date: 29.days.ago, end_date: 22.days.ago, effort_upstream: 80, effort_downstream: 34, discarded_at: Time.zone.today }
+
+      let!(:first_epic) { Fabricate :demand, project: first_project, artifact_type: :epic }
 
       context 'having demands' do
         it { expect(DemandsRepository.instance.grouped_by_effort_upstream_per_month(Project.all, 57.days.ago.to_date)).to eq([2018.0, 2.0] => 22.0, [2018.0, 3.0] => 195.0) }
@@ -122,6 +134,8 @@ RSpec.describe DemandsRepository, type: :repository do
       let!(:sixth_demand) { Fabricate :demand, project: project, commitment_date: 10.days.ago, end_date: 5.days.ago, effort_upstream: 32, effort_downstream: 87 }
       let!(:seventh_demand) { Fabricate :demand, project: project, commitment_date: 10.days.ago, end_date: nil, effort_upstream: 32, effort_downstream: 87 }
       let!(:eigth_demand) { Fabricate :demand, project: project, commitment_date: 29.days.ago, end_date: 22.days.ago, effort_upstream: 80, effort_downstream: 34, discarded_at: Time.zone.today }
+
+      let!(:first_epic) { Fabricate :demand, project: first_project, artifact_type: :epic }
 
       context 'having demands in progress' do
         it { expect(DemandsRepository.instance.grouped_by_effort_downstream_per_month(Project.all, 57.days.ago.to_date)).to eq([2018.0, 2.0] => 25.0, [2018.0, 3.0] => 186.0) }
@@ -150,7 +164,9 @@ RSpec.describe DemandsRepository, type: :repository do
         let!(:second_demand) { Fabricate :demand, project: first_project, downstream: false }
         let!(:third_demand) { Fabricate :demand, project: first_project, downstream: false }
 
-        let!(:eigth_demand) { Fabricate :demand, project: second_project, commitment_date: Time.zone.today, discarded_at: Time.zone.today }
+        let!(:fourth_demand) { Fabricate :demand, project: second_project, commitment_date: Time.zone.today, discarded_at: Time.zone.today }
+
+        let!(:first_epic) { Fabricate :demand, project: first_project, artifact_type: :epic }
 
         let!(:first_transition) { Fabricate :demand_transition, stage: first_stage, demand: first_demand, last_time_in: '2018-02-27T17:09:58-03:00', last_time_out: '2018-02-28T17:09:58-03:00' }
         let!(:second_transition) { Fabricate :demand_transition, stage: second_stage, demand: second_demand, last_time_in: '2018-02-28T17:09:58-03:00', last_time_out: nil }
@@ -177,6 +193,8 @@ RSpec.describe DemandsRepository, type: :repository do
           let!(:seventh_demand) { Fabricate :demand, project: third_project, downstream: false, commitment_date: Time.zone.today, end_date: Time.zone.tomorrow }
 
           let!(:eigth_demand) { Fabricate :demand, project: second_project, commitment_date: Time.zone.today, discarded_at: Time.zone.today }
+
+          let!(:first_epic) { Fabricate :demand, project: first_project, artifact_type: :epic }
 
           let!(:first_transition) { Fabricate :demand_transition, stage: first_stage, demand: first_demand, last_time_in: '2018-02-27T17:09:58-03:00', last_time_out: '2018-02-28T17:09:58-03:00' }
           let!(:second_transition) { Fabricate :demand_transition, stage: second_stage, demand: second_demand, last_time_in: '2018-02-28T17:09:58-03:00', last_time_out: nil }
@@ -211,6 +229,8 @@ RSpec.describe DemandsRepository, type: :repository do
 
       let!(:eigth_demand) { Fabricate :demand, project: second_project, commitment_date: Time.zone.today, discarded_at: Time.zone.today, effort_upstream: 54_321, effort_downstream: 15_223 }
 
+      let!(:first_epic) { Fabricate :demand, project: first_project, artifact_type: :epic }
+
       it { expect(DemandsRepository.instance.delivered_hours_in_month_for_projects(Project.all).to_f).to eq 3374.0 }
       it { expect(DemandsRepository.instance.delivered_hours_in_month_for_projects(Project.all, Date.new(2018, 3, 1)).to_f).to eq 2632.0 }
     end
@@ -232,6 +252,8 @@ RSpec.describe DemandsRepository, type: :repository do
     let!(:seventh_demand) { Fabricate :demand, project: third_project, downstream: true, commitment_date: Time.zone.today, end_date: Time.zone.tomorrow, effort_upstream: 120, effort_downstream: 723 }
 
     let!(:eigth_demand) { Fabricate :demand, project: second_project, commitment_date: Time.zone.today, discarded_at: Time.zone.today, effort_upstream: 54_321, effort_downstream: 15_223 }
+
+    let!(:first_epic) { Fabricate :demand, project: first_project, artifact_type: :epic }
 
     context 'not specifying the group period' do
       context 'for end_date' do
@@ -311,6 +333,8 @@ RSpec.describe DemandsRepository, type: :repository do
 
       let!(:eigth_demand) { Fabricate :demand, project: second_project, commitment_date: Time.zone.today, discarded_at: Time.zone.today, effort_upstream: 54_321, effort_downstream: 15_223 }
 
+      let!(:first_epic) { Fabricate :demand, project: first_project, artifact_type: :epic }
+
       it { expect(DemandsRepository.instance.demands_for_period(Demand.all, 4.days.ago, Time.zone.now)).to match_array [first_demand, second_demand] }
     end
 
@@ -336,6 +360,8 @@ RSpec.describe DemandsRepository, type: :repository do
       let!(:seventh_demand) { Fabricate :demand, project: third_project, downstream: true, commitment_date: Time.zone.today, end_date: Time.zone.tomorrow, effort_upstream: 120, effort_downstream: 723 }
 
       let!(:eigth_demand) { Fabricate :demand, project: second_project, commitment_date: Time.zone.today, discarded_at: Time.zone.today, effort_upstream: 54_321, effort_downstream: 15_223 }
+
+      let!(:first_epic) { Fabricate :demand, project: first_project, artifact_type: :epic }
 
       it { expect(DemandsRepository.instance.demands_for_periods_accumulated(Demand.all, 1.week.ago)).to match_array [third_demand, fifth_demand, sixth_demand] }
     end
@@ -365,6 +391,8 @@ RSpec.describe DemandsRepository, type: :repository do
 
       let!(:seventh_demand) { Fabricate :demand, project: second_project, commitment_date: Time.zone.today, discarded_at: Time.zone.today, effort_upstream: 54_321, effort_downstream: 15_223 }
       let!(:eigth_demand) { Fabricate :demand, project: second_project, commitment_date: Time.zone.today, discarded_at: 2.weeks.ago, effort_upstream: 54_321, effort_downstream: 15_223 }
+
+      let!(:first_epic) { Fabricate :demand, project: first_project, artifact_type: :epic }
 
       let!(:first_transition) { Fabricate :demand_transition, stage: first_stage, demand: first_demand, last_time_in: '2018-02-27T17:09:58-03:00', last_time_out: '2018-02-28T17:09:58-03:00' }
       let!(:second_transition) { Fabricate :demand_transition, stage: second_stage, demand: second_demand, last_time_in: '2018-03-01T17:09:58-03:00', last_time_out: '2018-03-01T17:09:58-03:00' }

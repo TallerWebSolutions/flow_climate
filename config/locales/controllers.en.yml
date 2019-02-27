@@ -75,6 +75,11 @@ en:
         desc: "Page not found"
         back: "Back to the path"
         page_title: "The page you're looking for does not exist"
+    monthly: "Monthly"
+    weekly: "Weekly"
+    daily: "Daily"
+    start: "Start"
+    finish: "Finish"
   header:
     logout: Logout
     explore: Explore
@@ -290,6 +295,8 @@ en:
         confidence_95: "Date having 95% of Confidence"
         confidence_80: "Date having 80% of Confidence"
         confidence_60: "Date having 60% of Confidence"
+      scope_variation:
+        title: "Scope variation in time"
     project_risk_alert_table: "Risk alerts to the project"
     project_risk_configs:
       title: "Risk Configurations"
@@ -484,6 +491,7 @@ en:
     replenishing: "Replenishing"
     customers_list: "Customers"
     products_list: "Products"
+    statistics: ""
   charts:
     xlabel:
       months: "Months"
@@ -538,6 +546,8 @@ en:
       title_upstream: "Upstream Cumulative Flow Diagram for %{target_name}"
       ytitle: "Demands"
       data_suffix: "demands"
+    period:
+      label: "Period"
   finances_params:
     edit:
       title: "Edit Financial Information"
@@ -666,3 +676,6 @@ en:
     attributes:
       demand:
         demand_id: "Demand ID"
+  stats:
+    period:
+      variation: "Period Variation"

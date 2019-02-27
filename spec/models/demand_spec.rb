@@ -51,6 +51,7 @@ RSpec.describe Demand, type: :model do
 
   context 'scopes' do
     let(:project) { Fabricate :project }
+    let!(:first_epic) { Fabricate :demand, project: project, artifact_type: :epic }
 
     describe '.opened_in_date' do
       let!(:first_demand) { Fabricate :demand, created_date: Time.zone.parse('2018-02-03 11:00') }

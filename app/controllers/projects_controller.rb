@@ -6,7 +6,7 @@ class ProjectsController < AuthenticatedController
   before_action :assign_company
   before_action :assign_customer, only: %i[create update]
   before_action :assign_product, only: %i[create update]
-  before_action :assign_project, only: %i[show edit update destroy synchronize_jira finish_project statistics copy_stages_from]
+  before_action :assign_project, only: %i[show edit update destroy synchronize_jira finish_project statistics copy_stages_from statistics_tab]
 
   def show
     @ordered_project_risk_alerts = @project.project_risk_alerts.order(created_at: :desc)
@@ -92,7 +92,26 @@ class ProjectsController < AuthenticatedController
     respond_to { |format| format.js { render file: 'projects/copy_stages_from.js.erb' } }
   end
 
+  def statistics_tab
+    @project_statistics_chart_adapter = Highchart::ProjectStatisticsChartsAdapter.new(@project, start_date_to_adapter, end_date_to_adapter, period_to_adapter)
+    scope_data = @project_statistics_chart_adapter.scope_data_evolution_chart[0][:data]
+    @period_variation = Stats::StatisticsService.instance.compute_percentage_variation(scope_data.first, scope_data.last)
+    respond_to { |format| format.js { render file: 'projects/statistics_tab.js.erb' } }
+  end
+
   private
+
+  def start_date_to_adapter
+    (params['start_date'] || @project.start_date).to_date
+  end
+
+  def end_date_to_adapter
+    (params['end_date'] || @project.end_date).to_date
+  end
+
+  def period_to_adapter
+    params['period'] || 'month'
+  end
 
   def assign_projects
     projects_parent = customer || product || team || @company

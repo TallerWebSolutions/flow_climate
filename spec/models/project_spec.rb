@@ -861,10 +861,10 @@ RSpec.describe Project, type: :model do
     context 'having blocks' do
       let(:demand) { Fabricate :demand, demand_type: :bug, project: project }
       let!(:discarded_demand_block) { Fabricate :demand_block, demand: demand, discarded_at: 1.day.ago, block_duration: 100 }
-      let!(:demand_block) { Fabricate :demand_block, demand: demand, block_duration: 10 }
-      let!(:other_demand_block) { Fabricate :demand_block, demand: demand, block_duration: 20 }
+      let!(:demand_block) { Fabricate :demand_block, demand: demand, block_time: 1.day.ago, unblock_time: 1.day.from_now }
+      let!(:other_demand_block) { Fabricate :demand_block, demand: demand, block_time: 1.day.ago, unblock_time: 2.days.from_now }
 
-      it { expect(project.average_block_duration).to eq 15 }
+      it { expect(project.average_block_duration).to eq 16 }
     end
     context 'having no demands' do
       it { expect(project.average_block_duration).to eq 0 }
@@ -937,19 +937,20 @@ RSpec.describe Project, type: :model do
     end
   end
 
-  describe '#active_and_kept_blocks' do
+  describe '#active_kept_closed_blocks' do
     let(:project) { Fabricate :project }
     let(:demand) { Fabricate :demand, project: project }
     let(:other_demand) { Fabricate :demand, project: project }
 
     context 'having blocks' do
-      let!(:inactive_demand_block) { Fabricate :demand_block, demand: demand, active: false, discarded_at: nil }
-      let!(:discarded_demand_block) { Fabricate :demand_block, demand: demand, active: true, discarded_at: Time.zone.yesterday }
-      let!(:inactive_and_discarded_demand_block) { Fabricate :demand_block, demand: demand, active: false, discarded_at: Time.zone.yesterday }
-      let!(:active_demand_block) { Fabricate :demand_block, demand: demand, active: true, discarded_at: nil }
-      let!(:other_active_demand_block) { Fabricate :demand_block, demand: demand, active: true, discarded_at: nil }
+      let!(:inactive_demand_block) { Fabricate :demand_block, demand: demand, active: false, unblock_time: 1.day.from_now, discarded_at: nil }
+      let!(:discarded_demand_block) { Fabricate :demand_block, demand: demand, active: true, unblock_time: 2.days.from_now, discarded_at: Time.zone.yesterday }
+      let!(:inactive_and_discarded_demand_block) { Fabricate :demand_block, demand: demand, active: false, unblock_time: 1.day.from_now, discarded_at: Time.zone.yesterday }
+      let!(:active_demand_block) { Fabricate :demand_block, demand: demand, active: true, unblock_time: 1.day.from_now, discarded_at: nil }
+      let!(:other_active_demand_block) { Fabricate :demand_block, demand: demand, active: true, unblock_time: 1.day.from_now, discarded_at: nil }
+      let!(:opened_active_demand_block) { Fabricate :demand_block, demand: demand, active: true, unblock_time: nil, discarded_at: nil }
 
-      it { expect(project.active_and_kept_blocks).to eq [active_demand_block, other_active_demand_block] }
+      it { expect(project.active_kept_closed_blocks).to eq [active_demand_block, other_active_demand_block] }
     end
 
     context 'having no active and not discarded blocks' do
@@ -957,11 +958,11 @@ RSpec.describe Project, type: :model do
       let!(:discarded_demand_block) { Fabricate :demand_block, demand: demand, active: true, discarded_at: Time.zone.yesterday }
       let!(:inactive_and_discarded_demand_block) { Fabricate :demand_block, demand: demand, active: false, discarded_at: Time.zone.yesterday }
 
-      it { expect(project.active_and_kept_blocks).to eq [] }
+      it { expect(project.active_kept_closed_blocks).to eq [] }
     end
 
     context 'having no blocks' do
-      it { expect(project.active_and_kept_blocks).to eq [] }
+      it { expect(project.active_kept_closed_blocks).to eq [] }
     end
   end
 
