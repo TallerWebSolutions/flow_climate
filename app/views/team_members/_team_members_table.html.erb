@@ -25,7 +25,11 @@
         <td><%= number_to_currency(member.hour_value) %></td>
         <td><%= number_to_currency(member.total_monthly_payment) %></td>
         <td><%= t(member.billable&.to_s) %></td>
-        <td><%= member.billable_type&.capitalize %></td>
+        <td>
+          <% if member.billable_type.present? %>
+            <%= I18n.t("activerecord.attributes.team_member.enums.billable_type.#{member.billable_type}") %>
+          <% end %>
+        </td>
         <td><%= t(member.active.to_s) %></td>
         <td>
           <%= link_to edit_company_team_team_member_path(@company, @team, member) do %>
