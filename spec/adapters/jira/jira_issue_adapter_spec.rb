@@ -201,7 +201,7 @@ RSpec.describe Jira::JiraIssueAdapter, type: :service do
         it 'updates the demand throwing no errors' do
           Jira::JiraIssueAdapter.instance.process_issue!(jira_account, first_project, jira_issue)
           expect(Demand.count).to eq 1
-          expect(Demand.last.assignees_count).to eq 0
+          expect(Demand.last.assignees_count).to eq 1
           expect(Demand.last.demand_title).to eq 'foo of bar'
           expect(Demand.last.downstream).to be false
           expect(Demand.last.created_date).to eq Time.zone.parse('2018-07-02T11:20:18.998-0300')
