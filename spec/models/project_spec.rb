@@ -856,15 +856,18 @@ RSpec.describe Project, type: :model do
   end
 
   describe '#average_block_duration' do
+    before { travel_to Time.zone.local(2018, 5, 21, 10, 0, 0) }
+    after { travel_back }
+
     let(:project) { Fabricate :project }
 
     context 'having blocks' do
       let(:demand) { Fabricate :demand, demand_type: :bug, project: project }
-      let!(:discarded_demand_block) { Fabricate :demand_block, demand: demand, discarded_at: 1.day.ago, block_duration: 100 }
+      let!(:discarded_demand_block) { Fabricate :demand_block, demand: demand, unblock_time: 1.day.from_now, discarded_at: 1.day.ago }
       let!(:demand_block) { Fabricate :demand_block, demand: demand, block_time: 1.day.ago, unblock_time: 1.day.from_now }
       let!(:other_demand_block) { Fabricate :demand_block, demand: demand, block_time: 1.day.ago, unblock_time: 2.days.from_now }
 
-      it { expect(project.average_block_duration).to eq 16 }
+      it { expect(project.average_block_duration.to_f).to eq 15 }
     end
     context 'having no demands' do
       it { expect(project.average_block_duration).to eq 0 }
