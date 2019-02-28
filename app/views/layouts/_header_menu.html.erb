@@ -20,12 +20,18 @@
         <% else %>
           <li><%= link_to 'Ligar Notificações', activate_email_notifications_users_path, method: :patch, remote: true, class: 'nav-link dropdown-item' %></li>
         <% end %>
-        <li class="divider"></li>
-        <% current_user.companies.each do |company| %>
-          <li><%= link_to company.abbreviation&.upcase, company_path(company) %></li>
+        <% if current_user.admin? || current_user.gold? %>
+          <li class="divider"></li>
+          <% if current_user.companies.present? %>
+            <% current_user.companies.each do |company| %>
+              <li><%= link_to company.abbreviation&.upcase, company_path(company) %></li>
+            <% end %>
+          <% else %>
+            <li><%= link_to t('companies.new.title'), new_company_path %></li>
+          <% end %>
         <% end %>
-        <li class="divider"></li>
         <% if current_user.admin? %>
+          <li class="divider"></li>
           <li><%= link_to 'Admin Dashboard', users_path %></li>
         <% end %>
         <li class="divider"></li>
