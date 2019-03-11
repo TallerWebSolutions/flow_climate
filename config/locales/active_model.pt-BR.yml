@@ -194,6 +194,7 @@ pt-BR:
         company: Empresa
       demand:
         demand_id: Id da Demanda
+        demand_title: Título da Demanda
         project: Projeto
         total_queue_time: Tempo Total de Fila
         total_touch_time: Tempo Total de Trabalho

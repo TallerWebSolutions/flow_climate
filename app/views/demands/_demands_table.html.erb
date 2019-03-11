@@ -26,6 +26,7 @@
         <th><%= Demand.human_attribute_name :artifact_type %></th>
         <th><%= Demand.human_attribute_name :demand_type %></th>
         <th><%= Demand.human_attribute_name :class_of_service %></th>
+        <th><%= t('demands.index.current_stage') %></th>
         <th><%= Demand.human_attribute_name :effort_upstream %></th>
         <th><%= Demand.human_attribute_name :effort_downstream %></th>
         <th><%= t('demands.index.qty_closed_blocks') %></th>
@@ -41,7 +42,7 @@
     <tbody>
       <% demands.each do |demand| %>
         <tr id='demand_<%= demand.id %>'>
-          <%= render 'demands/demand_fields', demand: demand %>
+          <%= render 'demands/demand_fields', demand_list: demand %>
         </tr>
       <% end %>
     </tbody>
