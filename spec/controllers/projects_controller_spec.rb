@@ -518,9 +518,9 @@ RSpec.describe ProjectsController, type: :controller do
 
       let(:customer) { Fabricate :customer, company: company }
       let(:project) { Fabricate :project, customer: customer }
-      let!(:jira_config) { Fabricate :project_jira_config, project: project }
 
       context 'passing valid parameters' do
+        let!(:jira_config) { Fabricate :project_jira_config, project: project }
         it 'calls the services and the reader' do
           expect(Jira::ProcessJiraProjectJob).to receive(:perform_later).once
           put :synchronize_jira, params: { company_id: company, id: project }
@@ -533,6 +533,15 @@ RSpec.describe ProjectsController, type: :controller do
         context 'project' do
           before { put :synchronize_jira, params: { company_id: company, id: 'foo' } }
           it { expect(response).to have_http_status :not_found }
+        end
+        context 'non existent jira project config' do
+          let(:project) { Fabricate :project, customer: customer }
+
+          before { put :synchronize_jira, params: { company_id: company, id: project } }
+          it 'redirects to the project page with an alert informing about the missing config' do
+            expect(response).to redirect_to company_project_path(company, project)
+            expect(flash[:alert]).to eq I18n.t('projects.sync.jira.no_config_error')
+          end
         end
         context 'company' do
           context 'non-existent' do
