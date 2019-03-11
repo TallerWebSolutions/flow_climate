@@ -342,6 +342,9 @@ en:
       wip: "WiP"
       throughput_last_week: "TH Last Week"
       selected_last_week: "Selected Last Week"
+    sync:
+      jira:
+        no_config_error: "Please configure Jira to the project first."
   project:
     new:
       title: "New Project"
