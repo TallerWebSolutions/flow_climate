@@ -19,6 +19,8 @@
         <th><%= DemandTransition.human_attribute_name :last_time_out %></th>
         <th><%= t('demand_transitions.total_time_in_transition') %></th>
         <th><%= t('demand_transitions.working_time_in_transition') %></th>
+        <th><%= t('demand_transitions.effort_time_in_transition') %></th>
+        <th><%= t('demand_transitions.block_time_in_transition') %></th>
       </tr>
     </thead>
     <tbody>
@@ -28,7 +30,13 @@
           <td><%= l(transition.last_time_in, format: :short) %></td>
           <td><%= l(transition.last_time_out, format: :short) if transition.last_time_out.present? %></td>
           <td><%= time_distance_in_words(transition.total_seconds_in_transition) %></td>
-          <td><%= "#{transition.working_time_in_transition} hs" %></td>
+          <td><%= "#{transition.working_time_in_transition} h" %></td>
+          <% if transition.stage.stage_project_configs.find_by(project: @demand.project).stage_percentage.present? %>
+            <td><%= "#{TimeService.instance.compute_working_hours_for_dates(transition.last_time_in, transition.last_time_out) * (transition.stage.stage_project_configs.find_by(project: @demand.project).stage_percentage / 100.0)} h" %></td>
+          <% else %>
+            <td>0 h</td>
+          <% end %>
+          <td><%= "#{@demand.demand_blocks.kept.closed.active.for_date_interval(transition.last_time_in, transition.last_time_out).sum(:block_duration)} h" %></td>
         </tr>
       <% end %>
     </tbody>

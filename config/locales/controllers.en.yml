@@ -589,6 +589,8 @@ en:
     working_time_in_transition: "Working time in transition"
     index:
       title: "Demand Transitions"
+    block_time_in_transition: "Block Time in Transition"
+    effort_time_in_transition: "Effort in Transition"
   financial_informations:
     index:
       throughput: "Throughput"

@@ -1,6 +1,6 @@
 <td><%= block.demand_block_id %></td>
 <td><%= t("activerecord.attributes.demand_block.enums.block_type.#{block.block_type}") %></td>
-<td><%= "#{block.block_duration} hs" if block.block_duration.present? %></td>
+<td><%= "#{block.block_duration} h" if block.block_duration.present? %></td>
 <td><%= block.blocker_username %></td>
 <td><%= l(block.block_time, format: :short) %></td>
 <td><%= block.unblocker_username %></td>
