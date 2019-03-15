@@ -191,15 +191,29 @@ class Demand < ApplicationRecord
   end
 
   def compute_effort_upstream
-    valid_effort = (working_time_upstream - blocked_working_time_upstream)
+    valid_effort = working_time_upstream
     valid_effort *= (project.percentage_effort_to_bugs / 100.0) if bug?
     valid_effort
   end
 
   def compute_effort_downstream
-    valid_effort = (working_time_downstream - blocked_working_time_downstream)
+    valid_effort = working_time_downstream
     valid_effort *= (project.percentage_effort_to_bugs / 100.0) if bug?
     valid_effort
+  end
+
+  def sum_effort(effort_transitions)
+    total_effort = 0
+    effort_transitions.each do |transition|
+      stage_config = transition.stage.stage_project_configs.find_by(project: project)
+      total_blocked = compute_blocked_effort(stage_config, transition)
+      total_effort += ((compute_effort_in_transition(transition, stage_config) * pairing_value(stage_config))) * (1 + (stage_config.management_percentage / 100.0)) - total_blocked
+    end
+    total_effort
+  end
+
+  def compute_blocked_effort(stage_config, transition)
+    demand_blocks.kept.closed.active.for_date_interval(transition.last_time_in, transition.last_time_out).sum(:block_duration) * (stage_config.stage_percentage / 100.0)
   end
 
   def sum_blocked_effort(effort_transitions)
@@ -208,15 +222,6 @@ class Demand < ApplicationRecord
       total_blocked += demand_blocks.kept.closed.active.for_date_interval(transition.last_time_in, transition.last_time_out).sum(:block_duration)
     end
     total_blocked
-  end
-
-  def sum_effort(effort_transitions)
-    total_effort = 0
-    effort_transitions.each do |transition|
-      stage_config = transition.stage.stage_project_configs.find_by(project: project)
-      total_effort += ((compute_effort_in_transition(transition, stage_config) * pairing_value(stage_config))) * (1 + (stage_config.management_percentage / 100.0))
-    end
-    total_effort
   end
 
   def compute_effort_in_transition(transition, stage_config)
