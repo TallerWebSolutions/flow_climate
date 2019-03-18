@@ -51,7 +51,7 @@
 </div>
 
 <div id="project-statistics" class="tab-container">
-  <%= render 'projects/project_statistics', project_statistics_chart_adapter: @project_statistics_chart_adapter, period_variation: @period_variation %>
+  <%= render 'projects/project_statistics', x_axis: @x_axis, scope_data: @scope_data, scope_period_variation: @scope_period_variation, leadtime_period_variation: @leadtime_period_variation, leadtime_data: @leadtime_data %>
 </div>
 
 <div id="project-status-report" class="tab-container">

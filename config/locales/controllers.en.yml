@@ -290,6 +290,7 @@ en:
         confidence_95: "95% of Confidence"
         confidence_80: "80% of Confidence"
         confidence_60: "60% of Confidence"
+        confidence: "Lead time confidence"
       montecarlo_dates:
         project_date: "Project Deadline"
         confidence_95: "Date having 95% of Confidence"
@@ -305,6 +306,7 @@ en:
     general:
       scope: "Scope"
       deadline: "Deadline"
+      leadtime: "Lead time confidence %{confidence}"
     finish_project:
       success_message: "Project finished."
     actions:
@@ -345,6 +347,9 @@ en:
     sync:
       jira:
         no_config_error: "Please configure Jira to the project first."
+    statistics:
+      scope_tab: "Scope Variation"
+      leadtime_tab: "Lead time variation"
   project:
     new:
       title: "New Project"

@@ -71,10 +71,7 @@ class ProjectsController < AuthenticatedController
     if @project.project_jira_config.blank?
       flash[:alert] = I18n.t('projects.sync.jira.no_config_error')
     else
-      jira_account = Jira::JiraAccount.find_by(customer_domain: @project.project_jira_config.jira_account_domain)
-      project_url = company_project_url(@company, @project)
-      Jira::ProcessJiraProjectJob.perform_later(jira_account, @project.project_jira_config, current_user.email, current_user.full_name, project_url)
-      flash[:notice] = t('general.enqueued')
+      synchronize_project
     end
 
     redirect_to company_project_path(@company, @project)
@@ -98,13 +95,31 @@ class ProjectsController < AuthenticatedController
   end
 
   def statistics_tab
-    @project_statistics_chart_adapter = Highchart::ProjectStatisticsChartsAdapter.new(@project, start_date_to_adapter, end_date_to_adapter, period_to_adapter)
-    scope_data = @project_statistics_chart_adapter.scope_data_evolution_chart[0][:data]
-    @period_variation = Stats::StatisticsService.instance.compute_percentage_variation(scope_data.first, scope_data.last)
+    project_statistics_chart_adapter = Highchart::ProjectStatisticsChartsAdapter.new(@project, start_date_to_adapter, end_date_to_adapter, period_to_adapter)
+    @x_axis = project_statistics_chart_adapter.x_axis
+    build_scope_data(project_statistics_chart_adapter)
+    build_leadtime_data(project_statistics_chart_adapter)
     respond_to { |format| format.js { render file: 'projects/statistics_tab.js.erb' } }
   end
 
   private
+
+  def build_scope_data(project_statistics_chart_adapter)
+    @scope_data = project_statistics_chart_adapter.scope_data_evolution_chart
+    @scope_period_variation = Stats::StatisticsService.instance.compute_percentage_variation(@scope_data[0][:data].first, @scope_data[0][:data].last)
+  end
+
+  def build_leadtime_data(project_statistics_chart_adapter)
+    @leadtime_data = project_statistics_chart_adapter.leadtime_data_evolution_chart(params[:leadtime_confidence])
+    @leadtime_period_variation = Stats::StatisticsService.instance.compute_percentage_variation(@leadtime_data[0][:data].first, @leadtime_data[0][:data].last)
+  end
+
+  def synchronize_project
+    jira_account = Jira::JiraAccount.find_by(customer_domain: @project.project_jira_config.jira_account_domain)
+    project_url = company_project_url(@company, @project)
+    Jira::ProcessJiraProjectJob.perform_later(jira_account, @project.project_jira_config, current_user.email, current_user.full_name, project_url)
+    flash[:notice] = t('general.enqueued')
+  end
 
   def start_date_to_adapter
     (params['start_date'] || @project.start_date).to_date

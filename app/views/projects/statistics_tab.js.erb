@@ -1,6 +1,6 @@
 var projectStatsDiv = $('#project-statistics')
 
-projectStatsDiv.html("<%= escape_javascript(render 'projects/project_statistics', project_statistics_chart_adapter: @project_statistics_chart_adapter, period_variation: @period_variation) %>");
+projectStatsDiv.html("<%= escape_javascript(render 'projects/project_statistics', x_axis: @x_axis, scope_data: @scope_data, scope_period_variation: @scope_period_variation, leadtime_period_variation: @leadtime_period_variation, leadtime_data: @leadtime_data) %>");
 
 buildProjectStatistics();
 
@@ -8,3 +8,7 @@ $('#general-loader').hide();
 projectStatsDiv.show();
 
 enableTabs();
+
+tablinks = document.getElementsByClassName("tablinks");
+tablinks[0].className += " active";
+document.getElementById("stats-scope").style.display = "block";
