@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ChangeDefaultForStageEffort < ActiveRecord::Migration[5.2]
   def up
     change_table :stage_project_configs, bulk: true do |t|
