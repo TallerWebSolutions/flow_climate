@@ -78,7 +78,7 @@ RSpec.describe DemandsRepository, type: :repository do
     end
   end
 
-  describe '#throughput_by_project_and_week' do
+  describe '#throughput_to_projects_and_period' do
     context 'having data' do
       let!(:first_demand) { Fabricate :demand, project: first_project, end_date: 3.weeks.ago }
       let!(:second_demand) { Fabricate :demand, project: first_project, end_date: 2.weeks.ago }
@@ -89,10 +89,10 @@ RSpec.describe DemandsRepository, type: :repository do
 
       let!(:first_epic) { Fabricate :demand, project: first_project, artifact_type: :epic }
 
-      it { expect(DemandsRepository.instance.throughput_by_project_and_week(Project.all, 1.week.ago.beginning_of_week, 1.week.ago.end_of_week)).to match_array [third_demand, fourth_demand, fifth_demand] }
+      it { expect(DemandsRepository.instance.throughput_to_projects_and_period(Project.all, 1.week.ago.beginning_of_week, 1.week.ago.end_of_week)).to match_array [third_demand, fourth_demand, fifth_demand] }
     end
     context 'having no data' do
-      it { expect(DemandsRepository.instance.throughput_by_project_and_week(Project.all, 1.week.ago.beginning_of_week, 1.week.ago.end_of_week)).to eq [] }
+      it { expect(DemandsRepository.instance.throughput_to_projects_and_period(Project.all, 1.week.ago.beginning_of_week, 1.week.ago.end_of_week)).to eq [] }
     end
   end
 

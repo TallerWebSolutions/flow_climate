@@ -15,7 +15,7 @@ class DemandsRepository
     Demand.kept.story.where(project_id: projects.map(&:id)).where('EXTRACT(WEEK FROM commitment_date) = :week AND EXTRACT(YEAR FROM commitment_date) = :year', week: week, year: year)
   end
 
-  def throughput_by_project_and_week(projects, start_period, end_period)
+  def throughput_to_projects_and_period(projects, start_period, end_period)
     Demand.kept.story.where(project_id: projects.map(&:id)).where('end_date BETWEEN :start_period AND :end_period', start_period: start_period, end_period: end_period)
   end
 

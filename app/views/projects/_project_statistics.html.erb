@@ -1,16 +1,21 @@
 <%= form_tag statistics_tab_company_project_path(@company, @project), method: :get, remote: true do%>
   <div class="row bottom-spaced-component">
-    <div class="col-xs-4">
+    <div class="col-xs-3">
       <%= label_tag Project.human_attribute_name(:start_date), nil, class: 'control-label' %>
       <%= date_field_tag :start_date, (params['start_date'] || @project.start_date), class: 'form-control' %>
     </div>
 
-    <div class="col-xs-4">
+    <div class="col-xs-3">
       <%= label_tag Project.human_attribute_name(:end_date), nil, class: 'control-label' %>
       <%= date_field_tag :end_date, (params['end_date'] || @project.end_date), class: 'form-control' %>
     </div>
 
-    <div class="col-xs-4">
+    <div class="col-xs-3">
+      <%= label_tag I18n.t('projects.charts.deadline_vs_montecarlo_durations.confidence'), nil, class: 'control-label' %>
+      <%= number_field_tag :leadtime_confidence, (params['leadtime_confidence'] || 80), class: 'form-control' %>
+    </div>
+
+    <div class="col-xs-3">
       <div class="form-group">
         <%= label_tag t('charts.period.label') %>
         <%= select_tag :period, options_for_select([[I18n.t('general.monthly'), 'month'], [I18n.t('general.weekly'), 'week'], [I18n.t('general.daily'), 'day']], params['period'] || 'week'), class: 'form-control filter-checks' %>
@@ -27,40 +32,25 @@
 
 <hr>
 
-<% if project_statistics_chart_adapter.present? %>
+<% if scope_data.present? && leadtime_data.present? %>
   <div class="row">
-    <div class="col-xs-10">
-      <div id="area-scope-growth"
-           class="flow-chart"
-           data-xcategories='<%= project_statistics_chart_adapter.x_axis.to_json %>'
-           data-title='<%= t('projects.charts.scope_variation.title') %>'
-           data-ytitle='<%= t('charts.cfd.ytitle') %>'
-           data-suffix='<%= t('charts.cfd.data_suffix') %>'
-           data-series='<%= project_statistics_chart_adapter.scope_data_evolution_chart.to_json %>'
-           data-stacking='normal'
-           data-decimals='0'>
+    <div class="col-xs-12">
+      <div class="tab">
+        <button class="tablinks" onclick="openTab(event, 'stats-scope')"><%= t('projects.statistics.scope_tab') %></button>
+        <button class="tablinks" onclick="openTab(event, 'stats-leadtime')"><%= t('projects.statistics.leadtime_tab') %></button>
       </div>
     </div>
-
-    <div class="col-xs-1 center-text">
-      <div><%= t('general.start') %></div>
-      <h3><%= project_statistics_chart_adapter.scope_data_evolution_chart[0][:data].first %></h3>
-    </div>
-    <div class="col-xs-1 center-text bottom-spaced-component">
-      <div><%= t('general.finish') %></div>
-      <h3><%= project_statistics_chart_adapter.scope_data_evolution_chart[0][:data].last %></h3>
-    </div>
-
-    <div class="col-xs-2">
-      <hr>
-    </div>
-
-    <div class="col-xs-2 center-text">
-      <div><%= t('stats.period.variation') %></div>
-      <h3><%= number_to_percentage((period_variation * 100), precision: 1) %></h3>
-    </div>
   </div>
-<% else %>
 
+  <div id="stats-scope" class="tabcontent">
+    <%= render 'projects/scope_variation_stats', x_axis: x_axis, scope_data: scope_data, scope_period_variation: scope_period_variation, leadtime_period_variation: leadtime_period_variation, leadtime_data: leadtime_data %>
+  </div>
+
+  <div id="stats-leadtime" class="tabcontent">
+    <%= render 'projects/leadtime_variation_stats', x_axis: x_axis, scope_data: scope_data, scope_period_variation: scope_period_variation, leadtime_period_variation: leadtime_period_variation, leadtime_data: leadtime_data %>
+  </div>
+
+<% else %>
   <%= t('general.no_data', missing_data: t('general.data')) %>
+
 <% end %>

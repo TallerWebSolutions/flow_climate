@@ -306,6 +306,7 @@ pt-BR:
         confidence_95: "95% Confiança"
         confidence_80: "80% de Confiança"
         confidence_60: "60% de Confiança"
+        confidence: "Confiança do lead time"
       montecarlo_dates:
         project_date: "Prazo do Projeto"
         confidence_95: "Data com 95% de Confiança"
@@ -323,6 +324,7 @@ pt-BR:
     general:
       deadline: "Data do Prazo"
       scope: "Escopo"
+      leadtime: "Lead time com %{confidence} de confiança"
     finish_project:
       success_message: "Projeto finalizado."
     actions:
@@ -363,6 +365,9 @@ pt-BR:
     sync:
       jira:
         no_config_error: "Por favor primeiro configure o Jira para o projeto."
+    statistics:
+      scope_tab: "Variação do Escopo"
+      leadtime_tab: "Variação do lead time"
   teams:
     index:
       title: "Times"
@@ -576,7 +581,7 @@ pt-BR:
     cfd:
       title_downstream: "Downstream Cumulative Flow Diagram para %{target_name}"
       title_upstream: "Upstream Cumulative Flow Diagram para %{target_name}"
-      ytitle: ""
+      ytitle: "Demandas"
       data_suffix: "demandas"
     period:
       label: "Período"

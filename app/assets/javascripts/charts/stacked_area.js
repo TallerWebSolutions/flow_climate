@@ -14,7 +14,7 @@ function buildAreaChart(areaDiv) {
         },
         xAxis: {
             categories: areaDiv.data('xcategories'),
-            title: {text: areaDiv.data('xtitle')}
+            title: { text: areaDiv.data('xtitle') }
         },
         yAxis: {
             title: {
