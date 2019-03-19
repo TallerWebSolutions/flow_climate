@@ -160,7 +160,7 @@ GEM
     pg (1.1.4)
     psych (3.1.0)
     public_suffix (3.0.3)
-    puma (3.12.0)
+    puma (3.12.1)
     rack (2.0.6)
     rack-protection (2.0.5)
       rack
@@ -344,7 +344,7 @@ DEPENDENCIES
   yui-compressor
 
 RUBY VERSION
-   ruby 2.6.1p33
+   ruby 2.6.2p47
 
 BUNDLED WITH
    1.17.3

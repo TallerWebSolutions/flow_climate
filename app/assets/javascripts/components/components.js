@@ -15,15 +15,16 @@ function accordionBehaviour() {
     }
 }
 
-function openTab(evt, tabName) {
-    let i, tabcontent, tablinks;
+function openTab(evt, tabName, tabClass) {
+    let i, tabcontent, subTabs;
     tabcontent = document.getElementsByClassName("tabcontent");
     for (i = 0; i < tabcontent.length; i++) {
         tabcontent[i].style.display = "none";
     }
-    tablinks = document.getElementsByClassName("statsTab");
-    for (i = 0; i < statsTab.length; i++) {
-        statsTab[i].className = statsTab[i].className.replace(" active", "");
+
+    subTabs = document.getElementsByClassName(tabClass);
+    for (i = 0; i < subTabs.length; i++) {
+        subTabs[i].className = subTabs[i].className.replace(" active", "");
     }
     document.getElementById(tabName).style.display = "block";
     evt.currentTarget.className += " active";
