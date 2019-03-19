@@ -24,6 +24,7 @@
     <%= link_to t('navbar.risks'), '#', id: 'nav-item-risks', class: 'nav-item', data: { container: '#risks' } %>
     <%= link_to t('navbar.status_report'), '#', id: 'nav-item-statusreport', class: 'nav-item', data: { container: '#project-status-report' } %>
     <%= link_to t('navbar.charts'), '#', id: 'nav-item-charts', class: 'nav-item', data: { container: '#operational-charts' } %>
+    <%= link_to t('navbar.statistics'), '#', id: 'nav-item-statistics', class: 'nav-item', data: { container: '#team-statistics' } %>
   </div>
 </div>
 
@@ -73,6 +74,10 @@
   <%= render 'charts/operational_charts_tab', target_name: @team.name, report_data: @report_data %>
 </div>
 
+<div id="team-statistics" class="tab-container">
+  <%= render 'teams/team_statistics', x_axis: @x_axis, scope_data: @scope_data, scope_period_variation: @scope_period_variation, leadtime_period_variation: @leadtime_period_variation, leadtime_data: @leadtime_data, block_data: @block_data, block_period_variation: @block_period_variation, block_by_project_data: @block_by_project_data, block_by_project_x_axis: @block_by_project_x_axis, block_by_project_variation: @block_by_project_variation %>
+</div>
+
 <% content_for :javascript do %>
   <%= javascript_include_tag 'charts/burnup' %>
   <%= javascript_include_tag 'charts/column' %>
@@ -82,7 +87,9 @@
   <%= javascript_include_tag 'charts/column-line' %>
   <%= javascript_include_tag 'charts/gauge' %>
   <%= javascript_include_tag 'charts/scatter' %>
+  <%= javascript_include_tag 'charts/stacked_area' %>
 
+  <%= javascript_include_tag 'stats_charts/statistics_charts' %>
 
   <%= javascript_include_tag 'components/components' %>
 
@@ -91,7 +98,6 @@
   <%= javascript_include_tag 'routes/chart_routes' %>
   <%= javascript_include_tag 'routes/demand_routes' %>
   <%= javascript_include_tag 'routes/team_routes' %>
-
 
   <%= javascript_include_tag 'projects/charts' %>
   <%= javascript_include_tag 'projects/status_report_current' %>

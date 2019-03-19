@@ -1,0 +1,29 @@
+<div class="row bottom-spaced-component">
+  <div class="col-xs-3">
+    <%= label_tag Project.human_attribute_name(:start_date), nil, class: 'control-label' %>
+    <%= date_field_tag :start_date, (params['start_date'] || start_date), class: 'form-control' %>
+  </div>
+
+  <div class="col-xs-3">
+    <%= label_tag Project.human_attribute_name(:end_date), nil, class: 'control-label' %>
+    <%= date_field_tag :end_date, (params['end_date'] || end_date), class: 'form-control' %>
+  </div>
+
+  <div class="col-xs-3">
+    <%= label_tag I18n.t('projects.charts.deadline_vs_montecarlo_durations.confidence'), nil, class: 'control-label' %>
+    <%= number_field_tag :leadtime_confidence, (params['leadtime_confidence'] || 80), class: 'form-control' %>
+  </div>
+
+  <div class="col-xs-3">
+    <div class="form-group">
+      <%= label_tag t('charts.period.label') %>
+      <%= select_tag :period, options_for_select([[I18n.t('general.monthly'), 'month'], [I18n.t('general.weekly'), 'week'], [I18n.t('general.daily'), 'day']], params['period'] || 'week'), class: 'form-control filter-checks' %>
+    </div>
+  </div>
+</div>
+
+<div class="row bottom-spaced-component">
+  <div class="col-xs-3">
+    <%= submit_tag t('general.search'), class: 'btn btn-primary' %>
+  </div>
+</div>

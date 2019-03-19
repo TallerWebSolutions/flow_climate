@@ -1,0 +1,33 @@
+<div class="row">
+  <div class="col-xs-10">
+    <div id="line-blocks-accumalated"
+         class="flow-chart"
+         data-xcategories='<%= x_axis.to_json %>'
+         data-title='<%= t('projects.statistics.accumulated_blocks.chart_title') %>'
+         data-ytitle='<%= t('projects.statistics.accumulated_blocks.ytitle') %>'
+         data-prefix=''
+         data-suffix=''
+         data-series='<%= block_data.to_json %>'
+         data-stacking='normal'
+         data-decimals='0'>
+    </div>
+  </div>
+
+  <div class="col-xs-1 center-text">
+    <div><%= t('general.start') %></div>
+    <h3><%= number_with_precision(block_data[0][:data].first, precision: 3) %></h3>
+  </div>
+  <div class="col-xs-1 center-text bottom-spaced-component">
+    <div><%= t('general.finish') %></div>
+    <h3><%= number_with_precision(block_data[0][:data].last, precision: 3) %></h3>
+  </div>
+
+  <div class="col-xs-2">
+    <hr>
+  </div>
+
+  <div class="col-xs-2 center-text">
+    <div><%= t('stats.period.variation') %></div>
+    <h3><%= number_to_percentage((block_period_variation * 100), precision: 1) %></h3>
+  </div>
+</div>

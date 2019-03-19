@@ -56,13 +56,16 @@ Rails.application.routes.draw do
     end
 
     resources :teams, only: %i[index show new create edit update] do
-      get :replenishing_input, on: :member
-
       resources :team_members, only: %i[new create edit update] do
         member do
           patch :activate
           patch :deactivate
         end
+      end
+
+      member do
+        get :replenishing_input
+        get :statistics_tab
       end
     end
 

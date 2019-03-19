@@ -1,0 +1,36 @@
+<% if scope_data.present? && leadtime_data.present? %>
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="tab">
+        <button class="tablinks stats-tab" onclick="openTab(event, 'stats-scope')"><%= t('projects.statistics.scope_tab') %></button>
+        <button class="tablinks stats-tab" onclick="openTab(event, 'stats-leadtime')"><%= t('projects.statistics.leadtime_tab') %></button>
+        <button class="tablinks stats-tab" onclick="openTab(event, 'stats-blocks')"><%= t('projects.statistics.block_tab') %></button>
+        <% if defined?(block_by_project_x_axis).present? %>
+          <button class="tablinks stats-tab" onclick="openTab(event, 'stats-blocks-by-project')"><%= t('projects.statistics.block_by_project_tab') %></button>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <div id="stats-scope" class="tabcontent">
+    <%= render 'charts/scope_variation_stats', x_axis: x_axis, scope_data: scope_data, scope_period_variation: scope_period_variation %>
+  </div>
+
+  <div id="stats-leadtime" class="tabcontent">
+    <%= render 'charts/leadtime_variation_stats', x_axis: x_axis, leadtime_period_variation: leadtime_period_variation, leadtime_data: leadtime_data %>
+  </div>
+
+  <div id="stats-blocks" class="tabcontent">
+    <%= render 'charts/blocks_variation_stats', x_axis: x_axis, block_data: block_data, block_period_variation: block_period_variation %>
+  </div>
+
+  <% if defined?(block_by_project_x_axis).present? %>
+    <div id="stats-blocks-by-project" class="tabcontent">
+      <%= render 'charts/block_by_project_stats', x_axis: x_axis, block_by_project_data: block_by_project_data, block_by_project_variation: block_by_project_variation, block_by_project_x_axis: block_by_project_x_axis %>
+    </div>
+  <% end %>
+
+<% else %>
+  <%= t('general.no_data', missing_data: t('general.data')) %>
+
+<% end %>

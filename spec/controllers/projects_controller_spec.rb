@@ -670,16 +670,21 @@ RSpec.describe ProjectsController, type: :controller do
       let!(:project) { Fabricate :project, customer: customer, start_date: 2.weeks.ago, end_date: Time.zone.today }
 
       context 'passing valid parameters' do
-        context 'no start nor end dates nor period' do
+        context 'no start nor end dates nor period provided' do
           it 'builds the statistic adapter and renders the view using the dates in project to a monthly period' do
-            expect(Highchart::ProjectStatisticsChartsAdapter).to receive(:new).with(project, 2.weeks.ago.to_date, Time.zone.today, 'month').and_call_original
+            expect(Highchart::ProjectStatisticsChartsAdapter).to receive(:new).with([project], 2.weeks.ago.to_date, Time.zone.today, 'month').and_call_original
             get :statistics_tab, params: { company_id: company, id: project }, xhr: true
             expect(response).to render_template 'projects/statistics_tab.js.erb'
             expect(response).to render_template 'projects/_project_statistics'
+            expect(assigns(:scope_data)).to eq [{ data: [0, 0], marker: { enabled: true }, name: I18n.t('projects.general.scope') }]
+            expect(assigns(:leadtime_data)).to eq [{ data: [0, 0], marker: { enabled: true }, name: I18n.t('projects.general.leadtime', confidence: 80) }]
+            expect(assigns(:block_data)).to eq [{ data: [0, 0], marker: { enabled: true }, name: I18n.t('projects.statistics.accumulated_blocks.data_title') }]
+            expect(assigns(:block_data)).to eq [{ data: [0, 0], marker: { enabled: true }, name: I18n.t('projects.statistics.accumulated_blocks.data_title') }]
           end
         end
-        context 'and a start and end dates' do
+        context 'and a start and end dates provided' do
           it 'builds the statistic adapter and renders the view using the parameters' do
+            expect(Highchart::ProjectStatisticsChartsAdapter).to receive(:new).with([project], 1.week.ago.to_date, Time.zone.today, 'month').and_call_original
             get :statistics_tab, params: { company_id: company, id: project, start_date: 1.week.ago, end_date: Time.zone.today, period: 'month' }, xhr: true
             expect(response).to render_template 'projects/statistics_tab.js.erb'
             expect(response).to render_template 'projects/_project_statistics'

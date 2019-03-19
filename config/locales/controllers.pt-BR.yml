@@ -82,6 +82,8 @@ pt-BR:
     daily: "Diário"
     start: "Início"
     finish: "Fim"
+    min: "Mínimo"
+    max: "Máximo"
   header:
     logout: Sair
     sign_up: Cadastre-se
@@ -368,6 +370,14 @@ pt-BR:
     statistics:
       scope_tab: "Variação do Escopo"
       leadtime_tab: "Variação do lead time"
+      accumulated_blocks:
+        data_title: "Bloqueios Acumulados"
+        chart_title: "Quantidade de Bloqueios Fechados Acumulados no Tempo"
+        ytitle: "Bloqueio"
+      block_tab: "Bloqueios"
+      blocks_by_project:
+        data_title: "Bloqueios por Projeto"
+      block_by_project_tab: "Bloqueios por Projeto"
   teams:
     index:
       title: "Times"
@@ -683,3 +693,8 @@ pt-BR:
   stats:
     period:
       variation: "Variação no Período"
+    population:
+      variation: "Variação da População"
+  portfolio:
+    charts:
+      block_count: "Qtd Bloqueios"

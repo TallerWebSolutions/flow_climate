@@ -33,9 +33,8 @@ $('.nav-item').on('click', function(event){
 
             getDemands(companyId, projectsIds);
         } else if ($(this).attr('id') === 'nav-item-statistics') {
-            $('#demands-tab').hide();
-
             getProjectStatistics(companyId, projectId, $("#start_date").val(), $("#end_date").val(), $("#period").val());
+
         } else {
             enableTabs();
             $($(this).data('container')).show();

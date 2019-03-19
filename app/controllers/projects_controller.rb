@@ -95,10 +95,13 @@ class ProjectsController < AuthenticatedController
   end
 
   def statistics_tab
-    project_statistics_chart_adapter = Highchart::ProjectStatisticsChartsAdapter.new(@project, start_date_to_adapter, end_date_to_adapter, period_to_adapter)
+    project_statistics_chart_adapter = Highchart::ProjectStatisticsChartsAdapter.new([@project], start_date_to_adapter, end_date_to_adapter, period_to_adapter)
     @x_axis = project_statistics_chart_adapter.x_axis
+
     build_scope_data(project_statistics_chart_adapter)
     build_leadtime_data(project_statistics_chart_adapter)
+    build_block_data(project_statistics_chart_adapter)
+
     respond_to { |format| format.js { render file: 'projects/statistics_tab.js.erb' } }
   end
 
@@ -112,6 +115,11 @@ class ProjectsController < AuthenticatedController
   def build_leadtime_data(project_statistics_chart_adapter)
     @leadtime_data = project_statistics_chart_adapter.leadtime_data_evolution_chart(params[:leadtime_confidence])
     @leadtime_period_variation = Stats::StatisticsService.instance.compute_percentage_variation(@leadtime_data[0][:data].first, @leadtime_data[0][:data].last)
+  end
+
+  def build_block_data(project_statistics_chart_adapter)
+    @block_data = project_statistics_chart_adapter.block_data_evolution_chart
+    @block_period_variation = Stats::StatisticsService.instance.compute_percentage_variation(@block_data[0][:data].first, @block_data[0][:data].last)
   end
 
   def synchronize_project

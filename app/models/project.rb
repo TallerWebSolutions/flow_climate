@@ -240,7 +240,7 @@ class Project < ApplicationRecord
   end
 
   def remaining_backlog(date = Time.zone.today)
-    known_scope = DemandsRepository.instance.known_scope_to_date(self, date) + initial_scope
+    known_scope = DemandsRepository.instance.known_scope_to_date([self], date) + initial_scope
     known_scope - total_throughput_until(date)
   end
 

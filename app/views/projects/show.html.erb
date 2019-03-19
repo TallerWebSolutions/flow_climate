@@ -51,7 +51,7 @@
 </div>
 
 <div id="project-statistics" class="tab-container">
-  <%= render 'projects/project_statistics', x_axis: @x_axis, scope_data: @scope_data, scope_period_variation: @scope_period_variation, leadtime_period_variation: @leadtime_period_variation, leadtime_data: @leadtime_data %>
+  <%= render 'projects/project_statistics', x_axis: @x_axis, scope_data: @scope_data, scope_period_variation: @scope_period_variation, leadtime_period_variation: @leadtime_period_variation, leadtime_data: @leadtime_data, block_data: @block_data, block_period_variation: @block_period_variation %>
 </div>
 
 <div id="project-status-report" class="tab-container">
@@ -70,6 +70,8 @@
   <%= javascript_include_tag 'charts/scatter' %>
   <%= javascript_include_tag 'charts/stacked_area' %>
 
+  <%= javascript_include_tag 'stats_charts/statistics_charts' %>
+
   <%= javascript_include_tag 'components/components' %>
 
   <%= javascript_include_tag 'top_navigation/tab-navigation' %>
@@ -80,7 +82,6 @@
 
   <%= javascript_include_tag 'projects/project_navigation_behaviour' %>
   <%= javascript_include_tag 'projects/charts' %>
-  <%= javascript_include_tag 'projects/project_statistics_charts' %>
   <%= javascript_include_tag 'projects/status_report_current' %>
   <%= javascript_include_tag 'projects/status_report_projection' %>
   <%= javascript_include_tag 'projects/show' %>
