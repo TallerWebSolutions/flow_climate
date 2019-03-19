@@ -4,7 +4,7 @@ RSpec.describe Highchart::ProjectStatisticsChartsAdapter, type: :service do
   before { travel_to Time.zone.local(2018, 2, 20, 10, 0, 0) }
   after { travel_back }
 
-  describe '.scope_data_evolution_chart' do
+  describe '#scope_data_evolution_chart' do
     let(:company) { Fabricate :company }
     let(:customer) { Fabricate :customer, company: company }
 
@@ -28,16 +28,16 @@ RSpec.describe Highchart::ProjectStatisticsChartsAdapter, type: :service do
 
       context 'daily basis x axis' do
         it 'builds the data structure for scope_data_evolution' do
-          statistics_data = Highchart::ProjectStatisticsChartsAdapter.new(first_project, first_project.start_date, first_project.end_date, 'day')
+          statistics_data = Highchart::ProjectStatisticsChartsAdapter.new([first_project], first_project.start_date, first_project.end_date, 'day')
 
-          expect(statistics_data.scope_data_evolution_chart).to eq [{ data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2], marker: { enabled: true }, name: I18n.t('projects.general.scope') }]
+          expect(statistics_data.scope_data_evolution_chart).to eq [{ data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2], marker: { enabled: true }, name: I18n.t('projects.general.scope') }]
           expect(statistics_data.x_axis).to eq(TimeService.instance.days_between_of(first_project.start_date, first_project.end_date))
         end
       end
 
       context 'weekly basis x axis' do
         it 'builds the data structure for scope_data_evolution' do
-          statistics_data = Highchart::ProjectStatisticsChartsAdapter.new(first_project, first_project.start_date, first_project.end_date, 'week')
+          statistics_data = Highchart::ProjectStatisticsChartsAdapter.new([first_project], first_project.start_date, first_project.end_date, 'week')
 
           expect(statistics_data.scope_data_evolution_chart).to eq [{ data: [0, 0, 1, 2, 2], marker: { enabled: true }, name: I18n.t('projects.general.scope') }]
           expect(statistics_data.x_axis).to eq(TimeService.instance.weeks_between_of(first_project.start_date, first_project.end_date))
@@ -46,7 +46,7 @@ RSpec.describe Highchart::ProjectStatisticsChartsAdapter, type: :service do
 
       context 'monthly basis x axis' do
         it 'builds the data structure for scope_data_evolution' do
-          statistics_data = Highchart::ProjectStatisticsChartsAdapter.new(first_project, first_project.start_date, first_project.end_date, 'month')
+          statistics_data = Highchart::ProjectStatisticsChartsAdapter.new([first_project], first_project.start_date, first_project.end_date, 'month')
 
           expect(statistics_data.scope_data_evolution_chart).to eq [{ data: [0, 2], marker: { enabled: true }, name: I18n.t('projects.general.scope') }]
           expect(statistics_data.x_axis).to eq(TimeService.instance.months_between_of(first_project.start_date, first_project.end_date))
@@ -55,7 +55,7 @@ RSpec.describe Highchart::ProjectStatisticsChartsAdapter, type: :service do
     end
   end
 
-  describe '.leadtime_data_evolution_chart' do
+  describe '#leadtime_data_evolution_chart' do
     let(:company) { Fabricate :company }
     let(:customer) { Fabricate :customer, company: company }
 
@@ -76,7 +76,7 @@ RSpec.describe Highchart::ProjectStatisticsChartsAdapter, type: :service do
 
       context 'daily basis x axis' do
         it 'builds the data structure for scope_data_evolution' do
-          statistics_data = Highchart::ProjectStatisticsChartsAdapter.new(first_project, first_project.start_date, first_project.end_date, 'day')
+          statistics_data = Highchart::ProjectStatisticsChartsAdapter.new([first_project], first_project.start_date, first_project.end_date, 'day')
 
           expect(statistics_data.leadtime_data_evolution_chart(80)).to eq [{ data: [4.0, 9.241666666666667, 9.241666666666667, 9.241666666666667], marker: { enabled: true }, name: I18n.t('projects.general.leadtime', confidence: 80) }]
           expect(statistics_data.x_axis).to eq(TimeService.instance.days_between_of(first_project.start_date, first_project.end_date))
@@ -85,7 +85,7 @@ RSpec.describe Highchart::ProjectStatisticsChartsAdapter, type: :service do
 
       context 'weekly basis x axis' do
         it 'builds the data structure for scope_data_evolution' do
-          statistics_data = Highchart::ProjectStatisticsChartsAdapter.new(first_project, first_project.start_date, first_project.end_date, 'week')
+          statistics_data = Highchart::ProjectStatisticsChartsAdapter.new([first_project], first_project.start_date, first_project.end_date, 'week')
 
           expect(statistics_data.leadtime_data_evolution_chart(80)).to eq [{ data: [4.0, 9.241666666666667], marker: { enabled: true }, name: I18n.t('projects.general.leadtime', confidence: 80) }]
           expect(statistics_data.x_axis).to eq(TimeService.instance.weeks_between_of(first_project.start_date, first_project.end_date))
@@ -94,9 +94,62 @@ RSpec.describe Highchart::ProjectStatisticsChartsAdapter, type: :service do
 
       context 'monthly basis x axis' do
         it 'builds the data structure for scope_data_evolution' do
-          statistics_data = Highchart::ProjectStatisticsChartsAdapter.new(first_project, first_project.start_date, first_project.end_date, 'month')
+          statistics_data = Highchart::ProjectStatisticsChartsAdapter.new([first_project], first_project.start_date, first_project.end_date, 'month')
 
           expect(statistics_data.leadtime_data_evolution_chart(80)).to eq [{ data: [9.241666666666667], marker: { enabled: true }, name: I18n.t('projects.general.leadtime', confidence: 80) }]
+          expect(statistics_data.x_axis).to eq(TimeService.instance.months_between_of(first_project.start_date, first_project.end_date))
+        end
+      end
+    end
+  end
+
+  describe '#block_data_evolution_chart' do
+    let(:company) { Fabricate :company }
+    let(:customer) { Fabricate :customer, company: company }
+
+    let(:team) { Fabricate :team, company: company }
+    let!(:team_member) { Fabricate :team_member, team: team, hours_per_month: 20 }
+    let!(:other_team_member) { Fabricate :team_member, team: team, hours_per_month: 160 }
+
+    context 'having blocks' do
+      let!(:first_project) { Fabricate :project, customer: customer, status: :maintenance, start_date: 3.days.ago, end_date: Time.zone.now, qty_hours: 1000, initial_scope: 95, value: 200.0 }
+
+      let!(:first_demand) { Fabricate :demand, project: first_project, commitment_date: 3.days.ago, end_date: Time.zone.now, effort_downstream: 200, effort_upstream: 10, created_date: 74.days.ago }
+      let!(:second_demand) { Fabricate :demand, project: first_project, commitment_date: 1.day.ago, end_date: Time.zone.now, effort_downstream: 400, effort_upstream: 130, created_date: 65.days.ago }
+      let!(:third_demand) { Fabricate :demand, project: first_project, commitment_date: 7.days.ago, end_date: Time.zone.now, effort_downstream: 100, effort_upstream: 20 }
+
+      let!(:first_demand) { Fabricate :demand, project: first_project, commitment_date: 7.days.ago, end_date: 2.days.ago, effort_downstream: 200, effort_upstream: 10, created_date: 74.days.ago }
+      let!(:second_demand) { Fabricate :demand, project: first_project, commitment_date: 14.days.ago, end_date: 2.days.ago, effort_downstream: 400, effort_upstream: 130, created_date: 65.days.ago }
+      let!(:third_demand) { Fabricate :demand, project: first_project, commitment_date: 7.days.ago, end_date: 3.days.ago, effort_downstream: 100, effort_upstream: 20 }
+
+      let!(:first_block) { Fabricate :demand_block, demand: first_demand, block_time: 1.hour.ago, unblock_time: Time.zone.today.end_of_day, active: true }
+      let!(:second_block) { Fabricate :demand_block, demand: first_demand, block_time: 2.days.ago, unblock_time: 2.days.ago }
+      let!(:third_block) { Fabricate :demand_block, demand: second_demand, block_time: 2.days.ago, unblock_time: Time.zone.yesterday }
+      let!(:fourth_block) { Fabricate :demand_block, demand: first_demand, block_time: 2.days.ago }
+
+      context 'daily basis x axis' do
+        it 'builds the data structure for scope_data_evolution' do
+          statistics_data = Highchart::ProjectStatisticsChartsAdapter.new([first_project], first_project.start_date, first_project.end_date, 'day')
+
+          expect(statistics_data.block_data_evolution_chart).to eq [{ data: [0, 1, 2, 3], marker: { enabled: true }, name: I18n.t('projects.statistics.accumulated_blocks.data_title') }]
+          expect(statistics_data.x_axis).to eq(TimeService.instance.days_between_of(first_project.start_date, first_project.end_date))
+        end
+      end
+
+      context 'weekly basis x axis' do
+        it 'builds the data structure for scope_data_evolution' do
+          statistics_data = Highchart::ProjectStatisticsChartsAdapter.new([first_project], first_project.start_date, first_project.end_date, 'week')
+
+          expect(statistics_data.block_data_evolution_chart).to eq [{ data: [0, 3], marker: { enabled: true }, name: I18n.t('projects.statistics.accumulated_blocks.data_title') }]
+          expect(statistics_data.x_axis).to eq(TimeService.instance.weeks_between_of(first_project.start_date, first_project.end_date))
+        end
+      end
+
+      context 'monthly basis x axis' do
+        it 'builds the data structure for scope_data_evolution' do
+          statistics_data = Highchart::ProjectStatisticsChartsAdapter.new([first_project], first_project.start_date, first_project.end_date, 'month')
+
+          expect(statistics_data.block_data_evolution_chart).to eq [{ data: [3], marker: { enabled: true }, name: I18n.t('projects.statistics.accumulated_blocks.data_title') }]
           expect(statistics_data.x_axis).to eq(TimeService.instance.months_between_of(first_project.start_date, first_project.end_date))
         end
       end

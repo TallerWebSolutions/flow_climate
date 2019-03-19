@@ -2,10 +2,10 @@
 
 module Highchart
   class ProjectStatisticsChartsAdapter
-    attr_reader :project, :start_date, :end_date, :x_axis, :chart_period_interval
+    attr_reader :projects, :start_date, :end_date, :x_axis, :chart_period_interval
 
-    def initialize(project, start_date, end_date, chart_period_interval)
-      @project = project
+    def initialize(projects, start_date, end_date, chart_period_interval)
+      @projects = projects
 
       @start_date = start_date
       @end_date = end_date
@@ -27,7 +27,7 @@ module Highchart
                      x_axis_date.end_of_month
                    end
 
-        accumulated_scope_in_time << DemandsRepository.instance.known_scope_to_date(@project, end_date)
+        accumulated_scope_in_time << DemandsRepository.instance.known_scope_to_date(@projects, end_date)
       end
 
       [{ name: I18n.t('projects.general.scope'), data: accumulated_scope_in_time, marker: { enabled: true } }]
@@ -47,11 +47,29 @@ module Highchart
                      x_axis_date.end_of_month
                    end
 
-        demands_to_period = DemandsRepository.instance.throughput_to_projects_and_period([@project], @start_date, end_date)
+        demands_to_period = DemandsRepository.instance.throughput_to_projects_and_period(@projects, @start_date, end_date)
         accumulated_leadtime_in_time << Stats::StatisticsService.instance.percentile(confidence, demands_to_period.map(&:leadtime_in_days))
       end
 
       [{ name: I18n.t('projects.general.leadtime', confidence: confidence), data: accumulated_leadtime_in_time, marker: { enabled: true } }]
+    end
+
+    def block_data_evolution_chart
+      accumulated_block_in_time = []
+
+      @x_axis.each do |x_axis_date|
+        end_date = if @chart_period_interval == 'day'
+                     x_axis_date.end_of_day
+                   elsif @chart_period_interval == 'week'
+                     x_axis_date.end_of_week
+                   else
+                     x_axis_date.end_of_month
+                   end
+
+        accumulated_block_in_time << DemandBlocksRepository.instance.accumulated_blocks_to_date(@projects, end_date)
+      end
+
+      [{ name: I18n.t('projects.statistics.accumulated_blocks.data_title'), data: accumulated_block_in_time, marker: { enabled: true } }]
     end
 
     private

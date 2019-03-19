@@ -317,7 +317,7 @@ RSpec.describe Project, type: :model do
           it { expect(project.flow_pressure).to eq 32.5 }
         end
         context 'specifying a date' do
-          it { expect(project.flow_pressure(Time.zone.parse('2018-03-05 22:00'))).to eq 21.666666666666668 }
+          it { expect(project.flow_pressure(Time.zone.parse('2018-03-05 22:00'))).to eq 18.333333333333332 }
         end
       end
       context 'having no results' do

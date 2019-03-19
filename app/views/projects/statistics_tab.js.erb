@@ -1,14 +1,14 @@
 var projectStatsDiv = $('#project-statistics')
 
-projectStatsDiv.html("<%= escape_javascript(render 'projects/project_statistics', x_axis: @x_axis, scope_data: @scope_data, scope_period_variation: @scope_period_variation, leadtime_period_variation: @leadtime_period_variation, leadtime_data: @leadtime_data) %>");
+projectStatsDiv.html("<%= escape_javascript(render 'projects/project_statistics', x_axis: @x_axis, scope_data: @scope_data, scope_period_variation: @scope_period_variation, leadtime_period_variation: @leadtime_period_variation, leadtime_data: @leadtime_data, block_data: @block_data, block_period_variation: @block_period_variation) %>");
 
-buildProjectStatistics();
+buildStatisticsCharts();
 
 $('#general-loader').hide();
 projectStatsDiv.show();
 
 enableTabs();
 
-tablinks = document.getElementsByClassName("tablinks");
-tablinks[0].className += " active";
+statsTab = document.getElementsByClassName("stats-tab");
+statsTab[0].className += " active";
 document.getElementById("stats-scope").style.display = "block";

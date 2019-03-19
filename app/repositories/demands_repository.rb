@@ -4,11 +4,16 @@ class DemandsRepository
   include Singleton
 
   def demands_for_company_and_week(company, required_date)
-    Demand.story.kept.joins(project: :customer).where('customers.company_id = :company_id AND EXTRACT(week FROM demands.created_date) = :week AND EXTRACT(year FROM demands.created_date) = :year', company_id: company.id, week: required_date.cweek, year: required_date.cwyear)
+    Demand.kept
+          .story
+          .joins(project: :customer)
+          .where('customers.company_id = :company_id AND EXTRACT(week FROM demands.created_date) = :week AND EXTRACT(year FROM demands.created_date) = :year', company_id: company.id, week: required_date.cweek, year: required_date.cwyear)
   end
 
-  def known_scope_to_date(project, analysed_date)
-    Demand.story.where('project_id = :project_id AND DATE(created_date::TIMESTAMPTZ AT TIME ZONE INTERVAL :interval_value::INTERVAL) <= :analysed_date AND (discarded_at IS NULL OR discarded_at > :limit_date)', project_id: project.id, interval_value: Time.zone.now.formatted_offset, analysed_date: analysed_date, limit_date: analysed_date.beginning_of_day).uniq.count
+  def known_scope_to_date(projects, analysed_date)
+    Demand.story
+          .where(project_id: projects.map(&:id))
+          .where('created_date <= :analysed_date AND (discarded_at IS NULL OR discarded_at > :limit_date)', analysed_date: analysed_date.end_of_day, limit_date: analysed_date.beginning_of_day).uniq.count
   end
 
   def committed_demands_by_project_and_week(projects, week, year)

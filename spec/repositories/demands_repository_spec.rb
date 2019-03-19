@@ -35,13 +35,14 @@ RSpec.describe DemandsRepository, type: :repository do
 
     let!(:fifth_demand) { Fabricate :demand, project: first_project, created_date: 2.days.ago, discarded_at: 3.days.ago }
     let!(:sixth_demand) { Fabricate :demand, project: first_project, created_date: 2.days.ago, discarded_at: 2.days.ago }
-    let!(:seventh_demand) { Fabricate :demand, project: first_project, created_date: 2.days.ago, discarded_at: 1.day.ago }
+    let!(:seventh_demand) { Fabricate :demand, project: first_project, created_date: 3.days.ago, discarded_at: Time.zone.now }
 
-    let!(:eigth_demand) { Fabricate :demand, project: second_project, created_date: 2.days.ago, discarded_at: nil }
+    let!(:eigth_demand) { Fabricate :demand, project: second_project, created_date: 4.days.ago, discarded_at: nil }
+    let!(:nineth_demand) { Fabricate :demand, project: third_project, created_date: 4.days.ago, discarded_at: nil }
 
     let!(:first_epic) { Fabricate :demand, project: first_project, artifact_type: :epic }
 
-    it { expect(DemandsRepository.instance.known_scope_to_date(first_project, 2.days.ago.to_date)).to eq 5 }
+    it { expect(DemandsRepository.instance.known_scope_to_date([first_project, second_project], 2.days.ago)).to eq 6 }
   end
 
   describe '#demands_to_projects' do

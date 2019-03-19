@@ -80,6 +80,8 @@ en:
     daily: "Daily"
     start: "Start"
     finish: "Finish"
+    min: "Minimum"
+    max: "Maximum"
   header:
     logout: Logout
     explore: Explore
@@ -350,6 +352,14 @@ en:
     statistics:
       scope_tab: "Scope Variation"
       leadtime_tab: "Lead time variation"
+      accumulated_blocks:
+        data_title: "Accumulated Blocks"
+        chart_title: "Block Count Accumulated in Time"
+        ytitle: "Block"
+      block_tab: "Blocks"
+      blocks_by_project:
+        data_title: "Blocks by Projects"
+      block_by_project_tab: "Blocks by Project"
   project:
     new:
       title: "New Project"
@@ -689,3 +699,8 @@ en:
   stats:
     period:
       variation: "Period Variation"
+    population:
+      variation: "Population Variation"
+  portfolio:
+    charts:
+      block_count: "Block Count"
