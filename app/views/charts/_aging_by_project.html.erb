@@ -1,0 +1,32 @@
+<div class="row">
+  <div class="col-xs-10">
+    <div id="column-aging-by-project"
+         class="flow-chart"
+         data-xcategories='<%= aging_by_project_x_axis.to_json %>'
+         data-title='<%= t('portfolio.charts.aging_by_project.title') %>'
+         data-ytitle='<%= t('portfolio.charts.aging_by_project.data_title') %>'
+         data-suffix='<%= t('portfolio.charts.aging_by_project.data_title') %>'
+         data-series='<%= aging_by_project_data.to_json %>'
+         data-stacking='normal'
+         data-decimals='0'>
+    </div>
+  </div>
+
+  <div class="col-xs-1 center-text">
+    <div><%= t('general.min') %></div>
+    <h3><%= aging_by_project_data[0][:data].min %></h3>
+  </div>
+  <div class="col-xs-1 center-text bottom-spaced-component">
+    <div><%= t('general.max') %></div>
+    <h3><%= aging_by_project_data[0][:data].max %></h3>
+  </div>
+
+  <div class="col-xs-2">
+    <hr>
+  </div>
+
+  <div class="col-xs-2 center-text">
+    <div><%= t('stats.population.variation') %></div>
+    <h3><%= number_to_percentage((aging_by_project_variation * 100), precision: 1) %></h3>
+  </div>
+</div>

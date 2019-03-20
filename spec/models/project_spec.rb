@@ -1088,4 +1088,12 @@ RSpec.describe Project, type: :model do
       it { expect(project.users).to eq [user] }
     end
   end
+
+  describe '#aging' do
+    context 'when already has the user' do
+      let(:user) { Fabricate :user }
+      let!(:project) { Fabricate :project, start_date: 4.days.ago.to_date, end_date: Time.zone.today }
+      it { expect(project.aging).to eq 4 }
+    end
+  end
 end

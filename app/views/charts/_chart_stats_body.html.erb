@@ -2,11 +2,12 @@
   <div class="row">
     <div class="col-xs-12">
       <div class="tab">
-        <button class="tablinks stats-tab" onclick="openTab(event, 'stats-scope')"><%= t('projects.statistics.scope_tab') %></button>
-        <button class="tablinks stats-tab" onclick="openTab(event, 'stats-leadtime')"><%= t('projects.statistics.leadtime_tab') %></button>
-        <button class="tablinks stats-tab" onclick="openTab(event, 'stats-blocks')"><%= t('projects.statistics.block_tab') %></button>
+        <button class="tablinks stats-tab" onclick="openTab(event, 'stats-scope', 'tablinks')"><%= t('projects.statistics.scope_tab') %></button>
+        <button class="tablinks stats-tab" onclick="openTab(event, 'stats-leadtime', 'tablinks')"><%= t('projects.statistics.leadtime_tab') %></button>
+        <button class="tablinks stats-tab" onclick="openTab(event, 'stats-blocks', 'tablinks')"><%= t('projects.statistics.block_tab') %></button>
         <% if defined?(block_by_project_x_axis).present? %>
-          <button class="tablinks stats-tab" onclick="openTab(event, 'stats-blocks-by-project')"><%= t('projects.statistics.block_by_project_tab') %></button>
+          <button class="tablinks stats-tab" onclick="openTab(event, 'stats-blocks-by-project', 'tablinks')"><%= t('projects.statistics.block_by_project_tab') %></button>
+          <button class="tablinks stats-tab" onclick="openTab(event, 'stats-aging-by-project', 'tablinks')"><%= t('projects.statistics.aging_by_project_tab') %></button>
         <% end %>
       </div>
     </div>
@@ -27,6 +28,10 @@
   <% if defined?(block_by_project_x_axis).present? %>
     <div id="stats-blocks-by-project" class="tabcontent">
       <%= render 'charts/block_by_project_stats', x_axis: x_axis, block_by_project_data: block_by_project_data, block_by_project_variation: block_by_project_variation, block_by_project_x_axis: block_by_project_x_axis %>
+    </div>
+
+    <div id="stats-aging-by-project" class="tabcontent">
+      <%= render 'charts/aging_by_project', x_axis: x_axis, aging_by_project_data: aging_by_project_data, aging_by_project_variation: aging_by_project_variation, aging_by_project_x_axis: aging_by_project_x_axis %>
     </div>
   <% end %>
 
