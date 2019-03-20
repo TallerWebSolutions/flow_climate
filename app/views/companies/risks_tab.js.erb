@@ -1,0 +1,11 @@
+var risksTableDiv = $('#risks-table')
+
+risksTableDiv.html("<%= escape_javascript(render 'charts/risks_and_hours_gauge_charts', max_hours_gauge: @company.total_active_hours, consumed_hours: @company.total_active_consumed_hours, projects_risk_chart_data: @projects_risk_chart_data).html_safe %>");
+
+var hoursGauge = $('#hours-gauge');
+buildGaugeChart(hoursGauge);
+
+$('#general-loader').hide();
+$('#risks').show();
+
+enableTabs();

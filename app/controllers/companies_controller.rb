@@ -13,12 +13,11 @@ class CompaniesController < AuthenticatedController
     @financial_informations = @company.financial_informations.select(:id, :finances_date, :income_total, :expenses_total)
     @finances_hash_with_computed_informations = Highchart::FinancesChartsAdapter.new(@financial_informations).finances_hash_with_computed_informations
     @teams = @company.teams.order(:name)
-    @company_projects = @company.projects.order(end_date: :desc)
+
     @products_list = @company.products.order(name: :asc)
     @customers_list = @company.customers.order(name: :asc)
-    @projects_summary = ProjectsSummaryData.new(@company_projects)
+
     assign_company_settings
-    build_charts_data
   end
 
   def new
@@ -66,15 +65,30 @@ class CompaniesController < AuthenticatedController
     respond_to { |format| format.js { render file: 'companies/update_settings.js.erb' } }
   end
 
+  def projects_tab
+    @company_projects = @company.projects.order(end_date: :desc)
+    @projects_summary = ProjectsSummaryData.new(@company_projects)
+    respond_to { |format| format.js { render file: 'companies/projects_tab.js.erb' } }
+  end
+
+  def strategic_chart_tab
+    @company_projects = @company.projects.order(end_date: :desc)
+    @strategic_chart_data = Highchart::StrategicChartsAdapter.new(@company, @company_projects, @company.total_available_hours)
+    respond_to { |format| format.js { render file: 'companies/strategic_chart_tab.js.erb' } }
+  end
+
+  def risks_tab
+    @company_projects = @company.projects.order(end_date: :desc)
+    @strategic_chart_data = Highchart::StrategicChartsAdapter.new(@company, @company_projects, @company.total_available_hours)
+    @projects_risk_chart_data = Highchart::ProjectRiskChartsAdapter.new(@company_projects)
+
+    respond_to { |format| format.js { render file: 'companies/risks_tab.js.erb' } }
+  end
+
   private
 
   def assign_company_settings
     @company_settings = @company.company_settings || CompanySettings.new(company: @company)
-  end
-
-  def build_charts_data
-    @projects_risk_chart_data = Highchart::ProjectRiskChartsAdapter.new(@company_projects)
-    @strategic_chart_data = Highchart::StrategicChartsAdapter.new(@company, @company.projects, @company.total_available_hours)
   end
 
   def assign_stages_list

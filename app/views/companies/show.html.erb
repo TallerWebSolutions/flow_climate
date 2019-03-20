@@ -4,19 +4,23 @@
   </div>
 </div>
 
+<%= hidden_field_tag :company_id, @company.id %>
+
 <div class="row">
   <div class="topnav">
     <%= link_to t('navbar.details'), '#', id: 'nav-item-stamps', class: 'nav-item active', data: { container: '#stamps' } %>
-    <%= link_to t('navbar.customers_list'), '#', id: 'nav-item-list', class: 'nav-item', data: { container: '#customer-list' } %>
-    <%= link_to t('navbar.products_list'), '#', id: 'nav-item-list', class: 'nav-item', data: { container: '#product-list' } %>
-    <%= link_to t('navbar.projects_list'), '#', id: 'nav-item-list', class: 'nav-item', data: { container: '#project-list' } %>
+    <%= link_to t('navbar.customers_list'), '#', id: 'nav-item-customers-list', class: 'nav-item', data: { container: '#customer-list' } %>
+    <%= link_to t('navbar.products_list'), '#', id: 'nav-item-products-list', class: 'nav-item', data: { container: '#product-list' } %>
+    <%= link_to t('navbar.projects_list'), '#', id: 'nav-item-projects-list', class: 'nav-item', data: { container: '#project-list' } %>
     <%= link_to t('navbar.teams'), '#', id: 'nav-item-teams', class: 'nav-item', data: { container: '#teams' } %>
     <%= link_to t('navbar.finance'), '#', id: 'nav-item-finance', class: 'nav-item', data: { container: '#finance' } %>
     <%= link_to t('navbar.risks'), '#', id: 'nav-item-risks', class: 'nav-item', data: { container: '#risks' } %>
-    <%= link_to t('navbar.strategic'), '#', id: 'nav-item-strategic', class: 'nav-item', data: { container: '#strategic' } %>
+    <%= link_to t('navbar.strategic'), '#', id: 'nav-item-strategic-charts', class: 'nav-item', data: { container: '#strategic-charts' } %>
     <%= link_to t('navbar.settings'), '#', id: 'nav-item-settings', class: 'nav-item', data: { container: '#settings' } %>
   </div>
 </div>
+
+<%= render 'commons/loader_spinner' %>
 
 <div id="stamps" class="tab-container">
   <%= render 'company_stamps' %>
@@ -50,21 +54,21 @@
   <h2><%= t('projects.index.title') %></h2>
 
   <div id="projects-table">
-    <%= render 'projects/projects_table', projects_list: @company.projects, team_id: @team&.id, customer_id: @customer&.id, product_id: @product&.id %>
+    <%= render 'projects/projects_table', projects_list: @company_projects %>
   </div>
 </div>
 
 <div id="risks" class="tab-container">
-  <%= render 'charts/risks_and_hours_gauge_charts',
-             max_hours_gauge: @company.total_active_hours,
-             consumed_hours: @company.total_active_consumed_hours,
-             projects_risk_chart_data: @projects_risk_chart_data
-  %>
+  <div id="risks-table">
+    <%= render 'charts/risks_and_hours_gauge_charts', max_hours_gauge: @company.total_active_hours, consumed_hours: @company.total_active_consumed_hours, projects_risk_chart_data: @projects_risk_chart_data %>
+  </div>
 </div>
 
 
-<div id="strategic" class="tab-container">
-  <%= render 'companies/strategic_table', model_name: @company.name, strategic_chart_data: @strategic_chart_data %>
+<div id="strategic-charts" class="tab-container">
+  <div id="strategic-table">
+    <%= render 'companies/strategic_table', model_name: @company.name, strategic_chart_data: @strategic_chart_data %>
+  </div>
 </div>
 
 <div id="settings" class="tab-container">
@@ -78,6 +82,7 @@
   <%= javascript_include_tag 'charts/gauge' %>
 
   <%= javascript_include_tag 'components/components' %>
+  <%= javascript_include_tag 'routes/company_routes' %>
 
   <%= javascript_include_tag 'companies/strategic_charts' %>
   <%= javascript_include_tag 'projects/risk_alert_color_chart' %>
