@@ -47,12 +47,12 @@ module Highchart
     end
 
     def hours_per_stage_upstream
-      hours_per_stage_distribution = ProjectsRepository.instance.hours_per_stage(@all_projects, :upstream, charts_data_bottom_limit_date)
+      hours_per_stage_distribution = DemandTransitionsRepository.instance.hours_per_stage(@all_projects, :upstream, charts_data_bottom_limit_date)
       build_hours_per_stage_hash(hours_per_stage_distribution)
     end
 
     def hours_per_stage_downstream
-      hours_per_stage_distribution = ProjectsRepository.instance.hours_per_stage(@all_projects, :downstream, charts_data_bottom_limit_date)
+      hours_per_stage_distribution = DemandTransitionsRepository.instance.hours_per_stage(@all_projects, :downstream, charts_data_bottom_limit_date)
       build_hours_per_stage_hash(hours_per_stage_distribution)
     end
 

@@ -237,9 +237,21 @@ RSpec.describe Company, type: :model do
 
   describe '#demands_delivered_last_week' do
     let(:company) { Fabricate :company }
-    it 'calls the repository' do
-      expect(DemandsRepository.instance).to receive(:demands_for_company_and_week).once
-      company.demands_delivered_last_week
+
+    context 'having no projects' do
+      let(:customer) { Fabricate :customer, company: company }
+      let!(:project) { Fabricate :project, customer: customer }
+
+      it 'calls the repository' do
+        expect(DemandsRepository.instance).to receive(:throughput_to_projects_and_period).once
+        company.demands_delivered_last_week
+      end
+    end
+    context 'having no projects' do
+      it 'calls the repository' do
+        expect(DemandsRepository.instance).to receive(:throughput_to_projects_and_period).never
+        expect(company.demands_delivered_last_week).to eq []
+      end
     end
   end
 

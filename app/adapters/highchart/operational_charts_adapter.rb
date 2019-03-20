@@ -181,8 +181,8 @@ module Highchart
       dates_array = []
       queue_times = []
       touch_times = []
-      queue_times_per_week_hash = ProjectsRepository.instance.total_time_for(@all_projects, 'total_queue_time')
-      touch_times_per_week_hash = ProjectsRepository.instance.total_time_for(@all_projects, 'total_touch_time')
+      queue_times_per_week_hash = DemandsRepository.instance.total_time_for(@all_projects, 'total_queue_time')
+      touch_times_per_week_hash = DemandsRepository.instance.total_time_for(@all_projects, 'total_touch_time')
 
       @all_projects_weeks.each do |date|
         break unless add_data_to_chart?(date.to_date)
@@ -207,8 +207,8 @@ module Highchart
       dates_array = []
       flow_efficiency_array = []
 
-      queue_times_per_week_hash = ProjectsRepository.instance.total_time_for(@all_projects, 'total_queue_time')
-      touch_times_per_week_hash = ProjectsRepository.instance.total_time_for(@all_projects, 'total_touch_time')
+      queue_times_per_week_hash = DemandsRepository.instance.total_time_for(@all_projects, 'total_queue_time')
+      touch_times_per_week_hash = DemandsRepository.instance.total_time_for(@all_projects, 'total_touch_time')
 
       @all_projects_weeks.each do |date|
         break unless add_data_to_chart?(date.to_date)

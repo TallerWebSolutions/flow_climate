@@ -6,17 +6,28 @@ class DemandTransitionsRepository
   def summed_transitions_time_grouped_by_stage_demand_for(demands_ids)
     demands_grouped_in_stages = {}
 
-    DemandTransition
-      .kept
-      .joins(:stage)
-      .joins(demand: :project)
-      .select('stages.name AS grouped_stage_name, projects.id AS project_id, demands.demand_id AS grouped_demand_id, SUM(EXTRACT(EPOCH FROM (demand_transitions.last_time_out - demand_transitions.last_time_in))) AS time_in_stage')
-      .where(demand_id: demands_ids)
-      .group('grouped_stage_name, grouped_demand_id, projects.id, stages.order')
-      .order('stages.order, grouped_demand_id')
-      .map { |times| demands_grouped_in_stages = build_grouped_hash(demands_grouped_in_stages, times) }
+    DemandTransition.kept
+                    .joins(:stage)
+                    .joins(demand: :project)
+                    .select('stages.name AS grouped_stage_name, projects.id AS project_id, demands.demand_id AS grouped_demand_id, SUM(EXTRACT(EPOCH FROM (demand_transitions.last_time_out - demand_transitions.last_time_in))) AS time_in_stage')
+                    .where(demand_id: demands_ids)
+                    .group('grouped_stage_name, grouped_demand_id, projects.id, stages.order')
+                    .order('stages.order, grouped_demand_id')
+                    .map { |times| demands_grouped_in_stages = build_grouped_hash(demands_grouped_in_stages, times) }
 
     demands_grouped_in_stages
+  end
+
+  def hours_per_stage(projects, stream, limit_date)
+    DemandTransition.kept
+                    .joins(:demand)
+                    .joins(:stage)
+                    .select('stages.name, stages.order, SUM(EXTRACT(EPOCH FROM (last_time_out - last_time_in))) AS sum_duration')
+                    .where(demands: { project_id: projects.map(&:id) })
+                    .where('stages.end_point = false AND last_time_in >= :limit_date AND last_time_out IS NOT NULL AND stage_stream = :stage_stream', limit_date: limit_date.beginning_of_day, stage_stream: Stage.stage_streams[stream])
+                    .group('stages.name, stages.order')
+                    .order('stages.order, stages.name')
+                    .map { |group_sum| [group_sum.name, group_sum.order, group_sum.sum_duration] }
   end
 
   private

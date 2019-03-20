@@ -45,31 +45,9 @@ class ProjectsRepository
   def throughput_per_week(projects, start_date_limit, end_date_limit = Time.zone.today)
     beginning_of_week = start_date_limit.beginning_of_week.to_date
     end_of_week = end_date_limit.end_of_week.to_date
-    throughput_per_week_grouped = Demand.where(project_id: projects.pluck(:id)).finished.where('end_date >= :start_date_limit AND end_date <= :end_date_limit', start_date_limit: beginning_of_week, end_date_limit: end_of_week).group('EXTRACT(WEEK FROM end_date)', 'EXTRACT(YEAR FROM end_date)').count
+
+    throughput_per_week_grouped = DemandsRepository.instance.throughput_to_projects_and_period(projects, beginning_of_week, end_of_week).group('EXTRACT(WEEK FROM end_date)', 'EXTRACT(YEAR FROM end_date)').count
     extract_data_for_week(projects, throughput_per_week_grouped, beginning_of_week, end_of_week)
-  end
-
-  def total_time_for(projects, sum_field)
-    result_array = Demand.kept
-                         .select('EXTRACT(WEEK FROM end_date) AS sum_week', 'EXTRACT(YEAR FROM end_date) AS sum_year', "SUM(#{sum_field}) AS total_time")
-                         .where('end_date IS NOT NULL')
-                         .where(project_id: projects.map(&:id))
-                         .group('demands.end_date')
-                         .map { |group_sum| [group_sum.sum_week.to_i, group_sum.sum_year.to_i, group_sum.total_time] }
-
-    build_hash_to_total_duration_query_result(result_array)
-  end
-
-  def hours_per_stage(projects, stream, limit_date)
-    DemandTransition.kept
-                    .joins(:demand)
-                    .joins(:stage)
-                    .select('stages.name, stages.order, SUM(EXTRACT(EPOCH FROM (last_time_out - last_time_in))) AS sum_duration')
-                    .where(demands: { project_id: projects.map(&:id) })
-                    .where('stages.end_point = false AND last_time_in >= :limit_date AND last_time_out IS NOT NULL AND stage_stream = :stage_stream', limit_date: limit_date.beginning_of_day, stage_stream: Stage.stage_streams[stream])
-                    .group('stages.name, stages.order')
-                    .order('stages.order, stages.name')
-                    .map { |group_sum| [group_sum.name, group_sum.order, group_sum.sum_duration] }
   end
 
   def finish_project!(project)
@@ -78,12 +56,6 @@ class ProjectsRepository
   end
 
   private
-
-  def build_hash_to_total_duration_query_result(query_result_array)
-    query_result_hash = {}
-    query_result_array.each { |single_result| query_result_hash[[single_result[0], single_result[1]]] = single_result[2].to_f }
-    query_result_hash
-  end
 
   def extract_data_for_week(projects, leadtime_per_week_grouped, start_date_limit, end_date_limit)
     return {} if projects.blank?
