@@ -1,5 +1,9 @@
 <% if strategic_chart_data.blank? %>
-  <%= t('general.no_data', missing_data: t('general.data')) %>
+  <div class="row">
+    <div class="col-xs-6">
+      <%= t('general.no_data', missing_data: t('general.data')) %>
+    </div>
+  </div>
 
 <% else %>
   <div class="row">

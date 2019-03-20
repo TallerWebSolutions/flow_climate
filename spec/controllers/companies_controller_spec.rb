@@ -41,6 +41,14 @@ RSpec.describe CompaniesController, type: :controller do
       before { post :update_settings, params: { id: 'xpto' }, xhr: true }
       it { expect(response.status).to eq 401 }
     end
+    describe 'GET #projects_tab' do
+      before { get :strategic_chart_tab, params: { id: 'xpto' }, xhr: true }
+      it { expect(response.status).to eq 401 }
+    end
+    describe 'GET #strategic_chart_tab' do
+      before { post :strategic_chart_tab, params: { id: 'xpto' }, xhr: true }
+      it { expect(response.status).to eq 401 }
+    end
   end
 
   context 'authenticated having a gold plan' do
@@ -97,14 +105,7 @@ RSpec.describe CompaniesController, type: :controller do
             expect(assigns(:financial_informations)).to match_array [other_finances, finances]
             expect(assigns(:teams)).to eq [team]
             expect(assigns(:stages_list)).to eq [third_stage, second_stage, first_stage]
-            expect(assigns(:company_projects)).to eq [second_project, first_project]
-            expect(assigns(:strategic_chart_data).array_of_months).to eq [Time.zone.today.beginning_of_month, 1.month.from_now.to_date.beginning_of_month]
-            expect(assigns(:strategic_chart_data).active_projects_count_data).to eq [1, 1]
-            expect(assigns(:projects_risk_chart_data).backlog_risk_alert_data).to eq [{ name: 'Vermelho', y: 1, color: '#FB283D' }]
-            expect(assigns(:projects_risk_chart_data).money_risk_alert_data).to eq [{ name: 'Verde', y: 1, color: '#179A02' }]
             expect(assigns(:company_settings)).to be_a_new CompanySettings
-            expect(assigns(:company_projects)).to eq [second_project, first_project]
-            expect(assigns(:projects_summary).total_flow_pressure).to eq 60
           end
         end
         context 'and the company already have settings' do
@@ -315,6 +316,83 @@ RSpec.describe CompaniesController, type: :controller do
         end
       end
     end
+
+    describe 'GET #projects_tab' do
+      let(:company) { Fabricate :company, users: [user] }
+      let(:customer) { Fabricate :customer, company: company }
+
+      context 'having data' do
+        let!(:first_project) { Fabricate :project, customer: customer, start_date: 2.weeks.ago, end_date: Time.zone.today }
+        let!(:second_project) { Fabricate :project, customer: customer, start_date: 3.weeks.ago, end_date: 1.day.from_now }
+
+        context 'passing valid parameters' do
+          it 'builds the statistic adapter and renders the view using the dates in project to a monthly period' do
+            get :projects_tab, params: { id: company }, xhr: true
+            expect(response).to render_template 'companies/projects_tab.js.erb'
+            expect(assigns(:company_projects)).to eq [second_project, first_project]
+            expect(assigns(:projects_summary)).to be_a ProjectsSummaryData
+          end
+        end
+      end
+      context 'having no data' do
+        it 'returns empty data set' do
+          get :projects_tab, params: { id: company }, xhr: true
+          expect(response).to render_template 'companies/projects_tab.js.erb'
+          expect(assigns(:company_projects)).to eq []
+        end
+      end
+    end
+
+    describe 'GET #strategic_chart_tab' do
+      let(:company) { Fabricate :company, users: [user] }
+      let(:customer) { Fabricate :customer, company: company }
+
+      context 'having data' do
+        let!(:first_project) { Fabricate :project, customer: customer, start_date: 2.weeks.ago, end_date: Time.zone.today }
+        let!(:second_project) { Fabricate :project, customer: customer, start_date: 3.weeks.ago, end_date: 1.day.from_now }
+
+        context 'passing valid parameters' do
+          it 'builds the statistic adapter and renders the view using the dates in project to a monthly period' do
+            get :strategic_chart_tab, params: { id: company }, xhr: true
+            expect(response).to render_template 'companies/strategic_chart_tab.js.erb'
+            expect(assigns(:strategic_chart_data)).to be_a Highchart::StrategicChartsAdapter
+          end
+        end
+      end
+      context 'having no data' do
+        it 'returns empty data set' do
+          get :strategic_chart_tab, params: { id: company }, xhr: true
+          expect(response).to render_template 'companies/strategic_chart_tab.js.erb'
+          expect(assigns(:company_projects)).to eq []
+        end
+      end
+    end
+
+    describe 'GET #risks_tab' do
+      let(:company) { Fabricate :company, users: [user] }
+      let(:customer) { Fabricate :customer, company: company }
+
+      context 'having data' do
+        let!(:first_project) { Fabricate :project, customer: customer, start_date: 2.weeks.ago, end_date: Time.zone.today }
+        let!(:second_project) { Fabricate :project, customer: customer, start_date: 3.weeks.ago, end_date: 1.day.from_now }
+
+        context 'passing valid parameters' do
+          it 'builds the statistic adapter and renders the view using the dates in project to a monthly period' do
+            get :risks_tab, params: { id: company }, xhr: true
+            expect(response).to render_template 'companies/risks_tab.js.erb'
+            expect(assigns(:strategic_chart_data)).to be_a Highchart::StrategicChartsAdapter
+            expect(assigns(:projects_risk_chart_data)).to be_a Highchart::ProjectRiskChartsAdapter
+          end
+        end
+      end
+      context 'having no data' do
+        it 'returns empty data set' do
+          get :risks_tab, params: { id: company }, xhr: true
+          expect(response).to render_template 'companies/risks_tab.js.erb'
+          expect(assigns(:company_projects)).to eq []
+        end
+      end
+    end
   end
 
   context 'authenticated having no plan' do
@@ -388,6 +466,28 @@ RSpec.describe CompaniesController, type: :controller do
 
     describe 'POST #update_settings' do
       before { post :update_settings, params: { id: 'xpto' }, xhr: true }
+      it 'redirects to the user profile with an alert' do
+        expect(response).to redirect_to user_path(user)
+        flash[:alert] = I18n.t('plans.validations.no_gold_plan')
+      end
+    end
+
+    describe 'GET #projects_tab' do
+      let(:company) { Fabricate :company, users: [user] }
+      let(:customer) { Fabricate :customer, company: company }
+
+      before { get :projects_tab, params: { id: 'xpto' }, xhr: true }
+      it 'redirects to the user profile with an alert' do
+        expect(response).to redirect_to user_path(user)
+        flash[:alert] = I18n.t('plans.validations.no_gold_plan')
+      end
+    end
+
+    describe 'GET #strategic_chart_tab' do
+      let(:company) { Fabricate :company, users: [user] }
+      let(:customer) { Fabricate :customer, company: company }
+
+      before { get :strategic_chart_tab, params: { id: 'xpto' }, xhr: true }
       it 'redirects to the user profile with an alert' do
         expect(response).to redirect_to user_path(user)
         flash[:alert] = I18n.t('plans.validations.no_gold_plan')
@@ -473,6 +573,28 @@ RSpec.describe CompaniesController, type: :controller do
         flash[:alert] = I18n.t('plans.validations.no_gold_plan')
       end
     end
+
+    describe 'GET #projects_tab' do
+      let(:company) { Fabricate :company, users: [user] }
+      let(:customer) { Fabricate :customer, company: company }
+
+      before { get :projects_tab, params: { id: 'xpto' }, xhr: true }
+      it 'redirects to the user profile with an alert' do
+        expect(response).to redirect_to user_path(user)
+        flash[:alert] = I18n.t('plans.validations.no_gold_plan')
+      end
+    end
+
+    describe 'GET #strategic_chart_tab' do
+      let(:company) { Fabricate :company, users: [user] }
+      let(:customer) { Fabricate :customer, company: company }
+
+      before { get :strategic_chart_tab, params: { id: 'xpto' }, xhr: true }
+      it 'redirects to the user profile with an alert' do
+        expect(response).to redirect_to user_path(user)
+        flash[:alert] = I18n.t('plans.validations.no_gold_plan')
+      end
+    end
   end
 
   context 'authenticated having a trial plan' do
@@ -548,6 +670,28 @@ RSpec.describe CompaniesController, type: :controller do
 
     describe 'POST #update_settings' do
       before { post :update_settings, params: { id: 'xpto' }, xhr: true }
+      it 'redirects to the user profile with an alert' do
+        expect(response).to redirect_to user_path(user)
+        flash[:alert] = I18n.t('plans.validations.no_gold_plan')
+      end
+    end
+
+    describe 'GET #projects_tab' do
+      let(:company) { Fabricate :company, users: [user] }
+      let(:customer) { Fabricate :customer, company: company }
+
+      before { get :projects_tab, params: { id: 'xpto' }, xhr: true }
+      it 'redirects to the user profile with an alert' do
+        expect(response).to redirect_to user_path(user)
+        flash[:alert] = I18n.t('plans.validations.no_gold_plan')
+      end
+    end
+
+    describe 'GET #strategic_chart_tab' do
+      let(:company) { Fabricate :company, users: [user] }
+      let(:customer) { Fabricate :customer, company: company }
+
+      before { get :strategic_chart_tab, params: { id: 'xpto' }, xhr: true }
       it 'redirects to the user profile with an alert' do
         expect(response).to redirect_to user_path(user)
         flash[:alert] = I18n.t('plans.validations.no_gold_plan')

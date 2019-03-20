@@ -40,7 +40,7 @@ $('.nav-item').on('click', function(event){
             enableTabs();
             $($(this).data('container')).show();
         }
-        $(this).addClass('active');
+        cc
     }
 });
 

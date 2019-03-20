@@ -3,13 +3,6 @@
 class DemandsRepository
   include Singleton
 
-  def demands_for_company_and_week(company, required_date)
-    Demand.kept
-          .story
-          .joins(project: :customer)
-          .where('customers.company_id = :company_id AND EXTRACT(week FROM demands.created_date) = :week AND EXTRACT(year FROM demands.created_date) = :year', company_id: company.id, week: required_date.cweek, year: required_date.cwyear)
-  end
-
   def known_scope_to_date(projects, analysed_date)
     Demand.story
           .where(project_id: projects.map(&:id))
@@ -137,6 +130,17 @@ class DemandsRepository
     cumulative_hash
   end
 
+  def total_time_for(projects, sum_field)
+    result_array = Demand.kept
+                         .select('EXTRACT(WEEK FROM end_date) AS sum_week', 'EXTRACT(YEAR FROM end_date) AS sum_year', "SUM(#{sum_field}) AS total_time")
+                         .where('end_date IS NOT NULL')
+                         .where(project_id: projects.map(&:id))
+                         .group('demands.end_date')
+                         .map { |group_sum| [group_sum.sum_week.to_i, group_sum.sum_year.to_i, group_sum.total_time] }
+
+    build_hash_to_total_duration_query_result(result_array)
+  end
+
   private
 
   def build_count_grouped_per_period_query(demands, select_string, base_date_field)
@@ -156,5 +160,11 @@ class DemandsRepository
 
   def demands_for_projects_and_finished_until_limit_date(projects, limit_date)
     Demand.kept.story.where(project_id: projects).where('end_date <= :limit_date', limit_date: limit_date)
+  end
+
+  def build_hash_to_total_duration_query_result(query_result_array)
+    query_result_hash = {}
+    query_result_array.each { |single_result| query_result_hash[[single_result[0], single_result[1]]] = single_result[2].to_f }
+    query_result_hash
   end
 end

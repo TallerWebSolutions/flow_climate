@@ -53,6 +53,9 @@ Rails.application.routes.draw do
       patch :add_user
       get :send_company_bulletin
       post :update_settings
+      get :projects_tab
+      get :strategic_chart_tab
+      get :risks_tab
     end
 
     resources :teams, only: %i[index show new create edit update] do
