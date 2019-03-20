@@ -1,5 +1,5 @@
 <%= form_tag statistics_tab_company_team_path(@company, @team), method: :get, remote: true do %>
-  <%= render 'charts/charts_stats_filter', start_date: @team_projects.minimum(:start_date), end_date: @team_projects.maximum(:end_date) %>
+  <%= render 'charts/charts_stats_filter', start_date: [@team_projects.minimum(:start_date), 3.months.ago.to_date].compact.max, end_date: @team_projects.maximum(:end_date) %>
 <% end %>
 
 <hr>
@@ -14,5 +14,8 @@
            scope_period_variation: scope_period_variation,
            block_by_project_data: block_by_project_data,
            block_by_project_variation: block_by_project_variation,
-           block_by_project_x_axis: block_by_project_x_axis
+           block_by_project_x_axis: block_by_project_x_axis,
+           aging_by_project_data: aging_by_project_data,
+           aging_by_project_variation: aging_by_project_variation,
+           aging_by_project_x_axis: aging_by_project_x_axis
 %>

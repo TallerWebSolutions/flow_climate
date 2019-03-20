@@ -344,6 +344,10 @@ class Project < ApplicationRecord
     demands.kept.story.map(&:id)
   end
 
+  def aging
+    (end_date - start_date).to_i
+  end
+
   private
 
   def no_pressure_set(date)

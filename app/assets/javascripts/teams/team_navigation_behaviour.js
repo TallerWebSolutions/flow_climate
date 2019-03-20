@@ -40,7 +40,8 @@ $('.nav-item').on('click', function(event){
             enableTabs();
             $($(this).data('container')).show();
         }
-        cc
+
+        $(this).addClass('active');
     }
 });
 

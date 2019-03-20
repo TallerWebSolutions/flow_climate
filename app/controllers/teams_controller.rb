@@ -52,6 +52,7 @@ class TeamsController < AuthenticatedController
     build_leadtime_data(project_statistics_chart_adapter)
     build_block_data(project_statistics_chart_adapter)
     build_block_by_project_data(portfolio_statistics_chart_adapter)
+    build_aging_by_project_data(portfolio_statistics_chart_adapter)
 
     respond_to { |format| format.js { render file: 'teams/statistics_tab.js.erb' } }
   end
@@ -82,10 +83,17 @@ class TeamsController < AuthenticatedController
   end
 
   def build_block_by_project_data(portfolio_statistics_chart_adapter)
-    @block_by_project_data = portfolio_statistics_chart_adapter.block_count_per_project
+    @block_by_project_data = portfolio_statistics_chart_adapter.block_count_by_project
     @block_by_project_x_axis = portfolio_statistics_chart_adapter.x_axis
 
     @block_by_project_variation = Stats::StatisticsService.instance.compute_percentage_variation(@block_by_project_data[0][:data].min || 0, @block_by_project_data[0][:data].max || 0)
+  end
+
+  def build_aging_by_project_data(portfolio_statistics_chart_adapter)
+    @aging_by_project_data = portfolio_statistics_chart_adapter.aging_by_project
+    @aging_by_project_x_axis = portfolio_statistics_chart_adapter.x_axis
+
+    @aging_by_project_variation = Stats::StatisticsService.instance.compute_percentage_variation(@aging_by_project_data[0][:data].min || 0, @aging_by_project_data[0][:data].max || 0)
   end
 
   def start_date_to_adapter

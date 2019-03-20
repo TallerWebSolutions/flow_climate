@@ -360,6 +360,7 @@ en:
       blocks_by_project:
         data_title: "Blocks by Projects"
       block_by_project_tab: "Blocks by Project"
+      aging_by_project_tab: "Aging per Project"
   project:
     new:
       title: "New Project"
@@ -704,3 +705,6 @@ en:
   portfolio:
     charts:
       block_count: "Block Count"
+      aging_by_project:
+        data_title: "days"
+        title: "Aging by Project"

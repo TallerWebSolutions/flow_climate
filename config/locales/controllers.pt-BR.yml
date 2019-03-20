@@ -378,6 +378,7 @@ pt-BR:
       blocks_by_project:
         data_title: "Bloqueios por Projeto"
       block_by_project_tab: "Bloqueios por Projeto"
+      aging_by_project_tab: "Aging por Projeto"
   teams:
     index:
       title: "Times"
@@ -698,3 +699,6 @@ pt-BR:
   portfolio:
     charts:
       block_count: "Qtd Bloqueios"
+      aging_by_project:
+        data_title: "dias"
+        title: "Aging por Projeto"
