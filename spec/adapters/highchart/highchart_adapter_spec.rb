@@ -21,11 +21,11 @@ RSpec.describe Highchart::HighchartAdapter, type: :data_object do
         subject(:chart_data) { Highchart::HighchartAdapter.new(Project.all, Project.all.map(&:start_date).min, Project.all.map(&:end_date).max, 'week') }
 
         it 'do the math and provides the correct information' do
-          expect(chart_data.x_axis).to eq [Date.new(2018, 2, 19), Date.new(2018, 2, 26), Date.new(2018, 3, 5), Date.new(2018, 3, 12), Date.new(2018, 3, 19)]
+          expect(chart_data.x_axis).to eq [Date.new(2018, 2, 25), Date.new(2018, 3, 4), Date.new(2018, 3, 11), Date.new(2018, 3, 18), Date.new(2018, 3, 25)]
           expect(chart_data.all_projects).to match_array Project.all
           expect(chart_data.all_projects_demands_ids).to match_array Demand.all.map(&:id)
-          expect(chart_data.upstream_operational_weekly_data).to eq(Date.new(2018, 2, 19) => { throughput: 1, total_effort_downstream: 5.0, total_effort_upstream: 10.0, total_queue_time: 0.0, total_touch_time: 0.0 })
-          expect(chart_data.downstream_operational_weekly_data).to eq(Date.new(2018, 2, 19) => { total_effort_upstream: 12.0, total_effort_downstream: 20.0, throughput: 1, total_queue_time: 0.0, total_touch_time: 0.0 }, Date.new(2018, 3, 12) => { total_effort_upstream: 163.0, total_effort_downstream: 99.0, throughput: 3, total_queue_time: 0.0, total_touch_time: 0.0 })
+          expect(chart_data.upstream_operational_weekly_data).to eq(Date.new(2018, 2, 25) => { throughput: 1, total_effort_downstream: 5.0, total_effort_upstream: 10.0, total_queue_time: 0.0, total_touch_time: 0.0 })
+          expect(chart_data.downstream_operational_weekly_data).to eq(Date.new(2018, 2, 25) => { total_effort_upstream: 12.0, total_effort_downstream: 20.0, throughput: 1, total_queue_time: 0.0, total_touch_time: 0.0 }, Date.new(2018, 3, 18) => { total_effort_upstream: 163.0, total_effort_downstream: 99.0, throughput: 3, total_queue_time: 0.0, total_touch_time: 0.0 })
         end
       end
     end

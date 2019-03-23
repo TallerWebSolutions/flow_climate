@@ -28,18 +28,6 @@ module Highchart
       ProjectsRepository.instance.projects_ending_after(projects, @start_date)
     end
 
-    def upstream_operational_data_for_week(upstream_keys_matching, data_required)
-      return @upstream_operational_weekly_data[upstream_keys_matching.first][data_required] if upstream_keys_matching.present? && @upstream_operational_weekly_data.try(:[], upstream_keys_matching.first).try(:[], data_required).present?
-
-      0
-    end
-
-    def downstream_operational_data_for_week(downstream_keys_matching, data_required)
-      return @downstream_operational_weekly_data[downstream_keys_matching.first][data_required] if downstream_keys_matching.present? && @downstream_operational_weekly_data.try(:[], downstream_keys_matching.first).try(:[], data_required).present?
-
-      0
-    end
-
     def build_x_axis
       @x_axis = []
       return if @all_projects.blank?

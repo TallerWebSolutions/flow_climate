@@ -71,7 +71,7 @@ RSpec.describe ChartsController, type: :controller do
         it 'builds the operation report and respond the JS render the template' do
           get :build_strategic_charts, params: { company_id: company, projects_ids: team.projects.map(&:id).to_csv }, xhr: true
           expect(response).to render_template 'charts/strategic_charts.js.erb'
-          expect(assigns(:strategic_chart_data).array_of_months).to eq [Time.zone.today.beginning_of_month, 1.month.from_now.to_date.beginning_of_month]
+          expect(assigns(:strategic_chart_data).array_of_months).to eq [Time.zone.today.end_of_month, 1.month.from_now.to_date.end_of_month]
           expect(assigns(:strategic_chart_data).active_projects_count_data).to eq [2, 1]
         end
       end

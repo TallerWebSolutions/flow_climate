@@ -24,12 +24,12 @@ module Highchart
       build_statistics_charts
     end
 
-    def hours_per_demand_per_week
+    def hours_per_demand
       chart_data = []
       @x_axis.each do |date|
-        break unless date <= Time.zone.today
+        break unless add_data_to_chart?(date)
 
-        chart_data << build_chart_data(date)
+        chart_data << compute_hours_per_demand_to_date(date)
       end
 
       chart_data
@@ -39,7 +39,7 @@ module Highchart
       upstream_result_data = []
       downstream_result_data = []
       @x_axis.each do |date|
-        break unless date <= Time.zone.today
+        break unless add_data_to_chart?(date)
 
         upstream_result_data << DemandsRepository.instance.delivered_until_date_to_projects_in_stream(@all_projects, 'upstream', date).count
         downstream_result_data << DemandsRepository.instance.delivered_until_date_to_projects_in_stream(@all_projects, 'downstream', date).count
@@ -70,29 +70,16 @@ module Highchart
 
     private
 
-    def build_chart_data(date)
-      upstream_keys_matching = @upstream_operational_weekly_data.keys.select { |key| key == date }
-      upstream_throughput = upstream_operational_data_for_week(upstream_keys_matching, :throughput)
+    def compute_hours_per_demand_to_date(date)
+      demands_finished_upstream = DemandsRepository.instance.delivered_until_date_to_projects_in_stream(@all_projects, 'upstream', date)
+      demands_finished_downstream = DemandsRepository.instance.delivered_until_date_to_projects_in_stream(@all_projects, 'downstream', date)
 
-      downstream_keys_matching = @downstream_operational_weekly_data.keys.select { |key| key == date }
-      downstream_throughput = downstream_operational_data_for_week(downstream_keys_matching, :throughput)
+      effort_upstream = demands_finished_upstream.sum(&:effort_upstream) + demands_finished_downstream.sum(&:effort_upstream)
+      effort_downstream = demands_finished_downstream.sum(&:effort_downstream)
 
-      throughput_total = upstream_throughput + downstream_throughput
+      total_throughput = demands_finished_upstream.count + demands_finished_downstream.count
 
-      if throughput_total.zero? || (upstream_keys_matching.blank? && downstream_keys_matching.blank?)
-        0
-      else
-        compute_hour_per_demand(throughput_total, (upstream_keys_matching + downstream_keys_matching).uniq)
-      end
-    end
-
-    def compute_hour_per_demand(throughput_total, upstream_keys_matching)
-      hours_for_week_upstream_data = upstream_operational_data_for_week(upstream_keys_matching, :total_effort_upstream)
-      hours_for_week_downstream_data = downstream_operational_data_for_week(upstream_keys_matching, :total_effort_upstream) + downstream_operational_data_for_week(upstream_keys_matching, :total_effort_downstream)
-
-      hours_of_effort_total = hours_for_week_upstream_data + hours_for_week_downstream_data
-
-      hours_of_effort_total.to_f / throughput_total.to_f
+      ((effort_upstream + effort_downstream) / total_throughput.to_f).to_f
     end
 
     def group_all_keys(grouped_hours_to_downstream, grouped_hours_to_upstream)
@@ -108,11 +95,23 @@ module Highchart
     def build_flow_pressure_array
       array_of_flow_pressures = []
       @x_axis.each do |date|
-        break unless date <= Time.zone.today
+        break unless add_data_to_chart?(date)
 
         @all_projects.each { |project| array_of_flow_pressures << project.flow_pressure(date.end_of_week) }
         @flow_pressure_data << array_of_flow_pressures.sum.to_f / array_of_flow_pressures.count.to_f
       end
+    end
+
+    def add_data_to_chart?(date)
+      limit_date = if @chart_period_interval == 'day'
+                     Time.zone.today.end_of_day
+                   elsif @chart_period_interval == 'week'
+                     Time.zone.today.end_of_week
+                   else
+                     Time.zone.today.end_of_month
+                   end
+
+      date <= limit_date
     end
 
     def build_demands_scope_data
@@ -124,7 +123,7 @@ module Highchart
     def build_demands_throughput_data
       throughput_per_period = []
       @x_axis.each do |date|
-        break unless date <= Time.zone.today
+        break unless add_data_to_chart?(date)
 
         upstream_total_delivered = DemandsRepository.instance.delivered_until_date_to_projects_in_stream(@all_projects, 'upstream', date).count
         downstream_total_delivered = DemandsRepository.instance.delivered_until_date_to_projects_in_stream(@all_projects, 'downstream', date).count
@@ -142,7 +141,7 @@ module Highchart
     def build_hours_throughput_data
       throughput_hours_per_period = []
       @x_axis.each do |date|
-        break unless date <= Time.zone.today
+        break unless add_data_to_chart?(date)
 
         upstream_total_hours_delivered = DemandsRepository.instance.delivered_until_date_to_projects_in_stream(@all_projects, 'upstream', date).sum(&:effort_upstream)
         downstream_total_hours_delivered = DemandsRepository.instance.delivered_until_date_to_projects_in_stream(@all_projects, 'downstream', date).sum(&:effort_downstream)
@@ -166,7 +165,7 @@ module Highchart
       bugs_opened_count_array = []
       bugs_closed_count_array = []
       @x_axis.each do |date|
-        break unless date <= Time.zone.today
+        break unless add_data_to_chart?(date)
 
         dates_array << date.to_s
         bugs_opened_count_array << DemandsRepository.instance.bugs_opened_until_limit_date(@all_projects, date)
@@ -179,7 +178,7 @@ module Highchart
       dates_array = []
       bugs_opened_share_array = []
       @x_axis.each do |date|
-        break unless date <= Time.zone.today
+        break unless add_data_to_chart?(date)
 
         dates_array << date.to_s
         scope_in_week = DemandsRepository.instance.scope_in_week_for_projects(@all_projects, date.cweek, date.cwyear)
@@ -197,7 +196,7 @@ module Highchart
       touch_times_per_week_hash = DemandsRepository.instance.total_time_for(@all_projects, 'total_touch_time')
 
       @x_axis.each do |date|
-        break unless date <= Time.zone.today
+        break unless add_data_to_chart?(date)
 
         demands_touch_block_total_time = compute_demands_touch_block_total_time(date)
         dates_array << date.to_s
@@ -223,7 +222,7 @@ module Highchart
       touch_times_per_week_hash = DemandsRepository.instance.total_time_for(@all_projects, 'total_touch_time')
 
       @x_axis.each do |date|
-        break unless date <= Time.zone.today
+        break unless add_data_to_chart?(date)
 
         dates_array << date.to_s
         flow_efficiency_array << compute_flow_efficiency(date, queue_times_per_week_hash, touch_times_per_week_hash)

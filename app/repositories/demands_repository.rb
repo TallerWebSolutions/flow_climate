@@ -86,7 +86,7 @@ class DemandsRepository
 
     base_query_to_operational_data(date, downstream, projects_ids)
       .map do |operational_data_to_week|
-      operational_weekly_data[Date.commercial(operational_data_to_week.year, operational_data_to_week.week, 1)] = {
+      operational_weekly_data[Date.commercial(operational_data_to_week.year, operational_data_to_week.week, 1).end_of_week] = {
         total_effort_upstream: operational_data_to_week.total_effort_upstream.to_f,
         total_effort_downstream: operational_data_to_week.total_effort_downstream.to_f,
         throughput: operational_data_to_week.throughput,
@@ -116,7 +116,7 @@ class DemandsRepository
           .where(id: demands.map(&:id)).where('end_date >= :bottom_limit AND end_date <= :upper_limit', bottom_limit: start_period, upper_limit: end_period)
   end
 
-  def demands_for_periods_accumulated(demands, upper_date_limit)
+  def demands_for_period_accumulated(demands, upper_date_limit)
     Demand.kept
           .story
           .where(id: demands.map(&:id)).where('end_date <= :upper_limit', upper_limit: upper_date_limit)
