@@ -893,8 +893,8 @@ CREATE TABLE public.team_members (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     team_id integer NOT NULL,
-    hour_value numeric DEFAULT 0,
-    total_monthly_payment numeric NOT NULL
+    start_date date,
+    end_date date
 );
 
 
@@ -2314,6 +2314,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190212183127'),
 ('20190215153227'),
 ('20190216181219'),
-('20190318221048');
+('20190318221048'),
+('20190323215103');
 
 

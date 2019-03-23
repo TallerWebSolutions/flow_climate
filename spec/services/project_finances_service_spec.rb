@@ -7,7 +7,7 @@ RSpec.describe ProjectFinancesService, type: :service do
   describe '#effort_share_in_month' do
     let(:company) { Fabricate :company }
     let!(:team) { Fabricate :team, company: company }
-    let!(:team_member) { Fabricate :team_member, active: true, billable_type: :outsourcing, billable: true, team: team, monthly_payment: 100, hours_per_month: 22, total_monthly_payment: 10_000 }
+    let!(:team_member) { Fabricate :team_member, active: true, billable_type: :outsourcing, billable: true, team: team, monthly_payment: 100 }
 
     let(:customer) { Fabricate :customer, company: company }
 

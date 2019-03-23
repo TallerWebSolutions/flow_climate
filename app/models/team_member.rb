@@ -4,18 +4,18 @@
 #
 # Table name: team_members
 #
-#  active                :boolean          default(TRUE)
-#  billable              :boolean          default(TRUE)
-#  billable_type         :integer          default("outsourcing")
-#  created_at            :datetime         not null
-#  hour_value            :decimal(, )      default(0.0)
-#  hours_per_month       :integer          not null
-#  id                    :bigint(8)        not null, primary key
-#  monthly_payment       :decimal(, )      not null
-#  name                  :string           not null
-#  team_id               :integer          not null
-#  total_monthly_payment :decimal(, )      not null
-#  updated_at            :datetime         not null
+#  active          :boolean          default(TRUE)
+#  billable        :boolean          default(TRUE)
+#  billable_type   :integer          default("outsourcing")
+#  created_at      :datetime         not null
+#  end_date        :date
+#  hours_per_month :integer          not null
+#  id              :bigint(8)        not null, primary key
+#  monthly_payment :decimal(, )      not null
+#  name            :string           not null
+#  start_date      :date
+#  team_id         :integer          not null
+#  updated_at      :datetime         not null
 #
 # Foreign Keys
 #
@@ -27,17 +27,7 @@ class TeamMember < ApplicationRecord
 
   belongs_to :team
 
-  validates :team, :name, :monthly_payment, :hours_per_month, :total_monthly_payment, presence: true
+  validates :team, :name, :monthly_payment, :hours_per_month, presence: true
 
   scope :active, -> { where active: true }
-
-  before_validation :update_total_monthly_payment
-
-  private
-
-  def update_total_monthly_payment
-    return if hour_value.blank? || hours_per_month.blank?
-
-    self.total_monthly_payment = monthly_payment + (hour_value * hours_per_month)
-  end
 end

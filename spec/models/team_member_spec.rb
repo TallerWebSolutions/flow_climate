@@ -13,8 +13,6 @@ RSpec.describe TeamMember, type: :model do
     it { is_expected.to validate_presence_of :team }
     it { is_expected.to validate_presence_of :name }
     it { is_expected.to validate_presence_of :monthly_payment }
-    it { is_expected.to validate_presence_of :hours_per_month }
-    it { is_expected.to validate_presence_of :total_monthly_payment }
   end
 
   context 'scopes' do
