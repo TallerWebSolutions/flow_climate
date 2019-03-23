@@ -332,7 +332,7 @@ RSpec.describe DemandsRepository, type: :repository do
     end
   end
 
-  describe '#demands_for_periods_accumulated' do
+  describe '#demands_for_period_accumulated' do
     let(:first_project) { Fabricate :project, customer: customer, start_date: 2.months.ago, end_date: 2.months.from_now }
     let(:second_project) { Fabricate :project, customer: customer, start_date: 2.months.ago, end_date: 2.months.from_now }
     let(:third_project) { Fabricate :project, customer: customer, start_date: 2.months.ago, end_date: 2.months.from_now }
@@ -350,12 +350,12 @@ RSpec.describe DemandsRepository, type: :repository do
 
       let!(:first_epic) { Fabricate :demand, project: first_project, artifact_type: :epic }
 
-      it { expect(DemandsRepository.instance.demands_for_periods_accumulated(Demand.all, 1.week.ago)).to match_array [third_demand, fifth_demand, sixth_demand] }
+      it { expect(DemandsRepository.instance.demands_for_period_accumulated(Demand.all, 1.week.ago)).to match_array [third_demand, fifth_demand, sixth_demand] }
     end
 
     context 'having no demands' do
       context 'having no demands' do
-        it { expect(DemandsRepository.instance.demands_for_periods_accumulated(Demand.all, 4.days.ago)).to eq [] }
+        it { expect(DemandsRepository.instance.demands_for_period_accumulated(Demand.all, 4.days.ago)).to eq [] }
       end
     end
   end

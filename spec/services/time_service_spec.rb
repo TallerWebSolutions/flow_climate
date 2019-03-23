@@ -63,7 +63,7 @@ RSpec.describe TimeService, type: :service do
 
       weeks = TimeService.instance.weeks_between_of(start_date, end_date)
 
-      expect(weeks).to eq [Date.new(2018, 7, 9), Date.new(2018, 7, 16), Date.new(2018, 7, 23), Date.new(2018, 7, 30), Date.new(2018, 8, 6), Date.new(2018, 8, 13), Date.new(2018, 8, 20)]
+      expect(weeks).to eq [Date.new(2018, 7, 15), Date.new(2018, 7, 22), Date.new(2018, 7, 29), Date.new(2018, 8, 5), Date.new(2018, 8, 12), Date.new(2018, 8, 19), Date.new(2018, 8, 26)]
     end
   end
 
@@ -74,7 +74,7 @@ RSpec.describe TimeService, type: :service do
 
       months = TimeService.instance.months_between_of(start_date, end_date)
 
-      expect(months).to eq [Date.new(2018, 7, 1), Date.new(2018, 8, 1)]
+      expect(months).to eq [Date.new(2018, 7, 31), Date.new(2018, 8, 31)]
     end
   end
 
@@ -85,7 +85,7 @@ RSpec.describe TimeService, type: :service do
 
       years = TimeService.instance.years_between_of(start_date, end_date)
 
-      expect(years).to eq [Date.new(2018, 1, 1), Date.new(2019, 1, 1)]
+      expect(years).to eq [Date.new(2018, 12, 31), Date.new(2019, 12, 31)]
     end
   end
 

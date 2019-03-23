@@ -32,7 +32,7 @@ RSpec.describe Highchart::DemandsChartsAdapter, type: :data_object do
       it 'computes and extracts the information of the creation_date' do
         creation_chart_data = Highchart::DemandsChartsAdapter.new(Demand.all, 'week').creation_chart_data
 
-        expect(creation_chart_data[:x_axis]).to eq [Date.new(2018, 8, 27)]
+        expect(creation_chart_data[:x_axis]).to eq [Date.new(2018, 9, 2)]
         expect(creation_chart_data[:y_axis][0][:name]).to eq I18n.t('demands.charts.creation_date')
         expect(creation_chart_data[:y_axis][0][:data]).to eq [5]
       end
@@ -65,7 +65,7 @@ RSpec.describe Highchart::DemandsChartsAdapter, type: :data_object do
     describe '.initialize' do
       subject(:throughput_chart_data) { Highchart::DemandsChartsAdapter.new(Demand.all, 'week').throughput_chart_data }
       it 'returns empty information' do
-        expect(throughput_chart_data[:x_axis]).to eq [Time.zone.today]
+        expect(throughput_chart_data[:x_axis]).to eq [Time.zone.today.end_of_week]
         expect(throughput_chart_data[:y_axis][0][:name]).to eq I18n.t('general.throughput')
         expect(throughput_chart_data[:y_axis][0][:data]).to eq []
       end

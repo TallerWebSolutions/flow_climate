@@ -58,12 +58,12 @@ RSpec.describe Highchart::OperationalChartsAdapter, type: :data_object do
 
           it 'do the math and provides the correct information' do
             expect(report_data.all_projects).to match_array [first_project, second_project, third_project]
-            expect(report_data.x_axis).to eq [Date.new(2018, 2, 19), Date.new(2018, 2, 26), Date.new(2018, 3, 5), Date.new(2018, 3, 12), Date.new(2018, 3, 19), Date.new(2018, 3, 26), Date.new(2018, 4, 2), Date.new(2018, 4, 9), Date.new(2018, 4, 16), Date.new(2018, 4, 23), Date.new(2018, 4, 30), Date.new(2018, 5, 7)]
+            expect(report_data.x_axis).to eq [Date.new(2018, 2, 25), Date.new(2018, 3, 4), Date.new(2018, 3, 11), Date.new(2018, 3, 18), Date.new(2018, 3, 25), Date.new(2018, 4, 1), Date.new(2018, 4, 8), Date.new(2018, 4, 15), Date.new(2018, 4, 22), Date.new(2018, 4, 29), Date.new(2018, 5, 6), Date.new(2018, 5, 13)]
             expect(report_data.demands_burnup_data.ideal_per_period).to eq [3.5, 7.0, 10.5, 14.0, 17.5, 21.0, 24.5, 28.0, 31.5, 35.0, 38.5, 42.0]
-            expect(report_data.demands_burnup_data.current_per_period).to eq [0, 1, 2, 2, 3, 5, 5, 5, 5, 5, 5, 10]
+            expect(report_data.demands_burnup_data.current_per_period).to eq [1, 2, 2, 3, 5, 5, 5, 5, 5, 5, 10, 10]
             expect(report_data.demands_burnup_data.scope_per_period).to eq [42, 42, 42, 42, 42, 42, 42, 42, 42, 42, 42, 42]
             expect(report_data.flow_pressure_data).to eq [0.6079086605402394, 0.6119437482595377, 0.6194386483003373, 0.7685507211180406, 0.6672543699978808, 0.611894497901687, 0.5916767653972133, 0.6206266524811823, 1.198132782003475, 1.10054172602535, 1.0383712660836515, 1.229618105021125]
-            expect(report_data.throughput_per_period).to eq([{ name: I18n.t('projects.charts.throughput.stage_stream.upstream'), data: [0, 0, 0, 0, 1, 2, 2, 2, 2, 2, 2, 2] }, { name: I18n.t('projects.charts.throughput.stage_stream.downstream'), data: [0, 1, 2, 2, 2, 3, 3, 3, 3, 3, 3, 8] }])
+            expect(report_data.throughput_per_period).to eq([{ name: I18n.t('projects.charts.throughput.stage_stream.upstream'), data: [0, 0, 0, 1, 2, 2, 2, 2, 2, 2, 2, 2] }, { name: I18n.t('projects.charts.throughput.stage_stream.downstream'), data: [1, 2, 2, 2, 3, 3, 3, 3, 3, 3, 8, 8] }])
             expect(report_data.effort_hours_per_month).to eq(keys: [[2018.0, 2.0], [2018.0, 3.0], [2018.0, 5.0]], data: { upstream: [0.0, 0.0, 224.0], downstream: [39.6, 0.0, 284.8] })
             expect(report_data.lead_time_control_chart[:dispersion_source]).to match_array [[fourth_demand.demand_id, fourth_demand.leadtime_in_days.to_f], [second_demand.demand_id, (second_demand.leadtime / 86_400).to_f], [first_demand.demand_id, (first_demand.leadtime / 86_400).to_f], [fifth_demand.demand_id, (fifth_demand.leadtime / 86_400).to_f], [third_demand.demand_id, (third_demand.leadtime / 86_400).to_f], [sixth_demand.demand_id, (sixth_demand.leadtime / 86_400).to_f], [first_bug.demand_id, (first_bug.leadtime / 86_400).to_f], [second_bug.demand_id, (second_bug.leadtime / 86_400).to_f], [third_bug.demand_id, (third_bug.leadtime / 86_400).to_f], [fourth_bug.demand_id, (fourth_bug.leadtime / 86_400).to_f]]
             expect(report_data.lead_time_control_chart[:percentile_95_data]).to eq 7.9088125
@@ -73,10 +73,10 @@ RSpec.describe Highchart::OperationalChartsAdapter, type: :data_object do
             expect(report_data.leadtime_histogram_data).to eq [6.0, 2.0, 2.0]
             expect(report_data.throughput_bins).to eq ['0.42 demanda(s)', '1.25 demanda(s)', '2.08 demanda(s)', '2.92 demanda(s)', '3.75 demanda(s)', '4.58 demanda(s)']
             expect(report_data.throughput_histogram_data).to eq [35.0, 3.0, 1.0, 0.0, 0.0, 1.0]
-            expect(report_data.weeekly_bugs_count_hash).to eq(dates_array: %w[2018-02-19 2018-02-26 2018-03-05 2018-03-12 2018-03-19 2018-03-26 2018-04-02 2018-04-09 2018-04-16 2018-04-23 2018-04-30 2018-05-07], bugs_opened_count_array: [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4], bugs_closed_count_array: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4])
-            expect(report_data.weeekly_bugs_share_hash).to eq(dates_array: %w[2018-02-19 2018-02-26 2018-03-05 2018-03-12 2018-03-19 2018-03-26 2018-04-02 2018-04-09 2018-04-16 2018-04-23 2018-04-30 2018-05-07], bugs_opened_share_array: [8.695652173913043, 8.695652173913043, 8.695652173913043, 8.695652173913043, 8.695652173913043, 8.695652173913043, 8.695652173913043, 8.695652173913043, 8.695652173913043, 8.695652173913043, 8.695652173913043, 8.695652173913043])
-            expect(report_data.weekly_queue_touch_count_hash).to eq(dates_array: %w[2018-02-19 2018-02-26 2018-03-05 2018-03-12 2018-03-19 2018-03-26 2018-04-02 2018-04-09 2018-04-16 2018-04-23 2018-04-30 2018-05-07], queue_times: [0.0, 96.0, 0, 0.0, 0.0, 0, 0, 0, 0, 0, 672.0, 0], touch_times: [0.0, 96.0, 0, 0.0, 0.0, 0, 0, 0, 0, 0, 240.0, 0])
-            expect(report_data.weekly_queue_touch_share_hash).to eq(dates_array: %w[2018-02-19 2018-02-26 2018-03-05 2018-03-12 2018-03-19 2018-03-26 2018-04-02 2018-04-09 2018-04-16 2018-04-23 2018-04-30 2018-05-07], flow_efficiency_array: [0, 50.0, 0, 0, 0, 0, 0, 0, 0, 0, 26.31578947368421, 0])
+            expect(report_data.weeekly_bugs_count_hash).to eq(dates_array: %w[2018-02-25 2018-03-04 2018-03-11 2018-03-18 2018-03-25 2018-04-01 2018-04-08 2018-04-15 2018-04-22 2018-04-29 2018-05-06 2018-05-13], bugs_opened_count_array: [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4], bugs_closed_count_array: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4])
+            expect(report_data.weeekly_bugs_share_hash).to eq(dates_array: %w[2018-02-25 2018-03-04 2018-03-11 2018-03-18 2018-03-25 2018-04-01 2018-04-08 2018-04-15 2018-04-22 2018-04-29 2018-05-06 2018-05-13], bugs_opened_share_array: [8.695652173913043, 8.695652173913043, 8.695652173913043, 8.695652173913043, 8.695652173913043, 8.695652173913043, 8.695652173913043, 8.695652173913043, 8.695652173913043, 8.695652173913043, 8.695652173913043, 8.695652173913043])
+            expect(report_data.weekly_queue_touch_count_hash).to eq(dates_array: %w[2018-02-25 2018-03-04 2018-03-11 2018-03-18 2018-03-25 2018-04-01 2018-04-08 2018-04-15 2018-04-22 2018-04-29 2018-05-06 2018-05-13], queue_times: [0.0, 96.0, 0, 0.0, 0.0, 0, 0, 0, 0, 0, 672.0, 0], touch_times: [0.0, 96.0, 0, 0.0, 0.0, 0, 0, 0, 0, 0, 240.0, 0])
+            expect(report_data.weekly_queue_touch_share_hash).to eq(dates_array: %w[2018-02-25 2018-03-04 2018-03-11 2018-03-18 2018-03-25 2018-04-01 2018-04-08 2018-04-15 2018-04-22 2018-04-29 2018-05-06 2018-05-13], flow_efficiency_array: [0, 50.0, 0, 0, 0, 0, 0, 0, 0, 0, 26.31578947368421, 0])
           end
         end
         context 'and using the month period interval' do
@@ -87,12 +87,12 @@ RSpec.describe Highchart::OperationalChartsAdapter, type: :data_object do
 
           it 'do the math and provides the correct information' do
             expect(report_data.all_projects).to match_array [first_project, second_project, third_project]
-            expect(report_data.x_axis).to eq [Date.new(2018, 2, 1), Date.new(2018, 3, 1), Date.new(2018, 4, 1), Date.new(2018, 5, 1)]
+            expect(report_data.x_axis).to eq [Date.new(2018, 2, 28), Date.new(2018, 3, 31), Date.new(2018, 4, 30), Date.new(2018, 5, 31)]
             expect(report_data.demands_burnup_data.ideal_per_period).to eq [10.5, 21.0, 31.5, 42.0]
-            expect(report_data.demands_burnup_data.current_per_period).to eq [0, 2, 5, 5]
-            expect(report_data.demands_burnup_data.scope_per_period).to eq [38, 42, 42, 42]
-            expect(report_data.flow_pressure_data).to eq [0.5570063150708312, 0.5864925755248336, 0.5026934294901286, 0.48118673878426316]
-            expect(report_data.throughput_per_period).to eq([{ name: I18n.t('projects.charts.throughput.stage_stream.upstream'), data: [0, 0, 2, 2] }, { name: I18n.t('projects.charts.throughput.stage_stream.downstream'), data: [0, 2, 3, 3] }])
+            expect(report_data.demands_burnup_data.current_per_period).to eq [2, 5, 5, 10]
+            expect(report_data.demands_burnup_data.scope_per_period).to eq [42, 42, 42, 42]
+            expect(report_data.flow_pressure_data).to eq [0.615978835978836, 0.4755369866997774, 0.4559135466887405, 0.3419351600165554]
+            expect(report_data.throughput_per_period).to eq([{ name: I18n.t('projects.charts.throughput.stage_stream.upstream'), data: [0, 2, 2, 2] }, { name: I18n.t('projects.charts.throughput.stage_stream.downstream'), data: [2, 3, 3, 8] }])
             expect(report_data.effort_hours_per_month).to eq(keys: [[2018.0, 2.0], [2018.0, 3.0], [2018.0, 5.0]], data: { upstream: [0.0, 0.0, 224.0], downstream: [39.6, 0.0, 284.8] })
             expect(report_data.lead_time_control_chart[:dispersion_source]).to match_array [[fifth_demand.demand_id, 4.0], [first_bug.demand_id, 0.5416666666666666], [first_demand.demand_id, 7.797361111111111], [fourth_bug.demand_id, 1.0], [second_demand.demand_id, 1.0], [sixth_demand.demand_id, 1.0], [fourth_demand.demand_id, 8.0], [third_demand.demand_id, 2.0], [second_bug.demand_id, 5.0], [third_bug.demand_id, 1.0]]
             expect(report_data.lead_time_control_chart[:percentile_95_data]).to eq 7.9088125
@@ -102,10 +102,10 @@ RSpec.describe Highchart::OperationalChartsAdapter, type: :data_object do
             expect(report_data.leadtime_histogram_data).to eq [6.0, 2.0, 2.0]
             expect(report_data.throughput_bins).to eq ['0.63 demanda(s)', '1.88 demanda(s)', '3.13 demanda(s)', '4.38 demanda(s)']
             expect(report_data.throughput_histogram_data).to eq [11.0, 1.0, 0.0, 1.0]
-            expect(report_data.weeekly_bugs_count_hash).to eq(dates_array: %w[2018-02-01 2018-03-01 2018-04-01 2018-05-01], bugs_opened_count_array: [4, 4, 4, 4], bugs_closed_count_array: [0, 0, 0, 0])
-            expect(report_data.weeekly_bugs_share_hash).to eq(dates_array: %w[2018-02-01 2018-03-01 2018-04-01 2018-05-01], bugs_opened_share_array: [9.523809523809524, 8.695652173913043, 8.695652173913043, 8.695652173913043])
-            expect(report_data.weekly_queue_touch_count_hash).to eq(dates_array: %w[2018-02-01 2018-03-01 2018-04-01 2018-05-01], queue_times: [0, 96.0, 0, 672.0], touch_times: [0, 96.0, 0, 240.0])
-            expect(report_data.weekly_queue_touch_share_hash).to eq(dates_array: %w[2018-02-01 2018-03-01 2018-04-01 2018-05-01], flow_efficiency_array: [0, 50.0, 0, 26.31578947368421])
+            expect(report_data.weeekly_bugs_count_hash).to eq(dates_array: %w[2018-02-28 2018-03-31 2018-04-30 2018-05-31], bugs_opened_count_array: [4, 4, 4, 4], bugs_closed_count_array: [0, 0, 0, 4])
+            expect(report_data.weeekly_bugs_share_hash).to eq(dates_array: %w[2018-02-28 2018-03-31 2018-04-30 2018-05-31], bugs_opened_share_array: [8.695652173913043, 8.695652173913043, 8.695652173913043, 8.695652173913043])
+            expect(report_data.weekly_queue_touch_count_hash).to eq(dates_array: %w[2018-02-28 2018-03-31 2018-04-30 2018-05-31], queue_times: [96.0, 0, 672.0, 0], touch_times: [96.0, 0, 240.0, 0])
+            expect(report_data.weekly_queue_touch_share_hash).to eq(dates_array: %w[2018-02-28 2018-03-31 2018-04-30 2018-05-31], flow_efficiency_array: [50.0, 0, 26.31578947368421, 0])
           end
         end
 
@@ -163,9 +163,9 @@ RSpec.describe Highchart::OperationalChartsAdapter, type: :data_object do
         end
       end
     end
-    describe '#hours_per_demand_per_week' do
+    describe '#hours_per_demand' do
       subject(:report_data) { Highchart::OperationalChartsAdapter.new(Project.all, Project.all.map(&:start_date).min, Project.all.map(&:end_date).max, 'week') }
-      it { expect(report_data.hours_per_demand_per_week).to eq [0.0, 39.6, 0, 0.0, 0.0, 0, 0, 0, 0, 0, 101.76, 0] }
+      it { expect(report_data.hours_per_demand).to eq [0.0, 19.8, 19.8, 13.2, 7.92, 7.92, 7.92, 7.92, 7.92, 7.92, 54.84, 54.84] }
     end
   end
 end

@@ -58,7 +58,7 @@ module Highchart
         demands_data = DemandsRepository.instance.demands_for_period(@demands_in_chart, start_date, end_date)
         leadtime_data << Stats::StatisticsService.instance.percentile(80, demands_data.map(&:leadtime_in_days))
 
-        demands_data_accumulated = DemandsRepository.instance.demands_for_periods_accumulated(@demands_in_chart, end_date)
+        demands_data_accumulated = DemandsRepository.instance.demands_for_period_accumulated(@demands_in_chart, end_date)
         accumulated_leadtime_data << Stats::StatisticsService.instance.percentile(80, demands_data_accumulated.map(&:leadtime_in_days))
       end
 

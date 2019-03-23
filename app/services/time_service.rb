@@ -12,34 +12,34 @@ class TimeService
   def days_between_of(start_date, end_date)
     return [] if start_date.blank? || end_date.blank?
 
-    compute_dates(start_date.beginning_of_day, end_date.end_of_day, 1.day)
+    compute_dates(start_date.end_of_day, end_date.end_of_day, 1.day, :end_of_day)
   end
 
   def weeks_between_of(start_date, end_date)
     return [] if start_date.blank? || end_date.blank?
 
-    min_date = start_date.beginning_of_week
+    min_date = start_date.end_of_week
     max_date = end_date.end_of_week
 
-    compute_dates(min_date, max_date, 1.week)
+    compute_dates(min_date, max_date, 1.week, :end_of_week)
   end
 
   def months_between_of(start_date, end_date)
     return [] if start_date.blank? || end_date.blank?
 
-    min_date = start_date.beginning_of_month
+    min_date = start_date.end_of_month
     max_date = end_date.end_of_month
 
-    compute_dates(min_date, max_date, 1.month)
+    compute_dates(min_date, max_date, 1.month, :end_of_month)
   end
 
   def years_between_of(start_date, end_date)
     return [] if start_date.blank? || end_date.blank?
 
-    min_date = start_date.beginning_of_year
+    min_date = start_date.end_of_year
     max_date = end_date.end_of_year
 
-    compute_dates(min_date, max_date, 1.year)
+    compute_dates(min_date, max_date, 1.year, :end_of_year)
   end
 
   def add_weeks_to_today(weeks)
@@ -60,11 +60,11 @@ class TimeService
 
   private
 
-  def compute_dates(min_date, max_date, period_frame)
+  def compute_dates(min_date, max_date, period_frame, end_of_period)
     array_of_dates = []
     while min_date <= max_date
       array_of_dates << min_date.to_date
-      min_date += period_frame
+      min_date = (min_date + period_frame).send(end_of_period)
     end
     array_of_dates
   end
