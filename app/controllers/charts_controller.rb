@@ -8,7 +8,6 @@ class ChartsController < AuthenticatedController
   def build_operational_charts
     @report_data = {}
     @report_data = Highchart::OperationalChartsAdapter.new(@projects, start_date_to_charts, end_date_to_charts, period_to_chart) if @projects.present?
-    # @portfolio_data = Highchart::PortfolioChartsAdapter.new(@projects, params[:period])
     respond_to { |format| format.js { render file: 'charts/operational_charts.js.erb' } }
   end
 
@@ -20,6 +19,7 @@ class ChartsController < AuthenticatedController
   def build_status_report_charts
     @status_report_data = {}
     @status_report_data = Highchart::StatusReportChartsAdapter.new(@projects, start_date_to_charts, end_date_to_charts, period_to_chart) if @projects.present?
+    @portfolio_data = Highchart::PortfolioChartsAdapter.new(@projects, start_date_to_charts, end_date_to_charts) if @projects.present?
     respond_to { |format| format.js { render file: 'charts/status_report_charts.js.erb' } }
   end
 
@@ -30,7 +30,6 @@ class ChartsController < AuthenticatedController
     return if @projects.blank?
 
     team = @projects.last.current_team
-    @target_name = params[:target_name]
     @available_hours_in_month = team.active_monthly_available_hours_for_billable_types(team.projects.pluck(:project_type).uniq)
   end
 

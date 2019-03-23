@@ -50,8 +50,8 @@ class ProjectsRepository
     extract_data_for_week(projects, throughput_per_week_grouped, beginning_of_week, end_of_week)
   end
 
-  def projects_started_after(projects, limit_date)
-    projects.where('start_date >= :limit_date', limit_date: limit_date)
+  def projects_ending_after(projects, limit_date)
+    projects.where('end_date >= :limit_date', limit_date: limit_date)
   end
 
   def finish_project!(project)

@@ -25,7 +25,7 @@ module Highchart
     def search_projects_by_dates(projects)
       return projects if @start_date.blank?
 
-      ProjectsRepository.instance.projects_started_after(projects, @start_date)
+      ProjectsRepository.instance.projects_ending_after(projects, @start_date)
     end
 
     def upstream_operational_data_for_week(upstream_keys_matching, data_required)

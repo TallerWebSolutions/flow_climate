@@ -83,7 +83,7 @@ RSpec.describe DemandsRepository, type: :repository do
     end
   end
 
-  describe '#grouped_by_effort_upstream_per_month' do
+  describe '#effort_upstream_grouped_by_month' do
     let(:project) { Fabricate :project, start_date: 2.months.ago, end_date: 2.months.from_now }
 
     context 'having demands' do
@@ -99,13 +99,13 @@ RSpec.describe DemandsRepository, type: :repository do
       let!(:first_epic) { Fabricate :demand, project: first_project, artifact_type: :epic }
 
       context 'having demands' do
-        it { expect(DemandsRepository.instance.grouped_by_effort_upstream_per_month(Project.all, 57.days.ago.to_date)).to eq([2018.0, 2.0] => 22.0, [2018.0, 3.0] => 195.0) }
-        it { expect(DemandsRepository.instance.grouped_by_effort_upstream_per_month(Project.all, 24.days.ago.to_date)).to eq([2018.0, 3.0] => 195.0) }
+        it { expect(DemandsRepository.instance.effort_upstream_grouped_by_month(Project.all, 57.days.ago.to_date)).to eq([2018.0, 2.0] => 22.0, [2018.0, 3.0] => 195.0) }
+        it { expect(DemandsRepository.instance.effort_upstream_grouped_by_month(Project.all, 24.days.ago.to_date)).to eq([2018.0, 3.0] => 195.0) }
       end
     end
 
     context 'having no demands' do
-      it { expect(DemandsRepository.instance.grouped_by_effort_upstream_per_month(Project.all, Time.zone.today)).to eq({}) }
+      it { expect(DemandsRepository.instance.effort_upstream_grouped_by_month(Project.all, Time.zone.today)).to eq({}) }
     end
   end
 
@@ -430,6 +430,20 @@ RSpec.describe DemandsRepository, type: :repository do
 
     it { expect(DemandsRepository.instance.total_time_for(Project.all, 'total_queue_time')).to eq([10, 2018] => 3_715_200.0, [13, 2018] => 86_400.0) }
     it { expect(DemandsRepository.instance.total_time_for(Project.all, 'total_touch_time')).to eq([10, 2018] => 3_024_000.0, [13, 2018] => 345_600.0) }
+  end
+
+  describe '#demands_delivered_grouped_by_projects_to_period' do
+    let(:first_project) { Fabricate :project, start_date: 3.days.ago, end_date: 2.days.from_now }
+    let(:second_project) { Fabricate :project, start_date: 2.days.ago, end_date: 1.day.from_now }
+
+    let!(:first_demand) { Fabricate :demand, project: first_project, end_date: 1.day.ago }
+    let!(:second_demand) { Fabricate :demand, project: first_project, end_date: Time.zone.today }
+    let!(:third_demand) { Fabricate :demand, project: second_project, end_date: 2.days.ago }
+    let!(:fourth_demand) { Fabricate :demand, project: first_project, end_date: 1.day.ago }
+    let!(:fifth_demand) { Fabricate :demand, project: first_project, end_date: 1.day.ago }
+
+    it { expect(DemandsRepository.instance.demands_delivered_grouped_by_projects_to_period([first_project, second_project], 3.days.ago, 2.days.from_now)[first_project.full_name]).to match_array [first_demand, second_demand, fourth_demand, fifth_demand] }
+    it { expect(DemandsRepository.instance.demands_delivered_grouped_by_projects_to_period([first_project, second_project], 3.days.ago, 2.days.from_now)[second_project.full_name]).to match_array [third_demand] }
   end
 
   pending '#scope_in_week_for_projects'

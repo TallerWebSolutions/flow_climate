@@ -4,7 +4,7 @@ function buildOperationalCharts(company_id, projects_ids, period, target_name, s
     jQuery.ajax({
         url: `/companies/${company_id}/build_operational_charts.js`,
         type: "GET",
-        data: `projects_ids=${projects_ids}&period=${period}&target_name=${target_name}&start_datee=${startDate}&end_datee=${endDate}&period=${period}`
+        data: `projects_ids=${projects_ids}&period=${period}&target_name=${target_name}&start_date=${startDate}&end_date=${endDate}&period=${period}`
     });
 }
 
@@ -20,6 +20,6 @@ function buildStatusReportCharts(company_id, projects_ids, period, target_name, 
     jQuery.ajax({
         url: `/companies/${company_id}/build_status_report_charts.js`,
         type: "GET",
-        data: `projects_ids=${projects_ids}&period=${period}&target_name=${target_name}&start_datee=${startDate}&end_datee=${endDate}&period=${period}`
+        data: `projects_ids=${projects_ids}&period=${period}&target_name=${target_name}&start_date=${startDate}&end_date=${endDate}&period=${period}`
     });
 }

@@ -17,11 +17,11 @@ class DemandsRepository
     Demand.kept.story.where(project_id: projects.map(&:id)).where('end_date BETWEEN :start_period AND :end_period', start_period: start_period, end_period: end_period)
   end
 
-  def throughput_grouped_by_projects_to_period(projects, start_period, end_period)
-    throughput_to_projects_and_period(projects, start_period, end_period).group(:project_id)
+  def demands_delivered_grouped_by_projects_to_period(projects, start_period, end_period)
+    throughput_to_projects_and_period(projects, start_period, end_period).group_by(&:project_full_name)
   end
 
-  def grouped_by_effort_upstream_per_month(projects, limit_date)
+  def effort_upstream_grouped_by_month(projects, limit_date)
     effort_upstream_hash = {}
     Demand.kept
           .story
