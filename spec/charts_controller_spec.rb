@@ -108,7 +108,7 @@ RSpec.describe ChartsController, type: :controller do
           it 'builds the status report with empty data' do
             get :build_status_report_charts, params: { company_id: company, projects_ids: Project.all.map(&:id).to_csv }, xhr: true
             expect(response).to render_template 'charts/status_report_charts.js.erb'
-            expect(assigns(:status_report_data)).to be_a Highchart::StatusReportChartsAdapter
+            expect(assigns(:status_report_data)).to eq({})
           end
         end
       end

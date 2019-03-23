@@ -47,18 +47,18 @@ RSpec.describe Highchart::StatusReportChartsAdapter, type: :data_object do
         before { travel_to Time.zone.local(2019, 2, 15, 10, 0, 0) }
         after { travel_back }
 
-        subject(:report_data) { Highchart::StatusReportChartsAdapter.new(Project.all, 'all') }
+        subject(:report_data) { Highchart::StatusReportChartsAdapter.new(Project.all, Project.all.map(&:start_date).min, Project.all.map(&:end_date).max, 'week') }
 
         it 'do the math and provides the correct information' do
           expect(report_data.all_projects).to match_array Project.all
-          expect(report_data.all_projects_weeks).to eq [Date.new(2018, 2, 19), Date.new(2018, 2, 26), Date.new(2018, 3, 5), Date.new(2018, 3, 12), Date.new(2018, 3, 19), Date.new(2018, 3, 26), Date.new(2018, 4, 2), Date.new(2018, 4, 9), Date.new(2018, 4, 16), Date.new(2018, 4, 23), Date.new(2018, 4, 30), Date.new(2018, 5, 7)]
+          expect(report_data.x_axis).to eq [Date.new(2018, 2, 19), Date.new(2018, 2, 26), Date.new(2018, 3, 5), Date.new(2018, 3, 12), Date.new(2018, 3, 19), Date.new(2018, 3, 26), Date.new(2018, 4, 2), Date.new(2018, 4, 9), Date.new(2018, 4, 16), Date.new(2018, 4, 23), Date.new(2018, 4, 30), Date.new(2018, 5, 7)]
           expect(report_data.hours_burnup_per_week_data.ideal_per_period).to eq [183.33333333333334, 366.6666666666667, 550.0, 733.3333333333334, 916.6666666666667, 1100.0, 1283.3333333333335, 1466.6666666666667, 1650.0, 1833.3333333333335, 2016.6666666666667, 2200.0]
           expect(report_data.hours_burnup_per_week_data.current_per_period).to eq [0, 0, 0, 0.1122e3, 0.2376e3, 0.2376e3, 0.2376e3, 0.2376e3, 0.2376e3, 0.2376e3, 0.2376e3, 0.2376e3]
           expect(report_data.hours_burnup_per_week_data.scope_per_period).to eq [2200.0, 2200.0, 2200.0, 2200.0, 2200.0, 2200.0, 2200.0, 2200.0, 2200.0, 2200.0, 2200.0, 2200.0]
-          expect(report_data.hours_burnup_per_month_data.ideal_per_period).to eq [550.0, 1100.0, 1650.0, 2200.0]
-          expect(report_data.hours_burnup_per_month_data.current_per_period).to eq [0, 237.6, 237.6, 237.6]
-          expect(report_data.hours_burnup_per_month_data.scope_per_period).to eq [2200.0, 2200.0, 2200.0, 2200.0]
-          expect(report_data.throughput_per_week).to eq([{ name: I18n.t('projects.charts.throughput_per_week.stage_stream.upstream'), data: [0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0] }, { name: I18n.t('projects.charts.throughput_per_week.stage_stream.downstream'), data: [1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0] }])
+          expect(report_data.hours_burnup_per_month_data.ideal_per_period).to eq [183.33333333333334, 366.6666666666667, 550.0, 733.3333333333334, 916.6666666666667, 1100.0, 1283.3333333333335, 1466.6666666666667, 1650.0, 1833.3333333333335, 2016.6666666666667, 2200.0]
+          expect(report_data.hours_burnup_per_month_data.current_per_period).to eq [0, 0, 237.6, 237.6, 237.6, 237.6, 237.6, 237.6, 237.6, 237.6, 237.6, 237.6]
+          expect(report_data.hours_burnup_per_month_data.scope_per_period).to eq [2200.0, 2200.0, 2200.0, 2200.0, 2200.0, 2200.0, 2200.0, 2200.0, 2200.0, 2200.0, 2200.0, 2200.0]
+          expect(report_data.throughput_per_period).to eq([{ name: I18n.t('projects.charts.throughput.stage_stream.upstream'), data: [0, 0, 0, 0, 1, 2, 2, 2, 2, 2, 2, 2] }, { name: I18n.t('projects.charts.throughput.stage_stream.downstream'), data: [0, 1, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3] }])
           expect(report_data.delivered_vs_remaining).to eq([{ name: I18n.t('projects.show.delivered_demands.opened_in_period'), data: [22] }, { name: I18n.t('projects.show.delivered_demands.delivered'), data: [5] }, { name: I18n.t('projects.show.scope_gap'), data: [110] }])
           expect(report_data.dates_to_montecarlo_duration).not_to be_empty
           expect(report_data.confidence_95_duration).to be_within(10).of(306)
@@ -72,18 +72,18 @@ RSpec.describe Highchart::StatusReportChartsAdapter, type: :data_object do
         end
       end
       context 'having no projects' do
-        subject(:report_data) { Highchart::StatusReportChartsAdapter.new(Project.none, 'all') }
+        subject(:report_data) { Highchart::StatusReportChartsAdapter.new(Project.none, Project.all.map(&:start_date).min, Project.all.map(&:end_date).max, 'week') }
 
         it 'return empty sets' do
           expect(report_data.all_projects).to eq []
-          expect(report_data.all_projects_weeks).to eq []
+          expect(report_data.x_axis).to eq []
           expect(report_data.hours_burnup_per_week_data.ideal_per_period).to eq []
           expect(report_data.hours_burnup_per_week_data.current_per_period).to eq []
           expect(report_data.hours_burnup_per_week_data.scope_per_period).to eq []
           expect(report_data.hours_burnup_per_month_data.ideal_per_period).to eq []
           expect(report_data.hours_burnup_per_month_data.current_per_period).to eq []
           expect(report_data.hours_burnup_per_month_data.scope_per_period).to eq []
-          expect(report_data.throughput_per_week).to eq([{ name: 'Upstream', data: [] }, { name: 'Downstream', data: [] }])
+          expect(report_data.throughput_per_period).to eq([{ name: 'Upstream', data: [] }, { name: 'Downstream', data: [] }])
           expect(report_data.delivered_vs_remaining).to eq([{ name: I18n.t('projects.show.delivered_demands.opened_in_period'), data: [0] }, { name: I18n.t('projects.show.delivered_demands.delivered'), data: [0] }, { name: I18n.t('projects.show.scope_gap'), data: [0] }])
           expect(report_data.dates_to_montecarlo_duration).to eq []
           expect(report_data.confidence_95_duration).to eq 0
@@ -95,19 +95,6 @@ RSpec.describe Highchart::StatusReportChartsAdapter, type: :data_object do
           expect(report_data.cumulative_flow_diagram_upstream).to eq []
           expect(report_data.cumulative_flow_diagram_downstream).to eq []
         end
-      end
-    end
-  end
-
-  context 'having no projects' do
-    describe '.initialize' do
-      subject(:report_data) { Highchart::StatusReportChartsAdapter.new(Project.all, 'all') }
-
-      it 'returns empty arrays' do
-        expect(report_data.all_projects).to eq []
-        expect(report_data.all_projects_weeks).to eq []
-        expect(report_data.throughput_per_week).to eq([{ name: I18n.t('projects.charts.throughput_per_week.stage_stream.upstream'), data: [] }, { name: I18n.t('projects.charts.throughput_per_week.stage_stream.downstream'), data: [] }])
-        expect(report_data.delivered_vs_remaining).to eq([{ name: I18n.t('projects.show.delivered_demands.opened_in_period'), data: [0] }, { name: I18n.t('projects.show.delivered_demands.delivered'), data: [0] }, { name: I18n.t('projects.show.scope_gap'), data: [0] }])
       end
     end
   end

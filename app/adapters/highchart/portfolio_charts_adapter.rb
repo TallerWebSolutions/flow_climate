@@ -28,5 +28,9 @@ module Highchart
 
       [{ name: I18n.t('portfolio.charts.aging_by_project.data_title'), data: ordered_projects.map(&:aging), marker: { enabled: true } }]
     end
+
+    def throughput_by_project
+      DemandsRepository.instance.throughput_grouped_by_projects_to_period(@projects, @start_date, @end_date)
+    end
   end
 end

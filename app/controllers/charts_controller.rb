@@ -6,7 +6,9 @@ class ChartsController < AuthenticatedController
   before_action :assign_target_name
 
   def build_operational_charts
-    @report_data = Highchart::OperationalChartsAdapter.new(@projects, params[:period])
+    @report_data = {}
+    @report_data = Highchart::OperationalChartsAdapter.new(@projects, start_date_to_charts, end_date_to_charts, period_to_chart) if @projects.present?
+    # @portfolio_data = Highchart::PortfolioChartsAdapter.new(@projects, params[:period])
     respond_to { |format| format.js { render file: 'charts/operational_charts.js.erb' } }
   end
 
@@ -16,7 +18,8 @@ class ChartsController < AuthenticatedController
   end
 
   def build_status_report_charts
-    @status_report_data = Highchart::StatusReportChartsAdapter.new(@projects, params[:period])
+    @status_report_data = {}
+    @status_report_data = Highchart::StatusReportChartsAdapter.new(@projects, start_date_to_charts, end_date_to_charts, period_to_chart) if @projects.present?
     respond_to { |format| format.js { render file: 'charts/status_report_charts.js.erb' } }
   end
 
@@ -33,5 +36,17 @@ class ChartsController < AuthenticatedController
 
   def assign_target_name
     @target_name = params[:target_name]
+  end
+
+  def start_date_to_charts
+    params[:start_date]&.to_date || @projects.map(&:start_date).min
+  end
+
+  def end_date_to_charts
+    params[:end_date]&.to_date || @projects.map(&:end_date).max
+  end
+
+  def period_to_chart
+    params[:period] || :week
   end
 end

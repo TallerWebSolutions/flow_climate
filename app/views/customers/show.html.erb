@@ -13,8 +13,6 @@
   <div class="topnav">
     <%= link_to t('navbar.details'), '#', id: 'nav-item-stamps', class: 'active' %>
     <%= link_to t('navbar.projects_list'), '#', id: 'nav-item-list' %>
-    <%= link_to t('navbar.status_report'), '#', id: 'nav-item-statusreport' %>
-    <%= link_to t('navbar.charts'), '#', id: 'nav-item-charts' %>
   </div>
 </div>
 
@@ -31,25 +29,6 @@
   </div>
 </div>
 
-<div id="project-status-report">
-  <%= render 'charts/status_report_tab', target_name: @customer.name, status_report_data: @status_report_data, montecarlo_durations: @montecarlo_durations %>
-</div>
-
-<div id="operational-charts">
-  <%= render 'charts/operational_charts', target_name: @customer.name, report_data: @report_data %>
-</div>
-
 <% content_for :javascript do %>
-  <%= javascript_include_tag 'charts/burnup' %>
-  <%= javascript_include_tag 'charts/column' %>
-  <%= javascript_include_tag 'charts/bar' %>
-  <%= javascript_include_tag 'charts/line' %>
-  <%= javascript_include_tag 'charts/scatter' %>
-  <%= javascript_include_tag 'charts/stacked_area' %>
-
-  <%= javascript_include_tag 'projects/charts' %>
-
-  <%= javascript_include_tag 'projects/status_report_current' %>
-  <%= javascript_include_tag 'projects/status_report_projection' %>
   <%= javascript_include_tag 'customers/show' %>
 <% end %>

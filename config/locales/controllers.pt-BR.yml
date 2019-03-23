@@ -230,6 +230,7 @@ pt-BR:
         days: "Dias"
         demands_per_week: "Demandas por Semana"
         months: "Meses"
+        time: "No Tempo"
       burnup:
         ylabel: "Demandas"
         tooltipsufix: " demandas"
@@ -249,8 +250,8 @@ pt-BR:
         data_suffix: "demandas/dia"
       flow_pressure_per_project:
         ylabel: "Pressão do Fluxo"
-      throughput_per_week:
-        title: "Throughput por Semana para %{target_name}"
+      throughput:
+        title: "Throughput para %{target_name}"
         tooltipsufix: " demandas"
         ylabel: "Demandas"
         stage_stream:

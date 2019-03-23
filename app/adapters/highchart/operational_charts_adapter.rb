@@ -7,24 +7,27 @@ module Highchart
                 :lead_time_control_chart, :leadtime_percentiles_on_time, :weeekly_bugs_count_hash, :weeekly_bugs_share_hash, :weekly_queue_touch_count_hash,
                 :weekly_queue_touch_share_hash
 
-    def initialize(projects, period)
-      super(projects, period)
+    def initialize(projects, start_date, end_date, chart_period_interval)
+      super(projects, start_date, end_date, chart_period_interval)
+
       @flow_pressure_data = []
-      @demands_burnup_data = Highchart::BurnupChartsAdapter.new(@all_projects_weeks, build_demands_scope_data, build_demands_throughput_data)
-      @hours_burnup_per_week_data = Highchart::BurnupChartsAdapter.new(@all_projects_weeks, build_hours_scope_data, build_hours_throughput_data)
+
+      @demands_burnup_data = Highchart::BurnupChartsAdapter.new(@x_axis, build_demands_scope_data, build_demands_throughput_data)
+      @hours_burnup_per_week_data = Highchart::BurnupChartsAdapter.new(@x_axis, build_hours_scope_data, build_hours_throughput_data)
 
       build_weeekly_bugs_count_hash
       build_weeekly_bugs_share_hash
       build_weekly_queue_touch_count_hash
       build_weekly_queue_touch_share_hash
+
       build_flow_pressure_array
       build_statistics_charts
     end
 
     def hours_per_demand_per_week
       chart_data = []
-      @all_projects_weeks.each do |date|
-        break unless add_data_to_chart?(date)
+      @x_axis.each do |date|
+        break unless date <= Time.zone.today
 
         chart_data << build_chart_data(date)
       end
@@ -32,13 +35,22 @@ module Highchart
       chart_data
     end
 
-    def throughput_per_week
-      throughput_chart_data
+    def throughput_per_period
+      upstream_result_data = []
+      downstream_result_data = []
+      @x_axis.each do |date|
+        break unless date <= Time.zone.today
+
+        upstream_result_data << DemandsRepository.instance.delivered_until_date_to_projects_in_stream(@all_projects, 'upstream', date).count
+        downstream_result_data << DemandsRepository.instance.delivered_until_date_to_projects_in_stream(@all_projects, 'downstream', date).count
+      end
+
+      [{ name: I18n.t('projects.charts.throughput.stage_stream.upstream'), data: upstream_result_data }, { name: I18n.t('projects.charts.throughput.stage_stream.downstream'), data: downstream_result_data }]
     end
 
     def effort_hours_per_month
-      grouped_hours_to_upstream = DemandsRepository.instance.grouped_by_effort_upstream_per_month(all_projects, charts_data_bottom_limit_date)
-      grouped_hours_to_downstream = DemandsRepository.instance.grouped_by_effort_downstream_per_month(all_projects, charts_data_bottom_limit_date)
+      grouped_hours_to_upstream = DemandsRepository.instance.grouped_by_effort_upstream_per_month(all_projects, @start_date)
+      grouped_hours_to_downstream = DemandsRepository.instance.grouped_by_effort_downstream_per_month(all_projects, @start_date)
 
       hours_per_month_data_hash = {}
 
@@ -95,8 +107,8 @@ module Highchart
 
     def build_flow_pressure_array
       array_of_flow_pressures = []
-      @all_projects_weeks.each do |date|
-        break unless add_data_to_chart?(date.to_date)
+      @x_axis.each do |date|
+        break unless date <= Time.zone.today
 
         @all_projects.each { |project| array_of_flow_pressures << project.flow_pressure(date.end_of_week) }
         @flow_pressure_data << array_of_flow_pressures.sum.to_f / array_of_flow_pressures.count.to_f
@@ -105,39 +117,39 @@ module Highchart
 
     def build_demands_scope_data
       scope_per_week = []
-      @all_projects_weeks.each { |date| scope_per_week << DemandsRepository.instance.scope_in_week_for_projects(all_projects, date.cweek, date.cwyear) }
+      @x_axis.each { |date| scope_per_week << DemandsRepository.instance.scope_in_week_for_projects(all_projects, date.cweek, date.cwyear) }
       scope_per_week
     end
 
     def build_demands_throughput_data
-      throughput_per_week = []
-      @all_projects_weeks.each do |date|
-        break unless add_data_to_chart?(date.to_date)
+      throughput_per_period = []
+      @x_axis.each do |date|
+        break unless date <= Time.zone.today
 
-        upstream_total_delivered = DemandsRepository.instance.delivered_until_date_to_projects_in_stream(@all_projects, 'upstream', date.end_of_week).count
-        downstream_total_delivered = DemandsRepository.instance.delivered_until_date_to_projects_in_stream(@all_projects, 'downstream', date.end_of_week).count
-        throughput_per_week << upstream_total_delivered + downstream_total_delivered if add_data_to_chart?(date)
+        upstream_total_delivered = DemandsRepository.instance.delivered_until_date_to_projects_in_stream(@all_projects, 'upstream', date).count
+        downstream_total_delivered = DemandsRepository.instance.delivered_until_date_to_projects_in_stream(@all_projects, 'downstream', date).count
+        throughput_per_period << upstream_total_delivered + downstream_total_delivered
       end
-      throughput_per_week
+      throughput_per_period
     end
 
     def build_hours_scope_data
       scope_per_week = []
-      @all_projects_weeks.each { |_week_year| scope_per_week << @all_projects.sum(:qty_hours).to_f }
+      @x_axis.each { |_week_year| scope_per_week << @all_projects.sum(:qty_hours).to_f }
       scope_per_week
     end
 
     def build_hours_throughput_data
-      throughput_hours_per_week = []
-      @all_projects_weeks.each do |date|
-        break unless add_data_to_chart?(date.to_date)
+      throughput_hours_per_period = []
+      @x_axis.each do |date|
+        break unless date <= Time.zone.today
 
-        upstream_total_hours_delivered = DemandsRepository.instance.delivered_until_date_to_projects_in_stream(@all_projects, 'upstream', date.end_of_week).sum(&:effort_upstream)
-        downstream_total_hours_delivered = DemandsRepository.instance.delivered_until_date_to_projects_in_stream(@all_projects, 'downstream', date.end_of_week).sum(&:effort_downstream)
+        upstream_total_hours_delivered = DemandsRepository.instance.delivered_until_date_to_projects_in_stream(@all_projects, 'upstream', date).sum(&:effort_upstream)
+        downstream_total_hours_delivered = DemandsRepository.instance.delivered_until_date_to_projects_in_stream(@all_projects, 'downstream', date).sum(&:effort_downstream)
 
-        throughput_hours_per_week << upstream_total_hours_delivered + downstream_total_hours_delivered if add_data_to_chart?(date)
+        throughput_hours_per_period << upstream_total_hours_delivered + downstream_total_hours_delivered
       end
-      throughput_hours_per_week
+      throughput_hours_per_period
     end
 
     def build_lead_time_control_chart
@@ -153,12 +165,12 @@ module Highchart
       dates_array = []
       bugs_opened_count_array = []
       bugs_closed_count_array = []
-      @all_projects_weeks.each do |date|
-        break unless add_data_to_chart?(date.to_date)
+      @x_axis.each do |date|
+        break unless date <= Time.zone.today
 
         dates_array << date.to_s
-        bugs_opened_count_array << DemandsRepository.instance.bugs_opened_until_limit_date(@all_projects, date.end_of_week)
-        bugs_closed_count_array << DemandsRepository.instance.bugs_closed_until_limit_date(@all_projects, date.end_of_week)
+        bugs_opened_count_array << DemandsRepository.instance.bugs_opened_until_limit_date(@all_projects, date)
+        bugs_closed_count_array << DemandsRepository.instance.bugs_closed_until_limit_date(@all_projects, date)
       end
       @weeekly_bugs_count_hash = { dates_array: dates_array, bugs_opened_count_array: bugs_opened_count_array, bugs_closed_count_array: bugs_closed_count_array }
     end
@@ -166,12 +178,12 @@ module Highchart
     def build_weeekly_bugs_share_hash
       dates_array = []
       bugs_opened_share_array = []
-      @all_projects_weeks.each do |date|
-        break unless add_data_to_chart?(date.to_date)
+      @x_axis.each do |date|
+        break unless date <= Time.zone.today
 
         dates_array << date.to_s
         scope_in_week = DemandsRepository.instance.scope_in_week_for_projects(@all_projects, date.cweek, date.cwyear)
-        bugs_in_week = DemandsRepository.instance.bugs_opened_until_limit_date(@all_projects, date.end_of_week)
+        bugs_in_week = DemandsRepository.instance.bugs_opened_until_limit_date(@all_projects, date)
         bugs_opened_share_array << Stats::StatisticsService.instance.compute_percentage(bugs_in_week, scope_in_week)
       end
       @weeekly_bugs_share_hash = { dates_array: dates_array, bugs_opened_share_array: bugs_opened_share_array }
@@ -184,8 +196,8 @@ module Highchart
       queue_times_per_week_hash = DemandsRepository.instance.total_time_for(@all_projects, 'total_queue_time')
       touch_times_per_week_hash = DemandsRepository.instance.total_time_for(@all_projects, 'total_touch_time')
 
-      @all_projects_weeks.each do |date|
-        break unless add_data_to_chart?(date.to_date)
+      @x_axis.each do |date|
+        break unless date <= Time.zone.today
 
         demands_touch_block_total_time = compute_demands_touch_block_total_time(date)
         dates_array << date.to_s
@@ -210,8 +222,8 @@ module Highchart
       queue_times_per_week_hash = DemandsRepository.instance.total_time_for(@all_projects, 'total_queue_time')
       touch_times_per_week_hash = DemandsRepository.instance.total_time_for(@all_projects, 'total_touch_time')
 
-      @all_projects_weeks.each do |date|
-        break unless add_data_to_chart?(date.to_date)
+      @x_axis.each do |date|
+        break unless date <= Time.zone.today
 
         dates_array << date.to_s
         flow_efficiency_array << compute_flow_efficiency(date, queue_times_per_week_hash, touch_times_per_week_hash)
@@ -232,7 +244,7 @@ module Highchart
     end
 
     def build_throughput_histogram
-      histogram_data = Stats::StatisticsService.instance.throughput_histogram_hash(ProjectsRepository.instance.throughput_per_week(@all_projects, charts_data_bottom_limit_date).values)
+      histogram_data = Stats::StatisticsService.instance.throughput_histogram_hash(ProjectsRepository.instance.throughput_per_week(@all_projects, @start_date).values)
       @throughput_bins = histogram_data.keys.map { |th| "#{th.round(2)} #{I18n.t('charts.demand.title')}" }
       @throughput_histogram_data = histogram_data.values
     end
@@ -242,7 +254,7 @@ module Highchart
     end
 
     def finished_demands_with_leadtime
-      @finished_demands_with_leadtime ||= Demand.kept.where(project_id: @all_projects.map(&:id)).finished_with_leadtime_after_date(charts_data_bottom_limit_date).order(:end_date)
+      @finished_demands_with_leadtime ||= Demand.kept.where(project_id: @all_projects.map(&:id)).finished_with_leadtime_after_date(@start_date).order(:end_date)
     end
   end
 end
