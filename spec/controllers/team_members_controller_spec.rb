@@ -64,7 +64,7 @@ RSpec.describe TeamMembersController, type: :controller do
       let(:company) { Fabricate :company, users: [user] }
 
       context 'passing valid parameters' do
-        before { post :create, params: { company_id: company, team_id: team, team_member: { name: 'foo', billable: false, active: false, monthly_payment: 100, hours_per_month: 10, billable_type: :outsourcing, hour_value: 80 } } }
+        before { post :create, params: { company_id: company, team_id: team, team_member: { name: 'foo', billable: false, active: false, monthly_payment: 100, hours_per_month: 10, billable_type: :outsourcing, start_date: 1.day.ago.to_date, end_date: Time.zone.today } } }
         it 'creates the new team member and redirects to team show' do
           expect(response).to redirect_to company_team_path(company, Team.last)
           expect(TeamMember.last.name).to eq 'foo'
@@ -73,8 +73,8 @@ RSpec.describe TeamMembersController, type: :controller do
           expect(TeamMember.last.monthly_payment).to eq 100
           expect(TeamMember.last.hours_per_month).to eq 10
           expect(TeamMember.last.billable_type).to eq 'outsourcing'
-          expect(TeamMember.last.hour_value).to eq 80
-          expect(TeamMember.last.total_monthly_payment).to eq 0.9e3
+          expect(TeamMember.last.start_date).to eq 1.day.ago.to_date
+          expect(TeamMember.last.end_date).to eq Time.zone.today
         end
       end
       context 'passing invalid parameters' do
@@ -82,7 +82,7 @@ RSpec.describe TeamMembersController, type: :controller do
         it 'does not create the team member and re-render the template with the errors' do
           expect(TeamMember.last).to be_nil
           expect(response).to render_template :new
-          expect(assigns(:team_member).errors.full_messages).to eq ['Nome não pode ficar em branco', 'Pagamento mensal não pode ficar em branco', 'Horas por mês não pode ficar em branco', 'Pagamento Mensal Total não pode ficar em branco']
+          expect(assigns(:team_member).errors.full_messages).to eq ['Nome não pode ficar em branco', 'Pagamento mensal não pode ficar em branco', 'Horas por mês não pode ficar em branco']
         end
       end
     end
@@ -132,7 +132,7 @@ RSpec.describe TeamMembersController, type: :controller do
       let(:team_member) { Fabricate :team_member, team: team }
 
       context 'passing valid parameters' do
-        before { put :update, params: { company_id: company, team_id: team, id: team_member, team_member: { team: other_team, name: 'foo', billable: false, active: false, monthly_payment: 100, hours_per_month: 10, billable_type: :outsourcing, hour_value: 80 } } }
+        before { put :update, params: { company_id: company, team_id: team, id: team_member, team_member: { team: other_team, name: 'foo', billable: false, active: false, monthly_payment: 100, hours_per_month: 10, billable_type: :outsourcing, start_date: 1.day.ago.to_date, end_date: Time.zone.today } } }
         it 'updates the member and redirects to team show' do
           team_member_updated = team_member.reload
           expect(team_member_updated.team).to eq other_team
@@ -142,8 +142,8 @@ RSpec.describe TeamMembersController, type: :controller do
           expect(team_member_updated.monthly_payment.to_f).to be 100.0
           expect(team_member_updated.hours_per_month).to be 10
           expect(team_member_updated.billable_type).to eq 'outsourcing'
-          expect(team_member_updated.hour_value).to eq 80
-          expect(team_member_updated.total_monthly_payment).to eq 0.9e3
+          expect(team_member_updated.start_date).to eq 1.day.ago.to_date
+          expect(team_member_updated.end_date).to eq Time.zone.today
           expect(response).to redirect_to company_team_path(company, team)
         end
       end

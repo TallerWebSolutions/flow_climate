@@ -392,7 +392,7 @@ RSpec.describe Project, type: :model do
     let(:company) { Fabricate :company }
     let!(:customer) { Fabricate :customer, company: company }
     let!(:team) { Fabricate :team, company: company }
-    let!(:team_member) { Fabricate :team_member, team: team, hours_per_month: 100, hour_value: 10, monthly_payment: 1200, total_monthly_payment: 1300 }
+    let!(:team_member) { Fabricate :team_member, team: team, hours_per_month: 100, monthly_payment: 1300 }
     let!(:project) { Fabricate :project, team: team, customer: customer, start_date: 2.months.ago, end_date: 3.months.from_now, qty_hours: 3000, value: 1_000_000, hour_value: 200, percentage_effort_to_bugs: 100 }
 
     let(:first_stage) { Fabricate :stage, company: company, stage_stream: :downstream, queue: false, end_point: false }
@@ -709,7 +709,7 @@ RSpec.describe Project, type: :model do
   describe '#current_cost' do
     context 'having cost' do
       include_context 'demands with effort'
-      it { expect(project.current_cost).to eq 0.22e4 }
+      it { expect(project.current_cost).to eq 0.13e4 }
     end
     context 'having no cost yet' do
       let(:project) { Fabricate :project, end_date: 4.weeks.from_now }

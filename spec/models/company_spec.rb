@@ -42,7 +42,7 @@ RSpec.describe Company, type: :model do
     let!(:customer) { Fabricate :customer, company: company }
     let!(:product) { Fabricate :product, customer: customer }
     let!(:team) { Fabricate :team, company: company }
-    let!(:team_member) { Fabricate :team_member, team: team, hours_per_month: 100, hour_value: 10, monthly_payment: 1200, total_monthly_payment: 1300 }
+    let!(:team_member) { Fabricate :team_member, team: team, hours_per_month: 100, monthly_payment: 1200 }
 
     let!(:active_project) { Fabricate :project, start_date: 4.weeks.ago, customer: customer, product: product, status: :executing, qty_hours: 200 }
     let!(:other_active_project) { Fabricate :project, start_date: 4.weeks.ago, customer: customer, product: product, status: :executing, qty_hours: 260 }

@@ -143,8 +143,8 @@ pt-BR:
         billable: Faturável?
         billable_type: Tipo do Faturamento
         active: Ativo?
-        hour_value: Valor da Hora
-        total_monthly_payment: Pagamento Mensal Total
+        start_date: Data de Início
+        end_date: Data Final
         enums:
           billable_type:
             outsourcing: Outsourcing

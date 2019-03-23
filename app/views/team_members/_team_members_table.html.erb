@@ -6,10 +6,10 @@
   <thead>
     <tr>
       <th><%= TeamMember.human_attribute_name :name %></th>
+      <th><%= TeamMember.human_attribute_name :start_date %></th>
+      <th><%= TeamMember.human_attribute_name :end_date %></th>
       <th><%= TeamMember.human_attribute_name :monthly_payment %></th>
       <th><%= TeamMember.human_attribute_name :hours_per_month %></th>
-      <th><%= TeamMember.human_attribute_name :hour_value %></th>
-      <th><%= TeamMember.human_attribute_name :total_monthly_payment %></th>
       <th><%= TeamMember.human_attribute_name :billable %></th>
       <th><%= TeamMember.human_attribute_name :billable_type %></th>
       <th><%= TeamMember.human_attribute_name :active %></th>
@@ -20,10 +20,10 @@
     <% @team_members.each do |member| %>
       <tr>
         <td><%= member.name %></td>
+        <td><%= l(member.start_date) if member.start_date.present? %></td>
+        <td><%= l(member.end_date) if member.end_date.present? %></td>
         <td><%= number_to_currency(member.monthly_payment) %></td>
         <td><%= member.hours_per_month %></td>
-        <td><%= number_to_currency(member.hour_value) %></td>
-        <td><%= number_to_currency(member.total_monthly_payment) %></td>
         <td><%= t(member.billable&.to_s) %></td>
         <td>
           <% if member.billable_type.present? %>
