@@ -17,7 +17,11 @@ class DemandsRepository
     Demand.kept.story.where(project_id: projects.map(&:id)).where('end_date BETWEEN :start_period AND :end_period', start_period: start_period, end_period: end_period)
   end
 
-  def grouped_by_effort_upstream_per_month(projects, limit_date)
+  def demands_delivered_grouped_by_projects_to_period(projects, start_period, end_period)
+    throughput_to_projects_and_period(projects, start_period, end_period).group_by(&:project_full_name)
+  end
+
+  def effort_upstream_grouped_by_month(projects, limit_date)
     effort_upstream_hash = {}
     Demand.kept
           .story
@@ -107,11 +111,15 @@ class DemandsRepository
   end
 
   def demands_for_period(demands, start_period, end_period)
-    Demand.kept.story.where(id: demands.map(&:id)).where('end_date >= :bottom_limit AND end_date <= :upper_limit', bottom_limit: start_period, upper_limit: end_period)
+    Demand.kept
+          .story
+          .where(id: demands.map(&:id)).where('end_date >= :bottom_limit AND end_date <= :upper_limit', bottom_limit: start_period, upper_limit: end_period)
   end
 
   def demands_for_periods_accumulated(demands, upper_date_limit)
-    Demand.kept.story.where(id: demands.map(&:id)).where('end_date <= :upper_limit', upper_limit: upper_date_limit)
+    Demand.kept
+          .story
+          .where(id: demands.map(&:id)).where('end_date <= :upper_limit', upper_limit: upper_date_limit)
   end
 
   def cumulative_flow_for_week(demands_ids, date, stream)
@@ -119,7 +127,8 @@ class DemandsRepository
     end_date = date.end_of_week
 
     cumulative_hash = {}
-    Demand.story.joins(demand_transitions: :stage).select('stages.name AS stage_name, count(1) as stage_th')
+    Demand.story
+          .joins(demand_transitions: :stage).select('stages.name AS stage_name, count(1) as stage_th')
           .where(id: demands_ids)
           .where('demand_transitions.last_time_in < :end_date', end_date: end_date)
           .where('demands.discarded_at IS NULL OR demands.discarded_at > :start_date', start_date: start_date)

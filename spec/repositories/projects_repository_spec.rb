@@ -151,4 +151,17 @@ RSpec.describe ProjectsRepository, type: :repository do
       it { expect(project.reload.status).to eq 'finished' }
     end
   end
+
+  describe '#projects_ending_after' do
+    context 'having projects' do
+      let(:project) { Fabricate :project, status: :executing, end_date: 2.days.ago }
+      let(:other_project) { Fabricate :project, status: :executing, end_date: 1.day.ago }
+      let(:out_project) { Fabricate :project, end_date: 4.days.ago }
+
+      it { expect(ProjectsRepository.instance.projects_ending_after(Project.all, 3.days.ago)).to match_array [project, other_project] }
+    end
+    context 'having no projects' do
+      it { expect(ProjectsRepository.instance.projects_ending_after(Project.all, 3.days.ago)).to eq [] }
+    end
+  end
 end

@@ -9,20 +9,26 @@ const teamId = $("#team_id").val();
 const projects_ids = $("#projects_ids").val();
 const target_name = $("#target_name").val();
 
+console.log(projects_ids);
+
 $('.nav-item').on('click', function(event){
     hideAllComponents();
     const disabled = $(this).attr('disabled');
-    const period = $('#status-report-period').val();
+
+    const period = $("#period").val();
+
+    const startDate = $('#start_date').val();
+    const endDate = $('#end_date').val();
 
     if (disabled === 'disabled') {
         event.preventDefault();
     } else {
         disableTabs();
         if ($(this).attr('id') === 'nav-item-statusreport') {
-            buildStatusReportCharts(companyId, projects_ids, period, target_name)
+            buildStatusReportCharts(companyId, projects_ids, period, target_name, startDate, endDate)
 
         } else if ($(this).attr('id') === 'nav-item-charts') {
-            buildOperationalCharts(companyId, projects_ids, period, target_name);
+            buildOperationalCharts(companyId, projects_ids, period, target_name, startDate, endDate);
 
         } else if ($(this).attr('id') === 'nav-item-strategic') {
             buildStrategicCharts(companyId, projects_ids, target_name);
@@ -34,7 +40,7 @@ $('.nav-item').on('click', function(event){
             buildReplenishingMeeting(companyId, teamId);
 
         } else if ($(this).attr('id') === 'nav-item-statistics') {
-            getTeamStatistics(companyId, teamId, $("#start_date").val(), $("#end_date").val(), $("#period").val());
+            getTeamStatistics(companyId, teamId, startDate, endDate, period);
 
         } else {
             enableTabs();

@@ -2,9 +2,6 @@ function buildStatusReportCurrentCharts() {
     const burnupHoursPerWeek = $('#burnup-hours-per-week');
     buildBurnupChart(burnupHoursPerWeek);
 
-    const burnupHoursPerMonth = $('#burnup-hours-per-month');
-    buildBurnupChart(burnupHoursPerMonth);
-
     const statusReportThroughputDiv = $('#status-report-throughput-column');
     buildColumnChart(statusReportThroughputDiv);
 
@@ -25,4 +22,7 @@ function buildStatusReportCurrentCharts() {
 
     const statusReportCFDUpstreamDiv = $('#cfd-upstream-area');
     buildAreaChart(statusReportCFDUpstreamDiv);
+
+    const throughputByProject = $('#throughput-by-project');
+    buildColumnChart(throughputByProject);
 }

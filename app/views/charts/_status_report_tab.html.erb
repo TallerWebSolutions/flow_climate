@@ -1,16 +1,37 @@
-<div class="row">
-  <div class="col-xs-3">
-    <%= label_tag t('general.period') %>
-    <%= select_tag :period, period_options(:week), class: 'form-control filter-checks', id: 'status-report-period', selected: params[:period] %>
+<%= form_tag company_build_status_report_charts_path(company, projects_ids: projects.map(&:id)), method: :get, remote: true do %>
+  <%= hidden_field_tag :target_name, target_name %>
+  <%= hidden_field_tag :projects_ids, projects.map(&:id).join(',') %>
+
+  <div class="row bottom-spaced-component">
+    <div class="col-xs-3">
+      <%= label_tag Project.human_attribute_name(:start_date), nil, class: 'control-label' %>
+      <%= date_field_tag :start_date, (params['start_date'] || start_date), class: 'form-control' %>
+    </div>
+
+    <div class="col-xs-3">
+      <%= label_tag Project.human_attribute_name(:end_date), nil, class: 'control-label' %>
+      <%= date_field_tag :end_date, (params['end_date'] || end_date), class: 'form-control' %>
+    </div>
+
+    <div class="col-xs-3">
+      <div class="form-group">
+        <%= label_tag t('charts.period.label') %>
+        <%= select_tag :period, options_for_select([[I18n.t('general.monthly'), 'month'], [I18n.t('general.weekly'), 'week'], [I18n.t('general.daily'), 'day']], params['period'] || 'week'), class: 'form-control filter-checks' %>
+      </div>
+    </div>
   </div>
-</div>
+
+  <div class="row bottom-spaced-component">
+    <div class="col-xs-3">
+      <%= submit_tag t('general.search'), class: 'btn btn-primary' %>
+    </div>
+  </div>
+<% end %>
 
 <div id="status-report-charts-current-div">
-  <%= render 'charts/status_report_charts', target_name: target_name, status_report_data: status_report_data %>
+  <%= render 'charts/status_report_charts', target_name: target_name, status_report_data: status_report_data, projects: projects, start_date: start_date, end_date: end_date %>
 </div>
 
 <div id="status-report-charts-projection-div">
-  <% if status_report_data&.running_projects_in_the_list? %>
-    <%= render 'charts/status_report_projection_charts', target_name: target_name, status_report_data: status_report_data %>
-  <% end %>
+  <%= render 'charts/status_report_projection_charts', target_name: target_name, status_report_data: status_report_data, projects: projects, start_date: start_date, end_date: end_date %>
 </div>

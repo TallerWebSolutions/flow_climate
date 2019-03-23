@@ -47,7 +47,7 @@
 </div>
 
 <div id="operational-charts" class="tab-container">
-  <%= render 'charts/operational_charts_tab', target_name: @project.full_name, report_data: @report_data %>
+  <%= render 'charts/operational_charts_tab', target_name: @project.full_name, report_data: @report_data, company: @company, projects: [@project], start_date: @start_date, end_date: @end_date %>
 </div>
 
 <div id="project-statistics" class="tab-container">
@@ -55,7 +55,7 @@
 </div>
 
 <div id="project-status-report" class="tab-container">
-  <%= render 'charts/status_report_tab', target_name: @project.full_name, status_report_data: @status_report_data %>
+  <%= render 'charts/status_report_tab', target_name: @project.full_name, status_report_data: @status_report_data, company: @company, projects: [@project], start_date: @start_date, end_date: @end_date %>
 </div>
 
 <div id="project-settings" class="tab-container">

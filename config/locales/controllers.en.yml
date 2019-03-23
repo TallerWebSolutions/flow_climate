@@ -214,14 +214,14 @@ en:
         days: "Days"
         months: "Months"
         demands_per_week: "Demands per week"
+        time: "In Time"
       burnup:
         ylabel: "Demands"
         tooltipsufix: " demands"
         demands:
           title: "Demands Burnup for %{target_name}"
         hours:
-          title_per_week: "Weekly Hours Burnup for %{target_name}"
-          title_per_month: "Monthly Hours Burnup for %{target_name}"
+          title: "Hours Burnup for %{target_name}"
       hours_per_demand:
         title: "Hours per demand on time for %{target_name}"
         ylabel: "Hours/Demand"
@@ -233,8 +233,8 @@ en:
         data_suffix: "demands/day"
       flow_pressure_per_project:
         ylabel: "Flow Pressure"
-      throughput_per_week:
-        title: "Throughput per Week to %{target_name}"
+      throughput:
+        title: "Throughput to %{target_name}"
         tooltipsufix: " demands"
         ylabel: "Demands"
         stage_stream:
@@ -708,3 +708,7 @@ en:
       aging_by_project:
         data_title: "days"
         title: "Aging by Project"
+      throughput_by_project:
+        data_title: "Throughput"
+        chart_title: "Throughput by Project for %{target_name}"
+        xtitle: "Projects"

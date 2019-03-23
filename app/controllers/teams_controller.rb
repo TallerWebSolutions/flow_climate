@@ -12,6 +12,9 @@ class TeamsController < AuthenticatedController
     @active_team_projects = @team_projects.active
     @projects_summary = ProjectsSummaryData.new(@team.projects)
     @projects_risk_chart_data = Highchart::ProjectRiskChartsAdapter.new(@team.projects)
+
+    @start_date = build_limit_date(@team_projects.map(&:start_date).min)
+    @end_date = build_limit_date(@team_projects.map(&:end_date).max)
   end
 
   def new
@@ -59,6 +62,10 @@ class TeamsController < AuthenticatedController
 
   private
 
+  def build_limit_date(date)
+    [date, 4.weeks.ago].compact.max.to_date
+  end
+
   def assign_team
     @team = Team.find(params[:id])
   end
@@ -83,15 +90,15 @@ class TeamsController < AuthenticatedController
   end
 
   def build_block_by_project_data(portfolio_statistics_chart_adapter)
-    @block_by_project_data = portfolio_statistics_chart_adapter.block_count_by_project
-    @block_by_project_x_axis = portfolio_statistics_chart_adapter.x_axis
+    @block_by_project_data = portfolio_statistics_chart_adapter.block_count_by_project[:series]
+    @block_by_project_x_axis = portfolio_statistics_chart_adapter.block_count_by_project[:x_axis]
 
     @block_by_project_variation = Stats::StatisticsService.instance.compute_percentage_variation(@block_by_project_data[0][:data].min || 0, @block_by_project_data[0][:data].max || 0)
   end
 
   def build_aging_by_project_data(portfolio_statistics_chart_adapter)
-    @aging_by_project_data = portfolio_statistics_chart_adapter.aging_by_project
-    @aging_by_project_x_axis = portfolio_statistics_chart_adapter.x_axis
+    @aging_by_project_data = portfolio_statistics_chart_adapter.aging_by_project[:series]
+    @aging_by_project_x_axis = portfolio_statistics_chart_adapter.aging_by_project[:x_axis]
 
     @aging_by_project_variation = Stats::StatisticsService.instance.compute_percentage_variation(@aging_by_project_data[0][:data].min || 0, @aging_by_project_data[0][:data].max || 0)
   end

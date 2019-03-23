@@ -12,7 +12,11 @@ const targetName = $("#target_name").val();
 $('.nav-item').on('click', function(event){
     hideAllComponents();
     const disabled = $(this).attr('disabled');
-    const period = $('#status-report-period').val();
+
+    const startDate = $('#start_date').val();
+    const endDate = $('#end_date').val();
+
+    const period = $('#period').val();
 
     if (disabled === 'disabled') {
         event.preventDefault();
@@ -21,10 +25,10 @@ $('.nav-item').on('click', function(event){
 
         if ($(this).attr('id') === 'nav-item-statusreport') {
 
-            buildStatusReportCharts(companyId, projectsIds, period, targetName)
+            buildStatusReportCharts(companyId, projectsIds, period, targetName, startDate, endDate)
         } else if ($(this).attr('id') === 'nav-item-charts') {
 
-            buildOperationalCharts(companyId, projectsIds, period, targetName);
+            buildOperationalCharts(companyId, projectsIds, period, targetName, startDate, endDate);
         } else if ($(this).attr('id') === 'nav-item-strategic') {
 
             buildStrategicCharts(companyId, projectsIds, targetName);
@@ -33,7 +37,7 @@ $('.nav-item').on('click', function(event){
 
             getDemands(companyId, projectsIds);
         } else if ($(this).attr('id') === 'nav-item-statistics') {
-            getProjectStatistics(companyId, projectId, $("#start_date").val(), $("#end_date").val(), $("#period").val());
+            getProjectStatistics(companyId, projectId, startDate, endDate, period);
 
         } else {
             enableTabs();
