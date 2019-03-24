@@ -676,7 +676,7 @@ RSpec.describe ProjectsController, type: :controller do
             get :statistics_tab, params: { company_id: company, id: project }, xhr: true
             expect(response).to render_template 'projects/statistics_tab.js.erb'
             expect(response).to render_template 'projects/_project_statistics'
-            expect(assigns(:scope_data)).to eq [{ data: [0, 0], marker: { enabled: true }, name: I18n.t('projects.general.scope') }]
+            expect(assigns(:scope_data)).to eq [{ data: [30, 30], marker: { enabled: true }, name: I18n.t('projects.general.scope') }]
             expect(assigns(:leadtime_data)).to eq [{ data: [0, 0], marker: { enabled: true }, name: I18n.t('projects.general.leadtime', confidence: 80) }]
             expect(assigns(:block_data)).to eq [{ data: [0, 0], marker: { enabled: true }, name: I18n.t('projects.statistics.accumulated_blocks.data_title') }]
             expect(assigns(:block_data)).to eq [{ data: [0, 0], marker: { enabled: true }, name: I18n.t('projects.statistics.accumulated_blocks.data_title') }]

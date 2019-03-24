@@ -6,7 +6,9 @@ class DemandsRepository
   def known_scope_to_date(projects, analysed_date)
     Demand.story
           .where(project_id: projects.map(&:id))
-          .where('created_date <= :analysed_date AND (discarded_at IS NULL OR discarded_at > :limit_date)', analysed_date: analysed_date.end_of_day, limit_date: analysed_date.beginning_of_day).uniq.count
+          .where('created_date <= :analysed_date AND (discarded_at IS NULL OR discarded_at > :limit_date)', analysed_date: analysed_date.end_of_day, limit_date: analysed_date.beginning_of_day)
+          .uniq
+          .count + projects.sum(&:initial_scope)
   end
 
   def committed_demands_by_project_and_week(projects, week, year)
@@ -49,12 +51,6 @@ class DemandsRepository
 
   def demands_to_projects(array_of_projects)
     DemandsList.kept.story.where(project_id: array_of_projects.map(&:id))
-  end
-
-  def scope_in_week_for_projects(projects, week, year)
-    total_scope = 0
-    projects.each { |project| total_scope += project.backlog_for(Date.commercial(year, week, 1)) }
-    total_scope
   end
 
   def bugs_opened_until_limit_date(projects, date = Time.zone.today)
