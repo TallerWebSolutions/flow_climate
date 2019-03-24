@@ -30,7 +30,7 @@ RSpec.describe Highchart::ProjectStatisticsChartsAdapter, type: :service do
         it 'builds the data structure for scope_data_evolution' do
           statistics_data = Highchart::ProjectStatisticsChartsAdapter.new([first_project], first_project.start_date, first_project.end_date, 'day')
 
-          expect(statistics_data.scope_data_evolution_chart).to eq [{ data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2], marker: { enabled: true }, name: I18n.t('projects.general.scope') }]
+          expect(statistics_data.scope_data_evolution_chart).to eq [{ data: [95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 96, 96, 96, 96, 96, 96, 96, 96, 96, 97, 97, 97, 97], marker: { enabled: true }, name: I18n.t('projects.general.scope') }]
           expect(statistics_data.x_axis).to eq(TimeService.instance.days_between_of(first_project.start_date, first_project.end_date))
         end
       end
@@ -39,7 +39,7 @@ RSpec.describe Highchart::ProjectStatisticsChartsAdapter, type: :service do
         it 'builds the data structure for scope_data_evolution' do
           statistics_data = Highchart::ProjectStatisticsChartsAdapter.new([first_project], first_project.start_date, first_project.end_date, 'week')
 
-          expect(statistics_data.scope_data_evolution_chart).to eq [{ data: [0, 0, 1, 2, 2], marker: { enabled: true }, name: I18n.t('projects.general.scope') }]
+          expect(statistics_data.scope_data_evolution_chart).to eq [{ data: [95, 95, 96, 97, 97], marker: { enabled: true }, name: I18n.t('projects.general.scope') }]
           expect(statistics_data.x_axis).to eq(TimeService.instance.weeks_between_of(first_project.start_date, first_project.end_date))
         end
       end
@@ -48,7 +48,7 @@ RSpec.describe Highchart::ProjectStatisticsChartsAdapter, type: :service do
         it 'builds the data structure for scope_data_evolution' do
           statistics_data = Highchart::ProjectStatisticsChartsAdapter.new([first_project], first_project.start_date, first_project.end_date, 'month')
 
-          expect(statistics_data.scope_data_evolution_chart).to eq [{ data: [0, 2], marker: { enabled: true }, name: I18n.t('projects.general.scope') }]
+          expect(statistics_data.scope_data_evolution_chart).to eq [{ data: [95, 97], marker: { enabled: true }, name: I18n.t('projects.general.scope') }]
           expect(statistics_data.x_axis).to eq(TimeService.instance.months_between_of(first_project.start_date, first_project.end_date))
         end
       end

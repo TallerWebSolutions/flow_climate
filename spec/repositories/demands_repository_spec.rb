@@ -28,7 +28,7 @@ RSpec.describe DemandsRepository, type: :repository do
 
     let!(:first_epic) { Fabricate :demand, project: first_project, artifact_type: :epic }
 
-    it { expect(DemandsRepository.instance.known_scope_to_date([first_project, second_project], 2.days.ago)).to eq 6 }
+    it { expect(DemandsRepository.instance.known_scope_to_date([first_project, second_project], 2.days.ago)).to eq 66 }
   end
 
   describe '#demands_to_projects' do
@@ -446,7 +446,6 @@ RSpec.describe DemandsRepository, type: :repository do
     it { expect(DemandsRepository.instance.demands_delivered_grouped_by_projects_to_period([first_project, second_project], 3.days.ago, 2.days.from_now)[second_project.full_name]).to match_array [third_demand] }
   end
 
-  pending '#scope_in_week_for_projects'
   pending '#bugs_opened_until_limit_date'
   pending '#bugs_closed_until_limit_date'
 end

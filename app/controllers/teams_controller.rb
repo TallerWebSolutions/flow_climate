@@ -80,8 +80,14 @@ class TeamsController < AuthenticatedController
   end
 
   def build_leadtime_data(project_statistics_chart_adapter)
-    @leadtime_data = project_statistics_chart_adapter.leadtime_data_evolution_chart(params[:leadtime_confidence])
+    @leadtime_data = project_statistics_chart_adapter.leadtime_data_evolution_chart(leadtime_confidence_to_charts)
     @leadtime_period_variation = Stats::StatisticsService.instance.compute_percentage_variation(@leadtime_data[0][:data].first, @leadtime_data[0][:data].last)
+  end
+
+  def leadtime_confidence_to_charts
+    confidence = params[:leadtime_confidence].to_i
+    confidence = 80 unless confidence.positive?
+    confidence
   end
 
   def build_block_data(project_statistics_chart_adapter)

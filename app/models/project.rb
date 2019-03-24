@@ -149,7 +149,7 @@ class Project < ApplicationRecord
   def backlog_for(date = Time.zone.today)
     return demands.kept.story.count if date.blank?
 
-    demands.kept.story.where('created_date <= :limit_date', limit_date: date.end_of_week).count + initial_scope
+    DemandsRepository.instance.known_scope_to_date([self], date)
   end
 
   def current_team
@@ -240,7 +240,7 @@ class Project < ApplicationRecord
   end
 
   def remaining_backlog(date = Time.zone.today)
-    known_scope = DemandsRepository.instance.known_scope_to_date([self], date) + initial_scope
+    known_scope = DemandsRepository.instance.known_scope_to_date([self], date)
     known_scope - total_throughput_until(date)
   end
 

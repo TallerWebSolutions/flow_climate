@@ -96,7 +96,7 @@ RSpec.describe Product, type: :model do
     after { travel_back }
 
     include_context 'consolidations variables data for product'
-    it { expect(product.last_week_scope).to eq 61 }
+    it { expect(product.last_week_scope).to eq 60 }
   end
 
   describe '#avg_hours_per_demand' do

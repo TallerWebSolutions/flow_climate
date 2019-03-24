@@ -19,6 +19,8 @@ module Highchart
       accumulated_scope_in_time = []
 
       @x_axis.each do |x_axis_date|
+        break unless add_data_to_chart?(x_axis_date)
+
         end_date = if @chart_period_interval == 'day'
                      x_axis_date.end_of_day
                    elsif @chart_period_interval == 'week'
@@ -35,10 +37,10 @@ module Highchart
 
     def leadtime_data_evolution_chart(confidence)
       accumulated_leadtime_in_time = []
-      confidence = confidence.to_i
-      confidence = 80 unless confidence.positive?
 
       @x_axis.each do |x_axis_date|
+        break unless add_data_to_chart?(x_axis_date)
+
         end_date = if @chart_period_interval == 'day'
                      x_axis_date.end_of_day
                    elsif @chart_period_interval == 'week'
@@ -58,6 +60,8 @@ module Highchart
       accumulated_block_in_time = []
 
       @x_axis.each do |x_axis_date|
+        break unless add_data_to_chart?(x_axis_date)
+
         end_date = if @chart_period_interval == 'day'
                      x_axis_date.end_of_day
                    elsif @chart_period_interval == 'week'
@@ -78,6 +82,18 @@ module Highchart
       @x_axis = TimeService.instance.days_between_of(@start_date, @end_date) if @chart_period_interval == 'day'
       @x_axis = TimeService.instance.weeks_between_of(@start_date, @end_date) if @chart_period_interval == 'week'
       @x_axis = TimeService.instance.months_between_of(@start_date, @end_date) if @chart_period_interval == 'month'
+    end
+
+    def add_data_to_chart?(date)
+      limit_date = if @chart_period_interval == 'day'
+                     Time.zone.today.end_of_day
+                   elsif @chart_period_interval == 'week'
+                     Time.zone.today.end_of_week
+                   else
+                     Time.zone.today.end_of_month
+                   end
+
+      date <= limit_date
     end
   end
 end

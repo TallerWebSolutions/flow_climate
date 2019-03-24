@@ -116,7 +116,7 @@ module Highchart
 
     def build_demands_scope_data
       scope_per_week = []
-      @x_axis.each { |date| scope_per_week << DemandsRepository.instance.scope_in_week_for_projects(all_projects, date.cweek, date.cwyear) }
+      @x_axis.each { |date| scope_per_week << DemandsRepository.instance.known_scope_to_date(all_projects, date) }
       scope_per_week
     end
 
@@ -181,7 +181,7 @@ module Highchart
         break unless add_data_to_chart?(date)
 
         dates_array << date.to_s
-        scope_in_week = DemandsRepository.instance.scope_in_week_for_projects(@all_projects, date.cweek, date.cwyear)
+        scope_in_week = DemandsRepository.instance.known_scope_to_date(@all_projects, date)
         bugs_in_week = DemandsRepository.instance.bugs_opened_until_limit_date(@all_projects, date)
         bugs_opened_share_array << Stats::StatisticsService.instance.compute_percentage(bugs_in_week, scope_in_week)
       end
