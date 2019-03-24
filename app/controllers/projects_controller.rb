@@ -115,7 +115,7 @@ class ProjectsController < AuthenticatedController
   end
 
   def build_leadtime_data(project_statistics_chart_adapter)
-    @leadtime_data = project_statistics_chart_adapter.leadtime_data_evolution_chart(params[:leadtime_confidence])
+    @leadtime_data = project_statistics_chart_adapter.leadtime_data_evolution_chart(leadtime_confidence_to_charts)
     @leadtime_period_variation = Stats::StatisticsService.instance.compute_percentage_variation(@leadtime_data[0][:data].first, @leadtime_data[0][:data].last)
   end
 
@@ -191,5 +191,11 @@ class ProjectsController < AuthenticatedController
     return if project_params[:end_date].blank? || @project.end_date == Date.parse(project_params[:end_date])
 
     ProjectChangeDeadlineHistory.create!(user: current_user, project: @project, previous_date: @project.end_date, new_date: project_params[:end_date])
+  end
+
+  def leadtime_confidence_to_charts
+    confidence = params[:leadtime_confidence].to_i
+    confidence = 80 unless confidence.positive?
+    confidence
   end
 end
