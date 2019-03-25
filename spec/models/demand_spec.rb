@@ -625,6 +625,21 @@ RSpec.describe Demand, type: :model do
     end
   end
 
+  describe '#partial_leadtime' do
+    context 'having leadtime' do
+      let!(:demand) { Fabricate :demand, commitment_date: 2.days.ago, end_date: 1.day.ago }
+      it { expect(demand.partial_leadtime.to_f).to be_within(1.second).of(86_400.00) }
+    end
+    context 'having no leadtime' do
+      let!(:demand) { Fabricate :demand, commitment_date: 2.days.ago, end_date: nil }
+      it { expect(demand.partial_leadtime.to_f).to be_within(1.second).of(172_800.06) }
+    end
+    context 'having no commitment date' do
+      let!(:demand) { Fabricate :demand, commitment_date: nil, end_date: nil }
+      it { expect(demand.partial_leadtime.to_f).to eq 0 }
+    end
+  end
+
   describe '#sum_touch_blocked_time' do
     context 'having transitions and blocks' do
       let(:company) { Fabricate :company }

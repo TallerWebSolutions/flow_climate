@@ -161,7 +161,14 @@ class Demand < ApplicationRecord
   def leadtime_in_days
     return 0.0 if leadtime.blank?
 
-    leadtime.to_f / 86_400.0
+    leadtime.to_f / 1.day
+  end
+
+  def partial_leadtime
+    return leadtime if leadtime.present?
+    return 0 if commitment_date.blank?
+
+    Time.zone.now - commitment_date
   end
 
   def sum_touch_blocked_time
