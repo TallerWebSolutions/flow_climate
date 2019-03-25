@@ -82,6 +82,7 @@ en:
     finish: "Finish"
     min: "Minimum"
     max: "Maximum"
+    partial: "(partial)"
   header:
     logout: Logout
     explore: Explore

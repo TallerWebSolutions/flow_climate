@@ -84,6 +84,7 @@ pt-BR:
     finish: "Fim"
     min: "Mínimo"
     max: "Máximo"
+    partial: "(parcial)"
   header:
     logout: Sair
     sign_up: Cadastre-se
