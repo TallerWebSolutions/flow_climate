@@ -307,7 +307,8 @@ RSpec.describe Project, type: :model do
   describe '#flow_pressure' do
     context 'and the start and finish dates are in different days' do
       let(:project) { Fabricate :project, initial_scope: 30, start_date: Time.zone.parse('2018-03-05 22:00'), end_date: Time.zone.parse('2018-03-07 10:00') }
-      context 'having results' do
+
+      context 'having demands' do
         let!(:opened_bugs) { Fabricate.times(20, :demand, project: project, demand_type: :bug, created_date: Time.zone.parse('2018-03-05 22:00')) }
         let!(:opened_features) { Fabricate.times(10, :demand, project: project, demand_type: :feature, created_date: Time.zone.parse('2018-03-06 22:00')) }
         let!(:delivered_bugs) { Fabricate.times(5, :demand, project: project, demand_type: :bug, created_date: Time.zone.parse('2018-03-05 22:00'), end_date: Time.zone.parse('2018-03-07 10:00')) }
@@ -316,8 +317,23 @@ RSpec.describe Project, type: :model do
           before { allow(Time.zone).to receive(:today) { Time.zone.parse('2018-03-06') } }
           it { expect(project.flow_pressure).to eq 32.5 }
         end
+
         context 'specifying a date' do
           it { expect(project.flow_pressure(Time.zone.parse('2018-03-05 22:00'))).to eq 18.333333333333332 }
+        end
+
+        context 'having date negotiations' do
+          let(:project) { Fabricate :project, initial_scope: 30, start_date: Time.zone.parse('2018-03-05 22:00'), end_date: Time.zone.parse('2018-03-12 10:00') }
+
+          let!(:opened_bugs) { Fabricate.times(20, :demand, project: project, demand_type: :bug, created_date: Time.zone.parse('2018-03-05 22:00')) }
+          let!(:opened_features) { Fabricate.times(10, :demand, project: project, demand_type: :feature, created_date: Time.zone.parse('2018-03-06 22:00')) }
+          let!(:delivered_bugs) { Fabricate.times(5, :demand, project: project, demand_type: :bug, created_date: Time.zone.parse('2018-03-05 22:00'), end_date: Time.zone.parse('2018-03-07 10:00')) }
+
+          let!(:first_project_change_deadline_history) { Fabricate :project_change_deadline_history, project: project, created_at: Time.zone.parse('2018-03-07 11:00'), previous_date: Time.zone.parse('2018-03-05 10:00'), new_date: Time.zone.parse('2018-03-06 23:00') }
+          let!(:second_project_change_deadline_history) { Fabricate :project_change_deadline_history, project: project, created_at: Time.zone.parse('2018-03-08 07:00'), previous_date: Time.zone.parse('2018-03-09 10:00'), new_date: Time.zone.parse('2018-03-10 22:00') }
+          let!(:third_project_change_deadline_history) { Fabricate :project_change_deadline_history, project: project, created_at: Time.zone.parse('2018-03-09 05:00'), previous_date: Time.zone.parse('2018-03-10 22:00'), new_date: Time.zone.parse('2018-03-12 22:00') }
+
+          it { expect(project.flow_pressure(Time.zone.parse('2018-03-08 10:00'))).to eq 30.0 }
         end
       end
       context 'having no results' do

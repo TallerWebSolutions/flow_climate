@@ -163,7 +163,7 @@ class Project < ApplicationRecord
   def flow_pressure(date = Time.zone.today)
     return 0.0 if no_pressure_set(date)
 
-    days = remaining_days(date) || total_days
+    days = remaining_days_to_period(date) || total_days
     remaining_backlog(date).to_f / days.to_f
   end
 
@@ -371,5 +371,16 @@ class Project < ApplicationRecord
     return true if consulting? || training?
 
     errors.add(:product, I18n.t('project.validations.product_blank')) if outsourcing? && product.blank?
+  end
+
+  def remaining_days_to_period(from_date = Time.zone.today)
+    end_date_for_from_date = end_date
+    last_deadline_change = project_change_deadline_histories.where('created_at <= :limit_date', limit_date: from_date).order(:created_at).last
+    end_date_for_from_date = last_deadline_change.previous_date if last_deadline_change.present?
+
+    start_date_limit = [start_date, from_date].max
+    return 0 if end_date_for_from_date < start_date_limit
+
+    (end_date_for_from_date - start_date_limit.to_date).to_i + 1
   end
 end
