@@ -512,6 +512,7 @@ en:
     customers_list: "Customers"
     products_list: "Products"
     statistics: ""
+    demand_blocks: "Demands Blocks"
   charts:
     xlabel:
       months: "Months"

@@ -29,7 +29,7 @@ RSpec.describe Highchart::PortfolioChartsAdapter, type: :service do
       it 'builds the data structure for block_count_by_project' do
         statistics_data = Highchart::PortfolioChartsAdapter.new([first_project, second_project], [first_project.start_date, second_project.start_date].min, [first_project.end_date, second_project.end_date].max)
 
-        expect(statistics_data.block_count_by_project[:series]).to eq [{ data: [3], marker: { enabled: true }, name: I18n.t('portfolio.charts.block_count') }]
+        expect(statistics_data.block_count_by_project[:series]).to eq [{ data: [5], marker: { enabled: true }, name: I18n.t('portfolio.charts.block_count') }]
         expect(statistics_data.block_count_by_project[:x_axis]).to eq([first_project.full_name])
       end
     end

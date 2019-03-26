@@ -43,6 +43,16 @@ class DemandBlock < ApplicationRecord
   scope :closed, -> { where('unblock_time IS NOT NULL') }
   scope :active, -> { where(active: true) }
 
+  def csv_array
+    [
+      id,
+      block_time&.iso8601,
+      unblock_time&.iso8601,
+      block_duration,
+      demand.demand_id
+    ]
+  end
+
   def activate!
     update(active: true)
   end

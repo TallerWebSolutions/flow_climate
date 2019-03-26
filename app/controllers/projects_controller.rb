@@ -6,7 +6,7 @@ class ProjectsController < AuthenticatedController
   before_action :assign_company
   before_action :assign_customer, only: %i[create update]
   before_action :assign_product, only: %i[create update]
-  before_action :assign_project, only: %i[show edit update destroy synchronize_jira finish_project statistics copy_stages_from statistics_tab]
+  before_action :assign_project, only: %i[show edit update destroy synchronize_jira finish_project statistics copy_stages_from statistics_tab demands_blocks_tab demands_blocks_csv]
 
   def show
     @ordered_project_risk_alerts = @project.project_risk_alerts.order(created_at: :desc)
@@ -97,7 +97,7 @@ class ProjectsController < AuthenticatedController
   end
 
   def statistics_tab
-    project_statistics_chart_adapter = Highchart::ProjectStatisticsChartsAdapter.new([@project], start_date_to_adapter, end_date_to_adapter, period_to_adapter)
+    project_statistics_chart_adapter = Highchart::ProjectStatisticsChartsAdapter.new([@project], start_date_to_query, end_date_to_query, period_to_adapter)
     @x_axis = project_statistics_chart_adapter.x_axis
 
     build_scope_data(project_statistics_chart_adapter)
@@ -105,6 +105,23 @@ class ProjectsController < AuthenticatedController
     build_block_data(project_statistics_chart_adapter)
 
     respond_to { |format| format.js { render file: 'projects/statistics_tab.js.erb' } }
+  end
+
+  def demands_blocks_tab
+    @demands_blocks = DemandBlocksRepository.instance.active_blocks_to_projects_and_period([@project], start_date_to_query, end_date_to_query).order(block_time: :desc)
+
+    respond_to { |format| format.js { render file: 'demand_blocks/demands_blocks_tab.js.erb' } }
+  end
+
+  def demands_blocks_csv
+    @demands_blocks = DemandBlocksRepository.instance.active_blocks_to_projects_and_period([@project], start_date_to_query, end_date_to_query).order(block_time: :desc)
+
+    attributes = %w[id block_time unblock_time block_duration demand_id]
+    blocks_csv = CSV.generate(headers: true) do |csv|
+      csv << attributes
+      @demands_blocks.each { |block| csv << block.csv_array }
+    end
+    respond_to { |format| format.csv { send_data blocks_csv, filename: "demands-blocks-#{Time.zone.now}.csv" } }
   end
 
   private
@@ -131,11 +148,11 @@ class ProjectsController < AuthenticatedController
     flash[:notice] = t('general.enqueued')
   end
 
-  def start_date_to_adapter
+  def start_date_to_query
     (params['start_date'] || @project.start_date).to_date
   end
 
-  def end_date_to_adapter
+  def end_date_to_query
     (params['end_date'] || @project.end_date).to_date
   end
 

@@ -1,0 +1,8 @@
+var demandsBlocksDiv = $('#demands-blocks-tab')
+
+demandsBlocksDiv.html("<%= escape_javascript(render 'demand_blocks/demands_blocks_tab', demands_blocks: @demands_blocks) %>");
+
+$('#general-loader').hide();
+demandsBlocksDiv.show();
+
+enableTabs();

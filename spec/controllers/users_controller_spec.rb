@@ -38,7 +38,7 @@ RSpec.describe UsersController, type: :controller do
     end
   end
 
-  context 'authenticated as noraml user' do
+  context 'authenticated as normal user' do
     let(:user) { Fabricate :user, admin: false }
     before { sign_in user }
 

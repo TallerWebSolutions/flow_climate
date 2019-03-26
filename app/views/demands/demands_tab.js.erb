@@ -4,3 +4,7 @@ demandsTab.html("<%= escape_javascript(render 'demands/demands_tab', demands: @d
 demandsTab.show();
 
 enableTabs();
+
+demandsTabMenu = document.getElementsByClassName("demands-tab");
+demandsTabMenu[0].className += " active";
+document.getElementById("demands-list").style.display = "block";
