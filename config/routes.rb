@@ -116,6 +116,8 @@ Rails.application.routes.draw do
         get :statistics
         patch :copy_stages_from
         get :statistics_tab
+        get :demands_blocks_tab
+        get :demands_blocks_csv
       end
     end
 

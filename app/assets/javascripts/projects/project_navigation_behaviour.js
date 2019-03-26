@@ -1,6 +1,6 @@
 hideAllComponents();
 
-var stampsDiv = $('#nav-item-stamps');
+const stampsDiv = $('#nav-item-stamps');
 stampsDiv.addClass('active');
 $('#stamps').show();
 
@@ -24,18 +24,22 @@ $('.nav-item').on('click', function(event){
         disableTabs();
 
         if ($(this).attr('id') === 'nav-item-statusreport') {
-
             buildStatusReportCharts(companyId, projectsIds, period, targetName, startDate, endDate)
+
         } else if ($(this).attr('id') === 'nav-item-charts') {
-
             buildOperationalCharts(companyId, projectsIds, period, targetName, startDate, endDate);
-        } else if ($(this).attr('id') === 'nav-item-strategic') {
 
+        } else if ($(this).attr('id') === 'nav-item-strategic') {
             buildStrategicCharts(companyId, projectsIds, targetName);
+
         } else if ($(this).attr('id') === 'nav-item-demands') {
             $('#demands-tab').hide();
-
             getDemands(companyId, projectsIds);
+
+        } else if ($(this).attr('id') === 'nav-item-demands-blocks') {
+            $('#demands-blocks-tab').hide();
+            getProjectBlocks(companyId, projectId, startDate, endDate);
+
         } else if ($(this).attr('id') === 'nav-item-statistics') {
             getProjectStatistics(companyId, projectId, startDate, endDate, period);
 

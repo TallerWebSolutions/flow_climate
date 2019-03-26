@@ -346,7 +346,7 @@ RSpec.describe TeamsController, type: :controller do
               expect(assigns(:block_data)).to eq [{ data: [0, 6], marker: { enabled: true }, name: I18n.t('projects.statistics.accumulated_blocks.data_title') }]
 
               expect(assigns(:block_by_project_variation)).to eq 0.0
-              expect(assigns(:block_by_project_data)).to eq [{ data: [4], marker: { enabled: true }, name: I18n.t('portfolio.charts.block_count') }]
+              expect(assigns(:block_by_project_data)).to eq [{ data: [6], marker: { enabled: true }, name: I18n.t('portfolio.charts.block_count') }]
               expect(assigns(:block_by_project_x_axis)).to eq [first_project.full_name]
 
               expect(assigns(:aging_by_project_variation)).to eq 0.5714285714285714

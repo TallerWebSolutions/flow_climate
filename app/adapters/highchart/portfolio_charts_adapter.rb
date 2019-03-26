@@ -12,7 +12,7 @@ module Highchart
     end
 
     def block_count_by_project
-      block_count_grouped_by_project = DemandBlocksRepository.instance.blocks_to_projects_and_period(@projects, @start_date, @end_date)
+      block_count_grouped_by_project = DemandBlocksRepository.instance.closed_blocks_to_projects_and_period_grouped(@projects, @start_date, @end_date)
       ordered_by_block_qty = {}
       block_count_grouped_by_project.each { |key, values| ordered_by_block_qty[key] = values.count }
 

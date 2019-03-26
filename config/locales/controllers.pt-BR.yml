@@ -541,6 +541,7 @@ pt-BR:
     customers_list: "Clientes"
     products_list: "Produtos"
     statistics: "Estatísticas"
+    demand_blocks: "Bloqueios"
   charts:
     xlabel:
       months: "Meses"
