@@ -697,7 +697,6 @@ RSpec.describe ProjectsController, type: :controller do
           end
         end
       end
-
     end
 
     describe 'GET #demands_blocks_tab' do
