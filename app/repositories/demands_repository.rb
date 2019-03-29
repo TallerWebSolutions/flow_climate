@@ -4,11 +4,7 @@ class DemandsRepository
   include Singleton
 
   def known_scope_to_date(projects, analysed_date)
-    Demand.story
-          .where(project_id: projects.map(&:id))
-          .where('created_date <= :analysed_date AND (discarded_at IS NULL OR discarded_at > :limit_date)', analysed_date: analysed_date.end_of_day, limit_date: analysed_date.beginning_of_day)
-          .uniq
-          .count + projects.sum(&:initial_scope)
+    demands_to_projects(projects, analysed_date).count + projects.sum(&:initial_scope)
   end
 
   def committed_demands_by_project_and_week(projects, week, year)
@@ -49,8 +45,10 @@ class DemandsRepository
     effort_downstream_hash
   end
 
-  def demands_to_projects(array_of_projects)
-    DemandsList.kept.story.where(project_id: array_of_projects.map(&:id))
+  def demands_to_projects(projects, analysed_date = Time.zone.now)
+    DemandsList.story
+               .where(project_id: projects.map(&:id))
+               .where('created_date <= :analysed_date AND (discarded_at IS NULL OR discarded_at > :limit_date)', analysed_date: analysed_date.end_of_day, limit_date: analysed_date.utc)
   end
 
   def bugs_opened_until_limit_date(projects, date = Time.zone.today)

@@ -13,7 +13,7 @@ RSpec.describe ProjectsSummaryData, type: :data_object do
 
       subject(:projects_summary) { ProjectsSummaryData.new(Project.all) }
 
-      it { expect(projects_summary.total_flow_pressure).to eq 1.1666666666666665 }
+      it { expect(projects_summary.total_flow_pressure).to be_within(0.5).of(1.1) }
     end
 
     context 'having no projects' do

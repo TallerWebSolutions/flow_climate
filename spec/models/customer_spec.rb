@@ -146,7 +146,7 @@ RSpec.describe Customer, type: :model do
 
   describe '#total_flow_pressure' do
     include_context 'demands with effort for customer'
-    it { expect(customer.total_flow_pressure).to eq customer.projects.sum(&:flow_pressure) }
+    it { expect(customer.total_flow_pressure).to be_within(0.9).of(customer.projects.sum(&:flow_pressure)) }
   end
 
   describe '#delivered_scope' do

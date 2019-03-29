@@ -94,7 +94,7 @@ class Project < ApplicationRecord
   end
 
   def total_days
-    (end_date - start_date).to_i + 1
+    ((end_date.end_of_day - start_date.beginning_of_day) / 1.day) + 1
   end
 
   def remaining_weeks(from_date = Time.zone.today)
@@ -104,11 +104,11 @@ class Project < ApplicationRecord
     ((end_date.to_time - start_date_limit.to_time).to_i / 1.week) + 1
   end
 
-  def remaining_days(from_date = Time.zone.today)
-    start_date_limit = [start_date, from_date].max
-    return 0 if end_date < start_date_limit
+  def remaining_days(from_date = Time.zone.now)
+    start_date_limit = [start_date.beginning_of_day, from_date].max
+    return 0 if end_date.end_of_day < start_date_limit
 
-    (end_date - start_date_limit.to_date).to_i + 1
+    ((end_date.end_of_day - start_date_limit.beginning_of_day) / 1.day) + 1
   end
 
   def percentage_remaining_days
@@ -133,11 +133,11 @@ class Project < ApplicationRecord
   end
 
   def last_week_scope
-    backlog_for(1.week.ago.to_date)
+    backlog_for(1.week.ago)
   end
 
   def backlog_unit_growth
-    backlog_for(Time.zone.today) - last_week_scope
+    backlog_for(Time.zone.now) - last_week_scope
   end
 
   def backlog_growth_rate
@@ -146,7 +146,7 @@ class Project < ApplicationRecord
     backlog_unit_growth.to_f / last_week_scope
   end
 
-  def backlog_for(date = Time.zone.today)
+  def backlog_for(date = Time.zone.now)
     return demands.kept.story.count if date.blank?
 
     DemandsRepository.instance.known_scope_to_date([self], date)
@@ -160,7 +160,7 @@ class Project < ApplicationRecord
     product.update(team: team) if product.present?
   end
 
-  def flow_pressure(date = Time.zone.today)
+  def flow_pressure(date = Time.zone.now)
     return 0.0 if no_pressure_set(date)
 
     days = remaining_days_to_period(date) || total_days
@@ -239,7 +239,7 @@ class Project < ApplicationRecord
     (total_hours_downstream.to_f / total_throughput_downstream.count.to_f)
   end
 
-  def remaining_backlog(date = Time.zone.today)
+  def remaining_backlog(date = Time.zone.now)
     known_scope = DemandsRepository.instance.known_scope_to_date([self], date)
     known_scope - total_throughput_until(date)
   end
@@ -373,14 +373,14 @@ class Project < ApplicationRecord
     errors.add(:product, I18n.t('project.validations.product_blank')) if outsourcing? && product.blank?
   end
 
-  def remaining_days_to_period(from_date = Time.zone.today)
-    end_date_for_from_date = end_date
+  def remaining_days_to_period(from_date = Time.zone.now)
+    end_date_for_from_date = end_date.end_of_day
     last_deadline_change = project_change_deadline_histories.where('created_at <= :limit_date', limit_date: from_date).order(:created_at).last
-    end_date_for_from_date = last_deadline_change.previous_date if last_deadline_change.present?
+    end_date_for_from_date = last_deadline_change.previous_date.end_of_day if last_deadline_change.present?
 
-    start_date_limit = [start_date, from_date].max
+    start_date_limit = [start_date.beginning_of_day, from_date].max
     return 0 if end_date_for_from_date < start_date_limit
 
-    (end_date_for_from_date - start_date_limit.to_date).to_i + 1
+    ((end_date_for_from_date - start_date_limit) / 1.day) + 1
   end
 end

@@ -57,7 +57,7 @@ RSpec.describe ProjectsRepository, type: :repository do
     let!(:other_project) { Fabricate :project, customer: customer, initial_scope: 50, start_date: 2.months.ago, end_date: 1.month.from_now }
 
     context 'having data' do
-      it { expect(ProjectsRepository.instance.flow_pressure_to_month(company.projects, 2.months.ago.to_date)).to eq 4.838709677419354 }
+      it { expect(ProjectsRepository.instance.flow_pressure_to_month(company.projects, 2.months.ago.to_date)).to be_within(0.5).of(4.7) }
     end
   end
 
@@ -65,7 +65,7 @@ RSpec.describe ProjectsRepository, type: :repository do
     let!(:project) { Fabricate :project, customer: customer, value: 100, start_date: 2.months.ago, end_date: 1.month.from_now }
     let!(:other_project) { Fabricate :project, customer: customer, value: 50, start_date: 2.months.ago, end_date: 1.month.from_now }
     context 'having projects in the month' do
-      it { expect(ProjectsRepository.instance.money_to_month(company.projects, 2.months.ago.to_date).to_f).to eq 50.0 }
+      it { expect(ProjectsRepository.instance.money_to_month(company.projects, 2.months.ago.to_date).to_f).to be_within(0.9).of(49.4) }
     end
 
     context 'having no projects in the month' do

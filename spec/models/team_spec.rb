@@ -149,7 +149,7 @@ RSpec.describe Team, type: :model do
 
   describe '#total_flow_pressure' do
     include_context 'consolidations data for team'
-    it { expect(team.total_flow_pressure).to eq team.projects.sum(&:flow_pressure) }
+    it { expect(team.total_flow_pressure).to be_within(0.2).of(team.projects.sum(&:flow_pressure)) }
   end
 
   describe '#delivered_scope' do
