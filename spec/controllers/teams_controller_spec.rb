@@ -247,8 +247,8 @@ RSpec.describe TeamsController, type: :controller do
           expect(replenishing_data[0][:end_date]).to eq first_project.end_date
           expect(replenishing_data[0][:weeks_to_end_date]).to eq first_project.remaining_weeks
           expect(replenishing_data[0][:remaining_backlog]).to eq first_project.remaining_backlog
-          expect(replenishing_data[0][:relative_flow_pressure]).to be_within(0.00001).of(75.31806)
-          expect(replenishing_data[0][:qty_using_pressure]).to be_within(0.00001).of(1.50636)
+          expect(replenishing_data[0][:relative_flow_pressure]).to be_within(0.9).of(68.6)
+          expect(replenishing_data[0][:qty_using_pressure]).to be_within(0.9).of(1.3)
           expect(replenishing_data[0][:leadtime_80]).to be_within(0.00001).of(77.44166)
           expect(replenishing_data[0][:work_in_progress]).to eq 0
           expect(replenishing_data[0][:montecarlo_80_percent]).to be_within(15).of(118.0)
@@ -259,8 +259,8 @@ RSpec.describe TeamsController, type: :controller do
           expect(replenishing_data[1][:end_date]).to eq second_project.end_date
           expect(replenishing_data[1][:weeks_to_end_date]).to eq second_project.remaining_weeks
           expect(replenishing_data[1][:remaining_backlog]).to eq second_project.remaining_backlog
-          expect(replenishing_data[1][:relative_flow_pressure]).to be_within(0.00001).of(16.79389)
-          expect(replenishing_data[1][:qty_using_pressure]).to be_within(0.00001).of(0.33587)
+          expect(replenishing_data[1][:relative_flow_pressure]).to be_within(0.9).of(21.1)
+          expect(replenishing_data[1][:qty_using_pressure]).to be_within(0.9).of(0.33587)
           expect(replenishing_data[1][:leadtime_80]).to eq 0
           expect(replenishing_data[1][:work_in_progress]).to eq 3
           expect(replenishing_data[1][:montecarlo_80_percent]).to be_within(40).of(160.0)
@@ -271,8 +271,8 @@ RSpec.describe TeamsController, type: :controller do
           expect(replenishing_data[2][:end_date]).to eq third_project.end_date
           expect(replenishing_data[2][:weeks_to_end_date]).to eq third_project.remaining_weeks
           expect(replenishing_data[2][:remaining_backlog]).to eq third_project.remaining_backlog
-          expect(replenishing_data[2][:relative_flow_pressure]).to be_within(0.00001).of(7.88804)
-          expect(replenishing_data[2][:qty_using_pressure]).to be_within(0.00001).of(0.15776)
+          expect(replenishing_data[2][:relative_flow_pressure]).to be_within(0.9).of(10.2)
+          expect(replenishing_data[2][:qty_using_pressure]).to be_within(0.9).of(0.20)
           expect(replenishing_data[2][:leadtime_80]).to be_within(0.001).of(0.58333)
           expect(replenishing_data[2][:work_in_progress]).to eq 0
           expect(replenishing_data[2][:montecarlo_80_percent]).to eq 0

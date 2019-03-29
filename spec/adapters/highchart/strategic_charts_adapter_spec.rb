@@ -34,11 +34,11 @@ RSpec.describe Highchart::StrategicChartsAdapter, type: :service do
         strategic_data = Highchart::StrategicChartsAdapter.new(company, company.projects, company.total_available_hours)
         expect(strategic_data.array_of_months).to eq [3.months.ago.to_date.end_of_month, 2.months.ago.to_date.end_of_month, 1.month.ago.to_date.end_of_month, Time.zone.today.end_of_month, 1.month.from_now.to_date.end_of_month, 2.months.from_now.to_date.end_of_month, 3.months.from_now.to_date.end_of_month]
         expect(strategic_data.active_projects_count_data).to eq [2, 2, 1, 0, 2, 4, 2]
-        expect(strategic_data.sold_hours_in_month).to eq [1209.6774193548385, 1209.6774193548385, 241.93548387096772, 0, 2062.5, 7094.758064516129, 5032.258064516129]
+        expect(strategic_data.sold_hours_in_month).to eq [1175.5952380952385, 1175.5952380952385, 238.09523809523813, 0, 2000.0000000000011, 6875.000000000003, 4875.000000000002]
         expect(strategic_data.consumed_hours_per_month).to eq [0.0, 210.0, 530.0, 0.0, 0.0, 120.0, 0.0]
         expect(strategic_data.available_hours_per_month).to eq [180, 180, 180, 180, 180, 180, 180]
-        expect(strategic_data.flow_pressure_per_month_data.map { |pressure| pressure.round(2) }).to eq [0.0, 0.0, 0.0, 0, 3.84, 7.71, 3.87]
-        expect(strategic_data.money_per_month_data.map { |money| money.round(2) }).to eq [1_671_106.45, 1_671_106.45, 1_670_912.9, 0.0, 10_031.25, 10_343.83, 312.58]
+        expect(strategic_data.flow_pressure_per_month_data.map { |pressure| pressure.round(2) }).to eq [0.0, 0.0, 0.0, 0, 3.73, 7.48, 3.75]
+        expect(strategic_data.money_per_month_data.map { |money| money.round(2) }).to eq [1_644_577.98, 1_644_577.98, 1_644_390.48, 0.0, 9727.27, 10_030.09, 302.81]
         expect(strategic_data.expenses_per_month_data.map { |expense| expense.round(2) }).to eq [300.0, 300.0, 200.0, 200.0, 200.0, 100.0, 100.0]
       end
     end

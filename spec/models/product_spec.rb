@@ -131,7 +131,7 @@ RSpec.describe Product, type: :model do
 
   describe '#total_flow_pressure' do
     include_context 'consolidations variables data for product'
-    it { expect(product.total_flow_pressure).to eq product.projects.sum(&:flow_pressure) }
+    it { expect(product.total_flow_pressure).to be_within(0.9).of(product.projects.sum(&:flow_pressure)) }
   end
 
   describe '#delivered_scope' do

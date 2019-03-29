@@ -97,7 +97,7 @@ module Highchart
       @x_axis.each do |date|
         break unless add_data_to_chart?(date)
 
-        @all_projects.each { |project| array_of_flow_pressures << project.flow_pressure(date.end_of_week) }
+        @all_projects.each { |project| array_of_flow_pressures << project.flow_pressure(date.end_of_day.end_of_week) }
         @flow_pressure_data << array_of_flow_pressures.sum.to_f / array_of_flow_pressures.count.to_f
       end
     end
@@ -116,7 +116,7 @@ module Highchart
 
     def build_demands_scope_data
       scope_per_week = []
-      @x_axis.each { |date| scope_per_week << DemandsRepository.instance.known_scope_to_date(all_projects, date) }
+      @x_axis.each { |date| scope_per_week << DemandsRepository.instance.known_scope_to_date(all_projects, date.beginning_of_day) }
       scope_per_week
     end
 
@@ -181,7 +181,7 @@ module Highchart
         break unless add_data_to_chart?(date)
 
         dates_array << date.to_s
-        scope_in_week = DemandsRepository.instance.known_scope_to_date(@all_projects, date)
+        scope_in_week = DemandsRepository.instance.known_scope_to_date(@all_projects, date.beginning_of_day)
         bugs_in_week = DemandsRepository.instance.bugs_opened_until_limit_date(@all_projects, date)
         bugs_opened_share_array << Stats::StatisticsService.instance.compute_percentage(bugs_in_week, scope_in_week)
       end

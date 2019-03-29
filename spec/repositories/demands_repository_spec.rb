@@ -28,7 +28,7 @@ RSpec.describe DemandsRepository, type: :repository do
 
     let!(:first_epic) { Fabricate :demand, project: first_project, artifact_type: :epic }
 
-    it { expect(DemandsRepository.instance.known_scope_to_date([first_project, second_project], 2.days.ago)).to eq 66 }
+    it { expect(DemandsRepository.instance.known_scope_to_date([first_project, second_project], 2.days.ago)).to eq 65 }
   end
 
   describe '#demands_to_projects' do

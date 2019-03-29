@@ -742,6 +742,9 @@ RSpec.describe ProjectsController, type: :controller do
     end
 
     describe 'GET #demands_blocks_csv' do
+      before { travel_to Time.zone.local(2018, 3, 6, 10, 0, 0) }
+      after { travel_back }
+
       let(:company) { Fabricate :company, users: [user] }
 
       let(:customer) { Fabricate :customer, company: company }

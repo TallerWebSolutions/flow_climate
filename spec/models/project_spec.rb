@@ -163,13 +163,13 @@ RSpec.describe Project, type: :model do
 
   describe '#total_days' do
     let(:project) { Fabricate :project, start_date: 1.day.ago, end_date: 1.day.from_now }
-    it { expect(project.total_days).to eq 3 }
+    it { expect(project.total_days).to be_within(0.1).of(3.9) }
   end
 
   describe '#remaining_days' do
     context 'when the end date is in the future' do
       let(:project) { Fabricate :project, start_date: 1.day.ago, end_date: 1.day.from_now }
-      it { expect(project.remaining_days).to eq 2 }
+      it { expect(project.remaining_days).to be_within(0.2).of(2.9) }
     end
     context 'when the end date is in the past' do
       let(:project) { Fabricate :project, start_date: 2.days.ago, end_date: 1.day.ago }
@@ -177,11 +177,11 @@ RSpec.describe Project, type: :model do
     end
     context 'when the start date is in the future' do
       let(:project) { Fabricate :project, start_date: 2.days.from_now, end_date: 3.days.from_now }
-      it { expect(project.remaining_days).to eq 2 }
+      it { expect(project.remaining_days).to be_within(0.2).of(2.9) }
     end
     context 'passing from_date as parameter' do
       let(:project) { Fabricate :project, start_date: 2.days.from_now, end_date: 10.days.from_now }
-      it { expect(project.remaining_days(1.week.from_now.to_date)).to eq 4 }
+      it { expect(project.remaining_days(1.week.from_now)).to be_within(0.2).of(4.9) }
     end
   end
 
@@ -207,7 +207,7 @@ RSpec.describe Project, type: :model do
   describe '#percentage_remaining_days' do
     context 'total_days is higher than 0' do
       let(:project) { Fabricate :project, start_date: 1.day.ago, end_date: 1.day.from_now }
-      it { expect(project.percentage_remaining_days).to be_within(0.01).of(66.66) }
+      it { expect(project.percentage_remaining_days).to be_within(0.9).of(74.9) }
     end
     context 'the start and end days are in the same date' do
       let(:project) { Fabricate :project, start_date: Time.zone.today, end_date: Time.zone.today }
@@ -314,12 +314,14 @@ RSpec.describe Project, type: :model do
         let!(:delivered_bugs) { Fabricate.times(5, :demand, project: project, demand_type: :bug, created_date: Time.zone.parse('2018-03-05 22:00'), end_date: Time.zone.parse('2018-03-07 10:00')) }
 
         context 'specifying no date' do
-          before { allow(Time.zone).to receive(:today) { Time.zone.parse('2018-03-06') } }
-          it { expect(project.flow_pressure).to eq 32.5 }
+          before { travel_to Time.zone.local(2018, 0o3, 0o6, 10, 0, 0) }
+          after { travel_back }
+
+          it { expect(project.flow_pressure).to be_within(0.5).of(25.1) }
         end
 
         context 'specifying a date' do
-          it { expect(project.flow_pressure(Time.zone.parse('2018-03-05 22:00'))).to eq 18.333333333333332 }
+          it { expect(project.flow_pressure(Time.zone.parse('2018-03-05 22:00'))).to be_within(0.5).of(17.9) }
         end
 
         context 'having date negotiations' do
@@ -333,21 +335,25 @@ RSpec.describe Project, type: :model do
           let!(:second_project_change_deadline_history) { Fabricate :project_change_deadline_history, project: project, created_at: Time.zone.parse('2018-03-08 07:00'), previous_date: Time.zone.parse('2018-03-09 10:00'), new_date: Time.zone.parse('2018-03-10 22:00') }
           let!(:third_project_change_deadline_history) { Fabricate :project_change_deadline_history, project: project, created_at: Time.zone.parse('2018-03-09 05:00'), previous_date: Time.zone.parse('2018-03-10 22:00'), new_date: Time.zone.parse('2018-03-12 22:00') }
 
-          it { expect(project.flow_pressure(Time.zone.parse('2018-03-08 10:00'))).to eq 30.0 }
+          it { expect(project.flow_pressure(Time.zone.parse('2018-03-08 10:00'))).to be_within(0.2).of(23.2) }
         end
       end
       context 'having no results' do
-        before { allow(Time.zone).to receive(:today) { Time.zone.parse('2018-03-06') } }
-        it { expect(project.flow_pressure).to eq 15 }
+        before { travel_to Time.zone.local(2018, 3, 6, 10, 0, 0) }
+        after { travel_back }
+
+        it { expect(project.flow_pressure).to be_within(0.9).of(11.6) }
       end
     end
     context 'and the start and finish dates are in the same day' do
       let(:project) { Fabricate :project, initial_scope: 30, start_date: Time.zone.today, end_date: Time.zone.today }
-      context 'having results' do
-        it { expect(project.flow_pressure).to be_within(0.01).of(project.remaining_backlog.to_f / project.remaining_days.to_f) }
+      context 'having demands' do
+        let!(:opened_features) { Fabricate.times(10, :demand, project: project, demand_type: :feature, end_date: nil) }
+
+        it { expect(project.flow_pressure).to be_within(0.9).of(34.8) }
       end
-      context 'having no results' do
-        it { expect(project.flow_pressure).to eq 30 }
+      context 'having no demands' do
+        it { expect(project.flow_pressure).to be_within(0.9).of(26.1) }
       end
     end
   end
@@ -525,7 +531,7 @@ RSpec.describe Project, type: :model do
     context 'having demands' do
       context 'specifying no date' do
         include_context 'demands with effort'
-        it { expect(project.remaining_backlog).to eq 33 }
+        it { expect(project.remaining_backlog).to eq 31 }
       end
       context 'specifying a date' do
         include_context 'demands with effort'
@@ -628,7 +634,7 @@ RSpec.describe Project, type: :model do
 
     context 'having data' do
       include_context 'demands with effort'
-      it { expect(project.required_hours).to eq 2541.0 }
+      it { expect(project.required_hours).to eq 2387.0 }
     end
     context 'having no data' do
       let!(:project) { Fabricate :project, end_date: 4.weeks.from_now, initial_scope: 30 }
@@ -642,7 +648,7 @@ RSpec.describe Project, type: :model do
 
     context 'having data' do
       include_context 'demands with effort'
-      it { expect(project.required_hours_per_available_hours).to eq 0.9176598049837487 }
+      it { expect(project.required_hours_per_available_hours).to eq 0.8620440592271578 }
     end
     context 'having no data' do
       let!(:project) { Fabricate :project, end_date: 4.weeks.from_now, initial_scope: 30 }
@@ -698,12 +704,12 @@ RSpec.describe Project, type: :model do
 
     context 'having data' do
       include_context 'demands with effort'
-      it { expect(project.money_per_deadline.to_f).to eq 10_062.36559139785 }
+      it { expect(project.money_per_deadline.to_f).to be_within(5).of(9950.9) }
     end
 
     context 'having no data' do
       let!(:project) { Fabricate :project, start_date: 1.week.ago, initial_scope: 30, end_date: 3.weeks.from_now, value: 10_000, hour_value: 20 }
-      it { expect(project.money_per_deadline.to_f).to eq 454.54545454545456 }
+      it { expect(project.money_per_deadline.to_f).to be_within(8).of(434) }
     end
   end
 
@@ -785,12 +791,12 @@ RSpec.describe Project, type: :model do
 
   describe '#hours_per_month' do
     let(:project) { Fabricate :project, qty_hours: 100, start_date: Date.new(2018, 2, 20), end_date: Date.new(2018, 5, 23) }
-    it { expect(project.hours_per_month).to eq 32.25806451612903 }
+    it { expect(project.hours_per_month).to be_within(0.2).of(31.9) }
   end
 
   describe '#money_per_month' do
     let(:project) { Fabricate :project, value: 100, start_date: Date.new(2018, 2, 20), end_date: Date.new(2018, 5, 23) }
-    it { expect(project.money_per_month.to_f).to eq 32.25806451612903 }
+    it { expect(project.money_per_month.to_f).to be_within(0.2).of(31.9) }
   end
 
   describe '#total_throughput_until' do

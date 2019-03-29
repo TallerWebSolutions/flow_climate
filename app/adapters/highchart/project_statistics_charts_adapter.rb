@@ -24,12 +24,12 @@ module Highchart
         end_date = if @chart_period_interval == 'day'
                      x_axis_date.end_of_day
                    elsif @chart_period_interval == 'week'
-                     x_axis_date.end_of_week
+                     x_axis_date.end_of_day.end_of_week
                    else
-                     x_axis_date.end_of_month
+                     x_axis_date.end_of_day.end_of_month
                    end
 
-        accumulated_scope_in_time << DemandsRepository.instance.known_scope_to_date(@projects, end_date)
+        accumulated_scope_in_time << DemandsRepository.instance.known_scope_to_date(@projects, end_date.end_of_day)
       end
 
       [{ name: I18n.t('projects.general.scope'), data: accumulated_scope_in_time, marker: { enabled: true } }]
