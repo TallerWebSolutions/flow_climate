@@ -350,10 +350,10 @@ RSpec.describe Project, type: :model do
       context 'having demands' do
         let!(:opened_features) { Fabricate.times(10, :demand, project: project, demand_type: :feature, end_date: nil) }
 
-        it { expect(project.flow_pressure).to be_within(0.9).of(34.8) }
+        it { expect(project.flow_pressure).to be_within(1).of(36) }
       end
       context 'having no demands' do
-        it { expect(project.flow_pressure).to be_within(0.9).of(26.1) }
+        it { expect(project.flow_pressure).to be_within(2).of(26) }
       end
     end
   end
