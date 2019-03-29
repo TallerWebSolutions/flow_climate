@@ -749,7 +749,7 @@ RSpec.describe ProjectsController, type: :controller do
 
       let(:customer) { Fabricate :customer, company: company }
       let(:project) { Fabricate :project, customer: customer }
-      let!(:demand) { Fabricate :demand, project: project, end_date: Time.zone.today }
+      let!(:demand) { Fabricate :demand, project: project, end_date: Time.zone.now }
       let!(:demand_block) { Fabricate :demand_block, demand: demand }
 
       context 'valid parameters' do
