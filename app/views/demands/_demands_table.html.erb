@@ -1,52 +1,57 @@
-<div class="row">
-  <div class="col-xs-12">
-    <div id="demands_count">
-      <h4><%= "#{t('general.total')}: #{t('demands.index.count', demands_count: demands.count)}" %></h4>
+<% if demands.count.positive? %>
+  <div class="row">
+    <div class="col-xs-12">
+      <div id="demands_count">
+        <h4><%= "#{t('general.total')}: #{t('demands.index.count', demands_count: demands.count)}" %></h4>
+      </div>
     </div>
   </div>
-</div>
 
-<div class="row">
-  <div class="col-xs-12">
-    <div class="form-group">
-      <%= link_to t('general.download_csv'), demands_csv_company_demands_path(@company, demands.map(&:id).to_csv, format: :csv), class: 'btn btn-sm btn-success' %>
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="form-group">
+        <%= link_to t('general.download_csv'), demands_csv_company_demands_path(@company, demands.map(&:id).to_csv, format: :csv), class: 'btn btn-sm btn-success' %>
+      </div>
     </div>
   </div>
-</div>
+<% end %>
 
-
-<div id="demands_table">
-  <table class="table table-index table-striped">
-    <thead>
-      <tr>
-        <th><%= t('general.table.actions') %></th>
-        <th><%= Demand.human_attribute_name :demand_id %></th>
-        <th><%= Demand.human_attribute_name :artifact_type %></th>
-        <th><%= Demand.human_attribute_name :demand_type %></th>
-        <th><%= Demand.human_attribute_name :class_of_service %></th>
-        <th><%= t('demands.index.current_stage') %></th>
-        <th><%= Demand.human_attribute_name :leadtime %></th>
-        <th><%= Demand.human_attribute_name :effort_upstream %></th>
-        <th><%= Demand.human_attribute_name :effort_downstream %></th>
-        <th><%= t('demands.index.qty_closed_blocks') %></th>
-        <th><%= t('demands.index.total_blocked_time') %></th>
-        <th><%= t('demands.index.total_blocked_work_time') %></th>
-        <th><%= Demand.human_attribute_name :created_date %></th>
-        <th><%= Demand.human_attribute_name :commitment_date %></th>
-        <th><%= Demand.human_attribute_name :end_date %></th>
-        <th><%= Demand.human_attribute_name :project %></th>
-        <th><%= Demand.human_attribute_name :demand_title %></th>
-        <th><%= t('general.table.actions') %></th>
-      </tr>
-    </thead>
-    <tbody>
-      <% demands.each do |demand| %>
-        <tr id='demand_<%= demand.id %>'>
-          <%= render 'demands/demand_fields', demand_list: demand %>
+<% if demands.present? %>
+  <div id="demands_table">
+    <table class="table table-index table-striped">
+      <thead>
+        <tr>
+          <th><%= t('general.table.actions') %></th>
+          <th><%= Demand.human_attribute_name :demand_id %></th>
+          <th><%= Demand.human_attribute_name :artifact_type %></th>
+          <th><%= Demand.human_attribute_name :demand_type %></th>
+          <th><%= Demand.human_attribute_name :class_of_service %></th>
+          <th><%= t('demands.index.current_stage') %></th>
+          <th><%= Demand.human_attribute_name :leadtime %></th>
+          <th><%= Demand.human_attribute_name :effort_upstream %></th>
+          <th><%= Demand.human_attribute_name :effort_downstream %></th>
+          <th><%= t('demands.index.qty_closed_blocks') %></th>
+          <th><%= t('demands.index.total_blocked_time') %></th>
+          <th><%= t('demands.index.total_blocked_work_time') %></th>
+          <th><%= Demand.human_attribute_name :created_date %></th>
+          <th><%= Demand.human_attribute_name :commitment_date %></th>
+          <th><%= Demand.human_attribute_name :end_date %></th>
+          <th><%= Demand.human_attribute_name :project %></th>
+          <th><%= Demand.human_attribute_name :demand_title %></th>
+          <th><%= t('general.table.actions') %></th>
         </tr>
-      <% end %>
-    </tbody>
-  </table>
-</div>
+      </thead>
+      <tbody>
+        <% demands.each do |demand| %>
+          <tr id='demand_<%= demand.id %>'>
+            <%= render 'demands/demand_fields', demand_list: demand %>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
 
-<div class="modal fade" id="edit-demand-form" tabindex="-1" role="dialog" aria-labelledby="edit-demand-form" aria-hidden="true"></div>
+  <div class="modal fade" id="edit-demand-form" tabindex="-1" role="dialog" aria-labelledby="edit-demand-form" aria-hidden="true"></div>
+<% else %>
+  <%= render 'layouts/no_data', missing_data: Demand.model_name.human.pluralize.downcase %>
+<% end %>
