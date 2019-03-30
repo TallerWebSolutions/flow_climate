@@ -71,6 +71,17 @@ RSpec.describe Jira::ProjectJiraConfigsController, type: :controller do
           end
         end
 
+        context 'breaking unique index' do
+          let!(:project_jira_config) { Fabricate :project_jira_config, project: project, team: team, jira_account_domain: 'foo', jira_project_key: 'bar', fix_version_name: 'xpto' }
+          before { post :create, params: { company_id: company, project_id: project, jira_project_jira_config: { team: team.id, jira_account_domain: 'foo', jira_project_key: 'bar', fix_version_name: 'xpto' } }, xhr: true }
+          it 'does not create the project jira config' do
+            expect(Jira::ProjectJiraConfig.count).to eq 1
+            expect(response).to render_template 'jira/project_jira_configs/create'
+            expect(assigns(:project_jira_config).errors_on(:jira_project_key)).to eq [I18n.t('project_jira_config.validations.jira_project_key_uniqueness.message')]
+            expect(flash[:error]).to eq I18n.t('project_jira_config.validations.jira_project_key_uniqueness.message')
+          end
+        end
+
         context 'non-existent project' do
           before { post :create, params: { company_id: company, project_id: 'foo', jira_project_jira_config: { name: '' } }, xhr: true }
           it { expect(response).to have_http_status :not_found }

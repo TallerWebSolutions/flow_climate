@@ -13,7 +13,8 @@ module Jira
     def create
       team = Team.find_by(id: project_jira_config_params[:team])
       @project_jira_config = ProjectJiraConfig.new(project_jira_config_params.merge(project: @project, team: team))
-      @project_jira_config.save
+      flash[:error] = I18n.t('project_jira_config.validations.jira_project_key_uniqueness.message') unless @project_jira_config.save
+
       render 'jira/project_jira_configs/create'
     end
 
