@@ -1,5 +1,6 @@
 function buildOperationalCharts(company_id, projects_ids, period, target_name, startDate, endDate) {
     $("#general-loader").show();
+    $("#operational-charts-div").hide();
 
     jQuery.ajax({
         url: `/companies/${company_id}/build_operational_charts.js`,

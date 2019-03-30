@@ -12,7 +12,6 @@ function searchDemandsByFlowStatus(companyId, projectsIds, grouping, flowStatus,
     $("#general-loader").show();
 
     $(".form-control").prop('disabled', true);
-    $(".filter-checks").prop('disabled', true);
 
     jQuery.ajax({
         url: `/companies/${companyId}/demands/search_demands_by_flow_status.js`,

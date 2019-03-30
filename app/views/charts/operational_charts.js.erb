@@ -1,12 +1,15 @@
-var operationalCharts = $("#operational-charts-div");
+var operationalChartsDiv = $("#operational-charts-div");
 
-operationalCharts.html("<%= escape_javascript(render 'charts/operational_charts', target_name: @target_name, report_data: @report_data, company: @company, projects: [@project], start_date: @start_date, end_date: @end_date).html_safe %>");
+operationalChartsDiv.html("<%= escape_javascript(render 'charts/operational_charts', target_name: @target_name, report_data: @report_data, company: @company, projects: @projects, start_date: @start_date, end_date: @end_date).html_safe %>");
 
 $('#nav-item-charts').addClass('active');
 
-operationalCharts.show();
+$('#general-loader').hide();
+operationalChartsDiv.show();
 $('#operational-charts').show();
 
-buildOperationalHighcharts();
+<% if @report_data.present? %>
+  buildOperationalHighcharts();
+<% end %>
 
 enableTabs();

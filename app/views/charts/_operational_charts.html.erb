@@ -167,5 +167,5 @@
     </div>
   </div>
 <% else %>
-  <%= t('general.no_data', missing_data: t('general.data')) %>
+  <%= render 'layouts/no_data', missing_data: t('general.data') %>
 <% end %>
