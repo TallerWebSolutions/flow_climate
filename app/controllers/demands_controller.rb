@@ -172,14 +172,24 @@ class DemandsController < AuthenticatedController
       @confidence_95_leadtime = Stats::StatisticsService.instance.percentile(95, @demands.finished_with_leadtime.map(&:leadtime_in_days))
       @confidence_80_leadtime = Stats::StatisticsService.instance.percentile(80, @demands.finished_with_leadtime.map(&:leadtime_in_days))
       @confidence_65_leadtime = Stats::StatisticsService.instance.percentile(65, @demands.finished_with_leadtime.map(&:leadtime_in_days))
-      @total_queue_time = @demands.sum(&:total_queue_time)
-      @total_touch_time = @demands.sum(&:total_touch_time)
+      build_flow_informations
     else
       @confidence_95_leadtime = 0
       @confidence_80_leadtime = 0
       @confidence_65_leadtime = 0
       @total_queue_time = 0
       @total_touch_time = 0
+      @average_queue_time = 0
+      @average_touch_time = 0
+      @avg_work_hours_per_demand = 0
     end
+  end
+
+  def build_flow_informations
+    @total_queue_time = @demands.sum(&:total_queue_time)
+    @total_touch_time = @demands.sum(&:total_touch_time)
+    @average_queue_time = @total_queue_time / @demands.count
+    @average_touch_time = @total_touch_time / @demands.count
+    @avg_work_hours_per_demand = @demands.sum(&:total_effort) / @demands.count
   end
 end
