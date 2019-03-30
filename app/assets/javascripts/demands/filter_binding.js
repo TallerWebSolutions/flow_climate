@@ -2,10 +2,6 @@ function bindDemandFilterActions() {
     const companyId = $("#company_id").val();
     const projectsIds = $("#projects_ids").val();
 
-    $('.filter-checks').on('change', function(){
-        filterDemands(companyId, projectsIds)
-    });
-
     $('.filter-button').on('click', function() {
         filterDemands(companyId, projectsIds)
     });
