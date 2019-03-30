@@ -29,7 +29,7 @@ RSpec.describe DemandBlock, type: :model do
       end
       context 'when there is no unblock_time' do
         before { demand_block.update(block_time: Time.zone.now) }
-        it { expect(demand_block.reload.block_duration).to be_nil }
+        it { expect(demand_block.reload.block_duration).to eq nil }
       end
     end
   end
@@ -43,14 +43,14 @@ RSpec.describe DemandBlock, type: :model do
       it { expect(DemandBlock.for_date_interval(Time.zone.parse('2018-03-05 23:00'), Time.zone.parse('2018-03-06 13:00'))).to match_array [first_demand_block, second_demand_block] }
     end
     describe '.open' do
-      let!(:first_demand_block) { Fabricate :demand_block, block_time: Time.zone.parse('2018-03-05 23:00') }
-      let!(:second_demand_block) { Fabricate :demand_block, block_time: Time.zone.parse('2018-03-06 10:00') }
+      let!(:first_demand_block) { Fabricate :demand_block, block_time: Time.zone.parse('2018-03-05 23:00'), unblock_time: nil }
+      let!(:second_demand_block) { Fabricate :demand_block, block_time: Time.zone.parse('2018-03-06 10:00'), unblock_time: nil }
       let!(:third_demand_block) { Fabricate :demand_block, block_time: Time.zone.parse('2018-03-06 14:00'), unblock_time: Time.zone.parse('2018-03-06 15:00') }
 
       it { expect(DemandBlock.open).to match_array [first_demand_block, second_demand_block] }
     end
     describe '.closed' do
-      let!(:first_demand_block) { Fabricate :demand_block, block_time: Time.zone.parse('2018-03-05 23:00') }
+      let!(:first_demand_block) { Fabricate :demand_block, block_time: Time.zone.parse('2018-03-05 23:00'), unblock_time: nil }
       let!(:second_demand_block) { Fabricate :demand_block, block_time: Time.zone.parse('2018-03-06 10:00'), unblock_time: Time.zone.parse('2018-03-06 15:00') }
       let!(:third_demand_block) { Fabricate :demand_block, block_time: Time.zone.parse('2018-03-06 14:00'), unblock_time: Time.zone.parse('2018-03-06 15:00') }
 
