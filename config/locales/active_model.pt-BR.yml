@@ -373,7 +373,7 @@ pt-BR:
   project_jira_config:
     validations:
       jira_project_key_uniqueness:
-        message: "Deve have apenas uma chave de projeto no jira para cada domínio de conta e nome da fix version"
+        message: "Deve haver apenas uma chave de projeto no jira para cada domínio de conta e nome da fix version"
   user_plan:
     validations:
       user_plan_active: "You already have a plan to this period."
