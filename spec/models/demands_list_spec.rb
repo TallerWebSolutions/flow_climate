@@ -68,6 +68,14 @@ RSpec.describe DemandsList, type: :model do
       it { expect(DemandsList.grouped_by_customer[customer.name].map(&:id)).to match_array [first_demand.id, second_demand.id] }
       it { expect(DemandsList.grouped_by_customer[other_customer.name].map(&:id)).to match_array [third_demand.id, fourth_demand.id] }
     end
+
+    describe '.finished_with_leadtime' do
+      let!(:first_demand) { Fabricate :demand, project: project, end_date: Time.zone.now, leadtime: 2 }
+      let!(:second_demand) { Fabricate :demand, project: project, end_date: Time.zone.now, leadtime: 3 }
+      let!(:third_demand) { Fabricate :demand, project: project, commitment_date: nil, end_date: Time.zone.now }
+
+      it { expect(DemandsList.finished_with_leadtime.map(&:id)).to match_array [first_demand.id, second_demand.id] }
+    end
   end
 
   describe '#leadtime_in_days' do

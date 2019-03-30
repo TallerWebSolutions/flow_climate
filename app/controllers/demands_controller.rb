@@ -168,11 +168,18 @@ class DemandsController < AuthenticatedController
   end
 
   def assign_consolidations
-    @confidence_95_leadtime = Stats::StatisticsService.instance.percentile(95, @demands.map(&:leadtime_in_days))
-    @confidence_80_leadtime = Stats::StatisticsService.instance.percentile(80, @demands.map(&:leadtime_in_days))
-    @confidence_65_leadtime = Stats::StatisticsService.instance.percentile(65, @demands.map(&:leadtime_in_days))
-
-    @total_queue_time = @demands.sum(&:total_queue_time)
-    @total_touch_time = @demands.sum(&:total_touch_time)
+    if @demands.present?
+      @confidence_95_leadtime = Stats::StatisticsService.instance.percentile(95, @demands.finished_with_leadtime.map(&:leadtime_in_days))
+      @confidence_80_leadtime = Stats::StatisticsService.instance.percentile(80, @demands.finished_with_leadtime.map(&:leadtime_in_days))
+      @confidence_65_leadtime = Stats::StatisticsService.instance.percentile(65, @demands.finished_with_leadtime.map(&:leadtime_in_days))
+      @total_queue_time = @demands.sum(&:total_queue_time)
+      @total_touch_time = @demands.sum(&:total_touch_time)
+    else
+      @confidence_95_leadtime = 0
+      @confidence_80_leadtime = 0
+      @confidence_65_leadtime = 0
+      @total_queue_time = 0
+      @total_touch_time = 0
+    end
   end
 end

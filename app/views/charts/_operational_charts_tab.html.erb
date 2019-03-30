@@ -1,6 +1,6 @@
 <%= form_tag company_build_operational_charts_path(company, projects_ids: projects.map(&:id)), method: :get, remote: true do %>
   <%= hidden_field_tag :target_name, target_name %>
-  <%= hidden_field_tag :projects_ids, projects.map(&:id) %>
+  <%= hidden_field_tag :projects_ids, projects.map(&:id).join(',') %>
 
   <div class="row bottom-spaced-component">
     <div class="col-xs-3">

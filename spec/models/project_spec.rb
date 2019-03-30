@@ -346,14 +346,17 @@ RSpec.describe Project, type: :model do
       end
     end
     context 'and the start and finish dates are in the same day' do
+      before { travel_to Time.zone.local(2018, 3, 6, 10, 0, 0) }
+      after { travel_back }
+
       let(:project) { Fabricate :project, initial_scope: 30, start_date: Time.zone.today, end_date: Time.zone.today }
       context 'having demands' do
         let!(:opened_features) { Fabricate.times(10, :demand, project: project, demand_type: :feature, end_date: nil) }
 
-        it { expect(project.flow_pressure).to be_within(1).of(36) }
+        it { expect(project.flow_pressure).to be_within(0.1).of(25.2) }
       end
       context 'having no demands' do
-        it { expect(project.flow_pressure).to be_within(2).of(26) }
+        it { expect(project.flow_pressure).to be_within(0.1).of(18.9) }
       end
     end
   end

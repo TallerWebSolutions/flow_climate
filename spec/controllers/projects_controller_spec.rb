@@ -742,15 +742,12 @@ RSpec.describe ProjectsController, type: :controller do
     end
 
     describe 'GET #demands_blocks_csv' do
-      before { travel_to Time.zone.local(2018, 3, 6, 10, 0, 0) }
-      after { travel_back }
-
       let(:company) { Fabricate :company, users: [user] }
 
       let(:customer) { Fabricate :customer, company: company }
-      let(:project) { Fabricate :project, customer: customer }
+      let(:project) { Fabricate :project, customer: customer, start_date: 2.days.ago, end_date: Time.zone.today }
       let!(:demand) { Fabricate :demand, project: project, end_date: Time.zone.now }
-      let!(:demand_block) { Fabricate :demand_block, demand: demand }
+      let!(:demand_block) { Fabricate :demand_block, demand: demand, block_time: 1.day.ago, unblock_time: nil }
 
       context 'valid parameters' do
         it 'calls the to_csv and responds success' do
@@ -762,7 +759,7 @@ RSpec.describe ProjectsController, type: :controller do
           expect(csv.first[0].to_i).to eq demand_block.id
           expect(csv.first[1]).to eq demand_block.block_time&.iso8601
           expect(csv.first[2]).to eq demand_block.unblock_time&.iso8601
-          expect(csv.first[3]).to eq demand_block.block_duration
+          expect(csv.first[3].to_i).to eq 0
           expect(csv.first[4]).to eq demand.demand_id
         end
       end

@@ -24,7 +24,7 @@ RSpec.describe UserNotifierMailer, type: :mailer do
     let!(:third_demand) { Fabricate :demand }
     let!(:fourth_demand) { Fabricate :demand }
 
-    let(:red_project) { Fabricate :project, customer: customer, status: :maintenance, end_date: 3.days.from_now, name: 'maintenance_red' }
+    let!(:red_project) { Fabricate :project, customer: customer, status: :maintenance, end_date: 3.days.from_now, name: 'maintenance_red' }
     let!(:first_alert) { Fabricate :project_risk_alert, project: red_project, alert_color: :red, created_at: Time.zone.now }
     let!(:second_alert) { Fabricate :project_risk_alert, project: red_project, alert_color: :green, created_at: 1.hour.ago }
 

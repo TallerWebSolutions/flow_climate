@@ -47,6 +47,7 @@ class DemandsList < ApplicationRecord
   belongs_to :project
 
   scope :finished, -> { kept.where('demands_lists.end_date IS NOT NULL') }
+  scope :finished_with_leadtime, -> { kept.story.where('demands_lists.end_date IS NOT NULL AND leadtime IS NOT NULL') }
   scope :in_wip, -> { kept.where('demands_lists.commitment_date IS NOT NULL AND demands_lists.end_date IS NULL') }
   scope :not_started, -> { kept.where('demands_lists.commitment_date IS NULL AND demands_lists.end_date IS NULL') }
 
