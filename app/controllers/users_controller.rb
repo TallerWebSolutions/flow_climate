@@ -4,6 +4,8 @@ class UsersController < AuthenticatedController
   before_action :check_admin, only: :toggle_admin
   before_action :assign_user, only: %i[toggle_admin update]
 
+  def index; end
+
   def activate_email_notifications
     current_user.update(email_notifications: true)
     respond_to { |format| format.js { render file: 'users/reload_notifications.js.erb' } }

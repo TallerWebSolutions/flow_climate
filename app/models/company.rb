@@ -75,7 +75,7 @@ class Company < ApplicationRecord
   end
 
   def last_week_scope
-    customers.sum(&:last_week_scope)
+    customers.includes(:projects).sum(&:last_week_scope)
   end
 
   def avg_hours_per_demand

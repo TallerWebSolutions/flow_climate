@@ -12,7 +12,7 @@ class ProjectsController < AuthenticatedController
     @ordered_project_risk_alerts = @project.project_risk_alerts.order(created_at: :desc)
     @project_change_deadline_histories = @project.project_change_deadline_histories
     @project_stages = @project.stages.order(:order, :name)
-    @projects_to_copy_stages_from = (@company.projects - [@project]).sort_by(&:full_name)
+    @projects_to_copy_stages_from = (@company.projects.includes(:customer).includes(:product) - [@project]).sort_by(&:full_name)
     @demands_ids = DemandsRepository.instance.demands_to_projects([@project]).map(&:id)
 
     @start_date = @project.start_date
@@ -195,7 +195,7 @@ class ProjectsController < AuthenticatedController
   end
 
   def assign_project
-    @project = Project.find(params[:id])
+    @project = Project.includes(:team).includes(:product).includes(:customer).find(params[:id])
   end
 
   def add_status_filter(projects)

@@ -18,6 +18,8 @@ class PlansController < AuthenticatedController
     redirect_to root_path
   end
 
+  private
+
   def build_plan_to_user(plan, plan_value)
     @user_plan = UserPlan.create(plan: plan, user: current_user, plan_billing_period: params[:period], plan_value: plan_value, start_at: Time.zone.now, finish_at: plan_finish_date, active: false, paid: false)
     UserNotifierMailer.plan_requested(@user, @user_plan).deliver
