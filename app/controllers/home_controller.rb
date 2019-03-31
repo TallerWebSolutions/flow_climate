@@ -3,6 +3,8 @@
 class HomeController < AuthenticatedController
   before_action :authenticate_user!
 
+  def no_company; end
+
   def show
     if current_user.lite?
       redirect_to request_project_information_path

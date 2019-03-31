@@ -12,10 +12,10 @@ class CompaniesController < AuthenticatedController
   def show
     @financial_informations = @company.financial_informations.select(:id, :finances_date, :income_total, :expenses_total)
     @finances_hash_with_computed_informations = Highchart::FinancesChartsAdapter.new(@financial_informations).finances_hash_with_computed_informations
-    @teams = @company.teams.order(:name)
+    @teams = @company.teams.includes(:projects).order(:name)
 
-    @products_list = @company.products.order(name: :asc)
-    @customers_list = @company.customers.order(name: :asc)
+    @products_list = @company.products.includes(:projects).includes(:team).includes(:customer).order(name: :asc)
+    @customers_list = @company.customers.includes(:projects).order(name: :asc)
 
     assign_company_settings
   end
@@ -66,13 +66,13 @@ class CompaniesController < AuthenticatedController
   end
 
   def projects_tab
-    @company_projects = @company.projects.order(end_date: :desc)
+    @company_projects = @company.projects.includes(:team).includes(:product).includes(:customer).order(end_date: :desc)
     @projects_summary = ProjectsSummaryData.new(@company_projects)
     respond_to { |format| format.js { render file: 'companies/projects_tab.js.erb' } }
   end
 
   def strategic_chart_tab
-    @company_projects = @company.projects.order(end_date: :desc)
+    @company_projects = @company.projects.includes(:product).includes(:customer).order(end_date: :desc)
     @strategic_chart_data = Highchart::StrategicChartsAdapter.new(@company, @company_projects, @company.total_available_hours)
     respond_to { |format| format.js { render file: 'companies/strategic_chart_tab.js.erb' } }
   end
@@ -100,7 +100,7 @@ class CompaniesController < AuthenticatedController
   end
 
   def assign_company
-    @company = Company.friendly.find(params[:id]&.downcase)
+    @company = Company.friendly.find(params[:id])
     not_found unless current_user.companies.include?(@company)
   end
 

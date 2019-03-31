@@ -58,7 +58,7 @@ Rails.application.routes.draw do
       get :risks_tab
     end
 
-    resources :teams, only: %i[index show new create edit update] do
+    resources :teams, only: %i[show new create edit update] do
       resources :team_members, only: %i[new create edit update] do
         member do
           patch :activate
@@ -81,7 +81,7 @@ Rails.application.routes.draw do
     end
 
     resources :projects do
-      resources :demands, except: %i[show destroy] do
+      resources :demands, except: %i[show destroy index] do
         put :synchronize_jira, on: :member
 
         resources :demand_blocks, only: %i[edit update] do
@@ -121,7 +121,7 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :stages do
+    resources :stages, except: :index do
       member do
         patch 'associate_project/:project_id', action: :associate_project, as: 'associate_project'
         patch 'dissociate_project/:project_id', action: :dissociate_project, as: 'dissociate_project'

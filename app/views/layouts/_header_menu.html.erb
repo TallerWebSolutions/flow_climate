@@ -20,6 +20,11 @@
         <% else %>
           <li><%= link_to 'Ligar Notificações', activate_email_notifications_users_path, method: :patch, remote: true, class: 'nav-link dropdown-item' %></li>
         <% end %>
+        <% if @company.present? && @company.persisted? %>
+          <li class="divider"></li>
+          <li><%= link_to t('navbar.customers_list'), company_customers_path(@company), class: 'nav-link dropdown-item' %></li>
+          <li><%= link_to t('navbar.products_list'), company_products_path(@company), class: 'nav-link dropdown-item' %></li>
+        <% end %>
         <% if current_user.admin? || current_user.gold? %>
           <li class="divider"></li>
           <% if current_user.companies.present? %>

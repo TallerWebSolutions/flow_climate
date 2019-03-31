@@ -41,7 +41,7 @@ class ProjectRiskConfigsController < AuthenticatedController
   end
 
   def assign_project
-    @project = Project.find(params[:project_id])
+    @project = Project.includes(:team).find(params[:project_id])
   end
 
   def assign_project_risk_config
