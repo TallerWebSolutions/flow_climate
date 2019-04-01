@@ -5,7 +5,7 @@ class ReplenishingData
 
   def initialize(team)
     @team = team
-    @running_projects = @team.projects.running.sort_by(&:flow_pressure).reverse
+    @running_projects = @team.projects.includes(:product).includes(:customer).running.sort_by(&:flow_pressure).reverse
     @total_pressure = @running_projects.sum(&:flow_pressure)
 
     build_summary_infos
@@ -30,6 +30,7 @@ class ReplenishingData
 
   def build_project_hash(project)
     project_data_to_replenish = {}
+    project_data_to_replenish[:id] = project.id
     project_data_to_replenish[:name] = project.full_name
     project_data_to_replenish[:end_date] = project.end_date
     project_data_to_replenish[:weeks_to_end_date] = project.remaining_weeks
