@@ -47,9 +47,9 @@ RSpec.describe ReplenishingData, type: :data_objects do
         expect(project_data_to_replenish[0][:leadtime_80]).to be_within(0.1).of(79.56666)
         expect(project_data_to_replenish[0][:qty_selected_last_week]).to eq 0
         expect(project_data_to_replenish[0][:work_in_progress]).to eq 0
-        expect(project_data_to_replenish[0][:montecarlo_80_percent]).to be_within(30).of(118.0)
+        expect(project_data_to_replenish[0][:montecarlo_80_percent]).to be_within(20).of(125)
         expect(project_data_to_replenish[0][:throughput_last_week]).to eq 7
-        expect(project_data_to_replenish[0][:customer_happiness]).to be_within(0.005).of(0.008)
+        expect(project_data_to_replenish[0][:customer_happiness]).to be_within(0.005).of(0.007)
 
         expect(project_data_to_replenish[1][:id]).to eq second_project.id
         expect(project_data_to_replenish[1][:name]).to eq second_project.full_name
@@ -61,9 +61,9 @@ RSpec.describe ReplenishingData, type: :data_objects do
         expect(project_data_to_replenish[1][:leadtime_80]).to be_within(0.1).of(0.60000)
         expect(project_data_to_replenish[1][:qty_selected_last_week]).to eq 2
         expect(project_data_to_replenish[1][:work_in_progress]).to eq 3
-        expect(project_data_to_replenish[1][:montecarlo_80_percent]).to be_within(40).of(160.0)
+        expect(project_data_to_replenish[1][:montecarlo_80_percent]).to be_within(40).of(184)
         expect(project_data_to_replenish[1][:throughput_last_week]).to eq 2
-        expect(project_data_to_replenish[1][:customer_happiness]).to be_within(0.005).of(0.008)
+        expect(project_data_to_replenish[1][:customer_happiness]).to be_within(0.005).of(0.005)
 
         expect(project_data_to_replenish[2][:id]).to eq third_project.id
         expect(project_data_to_replenish[2][:name]).to eq third_project.full_name

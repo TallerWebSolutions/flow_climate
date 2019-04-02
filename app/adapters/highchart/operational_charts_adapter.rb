@@ -41,8 +41,8 @@ module Highchart
       @x_axis.each do |date|
         break unless add_data_to_chart?(date)
 
-        upstream_result_data << DemandsRepository.instance.delivered_until_date_to_projects_in_stream(@all_projects, 'upstream', date).count
-        downstream_result_data << DemandsRepository.instance.delivered_until_date_to_projects_in_stream(@all_projects, 'downstream', date).count
+        upstream_result_data << DemandsRepository.instance.throughput_to_projects_and_period(@all_projects, start_of_period_for_date(date), end_of_period_for_date(date)).finished_in_stream('upstream').count
+        downstream_result_data << DemandsRepository.instance.throughput_to_projects_and_period(@all_projects, start_of_period_for_date(date), end_of_period_for_date(date)).finished_in_stream('downstream').count
       end
 
       [{ name: I18n.t('projects.charts.throughput.stage_stream.upstream'), data: upstream_result_data }, { name: I18n.t('projects.charts.throughput.stage_stream.downstream'), data: downstream_result_data }]
@@ -243,7 +243,9 @@ module Highchart
     end
 
     def build_throughput_histogram
-      histogram_data = Stats::StatisticsService.instance.throughput_histogram_hash(ProjectsRepository.instance.throughput_per_week(@all_projects, @start_date).values)
+      throughput_to_projects_and_period = DemandsRepository.instance.throughput_to_projects_and_period(@all_projects, @start_date, @end_date).group('EXTRACT(WEEK FROM end_date)', 'EXTRACT(YEAR FROM end_date)').count
+      demand_throughput_info = DemandInfoDataBuilder.instance.build_data_from_hash_per_week(throughput_to_projects_and_period, @start_date, @end_date)
+      histogram_data = Stats::StatisticsService.instance.throughput_histogram_hash(demand_throughput_info.values)
       @throughput_bins = histogram_data.keys.map { |th| "#{th.round(2)} #{I18n.t('charts.demand.title')}" }
       @throughput_histogram_data = histogram_data.values
     end

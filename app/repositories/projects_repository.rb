@@ -42,14 +42,6 @@ class ProjectsRepository
     projects_with_query_and_order.order(end_date: :desc)
   end
 
-  def throughput_per_week(projects, start_date_limit, end_date_limit = Time.zone.today)
-    beginning_of_week = start_date_limit.beginning_of_week.to_date
-    end_of_week = end_date_limit.end_of_week.to_date
-
-    throughput_per_week_grouped = DemandsRepository.instance.throughput_to_projects_and_period(projects, beginning_of_week, end_of_week).group('EXTRACT(WEEK FROM end_date)', 'EXTRACT(YEAR FROM end_date)').count
-    extract_data_for_week(projects, throughput_per_week_grouped, beginning_of_week, end_of_week)
-  end
-
   def projects_ending_after(projects, limit_date)
     projects.where('end_date >= :limit_date', limit_date: limit_date)
   end
@@ -60,16 +52,6 @@ class ProjectsRepository
   end
 
   private
-
-  def extract_data_for_week(projects, leadtime_per_week_grouped, start_date_limit, end_date_limit)
-    return {} if projects.blank?
-
-    data_grouped_hash = {}
-    (start_date_limit..end_date_limit).each do |date|
-      data_grouped_hash[date.beginning_of_week] = leadtime_per_week_grouped[[date.to_date.cweek.to_f, date.to_date.cwyear.to_f]] || 0
-    end
-    data_grouped_hash
-  end
 
   def where_by_start_end_dates(projects, required_date)
     projects.where('(start_date <= :end_date AND end_date >= :start_date) OR (start_date >= :start_date AND end_date <= :end_date) OR (start_date <= :end_date AND start_date >= :start_date)', start_date: required_date.beginning_of_month, end_date: required_date.end_of_month)

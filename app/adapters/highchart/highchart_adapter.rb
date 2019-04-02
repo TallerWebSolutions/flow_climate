@@ -36,5 +36,19 @@ module Highchart
       @x_axis = TimeService.instance.weeks_between_of(@start_date, @end_date) if @chart_period_interval == 'week'
       @x_axis = TimeService.instance.months_between_of(@start_date, @end_date) if @chart_period_interval == 'month'
     end
+
+    def start_of_period_for_date(date)
+      return date.beginning_of_day if @chart_period_interval == 'day'
+      return date.beginning_of_week if @chart_period_interval == 'week'
+
+      date.beginning_of_month
+    end
+
+    def end_of_period_for_date(date)
+      return date.end_of_day if @chart_period_interval == 'day'
+      return date.end_of_week if @chart_period_interval == 'week'
+
+      date.end_of_month
+    end
   end
 end

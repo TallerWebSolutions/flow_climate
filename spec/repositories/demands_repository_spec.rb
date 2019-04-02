@@ -31,7 +31,7 @@ RSpec.describe DemandsRepository, type: :repository do
     it { expect(DemandsRepository.instance.known_scope_to_date([first_project, second_project], 2.days.ago)).to eq 65 }
   end
 
-  describe '#demands_to_projects' do
+  describe '#demands_created_before_date_to_projects' do
     let!(:first_demand) { Fabricate :demand, project: first_project, demand_id: 'first_demand', created_date: 4.days.ago, end_date: 3.days.ago, discarded_at: nil }
     let!(:second_demand) { Fabricate :demand, project: first_project, demand_id: 'second_demand', created_date: 3.days.ago, end_date: 2.days.ago, discarded_at: nil }
     let!(:third_demand) { Fabricate :demand, project: first_project, demand_id: 'third_demand', created_date: 2.days.ago, end_date: nil, discarded_at: nil }
@@ -42,7 +42,7 @@ RSpec.describe DemandsRepository, type: :repository do
 
     let!(:first_epic) { Fabricate :demand, project: first_project, artifact_type: :epic }
 
-    subject(:query_return) { DemandsRepository.instance.demands_to_projects([first_project]) }
+    subject(:query_return) { DemandsRepository.instance.demands_created_before_date_to_projects([first_project]) }
 
     it { expect(query_return.map(&:id)).to match_array [first_demand.id, second_demand.id, third_demand.id] }
   end
