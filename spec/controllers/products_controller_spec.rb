@@ -220,7 +220,7 @@ RSpec.describe ProductsController, type: :controller do
             expect(assigns(:product)).to eq empty_product
             expect(assigns(:report_data)).to be_nil
             expect(assigns(:product_projects)).to eq []
-          end
+          endreplenishing_data_spec.rb:50
         end
       end
       context 'passing invalid parameters' do
