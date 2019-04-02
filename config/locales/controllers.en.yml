@@ -720,3 +720,5 @@ en:
       title: "New Impact"
     destroy:
       tooltip: "Delete Impact"
+    create:
+      success: "Flow impact created."

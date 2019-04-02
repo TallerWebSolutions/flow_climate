@@ -714,3 +714,5 @@ pt-BR:
       title: "Novo Impacto"
     destroy:
       tooltip: "Excluir Impacto"
+    create:
+      success: "Impacto de fluxo criado."
