@@ -513,6 +513,7 @@ en:
     products_list: "Products"
     statistics: ""
     demand_blocks: "Demands Blocks"
+    flow_impacts: "Flow Impacts"
   charts:
     xlabel:
       months: "Months"
@@ -714,3 +715,8 @@ en:
         data_title: "Throughput"
         chart_title: "Throughput by Project for %{target_name}"
         xtitle: "Projects"
+  flow_impacts:
+    new:
+      title: "New Impact"
+    destroy:
+      tooltip: "Delete Impact"

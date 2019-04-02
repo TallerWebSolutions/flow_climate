@@ -542,6 +542,7 @@ pt-BR:
     products_list: "Produtos"
     statistics: "Estatísticas"
     demand_blocks: "Bloqueios"
+    flow_impacts: "Impactos de Fluxo"
   charts:
     xlabel:
       months: "Meses"
@@ -708,3 +709,8 @@ pt-BR:
         data_title: "Throughput"
         chart_title: "Throughput por Projeto para %{target_name}"
         xtitle: "Projetos"
+  flow_impacts:
+    new:
+      title: "Novo Impacto"
+    destroy:
+      tooltip: "Excluir Impacto"

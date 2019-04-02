@@ -1,0 +1,26 @@
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th><%= FlowImpact.human_attribute_name :impact_type %></th>
+      <th><%= FlowImpact.human_attribute_name :start_date %></th>
+      <th><%= FlowImpact.human_attribute_name :end_date %></th>
+      <th><%= FlowImpact.human_attribute_name :impact_description %></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% flow_impacts_list.each do |flow_impact| %>
+      <tr>
+        <td><%= I18n.t("activerecord.attributes.flow_impact.enums.impact_type.#{flow_impact.impact_type}") %></td>
+        <td><%= l(flow_impact.start_date) %></td>
+        <td><%= l(flow_impact.end_date) if flow_impact.end_date.present? %></td>
+        <td><%= flow_impact.impact_description %></td>
+        <td>
+          <%= link_to company_project_flow_impact_path(company, project, flow_impact), method: :delete, data: { confirm: I18n.t('general.destroy.confirm') }, remote: true do %>
+            <i class="fa fa-times" title='<%= t('flow_impacts.destroy.tooltip') %>'></i>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
