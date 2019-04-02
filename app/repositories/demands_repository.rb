@@ -4,19 +4,19 @@ class DemandsRepository
   include Singleton
 
   def known_scope_to_date(projects, analysed_date)
-    demands_to_projects(projects, analysed_date).count + projects.sum(&:initial_scope)
+    demands_created_before_date_to_projects(projects, analysed_date).count + projects.sum(&:initial_scope)
   end
 
   def committed_demands_by_project_and_week(projects, week, year)
-    Demand.kept.story.where(project_id: projects.map(&:id)).where('EXTRACT(WEEK FROM commitment_date) = :week AND EXTRACT(YEAR FROM commitment_date) = :year', week: week, year: year)
-  end
-
-  def throughput_to_projects_and_period(projects, start_period, end_period)
-    Demand.kept.story.where(project_id: projects.map(&:id)).where('end_date BETWEEN :start_period AND :end_period', start_period: start_period, end_period: end_period)
+    demands_stories_to_projects(projects).where('EXTRACT(WEEK FROM commitment_date) = :week AND EXTRACT(YEAR FROM commitment_date) = :year', week: week, year: year)
   end
 
   def demands_delivered_grouped_by_projects_to_period(projects, start_period, end_period)
     throughput_to_projects_and_period(projects, start_period, end_period).group_by(&:project_full_name)
+  end
+
+  def throughput_to_projects_and_period(projects, start_period, end_period)
+    demands_stories_to_projects(projects).where('end_date BETWEEN :start_period AND :end_period', start_period: start_period, end_period: end_period)
   end
 
   def effort_upstream_grouped_by_month(projects, limit_date)
@@ -45,10 +45,8 @@ class DemandsRepository
     effort_downstream_hash
   end
 
-  def demands_to_projects(projects, analysed_date = Time.zone.now)
-    DemandsList.story
-               .where(project_id: projects.map(&:id))
-               .where('created_date <= :analysed_date AND (discarded_at IS NULL OR discarded_at > :limit_date)', analysed_date: analysed_date.end_of_day, limit_date: analysed_date.utc)
+  def demands_created_before_date_to_projects(projects, analysed_date = Time.zone.now)
+    demands_list_to_projects(projects).where('created_date <= :analysed_date AND (discarded_at IS NULL OR discarded_at > :limit_date)', analysed_date: analysed_date.end_of_day, limit_date: analysed_date.utc)
   end
 
   def bugs_opened_until_limit_date(projects, date = Time.zone.today)
@@ -145,6 +143,14 @@ class DemandsRepository
   end
 
   private
+
+  def demands_stories_to_projects(projects)
+    Demand.kept.story.where(project_id: projects.map(&:id))
+  end
+
+  def demands_list_to_projects(projects)
+    DemandsList.story.where(project_id: projects.map(&:id))
+  end
 
   def build_count_grouped_per_period_query(demands, select_string, base_date_field)
     Demand.kept.story.select(select_string).where(id: demands.map(&:id)).where("#{base_date_field} IS NOT NULL").order(Arel.sql(select_string)).group(select_string)

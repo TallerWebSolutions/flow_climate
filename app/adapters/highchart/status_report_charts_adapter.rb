@@ -7,7 +7,9 @@ module Highchart
     def initialize(projects, start_date, end_date, chart_period_interval)
       super(projects, start_date, end_date, chart_period_interval)
 
-      montecarlo_durations = Stats::StatisticsService.instance.run_montecarlo(@all_projects.active.sum(&:remaining_backlog), gather_throughput_data, 500)
+      return unless @all_projects.count.positive?
+
+      montecarlo_durations = Stats::StatisticsService.instance.run_montecarlo(@all_projects.active.sum(&:remaining_backlog), gather_throughput_data.values, 500)
       build_montecarlo_perecentage_confidences(montecarlo_durations)
       build_dates_to_montecarlo_duration
 
@@ -32,8 +34,8 @@ module Highchart
     end
 
     def deadline
-      min_date = @all_projects.minimum(:start_date)
-      max_date = @all_projects.maximum(:end_date)
+      min_date = project_start_date
+      max_date = project_end_date
       return [] if min_date.blank?
 
       passed_time = (Time.zone.today - min_date).to_i + 1
@@ -44,7 +46,7 @@ module Highchart
     def deadline_vs_montecarlo_durations
       return [] if @all_projects.blank?
 
-      max_date = @all_projects.maximum(:end_date)
+      max_date = project_end_date
       remaining_weeks = ((max_date - Time.zone.today).to_i / 7) + 1
 
       [
@@ -150,19 +152,16 @@ module Highchart
     def gather_throughput_data
       return [] if @all_projects.blank?
 
-      start_date_limit = @all_projects.minimum(:start_date)
-      end_date_limit = @all_projects.maximum(:end_date)
-
-      product_start_date = @all_projects.first.product.projects.minimum(:start_date)
-      product_end_date = @all_projects.first.product.projects.maximum(:end_date)
-
-      build_throughput_array(start_date_limit, end_date_limit, product_start_date, product_end_date).last(15)
+      throughput_grouped_per_week_hash = DemandsRepository.instance.throughput_to_projects_and_period(@all_projects, project_start_date, project_end_date).group('EXTRACT(WEEK FROM end_date)', 'EXTRACT(YEAR FROM end_date)').count
+      DemandInfoDataBuilder.instance.build_data_from_hash_per_week(throughput_grouped_per_week_hash, project_start_date, project_end_date)
     end
 
-    def build_throughput_array(start_date_limit, end_date_limit, product_start_date, product_end_date)
-      throughput_data_array = ProjectsRepository.instance.throughput_per_week(@all_projects, start_date_limit, end_date_limit).values
-      throughput_data_array = ProjectsRepository.instance.throughput_per_week(@all_projects.first.product.projects, product_start_date, product_end_date).values if throughput_data_array.size < 15 && @all_projects.count == 1
-      throughput_data_array
+    def project_start_date
+      @project_start_date ||= @all_projects.minimum(:start_date)
+    end
+
+    def project_end_date
+      @project_end_date ||= @all_projects.maximum(:end_date)
     end
 
     def build_hours_scope_data_per_week

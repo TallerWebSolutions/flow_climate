@@ -62,7 +62,7 @@ class DemandsController < AuthenticatedController
   end
 
   def demands_in_projects
-    filtered_demands = DemandsRepository.instance.demands_to_projects(@projects)
+    filtered_demands = DemandsRepository.instance.demands_created_before_date_to_projects(@projects)
     @demands = build_limit_date_query(filtered_demands, 'week')
     @demands_count_per_week = DemandService.instance.quantitative_consolidation_per_week_to_projects(@projects)
     assign_consolidations
@@ -86,8 +86,8 @@ class DemandsController < AuthenticatedController
   private
 
   def query_demands(period)
-    demands_to_projects = DemandsRepository.instance.demands_to_projects(@projects)
-    demands = build_limit_date_query(demands_to_projects, period)
+    demands_created_before_date_to_projects = DemandsRepository.instance.demands_created_before_date_to_projects(@projects)
+    demands = build_limit_date_query(demands_created_before_date_to_projects, period)
     demands = filter_text(demands)
     demands = build_flow_status_query(demands, params[:flow_status])
     demands = buld_demand_type_query(demands, params[:demand_type])

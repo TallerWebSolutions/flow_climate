@@ -227,56 +227,10 @@ RSpec.describe TeamsController, type: :controller do
         let!(:second_project) { Fabricate :project, customer: customer, team: team, name: 'second_project', status: :executing, start_date: 2.months.ago, end_date: 3.days.from_now }
         let!(:third_project) { Fabricate :project, customer: customer, team: team, name: 'third_project', status: :executing, start_date: 1.month.ago, end_date: 1.week.from_now }
 
-        let!(:first_demand) { Fabricate :demand, project: first_project, commitment_date: 3.months.ago, end_date: 1.week.ago }
-        let!(:second_demand) { Fabricate :demand, project: first_project, commitment_date: 2.months.ago, end_date: 4.days.ago }
-        let!(:third_demand) { Fabricate :demand, project: second_project, end_date: 1.day.ago }
-        let!(:fourth_demand) { Fabricate :demand, project: third_project, end_date: Time.zone.today }
-
-        let!(:first_project_closed_demands) { Fabricate.times(6, :demand, project: first_project, commitment_date: nil, end_date: 1.week.ago) }
-        let!(:second_project_closed_demands) { Fabricate.times(2, :demand, project: second_project, commitment_date: 1.week.ago, end_date: 1.week.ago) }
-
-        let!(:first_project_opened_demands) { Fabricate.times(7, :demand, project: first_project, commitment_date: nil, end_date: nil) }
-        let!(:second_project_opened_demands) { Fabricate.times(3, :demand, project: second_project, end_date: nil) }
-
         it 'returns the data and redirects' do
           get :replenishing_input, params: { company_id: company, id: team }, xhr: true
 
-          replenishing_data = assigns(:replenishing_data).project_data_to_replenish
-
-          expect(replenishing_data[0][:name]).to eq first_project.full_name
-          expect(replenishing_data[0][:end_date]).to eq first_project.end_date
-          expect(replenishing_data[0][:weeks_to_end_date]).to eq first_project.remaining_weeks
-          expect(replenishing_data[0][:remaining_backlog]).to eq first_project.remaining_backlog
-          expect(replenishing_data[0][:relative_flow_pressure]).to be_within(0.9).of(68.6)
-          expect(replenishing_data[0][:qty_using_pressure]).to be_within(0.9).of(1.3)
-          expect(replenishing_data[0][:leadtime_80]).to be_within(0.00001).of(77.44166)
-          expect(replenishing_data[0][:work_in_progress]).to eq 0
-          expect(replenishing_data[0][:montecarlo_80_percent]).to be_within(15).of(118.0)
-          expect(replenishing_data[0][:throughput_last_week]).to eq 7
-          expect(replenishing_data[0][:customer_happiness]).to be_within(0.005).of(0.008)
-
-          expect(replenishing_data[1][:name]).to eq second_project.full_name
-          expect(replenishing_data[1][:end_date]).to eq second_project.end_date
-          expect(replenishing_data[1][:weeks_to_end_date]).to eq second_project.remaining_weeks
-          expect(replenishing_data[1][:remaining_backlog]).to eq second_project.remaining_backlog
-          expect(replenishing_data[1][:relative_flow_pressure]).to be_within(0.9).of(21.1)
-          expect(replenishing_data[1][:qty_using_pressure]).to be_within(0.9).of(0.33587)
-          expect(replenishing_data[1][:leadtime_80]).to eq 0
-          expect(replenishing_data[1][:work_in_progress]).to eq 3
-          expect(replenishing_data[1][:montecarlo_80_percent]).to be_within(40).of(160.0)
-          expect(replenishing_data[1][:throughput_last_week]).to eq 2
-          expect(replenishing_data[1][:customer_happiness]).to be_within(0.005).of(0.008)
-
-          expect(replenishing_data[2][:name]).to eq third_project.full_name
-          expect(replenishing_data[2][:end_date]).to eq third_project.end_date
-          expect(replenishing_data[2][:weeks_to_end_date]).to eq third_project.remaining_weeks
-          expect(replenishing_data[2][:remaining_backlog]).to eq third_project.remaining_backlog
-          expect(replenishing_data[2][:relative_flow_pressure]).to be_within(0.9).of(10.2)
-          expect(replenishing_data[2][:qty_using_pressure]).to be_within(0.9).of(0.20)
-          expect(replenishing_data[2][:leadtime_80]).to be_within(0.001).of(0.58333)
-          expect(replenishing_data[2][:work_in_progress]).to eq 0
-          expect(replenishing_data[2][:montecarlo_80_percent]).to eq 0
-          expect(replenishing_data[2][:throughput_last_week]).to eq 0
+          expect(assigns(:replenishing_data)).to be_a ReplenishingData
         end
       end
 
