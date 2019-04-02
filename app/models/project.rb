@@ -52,6 +52,7 @@ class Project < ApplicationRecord
   has_many :stage_project_configs, dependent: :destroy
   has_many :demand_blocks, through: :demands
   has_many :stages, through: :stage_project_configs
+  has_many :flow_impacts, dependent: :destroy
   has_one :project_jira_config, class_name: 'Jira::ProjectJiraConfig', dependent: :destroy, autosave: true, inverse_of: :project
 
   has_many :user_project_roles, dependent: :destroy

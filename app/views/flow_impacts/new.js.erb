@@ -1,0 +1,6 @@
+var flow_impact_div = $('#flow-impacts-tab');
+
+flow_impact_div.html("<%= escape_javascript(render('flow_impacts/new', company: @company, project: @project, flow_impact: @flow_impact)) %>");
+
+$('#general-loader').hide();
+flow_impact_div.show();

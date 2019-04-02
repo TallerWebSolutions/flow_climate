@@ -8,6 +8,20 @@ SET check_function_bodies = false;
 SET client_min_messages = warning;
 SET row_security = off;
 
+--
+-- Name: pg_stat_statements; Type: EXTENSION; Schema: -; Owner: -
+--
+
+CREATE EXTENSION IF NOT EXISTS pg_stat_statements WITH SCHEMA public;
+
+
+--
+-- Name: EXTENSION pg_stat_statements; Type: COMMENT; Schema: -; Owner: -
+--
+
+COMMENT ON EXTENSION pg_stat_statements IS 'track execution statistics of all SQL statements executed';
+
+
 SET default_tablespace = '';
 
 SET default_with_oids = false;
@@ -365,6 +379,42 @@ CREATE SEQUENCE public.financial_informations_id_seq
 --
 
 ALTER SEQUENCE public.financial_informations_id_seq OWNED BY public.financial_informations.id;
+
+
+--
+-- Name: flow_impacts; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.flow_impacts (
+    id bigint NOT NULL,
+    project_id integer NOT NULL,
+    demand_id integer,
+    impact_type integer NOT NULL,
+    impact_description character varying NOT NULL,
+    start_date timestamp without time zone NOT NULL,
+    end_date timestamp without time zone,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: flow_impacts_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.flow_impacts_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: flow_impacts_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.flow_impacts_id_seq OWNED BY public.flow_impacts.id;
 
 
 --
@@ -1125,6 +1175,13 @@ ALTER TABLE ONLY public.financial_informations ALTER COLUMN id SET DEFAULT nextv
 
 
 --
+-- Name: flow_impacts id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.flow_impacts ALTER COLUMN id SET DEFAULT nextval('public.flow_impacts_id_seq'::regclass);
+
+
+--
 -- Name: friendly_id_slugs id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1327,6 +1384,14 @@ ALTER TABLE ONLY public.demands
 
 ALTER TABLE ONLY public.financial_informations
     ADD CONSTRAINT financial_informations_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: flow_impacts flow_impacts_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.flow_impacts
+    ADD CONSTRAINT flow_impacts_pkey PRIMARY KEY (id);
 
 
 --
@@ -1599,6 +1664,27 @@ CREATE UNIQUE INDEX index_demands_on_slug ON public.demands USING btree (slug);
 --
 
 CREATE INDEX index_financial_informations_on_company_id ON public.financial_informations USING btree (company_id);
+
+
+--
+-- Name: index_flow_impacts_on_demand_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_flow_impacts_on_demand_id ON public.flow_impacts USING btree (demand_id);
+
+
+--
+-- Name: index_flow_impacts_on_impact_type; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_flow_impacts_on_impact_type ON public.flow_impacts USING btree (impact_type);
+
+
+--
+-- Name: index_flow_impacts_on_project_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_flow_impacts_on_project_id ON public.flow_impacts USING btree (project_id);
 
 
 --
@@ -2177,6 +2263,14 @@ ALTER TABLE ONLY public.demand_transitions
 
 
 --
+-- Name: flow_impacts fk_rails_cda32ac094; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.flow_impacts
+    ADD CONSTRAINT fk_rails_cda32ac094 FOREIGN KEY (project_id) REFERENCES public.projects(id);
+
+
+--
 -- Name: teams fk_rails_e080df8a94; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2206,6 +2300,14 @@ ALTER TABLE ONLY public.projects
 
 ALTER TABLE ONLY public.customers
     ADD CONSTRAINT fk_rails_ef51a916ef FOREIGN KEY (company_id) REFERENCES public.companies(id);
+
+
+--
+-- Name: flow_impacts fk_rails_f6118b7a74; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.flow_impacts
+    ADD CONSTRAINT fk_rails_f6118b7a74 FOREIGN KEY (demand_id) REFERENCES public.demands(id);
 
 
 --
@@ -2315,6 +2417,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190215153227'),
 ('20190216181219'),
 ('20190318221048'),
-('20190323215103');
+('20190323215103'),
+('20190402135917');
 
 

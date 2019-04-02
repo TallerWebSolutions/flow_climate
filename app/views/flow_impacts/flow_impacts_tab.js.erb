@@ -1,0 +1,7 @@
+var flow_impact_div = $('#flow-impacts-tab');
+
+flow_impact_div.html("<%= escape_javascript(render('flow_impacts/flow_impacts_tab', company: @company, project: @project, flow_impacts_list: @flow_impacts)) %>");
+
+$('#general-loader').hide();
+flow_impact_div.show();
+enableTabs();

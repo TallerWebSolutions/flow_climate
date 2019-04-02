@@ -40,6 +40,10 @@ $('.nav-item').on('click', function(event){
             $('#demands-blocks-tab').hide();
             getProjectBlocks(companyId, projectId, startDate, endDate);
 
+        }else if ($(this).attr('id') === 'nav-item-flow-impacts') {
+            $('#flow-impacts-tab').hide();
+            getFlowImpacts(companyId, projectId);
+
         } else if ($(this).attr('id') === 'nav-item-statistics') {
             getProjectStatistics(companyId, projectId, startDate, endDate, period);
 

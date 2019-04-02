@@ -1,7 +1,7 @@
-$('#customer-select').on('change', function(){
+$('#flow_impact_project_id').on('change', function(){
     $.ajax({
         method: 'GET',
-        url: `/companies/${$('#product_company_id').val()}/products/products_for_customer/${$('#customer-select').val()}`,
+        url: `/companies/${$('#company_id').val()}/flow_impacts/demands_to_project/${$('#flow_impact_project_id').val()}`,
         dataType : 'script',
         success: function(){
             console.log("success");

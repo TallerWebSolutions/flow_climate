@@ -101,6 +101,10 @@ Rails.application.routes.draw do
 
       resources :demand_blocks, only: :index
 
+      resources :flow_impacts, only: %i[destroy new create] do
+        get :flow_impacts_tab, on: :collection
+      end
+
       scope :jira do
         resources :project_jira_configs, only: %i[new create destroy], module: 'jira'
       end
@@ -141,12 +145,20 @@ Rails.application.routes.draw do
     end
 
     controller :charts do
-      get 'build_operational_charts', action: :build_operational_charts # team product customer project
-      get 'build_strategic_charts', action: :build_strategic_charts # team company
-      get 'build_status_report_charts', action: :build_status_report_charts # team product customer project
+      get 'build_operational_charts', action: :build_operational_charts
+      get 'build_strategic_charts', action: :build_strategic_charts
+      get 'build_status_report_charts', action: :build_status_report_charts
     end
 
     resources :demands, only: %i[show destroy]
+
+    resources :flow_impacts, only: [] do
+      collection do
+        get :new_direct_link
+        post :create_direct_link
+        get 'demands_to_project/(:project_id)', action: :demands_to_project
+      end
+    end
   end
 
   root 'home#show'
