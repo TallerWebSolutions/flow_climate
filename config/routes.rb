@@ -100,6 +100,7 @@ Rails.application.routes.draw do
       end
 
       resources :demand_blocks, only: :index
+      resources :flow_impacts, only: :destroy
 
       scope :jira do
         resources :project_jira_configs, only: %i[new create destroy], module: 'jira'
@@ -147,6 +148,8 @@ Rails.application.routes.draw do
     end
 
     resources :demands, only: %i[show destroy]
+
+    resources :flow_impacts, only: %i[new create]
   end
 
   root 'home#show'

@@ -116,6 +116,9 @@ pt-BR:
       demand_data_processment:
           one: Processamento de Demandas
           other: Processamentos de Demandas
+      flow_impact:
+          one: Impacto no Fluxo
+          other: Impactos no Fluxo
       jira/project_jira_config:
         one: Configuração do Jira para o Projeto
         other: Configurações do Jira para o Projeto
@@ -334,6 +337,18 @@ pt-BR:
         created_at: Criado em
         project_key: Chave do Projeto
         user: Usuário
+      flow_impact:
+        project: Projeto
+        impact_type: Tipo do Impacto
+        impact_description: Descrição do Impacto
+        demand: Demanda
+        start_date: Iniciou em
+        end_date: Finalizou em
+        enums:
+          impact_type:
+            other_team_dependency: Dependência de outro time
+            api_not_ready: API não está pronta
+            customer_not_available: Cliente indisponível
       jira/project_jira_config:
         team: Time
         jira_account_domain: Domínio da Conta no Jira
