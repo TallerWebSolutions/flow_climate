@@ -93,6 +93,9 @@ RSpec.describe CompaniesController, type: :controller do
           let!(:second_stage) { Fabricate :stage, company: company, name: 'zzz', order: 1 }
           let!(:third_stage) { Fabricate :stage, company: company, name: 'aaa', order: 1 }
 
+          let!(:first_account) { Fabricate :jira_account, company: company, created_at: 1.day.ago }
+          let!(:second_account) { Fabricate :jira_account, company: company, created_at: 2.days.ago }
+
           let(:first_risk_config) { Fabricate :project_risk_config, project: first_project, risk_type: :no_money_to_deadline }
           let(:second_risk_config) { Fabricate :project_risk_config, project: first_project, risk_type: :backlog_growth_rate }
           let!(:first_alert) { Fabricate :project_risk_alert, project_risk_config: first_risk_config, project: first_project, alert_color: :green, created_at: Time.zone.now }
@@ -105,6 +108,7 @@ RSpec.describe CompaniesController, type: :controller do
             expect(assigns(:financial_informations)).to match_array [other_finances, finances]
             expect(assigns(:teams)).to eq [team]
             expect(assigns(:stages_list)).to eq [third_stage, second_stage, first_stage]
+            expect(assigns(:jira_accounts_list)).to eq [second_account, first_account]
             expect(assigns(:company_settings)).to be_a_new CompanySettings
           end
         end

@@ -1,0 +1,24 @@
+<table class="table">
+  <thead>
+    <th><%= Jira::JiraAccount.human_attribute_name :base_uri %></th>
+    <th><%= Jira::JiraAccount.human_attribute_name :username %></th>
+    <th><%= Jira::JiraAccount.human_attribute_name :customer_domain %></th>
+    <th><%= Jira::JiraAccount.human_attribute_name :created_at %></th>
+    <th></th>
+  </thead>
+  <tbody>
+    <% jira_accounts_list.each do |account| %>
+      <tr>
+        <td><%= account.base_uri %></td>
+        <td><%= account.username %></td>
+        <td><%= account.customer_domain %></td>
+        <td><%= l(account.created_at, format: :short) %></td>
+        <td>
+          <%= link_to company_jira_account_path(account.company, account), method: :delete, data: { confirm: I18n.t('general.destroy.confirm') }, remote: true do %>
+            <i class="fa fa-times" title='<%= t('jira_accounts.destroy.tooltip') %>'></i>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

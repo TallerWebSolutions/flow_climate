@@ -1,1 +1,4 @@
-$('#settings').html("<%= escape_javascript(render 'company_settings').html_safe %>");
+$('#settings').html("<%= escape_javascript(render 'companies/company_settings').html_safe %>");
+
+document.getElementsByClassName("company-config-tab")[0].className += " active";
+document.getElementById("company-settings").style.display = "block";

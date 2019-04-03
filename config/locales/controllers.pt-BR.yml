@@ -543,6 +543,8 @@ pt-BR:
     statistics: "Estatísticas"
     demand_blocks: "Bloqueios"
     flow_impacts: "Impactos de Fluxo"
+    jira: "Jira"
+    stages: "Etapas"
   charts:
     xlabel:
       months: "Meses"
@@ -716,3 +718,11 @@ pt-BR:
       tooltip: "Excluir Impacto"
     create:
       success: "Impacto de fluxo criado."
+  jira_accounts:
+    new:
+      title: "Nova Conta do Jira"
+    create:
+      success: "Conta do Jira criada"
+      failed: "A conta do jira não foi salva"
+    destroy:
+      tooltip: "Excluir Conta do Jira"

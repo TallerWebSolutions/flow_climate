@@ -498,7 +498,7 @@ en:
     details: "Details"
     charts: "Project Charts"
     risk_alerts: "Project Risk Alerts"
-    settings: "Project Settings"
+    settings: "Settings"
     projects_list: "Projects"
     members_table: "Team Members"
     strategic: "Strategic Informations"
@@ -514,6 +514,8 @@ en:
     statistics: ""
     demand_blocks: "Demands Blocks"
     flow_impacts: "Flow Impacts"
+    jira: "Jira"
+    stages: "Stages"
   charts:
     xlabel:
       months: "Months"
@@ -722,3 +724,11 @@ en:
       tooltip: "Delete Impact"
     create:
       success: "Flow impact created."
+  jira_accounts:
+    new:
+      title: "New Jira Account"
+    create:
+      success: "Jira Account created"
+      failed: "The jira account was not saved"
+    destroy:
+      tooltip: "Delete Jira Account"

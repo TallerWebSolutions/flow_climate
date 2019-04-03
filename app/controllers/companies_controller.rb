@@ -18,6 +18,7 @@ class CompaniesController < AuthenticatedController
     @customers_list = @company.customers.includes(:projects).order(name: :asc)
 
     assign_company_settings
+    assign_jira_accounts_list
   end
 
   def new
@@ -62,6 +63,7 @@ class CompaniesController < AuthenticatedController
     @company_settings = @company.company_settings
     @company_settings = CompanySettings.new(company: @company) if @company_settings.blank?
     @company_settings.update(company_settings_params)
+    assign_jira_accounts_list
     respond_to { |format| format.js { render file: 'companies/update_settings.js.erb' } }
   end
 
@@ -89,6 +91,10 @@ class CompaniesController < AuthenticatedController
 
   def assign_company_settings
     @company_settings = @company.company_settings || CompanySettings.new(company: @company)
+  end
+
+  def assign_jira_accounts_list
+    @jira_accounts_list = @company.jira_accounts.order(:created_at)
   end
 
   def assign_stages_list

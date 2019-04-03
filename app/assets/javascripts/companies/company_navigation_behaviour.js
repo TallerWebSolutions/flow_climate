@@ -3,6 +3,7 @@ hideAllComponents();
 function activateTab() {
     $('.nav-item').on('click', function(){
         hideAllComponents();
+        $(this).addClass('active');
 
         const companyId = $('#company_id').val();
 
@@ -22,7 +23,10 @@ function activateTab() {
             $("#general-loader").hide();
         }
 
-        $(this).addClass('active');
+        if ($(this).attr('id') === 'nav-item-settings') {
+            document.getElementsByClassName("company-config-tab")[0].className += " active";
+            document.getElementById("company-settings").style.display = "block";
+        }
     });
 }
 
