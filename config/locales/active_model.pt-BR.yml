@@ -122,6 +122,9 @@ pt-BR:
       jira/project_jira_config:
         one: Configuração do Jira para o Projeto
         other: Configurações do Jira para o Projeto
+      jira/jira_account:
+        one: Conta do Jira
+        other: Contas do Jira
     attributes:
       user:
         first_name: Nome
@@ -362,6 +365,7 @@ pt-BR:
         company: Empresa
         jira_custom_field_mappings: Meapeamento de Campos Customizados
         customer_domain: Domínio do Usuário
+        created_at: Criado em
   product:
     name:
       uniqueness: "Não deve repetir nome de produto para o mesmo cliente."

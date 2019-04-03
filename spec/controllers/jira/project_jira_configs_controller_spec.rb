@@ -10,6 +10,10 @@ RSpec.describe Jira::ProjectJiraConfigsController, type: :controller do
       before { post :create, params: { company_id: 'bar', project_id: 'foo' } }
       it { expect(response).to redirect_to new_user_session_path }
     end
+    describe 'DELETE #destroy' do
+      before { delete :destroy, params: { company_id: 'bar', project_id: 'foo', id: 'xpto' } }
+      it { expect(response).to redirect_to new_user_session_path }
+    end
   end
 
   context 'authenticated' do

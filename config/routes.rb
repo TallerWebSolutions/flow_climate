@@ -159,6 +159,10 @@ Rails.application.routes.draw do
         get 'demands_to_project/(:project_id)', action: :demands_to_project
       end
     end
+
+    scope :jira do
+      resources :jira_accounts, only: %i[new create destroy], module: 'jira'
+    end
   end
 
   root 'home#show'
