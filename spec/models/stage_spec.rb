@@ -11,6 +11,7 @@ RSpec.describe Stage, type: :model do
     it { is_expected.to have_many(:stage_project_configs) }
     it { is_expected.to have_many(:projects).through(:stage_project_configs) }
     it { is_expected.to have_many(:demand_transitions).dependent(:restrict_with_error) }
+    it { is_expected.to have_many(:demand_blocks).dependent(:restrict_with_error) }
   end
 
   context 'validations' do

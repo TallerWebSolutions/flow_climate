@@ -168,7 +168,8 @@ CREATE TABLE public.demand_blocks (
     updated_at timestamp without time zone NOT NULL,
     active boolean DEFAULT true NOT NULL,
     block_type integer DEFAULT 0 NOT NULL,
-    discarded_at timestamp without time zone
+    discarded_at timestamp without time zone,
+    stage_id integer
 );
 
 
@@ -2271,6 +2272,14 @@ ALTER TABLE ONLY public.flow_impacts
 
 
 --
+-- Name: demand_blocks fk_rails_d25cb2ae7e; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.demand_blocks
+    ADD CONSTRAINT fk_rails_d25cb2ae7e FOREIGN KEY (stage_id) REFERENCES public.stages(id);
+
+
+--
 -- Name: teams fk_rails_e080df8a94; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2418,6 +2427,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190216181219'),
 ('20190318221048'),
 ('20190323215103'),
-('20190402135917');
+('20190402135917'),
+('20190403153943');
 
 

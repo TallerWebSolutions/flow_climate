@@ -37,6 +37,7 @@ class Stage < ApplicationRecord
   has_many :stage_project_configs, dependent: :destroy
   has_many :projects, through: :stage_project_configs
   has_many :demand_transitions, dependent: :restrict_with_error
+  has_many :demand_blocks, dependent: :restrict_with_error
 
   validates :integration_id, :name, :stage_type, :stage_stream, presence: true
 
