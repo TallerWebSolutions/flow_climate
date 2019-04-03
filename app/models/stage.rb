@@ -16,6 +16,7 @@
 #  queue               :boolean          default(FALSE)
 #  stage_stream        :integer          not null
 #  stage_type          :integer          not null
+#  team_id             :integer
 #  updated_at          :datetime         not null
 #
 # Indexes
@@ -25,6 +26,7 @@
 #
 # Foreign Keys
 #
+#  fk_rails_c4e2c44248  (team_id => teams.id)
 #  fk_rails_ffd4cca0d4  (company_id => companies.id)
 #
 
@@ -33,6 +35,7 @@ class Stage < ApplicationRecord
   enum stage_stream: { upstream: 0, downstream: 1, out_stream: 2 }
 
   belongs_to :company
+  belongs_to :team
 
   has_many :stage_project_configs, dependent: :destroy
   has_many :projects, through: :stage_project_configs

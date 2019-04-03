@@ -22,4 +22,16 @@ class DemandBlocksRepository
                .where('demand_blocks.unblock_time <= :end_date', end_date: end_date)
                .count
   end
+
+  def blocks_duration_per_stage(team, start_date, end_date)
+    DemandBlock.closed
+               .active
+               .joins(demand: :stages)
+               .select('stages.name AS grouped_stage_name, stages.order AS grouped_stage_order, SUM(EXTRACT(EPOCH FROM (demand_blocks.unblock_time - demand_blocks.block_time))) AS time_in_blocked')
+               .where(stages: { id: team.stages.map(&:id) })
+               .where('demand_blocks.block_time >= :start_date AND demand_blocks.block_time <= :end_date', start_date: start_date.beginning_of_day, end_date: end_date.end_of_day)
+               .group('stages.name, stages.order')
+               .order('stages.order, stages.name')
+               .map { |group_sum| [group_sum.grouped_stage_name, group_sum.grouped_stage_order, group_sum.time_in_blocked] }
+  end
 end

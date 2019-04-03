@@ -94,4 +94,55 @@ RSpec.describe DemandBlocksRepository, type: :repository do
       it { expect(DemandBlocksRepository.instance.accumulated_blocks_to_date([first_project, second_project], second_project.end_date)).to eq 0 }
     end
   end
+
+  describe '#blocks_duration_per_stage' do
+    let(:company) { Fabricate :company }
+
+    let(:team) { Fabricate :team, company: company }
+
+    let!(:first_project) { Fabricate :project, status: :maintenance, start_date: 3.days.ago, end_date: 2.days.ago }
+    let!(:second_project) { Fabricate :project, status: :executing, start_date: 3.days.ago, end_date: Time.zone.today }
+
+    let(:first_stage) { Fabricate :stage, company: company, team: team, order: 0, projects: [first_project, second_project] }
+    let(:second_stage) { Fabricate :stage, company: company, team: team, order: 1, projects: [first_project, second_project] }
+
+    context 'having data' do
+      let!(:first_demand) { Fabricate :demand, project: first_project }
+      let!(:second_demand) { Fabricate :demand, project: first_project }
+      let!(:third_demand) { Fabricate :demand, project: second_project }
+      let!(:fourth_demand) { Fabricate :demand, project: first_project }
+
+      let!(:fifth_demand) { Fabricate :demand }
+
+      let!(:first_transition) { Fabricate :demand_transition, stage: first_stage, demand: first_demand, last_time_in: 1.month.ago, last_time_out: 2.weeks.ago }
+      let!(:second_transition) { Fabricate :demand_transition, stage: first_stage, demand: second_demand, last_time_in: 1.month.ago, last_time_out: 3.weeks.ago }
+
+      let!(:third_transition) { Fabricate :demand_transition, stage: second_stage, demand: first_demand, last_time_in: Time.zone.today }
+      let!(:fourth_transition) { Fabricate :demand_transition, stage: second_stage, demand: second_demand, last_time_in: Time.zone.today }
+
+      let!(:fifth_transition) { Fabricate :demand_transition, stage: second_stage, demand: third_demand, last_time_in: 2.months.ago, last_time_out: 5.weeks.ago }
+
+      let!(:first_block) { Fabricate :demand_block, demand: first_demand, block_time: 1.hour.ago, unblock_time: Time.zone.today, active: true }
+      let!(:second_block) { Fabricate :demand_block, demand: first_demand, block_time: 2.days.ago, unblock_time: 30.hours.ago }
+      let!(:third_block) { Fabricate :demand_block, demand: second_demand, block_time: 2.days.ago, unblock_time: 1.day.ago }
+      let!(:fourth_block) { Fabricate :demand_block, demand: first_demand, block_time: 2.days.ago, unblock_time: Time.zone.yesterday }
+      let!(:fifth_block) { Fabricate :demand_block, demand: third_demand, block_time: 5.days.ago, unblock_time: 3.days.ago }
+      let!(:sixth_block) { Fabricate :demand_block, demand: fourth_demand, block_time: 2.days.ago, unblock_time: Time.zone.today }
+
+      it 'returns the grouped data' do
+        blocks_grouped_data = DemandBlocksRepository.instance.blocks_duration_per_stage(team, 6.days.ago, Time.zone.now)
+        expect(blocks_grouped_data[0][0]).to eq first_stage.name
+        expect(blocks_grouped_data[0][1]).to eq 0
+        expect(blocks_grouped_data[0][2] / 1.hour).to be_within(1.2).of(37.9)
+
+        expect(blocks_grouped_data[1][0]).to eq second_stage.name
+        expect(blocks_grouped_data[1][1]).to eq 1
+        expect(blocks_grouped_data[1][2] / 1.hour).to be_within(1.2).of(85.8)
+      end
+    end
+
+    context 'having no data' do
+      it { expect(DemandBlocksRepository.instance.blocks_duration_per_stage(team, 6.days.ago, Time.zone.now)).to eq [] }
+    end
+  end
 end
