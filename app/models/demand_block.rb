@@ -14,6 +14,7 @@
 #  demand_id          :integer          not null, indexed
 #  discarded_at       :datetime
 #  id                 :bigint(8)        not null, primary key
+#  stage_id           :integer
 #  unblock_time       :datetime
 #  unblocker_username :string
 #  updated_at         :datetime         not null
@@ -25,6 +26,7 @@
 # Foreign Keys
 #
 #  fk_rails_0c8fa8d3a7  (demand_id => demands.id)
+#  fk_rails_d25cb2ae7e  (stage_id => stages.id)
 #
 
 class DemandBlock < ApplicationRecord
@@ -33,6 +35,7 @@ class DemandBlock < ApplicationRecord
   enum block_type: { coding_needed: 0, specification_needed: 1, waiting_external_supplier: 2, customer_low_urgency: 3, integration_needed: 4, customer_unavailable: 5 }
 
   belongs_to :demand
+  belongs_to :stage
 
   validates :demand, :demand_id, :demand_block_id, :blocker_username, :block_time, :block_type, presence: true
 
@@ -79,5 +82,6 @@ class DemandBlock < ApplicationRecord
 
   def update_computed_fields!
     self.block_duration = TimeService.instance.compute_working_hours_for_dates(block_time, unblock_time) if unblock_time.present?
+    self.stage = demand.current_stage
   end
 end

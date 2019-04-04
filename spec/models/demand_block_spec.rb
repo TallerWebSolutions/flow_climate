@@ -7,6 +7,7 @@ RSpec.describe DemandBlock, type: :model do
 
   context 'associations' do
     it { is_expected.to belong_to(:demand) }
+    it { is_expected.to belong_to(:stage) }
   end
 
   context 'validations' do
@@ -19,10 +20,14 @@ RSpec.describe DemandBlock, type: :model do
   end
 
   context 'callbacks' do
-    describe '#before_update' do
+    describe '#before_save' do
       before { travel_to Time.zone.local(2018, 5, 18, 10, 0, 0) }
       after { travel_back }
-      let(:demand_block) { Fabricate :demand_block, block_time: Time.zone.yesterday }
+
+      let(:stage) { Fabricate :stage }
+      let(:demand) { Fabricate :demand }
+      let(:demand_block) { Fabricate :demand_block, demand: demand, block_time: Time.zone.yesterday }
+
       context 'when there is unblock_time' do
         before { demand_block.update(unblock_time: Time.zone.now) }
         it { expect(demand_block.reload.block_duration).to eq 12 }
@@ -30,6 +35,14 @@ RSpec.describe DemandBlock, type: :model do
       context 'when there is no unblock_time' do
         before { demand_block.update(block_time: Time.zone.now) }
         it { expect(demand_block.reload.block_duration).to eq nil }
+      end
+      context 'when there is a demand current stage' do
+        before do
+          expect(demand).to(receive(:current_stage).twice.and_return(stage))
+          demand_block.update(block_time: Time.zone.now)
+        end
+        it { expect(demand_block.reload.block_duration).to eq nil }
+        it { expect(demand_block.reload.stage).to eq stage }
       end
     end
   end

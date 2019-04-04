@@ -168,7 +168,8 @@ CREATE TABLE public.demand_blocks (
     updated_at timestamp without time zone NOT NULL,
     active boolean DEFAULT true NOT NULL,
     block_type integer DEFAULT 0 NOT NULL,
-    discarded_at timestamp without time zone
+    discarded_at timestamp without time zone,
+    stage_id integer
 );
 
 
@@ -905,7 +906,8 @@ CREATE TABLE public.stages (
     updated_at timestamp without time zone NOT NULL,
     company_id integer NOT NULL,
     "order" integer DEFAULT 0 NOT NULL,
-    integration_pipe_id character varying
+    integration_pipe_id character varying,
+    team_id integer
 );
 
 
@@ -2255,6 +2257,14 @@ ALTER TABLE ONLY public.project_risk_alerts
 
 
 --
+-- Name: stages fk_rails_c4e2c44248; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.stages
+    ADD CONSTRAINT fk_rails_c4e2c44248 FOREIGN KEY (team_id) REFERENCES public.teams(id);
+
+
+--
 -- Name: demand_transitions fk_rails_c63024fc81; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2268,6 +2278,14 @@ ALTER TABLE ONLY public.demand_transitions
 
 ALTER TABLE ONLY public.flow_impacts
     ADD CONSTRAINT fk_rails_cda32ac094 FOREIGN KEY (project_id) REFERENCES public.projects(id);
+
+
+--
+-- Name: demand_blocks fk_rails_d25cb2ae7e; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.demand_blocks
+    ADD CONSTRAINT fk_rails_d25cb2ae7e FOREIGN KEY (stage_id) REFERENCES public.stages(id);
 
 
 --
@@ -2418,6 +2436,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190216181219'),
 ('20190318221048'),
 ('20190323215103'),
-('20190402135917');
+('20190402135917'),
+('20190403153943'),
+('20190403162125');
 
 
