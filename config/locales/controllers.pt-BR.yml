@@ -634,6 +634,11 @@ pt-BR:
       title: "Bloqueios de Demanda"
     edit:
       title: "Editar Bloqueio"
+    charts:
+      hours_per_stage:
+        title: "Horas Bloqueadas por Etapa para %{target_name}"
+        ylabel: "Horas"
+        legend: "Horas Bloqueadas"
   demand_transitions:
     total_time_in_transition: "Tempo total na transição"
     working_time_in_transition: "Tempo útil na transição"

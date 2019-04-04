@@ -34,4 +34,9 @@ function buildOperationalHighcharts() {
 
     const hoursConsumedColumnDiv = $('#hours-consumed-column');
     buildColumnChart(hoursConsumedColumnDiv);
+
+    const hoursBlockedPerStageDiv = $('#hours-blocked-per-stage');
+    if (hoursBlockedPerStageDiv.length !== 0) {
+        buildColumnChart(hoursBlockedPerStageDiv);
+    }
 }

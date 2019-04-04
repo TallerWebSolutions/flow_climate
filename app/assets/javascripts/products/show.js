@@ -1,9 +1,6 @@
 hideAllComponents();
 $('#stamps').show();
 $('#nav-item-stamps').addClass('active');
-buildOperationalHighcharts();
-buildStatusReportCurrentCharts();
-buildStatusReportProjectionCharts();
 
 $('#nav-item-stamps').on('click', function(){
     hideAllComponents();
@@ -15,18 +12,6 @@ $('#nav-item-list').on('click', function(){
     hideAllComponents();
     $('#project-list').show();
     $('#nav-item-list').addClass('active');
-});
-
-$('#nav-item-statusreport').on('click', function(){
-    hideAllComponents();
-    $('#project-status-report').show();
-    $('#nav-item-statusreport').addClass('active');
-});
-
-$('#nav-item-charts').on('click', function(){
-    hideAllComponents();
-    $('#operational-charts').show();
-    $('#nav-item-charts').addClass('active');
 });
 
 function hideAllComponents() {

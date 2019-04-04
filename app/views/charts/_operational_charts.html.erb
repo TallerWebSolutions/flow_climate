@@ -140,6 +140,22 @@
   </div>
 
   <div class="row bottom-spaced-component">
+    <% if report_data.hours_blocked_per_stage[:x_axis].present? %>
+      <div class="col-xs-6">
+        <div id="hours-blocked-per-stage"
+             class="flow-chart"
+             data-xcategories='<%= report_data.hours_blocked_per_stage[:x_axis] %>'
+             data-title='<%= t('demand_blocks.charts.hours_per_stage.title', target_name: target_name) %>'
+             data-ytitle='<%= t('demand_blocks.charts.hours_per_stage.ylabel') %>'
+             data-suffix='<%= t('demand_blocks.charts.hours_per_stage.ylabel') %>'
+             data-series='<%= [{ name: I18n.t('demand_blocks.charts.hours_per_stage.legend'), data: report_data.hours_blocked_per_stage[:data] }].to_json %>'
+             data-decimals='0'>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="row bottom-spaced-component">
     <div class="col-xs-6">
       <div id="leadtime-histogram"
            class="flow-chart"
@@ -166,6 +182,7 @@
       </div>
     </div>
   </div>
+
 <% else %>
   <%= render 'layouts/no_data', missing_data: t('general.data') %>
 <% end %>

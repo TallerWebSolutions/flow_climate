@@ -605,6 +605,11 @@ en:
       title: "Demand Blocks"
     edit:
       title: "Edit Block"
+    charts:
+      hours_per_stage:
+        title: "Hours Blocked per Stage for %{target_name}"
+        ylabel: "Hours"
+        legend: "Hours Blocked"
   demand_transitions:
     total_time_in_transition: "Total time in transition"
     working_time_in_transition: "Working time in transition"

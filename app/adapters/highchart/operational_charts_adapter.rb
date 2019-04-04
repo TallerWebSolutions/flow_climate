@@ -68,6 +68,12 @@ module Highchart
       hours_per_month_data_hash
     end
 
+    def hours_blocked_per_stage
+      grouped_hours_blocked_per_stage = DemandBlocksRepository.instance.blocks_duration_per_stage(@all_projects, @start_date, @end_date)
+      grouped_hours_blocked_per_stage_hash = DemandBlockDataBuilder.instance.build_block_per_stage(grouped_hours_blocked_per_stage)
+      { x_axis: grouped_hours_blocked_per_stage_hash.keys, data: grouped_hours_blocked_per_stage_hash.values }
+    end
+
     private
 
     def compute_hours_per_demand_to_date(date)
