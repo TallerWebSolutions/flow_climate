@@ -9,8 +9,6 @@ const teamId = $("#team_id").val();
 const projects_ids = $("#projects_ids").val();
 const target_name = $("#target_name").val();
 
-console.log(projects_ids);
-
 $('.nav-item').on('click', function(event){
     hideAllComponents();
     const disabled = $(this).attr('disabled');

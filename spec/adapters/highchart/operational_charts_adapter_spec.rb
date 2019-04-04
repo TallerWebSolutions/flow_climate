@@ -48,6 +48,13 @@ RSpec.describe Highchart::OperationalChartsAdapter, type: :data_object do
     let!(:seventh_transition) { Fabricate :demand_transition, stage: queue_ongoing_stage, demand: sixth_demand, last_time_in: Time.zone.iso8601('2018-03-25T17:09:58-03:00'), last_time_out: Time.zone.iso8601('2018-04-04T17:09:58-03:00') }
     let!(:eigth_transition) { Fabricate :demand_transition, stage: touch_ongoing_stage, demand: sixth_demand, last_time_in: Time.zone.iso8601('2018-03-30T17:09:58-03:00'), last_time_out: Time.zone.iso8601('2018-04-04T17:09:58-03:00') }
 
+    let!(:first_block) { Fabricate :demand_block, demand: first_demand, block_time: Time.zone.iso8601('2018-02-27T17:30:58-03:00'), unblock_time: Time.zone.iso8601('2018-02-28T17:09:58-03:00'), active: true }
+    let!(:second_block) { Fabricate :demand_block, demand: first_demand, block_time: 2.days.ago, unblock_time: 30.hours.ago }
+    let!(:third_block) { Fabricate :demand_block, demand: second_demand, block_time: 2.days.ago, unblock_time: 1.day.ago }
+    let!(:fourth_block) { Fabricate :demand_block, demand: first_demand, block_time: 2.days.ago, unblock_time: Time.zone.yesterday }
+    let!(:fifth_block) { Fabricate :demand_block, demand: third_demand, block_time: 5.days.ago, unblock_time: 3.days.ago }
+    let!(:sixth_block) { Fabricate :demand_block, demand: fourth_demand, block_time: 2.days.ago, unblock_time: Time.zone.today }
+
     describe '.initialize' do
       before { travel_to Date.new(2018, 11, 19) }
       after { travel_back }
@@ -166,6 +173,12 @@ RSpec.describe Highchart::OperationalChartsAdapter, type: :data_object do
     describe '#hours_per_demand' do
       subject(:report_data) { Highchart::OperationalChartsAdapter.new(Project.all, Project.all.map(&:start_date).min, Project.all.map(&:end_date).max, 'week') }
       it { expect(report_data.hours_per_demand).to eq [0.0, 19.8, 19.8, 13.2, 7.92, 7.92, 7.92, 7.92, 7.92, 7.92, 54.84, 54.84] }
+    end
+
+    describe '#hours_blocked_per_stage' do
+      subject(:report_data) { Highchart::OperationalChartsAdapter.new(Project.all, Time.zone.iso8601('2018-02-27T17:30:58-03:00').to_date, 1.day.from_now.to_date, 'week') }
+      it { expect(report_data.hours_blocked_per_stage[:x_axis].count).to be_positive }
+      it { expect(report_data.hours_blocked_per_stage[:data].count).to be_positive }
     end
   end
 end
