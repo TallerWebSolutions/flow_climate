@@ -37,7 +37,7 @@
   </div>
   <div class="col-xs-4">
     <%= label_tag t('demands.index.grouping_to_charts') %>
-    <%= select_tag :period, grouping_period_to_charts_options(:week), class: 'form-control', id: 'demands-table-grouping-period', selected: params[:period] %>
+    <%= select_tag :period, grouping_period_to_charts_options('week'), class: 'form-control', id: 'demands-table-grouping-period', selected: params[:period] %>
   </div>
   <div class="col-xs-4">
     <%= label_tag t('general.search_text') %>

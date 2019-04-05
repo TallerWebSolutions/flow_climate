@@ -66,10 +66,7 @@ Rails.application.routes.draw do
         end
       end
 
-      member do
-        get :replenishing_input
-        get :statistics_tab
-      end
+      get :replenishing_input, on: :member
     end
 
     resources :financial_informations, only: %i[new create edit update destroy]
@@ -119,7 +116,6 @@ Rails.application.routes.draw do
         patch :finish_project
         get :statistics
         patch :copy_stages_from
-        get :statistics_tab
         get :demands_blocks_tab
         get :demands_blocks_csv
       end
@@ -148,6 +144,7 @@ Rails.application.routes.draw do
       get 'build_operational_charts', action: :build_operational_charts
       get 'build_strategic_charts', action: :build_strategic_charts
       get 'build_status_report_charts', action: :build_status_report_charts
+      get 'statistics_charts', action: :statistics_charts
     end
 
     resources :demands, only: %i[show destroy]

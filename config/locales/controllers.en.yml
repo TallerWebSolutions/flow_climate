@@ -59,12 +59,6 @@ en:
           last_quarter: "Last quarter"
           all_period: "All Period"
           last_week: "Last Week"
-      grouping_period:
-        option:
-          day: "By Day"
-          week: "By Week"
-          month: "By Month"
-          year: "By Year"
     total: "Total"
     days_text: "%{days} day(s)"
     search_text: "Search in product or project name or demand title or demand id"
@@ -737,3 +731,6 @@ en:
       failed: "The jira account was not saved"
     destroy:
       tooltip: "Delete Jira Account"
+  filters:
+    options:
+      project_status: "Project Status"

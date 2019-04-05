@@ -82,7 +82,15 @@ RSpec.describe Stats::StatisticsService, type: :service do
   end
 
   describe '#compute_percentage_variation' do
-    it { expect(Stats::StatisticsService.instance.compute_percentage_variation(10, 30)).to eq 2.0 }
+    context 'not blank values' do
+      it { expect(Stats::StatisticsService.instance.compute_percentage_variation(10, 30)).to eq 2.0 }
+    end
+    context 'initial blank' do
+      it { expect(Stats::StatisticsService.instance.compute_percentage_variation(nil, 30)).to eq 0 }
+    end
+    context 'final blank' do
+      it { expect(Stats::StatisticsService.instance.compute_percentage_variation(10, nil)).to eq 0 }
+    end
   end
 
   describe '#standard_deviation' do

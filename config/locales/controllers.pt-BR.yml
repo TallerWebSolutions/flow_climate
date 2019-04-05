@@ -59,12 +59,6 @@ pt-BR:
           last_quarter: "Último Trimestre"
           all_period: "Todo o Período"
           last_week: "Última Semana"
-      grouping_period:
-        option:
-          day: "Por Dia"
-          week: "Por Semana"
-          month: "Por Mês"
-          year: "Por Ano"
     total: "Total"
     days_text: "%{days} dia(s)"
     leadtime:
@@ -731,3 +725,6 @@ pt-BR:
       failed: "A conta do jira não foi salva"
     destroy:
       tooltip: "Excluir Conta do Jira"
+  filters:
+    options:
+      project_status: "Status do Projeto"

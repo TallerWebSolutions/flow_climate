@@ -1,0 +1,23 @@
+<%= render 'charts/charts_stats_filter', start_date: start_date, end_date: end_date %>
+
+<hr>
+
+<div id="stats-charts-body">
+  <% if project_statistics_data.present? && portfolio_statistics_data.present? %>
+    <%= render 'charts/chart_stats_body',
+               x_axis: x_axis,
+               block_data: project_statistics_data.block_data,
+               block_period_variation: project_statistics_data.block_period_variation,
+               leadtime_period_variation: project_statistics_data.leadtime_period_variation,
+               leadtime_data: project_statistics_data.leadtime_data,
+               scope_data: project_statistics_data.scope_data,
+               scope_period_variation: project_statistics_data.scope_period_variation,
+               block_by_project_data: portfolio_statistics_data.block_by_project_data,
+               block_by_project_variation: portfolio_statistics_data.block_by_project_variation,
+               block_by_project_x_axis: portfolio_statistics_data.block_by_project_x_axis,
+               aging_by_project_data: portfolio_statistics_data.aging_by_project_data,
+               aging_by_project_variation: portfolio_statistics_data.aging_by_project_variation,
+               aging_by_project_x_axis: portfolio_statistics_data.aging_by_project_x_axis
+    %>
+  <% end %>
+</div>

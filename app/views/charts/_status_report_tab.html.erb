@@ -16,7 +16,7 @@
     <div class="col-xs-3">
       <div class="form-group">
         <%= label_tag t('charts.period.label') %>
-        <%= select_tag :period, options_for_select([[I18n.t('general.monthly'), 'month'], [I18n.t('general.weekly'), 'week'], [I18n.t('general.daily'), 'day']], params['period'] || 'week'), class: 'form-control filter-checks' %>
+        <%= select_tag :period, grouping_period_to_charts_options(params['period']), class: 'form-control filter-checks' %>
       </div>
     </div>
   </div>

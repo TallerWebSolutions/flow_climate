@@ -24,7 +24,7 @@
     <%= link_to t('navbar.risks'), '#', id: 'nav-item-risks', class: 'nav-item', data: { container: '#risks' } %>
     <%= link_to t('navbar.status_report'), '#', id: 'nav-item-statusreport', class: 'nav-item', data: { container: '#project-status-report' } %>
     <%= link_to t('navbar.charts'), '#', id: 'nav-item-charts', class: 'nav-item', data: { container: '#operational-charts' } %>
-    <%= link_to t('navbar.statistics'), '#', id: 'nav-item-statistics', class: 'nav-item', data: { container: '#team-statistics' } %>
+    <%= link_to t('navbar.statistics'), '#', id: 'nav-item-statistics', class: 'nav-item', data: { container: '#statistics-charts' } %>
   </div>
 </div>
 
@@ -74,8 +74,8 @@
   <%= render 'charts/operational_charts_tab', target_name: @team.name, report_data: @report_data, company: @company, projects: @team_projects, start_date: @start_date, end_date: @end_date %>
 </div>
 
-<div id="team-statistics" class="tab-container">
-  <%= render 'teams/team_statistics', x_axis: @x_axis, scope_data: @scope_data, scope_period_variation: @scope_period_variation, leadtime_period_variation: @leadtime_period_variation, leadtime_data: @leadtime_data, block_data: @block_data, block_period_variation: @block_period_variation, block_by_project_data: @block_by_project_data, block_by_project_variation: @block_by_project_variation, block_by_project_x_axis: @block_by_project_x_axis, aging_by_project_data: @aging_by_project_data, aging_by_project_variation: @aging_by_project_data, aging_by_project_x_axis: @aging_by_project_x_axis %>
+<div id="statistics-charts" class="tab-container">
+
 </div>
 
 <% content_for :javascript do %>

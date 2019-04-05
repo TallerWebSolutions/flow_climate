@@ -4,23 +4,38 @@ class ChartsController < AuthenticatedController
   before_action :assign_company
   before_action :assign_projects
   before_action :assign_target_name
+  before_action :assign_filter_parameters_to_charts
+  before_action :assign_leadtime_confidence
 
   def build_operational_charts
     @report_data = {}
-    @report_data = Highchart::OperationalChartsAdapter.new(@projects, start_date_to_charts, end_date_to_charts, period_to_chart) if @projects.present?
-    respond_to { |format| format.js { render file: 'charts/operational_charts.js.erb' } }
+    @report_data = Highchart::OperationalChartsAdapter.new(@projects, @start_date, @end_date, @period) if @projects.present?
+    respond_to { |format| format.js { render file: 'charts/operational_charts' } }
   end
 
   def build_strategic_charts
     @strategic_chart_data = Highchart::StrategicChartsAdapter.new(@company, @projects, @available_hours_in_month)
-    respond_to { |format| format.js { render file: 'charts/strategic_charts.js.erb' } }
+    respond_to { |format| format.js { render file: 'charts/strategic_charts' } }
   end
 
   def build_status_report_charts
     @status_report_data = {}
-    @status_report_data = Highchart::StatusReportChartsAdapter.new(@projects, start_date_to_charts, end_date_to_charts, period_to_chart) if @projects.present?
-    @portfolio_data = Highchart::PortfolioChartsAdapter.new(@projects, start_date_to_charts, end_date_to_charts) if @projects.present?
-    respond_to { |format| format.js { render file: 'charts/status_report_charts.js.erb' } }
+    @status_report_data = Highchart::StatusReportChartsAdapter.new(@projects, @start_date, @end_date, @period) if @projects.present?
+    @portfolio_data = Highchart::PortfolioChartsAdapter.new(@projects, @start_date, @end_date, '') if @projects.present?
+    respond_to { |format| format.js { render file: 'charts/status_report_charts' } }
+  end
+
+  def statistics_charts
+    if @projects.present?
+      project_statistics_chart_adapter = Highchart::ProjectStatisticsChartsAdapter.new(@projects, @start_date, @end_date, @period, params[:project_status])
+      portfolio_statistics_chart_adapter = Highchart::PortfolioChartsAdapter.new(@projects, @start_date, @end_date, params[:project_status])
+
+      @x_axis = project_statistics_chart_adapter.x_axis
+      @project_statistics_data = ProjectStatisticsData.new(project_statistics_chart_adapter, @leadtime_confidence)
+      @portfolio_statistics_data = PortfolioStatisticsData.new(portfolio_statistics_chart_adapter)
+    end
+
+    respond_to { |format| format.js { render file: 'charts/statistics_tab' } }
   end
 
   private
@@ -37,15 +52,14 @@ class ChartsController < AuthenticatedController
     @target_name = params[:target_name]
   end
 
-  def start_date_to_charts
-    params[:start_date]&.to_date || @projects.map(&:start_date).min
+  def assign_filter_parameters_to_charts
+    @start_date = params[:start_date]&.to_date || [@projects.map(&:start_date).min, 3.months.ago.to_date].compact.max
+    @end_date = params[:end_date]&.to_date || @projects.map(&:end_date).max
+    @period = params[:period] || 'month'
   end
 
-  def end_date_to_charts
-    params[:end_date]&.to_date || @projects.map(&:end_date).max
-  end
-
-  def period_to_chart
-    params[:period] || :week
+  def assign_leadtime_confidence
+    @leadtime_confidence = params[:leadtime_confidence].to_i
+    @leadtime_confidence = 80 unless @leadtime_confidence.positive?
   end
 end

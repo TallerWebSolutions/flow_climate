@@ -22,6 +22,6 @@ RSpec.describe FilterHelper, type: :helper do
   end
 
   describe '#grouping_period_to_charts_options' do
-    it { expect(helper.grouping_period_to_charts_options).to eq options_for_select([[I18n.t('general.filter.grouping_period.option.day'), 'day'], [I18n.t('general.filter.grouping_period.option.week'), 'week'], [I18n.t('general.filter.grouping_period.option.month'), 'month'], [I18n.t('general.filter.grouping_period.option.year'), 'year']], :week) }
+    it { expect(helper.grouping_period_to_charts_options).to eq options_for_select([[I18n.t('general.monthly'), 'month'], [I18n.t('general.weekly'), 'week'], [I18n.t('general.daily'), 'day']], 'week') }
   end
 end
