@@ -4,14 +4,17 @@ module Highchart
   class PortfolioChartsAdapter
     attr_reader :projects, :start_date, :end_date
 
-    def initialize(projects, start_date, end_date)
-      @projects = projects
+    def initialize(projects, start_date, end_date, project_status)
+      @projects = Project.includes(:product).includes(:customer).where(id: projects.map(&:id))
+      @projects = @projects.where(status: project_status) if project_status.present?
 
       @start_date = start_date
       @end_date = end_date
     end
 
     def block_count_by_project
+      return {} if @start_date.blank? || @end_date.blank?
+
       block_count_grouped_by_project = DemandBlocksRepository.instance.closed_blocks_to_projects_and_period_grouped(@projects, @start_date, @end_date)
       ordered_by_block_qty = {}
       block_count_grouped_by_project.each { |key, values| ordered_by_block_qty[key] = values.count }
@@ -23,6 +26,8 @@ module Highchart
     end
 
     def aging_by_project
+      return {} if @projects.blank?
+
       ordered_projects = @projects.sort_by(&:aging)
       x_axis = ordered_projects.map(&:full_name)
 
@@ -30,6 +35,8 @@ module Highchart
     end
 
     def throughput_by_project
+      return {} if @start_date.blank? || @end_date.blank?
+
       throughput_by_project_data = DemandsRepository.instance.demands_delivered_grouped_by_projects_to_period(@projects, @start_date, @end_date)
       x_axis = throughput_by_project_data.keys
       { x_axis: x_axis, series: [{ name: I18n.t('portfolio.charts.throughput_by_project.data_title'), data: throughput_by_project_data.values.map(&:count), marker: { enabled: true } }] }

@@ -45,7 +45,12 @@ $('.nav-item').on('click', function(event){
             getFlowImpacts(companyId, projectId);
 
         } else if ($(this).attr('id') === 'nav-item-statistics') {
-            getProjectStatistics(companyId, projectId, startDate, endDate, period);
+            const statsStartDate = '';
+            const statsEndDate = '';
+            const statsPeriod = 'month';
+            const statsLeadtimeConfidence = '80';
+
+            statisticsChartsRoute(companyId, projectsIds, statsPeriod, targetName, statsStartDate, statsEndDate, statsLeadtimeConfidence, '');
 
         } else {
             enableTabs();

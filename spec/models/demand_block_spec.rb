@@ -38,7 +38,7 @@ RSpec.describe DemandBlock, type: :model do
       end
       context 'when there is a demand current stage' do
         before do
-          expect(demand).to(receive(:current_stage).twice.and_return(stage))
+          expect(demand).to(receive(:stage_at).twice.and_return(stage))
           demand_block.update(block_time: Time.zone.now)
         end
         it { expect(demand_block.reload.block_duration).to eq nil }

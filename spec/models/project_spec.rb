@@ -315,7 +315,7 @@ RSpec.describe Project, type: :model do
         let!(:delivered_bugs) { Fabricate.times(5, :demand, project: project, demand_type: :bug, created_date: Time.zone.parse('2018-03-05 22:00'), end_date: Time.zone.parse('2018-03-07 10:00')) }
 
         context 'specifying no date' do
-          before { travel_to Time.zone.local(2018, 0o3, 0o6, 10, 0, 0) }
+          before { travel_to Time.zone.local(2018, 3, 6, 10, 0, 0) }
           after { travel_back }
 
           it { expect(project.flow_pressure).to be_within(0.5).of(25.1) }

@@ -4,7 +4,9 @@ class DemandBlocksRepository
   include Singleton
 
   def closed_blocks_to_projects_and_period_grouped(projects, start_date, end_date)
-    active_blocks_to_projects_and_period(projects, start_date, end_date).closed.order('demand_blocks.unblock_time ASC').group_by { |demand_block| demand_block.demand.project.full_name }
+    active_blocks_to_projects_and_period(projects, start_date, end_date).closed
+                                                                        .order('demand_blocks.unblock_time ASC')
+                                                                        .group_by { |demand_block| demand_block.demand.project.full_name }
   end
 
   def active_blocks_to_projects_and_period(projects, start_date, end_date)
@@ -16,6 +18,7 @@ class DemandBlocksRepository
 
   def accumulated_blocks_to_date(projects, end_date)
     DemandBlock.closed
+               .includes(:demand)
                .active
                .joins(demand: :project)
                .where(projects: { id: projects.map(&:id) })

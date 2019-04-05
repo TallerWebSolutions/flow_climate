@@ -96,6 +96,9 @@ RSpec.describe DemandBlocksRepository, type: :repository do
   end
 
   describe '#blocks_duration_per_stage' do
+    before { travel_to Time.zone.local(2018, 3, 6, 10, 0, 0) }
+    after { travel_back }
+
     let(:company) { Fabricate :company }
 
     let(:team) { Fabricate :team, company: company }
@@ -114,8 +117,8 @@ RSpec.describe DemandBlocksRepository, type: :repository do
 
       let!(:fifth_demand) { Fabricate :demand }
 
-      let!(:first_transition) { Fabricate :demand_transition, stage: first_stage, demand: first_demand, last_time_in: 1.month.ago, last_time_out: 2.weeks.ago }
-      let!(:second_transition) { Fabricate :demand_transition, stage: second_stage, demand: second_demand, last_time_in: 1.month.ago, last_time_out: 3.weeks.ago }
+      let!(:first_transition) { Fabricate :demand_transition, stage: first_stage, demand: first_demand, last_time_in: 1.month.ago, last_time_out: Time.zone.today }
+      let!(:second_transition) { Fabricate :demand_transition, stage: second_stage, demand: second_demand, last_time_in: 1.month.ago, last_time_out: Time.zone.today }
 
       let!(:first_block) { Fabricate :demand_block, demand: first_demand, block_time: 1.hour.ago, unblock_time: Time.zone.today, active: true }
       let!(:second_block) { Fabricate :demand_block, demand: first_demand, block_time: 2.days.ago, unblock_time: 30.hours.ago }
@@ -130,7 +133,7 @@ RSpec.describe DemandBlocksRepository, type: :repository do
         blocks_grouped_data = DemandBlocksRepository.instance.blocks_duration_per_stage(team.projects, 6.days.ago, Time.zone.now)
         expect(blocks_grouped_data[0][0]).to eq first_stage.name
         expect(blocks_grouped_data[0][1]).to eq 0
-        expect(blocks_grouped_data[0][2] / 1.hour).to be_within(2.5).of(4.2)
+        expect(blocks_grouped_data[0][2] / 1.hour).to be_within(2.5).of(31.0)
 
         expect(blocks_grouped_data[1][0]).to eq second_stage.name
         expect(blocks_grouped_data[1][1]).to eq 1

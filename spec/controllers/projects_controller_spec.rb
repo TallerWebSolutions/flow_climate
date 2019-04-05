@@ -57,10 +57,6 @@ RSpec.describe ProjectsController, type: :controller do
       before { patch :copy_stages_from, params: { company_id: 'foo', id: 'sbbrubles', project_to_copy_stages_from: 'bla' } }
       it { expect(response).to redirect_to new_user_session_path }
     end
-    describe 'GET #statistics_tab' do
-      before { get :statistics_tab, params: { company_id: 'foo', id: 'sbbrubles' } }
-      it { expect(response).to redirect_to new_user_session_path }
-    end
     describe 'GET #demands_blocks_tab' do
       before { get :demands_blocks_tab, params: { company_id: 'foo', id: 'sbbrubles' } }
       it { expect(response).to redirect_to new_user_session_path }
@@ -667,33 +663,6 @@ RSpec.describe ProjectsController, type: :controller do
             let(:company) { Fabricate :company, users: [] }
             before { patch :copy_stages_from, params: { company_id: company, id: third_project, project_to_copy_stages_from: third_project }, xhr: true }
             it { expect(response).to have_http_status :not_found }
-          end
-        end
-      end
-    end
-
-    describe 'GET #statistics_tab' do
-      let!(:project) { Fabricate :project, customer: customer, start_date: 2.weeks.ago, end_date: Time.zone.today }
-
-      context 'passing valid parameters' do
-        context 'no start nor end dates nor period provided' do
-          it 'builds the statistic adapter and renders the view using the dates in project to a monthly period' do
-            expect(Highchart::ProjectStatisticsChartsAdapter).to receive(:new).with([project], 2.weeks.ago.to_date, Time.zone.today, 'month').and_call_original
-            get :statistics_tab, params: { company_id: company, id: project }, xhr: true
-            expect(response).to render_template 'projects/statistics_tab.js.erb'
-            expect(response).to render_template 'projects/_project_statistics'
-            expect(assigns(:scope_data)).to eq [{ data: [30, 30], marker: { enabled: true }, name: I18n.t('projects.general.scope') }]
-            expect(assigns(:leadtime_data)).to eq [{ data: [0, 0], marker: { enabled: true }, name: I18n.t('projects.general.leadtime', confidence: 80) }]
-            expect(assigns(:block_data)).to eq [{ data: [0, 0], marker: { enabled: true }, name: I18n.t('projects.statistics.accumulated_blocks.data_title') }]
-            expect(assigns(:block_data)).to eq [{ data: [0, 0], marker: { enabled: true }, name: I18n.t('projects.statistics.accumulated_blocks.data_title') }]
-          end
-        end
-        context 'and a start and end dates provided' do
-          it 'builds the statistic adapter and renders the view using the parameters' do
-            expect(Highchart::ProjectStatisticsChartsAdapter).to receive(:new).with([project], 1.week.ago.to_date, Time.zone.today, 'month').and_call_original
-            get :statistics_tab, params: { company_id: company, id: project, start_date: 1.week.ago, end_date: Time.zone.today, period: 'month' }, xhr: true
-            expect(response).to render_template 'projects/statistics_tab.js.erb'
-            expect(response).to render_template 'projects/_project_statistics'
           end
         end
       end

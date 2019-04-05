@@ -52,6 +52,8 @@ module Stats
     end
 
     def compute_percentage_variation(initial_value, last_value)
+      return 0 if initial_value.blank? || last_value.blank?
+
       start_value = initial_value
       start_value = 1 if initial_value.zero?
       (last_value.to_f - initial_value.to_f) / start_value.to_f

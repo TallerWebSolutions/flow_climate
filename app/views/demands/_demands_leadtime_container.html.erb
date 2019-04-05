@@ -20,13 +20,13 @@
   <div class="col-xs-2 leadtime-frame">
     <div class="leadtime-content">
       <p class="leadtime-title"><%= t('demands.stats.avg_queue') %></p>
-      <p class="leadtime-value"><%= @average_queue_time %></p>
+      <p class="leadtime-value"><%= number_with_precision(@average_queue_time, precision: 2) %></p>
     </div>
   </div>
   <div class="col-xs-2 leadtime-frame">
     <div class="leadtime-content">
       <p class="leadtime-title"><%= t('demands.stats.avg_touch') %></p>
-      <p class="leadtime-value"><%= @average_touch_time %></p>
+      <p class="leadtime-value"><%= number_with_precision(@average_touch_time, precision: 2) %></p>
     </div>
   </div>
   <div class="col-xs-2 leadtime-frame">

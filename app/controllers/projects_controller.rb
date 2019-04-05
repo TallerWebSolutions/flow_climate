@@ -6,7 +6,7 @@ class ProjectsController < AuthenticatedController
   before_action :assign_company
   before_action :assign_customer, only: %i[create update]
   before_action :assign_product, only: %i[create update]
-  before_action :assign_project, only: %i[show edit update destroy synchronize_jira finish_project statistics copy_stages_from statistics_tab demands_blocks_tab demands_blocks_csv]
+  before_action :assign_project, only: %i[show edit update destroy synchronize_jira finish_project statistics copy_stages_from demands_blocks_tab demands_blocks_csv]
 
   def show
     @ordered_project_risk_alerts = @project.project_risk_alerts.order(created_at: :desc)
@@ -96,17 +96,6 @@ class ProjectsController < AuthenticatedController
     respond_to { |format| format.js { render file: 'projects/copy_stages_from.js.erb' } }
   end
 
-  def statistics_tab
-    project_statistics_chart_adapter = Highchart::ProjectStatisticsChartsAdapter.new([@project], start_date_to_query, end_date_to_query, period_to_adapter)
-    @x_axis = project_statistics_chart_adapter.x_axis
-
-    build_scope_data(project_statistics_chart_adapter)
-    build_leadtime_data(project_statistics_chart_adapter)
-    build_block_data(project_statistics_chart_adapter)
-
-    respond_to { |format| format.js { render file: 'projects/statistics_tab.js.erb' } }
-  end
-
   def demands_blocks_tab
     @demands_blocks = DemandBlocksRepository.instance.active_blocks_to_projects_and_period([@project], start_date_to_query, end_date_to_query).order(block_time: :desc)
 
@@ -126,21 +115,6 @@ class ProjectsController < AuthenticatedController
 
   private
 
-  def build_scope_data(project_statistics_chart_adapter)
-    @scope_data = project_statistics_chart_adapter.scope_data_evolution_chart
-    @scope_period_variation = Stats::StatisticsService.instance.compute_percentage_variation(@scope_data[0][:data].first, @scope_data[0][:data].last)
-  end
-
-  def build_leadtime_data(project_statistics_chart_adapter)
-    @leadtime_data = project_statistics_chart_adapter.leadtime_data_evolution_chart(leadtime_confidence_to_charts)
-    @leadtime_period_variation = Stats::StatisticsService.instance.compute_percentage_variation(@leadtime_data[0][:data].first, @leadtime_data[0][:data].last)
-  end
-
-  def build_block_data(project_statistics_chart_adapter)
-    @block_data = project_statistics_chart_adapter.block_data_evolution_chart
-    @block_period_variation = Stats::StatisticsService.instance.compute_percentage_variation(@block_data[0][:data].first, @block_data[0][:data].last)
-  end
-
   def synchronize_project
     jira_account = Jira::JiraAccount.find_by(customer_domain: @project.project_jira_config.jira_account_domain)
     project_url = company_project_url(@company, @project)
@@ -154,10 +128,6 @@ class ProjectsController < AuthenticatedController
 
   def end_date_to_query
     (params['end_date'] || @project.end_date).to_date
-  end
-
-  def period_to_adapter
-    params['period'] || 'month'
   end
 
   def assign_projects
@@ -208,11 +178,5 @@ class ProjectsController < AuthenticatedController
     return if project_params[:end_date].blank? || @project.end_date == Date.parse(project_params[:end_date])
 
     ProjectChangeDeadlineHistory.create!(user: current_user, project: @project, previous_date: @project.end_date, new_date: project_params[:end_date])
-  end
-
-  def leadtime_confidence_to_charts
-    confidence = params[:leadtime_confidence].to_i
-    confidence = 80 unless confidence.positive?
-    confidence
   end
 end

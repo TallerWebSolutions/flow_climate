@@ -6,8 +6,8 @@ $('#stamps').show();
 
 const companyId = $("#company_id").val();
 const teamId = $("#team_id").val();
-const projects_ids = $("#projects_ids").val();
-const target_name = $("#target_name").val();
+const projectsIds = $("#projects_ids").val();
+const targetName = $("#target_name").val();
 
 $('.nav-item').on('click', function(event){
     hideAllComponents();
@@ -23,22 +23,28 @@ $('.nav-item').on('click', function(event){
     } else {
         disableTabs();
         if ($(this).attr('id') === 'nav-item-statusreport') {
-            buildStatusReportCharts(companyId, projects_ids, period, target_name, startDate, endDate)
+            buildStatusReportCharts(companyId, projectsIds, period, targetName, startDate, endDate)
 
         } else if ($(this).attr('id') === 'nav-item-charts') {
-            buildOperationalCharts(companyId, projects_ids, period, target_name, startDate, endDate);
+            buildOperationalCharts(companyId, projectsIds, period, targetName, startDate, endDate);
 
         } else if ($(this).attr('id') === 'nav-item-strategic') {
-            buildStrategicCharts(companyId, projects_ids, target_name);
+            buildStrategicCharts(companyId, projectsIds, targetName);
 
         } else if ($(this).attr('id') === 'nav-item-demands') {
-            getDemands(companyId, projects_ids);
+            getDemands(companyId, projectsIds);
 
         } else if ($(this).attr('id') === 'nav-item-replenishingDiv') {
             buildReplenishingMeeting(companyId, teamId);
 
         } else if ($(this).attr('id') === 'nav-item-statistics') {
-            getTeamStatistics(companyId, teamId, startDate, endDate, period);
+            const statsStartDate = '';
+            const statsEndDate = '';
+            const statsPeriod = 'month';
+            const statsLeadtimeConfidence = '80';
+            const statsProjectStatus = 'executing';
+
+            statisticsChartsRoute(companyId, projectsIds, statsPeriod, targetName, statsStartDate, statsEndDate, statsLeadtimeConfidence, statsProjectStatus);
 
         } else {
             enableTabs();

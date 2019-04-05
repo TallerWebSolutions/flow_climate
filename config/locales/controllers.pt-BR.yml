@@ -59,12 +59,6 @@ pt-BR:
           last_quarter: "Último Trimestre"
           all_period: "Todo o Período"
           last_week: "Última Semana"
-      grouping_period:
-        option:
-          day: "Por Dia"
-          week: "Por Semana"
-          month: "Por Mês"
-          year: "Por Ano"
     total: "Total"
     days_text: "%{days} dia(s)"
     leadtime:
@@ -495,8 +489,8 @@ pt-BR:
     stats:
       std_throughput: "Desvio Padrão Vazão"
       std_committed_with: "Desvio Padrão Comprometido"
-      avg_touch: "Trabalho Médio"
-      avg_queue: "Fila Média"
+      avg_touch: "Trabalho Médio (horas)"
+      avg_queue: "Fila Média (horas)"
       avg_work_hours_per_demand: "Média Horas Úteis por Demanda"
     filter:
       grouping:
@@ -731,3 +725,6 @@ pt-BR:
       failed: "A conta do jira não foi salva"
     destroy:
       tooltip: "Excluir Conta do Jira"
+  filters:
+    options:
+      project_status: "Status do Projeto"
