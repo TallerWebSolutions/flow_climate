@@ -14,6 +14,10 @@ RSpec.describe ChartsController, type: :controller do
       before { get :build_status_report_charts, params: { company_id: 'foo' }, xhr: true }
       it { expect(response.status).to eq 401 }
     end
+    describe 'GET #statistics_charts' do
+      before { get :statistics_charts, params: { company_id: 'foo' }, xhr: true }
+      it { expect(response.status).to eq 401 }
+    end
   end
 
   context 'authenticated' do

@@ -460,8 +460,8 @@ en:
     stats:
       std_committed_with: "STD Committed with"
       std_throughput: "STD Throughput"
-      avg_touch: "Average Touch"
-      avg_queue: "Average Queue"
+      avg_touch: "Average Touch (hours)"
+      avg_queue: "Average Queue (hours)"
       avg_work_hours_per_demand: "Avg Work Hours per Demand"
     filter:
       grouping:

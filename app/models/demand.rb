@@ -183,6 +183,11 @@ class Demand < ApplicationRecord
     demand_blocks.kept.closed.sum(&:block_duration)
   end
 
+  def stage_at(analysed_date = Time.zone.now)
+    transitions_at = demand_transitions.where('last_time_in <= :analysed_date AND (last_time_out IS NULL OR last_time_out >= :analysed_date)', analysed_date: analysed_date)
+    transitions_at&.first&.stage
+  end
+
   private
 
   def sum_blocked_time_for_transitions(transitions)

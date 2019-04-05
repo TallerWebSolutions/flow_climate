@@ -186,8 +186,8 @@ class DemandsController < AuthenticatedController
   end
 
   def build_flow_informations
-    @total_queue_time = @demands.sum(&:total_queue_time)
-    @total_touch_time = @demands.sum(&:total_touch_time)
+    @total_queue_time = @demands.sum(&:total_queue_time).to_f / 1.hour
+    @total_touch_time = @demands.sum(&:total_touch_time).to_f / 1.hour
     @average_queue_time = @total_queue_time / @demands.count
     @average_touch_time = @total_touch_time / @demands.count
     @avg_work_hours_per_demand = @demands.sum(&:total_effort) / @demands.count
