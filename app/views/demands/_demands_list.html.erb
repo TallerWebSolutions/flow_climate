@@ -70,19 +70,19 @@
     <hr>
 
     <div id="demands-grouped-per-month-div">
-      <%= render 'demands/grouped_by_month_demands_table', demands: grouped_delivered_demands %>
+      <%= render 'demands/grouped_by_month_demands_table', company: company, demands: grouped_delivered_demands %>
     </div>
 
     <div id="demands-grouped-per-customer-div">
-      <%= render 'demands/grouped_by_customer_demands_table', demands: grouped_customer_demands %>
+      <%= render 'demands/grouped_by_customer_demands_table', company: company, demands: grouped_customer_demands %>
     </div>
 
     <div id="demands-grouped-per-stage-div">
-      <%= render 'demands/grouped_by_stage_demands_table', demands: grouped_stage_demands %>
+      <%= render 'demands/grouped_by_stage_demands_table', company: company, demands: grouped_stage_demands %>
     </div>
 
     <div id="flat-demands-div">
-      <%= render 'demands/demands_table', demands: demands %>
+      <%= render 'demands/demands_table', company: company, demands: demands %>
     </div>
   </div>
 

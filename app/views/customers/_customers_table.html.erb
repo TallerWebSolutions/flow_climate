@@ -1,6 +1,6 @@
 <div class="row">
   <div class="col-xs-12">
-    <%= link_to t('customers.new.title'), new_company_customer_path(@company), class: 'btn btn-sm btn-success bottom-spaced-component pull-right' %>
+    <%= link_to t('customers.new.title'), new_company_customer_path(company), class: 'btn btn-sm btn-success bottom-spaced-component pull-right' %>
   </div>
 </div>
 
@@ -21,16 +21,16 @@
     <tbody>
       <% customers_list.each do |customer| %>
         <tr>
-          <td><%= link_to customer.name, company_customer_path(@company, customer) %></td>
+          <td><%= link_to customer.name, company_customer_path(company, customer) %></td>
           <td><%= number_to_currency(customer.total_value) %></td>
           <td><%= number_to_currency(customer.remaining_money) %></td>
           <td><%= number_with_precision(customer.avg_hours_per_demand, precision: 2) %></td>
           <td><%= number_with_precision(customer.total_flow_pressure, precision: 3) %></td>
           <td>
-            <%= link_to edit_company_customer_path(@company, customer) do %>
+            <%= link_to edit_company_customer_path(company, customer) do %>
               <i class="fas fa-edit"></i>
             <% end %>
-            <%= link_to company_customer_path(@company, customer), method: :delete do %>
+            <%= link_to company_customer_path(company, customer), method: :delete do %>
               <i class="fa fa-times"></i>
             <% end %>
           </td>

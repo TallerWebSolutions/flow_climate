@@ -52,7 +52,7 @@
     <tbody>
       <% projects_list.each do |project| %>
         <tr>
-          <td><%= render 'projects/project_actions', project: project %></td>
+          <td><%= render 'projects/project_actions', company: company, project: project %></td>
           <td><%= link_to project.customer_name, company_customer_path(company, project.customer) %></td>
           <td>
             <% if project.product.present? %>
@@ -85,7 +85,7 @@
           <td><%= number_with_precision(project.flow_pressure, precision: 3) %></td>
           <td><%= number_to_percentage((project.flow_pressure.to_f / projects_summary.total_flow_pressure) * 100, precision: 2) %></td>
           <td><%= render 'projects/project_risk_indicators', project: project %></td>
-          <td><%= render 'projects/project_actions', project: project %></td>
+          <td><%= render 'projects/project_actions', company: company, project: project %></td>
         </tr>
       <% end %>
     </tbody>

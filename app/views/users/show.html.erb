@@ -43,7 +43,7 @@
     <% if @user_plans.blank? %>
       <%= render 'layouts/no_data', missing_data: UserPlan.model_name.human %>
     <% else %>
-      <%= render 'users/user_plans_table', user_plans: @user_plans %>
+      <%= render 'users/user_plans_table', user_plans: @user_plans, user: @user %>
     <% end %>
   </div>
 

@@ -10,7 +10,7 @@
   <div class="row">
     <div class="col-xs-12">
       <div class="form-group">
-        <%= link_to t('general.download_csv'), demands_csv_company_demands_path(@company, demands.map(&:id).to_csv, format: :csv), class: 'btn btn-sm btn-success' %>
+        <%= link_to t('general.download_csv'), demands_csv_company_demands_path(company, demands.map(&:id).to_csv, format: :csv), class: 'btn btn-sm btn-success' %>
       </div>
     </div>
   </div>
@@ -44,7 +44,7 @@
       <tbody>
         <% demands.each do |demand| %>
           <tr id='demand_<%= demand.id %>'>
-            <%= render 'demands/demand_fields', demand_list: demand %>
+            <%= render 'demands/demand_fields', company: company, demand_list: demand %>
           </tr>
         <% end %>
       </tbody>

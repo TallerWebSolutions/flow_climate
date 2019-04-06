@@ -39,7 +39,7 @@
       <td><%= number_with_precision(demand.effort_upstream, precision: 2) %></td>
       <td><%= number_with_precision(demand.effort_downstream, precision: 2) %></td>
       <td><%= link_to demand.url, demand.url %></td>
-      <td><%= render 'demands/demand_actions', demand: demand %></td>
+      <td><%= render 'demands/demand_actions', company: company, demand: demand %></td>
     </tr>
   <% end %>
   </tbody>

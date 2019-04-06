@@ -17,7 +17,7 @@
     </tr>
   </thead>
   <tbody>
-    <% @team_members.each do |member| %>
+    <% team_members.each do |member| %>
       <tr>
         <td><%= member.name %></td>
         <td><%= l(member.start_date) if member.start_date.present? %></td>

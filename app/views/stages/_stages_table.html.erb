@@ -22,7 +22,7 @@
   </thead>
   <tbody>
     <% stages_list.each do |stage| %>
-      <tr id="stage_row_<%= stage.id %>"><%= render 'stages/stage_fields', stage: stage %></tr>
+      <tr id="stage_row_<%= stage.id %>"><%= render 'stages/stage_fields', company: company, stage: stage %></tr>
     <% end %>
   </tbody>
 </table>

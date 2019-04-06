@@ -1,11 +1,11 @@
-<%= link_to company_project_path(@company, project), method: :delete, data: { confirm: I18n.t('project.destroy.confirm') } do %>
+<%= link_to company_project_path(company, project), method: :delete, data: { confirm: I18n.t('project.destroy.confirm') } do %>
   <i class="fa fa-times" title='<%= t('projects.actions.delete.tooltip') %>'></i>
 <% end %>
 
-<%= link_to finish_project_company_project_path(@company, project), method: :patch do %>
+<%= link_to finish_project_company_project_path(company, project), method: :patch do %>
   <i class="far fa-calendar-check" title='<%= t('projects.actions.finish.tooltip') %>'></i>
 <% end %>
 
-<%= link_to statistics_company_project_path(@company, project), class: 'statistics-project', remote: true do %>
+<%= link_to statistics_company_project_path(company, project), class: 'statistics-project', remote: true do %>
   <i class="fas fa-superscript" title='<%= t('projects.actions.statistics.tooltip') %>'></i>
 <% end %>

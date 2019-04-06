@@ -1,5 +1,5 @@
-<td><%= render 'demands/demand_actions', demand: demand_list %></td>
-<td><%= link_to demand_list.demand_id, company_demand_path(@company, demand_list.slug) %></td>
+<td><%= render 'demands/demand_actions', company: company, demand: demand_list %></td>
+<td><%= link_to demand_list.demand_id, company_demand_path(company, demand_list.slug) %></td>
 <td><%= t("activerecord.attributes.demand.enums.artifact_type.#{demand_list.artifact_type}") %></td>
 <td><%= t("activerecord.attributes.demand.enums.demand_type.#{demand_list.demand_type}") %></td>
 <td><%= t("activerecord.attributes.demand.enums.class_of_service.#{demand_list.class_of_service}") %></td>
@@ -25,4 +25,4 @@
 <td><%= demand_list.project.full_name %></td>
 <td><%= demand_list.demand_title %></td>
 
-<td><%= render 'demands/demand_actions', demand: demand_list %></td>
+<td><%= render 'demands/demand_actions', company: company, demand: demand_list %></td>

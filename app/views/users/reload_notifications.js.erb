@@ -1,1 +1,1 @@
-$("#header").html("<%= escape_javascript(render 'layouts/header_menu').html_safe %>");
+$("#header").html("<%= escape_javascript(render 'layouts/header_menu', company: @company).html_safe %>");
