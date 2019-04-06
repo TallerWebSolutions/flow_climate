@@ -4,7 +4,8 @@ statsChartsDiv.html("<%= escape_javascript(render 'charts/statistics_charts', st
                                                                               end_date: @end_date,
                                                                               x_axis: @x_axis,
                                                                               project_statistics_data: @project_statistics_data,
-                                                                              portfolio_statistics_data: @portfolio_statistics_data) %>");
+                                                                              portfolio_statistics_data: @portfolio_statistics_data,
+                                                                              projects_count: @projects.count) %>");
 
 buildStatisticsCharts();
 
@@ -33,7 +34,8 @@ $('#search-stats').on('click', function() {
     const statsEndDate = $('#stats_end_date').val();
     const statsPeriod = $('#stats_chart_period').val();
     const statsLeadtimeConfidence = $('#stats_leadtime_confidence').val();
+    const statsProjectStatus = $('#project_status').val();
 
-    statisticsChartsRoute(companyId, projectsIds, statsPeriod, targetName, statsStartDate, statsEndDate, statsLeadtimeConfidence, '');
+    statisticsChartsRoute(companyId, projectsIds, statsPeriod, targetName, statsStartDate, statsEndDate, statsLeadtimeConfidence, statsProjectStatus);
 });
 
