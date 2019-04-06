@@ -19,6 +19,7 @@ RSpec.describe Jira::JiraAccount, type: :model do
       context 'customer_domain' do
         let!(:jira_account) { Fabricate :jira_account, customer_domain: 'foo' }
         let!(:other_jira_account) { Fabricate.build :jira_account, customer_domain: 'foo' }
+
         it 'responds invalid with an error message' do
           expect(other_jira_account).not_to be_valid
           expect(other_jira_account.errors.full_messages).to eq ['Domínio do Usuário já está em uso']

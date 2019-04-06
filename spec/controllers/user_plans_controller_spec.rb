@@ -4,46 +4,55 @@ RSpec.describe UserPlansController, type: :controller do
   context 'unauthenticated' do
     describe 'PATCH #activate_user_plan' do
       before { patch :activate_user_plan, params: { user_id: 'foo', id: 'bar' } }
+
       it { expect(response).to redirect_to new_user_session_path }
     end
 
     describe 'PATCH #deactivate_user_plan' do
       before { patch :deactivate_user_plan, params: { user_id: 'foo', id: 'bar' } }
+
       it { expect(response).to redirect_to new_user_session_path }
     end
 
     describe 'PATCH #pay_plan' do
       before { patch :pay_plan, params: { user_id: 'foo', id: 'bar' } }
+
       it { expect(response).to redirect_to new_user_session_path }
     end
 
     describe 'PATCH #unpay_plan' do
       before { patch :pay_plan, params: { user_id: 'foo', id: 'bar' } }
+
       it { expect(response).to redirect_to new_user_session_path }
     end
   end
 
   context 'authenticated as normal user' do
     let(:user) { Fabricate :user, admin: false }
+
     before { sign_in user }
 
     describe 'PATCH #activate_user_plan' do
       before { patch :activate_user_plan, params: { user_id: 'foo', id: 'bar' } }
+
       it { expect(response).to redirect_to root_path }
     end
 
     describe 'PATCH #deactivate_user_plan' do
       before { patch :deactivate_user_plan, params: { user_id: 'foo', id: 'bar' } }
+
       it { expect(response).to redirect_to root_path }
     end
 
     describe 'PATCH #pay_plan' do
       before { patch :pay_plan, params: { user_id: 'foo', id: 'bar' } }
+
       it { expect(response).to redirect_to root_path }
     end
 
     describe 'PATCH #unpay_plan' do
       before { patch :pay_plan, params: { user_id: 'foo', id: 'bar' } }
+
       it { expect(response).to redirect_to root_path }
     end
   end
@@ -51,6 +60,7 @@ RSpec.describe UserPlansController, type: :controller do
   context 'authenticated as admin' do
     let(:user) { Fabricate :user, admin: true }
     let(:plan) { Fabricate :plan }
+
     before { sign_in user }
 
     describe 'PATCH #activate_user_plan' do
@@ -67,10 +77,13 @@ RSpec.describe UserPlansController, type: :controller do
       context 'invalid' do
         context 'user' do
           before { patch :activate_user_plan, params: { user_id: 'foo', id: user_plan } }
+
           it { expect(response).to have_http_status :not_found }
         end
+
         context 'user_plan' do
           before { patch :activate_user_plan, params: { user_id: user, id: 'foo' } }
+
           it { expect(response).to have_http_status :not_found }
         end
       end
@@ -90,10 +103,13 @@ RSpec.describe UserPlansController, type: :controller do
       context 'invalid' do
         context 'user' do
           before { patch :deactivate_user_plan, params: { user_id: 'foo', id: user_plan } }
+
           it { expect(response).to have_http_status :not_found }
         end
+
         context 'user_plan' do
           before { patch :deactivate_user_plan, params: { user_id: user, id: 'foo' } }
+
           it { expect(response).to have_http_status :not_found }
         end
       end
@@ -113,10 +129,13 @@ RSpec.describe UserPlansController, type: :controller do
       context 'invalid' do
         context 'user' do
           before { patch :pay_plan, params: { user_id: 'foo', id: user_plan } }
+
           it { expect(response).to have_http_status :not_found }
         end
+
         context 'user_plan' do
           before { patch :pay_plan, params: { user_id: user, id: 'foo' } }
+
           it { expect(response).to have_http_status :not_found }
         end
       end
@@ -136,10 +155,13 @@ RSpec.describe UserPlansController, type: :controller do
       context 'invalid' do
         context 'user' do
           before { patch :unpay_plan, params: { user_id: 'foo', id: user_plan } }
+
           it { expect(response).to have_http_status :not_found }
         end
+
         context 'user_plan' do
           before { patch :unpay_plan, params: { user_id: user, id: 'foo' } }
+
           it { expect(response).to have_http_status :not_found }
         end
       end

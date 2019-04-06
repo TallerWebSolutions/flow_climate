@@ -2,6 +2,7 @@
 
 RSpec.describe Highchart::PortfolioChartsAdapter, type: :service do
   before { travel_to Time.zone.local(2018, 2, 20, 10, 0, 0) }
+
   after { travel_back }
 
   describe '#block_count_by_project' do

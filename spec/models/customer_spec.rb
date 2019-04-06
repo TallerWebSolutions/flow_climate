@@ -20,19 +20,24 @@ RSpec.describe Customer, type: :model do
         context 'same name in same customer' do
           let!(:customer) { Fabricate :customer, company: company, name: 'zzz' }
           let!(:other_customer) { Fabricate.build :customer, company: company, name: 'zzz' }
+
           it 'does not accept the model' do
             expect(other_customer.valid?).to be false
             expect(other_customer.errors[:name]).to eq ['Não deve repetir nome de cliente para a mesma empresa.']
           end
         end
+
         context 'different name in same customer' do
           let!(:customer) { Fabricate :customer, company: company, name: 'zzz' }
           let!(:other_customer) { Fabricate.build :customer, company: company, name: 'aaa' }
+
           it { expect(other_customer.valid?).to be true }
         end
+
         context 'different name in same customer' do
           let!(:customer) { Fabricate :customer, company: company, name: 'zzz' }
           let!(:other_customer) { Fabricate.build :customer, name: 'zzz' }
+
           it { expect(other_customer.valid?).to be true }
         end
       end
@@ -113,6 +118,7 @@ RSpec.describe Customer, type: :model do
 
   describe '#avg_hours_per_demand' do
     before { travel_to Date.new(2018, 11, 19) }
+
     after { travel_back }
 
     include_context 'demands with effort for customer'

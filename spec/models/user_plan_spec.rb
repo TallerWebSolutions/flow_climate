@@ -47,6 +47,7 @@ RSpec.describe UserPlan, type: :model do
         it { expect(user.user_plans.valid_plans).to eq [user_plan] }
       end
     end
+
     describe '.inactive_in_period' do
       context 'having inactive in period user plans' do
         let(:plan) { Fabricate :plan, plan_type: :lite }
@@ -68,30 +69,39 @@ RSpec.describe UserPlan, type: :model do
   describe '#description' do
     let(:plan) { Fabricate :plan, plan_type: :lite, plan_period: :monthly }
     let!(:user_plan) { Fabricate :user_plan, plan: plan }
+
     it { expect(user_plan.description).to eq "#{plan.plan_type.capitalize} #{user_plan.plan_billing_period.capitalize}" }
   end
 
   describe '#activate' do
     let(:user_plan) { Fabricate :user_plan, active: false }
+
     before { user_plan.activate }
+
     it { expect(user_plan.active).to eq true }
   end
 
   describe '#deactivate' do
     let(:user_plan) { Fabricate :user_plan, active: true }
+
     before { user_plan.deactivate }
+
     it { expect(user_plan.active).to eq false }
   end
 
   describe '#pay' do
     let(:user_plan) { Fabricate :user_plan, paid: false }
+
     before { user_plan.pay }
+
     it { expect(user_plan.paid?).to eq true }
   end
 
   describe '#unpay' do
     let(:user_plan) { Fabricate :user_plan, paid: true }
+
     before { user_plan.unpay }
+
     it { expect(user_plan.paid?).to eq false }
   end
 end

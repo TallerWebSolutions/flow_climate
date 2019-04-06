@@ -2,6 +2,7 @@
 
 RSpec.describe Stats::StatisticsService, type: :service do
   before { travel_to Time.zone.local(2018, 4, 12, 10, 0, 0) }
+
   after { travel_back }
 
   describe '#percentile' do
@@ -46,19 +47,24 @@ RSpec.describe Stats::StatisticsService, type: :service do
     context 'having data' do
       context 'with some throughput' do
         subject(:monte_carlo_durations_data) { Stats::StatisticsService.instance.run_montecarlo(30, [10, 15, 12, 15], 100) }
+
         it 'computes and provides the data' do
           expect(monte_carlo_durations_data.sum).not_to be_zero
         end
       end
+
       context 'having no throughput' do
         subject(:monte_carlo_durations_data) { Stats::StatisticsService.instance.run_montecarlo(30, [0, 0, 0, 0], 100) }
+
         it 'returns an empty array' do
           expect(monte_carlo_durations_data).to eq []
         end
       end
     end
+
     context 'having no data' do
       subject(:monte_carlo_durations_data) { Stats::StatisticsService.instance.run_montecarlo(0, [], 5) }
+
       it 'returns an empty array' do
         expect(monte_carlo_durations_data).to eq []
       end
@@ -69,9 +75,11 @@ RSpec.describe Stats::StatisticsService, type: :service do
     context 'when the data count remaining is zero' do
       it { expect(Stats::StatisticsService.instance.compute_percentage(10, 0)).to eq 100.0 }
     end
+
     context 'when both are zero' do
       it { expect(Stats::StatisticsService.instance.compute_percentage(0, 0)).to eq 0.0 }
     end
+
     context 'when none is zero' do
       it { expect(Stats::StatisticsService.instance.compute_percentage(10, 40)).to eq 20.0 }
     end
@@ -85,9 +93,11 @@ RSpec.describe Stats::StatisticsService, type: :service do
     context 'not blank values' do
       it { expect(Stats::StatisticsService.instance.compute_percentage_variation(10, 30)).to eq 2.0 }
     end
+
     context 'initial blank' do
       it { expect(Stats::StatisticsService.instance.compute_percentage_variation(nil, 30)).to eq 0 }
     end
+
     context 'final blank' do
       it { expect(Stats::StatisticsService.instance.compute_percentage_variation(10, nil)).to eq 0 }
     end
@@ -97,6 +107,7 @@ RSpec.describe Stats::StatisticsService, type: :service do
     context 'having two or more units in the population' do
       it { expect(Stats::StatisticsService.instance.standard_deviation([10, 30])).to eq 14.142135623730951 }
     end
+
     context 'having one unit in the population' do
       it { expect(Stats::StatisticsService.instance.standard_deviation([10])).to eq 0 }
     end
@@ -106,9 +117,11 @@ RSpec.describe Stats::StatisticsService, type: :service do
     context 'having two or more units in the population' do
       it { expect(Stats::StatisticsService.instance.tail_events_boundary([10, 30, 20, 5, 100])).to eq 187.66091943344964 }
     end
+
     context 'having one unit in the population' do
       it { expect(Stats::StatisticsService.instance.tail_events_boundary([10])).to eq 10.0 }
     end
+
     context 'having nothing in the population' do
       it { expect(Stats::StatisticsService.instance.tail_events_boundary([])).to eq 0 }
     end

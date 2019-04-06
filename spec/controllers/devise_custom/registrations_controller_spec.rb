@@ -5,6 +5,7 @@ RSpec.describe DeviseCustom::RegistrationsController, type: :controller do
 
   describe 'GET #new' do
     before { get :new }
+
     it { expect(response).to render_template :new }
   end
 

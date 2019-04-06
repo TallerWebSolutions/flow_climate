@@ -27,10 +27,10 @@ RSpec.describe ProjectRiskMonitorJob, type: :active_job do
 
         context 'when the project is in the green area' do
           it 'creates a green alert to the active projects' do
-            allow_any_instance_of(Project).to receive(:money_per_deadline) { 2 }
-            allow_any_instance_of(Project).to receive(:backlog_growth_throughput_rate) { 3 }
-            allow_any_instance_of(Project).to receive(:required_hours_per_available_hours) { 4 }
-            allow_any_instance_of(Project).to receive(:flow_pressure) { 1 }
+            allow_any_instance_of(Project).to receive(:money_per_deadline).and_return(2)
+            allow_any_instance_of(Project).to receive(:backlog_growth_throughput_rate).and_return(3)
+            allow_any_instance_of(Project).to receive(:required_hours_per_available_hours).and_return(4)
+            allow_any_instance_of(Project).to receive(:flow_pressure).and_return(1)
 
             ProjectRiskMonitorJob.perform_now
             expect(first_project.reload.project_risk_alerts.count).to eq 4
@@ -42,12 +42,13 @@ RSpec.describe ProjectRiskMonitorJob, type: :active_job do
             expect(first_project.reload.project_risk_alerts.pluck(:alert_value)).to match_array [first_project.money_per_deadline, first_project.backlog_growth_throughput_rate, first_project.required_hours_per_available_hours, first_project.flow_pressure]
           end
         end
+
         context 'when the project is in the yellow area' do
           it 'creates a green alert to the project' do
-            allow_any_instance_of(Project).to receive(:money_per_deadline) { 20 }
-            allow_any_instance_of(Project).to receive(:backlog_growth_throughput_rate) { 25 }
-            allow_any_instance_of(Project).to receive(:required_hours_per_available_hours) { 27 }
-            allow_any_instance_of(Project).to receive(:flow_pressure) { 29 }
+            allow_any_instance_of(Project).to receive(:money_per_deadline).and_return(20)
+            allow_any_instance_of(Project).to receive(:backlog_growth_throughput_rate).and_return(25)
+            allow_any_instance_of(Project).to receive(:required_hours_per_available_hours).and_return(27)
+            allow_any_instance_of(Project).to receive(:flow_pressure).and_return(29)
 
             ProjectRiskMonitorJob.perform_now
             expect(first_project.reload.project_risk_alerts.count).to eq 4
@@ -56,14 +57,15 @@ RSpec.describe ProjectRiskMonitorJob, type: :active_job do
             expect(first_project.reload.project_risk_alerts.pluck(:alert_value)).to match_array [first_project.money_per_deadline, first_project.backlog_growth_throughput_rate, first_project.required_hours_per_available_hours, first_project.flow_pressure]
           end
         end
+
         context 'when the project is in the red area' do
           it 'creates a green alert to the project' do
             ProjectRiskAlert.create(created_at: Time.zone.today, project: first_project, project_risk_config: first_risk_config, alert_color: :red, alert_value: 30)
 
-            allow_any_instance_of(Project).to receive(:money_per_deadline) { 40 }
-            allow_any_instance_of(Project).to receive(:backlog_growth_throughput_rate) { 45 }
-            allow_any_instance_of(Project).to receive(:required_hours_per_available_hours) { 55 }
-            allow_any_instance_of(Project).to receive(:flow_pressure) { 65 }
+            allow_any_instance_of(Project).to receive(:money_per_deadline).and_return(40)
+            allow_any_instance_of(Project).to receive(:backlog_growth_throughput_rate).and_return(45)
+            allow_any_instance_of(Project).to receive(:required_hours_per_available_hours).and_return(55)
+            allow_any_instance_of(Project).to receive(:flow_pressure).and_return(65)
 
             expect(UserNotifierMailer).to receive(:notify_new_red_alert).exactly(3).times.and_call_original
 
@@ -83,7 +85,7 @@ RSpec.describe ProjectRiskMonitorJob, type: :active_job do
 
           it 'will not create the new alert and will update the existent one' do
             ProjectRiskAlert.create(created_at: Time.zone.today, project: first_project, project_risk_config: first_risk_config, alert_color: :green, alert_value: 30)
-            allow_any_instance_of(Project).to receive(:money_per_deadline) { 40 }
+            allow_any_instance_of(Project).to receive(:money_per_deadline).and_return(40)
 
             ProjectRiskMonitorJob.perform_now
             expect(first_project.reload.project_risk_alerts.count).to eq 1

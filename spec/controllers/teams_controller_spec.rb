@@ -4,32 +4,44 @@ RSpec.describe TeamsController, type: :controller do
   context 'unauthenticated' do
     describe 'GET #show' do
       before { get :show, params: { company_id: 'bar', id: 'foo' } }
+
       it { expect(response).to redirect_to new_user_session_path }
     end
+
     describe 'GET #new' do
       before { get :new, params: { company_id: 'bar' } }
+
       it { expect(response).to redirect_to new_user_session_path }
     end
+
     describe 'POST #create' do
       before { post :create, params: { company_id: 'bar' } }
+
       it { expect(response).to redirect_to new_user_session_path }
     end
+
     describe 'GET #edit' do
       before { get :edit, params: { company_id: 'xpto', id: 'foo' } }
+
       it { expect(response).to redirect_to new_user_session_path }
     end
+
     describe 'PUT #update' do
       before { put :update, params: { company_id: 'xpto', id: 'foo' } }
+
       it { expect(response).to redirect_to new_user_session_path }
     end
+
     describe 'GET #replenishing_input' do
       before { put :update, params: { company_id: 'xpto', id: 'foo' } }
+
       it { expect(response).to redirect_to new_user_session_path }
     end
   end
 
   context 'authenticated as gold' do
     before { travel_to Time.zone.local(2018, 4, 6, 10, 0, 0) }
+
     after { travel_back }
 
     let(:plan) { Fabricate :plan, plan_type: :gold }
@@ -67,7 +79,7 @@ RSpec.describe TeamsController, type: :controller do
       context 'passing a valid ID' do
         context 'having data' do
           it 'assigns the instance variables and renders the template' do
-            expect_any_instance_of(AuthenticatedController).to(receive(:user_gold_check).once { true })
+            expect_any_instance_of(AuthenticatedController).to(receive(:user_gold_check).once.and_return(true))
             get :show, params: { company_id: company, id: team }
 
             expect(response).to render_template :show
@@ -79,12 +91,13 @@ RSpec.describe TeamsController, type: :controller do
             expect(assigns(:projects_risk_chart_data).money_risk_alert_data).to eq [{ name: 'Verde', y: 1, color: '#179A02' }]
           end
         end
+
         context 'having no data' do
           let(:other_company) { Fabricate :company, users: [user] }
           let(:empty_team) { Fabricate :team, company: other_company }
 
           it 'assigns the empty instance variables and renders the template' do
-            expect_any_instance_of(AuthenticatedController).to(receive(:user_gold_check).once { true })
+            expect_any_instance_of(AuthenticatedController).to(receive(:user_gold_check).once.and_return(true))
             get :show, params: { company_id: other_company, id: empty_team }
             expect(response).to render_template :show
             expect(assigns(:company)).to eq other_company
@@ -93,19 +106,25 @@ RSpec.describe TeamsController, type: :controller do
           end
         end
       end
+
       context 'passing invalid parameters' do
-        before { expect_any_instance_of(AuthenticatedController).to(receive(:user_gold_check).once { true }) }
         context 'non-existent company' do
           before { get :show, params: { company_id: 'foo', id: team } }
+
           it { expect(response).to have_http_status :not_found }
         end
+
         context 'non-existent team' do
           before { get :show, params: { company_id: company, id: 'foo' } }
+
           it { expect(response).to have_http_status :not_found }
         end
+
         context 'not permitted' do
           let(:company) { Fabricate :company, users: [] }
+
           before { get :show, params: { company_id: company, id: team } }
+
           it { expect(response).to have_http_status :not_found }
         end
       end
@@ -114,22 +133,24 @@ RSpec.describe TeamsController, type: :controller do
     describe 'GET #new' do
       context 'valid parameters' do
         it 'instantiates a new Team and renders the template' do
-          expect_any_instance_of(AuthenticatedController).to(receive(:user_gold_check).once { true })
           get :new, params: { company_id: company }
           expect(response).to render_template :new
           expect(assigns(:team)).to be_a_new Team
         end
       end
+
       context 'invalid parameters' do
-        before { expect_any_instance_of(AuthenticatedController).to(receive(:user_gold_check).once { true }) }
         context 'non-existent company' do
           before { get :new, params: { company_id: 'foo' } }
+
           it { expect(response).to have_http_status :not_found }
         end
+
         context 'not-permitted company' do
           let(:company) { Fabricate :company, users: [] }
 
           before { get :new, params: { company_id: company } }
+
           it { expect(response).to have_http_status :not_found }
         end
       end
@@ -138,15 +159,14 @@ RSpec.describe TeamsController, type: :controller do
     describe 'POST #create' do
       context 'passing valid parameters' do
         it 'creates the new team and redirects to its show' do
-          expect_any_instance_of(AuthenticatedController).to(receive(:user_gold_check).once { true })
           post :create, params: { company_id: company, team: { name: 'foo' } }
           expect(Team.last.name).to eq 'foo'
           expect(response).to redirect_to company_team_path(company, Team.last)
         end
       end
+
       context 'passing invalid parameters' do
         it 'does not create the team and re-render the template with the errors' do
-          expect_any_instance_of(AuthenticatedController).to(receive(:user_gold_check).once { true })
           post :create, params: { company_id: company, team: { name: '' } }
           expect(response).to render_template :new
           expect(assigns(:team).errors.full_messages).to eq ['Nome não pode ficar em branco']
@@ -159,7 +179,6 @@ RSpec.describe TeamsController, type: :controller do
 
       context 'valid parameters' do
         it 'assigns the instance variables and renders the template' do
-          expect_any_instance_of(AuthenticatedController).to(receive(:user_gold_check).once { true })
           get :edit, params: { company_id: company, id: team }
           expect(response).to render_template :edit
           expect(assigns(:company)).to eq company
@@ -168,20 +187,24 @@ RSpec.describe TeamsController, type: :controller do
       end
 
       context 'invalid' do
-        before { expect_any_instance_of(AuthenticatedController).to(receive(:user_gold_check).once { true }) }
         context 'team' do
           before { get :edit, params: { company_id: company, id: 'foo' } }
+
           it { expect(response).to have_http_status :not_found }
         end
 
         context 'company' do
           context 'non-existent' do
             before { get :edit, params: { company_id: 'foo', id: team } }
+
             it { expect(response).to have_http_status :not_found }
           end
+
           context 'not-permitted' do
             let(:company) { Fabricate :company, users: [] }
+
             before { get :edit, params: { company_id: company, id: team } }
+
             it { expect(response).to have_http_status :not_found }
           end
         end
@@ -193,7 +216,6 @@ RSpec.describe TeamsController, type: :controller do
 
       context 'passing valid parameters' do
         it 'updates the team and redirects to company show' do
-          expect_any_instance_of(AuthenticatedController).to(receive(:user_gold_check).once { true })
           put :update, params: { company_id: company, id: team, team: { name: 'foo' } }
           expect(team.reload.name).to eq 'foo'
           expect(response).to redirect_to company_path(company)
@@ -201,26 +223,31 @@ RSpec.describe TeamsController, type: :controller do
       end
 
       context 'passing invalid' do
-        before { expect_any_instance_of(AuthenticatedController).to(receive(:user_gold_check).once { true }) }
         context 'team parameters' do
-          before { put :update, params: { company_id: company, id: team, team: { name: nil } } }
           it 'does not update the team and re-render the template with the errors' do
+            put :update, params: { company_id: company, id: team, team: { name: nil } }
+
             expect(response).to render_template :edit
             expect(assigns(:team).errors.full_messages).to eq ['Nome não pode ficar em branco']
           end
         end
+
         context 'non-existent team' do
           before { put :update, params: { company_id: company, id: 'foo', team: { name: 'foo' } } }
+
           it { expect(response).to have_http_status :not_found }
         end
+
         context 'unpermitted company' do
           let(:company) { Fabricate :company, users: [] }
 
           before { put :update, params: { company_id: company, id: team, team: { name: 'foo' } } }
+
           it { expect(response).to have_http_status :not_found }
         end
       end
     end
+
     describe 'GET #replenishing_input' do
       context 'having data' do
         let!(:first_project) { Fabricate :project, customer: customer, team: team, name: 'first_project', status: :executing, start_date: 4.months.ago, end_date: Time.zone.today }
@@ -236,6 +263,7 @@ RSpec.describe TeamsController, type: :controller do
 
       context 'having no data' do
         before { get :replenishing_input, params: { company_id: company, id: team }, xhr: true }
+
         it 'returns an empty array and redirects' do
           replenishing_data = assigns(:replenishing_data).project_data_to_replenish
           expect(replenishing_data).to eq []

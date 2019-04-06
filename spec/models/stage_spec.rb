@@ -24,28 +24,40 @@ RSpec.describe Stage, type: :model do
 
   describe '#add_project!' do
     let(:project) { Fabricate :project }
+
     context 'when the stage does not have the project yet' do
       let(:stage) { Fabricate :stage }
+
       before { stage.add_project!(project) }
+
       it { expect(stage.reload.projects).to eq [project] }
     end
+
     context 'when the stage has the project' do
       let(:stage) { Fabricate :stage, projects: [project] }
+
       before { stage.add_project!(project) }
+
       it { expect(stage.reload.projects).to eq [project] }
     end
   end
 
   describe '#remove_project!' do
     let(:project) { Fabricate :project }
+
     context 'when the stage does not have the project yet' do
       let(:stage) { Fabricate :stage }
+
       before { stage.remove_project!(project) }
+
       it { expect(stage.reload.projects).to eq [] }
     end
+
     context 'when the stage has the project' do
       let(:stage) { Fabricate :stage, projects: [project] }
+
       before { stage.remove_project!(project) }
+
       it { expect(stage.reload.projects).to eq [] }
     end
   end
@@ -78,6 +90,7 @@ RSpec.describe Stage, type: :model do
           expect(fifth_stage.first_end_stage_in_pipe?(demand)).to be false
         end
       end
+
       context 'and the demand did not reach the downstream' do
         let(:demand) { Fabricate :demand, project: project }
         let!(:fifth_demand_transition) { Fabricate :demand_transition, stage: fifth_stage, demand: demand }
@@ -179,6 +192,7 @@ RSpec.describe Stage, type: :model do
           expect(fifth_stage.inside_commitment_area?).to be true
         end
       end
+
       context 'not commitment stages' do
         it 'returns false' do
           expect(fourth_stage.inside_commitment_area?).to be false
@@ -197,6 +211,7 @@ RSpec.describe Stage, type: :model do
 
         it { expect(first_stage.inside_commitment_area?).to be false }
       end
+
       context 'and it is the commitment point' do
         let!(:first_stage) { Fabricate :stage, company: company, commitment_point: true }
         let(:demand) { Fabricate :demand, project: project }
@@ -229,6 +244,7 @@ RSpec.describe Stage, type: :model do
         expect(seventh_stage.before_commitment_point?).to be false
       end
     end
+
     context 'before commitment stages' do
       it 'returns false' do
         expect(second_stage.before_commitment_point?).to be true

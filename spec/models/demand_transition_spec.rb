@@ -22,11 +22,13 @@ RSpec.describe DemandTransition, type: :model do
 
         context 'having the same stage' do
           let(:demand_transition) { Fabricate.build :demand_transition, stage: stage, demand: demand }
+
           it { expect(demand_transition.valid?).to be true }
         end
 
         context 'having other stage' do
           let(:demand_transition) { Fabricate.build :demand_transition, stage: stage }
+
           it 'responds invalid' do
             expect(demand_transition.valid?).to be false
             expect(demand_transition.errors[:stage]).to eq ['A etapa deve ser a mesma do projeto da demanda']
@@ -52,10 +54,12 @@ RSpec.describe DemandTransition, type: :model do
 
         it { expect(DemandTransition.downstream_transitions).to match_array [demand_transition, other_demand_transition] }
       end
+
       context 'having no data' do
         it { expect(DemandTransition.downstream_transitions).to match_array [] }
       end
     end
+
     describe '.upstream_transitions' do
       let(:project) { Fabricate :project }
       let!(:stage) { Fabricate :stage, stage_stream: :downstream, projects: [project] }
@@ -69,6 +73,7 @@ RSpec.describe DemandTransition, type: :model do
 
         it { expect(DemandTransition.upstream_transitions).to match_array [demand_transition, other_demand_transition] }
       end
+
       context 'having no data' do
         it { expect(DemandTransition.upstream_transitions).to eq [] }
       end
@@ -93,6 +98,7 @@ RSpec.describe DemandTransition, type: :model do
 
         it { expect(DemandTransition.touch_transitions).to match_array [touch_transition, other_touch_transition] }
       end
+
       context 'having no data' do
         it { expect(DemandTransition.touch_transitions).to eq [] }
       end
@@ -117,6 +123,7 @@ RSpec.describe DemandTransition, type: :model do
 
         it { expect(DemandTransition.queue_transitions).to match_array [queue_transition, other_queue_transition] }
       end
+
       context 'having no data' do
         it { expect(DemandTransition.queue_transitions).to eq [] }
       end
@@ -141,12 +148,14 @@ RSpec.describe DemandTransition, type: :model do
       let(:transition_date) { Time.zone.parse('2018-03-13 12:00:00') }
 
       before { Fabricate :demand_transition, stage: stage, demand: demand, last_time_in: transition_date }
+
       it 'sets the commitment date and do not touch in the others' do
         expect(demand.reload.commitment_date).to eq transition_date
         expect(demand.reload.created_date).to eq Time.zone.parse('2018-02-04 12:00:00')
         expect(demand.reload.end_date).to be_nil
       end
     end
+
     context 'when the stage is an end_point' do
       let!(:first_stage) { Fabricate :stage, company: company, commitment_point: false, end_point: true, projects: [project], order: 0, integration_pipe_id: '123', stage_stream: :downstream }
       let!(:second_stage) { Fabricate :stage, company: company, commitment_point: false, end_point: true, projects: [project], order: 1, integration_pipe_id: '123', stage_stream: :downstream }
@@ -156,17 +165,20 @@ RSpec.describe DemandTransition, type: :model do
         let(:transition_date) { Time.zone.parse('2018-03-13 12:00:00') }
 
         before { Fabricate :demand_transition, stage: first_stage, demand: demand, last_time_in: transition_date }
+
         it 'sets the end_date and do not touch in the others' do
           expect(demand.reload.commitment_date).to be_nil
           expect(demand.reload.created_date).to eq Time.zone.parse('2018-02-04 12:00:00')
           expect(demand.reload.end_date).to eq transition_date
         end
       end
+
       context 'and there is an end_date defined by a previous stage' do
         let(:demand) { Fabricate :demand, project: project, created_date: Time.zone.parse('2018-02-04 12:00:00'), commitment_date: nil, end_date: Time.zone.parse('2018-02-05 12:00:00') }
         let(:transition_date) { Time.zone.parse('2018-03-13 12:00:00') }
 
         before { Fabricate :demand_transition, stage: second_stage, demand: demand, last_time_in: transition_date }
+
         it 'do not touch the dates' do
           expect(demand.reload.commitment_date).to be_nil
           expect(demand.reload.created_date).to eq Time.zone.parse('2018-02-04 12:00:00')
@@ -174,6 +186,7 @@ RSpec.describe DemandTransition, type: :model do
         end
       end
     end
+
     context 'when the stage is a wip and the demand has end_date' do
       context 'and the stage of the transition is before the end_point' do
         let!(:stage) { Fabricate :stage, company: company, commitment_point: false, end_point: false, projects: [project], order: 0 }
@@ -183,6 +196,7 @@ RSpec.describe DemandTransition, type: :model do
         let(:transition_date) { Time.zone.parse('2018-03-13 12:00:00') }
 
         before { Fabricate :demand_transition, stage: stage, demand: demand, last_time_in: transition_date }
+
         it 'sets the commitment date and do not touch in the others' do
           expect(demand.reload.commitment_date).to be_nil
           expect(demand.reload.created_date).to eq Time.zone.parse('2018-02-04 12:00:00')
@@ -198,6 +212,7 @@ RSpec.describe DemandTransition, type: :model do
         let(:transition_date) { Time.zone.parse('2018-03-13 12:00:00') }
 
         before { Fabricate :demand_transition, stage: stage, demand: demand, last_time_in: transition_date }
+
         it 'sets the commitment date and do not touch in the others' do
           expect(demand.reload.commitment_date).to be_nil
           expect(demand.reload.created_date).to eq Time.zone.parse('2018-02-04 12:00:00')
@@ -225,6 +240,7 @@ RSpec.describe DemandTransition, type: :model do
 
     context 'when there is no last_time_out' do
       let(:demand_transition) { Fabricate :demand_transition, stage: stage, demand: demand, last_time_in: Time.zone.parse('2018-03-13 12:00:00'), last_time_out: nil }
+
       it { expect(demand_transition.total_seconds_in_transition).to eq 0 }
     end
   end
@@ -236,10 +252,13 @@ RSpec.describe DemandTransition, type: :model do
 
     context 'when there is last_time_out' do
       let(:demand_transition) { Fabricate :demand_transition, stage: stage, demand: demand, last_time_in: Time.zone.parse('2018-03-15 12:00:00'), last_time_out: Time.zone.parse('2018-03-19 12:00:00') }
+
       it { expect(demand_transition.working_time_in_transition).to eq 12 }
     end
+
     context 'when there is no last_time_out' do
       let(:demand_transition) { Fabricate :demand_transition, stage: stage, demand: demand, last_time_in: Time.zone.parse('2018-03-13 12:00:00'), last_time_out: nil }
+
       it { expect(demand_transition.working_time_in_transition).to eq 0 }
     end
   end

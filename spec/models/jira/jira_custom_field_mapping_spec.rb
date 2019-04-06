@@ -17,17 +17,22 @@ RSpec.describe Jira::JiraCustomFieldMapping, type: :model do
 
         context 'same demand_field in same jira account' do
           let!(:other_custom_field) { Fabricate.build :jira_custom_field_mapping, jira_account: jira_account, demand_field: :responsibles }
+
           it 'does not accept the model' do
             expect(other_custom_field.valid?).to be false
             expect(other_custom_field.errors[:demand_field]).to eq [I18n.t('jira_custom_field_mapping.uniqueness.demand_field')]
           end
         end
+
         context 'other demand_field in same jira_account' do
           let!(:other_custom_field) { Fabricate.build :jira_custom_field_mapping, jira_account: jira_account, demand_field: :class_of_service }
+
           it { expect(other_custom_field.valid?).to be true }
         end
+
         context 'same demand_field in different jira_account' do
           let!(:other_custom_field) { Fabricate.build :jira_custom_field_mapping, demand_field: :responsibles }
+
           it { expect(other_custom_field.valid?).to be true }
         end
       end

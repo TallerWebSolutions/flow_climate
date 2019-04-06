@@ -5,6 +5,7 @@ RSpec.describe Jira::ProjectJiraConfig, type: :model do
     it { is_expected.to belong_to :project }
     it { is_expected.to belong_to :team }
   end
+
   context 'validations' do
     it { is_expected.to validate_presence_of :project }
     it { is_expected.to validate_presence_of :team }
@@ -25,10 +26,13 @@ RSpec.describe Jira::ProjectJiraConfig, type: :model do
         end
         context 'same fix version name' do
           let(:other_project_jira_config) { Fabricate.build :project_jira_config, jira_project_key: 'bla', jira_account_domain: 'foo2', fix_version_name: 'bar' }
+
           it { expect(other_project_jira_config.valid?).to be true }
         end
+
         context 'other jira project key' do
           let(:other_project_jira_config) { Fabricate.build :project_jira_config, jira_project_key: 'bla2', jira_account_domain: 'foo', fix_version_name: 'bar' }
+
           it { expect(other_project_jira_config.valid?).to be true }
         end
       end

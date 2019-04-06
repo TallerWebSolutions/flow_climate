@@ -19,6 +19,7 @@ RSpec.describe IntegrationError, type: :model do
   describe '.build_integration_error' do
     let(:demand) { Fabricate :demand }
     let(:demand_transition) { Fabricate :demand_transition, demand: demand }
+
     it 'creates the integration error' do
       demand_transition.errors.add(:stage, 'error')
       integration_error = IntegrationError.build_integration_error(demand, demand_transition, :jira)

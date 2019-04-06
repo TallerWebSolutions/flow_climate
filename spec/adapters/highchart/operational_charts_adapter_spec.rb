@@ -57,6 +57,7 @@ RSpec.describe Highchart::OperationalChartsAdapter, type: :data_object do
 
     describe '.initialize' do
       before { travel_to Date.new(2018, 11, 19) }
+
       after { travel_back }
 
       context 'having projects' do
@@ -86,11 +87,13 @@ RSpec.describe Highchart::OperationalChartsAdapter, type: :data_object do
             expect(report_data.weekly_queue_touch_share_hash).to eq(dates_array: %w[2018-02-25 2018-03-04 2018-03-11 2018-03-18 2018-03-25 2018-04-01 2018-04-08 2018-04-15 2018-04-22 2018-04-29 2018-05-06 2018-05-13], flow_efficiency_array: [0, 50.0, 0, 0, 0, 0, 0, 0, 0, 0, 26.31578947368421, 0])
           end
         end
-        context 'and using the month period interval' do
-          before { travel_to Time.zone.local(2018, 5, 15, 10, 0, 0) }
-          after { travel_back }
 
+        context 'and using the month period interval' do
           subject(:report_data) { Highchart::OperationalChartsAdapter.new(Project.all, Project.all.map(&:start_date).min, Project.all.map(&:end_date).max, 'month') }
+
+          before { travel_to Time.zone.local(2018, 5, 15, 10, 0, 0) }
+
+          after { travel_back }
 
           it 'do the math and provides the correct information' do
             expect(report_data.all_projects).to match_array [first_project, second_project, third_project]
@@ -117,10 +120,11 @@ RSpec.describe Highchart::OperationalChartsAdapter, type: :data_object do
         end
 
         context 'and using the day period interval' do
-          before { travel_to Time.zone.local(2018, 5, 21, 10, 0, 0) }
-          after { travel_back }
-
           subject(:report_data) { Highchart::OperationalChartsAdapter.new(Project.all, Date.new(2018, 3, 13), Date.new(2018, 4, 30), 'day') }
+
+          before { travel_to Time.zone.local(2018, 5, 21, 10, 0, 0) }
+
+          after { travel_back }
 
           it 'do the math and provides the correct information' do
             expect(report_data.all_projects).to match_array Project.all
@@ -170,13 +174,16 @@ RSpec.describe Highchart::OperationalChartsAdapter, type: :data_object do
         end
       end
     end
+
     describe '#hours_per_demand' do
       subject(:report_data) { Highchart::OperationalChartsAdapter.new(Project.all, Project.all.map(&:start_date).min, Project.all.map(&:end_date).max, 'week') }
+
       it { expect(report_data.hours_per_demand).to eq [0.0, 19.8, 19.8, 13.2, 7.92, 7.92, 7.92, 7.92, 7.92, 7.92, 54.84, 54.84] }
     end
 
     describe '#hours_blocked_per_stage' do
       subject(:report_data) { Highchart::OperationalChartsAdapter.new(Project.all, Time.zone.iso8601('2018-02-27T17:30:58-03:00').to_date, 1.day.from_now.to_date, 'week') }
+
       it { expect(report_data.hours_blocked_per_stage[:x_axis].count).to be_positive }
       it { expect(report_data.hours_blocked_per_stage[:data].count).to be_positive }
     end

@@ -64,14 +64,14 @@ RSpec.configure do |config|
     DatabaseCleaner.clean_with :truncation, except: [ActiveRecord::InternalMetadata.table_name]
   end
 
-  config.around(:each) do |example|
+  config.around do |example|
     DatabaseCleaner.cleaning do
       example.run
     end
   end
 
   config.include ActiveJob::TestHelper
-  config.after(:each) do
+  config.after do
     clear_enqueued_jobs
   end
 

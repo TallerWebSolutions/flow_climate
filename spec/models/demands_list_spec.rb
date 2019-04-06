@@ -80,46 +80,63 @@ RSpec.describe DemandsList, type: :model do
 
   describe '#leadtime_in_days' do
     context 'having leadtime' do
-      let!(:demand) { Fabricate :demand }
       subject(:demands_list) { DemandsList.first }
+
+      let!(:demand) { Fabricate :demand }
+
       it { expect(demands_list.leadtime_in_days.to_f).to be_within(1.second).of(1) }
     end
+
     context 'having no leadtime' do
-      let!(:demand) { Fabricate :demand, commitment_date: nil, end_date: nil, leadtime: nil }
       subject(:demands_list) { DemandsList.first }
+
+      let!(:demand) { Fabricate :demand, commitment_date: nil, end_date: nil, leadtime: nil }
+
       it { expect(demands_list.leadtime_in_days.to_f).to eq 0 }
     end
   end
 
   describe '#touch_time_in_days' do
     context 'having touch_time_in_days' do
-      let!(:demand) { Fabricate :demand, total_touch_time: (3 * 86_400) }
       subject(:demands_list) { DemandsList.first }
+
+      let!(:demand) { Fabricate :demand, total_touch_time: (3 * 86_400) }
+
       it { expect(demands_list.touch_time_in_days.to_f).to eq 3 }
     end
+
     context 'having no leadtime' do
-      let!(:demand) { Fabricate :demand, commitment_date: nil, end_date: nil, leadtime: nil, total_touch_time: 0 }
       subject(:demands_list) { DemandsList.first }
+
+      let!(:demand) { Fabricate :demand, commitment_date: nil, end_date: nil, leadtime: nil, total_touch_time: 0 }
+
       it { expect(demands_list.touch_time_in_days.to_f).to eq 0 }
     end
   end
 
   describe '#queue_time_in_days' do
     context 'having touch_time_in_days' do
-      let!(:demand) { Fabricate :demand, total_queue_time: (3 * 86_400) }
       subject(:demands_list) { DemandsList.first }
+
+      let!(:demand) { Fabricate :demand, total_queue_time: (3 * 86_400) }
+
       it { expect(demands_list.queue_time_in_days.to_f).to eq 3 }
     end
+
     context 'having no leadtime' do
-      let!(:demand) { Fabricate :demand, commitment_date: nil, end_date: nil, leadtime: nil, total_queue_time: 0 }
       subject(:demands_list) { DemandsList.first }
+
+      let!(:demand) { Fabricate :demand, commitment_date: nil, end_date: nil, leadtime: nil, total_queue_time: 0 }
+
       it { expect(demands_list.queue_time_in_days.to_f).to eq 0 }
     end
   end
 
   describe '#total_effort' do
-    let!(:demand) { Fabricate :demand, effort_upstream: 10, effort_downstream: 20 }
     subject(:demands_list) { DemandsList.first }
+
+    let!(:demand) { Fabricate :demand, effort_upstream: 10, effort_downstream: 20 }
+
     it { expect(demands_list.total_effort).to eq 30 }
   end
 end

@@ -2,6 +2,7 @@
 
 RSpec.describe Company, type: :model do
   before { travel_to Time.zone.local(2018, 11, 19, 10, 0, 0) }
+
   after { travel_back }
 
   context 'associations' do
@@ -26,13 +27,18 @@ RSpec.describe Company, type: :model do
     context 'when already has the user' do
       let(:user) { Fabricate :user }
       let!(:company) { Fabricate :company, users: [user] }
+
       before { company.add_user(user) }
+
       it { expect(company.users).to eq [user] }
     end
+
     context 'when does not have the user' do
       let(:user) { Fabricate :user }
       let!(:company) { Fabricate :company }
+
       before { company.add_user(user) }
+
       it { expect(company.users).to eq [user] }
     end
   end
@@ -141,6 +147,7 @@ RSpec.describe Company, type: :model do
 
     context 'having no finances' do
       let(:company) { Fabricate :company }
+
       it { expect(company.current_cost_per_hour).to eq 0 }
     end
   end
@@ -154,6 +161,7 @@ RSpec.describe Company, type: :model do
 
     context 'having no finances' do
       let(:company) { Fabricate :company }
+
       it { expect(company.current_hours_per_demand.to_f).to eq 0 }
     end
   end
@@ -247,9 +255,10 @@ RSpec.describe Company, type: :model do
         company.demands_delivered_last_week
       end
     end
+
     context 'having no projects' do
       it 'calls the repository' do
-        expect(DemandsRepository.instance).to receive(:throughput_to_projects_and_period).never
+        expect(DemandsRepository.instance).not_to receive(:throughput_to_projects_and_period)
         expect(company.demands_delivered_last_week).to eq []
       end
     end
@@ -260,8 +269,10 @@ RSpec.describe Company, type: :model do
       include_context 'demands with effort for company'
       it { expect(company.total_active_hours).to eq 0.1632e4 }
     end
+
     context 'having no data' do
       let(:company) { Fabricate :company }
+
       it { expect(company.total_active_hours).to eq 0 }
     end
   end
@@ -274,6 +285,7 @@ RSpec.describe Company, type: :model do
 
     context 'having no data' do
       let(:company) { Fabricate :company }
+
       it { expect(company.total_active_consumed_hours).to eq 0 }
     end
   end
@@ -286,6 +298,7 @@ RSpec.describe Company, type: :model do
 
     context 'having no data' do
       let(:company) { Fabricate :company }
+
       it { expect(company.total_active_consumed_hours).to eq 0 }
     end
   end

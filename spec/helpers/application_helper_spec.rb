@@ -10,6 +10,7 @@ RSpec.describe ApplicationHelper, type: :helper do
         expect(helper.notice).to render_template 'layouts/_notice'
       end
     end
+
     context 'having no flash notice' do
       it 'calls the render to the template' do
         flash[:notice] = nil
@@ -25,6 +26,7 @@ RSpec.describe ApplicationHelper, type: :helper do
         expect(helper.alert).to render_template 'layouts/_alert'
       end
     end
+
     context 'having no flash notice' do
       it 'calls the render to the template' do
         flash[:alert] = nil
@@ -40,6 +42,7 @@ RSpec.describe ApplicationHelper, type: :helper do
         expect(helper.error).to render_template 'layouts/_error'
       end
     end
+
     context 'having no flash notice' do
       it 'calls the render to the template' do
         flash[:error] = nil

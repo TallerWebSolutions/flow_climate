@@ -20,19 +20,24 @@ RSpec.describe Team, type: :model do
         context 'same name in same customer' do
           let!(:team) { Fabricate :team, company: company, name: 'zzz' }
           let!(:other_team) { Fabricate.build :team, company: company, name: 'zzz' }
+
           it 'does not accept the model' do
             expect(other_team.valid?).to be false
             expect(other_team.errors[:name]).to eq ['Não deve repetir nome do time para a mesma empresa.']
           end
         end
+
         context 'different name in same customer' do
           let!(:team) { Fabricate :team, company: company, name: 'zzz' }
           let!(:other_team) { Fabricate.build :team, company: company, name: 'aaa' }
+
           it { expect(other_team.valid?).to be true }
         end
+
         context 'different name in same customer' do
           let!(:team) { Fabricate :team, company: company, name: 'zzz' }
           let!(:other_team) { Fabricate.build :team, name: 'zzz' }
+
           it { expect(other_team.valid?).to be true }
         end
       end
@@ -122,6 +127,7 @@ RSpec.describe Team, type: :model do
       include_context 'consolidations data for team'
       it { expect(team.percentage_remaining_money).to eq((team.remaining_money / team.total_value) * 100) }
     end
+
     context 'having no data' do
       let(:company) { Fabricate :company }
       let(:team) { Fabricate :team, company: company }
@@ -140,6 +146,7 @@ RSpec.describe Team, type: :model do
       include_context 'consolidations data for team'
       it { expect(team.percentage_remaining_scope).to eq((team.remaining_backlog.to_f / team.last_week_scope.to_f) * 100) }
     end
+
     context 'having no data' do
       let(:company) { Fabricate :company }
       let(:team) { Fabricate :team, company: company }
@@ -168,9 +175,11 @@ RSpec.describe Team, type: :model do
 
   describe '#consumed_hours_in_month' do
     before { travel_to Time.zone.local(2018, 4, 6, 10, 0, 0) }
+
     after { travel_back }
 
     let(:team) { Fabricate :team }
+
     context 'having data' do
       include_context 'consolidations data for team'
       it { expect(team.consumed_hours_in_month(Date.new(2018, 4, 5))).to eq 0.88e2 }

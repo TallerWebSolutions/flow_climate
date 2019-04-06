@@ -38,6 +38,7 @@ RSpec.describe Jira::JiraDataToCsvJob, type: :active_job do
           expect(DemandDataProcessment.first.downloaded_content).to eq "jira_key,project_key,issue_type,class_of_service,created_date,first_stage,second_stage\n10000,foo,Story,,2018-07-02T11:20:18.998-0300,2018-07-05T09:40:43.886-0300,2018-07-08T22:34:47.440-0300\n"
         end
       end
+
       context 'querying by project name' do
         it 'computes the CSV, saves it and send an email with the content' do
           returned_project = client.Project.build({ fields: { key: 'FC', name: 'flow climate' } }.with_indifferent_access)
@@ -46,7 +47,7 @@ RSpec.describe Jira::JiraDataToCsvJob, type: :active_job do
           expect_any_instance_of(JIRA::Resource::Project).to(receive(:issues).once { [returned_issue] })
           expect(JIRA::Resource::Issue).to(receive(:find).once { returned_issue })
 
-          expect(JIRA::Resource::Issue).to(receive(:jql).never)
+          expect(JIRA::Resource::Issue).not_to(receive(:jql))
 
           Jira::JiraDataToCsvJob.perform_now('foo', 'bar', 'https://foo.atlassian.net/', 'NSC', nil, nil, 'class_of_service_field', user.id)
 

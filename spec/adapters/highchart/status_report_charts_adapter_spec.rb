@@ -45,10 +45,11 @@ RSpec.describe Highchart::StatusReportChartsAdapter, type: :data_object do
 
       describe '.initialize' do
         context 'having projects' do
-          before { travel_to Time.zone.local(2019, 2, 15, 10, 0, 0) }
-          after { travel_back }
-
           subject(:report_data) { Highchart::StatusReportChartsAdapter.new(Project.all, Project.all.map(&:start_date).min, Project.all.map(&:end_date).max, 'week') }
+
+          before { travel_to Time.zone.local(2019, 2, 15, 10, 0, 0) }
+
+          after { travel_back }
 
           it 'do the math and provides the correct information' do
             expect(report_data.all_projects).to match_array Project.all
@@ -72,6 +73,7 @@ RSpec.describe Highchart::StatusReportChartsAdapter, type: :data_object do
             expect(report_data.cumulative_flow_diagram_downstream).to eq([{ name: second_stage.name, data: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], marker: { enabled: false } }, { name: first_stage.name, data: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], marker: { enabled: false } }, { name: third_stage.name, data: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], marker: { enabled: false } }])
           end
         end
+
         context 'having no projects' do
           subject(:report_data) { Highchart::StatusReportChartsAdapter.new(Project.none, Project.all.map(&:start_date).min, Project.all.map(&:end_date).max, 'week') }
 

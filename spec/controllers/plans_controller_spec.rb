@@ -4,10 +4,13 @@ RSpec.describe PlansController, type: :controller do
   context 'unauthenticated' do
     describe 'GET #no_plan' do
       before { get :no_plan }
+
       it { expect(response).to redirect_to new_user_session_path }
     end
+
     describe 'POST #plan_choose' do
       before { post :plan_choose }
+
       it { expect(response).to redirect_to new_user_session_path }
     end
   end
@@ -15,19 +18,23 @@ RSpec.describe PlansController, type: :controller do
   context 'authenticated' do
     let!(:admin_user) { Fabricate :user, admin: true }
     let(:user) { Fabricate :user }
+
     before { sign_in user }
 
     describe 'GET #no_plan' do
       context 'no no_plan' do
         let(:plan) { Fabricate :plan, plan_type: :lite }
         let!(:user_plan) { Fabricate :user_plan, active: true }
+
         before { get :no_plan }
+
         it { expect(response).to render_template :no_plan }
       end
     end
 
     describe 'POST #plan_choose' do
       let!(:plan) { Fabricate :plan }
+
       context 'having no inactive plans' do
         it 'creates the plan to the user and redirects to the root path' do
           expect(UserNotifierMailer).to receive(:plan_requested).once.and_call_original
@@ -42,10 +49,12 @@ RSpec.describe PlansController, type: :controller do
           expect(response).to redirect_to root_path
         end
       end
+
       context 'having inactive plans' do
         let!(:user_plan) { Fabricate :user_plan, user: user, plan: plan, active: false, finish_at: 1.day.from_now }
 
         before { post :plan_choose, params: { plan_id: plan.id, period: :monthly } }
+
         it 'creates the plan to the user and redirects to the root path' do
           expect(UserPlan.count).to eq 1
 
