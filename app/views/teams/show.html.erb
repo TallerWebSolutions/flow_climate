@@ -35,14 +35,14 @@
 </div>
 
 <div id="members-table" class="tab-container">
-  <%= render 'team_members/team_members_table' %>
+  <%= render 'team_members/team_members_table', company: @company, team: @team, team_members: @team_members %>
 </div>
 
 <div id="project-list" class="tab-container">
   <h2><%= t('projects.index.title') %></h2>
 
   <div id="projects-table">
-    <%= render 'projects/projects_table', projects_list: @team_projects, team_id: @team&.id, customer_id: @customer&.id, product_id: @product&.id %>
+    <%= render 'projects/projects_table', company: @company, projects_list: @team_projects, projects_summary: @projects_summary %>
   </div>
 </div>
 

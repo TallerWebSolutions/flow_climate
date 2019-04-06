@@ -1,5 +1,5 @@
 <td><%= stage.order %></td>
-<td><%= link_to stage.name, company_stage_path(@company, stage) %></td>
+<td><%= link_to stage.name, company_stage_path(company, stage) %></td>
 <td><%= stage.integration_id %></td>
 <td><%= stage.integration_pipe_id %></td>
 <td><%= stage.projects.count %></td>
@@ -21,10 +21,10 @@
   <% end %>
 </td>
 <td>
-  <%= link_to edit_company_stage_path(@company, stage), class: 'edit-stage', remote: true do %>
+  <%= link_to edit_company_stage_path(company, stage), class: 'edit-stage', remote: true do %>
     <i class="fas fa-edit"></i>
   <% end %>
-  <%= link_to company_stage_path(@company, stage), method: :delete do %>
+  <%= link_to company_stage_path(company, stage), method: :delete do %>
     <i class="fa fa-times" aria-hidden="true"></i>
   <% end %>
 </td>

@@ -3,6 +3,7 @@
 RSpec.describe Highchart::FinancesChartsAdapter, type: :data_object do
   context 'having finances informations' do
     before { travel_to Time.zone.local(2018, 9, 3, 12, 20, 31) }
+
     after { travel_back }
 
     let(:company) { Fabricate :company }
@@ -70,9 +71,11 @@ RSpec.describe Highchart::FinancesChartsAdapter, type: :data_object do
       end
     end
   end
+
   context 'having no projects' do
     describe '.initialize' do
       let(:finances_hash) { Highchart::FinancesChartsAdapter.new(FinancialInformation.all).finances_hash_with_computed_informations }
+
       it { expect(finances_hash).to be_empty }
     end
   end

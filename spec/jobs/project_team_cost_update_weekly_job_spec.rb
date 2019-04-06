@@ -25,16 +25,20 @@ RSpec.describe ProjectTeamCostUpdateWeeklyJob, type: :active_job do
         expect(ProjectWeeklyCost.first.monthly_cost_value).to eq first_project.current_cost
       end
     end
+
     context 'having weekly cost to this week' do
       let!(:project_weekly_cost) { Fabricate :project_weekly_cost, date_beggining_of_week: Date.commercial(Time.zone.today.cwyear, Time.zone.today.cweek, 1), project: first_project, monthly_cost_value: 200 }
+
       it 'does not duplicate the cost and just updates the value' do
         ProjectTeamCostUpdateWeeklyJob.perform_now
         expect(ProjectWeeklyCost.count).to eq 1
         expect(ProjectWeeklyCost.first.monthly_cost_value).to eq first_project.current_cost
       end
     end
+
     context 'having weekly cost to other week' do
       let!(:project_weekly_cost) { Fabricate :project_weekly_cost, date_beggining_of_week: Date.commercial(1.week.ago.to_date.cwyear, 1.week.ago.to_date.cweek, 1), project: first_project, monthly_cost_value: 200 }
+
       it 'does not duplicate the cost and just updates the value' do
         ProjectTeamCostUpdateWeeklyJob.perform_now
         expect(ProjectWeeklyCost.count).to eq 2

@@ -5,6 +5,7 @@ RSpec.describe ProjectsRepository, type: :repository do
   let(:customer) { Fabricate :customer, company: company }
 
   before { travel_to Time.zone.local(2018, 4, 13, 10, 0, 0) }
+
   after { travel_back }
 
   describe '#active_projects_in_month' do
@@ -29,6 +30,7 @@ RSpec.describe ProjectsRepository, type: :repository do
     context 'having data' do
       let!(:first_demand) { Fabricate :demand, project: project, downstream: true, created_date: 3.months.ago.to_date, end_date: 2.months.ago.to_date, leadtime: 2 * 86_400, effort_upstream: 10, effort_downstream: 5 }
       let!(:second_demand) { Fabricate :demand, project: other_project, downstream: false, created_date: 4.months.ago.to_date, end_date: 2.months.ago, leadtime: 1 * 86_400, effort_upstream: 27, effort_downstream: 40 }
+
       it { expect(ProjectsRepository.instance.hours_consumed_per_month(company.projects, 2.months.ago.to_date)).to eq 0.82e2 }
     end
 
@@ -44,6 +46,7 @@ RSpec.describe ProjectsRepository, type: :repository do
     context 'having data' do
       let!(:first_demand) { Fabricate :demand, project: project, downstream: true, created_date: 3.months.ago.to_date, end_date: 2.weeks.ago.to_date, leadtime: 2 * 86_400, effort_upstream: 10, effort_downstream: 5 }
       let!(:second_demand) { Fabricate :demand, project: other_project, downstream: false, created_date: 4.months.ago.to_date, end_date: 2.weeks.ago, leadtime: 1 * 86_400, effort_upstream: 27, effort_downstream: 40 }
+
       it { expect(ProjectsRepository.instance.hours_consumed_per_week(company.projects, 2.weeks.ago.to_date)).to eq 0.82e2 }
     end
 
@@ -64,6 +67,7 @@ RSpec.describe ProjectsRepository, type: :repository do
   describe '#money_to_month' do
     let!(:project) { Fabricate :project, customer: customer, value: 100, start_date: 2.months.ago, end_date: 1.month.from_now }
     let!(:other_project) { Fabricate :project, customer: customer, value: 50, start_date: 2.months.ago, end_date: 1.month.from_now }
+
     context 'having projects in the month' do
       it { expect(ProjectsRepository.instance.money_to_month(company.projects, 2.months.ago.to_date).to_f).to be_within(0.9).of(49.4) }
     end
@@ -104,9 +108,11 @@ RSpec.describe ProjectsRepository, type: :repository do
       let!(:fourth_project) { Fabricate :project, customer: customer, product: product, start_date: 2.months.from_now, end_date: 2.months.from_now, status: :maintenance }
       let!(:fifth_project) { Fabricate :project, customer: customer, product: product, start_date: 1.week.from_now, end_date: 1.month.from_now, status: :finished }
       let!(:sixth_project) { Fabricate :project, customer: customer, product: product, start_date: 3.months.from_now, end_date: 4.months.from_now, status: :cancelled }
+
       context 'passing status filter' do
         it { expect(ProjectsRepository.instance.add_query_to_projects_in_status(Project.all, :maintenance)).to match_array [second_project, fourth_project] }
       end
+
       context 'passing no status filter' do
         it { expect(ProjectsRepository.instance.add_query_to_projects_in_status(Project.all, 'all')).to match_array [first_project, second_project, third_project, fourth_project, fifth_project, sixth_project] }
       end
@@ -117,21 +123,25 @@ RSpec.describe ProjectsRepository, type: :repository do
     let(:project) { Fabricate :project, status: :executing }
     let(:other_project) { Fabricate :project, status: :executing }
     let(:previous_end_date) { 1.day.ago }
+
     context 'having ongoing demands' do
       let!(:first_demand) { Fabricate :demand, project: project, end_date: previous_end_date }
       let!(:second_demand) { Fabricate :demand, project: project, end_date: nil }
       let!(:third_demand) { Fabricate :demand, project: project, end_date: nil }
 
       before { ProjectsRepository.instance.finish_project!(project) }
+
       it { expect(project.reload.status).to eq 'finished' }
       it { expect(first_demand.reload.end_date).to eq previous_end_date }
       it { expect(second_demand.reload.end_date).not_to be_nil }
       it { expect(third_demand.reload.end_date).not_to be_nil }
     end
+
     context 'having no demands' do
       let!(:first_demand) { Fabricate :demand, project: project, end_date: previous_end_date }
 
       before { ProjectsRepository.instance.finish_project!(project) }
+
       it { expect(first_demand.reload.end_date).to eq previous_end_date }
       it { expect(project.reload.status).to eq 'finished' }
     end
@@ -145,6 +155,7 @@ RSpec.describe ProjectsRepository, type: :repository do
 
       it { expect(ProjectsRepository.instance.projects_ending_after(Project.all, 3.days.ago)).to match_array [project, other_project] }
     end
+
     context 'having no projects' do
       it { expect(ProjectsRepository.instance.projects_ending_after(Project.all, 3.days.ago)).to eq [] }
     end

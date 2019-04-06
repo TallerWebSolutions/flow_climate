@@ -1,48 +1,48 @@
 <div class="standard-form">
 
-  <% if @team_member.persisted? %>
+  <% if team_member.persisted? %>
     <div class="row">
-      <div class='col-xs-12 form-group <%= 'has-error' if @team_member.errors[:team].present? %>'>
+      <div class='col-xs-12 form-group <%= 'has-error' if team_member.errors[:team].present? %>'>
         <%= f.label :team, class: 'control-label' %>
-        <%= f.select :team, @company.teams.map { |team| [team.name, team.id] }, { include_blank: t('general.select'), selected: @team_member.team_id }, class: 'form-control' %>
-        <span class="help-block"><%= @team_member.errors[:team].join(', ') %></span>
+        <%= f.select :team, company.teams.map { |team| [team.name, team.id] }, { include_blank: t('general.select'), selected: team_member.team_id }, class: 'form-control' %>
+        <span class="help-block"><%= team_member.errors[:team].join(', ') %></span>
       </div>
     </div>
   <% end %>
 
   <div class="row">
-    <div class='col-xs-6 form-group <%= 'has-error' if @team_member.errors[:name].present? %>'>
+    <div class='col-xs-6 form-group <%= 'has-error' if team_member.errors[:name].present? %>'>
       <%= f.label :name, class: 'control-label required' %>
       <%= f.text_field :name, class: 'form-control', autofocus: true %>
-      <span class="help-block"><%= @team_member.errors[:name].join(', ') %></span>
+      <span class="help-block"><%= team_member.errors[:name].join(', ') %></span>
     </div>
-    <div class='col-xs-6 form-group <%= 'has-error' if @team_member.errors[:billable_type].present? %>'>
+    <div class='col-xs-6 form-group <%= 'has-error' if team_member.errors[:billable_type].present? %>'>
       <%= f.label :billable_type, class: 'control-label' %>
-      <%= f.select :billable_type, TeamMember.billable_types.map { |key, _value| [t("activerecord.attributes.team_member.enums.billable_type.#{key}"), key] }, { include_blank: t('general.select'), selected: @team_member.billable_type }, class: 'form-control' %>
-      <span class="help-block"><%= @team_member.errors[:billable_type].join(', ') %></span>
+      <%= f.select :billable_type, TeamMember.billable_types.map { |key, _value| [t("activerecord.attributes.team_member.enums.billable_type.#{key}"), key] }, { include_blank: t('general.select'), selected: team_member.billable_type }, class: 'form-control' %>
+      <span class="help-block"><%= team_member.errors[:billable_type].join(', ') %></span>
     </div>
   </div>
 
   <div class="row">
-    <div class='col-xs-3 form-group <%= 'has-error' if @team_member.errors[:start_date].present? %>'>
+    <div class='col-xs-3 form-group <%= 'has-error' if team_member.errors[:start_date].present? %>'>
       <%= f.label :start_date, class: 'control-label required' %>
       <%= f.date_field :start_date, class: 'form-control' %>
-      <span class="help-block"><%= @team_member.errors[:monthly_payment].join(', ') %></span>
+      <span class="help-block"><%= team_member.errors[:monthly_payment].join(', ') %></span>
     </div>
     <div class='col-xs-3 form-group'>
       <%= f.label :end_date, class: 'control-label' %>
       <%= f.date_field :end_date, class: 'form-control' %>
     </div>
-    <div class='col-xs-3 form-group <%= 'has-error' if @team_member.errors[:monthly_payment].present? %>'>
+    <div class='col-xs-3 form-group <%= 'has-error' if team_member.errors[:monthly_payment].present? %>'>
       <%= f.label :monthly_payment, class: 'control-label required' %>
       <%= f.number_field :monthly_payment, class: 'form-control', step: 0.01 %>
-      <span class="help-block"><%= @team_member.errors[:monthly_payment].join(', ') %></span>
+      <span class="help-block"><%= team_member.errors[:monthly_payment].join(', ') %></span>
     </div>
 
-    <div class='col-xs-3 form-group <%= 'has-error' if @team_member.errors[:hours_per_month].present? %>'>
+    <div class='col-xs-3 form-group <%= 'has-error' if team_member.errors[:hours_per_month].present? %>'>
       <%= f.label :hours_per_month, class: 'control-label required' %>
       <%= f.number_field :hours_per_month, class: 'form-control', step: 1, id: 'hours_per_month' %>
-      <span class="help-block"><%= @team_member.errors[:hours_per_month].join(', ') %></span>
+      <span class="help-block"><%= team_member.errors[:hours_per_month].join(', ') %></span>
     </div>
   </div>
 

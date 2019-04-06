@@ -2,6 +2,7 @@
 
 RSpec.describe Highchart::DemandsChartsAdapter, type: :data_object do
   before { travel_to Time.zone.local(2018, 9, 3, 12, 20, 31) }
+
   after { travel_back }
 
   context 'having demands' do
@@ -61,9 +62,11 @@ RSpec.describe Highchart::DemandsChartsAdapter, type: :data_object do
       end
     end
   end
+
   context 'having no demands' do
     describe '.initialize' do
       subject(:throughput_chart_data) { Highchart::DemandsChartsAdapter.new(Demand.all, 'week').throughput_chart_data }
+
       it 'returns empty information' do
         expect(throughput_chart_data[:x_axis]).to eq [Time.zone.today.end_of_week]
         expect(throughput_chart_data[:y_axis][0][:name]).to eq I18n.t('general.throughput')

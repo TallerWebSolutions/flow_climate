@@ -12,7 +12,7 @@
 <%= form_for @team, url: company_team_path(@company, @team), method: :put, class: 'form' do |f| %>
   <div class="row bottom-spaced-component">
     <div class="col-xs-12">
-      <%= render 'form', f: f %>
+      <%= render 'form', f: f, team: @team %>
     </div>
   </div>
 <% end %>

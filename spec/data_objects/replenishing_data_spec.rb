@@ -2,6 +2,7 @@
 
 RSpec.describe ReplenishingData, type: :data_objects do
   before { travel_to Time.zone.local(2019, 2, 1, 10, 0, 0) }
+
   after { travel_back }
 
   let(:company) { Fabricate :company }
@@ -26,10 +27,12 @@ RSpec.describe ReplenishingData, type: :data_objects do
 
   describe '#summary_infos' do
     context 'having data' do
+      subject(:replenishing_data) { ReplenishingData.new(team) }
+
       let!(:company_config) { Fabricate :company_settings, company: company, max_active_parallel_projects: 2, max_flow_pressure: 3 }
       let!(:projects) { Fabricate.times(2, :project, customer: customer, start_date: Time.zone.today, end_date: Time.zone.today) }
       let!(:other_projects) { Fabricate.times(2, :project, customer: customer, start_date: 1.month.from_now, end_date: 1.month.from_now) }
-      subject(:replenishing_data) { ReplenishingData.new(team) }
+
       it 'returns the hash value' do
         expect(replenishing_data.summary_infos[:four_last_throughputs]).to eq [0, 0, 0, 9]
         expect(replenishing_data.summary_infos[:average_throughput]).to eq 2
@@ -79,10 +82,12 @@ RSpec.describe ReplenishingData, type: :data_objects do
         expect(project_data_to_replenish[2][:throughput_last_week]).to eq 0
       end
     end
+
     context 'having no data' do
+      subject(:replenishing_data) { ReplenishingData.new(other_team) }
+
       let(:other_team) { Fabricate :team, company: company }
 
-      subject(:replenishing_data) { ReplenishingData.new(other_team) }
       it 'returns nil' do
         expect(replenishing_data.summary_infos[:four_last_throughputs]).to be_nil
       end

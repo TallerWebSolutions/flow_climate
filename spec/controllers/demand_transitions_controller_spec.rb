@@ -4,6 +4,7 @@ RSpec.describe DemandTransitionsController, type: :controller do
   context 'unauthenticated' do
     describe 'DELETE #destroy' do
       before { delete :destroy, params: { company_id: 'foo', stage_id: 'bar', id: 'sbbrubles' } }
+
       it { expect(response).to redirect_to new_user_session_path }
     end
   end
@@ -25,6 +26,7 @@ RSpec.describe DemandTransitionsController, type: :controller do
 
       context 'passing valid IDs' do
         before { delete :destroy, params: { company_id: company, stage_id: stage, id: demand_transition } }
+
         it 'assigns the instance variable and renders the template' do
           expect(response).to redirect_to company_stage_path(company, stage)
           expect(DemandTransition.last).to be_nil
@@ -34,16 +36,21 @@ RSpec.describe DemandTransitionsController, type: :controller do
       context 'passing an invalid ID' do
         context 'non-existent company' do
           before { delete :destroy, params: { company_id: 'foo', stage_id: stage, id: demand_transition } }
+
           it { expect(response).to have_http_status :not_found }
         end
+
         context 'non-existent stage' do
           before { delete :destroy, params: { company_id: company, stage_id: 'foo', id: demand_transition } }
+
           it { expect(response).to have_http_status :not_found }
         end
+
         context 'not permitted' do
           let(:company) { Fabricate :company, users: [] }
 
           before { delete :destroy, params: { company_id: company, stage_id: stage, id: demand_transition } }
+
           it { expect(response).to have_http_status :not_found }
         end
       end

@@ -9,7 +9,7 @@
     <th><%= ProjectRiskAlert.human_attribute_name :alert_value %></th>
   </thead>
   <tbody>
-    <% @ordered_project_risk_alerts.each do |alert| %>
+    <% ordered_project_risk_alerts.each do |alert| %>
       <tr>
         <td><figure class='circle-<%= alert.alert_color %>'></figure></td>
         <td><%= l(alert.created_at, format: :short) %></td>

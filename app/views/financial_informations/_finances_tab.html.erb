@@ -9,13 +9,13 @@
 </div>
 
 <div id="content-finances-list" class="tabcontent">
-  <%= render 'financial_informations/finances_list', finances: finances %>
+  <%= render 'financial_informations/finances_list', finances: finances, company: company, financial_informations: financial_informations, finances_hash_with_computed_informations: finances_hash_with_computed_informations %>
 </div>
 
 <div id="content-finances-stats" class="tabcontent">
-  <%= render 'financial_informations/statistics_list', finances: finances, finances_hash: @finances_hash_with_computed_informations %>
+  <%= render 'financial_informations/statistics_list', finances: finances, company: company, finances_hash_with_computed_informations: finances_hash_with_computed_informations %>
 </div>
 
 <div id="content-finances-charts" class="tabcontent">
-  <%= render 'financial_informations/finances_charts', finances_hash: @finances_hash_with_computed_informations %>
+  <%= render 'financial_informations/finances_charts', finances_hash: finances_hash_with_computed_informations %>
 </div>

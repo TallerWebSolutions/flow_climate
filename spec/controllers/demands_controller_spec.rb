@@ -2,48 +2,68 @@
 
 RSpec.describe DemandsController, type: :controller do
   before { travel_to Time.zone.local(2019, 1, 24, 10, 0, 0) }
+
   after { travel_back }
 
   context 'unauthenticated' do
     describe 'GET #new' do
       before { get :new, params: { company_id: 'foo', project_id: 'bar' } }
+
       it { expect(response).to redirect_to new_user_session_path }
     end
+
     describe 'POST #create' do
       before { post :create, params: { company_id: 'foo', project_id: 'bar' } }
+
       it { expect(response).to redirect_to new_user_session_path }
     end
+
     describe 'DELETE #destroy' do
       before { delete :destroy, params: { company_id: 'foo', id: 'sbbrubles' }, xhr: true }
+
       it { expect(response).to have_http_status :unauthorized }
     end
+
     describe 'GET #edit' do
       before { get :edit, params: { company_id: 'foo', project_id: 'bar', id: 'sbbrubles' }, xhr: true }
-      it { expect(response).to have_http_status 401 }
+
+      it { expect(response).to have_http_status :unauthorized }
     end
+
     describe 'PUT #update' do
       before { put :update, params: { company_id: 'foo', project_id: 'bar', id: 'sbbrubles' }, xhr: true }
-      it { expect(response).to have_http_status 401 }
+
+      it { expect(response).to have_http_status :unauthorized }
     end
+
     describe 'GET #show' do
       before { get :show, params: { company_id: 'foo', id: 'sbbrubles' } }
+
       it { expect(response).to redirect_to new_user_session_path }
     end
+
     describe 'PUT #synchronize_jira' do
       before { put :synchronize_jira, params: { company_id: 'foo', project_id: 'bar', id: 'bla' } }
+
       it { expect(response).to redirect_to new_user_session_path }
     end
+
     describe 'GET #demands_csv' do
       before { get :demands_csv, params: { company_id: 'xpto' }, format: :csv }
-      it { expect(response).to have_http_status 401 }
+
+      it { expect(response).to have_http_status :unauthorized }
     end
+
     describe 'GET #demands_in_projects' do
       before { get :demands_in_projects, params: { company_id: 'xpto' }, xhr: true }
-      it { expect(response).to have_http_status 401 }
+
+      it { expect(response).to have_http_status :unauthorized }
     end
+
     describe 'GET #search_demands_by_flow_status' do
       before { get :search_demands_by_flow_status, params: { company_id: 'foo', id: 'foo', no_grouping: 'true', grouped_by_month: 'false', grouped_by_customer: 'false', not_started: 'false', wip: 'false', delivered: 'false' }, xhr: true }
-      it { expect(response).to have_http_status 401 }
+
+      it { expect(response).to have_http_status :unauthorized }
     end
   end
 
@@ -63,6 +83,7 @@ RSpec.describe DemandsController, type: :controller do
     describe 'GET #new' do
       context 'valid parameters' do
         before { get :new, params: { company_id: company, project_id: project } }
+
         it 'instantiates a new Demand and renders the template' do
           expect(response).to render_template :new
           expect(assigns(:company)).to eq company
@@ -74,15 +95,21 @@ RSpec.describe DemandsController, type: :controller do
       context 'invalid' do
         context 'company' do
           before { get :new, params: { company_id: 'foo', project_id: project } }
+
           it { expect(response).to have_http_status :not_found }
         end
+
         context 'project' do
           before { get :new, params: { company_id: company, project_id: 'foo' } }
+
           it { expect(response).to have_http_status :not_found }
         end
+
         context 'and not permitted company' do
           let(:company) { Fabricate :company }
+
           before { get :new, params: { company_id: company, project_id: project } }
+
           it { expect(response).to have_http_status :not_found }
         end
       end
@@ -91,6 +118,7 @@ RSpec.describe DemandsController, type: :controller do
     describe 'POST #create' do
       context 'passing valid parameters' do
         let(:date_to_demand) { 1.day.ago.change(usec: 0) }
+
         it 'creates the new demand and redirects' do
           post :create, params: { company_id: company, project_id: project, demand: { demand_id: 'xpto', demand_type: 'bug', downstream: false, manual_effort: true, class_of_service: 'expedite', assignees_count: 3, effort_upstream: 5, effort_downstream: 2, created_date: date_to_demand, commitment_date: date_to_demand, end_date: date_to_demand } }
 
@@ -111,26 +139,35 @@ RSpec.describe DemandsController, type: :controller do
           expect(response).to redirect_to company_demand_path(company, created_demand)
         end
       end
+
       context 'invalid' do
         context 'parameters' do
           before { post :create, params: { company_id: company, project_id: project, demand: { finances: nil, income_total: nil, expenses_total: nil } } }
+
           it 'does not create the demand and re-render the template with the errors' do
             expect(Demand.last).to be_nil
             expect(response).to render_template :new
             expect(assigns(:demand).errors.full_messages).to eq ['Data de Criação não pode ficar em branco', 'Id da Demanda não pode ficar em branco', 'Tipo da Demanda não pode ficar em branco', 'Qtd Responsáveis não pode ficar em branco']
           end
         end
+
         context 'company' do
           before { post :create, params: { company_id: 'foo', project_id: project, demand: { finances_date: Time.zone.today, income_total: 10, expenses_total: 5 } } }
+
           it { expect(response).to have_http_status :not_found }
         end
+
         context 'project' do
           before { post :create, params: { company_id: company, project_id: 'foo' } }
+
           it { expect(response).to have_http_status :not_found }
         end
+
         context 'and not permitted company' do
           let(:company) { Fabricate :company }
+
           before { post :create, params: { company_id: company, project_id: project, demand: { finances_date: Time.zone.today, income_total: 10, expenses_total: 5 } } }
+
           it { expect(response).to have_http_status :not_found }
         end
       end
@@ -151,12 +188,15 @@ RSpec.describe DemandsController, type: :controller do
       context 'passing an invalid ID' do
         context 'non-existent company' do
           before { delete :destroy, params: { company_id: 'foo', id: demand }, xhr: true }
+
           it { expect(response).to have_http_status :not_found }
         end
+
         context 'not permitted' do
           let(:company) { Fabricate :company, users: [] }
 
           before { delete :destroy, params: { company_id: company, id: demand }, xhr: true }
+
           it { expect(response).to have_http_status :not_found }
         end
       end
@@ -171,6 +211,7 @@ RSpec.describe DemandsController, type: :controller do
 
       context 'valid parameters' do
         before { get :edit, params: { company_id: company, project_id: project, id: demand }, xhr: true }
+
         it 'assigns the instance variables and renders the template' do
           expect(assigns(:company)).to eq company
           expect(assigns(:project)).to eq project
@@ -182,22 +223,28 @@ RSpec.describe DemandsController, type: :controller do
       context 'invalid' do
         context 'project' do
           before { get :edit, params: { company_id: company, project_id: 'foo', id: demand }, xhr: true }
+
           it { expect(response).to have_http_status :not_found }
         end
 
         context 'demand' do
           before { get :edit, params: { company_id: company, project_id: project, id: 'bar' }, xhr: true }
+
           it { expect(response).to have_http_status :not_found }
         end
 
         context 'company' do
           context 'non-existent' do
             before { get :edit, params: { company_id: 'foo', project_id: project, id: demand }, xhr: true }
+
             it { expect(response).to have_http_status :not_found }
           end
+
           context 'not-permitted' do
             let(:company) { Fabricate :company, users: [] }
+
             before { get :edit, params: { company_id: company, project_id: project, id: demand }, xhr: true }
+
             it { expect(response).to have_http_status :not_found }
           end
         end
@@ -239,6 +286,7 @@ RSpec.describe DemandsController, type: :controller do
       context 'passing invalid' do
         context 'project' do
           before { put :update, params: { company_id: company, project_id: 'foo', id: demand }, xhr: true }
+
           it { expect(response).to have_http_status :not_found }
         end
 
@@ -252,6 +300,7 @@ RSpec.describe DemandsController, type: :controller do
 
         context 'demand' do
           before { put :update, params: { company_id: company, project_id: project, id: 'bar' }, xhr: true }
+
           it { expect(response).to have_http_status :not_found }
         end
 
@@ -260,6 +309,7 @@ RSpec.describe DemandsController, type: :controller do
           let(:customer) { Fabricate :customer, company: company }
 
           before { put :update, params: { company_id: company, project_id: project, id: demand, demand: { customer_id: customer, name: 'foo' } }, xhr: true }
+
           it { expect(response).to have_http_status :not_found }
         end
       end
@@ -278,7 +328,9 @@ RSpec.describe DemandsController, type: :controller do
           let!(:first_block) { Fabricate :demand_block, demand: first_demand, block_time: Time.zone.today, active: true }
           let!(:second_block) { Fabricate :demand_block, demand: first_demand, block_time: 2.days.ago }
           let!(:out_block) { Fabricate :demand_block, demand: second_demand }
+
           before { get :show, params: { company_id: company, project_id: project, id: first_demand } }
+
           it 'assigns the instance variable and renders the template' do
             expect(response).to render_template :show
             expect(assigns(:company)).to eq company
@@ -290,9 +342,12 @@ RSpec.describe DemandsController, type: :controller do
             expect(assigns(:downstream_percentage)).to eq 100
           end
         end
+
         context 'having no demand_blocks' do
           let!(:demand) { Fabricate :demand, project: project }
+
           before { get :show, params: { company_id: company, id: first_demand } }
+
           it 'assigns the instance variable and renders the template' do
             expect(response).to render_template :show
             expect(assigns(:company)).to eq company
@@ -304,14 +359,19 @@ RSpec.describe DemandsController, type: :controller do
           end
         end
       end
+
       context 'passing invalid parameters' do
         context 'non-existent company' do
           before { get :show, params: { company_id: 'foo', id: first_demand } }
+
           it { expect(response).to have_http_status :not_found }
         end
+
         context 'not permitted' do
           let(:company) { Fabricate :company, users: [] }
+
           before { get :show, params: { company_id: company, id: first_demand } }
+
           it { expect(response).to have_http_status :not_found }
         end
       end
@@ -332,6 +392,7 @@ RSpec.describe DemandsController, type: :controller do
       context 'passing valid parameters' do
         context 'when there is no project change' do
           let(:first_card_response) { { data: { card: { id: '5140999', assignees: [{ id: '101381', username: 'xpto' }, { id: '101381', username: 'xpto' }, { id: '101382', username: 'bla' }, { id: '101321', username: 'mambo' }], comments: [{ created_at: '2018-02-22T18:39:46-03:00', author: { username: 'sbbrubles' }, text: '[BLOCKED]: xpto of bla having foo.' }], fields: [{ name: 'Descrição da pesquisa', value: 'teste' }, { name: 'Title', value: 'Página dos colunistas' }, { name: 'Type', value: 'bUG' }, { name: 'JiraKey', value: 'PD-46' }, { name: 'Class of Service', value: 'Padrão' }, { name: 'Project', value: project.full_name }], phases_history: [{ phase: { id: '2481595' }, firstTimeIn: '2018-02-22T17:09:58-03:00', lastTimeOut: '2018-02-26T17:09:58-03:00' }, { phase: { id: '3481595' }, firstTimeIn: '2018-02-15T17:10:40-03:00', lastTimeOut: '2018-02-17T17:10:40-03:00' }, { phase: { id: '2481597' }, firstTimeIn: '2018-02-27T17:09:58-03:00', lastTimeOut: nil }], pipe: { id: '356355' }, url: 'http://app.jira.com/pipes/356355#cards/5140999' } } }.with_indifferent_access }
+
           it 'calls the services and the reader' do
             expect(Jira::ProcessJiraIssueJob).to receive(:perform_later)
             put :synchronize_jira, params: { company_id: company, project_id: project, id: demand }
@@ -345,20 +406,28 @@ RSpec.describe DemandsController, type: :controller do
       context 'invalid' do
         context 'demand' do
           before { put :synchronize_jira, params: { company_id: company, project_id: project, id: 'foo' } }
+
           it { expect(response).to have_http_status :not_found }
         end
+
         context 'project' do
           before { put :synchronize_jira, params: { company_id: company, project_id: 'foo', id: demand } }
+
           it { expect(response).to have_http_status :not_found }
         end
+
         context 'company' do
           context 'non-existent' do
             before { put :synchronize_jira, params: { company_id: 'foo', project_id: project, id: demand } }
+
             it { expect(response).to have_http_status :not_found }
           end
+
           context 'not-permitted' do
             let(:company) { Fabricate :company, users: [] }
+
             before { put :synchronize_jira, params: { company_id: company, project_id: project, id: demand } }
+
             it { expect(response).to have_http_status :not_found }
           end
         end
@@ -379,7 +448,7 @@ RSpec.describe DemandsController, type: :controller do
       context 'valid parameters' do
         it 'calls the to_csv and responds success' do
           get :demands_csv, params: { company_id: company, demands_ids: Demand.all.map(&:id).to_csv }, format: :csv
-          expect(response).to have_http_status 200
+          expect(response).to have_http_status :ok
 
           csv = CSV.parse(response.body, headers: true)
           expect(csv.count).to eq 1
@@ -401,11 +470,15 @@ RSpec.describe DemandsController, type: :controller do
         context 'company' do
           context 'non-existent' do
             before { get :demands_csv, params: { company_id: 'foo' }, format: :csv }
+
             it { expect(response).to have_http_status :not_found }
           end
+
           context 'not-permitted' do
             let(:company) { Fabricate :company, users: [] }
+
             before { get :demands_csv, params: { company_id: company }, format: :csv }
+
             it { expect(response).to have_http_status :not_found }
           end
         end
@@ -437,11 +510,15 @@ RSpec.describe DemandsController, type: :controller do
       context 'passing invalid' do
         context 'company' do
           before { get :demands_in_projects, params: { company_id: 'foo' }, xhr: true }
+
           it { expect(response).to have_http_status :not_found }
         end
+
         context 'not permitted company' do
           let(:company) { Fabricate :company, users: [] }
+
           before { get :demands_in_projects, params: { company_id: company }, xhr: true }
+
           it { expect(response).to have_http_status :not_found }
         end
       end
@@ -483,6 +560,7 @@ RSpec.describe DemandsController, type: :controller do
                 expect(assigns(:confidence_65_leadtime)).to be_within(0.3).of(2.9)
               end
             end
+
             context 'grouped_by_month' do
               it 'finds the correct demands and responds with the correct JS' do
                 get :search_demands_by_flow_status, params: { company_id: company, projects_ids: Project.all.map(&:id).join(','), grouping: 'grouped_by_month', period: :all }, xhr: true
@@ -496,6 +574,7 @@ RSpec.describe DemandsController, type: :controller do
                 expect(assigns(:confidence_65_leadtime)).to be_within(0.3).of(2.9)
               end
             end
+
             context 'grouped_customer_demands' do
               it 'finds the correct demands and responds with the correct JS' do
                 get :search_demands_by_flow_status, params: { company_id: company, projects_ids: Project.all.map(&:id).join(','), grouping: 'grouped_by_customer', period: :all }, xhr: true
@@ -510,6 +589,7 @@ RSpec.describe DemandsController, type: :controller do
               end
             end
           end
+
           context 'and passing the flow status filter not started' do
             context 'not grouped' do
               it 'finds the correct demands and responds with the correct JS' do
@@ -522,6 +602,7 @@ RSpec.describe DemandsController, type: :controller do
                 expect(assigns(:confidence_95_leadtime)).to eq 0
               end
             end
+
             context 'grouped_delivered_demands' do
               it 'finds the correct demands and responds with the correct JS' do
                 get :search_demands_by_flow_status, params: { company_id: company, projects_ids: Project.all.map(&:id).join(','), grouping: 'grouped_by_month', flow_status: 'not_started', period: :all }, xhr: true
@@ -533,6 +614,7 @@ RSpec.describe DemandsController, type: :controller do
                 expect(assigns(:confidence_95_leadtime)).to eq 0
               end
             end
+
             context 'grouped_customer_demands' do
               it 'finds the correct demands and responds with the correct JS' do
                 get :search_demands_by_flow_status, params: { company_id: company, projects_ids: Project.all.map(&:id).join(','), grouping: 'grouped_by_customer', flow_status: 'not_started', period: :all }, xhr: true
@@ -545,6 +627,7 @@ RSpec.describe DemandsController, type: :controller do
               end
             end
           end
+
           context 'and passing the flow status filter committed' do
             context 'not grouped' do
               it 'finds the correct demands and responds with the correct JS' do
@@ -557,6 +640,7 @@ RSpec.describe DemandsController, type: :controller do
                 expect(assigns(:confidence_95_leadtime)).to eq 0
               end
             end
+
             context 'grouped_by_month' do
               it 'finds the correct demands and responds with the correct JS' do
                 get :search_demands_by_flow_status, params: { company_id: company, projects_ids: Project.all.map(&:id).join(','), grouping: 'grouped_by_month', flow_status: 'wip', period: :all }, xhr: true
@@ -568,6 +652,7 @@ RSpec.describe DemandsController, type: :controller do
                 expect(assigns(:confidence_95_leadtime)).to eq 0
               end
             end
+
             context 'grouped_by_customer' do
               it 'finds the correct demands and responds with the correct JS' do
                 get :search_demands_by_flow_status, params: { company_id: company, projects_ids: Project.all.map(&:id).join(','), grouping: 'grouped_by_customer', flow_status: 'wip', period: :all }, xhr: true
@@ -580,6 +665,7 @@ RSpec.describe DemandsController, type: :controller do
               end
             end
           end
+
           context 'and passing the flow status filter delivered' do
             context 'not grouped' do
               it 'finds the correct demands and responds with the correct JS' do
@@ -594,6 +680,7 @@ RSpec.describe DemandsController, type: :controller do
                 expect(assigns(:confidence_65_leadtime)).to be_within(0.00001).of(2.9000000000000004)
               end
             end
+
             context 'grouped_by_month' do
               it 'finds the correct demands and responds with the correct JS' do
                 get :search_demands_by_flow_status, params: { company_id: company, projects_ids: Project.all.map(&:id).join(','), grouping: 'grouped_by_month', flow_status: 'delivered', period: :all }, xhr: true
@@ -607,6 +694,7 @@ RSpec.describe DemandsController, type: :controller do
                 expect(assigns(:confidence_65_leadtime)).to be_within(0.00001).of(2.90000)
               end
             end
+
             context 'grouped_customer_demands' do
               it 'finds the correct demands and responds with the correct JS' do
                 get :search_demands_by_flow_status, params: { company_id: company, projects_ids: Project.all.map(&:id).join(','), grouping: 'grouped_by_customer', flow_status: 'delivered', period: :all }, xhr: true
@@ -632,6 +720,7 @@ RSpec.describe DemandsController, type: :controller do
                   expect(assigns(:confidence_65_leadtime)).to be_within(0.5).of(3.0)
                 end
               end
+
               context 'bug' do
                 it 'returns the bugs' do
                   get :search_demands_by_flow_status, params: { company_id: company, projects_ids: Project.all.map(&:id).join(','), demand_type: 'bug', period: :all }, xhr: true
@@ -642,6 +731,7 @@ RSpec.describe DemandsController, type: :controller do
                   expect(assigns(:confidence_65_leadtime)).to eq 0
                 end
               end
+
               context 'chore' do
                 it 'returns the chores' do
                   get :search_demands_by_flow_status, params: { company_id: company, projects_ids: Project.all.map(&:id).join(','), demand_type: 'chore', period: :all }, xhr: true
@@ -652,6 +742,7 @@ RSpec.describe DemandsController, type: :controller do
                   expect(assigns(:confidence_65_leadtime)).to be_within(0.00001).of(4.58333)
                 end
               end
+
               context 'performance improvement' do
                 it 'returns the performances demands' do
                   get :search_demands_by_flow_status, params: { company_id: company, projects_ids: Project.all.map(&:id).join(','), demand_type: 'performance_improvement', period: :all }, xhr: true
@@ -662,6 +753,7 @@ RSpec.describe DemandsController, type: :controller do
                   expect(assigns(:confidence_65_leadtime)).to eq 1.0
                 end
               end
+
               context 'ui' do
                 it 'returns the ui demands' do
                   get :search_demands_by_flow_status, params: { company_id: company, projects_ids: Project.all.map(&:id).join(','), demand_type: 'ui', period: :all }, xhr: true
@@ -672,6 +764,7 @@ RSpec.describe DemandsController, type: :controller do
                   expect(assigns(:confidence_65_leadtime)).to eq 0
                 end
               end
+
               context 'wireframe' do
                 it 'returns the wireframe demands' do
                   get :search_demands_by_flow_status, params: { company_id: company, projects_ids: Project.all.map(&:id).join(','), demand_type: 'wireframe', period: :all }, xhr: true
@@ -683,6 +776,7 @@ RSpec.describe DemandsController, type: :controller do
                 end
               end
             end
+
             context 'and passing the filter by the class of service' do
               context 'standard' do
                 it 'returns the standard demands' do
@@ -694,6 +788,7 @@ RSpec.describe DemandsController, type: :controller do
                   expect(assigns(:confidence_65_leadtime)).to be_within(0.3).of(4.5)
                 end
               end
+
               context 'fixed date' do
                 it 'returns the fixed dates' do
                   get :search_demands_by_flow_status, params: { company_id: company, projects_ids: Project.all.map(&:id).join(','), demand_class_of_service: 'fixed_date', period: :all }, xhr: true
@@ -704,6 +799,7 @@ RSpec.describe DemandsController, type: :controller do
                   expect(assigns(:confidence_65_leadtime)).to be_within(0.5).of(0.3)
                 end
               end
+
               context 'intangible' do
                 it 'returns the intagibles' do
                   get :search_demands_by_flow_status, params: { company_id: company, projects_ids: Project.all.map(&:id).join(','), demand_class_of_service: 'intangible', period: :all }, xhr: true
@@ -714,6 +810,7 @@ RSpec.describe DemandsController, type: :controller do
                   expect(assigns(:confidence_65_leadtime)).to eq 3.0
                 end
               end
+
               context 'expedite' do
                 it 'returns the expeditees' do
                   get :search_demands_by_flow_status, params: { company_id: company, projects_ids: Project.all.map(&:id).join(','), demand_class_of_service: 'expedite', period: :all }, xhr: true
@@ -726,6 +823,7 @@ RSpec.describe DemandsController, type: :controller do
               end
             end
           end
+
           context 'and passing a free search text' do
             context 'on demand title' do
               it 'returns the matches' do
@@ -759,6 +857,7 @@ RSpec.describe DemandsController, type: :controller do
                 expect(assigns(:confidence_65_leadtime)).to be_within(0.1).of(0.8)
               end
             end
+
             context 'on demand id' do
               it 'returns the matches' do
                 get :search_demands_by_flow_status, params: { company_id: company, projects_ids: Project.all.map(&:id).join(','), search_text: 'hhh', period: :all }, xhr: true
@@ -771,6 +870,7 @@ RSpec.describe DemandsController, type: :controller do
             end
           end
         end
+
         context 'having no data' do
           it 'assigns the instance variable and renders the template' do
             get :search_demands_by_flow_status, params: { company_id: company, projects_ids: Project.all.map(&:id).join(','), not_started: 'true', wip: 'false', delivered: 'false', period: :all }, xhr: true
@@ -785,11 +885,15 @@ RSpec.describe DemandsController, type: :controller do
       context 'passing invalid' do
         context 'company' do
           before { get :search_demands_by_flow_status, params: { company_id: 'foo', id: first_project }, xhr: true }
+
           it { expect(response).to have_http_status :not_found }
         end
+
         context 'not permitted company' do
           let(:company) { Fabricate :company, users: [] }
+
           before { get :search_demands_by_flow_status, params: { company_id: company, id: first_project }, xhr: true }
+
           it { expect(response).to have_http_status :not_found }
         end
       end

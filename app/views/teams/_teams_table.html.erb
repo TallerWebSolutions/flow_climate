@@ -1,5 +1,5 @@
 <h2><%= t('teams.index.title') %></h2>
-<%= link_to t('teams.new.title'), new_company_team_path(@company), class: 'btn btn-sm btn-primary bottom-spaced-component' %>
+<%= link_to t('teams.new.title'), new_company_team_path(company), class: 'btn btn-sm btn-primary bottom-spaced-component' %>
 
 <table class="table table-striped">
   <thead>
@@ -13,15 +13,15 @@
     </tr>
   </thead>
   <tbody>
-    <% @teams.each do |team| %>
+    <% teams.each do |team| %>
       <tr>
-        <td><%= link_to team.name, company_team_path(@company, team) %></td>
+        <td><%= link_to team.name, company_team_path(company, team) %></td>
         <td><%= number_to_currency(team.total_value) %></td>
         <td><%= number_to_currency(team.remaining_money) %></td>
         <td><%= number_with_precision(team.avg_hours_per_demand, precision: 2) %></td>
         <td><%= number_with_precision(team.total_flow_pressure, precision: 3) %></td>
         <td>
-          <%= link_to edit_company_team_path(@company, team) do %>
+          <%= link_to edit_company_team_path(company, team) do %>
             <i class="fas fa-edit"></i>
           <% end %>
         </td>

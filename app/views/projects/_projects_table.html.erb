@@ -1,17 +1,17 @@
 <div class="row">
   <div class="col-xs-12 bottom-spaced-component">
-    <%= link_to t('projects.index.all_filter'), search_for_projects_company_projects_path(company_id: @company, status_filter: :all), remote: true, class: 'btn btn-sm btn-info' %>
-    <%= link_to t('projects.index.waiting_filter'), search_for_projects_company_projects_path(company_id: @company, status_filter: :waiting), remote: true, class: 'btn btn-sm btn-info' %>
-    <%= link_to t('projects.index.executing_filter'), search_for_projects_company_projects_path(company_id: @company, status_filter: :executing), remote: true, class: 'btn btn-sm btn-info' %>
-    <%= link_to t('projects.index.maintenance_filter'), search_for_projects_company_projects_path(company_id: @company, status_filter: :maintenance), remote: true, class: 'btn btn-sm btn-info' %>
-    <%= link_to t('projects.index.finished_filter'), search_for_projects_company_projects_path(company_id: @company, status_filter: :finished), remote: true, class: 'btn btn-sm btn-info' %>
-    <%= link_to t('projects.index.cancelled_filter'), search_for_projects_company_projects_path(company_id: @company, status_filter: :cancelled), remote: true, class: 'btn btn-sm btn-info' %>
+    <%= link_to t('projects.index.all_filter'), search_for_projects_company_projects_path(company_id: company, status_filter: :all), remote: true, class: 'btn btn-sm btn-info' %>
+    <%= link_to t('projects.index.waiting_filter'), search_for_projects_company_projects_path(company_id: company, status_filter: :waiting), remote: true, class: 'btn btn-sm btn-info' %>
+    <%= link_to t('projects.index.executing_filter'), search_for_projects_company_projects_path(company_id: company, status_filter: :executing), remote: true, class: 'btn btn-sm btn-info' %>
+    <%= link_to t('projects.index.maintenance_filter'), search_for_projects_company_projects_path(company_id: company, status_filter: :maintenance), remote: true, class: 'btn btn-sm btn-info' %>
+    <%= link_to t('projects.index.finished_filter'), search_for_projects_company_projects_path(company_id: company, status_filter: :finished), remote: true, class: 'btn btn-sm btn-info' %>
+    <%= link_to t('projects.index.cancelled_filter'), search_for_projects_company_projects_path(company_id: company, status_filter: :cancelled), remote: true, class: 'btn btn-sm btn-info' %>
   </div>
 </div>
 
 <div class="row">
   <div class="col-xs-12">
-    <%= link_to t('project.new.title'), new_company_project_path(@company), class: 'btn btn-sm btn-primary bottom-spaced-component' %>
+    <%= link_to t('project.new.title'), new_company_project_path(company), class: 'btn btn-sm btn-primary bottom-spaced-component' %>
   </div>
 </div>
 
@@ -52,15 +52,15 @@
     <tbody>
       <% projects_list.each do |project| %>
         <tr>
-          <td><%= render 'projects/project_actions', project: project %></td>
-          <td><%= link_to project.customer_name, company_customer_path(@company, project.customer) %></td>
+          <td><%= render 'projects/project_actions', company: company, project: project %></td>
+          <td><%= link_to project.customer_name, company_customer_path(company, project.customer) %></td>
           <td>
             <% if project.product.present? %>
-              <%= link_to project.product_name, company_product_path(@company, project.product) %>
+              <%= link_to project.product_name, company_product_path(company, project.product) %>
             <% end %>
           </td>
-          <td><%= link_to project.name, company_project_path(@company, project) %></td>
-          <td><%= link_to project.current_team.name, company_team_path(@company, project.current_team) if project.current_team.present? %></td>
+          <td><%= link_to project.name, company_project_path(company, project) %></td>
+          <td><%= link_to project.current_team.name, company_team_path(company, project.current_team) if project.current_team.present? %></td>
           <td><%= l(project.start_date) %></td>
           <td><%= l(project.end_date) %></td>
           <td><%= t("activerecord.attributes.project.enums.status.#{project.status}") %></td>
@@ -68,7 +68,7 @@
           <td><%= number_with_precision(project.qty_hours, precision: 2) %></td>
           <td><%= number_with_precision(project.consumed_hours, precision: 2) %></td>
           <td>
-            <%= link_to company_project_demand_blocks_path(@company, project), class: 'list-block', remote: true do %>
+            <%= link_to company_project_demand_blocks_path(company, project), class: 'list-block', remote: true do %>
               <%= project.active_kept_closed_blocks.count %>
             <% end %>
           </td>
@@ -83,9 +83,9 @@
           <td><%= number_to_currency(project.remaining_money) %></td>
           <td><%= project.remaining_days %></td>
           <td><%= number_with_precision(project.flow_pressure, precision: 3) %></td>
-          <td><%= number_to_percentage((project.flow_pressure.to_f / @projects_summary.total_flow_pressure) * 100, precision: 2) %></td>
+          <td><%= number_to_percentage((project.flow_pressure.to_f / projects_summary.total_flow_pressure) * 100, precision: 2) %></td>
           <td><%= render 'projects/project_risk_indicators', project: project %></td>
-          <td><%= render 'projects/project_actions', project: project %></td>
+          <td><%= render 'projects/project_actions', company: company, project: project %></td>
         </tr>
       <% end %>
     </tbody>

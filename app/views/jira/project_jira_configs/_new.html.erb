@@ -9,7 +9,7 @@
         <div class="row">
           <div class='col-xs-12 form-group <%= 'has-error' if project_jira_config.errors[:team].present? %>'>
             <%= form.label :team, class: 'control-label' %>
-            <%= form.select :team, @company.teams.map { |team| [team.name, team.id] }, { include_blank: t('general.select'), selected: project_jira_config.team_id }, class: 'form-control', autofocus: true %>
+            <%= form.select :team, company.teams.map { |team| [team.name, team.id] }, { include_blank: t('general.select'), selected: project_jira_config.team_id }, class: 'form-control', autofocus: true %>
             <span class="help-block"><%= project_jira_config.errors[:team].join(', ') %></span>
           </div>
         </div>

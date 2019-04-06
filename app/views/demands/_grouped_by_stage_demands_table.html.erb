@@ -15,7 +15,7 @@
         <% demands_in_stage[:data].each do |demand_id, time| %>
           <% if time.present? %>
             <tr>
-              <td><%= link_to demand_id, company_demand_path(@company, demand_id) %></td>
+              <td><%= link_to demand_id, company_demand_path(company, demand_id) %></td>
               <td><%= time_distance_in_words(time) %></td>
               <td><%= number_with_precision((time / 1.hour), precision: 4) %></td>
             </tr>

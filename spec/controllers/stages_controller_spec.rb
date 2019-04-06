@@ -4,38 +4,55 @@ RSpec.describe StagesController, type: :controller do
   context 'unauthenticated' do
     describe 'GET #new' do
       before { get :new, params: { company_id: 'foo' } }
+
       it { expect(response).to redirect_to new_user_session_path }
     end
+
     describe 'POST #create' do
       before { post :create, params: { company_id: 'foo' } }
+
       it { expect(response).to redirect_to new_user_session_path }
     end
+
     describe 'GET #edit' do
       before { get :edit, params: { company_id: 'foo', id: 'sbbrubles', xhr: true } }
+
       it { expect(response).to redirect_to new_user_session_path }
     end
+
     describe 'PUT #update' do
       before { put :update, params: { company_id: 'foo', id: 'sbbrubles', xhr: true } }
+
       it { expect(response).to redirect_to new_user_session_path }
     end
+
     describe 'DELETE #destroy' do
       before { delete :destroy, params: { company_id: 'foo', id: 'bar' } }
+
       it { expect(response).to redirect_to new_user_session_path }
     end
+
     describe 'GET #show' do
       before { get :show, params: { company_id: 'foo', id: 'sbbrubles' } }
+
       it { expect(response).to redirect_to new_user_session_path }
     end
+
     describe 'PATCH #associate_project' do
       before { patch :associate_project, params: { company_id: 'foo', id: 'sbbrubles', project_id: 'bla' } }
+
       it { expect(response).to redirect_to new_user_session_path }
     end
+
     describe 'PATCH #dissociate_project' do
       before { patch :dissociate_project, params: { company_id: 'foo', id: 'sbbrubles', project_id: 'bla' } }
+
       it { expect(response).to redirect_to new_user_session_path }
     end
+
     describe 'PATCH #copy_projects_from' do
       before { patch :copy_projects_from, params: { company_id: 'foo', id: 'sbbrubles', provider_stage_id: 'bla' } }
+
       it { expect(response).to redirect_to new_user_session_path }
     end
   end
@@ -46,11 +63,13 @@ RSpec.describe StagesController, type: :controller do
     let!(:user_plan) { Fabricate :user_plan, user: user, plan: plan, active: true, paid: true, finish_at: 1.week.from_now }
 
     let(:company) { Fabricate :company, users: [user] }
+
     before { sign_in user }
 
     describe 'GET #new' do
       context 'valid parameters' do
         before { get :new, params: { company_id: company } }
+
         it 'instantiates a new Company and renders the template' do
           expect(response).to render_template :new
           expect(assigns(:stage)).to be_a_new Stage
@@ -60,11 +79,15 @@ RSpec.describe StagesController, type: :controller do
       context 'invalid parameters' do
         context 'inexistent company' do
           before { get :new, params: { company_id: 'foo' } }
+
           it { expect(response).to have_http_status :not_found }
         end
+
         context 'and not permitted' do
           let(:company) { Fabricate :company }
+
           before { get :new, params: { company_id: company } }
+
           it { expect(response).to have_http_status :not_found }
         end
       end
@@ -73,6 +96,7 @@ RSpec.describe StagesController, type: :controller do
     describe 'POST #create' do
       context 'passing valid parameters' do
         before { post :create, params: { company_id: company, stage: { order: 2, name: 'foo', integration_id: '332231', integration_pipe_id: '441271', stage_type: :analysis, stage_stream: :downstream, commitment_point: true, end_point: true, queue: true } } }
+
         it 'creates the new financial information to the company and redirects to its show' do
           created_stage = Stage.last
           expect(created_stage.company).to eq company
@@ -88,22 +112,29 @@ RSpec.describe StagesController, type: :controller do
           expect(response).to redirect_to company_path(Company.last)
         end
       end
+
       context 'passing invalid parameters' do
         context 'invalid attributes' do
           before { post :create, params: { company_id: company, stage: { name: nil, integration_id: nil, stage_type: nil, stage_stream: nil, commitment_point: nil, end_point: nil, queue: nil } } }
+
           it 'does not create the company and re-render the template with the errors' do
             expect(Stage.last).to be_nil
             expect(response).to render_template :new
             expect(assigns(:stage).errors.full_messages).to eq ['Id na Integração não pode ficar em branco', 'Nome não pode ficar em branco', 'Tipo da Etapa não pode ficar em branco', 'Tipo do Stream não pode ficar em branco']
           end
         end
+
         context 'inexistent company' do
           before { post :create, params: { company_id: 'foo', stage: { name: 'foo', integration_id: '332231', stage_type: :analysis, stage_stream: :downstream, commitment_point: true, end_point: true, queue: true } } }
+
           it { expect(response).to have_http_status :not_found }
         end
+
         context 'and not permitted company' do
           let(:company) { Fabricate :company }
+
           before { post :create, params: { company_id: company, stage: { name: 'foo', integration_id: '332231', stage_type: :analysis, stage_stream: :downstream, commitment_point: true, end_point: true, queue: true } } }
+
           it { expect(response).to have_http_status :not_found }
         end
       end
@@ -115,6 +146,7 @@ RSpec.describe StagesController, type: :controller do
 
       context 'valid parameters' do
         before { get :edit, params: { company_id: company, id: stage }, xhr: true }
+
         it 'assigns the instance variables and renders the template' do
           expect(response).to render_template 'stages/edit'
           expect(assigns(:company)).to eq company
@@ -126,11 +158,15 @@ RSpec.describe StagesController, type: :controller do
         context 'company' do
           context 'non-existent' do
             before { get :edit, params: { company_id: 'foo', id: stage }, xhr: true }
+
             it { expect(response).to have_http_status :not_found }
           end
+
           context 'not-permitted' do
             let(:company) { Fabricate :company, users: [] }
+
             before { get :edit, params: { company_id: company, id: stage }, xhr: true }
+
             it { expect(response).to have_http_status :not_found }
           end
         end
@@ -162,20 +198,28 @@ RSpec.describe StagesController, type: :controller do
       context 'passing invalid' do
         context 'parameters' do
           before { put :update, params: { company_id: company, id: stage, stage: { name: nil, integration_id: nil, stage_type: nil, stage_stream: nil, commitment_point: nil, end_point: nil, queue: nil } }, xhr: true }
+
           it { expect(assigns(:stage).errors.full_messages).to match_array ['Id na Integração não pode ficar em branco', 'Nome não pode ficar em branco', 'Tipo da Etapa não pode ficar em branco', 'Tipo do Stream não pode ficar em branco'] }
         end
+
         context 'non-stage' do
           before { put :update, params: { company_id: company, id: 'foo', stage: { name: 'foo' } }, xhr: true }
+
           it { expect(response).to have_http_status :not_found }
         end
+
         context 'company' do
           context 'non-existent' do
             before { put :update, params: { company_id: 'foo', id: stage, stage: { name: 'foo' } }, xhr: true }
+
             it { expect(response).to have_http_status :not_found }
           end
+
           context 'not-permitted' do
             let(:company) { Fabricate :company, users: [] }
+
             before { put :update, params: { company_id: company, id: stage, stage: { name: 'foo' } }, xhr: true }
+
             it { expect(response).to have_http_status :not_found }
           end
         end
@@ -189,16 +233,19 @@ RSpec.describe StagesController, type: :controller do
       context 'passing valid ID' do
         context 'having no dependencies' do
           before { delete :destroy, params: { company_id: company, id: stage } }
+
           it 'deletes the stage and redirects' do
             expect(response).to redirect_to company_path(company)
             expect(Stage.last).to be_nil
           end
         end
+
         context 'having dependencies' do
           let(:project) { Fabricate :project }
           let!(:stage) { Fabricate :stage, company: company, projects: [project] }
           let(:demand) { Fabricate :demand, project: project }
           let!(:demand_transition) { Fabricate :demand_transition, stage: stage, demand: demand }
+
           before { delete :destroy, params: { company_id: company, id: stage } }
 
           it 'does not delete the stage and show the errors' do
@@ -212,16 +259,22 @@ RSpec.describe StagesController, type: :controller do
       context 'passing an invalid' do
         context 'non-existent stage' do
           before { delete :destroy, params: { company_id: company, id: 'foo' } }
+
           it { expect(response).to have_http_status :not_found }
         end
+
         context 'company' do
           context 'non-existent' do
             before { delete :destroy, params: { company_id: 'foo', id: stage } }
+
             it { expect(response).to have_http_status :not_found }
           end
+
           context 'not permitted' do
             let(:company) { Fabricate :company, users: [] }
+
             before { delete :destroy, params: { company_id: company, id: stage } }
+
             it { expect(response).to have_http_status :not_found }
           end
         end
@@ -254,16 +307,22 @@ RSpec.describe StagesController, type: :controller do
       context 'passing an invalid' do
         context 'non-existent stage' do
           before { get :show, params: { company_id: company, id: 'foo' } }
+
           it { expect(response).to have_http_status :not_found }
         end
+
         context 'company' do
           context 'non-existent' do
             before { get :show, params: { company_id: 'foo', id: stage } }
+
             it { expect(response).to have_http_status :not_found }
           end
+
           context 'not permitted' do
             let(:company) { Fabricate :company, users: [] }
+
             before { get :show, params: { company_id: company, id: stage } }
+
             it { expect(response).to have_http_status :not_found }
           end
         end
@@ -287,20 +346,28 @@ RSpec.describe StagesController, type: :controller do
       context 'passing an invalid' do
         context 'non-existent stage' do
           before { patch :associate_project, params: { company_id: company, id: 'foo', project_id: project } }
+
           it { expect(response).to have_http_status :not_found }
         end
+
         context 'non-existent project' do
           before { patch :associate_project, params: { company_id: company, id: 'foo', project_id: 'foo' } }
+
           it { expect(response).to have_http_status :not_found }
         end
+
         context 'company' do
           context 'non-existent' do
             before { patch :associate_project, params: { company_id: 'foo', id: stage, project_id: project } }
+
             it { expect(response).to have_http_status :not_found }
           end
+
           context 'not permitted' do
             let(:company) { Fabricate :company, users: [] }
+
             before { patch :associate_project, params: { company_id: company, id: stage, project_id: project } }
+
             it { expect(response).to have_http_status :not_found }
           end
         end
@@ -324,20 +391,28 @@ RSpec.describe StagesController, type: :controller do
       context 'passing an invalid' do
         context 'non-existent stage' do
           before { patch :dissociate_project, params: { company_id: company, id: 'foo', project_id: project } }
+
           it { expect(response).to have_http_status :not_found }
         end
+
         context 'non-existent project' do
           before { patch :dissociate_project, params: { company_id: company, id: 'foo', project_id: 'foo' } }
+
           it { expect(response).to have_http_status :not_found }
         end
+
         context 'company' do
           context 'non-existent' do
             before { patch :dissociate_project, params: { company_id: 'foo', id: stage, project_id: project } }
+
             it { expect(response).to have_http_status :not_found }
           end
+
           context 'not permitted' do
             let(:company) { Fabricate :company, users: [] }
+
             before { patch :dissociate_project, params: { company_id: company, id: stage, project_id: project } }
+
             it { expect(response).to have_http_status :not_found }
           end
         end
@@ -368,20 +443,28 @@ RSpec.describe StagesController, type: :controller do
       context 'passing an invalid' do
         context 'non-existent stage' do
           before { patch :copy_projects_from, params: { company_id: company, id: 'foo', provider_stage_id: provider_stage } }
+
           it { expect(response).to have_http_status :not_found }
         end
+
         context 'non-existent provider_stage' do
           before { patch :copy_projects_from, params: { company_id: company, id: receiver_stage, provider_stage_id: 'foo' } }
+
           it { expect(response).to have_http_status :not_found }
         end
+
         context 'company' do
           context 'non-existent' do
             before { patch :copy_projects_from, params: { company_id: 'foo', id: receiver_stage, provider_stage_id: provider_stage } }
+
             it { expect(response).to have_http_status :not_found }
           end
+
           context 'not permitted' do
             let(:company) { Fabricate :company, users: [] }
+
             before { patch :copy_projects_from, params: { company_id: company, id: receiver_stage, provider_stage_id: provider_stage } }
+
             it { expect(response).to have_http_status :not_found }
           end
         end

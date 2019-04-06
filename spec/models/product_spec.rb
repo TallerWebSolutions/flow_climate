@@ -12,6 +12,7 @@ RSpec.describe Product, type: :model do
       it { is_expected.to validate_presence_of :customer }
       it { is_expected.to validate_presence_of :name }
     end
+
     context 'complex ones' do
       let(:customer) { Fabricate :customer }
 
@@ -19,19 +20,24 @@ RSpec.describe Product, type: :model do
         context 'same name in same customer' do
           let!(:product) { Fabricate :product, customer: customer, name: 'zzz' }
           let!(:other_product) { Fabricate.build :product, customer: customer, name: 'zzz' }
+
           it 'does not accept the model' do
             expect(other_product.valid?).to be false
             expect(other_product.errors[:name]).to eq ['Não deve repetir nome de produto para o mesmo cliente.']
           end
         end
+
         context 'different name in same customer' do
           let!(:product) { Fabricate :product, customer: customer, name: 'zzz' }
           let!(:other_product) { Fabricate.build :product, customer: customer, name: 'aaa' }
+
           it { expect(other_product.valid?).to be true }
         end
+
         context 'different name in same customer' do
           let!(:product) { Fabricate :product, customer: customer, name: 'zzz' }
           let!(:other_product) { Fabricate.build :product, name: 'zzz' }
+
           it { expect(other_product.valid?).to be true }
         end
       end
@@ -67,6 +73,7 @@ RSpec.describe Product, type: :model do
 
     it { expect(product.waiting_projects).to match_array [waiting_project, other_waiting_project] }
   end
+
   describe '#waiting_projects' do
     let(:customer) { Fabricate :customer }
     let(:product) { Fabricate :product, customer: customer, name: 'zzz' }
@@ -93,6 +100,7 @@ RSpec.describe Product, type: :model do
 
   describe '#last_week_scope' do
     before { travel_to Time.zone.local(2018, 11, 19, 10, 0, 0) }
+
     after { travel_back }
 
     include_context 'consolidations variables data for product'
@@ -160,6 +168,7 @@ RSpec.describe Product, type: :model do
 
         it { expect(product.regressive_avg_hours_per_demand).to eq customer.avg_hours_per_demand }
       end
+
       context 'but having results to the company' do
         let(:other_customer) { Fabricate :customer, company: company }
         let(:other_product) { Fabricate :product, customer: other_customer }

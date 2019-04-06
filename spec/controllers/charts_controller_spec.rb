@@ -4,24 +4,32 @@ RSpec.describe ChartsController, type: :controller do
   context 'unauthenticated' do
     describe 'GET #build_operational_charts' do
       before { get :build_operational_charts, params: { company_id: 'foo' }, xhr: true }
+
       it { expect(response.status).to eq 401 }
     end
+
     describe 'GET #build_strategic_charts' do
       before { get :build_strategic_charts, params: { company_id: 'foo' }, xhr: true }
+
       it { expect(response.status).to eq 401 }
     end
+
     describe 'GET #build_status_report_charts' do
       before { get :build_status_report_charts, params: { company_id: 'foo' }, xhr: true }
+
       it { expect(response.status).to eq 401 }
     end
+
     describe 'GET #statistics_charts' do
       before { get :statistics_charts, params: { company_id: 'foo' }, xhr: true }
+
       it { expect(response.status).to eq 401 }
     end
   end
 
   context 'authenticated' do
     before { travel_to Time.zone.local(2018, 4, 6, 10, 0, 0) }
+
     after { travel_back }
 
     let(:user) { Fabricate :user }
@@ -55,11 +63,15 @@ RSpec.describe ChartsController, type: :controller do
       context 'passing invalid' do
         context 'company' do
           before { get :build_operational_charts, params: { company_id: 'foo', projects_ids: team.projects.map(&:id).to_csv }, xhr: true }
+
           it { expect(response).to have_http_status :not_found }
         end
+
         context 'not permitted company' do
           let(:company) { Fabricate :company, users: [] }
+
           before { get :build_operational_charts, params: { company_id: company, projects_ids: team.projects.map(&:id).to_csv }, xhr: true }
+
           it { expect(response).to have_http_status :not_found }
         end
       end
@@ -83,11 +95,15 @@ RSpec.describe ChartsController, type: :controller do
       context 'passing invalid' do
         context 'company' do
           before { get :build_strategic_charts, params: { company_id: 'foo', projects_ids: team.projects.map(&:id).to_csv }, xhr: true }
+
           it { expect(response).to have_http_status :not_found }
         end
+
         context 'not permitted company' do
           let(:company) { Fabricate :company, users: [] }
+
           before { get :build_strategic_charts, params: { company_id: company, projects_ids: team.projects.map(&:id).to_csv }, xhr: true }
+
           it { expect(response).to have_http_status :not_found }
         end
       end
@@ -102,12 +118,14 @@ RSpec.describe ChartsController, type: :controller do
         context 'having projects' do
           let!(:project) { Fabricate :project, product: product }
           let!(:other_project) { Fabricate :project, product: product }
+
           it 'builds the status report and respond the JS render the template' do
             get :build_status_report_charts, params: { company_id: company, projects_ids: Project.all.map(&:id).to_csv }, xhr: true
             expect(response).to render_template 'charts/status_report_charts'
             expect(assigns(:status_report_data)).to be_a Highchart::StatusReportChartsAdapter
           end
         end
+
         context 'having no projects' do
           it 'builds the status report with empty data' do
             get :build_status_report_charts, params: { company_id: company, projects_ids: Project.all.map(&:id).to_csv }, xhr: true
@@ -120,11 +138,15 @@ RSpec.describe ChartsController, type: :controller do
       context 'passing invalid' do
         context 'company' do
           before { get :build_status_report_charts, params: { company_id: 'foo', projects_ids: team.projects.map(&:id).to_csv }, xhr: true }
+
           it { expect(response).to have_http_status :not_found }
         end
+
         context 'not permitted company' do
           let(:company) { Fabricate :company, users: [] }
+
           before { get :build_status_report_charts, params: { company_id: company, projects_ids: team.projects.map(&:id).to_csv }, xhr: true }
+
           it { expect(response).to have_http_status :not_found }
         end
       end
@@ -192,6 +214,7 @@ RSpec.describe ChartsController, type: :controller do
               end
             end
           end
+
           context 'and a start and end dates provided' do
             it 'builds the statistic adapter and renders the view using the parameters' do
               get :statistics_charts, params: { company_id: company, projects_ids: team.projects.map(&:id).join(','), start_date: 1.week.ago, end_date: Time.zone.today, period: 'month', project_status: '' }, xhr: true
@@ -213,6 +236,7 @@ RSpec.describe ChartsController, type: :controller do
           end
         end
       end
+
       context 'having no data' do
         it 'returns empty data set' do
           get :statistics_charts, params: { company_id: company, projects_ids: team.projects.map(&:id).join(','), project_status: '' }, xhr: true

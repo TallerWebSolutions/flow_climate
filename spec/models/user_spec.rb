@@ -24,6 +24,7 @@ RSpec.describe User, type: :model do
 
         it { expect(User.to_notify_email).to match_array [first_user, second_user] }
       end
+
       context 'having no data' do
         it { expect(User.to_notify_email).to eq [] }
       end
@@ -37,6 +38,7 @@ RSpec.describe User, type: :model do
 
         it { expect(User.admins).to match_array [first_user, second_user] }
       end
+
       context 'having no data' do
         it { expect(User.admins).to eq [] }
       end
@@ -51,6 +53,7 @@ RSpec.describe User, type: :model do
 
       it { expect(user.trial?).to be false }
     end
+
     context 'when it is trial' do
       let(:plan) { Fabricate :plan, plan_type: :trial }
       let(:user) { Fabricate :user }
@@ -68,6 +71,7 @@ RSpec.describe User, type: :model do
 
       it { expect(user.lite?).to be false }
     end
+
     context 'when it is lite' do
       let(:plan) { Fabricate :plan, plan_type: :lite }
       let(:user) { Fabricate :user }
@@ -85,6 +89,7 @@ RSpec.describe User, type: :model do
 
       it { expect(user.gold?).to be false }
     end
+
     context 'when it is gold' do
       let(:plan) { Fabricate :plan, plan_type: :gold }
       let(:user) { Fabricate :user }
@@ -102,6 +107,7 @@ RSpec.describe User, type: :model do
 
       it { expect(user.no_plan?).to be true }
     end
+
     context 'when it is lite' do
       let(:plan) { Fabricate :plan, plan_type: :lite }
       let(:user) { Fabricate :user }
@@ -119,6 +125,7 @@ RSpec.describe User, type: :model do
 
       it { expect(user.current_plan).to eq plan }
     end
+
     context 'having no plans' do
       let(:user) { Fabricate :user }
       let(:plan) { Fabricate :plan }
@@ -136,6 +143,7 @@ RSpec.describe User, type: :model do
 
       it { expect(user.current_user_plan).to eq user_plan }
     end
+
     context 'having no plans' do
       let(:user) { Fabricate :user }
       let(:plan) { Fabricate :plan }
@@ -148,18 +156,24 @@ RSpec.describe User, type: :model do
   describe '#toggle_admin' do
     context 'admin' do
       let(:user) { Fabricate :user, admin: true }
+
       before { user.toggle_admin }
+
       it { expect(user).not_to be_admin }
     end
+
     context 'not admin' do
       let(:user) { Fabricate :user, admin: false }
+
       before { user.toggle_admin }
+
       it { expect(user).to be_admin }
     end
   end
 
   describe '#full_name' do
     let(:user) { Fabricate :user }
+
     it { expect(user.full_name).to eq "#{user.last_name}, #{user.first_name}" }
   end
 end

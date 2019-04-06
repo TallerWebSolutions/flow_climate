@@ -31,7 +31,7 @@
       </td>
       <td><%= l(demand.commitment_date, format: :short) if demand.commitment_date.present? %></td>
       <td><%= l(demand.end_date, format: :short) if demand.end_date.present? %></td>
-      <td><%= time_ago_in_words(demand.leadtime.seconds.ago) if demand.leadtime.present? %></td>
+      <td><%= time_distance_in_words(demand.leadtime.seconds.ago) if demand.leadtime.present? %></td>
       <td><%= number_with_precision(demand.working_time_upstream, precision: 2) %></td>
       <td><%= number_with_precision(demand.working_time_downstream, precision: 2) %></td>
       <td><%= number_with_precision(demand.blocked_working_time_upstream, precision: 2) %></td>
@@ -39,7 +39,7 @@
       <td><%= number_with_precision(demand.effort_upstream, precision: 2) %></td>
       <td><%= number_with_precision(demand.effort_downstream, precision: 2) %></td>
       <td><%= link_to demand.url, demand.url %></td>
-      <td><%= render 'demands/demand_actions', demand: demand %></td>
+      <td><%= render 'demands/demand_actions', company: company, demand: demand %></td>
     </tr>
   <% end %>
   </tbody>

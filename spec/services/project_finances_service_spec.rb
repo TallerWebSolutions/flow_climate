@@ -2,6 +2,7 @@
 
 RSpec.describe ProjectFinancesService, type: :service do
   before { travel_to Time.zone.local(2018, 6, 20, 10, 0, 0) }
+
   after { travel_back }
 
   describe '#effort_share_in_month' do

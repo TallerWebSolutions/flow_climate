@@ -37,10 +37,11 @@ RSpec.describe Jira::ProcessJiraProjectJob, type: :active_job do
       context 'and invalid data' do
         context 'and blank issue response' do
           let(:jira_issue) { client.Issue.build }
+
           it 'returns doing nothing' do
             expect_any_instance_of(Jira::JiraApiService).to(receive(:request_issues_by_fix_version) { [jira_issue] })
-            expect_any_instance_of(Jira::JiraApiService).to(receive(:request_issue_details).never)
-            expect(Jira::JiraIssueAdapter.instance).to receive(:process_issue!).never
+            expect_any_instance_of(Jira::JiraApiService).not_to(receive(:request_issue_details))
+            expect(Jira::JiraIssueAdapter.instance).not_to receive(:process_issue!)
             Jira::ProcessJiraProjectJob.perform_now(jira_account, jira_config, 'foo@bar.com', 'Foo Bar', 'http://foo.com.br')
           end
         end

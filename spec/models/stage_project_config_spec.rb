@@ -20,13 +20,16 @@ RSpec.describe StageProjectConfig, type: :model do
 
         context 'having the same project and the same stage' do
           subject(:duplicated_stage_project_config) { Fabricate.build(:stage_project_config, project: project, stage: stage) }
+
           it 'does not accept the object as valid' do
             expect(duplicated_stage_project_config).not_to be_valid
             expect(duplicated_stage_project_config.errors[:project]).to eq [I18n.t('stage_project_config.validations.stage_project_unique.message')]
           end
         end
+
         context 'having the same project and different stage' do
           subject(:duplicated_stage_project_config) { Fabricate.build(:stage_project_config, project: project) }
+
           it { expect(duplicated_stage_project_config).to be_valid }
         end
       end

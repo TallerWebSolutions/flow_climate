@@ -9,9 +9,12 @@ RSpec.describe StageAnalyticData, type: :data_object do
 
   describe '.initialize' do
     before { travel_to Time.zone.local(2018, 5, 29, 18, 25, 0) }
+
     after { travel_back }
 
     context 'and the stage has transitions with duration' do
+      subject(:stage_analytic_data) { StageAnalyticData.new(stage) }
+
       let(:demand) { Fabricate :demand, project: project }
       let(:other_demand) { Fabricate :demand, project: project }
 
@@ -22,8 +25,6 @@ RSpec.describe StageAnalyticData, type: :data_object do
       let!(:fourth_transition) { Fabricate :demand_transition, demand: demand, stage: stage, last_time_in: 2.days.ago, last_time_out: 1.day.ago }
       let!(:fifth_transition) { Fabricate :demand_transition, demand: demand, stage: stage, last_time_in: 1.day.ago, last_time_out: 1.hour.ago }
       let!(:sixth_transition) { Fabricate :demand_transition, demand: demand, stage: other_stage, last_time_in: Time.zone.now, last_time_out: 1.hour.from_now }
-
-      subject(:stage_analytic_data) { StageAnalyticData.new(stage) }
 
       it 'retrieves the last stages informations to the charts' do
         expect(stage_analytic_data.entrances_per_weekday).to eq('Domingo' => { y: 2, color: 'rgb(247, 229, 83)' }, 'Segunda-feira' => { y: 2, color: 'rgb(73, 142, 142)' }, 'Terça-feira' => { y: 1, color: 'rgb(73, 142, 142)' })
@@ -39,14 +40,14 @@ RSpec.describe StageAnalyticData, type: :data_object do
     end
 
     context 'and the stage has transitions without duration' do
+      subject(:stage_analytic_data) { StageAnalyticData.new(stage) }
+
       let(:demand) { Fabricate :demand, project: project }
       let(:other_demand) { Fabricate :demand, project: project }
 
       let!(:first_transition) { Fabricate :demand_transition, demand: demand, stage: stage, last_time_in: 2.days.ago, last_time_out: nil }
       let!(:second_transition) { Fabricate :demand_transition, demand: demand, stage: stage, last_time_in: 1.day.ago, last_time_out: nil }
       let!(:third_transition) { Fabricate :demand_transition, demand: demand, stage: stage, last_time_in: Time.zone.now, last_time_out: nil }
-
-      subject(:stage_analytic_data) { StageAnalyticData.new(stage) }
 
       it 'retrieves the last stages informations to the charts' do
         expect(stage_analytic_data.entrances_per_weekday).to eq('Domingo' => { y: 1, color: 'rgb(247, 229, 83)' }, 'Segunda-feira' => { y: 1, color: 'rgb(73, 142, 142)' }, 'Terça-feira' => { y: 1, color: 'rgb(73, 142, 142)' })

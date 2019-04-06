@@ -18,13 +18,17 @@ RSpec.describe ProjectRiskConfig, type: :model do
 
   describe '#activate' do
     let(:risk_config) { Fabricate :project_risk_config, active: false }
+
     before { risk_config.activate! }
+
     it { expect(risk_config.reload.active).to be true }
   end
 
   describe '#deactivate' do
     let(:risk_config) { Fabricate :project_risk_config, active: true }
+
     before { risk_config.deactivate! }
+
     it { expect(risk_config.reload.active).to be false }
   end
 end

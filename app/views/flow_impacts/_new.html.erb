@@ -1,3 +1,3 @@
-<%= form_for [@company, @project, @flow_impact], remote: true do |f| %>
-  <%= render 'flow_impacts/form', f: f, company: @company, flow_impact: @flow_impact, demands_for_impact_form: @demands_for_impact_form %>
+<%= form_for [company, project, flow_impact], remote: true do |f| %>
+  <%= render 'flow_impacts/form', f: f, company: company, flow_impact: flow_impact, demands_for_impact_form: demands_for_impact_form %>
 <% end %>

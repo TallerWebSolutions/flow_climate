@@ -64,10 +64,6 @@ class DemandBlock < ApplicationRecord
     update(active: false)
   end
 
-  def unblocked?
-    unblock_time.present?
-  end
-
   def total_blocked_time
     return 0 unless closed? && unblock_time > block_time
 

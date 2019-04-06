@@ -48,7 +48,7 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :companies, only: %i[show new create index edit update] do
+  resources :companies, except: :destroy do
     member do
       patch :add_user
       get :send_company_bulletin

@@ -2,6 +2,7 @@
 
 RSpec.describe Highchart::ProjectStatisticsChartsAdapter, type: :service do
   before { travel_to Time.zone.local(2018, 2, 20, 10, 0, 0) }
+
   after { travel_back }
 
   describe '#scope_data_evolution_chart' do
@@ -81,15 +82,15 @@ RSpec.describe Highchart::ProjectStatisticsChartsAdapter, type: :service do
       let!(:second_demand) { Fabricate :demand, project: first_project, commitment_date: 1.day.ago, end_date: Time.zone.now, effort_downstream: 400, effort_upstream: 130, created_date: 65.days.ago }
       let!(:third_demand) { Fabricate :demand, project: first_project, commitment_date: 7.days.ago, end_date: Time.zone.now, effort_downstream: 100, effort_upstream: 20 }
 
-      let!(:first_demand) { Fabricate :demand, project: first_project, commitment_date: 7.days.ago, end_date: 2.days.ago, effort_downstream: 200, effort_upstream: 10, created_date: 74.days.ago }
-      let!(:second_demand) { Fabricate :demand, project: first_project, commitment_date: 14.days.ago, end_date: 2.days.ago, effort_downstream: 400, effort_upstream: 130, created_date: 65.days.ago }
-      let!(:third_demand) { Fabricate :demand, project: first_project, commitment_date: 7.days.ago, end_date: 3.days.ago, effort_downstream: 100, effort_upstream: 20 }
+      let!(:fourth_demand) { Fabricate :demand, project: first_project, commitment_date: 7.days.ago, end_date: 2.days.ago, effort_downstream: 200, effort_upstream: 10, created_date: 74.days.ago }
+      let!(:fifth_demand) { Fabricate :demand, project: first_project, commitment_date: 14.days.ago, end_date: 2.days.ago, effort_downstream: 400, effort_upstream: 130, created_date: 65.days.ago }
+      let!(:sixth_demand) { Fabricate :demand, project: first_project, commitment_date: 7.days.ago, end_date: 3.days.ago, effort_downstream: 100, effort_upstream: 20 }
 
       context 'daily basis x axis' do
         it 'builds the data structure for scope_data_evolution' do
           statistics_data = Highchart::ProjectStatisticsChartsAdapter.new([first_project], first_project.start_date, first_project.end_date, 'day', '')
 
-          expect(statistics_data.leadtime_data_evolution_chart(80)).to eq [{ data: [4.0, 9.241666666666667, 9.241666666666667, 9.241666666666667], marker: { enabled: true }, name: I18n.t('projects.general.leadtime', confidence: 80) }]
+          expect(statistics_data.leadtime_data_evolution_chart(80)).to eq [{ data: [4.0, 9.241666666666667, 9.241666666666667, 7.041666666666667], marker: { enabled: true }, name: I18n.t('projects.general.leadtime', confidence: 80) }]
           expect(statistics_data.x_axis).to eq(TimeService.instance.days_between_of(first_project.start_date, first_project.end_date))
         end
       end
@@ -98,7 +99,7 @@ RSpec.describe Highchart::ProjectStatisticsChartsAdapter, type: :service do
         it 'builds the data structure for scope_data_evolution' do
           statistics_data = Highchart::ProjectStatisticsChartsAdapter.new([first_project], first_project.start_date, first_project.end_date, 'week', '')
 
-          expect(statistics_data.leadtime_data_evolution_chart(80)).to eq [{ data: [4.0, 9.241666666666667], marker: { enabled: true }, name: I18n.t('projects.general.leadtime', confidence: 80) }]
+          expect(statistics_data.leadtime_data_evolution_chart(80)).to eq [{ data: [4.0, 7.041666666666667], marker: { enabled: true }, name: I18n.t('projects.general.leadtime', confidence: 80) }]
           expect(statistics_data.x_axis).to eq(TimeService.instance.weeks_between_of(first_project.start_date, first_project.end_date))
         end
       end
@@ -107,7 +108,7 @@ RSpec.describe Highchart::ProjectStatisticsChartsAdapter, type: :service do
         it 'builds the data structure for scope_data_evolution' do
           statistics_data = Highchart::ProjectStatisticsChartsAdapter.new([first_project], first_project.start_date, first_project.end_date, 'month', '')
 
-          expect(statistics_data.leadtime_data_evolution_chart(80)).to eq [{ data: [9.241666666666667], marker: { enabled: true }, name: I18n.t('projects.general.leadtime', confidence: 80) }]
+          expect(statistics_data.leadtime_data_evolution_chart(80)).to eq [{ data: [7.041666666666667], marker: { enabled: true }, name: I18n.t('projects.general.leadtime', confidence: 80) }]
           expect(statistics_data.x_axis).to eq(TimeService.instance.months_between_of(first_project.start_date, first_project.end_date))
         end
       end
@@ -129,9 +130,9 @@ RSpec.describe Highchart::ProjectStatisticsChartsAdapter, type: :service do
       let!(:second_demand) { Fabricate :demand, project: first_project, commitment_date: 1.day.ago, end_date: Time.zone.now, effort_downstream: 400, effort_upstream: 130, created_date: 65.days.ago }
       let!(:third_demand) { Fabricate :demand, project: first_project, commitment_date: 7.days.ago, end_date: Time.zone.now, effort_downstream: 100, effort_upstream: 20 }
 
-      let!(:first_demand) { Fabricate :demand, project: first_project, commitment_date: 7.days.ago, end_date: 2.days.ago, effort_downstream: 200, effort_upstream: 10, created_date: 74.days.ago }
-      let!(:second_demand) { Fabricate :demand, project: first_project, commitment_date: 14.days.ago, end_date: 2.days.ago, effort_downstream: 400, effort_upstream: 130, created_date: 65.days.ago }
-      let!(:third_demand) { Fabricate :demand, project: first_project, commitment_date: 7.days.ago, end_date: 3.days.ago, effort_downstream: 100, effort_upstream: 20 }
+      let!(:fourth_demand) { Fabricate :demand, project: first_project, commitment_date: 7.days.ago, end_date: 2.days.ago, effort_downstream: 200, effort_upstream: 10, created_date: 74.days.ago }
+      let!(:fifth_demand) { Fabricate :demand, project: first_project, commitment_date: 14.days.ago, end_date: 2.days.ago, effort_downstream: 400, effort_upstream: 130, created_date: 65.days.ago }
+      let!(:sixth_demand) { Fabricate :demand, project: first_project, commitment_date: 7.days.ago, end_date: 3.days.ago, effort_downstream: 100, effort_upstream: 20 }
 
       let!(:first_block) { Fabricate :demand_block, demand: first_demand, block_time: 1.hour.ago, unblock_time: Time.zone.today.end_of_day, active: true }
       let!(:second_block) { Fabricate :demand_block, demand: first_demand, block_time: 2.days.ago, unblock_time: 2.days.ago }

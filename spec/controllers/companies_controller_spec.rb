@@ -2,51 +2,73 @@
 
 RSpec.describe CompaniesController, type: :controller do
   before { travel_to Time.zone.local(2018, 9, 3, 12, 20, 31) }
+
   after { travel_back }
 
   context 'unauthenticated' do
     describe 'GET #index' do
       before { get :index }
+
       it { expect(response).to redirect_to new_user_session_path }
     end
+
     describe 'GET #show' do
       before { get :show, params: { id: 'foo' } }
+
       it { expect(response).to redirect_to new_user_session_path }
     end
+
     describe 'GET #new' do
       before { get :new }
+
       it { expect(response).to redirect_to new_user_session_path }
     end
+
     describe 'POST #create' do
       before { post :create }
+
       it { expect(response).to redirect_to new_user_session_path }
     end
+
     describe 'GET #edit' do
       before { get :edit, params: { id: 'xpto' } }
+
       it { expect(response).to redirect_to new_user_session_path }
     end
+
     describe 'PUT #update' do
       before { put :update, params: { id: 'xpto' } }
+
       it { expect(response).to redirect_to new_user_session_path }
     end
+
     describe 'PATCH #add_user' do
       before { patch :add_user, params: { id: 'xpto' } }
+
       it { expect(response).to redirect_to new_user_session_path }
     end
+
     describe 'GET #send_company_bulletin' do
       before { get :send_company_bulletin, params: { id: 'xpto' } }
+
       it { expect(response).to redirect_to new_user_session_path }
     end
+
     describe 'POST #update_settings' do
       before { post :update_settings, params: { id: 'xpto' }, xhr: true }
+
       it { expect(response.status).to eq 401 }
     end
+
     describe 'GET #projects_tab' do
       before { get :strategic_chart_tab, params: { id: 'xpto' }, xhr: true }
+
       it { expect(response.status).to eq 401 }
     end
+
     describe 'GET #strategic_chart_tab' do
       before { post :strategic_chart_tab, params: { id: 'xpto' }, xhr: true }
+
       it { expect(response.status).to eq 401 }
     end
   end
@@ -65,7 +87,7 @@ RSpec.describe CompaniesController, type: :controller do
         let(:out_company) { Fabricate :company }
 
         it 'assigns the instance variable and renders the template' do
-          expect_any_instance_of(AuthenticatedController).to(receive(:user_gold_check).once { true })
+          expect_any_instance_of(AuthenticatedController).to(receive(:user_gold_check).once.and_return(true))
           get :index
           expect(response).to render_template :index
           expect(assigns(:companies)).to eq [other_company, company]
@@ -76,6 +98,7 @@ RSpec.describe CompaniesController, type: :controller do
     describe 'GET #show' do
       context 'passing valid parameters' do
         let(:company) { Fabricate :company, users: [user] }
+
         context 'and the company has no settings yet' do
           let(:customer) { Fabricate :customer, company: company }
 
@@ -102,6 +125,7 @@ RSpec.describe CompaniesController, type: :controller do
           let!(:second_alert) { Fabricate :project_risk_alert, project_risk_config: second_risk_config, project: first_project, alert_color: :red, created_at: 1.hour.ago }
 
           before { get :show, params: { id: company } }
+
           it 'assigns the instance variable and renders the template' do
             expect(response).to render_template :show
             expect(assigns(:company)).to eq company
@@ -112,20 +136,28 @@ RSpec.describe CompaniesController, type: :controller do
             expect(assigns(:company_settings)).to be_a_new CompanySettings
           end
         end
+
         context 'and the company already have settings' do
           let!(:company_settings) { Fabricate :company_settings, company: company }
+
           before { get :show, params: { id: company } }
+
           it { expect(assigns(:company_settings)).to eq company.reload.company_settings }
         end
       end
+
       context 'passing an invalid ID' do
         context 'non-existent' do
           before { get :show, params: { id: 'foo' } }
+
           it { expect(response).to have_http_status :not_found }
         end
+
         context 'not permitted' do
           let(:company) { Fabricate :company, users: [] }
+
           before { get :show, params: { id: company } }
+
           it { expect(response).to have_http_status :not_found }
         end
       end
@@ -133,6 +165,7 @@ RSpec.describe CompaniesController, type: :controller do
 
     describe 'GET #new' do
       before { get :new }
+
       it 'instantiates a new Company and renders the template' do
         expect(response).to render_template :new
         expect(assigns(:company)).to be_a_new Company
@@ -142,6 +175,7 @@ RSpec.describe CompaniesController, type: :controller do
     describe 'POST #create' do
       context 'passing valid parameters' do
         before { post :create, params: { company: { name: 'foo', abbreviation: 'bar' } } }
+
         it 'creates the new company and redirects to its show' do
           expect(Company.last.name).to eq 'foo'
           expect(Company.last.abbreviation).to eq 'bar'
@@ -149,8 +183,10 @@ RSpec.describe CompaniesController, type: :controller do
           expect(response).to redirect_to company_path(Company.last)
         end
       end
+
       context 'passing invalid parameters' do
         before { post :create, params: { company: { name: '' } } }
+
         it 'does not create the company and re-render the template with the errors' do
           expect(Company.last).to be_nil
           expect(response).to render_template :new
@@ -165,6 +201,7 @@ RSpec.describe CompaniesController, type: :controller do
 
       context 'valid parameters' do
         before { get :edit, params: { id: company } }
+
         it 'assigns the instance variables and renders the template' do
           expect(response).to render_template :edit
           expect(assigns(:company)).to eq company
@@ -176,11 +213,15 @@ RSpec.describe CompaniesController, type: :controller do
         context 'company' do
           context 'non-existent' do
             before { get :edit, params: { id: 'foo' } }
+
             it { expect(response).to have_http_status :not_found }
           end
+
           context 'not-permitted' do
             let(:company) { Fabricate :company, users: [] }
+
             before { get :edit, params: { id: company } }
+
             it { expect(response).to have_http_status :not_found }
           end
         end
@@ -192,6 +233,7 @@ RSpec.describe CompaniesController, type: :controller do
 
       context 'passing valid parameters' do
         before { put :update, params: { id: company, company: { name: 'foo', abbreviation: 'bar' } } }
+
         it 'updates the company and redirects to projects index' do
           expect(Company.last.name).to eq 'foo'
           expect(Company.last.abbreviation).to eq 'bar'
@@ -202,19 +244,24 @@ RSpec.describe CompaniesController, type: :controller do
       context 'passing invalid' do
         context 'company parameters' do
           before { put :update, params: { id: company, company: { name: '', abbreviation: '' } } }
+
           it 'does not update the company and re-render the template with the errors' do
             expect(response).to render_template :edit
             expect(assigns(:company).errors.full_messages).to eq ['Nome não pode ficar em branco', 'Sigla não pode ficar em branco']
           end
         end
+
         context 'non-existent company' do
           before { put :update, params: { id: 'foo', product: { name: 'foo', abbreviation: 'bar' } } }
+
           it { expect(response).to have_http_status :not_found }
         end
+
         context 'unpermitted company' do
           let(:company) { Fabricate :company, users: [] }
 
           before { put :update, params: { id: company, product: { name: 'foo', abbreviation: 'bar' } } }
+
           it { expect(response).to have_http_status :not_found }
         end
       end
@@ -227,13 +274,16 @@ RSpec.describe CompaniesController, type: :controller do
       context 'passing valid parameters' do
         context 'and the user is not in the company users list' do
           before { patch :add_user, params: { id: company, user_email: other_user.email } }
+
           it 'adds the user and redirects to the edit page' do
             expect(company.reload.users).to match_array [user, other_user]
             expect(response).to redirect_to edit_company_path(company)
           end
         end
+
         context 'and the user is already in the company users list' do
           before { patch :add_user, params: { id: company, user_email: user.email } }
+
           it 'does not add the repeated user' do
             expect(company.reload.users).to eq [user]
             expect(response).to redirect_to edit_company_path(company)
@@ -244,16 +294,20 @@ RSpec.describe CompaniesController, type: :controller do
       context 'passing invalid' do
         context 'non-existent company' do
           before { patch :add_user, params: { id: 'foo', user_email: user.email } }
+
           it { expect(response).to have_http_status :not_found }
         end
+
         context 'unpermitted company' do
           let(:company) { Fabricate :company, users: [] }
 
           before { put :update, params: { id: company, user_email: user.email } }
+
           it { expect(response).to have_http_status :not_found }
         end
       end
     end
+
     describe 'GET #send_company_bulletin' do
       let(:other_user) { Fabricate :user }
       let(:company) { Fabricate :company, users: [user, other_user] }
@@ -272,11 +326,15 @@ RSpec.describe CompaniesController, type: :controller do
         context 'company' do
           context 'non-existent' do
             before { get :send_company_bulletin, params: { id: 'foo' } }
+
             it { expect(response).to have_http_status :not_found }
           end
+
           context 'not-permitted' do
             let(:company) { Fabricate :company, users: [] }
+
             before { get :send_company_bulletin, params: { id: company } }
+
             it { expect(response).to have_http_status :not_found }
           end
         end
@@ -285,9 +343,11 @@ RSpec.describe CompaniesController, type: :controller do
 
     describe 'POST #update_settings' do
       let(:company) { Fabricate :company, users: [user] }
+
       context 'passing valid parameters' do
         context 'when the company does not have settings yet' do
           before { post :update_settings, params: { id: company, company_settings: { max_active_parallel_projects: 100, max_flow_pressure: 2.2 } }, xhr: true }
+
           it 'updates the already existent settings' do
             expect(company.reload.company_settings.max_active_parallel_projects).to eq 100
             expect(company.reload.company_settings.max_flow_pressure).to eq 2.2
@@ -295,9 +355,12 @@ RSpec.describe CompaniesController, type: :controller do
             expect(response).to render_template 'companies/update_settings.js.erb'
           end
         end
+
         context 'when the company already has settings' do
           let!(:company_settings) { Fabricate :company_settings, company: company }
+
           before { post :update_settings, params: { id: company, company_settings: { max_active_parallel_projects: 100, max_flow_pressure: 2.2 } }, xhr: true }
+
           it 'updates the already existent settings' do
             expect(company.reload.company_settings.max_active_parallel_projects).to eq 100
             expect(company.reload.company_settings.max_flow_pressure).to eq 2.2
@@ -310,11 +373,15 @@ RSpec.describe CompaniesController, type: :controller do
         context 'company' do
           context 'non-existent' do
             before { post :update_settings, params: { id: 'foo', company_settings: { max_active_parallel_projects: 100, max_flow_pressure: 2.2 } }, xhr: true }
+
             it { expect(response.status).to eq 404 }
           end
+
           context 'not-permitted' do
             let(:company) { Fabricate :company, users: [] }
+
             before { post :update_settings, params: { id: company, company_settings: { max_active_parallel_projects: 100, max_flow_pressure: 2.2 } }, xhr: true }
+
             it { expect(response.status).to eq 404 }
           end
         end
@@ -338,6 +405,7 @@ RSpec.describe CompaniesController, type: :controller do
           end
         end
       end
+
       context 'having no data' do
         it 'returns empty data set' do
           get :projects_tab, params: { id: company }, xhr: true
@@ -363,6 +431,7 @@ RSpec.describe CompaniesController, type: :controller do
           end
         end
       end
+
       context 'having no data' do
         it 'returns empty data set' do
           get :strategic_chart_tab, params: { id: company }, xhr: true
@@ -389,6 +458,7 @@ RSpec.describe CompaniesController, type: :controller do
           end
         end
       end
+
       context 'having no data' do
         it 'returns empty data set' do
           get :risks_tab, params: { id: company }, xhr: true
@@ -406,6 +476,7 @@ RSpec.describe CompaniesController, type: :controller do
 
     describe 'GET #index' do
       before { get :index }
+
       it 'redirects to the user profile with an alert' do
         expect(response).to redirect_to user_path(user)
         flash[:alert] = I18n.t('plans.validations.no_gold_plan')
@@ -414,6 +485,7 @@ RSpec.describe CompaniesController, type: :controller do
 
     describe 'GET #show' do
       before { get :show, params: { id: 'foo' } }
+
       it 'redirects to the user profile with an alert' do
         expect(response).to redirect_to user_path(user)
         flash[:alert] = I18n.t('plans.validations.no_gold_plan')
@@ -422,6 +494,7 @@ RSpec.describe CompaniesController, type: :controller do
 
     describe 'GET #new' do
       before { get :new }
+
       it 'redirects to the user profile with an alert' do
         expect(response).to redirect_to user_path(user)
         flash[:alert] = I18n.t('plans.validations.no_gold_plan')
@@ -430,6 +503,7 @@ RSpec.describe CompaniesController, type: :controller do
 
     describe 'POST #create' do
       before { post :create }
+
       it 'redirects to the user profile with an alert' do
         expect(response).to redirect_to user_path(user)
         flash[:alert] = I18n.t('plans.validations.no_gold_plan')
@@ -438,6 +512,7 @@ RSpec.describe CompaniesController, type: :controller do
 
     describe 'GET #edit' do
       before { get :edit, params: { id: 'foo' } }
+
       it 'redirects to the user profile with an alert' do
         expect(response).to redirect_to user_path(user)
         flash[:alert] = I18n.t('plans.validations.no_gold_plan')
@@ -446,6 +521,7 @@ RSpec.describe CompaniesController, type: :controller do
 
     describe 'PUT #update' do
       before { put :update, params: { id: 'foo' } }
+
       it 'redirects to the user profile with an alert' do
         expect(response).to redirect_to user_path(user)
         flash[:alert] = I18n.t('plans.validations.no_gold_plan')
@@ -454,6 +530,7 @@ RSpec.describe CompaniesController, type: :controller do
 
     describe 'PATCH #add_user' do
       before { patch :add_user, params: { id: 'foo' } }
+
       it 'redirects to the user profile with an alert' do
         expect(response).to redirect_to user_path(user)
         flash[:alert] = I18n.t('plans.validations.no_gold_plan')
@@ -462,6 +539,7 @@ RSpec.describe CompaniesController, type: :controller do
 
     describe 'GET #send_company_bulletin' do
       before { get :send_company_bulletin, params: { id: 'foo' } }
+
       it 'redirects to the user profile with an alert' do
         expect(response).to redirect_to user_path(user)
         flash[:alert] = I18n.t('plans.validations.no_gold_plan')
@@ -470,6 +548,7 @@ RSpec.describe CompaniesController, type: :controller do
 
     describe 'POST #update_settings' do
       before { post :update_settings, params: { id: 'xpto' }, xhr: true }
+
       it 'redirects to the user profile with an alert' do
         expect(response).to redirect_to user_path(user)
         flash[:alert] = I18n.t('plans.validations.no_gold_plan')
@@ -481,6 +560,7 @@ RSpec.describe CompaniesController, type: :controller do
       let(:customer) { Fabricate :customer, company: company }
 
       before { get :projects_tab, params: { id: 'xpto' }, xhr: true }
+
       it 'redirects to the user profile with an alert' do
         expect(response).to redirect_to user_path(user)
         flash[:alert] = I18n.t('plans.validations.no_gold_plan')
@@ -492,6 +572,7 @@ RSpec.describe CompaniesController, type: :controller do
       let(:customer) { Fabricate :customer, company: company }
 
       before { get :strategic_chart_tab, params: { id: 'xpto' }, xhr: true }
+
       it 'redirects to the user profile with an alert' do
         expect(response).to redirect_to user_path(user)
         flash[:alert] = I18n.t('plans.validations.no_gold_plan')
@@ -508,6 +589,7 @@ RSpec.describe CompaniesController, type: :controller do
 
     describe 'GET #index' do
       before { get :index }
+
       it 'redirects to the user profile with an alert' do
         expect(response).to redirect_to user_path(user)
         flash[:alert] = I18n.t('plans.validations.no_gold_plan')
@@ -516,6 +598,7 @@ RSpec.describe CompaniesController, type: :controller do
 
     describe 'GET #show' do
       before { get :show, params: { id: 'foo' } }
+
       it 'redirects to the user profile with an alert' do
         expect(response).to redirect_to user_path(user)
         flash[:alert] = I18n.t('plans.validations.no_gold_plan')
@@ -524,6 +607,7 @@ RSpec.describe CompaniesController, type: :controller do
 
     describe 'GET #new' do
       before { get :new }
+
       it 'redirects to the user profile with an alert' do
         expect(response).to redirect_to user_path(user)
         flash[:alert] = I18n.t('plans.validations.no_gold_plan')
@@ -532,6 +616,7 @@ RSpec.describe CompaniesController, type: :controller do
 
     describe 'POST #create' do
       before { post :create }
+
       it 'redirects to the user profile with an alert' do
         expect(response).to redirect_to user_path(user)
         flash[:alert] = I18n.t('plans.validations.no_gold_plan')
@@ -540,6 +625,7 @@ RSpec.describe CompaniesController, type: :controller do
 
     describe 'GET #edit' do
       before { get :edit, params: { id: 'foo' } }
+
       it 'redirects to the user profile with an alert' do
         expect(response).to redirect_to user_path(user)
         flash[:alert] = I18n.t('plans.validations.no_gold_plan')
@@ -548,6 +634,7 @@ RSpec.describe CompaniesController, type: :controller do
 
     describe 'PUT #update' do
       before { put :update, params: { id: 'foo' } }
+
       it 'redirects to the user profile with an alert' do
         expect(response).to redirect_to user_path(user)
         flash[:alert] = I18n.t('plans.validations.no_gold_plan')
@@ -556,6 +643,7 @@ RSpec.describe CompaniesController, type: :controller do
 
     describe 'PATCH #add_user' do
       before { patch :add_user, params: { id: 'foo' } }
+
       it 'redirects to the user profile with an alert' do
         expect(response).to redirect_to user_path(user)
         flash[:alert] = I18n.t('plans.validations.no_gold_plan')
@@ -564,6 +652,7 @@ RSpec.describe CompaniesController, type: :controller do
 
     describe 'GET #send_company_bulletin' do
       before { get :send_company_bulletin, params: { id: 'foo' } }
+
       it 'redirects to the user profile with an alert' do
         expect(response).to redirect_to user_path(user)
         flash[:alert] = I18n.t('plans.validations.no_gold_plan')
@@ -572,6 +661,7 @@ RSpec.describe CompaniesController, type: :controller do
 
     describe 'POST #update_settings' do
       before { post :update_settings, params: { id: 'xpto' }, xhr: true }
+
       it 'redirects to the user profile with an alert' do
         expect(response).to redirect_to user_path(user)
         flash[:alert] = I18n.t('plans.validations.no_gold_plan')
@@ -583,6 +673,7 @@ RSpec.describe CompaniesController, type: :controller do
       let(:customer) { Fabricate :customer, company: company }
 
       before { get :projects_tab, params: { id: 'xpto' }, xhr: true }
+
       it 'redirects to the user profile with an alert' do
         expect(response).to redirect_to user_path(user)
         flash[:alert] = I18n.t('plans.validations.no_gold_plan')
@@ -594,6 +685,7 @@ RSpec.describe CompaniesController, type: :controller do
       let(:customer) { Fabricate :customer, company: company }
 
       before { get :strategic_chart_tab, params: { id: 'xpto' }, xhr: true }
+
       it 'redirects to the user profile with an alert' do
         expect(response).to redirect_to user_path(user)
         flash[:alert] = I18n.t('plans.validations.no_gold_plan')
@@ -610,6 +702,7 @@ RSpec.describe CompaniesController, type: :controller do
 
     describe 'GET #index' do
       before { get :index }
+
       it 'redirects to the user profile with an alert' do
         expect(response).to redirect_to user_path(user)
         flash[:alert] = I18n.t('plans.validations.no_gold_plan')
@@ -618,6 +711,7 @@ RSpec.describe CompaniesController, type: :controller do
 
     describe 'GET #show' do
       before { get :show, params: { id: 'foo' } }
+
       it 'redirects to the user profile with an alert' do
         expect(response).to redirect_to user_path(user)
         flash[:alert] = I18n.t('plans.validations.no_gold_plan')
@@ -626,6 +720,7 @@ RSpec.describe CompaniesController, type: :controller do
 
     describe 'GET #new' do
       before { get :new }
+
       it 'redirects to the user profile with an alert' do
         expect(response).to redirect_to user_path(user)
         flash[:alert] = I18n.t('plans.validations.no_gold_plan')
@@ -634,6 +729,7 @@ RSpec.describe CompaniesController, type: :controller do
 
     describe 'POST #create' do
       before { post :create }
+
       it 'redirects to the user profile with an alert' do
         expect(response).to redirect_to user_path(user)
         flash[:alert] = I18n.t('plans.validations.no_gold_plan')
@@ -642,6 +738,7 @@ RSpec.describe CompaniesController, type: :controller do
 
     describe 'GET #edit' do
       before { get :edit, params: { id: 'foo' } }
+
       it 'redirects to the user profile with an alert' do
         expect(response).to redirect_to user_path(user)
         flash[:alert] = I18n.t('plans.validations.no_gold_plan')
@@ -650,6 +747,7 @@ RSpec.describe CompaniesController, type: :controller do
 
     describe 'PUT #update' do
       before { put :update, params: { id: 'foo' } }
+
       it 'redirects to the user profile with an alert' do
         expect(response).to redirect_to user_path(user)
         flash[:alert] = I18n.t('plans.validations.no_gold_plan')
@@ -658,6 +756,7 @@ RSpec.describe CompaniesController, type: :controller do
 
     describe 'PATCH #add_user' do
       before { patch :add_user, params: { id: 'foo' } }
+
       it 'redirects to the user profile with an alert' do
         expect(response).to redirect_to user_path(user)
         flash[:alert] = I18n.t('plans.validations.no_gold_plan')
@@ -666,6 +765,7 @@ RSpec.describe CompaniesController, type: :controller do
 
     describe 'GET #send_company_bulletin' do
       before { get :send_company_bulletin, params: { id: 'foo' } }
+
       it 'redirects to the user profile with an alert' do
         expect(response).to redirect_to user_path(user)
         flash[:alert] = I18n.t('plans.validations.no_gold_plan')
@@ -674,6 +774,7 @@ RSpec.describe CompaniesController, type: :controller do
 
     describe 'POST #update_settings' do
       before { post :update_settings, params: { id: 'xpto' }, xhr: true }
+
       it 'redirects to the user profile with an alert' do
         expect(response).to redirect_to user_path(user)
         flash[:alert] = I18n.t('plans.validations.no_gold_plan')
@@ -685,6 +786,7 @@ RSpec.describe CompaniesController, type: :controller do
       let(:customer) { Fabricate :customer, company: company }
 
       before { get :projects_tab, params: { id: 'xpto' }, xhr: true }
+
       it 'redirects to the user profile with an alert' do
         expect(response).to redirect_to user_path(user)
         flash[:alert] = I18n.t('plans.validations.no_gold_plan')
@@ -696,6 +798,7 @@ RSpec.describe CompaniesController, type: :controller do
       let(:customer) { Fabricate :customer, company: company }
 
       before { get :strategic_chart_tab, params: { id: 'xpto' }, xhr: true }
+
       it 'redirects to the user profile with an alert' do
         expect(response).to redirect_to user_path(user)
         flash[:alert] = I18n.t('plans.validations.no_gold_plan')

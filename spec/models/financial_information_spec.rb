@@ -13,24 +13,21 @@ RSpec.describe FinancialInformation, type: :model do
 
   context 'scopes' do
     before { travel_to Date.new(2018, 8, 31) }
-    after { travel_back }
-    pending '.for_month'
-    describe '.for_year' do
-      let!(:first_finances) { Fabricate :financial_information, finances_date: 1.month.ago, income_total: 20.4, expenses_total: 12.2 }
-      let!(:second_finances) { Fabricate :financial_information, finances_date: Time.zone.today, income_total: 20.4, expenses_total: 12.2 }
-      let!(:third_finances) { Fabricate :financial_information, finances_date: 1.year.ago, income_total: 20.4, expenses_total: 12.2 }
 
-      it { expect(FinancialInformation.for_year(2018)).to match_array [first_finances, second_finances] }
-    end
+    after { travel_back }
+
+    pending '.for_month'
   end
 
   describe '#financial_result' do
     let(:finances) { Fabricate :financial_information, income_total: 20.4, expenses_total: 12.2 }
+
     it { expect(finances.financial_result).to eq 8.2 }
   end
 
   describe '#throughput_in_month' do
     before { travel_to Date.new(2018, 10, 25) }
+
     after { travel_back }
 
     let(:company) { Fabricate :company }
@@ -78,6 +75,7 @@ RSpec.describe FinancialInformation, type: :model do
 
   describe '#income_per_hour' do
     before { travel_to Date.new(2018, 11, 19) }
+
     after { travel_back }
 
     include_context 'demands with effort for finances'
@@ -89,6 +87,7 @@ RSpec.describe FinancialInformation, type: :model do
 
   describe '#cost_per_hour' do
     before { travel_to Date.new(2018, 11, 19) }
+
     after { travel_back }
 
     include_context 'demands with effort for finances'
@@ -100,6 +99,7 @@ RSpec.describe FinancialInformation, type: :model do
 
   describe '#project_delivered_hours' do
     before { travel_to Date.new(2018, 11, 19) }
+
     after { travel_back }
 
     include_context 'demands with effort for finances'
@@ -111,6 +111,7 @@ RSpec.describe FinancialInformation, type: :model do
 
   describe '#hours_per_demand' do
     before { travel_to Date.new(2018, 11, 19) }
+
     after { travel_back }
 
     include_context 'demands with effort for finances'
@@ -122,12 +123,16 @@ RSpec.describe FinancialInformation, type: :model do
 
   describe '#red?' do
     let(:company) { Fabricate :company }
+
     context 'when the expenses are greather than incomes' do
       let!(:finances) { Fabricate :financial_information, company: company, finances_date: 1.month.ago, income_total: 20.4, expenses_total: 30 }
+
       it { expect(finances.red?).to be true }
     end
+
     context 'when the expenses are smaller than incomes' do
       let!(:finances) { Fabricate :financial_information, company: company, finances_date: 1.month.ago, income_total: 20.4, expenses_total: 1 }
+
       it { expect(finances.red?).to be false }
     end
   end

@@ -18,6 +18,7 @@ RSpec.describe AuthenticatedController, type: :controller do
 
     context 'when authenticated' do
       let(:user) { Fabricate :user }
+
       before { sign_in user }
 
       it 'calls the authneticate_user! method' do
@@ -43,7 +44,9 @@ RSpec.describe AuthenticatedController, type: :controller do
 
     context 'when user is an admin' do
       let(:user) { Fabricate :user, first_name: 'zzz', admin: true }
+
       before { sign_in user }
+
       it { expect(controller.send(:user_gold_check)).to eq true }
     end
 

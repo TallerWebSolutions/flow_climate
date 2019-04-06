@@ -1,19 +1,19 @@
 <div class="standard-form">
-  <%= f.hidden_field :company_id, value: @company.id %>
+  <%= f.hidden_field :company_id, value: company.id %>
   <div class="row">
     <div class='col-xs-4 form-group'>
       <%= f.label :customer, Customer.model_name.human, { class: 'control-label required' } %>
-      <%= f.collection_select :customer_id, @company_customers, :id, :name, { include_blank: t('general.select'), selected: @product.customer_id }, { class: 'form-control', id: 'customer-select' } %>
+      <%= f.collection_select :customer_id, company_customers, :id, :name, { include_blank: t('general.select'), selected: product.customer_id }, { class: 'form-control', id: 'customer-select' } %>
     </div>
-    <div class='col-xs-4 form-group <%= 'has-error' if @product.errors[:team].present? %>'>
+    <div class='col-xs-4 form-group <%= 'has-error' if product.errors[:team].present? %>'>
       <%= f.label :team, class: 'control-label' %>
-      <%= f.select :team_id, @company.teams.map { |team| [team.name, team.id] }, { include_blank: t('general.select'), selected: @product.team_id }, class: 'form-control' %>
-      <span class="help-block"><%= @product.errors[:team].join(', ') %></span>
+      <%= f.select :team_id, company.teams.map { |team| [team.name, team.id] }, { include_blank: t('general.select'), selected: product.team_id }, class: 'form-control' %>
+      <span class="help-block"><%= product.errors[:team].join(', ') %></span>
     </div>
-    <div class='col-xs-4 form-group <%= 'has-error' if @product.errors[:name].present? %>'>
+    <div class='col-xs-4 form-group <%= 'has-error' if product.errors[:name].present? %>'>
       <%= f.label :name, class: 'control-label required' %>
-      <%= f.text_field :name, value: @product.name, autofocus: true, class: 'form-control' %>
-      <span class="help-block"><%= @product.errors[:name].join(', ') %></span>
+      <%= f.text_field :name, value: product.name, autofocus: true, class: 'form-control' %>
+      <span class="help-block"><%= product.errors[:name].join(', ') %></span>
     </div>
   </div>
 

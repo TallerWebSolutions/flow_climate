@@ -64,19 +64,19 @@ class CompaniesController < AuthenticatedController
     @company_settings = CompanySettings.new(company: @company) if @company_settings.blank?
     @company_settings.update(company_settings_params)
     assign_jira_accounts_list
-    respond_to { |format| format.js { render file: 'companies/update_settings.js.erb' } }
+    respond_to { |format| format.js { render 'companies/update_settings.js.erb' } }
   end
 
   def projects_tab
     @company_projects = @company.projects.includes(:team).includes(:product).includes(:customer).order(end_date: :desc)
     @projects_summary = ProjectsSummaryData.new(@company_projects)
-    respond_to { |format| format.js { render file: 'companies/projects_tab.js.erb' } }
+    respond_to { |format| format.js { render 'companies/projects_tab.js.erb' } }
   end
 
   def strategic_chart_tab
     @company_projects = @company.projects.includes(:product).includes(:customer).order(end_date: :desc)
     @strategic_chart_data = Highchart::StrategicChartsAdapter.new(@company, @company_projects, @company.total_available_hours)
-    respond_to { |format| format.js { render file: 'companies/strategic_chart_tab.js.erb' } }
+    respond_to { |format| format.js { render 'companies/strategic_chart_tab.js.erb' } }
   end
 
   def risks_tab
@@ -84,7 +84,7 @@ class CompaniesController < AuthenticatedController
     @strategic_chart_data = Highchart::StrategicChartsAdapter.new(@company, @company_projects, @company.total_available_hours)
     @projects_risk_chart_data = Highchart::ProjectRiskChartsAdapter.new(@company_projects)
 
-    respond_to { |format| format.js { render file: 'companies/risks_tab.js.erb' } }
+    respond_to { |format| format.js { render 'companies/risks_tab.js.erb' } }
   end
 
   private

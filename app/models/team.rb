@@ -40,16 +40,8 @@ class Team < ApplicationRecord
     team_members.active.where(billable: true, billable_type: billable_type).sum(&:monthly_payment)
   end
 
-  def active_members_count_for_billable_types(billable_type)
-    team_members.active.where(billable: true, billable_type: billable_type).count
-  end
-
   def active_monthly_available_hours_for_billable_types(billable_type)
     team_members.active.where(billable: true, billable_type: billable_type).sum(&:hours_per_month)
-  end
-
-  def total_cost
-    team_members.active.sum(&:monthly_payment)
   end
 
   def consumed_hours_in_month(required_date)

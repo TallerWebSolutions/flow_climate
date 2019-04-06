@@ -1,12 +1,12 @@
 <div class="row">
   <div class="col-xs-4">
-    <%= link_to t('projects.actions.edit.title'), edit_company_project_path(@company, @project), class: 'btn btn-primary btn-block bottom-spaced-component' %>
+    <%= link_to t('projects.actions.edit.title'), edit_company_project_path(company, project), class: 'btn btn-primary btn-block bottom-spaced-component' %>
   </div>
   <div class="col-xs-4">
-    <%= link_to t('projects.show.sync_jira'), synchronize_jira_company_project_path(@company, @project), method: :put, class: 'btn btn-primary btn-block bottom-spaced-component' %>
+    <%= link_to t('projects.show.sync_jira'), synchronize_jira_company_project_path(company, project), method: :put, class: 'btn btn-primary btn-block bottom-spaced-component' %>
   </div>
   <div class="col-xs-4">
-    <%= link_to t('demands.new.title'), new_company_project_demand_path(@company, @project), class: 'btn btn-primary btn-block bottom-spaced-component' %>
+    <%= link_to t('demands.new.title'), new_company_project_demand_path(company, project), class: 'btn btn-primary btn-block bottom-spaced-component' %>
   </div>
 </div>
 
@@ -21,15 +21,15 @@
 </div>
 
 <div id="content-project-risks" class="tabcontent">
-  <%= render 'projects/project_risk_settings', project_risk_configs: project_risk_configs %>
+  <%= render 'projects/project_risk_settings', company: company, project: project, project_risk_configs: project_risk_configs %>
 </div>
 
 <div id="content-project-stages" class="tabcontent">
-  <%= render 'projects/projects_stages_tab', company: @company, project: @project, project_stages: @project_stages, projects_to_copy_stages_from: @projects_to_copy_stages_from %>
+  <%= render 'projects/projects_stages_tab', company: company, project: project, project_stages: project_stages, projects_to_copy_stages_from: projects_to_copy_stages_from %>
 </div>
 
 <div id="content-project-jira" class="tabcontent">
-  <%= render 'jira/project_jira_configs/project_jira_config_table', company: @company, project: @project %>
+  <%= render 'jira/project_jira_configs/project_jira_config_table', company: company, project: project %>
 </div>
 
 <% content_for :javascript do %>

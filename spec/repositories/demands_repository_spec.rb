@@ -2,6 +2,7 @@
 
 RSpec.describe DemandsRepository, type: :repository do
   before { travel_to Time.zone.local(2018, 4, 5, 10, 0, 0) }
+
   after { travel_back }
 
   let(:company) { Fabricate :company }
@@ -32,6 +33,8 @@ RSpec.describe DemandsRepository, type: :repository do
   end
 
   describe '#demands_created_before_date_to_projects' do
+    subject(:query_return) { DemandsRepository.instance.demands_created_before_date_to_projects([first_project]) }
+
     let!(:first_demand) { Fabricate :demand, project: first_project, demand_id: 'first_demand', created_date: 4.days.ago, end_date: 3.days.ago, discarded_at: nil }
     let!(:second_demand) { Fabricate :demand, project: first_project, demand_id: 'second_demand', created_date: 3.days.ago, end_date: 2.days.ago, discarded_at: nil }
     let!(:third_demand) { Fabricate :demand, project: first_project, demand_id: 'third_demand', created_date: 2.days.ago, end_date: nil, discarded_at: nil }
@@ -41,8 +44,6 @@ RSpec.describe DemandsRepository, type: :repository do
     let!(:sixth_demand) { Fabricate :demand, project: first_project, demand_id: 'sixth_demand', discarded_at: Time.zone.today }
 
     let!(:first_epic) { Fabricate :demand, project: first_project, artifact_type: :epic }
-
-    subject(:query_return) { DemandsRepository.instance.demands_created_before_date_to_projects([first_project]) }
 
     it { expect(query_return.map(&:id)).to match_array [first_demand.id, second_demand.id, third_demand.id] }
   end
@@ -60,6 +61,7 @@ RSpec.describe DemandsRepository, type: :repository do
 
       it { expect(DemandsRepository.instance.committed_demands_by_project_and_week(Project.all, 1.week.ago.to_date.cweek, 1.week.ago.to_date.cwyear)).to match_array [third_demand, fourth_demand, fifth_demand] }
     end
+
     context 'having no data' do
       it { expect(DemandsRepository.instance.committed_demands_by_project_and_week(Project.all, 1.week.ago.to_date.cweek, 1.week.ago.to_date.cwyear)).to eq [] }
     end
@@ -78,6 +80,7 @@ RSpec.describe DemandsRepository, type: :repository do
 
       it { expect(DemandsRepository.instance.throughput_to_projects_and_period(Project.all, 1.week.ago.beginning_of_week, 1.week.ago.end_of_week)).to match_array [third_demand, fourth_demand, fifth_demand] }
     end
+
     context 'having no data' do
       it { expect(DemandsRepository.instance.throughput_to_projects_and_period(Project.all, 1.week.ago.beginning_of_week, 1.week.ago.end_of_week)).to eq [] }
     end
@@ -162,6 +165,7 @@ RSpec.describe DemandsRepository, type: :repository do
         it { expect(DemandsRepository.instance.delivered_until_date_to_projects_in_stream(Project.all, 'upstream')).to match_array [second_demand, third_demand] }
         it { expect(DemandsRepository.instance.delivered_until_date_to_projects_in_stream(Project.all, 'upstream', Date.new(2018, 3, 1))).to eq [second_demand] }
       end
+
       context 'downstream' do
         let(:first_project) { Fabricate :project, start_date: 2.months.ago, end_date: 2.months.from_now }
         let(:second_project) { Fabricate :project, start_date: 2.months.ago, end_date: 2.months.from_now }
@@ -245,6 +249,7 @@ RSpec.describe DemandsRepository, type: :repository do
     context 'not specifying the group period' do
       context 'for end_date' do
         subject(:result_data) { DemandsRepository.instance.count_grouped_per_period(Demand.all, :end_date) }
+
         it 'returns grouped per week using the end date' do
           expect(result_data[Date.new(2018, 3, 5)]).to eq 1
           expect(result_data[Date.new(2018, 3, 12)]).to eq 1
@@ -252,14 +257,18 @@ RSpec.describe DemandsRepository, type: :repository do
           expect(result_data[Date.new(2018, 4, 2)]).to eq 2
         end
       end
+
       context 'for created_date' do
         subject(:result_data) { DemandsRepository.instance.count_grouped_per_period(Demand.all, :created_date) }
+
         it 'returns grouped per week to created date' do
           expect(result_data[Date.new(2018, 3, 26)]).to eq 7
         end
       end
+
       context 'for commitment_date' do
         subject(:result_data) { DemandsRepository.instance.count_grouped_per_period(Demand.all, :commitment_date) }
+
         it 'returns grouped per week to commitment date' do
           expect(result_data[Date.new(2018, 3, 26)]).to eq 3
         end
@@ -268,6 +277,7 @@ RSpec.describe DemandsRepository, type: :repository do
 
     context 'specifying the week period' do
       subject(:result_data) { DemandsRepository.instance.count_grouped_per_period(Demand.all, :end_date, 'week') }
+
       it 'returns grouped per week' do
         expect(result_data[Date.new(2018, 3, 5)]).to eq 1
         expect(result_data[Date.new(2018, 3, 12)]).to eq 1
@@ -278,6 +288,7 @@ RSpec.describe DemandsRepository, type: :repository do
 
     context 'specifying the month period' do
       subject(:result_data) { DemandsRepository.instance.count_grouped_per_period(Demand.all, :end_date, 'month') }
+
       it 'returns grouped per month' do
         expect(result_data[Date.new(2018, 3, 1)]).to eq 3
         expect(result_data[Date.new(2018, 4, 1)]).to eq 3
@@ -286,6 +297,7 @@ RSpec.describe DemandsRepository, type: :repository do
 
     context 'specifying the day period' do
       subject(:result_data) { DemandsRepository.instance.count_grouped_per_period(Demand.all, :end_date, 'day') }
+
       it 'returns grouped per day' do
         expect(result_data[Date.new(2018, 3, 5)]).to eq 1
         expect(result_data[Date.new(2018, 3, 15)]).to eq 1
@@ -298,6 +310,7 @@ RSpec.describe DemandsRepository, type: :repository do
 
     context 'specifying the year period' do
       subject(:result_data) { DemandsRepository.instance.count_grouped_per_period(Demand.all, :end_date, 'year') }
+
       it 'returns grouped per year' do
         expect(result_data[Date.new(2018, 1, 1)]).to eq 6
       end

@@ -21,22 +21,22 @@
 <%= render 'commons/loader_spinner' %>
 
 <div id="stamps" class="tab-container">
-  <%= render 'company_stamps' %>
+  <%= render 'company_stamps', company: @company, customer: @customer %>
 </div>
 
 <div id="teams" class="tab-container">
-  <%= render 'teams/teams_table' %>
+  <%= render 'teams/teams_table', teams: @teams, company: @company %>
 </div>
 
 <div id="finance" class="tab-container">
-  <%= render 'financial_informations/finances_tab', finances: @finances %>
+  <%= render 'financial_informations/finances_tab', company: @company, finances: @finances, financial_informations: @financial_informations, finances_hash_with_computed_informations: @finances_hash_with_computed_informations %>
 </div>
 
 <div id="project-list" class="tab-container">
   <h2><%= t('projects.index.title') %></h2>
 
   <div id="projects-table">
-    <%= render 'projects/projects_table', projects_list: @company_projects %>
+    <%= render 'projects/projects_table', company: @company, projects_list: @company_projects %>
   </div>
 </div>
 
@@ -54,7 +54,7 @@
 </div>
 
 <div id="settings" class="tab-container">
-  <%= render 'companies/company_settings' %>
+  <%= render 'companies/company_settings', company: @company, jira_accounts_list: @jira_accounts_list, stages_list: @stages_list, company_settings: @company_settings %>
 </div>
 
 <% content_for :javascript do %>

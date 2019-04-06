@@ -6,14 +6,18 @@ RSpec.describe TimeService, type: :service do
       context 'in different hours' do
         let(:start_date) { Time.zone.local(2018, 2, 13, 14, 0, 0) }
         let(:end_date) { Time.zone.local(2018, 2, 13, 16, 0, 0) }
+
         it { expect(TimeService.instance.compute_working_hours_for_dates(start_date, end_date)).to eq 2 }
       end
+
       context 'in different minutes' do
         let(:start_date) { Time.zone.local(2018, 2, 13, 14, 0, 0) }
         let(:end_date) { Time.zone.local(2018, 2, 13, 14, 23, 0) }
+
         it { expect(TimeService.instance.compute_working_hours_for_dates(start_date, end_date)).to eq 1 }
       end
     end
+
     context 'when the dates are in different days' do
       context 'and there is no weekend between the dates' do
         let(:start_date) { Time.zone.local(2018, 2, 13, 14, 0, 0) }
@@ -21,18 +25,21 @@ RSpec.describe TimeService, type: :service do
 
         it { expect(TimeService.instance.compute_working_hours_for_dates(start_date, end_date)).to eq 14 }
       end
+
       context 'and there is weekend between the dates' do
         let(:start_date) { Time.zone.local(2018, 2, 9, 14, 0, 0) }
         let(:end_date) { Time.zone.local(2018, 2, 13, 16, 0, 0) }
 
         it { expect(TimeService.instance.compute_working_hours_for_dates(start_date, end_date)).to eq 14 }
       end
+
       context 'and there is less than one minute apart' do
         let(:start_date) { Time.zone.local(2018, 2, 9, 14, 0, 0) }
         let(:end_date) { Time.zone.local(2018, 2, 9, 14, 0, 30) }
 
         it { expect(TimeService.instance.compute_working_hours_for_dates(start_date, end_date)).to eq 0 }
       end
+
       context 'and there is exactly one minute apart' do
         let(:start_date) { Time.zone.local(2018, 2, 9, 14, 0, 0) }
         let(:end_date) { Time.zone.local(2018, 2, 9, 14, 1, 0) }
@@ -40,6 +47,7 @@ RSpec.describe TimeService, type: :service do
         it { expect(TimeService.instance.compute_working_hours_for_dates(start_date, end_date)).to eq 0 }
       end
     end
+
     context 'when the dates are nil' do
       it { expect(TimeService.instance.compute_working_hours_for_dates(nil, nil)).to eq 0 }
     end
@@ -91,7 +99,9 @@ RSpec.describe TimeService, type: :service do
 
   describe '#add_weeks_to_today' do
     before { travel_to Date.new(2018, 8, 30) }
+
     after { travel_back }
+
     it 'returns the new date x weeks later than today' do
       control_date_5_weeks_later = TimeService.instance.add_weeks_to_today(5)
 
@@ -101,6 +111,7 @@ RSpec.describe TimeService, type: :service do
 
   describe '#limit_date_to_period' do
     before { travel_to Date.new(2018, 8, 30) }
+
     after { travel_back }
 
     context 'for period all' do

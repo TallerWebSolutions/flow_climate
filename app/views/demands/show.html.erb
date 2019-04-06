@@ -58,7 +58,7 @@
 </div>
 
 <%= render 'demand_blocks/demand_blocks_data', demand_blocks_list: @demand_blocks %>
-<%= render 'demand_transitions/demand_transitions_table', demand_transitions_list: @demand_transitions %>
+<%= render 'demand_transitions/demand_transitions_table', demand_transitions_list: @demand_transitions, demand: @demand %>
 
 <% content_for :javascript do %>
   <%= javascript_include_tag 'demands/show' %>

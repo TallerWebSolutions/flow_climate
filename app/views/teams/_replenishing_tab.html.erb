@@ -36,7 +36,7 @@
   <tbody>
     <% projects_to_replenish.each do |project_hash| %>
       <tr>
-        <td><%= link_to project_hash[:name], company_project_path(@company, project_hash[:id]) %></td>
+        <td><%= link_to project_hash[:name], company_project_path(company, project_hash[:id]) %></td>
         <td><%= l(project_hash[:end_date], format: :default) %></td>
         <td><%= project_hash[:weeks_to_end_date] %></td>
         <td><%= project_hash[:remaining_backlog] %></td>

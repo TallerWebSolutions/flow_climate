@@ -1,23 +1,23 @@
 <div class="standard-form">
 
   <div class="row">
-    <div class='col-xs-6 form-group <%= 'has-error' if @financial_information.errors[:finances_date].present? %>'>
+    <div class='col-xs-6 form-group <%= 'has-error' if financial_information.errors[:finances_date].present? %>'>
       <%= f.label :finances_date, class: 'control-label required' %>
       <%= f.date_field :finances_date, class: 'form-control', autofocus: true %>
-      <span class="help-block"><%= @financial_information.errors[:finances_date].join(', ') %></span>
+      <span class="help-block"><%= financial_information.errors[:finances_date].join(', ') %></span>
     </div>
-    <div class='col-xs-6 form-group <%= 'has-error' if @financial_information.errors[:income_total].present? %>'>
+    <div class='col-xs-6 form-group <%= 'has-error' if financial_information.errors[:income_total].present? %>'>
       <%= f.label :income_total, class: 'control-label required' %>
-      <%= f.number_field :income_total, value: @financial_information.income_total, class: 'form-control', step: 0.01 %>
-      <span class="help-block"><%= @financial_information.errors[:income_total].join(', ') %></span>
+      <%= f.number_field :income_total, value: financial_information.income_total, class: 'form-control', step: 0.01 %>
+      <span class="help-block"><%= financial_information.errors[:income_total].join(', ') %></span>
     </div>
   </div>
 
   <div class="row">
-    <div class='col-xs-6 form-group <%= 'has-error' if @financial_information.errors[:expenses_total].present? %>'>
+    <div class='col-xs-6 form-group <%= 'has-error' if financial_information.errors[:expenses_total].present? %>'>
       <%= f.label :expenses_total, class: 'control-label required' %>
-      <%= f.number_field :expenses_total, value: @financial_information.expenses_total, class: 'form-control', step: 0.01 %>
-      <span class="help-block"><%= @financial_information.errors[:expenses_total].join(', ') %></span>
+      <%= f.number_field :expenses_total, value: financial_information.expenses_total, class: 'form-control', step: 0.01 %>
+      <span class="help-block"><%= financial_information.errors[:expenses_total].join(', ') %></span>
     </div>
   </div>
 
