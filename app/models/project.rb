@@ -157,10 +157,6 @@ class Project < ApplicationRecord
     team || product&.team || project_jira_config&.team
   end
 
-  def update_team_in_product(team)
-    product.update(team: team) if product.present?
-  end
-
   def flow_pressure(date = Time.zone.now)
     return 0.0 if no_pressure_set(date)
 
@@ -174,14 +170,6 @@ class Project < ApplicationRecord
 
   def total_throughput
     demands.kept.story.finished.count
-  end
-
-  def total_throughput_upstream
-    demands.kept.story.finished.reject(&:downstream_demand?)
-  end
-
-  def total_throughput_downstream
-    demands.kept.story.finished.select(&:downstream_demand?)
   end
 
   def total_throughput_for(date = Time.zone.today)
@@ -210,34 +198,10 @@ class Project < ApplicationRecord
     required_hours.to_f / remaining_hours.to_f
   end
 
-  def total_bugs_opened
-    demands.kept.story.bug.not_finished.count
-  end
-
-  def total_bugs_closed
-    demands.kept.story.bug.finished.count
-  end
-
-  def total_hours_bug
-    demands.kept.story.bug.finished.sum(&:effort_upstream) + demands.kept.story.bug.finished.sum(&:effort_downstream)
-  end
-
   def avg_hours_per_demand
     return 0 if total_hours_consumed.zero? || total_throughput.zero?
 
     (total_hours_consumed.to_f / total_throughput.to_f)
-  end
-
-  def avg_hours_per_demand_upstream
-    return 0 if total_hours_upstream.zero? || total_throughput_upstream.count.zero?
-
-    (total_hours_upstream.to_f / total_throughput_upstream.count.to_f)
-  end
-
-  def avg_hours_per_demand_downstream
-    return 0 if total_hours_downstream.zero? || total_throughput_downstream.count.zero?
-
-    (total_hours_downstream.to_f / total_throughput_downstream.count.to_f)
   end
 
   def remaining_backlog(date = Time.zone.now)
@@ -304,11 +268,6 @@ class Project < ApplicationRecord
     Stats::StatisticsService.instance.percentile(desired_percentile, demands_in_class_of_service.map(&:leadtime))
   end
 
-  def leadtime_for_demand_type(demand_type, desired_percentile = 80)
-    demands_in_type = demands.kept.send(demand_type).finished
-    Stats::StatisticsService.instance.percentile(desired_percentile, demands_in_type.map(&:leadtime))
-  end
-
   def general_leadtime(desired_percentile = 80)
     Stats::StatisticsService.instance.percentile(desired_percentile, demands.finished.map(&:leadtime))
   end
@@ -339,10 +298,6 @@ class Project < ApplicationRecord
     return 0 if demands.kept.story.count.zero?
 
     (demands.kept.story.intangible.count.to_f / demands.kept.story.count.to_f) * 100
-  end
-
-  def kept_demands_ids
-    demands.kept.story.map(&:id)
   end
 
   def aging

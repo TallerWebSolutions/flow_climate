@@ -17,13 +17,6 @@ RSpec.describe FinancialInformation, type: :model do
     after { travel_back }
 
     pending '.for_month'
-    describe '.for_year' do
-      let!(:first_finances) { Fabricate :financial_information, finances_date: 1.month.ago, income_total: 20.4, expenses_total: 12.2 }
-      let!(:second_finances) { Fabricate :financial_information, finances_date: Time.zone.today, income_total: 20.4, expenses_total: 12.2 }
-      let!(:third_finances) { Fabricate :financial_information, finances_date: 1.year.ago, income_total: 20.4, expenses_total: 12.2 }
-
-      it { expect(FinancialInformation.for_year(2018)).to match_array [first_finances, second_finances] }
-    end
   end
 
   describe '#financial_result' do
