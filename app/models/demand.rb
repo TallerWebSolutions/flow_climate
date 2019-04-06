@@ -67,22 +67,16 @@ class Demand < ApplicationRecord
   validates :project, :created_date, :demand_id, :demand_type, :class_of_service, :assignees_count, presence: true
   validates :demand_id, uniqueness: { scope: :company_id, message: I18n.t('demand.validations.demand_id_unique.message') }
 
-  scope :opened_in_date, ->(date) { kept.story.where('created_date::timestamp::date = :date', date: date) }
   scope :opened_after_date, ->(date) { kept.story.where('created_date >= :date', date: date.beginning_of_day) }
   scope :finished_in_stream, ->(stage_stream) { kept.story.where('demands.downstream = :downstream', downstream: stage_stream == 'downstream') }
   scope :finished, -> { kept.story.where('demands.end_date IS NOT NULL') }
   scope :finished_with_leadtime, -> { kept.story.where('end_date IS NOT NULL AND leadtime IS NOT NULL') }
   scope :finished_until_date, ->(limit_date) { finished.where('demands.end_date <= :limit_date', limit_date: limit_date) }
-  scope :finished_until_date_with_leadtime, ->(limit_date) { finished_with_leadtime.finished_until_date(limit_date) }
   scope :finished_after_date, ->(limit_date) { finished.where('demands.end_date >= :limit_date', limit_date: limit_date.beginning_of_day) }
   scope :finished_with_leadtime_after_date, ->(limit_date) { finished_with_leadtime.where('demands.end_date >= :limit_date', limit_date: limit_date.beginning_of_day) }
-  scope :finished_bugs, -> { bug.finished }
   scope :finished_in_month, ->(month, year) { finished.where('EXTRACT(month FROM end_date) = :month AND EXTRACT(year FROM end_date) = :year', month: month, year: year) }
   scope :finished_in_week, ->(week, year) { finished.where('EXTRACT(week FROM end_date) = :week AND EXTRACT(year FROM end_date) = :year', week: week, year: year) }
   scope :not_finished, -> { kept.story.where('end_date IS NULL') }
-  scope :upstream_flag, -> { kept.story.where(downstream: false) }
-  scope :downstream_flag, -> { kept.story.where(downstream: true) }
-  scope :not_discarded_until_date, ->(limit_date) { story.where('demands.discarded_at IS NULL OR demands.discarded_at > :limit_date', limit_date: limit_date.end_of_day) }
 
   scope :in_wip, -> { kept.story.where('demands.commitment_date IS NOT NULL AND demands.end_date IS NULL') }
 
@@ -112,10 +106,6 @@ class Demand < ApplicationRecord
     return if manual_effort? && !update_manual_effort
 
     update(effort_downstream: compute_effort_downstream, effort_upstream: compute_effort_upstream)
-  end
-
-  def result_date
-    end_date&.utc&.to_date || created_date.utc.to_date
   end
 
   def working_time_upstream
@@ -150,14 +140,6 @@ class Demand < ApplicationRecord
     demand_transitions.kept.where(last_time_out: nil).order(:last_time_in).last&.stage || demand_transitions.kept.order(:last_time_in)&.last&.stage
   end
 
-  def archived?
-    stages.archived.present?
-  end
-
-  def update_commitment_date!
-    update(commitment_date: nil) if current_stage&.before_commitment_point?
-  end
-
   def leadtime_in_days
     return 0.0 if leadtime.blank?
 
@@ -173,10 +155,6 @@ class Demand < ApplicationRecord
 
   def sum_touch_blocked_time
     sum_blocked_time_for_transitions(demand_transitions.kept.touch_transitions)
-  end
-
-  def sum_queue_blocked_time
-    sum_blocked_time_for_transitions(demand_transitions.kept.queue_transitions)
   end
 
   def total_bloked_working_time

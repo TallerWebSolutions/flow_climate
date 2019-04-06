@@ -59,14 +59,6 @@ RSpec.describe Demand, type: :model do
     let(:project) { Fabricate :project }
     let!(:first_epic) { Fabricate :demand, project: project, artifact_type: :epic }
 
-    describe '.opened_in_date' do
-      let!(:first_demand) { Fabricate :demand, created_date: Time.zone.parse('2018-02-03 11:00') }
-      let!(:second_demand) { Fabricate :demand, created_date: Time.zone.parse('2018-02-03 11:00') }
-      let!(:third_demand) { Fabricate :demand, created_date: Time.zone.parse('2018-02-05 11:00') }
-
-      it { expect(Demand.opened_in_date(Date.new(2018, 2, 3))).to match_array [first_demand, second_demand] }
-    end
-
     describe '.opened_after_date' do
       let!(:first_demand) { Fabricate :demand, created_date: Time.zone.parse('2018-02-02 11:00') }
       let!(:second_demand) { Fabricate :demand, created_date: Time.zone.parse('2018-02-03 11:00') }
@@ -99,14 +91,6 @@ RSpec.describe Demand, type: :model do
       it { expect(Demand.finished_until_date(1.day.ago)).to match_array [first_demand, second_demand] }
     end
 
-    describe '.finished_until_date_with_leadtime' do
-      let!(:first_demand) { Fabricate :demand, project: project, end_date: 2.days.ago, leadtime: 2 }
-      let!(:second_demand) { Fabricate :demand, project: project, end_date: 1.day.ago, leadtime: 3 }
-      let!(:third_demand) { Fabricate :demand, project: project, end_date: Time.zone.now }
-
-      it { expect(Demand.finished_until_date_with_leadtime(1.day.ago)).to match_array [first_demand, second_demand] }
-    end
-
     describe '.finished_after_date' do
       let!(:first_demand) { Fabricate :demand, project: project, end_date: 2.days.ago, leadtime: 2 }
       let!(:second_demand) { Fabricate :demand, project: project, end_date: 1.day.ago, leadtime: 3 }
@@ -121,31 +105,6 @@ RSpec.describe Demand, type: :model do
       let!(:third_demand) { Fabricate :demand, project: project, end_date: Time.zone.now }
 
       it { expect(Demand.not_finished).to match_array [first_demand, second_demand] }
-    end
-
-    describe '.upstream_flag' do
-      let!(:first_demand) { Fabricate :demand, downstream: false }
-      let!(:second_demand) { Fabricate :demand, downstream: false }
-      let!(:third_demand) { Fabricate :demand, downstream: true }
-
-      it { expect(Demand.upstream_flag).to match_array [first_demand, second_demand] }
-    end
-
-    describe '.downstream_flag' do
-      let!(:first_demand) { Fabricate :demand, downstream: true }
-      let!(:second_demand) { Fabricate :demand, downstream: true }
-      let!(:third_demand) { Fabricate :demand, downstream: false }
-
-      it { expect(Demand.downstream_flag).to match_array [first_demand, second_demand] }
-    end
-
-    describe '.not_discarded_until_date' do
-      let!(:first_demand) { Fabricate :demand, discarded_at: 2.weeks.ago.end_of_day }
-      let!(:second_demand) { Fabricate :demand, discarded_at: 1.week.ago.end_of_day }
-      let!(:third_demand) { Fabricate :demand, discarded_at: 3.days.ago.end_of_day }
-      let!(:fourth_demand) { Fabricate :demand, discarded_at: Time.zone.now }
-
-      it { expect(Demand.not_discarded_until_date(1.week.ago)).to match_array [third_demand, fourth_demand] }
     end
 
     describe '.finished_in_month' do
@@ -363,26 +322,6 @@ RSpec.describe Demand, type: :model do
     end
   end
 
-  describe '#result_date' do
-    context 'having end_date' do
-      let!(:demand) { Fabricate :demand, end_date: Time.zone.parse('2018-03-15 16:24:41 -3') }
-
-      it { expect(demand.result_date).to eq Date.new(2018, 3, 15) }
-    end
-
-    context 'having no end_date' do
-      let!(:demand) { Fabricate :demand, end_date: nil }
-
-      it { expect(demand.result_date).to eq demand.created_date.utc.to_date }
-    end
-
-    context 'having the end_date in the edge of timezone' do
-      let!(:demand) { Fabricate :demand, end_date: Time.zone.parse('2018-03-15 23:24:41 -3') }
-
-      it { expect(demand.result_date).to eq Date.new(2018, 3, 16) }
-    end
-  end
-
   describe '#working_time_upstream' do
     let(:company) { Fabricate :company }
     let(:customer) { Fabricate :customer, company: company }
@@ -558,74 +497,6 @@ RSpec.describe Demand, type: :model do
     end
   end
 
-  describe '#update_commitment_date!' do
-    let(:company) { Fabricate :company }
-    let(:customer) { Fabricate :customer, company: company }
-    let(:project) { Fabricate :project, customer: customer }
-    let(:stage) { Fabricate :stage, company: company, projects: [project], order: 0 }
-    let(:other_stage) { Fabricate :stage, company: company, projects: [project], order: 1, commitment_point: true }
-
-    context 'having stages' do
-      context 'and the demand is inside commitment area' do
-        let(:demand) { Fabricate :demand, project: project, commitment_date: Time.zone.now }
-        let!(:first_demand_transition) { Fabricate :demand_transition, demand: demand, stage: stage, last_time_in: 2.days.ago, last_time_out: 1.day.ago }
-        let!(:second_demand_transition) { Fabricate :demand_transition, demand: demand, stage: other_stage, last_time_in: 1.day.ago, last_time_out: Time.zone.now }
-
-        before { demand.update_commitment_date! }
-
-        it { expect(demand.commitment_date).not_to be_nil }
-      end
-
-      context 'and the demand went to outside commitment area' do
-        let(:demand) { Fabricate :demand, project: project, commitment_date: Time.zone.now }
-        let!(:first_demand_transition) { Fabricate :demand_transition, demand: demand, stage: stage, last_time_in: 2.days.ago, last_time_out: 1.day.ago }
-        let!(:second_demand_transition) { Fabricate :demand_transition, demand: demand, stage: other_stage, last_time_in: 1.day.ago, last_time_out: Time.zone.now }
-        let!(:third_demand_transition) { Fabricate :demand_transition, demand: demand, stage: stage, last_time_in: Time.zone.now, last_time_out: Time.zone.tomorrow }
-
-        before { demand.update_commitment_date! }
-
-        it { expect(demand.commitment_date).to be_nil }
-      end
-
-      context 'and the demand went to outside commitment area via last time out nil' do
-        let(:demand) { Fabricate :demand, project: project, commitment_date: Time.zone.now }
-        let!(:first_demand_transition) { Fabricate :demand_transition, demand: demand, stage: stage, last_time_in: 2.days.ago, last_time_out: nil }
-        let!(:second_demand_transition) { Fabricate :demand_transition, demand: demand, stage: other_stage, last_time_in: 1.day.ago, last_time_out: Time.zone.now }
-
-        before { demand.update_commitment_date! }
-
-        it { expect(demand.commitment_date).to be_nil }
-      end
-    end
-
-    context 'having no stages' do
-      context 'and the demand is inside commitment area' do
-        let(:demand) { Fabricate :demand, project: project, commitment_date: Time.zone.now }
-
-        it { expect { demand.update_commitment_date! }.not_to raise_error Exception }
-      end
-    end
-  end
-
-  describe '#archived?' do
-    let(:project) { Fabricate :project }
-
-    let!(:not_archived) { Fabricate :stage, stage_type: :development, projects: [project] }
-    let(:demand) { Fabricate :demand, project: project }
-    let!(:demand_transition) { Fabricate :demand_transition, stage: not_archived, demand: demand }
-
-    context 'having transition in an archived stage' do
-      let!(:archived_stage) { Fabricate :stage, stage_type: :archived, projects: [project] }
-      let!(:archived_demand_transition) { Fabricate :demand_transition, stage: archived_stage, demand: demand }
-
-      it { expect(demand.reload).to be_archived }
-    end
-
-    context 'having no transition in an archived stage' do
-      it { expect(demand.reload).not_to be_archived }
-    end
-  end
-
   describe '#csv_array' do
     context 'having no stages' do
       let!(:demand) { Fabricate :demand, effort_downstream: nil, end_date: Time.zone.today }
@@ -708,36 +579,6 @@ RSpec.describe Demand, type: :model do
       let!(:demand) { Fabricate :demand, leadtime: nil }
 
       it { expect(demand.sum_touch_blocked_time.to_f).to eq 0 }
-    end
-  end
-
-  describe '#sum_queue_blocked_time' do
-    context 'having transitions and blocks' do
-      let(:company) { Fabricate :company }
-      let(:customer) { Fabricate :customer, company: company }
-      let(:product) { Fabricate :product, customer: customer }
-      let(:project) { Fabricate :project, product: product }
-
-      let!(:queue_stage) { Fabricate :stage, company: company, projects: [project], end_point: false, commitment_point: false, queue: false }
-      let!(:touch_stage) { Fabricate :stage, company: company, projects: [project], end_point: false, commitment_point: false, queue: true }
-
-      let!(:demand) { Fabricate :demand, project: project, leadtime: 453_223 }
-      let!(:first_demand_transition) { Fabricate :demand_transition, demand: demand, stage: queue_stage, last_time_in: 2.days.ago, last_time_out: 5.hours.ago }
-      let!(:second_demand_transition) { Fabricate :demand_transition, demand: demand, stage: touch_stage, last_time_in: 1.day.ago, last_time_out: Time.zone.now }
-      let!(:discarded_demand_transition) { Fabricate :demand_transition, demand: demand, stage: queue_stage, last_time_in: 1.day.ago, last_time_out: Time.zone.now, discarded_at: Time.zone.now }
-
-      let!(:first_demand_block) { Fabricate :demand_block, demand: demand, block_time: 40.hours.ago, unblock_time: 20.hours.ago }
-      let!(:second_demand_block) { Fabricate :demand_block, demand: demand, block_time: 15.hours.ago, unblock_time: 10.hours.ago }
-
-      let!(:discarded_demand_block) { Fabricate :demand_block, demand: demand, active: true, block_time: Time.zone.parse('2018-03-06 10:00'), unblock_time: Time.zone.parse('2018-03-06 12:00'), discarded_at: Time.zone.now }
-
-      it { expect(demand.sum_queue_blocked_time.to_i).to eq 18_000 }
-    end
-
-    context 'having no transitions' do
-      let!(:demand) { Fabricate :demand, leadtime: nil }
-
-      it { expect(demand.sum_queue_blocked_time.to_f).to eq 0 }
     end
   end
 
