@@ -1,1 +1,1 @@
-$("#products-table").html("<%= escape_javascript(render 'products/products_table', products_list: @products).html_safe %>");
+$("#products-table").html("<%= escape_javascript(render 'products/products_table', company: @company, products_list: @products).html_safe %>");

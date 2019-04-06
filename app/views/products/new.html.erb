@@ -11,13 +11,13 @@
 <%= form_for [@company, @product] do |f| %>
   <div class="row bottom-spaced-component">
     <div class="col-xs-12">
-      <%= render 'form', f: f %>
+      <%= render 'form', f: f, company: @company, product: @product, company_customers: @company_customers %>
     </div>
   </div>
 <% end %>
 
 <div id="products-table">
-  <%= render 'products/products_table', products_list: @products %>
+  <%= render 'products/products_table', company: @company, products_list: @products %>
 </div>
 
 <% content_for :javascript do %>

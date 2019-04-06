@@ -36,7 +36,7 @@ class AuthenticatedController < ApplicationController
     @products = []
     customer = Customer.find_by(id: customer_id)
     @products = customer.products.order(name: :asc) if customer.present?
-    respond_to { |format| format.js { render file: render_file } }
+    respond_to { |format| format.js { render render_file } }
   end
 
   def no_plan_to_access(plan_type)

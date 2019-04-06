@@ -485,7 +485,7 @@ RSpec.describe ProjectsController, type: :controller do
             before { get :search_for_projects, params: { company_id: company, status_filter: :executing }, xhr: true }
 
             it 'assigns the instance variable and renders the template' do
-              expect(response).to render_template 'projects/projects_search.js.erb'
+              expect(response).to render_template 'projects/projects_search'
               expect(assigns(:projects)).to eq [second_project, first_project]
             end
           end
@@ -494,7 +494,7 @@ RSpec.describe ProjectsController, type: :controller do
             before { get :search_for_projects, params: { company_id: company, status_filter: :all }, xhr: true }
 
             it 'assigns the instance variable and renders the template' do
-              expect(response).to render_template 'projects/projects_search.js.erb'
+              expect(response).to render_template 'projects/projects_search'
               expect(assigns(:projects)).to eq [second_project, third_project, first_project]
             end
           end
@@ -507,7 +507,7 @@ RSpec.describe ProjectsController, type: :controller do
             before { get :search_for_projects, params: { company_id: company, team_id: team.id, status_filter: :executing }, xhr: true }
 
             it 'assigns the instance variable and renders the template' do
-              expect(response).to render_template 'projects/projects_search.js.erb'
+              expect(response).to render_template 'projects/projects_search'
               expect(assigns(:projects)).to eq [second_team_project, first_team_project]
             end
           end
@@ -519,7 +519,7 @@ RSpec.describe ProjectsController, type: :controller do
             before { get :search_for_projects, params: { company_id: company, product_id: product.id, status_filter: :executing }, xhr: true }
 
             it 'assigns the instance variable and renders the template' do
-              expect(response).to render_template 'projects/projects_search.js.erb'
+              expect(response).to render_template 'projects/projects_search'
               expect(assigns(:projects)).to eq [second_product_project, first_product_project]
             end
           end
@@ -528,7 +528,7 @@ RSpec.describe ProjectsController, type: :controller do
             before { get :search_for_projects, params: { company_id: company, customer_id: other_customer.id, status_filter: :waiting }, xhr: true }
 
             it 'assigns the instance variable and renders the template' do
-              expect(response).to render_template 'projects/projects_search.js.erb'
+              expect(response).to render_template 'projects/projects_search'
               expect(assigns(:projects)).to eq [third_project]
             end
           end
@@ -540,7 +540,7 @@ RSpec.describe ProjectsController, type: :controller do
           before { get :search_for_projects, params: { company_id: company, status_filter: :executing }, xhr: true }
 
           it 'assigns the instance variable and renders the template' do
-            expect(response).to render_template 'projects/projects_search.js.erb'
+            expect(response).to render_template 'projects/projects_search'
             expect(assigns(:projects)).to eq []
           end
         end
@@ -718,7 +718,7 @@ RSpec.describe ProjectsController, type: :controller do
         it 'assigns the instance variable and renders the template' do
           expect(project).to eq project
           expect(company).to eq company
-          expect(response).to render_template 'projects/project_statistics.js.erb'
+          expect(response).to render_template 'projects/project_statistics'
         end
       end
 
@@ -751,7 +751,7 @@ RSpec.describe ProjectsController, type: :controller do
         context 'when there is no stages set in the receiver project' do
           it 'makes the copy of the stages to the receiver project' do
             patch :copy_stages_from, params: { company_id: company, id: third_project, project_to_copy_stages_from: first_project }, xhr: true
-            expect(response).to render_template 'projects/copy_stages_from.js.erb'
+            expect(response).to render_template 'projects/copy_stages_from'
             expect(third_project.reload.stages).to match_array [stage_in_first_project, second_stage_in_first_project]
           end
         end
@@ -759,7 +759,7 @@ RSpec.describe ProjectsController, type: :controller do
         context 'when there is stages already set in the receiver project' do
           it 'does nothing' do
             patch :copy_stages_from, params: { company_id: company, id: second_project, project_to_copy_stages_from: first_project }, xhr: true
-            expect(response).to render_template 'projects/copy_stages_from.js.erb'
+            expect(response).to render_template 'projects/copy_stages_from'
             expect(second_project.reload.stages).to match_array [stage_in_second_project]
           end
         end
@@ -815,7 +815,7 @@ RSpec.describe ProjectsController, type: :controller do
           context 'no start nor end dates nor period provided' do
             it 'builds the statistic adapter and renders the view using the dates in project to a monthly period' do
               get :demands_blocks_tab, params: { company_id: company, id: first_project }, xhr: true
-              expect(response).to render_template 'demand_blocks/demands_blocks_tab.js.erb'
+              expect(response).to render_template 'demand_blocks/demands_blocks_tab'
               expect(assigns(:demands_blocks)).to eq [first_block, fourth_block, second_block, fifth_block]
             end
           end
@@ -824,7 +824,7 @@ RSpec.describe ProjectsController, type: :controller do
             it 'builds the block list and render the template' do
               get :demands_blocks_tab, params: { company_id: company, id: first_project, start_date: 2.days.ago, end_date: Time.zone.today }, xhr: true
               expect(assigns(:demands_blocks)).to eq [first_block, fourth_block]
-              expect(response).to render_template 'demand_blocks/demands_blocks_tab.js.erb'
+              expect(response).to render_template 'demand_blocks/demands_blocks_tab'
             end
           end
         end
@@ -834,7 +834,7 @@ RSpec.describe ProjectsController, type: :controller do
         it 'render the template with empty data' do
           get :demands_blocks_tab, params: { company_id: company, id: first_project, start_date: 2.days.ago, end_date: Time.zone.today }, xhr: true
           expect(assigns(:demands_blocks)).to eq []
-          expect(response).to render_template 'demand_blocks/demands_blocks_tab.js.erb'
+          expect(response).to render_template 'demand_blocks/demands_blocks_tab'
         end
       end
     end

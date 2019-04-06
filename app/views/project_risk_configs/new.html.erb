@@ -15,7 +15,7 @@
 <%= form_for [@company, @project, @project_risk_config] do |f| %>
   <div class="row bottom-spaced-component">
     <div class="col-xs-12">
-      <%= render 'form', f: f %>
+      <%= render 'project_risk_configs/form', f: f, project_risk_config: @project_risk_config %>
     </div>
   </div>
 <% end %>

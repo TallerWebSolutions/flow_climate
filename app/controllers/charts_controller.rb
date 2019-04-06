@@ -10,19 +10,19 @@ class ChartsController < AuthenticatedController
   def build_operational_charts
     @report_data = {}
     @report_data = Highchart::OperationalChartsAdapter.new(@projects, @start_date, @end_date, @period) if @projects.present?
-    respond_to { |format| format.js { render file: 'charts/operational_charts' } }
+    respond_to { |format| format.js { render 'charts/operational_charts' } }
   end
 
   def build_strategic_charts
     @strategic_chart_data = Highchart::StrategicChartsAdapter.new(@company, @projects, @available_hours_in_month)
-    respond_to { |format| format.js { render file: 'charts/strategic_charts' } }
+    respond_to { |format| format.js { render 'charts/strategic_charts' } }
   end
 
   def build_status_report_charts
     @status_report_data = {}
     @status_report_data = Highchart::StatusReportChartsAdapter.new(@projects, @start_date, @end_date, @period) if @projects.present?
     @portfolio_data = Highchart::PortfolioChartsAdapter.new(@projects, @start_date, @end_date, '') if @projects.present?
-    respond_to { |format| format.js { render file: 'charts/status_report_charts' } }
+    respond_to { |format| format.js { render 'charts/status_report_charts' } }
   end
 
   def statistics_charts
@@ -35,7 +35,7 @@ class ChartsController < AuthenticatedController
       @portfolio_statistics_data = PortfolioStatisticsData.new(portfolio_statistics_chart_adapter)
     end
 
-    respond_to { |format| format.js { render file: 'charts/statistics_tab' } }
+    respond_to { |format| format.js { render 'charts/statistics_tab' } }
   end
 
   private

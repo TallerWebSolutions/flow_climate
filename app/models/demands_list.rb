@@ -60,18 +60,6 @@ class DemandsList < ApplicationRecord
     leadtime.to_f / 86_400.0
   end
 
-  def queue_time_in_days
-    return 0.0 if total_queue_time.blank?
-
-    total_queue_time.to_f / 86_400.0
-  end
-
-  def touch_time_in_days
-    return 0.0 if total_touch_time.blank?
-
-    total_touch_time.to_f / 86_400.0
-  end
-
   def total_effort
     effort_upstream + effort_downstream
   end

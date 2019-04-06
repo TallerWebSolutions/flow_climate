@@ -10,7 +10,7 @@ class ProjectsController < AuthenticatedController
 
   def show
     @ordered_project_risk_alerts = @project.project_risk_alerts.order(created_at: :desc)
-    @project_change_deadline_histories = @project.project_change_deadline_histories
+    @project_change_deadline_histories = @project.project_change_deadline_histories.includes(:user)
     @project_stages = @project.stages.order(:order, :name)
     @projects_to_copy_stages_from = (@company.projects.includes(:customer).includes(:product) - [@project]).sort_by(&:full_name)
     @demands_ids = DemandsRepository.instance.demands_created_before_date_to_projects([@project]).map(&:id)
@@ -61,7 +61,7 @@ class ProjectsController < AuthenticatedController
   def search_for_projects
     assign_projects
     @projects_summary = ProjectsSummaryData.new(@projects)
-    respond_to { |format| format.js { render file: 'projects/projects_search.js.erb' } }
+    respond_to { |format| format.js { render 'projects/projects_search' } }
   end
 
   def destroy
@@ -86,20 +86,20 @@ class ProjectsController < AuthenticatedController
   end
 
   def statistics
-    respond_to { |format| format.js { render file: 'projects/project_statistics.js.erb' } }
+    respond_to { |format| format.js { render 'projects/project_statistics' } }
   end
 
   def copy_stages_from
     @project_to_copy_stages_from = Project.find(params[:project_to_copy_stages_from])
     @project.update(stages: @project_to_copy_stages_from.stages) if @project.stages.empty?
     @project_stages = @project.reload.stages.order(:order, :name)
-    respond_to { |format| format.js { render file: 'projects/copy_stages_from.js.erb' } }
+    respond_to { |format| format.js { render 'projects/copy_stages_from' } }
   end
 
   def demands_blocks_tab
     @demands_blocks = DemandBlocksRepository.instance.active_blocks_to_projects_and_period([@project], start_date_to_query, end_date_to_query).order(block_time: :desc)
 
-    respond_to { |format| format.js { render file: 'demand_blocks/demands_blocks_tab.js.erb' } }
+    respond_to { |format| format.js { render 'demand_blocks/demands_blocks_tab' } }
   end
 
   def demands_blocks_csv

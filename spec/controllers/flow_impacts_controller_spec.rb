@@ -267,7 +267,7 @@ RSpec.describe FlowImpactsController, type: :controller do
 
         it 'assign the instance variable and renders the template' do
           get :flow_impacts_tab, params: { company_id: company, project_id: project }, xhr: true
-          expect(response).to render_template 'flow_impacts/flow_impacts_tab.js.erb'
+          expect(response).to render_template 'flow_impacts/flow_impacts_tab'
           expect(assigns(:flow_impacts)).to eq [second_impact, first_impact]
         end
       end

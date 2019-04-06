@@ -26,7 +26,7 @@
     </tr>
   </thead>
   <tbody>
-    <% @finances_hash_with_computed_informations.sort_by { |finances_hash| finances_hash['finances_date'] }.reverse.each do |finance_hash| %>
+    <% finances_hash_with_computed_informations.sort_by { |finances_hash| finances_hash['finances_date'] }.reverse.each do |finance_hash| %>
       <tr>
         <td><%= l(finance_hash['finances_date'], format: :month_year) %></td>
         <td><%= number_to_currency(finance_hash['income_total']) %></td>
@@ -44,10 +44,10 @@
         <td><%= number_to_currency(finance_hash['financial_result']) %></td>
         <td><%= number_to_currency(finance_hash['accumulated_financial_result']) %></td>
         <td>
-          <%= link_to edit_company_financial_information_path(@company, finance_hash['id']) do %>
+          <%= link_to edit_company_financial_information_path(company, finance_hash['id']) do %>
             <i class="fas fa-edit"></i>
           <% end %>
-          <%= link_to company_financial_information_path(@company, finance_hash['id']), method: :delete do %>
+          <%= link_to company_financial_information_path(company, finance_hash['id']), method: :delete do %>
             <i class="fa fa-times" aria-hidden="true"></i>
           <% end %>
         </td>
@@ -56,19 +56,19 @@
   </tbody>
 </table>
 
-<% if finances_hash.present? %>
+<% if finances_hash_with_computed_informations.present? %>
   <div class="row">
     <div class="col-xs-6">
       <div id="finances-std-dev-income-outcome-div"
            data-title='<%= t('finances.charts.finance.std_dev_income_outcome') %>'
-           data-xcategories='<%= finances_hash.map { |hash| hash['finances_date'] }.to_json %>'
+           data-xcategories='<%= finances_hash_with_computed_informations.map { |hash| hash['finances_date'] }.to_json %>'
            data-xtitle='<%= t('charts.xlabel.months') %>'
            data-ytitle='<%= t('charts.ylabel.money.text') %>'
            data-prefix=''
            data-suffix=''
            data-series='<%= [
-                                { color: '#0066ff', name: I18n.t('finances.charts.finance.std_dev_income_per_hour'), data: finances_hash.map { |hash| hash['std_dev_income'].to_f } },
-                                { color: '#f90000', name: I18n.t('finances.charts.finance.std_dev_cost_per_hour'), data: finances_hash.map { |hash| hash['std_dev_expenses'].to_f } }
+                                { color: '#0066ff', name: I18n.t('finances.charts.finance.std_dev_income_per_hour'), data: finances_hash_with_computed_informations.map { |hash| hash['std_dev_income'].to_f } },
+                                { color: '#f90000', name: I18n.t('finances.charts.finance.std_dev_cost_per_hour'), data: finances_hash_with_computed_informations.map { |hash| hash['std_dev_expenses'].to_f } }
                             ].to_json %>'
            data-decimals='2'>
       </div>
@@ -76,12 +76,12 @@
     <div class="col-xs-6">
       <div id="finances-mean-cost-per-hour-div"
            data-title='<%= t('finances.charts.finance.mean_cost_per_hour') %>'
-           data-xcategories='<%= finances_hash.map { |hash| hash['finances_date'] }.to_json %>'
+           data-xcategories='<%= finances_hash_with_computed_informations.map { |hash| hash['finances_date'] }.to_json %>'
            data-xtitle='<%= t('charts.xlabel.months') %>'
            data-ytitle='<%= t('charts.ylabel.money.text') %>'
            data-prefix=''
            data-suffix=''
-           data-series='<%= [{ color: '#0066ff', name: I18n.t('finances.charts.finance.mean_cost_per_hour'), data: finances_hash.map { |hash| hash['mean_cost_per_hour'].to_f } }].to_json %>'
+           data-series='<%= [{ color: '#0066ff', name: I18n.t('finances.charts.finance.mean_cost_per_hour'), data: finances_hash_with_computed_informations.map { |hash| hash['mean_cost_per_hour'].to_f } }].to_json %>'
            data-decimals='2'>
       </div>
     </div>

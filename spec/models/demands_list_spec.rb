@@ -96,42 +96,6 @@ RSpec.describe DemandsList, type: :model do
     end
   end
 
-  describe '#touch_time_in_days' do
-    context 'having touch_time_in_days' do
-      subject(:demands_list) { DemandsList.first }
-
-      let!(:demand) { Fabricate :demand, total_touch_time: (3 * 86_400) }
-
-      it { expect(demands_list.touch_time_in_days.to_f).to eq 3 }
-    end
-
-    context 'having no leadtime' do
-      subject(:demands_list) { DemandsList.first }
-
-      let!(:demand) { Fabricate :demand, commitment_date: nil, end_date: nil, leadtime: nil, total_touch_time: 0 }
-
-      it { expect(demands_list.touch_time_in_days.to_f).to eq 0 }
-    end
-  end
-
-  describe '#queue_time_in_days' do
-    context 'having touch_time_in_days' do
-      subject(:demands_list) { DemandsList.first }
-
-      let!(:demand) { Fabricate :demand, total_queue_time: (3 * 86_400) }
-
-      it { expect(demands_list.queue_time_in_days.to_f).to eq 3 }
-    end
-
-    context 'having no leadtime' do
-      subject(:demands_list) { DemandsList.first }
-
-      let!(:demand) { Fabricate :demand, commitment_date: nil, end_date: nil, leadtime: nil, total_queue_time: 0 }
-
-      it { expect(demands_list.queue_time_in_days.to_f).to eq 0 }
-    end
-  end
-
   describe '#total_effort' do
     subject(:demands_list) { DemandsList.first }
 

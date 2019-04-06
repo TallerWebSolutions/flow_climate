@@ -69,7 +69,7 @@ class DemandsController < AuthenticatedController
 
     @demands_chart_adapter = Highchart::DemandsChartsAdapter.new(@demands, 'week')
 
-    respond_to { |format| format.js { render file: 'demands/demands_tab.js.erb' } }
+    respond_to { |format| format.js { render 'demands/demands_tab.js.erb' } }
   end
 
   def search_demands_by_flow_status
@@ -80,7 +80,7 @@ class DemandsController < AuthenticatedController
     assign_consolidations
     @demands_chart_adapter = Highchart::DemandsChartsAdapter.new(@demands, params[:grouping_period])
 
-    respond_to { |format| format.js { render file: 'demands/search_demands_by_flow_status.js.erb' } }
+    respond_to { |format| format.js { render 'demands/search_demands_by_flow_status.js.erb' } }
   end
 
   private

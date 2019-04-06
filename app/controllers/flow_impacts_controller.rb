@@ -27,7 +27,7 @@ class FlowImpactsController < AuthenticatedController
 
   def flow_impacts_tab
     @flow_impacts = @project.flow_impacts.order(:start_date)
-    respond_to { |format| format.js { render file: 'flow_impacts/flow_impacts_tab.js.erb' } }
+    respond_to { |format| format.js { render 'flow_impacts/flow_impacts_tab' } }
   end
 
   def new_direct_link

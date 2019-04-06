@@ -1,5 +1,5 @@
 <div class="row">
-  <%= link_to company_customer_path(@company, project.customer) do %>
+  <%= link_to company_customer_path(company, project.customer) do %>
     <div class="col-xs-3 stamp">
       <div class="stamp-title"><%= Customer.model_name %></div>
       <div class="stamp-content"><%= project.customer_name %></div>
@@ -9,7 +9,7 @@
     <div class="stamp-title"><%= Product.model_name.human %></div>
     <div class="stamp-content">
       <% if project.product.present? %>
-        <%= link_to project.product_name, company_product_path(@company, project.product) %>
+        <%= link_to project.product_name, company_product_path(company, project.product) %>
       <% end %>
     </div>
   </div>

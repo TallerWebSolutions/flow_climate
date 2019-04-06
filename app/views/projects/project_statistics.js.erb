@@ -2,7 +2,7 @@ var statsModal = $("#project-statistics-page").modal({
     show: false
 });
 
-statsModal.html("<%= escape_javascript(render 'projects/statistics', company_id: @company, project_id: @project) %>");
+statsModal.html("<%= escape_javascript(render 'projects/statistics', project: @project) %>");
 
 statsModal.on('show.bs.modal', function(){
     buildDemandClassificationHighcharts();

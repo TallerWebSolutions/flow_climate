@@ -1,6 +1,6 @@
 <div class="row">
   <div class="col-xs-12">
-    <%= link_to t('products.new.title'), new_company_product_path(@company), class: 'btn btn-sm btn-success bottom-spaced-component pull-right' %>
+    <%= link_to t('products.new.title'), new_company_product_path(company), class: 'btn btn-sm btn-success bottom-spaced-component pull-right' %>
   </div>
 </div>
 
@@ -21,18 +21,18 @@
     <tbody>
       <% products_list.each do |product| %>
         <tr>
-          <td><%= link_to product.customer_name, company_customer_path(@company, product.customer) %></td>
-          <td><%= link_to product.name, company_product_path(@company, product)  %></td>
-          <td><%= link_to product.team.name, company_team_path(@company, product.team) if product.team.present? %></td>
+          <td><%= link_to product.customer_name, company_customer_path(company, product.customer) %></td>
+          <td><%= link_to product.name, company_product_path(company, product)  %></td>
+          <td><%= link_to product.team.name, company_team_path(company, product.team) if product.team.present? %></td>
           <td><%= number_to_currency(product.total_value) %></td>
           <td><%= number_to_currency(product.remaining_money) %></td>
           <td><%= number_with_precision(product.avg_hours_per_demand, precision: 2) %></td>
           <td><%= number_with_precision(product.total_flow_pressure, precision: 3) %></td>
           <td>
-            <%= link_to edit_company_product_path(@company, product) do %>
+            <%= link_to edit_company_product_path(company, product) do %>
               <i class="fas fa-edit"></i>
             <% end %>
-            <%= link_to company_product_path(@company, product), method: :delete do %>
+            <%= link_to company_product_path(company, product), method: :delete do %>
               <i class="fa fa-times"></i>
             <% end %>
           </td>

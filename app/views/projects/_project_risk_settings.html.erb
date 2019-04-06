@@ -1,7 +1,7 @@
 <h2><%= t('projects.project_risk_configs.title') %></h2>
 <div class="row">
   <div class="col-xs-3">
-    <%= link_to t('project_risk_configs.new.title'), new_company_project_project_risk_config_path(@company, @project), class: 'btn btn-sm btn-primary bottom-spaced-component' %>
+    <%= link_to t('project_risk_configs.new.title'), new_company_project_project_risk_config_path(company, project), class: 'btn btn-sm btn-primary bottom-spaced-component' %>
   </div>
 </div>
 
@@ -23,15 +23,15 @@
         <td><%= number_with_precision(risk_config.high_yellow_value, precision: 3) %></td>
         <td>
           <% if risk_config.active? %>
-            <%= link_to deactivate_company_project_project_risk_config_path(@company, @project, risk_config), method: :patch do %>
+            <%= link_to deactivate_company_project_project_risk_config_path(company, project, risk_config), method: :patch do %>
               <i class="fa fa-ban"></i>
             <% end %>
           <% else %>
-            <%= link_to activate_company_project_project_risk_config_path(@company, @project, risk_config), method: :patch do %>
+            <%= link_to activate_company_project_project_risk_config_path(company, project, risk_config), method: :patch do %>
               <i class="fa fa-check"></i>
             <% end %>
           <% end %>
-          <%= link_to company_project_project_risk_config_path(@company, @project, risk_config), method: :delete do %>
+          <%= link_to company_project_project_risk_config_path(company, project, risk_config), method: :delete do %>
             <i class="fa fa-times" aria-hidden="true"></i>
           <% end %>
         </td>
