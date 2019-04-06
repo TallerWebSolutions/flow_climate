@@ -38,6 +38,7 @@ group :test, :development do
   gem 'rspec-collection_matchers'
   gem 'rspec-rails'
   gem 'rubocop'
+  gem 'rubocop-performance'
   gem 'ruby-debug-ide', '~> 0.7.0.beta7'
   gem 'shoulda-matchers', '4.0.0.rc1'
   gem 'simplecov', require: false
