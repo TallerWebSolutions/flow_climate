@@ -36,6 +36,15 @@ module Highchart
       chart_data
     end
 
+    def aging_per_demand
+      downstream_result_data = DemandsRepository.instance.throughput_to_projects_and_period(@all_projects, start_of_period_for_date(@start_date), end_of_period_for_date(@end_date)).order(:end_date)
+
+      aging_x_axis = downstream_result_data.map(&:demand_id)
+      aging_series = downstream_result_data.map(&:aging_when_finished)
+
+      { x_axis: aging_x_axis, data: [{ name: I18n.t('demands.charts.aging.series'), data: aging_series }] }
+    end
+
     def throughput_per_period
       upstream_result_data = []
       downstream_result_data = []

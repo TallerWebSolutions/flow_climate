@@ -480,6 +480,12 @@ pt-BR:
         title: "Demandas"
       commitment_date: "Data de Compromisso"
       committed_date: "Comprometidas"
+      aging_per_demand:
+        title: "Idade quando a demanda foi finalizada"
+        ylabel: "dia(s)"
+        legend: "dia(s)"
+      aging:
+        series: "idade"
     flow:
       processed_demand: "Demandas Processadas"
       wip: "Trabalho em Progresso"

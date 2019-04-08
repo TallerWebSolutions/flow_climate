@@ -451,6 +451,12 @@ en:
       creation_date: "Creation Rate"
       commitment_date: "Commitment Date"
       committed_date: "Committed to"
+      aging_per_demand:
+        title: "Aging when the demand was finished"
+        ylabel: "day(s)"
+        legend: "day(s)"
+      aging:
+        series: "aging"
     flow:
       processed_demand: "Processed Demands"
       wip: "Work in Progress"
