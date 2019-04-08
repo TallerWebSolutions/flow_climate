@@ -167,7 +167,7 @@ en:
       maintenance_filter: "Maintenance"
       passed_time: "Time Passed"
       leadtime:
-        title: "Leadtime in days"
+        title: "Lead time in days"
       total_remaining_weeks: "Remaining Weeks"
     show:
       initial_scope: "Initial Scope"
@@ -254,7 +254,7 @@ en:
         title: "Lead time control chart for %{target_name}"
         ylabel: "days"
       leadtime_histogram:
-        title: "Leadtime histogram for %{target_name}"
+        title: "Lead time histogram for %{target_name}"
         ylabel: "hits"
       throughput_histogram:
         title: "Throughput Histogram for %{target_name}"
@@ -276,7 +276,7 @@ en:
         title: "Flow Efficiency for %{target_name}"
         share: "Flow Efficiency"
       leadtime_evolution:
-        title: "Leadtime confidence evolution"
+        title: "Lead time confidence evolution"
         ylabel: "Days"
         legend:
           leadtime_80_confidence: "LT 80% Confidence"

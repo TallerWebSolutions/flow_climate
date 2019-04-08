@@ -183,7 +183,7 @@ pt-BR:
       maintenance_filter: "Manutenção"
       passed_time: "Tempo Decorrido"
       leadtime:
-        title: "Leadtime em dias"
+        title: "Lead time em dias"
       total_remaining_weeks: "Semanas Restantes"
     show:
       initial_scope: "Escopo Inicial"
@@ -209,7 +209,7 @@ pt-BR:
         opened_in_period: "Abertas no Período"
         delivered: "Entregues no Período"
       throughput: "Throughput Semana Anterior"
-      leadtime_80_confidence: "Leadtime 80%"
+      leadtime_80_confidence: "Lead time 80%"
       demands_count: "Qtd de Demandas"
       bugs_count: "Qtd de Bugs"
       features_count: "Qtd Features"
@@ -292,7 +292,7 @@ pt-BR:
         title: "Eficiência de Fluxo para %{target_name}"
         share: "Eficiência de Fluxo"
       leadtime_evolution:
-        title: "Evolução da Confiança do Leadtime"
+        title: "Evolução da Confiança do Lead Time"
         ylabel: "Dias"
         legend:
           leadtime_80_confidence: "LT 80% de Confiança"

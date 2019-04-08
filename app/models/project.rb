@@ -332,7 +332,7 @@ class Project < ApplicationRecord
   def remaining_days_to_period(from_date = Time.zone.now)
     end_date_for_from_date = end_date.end_of_day
     last_deadline_change = project_change_deadline_histories.where('created_at <= :limit_date', limit_date: from_date.utc).order(:created_at).last
-    end_date_for_from_date = last_deadline_change.previous_date.end_of_day if last_deadline_change.present?
+    end_date_for_from_date = last_deadline_change.new_date.end_of_day if last_deadline_change.present?
 
     start_date_limit = [start_date.beginning_of_day, from_date].max
     return 0 if end_date_for_from_date < start_date_limit

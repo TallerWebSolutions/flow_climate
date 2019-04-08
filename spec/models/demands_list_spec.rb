@@ -76,6 +76,16 @@ RSpec.describe DemandsList, type: :model do
 
       it { expect(DemandsList.finished_with_leadtime.map(&:id)).to match_array [first_demand.id, second_demand.id] }
     end
+
+    describe '.with_effort' do
+      it 'returns only the demands with effort' do
+        first_demand = Fabricate :demand, project: project, effort_downstream: 10, effort_upstream: 0
+        second_demand = Fabricate :demand, project: project, effort_downstream: 0, effort_upstream: 10
+        Fabricate :demand, project: project, effort_downstream: 0, effort_upstream: 0
+
+        expect(DemandsList.with_effort.map(&:id)).to match_array [first_demand.id, second_demand.id]
+      end
+    end
   end
 
   describe '#leadtime_in_days' do
