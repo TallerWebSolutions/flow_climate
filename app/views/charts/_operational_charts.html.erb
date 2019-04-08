@@ -58,30 +58,61 @@
 
   <div class="row bottom-spaced-component">
     <div class="col-xs-6">
-      <div id="bugs-in-time"
+      <div id="accumulated-bugs-in-time"
            class="flow-chart"
-           data-title='<%= t('projects.charts.bugs_in_time.title', target_name: target_name) %>'
-           data-xcategories='<%= report_data.weeekly_bugs_count_hash[:dates_array] %>'
+           data-title='<%= t('projects.charts.accumulated_bugs_in_time.title', target_name: target_name) %>'
+           data-xcategories='<%= report_data.bugs_count_accumulated_hash[:dates_array] %>'
            data-xtitle='<%= t('projects.charts.xlabel.time') %>'
            data-ytitle='<%= t('projects.charts.bugs_in_time.ylabel') %>'
            data-prefix=''
-           data-series='<%= [{ name: I18n.t('projects.charts.bugs_in_time.opened'), data: report_data.weeekly_bugs_count_hash[:bugs_opened_count_array] }, { name: I18n.t('projects.charts.bugs_in_time.closed'), data: report_data.weeekly_bugs_count_hash[:bugs_closed_count_array] }].to_json %>'
+           data-series='<%= [{ name: I18n.t('projects.charts.bugs_in_time.opened'), data: report_data.bugs_count_accumulated_hash[:accumulated_bugs_opened_count_array] }, { name: I18n.t('projects.charts.bugs_in_time.closed'), data: report_data.bugs_count_accumulated_hash[:accumulated_bugs_closed_count_array] }].to_json %>'
            data-decimals='2'>
       </div>
     </div>
     <div class="col-xs-6 ">
-      <div id="line-share-bug"
+      <div id="accumulated-share-bug"
            class="flow-chart"
-           data-title='<%= t('projects.charts.bugs_percentage_in_time.title', target_name: target_name) %>'
-           data-xcategories='<%= report_data.weeekly_bugs_share_hash[:dates_array] %>'
+           data-title='<%= t('projects.charts.accumulated_bugs_percentage_in_time.title', target_name: target_name) %>'
+           data-xcategories='<%= report_data.bugs_share_accumulated_hash[:dates_array] %>'
            data-xtitle='<%= t('projects.charts.xlabel.weeks') %>'
            data-ytitle='<%= t('general.percentage.title') %>'
            data-prefix=''
            data-suffix='<%= t('general.percentage.symbol') %>'
-           data-series='<%= [{ name: I18n.t('projects.charts.bugs_in_time.share'), data: report_data.weeekly_bugs_share_hash[:bugs_opened_share_array] }].to_json %>'
+           data-series='<%= [{ name: I18n.t('projects.charts.bugs_in_time.share'), data: report_data.bugs_share_accumulated_hash[:bugs_opened_share_array] }].to_json %>'
            data-decimals='2'>
       </div>
     </div>
+  </div>
+
+  <div class="row bottom-spaced-component">
+    <% if report_data.hours_blocked_per_stage[:x_axis].present? %>
+      <div class="col-xs-6">
+        <div id="hours-blocked-per-stage"
+             class="flow-chart"
+             data-xcategories='<%= report_data.hours_blocked_per_stage[:x_axis] %>'
+             data-title='<%= t('demand_blocks.charts.hours_per_stage.title', target_name: target_name) %>'
+             data-ytitle='<%= t('demand_blocks.charts.hours_per_stage.ylabel') %>'
+             data-suffix='<%= t('demand_blocks.charts.hours_per_stage.ylabel') %>'
+             data-series='<%= [{ name: I18n.t('demand_blocks.charts.hours_per_stage.legend'), data: report_data.hours_blocked_per_stage[:data] }].to_json %>'
+             data-decimals='0'>
+        </div>
+      </div>
+    <% end %>
+
+    <% if report_data.bugs_count_to_period[:dates_array].present? %>
+      <div class="col-xs-6">
+        <div id="bugs-in-time"
+             class="flow-chart"
+             data-title='<%= t('projects.charts.bugs_in_time.title', target_name: target_name) %>'
+             data-xcategories='<%= report_data.bugs_count_to_period[:dates_array] %>'
+             data-xtitle='<%= t('projects.charts.xlabel.time') %>'
+             data-ytitle='<%= t('projects.charts.bugs_in_time.ylabel') %>'
+             data-prefix=''
+             data-series='<%= [{ name: I18n.t('projects.charts.bugs_in_time.opened'), data: report_data.bugs_count_to_period[:bugs_opened_count_array] }, { name: I18n.t('projects.charts.bugs_in_time.closed'), data: report_data.bugs_count_to_period[:bugs_closed_count_array] }].to_json %>'
+             data-decimals='2'>
+        </div>
+      </div>
+    <% end %>
   </div>
 
   <div class="row bottom-spaced-component">
@@ -89,11 +120,11 @@
       <div id="queue-touch-in-time"
            class="flow-chart"
            data-title='<%= t('projects.charts.queue_touch_time.title', target_name: target_name) %>'
-           data-xcategories='<%= report_data.weekly_queue_touch_count_hash[:dates_array] %>'
+           data-xcategories='<%= report_data.queue_touch_count_hash[:dates_array] %>'
            data-xtitle='<%= t('projects.charts.xlabel.weeks') %>'
            data-ytitle='<%= t('projects.charts.queue_touch_time.ylabel') %>'
            data-prefix=''
-           data-series='<%= [{ name: I18n.t('projects.charts.queue_touch_time.queue'), data: report_data.weekly_queue_touch_count_hash[:queue_times] }, { name: I18n.t('projects.charts.queue_touch_time.touch'), data: report_data.weekly_queue_touch_count_hash[:touch_times] }].to_json %>'
+           data-series='<%= [{ name: I18n.t('projects.charts.queue_touch_time.queue'), data: report_data.queue_touch_count_hash[:queue_times] }, { name: I18n.t('projects.charts.queue_touch_time.touch'), data: report_data.queue_touch_count_hash[:touch_times] }].to_json %>'
            data-decimals='2'>
       </div>
     </div>
@@ -101,12 +132,12 @@
       <div id="flow-efficiency"
            class="flow-chart"
            data-title='<%= t('projects.charts.flow_efficiency.title', target_name: target_name) %>'
-           data-xcategories='<%= report_data.weeekly_bugs_share_hash[:dates_array] %>'
+           data-xcategories='<%= report_data.bugs_share_accumulated_hash[:dates_array] %>'
            data-xtitle='<%= t('projects.charts.xlabel.weeks') %>'
            data-ytitle='<%= t('general.percentage.title') %>'
            data-prefix=''
            data-suffix='<%= t('general.percentage.symbol') %>'
-           data-series='<%= [{ name: I18n.t('projects.charts.flow_efficiency.share'), data: report_data.weekly_queue_touch_share_hash[:flow_efficiency_array] }].to_json %>'
+           data-series='<%= [{ name: I18n.t('projects.charts.flow_efficiency.share'), data: report_data.queue_touch_share_hash[:flow_efficiency_array] }].to_json %>'
            data-decimals='2'>
       </div>
     </div>
@@ -137,22 +168,6 @@
            data-percentile60='<%= report_data.lead_time_control_chart[:percentile_60_data] || 0 %>'>
       </div>
     </div>
-  </div>
-
-  <div class="row bottom-spaced-component">
-    <% if report_data.hours_blocked_per_stage[:x_axis].present? %>
-      <div class="col-xs-6">
-        <div id="hours-blocked-per-stage"
-             class="flow-chart"
-             data-xcategories='<%= report_data.hours_blocked_per_stage[:x_axis] %>'
-             data-title='<%= t('demand_blocks.charts.hours_per_stage.title', target_name: target_name) %>'
-             data-ytitle='<%= t('demand_blocks.charts.hours_per_stage.ylabel') %>'
-             data-suffix='<%= t('demand_blocks.charts.hours_per_stage.ylabel') %>'
-             data-series='<%= [{ name: I18n.t('demand_blocks.charts.hours_per_stage.legend'), data: report_data.hours_blocked_per_stage[:data] }].to_json %>'
-             data-decimals='0'>
-        </div>
-      </div>
-    <% end %>
   </div>
 
   <div class="row bottom-spaced-component">

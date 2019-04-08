@@ -2,11 +2,14 @@ function buildOperationalHighcharts() {
     const throughputDiv = $('#throughput-column');
     buildColumnChart(throughputDiv);
 
+    const accBugsInTimeDiv = $('#accumulated-bugs-in-time');
+    buildColumnChart(accBugsInTimeDiv);
+
+    const accShareBugsInTimeDiv = $('#accumulated-share-bug');
+    buildLineChart(accShareBugsInTimeDiv);
+
     const bugsInTimeDiv = $('#bugs-in-time');
     buildColumnChart(bugsInTimeDiv);
-
-    const shareBugsInTimeDiv = $('#line-share-bug');
-    buildLineChart(shareBugsInTimeDiv);
 
     const queueTouchCountDiv = $('#queue-touch-in-time');
     buildColumnChart(queueTouchCountDiv);

@@ -67,6 +67,25 @@ RSpec.describe DemandsRepository, type: :repository do
     end
   end
 
+  describe '#created_to_projects_and_period' do
+    context 'having data' do
+      let!(:first_demand) { Fabricate :demand, project: first_project, created_date: 3.weeks.ago }
+      let!(:second_demand) { Fabricate :demand, project: first_project, created_date: 2.weeks.ago }
+      let!(:third_demand) { Fabricate :demand, project: first_project, created_date: 1.week.ago }
+      let!(:fourth_demand) { Fabricate :demand, project: first_project, created_date: 1.week.ago }
+      let!(:fifth_demand) { Fabricate :demand, project: second_project, created_date: 1.week.ago }
+      let!(:sixth_demand) { Fabricate :demand, project: first_project, created_date: 1.week.ago, discarded_at: Time.zone.today }
+
+      let!(:first_epic) { Fabricate :demand, project: first_project, artifact_type: :epic }
+
+      it { expect(DemandsRepository.instance.created_to_projects_and_period(Project.all, 1.week.ago.beginning_of_week, 1.week.ago.end_of_week)).to match_array [third_demand, fourth_demand, fifth_demand] }
+    end
+
+    context 'having no data' do
+      it { expect(DemandsRepository.instance.created_to_projects_and_period(Project.all, 1.week.ago.beginning_of_week, 1.week.ago.end_of_week)).to eq [] }
+    end
+  end
+
   describe '#throughput_to_projects_and_period' do
     context 'having data' do
       let!(:first_demand) { Fabricate :demand, project: first_project, end_date: 3.weeks.ago }
@@ -317,7 +336,7 @@ RSpec.describe DemandsRepository, type: :repository do
     end
   end
 
-  describe '#demands_for_period' do
+  describe '#demands_delivered_for_period' do
     let(:first_project) { Fabricate :project, start_date: 2.months.ago, end_date: 2.months.from_now }
     let(:second_project) { Fabricate :project, start_date: 2.months.ago, end_date: 2.months.from_now }
     let(:third_project) { Fabricate :project, start_date: 2.months.ago, end_date: 2.months.from_now }
@@ -335,17 +354,17 @@ RSpec.describe DemandsRepository, type: :repository do
 
       let!(:first_epic) { Fabricate :demand, project: first_project, artifact_type: :epic }
 
-      it { expect(DemandsRepository.instance.demands_for_period(Demand.all, 4.days.ago, Time.zone.now)).to match_array [first_demand, second_demand] }
+      it { expect(DemandsRepository.instance.demands_delivered_for_period(Demand.all, 4.days.ago, Time.zone.now)).to match_array [first_demand, second_demand] }
     end
 
     context 'having no demands' do
       context 'having no demands' do
-        it { expect(DemandsRepository.instance.demands_for_period(Demand.all, 4.days.ago, Time.zone.now)).to eq [] }
+        it { expect(DemandsRepository.instance.demands_delivered_for_period(Demand.all, 4.days.ago, Time.zone.now)).to eq [] }
       end
     end
   end
 
-  describe '#demands_for_period_accumulated' do
+  describe '#demands_delivered_for_period_accumulated' do
     let(:first_project) { Fabricate :project, customer: customer, start_date: 2.months.ago, end_date: 2.months.from_now }
     let(:second_project) { Fabricate :project, customer: customer, start_date: 2.months.ago, end_date: 2.months.from_now }
     let(:third_project) { Fabricate :project, customer: customer, start_date: 2.months.ago, end_date: 2.months.from_now }
@@ -363,12 +382,12 @@ RSpec.describe DemandsRepository, type: :repository do
 
       let!(:first_epic) { Fabricate :demand, project: first_project, artifact_type: :epic }
 
-      it { expect(DemandsRepository.instance.demands_for_period_accumulated(Demand.all, 1.week.ago)).to match_array [third_demand, fifth_demand, sixth_demand] }
+      it { expect(DemandsRepository.instance.demands_delivered_for_period_accumulated(Demand.all, 1.week.ago)).to match_array [third_demand, fifth_demand, sixth_demand] }
     end
 
     context 'having no demands' do
       context 'having no demands' do
-        it { expect(DemandsRepository.instance.demands_for_period_accumulated(Demand.all, 4.days.ago)).to eq [] }
+        it { expect(DemandsRepository.instance.demands_delivered_for_period_accumulated(Demand.all, 4.days.ago)).to eq [] }
       end
     end
   end
