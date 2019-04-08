@@ -77,7 +77,6 @@ class Demand < ApplicationRecord
   scope :finished_in_month, ->(month, year) { finished.where('EXTRACT(month FROM end_date) = :month AND EXTRACT(year FROM end_date) = :year', month: month, year: year) }
   scope :finished_in_week, ->(week, year) { finished.where('EXTRACT(week FROM end_date) = :week AND EXTRACT(year FROM end_date) = :year', week: week, year: year) }
   scope :not_finished, -> { kept.story.where('end_date IS NULL') }
-
   scope :in_wip, -> { kept.story.where('demands.commitment_date IS NOT NULL AND demands.end_date IS NULL') }
 
   delegate :full_name, to: :project, prefix: true

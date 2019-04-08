@@ -213,7 +213,7 @@ pt-BR:
         end_date: Data da Entrega
         created_date: Data de Criação
         assignees_count: Qtd Responsáveis
-        leadtime: Leadtime
+        leadtime: Lead time
         artifact_type: Tipo do Artefato
         enums:
           demand_type:
