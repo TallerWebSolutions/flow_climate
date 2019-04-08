@@ -283,6 +283,10 @@ pt-BR:
         share: "Porcentagem de Bugs"
       bugs_percentage_in_time:
         title: "Porcentagem de Bugs no Tempo para %{target_name}"
+      accumulated_bugs_in_time:
+        title: "Bugs acumulados no tempo para %{target_name}"
+      accumulated_bugs_percentage_in_time:
+        title: "Porcentagem de bugs acumulados no tempo para %{target_name}"
       queue_touch_time:
         title: "Horas em Fila x Trabalho para %{target_name}"
         ylabel: "horas"

@@ -266,7 +266,11 @@ en:
         ylabel: "bugs"
         share: "Percentage of Bugs"
       bugs_percentage_in_time:
-        title: "Percentage of Bugs in Time for %{target_name}"
+        title: "Percentage of bugs in time for %{target_name}"
+      accumulated_bugs_in_time:
+        title: "Accumulated bugs in time for %{target_name}"
+      accumulated_bugs_percentage_in_time:
+        title: "Accumulated bugs in time for %{target_name}"
       queue_touch_time:
         title: "Hours in Queue x Work for %{target_name}"
         ylabel: "hours"

@@ -19,6 +19,10 @@ class DemandsRepository
     demands_stories_to_projects(projects).where('end_date BETWEEN :start_period AND :end_period', start_period: start_period, end_period: end_period)
   end
 
+  def created_to_projects_and_period(projects, start_period, end_period)
+    demands_stories_to_projects(projects).where('created_date BETWEEN :start_period AND :end_period', start_period: start_period, end_period: end_period)
+  end
+
   def effort_upstream_grouped_by_month(projects, limit_date)
     effort_upstream_hash = {}
     Demand.kept
@@ -102,13 +106,13 @@ class DemandsRepository
     end
   end
 
-  def demands_for_period(demands, start_period, end_period)
+  def demands_delivered_for_period(demands, start_period, end_period)
     Demand.kept
           .story
           .where(id: demands.map(&:id)).where('end_date >= :bottom_limit AND end_date <= :upper_limit', bottom_limit: start_period, upper_limit: end_period)
   end
 
-  def demands_for_period_accumulated(demands, upper_date_limit)
+  def demands_delivered_for_period_accumulated(demands, upper_date_limit)
     Demand.kept
           .story
           .where(id: demands.map(&:id)).where('end_date <= :upper_limit', upper_limit: upper_date_limit)
