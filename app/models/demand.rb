@@ -165,6 +165,12 @@ class Demand < ApplicationRecord
     transitions_at&.first&.stage
   end
 
+  def aging_when_finished
+    return 0 if end_date.blank?
+
+    (end_date - created_date) / 1.day
+  end
+
   private
 
   def sum_blocked_time_for_transitions(transitions)

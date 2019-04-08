@@ -42,4 +42,9 @@ function buildOperationalHighcharts() {
     if (hoursBlockedPerStageDiv.length !== 0) {
         buildColumnChart(hoursBlockedPerStageDiv);
     }
+
+    const agingPerDemandDiv = $('#aging-per-demand-div');
+    if (agingPerDemandDiv.length !== 0) {
+        buildColumnChart(agingPerDemandDiv);
+    }
 }

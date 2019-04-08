@@ -617,4 +617,12 @@ RSpec.describe Demand, type: :model do
 
     it { expect(demand.total_bloked_working_time).to eq 6 }
   end
+
+  describe '#aging_when_finished' do
+    let(:demand) { Fabricate :demand, created_date: Time.zone.local(2019, 2, 8, 19, 7, 0), end_date: Time.zone.local(2019, 2, 9, 10, 7, 0) }
+    let(:other_demand) { Fabricate :demand, created_date: Time.zone.local(2019, 2, 8, 19, 7, 0), end_date: nil }
+
+    it { expect(demand.aging_when_finished).to eq 0.625 }
+    it { expect(other_demand.aging_when_finished).to eq 0 }
+  end
 end
