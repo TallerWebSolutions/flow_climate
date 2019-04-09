@@ -34,6 +34,6 @@ RSpec.describe FlowClimateImageUploader, type: :image_uploader do
 
     before { uploader.store!(File.open('spec/fixtures/default_image.png')) }
 
-    it { expect(uploader.public_id).to eq 'usuarios' }
+    it { expect(uploader.public_id).to eq "usuarios_#{Rails.env}_1" }
   end
 end
