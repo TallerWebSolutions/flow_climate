@@ -26,6 +26,6 @@ class FlowClimateImageUploader < CarrierWave::Uploader::Base
   end
 
   def public_id
-    I18n.transliterate(model.model_name.human.downcase)
+    I18n.transliterate("#{model.model_name.human.downcase}_#{Rails.env}_#{model.id}")
   end
 end
