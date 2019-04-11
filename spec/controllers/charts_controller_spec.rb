@@ -191,7 +191,7 @@ RSpec.describe ChartsController, type: :controller do
                 expect(assigns(:period)).to eq 'month'
                 expect(assigns(:leadtime_confidence)).to eq 80
 
-                expect(assigns(:project_statistics_data).scope_data).to eq [{ data: [64, 66], marker: { enabled: true }, name: I18n.t('projects.general.scope') }]
+                expect(assigns(:project_statistics_data).scope_data).to eq [{ data: [62, 60], marker: { enabled: true }, name: I18n.t('projects.general.scope') }]
                 expect(assigns(:project_statistics_data).leadtime_data).to eq [{ data: [0, 7.0], marker: { enabled: true }, name: I18n.t('projects.general.leadtime', confidence: 80) }]
                 expect(assigns(:project_statistics_data).block_data).to eq [{ data: [0, 6], marker: { enabled: true }, name: I18n.t('projects.statistics.accumulated_blocks.data_title') }]
 
@@ -221,7 +221,7 @@ RSpec.describe ChartsController, type: :controller do
               expect(response).to render_template 'charts/statistics_tab'
               expect(response).to render_template 'charts/_statistics_charts'
 
-              expect(assigns(:project_statistics_data).scope_data).to eq [{ data: [64, 66], marker: { enabled: true }, name: I18n.t('projects.general.scope') }]
+              expect(assigns(:project_statistics_data).scope_data).to eq [{ data: [62, 60], marker: { enabled: true }, name: I18n.t('projects.general.scope') }]
               expect(assigns(:project_statistics_data).leadtime_data).to eq [{ data: [0, 7.0], marker: { enabled: true }, name: I18n.t('projects.general.leadtime', confidence: 80) }]
               expect(assigns(:project_statistics_data).block_data).to eq [{ data: [0, 6], marker: { enabled: true }, name: I18n.t('projects.statistics.accumulated_blocks.data_title') }]
 

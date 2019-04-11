@@ -61,11 +61,11 @@ RSpec.describe Highchart::StatusReportChartsAdapter, type: :data_object do
             expect(report_data.hours_burnup_per_month_data.current_per_period).to eq [0, 237.6, 237.6, 237.6, 237.6, 237.6, 237.6, 237.6, 237.6, 237.6, 237.6, 237.6]
             expect(report_data.hours_burnup_per_month_data.scope_per_period).to eq [2200.0, 2200.0, 2200.0, 2200.0, 2200.0, 2200.0, 2200.0, 2200.0, 2200.0, 2200.0, 2200.0, 2200.0]
             expect(report_data.throughput_per_period).to eq([{ name: I18n.t('projects.charts.throughput.stage_stream.upstream'), data: [0, 0, 0, 1, 2, 2, 2, 2, 2, 2, 2, 2] }, { name: I18n.t('projects.charts.throughput.stage_stream.downstream'), data: [1, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3] }])
-            expect(report_data.delivered_vs_remaining).to eq([{ name: I18n.t('projects.show.delivered_demands.opened_in_period'), data: [22] }, { name: I18n.t('projects.show.delivered_demands.delivered'), data: [5] }, { name: I18n.t('projects.show.scope_gap'), data: [110] }])
+            expect(report_data.delivered_vs_remaining).to eq([{ name: I18n.t('projects.show.delivered_demands.opened_in_period'), data: [22] }, { name: I18n.t('projects.show.delivered_demands.delivered'), data: [5] }, { name: I18n.t('projects.show.scope_gap'), data: [105] }])
             expect(report_data.dates_to_montecarlo_duration).not_to be_empty
-            expect(report_data.confidence_95_duration).to be_within(10).of(307)
-            expect(report_data.confidence_80_duration).to be_within(10).of(284)
-            expect(report_data.confidence_60_duration).to be_within(10).of(269)
+            expect(report_data.confidence_95_duration).to be_within(10).of(293)
+            expect(report_data.confidence_80_duration).to be_within(10).of(272)
+            expect(report_data.confidence_60_duration).to be_within(10).of(258)
             expect(report_data.deadline).to eq [{ data: [-277], name: 'Dias (restantes)' }, { color: '#F45830', data: [361], name: 'Tempo Decorrido' }]
             expect(report_data.hours_per_stage_upstream).to eq(xcategories: [sixth_stage.name], hours_per_stage: [1104.0])
             expect(report_data.hours_per_stage_downstream).to eq(xcategories: [], hours_per_stage: [])

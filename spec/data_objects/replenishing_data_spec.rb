@@ -45,7 +45,7 @@ RSpec.describe ReplenishingData, type: :data_objects do
         expect(project_data_to_replenish[0][:end_date]).to eq first_project.end_date
         expect(project_data_to_replenish[0][:weeks_to_end_date]).to eq first_project.remaining_weeks
         expect(project_data_to_replenish[0][:remaining_backlog]).to eq first_project.remaining_backlog
-        expect(project_data_to_replenish[0][:relative_flow_pressure]).to be_within(0.1).of(68.60)
+        expect(project_data_to_replenish[0][:relative_flow_pressure]).to be_within(0.1).of(66.3)
         expect(project_data_to_replenish[0][:qty_using_pressure]).to be_within(0.9).of(1.37)
         expect(project_data_to_replenish[0][:leadtime_80]).to be_within(0.1).of(79.56666)
         expect(project_data_to_replenish[0][:qty_selected_last_week]).to eq 0
@@ -73,7 +73,7 @@ RSpec.describe ReplenishingData, type: :data_objects do
         expect(project_data_to_replenish[2][:end_date]).to eq third_project.end_date
         expect(project_data_to_replenish[2][:weeks_to_end_date]).to eq third_project.remaining_weeks
         expect(project_data_to_replenish[2][:remaining_backlog]).to eq third_project.remaining_backlog
-        expect(project_data_to_replenish[2][:relative_flow_pressure]).to be_within(0.9).of(10.26)
+        expect(project_data_to_replenish[2][:relative_flow_pressure]).to be_within(0.9).of(12.24)
         expect(project_data_to_replenish[2][:qty_using_pressure]).to be_within(0.1).of(0.15776)
         expect(project_data_to_replenish[2][:leadtime_80]).to be_within(0.2).of(0.50)
         expect(project_data_to_replenish[2][:qty_selected_last_week]).to eq 0

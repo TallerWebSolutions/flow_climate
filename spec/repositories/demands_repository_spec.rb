@@ -24,8 +24,11 @@ RSpec.describe DemandsRepository, type: :repository do
     let!(:sixth_demand) { Fabricate :demand, project: first_project, created_date: 2.days.ago, discarded_at: 2.days.ago }
     let!(:seventh_demand) { Fabricate :demand, project: first_project, created_date: 3.days.ago, discarded_at: Time.zone.now }
 
-    let!(:eigth_demand) { Fabricate :demand, project: second_project, created_date: 4.days.ago, discarded_at: nil }
-    let!(:nineth_demand) { Fabricate :demand, project: third_project, created_date: 4.days.ago, discarded_at: nil }
+    let!(:eigth_demand) { Fabricate :demand, project: second_project, created_date: 4.days.ago, commitment_date: 1.day.ago, discarded_at: nil }
+    let!(:nineth_demand) { Fabricate :demand, project: third_project, created_date: 4.days.ago, end_date: 1.day.ago, discarded_at: nil }
+
+    let!(:tenth_demand) { Fabricate :demand, project: first_project, created_date: 4.days.ago, commitment_date: 3.days.ago, discarded_at: nil }
+    let!(:eleventh_demand) { Fabricate :demand, project: first_project, created_date: 4.days.ago, end_date: 3.days.ago, discarded_at: nil }
 
     let!(:first_epic) { Fabricate :demand, project: first_project, artifact_type: :epic }
 
