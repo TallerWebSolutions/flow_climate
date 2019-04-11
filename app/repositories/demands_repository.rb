@@ -7,6 +7,10 @@ class DemandsRepository
     demands_created_before_date_to_projects(projects, analysed_date).count + projects.sum(&:initial_scope)
   end
 
+  def remaining_backlog_to_date(projects, analysed_date)
+    demands_created_before_date_to_projects(projects, analysed_date).where('(end_date IS NULL OR end_date > :analysed_date) AND (commitment_date IS NULL OR commitment_date > :analysed_date)', analysed_date: analysed_date).count + projects.sum(&:initial_scope)
+  end
+
   def committed_demands_by_project_and_week(projects, week, year)
     demands_stories_to_projects(projects).where('EXTRACT(WEEK FROM commitment_date) = :week AND EXTRACT(YEAR FROM commitment_date) = :year', week: week, year: year)
   end

@@ -391,7 +391,7 @@ RSpec.describe Project, type: :model do
       context 'having demands' do
         let!(:opened_features) { Fabricate.times(10, :demand, project: project, demand_type: :feature, end_date: nil) }
 
-        it { expect(project.flow_pressure).to be_within(0.1).of(25.2) }
+        it { expect(project.flow_pressure).to be_within(0.1).of(18.9) }
       end
 
       context 'having no demands' do
@@ -505,7 +505,7 @@ RSpec.describe Project, type: :model do
     context 'having demands' do
       context 'specifying no date' do
         include_context 'demands with effort'
-        it { expect(project.remaining_backlog).to eq 31 }
+        it { expect(project.remaining_backlog).to eq 30 }
       end
 
       context 'specifying a date' do
@@ -611,7 +611,7 @@ RSpec.describe Project, type: :model do
 
     context 'having data' do
       include_context 'demands with effort'
-      it { expect(project.required_hours).to eq 2387.0 }
+      it { expect(project.required_hours).to eq 2310.0 }
     end
 
     context 'having no data' do
@@ -628,7 +628,7 @@ RSpec.describe Project, type: :model do
 
     context 'having data' do
       include_context 'demands with effort'
-      it { expect(project.required_hours_per_available_hours).to eq 0.8620440592271578 }
+      it { expect(project.required_hours_per_available_hours).to eq 0.8342361863488624 }
     end
 
     context 'having no data' do
