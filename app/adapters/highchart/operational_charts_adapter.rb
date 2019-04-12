@@ -281,7 +281,7 @@ module Highchart
     end
 
     def demand_data
-      @demand_data ||= finished_demands_with_leadtime.map { |demand| demand.leadtime_in_days.to_f }
+      @demand_data ||= finished_demands_with_leadtime.where('end_date BETWEEN :start_date AND :end_date', start_date: start_of_period_for_date(@start_date), end_date: end_of_period_for_date(@end_date)).map { |demand| demand.leadtime_in_days.to_f }
     end
 
     def finished_demands_with_leadtime

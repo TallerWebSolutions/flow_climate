@@ -179,6 +179,8 @@ RSpec.describe Highchart::OperationalChartsAdapter, type: :data_object do
       end
     end
 
+    pending 'spec to check the query to dates in the @demand_data ||= finished_demands_with_leadtime'
+
     describe '#hours_per_demand' do
       subject(:report_data) { Highchart::OperationalChartsAdapter.new(Project.all, Project.all.map(&:start_date).min, Project.all.map(&:end_date).max, 'week') }
 
