@@ -63,31 +63,38 @@ class DemandsController < AuthenticatedController
 
   def demands_in_projects
     filtered_demands = DemandsRepository.instance.demands_created_before_date_to_projects(@projects)
-    @demands = build_limit_date_query(filtered_demands, 'week')
+    @demands = build_limit_date_query(filtered_demands, 3.months.ago, Time.zone.today)
     @demands_count_per_week = DemandService.instance.quantitative_consolidation_per_week_to_projects(@projects)
     assign_consolidations
 
-    @demands_chart_adapter = Highchart::DemandsChartsAdapter.new(@demands, 'week')
+    @start_date = [@demands.map(&:created_date).min, 3.months.ago].max.to_date
+    @end_date = @demands.map(&:end_date).compact.max&.to_date || Time.zone.today
+
+    @demands_chart_adapter = Highchart::DemandsChartsAdapter.new(@demands, @start_date, @end_date, 'week')
 
     respond_to { |format| format.js { render 'demands/demands_tab.js.erb' } }
   end
 
   def search_demands_by_flow_status
-    @demands = query_demands(params[:period])
+    @demands = query_demands(params[:start_date], params[:end_date])
 
     build_grouping_query(@demands, params[:grouping])
 
+    @start_date = params[:start_date].to_date
+    @end_date = params[:end_date].to_date
+
     assign_consolidations
-    @demands_chart_adapter = Highchart::DemandsChartsAdapter.new(@demands, params[:grouping_period])
+
+    @demands_chart_adapter = Highchart::DemandsChartsAdapter.new(@demands, @start_date, @end_date, params[:grouping_period])
 
     respond_to { |format| format.js { render 'demands/search_demands_by_flow_status.js.erb' } }
   end
 
   private
 
-  def query_demands(period)
+  def query_demands(start_date, end_date)
     demands_created_before_date_to_projects = DemandsRepository.instance.demands_created_before_date_to_projects(@projects)
-    demands = build_limit_date_query(demands_created_before_date_to_projects, period)
+    demands = build_limit_date_query(demands_created_before_date_to_projects, start_date, end_date)
     demands = filter_text(demands)
     demands = build_flow_status_query(demands, params[:flow_status])
     demands = buld_demand_type_query(demands, params[:demand_type])
@@ -110,10 +117,10 @@ class DemandsController < AuthenticatedController
     @demand = Demand.friendly.find(params[:id]&.downcase)
   end
 
-  def build_limit_date_query(demands, period)
-    bottom_date = bottom_date_limit_value(period)
-    filtered_demands = demands
-    filtered_demands = demands.where('(demands_lists.end_date IS NULL AND demands_lists.created_date >= :bottom_date) OR (demands_lists.end_date >= :bottom_date)', bottom_date: bottom_date) if bottom_date.present?
+  def build_limit_date_query(demands, start_date, end_date)
+    return demands unless start_date.present? && end_date.present?
+
+    filtered_demands = demands.to_dates(start_date, end_date)
 
     filtered_demands.order('demands_lists.end_date DESC, demands_lists.commitment_date DESC, demands_lists.created_date DESC')
   end
@@ -159,12 +166,6 @@ class DemandsController < AuthenticatedController
     return demands if params[:search_text].blank?
 
     demands.joins(project: :product).where('demand_title ILIKE :search_param OR demand_id ILIKE :search_param OR products.name ILIKE :search_param OR projects.name ILIKE :search_param', search_param: "%#{params[:search_text].downcase}%")
-  end
-
-  def bottom_date_limit_value(period)
-    base_date = @projects.map(&:end_date).flatten.max
-    base_date = Time.zone.now if @projects.blank? || @projects.map(&:status).flatten.include?('executing')
-    TimeService.instance.limit_date_to_period(period, base_date)
   end
 
   def assign_consolidations

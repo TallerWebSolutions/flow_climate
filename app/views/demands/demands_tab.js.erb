@@ -1,6 +1,17 @@
 var demandsTab = $('#demands-tab');
 
-demandsTab.html("<%= escape_javascript(render 'demands/demands_tab', company: @company, demands: @demands, demands_count_per_week: @demands_count_per_week, demands_chart_adapter: @demands_chart_adapter, confidence_65_leadtime: @confidence_65_leadtime, confidence_80_leadtime: @confidence_80_leadtime, confidence_95_leadtime: @confidence_95_leadtime, queue_time: @total_queue_time, touch_time: @total_touch_time).html_safe %>");
+demandsTab.html("<%= escape_javascript(render 'demands/demands_tab', company: @company,
+                                                                     demands: @demands,
+                                                                     demands_count_per_week: @demands_count_per_week,
+                                                                     demands_chart_adapter: @demands_chart_adapter,
+                                                                     confidence_65_leadtime: @confidence_65_leadtime,
+                                                                     confidence_80_leadtime: @confidence_80_leadtime,
+                                                                     confidence_95_leadtime: @confidence_95_leadtime,
+                                                                     queue_time: @total_queue_time,
+                                                                     touch_time: @total_touch_time,
+                                                                     start_date: @start_date,
+                                                                     end_date: @end_date).html_safe %>");
+
 demandsTab.show();
 
 enableTabs();

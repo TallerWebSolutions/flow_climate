@@ -1,58 +1,73 @@
 <div class="row bottom-spaced-component">
-  <div class="col-xs-6">
-    <div id="demands-created-column"
-         class="flow-chart"
-         data-title='<%= t('demands.charts.creation_date') %>'
-         data-xcategories='<%= demands_chart_adapter.creation_chart_data[:x_axis].to_json %>'
-         data-xtitle='<%= t('general.period') %>'
-         data-ytitle='<%= t('demands.charts.demands.title') %>'
-         data-tooltipsufix='<%= t('projects.charts.throughput.tooltipsufix') %>'
-         data-series='<%= demands_chart_adapter.creation_chart_data[:y_axis].to_json %>'
-         data-stacking='normal'
-         data-decimals='0'>
+  <% if demands_chart_adapter.creation_chart_data.present? %>
+    <div class="col-xs-6">
+      <div id="demands-created-column"
+           class="flow-chart"
+           data-title='<%= t('demands.charts.creation_date') %>'
+           data-xcategories='<%= demands_chart_adapter.creation_chart_data[:x_axis].to_json %>'
+           data-xtitle='<%= t('general.period') %>'
+           data-ytitle='<%= t('demands.charts.demands.title') %>'
+           data-tooltipsufix='<%= t('projects.charts.throughput.tooltipsufix') %>'
+           data-series='<%= demands_chart_adapter.creation_chart_data[:y_axis].to_json %>'
+           data-stacking='normal'
+           data-decimals='0'>
+      </div>
     </div>
-  </div>
+  <% else %>
+    <%= render 'layouts/no_data', missing_data: Demand.model_name.human.pluralize.downcase %>
+  <% end %>
 
-  <div class="col-xs-6">
-    <div id="leadtime-evolution"
-         class="flow-chart"
-         data-title='<%= t('projects.charts.leadtime_evolution.title') %>'
-         data-xcategories='<%= demands_chart_adapter.leadtime_percentiles_on_time_chart_data[:x_axis].to_json %>'
-         data-series='<%= demands_chart_adapter.leadtime_percentiles_on_time_chart_data[:y_axis].to_json %>'
-         data-xtitle='<%= t('projects.charts.xlabel.weeks') %>'
-         data-ytitle='<%= t('projects.charts.leadtime_evolution.ylabel') %>'
-         data-suffix='<%= t('projects.charts.leadtime_evolution.ylabel') %>'
-         data-prefix=''
-         data-decimals='2'>
+  <% if demands_chart_adapter.leadtime_percentiles_on_time_chart_data.present? %>
+    <div class="col-xs-6">
+      <div id="leadtime-evolution"
+           class="flow-chart"
+           data-title='<%= t('projects.charts.leadtime_evolution.title') %>'
+           data-xcategories='<%= demands_chart_adapter.leadtime_percentiles_on_time_chart_data[:x_axis].to_json %>'
+           data-series='<%= demands_chart_adapter.leadtime_percentiles_on_time_chart_data[:y_axis].to_json %>'
+           data-xtitle='<%= t('projects.charts.xlabel.weeks') %>'
+           data-ytitle='<%= t('projects.charts.leadtime_evolution.ylabel') %>'
+           data-suffix='<%= t('projects.charts.leadtime_evolution.ylabel') %>'
+           data-prefix=''
+           data-decimals='2'>
+      </div>
     </div>
-  </div>
-</div>
+  <% else %>
+    <%= render 'layouts/no_data', missing_data: Demand.model_name.human.pluralize.downcase %>
+  <% end %>
 
-<div class="row">
-  <div class="col-xs-6">
-    <div id="demands-committed-column"
-         class="flow-chart"
-         data-title='<%= t('demands.charts.committed_date') %>'
-         data-xcategories='<%= demands_chart_adapter.committed_chart_data[:x_axis].to_json %>'
-         data-xtitle='<%= t('general.period') %>'
-         data-ytitle='<%= t('demands.charts.demands.title') %>'
-         data-tooltipsufix='<%= t('projects.charts.throughput.tooltipsufix') %>'
-         data-series='<%= demands_chart_adapter.committed_chart_data[:y_axis].to_json %>'
-         data-stacking='normal'
-         data-decimals='0'>
+  <% if demands_chart_adapter.committed_chart_data.present? %>
+    <div class="col-xs-6">
+      <div id="demands-committed-column"
+           class="flow-chart"
+           data-title='<%= t('demands.charts.committed_date') %>'
+           data-xcategories='<%= demands_chart_adapter.committed_chart_data[:x_axis].to_json %>'
+           data-xtitle='<%= t('general.period') %>'
+           data-ytitle='<%= t('demands.charts.demands.title') %>'
+           data-tooltipsufix='<%= t('projects.charts.throughput.tooltipsufix') %>'
+           data-series='<%= demands_chart_adapter.committed_chart_data[:y_axis].to_json %>'
+           data-stacking='normal'
+           data-decimals='0'>
+      </div>
     </div>
-  </div>
-  <div class="col-xs-6">
-    <div id="demands-throughput-column"
-         class="flow-chart"
-         data-title='<%= t('demands.charts.throughput') %>'
-         data-xcategories='<%= demands_chart_adapter.throughput_chart_data[:x_axis].to_json %>'
-         data-xtitle='<%= t('general.period') %>'
-         data-ytitle='<%= t('demands.charts.demands.title') %>'
-         data-tooltipsufix='<%= t('demands.charts.demands.title') %>'
-         data-series='<%= demands_chart_adapter.throughput_chart_data[:y_axis].to_json %>'
-         data-stacking='normal'
-         data-decimals='0'>
+  <% else %>
+    <%= render 'layouts/no_data', missing_data: Demand.model_name.human.pluralize.downcase %>
+  <% end %>
+
+  <% if demands_chart_adapter.throughput_chart_data.present? %>
+    <div class="col-xs-6">
+      <div id="demands-throughput-column"
+           class="flow-chart"
+           data-title='<%= t('demands.charts.throughput') %>'
+           data-xcategories='<%= demands_chart_adapter.throughput_chart_data[:x_axis].to_json %>'
+           data-xtitle='<%= t('general.period') %>'
+           data-ytitle='<%= t('demands.charts.demands.title') %>'
+           data-tooltipsufix='<%= t('demands.charts.demands.title') %>'
+           data-series='<%= demands_chart_adapter.throughput_chart_data[:y_axis].to_json %>'
+           data-stacking='normal'
+           data-decimals='0'>
+      </div>
     </div>
-  </div>
+  <% else %>
+    <%= render 'layouts/no_data', missing_data: Demand.model_name.human.pluralize.downcase %>
+  <% end %>
 </div>

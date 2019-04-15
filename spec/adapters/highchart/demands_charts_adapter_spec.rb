@@ -5,6 +5,9 @@ RSpec.describe Highchart::DemandsChartsAdapter, type: :data_object do
 
   after { travel_back }
 
+  let(:start_date) { 6.months.ago }
+  let(:end_date) { Time.zone.today }
+
   context 'having demands' do
     let(:company) { Fabricate :company }
     let(:customer) { Fabricate :customer, company: company }
@@ -21,7 +24,7 @@ RSpec.describe Highchart::DemandsChartsAdapter, type: :data_object do
 
     describe '#throughput_chart_data' do
       it 'computes and extracts the information of the throughput' do
-        throughput_chart_data = Highchart::DemandsChartsAdapter.new(Demand.all, 'week').throughput_chart_data
+        throughput_chart_data = Highchart::DemandsChartsAdapter.new(Demand.all, start_date, end_date, 'week').throughput_chart_data
 
         expect(throughput_chart_data[:x_axis]).to eq TimeService.instance.weeks_between_of(Date.new(2018, 5, 28), Date.new(2018, 9, 3))
         expect(throughput_chart_data[:y_axis][0][:name]).to eq I18n.t('general.throughput')
@@ -31,9 +34,9 @@ RSpec.describe Highchart::DemandsChartsAdapter, type: :data_object do
 
     describe '#creation_chart_data' do
       it 'computes and extracts the information of the creation_date' do
-        creation_chart_data = Highchart::DemandsChartsAdapter.new(Demand.all, 'week').creation_chart_data
+        creation_chart_data = Highchart::DemandsChartsAdapter.new(Demand.all, start_date, end_date, 'week').creation_chart_data
 
-        expect(creation_chart_data[:x_axis]).to eq [Date.new(2018, 9, 2)]
+        expect(creation_chart_data[:x_axis]).to eq TimeService.instance.weeks_between_of(Date.new(2018, 3, 4), Date.new(2018, 9, 2))
         expect(creation_chart_data[:y_axis][0][:name]).to eq I18n.t('demands.charts.creation_date')
         expect(creation_chart_data[:y_axis][0][:data]).to eq [5]
       end
@@ -41,7 +44,7 @@ RSpec.describe Highchart::DemandsChartsAdapter, type: :data_object do
 
     describe '#committed_chart_data' do
       it 'computes and extracts the information of the throughput' do
-        committed_chart_data = Highchart::DemandsChartsAdapter.new(Demand.all, 'week').committed_chart_data
+        committed_chart_data = Highchart::DemandsChartsAdapter.new(Demand.all, start_date, end_date, 'week').committed_chart_data
 
         expect(committed_chart_data[:x_axis]).to eq TimeService.instance.weeks_between_of(Date.new(2018, 4, 2), Date.new(2018, 7, 2))
         expect(committed_chart_data[:y_axis][0][:name]).to eq I18n.t('demands.charts.commitment_date')
@@ -51,7 +54,7 @@ RSpec.describe Highchart::DemandsChartsAdapter, type: :data_object do
 
     describe '#leadtime_on_time_chart_data' do
       it 'computes and extracts the information of the throughput' do
-        leadtime_on_time_chart_data = Highchart::DemandsChartsAdapter.new(Demand.all, 'week').leadtime_percentiles_on_time_chart_data
+        leadtime_on_time_chart_data = Highchart::DemandsChartsAdapter.new(Demand.all, start_date, end_date, 'week').leadtime_percentiles_on_time_chart_data
 
         expect(leadtime_on_time_chart_data[:x_axis]).to eq TimeService.instance.weeks_between_of(Date.new(2018, 5, 28), Date.new(2018, 9, 3))
         expect(leadtime_on_time_chart_data[:y_axis][0][:name]).to eq I18n.t('projects.charts.leadtime_evolution.legend.leadtime_80_confidence')
@@ -65,12 +68,10 @@ RSpec.describe Highchart::DemandsChartsAdapter, type: :data_object do
 
   context 'having no demands' do
     describe '.initialize' do
-      subject(:throughput_chart_data) { Highchart::DemandsChartsAdapter.new(Demand.all, 'week').throughput_chart_data }
+      subject(:throughput_chart_data) { Highchart::DemandsChartsAdapter.new(Demand.all, start_date, end_date, 'week').throughput_chart_data }
 
       it 'returns empty information' do
-        expect(throughput_chart_data[:x_axis]).to eq [Time.zone.today.end_of_week]
-        expect(throughput_chart_data[:y_axis][0][:name]).to eq I18n.t('general.throughput')
-        expect(throughput_chart_data[:y_axis][0][:data]).to eq []
+        expect(throughput_chart_data).to be_nil
       end
     end
   end

@@ -119,7 +119,7 @@ RSpec.describe Highchart::OperationalChartsAdapter, type: :data_object do
             expect(report_data.bugs_count_to_period).to eq(dates_array: %w[2018-02-28 2018-03-31 2018-04-30 2018-05-31], bugs_opened_count_array: [0, 0, 0, 0], bugs_closed_count_array: [0, 0, 0, 4])
             expect(report_data.queue_touch_count_hash).to eq(dates_array: %w[2018-02-28 2018-03-31 2018-04-30 2018-05-31], queue_times: [96.0, 0, 672.0, 0], touch_times: [96.0, 0, 240.0, 0])
             expect(report_data.queue_touch_share_hash).to eq(dates_array: %w[2018-02-28 2018-03-31 2018-04-30 2018-05-31], flow_efficiency_array: [50.0, 0, 26.31578947368421, 0])
-            expect(report_data.aging_per_demand[:x_axis]).to eq %w[second_demand first_demand fifth_demand fourth_demand third_demand sixth_demand fourth_bug first_bug second_bug third_bug]
+            expect(report_data.aging_per_demand[:x_axis]).to match_array %w[second_demand first_demand fifth_demand fourth_demand third_demand sixth_demand fourth_bug first_bug second_bug third_bug]
             expect(report_data.aging_per_demand[:data]).to eq [{ data: [33.0, 36.79736111111111, 51.0, 43.0, 29.0, 105.0, 105.0, 105.0, 105.0, 105.0], name: I18n.t('demands.charts.aging.series') }]
           end
         end
