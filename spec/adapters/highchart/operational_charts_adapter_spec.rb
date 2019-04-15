@@ -30,6 +30,7 @@ RSpec.describe Highchart::OperationalChartsAdapter, type: :data_object do
     let!(:fourth_demand) { Fabricate :demand, project: second_project, demand_id: 'fourth_demand', downstream: false, created_date: Time.zone.iso8601('2018-02-03T23:01:46-02:00'), commitment_date: Time.zone.iso8601('2018-03-10T23:01:46-02:00'), end_date: Time.zone.iso8601('2018-03-18T23:01:46-02:00'), effort_upstream: 80, effort_downstream: 34 }
     let!(:fifth_demand) { Fabricate :demand, project: third_project, demand_id: 'fifth_demand', downstream: true, created_date: Time.zone.iso8601('2018-01-21T23:01:46-02:00'), commitment_date: Time.zone.iso8601('2018-03-09T23:01:46-02:00'), end_date: Time.zone.iso8601('2018-03-13T23:01:46-02:00'), effort_upstream: 56, effort_downstream: 25 }
     let!(:sixth_demand) { Fabricate :demand, project: first_project, demand_id: 'sixth_demand', downstream: false, created_date: Time.zone.iso8601('2018-01-15T23:01:46-02:00'), commitment_date: Time.zone.iso8601('2018-04-29T23:01:46-02:00'), end_date: Time.zone.iso8601('2018-04-30T23:01:46-02:00'), effort_upstream: 56, effort_downstream: 25 }
+    let!(:seventh_demand) { Fabricate :demand, project: first_project, demand_id: 'seventh_demand', downstream: false, created_date: Project.all.map(&:end_date).max + 3.months, commitment_date: Project.all.map(&:end_date).max + 4.months, end_date: Project.all.map(&:end_date).max + 5.months, effort_upstream: 56, effort_downstream: 25 }
 
     let!(:first_bug) { Fabricate :demand, project: first_project, demand_id: 'first_bug', demand_type: :bug, created_date: Time.zone.iso8601('2018-01-15T23:01:46-02:00'), commitment_date: Time.zone.iso8601('2018-04-30T10:01:46-02:00'), end_date: Time.zone.iso8601('2018-04-30T23:01:46-02:00'), effort_upstream: 56, effort_downstream: 25 }
     let!(:second_bug) { Fabricate :demand, project: first_project, demand_id: 'second_bug', demand_type: :bug, created_date: Time.zone.iso8601('2018-01-15T23:01:46-02:00'), commitment_date: Time.zone.iso8601('2018-04-25T23:01:46-02:00'), end_date: Time.zone.iso8601('2018-04-30T23:01:46-02:00'), effort_upstream: 56, effort_downstream: 25 }
@@ -73,12 +74,12 @@ RSpec.describe Highchart::OperationalChartsAdapter, type: :data_object do
             expect(report_data.flow_pressure_data).to eq [0.5567068713450297, 0.5636659356725151, 0.5592882723604883, 0.6817712724964871, 0.5978308111006378, 0.5540415321539848, 0.5420885090420399, 0.5772369281704055, 1.1595641381716737, 1.0658299465767285, 1.006815102948541, 1.2006916221472739]
             expect(report_data.throughput_per_period).to eq([{ name: I18n.t('projects.charts.throughput.stage_stream.upstream'), data: [0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0] }, { name: I18n.t('projects.charts.throughput.stage_stream.downstream'), data: [1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 5, 0] }])
             expect(report_data.effort_hours_per_month).to eq(keys: [[2018.0, 2.0], [2018.0, 3.0], [2018.0, 5.0]], data: { upstream: [0.0, 0.0, 224.0], downstream: [39.6, 0.0, 284.8] })
-            expect(report_data.lead_time_control_chart[:dispersion_source]).to match_array [[fourth_demand.demand_id, fourth_demand.leadtime_in_days.to_f], [second_demand.demand_id, (second_demand.leadtime / 86_400).to_f], [first_demand.demand_id, (first_demand.leadtime / 86_400).to_f], [fifth_demand.demand_id, (fifth_demand.leadtime / 86_400).to_f], [third_demand.demand_id, (third_demand.leadtime / 86_400).to_f], [sixth_demand.demand_id, (sixth_demand.leadtime / 86_400).to_f], [first_bug.demand_id, (first_bug.leadtime / 86_400).to_f], [second_bug.demand_id, (second_bug.leadtime / 86_400).to_f], [third_bug.demand_id, (third_bug.leadtime / 86_400).to_f], [fourth_bug.demand_id, (fourth_bug.leadtime / 86_400).to_f]]
+            expect(report_data.lead_time_control_chart[:dispersion_source]).to match_array [['second_demand', 1.0], ['first_demand', 7.797361111111111], ['fifth_demand', 4.0], ['fourth_demand', 8.0], ['third_demand', 2.0], ['sixth_demand', 1.0], ['third_bug', 1.0], ['second_bug', 5.0], ['first_bug', 0.5416666666666666], ['fourth_bug', 1.0], ['seventh_demand', 30.0]]
             expect(report_data.lead_time_control_chart[:percentile_95_data]).to eq 7.9088125
             expect(report_data.lead_time_control_chart[:percentile_80_data]).to eq 5.559472222222222
             expect(report_data.lead_time_control_chart[:percentile_60_data]).to eq 2.799999999999999
-            expect(report_data.leadtime_bins).to eq ['1.78 Dias', '4.27 Dias', '6.76 Dias']
-            expect(report_data.leadtime_histogram_data).to eq [6.0, 2.0, 2.0]
+            expect(report_data.leadtime_bins).to eq ['5.45 Dias', '15.27 Dias', '25.09 Dias']
+            expect(report_data.leadtime_histogram_data).to eq [10.0, 0.0, 1.0]
             expect(report_data.throughput_bins).to eq ['0.83 demanda(s)', '2.5 demanda(s)', '4.17 demanda(s)']
             expect(report_data.throughput_histogram_data).to eq [10.0, 1.0, 1.0]
             expect(report_data.bugs_count_accumulated_hash).to eq(dates_array: %w[2018-02-25 2018-03-04 2018-03-11 2018-03-18 2018-03-25 2018-04-01 2018-04-08 2018-04-15 2018-04-22 2018-04-29 2018-05-06 2018-05-13], accumulated_bugs_opened_count_array: [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4], accumulated_bugs_closed_count_array: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4])
@@ -105,12 +106,12 @@ RSpec.describe Highchart::OperationalChartsAdapter, type: :data_object do
             expect(report_data.flow_pressure_data).to eq [0.5706250000000005, 0.45286006871035966, 0.440795601362462, 0.3305967010218465]
             expect(report_data.throughput_per_period).to eq([{ name: I18n.t('projects.charts.throughput.stage_stream.upstream'), data: [0, 2, 0, 0] }, { name: I18n.t('projects.charts.throughput.stage_stream.downstream'), data: [2, 1, 0, 5] }])
             expect(report_data.effort_hours_per_month).to eq(keys: [[2018.0, 2.0], [2018.0, 3.0], [2018.0, 5.0]], data: { upstream: [0.0, 0.0, 224.0], downstream: [39.6, 0.0, 284.8] })
-            expect(report_data.lead_time_control_chart[:dispersion_source]).to match_array [[fifth_demand.demand_id, 4.0], [first_bug.demand_id, 0.5416666666666666], [first_demand.demand_id, 7.797361111111111], [fourth_bug.demand_id, 1.0], [second_demand.demand_id, 1.0], [sixth_demand.demand_id, 1.0], [fourth_demand.demand_id, 8.0], [third_demand.demand_id, 2.0], [second_bug.demand_id, 5.0], [third_bug.demand_id, 1.0]]
+            expect(report_data.lead_time_control_chart[:dispersion_source]).to match_array [['second_demand', 1.0], ['first_demand', 7.797361111111111], ['fifth_demand', 4.0], ['fourth_demand', 8.0], ['third_demand', 2.0], ['sixth_demand', 1.0], ['third_bug', 1.0], ['second_bug', 5.0], ['first_bug', 0.5416666666666666], ['fourth_bug', 1.0], ['seventh_demand', 30.0]]
             expect(report_data.lead_time_control_chart[:percentile_95_data]).to eq 7.9088125
             expect(report_data.lead_time_control_chart[:percentile_80_data]).to eq 5.559472222222222
             expect(report_data.lead_time_control_chart[:percentile_60_data]).to eq 2.799999999999999
-            expect(report_data.leadtime_bins).to eq ['1.78 Dias', '4.27 Dias', '6.76 Dias']
-            expect(report_data.leadtime_histogram_data).to eq [6.0, 2.0, 2.0]
+            expect(report_data.leadtime_bins).to eq ['5.45 Dias', '15.27 Dias', '25.09 Dias']
+            expect(report_data.leadtime_histogram_data).to eq [10.0, 0.0, 1.0]
             expect(report_data.throughput_bins).to eq ['0.83 demanda(s)', '2.5 demanda(s)', '4.17 demanda(s)']
             expect(report_data.throughput_histogram_data).to eq [10.0, 1.0, 1.0]
             expect(report_data.bugs_count_accumulated_hash).to eq(dates_array: %w[2018-02-28 2018-03-31 2018-04-30 2018-05-31], accumulated_bugs_opened_count_array: [4, 4, 4, 4], accumulated_bugs_closed_count_array: [0, 0, 0, 4])
@@ -139,12 +140,12 @@ RSpec.describe Highchart::OperationalChartsAdapter, type: :data_object do
             expect(report_data.flow_pressure_data).to eq [1.0492202729044833, 1.0492202729044833, 1.0492202729044835, 1.0492202729044833, 1.0492202729044835, 1.0492202729044835, 0.9367700861348774, 0.8524324460576729, 0.7868365037754027, 0.7343597499495866, 0.6914242240921007, 0.6556446192108624, 0.6253695689267378, 0.604635680962022, 0.5866663113926018, 0.5709431130193592, 0.5570697026900273, 0.544737782397288, 0.5337039589774686, 0.5237735178996311, 0.5212305108744283, 0.518918686306062, 0.5168078899610319, 0.514872993311421, 0.5130928883937789, 0.5114497146236479, 0.509928257429082, 0.5211192433090778, 0.5315384370594188, 0.5412630178930703, 0.5503602064148734, 0.5588888206540638, 0.5669005491817881, 0.5744409995608227, 0.724262165807137, 0.8657599339286558, 0.9996091740436062, 1.1264137173104012, 1.2467154634865916, 1.361002122353972, 1.4697138222522124, 1.4400116412991173, 1.4116909571345382, 1.384657576795622, 1.3588256800273242, 1.334116909205474, 1.3104595754398731, 1.2877879639145053, 1.2700099782563863]
             expect(report_data.throughput_per_period).to eq([{ name: I18n.t('projects.charts.throughput.stage_stream.upstream'), data: [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] }, { name: I18n.t('projects.charts.throughput.stage_stream.downstream'), data: [0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5] }])
             expect(report_data.effort_hours_per_month).to eq(data: { downstream: [0.0, 284.8], upstream: [0.0, 224.0] }, keys: [[2018.0, 3.0], [2018.0, 5.0]])
-            expect(report_data.lead_time_control_chart[:dispersion_source]).to match_array [[fifth_demand.demand_id, 4.0], [fourth_demand.demand_id, 8.0], [third_demand.demand_id, 2.0], [first_bug.demand_id, 0.5416666666666666], [sixth_demand.demand_id, 1.0], [second_bug.demand_id, 5.0], [third_bug.demand_id, 1.0], [fourth_bug.demand_id, 1.0]]
+            expect(report_data.lead_time_control_chart[:dispersion_source]).to match_array [['fifth_demand', 4.0], ['fourth_demand', 8.0], ['third_demand', 2.0], ['first_bug', 0.5416666666666666], ['sixth_demand', 1.0], ['fourth_bug', 1.0], ['third_bug', 1.0], ['second_bug', 5.0], ['seventh_demand', 30.0]]
             expect(report_data.lead_time_control_chart[:percentile_95_data]).to eq 6.949999999999998
             expect(report_data.lead_time_control_chart[:percentile_80_data]).to eq 4.6000000000000005
             expect(report_data.lead_time_control_chart[:percentile_60_data]).to eq 2.4000000000000004
-            expect(report_data.leadtime_bins).to eq ['1.78 Dias', '4.27 Dias', '6.76 Dias']
-            expect(report_data.leadtime_histogram_data).to eq [5.0, 2.0, 1.0]
+            expect(report_data.leadtime_bins).to eq ['5.45 Dias', '15.27 Dias', '25.09 Dias']
+            expect(report_data.leadtime_histogram_data).to eq [8.0, 0.0, 1.0]
             expect(report_data.throughput_bins).to eq ['0.33 demanda(s)', '1.0 demanda(s)', '1.67 demanda(s)']
             expect(report_data.throughput_histogram_data).to eq [6.0, 1.0, 1.0]
             expect(report_data.bugs_count_accumulated_hash).to eq(dates_array: %w[2018-03-13 2018-03-14 2018-03-15 2018-03-16 2018-03-17 2018-03-18 2018-03-19 2018-03-20 2018-03-21 2018-03-22 2018-03-23 2018-03-24 2018-03-25 2018-03-26 2018-03-27 2018-03-28 2018-03-29 2018-03-30 2018-03-31 2018-04-01 2018-04-02 2018-04-03 2018-04-04 2018-04-05 2018-04-06 2018-04-07 2018-04-08 2018-04-09 2018-04-10 2018-04-11 2018-04-12 2018-04-13 2018-04-14 2018-04-15 2018-04-16 2018-04-17 2018-04-18 2018-04-19 2018-04-20 2018-04-21 2018-04-22 2018-04-23 2018-04-24 2018-04-25 2018-04-26 2018-04-27 2018-04-28 2018-04-29 2018-04-30], accumulated_bugs_opened_count_array: [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4], accumulated_bugs_closed_count_array: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
@@ -178,8 +179,6 @@ RSpec.describe Highchart::OperationalChartsAdapter, type: :data_object do
         end
       end
     end
-
-    pending 'spec to check the query to dates in the @demand_data ||= finished_demands_with_leadtime'
 
     describe '#hours_per_demand' do
       subject(:report_data) { Highchart::OperationalChartsAdapter.new(Project.all, Project.all.map(&:start_date).min, Project.all.map(&:end_date).max, 'week') }

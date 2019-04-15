@@ -27,26 +27,26 @@ class DemandsRepository
     demands_stories_to_projects(projects).where('created_date BETWEEN :start_period AND :end_period', start_period: start_period, end_period: end_period)
   end
 
-  def effort_upstream_grouped_by_month(projects, limit_date)
+  def effort_upstream_grouped_by_month(projects, start_date, end_date)
     effort_upstream_hash = {}
     Demand.kept
           .story
           .select('EXTRACT(YEAR from end_date) AS year, EXTRACT(MONTH from end_date) AS month, SUM(effort_upstream) AS computed_sum_effort')
           .where(project_id: projects.map(&:id))
-          .where('end_date >= :limit_date', limit_date: limit_date)
+          .where('end_date BETWEEN :start_date AND :end_date', start_date: start_date, end_date: end_date)
           .order('year, month')
           .group('year, month')
           .map { |group_sum| effort_upstream_hash[[group_sum.year, group_sum.month]] = group_sum.computed_sum_effort.to_f }
     effort_upstream_hash
   end
 
-  def grouped_by_effort_downstream_per_month(projects, limit_date)
+  def grouped_by_effort_downstream_per_month(projects, start_date, end_date)
     effort_downstream_hash = {}
     Demand.kept
           .story
           .select('EXTRACT(YEAR from end_date) AS year, EXTRACT(MONTH from end_date) AS month, SUM(effort_downstream) AS computed_sum_effort')
           .where(project_id: projects.map(&:id))
-          .where('end_date >= :limit_date', limit_date: limit_date)
+          .where('end_date BETWEEN :start_date AND :end_date', start_date: start_date, end_date: end_date)
           .order('year, month')
           .group('year, month')
           .map { |group_sum| effort_downstream_hash[[group_sum.year, group_sum.month]] = group_sum.computed_sum_effort.to_f }

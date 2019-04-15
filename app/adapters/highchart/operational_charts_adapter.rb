@@ -59,8 +59,8 @@ module Highchart
     end
 
     def effort_hours_per_month
-      grouped_hours_to_upstream = DemandsRepository.instance.effort_upstream_grouped_by_month(all_projects, @start_date)
-      grouped_hours_to_downstream = DemandsRepository.instance.grouped_by_effort_downstream_per_month(all_projects, @start_date)
+      grouped_hours_to_upstream = DemandsRepository.instance.effort_upstream_grouped_by_month(@all_projects, start_of_period_for_date(@start_date), end_of_period_for_date(@end_date))
+      grouped_hours_to_downstream = DemandsRepository.instance.grouped_by_effort_downstream_per_month(@all_projects, start_of_period_for_date(@start_date), end_of_period_for_date(@end_date))
 
       hours_per_month_data_hash = {}
 
