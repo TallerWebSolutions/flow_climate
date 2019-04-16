@@ -191,6 +191,22 @@
            data-decimals='2'>
       </div>
     </div>
+
+    <% if @team_chart_data.present? %>
+      <div class="col-xs-6 bottom-spaced-component">
+        <div id="average-demand-cost"
+             class="flow-chart"
+             data-title='<%= t('teams.charts.average_demand_cost.title', target_name: target_name) %>'
+             data-xcategories='<%= @team_chart_data.average_demand_cost[:x_axis].to_json %>'
+             data-xtitle='<%= t('teams.charts.average_demand_cost.xlabel') %>'
+             data-ytitle='<%= t('teams.charts.average_demand_cost.ylabel') %>'
+             data-prefix='<%= t('general.money') %>'
+             data-suffix=''
+             data-series='<%= [{ name: I18n.t('teams.charts.average_demand_cost.data_legend'), data: @team_chart_data.average_demand_cost[:data] }].to_json %>'
+             data-decimals='2'>
+        </div>
+      </div>
+    <% end %>
   </div>
 
 <% else %>

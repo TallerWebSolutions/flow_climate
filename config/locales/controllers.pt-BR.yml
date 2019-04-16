@@ -79,6 +79,7 @@ pt-BR:
     min: "Mínimo"
     max: "Máximo"
     partial: "(parcial)"
+    money: "R$ "
   header:
     logout: Sair
     sign_up: Cadastre-se
@@ -388,6 +389,12 @@ pt-BR:
         title: "Fluxo entre os dias %{start_date} e %{end_date}"
     replenishing:
       title: "Reabastecimento do Fluxo"
+    charts:
+      average_demand_cost:
+        data_legend: "Custo Médio por Demanda"
+        title: "Custo Médio por Demanda"
+        ylabel: "$ / Demanda"
+        xlabel: "período"
   project:
     new:
       title: "Novo Projeto"

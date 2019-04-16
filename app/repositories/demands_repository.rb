@@ -122,17 +122,18 @@ class DemandsRepository
           .where(id: demands.map(&:id)).where('demands.end_date <= :upper_limit', upper_limit: upper_date_limit)
   end
 
-  def cumulative_flow_for_date(demands_ids, analysed_date, stream)
+  def cumulative_flow_for_date(demands_ids, start_date, end_date, stream)
     demands = Demand.story.joins(demand_transitions: :stage)
                     .where(id: demands_ids)
-                    .where('demands.discarded_at IS NULL OR demands.discarded_at > :start_date', start_date: analysed_date)
+                    .where('demands.discarded_at IS NULL OR demands.discarded_at > :end_date', end_date: end_date)
+                    .where('(demands.end_date IS NULL OR demands.end_date >= :start_date)', start_date: start_date)
                     .where('stages.stage_stream = :stream', stream: Stage.stage_streams[stream])
                     .where('stages.stage_stream <> :stream', stream: Stage.stage_streams[:out_stream])
 
     stages_id = demands.select('stages.id AS stage_id').map(&:stage_id).uniq
     stages = Stage.where(id: stages_id).order('stages.order DESC')
 
-    build_cumulative_stage_hash(analysed_date, demands, stages)
+    build_cumulative_stage_hash(end_date, demands, stages)
   end
 
   def total_time_for(projects, sum_field)

@@ -74,7 +74,7 @@ module Highchart
       @x_axis.each do |date|
         break unless date <= end_of_period_for_date(Time.zone.today)
 
-        cumulative_data_to_week = DemandsRepository.instance.cumulative_flow_for_date(demands_ids, end_of_period_for_date(date), :downstream)
+        cumulative_data_to_week = DemandsRepository.instance.cumulative_flow_for_date(demands_ids, @start_date, end_of_period_for_date(date), :downstream)
         cumulative_hash = cumulative_hash.merge(build_cumulative_hash(cumulative_data_to_week, cumulative_hash))
       end
 
@@ -88,7 +88,7 @@ module Highchart
       @x_axis.each do |date|
         break unless date <= Time.zone.today
 
-        cumulative_data_to_week = DemandsRepository.instance.cumulative_flow_for_date(demands_ids, date, :upstream)
+        cumulative_data_to_week = DemandsRepository.instance.cumulative_flow_for_date(demands_ids, @start_date, date, :upstream)
 
         cumulative_hash = cumulative_hash.merge(build_cumulative_hash(cumulative_data_to_week, cumulative_hash))
       end
