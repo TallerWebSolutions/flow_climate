@@ -392,7 +392,7 @@ RSpec.describe DemandsRepository, type: :repository do
     end
   end
 
-  describe '#cumulative_flow_for_week' do
+  describe '#cumulative_flow_for_date' do
     let(:first_stage) { Fabricate :stage, company: company, projects: [first_project, second_project], name: 'first_stage', integration_pipe_id: '123', order: 0, stage_stream: :downstream }
     let(:second_stage) { Fabricate :stage, company: company, projects: [first_project, second_project], name: 'second_stage', integration_pipe_id: '123', order: 1, stage_stream: :downstream, end_point: true }
 
@@ -421,12 +421,12 @@ RSpec.describe DemandsRepository, type: :repository do
       let!(:sixth_transition) { Fabricate :demand_transition, stage: first_stage, demand: seventh_demand, last_time_in: '2018-03-01T17:09:58-03:00', last_time_out: nil }
       let!(:seventh_transition) { Fabricate :demand_transition, stage: first_stage, demand: eigth_demand, last_time_in: '2018-04-01T17:09:58-03:00', last_time_out: nil }
 
-      it { expect(DemandsRepository.instance.cumulative_flow_for_week(Demand.all.map(&:id), 1.week.ago, :downstream)).to eq(first_stage.name => 4, second_stage.name => 2) }
+      it { expect(DemandsRepository.instance.cumulative_flow_for_date(Demand.all.map(&:id), 1.week.ago, :downstream)).to eq(first_stage.name => 2, second_stage.name => 2) }
     end
 
     context 'having no demands' do
       context 'having no demands' do
-        it { expect(DemandsRepository.instance.cumulative_flow_for_week(Demand.all.map(&:id), 1.week.ago, :downstream)).to eq({}) }
+        it { expect(DemandsRepository.instance.cumulative_flow_for_date(Demand.all.map(&:id), 1.week.ago, :downstream)).to eq({}) }
       end
     end
   end

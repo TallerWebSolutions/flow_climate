@@ -350,7 +350,7 @@ RSpec.describe Project, type: :model do
 
           after { travel_back }
 
-          it { expect(project.flow_pressure).to be_within(0.5).of(25.1) }
+          it { expect(project.flow_pressure).to be_within(0.5).of(21.2) }
         end
 
         context 'specifying a date' do

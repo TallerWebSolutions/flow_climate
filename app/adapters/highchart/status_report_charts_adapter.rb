@@ -21,10 +21,10 @@ module Highchart
       upstream_result_data = []
       downstream_result_data = []
       @x_axis.each do |date|
-        break unless date <= Time.zone.today.end_of_day
+        break unless date <= end_of_period_for_date(Time.zone.today)
 
-        upstream_result_data << DemandsRepository.instance.delivered_until_date_to_projects_in_stream(@all_projects, 'upstream', date).count
-        downstream_result_data << DemandsRepository.instance.delivered_until_date_to_projects_in_stream(@all_projects, 'downstream', date).count
+        upstream_result_data << DemandsRepository.instance.delivered_until_date_to_projects_in_stream(@all_projects, 'upstream', end_of_period_for_date(date)).count
+        downstream_result_data << DemandsRepository.instance.delivered_until_date_to_projects_in_stream(@all_projects, 'downstream', end_of_period_for_date(date)).count
       end
       [{ name: I18n.t('projects.charts.throughput.stage_stream.upstream'), data: upstream_result_data }, { name: I18n.t('projects.charts.throughput.stage_stream.downstream'), data: downstream_result_data }]
     end
@@ -72,9 +72,9 @@ module Highchart
       cumulative_hash = {}
 
       @x_axis.each do |date|
-        break unless date <= Time.zone.today
+        break unless date <= end_of_period_for_date(Time.zone.today)
 
-        cumulative_data_to_week = DemandsRepository.instance.cumulative_flow_for_week(demands_ids, date, :downstream)
+        cumulative_data_to_week = DemandsRepository.instance.cumulative_flow_for_date(demands_ids, end_of_period_for_date(date), :downstream)
         cumulative_hash = cumulative_hash.merge(build_cumulative_hash(cumulative_data_to_week, cumulative_hash))
       end
 
@@ -88,7 +88,7 @@ module Highchart
       @x_axis.each do |date|
         break unless date <= Time.zone.today
 
-        cumulative_data_to_week = DemandsRepository.instance.cumulative_flow_for_week(demands_ids, date, :upstream)
+        cumulative_data_to_week = DemandsRepository.instance.cumulative_flow_for_date(demands_ids, date, :upstream)
 
         cumulative_hash = cumulative_hash.merge(build_cumulative_hash(cumulative_data_to_week, cumulative_hash))
       end

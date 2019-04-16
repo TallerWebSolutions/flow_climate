@@ -56,7 +56,7 @@ class DemandsList < ApplicationRecord
 
   scope :with_effort, -> { story.where('effort_downstream > 0 OR effort_upstream > 0') }
 
-  scope :to_dates, ->(start_date, end_date) { where('((demands_lists.end_date IS NULL AND demands_lists.created_date >= :start_date) OR (demands_lists.end_date >= :start_date)) OR (demands_lists.end_date <= :end_date)', start_date: start_date, end_date: end_date) }
+  scope :to_dates, ->(start_date, end_date) { where('(demands_lists.end_date IS NULL AND demands_lists.created_date BETWEEN :start_date AND :end_date) OR (demands_lists.end_date BETWEEN :start_date AND :end_date)', start_date: start_date.beginning_of_day, end_date: end_date.end_of_day) }
 
   def leadtime_in_days
     return 0.0 if leadtime.blank?
