@@ -5,7 +5,7 @@ module Highchart
     attr_reader :demands_burnup_data, :hours_burnup_per_week_data, :flow_pressure_data,
                 :leadtime_bins, :leadtime_histogram_data, :throughput_bins, :throughput_histogram_data,
                 :lead_time_control_chart, :leadtime_percentiles_on_time, :bugs_count_accumulated_hash, :bugs_share_accumulated_hash,
-                :bugs_count_to_period, :queue_touch_count_hash, :queue_touch_share_hash
+                :bugs_count_to_period, :queue_touch_count_hash, :queue_touch_share_hash, :average_demand_cost
 
     def initialize(projects, start_date, end_date, chart_period_interval)
       super(projects, start_date, end_date, chart_period_interval)

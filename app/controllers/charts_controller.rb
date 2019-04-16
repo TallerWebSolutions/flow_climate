@@ -3,6 +3,7 @@
 class ChartsController < AuthenticatedController
   before_action :assign_company
   before_action :assign_projects
+  before_action :assign_team, only: :build_operational_charts
   before_action :assign_target_name
   before_action :assign_filter_parameters_to_charts
   before_action :assign_leadtime_confidence
@@ -10,6 +11,7 @@ class ChartsController < AuthenticatedController
   def build_operational_charts
     @report_data = {}
     @report_data = Highchart::OperationalChartsAdapter.new(@projects, @start_date, @end_date, @period) if @projects.present?
+    @team_chart_data = Highchart::TeamChartsAdapter.new(@team, @start_date, @end_date, @period) if @team.present?
     respond_to { |format| format.js { render 'charts/operational_charts' } }
   end
 
@@ -46,6 +48,10 @@ class ChartsController < AuthenticatedController
 
     team = @projects.includes(:team).last.current_team
     @available_hours_in_month = team.active_monthly_available_hours_for_billable_types(team.projects.pluck(:project_type).uniq)
+  end
+
+  def assign_team
+    @team = Team.find_by(id: params[:team_id])
   end
 
   def assign_target_name

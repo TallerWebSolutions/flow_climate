@@ -244,7 +244,7 @@ RSpec.describe ProductsController, type: :controller do
             expect(assigns(:company)).to eq company
             expect(assigns(:product)).to eq product
             expect(assigns(:product_projects)).to eq [second_project, first_project]
-            expect(assigns(:projects_summary).total_flow_pressure).to be_within(0.9).of(7.65)
+            expect(assigns(:projects_summary).total_flow_pressure).to be_within(0.9).of(8.5)
           end
         end
 

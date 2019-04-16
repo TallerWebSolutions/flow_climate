@@ -77,6 +77,7 @@ en:
     min: "Minimum"
     max: "Maximum"
     partial: "(partial)"
+    money: "US$ "
   header:
     logout: Logout
     explore: Explore
@@ -709,6 +710,12 @@ en:
       title: "Teams"
     replenishing:
       title: "Flow Replenishing"
+    charts:
+      average_demand_cost:
+        data_legend: "Average Demand Cost"
+        title: "Average Demand Cost"
+        ylabel: "$ / Demand"
+        xlabel: "period"
   activerecord:
     attributes:
       demand:

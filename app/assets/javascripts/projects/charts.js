@@ -47,4 +47,9 @@ function buildOperationalHighcharts() {
     if (agingPerDemandDiv.length !== 0) {
         buildColumnChart(agingPerDemandDiv);
     }
+
+    const avgDemandCost = $('#average-demand-cost');
+    if (avgDemandCost.length !== 0) {
+        buildLineChart(avgDemandCost);
+    }
 }

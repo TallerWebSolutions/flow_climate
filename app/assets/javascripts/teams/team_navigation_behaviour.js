@@ -26,7 +26,7 @@ $('.nav-item').on('click', function(event){
             buildStatusReportCharts(companyId, projectsIds, period, targetName, startDate, endDate)
 
         } else if ($(this).attr('id') === 'nav-item-charts') {
-            buildOperationalCharts(companyId, projectsIds, period, targetName, startDate, endDate);
+            buildOperationalCharts(companyId, projectsIds, period, targetName, startDate, endDate, teamId);
 
         } else if ($(this).attr('id') === 'nav-item-strategic') {
             buildStrategicCharts(companyId, projectsIds, targetName);

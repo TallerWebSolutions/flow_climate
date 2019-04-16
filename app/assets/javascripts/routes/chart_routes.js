@@ -1,11 +1,11 @@
-function buildOperationalCharts(companyId, projectsIds, period, targetName, startDate, endDate) {
+function buildOperationalCharts(companyId, projectsIds, period, targetName, startDate, endDate, teamId) {
     $("#general-loader").show();
     $("#operational-charts-div").hide();
 
     jQuery.ajax({
         url: `/companies/${companyId}/build_operational_charts.js`,
         type: "GET",
-        data: `projects_ids=${projectsIds}&period=${period}&target_name=${targetName}&start_date=${startDate}&end_date=${endDate}&period=${period}`
+        data: `projects_ids=${projectsIds}&period=${period}&target_name=${targetName}&start_date=${startDate}&end_date=${endDate}&period=${period}&team_id=${teamId}`
     });
 }
 

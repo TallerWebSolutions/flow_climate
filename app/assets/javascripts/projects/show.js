@@ -8,5 +8,5 @@ $('#search_operational_charts').on('click', function() {
     const period = $('#operational_charts_period').val();
     const targetName = $('#target_name').val();
 
-    buildOperationalCharts(companyId, projects_ids, period, targetName, startDate, endDate)
+    buildOperationalCharts(companyId, projects_ids, period, targetName, startDate, endDate, "")
 });
