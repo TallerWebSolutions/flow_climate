@@ -3,6 +3,7 @@
     <div class="tab">
       <button class="tablinks demands-tab" onclick="openTab(event, 'demands-list', 'tablinks')"><%= t('demands.data_analysis.demands_list') %></button>
       <button class="tablinks demands-tab" onclick="openTab(event, 'content-consolidation', 'tablinks')"><%= t('demands.data_analysis.consolidation') %></button>
+      <button class="tablinks demands-tab" onclick="openTab(event, 'content-discarded-demands', 'tablinks')"><%= t('demands.data_analysis.discarded_demands') %></button>
     </div>
   </div>
 </div>
@@ -10,9 +11,25 @@
 <%= hidden_field_tag :demands_ids_in_model, demands.map(&:id).join(',') %>
 
 <div id="demands-list" class="tabcontent">
-  <%= render 'demands/demands_list', company: company, demands: demands, demands_chart_adapter: @demands_chart_adapter, grouped_delivered_demands: nil, grouped_customer_demands: nil, grouped_stage_demands: nil, confidence_65_leadtime: confidence_65_leadtime, confidence_80_leadtime: confidence_80_leadtime, confidence_95_leadtime: confidence_95_leadtime, queue_time: queue_time, touch_time: touch_time %>
+  <%= render 'demands/demands_list', company: company,
+                                     demands: demands,
+                                     demands_chart_adapter: @demands_chart_adapter,
+                                     grouped_delivered_demands: nil,
+                                     grouped_customer_demands: nil,
+                                     grouped_stage_demands: nil,
+                                     confidence_65_leadtime: confidence_65_leadtime,
+                                     confidence_80_leadtime: confidence_80_leadtime,
+                                     confidence_95_leadtime: confidence_95_leadtime,
+                                     queue_time: queue_time,
+                                     touch_time: touch_time,
+                                     start_date: start_date,
+                                     end_date: end_date %>
 </div>
 
 <div id="content-consolidation" class="tabcontent">
   <%= render 'demands/demands_week_consolidation', demands_count_per_week: demands_count_per_week %>
+</div>
+
+<div id="content-discarded-demands" class="tabcontent">
+  <%= render 'demands/discarded_demands_table', company: company, discarded_demands: discarded_demands %>
 </div>

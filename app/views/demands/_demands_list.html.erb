@@ -31,15 +31,20 @@
 </div>
 
 <div class="row bottom-spaced-component">
-  <div class="col-xs-4">
-    <%= label_tag t('general.period') %>
-    <%= select_tag :period, period_options(:week), class: 'form-control', id: 'demands-table-period', selected: params[:period] %>
+  <div class="col-xs-2">
+    <%= label_tag Project.human_attribute_name(:start_date), nil, class: 'control-label' %>
+    <%= date_field_tag :demands_start_date, start_date, class: 'form-control' %>
   </div>
-  <div class="col-xs-4">
+
+  <div class="col-xs-2">
+    <%= label_tag Project.human_attribute_name(:end_date), nil, class: 'control-label' %>
+    <%= date_field_tag :demands_end_date, end_date, class: 'form-control' %>
+  </div>
+  <div class="col-xs-2">
     <%= label_tag t('demands.index.grouping_to_charts') %>
     <%= select_tag :period, grouping_period_to_charts_options('week'), class: 'form-control', id: 'demands-table-grouping-period', selected: params[:period] %>
   </div>
-  <div class="col-xs-4">
+  <div class="col-xs-6">
     <%= label_tag t('general.search_text') %>
     <%= text_field_tag :search_text, nil, class: 'form-control', id: 'search_text' %>
   </div>

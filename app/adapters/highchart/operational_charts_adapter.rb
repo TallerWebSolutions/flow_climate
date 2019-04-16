@@ -59,8 +59,8 @@ module Highchart
     end
 
     def effort_hours_per_month
-      grouped_hours_to_upstream = DemandsRepository.instance.effort_upstream_grouped_by_month(all_projects, @start_date)
-      grouped_hours_to_downstream = DemandsRepository.instance.grouped_by_effort_downstream_per_month(all_projects, @start_date)
+      grouped_hours_to_upstream = DemandsRepository.instance.effort_upstream_grouped_by_month(@all_projects, start_of_period_for_date(@start_date), end_of_period_for_date(@end_date))
+      grouped_hours_to_downstream = DemandsRepository.instance.grouped_by_effort_downstream_per_month(@all_projects, start_of_period_for_date(@start_date), end_of_period_for_date(@end_date))
 
       hours_per_month_data_hash = {}
 
@@ -132,7 +132,7 @@ module Highchart
 
     def build_demands_scope_data
       scope_per_period = []
-      @x_axis.each { |date| scope_per_period << DemandsRepository.instance.known_scope_to_date(all_projects, date.beginning_of_day) }
+      @x_axis.each { |date| scope_per_period << DemandsRepository.instance.known_scope_to_date(all_projects, end_of_period_for_date(date)) }
       scope_per_period
     end
 
@@ -141,8 +141,8 @@ module Highchart
       @x_axis.each do |date|
         break unless add_data_to_chart?(date)
 
-        upstream_total_delivered = DemandsRepository.instance.delivered_until_date_to_projects_in_stream(@all_projects, 'upstream', date).count
-        downstream_total_delivered = DemandsRepository.instance.delivered_until_date_to_projects_in_stream(@all_projects, 'downstream', date).count
+        upstream_total_delivered = DemandsRepository.instance.delivered_until_date_to_projects_in_stream(@all_projects, 'upstream', end_of_period_for_date(date)).count
+        downstream_total_delivered = DemandsRepository.instance.delivered_until_date_to_projects_in_stream(@all_projects, 'downstream', end_of_period_for_date(date)).count
         throughput_per_period << upstream_total_delivered + downstream_total_delivered
       end
       throughput_per_period
@@ -159,8 +159,8 @@ module Highchart
       @x_axis.each do |date|
         break unless add_data_to_chart?(date)
 
-        upstream_total_hours_delivered = DemandsRepository.instance.delivered_until_date_to_projects_in_stream(@all_projects, 'upstream', date).sum(&:effort_upstream)
-        downstream_total_hours_delivered = DemandsRepository.instance.delivered_until_date_to_projects_in_stream(@all_projects, 'downstream', date).sum(&:effort_downstream)
+        upstream_total_hours_delivered = DemandsRepository.instance.delivered_until_date_to_projects_in_stream(@all_projects, 'upstream', end_of_period_for_date(date)).sum(&:effort_upstream)
+        downstream_total_hours_delivered = DemandsRepository.instance.delivered_until_date_to_projects_in_stream(@all_projects, 'downstream', end_of_period_for_date(date)).sum(&:effort_downstream)
 
         throughput_hours_per_period << upstream_total_hours_delivered + downstream_total_hours_delivered
       end
@@ -184,8 +184,8 @@ module Highchart
         break unless add_data_to_chart?(date)
 
         dates_array << date.to_s
-        accumulated_bugs_opened_count_array << DemandsRepository.instance.bugs_opened_until_limit_date(@all_projects, date)
-        accumulated_bugs_closed_count_array << DemandsRepository.instance.bugs_closed_until_limit_date(@all_projects, date)
+        accumulated_bugs_opened_count_array << DemandsRepository.instance.bugs_opened_until_limit_date(@all_projects, end_of_period_for_date(date))
+        accumulated_bugs_closed_count_array << DemandsRepository.instance.bugs_closed_until_limit_date(@all_projects, end_of_period_for_date(date))
       end
       @bugs_count_accumulated_hash = { dates_array: dates_array, accumulated_bugs_opened_count_array: accumulated_bugs_opened_count_array, accumulated_bugs_closed_count_array: accumulated_bugs_closed_count_array }
     end
@@ -197,8 +197,8 @@ module Highchart
         break unless add_data_to_chart?(date)
 
         dates_array << date.to_s
-        known_scope_to_date = DemandsRepository.instance.known_scope_to_date(@all_projects, date.beginning_of_day)
-        accumulated_bugs_until_date = DemandsRepository.instance.bugs_opened_until_limit_date(@all_projects, date)
+        known_scope_to_date = DemandsRepository.instance.known_scope_to_date(@all_projects, end_of_period_for_date(date))
+        accumulated_bugs_until_date = DemandsRepository.instance.bugs_opened_until_limit_date(@all_projects, end_of_period_for_date(date))
         accumulated_bugs_opened_share_array << Stats::StatisticsService.instance.compute_percentage(accumulated_bugs_until_date, known_scope_to_date)
       end
       @bugs_share_accumulated_hash = { dates_array: dates_array, bugs_opened_share_array: accumulated_bugs_opened_share_array }
@@ -228,7 +228,7 @@ module Highchart
       @x_axis.each do |date|
         break unless add_data_to_chart?(date)
 
-        demands_touch_block_total_time = compute_demands_touch_block_total_time(date)
+        demands_touch_block_total_time = compute_demands_touch_block_total_time(end_of_period_for_date(date))
         dates_array << date.to_s
         queue_times << compute_time_in_seconds_to_hours(date, queue_times_per_period_hash, demands_touch_block_total_time)
         touch_times << compute_time_in_seconds_to_hours(date, touch_times_per_period_hash, (demands_touch_block_total_time * -1))
@@ -237,7 +237,7 @@ module Highchart
     end
 
     def compute_demands_touch_block_total_time(date)
-      @all_projects.map { |project| project.demands.kept.where('EXTRACT(WEEK FROM end_date) = :week AND EXTRACT(YEAR FROM end_date) = :year', week: date.cweek, year: date.cwyear).sum(&:sum_touch_blocked_time) }.sum
+      @all_projects.map { |project| project.demands.kept.where('end_date BETWEEN :start_date AND :end_date', start_date: date.beginning_of_week, end_date: date.end_of_week).sum(&:sum_touch_blocked_time) }.sum
     end
 
     def compute_time_in_seconds_to_hours(date, times_per_week_hash, blocking_time)
@@ -255,14 +255,14 @@ module Highchart
         break unless add_data_to_chart?(date)
 
         dates_array << date.to_s
-        flow_efficiency_array << compute_flow_efficiency(date, queue_times_per_period_hash, touch_times_per_period_hash)
+        flow_efficiency_array << compute_flow_efficiency(end_of_period_for_date(date), queue_times_per_period_hash, touch_times_per_period_hash)
       end
       @queue_touch_share_hash = { dates_array: dates_array, flow_efficiency_array: flow_efficiency_array }
     end
 
     def compute_flow_efficiency(date, queue_times_per_week_hash, touch_times_per_week_hash)
-      queue_time = (queue_times_per_week_hash[[date.cweek, date.cwyear]] || 0)
-      touch_time = (touch_times_per_week_hash[[date.cweek, date.cwyear]] || 0)
+      queue_time = (queue_times_per_week_hash[[date.to_date.cweek, date.to_date.cwyear]] || 0)
+      touch_time = (touch_times_per_week_hash[[date.to_date.cweek, date.to_date.cwyear]] || 0)
       Stats::StatisticsService.instance.compute_percentage(touch_time, queue_time)
     end
 

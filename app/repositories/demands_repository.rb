@@ -27,26 +27,26 @@ class DemandsRepository
     demands_stories_to_projects(projects).where('created_date BETWEEN :start_period AND :end_period', start_period: start_period, end_period: end_period)
   end
 
-  def effort_upstream_grouped_by_month(projects, limit_date)
+  def effort_upstream_grouped_by_month(projects, start_date, end_date)
     effort_upstream_hash = {}
     Demand.kept
           .story
           .select('EXTRACT(YEAR from end_date) AS year, EXTRACT(MONTH from end_date) AS month, SUM(effort_upstream) AS computed_sum_effort')
           .where(project_id: projects.map(&:id))
-          .where('end_date >= :limit_date', limit_date: limit_date)
+          .where('end_date BETWEEN :start_date AND :end_date', start_date: start_date, end_date: end_date)
           .order('year, month')
           .group('year, month')
           .map { |group_sum| effort_upstream_hash[[group_sum.year, group_sum.month]] = group_sum.computed_sum_effort.to_f }
     effort_upstream_hash
   end
 
-  def grouped_by_effort_downstream_per_month(projects, limit_date)
+  def grouped_by_effort_downstream_per_month(projects, start_date, end_date)
     effort_downstream_hash = {}
     Demand.kept
           .story
           .select('EXTRACT(YEAR from end_date) AS year, EXTRACT(MONTH from end_date) AS month, SUM(effort_downstream) AS computed_sum_effort')
           .where(project_id: projects.map(&:id))
-          .where('end_date >= :limit_date', limit_date: limit_date)
+          .where('end_date BETWEEN :start_date AND :end_date', start_date: start_date, end_date: end_date)
           .order('year, month')
           .group('year, month')
           .map { |group_sum| effort_downstream_hash[[group_sum.year, group_sum.month]] = group_sum.computed_sum_effort.to_f }
@@ -54,7 +54,7 @@ class DemandsRepository
   end
 
   def demands_created_before_date_to_projects(projects, analysed_date = Time.zone.now)
-    demands_list_to_projects(projects).where('created_date <= :analysed_date AND (discarded_at IS NULL OR discarded_at > :limit_date)', analysed_date: analysed_date.end_of_day, limit_date: analysed_date.utc)
+    demands_list_to_projects(projects).where('demands_lists.created_date <= :analysed_date AND (demands_lists.discarded_at IS NULL OR demands_lists.discarded_at > :limit_date)', analysed_date: analysed_date, limit_date: analysed_date)
   end
 
   def bugs_opened_until_limit_date(projects, date = Time.zone.today)
@@ -113,30 +113,26 @@ class DemandsRepository
   def demands_delivered_for_period(demands, start_period, end_period)
     Demand.kept
           .story
-          .where(id: demands.map(&:id)).where('end_date >= :bottom_limit AND end_date <= :upper_limit', bottom_limit: start_period, upper_limit: end_period)
+          .where(id: demands.map(&:id)).where('demands.end_date >= :bottom_limit AND demands.end_date <= :upper_limit', bottom_limit: start_period, upper_limit: end_period)
   end
 
   def demands_delivered_for_period_accumulated(demands, upper_date_limit)
     Demand.kept
           .story
-          .where(id: demands.map(&:id)).where('end_date <= :upper_limit', upper_limit: upper_date_limit)
+          .where(id: demands.map(&:id)).where('demands.end_date <= :upper_limit', upper_limit: upper_date_limit)
   end
 
-  def cumulative_flow_for_week(demands_ids, date, stream)
-    start_date = date.beginning_of_week
-    end_date = date.end_of_week
+  def cumulative_flow_for_date(demands_ids, analysed_date, stream)
+    demands = Demand.story.joins(demand_transitions: :stage)
+                    .where(id: demands_ids)
+                    .where('demands.discarded_at IS NULL OR demands.discarded_at > :start_date', start_date: analysed_date)
+                    .where('stages.stage_stream = :stream', stream: Stage.stage_streams[stream])
+                    .where('stages.stage_stream <> :stream', stream: Stage.stage_streams[:out_stream])
 
-    cumulative_hash = {}
-    Demand.story
-          .joins(demand_transitions: :stage).select('stages.name AS stage_name, count(1) as stage_th')
-          .where(id: demands_ids)
-          .where('demand_transitions.last_time_in < :end_date', end_date: end_date)
-          .where('demands.discarded_at IS NULL OR demands.discarded_at > :start_date', start_date: start_date)
-          .where('stages.stage_stream = :stream', stream: Stage.stage_streams[stream])
-          .order('stages.order').group('stages.id, stages.order')
-          .map { |result| cumulative_hash[result['stage_name']] = result['stage_th'] }
+    stages_id = demands.select('stages.id AS stage_id').map(&:stage_id).uniq
+    stages = Stage.where(id: stages_id).order('stages.order DESC')
 
-    cumulative_hash
+    build_cumulative_stage_hash(analysed_date, demands, stages)
   end
 
   def total_time_for(projects, sum_field)
@@ -150,7 +146,24 @@ class DemandsRepository
     build_hash_to_total_duration_query_result(result_array)
   end
 
+  def discarded_demands_to_projects(projects)
+    Demand.includes(:project).where(project_id: projects.map(&:id)).where('discarded_at IS NOT NULL').order(discarded_at: :desc)
+  end
+
   private
+
+  def build_cumulative_stage_hash(analysed_date, demands, stages)
+    acc_count = 0
+    cumulative_hash = {}
+    stages.each do |stage|
+      stage_demands_count = demands.where('demand_transitions.last_time_in <= :limit_date', limit_date: analysed_date).where('stages.id = :stage_id', stage_id: stage.id).uniq.count
+      stage_result = stage_demands_count - acc_count
+      cumulative_hash[stage.name] = stage_result
+      acc_count += stage_result
+    end
+
+    cumulative_hash.to_a.reverse.to_h
+  end
 
   def demands_stories_to_projects(projects)
     Demand.kept.story.where(project_id: projects.map(&:id))

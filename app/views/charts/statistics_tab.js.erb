@@ -34,7 +34,11 @@ $('#search-stats').on('click', function() {
     const statsEndDate = $('#stats_end_date').val();
     const statsPeriod = $('#stats_chart_period').val();
     const statsLeadtimeConfidence = $('#stats_leadtime_confidence').val();
-    const statsProjectStatus = $('#project_status').val();
+    var statsProjectStatus = "";
+    var projectStatusComp = $('#project_status');
+    if (projectStatusComp.val() !== undefined) {
+        statsProjectStatus = projectStatusComp.val();
+    }
 
     statisticsChartsRoute(companyId, projectsIds, statsPeriod, targetName, statsStartDate, statsEndDate, statsLeadtimeConfidence, statsProjectStatus);
 });

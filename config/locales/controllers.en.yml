@@ -420,6 +420,7 @@ en:
       total_blocked_time: "Time Blocked"
       grouping_to_charts: "Grouping to Charts"
       total_blocked_work_time: "Work Time Blocked"
+      discarded_stage: "Discarded Stage"
     edit:
       title: "Edit Demand"
     show:
@@ -467,6 +468,7 @@ en:
       consolidation: "Consolidation"
       charts: "Charts"
       list: "List"
+      discarded_demands: "Discarded"
     stats:
       std_committed_with: "STD Committed with"
       std_throughput: "STD Throughput"

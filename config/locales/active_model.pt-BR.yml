@@ -215,6 +215,7 @@ pt-BR:
         assignees_count: Qtd Responsáveis
         leadtime: Lead time
         artifact_type: Tipo do Artefato
+        discarded_at: Descartada em
         enums:
           demand_type:
             bug: Bug

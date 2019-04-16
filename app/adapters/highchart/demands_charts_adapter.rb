@@ -4,9 +4,15 @@ module Highchart
   class DemandsChartsAdapter
     attr_reader :demands_in_chart, :grouped_period, :throughput_chart_data, :creation_chart_data, :committed_chart_data, :leadtime_percentiles_on_time_chart_data
 
-    def initialize(demands, grouped_period)
-      @demands_in_chart = demands
+    def initialize(demands, start_date, end_date, grouped_period)
       @grouped_period = grouped_period
+
+      @start_date = beginning_of_period_for_query(start_date)
+      @end_date = end_of_period_for_query(end_date)
+
+      return if demands.blank?
+
+      @demands_in_chart = demands.to_dates(@start_date, @end_date)
 
       build_creation_chart_data
       build_commitment_chart_data
@@ -18,10 +24,8 @@ module Highchart
 
     def build_creation_chart_data
       creation_rate_data = DemandsRepository.instance.count_grouped_per_period(@demands_in_chart, :created_date, @grouped_period)
-      min_date = [@demands_in_chart.minimum(:created_date), Time.zone.now].compact.min.to_date
-      max_date = [@demands_in_chart.maximum(:created_date), Time.zone.now].compact.min.to_date
 
-      @creation_chart_data = { x_axis: build_x_axis_for_date(min_date, max_date), y_axis: [{ name: I18n.t('demands.charts.creation_date'), data: creation_rate_data.values }] }
+      @creation_chart_data = { x_axis: build_x_axis_for_date(@start_date, @end_date), y_axis: [{ name: I18n.t('demands.charts.creation_date'), data: creation_rate_data.values }] }
     end
 
     def build_commitment_chart_data

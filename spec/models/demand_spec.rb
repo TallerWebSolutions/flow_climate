@@ -144,6 +144,15 @@ RSpec.describe Demand, type: :model do
 
       it { expect(Demand.in_wip.map(&:id)).to match_array [second_demand.id, third_demand.id] }
     end
+
+    describe '.to_dates' do
+      let!(:first_demand) { Fabricate :demand, downstream: true, created_date: 3.months.ago, end_date: 2.months.ago }
+      let!(:second_demand) { Fabricate :demand, downstream: true, created_date: 1.month.ago, end_date: 15.days.ago }
+      let!(:third_demand) { Fabricate :demand, downstream: true, created_date: 2.months.ago, end_date: Time.zone.now }
+      let!(:fourth_demand) { Fabricate :demand, downstream: false, created_date: 4.months.ago, end_date: 1.day.from_now }
+
+      it { expect(Demand.story.to_dates(1.month.ago, Time.zone.now).map(&:id)).to match_array [second_demand.id, third_demand.id] }
+    end
   end
 
   context 'delegations' do

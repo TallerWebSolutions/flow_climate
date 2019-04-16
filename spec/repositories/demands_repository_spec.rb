@@ -121,13 +121,13 @@ RSpec.describe DemandsRepository, type: :repository do
       let!(:first_epic) { Fabricate :demand, project: first_project, artifact_type: :epic }
 
       context 'having demands' do
-        it { expect(DemandsRepository.instance.effort_upstream_grouped_by_month(Project.all, 57.days.ago.to_date)).to eq([2018.0, 2.0] => 22.0, [2018.0, 3.0] => 195.0) }
-        it { expect(DemandsRepository.instance.effort_upstream_grouped_by_month(Project.all, 24.days.ago.to_date)).to eq([2018.0, 3.0] => 195.0) }
+        it { expect(DemandsRepository.instance.effort_upstream_grouped_by_month(Project.all, 57.days.ago.to_date, Time.zone.today)).to eq([2018.0, 2.0] => 22.0, [2018.0, 3.0] => 195.0) }
+        it { expect(DemandsRepository.instance.effort_upstream_grouped_by_month(Project.all, 24.days.ago.to_date, Time.zone.today)).to eq([2018.0, 3.0] => 195.0) }
       end
     end
 
     context 'having no demands' do
-      it { expect(DemandsRepository.instance.effort_upstream_grouped_by_month(Project.all, Time.zone.today)).to eq({}) }
+      it { expect(DemandsRepository.instance.effort_upstream_grouped_by_month(Project.all, 57.days.ago.to_date, Time.zone.today)).to eq({}) }
     end
   end
 
@@ -147,14 +147,14 @@ RSpec.describe DemandsRepository, type: :repository do
       let!(:first_epic) { Fabricate :demand, project: first_project, artifact_type: :epic }
 
       context 'having demands in progress' do
-        it { expect(DemandsRepository.instance.grouped_by_effort_downstream_per_month(Project.all, 57.days.ago.to_date)).to eq([2018.0, 2.0] => 25.0, [2018.0, 3.0] => 186.0) }
-        it { expect(DemandsRepository.instance.grouped_by_effort_downstream_per_month(Project.all, 24.days.ago.to_date)).to eq([2018.0, 3.0] => 186.0) }
+        it { expect(DemandsRepository.instance.grouped_by_effort_downstream_per_month(Project.all, 57.days.ago.to_date, Time.zone.today)).to eq([2018.0, 2.0] => 25.0, [2018.0, 3.0] => 186.0) }
+        it { expect(DemandsRepository.instance.grouped_by_effort_downstream_per_month(Project.all, 24.days.ago.to_date, Time.zone.today)).to eq([2018.0, 3.0] => 186.0) }
       end
     end
 
     context 'having no demands' do
       context 'having demands in progress' do
-        it { expect(DemandsRepository.instance.grouped_by_effort_downstream_per_month(Project.all, Time.zone.today)).to eq({}) }
+        it { expect(DemandsRepository.instance.grouped_by_effort_downstream_per_month(Project.all, 57.days.ago.to_date, Time.zone.today)).to eq({}) }
       end
     end
   end
@@ -392,7 +392,7 @@ RSpec.describe DemandsRepository, type: :repository do
     end
   end
 
-  describe '#cumulative_flow_for_week' do
+  describe '#cumulative_flow_for_date' do
     let(:first_stage) { Fabricate :stage, company: company, projects: [first_project, second_project], name: 'first_stage', integration_pipe_id: '123', order: 0, stage_stream: :downstream }
     let(:second_stage) { Fabricate :stage, company: company, projects: [first_project, second_project], name: 'second_stage', integration_pipe_id: '123', order: 1, stage_stream: :downstream, end_point: true }
 
@@ -421,12 +421,12 @@ RSpec.describe DemandsRepository, type: :repository do
       let!(:sixth_transition) { Fabricate :demand_transition, stage: first_stage, demand: seventh_demand, last_time_in: '2018-03-01T17:09:58-03:00', last_time_out: nil }
       let!(:seventh_transition) { Fabricate :demand_transition, stage: first_stage, demand: eigth_demand, last_time_in: '2018-04-01T17:09:58-03:00', last_time_out: nil }
 
-      it { expect(DemandsRepository.instance.cumulative_flow_for_week(Demand.all.map(&:id), 1.week.ago, :downstream)).to eq(first_stage.name => 4, second_stage.name => 2) }
+      it { expect(DemandsRepository.instance.cumulative_flow_for_date(Demand.all.map(&:id), 1.week.ago, :downstream)).to eq(first_stage.name => 2, second_stage.name => 2) }
     end
 
     context 'having no demands' do
       context 'having no demands' do
-        it { expect(DemandsRepository.instance.cumulative_flow_for_week(Demand.all.map(&:id), 1.week.ago, :downstream)).to eq({}) }
+        it { expect(DemandsRepository.instance.cumulative_flow_for_date(Demand.all.map(&:id), 1.week.ago, :downstream)).to eq({}) }
       end
     end
   end
@@ -481,4 +481,5 @@ RSpec.describe DemandsRepository, type: :repository do
   pending '#bugs_opened_until_limit_date'
   pending '#bugs_closed_until_limit_date'
   pending '#remaining_backlog_to_date'
+  pending '#discarded_demands_to_projects'
 end

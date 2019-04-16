@@ -10,11 +10,11 @@ RSpec.describe Highchart::StatusReportChartsAdapter, type: :data_object do
       let(:second_project) { Fabricate :project, customer: customer, status: :waiting, start_date: Time.zone.parse('2018-03-13'), end_date: Time.zone.parse('2018-04-21'), qty_hours: 400 }
       let(:third_project) { Fabricate :project, customer: customer, status: :maintenance, start_date: Time.zone.parse('2018-03-12'), end_date: Time.zone.parse('2018-05-13'), qty_hours: 800 }
 
-      let(:first_stage) { Fabricate :stage, company: company, name: 'first_stage', stage_stream: :downstream, queue: false, end_point: true }
-      let(:second_stage) { Fabricate :stage, company: company, name: 'second_stage', stage_stream: :downstream, queue: false, end_point: true }
-      let(:third_stage) { Fabricate :stage, company: company, name: 'third_stage', stage_stream: :downstream, queue: true, end_point: true }
-      let(:fourth_stage) { Fabricate :stage, company: company, name: 'fourth_stage', stage_stream: :upstream, queue: false, end_point: true }
-      let(:fifth_stage) { Fabricate :stage, company: company, name: 'fifth_stage', stage_stream: :upstream, queue: true, end_point: true }
+      let(:first_stage) { Fabricate :stage, company: company, name: 'first_stage', stage_stream: :downstream, queue: false, end_point: true, order: 0 }
+      let(:second_stage) { Fabricate :stage, company: company, name: 'second_stage', stage_stream: :downstream, queue: false, end_point: true, order: 1 }
+      let(:third_stage) { Fabricate :stage, company: company, name: 'third_stage', stage_stream: :downstream, queue: true, end_point: true, order: 2 }
+      let(:fourth_stage) { Fabricate :stage, company: company, name: 'fourth_stage', stage_stream: :upstream, queue: false, end_point: true, order: 3 }
+      let(:fifth_stage) { Fabricate :stage, company: company, name: 'fifth_stage', stage_stream: :upstream, queue: true, end_point: true, order: 4 }
 
       let(:sixth_stage) { Fabricate :stage, company: company, name: 'sixth_stage', projects: [first_project, second_project, third_project], stage_stream: :upstream, end_point: false }
 
@@ -69,8 +69,8 @@ RSpec.describe Highchart::StatusReportChartsAdapter, type: :data_object do
             expect(report_data.deadline).to eq [{ data: [-277], name: 'Dias (restantes)' }, { color: '#F45830', data: [361], name: 'Tempo Decorrido' }]
             expect(report_data.hours_per_stage_upstream).to eq(xcategories: [sixth_stage.name], hours_per_stage: [1104.0])
             expect(report_data.hours_per_stage_downstream).to eq(xcategories: [], hours_per_stage: [])
-            expect(report_data.cumulative_flow_diagram_upstream).to match_array([{ name: fourth_stage.name, data: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], marker: { enabled: false } }, { name: sixth_stage.name, data: [2, 3, 4, 4, 4, 4, 5, 5, 5, 5, 5, 5], marker: { enabled: false } }, { name: fifth_stage.name, data: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], marker: { enabled: false } }])
-            expect(report_data.cumulative_flow_diagram_downstream).to eq([{ name: second_stage.name, data: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], marker: { enabled: false } }, { name: first_stage.name, data: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], marker: { enabled: false } }, { name: third_stage.name, data: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], marker: { enabled: false } }])
+            expect(report_data.cumulative_flow_diagram_upstream).to eq([{ name: 'sixth_stage', data: [1, 2, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4], marker: { enabled: false } }, { name: 'fourth_stage', data: [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], marker: { enabled: false } }, { name: 'fifth_stage', data: [0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], marker: { enabled: false } }])
+            expect(report_data.cumulative_flow_diagram_downstream).to match_array([{ name: 'first_stage', data: [-1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], marker: { enabled: false } }, { name: 'second_stage', data: [1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0], marker: { enabled: false } }, { name: 'third_stage', data: [0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1], marker: { enabled: false } }])
           end
         end
 
