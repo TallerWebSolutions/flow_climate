@@ -10,7 +10,8 @@ demandsTab.html("<%= escape_javascript(render 'demands/demands_tab', company: @c
                                                                      queue_time: @total_queue_time,
                                                                      touch_time: @total_touch_time,
                                                                      start_date: @start_date,
-                                                                     end_date: @end_date).html_safe %>");
+                                                                     end_date: @end_date,
+                                                                     discarded_demands: @discarded_demands).html_safe %>");
 
 demandsTab.show();
 

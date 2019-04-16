@@ -54,7 +54,7 @@ class DemandsRepository
   end
 
   def demands_created_before_date_to_projects(projects, analysed_date = Time.zone.now)
-    demands_list_to_projects(projects).where('created_date <= :analysed_date AND (discarded_at IS NULL OR discarded_at > :limit_date)', analysed_date: analysed_date, limit_date: analysed_date)
+    demands_list_to_projects(projects).where('demands_lists.created_date <= :analysed_date AND (demands_lists.discarded_at IS NULL OR demands_lists.discarded_at > :limit_date)', analysed_date: analysed_date, limit_date: analysed_date)
   end
 
   def bugs_opened_until_limit_date(projects, date = Time.zone.today)
@@ -113,13 +113,13 @@ class DemandsRepository
   def demands_delivered_for_period(demands, start_period, end_period)
     Demand.kept
           .story
-          .where(id: demands.map(&:id)).where('end_date >= :bottom_limit AND end_date <= :upper_limit', bottom_limit: start_period, upper_limit: end_period)
+          .where(id: demands.map(&:id)).where('demands.end_date >= :bottom_limit AND demands.end_date <= :upper_limit', bottom_limit: start_period, upper_limit: end_period)
   end
 
   def demands_delivered_for_period_accumulated(demands, upper_date_limit)
     Demand.kept
           .story
-          .where(id: demands.map(&:id)).where('end_date <= :upper_limit', upper_limit: upper_date_limit)
+          .where(id: demands.map(&:id)).where('demands.end_date <= :upper_limit', upper_limit: upper_date_limit)
   end
 
   def cumulative_flow_for_date(demands_ids, analysed_date, stream)
@@ -144,6 +144,10 @@ class DemandsRepository
                          .map { |group_sum| [group_sum.sum_week.to_i, group_sum.sum_year.to_i, group_sum.total_time] }
 
     build_hash_to_total_duration_query_result(result_array)
+  end
+
+  def discarded_demands_to_projects(projects)
+    Demand.includes(:project).where(project_id: projects.map(&:id)).where('discarded_at IS NOT NULL').order(discarded_at: :desc)
   end
 
   private

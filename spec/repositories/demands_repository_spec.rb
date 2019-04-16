@@ -481,4 +481,5 @@ RSpec.describe DemandsRepository, type: :repository do
   pending '#bugs_opened_until_limit_date'
   pending '#bugs_closed_until_limit_date'
   pending '#remaining_backlog_to_date'
+  pending '#discarded_demands_to_projects'
 end

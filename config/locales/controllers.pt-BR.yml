@@ -447,6 +447,7 @@ pt-BR:
       total_blocked_time: "Tempo Bloqueado"
       grouping_to_charts: "Agrupamento para os Gráficos"
       total_blocked_work_time: "Tempo Útil Bloq."
+      discarded_stage: "Descartada na Etapa"
     edit:
       title: "Editar Demanda"
     show:
@@ -496,6 +497,7 @@ pt-BR:
       consolidation: "Consolidação"
       charts: "Gráficos"
       list: "Listagem"
+      discarded_demands: "Descartadas"
     stats:
       std_throughput: "Desvio Padrão Vazão"
       std_committed_with: "Desvio Padrão Comprometido"

@@ -3,6 +3,7 @@
     <div class="tab">
       <button class="tablinks demands-tab" onclick="openTab(event, 'demands-list', 'tablinks')"><%= t('demands.data_analysis.demands_list') %></button>
       <button class="tablinks demands-tab" onclick="openTab(event, 'content-consolidation', 'tablinks')"><%= t('demands.data_analysis.consolidation') %></button>
+      <button class="tablinks demands-tab" onclick="openTab(event, 'content-discarded-demands', 'tablinks')"><%= t('demands.data_analysis.discarded_demands') %></button>
     </div>
   </div>
 </div>
@@ -27,4 +28,8 @@
 
 <div id="content-consolidation" class="tabcontent">
   <%= render 'demands/demands_week_consolidation', demands_count_per_week: demands_count_per_week %>
+</div>
+
+<div id="content-discarded-demands" class="tabcontent">
+  <%= render 'demands/discarded_demands_table', company: company, discarded_demands: discarded_demands %>
 </div>

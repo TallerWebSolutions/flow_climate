@@ -62,13 +62,14 @@ class DemandsController < AuthenticatedController
   end
 
   def demands_in_projects
-    filtered_demands = DemandsRepository.instance.demands_created_before_date_to_projects(@projects)
-    @demands = build_date_query_and_order(filtered_demands, 3.months.ago, Time.zone.today)
-    @demands_count_per_week = DemandService.instance.quantitative_consolidation_per_week_to_projects(@projects)
-    assign_consolidations
+    filtered_demands_list = DemandsRepository.instance.demands_created_before_date_to_projects(@projects)
 
-    @start_date = build_initial_start_date
-    @end_date = build_inicial_end_date
+    @demands = build_date_query_and_order(filtered_demands_list, 3.months.ago, Time.zone.today)
+    @demands_count_per_week = DemandService.instance.quantitative_consolidation_per_week_to_projects(@projects)
+    @discarded_demands = DemandsRepository.instance.discarded_demands_to_projects(@projects)
+
+    assign_consolidations
+    build_initial_dates
 
     @demands_chart_adapter = Highchart::DemandsChartsAdapter.new(@demands, @start_date, @end_date, 'week')
 
@@ -92,12 +93,9 @@ class DemandsController < AuthenticatedController
 
   private
 
-  def build_inicial_end_date
-    @demands.map(&:end_date).compact.max&.to_date || Time.zone.today
-  end
-
-  def build_initial_start_date
-    [@demands.map(&:created_date).min, 3.months.ago].max.to_date
+  def build_initial_dates
+    @start_date = [@demands.map(&:created_date).min, 3.months.ago].max.to_date
+    @end_date = @demands.map(&:end_date).compact.max&.to_date || Time.zone.today
   end
 
   def query_demands(start_date, end_date)
@@ -126,9 +124,11 @@ class DemandsController < AuthenticatedController
   end
 
   def build_date_query_and_order(demands, start_date, end_date)
-    return demands unless start_date.present? && end_date.present?
+    prepared_query_demands = demands.includes(:project).includes(:demand)
 
-    filtered_demands = demands.to_dates(start_date, end_date)
+    return prepared_query_demands unless start_date.present? && end_date.present?
+
+    filtered_demands = prepared_query_demands.to_dates(start_date, end_date)
 
     filtered_demands.order('demands_lists.end_date DESC, demands_lists.commitment_date DESC, demands_lists.created_date DESC')
   end
@@ -173,7 +173,7 @@ class DemandsController < AuthenticatedController
   def filter_text(demands)
     return demands if params[:search_text].blank?
 
-    demands.joins(project: :product).where('demand_title ILIKE :search_param OR demand_id ILIKE :search_param OR products.name ILIKE :search_param OR projects.name ILIKE :search_param', search_param: "%#{params[:search_text].downcase}%")
+    demands.joins(project: :product).where('demands_lists.demand_title ILIKE :search_param OR demands_lists.demand_id ILIKE :search_param OR products.name ILIKE :search_param OR projects.name ILIKE :search_param', search_param: "%#{params[:search_text].downcase}%")
   end
 
   def assign_consolidations

@@ -493,10 +493,13 @@ RSpec.describe DemandsController, type: :controller do
         let!(:first_demand) { Fabricate :demand, project: first_project, commitment_date: 1.day.ago, end_date: Time.zone.now }
         let!(:second_demand) { Fabricate :demand, project: second_project, commitment_date: 3.hours.ago, end_date: Time.zone.now }
 
+        let!(:third_demand) { Fabricate :demand, project: second_project, commitment_date: 3.hours.ago, end_date: Time.zone.now, discarded_at: Time.zone.now }
+
         it 'builds the operation report and respond the JS render the template' do
           get :demands_in_projects, params: { company_id: company, projects_ids: [first_project, second_project].map(&:id).to_csv, period: :all }, xhr: true
           expect(response).to render_template 'demands/demands_tab.js.erb'
           expect(assigns(:demands).map(&:id)).to match_array [first_demand.id, second_demand.id]
+          expect(assigns(:discarded_demands).map(&:id)).to eq [third_demand.id]
           expect(assigns(:demands_count_per_week)[first_project.start_date.end_of_week][:arrived_in_week]).to match_array [second_demand, first_demand]
           expect(assigns(:demands_count_per_week)[first_project.start_date.end_of_week][:std_dev_arrived]).to eq 0
           expect(assigns(:demands_count_per_week)[first_project.start_date.end_of_week][:std_dev_throughput]).to eq 0

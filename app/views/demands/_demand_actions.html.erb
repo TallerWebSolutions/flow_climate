@@ -1,9 +1,13 @@
-<%= link_to company_demand_path(company, demand), method: :delete, data: { confirm: I18n.t('general.destroy.confirm') }, remote: true do %>
-  <i class="fa fa-times" aria-hidden="true"></i>
+<% unless demand.discarded? %>
+  <%= link_to company_demand_path(company, demand), method: :delete, data: { confirm: I18n.t('general.destroy.confirm') }, remote: true do %>
+    <i class="fa fa-times" aria-hidden="true"></i>
+  <% end %>
 <% end %>
+
 <%= link_to edit_company_project_demand_path(company, demand.project, demand), class: 'edit-demand-button', remote: true do %>
   <i class="fas fa-edit"></i>
 <% end %>
+
 <% if demand.url.present? %>
   <%= link_to demand.url, target: :_blank do %>
     <i class="fas fa-external-link-alt"></i>
