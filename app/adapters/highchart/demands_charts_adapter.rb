@@ -23,7 +23,8 @@ module Highchart
     private
 
     def build_creation_chart_data
-      creation_rate_data = DemandsRepository.instance.count_grouped_per_period(@demands_in_chart, :created_date, @grouped_period)
+      created_demands_in_period = Demand.where('created_date BETWEEN :start_date AND :end_date', start_date: @start_date, end_date: @end_date)
+      creation_rate_data = DemandsRepository.instance.count_grouped_per_period(created_demands_in_period, :created_date, @grouped_period)
 
       @creation_chart_data = { x_axis: build_x_axis_for_date(@start_date, @end_date), y_axis: [{ name: I18n.t('demands.charts.creation_date'), data: creation_rate_data.values }] }
     end
