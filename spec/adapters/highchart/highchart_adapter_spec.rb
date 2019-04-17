@@ -24,8 +24,6 @@ RSpec.describe Highchart::HighchartAdapter, type: :data_object do
         it 'do the math and provides the correct information' do
           expect(chart_data.x_axis).to eq [Date.new(2018, 2, 25), Date.new(2018, 3, 4), Date.new(2018, 3, 11), Date.new(2018, 3, 18), Date.new(2018, 3, 25)]
           expect(chart_data.all_projects).to match_array Project.all
-          expect(chart_data.upstream_operational_weekly_data).to eq(Date.new(2018, 2, 25) => { throughput: 1, total_effort_downstream: 5.0, total_effort_upstream: 10.0, total_queue_time: 0.0, total_touch_time: 0.0 })
-          expect(chart_data.downstream_operational_weekly_data).to eq(Date.new(2018, 2, 25) => { total_effort_upstream: 12.0, total_effort_downstream: 20.0, throughput: 1, total_queue_time: 0.0, total_touch_time: 0.0 }, Date.new(2018, 3, 18) => { total_effort_upstream: 163.0, total_effort_downstream: 99.0, throughput: 3, total_queue_time: 0.0, total_touch_time: 0.0 })
         end
       end
     end
@@ -38,8 +36,6 @@ RSpec.describe Highchart::HighchartAdapter, type: :data_object do
       it 'returns empty data' do
         expect(chart_data.x_axis).to eq []
         expect(chart_data.all_projects).to eq []
-        expect(chart_data.upstream_operational_weekly_data).to eq({})
-        expect(chart_data.downstream_operational_weekly_data).to eq({})
       end
     end
   end

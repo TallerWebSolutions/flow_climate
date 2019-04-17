@@ -2,8 +2,7 @@
 
 module Highchart
   class HighchartAdapter
-    attr_reader :x_axis, :all_projects, :active_projects_demands_ids, :start_date, :end_date, :chart_period_interval,
-                :upstream_operational_weekly_data, :downstream_operational_weekly_data
+    attr_reader :x_axis, :all_projects, :active_projects_demands_ids, :start_date, :end_date, :chart_period_interval
 
     def initialize(projects, start_date, end_date, chart_period_interval)
       @start_date = start_date
@@ -13,9 +12,6 @@ module Highchart
       @chart_period_interval = chart_period_interval
 
       build_x_axis
-
-      @upstream_operational_weekly_data = DemandsRepository.instance.operational_data_per_week_to_projects(@all_projects.map(&:id), false, start_date)
-      @downstream_operational_weekly_data = DemandsRepository.instance.operational_data_per_week_to_projects(@all_projects.map(&:id), true, start_date)
     end
 
     private
