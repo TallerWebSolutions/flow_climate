@@ -1,6 +1,6 @@
-<div class="row bottom-spaced-component">
+<div class="row">
   <% if demands_chart_adapter.creation_chart_data.present? %>
-    <div class="col-xs-6">
+    <div class="col-xs-6 bottom-spaced-component">
       <div id="demands-created-column"
            class="flow-chart"
            data-title='<%= t('demands.charts.creation_date') %>'
@@ -18,7 +18,7 @@
   <% end %>
 
   <% if demands_chart_adapter.leadtime_percentiles_on_time_chart_data.present? %>
-    <div class="col-xs-6">
+    <div class="col-xs-6 bottom-spaced-component">
       <div id="leadtime-evolution"
            class="flow-chart"
            data-title='<%= t('projects.charts.leadtime_evolution.title') %>'
@@ -36,7 +36,7 @@
   <% end %>
 
   <% if demands_chart_adapter.committed_chart_data.present? %>
-    <div class="col-xs-6">
+    <div class="col-xs-6 bottom-spaced-component">
       <div id="demands-committed-column"
            class="flow-chart"
            data-title='<%= t('demands.charts.committed_date') %>'
@@ -54,7 +54,7 @@
   <% end %>
 
   <% if demands_chart_adapter.throughput_chart_data.present? %>
-    <div class="col-xs-6">
+    <div class="col-xs-6 bottom-spaced-component">
       <div id="demands-throughput-column"
            class="flow-chart"
            data-title='<%= t('demands.charts.throughput') %>'
