@@ -1,11 +1,12 @@
 # frozen_string_literal: true
 
 class ReplenishingData
-  attr_reader :team, :running_projects, :total_pressure, :summary_infos, :project_data_to_replenish
+  attr_reader :team, :projects, :running_projects, :total_pressure, :summary_infos, :project_data_to_replenish
 
   def initialize(team)
     @team = team
-    @running_projects = @team.projects.includes(:product).includes(:customer).running.sort_by(&:flow_pressure).reverse
+    @projects = @team.projects.includes(:product).includes(:customer)
+    @running_projects = @projects.running.sort_by(&:flow_pressure).reverse
     @total_pressure = @running_projects.sum(&:flow_pressure)
 
     @start_date = 4.weeks.ago.beginning_of_week.to_date
@@ -18,8 +19,8 @@ class ReplenishingData
   private
 
   def build_summary_infos
-    if @running_projects.present?
-      th_per_week_hash = DemandsRepository.instance.throughput_to_projects_and_period(running_projects, @start_date, @end_date).group('EXTRACT(WEEK FROM end_date)', 'EXTRACT(YEAR FROM end_date)').count
+    if @projects.present?
+      th_per_week_hash = DemandsRepository.instance.throughput_to_projects_and_period(projects, @start_date, @end_date).group('EXTRACT(WEEK FROM end_date)', 'EXTRACT(YEAR FROM end_date)').count
       @summary_infos = { four_last_throughputs: DemandInfoDataBuilder.instance.build_data_from_hash_per_week(th_per_week_hash, @start_date, @end_date).values }
       @summary_infos[:average_throughput] = @summary_infos[:four_last_throughputs].sum / @summary_infos[:four_last_throughputs].count
     else
