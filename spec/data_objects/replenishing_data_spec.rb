@@ -14,6 +14,8 @@ RSpec.describe ReplenishingData, type: :data_objects do
   let!(:second_project) { Fabricate :project, customer: customer, team: team, name: 'second_project', status: :executing, start_date: 2.months.ago, end_date: 3.days.from_now }
   let!(:third_project) { Fabricate :project, customer: customer, team: team, name: 'third_project', status: :executing, start_date: 1.month.ago, end_date: 1.week.from_now }
 
+  let!(:fourth_project) { Fabricate :project, customer: customer, team: team, name: 'fourth_project', status: :finished, start_date: 1.month.ago, end_date: 1.week.ago }
+
   let!(:first_demand) { Fabricate :demand, project: first_project, commitment_date: 3.months.ago, end_date: 1.week.ago }
   let!(:second_demand) { Fabricate :demand, project: first_project, commitment_date: 2.months.ago, end_date: 4.days.ago }
   let!(:third_demand) { Fabricate :demand, project: second_project, commitment_date: 2.days.ago, end_date: 1.day.ago }
@@ -34,11 +36,13 @@ RSpec.describe ReplenishingData, type: :data_objects do
       let!(:other_projects) { Fabricate.times(2, :project, customer: customer, start_date: 1.month.from_now, end_date: 1.month.from_now) }
 
       it 'returns the hash value' do
+        expect(replenishing_data.projects).to eq [first_project, second_project, third_project, fourth_project]
         expect(replenishing_data.summary_infos[:four_last_throughputs]).to eq [0, 0, 0, 9]
         expect(replenishing_data.summary_infos[:average_throughput]).to eq 2
 
         project_data_to_replenish = replenishing_data.project_data_to_replenish
         expect(project_data_to_replenish[0][:name]).to eq first_project.full_name
+        expect(project_data_to_replenish.count).to eq 3
 
         expect(project_data_to_replenish[0][:id]).to eq first_project.id
         expect(project_data_to_replenish[0][:name]).to eq first_project.full_name
