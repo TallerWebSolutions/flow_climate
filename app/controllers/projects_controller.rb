@@ -59,7 +59,8 @@ class ProjectsController < AuthenticatedController
   end
 
   def search_for_projects
-    assign_projects
+    assign_parent
+    @projects = @parent.projects.order(end_date: :desc)
     @projects_summary = ProjectsSummaryData.new(@projects)
     respond_to { |format| format.js { render 'projects/projects_search' } }
   end
@@ -130,22 +131,30 @@ class ProjectsController < AuthenticatedController
     (params['end_date'] || @project.end_date).to_date
   end
 
-  def assign_projects
-    projects_parent = customer || product || team || @company
+  def assign_parent
+    @parent = if team?
+                Team.find(params[:parent_id])
+              elsif customer?
+                Customer.find(params[:parent_id])
+              elsif product?
+                Product.find(params[:parent_id])
+              else
+                Company.find(params[:parent_id])
+              end
 
-    @projects = ProjectsRepository.instance.add_query_to_projects_in_status(projects_parent.projects.joins(:customer), params[:status_filter])
+    @parent_type = params[:parent_type]
   end
 
-  def customer
-    @customer ||= Customer.find(params[:customer_id]) if params[:customer_id].present?
+  def product?
+    params[:parent_type] == 'product'
   end
 
-  def product
-    @product ||= Product.find(params[:product_id]) if params[:product_id].present?
+  def customer?
+    params[:parent_type] == 'customer'
   end
 
-  def team
-    @team ||= Team.find(params[:team_id]) if params[:team_id].present?
+  def team?
+    params[:parent_type] == 'team'
   end
 
   def assign_products_list

@@ -1,1 +1,1 @@
-$("#projects-table").html("<%= escape_javascript(render 'projects/projects_table', company: @company, projects_list: @projects, projects_summary: @projects_summary).html_safe %>");
+$("#projects-table").html("<%= escape_javascript(render 'projects/projects_table', company: @company, projects_list: @projects, projects_summary: @projects_summary, parent_id: @parent.id, parent_type: @parent_type).html_safe %>");

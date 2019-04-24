@@ -108,7 +108,7 @@ Rails.application.routes.draw do
 
       collection do
         get 'product_options_for_customer/(:customer_id)', action: :product_options_for_customer
-        get 'search_for_projects/:status_filter', action: :search_for_projects, as: 'search_for_projects'
+        get 'search_for_projects/:status_filter/:parent_id/:parent_type', action: :search_for_projects, as: 'search_for_projects'
       end
 
       member do
