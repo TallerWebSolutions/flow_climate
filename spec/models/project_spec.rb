@@ -37,6 +37,7 @@ RSpec.describe Project, type: :model do
       it { is_expected.to validate_presence_of :initial_scope }
       it { is_expected.to validate_presence_of :qty_hours }
       it { is_expected.to validate_presence_of :percentage_effort_to_bugs }
+      it { is_expected.to validate_presence_of :max_work_in_progress }
     end
 
     context 'complex ones' do
@@ -1107,6 +1108,15 @@ RSpec.describe Project, type: :model do
       let!(:project) { Fabricate :project, start_date: 4.days.ago.to_date, end_date: Time.zone.today }
 
       it { expect(project.aging).to eq 4 }
+    end
+  end
+
+  describe '#aging_today' do
+    context 'when already has the user' do
+      let(:user) { Fabricate :user }
+      let!(:project) { Fabricate :project, start_date: 4.days.ago.to_date, end_date: 1.day.from_now.to_date }
+
+      it { expect(project.aging_today).to eq 4 }
     end
   end
 end

@@ -159,8 +159,9 @@ RSpec.describe TeamsController, type: :controller do
     describe 'POST #create' do
       context 'passing valid parameters' do
         it 'creates the new team and redirects to its show' do
-          post :create, params: { company_id: company, team: { name: 'foo' } }
+          post :create, params: { company_id: company, team: { name: 'foo', max_work_in_progress: 12 } }
           expect(Team.last.name).to eq 'foo'
+          expect(Team.last.reload.max_work_in_progress).to eq 12
           expect(response).to redirect_to company_team_path(company, Team.last)
         end
       end
@@ -216,8 +217,9 @@ RSpec.describe TeamsController, type: :controller do
 
       context 'passing valid parameters' do
         it 'updates the team and redirects to company show' do
-          put :update, params: { company_id: company, id: team, team: { name: 'foo' } }
+          put :update, params: { company_id: company, id: team, team: { name: 'foo', max_work_in_progress: 12 } }
           expect(team.reload.name).to eq 'foo'
+          expect(team.reload.max_work_in_progress).to eq 12
           expect(response).to redirect_to company_path(company)
         end
       end

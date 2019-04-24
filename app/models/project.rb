@@ -10,6 +10,7 @@
 #  hour_value                :decimal(, )
 #  id                        :bigint(8)        not null, primary key
 #  initial_scope             :integer          not null
+#  max_work_in_progress      :integer          default(0), not null
 #  name                      :string           not null, indexed => [product_id]
 #  nickname                  :string           indexed => [customer_id]
 #  percentage_effort_to_bugs :integer          default(0), not null
@@ -58,7 +59,7 @@ class Project < ApplicationRecord
   has_many :user_project_roles, dependent: :destroy
   has_many :users, through: :user_project_roles
 
-  validates :customer, :qty_hours, :project_type, :name, :status, :start_date, :end_date, :status, :initial_scope, :percentage_effort_to_bugs, presence: true
+  validates :customer, :qty_hours, :project_type, :name, :status, :start_date, :end_date, :status, :initial_scope, :percentage_effort_to_bugs, :max_work_in_progress, presence: true
   validates :name, uniqueness: { scope: :product, message: I18n.t('project.name.uniqueness') }
   validates :nickname, uniqueness: { scope: :customer, message: I18n.t('project.nickname.uniqueness') }, allow_nil: true
   validate :hour_value_project_value?, :product_required?
@@ -267,8 +268,8 @@ class Project < ApplicationRecord
     Stats::StatisticsService.instance.percentile(desired_percentile, demands_in_class_of_service.map(&:leadtime))
   end
 
-  def general_leadtime(desired_percentile = 80)
-    Stats::StatisticsService.instance.percentile(desired_percentile, demands.finished.map(&:leadtime))
+  def general_leadtime(percentile = 80)
+    Stats::StatisticsService.instance.percentile(percentile, demands.finished.map(&:leadtime))
   end
 
   def active_kept_closed_blocks
@@ -301,6 +302,10 @@ class Project < ApplicationRecord
 
   def aging
     (end_date - start_date).to_i
+  end
+
+  def aging_today
+    (Time.zone.today - start_date).to_i
   end
 
   private

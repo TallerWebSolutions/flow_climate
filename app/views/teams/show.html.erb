@@ -42,7 +42,7 @@
   <h2><%= t('projects.index.title') %></h2>
 
   <div id="projects-table">
-    <%= render 'projects/projects_table', company: @company, projects_list: @team_projects, projects_summary: @projects_summary %>
+    <%= render 'projects/projects_table', company: @company, projects_list: @team_projects, projects_summary: @projects_summary, parent_id: @team.id, parent_type: 'team' %>
   </div>
 </div>
 
@@ -111,4 +111,6 @@
   <%= javascript_include_tag 'demands/column_throughput_week' %>
 
   <%= javascript_include_tag 'projects/risk_alert_color_chart' %>
+
+  <%= javascript_include_tag 'components/components' %>
 <% end %>

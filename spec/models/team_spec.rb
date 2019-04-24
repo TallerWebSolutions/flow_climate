@@ -12,6 +12,7 @@ RSpec.describe Team, type: :model do
   context 'validations' do
     it { is_expected.to validate_presence_of :company }
     it { is_expected.to validate_presence_of :name }
+    it { is_expected.to validate_presence_of :max_work_in_progress }
 
     context 'complex ones' do
       let(:company) { Fabricate :company }
@@ -167,6 +168,30 @@ RSpec.describe Team, type: :model do
 
     context 'having no data' do
       it { expect(team.consumed_hours_in_month(Date.new(2018, 4, 5))).to eq 0 }
+    end
+  end
+
+  describe '#lead_time' do
+    before { travel_to Time.zone.local(2018, 4, 6, 10, 0, 0) }
+
+    after { travel_back }
+
+    let(:team) { Fabricate :team }
+
+    let(:project) { Fabricate :project, team: team, end_date: 4.weeks.from_now, qty_hours: 2000 }
+    let(:other_project) { Fabricate :project, team: team, end_date: 4.weeks.from_now }
+
+    context 'with data' do
+      let!(:first_demand) { Fabricate :demand, project: project, commitment_date: 2.weeks.ago, end_date: 1.week.ago, demand_type: :bug, effort_downstream: 20, effort_upstream: 30 }
+      let!(:second_demand) { Fabricate :demand, project: project, commitment_date: 2.weeks.ago, end_date: 1.week.ago, effort_downstream: 40, effort_upstream: 35 }
+      let!(:third_demand) { Fabricate :demand, project: project, commitment_date: 1.week.ago, end_date: 2.days.ago, effort_downstream: 10, effort_upstream: 78 }
+
+      it { expect(team.lead_time(4.weeks.ago, Time.zone.now)).to be_within(0.1).of 604_800.0 }
+      it { expect(team.lead_time(4.weeks.ago, Time.zone.now, 40)).to be_within(0.1).of 570_240.0 }
+    end
+
+    context 'with no data' do
+      it { expect(team.lead_time(4.weeks.ago, Time.zone.now)).to be_within(0.1).of 0 }
     end
   end
 end

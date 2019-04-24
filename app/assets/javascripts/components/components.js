@@ -42,3 +42,8 @@ function openDemandsDiv(evt, divId, inactiveDivId) {
 
     evt.currentTarget.className += " btn-active";
 }
+
+function toggleTableDetails(componentId) {
+    $(`#${componentId}`).toggle();
+    $('.toggle-table-details').blur();
+}

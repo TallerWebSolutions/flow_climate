@@ -1,11 +1,11 @@
 <div class="row">
   <div class="col-xs-12 bottom-spaced-component">
-    <%= link_to t('projects.index.all_filter'), search_for_projects_company_projects_path(company_id: company, status_filter: :all), remote: true, class: 'btn btn-sm btn-info' %>
-    <%= link_to t('projects.index.waiting_filter'), search_for_projects_company_projects_path(company_id: company, status_filter: :waiting), remote: true, class: 'btn btn-sm btn-info' %>
-    <%= link_to t('projects.index.executing_filter'), search_for_projects_company_projects_path(company_id: company, status_filter: :executing), remote: true, class: 'btn btn-sm btn-info' %>
-    <%= link_to t('projects.index.maintenance_filter'), search_for_projects_company_projects_path(company_id: company, status_filter: :maintenance), remote: true, class: 'btn btn-sm btn-info' %>
-    <%= link_to t('projects.index.finished_filter'), search_for_projects_company_projects_path(company_id: company, status_filter: :finished), remote: true, class: 'btn btn-sm btn-info' %>
-    <%= link_to t('projects.index.cancelled_filter'), search_for_projects_company_projects_path(company_id: company, status_filter: :cancelled), remote: true, class: 'btn btn-sm btn-info' %>
+    <%= link_to t('projects.index.all_filter'), search_for_projects_company_projects_path(company_id: company, status_filter: :all, parent_id: parent_id, parent_type: parent_type), remote: true, class: 'btn btn-sm btn-info' %>
+    <%= link_to t('projects.index.waiting_filter'), search_for_projects_company_projects_path(company_id: company, status_filter: :waiting, parent_id: parent_id, parent_type: parent_type), remote: true, class: 'btn btn-sm btn-info' %>
+    <%= link_to t('projects.index.executing_filter'), search_for_projects_company_projects_path(company_id: company, status_filter: :executing, parent_id: parent_id, parent_type: parent_type), remote: true, class: 'btn btn-sm btn-info' %>
+    <%= link_to t('projects.index.maintenance_filter'), search_for_projects_company_projects_path(company_id: company, status_filter: :maintenance, parent_id: parent_id, parent_type: parent_type), remote: true, class: 'btn btn-sm btn-info' %>
+    <%= link_to t('projects.index.finished_filter'), search_for_projects_company_projects_path(company_id: company, status_filter: :finished, parent_id: parent_id, parent_type: parent_type), remote: true, class: 'btn btn-sm btn-info' %>
+    <%= link_to t('projects.index.cancelled_filter'), search_for_projects_company_projects_path(company_id: company, status_filter: :cancelled, parent_id: parent_id, parent_type: parent_type), remote: true, class: 'btn btn-sm btn-info' %>
   </div>
 </div>
 

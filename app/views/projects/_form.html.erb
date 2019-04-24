@@ -77,15 +77,20 @@
   </div>
 
   <div class="row">
-    <div class='col-xs-6 form-group <%= 'has-error' if project.errors[:value].present? %>'>
+    <div class='col-xs-4 form-group <%= 'has-error' if project.errors[:value].present? %>'>
       <%= f.label :value, class: 'control-label required' %>
       <%= f.number_field :value, value: project.value, class: 'form-control', step: 0.01 %>
       <span class="help-block"><%= project.errors[:value].join(', ') %></span>
     </div>
-    <div class='col-xs-6 form-group <%= 'has-error' if project.errors[:percentage_effort_to_bugs].present? %>'>
+    <div class='col-xs-4 form-group <%= 'has-error' if project.errors[:percentage_effort_to_bugs].present? %>'>
       <%= f.label :percentage_effort_to_bugs, class: 'control-label required' %>
       <%= f.number_field :percentage_effort_to_bugs, value: project.percentage_effort_to_bugs, class: 'form-control', step: 1 %>
       <span class="help-block"><%= project.errors[:percentage_effort_to_bugs].join(', ') %></span>
+    </div>
+    <div class='col-xs-4 form-group <%= 'has-error' if project.errors[:max_work_in_progress].present? %>'>
+      <%= f.label :max_work_in_progress, class: 'control-label required' %>
+      <%= f.number_field :max_work_in_progress, value: project.max_work_in_progress, class: 'form-control', step: 1 %>
+      <span class="help-block"><%= project.errors[:max_work_in_progress].join(', ') %></span>
     </div>
   </div>
 

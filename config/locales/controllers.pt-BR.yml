@@ -80,6 +80,7 @@ pt-BR:
     max: "Máximo"
     partial: "(parcial)"
     money: "R$ "
+    weeks_text: "%{weeks} semana(s)"
   header:
     logout: Sair
     sign_up: Cadastre-se
@@ -356,7 +357,8 @@ pt-BR:
       risk_scope: "Escopo"
     replenishing:
       weeks_to_finish: "Semanas Restantes"
-      weeks_montecarlo: "Sem. por Monte Carlo (80%)"
+      weeks_montecarlo: "Monte Carlo (80%)"
+      team_based_weeks_montecarlo: "Monte Carlo (80%) - Time"
       customer_happiness: "Felicidade do Cliente"
       last_four_weeks_throughput: "Throughput das Últimas 4 Semanas"
       average_throughput: "Throughput Médio das Últ. 4 Semanas"
@@ -364,6 +366,12 @@ pt-BR:
       wip: "WiP"
       throughput_last_week: "TH Últ. Semana"
       selected_last_week: "Selecionadas na Últ. Sem."
+      team_wip: "WiP Máx do Time"
+      throughput_data_size: "Qtd de Throughputs"
+      throughput_data_stddev: "Throughput Std Dev"
+      aging: "Idade"
+      throughput_data_mode: "Moda do Throughput"
+      last_four_weeks_lead_time: "Lead Time das Últ, 4 Sem."
     sync:
       jira:
         no_config_error: "Por favor primeiro configure o Jira para o projeto."

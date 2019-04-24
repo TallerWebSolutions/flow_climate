@@ -70,6 +70,8 @@ class CompaniesController < AuthenticatedController
   def projects_tab
     @company_projects = @company.projects.includes(:team).includes(:product).includes(:customer).order(end_date: :desc)
     @projects_summary = ProjectsSummaryData.new(@company_projects)
+    @parent = @company
+    @parent_type = 'company'
     respond_to { |format| format.js { render 'companies/projects_tab.js.erb' } }
   end
 

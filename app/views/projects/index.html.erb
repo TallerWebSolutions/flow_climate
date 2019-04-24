@@ -11,5 +11,5 @@
 <h2><%= t('projects.index.title') %></h2>
 
 <div id="projects-table">
-  <%= render 'projects/projects_table', company: @company, projects_list: @projects, projects_summary: @projects_summary %>
+  <%= render 'projects/projects_table', company: @company, projects_list: @projects, projects_summary: @projects_summary, parent_id: @company.id, parent_type: 'company' %>
 </div>
