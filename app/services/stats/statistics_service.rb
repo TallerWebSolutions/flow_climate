@@ -17,8 +17,14 @@ module Stats
       compute_percentile(desired_percentile, processed_population).to_f
     end
 
-    def mean(population)
-      population.sum.to_f / population.count.to_f
+    def mean(population_array)
+      population_array.sum.to_f / population_array.count.to_f
+    end
+
+    def mode(population_array)
+      return nil if population_array.blank?
+
+      population_array.group_by { |e| e }.max_by { |_k, v| v.length }.first
     end
 
     def leadtime_histogram_hash(leadtime_data_array)
@@ -29,8 +35,8 @@ module Stats
       create_histogram_data(throughput_data_array)
     end
 
-    def run_montecarlo(remaining_backlog_count, throughput_per_week_histogram_data, qty_cycles)
-      compute_durations_in_weeks_array(remaining_backlog_count, throughput_per_week_histogram_data, qty_cycles)
+    def run_montecarlo(remaining_backlog_count, throughput_data_array, qty_cycles)
+      compute_durations_array(remaining_backlog_count, throughput_data_array, qty_cycles)
     end
 
     def compute_percentage(data_count_analysed, data_count_remaining)
@@ -69,11 +75,11 @@ module Stats
       histogram_data
     end
 
-    def compute_durations_in_weeks_array(remaining_backlog_count, throughput_histogram_data, qty_cycles)
-      return [] if throughput_histogram_data.sum.zero?
+    def compute_durations_array(remaining_backlog_count, throughput_data_array, qty_cycles)
+      return [] if throughput_data_array.sum.zero?
 
       durations_array = []
-      qty_cycles.times { durations_array << run_montecarlo_cycle(remaining_backlog_count, throughput_histogram_data) }
+      qty_cycles.times { durations_array << run_montecarlo_cycle(remaining_backlog_count, throughput_data_array) }
       durations_array
     end
 

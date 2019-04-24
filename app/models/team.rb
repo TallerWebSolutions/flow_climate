@@ -4,11 +4,12 @@
 #
 # Table name: teams
 #
-#  company_id :integer          not null, indexed, indexed => [name]
-#  created_at :datetime         not null
-#  id         :bigint(8)        not null, primary key
-#  name       :string           not null, indexed => [company_id]
-#  updated_at :datetime         not null
+#  company_id           :integer          not null, indexed, indexed => [name]
+#  created_at           :datetime         not null
+#  id                   :bigint(8)        not null, primary key
+#  max_work_in_progress :integer          default(0), not null
+#  name                 :string           not null, indexed => [company_id]
+#  updated_at           :datetime         not null
 #
 # Indexes
 #
@@ -31,7 +32,7 @@ class Team < ApplicationRecord
   has_many :demands, -> { distinct }, through: :projects
   has_many :stages, dependent: :nullify
 
-  validates :company, :name, presence: true
+  validates :company, :name, :max_work_in_progress, presence: true
   validates :name, uniqueness: { scope: :company, message: I18n.t('team.name.uniqueness') }
 
   delegate :count, to: :projects, prefix: true
@@ -46,5 +47,9 @@ class Team < ApplicationRecord
 
   def consumed_hours_in_month(required_date)
     demands.kept.where('EXTRACT(YEAR from demands.end_date) = :year AND EXTRACT(MONTH from demands.end_date) = :month', year: required_date.to_date.cwyear, month: required_date.to_date.month).sum(&:total_effort)
+  end
+
+  def lead_time(start_date, end_date, percentile = 80)
+    Stats::StatisticsService.instance.percentile(percentile, demands.finished.where('demands.end_date BETWEEN :start_date AND :end_date', start_date: start_date, end_date: end_date).map(&:leadtime))
   end
 end

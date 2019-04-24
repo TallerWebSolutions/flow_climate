@@ -78,6 +78,7 @@ en:
     max: "Maximum"
     partial: "(partial)"
     money: "US$ "
+    weeks_text: "%{weeks} week(s)"
   header:
     logout: Logout
     explore: Explore
@@ -338,7 +339,8 @@ en:
       risk_scope: "Scope"
     replenishing:
       weeks_to_finish: "Weeks to Finish"
-      weeks_montecarlo: "Weeks by Monte Carlo (80%)"
+      weeks_montecarlo: "Monte Carlo (80%)"
+      team_based_weeks_montecarlo: "Monte Carlo (80%) - Team"
       customer_happiness: "Customer Happiness"
       last_four_weeks_throughput: "Last 4 Weeks Throughput"
       average_throughput: "Avg Throughput Last 4 Weeks"
@@ -346,6 +348,12 @@ en:
       wip: "WiP"
       throughput_last_week: "TH Last Week"
       selected_last_week: "Selected Last Week"
+      team_wip: "Max Team WiP"
+      throughput_data_size: "Throughput Data Size"
+      throughput_data_stddev: "Throughput Std Dev"
+      aging: "Aging"
+      throughput_data_mode: "Throughput Mode"
+      last_four_weeks_lead_time: "Last 4 Weeks Lead Time"
     sync:
       jira:
         no_config_error: "Please configure Jira to the project first."

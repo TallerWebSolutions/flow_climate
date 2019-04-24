@@ -1,0 +1,22 @@
+<table class="table">
+  <thead>
+    <tr>
+      <th><%= Project.human_attribute_name :max_work_in_progress %></th>
+      <th><%= t('projects.replenishing.throughput_last_week') %></th>
+      <th><%= t('projects.replenishing.throughput_data_size') %></th>
+      <th><%= t('projects.replenishing.throughput_data_mode') %></th>
+      <th><%= t('projects.replenishing.throughput_data_stddev') %></th>
+      <th><%= t('projects.replenishing.team_based_weeks_montecarlo') %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><%= project_hash[:max_work_in_progress] %></td>
+      <td><%= project_hash[:throughput_last_week] %></td>
+      <td><%= "#{project_hash[:throughput_data_size]} (#{project_hash[:throughput_data]})" %></td>
+      <td><%= project_hash[:throughput_data_mode] %></td>
+      <td><%= number_with_precision(project_hash[:throughput_data_stddev], precision: 2) %></td>
+      <td><%= number_with_precision(project_hash[:team_based_montecarlo_80_percent], precision: 2) %></td>
+    </tr>
+  </tbody>
+</table>

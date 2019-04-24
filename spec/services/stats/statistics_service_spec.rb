@@ -113,6 +113,16 @@ RSpec.describe Stats::StatisticsService, type: :service do
     end
   end
 
+  describe '#mode' do
+    context 'having data in the population' do
+      it { expect(Stats::StatisticsService.instance.mode([10, 30, 10])).to eq 10 }
+    end
+
+    context 'having no data in the population' do
+      it { expect(Stats::StatisticsService.instance.mode([])).to eq nil }
+    end
+  end
+
   describe '#tail_events_boundary' do
     context 'having two or more units in the population' do
       it { expect(Stats::StatisticsService.instance.tail_events_boundary([10, 30, 20, 5, 100])).to eq 187.66091943344964 }

@@ -8,6 +8,20 @@ SET check_function_bodies = false;
 SET client_min_messages = warning;
 SET row_security = off;
 
+--
+-- Name: pg_stat_statements; Type: EXTENSION; Schema: -; Owner: -
+--
+
+CREATE EXTENSION IF NOT EXISTS pg_stat_statements WITH SCHEMA public;
+
+
+--
+-- Name: EXTENSION pg_stat_statements; Type: COMMENT; Schema: -; Owner: -
+--
+
+COMMENT ON EXTENSION pg_stat_statements IS 'track execution statistics of all SQL statements executed';
+
+
 SET default_tablespace = '';
 
 SET default_with_oids = false;
@@ -807,7 +821,8 @@ CREATE TABLE public.projects (
     product_id integer,
     nickname character varying,
     percentage_effort_to_bugs integer DEFAULT 0 NOT NULL,
-    team_id integer
+    team_id integer,
+    max_work_in_progress integer DEFAULT 0 NOT NULL
 );
 
 
@@ -964,7 +979,8 @@ CREATE TABLE public.teams (
     company_id integer NOT NULL,
     name character varying NOT NULL,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    max_work_in_progress integer DEFAULT 0 NOT NULL
 );
 
 
@@ -2424,6 +2440,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190323215103'),
 ('20190402135917'),
 ('20190403153943'),
-('20190403162125');
+('20190403162125'),
+('20190423164537');
 
 

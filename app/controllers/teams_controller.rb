@@ -54,6 +54,6 @@ class TeamsController < AuthenticatedController
   end
 
   def team_params
-    params.require(:team).permit(:name)
+    params.require(:team).permit(:name, :max_work_in_progress)
   end
 end
