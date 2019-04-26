@@ -11,7 +11,8 @@ demandsTab.html("<%= escape_javascript(render 'demands/demands_tab', company: @c
                                                                      touch_time: @total_touch_time,
                                                                      start_date: @start_date,
                                                                      end_date: @end_date,
-                                                                     discarded_demands: @discarded_demands).html_safe %>");
+                                                                     discarded_demands: @discarded_demands,
+                                                                     projects_ids: @projects_ids).html_safe %>");
 
 demandsTab.show();
 
@@ -20,3 +21,10 @@ enableTabs();
 demandsTabMenu = document.getElementsByClassName("demands-tab");
 demandsTabMenu[0].className += " active";
 document.getElementById("demands-list").style.display = "block";
+
+$('#demands-grouped-per-month-div').hide();
+$('#demands-grouped-per-customer-div').hide();
+$('#demands-grouped-per-stage-div').hide();
+$('#content-charts').hide();
+$('#flat-demands-div').show();
+$('#list-charts-button').show();

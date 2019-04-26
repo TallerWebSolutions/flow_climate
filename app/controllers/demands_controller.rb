@@ -5,8 +5,8 @@ class DemandsController < AuthenticatedController
 
   before_action :assign_company
   before_action :assign_demand, only: %i[edit update show synchronize_jira destroy]
-  before_action :assign_project, except: %i[demands_csv demands_in_projects search_demands_by_flow_status show destroy]
-  before_action :assign_projects_for_queries, only: %i[demands_in_projects search_demands_by_flow_status]
+  before_action :assign_project, except: %i[demands_csv demands_in_projects search_demands show destroy]
+  before_action :assign_projects_for_queries, only: %i[demands_in_projects search_demands]
 
   def new
     @demand = Demand.new(project: @project)
@@ -21,15 +21,28 @@ class DemandsController < AuthenticatedController
 
   def destroy
     @demand.discard
-    render 'demands/destroy.js.erb'
+
+    @demands = DemandsList.kept.where(id: params[:demands_ids])
+    build_grouping_query(@demands, params[:grouping])
+
+    assign_consolidations
+    build_initial_dates
+    @demands_chart_adapter = Highchart::DemandsChartsAdapter.new(@demands, @start_date, @end_date, params[:grouping_period])
+
+    respond_to { |format| format.js { render 'demands/search_demands.js.erb' } }
   end
 
   def edit
+    demands = Demand.where(id: params[:demands_ids])
+    @demands_ids = demands.map(&:id)
+
     respond_to { |format| format.js }
   end
 
   def update
     @demand.update(demand_params)
+    demands = Demand.where(id: params[:demands_ids])
+    @demands_ids = demands.map(&:id)
     @updated_demand = DemandsList.find(@demand.id)
     render 'demands/update'
   end
@@ -76,7 +89,7 @@ class DemandsController < AuthenticatedController
     respond_to { |format| format.js { render 'demands/demands_tab.js.erb' } }
   end
 
-  def search_demands_by_flow_status
+  def search_demands
     @start_date = params[:start_date]&.to_date
     @end_date = params[:end_date]&.to_date
 
@@ -88,13 +101,13 @@ class DemandsController < AuthenticatedController
 
     @demands_chart_adapter = Highchart::DemandsChartsAdapter.new(@demands, @start_date, @end_date, params[:grouping_period])
 
-    respond_to { |format| format.js { render 'demands/search_demands_by_flow_status.js.erb' } }
+    respond_to { |format| format.js { render 'demands/search_demands.js.erb' } }
   end
 
   private
 
   def build_initial_dates
-    @start_date = [@demands.map(&:created_date).min, 3.months.ago].max.to_date
+    @start_date = [@demands.map(&:created_date).min, 3.months.ago].compact.max.to_date
     @end_date = @demands.map(&:end_date).compact.max&.to_date || Time.zone.today
   end
 
@@ -117,6 +130,7 @@ class DemandsController < AuthenticatedController
 
   def assign_projects_for_queries
     @projects = Project.where(id: params[:projects_ids].split(','))
+    @projects_ids = @projects.map(&:id)
   end
 
   def assign_demand

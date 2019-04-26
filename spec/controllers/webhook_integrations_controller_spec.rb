@@ -12,16 +12,27 @@ RSpec.describe WebhookIntegrationsController, type: :controller do
     end
 
     context 'when the content type is application/json' do
-      context 'and the project has a valid registration' do
+      context 'and the has a valid project' do
         let!(:jira_account) { Fabricate :jira_account, base_uri: 'http://foo.bar', username: 'foo', password: 'bar', customer_domain: 'bar' }
         let(:project) { Fabricate :project }
         let!(:project_jira_config) { Fabricate :project_jira_config, project: project, jira_account_domain: 'bar', jira_project_key: 'foo', fix_version_name: 'foo' }
 
-        it 'enqueues the job' do
-          request.headers['Content-Type'] = 'application/json'
-          expect(Jira::ProcessJiraIssueJob).to receive(:perform_later).once
-          post :jira_webhook, params: { issue: { key: 'FC-6', fields: { project: { key: 'foo', self: 'http://bar.atlassian.com' }, fixVersions: [{ name: 'foo' }] } }.with_indifferent_access }
-          expect(response).to have_http_status :ok
+        context 'with fixVersion' do
+          it 'enqueues the job' do
+            request.headers['Content-Type'] = 'application/json'
+            expect(Jira::ProcessJiraIssueJob).to receive(:perform_later).once
+            post :jira_webhook, params: { issue: { key: 'FC-6', fields: { project: { key: 'foo', self: 'http://bar.atlassian.com' }, fixVersions: [{ name: 'foo' }] } }.with_indifferent_access }
+            expect(response).to have_http_status :ok
+          end
+        end
+
+        context 'with label' do
+          it 'enqueues the job' do
+            request.headers['Content-Type'] = 'application/json'
+            expect(Jira::ProcessJiraIssueJob).to receive(:perform_later).once
+            post :jira_webhook, params: { issue: { key: 'FC-6', fields: { project: { key: 'foo', self: 'http://bar.atlassian.com' }, fixVersions: [], labels: ['foo'] } }.with_indifferent_access }
+            expect(response).to have_http_status :ok
+          end
         end
       end
 
@@ -37,7 +48,7 @@ RSpec.describe WebhookIntegrationsController, type: :controller do
         end
       end
 
-      context 'and the project has an invalid registration without jira account' do
+      context 'and the project has an invalid data without jira account' do
         let(:project) { Fabricate :project }
         let!(:project_jira_config) { Fabricate :project_jira_config, project: project, jira_account_domain: 'bar', jira_project_key: 'Fc-6', fix_version_name: 'foo' }
 
