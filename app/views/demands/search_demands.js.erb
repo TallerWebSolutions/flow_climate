@@ -38,19 +38,10 @@ $('#content-charts').html("<%= escape_javascript(render 'demands/demands_charts'
 
 <% end %>
 
-var demandsThroughputDiv = $('#demands-throughput-column');
-buildColumnChart(demandsThroughputDiv);
-
-var demandsCreatedDiv = $('#demands-created-column');
-buildColumnChart(demandsCreatedDiv);
-
-var demandsCommittedDiv = $('#demands-committed-column');
-buildColumnChart(demandsCommittedDiv);
-
-var leadtimeEvolution = $('#leadtime-evolution');
-buildLineChart(leadtimeEvolution);
+buildDemandsTabCharts();
 
 $("#demands_table").show();
 $(".form-control").prop('disabled', false)
 $("#general-loader").hide();
 $('#demand-tab-content').show();
+$('#list-charts-button').show();

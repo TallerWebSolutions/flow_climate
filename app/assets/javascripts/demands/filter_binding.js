@@ -13,6 +13,7 @@ function filterDemands(companyId, projectsIds) {
     $('#demands-grouped-per-stage-div').hide();
     $('#flat-demands-div').hide();
     $('#demand-tab-content').hide();
+    $('#list-charts-button').hide();
 
     const grouping = $('#demands-table-grouping').val();
     const flowStatus = $('#demands-table-flow-status').val();
@@ -25,5 +26,5 @@ function filterDemands(companyId, projectsIds) {
     const end_date = $('#demands_end_date').val();
     const groupingPeriod = $('#demands-table-grouping-period').val();
 
-    searchDemandsByFlowStatus(companyId, projectsIds, grouping, flowStatus, demandType, demandClassOfService, searchText, start_date, end_date, groupingPeriod)
+    searchDemands(companyId, projectsIds, grouping, flowStatus, demandType, demandClassOfService, searchText, start_date, end_date, groupingPeriod)
 }

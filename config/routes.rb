@@ -136,7 +136,7 @@ Rails.application.routes.draw do
       collection do
         get 'demands_csv/(:demands_ids)', action: :demands_csv, as: 'demands_csv'
         get :demands_in_projects
-        get 'search_demands_by_flow_status'
+        get 'search_demands'
       end
     end
 

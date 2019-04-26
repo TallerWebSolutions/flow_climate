@@ -44,7 +44,7 @@
       <tbody>
         <% demands.each do |demand| %>
           <tr id='demand_<%= demand.id %>'>
-            <%= render 'demands/demand_fields', company: company, demand_list: demand %>
+            <%= render 'demands/demand_fields', company: company, demand_list: demand, demands_ids: demands.map(&:id) %>
           </tr>
         <% end %>
       </tbody>

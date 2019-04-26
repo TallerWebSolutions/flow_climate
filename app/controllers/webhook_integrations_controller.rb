@@ -41,7 +41,18 @@ class WebhookIntegrationsController < ApplicationController
   end
 
   def define_project(data, jira_account_domain)
-    jira_config = Jira::ProjectJiraConfig.find_by(jira_account_domain: jira_account_domain, jira_project_key: project_jira_key(data), fix_version_name: fix_version_name(data))
+    labels = data['issue']['fields']['labels'] || []
+    fix_version_name = fix_version_name(data)
+
+    labels << fix_version_name
+
+    jira_config = nil
+
+    labels.reject(&:empty?).each do |label|
+      jira_config = Jira::ProjectJiraConfig.find_by(jira_account_domain: jira_account_domain, jira_project_key: project_jira_key(data), fix_version_name: label)
+      break if jira_config.present?
+    end
+
     return if jira_config.blank?
 
     jira_config.project
@@ -56,6 +67,8 @@ class WebhookIntegrationsController < ApplicationController
   end
 
   def fix_version_name(data)
+    return '' if data['issue']['fields']['fixVersions'].blank?
+
     data['issue']['fields']['fixVersions'][0]['name']
   end
 
