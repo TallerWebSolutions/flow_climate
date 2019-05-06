@@ -2,8 +2,8 @@
 
 desc 'Consolidations for flow and projects'
 
-namespace :statistcs do
+namespace :statistics do
   task consolidate_weekly: :environment do
-    ProjectRiskMonitorJob.perform_later
+    ProjectConsolidationJob.perform_later
   end
 end
