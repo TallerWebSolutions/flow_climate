@@ -5,6 +5,7 @@ statsChartsDiv.html("<%= escape_javascript(render 'charts/statistics_charts', st
                                                                               x_axis: @x_axis,
                                                                               project_statistics_data: @project_statistics_data,
                                                                               portfolio_statistics_data: @portfolio_statistics_data,
+                                                                              projects_consolidations_charts_adapter: @projects_consolidations_charts_adapter,
                                                                               projects_count: @projects.count) %>");
 
 buildStatisticsCharts();

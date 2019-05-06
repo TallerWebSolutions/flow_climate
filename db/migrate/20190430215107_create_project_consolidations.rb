@@ -13,6 +13,7 @@ class CreateProjectConsolidations < ActiveRecord::Migration[5.2]
 
       t.integer :project_id, null: false
       t.integer :demands_ids, array: true, null: false
+      t.integer :demands_finished_ids, array: true, null: false
 
       t.decimal :demands_lead_times, array: true, null: false
       t.decimal :demands_lead_times_average, null: false

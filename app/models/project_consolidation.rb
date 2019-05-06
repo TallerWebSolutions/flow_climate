@@ -8,6 +8,7 @@
 #  created_at                    :datetime         not null
 #  current_wip                   :integer          not null
 #  customer_happiness            :decimal(, )      not null
+#  demands_finished_ids          :integer          not null, is an Array
 #  demands_ids                   :integer          not null, is an Array
 #  demands_lead_times            :decimal(, )      not null, is an Array
 #  demands_lead_times_average    :decimal(, )      not null

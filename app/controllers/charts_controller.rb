@@ -35,6 +35,8 @@ class ChartsController < AuthenticatedController
       @x_axis = project_statistics_chart_adapter.x_axis
       @project_statistics_data = ProjectStatisticsData.new(project_statistics_chart_adapter, @leadtime_confidence)
       @portfolio_statistics_data = PortfolioStatisticsData.new(portfolio_statistics_chart_adapter)
+      project_consolidations = @projects.first.project_consolidations.order(:consolidation_date)
+      @projects_consolidations_charts_adapter = Highchart::ProjectsConsolidationsChartsAdapter.new(project_consolidations, @start_date, @end_date)
     end
 
     respond_to { |format| format.js { render 'charts/statistics_tab' } }

@@ -716,6 +716,7 @@ CREATE TABLE public.project_consolidations (
     population_end_date date NOT NULL,
     project_id integer NOT NULL,
     demands_ids integer[] NOT NULL,
+    demands_finished_ids integer[] NOT NULL,
     demands_lead_times numeric[] NOT NULL,
     demands_lead_times_average numeric NOT NULL,
     demands_lead_times_std_dev numeric NOT NULL,
@@ -864,39 +865,6 @@ CREATE SEQUENCE public.project_risk_configs_id_seq
 --
 
 ALTER SEQUENCE public.project_risk_configs_id_seq OWNED BY public.project_risk_configs.id;
-
-
---
--- Name: project_weekly_costs; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.project_weekly_costs (
-    id bigint NOT NULL,
-    project_id integer,
-    date_beggining_of_week date,
-    monthly_cost_value numeric,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
-);
-
-
---
--- Name: project_weekly_costs_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.project_weekly_costs_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: project_weekly_costs_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.project_weekly_costs_id_seq OWNED BY public.project_weekly_costs.id;
 
 
 --
@@ -1369,13 +1337,6 @@ ALTER TABLE ONLY public.project_risk_configs ALTER COLUMN id SET DEFAULT nextval
 
 
 --
--- Name: project_weekly_costs id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.project_weekly_costs ALTER COLUMN id SET DEFAULT nextval('public.project_weekly_costs_id_seq'::regclass);
-
-
---
 -- Name: projects id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1605,14 +1566,6 @@ ALTER TABLE ONLY public.project_risk_alerts
 
 ALTER TABLE ONLY public.project_risk_configs
     ADD CONSTRAINT project_risk_configs_pkey PRIMARY KEY (id);
-
-
---
--- Name: project_weekly_costs project_weekly_costs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.project_weekly_costs
-    ADD CONSTRAINT project_weekly_costs_pkey PRIMARY KEY (id);
 
 
 --
@@ -1951,13 +1904,6 @@ CREATE INDEX index_project_risk_alerts_on_project_id ON public.project_risk_aler
 --
 
 CREATE INDEX index_project_risk_alerts_on_project_risk_config_id ON public.project_risk_alerts USING btree (project_risk_config_id);
-
-
---
--- Name: index_project_weekly_costs_on_project_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_project_weekly_costs_on_project_id ON public.project_weekly_costs USING btree (project_id);
 
 
 --
@@ -2451,14 +2397,6 @@ ALTER TABLE ONLY public.teams
 
 
 --
--- Name: project_weekly_costs fk_rails_eafbb59099; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.project_weekly_costs
-    ADD CONSTRAINT fk_rails_eafbb59099 FOREIGN KEY (project_id) REFERENCES public.projects(id);
-
-
---
 -- Name: projects fk_rails_ecc227a0c2; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2595,6 +2533,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190403162125'),
 ('20190423164537'),
 ('20190430205947'),
-('20190430215107');
+('20190430215107'),
+('20190501044600');
 
 

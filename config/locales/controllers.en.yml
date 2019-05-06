@@ -369,6 +369,10 @@ en:
         data_title: "Blocks by Projects"
       block_by_project_tab: "Blocks by Project"
       aging_by_project_tab: "Aging per Project"
+      lead_time_data_range_tab: "Lead Time Range"
+      lead_time_histogram_data_range_tab: "Histogram LT Range"
+      lead_time_interquartile_data_range_evolution_tab: "Interquartile Range"
+      lead_time_interquartile_histogram_range_evolution_tab: "Histogram X Interquartile"
   project:
     new:
       title: "New Project"
@@ -587,6 +591,27 @@ en:
       data_suffix: "demands"
     period:
       label: "Period"
+    lead_time_data_range_evolution:
+      title: "Lead Time Range Evolution In Time"
+      total_range: "Lead Time Total Range"
+      total_range_max: "Lead Time Max"
+      total_range_min: "Lead Time Min"
+    lead_time_histogram_data_range_evolution:
+      total_range: "Total Range"
+      total_range_max: "Bin Max"
+      total_range_min: "Bin Min"
+    lead_time_histogram_range_evolution:
+      title: "Lead Time Histogram Range Variation"
+    lead_time_interquartile_data_range_evolution:
+      title: "Lead Time Interquartile Range"
+      total_range: "Total Range"
+      percentile_25: "Percentile 25"
+      percentile_75: "Percentile 75"
+    lead_time_interquartile_histogram_range_evolution:
+      title: "Interquartile and Histogram Range"
+      total_range: "Total Range"
+      interquartile: "Interquartile"
+      histogram: "Histogram"
   finances_params:
     edit:
       title: "Edit Financial Information"

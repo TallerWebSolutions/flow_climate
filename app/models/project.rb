@@ -47,13 +47,13 @@ class Project < ApplicationRecord
   has_many :project_risk_configs, dependent: :destroy
   has_many :project_risk_alerts, dependent: :destroy
   has_many :demands, dependent: :destroy
-  has_many :project_weekly_costs, dependent: :destroy
   has_many :integration_errors, dependent: :destroy
   has_many :project_change_deadline_histories, dependent: :destroy
   has_many :stage_project_configs, dependent: :destroy
   has_many :demand_blocks, through: :demands
   has_many :stages, through: :stage_project_configs
   has_many :flow_impacts, dependent: :destroy
+  has_many :project_consolidations, dependent: :destroy
   has_one :project_jira_config, class_name: 'Jira::ProjectJiraConfig', dependent: :destroy, autosave: true, inverse_of: :project
 
   has_many :user_project_roles, dependent: :destroy
