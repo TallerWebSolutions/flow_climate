@@ -387,6 +387,10 @@ pt-BR:
         data_title: "Bloqueios por Projeto"
       block_by_project_tab: "Bloqueios por Projeto"
       aging_by_project_tab: "Aging por Projeto"
+      lead_time_data_range_tab: "Amplitude do Lead Time"
+      lead_time_histogram_data_range_tab: "Amplitude do Hist. do LT"
+      lead_time_interquartile_data_range_evolution_tab: "Amplitude do Interquartil"
+      lead_time_interquartile_histogram_range_evolution_tab: "Histograma X Interquartil"
   teams:
     index:
       title: "Times"
@@ -622,6 +626,27 @@ pt-BR:
       data_suffix: "demandas"
     period:
       label: "Período"
+    lead_time_data_range_evolution:
+      title: "Variação da Amplitude do Lead Time no Tempo"
+      total_range: "Amplitude Total do Lead Time"
+      total_range_max: "Lead Time Max"
+      total_range_min: "Lead Time Min"
+    lead_time_histogram_data_range_evolution:
+      total_range: "Amplitude Total"
+      total_range_max: "Bin Max"
+      total_range_min: "Bin Min"
+    lead_time_histogram_range_evolution:
+      title: "Amplitude do Histograma de Lead Time"
+    lead_time_interquartile_data_range_evolution:
+      title: "Amplitude do Interquartil do Lead Time"
+      total_range: "Amplitude (IQR)"
+      percentile_25: "Percentil 25"
+      percentile_75: "Percentil 75"
+    lead_time_interquartile_histogram_range_evolution:
+      title: "Amplitude entre o Histograma e o Interquartil"
+      total_range: "Amplitude Total"
+      interquartile: "Interquartil"
+      histogram: "Histograma"
   finances_params:
     edit:
       title: "Editar Informação Financeira"

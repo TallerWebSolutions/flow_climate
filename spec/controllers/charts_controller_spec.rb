@@ -156,7 +156,7 @@ RSpec.describe ChartsController, type: :controller do
       let(:team) { Fabricate :team, company: company }
       let(:other_team) { Fabricate :team, company: company }
 
-      context 'having data' do
+      context 'having projects' do
         let!(:first_project) { Fabricate :project, customer: customer, team: team, start_date: 2.weeks.ago, end_date: Time.zone.today }
         let!(:second_project) { Fabricate :project, customer: customer, team: team, start_date: 3.weeks.ago, end_date: 1.day.from_now }
 
@@ -178,18 +178,55 @@ RSpec.describe ChartsController, type: :controller do
         let!(:fifth_block) { Fabricate :demand_block, demand: third_demand, block_time: 5.days.ago, unblock_time: 3.days.ago }
         let!(:sixth_block) { Fabricate :demand_block, demand: fourth_demand, block_time: 2.days.ago, unblock_time: Time.zone.today }
 
-        context 'passing valid parameters' do
-          context 'no start nor end dates nor period provided' do
-            context 'and the project started after 3 months ago' do
-              it 'builds the statistic adapter and renders the view using the dates in project to a monthly period' do
-                get :statistics_charts, params: { company_id: company, projects_ids: team.projects.map(&:id).join(','), project_status: '' }, xhr: true
+        context 'with projects consolidations' do
+          let!(:project_consolidation) { Fabricate :project_consolidation, consolidation_date: Time.zone.today, project: first_project }
+          let!(:other_project_consolidation) { Fabricate :project_consolidation, consolidation_date: 1.week.ago, project: first_project }
+
+          context 'passing valid parameters' do
+            context 'no start nor end dates nor period provided' do
+              context 'and the project started after 3 months ago' do
+                it 'builds the statistic adapter and renders the view using the dates in project to a monthly period' do
+                  get :statistics_charts, params: { company_id: company, projects_ids: team.projects.map(&:id).join(','), project_status: '' }, xhr: true
+                  expect(response).to render_template 'charts/statistics_tab'
+                  expect(response).to render_template 'charts/_statistics_charts'
+
+                  expect(assigns(:start_date)).to eq Date.new(2018, 3, 16)
+                  expect(assigns(:end_date)).to eq Date.new(2018, 4, 7)
+                  expect(assigns(:period)).to eq 'month'
+                  expect(assigns(:leadtime_confidence)).to eq 80
+
+                  expect(assigns(:project_statistics_data).scope_data).to eq [{ data: [64, 66], marker: { enabled: true }, name: I18n.t('projects.general.scope') }]
+                  expect(assigns(:project_statistics_data).leadtime_data).to eq [{ data: [0, 7.0], marker: { enabled: true }, name: I18n.t('projects.general.leadtime', confidence: 80) }]
+                  expect(assigns(:project_statistics_data).block_data).to eq [{ data: [0, 6], marker: { enabled: true }, name: I18n.t('projects.statistics.accumulated_blocks.data_title') }]
+
+                  expect(assigns(:portfolio_statistics_data).block_by_project_variation).to eq 0.0
+                  expect(assigns(:portfolio_statistics_data).block_by_project_data).to eq [{ data: [6], marker: { enabled: true }, name: I18n.t('portfolio.charts.block_count') }]
+                  expect(assigns(:portfolio_statistics_data).block_by_project_x_axis).to eq [first_project.full_name]
+                  expect(assigns(:projects_consolidations_charts_adapter).lead_time_data_range_evolution[:x_axis]).to eq [1.week.ago.to_date, Time.zone.today]
+                  expect(assigns(:projects_consolidations_charts_adapter).lead_time_data_range_evolution[:y_axis][0][:name]).to eq I18n.t('charts.lead_time_data_range_evolution.total_range')
+                  expect(assigns(:projects_consolidations_charts_adapter).lead_time_data_range_evolution[:y_axis][0][:data]).to eq [1.388888888888889e-05, 1.388888888888889e-05]
+                end
+              end
+
+              context 'and the project started before 3 months ago' do
+                let!(:first_project) { Fabricate :project, customer: customer, team: team, start_date: 4.months.ago.to_date, end_date: Time.zone.today }
+
+                it 'builds the statistic adapter and renders the view using the dates in project to a monthly period' do
+                  get :statistics_charts, params: { company_id: company, projects_ids: team.projects.map(&:id).join(','), project_status: '' }, xhr: true
+
+                  expect(assigns(:start_date)).to eq 3.months.ago.to_date
+                  expect(assigns(:end_date)).to eq Date.new(2018, 4, 7)
+                  expect(assigns(:period)).to eq 'month'
+                  expect(assigns(:leadtime_confidence)).to eq 80
+                end
+              end
+            end
+
+            context 'and a start and end dates provided' do
+              it 'builds the statistic adapter and renders the view using the parameters' do
+                get :statistics_charts, params: { company_id: company, projects_ids: team.projects.map(&:id).join(','), start_date: 1.week.ago, end_date: Time.zone.today, period: 'month', project_status: '' }, xhr: true
                 expect(response).to render_template 'charts/statistics_tab'
                 expect(response).to render_template 'charts/_statistics_charts'
-
-                expect(assigns(:start_date)).to eq Date.new(2018, 3, 16)
-                expect(assigns(:end_date)).to eq Date.new(2018, 4, 7)
-                expect(assigns(:period)).to eq 'month'
-                expect(assigns(:leadtime_confidence)).to eq 80
 
                 expect(assigns(:project_statistics_data).scope_data).to eq [{ data: [64, 66], marker: { enabled: true }, name: I18n.t('projects.general.scope') }]
                 expect(assigns(:project_statistics_data).leadtime_data).to eq [{ data: [0, 7.0], marker: { enabled: true }, name: I18n.t('projects.general.leadtime', confidence: 80) }]
@@ -198,46 +235,33 @@ RSpec.describe ChartsController, type: :controller do
                 expect(assigns(:portfolio_statistics_data).block_by_project_variation).to eq 0.0
                 expect(assigns(:portfolio_statistics_data).block_by_project_data).to eq [{ data: [6], marker: { enabled: true }, name: I18n.t('portfolio.charts.block_count') }]
                 expect(assigns(:portfolio_statistics_data).block_by_project_x_axis).to eq [first_project.full_name]
-              end
-            end
 
-            context 'and the project started before 3 months ago' do
-              let!(:first_project) { Fabricate :project, customer: customer, team: team, start_date: 4.months.ago.to_date, end_date: Time.zone.today }
+                expect(assigns(:portfolio_statistics_data).aging_by_project_variation).to eq 0.5714285714285714
+                expect(assigns(:portfolio_statistics_data).aging_by_project_data).to eq [{ data: [14, 22], marker: { enabled: true }, name: I18n.t('portfolio.charts.aging_by_project.data_title') }]
+                expect(assigns(:portfolio_statistics_data).aging_by_project_x_axis).to eq [first_project.full_name, second_project.full_name]
 
-              it 'builds the statistic adapter and renders the view using the dates in project to a monthly period' do
-                get :statistics_charts, params: { company_id: company, projects_ids: team.projects.map(&:id).join(','), project_status: '' }, xhr: true
-
-                expect(assigns(:start_date)).to eq 3.months.ago.to_date
-                expect(assigns(:end_date)).to eq Date.new(2018, 4, 7)
-                expect(assigns(:period)).to eq 'month'
-                expect(assigns(:leadtime_confidence)).to eq 80
+                expect(assigns(:projects_consolidations_charts_adapter).lead_time_data_range_evolution[:x_axis]).to eq [1.week.ago.to_date, Time.zone.today]
+                expect(assigns(:projects_consolidations_charts_adapter).lead_time_data_range_evolution[:y_axis][0][:name]).to eq I18n.t('charts.lead_time_data_range_evolution.total_range')
+                expect(assigns(:projects_consolidations_charts_adapter).lead_time_data_range_evolution[:y_axis][0][:data]).to eq [1.388888888888889e-05, 1.388888888888889e-05]
               end
             end
           end
+        end
 
-          context 'and a start and end dates provided' do
-            it 'builds the statistic adapter and renders the view using the parameters' do
-              get :statistics_charts, params: { company_id: company, projects_ids: team.projects.map(&:id).join(','), start_date: 1.week.ago, end_date: Time.zone.today, period: 'month', project_status: '' }, xhr: true
-              expect(response).to render_template 'charts/statistics_tab'
-              expect(response).to render_template 'charts/_statistics_charts'
+        context 'without projects consolidations' do
+          it 'returns empty data set' do
+            get :statistics_charts, params: { company_id: company, projects_ids: team.projects.map(&:id).join(','), project_status: '' }, xhr: true
+            expect(response).to render_template 'charts/statistics_tab'
+            expect(response).to render_template 'charts/_statistics_charts'
 
-              expect(assigns(:project_statistics_data).scope_data).to eq [{ data: [64, 66], marker: { enabled: true }, name: I18n.t('projects.general.scope') }]
-              expect(assigns(:project_statistics_data).leadtime_data).to eq [{ data: [0, 7.0], marker: { enabled: true }, name: I18n.t('projects.general.leadtime', confidence: 80) }]
-              expect(assigns(:project_statistics_data).block_data).to eq [{ data: [0, 6], marker: { enabled: true }, name: I18n.t('projects.statistics.accumulated_blocks.data_title') }]
-
-              expect(assigns(:portfolio_statistics_data).block_by_project_variation).to eq 0.0
-              expect(assigns(:portfolio_statistics_data).block_by_project_data).to eq [{ data: [6], marker: { enabled: true }, name: I18n.t('portfolio.charts.block_count') }]
-              expect(assigns(:portfolio_statistics_data).block_by_project_x_axis).to eq [first_project.full_name]
-
-              expect(assigns(:portfolio_statistics_data).aging_by_project_variation).to eq 0.5714285714285714
-              expect(assigns(:portfolio_statistics_data).aging_by_project_data).to eq [{ data: [14, 22], marker: { enabled: true }, name: I18n.t('portfolio.charts.aging_by_project.data_title') }]
-              expect(assigns(:portfolio_statistics_data).aging_by_project_x_axis).to eq [first_project.full_name, second_project.full_name]
-            end
+            expect(assigns(:projects_consolidations_charts_adapter).lead_time_data_range_evolution[:x_axis]).to eq []
+            expect(assigns(:projects_consolidations_charts_adapter).lead_time_data_range_evolution[:y_axis][0][:name]).to eq I18n.t('charts.lead_time_data_range_evolution.total_range')
+            expect(assigns(:projects_consolidations_charts_adapter).lead_time_data_range_evolution[:y_axis][0][:data]).to eq []
           end
         end
       end
 
-      context 'having no data' do
+      context 'having no projects' do
         it 'returns empty data set' do
           get :statistics_charts, params: { company_id: company, projects_ids: team.projects.map(&:id).join(','), project_status: '' }, xhr: true
           expect(response).to render_template 'charts/statistics_tab'
@@ -245,6 +269,8 @@ RSpec.describe ChartsController, type: :controller do
 
           expect(assigns(:project_statistics_data)).to be_nil
           expect(assigns(:portfolio_statistics_data)).to be_nil
+
+          expect(assigns(:projects_consolidations_charts_adapter)).to be_nil
         end
       end
     end
