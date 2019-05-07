@@ -23,6 +23,7 @@ gem 'oj'
 gem 'pg'
 gem 'rollbar'
 gem 'sidekiq'
+gem 'slack-notifier'
 gem 'therubyracer', platforms: :ruby
 gem 'uglifier'
 gem 'webmock'
