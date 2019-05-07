@@ -975,7 +975,7 @@ CREATE TABLE public.stages (
     company_id integer NOT NULL,
     "order" integer DEFAULT 0 NOT NULL,
     integration_pipe_id character varying,
-    team_id integer
+    team_id integer NOT NULL
 );
 
 
@@ -2534,6 +2534,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190423164537'),
 ('20190430205947'),
 ('20190430215107'),
-('20190501044600');
+('20190501044600'),
+('20190507183550');
 
 
