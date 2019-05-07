@@ -1,4 +1,5 @@
 <td><%= stage.order %></td>
+<td><%= link_to stage.team.name, company_team_path(company, stage.team) if stage.team.present? %></td>
 <td><%= link_to stage.name, company_stage_path(company, stage) %></td>
 <td><%= stage.integration_id %></td>
 <td><%= stage.integration_pipe_id %></td>

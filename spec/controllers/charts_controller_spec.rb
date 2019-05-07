@@ -180,7 +180,7 @@ RSpec.describe ChartsController, type: :controller do
 
         context 'with projects consolidations' do
           let!(:project_consolidation) { Fabricate :project_consolidation, consolidation_date: Time.zone.today, project: first_project }
-          let!(:other_project_consolidation) { Fabricate :project_consolidation, consolidation_date: 1.week.ago, project: first_project }
+          let!(:other_project_consolidation) { Fabricate :project_consolidation, consolidation_date: 1.week.ago, project: second_project }
 
           context 'passing valid parameters' do
             context 'no start nor end dates nor period provided' do

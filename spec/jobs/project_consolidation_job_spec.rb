@@ -23,9 +23,9 @@ RSpec.describe ProjectConsolidationJob, type: :active_job do
     let!(:second_demand) { Fabricate :demand, project: first_project, commitment_date: 1.day.ago, end_date: Time.zone.now, effort_downstream: 400, effort_upstream: 130, created_date: 65.days.ago }
     let!(:third_demand) { Fabricate :demand, project: first_project, commitment_date: 7.days.ago, end_date: Time.zone.now, effort_downstream: 100, effort_upstream: 20 }
 
-    let!(:fourth_demand) { Fabricate :demand, project: first_project, commitment_date: 7.days.ago, end_date: 2.days.ago, effort_downstream: 200, effort_upstream: 10, created_date: 74.days.ago }
-    let!(:fifth_demand) { Fabricate :demand, project: first_project, commitment_date: 14.days.ago, end_date: 2.days.ago, effort_downstream: 400, effort_upstream: 130, created_date: 65.days.ago }
-    let!(:sixth_demand) { Fabricate :demand, project: second_project, commitment_date: 7.days.ago, end_date: 3.days.ago, effort_downstream: 100, effort_upstream: 20 }
+    let!(:fourth_demand) { Fabricate :demand, project: first_project, commitment_date: 7.days.ago, end_date: 7.days.ago, effort_downstream: 200, effort_upstream: 10, created_date: 74.days.ago }
+    let!(:fifth_demand) { Fabricate :demand, project: first_project, commitment_date: 14.days.ago, end_date: 9.days.ago, effort_downstream: 400, effort_upstream: 130, created_date: 65.days.ago }
+    let!(:sixth_demand) { Fabricate :demand, project: second_project, commitment_date: 7.days.ago, end_date: 8.days.ago, effort_downstream: 100, effort_upstream: 20 }
 
     it 'calls the mailer to send the data' do
       # TODO: improve this spec

@@ -4,13 +4,16 @@
       <%= form.label :order, class: 'control-label' %>
       <%= form.number_field :order, class: 'form-control', autofocus: true, step: 1 %>
     </div>
+    <div class='col-xs-6 form-group <%= 'has-error' if stage.errors[:team].present? %>'>
+      <%= form.label :team, class: 'control-label' %>
+      <%= form.select :team_id, company.teams.order(:name).map { |team| [team.name, team.id] }, { include_blank: t('general.select'), selected: stage.team_id }, class: 'form-control' %>
+      <span class="help-block"><%= stage.errors[:team].join(', ') %></span>
+    </div>
     <div class='col-xs-6 form-group <%= 'has-error' if stage.errors[:name].present? %>'>
       <%= form.label :name, class: 'control-label required' %>
       <%= form.text_field :name, class: 'form-control' %>
       <span class="help-block"><%= stage.errors[:name].join(', ') %></span>
     </div>
-  </div>
-  <div class="row">
     <div class='col-xs-6 form-group <%= 'has-error' if stage.errors[:integration_id].present? %>'>
       <%= form.label :integration_id, class: 'control-label required' %>
       <%= form.text_field :integration_id, class: 'form-control', autofocus: true %>
@@ -21,8 +24,6 @@
       <%= form.text_field :integration_pipe_id, class: 'form-control', autofocus: true %>
       <span class="help-block"><%= stage.errors[:integration_pipe_id].join(', ') %></span>
     </div>
-  </div>
-  <div class="row">
     <div class='col-xs-6 form-group <%= 'has-error' if stage.errors[:stage_type].present? %>'>
       <%= form.label :stage_type, class: 'control-label' %>
       <%= form.select :stage_type, Stage.stage_types.map { |key, _value| [t("activerecord.attributes.stage.enums.stage_type.#{key}"), key] }, { include_blank: t('general.select'), selected: stage.stage_type }, class: 'form-control' %>
@@ -36,18 +37,15 @@
   </div>
 
   <div class="row">
-    <div class='col-xs-6 form-check bottom-spaced-component'>
+    <div class='col-xs-3 form-check bottom-spaced-component'>
       <%= form.check_box :queue, class: 'form-check-input' %>
       <%= form.label :queue, class: 'form-check-label' %>
     </div>
-    <div class='col-xs-6 form-check bottom-spaced-component'>
+    <div class='col-xs-3 form-check bottom-spaced-component'>
       <%= form.check_box :end_point, class: 'form-check-input' %>
       <%= form.label :end_point, class: 'form-check-label' %>
     </div>
-  </div>
-
-  <div class="row">
-    <div class='col-xs-12 form-check bottom-spaced-component'>
+    <div class='col-xs-6 form-check bottom-spaced-component'>
       <%= form.check_box :commitment_point, class: 'form-check-input' %>
       <%= form.label :commitment_point, class: 'form-check-label' %>
     </div>

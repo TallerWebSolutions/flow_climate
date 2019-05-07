@@ -64,6 +64,8 @@ RSpec.describe StagesController, type: :controller do
 
     let(:company) { Fabricate :company, users: [user] }
 
+    let(:team) { Fabricate :team, company: company }
+
     before { sign_in user }
 
     describe 'GET #new' do
@@ -95,12 +97,13 @@ RSpec.describe StagesController, type: :controller do
 
     describe 'POST #create' do
       context 'passing valid parameters' do
-        before { post :create, params: { company_id: company, stage: { order: 2, name: 'foo', integration_id: '332231', integration_pipe_id: '441271', stage_type: :analysis, stage_stream: :downstream, commitment_point: true, end_point: true, queue: true } } }
+        before { post :create, params: { company_id: company, stage: { order: 2, team_id: team.id, name: 'foo', integration_id: '332231', integration_pipe_id: '441271', stage_type: :analysis, stage_stream: :downstream, commitment_point: true, end_point: true, queue: true } } }
 
         it 'creates the new financial information to the company and redirects to its show' do
           created_stage = Stage.last
           expect(created_stage.company).to eq company
           expect(created_stage.order).to eq 2
+          expect(created_stage.team).to eq team
           expect(created_stage.integration_id).to eq '332231'
           expect(created_stage.integration_pipe_id).to eq '441271'
           expect(created_stage.name).to eq 'foo'
@@ -176,12 +179,14 @@ RSpec.describe StagesController, type: :controller do
     describe 'PUT #update' do
       let(:company) { Fabricate :company, users: [user] }
       let(:stage) { Fabricate :stage, company: company }
+      let(:team) { Fabricate :team, company: company }
 
       context 'passing valid parameters' do
         it 'updates the demand and redirects to projects index' do
-          put :update, params: { company_id: company, id: stage, stage: { order: 2, name: 'foo', integration_id: '332231', integration_pipe_id: '441271', stage_type: :analysis, stage_stream: :downstream, commitment_point: true, end_point: true, queue: true } }, xhr: true
+          put :update, params: { company_id: company, id: stage, stage: { order: 2, team_id: team.id, name: 'foo', integration_id: '332231', integration_pipe_id: '441271', stage_type: :analysis, stage_stream: :downstream, commitment_point: true, end_point: true, queue: true } }, xhr: true
           updated_stage = stage.reload
           expect(updated_stage.company).to eq company
+          expect(updated_stage.team).to eq team
           expect(updated_stage.order).to eq 2
           expect(updated_stage.integration_id).to eq '332231'
           expect(updated_stage.integration_pipe_id).to eq '441271'
