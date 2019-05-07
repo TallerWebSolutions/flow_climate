@@ -261,6 +261,7 @@ pt-BR:
         max_flow_pressure: Máxima Pressão Geral do Fluxo
       stage:
         projects: Projetos
+        team: Time
         demand_transitions: Transições de Demanda
         integration_pipe_id: Id do Pipe na Integração
         integration_id: Id na Integração

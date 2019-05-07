@@ -6,7 +6,7 @@
     </div>
     <div class="modal-body">
       <%= form_for stage, url: company_stage_url(company, stage), remote: true, method: :put, class: 'form' do |f| %>
-        <%= render 'stages/form', form: f, stage: stage %>
+        <%= render 'stages/form', form: f, stage: stage, company: company %>
       <% end %>
     </div>
   </div>
