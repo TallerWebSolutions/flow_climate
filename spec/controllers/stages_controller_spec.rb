@@ -123,7 +123,7 @@ RSpec.describe StagesController, type: :controller do
           it 'does not create the company and re-render the template with the errors' do
             expect(Stage.last).to be_nil
             expect(response).to render_template :new
-            expect(assigns(:stage).errors.full_messages).to eq ['Id na Integração não pode ficar em branco', 'Nome não pode ficar em branco', 'Tipo da Etapa não pode ficar em branco', 'Tipo do Stream não pode ficar em branco']
+            expect(assigns(:stage).errors.full_messages).to eq ['Id na Integração não pode ficar em branco', 'Nome não pode ficar em branco', 'Time não pode ficar em branco', 'Tipo da Etapa não pode ficar em branco', 'Tipo do Stream não pode ficar em branco']
           end
         end
 

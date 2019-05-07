@@ -28,7 +28,7 @@ RSpec.describe Highchart::DemandsChartsAdapter, type: :data_object do
 
         expect(throughput_chart_data[:x_axis]).to eq TimeService.instance.weeks_between_of(Date.new(2018, 3, 4), Date.new(2018, 9, 2))
         expect(throughput_chart_data[:y_axis][0][:name]).to eq I18n.t('general.throughput')
-        expect(throughput_chart_data[:y_axis][0][:data]).to eq [2, 1, 1, 1]
+        expect(throughput_chart_data[:y_axis][0][:data]).to eq [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0]
       end
     end
 
@@ -38,7 +38,7 @@ RSpec.describe Highchart::DemandsChartsAdapter, type: :data_object do
 
         expect(creation_chart_data[:x_axis]).to eq TimeService.instance.weeks_between_of(Date.new(2018, 3, 4), Date.new(2018, 9, 2))
         expect(creation_chart_data[:y_axis][0][:name]).to eq I18n.t('demands.charts.creation_date')
-        expect(creation_chart_data[:y_axis][0][:data]).to eq [5]
+        expect(creation_chart_data[:y_axis][0][:data]).to eq [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5]
       end
     end
 
@@ -48,7 +48,7 @@ RSpec.describe Highchart::DemandsChartsAdapter, type: :data_object do
 
         expect(committed_chart_data[:x_axis]).to eq TimeService.instance.weeks_between_of(Date.new(2018, 3, 4), Date.new(2018, 9, 2))
         expect(committed_chart_data[:y_axis][0][:name]).to eq I18n.t('demands.charts.commitment_date')
-        expect(committed_chart_data[:y_axis][0][:data]).to eq [1, 1, 1, 2]
+        expect(committed_chart_data[:y_axis][0][:data]).to eq [0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0]
       end
     end
 
