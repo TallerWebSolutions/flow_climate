@@ -156,3 +156,6 @@ en:
   user_plan:
     validations:
       user_plan_active: "Você já tem um plano para o período."
+  slack_configurations:
+    notifications:
+      cmd_text: "Hey, tem team %{name} is operating in this week with a %{number_to_currency} average demand cost."

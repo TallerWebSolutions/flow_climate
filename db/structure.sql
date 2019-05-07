@@ -922,6 +922,39 @@ CREATE TABLE public.schema_migrations (
 
 
 --
+-- Name: slack_configurations; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.slack_configurations (
+    id bigint NOT NULL,
+    team_id integer NOT NULL,
+    room_webhook character varying NOT NULL,
+    notification_hour integer NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: slack_configurations_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.slack_configurations_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: slack_configurations_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.slack_configurations_id_seq OWNED BY public.slack_configurations.id;
+
+
+--
 -- Name: stage_project_configs; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1344,6 +1377,13 @@ ALTER TABLE ONLY public.projects ALTER COLUMN id SET DEFAULT nextval('public.pro
 
 
 --
+-- Name: slack_configurations id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.slack_configurations ALTER COLUMN id SET DEFAULT nextval('public.slack_configurations_id_seq'::regclass);
+
+
+--
 -- Name: stage_project_configs id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1582,6 +1622,14 @@ ALTER TABLE ONLY public.projects
 
 ALTER TABLE ONLY public.schema_migrations
     ADD CONSTRAINT schema_migrations_pkey PRIMARY KEY (version);
+
+
+--
+-- Name: slack_configurations slack_configurations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.slack_configurations
+    ADD CONSTRAINT slack_configurations_pkey PRIMARY KEY (id);
 
 
 --
@@ -1928,6 +1976,13 @@ CREATE UNIQUE INDEX index_projects_on_product_id_and_name ON public.projects USI
 
 
 --
+-- Name: index_slack_configurations_on_team_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_slack_configurations_on_team_id ON public.slack_configurations USING btree (team_id);
+
+
+--
 -- Name: index_stage_project_configs_on_project_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2226,6 +2281,14 @@ ALTER TABLE ONLY public.projects
 
 ALTER TABLE ONLY public.user_project_roles
     ADD CONSTRAINT fk_rails_4bed04fd76 FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
+-- Name: slack_configurations fk_rails_52597683c1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.slack_configurations
+    ADD CONSTRAINT fk_rails_52597683c1 FOREIGN KEY (team_id) REFERENCES public.teams(id);
 
 
 --
@@ -2535,6 +2598,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190430205947'),
 ('20190430215107'),
 ('20190501044600'),
-('20190507183550');
+('20190507183550'),
+('20190507222549');
 
 

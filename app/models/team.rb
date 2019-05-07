@@ -31,6 +31,7 @@ class Team < ApplicationRecord
   has_many :product_projects, -> { distinct }, through: :products, source: :projects
   has_many :demands, -> { distinct }, through: :projects
   has_many :stages, dependent: :nullify
+  has_many :slack_configurations, dependent: :destroy
 
   validates :company, :name, :max_work_in_progress, presence: true
   validates :name, uniqueness: { scope: :company, message: I18n.t('team.name.uniqueness') }
