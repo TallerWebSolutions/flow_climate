@@ -23,22 +23,36 @@ module Highchart
     private
 
     def build_creation_chart_data
-      created_demands_in_period = @demands_in_chart.where('demands.created_date BETWEEN :start_date AND :end_date', start_date: @start_date, end_date: @end_date)
-      creation_rate_data = DemandsRepository.instance.count_grouped_per_period(created_demands_in_period, :created_date, @grouped_period)
+      x_axis = build_x_axis_for_date(@start_date, @end_date)
 
-      @creation_chart_data = { x_axis: build_x_axis_for_date(@start_date, @end_date), y_axis: [{ name: I18n.t('demands.charts.creation_date'), data: creation_rate_data.values }] }
+      creation_data = []
+      x_axis.each do |date|
+        creation_data << @demands_in_chart.where('demands.created_date BETWEEN :start_date AND :end_date', start_date: beginning_of_period_for_query(date), end_date: end_of_period_for_query(date)).count
+      end
+
+      @creation_chart_data = { x_axis: x_axis, y_axis: [{ name: I18n.t('demands.charts.creation_date'), data: creation_data }] }
     end
 
     def build_commitment_chart_data
-      committed_demands_in_period = @demands_in_chart.where('demands.commitment_date BETWEEN :start_date AND :end_date', start_date: @start_date, end_date: @end_date)
-      commitment_rate_data = DemandsRepository.instance.count_grouped_per_period(committed_demands_in_period, :commitment_date, @grouped_period)
-      @committed_chart_data = { x_axis: build_x_axis_for_date(@start_date, @end_date), y_axis: [{ name: I18n.t('demands.charts.commitment_date'), data: commitment_rate_data.values }] }
+      x_axis = build_x_axis_for_date(@start_date, @end_date)
+
+      committed_data = []
+      x_axis.each do |date|
+        committed_data << @demands_in_chart.where('demands.commitment_date BETWEEN :start_date AND :end_date', start_date: beginning_of_period_for_query(date), end_date: end_of_period_for_query(date)).count
+      end
+
+      @committed_chart_data = { x_axis: build_x_axis_for_date(@start_date, @end_date), y_axis: [{ name: I18n.t('demands.charts.commitment_date'), data: committed_data }] }
     end
 
     def build_throughput_chart_data
-      delivered_demands_in_period = @demands_in_chart.where('demands.end_date BETWEEN :start_date AND :end_date', start_date: @start_date, end_date: @end_date)
-      throughput_data = DemandsRepository.instance.count_grouped_per_period(delivered_demands_in_period, :end_date, @grouped_period)
-      @throughput_chart_data = { x_axis: build_x_axis_for_date(@start_date, @end_date), y_axis: [{ name: I18n.t('general.throughput'), data: throughput_data.values }] }
+      x_axis = build_x_axis_for_date(@start_date, @end_date)
+
+      delivered_data = []
+      x_axis.each do |date|
+        delivered_data << @demands_in_chart.where('demands.end_date BETWEEN :start_date AND :end_date', start_date: beginning_of_period_for_query(date), end_date: end_of_period_for_query(date)).count
+      end
+
+      @throughput_chart_data = { x_axis: build_x_axis_for_date(@start_date, @end_date), y_axis: [{ name: I18n.t('general.throughput'), data: delivered_data }] }
     end
 
     def build_leadtime_percentiles_on_time

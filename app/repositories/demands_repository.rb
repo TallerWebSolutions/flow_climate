@@ -81,18 +81,6 @@ class DemandsRepository
     demands_for_projects_finished_in_period(projects, date.beginning_of_month, date.end_of_month).finished_in_stream('downstream')
   end
 
-  def count_grouped_per_period(demands, base_date_field, group_period = 'week')
-    if group_period == 'day'
-      build_count_grouped_per_period_query(demands, "DATE_TRUNC('day', #{base_date_field})::date", base_date_field).size
-    elsif group_period == 'week'
-      build_count_grouped_per_period_query(demands, "DATE_TRUNC('week', #{base_date_field})::date", base_date_field).size
-    elsif group_period == 'year'
-      build_count_grouped_per_period_query(demands, "DATE_TRUNC('year', #{base_date_field})::date", base_date_field).size
-    else
-      build_count_grouped_per_period_query(demands, "DATE_TRUNC('month', #{base_date_field})::date", base_date_field).size
-    end
-  end
-
   def demands_delivered_for_period(demands, start_period, end_period)
     Demand.kept
           .story
@@ -155,10 +143,6 @@ class DemandsRepository
 
   def demands_list_to_projects(projects)
     DemandsList.story.where(project_id: projects.map(&:id))
-  end
-
-  def build_count_grouped_per_period_query(demands, select_string, base_date_field)
-    Demand.kept.story.select(select_string).where(id: demands.map(&:id)).where("#{base_date_field} IS NOT NULL").order(Arel.sql(select_string)).group(select_string)
   end
 
   def demands_for_projects_finished_in_period(projects, start_period, end_period)
