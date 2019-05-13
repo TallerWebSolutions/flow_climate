@@ -402,4 +402,4 @@ pt-BR:
       user_plan_active: "You already have a plan to this period."
   slack_configurations:
     notifications:
-      cmd_text: "Hey, o time *%{name}* está operando nesta semana com um Custo Médio por Demanda de *%{number_to_currency}*"
+      cmd_text: "Hey, o time *%{name}* está operando nesta semana com um Custo Médio por Demanda de *%{cmd_value}* uma variação de *%{cmd_difference_to_last_week}%* com relação à semana anterior (%{previous_week})."
