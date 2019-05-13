@@ -2,6 +2,8 @@
 
 module Highchart
   class ProjectsConsolidationsChartsAdapter
+    include DateHelper
+
     attr_reader :projects_consolidations
 
     def initialize(projects_consolidations, start_date, end_date)
@@ -10,11 +12,13 @@ module Highchart
 
     def lead_time_data_range_evolution
       x_axis = @projects_consolidations.map(&:consolidation_date)
+      y_axis_data = build_y_axis(x_axis, :total_range, :lead_time_max, :lead_time_min)
+
       y_axis =
         [
-          { name: I18n.t('charts.lead_time_data_range_evolution.total_range'), data: @projects_consolidations.map { |consolidation| (consolidation.total_range / 86_400).to_f }, marker: { enabled: true } },
-          { name: I18n.t('charts.lead_time_data_range_evolution.total_range_max'), data: @projects_consolidations.map { |consolidation| (consolidation.lead_time_max / 86_400).to_f }, marker: { enabled: true } },
-          { name: I18n.t('charts.lead_time_data_range_evolution.total_range_min'), data: @projects_consolidations.map { |consolidation| (consolidation.lead_time_min / 86_400).to_f }, marker: { enabled: true } }
+          { name: I18n.t('charts.lead_time_data_range_evolution.total_range'), data: y_axis_data[:ranges], marker: { enabled: true } },
+          { name: I18n.t('charts.lead_time_data_range_evolution.total_range_max'), data: y_axis_data[:array_of_field_max], marker: { enabled: true } },
+          { name: I18n.t('charts.lead_time_data_range_evolution.total_range_min'), data: y_axis_data[:array_of_field_min], marker: { enabled: true } }
         ]
 
       { x_axis: x_axis, y_axis: y_axis }
@@ -22,11 +26,13 @@ module Highchart
 
     def lead_time_histogram_data_range_evolution
       x_axis = @projects_consolidations.map(&:consolidation_date)
+      y_axis_data = build_y_axis(x_axis, :histogram_range, :lead_time_histogram_bin_max, :lead_time_histogram_bin_min)
+
       y_axis =
         [
-          { name: I18n.t('charts.lead_time_histogram_data_range_evolution.total_range'), data: @projects_consolidations.map { |consolidation| (consolidation.histogram_range / 86_400).to_f }, marker: { enabled: true } },
-          { name: I18n.t('charts.lead_time_histogram_data_range_evolution.total_range_max'), data: @projects_consolidations.map { |consolidation| (consolidation.lead_time_histogram_bin_max / 86_400).to_f }, marker: { enabled: true } },
-          { name: I18n.t('charts.lead_time_histogram_data_range_evolution.total_range_min'), data: @projects_consolidations.map { |consolidation| (consolidation.lead_time_histogram_bin_min / 86_400).to_f }, marker: { enabled: true } }
+          { name: I18n.t('charts.lead_time_histogram_data_range_evolution.total_range'), data: y_axis_data[:ranges], marker: { enabled: true } },
+          { name: I18n.t('charts.lead_time_histogram_data_range_evolution.total_range_max'), data: y_axis_data[:array_of_field_max], marker: { enabled: true } },
+          { name: I18n.t('charts.lead_time_histogram_data_range_evolution.total_range_min'), data: y_axis_data[:array_of_field_min], marker: { enabled: true } }
         ]
 
       { x_axis: x_axis, y_axis: y_axis }
@@ -34,26 +40,31 @@ module Highchart
 
     def lead_time_interquartile_data_range_evolution
       x_axis = @projects_consolidations.map(&:consolidation_date)
+      y_axis_data = build_y_axis(x_axis, :interquartile_range, :lead_time_p75, :lead_time_p25)
+
       y_axis =
         [
-          { name: I18n.t('charts.lead_time_interquartile_data_range_evolution.total_range'), data: @projects_consolidations.map { |consolidation| (consolidation.interquartile_range / 86_400).to_f }, marker: { enabled: true } },
-          { name: I18n.t('charts.lead_time_interquartile_data_range_evolution.percentile_25'), data: @projects_consolidations.map { |consolidation| (consolidation.lead_time_p25 / 86_400).to_f }, marker: { enabled: true } },
-          { name: I18n.t('charts.lead_time_interquartile_data_range_evolution.percentile_75'), data: @projects_consolidations.map { |consolidation| (consolidation.lead_time_p75 / 86_400).to_f }, marker: { enabled: true } }
+          { name: I18n.t('charts.lead_time_interquartile_data_range_evolution.total_range'), data: y_axis_data[:ranges], marker: { enabled: true } },
+          { name: I18n.t('charts.lead_time_interquartile_data_range_evolution.percentile_25'), data: y_axis_data[:array_of_field_min], marker: { enabled: true } },
+          { name: I18n.t('charts.lead_time_interquartile_data_range_evolution.percentile_75'), data: y_axis_data[:array_of_field_max], marker: { enabled: true } }
         ]
 
       { x_axis: x_axis, y_axis: y_axis }
     end
 
-    def lead_time_interquartile_histogram_range_evolution
-      x_axis = @projects_consolidations.map(&:consolidation_date)
-      y_axis =
-        [
-          { name: I18n.t('charts.lead_time_interquartile_histogram_range_evolution.total_range'), data: @projects_consolidations.map { |consolidation| ((consolidation.histogram_range - consolidation.interquartile_range) / 86_400).to_f }, marker: { enabled: true } },
-          { name: I18n.t('charts.lead_time_interquartile_histogram_range_evolution.interquartile'), data: @projects_consolidations.map { |consolidation| (consolidation.interquartile_range / 86_400).to_f }, marker: { enabled: true } },
-          { name: I18n.t('charts.lead_time_interquartile_histogram_range_evolution.histogram'), data: @projects_consolidations.map { |consolidation| (consolidation.histogram_range / 86_400).to_f }, marker: { enabled: true } }
-        ]
+    private
 
-      { x_axis: x_axis, y_axis: y_axis }
+    def build_y_axis(x_axis, range, field_max, field_min)
+      ranges = []
+      array_of_field_max = []
+      array_of_field_min = []
+      x_axis.each do |date|
+        consolidations_in_week = @projects_consolidations.where(consolidation_date: date)
+        ranges << seconds_to_day(consolidations_in_week.map(&range).max)
+        array_of_field_max << seconds_to_day(consolidations_in_week.map(&field_max).max)
+        array_of_field_min << seconds_to_day(consolidations_in_week.map(&field_min).max)
+      end
+      { ranges: ranges, array_of_field_max: array_of_field_max, array_of_field_min: array_of_field_min }
     end
   end
 end

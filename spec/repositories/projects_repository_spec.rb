@@ -28,8 +28,8 @@ RSpec.describe ProjectsRepository, type: :repository do
     let!(:other_project) { Fabricate :project, customer: customer, start_date: 2.months.ago, end_date: 1.month.from_now }
 
     context 'having data' do
-      let!(:first_demand) { Fabricate :demand, project: project, downstream: true, created_date: 3.months.ago.to_date, end_date: 2.months.ago.to_date, leadtime: 2 * 86_400, effort_upstream: 10, effort_downstream: 5 }
-      let!(:second_demand) { Fabricate :demand, project: other_project, downstream: false, created_date: 4.months.ago.to_date, end_date: 2.months.ago, leadtime: 1 * 86_400, effort_upstream: 27, effort_downstream: 40 }
+      let!(:first_demand) { Fabricate :demand, project: project, downstream: true, created_date: 3.months.ago.to_date, end_date: 2.months.ago.to_date, leadtime: 2 * 1.day, effort_upstream: 10, effort_downstream: 5 }
+      let!(:second_demand) { Fabricate :demand, project: other_project, downstream: false, created_date: 4.months.ago.to_date, end_date: 2.months.ago, leadtime: 1 * 1.day, effort_upstream: 27, effort_downstream: 40 }
 
       it { expect(ProjectsRepository.instance.hours_consumed_per_month(company.projects, 2.months.ago.to_date)).to eq 0.82e2 }
     end
@@ -44,8 +44,8 @@ RSpec.describe ProjectsRepository, type: :repository do
     let!(:other_project) { Fabricate :project, customer: customer, start_date: 2.weeks.ago, end_date: 1.week.from_now }
 
     context 'having data' do
-      let!(:first_demand) { Fabricate :demand, project: project, downstream: true, created_date: 3.months.ago.to_date, end_date: 2.weeks.ago.to_date, leadtime: 2 * 86_400, effort_upstream: 10, effort_downstream: 5 }
-      let!(:second_demand) { Fabricate :demand, project: other_project, downstream: false, created_date: 4.months.ago.to_date, end_date: 2.weeks.ago, leadtime: 1 * 86_400, effort_upstream: 27, effort_downstream: 40 }
+      let!(:first_demand) { Fabricate :demand, project: project, downstream: true, created_date: 3.months.ago.to_date, end_date: 2.weeks.ago.to_date, leadtime: 2 * 1.day, effort_upstream: 10, effort_downstream: 5 }
+      let!(:second_demand) { Fabricate :demand, project: other_project, downstream: false, created_date: 4.months.ago.to_date, end_date: 2.weeks.ago, leadtime: 1 * 1.day, effort_upstream: 27, effort_downstream: 40 }
 
       it { expect(ProjectsRepository.instance.hours_consumed_per_week(company.projects, 2.weeks.ago.to_date)).to eq 0.82e2 }
     end

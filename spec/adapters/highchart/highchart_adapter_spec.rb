@@ -7,11 +7,11 @@ RSpec.describe Highchart::HighchartAdapter, type: :data_object do
     let!(:third_project) { Fabricate :project, status: :maintenance, start_date: Time.zone.parse('2018-03-12'), end_date: Time.zone.parse('2018-03-13') }
 
     let!(:opened_demands) { Fabricate.times(20, :demand, project: first_project, created_date: Time.zone.parse('2018-02-21'), end_date: nil) }
-    let!(:first_demand) { Fabricate :demand, project: first_project, created_date: Time.zone.parse('2018-02-21'), end_date: Time.zone.parse('2018-02-21'), leadtime: 2 * 86_400, effort_upstream: 10, effort_downstream: 5, downstream: false }
-    let!(:second_demand) { Fabricate :demand, project: first_project, created_date: Time.zone.parse('2018-02-21'), end_date: Time.zone.parse('2018-02-21'), leadtime: 3 * 86_400, effort_upstream: 12, effort_downstream: 20 }
-    let!(:third_demand) { Fabricate :demand, project: first_project, created_date: Time.zone.parse('2018-02-21'), end_date: Time.zone.parse('2018-03-18'), leadtime: 1 * 86_400, effort_upstream: 27, effort_downstream: 40 }
-    let!(:fourth_demand) { Fabricate :demand, project: first_project, created_date: Time.zone.parse('2018-02-21'), end_date: Time.zone.parse('2018-03-18'), leadtime: 1 * 86_400, effort_upstream: 80, effort_downstream: 34 }
-    let!(:fifth_demand) { Fabricate :demand, project: first_project, created_date: Time.zone.parse('2018-02-21'), end_date: Time.zone.parse('2018-03-13'), leadtime: 4 * 86_400, effort_upstream: 56, effort_downstream: 25 }
+    let!(:first_demand) { Fabricate :demand, project: first_project, created_date: Time.zone.parse('2018-02-21'), end_date: Time.zone.parse('2018-02-21'), leadtime: 2 * 1.day, effort_upstream: 10, effort_downstream: 5, downstream: false }
+    let!(:second_demand) { Fabricate :demand, project: first_project, created_date: Time.zone.parse('2018-02-21'), end_date: Time.zone.parse('2018-02-21'), leadtime: 3 * 1.day, effort_upstream: 12, effort_downstream: 20 }
+    let!(:third_demand) { Fabricate :demand, project: first_project, created_date: Time.zone.parse('2018-02-21'), end_date: Time.zone.parse('2018-03-18'), leadtime: 1 * 1.day, effort_upstream: 27, effort_downstream: 40 }
+    let!(:fourth_demand) { Fabricate :demand, project: first_project, created_date: Time.zone.parse('2018-02-21'), end_date: Time.zone.parse('2018-03-18'), leadtime: 1 * 1.day, effort_upstream: 80, effort_downstream: 34 }
+    let!(:fifth_demand) { Fabricate :demand, project: first_project, created_date: Time.zone.parse('2018-02-21'), end_date: Time.zone.parse('2018-03-13'), leadtime: 4 * 1.day, effort_upstream: 56, effort_downstream: 25 }
 
     describe '.initialize' do
       context 'querying all the time' do

@@ -61,7 +61,7 @@ class DemandsList < ApplicationRecord
   def leadtime_in_days
     return 0.0 if leadtime.blank?
 
-    leadtime.to_f / 86_400.0
+    leadtime.to_f / 1.day.to_f
   end
 
   def total_effort

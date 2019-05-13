@@ -109,7 +109,7 @@ RSpec.describe DemandBlock, type: :model do
 
       let(:demand_block) { Fabricate :demand_block, active: true, block_time: 1.day.ago, unblock_time: Time.zone.now }
 
-      it { expect(demand_block.total_blocked_time).to eq 86_400.0 }
+      it { expect(demand_block.total_blocked_time).to eq 1.day.to_f }
     end
 
     context 'when it still blocked' do

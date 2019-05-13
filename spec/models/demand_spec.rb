@@ -545,7 +545,7 @@ RSpec.describe Demand, type: :model do
     context 'having leadtime' do
       let!(:demand) { Fabricate :demand, commitment_date: 2.days.ago, end_date: 1.day.ago }
 
-      it { expect(demand.partial_leadtime.to_f).to be_within(1.second).of(86_400.00) }
+      it { expect(demand.partial_leadtime.to_f).to be_within(1.second).of(1.day) }
     end
 
     context 'having no leadtime' do
