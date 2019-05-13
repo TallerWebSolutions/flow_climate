@@ -16,4 +16,8 @@ module DateHelper
     return "#{days} #{I18n.t('datetime.date_attributes.day', count: days)} #{I18n.t('geenral.connector.and')} #{hours} #{I18n.t('datetime.date_attributes.hour', count: hours)}" if hours.positive?
     "#{days} #{I18n.t('datetime.date_attributes.day', count: days)}"
   end
+
+  def seconds_to_day(date_in_seconds)
+    date_in_seconds.to_f / 1.day
+  end
 end

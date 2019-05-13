@@ -12,7 +12,7 @@ class ProjectConsolidationJob < ApplicationJob
           end_of_week = start_date.end_of_week
 
           demands = project.demands.kept.where('demands.created_date <= :analysed_date', analysed_date: end_of_week)
-          demands_finished = demands.where('demands.end_date <= :analysed_date', analysed_date: end_of_week).order(end_date: :asc)
+          demands_finished = demands.finished_with_leadtime.where('demands.end_date <= :analysed_date', analysed_date: end_of_week).order(end_date: :asc)
 
           team = project.team
           team_projects = team.projects
@@ -50,7 +50,7 @@ class ProjectConsolidationJob < ApplicationJob
           end
 
           lead_times_array = demands_finished.map { |demand| demand.leadtime.to_f }
-          last_8_lead_times = demands_finished.where('end_date > :limit_date', limit_date: 8.weeks.ago.beginning_of_week).map { |demand| demand.leadtime.to_f }
+          last_8_lead_times = demands_finished.where('end_date >= :limit_date', limit_date: 8.weeks.ago.beginning_of_week).map { |demand| demand.leadtime.to_f }
           last_8_throughputs = project_throughput_data.values.last(8)
 
           lead_time_p25 = Stats::StatisticsService.instance.percentile(25, lead_times_array)
