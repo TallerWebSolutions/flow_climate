@@ -7,12 +7,12 @@ function buildReplenishingMeeting(companyId, teamId) {
     });
 }
 
-function getTeamStatistics(companyId, teamId, startDate, endDate, period) {
+function getTeamFlowImpacts(companyId, projectsIds) {
     $("#general-loader").show();
 
     jQuery.ajax({
-        url: `/companies/${companyId}/teams/${teamId}/statistics_tab.js`,
+        url: `/companies/${companyId}/flow_impacts/flow_impacts_tab.js`,
         type: "GET",
-        data: `start_date=${startDate}&end_date=${endDate}&period=${period}`
+        data: `projects_ids=${projectsIds}`
     });
 }

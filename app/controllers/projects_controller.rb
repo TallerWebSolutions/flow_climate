@@ -6,7 +6,7 @@ class ProjectsController < AuthenticatedController
   before_action :assign_company
   before_action :assign_customer, only: %i[create update]
   before_action :assign_product, only: %i[create update]
-  before_action :assign_project, only: %i[show edit update destroy synchronize_jira finish_project statistics copy_stages_from demands_blocks_tab demands_blocks_csv]
+  before_action :assign_project, only: %i[show edit update destroy synchronize_jira finish_project statistics copy_stages_from]
 
   def show
     @ordered_project_risk_alerts = @project.project_risk_alerts.order(created_at: :desc)
@@ -97,23 +97,6 @@ class ProjectsController < AuthenticatedController
     respond_to { |format| format.js { render 'projects/copy_stages_from' } }
   end
 
-  def demands_blocks_tab
-    @demands_blocks = DemandBlocksRepository.instance.active_blocks_to_projects_and_period([@project], start_date_to_query, end_date_to_query).order(block_time: :desc)
-
-    respond_to { |format| format.js { render 'demand_blocks/demands_blocks_tab' } }
-  end
-
-  def demands_blocks_csv
-    @demands_blocks = DemandBlocksRepository.instance.active_blocks_to_projects_and_period([@project], start_date_to_query, end_date_to_query).order(block_time: :desc)
-
-    attributes = %w[id block_time unblock_time block_duration demand_id]
-    blocks_csv = CSV.generate(headers: true) do |csv|
-      csv << attributes
-      @demands_blocks.each { |block| csv << block.csv_array }
-    end
-    respond_to { |format| format.csv { send_data blocks_csv, filename: "demands-blocks-#{Time.zone.now}.csv" } }
-  end
-
   private
 
   def synchronize_project
@@ -121,14 +104,6 @@ class ProjectsController < AuthenticatedController
     project_url = company_project_url(@company, @project)
     Jira::ProcessJiraProjectJob.perform_later(jira_account, @project.project_jira_config, current_user.email, current_user.full_name, project_url)
     flash[:notice] = t('general.enqueued')
-  end
-
-  def start_date_to_query
-    (params['start_date'] || @project.start_date).to_date
-  end
-
-  def end_date_to_query
-    (params['end_date'] || @project.end_date).to_date
   end
 
   def assign_parent
