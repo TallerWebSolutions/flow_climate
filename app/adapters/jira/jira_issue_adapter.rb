@@ -124,35 +124,27 @@ module Jira
 
       last_time_out = demand.created_date
       issue_changelog['histories'].sort_by { |history_hash| history_hash['id'] }.each do |history|
-        next unless transition_history?(history)
+        next if history['items'].blank?
 
-        transition_created_at = history['created']
-        create_transitions!(demand, history, last_time_out, transition_created_at)
-        last_time_out = transition_created_at
+        history['items'].each do |item|
+          next unless item['field'].casecmp('status').zero?
+
+          transition_created_at = history['created']
+          create_transitions!(demand, item['from'], item['to'], last_time_out, transition_created_at)
+          last_time_out = transition_created_at
+        end
       end
     end
 
-    def create_transitions!(demand, history, last_time_out, transition_created_at)
-      stage_from = demand.project.stages.find_by(integration_id: from_id(history))
-      stage_to = demand.project.stages.find_by(integration_id: to_id(history))
+    def create_transitions!(demand, from_id, to_id, last_time_out, transition_created_at)
+      stage_from = demand.project.stages.find_by(integration_id: from_id)
+      stage_to = demand.project.stages.find_by(integration_id: to_id)
 
       transition_from = DemandTransition.where(demand: demand, stage: stage_from).first_or_initialize
       transition_from.update(last_time_in: last_time_out, last_time_out: transition_created_at)
 
       transition_to = DemandTransition.where(demand: demand, stage: stage_to).first_or_initialize
       transition_to.update(demand: demand, last_time_in: transition_created_at, last_time_out: nil)
-    end
-
-    def to_id(history)
-      history['items'].first['to']
-    end
-
-    def from_id(history)
-      history['items'].first['from']
-    end
-
-    def transition_history?(history)
-      history['items'].present? && history['items'].first['field'].casecmp('status').zero?
     end
 
     def build_jira_url(jira_account, issue_key)
