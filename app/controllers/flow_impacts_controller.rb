@@ -2,7 +2,7 @@
 
 class FlowImpactsController < AuthenticatedController
   before_action :assign_company
-  before_action :assign_project, except: %i[new_direct_link create_direct_link]
+  before_action :assign_project, except: %i[flow_impacts_tab new_direct_link create_direct_link]
 
   def new
     @flow_impact = FlowImpact.new
@@ -26,7 +26,8 @@ class FlowImpactsController < AuthenticatedController
   end
 
   def flow_impacts_tab
-    @flow_impacts = @project.flow_impacts.order(:start_date)
+    @projects = Project.where(id: params[:projects_ids].split(','))
+    @flow_impacts = FlowImpact.where(id: @projects.map { |project| project.flow_impacts.map(&:id) }.flatten).order(:start_date)
     respond_to { |format| format.js { render 'flow_impacts/flow_impacts_tab' } }
   end
 

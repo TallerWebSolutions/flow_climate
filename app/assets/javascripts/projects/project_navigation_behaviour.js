@@ -38,11 +38,11 @@ $('.nav-item').on('click', function(event){
 
         } else if ($(this).attr('id') === 'nav-item-demands-blocks') {
             $('#demands-blocks-tab').hide();
-            getProjectBlocks(companyId, projectId, startDate, endDate);
+            getDemandBlocks(companyId, projectsIds, startDate, endDate);
 
-        }else if ($(this).attr('id') === 'nav-item-flow-impacts') {
+        } else if ($(this).attr('id') === 'nav-item-flow-impacts') {
             $('#flow-impacts-tab').hide();
-            getFlowImpacts(companyId, projectId);
+            getProjectFlowImpacts(companyId, projectId);
 
         } else if ($(this).attr('id') === 'nav-item-statistics') {
             const statsStartDate = '';

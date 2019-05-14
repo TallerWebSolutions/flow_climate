@@ -34,6 +34,14 @@ $('.nav-item').on('click', function(event){
         } else if ($(this).attr('id') === 'nav-item-demands') {
             getDemands(companyId, projectsIds);
 
+        } else if ($(this).attr('id') === 'nav-item-demands-blocks') {
+            $('#demands-blocks-tab').hide();
+            getDemandBlocks(companyId, projectsIds, startDate, endDate);
+
+        } else if ($(this).attr('id') === 'nav-item-flow-impacts') {
+            $('#flow-impacts-tab').hide();
+            getTeamFlowImpacts(companyId, projectsIds);
+
         } else if ($(this).attr('id') === 'nav-item-replenishingDiv') {
             buildReplenishingMeeting(companyId, teamId);
 

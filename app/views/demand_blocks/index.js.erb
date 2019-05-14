@@ -1,1 +1,1 @@
-$("#list-blocks-page").html("<%= escape_javascript(render 'demand_blocks/index', company_id: @company, project_id: @project) %>");
+$("#list-blocks-page").html("<%= escape_javascript(render 'demand_blocks/index', company_id: @company, projects_ids: @projects.map(&:id).join(',')) %>");

@@ -19,6 +19,8 @@
     <%= link_to t('navbar.members_table'), '#', id: 'nav-item-members', class: 'nav-item', data: { container: '#members-table' } %>
     <%= link_to t('navbar.projects_list'), '#', id: 'nav-item-list', class: 'nav-item', data: { container: '#project-list' } %>
     <%= link_to t('navbar.demands'), '#', id: 'nav-item-demands', class: 'nav-item', data: { container: '#demands-tab' } %>
+    <%= link_to t('navbar.demand_blocks'), '#', id: 'nav-item-demands-blocks', class: 'nav-item', data: { container: '#demands-blocks-tab' } %>
+    <%= link_to t('navbar.flow_impacts'), '#', id: 'nav-item-flow-impacts', class: 'nav-item', data: { container: '#flow-impacts-tab' } %>
     <%= link_to t('navbar.replenishing'), '#', id: 'nav-item-replenishingDiv', class: 'nav-item', data: { container: '#replenishingDiv-tab' } %>
     <%= link_to t('navbar.strategic'), '#', id: 'nav-item-strategic', class: 'nav-item', data: { container: '#strategic' } %>
     <%= link_to t('navbar.risks'), '#', id: 'nav-item-risks', class: 'nav-item', data: { container: '#risks' } %>
@@ -47,6 +49,14 @@
 </div>
 
 <div id="demands-tab" class="tab-container">
+
+</div>
+
+<div id="demands-blocks-tab" class="tab-container">
+
+</div>
+
+<div id="flow-impacts-tab" class="tab-container">
 
 </div>
 
@@ -98,6 +108,7 @@
   <%= javascript_include_tag 'routes/chart_routes' %>
   <%= javascript_include_tag 'routes/demand_routes' %>
   <%= javascript_include_tag 'routes/team_routes' %>
+  <%= javascript_include_tag 'routes/demand_block_routes' %>
 
   <%= javascript_include_tag 'projects/charts' %>
   <%= javascript_include_tag 'projects/status_report_current' %>

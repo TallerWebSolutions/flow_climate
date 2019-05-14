@@ -18,7 +18,7 @@
         <td><%= l(flow_impact.end_date) if flow_impact.end_date.present? %></td>
         <td><%= flow_impact.impact_description %></td>
         <td>
-          <%= link_to company_project_flow_impact_path(company, project, flow_impact), method: :delete, data: { confirm: I18n.t('general.destroy.confirm') }, remote: true do %>
+          <%= link_to company_flow_impact_path(company, flow_impact), method: :delete, data: { confirm: I18n.t('general.destroy.confirm') }, remote: true do %>
             <i class="fa fa-times" title='<%= t('flow_impacts.destroy.tooltip') %>'></i>
           <% end %>
         </td>
