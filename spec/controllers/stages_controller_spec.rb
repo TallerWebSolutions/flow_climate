@@ -55,6 +55,12 @@ RSpec.describe StagesController, type: :controller do
 
       it { expect(response).to redirect_to new_user_session_path }
     end
+
+    describe 'POST #import_from_jira' do
+      before { post :import_from_jira, params: { company_id: 'foo' } }
+
+      it { expect(response).to redirect_to new_user_session_path }
+    end
   end
 
   context 'authenticated as gold' do
@@ -97,7 +103,7 @@ RSpec.describe StagesController, type: :controller do
 
     describe 'POST #create' do
       context 'passing valid parameters' do
-        before { post :create, params: { company_id: company, stage: { order: 2, team_id: team.id, name: 'foo', integration_id: '332231', integration_pipe_id: '441271', stage_type: :analysis, stage_stream: :downstream, commitment_point: true, end_point: true, queue: true } } }
+        before { post :create, params: { company_id: company, stage: { order: 2, team_id: team.id, name: 'foo', integration_id: '332231', stage_type: :analysis, stage_stream: :downstream, commitment_point: true, end_point: true, queue: true } } }
 
         it 'creates the new financial information to the company and redirects to its show' do
           created_stage = Stage.last
@@ -105,7 +111,6 @@ RSpec.describe StagesController, type: :controller do
           expect(created_stage.order).to eq 2
           expect(created_stage.team).to eq team
           expect(created_stage.integration_id).to eq '332231'
-          expect(created_stage.integration_pipe_id).to eq '441271'
           expect(created_stage.name).to eq 'foo'
           expect(created_stage.stage_type).to eq 'analysis'
           expect(created_stage.stage_stream).to eq 'downstream'
@@ -123,7 +128,7 @@ RSpec.describe StagesController, type: :controller do
           it 'does not create the company and re-render the template with the errors' do
             expect(Stage.last).to be_nil
             expect(response).to render_template :new
-            expect(assigns(:stage).errors.full_messages).to eq ['Id na Integração não pode ficar em branco', 'Nome não pode ficar em branco', 'Time não pode ficar em branco', 'Tipo da Etapa não pode ficar em branco', 'Tipo do Stream não pode ficar em branco']
+            expect(assigns(:stage).errors.full_messages).to eq ['Id na Integração não pode ficar em branco', 'Nome não pode ficar em branco', 'Tipo da Etapa não pode ficar em branco', 'Tipo do Stream não pode ficar em branco']
           end
         end
 
@@ -183,13 +188,12 @@ RSpec.describe StagesController, type: :controller do
 
       context 'passing valid parameters' do
         it 'updates the demand and redirects to projects index' do
-          put :update, params: { company_id: company, id: stage, stage: { order: 2, team_id: team.id, name: 'foo', integration_id: '332231', integration_pipe_id: '441271', stage_type: :analysis, stage_stream: :downstream, commitment_point: true, end_point: true, queue: true } }, xhr: true
+          put :update, params: { company_id: company, id: stage, stage: { order: 2, team_id: team.id, name: 'foo', integration_id: '332231', stage_type: :analysis, stage_stream: :downstream, commitment_point: true, end_point: true, queue: true } }, xhr: true
           updated_stage = stage.reload
           expect(updated_stage.company).to eq company
           expect(updated_stage.team).to eq team
           expect(updated_stage.order).to eq 2
           expect(updated_stage.integration_id).to eq '332231'
-          expect(updated_stage.integration_pipe_id).to eq '441271'
           expect(updated_stage.name).to eq 'foo'
           expect(updated_stage.stage_type).to eq 'analysis'
           expect(updated_stage.stage_stream).to eq 'downstream'
@@ -469,6 +473,70 @@ RSpec.describe StagesController, type: :controller do
             let(:company) { Fabricate :company, users: [] }
 
             before { patch :copy_projects_from, params: { company_id: company, id: receiver_stage, provider_stage_id: provider_stage } }
+
+            it { expect(response).to have_http_status :not_found }
+          end
+        end
+      end
+    end
+
+    describe 'POST #import_from_jira' do
+      let(:company) { Fabricate :company, users: [user] }
+      let!(:first_stage) { Fabricate :stage, company: company, integration_id: 'sbbrubles', name: 'foobar' }
+      let!(:second_stage) { Fabricate :stage, company: company, name: 'xpto' }
+
+      context 'passing valid parameters' do
+        context 'with JiraAccount' do
+          let!(:jira_account) { Fabricate :jira_account, company: company }
+          let(:options) { { username: 'foo', password: 'bar', site: 'https://foo.atlassian.net/', context_path: '/', auth_type: :basic, read_timeout: 120 } }
+          let(:client) { JIRA::Client.new(options) }
+
+          context 'and the stage does not exist' do
+            it 'creates the stage with minimum fields' do
+              returned_status = client.Status.build('id' => 'foo', 'name' => 'bar')
+
+              expect_any_instance_of(Jira::JiraApiService).to(receive(:request_status).once { [returned_status] })
+              post :import_from_jira, params: { company_id: company }, xhr: true
+              expect(response).to have_http_status :ok
+              expect(assigns(:stages_list).count).to eq 3
+              expect(assigns(:stages_list).where(integration_id: 'foo').count).to eq 1
+            end
+          end
+
+          context 'and the stage exists' do
+            it 'updates the stage' do
+              returned_status = client.Status.build('id' => 'sbbrubles', 'name' => 'bar')
+
+              expect_any_instance_of(Jira::JiraApiService).to(receive(:request_status).once { [returned_status] })
+              post :import_from_jira, params: { company_id: company }, xhr: true
+              expect(response).to have_http_status :ok
+              expect(assigns(:stages_list).count).to eq 2
+              expect(assigns(:stages_list).map(&:name)).to match_array(%w[bar xpto])
+            end
+          end
+        end
+
+        context 'without JiraAccount' do
+          it 'assigns the instance variables and renders the template' do
+            post :import_from_jira, params: { company_id: company }, xhr: true
+            expect(response).to have_http_status :ok
+            expect(assigns(:stages_list).count).to eq 2
+          end
+        end
+      end
+
+      context 'passing an invalid' do
+        context 'company' do
+          context 'non-existent' do
+            before { post :import_from_jira, params: { company_id: 'foo' }, xhr: true }
+
+            it { expect(response).to have_http_status :not_found }
+          end
+
+          context 'not permitted' do
+            let(:company) { Fabricate :company, users: [] }
+
+            before { post :import_from_jira, params: { company_id: company }, xhr: true }
 
             it { expect(response).to have_http_status :not_found }
           end

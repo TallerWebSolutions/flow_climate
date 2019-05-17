@@ -2,7 +2,6 @@
 <td><%= link_to stage.team.name, company_team_path(company, stage.team) if stage.team.present? %></td>
 <td><%= link_to stage.name, company_stage_path(company, stage) %></td>
 <td><%= stage.integration_id %></td>
-<td><%= stage.integration_pipe_id %></td>
 <td><%= stage.projects.count %></td>
 <td><%= t("activerecord.attributes.stage.enums.stage_type.#{stage.stage_type}") %></td>
 <td><%= t("activerecord.attributes.stage.enums.stage_stream.#{stage.stage_stream}") %></td>

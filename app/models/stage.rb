@@ -14,9 +14,9 @@
 #  name                :string           not null, indexed
 #  order               :integer          default(0), not null
 #  queue               :boolean          default(FALSE)
-#  stage_stream        :integer          not null
-#  stage_type          :integer          not null
-#  team_id             :integer          not null
+#  stage_stream        :integer          default("upstream"), not null
+#  stage_type          :integer          default("backlog"), not null
+#  team_id             :integer
 #  updated_at          :datetime         not null
 #
 # Indexes
@@ -42,7 +42,7 @@ class Stage < ApplicationRecord
   has_many :demand_transitions, dependent: :restrict_with_error
   has_many :demand_blocks, dependent: :restrict_with_error
 
-  validates :integration_id, :name, :team, :stage_type, :stage_stream, presence: true
+  validates :integration_id, :name, :stage_type, :stage_stream, presence: true
 
   def add_project!(project)
     projects << project unless projects.include?(project)

@@ -1,17 +1,27 @@
-<div class="row">
+<div class="row pull-right">
+  <% if @company.jira_accounts.present? %>
+    <div class="col-xs-6">
+      <%= link_to t('stages.import_from_jira.title'), import_from_jira_company_stages_path(company), method: :post, data: { confirm: I18n.t('stages.import_from_jira.warning') }, remote: true, class: 'btn btn-success bottom-spaced-component' %>
+    </div>
+  <% end %>
   <div class="col-xs-6">
+    <%= link_to t('stages.new.title'), new_company_stage_path(company), class: 'btn btn-success bottom-spaced-component' %>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-xs-3">
     <h2><%= t('stages.index.title') %></h2>
   </div>
 </div>
 
-<table class="table table-ordered">
+<table class="table">
   <thead>
     <tr>
       <th><%= Stage.human_attribute_name :order %></th>
       <th><%= Stage.human_attribute_name :team %></th>
       <th><%= Stage.human_attribute_name :name %></th>
       <th><%= Stage.human_attribute_name :integration_id %></th>
-      <th><%= Stage.human_attribute_name :integration_pipe_id %></th>
       <th><%= t('stages.index.project_count') %></th>
       <th><%= Stage.human_attribute_name :stage_type %></th>
       <th><%= Stage.human_attribute_name :stage_stream %></th>

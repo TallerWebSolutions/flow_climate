@@ -675,6 +675,9 @@ pt-BR:
         title: "Demandas Saindo de %{target_name}"
         ylabel: "demandas saindo"
         tooltip_prefix: "demandas saindo"
+    import_from_jira:
+      title: "Importar do Jira"
+      warning: "Esta ação irá importar todos os statuses de todos os workflows configurados. Não funcionará caso você esteja usando projetos new gen."
   demand_blocks:
     index:
       title: "Bloqueios de Demanda"

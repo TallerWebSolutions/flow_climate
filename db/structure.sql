@@ -999,8 +999,8 @@ CREATE TABLE public.stages (
     id bigint NOT NULL,
     integration_id character varying NOT NULL,
     name character varying NOT NULL,
-    stage_type integer NOT NULL,
-    stage_stream integer NOT NULL,
+    stage_type integer DEFAULT 0 NOT NULL,
+    stage_stream integer DEFAULT 0 NOT NULL,
     commitment_point boolean DEFAULT false,
     end_point boolean DEFAULT false,
     queue boolean DEFAULT false,
@@ -1009,7 +1009,7 @@ CREATE TABLE public.stages (
     company_id integer NOT NULL,
     "order" integer DEFAULT 0 NOT NULL,
     integration_pipe_id character varying,
-    team_id integer NOT NULL
+    team_id integer
 );
 
 
@@ -2600,6 +2600,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190430215107'),
 ('20190501044600'),
 ('20190507183550'),
-('20190507222549');
+('20190507222549'),
+('20190517141230');
 
 

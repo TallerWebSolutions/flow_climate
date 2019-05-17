@@ -39,7 +39,7 @@ RSpec.describe Jira::JiraDataToCsvJob, type: :active_job do
         end
       end
 
-      context 'querying by project name' do
+      context 'querying by project key' do
         it 'computes the CSV, saves it and send an email with the content' do
           returned_project = client.Project.build({ fields: { key: 'FC', name: 'flow climate' } }.with_indifferent_access)
           returned_issue = client.Issue.build({ key: '10000', fields: { created: '2018-07-02T11:20:18.998-0300', summary: 'foo of bar', issuetype: { name: 'Story' }, customfield_10028: { value: 'Expedite' }, project: { key: 'foo' }, customfield_10024: [{ name: 'foo' }, { name: 'bar' }] }, changelog: { startAt: 0, maxResults: 3, total: 3, histories: [{ id: '10039', created: '2018-07-08T22:34:47.440-0300', items: [{ field: 'status', fromString: 'first_stage', toString: 'second_stage' }] }, { id: '10038', created: '2018-07-06T09:40:43.886-0300', items: [{ field: 'status', fromString: 'third_stage', toString: 'first_stage' }] }, { id: '10038', created: '2018-07-05T09:40:43.886-0300', items: [{ field: 'status', fromString: 'third_stage', toString: 'first_stage' }] }] } }.with_indifferent_access)
@@ -49,7 +49,7 @@ RSpec.describe Jira::JiraDataToCsvJob, type: :active_job do
 
           expect(JIRA::Resource::Issue).not_to(receive(:jql))
 
-          Jira::JiraDataToCsvJob.perform_now('foo', 'bar', 'https://foo.atlassian.net/', 'NSC', nil, nil, 'class_of_service_field', user.id)
+          Jira::JiraDataToCsvJob.perform_now('foo', 'bar', 'https://foo.atlassian.net/', 'NSC', 'FC', nil, 'class_of_service_field', user.id)
 
           expect(DemandDataProcessment.count).to eq 1
           expect(DemandDataProcessment.first.user).to eq user

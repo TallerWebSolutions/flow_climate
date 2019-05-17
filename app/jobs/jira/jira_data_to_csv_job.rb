@@ -4,7 +4,7 @@ module Jira
     def perform(username, password, base_uri, project_name, jira_project_key, fix_version_name, class_of_service_field_name, user_id)
       user = User.find(user_id)
       jira_api_service = Jira::JiraApiService.new(username, password, base_uri)
-      project_issues = retrieve_issues(project_name, jira_project_key, fix_version_name, jira_api_service)
+      project_issues = retrieve_issues(jira_project_key, fix_version_name, jira_api_service)
 
       array_of_jira_issues_keys = []
       array_of_project_keys = []
@@ -71,11 +71,11 @@ module Jira
       history['items'].present? && history['items'].first['field'].casecmp('status').zero?
     end
 
-    def retrieve_issues(project_name, project_key, project_fix_version, jira_api_service)
+    def retrieve_issues(project_key, project_fix_version, jira_api_service)
       return jira_api_service.request_issues_by_fix_version(project_key, project_fix_version) if project_key.present? && project_fix_version.present?
-      return [] if project_name.blank?
+      return [] if project_key.blank?
 
-      jira_api_service.request_project(project_name).issues
+      jira_api_service.request_project(project_key).issues
     end
   end
 end

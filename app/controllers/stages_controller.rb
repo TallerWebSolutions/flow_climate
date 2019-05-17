@@ -4,7 +4,7 @@ class StagesController < AuthenticatedController
   before_action :user_gold_check
 
   before_action :assign_company
-  before_action :assign_stage, except: %i[new create]
+  before_action :assign_stage, except: %i[new create import_from_jira]
 
   def new
     @stage = Stage.new
@@ -58,10 +58,24 @@ class StagesController < AuthenticatedController
     redirect_to company_stage_path(@company, @stage)
   end
 
+  def import_from_jira
+    if @company.jira_accounts.present?
+      jira_stages = Jira::JiraApiService.new(@company.jira_accounts.first.username, @company.jira_accounts.first.password, @company.jira_accounts.first.base_uri).request_status
+      jira_stages.each(&method(:build_stage))
+    end
+
+    @stages_list = @company.stages.includes(:team).order('teams.name, stages.order')
+  end
+
   private
 
+  def build_stage(jira_stage)
+    imported_stage = Stage.where(integration_id: jira_stage.attrs['id'], company: @company).first_or_initialize
+    imported_stage.update(name: jira_stage.attrs['name'])
+  end
+
   def stages_params
-    params.require(:stage).permit(:order, :team_id, :integration_id, :integration_pipe_id, :name, :stage_type, :stage_stream, :commitment_point, :end_point, :queue)
+    params.require(:stage).permit(:order, :team_id, :integration_id, :name, :stage_type, :stage_stream, :commitment_point, :end_point, :queue)
   end
 
   def assign_stage
