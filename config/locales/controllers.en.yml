@@ -640,6 +640,9 @@ en:
         title: "Demands Out of %{target_name}"
         ylabel: "demands out"
         tooltip_prefix: "demands_out"
+    import_from_jira:
+      title: "Import from Jira"
+      warning: "This action will import all statuses from all configured workflows. It will not work if you are running a new gen project."
   demand_blocks:
     index:
       title: "Demand Blocks"

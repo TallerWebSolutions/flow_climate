@@ -122,6 +122,8 @@ Rails.application.routes.draw do
         patch :copy_projects_from
       end
 
+      post :import_from_jira, on: :collection
+
       resources :demand_transitions, only: :destroy
       resources :stage_project_configs, only: %i[edit update]
     end
