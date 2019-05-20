@@ -53,23 +53,48 @@ module Jira
     end
 
     def translate_class_of_service(jira_account, jira_issue)
-      class_of_service_custom_field_name = jira_account.class_of_service_custom_field&.custom_field_machine_name
-      return :standard if class_of_service_custom_field_name.blank?
+      class_of_service_name = read_class_of_service_by_tag_name(jira_issue)
 
-      class_of_service_hash = jira_issue.attrs['fields'][class_of_service_custom_field_name]
-      return :standard if class_of_service_hash.blank?
+      class_of_service_name = read_class_of_service_custom_field_id(jira_account, jira_issue) if class_of_service_name.blank?
 
-      class_of_service = class_of_service_hash['value']
-
-      if class_of_service.casecmp('expedite').zero?
+      if class_of_service_name.casecmp('expedite').zero?
         :expedite
-      elsif class_of_service.casecmp('fixed date').zero?
+      elsif class_of_service_name.casecmp('fixed date').zero?
         :fixed_date
-      elsif class_of_service.casecmp('intangible').zero?
+      elsif class_of_service_name.casecmp('intangible').zero?
         :intangible
       else
         :standard
       end
+    end
+
+    def read_class_of_service_custom_field_id(jira_account, jira_issue)
+      class_of_service_custom_field_name = jira_account.class_of_service_custom_field&.custom_field_machine_name
+
+      if class_of_service_custom_field_name.blank?
+        class_of_service_name = 'standard'
+      else
+        class_of_service_hash = jira_issue.attrs['fields'][class_of_service_custom_field_name]
+
+        class_of_service_name = if class_of_service_hash.blank?
+                                  'standard'
+                                else
+                                  class_of_service_hash['value']
+                                end
+      end
+      class_of_service_name
+    end
+
+    def read_class_of_service_by_tag_name(jira_issue)
+      class_of_service = ''
+      return class_of_service if jira_issue.attrs['changelog'].blank?
+
+      jira_issue.attrs['changelog']['histories'].each do |history|
+        next unless history['items'].present? && history['items'].first['field'].downcase.include?('class of service')
+
+        class_of_service = history['items'].first['toString']
+      end
+      class_of_service
     end
 
     def compute_assignees_count(jira_account, jira_issue)
@@ -86,7 +111,9 @@ module Jira
     def translate_blocks!(demand, jira_issue)
       return unless hash_have_histories?(jira_issue)
 
-      history_array = jira_issue.attrs['changelog']['histories']
+      history_array = jira_issue.attrs['changelog']['histories'].select do |history|
+        impediment_field?(history)
+      end
 
       demand.demand_blocks.map(&:destroy)
 
@@ -94,14 +121,16 @@ module Jira
         next if history['items'].blank?
 
         history_item = history['items'][0]
-        next unless impediment_field?(history_item)
 
         process_demand_block(demand, history, history_item)
       end
     end
 
-    def impediment_field?(history_item)
-      history_item['field'].casecmp('impediment').zero? || history_item['field'].casecmp('flagged').zero?
+    def impediment_field?(history)
+      return false if history['items'].blank?
+
+      history_item = history['items'][0]
+      history_item['field'].present? && (history_item['field'].casecmp('impediment').zero? || history_item['field'].casecmp('flagged').zero?)
     end
 
     def hash_have_histories?(jira_issue)
