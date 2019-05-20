@@ -67,8 +67,10 @@ class Stage < ApplicationRecord
   private
 
   def first_done_stage_in_pipe(demand)
-    return company.stages.where(integration_pipe_id: integration_pipe_id, end_point: true, stage_stream: :downstream).order(:order).first if demand.downstream_demand?
+    active_stages = company.stages.where('stages.integration_pipe_id = :integration_pipe_id AND (stages.order IS NULL OR stages.order >= 0) AND stages.end_point = true', integration_pipe_id: integration_pipe_id)
 
-    company.stages.where(integration_pipe_id: integration_pipe_id, end_point: true).order(:order).first
+    return active_stages.where(stage_stream: :downstream).order(:order).first if demand.downstream_demand?
+
+    active_stages.order(:order).first
   end
 end

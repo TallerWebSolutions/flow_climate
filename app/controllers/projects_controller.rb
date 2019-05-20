@@ -9,9 +9,10 @@ class ProjectsController < AuthenticatedController
   before_action :assign_project, only: %i[show edit update destroy synchronize_jira finish_project statistics copy_stages_from]
 
   def show
+    assign_project_stages
+
     @ordered_project_risk_alerts = @project.project_risk_alerts.order(created_at: :desc)
     @project_change_deadline_histories = @project.project_change_deadline_histories.includes(:user)
-    @project_stages = @project.stages.order(:order, :name)
     @projects_to_copy_stages_from = (@company.projects.includes(:customer).includes(:product) - [@project]).sort_by(&:full_name)
     @demands_ids = DemandsRepository.instance.demands_created_before_date_to_projects([@project]).map(&:id)
 
@@ -93,11 +94,15 @@ class ProjectsController < AuthenticatedController
   def copy_stages_from
     @project_to_copy_stages_from = Project.find(params[:project_to_copy_stages_from])
     @project.update(stages: @project_to_copy_stages_from.stages) if @project.stages.empty?
-    @project_stages = @project.reload.stages.order(:order, :name)
+    assign_project_stages
     respond_to { |format| format.js { render 'projects/copy_stages_from' } }
   end
 
   private
+
+  def assign_project_stages
+    @project_stages = @project.reload.stages.includes(:team).order(:order, :name)
+  end
 
   def synchronize_project
     jira_account = Jira::JiraAccount.find_by(customer_domain: @project.project_jira_config.jira_account_domain)
