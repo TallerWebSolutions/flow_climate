@@ -104,11 +104,22 @@ RSpec.describe Jira::JiraIssueAdapter, type: :service do
       end
 
       context 'and it is a class of service intangible' do
-        let!(:jira_issue) { client.Issue.build({ key: '10000', summary: 'foo of bar', fields: { created: '2018-07-03T11:20:18.998-0300', issuetype: { name: 'Chore' }, project: { key: 'foo' }, customfield_10024: [{ name: 'foo' }, { name: 'bar' }], customfield_10028: { value: 'intangible' } } }.with_indifferent_access) }
+        context 'reading from custom field machine name (10000)' do
+          let!(:jira_issue) { client.Issue.build({ key: '10000', summary: 'foo of bar', fields: { created: '2018-07-03T11:20:18.998-0300', issuetype: { name: 'Chore' }, project: { key: 'foo' }, customfield_10024: [{ name: 'foo' }, { name: 'bar' }], customfield_10028: { value: 'intangible' } } }.with_indifferent_access) }
 
-        it 'creates the demand as intangible class of service' do
-          Jira::JiraIssueAdapter.instance.process_issue!(jira_account, first_project, jira_issue)
-          expect(Demand.last).to be_intangible
+          it 'creates the demand as intangible class of service' do
+            Jira::JiraIssueAdapter.instance.process_issue!(jira_account, first_project, jira_issue)
+            expect(Demand.last).to be_intangible
+          end
+        end
+
+        context 'reading from custom field name' do
+          let!(:jira_issue) { client.Issue.build({ key: '10000', summary: 'foo of bar', fields: { created: '2018-07-02T11:20:18.998-0300', issuetype: { name: 'Story' }, customfield_10028: { value: 'Expedite' }, project: { key: 'foo' }, customfield_10024: [{ name: 'foo' }, { name: 'bar' }] }, changelog: { startAt: 0, maxResults: 2, total: 2, histories: [{ id: '10041', created: '2018-07-09T23:34:47.440-0300', items: [{ field: 'status', from: 'first_stage', to: 'second_stage' }] }, { id: '10040', created: '2018-07-09T22:34:47.440-0300', items: [{ field: 'status', from: 'second_stage', to: 'first_stage' }] }, { id: '10039', created: '2018-07-08T22:34:47.440-0300', items: [{ field: 'status', from: 'first_stage', to: 'second_stage' }] }, { id: '10038', created: '2018-07-06T09:40:43.886-0300', items: [{ field: 'status', from: 'third_stage', to: 'first_stage' }] }, { id: '10055', created: '2018-07-06T09:40:43.886-0300', items: [{ field: 'foo', from: 'third_stage', to: 'first_stage' }] }, { id: '66821', created: '2019-05-08T16:48:41.160-0300', items: [{ field: 'Class of Service (apoio)', fieldtype: 'custom', fieldId: 'customfield_10093', from: '10065', fromString: 'Standard', to: '10064', toString: 'INTangiBle' }] }] } }.with_indifferent_access) }
+
+          it 'creates the demand as intangible class of service' do
+            Jira::JiraIssueAdapter.instance.process_issue!(jira_account, first_project, jira_issue)
+            expect(Demand.last).to be_intangible
+          end
         end
       end
 
@@ -122,7 +133,7 @@ RSpec.describe Jira::JiraIssueAdapter, type: :service do
       end
 
       context 'and it was blocked' do
-        let!(:jira_issue) { client.Issue.build({ key: '10000', summary: 'foo of bar', fields: { created: '2018-07-03T11:20:18.998-0300', issuetype: { name: 'chore' }, project: { key: 'foo' }, customfield_10024: [{ name: 'foo' }, { name: 'bar' }], customfield_10028: { value: 'sTandard' } }, changelog: { comment: { comments: [{ body: '(flagoff) o bla do xpto foi resolvido de boa', created: '2018-07-07T17:00:18.399-0300', author: { name: 'bla' } }, { body: '(flag) Flag added\n\nbla do xpto passando pelo foo até o bar.', created: '2018-07-06T17:00:18.399-0300', author: { name: 'sbbrubles' } }, { body: '(flag) Flag added\n\nbla do xpto resolvido nada.. vai ter que refazer essa bagaça..', created: '2018-07-08T17:00:18.399-0300', author: { name: 'soul' } }, { body: 'Comentário que não é um bloqueio modafucka', created: '2018-07-09T17:00:18.399-0300', author: { name: 'mor' } }] }, histories: [{ id: '10038', author: { displayName: 'bla' }, created: '2018-07-06T09:40:43.886-0300', items: [{ field: 'Impediment', fromString: '', to: '10055', toString: 'Impediment' }] }, { id: '10055', author: { displayName: 'xpto' }, created: '2018-07-06T13:40:43.886-0300', items: [{ field: 'Impediment', fromString: 'Impediment', to: '10055', toString: '' }] }, { id: '10055', author: { displayName: 'foo' }, created: '2018-07-09T13:40:43.886-0300', items: [{ field: 'Impediment', fromString: '', to: '10055', toString: 'Impediment' }] }] } }.with_indifferent_access) }
+        let!(:jira_issue) { client.Issue.build({ key: '10000', summary: 'foo of bar', fields: { created: '2018-07-03T11:20:18.998-0300', issuetype: { name: 'chore' }, project: { key: 'foo' }, customfield_10024: [{ name: 'foo' }, { name: 'bar' }], customfield_10028: { value: 'sTandard' } }, changelog: { comment: { comments: [{ body: '(flagoff) o bla do xpto foi resolvido de boa', created: '2018-07-07T17:00:18.399-0300', author: { name: 'bla' } }, { body: '(flag) Flag added\n\nbla do xpto passando pelo foo até o bar.', created: '2018-07-06T17:00:18.399-0300', author: { name: 'sbbrubles' } }, { body: '(flag) Flag added\n\nbla do xpto resolvido nada.. vai ter que refazer essa bagaça..', created: '2018-07-08T17:00:18.399-0300', author: { name: 'soul' } }, { body: 'Comentário que não é um bloqueio modafucka', created: '2018-07-09T17:00:18.399-0300', author: { name: 'mor' } }] }, histories: [{ id: '10038', author: { displayName: 'bla' }, created: '2018-07-06T09:40:43.886-0300', items: [{ field: 'Impediment', fromString: '', to: '10055', toString: 'Impediment' }] }, { id: '10055', author: { displayName: 'xpto' }, created: '2018-07-06T13:40:43.886-0300', items: [{ field: 'Impediment', fromString: 'Impediment', to: '10055', toString: '' }] }, { id: '10057', author: { displayName: 'foo' }, created: '2018-07-09T13:40:43.886-0300', items: [{ field: 'Impediment', fromString: '', to: '10055', toString: 'Impediment' }] }] } }.with_indifferent_access) }
 
         it 'creates the demand and the blocks information' do
           Jira::JiraIssueAdapter.instance.process_issue!(jira_account, first_project, jira_issue)
