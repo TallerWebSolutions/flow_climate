@@ -72,6 +72,7 @@ RSpec.describe Stage, type: :model do
     let!(:third_stage) { Fabricate :stage, company: company, projects: [project], stage_stream: :downstream, integration_pipe_id: '321', order: 4, end_point: true }
     let!(:fourth_stage) { Fabricate :stage, company: company, projects: [project], stage_stream: :downstream, integration_pipe_id: '321', order: 3, end_point: true }
     let!(:fifth_stage) { Fabricate :stage, company: company, projects: [project], stage_stream: :upstream, integration_pipe_id: '321', order: 2, end_point: true }
+    let!(:sixth_stage) { Fabricate :stage, company: company, projects: [project], stage_stream: :downstream, integration_pipe_id: '321', order: -1, end_point: true }
 
     context 'having data' do
       context 'and the demand reached the downstream' do
@@ -88,6 +89,7 @@ RSpec.describe Stage, type: :model do
           expect(third_stage.first_end_stage_in_pipe?(demand)).to be false
           expect(fourth_stage.first_end_stage_in_pipe?(demand)).to be true
           expect(fifth_stage.first_end_stage_in_pipe?(demand)).to be false
+          expect(sixth_stage.first_end_stage_in_pipe?(demand)).to be false
         end
       end
 

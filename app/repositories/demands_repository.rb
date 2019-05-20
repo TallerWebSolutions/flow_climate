@@ -119,7 +119,7 @@ class DemandsRepository
   end
 
   def discarded_demands_to_projects(projects)
-    Demand.includes(:project).where(project_id: projects.map(&:id)).where('discarded_at IS NOT NULL').order(discarded_at: :desc)
+    Demand.where(project_id: projects.map(&:id)).where('discarded_at IS NOT NULL').order(discarded_at: :desc)
   end
 
   private

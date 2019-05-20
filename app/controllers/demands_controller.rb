@@ -75,9 +75,9 @@ class DemandsController < AuthenticatedController
   end
 
   def demands_in_projects
-    filtered_demands_list = DemandsRepository.instance.demands_created_before_date_to_projects(@projects)
+    filtered_demands_list_view = DemandsRepository.instance.demands_created_before_date_to_projects(@projects)
 
-    @demands = build_date_query_and_order(filtered_demands_list, 3.months.ago, Time.zone.today)
+    @demands = build_date_query_and_order(filtered_demands_list_view, 3.months.ago, Time.zone.today)
     @demands_count_per_week = DemandService.instance.quantitative_consolidation_per_week_to_projects(@projects)
     @discarded_demands = DemandsRepository.instance.discarded_demands_to_projects(@projects)
 
@@ -113,11 +113,11 @@ class DemandsController < AuthenticatedController
 
   def query_demands(start_date, end_date)
     demands_created_before_date_to_projects = DemandsRepository.instance.demands_created_before_date_to_projects(@projects)
-    demands = build_date_query_and_order(demands_created_before_date_to_projects, start_date, end_date)
-    demands = filter_text(demands)
-    demands = build_flow_status_query(demands, params[:flow_status])
-    demands = buld_demand_type_query(demands, params[:demand_type])
-    build_class_of_service_query(demands, params[:demand_class_of_service])
+    demands_list_view = build_date_query_and_order(demands_created_before_date_to_projects, start_date, end_date)
+    demands_list_view = filter_text(demands_list_view)
+    demands_list_view = build_flow_status_query(demands_list_view, params[:flow_status])
+    demands_list_view = buld_demand_type_query(demands_list_view, params[:demand_type])
+    build_class_of_service_query(demands_list_view, params[:demand_class_of_service])
   end
 
   def demand_params
@@ -137,8 +137,8 @@ class DemandsController < AuthenticatedController
     @demand = Demand.friendly.find(params[:id]&.downcase)
   end
 
-  def build_date_query_and_order(demands, start_date, end_date)
-    prepared_query_demands = demands.includes(:project).includes(:demand)
+  def build_date_query_and_order(demands_list_view, start_date, end_date)
+    prepared_query_demands = demands_list_view.includes(:project).includes(:demand)
 
     return prepared_query_demands unless start_date.present? && end_date.present?
 
@@ -184,10 +184,10 @@ class DemandsController < AuthenticatedController
     filtered_demands
   end
 
-  def filter_text(demands)
-    return demands if params[:search_text].blank?
+  def filter_text(demands_list_view)
+    return demands_list_view.includes(:project) if params[:search_text].blank?
 
-    demands.joins(project: :product).where('demands_lists.demand_title ILIKE :search_param OR demands_lists.demand_id ILIKE :search_param OR products.name ILIKE :search_param OR projects.name ILIKE :search_param', search_param: "%#{params[:search_text].downcase}%")
+    demands_list_view.includes(:project).joins(project: :product).where('demands_lists.demand_title ILIKE :search_param OR demands_lists.demand_id ILIKE :search_param OR products.name ILIKE :search_param OR projects.name ILIKE :search_param', search_param: "%#{params[:search_text].downcase}%")
   end
 
   def assign_consolidations
