@@ -20,8 +20,9 @@ RSpec.describe ReplenishingData, type: :data_objects do
   let!(:second_demand) { Fabricate :demand, project: first_project, commitment_date: 2.months.ago, end_date: 4.weeks.ago }
   let!(:third_demand) { Fabricate :demand, project: second_project, commitment_date: 2.days.ago, end_date: 1.day.ago }
   let!(:fourth_demand) { Fabricate :demand, project: third_project, commitment_date: 1.day.ago, end_date: Time.zone.today }
+  let!(:fifth_demand) { Fabricate :demand, project: third_project, commitment_date: nil, end_date: 1.week.ago }
 
-  let!(:first_project_closed_demands) { Fabricate.times(6, :demand, project: first_project, commitment_date: nil, end_date: 1.week.ago) }
+  let!(:first_project_closed_demands) { Fabricate.times(6, :demand, project: first_project, commitment_date: 1.week.ago, end_date: 1.week.ago) }
   let!(:second_project_closed_demands) { Fabricate.times(2, :demand, project: second_project, commitment_date: 1.week.ago, end_date: 1.week.ago) }
 
   describe '#summary_infos' do
@@ -29,7 +30,7 @@ RSpec.describe ReplenishingData, type: :data_objects do
       subject(:replenishing_data) { ReplenishingData.new(team) }
 
       let!(:company_config) { Fabricate :company_settings, company: company, max_active_parallel_projects: 2, max_flow_pressure: 3 }
-      let!(:projects) { Fabricate.times(2, :project, customer: customer, start_date: Time.zone.today, end_date: Time.zone.today) }
+      let!(:projects) { Fabricate.times(2, :project, customer: customer, start_date: 2.weeks.ago, end_date: Time.zone.today) }
       let!(:other_projects) { Fabricate.times(2, :project, customer: customer, start_date: 1.month.from_now, end_date: 1.month.from_now) }
 
       it 'returns the hash value' do
@@ -51,8 +52,8 @@ RSpec.describe ReplenishingData, type: :data_objects do
         expect(project_data_to_replenish[0][:remaining_backlog]).to eq first_project.remaining_backlog
         expect(project_data_to_replenish[0][:relative_flow_pressure]).to be_within(0.1).of(65.3)
         expect(project_data_to_replenish[0][:qty_using_pressure]).to be_within(0.9).of(1.37)
-        expect(project_data_to_replenish[0][:leadtime_80]).to be_within(0.1).of(74.7)
-        expect(project_data_to_replenish[0][:qty_selected_last_week]).to eq 0
+        expect(project_data_to_replenish[0][:leadtime_80]).to be_within(0.1).of(20.4)
+        expect(project_data_to_replenish[0][:qty_selected_last_week]).to eq 6
         expect(project_data_to_replenish[0][:work_in_progress]).to eq 0
         expect(project_data_to_replenish[0][:montecarlo_80_percent]).to be_within(7).of(54)
         expect(project_data_to_replenish[0][:team_based_montecarlo_80_percent]).to be_within(30).of(135)
