@@ -68,7 +68,8 @@ class Demand < ApplicationRecord
   validates :demand_id, uniqueness: { scope: :company_id, message: I18n.t('demand.validations.demand_id_unique.message') }
 
   scope :opened_after_date, ->(date) { kept.story.where('created_date >= :date', date: date.beginning_of_day) }
-  scope :finished_in_stream, ->(stage_stream) { kept.story.where('demands.downstream = :downstream', downstream: stage_stream == 'downstream') }
+  scope :finished_in_downstream, -> { kept.story.where('commitment_date IS NOT NULL AND end_date IS NOT NULL') }
+  scope :finished_in_upstream, -> { kept.story.where('commitment_date IS NULL AND end_date IS NOT NULL') }
   scope :finished, -> { kept.story.where('demands.end_date IS NOT NULL') }
   scope :finished_with_leadtime, -> { kept.story.where('end_date IS NOT NULL AND leadtime IS NOT NULL') }
   scope :finished_until_date, ->(limit_date) { finished.where('demands.end_date <= :limit_date', limit_date: limit_date) }
