@@ -20,7 +20,7 @@ class ReplenishingData
 
   def build_summary_infos
     if @projects.present?
-      th_per_week_hash = DemandsRepository.instance.throughput_to_projects_and_period(projects, @start_date, @end_date).group('EXTRACT(WEEK FROM end_date)', 'EXTRACT(YEAR FROM end_date)').count
+      th_per_week_hash = DemandsRepository.instance.throughput_to_projects_and_period(projects, @start_date, @end_date).finished_with_leadtime.group('EXTRACT(WEEK FROM end_date)', 'EXTRACT(YEAR FROM end_date)').count
       build_basic_summary_infos(th_per_week_hash)
       @summary_infos[:average_throughput] = @summary_infos[:four_last_throughputs].sum / @summary_infos[:four_last_throughputs].count
     else
@@ -83,14 +83,21 @@ class ReplenishingData
   end
 
   def build_grouped_per_week_hash(project)
-    throughput_data_per_week = DemandsRepository.instance.throughput_to_projects_and_period(project.product.projects.order(:end_date), project.product.projects.minimum(:start_date), 1.week.ago.end_of_week).group('EXTRACT(WEEK FROM end_date)', 'EXTRACT(YEAR FROM end_date)').count
+    throughput_data_per_week = DemandsRepository.instance.throughput_to_projects_and_period(project.product.projects.order(:end_date), build_minimum_date_in_product(project), 1.week.ago.end_of_week).finished_with_leadtime.group('EXTRACT(WEEK FROM end_date)', 'EXTRACT(YEAR FROM end_date)').count
     DemandInfoDataBuilder.instance.build_data_from_hash_per_week(throughput_data_per_week, project.start_date, 1.week.ago)
   end
 
+  def build_minimum_date_in_product(project)
+    project.product.projects.minimum(:start_date)
+  end
+
   def build_team_throughput_per_week_data
-    minimum_start_date = @projects.minimum(:start_date)
-    throughput_data_per_week = DemandsRepository.instance.throughput_to_projects_and_period(@projects.order(:end_date), minimum_start_date, 1.week.ago.end_of_week).group('EXTRACT(WEEK FROM end_date)', 'EXTRACT(YEAR FROM end_date)').count
-    DemandInfoDataBuilder.instance.build_data_from_hash_per_week(throughput_data_per_week, minimum_start_date, 1.week.ago)
+    throughput_data_per_week = DemandsRepository.instance.throughput_to_projects_and_period(@projects.order(:end_date), minimum_date, 1.week.ago.end_of_week).finished_with_leadtime.group('EXTRACT(WEEK FROM end_date)', 'EXTRACT(YEAR FROM end_date)').count
+    DemandInfoDataBuilder.instance.build_data_from_hash_per_week(throughput_data_per_week, minimum_date, 1.week.ago)
+  end
+
+  def minimum_date
+    @minimum_date ||= @projects.minimum(:start_date)
   end
 
   def build_project_share_in_team_throughput(project, team_throughput_per_week_array)
