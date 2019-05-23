@@ -71,7 +71,7 @@ RSpec.describe Stage, type: :model do
     let!(:second_stage) { Fabricate :stage, company: company, projects: [project], stage_stream: :downstream, integration_pipe_id: '321', order: 1 }
     let!(:third_stage) { Fabricate :stage, company: company, projects: [project], stage_stream: :downstream, integration_pipe_id: '321', order: 4, end_point: true }
     let!(:fourth_stage) { Fabricate :stage, company: company, projects: [project], stage_stream: :downstream, integration_pipe_id: '321', order: 3, end_point: true }
-    let!(:fifth_stage) { Fabricate :stage, company: company, projects: [project], stage_stream: :upstream, integration_pipe_id: '321', order: 2, end_point: true }
+    let!(:fifth_stage) { Fabricate :stage, company: company, projects: [project], stage_stream: :upstream, integration_pipe_id: '321', order: 2, end_point: false }
     let!(:sixth_stage) { Fabricate :stage, company: company, projects: [project], stage_stream: :downstream, integration_pipe_id: '321', order: -1, end_point: true }
 
     context 'having data' do
@@ -84,25 +84,12 @@ RSpec.describe Stage, type: :model do
         let!(:fifth_demand_transition) { Fabricate :demand_transition, stage: fifth_stage, demand: demand }
 
         it 'considers the first end stage in dowsntream as the done' do
-          expect(first_stage.first_end_stage_in_pipe?(demand)).to be false
-          expect(second_stage.first_end_stage_in_pipe?(demand)).to be false
-          expect(third_stage.first_end_stage_in_pipe?(demand)).to be false
-          expect(fourth_stage.first_end_stage_in_pipe?(demand)).to be true
-          expect(fifth_stage.first_end_stage_in_pipe?(demand)).to be false
-          expect(sixth_stage.first_end_stage_in_pipe?(demand)).to be false
-        end
-      end
-
-      context 'and the demand did not reach the downstream' do
-        let(:demand) { Fabricate :demand, project: project }
-        let!(:fifth_demand_transition) { Fabricate :demand_transition, stage: fifth_stage, demand: demand }
-
-        it 'considers the first end stage in upstream as the done' do
-          expect(first_stage.first_end_stage_in_pipe?(demand)).to be false
-          expect(second_stage.first_end_stage_in_pipe?(demand)).to be false
-          expect(third_stage.first_end_stage_in_pipe?(demand)).to be false
-          expect(fourth_stage.first_end_stage_in_pipe?(demand)).to be false
-          expect(fifth_stage.first_end_stage_in_pipe?(demand)).to be true
+          expect(first_stage.first_end_stage_in_pipe?).to be false
+          expect(second_stage.first_end_stage_in_pipe?).to be false
+          expect(third_stage.first_end_stage_in_pipe?).to be false
+          expect(fourth_stage.first_end_stage_in_pipe?).to be true
+          expect(fifth_stage.first_end_stage_in_pipe?).to be false
+          expect(sixth_stage.first_end_stage_in_pipe?).to be false
         end
       end
     end
@@ -111,7 +98,7 @@ RSpec.describe Stage, type: :model do
       let!(:first_stage) { Fabricate :stage, company: company }
       let(:demand) { Fabricate :demand, project: project }
 
-      it { expect(first_stage.first_end_stage_in_pipe?(demand)).to be false }
+      it { expect(first_stage.first_end_stage_in_pipe?).to be false }
     end
   end
 
@@ -135,18 +122,18 @@ RSpec.describe Stage, type: :model do
       let!(:fourth_demand_transition) { Fabricate :demand_transition, stage: fourth_stage, demand: demand }
       let!(:fifth_demand_transition) { Fabricate :demand_transition, stage: fifth_stage, demand: demand }
 
-      it { expect(first_stage.before_end_point?(demand)).to be true }
-      it { expect(second_stage.before_end_point?(demand)).to be true }
-      it { expect(third_stage.before_end_point?(demand)).to be false }
-      it { expect(fourth_stage.before_end_point?(demand)).to be false }
-      it { expect(fifth_stage.before_end_point?(demand)).to be false }
+      it { expect(first_stage.before_end_point?).to be true }
+      it { expect(second_stage.before_end_point?).to be true }
+      it { expect(third_stage.before_end_point?).to be false }
+      it { expect(fourth_stage.before_end_point?).to be false }
+      it { expect(fifth_stage.before_end_point?).to be false }
     end
 
     context 'having no data' do
       let!(:first_stage) { Fabricate :stage, company: company }
       let(:demand) { Fabricate :demand, project: project }
 
-      it { expect(first_stage.before_end_point?(demand)).to be true }
+      it { expect(first_stage.before_end_point?).to be true }
     end
   end
 end
