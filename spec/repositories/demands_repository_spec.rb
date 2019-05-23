@@ -165,54 +165,25 @@ RSpec.describe DemandsRepository, type: :repository do
     let(:third_project) { Fabricate :project, start_date: 2.months.ago, end_date: 2.months.from_now }
 
     context 'having demands' do
+      let(:first_stage) { Fabricate :stage, company: company, projects: [first_project, second_project], integration_pipe_id: '123', order: 0, stage_stream: :upstream }
+      let(:second_stage) { Fabricate :stage, company: company, projects: [first_project, second_project], integration_pipe_id: '123', order: 1, stage_stream: :upstream, end_point: true }
+
+      let!(:first_demand) { Fabricate :demand, project: first_project, commitment_date: nil, end_date: 2.days.ago }
+      let!(:second_demand) { Fabricate :demand, project: first_project, commitment_date: nil, end_date: 1.day.ago }
+      let!(:third_demand) { Fabricate :demand, project: first_project, commitment_date: nil, end_date: Time.zone.now }
+      let!(:fourth_demand) { Fabricate :demand, project: first_project, commitment_date: 2.days.ago, end_date: 2.days.ago }
+      let!(:fifth_demand) { Fabricate :demand, project: first_project, commitment_date: 3.days.ago, end_date: Time.zone.now }
+
+      let!(:first_epic) { Fabricate :demand, project: first_project, artifact_type: :epic }
+
       context 'upstream' do
-        let(:first_stage) { Fabricate :stage, company: company, projects: [first_project, second_project], integration_pipe_id: '123', order: 0, stage_stream: :upstream }
-        let(:second_stage) { Fabricate :stage, company: company, projects: [first_project, second_project], integration_pipe_id: '123', order: 1, stage_stream: :upstream, end_point: true }
-
-        let!(:first_demand) { Fabricate :demand, project: first_project, downstream: false }
-        let!(:second_demand) { Fabricate :demand, project: first_project, downstream: false }
-        let!(:third_demand) { Fabricate :demand, project: first_project, downstream: false }
-
-        let!(:fourth_demand) { Fabricate :demand, project: second_project, commitment_date: Time.zone.today, discarded_at: Time.zone.today }
-
-        let!(:first_epic) { Fabricate :demand, project: first_project, artifact_type: :epic }
-
-        let!(:first_transition) { Fabricate :demand_transition, stage: first_stage, demand: first_demand, last_time_in: '2018-02-27T17:09:58-03:00', last_time_out: '2018-02-28T17:09:58-03:00' }
-        let!(:second_transition) { Fabricate :demand_transition, stage: second_stage, demand: second_demand, last_time_in: '2018-02-28T17:09:58-03:00', last_time_out: nil }
-        let!(:third_transition) { Fabricate :demand_transition, stage: second_stage, demand: third_demand, last_time_in: '2018-04-04T17:09:58-03:00', last_time_out: nil }
-
-        it { expect(DemandsRepository.instance.delivered_until_date_to_projects_in_stream(Project.all, 'upstream')).to match_array [second_demand, third_demand] }
-        it { expect(DemandsRepository.instance.delivered_until_date_to_projects_in_stream(Project.all, 'upstream', Date.new(2018, 3, 1))).to eq [second_demand] }
+        it { expect(DemandsRepository.instance.delivered_until_date_to_projects_in_stream(Project.all, 'upstream')).to match_array [first_demand, second_demand, third_demand] }
+        it { expect(DemandsRepository.instance.delivered_until_date_to_projects_in_stream(Project.all, 'upstream', 1.day.ago)).to match_array [first_demand, second_demand] }
       end
 
       context 'downstream' do
-        let(:first_project) { Fabricate :project, start_date: 2.months.ago, end_date: 2.months.from_now }
-        let(:second_project) { Fabricate :project, start_date: 2.months.ago, end_date: 2.months.from_now }
-        let(:third_project) { Fabricate :project, start_date: 2.months.ago, end_date: 2.months.from_now }
-
-        context 'having demands' do
-          let(:first_stage) { Fabricate :stage, company: company, projects: [first_project, second_project], integration_pipe_id: '123', order: 0, stage_stream: :downstream }
-          let(:second_stage) { Fabricate :stage, company: company, projects: [first_project, second_project], integration_pipe_id: '123', order: 1, stage_stream: :downstream, end_point: true }
-
-          let!(:first_demand) { Fabricate :demand, project: first_project, downstream: false }
-          let!(:second_demand) { Fabricate :demand, project: first_project, downstream: false }
-          let!(:third_demand) { Fabricate :demand, project: first_project, downstream: false }
-          let!(:fourth_demand) { Fabricate :demand, project: first_project, downstream: false, commitment_date: nil }
-          let!(:fifth_demand) { Fabricate :demand, project: first_project, downstream: false, commitment_date: Time.zone.today }
-          let!(:sixth_demand) { Fabricate :demand, project: second_project, downstream: false }
-          let!(:seventh_demand) { Fabricate :demand, project: third_project, downstream: false, commitment_date: Time.zone.today, end_date: Time.zone.tomorrow }
-
-          let!(:eigth_demand) { Fabricate :demand, project: second_project, commitment_date: Time.zone.today, discarded_at: Time.zone.today }
-
-          let!(:first_epic) { Fabricate :demand, project: first_project, artifact_type: :epic }
-
-          let!(:first_transition) { Fabricate :demand_transition, stage: first_stage, demand: first_demand, last_time_in: '2018-02-27T17:09:58-03:00', last_time_out: '2018-02-28T17:09:58-03:00' }
-          let!(:second_transition) { Fabricate :demand_transition, stage: second_stage, demand: second_demand, last_time_in: '2018-02-28T17:09:58-03:00', last_time_out: nil }
-          let!(:seventh_transition) { Fabricate :demand_transition, stage: second_stage, demand: third_demand, last_time_in: '2018-04-04T17:09:58-03:00', last_time_out: nil }
-
-          it { expect(DemandsRepository.instance.delivered_until_date_to_projects_in_stream(Project.all, 'downstream')).to match_array [second_demand, third_demand] }
-          it { expect(DemandsRepository.instance.delivered_until_date_to_projects_in_stream(Project.all, 'downstream', Date.new(2018, 3, 1))).to eq [second_demand] }
-        end
+        it { expect(DemandsRepository.instance.delivered_until_date_to_projects_in_stream(Project.all, 'downstream')).to match_array [fourth_demand, fifth_demand] }
+        it { expect(DemandsRepository.instance.delivered_until_date_to_projects_in_stream(Project.all, 'downstream', 1.day.ago)).to eq [fourth_demand] }
       end
     end
 

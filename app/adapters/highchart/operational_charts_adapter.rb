@@ -37,7 +37,7 @@ module Highchart
     end
 
     def aging_per_demand
-      downstream_result_data = DemandsRepository.instance.throughput_to_projects_and_period(@all_projects, start_of_period_for_date(@start_date), end_of_period_for_date(@end_date)).order(:end_date)
+      downstream_result_data = DemandsRepository.instance.throughput_to_projects_and_period(@all_projects, start_of_period_for_date(@start_date), end_of_period_for_date(@end_date)).finished_with_leadtime.order(:end_date)
 
       aging_x_axis = downstream_result_data.map(&:demand_id)
       aging_series = downstream_result_data.map(&:aging_when_finished)
@@ -51,8 +51,8 @@ module Highchart
       @x_axis.each do |date|
         break unless add_data_to_chart?(date)
 
-        upstream_result_data << DemandsRepository.instance.throughput_to_projects_and_period(@all_projects, start_of_period_for_date(date), end_of_period_for_date(date)).finished_in_stream('upstream').count
-        downstream_result_data << DemandsRepository.instance.throughput_to_projects_and_period(@all_projects, start_of_period_for_date(date), end_of_period_for_date(date)).finished_in_stream('downstream').count
+        upstream_result_data << DemandsRepository.instance.throughput_to_projects_and_period(@all_projects, start_of_period_for_date(date), end_of_period_for_date(date)).finished_in_upstream.count
+        downstream_result_data << DemandsRepository.instance.throughput_to_projects_and_period(@all_projects, start_of_period_for_date(date), end_of_period_for_date(date)).finished_in_downstream.count
       end
 
       [{ name: I18n.t('projects.charts.throughput.stage_stream.upstream'), data: upstream_result_data }, { name: I18n.t('projects.charts.throughput.stage_stream.downstream'), data: downstream_result_data }]
