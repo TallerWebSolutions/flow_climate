@@ -79,6 +79,9 @@ en:
     partial: "(partial)"
     money: "US$ "
     weeks_text: "%{weeks} week(s)"
+    tabs:
+      config: "Configuration"
+      charts: "Charts"
   header:
     logout: Logout
     explore: Explore

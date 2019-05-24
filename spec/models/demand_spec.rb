@@ -146,12 +146,30 @@ RSpec.describe Demand, type: :model do
     end
 
     describe '.to_dates' do
-      let!(:first_demand) { Fabricate :demand, downstream: true, created_date: 3.months.ago, end_date: 2.months.ago }
-      let!(:second_demand) { Fabricate :demand, downstream: true, created_date: 1.month.ago, end_date: 15.days.ago }
-      let!(:third_demand) { Fabricate :demand, downstream: true, created_date: 2.months.ago, end_date: Time.zone.now }
-      let!(:fourth_demand) { Fabricate :demand, downstream: false, created_date: 4.months.ago, end_date: 1.day.from_now }
+      let!(:first_demand) { Fabricate :demand, created_date: 3.months.ago, end_date: 2.months.ago }
+      let!(:second_demand) { Fabricate :demand, created_date: 1.month.ago, end_date: 15.days.ago }
+      let!(:third_demand) { Fabricate :demand, created_date: 2.months.ago, end_date: Time.zone.now }
+      let!(:fourth_demand) { Fabricate :demand, created_date: 4.months.ago, end_date: 1.day.from_now }
 
-      it { expect(Demand.story.to_dates(1.month.ago, Time.zone.now).map(&:id)).to match_array [second_demand.id, third_demand.id] }
+      it { expect(Demand.to_dates(1.month.ago, Time.zone.now).map(&:id)).to match_array [second_demand.id, third_demand.id, first_epic.id] }
+    end
+
+    describe '.finished_in_downstream' do
+      let!(:first_demand) { Fabricate :demand, downstream: true, commitment_date: 3.months.ago, end_date: 2.months.ago }
+      let!(:second_demand) { Fabricate :demand, downstream: true, commitment_date: 1.month.ago, end_date: 15.days.ago }
+      let!(:third_demand) { Fabricate :demand, downstream: true, commitment_date: nil, end_date: Time.zone.now }
+      let!(:fourth_demand) { Fabricate :demand, downstream: false, commitment_date: nil, end_date: 1.day.from_now }
+
+      it { expect(Demand.finished_in_downstream.map(&:id)).to match_array [first_demand.id, second_demand.id] }
+    end
+
+    describe '.finished_in_upstream' do
+      let!(:first_demand) { Fabricate :demand, downstream: true, commitment_date: 3.months.ago, end_date: 2.months.ago }
+      let!(:second_demand) { Fabricate :demand, downstream: true, commitment_date: 1.month.ago, end_date: 15.days.ago }
+      let!(:third_demand) { Fabricate :demand, downstream: true, commitment_date: nil, end_date: Time.zone.now }
+      let!(:fourth_demand) { Fabricate :demand, downstream: false, commitment_date: nil, end_date: 1.day.from_now }
+
+      it { expect(Demand.finished_in_upstream.map(&:id)).to match_array [third_demand.id, fourth_demand.id] }
     end
   end
 
