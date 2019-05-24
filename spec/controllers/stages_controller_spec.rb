@@ -103,9 +103,11 @@ RSpec.describe StagesController, type: :controller do
 
     describe 'POST #create' do
       context 'passing valid parameters' do
-        before { post :create, params: { company_id: company, stage: { order: 2, team_id: team.id, name: 'foo', integration_id: '332231', stage_type: :analysis, stage_stream: :downstream, commitment_point: true, end_point: true, queue: true } } }
-
         it 'creates the new financial information to the company and redirects to its show' do
+          expect(StagesRepository.instance).to receive(:save_stage).once.and_call_original
+
+          post :create, params: { company_id: company, stage: { order: 2, team_id: team.id, name: 'foo', integration_id: '332231', stage_type: :analysis, stage_stream: :downstream, commitment_point: true, end_point: true, queue: true } }
+
           created_stage = Stage.last
           expect(created_stage.company).to eq company
           expect(created_stage.order).to eq 2
@@ -188,6 +190,8 @@ RSpec.describe StagesController, type: :controller do
 
       context 'passing valid parameters' do
         it 'updates the demand and redirects to projects index' do
+          expect(StagesRepository.instance).to receive(:save_stage).once.and_call_original
+
           put :update, params: { company_id: company, id: stage, stage: { order: 2, team_id: team.id, name: 'foo', integration_id: '332231', stage_type: :analysis, stage_stream: :downstream, commitment_point: true, end_point: true, queue: true } }, xhr: true
           updated_stage = stage.reload
           expect(updated_stage.company).to eq company

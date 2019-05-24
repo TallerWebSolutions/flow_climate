@@ -19,6 +19,14 @@ class StagesRepository
     stage.demand_transitions.select('EXTRACT(YEAR FROM last_time_in) AS year, EXTRACT(MONTH FROM last_time_in) AS month, EXTRACT(EPOCH FROM AVG(demand_transitions.last_time_out - demand_transitions.last_time_in)::INTERVAL) AS avg_duration').group('EXTRACT(YEAR FROM last_time_in)', 'EXTRACT(MONTH FROM last_time_in)').order(Arel.sql('EXTRACT(YEAR FROM last_time_in)'), Arel.sql('EXTRACT(MONTH FROM last_time_in)')).map { |avg| [avg.year, avg.month, avg.avg_duration] }
   end
 
+  def save_stage(stage, stage_params)
+    stage.update(stage_params)
+    team = stage.team
+    stage.projects = (stage.projects + team.projects).uniq if team.present?
+    stage.save
+    stage
+  end
+
   private
 
   def add_where_to_demand_transitions(stage, transition_date_field)
