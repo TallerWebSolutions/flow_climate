@@ -12,7 +12,8 @@ class StagesController < AuthenticatedController
 
   def create
     @stage = Stage.new(stages_params.merge(company: @company))
-    return redirect_to company_path(@company) if @stage.save
+    @stage = StagesRepository.instance.save_stage(@stage, stages_params)
+    return redirect_to company_path(@company) if @stage.valid?
 
     render :new
   end
@@ -22,7 +23,7 @@ class StagesController < AuthenticatedController
   end
 
   def update
-    @stage.update(stages_params)
+    @stage = StagesRepository.instance.save_stage(@stage, stages_params)
     render 'stages/update'
   end
 

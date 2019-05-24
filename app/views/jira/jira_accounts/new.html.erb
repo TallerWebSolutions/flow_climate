@@ -12,13 +12,13 @@
   <div class="row">
     <div class='col-xs-6 form-group <%= 'has-error' if @jira_account.errors[:base_uri].present? %>'>
       <%= f.label :base_uri, class: 'control-label required' %>
-      <%= f.text_field :base_uri, class: 'form-control', value: @jira_account.base_uri, autofocus: true %>
+      <%= f.text_field :base_uri, class: 'form-control', value: @jira_account.base_uri, placeholder: 'https://your_domain.atlassian.net/', autofocus: true %>
       <span class="help-block"><%= @jira_account.errors[:base_uri].join(', ') %></span>
     </div>
 
     <div class='col-xs-6 form-group <%= 'has-error' if @jira_account.errors[:customer_domain].present? %>'>
       <%= f.label :customer_domain, class: 'control-label required' %>
-      <%= f.text_field :customer_domain, class: 'form-control', value: @jira_account.customer_domain %>
+      <%= f.text_field :customer_domain, class: 'form-control', value: @jira_account.customer_domain, placeholder: 'your_domain' %>
       <span class="help-block"><%= @jira_account.errors[:customer_domain].join(', ') %></span>
     </div>
   </div>

@@ -22,3 +22,26 @@
     <% end %>
   </tbody>
 </table>
+
+<% if jira_accounts_list.present? %>
+  <div class="help-frame">
+    <p class="bottom-spaced-component help-title">
+      <%= t('jira_accounts.webhooks.help') %>
+      <%= link_to "#{jira_accounts_list.first.base_uri}plugins/servlet/webhooks#", target: :_blank do %>
+        <i class="fas fa-external-link-alt" title="<%= t('jira_accounts.webhooks.link_form_hint') %>"></i>
+      <% end %>
+    </p>
+    <p>
+      <%= t('jira_accounts.webhooks.help_create_update_card') %>
+      <%= link_to "https://res.cloudinary.com/dmphguydp/image/upload/v1558722720/update-webhook-config-help_vpu8mu.png", target: :_blank do %>
+        <i class="far fa-question-circle" title="<%= t('jira_accounts.webhooks.link_form_help_hint') %>"></i>
+      <% end %>
+    </p>
+    <p>
+      <%= t('jira_accounts.webhooks.help_delete_card') %>
+      <%= link_to "https://res.cloudinary.com/dmphguydp/image/upload/v1558723666/delete-webhook-config-help_ui2pdr.png", target: :_blank do %>
+        <i class="far fa-question-circle" title="<%= t('jira_accounts.webhooks.help_create_update_card') %>"></i>
+      <% end %>
+    </p>
+  </div>
+<% end %>

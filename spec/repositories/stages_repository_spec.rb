@@ -115,4 +115,15 @@ RSpec.describe StagesRepository, type: :repository do
       it { expect(StagesRepository.instance.average_seconds_in_stage_per_month(stage)).to eq [] }
     end
   end
+
+  describe '#save_stage' do
+    let(:team) { Fabricate :team, company: company }
+    let!(:new_project) { Fabricate :project, team: team }
+
+    it 'saves the stage and adds team projects' do
+      stage_params = { team_id: team.id }
+      saved_stage = StagesRepository.instance.save_stage(stage, stage_params)
+      expect(saved_stage.projects.map(&:id)).to match_array [new_project.id, project.id]
+    end
+  end
 end
