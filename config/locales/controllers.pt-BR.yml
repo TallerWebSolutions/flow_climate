@@ -81,6 +81,9 @@ pt-BR:
     partial: "(parcial)"
     money: "R$ "
     weeks_text: "%{weeks} semana(s)"
+    tabs:
+      config: "Configuração"
+      charts: "Gráficos"
   header:
     logout: Sair
     sign_up: Cadastre-se
