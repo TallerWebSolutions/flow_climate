@@ -7,23 +7,9 @@
     <div class="modal-body">
       <%= form_for project_jira_config, url: company_project_project_jira_configs_path(company, project), remote: true do |form| %>
         <div class="row">
-          <div class='col-xs-12 form-group <%= 'has-error' if project_jira_config.errors[:team].present? %>'>
-            <%= form.label :team, class: 'control-label' %>
-            <%= form.select :team, company.teams.map { |team| [team.name, team.id] }, { include_blank: t('general.select'), selected: project_jira_config.team_id }, class: 'form-control', autofocus: true %>
-            <span class="help-block"><%= project_jira_config.errors[:team].join(', ') %></span>
-          </div>
-        </div>
-
-        <div class="row">
-          <div class='col-xs-12 form-group <%= 'has-error' if project_jira_config.errors[:jira_account_domain].present? %>'>
-            <%= form.label :jira_account_domain, class: 'control-label required' %>
-            <%= form.text_field :jira_account_domain, class: 'form-control' %>
-            <span class="help-block"><%= project_jira_config.errors[:jira_account_domain].join(', ') %></span>
-          </div>
-        </div>
-        <div class="row">
           <div class='col-xs-12 form-group <%= 'has-error' if project_jira_config.errors[:fix_version_name].present? %>'>
             <%= form.label :fix_version_name, class: 'control-label required' %>
+            <i class="far fa-question-circle" title="<%= t('project_jira_configs.new.fix_version_field.help') %>"></i>
             <%= form.text_field :fix_version_name, class: 'form-control' %>
             <span class="help-block"><%= project_jira_config.errors[:fix_version_name].join(', ') %></span>
           </div>

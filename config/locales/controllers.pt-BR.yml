@@ -223,6 +223,8 @@ pt-BR:
       demand_blocks_duration_average: "Duração Média dos Bloqueios"
       import_stages: "Importar Etapas"
       sync_jira: "Sincronizar Projeto"
+      jira_area:
+        title: "Área Jira"
     charts:
       xlabel:
         weeks: "Semanas"
@@ -729,6 +731,8 @@ pt-BR:
   project_jira_configs:
     new:
       title: "Nova Configuração do Jira"
+      fix_version_field:
+        help: "Usamos fix versions ou labels para dividir os itens de trabalho em lotes de planejamento e previsibilidade. Labels possuem precedência sobre as fix versions."
   exports:
     request_project_information:
       title: "Receber Informações do Jira"

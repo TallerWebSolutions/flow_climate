@@ -356,11 +356,10 @@ pt-BR:
             api_not_ready: API não está pronta
             customer_not_available: Cliente indisponível
       jira/project_jira_config:
-        team: Time
-        jira_account_domain: Domínio da Conta no Jira
         jira_project_key: Chave do Projeto no Jira
         active: Ativo?
         project: Projeto
+        fix_version_name: Fix Version ou Label no Jira
       jira/jira_account:
         username: Nome de usuário
         password: Senha

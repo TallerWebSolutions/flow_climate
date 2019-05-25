@@ -9,6 +9,20 @@ SET xmloption = content;
 SET client_min_messages = warning;
 SET row_security = off;
 
+--
+-- Name: pg_stat_statements; Type: EXTENSION; Schema: -; Owner: -
+--
+
+CREATE EXTENSION IF NOT EXISTS pg_stat_statements WITH SCHEMA public;
+
+
+--
+-- Name: EXTENSION pg_stat_statements; Type: COMMENT; Schema: -; Owner: -
+--
+
+COMMENT ON EXTENSION pg_stat_statements IS 'track execution statistics of all SQL statements executed';
+
+
 SET default_tablespace = '';
 
 SET default_with_oids = false;
@@ -269,7 +283,6 @@ CREATE TABLE public.demands (
     effort_downstream numeric DEFAULT 0,
     effort_upstream numeric DEFAULT 0,
     leadtime numeric,
-    downstream boolean DEFAULT false,
     manual_effort boolean DEFAULT false,
     total_queue_time integer DEFAULT 0,
     total_touch_time integer DEFAULT 0,
@@ -770,10 +783,7 @@ ALTER SEQUENCE public.project_consolidations_id_seq OWNED BY public.project_cons
 CREATE TABLE public.project_jira_configs (
     id bigint NOT NULL,
     project_id integer NOT NULL,
-    team_id integer NOT NULL,
-    jira_account_domain character varying NOT NULL,
     jira_project_key character varying NOT NULL,
-    active boolean DEFAULT true NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     fix_version_name character varying
@@ -1914,13 +1924,6 @@ CREATE INDEX index_project_change_deadline_histories_on_user_id ON public.projec
 
 
 --
--- Name: index_project_jira_configs_on_jira_account_domain; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_project_jira_configs_on_jira_account_domain ON public.project_jira_configs USING btree (jira_account_domain);
-
-
---
 -- Name: index_project_jira_configs_on_jira_project_key; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1932,13 +1935,6 @@ CREATE INDEX index_project_jira_configs_on_jira_project_key ON public.project_ji
 --
 
 CREATE INDEX index_project_jira_configs_on_project_id ON public.project_jira_configs USING btree (project_id);
-
-
---
--- Name: index_project_jira_configs_on_team_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_project_jira_configs_on_team_id ON public.project_jira_configs USING btree (team_id);
 
 
 --
@@ -2086,13 +2082,6 @@ CREATE UNIQUE INDEX index_users_on_reset_password_token ON public.users USING bt
 --
 
 CREATE UNIQUE INDEX unique_custom_field_to_jira_account ON public.jira_custom_field_mappings USING btree (jira_account_id, demand_field);
-
-
---
--- Name: unique_jira_project_key_to_jira_account_domain; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX unique_jira_project_key_to_jira_account_domain ON public.project_jira_configs USING btree (jira_project_key, jira_account_domain, fix_version_name);
 
 
 --
@@ -2397,14 +2386,6 @@ ALTER TABLE ONLY public.stage_project_configs
 
 
 --
--- Name: project_jira_configs fk_rails_b2aa7aacef; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.project_jira_configs
-    ADD CONSTRAINT fk_rails_b2aa7aacef FOREIGN KEY (team_id) REFERENCES public.teams(id);
-
-
---
 -- Name: project_risk_alerts fk_rails_b8b501e2eb; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2601,6 +2582,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190501044600'),
 ('20190507183550'),
 ('20190507222549'),
-('20190517141230');
+('20190517141230'),
+('20190525161036');
 
 

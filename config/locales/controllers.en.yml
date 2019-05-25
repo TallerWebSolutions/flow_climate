@@ -207,6 +207,8 @@ en:
       demand_blocks_duration_average: "Block Duration Avg"
       import_stages: "Import Stages"
       sync_jira: "Sync Project"
+      jira_area:
+        title: "Jira Area"
     charts:
       xlabel:
         weeks: "Weeks"
@@ -717,6 +719,8 @@ en:
   project_jira_configs:
     new:
       title: "New Jira Config"
+      fix_version_field:
+        help: "We are using fix versions and labels to split the work itens into a large batch for planning and predictability."
   exports:
     request_project_information:
       title: "Receive informations from Jira"

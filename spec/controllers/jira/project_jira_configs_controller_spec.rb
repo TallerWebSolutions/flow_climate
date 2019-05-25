@@ -63,15 +63,11 @@ RSpec.describe Jira::ProjectJiraConfigsController, type: :controller do
     end
 
     describe 'POST #create' do
-      let!(:team) { Fabricate :team, company: company }
-
       context 'passing valid parameters' do
-        before { post :create, params: { company_id: company, project_id: project, jira_project_jira_config: { team: team.id, jira_account_domain: 'foo', jira_project_key: 'bar', fix_version_name: 'xpto' } }, xhr: true }
+        before { post :create, params: { company_id: company, project_id: project, jira_project_jira_config: { jira_project_key: 'bar', fix_version_name: 'xpto' } }, xhr: true }
 
         it 'creates the new project jira config' do
           created_config = Jira::ProjectJiraConfig.last
-          expect(created_config.team).to eq team
-          expect(created_config.jira_account_domain).to eq 'foo'
           expect(created_config.jira_project_key).to eq 'bar'
           expect(created_config.fix_version_name).to eq 'xpto'
 
@@ -86,14 +82,14 @@ RSpec.describe Jira::ProjectJiraConfigsController, type: :controller do
           it 'does not create the project jira config' do
             expect(Jira::ProjectJiraConfig.last).to be_nil
             expect(response).to render_template 'jira/project_jira_configs/create'
-            expect(assigns(:project_jira_config).errors.full_messages).to eq ['Time não pode ficar em branco', 'Domínio da Conta no Jira não pode ficar em branco', 'Chave do Projeto no Jira não pode ficar em branco']
+            expect(assigns(:project_jira_config).errors.full_messages).to eq ['Chave do Projeto no Jira não pode ficar em branco']
           end
         end
 
         context 'breaking unique index' do
-          let!(:project_jira_config) { Fabricate :project_jira_config, project: project, team: team, jira_account_domain: 'foo', jira_project_key: 'bar', fix_version_name: 'xpto' }
+          let!(:project_jira_config) { Fabricate :project_jira_config, project: project, jira_project_key: 'bar', fix_version_name: 'xpto' }
 
-          before { post :create, params: { company_id: company, project_id: project, jira_project_jira_config: { team: team.id, jira_account_domain: 'foo', jira_project_key: 'bar', fix_version_name: 'xpto' } }, xhr: true }
+          before { post :create, params: { company_id: company, project_id: project, jira_project_jira_config: { jira_project_key: 'bar', fix_version_name: 'xpto' } }, xhr: true }
 
           it 'does not create the project jira config' do
             expect(Jira::ProjectJiraConfig.count).to eq 1

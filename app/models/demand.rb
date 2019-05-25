@@ -16,7 +16,6 @@
 #  demand_type       :integer          not null
 #  demand_url        :string
 #  discarded_at      :datetime         indexed
-#  downstream        :boolean          default(FALSE)
 #  effort_downstream :decimal(, )      default(0.0)
 #  effort_upstream   :decimal(, )      default(0.0)
 #  end_date          :datetime
@@ -130,7 +129,7 @@ class Demand < ApplicationRecord
   end
 
   def downstream_demand?
-    demand_transitions.kept.joins(:stage).downstream_transitions.present? || downstream?
+    commitment_date.present?
   end
 
   def total_effort
