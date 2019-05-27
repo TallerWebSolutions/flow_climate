@@ -194,6 +194,39 @@ ALTER SEQUENCE public.demand_blocks_id_seq OWNED BY public.demand_blocks.id;
 
 
 --
+-- Name: demand_comments; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.demand_comments (
+    id bigint NOT NULL,
+    demand_id integer NOT NULL,
+    comment_date timestamp without time zone NOT NULL,
+    comment_text character varying NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: demand_comments_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.demand_comments_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: demand_comments_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.demand_comments_id_seq OWNED BY public.demand_comments.id;
+
+
+--
 -- Name: demand_data_processments; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1262,6 +1295,13 @@ ALTER TABLE ONLY public.demand_blocks ALTER COLUMN id SET DEFAULT nextval('publi
 
 
 --
+-- Name: demand_comments id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.demand_comments ALTER COLUMN id SET DEFAULT nextval('public.demand_comments_id_seq'::regclass);
+
+
+--
 -- Name: demand_data_processments id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1481,6 +1521,14 @@ ALTER TABLE ONLY public.customers
 
 ALTER TABLE ONLY public.demand_blocks
     ADD CONSTRAINT demand_blocks_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: demand_comments demand_comments_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.demand_comments
+    ADD CONSTRAINT demand_comments_pkey PRIMARY KEY (id);
 
 
 --
@@ -1753,6 +1801,13 @@ CREATE UNIQUE INDEX index_customers_on_company_id_and_name ON public.customers U
 --
 
 CREATE INDEX index_demand_blocks_on_demand_id ON public.demand_blocks USING btree (demand_id);
+
+
+--
+-- Name: index_demand_comments_on_demand_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_demand_comments_on_demand_id ON public.demand_comments USING btree (demand_id);
 
 
 --
@@ -2434,6 +2489,14 @@ ALTER TABLE ONLY public.flow_consolidations
 
 
 --
+-- Name: demand_comments fk_rails_dc14d53db5; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.demand_comments
+    ADD CONSTRAINT fk_rails_dc14d53db5 FOREIGN KEY (demand_id) REFERENCES public.demands(id);
+
+
+--
 -- Name: teams fk_rails_e080df8a94; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2583,6 +2646,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190507183550'),
 ('20190507222549'),
 ('20190517141230'),
-('20190525161036');
+('20190525161036'),
+('20190527172016');
 
 

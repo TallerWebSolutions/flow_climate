@@ -61,6 +61,7 @@ class Demand < ApplicationRecord
   has_many :demand_transitions, dependent: :destroy
   has_many :demand_blocks, dependent: :destroy
   has_many :stages, -> { distinct }, through: :demand_transitions
+  has_many :demand_comments, dependent: :destroy
   has_one :demands_list, inverse_of: :demand, dependent: :restrict_with_error
 
   validates :project, :created_date, :demand_id, :demand_type, :class_of_service, :assignees_count, presence: true
