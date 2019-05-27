@@ -209,6 +209,10 @@ en:
       sync_jira: "Sync Project"
       jira_area:
         title: "Jira Area"
+        no_stages: "But does not have configurated stages."
+        not_integrated: "This is not a JIRA integrated project."
+        integrated_project: "This is a project integrated to JIRA."
+        configured_stages: "This project has %{count} stages."
     charts:
       xlabel:
         weeks: "Weeks"

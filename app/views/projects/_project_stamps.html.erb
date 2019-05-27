@@ -83,12 +83,14 @@
   <div class="col-xs-6">
     <h3 class="center"><%= t('projects.show.jira_area.title') %></h3>
     <% if project.project_jira_config.present? %>
-      <p>Este é um projeto integrado ao JIRA.</p>
+      <p><%= t('projects.show.jira_area.integrated_project') %></p>
       <% if project.stages.blank? %>
-        <p>Mas ainda não possui etapas configuradas.</p>
+        <p><%= t('projects.show.jira_area.no_stages') %></p>
+      <% else %>
+        <p><%= t('projects.show.jira_area.configured_stages', count: project.stages.count) %></p>
       <% end %>
     <% else %>
-      <p>Este projeto não tem integração com o JIRA</p>
+      <p><%= t('projects.show.jira_area.not_integrated') %></p>
     <% end %>
   </div>
 </div>
