@@ -161,6 +161,7 @@ module Jira
 
     def process_demand_block(demand, history, history_item)
       created = history['created']
+
       author = history['author']['displayName']
 
       if history_item['toString'].casecmp('impediment').zero? || history_item['toString'].casecmp('impedimento').zero?

@@ -293,6 +293,7 @@ pt-BR:
         demand: Demanda
         demand_block_id: Id
         stage: Bloqueado em
+        block_reason: Motivo
         blocker_username: Bloqueado por
         block_time: Bloqueado em
         unblocker_username: Desbloqueado por

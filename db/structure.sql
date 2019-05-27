@@ -9,20 +9,6 @@ SET xmloption = content;
 SET client_min_messages = warning;
 SET row_security = off;
 
---
--- Name: pg_stat_statements; Type: EXTENSION; Schema: -; Owner: -
---
-
-CREATE EXTENSION IF NOT EXISTS pg_stat_statements WITH SCHEMA public;
-
-
---
--- Name: EXTENSION pg_stat_statements; Type: COMMENT; Schema: -; Owner: -
---
-
-COMMENT ON EXTENSION pg_stat_statements IS 'track execution statistics of all SQL statements executed';
-
-
 SET default_tablespace = '';
 
 SET default_with_oids = false;
@@ -170,7 +156,8 @@ CREATE TABLE public.demand_blocks (
     active boolean DEFAULT true NOT NULL,
     block_type integer DEFAULT 0 NOT NULL,
     discarded_at timestamp without time zone,
-    stage_id integer
+    stage_id integer,
+    block_reason character varying
 );
 
 
@@ -1930,6 +1917,13 @@ CREATE INDEX index_integration_errors_on_integration_type ON public.integration_
 
 
 --
+-- Name: index_jira_accounts_on_base_uri; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_jira_accounts_on_base_uri ON public.jira_accounts USING btree (base_uri);
+
+
+--
 -- Name: index_jira_accounts_on_company_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2647,6 +2641,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190507222549'),
 ('20190517141230'),
 ('20190525161036'),
-('20190527172016');
+('20190527172016'),
+('20190527200450');
 
 

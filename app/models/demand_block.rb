@@ -6,6 +6,7 @@
 #
 #  active             :boolean          default(TRUE), not null
 #  block_duration     :integer
+#  block_reason       :string
 #  block_time         :datetime         not null
 #  block_type         :integer          default("coding_needed"), not null
 #  blocker_username   :string           not null

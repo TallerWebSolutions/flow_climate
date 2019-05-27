@@ -4,7 +4,7 @@
 #
 # Table name: jira_accounts
 #
-#  base_uri              :string           not null
+#  base_uri              :string           not null, indexed
 #  company_id            :integer          not null, indexed
 #  created_at            :datetime         not null
 #  customer_domain       :string           not null, indexed
@@ -16,6 +16,7 @@
 #
 # Indexes
 #
+#  index_jira_accounts_on_base_uri         (base_uri) UNIQUE
 #  index_jira_accounts_on_company_id       (company_id)
 #  index_jira_accounts_on_customer_domain  (customer_domain) UNIQUE
 #
@@ -32,7 +33,7 @@ module Jira
     attr_encrypted :password, key: Base64.decode64(Figaro.env.secret_key_32_encoded)
 
     validates :username, :password, :base_uri, :company, :customer_domain, presence: true
-    validates :customer_domain, uniqueness: true
+    validates :customer_domain, :base_uri, uniqueness: true
 
     def responsibles_custom_field
       jira_custom_field_mappings.find_by(demand_field: :responsibles)
