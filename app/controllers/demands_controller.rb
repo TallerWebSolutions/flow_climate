@@ -54,6 +54,7 @@ class DemandsController < AuthenticatedController
     @touch_percentage = 100 - @queue_percentage
     @upstream_percentage = Stats::StatisticsService.instance.compute_percentage(@demand.working_time_upstream, @demand.working_time_downstream)
     @downstream_percentage = 100 - @upstream_percentage
+    @demand_comments = @demand.demand_comments.order(:comment_date)
   end
 
   def synchronize_jira

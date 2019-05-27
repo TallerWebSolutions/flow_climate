@@ -119,6 +119,9 @@ pt-BR:
       flow_impact:
         one: Impacto no Fluxo
         other: Impactos no Fluxo
+      demand_comment:
+        one: Comentário
+        other: Comentários
       jira/project_jira_config:
         one: Configuração do Jira para o Projeto
         other: Configurações do Jira para o Projeto
@@ -293,6 +296,7 @@ pt-BR:
         demand: Demanda
         demand_block_id: Id
         stage: Bloqueado em
+        block_reason: Motivo
         blocker_username: Bloqueado por
         block_time: Bloqueado em
         unblocker_username: Desbloqueado por
@@ -355,6 +359,10 @@ pt-BR:
             other_team_dependency: Dependência de outro time
             api_not_ready: API não está pronta
             customer_not_available: Cliente indisponível
+      demand_comment:
+        demand: Demanda
+        comment_date: Data do Comentário
+        comment_text: Texto
       jira/project_jira_config:
         jira_project_key: Chave do Projeto no Jira
         active: Ativo?

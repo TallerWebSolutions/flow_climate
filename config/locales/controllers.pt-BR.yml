@@ -225,6 +225,10 @@ pt-BR:
       sync_jira: "Sincronizar Projeto"
       jira_area:
         title: "Área Jira"
+        no_stages: "Mas ainda não possui etapas configuradas."
+        not_integrated: "Este projeto não tem integração com o JIRA."
+        integrated_project: "Este é um projeto integrado ao JIRA."
+        configured_stages: "Este projeto possui %{count} etapas."
     charts:
       xlabel:
         weeks: "Semanas"

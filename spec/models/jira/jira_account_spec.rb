@@ -25,6 +25,16 @@ RSpec.describe Jira::JiraAccount, type: :model do
           expect(other_jira_account.errors.full_messages).to eq ['Domínio do Usuário já está em uso']
         end
       end
+
+      context 'base_uri' do
+        let!(:jira_account) { Fabricate :jira_account, base_uri: 'foo' }
+        let!(:other_jira_account) { Fabricate.build :jira_account, base_uri: 'foo' }
+
+        it 'responds invalid with an error message' do
+          expect(other_jira_account).not_to be_valid
+          expect(other_jira_account.errors.full_messages).to eq ['URI base já está em uso']
+        end
+      end
     end
   end
 

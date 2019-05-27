@@ -5,11 +5,7 @@
 </div>
 
 <% if demand_transitions_list.empty? %>
-  <div class="row">
-    <div class="col-xs-12">
-      <%= t('demands.show.no_demand_transitions') %>
-    </div>
-  </div>
+  <%= render 'layouts/no_data', missing_data: DemandTransition.model_name.human.downcase %>>
 <% else %>
   <table class="table table-striped">
     <thead>

@@ -14,6 +14,7 @@ RSpec.describe Demand, type: :model do
     it { is_expected.to have_many(:children).class_name('Demand').inverse_of(:parent).dependent(:destroy) }
     it { is_expected.to have_many(:demand_transitions).dependent(:destroy) }
     it { is_expected.to have_many(:demand_blocks).dependent(:destroy) }
+    it { is_expected.to have_many(:demand_comments).dependent(:destroy) }
     it { is_expected.to have_many(:stages).through(:demand_transitions) }
   end
 

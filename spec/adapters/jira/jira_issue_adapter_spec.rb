@@ -133,7 +133,7 @@ RSpec.describe Jira::JiraIssueAdapter, type: :service do
       end
 
       context 'and it was blocked' do
-        let!(:jira_issue) { client.Issue.build({ key: '10000', summary: 'foo of bar', fields: { created: '2018-07-03T11:20:18.998-0300', issuetype: { name: 'chore' }, project: { key: 'foo' }, customfield_10024: [{ name: 'foo' }, { name: 'bar' }], customfield_10028: { value: 'sTandard' } }, changelog: { comment: { comments: [{ body: '(flagoff) o bla do xpto foi resolvido de boa', created: '2018-07-07T17:00:18.399-0300', author: { name: 'bla' } }, { body: '(flag) Flag added\n\nbla do xpto passando pelo foo até o bar.', created: '2018-07-06T17:00:18.399-0300', author: { name: 'sbbrubles' } }, { body: '(flag) Flag added\n\nbla do xpto resolvido nada.. vai ter que refazer essa bagaça..', created: '2018-07-08T17:00:18.399-0300', author: { name: 'soul' } }, { body: 'Comentário que não é um bloqueio modafucka', created: '2018-07-09T17:00:18.399-0300', author: { name: 'mor' } }] }, histories: [{ id: '10038', author: { displayName: 'bla' }, created: '2018-07-06T09:40:43.886-0300', items: [{ field: 'Impediment', fromString: '', to: '10055', toString: 'Impediment' }] }, { id: '10055', author: { displayName: 'xpto' }, created: '2018-07-06T13:40:43.886-0300', items: [{ field: 'Impediment', fromString: 'Impediment', to: '10055', toString: '' }] }, { id: '10057', author: { displayName: 'foo' }, created: '2018-07-09T13:40:43.886-0300', items: [{ field: 'Impediment', fromString: '', to: '10055', toString: 'Impediment' }] }] } }.with_indifferent_access) }
+        let!(:jira_issue) { client.Issue.build({ key: '10000', summary: 'foo of bar', fields: { created: '2018-07-03T11:20:18.998-0300', issuetype: { name: 'chore' }, project: { key: 'foo' }, customfield_10024: [{ name: 'foo' }, { name: 'bar' }], customfield_10028: { value: 'sTandard' }, comment: { comments: [{ created: '2018-07-06T09:40:43.886000000-0300', body: '(flag) comment example' }] } }, changelog: { histories: [{ id: '10038', author: { displayName: 'bla' }, created: '2018-07-06T09:40:43.886-0300', items: [{ field: 'Impediment', fromString: '', to: '10055', toString: 'Impediment' }] }, { id: '10055', author: { displayName: 'xpto' }, created: '2018-07-06T13:40:43.886-0300', items: [{ field: 'Impediment', fromString: 'Impediment', to: '10055', toString: '' }] }, { id: '10057', author: { displayName: 'foo' }, created: '2018-07-09T13:40:43.886-0300', items: [{ field: 'Impediment', fromString: '', to: '10055', toString: 'Impediment' }] }] } }.with_indifferent_access) }
 
         it 'creates the demand and the blocks information' do
           Jira::JiraIssueAdapter.instance.process_issue!(jira_account, first_project, jira_issue)
@@ -142,6 +142,7 @@ RSpec.describe Jira::JiraIssueAdapter, type: :service do
 
           first_demand_block = demand_created.demand_blocks.order(created_at: :asc).first
           expect(first_demand_block.blocker_username).to eq 'bla'
+          expect(first_demand_block.block_reason).to eq '(flag) comment example'
           expect(first_demand_block.block_time).to eq '2018-07-06T09:40:43.886000000-0300'
 
           expect(first_demand_block.unblocker_username).to eq 'xpto'
@@ -187,7 +188,7 @@ RSpec.describe Jira::JiraIssueAdapter, type: :service do
       let!(:jira_custom_field_mapping) { Fabricate :jira_custom_field_mapping, jira_account: jira_account, demand_field: :responsibles, custom_field_machine_name: 'customfield_10024' }
       let!(:demand) { Fabricate :demand, project: first_project, demand_id: '10000' }
 
-      let!(:jira_issue) { client.Issue.build({ key: '10000', fields: { created: '2018-07-02T11:20:18.998-0300', summary: 'foo of bar', issuetype: { name: 'Story' }, customfield_10028: { value: 'Expedite' }, project: { key: 'foo' }, customfield_10024: [{ name: 'foo' }, { name: 'bar' }] }, changelog: { startAt: 0, maxResults: 2, total: 2, histories: [{ id: '10039', from: 'first_stage', to: 'second_stage', created: '2018-07-08T22:34:47.440-0300' }, { id: '10038', from: 'third_stage', to: 'first_stage', created: '2018-07-06T09:40:43.886-0300' }] } }.with_indifferent_access) }
+      let!(:jira_issue) { client.Issue.build({ key: '10000', fields: { created: '2018-07-02T11:20:18.998-0300', summary: 'foo of bar', issuetype: { name: 'Story' }, customfield_10028: { value: 'Expedite' }, project: { key: 'foo' }, customfield_10024: [{ name: 'foo' }, { name: 'bar' }], comment: { comments: [{ created: Time.zone.local(2019, 5, 27, 10, 0, 0).iso8601, body: 'comment example' }] } }, changelog: { startAt: 0, maxResults: 2, total: 2, histories: [{ id: '10039', from: 'first_stage', to: 'second_stage', created: '2018-07-08T22:34:47.440-0300' }, { id: '10038', from: 'third_stage', to: 'first_stage', created: '2018-07-06T09:40:43.886-0300' }] } }.with_indifferent_access) }
 
       context 'and the demand is not archived' do
         it 'updates the demand' do
@@ -196,6 +197,8 @@ RSpec.describe Jira::JiraIssueAdapter, type: :service do
           expect(Demand.last.assignees_count).to eq 2
           expect(Demand.last.demand_title).to eq 'foo of bar'
           expect(Demand.last.downstream_demand?).to be false
+          expect(Demand.last.demand_comments.first.comment_text).to eq 'comment example'
+          expect(Demand.last.demand_comments.first.comment_date).to eq Time.zone.local(2019, 5, 27, 10, 0, 0)
           expect(Demand.last.url).to eq "#{jira_account.base_uri}browse/10000"
           expect(Demand.last.created_date).to eq Time.zone.parse('2018-07-02T11:20:18.998-0300')
         end
