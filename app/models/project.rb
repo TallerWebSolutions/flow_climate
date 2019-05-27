@@ -155,7 +155,7 @@ class Project < ApplicationRecord
   end
 
   def current_team
-    team || product&.team || project_jira_config&.team
+    team || product&.team
   end
 
   def flow_pressure(date = Time.zone.now)
