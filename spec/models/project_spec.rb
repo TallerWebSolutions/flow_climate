@@ -307,34 +307,24 @@ RSpec.describe Project, type: :model do
     context 'having a defined team to the project' do
       let(:product) { Fabricate :product, team: product_team }
       let(:project) { Fabricate :project, product: product, team: project_team, end_date: 4.weeks.from_now }
-      let!(:project_jira_config) { Fabricate :project_jira_config, project: project, team: other_team }
+      let!(:project_jira_config) { Fabricate :project_jira_config, project: project }
 
       it { expect(project.current_team).to eq project_team }
     end
 
-    context 'having no data' do
-      context 'but having a team to the product' do
-        let(:product) { Fabricate :product, team: product_team }
-        let!(:project) { Fabricate :project, product: product }
-        let!(:project_jira_config) { Fabricate :project_jira_config, project: project, team: team }
+    context 'having no team to the project to the product' do
+      let(:product) { Fabricate :product, team: product_team }
+      let!(:project) { Fabricate :project, product: product }
+      let!(:project_jira_config) { Fabricate :project_jira_config, project: project }
 
-        it { expect(project.current_team).to eq product_team }
-      end
+      it { expect(project.current_team).to eq product_team }
+    end
 
-      context 'having no team to the product but having a configuration to Jira' do
-        let(:product) { Fabricate :product, team: nil }
-        let(:project) { Fabricate :project, product: product, project_type: :outsourcing }
-        let!(:project_jira_config) { Fabricate :project_jira_config, project: project, team: team }
+    context 'having no team to the project neither to the product' do
+      let(:product) { Fabricate :product, team: nil }
+      let(:project) { Fabricate :project, product: product, project_type: :outsourcing }
 
-        it { expect(project.current_team).to eq team }
-      end
-
-      context 'having no team to the product and no configuration to Jira' do
-        let(:product) { Fabricate :product, team: nil }
-        let(:project) { Fabricate :project, product: product, project_type: :outsourcing }
-
-        it { expect(project.current_team).to be_nil }
-      end
+      it { expect(project.current_team).to be_nil }
     end
   end
 

@@ -155,19 +155,19 @@ RSpec.describe Demand, type: :model do
     end
 
     describe '.finished_in_downstream' do
-      let!(:first_demand) { Fabricate :demand, downstream: true, commitment_date: 3.months.ago, end_date: 2.months.ago }
-      let!(:second_demand) { Fabricate :demand, downstream: true, commitment_date: 1.month.ago, end_date: 15.days.ago }
-      let!(:third_demand) { Fabricate :demand, downstream: true, commitment_date: nil, end_date: Time.zone.now }
-      let!(:fourth_demand) { Fabricate :demand, downstream: false, commitment_date: nil, end_date: 1.day.from_now }
+      let!(:first_demand) { Fabricate :demand, commitment_date: 3.months.ago, end_date: 2.months.ago }
+      let!(:second_demand) { Fabricate :demand, commitment_date: 1.month.ago, end_date: 15.days.ago }
+      let!(:third_demand) { Fabricate :demand, commitment_date: nil, end_date: Time.zone.now }
+      let!(:fourth_demand) { Fabricate :demand, commitment_date: nil, end_date: 1.day.from_now }
 
       it { expect(Demand.finished_in_downstream.map(&:id)).to match_array [first_demand.id, second_demand.id] }
     end
 
     describe '.finished_in_upstream' do
-      let!(:first_demand) { Fabricate :demand, downstream: true, commitment_date: 3.months.ago, end_date: 2.months.ago }
-      let!(:second_demand) { Fabricate :demand, downstream: true, commitment_date: 1.month.ago, end_date: 15.days.ago }
-      let!(:third_demand) { Fabricate :demand, downstream: true, commitment_date: nil, end_date: Time.zone.now }
-      let!(:fourth_demand) { Fabricate :demand, downstream: false, commitment_date: nil, end_date: 1.day.from_now }
+      let!(:first_demand) { Fabricate :demand, commitment_date: 3.months.ago, end_date: 2.months.ago }
+      let!(:second_demand) { Fabricate :demand, commitment_date: 1.month.ago, end_date: 15.days.ago }
+      let!(:third_demand) { Fabricate :demand, commitment_date: nil, end_date: Time.zone.now }
+      let!(:fourth_demand) { Fabricate :demand, commitment_date: nil, end_date: 1.day.from_now }
 
       it { expect(Demand.finished_in_upstream.map(&:id)).to match_array [third_demand.id, fourth_demand.id] }
     end
@@ -467,16 +467,14 @@ RSpec.describe Demand, type: :model do
     let!(:stage_project_config) { Fabricate :stage_project_config, project: project, stage: upstream_stage }
     let!(:other_stage_project_config) { Fabricate :stage_project_config, project: project, stage: downstream_stage }
 
-    let(:demand) { Fabricate :demand, project: project, assignees_count: 1 }
-
-    context 'having transition in the downstream' do
-      let!(:demand_transition) { Fabricate :demand_transition, demand: demand, stage: downstream_stage }
+    context 'having commitment_date' do
+      let(:demand) { Fabricate :demand, project: project, commitment_date: Time.zone.now }
 
       it { expect(demand.downstream_demand?).to be true }
     end
 
-    context 'having no transitions in the downstream' do
-      let!(:demand_transition) { Fabricate :demand_transition, demand: demand, stage: upstream_stage }
+    context 'having no commitment_date' do
+      let(:demand) { Fabricate :demand, project: project, commitment_date: nil }
 
       it { expect(demand.downstream_demand?).to be false }
     end

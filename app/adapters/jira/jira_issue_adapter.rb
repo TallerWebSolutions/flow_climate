@@ -20,7 +20,7 @@ module Jira
     def update_demand!(demand, jira_account, jira_issue, project)
       demand.update(project: project, company: project.company, created_date: issue_fields_value(jira_issue, 'created'), demand_type: translate_issue_type(jira_issue), artifact_type: translate_artifact_type(jira_issue),
                     class_of_service: translate_class_of_service(jira_account, jira_issue), demand_title: issue_fields_value(jira_issue, 'summary'),
-                    assignees_count: compute_assignees_count(jira_account, jira_issue), url: build_jira_url(jira_account, demand.demand_id), downstream: false, discarded_at: nil)
+                    assignees_count: compute_assignees_count(jira_account, jira_issue), url: build_jira_url(jira_account, demand.demand_id), commitment_date: nil, discarded_at: nil)
 
       translate_blocks!(demand, jira_issue)
       process_transitions!(demand, jira_issue.changelog) if jira_issue.respond_to?(:changelog)

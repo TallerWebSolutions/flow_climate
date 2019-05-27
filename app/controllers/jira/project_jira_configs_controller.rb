@@ -11,8 +11,7 @@ module Jira
     end
 
     def create
-      team = Team.find_by(id: project_jira_config_params[:team])
-      @project_jira_config = ProjectJiraConfig.new(project_jira_config_params.merge(project: @project, team: team))
+      @project_jira_config = ProjectJiraConfig.new(project_jira_config_params.merge(project: @project))
       flash[:error] = I18n.t('project_jira_config.validations.jira_project_key_uniqueness.message') unless @project_jira_config.save
 
       render 'jira/project_jira_configs/create'
@@ -27,7 +26,7 @@ module Jira
     private
 
     def project_jira_config_params
-      params.require(:jira_project_jira_config).permit(:jira_account_domain, :jira_project_key, :fix_version_name, :team)
+      params.require(:jira_project_jira_config).permit(:jira_project_key, :fix_version_name)
     end
 
     def assign_project

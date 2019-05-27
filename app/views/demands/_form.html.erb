@@ -19,11 +19,7 @@
       <%= form.text_field :demand_id, class: 'form-control', autofocus: true %>
       <span class="help-block"><%= demand.errors[:demand_id].join(', ') %></span>
     </div>
-    <div class='col-xs-3 form-check bottom-spaced-component'>
-      <%= form.check_box :downstream, class: 'form-check-input' %>
-      <%= form.label :downstream, class: 'form-check-label' %>
-    </div>
-    <div class='col-xs-3 form-check bottom-spaced-component'>
+    <div class='col-xs-6 form-check bottom-spaced-component'>
       <%= form.check_box :manual_effort, class: 'form-check-input' %>
       <%= form.label :manual_effort, class: 'form-check-label' %>
     </div>

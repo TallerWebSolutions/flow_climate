@@ -57,7 +57,7 @@ class DemandsController < AuthenticatedController
   end
 
   def synchronize_jira
-    jira_account = Jira::JiraAccount.find_by(customer_domain: @project.project_jira_config.jira_account_domain)
+    jira_account = @company.jira_accounts.first
     demand_url = company_project_demand_url(@demand.project.company, @demand.project, @demand)
     Jira::ProcessJiraIssueJob.perform_later(jira_account, @project, @demand.demand_id, current_user.email, current_user.full_name, demand_url)
     flash[:notice] = t('general.enqueued')
