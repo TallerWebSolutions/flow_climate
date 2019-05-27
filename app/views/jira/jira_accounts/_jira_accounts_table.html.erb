@@ -1,29 +1,29 @@
-<table class="table">
-  <thead>
-    <th><%= Jira::JiraAccount.human_attribute_name :base_uri %></th>
-    <th><%= Jira::JiraAccount.human_attribute_name :username %></th>
-    <th><%= Jira::JiraAccount.human_attribute_name :customer_domain %></th>
-    <th><%= Jira::JiraAccount.human_attribute_name :created_at %></th>
-    <th></th>
-  </thead>
-  <tbody>
-    <% jira_accounts_list.each do |account| %>
-      <tr>
-        <td><%= account.base_uri %></td>
-        <td><%= account.username %></td>
-        <td><%= account.customer_domain %></td>
-        <td><%= l(account.created_at, format: :short) %></td>
-        <td>
-          <%= link_to company_jira_account_path(account.company, account), method: :delete, data: { confirm: I18n.t('general.destroy.confirm') }, remote: true do %>
-            <i class="fa fa-times" title='<%= t('jira_accounts.destroy.tooltip') %>'></i>
-          <% end %>
-        </td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
-
 <% if jira_accounts_list.present? %>
+  <table class="table">
+    <thead>
+      <th><%= Jira::JiraAccount.human_attribute_name :base_uri %></th>
+      <th><%= Jira::JiraAccount.human_attribute_name :username %></th>
+      <th><%= Jira::JiraAccount.human_attribute_name :customer_domain %></th>
+      <th><%= Jira::JiraAccount.human_attribute_name :created_at %></th>
+      <th></th>
+    </thead>
+    <tbody>
+      <% jira_accounts_list.each do |account| %>
+        <tr>
+          <td><%= account.base_uri %></td>
+          <td><%= account.username %></td>
+          <td><%= account.customer_domain %></td>
+          <td><%= l(account.created_at, format: :short) %></td>
+          <td>
+            <%= link_to company_jira_account_path(account.company, account), method: :delete, data: { confirm: I18n.t('general.destroy.confirm') }, remote: true do %>
+              <i class="fa fa-times" title='<%= t('jira_accounts.destroy.tooltip') %>'></i>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
   <div class="help-frame">
     <p class="bottom-spaced-component help-title">
       <%= t('jira_accounts.webhooks.help') %>
@@ -43,5 +43,15 @@
         <i class="far fa-question-circle" title="<%= t('jira_accounts.webhooks.help_create_update_card') %>"></i>
       <% end %>
     </p>
+  </div>
+<% else %>
+  <div class="row">
+    <div class="col-xs-12">
+      <%= link_to t('jira_accounts.new.title'), new_company_jira_account_path(company), class: 'btn btn-success bottom-spaced-component pull-right' %>
+    </div>
+  </div>
+
+  <div class="no-data">
+    <%= t('general.no_data', missing_data: I18n.t('activerecord.models.jira/jira_account', count: 2).downcase) %>
   </div>
 <% end %>

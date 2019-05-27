@@ -114,11 +114,11 @@ pt-BR:
         one: Plano de Usuário
         other: Planos de Usuário
       demand_data_processment:
-          one: Processamento de Demandas
-          other: Processamentos de Demandas
+        one: Processamento de Demandas
+        other: Processamentos de Demandas
       flow_impact:
-          one: Impacto no Fluxo
-          other: Impactos no Fluxo
+        one: Impacto no Fluxo
+        other: Impactos no Fluxo
       jira/project_jira_config:
         one: Configuração do Jira para o Projeto
         other: Configurações do Jira para o Projeto

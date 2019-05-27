@@ -123,6 +123,8 @@ en:
         demand_transition:
           stage:
             not_same: "The stage needs to be the same as the stage in project"
+    models:
+      jira/jira_account: "Jira Accounts"
   product:
     name:
       uniqueness: "Should have only one to the same customer."
