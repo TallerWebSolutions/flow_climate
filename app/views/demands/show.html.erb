@@ -58,7 +58,16 @@
 </div>
 
 <%= render 'demand_blocks/demand_blocks_data', demand_blocks_list: @demand_blocks %>
+
+<div class="row">
+  <div class="col-xs-12">
+    <h3><%= DemandComment.model_name.human %></h3>
+  </div>
+</div>
+<%= render 'demand_comments/demand_comments_table', demand_comments_list: @demand_comments %>
+
 <%= render 'demand_transitions/demand_transitions_table', demand_transitions_list: @demand_transitions, demand: @demand %>
+
 
 <% content_for :javascript do %>
   <%= javascript_include_tag 'demands/show' %>

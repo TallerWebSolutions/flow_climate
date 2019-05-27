@@ -767,6 +767,9 @@ en:
     attributes:
       demand:
         demand_id: "Demand ID"
+    models:
+      demand_comment:
+        other: "Demand Comments"
   stats:
     period:
       variation: "Period Variation"

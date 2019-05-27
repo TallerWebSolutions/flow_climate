@@ -342,7 +342,10 @@ RSpec.describe DemandsController, type: :controller do
       let!(:second_demand) { Fabricate :demand }
 
       context 'passing a valid ID' do
-        context 'having data' do
+        context 'with data' do
+          let!(:demand_comment) { Fabricate :demand_comment, demand: first_demand, comment_date: 1.day.ago }
+          let!(:other_demand_comment) { Fabricate :demand_comment, demand: first_demand, comment_date: 2.days.ago }
+
           let!(:first_block) { Fabricate :demand_block, demand: first_demand, block_time: Time.zone.today, active: true }
           let!(:second_block) { Fabricate :demand_block, demand: first_demand, block_time: 2.days.ago }
           let!(:out_block) { Fabricate :demand_block, demand: second_demand }
@@ -358,10 +361,11 @@ RSpec.describe DemandsController, type: :controller do
             expect(assigns(:touch_percentage)).to eq 100
             expect(assigns(:upstream_percentage)).to eq 0
             expect(assigns(:downstream_percentage)).to eq 100
+            expect(assigns(:demand_comments)).to eq [other_demand_comment, demand_comment]
           end
         end
 
-        context 'having no demand_blocks' do
+        context 'without data' do
           let!(:demand) { Fabricate :demand, project: project }
 
           before { get :show, params: { company_id: company, id: first_demand } }
@@ -374,6 +378,7 @@ RSpec.describe DemandsController, type: :controller do
             expect(assigns(:touch_percentage)).to eq 100
             expect(assigns(:upstream_percentage)).to eq 0
             expect(assigns(:downstream_percentage)).to eq 100
+            expect(assigns(:demand_comments)).to eq []
           end
         end
       end

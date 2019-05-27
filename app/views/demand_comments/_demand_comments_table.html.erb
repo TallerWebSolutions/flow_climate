@@ -1,0 +1,24 @@
+<% if demand_comments_list.present? %>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th><%= Project.model_name.human %></th>
+        <th><%= DemandComment.human_attribute_name :demand %></th>
+        <th><%= DemandComment.human_attribute_name :comment_date %></th>
+        <th><%= DemandComment.human_attribute_name :comment_text %></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% demand_comments_list.each do |comment| %>
+        <tr>
+          <td><%= comment.demand.project_full_name %></td>
+          <td><%= comment.demand.demand_id %></td>
+          <td><%= I18n.l(comment.comment_date, format: :short) %></td>
+          <td><%= comment.comment_text %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <%= render 'layouts/no_data', missing_data: I18n.t('activerecord.models.demand_comment.other') %>
+<% end %>

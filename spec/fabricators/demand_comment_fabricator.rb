@@ -2,6 +2,6 @@
 
 Fabricator(:demand_comment) do
   demand
-  commitment_date 1.day.ago
-  commitment_text { Faker::Lorem.sentence(2) }
+  comment_date 1.day.ago
+  comment_text { Faker::Lorem.sentence(2) }
 end
