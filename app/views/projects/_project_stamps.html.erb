@@ -18,6 +18,8 @@
     <div class="stamp-title"><%= t('projects.show.last_team') %></div>
     <% if project.current_team.present? %>
       <div class="stamp-content"><%= link_to project.current_team&.name, company_team_path(company, project.current_team) %></div>
+    <% else %>
+      <div class="stamp-content"></div>
     <% end %>
   </div>
   <div class="col-xs-2 green-stamp">

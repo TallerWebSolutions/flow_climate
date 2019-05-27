@@ -110,13 +110,13 @@ class Project < ApplicationRecord
     start_date_limit = [start_date.beginning_of_day, from_date].max
     return 0 if end_date.end_of_day < start_date_limit
 
-    ((end_date.end_of_day - start_date_limit.beginning_of_day) / 1.day) + 1
+    (((end_date.end_of_day - start_date_limit.beginning_of_day) / 1.day) + 1).round
   end
 
   def percentage_remaining_days
     return 0 if total_days.zero?
 
-    (remaining_days.to_f / total_days.to_f) * 100
+    ((remaining_days.to_f / total_days.to_f) * 100).round(2)
   end
 
   def consumed_hours
