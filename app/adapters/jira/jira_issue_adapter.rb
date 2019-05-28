@@ -130,11 +130,15 @@ module Jira
       return class_of_service if jira_issue.attrs['changelog'].blank?
 
       jira_issue.attrs['changelog']['histories'].each do |history|
-        next unless history['items'].present? && history['items'].first['field'].downcase.include?('class of service')
+        next unless history['items'].present? && class_of_service_field?(history)
 
         class_of_service = history['items'].first['toString']
       end
       class_of_service
+    end
+
+    def class_of_service_field?(history)
+      (history['items'].first['field'].downcase.include?('class of service') || history['items'].first['field'].downcase.include?('classe de serviço'))
     end
 
     def compute_assignees_count(jira_account, jira_issue)
