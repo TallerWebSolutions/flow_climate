@@ -138,7 +138,7 @@ class Demand < ApplicationRecord
   end
 
   def current_stage
-    demand_transitions.kept.where(last_time_out: nil).order(:last_time_in).last&.stage || demand_transitions.kept.order(:last_time_in)&.last&.stage
+    demand_transitions.where(last_time_out: nil).order(:last_time_in).last&.stage || demand_transitions.order(:last_time_in)&.last&.stage
   end
 
   def leadtime_in_days
