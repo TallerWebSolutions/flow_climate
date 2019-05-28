@@ -60,15 +60,24 @@ class StagesController < AuthenticatedController
   end
 
   def import_from_jira
-    if @company.jira_accounts.present?
-      jira_stages = Jira::JiraApiService.new(@company.jira_accounts.first.username, @company.jira_accounts.first.password, @company.jira_accounts.first.base_uri).request_status
-      jira_stages.each(&method(:build_stage))
-    end
+    update_stages_in_company
+    assign_stages_list
 
-    @stages_list = @company.stages.includes(:team).order('teams.name, stages.order')
+    respond_to { |format| format.js { render 'stages/update_stages_table' } }
   end
 
   private
+
+  def update_stages_in_company
+    return if @company.jira_accounts.blank?
+
+    jira_stages = Jira::JiraApiService.new(@company.jira_accounts.first.username, @company.jira_accounts.first.password, @company.jira_accounts.first.base_uri).request_status
+    jira_stages.each(&method(:build_stage))
+  end
+
+  def assign_stages_list
+    @stages_list = @company.stages.includes(:team).order('teams.name, stages.order')
+  end
 
   def build_stage(jira_stage)
     imported_stage = Stage.where(integration_id: jira_stage.attrs['id'], company: @company).first_or_initialize

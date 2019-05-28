@@ -502,6 +502,7 @@ RSpec.describe StagesController, type: :controller do
               expect_any_instance_of(Jira::JiraApiService).to(receive(:request_status).once { [returned_status] })
               post :import_from_jira, params: { company_id: company }, xhr: true
               expect(response).to have_http_status :ok
+              expect(response).to render_template 'stages/update_stages_table'
               expect(assigns(:stages_list).count).to eq 3
               expect(assigns(:stages_list).where(integration_id: 'foo').count).to eq 1
             end

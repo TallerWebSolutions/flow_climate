@@ -93,15 +93,16 @@ class ProjectsController < AuthenticatedController
 
   def copy_stages_from
     @project_to_copy_stages_from = Project.find(params[:project_to_copy_stages_from])
-    @project.update(stages: @project_to_copy_stages_from.stages) if @project.stages.empty?
+    @project.update(stages: (@project.stages + @project_to_copy_stages_from.stages) - (@project.stages & @project_to_copy_stages_from.stages))
     assign_project_stages
-    respond_to { |format| format.js { render 'projects/copy_stages_from' } }
+
+    respond_to { |format| format.js { render 'stages/update_stages_table' } }
   end
 
   private
 
   def assign_project_stages
-    @project_stages = @project.reload.stages.includes(:team).order(:order, :name)
+    @stages_list = @project.reload.stages.includes(:team).order(:order, :name)
   end
 
   def synchronize_project
