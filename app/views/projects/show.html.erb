@@ -69,7 +69,7 @@
 </div>
 
 <div id="project-settings" class="tab-container">
-  <%= render 'projects/settings', company: @company, project: @project, project_stages: @project_stages, project_risk_configs: @project.project_risk_configs, projects_to_copy_stages_from: @projects_to_copy_stages_from %>
+  <%= render 'projects/settings', company: @company, project: @project, project_stages: @stages_list, project_risk_configs: @project.project_risk_configs, projects_to_copy_stages_from: @projects_to_copy_stages_from %>
 </div>
 
 <% content_for :javascript do %>

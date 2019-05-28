@@ -747,16 +747,16 @@ RSpec.describe ProjectsController, type: :controller do
         context 'when there is no stages set in the receiver project' do
           it 'makes the copy of the stages to the receiver project' do
             patch :copy_stages_from, params: { company_id: company, id: third_project, project_to_copy_stages_from: first_project }, xhr: true
-            expect(response).to render_template 'projects/copy_stages_from'
+            expect(response).to render_template 'stages/update_stages_table'
             expect(third_project.reload.stages).to match_array [stage_in_first_project, second_stage_in_first_project]
           end
         end
 
         context 'when there is stages already set in the receiver project' do
-          it 'does nothing' do
+          it 'merges the stages' do
             patch :copy_stages_from, params: { company_id: company, id: second_project, project_to_copy_stages_from: first_project }, xhr: true
-            expect(response).to render_template 'projects/copy_stages_from'
-            expect(second_project.reload.stages).to match_array [stage_in_second_project]
+            expect(response).to render_template 'stages/update_stages_table'
+            expect(second_project.reload.stages).to match_array [stage_in_second_project, stage_in_first_project, second_stage_in_first_project]
           end
         end
       end

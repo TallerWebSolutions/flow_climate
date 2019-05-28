@@ -1,15 +1,16 @@
+<%= form_tag copy_stages_from_company_project_url(company, project), method: :patch, class: 'form', remote: true do %>
+  <div class="form-group">
+    <%= label_tag Project.model_name.human.pluralize, nil, class: 'control-label' %>
+    <%= select_tag :project_to_copy_stages_from, options_from_collection_for_select(projects_to_copy_stages_from, :id, :full_name), class: 'form-control' %>
+  </div>
+  <div class="row">
+    <div class="col-xs-12">
+      <%= submit_tag t('projects.show.import_stages'), class: 'btn btn-success' %>
+    </div>
+  </div>
+<% end %>
+
 <% if project.stages.empty? %>
-  <%= form_tag copy_stages_from_company_project_url(company, project), method: :patch, class: 'form', remote: true do %>
-    <div class="form-group">
-      <%= label_tag Project.model_name.human.pluralize, nil, class: 'control-label' %>
-      <%= select_tag :project_to_copy_stages_from, options_from_collection_for_select(projects_to_copy_stages_from, :id, :full_name, params[:project_to_copy_stages_from]), class: 'form-control' %>
-    </div>
-    <div class="row">
-      <div class="col-xs-12">
-        <%= submit_tag t('projects.show.import_stages'), class: 'btn btn-success' %>
-      </div>
-    </div>
-  <% end %>
   <div class="no-data">
     <%= t('general.no_data', missing_data: Stage.model_name.human.pluralize(2).downcase) %>
   </div>
