@@ -76,12 +76,23 @@ RSpec.describe Jira::JiraApiService, type: :service do
   end
 
   describe '#request_status' do
-    context 'when the project exists' do
+    context 'when the status exists' do
       it 'returns the project' do
         returned_status = client.Status.build(id: 'bar', name: 'bar')
         expect(JIRA::Resource::Status).to(receive(:all).once { [returned_status] })
 
         Jira::JiraApiService.new(jira_account.username, jira_account.password, jira_account.base_uri).request_status
+      end
+    end
+
+    context 'when the status does not exist' do
+      it 'returns an empty Issue' do
+        response = Net::HTTPResponse.new(1.0, 404, 'not found')
+        expect(JIRA::Resource::Status).to(receive(:all).once.and_raise(JIRA::HTTPError.new(response)))
+
+        returned_status = Jira::JiraApiService.new(jira_account.username, jira_account.password, jira_account.base_uri).request_status
+
+        expect(returned_status).to eq []
       end
     end
   end

@@ -33,6 +33,8 @@ module Jira
 
     def request_status
       client.Status.all
+    rescue JIRA::HTTPError
+      []
     end
 
     private
