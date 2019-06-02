@@ -1149,7 +1149,7 @@ RSpec.describe Project, type: :model do
       let!(:project_consolidation) { Fabricate :project_consolidation, project: project, consolidation_date: consolidation_date_one_day, odds_to_deadline_project: 0.245, updated_at: consolidation_date_one_day }
       let!(:other_project_consolidation) { Fabricate :project_consolidation, project: project, consolidation_date: consolidation_date_two_days, odds_to_deadline_project: 0.345, updated_at: consolidation_date_two_days }
 
-      it { expect(project.consolidations_last_update).to eq consolidation_date_one_day }
+      it { expect(project.consolidations_last_update.to_date).to eq consolidation_date_one_day.to_date }
     end
 
     context 'without project consolidations' do
