@@ -1,4 +1,5 @@
 require:
+  - rubocop-rails
   - rubocop-performance
   - rubocop-rspec
 
@@ -14,9 +15,6 @@ AllCops:
     - 'app/helpers/**/*'
     - 'config/environments/**/*'
     - 'app/jobs/**/*'
-
-Rails:
-  Enabled: true
 
 Metrics/LineLength:
   Enabled: false

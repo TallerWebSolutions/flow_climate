@@ -40,6 +40,7 @@ group :test, :development do
   gem 'rspec-rails'
   gem 'rubocop'
   gem 'rubocop-performance'
+  gem 'rubocop-rails'
   gem 'rubocop-rspec'
   gem 'ruby-debug-ide', '~> 0.7.0.beta7'
   gem 'shoulda-matchers', '4.0.0.rc1'
