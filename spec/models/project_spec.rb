@@ -222,7 +222,7 @@ RSpec.describe Project, type: :model do
     context 'when the end date is in the future' do
       let(:project) { Fabricate :project, start_date: 1.week.ago, end_date: 1.week.from_now }
 
-      it { expect(project.remaining_weeks).to eq 2 }
+      it { expect(project.remaining_weeks).to eq 1 }
     end
 
     context 'when the end date is in the past' do
@@ -234,13 +234,13 @@ RSpec.describe Project, type: :model do
     context 'when the start date is in the future' do
       let(:project) { Fabricate :project, start_date: 2.weeks.from_now, end_date: 3.weeks.from_now }
 
-      it { expect(project.remaining_weeks).to eq 2 }
+      it { expect(project.remaining_weeks).to eq 1 }
     end
 
     context 'passing from_date as parameter' do
       let(:project) { Fabricate :project, start_date: 2.weeks.from_now, end_date: 10.weeks.from_now }
 
-      it { expect(project.remaining_weeks(1.week.from_now.to_date)).to eq 9 }
+      it { expect(project.remaining_weeks(1.week.from_now.to_date)).to eq 8 }
     end
   end
 
@@ -1103,11 +1103,59 @@ RSpec.describe Project, type: :model do
   end
 
   describe '#aging_today' do
-    context 'when already has the user' do
-      let(:user) { Fabricate :user }
-      let!(:project) { Fabricate :project, start_date: 4.days.ago.to_date, end_date: 1.day.from_now.to_date }
+    let!(:project) { Fabricate :project, start_date: 4.days.ago.to_date, end_date: 1.day.from_now.to_date }
 
-      it { expect(project.aging_today).to eq 4 }
+    it { expect(project.aging_today).to eq 4 }
+  end
+
+  describe '#odds_to_deadline' do
+    context 'with project consolidations' do
+      let(:project) { Fabricate :project }
+      let!(:project_consolidation) { Fabricate :project_consolidation, project: project, consolidation_date: 1.day.ago, odds_to_deadline_project: 0.245 }
+      let!(:other_project_consolidation) { Fabricate :project_consolidation, project: project, consolidation_date: 2.days.ago, odds_to_deadline_project: 0.345 }
+
+      it { expect(project.odds_to_deadline).to eq 0.245 }
+    end
+
+    context 'without project consolidations' do
+      let(:project) { Fabricate :project }
+
+      it { expect(project.odds_to_deadline).to eq 0 }
+    end
+  end
+
+  describe '#current_risk_to_deadline' do
+    context 'with project consolidations' do
+      let(:project) { Fabricate :project }
+      let!(:project_consolidation) { Fabricate :project_consolidation, project: project, consolidation_date: 1.day.ago, odds_to_deadline_project: 0.245 }
+      let!(:other_project_consolidation) { Fabricate :project_consolidation, project: project, consolidation_date: 2.days.ago, odds_to_deadline_project: 0.345 }
+
+      it { expect(project.current_risk_to_deadline).to eq 0.755 }
+    end
+
+    context 'without project consolidations' do
+      let(:project) { Fabricate :project }
+
+      it { expect(project.current_risk_to_deadline).to eq 1 }
+    end
+  end
+
+  describe '#consolidations_last_update' do
+    context 'with project consolidations' do
+      let(:project) { Fabricate :project }
+      let(:consolidation_date_one_day) { 1.day.ago }
+      let(:consolidation_date_two_days) { 2.days.ago }
+
+      let!(:project_consolidation) { Fabricate :project_consolidation, project: project, consolidation_date: consolidation_date_one_day, odds_to_deadline_project: 0.245, updated_at: consolidation_date_one_day }
+      let!(:other_project_consolidation) { Fabricate :project_consolidation, project: project, consolidation_date: consolidation_date_two_days, odds_to_deadline_project: 0.345, updated_at: consolidation_date_two_days }
+
+      it { expect(project.consolidations_last_update).to eq consolidation_date_one_day }
+    end
+
+    context 'without project consolidations' do
+      let(:project) { Fabricate :project }
+
+      it { expect(project.consolidations_last_update).to be_nil }
     end
   end
 end

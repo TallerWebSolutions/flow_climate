@@ -136,4 +136,18 @@ RSpec.describe Stats::StatisticsService, type: :service do
       it { expect(Stats::StatisticsService.instance.tail_events_boundary([])).to eq 0 }
     end
   end
+
+  describe '#compute_odds_to_deadline' do
+    context 'no montecarlo data' do
+      it { expect(Stats::StatisticsService.instance.compute_odds_to_deadline(1, [])).to eq 0 }
+    end
+
+    context 'with deadline after biggest montecarlo data' do
+      it { expect(Stats::StatisticsService.instance.compute_odds_to_deadline(3, [1, 2, 1])).to eq 1 }
+    end
+
+    context 'with deadline after inside montecarlo data' do
+      it { expect(Stats::StatisticsService.instance.compute_odds_to_deadline(3, [1, 2, 1, 3, 4, 4, 3, 3, 1, 3, 4])).to eq 0.7272727272727273 }
+    end
+  end
 end

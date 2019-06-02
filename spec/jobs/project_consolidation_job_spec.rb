@@ -36,7 +36,7 @@ RSpec.describe ProjectConsolidationJob, type: :active_job do
 
       ProjectConsolidationJob.perform_now
 
-      expect(ProjectConsolidation.count).to eq 3
+      expect(ProjectConsolidation.count).to eq 8
     end
   end
 end

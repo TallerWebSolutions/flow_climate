@@ -11,7 +11,7 @@ module Highchart
 
       montecarlo_durations = Stats::StatisticsService.instance.run_montecarlo(@all_projects.active.sum(&:remaining_backlog), gather_throughput_data.values, 500)
       build_montecarlo_perecentage_confidences(montecarlo_durations)
-      build_dates_to_montecarlo_duration
+      build_dates_to_montecarlo_duration_chart_hash
 
       @hours_burnup_per_week_data = Highchart::BurnupChartsAdapter.new(@x_axis, build_hours_scope_data_per_week, build_hours_throughput_data_week)
       @hours_burnup_per_month_data = Highchart::BurnupChartsAdapter.new(@x_axis, build_hours_scope_data_per_month, build_hours_throughput_data_month)
@@ -138,7 +138,7 @@ module Highchart
       @confidence_60_duration = Stats::StatisticsService.instance.percentile(60, montecarlo_durations)
     end
 
-    def build_dates_to_montecarlo_duration
+    def build_dates_to_montecarlo_duration_chart_hash
       @dates_to_montecarlo_duration = []
       active_projects = @all_projects.active
       return if active_projects.blank?
