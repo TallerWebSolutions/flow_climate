@@ -5,7 +5,7 @@ class ProjectConsolidationJob < ApplicationJob
     Company.all.each do |company|
       company.projects.each do |project|
         start_date = project.start_date
-        end_date = [project.end_date, 1.week.ago.end_of_week.to_date].min
+        end_date = [project.end_date, Time.zone.today.end_of_week].min
 
         while start_date <= end_date
           beginning_of_week = start_date.beginning_of_week
@@ -29,17 +29,26 @@ class ProjectConsolidationJob < ApplicationJob
           project_share_in_flow = 1
           project_share_in_flow = (project_wip.to_f / team_wip.to_f) if team_wip.positive? && project_wip.positive?
 
-          project_share_team_throughput_data = team_throughput_data.values.last(10).map { |throughput| throughput * project_share_in_flow }
-          team_based_montecarlo_durations = Stats::StatisticsService.instance.run_montecarlo(project.remaining_backlog(end_of_week), project_share_team_throughput_data, 100)
+          project_share_team_throughput_data = team_throughput_data.values.last(20).map { |throughput| throughput * project_share_in_flow }
+          team_based_montecarlo_durations = Stats::StatisticsService.instance.run_montecarlo(project.remaining_backlog(end_of_week), project_share_team_throughput_data, 500)
           team_based_montecarlo_80_percent = Stats::StatisticsService.instance.percentile(80, team_based_montecarlo_durations)
+          team_based_min_weeks_montecarlo = team_based_montecarlo_durations.min
+          team_based_max_weeks_montecarlo = team_based_montecarlo_durations.max
+          team_based_std_dev_weeks_montecarlo = Stats::StatisticsService.instance.standard_deviation(team_based_montecarlo_durations)
+          team_based_odds_to_deadline = Stats::StatisticsService.instance.compute_odds_to_deadline(project.remaining_weeks, team_based_montecarlo_durations)
 
           weeks_to_end_date = project.remaining_weeks(end_of_week)
 
           project_throughput_data_per_week = DemandsRepository.instance.throughput_to_projects_and_period([project], project.start_date, end_of_week).group('EXTRACT(WEEK FROM end_date)', 'EXTRACT(YEAR FROM end_date)').count
           project_throughput_data = DemandInfoDataBuilder.instance.build_data_from_hash_per_week(project_throughput_data_per_week, project.start_date, end_of_week)
 
-          project_based_montecarlo_durations = Stats::StatisticsService.instance.run_montecarlo(project.remaining_backlog(end_of_week), project_throughput_data.values.last(10), 100)
+          project_based_montecarlo_durations = Stats::StatisticsService.instance.run_montecarlo(project.remaining_backlog(end_of_week), project_throughput_data.values.last(20), 500)
           project_based_montecarlo_80_percent = Stats::StatisticsService.instance.percentile(80, project_based_montecarlo_durations)
+          project_based_min_weeks_montecarlo = project_based_montecarlo_durations.min
+          project_based_max_weeks_montecarlo = project_based_montecarlo_durations.max
+          project_based_std_dev_weeks_montecarlo = Stats::StatisticsService.instance.standard_deviation(project_based_montecarlo_durations)
+
+          project_based_odds_to_deadline = Stats::StatisticsService.instance.compute_odds_to_deadline(project.remaining_weeks, project_based_montecarlo_durations)
 
           customer_happiness = 0
           customer_happiness = weeks_to_end_date.to_f / project_based_montecarlo_80_percent.to_f if project_based_montecarlo_80_percent.positive?
@@ -73,12 +82,11 @@ class ProjectConsolidationJob < ApplicationJob
           average_lead_time = 0
           average_lead_time = (last_8_lead_times.compact.sum / last_8_lead_times.compact.count) if last_8_lead_times.size.positive?
 
-          consolidation = ProjectConsolidation.find_or_initialize_by(project: project, consolidation_date: end_of_week)
-
           project_flow_pressure_percentage = 0
           project_flow_pressure = project.flow_pressure(end_of_week.end_of_day)
           project_flow_pressure_percentage = project_flow_pressure / total_flow_pressure_in_date if project_flow_pressure.positive? && total_flow_pressure_in_date.positive?
 
+          consolidation = ProjectConsolidation.find_or_initialize_by(project: project, consolidation_date: end_of_week)
           consolidation.update(customer_happiness: customer_happiness,
                                population_start_date: demands.minimum(:created_date),
                                population_end_date: demands.maximum(:end_date),
@@ -101,7 +109,15 @@ class ProjectConsolidationJob < ApplicationJob
                                last_lead_time_p80: average_lead_time,
                                last_throughput_per_week_data: last_8_throughputs,
                                project_monte_carlo_weeks_p80: project_based_montecarlo_80_percent,
+                               min_weeks_montecarlo_project: project_based_min_weeks_montecarlo,
+                               max_weeks_montecarlo_project: project_based_max_weeks_montecarlo,
+                               std_dev_weeks_montecarlo_project: project_based_std_dev_weeks_montecarlo,
+                               odds_to_deadline_project: project_based_odds_to_deadline,
                                team_monte_carlo_weeks_p80: team_based_montecarlo_80_percent,
+                               min_weeks_montecarlo_team: team_based_min_weeks_montecarlo,
+                               max_weeks_montecarlo_team: team_based_max_weeks_montecarlo,
+                               std_dev_weeks_montecarlo_team: team_based_std_dev_weeks_montecarlo,
+                               odds_to_deadline_team: team_based_odds_to_deadline,
                                weeks_to_deadline: weeks_to_end_date,
                                project_aging: (end_of_week - project.start_date),
                                flow_pressure: project_flow_pressure,

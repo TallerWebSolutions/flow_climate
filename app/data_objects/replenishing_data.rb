@@ -74,12 +74,23 @@ class ReplenishingData
     stats_hash[:throughput_data] = throughput_grouped_per_week_hash.join(', ')
     stats_hash[:throughput_last_week] = throughput_grouped_per_week_hash.last
     stats_hash[:montecarlo_80_percent] = build_monte_carlo_info(project, throughput_grouped_per_week_hash.last(10))
+    stats_hash[:project_based_risks_to_deadline] = project.current_risk_to_deadline
     stats_hash[:team_based_montecarlo_80_percent] = build_monte_carlo_info(project, build_project_share_in_team_throughput(project, build_team_throughput_per_week_data.values.last(10)))
+
+    build_proejct_consolidation_data(project, stats_hash)
+
     stats_hash[:throughput_data_size] = throughput_grouped_per_week_hash.count
 
     stats_hash[:throughput_data_stddev] = Stats::StatisticsService.instance.standard_deviation(throughput_grouped_per_week_hash)
     stats_hash[:throughput_data_mode] = Stats::StatisticsService.instance.mode(throughput_grouped_per_week_hash)
     stats_hash
+  end
+
+  def build_proejct_consolidation_data(project, stats_hash)
+    stats_hash[:team_based_odds_to_deadline] = project.last_project_consolidation&.odds_to_deadline_team
+    stats_hash[:std_dev_weeks_montecarlo_team] = project.last_project_consolidation&.std_dev_weeks_montecarlo_team
+    stats_hash[:min_weeks_montecarlo_team] = project.last_project_consolidation&.min_weeks_montecarlo_team
+    stats_hash[:max_weeks_montecarlo_team] = project.last_project_consolidation&.max_weeks_montecarlo_team
   end
 
   def build_grouped_per_week_hash(project)

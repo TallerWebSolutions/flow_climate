@@ -103,7 +103,7 @@ class Project < ApplicationRecord
     start_date_limit = [start_date, from_date].max
     return 0 if end_date < start_date_limit
 
-    ((end_date.to_time - start_date_limit.to_time).to_i / 1.week) + 1
+    ((start_date_limit.end_of_week.upto(end_date.to_date.end_of_week).count.to_f + 1) / 7).round
   end
 
   def remaining_days(from_date = Time.zone.now)
@@ -306,6 +306,22 @@ class Project < ApplicationRecord
 
   def aging_today
     (Time.zone.today - start_date).to_i
+  end
+
+  def odds_to_deadline
+    last_project_consolidation&.odds_to_deadline_project || 0
+  end
+
+  def current_risk_to_deadline
+    1 - odds_to_deadline
+  end
+
+  def consolidations_last_update
+    last_project_consolidation&.updated_at
+  end
+
+  def last_project_consolidation
+    project_consolidations.order(:consolidation_date).last
   end
 
   private

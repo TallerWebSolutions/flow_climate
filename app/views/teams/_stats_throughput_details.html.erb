@@ -7,6 +7,8 @@
       <th><%= t('projects.replenishing.throughput_data_mode') %></th>
       <th><%= t('projects.replenishing.throughput_data_stddev') %></th>
       <th><%= t('projects.replenishing.team_based_weeks_montecarlo') %></th>
+      <th><%= 'MC - Min - Max' %></th>
+      <th><%= 'Chances da Data - Time' %></th>
     </tr>
   </thead>
   <tbody>
@@ -16,7 +18,10 @@
       <td><%= "#{project_hash[:throughput_data_size]} (#{project_hash[:throughput_data]})" %></td>
       <td><%= project_hash[:throughput_data_mode] %></td>
       <td><%= number_with_precision(project_hash[:throughput_data_stddev], precision: 2) %></td>
-      <td><%= number_with_precision(project_hash[:team_based_montecarlo_80_percent], precision: 2) %></td>
+      <td><%= "#{number_with_precision(project_hash[:team_based_montecarlo_80_percent], precision: 2)} (#{number_with_precision(project_hash[:std_dev_weeks_montecarlo_team], precision: 2)})" %></td>
+      <td><%= "#{project_hash[:min_weeks_montecarlo_team]} - #{project_hash[:max_weeks_montecarlo_team]}" %></td>
+      <td><%= number_to_percentage(project_hash[:team_based_odds_to_deadline] * 100, precision: 2) if project_hash[:team_based_odds_to_deadline].present? %></td>
+      <td><%=  %></td>
     </tr>
   </tbody>
 </table>

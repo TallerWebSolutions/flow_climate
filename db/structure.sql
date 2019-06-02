@@ -403,61 +403,6 @@ ALTER SEQUENCE public.financial_informations_id_seq OWNED BY public.financial_in
 
 
 --
--- Name: flow_consolidations; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.flow_consolidations (
-    id bigint NOT NULL,
-    consolidation_date date NOT NULL,
-    population_start_date date NOT NULL,
-    population_end_date date NOT NULL,
-    team_id integer NOT NULL,
-    demands_ids integer[] NOT NULL,
-    projects_ids integer[] NOT NULL,
-    demands_lead_times numeric[] NOT NULL,
-    demands_lead_times_average numeric NOT NULL,
-    demands_lead_times_std_dev numeric NOT NULL,
-    lead_time_min numeric NOT NULL,
-    lead_time_max numeric NOT NULL,
-    total_range numeric NOT NULL,
-    lead_time_histogram_bin_min numeric NOT NULL,
-    lead_time_histogram_bin_max numeric NOT NULL,
-    histogram_range numeric NOT NULL,
-    lead_time_p25 numeric NOT NULL,
-    lead_time_p75 numeric NOT NULL,
-    interquartile_range numeric NOT NULL,
-    last_throughput_per_week_data integer[] NOT NULL,
-    last_lead_time_p80 numeric NOT NULL,
-    wip_limit integer NOT NULL,
-    current_wip integer NOT NULL,
-    average_customer_happiness numeric NOT NULL,
-    flow_pressure numeric NOT NULL,
-    flow_total_cost numeric NOT NULL,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
-);
-
-
---
--- Name: flow_consolidations_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.flow_consolidations_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: flow_consolidations_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.flow_consolidations_id_seq OWNED BY public.flow_consolidations.id;
-
-
---
 -- Name: flow_impacts; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -744,36 +689,44 @@ ALTER SEQUENCE public.project_change_deadline_histories_id_seq OWNED BY public.p
 CREATE TABLE public.project_consolidations (
     id bigint NOT NULL,
     consolidation_date date NOT NULL,
-    project_aging integer NOT NULL,
-    weeks_to_deadline integer NOT NULL,
-    population_start_date date NOT NULL,
-    population_end_date date NOT NULL,
+    project_aging integer DEFAULT 0 NOT NULL,
+    weeks_to_deadline integer DEFAULT 0 NOT NULL,
+    population_start_date date,
+    population_end_date date,
     project_id integer NOT NULL,
-    demands_ids integer[] NOT NULL,
-    demands_finished_ids integer[] NOT NULL,
-    demands_lead_times numeric[] NOT NULL,
-    demands_lead_times_average numeric NOT NULL,
-    demands_lead_times_std_dev numeric NOT NULL,
-    lead_time_min numeric NOT NULL,
-    lead_time_max numeric NOT NULL,
-    total_range numeric NOT NULL,
-    lead_time_histogram_bin_min numeric NOT NULL,
-    lead_time_histogram_bin_max numeric NOT NULL,
-    histogram_range numeric NOT NULL,
-    lead_time_p25 numeric NOT NULL,
-    lead_time_p75 numeric NOT NULL,
-    interquartile_range numeric NOT NULL,
-    last_throughput_per_week_data integer[] NOT NULL,
-    last_lead_time_p80 numeric NOT NULL,
-    wip_limit integer NOT NULL,
-    current_wip integer NOT NULL,
-    project_monte_carlo_weeks_p80 integer NOT NULL,
-    team_monte_carlo_weeks_p80 integer NOT NULL,
-    flow_pressure numeric NOT NULL,
-    flow_pressure_percentage numeric NOT NULL,
-    customer_happiness numeric NOT NULL,
+    demands_ids integer[],
+    demands_finished_ids integer[],
+    demands_lead_times numeric[],
+    demands_lead_times_average numeric,
+    demands_lead_times_std_dev numeric,
+    lead_time_min numeric,
+    lead_time_max numeric,
+    total_range numeric,
+    lead_time_histogram_bin_min numeric,
+    lead_time_histogram_bin_max numeric,
+    histogram_range numeric,
+    lead_time_p25 numeric,
+    lead_time_p75 numeric,
+    interquartile_range numeric,
+    last_throughput_per_week_data integer[],
+    last_lead_time_p80 numeric,
+    wip_limit integer,
+    current_wip integer,
+    project_monte_carlo_weeks_p80 numeric,
+    team_monte_carlo_weeks_p80 numeric,
+    flow_pressure numeric,
+    flow_pressure_percentage numeric,
+    customer_happiness numeric,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    odds_to_deadline_project double precision,
+    odds_to_deadline_team double precision,
+    min_weeks_montecarlo_project integer,
+    min_weeks_montecarlo_team integer,
+    max_weeks_montecarlo_project integer,
+    max_weeks_montecarlo_team integer,
+    std_dev_weeks_montecarlo_project double precision,
+    std_dev_weeks_montecarlo_team double precision
 );
 
 
@@ -1317,13 +1270,6 @@ ALTER TABLE ONLY public.financial_informations ALTER COLUMN id SET DEFAULT nextv
 
 
 --
--- Name: flow_consolidations id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.flow_consolidations ALTER COLUMN id SET DEFAULT nextval('public.flow_consolidations_id_seq'::regclass);
-
-
---
 -- Name: flow_impacts id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1548,14 +1494,6 @@ ALTER TABLE ONLY public.demands
 
 ALTER TABLE ONLY public.financial_informations
     ADD CONSTRAINT financial_informations_pkey PRIMARY KEY (id);
-
-
---
--- Name: flow_consolidations flow_consolidations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.flow_consolidations
-    ADD CONSTRAINT flow_consolidations_pkey PRIMARY KEY (id);
 
 
 --
@@ -1851,13 +1789,6 @@ CREATE UNIQUE INDEX index_demands_on_slug ON public.demands USING btree (slug);
 --
 
 CREATE INDEX index_financial_informations_on_company_id ON public.financial_informations USING btree (company_id);
-
-
---
--- Name: index_flow_consolidations_on_team_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_flow_consolidations_on_team_id ON public.flow_consolidations USING btree (team_id);
 
 
 --
@@ -2475,14 +2406,6 @@ ALTER TABLE ONLY public.demand_blocks
 
 
 --
--- Name: flow_consolidations fk_rails_d5dbebc03a; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.flow_consolidations
-    ADD CONSTRAINT fk_rails_d5dbebc03a FOREIGN KEY (team_id) REFERENCES public.teams(id);
-
-
---
 -- Name: demand_comments fk_rails_dc14d53db5; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2642,6 +2565,9 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190517141230'),
 ('20190525161036'),
 ('20190527172016'),
-('20190527200450');
+('20190527200450'),
+('20190531184111'),
+('20190531191855'),
+('20190531215933');
 
 

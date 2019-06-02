@@ -14,7 +14,7 @@ module Stats
       processed_population.sort!
       return processed_population.last.to_f if desired_percentile == 100
 
-      compute_percentile(desired_percentile, processed_population).to_f
+      compute_value_in_percentile(desired_percentile, processed_population).to_f
     end
 
     def mean(population_array)
@@ -65,6 +65,16 @@ module Stats
       (last_value.to_f - initial_value.to_f) / start_value.to_f
     end
 
+    def compute_odds_to_deadline(weeks_to_deadline, montecarlo_durations)
+      min_weeks_montecarlo = montecarlo_durations.min
+      max_weeks_montecarlo = montecarlo_durations.max
+
+      return 0 if min_weeks_montecarlo.blank? || min_weeks_montecarlo.blank? || weeks_to_deadline < min_weeks_montecarlo
+      return 1 if weeks_to_deadline >= max_weeks_montecarlo
+
+      montecarlo_durations.count { |x| x <= weeks_to_deadline }.to_f / montecarlo_durations.count.to_f
+    end
+
     private
 
     def create_histogram_data(data_array)
@@ -97,9 +107,11 @@ module Stats
       duration
     end
 
-    def compute_percentile(desired_percentile, population)
+    def compute_value_in_percentile(desired_percentile, population)
       rank = desired_percentile / 100.0 * (population.size - 1)
-      lower, upper = population[rank.floor, 2]
+      population_slice = population[rank.floor, 2]
+      lower = population_slice[0]
+      upper = population_slice[1]
       lower + (upper - lower) * (rank - rank.floor)
     end
 

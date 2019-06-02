@@ -82,6 +82,10 @@ en:
     tabs:
       config: "Configuration"
       charts: "Charts"
+    last_update:
+      text: "Last update: %{last_update}"
+    risk:
+      text: "Math risk to deadline %{risk_value}"
   header:
     logout: Logout
     explore: Explore
@@ -191,6 +195,7 @@ en:
         first_part: "Only "
         second_part: " till D-day!"
         days: "%{remaining_days} day(s)"
+        risk: "Math risk to deadline is %{risk_value}"
       cmd: "Average Demand Cost"
       status_information_html: "This project is <b>%{status_description}</b>"
       delivered_demands:
@@ -349,7 +354,7 @@ en:
     replenishing:
       weeks_to_finish: "Weeks to Finish"
       weeks_montecarlo: "Monte Carlo (80%)"
-      team_based_weeks_montecarlo: "Monte Carlo (80%) - Team"
+      team_based_weeks_montecarlo: "Monte Carlo (80%) - Team (std dev)"
       customer_happiness: "Customer Happiness"
       last_four_weeks_throughput: "Last 4 Weeks Throughput"
       average_throughput: "Avg Throughput Last 4 Weeks"
@@ -448,7 +453,6 @@ en:
     show:
       no_demand_blocks: "There is no demand blocks"
       no_demand_transitions: "No transitions to this demand."
-      last_update: "Last update: %{last_update_date}"
       progress_bars:
         streams: "Flow Streams Occupation"
       sync_jira: "Sync Demand"

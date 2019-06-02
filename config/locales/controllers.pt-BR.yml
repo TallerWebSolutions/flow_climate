@@ -84,6 +84,10 @@ pt-BR:
     tabs:
       config: "Configuração"
       charts: "Gráficos"
+    last_update:
+      text: "Última atualização em %{last_update}"
+    risk:
+      text: "Risco matemático para o deadline é %{risk_value}"
   header:
     logout: Sair
     sign_up: Cadastre-se
@@ -207,6 +211,7 @@ pt-BR:
         first_part: "Faltam "
         second_part: " para o fim do projeto"
         days: "%{remaining_days} dia(s)"
+        risk: "Risco matemático para o prazo é %{risk_value}"
       cmd: "CMD"
       status_information_html: "Este projeto está <i>%{status_description}</i>"
       delivered_demands:
@@ -367,7 +372,7 @@ pt-BR:
     replenishing:
       weeks_to_finish: "Semanas Restantes"
       weeks_montecarlo: "Monte Carlo (80%)"
-      team_based_weeks_montecarlo: "Monte Carlo (80%) - Time"
+      team_based_weeks_montecarlo: "Monte Carlo (80%) - Time (std dev)"
       customer_happiness: "Felicidade do Cliente"
       last_four_weeks_throughput: "Throughput das Últimas 4 Semanas"
       average_throughput: "Throughput Médio das Últ. 4 Semanas"
@@ -481,7 +486,6 @@ pt-BR:
     show:
       no_demand_blocks: "Não existem bloqueios na demanda"
       no_demand_transitions: "Esta demanda não tem transições."
-      last_update: "Última atualização: %{last_update_date}"
       progress_bars:
         streams: "Streams do Fluxo"
       sync_jira: "Sincronizar Demanda"

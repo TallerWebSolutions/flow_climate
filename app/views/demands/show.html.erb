@@ -18,7 +18,7 @@
     <%= link_to synchronize_jira_company_project_demand_path(@company, @demand.project, @demand), method: :put do %>
       <span class="btn btn-sm"><i class="fas fa-sync-alt"></i></span><span><%= t('demands.show.sync_jira') %></span>
     <% end %>
-    <span class="detailed"><%= "(#{t('demands.show.last_update', last_update_date: l(@demand.updated_at, format: :short))})" %></span>
+    <span class="detailed"><%= "(#{t('general.last_update.text', last_update: I18n.l(@demand.updated_at, format: :short))})" %></span>
   </div>
 </div>
 
