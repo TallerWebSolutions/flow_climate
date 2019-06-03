@@ -34,10 +34,10 @@ class StagesController < AuthenticatedController
   end
 
   def show
-    @not_associated_projects = (@company.projects.includes(:team) - @stage.projects.includes(:team)).sort_by(&:full_name)
-    @stage_projects = @stage.projects.includes(:team).includes(:product).includes(:customer).sort_by(&:full_name)
+    assign_project_stages
+    assign_team_stages
+
     @transitions_in_stage = @stage.demand_transitions.includes(:demand)
-    @provider_stages = (@company.stages - [@stage]).sort_by(&:name)
     @stage_analytic_data = StageAnalyticData.new(@stage)
   end
 
@@ -50,6 +50,18 @@ class StagesController < AuthenticatedController
   def dissociate_project
     project = Project.find(params[:project_id])
     @stage.remove_project(project)
+    redirect_to company_stage_path(@company, @stage)
+  end
+
+  def associate_team
+    team = @company.teams.find(params[:team_id])
+    @stage.add_team(team)
+    redirect_to company_stage_path(@company, @stage)
+  end
+
+  def dissociate_team
+    team = @company.teams.find(params[:team_id])
+    @stage.remove_team(team)
     redirect_to company_stage_path(@company, @stage)
   end
 
@@ -67,6 +79,17 @@ class StagesController < AuthenticatedController
   end
 
   private
+
+  def assign_project_stages
+    @stage_projects = @stage.projects.includes(:team).includes(:product).includes(:customer).sort_by(&:full_name)
+    @not_associated_projects = @company.projects.includes(:team) - @stage_projects
+    @provider_stages = (@company.stages - [@stage]).sort_by(&:name)
+  end
+
+  def assign_team_stages
+    @stage_teams = @stage.teams.order(:name)
+    @not_associated_teams = @company.teams - @stage_teams
+  end
 
   def update_stages_in_company
     return if @company.jira_accounts.blank?

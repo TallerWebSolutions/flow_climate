@@ -1,0 +1,28 @@
+<div class="row">
+  <div class="col-xs-6">
+    <h3><%= t('stages.show.not_associated_teams') %></h3>
+    <ul>
+      <% not_associated_teams.each do |team| %>
+        <li>
+          <%= "#{team.name}" %>
+          <%= link_to associate_team_company_stage_path(company, stage, team), method: :patch do %>
+            <i class="fa fa-check"></i>
+          <% end %>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+  <div class="col-xs-6">
+    <h3><%= t('stages.show.stage_teams') %></h3>
+    <ul>
+      <% stage_teams.each do |team| %>
+        <li>
+          <%= team.name %>
+          <%= link_to dissociate_team_company_stage_path(company, stage, team), method: :patch do %>
+            <i class="fa fa-times"></i>
+          <% end %>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+</div>

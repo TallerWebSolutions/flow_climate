@@ -119,7 +119,11 @@ Rails.application.routes.draw do
       member do
         patch 'associate_project/:project_id', action: :associate_project, as: 'associate_project'
         patch 'dissociate_project/:project_id', action: :dissociate_project, as: 'dissociate_project'
+
         patch :copy_projects_from
+
+        patch 'associate_team/:team_id', action: :associate_team, as: 'associate_team'
+        patch 'dissociate_team/:team_id', action: :dissociate_team, as: 'dissociate_team'
       end
 
       post :import_from_jira, on: :collection

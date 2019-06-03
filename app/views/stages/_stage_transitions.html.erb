@@ -1,0 +1,37 @@
+<div class="row">
+  <div class="col-xs-12">
+    <h3><%= t('stages.show.transitions') %></h3>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th><%= 'Valid?' %></th>
+          <th><%= DemandTransition.human_attribute_name :stage %></th>
+          <th><%= DemandTransition.human_attribute_name :project %></th>
+          <th><%= Team.model_name.human %></th>
+          <th><%= DemandTransition.human_attribute_name :last_time_in %></th>
+          <th><%= DemandTransition.human_attribute_name :last_time_out %></th>
+          <th><%= t('demand_transitions.total_time_in_transition') %></th>
+          <th><%= t('general.table.actions') %></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @transitions_in_stage.each do |transition| %>
+          <tr>
+            <td><%= transition.valid? %></td>
+            <td><%= transition.stage_name %></td>
+            <td><%= link_to transition.demand.project.full_name, company_project_path(@company, transition.demand.project) %></td>
+            <td><%= transition.demand.project.current_team.name %></td>
+            <td><%= l(transition.last_time_in, format: :short) %></td>
+            <td><%= l(transition.last_time_out, format: :short) if transition.last_time_out.present? %></td>
+            <td><%= time_distance_in_words(transition.total_seconds_in_transition) %></td>
+            <td>
+              <%= link_to company_stage_demand_transition_path(@company, @stage, transition), method: :delete do %>
+                <i class="fa fa-times"></i>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
