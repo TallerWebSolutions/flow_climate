@@ -58,7 +58,7 @@ RSpec.describe ReplenishingData, type: :data_objects do
         expect(project_data_to_replenish[0][:montecarlo_80_percent]).to be_within(12).of(54)
         expect(project_data_to_replenish[0][:team_based_montecarlo_80_percent]).to be_within(30).of(135)
         expect(project_data_to_replenish[0][:throughput_last_week]).to eq 7
-        expect(project_data_to_replenish[0][:customer_happiness]).to be_within(0.005).of(0.04)
+        expect(project_data_to_replenish[0][:customer_happiness]).to be_within(0.05).of(0.04)
         expect(project_data_to_replenish[0][:max_work_in_progress]).to eq 3
         expect(project_data_to_replenish[0][:throughput_data_mode]).to eq 0
         expect(project_data_to_replenish[0][:throughput_data_stddev]).to eq 1.6999134926086508
@@ -78,7 +78,7 @@ RSpec.describe ReplenishingData, type: :data_objects do
         expect(project_data_to_replenish[1][:work_in_progress]).to eq 0
         expect(project_data_to_replenish[1][:montecarlo_80_percent]).to be_within(40).of(184)
         expect(project_data_to_replenish[1][:throughput_last_week]).to eq 2
-        expect(project_data_to_replenish[1][:customer_happiness]).to be_within(0.005).of(0.019)
+        expect(project_data_to_replenish[1][:customer_happiness]).to be_within(0.05).of(0.01)
         expect(project_data_to_replenish[1][:max_work_in_progress]).to eq 2
         expect(project_data_to_replenish[1][:throughput_data_mode]).to eq 0
         expect(project_data_to_replenish[1][:throughput_data_stddev]).to eq 0.6666666666666666
