@@ -1,0 +1,24 @@
+<div class="row bottom-spaced-component">
+  <div class="col-xs-12">
+    <h2><%= "#{Stage.human_attribute_name(:integration_id)}: #{stage.integration_id}" %></h2>
+  </div>
+</div>
+
+<hr>
+
+<div class="row">
+  <div class="col-xs-12">
+    <div class="tab">
+      <button class="tablinks tab-stages-config" id="stage-project-associations-tab" onclick="openTab(event, 'stage-projects-associations', 'tab-stages-config', 'tabcontent-stages-config')"><%= t('general.tabs.projects_associations') %></button>
+      <button class="tablinks tab-stages-config" onclick="openTab(event, 'stage-teams-associations', 'tab-stages-config', 'tabcontent-stages-config')"><%= t('general.tabs.teams_associations') %></button>
+    </div>
+  </div>
+</div>
+
+<div id="stage-projects-associations" class="tabcontent tabcontent-stages-config">
+  <%= render 'stages/stage_project_associations', company: @company, stage: @stage, not_associated_projects: @not_associated_projects, stage_projects: @stage_projects, provider_stages: provider_stages %>
+</div>
+
+<div id="stage-teams-associations" class="tabcontent tabcontent-stages-config">
+  <%= render 'stages/stage_teams_associations', company: @company, stage: @stage, not_associated_teams: @not_associated_teams, stage_teams: @stage_teams %>
+</div>

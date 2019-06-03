@@ -100,7 +100,7 @@ class CompaniesController < AuthenticatedController
   end
 
   def assign_stages_list
-    @stages_list = @company.stages.includes(:team).order('teams.name, stages.order')
+    @stages_list = @company.stages.order('stages.order')
   end
 
   def assign_users_in_company

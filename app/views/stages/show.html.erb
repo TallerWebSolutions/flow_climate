@@ -11,186 +11,23 @@
 <div class="row">
   <div class="col-xs-12">
     <div class="tab">
-      <button class="tablinks" id="stage-charts-tab" onclick="openTab(event, 'stage-charts', 'tablinks')"><%= t('general.tabs.charts') %></button>
-      <button class="tablinks" onclick="openTab(event, 'stage-config', 'tablinks')"><%= t('general.tabs.config') %></button>
+      <button class="tablinks tab-stages" id="stage-charts-tab" onclick="openTab(event, 'stage-charts', 'tab-stages', 'tabcontent-stages')"><%= t('general.tabs.charts') %></button>
+      <button class="tablinks tab-stages" onclick="openTab(event, 'stage-config', 'tab-stages', 'tabcontent-stages')"><%= t('general.tabs.config') %></button>
+      <button class="tablinks tab-stages" onclick="openTab(event, 'stage-transitions', 'tab-stages', 'tabcontent-stages')"><%= t('general.tabs.transitions') %></button>
     </div>
   </div>
 </div>
 
-<div id="stage-charts" class="tabcontent">
-  <div class="row">
-    <div class="col-xs-4">
-      <div id="entrances-per-weekday-column"
-           class="flow-chart"
-           data-title='<%= t('stages.charts.entrances_per_weekday.title', target_name: @stage.name) %>'
-           data-xcategories='<%= @stage_analytic_data.entrances_per_weekday.keys %>'
-           data-xtitle='<%= t('general.charts.xlabel.weekdays') %>'
-           data-ytitle='<%= t('stages.charts.entrances_per_weekday.ylabel') %>'
-           data-prefix='<%= t('stages.charts.entrances_per_weekday.tooltip_prefix') %>'
-           data-series='<%= [{ name: I18n.t('stages.charts.entrances_per_weekday.ylabel'), data: @stage_analytic_data.entrances_per_weekday.values }].to_json %>'
-           data-decimals='0'>
-      </div>
-    </div>
-    <div class="col-xs-4">
-      <div id="entrances-per-day-column"
-           class="flow-chart"
-           data-title='<%= t('stages.charts.entrances_per_weekday.title', target_name: @stage.name) %>'
-           data-xcategories='<%= @stage_analytic_data.entrances_per_day.keys %>'
-           data-xtitle='<%= t('general.charts.xlabel.weekdays') %>'
-           data-ytitle='<%= t('stages.charts.entrances_per_weekday.ylabel') %>'
-           data-prefix='<%= t('stages.charts.entrances_per_weekday.tooltip_prefix') %>'
-           data-series='<%= [{ name: I18n.t('stages.charts.entrances_per_weekday.ylabel'), data: @stage_analytic_data.entrances_per_day.values }].to_json %>'
-           data-decimals='0'>
-      </div>
-    </div>
-    <div class="col-xs-4">
-      <div id="entrances-per-hour-column"
-           class="flow-chart"
-           data-title='<%= t('stages.charts.entrances_per_weekday.title', target_name: @stage.name) %>'
-           data-xcategories='<%= @stage_analytic_data.entrances_per_hour.keys %>'
-           data-xtitle='<%= t('general.charts.hours') %>'
-           data-ytitle='<%= t('stages.charts.entrances_per_weekday.ylabel') %>'
-           data-prefix='<%= t('stages.charts.entrances_per_weekday.tooltip_prefix') %>'
-           data-series='<%= [{ name: I18n.t('stages.charts.entrances_per_weekday.ylabel'), data: @stage_analytic_data.entrances_per_hour.values }].to_json %>'
-           data-decimals='0'>
-      </div>
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="col-xs-4">
-      <div id="out-per-weekday-column"
-           class="flow-chart"
-           data-title='<%= t('stages.charts.out_per_weekday.title', target_name: @stage.name) %>'
-           data-xcategories='<%= @stage_analytic_data.entrances_per_weekday.keys %>'
-           data-xtitle='<%= t('general.charts.xlabel.weekdays') %>'
-           data-ytitle='<%= t('stages.charts.out_per_weekday.ylabel') %>'
-           data-prefix='<%= t('stages.charts.out_per_weekday.tooltip_prefix') %>'
-           data-series='<%= [{ name: I18n.t('stages.charts.out_per_weekday.ylabel'), data: @stage_analytic_data.out_per_weekday.values }].to_json %>'
-           data-decimals='0'>
-      </div>
-    </div>
-    <div class="col-xs-4">
-      <div id="out-per-day-column"
-           class="flow-chart"
-           data-title='<%= t('stages.charts.out_per_weekday.title', target_name: @stage.name) %>'
-           data-xcategories='<%= @stage_analytic_data.entrances_per_day.keys %>'
-           data-xtitle='<%= t('general.charts.xlabel.weekdays') %>'
-           data-ytitle='<%= t('stages.charts.out_per_weekday.ylabel') %>'
-           data-prefix='<%= t('stages.charts.out_per_weekday.tooltip_prefix') %>'
-           data-series='<%= [{ name: I18n.t('stages.charts.out_per_weekday.ylabel'), data: @stage_analytic_data.out_per_day.values }].to_json %>'
-           data-decimals='0'>
-      </div>
-    </div>
-    <div class="col-xs-4">
-      <div id="out-per-hour-column"
-           class="flow-chart"
-           data-title='<%= t('stages.charts.out_per_weekday.title', target_name: @stage.name) %>'
-           data-xcategories='<%= @stage_analytic_data.entrances_per_hour.keys %>'
-           data-xtitle='<%= t('general.charts.hours') %>'
-           data-ytitle='<%= t('stages.charts.out_per_weekday.ylabel') %>'
-           data-prefix='<%= t('stages.charts.out_per_weekday.tooltip_prefix') %>'
-           data-series='<%= [{ name: I18n.t('stages.charts.out_per_weekday.ylabel'), data: @stage_analytic_data.out_per_hour.values }].to_json %>'
-           data-decimals='0'>
-      </div>
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="col-xs-12">
-      <div id="line-avg-hours-in-stage"
-           class="flow-chart"
-           data-title='<%= t('stages.charts.avg_hours_in_stage.title', target_name: @stage.name) %>'
-           data-xcategories='<%= @stage_analytic_data.avg_time_in_stage_per_month.keys %>'
-           data-xtitle='<%= t('charts.xlabel.months') %>'
-           data-ytitle='<%= t('general.charts.hours') %>'
-           data-prefix=''
-           data-suffix='<%= t('general.charts.hours') %>'
-           data-series='<%= [{ name: I18n.t('stages.charts.avg_hours_in_stage.ylabel'), data: @stage_analytic_data.avg_time_in_stage_per_month.values }].to_json %>'
-           data-decimals='2'>
-      </div>
-    </div>
-  </div>
+<div id="stage-charts" class="tabcontent tabcontent-stages">
+  <%= render 'stages/stage_charts', stage_analytic_data: @stage_analytic_data %>
 </div>
 
-<div id="stage-config" class="tabcontent">
-  <div class="row">
-    <div class="col-xs-12">
+<div id="stage-config" class="tabcontent tabcontent-stages">
+  <%= render 'stages/stage_project_config', company: @company, stage: @stage, provider_stages: @provider_stages, not_associated_projects: @not_associated_projects, stage_projects: @stage_projects %>
+</div>
 
-      <h2><%= "#{Stage.human_attribute_name(:integration_id)}: #{@stage.integration_id}" %></h2>
-
-      <%= form_tag copy_projects_from_company_stage_url(@company, @stage), method: :patch, class: 'form-inline' do %>
-        <%= select_tag :provider_stage_id, options_from_collection_for_select(@provider_stages, :id, :name, params[:provider_stage_id]), class: 'form-control' %>
-        <%= submit_tag t('stages.show.import_projects'), class: 'btn btn-success' %>
-      <% end %>
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="col-xs-6">
-      <h3><%= t('stages.show.not_associated_projects') %></h3>
-      <ul>
-        <% @not_associated_projects.each do |project| %>
-          <li>
-            <%= "#{project.full_name} (#{project.current_team&.name})" %>
-            <%= link_to associate_project_company_stage_path(@company, @stage, project), method: :patch do %>
-              <i class="fa fa-check"></i>
-            <% end %>
-          </li>
-        <% end %>
-      </ul>
-    </div>
-    <div class="col-xs-6">
-      <h3><%= t('stages.show.stage_projects') %></h3>
-      <ul>
-        <% @stage_projects.each do |project| %>
-          <li>
-            <%= link_to "#{project.full_name} (#{project.current_team&.name})", edit_company_stage_stage_project_config_path(@company, @stage, project.stage_project_configs.find_by(stage: @stage)) %>
-            <%= link_to dissociate_project_company_stage_path(@company, @stage, project), method: :patch do %>
-              <i class="fa fa-times"></i>
-            <% end %>
-          </li>
-        <% end %>
-      </ul>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-xs-12">
-      <h3><%= t('stages.show.transitions') %></h3>
-      <table class="table table-striped">
-        <thead>
-          <tr>
-            <th><%= 'Valid?' %></th>
-            <th><%= DemandTransition.human_attribute_name :stage %></th>
-            <th><%= DemandTransition.human_attribute_name :project %></th>
-            <th><%= Team.model_name.human %></th>
-            <th><%= DemandTransition.human_attribute_name :last_time_in %></th>
-            <th><%= DemandTransition.human_attribute_name :last_time_out %></th>
-            <th><%= t('demand_transitions.total_time_in_transition') %></th>
-            <th><%= t('general.table.actions') %></th>
-          </tr>
-        </thead>
-        <tbody>
-          <% @transitions_in_stage.each do |transition| %>
-            <tr>
-              <td><%= transition.valid? %></td>
-              <td><%= transition.stage_name %></td>
-              <td><%= link_to transition.demand.project.full_name, company_project_path(@company, transition.demand.project) %></td>
-              <td><%= transition.demand.project.current_team.name %></td>
-              <td><%= l(transition.last_time_in, format: :short) %></td>
-              <td><%= l(transition.last_time_out, format: :short) if transition.last_time_out.present? %></td>
-              <td><%= time_distance_in_words(transition.total_seconds_in_transition) %></td>
-              <td>
-                <%= link_to company_stage_demand_transition_path(@company, @stage, transition), method: :delete do %>
-                  <i class="fa fa-times"></i>
-                <% end %>
-              </td>
-            </tr>
-          <% end %>
-        </tbody>
-      </table>
-    </div>
-  </div>
+<div id="stage-transitions" class="tabcontent tabcontent-stages">
+  <%= render 'stages/stage_transitions' %>
 </div>
 
 <% content_for :javascript do %>

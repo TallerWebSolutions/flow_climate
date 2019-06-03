@@ -15,9 +15,9 @@ function accordionBehaviour() {
     }
 }
 
-function openTab(evt, tabName, tabClass) {
+function openTab(evt, tabName, tabClass, tabContentName) {
     let i, tabcontent, subTabs;
-    tabcontent = document.getElementsByClassName("tabcontent");
+    tabcontent = document.getElementsByClassName(tabContentName);
     for (i = 0; i < tabcontent.length; i++) {
         tabcontent[i].style.display = "none";
     }

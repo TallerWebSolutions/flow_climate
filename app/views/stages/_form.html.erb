@@ -4,10 +4,9 @@
       <%= form.label :order, class: 'control-label' %>
       <%= form.number_field :order, class: 'form-control', autofocus: true, step: 1 %>
     </div>
-    <div class='col-xs-6 form-group <%= 'has-error' if stage.errors[:team].present? %>'>
+    <div class='col-xs-6 form-group'>
       <%= form.label :team, class: 'control-label' %>
-      <%= form.select :team_id, company.teams.order(:name).map { |team| [team.name, team.id] }, { include_blank: t('general.select'), selected: stage.team_id }, class: 'form-control' %>
-      <span class="help-block"><%= stage.errors[:team].join(', ') %></span>
+      <%= select_tag :team_id, company.teams.order(:name).map { |team| [team.name, team.id] }, class: 'form-control' %>
     </div>
     <div class='col-xs-6 form-group <%= 'has-error' if stage.errors[:name].present? %>'>
       <%= form.label :name, class: 'control-label required' %>

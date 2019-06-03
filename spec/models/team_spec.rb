@@ -6,7 +6,7 @@ RSpec.describe Team, type: :model do
     it { is_expected.to have_many(:team_members).dependent(:destroy) }
     it { is_expected.to have_many(:products).dependent(:restrict_with_error) }
     it { is_expected.to have_many(:projects) }
-    it { is_expected.to have_many(:stages).dependent(:nullify) }
+    it { is_expected.to have_and_belong_to_many(:stages) }
     it { is_expected.to have_many(:slack_configurations).dependent(:destroy) }
   end
 

@@ -84,6 +84,9 @@ pt-BR:
     tabs:
       config: "Configuração"
       charts: "Gráficos"
+      transitions: "Transições"
+      projects_associations: "Associações com Projetos"
+      teams_associations: "Associações com Times"
     last_update:
       text: "Última atualização em %{last_update}"
     risk:
@@ -676,6 +679,8 @@ pt-BR:
       stage_projects: "Projetos na Etapa"
       transitions: "Transições"
       import_projects: "Importar Projetos da Etapa"
+      not_associated_teams: "Times não associados"
+      stage_teams: "Times na Etapa"
     charts:
       entrances_per_weekday:
         ylabel: "demandas chegando"

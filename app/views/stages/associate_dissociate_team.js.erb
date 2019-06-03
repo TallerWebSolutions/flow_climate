@@ -1,0 +1,1 @@
+$('#stage-teams-associations').html("<%= escape_javascript(render 'stages/stage_teams_associations', company: @company, stage: @stage, not_associated_teams: @not_associated_teams, stage_teams: @stage_teams).html_safe %>");

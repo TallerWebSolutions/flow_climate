@@ -20,10 +20,15 @@ class StagesRepository
   end
 
   def save_stage(stage, stage_params)
+    team_id = stage_params.delete(:team_id)
+    team = Team.find_by(id: team_id)
+    stage.add_team(team) if team.present?
+
     stage.update(stage_params)
-    team = stage.team
+    team = stage.teams.first
     stage.projects = (stage.projects + team.projects).uniq if team.present?
     stage.save
+
     stage
   end
 

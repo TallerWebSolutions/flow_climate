@@ -1,0 +1,33 @@
+<%= form_tag copy_projects_from_company_stage_url(company, stage), method: :patch, class: 'form-inline' do %>
+  <%= select_tag :provider_stage_id, options_from_collection_for_select(provider_stages, :id, :name, params[:provider_stage_id]), class: 'form-control' %>
+  <%= submit_tag t('stages.show.import_projects'), class: 'btn btn-success' %>
+<% end %>
+
+<div class="row">
+  <div class="col-xs-6">
+    <h3><%= t('stages.show.not_associated_projects') %></h3>
+    <ul>
+      <% not_associated_projects.each do |project| %>
+        <li>
+          <%= "#{project.full_name} (#{project.current_team&.name})" %>
+          <%= link_to associate_project_company_stage_path(company, stage, project), method: :patch do %>
+            <i class="fa fa-check"></i>
+          <% end %>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+  <div class="col-xs-6">
+    <h3><%= t('stages.show.stage_projects') %></h3>
+    <ul>
+      <% stage_projects.each do |project| %>
+        <li>
+          <%= link_to "#{project.full_name} (#{project.current_team&.name})", edit_company_stage_stage_project_config_path(company, stage, project.stage_project_configs.find_by(stage: stage)) %>
+          <%= link_to dissociate_project_company_stage_path(company, stage, project), method: :patch do %>
+            <i class="fa fa-times"></i>
+          <% end %>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+</div>

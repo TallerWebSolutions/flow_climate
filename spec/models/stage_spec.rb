@@ -8,7 +8,7 @@ RSpec.describe Stage, type: :model do
 
   context 'associations' do
     it { is_expected.to belong_to(:company) }
-    it { is_expected.to belong_to(:team) }
+    it { is_expected.to have_and_belong_to_many(:teams) }
     it { is_expected.to have_many(:stage_project_configs) }
     it { is_expected.to have_many(:projects).through(:stage_project_configs) }
     it { is_expected.to have_many(:demand_transitions).dependent(:restrict_with_error) }
@@ -22,13 +22,13 @@ RSpec.describe Stage, type: :model do
     it { is_expected.to validate_presence_of :stage_stream }
   end
 
-  describe '#add_project!' do
+  describe '#add_project' do
     let(:project) { Fabricate :project }
 
     context 'when the stage does not have the project yet' do
       let(:stage) { Fabricate :stage }
 
-      before { stage.add_project!(project) }
+      before { stage.add_project(project) }
 
       it { expect(stage.reload.projects).to eq [project] }
     end
@@ -36,19 +36,19 @@ RSpec.describe Stage, type: :model do
     context 'when the stage has the project' do
       let(:stage) { Fabricate :stage, projects: [project] }
 
-      before { stage.add_project!(project) }
+      before { stage.add_project(project) }
 
       it { expect(stage.reload.projects).to eq [project] }
     end
   end
 
-  describe '#remove_project!' do
+  describe '#remove_project' do
     let(:project) { Fabricate :project }
 
     context 'when the stage does not have the project yet' do
       let(:stage) { Fabricate :stage }
 
-      before { stage.remove_project!(project) }
+      before { stage.remove_project(project) }
 
       it { expect(stage.reload.projects).to eq [] }
     end
@@ -56,9 +56,49 @@ RSpec.describe Stage, type: :model do
     context 'when the stage has the project' do
       let(:stage) { Fabricate :stage, projects: [project] }
 
-      before { stage.remove_project!(project) }
+      before { stage.remove_project(project) }
 
       it { expect(stage.reload.projects).to eq [] }
+    end
+  end
+
+  describe '#add_team' do
+    let(:team) { Fabricate :team }
+
+    context 'when the stage does not have the team yet' do
+      let(:stage) { Fabricate :stage }
+
+      before { stage.add_team(team) }
+
+      it { expect(stage.reload.teams).to eq [team] }
+    end
+
+    context 'when the stage has the team' do
+      let(:stage) { Fabricate :stage, teams: [team] }
+
+      before { stage.add_team(team) }
+
+      it { expect(stage.reload.teams).to eq [team] }
+    end
+  end
+
+  describe '#remove_team' do
+    let(:team) { Fabricate :team }
+
+    context 'when the stage does not have the team yet' do
+      let(:stage) { Fabricate :stage }
+
+      before { stage.remove_team(team) }
+
+      it { expect(stage.reload.teams).to eq [] }
+    end
+
+    context 'when the stage has the team' do
+      let(:stage) { Fabricate :stage, teams: [team] }
+
+      before { stage.remove_team(team) }
+
+      it { expect(stage.reload.teams).to eq [] }
     end
   end
 

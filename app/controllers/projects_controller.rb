@@ -102,7 +102,7 @@ class ProjectsController < AuthenticatedController
   private
 
   def assign_project_stages
-    @stages_list = @project.reload.stages.includes(:team).order(:order, :name)
+    @stages_list = @project.reload.stages.order(:order, :name)
   end
 
   def synchronize_project

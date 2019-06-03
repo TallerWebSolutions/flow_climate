@@ -2,7 +2,6 @@
 
 Fabricator(:stage) do
   company
-  team
   integration_id { Faker::IDNumber.valid }
   name { Faker::Name.first_name }
   stage_type { [0, 1, 2, 3, 4, 5, 6].sample }

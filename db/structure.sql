@@ -991,8 +991,7 @@ CREATE TABLE public.stages (
     updated_at timestamp without time zone NOT NULL,
     company_id integer NOT NULL,
     "order" integer DEFAULT 0 NOT NULL,
-    integration_pipe_id character varying,
-    team_id integer
+    integration_pipe_id character varying
 );
 
 
@@ -1013,6 +1012,38 @@ CREATE SEQUENCE public.stages_id_seq
 --
 
 ALTER SEQUENCE public.stages_id_seq OWNED BY public.stages.id;
+
+
+--
+-- Name: stages_teams; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.stages_teams (
+    id bigint NOT NULL,
+    stage_id integer NOT NULL,
+    team_id integer NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: stages_teams_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.stages_teams_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: stages_teams_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.stages_teams_id_seq OWNED BY public.stages_teams.id;
 
 
 --
@@ -1382,6 +1413,13 @@ ALTER TABLE ONLY public.stages ALTER COLUMN id SET DEFAULT nextval('public.stage
 
 
 --
+-- Name: stages_teams id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.stages_teams ALTER COLUMN id SET DEFAULT nextval('public.stages_teams_id_seq'::regclass);
+
+
+--
 -- Name: team_members id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1630,6 +1668,14 @@ ALTER TABLE ONLY public.stage_project_configs
 
 ALTER TABLE ONLY public.stages
     ADD CONSTRAINT stages_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: stages_teams stages_teams_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.stages_teams
+    ADD CONSTRAINT stages_teams_pkey PRIMARY KEY (id);
 
 
 --
@@ -1995,6 +2041,20 @@ CREATE INDEX index_stages_on_name ON public.stages USING btree (name);
 
 
 --
+-- Name: index_stages_teams_on_stage_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_stages_teams_on_stage_id ON public.stages_teams USING btree (stage_id);
+
+
+--
+-- Name: index_stages_teams_on_team_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_stages_teams_on_team_id ON public.stages_teams USING btree (team_id);
+
+
+--
 -- Name: index_teams_on_company_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2334,6 +2394,14 @@ ALTER TABLE ONLY public.project_change_deadline_histories
 
 
 --
+-- Name: stages_teams fk_rails_8d8a97b7b3; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.stages_teams
+    ADD CONSTRAINT fk_rails_8d8a97b7b3 FOREIGN KEY (team_id) REFERENCES public.teams(id);
+
+
+--
 -- Name: users fk_rails_971bf2d9a1; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2374,19 +2442,19 @@ ALTER TABLE ONLY public.project_risk_alerts
 
 
 --
--- Name: stages fk_rails_c4e2c44248; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.stages
-    ADD CONSTRAINT fk_rails_c4e2c44248 FOREIGN KEY (team_id) REFERENCES public.teams(id);
-
-
---
 -- Name: demand_transitions fk_rails_c63024fc81; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.demand_transitions
     ADD CONSTRAINT fk_rails_c63024fc81 FOREIGN KEY (stage_id) REFERENCES public.stages(id);
+
+
+--
+-- Name: stages_teams fk_rails_cb288435d9; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.stages_teams
+    ADD CONSTRAINT fk_rails_cb288435d9 FOREIGN KEY (stage_id) REFERENCES public.stages(id);
 
 
 --
@@ -2568,6 +2636,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190527200450'),
 ('20190531184111'),
 ('20190531191855'),
-('20190531215933');
+('20190531215933'),
+('20190603153315');
 
 

@@ -82,6 +82,9 @@ en:
     tabs:
       config: "Configuration"
       charts: "Charts"
+      transitions: "Transitions"
+      projects_associations: "Project Associations"
+      teams_associations: "Team Associations"
     last_update:
       text: "Last update: %{last_update}"
     risk:
@@ -641,6 +644,8 @@ en:
       stage_projects: "Stage Projects"
       transitions: "Transitions"
       import_projects: "Import Projetct from Stage"
+      not_associated_teams: "Not Associated Teams"
+      stage_teams: "Teams in Stage"
     charts:
       entrances_per_weekday:
         ylabel: "demands in"
