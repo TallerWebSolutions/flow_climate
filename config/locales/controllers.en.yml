@@ -637,6 +637,7 @@ en:
     index:
       title: "Configured Stages"
       project_count: "Qty Projects"
+      time_in_stage: "Stage Time"
     edit:
       title: "Edit Stage"
     show:

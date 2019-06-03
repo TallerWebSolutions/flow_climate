@@ -672,6 +672,7 @@ pt-BR:
     index:
       title: "Etapas Configuradas"
       project_count: "Qtd Projetos"
+      time_in_stage: "Tempo na Etapa"
     edit:
       title: "Editar Etapa"
     show:

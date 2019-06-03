@@ -176,4 +176,22 @@ RSpec.describe Stage, type: :model do
       it { expect(first_stage.before_end_point?).to be true }
     end
   end
+
+  describe '#total_seconds_in' do
+    context 'having data' do
+      let(:demand) { Fabricate :demand }
+      let!(:first_stage) { Fabricate :stage, projects: [demand.project], integration_pipe_id: '321', order: 2 }
+
+      let!(:demand_transition) { Fabricate :demand_transition, demand: demand, stage: first_stage, last_time_in: Time.zone.parse('2018-03-05 22:00'), last_time_out: Time.zone.parse('2018-03-06 13:00') }
+      let!(:other_demand_transition) { Fabricate :demand_transition, demand: demand, stage: first_stage, last_time_in: Time.zone.parse('2018-03-07 22:00'), last_time_out: Time.zone.parse('2018-03-09 13:00') }
+
+      it { expect(first_stage.total_seconds_in).to eq 194_400.0 }
+    end
+
+    context 'having no data' do
+      let!(:first_stage) { Fabricate :stage }
+
+      it { expect(first_stage.total_seconds_in).to eq 0 }
+    end
+  end
 end

@@ -3,6 +3,7 @@
 <td><%= link_to stage.name, company_stage_path(company, stage) %></td>
 <td><%= stage.integration_id %></td>
 <td><%= stage.projects.count %></td>
+<td><%= time_distance_in_words(stage.total_seconds_in) %></td>
 <td><%= t("activerecord.attributes.stage.enums.stage_type.#{stage.stage_type}") %></td>
 <td><%= t("activerecord.attributes.stage.enums.stage_stream.#{stage.stage_stream}") %></td>
 <td class="center">

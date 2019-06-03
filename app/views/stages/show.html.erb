@@ -8,6 +8,17 @@
   </div>
 </div>
 
+<hr>
+
+<div class="row bottom-spaced-component">
+  <div class="col-xs-12">
+    <h2><%= "#{Stage.human_attribute_name(:integration_id)}: #{@stage.integration_id}" %></h2>
+    <h4><%= "#{t('stages.index.time_in_stage')}: #{time_distance_in_words(@stage.total_seconds_in)}" %></h4>
+  </div>
+</div>
+
+<hr>
+
 <div class="row">
   <div class="col-xs-12">
     <div class="tab">
