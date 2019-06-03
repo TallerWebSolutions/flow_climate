@@ -73,6 +73,10 @@ class Stage < ApplicationRecord
     order < first_done_stage_in_pipe.order
   end
 
+  def total_seconds_in
+    demand_transitions.sum(&:total_seconds_in_transition)
+  end
+
   private
 
   def first_done_stage_in_pipe
