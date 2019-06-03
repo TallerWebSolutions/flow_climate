@@ -360,7 +360,7 @@ RSpec.describe StagesController, type: :controller do
       let!(:project) { Fabricate :project, stages: [stage] }
 
       context 'passing valid parameters' do
-        it 'assigns the instance variables and renders the template' do
+        it 'associate the project from stage and renders the template' do
           patch :associate_project, params: { company_id: company, id: stage, project_id: project }
           expect(response).to redirect_to company_stage_path(company, stage)
           expect(stage.reload.projects).to eq [project]
@@ -405,7 +405,7 @@ RSpec.describe StagesController, type: :controller do
       let!(:project) { Fabricate :project, stages: [stage] }
 
       context 'passing valid parameters' do
-        it 'assigns the instance variables and renders the template' do
+        it 'dissociate the project from stage and renders the template' do
           patch :dissociate_project, params: { company_id: company, id: stage, project_id: project }
           expect(response).to redirect_to company_stage_path(company, stage)
           expect(stage.reload.projects).to eq []
@@ -448,31 +448,32 @@ RSpec.describe StagesController, type: :controller do
       let!(:stage) { Fabricate :stage, company: company }
 
       let!(:team) { Fabricate :team, company: company, stages: [stage] }
+      let!(:other_team) { Fabricate :team, company: company, stages: [stage] }
 
       context 'passing valid parameters' do
-        it 'assigns the instance variables and renders the template' do
-          patch :associate_team, params: { company_id: company, id: stage, team_id: team }
-          expect(response).to redirect_to company_stage_path(company, stage)
-          expect(stage.reload.teams).to eq [team]
+        it 'associates the team and renders the template' do
+          patch :associate_team, params: { company_id: company, id: stage, team_id: team }, xhr: true
+          expect(response).to render_template 'stages/associate_dissociate_team'
+          expect(stage.reload.teams).to match_array [team, other_team]
         end
       end
 
       context 'passing an invalid' do
         context 'non-existent stage' do
-          before { patch :associate_team, params: { company_id: company, id: 'foo', team_id: team } }
+          before { patch :associate_team, params: { company_id: company, id: 'foo', team_id: team }, xhr: true }
 
           it { expect(response).to have_http_status :not_found }
         end
 
         context 'non-existent team' do
-          before { patch :associate_team, params: { company_id: company, id: 'foo', team_id: 'foo' } }
+          before { patch :associate_team, params: { company_id: company, id: 'foo', team_id: 'foo' }, xhr: true }
 
           it { expect(response).to have_http_status :not_found }
         end
 
         context 'company' do
           context 'non-existent' do
-            before { patch :associate_team, params: { company_id: 'foo', id: stage, team_id: team } }
+            before { patch :associate_team, params: { company_id: 'foo', id: stage, team_id: team }, xhr: true }
 
             it { expect(response).to have_http_status :not_found }
           end
@@ -480,7 +481,7 @@ RSpec.describe StagesController, type: :controller do
           context 'not permitted' do
             let(:company) { Fabricate :company, users: [] }
 
-            before { patch :associate_team, params: { company_id: company, id: stage, team_id: team } }
+            before { patch :associate_team, params: { company_id: company, id: stage, team_id: team }, xhr: true }
 
             it { expect(response).to have_http_status :not_found }
           end
@@ -493,31 +494,32 @@ RSpec.describe StagesController, type: :controller do
       let!(:stage) { Fabricate :stage, company: company }
 
       let!(:team) { Fabricate :team, company: company, stages: [stage] }
+      let!(:other_team) { Fabricate :team, company: company, stages: [stage] }
 
       context 'passing valid parameters' do
         it 'assigns the instance variables and renders the template' do
-          patch :dissociate_team, params: { company_id: company, id: stage, team_id: team }
-          expect(response).to redirect_to company_stage_path(company, stage)
-          expect(stage.reload.teams).to eq []
+          patch :dissociate_team, params: { company_id: company, id: stage, team_id: team }, xhr: true
+          expect(response).to render_template 'stages/associate_dissociate_team'
+          expect(stage.reload.teams).to eq [other_team]
         end
       end
 
       context 'passing an invalid' do
         context 'non-existent stage' do
-          before { patch :dissociate_team, params: { company_id: company, id: 'foo', team_id: team } }
+          before { patch :dissociate_team, params: { company_id: company, id: 'foo', team_id: team }, xhr: true }
 
           it { expect(response).to have_http_status :not_found }
         end
 
         context 'non-existent team' do
-          before { patch :dissociate_team, params: { company_id: company, id: 'foo', team_id: 'foo' } }
+          before { patch :dissociate_team, params: { company_id: company, id: 'foo', team_id: 'foo' }, xhr: true }
 
           it { expect(response).to have_http_status :not_found }
         end
 
         context 'company' do
           context 'non-existent' do
-            before { patch :dissociate_team, params: { company_id: 'foo', id: stage, team_id: team } }
+            before { patch :dissociate_team, params: { company_id: 'foo', id: stage, team_id: team }, xhr: true }
 
             it { expect(response).to have_http_status :not_found }
           end
@@ -525,7 +527,7 @@ RSpec.describe StagesController, type: :controller do
           context 'not permitted' do
             let(:company) { Fabricate :company, users: [] }
 
-            before { patch :dissociate_team, params: { company_id: company, id: stage, team_id: team } }
+            before { patch :dissociate_team, params: { company_id: company, id: stage, team_id: team }, xhr: true }
 
             it { expect(response).to have_http_status :not_found }
           end

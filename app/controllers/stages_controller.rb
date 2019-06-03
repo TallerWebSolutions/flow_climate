@@ -56,13 +56,15 @@ class StagesController < AuthenticatedController
   def associate_team
     team = @company.teams.find(params[:team_id])
     @stage.add_team(team)
-    redirect_to company_stage_path(@company, @stage)
+    assign_team_stages
+    respond_to { |format| format.js { render 'stages/associate_dissociate_team' } }
   end
 
   def dissociate_team
     team = @company.teams.find(params[:team_id])
     @stage.remove_team(team)
-    redirect_to company_stage_path(@company, @stage)
+    assign_team_stages
+    respond_to { |format| format.js { render 'stages/associate_dissociate_team' } }
   end
 
   def copy_projects_from

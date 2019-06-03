@@ -5,7 +5,7 @@
       <% not_associated_teams.each do |team| %>
         <li>
           <%= "#{team.name}" %>
-          <%= link_to associate_team_company_stage_path(company, stage, team), method: :patch do %>
+          <%= link_to associate_team_company_stage_path(company, stage, team), method: :patch, remote: true do %>
             <i class="fa fa-check"></i>
           <% end %>
         </li>
@@ -18,7 +18,7 @@
       <% stage_teams.each do |team| %>
         <li>
           <%= team.name %>
-          <%= link_to dissociate_team_company_stage_path(company, stage, team), method: :patch do %>
+          <%= link_to dissociate_team_company_stage_path(company, stage, team), method: :patch, remote: true do %>
             <i class="fa fa-times"></i>
           <% end %>
         </li>
