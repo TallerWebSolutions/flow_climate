@@ -222,7 +222,7 @@ RSpec.describe Project, type: :model do
     context 'when the end date is in the future' do
       let(:project) { Fabricate :project, start_date: 1.week.ago, end_date: 1.week.from_now }
 
-      it { expect(project.remaining_weeks).to eq 1 }
+      it { expect(project.remaining_weeks).to eq 2 }
     end
 
     context 'when the end date is in the past' do
@@ -234,13 +234,13 @@ RSpec.describe Project, type: :model do
     context 'when the start date is in the future' do
       let(:project) { Fabricate :project, start_date: 2.weeks.from_now, end_date: 3.weeks.from_now }
 
-      it { expect(project.remaining_weeks).to eq 1 }
+      it { expect(project.remaining_weeks).to eq 2 }
     end
 
     context 'passing from_date as parameter' do
       let(:project) { Fabricate :project, start_date: 2.weeks.from_now, end_date: 10.weeks.from_now }
 
-      it { expect(project.remaining_weeks(1.week.from_now.to_date)).to eq 8 }
+      it { expect(project.remaining_weeks(1.week.from_now.to_date)).to eq 9 }
     end
   end
 

@@ -183,6 +183,10 @@ RSpec.describe Highchart::OperationalChartsAdapter, type: :data_object do
     describe '#hours_per_demand' do
       subject(:report_data) { Highchart::OperationalChartsAdapter.new(Project.all, Project.all.map(&:start_date).min, Project.all.map(&:end_date).max, 'week') }
 
+      before { travel_to Time.zone.local(2018, 5, 21, 10, 0, 0) }
+
+      after { travel_back }
+
       it { expect(report_data.hours_per_demand).to eq [0.0, 19.8, 19.8, 9.9, 7.92, 7.92, 7.92, 7.92, 7.92, 7.92, 54.84, 54.84] }
     end
 

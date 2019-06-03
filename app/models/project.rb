@@ -103,7 +103,7 @@ class Project < ApplicationRecord
     start_date_limit = [start_date, from_date].max
     return 0 if end_date < start_date_limit
 
-    ((start_date_limit.end_of_week.upto(end_date.to_date.end_of_week).count.to_f + 1) / 7).round
+    ((start_date_limit.end_of_week.upto(end_date.to_date.end_of_week).count.to_f + 1) / 7).round + 1
   end
 
   def remaining_days(from_date = Time.zone.now)
