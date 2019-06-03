@@ -107,8 +107,8 @@ RSpec.describe DemandBlocksRepository, type: :repository do
     let!(:first_project) { Fabricate :project, status: :maintenance, start_date: 3.days.ago, end_date: 2.days.ago, team: team }
     let!(:second_project) { Fabricate :project, status: :executing, start_date: 3.days.ago, end_date: Time.zone.today, team: team }
 
-    let(:first_stage) { Fabricate :stage, company: company, team: team, order: 0, name: 'bbb', projects: [first_project, second_project] }
-    let(:second_stage) { Fabricate :stage, company: company, team: team, order: 1, name: 'aaa', projects: [first_project, second_project] }
+    let(:first_stage) { Fabricate :stage, company: company, teams: [team], order: 0, name: 'bbb', projects: [first_project, second_project] }
+    let(:second_stage) { Fabricate :stage, company: company, teams: [team], order: 1, name: 'aaa', projects: [first_project, second_project] }
 
     context 'having data' do
       let!(:first_demand) { Fabricate :demand, project: first_project }

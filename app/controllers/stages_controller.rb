@@ -11,7 +11,7 @@ class StagesController < AuthenticatedController
   end
 
   def create
-    @stage = Stage.new(stages_params.merge(company: @company))
+    @stage = Stage.new(stages_params.except(:team_id).merge(company: @company))
     @stage = StagesRepository.instance.save_stage(@stage, stages_params)
     return redirect_to company_path(@company) if @stage.valid?
 
@@ -43,13 +43,13 @@ class StagesController < AuthenticatedController
 
   def associate_project
     project = Project.find(params[:project_id])
-    @stage.add_project!(project)
+    @stage.add_project(project)
     redirect_to company_stage_path(@company, @stage)
   end
 
   def dissociate_project
     project = Project.find(params[:project_id])
-    @stage.remove_project!(project)
+    @stage.remove_project(project)
     redirect_to company_stage_path(@company, @stage)
   end
 
@@ -76,7 +76,7 @@ class StagesController < AuthenticatedController
   end
 
   def assign_stages_list
-    @stages_list = @company.stages.includes(:team).order('teams.name, stages.order')
+    @stages_list = @company.stages.order('stages.order')
   end
 
   def build_stage(jira_stage)
