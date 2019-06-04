@@ -22,14 +22,16 @@ namespace :notifications do
 
       notifier = Slack::Notifier.new(config.room_webhook)
 
-      cmd = TeamService.instance.compute_average_demand_cost_to_team(team, 1.week.ago.beginning_of_week.to_date, Time.zone.today.end_of_week.to_date, 'week')
+      five_weeks_cmd = TeamService.instance.compute_average_demand_cost_to_team(team, 4.weeks.ago.beginning_of_week.to_date, Time.zone.today.end_of_week.to_date, 'week')
 
-      penultimate_week = cmd.values[-2]
-      last_week = cmd.values[-1]
+      four_weeks_cmd_array = five_weeks_cmd.values[-4, -2].compact
+      four_weeks_cmd_average = four_weeks_cmd_array.sum / four_weeks_cmd_array.count
 
-      cmd_difference_to_last_week = ((last_week.to_f - penultimate_week.to_f) / penultimate_week.to_f) * 100
+      last_week = five_weeks_cmd.values[-1]
 
-      notifier.ping(I18n.t('slack_configurations.notifications.cmd_text', name: team.name, cmd_value: number_to_currency(last_week), cmd_difference_to_last_week: number_with_precision(cmd_difference_to_last_week, precision: 2), previous_week: number_to_currency(penultimate_week)))
+      cmd_difference_to_avg_last_four_weeks = ((last_week.to_f - four_weeks_cmd_average) / four_weeks_cmd_average) * 100
+
+      notifier.ping(I18n.t('slack_configurations.notifications.cmd_text', name: team.name, cmd_value: number_to_currency(last_week), cmd_difference_to_last_week: number_with_precision(cmd_difference_to_avg_last_four_weeks, precision: 2), previous_cmd: number_to_currency(penultimate_week)))
     end
   end
 end
