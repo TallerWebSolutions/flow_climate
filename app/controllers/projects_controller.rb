@@ -106,7 +106,7 @@ class ProjectsController < AuthenticatedController
   end
 
   def synchronize_project
-    jira_account = @company.jira_accounts.first&.jira_account_domain
+    jira_account = @company.jira_accounts.first
 
     project_url = company_project_url(@company, @project)
     Jira::ProcessJiraProjectJob.perform_later(jira_account, @project.project_jira_config, current_user.email, current_user.full_name, project_url)
