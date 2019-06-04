@@ -44,7 +44,7 @@ RSpec.describe Jira::JiraApiService, type: :service do
     context 'when the issue does not exist' do
       it 'returns an empty Issue' do
         response = Net::HTTPResponse.new(1.0, 404, 'not found')
-        expect(JIRA::Resource::Issue).to(receive(:jql).once.and_raise(JIRA::HTTPError.new(response)))
+        expect(JIRA::Resource::Issue).to(receive(:jql).twice.and_raise(JIRA::HTTPError.new(response)))
 
         issues_returned = Jira::JiraApiService.new(jira_account.username, jira_account.password, jira_account.base_uri).request_issues_by_fix_version('fix version name', 'EX')
 

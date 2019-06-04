@@ -17,12 +17,9 @@ module Jira
     end
 
     def request_issues_by_fix_version(project_key, release_name)
-      issues = client.Issue.jql("labels IN ('#{release_name}') AND project = '#{project_key}'")
-      issues = client.Issue.jql("fixVersion = '#{release_name}' AND project = '#{project_key}'") if issues.blank?
-
-      issues
+      client.Issue.jql("labels IN ('#{release_name}') AND project = '#{project_key}'")
     rescue JIRA::HTTPError
-      []
+      request_by_fix_version(project_key, release_name)
     end
 
     def request_project(project_key)
@@ -38,6 +35,12 @@ module Jira
     end
 
     private
+
+    def request_by_fix_version(project_key, release_name)
+      client.Issue.jql("fixVersion = '#{release_name}' AND project = '#{project_key}'")
+    rescue JIRA::HTTPError
+      []
+    end
 
     def client
       @client ||= JIRA::Client.new(@connection_parameters)
