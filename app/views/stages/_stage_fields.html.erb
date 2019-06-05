@@ -25,7 +25,7 @@
   <%= link_to edit_company_stage_path(company, stage), class: 'edit-stage', remote: true do %>
     <i class="fas fa-edit"></i>
   <% end %>
-  <%= link_to company_stage_path(company, stage), method: :delete do %>
+  <%= link_to company_stage_path(company, stage), data: { confirm: I18n.t('general.destroy.confirm') }, method: :delete do %>
     <i class="fa fa-times" aria-hidden="true"></i>
   <% end %>
 </td>
