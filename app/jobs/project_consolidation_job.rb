@@ -3,7 +3,7 @@ class ProjectConsolidationJob < ApplicationJob
 
   def perform
     Company.all.each do |company|
-      company.projects.each do |project|
+      company.projects.active.each do |project|
         start_date = project.start_date
         end_date = [project.end_date, Time.zone.today.end_of_week].min
 
