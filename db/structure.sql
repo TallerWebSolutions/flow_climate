@@ -1094,7 +1094,8 @@ CREATE TABLE public.team_members (
     updated_at timestamp without time zone NOT NULL,
     team_id integer NOT NULL,
     start_date date,
-    end_date date
+    end_date date,
+    jira_account_user_email character varying
 );
 
 
@@ -2715,6 +2716,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190531191855'),
 ('20190531215933'),
 ('20190603153315'),
-('20190606144211');
+('20190606144211'),
+('20190606204533');
 
 

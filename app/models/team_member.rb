@@ -4,18 +4,19 @@
 #
 # Table name: team_members
 #
-#  active          :boolean          default(TRUE)
-#  billable        :boolean          default(TRUE)
-#  billable_type   :integer          default("outsourcing")
-#  created_at      :datetime         not null
-#  end_date        :date
-#  hours_per_month :integer          not null
-#  id              :bigint(8)        not null, primary key
-#  monthly_payment :decimal(, )      not null
-#  name            :string           not null
-#  start_date      :date
-#  team_id         :integer          not null
-#  updated_at      :datetime         not null
+#  active                  :boolean          default(TRUE)
+#  billable                :boolean          default(TRUE)
+#  billable_type           :integer          default("outsourcing")
+#  created_at              :datetime         not null
+#  end_date                :date
+#  hours_per_month         :integer          not null
+#  id                      :bigint(8)        not null, primary key
+#  jira_account_user_email :string
+#  monthly_payment         :decimal(, )      not null
+#  name                    :string           not null
+#  start_date              :date
+#  team_id                 :integer          not null
+#  updated_at              :datetime         not null
 #
 # Foreign Keys
 #

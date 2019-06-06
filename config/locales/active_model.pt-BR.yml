@@ -150,6 +150,7 @@ pt-BR:
         expenses_total: Saídas totais
       team_member:
         name: Nome
+        jira_account_user_email: Email na Conta do Jira
         monthly_payment: Pagamento mensal
         hours_per_month: Horas por mês
         billable: Faturável?
