@@ -64,6 +64,8 @@ class Demand < ApplicationRecord
   has_many :demand_comments, dependent: :destroy
   has_one :demands_list, inverse_of: :demand, dependent: :restrict_with_error
 
+  has_and_belongs_to_many :team_members, dependent: :destroy, counter_cache: :assignees_count
+
   validates :project, :created_date, :demand_id, :demand_type, :class_of_service, :assignees_count, presence: true
   validates :demand_id, uniqueness: { scope: :company_id, message: I18n.t('demand.validations.demand_id_unique.message') }
 
