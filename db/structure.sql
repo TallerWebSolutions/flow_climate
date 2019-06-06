@@ -369,6 +369,38 @@ SELECT
 
 
 --
+-- Name: demands_team_members; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.demands_team_members (
+    id bigint NOT NULL,
+    demand_id integer NOT NULL,
+    team_member_id integer NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: demands_team_members_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.demands_team_members_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: demands_team_members_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.demands_team_members_id_seq OWNED BY public.demands_team_members.id;
+
+
+--
 -- Name: financial_informations; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1294,6 +1326,13 @@ ALTER TABLE ONLY public.demands ALTER COLUMN id SET DEFAULT nextval('public.dema
 
 
 --
+-- Name: demands_team_members id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.demands_team_members ALTER COLUMN id SET DEFAULT nextval('public.demands_team_members_id_seq'::regclass);
+
+
+--
 -- Name: financial_informations id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1524,6 +1563,14 @@ ALTER TABLE ONLY public.demand_transitions
 
 ALTER TABLE ONLY public.demands
     ADD CONSTRAINT demands_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: demands_team_members demands_team_members_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.demands_team_members
+    ADD CONSTRAINT demands_team_members_pkey PRIMARY KEY (id);
 
 
 --
@@ -1828,6 +1875,20 @@ CREATE INDEX index_demands_on_discarded_at ON public.demands USING btree (discar
 --
 
 CREATE UNIQUE INDEX index_demands_on_slug ON public.demands USING btree (slug);
+
+
+--
+-- Name: index_demands_team_members_on_demand_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_demands_team_members_on_demand_id ON public.demands_team_members USING btree (demand_id);
+
+
+--
+-- Name: index_demands_team_members_on_team_member_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_demands_team_members_on_team_member_id ON public.demands_team_members USING btree (team_member_id);
 
 
 --
@@ -2178,6 +2239,14 @@ ALTER TABLE ONLY public.project_consolidations
 
 
 --
+-- Name: demands_team_members fk_rails_0af34c141e; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.demands_team_members
+    ADD CONSTRAINT fk_rails_0af34c141e FOREIGN KEY (demand_id) REFERENCES public.demands(id);
+
+
+--
 -- Name: demand_blocks fk_rails_0c8fa8d3a7; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2383,6 +2452,14 @@ ALTER TABLE ONLY public.stage_project_configs
 
 ALTER TABLE ONLY public.user_project_roles
     ADD CONSTRAINT fk_rails_7402a518b4 FOREIGN KEY (project_id) REFERENCES public.projects(id);
+
+
+--
+-- Name: demands_team_members fk_rails_78b4938f25; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.demands_team_members
+    ADD CONSTRAINT fk_rails_78b4938f25 FOREIGN KEY (team_member_id) REFERENCES public.team_members(id);
 
 
 --
@@ -2637,6 +2714,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190531184111'),
 ('20190531191855'),
 ('20190531215933'),
-('20190603153315');
+('20190603153315'),
+('20190606144211');
 
 

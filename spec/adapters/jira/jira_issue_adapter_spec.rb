@@ -25,12 +25,16 @@ RSpec.describe Jira::JiraIssueAdapter, type: :service do
       let!(:class_of_service_custom_field) { Fabricate :jira_custom_field_mapping, jira_account: jira_account, demand_field: :class_of_service, custom_field_machine_name: 'customfield_10028' }
 
       context 'and it is a feature' do
-        let!(:jira_issue) { client.Issue.build({ key: '10000', fields: { created: '2018-07-02T11:20:18.998-0300', summary: 'foo of bar', issuetype: { name: 'Story' }, customfield_10028: { value: 'Expedite' }, project: { key: 'foo' }, customfield_10024: [{ name: 'foo' }, { name: 'bar' }] }, changelog: { startAt: 0, maxResults: 2, total: 2, histories: [{ id: '10039', created: '2018-07-08T22:34:47.440-0300', items: [{ field: 'status', from: 'first_stage', to: 'second_stage' }] }, { id: '10038', created: '2018-07-06T09:40:43.886-0300', items: [{ field: 'status', from: 'third_stage', to: 'first_stage' }] }] } }.with_indifferent_access) }
+        let!(:team_member) { Fabricate :team_member, team: team, name: 'foo' }
+        let!(:other_team_member) { Fabricate :team_member, team: team, name: 'bar' }
+
+        let!(:jira_issue) { client.Issue.build({ key: '10000', fields: { created: '2018-07-02T11:20:18.998-0300', summary: 'foo of bar', issuetype: { name: 'Story' }, customfield_10028: { value: 'Expedite' }, project: { key: 'foo' }, customfield_10024: [{ name: 'fOO' }, { name: 'BaR' }] }, changelog: { startAt: 0, maxResults: 2, total: 2, histories: [{ id: '10039', created: '2018-07-08T22:34:47.440-0300', items: [{ field: 'status', from: 'first_stage', to: 'second_stage' }] }, { id: '10038', created: '2018-07-06T09:40:43.886-0300', items: [{ field: 'status', from: 'third_stage', to: 'first_stage' }] }] } }.with_indifferent_access) }
 
         it 'creates the demand' do
           Jira::JiraIssueAdapter.instance.process_issue!(jira_account, first_project, jira_issue)
           expect(Demand.count).to eq 1
           expect(Demand.last.assignees_count).to eq 2
+          expect(Demand.last.team_members).to match_array [team_member, other_team_member]
           expect(Demand.last.demand_title).to eq 'foo of bar'
           expect(Demand.last.downstream_demand?).to be false
           expect(Demand.last).to be_feature
@@ -56,11 +60,13 @@ RSpec.describe Jira::JiraIssueAdapter, type: :service do
         end
       end
 
-      context 'and it is a bug' do
+      context 'and it is a bug with no team member registered' do
         let!(:jira_issue) { client.Issue.build({ key: '10000', summary: 'foo of bar', fields: { created: '2018-07-03T11:20:18.998-0300', issuetype: { name: 'Bug' }, project: { key: 'foo' }, customfield_10024: [{ name: 'foo' }, { name: 'bar' }] } }.with_indifferent_access) }
 
         it 'creates the demand' do
           Jira::JiraIssueAdapter.instance.process_issue!(jira_account, first_project, jira_issue)
+          expect(Demand.last.assignees_count).to eq 0
+          expect(Demand.last.team_members).to eq []
           expect(Demand.last).to be_bug
         end
       end
@@ -205,7 +211,7 @@ RSpec.describe Jira::JiraIssueAdapter, type: :service do
         it 'updates the demand' do
           Jira::JiraIssueAdapter.instance.process_issue!(jira_account, first_project, jira_issue)
           expect(Demand.count).to eq 1
-          expect(Demand.last.assignees_count).to eq 2
+          expect(Demand.last.assignees_count).to eq 0
           expect(Demand.last.demand_title).to eq 'foo of bar'
           expect(Demand.last.downstream_demand?).to be false
           expect(Demand.last.demand_comments.first.comment_text).to eq 'comment example'
@@ -222,7 +228,7 @@ RSpec.describe Jira::JiraIssueAdapter, type: :service do
         it 'updates the demand' do
           Jira::JiraIssueAdapter.instance.process_issue!(jira_account, first_project, jira_issue)
           expect(Demand.count).to eq 1
-          expect(Demand.last.assignees_count).to eq 2
+          expect(Demand.last.assignees_count).to eq 0
           expect(Demand.last.demand_title).to eq 'foo of bar'
           expect(Demand.last.downstream_demand?).to be false
           expect(Demand.last.url).to eq "#{jira_account.base_uri}browse/10000"
