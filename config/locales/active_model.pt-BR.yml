@@ -95,6 +95,9 @@ pt-BR:
       stage:
         one: Etapa
         other: Etapas
+        attributes:
+          integration_pipe_id:
+            help: "ID do Fluxo, ID do Quadro, ID do rapidView (Jira)..."
       demand_transition:
         one: Transição da Demanda
         other: Transições da Demanda
@@ -266,6 +269,7 @@ pt-BR:
         projects: Projetos
         team: Time
         demand_transitions: Transições de Demanda
+        integration_pipe_id: Id do Fluxo
         integration_id: Id na Integração
         name: Nome
         stage_type: Tipo da Etapa

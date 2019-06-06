@@ -5,13 +5,19 @@
       <%= form.number_field :order, class: 'form-control', autofocus: true, step: 1 %>
     </div>
     <div class='col-xs-6 form-group'>
-      <%= form.label :team, class: 'control-label' %>
-      <%= select_tag :team_id, company.teams.order(:name).map { |team| [team.name, team.id] }, class: 'form-control' %>
+      <%= label_tag Team.model_name.human %>
+      <%= select_tag :team_id, teams_in_company_options(company), class: 'form-control', include_blank: I18n.t('general.select') %>
     </div>
     <div class='col-xs-6 form-group <%= 'has-error' if stage.errors[:name].present? %>'>
       <%= form.label :name, class: 'control-label required' %>
       <%= form.text_field :name, class: 'form-control' %>
       <span class="help-block"><%= stage.errors[:name].join(', ') %></span>
+    </div>
+    <div class='col-xs-6 form-group <%= 'has-error' if stage.errors[:integration_pipe_id].present? %>'>
+      <%= form.label :integration_pipe_id, class: 'control-label' %>
+      <i class="far fa-question-circle" title="<%= t('activerecord.models.stage.attributes.integration_pipe_id.help') %>"></i>
+      <%= form.text_field :integration_pipe_id, class: 'form-control', autofocus: true %>
+      <span class="help-block"><%= stage.errors[:integration_pipe_id].join(', ') %></span>
     </div>
     <div class='col-xs-6 form-group <%= 'has-error' if stage.errors[:integration_id].present? %>'>
       <%= form.label :integration_id, class: 'control-label required' %>

@@ -110,7 +110,7 @@ class StagesController < AuthenticatedController
   end
 
   def stages_params
-    params.require(:stage).permit(:order, :team_id, :integration_id, :name, :stage_type, :stage_stream, :commitment_point, :end_point, :queue)
+    params.require(:stage).permit(:order, :team_id, :integration_pipe_id, :integration_id, :name, :stage_type, :stage_stream, :commitment_point, :end_point, :queue)
   end
 
   def assign_stage

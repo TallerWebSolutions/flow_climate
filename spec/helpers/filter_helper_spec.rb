@@ -24,4 +24,11 @@ RSpec.describe FilterHelper, type: :helper do
   describe '#grouping_period_to_charts_options' do
     it { expect(helper.grouping_period_to_charts_options).to eq options_for_select([[I18n.t('general.monthly'), 'month'], [I18n.t('general.weekly'), 'week'], [I18n.t('general.daily'), 'day']], 'month') }
   end
+
+  describe '#teams_in_company_options' do
+    let(:company) { Fabricate :company }
+    let!(:team) { Fabricate :team, company: company }
+
+    it { expect(helper.teams_in_company_options(company)).to eq options_for_select([[team.name, team.id.to_s]]) }
+  end
 end
