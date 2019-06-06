@@ -1,6 +1,7 @@
 <td><%= stage.order %></td>
 <td><%= stage.teams.count %></td>
 <td><%= link_to stage.name, company_stage_path(company, stage) %></td>
+<td><%= stage.integration_pipe_id %></td>
 <td><%= stage.integration_id %></td>
 <td><%= stage.projects.count %></td>
 <td><%= time_distance_in_words(stage.total_seconds_in) %></td>

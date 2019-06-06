@@ -22,4 +22,8 @@ module FilterHelper
   def grouping_period_to_charts_options(selected_value = 'month')
     options_for_select([[I18n.t('general.monthly'), 'month'], [I18n.t('general.weekly'), 'week'], [I18n.t('general.daily'), 'day']], selected_value)
   end
+
+  def teams_in_company_options(company)
+    options_for_select(company.teams.map{ |team| [team.name, team.id.to_s] })
+  end
 end
