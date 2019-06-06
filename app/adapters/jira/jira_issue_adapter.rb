@@ -22,7 +22,7 @@ module Jira
                     class_of_service: read_class_of_service(jira_account, jira_issue), demand_title: issue_fields_value(jira_issue, 'summary'),
                     url: build_jira_url(jira_account, demand.demand_id), commitment_date: nil, discarded_at: nil)
 
-      read_assignees_info(demand, jira_account, jira_issue)
+      read_responsibles_info(demand, jira_account, jira_issue)
       read_comments(demand, jira_issue)
       read_blocks(demand, jira_issue)
       read_transitions!(demand, jira_issue.changelog) if jira_issue.respond_to?(:changelog)
@@ -142,7 +142,7 @@ module Jira
       (history['items'].first['field'].downcase.include?('class of service') || history['items'].first['field'].downcase.include?('classe de serviço'))
     end
 
-    def read_assignees_info(demand, jira_account, jira_issue)
+    def read_responsibles_info(demand, jira_account, jira_issue)
       responsibles_custom_field_name = jira_account.responsibles_custom_field&.custom_field_machine_name
       return 1 if responsibles_custom_field_name.blank?
 
@@ -150,7 +150,7 @@ module Jira
 
       return 1 if responsibles.blank?
 
-      responsibles = TeamMember.where('lower(name) IN (:name)', name: jira_issue.attrs['fields'][responsibles_custom_field_name].map { |responsible| responsible['name'].downcase })
+      responsibles = TeamMember.where(jira_account_user_email: jira_issue.attrs['fields'][responsibles_custom_field_name].map { |responsible| responsible['emailAddress'] })
 
       demand.update(team_members: responsibles, assignees_count: responsibles.count)
     end
