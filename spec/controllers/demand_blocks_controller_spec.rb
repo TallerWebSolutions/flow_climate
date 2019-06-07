@@ -55,7 +55,7 @@ RSpec.describe DemandBlocksController, type: :controller do
     describe 'PATCH #activate' do
       let(:company) { Fabricate :company, users: [user] }
       let(:customer) { Fabricate :customer, company: company }
-      let!(:project) { Fabricate :project, customer: customer }
+      let!(:project) { Fabricate :project, customers: [customer] }
       let(:demand) { Fabricate :demand, project: project }
       let(:demand_block) { Fabricate :demand_block, demand: demand, active: false }
 
@@ -98,7 +98,7 @@ RSpec.describe DemandBlocksController, type: :controller do
     describe 'PATCH #deactivate' do
       let(:company) { Fabricate :company, users: [user] }
       let(:customer) { Fabricate :customer, company: company }
-      let!(:project) { Fabricate :project, customer: customer }
+      let!(:project) { Fabricate :project, customers: [customer] }
       let(:demand) { Fabricate :demand, project: project }
       let(:demand_block) { Fabricate :demand_block, demand: demand, active: true }
 
@@ -141,7 +141,7 @@ RSpec.describe DemandBlocksController, type: :controller do
     describe 'GET #edit' do
       let(:company) { Fabricate :company, users: [user] }
       let(:customer) { Fabricate :customer, company: company }
-      let!(:project) { Fabricate :project, customer: customer }
+      let!(:project) { Fabricate :project, customers: [customer] }
       let(:demand) { Fabricate :demand, project: project }
       let(:demand_block) { Fabricate :demand_block, demand: demand, active: true }
 
@@ -183,7 +183,7 @@ RSpec.describe DemandBlocksController, type: :controller do
     describe 'PUT #update' do
       let(:company) { Fabricate :company, users: [user] }
       let(:customer) { Fabricate :customer, company: company }
-      let!(:project) { Fabricate :project, customer: customer }
+      let!(:project) { Fabricate :project, customers: [customer] }
       let(:demand) { Fabricate :demand, project: project }
       let(:demand_block) { Fabricate :demand_block, demand: demand, active: true }
 
@@ -227,7 +227,7 @@ RSpec.describe DemandBlocksController, type: :controller do
     describe 'GET #index' do
       let(:company) { Fabricate :company, users: [user] }
       let(:customer) { Fabricate :customer, company: company }
-      let!(:project) { Fabricate :project, customer: customer }
+      let!(:project) { Fabricate :project, customers: [customer] }
       let(:demand) { Fabricate :demand, project: project }
       let!(:demand_block) { Fabricate :demand_block, demand: demand, active: true }
 
@@ -254,8 +254,8 @@ RSpec.describe DemandBlocksController, type: :controller do
       let(:company) { Fabricate :company, users: [user] }
       let(:customer) { Fabricate :customer, company: company }
 
-      let!(:first_project) { Fabricate :project, customer: customer, status: :maintenance, start_date: 6.days.ago, end_date: Time.zone.today }
-      let!(:second_project) { Fabricate :project, customer: customer, status: :executing, start_date: 6.days.ago, end_date: Time.zone.today }
+      let!(:first_project) { Fabricate :project, customers: [customer], status: :maintenance, start_date: 6.days.ago, end_date: Time.zone.today }
+      let!(:second_project) { Fabricate :project, customers: [customer], status: :executing, start_date: 6.days.ago, end_date: Time.zone.today }
 
       context 'having data' do
         context 'passing valid parameters' do
@@ -301,7 +301,7 @@ RSpec.describe DemandBlocksController, type: :controller do
       let(:company) { Fabricate :company, users: [user] }
 
       let(:customer) { Fabricate :customer, company: company }
-      let(:project) { Fabricate :project, customer: customer, start_date: 2.days.ago, end_date: Time.zone.today }
+      let(:project) { Fabricate :project, customers: [customer], start_date: 2.days.ago, end_date: Time.zone.today }
       let!(:demand) { Fabricate :demand, project: project, end_date: Time.zone.now }
       let!(:demand_block) { Fabricate :demand_block, demand: demand, block_time: 1.day.ago, unblock_time: nil }
 

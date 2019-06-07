@@ -4,15 +4,15 @@
 #
 # Table name: projects
 #
+#  company_id                :integer          not null
 #  created_at                :datetime         not null
-#  customer_id               :integer          not null, indexed, indexed => [nickname]
 #  end_date                  :date             not null
 #  hour_value                :decimal(, )
 #  id                        :bigint(8)        not null, primary key
 #  initial_scope             :integer          not null
 #  max_work_in_progress      :integer          default(0), not null
 #  name                      :string           not null, indexed => [product_id]
-#  nickname                  :string           indexed => [customer_id]
+#  nickname                  :string
 #  percentage_effort_to_bugs :integer          default(0), not null
 #  product_id                :integer          indexed => [name]
 #  project_type              :integer          not null
@@ -25,14 +25,12 @@
 #
 # Indexes
 #
-#  index_projects_on_customer_id               (customer_id)
-#  index_projects_on_nickname_and_customer_id  (nickname,customer_id) UNIQUE
-#  index_projects_on_product_id_and_name       (product_id,name) UNIQUE
+#  index_projects_on_product_id_and_name  (product_id,name) UNIQUE
 #
 # Foreign Keys
 #
 #  fk_rails_21e11c2480  (product_id => products.id)
-#  fk_rails_47c768ed16  (customer_id => customers.id)
+#  fk_rails_44a549d7b3  (company_id => companies.id)
 #  fk_rails_ecc227a0c2  (team_id => teams.id)
 #
 
@@ -40,9 +38,13 @@ class Project < ApplicationRecord
   enum status: { waiting: 0, executing: 1, maintenance: 2, finished: 3, cancelled: 4, negotiating: 5 }
   enum project_type: { outsourcing: 0, consulting: 1, training: 2, domestic_product: 3 }
 
-  belongs_to :customer, counter_cache: true
+  belongs_to :company
   belongs_to :product, counter_cache: true
   belongs_to :team
+
+  has_and_belongs_to_many :customers, dependent: :destroy
+
+  has_one :project_jira_config, class_name: 'Jira::ProjectJiraConfig', dependent: :destroy, autosave: true, inverse_of: :project
 
   has_many :project_risk_configs, dependent: :destroy
   has_many :project_risk_alerts, dependent: :destroy
@@ -54,19 +56,14 @@ class Project < ApplicationRecord
   has_many :stages, through: :stage_project_configs
   has_many :flow_impacts, dependent: :destroy
   has_many :project_consolidations, dependent: :destroy
-  has_one :project_jira_config, class_name: 'Jira::ProjectJiraConfig', dependent: :destroy, autosave: true, inverse_of: :project
-
   has_many :user_project_roles, dependent: :destroy
   has_many :users, through: :user_project_roles
 
-  validates :customer, :qty_hours, :project_type, :name, :status, :start_date, :end_date, :status, :initial_scope, :percentage_effort_to_bugs, :max_work_in_progress, presence: true
+  validates :company, :qty_hours, :project_type, :name, :status, :start_date, :end_date, :status, :initial_scope, :percentage_effort_to_bugs, :max_work_in_progress, presence: true
   validates :name, uniqueness: { scope: :product, message: I18n.t('project.name.uniqueness') }
-  validates :nickname, uniqueness: { scope: :customer, message: I18n.t('project.nickname.uniqueness') }, allow_nil: true
   validate :hour_value_project_value?, :product_required?
 
-  delegate :name, to: :customer, prefix: true
   delegate :name, to: :product, prefix: true, allow_nil: true
-  delegate :company, to: :customer
 
   scope :waiting_projects_starting_within_week, -> { waiting.where('EXTRACT(week FROM start_date) = :week AND EXTRACT(year FROM start_date) = :year', week: Time.zone.today.cweek, year: Time.zone.today.cwyear) }
   scope :running_projects_finishing_within_week, -> { running.where('EXTRACT(week FROM end_date) = :week AND EXTRACT(year FROM end_date) = :year', week: Time.zone.today.cweek, year: Time.zone.today.cwyear) }
@@ -79,6 +76,18 @@ class Project < ApplicationRecord
     users << user
   end
 
+  def add_customer(customer)
+    return if customers.include?(customer)
+
+    customers << customer
+    save
+  end
+
+  def remove_customer(customer)
+    customers.delete(customer) if customers.include?(customer)
+    save
+  end
+
   def red?
     project_risk_configs.each do |risk_config|
       risk_alert = project_risk_alerts.where(project_risk_config: risk_config).order(:created_at).last
@@ -89,7 +98,6 @@ class Project < ApplicationRecord
   end
 
   def full_name
-    return name if customer.blank?
     return "#{product_name} | #{name}" if product.present?
 
     name

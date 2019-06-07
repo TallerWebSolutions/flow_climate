@@ -10,8 +10,8 @@ RSpec.describe Highchart::PortfolioChartsAdapter, type: :service do
     let(:customer) { Fabricate :customer, company: company }
 
     context 'having blocks' do
-      let!(:first_project) { Fabricate :project, customer: customer, status: :maintenance, start_date: 3.days.ago, end_date: 2.days.ago, qty_hours: 1000, initial_scope: 95, value: 200.0 }
-      let!(:second_project) { Fabricate :project, customer: customer, status: :executing, start_date: 3.days.ago, end_date: Time.zone.today, qty_hours: 500, initial_scope: 40, value: 3_453_220.0 }
+      let!(:first_project) { Fabricate :project, customers: [customer], status: :maintenance, start_date: 3.days.ago, end_date: 2.days.ago, qty_hours: 1000, initial_scope: 95, value: 200.0 }
+      let!(:second_project) { Fabricate :project, customers: [customer], status: :executing, start_date: 3.days.ago, end_date: Time.zone.today, qty_hours: 500, initial_scope: 40, value: 3_453_220.0 }
 
       let!(:first_demand) { Fabricate :demand, project: first_project, effort_downstream: 200, effort_upstream: 10, created_date: 74.days.ago }
       let!(:second_demand) { Fabricate :demand, project: first_project, effort_downstream: 400, effort_upstream: 130, created_date: 65.days.ago }
@@ -47,8 +47,8 @@ RSpec.describe Highchart::PortfolioChartsAdapter, type: :service do
     end
 
     context 'having no blocks' do
-      let!(:first_project) { Fabricate :project, customer: customer, status: :maintenance, start_date: 3.days.ago, end_date: 2.days.ago, qty_hours: 1000, initial_scope: 95, value: 200.0 }
-      let!(:second_project) { Fabricate :project, customer: customer, status: :executing, start_date: 3.days.ago, end_date: Time.zone.today, qty_hours: 500, initial_scope: 40, value: 3_453_220.0 }
+      let!(:first_project) { Fabricate :project, customers: [customer], status: :maintenance, start_date: 3.days.ago, end_date: 2.days.ago, qty_hours: 1000, initial_scope: 95, value: 200.0 }
+      let!(:second_project) { Fabricate :project, customers: [customer], status: :executing, start_date: 3.days.ago, end_date: Time.zone.today, qty_hours: 500, initial_scope: 40, value: 3_453_220.0 }
 
       it 'builds the data structure for scope_data_evolution' do
         statistics_data = Highchart::PortfolioChartsAdapter.new([first_project, second_project], [first_project.start_date, second_project.start_date].min, [first_project.end_date, second_project.end_date].max, '')
@@ -64,8 +64,8 @@ RSpec.describe Highchart::PortfolioChartsAdapter, type: :service do
     let(:customer) { Fabricate :customer, company: company }
 
     context 'having blocks' do
-      let!(:first_project) { Fabricate :project, customer: customer, status: :maintenance, start_date: 3.days.ago, end_date: 2.days.ago, qty_hours: 1000, initial_scope: 95, value: 200.0 }
-      let!(:second_project) { Fabricate :project, customer: customer, status: :executing, start_date: 3.days.ago, end_date: Time.zone.today, qty_hours: 500, initial_scope: 40, value: 3_453_220.0 }
+      let!(:first_project) { Fabricate :project, customers: [customer], status: :maintenance, start_date: 3.days.ago, end_date: 2.days.ago, qty_hours: 1000, initial_scope: 95, value: 200.0 }
+      let!(:second_project) { Fabricate :project, customers: [customer], status: :executing, start_date: 3.days.ago, end_date: Time.zone.today, qty_hours: 500, initial_scope: 40, value: 3_453_220.0 }
 
       it 'builds the data structure for aging_by_project' do
         portfolio_data = Highchart::PortfolioChartsAdapter.new([first_project, second_project], [first_project.start_date, second_project.start_date].min, [first_project.end_date, second_project.end_date].max, '')
@@ -81,8 +81,8 @@ RSpec.describe Highchart::PortfolioChartsAdapter, type: :service do
     let(:customer) { Fabricate :customer, company: company }
 
     context 'having projects' do
-      let!(:first_project) { Fabricate :project, customer: customer, status: :maintenance, start_date: 3.days.ago, end_date: 1.day.ago }
-      let!(:second_project) { Fabricate :project, customer: customer, status: :executing, start_date: 3.days.ago, end_date: Time.zone.today }
+      let!(:first_project) { Fabricate :project, customers: [customer], status: :maintenance, start_date: 3.days.ago, end_date: 1.day.ago }
+      let!(:second_project) { Fabricate :project, customers: [customer], status: :executing, start_date: 3.days.ago, end_date: Time.zone.today }
 
       context 'and no throughput' do
         let!(:first_demand) { Fabricate :demand, project: first_project, end_date: nil }

@@ -10,8 +10,8 @@ RSpec.describe Highchart::ProjectsConsolidationsChartsAdapter, type: :service do
     let(:customer) { Fabricate :customer, company: company }
 
     context 'having projects' do
-      let!(:first_project) { Fabricate :project, customer: customer, status: :maintenance, start_date: 3.months.ago, end_date: 2.months.ago, qty_hours: 1000, initial_scope: 95, value: 200.0 }
-      let!(:second_project) { Fabricate :project, customer: customer, status: :executing, start_date: 3.months.ago, end_date: 1.month.ago, qty_hours: 500, initial_scope: 40, value: 3_453_220.0 }
+      let!(:first_project) { Fabricate :project, customers: [customer], status: :maintenance, start_date: 3.months.ago, end_date: 2.months.ago, qty_hours: 1000, initial_scope: 95, value: 200.0 }
+      let!(:second_project) { Fabricate :project, customers: [customer], status: :executing, start_date: 3.months.ago, end_date: 1.month.ago, qty_hours: 500, initial_scope: 40, value: 3_453_220.0 }
 
       let!(:project_consolidation) { Fabricate :project_consolidation, consolidation_date: 65.days.ago, project: first_project }
       let!(:other_project_consolidation) { Fabricate :project_consolidation, consolidation_date: 34.days.ago, project: second_project }
@@ -39,8 +39,8 @@ RSpec.describe Highchart::ProjectsConsolidationsChartsAdapter, type: :service do
     let(:customer) { Fabricate :customer, company: company }
 
     context 'having projects' do
-      let!(:first_project) { Fabricate :project, customer: customer, status: :maintenance, start_date: 3.months.ago, end_date: 2.months.ago, qty_hours: 1000, initial_scope: 95, value: 200.0 }
-      let!(:second_project) { Fabricate :project, customer: customer, status: :executing, start_date: 3.months.ago, end_date: 1.month.ago, qty_hours: 500, initial_scope: 40, value: 3_453_220.0 }
+      let!(:first_project) { Fabricate :project, customers: [customer], status: :maintenance, start_date: 3.months.ago, end_date: 2.months.ago, qty_hours: 1000, initial_scope: 95, value: 200.0 }
+      let!(:second_project) { Fabricate :project, customers: [customer], status: :executing, start_date: 3.months.ago, end_date: 1.month.ago, qty_hours: 500, initial_scope: 40, value: 3_453_220.0 }
 
       let!(:project_consolidation) { Fabricate :project_consolidation, consolidation_date: 65.days.ago, project: first_project }
       let!(:other_project_consolidation) { Fabricate :project_consolidation, consolidation_date: 34.days.ago, project: second_project }
@@ -68,8 +68,8 @@ RSpec.describe Highchart::ProjectsConsolidationsChartsAdapter, type: :service do
     let(:customer) { Fabricate :customer, company: company }
 
     context 'having projects' do
-      let!(:first_project) { Fabricate :project, customer: customer, status: :maintenance, start_date: 3.months.ago, end_date: 2.months.ago, qty_hours: 1000, initial_scope: 95, value: 200.0 }
-      let!(:second_project) { Fabricate :project, customer: customer, status: :executing, start_date: 3.months.ago, end_date: 1.month.ago, qty_hours: 500, initial_scope: 40, value: 3_453_220.0 }
+      let!(:first_project) { Fabricate :project, customers: [customer], status: :maintenance, start_date: 3.months.ago, end_date: 2.months.ago, qty_hours: 1000, initial_scope: 95, value: 200.0 }
+      let!(:second_project) { Fabricate :project, customers: [customer], status: :executing, start_date: 3.months.ago, end_date: 1.month.ago, qty_hours: 500, initial_scope: 40, value: 3_453_220.0 }
 
       let!(:project_consolidation) { Fabricate :project_consolidation, consolidation_date: 65.days.ago, project: first_project }
       let!(:other_project_consolidation) { Fabricate :project_consolidation, consolidation_date: 34.days.ago, project: second_project }

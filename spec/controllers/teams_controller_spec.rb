@@ -60,11 +60,11 @@ RSpec.describe TeamsController, type: :controller do
     let(:product) { Fabricate :product, customer: customer, team: team }
 
     describe 'GET #show' do
-      let!(:first_project) { Fabricate :project, customer: customer, team: team, status: :executing, start_date: 4.months.ago, end_date: Time.zone.today }
-      let!(:second_project) { Fabricate :project, customer: customer, team: team, status: :maintenance, start_date: 2.months.ago, end_date: 34.days.from_now }
-      let!(:third_project) { Fabricate :project, customer: customer, team: team, status: :waiting, start_date: 1.month.ago, end_date: 2.months.from_now }
-      let!(:fourth_project) { Fabricate :project, customer: customer, team: team, product: product, status: :cancelled, start_date: 35.days.from_now, end_date: 37.days.from_now }
-      let!(:fifth_project) { Fabricate :project, customer: customer, team: team, product: product, status: :finished, start_date: 38.days.from_now, end_date: 39.days.from_now }
+      let!(:first_project) { Fabricate :project, customers: [customer], team: team, status: :executing, start_date: 4.months.ago, end_date: Time.zone.today }
+      let!(:second_project) { Fabricate :project, customers: [customer], team: team, status: :maintenance, start_date: 2.months.ago, end_date: 34.days.from_now }
+      let!(:third_project) { Fabricate :project, customers: [customer], team: team, status: :waiting, start_date: 1.month.ago, end_date: 2.months.from_now }
+      let!(:fourth_project) { Fabricate :project, customers: [customer], team: team, product: product, status: :cancelled, start_date: 35.days.from_now, end_date: 37.days.from_now }
+      let!(:fifth_project) { Fabricate :project, customers: [customer], team: team, product: product, status: :finished, start_date: 38.days.from_now, end_date: 39.days.from_now }
 
       let(:first_risk_config) { Fabricate :project_risk_config, project: first_project, risk_type: :no_money_to_deadline }
       let(:second_risk_config) { Fabricate :project_risk_config, project: first_project, risk_type: :backlog_growth_rate }
@@ -252,9 +252,9 @@ RSpec.describe TeamsController, type: :controller do
 
     describe 'GET #replenishing_input' do
       context 'having data' do
-        let!(:first_project) { Fabricate :project, customer: customer, team: team, name: 'first_project', status: :executing, start_date: 4.months.ago, end_date: Time.zone.today }
-        let!(:second_project) { Fabricate :project, customer: customer, team: team, name: 'second_project', status: :executing, start_date: 2.months.ago, end_date: 3.days.from_now }
-        let!(:third_project) { Fabricate :project, customer: customer, team: team, name: 'third_project', status: :executing, start_date: 1.month.ago, end_date: 1.week.from_now }
+        let!(:first_project) { Fabricate :project, customers: [customer], team: team, name: 'first_project', status: :executing, start_date: 4.months.ago, end_date: Time.zone.today }
+        let!(:second_project) { Fabricate :project, customers: [customer], team: team, name: 'second_project', status: :executing, start_date: 2.months.ago, end_date: 3.days.from_now }
+        let!(:third_project) { Fabricate :project, customers: [customer], team: team, name: 'third_project', status: :executing, start_date: 1.month.ago, end_date: 1.week.from_now }
 
         it 'returns the data and redirects' do
           get :replenishing_input, params: { company_id: company, id: team }, xhr: true

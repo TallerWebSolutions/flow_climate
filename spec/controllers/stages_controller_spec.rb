@@ -314,10 +314,10 @@ RSpec.describe StagesController, type: :controller do
       let(:other_product) { Fabricate :product, customer: customer, name: 'zzz' }
       let(:stage) { Fabricate :stage, company: company }
 
-      let!(:first_project) { Fabricate :project, customer: customer, product: product, stages: [stage], name: 'zzz' }
-      let!(:second_project) { Fabricate :project, customer: customer, product: product, stages: [stage], name: 'aaa' }
-      let!(:third_project) { Fabricate :project, customer: customer, product: other_product, name: 'zzz' }
-      let!(:fourth_project) { Fabricate :project, customer: customer, product: other_product, name: 'aaa' }
+      let!(:first_project) { Fabricate :project, company: company, customers: [customer], product: product, stages: [stage], name: 'zzz' }
+      let!(:second_project) { Fabricate :project, company: company, customers: [customer], product: product, stages: [stage], name: 'aaa' }
+      let!(:third_project) { Fabricate :project, company: company, customers: [customer], product: other_product, name: 'zzz' }
+      let!(:fourth_project) { Fabricate :project, company: company, customers: [customer], product: other_product, name: 'aaa' }
 
       context 'passing valid parameters' do
         it 'assigns the instance variables and renders the template' do

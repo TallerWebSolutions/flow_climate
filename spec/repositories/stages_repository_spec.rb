@@ -3,7 +3,7 @@
 RSpec.describe StagesRepository, type: :repository do
   let(:company) { Fabricate :company }
   let(:customer) { Fabricate :customer, company: company }
-  let(:project) { Fabricate :project, customer: customer }
+  let(:project) { Fabricate :project, customers: [customer] }
   let(:stage) { Fabricate :stage, projects: [project] }
   let(:other_stage) { Fabricate :stage, projects: [project] }
 

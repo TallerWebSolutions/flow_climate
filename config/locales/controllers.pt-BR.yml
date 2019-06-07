@@ -432,8 +432,6 @@ pt-BR:
     validations:
       no_value: "Valor ou Valor da hora é obrigatório"
       product_blank: "é obrigatório para projeto de outsourcing"
-    nickname:
-      uniqueness: "Não deve repetir para o mesmo cliente"
     destroy:
       confirm: "Tem certeza que deseja apagar o projeto? Todas as demandas deste projeto também serão excluídas."
     modal:

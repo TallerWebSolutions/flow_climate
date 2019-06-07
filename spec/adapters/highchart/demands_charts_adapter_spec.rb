@@ -12,9 +12,9 @@ RSpec.describe Highchart::DemandsChartsAdapter, type: :data_object do
     let(:company) { Fabricate :company }
     let(:customer) { Fabricate :customer, company: company }
 
-    let(:first_project) { Fabricate :project, customer: customer, status: :executing, start_date: 4.months.ago, end_date: 1.week.from_now }
-    let(:second_project) { Fabricate :project, customer: customer, status: :waiting, start_date: 5.months.ago, end_date: 2.weeks.from_now }
-    let(:third_project) { Fabricate :project, customer: customer, status: :maintenance, start_date: 3.months.ago, end_date: 3.weeks.from_now }
+    let(:first_project) { Fabricate :project, customers: [customer], status: :executing, start_date: 4.months.ago, end_date: 1.week.from_now }
+    let(:second_project) { Fabricate :project, customers: [customer], status: :waiting, start_date: 5.months.ago, end_date: 2.weeks.from_now }
+    let(:third_project) { Fabricate :project, customers: [customer], status: :maintenance, start_date: 3.months.ago, end_date: 3.weeks.from_now }
 
     let!(:first_demand) { Fabricate :demand, project: first_project, commitment_date: 4.months.ago, end_date: 3.months.ago, effort_downstream: 16, effort_upstream: 123 }
     let!(:second_demand) { Fabricate :demand, project: second_project, commitment_date: 5.months.ago, end_date: 3.months.ago, effort_downstream: 7, effort_upstream: 221 }

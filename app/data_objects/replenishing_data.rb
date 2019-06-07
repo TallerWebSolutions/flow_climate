@@ -5,7 +5,7 @@ class ReplenishingData
 
   def initialize(team)
     @team = team
-    @projects = @team.projects.includes(:product).includes(:customer)
+    @projects = @team.projects.includes(:product)
     @running_projects = @projects.running.sort_by(&:flow_pressure).reverse
     @total_pressure = @running_projects.sum(&:flow_pressure)
 

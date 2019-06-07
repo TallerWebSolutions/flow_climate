@@ -105,7 +105,7 @@ RSpec.describe Stage, type: :model do
   describe '#first_end_stage_in_pipe?' do
     let(:company) { Fabricate :company }
     let(:customer) { Fabricate :customer, company: company }
-    let(:project) { Fabricate :project, customer: customer }
+    let(:project) { Fabricate :project, customers: [customer] }
 
     let!(:first_stage) { Fabricate :stage, company: company, projects: [project], stage_stream: :downstream, integration_pipe_id: '321', order: 2 }
     let!(:second_stage) { Fabricate :stage, company: company, projects: [project], stage_stream: :downstream, integration_pipe_id: '321', order: 1 }
@@ -145,7 +145,7 @@ RSpec.describe Stage, type: :model do
   describe '#before_end_point?' do
     let(:company) { Fabricate :company }
     let(:customer) { Fabricate :customer, company: company }
-    let(:project) { Fabricate :project, customer: customer }
+    let(:project) { Fabricate :project, customers: [customer] }
 
     context 'having data' do
       let!(:first_stage) { Fabricate :stage, company: company, projects: [project], integration_pipe_id: '321', order: 2 }

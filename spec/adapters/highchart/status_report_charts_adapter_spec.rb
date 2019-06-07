@@ -6,9 +6,9 @@ RSpec.describe Highchart::StatusReportChartsAdapter, type: :data_object do
     let(:customer) { Fabricate :customer, company: company }
 
     context 'and enough data to use just the project' do
-      let(:first_project) { Fabricate :project, customer: customer, status: :executing, start_date: Time.zone.parse('2018-02-20'), end_date: Time.zone.parse('2018-04-22'), qty_hours: 1000 }
-      let(:second_project) { Fabricate :project, customer: customer, status: :waiting, start_date: Time.zone.parse('2018-03-13'), end_date: Time.zone.parse('2018-04-21'), qty_hours: 400 }
-      let(:third_project) { Fabricate :project, customer: customer, status: :maintenance, start_date: Time.zone.parse('2018-03-12'), end_date: Time.zone.parse('2018-05-13'), qty_hours: 800 }
+      let(:first_project) { Fabricate :project, customers: [customer], status: :executing, start_date: Time.zone.parse('2018-02-20'), end_date: Time.zone.parse('2018-04-22'), qty_hours: 1000 }
+      let(:second_project) { Fabricate :project, customers: [customer], status: :waiting, start_date: Time.zone.parse('2018-03-13'), end_date: Time.zone.parse('2018-04-21'), qty_hours: 400 }
+      let(:third_project) { Fabricate :project, customers: [customer], status: :maintenance, start_date: Time.zone.parse('2018-03-12'), end_date: Time.zone.parse('2018-05-13'), qty_hours: 800 }
 
       let(:first_stage) { Fabricate :stage, company: company, name: 'first_stage', stage_stream: :downstream, queue: false, end_point: true, order: 0 }
       let(:second_stage) { Fabricate :stage, company: company, name: 'second_stage', stage_stream: :downstream, queue: false, end_point: true, order: 1 }

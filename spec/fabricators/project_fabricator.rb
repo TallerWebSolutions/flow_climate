@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 Fabricator(:project) do
-  customer
-  product { |attrs| Fabricate :product, customer: attrs[:customer] }
+  company
+  product
   name { Faker::Name.unique.name }
   start_date 2.months.ago
   end_date 2.months.from_now

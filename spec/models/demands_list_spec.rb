@@ -60,24 +60,6 @@ RSpec.describe DemandsList, type: :model do
       it { expect(DemandsList.to_dates(1.month.ago, Time.zone.now).map(&:id)).to match_array [second_demand.id, third_demand.id] }
     end
 
-    describe '.grouped_by_customer' do
-      let(:company) { Fabricate :company }
-      let(:customer) { Fabricate :customer, company: company }
-      let(:other_customer) { Fabricate :customer, company: company }
-
-      let(:first_project) { Fabricate :project, customer: customer }
-      let(:second_project) { Fabricate :project, customer: other_customer }
-      let(:third_project) { Fabricate :project, customer: other_customer }
-
-      let!(:first_demand) { Fabricate :demand, project: first_project, end_date: 2.months.ago }
-      let!(:second_demand) { Fabricate :demand, project: first_project, end_date: 2.months.ago }
-      let!(:third_demand) { Fabricate :demand, project: second_project }
-      let!(:fourth_demand) { Fabricate :demand, project: third_project }
-
-      it { expect(DemandsList.grouped_by_customer[customer.name].map(&:id)).to match_array [first_demand.id, second_demand.id] }
-      it { expect(DemandsList.grouped_by_customer[other_customer.name].map(&:id)).to match_array [third_demand.id, fourth_demand.id] }
-    end
-
     describe '.finished_with_leadtime' do
       let!(:first_demand) { Fabricate :demand, project: project, end_date: Time.zone.now, leadtime: 2 }
       let!(:second_demand) { Fabricate :demand, project: project, end_date: Time.zone.now, leadtime: 3 }

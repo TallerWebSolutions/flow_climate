@@ -52,7 +52,6 @@ class DemandsList < ApplicationRecord
   scope :not_started, -> { kept.where('demands_lists.commitment_date IS NULL AND demands_lists.end_date IS NULL') }
 
   scope :grouped_end_date_by_month, -> { kept.finished.order(end_date: :desc).group_by { |demand| [demand.end_date.to_date.cwyear, demand.end_date.to_date.month] } }
-  scope :grouped_by_customer, -> { kept.joins(project: :customer).order('customers.name').group_by { |demand| demand.project.customer.name } }
 
   scope :with_effort, -> { story.where('effort_downstream > 0 OR effort_upstream > 0') }
 

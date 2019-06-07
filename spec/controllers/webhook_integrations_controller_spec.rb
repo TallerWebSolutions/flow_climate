@@ -17,7 +17,7 @@ RSpec.describe WebhookIntegrationsController, type: :controller do
     context 'when the content type is application/json' do
       context 'and the has a valid project' do
         let!(:jira_account) { Fabricate :jira_account, company: company, base_uri: 'http://foo.bar', username: 'foo', password: 'bar', customer_domain: 'bar' }
-        let(:project) { Fabricate :project, customer: customer }
+        let(:project) { Fabricate :project, company: company, customers: [customer] }
         let!(:project_jira_config) { Fabricate :project_jira_config, project: project, jira_project_key: 'foo', fix_version_name: 'foo' }
 
         context 'with fixVersion' do
@@ -81,7 +81,7 @@ RSpec.describe WebhookIntegrationsController, type: :controller do
     context 'when the content type is application/json' do
       context 'and the project has a valid registration' do
         let!(:jira_account) { Fabricate :jira_account, company: company, base_uri: 'http://foo.bar', username: 'foo', password: 'bar', customer_domain: 'bar' }
-        let(:project) { Fabricate :project, customer: customer }
+        let(:project) { Fabricate :project, company: company, customers: [customer] }
         let!(:project_jira_config) { Fabricate :project_jira_config, project: project, jira_project_key: 'FC-6', fix_version_name: 'bar' }
 
         context 'when the demand exists' do

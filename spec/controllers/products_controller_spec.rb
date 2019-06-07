@@ -232,8 +232,8 @@ RSpec.describe ProductsController, type: :controller do
 
       let(:product) { Fabricate :product, customer: customer }
 
-      let!(:first_project) { Fabricate :project, customer: product.customer, product: product, end_date: 5.days.from_now }
-      let!(:second_project) { Fabricate :project, customer: product.customer, product: product, end_date: 7.days.from_now }
+      let!(:first_project) { Fabricate :project, customers: [product.customer], product: product, end_date: 5.days.from_now }
+      let!(:second_project) { Fabricate :project, customers: [product.customer], product: product, end_date: 7.days.from_now }
 
       context 'passing a valid ID' do
         context 'having data' do
@@ -353,7 +353,7 @@ RSpec.describe ProductsController, type: :controller do
         end
 
         context 'having dependencies' do
-          let!(:project) { Fabricate :project, product: product, customer: product.customer }
+          let!(:project) { Fabricate :project, product: product, customers: [product.customer] }
 
           before { delete :destroy, params: { company_id: company, id: product } }
 

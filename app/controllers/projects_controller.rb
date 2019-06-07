@@ -4,7 +4,6 @@ class ProjectsController < AuthenticatedController
   before_action :user_gold_check
 
   before_action :assign_company
-  before_action :assign_customer, only: %i[create update]
   before_action :assign_product, only: %i[create update]
   before_action :assign_project, only: %i[show edit update destroy synchronize_jira finish_project statistics copy_stages_from]
 
@@ -13,7 +12,7 @@ class ProjectsController < AuthenticatedController
 
     @ordered_project_risk_alerts = @project.project_risk_alerts.order(created_at: :desc)
     @project_change_deadline_histories = @project.project_change_deadline_histories.includes(:user)
-    @projects_to_copy_stages_from = (@company.projects.includes(:customer).includes(:product) - [@project]).sort_by(&:full_name)
+    @projects_to_copy_stages_from = (@company.projects.includes(:product) - [@project]).sort_by(&:full_name)
     @demands_ids = DemandsRepository.instance.demands_created_before_date_to_projects([@project]).map(&:id)
 
     @start_date = @project.start_date
@@ -21,7 +20,7 @@ class ProjectsController < AuthenticatedController
   end
 
   def index
-    @projects = add_status_filter(Project.joins(:customer).where('customers.company_id = ?', @company.id)).order(end_date: :desc)
+    @projects = add_status_filter(Project.where('company_id = ?', @company.id)).order(end_date: :desc)
     @projects_summary = ProjectsSummaryData.new(@projects)
   end
 
@@ -32,7 +31,7 @@ class ProjectsController < AuthenticatedController
   end
 
   def create
-    @project = Project.new(project_params.merge(customer: @customer, product: @product))
+    @project = Project.new(project_params.merge(company: @company, product: @product))
     return redirect_to company_projects_path(@company) if @project.save
 
     assign_products_list
@@ -47,7 +46,8 @@ class ProjectsController < AuthenticatedController
 
   def update
     check_change_in_deadline!
-    @project.update(project_params.merge(customer: @customer, product: @product))
+    @project.update(project_params.merge(product: @product))
+
     return redirect_to company_project_path(@company, @project) if @project.save
 
     assign_customers
@@ -140,23 +140,19 @@ class ProjectsController < AuthenticatedController
   end
 
   def assign_products_list
-    @products = (@customer || @project.customer)&.products&.order(:name) || []
+    @products = @company.products.order(:name) || []
   end
 
   def assign_product
     @product = Product.find_by(id: project_params[:product_id])
   end
 
-  def assign_customer
-    @customer = Customer.find_by(id: project_params[:customer_id])
-  end
-
   def project_params
-    params.require(:project).permit(:customer_id, :product_id, :name, :nickname, :status, :project_type, :start_date, :end_date, :value, :qty_hours, :hour_value, :initial_scope, :percentage_effort_to_bugs, :team_id, :max_work_in_progress)
+    params.require(:project).permit(:product_id, :name, :nickname, :status, :project_type, :start_date, :end_date, :value, :qty_hours, :hour_value, :initial_scope, :percentage_effort_to_bugs, :team_id, :max_work_in_progress)
   end
 
   def assign_project
-    @project = Project.includes(:team).includes(:product).includes(:customer).find(params[:id])
+    @project = Project.includes(:team).includes(:product).find(params[:id])
   end
 
   def add_status_filter(projects)

@@ -20,8 +20,8 @@ RSpec.describe ProjectConsolidationJob, type: :active_job do
 
     let(:team) { Fabricate :team, company: company }
 
-    let!(:first_project) { Fabricate :project, customer: customer, team: team, start_date: 3.weeks.ago, end_date: Time.zone.today }
-    let!(:second_project) { Fabricate :project, customer: customer, team: team, start_date: 3.weeks.ago, end_date: Time.zone.tomorrow }
+    let!(:first_project) { Fabricate :project, customers: [customer], team: team, start_date: 3.weeks.ago, end_date: Time.zone.today }
+    let!(:second_project) { Fabricate :project, customers: [customer], team: team, start_date: 3.weeks.ago, end_date: Time.zone.tomorrow }
 
     let!(:first_demand) { Fabricate :demand, project: first_project, commitment_date: 15.days.ago, end_date: 1.week.ago, effort_downstream: 200, effort_upstream: 10, created_date: 74.days.ago }
     let!(:second_demand) { Fabricate :demand, project: first_project, commitment_date: 14.days.ago, end_date: 1.week.ago, effort_downstream: 400, effort_upstream: 130, created_date: 65.days.ago }
