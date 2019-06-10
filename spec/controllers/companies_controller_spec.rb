@@ -111,8 +111,8 @@ RSpec.describe CompaniesController, type: :controller do
           let!(:team_member) { Fabricate :team_member, team: team, name: 'aaa' }
           let!(:other_team_member) { Fabricate :team_member, team: team, name: 'zzz' }
 
-          let!(:first_project) { Fabricate :project, customer: customer, status: :executing, start_date: Time.zone.today, end_date: Time.zone.now }
-          let!(:second_project) { Fabricate :project, customer: customer, status: :maintenance, start_date: 1.month.from_now, end_date: 1.month.from_now }
+          let!(:first_project) { Fabricate :project, customers: [customer], status: :executing, start_date: Time.zone.today, end_date: Time.zone.now }
+          let!(:second_project) { Fabricate :project, customers: [customer], status: :maintenance, start_date: 1.month.from_now, end_date: 1.month.from_now }
 
           let!(:first_stage) { Fabricate :stage, company: company, teams: [team], order: 3 }
           let!(:second_stage) { Fabricate :stage, company: company, teams: [other_team], order: 2 }
@@ -395,8 +395,8 @@ RSpec.describe CompaniesController, type: :controller do
       let(:customer) { Fabricate :customer, company: company }
 
       context 'having data' do
-        let!(:first_project) { Fabricate :project, customer: customer, start_date: 2.weeks.ago, end_date: Time.zone.today }
-        let!(:second_project) { Fabricate :project, customer: customer, start_date: 3.weeks.ago, end_date: 1.day.from_now }
+        let!(:first_project) { Fabricate :project, company: company, customers: [customer], start_date: 2.weeks.ago, end_date: Time.zone.today }
+        let!(:second_project) { Fabricate :project, company: company, customers: [customer], start_date: 3.weeks.ago, end_date: 1.day.from_now }
 
         context 'passing valid parameters' do
           it 'builds the statistic adapter and renders the view using the dates in project to a monthly period' do
@@ -422,8 +422,8 @@ RSpec.describe CompaniesController, type: :controller do
       let(:customer) { Fabricate :customer, company: company }
 
       context 'having data' do
-        let!(:first_project) { Fabricate :project, customer: customer, start_date: 2.weeks.ago, end_date: Time.zone.today }
-        let!(:second_project) { Fabricate :project, customer: customer, start_date: 3.weeks.ago, end_date: 1.day.from_now }
+        let!(:first_project) { Fabricate :project, customers: [customer], start_date: 2.weeks.ago, end_date: Time.zone.today }
+        let!(:second_project) { Fabricate :project, customers: [customer], start_date: 3.weeks.ago, end_date: 1.day.from_now }
 
         context 'passing valid parameters' do
           it 'builds the statistic adapter and renders the view using the dates in project to a monthly period' do
@@ -448,8 +448,8 @@ RSpec.describe CompaniesController, type: :controller do
       let(:customer) { Fabricate :customer, company: company }
 
       context 'having data' do
-        let!(:first_project) { Fabricate :project, customer: customer, start_date: 2.weeks.ago, end_date: Time.zone.today }
-        let!(:second_project) { Fabricate :project, customer: customer, start_date: 3.weeks.ago, end_date: 1.day.from_now }
+        let!(:first_project) { Fabricate :project, customers: [customer], start_date: 2.weeks.ago, end_date: Time.zone.today }
+        let!(:second_project) { Fabricate :project, customers: [customer], start_date: 3.weeks.ago, end_date: 1.day.from_now }
 
         context 'passing valid parameters' do
           it 'builds the statistic adapter and renders the view using the dates in project to a monthly period' do

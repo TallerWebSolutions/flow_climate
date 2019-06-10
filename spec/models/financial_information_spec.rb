@@ -32,7 +32,7 @@ RSpec.describe FinancialInformation, type: :model do
 
     let(:company) { Fabricate :company }
     let(:customer) { Fabricate :customer, company: company }
-    let(:project) { Fabricate :project, customer: customer, start_date: 2.months.ago, end_date: 3.months.from_now }
+    let(:project) { Fabricate :project, company: company, customers: [customer], start_date: 2.months.ago, end_date: 3.months.from_now }
 
     let(:first_stage) { Fabricate :stage, company: company, projects: [project], stage_stream: :downstream, queue: false, end_point: true }
 
@@ -52,7 +52,7 @@ RSpec.describe FinancialInformation, type: :model do
   RSpec.shared_context 'demands with effort for finances', shared_context: :metadata do
     let(:company) { Fabricate :company }
     let!(:customer) { Fabricate :customer, company: company }
-    let!(:project) { Fabricate :project, customer: customer, start_date: 2.months.ago, end_date: 3.months.from_now }
+    let!(:project) { Fabricate :project, company: company, customers: [customer], start_date: 2.months.ago, end_date: 3.months.from_now }
 
     let(:first_stage) { Fabricate :stage, company: company, stage_stream: :downstream, queue: false, end_point: false }
     let(:second_stage) { Fabricate :stage, company: company, stage_stream: :downstream, queue: false, end_point: true }

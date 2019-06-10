@@ -19,7 +19,7 @@
           <tr>
             <td><%= transition.valid? %></td>
             <td><%= transition.stage_name %></td>
-            <td><%= link_to transition.demand.project.full_name, company_project_path(@company, transition.demand.project) %></td>
+            <td><%= link_to transition.demand.project.name, company_project_path(@company, transition.demand.project) %></td>
             <td><%= transition.demand.project.current_team.name %></td>
             <td><%= l(transition.last_time_in, format: :short) %></td>
             <td><%= l(transition.last_time_out, format: :short) if transition.last_time_out.present? %></td>

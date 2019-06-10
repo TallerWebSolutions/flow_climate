@@ -10,11 +10,11 @@ RSpec.describe ReplenishingData, type: :data_objects do
 
   let(:team) { Fabricate :team, company: company, max_work_in_progress: 12 }
 
-  let!(:first_project) { Fabricate :project, customer: customer, team: team, name: 'first_project', status: :executing, start_date: 4.months.ago, end_date: 2.weeks.from_now, max_work_in_progress: 3 }
-  let!(:second_project) { Fabricate :project, customer: customer, team: team, name: 'second_project', status: :executing, start_date: 2.months.ago, end_date: 3.weeks.from_now, max_work_in_progress: 2 }
-  let!(:third_project) { Fabricate :project, customer: customer, team: team, name: 'third_project', status: :executing, start_date: 1.month.ago, end_date: 4.weeks.from_now, max_work_in_progress: 5 }
+  let!(:first_project) { Fabricate :project, company: company, customers: [customer], team: team, name: 'first_project', status: :executing, start_date: 4.months.ago, end_date: 2.weeks.from_now, max_work_in_progress: 3 }
+  let!(:second_project) { Fabricate :project, company: company, customers: [customer], team: team, name: 'second_project', status: :executing, start_date: 2.months.ago, end_date: 3.weeks.from_now, max_work_in_progress: 2 }
+  let!(:third_project) { Fabricate :project, company: company, customers: [customer], team: team, name: 'third_project', status: :executing, start_date: 1.month.ago, end_date: 4.weeks.from_now, max_work_in_progress: 5 }
 
-  let!(:fourth_project) { Fabricate :project, customer: customer, team: team, name: 'fourth_project', status: :finished, start_date: 1.month.ago, end_date: 1.week.ago }
+  let!(:fourth_project) { Fabricate :project, company: company, customers: [customer], team: team, name: 'fourth_project', status: :finished, start_date: 1.month.ago, end_date: 1.week.ago }
 
   let!(:first_demand) { Fabricate :demand, project: first_project, commitment_date: 3.months.ago, end_date: 1.week.ago }
   let!(:second_demand) { Fabricate :demand, project: first_project, commitment_date: 2.months.ago, end_date: 4.weeks.ago }
@@ -30,8 +30,8 @@ RSpec.describe ReplenishingData, type: :data_objects do
       subject(:replenishing_data) { ReplenishingData.new(team) }
 
       let!(:company_config) { Fabricate :company_settings, company: company, max_active_parallel_projects: 2, max_flow_pressure: 3 }
-      let!(:projects) { Fabricate.times(2, :project, customer: customer, start_date: 2.weeks.ago, end_date: Time.zone.today) }
-      let!(:other_projects) { Fabricate.times(2, :project, customer: customer, start_date: 1.month.from_now, end_date: 1.month.from_now) }
+      let!(:projects) { Fabricate.times(2, :project, company: company, customers: [customer], start_date: 2.weeks.ago, end_date: Time.zone.today) }
+      let!(:other_projects) { Fabricate.times(2, :project, company: company, customers: [customer], start_date: 1.month.from_now, end_date: 1.month.from_now) }
 
       it 'returns the hash value' do
         expect(replenishing_data.projects).to eq [first_project, second_project, third_project, fourth_project]
@@ -40,11 +40,11 @@ RSpec.describe ReplenishingData, type: :data_objects do
         expect(replenishing_data.summary_infos[:team_wip]).to eq 12
 
         project_data_to_replenish = replenishing_data.project_data_to_replenish
-        expect(project_data_to_replenish[0][:name]).to eq first_project.full_name
+        expect(project_data_to_replenish[0][:name]).to eq first_project.name
         expect(project_data_to_replenish.count).to eq 3
 
         expect(project_data_to_replenish[0][:id]).to eq first_project.id
-        expect(project_data_to_replenish[0][:name]).to eq first_project.full_name
+        expect(project_data_to_replenish[0][:name]).to eq first_project.name
         expect(project_data_to_replenish[0][:start_date]).to eq first_project.start_date
         expect(project_data_to_replenish[0][:aging_today]).to eq 123
         expect(project_data_to_replenish[0][:end_date]).to eq first_project.end_date
@@ -65,7 +65,7 @@ RSpec.describe ReplenishingData, type: :data_objects do
         expect(project_data_to_replenish[0][:throughput_data_size]).to eq 17
 
         expect(project_data_to_replenish[1][:id]).to eq second_project.id
-        expect(project_data_to_replenish[1][:name]).to eq second_project.full_name
+        expect(project_data_to_replenish[1][:name]).to eq second_project.name
         expect(project_data_to_replenish[1][:start_date]).to eq second_project.start_date
         expect(project_data_to_replenish[1][:aging_today]).to eq 62
         expect(project_data_to_replenish[1][:end_date]).to eq second_project.end_date
@@ -85,7 +85,7 @@ RSpec.describe ReplenishingData, type: :data_objects do
         expect(project_data_to_replenish[1][:throughput_data_size]).to eq 9
 
         expect(project_data_to_replenish[2][:id]).to eq third_project.id
-        expect(project_data_to_replenish[2][:name]).to eq third_project.full_name
+        expect(project_data_to_replenish[2][:name]).to eq third_project.name
         expect(project_data_to_replenish[2][:start_date]).to eq third_project.start_date
         expect(project_data_to_replenish[2][:aging_today]).to eq 31
         expect(project_data_to_replenish[2][:end_date]).to eq third_project.end_date

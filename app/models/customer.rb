@@ -27,7 +27,7 @@ class Customer < ApplicationRecord
 
   belongs_to :company, counter_cache: true
   has_many :products, dependent: :restrict_with_error
-  has_many :projects, dependent: :restrict_with_error
+  has_and_belongs_to_many :projects, dependent: :restrict_with_error
 
   validates :company, :name, presence: true
   validates :name, uniqueness: { scope: :company, message: I18n.t('customer.name.uniqueness') }

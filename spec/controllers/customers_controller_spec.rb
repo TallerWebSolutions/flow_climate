@@ -55,12 +55,12 @@ RSpec.describe CustomersController, type: :controller do
 
     describe 'GET #index' do
       let(:customer) { Fabricate :customer, company: company, name: 'zzz' }
-      let!(:project) { Fabricate :project, customer: customer, start_date: Time.zone.today, end_date: 2.days.from_now, initial_scope: 100 }
+      let!(:project) { Fabricate :project, customers: [customer], start_date: Time.zone.today, end_date: 2.days.from_now, initial_scope: 100 }
 
       context 'passing valid parameters' do
         context 'valid parameters' do
           let(:other_customer) { Fabricate :customer, company: company, name: 'aaa' }
-          let!(:other_project) { Fabricate :project, customer: other_customer, start_date: Time.zone.today, end_date: 1.day.from_now, initial_scope: 200 }
+          let!(:other_project) { Fabricate :project, customers: [other_customer], start_date: Time.zone.today, end_date: 1.day.from_now, initial_scope: 200 }
 
           let(:out_customer) { Fabricate :customer, name: 'aaa' }
 
@@ -237,10 +237,10 @@ RSpec.describe CustomersController, type: :controller do
 
       context 'passing a valid ID' do
         context 'having projects' do
-          let!(:first_project) { Fabricate :project, customer: customer, end_date: 5.days.from_now }
-          let!(:second_project) { Fabricate :project, customer: customer, end_date: 7.days.from_now }
+          let!(:first_project) { Fabricate :project, customers: [customer], end_date: 5.days.from_now }
+          let!(:second_project) { Fabricate :project, customers: [customer], end_date: 7.days.from_now }
 
-          before { get :show, params: { company_id: company, id: customer.id } }
+          before { get :show, params: { company_id: company, id: customer } }
 
           it 'assigns the instance variable and renders the template' do
             expect(response).to render_template :show
@@ -300,7 +300,6 @@ RSpec.describe CustomersController, type: :controller do
         end
 
         context 'having dependencies' do
-          let!(:project) { Fabricate :project, customer: customer }
           let!(:product) { Fabricate :product, customer: customer }
 
           before { delete :destroy, params: { company_id: company, id: customer } }

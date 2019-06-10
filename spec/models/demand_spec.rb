@@ -176,7 +176,7 @@ RSpec.describe Demand, type: :model do
   end
 
   context 'delegations' do
-    it { is_expected.to delegate_method(:full_name).to(:project).with_prefix }
+    it { is_expected.to delegate_method(:name).to(:project).with_prefix }
   end
 
   context 'soft deletion' do
@@ -217,7 +217,7 @@ RSpec.describe Demand, type: :model do
   describe '#update_effort!' do
     let(:company) { Fabricate :company }
     let(:customer) { Fabricate :customer, company: company }
-    let(:project) { Fabricate :project, customer: customer, percentage_effort_to_bugs: 20 }
+    let(:project) { Fabricate :project, customers: [customer], percentage_effort_to_bugs: 20 }
     let(:upstream_effort_stage) { Fabricate :stage, stage_stream: :upstream }
     let(:downstream_effort_stage) { Fabricate :stage, stage_stream: :downstream }
 
@@ -354,8 +354,8 @@ RSpec.describe Demand, type: :model do
   describe '#working_time_upstream' do
     let(:company) { Fabricate :company }
     let(:customer) { Fabricate :customer, company: company }
-    let(:project) { Fabricate :project, customer: customer }
-    let(:other_project) { Fabricate :project, customer: customer }
+    let(:project) { Fabricate :project, customers: [customer] }
+    let(:other_project) { Fabricate :project, customers: [customer] }
     let(:effort_stage) { Fabricate :stage, stage_stream: :upstream }
     let!(:stage_project_config) { Fabricate :stage_project_config, project: project, stage: effort_stage, compute_effort: true, pairing_percentage: 60, stage_percentage: 90, management_percentage: 20 }
     let!(:other_stage_project_config) { Fabricate :stage_project_config, project: other_project, stage: effort_stage, compute_effort: true, pairing_percentage: 40, stage_percentage: 100, management_percentage: 10 }
@@ -382,8 +382,8 @@ RSpec.describe Demand, type: :model do
   describe '#working_time_downstream' do
     let(:company) { Fabricate :company }
     let(:customer) { Fabricate :customer, company: company }
-    let(:project) { Fabricate :project, customer: customer }
-    let(:other_project) { Fabricate :project, customer: customer }
+    let(:project) { Fabricate :project, customers: [customer] }
+    let(:other_project) { Fabricate :project, customers: [customer] }
     let(:effort_stage) { Fabricate :stage, stage_stream: :downstream }
     let!(:stage_project_config) { Fabricate :stage_project_config, project: project, stage: effort_stage, compute_effort: true, pairing_percentage: 80, stage_percentage: 100, management_percentage: 10 }
     let!(:other_stage_project_config) { Fabricate :stage_project_config, project: other_project, stage: effort_stage, compute_effort: true, pairing_percentage: 30, stage_percentage: 90, management_percentage: 10 }
@@ -410,7 +410,7 @@ RSpec.describe Demand, type: :model do
   describe '#blocked_working_time_upstream' do
     let(:company) { Fabricate :company }
     let(:customer) { Fabricate :customer, company: company }
-    let(:project) { Fabricate :project, customer: customer }
+    let(:project) { Fabricate :project, customers: [customer] }
     let(:effort_stage) { Fabricate :stage, stage_stream: :upstream }
     let!(:stage_project_config) { Fabricate :stage_project_config, project: project, stage: effort_stage, compute_effort: true }
     let(:demand) { Fabricate :demand, project: project, assignees_count: 1 }
@@ -436,7 +436,7 @@ RSpec.describe Demand, type: :model do
   describe '#blocked_working_time_downstream' do
     let(:company) { Fabricate :company }
     let(:customer) { Fabricate :customer, company: company }
-    let(:project) { Fabricate :project, customer: customer }
+    let(:project) { Fabricate :project, customers: [customer] }
     let(:effort_stage) { Fabricate :stage, stage_stream: :downstream }
     let!(:stage_project_config) { Fabricate :stage_project_config, project: project, stage: effort_stage, compute_effort: true }
     let(:demand) { Fabricate :demand, project: project, assignees_count: 1 }
@@ -462,7 +462,7 @@ RSpec.describe Demand, type: :model do
   describe '#downstream_demand?' do
     let(:company) { Fabricate :company }
     let(:customer) { Fabricate :customer, company: company }
-    let(:project) { Fabricate :project, customer: customer }
+    let(:project) { Fabricate :project, customers: [customer] }
     let(:downstream_stage) { Fabricate :stage, stage_stream: :downstream }
     let(:upstream_stage) { Fabricate :stage, stage_stream: :upstream }
 
@@ -492,7 +492,7 @@ RSpec.describe Demand, type: :model do
     context 'having transitions' do
       let(:company) { Fabricate :company }
       let(:customer) { Fabricate :customer, company: company }
-      let(:project) { Fabricate :project, customer: customer }
+      let(:project) { Fabricate :project, customers: [customer] }
       let(:stage) { Fabricate :stage, company: company, projects: [project] }
       let(:other_stage) { Fabricate :stage, company: company, projects: [project] }
 
@@ -516,7 +516,7 @@ RSpec.describe Demand, type: :model do
     context 'having no transitions' do
       let(:company) { Fabricate :company }
       let(:customer) { Fabricate :customer, company: company }
-      let(:project) { Fabricate :project, customer: customer }
+      let(:project) { Fabricate :project, customers: [customer] }
 
       let(:demand) { Fabricate :demand, project: project }
 

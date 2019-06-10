@@ -22,7 +22,7 @@
 <td><%= l(demand_list.commitment_date, format: :short) if demand_list.commitment_date.present? %></td>
 <td><%= l(demand_list.end_date, format: :short) if demand_list.end_date.present? %></td>
 
-<td><%= demand_list.project.full_name %></td>
+<td><%= demand_list.project.name %></td>
 <td><%= demand_list.demand_title %></td>
 
 <td><%= render 'demands/demand_actions', company: company, demand: demand_list, demands_ids: demands_ids %></td>

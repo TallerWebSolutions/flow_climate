@@ -140,7 +140,7 @@ RSpec.describe DemandTransition, type: :model do
   describe '#set_demand_dates' do
     let(:company) { Fabricate :company }
     let(:customer) { Fabricate :customer, company: company }
-    let(:project) { Fabricate :project, customer: customer }
+    let(:project) { Fabricate :project, customers: [customer] }
 
     context 'when the stage is a commitment_point' do
       let(:stage) { Fabricate :stage, company: company, commitment_point: true, end_point: false, projects: [project] }

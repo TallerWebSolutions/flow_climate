@@ -174,7 +174,7 @@ pt-BR:
         projects: Projetos
         team: Time
       project:
-        customer: Cliente
+        company: Empresa
         product: Produto
         name: Nome
         qty_hours: Qtd de Horas

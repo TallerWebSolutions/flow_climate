@@ -23,7 +23,7 @@ RSpec.describe StageProjectConfigsController, type: :controller do
     let(:company) { Fabricate :company, users: [user] }
     let(:stage) { Fabricate :stage, company: company }
     let(:customer) { Fabricate :customer, company: company }
-    let(:project) { Fabricate :project, customer: customer }
+    let(:project) { Fabricate :project, customers: [customer] }
 
     before { sign_in user }
 
@@ -72,7 +72,7 @@ RSpec.describe StageProjectConfigsController, type: :controller do
     describe 'PUT #update' do
       let!(:stage_project_config) { Fabricate :stage_project_config, stage: stage, project: project, stage_percentage: nil, pairing_percentage: nil, management_percentage: nil }
 
-      let(:other_project) { Fabricate :project, customer: customer }
+      let(:other_project) { Fabricate :project, customers: [customer] }
       let!(:other_stage_project_config) { Fabricate :stage_project_config, stage: stage, project: other_project, stage_percentage: nil, pairing_percentage: nil, management_percentage: nil }
 
       context 'passing valid parameters' do

@@ -17,9 +17,9 @@ class UserNotifierMailer < ApplicationMailer
     @risk = risk
     @previous_color = previous_color
     @alert_value = alert_value
-    emails = project.customer.company.users.to_notify_email.pluck(:email)
+    emails = project.company.users.to_notify_email.pluck(:email)
     Rails.logger.info("Notifying users on red project #{emails}")
-    mail(to: emails, subject: t('projects.red_alert.subject', target_name: project.full_name))
+    mail(to: emails, subject: t('projects.red_alert.subject', target_name: project.name))
   end
 
   def jira_requested_csv(user, content)

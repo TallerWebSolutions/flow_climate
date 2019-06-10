@@ -22,7 +22,7 @@ RSpec.describe DemandBlocksRepository, type: :repository do
 
       it 'returns the grouped data' do
         blocks_grouped_data = DemandBlocksRepository.instance.closed_blocks_to_projects_and_period_grouped([first_project, second_project], first_project.start_date, second_project.end_date)
-        expect(blocks_grouped_data.keys).to eq([first_project.full_name])
+        expect(blocks_grouped_data.keys).to eq([first_project.name])
         expect(blocks_grouped_data.values[0].first).to eq third_block
       end
     end

@@ -4,7 +4,7 @@
       <li><%= link_to t('general.home.title'), root_path %></li>
       <li><%= link_to @company.abbreviation&.upcase, company_path(@company) %></li>
       <li><%= link_to Project.model_name.human.pluralize, company_projects_path(@company) %></li>
-      <li><%= @project.full_name %></li>
+      <li><%= @project.name %></li>
     </ul>
   </div>
 </div>
@@ -12,7 +12,7 @@
 <%= hidden_field_tag :company_id, @company.id %>
 <%= hidden_field_tag :project_id, @project.id %>
 <%= hidden_field_tag :projects_ids, @project.id %>
-<%= hidden_field_tag :target_name, @project.full_name %>
+<%= hidden_field_tag :target_name, @project.name %>
 <%= hidden_field_tag :demands_ids, @demands_ids.join(',') %>
 
 <div class="row">
@@ -57,7 +57,7 @@
 </div>
 
 <div id="operational-charts" class="tab-container">
-  <%= render 'charts/operational_charts_tab', target_name: @project.full_name, report_data: @report_data, company: @company, projects: [@project], start_date: @start_date, end_date: @end_date %>
+  <%= render 'charts/operational_charts_tab', target_name: @project.name, report_data: @report_data, company: @company, projects: [@project], start_date: @start_date, end_date: @end_date %>
 </div>
 
 <div id="statistics-charts" class="tab-container">
@@ -65,7 +65,7 @@
 </div>
 
 <div id="project-status-report" class="tab-container">
-  <%= render 'charts/status_report_tab', target_name: @project.full_name, status_report_data: @status_report_data, company: @company, projects: [@project], start_date: @start_date, end_date: @end_date %>
+  <%= render 'charts/status_report_tab', target_name: @project.name, status_report_data: @status_report_data, company: @company, projects: [@project], start_date: @start_date, end_date: @end_date %>
 </div>
 
 <div id="project-settings" class="tab-container">

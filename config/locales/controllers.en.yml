@@ -221,6 +221,8 @@ en:
         not_integrated: "This is not a JIRA integrated project."
         integrated_project: "This is a project integrated to JIRA."
         configured_stages: "This project has %{count} stages."
+      not_associated_customers: "Not associated customers"
+      project_customers: "Customers in project"
     charts:
       xlabel:
         weeks: "Weeks"
@@ -350,6 +352,7 @@ en:
       risks: "Risks"
       stages: "Stages"
       jira: "Jira"
+      customers: "Customers"
     data_analysis:
       risk_deadline: "Deadline"
       risk_money: "Cost"
@@ -399,8 +402,6 @@ en:
       no_value: "Value or Hour value is mandatory"
       customer_not_same: "The customer in the project must be the same in the product"
       product_blank: "it is mandatory to outsourcing projects"
-    nickname:
-      uniqueness: "Should have only one to the same customer"
     destroy:
       confirm: "Are you sure? All demands in this project will be deleted as well."
     modal:

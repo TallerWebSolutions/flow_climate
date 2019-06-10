@@ -76,7 +76,7 @@ RSpec.describe DemandsController, type: :controller do
     let(:customer) { Fabricate :customer, company: company }
     let(:team) { Fabricate :team, company: company }
     let(:product) { Fabricate :product, customer: customer, team: team }
-    let(:project) { Fabricate :project, customer: customer, product: product }
+    let(:project) { Fabricate :project, customers: [customer], product: product }
 
     before { sign_in user }
 
@@ -147,7 +147,7 @@ RSpec.describe DemandsController, type: :controller do
           it 'does not create the demand and re-render the template with the errors' do
             expect(Demand.last).to be_nil
             expect(response).to render_template :new
-            expect(assigns(:demand).errors.full_messages).to eq ['Data de Criação não pode ficar em branco', 'Id da Demanda não pode ficar em branco', 'Tipo da Demanda não pode ficar em branco', 'Qtd Responsáveis não pode ficar em branco']
+            expect(assigns(:demand).errors.full_messages).to eq ['Data de Criação não pode ficar em branco', 'Id da Demanda não pode ficar em branco', 'Tipo da Demanda não pode ficar em branco']
           end
         end
 
@@ -174,7 +174,7 @@ RSpec.describe DemandsController, type: :controller do
     end
 
     describe 'DELETE #destroy' do
-      let(:project) { Fabricate :project, customer: customer, product: product }
+      let(:project) { Fabricate :project, customers: [customer], product: product }
       let!(:first_demand) { Fabricate :demand, project: project, demand_id: 'hhh', demand_title: 'foo', demand_type: :feature, class_of_service: :standard, created_date: 2.days.ago, commitment_date: nil, end_date: nil, effort_downstream: 20, effort_upstream: 0 }
       let!(:second_demand) { Fabricate :demand, project: project, demand_title: 'foo bar', demand_type: :bug, class_of_service: :expedite, created_date: 1.day.ago, commitment_date: Time.zone.today, end_date: nil, effort_downstream: 0, effort_upstream: 0 }
       let!(:third_demand) { Fabricate :demand, project: project, demand_title: 'bar foo', demand_type: :feature, class_of_service: :intangible, created_date: 5.days.ago, commitment_date: 4.days.ago, end_date: 1.day.ago, effort_downstream: 0, effort_upstream: 10 }
@@ -193,7 +193,6 @@ RSpec.describe DemandsController, type: :controller do
           expect(response).to render_template 'demands/search_demands.js.erb'
           expect(demand.reload.discarded_at).not_to be_nil
           expect(assigns(:grouped_delivered_demands)).to be_nil
-          expect(assigns(:grouped_customer_demands)).to be_nil
           expect(assigns(:demands).map(&:id)).to eq [first_demand.id, second_demand.id, third_demand.id, fourth_demand.id, fifth_demand.id, sixth_demand.id, seventh_demand.id, eigth_demand.id]
           expect(assigns(:confidence_95_leadtime)).to be_within(0.3).of(4.3)
           expect(assigns(:confidence_80_leadtime)).to be_within(0.3).of(3.6)
@@ -223,7 +222,7 @@ RSpec.describe DemandsController, type: :controller do
       let(:company) { Fabricate :company, users: [user] }
 
       let(:customer) { Fabricate :customer, company: company }
-      let(:project) { Fabricate :project, customer: customer }
+      let(:project) { Fabricate :project, customers: [customer] }
       let!(:demand) { Fabricate :demand }
 
       context 'valid parameters' do
@@ -280,7 +279,7 @@ RSpec.describe DemandsController, type: :controller do
 
       let(:customer) { Fabricate :customer, company: company }
       let(:product) { Fabricate :product, customer: customer, team: team }
-      let(:project) { Fabricate :project, customer: customer, product: product }
+      let(:project) { Fabricate :project, customers: [customer], product: product }
       let!(:demand) { Fabricate :demand, project: project, created_date: created_date }
 
       context 'passing valid parameters' do
@@ -337,7 +336,7 @@ RSpec.describe DemandsController, type: :controller do
       let(:company) { Fabricate :company, users: [user] }
       let(:customer) { Fabricate :customer, company: company }
       let(:product) { Fabricate :product, customer: customer }
-      let!(:project) { Fabricate :project, customer: product.customer, product: product, end_date: 5.days.from_now }
+      let!(:project) { Fabricate :project, customers: [product.customer], product: product, end_date: 5.days.from_now }
       let!(:first_demand) { Fabricate :demand }
       let!(:second_demand) { Fabricate :demand }
 
@@ -405,16 +404,16 @@ RSpec.describe DemandsController, type: :controller do
 
       let(:customer) { Fabricate :customer, company: company }
       let(:other_customer) { Fabricate :customer, company: company }
-      let(:project) { Fabricate :project, customer: customer }
-      let(:other_project) { Fabricate :project, customer: other_customer }
+      let(:project) { Fabricate :project, customers: [customer] }
+      let(:other_project) { Fabricate :project, customers: [other_customer] }
       let!(:project_jira_config) { Fabricate :project_jira_config, project: project }
       let!(:demand) { Fabricate :demand, project: project }
 
-      let(:first_card_response) { { data: { card: { id: '5140999', assignees: [{ id: '101381', username: 'xpto' }, { id: '101381', username: 'xpto' }, { id: '101382', username: 'bla' }, { id: '101321', username: 'mambo' }], comments: [{ created_at: '2018-02-22T18:39:46-03:00', author: { username: 'sbbrubles' }, text: '[BLOCKED]: xpto of bla having foo.' }], fields: [{ name: 'Descrição da pesquisa', value: 'teste' }, { name: 'Title', value: 'Página dos colunistas' }, { name: 'Type', value: 'bUG' }, { name: 'JiraKey', value: 'PD-46' }, { name: 'Class of Service', value: 'Padrão' }, { name: 'Project', value: other_project.full_name }], phases_history: [{ phase: { id: '2481595' }, firstTimeIn: '2018-02-22T17:09:58-03:00', lastTimeOut: '2018-02-26T17:09:58-03:00' }, { phase: { id: '3481595' }, firstTimeIn: '2018-02-15T17:10:40-03:00', lastTimeOut: '2018-02-17T17:10:40-03:00' }, { phase: { id: '2481597' }, firstTimeIn: '2018-02-27T17:09:58-03:00', lastTimeOut: nil }], pipe: { id: '356355' }, url: 'http://app.jira.com/pipes/356355#cards/5140999' } } }.with_indifferent_access }
+      let(:first_card_response) { { data: { card: { id: '5140999', assignees: [{ id: '101381', username: 'xpto' }, { id: '101381', username: 'xpto' }, { id: '101382', username: 'bla' }, { id: '101321', username: 'mambo' }], comments: [{ created_at: '2018-02-22T18:39:46-03:00', author: { username: 'sbbrubles' }, text: '[BLOCKED]: xpto of bla having foo.' }], fields: [{ name: 'Descrição da pesquisa', value: 'teste' }, { name: 'Title', value: 'Página dos colunistas' }, { name: 'Type', value: 'bUG' }, { name: 'JiraKey', value: 'PD-46' }, { name: 'Class of Service', value: 'Padrão' }, { name: 'Project', value: other_project.name }], phases_history: [{ phase: { id: '2481595' }, firstTimeIn: '2018-02-22T17:09:58-03:00', lastTimeOut: '2018-02-26T17:09:58-03:00' }, { phase: { id: '3481595' }, firstTimeIn: '2018-02-15T17:10:40-03:00', lastTimeOut: '2018-02-17T17:10:40-03:00' }, { phase: { id: '2481597' }, firstTimeIn: '2018-02-27T17:09:58-03:00', lastTimeOut: nil }], pipe: { id: '356355' }, url: 'http://app.jira.com/pipes/356355#cards/5140999' } } }.with_indifferent_access }
 
       context 'passing valid parameters' do
         context 'when there is no project change' do
-          let(:first_card_response) { { data: { card: { id: '5140999', assignees: [{ id: '101381', username: 'xpto' }, { id: '101381', username: 'xpto' }, { id: '101382', username: 'bla' }, { id: '101321', username: 'mambo' }], comments: [{ created_at: '2018-02-22T18:39:46-03:00', author: { username: 'sbbrubles' }, text: '[BLOCKED]: xpto of bla having foo.' }], fields: [{ name: 'Descrição da pesquisa', value: 'teste' }, { name: 'Title', value: 'Página dos colunistas' }, { name: 'Type', value: 'bUG' }, { name: 'JiraKey', value: 'PD-46' }, { name: 'Class of Service', value: 'Padrão' }, { name: 'Project', value: project.full_name }], phases_history: [{ phase: { id: '2481595' }, firstTimeIn: '2018-02-22T17:09:58-03:00', lastTimeOut: '2018-02-26T17:09:58-03:00' }, { phase: { id: '3481595' }, firstTimeIn: '2018-02-15T17:10:40-03:00', lastTimeOut: '2018-02-17T17:10:40-03:00' }, { phase: { id: '2481597' }, firstTimeIn: '2018-02-27T17:09:58-03:00', lastTimeOut: nil }], pipe: { id: '356355' }, url: 'http://app.jira.com/pipes/356355#cards/5140999' } } }.with_indifferent_access }
+          let(:first_card_response) { { data: { card: { id: '5140999', assignees: [{ id: '101381', username: 'xpto' }, { id: '101381', username: 'xpto' }, { id: '101382', username: 'bla' }, { id: '101321', username: 'mambo' }], comments: [{ created_at: '2018-02-22T18:39:46-03:00', author: { username: 'sbbrubles' }, text: '[BLOCKED]: xpto of bla having foo.' }], fields: [{ name: 'Descrição da pesquisa', value: 'teste' }, { name: 'Title', value: 'Página dos colunistas' }, { name: 'Type', value: 'bUG' }, { name: 'JiraKey', value: 'PD-46' }, { name: 'Class of Service', value: 'Padrão' }, { name: 'Project', value: project.name }], phases_history: [{ phase: { id: '2481595' }, firstTimeIn: '2018-02-22T17:09:58-03:00', lastTimeOut: '2018-02-26T17:09:58-03:00' }, { phase: { id: '3481595' }, firstTimeIn: '2018-02-15T17:10:40-03:00', lastTimeOut: '2018-02-17T17:10:40-03:00' }, { phase: { id: '2481597' }, firstTimeIn: '2018-02-27T17:09:58-03:00', lastTimeOut: nil }], pipe: { id: '356355' }, url: 'http://app.jira.com/pipes/356355#cards/5140999' } } }.with_indifferent_access }
 
           it 'calls the services and the reader' do
             expect(Jira::ProcessJiraIssueJob).to receive(:perform_later)
@@ -461,7 +460,7 @@ RSpec.describe DemandsController, type: :controller do
       let(:company) { Fabricate :company, users: [user] }
 
       let(:customer) { Fabricate :customer, company: company }
-      let(:project) { Fabricate :project, customer: customer }
+      let(:project) { Fabricate :project, customers: [customer] }
       let!(:demand) { Fabricate :demand, project: project, end_date: Time.zone.today }
       let!(:stage) { Fabricate :stage, company: company, projects: [project], end_point: false, commitment_point: false, stage_stream: :downstream, order: 0 }
       let!(:end_stage) { Fabricate :stage, company: company, projects: [project], commitment_point: false, end_point: true, order: 1, stage_stream: :downstream }
@@ -510,8 +509,8 @@ RSpec.describe DemandsController, type: :controller do
 
     describe 'GET #demands_in_projects' do
       context 'passing valid parameters' do
-        let(:first_project) { Fabricate :project, customer: customer, product: product, start_date: 3.days.ago, end_date: 1.day.from_now, status: :executing }
-        let(:second_project) { Fabricate :project, customer: customer, product: product, start_date: 3.days.ago, end_date: 1.day.from_now, status: :finished }
+        let(:first_project) { Fabricate :project, customers: [customer], product: product, start_date: 3.days.ago, end_date: 1.day.from_now, status: :executing }
+        let(:second_project) { Fabricate :project, customers: [customer], product: product, start_date: 3.days.ago, end_date: 1.day.from_now, status: :finished }
 
         let!(:first_demand) { Fabricate :demand, project: first_project, commitment_date: 1.day.ago, end_date: Time.zone.now }
         let!(:second_demand) { Fabricate :demand, project: second_project, commitment_date: 3.hours.ago, end_date: Time.zone.now }
@@ -560,8 +559,8 @@ RSpec.describe DemandsController, type: :controller do
       let(:product) { Fabricate :product, customer: customer, name: 'zzz', team: team }
       let(:other_product) { Fabricate :product, customer: other_customer, name: 'aaa', team: team }
 
-      let!(:first_project) { Fabricate :project, name: 'qqq', customer: customer, product: product, status: :executing, start_date: 1.month.ago, end_date: 10.days.from_now }
-      let!(:second_project) { Fabricate :project, customer: other_customer, product: other_product, status: :executing, start_date: 15.days.ago, end_date: 50.days.from_now }
+      let!(:first_project) { Fabricate :project, name: 'qqq', customers: [customer], product: product, status: :executing, start_date: 1.month.ago, end_date: 10.days.from_now }
+      let!(:second_project) { Fabricate :project, customers: [other_customer], product: other_product, status: :executing, start_date: 15.days.ago, end_date: 50.days.from_now }
 
       let(:start_date) { Project.all.map(&:start_date).min }
       let(:end_date) { Project.all.map(&:end_date).max }
@@ -586,7 +585,6 @@ RSpec.describe DemandsController, type: :controller do
                 expect(response).to render_template 'demands/search_demands.js.erb'
                 expect(assigns(:demands).map(&:id)).to eq [first_demand.id, fifth_demand.id, second_demand.id, sixth_demand.id, eigth_demand.id, fourth_demand.id, seventh_demand.id, third_demand.id]
                 expect(assigns(:grouped_delivered_demands)).to be_nil
-                expect(assigns(:grouped_customer_demands)).to be_nil
                 expect(assigns(:confidence_95_leadtime)).to be_within(0.3).of(4.3)
                 expect(assigns(:confidence_80_leadtime)).to be_within(0.3).of(3.6)
                 expect(assigns(:confidence_65_leadtime)).to be_within(0.3).of(2.9)
@@ -601,21 +599,6 @@ RSpec.describe DemandsController, type: :controller do
                 expect(response).to render_template 'demands/search_demands.js.erb'
                 expect(assigns(:demands).map(&:id)).to eq [first_demand.id, fifth_demand.id, second_demand.id, sixth_demand.id, eigth_demand.id, fourth_demand.id, seventh_demand.id, third_demand.id]
                 expect(assigns(:grouped_delivered_demands)[[2019, 1]].map(&:id)).to eq [eigth_demand.id, fourth_demand.id, seventh_demand.id, third_demand.id]
-                expect(assigns(:grouped_customer_demands)).to be_nil
-                expect(assigns(:confidence_95_leadtime)).to be_within(0.3).of(4.3)
-                expect(assigns(:confidence_80_leadtime)).to be_within(0.3).of(3.6)
-                expect(assigns(:confidence_65_leadtime)).to be_within(0.3).of(2.9)
-              end
-            end
-
-            context 'grouped_customer_demands' do
-              it 'finds the correct demands and responds with the correct JS' do
-                get :search_demands, params: { company_id: company, projects_ids: Project.all.map(&:id).join(','), start_date: start_date, end_date: end_date, grouping: 'grouped_by_customer', period: :all }, xhr: true
-
-                expect(response).to render_template 'demands/search_demands.js.erb'
-                expect(assigns(:demands).map(&:id)).to eq [first_demand.id, fifth_demand.id, second_demand.id, sixth_demand.id, eigth_demand.id, fourth_demand.id, seventh_demand.id, third_demand.id]
-                expect(assigns(:grouped_delivered_demands)).to be_nil
-                expect(assigns(:grouped_customer_demands)[customer.name].map(&:id)).to eq [first_demand.id, second_demand.id, fourth_demand.id, third_demand.id]
                 expect(assigns(:confidence_95_leadtime)).to be_within(0.3).of(4.3)
                 expect(assigns(:confidence_80_leadtime)).to be_within(0.3).of(3.6)
                 expect(assigns(:confidence_65_leadtime)).to be_within(0.3).of(2.9)
@@ -631,7 +614,6 @@ RSpec.describe DemandsController, type: :controller do
                 expect(response).to render_template 'demands/search_demands.js.erb'
                 expect(assigns(:demands).map(&:id)).to eq [first_demand.id, fifth_demand.id]
                 expect(assigns(:grouped_delivered_demands)).to be_nil
-                expect(assigns(:grouped_customer_demands)).to be_nil
                 expect(assigns(:confidence_95_leadtime)).to eq 0
               end
             end
@@ -643,19 +625,6 @@ RSpec.describe DemandsController, type: :controller do
                 expect(response).to render_template 'demands/search_demands.js.erb'
                 expect(assigns(:demands).map(&:id)).to eq [first_demand.id, fifth_demand.id]
                 expect(assigns(:grouped_delivered_demands)).to eq({})
-                expect(assigns(:grouped_customer_demands)).to be_nil
-                expect(assigns(:confidence_95_leadtime)).to eq 0
-              end
-            end
-
-            context 'grouped_customer_demands' do
-              it 'finds the correct demands and responds with the correct JS' do
-                get :search_demands, params: { company_id: company, projects_ids: Project.all.map(&:id).join(','), start_date: start_date, end_date: end_date, grouping: 'grouped_by_customer', flow_status: 'not_started', period: :all }, xhr: true
-
-                expect(response).to render_template 'demands/search_demands.js.erb'
-                expect(assigns(:demands).map(&:id)).to eq [first_demand.id, fifth_demand.id]
-                expect(assigns(:grouped_delivered_demands)).to be_nil
-                expect(assigns(:grouped_customer_demands)[customer.name].map(&:id)).to eq [first_demand.id]
                 expect(assigns(:confidence_95_leadtime)).to eq 0
               end
             end
@@ -669,7 +638,6 @@ RSpec.describe DemandsController, type: :controller do
                 expect(response).to render_template 'demands/search_demands.js.erb'
                 expect(assigns(:demands).map(&:id)).to match_array [second_demand.id, sixth_demand.id]
                 expect(assigns(:grouped_delivered_demands)).to be_nil
-                expect(assigns(:grouped_customer_demands)).to be_nil
                 expect(assigns(:confidence_95_leadtime)).to eq 0
               end
             end
@@ -681,7 +649,6 @@ RSpec.describe DemandsController, type: :controller do
                 expect(response).to render_template 'demands/search_demands.js.erb'
                 expect(assigns(:demands).map(&:id)).to match_array [second_demand.id, sixth_demand.id]
                 expect(assigns(:grouped_delivered_demands)).to eq({})
-                expect(assigns(:grouped_customer_demands)).to be_nil
                 expect(assigns(:confidence_95_leadtime)).to eq 0
               end
             end
@@ -693,7 +660,6 @@ RSpec.describe DemandsController, type: :controller do
                 expect(response).to render_template 'demands/search_demands.js.erb'
                 expect(assigns(:demands).map(&:id)).to match_array [second_demand.id, sixth_demand.id]
                 expect(assigns(:grouped_delivered_demands)).to be_nil
-                expect(assigns(:grouped_customer_demands)[customer.name].map(&:id)).to eq [second_demand.id]
                 expect(assigns(:confidence_95_leadtime)).to eq 0
               end
             end
@@ -707,7 +673,6 @@ RSpec.describe DemandsController, type: :controller do
                 expect(response).to render_template 'demands/search_demands.js.erb'
                 expect(assigns(:demands).map(&:id)).to eq [eigth_demand.id, fourth_demand.id, seventh_demand.id, third_demand.id]
                 expect(assigns(:grouped_delivered_demands)).to be_nil
-                expect(assigns(:grouped_customer_demands)).to be_nil
                 expect(assigns(:confidence_95_leadtime)).to be_within(0.00001).of(4.34583)
                 expect(assigns(:confidence_80_leadtime)).to be_within(0.00001).of(3.63333)
                 expect(assigns(:confidence_65_leadtime)).to be_within(0.00001).of(2.9000000000000004)
@@ -721,24 +686,9 @@ RSpec.describe DemandsController, type: :controller do
                 expect(response).to render_template 'demands/search_demands.js.erb'
                 expect(assigns(:demands).map(&:id)).to eq [eigth_demand.id, fourth_demand.id, seventh_demand.id, third_demand.id]
                 expect(assigns(:grouped_delivered_demands)[[2019, 1]].map(&:id)).to eq [eigth_demand.id, fourth_demand.id, seventh_demand.id, third_demand.id]
-                expect(assigns(:grouped_customer_demands)).to be_nil
                 expect(assigns(:confidence_95_leadtime)).to be_within(0.00001).of(4.34583)
                 expect(assigns(:confidence_80_leadtime)).to be_within(0.00001).of(3.63333)
                 expect(assigns(:confidence_65_leadtime)).to be_within(0.00001).of(2.90000)
-              end
-            end
-
-            context 'grouped_customer_demands' do
-              it 'finds the correct demands and responds with the correct JS' do
-                get :search_demands, params: { company_id: company, projects_ids: Project.all.map(&:id).join(','), start_date: start_date, end_date: end_date, grouping: 'grouped_by_customer', flow_status: 'delivered', period: :all }, xhr: true
-
-                expect(response).to render_template 'demands/search_demands.js.erb'
-                expect(assigns(:demands).map(&:id)).to eq [eigth_demand.id, fourth_demand.id, seventh_demand.id, third_demand.id]
-                expect(assigns(:grouped_delivered_demands)).to be_nil
-                expect(assigns(:grouped_customer_demands)[customer.name].map(&:id)).to eq [fourth_demand.id, third_demand.id]
-                expect(assigns(:confidence_95_leadtime)).to be_within(0.00001).of(4.345833)
-                expect(assigns(:confidence_80_leadtime)).to be_within(0.00001).of(3.633333)
-                expect(assigns(:confidence_65_leadtime)).to be_within(0.00001).of(2.9000000000000004)
               end
             end
 

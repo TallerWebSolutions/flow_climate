@@ -68,7 +68,7 @@ class CompaniesController < AuthenticatedController
   end
 
   def projects_tab
-    @company_projects = @company.projects.includes(:team).includes(:product).includes(:customer).order(end_date: :desc)
+    @company_projects = @company.projects.includes(:team).includes(:product).order(end_date: :desc)
     @projects_summary = ProjectsSummaryData.new(@company_projects)
     @parent = @company
     @parent_type = 'company'
@@ -76,7 +76,7 @@ class CompaniesController < AuthenticatedController
   end
 
   def strategic_chart_tab
-    @company_projects = @company.projects.includes(:product).includes(:customer).order(end_date: :desc)
+    @company_projects = @company.projects.includes(:product).order(end_date: :desc)
     @strategic_chart_data = Highchart::StrategicChartsAdapter.new(@company, @company_projects, @company.total_available_hours)
     respond_to { |format| format.js { render 'companies/strategic_chart_tab.js.erb' } }
   end

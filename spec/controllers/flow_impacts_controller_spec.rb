@@ -53,10 +53,10 @@ RSpec.describe FlowImpactsController, type: :controller do
     let(:other_company) { Fabricate :company, users: [user] }
 
     let(:customer) { Fabricate :customer, company: company }
-    let(:project) { Fabricate :project, customer: customer, status: :executing }
+    let(:project) { Fabricate :project, company: company, customers: [customer], status: :executing }
 
     let(:other_customer) { Fabricate :customer, company: other_company }
-    let(:other_project) { Fabricate :project, customer: other_customer }
+    let(:other_project) { Fabricate :project, customers: [other_customer] }
 
     let!(:demand) { Fabricate :demand, project: project, commitment_date: 1.day.ago, end_date: nil, demand_id: 'bbb' }
     let!(:other_demand) { Fabricate :demand, project: project, commitment_date: 1.day.ago, end_date: nil, demand_id: 'aaa' }
@@ -215,7 +215,7 @@ RSpec.describe FlowImpactsController, type: :controller do
       let(:demand) { Fabricate :demand, project: project }
 
       context 'passing valid parameters' do
-        let(:other_project) { Fabricate :project, customer: customer }
+        let(:other_project) { Fabricate :project, customers: [customer] }
 
         let(:demand) { Fabricate :demand, project: project }
 

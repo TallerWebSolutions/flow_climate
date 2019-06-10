@@ -139,6 +139,38 @@ ALTER SEQUENCE public.customers_id_seq OWNED BY public.customers.id;
 
 
 --
+-- Name: customers_projects; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.customers_projects (
+    id bigint NOT NULL,
+    customer_id integer NOT NULL,
+    project_id integer NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: customers_projects_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.customers_projects_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: customers_projects_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.customers_projects_id_seq OWNED BY public.customers_projects.id;
+
+
+--
 -- Name: demand_blocks; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -299,7 +331,7 @@ CREATE TABLE public.demands (
     url character varying,
     class_of_service integer DEFAULT 0 NOT NULL,
     project_id integer NOT NULL,
-    assignees_count integer NOT NULL,
+    assignees_count integer DEFAULT 0 NOT NULL,
     effort_downstream numeric DEFAULT 0,
     effort_upstream numeric DEFAULT 0,
     leadtime numeric,
@@ -889,7 +921,6 @@ ALTER SEQUENCE public.project_risk_configs_id_seq OWNED BY public.project_risk_c
 
 CREATE TABLE public.projects (
     id bigint NOT NULL,
-    customer_id integer NOT NULL,
     name character varying NOT NULL,
     status integer NOT NULL,
     project_type integer NOT NULL,
@@ -905,7 +936,8 @@ CREATE TABLE public.projects (
     nickname character varying,
     percentage_effort_to_bugs integer DEFAULT 0 NOT NULL,
     team_id integer,
-    max_work_in_progress integer DEFAULT 0 NOT NULL
+    max_work_in_progress integer DEFAULT 0 NOT NULL,
+    company_id integer NOT NULL
 );
 
 
@@ -1292,6 +1324,13 @@ ALTER TABLE ONLY public.customers ALTER COLUMN id SET DEFAULT nextval('public.cu
 
 
 --
+-- Name: customers_projects id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.customers_projects ALTER COLUMN id SET DEFAULT nextval('public.customers_projects_id_seq'::regclass);
+
+
+--
 -- Name: demand_blocks id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1524,6 +1563,14 @@ ALTER TABLE ONLY public.company_settings
 
 ALTER TABLE ONLY public.customers
     ADD CONSTRAINT customers_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: customers_projects customers_projects_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.customers_projects
+    ADD CONSTRAINT customers_projects_pkey PRIMARY KEY (id);
 
 
 --
@@ -1816,6 +1863,27 @@ CREATE UNIQUE INDEX index_customers_on_company_id_and_name ON public.customers U
 
 
 --
+-- Name: index_customers_projects_on_customer_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_customers_projects_on_customer_id ON public.customers_projects USING btree (customer_id);
+
+
+--
+-- Name: index_customers_projects_on_customer_id_and_project_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_customers_projects_on_customer_id_and_project_id ON public.customers_projects USING btree (customer_id, project_id);
+
+
+--
+-- Name: index_customers_projects_on_project_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_customers_projects_on_project_id ON public.customers_projects USING btree (project_id);
+
+
+--
 -- Name: index_demand_blocks_on_demand_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2040,24 +2108,10 @@ CREATE INDEX index_project_risk_alerts_on_project_risk_config_id ON public.proje
 
 
 --
--- Name: index_projects_on_customer_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_projects_on_company_id_and_name; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_projects_on_customer_id ON public.projects USING btree (customer_id);
-
-
---
--- Name: index_projects_on_nickname_and_customer_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX index_projects_on_nickname_and_customer_id ON public.projects USING btree (nickname, customer_id);
-
-
---
--- Name: index_projects_on_product_id_and_name; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX index_projects_on_product_id_and_name ON public.projects USING btree (product_id, name);
+CREATE UNIQUE INDEX index_projects_on_company_id_and_name ON public.projects USING btree (company_id, name);
 
 
 --
@@ -2107,6 +2161,13 @@ CREATE INDEX index_stages_on_name ON public.stages USING btree (name);
 --
 
 CREATE INDEX index_stages_teams_on_stage_id ON public.stages_teams USING btree (stage_id);
+
+
+--
+-- Name: index_stages_teams_on_stage_id_and_team_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_stages_teams_on_stage_id_and_team_id ON public.stages_teams USING btree (stage_id, team_id);
 
 
 --
@@ -2360,19 +2421,19 @@ ALTER TABLE ONLY public.user_plans
 
 
 --
+-- Name: projects fk_rails_44a549d7b3; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.projects
+    ADD CONSTRAINT fk_rails_44a549d7b3 FOREIGN KEY (company_id) REFERENCES public.companies(id);
+
+
+--
 -- Name: project_risk_alerts fk_rails_4685dfa1bb; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.project_risk_alerts
     ADD CONSTRAINT fk_rails_4685dfa1bb FOREIGN KEY (project_id) REFERENCES public.projects(id);
-
-
---
--- Name: projects fk_rails_47c768ed16; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.projects
-    ADD CONSTRAINT fk_rails_47c768ed16 FOREIGN KEY (customer_id) REFERENCES public.customers(id);
 
 
 --
@@ -2488,6 +2549,14 @@ ALTER TABLE ONLY public.users
 
 
 --
+-- Name: customers_projects fk_rails_9b68bbaf49; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.customers_projects
+    ADD CONSTRAINT fk_rails_9b68bbaf49 FOREIGN KEY (customer_id) REFERENCES public.customers(id);
+
+
+--
 -- Name: products fk_rails_a551b9b235; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2573,6 +2642,14 @@ ALTER TABLE ONLY public.teams
 
 ALTER TABLE ONLY public.projects
     ADD CONSTRAINT fk_rails_ecc227a0c2 FOREIGN KEY (team_id) REFERENCES public.teams(id);
+
+
+--
+-- Name: customers_projects fk_rails_ee14b8e6f4; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.customers_projects
+    ADD CONSTRAINT fk_rails_ee14b8e6f4 FOREIGN KEY (project_id) REFERENCES public.projects(id);
 
 
 --
@@ -2717,6 +2794,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190531215933'),
 ('20190603153315'),
 ('20190606144211'),
-('20190606204533');
+('20190606204533'),
+('20190607143157');
 
 

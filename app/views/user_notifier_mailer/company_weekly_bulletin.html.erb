@@ -10,7 +10,7 @@
     <% if @projects_starting.present? %>
       <% @projects_starting.each do |project| %>
         <ul>
-          <li><%= link_to "#{project.full_name} (#{l(project.start_date)}) [#{number_with_precision(project.flow_pressure , precision: 3)}]", company_project_url(@company, project) %></li>
+          <li><%= link_to "#{project.name} (#{l(project.start_date)}) [#{number_with_precision(project.flow_pressure , precision: 3)}]", company_project_url(@company, project) %></li>
         </ul>
       <% end %>
     <% else %>
@@ -21,7 +21,7 @@
     <% if @projects_finishing.present? %>
       <% @projects_finishing.each do |project| %>
         <ul>
-          <li><%= link_to "#{project.full_name} (#{l(project.end_date)}) [#{number_with_precision(project.flow_pressure , precision: 3)}]", company_project_url(@company, project) %></li>
+          <li><%= link_to "#{project.name} (#{l(project.end_date)}) [#{number_with_precision(project.flow_pressure , precision: 3)}]", company_project_url(@company, project) %></li>
         </ul>
       <% end %>
     <% else %>
@@ -31,7 +31,7 @@
     <h3><%= t('projects.portfolio_bulletin.next_starting_project') %></h3>
     <% if @next_starting_project.present? %>
       <ul>
-        <li><%= link_to "#{@next_starting_project.full_name} (#{l(@next_starting_project.start_date)}) [#{number_with_precision(@next_starting_project.flow_pressure , precision: 3)}]", company_project_url(@company, @next_starting_project) %></li>
+        <li><%= link_to "#{@next_starting_project.name} (#{l(@next_starting_project.start_date)}) [#{number_with_precision(@next_starting_project.flow_pressure , precision: 3)}]", company_project_url(@company, @next_starting_project) %></li>
       </ul>
     <% else %>
       <%= t('projects.no_project_starting') %>
@@ -40,7 +40,7 @@
     <h3><%= t('projects.portfolio_bulletin.next_finishing_project') %></h3>
     <% if @next_finishing_project.present? %>
       <ul>
-        <li><%= link_to "#{@next_finishing_project.full_name} (#{l(@next_finishing_project.end_date)}) [#{number_with_precision(@next_finishing_project.flow_pressure , precision: 3)}]", company_project_url(@company, @next_finishing_project) %></li>
+        <li><%= link_to "#{@next_finishing_project.name} (#{l(@next_finishing_project.end_date)}) [#{number_with_precision(@next_finishing_project.flow_pressure , precision: 3)}]", company_project_url(@company, @next_finishing_project) %></li>
       </ul>
     <% else %>
       <%= t('projects.no_project_finishing') %>
@@ -50,7 +50,7 @@
     <% if @red_projects.present? %>
       <% @red_projects.each do |red_project| %>
         <ul>
-          <li><%= link_to "#{red_project.full_name} (#{l(red_project.end_date)}) [#{number_with_precision(red_project.flow_pressure , precision: 3)}]", company_project_url(@company, red_project) %></li>
+          <li><%= link_to "#{red_project.name} (#{l(red_project.end_date)}) [#{number_with_precision(red_project.flow_pressure , precision: 3)}]", company_project_url(@company, red_project) %></li>
         </ul>
       <% end %>
     <% else %>
@@ -61,7 +61,7 @@
     <% if @top_three_flow_pressure.present? %>
       <% @top_three_flow_pressure.each do |project| %>
         <ul>
-          <li><%= link_to "#{project.full_name} (#{l(project.end_date)}) [#{number_with_precision(project.flow_pressure , precision: 3)}]", company_project_url(@company, project) %></li>
+          <li><%= link_to "#{project.name} (#{l(project.end_date)}) [#{number_with_precision(project.flow_pressure , precision: 3)}]", company_project_url(@company, project) %></li>
         </ul>
       <% end %>
     <% else %>
@@ -72,7 +72,7 @@
     <% if @top_three_throughput.present? %>
       <% @top_three_throughput.each do |project| %>
         <ul>
-          <li><%= link_to "#{project.full_name} (#{l(project.end_date)}) [#{number_with_precision(project.total_throughput_for(1.week.ago.to_date) , precision: 3)}]", company_project_url(@company, project) %></li>
+          <li><%= link_to "#{project.name} (#{l(project.end_date)}) [#{number_with_precision(project.total_throughput_for(1.week.ago.to_date) , precision: 3)}]", company_project_url(@company, project) %></li>
         </ul>
       <% end %>
     <% else %>

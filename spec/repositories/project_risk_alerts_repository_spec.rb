@@ -5,9 +5,9 @@ RSpec.describe ProjectRiskAlertsRepository, type: :repository do
     let(:company) { Fabricate :company }
     let(:customer) { Fabricate :customer, company: company }
 
-    let(:first_project) { Fabricate :project, customer: customer, start_date: 1.week.ago }
-    let(:second_project) { Fabricate :project, customer: customer, start_date: 1.week.ago }
-    let(:third_project) { Fabricate :project, customer: customer, end_date: 1.week.from_now }
+    let(:first_project) { Fabricate :project, customers: [customer], start_date: 1.week.ago }
+    let(:second_project) { Fabricate :project, customers: [customer], start_date: 1.week.ago }
+    let(:third_project) { Fabricate :project, customers: [customer], end_date: 1.week.from_now }
 
     let(:first_risk_config) { Fabricate :project_risk_config, project: first_project, risk_type: :no_money_to_deadline }
     let(:second_risk_config) { Fabricate :project_risk_config, project: first_project, risk_type: :backlog_growth_rate }

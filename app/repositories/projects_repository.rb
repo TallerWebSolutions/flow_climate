@@ -4,7 +4,7 @@ class ProjectsRepository
   include Singleton
 
   def active_projects_in_month(projects, required_date)
-    where_by_start_end_dates(projects.joins(:customer).active, required_date)
+    where_by_start_end_dates(projects.active, required_date)
   end
 
   def hours_consumed_per_month(projects, required_date)
@@ -33,7 +33,7 @@ class ProjectsRepository
   end
 
   def all_projects_for_team(team)
-    Project.where('projects.team_id = :team_id', team_id: team.id).includes(:team).includes(:product).includes(:customer).order(end_date: :desc)
+    Project.where('projects.team_id = :team_id', team_id: team.id).includes(:team).includes(:product).order(end_date: :desc)
   end
 
   def add_query_to_projects_in_status(projects, status_param)

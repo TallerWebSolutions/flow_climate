@@ -152,7 +152,6 @@ class DemandsController < AuthenticatedController
     return if params[:grouping] == 'no_grouping'
 
     @grouped_delivered_demands = demands.grouped_end_date_by_month if params_grouping == 'grouped_by_month'
-    @grouped_customer_demands = demands.grouped_by_customer if params_grouping == 'grouped_by_customer'
     @grouped_by_stage_demands = DemandTransitionsRepository.instance.summed_transitions_time_grouped_by_stage_demand_for(demands.map(&:id)) if params_grouping == 'grouped_by_stage'
   end
 

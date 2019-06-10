@@ -30,8 +30,8 @@ RSpec.describe DemandTransitionsRepository, type: :repository do
     context 'having transitions' do
       let(:company) { Fabricate :company }
       let(:customer) { Fabricate :customer, company: company }
-      let(:project) { Fabricate :project, customer: customer }
-      let(:other_project) { Fabricate :project, customer: customer }
+      let(:project) { Fabricate :project, customers: [customer] }
+      let(:other_project) { Fabricate :project, customers: [customer] }
 
       let(:first_stage) { Fabricate :stage, company: company, projects: [project], stage_stream: :downstream, name: 'first_stage', queue: false, order: 2 }
       let(:second_stage) { Fabricate :stage, company: company, projects: [project], stage_stream: :downstream, name: 'second_stage', queue: false, order: 1 }

@@ -9,10 +9,10 @@ RSpec.describe DemandsRepository, type: :repository do
   let(:customer) { Fabricate :customer, company: company }
   let(:other_customer) { Fabricate :customer }
 
-  let(:first_project) { Fabricate :project, customer: customer, start_date: 4.weeks.ago }
-  let(:second_project) { Fabricate :project, customer: customer, start_date: 3.weeks.ago }
-  let(:third_project) { Fabricate :project, customer: other_customer, end_date: 1.week.from_now }
-  let(:fourth_project) { Fabricate :project, customer: customer, end_date: 1.week.from_now }
+  let(:first_project) { Fabricate :project, company: company, customers: [customer], start_date: 4.weeks.ago }
+  let(:second_project) { Fabricate :project, company: company, customers: [customer], start_date: 3.weeks.ago }
+  let(:third_project) { Fabricate :project, customers: [other_customer], end_date: 1.week.from_now }
+  let(:fourth_project) { Fabricate :project, company: company, customers: [customer], end_date: 1.week.from_now }
 
   describe '#known_scope_to_date' do
     let!(:first_demand) { Fabricate :demand, project: first_project, created_date: 3.days.ago, discarded_at: nil }
@@ -252,9 +252,9 @@ RSpec.describe DemandsRepository, type: :repository do
   end
 
   describe '#demands_delivered_for_period_accumulated' do
-    let(:first_project) { Fabricate :project, customer: customer, start_date: 2.months.ago, end_date: 2.months.from_now }
-    let(:second_project) { Fabricate :project, customer: customer, start_date: 2.months.ago, end_date: 2.months.from_now }
-    let(:third_project) { Fabricate :project, customer: customer, start_date: 2.months.ago, end_date: 2.months.from_now }
+    let(:first_project) { Fabricate :project, customers: [customer], start_date: 2.months.ago, end_date: 2.months.from_now }
+    let(:second_project) { Fabricate :project, customers: [customer], start_date: 2.months.ago, end_date: 2.months.from_now }
+    let(:third_project) { Fabricate :project, customers: [customer], start_date: 2.months.ago, end_date: 2.months.from_now }
 
     context 'having demands' do
       let!(:first_demand) { Fabricate :demand, project: first_project, commitment_date: nil, end_date: 4.days.ago, effort_upstream: 558, effort_downstream: 929 }
@@ -321,7 +321,7 @@ RSpec.describe DemandsRepository, type: :repository do
   describe '#total_time_for' do
     let(:company) { Fabricate :company }
     let(:customer) { Fabricate :customer, company: company }
-    let(:project) { Fabricate :project, customer: customer }
+    let(:project) { Fabricate :project, customers: [customer] }
 
     let(:first_stage) { Fabricate :stage, company: company, projects: [project], stage_stream: :downstream, queue: false, order: 1 }
     let(:second_stage) { Fabricate :stage, company: company, projects: [project], stage_stream: :downstream, queue: false, order: 2 }
@@ -361,8 +361,8 @@ RSpec.describe DemandsRepository, type: :repository do
     let!(:fourth_demand) { Fabricate :demand, project: first_project, end_date: 1.day.ago }
     let!(:fifth_demand) { Fabricate :demand, project: first_project, end_date: 1.day.ago }
 
-    it { expect(DemandsRepository.instance.demands_delivered_grouped_by_projects_to_period([first_project, second_project], 3.days.ago, 2.days.from_now)[first_project.full_name]).to match_array [first_demand, second_demand, fourth_demand, fifth_demand] }
-    it { expect(DemandsRepository.instance.demands_delivered_grouped_by_projects_to_period([first_project, second_project], 3.days.ago, 2.days.from_now)[second_project.full_name]).to match_array [third_demand] }
+    it { expect(DemandsRepository.instance.demands_delivered_grouped_by_projects_to_period([first_project, second_project], 3.days.ago, 2.days.from_now)[first_project.name]).to match_array [first_demand, second_demand, fourth_demand, fifth_demand] }
+    it { expect(DemandsRepository.instance.demands_delivered_grouped_by_projects_to_period([first_project, second_project], 3.days.ago, 2.days.from_now)[second_project.name]).to match_array [third_demand] }
   end
 
   pending '#bugs_opened_until_limit_date'

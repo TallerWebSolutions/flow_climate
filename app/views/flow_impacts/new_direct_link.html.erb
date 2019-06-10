@@ -14,7 +14,7 @@
   <div class="row">
     <div class='col-xs-6 form-group <%= 'has-error' if @flow_impact.errors[:project].present? %>'>
       <%= f.label :project, class: 'control-label' %>
-      <%= f.select :project_id, @projects_to_direct_link.map { |project| [project.full_name, project.id] }, {include_blank: t('general.select'), selected: @flow_impact.project_id }, class: 'form-control' %>
+      <%= f.select :project_id, @projects_to_direct_link.map { |project| [project.name, project.id] }, {include_blank: t('general.select'), selected: @flow_impact.project_id }, class: 'form-control' %>
       <span class="help-block"><%= @flow_impact.errors[:project].join(', ') %></span>
     </div>
     <div class='col-xs-6 form-group <%= 'has-error' if @flow_impact.errors[:demand].present? %>'>

@@ -12,7 +12,7 @@ RSpec.describe Jira::JiraIssueAdapter, type: :service do
   let(:team) { Fabricate :team, company: company }
   let(:product) { Fabricate :product, customer: customer, team: team }
 
-  let!(:first_project) { Fabricate :project, customer: customer, product: product }
+  let!(:first_project) { Fabricate :project, customers: [customer], product: product }
 
   let!(:first_stage) { Fabricate :stage, company: company, integration_id: 'first_stage', projects: [first_project] }
   let!(:second_stage) { Fabricate :stage, company: company, integration_id: 'second_stage', projects: [first_project] }

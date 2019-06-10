@@ -44,7 +44,7 @@ RSpec.describe ProjectRiskConfigsController, type: :controller do
       let(:company) { Fabricate :company, users: [user] }
       let(:customer) { Fabricate :customer, company: company, name: 'zzz' }
       let(:product) { Fabricate :product, customer: customer, name: 'zzz' }
-      let!(:project) { Fabricate :project, customer: customer, product: product, end_date: 5.days.from_now }
+      let!(:project) { Fabricate :project, customers: [customer], product: product, end_date: 5.days.from_now }
 
       context 'passing valid IDs' do
         before { get :new, params: { company_id: company, project_id: project } }
@@ -84,7 +84,7 @@ RSpec.describe ProjectRiskConfigsController, type: :controller do
       let(:team) { Fabricate :team, company: company }
       let(:customer) { Fabricate :customer, company: company }
       let(:product) { Fabricate :product, customer: customer, name: 'zzz' }
-      let!(:project) { Fabricate :project, customer: customer, product: product, end_date: 2.days.from_now }
+      let!(:project) { Fabricate :project, customers: [customer], product: product, end_date: 2.days.from_now }
 
       context 'passing valid parameters' do
         before { post :create, params: { company_id: company, project_id: project, project_risk_config: { risk_type: :no_money_to_deadline, low_yellow_value: 10, high_yellow_value: 14 } } }
@@ -127,7 +127,7 @@ RSpec.describe ProjectRiskConfigsController, type: :controller do
       let(:team) { Fabricate :team, company: company }
       let(:customer) { Fabricate :customer, company: company }
       let(:product) { Fabricate :product, customer: customer, name: 'zzz' }
-      let!(:project) { Fabricate :project, customer: customer, product: product, end_date: 2.days.from_now }
+      let!(:project) { Fabricate :project, customers: [customer], product: product, end_date: 2.days.from_now }
       let(:project_risk_config) { Fabricate :project_risk_config, project: project, active: false }
 
       context 'passing valid parameters' do
@@ -159,7 +159,7 @@ RSpec.describe ProjectRiskConfigsController, type: :controller do
       let(:team) { Fabricate :team, company: company }
       let(:customer) { Fabricate :customer, company: company }
       let(:product) { Fabricate :product, customer: customer, name: 'zzz' }
-      let!(:project) { Fabricate :project, customer: customer, product: product, end_date: 2.days.from_now }
+      let!(:project) { Fabricate :project, customers: [customer], product: product, end_date: 2.days.from_now }
       let(:project_risk_config) { Fabricate :project_risk_config, project: project, active: true }
 
       context 'passing valid parameters' do
@@ -189,7 +189,7 @@ RSpec.describe ProjectRiskConfigsController, type: :controller do
     describe 'DELETE #destroy' do
       let(:company) { Fabricate :company, users: [user] }
       let(:customer) { Fabricate :customer, company: company }
-      let!(:project) { Fabricate :project, customer: customer }
+      let!(:project) { Fabricate :project, customers: [customer] }
       let!(:project_risk_config) { Fabricate :project_risk_config, project: project }
 
       context 'passing valid ID' do

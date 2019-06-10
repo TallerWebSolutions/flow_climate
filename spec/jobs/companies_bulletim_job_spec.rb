@@ -16,10 +16,10 @@ RSpec.describe CompaniesBulletimJob, type: :active_job do
     let!(:company) { Fabricate :company, users: [first_user, second_user] }
     let(:customer) { Fabricate :customer, company: company }
 
-    let!(:first_project) { Fabricate :project, customer: customer, start_date: Time.zone.today }
-    let!(:second_project) { Fabricate :project, customer: customer, start_date: Time.zone.today }
-    let!(:third_project) { Fabricate :project, customer: customer, end_date: Time.zone.today }
-    let!(:fourth_project) { Fabricate :project, customer: customer, end_date: Time.zone.today }
+    let!(:first_project) { Fabricate :project, company: company, customers: [customer], start_date: Time.zone.today }
+    let!(:second_project) { Fabricate :project, company: company, customers: [customer], start_date: Time.zone.today }
+    let!(:third_project) { Fabricate :project, company: company, customers: [customer], end_date: Time.zone.today }
+    let!(:fourth_project) { Fabricate :project, company: company, customers: [customer], end_date: Time.zone.today }
 
     it 'calls the mailer to send the data' do
       allow(Time.zone).to receive(:today).and_return Time.zone.today.beginning_of_week + 1.day

@@ -48,8 +48,8 @@ RSpec.describe ChartsController, type: :controller do
       context 'passing valid parameters' do
         context 'for team' do
           let(:team) { Fabricate :team, company: company }
-          let!(:first_project) { Fabricate :project, customer: customer, product: product, team: team }
-          let!(:second_project) { Fabricate :project, customer: customer, product: product, team: team }
+          let!(:first_project) { Fabricate :project, company: company, customers: [customer], product: product, team: team }
+          let!(:second_project) { Fabricate :project, company: company, customers: [customer], product: product, team: team }
 
           it 'builds the operation report and respond the JS render the template' do
             get :build_operational_charts, params: { company_id: company, projects_ids: team.projects.map(&:id).to_csv }, xhr: true
@@ -81,8 +81,8 @@ RSpec.describe ChartsController, type: :controller do
       let(:team) { Fabricate :team, company: company }
 
       context 'passing valid parameters' do
-        let!(:first_project) { Fabricate :project, customer: customer, product: product, team: team, status: :executing, start_date: Time.zone.yesterday, end_date: 10.days.from_now }
-        let!(:second_project) { Fabricate :project, customer: customer, product: product, team: team, status: :executing, start_date: Time.zone.yesterday, end_date: 50.days.from_now }
+        let!(:first_project) { Fabricate :project, company: company, customers: [customer], product: product, team: team, status: :executing, start_date: Time.zone.yesterday, end_date: 10.days.from_now }
+        let!(:second_project) { Fabricate :project, company: company, customers: [customer], product: product, team: team, status: :executing, start_date: Time.zone.yesterday, end_date: 50.days.from_now }
 
         it 'builds the operation report and respond the JS render the template' do
           get :build_strategic_charts, params: { company_id: company, projects_ids: team.projects.map(&:id).to_csv }, xhr: true
@@ -116,8 +116,8 @@ RSpec.describe ChartsController, type: :controller do
 
       context 'passing valid parameters' do
         context 'having projects' do
-          let!(:project) { Fabricate :project, product: product }
-          let!(:other_project) { Fabricate :project, product: product }
+          let!(:project) { Fabricate :project, company: company, product: product }
+          let!(:other_project) { Fabricate :project, company: company, product: product }
 
           it 'builds the status report and respond the JS render the template' do
             get :build_status_report_charts, params: { company_id: company, projects_ids: Project.all.map(&:id).to_csv }, xhr: true
@@ -157,10 +157,10 @@ RSpec.describe ChartsController, type: :controller do
       let(:other_team) { Fabricate :team, company: company }
 
       context 'having projects' do
-        let!(:first_project) { Fabricate :project, customer: customer, team: team, start_date: 2.weeks.ago, end_date: Time.zone.today }
-        let!(:second_project) { Fabricate :project, customer: customer, team: team, start_date: 3.weeks.ago, end_date: 1.day.from_now }
+        let!(:first_project) { Fabricate :project, company: company, customers: [customer], team: team, start_date: 2.weeks.ago, end_date: Time.zone.today }
+        let!(:second_project) { Fabricate :project, company: company, customers: [customer], team: team, start_date: 3.weeks.ago, end_date: 1.day.from_now }
 
-        let!(:other_project) { Fabricate :project, customer: customer, team: other_team, start_date: 3.weeks.ago, end_date: 1.day.from_now }
+        let!(:other_project) { Fabricate :project, company: company, customers: [customer], team: other_team, start_date: 3.weeks.ago, end_date: 1.day.from_now }
 
         let!(:first_demand) { Fabricate :demand, project: first_project, commitment_date: 3.days.ago, end_date: Time.zone.now, effort_downstream: 200, effort_upstream: 10, created_date: 74.days.ago }
         let!(:second_demand) { Fabricate :demand, project: first_project, commitment_date: 1.day.ago, end_date: Time.zone.now, effort_downstream: 400, effort_upstream: 130, created_date: 65.days.ago }
@@ -201,7 +201,7 @@ RSpec.describe ChartsController, type: :controller do
 
                   expect(assigns(:portfolio_statistics_data).block_by_project_variation).to eq 0.0
                   expect(assigns(:portfolio_statistics_data).block_by_project_data).to eq [{ data: [6], marker: { enabled: true }, name: I18n.t('portfolio.charts.block_count') }]
-                  expect(assigns(:portfolio_statistics_data).block_by_project_x_axis).to eq [first_project.full_name]
+                  expect(assigns(:portfolio_statistics_data).block_by_project_x_axis).to eq [first_project.name]
                   expect(assigns(:projects_consolidations_charts_adapter).lead_time_data_range_evolution[:x_axis]).to eq [1.week.ago.to_date, Time.zone.today]
                   expect(assigns(:projects_consolidations_charts_adapter).lead_time_data_range_evolution[:y_axis][0][:name]).to eq I18n.t('charts.lead_time_data_range_evolution.total_range')
                   expect(assigns(:projects_consolidations_charts_adapter).lead_time_data_range_evolution[:y_axis][0][:data]).to eq [1.3888888888888888e-05, 1.3888888888888888e-05]
@@ -209,7 +209,7 @@ RSpec.describe ChartsController, type: :controller do
               end
 
               context 'and the project started before 3 months ago' do
-                let!(:first_project) { Fabricate :project, customer: customer, team: team, start_date: 4.months.ago.to_date, end_date: Time.zone.today }
+                let!(:first_project) { Fabricate :project, customers: [customer], team: team, start_date: 4.months.ago.to_date, end_date: Time.zone.today }
 
                 it 'builds the statistic adapter and renders the view using the dates in project to a monthly period' do
                   get :statistics_charts, params: { company_id: company, projects_ids: team.projects.map(&:id).join(','), project_status: '' }, xhr: true
@@ -234,11 +234,11 @@ RSpec.describe ChartsController, type: :controller do
 
                 expect(assigns(:portfolio_statistics_data).block_by_project_variation).to eq 0.0
                 expect(assigns(:portfolio_statistics_data).block_by_project_data).to eq [{ data: [6], marker: { enabled: true }, name: I18n.t('portfolio.charts.block_count') }]
-                expect(assigns(:portfolio_statistics_data).block_by_project_x_axis).to eq [first_project.full_name]
+                expect(assigns(:portfolio_statistics_data).block_by_project_x_axis).to eq [first_project.name]
 
                 expect(assigns(:portfolio_statistics_data).aging_by_project_variation).to eq 0.5714285714285714
                 expect(assigns(:portfolio_statistics_data).aging_by_project_data).to eq [{ data: [14, 22], marker: { enabled: true }, name: I18n.t('portfolio.charts.aging_by_project.data_title') }]
-                expect(assigns(:portfolio_statistics_data).aging_by_project_x_axis).to eq [first_project.full_name, second_project.full_name]
+                expect(assigns(:portfolio_statistics_data).aging_by_project_x_axis).to eq [first_project.name, second_project.name]
 
                 expect(assigns(:projects_consolidations_charts_adapter).lead_time_data_range_evolution[:x_axis]).to eq [1.week.ago.to_date, Time.zone.today]
                 expect(assigns(:projects_consolidations_charts_adapter).lead_time_data_range_evolution[:y_axis][0][:name]).to eq I18n.t('charts.lead_time_data_range_evolution.total_range')
