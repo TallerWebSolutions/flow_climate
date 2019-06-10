@@ -221,6 +221,8 @@ en:
         not_integrated: "This is not a JIRA integrated project."
         integrated_project: "This is a project integrated to JIRA."
         configured_stages: "This project has %{count} stages."
+      not_associated_customers: "Not associated customers"
+      project_customers: "Customers in project"
     charts:
       xlabel:
         weeks: "Weeks"
@@ -350,6 +352,7 @@ en:
       risks: "Risks"
       stages: "Stages"
       jira: "Jira"
+      customers: "Customers"
     data_analysis:
       risk_deadline: "Deadline"
       risk_money: "Cost"

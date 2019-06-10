@@ -777,5 +777,97 @@ RSpec.describe ProjectsController, type: :controller do
         end
       end
     end
+
+    describe 'PATCH #associate_customer' do
+      let(:company) { Fabricate :company, users: [user] }
+      let!(:project) { Fabricate :project, company: company }
+
+      let!(:customer) { Fabricate :customer, company: company, projects: [project] }
+      let!(:other_customer) { Fabricate :customer, company: company, projects: [project] }
+
+      context 'passing valid parameters' do
+        it 'associates the customer and renders the template' do
+          patch :associate_customer, params: { company_id: company, id: project, customer_id: customer }, xhr: true
+          expect(response).to render_template 'projects/associate_dissociate_customer'
+          expect(project.reload.customers).to match_array [customer, other_customer]
+        end
+      end
+
+      context 'passing an invalid' do
+        context 'non-existent project' do
+          before { patch :associate_customer, params: { company_id: company, id: 'foo', customer_id: customer }, xhr: true }
+
+          it { expect(response).to have_http_status :not_found }
+        end
+
+        context 'non-existent customer' do
+          before { patch :associate_customer, params: { company_id: company, id: 'foo', customer_id: 'foo' }, xhr: true }
+
+          it { expect(response).to have_http_status :not_found }
+        end
+
+        context 'company' do
+          context 'non-existent' do
+            before { patch :associate_customer, params: { company_id: 'foo', id: project, customer_id: customer }, xhr: true }
+
+            it { expect(response).to have_http_status :not_found }
+          end
+
+          context 'not permitted' do
+            let(:company) { Fabricate :company, users: [] }
+
+            before { patch :associate_customer, params: { company_id: company, id: project, customer_id: customer }, xhr: true }
+
+            it { expect(response).to have_http_status :not_found }
+          end
+        end
+      end
+    end
+
+    describe 'PATCH #dissociate_customer' do
+      let(:company) { Fabricate :company, users: [user] }
+      let!(:project) { Fabricate :project, company: company }
+
+      let!(:customer) { Fabricate :customer, company: company, projects: [project] }
+      let!(:other_customer) { Fabricate :customer, company: company, projects: [project] }
+
+      context 'passing valid parameters' do
+        it 'assigns the instance variables and renders the template' do
+          patch :dissociate_customer, params: { company_id: company, id: project, customer_id: customer }, xhr: true
+          expect(response).to render_template 'projects/associate_dissociate_customer'
+          expect(project.reload.customers).to eq [other_customer]
+        end
+      end
+
+      context 'passing an invalid' do
+        context 'non-existent project' do
+          before { patch :dissociate_customer, params: { company_id: company, id: 'foo', customer_id: customer }, xhr: true }
+
+          it { expect(response).to have_http_status :not_found }
+        end
+
+        context 'non-existent customer' do
+          before { patch :dissociate_customer, params: { company_id: company, id: 'foo', customer_id: 'foo' }, xhr: true }
+
+          it { expect(response).to have_http_status :not_found }
+        end
+
+        context 'company' do
+          context 'non-existent' do
+            before { patch :dissociate_customer, params: { company_id: 'foo', id: project, customer_id: customer }, xhr: true }
+
+            it { expect(response).to have_http_status :not_found }
+          end
+
+          context 'not permitted' do
+            let(:company) { Fabricate :company, users: [] }
+
+            before { patch :dissociate_customer, params: { company_id: company, id: project, customer_id: customer }, xhr: true }
+
+            it { expect(response).to have_http_status :not_found }
+          end
+        end
+      end
+    end
   end
 end

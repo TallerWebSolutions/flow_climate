@@ -8,7 +8,7 @@
     </div>
   </div>
 
-  <div class="col-xs-2 stamp">
+  <div class="col-xs-3 stamp">
     <div class="stamp-title"><%= t('projects.show.last_team') %></div>
     <% if project.current_team.present? %>
       <div class="stamp-content"><%= link_to project.current_team&.name, company_team_path(company, project.current_team) %></div>
@@ -16,11 +16,11 @@
       <div class="stamp-content"></div>
     <% end %>
   </div>
-  <div class="col-xs-2 green-stamp">
+  <div class="col-xs-3 green-stamp">
     <div class="stamp-title"><%= t('projects.index.remaining_money') %></div>
     <div class="stamp-content"><%= number_to_currency(project.remaining_money) %></div>
   </div>
-  <div class="col-xs-2 green-stamp">
+  <div class="col-xs-3 green-stamp">
     <div class="stamp-title"><%= t('projects.index.percentage_remaining_money') %></div>
     <div class="stamp-content">
       <% if project.value != 0 %>

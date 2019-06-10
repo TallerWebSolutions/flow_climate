@@ -1,0 +1,28 @@
+<div class="row">
+  <div class="col-xs-6">
+    <h3><%= t('projects.show.not_associated_customers') %></h3>
+    <ul>
+      <% not_associated_customers.each do |customer| %>
+        <li>
+          <%= customer.name %>
+          <%= link_to associate_customer_company_project_path(company, project, customer), method: :patch, remote: true do %>
+            <i class="fa fa-check"></i>
+          <% end %>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+  <div class="col-xs-6">
+    <h3><%= t('projects.show.project_customers') %></h3>
+    <ul>
+      <% project_customers.each do |customer| %>
+        <li>
+          <%= customer.name %>
+          <%= link_to dissociate_customer_company_project_path(company, project, customer), method: :patch, remote: true do %>
+            <i class="fa fa-times"></i>
+          <% end %>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+</div>

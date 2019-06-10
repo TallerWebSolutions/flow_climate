@@ -13,9 +13,10 @@
 <div class="row">
   <div class="col-xs-12">
     <div class="tab">
-      <button class="tablinks" id="tab-project-risks" onclick="openTab(event, 'content-project-risks', 'tablinks', 'tabcontent')"><%= t('projects.settings.risks') %></button>
-      <button class="tablinks" id="tab-project-stages" onclick="openTab(event, 'content-project-stages', 'tablinks', 'tabcontent')"><%= t('projects.settings.stages') %></button>
-      <button class="tablinks" id="tab-project-jira" onclick="openTab(event, 'content-project-jira', 'tablinks', 'tabcontent')"><%= t('projects.settings.jira') %></button>
+      <button class="tablinks tablinks-project-settings" id="tab-project-risks" onclick="openTab(event, 'content-project-risks', 'tablinks-project-settings', 'tabcontent')"><%= t('projects.settings.risks') %></button>
+      <button class="tablinks tablinks-project-settings" id="tab-project-stages" onclick="openTab(event, 'content-project-stages', 'tablinks-project-settings', 'tabcontent')"><%= t('projects.settings.stages') %></button>
+      <button class="tablinks tablinks-project-settings" id="tab-project-jira" onclick="openTab(event, 'content-project-jira', 'tablinks-project-settings', 'tabcontent')"><%= t('projects.settings.jira') %></button>
+      <button class="tablinks tablinks-project-settings" id="tab-project-customers" onclick="openTab(event, 'project-customers-associations', 'tablinks-project-settings', 'tabcontent')"><%= t('projects.settings.customers') %></button>
     </div>
   </div>
 </div>
@@ -30,6 +31,10 @@
 
 <div id="content-project-jira" class="tabcontent">
   <%= render 'jira/project_jira_configs/project_jira_config_table', company: company, project: project %>
+</div>
+
+<div id="project-customers-associations" class="tabcontent">
+  <%= render 'projects/project_customers_tab', company: company, project: project, not_associated_customers: @not_associated_customers, project_customers: @project_customers %>
 </div>
 
 <% content_for :javascript do %>

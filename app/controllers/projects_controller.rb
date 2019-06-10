@@ -5,10 +5,11 @@ class ProjectsController < AuthenticatedController
 
   before_action :assign_company
   before_action :assign_product, only: %i[create update]
-  before_action :assign_project, only: %i[show edit update destroy synchronize_jira finish_project statistics copy_stages_from]
+  before_action :assign_project, only: %i[show edit update destroy synchronize_jira finish_project statistics copy_stages_from associate_customer dissociate_customer]
 
   def show
     assign_project_stages
+    assign_customer_projects
 
     @ordered_project_risk_alerts = @project.project_risk_alerts.order(created_at: :desc)
     @project_change_deadline_histories = @project.project_change_deadline_histories.includes(:user)
@@ -99,6 +100,20 @@ class ProjectsController < AuthenticatedController
     respond_to { |format| format.js { render 'stages/update_stages_table' } }
   end
 
+  def associate_customer
+    customer = @company.customers.find(params[:customer_id])
+    @project.add_customer(customer)
+    assign_customer_projects
+    respond_to { |format| format.js { render 'projects/associate_dissociate_customer' } }
+  end
+
+  def dissociate_customer
+    customer = @company.customers.find(params[:customer_id])
+    @project.remove_customer(customer)
+    assign_customer_projects
+    respond_to { |format| format.js { render 'projects/associate_dissociate_customer' } }
+  end
+
   private
 
   def assign_project_stages
@@ -165,5 +180,10 @@ class ProjectsController < AuthenticatedController
     return if project_params[:end_date].blank? || @project.end_date == Date.parse(project_params[:end_date])
 
     ProjectChangeDeadlineHistory.create!(user: current_user, project: @project, previous_date: @project.end_date, new_date: project_params[:end_date])
+  end
+
+  def assign_customer_projects
+    @project_customers = @project.customers.order(:name)
+    @not_associated_customers = @company.customers - @project_customers
   end
 end
