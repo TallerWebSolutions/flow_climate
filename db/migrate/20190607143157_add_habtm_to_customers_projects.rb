@@ -2,6 +2,12 @@
 
 class AddHabtmToCustomersProjects < ActiveRecord::Migration[5.2]
   def up
+    execute("UPDATE projects p SET name = (subquery.product_name || ' | ' || p.name) FROM (SELECT products.id AS product_id, products.name AS product_name, customers.company_id FROM products, customers WHERE customer_id = customers.id) AS subquery WHERE subquery.product_id = p.product_id AND subquery.company_id = 2 AND p.name = 'Sustentação - 2018-02'")
+    execute("UPDATE projects p SET name = (subquery.product_name || ' | ' || p.name) FROM (SELECT products.id AS product_id, products.name AS product_name, customers.company_id FROM products, customers WHERE customer_id = customers.id) AS subquery WHERE subquery.product_id = p.product_id AND subquery.company_id = 1 AND p.name = 'Fase 1'")
+    execute("UPDATE projects p SET name = (subquery.product_name || ' | ' || p.name) FROM (SELECT products.id AS product_id, products.name AS product_name, customers.company_id FROM products, customers WHERE customer_id = customers.id) AS subquery WHERE subquery.product_id = p.product_id AND subquery.company_id = 1 AND p.name = 'F1'")
+    execute("UPDATE projects p SET name = (subquery.product_name || ' | ' || p.name) FROM (SELECT products.id AS product_id, products.name AS product_name, customers.company_id FROM products, customers WHERE customer_id = customers.id) AS subquery WHERE subquery.product_id = p.product_id AND subquery.company_id = 1 AND p.name = 'Fase 3'")
+    execute("UPDATE projects p SET name = (subquery.product_name || ' | ' || p.name) FROM (SELECT products.id AS product_id, products.name AS product_name, customers.company_id FROM products, customers WHERE customer_id = customers.id) AS subquery WHERE subquery.product_id = p.product_id AND subquery.company_id = 1 AND p.name = 'Fase 2'")
+
     create_table :customers_projects do |t|
       t.integer :customer_id, index: true, null: false
       t.integer :project_id, index: true, null: false
@@ -30,6 +36,14 @@ class AddHabtmToCustomersProjects < ActiveRecord::Migration[5.2]
     change_table :projects, bulk: true do |t|
       t.remove :customer_id
     end
+
+    remove_index :projects, %i[product_id name]
+
+    add_index :projects, %i[company_id name], unique: true
+
+    change_table :demands, bulk: true do |t|
+      t.change_default :assignees_count, from: nil, to: 0
+    end
   end
 
   def down
@@ -40,5 +54,11 @@ class AddHabtmToCustomersProjects < ActiveRecord::Migration[5.2]
     add_foreign_key :projects, :customers, column: :customer_id
 
     drop_table :customers_projects
+
+    remove_index :projects, %i[company_id name]
+
+    change_table :demands, bulk: true do |t|
+      t.change_default :assignees_count, from: 0, to: nil
+    end
   end
 end

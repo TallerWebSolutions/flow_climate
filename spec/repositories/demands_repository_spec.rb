@@ -361,8 +361,8 @@ RSpec.describe DemandsRepository, type: :repository do
     let!(:fourth_demand) { Fabricate :demand, project: first_project, end_date: 1.day.ago }
     let!(:fifth_demand) { Fabricate :demand, project: first_project, end_date: 1.day.ago }
 
-    it { expect(DemandsRepository.instance.demands_delivered_grouped_by_projects_to_period([first_project, second_project], 3.days.ago, 2.days.from_now)[first_project.full_name]).to match_array [first_demand, second_demand, fourth_demand, fifth_demand] }
-    it { expect(DemandsRepository.instance.demands_delivered_grouped_by_projects_to_period([first_project, second_project], 3.days.ago, 2.days.from_now)[second_project.full_name]).to match_array [third_demand] }
+    it { expect(DemandsRepository.instance.demands_delivered_grouped_by_projects_to_period([first_project, second_project], 3.days.ago, 2.days.from_now)[first_project.name]).to match_array [first_demand, second_demand, fourth_demand, fifth_demand] }
+    it { expect(DemandsRepository.instance.demands_delivered_grouped_by_projects_to_period([first_project, second_project], 3.days.ago, 2.days.from_now)[second_project.name]).to match_array [third_demand] }
   end
 
   pending '#bugs_opened_until_limit_date'

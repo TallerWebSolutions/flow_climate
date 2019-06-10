@@ -331,7 +331,7 @@ CREATE TABLE public.demands (
     url character varying,
     class_of_service integer DEFAULT 0 NOT NULL,
     project_id integer NOT NULL,
-    assignees_count integer NOT NULL,
+    assignees_count integer DEFAULT 0 NOT NULL,
     effort_downstream numeric DEFAULT 0,
     effort_upstream numeric DEFAULT 0,
     leadtime numeric,
@@ -2108,10 +2108,10 @@ CREATE INDEX index_project_risk_alerts_on_project_risk_config_id ON public.proje
 
 
 --
--- Name: index_projects_on_product_id_and_name; Type: INDEX; Schema: public; Owner: -
+-- Name: index_projects_on_company_id_and_name; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX index_projects_on_product_id_and_name ON public.projects USING btree (product_id, name);
+CREATE UNIQUE INDEX index_projects_on_company_id_and_name ON public.projects USING btree (company_id, name);
 
 
 --

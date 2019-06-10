@@ -16,7 +16,7 @@ class DemandsRepository
   end
 
   def demands_delivered_grouped_by_projects_to_period(projects, start_period, end_period)
-    throughput_to_projects_and_period(projects, start_period, end_period).group_by(&:project_full_name)
+    throughput_to_projects_and_period(projects, start_period, end_period).group_by(&:project_name)
   end
 
   def throughput_to_projects_and_period(projects, start_period, end_period)

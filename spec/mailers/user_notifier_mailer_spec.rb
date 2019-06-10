@@ -18,9 +18,9 @@ RSpec.describe UserNotifierMailer, type: :mailer do
     let(:product) { Fabricate :product, customer: customer }
 
     let!(:first_project) { Fabricate :project, company: company, customers: [customer], product: product, status: :executing, start_date: 2.months.ago, end_date: Time.zone.today }
-    let!(:second_project) { Fabricate :project, company: company, customers: [customer], product: product, status: :executing, start_date: 2.months.ago, end_date: 1.month.from_now }
-    let!(:third_project) { Fabricate :project, company: company, customers: [customer], product: product, status: :executing, start_date: 2.months.ago, end_date: 1.month.from_now }
-    let!(:fourth_project) { Fabricate :project, company: company, customers: [customer], product: product, status: :executing, start_date: 2.months.ago, end_date: 1.month.from_now }
+    let!(:second_project) { Fabricate :project, company: company, customers: [customer], product: product, status: :waiting, start_date: 2.days.from_now, end_date: 1.month.from_now }
+    let!(:third_project) { Fabricate :project, company: company, customers: [customer], product: product, status: :waiting, start_date: 4.days.from_now, end_date: 2.months.from_now }
+    let!(:fourth_project) { Fabricate :project, company: company, customers: [customer], product: product, status: :executing, start_date: 2.months.ago, end_date: 3.months.from_now }
 
     let!(:first_demand) { Fabricate :demand, discarded_at: nil, end_date: 1.week.ago }
     let!(:second_demand) { Fabricate :demand, discarded_at: nil, end_date: 1.week.ago }
@@ -39,12 +39,12 @@ RSpec.describe UserNotifierMailer, type: :mailer do
       expect(mail.subject).to eq I18n.t('projects.portfolio_bulletin.subject')
       expect(mail.to).to match_array [first_user.email, second_user.email]
       expect(mail.from).to eq(['no-reply@taller.net.br'])
-      expect(mail.body.encoded).to match first_project.full_name
-      expect(mail.body.encoded).to match second_project.full_name
-      expect(mail.body.encoded).to match third_project.full_name
-      expect(mail.body.encoded).to match fourth_project.full_name
-      expect(mail.body.encoded).to match red_project.full_name
-      expect(mail.body.encoded).to match other_red_project.full_name
+      expect(mail.body.encoded).to match first_project.name
+      expect(mail.body.encoded).to match second_project.name
+      expect(mail.body.encoded).to match third_project.name
+      expect(mail.body.encoded).to match fourth_project.name
+      expect(mail.body.encoded).to match red_project.name
+      expect(mail.body.encoded).to match other_red_project.name
       expect(mail.body.encoded).to match I18n.t('general.signature.regards')
       expect(mail.body.encoded).to match I18n.t('general.signature.flow_climate_team')
     end
@@ -67,10 +67,10 @@ RSpec.describe UserNotifierMailer, type: :mailer do
     let(:project_risk_alert) { Fabricate(:project_risk_alert, created_at: Time.zone.today, project: first_project, project_risk_config: first_risk_config, alert_color: :red, alert_value: 30) }
 
     it 'renders the email' do
-      expect(mail.subject).to eq I18n.t('projects.red_alert.subject', target_name: first_project.full_name)
+      expect(mail.subject).to eq I18n.t('projects.red_alert.subject', target_name: first_project.name)
       expect(mail.to).to match_array [first_user.email, second_user.email]
       expect(mail.from).to eq(['no-reply@taller.net.br'])
-      expect(mail.body.encoded).to match first_project.full_name
+      expect(mail.body.encoded).to match first_project.name
       expect(mail.body.encoded).to match I18n.t("activerecord.attributes.project_risk_config.enums.risk_type.#{first_risk_config.risk_type}")
       expect(mail.body.encoded).to match I18n.t('general.signature.regards')
       expect(mail.body.encoded).to match I18n.t('general.signature.flow_climate_team')

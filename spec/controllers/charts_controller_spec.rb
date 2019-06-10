@@ -201,7 +201,7 @@ RSpec.describe ChartsController, type: :controller do
 
                   expect(assigns(:portfolio_statistics_data).block_by_project_variation).to eq 0.0
                   expect(assigns(:portfolio_statistics_data).block_by_project_data).to eq [{ data: [6], marker: { enabled: true }, name: I18n.t('portfolio.charts.block_count') }]
-                  expect(assigns(:portfolio_statistics_data).block_by_project_x_axis).to eq [first_project.full_name]
+                  expect(assigns(:portfolio_statistics_data).block_by_project_x_axis).to eq [first_project.name]
                   expect(assigns(:projects_consolidations_charts_adapter).lead_time_data_range_evolution[:x_axis]).to eq [1.week.ago.to_date, Time.zone.today]
                   expect(assigns(:projects_consolidations_charts_adapter).lead_time_data_range_evolution[:y_axis][0][:name]).to eq I18n.t('charts.lead_time_data_range_evolution.total_range')
                   expect(assigns(:projects_consolidations_charts_adapter).lead_time_data_range_evolution[:y_axis][0][:data]).to eq [1.3888888888888888e-05, 1.3888888888888888e-05]
@@ -234,11 +234,11 @@ RSpec.describe ChartsController, type: :controller do
 
                 expect(assigns(:portfolio_statistics_data).block_by_project_variation).to eq 0.0
                 expect(assigns(:portfolio_statistics_data).block_by_project_data).to eq [{ data: [6], marker: { enabled: true }, name: I18n.t('portfolio.charts.block_count') }]
-                expect(assigns(:portfolio_statistics_data).block_by_project_x_axis).to eq [first_project.full_name]
+                expect(assigns(:portfolio_statistics_data).block_by_project_x_axis).to eq [first_project.name]
 
                 expect(assigns(:portfolio_statistics_data).aging_by_project_variation).to eq 0.5714285714285714
                 expect(assigns(:portfolio_statistics_data).aging_by_project_data).to eq [{ data: [14, 22], marker: { enabled: true }, name: I18n.t('portfolio.charts.aging_by_project.data_title') }]
-                expect(assigns(:portfolio_statistics_data).aging_by_project_x_axis).to eq [first_project.full_name, second_project.full_name]
+                expect(assigns(:portfolio_statistics_data).aging_by_project_x_axis).to eq [first_project.name, second_project.name]
 
                 expect(assigns(:projects_consolidations_charts_adapter).lead_time_data_range_evolution[:x_axis]).to eq [1.week.ago.to_date, Time.zone.today]
                 expect(assigns(:projects_consolidations_charts_adapter).lead_time_data_range_evolution[:y_axis][0][:name]).to eq I18n.t('charts.lead_time_data_range_evolution.total_range')

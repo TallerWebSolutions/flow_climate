@@ -5,7 +5,7 @@
 # Table name: demands
 #
 #  artifact_type     :integer          default("story")
-#  assignees_count   :integer          not null
+#  assignees_count   :integer          default(0), not null
 #  class_of_service  :integer          default("standard"), not null
 #  commitment_date   :datetime
 #  company_id        :integer          not null, indexed => [demand_id]
@@ -83,7 +83,7 @@ class Demand < ApplicationRecord
   scope :in_wip, -> { kept.story.where('demands.commitment_date IS NOT NULL AND demands.end_date IS NULL') }
   scope :to_dates, ->(start_date, end_date) { where('(demands.end_date IS NULL AND demands.created_date BETWEEN :start_date AND :end_date) OR (demands.end_date BETWEEN :start_date AND :end_date)', start_date: start_date.beginning_of_day, end_date: end_date.end_of_day) }
 
-  delegate :full_name, to: :project, prefix: true
+  delegate :name, to: :project, prefix: true
 
   before_save :compute_and_update_automatic_fields
   after_discard :discard_transitions_and_blocks

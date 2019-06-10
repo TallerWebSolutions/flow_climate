@@ -40,11 +40,11 @@ RSpec.describe ReplenishingData, type: :data_objects do
         expect(replenishing_data.summary_infos[:team_wip]).to eq 12
 
         project_data_to_replenish = replenishing_data.project_data_to_replenish
-        expect(project_data_to_replenish[0][:name]).to eq first_project.full_name
+        expect(project_data_to_replenish[0][:name]).to eq first_project.name
         expect(project_data_to_replenish.count).to eq 3
 
         expect(project_data_to_replenish[0][:id]).to eq first_project.id
-        expect(project_data_to_replenish[0][:name]).to eq first_project.full_name
+        expect(project_data_to_replenish[0][:name]).to eq first_project.name
         expect(project_data_to_replenish[0][:start_date]).to eq first_project.start_date
         expect(project_data_to_replenish[0][:aging_today]).to eq 123
         expect(project_data_to_replenish[0][:end_date]).to eq first_project.end_date
@@ -65,7 +65,7 @@ RSpec.describe ReplenishingData, type: :data_objects do
         expect(project_data_to_replenish[0][:throughput_data_size]).to eq 17
 
         expect(project_data_to_replenish[1][:id]).to eq second_project.id
-        expect(project_data_to_replenish[1][:name]).to eq second_project.full_name
+        expect(project_data_to_replenish[1][:name]).to eq second_project.name
         expect(project_data_to_replenish[1][:start_date]).to eq second_project.start_date
         expect(project_data_to_replenish[1][:aging_today]).to eq 62
         expect(project_data_to_replenish[1][:end_date]).to eq second_project.end_date
@@ -85,7 +85,7 @@ RSpec.describe ReplenishingData, type: :data_objects do
         expect(project_data_to_replenish[1][:throughput_data_size]).to eq 9
 
         expect(project_data_to_replenish[2][:id]).to eq third_project.id
-        expect(project_data_to_replenish[2][:name]).to eq third_project.full_name
+        expect(project_data_to_replenish[2][:name]).to eq third_project.name
         expect(project_data_to_replenish[2][:start_date]).to eq third_project.start_date
         expect(project_data_to_replenish[2][:aging_today]).to eq 31
         expect(project_data_to_replenish[2][:end_date]).to eq third_project.end_date

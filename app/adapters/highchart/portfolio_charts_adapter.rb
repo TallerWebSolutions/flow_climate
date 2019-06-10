@@ -29,7 +29,7 @@ module Highchart
       return {} if @projects.blank?
 
       ordered_projects = @projects.sort_by(&:aging)
-      x_axis = ordered_projects.map(&:full_name)
+      x_axis = ordered_projects.map(&:name)
 
       { x_axis: x_axis, series: [{ name: I18n.t('portfolio.charts.aging_by_project.data_title'), data: ordered_projects.map(&:aging), marker: { enabled: true } }] }
     end

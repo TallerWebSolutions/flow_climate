@@ -176,7 +176,7 @@ RSpec.describe Demand, type: :model do
   end
 
   context 'delegations' do
-    it { is_expected.to delegate_method(:full_name).to(:project).with_prefix }
+    it { is_expected.to delegate_method(:name).to(:project).with_prefix }
   end
 
   context 'soft deletion' do

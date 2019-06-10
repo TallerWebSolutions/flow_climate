@@ -363,20 +363,6 @@ RSpec.describe Project, type: :model do
     end
   end
 
-  describe '#full_name' do
-    context 'having product' do
-      let(:project) { Fabricate :project, initial_scope: 30, start_date: 1.week.ago, end_date: 1.week.from_now }
-
-      it { expect(project.full_name).to eq "#{project.product_name} | #{project.name}" }
-    end
-
-    context 'having no product' do
-      let(:project) { Fabricate :project, project_type: :consulting, product: nil, initial_scope: 30, start_date: 1.week.ago, end_date: 1.week.from_now }
-
-      it { expect(project.full_name).to eq project.name }
-    end
-  end
-
   describe '#risk_color' do
     let(:project) { Fabricate :project, end_date: 4.weeks.from_now }
 

@@ -11,7 +11,7 @@
     <tbody>
       <% demand_comments_list.each do |comment| %>
         <tr>
-          <td><%= comment.demand.project_full_name %></td>
+          <td><%= comment.demand.project_name %></td>
           <td><%= comment.demand.demand_id %></td>
           <td><%= I18n.l(comment.comment_date, format: :short) %></td>
           <td><%= comment.comment_text %></td>

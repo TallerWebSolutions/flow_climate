@@ -8,7 +8,7 @@ class DemandBlocksRepository
                                                                         .includes(demand: :project)
                                                                         .closed
                                                                         .order('demand_blocks.unblock_time ASC')
-                                                                        .group_by { |demand_block| demand_block.demand.project.full_name }
+                                                                        .group_by { |demand_block| demand_block.demand.project_name }
   end
 
   def active_blocks_to_projects_and_period(projects, start_date, end_date)

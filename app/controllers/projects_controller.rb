@@ -12,7 +12,7 @@ class ProjectsController < AuthenticatedController
 
     @ordered_project_risk_alerts = @project.project_risk_alerts.order(created_at: :desc)
     @project_change_deadline_histories = @project.project_change_deadline_histories.includes(:user)
-    @projects_to_copy_stages_from = (@company.projects.includes(:product) - [@project]).sort_by(&:full_name)
+    @projects_to_copy_stages_from = (@company.projects.includes(:product) - [@project]).sort_by(&:name)
     @demands_ids = DemandsRepository.instance.demands_created_before_date_to_projects([@project]).map(&:id)
 
     @start_date = @project.start_date

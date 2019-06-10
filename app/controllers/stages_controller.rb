@@ -83,7 +83,7 @@ class StagesController < AuthenticatedController
   private
 
   def assign_project_stages
-    @stage_projects = @stage.projects.includes(:team).includes(:product).sort_by(&:full_name)
+    @stage_projects = @stage.projects.includes(:team).includes(:product).sort_by(&:name)
     @not_associated_projects = @company.projects.includes(:team) - @stage_projects
     @provider_stages = (@company.stages - [@stage]).sort_by(&:name)
   end

@@ -31,9 +31,9 @@
         </tr>
       </thead>
       <tbody>
-        <% @stage_project_config.stage.projects.sort_by(&:full_name).each do |project| %>
+        <% @stage_project_config.stage.projects.sort_by(&:name).each do |project| %>
           <tr>
-            <td><%= project.full_name %></td>
+            <td><%= project.name %></td>
             <% stage_config_to_project = project.stage_project_configs.find_by(stage: @stage) %>
             <td class="center">
               <% if stage_config_to_project&.compute_effort? %>

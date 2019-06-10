@@ -53,7 +53,7 @@ class ReplenishingData
   def build_project_hash(project)
     project_data_to_replenish = {}
     project_data_to_replenish[:id] = project.id
-    project_data_to_replenish[:name] = project.full_name
+    project_data_to_replenish[:name] = project.name
     project_data_to_replenish[:start_date] = project.start_date
     project_data_to_replenish[:end_date] = project.end_date
     project_data_to_replenish[:weeks_to_end_date] = project.remaining_weeks

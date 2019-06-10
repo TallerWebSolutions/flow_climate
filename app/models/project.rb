@@ -4,17 +4,17 @@
 #
 # Table name: projects
 #
-#  company_id                :integer          not null
+#  company_id                :integer          not null, indexed => [name]
 #  created_at                :datetime         not null
 #  end_date                  :date             not null
 #  hour_value                :decimal(, )
 #  id                        :bigint(8)        not null, primary key
 #  initial_scope             :integer          not null
 #  max_work_in_progress      :integer          default(0), not null
-#  name                      :string           not null, indexed => [product_id]
+#  name                      :string           not null, indexed => [company_id]
 #  nickname                  :string
 #  percentage_effort_to_bugs :integer          default(0), not null
-#  product_id                :integer          indexed => [name]
+#  product_id                :integer
 #  project_type              :integer          not null
 #  qty_hours                 :decimal(, )
 #  start_date                :date             not null
@@ -25,7 +25,7 @@
 #
 # Indexes
 #
-#  index_projects_on_product_id_and_name  (product_id,name) UNIQUE
+#  index_projects_on_company_id_and_name  (company_id,name) UNIQUE
 #
 # Foreign Keys
 #
@@ -95,12 +95,6 @@ class Project < ApplicationRecord
     end
 
     false
-  end
-
-  def full_name
-    return "#{product_name} | #{name}" if product.present?
-
-    name
   end
 
   def total_days
