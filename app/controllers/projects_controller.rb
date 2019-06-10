@@ -28,7 +28,7 @@ class ProjectsController < AuthenticatedController
   def new
     assign_customers
     @project = Project.new
-    @products = []
+    @products = @company.products.order(:name)
   end
 
   def create
