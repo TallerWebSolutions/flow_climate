@@ -5,7 +5,7 @@
 </div>
 
 <% if demand_transitions_list.empty? %>
-  <%= render 'layouts/no_data', missing_data: DemandTransition.model_name.human.downcase %>>
+  <%= render 'layouts/no_data', missing_data: DemandTransition.model_name.human.downcase %>
 <% else %>
   <table class="table table-striped">
     <thead>
@@ -16,7 +16,7 @@
         <th><%= t('demand_transitions.total_time_in_transition') %></th>
         <th><%= t('demand_transitions.working_time_in_transition') %></th>
         <th><%= t('demand_transitions.effort_time_in_transition') %></th>
-        <th><%= t('demand_transitions.block_time_in_transition') %></th>
+        <th><%= t('demand_transitions.block_time_in_transition') %></th>ahh
       </tr>
     </thead>
     <tbody>

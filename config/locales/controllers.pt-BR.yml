@@ -197,6 +197,7 @@ pt-BR:
       leadtime:
         title: "Lead time em dias"
       total_remaining_weeks: "Semanas Restantes"
+      inconsistent_demands_count: "Qtd Demandas Inconsistentes"
     show:
       initial_scope: "Escopo Inicial"
       last_team: "Time atual"
@@ -239,6 +240,11 @@ pt-BR:
         configured_stages: "Este projeto possui %{count} etapas."
       not_associated_customers: "Clientes não associados"
       project_customers: "Clientes no projeto"
+      inconsistent_demands:
+        title: "Demandas Inconsistentes"
+        no_demands: "Nenhuma demanda inconsistente"
+        demands: "%{value} demandas"
+        help: "Demandas inconsistentes são demandas com seu ponto de comprometimento antes da data de início do projeto ou com data fim depois da data final do projeto."
     charts:
       xlabel:
         weeks: "Semanas"
