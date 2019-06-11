@@ -107,7 +107,7 @@ RSpec.describe ProjectsController, type: :controller do
         let!(:second_alert) { Fabricate :project_risk_alert, project: first_project, created_at: Time.zone.now }
 
         let!(:first_demand) { Fabricate :demand, project: first_project, end_date: Date.new(2018, 3, 10), leadtime: 2000 }
-        let!(:second_demand) { Fabricate :demand, project: first_project, end_date: Date.new(2018, 3, 25), leadtime: 6000 }
+        let!(:second_demand) { Fabricate :demand, project: first_project, end_date: Date.new(2018, 5, 25), leadtime: 6000 }
         let!(:third_demand) { Fabricate :demand, project: first_project, end_date: nil }
 
         let!(:fourth_demand) { Fabricate :demand, end_date: Time.zone.today }
@@ -123,6 +123,7 @@ RSpec.describe ProjectsController, type: :controller do
             expect(assigns(:project)).to eq first_project
             expect(assigns(:ordered_project_risk_alerts)).to eq [second_alert, first_alert]
             expect(assigns(:project_change_deadline_histories)).to match_array [first_change_deadline, second_change_deadline]
+            expect(assigns(:inconsistent_demands)).to eq [second_demand]
           end
         end
       end

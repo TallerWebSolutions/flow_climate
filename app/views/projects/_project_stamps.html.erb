@@ -83,6 +83,8 @@
   </div>
 </div>
 
+<hr>
+
 <div class="row">
   <div class="col-xs-6">
     <h3 class="center"><%= t('projects.show.jira_area.title') %></h3>
@@ -95,6 +97,22 @@
       <% end %>
     <% else %>
       <p><%= t('projects.show.jira_area.not_integrated') %></p>
+    <% end %>
+  </div>
+
+  <div class="col-xs-6">
+    <h3 class="center">
+      <%= t('projects.show.inconsistent_demands.title') %>
+      <i class="far fa-question-circle" title="<%= t('projects.show.inconsistent_demands.help') %>"></i>
+    </h3>
+
+    <% if inconsistent_demands.blank? %>
+      <p><%= t('projects.show.inconsistent_demands.no_demands') %></p>
+    <% else %>
+      <p><%= t('projects.show.inconsistent_demands.demands', value: inconsistent_demands.count ) %></p>
+      <p>
+        <%= sanitize inconsistent_demands.map { |demand| link_to demand.demand_id, company_demand_url(company, demand) }.join(' | ') %>
+      </p>
     <% end %>
   </div>
 </div>

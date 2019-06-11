@@ -18,7 +18,7 @@ module Jira
     private
 
     def update_demand!(demand, jira_account, jira_issue, project)
-      demand.update(project: project, company: project.company, created_date: issue_fields_value(jira_issue, 'created'), demand_type: read_issue_type(jira_issue), artifact_type: read_artifact_type(jira_issue),
+      demand.update(project: read_project(jira_account, jira_issue.attrs['fields']) || project, company: project.company, created_date: issue_fields_value(jira_issue, 'created'), demand_type: read_issue_type(jira_issue), artifact_type: read_artifact_type(jira_issue),
                     class_of_service: read_class_of_service(jira_account, jira_issue), demand_title: issue_fields_value(jira_issue, 'summary'),
                     url: build_jira_url(jira_account, demand.demand_id), commitment_date: nil, discarded_at: nil)
 
@@ -26,6 +26,33 @@ module Jira
       read_comments(demand, jira_issue)
       read_blocks(demand, jira_issue)
       read_transitions!(demand, jira_issue.changelog) if jira_issue.respond_to?(:changelog)
+    end
+
+    def read_project(jira_account, jira_issue_fields)
+      labels = jira_issue_fields['labels'] || []
+      fix_version_name = read_fix_version_name(jira_issue_fields)
+
+      labels << fix_version_name
+      labels.reject!(&:empty?)
+
+      project_key = jira_issue_fields['project']['key']
+
+      jira_config = nil
+
+      labels.each do |label|
+        jira_config = jira_account.company.project_jira_configs.find_by(jira_project_key: project_key, fix_version_name: label)
+        break if jira_config.present?
+      end
+
+      return if jira_config.blank?
+
+      jira_config.project
+    end
+
+    def read_fix_version_name(jira_issue_fields)
+      return '' if jira_issue_fields['fixVersions'].blank?
+
+      jira_issue_fields['fixVersions'][0]['name']
     end
 
     def read_blocks(demand, jira_issue)

@@ -15,6 +15,7 @@ class ProjectsController < AuthenticatedController
     @project_change_deadline_histories = @project.project_change_deadline_histories.includes(:user)
     @projects_to_copy_stages_from = (@company.projects.includes(:product) - [@project]).sort_by(&:name)
     @demands_ids = DemandsRepository.instance.demands_created_before_date_to_projects([@project]).map(&:id)
+    @inconsistent_demands = @project.demands.dates_inconsistent_to_project(@project)
 
     @start_date = @project.start_date
     @end_date = @project.end_date

@@ -181,6 +181,7 @@ en:
       leadtime:
         title: "Lead time in days"
       total_remaining_weeks: "Remaining Weeks"
+      inconsistent_demands_count: "Qty Inconsistent Demands"
     show:
       initial_scope: "Initial Scope"
       last_team: "Current team"
@@ -223,6 +224,11 @@ en:
         configured_stages: "This project has %{count} stages."
       not_associated_customers: "Not associated customers"
       project_customers: "Customers in project"
+      inconsistent_demands:
+        title: "Inconsistent Demands"
+        no_demands: "No inconsistent demands"
+        demands: "%{value} demands"
+        help: "Inconsistent demands are demands committed before project's start date or ended after project's end date."
     charts:
       xlabel:
         weeks: "Weeks"

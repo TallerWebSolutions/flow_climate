@@ -44,6 +44,10 @@
         <th><%= t('projects.index.total_remaining_days') %></th>
         <th><%= t('projects.index.flow_pressure') %></th>
         <th><%= t('projects.index.percentage_flow_pressure') %></th>
+        <th>
+          <%= t('projects.index.inconsistent_demands_count') %>
+          <i class="far fa-question-circle" title="<%= t('projects.show.inconsistent_demands.help') %>"></i>
+        </th>
         <th class="center"><%= t('projects.index.risk_alerts') %></th>
         <th><%= t('general.table.actions') %></th>
       </tr>
@@ -88,6 +92,7 @@
               0,00
             <% end %>
           </td>
+          <td><%= project.demands.dates_inconsistent_to_project(project).count %></td>
           <td><%= render 'projects/project_risk_indicators', project: project %></td>
           <td><%= render 'projects/project_actions', company: company, project: project %></td>
         </tr>

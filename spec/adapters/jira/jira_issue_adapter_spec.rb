@@ -6,13 +6,13 @@ RSpec.describe Jira::JiraIssueAdapter, type: :service do
   let(:options) { { username: 'foo', password: 'bar', site: 'http://foo.bar', context_path: '/', auth_type: :basic, read_timeout: 120 } }
   let(:client) { JIRA::Client.new(options) }
 
-  let(:jira_account) { Fabricate :jira_account, base_uri: 'http://foo.bar', username: 'foo', password: 'bar' }
+  let(:jira_account) { Fabricate :jira_account, company: company, base_uri: 'http://foo.bar', username: 'foo', password: 'bar' }
 
   let(:customer) { Fabricate :customer, company: company }
   let(:team) { Fabricate :team, company: company }
   let(:product) { Fabricate :product, customer: customer, team: team }
 
-  let!(:first_project) { Fabricate :project, customers: [customer], product: product }
+  let!(:first_project) { Fabricate :project, company: company, customers: [customer], product: product }
 
   let!(:first_stage) { Fabricate :stage, company: company, integration_id: 'first_stage', projects: [first_project] }
   let!(:second_stage) { Fabricate :stage, company: company, integration_id: 'second_stage', projects: [first_project] }
@@ -20,7 +20,6 @@ RSpec.describe Jira::JiraIssueAdapter, type: :service do
 
   describe '#process_issue!' do
     context 'when the demand does not exist' do
-      let!(:jira_account) { Fabricate :jira_account, company: company }
       let!(:responsible_custom_field) { Fabricate :jira_custom_field_mapping, jira_account: jira_account, demand_field: :responsibles, custom_field_machine_name: 'customfield_10024' }
       let!(:class_of_service_custom_field) { Fabricate :jira_custom_field_mapping, jira_account: jira_account, demand_field: :class_of_service, custom_field_machine_name: 'customfield_10028' }
 
@@ -33,6 +32,7 @@ RSpec.describe Jira::JiraIssueAdapter, type: :service do
         it 'creates the demand' do
           Jira::JiraIssueAdapter.instance.process_issue!(jira_account, first_project, jira_issue)
           expect(Demand.count).to eq 1
+          expect(Demand.last.project).to eq first_project
           expect(Demand.last.assignees_count).to eq 2
           expect(Demand.last.team_members).to match_array [team_member, other_team_member]
           expect(Demand.last.demand_title).to eq 'foo of bar'
@@ -201,16 +201,18 @@ RSpec.describe Jira::JiraIssueAdapter, type: :service do
     end
 
     context 'when the demand exists' do
-      let!(:jira_account) { Fabricate :jira_account, company: company }
       let!(:jira_custom_field_mapping) { Fabricate :jira_custom_field_mapping, jira_account: jira_account, demand_field: :responsibles, custom_field_machine_name: 'customfield_10024' }
       let!(:demand) { Fabricate :demand, project: first_project, demand_id: '10000' }
+      let!(:second_project) { Fabricate :project, company: company, customers: [customer], product: product }
+      let!(:project_jira_config) { Fabricate :project_jira_config, project: second_project, jira_project_key: 'foo', fix_version_name: 'bar' }
 
-      let!(:jira_issue) { client.Issue.build({ key: '10000', fields: { created: '2018-07-02T11:20:18.998-0300', summary: 'foo of bar', issuetype: { name: 'Story' }, customfield_10028: { value: 'Expedite' }, project: { key: 'foo' }, customfield_10024: [{ name: 'foo' }, { name: 'bar' }], comment: { comments: [{ created: Time.zone.local(2019, 5, 27, 10, 0, 0).iso8601, body: 'comment example' }] } }, changelog: { startAt: 0, maxResults: 2, total: 2, histories: [{ id: '10039', from: 'first_stage', to: 'second_stage', created: '2018-07-08T22:34:47.440-0300' }, { id: '10038', from: 'third_stage', to: 'first_stage', created: '2018-07-06T09:40:43.886-0300' }] } }.with_indifferent_access) }
+      let!(:jira_issue) { client.Issue.build({ key: '10000', fields: { created: '2018-07-02T11:20:18.998-0300', summary: 'foo of bar', issuetype: { name: 'Story' }, customfield_10028: { value: 'Expedite' }, project: { key: 'foo' }, customfield_10024: [{ name: 'foo' }, { name: 'bar' }], comment: { comments: [{ created: Time.zone.local(2019, 5, 27, 10, 0, 0).iso8601, body: 'comment example' }] }, fixVersions: [{ name: 'bar' }] }, changelog: { startAt: 0, maxResults: 2, total: 2, histories: [{ id: '10039', from: 'first_stage', to: 'second_stage', created: '2018-07-08T22:34:47.440-0300' }, { id: '10038', from: 'third_stage', to: 'first_stage', created: '2018-07-06T09:40:43.886-0300' }] } }.with_indifferent_access) }
 
       context 'and the demand is not archived' do
         it 'updates the demand' do
           Jira::JiraIssueAdapter.instance.process_issue!(jira_account, first_project, jira_issue)
           expect(Demand.count).to eq 1
+          expect(Demand.last.project).to eq second_project
           expect(Demand.last.assignees_count).to eq 0
           expect(Demand.last.demand_title).to eq 'foo of bar'
           expect(Demand.last.downstream_demand?).to be false
