@@ -12,6 +12,7 @@ class TeamsController < AuthenticatedController
     @active_team_projects = @team_projects.active
     @projects_summary = ProjectsSummaryData.new(@team.projects)
     @projects_risk_chart_data = Highchart::ProjectRiskChartsAdapter.new(@team.projects)
+    @slack_configurations = @team.slack_configurations
 
     @start_date = build_limit_date(@team_projects.map(&:start_date).min)
     @end_date = build_limit_date(@team_projects.map(&:end_date).max)

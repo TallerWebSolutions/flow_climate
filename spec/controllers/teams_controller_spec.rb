@@ -62,6 +62,9 @@ RSpec.describe TeamsController, type: :controller do
     let(:second_team_member) { Fabricate :team_member, team: team }
     let(:third_team_member) { Fabricate :team_member, team: team }
 
+    let!(:slack_config) { Fabricate :slack_configuration, team: team, info_type: 1 }
+    let!(:other_slack_config) { Fabricate :slack_configuration, team: team, info_type: 0 }
+
     let(:customer) { Fabricate :customer, company: company }
     let(:product) { Fabricate :product, customer: customer, team: team }
 
@@ -95,6 +98,7 @@ RSpec.describe TeamsController, type: :controller do
             expect(assigns(:active_team_projects)).to eq [third_project, second_project, first_project]
             expect(assigns(:projects_risk_chart_data).backlog_risk_alert_data).to eq [{ name: 'Vermelho', y: 1, color: '#FB283D' }]
             expect(assigns(:projects_risk_chart_data).money_risk_alert_data).to eq [{ name: 'Verde', y: 1, color: '#179A02' }]
+            expect(assigns(:slack_configurations)).to eq [slack_config, other_slack_config]
           end
         end
 

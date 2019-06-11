@@ -33,7 +33,7 @@
 <%= render 'commons/loader_spinner' %>
 
 <div id="stamps" class="tab-container">
-  <%= render 'team_stamps', team: @team %>
+  <%= render 'team_stamps', company: @company, team: @team, slack_configurations: @slack_configurations %>
 </div>
 
 <div id="members-table" class="tab-container">

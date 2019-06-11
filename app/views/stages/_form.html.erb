@@ -15,7 +15,7 @@
     </div>
     <div class='col-xs-6 form-group <%= 'has-error' if stage.errors[:integration_pipe_id].present? %>'>
       <%= form.label :integration_pipe_id, class: 'control-label' %>
-      <i class="far fa-question-circle" title="<%= t('activerecord.models.stage.attributes.integration_pipe_id.help') %>"></i>
+      <i class="far fa-question-circle" title="<%= t('activerecord.attributes.stage.help.integration_pipe_id') %>"></i>
       <%= form.text_field :integration_pipe_id, class: 'form-control', autofocus: true %>
       <span class="help-block"><%= stage.errors[:integration_pipe_id].join(', ') %></span>
     </div>

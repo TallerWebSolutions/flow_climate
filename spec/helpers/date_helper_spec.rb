@@ -28,4 +28,8 @@ RSpec.describe DateHelper, type: :helper do
       it { expect(helper.seconds_to_day(300_000)).to eq 3.4722222222222223 }
     end
   end
+
+  describe '#hours_in_a_day_options' do
+    it { expect(helper.hours_in_a_day_options).to eq 0..23 }
+  end
 end

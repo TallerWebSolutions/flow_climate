@@ -979,7 +979,8 @@ CREATE TABLE public.slack_configurations (
     room_webhook character varying NOT NULL,
     notification_hour integer NOT NULL,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    info_type integer DEFAULT 0 NOT NULL
 );
 
 
@@ -2115,6 +2116,13 @@ CREATE UNIQUE INDEX index_projects_on_company_id_and_name ON public.projects USI
 
 
 --
+-- Name: index_slack_configurations_on_info_type_and_team_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_slack_configurations_on_info_type_and_team_id ON public.slack_configurations USING btree (info_type, team_id);
+
+
+--
 -- Name: index_slack_configurations_on_team_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2795,6 +2803,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190603153315'),
 ('20190606144211'),
 ('20190606204533'),
-('20190607143157');
+('20190607143157'),
+('20190611195749');
 
 

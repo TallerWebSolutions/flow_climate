@@ -819,3 +819,9 @@ pt-BR:
   filters:
     options:
       project_status: "Status do Projeto"
+  slack_configuration:
+    info_type:
+      uniqueness: "Você só pode ter um tipo de configuração por cada time."
+  slack_configurations:
+    new:
+      title: "Nova Config do Slack"
