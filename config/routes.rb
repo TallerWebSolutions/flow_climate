@@ -58,7 +58,7 @@ Rails.application.routes.draw do
       get :risks_tab
     end
 
-    resources :teams, only: %i[show new create edit update] do
+    resources :teams do
       resources :team_members, only: %i[new create edit update] do
         member do
           patch :activate

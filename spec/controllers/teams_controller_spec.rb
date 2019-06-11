@@ -37,6 +37,12 @@ RSpec.describe TeamsController, type: :controller do
 
       it { expect(response).to redirect_to new_user_session_path }
     end
+
+    describe 'DELETE #destroy' do
+      before { delete :destroy, params: { company_id: 'bar', id: 'foo' } }
+
+      it { expect(response).to redirect_to new_user_session_path }
+    end
   end
 
   context 'authenticated as gold' do
@@ -270,6 +276,52 @@ RSpec.describe TeamsController, type: :controller do
           replenishing_data = assigns(:replenishing_data).project_data_to_replenish
           expect(replenishing_data).to eq []
           expect(response).to render_template 'teams/replenishing_input.js.erb'
+        end
+      end
+    end
+
+    describe 'DELETE #destroy' do
+      context 'with valid parameters' do
+        context 'with no dependencies' do
+          let!(:other_team) { Fabricate :team, company: company }
+
+          it 'destroys the team and updates the view' do
+            team_name = other_team.name
+            delete :destroy, params: { company_id: company, id: other_team }, xhr: true
+            expect(Team.all).to eq [team]
+            expect(response).to render_template 'teams/destroy'
+            expect(flash[:notice]).to eq I18n.t('teams.destroy.success', team_name: team_name)
+          end
+        end
+
+        context 'with dependencies' do
+          let!(:other_team) { Fabricate :team, company: company }
+          let!(:project) { Fabricate :project, company: company, team: other_team }
+
+          it 'does not destroy the team and updates the view informing the error' do
+            delete :destroy, params: { company_id: company, id: other_team }, xhr: true
+            expect(Team.all).to match_array [team, other_team]
+            expect(response).to render_template 'teams/destroy'
+            expect(flash[:error]).to eq 'Não é possível excluir o registro pois existem projetos dependentes'
+          end
+        end
+      end
+
+      context 'with invalid' do
+        context 'company' do
+          context 'non-existent' do
+            before { delete :destroy, params: { company_id: 'foo', id: team } }
+
+            it { expect(response).to have_http_status :not_found }
+          end
+        end
+
+        context 'not_permitted' do
+          let!(:team) { Fabricate :team }
+
+          before { delete :destroy, params: { company_id: 'foo', id: team } }
+
+          it { expect(response).to have_http_status :not_found }
         end
       end
     end
