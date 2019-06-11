@@ -95,9 +95,9 @@ pt-BR:
       stage:
         one: Etapa
         other: Etapas
-        attributes:
-          integration_pipe_id:
-            help: "ID do Fluxo, ID do Quadro, ID do rapidView (Jira)..."
+      slack_configuration:
+        one: Configuração do Slack
+        other: Configurações do Slack
       demand_transition:
         one: Transição da Demanda
         other: Transições da Demanda
@@ -282,6 +282,8 @@ pt-BR:
         stage_stream: Tipo do Stream
         commitment_point: Ponto de Comprometimento?
         end_point: Etapa Final?
+        help:
+          integration_pipe_id: "ID do Fluxo, ID do Quadro, ID do rapidView (Jira)..."
         enums:
           stage_type:
             backlog: Backlog
@@ -373,6 +375,16 @@ pt-BR:
         demand: Demanda
         comment_date: Data do Comentário
         comment_text: Texto
+      slack_configuration:
+        info_type: Tipo da Informação
+        team: Time
+        room_webhook: Webhook da sala
+        notification_hour: Hora para Notificar
+        enums:
+          info_type:
+            average_demand_cost: Custo Médio por Demanda
+            current_week_throughput: Throughput da Semana
+            last_week_delivered_demands_info: Infos de Entrega da Última Semana
       jira/project_jira_config:
         jira_project_key: Chave do Projeto no Jira
         active: Ativo?

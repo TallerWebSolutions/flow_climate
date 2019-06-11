@@ -1,0 +1,29 @@
+<div class="row bottom-spaced-component">
+  <div class="col-xs-12">
+    <%= link_to I18n.t('slack_configurations.new.title'), new_company_team_slack_configuration_path(company, team), class: 'btn btn-success pull-right', remote: true %>
+  </div>
+</div>
+
+<% if slack_configurations.present? %>
+<table class="table tabble-striped">
+  <thead>
+    <th><%= Team.model_name.human %></th>
+    <th><%= SlackConfiguration.human_attribute_name :info_type %></th>
+    <th><%= SlackConfiguration.human_attribute_name :room_webhook %></th>
+    <th><%= SlackConfiguration.human_attribute_name :notification_hour %></th>
+  </thead>
+
+  <tbody>
+    <% slack_configurations.each do |slack_config| %>
+    <tr>
+      <td><%= slack_config.team.name %></td>
+      <td><%= t("activerecord.attributes.slack_configuration.enums.info_type.#{slack_config.info_type}") %></td>
+      <td><%= slack_config.room_webhook %></td>
+      <td><%= slack_config.notification_hour %></td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
+<% else %>
+  <%= render 'layouts/no_data', missing_data: I18n.t('activerecord.models.slack_configuration.other') %>
+<% end %>

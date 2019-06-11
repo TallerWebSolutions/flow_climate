@@ -1,0 +1,25 @@
+<%= form_for slack_configuration, url: company_team_slack_configurations_url(company, team, slack_configuration), method: :post, remote: true do |form| %>
+  <div class="row">
+    <div class='col-xs-4 form-group <%= 'has-error' if slack_configuration.errors[:info_type].present? %>'>
+      <%= form.label :info_type, class: 'control-label' %>
+      <%= form.select :info_type, SlackConfiguration.info_types.map { |key, _value| [t("activerecord.attributes.slack_configuration.enums.info_type.#{key}"), key] }, { include_blank: t('general.select'), selected: slack_configuration.info_type }, class: 'form-control' %>
+      <span class="help-block"><%= slack_configuration.errors[:info_type].join(', ') %></span>
+    </div>
+    <div class='col-xs-4 form-group <%= 'has-error' if slack_configuration.errors[:room_webhook].present? %>'>
+      <%= form.label :room_webhook, class: 'control-label' %>
+      <%= form.text_field :room_webhook, class: 'form-control' %>
+      <span class="help-block"><%= slack_configuration.errors[:room_webhook].join(', ') %></span>
+    </div>
+    <div class='col-xs-4 form-group <%= 'has-error' if slack_configuration.errors[:notification_hour].present? %>'>
+      <%= form.label :notification_hour, class: 'control-label' %>
+      <%= form.select :notification_hour, hours_in_a_day_options, { include_blank: t('general.select'), selected: slack_configuration.notification_hour }, class: 'form-control' %>
+      <span class="help-block"><%= slack_configuration.errors[:notification_hour].join(', ') %></span>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-xs-12">
+      <%= form.submit t('general.buttons.save'), class: 'btn btn-success' %>
+    </div>
+  </div>
+<% end %>

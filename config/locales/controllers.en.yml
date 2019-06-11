@@ -789,6 +789,8 @@ en:
     models:
       demand_comment:
         other: "Demand Comments"
+      slack_configuration:
+        other: "No Slack Configurations Data"
   stats:
     period:
       variation: "Period Variation"
@@ -828,3 +830,9 @@ en:
   filters:
     options:
       project_status: "Project Status"
+  slack_configuration:
+    info_type:
+      uniqueness: "You can have only one type of configuration to each team."
+  slack_configurations:
+    new:
+      title: "New Slack Config"

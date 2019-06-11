@@ -79,6 +79,8 @@ en:
             upstream: Upstream
             downstream: Downstream
             out_stream: Out Stream
+        help:
+          integration_pipe_id: "Flow ID, board ID, rapidView ID (Jira)..."
       demand_block:
         demand: Demand
         demand_block_id: Id
@@ -125,10 +127,6 @@ en:
             not_same: "The stage needs to be the same as the stage in project"
     models:
       jira/jira_account: "Jira Accounts"
-      stage:
-        attributes:
-          integration_pipe_id:
-            help: "Flow ID, board ID, rapidView ID (Jira)..."
   product:
     name:
       uniqueness: "Should have only one to the same customer."

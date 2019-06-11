@@ -20,4 +20,8 @@ module DateHelper
   def seconds_to_day(date_in_seconds)
     date_in_seconds.to_f / 1.day
   end
+
+  def hours_in_a_day_options
+    0..23
+  end
 end
