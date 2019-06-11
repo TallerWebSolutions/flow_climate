@@ -433,6 +433,8 @@ pt-BR:
         title: "Custo Médio por Demanda"
         ylabel: "$ / Demanda"
         xlabel: "período"
+    destroy:
+      success: 'Time "%{team_name}" excluído.'
   project:
     new:
       title: "Novo Projeto"

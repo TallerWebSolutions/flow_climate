@@ -780,6 +780,8 @@ en:
         title: "Average Demand Cost"
         ylabel: "$ / Demand"
         xlabel: "period"
+    destroy:
+      success: "Team %{team_name} deleted."
   activerecord:
     attributes:
       demand:

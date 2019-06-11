@@ -4,7 +4,7 @@ class TeamsController < AuthenticatedController
   before_action :user_gold_check
 
   before_action :assign_company
-  before_action :assign_team, only: %i[show edit update replenishing_input]
+  before_action :assign_team, only: %i[show edit update replenishing_input destroy]
 
   def show
     @team_members = @team.team_members.order(:name)
@@ -41,6 +41,20 @@ class TeamsController < AuthenticatedController
     @replenishing_data = ReplenishingData.new(@team)
 
     render 'teams/replenishing_input.js.erb'
+  end
+
+  def destroy
+    team_name = @team.name
+
+    @team.destroy
+    if @team.errors.full_messages.present?
+      flash[:error] = @team.errors.full_messages.join(' | ')
+    else
+      flash[:notice] = I18n.t('teams.destroy.success', team_name: team_name)
+    end
+
+    @teams = @company.teams.order(:name)
+    respond_to { |format| format.js { render 'teams/destroy' } }
   end
 
   private
