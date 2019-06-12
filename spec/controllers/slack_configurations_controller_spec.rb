@@ -58,10 +58,12 @@ RSpec.describe SlackConfigurationsController, type: :controller do
     describe 'POST #create' do
       context 'passing valid parameters' do
         it 'creates the new team and redirects to its show' do
-          post :create, params: { company_id: company, team_id: team, slack_configuration: { info_type: :current_week_throughput, room_webhook: 'http://xpto', notification_hour: 4 } }, xhr: true
+          post :create, params: { company_id: company, team_id: team, slack_configuration: { info_type: :current_week_throughput, room_webhook: 'http://xpto', notification_hour: 4, notification_minute: 0, weekday_to_notify: :monday } }, xhr: true
           expect(SlackConfiguration.last.room_webhook).to eq 'http://xpto'
           expect(SlackConfiguration.last.info_type).to eq 'current_week_throughput'
           expect(SlackConfiguration.last.notification_hour).to eq 4
+          expect(SlackConfiguration.last.notification_minute).to eq 0
+          expect(SlackConfiguration.last.weekday_to_notify).to eq 'monday'
           expect(response).to render_template 'slack_configurations/create'
         end
       end
@@ -70,7 +72,7 @@ RSpec.describe SlackConfigurationsController, type: :controller do
         it 'does not create the team and re-render the template with the errors' do
           post :create, params: { company_id: company, team_id: team, slack_configuration: { room_webhook: '' } }, xhr: true
           expect(response).to render_template 'slack_configurations/new'
-          expect(assigns(:slack_configuration).errors.full_messages).to eq ['Webhook da sala não pode ficar em branco', 'Hora para Notificar não pode ficar em branco']
+          expect(assigns(:slack_configuration).errors.full_messages).to eq ['Webhook da sala não pode ficar em branco', 'Hora não pode ficar em branco']
         end
       end
     end

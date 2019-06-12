@@ -24,4 +24,19 @@ module DateHelper
   def hours_in_a_day_options
     0..23
   end
+
+  def minutes_in_a_day_options
+    0..59
+  end
+
+  def weekdays_options(selected)
+    options_for_select([
+                           [I18n.t('activerecord.attributes.slack_configuration.enums.weekday_to_notify.all_weekdays'), :all_weekdays],
+                           [I18n.t('activerecord.attributes.slack_configuration.enums.weekday_to_notify.monday'), :monday],
+                           [I18n.t('activerecord.attributes.slack_configuration.enums.weekday_to_notify.tuesday'), :tuesday],
+                           [I18n.t('activerecord.attributes.slack_configuration.enums.weekday_to_notify.wednesday'), :wednesday],
+                           [I18n.t('activerecord.attributes.slack_configuration.enums.weekday_to_notify.thursday'), :thursday],
+                           [I18n.t('activerecord.attributes.slack_configuration.enums.weekday_to_notify.friday'), :friday]
+                       ], selected)
+  end
 end

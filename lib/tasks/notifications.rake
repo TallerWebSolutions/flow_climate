@@ -12,10 +12,16 @@ namespace :notifications do
 
   task slack_notifications: :environment do
     Team.all.each do |team|
-      hour_now = Time.zone.now.hour
-      next if team.slack_configurations.blank?
+      next if team.slack_configurations.blank? || Time.zone.today.saturday? || Time.zone.today.sunday?
 
-      slack_configs = team.slack_configurations.where(notification_hour: hour_now)
+      hour_now = Time.zone.now.hour
+      minute_now = Time.zone.now.min
+      weekday = Time.zone.now.wday
+
+      slack_configs = team.slack_configurations.where('weekday_to_notify = 0 OR weekday_to_notify = :weekday_to_notify', weekday_to_notify: weekday)
+      next if slack_configs.blank?
+
+      slack_configs = team.slack_configurations.where(notification_hour: hour_now).where('notification_minute BETWEEN :minute_now_start AND :minute_now_end', minute_now_start: minute_now, minute_now_end: minute_now + 10)
       next if slack_configs.blank?
 
       slack_configs.each { |slack_config| Slack::SlackNotificationsJob.perform_now(slack_config, team) }

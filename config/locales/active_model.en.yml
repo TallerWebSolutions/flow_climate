@@ -115,6 +115,15 @@ en:
             story: Story
             epic: Epic
             theme: Theme
+      slack_configuration:
+        enums:
+          weekday_to_notify:
+            all_weekdays: "All"
+            monday: "Monday"
+            tuesday: "Tuesday"
+            wednesday: "Wednesday"
+            thursday: "Thursday"
+            friday: "Friday"
     errors:
       messages:
         record_invalid: 'Validation failed: %{errors}'

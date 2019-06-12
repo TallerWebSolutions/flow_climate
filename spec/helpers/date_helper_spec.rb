@@ -32,4 +32,12 @@ RSpec.describe DateHelper, type: :helper do
   describe '#hours_in_a_day_options' do
     it { expect(helper.hours_in_a_day_options).to eq 0..23 }
   end
+
+  describe '#minutes_in_a_day_options' do
+    it { expect(helper.minutes_in_a_day_options).to eq 0..59 }
+  end
+
+  describe '#weekdays_options' do
+    it { expect(helper.weekdays_options(:all)).to eq options_for_select([[I18n.t('activerecord.attributes.slack_configuration.enums.weekday_to_notify.all_weekdays'), :all_weekdays], [I18n.t('activerecord.attributes.slack_configuration.enums.weekday_to_notify.monday'), :monday], [I18n.t('activerecord.attributes.slack_configuration.enums.weekday_to_notify.tuesday'), :tuesday], [I18n.t('activerecord.attributes.slack_configuration.enums.weekday_to_notify.wednesday'), :wednesday], [I18n.t('activerecord.attributes.slack_configuration.enums.weekday_to_notify.thursday'), :thursday], [I18n.t('activerecord.attributes.slack_configuration.enums.weekday_to_notify.friday'), :friday]], :all) }
+  end
 end

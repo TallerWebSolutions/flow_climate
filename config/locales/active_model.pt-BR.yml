@@ -379,14 +379,22 @@ pt-BR:
         info_type: Tipo da Informação
         team: Time
         room_webhook: Webhook da sala
-        notification_hour: Hora para Notificar
+        notification_hour: Hora
+        notification_minute: Minuto
+        weekday_to_notify: Dia da Semana
         enums:
           info_type:
             average_demand_cost: Custo Médio por Demanda
             current_week_throughput: Throughput da Semana
             last_week_delivered_demands_info: Infos de Entrega da Última Semana
-            delivered_demand: Demanda Entregue
             demands_wip_info: Demandas em WiP
+          weekday_to_notify:
+            all_weekdays: Todos
+            monday: Segunda
+            tuesday: Terça
+            wednesday: Quarta
+            thursday: Quinta
+            friday: Sexta
       jira/project_jira_config:
         jira_project_key: Chave do Projeto no Jira
         active: Ativo?

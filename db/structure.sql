@@ -9,20 +9,6 @@ SET xmloption = content;
 SET client_min_messages = warning;
 SET row_security = off;
 
---
--- Name: pg_stat_statements; Type: EXTENSION; Schema: -; Owner: -
---
-
-CREATE EXTENSION IF NOT EXISTS pg_stat_statements WITH SCHEMA public;
-
-
---
--- Name: EXTENSION pg_stat_statements; Type: COMMENT; Schema: -; Owner: -
---
-
-COMMENT ON EXTENSION pg_stat_statements IS 'track execution statistics of all SQL statements executed';
-
-
 SET default_tablespace = '';
 
 SET default_with_oids = false;
@@ -994,7 +980,9 @@ CREATE TABLE public.slack_configurations (
     notification_hour integer NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    info_type integer DEFAULT 0 NOT NULL
+    info_type integer DEFAULT 0 NOT NULL,
+    weekday_to_notify integer DEFAULT 0 NOT NULL,
+    notification_minute integer DEFAULT 0 NOT NULL
 );
 
 
@@ -2818,6 +2806,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190606144211'),
 ('20190606204533'),
 ('20190607143157'),
-('20190611195749');
+('20190611195749'),
+('20190612195656');
 
 
