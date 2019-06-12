@@ -162,4 +162,9 @@ en:
       user_plan_active: "Você já tem um plano para o período."
   slack_configurations:
     notifications:
-      cmd_text: "Hey, the team %{name} is operating in this week with a %{cmd_value} average demand cost and a variation of *%{cmd_difference_to_last_week}%* for the average of previous 4 weeks (%{previous_cmd})."
+      cmd_text: "Hey, the team *%{team_name}* is operating in this week with a %{cmd_value} average demand cost and a variation of *%{cmd_difference_to_last_week}%* for the average of previous 4 weeks (%{previous_cmd})."
+      th_week_text: "Hey, the team *%{team_name}* this week, the throughput is %{th_current_week} demands representing a variation of *%{difference_last_week_th_value}%* for the average of previous 4 weeks (%{four_weeks_th_average})."
+      th_last_week_text: "Hey, the team *%{team_name}* last week, the throughput was %{th_last_week} demands."
+      th_last_week_demand_info_text: "*%{demand_id}* %{demand_title} | *Responsibles:* %{responsibles_names} | *Cost to Project:* %{cost_to_project}"
+      qty_demands_in_wip: "Hey, current work in progress to the team *%{team_name}* is %{in_wip} demands."
+      demands_in_wip_info_text: "*%{demand_id}* %{demand_title} | *Responsibles:* %{responsibles_names} | *Cost to Project:* %{cost_to_project} | *Current Stage:* %{current_stage} | *Time in Stage:* %{time_in_current_stage} | *% Flow Concluded:* %{percentage_concluded}"

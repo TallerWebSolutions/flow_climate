@@ -23,7 +23,7 @@
 #
 
 class SlackConfiguration < ApplicationRecord
-  enum info_type: { average_demand_cost: 0, current_week_throughput: 1, last_week_delivered_demands_info: 2 }
+  enum info_type: { average_demand_cost: 0, current_week_throughput: 1, last_week_delivered_demands_info: 2, demands_wip_info: 3 }
   belongs_to :team
 
   validates :team, :room_webhook, :notification_hour, presence: true

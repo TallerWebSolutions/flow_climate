@@ -144,6 +144,19 @@ class Demand < ApplicationRecord
     demand_transitions.where(last_time_out: nil).order(:last_time_in).last&.stage || demand_transitions.order(:last_time_in)&.last&.stage
   end
 
+  def time_in_current_stage
+    return 0 if current_stage.blank?
+
+    Time.zone.now - demand_transitions.order(:last_time_in).last.last_time_in
+  end
+
+  def flow_percentage_concluded
+    return 0 if current_stage.blank?
+
+    stage_orders_array = project.stages.order(:order).map(&:order)
+    stage_orders_array.count { |order| order <= current_stage.order }.to_f / stage_orders_array.count.to_f
+  end
+
   def leadtime_in_days
     return 0.0 if leadtime.blank?
 
@@ -174,6 +187,12 @@ class Demand < ApplicationRecord
     return 0 if end_date.blank?
 
     (end_date - created_date) / 1.day
+  end
+
+  def cost_to_project
+    return 0 if project.hour_value.blank?
+
+    (effort_downstream + effort_upstream) * project.hour_value
   end
 
   private
@@ -225,7 +244,7 @@ class Demand < ApplicationRecord
   end
 
   def compute_effort_in_transition(transition, stage_config)
-    TimeService.instance.compute_working_hours_for_dates(transition.last_time_in, transition.last_time_out) * (stage_config.stage_percentage / 100.0)
+    transition.working_time_in_transition * (stage_config.stage_percentage / 100.0)
   end
 
   def pairing_value(stage_config)
