@@ -3,8 +3,8 @@
 <td><%= t("activerecord.attributes.demand.enums.artifact_type.#{demand_list.artifact_type}") %></td>
 <td><%= t("activerecord.attributes.demand.enums.demand_type.#{demand_list.demand_type}") %></td>
 <td><%= t("activerecord.attributes.demand.enums.class_of_service.#{demand_list.class_of_service}") %></td>
-<td><%= demand_list.demand.current_stage&.name %></td>
 <td><%= number_to_currency(demand_list.demand.cost_to_project) %></td>
+<td><%= demand_list.demand.current_stage&.name %></td>
 <td>
   <% if demand_list.leadtime.present? %>
     <%= time_distance_in_words(demand_list.leadtime) %>
