@@ -39,10 +39,10 @@ module Stats
       compute_durations_array(remaining_backlog_count, throughput_data_array, qty_cycles)
     end
 
-    def compute_percentage(data_count_analysed, data_count_remaining)
-      return 0 if data_count_remaining.zero? && data_count_analysed.zero?
+    def compute_percentage(amount_analysed, amount_remaining)
+      return 0 if amount_remaining.zero? && amount_analysed.zero?
 
-      (data_count_analysed.to_f / (data_count_analysed.to_f + data_count_remaining.to_f) * 100)
+      (amount_analysed.to_f / (amount_analysed.to_f + amount_remaining.to_f) * 100)
     end
 
     def standard_deviation(population_array)

@@ -458,6 +458,7 @@ en:
       grouping_to_charts: "Grouping to Charts"
       total_blocked_work_time: "Work Time Blocked"
       discarded_stage: "Discarded Stage"
+      cost_to_project: "Cost to Project"
     edit:
       title: "Edit Demand"
     show:

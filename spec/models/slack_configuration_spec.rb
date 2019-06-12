@@ -2,7 +2,7 @@
 
 RSpec.describe SlackConfiguration, type: :model do
   context 'enums' do
-    it { is_expected.to define_enum_for(:info_type).with_values(average_demand_cost: 0, current_week_throughput: 1, last_week_delivered_demands_info: 2) }
+    it { is_expected.to define_enum_for(:info_type).with_values(average_demand_cost: 0, current_week_throughput: 1, last_week_delivered_demands_info: 2, demands_wip_info: 3) }
   end
 
   context 'associations' do
@@ -14,6 +14,8 @@ RSpec.describe SlackConfiguration, type: :model do
       it { is_expected.to validate_presence_of :team }
       it { is_expected.to validate_presence_of :room_webhook }
       it { is_expected.to validate_presence_of :notification_hour }
+      it { is_expected.to validate_presence_of :notification_minute }
+      it { is_expected.to validate_presence_of :weekday_to_notify }
     end
 
     context 'complex ones' do

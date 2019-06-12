@@ -10,10 +10,20 @@
       <%= form.text_field :room_webhook, class: 'form-control' %>
       <span class="help-block"><%= slack_configuration.errors[:room_webhook].join(', ') %></span>
     </div>
-    <div class='col-xs-4 form-group <%= 'has-error' if slack_configuration.errors[:notification_hour].present? %>'>
+    <div class='col-xs-1 form-group <%= 'has-error' if slack_configuration.errors[:notification_hour].present? %>'>
       <%= form.label :notification_hour, class: 'control-label' %>
       <%= form.select :notification_hour, hours_in_a_day_options, { include_blank: t('general.select'), selected: slack_configuration.notification_hour }, class: 'form-control' %>
       <span class="help-block"><%= slack_configuration.errors[:notification_hour].join(', ') %></span>
+    </div>
+    <div class='col-xs-1 form-group <%= 'has-error' if slack_configuration.errors[:notification_minute].present? %>'>
+      <%= form.label :notification_minute, class: 'control-label' %>
+      <%= form.select :notification_minute, minutes_in_a_day_options, { include_blank: t('general.select'), selected: slack_configuration.notification_minute }, class: 'form-control' %>
+      <span class="help-block"><%= slack_configuration.errors[:notification_minute].join(', ') %></span>
+    </div>
+    <div class='col-xs-2 form-group <%= 'has-error' if slack_configuration.errors[:weekday_to_notify].present? %>'>
+      <%= form.label :weekday_to_notify, class: 'control-label' %>
+      <%= form.select :weekday_to_notify, weekdays_options(slack_configuration.weekday_to_notify), {}, { class: 'form-control' } %>
+      <span class="help-block"><%= slack_configuration.errors[:weekday_to_notify].join(', ') %></span>
     </div>
   </div>
 

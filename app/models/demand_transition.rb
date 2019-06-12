@@ -47,15 +47,17 @@ class DemandTransition < ApplicationRecord
   after_save :set_demand_computed_fields, on: %i[create update]
 
   def total_seconds_in_transition
-    return 0 if last_time_out.blank?
+    out_time = last_time_out
+    out_time = Time.zone.now if last_time_out.blank?
 
-    last_time_out - last_time_in
+    out_time - last_time_in
   end
 
   def working_time_in_transition
-    return 0 if last_time_out.blank?
+    out_time = last_time_out
+    out_time = Time.zone.now if last_time_out.blank?
 
-    TimeService.instance.compute_working_hours_for_dates(last_time_in, last_time_out)
+    TimeService.instance.compute_working_hours_for_dates(last_time_in, out_time)
   end
 
   private

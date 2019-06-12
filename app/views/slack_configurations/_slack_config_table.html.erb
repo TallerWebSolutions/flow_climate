@@ -11,6 +11,8 @@
     <th><%= SlackConfiguration.human_attribute_name :info_type %></th>
     <th><%= SlackConfiguration.human_attribute_name :room_webhook %></th>
     <th><%= SlackConfiguration.human_attribute_name :notification_hour %></th>
+    <th><%= SlackConfiguration.human_attribute_name :notification_minute %></th>
+    <th><%= SlackConfiguration.human_attribute_name :weekday_to_notify %></th>
   </thead>
 
   <tbody>
@@ -20,6 +22,8 @@
       <td><%= t("activerecord.attributes.slack_configuration.enums.info_type.#{slack_config.info_type}") %></td>
       <td><%= slack_config.room_webhook %></td>
       <td><%= slack_config.notification_hour %></td>
+      <td><%= slack_config.notification_minute %></td>
+      <td><%= t("activerecord.attributes.slack_configuration.enums.weekday_to_notify.#{slack_config.weekday_to_notify}") %></td>
     </tr>
     <% end %>
   </tbody>

@@ -379,12 +379,22 @@ pt-BR:
         info_type: Tipo da Informação
         team: Time
         room_webhook: Webhook da sala
-        notification_hour: Hora para Notificar
+        notification_hour: Hora
+        notification_minute: Minuto
+        weekday_to_notify: Dia da Semana
         enums:
           info_type:
             average_demand_cost: Custo Médio por Demanda
             current_week_throughput: Throughput da Semana
             last_week_delivered_demands_info: Infos de Entrega da Última Semana
+            demands_wip_info: Demandas em WiP
+          weekday_to_notify:
+            all_weekdays: Todos
+            monday: Segunda
+            tuesday: Terça
+            wednesday: Quarta
+            thursday: Quinta
+            friday: Sexta
       jira/project_jira_config:
         jira_project_key: Chave do Projeto no Jira
         active: Ativo?
@@ -431,3 +441,8 @@ pt-BR:
   slack_configurations:
     notifications:
       cmd_text: "Hey, o time *%{name}* está operando nesta semana com um Custo Médio por Demanda de *%{cmd_value}* uma variação de *%{cmd_difference_to_last_week}%* com relação à média das últimas 4 semanas (%{previous_cmd})."
+      th_week_text: "Hey, o time *%{name}* entregou %{th_current_week} demandas nesta semana, representando uma variação de *%{difference_last_week_th_value}%* para a média das últimas 4 semanas (%{four_weeks_th_average})."
+      th_last_week_text: "Hey, o time *%{name}* entregou %{th_last_week} demandas na semana passada."
+      th_last_week_demand_info_text: "*%{demand_id}* %{demand_title} | *Responsáveis:* %{responsibles_names} | *Custo pro Projeto:* %{cost_to_project}"
+      qty_demands_in_wip: "Hey, o trabalho em progresso atual no *%{team_name}* é de %{in_wip} demanda(s)."
+      demands_in_wip_info_text: "*%{demand_id}* %{demand_title} | *Responsáveis:* %{responsibles_names} | *Custo pro Projeto:* %{cost_to_project} | *Etapa atual:* %{current_stage} | *Tempo na Etapa:* %{time_in_current_stage} | *% Fluxo Concluído*: %{percentage_concluded}"

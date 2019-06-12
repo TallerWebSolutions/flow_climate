@@ -652,4 +652,72 @@ RSpec.describe Demand, type: :model do
     it { expect(demand.aging_when_finished).to eq 0.625 }
     it { expect(other_demand.aging_when_finished).to eq 0 }
   end
+
+  describe '#cost_to_project' do
+    context 'without effort computed' do
+      let(:project) { Fabricate :project, hour_value: 100 }
+      let(:demand) { Fabricate :demand, project: project, effort_downstream: 0, effort_upstream: 0 }
+
+      it { expect(demand.cost_to_project).to eq 0 }
+    end
+
+    context 'with effort computed and project hour value' do
+      let(:project) { Fabricate :project, hour_value: 100 }
+      let(:demand) { Fabricate :demand, project: project, effort_downstream: 10, effort_upstream: 20 }
+
+      it { expect(demand.cost_to_project).to eq 3000 }
+    end
+
+    context 'without project hour value' do
+      let(:project) { Fabricate :project, hour_value: nil }
+      let(:demand) { Fabricate :demand, project: project, effort_downstream: 10, effort_upstream: 20 }
+
+      it { expect(demand.cost_to_project).to eq 0 }
+    end
+  end
+
+  describe '#time_in_current_stage' do
+    context 'without transitions' do
+      let(:demand) { Fabricate :demand }
+
+      it { expect(demand.time_in_current_stage).to eq 0 }
+    end
+
+    context 'with transitions' do
+      let(:project) { Fabricate :project, hour_value: 100 }
+      let(:stage) { Fabricate :stage, projects: [project] }
+
+      let!(:demand) { Fabricate :demand, project: project }
+
+      let!(:demand_transition) { Fabricate :demand_transition, demand: demand, stage: stage, last_time_in: 1.day.ago }
+      let!(:other_demand_transition) { Fabricate :demand_transition, demand: demand, stage: stage, last_time_in: 2.days.ago }
+
+      it { expect(demand.time_in_current_stage).to be_within(0.9).of(86_400.2) }
+    end
+  end
+
+  describe '#flow_percentage_concluded' do
+    context 'without transitions' do
+      let(:demand) { Fabricate :demand }
+
+      it { expect(demand.flow_percentage_concluded).to eq 0 }
+    end
+
+    context 'with transitions' do
+      let(:project) { Fabricate :project, hour_value: 100 }
+
+      let!(:first_stage) { Fabricate :stage, projects: [project], order: 0 }
+      let!(:second_stage) { Fabricate :stage, projects: [project], order: 1 }
+      let!(:third_stage) { Fabricate :stage, projects: [project], order: 2 }
+      let!(:fourth_stage) { Fabricate :stage, projects: [project], order: 3 }
+
+      let!(:demand) { Fabricate :demand, project: project }
+
+      let!(:first_demand_transition) { Fabricate :demand_transition, demand: demand, stage: third_stage, last_time_in: 1.day.ago }
+      let!(:second_demand_transition) { Fabricate :demand_transition, demand: demand, stage: second_stage, last_time_in: 2.days.ago }
+      let!(:third_demand_transition) { Fabricate :demand_transition, demand: demand, stage: first_stage, last_time_in: 3.days.ago }
+
+      it { expect(demand.flow_percentage_concluded).to eq 0.75 }
+    end
+  end
 end

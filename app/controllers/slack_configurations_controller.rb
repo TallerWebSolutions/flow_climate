@@ -24,7 +24,7 @@ class SlackConfigurationsController < AuthenticatedController
   private
 
   def slack_configuration_params
-    params.require(:slack_configuration).permit(:room_webhook, :notification_hour, :info_type)
+    params.require(:slack_configuration).permit(:room_webhook, :notification_hour, :notification_minute, :weekday_to_notify, :info_type)
   end
 
   def assign_team
