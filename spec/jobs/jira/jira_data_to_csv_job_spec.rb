@@ -16,7 +16,7 @@ RSpec.describe Jira::JiraDataToCsvJob, type: :active_job do
     let(:options) { { username: 'foo', password: 'bar', site: 'https://foo.atlassian.net/', context_path: '/', auth_type: :basic, read_timeout: 120 } }
     let(:client) { JIRA::Client.new(options) }
 
-    let(:jira_account) { Fabricate :jira_account, base_uri: 'https://foo.atlassian.net/', username: 'foo', password: 'bar' }
+    let(:jira_account) { Fabricate :jira_account, base_uri: 'https://foo.atlassian.net/', username: 'foo', api_token: 'bar' }
 
     let(:jira_api_service) { Jira::JiraApiService.new('foo', 'bar', 'https://foo.atlassian.net/') }
 

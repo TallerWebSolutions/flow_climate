@@ -1,9 +1,9 @@
 module Jira
   class JiraDataToCsvJob < ApplicationJob
 
-    def perform(username, password, base_uri, project_name, jira_project_key, fix_version_name, class_of_service_field_name, user_id)
+    def perform(username, api_token, base_uri, project_name, jira_project_key, fix_version_name, class_of_service_field_name, user_id)
       user = User.find(user_id)
-      jira_api_service = Jira::JiraApiService.new(username, password, base_uri)
+      jira_api_service = Jira::JiraApiService.new(username, api_token, base_uri)
       project_issues = retrieve_issues(jira_project_key, fix_version_name, jira_api_service)
 
       array_of_jira_issues_keys = []

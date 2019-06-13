@@ -579,8 +579,8 @@ CREATE TABLE public.jira_accounts (
     id bigint NOT NULL,
     company_id integer NOT NULL,
     username character varying NOT NULL,
-    encrypted_password character varying NOT NULL,
-    encrypted_password_iv character varying NOT NULL,
+    encrypted_api_token character varying NOT NULL,
+    encrypted_api_token_iv character varying NOT NULL,
     base_uri character varying NOT NULL,
     customer_domain character varying NOT NULL,
     created_at timestamp without time zone NOT NULL,
@@ -2799,6 +2799,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190607143157'),
 ('20190611195749'),
 ('20190612195656'),
-('20190613135818');
+('20190613135818'),
+('20190613192708');
 
 

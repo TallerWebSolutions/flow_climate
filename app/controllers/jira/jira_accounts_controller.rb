@@ -29,7 +29,7 @@ module Jira
     private
 
     def jira_account_params
-      params.require(:jira_jira_account).permit(:base_uri, :username, :password, :customer_domain)
+      params.require(:jira_jira_account).permit(:base_uri, :username, :api_token, :customer_domain)
     end
   end
 end
