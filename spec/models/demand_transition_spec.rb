@@ -84,7 +84,8 @@ RSpec.describe DemandTransition, type: :model do
 
       let!(:queue_stage) { Fabricate :stage, stage_stream: :downstream, queue: true, projects: [project] }
       let!(:touch_stage) { Fabricate :stage, stage_stream: :downstream, queue: false, projects: [project] }
-      let(:other_touch_stage) { Fabricate :stage, stage_stream: :upstream, queue: false, projects: [project] }
+      let(:other_touch_stage) { Fabricate :stage, stage_stream: :downstream, queue: false, projects: [project] }
+      let(:upstream_touch_stage) { Fabricate :stage, stage_stream: :upstream, queue: false, projects: [project] }
       let(:out_stream_touch_stage) { Fabricate :stage, stage_stream: :out_stream, queue: false, projects: [project] }
 
       let(:demand) { Fabricate :demand, project: project }
@@ -95,6 +96,7 @@ RSpec.describe DemandTransition, type: :model do
         let!(:other_touch_transition) { Fabricate :demand_transition, demand: demand, stage: other_touch_stage }
 
         let!(:out_stream_touch_transition) { Fabricate :demand_transition, demand: demand, stage: out_stream_touch_stage }
+        let!(:upstream_touch_transition) { Fabricate :demand_transition, demand: demand, stage: upstream_touch_stage }
 
         it { expect(DemandTransition.touch_transitions).to match_array [touch_transition, other_touch_transition] }
       end
@@ -109,7 +111,8 @@ RSpec.describe DemandTransition, type: :model do
 
       let!(:touch_stage) { Fabricate :stage, stage_stream: :downstream, queue: false, projects: [project] }
       let!(:queue_stage) { Fabricate :stage, stage_stream: :downstream, queue: true, projects: [project] }
-      let(:other_queue_stage) { Fabricate :stage, stage_stream: :upstream, queue: true, projects: [project] }
+      let(:other_queue_stage) { Fabricate :stage, stage_stream: :downstream, queue: true, projects: [project] }
+      let(:upstream_queue_stage) { Fabricate :stage, stage_stream: :upstream, queue: true, projects: [project] }
       let(:out_stream_queue_stage) { Fabricate :stage, stage_stream: :out_stream, queue: true, projects: [project] }
 
       let(:demand) { Fabricate :demand, project: project }
@@ -120,6 +123,7 @@ RSpec.describe DemandTransition, type: :model do
         let!(:other_queue_transition) { Fabricate :demand_transition, demand: demand, stage: other_queue_stage }
 
         let!(:out_stream_touch_transition) { Fabricate :demand_transition, demand: demand, stage: out_stream_queue_stage }
+        let!(:upstream_touch_transition) { Fabricate :demand_transition, demand: demand, stage: upstream_queue_stage }
 
         it { expect(DemandTransition.queue_transitions).to match_array [queue_transition, other_queue_transition] }
       end

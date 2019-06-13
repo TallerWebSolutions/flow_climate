@@ -332,6 +332,7 @@ RSpec.describe DemandsRepository, type: :repository do
 
     let(:demand) { Fabricate :demand, project: project }
     let(:other_demand) { Fabricate :demand, project: project }
+    let!(:upstream_demand) { Fabricate :demand, project: project, commitment_date: nil }
 
     let!(:first_transition) { Fabricate :demand_transition, stage: first_stage, demand: demand, last_time_in: '2018-02-27T17:09:58-03:00', last_time_out: '2018-03-02T17:09:58-03:00' }
     let!(:second_transition) { Fabricate :demand_transition, stage: second_stage, demand: demand, last_time_in: '2018-02-02T17:09:58-03:00', last_time_out: '2018-02-09T17:09:58-03:00' }
@@ -347,8 +348,11 @@ RSpec.describe DemandsRepository, type: :repository do
     let!(:ninth_transition) { Fabricate :demand_transition, stage: third_stage, demand: other_demand, last_time_in: '2018-03-24T17:09:58-03:00', last_time_out: '2018-03-25T17:09:58-03:00' }
     let!(:tenth_transition) { Fabricate :demand_transition, stage: fifth_stage, demand: other_demand, last_time_in: '2018-03-26T17:09:58-03:00', last_time_out: '2018-03-27T17:09:58-03:00' }
 
+    let!(:eleventh_transition) { Fabricate :demand_transition, stage: fourth_stage, demand: upstream_demand, last_time_in: '2018-03-26T17:09:58-03:00', last_time_out: '2018-10-10T17:09:58-03:00' }
+    let!(:twefth_transition) { Fabricate :demand_transition, stage: fifth_stage, demand: upstream_demand, last_time_in: '2018-03-26T17:09:58-03:00', last_time_out: '2018-10-10T17:09:58-03:00' }
+
     it { expect(DemandsRepository.instance.total_time_for(Project.all, 'total_queue_time')).to eq([10, 2018] => 3_715_200.0, [13, 2018] => 1.day.to_f) }
-    it { expect(DemandsRepository.instance.total_time_for(Project.all, 'total_touch_time')).to eq([10, 2018] => 3_024_000.0, [13, 2018] => 345_600.0) }
+    it { expect(DemandsRepository.instance.total_time_for(Project.all, 'total_touch_time')).to eq([10, 2018] => 864_000.0, [13, 2018] => 172_800.0) }
   end
 
   describe '#demands_delivered_grouped_by_projects_to_period' do
