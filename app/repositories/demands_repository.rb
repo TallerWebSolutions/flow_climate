@@ -111,6 +111,7 @@ class DemandsRepository
 
   def total_time_for(projects, sum_field)
     result_array = Demand.kept
+                         .finished_in_downstream
                          .select('EXTRACT(WEEK FROM end_date) AS sum_week', 'EXTRACT(YEAR FROM end_date) AS sum_year', "SUM(#{sum_field}) AS total_time")
                          .where('end_date IS NOT NULL')
                          .where(project_id: projects.map(&:id))

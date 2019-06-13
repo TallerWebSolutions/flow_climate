@@ -586,8 +586,8 @@ RSpec.describe Demand, type: :model do
       let(:product) { Fabricate :product, customer: customer }
       let(:project) { Fabricate :project, product: product }
 
-      let!(:queue_stage) { Fabricate :stage, company: company, projects: [project], end_point: false, commitment_point: false, queue: false }
-      let!(:touch_stage) { Fabricate :stage, company: company, projects: [project], end_point: false, commitment_point: false, queue: true }
+      let!(:queue_stage) { Fabricate :stage, company: company, projects: [project], end_point: false, commitment_point: false, queue: false, stage_stream: :downstream }
+      let!(:touch_stage) { Fabricate :stage, company: company, projects: [project], end_point: false, commitment_point: false, queue: true, stage_stream: :downstream }
 
       let!(:demand) { Fabricate :demand, project: project, leadtime: 453_223 }
       let!(:first_demand_transition) { Fabricate :demand_transition, demand: demand, stage: queue_stage, last_time_in: 2.days.ago, last_time_out: 5.hours.ago }
