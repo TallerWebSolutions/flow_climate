@@ -34,7 +34,7 @@ RSpec.describe DateHelper, type: :helper do
   end
 
   describe '#minutes_in_a_day_options' do
-    it { expect(helper.minutes_in_a_day_options).to eq 0..59 }
+    it { expect(helper.minutes_in_a_day_options.to_a).to eq [0, 10, 20, 30, 40, 50] }
   end
 
   describe '#weekdays_options' do
