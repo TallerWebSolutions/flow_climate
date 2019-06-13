@@ -269,36 +269,6 @@ RSpec.describe Project, type: :model do
     end
   end
 
-  describe '#current_team' do
-    let(:product_team) { Fabricate :team }
-    let(:project_team) { Fabricate :team }
-    let(:team) { Fabricate :team }
-    let(:other_team) { Fabricate :team }
-
-    context 'having a defined team to the project' do
-      let(:product) { Fabricate :product, team: product_team }
-      let(:project) { Fabricate :project, product: product, team: project_team, end_date: 4.weeks.from_now }
-      let!(:project_jira_config) { Fabricate :project_jira_config, project: project }
-
-      it { expect(project.current_team).to eq project_team }
-    end
-
-    context 'having no team to the project to the product' do
-      let(:product) { Fabricate :product, team: product_team }
-      let!(:project) { Fabricate :project, product: product }
-      let!(:project_jira_config) { Fabricate :project_jira_config, project: project }
-
-      it { expect(project.current_team).to eq product_team }
-    end
-
-    context 'having no team to the project neither to the product' do
-      let(:product) { Fabricate :product, team: nil }
-      let(:project) { Fabricate :project, product: product, project_type: :outsourcing }
-
-      it { expect(project.current_team).to be_nil }
-    end
-  end
-
   describe '#flow_pressure' do
     context 'and the start and finish dates are in different days' do
       let(:project) { Fabricate :project, initial_scope: 30, start_date: Time.zone.parse('2018-03-05 22:00'), end_date: Time.zone.parse('2018-03-07 10:00') }

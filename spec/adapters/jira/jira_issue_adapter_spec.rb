@@ -10,7 +10,7 @@ RSpec.describe Jira::JiraIssueAdapter, type: :service do
 
   let(:customer) { Fabricate :customer, company: company }
   let(:team) { Fabricate :team, company: company }
-  let(:product) { Fabricate :product, customer: customer, team: team }
+  let(:product) { Fabricate :product, customer: customer }
 
   let!(:first_project) { Fabricate :project, company: company, customers: [customer], product: product }
 

@@ -202,7 +202,6 @@ pt-BR:
       initial_scope: "Escopo Inicial"
       last_team: "Time atual"
       last_week_scope: "Escopo da Última Sem."
-      current_team: "Time Atual"
       avg_hours_per_demand: "Média Horas/Demanda"
       scope_gap: "Restante do escopo"
       scope_growth: "Crescimento do Escopo (%)"

@@ -22,7 +22,7 @@ class ProjectsController < AuthenticatedController
   end
 
   def index
-    @projects = add_status_filter(Project.where('company_id = ?', @company.id)).order(end_date: :desc)
+    @projects = add_status_filter(Project.where('company_id = ?', @company.id)).includes(:team).includes(:product).order(end_date: :desc)
     @projects_summary = ProjectsSummaryData.new(@projects)
   end
 

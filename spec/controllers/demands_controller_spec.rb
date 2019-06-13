@@ -75,7 +75,7 @@ RSpec.describe DemandsController, type: :controller do
     let(:company) { Fabricate :company, users: [user] }
     let(:customer) { Fabricate :customer, company: company }
     let(:team) { Fabricate :team, company: company }
-    let(:product) { Fabricate :product, customer: customer, team: team }
+    let(:product) { Fabricate :product, customer: customer }
     let(:project) { Fabricate :project, customers: [customer], product: product }
 
     before { sign_in user }
@@ -278,7 +278,7 @@ RSpec.describe DemandsController, type: :controller do
       let!(:team_member) { Fabricate(:team_member, monthly_payment: 100, team: team) }
 
       let(:customer) { Fabricate :customer, company: company }
-      let(:product) { Fabricate :product, customer: customer, team: team }
+      let(:product) { Fabricate :product, customer: customer }
       let(:project) { Fabricate :project, customers: [customer], product: product }
       let!(:demand) { Fabricate :demand, project: project, created_date: created_date }
 
@@ -556,8 +556,8 @@ RSpec.describe DemandsController, type: :controller do
       let(:team) { Fabricate :team, company: company }
       let(:other_team) { Fabricate :team, company: company }
 
-      let(:product) { Fabricate :product, customer: customer, name: 'zzz', team: team }
-      let(:other_product) { Fabricate :product, customer: other_customer, name: 'aaa', team: team }
+      let(:product) { Fabricate :product, customer: customer, name: 'zzz' }
+      let(:other_product) { Fabricate :product, customer: other_customer, name: 'aaa' }
 
       let!(:first_project) { Fabricate :project, name: 'qqq', customers: [customer], product: product, status: :executing, start_date: 1.month.ago, end_date: 10.days.from_now }
       let!(:second_project) { Fabricate :project, customers: [other_customer], product: other_product, status: :executing, start_date: 15.days.ago, end_date: 50.days.from_now }

@@ -48,8 +48,9 @@ class ChartsController < AuthenticatedController
     @projects = Project.where(id: params[:projects_ids].split(','))
     return if @projects.blank?
 
-    team = @projects.includes(:team).last.current_team
-    @available_hours_in_month = team.active_monthly_available_hours_for_billable_types(team.projects.pluck(:project_type).uniq)
+    teams = @projects.includes(:team).map(&:team).uniq.compact
+    @available_hours_in_month = 0
+    @available_hours_in_month = teams.sum { |team| team.active_monthly_available_hours_for_billable_types(@projects.pluck(:project_type).uniq) } if teams.present?
   end
 
   def assign_team

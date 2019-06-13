@@ -29,8 +29,6 @@ class Team < ApplicationRecord
 
   has_many :team_members, dependent: :destroy
   has_many :projects, dependent: :restrict_with_error
-  has_many :products, dependent: :restrict_with_error
-  has_many :product_projects, -> { distinct }, through: :products, source: :projects
   has_many :demands, -> { distinct }, through: :projects
   has_many :slack_configurations, dependent: :destroy
 

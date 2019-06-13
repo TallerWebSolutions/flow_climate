@@ -66,7 +66,7 @@ RSpec.describe TeamsController, type: :controller do
     let!(:other_slack_config) { Fabricate :slack_configuration, team: team, info_type: 0 }
 
     let(:customer) { Fabricate :customer, company: company }
-    let(:product) { Fabricate :product, customer: customer, team: team }
+    let(:product) { Fabricate :product, customer: customer }
 
     describe 'GET #show' do
       let!(:first_project) { Fabricate :project, customers: [customer], team: team, status: :executing, start_date: 4.months.ago, end_date: Time.zone.today }

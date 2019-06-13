@@ -42,7 +42,7 @@ RSpec.describe ChartsController, type: :controller do
     let(:third_team_member) { Fabricate :team_member, team: team }
 
     let(:customer) { Fabricate :customer, company: company }
-    let(:product) { Fabricate :product, customer: customer, team: team }
+    let(:product) { Fabricate :product, customer: customer }
 
     describe 'GET #build_operational_charts' do
       context 'passing valid parameters' do
@@ -112,17 +112,31 @@ RSpec.describe ChartsController, type: :controller do
     describe 'GET #build_status_report_charts' do
       let(:team) { Fabricate :team, company: company }
       let(:customer) { Fabricate :customer, company: company }
-      let!(:product) { Fabricate :product, customer: customer, team: team }
+      let!(:product) { Fabricate :product, customer: customer }
 
       context 'passing valid parameters' do
         context 'having projects' do
-          let!(:project) { Fabricate :project, company: company, product: product }
-          let!(:other_project) { Fabricate :project, company: company, product: product }
+          context 'with teams in the projects' do
+            let!(:project) { Fabricate :project, company: company, product: product, team: team }
+            let!(:other_project) { Fabricate :project, company: company, product: product, team: team }
 
-          it 'builds the status report and respond the JS render the template' do
-            get :build_status_report_charts, params: { company_id: company, projects_ids: Project.all.map(&:id).to_csv }, xhr: true
-            expect(response).to render_template 'charts/status_report_charts'
-            expect(assigns(:status_report_data)).to be_a Highchart::StatusReportChartsAdapter
+            it 'builds the status report and respond the JS render the template' do
+              get :build_status_report_charts, params: { company_id: company, projects_ids: Project.all.map(&:id).to_csv }, xhr: true
+              expect(response).to render_template 'charts/status_report_charts'
+              expect(assigns(:status_report_data)).to be_a Highchart::StatusReportChartsAdapter
+            end
+          end
+
+          context 'with no teams in the projects' do
+            let!(:project) { Fabricate :project, company: company, product: product }
+            let!(:other_project) { Fabricate :project, company: company, product: product }
+
+            it 'builds the status report and respond the JS render the template' do
+              get :build_status_report_charts, params: { company_id: company, projects_ids: Project.all.map(&:id).to_csv }, xhr: true
+              expect(response).to render_template 'charts/status_report_charts'
+              expect(assigns(:status_report_data)).to be_a Highchart::StatusReportChartsAdapter
+              expect(assigns(:available_hours_in_month)).to eq 0
+            end
           end
         end
 

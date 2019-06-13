@@ -13,9 +13,9 @@ RSpec.describe ProjectFinancesService, type: :service do
     let(:customer) { Fabricate :customer, company: company }
 
     context 'when the projects have a team' do
-      let!(:product) { Fabricate :product, customer: customer, team: team }
-      let(:first_project) { Fabricate :project, company: company, product: product, customers: [customer], project_type: :outsourcing, start_date: 1.month.ago, end_date: Time.zone.tomorrow }
-      let(:second_project) { Fabricate :project, company: company, product: product, customers: [customer], project_type: :outsourcing, start_date: 1.month.ago, end_date: Time.zone.tomorrow }
+      let!(:product) { Fabricate :product, customer: customer }
+      let(:first_project) { Fabricate :project, company: company, product: product, customers: [customer], team: team, project_type: :outsourcing, start_date: 1.month.ago, end_date: Time.zone.tomorrow }
+      let(:second_project) { Fabricate :project, company: company, product: product, customers: [customer], team: team, project_type: :outsourcing, start_date: 1.month.ago, end_date: Time.zone.tomorrow }
 
       let!(:first_demand) { Fabricate :demand, project: first_project, end_date: 1.month.ago, effort_downstream: 100, effort_upstream: 50 }
       let!(:second_demand) { Fabricate :demand, project: first_project, end_date: 1.month.ago, effort_downstream: 200, effort_upstream: 230 }

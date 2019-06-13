@@ -9,7 +9,6 @@
 #  id             :bigint(8)        not null, primary key
 #  name           :string           not null, indexed => [customer_id]
 #  projects_count :integer          default(0)
-#  team_id        :integer
 #  updated_at     :datetime         not null
 #
 # Indexes
@@ -20,15 +19,14 @@
 # Foreign Keys
 #
 #  fk_rails_252452a41b  (customer_id => customers.id)
-#  fk_rails_a551b9b235  (team_id => teams.id)
 #
 
 class Product < ApplicationRecord
   include ProjectAggregator
 
   belongs_to :customer, counter_cache: true
-  belongs_to :team
   has_many :projects, dependent: :restrict_with_error
+  has_many :teams, -> { distinct }, through: :projects
 
   validates :name, :customer, presence: true
   validates :name, uniqueness: { scope: :customer, message: I18n.t('product.name.uniqueness') }

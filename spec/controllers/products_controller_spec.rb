@@ -113,13 +113,10 @@ RSpec.describe ProductsController, type: :controller do
         let(:customer) { Fabricate :customer, company: company, name: 'zzz' }
         let(:other_customer) { Fabricate :customer, company: company, name: 'aaa' }
 
-        let(:team) { Fabricate :team, company: company }
-
-        before { post :create, params: { company_id: company, product: { team_id: team, customer_id: customer, name: 'foo' } } }
+        before { post :create, params: { company_id: company, product: { customer_id: customer, name: 'foo' } } }
 
         it 'creates the new product and redirects to its show' do
           expect(Product.last.customer).to eq customer
-          expect(Product.last.team).to eq team
           expect(Product.last.name).to eq 'foo'
           expect(response).to redirect_to company_products_path(company)
         end
@@ -182,15 +179,13 @@ RSpec.describe ProductsController, type: :controller do
       let(:customer) { Fabricate :customer, company: company, name: 'zzz' }
       let!(:other_customer) { Fabricate :customer, company: company, name: 'aaa' }
 
-      let(:team) { Fabricate :team, company: company }
       let(:product) { Fabricate :product, customer: customer }
 
       context 'passing valid parameters' do
-        before { put :update, params: { company_id: company, id: product, product: { team_id: team, customer_id: customer, name: 'foo' } } }
+        before { put :update, params: { company_id: company, id: product, product: { customer_id: customer, name: 'foo' } } }
 
         it 'updates the product and redirects to projects index' do
           expect(Product.last.customer).to eq customer
-          expect(Product.last.team).to eq team
           expect(Product.last.name).to eq 'foo'
 
           expect(response).to redirect_to company_products_path(company)

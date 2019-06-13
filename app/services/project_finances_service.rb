@@ -4,10 +4,10 @@ class ProjectFinancesService
   include Singleton
 
   def effort_share_in_month(project, date)
-    team = project.current_team
+    team = project.team
     return 0 if team.blank?
 
-    other_project_in_team = team.product_projects - [project]
+    other_project_in_team = team.projects - [project]
 
     compute_effort_share(date, other_project_in_team, project)
   end
