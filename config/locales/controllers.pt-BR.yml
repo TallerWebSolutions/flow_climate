@@ -130,8 +130,9 @@ pt-BR:
       title: "Adicionar usuário"
     users_in_company: "Usuários na empresa"
     send_company_bulletin:
-      queued: "Sua solicitação foi colocada na fila."
+      sent: "Sua solicitação foi enviada."
       button: "Me Enviar Boletim"
+      error: "Não existe email habilitado para notificar."
     charts:
       active_projects:
         title: "Contagem de Projetos Ativos no Mês para %{target_name}"

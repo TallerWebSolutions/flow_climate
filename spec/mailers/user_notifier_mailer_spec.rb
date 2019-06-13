@@ -8,45 +8,56 @@ RSpec.describe UserNotifierMailer, type: :mailer do
   describe '#company_weekly_bulletin' do
     subject(:mail) { UserNotifierMailer.company_weekly_bulletin(company.users, company).deliver_now }
 
-    let(:first_user) { Fabricate :user, email_notifications: true }
-    let(:second_user) { Fabricate :user, email_notifications: true }
-    let(:third_user) { Fabricate :user, email_notifications: false }
-    let(:fourth_user) { Fabricate :user }
-
     let!(:company) { Fabricate :company, users: [first_user, second_user, third_user] }
     let(:customer) { Fabricate :customer, company: company }
     let(:product) { Fabricate :product, customer: customer }
 
-    let!(:first_project) { Fabricate :project, company: company, customers: [customer], product: product, status: :executing, start_date: 2.months.ago, end_date: Time.zone.today }
-    let!(:second_project) { Fabricate :project, company: company, customers: [customer], product: product, status: :waiting, start_date: 2.days.from_now, end_date: 1.month.from_now }
-    let!(:third_project) { Fabricate :project, company: company, customers: [customer], product: product, status: :waiting, start_date: 4.days.from_now, end_date: 2.months.from_now }
-    let!(:fourth_project) { Fabricate :project, company: company, customers: [customer], product: product, status: :executing, start_date: 2.months.ago, end_date: 3.months.from_now }
+    context 'with emails to notify' do
+      let(:first_user) { Fabricate :user, email_notifications: true }
+      let(:second_user) { Fabricate :user, email_notifications: true }
+      let(:third_user) { Fabricate :user, email_notifications: false }
+      let(:fourth_user) { Fabricate :user }
 
-    let!(:first_demand) { Fabricate :demand, discarded_at: nil, end_date: 1.week.ago }
-    let!(:second_demand) { Fabricate :demand, discarded_at: nil, end_date: 1.week.ago }
-    let!(:third_demand) { Fabricate :demand }
-    let!(:fourth_demand) { Fabricate :demand }
+      let!(:first_project) { Fabricate :project, company: company, customers: [customer], product: product, status: :executing, start_date: 2.months.ago, end_date: Time.zone.today }
+      let!(:second_project) { Fabricate :project, company: company, customers: [customer], product: product, status: :waiting, start_date: 2.days.from_now, end_date: 1.month.from_now }
+      let!(:third_project) { Fabricate :project, company: company, customers: [customer], product: product, status: :waiting, start_date: 4.days.from_now, end_date: 2.months.from_now }
+      let!(:fourth_project) { Fabricate :project, company: company, customers: [customer], product: product, status: :executing, start_date: 2.months.ago, end_date: 3.months.from_now }
 
-    let!(:red_project) { Fabricate :project, company: company, customers: [customer], status: :maintenance, end_date: 3.days.from_now, name: 'maintenance_red' }
-    let!(:first_alert) { Fabricate :project_risk_alert, project: red_project, alert_color: :red, created_at: Time.zone.now }
-    let!(:second_alert) { Fabricate :project_risk_alert, project: red_project, alert_color: :green, created_at: 1.hour.ago }
+      let!(:first_demand) { Fabricate :demand, discarded_at: nil, end_date: 1.week.ago }
+      let!(:second_demand) { Fabricate :demand, discarded_at: nil, end_date: 1.week.ago }
+      let!(:third_demand) { Fabricate :demand }
+      let!(:fourth_demand) { Fabricate :demand }
 
-    let(:other_red_project) { Fabricate :project, company: company, customers: [customer], status: :executing, end_date: 3.days.from_now, name: 'executing_red' }
-    let!(:other_first_alert) { Fabricate :project_risk_alert, project: other_red_project, alert_color: :red, created_at: Time.zone.now }
-    let!(:other_second_alert) { Fabricate :project_risk_alert, project: other_red_project, alert_color: :green, created_at: 1.hour.ago }
+      let!(:red_project) { Fabricate :project, company: company, customers: [customer], status: :maintenance, end_date: 3.days.from_now, name: 'maintenance_red' }
+      let!(:first_alert) { Fabricate :project_risk_alert, project: red_project, alert_color: :red, created_at: Time.zone.now }
+      let!(:second_alert) { Fabricate :project_risk_alert, project: red_project, alert_color: :green, created_at: 1.hour.ago }
 
-    it 'renders the email' do
-      expect(mail.subject).to eq I18n.t('projects.portfolio_bulletin.subject')
-      expect(mail.to).to match_array [first_user.email, second_user.email]
-      expect(mail.from).to eq(['no-reply@taller.net.br'])
-      expect(mail.body.encoded).to match first_project.name
-      expect(mail.body.encoded).to match second_project.name
-      expect(mail.body.encoded).to match third_project.name
-      expect(mail.body.encoded).to match fourth_project.name
-      expect(mail.body.encoded).to match red_project.name
-      expect(mail.body.encoded).to match other_red_project.name
-      expect(mail.body.encoded).to match I18n.t('general.signature.regards')
-      expect(mail.body.encoded).to match I18n.t('general.signature.flow_climate_team')
+      let(:other_red_project) { Fabricate :project, company: company, customers: [customer], status: :executing, end_date: 3.days.from_now, name: 'executing_red' }
+      let!(:other_first_alert) { Fabricate :project_risk_alert, project: other_red_project, alert_color: :red, created_at: Time.zone.now }
+      let!(:other_second_alert) { Fabricate :project_risk_alert, project: other_red_project, alert_color: :green, created_at: 1.hour.ago }
+
+      it 'renders the email' do
+        expect(mail.subject).to eq I18n.t('projects.portfolio_bulletin.subject')
+        expect(mail.to).to match_array [first_user.email, second_user.email]
+        expect(mail.from).to eq(['no-reply@taller.net.br'])
+        expect(mail.body.encoded).to match first_project.name
+        expect(mail.body.encoded).to match second_project.name
+        expect(mail.body.encoded).to match third_project.name
+        expect(mail.body.encoded).to match fourth_project.name
+        expect(mail.body.encoded).to match red_project.name
+        expect(mail.body.encoded).to match other_red_project.name
+        expect(mail.body.encoded).to match I18n.t('general.signature.regards')
+        expect(mail.body.encoded).to match I18n.t('general.signature.flow_climate_team')
+      end
+    end
+
+    context 'without emails to notify' do
+      let(:first_user) { Fabricate :user, email_notifications: false }
+      let(:second_user) { Fabricate :user, email_notifications: false }
+      let(:third_user) { Fabricate :user, email_notifications: false }
+      let(:fourth_user) { Fabricate :user }
+
+      it { expect(mail).to be_nil }
     end
   end
 

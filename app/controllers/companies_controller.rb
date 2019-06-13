@@ -54,8 +54,12 @@ class CompaniesController < AuthenticatedController
   end
 
   def send_company_bulletin
-    UserNotifierMailer.company_weekly_bulletin(User.where(id: current_user.id), @company).deliver
-    flash[:notice] = t('companies.send_company_bulletin.queued')
+    mail_sent = UserNotifierMailer.company_weekly_bulletin(User.where(id: current_user.id), @company).deliver
+    if mail_sent.instance_of?(Mail::Message)
+      flash[:notice] = t('companies.send_company_bulletin.sent')
+    else
+      flash[:error] = t('companies.send_company_bulletin.error')
+    end
     redirect_to company_path(@company)
   end
 

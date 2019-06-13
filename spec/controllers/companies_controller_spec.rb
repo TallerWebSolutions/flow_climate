@@ -75,7 +75,7 @@ RSpec.describe CompaniesController, type: :controller do
 
   context 'authenticated having a gold plan' do
     let(:plan) { Fabricate :plan, plan_type: :gold }
-    let(:user) { Fabricate :user, first_name: 'zzz' }
+    let(:user) { Fabricate :user, first_name: 'zzz', email_notifications: true }
     let!(:user_plan) { Fabricate :user_plan, user: user, plan: plan, active: true, paid: true, finish_at: 1.week.from_now }
 
     before { sign_in user }
@@ -315,12 +315,27 @@ RSpec.describe CompaniesController, type: :controller do
       let(:company) { Fabricate :company, users: [user, other_user] }
 
       context 'valid parameters' do
-        it 'assigns the instance variables and renders the template' do
-          expect(UserNotifierMailer).to receive(:company_weekly_bulletin).with(User.where(id: user.id), company).once.and_call_original
-          get :send_company_bulletin, params: { id: company }
-          expect(response).to redirect_to company_path(company)
-          expect(flash[:notice]).to eq I18n.t('companies.send_company_bulletin.queued')
-          expect(assigns(:company)).to eq company
+        context 'with notifications enabled' do
+          it 'assigns the instance variables and renders the template' do
+            expect(UserNotifierMailer).to receive(:company_weekly_bulletin).with(User.where(id: user.id), company).once.and_call_original
+            get :send_company_bulletin, params: { id: company }
+            expect(response).to redirect_to company_path(company)
+            expect(flash[:notice]).to eq I18n.t('companies.send_company_bulletin.sent')
+            expect(assigns(:company)).to eq company
+          end
+        end
+
+        context 'without notifications enabled' do
+          it 'assigns the instance variables and renders the template' do
+            user.update(email_notifications: false)
+
+            expect(UserNotifierMailer).to receive(:company_weekly_bulletin).with(User.where(id: user.id), company).once.and_call_original
+            get :send_company_bulletin, params: { id: company }
+            expect(response).to redirect_to company_path(company)
+            expect(flash[:notice]).to be_nil
+            expect(flash[:error]).to eq I18n.t('companies.send_company_bulletin.error')
+            expect(assigns(:company)).to eq company
+          end
         end
       end
 

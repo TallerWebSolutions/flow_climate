@@ -129,8 +129,9 @@ en:
       title: "Add user"
     users_in_company: "Users in company"
     send_company_bulletin:
-      queued: "Your request was queued."
+      sent: "Your request was sent."
       button: "Send Bulletin to Me"
+      error: "There is no email enabled to notify."
     charts:
       active_projects:
         title: "Active Projects Count to Months for %{target_name}"
