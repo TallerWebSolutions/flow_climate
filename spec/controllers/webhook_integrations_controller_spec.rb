@@ -16,7 +16,7 @@ RSpec.describe WebhookIntegrationsController, type: :controller do
 
     context 'when the content type is application/json' do
       context 'and the has a valid project' do
-        let!(:jira_account) { Fabricate :jira_account, company: company, base_uri: 'http://foo.bar', username: 'foo', password: 'bar', customer_domain: 'bar' }
+        let!(:jira_account) { Fabricate :jira_account, company: company, base_uri: 'http://foo.bar', username: 'foo', api_token: 'bar', customer_domain: 'bar' }
         let(:project) { Fabricate :project, company: company, customers: [customer] }
         let!(:project_jira_config) { Fabricate :project_jira_config, project: project, jira_project_key: 'foo', fix_version_name: 'foo' }
 
@@ -40,7 +40,7 @@ RSpec.describe WebhookIntegrationsController, type: :controller do
       end
 
       context 'and the project has an invalid registration without jira config' do
-        let!(:jira_account) { Fabricate :jira_account, base_uri: 'http://foo.bar', username: 'foo', password: 'bar' }
+        let!(:jira_account) { Fabricate :jira_account, base_uri: 'http://foo.bar', username: 'foo', api_token: 'bar' }
         let(:project) { Fabricate :project }
 
         it 'does not enqueue the job' do
@@ -80,7 +80,7 @@ RSpec.describe WebhookIntegrationsController, type: :controller do
 
     context 'when the content type is application/json' do
       context 'and the project has a valid registration' do
-        let!(:jira_account) { Fabricate :jira_account, company: company, base_uri: 'http://foo.bar', username: 'foo', password: 'bar', customer_domain: 'bar' }
+        let!(:jira_account) { Fabricate :jira_account, company: company, base_uri: 'http://foo.bar', username: 'foo', api_token: 'bar', customer_domain: 'bar' }
         let(:project) { Fabricate :project, company: company, customers: [customer] }
         let!(:project_jira_config) { Fabricate :project_jira_config, project: project, jira_project_key: 'FC-6', fix_version_name: 'bar' }
 
@@ -105,7 +105,7 @@ RSpec.describe WebhookIntegrationsController, type: :controller do
       end
 
       context 'and the project has an invalid registration without jira config' do
-        let!(:jira_account) { Fabricate :jira_account, base_uri: 'http://foo.bar', username: 'foo', password: 'bar' }
+        let!(:jira_account) { Fabricate :jira_account, base_uri: 'http://foo.bar', username: 'foo', api_token: 'bar' }
         let(:project) { Fabricate :project }
 
         it 'does nothing' do

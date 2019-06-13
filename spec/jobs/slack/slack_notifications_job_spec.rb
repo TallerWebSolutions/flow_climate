@@ -47,14 +47,14 @@ RSpec.describe Slack::SlackNotificationsJob, type: :active_job do
 
     context 'with current_week_throughput notification' do
       it 'calls slack notification method' do
-        expect_any_instance_of(Slack::Notifier).to receive(:ping).with("Hey, o time *#{team.name}* entregou 3 demandas nesta semana, representando uma variação de *200,00%* para a média das últimas 4 semanas (1.0).").once
+        expect_any_instance_of(Slack::Notifier).to receive(:ping).with("Hey, o time *#{team.name}* entregou *3 demandas* nesta semana, representando uma variação de *200,00%* para a média das últimas 4 semanas (1.0).").once
         Slack::SlackNotificationsJob.perform_now(second_slack_config, team)
       end
     end
 
     context 'with last_week_delivered_demands_info notification' do
       it 'calls slack notification method' do
-        expect_any_instance_of(Slack::Notifier).to receive(:ping).with("Hey, o time *#{team.name}* entregou 1 demandas na semana passada.").once
+        expect_any_instance_of(Slack::Notifier).to receive(:ping).with("Hey, o time *#{team.name}* entregou *1 demandas* na semana passada.").once
         expect_any_instance_of(Slack::Notifier).to receive(:ping).with("*#{first_demand.demand_id}* #{first_demand.demand_title} | *Responsáveis:*  | *Custo pro Projeto:* #{number_to_currency(first_demand.cost_to_project)}").once
 
         Slack::SlackNotificationsJob.perform_now(third_slack_config, team)

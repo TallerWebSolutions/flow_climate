@@ -21,11 +21,11 @@ namespace :notifications do
       slack_configs = team.slack_configurations.where('weekday_to_notify = 0 OR weekday_to_notify = :weekday_to_notify', weekday_to_notify: weekday)
       next if slack_configs.blank?
 
-      slack_configs = team.slack_configurations.where('(notification_hour = :hour_now AND notification_minute BETWEEN :minute_now AND :minute_plus_nine) OR (notification_hour = :hour_plus_one AND notification_minute <= 9)',
-                                                      hour_now: hour_now,
-                                                      minute_now: minute_now,
-                                                      minute_plus_nine: minute_now + 9,
-                                                      hour_plus_one: hour_now + 1)
+      slack_configs = slack_configs.where('(notification_hour = :hour_now AND notification_minute BETWEEN :minute_now AND :minute_plus_nine) OR (notification_hour = :hour_plus_one AND notification_minute <= 9 AND EXTRACT(MINUTE FROM current_timestamp) >= 50)',
+                                          hour_now: hour_now,
+                                          minute_now: minute_now,
+                                          minute_plus_nine: minute_now + 9,
+                                          hour_plus_one: hour_now + 1)
 
       next if slack_configs.blank?
 

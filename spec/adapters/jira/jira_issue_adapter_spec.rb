@@ -6,7 +6,7 @@ RSpec.describe Jira::JiraIssueAdapter, type: :service do
   let(:options) { { username: 'foo', password: 'bar', site: 'http://foo.bar', context_path: '/', auth_type: :basic, read_timeout: 120 } }
   let(:client) { JIRA::Client.new(options) }
 
-  let(:jira_account) { Fabricate :jira_account, company: company, base_uri: 'http://foo.bar', username: 'foo', password: 'bar' }
+  let(:jira_account) { Fabricate :jira_account, company: company, base_uri: 'http://foo.bar', username: 'foo', api_token: 'bar' }
 
   let(:customer) { Fabricate :customer, company: company }
   let(:team) { Fabricate :team, company: company }

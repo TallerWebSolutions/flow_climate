@@ -58,14 +58,14 @@ RSpec.describe Jira::JiraAccountsController, type: :controller do
       let!(:team) { Fabricate :team, company: company }
 
       context 'passing valid parameters' do
-        before { post :create, params: { company_id: company, jira_jira_account: { base_uri: 'foo.bar', username: 'foo', customer_domain: 'bar', password: 'xptobar' } } }
+        before { post :create, params: { company_id: company, jira_jira_account: { base_uri: 'foo.bar', username: 'foo', customer_domain: 'bar', api_token: 'xptobar' } } }
 
         it 'creates the new jira account' do
           created_account = Jira::JiraAccount.last
           expect(created_account.base_uri).to eq 'foo.bar'
           expect(created_account.username).to eq 'foo'
           expect(created_account.customer_domain).to eq 'bar'
-          expect(created_account.encrypted_password).not_to be_empty
+          expect(created_account.encrypted_api_token).not_to be_empty
 
           expect(flash[:notice]).to eq I18n.t('jira_accounts.create.success')
           expect(response).to redirect_to company_path(company)
@@ -80,7 +80,7 @@ RSpec.describe Jira::JiraAccountsController, type: :controller do
             expect(Jira::JiraAccount.last).to be_nil
             expect(response).to render_template :new
             expect(flash[:error]).to eq I18n.t('jira_accounts.create.failed')
-            expect(assigns(:jira_account).errors.full_messages).to eq ['Nome de usuário não pode ficar em branco', 'Senha não pode ficar em branco', 'URI base não pode ficar em branco', 'Domínio do Usuário não pode ficar em branco']
+            expect(assigns(:jira_account).errors.full_messages).to eq ['Nome de usuário não pode ficar em branco', 'Token da API não pode ficar em branco', 'URI base não pode ficar em branco', 'Domínio do Usuário não pode ficar em branco']
           end
         end
 

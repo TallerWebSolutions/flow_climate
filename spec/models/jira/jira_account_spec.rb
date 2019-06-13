@@ -10,7 +10,7 @@ RSpec.describe Jira::JiraAccount, type: :model do
     context 'simple ones' do
       it { is_expected.to validate_presence_of :company }
       it { is_expected.to validate_presence_of :username }
-      it { is_expected.to validate_presence_of :password }
+      it { is_expected.to validate_presence_of :api_token }
       it { is_expected.to validate_presence_of :base_uri }
       it { is_expected.to validate_presence_of :customer_domain }
     end
@@ -39,9 +39,9 @@ RSpec.describe Jira::JiraAccount, type: :model do
   end
 
   context 'attr encryption' do
-    it 'encrypts the password' do
-      jira_account = Fabricate :jira_account, password: '123'
-      expect(jira_account.encrypted_password).not_to eq '123'
+    it 'encrypts the api_token' do
+      jira_account = Fabricate :jira_account, api_token: '123'
+      expect(jira_account.encrypted_api_token).not_to eq '123'
     end
   end
 
