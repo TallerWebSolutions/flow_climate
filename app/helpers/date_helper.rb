@@ -26,7 +26,7 @@ module DateHelper
   end
 
   def minutes_in_a_day_options
-    0..59
+    (0..59).step(10)
   end
 
   def weekdays_options(selected)

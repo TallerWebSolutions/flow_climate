@@ -21,7 +21,12 @@ namespace :notifications do
       slack_configs = team.slack_configurations.where('weekday_to_notify = 0 OR weekday_to_notify = :weekday_to_notify', weekday_to_notify: weekday)
       next if slack_configs.blank?
 
-      slack_configs = team.slack_configurations.where(notification_hour: hour_now).where('notification_minute BETWEEN :minute_now_start AND :minute_now_end', minute_now_start: minute_now, minute_now_end: minute_now + 10)
+      slack_configs = team.slack_configurations.where('(notification_hour = :hour_now AND notification_minute BETWEEN :minute_now AND :minute_plus_nine) OR (notification_hour = :hour_plus_one AND notification_minute <= 9)',
+                                                      hour_now: hour_now,
+                                                      minute_now: minute_now,
+                                                      minute_plus_nine: minute_now + 9,
+                                                      hour_plus_one: hour_now + 1)
+
       next if slack_configs.blank?
 
       slack_configs.each { |slack_config| Slack::SlackNotificationsJob.perform_now(slack_config, team) }
