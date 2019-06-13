@@ -7,7 +7,7 @@ module Jira
     attr_reader :connection_parameters
 
     def initialize(username, api_token, base_uri)
-      @connection_parameters = { username: username, api_token: api_token, site: base_uri, context_path: '/', auth_type: :basic, read_timeout: 120 }
+      @connection_parameters = { username: username, password: api_token, site: base_uri, context_path: '/', auth_type: :basic, read_timeout: 120 }
     end
 
     def request_issue_details(issue_key)
