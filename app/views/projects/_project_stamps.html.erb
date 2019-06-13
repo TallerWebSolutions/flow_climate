@@ -10,8 +10,8 @@
 
   <div class="col-xs-3 stamp">
     <div class="stamp-title"><%= t('projects.show.last_team') %></div>
-    <% if project.current_team.present? %>
-      <div class="stamp-content"><%= link_to project.current_team&.name, company_team_path(company, project.current_team) %></div>
+    <% if project.team.present? %>
+      <div class="stamp-content"><%= link_to project.team&.name, company_team_path(company, project.team) %></div>
     <% else %>
       <div class="stamp-content"></div>
     <% end %>

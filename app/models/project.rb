@@ -156,10 +156,6 @@ class Project < ApplicationRecord
     DemandsRepository.instance.known_scope_to_date([self], date)
   end
 
-  def current_team
-    team || product&.team
-  end
-
   def flow_pressure(date = Time.zone.now)
     return 0.0 if no_pressure_set(date)
 
@@ -248,9 +244,9 @@ class Project < ApplicationRecord
   end
 
   def current_cost
-    return 0 if current_team.blank?
+    return 0 if team.blank?
 
-    current_team.active_monthly_cost_for_billable_types(project_type)
+    team.active_monthly_cost_for_billable_types(project_type)
   end
 
   def percentage_of_demand_type(demand_type)

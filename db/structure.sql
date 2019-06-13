@@ -688,8 +688,7 @@ CREATE TABLE public.products (
     name character varying NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    projects_count integer DEFAULT 0,
-    team_id integer
+    projects_count integer DEFAULT 0
 );
 
 
@@ -2567,14 +2566,6 @@ ALTER TABLE ONLY public.customers_projects
 
 
 --
--- Name: products fk_rails_a551b9b235; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.products
-    ADD CONSTRAINT fk_rails_a551b9b235 FOREIGN KEY (team_id) REFERENCES public.teams(id);
-
-
---
 -- Name: jira_accounts fk_rails_b16d2de302; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2807,6 +2798,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190606204533'),
 ('20190607143157'),
 ('20190611195749'),
-('20190612195656');
+('20190612195656'),
+('20190613135818');
 
 

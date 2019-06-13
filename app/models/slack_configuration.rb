@@ -12,7 +12,7 @@
 #  room_webhook        :string           not null
 #  team_id             :integer          not null, indexed => [info_type], indexed
 #  updated_at          :datetime         not null
-#  weekday_to_notify   :integer          default(0), not null
+#  weekday_to_notify   :integer          default("all_weekdays"), not null
 #
 # Indexes
 #

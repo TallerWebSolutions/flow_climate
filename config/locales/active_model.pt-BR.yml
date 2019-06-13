@@ -172,10 +172,11 @@ pt-BR:
         customer: Cliente
         name: Nome
         projects: Projetos
-        team: Time
+        teams: Times
       project:
         company: Empresa
         product: Produto
+        team: Time
         name: Nome
         qty_hours: Qtd de Horas
         value: Valor do Projeto
@@ -184,7 +185,6 @@ pt-BR:
         end_date: Data Final
         project_type: Tipo do Projeto
         status: Status
-        name: Nome
         customer_name: Cliente
         product_name: Produto
         initial_scope: Escopo inicial

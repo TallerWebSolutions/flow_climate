@@ -9,7 +9,7 @@
     <ul>
       <% not_associated_projects.each do |project| %>
         <li>
-          <%= "#{project.name} (#{project.current_team&.name})" %>
+          <%= "#{project.name} (#{project.team&.name})" %>
           <%= link_to associate_project_company_stage_path(company, stage, project), method: :patch do %>
             <i class="fa fa-check"></i>
           <% end %>
@@ -22,7 +22,7 @@
     <ul>
       <% stage_projects.each do |project| %>
         <li>
-          <%= link_to "#{project.name} (#{project.current_team&.name})", edit_company_stage_stage_project_config_path(company, stage, project.stage_project_configs.find_by(stage: stage)) %>
+          <%= link_to "#{project.name} (#{project.team&.name})", edit_company_stage_stage_project_config_path(company, stage, project.stage_project_configs.find_by(stage: stage)) %>
           <%= link_to dissociate_project_company_stage_path(company, stage, project), method: :patch do %>
             <i class="fa fa-times"></i>
           <% end %>

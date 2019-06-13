@@ -13,7 +13,7 @@ class ProductsController < AuthenticatedController
   def show
     @product_projects = @product.projects.order(end_date: :desc)
     @projects_summary = ProjectsSummaryData.new(@product.projects)
-    return render :show if @product_projects.blank?
+    render :show
   end
 
   def new
@@ -56,7 +56,7 @@ class ProductsController < AuthenticatedController
   private
 
   def product_params
-    params.require(:product).permit(:customer_id, :team_id, :name)
+    params.require(:product).permit(:customer_id, :name)
   end
 
   def assign_product
