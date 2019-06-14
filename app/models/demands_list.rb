@@ -10,7 +10,6 @@
 #  class_of_service  :integer
 #  commitment_date   :datetime
 #  created_date      :datetime
-#  customer_id       :bigint(8)
 #  demand_id         :string
 #  demand_title      :string
 #  demand_type       :integer
@@ -20,8 +19,6 @@
 #  end_date          :datetime
 #  id                :bigint(8)        primary key
 #  leadtime          :decimal(, )
-#  product_id        :bigint(8)
-#  product_name      :string
 #  project_id        :bigint(8)
 #  project_name      :string
 #  queued_time       :float
@@ -42,18 +39,16 @@ class DemandsList < ApplicationRecord
   enum class_of_service: { standard: 0, expedite: 1, fixed_date: 2, intangible: 3 }
 
   belongs_to :demand, foreign_key: :id, inverse_of: :demands_list
-  belongs_to :customer
-  belongs_to :product
   belongs_to :project
 
   scope :finished, -> { kept.where('demands_lists.end_date IS NOT NULL') }
-  scope :finished_with_leadtime, -> { kept.story.where('demands_lists.end_date IS NOT NULL AND leadtime IS NOT NULL') }
+  scope :finished_with_leadtime, -> { kept.story.where('demands_lists.end_date IS NOT NULL AND demands_lists.leadtime IS NOT NULL') }
   scope :in_wip, -> { kept.where('demands_lists.commitment_date IS NOT NULL AND demands_lists.end_date IS NULL') }
   scope :not_started, -> { kept.where('demands_lists.commitment_date IS NULL AND demands_lists.end_date IS NULL') }
 
   scope :grouped_end_date_by_month, -> { kept.finished.order(end_date: :desc).group_by { |demand| [demand.end_date.to_date.cwyear, demand.end_date.to_date.month] } }
 
-  scope :with_effort, -> { story.where('effort_downstream > 0 OR effort_upstream > 0') }
+  scope :with_effort, -> { story.where('demands_lists.effort_downstream > 0 OR demands_lists.effort_upstream > 0') }
 
   scope :to_dates, ->(start_date, end_date) { where('(demands_lists.end_date IS NULL AND demands_lists.created_date BETWEEN :start_date AND :end_date) OR (demands_lists.end_date BETWEEN :start_date AND :end_date)', start_date: start_date.beginning_of_day, end_date: end_date.end_of_day) }
 

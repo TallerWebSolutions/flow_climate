@@ -376,12 +376,9 @@ SELECT
     NULL::character varying AS demand_id,
     NULL::character varying AS slug,
     NULL::bigint AS project_id,
-    NULL::bigint AS product_id,
-    NULL::bigint AS customer_id,
     NULL::timestamp without time zone AS created_date,
     NULL::timestamp without time zone AS commitment_date,
     NULL::timestamp without time zone AS end_date,
-    NULL::character varying AS product_name,
     NULL::character varying AS project_name,
     NULL::integer AS artifact_type,
     NULL::integer AS demand_type,
@@ -687,8 +684,7 @@ CREATE TABLE public.products (
     customer_id integer NOT NULL,
     name character varying NOT NULL,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
-    projects_count integer DEFAULT 0
+    updated_at timestamp without time zone NOT NULL
 );
 
 
@@ -709,6 +705,38 @@ CREATE SEQUENCE public.products_id_seq
 --
 
 ALTER SEQUENCE public.products_id_seq OWNED BY public.products.id;
+
+
+--
+-- Name: products_projects; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.products_projects (
+    id bigint NOT NULL,
+    product_id integer NOT NULL,
+    project_id integer NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: products_projects_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.products_projects_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: products_projects_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.products_projects_id_seq OWNED BY public.products_projects.id;
 
 
 --
@@ -931,7 +959,6 @@ CREATE TABLE public.projects (
     initial_scope integer NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    product_id integer,
     nickname character varying,
     percentage_effort_to_bugs integer DEFAULT 0 NOT NULL,
     team_id integer,
@@ -1431,6 +1458,13 @@ ALTER TABLE ONLY public.products ALTER COLUMN id SET DEFAULT nextval('public.pro
 
 
 --
+-- Name: products_projects id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.products_projects ALTER COLUMN id SET DEFAULT nextval('public.products_projects_id_seq'::regclass);
+
+
+--
 -- Name: project_change_deadline_histories id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1685,6 +1719,14 @@ ALTER TABLE ONLY public.plans
 
 ALTER TABLE ONLY public.products
     ADD CONSTRAINT products_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: products_projects products_projects_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.products_projects
+    ADD CONSTRAINT products_projects_pkey PRIMARY KEY (id);
 
 
 --
@@ -2068,6 +2110,27 @@ CREATE UNIQUE INDEX index_products_on_customer_id_and_name ON public.products US
 
 
 --
+-- Name: index_products_projects_on_product_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_products_projects_on_product_id ON public.products_projects USING btree (product_id);
+
+
+--
+-- Name: index_products_projects_on_product_id_and_project_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_products_projects_on_product_id_and_project_id ON public.products_projects USING btree (product_id, project_id);
+
+
+--
+-- Name: index_products_projects_on_project_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_products_projects_on_project_id ON public.products_projects USING btree (project_id);
+
+
+--
 -- Name: index_project_change_deadline_histories_on_project_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2265,12 +2328,9 @@ CREATE OR REPLACE VIEW public.demands_lists AS
     d.demand_id,
     d.slug,
     proj.id AS project_id,
-    prod.id AS product_id,
-    cust.id AS customer_id,
     d.created_date,
     d.commitment_date,
     d.end_date,
-    prod.name AS product_name,
     proj.name AS project_name,
     d.artifact_type,
     d.demand_type,
@@ -2293,12 +2353,10 @@ CREATE OR REPLACE VIEW public.demands_lists AS
            FROM public.demand_transitions touch_transitions,
             public.stages s
           WHERE ((touch_transitions.demand_id = d.id) AND (s.id = touch_transitions.stage_id) AND (s.queue = false))) AS touch_time
-   FROM ((((public.demands d
+   FROM ((public.demands d
      JOIN public.projects proj ON ((d.project_id = proj.id)))
-     JOIN public.products prod ON ((proj.product_id = prod.id)))
-     JOIN public.customers cust ON ((prod.customer_id = cust.id)))
      LEFT JOIN public.demand_blocks blocks ON (((blocks.demand_id = d.id) AND (blocks.unblock_time >= blocks.block_time) AND (blocks.active = true) AND (blocks.unblock_time IS NOT NULL))))
-  GROUP BY d.id, proj.id, prod.id, cust.id;
+  GROUP BY d.id, proj.id;
 
 
 --
@@ -2323,6 +2381,14 @@ ALTER TABLE ONLY public.demands_team_members
 
 ALTER TABLE ONLY public.demand_blocks
     ADD CONSTRAINT fk_rails_0c8fa8d3a7 FOREIGN KEY (demand_id) REFERENCES public.demands(id);
+
+
+--
+-- Name: products_projects fk_rails_170b9c6651; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.products_projects
+    ADD CONSTRAINT fk_rails_170b9c6651 FOREIGN KEY (project_id) REFERENCES public.projects(id);
 
 
 --
@@ -2371,14 +2437,6 @@ ALTER TABLE ONLY public.demand_data_processments
 
 ALTER TABLE ONLY public.project_change_deadline_histories
     ADD CONSTRAINT fk_rails_1f60eef53a FOREIGN KEY (project_id) REFERENCES public.projects(id);
-
-
---
--- Name: projects fk_rails_21e11c2480; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.projects
-    ADD CONSTRAINT fk_rails_21e11c2480 FOREIGN KEY (product_id) REFERENCES public.products(id);
 
 
 --
@@ -2598,6 +2656,14 @@ ALTER TABLE ONLY public.demand_transitions
 
 
 --
+-- Name: products_projects fk_rails_c648f2cd3e; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.products_projects
+    ADD CONSTRAINT fk_rails_c648f2cd3e FOREIGN KEY (product_id) REFERENCES public.products(id);
+
+
+--
 -- Name: stages_teams fk_rails_cb288435d9; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2800,6 +2866,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190611195749'),
 ('20190612195656'),
 ('20190613135818'),
-('20190613192708');
+('20190613192708'),
+('20190614134919');
 
 

@@ -1,0 +1,1 @@
+$('#project-products-associations').html("<%= escape_javascript(render 'projects/project_products_tab', company: @company, project: @project, not_associated_products: @not_associated_products, project_products: @project_products).html_safe %>");

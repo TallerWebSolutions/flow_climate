@@ -8,7 +8,6 @@ RSpec.describe Project, type: :model do
 
   context 'associations' do
     it { is_expected.to belong_to :company }
-    it { is_expected.to belong_to :product }
     it { is_expected.to belong_to :team }
 
     it { is_expected.to have_many(:project_risk_configs).dependent(:destroy) }
@@ -26,7 +25,8 @@ RSpec.describe Project, type: :model do
     it { is_expected.to have_many(:user_project_roles).dependent(:destroy) }
     it { is_expected.to have_many(:users).through(:user_project_roles) }
 
-    it { is_expected.to have_and_belong_to_many :customers }
+    it { is_expected.to have_and_belong_to_many(:customers).dependent(:destroy) }
+    it { is_expected.to have_and_belong_to_many(:products).dependent(:destroy) }
   end
 
   context 'validations' do
@@ -66,59 +66,29 @@ RSpec.describe Project, type: :model do
         end
       end
 
-      context 'the product cannot be blank to outsourcing projects' do
-        context 'when is outsourcing and the product is blank' do
-          let(:project) { Fabricate.build :project, project_type: :outsourcing, product: nil }
-
-          it 'fails the validation' do
-            expect(project.valid?).to be false
-            expect(project.errors.full_messages).to eq ['Produto é obrigatório para projeto de outsourcing']
-          end
-        end
-
-        context 'when is outsourcing and the product is present' do
-          let(:project) { Fabricate.build :project, project_type: :outsourcing }
-
-          it { expect(project.valid?).to be true }
-        end
-
-        context 'when it is consulting' do
-          let(:project) { Fabricate :project, project_type: :consulting, product: nil }
-
-          it { expect(project.valid?).to be true }
-        end
-
-        context 'when it is consulting' do
-          let(:project) { Fabricate :project, project_type: :training, product: nil }
-
-          it { expect(project.valid?).to be true }
-        end
-      end
-
       context 'uniqueness' do
-        context 'name to product' do
-          let(:customer) { Fabricate :customer }
-          let(:product) { Fabricate :product, customer: customer }
+        context 'name to company' do
+          let(:company) { Fabricate :company }
 
           context 'same name in same product' do
-            let!(:project) { Fabricate :project, customers: [customer], product: product, name: 'zzz' }
-            let!(:other_project) { Fabricate.build :project, customers: [customer], product: product, name: 'zzz' }
+            let!(:project) { Fabricate :project, company: company, name: 'zzz' }
+            let!(:other_project) { Fabricate.build :project, company: company, name: 'zzz' }
 
             it 'does not accept the model' do
               expect(other_project.valid?).to be false
-              expect(other_project.errors[:name]).to eq ['Não deve repetir nome de projeto para o mesmo produto.']
+              expect(other_project.errors[:name]).to eq ['Não deve repetir nome de projeto para a mesma empresa.']
             end
           end
 
-          context 'different name in same product' do
-            let!(:project) { Fabricate :project, customers: [customer], product: product, name: 'zzz' }
-            let!(:other_project) { Fabricate.build :project, customers: [customer], product: product, name: 'aaa' }
+          context 'different name in same company' do
+            let!(:project) { Fabricate :project, company: company, name: 'zzz' }
+            let!(:other_project) { Fabricate.build :project, company: company, name: 'aaa' }
 
             it { expect(other_project.valid?).to be true }
           end
 
-          context 'same name in other product' do
-            let!(:project) { Fabricate :project, customers: [customer], product: product, name: 'zzz' }
+          context 'same name in other company' do
+            let!(:project) { Fabricate :project, company: company, name: 'zzz' }
             let!(:other_project) { Fabricate.build :project, name: 'zzz' }
 
             it { expect(other_project.valid?).to be true }
@@ -126,10 +96,6 @@ RSpec.describe Project, type: :model do
         end
       end
     end
-  end
-
-  context 'delegations' do
-    it { is_expected.to delegate_method(:name).to(:product).with_prefix }
   end
 
   context 'scopes' do
@@ -1057,6 +1023,46 @@ RSpec.describe Project, type: :model do
       before { project.remove_customer(customer) }
 
       it { expect(project.reload.customers).to eq [] }
+    end
+  end
+
+  describe '#add_product' do
+    let(:product) { Fabricate :product }
+
+    context 'when the project does not have the product yet' do
+      let(:project) { Fabricate :project }
+
+      before { project.add_product(product) }
+
+      it { expect(project.reload.products).to eq [product] }
+    end
+
+    context 'when the project has the product' do
+      let(:project) { Fabricate :project, products: [product] }
+
+      before { project.add_product(product) }
+
+      it { expect(project.reload.products).to eq [product] }
+    end
+  end
+
+  describe '#remove_product' do
+    let(:product) { Fabricate :product }
+
+    context 'when the project does not have the product yet' do
+      let(:project) { Fabricate :project }
+
+      before { project.remove_product(product) }
+
+      it { expect(project.reload.products).to eq [] }
+    end
+
+    context 'when the project has the product' do
+      let(:project) { Fabricate :project, products: [product] }
+
+      before { project.remove_product(product) }
+
+      it { expect(project.reload.products).to eq [] }
     end
   end
 

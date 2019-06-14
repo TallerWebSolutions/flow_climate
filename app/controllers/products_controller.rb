@@ -48,9 +48,8 @@ class ProductsController < AuthenticatedController
   end
 
   def destroy
-    return redirect_to company_products_path(@company) if @product.destroy
-
-    redirect_to(company_products_path(@company), flash: { error: @product.errors.full_messages.join(',') })
+    @product.destroy
+    redirect_to company_products_path(@company)
   end
 
   private

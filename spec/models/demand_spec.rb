@@ -536,7 +536,7 @@ RSpec.describe Demand, type: :model do
       let(:customer) { Fabricate :customer, company: company }
       let(:product) { Fabricate :product, customer: customer }
 
-      let(:project) { Fabricate :project, product: product }
+      let(:project) { Fabricate :project, products: [product] }
       let!(:stage) { Fabricate :stage, company: company, projects: [project], end_point: false, commitment_point: false, stage_stream: :downstream, order: 0 }
       let!(:demand_transition) { Fabricate :demand_transition, demand: demand, stage: stage }
       let!(:demand) { Fabricate :demand, project: project, effort_downstream: nil }
@@ -584,7 +584,7 @@ RSpec.describe Demand, type: :model do
       let(:company) { Fabricate :company }
       let(:customer) { Fabricate :customer, company: company }
       let(:product) { Fabricate :product, customer: customer }
-      let(:project) { Fabricate :project, product: product }
+      let(:project) { Fabricate :project, products: [product] }
 
       let!(:queue_stage) { Fabricate :stage, company: company, projects: [project], end_point: false, commitment_point: false, queue: false, stage_stream: :downstream }
       let!(:touch_stage) { Fabricate :stage, company: company, projects: [project], end_point: false, commitment_point: false, queue: true, stage_stream: :downstream }

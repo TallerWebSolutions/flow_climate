@@ -31,10 +31,4 @@ class Customer < ApplicationRecord
 
   validates :company, :name, presence: true
   validates :name, uniqueness: { scope: :company, message: I18n.t('customer.name.uniqueness') }
-
-  def regressive_avg_hours_per_demand
-    return avg_hours_per_demand if avg_hours_per_demand.positive?
-
-    company.avg_hours_per_demand
-  end
 end

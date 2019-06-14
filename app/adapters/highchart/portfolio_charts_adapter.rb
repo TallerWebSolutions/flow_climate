@@ -5,7 +5,7 @@ module Highchart
     attr_reader :projects, :start_date, :end_date
 
     def initialize(projects, start_date, end_date, project_status)
-      @projects = Project.includes(:product).where(id: projects.map(&:id))
+      @projects = Project.where(id: projects.map(&:id))
       @projects = @projects.where(status: project_status) if project_status.present?
 
       @start_date = start_date

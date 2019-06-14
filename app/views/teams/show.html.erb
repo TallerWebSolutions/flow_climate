@@ -44,7 +44,7 @@
   <h2><%= t('projects.index.title') %></h2>
 
   <div id="projects-table">
-    <%= render 'projects/projects_table', company: @company, projects_list: @team_projects, projects_summary: @projects_summary, parent_id: @team.id, parent_type: 'team' %>
+    <%= render 'projects/projects_table', company: @company, projects_list: @team_projects, projects_summary: @projects_summary, projects_ids: @team_projects.map(&:id).flatten.join(',') %>
   </div>
 </div>
 

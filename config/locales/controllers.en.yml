@@ -229,6 +229,8 @@ en:
         no_demands: "No inconsistent demands"
         demands: "%{value} demands"
         help: "Inconsistent demands are demands committed before project's start date or ended after project's end date."
+      not_associated_products: "Not associated products"
+      project_products: "Products in Project"
     charts:
       xlabel:
         weeks: "Weeks"
@@ -359,6 +361,7 @@ en:
       stages: "Stages"
       jira: "Jira"
       customers: "Customers"
+      products: "Products"
     data_analysis:
       risk_deadline: "Deadline"
       risk_money: "Cost"

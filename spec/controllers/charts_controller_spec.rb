@@ -48,8 +48,8 @@ RSpec.describe ChartsController, type: :controller do
       context 'passing valid parameters' do
         context 'for team' do
           let(:team) { Fabricate :team, company: company }
-          let!(:first_project) { Fabricate :project, company: company, customers: [customer], product: product, team: team }
-          let!(:second_project) { Fabricate :project, company: company, customers: [customer], product: product, team: team }
+          let!(:first_project) { Fabricate :project, company: company, customers: [customer], products: [product], team: team }
+          let!(:second_project) { Fabricate :project, company: company, customers: [customer], products: [product], team: team }
 
           it 'builds the operation report and respond the JS render the template' do
             get :build_operational_charts, params: { company_id: company, projects_ids: team.projects.map(&:id).to_csv }, xhr: true
@@ -81,8 +81,8 @@ RSpec.describe ChartsController, type: :controller do
       let(:team) { Fabricate :team, company: company }
 
       context 'passing valid parameters' do
-        let!(:first_project) { Fabricate :project, company: company, customers: [customer], product: product, team: team, status: :executing, start_date: Time.zone.yesterday, end_date: 10.days.from_now }
-        let!(:second_project) { Fabricate :project, company: company, customers: [customer], product: product, team: team, status: :executing, start_date: Time.zone.yesterday, end_date: 50.days.from_now }
+        let!(:first_project) { Fabricate :project, company: company, customers: [customer], products: [product], team: team, status: :executing, start_date: Time.zone.yesterday, end_date: 10.days.from_now }
+        let!(:second_project) { Fabricate :project, company: company, customers: [customer], products: [product], team: team, status: :executing, start_date: Time.zone.yesterday, end_date: 50.days.from_now }
 
         it 'builds the operation report and respond the JS render the template' do
           get :build_strategic_charts, params: { company_id: company, projects_ids: team.projects.map(&:id).to_csv }, xhr: true
@@ -117,8 +117,8 @@ RSpec.describe ChartsController, type: :controller do
       context 'passing valid parameters' do
         context 'having projects' do
           context 'with teams in the projects' do
-            let!(:project) { Fabricate :project, company: company, product: product, team: team }
-            let!(:other_project) { Fabricate :project, company: company, product: product, team: team }
+            let!(:project) { Fabricate :project, company: company, products: [product], team: team }
+            let!(:other_project) { Fabricate :project, company: company, products: [product], team: team }
 
             it 'builds the status report and respond the JS render the template' do
               get :build_status_report_charts, params: { company_id: company, projects_ids: Project.all.map(&:id).to_csv }, xhr: true
@@ -128,8 +128,8 @@ RSpec.describe ChartsController, type: :controller do
           end
 
           context 'with no teams in the projects' do
-            let!(:project) { Fabricate :project, company: company, product: product }
-            let!(:other_project) { Fabricate :project, company: company, product: product }
+            let!(:project) { Fabricate :project, company: company, products: [product] }
+            let!(:other_project) { Fabricate :project, company: company, products: [product] }
 
             it 'builds the status report and respond the JS render the template' do
               get :build_status_report_charts, params: { company_id: company, projects_ids: Project.all.map(&:id).to_csv }, xhr: true

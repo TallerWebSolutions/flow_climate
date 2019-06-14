@@ -15,8 +15,8 @@ RSpec.describe TeamService, type: :service do
 
     context 'with data' do
       let!(:product) { Fabricate :product, customer: customer }
-      let(:first_project) { Fabricate :project, company: company, product: product, team: team, customers: [customer], project_type: :outsourcing, start_date: 1.month.ago, end_date: Time.zone.tomorrow }
-      let(:second_project) { Fabricate :project, company: company, product: product, team: team, customers: [customer], project_type: :outsourcing, start_date: 1.month.ago, end_date: Time.zone.tomorrow }
+      let(:first_project) { Fabricate :project, company: company, team: team, customers: [customer], project_type: :outsourcing, start_date: 1.month.ago, end_date: Time.zone.tomorrow }
+      let(:second_project) { Fabricate :project, company: company, team: team, customers: [customer], project_type: :outsourcing, start_date: 1.month.ago, end_date: Time.zone.tomorrow }
 
       let!(:first_demand) { Fabricate :demand, project: first_project, end_date: 1.month.ago }
       let!(:second_demand) { Fabricate :demand, project: first_project, end_date: 1.month.ago }

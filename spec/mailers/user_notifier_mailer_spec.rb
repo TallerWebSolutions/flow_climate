@@ -18,10 +18,10 @@ RSpec.describe UserNotifierMailer, type: :mailer do
       let(:third_user) { Fabricate :user, email_notifications: false }
       let(:fourth_user) { Fabricate :user }
 
-      let!(:first_project) { Fabricate :project, company: company, customers: [customer], product: product, status: :executing, start_date: 2.months.ago, end_date: Time.zone.today }
-      let!(:second_project) { Fabricate :project, company: company, customers: [customer], product: product, status: :waiting, start_date: 2.days.from_now, end_date: 1.month.from_now }
-      let!(:third_project) { Fabricate :project, company: company, customers: [customer], product: product, status: :waiting, start_date: 4.days.from_now, end_date: 2.months.from_now }
-      let!(:fourth_project) { Fabricate :project, company: company, customers: [customer], product: product, status: :executing, start_date: 2.months.ago, end_date: 3.months.from_now }
+      let!(:first_project) { Fabricate :project, company: company, customers: [customer], products: [product], status: :executing, start_date: 2.months.ago, end_date: Time.zone.today }
+      let!(:second_project) { Fabricate :project, company: company, customers: [customer], products: [product], status: :waiting, start_date: 2.days.from_now, end_date: 1.month.from_now }
+      let!(:third_project) { Fabricate :project, company: company, customers: [customer], products: [product], status: :waiting, start_date: 4.days.from_now, end_date: 2.months.from_now }
+      let!(:fourth_project) { Fabricate :project, company: company, customers: [customer], products: [product], status: :executing, start_date: 2.months.ago, end_date: 3.months.from_now }
 
       let!(:first_demand) { Fabricate :demand, discarded_at: nil, end_date: 1.week.ago }
       let!(:second_demand) { Fabricate :demand, discarded_at: nil, end_date: 1.week.ago }

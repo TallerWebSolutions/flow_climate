@@ -105,8 +105,7 @@ Rails.application.routes.draw do
       end
 
       collection do
-        get 'product_options_for_customer/(:customer_id)', action: :product_options_for_customer
-        get 'search_for_projects/:status_filter/:parent_id/:parent_type', action: :search_for_projects, as: 'search_for_projects'
+        get 'search_for_projects/:status_filter/:projects_ids', action: :search_for_projects, as: 'search_for_projects'
       end
 
       member do
@@ -116,6 +115,8 @@ Rails.application.routes.draw do
         patch :copy_stages_from
         patch 'associate_customer/:customer_id', action: :associate_customer, as: 'associate_customer'
         patch 'dissociate_customer/:customer_id', action: :dissociate_customer, as: 'dissociate_customer'
+        patch 'associate_product/:product_id', action: :associate_product, as: 'associate_product'
+        patch 'dissociate_product/:product_id', action: :dissociate_product, as: 'dissociate_product'
       end
     end
 

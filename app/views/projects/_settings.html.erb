@@ -17,6 +17,7 @@
       <button class="tablinks tablinks-project-settings" id="tab-project-stages" onclick="openTab(event, 'content-project-stages', 'tablinks-project-settings', 'tabcontent')"><%= t('projects.settings.stages') %></button>
       <button class="tablinks tablinks-project-settings" id="tab-project-jira" onclick="openTab(event, 'content-project-jira', 'tablinks-project-settings', 'tabcontent')"><%= t('projects.settings.jira') %></button>
       <button class="tablinks tablinks-project-settings" id="tab-project-customers" onclick="openTab(event, 'project-customers-associations', 'tablinks-project-settings', 'tabcontent')"><%= t('projects.settings.customers') %></button>
+      <button class="tablinks tablinks-project-settings" id="tab-project-products" onclick="openTab(event, 'project-products-associations', 'tablinks-project-settings', 'tabcontent')"><%= t('projects.settings.products') %></button>
     </div>
   </div>
 </div>
@@ -35,6 +36,10 @@
 
 <div id="project-customers-associations" class="tabcontent">
   <%= render 'projects/project_customers_tab', company: company, project: project, not_associated_customers: @not_associated_customers, project_customers: @project_customers %>
+</div>
+
+<div id="project-products-associations" class="tabcontent">
+  <%= render 'projects/project_products_tab', company: company, project: project, not_associated_products: @not_associated_products, project_products: @project_products %>
 </div>
 
 <% content_for :javascript do %>

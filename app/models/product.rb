@@ -4,12 +4,11 @@
 #
 # Table name: products
 #
-#  created_at     :datetime         not null
-#  customer_id    :integer          not null, indexed, indexed => [name]
-#  id             :bigint(8)        not null, primary key
-#  name           :string           not null, indexed => [customer_id]
-#  projects_count :integer          default(0)
-#  updated_at     :datetime         not null
+#  created_at  :datetime         not null
+#  customer_id :integer          not null, indexed, indexed => [name]
+#  id          :bigint(8)        not null, primary key
+#  name        :string           not null, indexed => [customer_id]
+#  updated_at  :datetime         not null
 #
 # Indexes
 #
@@ -25,17 +24,11 @@ class Product < ApplicationRecord
   include ProjectAggregator
 
   belongs_to :customer, counter_cache: true
-  has_many :projects, dependent: :restrict_with_error
+  has_and_belongs_to_many :projects, dependent: :destroy
   has_many :teams, -> { distinct }, through: :projects
 
   validates :name, :customer, presence: true
   validates :name, uniqueness: { scope: :customer, message: I18n.t('product.name.uniqueness') }
 
   delegate :name, to: :customer, prefix: true
-
-  def regressive_avg_hours_per_demand
-    return avg_hours_per_demand if avg_hours_per_demand.positive?
-
-    customer.regressive_avg_hours_per_demand
-  end
 end

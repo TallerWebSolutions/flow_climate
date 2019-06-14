@@ -14,7 +14,6 @@
 #  name                      :string           not null, indexed => [company_id]
 #  nickname                  :string
 #  percentage_effort_to_bugs :integer          default(0), not null
-#  product_id                :integer
 #  project_type              :integer          not null
 #  qty_hours                 :decimal(, )
 #  start_date                :date             not null
@@ -29,7 +28,6 @@
 #
 # Foreign Keys
 #
-#  fk_rails_21e11c2480  (product_id => products.id)
 #  fk_rails_44a549d7b3  (company_id => companies.id)
 #  fk_rails_ecc227a0c2  (team_id => teams.id)
 #
@@ -39,10 +37,10 @@ class Project < ApplicationRecord
   enum project_type: { outsourcing: 0, consulting: 1, training: 2, domestic_product: 3 }
 
   belongs_to :company
-  belongs_to :product, counter_cache: true
   belongs_to :team
 
   has_and_belongs_to_many :customers, dependent: :destroy
+  has_and_belongs_to_many :products, dependent: :destroy
 
   has_one :project_jira_config, class_name: 'Jira::ProjectJiraConfig', dependent: :destroy, autosave: true, inverse_of: :project
 
@@ -60,10 +58,8 @@ class Project < ApplicationRecord
   has_many :users, through: :user_project_roles
 
   validates :company, :qty_hours, :project_type, :name, :status, :start_date, :end_date, :status, :initial_scope, :percentage_effort_to_bugs, :max_work_in_progress, presence: true
-  validates :name, uniqueness: { scope: :product, message: I18n.t('project.name.uniqueness') }
-  validate :hour_value_project_value?, :product_required?
-
-  delegate :name, to: :product, prefix: true, allow_nil: true
+  validates :name, uniqueness: { scope: :company, message: I18n.t('project.name.uniqueness') }
+  validate :hour_value_project_value?
 
   scope :waiting_projects_starting_within_week, -> { waiting.where('EXTRACT(week FROM start_date) = :week AND EXTRACT(year FROM start_date) = :year', week: Time.zone.today.cweek, year: Time.zone.today.cwyear) }
   scope :running_projects_finishing_within_week, -> { running.where('EXTRACT(week FROM end_date) = :week AND EXTRACT(year FROM end_date) = :year', week: Time.zone.today.cweek, year: Time.zone.today.cwyear) }
@@ -85,6 +81,18 @@ class Project < ApplicationRecord
 
   def remove_customer(customer)
     customers.delete(customer) if customers.include?(customer)
+    save
+  end
+
+  def add_product(product)
+    return if products.include?(product)
+
+    products << product
+    save
+  end
+
+  def remove_product(product)
+    products.delete(product) if products.include?(product)
     save
   end
 
@@ -208,7 +216,7 @@ class Project < ApplicationRecord
   end
 
   def required_hours
-    remaining_backlog * regressive_hours_per_demand
+    remaining_backlog * avg_hours_per_demand
   end
 
   def remaining_hours
@@ -328,23 +336,11 @@ class Project < ApplicationRecord
     remaining_days_to_period(date).zero? || total_days.zero? || remaining_backlog(date).zero?
   end
 
-  def regressive_hours_per_demand
-    return avg_hours_per_demand if avg_hours_per_demand.positive?
-
-    product.regressive_avg_hours_per_demand
-  end
-
   def hour_value_project_value?
     return true if hour_value.present? || value.present?
 
     errors.add(:value, I18n.t('project.validations.no_value'))
     errors.add(:hour_value, I18n.t('project.validations.no_value'))
-  end
-
-  def product_required?
-    return true if consulting? || training?
-
-    errors.add(:product, I18n.t('project.validations.product_blank')) if outsourcing? && product.blank?
   end
 
   def remaining_days_to_period(from_date = Time.zone.now)
