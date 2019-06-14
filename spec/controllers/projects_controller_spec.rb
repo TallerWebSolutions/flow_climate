@@ -760,5 +760,99 @@ RSpec.describe ProjectsController, type: :controller do
         end
       end
     end
+
+    describe 'PATCH #associate_product' do
+      let(:company) { Fabricate :company, users: [user] }
+      let(:customer) { Fabricate :customer, company: company }
+      let!(:project) { Fabricate :project, company: company }
+
+      let!(:product) { Fabricate :product, customer: customer, projects: [project] }
+      let!(:other_product) { Fabricate :product, customer: customer, projects: [project] }
+
+      context 'passing valid parameters' do
+        it 'associates the product and renders the template' do
+          patch :associate_product, params: { company_id: company, id: project, product_id: product }, xhr: true
+          expect(response).to render_template 'projects/associate_dissociate_product'
+          expect(project.reload.products).to match_array [product, other_product]
+        end
+      end
+
+      context 'passing an invalid' do
+        context 'non-existent project' do
+          before { patch :associate_product, params: { company_id: company, id: 'foo', product_id: product }, xhr: true }
+
+          it { expect(response).to have_http_status :not_found }
+        end
+
+        context 'non-existent product' do
+          before { patch :associate_product, params: { company_id: company, id: 'foo', product_id: 'foo' }, xhr: true }
+
+          it { expect(response).to have_http_status :not_found }
+        end
+
+        context 'company' do
+          context 'non-existent' do
+            before { patch :associate_product, params: { company_id: 'foo', id: project, product_id: product }, xhr: true }
+
+            it { expect(response).to have_http_status :not_found }
+          end
+
+          context 'not permitted' do
+            let(:company) { Fabricate :company, users: [] }
+
+            before { patch :associate_product, params: { company_id: company, id: project, product_id: product }, xhr: true }
+
+            it { expect(response).to have_http_status :not_found }
+          end
+        end
+      end
+    end
+
+    describe 'PATCH #dissociate_product' do
+      let(:company) { Fabricate :company, users: [user] }
+      let(:customer) { Fabricate :customer, company: company }
+      let!(:project) { Fabricate :project, company: company }
+
+      let!(:product) { Fabricate :product, customer: customer, projects: [project] }
+      let!(:other_product) { Fabricate :product, customer: customer, projects: [project] }
+
+      context 'passing valid parameters' do
+        it 'assigns the instance variables and renders the template' do
+          patch :dissociate_product, params: { company_id: company, id: project, product_id: product }, xhr: true
+          expect(response).to render_template 'projects/associate_dissociate_product'
+          expect(project.reload.products).to eq [other_product]
+        end
+      end
+
+      context 'passing an invalid' do
+        context 'non-existent project' do
+          before { patch :dissociate_product, params: { company_id: company, id: 'foo', product_id: product }, xhr: true }
+
+          it { expect(response).to have_http_status :not_found }
+        end
+
+        context 'non-existent product' do
+          before { patch :dissociate_product, params: { company_id: company, id: 'foo', product_id: 'foo' }, xhr: true }
+
+          it { expect(response).to have_http_status :not_found }
+        end
+
+        context 'company' do
+          context 'non-existent' do
+            before { patch :dissociate_product, params: { company_id: 'foo', id: project, product_id: product }, xhr: true }
+
+            it { expect(response).to have_http_status :not_found }
+          end
+
+          context 'not permitted' do
+            let(:company) { Fabricate :company, users: [] }
+
+            before { patch :dissociate_product, params: { company_id: company, id: project, product_id: product }, xhr: true }
+
+            it { expect(response).to have_http_status :not_found }
+          end
+        end
+      end
+    end
   end
 end

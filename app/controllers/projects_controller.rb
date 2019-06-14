@@ -4,11 +4,12 @@ class ProjectsController < AuthenticatedController
   before_action :user_gold_check
 
   before_action :assign_company
-  before_action :assign_project, only: %i[show edit update destroy synchronize_jira finish_project statistics copy_stages_from associate_customer dissociate_customer]
+  before_action :assign_project, only: %i[show edit update destroy synchronize_jira finish_project statistics copy_stages_from associate_customer dissociate_customer associate_product dissociate_product]
 
   def show
     assign_project_stages
     assign_customer_projects
+    assign_product_projects
 
     @ordered_project_risk_alerts = @project.project_risk_alerts.order(created_at: :desc)
     @project_change_deadline_histories = @project.project_change_deadline_histories.includes(:user)
@@ -106,6 +107,20 @@ class ProjectsController < AuthenticatedController
     respond_to { |format| format.js { render 'projects/associate_dissociate_customer' } }
   end
 
+  def associate_product
+    product = @company.products.find(params[:product_id])
+    @project.add_product(product)
+    assign_product_projects
+    respond_to { |format| format.js { render 'projects/associate_dissociate_product' } }
+  end
+
+  def dissociate_product
+    product = @company.products.find(params[:product_id])
+    @project.remove_product(product)
+    assign_product_projects
+    respond_to { |format| format.js { render 'projects/associate_dissociate_product' } }
+  end
+
   private
 
   def assign_project_stages
@@ -143,5 +158,10 @@ class ProjectsController < AuthenticatedController
   def assign_customer_projects
     @project_customers = @project.customers.order(:name)
     @not_associated_customers = @company.customers - @project_customers
+  end
+
+  def assign_product_projects
+    @project_products = @project.products.order(:name)
+    @not_associated_products = @company.products - @project_products
   end
 end

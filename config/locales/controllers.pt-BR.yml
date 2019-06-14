@@ -245,6 +245,8 @@ pt-BR:
         no_demands: "Nenhuma demanda inconsistente"
         demands: "%{value} demandas"
         help: "Demandas inconsistentes são demandas com seu ponto de comprometimento antes da data de início do projeto ou com data fim depois da data final do projeto."
+      not_associated_products: "Produtos não associados"
+      project_products: "Produtos no Projeto"
     charts:
       xlabel:
         weeks: "Semanas"
@@ -377,6 +379,7 @@ pt-BR:
       stages: "Etapas"
       jira: "Jira"
       customers: "Clientes"
+      products: "Produtos"
     data_analysis:
       risk_deadline: "Prazo"
       risk_money: "Custo"
