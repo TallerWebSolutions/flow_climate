@@ -111,8 +111,8 @@ RSpec.describe CompaniesController, type: :controller do
           let!(:team_member) { Fabricate :team_member, team: team, name: 'aaa' }
           let!(:other_team_member) { Fabricate :team_member, team: team, name: 'zzz' }
 
-          let!(:first_project) { Fabricate :project, customers: [customer], status: :executing, start_date: Time.zone.today, end_date: Time.zone.now }
-          let!(:second_project) { Fabricate :project, customers: [customer], status: :maintenance, start_date: 1.month.from_now, end_date: 1.month.from_now }
+          let!(:first_project) { Fabricate :project, company: company, customers: [customer], status: :executing, start_date: Time.zone.today, end_date: Time.zone.now }
+          let!(:second_project) { Fabricate :project, company: company, customers: [customer], status: :maintenance, start_date: 1.month.from_now, end_date: 1.month.from_now }
 
           let!(:first_stage) { Fabricate :stage, company: company, teams: [team], order: 3 }
           let!(:second_stage) { Fabricate :stage, company: company, teams: [other_team], order: 2 }

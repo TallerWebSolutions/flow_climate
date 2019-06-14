@@ -141,7 +141,7 @@ en:
       uniqueness: "Should have only one to the same customer."
   project:
     name:
-      uniqueness: "Should have only one to the same product."
+      uniqueness: "Should have only one to the same company."
   team:
     name:
       uniqueness: "Should have only one to the same company."

@@ -105,9 +105,9 @@ RSpec.describe ProjectsRepository, type: :repository do
       let!(:first_project) { Fabricate :project, company: company, customers: [customer], start_date: 1.week.ago, end_date: 2.months.from_now, status: :executing }
       let!(:second_project) { Fabricate :project, company: company, customers: [customer], start_date: 1.month.from_now, end_date: 3.months.from_now, status: :maintenance }
       let!(:third_project) { Fabricate :project, company: company, customers: [customer], start_date: 2.months.from_now, end_date: 2.months.from_now, status: :waiting }
-      let!(:fourth_project) { Fabricate :project, company: company, customers: [customer], product: product, start_date: 2.months.from_now, end_date: 2.months.from_now, status: :maintenance }
-      let!(:fifth_project) { Fabricate :project, company: company, customers: [customer], product: product, start_date: 1.week.from_now, end_date: 1.month.from_now, status: :finished }
-      let!(:sixth_project) { Fabricate :project, company: company, customers: [customer], product: product, start_date: 3.months.from_now, end_date: 4.months.from_now, status: :cancelled }
+      let!(:fourth_project) { Fabricate :project, company: company, customers: [customer], products: [product], start_date: 2.months.from_now, end_date: 2.months.from_now, status: :maintenance }
+      let!(:fifth_project) { Fabricate :project, company: company, customers: [customer], products: [product], start_date: 1.week.from_now, end_date: 1.month.from_now, status: :finished }
+      let!(:sixth_project) { Fabricate :project, company: company, customers: [customer], products: [product], start_date: 3.months.from_now, end_date: 4.months.from_now, status: :cancelled }
 
       context 'passing status filter' do
         it { expect(ProjectsRepository.instance.add_query_to_projects_in_status(Project.all, :maintenance)).to match_array [second_project, fourth_project] }

@@ -73,7 +73,7 @@ class Demand < ApplicationRecord
   scope :finished_in_downstream, -> { kept.story.where('commitment_date IS NOT NULL AND end_date IS NOT NULL') }
   scope :finished_in_upstream, -> { kept.story.where('commitment_date IS NULL AND end_date IS NOT NULL') }
   scope :finished, -> { kept.story.where('demands.end_date IS NOT NULL') }
-  scope :finished_with_leadtime, -> { kept.story.where('end_date IS NOT NULL AND leadtime IS NOT NULL') }
+  scope :finished_with_leadtime, -> { kept.story.where('demands.end_date IS NOT NULL AND demands.leadtime IS NOT NULL') }
   scope :finished_until_date, ->(limit_date) { finished.where('demands.end_date <= :limit_date', limit_date: limit_date) }
   scope :finished_after_date, ->(limit_date) { finished.where('demands.end_date >= :limit_date', limit_date: limit_date.beginning_of_day) }
   scope :finished_with_leadtime_after_date, ->(limit_date) { finished_with_leadtime.where('demands.end_date >= :limit_date', limit_date: limit_date.beginning_of_day) }

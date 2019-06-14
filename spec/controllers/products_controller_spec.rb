@@ -227,8 +227,8 @@ RSpec.describe ProductsController, type: :controller do
 
       let(:product) { Fabricate :product, customer: customer }
 
-      let!(:first_project) { Fabricate :project, customers: [product.customer], product: product, end_date: 5.days.from_now }
-      let!(:second_project) { Fabricate :project, customers: [product.customer], product: product, end_date: 7.days.from_now }
+      let!(:first_project) { Fabricate :project, customers: [product.customer], products: [product], end_date: 5.days.from_now }
+      let!(:second_project) { Fabricate :project, customers: [product.customer], products: [product], end_date: 7.days.from_now }
 
       context 'passing a valid ID' do
         context 'having data' do
@@ -344,18 +344,6 @@ RSpec.describe ProductsController, type: :controller do
           it 'deletes the product and redirects' do
             expect(response).to redirect_to company_products_path(company)
             expect(Product.last).to be_nil
-          end
-        end
-
-        context 'having dependencies' do
-          let!(:project) { Fabricate :project, product: product, customers: [product.customer] }
-
-          before { delete :destroy, params: { company_id: company, id: product } }
-
-          it 'does not delete the product and show the error' do
-            expect(response).to redirect_to company_products_path(company)
-            expect(Product.last).to eq product
-            expect(flash[:error]).to eq assigns(:product).errors.full_messages.join(',')
           end
         end
       end

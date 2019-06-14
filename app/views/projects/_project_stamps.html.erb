@@ -1,14 +1,5 @@
 <div class="row">
-  <div class="col-xs-3 stamp">
-    <div class="stamp-title"><%= Product.model_name.human %></div>
-    <div class="stamp-content">
-      <% if project.product.present? %>
-        <%= link_to project.product_name, company_product_path(company, project.product) %>
-      <% end %>
-    </div>
-  </div>
-
-  <div class="col-xs-3 stamp">
+  <div class="col-xs-4 stamp">
     <div class="stamp-title"><%= t('projects.show.last_team') %></div>
     <% if project.team.present? %>
       <div class="stamp-content"><%= link_to project.team&.name, company_team_path(company, project.team) %></div>
@@ -16,11 +7,11 @@
       <div class="stamp-content"></div>
     <% end %>
   </div>
-  <div class="col-xs-3 green-stamp">
+  <div class="col-xs-4 green-stamp">
     <div class="stamp-title"><%= t('projects.index.remaining_money') %></div>
     <div class="stamp-content"><%= number_to_currency(project.remaining_money) %></div>
   </div>
-  <div class="col-xs-3 green-stamp">
+  <div class="col-xs-4 green-stamp">
     <div class="stamp-title"><%= t('projects.index.percentage_remaining_money') %></div>
     <div class="stamp-content">
       <% if project.value != 0 %>

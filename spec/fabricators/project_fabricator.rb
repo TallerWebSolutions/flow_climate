@@ -2,7 +2,6 @@
 
 Fabricator(:project) do
   company
-  product
   name { Faker::Name.unique.name }
   start_date 2.months.ago
   end_date 2.months.from_now

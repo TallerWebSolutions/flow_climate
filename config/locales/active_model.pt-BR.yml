@@ -413,7 +413,7 @@ pt-BR:
       uniqueness: "Não deve repetir nome de produto para o mesmo cliente."
   project:
     name:
-      uniqueness: "Não deve repetir nome de projeto para o mesmo produto."
+      uniqueness: "Não deve repetir nome de projeto para a mesma empresa."
   team:
     name:
       uniqueness: "Não deve repetir nome do time para a mesma empresa."

@@ -83,7 +83,7 @@
     <% if @demands_delivered_last_week.present? %>
       <% @demands_delivered_last_week.each do |demand| %>
         <ul>
-          <li><%= "#{demand.project.product.name}|#{demand.project.name}|#{demand.demand_id} - #{t('projects.bulletin.demand_effort_upstream')} #{number_with_precision(demand.effort_upstream, precision: 2)}) - #{t('projects.bulletin.demand_effort_downstream')} #{number_with_precision(demand.effort_downstream, precision: 2)})" %></li>
+          <li><%= "#{demand.project.name}|#{demand.demand_id} - #{t('projects.bulletin.demand_effort_upstream')} #{number_with_precision(demand.effort_upstream, precision: 2)}) - #{t('projects.bulletin.demand_effort_downstream')} #{number_with_precision(demand.effort_downstream, precision: 2)})" %></li>
         </ul>
       <% end %>
     <% else %>

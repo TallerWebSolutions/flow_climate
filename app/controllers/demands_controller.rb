@@ -187,7 +187,7 @@ class DemandsController < AuthenticatedController
   def filter_text(demands_list_view)
     return demands_list_view.includes(:project) if params[:search_text].blank?
 
-    demands_list_view.includes(:project).joins(project: :product).where('demands_lists.demand_title ILIKE :search_param OR demands_lists.demand_id ILIKE :search_param OR products.name ILIKE :search_param OR projects.name ILIKE :search_param', search_param: "%#{params[:search_text].downcase}%")
+    demands_list_view.includes(:project).joins(:project).where('demands_lists.demand_title ILIKE :search_param OR demands_lists.demand_id ILIKE :search_param OR projects.name ILIKE :search_param', search_param: "%#{params[:search_text].downcase}%")
   end
 
   def assign_consolidations

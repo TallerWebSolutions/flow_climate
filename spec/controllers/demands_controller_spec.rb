@@ -76,7 +76,7 @@ RSpec.describe DemandsController, type: :controller do
     let(:customer) { Fabricate :customer, company: company }
     let(:team) { Fabricate :team, company: company }
     let(:product) { Fabricate :product, customer: customer }
-    let(:project) { Fabricate :project, customers: [customer], product: product }
+    let(:project) { Fabricate :project, customers: [customer], products: [product] }
 
     before { sign_in user }
 
@@ -174,7 +174,7 @@ RSpec.describe DemandsController, type: :controller do
     end
 
     describe 'DELETE #destroy' do
-      let(:project) { Fabricate :project, customers: [customer], product: product }
+      let(:project) { Fabricate :project, customers: [customer], products: [product] }
       let!(:first_demand) { Fabricate :demand, project: project, demand_id: 'hhh', demand_title: 'foo', demand_type: :feature, class_of_service: :standard, created_date: 2.days.ago, commitment_date: nil, end_date: nil, effort_downstream: 20, effort_upstream: 0 }
       let!(:second_demand) { Fabricate :demand, project: project, demand_title: 'foo bar', demand_type: :bug, class_of_service: :expedite, created_date: 1.day.ago, commitment_date: Time.zone.today, end_date: nil, effort_downstream: 0, effort_upstream: 0 }
       let!(:third_demand) { Fabricate :demand, project: project, demand_title: 'bar foo', demand_type: :feature, class_of_service: :intangible, created_date: 5.days.ago, commitment_date: 4.days.ago, end_date: 1.day.ago, effort_downstream: 0, effort_upstream: 10 }
@@ -279,7 +279,7 @@ RSpec.describe DemandsController, type: :controller do
 
       let(:customer) { Fabricate :customer, company: company }
       let(:product) { Fabricate :product, customer: customer }
-      let(:project) { Fabricate :project, customers: [customer], product: product }
+      let(:project) { Fabricate :project, customers: [customer], products: [product] }
       let!(:demand) { Fabricate :demand, project: project, created_date: created_date }
 
       context 'passing valid parameters' do
@@ -336,7 +336,7 @@ RSpec.describe DemandsController, type: :controller do
       let(:company) { Fabricate :company, users: [user] }
       let(:customer) { Fabricate :customer, company: company }
       let(:product) { Fabricate :product, customer: customer }
-      let!(:project) { Fabricate :project, customers: [product.customer], product: product, end_date: 5.days.from_now }
+      let!(:project) { Fabricate :project, customers: [product.customer], products: [product], end_date: 5.days.from_now }
       let!(:first_demand) { Fabricate :demand }
       let!(:second_demand) { Fabricate :demand }
 
@@ -509,8 +509,8 @@ RSpec.describe DemandsController, type: :controller do
 
     describe 'GET #demands_in_projects' do
       context 'passing valid parameters' do
-        let(:first_project) { Fabricate :project, customers: [customer], product: product, start_date: 3.days.ago, end_date: 1.day.from_now, status: :executing }
-        let(:second_project) { Fabricate :project, customers: [customer], product: product, start_date: 3.days.ago, end_date: 1.day.from_now, status: :finished }
+        let(:first_project) { Fabricate :project, customers: [customer], products: [product], start_date: 3.days.ago, end_date: 1.day.from_now, status: :executing }
+        let(:second_project) { Fabricate :project, customers: [customer], products: [product], start_date: 3.days.ago, end_date: 1.day.from_now, status: :finished }
 
         let!(:first_demand) { Fabricate :demand, project: first_project, commitment_date: 1.day.ago, end_date: Time.zone.now }
         let!(:second_demand) { Fabricate :demand, project: second_project, commitment_date: 3.hours.ago, end_date: Time.zone.now }
@@ -559,8 +559,8 @@ RSpec.describe DemandsController, type: :controller do
       let(:product) { Fabricate :product, customer: customer, name: 'zzz' }
       let(:other_product) { Fabricate :product, customer: other_customer, name: 'aaa' }
 
-      let!(:first_project) { Fabricate :project, name: 'qqq', customers: [customer], product: product, status: :executing, start_date: 1.month.ago, end_date: 10.days.from_now }
-      let!(:second_project) { Fabricate :project, customers: [other_customer], product: other_product, status: :executing, start_date: 15.days.ago, end_date: 50.days.from_now }
+      let!(:first_project) { Fabricate :project, name: 'qqq', customers: [customer], products: [product], status: :executing, start_date: 1.month.ago, end_date: 10.days.from_now }
+      let!(:second_project) { Fabricate :project, customers: [other_customer], products: [other_product], status: :executing, start_date: 15.days.ago, end_date: 50.days.from_now }
 
       let(:start_date) { Project.all.map(&:start_date).min }
       let(:end_date) { Project.all.map(&:end_date).max }
@@ -827,17 +827,6 @@ RSpec.describe DemandsController, type: :controller do
                 expect(assigns(:confidence_95_leadtime)).to be_within(0.3).of(4.3)
                 expect(assigns(:confidence_80_leadtime)).to be_within(0.3).of(4.3)
                 expect(assigns(:confidence_65_leadtime)).to eq 4.029166666666667
-              end
-            end
-
-            context 'on product name' do
-              it 'returns the matches' do
-                get :search_demands, params: { company_id: company, projects_ids: Project.all.map(&:id).join(','), start_date: start_date, end_date: end_date, search_text: 'aaa', period: :all }, xhr: true
-                expect(response).to render_template 'demands/search_demands.js.erb'
-                expect(assigns(:demands).map(&:id)).to eq [fifth_demand.id, sixth_demand.id, eigth_demand.id, seventh_demand.id]
-                expect(assigns(:confidence_95_leadtime)).to be_within(0.1).of(0.9)
-                expect(assigns(:confidence_80_leadtime)).to be_within(0.1).of(0.9)
-                expect(assigns(:confidence_65_leadtime)).to be_within(0.1).of(0.8)
               end
             end
 

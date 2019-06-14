@@ -14,8 +14,8 @@ class CompaniesController < AuthenticatedController
     @finances_hash_with_computed_informations = Highchart::FinancesChartsAdapter.new(@financial_informations).finances_hash_with_computed_informations
     @teams = @company.teams.includes(:projects).order(:name)
 
-    @products_list = @company.products.includes(:projects).includes(:team).includes(:customer).order(name: :asc)
-    @customers_list = @company.customers.includes(:projects).order(name: :asc)
+    @products_list = @company.products.includes(:team).includes(:customer).order(name: :asc)
+    @customers_list = @company.customers.order(name: :asc)
 
     assign_company_settings
     assign_jira_accounts_list
@@ -72,7 +72,7 @@ class CompaniesController < AuthenticatedController
   end
 
   def projects_tab
-    @company_projects = @company.projects.includes(:team).includes(:product).order(end_date: :desc)
+    @company_projects = @company.projects.includes(:team).order(end_date: :desc)
     @projects_summary = ProjectsSummaryData.new(@company_projects)
     @parent = @company
     @parent_type = 'company'
@@ -80,7 +80,7 @@ class CompaniesController < AuthenticatedController
   end
 
   def strategic_chart_tab
-    @company_projects = @company.projects.includes(:product).order(end_date: :desc)
+    @company_projects = @company.projects.order(end_date: :desc)
     @strategic_chart_data = Highchart::StrategicChartsAdapter.new(@company, @company_projects, @company.total_available_hours)
     respond_to { |format| format.js { render 'companies/strategic_chart_tab.js.erb' } }
   end
