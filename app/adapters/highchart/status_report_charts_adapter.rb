@@ -152,8 +152,7 @@ module Highchart
     def gather_throughput_data
       return [] if @all_projects.blank?
 
-      projects_to_throughput_data = @all_projects
-      projects_to_throughput_data = @all_projects.first.product.projects.order(:end_date) if @all_projects.size == 1
+      projects_to_throughput_data = @all_projects.order(:end_date)
 
       throughput_grouped_per_week_hash = DemandsRepository.instance.throughput_to_projects_and_period(projects_to_throughput_data, project_start_date, project_end_date).group('EXTRACT(WEEK FROM end_date)', 'EXTRACT(YEAR FROM end_date)').count
       DemandInfoDataBuilder.instance.build_data_from_hash_per_week(throughput_grouped_per_week_hash, project_start_date, project_end_date)
