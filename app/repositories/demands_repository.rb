@@ -109,16 +109,14 @@ class DemandsRepository
     build_cumulative_stage_hash(end_date, demands, stages)
   end
 
-  def total_time_for(projects, sum_field)
-    result_array = Demand.kept
-                         .finished_in_downstream
-                         .select('EXTRACT(WEEK FROM end_date) AS sum_week', 'EXTRACT(YEAR FROM end_date) AS sum_year', "SUM(#{sum_field}) AS total_time")
-                         .where('end_date IS NOT NULL')
-                         .where(project_id: projects.map(&:id))
-                         .group('demands.end_date')
-                         .map { |group_sum| [group_sum.sum_week.to_i, group_sum.sum_year.to_i, group_sum.total_time] }
+  def total_time_for(projects, sum_field, group_field_year_period)
+    result_array = mount_select_to_total_time_group(group_field_year_period, sum_field)
+                   .finished_in_downstream
+                   .where('end_date IS NOT NULL')
+                   .where(project_id: projects.map(&:id))
+                   .group('demands.end_date')
 
-    build_hash_to_total_duration_query_result(result_array)
+    build_hash_to_total_duration_query_result(result_array, group_field_year_period)
   end
 
   def discarded_demands_to_projects(projects)
@@ -126,6 +124,14 @@ class DemandsRepository
   end
 
   private
+
+  def mount_select_to_total_time_group(group_field_year_period, sum_field)
+    if group_field_year_period == 'day'
+      Demand.kept.select('end_date AS sum_date_period', "SUM(#{sum_field}) AS total_time")
+    else
+      Demand.kept.select("EXTRACT(#{group_field_year_period} FROM end_date) AS sum_group_period", 'EXTRACT(YEAR FROM end_date) AS sum_year', "SUM(#{sum_field}) AS total_time")
+    end
+  end
 
   def build_cumulative_stage_hash(analysed_date, demands, stages)
     acc_count = 0
@@ -156,9 +162,15 @@ class DemandsRepository
     Demand.kept.story.where(project_id: projects).where('end_date <= :limit_date', limit_date: limit_date)
   end
 
-  def build_hash_to_total_duration_query_result(query_result_array)
+  def build_hash_to_total_duration_query_result(query_result_array, group_period)
     query_result_hash = {}
-    query_result_array.each { |single_result| query_result_hash[[single_result[0], single_result[1]]] = single_result[2].to_f }
+
+    if group_period == 'day'
+      query_result_array.each { |group_sum| query_result_hash[group_sum.sum_date_period.to_date.to_s] = group_sum.total_time.to_f }
+    else
+      query_result_array.each { |group_sum| query_result_hash[[group_sum.sum_group_period.to_i, group_sum.sum_year.to_i]] = group_sum.total_time.to_f }
+    end
+
     query_result_hash
   end
 end

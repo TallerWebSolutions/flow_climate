@@ -351,8 +351,12 @@ RSpec.describe DemandsRepository, type: :repository do
     let!(:eleventh_transition) { Fabricate :demand_transition, stage: fourth_stage, demand: upstream_demand, last_time_in: '2018-03-26T17:09:58-03:00', last_time_out: '2018-10-10T17:09:58-03:00' }
     let!(:twefth_transition) { Fabricate :demand_transition, stage: fifth_stage, demand: upstream_demand, last_time_in: '2018-03-26T17:09:58-03:00', last_time_out: '2018-10-10T17:09:58-03:00' }
 
-    it { expect(DemandsRepository.instance.total_time_for(Project.all, 'total_queue_time')).to eq([10, 2018] => 3_715_200.0, [13, 2018] => 1.day.to_f) }
-    it { expect(DemandsRepository.instance.total_time_for(Project.all, 'total_touch_time')).to eq([10, 2018] => 864_000.0, [13, 2018] => 172_800.0) }
+    it { expect(DemandsRepository.instance.total_time_for(Project.all, 'total_queue_time', 'week')).to eq([10, 2018] => 3_715_200.0, [13, 2018] => 1.day.to_f) }
+    it { expect(DemandsRepository.instance.total_time_for(Project.all, 'total_touch_time', 'week')).to eq([10, 2018] => 864_000.0, [13, 2018] => 172_800.0) }
+    it { expect(DemandsRepository.instance.total_time_for(Project.all, 'total_queue_time', 'month')).to eq([3, 2018] => 86_400.0) }
+    it { expect(DemandsRepository.instance.total_time_for(Project.all, 'total_touch_time', 'month')).to eq([3, 2018] => 172_800.0) }
+    it { expect(DemandsRepository.instance.total_time_for(Project.all, 'total_queue_time', 'day')).to eq('2018-03-08' => 3_715_200.0, '2018-03-26' => 86_400.0) }
+    it { expect(DemandsRepository.instance.total_time_for(Project.all, 'total_touch_time', 'day')).to eq('2018-03-08' => 864_000.0, '2018-03-26' => 172_800.0) }
   end
 
   describe '#demands_delivered_grouped_by_projects_to_period' do
