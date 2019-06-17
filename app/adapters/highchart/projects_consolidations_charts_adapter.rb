@@ -4,15 +4,15 @@ module Highchart
   class ProjectsConsolidationsChartsAdapter
     include DateHelper
 
-    attr_reader :projects_consolidations
+    attr_reader :projects_consolidations, :x_axis
 
     def initialize(projects_consolidations, start_date, end_date)
       @projects_consolidations = projects_consolidations.where('consolidation_date BETWEEN :start_date AND :end_date', start_date: start_date, end_date: end_date)
+      @x_axis = @projects_consolidations.map(&:consolidation_date).uniq
     end
 
     def lead_time_data_range_evolution
-      x_axis = @projects_consolidations.map(&:consolidation_date)
-      y_axis_data = build_y_axis(x_axis, :total_range, :lead_time_max, :lead_time_min)
+      y_axis_data = build_y_axis(@x_axis, :total_range, :lead_time_max, :lead_time_min)
 
       y_axis =
         [
@@ -25,8 +25,7 @@ module Highchart
     end
 
     def lead_time_histogram_data_range_evolution
-      x_axis = @projects_consolidations.map(&:consolidation_date)
-      y_axis_data = build_y_axis(x_axis, :histogram_range, :lead_time_histogram_bin_max, :lead_time_histogram_bin_min)
+      y_axis_data = build_y_axis(@x_axis, :histogram_range, :lead_time_histogram_bin_max, :lead_time_histogram_bin_min)
 
       y_axis =
         [
@@ -39,8 +38,7 @@ module Highchart
     end
 
     def lead_time_interquartile_data_range_evolution
-      x_axis = @projects_consolidations.map(&:consolidation_date)
-      y_axis_data = build_y_axis(x_axis, :interquartile_range, :lead_time_p75, :lead_time_p25)
+      y_axis_data = build_y_axis(@x_axis, :interquartile_range, :lead_time_p75, :lead_time_p25)
 
       y_axis =
         [
@@ -61,8 +59,8 @@ module Highchart
       x_axis.each do |date|
         consolidations_in_week = @projects_consolidations.where(consolidation_date: date)
         ranges << seconds_to_day(consolidations_in_week.map(&range).max)
-        array_of_field_max << seconds_to_day(consolidations_in_week.map(&field_max).max)
-        array_of_field_min << seconds_to_day(consolidations_in_week.map(&field_min).max)
+        array_of_field_max << seconds_to_day(consolidations_in_week.map(&field_max).compact.max)
+        array_of_field_min << seconds_to_day(consolidations_in_week.map(&field_min).compact.max)
       end
       { ranges: ranges, array_of_field_max: array_of_field_max, array_of_field_min: array_of_field_min }
     end
