@@ -72,6 +72,8 @@
   <%= render 'projects/settings', company: @company, project: @project, project_stages: @stages_list, project_risk_configs: @project.project_risk_configs, projects_to_copy_stages_from: @projects_to_copy_stages_from %>
 </div>
 
+<div class="modal fade" id="edit-block-form" tabindex="-1" role="dialog" aria-labelledby="edit-block-form" aria-hidden="true"></div>
+
 <% content_for :javascript do %>
   <%= javascript_include_tag 'charts/burnup' %>
   <%= javascript_include_tag 'charts/column' %>

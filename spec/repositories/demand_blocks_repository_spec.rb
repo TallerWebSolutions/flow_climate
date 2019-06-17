@@ -19,6 +19,7 @@ RSpec.describe DemandBlocksRepository, type: :repository do
       let!(:fourth_block) { Fabricate :demand_block, demand: first_demand, block_time: 2.days.ago, unblock_time: Time.zone.yesterday }
       let!(:fifth_block) { Fabricate :demand_block, demand: third_demand, block_time: 5.days.ago, unblock_time: 3.days.ago }
       let!(:sixth_block) { Fabricate :demand_block, demand: fourth_demand, block_time: 2.days.ago, unblock_time: Time.zone.today }
+      let!(:seventh_block) { Fabricate :demand_block, demand: second_demand, block_time: 2.days.ago, unblock_time: Time.zone.today, active: true, discarded_at: Time.zone.today }
 
       it 'returns the grouped data' do
         blocks_grouped_data = DemandBlocksRepository.instance.closed_blocks_to_projects_and_period_grouped([first_project, second_project], first_project.start_date, second_project.end_date)
@@ -51,8 +52,9 @@ RSpec.describe DemandBlocksRepository, type: :repository do
       let!(:fourth_block) { Fabricate :demand_block, demand: first_demand, block_time: 2.days.ago, unblock_time: Time.zone.yesterday, active: true }
       let!(:fifth_block) { Fabricate :demand_block, demand: third_demand, block_time: 5.days.ago, unblock_time: 3.days.ago, active: true }
       let!(:sixth_block) { Fabricate :demand_block, demand: fourth_demand, block_time: 2.days.ago, unblock_time: Time.zone.today, active: true }
+      let!(:seventh_block) { Fabricate :demand_block, demand: second_demand, block_time: 2.days.ago, unblock_time: Time.zone.today, active: true, discarded_at: Time.zone.today }
 
-      let!(:seventh_block) { Fabricate :demand_block, demand: fifth_demand, block_time: 2.days.ago, unblock_time: Time.zone.today, active: true }
+      let!(:eigth_block) { Fabricate :demand_block, demand: fifth_demand, block_time: 2.days.ago, unblock_time: Time.zone.today, active: true }
 
       it 'returns the grouped data' do
         blocks_grouped_data = DemandBlocksRepository.instance.active_blocks_to_projects_and_period([first_project, second_project], first_project.start_date, second_project.end_date)
@@ -77,16 +79,17 @@ RSpec.describe DemandBlocksRepository, type: :repository do
 
       let!(:fifth_demand) { Fabricate :demand, project: first_project }
 
-      let!(:first_block) { Fabricate :demand_block, demand: first_demand, block_time: 1.hour.ago, unblock_time: Time.zone.today, active: true }
+      let!(:first_block) { Fabricate :demand_block, demand: first_demand, block_time: 1.hour.ago, unblock_time: Time.zone.today }
       let!(:second_block) { Fabricate :demand_block, demand: first_demand, block_time: 2.days.ago, unblock_time: 2.days.ago }
-      let!(:third_block) { Fabricate :demand_block, demand: second_demand, block_time: 2.days.ago, unblock_time: 4.days.ago }
+      let!(:third_block) { Fabricate :demand_block, demand: second_demand, block_time: 6.days.ago, unblock_time: 4.days.ago }
       let!(:fourth_block) { Fabricate :demand_block, demand: first_demand, block_time: 2.days.ago, unblock_time: Time.zone.yesterday }
       let!(:fifth_block) { Fabricate :demand_block, demand: third_demand, block_time: 5.days.ago, unblock_time: 3.days.ago }
       let!(:sixth_block) { Fabricate :demand_block, demand: fourth_demand, block_time: 2.days.ago, unblock_time: Time.zone.today }
+      let!(:seventh_block) { Fabricate :demand_block, demand: second_demand, block_time: 4.days.ago, unblock_time: 2.days.ago, discarded_at: Time.zone.today }
 
       it 'returns the grouped data' do
-        blocks_grouped_data = DemandBlocksRepository.instance.accumulated_blocks_to_date([first_project, second_project], second_project.end_date)
-        expect(blocks_grouped_data).to eq 4
+        blocks_grouped_data = DemandBlocksRepository.instance.accumulated_blocks_to_date([first_project, second_project], 2.days.ago)
+        expect(blocks_grouped_data).to eq 3
       end
     end
 
@@ -129,6 +132,8 @@ RSpec.describe DemandBlocksRepository, type: :repository do
       let!(:sixth_block) { Fabricate :demand_block, demand: fourth_demand, block_time: 2.days.ago, unblock_time: Time.zone.today }
 
       let!(:seventh_block) { Fabricate :demand_block, demand: fifth_demand, block_time: 4.days.ago, unblock_time: Time.zone.today }
+
+      let!(:eigth_block) { Fabricate :demand_block, demand: second_demand, block_time: 2.days.ago, unblock_time: Time.zone.today, active: true, discarded_at: Time.zone.today }
 
       it 'returns the grouped data' do
         blocks_grouped_data = DemandBlocksRepository.instance.blocks_duration_per_stage(team.projects, 6.days.ago, Time.zone.now)
