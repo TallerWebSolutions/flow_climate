@@ -1,4 +1,5 @@
 <td><%= block.demand_block_id %></td>
+<td><%= block.demand.demand_id %></td>
 <td><%= t("activerecord.attributes.demand_block.enums.block_type.#{block.block_type}") %></td>
 <td><%= block.block_reason %></td>
 <td><%= block.stage&.name %></td>
@@ -14,11 +15,11 @@
 </td>
 <td>
   <% if block.active? %>
-    <%= link_to deactivate_company_project_demand_demand_block_path(@company, block.demand.project, block.demand, block), method: :patch do %>
+    <%= link_to deactivate_company_project_demand_demand_block_path(@company, block.demand.project, block.demand, block), method: :patch, remote: true do %>
       <i class="fa fa-ban"></i>
     <% end %>
   <% else %>
-    <%= link_to activate_company_project_demand_demand_block_path(@company, block.demand.project, block.demand, block), method: :patch do %>
+    <%= link_to activate_company_project_demand_demand_block_path(@company, block.demand.project, block.demand, block), method: :patch, remote: true do %>
       <i class="fa fa-check"></i>
     <% end %>
   <% end %>

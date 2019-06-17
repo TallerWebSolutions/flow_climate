@@ -10,16 +10,16 @@ class DemandBlocksController < AuthenticatedController
 
   def activate
     @demand_block.activate!
-    redirect_to company_demand_path(@company, @demand)
+    render 'demand_blocks/update'
   end
 
   def deactivate
     @demand_block.deactivate!
-    redirect_to company_demand_path(@company, @demand)
+    render 'demand_blocks/update'
   end
 
   def edit
-    respond_to { |format| format.js }
+    render 'demand_blocks/edit'
   end
 
   def update
@@ -29,13 +29,13 @@ class DemandBlocksController < AuthenticatedController
 
   def index
     @demand_blocks = DemandBlocksRepository.instance.active_blocks_to_projects_and_period(@projects, start_date_to_query, end_date_to_query).order(block_time: :desc)
-    respond_to { |format| format.js }
+    render 'demand_blocks/index'
   end
 
   def demands_blocks_tab
     @demands_blocks = DemandBlocksRepository.instance.active_blocks_to_projects_and_period(@projects, start_date_to_query, end_date_to_query).order(block_time: :desc)
 
-    respond_to { |format| format.js { render 'demand_blocks/demands_blocks_tab' } }
+    'demand_blocks/demands_blocks_tab'
   end
 
   def demands_blocks_csv

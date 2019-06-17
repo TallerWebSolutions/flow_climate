@@ -60,35 +60,35 @@ RSpec.describe DemandBlocksController, type: :controller do
       let(:demand_block) { Fabricate :demand_block, demand: demand, active: false }
 
       context 'passing valid parameters' do
-        before { patch :activate, params: { company_id: company, project_id: project, demand_id: demand, id: demand_block } }
+        before { patch :activate, params: { company_id: company, project_id: project, demand_id: demand, id: demand_block }, xhr: true }
 
         it 'assigns the instance variable and renders the template' do
-          expect(response).to redirect_to company_demand_path(company, demand)
+          expect(response).to render_template 'demand_blocks/update'
           expect(demand_block.reload.active).to be true
         end
       end
 
       context 'passing invalid' do
         context 'company' do
-          before { patch :activate, params: { company_id: 'foo', project_id: project, demand_id: demand, id: demand_block } }
+          before { patch :activate, params: { company_id: 'foo', project_id: project, demand_id: demand, id: demand_block }, xhr: true }
 
           it { expect(response).to have_http_status :not_found }
         end
 
         context 'project' do
-          before { patch :activate, params: { company_id: company, project_id: 'foo', demand_id: demand, id: demand_block } }
+          before { patch :activate, params: { company_id: company, project_id: 'foo', demand_id: demand, id: demand_block }, xhr: true }
 
           it { expect(response).to have_http_status :not_found }
         end
 
         context 'demand' do
-          before { patch :activate, params: { company_id: company, project_id: project, demand_id: 'foo', id: demand_block } }
+          before { patch :activate, params: { company_id: company, project_id: project, demand_id: 'foo', id: demand_block }, xhr: true }
 
           it { expect(response).to have_http_status :not_found }
         end
 
         context 'demand_block' do
-          before { patch :activate, params: { company_id: company, project_id: project, demand_id: demand, id: 'foo' } }
+          before { patch :activate, params: { company_id: company, project_id: project, demand_id: demand, id: 'foo' }, xhr: true }
 
           it { expect(response).to have_http_status :not_found }
         end
@@ -103,10 +103,10 @@ RSpec.describe DemandBlocksController, type: :controller do
       let(:demand_block) { Fabricate :demand_block, demand: demand, active: true }
 
       context 'passing valid parameters' do
-        before { patch :deactivate, params: { company_id: company, project_id: project, demand_id: demand, id: demand_block } }
+        before { patch :deactivate, params: { company_id: company, project_id: project, demand_id: demand, id: demand_block }, xhr: true }
 
         it 'assigns the instance variable and renders the template' do
-          expect(response).to redirect_to company_demand_path(company, demand)
+          expect(response).to render_template 'demand_blocks/update'
           expect(demand_block.reload.active).to be false
         end
       end
@@ -268,6 +268,7 @@ RSpec.describe DemandBlocksController, type: :controller do
           let!(:fourth_block) { Fabricate :demand_block, demand: first_demand, block_time: 2.days.ago, unblock_time: Time.zone.yesterday, active: true }
           let!(:fifth_block) { Fabricate :demand_block, demand: first_demand, block_time: 5.days.ago, unblock_time: 3.days.ago, active: true }
           let!(:sixth_block) { Fabricate :demand_block, demand: second_demand, block_time: 2.days.ago, unblock_time: Time.zone.today, active: true }
+          let!(:seventh_block) { Fabricate :demand_block, demand: second_demand, block_time: 2.days.ago, unblock_time: Time.zone.today, active: true, discarded_at: Time.zone.today }
 
           context 'no start nor end dates nor period provided' do
             it 'builds the statistic adapter and renders the view using the dates in project to a monthly period' do

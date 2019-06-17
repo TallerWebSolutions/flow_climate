@@ -9,6 +9,7 @@
     <thead>
       <tr>
         <th><%= DemandBlock.human_attribute_name :demand_block_id %></th>
+        <th><%= I18n.t('activerecord.attributes.demand.demand_id') %></th>
         <th><%= DemandBlock.human_attribute_name :block_type %></th>
         <th><%= DemandBlock.human_attribute_name :block_reason %></th>
         <th><%= DemandBlock.human_attribute_name :stage %></th>
@@ -31,9 +32,11 @@
     <tfoot>
       <tr>
         <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
         <td><%= "#{demand_blocks_list.sum(:block_duration)}h" %></td>
-        <td></td>
-        <td></td>
         <td></td>
         <td></td>
         <td></td>
@@ -47,6 +50,4 @@
 
 <div class="modal fade" id="edit-block-form" tabindex="-1" role="dialog" aria-labelledby="edit-block-form" aria-hidden="true"></div>
 
-<% content_for :javascript do %>
-  <%= javascript_include_tag 'demand_blocks/form_modal' %>
-<% end %>
+<%= javascript_include_tag 'demand_blocks/form_modal' %>
