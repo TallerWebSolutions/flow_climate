@@ -118,18 +118,6 @@ module Highchart
       end
     end
 
-    def add_data_to_chart?(date)
-      limit_date = if @chart_period_interval == 'day'
-                     Time.zone.today.end_of_day
-                   elsif @chart_period_interval == 'week'
-                     Time.zone.today.end_of_week
-                   else
-                     Time.zone.today.end_of_month
-                   end
-
-      date <= limit_date
-    end
-
     def build_demands_scope_data
       scope_per_period = []
       @x_axis.each { |date| scope_per_period << DemandsRepository.instance.known_scope_to_date(all_projects, end_of_period_for_date(date)) }
@@ -222,8 +210,8 @@ module Highchart
       dates_array = []
       queue_times = []
       touch_times = []
-      queue_times_per_period_hash = DemandsRepository.instance.total_time_for(@all_projects, 'total_queue_time')
-      touch_times_per_period_hash = DemandsRepository.instance.total_time_for(@all_projects, 'total_touch_time')
+      queue_times_per_period_hash = DemandsRepository.instance.total_time_for(@all_projects, 'total_queue_time', @chart_period_interval)
+      touch_times_per_period_hash = DemandsRepository.instance.total_time_for(@all_projects, 'total_touch_time', @chart_period_interval)
 
       @x_axis.each do |date|
         break unless add_data_to_chart?(date)
@@ -240,16 +228,26 @@ module Highchart
       @all_projects.map { |project| project.demands.kept.where('end_date BETWEEN :start_date AND :end_date', start_date: date.beginning_of_week, end_date: date.end_of_week).sum(&:sum_touch_blocked_time) }.sum
     end
 
-    def compute_time_in_seconds_to_hours(date, times_per_week_hash, blocking_time)
-      ((times_per_week_hash[[date.cweek, date.cwyear]] || 0) + blocking_time) / (60 * 60)
+    def compute_time_in_seconds_to_hours(date, times_per_period_hash, blocking_time)
+      (read_value_from_hash_using_date_key(date, times_per_period_hash) + blocking_time) / 1.hour
+    end
+
+    def read_value_from_hash_using_date_key(date, times_per_period_hash)
+      if weekly?
+        times_per_period_hash[[date.cweek, date.cwyear]] || 0
+      elsif monthly?
+        times_per_period_hash[[date.month, date.cwyear]] || 0
+      else
+        times_per_period_hash[date.to_s] || 0
+      end
     end
 
     def build_queue_touch_share_hash
       dates_array = []
       flow_efficiency_array = []
 
-      queue_times_per_period_hash = DemandsRepository.instance.total_time_for(@all_projects, 'total_queue_time')
-      touch_times_per_period_hash = DemandsRepository.instance.total_time_for(@all_projects, 'total_touch_time')
+      queue_times_per_period_hash = DemandsRepository.instance.total_time_for(@all_projects, 'total_queue_time', @chart_period_interval)
+      touch_times_per_period_hash = DemandsRepository.instance.total_time_for(@all_projects, 'total_touch_time', @chart_period_interval)
 
       @x_axis.each do |date|
         break unless add_data_to_chart?(date)
@@ -261,8 +259,9 @@ module Highchart
     end
 
     def compute_flow_efficiency(date, queue_times_per_week_hash, touch_times_per_week_hash)
-      queue_time = (queue_times_per_week_hash[[date.to_date.cweek, date.to_date.cwyear]] || 0)
-      touch_time = (touch_times_per_week_hash[[date.to_date.cweek, date.to_date.cwyear]] || 0)
+      queue_time = read_value_from_hash_using_date_key(date, queue_times_per_week_hash)
+      touch_time = read_value_from_hash_using_date_key(date, touch_times_per_week_hash)
+
       Stats::StatisticsService.instance.compute_percentage(touch_time, queue_time)
     end
 
