@@ -12,19 +12,17 @@ class ChartsController < AuthenticatedController
     @report_data = {}
     @report_data = Highchart::OperationalChartsAdapter.new(@projects, @start_date, @end_date, @period) if @projects.present?
     @team_chart_data = Highchart::TeamChartsAdapter.new(@team, @start_date, @end_date, @period) if @team.present?
+
+    @status_report_data = {}
+    @status_report_data = Highchart::StatusReportChartsAdapter.new(@projects, @start_date, @end_date, @period) if @projects.present?
+    @portfolio_data = Highchart::PortfolioChartsAdapter.new(@projects, @start_date, @end_date, '') if @projects.present?
+
     respond_to { |format| format.js { render 'charts/operational_charts' } }
   end
 
   def build_strategic_charts
     @strategic_chart_data = Highchart::StrategicChartsAdapter.new(@company, @projects, @available_hours_in_month)
     respond_to { |format| format.js { render 'charts/strategic_charts' } }
-  end
-
-  def build_status_report_charts
-    @status_report_data = {}
-    @status_report_data = Highchart::StatusReportChartsAdapter.new(@projects, @start_date, @end_date, @period) if @projects.present?
-    @portfolio_data = Highchart::PortfolioChartsAdapter.new(@projects, @start_date, @end_date, '') if @projects.present?
-    respond_to { |format| format.js { render 'charts/status_report_charts' } }
   end
 
   def statistics_charts

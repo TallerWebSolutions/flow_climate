@@ -148,7 +148,6 @@ Rails.application.routes.draw do
     controller :charts do
       get 'build_operational_charts', action: :build_operational_charts
       get 'build_strategic_charts', action: :build_strategic_charts
-      get 'build_status_report_charts', action: :build_status_report_charts
       get 'statistics_charts', action: :statistics_charts
     end
 
