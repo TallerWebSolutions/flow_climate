@@ -22,10 +22,8 @@ $('.nav-item').on('click', function(event){
         event.preventDefault();
     } else {
         disableTabs();
-        if ($(this).attr('id') === 'nav-item-statusreport') {
-            buildStatusReportCharts(companyId, projectsIds, period, targetName, startDate, endDate)
 
-        } else if ($(this).attr('id') === 'nav-item-charts') {
+        if ($(this).attr('id') === 'nav-item-charts') {
             buildOperationalCharts(companyId, projectsIds, period, targetName, startDate, endDate, teamId);
 
         } else if ($(this).attr('id') === 'nav-item-strategic') {

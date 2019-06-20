@@ -23,7 +23,6 @@
     <%= link_to t('navbar.flow_impacts'), '#', id: 'nav-item-flow-impacts', class: 'nav-item', data: { container: '#flow-impacts-tab' } %>
     <%= link_to t('projects.show.deadline.title'), '#', id: 'nav-item-deadline', class: 'nav-item', data: { container: '#deadline-change' } %>
     <%= link_to t('navbar.charts'), '#', id: 'nav-item-charts', class: 'nav-item', data: { container: '#operational-charts' } %>
-    <%= link_to t('navbar.status_report'), '#', id: 'nav-item-statusreport', class: 'nav-item', data: { container: '#project-status-report' } %>
     <%= link_to t('navbar.statistics'), '#', id: 'nav-item-statistics', class: 'nav-item', data: { container: '#statistics-charts' } %>
     <%= link_to t('navbar.risk_alerts'), '#', id: 'nav-item-risk', class: 'nav-item', data: { container: '#project-risk-alerts-table' } %>
     <%= link_to t('navbar.settings'), '#', id: 'nav-item-settings', class: 'nav-item', data: { container: '#project-settings' } %>
@@ -57,15 +56,11 @@
 </div>
 
 <div id="operational-charts" class="tab-container">
-  <%= render 'charts/operational_charts_tab', target_name: @project.name, report_data: @report_data, company: @company, projects: [@project], start_date: @start_date, end_date: @end_date %>
+  <%= render 'charts/operational_charts_tab', target_name: @project.name, report_data: @report_data, status_report_data: @status_report_data, company: @company, projects: [@project], start_date: @start_date, end_date: @end_date %>
 </div>
 
 <div id="statistics-charts" class="tab-container">
 
-</div>
-
-<div id="project-status-report" class="tab-container">
-  <%= render 'charts/status_report_tab', target_name: @project.name, status_report_data: @status_report_data, company: @company, projects: [@project], start_date: @start_date, end_date: @end_date %>
 </div>
 
 <div id="project-settings" class="tab-container">

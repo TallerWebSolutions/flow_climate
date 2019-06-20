@@ -17,14 +17,6 @@ function buildStrategicCharts(companyId, projectsIds, targetName) {
     });
 }
 
-function buildStatusReportCharts(companyId, projectsIds, period, targetName, startDate, endDate) {
-    jQuery.ajax({
-        url: `/companies/${companyId}/build_status_report_charts.js`,
-        type: "GET",
-        data: `projects_ids=${projectsIds}&period=${period}&target_name=${targetName}&start_date=${startDate}&end_date=${endDate}&period=${period}`
-    });
-}
-
 function statisticsChartsRoute(companyId, projectsIds, period, targetName, startDate, endDate, statsLeadtimeConfidence, projectStatus) {
     $("#general-loader").show();
     $("#stats-charts-body").hide();
