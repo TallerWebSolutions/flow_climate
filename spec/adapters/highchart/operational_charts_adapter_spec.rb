@@ -196,5 +196,12 @@ RSpec.describe Highchart::OperationalChartsAdapter, type: :data_object do
       it { expect(report_data.hours_blocked_per_stage[:x_axis].count).to be_positive }
       it { expect(report_data.hours_blocked_per_stage[:data].count).to be_positive }
     end
+
+    describe '#count_blocked_per_stage' do
+      subject(:report_data) { Highchart::OperationalChartsAdapter.new(Project.all, Time.zone.iso8601('2018-02-27T17:30:58-03:00').to_date, 1.day.from_now.to_date, 'week') }
+
+      it { expect(report_data.count_blocked_per_stage[:x_axis].count).to be_positive }
+      it { expect(report_data.count_blocked_per_stage[:data].count).to be_positive }
+    end
   end
 end

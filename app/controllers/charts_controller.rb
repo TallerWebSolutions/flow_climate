@@ -15,6 +15,7 @@ class ChartsController < AuthenticatedController
 
     @status_report_data = {}
     @status_report_data = Highchart::StatusReportChartsAdapter.new(@projects, @start_date, @end_date, @period) if @projects.present?
+
     @portfolio_data = Highchart::PortfolioChartsAdapter.new(@projects, @start_date, @end_date, '') if @projects.present?
 
     respond_to { |format| format.js { render 'charts/operational_charts' } }

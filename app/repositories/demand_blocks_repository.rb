@@ -38,4 +38,13 @@ class DemandBlocksRepository
                                                                         .order('grouped_stage_order, grouped_stage_name')
                                                                         .map { |group_sum| [group_sum.grouped_stage_name, group_sum.grouped_stage_order, group_sum.time_in_blocked] }
   end
+
+  def blocks_count_per_stage(projects, start_date, end_date)
+    active_blocks_to_projects_and_period(projects, start_date, end_date).closed
+                                                                        .joins(:stage)
+                                                                        .select('stages.name AS grouped_stage_name, stages.order AS grouped_stage_order, COUNT(1) AS count_block')
+                                                                        .group('grouped_stage_name, grouped_stage_order')
+                                                                        .order('grouped_stage_order, grouped_stage_name')
+                                                                        .map { |block_count| [block_count.grouped_stage_name, block_count.grouped_stage_order, block_count.count_block] }
+  end
 end

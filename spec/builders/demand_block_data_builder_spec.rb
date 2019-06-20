@@ -14,4 +14,18 @@ RSpec.describe DemandBlockDataBuilder, type: :builder do
       it { expect(DemandBlockDataBuilder.instance.build_block_per_stage(info_data_hash)).to eq({}) }
     end
   end
+
+  describe '#build_blocks_count_per_stage' do
+    context 'having info in the hash' do
+      let(:info_data_hash) { [['bla', 0, 4], ['ble', 1, 5], ['bli', 2, 0]] }
+
+      it { expect(DemandBlockDataBuilder.instance.build_blocks_count_per_stage(info_data_hash)).to eq('bla' => 4, 'ble' => 5, 'bli' => 0) }
+    end
+
+    context 'empty hash' do
+      let(:info_data_hash) { {} }
+
+      it { expect(DemandBlockDataBuilder.instance.build_blocks_count_per_stage(info_data_hash)).to eq({}) }
+    end
+  end
 end

@@ -43,6 +43,11 @@ function buildOperationalHighcharts() {
         buildColumnChart(hoursBlockedPerStageDiv);
     }
 
+    const countBlockedPerStageDiv = $('#count-blocked-per-stage');
+    if (countBlockedPerStageDiv.length !== 0) {
+        buildColumnChart(countBlockedPerStageDiv);
+    }
+
     const agingPerDemandDiv = $('#aging-per-demand-div');
     if (agingPerDemandDiv.length !== 0) {
         buildColumnChart(agingPerDemandDiv);
