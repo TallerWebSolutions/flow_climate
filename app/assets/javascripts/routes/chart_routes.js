@@ -1,6 +1,8 @@
 function buildOperationalCharts(companyId, projectsIds, period, targetName, startDate, endDate, teamId) {
     $("#general-loader").show();
     $("#operational-charts-div").hide();
+    $("#status-report-charts-current-div").hide();
+    $("#status-report-charts-projection-div").hide();
 
     jQuery.ajax({
         url: `/companies/${companyId}/build_operational_charts.js`,
