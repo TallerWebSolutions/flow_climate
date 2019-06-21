@@ -720,4 +720,38 @@ RSpec.describe Demand, type: :model do
       it { expect(demand.flow_percentage_concluded).to eq 0.75 }
     end
   end
+
+  describe '#beyond_limit_time?' do
+    let(:company) { Fabricate :company }
+    let(:stage) { Fabricate :stage, company: company }
+    let(:project) { Fabricate :project, company: company }
+    let!(:demand) { Fabricate :demand, project: project }
+
+    context 'with value in stage project config' do
+      let!(:stage_project_config) { Fabricate :stage_project_config, stage: stage, project: project, max_seconds_in_stage: 24 * 60 * 60 }
+
+      context 'with an outdated transition in the stage' do
+        let!(:demand_transition) { Fabricate :demand_transition, demand: demand, stage: stage, last_time_in: 2.days.ago }
+
+        it { expect(demand.beyond_limit_time?).to be true }
+      end
+
+      context 'without an outdated transition in the stage' do
+        let!(:demand_transition) { Fabricate :demand_transition, demand: demand, stage: stage, last_time_in: 2.hours.ago }
+
+        it { expect(demand.beyond_limit_time?).to be false }
+      end
+    end
+
+    context 'without value in stage project config' do
+      let!(:stage_project_config) { Fabricate :stage_project_config, stage: stage, project: project, max_seconds_in_stage: 0 }
+      let!(:demand_transition) { Fabricate :demand_transition, demand: demand, stage: stage, last_time_in: 2.hours.ago }
+
+      it { expect(demand.beyond_limit_time?).to be false }
+    end
+
+    context 'without stage project config' do
+      it { expect(demand.beyond_limit_time?).to be false }
+    end
+  end
 end

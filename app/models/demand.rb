@@ -195,6 +195,15 @@ class Demand < ApplicationRecord
     (effort_downstream + effort_upstream) * project.hour_value
   end
 
+  def beyond_limit_time?
+    return false if current_stage.blank?
+
+    max_seconds_in_stage = current_stage.stage_project_configs.where(project: project).last.max_seconds_in_stage
+    return false if max_seconds_in_stage.zero?
+
+    time_in_current_stage > max_seconds_in_stage
+  end
+
   private
 
   def sum_blocked_time_for_transitions(transitions)

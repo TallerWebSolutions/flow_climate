@@ -25,6 +25,10 @@ RSpec.describe FilterHelper, type: :helper do
     it { expect(helper.grouping_period_to_charts_options).to eq options_for_select([[I18n.t('general.monthly'), 'month'], [I18n.t('general.weekly'), 'week'], [I18n.t('general.daily'), 'day']], 'month') }
   end
 
+  describe '#form_input_periods' do
+    it { expect(helper.form_input_periods).to eq options_for_select([[I18n.t('general.days'), 'day'], [I18n.t('general.weeks'), 'week'], [I18n.t('general.hours'), 'hour']], 'day') }
+  end
+
   describe '#teams_in_company_options' do
     let(:company) { Fabricate :company }
     let!(:team) { Fabricate :team, company: company }

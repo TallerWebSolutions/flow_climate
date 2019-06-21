@@ -8,6 +8,7 @@
 #  created_at            :datetime         not null
 #  id                    :bigint(8)        not null, primary key
 #  management_percentage :integer          default(0)
+#  max_seconds_in_stage  :integer          default(0)
 #  pairing_percentage    :integer          default(0)
 #  project_id            :integer          not null, indexed, indexed => [stage_id]
 #  stage_id              :integer          not null, indexed => [project_id], indexed

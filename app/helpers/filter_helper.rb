@@ -23,6 +23,10 @@ module FilterHelper
     options_for_select([[I18n.t('general.monthly'), 'month'], [I18n.t('general.weekly'), 'week'], [I18n.t('general.daily'), 'day']], selected_value)
   end
 
+  def form_input_periods(selected_value = 'day')
+    options_for_select([[I18n.t('general.days'), 'day'], [I18n.t('general.weeks'), 'week'], [I18n.t('general.hours'), 'hour']], selected_value)
+  end
+
   def teams_in_company_options(company)
     options_for_select(company.teams.map{ |team| [team.name, team.id.to_s] })
   end

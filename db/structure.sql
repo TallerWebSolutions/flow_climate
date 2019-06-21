@@ -1068,7 +1068,8 @@ CREATE TABLE public.stage_project_configs (
     management_percentage integer DEFAULT 0,
     pairing_percentage integer DEFAULT 0,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    max_seconds_in_stage integer DEFAULT 0
 );
 
 
@@ -2892,6 +2893,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190613135818'),
 ('20190613192708'),
 ('20190614134919'),
-('20190621150621');
+('20190621150621'),
+('20190621191628');
 
 

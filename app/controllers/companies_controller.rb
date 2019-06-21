@@ -104,7 +104,7 @@ class CompaniesController < AuthenticatedController
   end
 
   def assign_stages_list
-    @stages_list = @company.stages.order('stages.order')
+    @stages_list = @company.stages.order('stages.integration_pipe_id, stages.order')
   end
 
   def assign_users_in_company
