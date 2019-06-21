@@ -31,11 +31,13 @@ class ProjectConsolidationJob < ApplicationJob
 
           project_share_team_throughput_data = team_throughput_data.values.last(20).map { |throughput| throughput * project_share_in_flow }
           team_based_montecarlo_durations = Stats::StatisticsService.instance.run_montecarlo(project.remaining_backlog(end_of_week), project_share_team_throughput_data, 500)
-          team_based_montecarlo_80_percent = Stats::StatisticsService.instance.percentile(80, team_based_montecarlo_durations)
+          team_based_montecarlo_80_percentil = Stats::StatisticsService.instance.percentile(80, team_based_montecarlo_durations)
           team_based_min_weeks_montecarlo = team_based_montecarlo_durations.min
           team_based_max_weeks_montecarlo = team_based_montecarlo_durations.max
           team_based_std_dev_weeks_montecarlo = Stats::StatisticsService.instance.standard_deviation(team_based_montecarlo_durations)
           team_based_odds_to_deadline = Stats::StatisticsService.instance.compute_odds_to_deadline(project.remaining_weeks, team_based_montecarlo_durations)
+
+          min_weeks_montecarlo_team_percentage = team_based_montecarlo_durations.count { |x| x <= team_based_min_weeks_montecarlo }.to_f / team_based_montecarlo_durations.count.to_f
 
           weeks_to_end_date = project.remaining_weeks(end_of_week)
 
@@ -47,6 +49,8 @@ class ProjectConsolidationJob < ApplicationJob
           project_based_min_weeks_montecarlo = project_based_montecarlo_durations.min
           project_based_max_weeks_montecarlo = project_based_montecarlo_durations.max
           project_based_std_dev_weeks_montecarlo = Stats::StatisticsService.instance.standard_deviation(project_based_montecarlo_durations)
+
+          min_weeks_montecarlo_project_percentage = project_based_montecarlo_durations.count { |x| x <= project_based_min_weeks_montecarlo }.to_f / project_based_montecarlo_durations.count.to_f
 
           project_based_odds_to_deadline = Stats::StatisticsService.instance.compute_odds_to_deadline(project.remaining_weeks, project_based_montecarlo_durations)
 
@@ -60,7 +64,24 @@ class ProjectConsolidationJob < ApplicationJob
 
           lead_times_array = demands_finished.map { |demand| demand.leadtime.to_f }
           last_8_lead_times = demands_finished.where('end_date >= :limit_date', limit_date: 8.weeks.ago.beginning_of_week).map { |demand| demand.leadtime.to_f }
+
           last_8_throughputs = project_throughput_data.values.last(8)
+
+          last_8_throughputs_average = 0
+          last_8_throughputs_average = last_8_throughputs.sum.to_f / last_8_throughputs.count.to_f if last_8_throughputs.count.positive?
+
+          last_8_throughput_std_dev = Stats::StatisticsService.instance.standard_deviation(last_8_throughputs)
+
+          last_8_data_little_law_weeks = 0
+          last_8_data_little_law_weeks = project.remaining_backlog.to_f / last_8_throughputs_average if last_8_throughputs_average.positive?
+
+          throughput_average = 0
+          throughput_average = project_throughput_data.values.sum.to_f / project_throughput_data.values.count.to_f if project_throughput_data.values.compact.count.positive?
+
+          throughput_std_dev = Stats::StatisticsService.instance.standard_deviation(project_throughput_data.values)
+
+          all_data_little_law_weeks = 0
+          all_data_little_law_weeks = project.remaining_backlog.to_f / throughput_average if throughput_average.positive?
 
           lead_time_p25 = Stats::StatisticsService.instance.percentile(25, lead_times_array)
           lead_time_p75 = Stats::StatisticsService.instance.percentile(75, lead_times_array)
@@ -87,7 +108,8 @@ class ProjectConsolidationJob < ApplicationJob
           project_flow_pressure_percentage = project_flow_pressure / total_flow_pressure_in_date if project_flow_pressure.positive? && total_flow_pressure_in_date.positive?
 
           consolidation = ProjectConsolidation.find_or_initialize_by(project: project, consolidation_date: end_of_week)
-          consolidation.update(customer_happiness: customer_happiness,
+          consolidation.update(remaining_scope: project.remaining_backlog,
+                               customer_happiness: customer_happiness,
                                population_start_date: demands.minimum(:created_date),
                                population_end_date: demands.maximum(:end_date),
                                wip_limit: project_wip,
@@ -107,15 +129,24 @@ class ProjectConsolidationJob < ApplicationJob
                                lead_time_p75: lead_time_p75,
                                interquartile_range: lead_time_p75 - lead_time_p25,
                                last_lead_time_p80: average_lead_time,
-                               last_throughput_per_week_data: last_8_throughputs,
+                               last_8_throughput_per_week_data: last_8_throughputs,
+                               last_8_throughput_average: last_8_throughputs_average,
+                               last_8_throughput_std_dev: last_8_throughput_std_dev,
+                               throughput_per_week_data: project_throughput_data.values,
+                               throughput_average: throughput_average,
+                               throughput_std_dev: throughput_std_dev,
+                               last_8_data_little_law_weeks: last_8_data_little_law_weeks,
+                               all_data_little_law_weeks: all_data_little_law_weeks,
                                project_monte_carlo_weeks_p80: project_based_montecarlo_80_percent,
                                min_weeks_montecarlo_project: project_based_min_weeks_montecarlo,
                                max_weeks_montecarlo_project: project_based_max_weeks_montecarlo,
+                               min_weeks_montecarlo_project_percentage: min_weeks_montecarlo_project_percentage,
                                std_dev_weeks_montecarlo_project: project_based_std_dev_weeks_montecarlo,
                                odds_to_deadline_project: project_based_odds_to_deadline,
-                               team_monte_carlo_weeks_p80: team_based_montecarlo_80_percent,
+                               team_monte_carlo_weeks_p80: team_based_montecarlo_80_percentil,
                                min_weeks_montecarlo_team: team_based_min_weeks_montecarlo,
                                max_weeks_montecarlo_team: team_based_max_weeks_montecarlo,
+                               min_weeks_montecarlo_team_percentage: min_weeks_montecarlo_team_percentage,
                                std_dev_weeks_montecarlo_team: team_based_std_dev_weeks_montecarlo,
                                odds_to_deadline_team: team_based_odds_to_deadline,
                                weeks_to_deadline: weeks_to_end_date,

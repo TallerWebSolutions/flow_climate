@@ -89,6 +89,17 @@ en:
       text: "Last update: %{last_update}"
     risk:
       text: "Math risk to deadline %{risk_value}"
+    detail: "Risk Detail"
+    minimum: "Minimum"
+    maximum: "Maximum"
+    statistics:
+      p80: "Percentile 80"
+      standard_deviation: "Standard Deviation"
+      histogram_bin_min: "Histogram Bin Min"
+      histogram_bin_max: "Histogram Bin Max"
+      average: "Average"
+      sample_size: "Sample Size"
+    demands_text: "%{demands_count} demand(s)"
   header:
     logout: Logout
     explore: Explore
@@ -402,6 +413,13 @@ en:
       lead_time_histogram_data_range_tab: "Histogram LT Range"
       lead_time_interquartile_data_range_evolution_tab: "Interquartile Range"
       lead_time_interquartile_histogram_range_evolution_tab: "Histogram X Interquartile"
+      montecarlo:
+        title: "Monte Carlo"
+    risk:
+      drill_down_title: "Risk Drill Down"
+      drill_down_flow_title: "Flow (Last 8 weeks)"
+      drill_down_wip_title: "WiP Limit"
+      drill_down_little_law_title: "LIttle's Law"
   project:
     new:
       title: "New Project"

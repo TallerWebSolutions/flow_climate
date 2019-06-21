@@ -66,6 +66,9 @@
       <% if project.project_consolidations.present? %>
         <h4 class="center"><%= t('projects.show.deadline_countdown.risk', risk_value: number_to_percentage(project.current_risk_to_deadline * 100, precision: 2)) %>
           <i class="far fa-calendar-alt" title="<%= "#{t('general.last_update.text', last_update: I18n.l(project.consolidations_last_update, format: :short))}" %>"></i>
+          <%= link_to risk_drill_down_company_project_path(company, project), class: 'project-risk-drill-down-button', remote: true do %>
+            <i class="fas fa-info-circle" title="<%= t('general.detail') %>"></i>
+          <% end %>
         </h4>
       <% end %>
     <% else %>
@@ -107,3 +110,5 @@
     <% end %>
   </div>
 </div>
+
+<div class="modal fade" id="project-risk-drill-down" tabindex="-1" role="dialog" aria-labelledby="project-risk-drill-down" aria-hidden="true"></div>

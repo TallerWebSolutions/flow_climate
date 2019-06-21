@@ -77,6 +77,12 @@ RSpec.describe ProjectsController, type: :controller do
 
       it { expect(response).to redirect_to new_user_session_path }
     end
+
+    describe 'GET #risk_drill_down' do
+      before { get :risk_drill_down, params: { company_id: 'foo', id: 'sbbrubles' } }
+
+      it { expect(response).to redirect_to new_user_session_path }
+    end
   end
 
   pending 'authenticated as lite'
@@ -848,6 +854,49 @@ RSpec.describe ProjectsController, type: :controller do
             let(:company) { Fabricate :company, users: [] }
 
             before { patch :dissociate_product, params: { company_id: company, id: project, product_id: product }, xhr: true }
+
+            it { expect(response).to have_http_status :not_found }
+          end
+        end
+      end
+    end
+
+    describe 'GET #risk_drill_down' do
+      let(:company) { Fabricate :company, users: [user] }
+      let(:customer) { Fabricate :customer, company: company }
+      let!(:project) { Fabricate :project, company: company }
+
+      let!(:project_consolidation) { Fabricate :project_consolidation, project: project, consolidation_date: Time.zone.today }
+      let!(:other_project_consolidation) { Fabricate :project_consolidation, project: project, consolidation_date: 1.day.ago }
+
+      let!(:out_project_consolidation) { Fabricate :project_consolidation }
+
+      context 'passing valid parameters' do
+        it 'assigns the instance variables and renders the template' do
+          get :risk_drill_down, params: { company_id: company, id: project }, xhr: true
+          expect(response).to render_template 'projects/risk_drill_down'
+          expect(assigns(:project_consolidations)).to eq [other_project_consolidation, project_consolidation]
+        end
+      end
+
+      context 'passing an invalid' do
+        context 'non-existent project' do
+          before { get :risk_drill_down, params: { company_id: company, id: 'foo' }, xhr: true }
+
+          it { expect(response).to have_http_status :not_found }
+        end
+
+        context 'company' do
+          context 'non-existent' do
+            before { get :risk_drill_down, params: { company_id: 'foo', id: project }, xhr: true }
+
+            it { expect(response).to have_http_status :not_found }
+          end
+
+          context 'not permitted' do
+            let(:company) { Fabricate :company, users: [] }
+
+            before { get :risk_drill_down, params: { company_id: company, id: project }, xhr: true }
 
             it { expect(response).to have_http_status :not_found }
           end
