@@ -391,6 +391,7 @@ pt-BR:
             current_week_throughput: Throughput da Semana
             last_week_delivered_demands_info: Infos de Entrega da Última Semana
             demands_wip_info: Demandas em WiP
+            outdated_demands: Demandas atrasadas
           weekday_to_notify:
             all_weekdays: Todos
             monday: Segunda
@@ -451,3 +452,4 @@ pt-BR:
       th_last_week_demand_info_text: "*%{demand_id}* %{demand_title} | *Responsáveis:* %{responsibles_names} | *Custo pro Projeto:* %{cost_to_project}"
       qty_demands_in_wip: "Hey, o trabalho em progresso atual no *%{team_name}* é de %{in_wip} demanda(s)."
       demands_in_wip_info_text: "*%{demand_id}* %{demand_title} | *Responsáveis:* %{responsibles_names} | *Custo pro Projeto:* %{cost_to_project} | *Etapa atual:* %{current_stage} | *Tempo na Etapa:* %{time_in_current_stage} | *% Fluxo Concluído*: %{percentage_concluded}"
+      outdated_demands_info_text: "*%{demand_id}* %{demand_title} | *Etapa atual:* %{current_stage} | *Tempo na Etapa:* %{time_in_current_stage}"

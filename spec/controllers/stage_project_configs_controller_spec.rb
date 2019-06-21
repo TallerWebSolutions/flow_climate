@@ -75,10 +75,10 @@ RSpec.describe StageProjectConfigsController, type: :controller do
       let(:other_project) { Fabricate :project, customers: [customer] }
       let!(:other_stage_project_config) { Fabricate :stage_project_config, stage: stage, project: other_project, stage_percentage: nil, pairing_percentage: nil, management_percentage: nil }
 
-      context 'passing valid parameters' do
-        context 'and replicating the update to the other projects' do
+      context 'with valid parameters' do
+        context 'with replication to other projects' do
           it 'updates the config and replicates the values to the other projects' do
-            put :update, params: { company_id: company, stage_id: stage, id: stage_project_config, replicate_to_projects: '1', stage_project_config: { compute_effort: true, stage_percentage: 10, pairing_percentage: 20, management_percentage: 30 } }
+            put :update, params: { company_id: company, stage_id: stage, id: stage_project_config, replicate_to_projects: '1', max_time_in_stage: 1, max_time_in_stage_period: 'week', stage_project_config: { compute_effort: true, stage_percentage: 10, pairing_percentage: 20, management_percentage: 30 } }
             expect(response).to redirect_to edit_company_stage_stage_project_config_path(company, stage, stage_project_config)
 
             stage_project_config_updated = stage_project_config.reload
@@ -86,6 +86,7 @@ RSpec.describe StageProjectConfigsController, type: :controller do
             expect(stage_project_config_updated.stage_percentage).to eq 10.0
             expect(stage_project_config_updated.pairing_percentage).to eq 20.0
             expect(stage_project_config_updated.management_percentage).to eq 30.0
+            expect(stage_project_config_updated.max_seconds_in_stage).to eq 604_800
 
             other_stage_project_config_updated = other_stage_project_config.reload
             expect(other_stage_project_config_updated.compute_effort?).to be true
@@ -95,7 +96,17 @@ RSpec.describe StageProjectConfigsController, type: :controller do
           end
         end
 
-        context 'and no replication to other projects' do
+        context 'with max_time_in_stage_period as day' do
+          it 'updates the config and replicates the values to the other projects' do
+            put :update, params: { company_id: company, stage_id: stage, id: stage_project_config, replicate_to_projects: '1', max_time_in_stage: 1, max_time_in_stage_period: 'day', stage_project_config: { compute_effort: true, stage_percentage: 10, pairing_percentage: 20, management_percentage: 30 } }
+            expect(response).to redirect_to edit_company_stage_stage_project_config_path(company, stage, stage_project_config)
+
+            stage_project_config_updated = stage_project_config.reload
+            expect(stage_project_config_updated.max_seconds_in_stage).to eq 86_400
+          end
+        end
+
+        context 'without replication to other projects' do
           it 'updates the config and does not replicate the values to the other projects' do
             put :update, params: { company_id: company, stage_id: stage, id: stage_project_config, replicate_to_projects: '0', stage_project_config: { compute_effort: true, stage_percentage: 10, pairing_percentage: 20, management_percentage: 30 } }
             expect(response).to redirect_to edit_company_stage_stage_project_config_path(company, stage, stage_project_config)
@@ -105,6 +116,7 @@ RSpec.describe StageProjectConfigsController, type: :controller do
             expect(stage_project_config_updated.stage_percentage).to eq 10.0
             expect(stage_project_config_updated.pairing_percentage).to eq 20.0
             expect(stage_project_config_updated.management_percentage).to eq 30.0
+            expect(stage_project_config_updated.max_seconds_in_stage).to eq 0
 
             other_stage_project_config_updated = other_stage_project_config.reload
             expect(other_stage_project_config_updated.compute_effort?).to be true

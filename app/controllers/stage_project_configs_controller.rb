@@ -10,13 +10,27 @@ class StageProjectConfigsController < AuthenticatedController
   def edit; end
 
   def update
-    @stage_project_config.update(stage_project_config_params)
+    @stage_project_config.update(stage_project_config_params.merge(max_seconds_in_stage: time_in_seconds_from_params))
     recompute_manual_efforts_to_transitions_in_stage
     replicate_to_other_projects if params['replicate_to_projects'] == '1'
     redirect_to edit_company_stage_stage_project_config_path(@company, @stage, @stage_project_config)
   end
 
   private
+
+  def time_in_seconds_from_params
+    if params[:max_time_in_stage_period] == 'week'
+      time_in_stage_param * 1.week
+    elsif params[:max_time_in_stage_period] == 'day'
+      time_in_stage_param * 1.day
+    else
+      time_in_stage_param * 1.hour
+    end
+  end
+
+  def time_in_stage_param
+    params[:max_time_in_stage]&.to_i || 0
+  end
 
   def recompute_manual_efforts_to_transitions_in_stage
     project = @stage_project_config.project
@@ -34,7 +48,7 @@ class StageProjectConfigsController < AuthenticatedController
   end
 
   def stage_project_config_params
-    params.require(:stage_project_config).permit(:compute_effort, :stage_percentage, :management_percentage, :pairing_percentage)
+    params.require(:stage_project_config).permit(:compute_effort, :stage_percentage, :management_percentage, :pairing_percentage, :max_seconds_in_stage)
   end
 
   def assign_stage

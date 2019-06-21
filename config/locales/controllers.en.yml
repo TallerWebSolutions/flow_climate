@@ -100,6 +100,10 @@ en:
       average: "Average"
       sample_size: "Sample Size"
     demands_text: "%{demands_count} demand(s)"
+    months: "months"
+    weeks: "weeks"
+    days: "days"
+    hours: "hours"
   header:
     logout: Logout
     explore: Explore
@@ -741,6 +745,9 @@ en:
       project_list: "Projects with configuration on the stage"
       replicate_to_projects: "Replicate to others projects in this stage?"
       recompute_manual_efforts: "Recompute Manual Efforts"
+    form:
+      max_seconds_in_stage: "Max Time in Stage"
+      max_seconds_in_stage_period: "Period"
   finances:
     charts:
       finance_result:
@@ -857,3 +864,5 @@ en:
   slack_configurations:
     new:
       title: "New Slack Config"
+    notifications:
+      beyond_expected_title: "The team %{team_name} has %{beyond_expected_count} outdated demands."

@@ -179,3 +179,4 @@ en:
       th_last_week_demand_info_text: "*%{demand_id}* %{demand_title} | *Responsibles:* %{responsibles_names} | *Cost to Project:* %{cost_to_project}"
       qty_demands_in_wip: "Hey, current work in progress to the team *%{team_name}* is %{in_wip} demands."
       demands_in_wip_info_text: "*%{demand_id}* %{demand_title} | *Responsibles:* %{responsibles_names} | *Cost to Project:* %{cost_to_project} | *Current Stage:* %{current_stage} | *Time in Stage:* %{time_in_current_stage} | *% Flow Concluded:* %{percentage_concluded}"
+      outdated_demands_info_text: "*%{demand_id}* %{demand_title} | *Current Stage:* %{current_stage} | *Time in Stage:* %{time_in_current_stage}"

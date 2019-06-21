@@ -102,6 +102,10 @@ pt-BR:
       average: "Média"
       sample_size: "Tamanho da Amostra"
     demands_text: "%{demands_count} demanda(s)"
+    months: "meses"
+    weeks: "semanas"
+    days: "dias"
+    hours: "horas"
   header:
     logout: Sair
     sign_up: Cadastre-se
@@ -755,6 +759,9 @@ pt-BR:
       recompute_manual_efforts: "Recalcular Esforços Manuais"
     registrations:
       change_password: "Mudar Senha"
+    form:
+      max_seconds_in_stage: "Tempo Máximo na Etapa"
+      max_seconds_in_stage_period: "Período"
   finances:
     charts:
       finance_result:
@@ -846,3 +853,5 @@ pt-BR:
   slack_configurations:
     new:
       title: "Nova Config do Slack"
+    notifications:
+      beyond_expected_title: "O time %{team_name} está com %{beyond_expected_count} demanda(s) acima do esperado na etapa"

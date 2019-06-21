@@ -14,6 +14,8 @@ module Slack
         notify_last_week_delivered_demands_info(slack_notifier, team)
       elsif slack_configuration.demands_wip_info?
         notify_wip_demands(slack_notifier, team)
+      elsif slack_configuration.outdated_demands?
+        notify_beyond_expected_time_in_stage(slack_notifier, team)
       end
     end
 
@@ -55,7 +57,8 @@ module Slack
     end
 
     def notify_wip_demands(slack_notifier, team)
-      demands_in_wip = team.demands.in_wip
+      demands_in_wip = team.demands.in_wip.sort_by(&:flow_percentage_concluded).reverse
+
       slack_notifier.ping(I18n.t('slack_configurations.notifications.qty_demands_in_wip', team_name: team.name, in_wip: demands_in_wip.count))
 
       demands_in_wip.each do |demand|
@@ -69,6 +72,25 @@ module Slack
                    time_in_current_stage: time_distance_in_words(demand.time_in_current_stage),
                    percentage_concluded: number_to_percentage(demand.flow_percentage_concluded * 100, precision: 2))
         )
+      end
+    end
+
+    def notify_beyond_expected_time_in_stage(slack_notifier, team)
+      demands_in_wip = team.demands.in_wip.sort_by(&:flow_percentage_concluded).reverse
+      demands_beyond_time = demands_in_wip.select(&:beyond_limit_time?)
+
+      if demands_beyond_time.present?
+        slack_notifier.ping(I18n.t('slack_configurations.notifications.beyond_expected_title', team_name: team.name, beyond_expected_count: demands_beyond_time.count))
+
+        demands_beyond_time.each do |outdated_demand|
+          slack_notifier.ping(
+              I18n.t('slack_configurations.notifications.outdated_demands_info_text',
+                     demand_id: outdated_demand.demand_id,
+                     demand_title: outdated_demand.demand_title,
+                     current_stage: outdated_demand.current_stage&.name,
+                     time_in_current_stage: time_distance_in_words(outdated_demand.time_in_current_stage))
+          )
+        end
       end
     end
   end
