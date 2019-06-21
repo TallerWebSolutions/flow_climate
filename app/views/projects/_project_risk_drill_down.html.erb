@@ -1,0 +1,105 @@
+<div class="modal-dialog">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+      <h4 class="modal-title" id="myModalLabel"><%= t('projects.risk.drill_down_title') %></h4>
+    </div>
+    <div class="modal-body">
+      <% if project_consolidations.present? %>
+        <div class="row">
+          <div class="col-xs-12 div-group-title">
+            <%= t('projects.risk.drill_down_flow_title') %>
+          </div>
+          <div class="col-xs-5">
+            <p class="stamp-title"><%= I18n.t('general.throughput') %></p>
+            <p class="stamp-content"><%= project_consolidations.last.last_8_throughput_per_week_data.join(', ') %></p>
+          </div>
+          <div class="col-xs-3">
+            <p class="stamp-title"><%= t('projects.risk.drill_down_wip_title') %></p>
+            <p class="stamp-content"><%= project_consolidations.last.wip_limit %></p>
+          </div>
+          <div class="col-xs-4">
+            <p class="stamp-title"><%= t('projects.risk.drill_down_little_law_title') %></p>
+            <p class="stamp-content"><%= "#{number_with_precision(project_consolidations.last.last_8_data_little_law_weeks, precision: 1)} semana(s)" %></p>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-xs-12 div-group-title">
+            <%= I18n.t('projects.statistics.montecarlo.title') %>
+          </div>
+          <div class="col-xs-6 bottom-spaced-component">
+            <p class="stamp-title"><%= I18n.t('general.minimum') %></p>
+            <p class="stamp-content">
+              <%= I18n.t('general.weeks_text', weeks: project_consolidations.last.min_weeks_montecarlo_project) %>
+              <sup><%= "(#{number_to_percentage(project_consolidations.last.min_weeks_montecarlo_project_percentage * 100, precision: 2)})" %></sup>
+            </p>
+          </div>
+          <div class="col-xs-6 bottom-spaced-component">
+            <p class="stamp-title"><%= I18n.t('general.maximum') %></p>
+            <p class="stamp-content">
+              <%= I18n.t('general.weeks_text', weeks: project_consolidations.last.max_weeks_montecarlo_project) %>
+            </p>
+          </div>
+          <div class="col-xs-6 bottom-spaced-component">
+            <p class="stamp-title"><%= I18n.t('general.statistics.p80') %></p>
+            <p class="stamp-content"><%= I18n.t('general.weeks_text', weeks: project_consolidations.last.project_monte_carlo_weeks_p80) %></p>
+          </div>
+          <div class="col-xs-6 bottom-spaced-component">
+            <p class="stamp-title"><%= I18n.t('general.statistics.standard_deviation') %></p>
+            <p class="stamp-content"><%= I18n.t('general.weeks_text', weeks: number_with_precision(project_consolidations.last.std_dev_weeks_montecarlo_project, precision: 2)) %></p>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-xs-12 div-group-title">
+            Lead Time
+          </div>
+
+          <div class="col-xs-6 bottom-spaced-component">
+            <p class="stamp-title"><%= I18n.t('general.minimum') %></p>
+            <p class="stamp-content"><%= time_distance_in_words(project_consolidations.last.lead_time_min) %></p>
+          </div>
+
+          <div class="col-xs-6 bottom-spaced-component">
+            <p class="stamp-title"><%= I18n.t('general.maximum') %></p>
+            <p class="stamp-content"><%= time_distance_in_words(project_consolidations.last.lead_time_max) %></p>
+          </div>
+
+          <div class="col-xs-6 bottom-spaced-component">
+            <p class="stamp-title"><%= I18n.t('general.statistics.p80') %></p>
+            <p class="stamp-content"><%= time_distance_in_words(project_consolidations.last.last_lead_time_p80) %></p>
+          </div>
+
+          <div class="col-xs-6 bottom-spaced-component">
+            <p class="stamp-title"><%= I18n.t('general.statistics.standard_deviation') %></p>
+            <p class="stamp-content"><%= time_distance_in_words(project_consolidations.last.demands_lead_times_std_dev) %></p>
+          </div>
+
+          <div class="col-xs-6 bottom-spaced-component">
+            <p class="stamp-title"><%= I18n.t('general.statistics.histogram_bin_min') %></p>
+            <p class="stamp-content"><%= time_distance_in_words(project_consolidations.last.lead_time_histogram_bin_min) %></p>
+          </div>
+
+          <div class="col-xs-6 bottom-spaced-component">
+            <p class="stamp-title"><%= I18n.t('general.statistics.histogram_bin_max') %></p>
+            <p class="stamp-content"><%= time_distance_in_words(project_consolidations.last.lead_time_histogram_bin_max) %></p>
+          </div>
+
+          <div class="col-xs-6 bottom-spaced-component">
+            <p class="stamp-title"><%= I18n.t('general.statistics.average') %></p>
+            <p class="stamp-content"><%= time_distance_in_words(project_consolidations.last.demands_lead_times_average) %></p>
+          </div>
+
+          <div class="col-xs-6 bottom-spaced-component">
+            <p class="stamp-title"><%= I18n.t('general.statistics.sample_size') %></p>
+            <p class="stamp-content"><%= I18n.t('general.demands_text', demands_count: project_consolidations.last.demands_finished_ids.count) %></p>
+          </div>
+        </div>
+
+      <% else %>
+        <%= render 'layouts/no_data', missing_data: ProjectConsolidation.model_name.human %>
+      <% end %>
+    </div>
+  </div>
+</div>

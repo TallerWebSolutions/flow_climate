@@ -15,7 +15,7 @@ Fabricator(:project_consolidation) do
   histogram_range 10
   interquartile_range 3
   last_lead_time_p80 4.3
-  last_throughput_per_week_data [3, 2, 4, 1, 5]
+  last_8_throughput_per_week_data [3, 2, 4, 1, 5]
   lead_time_histogram_bin_max 4.3
   lead_time_histogram_bin_min 2.1
   lead_time_max 2.1

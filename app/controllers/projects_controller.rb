@@ -4,7 +4,7 @@ class ProjectsController < AuthenticatedController
   before_action :user_gold_check
 
   before_action :assign_company
-  before_action :assign_project, only: %i[show edit update destroy synchronize_jira finish_project statistics copy_stages_from associate_customer dissociate_customer associate_product dissociate_product]
+  before_action :assign_project, except: %i[new create index search_for_projects]
 
   def show
     assign_project_stages
@@ -119,6 +119,11 @@ class ProjectsController < AuthenticatedController
     @project.remove_product(product)
     assign_product_projects
     respond_to { |format| format.js { render 'projects/associate_dissociate_product' } }
+  end
+
+  def risk_drill_down
+    @project_consolidations = @project.project_consolidations.order(:consolidation_date)
+    respond_to { |format| format.js { render 'projects/risk_drill_down' } }
   end
 
   private

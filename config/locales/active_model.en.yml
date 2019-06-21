@@ -124,6 +124,8 @@ en:
             wednesday: "Wednesday"
             thursday: "Thursday"
             friday: "Friday"
+      project_consolidation:
+        last_8_throughput_per_week_data: "Last 8 Weeks Throughput"
     errors:
       messages:
         record_invalid: 'Validation failed: %{errors}'

@@ -43,7 +43,7 @@ pt-BR:
         title: "Custo Médio por Demanda"
       flow_pressure: "Pressão do Fluxo"
       hours_per_demand: "Horas por Demanda"
-    no_data: "Não existem %{missing_data} para essa exibição"
+    no_data: "Não existe %{missing_data} para essa exibição"
     download_csv: "Download CSV"
     percentage:
       symbol: "%"
@@ -91,6 +91,17 @@ pt-BR:
       text: "Última atualização em %{last_update}"
     risk:
       text: "Risco matemático para o deadline é %{risk_value}"
+    detail: "Detalhamento do Risco"
+    minimum: "Mínimo"
+    maximum: "Máximo"
+    statistics:
+      p80: "Percentil 80"
+      standard_deviation: "Desvio Padrão"
+      histogram_bin_min: "Bin Mínimo do Histograma"
+      histogram_bin_max: "Bin Máximo do Histograma"
+      average: "Média"
+      sample_size: "Tamanho da Amostra"
+    demands_text: "%{demands_count} demanda(s)"
   header:
     logout: Sair
     sign_up: Cadastre-se
@@ -420,6 +431,13 @@ pt-BR:
       lead_time_histogram_data_range_tab: "Amplitude do Hist. do LT"
       lead_time_interquartile_data_range_evolution_tab: "Amplitude do Interquartil"
       lead_time_interquartile_histogram_range_evolution_tab: "Histograma X Interquartil"
+      montecarlo:
+        title: "Monte Carlo"
+    risk:
+      drill_down_title: "Detalhamento do Risco"
+      drill_down_flow_title: "Fluxo (Últimas 8 semanas)"
+      drill_down_wip_title: "Limite do WiP"
+      drill_down_little_law_title: "Lei de Little"
   teams:
     index:
       title: "Times"
