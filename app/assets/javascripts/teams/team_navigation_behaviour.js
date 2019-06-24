@@ -13,10 +13,10 @@ $('.nav-item').on('click', function(event){
     hideAllComponents();
     const disabled = $(this).attr('disabled');
 
-    const period = $("#period").val();
+    const period = $('#operational_charts_period').val();
 
-    const startDate = $('#start_date').val();
-    const endDate = $('#end_date').val();
+    const startDate = $('#operational_charts_start_date').val();
+    const endDate = $('#operational_charts_end_date').val();
 
     if (disabled === 'disabled') {
         event.preventDefault();
