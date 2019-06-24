@@ -7,12 +7,7 @@ class TeamsController < AuthenticatedController
   before_action :assign_team, only: %i[show edit update replenishing_input destroy]
 
   def show
-    @team_members = @team.team_members.order(:name)
-    @team_projects = ProjectsRepository.instance.all_projects_for_team(@team)
-    @active_team_projects = @team_projects.active
-    @projects_summary = ProjectsSummaryData.new(@team.projects)
-    @projects_risk_chart_data = Highchart::ProjectRiskChartsAdapter.new(@team.projects)
-    @slack_configurations = @team.slack_configurations
+    assign_team_objects
 
     @start_date = build_limit_date(@team_projects.map(&:start_date).min)
     @end_date = build_limit_date(@team_projects.map(&:end_date).max)
@@ -59,6 +54,15 @@ class TeamsController < AuthenticatedController
   end
 
   private
+
+  def assign_team_objects
+    @team_members = @team.team_members.order(:name)
+    @team_projects = ProjectsRepository.instance.all_projects_for_team(@team)
+    @active_team_projects = @team_projects.active
+    @projects_summary = ProjectsSummaryData.new(@team.projects)
+    @projects_risk_chart_data = Highchart::ProjectRiskChartsAdapter.new(@team.projects)
+    @slack_configurations = @team.slack_configurations.order(:created_at)
+  end
 
   def build_limit_date(date)
     [date, 4.weeks.ago].compact.max.to_date

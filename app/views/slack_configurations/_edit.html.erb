@@ -1,4 +1,4 @@
-<%= form_for slack_configuration, url: company_team_slack_configurations_url(company, team, slack_configuration), method: :post, remote: true do |form| %>
+<%= form_for slack_configuration, url: company_team_slack_configuration_url(company, team, slack_configuration), method: :put, remote: true do |form| %>
   <%= render 'slack_configurations/form', slack_configuration: slack_configuration, form: form %>
 
   <div class="row">

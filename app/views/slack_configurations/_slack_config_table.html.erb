@@ -7,6 +7,7 @@
 <% if slack_configurations.present? %>
 <table class="table tabble-striped">
   <thead>
+    <th></th>
     <th><%= Team.model_name.human %></th>
     <th><%= SlackConfiguration.human_attribute_name :info_type %></th>
     <th><%= SlackConfiguration.human_attribute_name :room_webhook %></th>

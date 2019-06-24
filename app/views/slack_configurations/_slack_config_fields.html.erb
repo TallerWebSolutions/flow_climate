@@ -1,3 +1,9 @@
+<td>
+  <%= link_to edit_company_team_slack_configuration_path(company, team, slack_config), remote: true do %>
+    <i class="fas fa-edit"></i>
+  <% end %>
+</td>
+
 <td><%= slack_config.team.name %></td>
 <td><%= t("activerecord.attributes.slack_configuration.enums.info_type.#{slack_config.info_type}") %></td>
 <td><%= slack_config.room_webhook %></td>
