@@ -66,7 +66,7 @@ Rails.application.routes.draw do
         end
       end
 
-      resources :slack_configurations, only: %i[new create] do
+      resources :slack_configurations, only: %i[new create edit update] do
         patch :toggle_active, on: :member
       end
 
