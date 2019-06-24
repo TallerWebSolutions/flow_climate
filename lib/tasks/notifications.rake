@@ -18,7 +18,7 @@ namespace :notifications do
       minute_now = Time.zone.now.min
       weekday = Time.zone.now.wday
 
-      slack_configs = team.slack_configurations.where('weekday_to_notify = 0 OR weekday_to_notify = :weekday_to_notify', weekday_to_notify: weekday)
+      slack_configs = team.slack_configurations.active_configurations.where('weekday_to_notify = 0 OR weekday_to_notify = :weekday_to_notify', weekday_to_notify: weekday)
       next if slack_configs.blank?
 
       slack_configs = slack_configs.where('(notification_hour = :hour_now AND notification_minute BETWEEN :minute_now AND :minute_plus_nine) OR (notification_hour = :hour_plus_one AND notification_minute <= 9 AND EXTRACT(MINUTE FROM current_timestamp) >= 50)',

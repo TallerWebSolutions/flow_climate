@@ -13,6 +13,12 @@ RSpec.describe SlackConfigurationsController, type: :controller do
 
       it { expect(response).to redirect_to new_user_session_path }
     end
+
+    describe 'PATCH #toggle_active' do
+      before { patch :toggle_active, params: { company_id: 'bar', team_id: 'foo', id: 'xpto' } }
+
+      it { expect(response).to redirect_to new_user_session_path }
+    end
   end
 
   context 'authenticated as gold' do
@@ -73,6 +79,50 @@ RSpec.describe SlackConfigurationsController, type: :controller do
           post :create, params: { company_id: company, team_id: team, slack_configuration: { room_webhook: '' } }, xhr: true
           expect(response).to render_template 'slack_configurations/new'
           expect(assigns(:slack_configuration).errors.full_messages).to eq ['Webhook da sala não pode ficar em branco', 'Hora não pode ficar em branco']
+        end
+      end
+    end
+
+    describe 'PATCH #toggle_admin' do
+      let(:slack_config) { Fabricate :slack_configuration, team: team, active: true }
+
+      context 'with valid parameters' do
+        context 'and activated slack config' do
+          it 'deactivate the slack configuration' do
+            patch :toggle_active, params: { company_id: company, team_id: team, id: slack_config }, xhr: true
+            expect(SlackConfiguration.last.active).to be false
+            expect(response).to render_template 'slack_configurations/toggle_active'
+          end
+        end
+
+        context 'and inactive slack config' do
+          let!(:inactive_slack_config) { Fabricate :slack_configuration, team: team, active: false }
+
+          it 'deactivate the slack configuration' do
+            patch :toggle_active, params: { company_id: company, team_id: team, id: inactive_slack_config }, xhr: true
+            expect(SlackConfiguration.last.active).to be true
+            expect(response).to render_template 'slack_configurations/toggle_active'
+          end
+        end
+      end
+
+      context 'with invalid' do
+        context 'company' do
+          before { patch :toggle_active, params: { company_id: 'foo', team_id: team, id: slack_config }, xhr: true }
+
+          it { expect(response).to have_http_status :not_found }
+        end
+
+        context 'team' do
+          before { patch :toggle_active, params: { company_id: company, team_id: 'foo', id: slack_config }, xhr: true }
+
+          it { expect(response).to have_http_status :not_found }
+        end
+
+        context 'slack config' do
+          before { patch :toggle_active, params: { company_id: company, team_id: team, id: 'foo' }, xhr: true }
+
+          it { expect(response).to have_http_status :not_found }
         end
       end
     end

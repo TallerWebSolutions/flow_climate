@@ -49,4 +49,32 @@ RSpec.describe SlackConfiguration, type: :model do
       end
     end
   end
+
+  context 'scopes' do
+    describe '.active_configurations' do
+      let!(:first_slack_configuration) { Fabricate :slack_configuration, active: false }
+      let!(:second_slack_configuration) { Fabricate :slack_configuration, active: true }
+      let!(:third_slack_configuration) { Fabricate :slack_configuration, active: true }
+
+      it { expect(SlackConfiguration.active_configurations).to match_array [second_slack_configuration, third_slack_configuration] }
+    end
+  end
+
+  describe '#toggle_active' do
+    context 'with inactive config' do
+      let(:slack_configuration) { Fabricate :slack_configuration, active: false }
+
+      before { slack_configuration.toggle_active }
+
+      it { expect(slack_configuration.reload.active).to be true }
+    end
+
+    context 'with active config' do
+      let(:slack_configuration) { Fabricate :slack_configuration, active: true }
+
+      before { slack_configuration.toggle_active }
+
+      it { expect(slack_configuration.reload.active).to be false }
+    end
+  end
 end

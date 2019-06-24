@@ -4,6 +4,7 @@
 #
 # Table name: slack_configurations
 #
+#  active              :boolean          default(TRUE)
 #  created_at          :datetime         not null
 #  id                  :bigint(8)        not null, primary key
 #  info_type           :integer          default("average_demand_cost"), not null, indexed => [team_id]
@@ -32,4 +33,10 @@ class SlackConfiguration < ApplicationRecord
 
   validates :team, :room_webhook, :notification_hour, :notification_minute, :weekday_to_notify, presence: true
   validates :info_type, uniqueness: { scope: :team, message: I18n.t('slack_configuration.info_type.uniqueness') }
+
+  scope :active_configurations, -> { where(active: true) }
+
+  def toggle_active
+    update(active: !active?)
+  end
 end

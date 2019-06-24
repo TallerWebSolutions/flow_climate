@@ -1,0 +1,15 @@
+<td><%= slack_config.team.name %></td>
+<td><%= t("activerecord.attributes.slack_configuration.enums.info_type.#{slack_config.info_type}") %></td>
+<td><%= slack_config.room_webhook %></td>
+<td><%= slack_config.notification_hour %></td>
+<td><%= slack_config.notification_minute %></td>
+<td><%= t("activerecord.attributes.slack_configuration.enums.weekday_to_notify.#{slack_config.weekday_to_notify}") %></td>
+<td>
+  <%= link_to toggle_active_company_team_slack_configuration_path(company, team, slack_config), method: :patch, remote: true do %>
+    <% if slack_config.active? %>
+      <i class="fas fa-toggle-on fa-2x"></i>
+    <% else %>
+      <i class="fas fa-toggle-off fa-2x"></i>
+    <% end %>
+  <% end %>
+</td>

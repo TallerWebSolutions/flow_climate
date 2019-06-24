@@ -855,3 +855,5 @@ pt-BR:
       title: "Nova Config do Slack"
     notifications:
       beyond_expected_title: "O time %{team_name} está com %{beyond_expected_count} demanda(s) acima do esperado na etapa"
+    index:
+      active: "Ativo?"

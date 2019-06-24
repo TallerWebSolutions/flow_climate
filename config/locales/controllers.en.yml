@@ -866,3 +866,5 @@ en:
       title: "New Slack Config"
     notifications:
       beyond_expected_title: "The team %{team_name} has %{beyond_expected_count} outdated demands."
+    index:
+      active: "Active?"
