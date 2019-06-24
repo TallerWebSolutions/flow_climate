@@ -66,7 +66,9 @@ Rails.application.routes.draw do
         end
       end
 
-      resources :slack_configurations, only: %i[new create]
+      resources :slack_configurations, only: %i[new create] do
+        patch :toggle_active, on: :member
+      end
 
       get :replenishing_input, on: :member
     end

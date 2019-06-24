@@ -13,17 +13,13 @@
     <th><%= SlackConfiguration.human_attribute_name :notification_hour %></th>
     <th><%= SlackConfiguration.human_attribute_name :notification_minute %></th>
     <th><%= SlackConfiguration.human_attribute_name :weekday_to_notify %></th>
+    <th><%= I18n.t('slack_configurations.index.active') %></th>
   </thead>
 
   <tbody>
     <% slack_configurations.each do |slack_config| %>
-    <tr>
-      <td><%= slack_config.team.name %></td>
-      <td><%= t("activerecord.attributes.slack_configuration.enums.info_type.#{slack_config.info_type}") %></td>
-      <td><%= slack_config.room_webhook %></td>
-      <td><%= slack_config.notification_hour %></td>
-      <td><%= slack_config.notification_minute %></td>
-      <td><%= t("activerecord.attributes.slack_configuration.enums.weekday_to_notify.#{slack_config.weekday_to_notify}") %></td>
+    <tr id="slack_config_<%= slack_config.id %>">
+      <%= render 'slack_configurations/slack_config_fields', company: company, team: team, slack_config: slack_config %>
     </tr>
     <% end %>
   </tbody>

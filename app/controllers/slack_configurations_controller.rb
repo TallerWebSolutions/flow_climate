@@ -21,6 +21,12 @@ class SlackConfigurationsController < AuthenticatedController
     end
   end
 
+  def toggle_active
+    @slack_configuration = SlackConfiguration.find(params[:id])
+    @slack_configuration.toggle_active
+    respond_to { |format| format.js { render 'slack_configurations/toggle_active' } }
+  end
+
   private
 
   def slack_configuration_params
