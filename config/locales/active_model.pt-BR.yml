@@ -125,12 +125,12 @@ pt-BR:
       demand_comment:
         one: Comentário
         other: Comentários
+      jira/jira_project_config:
+        one: Configuração do Jira para o Projeto
+        other: Configurações do Jira para o Projeto
       portfolio_unit:
         one: Unidade do Portfólio
         other: Unidades do Portfólio
-      jira/project_jira_config:
-        one: Configuração do Jira para o Projeto
-        other: Configurações do Jira para o Projeto
       jira/jira_account:
         one: Conta do Jira
         other: Contas do Jira
@@ -418,7 +418,7 @@ pt-BR:
             key_result: Key Result
             impact: Impacto
             source: Origem
-      jira/project_jira_config:
+      jira/jira_project_config:
         jira_project_key: Chave do Projeto no Jira
         active: Ativo?
         project: Projeto
@@ -459,10 +459,10 @@ pt-BR:
   jira_custom_field_mapping:
     uniqueness:
       demand_field: "Apenas uma configuração de campo é permitida por conta do Jira."
-  project_jira_config:
+  jira_product_config:
     validations:
-      jira_project_key_uniqueness:
-        message: "Deve haver apenas uma chave de projeto no jira para cada domínio de conta e nome da fix version"
+      jira_product_key_uniqueness:
+        message: "Deve haver apenas uma chave de produto no jira para cada produto"
   user_plan:
     validations:
       user_plan_active: "You already have a plan to this period."
@@ -478,3 +478,7 @@ pt-BR:
   portfolio_unit:
     validations:
       name: "Você só pode ter um nome de unidade para cada produto."
+  jira_project_config:
+    validations:
+      fix_version_name_uniqueness:
+        message: "Você deveria ter apenas um nome da fix version por projeto"

@@ -82,7 +82,7 @@
 <div class="row">
   <div class="col-xs-6">
     <h3 class="center"><%= t('projects.show.jira_area.title') %></h3>
-    <% if project.project_jira_config.present? %>
+    <% if project.jira_project_config.present? %>
       <p><%= t('projects.show.jira_area.integrated_project') %></p>
       <% if project.stages.blank? %>
         <p><%= t('projects.show.jira_area.no_stages') %></p>

@@ -40,8 +40,8 @@ RSpec.describe ExportsController, type: :controller do
         context 'having all fields' do
           it 'returns the CSV to download' do
             expect(Jira::JiraDataToCsvJob).to receive(:perform_later).once
-            post :process_requested_information, params: { project_name: 'foo', jira_project_key: 'key', fix_version_name: 'bar' }, format: :csv
-            expect(response).to redirect_to request_project_information_path(project_name: 'foo', jira_project_key: 'key', fix_version_name: 'bar')
+            post :process_requested_information, params: { project_name: 'foo', fix_version_name: 'bar' }, format: :csv
+            expect(response).to redirect_to request_project_information_path(project_name: 'foo', fix_version_name: 'bar')
             expect(flash[:notice]).to eq I18n.t('exports.request_project_information.queued')
           end
         end

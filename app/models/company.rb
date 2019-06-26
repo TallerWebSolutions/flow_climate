@@ -27,7 +27,7 @@ class Company < ApplicationRecord
   has_many :customers, dependent: :restrict_with_error
   has_many :products, through: :customers
   has_many :projects, counter_cache: true, dependent: :restrict_with_error
-  has_many :project_jira_configs, through: :projects
+  has_many :jira_project_configs, through: :projects
   has_many :demands, through: :projects
   has_many :teams, dependent: :restrict_with_error
   has_many :stages, dependent: :restrict_with_error

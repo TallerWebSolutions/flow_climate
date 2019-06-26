@@ -66,7 +66,7 @@ class ProjectsController < AuthenticatedController
   end
 
   def synchronize_jira
-    if @project.project_jira_config.blank?
+    if @project.jira_project_config.blank?
       flash[:alert] = I18n.t('projects.sync.jira.no_config_error')
     else
       synchronize_project
@@ -136,7 +136,7 @@ class ProjectsController < AuthenticatedController
     jira_account = @company.jira_accounts.first
 
     project_url = company_project_url(@company, @project)
-    Jira::ProcessJiraProjectJob.perform_later(jira_account, @project.project_jira_config, current_user.email, current_user.full_name, project_url)
+    Jira::ProcessJiraProjectJob.perform_later(jira_account, @project.jira_project_config, current_user.email, current_user.full_name, project_url)
     flash[:notice] = t('general.enqueued')
   end
 

@@ -40,7 +40,7 @@ module Jira
       jira_config = nil
 
       labels.each do |label|
-        jira_config = jira_account.company.project_jira_configs.find_by(jira_project_key: project_key, fix_version_name: label)
+        jira_config = jira_account.company.jira_project_configs.find_by(jira_project_key: project_key, fix_version_name: label)
         break if jira_config.present?
       end
 

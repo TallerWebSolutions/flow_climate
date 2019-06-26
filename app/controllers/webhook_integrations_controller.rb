@@ -58,7 +58,7 @@ class WebhookIntegrationsController < ApplicationController
     return nil if company.blank?
 
     labels.each do |label|
-      jira_config = company.project_jira_configs.find_by(jira_project_key: project_jira_key(data), fix_version_name: label)
+      jira_config = company.jira_project_configs.find_by(jira_project_key: project_jira_key(data), fix_version_name: label)
       break if jira_config.present?
     end
 

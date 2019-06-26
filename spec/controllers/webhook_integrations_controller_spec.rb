@@ -18,7 +18,7 @@ RSpec.describe WebhookIntegrationsController, type: :controller do
       context 'and the has a valid project' do
         let!(:jira_account) { Fabricate :jira_account, company: company, base_uri: 'http://foo.bar', username: 'foo', api_token: 'bar', customer_domain: 'bar' }
         let(:project) { Fabricate :project, company: company, customers: [customer] }
-        let!(:project_jira_config) { Fabricate :project_jira_config, project: project, jira_project_key: 'foo', fix_version_name: 'foo' }
+        let!(:jira_project_config) { Fabricate :jira_project_config, project: project, fix_version_name: 'foo' }
 
         context 'with fixVersion' do
           it 'enqueues the job' do
@@ -53,7 +53,7 @@ RSpec.describe WebhookIntegrationsController, type: :controller do
 
       context 'and the project has an invalid data without jira account' do
         let(:project) { Fabricate :project }
-        let!(:project_jira_config) { Fabricate :project_jira_config, project: project, jira_project_key: 'Fc-6', fix_version_name: 'foo' }
+        let!(:jira_project_config) { Fabricate :jira_project_config, project: project, fix_version_name: 'foo' }
 
         it 'does not enqueue the job' do
           request.headers['Content-Type'] = 'application/json'
@@ -82,7 +82,7 @@ RSpec.describe WebhookIntegrationsController, type: :controller do
       context 'and the project has a valid registration' do
         let!(:jira_account) { Fabricate :jira_account, company: company, base_uri: 'http://foo.bar', username: 'foo', api_token: 'bar', customer_domain: 'bar' }
         let(:project) { Fabricate :project, company: company, customers: [customer] }
-        let!(:project_jira_config) { Fabricate :project_jira_config, project: project, jira_project_key: 'FC-6', fix_version_name: 'bar' }
+        let!(:jira_project_config) { Fabricate :jira_project_config, project: project, fix_version_name: 'bar' }
 
         context 'when the demand exists' do
           let!(:demand) { Fabricate :demand, project: project, demand_id: 'bla' }

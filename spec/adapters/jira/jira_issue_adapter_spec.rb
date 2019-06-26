@@ -204,7 +204,7 @@ RSpec.describe Jira::JiraIssueAdapter, type: :service do
       let!(:jira_custom_field_mapping) { Fabricate :jira_custom_field_mapping, jira_account: jira_account, demand_field: :responsibles, custom_field_machine_name: 'customfield_10024' }
       let!(:demand) { Fabricate :demand, project: first_project, demand_id: '10000' }
       let!(:second_project) { Fabricate :project, company: company, customers: [customer], products: [product] }
-      let!(:project_jira_config) { Fabricate :project_jira_config, project: second_project, jira_project_key: 'foo', fix_version_name: 'bar' }
+      let!(:jira_project_config) { Fabricate :jira_project_config, project: second_project, fix_version_name: 'bar' }
 
       let!(:jira_issue) { client.Issue.build({ key: '10000', fields: { created: '2018-07-02T11:20:18.998-0300', summary: 'foo of bar', issuetype: { name: 'Story' }, customfield_10028: { value: 'Expedite' }, project: { key: 'foo' }, customfield_10024: [{ name: 'foo' }, { name: 'bar' }], comment: { comments: [{ created: Time.zone.local(2019, 5, 27, 10, 0, 0).iso8601, body: 'comment example' }] }, fixVersions: [{ name: 'bar' }] }, changelog: { startAt: 0, maxResults: 2, total: 2, histories: [{ id: '10039', from: 'first_stage', to: 'second_stage', created: '2018-07-08T22:34:47.440-0300' }, { id: '10038', from: 'third_stage', to: 'first_stage', created: '2018-07-06T09:40:43.886-0300' }] } }.with_indifferent_access) }
 

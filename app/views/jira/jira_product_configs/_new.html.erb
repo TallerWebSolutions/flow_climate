@@ -2,23 +2,23 @@
   <div class="modal-content">
     <div class="modal-header">
       <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-      <h4 class="modal-title" id="new-jira-config"><%= t('project_jira_configs.new.title') %></h4>
+      <h4 class="modal-title" id="new-jira-config"><%= t('jira_project_configs.new.title') %></h4>
     </div>
     <div class="modal-body">
-      <%= form_for project_jira_config, url: company_project_project_jira_configs_path(company, project), remote: true do |form| %>
+      <%= form_for jira_project_config, url: company_project_jira_project_configs_path(company, project), remote: true do |form| %>
         <div class="row">
-          <div class='col-xs-12 form-group <%= 'has-error' if project_jira_config.errors[:fix_version_name].present? %>'>
+          <div class='col-xs-12 form-group <%= 'has-error' if jira_project_config.errors[:fix_version_name].present? %>'>
             <%= form.label :fix_version_name, class: 'control-label required' %>
-            <i class="far fa-question-circle" title="<%= t('project_jira_configs.new.fix_version_field.help') %>"></i>
+            <i class="far fa-question-circle" title="<%= t('jira_project_configs.new.fix_version_field.help') %>"></i>
             <%= form.text_field :fix_version_name, class: 'form-control' %>
-            <span class="help-block"><%= project_jira_config.errors[:fix_version_name].join(', ') %></span>
+            <span class="help-block"><%= jira_project_config.errors[:fix_version_name].join(', ') %></span>
           </div>
         </div>
         <div class="row">
-          <div class='col-xs-12 form-group <%= 'has-error' if project_jira_config.errors[:jira_project_key].present? %>'>
+          <div class='col-xs-12 form-group <%= 'has-error' if jira_project_config.errors[:jira_project_key].present? %>'>
             <%= form.label :jira_project_key, class: 'control-label required' %>
             <%= form.text_field :jira_project_key, class: 'form-control' %>
-            <span class="help-block"><%= project_jira_config.errors[:jira_project_key].join(', ') %></span>
+            <span class="help-block"><%= jira_project_config.errors[:jira_project_key].join(', ') %></span>
           </div>
         </div>
 

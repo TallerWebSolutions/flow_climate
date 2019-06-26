@@ -105,7 +105,7 @@ Rails.application.routes.draw do
       resources :flow_impacts, only: %i[new create]
 
       scope :jira do
-        resources :project_jira_configs, only: %i[new create destroy], module: 'jira'
+        resources :jira_project_configs, only: %i[new create destroy], module: 'jira'
       end
 
       collection do

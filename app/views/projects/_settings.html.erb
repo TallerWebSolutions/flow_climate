@@ -31,7 +31,7 @@
 </div>
 
 <div id="content-project-jira" class="tabcontent">
-  <%= render 'jira/project_jira_configs/project_jira_config_table', company: company, project: project %>
+  <%= render 'jira/jira_project_configs/jira_project_config_table', company: company, project: project %>
 </div>
 
 <div id="project-customers-associations" class="tabcontent">
@@ -43,5 +43,5 @@
 </div>
 
 <% content_for :javascript do %>
-  <%= javascript_include_tag 'project_jira_configs/form_modal' %>
+  <%= javascript_include_tag 'jira_project_configs/form_modal' %>
 <% end %>
