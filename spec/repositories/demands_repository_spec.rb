@@ -353,8 +353,8 @@ RSpec.describe DemandsRepository, type: :repository do
 
     it { expect(DemandsRepository.instance.total_time_for(Project.all, 'total_queue_time', 'week')).to eq([10, 2018] => 3_715_200.0, [13, 2018] => 1.day.to_f) }
     it { expect(DemandsRepository.instance.total_time_for(Project.all, 'total_touch_time', 'week')).to eq([10, 2018] => 864_000.0, [13, 2018] => 172_800.0) }
-    it { expect(DemandsRepository.instance.total_time_for(Project.all, 'total_queue_time', 'month')).to eq([3, 2018] => 86_400.0) }
-    it { expect(DemandsRepository.instance.total_time_for(Project.all, 'total_touch_time', 'month')).to eq([3, 2018] => 172_800.0) }
+    it { expect(DemandsRepository.instance.total_time_for(Project.all, 'total_queue_time', 'month')).to eq([3, 2018] => 3_801_600.0) }
+    it { expect(DemandsRepository.instance.total_time_for(Project.all, 'total_touch_time', 'month')).to eq([3, 2018] => 1_036_800.0) }
     it { expect(DemandsRepository.instance.total_time_for(Project.all, 'total_queue_time', 'day')).to eq('2018-03-08' => 3_715_200.0, '2018-03-26' => 86_400.0) }
     it { expect(DemandsRepository.instance.total_time_for(Project.all, 'total_touch_time', 'day')).to eq('2018-03-08' => 864_000.0, '2018-03-26' => 172_800.0) }
   end

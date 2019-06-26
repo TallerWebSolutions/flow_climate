@@ -2,7 +2,7 @@
 
 module Highchart
   class OperationalChartsAdapter < HighchartAdapter
-    attr_reader :demands_burnup_data, :hours_burnup_per_week_data, :flow_pressure_data,
+    attr_reader :demands_burnup_data, :hours_burnup_per_period_data, :flow_pressure_data,
                 :leadtime_bins, :leadtime_histogram_data, :throughput_bins, :throughput_histogram_data,
                 :lead_time_control_chart, :leadtime_percentiles_on_time, :bugs_count_accumulated_hash, :bugs_share_accumulated_hash,
                 :bugs_count_to_period, :queue_touch_count_hash, :queue_touch_share_hash, :average_demand_cost
@@ -13,7 +13,7 @@ module Highchart
       @flow_pressure_data = []
 
       @demands_burnup_data = Highchart::BurnupChartsAdapter.new(@x_axis, build_demands_scope_data, build_demands_throughput_data)
-      @hours_burnup_per_week_data = Highchart::BurnupChartsAdapter.new(@x_axis, build_hours_scope_data, build_hours_throughput_data)
+      @hours_burnup_per_period_data = Highchart::BurnupChartsAdapter.new(@x_axis, build_hours_scope_data, build_hours_throughput_data)
 
       build_bugs_count_accumulated_hash
       build_bugs_accumulated_share_hash
@@ -119,7 +119,7 @@ module Highchart
       @x_axis.each do |date|
         break unless add_data_to_chart?(date)
 
-        @all_projects.each { |project| array_of_flow_pressures << project.flow_pressure(date.end_of_day.end_of_week) }
+        @all_projects.each { |project| array_of_flow_pressures << project.flow_pressure(end_of_period_for_date(date).end_of_day) }
         @flow_pressure_data << array_of_flow_pressures.sum.to_f / array_of_flow_pressures.count.to_f
       end
     end
@@ -231,7 +231,7 @@ module Highchart
     end
 
     def compute_demands_touch_block_total_time(date)
-      @all_projects.map { |project| project.demands.kept.where('end_date BETWEEN :start_date AND :end_date', start_date: date.beginning_of_week, end_date: date.end_of_week).sum(&:sum_touch_blocked_time) }.sum
+      @all_projects.map { |project| project.demands.finished_in_downstream.kept.where('end_date BETWEEN :start_date AND :end_date', start_date: start_of_period_for_date(date), end_date: end_of_period_for_date(date)).sum(&:sum_touch_blocked_time) }.sum
     end
 
     def compute_time_in_seconds_to_hours(date, times_per_period_hash, blocking_time)
@@ -264,9 +264,9 @@ module Highchart
       @queue_touch_share_hash = { dates_array: dates_array, flow_efficiency_array: flow_efficiency_array }
     end
 
-    def compute_flow_efficiency(date, queue_times_per_week_hash, touch_times_per_week_hash)
-      queue_time = read_value_from_hash_using_date_key(date, queue_times_per_week_hash)
-      touch_time = read_value_from_hash_using_date_key(date, touch_times_per_week_hash)
+    def compute_flow_efficiency(date, queue_times_per_period_hash, touch_times_per_period_hash)
+      queue_time = read_value_from_hash_using_date_key(date, queue_times_per_period_hash)
+      touch_time = read_value_from_hash_using_date_key(date, touch_times_per_period_hash)
 
       Stats::StatisticsService.instance.compute_percentage(touch_time, queue_time)
     end

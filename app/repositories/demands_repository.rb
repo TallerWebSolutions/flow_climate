@@ -112,11 +112,11 @@ class DemandsRepository
   def total_time_for(projects, sum_field, group_field_year_period)
     result_array = mount_select_to_total_time_group(group_field_year_period, sum_field)
                    .finished_in_downstream
-                   .where('end_date IS NOT NULL')
                    .where(project_id: projects.map(&:id))
-                   .group('demands.end_date')
 
-    build_hash_to_total_duration_query_result(result_array, group_field_year_period)
+    grouped_result = mount_group_by_time(group_field_year_period, result_array)
+
+    build_hash_to_total_duration_query_result(grouped_result, group_field_year_period)
   end
 
   def discarded_demands_to_projects(projects)
@@ -130,6 +130,14 @@ class DemandsRepository
       Demand.kept.select('end_date AS sum_date_period', "SUM(#{sum_field}) AS total_time")
     else
       Demand.kept.select("EXTRACT(#{group_field_year_period} FROM end_date) AS sum_group_period", 'EXTRACT(YEAR FROM end_date) AS sum_year', "SUM(#{sum_field}) AS total_time")
+    end
+  end
+
+  def mount_group_by_time(group_field_year_period, query)
+    if group_field_year_period == 'day'
+      query.group('sum_date_period')
+    else
+      query.group('sum_group_period', 'sum_year')
     end
   end
 

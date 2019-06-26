@@ -2,9 +2,6 @@ function buildStatusReportCurrentCharts() {
     const burnupHoursPerWeek = $('#burnup-hours-per-week');
     buildBurnupChart(burnupHoursPerWeek);
 
-    const statusReportThroughputDiv = $('#status-report-throughput-column');
-    buildColumnChart(statusReportThroughputDiv);
-
     const statusReportDeliveredDiv = $('#status-report-delivered-column');
     buildColumnChart(statusReportDeliveredDiv);
 

@@ -106,6 +106,7 @@ pt-BR:
     weeks: "semanas"
     days: "dias"
     hours: "horas"
+    hours_text: "%{hour_value} horas"
   header:
     logout: Sair
     sign_up: Cadastre-se
@@ -519,6 +520,8 @@ pt-BR:
       total_blocked_work_time: "Tempo Útil Bloq."
       discarded_stage: "Descartada na Etapa"
       cost_to_project: "Custo pro Projeto"
+      total_queue_time: "Fila"
+      total_touch_time: "Trabalho"
     edit:
       title: "Editar Demanda"
     show:

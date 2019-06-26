@@ -104,6 +104,7 @@ en:
     weeks: "weeks"
     days: "days"
     hours: "hours"
+    hours_text: "%{hour_value} hours"
   header:
     logout: Logout
     explore: Explore
@@ -484,6 +485,8 @@ en:
       total_blocked_work_time: "Work Time Blocked"
       discarded_stage: "Discarded Stage"
       cost_to_project: "Cost to Project"
+      total_queue_time: "Queue"
+      total_touch_time: "Touch"
     edit:
       title: "Edit Demand"
     show:
