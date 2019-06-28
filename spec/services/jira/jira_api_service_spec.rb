@@ -42,13 +42,25 @@ RSpec.describe Jira::JiraApiService, type: :service do
     end
 
     context 'when the issue does not exist' do
-      it 'returns an empty Issue' do
-        response = Net::HTTPResponse.new(1.0, 404, 'not found')
-        expect(JIRA::Resource::Issue).to(receive(:jql).twice.and_raise(JIRA::HTTPError.new(response)))
+      context 'returning not found' do
+        it 'returns an empty Issue' do
+          response = Net::HTTPResponse.new(1.0, 404, 'not found')
+          expect(JIRA::Resource::Issue).to(receive(:jql).twice.and_raise(JIRA::HTTPError.new(response)))
 
-        issues_returned = Jira::JiraApiService.new(jira_account.username, jira_account.api_token, jira_account.base_uri).request_issues_by_fix_version('fix version name', 'EX')
+          issues_returned = Jira::JiraApiService.new(jira_account.username, jira_account.api_token, jira_account.base_uri).request_issues_by_fix_version('fix version name', 'EX')
 
-        expect(issues_returned).to be_empty
+          expect(issues_returned).to be_empty
+        end
+      end
+
+      context 'returning empty array' do
+        it 'returns an empty Issue' do
+          expect(JIRA::Resource::Issue).to(receive(:jql).twice.and_return([]))
+
+          issues_returned = Jira::JiraApiService.new(jira_account.username, jira_account.api_token, jira_account.base_uri).request_issues_by_fix_version('fix version name', 'EX')
+
+          expect(issues_returned).to be_empty
+        end
       end
     end
   end

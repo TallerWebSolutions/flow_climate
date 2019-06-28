@@ -744,6 +744,10 @@ pt-BR:
         title: "Horas Bloqueadas por Etapa para %{target_name}"
         ylabel: "Horas"
         legend: "Horas Bloqueadas"
+      blocks_per_stage:
+        title: "Bloqueios por Etapa para %{target_name}"
+        ylabel: "bloqueios"
+        legend: "bloqueios"
   demand_transitions:
     total_time_in_transition: "Tempo total na transição"
     working_time_in_transition: "Tempo útil na transição"

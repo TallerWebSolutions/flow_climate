@@ -17,7 +17,9 @@ module Jira
     end
 
     def request_issues_by_fix_version(project_key, release_name)
-      client.Issue.jql("labels IN ('#{release_name}') AND project = '#{project_key}'")
+      issues = client.Issue.jql("labels IN ('#{release_name}') AND project = '#{project_key}'")
+      issues = request_by_fix_version(project_key, release_name) if issues.blank?
+      issues
     rescue JIRA::HTTPError
       request_by_fix_version(project_key, release_name)
     end
