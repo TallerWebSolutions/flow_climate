@@ -101,10 +101,9 @@ class DemandsRepository
                     .where('demands.discarded_at IS NULL OR demands.discarded_at > :end_date', end_date: end_date)
                     .where('(demands.end_date IS NULL OR demands.end_date >= :start_date)', start_date: start_date)
                     .where('stages.stage_stream = :stream', stream: Stage.stage_streams[stream])
-                    .where('stages.stage_stream <> :stream', stream: Stage.stage_streams[:out_stream])
 
     stages_id = demands.select('stages.id AS stage_id').map(&:stage_id).uniq
-    stages = Stage.where(id: stages_id).order('stages.order DESC')
+    stages = Stage.where(id: stages_id)
 
     build_cumulative_stage_hash(end_date, demands, stages)
   end
@@ -142,13 +141,10 @@ class DemandsRepository
   end
 
   def build_cumulative_stage_hash(analysed_date, demands, stages)
-    acc_count = 0
     cumulative_hash = {}
-    stages.each do |stage|
-      stage_demands_count = demands.where('demand_transitions.last_time_in <= :limit_date', limit_date: analysed_date).where('stages.id = :stage_id', stage_id: stage.id).uniq.count
-      stage_result = stage_demands_count - acc_count
-      cumulative_hash[stage.name] = stage_result
-      acc_count += stage_result
+    stages.order('stages.order DESC').each do |stage|
+      stage_demands_count = demands.where('demand_transitions.last_time_in <= :limit_date', limit_date: analysed_date).where(stages: { id: stage.id }).uniq.count
+      cumulative_hash[stage.name] = stage_demands_count
     end
 
     cumulative_hash.to_a.reverse.to_h

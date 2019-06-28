@@ -308,7 +308,7 @@ RSpec.describe DemandsRepository, type: :repository do
       let!(:sixth_transition) { Fabricate :demand_transition, stage: first_stage, demand: seventh_demand, last_time_in: '2018-03-01T17:09:58-03:00', last_time_out: nil }
       let!(:seventh_transition) { Fabricate :demand_transition, stage: first_stage, demand: eigth_demand, last_time_in: '2018-04-01T17:09:58-03:00', last_time_out: nil }
 
-      it { expect(DemandsRepository.instance.cumulative_flow_for_date(Demand.all.map(&:id), Date.new(2018, 2, 27), 1.week.ago, :downstream)).to eq(first_stage.name => 2, second_stage.name => 2) }
+      it { expect(DemandsRepository.instance.cumulative_flow_for_date(Demand.all.map(&:id), Date.new(2018, 2, 27), 1.week.ago, :downstream)).to eq(first_stage.name => 4, second_stage.name => 2) }
     end
 
     context 'having no demands' do

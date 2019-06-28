@@ -69,8 +69,8 @@ RSpec.describe Highchart::StatusReportChartsAdapter, type: :data_object do
             expect(report_data.deadline).to eq [{ data: [-277], name: 'Dias (restantes)' }, { color: '#F45830', data: [361], name: 'Tempo Decorrido' }]
             expect(report_data.hours_per_stage_upstream).to eq(xcategories: [sixth_stage.name], hours_per_stage: [1104.0])
             expect(report_data.hours_per_stage_downstream).to eq(xcategories: [], hours_per_stage: [])
-            expect(report_data.cumulative_flow_diagram_upstream).to eq([{ name: 'sixth_stage', data: [1, 2, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4], marker: { enabled: false } }, { name: 'fourth_stage', data: [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], marker: { enabled: false } }, { name: 'fifth_stage', data: [0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], marker: { enabled: false } }])
-            expect(report_data.cumulative_flow_diagram_downstream).to match_array([{ name: 'first_stage', data: [-1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], marker: { enabled: false } }, { name: 'second_stage', data: [1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0], marker: { enabled: false } }, { name: 'third_stage', data: [0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1], marker: { enabled: false } }])
+            expect(report_data.cumulative_flow_diagram_upstream).to eq([{ name: 'sixth_stage', data: [2, 3, 4, 4, 4, 4, 5, 5, 5, 5, 5, 5], marker: { enabled: false } }, { name: 'fourth_stage', data: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], marker: { enabled: false } }, { name: 'fifth_stage', data: [0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], marker: { enabled: false } }])
+            expect(report_data.cumulative_flow_diagram_downstream).to match_array([{ name: 'first_stage', data: [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], marker: { enabled: false } }, { name: 'second_stage', data: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], marker: { enabled: false } }, { name: 'third_stage', data: [0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1], marker: { enabled: false } }])
           end
         end
 
