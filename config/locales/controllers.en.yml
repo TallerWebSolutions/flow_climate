@@ -707,6 +707,10 @@ en:
         title: "Hours Blocked per Stage for %{target_name}"
         ylabel: "Hours"
         legend: "Hours Blocked"
+      blocks_per_stage:
+        title: "Blocks per Stage for %{target_name}"
+        ylabel: "block(s)"
+        legend: "blocks"
   demand_transitions:
     total_time_in_transition: "Total time in transition"
     working_time_in_transition: "Working time in transition"
