@@ -110,7 +110,7 @@ class ReplenishingData
   def build_project_share_in_team_throughput(project, team_throughput_per_week_array)
     project_wip = project.max_work_in_progress
     team_wip = @team.max_work_in_progress
-    project_share_in_flow = project_wip.to_f / team_wip.to_f
+    project_share_in_flow = project_wip.to_f / team_wip
 
     team_throughput_per_week_array.map { |throughput| throughput * project_share_in_flow }
   end
@@ -124,7 +124,7 @@ class ReplenishingData
   end
 
   def compute_customer_happiness(project_data_to_replenish)
-    project_data_to_replenish[:weeks_to_end_date].to_f / project_data_to_replenish[:montecarlo_80_percent].to_f
+    project_data_to_replenish[:weeks_to_end_date].to_f / project_data_to_replenish[:montecarlo_80_percent]
   end
 
   def build_monte_carlo_info(project, throughput_data)
@@ -133,6 +133,8 @@ class ReplenishingData
   end
 
   def compute_qty_using_pressure(project)
+    return 0 if @total_pressure.blank? || @total_pressure.zero?
+
     @summary_infos[:average_throughput] * (project.flow_pressure / @total_pressure)
   end
 end

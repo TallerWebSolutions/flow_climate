@@ -1,5 +1,6 @@
 {
   "name": "flow_climate",
   "private": true,
-  "dependencies": {}
+  "dependencies": {},
+  "version": "0.0.0"
 }

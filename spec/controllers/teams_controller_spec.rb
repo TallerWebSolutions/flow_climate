@@ -279,7 +279,7 @@ RSpec.describe TeamsController, type: :controller do
         it 'returns an empty array and redirects' do
           replenishing_data = assigns(:replenishing_data).project_data_to_replenish
           expect(replenishing_data).to eq []
-          expect(response).to render_template 'teams/replenishing_input.js.erb'
+          expect(response).to render_template 'teams/replenishing_input'
         end
       end
     end

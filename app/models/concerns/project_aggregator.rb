@@ -43,7 +43,7 @@ module ProjectAggregator
   def percentage_remaining_scope
     return 0 if last_week_scope.zero?
 
-    (remaining_backlog.to_f / last_week_scope.to_f) * 100
+    (remaining_backlog.to_f / last_week_scope) * 100
   end
 
   def total_flow_pressure

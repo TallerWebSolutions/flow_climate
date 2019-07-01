@@ -18,7 +18,7 @@ module Stats
     end
 
     def mean(population_array)
-      population_array.sum.to_f / population_array.count.to_f
+      population_array.sum.to_f / population_array.count
     end
 
     def mode(population_array)
@@ -72,7 +72,7 @@ module Stats
       return 0 if min_weeks_montecarlo.blank? || min_weeks_montecarlo.blank? || weeks_to_deadline < min_weeks_montecarlo
       return 1 if weeks_to_deadline >= max_weeks_montecarlo
 
-      montecarlo_durations.count { |x| x <= weeks_to_deadline }.to_f / montecarlo_durations.count.to_f
+      montecarlo_durations.count { |x| x <= weeks_to_deadline }.to_f / montecarlo_durations.count
     end
 
     private

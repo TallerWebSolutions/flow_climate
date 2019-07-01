@@ -67,7 +67,7 @@ class Company < ApplicationRecord
   end
 
   def current_hours_per_demand
-    consumed_hours_in_month.to_f / current_month_throughput.to_f if current_month_throughput.positive?
+    consumed_hours_in_month.to_f / current_month_throughput if current_month_throughput.positive?
     consumed_hours_in_month
   end
 

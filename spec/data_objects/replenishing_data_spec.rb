@@ -16,18 +16,18 @@ RSpec.describe ReplenishingData, type: :data_objects do
 
   let!(:fourth_project) { Fabricate :project, company: company, customers: [customer], team: team, name: 'fourth_project', status: :finished, start_date: 1.month.ago, end_date: 1.week.ago }
 
-  let!(:first_demand) { Fabricate :demand, project: first_project, commitment_date: 3.months.ago, end_date: 1.week.ago }
-  let!(:second_demand) { Fabricate :demand, project: first_project, commitment_date: 2.months.ago, end_date: 4.weeks.ago }
-  let!(:third_demand) { Fabricate :demand, project: second_project, commitment_date: 2.days.ago, end_date: 1.day.ago }
-  let!(:fourth_demand) { Fabricate :demand, project: third_project, commitment_date: 1.day.ago, end_date: Time.zone.today }
-  let!(:fifth_demand) { Fabricate :demand, project: third_project, commitment_date: nil, end_date: 1.week.ago }
-
-  let!(:first_project_closed_demands) { Fabricate.times(6, :demand, project: first_project, commitment_date: 1.week.ago, end_date: 1.week.ago) }
-  let!(:second_project_closed_demands) { Fabricate.times(2, :demand, project: second_project, commitment_date: 1.week.ago, end_date: 1.week.ago) }
-
   describe '#summary_infos' do
-    context 'having data' do
+    context 'with data' do
       subject(:replenishing_data) { ReplenishingData.new(team) }
+
+      let!(:first_demand) { Fabricate :demand, project: first_project, commitment_date: 3.months.ago, end_date: 1.week.ago }
+      let!(:second_demand) { Fabricate :demand, project: first_project, commitment_date: 2.months.ago, end_date: 4.weeks.ago }
+      let!(:third_demand) { Fabricate :demand, project: second_project, commitment_date: 2.days.ago, end_date: 1.day.ago }
+      let!(:fourth_demand) { Fabricate :demand, project: third_project, commitment_date: 1.day.ago, end_date: Time.zone.today }
+      let!(:fifth_demand) { Fabricate :demand, project: third_project, commitment_date: nil, end_date: 1.week.ago }
+
+      let!(:first_project_closed_demands) { Fabricate.times(6, :demand, project: first_project, commitment_date: 1.week.ago, end_date: 1.week.ago) }
+      let!(:second_project_closed_demands) { Fabricate.times(2, :demand, project: second_project, commitment_date: 1.week.ago, end_date: 1.week.ago) }
 
       let!(:company_config) { Fabricate :company_settings, company: company, max_active_parallel_projects: 2, max_flow_pressure: 3 }
       let!(:projects) { Fabricate.times(2, :project, company: company, customers: [customer], start_date: 2.weeks.ago, end_date: Time.zone.today) }
@@ -105,13 +105,27 @@ RSpec.describe ReplenishingData, type: :data_objects do
       end
     end
 
-    context 'having no data' do
+    context 'with no data in project' do
+      subject(:replenishing_data) { ReplenishingData.new(team) }
+
+      let(:other_team) { Fabricate :team, company: company }
+
+      it 'returns nil' do
+        expect(replenishing_data.summary_infos[:four_last_throughputs]).to eq [0, 0, 0, 0]
+        project_data_to_replenish = replenishing_data.project_data_to_replenish
+        expect(project_data_to_replenish[0][:qty_using_pressure]).to eq 0.0
+      end
+    end
+
+    context 'with no data' do
       subject(:replenishing_data) { ReplenishingData.new(other_team) }
 
       let(:other_team) { Fabricate :team, company: company }
 
       it 'returns nil' do
         expect(replenishing_data.summary_infos[:four_last_throughputs]).to be_nil
+        project_data_to_replenish = replenishing_data.project_data_to_replenish
+        expect(project_data_to_replenish[0]).to be_nil
       end
     end
   end

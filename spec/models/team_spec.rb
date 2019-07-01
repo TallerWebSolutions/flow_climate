@@ -134,7 +134,7 @@ RSpec.describe Team, type: :model do
   describe '#percentage_remaining_scope' do
     context 'having data' do
       include_context 'consolidations data for team'
-      it { expect(team.percentage_remaining_scope).to eq((team.remaining_backlog.to_f / team.last_week_scope.to_f) * 100) }
+      it { expect(team.percentage_remaining_scope).to eq((team.remaining_backlog.to_f / team.last_week_scope) * 100) }
     end
 
     context 'having no data' do

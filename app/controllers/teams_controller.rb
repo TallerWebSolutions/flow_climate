@@ -36,7 +36,7 @@ class TeamsController < AuthenticatedController
   def replenishing_input
     @replenishing_data = ReplenishingData.new(@team)
 
-    render 'teams/replenishing_input.js.erb'
+    render 'teams/replenishing_input'
   end
 
   def destroy
