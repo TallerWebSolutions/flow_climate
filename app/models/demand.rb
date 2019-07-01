@@ -23,6 +23,7 @@
 #  leadtime          :decimal(, )
 #  manual_effort     :boolean          default(FALSE)
 #  parent_id         :integer
+#  portfolio_unit_id :integer
 #  project_id        :integer          not null
 #  slug              :string           indexed
 #  total_queue_time  :integer          default(0)
@@ -40,6 +41,7 @@
 #
 #  fk_rails_19bdd8aa1e  (project_id => projects.id)
 #  fk_rails_1abfdc9ca0  (parent_id => demands.id)
+#  fk_rails_c9b5eaaa7f  (portfolio_unit_id => portfolio_units.id)
 #
 
 class Demand < ApplicationRecord
@@ -52,8 +54,9 @@ class Demand < ApplicationRecord
   enum demand_type: { feature: 0, bug: 1, performance_improvement: 2, ui: 3, chore: 4, wireframe: 5 }
   enum class_of_service: { standard: 0, expedite: 1, fixed_date: 2, intangible: 3 }
 
-  belongs_to :project
   belongs_to :company
+  belongs_to :project
+  belongs_to :portfolio_unit
 
   belongs_to :parent, class_name: 'Demand', foreign_key: :parent_id, inverse_of: :children
   has_many :children, class_name: 'Demand', foreign_key: :parent_id, inverse_of: :parent, dependent: :destroy

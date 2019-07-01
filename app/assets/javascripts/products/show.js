@@ -1,27 +1,31 @@
-hideAllComponents();
-$('#stamps').show();
-$('#nav-item-stamps').addClass('active');
+const navItemStamps = $("#nav-item-stamps");
+const navItemPortfolio = $("#nav-item-portfolio-unit");
+const navItemList = $("#nav-item-list");
 
-$('#nav-item-stamps').on('click', function(){
+hideAllComponents();
+
+$("#stamps").show();
+
+navItemStamps.addClass("active");
+
+navItemStamps.on("click", function(){
     hideAllComponents();
-    $('#stamps').show();
-    $('#nav-item-stamps').addClass('active');
+    $("#stamps").show();
+    $("#nav-item-stamps").addClass("active");
+});
+navItemList.on("click", function(){
+    hideAllComponents();
+    $("#project-list").show();
+    $("#nav-item-list").addClass("active");
 });
 
-$('#nav-item-list').on('click', function(){
+navItemPortfolio.on("click", function(){
     hideAllComponents();
-    $('#project-list').show();
-    $('#nav-item-list').addClass('active');
+    $("#portfolio-units").show();
+    $("#nav-item-portfolio-unit").addClass("active");
 });
 
 function hideAllComponents() {
-    $('#stamps').hide();
-    $('#project-list').hide();
-    $('#project-status-report').hide();
-    $('#operational-charts').hide();
-
-    $('#nav-item-stamps').removeClass('active');
-    $('#nav-item-list').removeClass('active');
-    $('#nav-item-statusreport').removeClass('active');
-    $('#nav-item-charts').removeClass('active');
+    $(".tab-detail").hide();
+    $(".nav-tab").removeClass("active");
 }

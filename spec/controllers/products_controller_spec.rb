@@ -226,6 +226,8 @@ RSpec.describe ProductsController, type: :controller do
       let(:customer) { Fabricate :customer, company: company, name: 'zzz' }
 
       let(:product) { Fabricate :product, customer: customer }
+      let!(:portfolio_unit) { Fabricate :portfolio_unit, product: product, name: 'zzz' }
+      let!(:other_portfolio_unit) { Fabricate :portfolio_unit, product: product, name: 'aaa' }
 
       let!(:first_project) { Fabricate :project, customers: [product.customer], products: [product], end_date: 5.days.from_now }
       let!(:second_project) { Fabricate :project, customers: [product.customer], products: [product], end_date: 7.days.from_now }
@@ -239,6 +241,7 @@ RSpec.describe ProductsController, type: :controller do
             expect(assigns(:company)).to eq company
             expect(assigns(:product)).to eq product
             expect(assigns(:product_projects)).to eq [second_project, first_project]
+            expect(assigns(:portfolio_units)).to eq [other_portfolio_unit, portfolio_unit]
             expect(assigns(:projects_summary).total_flow_pressure).to be_within(0.9).of(8.5)
           end
         end

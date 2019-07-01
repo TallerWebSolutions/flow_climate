@@ -343,7 +343,8 @@ CREATE TABLE public.demands (
     artifact_type integer DEFAULT 0,
     parent_id integer,
     slug character varying,
-    company_id integer NOT NULL
+    company_id integer NOT NULL,
+    portfolio_unit_id integer
 );
 
 
@@ -638,6 +639,38 @@ ALTER SEQUENCE public.jira_custom_field_mappings_id_seq OWNED BY public.jira_cus
 
 
 --
+-- Name: jira_portfolio_unit_configs; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.jira_portfolio_unit_configs (
+    id bigint NOT NULL,
+    portfolio_unit_id integer NOT NULL,
+    jira_field_name character varying NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: jira_portfolio_unit_configs_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.jira_portfolio_unit_configs_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: jira_portfolio_unit_configs_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.jira_portfolio_unit_configs_id_seq OWNED BY public.jira_portfolio_unit_configs.id;
+
+
+--
 -- Name: plans; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -673,6 +706,40 @@ CREATE SEQUENCE public.plans_id_seq
 --
 
 ALTER SEQUENCE public.plans_id_seq OWNED BY public.plans.id;
+
+
+--
+-- Name: portfolio_units; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.portfolio_units (
+    id bigint NOT NULL,
+    product_id integer NOT NULL,
+    parent_id integer,
+    name character varying NOT NULL,
+    portfolio_unit_type integer NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: portfolio_units_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.portfolio_units_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: portfolio_units_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.portfolio_units_id_seq OWNED BY public.portfolio_units.id;
 
 
 --
@@ -1456,10 +1523,24 @@ ALTER TABLE ONLY public.jira_custom_field_mappings ALTER COLUMN id SET DEFAULT n
 
 
 --
+-- Name: jira_portfolio_unit_configs id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.jira_portfolio_unit_configs ALTER COLUMN id SET DEFAULT nextval('public.jira_portfolio_unit_configs_id_seq'::regclass);
+
+
+--
 -- Name: plans id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.plans ALTER COLUMN id SET DEFAULT nextval('public.plans_id_seq'::regclass);
+
+
+--
+-- Name: portfolio_units id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.portfolio_units ALTER COLUMN id SET DEFAULT nextval('public.portfolio_units_id_seq'::regclass);
 
 
 --
@@ -1718,11 +1799,27 @@ ALTER TABLE ONLY public.jira_custom_field_mappings
 
 
 --
+-- Name: jira_portfolio_unit_configs jira_portfolio_unit_configs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.jira_portfolio_unit_configs
+    ADD CONSTRAINT jira_portfolio_unit_configs_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: plans plans_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.plans
     ADD CONSTRAINT plans_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: portfolio_units portfolio_units_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.portfolio_units
+    ADD CONSTRAINT portfolio_units_pkey PRIMARY KEY (id);
 
 
 --
@@ -2108,6 +2205,48 @@ CREATE INDEX index_jira_custom_field_mappings_on_jira_account_id ON public.jira_
 
 
 --
+-- Name: index_jira_portfolio_unit_configs_on_portfolio_unit_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_jira_portfolio_unit_configs_on_portfolio_unit_id ON public.jira_portfolio_unit_configs USING btree (portfolio_unit_id);
+
+
+--
+-- Name: index_portfolio_units_on_name; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_portfolio_units_on_name ON public.portfolio_units USING btree (name);
+
+
+--
+-- Name: index_portfolio_units_on_name_and_product_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_portfolio_units_on_name_and_product_id ON public.portfolio_units USING btree (name, product_id);
+
+
+--
+-- Name: index_portfolio_units_on_parent_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_portfolio_units_on_parent_id ON public.portfolio_units USING btree (parent_id);
+
+
+--
+-- Name: index_portfolio_units_on_portfolio_unit_type; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_portfolio_units_on_portfolio_unit_type ON public.portfolio_units USING btree (portfolio_unit_type);
+
+
+--
+-- Name: index_portfolio_units_on_product_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_portfolio_units_on_product_id ON public.portfolio_units USING btree (product_id);
+
+
+--
 -- Name: index_products_on_customer_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2396,6 +2535,14 @@ ALTER TABLE ONLY public.demand_blocks
 
 
 --
+-- Name: portfolio_units fk_rails_111d0b277b; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.portfolio_units
+    ADD CONSTRAINT fk_rails_111d0b277b FOREIGN KEY (product_id) REFERENCES public.products(id);
+
+
+--
 -- Name: products_projects fk_rails_170b9c6651; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2476,6 +2623,14 @@ ALTER TABLE ONLY public.demand_transitions
 
 
 --
+-- Name: portfolio_units fk_rails_2af43d471c; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.portfolio_units
+    ADD CONSTRAINT fk_rails_2af43d471c FOREIGN KEY (parent_id) REFERENCES public.portfolio_units(id);
+
+
+--
 -- Name: demand_data_processments fk_rails_337e2008a8; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2489,6 +2644,14 @@ ALTER TABLE ONLY public.demand_data_processments
 
 ALTER TABLE ONLY public.integration_errors
     ADD CONSTRAINT fk_rails_3505c123da FOREIGN KEY (company_id) REFERENCES public.companies(id);
+
+
+--
+-- Name: jira_portfolio_unit_configs fk_rails_36a483c30d; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.jira_portfolio_unit_configs
+    ADD CONSTRAINT fk_rails_36a483c30d FOREIGN KEY (portfolio_unit_id) REFERENCES public.portfolio_units(id);
 
 
 --
@@ -2673,6 +2836,14 @@ ALTER TABLE ONLY public.demand_transitions
 
 ALTER TABLE ONLY public.products_projects
     ADD CONSTRAINT fk_rails_c648f2cd3e FOREIGN KEY (product_id) REFERENCES public.products(id);
+
+
+--
+-- Name: demands fk_rails_c9b5eaaa7f; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.demands
+    ADD CONSTRAINT fk_rails_c9b5eaaa7f FOREIGN KEY (portfolio_unit_id) REFERENCES public.portfolio_units(id);
 
 
 --
@@ -2882,6 +3053,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190614134919'),
 ('20190621150621'),
 ('20190621191628'),
-('20190624141355');
+('20190624141355'),
+('20190701193809'),
+('20190701194645');
 
 

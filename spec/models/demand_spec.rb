@@ -10,6 +10,7 @@ RSpec.describe Demand, type: :model do
   context 'associations' do
     it { is_expected.to belong_to :company }
     it { is_expected.to belong_to :project }
+    it { is_expected.to belong_to :portfolio_unit }
     it { is_expected.to belong_to(:parent).class_name('Demand').inverse_of(:children) }
     it { is_expected.to have_many(:children).class_name('Demand').inverse_of(:parent).dependent(:destroy) }
     it { is_expected.to have_many(:demand_transitions).dependent(:destroy) }

@@ -13,20 +13,27 @@
 
 <div class="row">
   <div class="topnav">
-    <%= link_to t('navbar.details'), '#', id: 'nav-item-stamps', class: 'active' %>
-    <%= link_to t('navbar.projects_list'), '#', id: 'nav-item-list' %>
+    <%= link_to t('navbar.details'), '#', id: 'nav-item-stamps', class: 'active nav-tab' %>
+    <%= link_to t('navbar.projects_list'), '#', id: 'nav-item-list', class: 'nav-tab' %>
+    <%= link_to t('navbar.portfolio_units'), '#', id: 'nav-item-portfolio-unit', class: 'nav-tab' %>
   </div>
 </div>
 
-<div id="stamps">
-  <%= render 'product_stamps', company: @company, product: @product %>
+<div id="stamps" class="tab-detail">
+  <%= render 'products/product_stamps', company: @company, product: @product %>
 </div>
 
-<div id="project-list">
+<div id="project-list" class="tab-detail">
   <h2><%= t('projects.index.title') %></h2>
 
   <div id="projects-table">
     <%= render 'projects/projects_table', company: @company, projects_list: @product_projects, projects_summary: @projects_summary, projects_ids: @product_projects.map(&:id).flatten.join(',') %>
+  </div>
+</div>
+
+<div id="portfolio-units" class="tab-detail">
+  <div id="portfolio-units-table">
+    <%= render 'portfolio_units/portfolio_units_table', company: @company, product: @product, portfolio_units: @portfolio_units %>
   </div>
 </div>
 

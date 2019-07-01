@@ -591,6 +591,7 @@ en:
     flow_impacts: "Flow Impacts"
     jira: "Jira"
     stages: "Stages"
+    portfolio_units: "Portfolio Units"
   charts:
     xlabel:
       months: "Months"
@@ -880,3 +881,8 @@ en:
       beyond_expected_title: "The team %{team_name} has %{beyond_expected_count} outdated demands."
     index:
       active: "Active?"
+  portfolio_units:
+    index:
+      title: "Portfolio Units"
+    new:
+      button: "New Portfolio Unit"
