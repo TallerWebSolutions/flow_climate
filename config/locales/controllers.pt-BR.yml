@@ -382,6 +382,10 @@ pt-BR:
         tooltip: "Finalizar Projeto"
       statistics:
         tooltip: "Estatísticas"
+      products:
+        tooltip: "Produtos neste projeto"
+      customers:
+        tooltip: "Clientes neste projeto"
     status_report_chart:
       hours_per_stage:
         series:

@@ -90,6 +90,18 @@
           <td><%= render 'projects/project_risk_indicators', project: project %></td>
           <td><%= render 'projects/project_actions', company: company, project: project %></td>
         </tr>
+        <tr id="<%= "products_table_#{project.id}" %>" class="col-table-details">
+          <td></td>
+          <td colspan="12">
+            <%= render 'projects/products_in_project', project: project %>
+          </td>
+        </tr>
+        <tr id="<%= "customers_table_#{project.id}" %>" class="col-table-details">
+          <td></td>
+          <td colspan="12">
+            <%= render 'projects/customers_in_project', project: project %>
+          </td>
+        </tr>
       <% end %>
     </tbody>
   </table>
@@ -101,5 +113,8 @@
 <% content_for :javascript do %>
   <%= javascript_include_tag 'charts/donut' %>
   <%= javascript_include_tag 'projects/demand_classification_charts' %>
+
   <%= javascript_include_tag 'demand_blocks/list_modal' %>
+  <%= javascript_include_tag 'components/components' %>
+  <%= javascript_include_tag 'projects/index' %>
 <% end %>

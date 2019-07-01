@@ -1,0 +1,17 @@
+<table class="table">
+  <thead>
+    <tr>
+      <th><%= Customer.human_attribute_name :name %></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% project.customers.each do |customer| %>
+      <tr>
+        <td>
+          <%= customer.name %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

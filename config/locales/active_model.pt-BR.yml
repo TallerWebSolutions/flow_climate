@@ -216,6 +216,7 @@ pt-BR:
         slack_configurations: Configurações do Slack
       demand:
         demand_id: Id da Demanda
+        team_members: Responsáveis
         demand_title: Título da Demanda
         project: Projeto
         total_queue_time: Tempo Total de Fila
