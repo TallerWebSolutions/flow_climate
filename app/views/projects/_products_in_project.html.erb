@@ -1,0 +1,17 @@
+<table class="table">
+  <thead>
+    <tr>
+      <th><%= Product.human_attribute_name :name %></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% project.products.each do |product| %>
+      <tr>
+        <td>
+          <%= product.name %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

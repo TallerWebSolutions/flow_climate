@@ -9,3 +9,11 @@
 <%= link_to statistics_company_project_path(company, project), class: 'statistics-project', remote: true do %>
   <i class="fas fa-superscript" title='<%= t('projects.actions.statistics.tooltip') %>'></i>
 <% end %>
+
+<%= link_to '#', class: 'toggle-table-details', onclick: "toggleTableDetails('customers_table_#{project.id}')" do %>
+  <i class="fas fa-users" title='<%= t('projects.actions.customers.tooltip') %>'></i>
+<% end %>
+
+<%= link_to '#', class: 'toggle-table-details', onclick: "toggleTableDetails('products_table_#{project.id}')" do %>
+  <i class="fas fa-boxes" title='<%= t('projects.actions.products.tooltip') %>'></i>
+<% end %>

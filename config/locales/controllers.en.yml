@@ -364,6 +364,10 @@ en:
         tooltip: "Finish Project"
       statistics:
         tooltip: "Statistics"
+      products:
+        tooltip: "Products in this project"
+      customers:
+        tooltip: "Customers in this project"
     status_report_chart:
       hours_per_stage:
         series:
