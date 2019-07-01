@@ -154,7 +154,7 @@ class Demand < ApplicationRecord
     return 0 if current_stage.blank?
 
     stage_orders_array = project.stages.order(:order).map(&:order)
-    stage_orders_array.count { |order| order <= current_stage.order }.to_f / stage_orders_array.count.to_f
+    stage_orders_array.count { |order| order <= current_stage.order }.to_f / stage_orders_array.count
   end
 
   def leadtime_in_days

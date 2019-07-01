@@ -249,7 +249,7 @@ RSpec.describe Project, type: :model do
 
           after { travel_back }
 
-          it { expect(project.flow_pressure).to be_within(0.5).of(21.2) }
+          it { expect(project.flow_pressure).to be_within(0.5).of(25.1) }
         end
 
         context 'specifying a date' do
@@ -271,7 +271,7 @@ RSpec.describe Project, type: :model do
         end
       end
 
-      context 'having no results' do
+      context 'having no demands' do
         before { travel_to Time.zone.local(2018, 3, 6, 10, 0, 0) }
 
         after { travel_back }
@@ -295,6 +295,48 @@ RSpec.describe Project, type: :model do
 
       context 'having no demands' do
         it { expect(project.flow_pressure).to be_within(0.1).of(18.9) }
+      end
+    end
+  end
+
+  describe '#relative_flow_pressure' do
+    context 'and the start and finish dates are in different days' do
+      let(:project) { Fabricate :project, initial_scope: 30, start_date: Time.zone.parse('2018-03-05 22:00'), end_date: Time.zone.parse('2018-03-07 10:00') }
+
+      context 'with demands' do
+        let!(:opened_bugs) { Fabricate.times(20, :demand, project: project, demand_type: :bug, created_date: Time.zone.parse('2018-03-05 22:00')) }
+        let!(:opened_features) { Fabricate.times(10, :demand, project: project, demand_type: :feature, created_date: Time.zone.parse('2018-03-06 22:00')) }
+        let!(:delivered_bugs) { Fabricate.times(5, :demand, project: project, demand_type: :bug, created_date: Time.zone.parse('2018-03-05 22:00'), end_date: Time.zone.parse('2018-03-07 10:00')) }
+
+        before { travel_to Time.zone.local(2018, 3, 6, 10, 0, 0) }
+
+        after { travel_back }
+
+        it { expect(project.relative_flow_pressure(80)).to be_within(0.5).of(31.4) }
+      end
+
+      context 'with no demands' do
+        before { travel_to Time.zone.local(2018, 3, 6, 10, 0, 0) }
+
+        after { travel_back }
+
+        it { expect(project.relative_flow_pressure(10)).to be_within(0.9).of(116.1) }
+      end
+
+      context 'with no demands and no total pressure' do
+        before { travel_to Time.zone.local(2018, 3, 6, 10, 0, 0) }
+
+        after { travel_back }
+
+        it { expect(project.relative_flow_pressure(nil)).to eq 0 }
+      end
+
+      context 'with no demands and 0 as total pressure' do
+        before { travel_to Time.zone.local(2018, 3, 6, 10, 0, 0) }
+
+        after { travel_back }
+
+        it { expect(project.relative_flow_pressure(0)).to eq 0 }
       end
     end
   end
@@ -513,7 +555,7 @@ RSpec.describe Project, type: :model do
 
     context 'having data' do
       include_context 'demands with effort'
-      it { expect(project.required_hours_per_available_hours).to eq 0.8342361863488624 }
+      it { expect(project.required_hours_per_available_hours).to be_within(0.02).of(0.83) }
     end
 
     context 'having no data' do

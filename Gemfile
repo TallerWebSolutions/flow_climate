@@ -26,7 +26,6 @@ gem 'sidekiq'
 gem 'slack-notifier'
 gem 'therubyracer', platforms: :ruby
 gem 'uglifier'
-gem 'webmock'
 gem 'yui-compressor'
 
 group :test, :development do
@@ -35,6 +34,7 @@ group :test, :development do
   gem 'debase', '~> 0.2.3.beta3'
   gem 'fabrication'
   gem 'faker'
+  gem 'hashdiff', ['>= 1.0.0.beta1', '< 2.0.0']
   gem 'parser'
   gem 'rspec-collection_matchers'
   gem 'rspec-rails'
@@ -45,6 +45,7 @@ group :test, :development do
   gem 'ruby-debug-ide', '~> 0.7.0.beta7'
   gem 'shoulda-matchers', '4.0.0.rc1'
   gem 'simplecov', require: false
+  gem 'webmock'
 end
 
 group :development do

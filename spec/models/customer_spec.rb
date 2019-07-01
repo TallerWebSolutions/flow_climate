@@ -147,7 +147,7 @@ RSpec.describe Customer, type: :model do
 
   describe '#percentage_remaining_scope' do
     include_context 'demands with effort for customer'
-    it { expect(customer.percentage_remaining_scope).to eq((customer.remaining_backlog.to_f / customer.last_week_scope.to_f) * 100) }
+    it { expect(customer.percentage_remaining_scope).to eq((customer.remaining_backlog.to_f / customer.last_week_scope) * 100) }
   end
 
   describe '#total_flow_pressure' do

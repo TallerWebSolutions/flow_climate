@@ -126,7 +126,7 @@ class Project < ApplicationRecord
   def percentage_remaining_days
     return 0 if total_days.zero?
 
-    ((remaining_days.to_f / total_days.to_f) * 100).round(2)
+    ((remaining_days.to_f / total_days) * 100).round(2)
   end
 
   def consumed_hours
@@ -168,10 +168,12 @@ class Project < ApplicationRecord
     return 0.0 if no_pressure_set(date)
 
     days = remaining_days_to_period(date) || total_days
-    remaining_backlog(date).to_f / days.to_f
+    remaining_backlog(date).to_f / days
   end
 
   def relative_flow_pressure(total_pressure)
+    return 0 if total_pressure.blank? || total_pressure.zero?
+
     (flow_pressure / total_pressure) * 100
   end
 
@@ -202,17 +204,17 @@ class Project < ApplicationRecord
   end
 
   def required_hours_per_available_hours
-    required_hours.to_f / remaining_hours.to_f
+    required_hours.to_f / remaining_hours
   end
 
   def avg_hours_per_demand
     return 0 if total_hours_consumed.zero? || total_throughput.zero?
 
-    (total_hours_consumed.to_f / total_throughput.to_f)
+    (total_hours_consumed.to_f / total_throughput)
   end
 
   def remaining_backlog(date = Time.zone.now)
-    DemandsRepository.instance.remaining_backlog_to_date([self], date)
+    DemandsRepository.instance.remaining_backlog_to_date([self], date.end_of_day)
   end
 
   def required_hours
@@ -230,13 +232,13 @@ class Project < ApplicationRecord
   end
 
   def money_per_deadline
-    remaining_money.to_f / remaining_days.to_f
+    remaining_money.to_f / remaining_days
   end
 
   def backlog_growth_throughput_rate
-    return backlog_unit_growth if total_throughput_for(Time.zone.today).to_f.zero?
+    return backlog_unit_growth if total_throughput_for(Time.zone.today).zero?
 
-    backlog_unit_growth.to_f / total_throughput_for(Time.zone.today).to_f
+    backlog_unit_growth.to_f / total_throughput_for(Time.zone.today)
   end
 
   def last_alert_for(risk_type)
@@ -260,7 +262,7 @@ class Project < ApplicationRecord
   def percentage_of_demand_type(demand_type)
     return 0 if demands.kept.story.count.zero?
 
-    (demands.kept.story.send(demand_type).count.to_f / demands.kept.story.count.to_f) * 100
+    (demands.kept.story.send(demand_type).count.to_f / demands.kept.story.count) * 100
   end
 
   def average_block_duration
@@ -285,25 +287,25 @@ class Project < ApplicationRecord
   def percentage_expedite
     return 0 if demands.kept.story.count.zero?
 
-    (demands.kept.story.expedite.count.to_f / demands.kept.story.count.to_f) * 100
+    (demands.kept.story.expedite.count.to_f / demands.kept.story.count) * 100
   end
 
   def percentage_standard
     return 0 if demands.kept.story.count.zero?
 
-    (demands.kept.story.standard.count.to_f / demands.kept.story.count.to_f) * 100
+    (demands.kept.story.standard.count.to_f / demands.kept.story.count) * 100
   end
 
   def percentage_fixed_date
     return 0 if demands.kept.story.count.zero?
 
-    (demands.kept.story.fixed_date.count.to_f / demands.kept.story.count.to_f) * 100
+    (demands.kept.story.fixed_date.count.to_f / demands.kept.story.count) * 100
   end
 
   def percentage_intangible
     return 0 if demands.kept.story.count.zero?
 
-    (demands.kept.story.intangible.count.to_f / demands.kept.story.count.to_f) * 100
+    (demands.kept.story.intangible.count.to_f / demands.kept.story.count) * 100
   end
 
   def aging

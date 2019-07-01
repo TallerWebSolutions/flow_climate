@@ -26,70 +26,8 @@
     </div>
   </div>
 
-  <table class="table table-striped">
-    <thead>
-      <tr>
-        <th></th>
-        <th><%= Project.human_attribute_name :name %></th>
-        <th><%= Project.human_attribute_name :start_date %></th>
-        <th><%= t('projects.replenishing.aging') %></th>
-        <th><%= Project.human_attribute_name :end_date %></th>
-        <th><%= t('projects.replenishing.weeks_to_finish') %></th>
-        <th><%= t('projects.index.remaining_backlog') %></th>
-        <th><%= t('projects.index.flow_pressure') %></th>
-        <th><%= t('projects.index.percentage_flow_pressure') %></th>
-        <th><%= t('projects.replenishing.qty_using_pressure') %></th>
-        <th><%= t('projects.charts.leadtime_evolution.legend.leadtime_80_confidence') %></th>
-        <th><%= t('projects.replenishing.selected_last_week') %></th>
-        <th><%= t('projects.replenishing.wip') %></th>
-        <th><%= t('projects.replenishing.weeks_montecarlo') %></th>
-        <th></th>
-      </tr>
-    </thead>
+  <%= render 'teams/replenishing_table', company: company, projects_to_replenish: projects_to_replenish %>
 
-    <tbody>
-      <% projects_to_replenish.each do |project_hash| %>
-        <tr>
-          <td><%= link_to '+', '#', class: 'toggle-table-details', onclick: "toggleTableDetails(#{project_hash[:id]})" %></td>
-          <td><%= link_to project_hash[:name], company_project_path(company, project_hash[:id]) %></td>
-          <td><%= l(project_hash[:start_date], format: :default) %></td>
-          <td><%= I18n.t('general.days_text', days: project_hash[:aging_today]) %></td>
-          <td><%= l(project_hash[:end_date], format: :default) %></td>
-          <td>
-            <%= project_hash[:weeks_to_end_date] %>
-            <% if project_hash[:project_based_risks_to_deadline].present? %>
-              <i class="fas fa-info-circle" title="<%= t('general.risk.text', risk_value: number_to_percentage(project_hash[:project_based_risks_to_deadline] * 100, precision: 2)) %>"></i>
-            <% end %>
-          </td>
-          <td><%= project_hash[:remaining_backlog] %></td>
-          <td><%= number_with_precision(project_hash[:flow_pressure], precision: 3) %></td>
-          <td><%= number_to_percentage(project_hash[:relative_flow_pressure], precision: 2) %></td>
-          <td><%= number_with_precision(project_hash[:qty_using_pressure], precision: 1) %></td>
-          <td><%= number_with_precision(project_hash[:leadtime_80], precision: 3) %></td>
-          <td><%= project_hash[:qty_selected_last_week] %></td>
-          <td><%= project_hash[:work_in_progress] %></td>
-          <td><%= I18n.t('general.weeks_text', weeks: number_with_precision(project_hash[:montecarlo_80_percent], precision: 1)) %></td>
-          <td>
-            <% if project_hash[:customer_happiness] > 2 %>
-              <i class="far fa-laugh fa-2x"></i>
-            <% elsif project_hash[:customer_happiness] > 1.2 %>
-              <i class="far fa-smile fa-2x"></i>
-            <% elsif project_hash[:customer_happiness] > 0.8 %>
-              <i class="far fa-meh fa-2x"></i>
-            <% else %>
-              <i class="far fa-sad-cry fa-2x"></i>
-            <% end %>
-          </td>
-        </tr>
-        <tr id="<%= project_hash[:id] %>" class="col-table-details">
-          <td></td>
-          <td colspan="12">
-            <%= render 'teams/stats_throughput_details', project_hash: project_hash %>
-          </td>
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
 <% else %>
   <div class="no-data">
     <%= t('general.no_data', missing_data: t('general.data')) %>

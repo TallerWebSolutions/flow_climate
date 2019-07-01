@@ -120,7 +120,7 @@ module Highchart
         break unless add_data_to_chart?(date)
 
         @all_projects.each { |project| array_of_flow_pressures << project.flow_pressure(end_of_period_for_date(date).end_of_day) }
-        @flow_pressure_data << array_of_flow_pressures.sum.to_f / array_of_flow_pressures.count.to_f
+        @flow_pressure_data << array_of_flow_pressures.sum.to_f / array_of_flow_pressures.count
       end
     end
 
