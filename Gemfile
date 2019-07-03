@@ -6,6 +6,7 @@ ruby '2.6.3'
 
 gem 'rails'
 
+gem 'addressable'
 gem 'attr_encrypted'
 gem 'carrierwave', '~> 1.0'
 gem 'cloudinary'
