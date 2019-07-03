@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'addressable/uri'
+
 class WebhookIntegrationsController < ApplicationController
   skip_before_action :verify_authenticity_token
   before_action :check_request
