@@ -125,12 +125,18 @@ pt-BR:
       demand_comment:
         one: Comentário
         other: Comentários
+      portfolio_unit:
+        one: Unidade do Portfólio
+        other: Unidades do Portfólio
       jira/project_jira_config:
         one: Configuração do Jira para o Projeto
         other: Configurações do Jira para o Projeto
       jira/jira_account:
         one: Conta do Jira
         other: Contas do Jira
+      jira/jira_portfolio_unit_config:
+        one: Config da Unidade no Jira
+        other: Configs da Unidade no Jira
       project_consolidation:
         one: Consolidação de Projeto
         other: Consolidações de Projeto
@@ -216,6 +222,7 @@ pt-BR:
         slack_configurations: Configurações do Slack
       demand:
         demand_id: Id da Demanda
+        portfolio_unit: Unidade do Portfolio
         team_members: Responsáveis
         demand_title: Título da Demanda
         project: Projeto
@@ -400,6 +407,17 @@ pt-BR:
             wednesday: Quarta
             thursday: Quinta
             friday: Sexta
+      portfolio_unit:
+        name: Nome
+        portfolio_unit_type: Tipo da Unidade
+        jira_portfolio_unit_config: Config do Jira
+        product: Produto
+        enums:
+          portfolio_unit_type:
+            product_module: Módulo do Produto
+            key_result: Key Result
+            impact: Impacto
+            source: Origem
       jira/project_jira_config:
         jira_project_key: Chave do Projeto no Jira
         active: Ativo?
@@ -413,6 +431,9 @@ pt-BR:
         jira_custom_field_mappings: Meapeamento de Campos Customizados
         customer_domain: Domínio do Usuário
         created_at: Criado em
+      jira/jira_portfolio_unit_config:
+        jira_field_name: Nome do Campo no Jira
+        portfolio_unit: Unidade do Portfólio
       project_consolidation:
         last_8_throughput_per_week_data: Throughput das últimas 8 Semanas
   product:
@@ -454,3 +475,6 @@ pt-BR:
       qty_demands_in_wip: "*%{team_name}* | Trabalho em progresso: %{in_wip} demanda(s)."
       demands_in_wip_info_text: "*%{demand_id}* %{demand_title} | *Responsáveis:* %{responsibles_names} | *Custo pro Projeto:* %{cost_to_project} | *Etapa atual:* %{current_stage} | *Tempo na Etapa:* %{time_in_current_stage} | *% Fluxo Concluído*: %{percentage_concluded}"
       outdated_demands_info_text: "*%{demand_id}* %{demand_title} | *Etapa atual:* %{current_stage} | *Tempo na Etapa:* %{time_in_current_stage}"
+  portfolio_unit:
+    validations:
+      name: "Você só pode ter um nome de unidade para cada produto."

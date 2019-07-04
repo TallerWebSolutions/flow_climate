@@ -43,7 +43,7 @@ pt-BR:
         title: "Custo Médio por Demanda"
       flow_pressure: "Pressão do Fluxo"
       hours_per_demand: "Horas por Demanda"
-    no_data: "Não existe %{missing_data} para essa exibição"
+    no_data: "Não existem %{missing_data} para essa exibição"
     download_csv: "Download CSV"
     percentage:
       symbol: "%"
@@ -628,6 +628,7 @@ pt-BR:
     flow_impacts: "Impactos de Fluxo"
     jira: "Jira"
     stages: "Etapas"
+    portfolio_units: "Unidades do Portfólio"
   charts:
     xlabel:
       months: "Meses"
@@ -869,3 +870,8 @@ pt-BR:
       beyond_expected_title: "O time %{team_name} está com %{beyond_expected_count} demanda(s) acima do esperado na etapa"
     index:
       active: "Ativo?"
+  portfolio_units:
+    index:
+      title: "Unidades do Portfólio"
+    new:
+      button: "Nova Unidade do Portfólio"

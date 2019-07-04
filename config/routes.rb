@@ -79,6 +79,8 @@ Rails.application.routes.draw do
 
     resources :products do
       get 'products_for_customer/(:customer_id)', action: :products_for_customer, on: :collection
+
+      resources :portfolio_units, only: %i[new create]
     end
 
     resources :projects do

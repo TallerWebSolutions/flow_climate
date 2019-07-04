@@ -12,6 +12,7 @@ class ProductsController < AuthenticatedController
 
   def show
     @product_projects = @product.projects.order(end_date: :desc)
+    @portfolio_units = @product.portfolio_units.order(:name)
     @projects_summary = ProjectsSummaryData.new(@product.projects)
     render :show
   end

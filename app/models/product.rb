@@ -26,6 +26,7 @@ class Product < ApplicationRecord
   belongs_to :customer, counter_cache: true
   has_and_belongs_to_many :projects, dependent: :destroy
   has_many :teams, -> { distinct }, through: :projects
+  has_many :portfolio_units, dependent: :destroy
 
   validates :name, :customer, presence: true
   validates :name, uniqueness: { scope: :customer, message: I18n.t('product.name.uniqueness') }

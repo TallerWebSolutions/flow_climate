@@ -126,6 +126,13 @@ en:
             friday: "Friday"
       project_consolidation:
         last_8_throughput_per_week_data: "Last 8 Weeks Throughput"
+      portfolio_unit:
+        enums:
+          portfolio_unit_type:
+            product_module: "Product Module"
+            key_result: "Key Result"
+            impact: "Impact"
+            source: "Source"
     errors:
       messages:
         record_invalid: 'Validation failed: %{errors}'
@@ -138,6 +145,8 @@ en:
             not_same: "The stage needs to be the same as the stage in project"
     models:
       jira/jira_account: "Jira Accounts"
+      portfolio_unit:
+        other: "Portfolio Units"
   product:
     name:
       uniqueness: "Should have only one to the same customer."
@@ -180,3 +189,6 @@ en:
       qty_demands_in_wip: "*%{team_name}* | Work in Progress: %{in_wip} demands."
       demands_in_wip_info_text: "*%{demand_id}* %{demand_title} | *Responsibles:* %{responsibles_names} | *Cost to Project:* %{cost_to_project} | *Current Stage:* %{current_stage} | *Time in Stage:* %{time_in_current_stage} | *% Flow Concluded:* %{percentage_concluded}"
       outdated_demands_info_text: "*%{demand_id}* %{demand_title} | *Current Stage:* %{current_stage} | *Time in Stage:* %{time_in_current_stage}"
+  portfolio_unit:
+    validations:
+      name: "You can have only one unit name to each product."
