@@ -47,6 +47,22 @@ RSpec.describe SlackConfiguration, type: :model do
           end
         end
       end
+
+      context 'room_webhook valid URI' do
+        it 'accepts valid and rejects invalid' do
+          slack_config = Fabricate.build :slack_configuration, room_webhook: 'aaa'
+          expect(slack_config.errors_on(:room_webhook)).to eq ['não é válido']
+
+          slack_config = Fabricate.build :slack_configuration, room_webhook: 'http://aaa com'
+          expect(slack_config.errors_on(:room_webhook)).to eq ['não é válido']
+
+          slack_config = Fabricate.build :slack_configuration, room_webhook: 'http://aaa'
+          expect(slack_config.errors_on(:room_webhook)).to eq []
+
+          slack_config = Fabricate.build :slack_configuration, room_webhook: 'https://aaa.com'
+          expect(slack_config.errors_on(:room_webhook)).to eq []
+        end
+      end
     end
   end
 

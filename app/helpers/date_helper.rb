@@ -1,5 +1,7 @@
 module DateHelper
   def time_distance_in_words(time_in_seconds)
+    return I18n.t('general.days_text', days: 0) if time_in_seconds.blank?
+
     seconds_in_a_day = 24 * 60 * 60
     seconds_in_a_hour = 60 * 60
     seconds_in_a_minute = 60

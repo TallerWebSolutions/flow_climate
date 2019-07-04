@@ -6,7 +6,7 @@
   </div>
   <div class='col-xs-4 form-group <%= 'has-error' if slack_configuration.errors[:room_webhook].present? %>'>
     <%= form.label :room_webhook, class: 'control-label' %>
-    <%= form.text_field :room_webhook, class: 'form-control' %>
+    <%= form.text_field :room_webhook, class: 'form-control', placeholder: 'https://hooks.slack.com/services/room_key' %>
     <span class="help-block"><%= slack_configuration.errors[:room_webhook].join(', ') %></span>
   </div>
   <div class='col-xs-1 form-group <%= 'has-error' if slack_configuration.errors[:notification_hour].present? %>'>

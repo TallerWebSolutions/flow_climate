@@ -17,6 +17,10 @@ RSpec.describe DateHelper, type: :helper do
     context 'greather than a day' do
       it { expect(helper.time_distance_in_words(300_000)).to eq "3 #{I18n.t('datetime.date_attributes.day', count: 3)} #{I18n.t('geenral.connector.and')} 11 #{I18n.t('datetime.date_attributes.hour', count: 11)}" }
     end
+
+    context 'nil time ' do
+      it { expect(helper.time_distance_in_words(nil)).to eq '0 dia(s)' }
+    end
   end
 
   describe '#seconds_to_day' do

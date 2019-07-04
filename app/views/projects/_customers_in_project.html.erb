@@ -1,17 +1,22 @@
-<table class="table">
-  <thead>
-    <tr>
-      <th><%= Customer.human_attribute_name :name %></th>
-    </tr>
-  </thead>
-
-  <tbody>
-    <% project.customers.each do |customer| %>
+<% if project.customers.present? %>
+  <table class="table">
+    <thead>
       <tr>
-        <td>
-          <%= customer.name %>
-        </td>
+        <th><%= Customer.human_attribute_name :name %></th>
       </tr>
-    <% end %>
-  </tbody>
-</table>
+    </thead>
+
+    <tbody>
+      <% project.customers.each do |customer| %>
+        <tr>
+          <td>
+            <%= customer.name %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+<% else %>
+  <%= render 'layouts/no_data', missing_data: Customer.model_name.human.pluralize(2).downcase %>
+<% end %>

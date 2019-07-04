@@ -1,3 +1,4 @@
+<% if project.products.present? %>
 <table class="table">
   <thead>
     <tr>
@@ -15,3 +16,6 @@
     <% end %>
   </tbody>
 </table>
+<% else %>
+  <%= render 'layouts/no_data', missing_data: Product.model_name.human.pluralize(2).downcase %>
+<% end %>
