@@ -90,7 +90,7 @@ RSpec.describe SlackConfigurationsController, type: :controller do
         it 'does not create the slack config and re-render the template with the errors' do
           post :create, params: { company_id: company, team_id: team, slack_configuration: { room_webhook: '' } }, xhr: true
           expect(response).to render_template 'slack_configurations/new'
-          expect(assigns(:slack_configuration).errors.full_messages).to eq ['Webhook da sala não pode ficar em branco', 'Hora não pode ficar em branco']
+          expect(assigns(:slack_configuration).errors.full_messages).to eq ['Webhook da sala não pode ficar em branco', 'Webhook da sala não é válido', 'Hora não pode ficar em branco']
         end
       end
     end
@@ -198,7 +198,7 @@ RSpec.describe SlackConfigurationsController, type: :controller do
         it 'does not update the slack config and re-renders the form' do
           put :update, params: { company_id: company, team_id: team, id: slack_config, slack_configuration: { room_webhook: '' } }, xhr: true
           expect(response).to render_template 'slack_configurations/edit'
-          expect(assigns(:slack_configuration).errors.full_messages).to eq ['Webhook da sala não pode ficar em branco']
+          expect(assigns(:slack_configuration).errors.full_messages).to eq ['Webhook da sala não pode ficar em branco', 'Webhook da sala não é válido']
         end
       end
     end

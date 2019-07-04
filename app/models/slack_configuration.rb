@@ -34,9 +34,24 @@ class SlackConfiguration < ApplicationRecord
   validates :team, :room_webhook, :notification_hour, :notification_minute, :weekday_to_notify, presence: true
   validates :info_type, uniqueness: { scope: :team, message: I18n.t('slack_configuration.info_type.uniqueness') }
 
+  validate :valid_room_uri?
+
   scope :active_configurations, -> { where(active: true) }
 
   def toggle_active
     update(active: !active?)
+  end
+
+  private
+
+  def valid_room_uri?
+    room_webhook_url = begin
+                         URI.parse(room_webhook)
+                       rescue StandardError
+                         false
+                       end
+    return if room_webhook_url.is_a?(URI::HTTP) || room_webhook_url.is_a?(URI::HTTPS)
+
+    errors.add(:room_webhook, I18n.t('errors.messages.invalid'))
   end
 end

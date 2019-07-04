@@ -1,1 +1,3 @@
 $("#projects-table").html("<%= escape_javascript(render 'projects/projects_table', company: @company, projects_list: @searched_projects, projects_summary: @projects_summary, projects_ids: @projects.map(&:id).flatten.join(',')).html_safe %>");
+
+$(".col-table-details").hide();

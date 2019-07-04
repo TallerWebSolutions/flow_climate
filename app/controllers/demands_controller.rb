@@ -214,5 +214,10 @@ class DemandsController < AuthenticatedController
     @average_queue_time = @total_queue_time / @demands.count
     @average_touch_time = @total_touch_time / @demands.count
     @avg_work_hours_per_demand = @demands.with_effort.sum(&:total_effort) / @demands.count
+    build_block_informations
+  end
+
+  def build_block_informations
+    @share_demands_blocked = @demands.count { |demand_list| demand_list.demand.demand_blocks.count.positive? }.to_f / @demands.count
   end
 end

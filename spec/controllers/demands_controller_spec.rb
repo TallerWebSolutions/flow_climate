@@ -577,6 +577,8 @@ RSpec.describe DemandsController, type: :controller do
           let!(:seventh_demand) { Fabricate :demand, project: second_project, demand_title: 'sas', demand_type: :performance_improvement, class_of_service: :expedite, created_date: 2.days.ago, commitment_date: 2.days.ago, end_date: 1.day.ago, effort_downstream: 0, effort_upstream: 0 }
           let!(:eigth_demand) { Fabricate :demand, project: second_project, demand_title: 'sas', demand_type: :wireframe, class_of_service: :fixed_date, created_date: 3.days.ago, commitment_date: 1.day.ago, end_date: Time.zone.today, effort_downstream: 0, effort_upstream: 0 }
 
+          let!(:demand_block) { Fabricate :demand_block, demand: first_demand }
+
           context 'and passing the flow status all filters false' do
             context 'not grouped' do
               it 'finds the correct demands and responds with the correct JS' do
@@ -589,6 +591,7 @@ RSpec.describe DemandsController, type: :controller do
                 expect(assigns(:confidence_80_leadtime)).to be_within(0.3).of(3.6)
                 expect(assigns(:confidence_65_leadtime)).to be_within(0.3).of(2.9)
                 expect(assigns(:avg_work_hours_per_demand).to_f).to eq 3.75
+                expect(assigns(:share_demands_blocked).to_f).to eq 0.125
               end
             end
 
@@ -845,11 +848,12 @@ RSpec.describe DemandsController, type: :controller do
 
         context 'having no data' do
           it 'assigns the instance variable and renders the template' do
-            get :search_demands, params: { company_id: company, projects_ids: Project.all.map(&:id).join(','), start_date: start_date, end_date: end_date, not_started: 'true', wip: 'false', delivered: 'false', period: :all }, xhr: true
+            get :search_demands, params: { company_id: company, projects_ids: ['foo'], start_date: start_date, end_date: end_date, not_started: 'true', wip: 'false', delivered: 'false', period: :all }, xhr: true
             expect(response).to render_template 'demands/search_demands.js.erb'
             expect(assigns(:confidence_95_leadtime)).to eq 0
             expect(assigns(:confidence_80_leadtime)).to eq 0
             expect(assigns(:confidence_65_leadtime)).to eq 0
+            expect(assigns(:share_demands_blocked).to_f).to eq 0
           end
         end
       end
