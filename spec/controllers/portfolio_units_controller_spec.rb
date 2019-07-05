@@ -13,6 +13,12 @@ RSpec.describe PortfolioUnitsController, type: :controller do
 
       it { expect(response).to redirect_to new_user_session_path }
     end
+
+    describe 'DELETE #destroy' do
+      before { delete :destroy, params: { company_id: 'bar', product_id: 'foo', id: 'bar' } }
+
+      it { expect(response).to redirect_to new_user_session_path }
+    end
   end
 
   context 'authenticated' do
@@ -128,6 +134,47 @@ RSpec.describe PortfolioUnitsController, type: :controller do
           let(:other_company) { Fabricate :company }
 
           before { post :create, params: { company_id: other_company, product_id: product }, xhr: true }
+
+          it { expect(response).to have_http_status :not_found }
+        end
+      end
+    end
+
+    describe 'DELETE #destroy' do
+      let!(:portfolio_unit) { Fabricate :portfolio_unit, product: product }
+
+      context 'valid parameters' do
+        before { delete :destroy, params: { company_id: company, product_id: product, id: portfolio_unit }, xhr: true }
+
+        it 'deletes the jira config' do
+          expect(response).to render_template 'portfolio_units/destroy'
+          expect(Jira::JiraProductConfig.last).to be_nil
+        end
+      end
+
+      context 'invalid parameters' do
+        context 'non-existent product jira config' do
+          before { delete :destroy, params: { company_id: company, product_id: product, id: 'foo' }, xhr: true }
+
+          it { expect(response).to have_http_status :not_found }
+        end
+
+        context 'non-existent product' do
+          before { delete :destroy, params: { company_id: company, product_id: 'foo', id: portfolio_unit }, xhr: true }
+
+          it { expect(response).to have_http_status :not_found }
+        end
+
+        context 'non-existent company' do
+          before { delete :destroy, params: { company_id: 'foo', product_id: product, id: portfolio_unit }, xhr: true }
+
+          it { expect(response).to have_http_status :not_found }
+        end
+
+        context 'not-permitted company' do
+          let(:company) { Fabricate :company, users: [] }
+
+          before { delete :destroy, params: { company_id: company, product_id: product, id: portfolio_unit }, xhr: true }
 
           it { expect(response).to have_http_status :not_found }
         end
