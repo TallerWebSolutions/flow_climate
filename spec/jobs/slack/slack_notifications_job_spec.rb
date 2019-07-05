@@ -46,7 +46,7 @@ RSpec.describe Slack::SlackNotificationsJob, type: :active_job do
 
     context 'with average_demand_cost notification' do
       it 'calls slack notification method' do
-        expect_any_instance_of(Slack::Notifier).to receive(:ping).with("*#{team.name}* | Custo Médio por Demanda: *R$ 833,33* | Variação: *-61,90%* com relação à média das últimas 4 semanas (R$ 2.187,50).").once
+        expect_any_instance_of(Slack::Notifier).to receive(:ping).with("*#{team.name}* | Custo Médio por Demanda: *R$ 833,33* | Última semana: R$ 2.500,00 | Variação: *-61,90%* com relação à média das últimas 4 semanas (R$ 2.187,50).").once
         Slack::SlackNotificationsJob.perform_now(first_slack_config, team)
       end
     end
