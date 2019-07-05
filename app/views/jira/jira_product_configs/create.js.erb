@@ -1,0 +1,7 @@
+var jiraProductConfigTable = $('#jira-product-config-table');
+
+<% if flash[:error].present? %>
+  jiraProductConfigTable.html("<%= escape_javascript(render('jira/jira_product_configs/new', company: @company, product: @product, jira_product_config: @jira_product_config)) %>")
+<% else %>
+  jiraProductConfigTable.html("<%= escape_javascript(render('jira/jira_product_configs/jira_product_configs_table', company: @company, product: @product, jira_product_configs: @jira_product_configs)) %>")
+<% end %>

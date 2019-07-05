@@ -16,6 +16,7 @@
     <%= link_to t('navbar.details'), '#', id: 'nav-item-stamps', class: 'active nav-tab' %>
     <%= link_to t('navbar.projects_list'), '#', id: 'nav-item-list', class: 'nav-tab' %>
     <%= link_to t('navbar.portfolio_units'), '#', id: 'nav-item-portfolio-unit', class: 'nav-tab' %>
+    <%= link_to t('navbar.settings'), '#', id: 'nav-item-product-settings', class: 'nav-tab' %>
   </div>
 </div>
 
@@ -35,6 +36,10 @@
   <div id="portfolio-units-table">
     <%= render 'portfolio_units/portfolio_units_table', company: @company, product: @product, portfolio_units: @portfolio_units %>
   </div>
+</div>
+
+<div id="product-settings-content" class="tab-detail">
+  <%= render 'products/product_settings', company: @company, product: @product, jira_product_configs: @jira_product_configs %>
 </div>
 
 <% content_for :javascript do %>

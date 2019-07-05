@@ -1,0 +1,36 @@
+<div class="row">
+  <div class="col-xs-12">
+    <div class="pull-right bottom-spaced-component">
+      <%= link_to I18n.t('jira_product_configs.new.button'), new_company_product_jira_product_config_path(company, product), class: 'btn btn-success', remote: true %>
+    </div>
+  </div>
+</div>
+
+<% if jira_product_configs.present? %>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th><%= Jira::JiraProductConfig.human_attribute_name :jira_product_key %></th>
+        <th><%= I18n.t('activerecord.attributes.jira/jira_project_config.fix_version_name') %></th>
+        <th></th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% jira_product_configs.each do |config| %>
+        <tr>
+          <td><%= config.jira_product_key %></td>
+          <td><%= config.jira_project_configs.map(&:fix_version_name).join(', ') %></td>
+          <td>
+            <%= link_to company_product_jira_product_config_path(company, product, config), method: :delete, data: { confirm: I18n.t('general.destroy.confirm') }, remote: true do %>
+              <i class="fa fa-times" aria-hidden="true"></i>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+<% else %>
+  <%= render 'layouts/no_data', missing_data: Jira::JiraProductConfig.model_name.human.pluralize %>
+<% end %>

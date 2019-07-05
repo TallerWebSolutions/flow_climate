@@ -18,7 +18,7 @@ RSpec.describe Project, type: :model do
     it { is_expected.to have_many(:stages).through(:stage_project_configs) }
     it { is_expected.to have_many(:integration_errors).dependent(:destroy) }
     it { is_expected.to have_many(:project_change_deadline_histories).dependent(:destroy) }
-    it { is_expected.to have_one(:project_jira_config).dependent(:destroy) }
+    it { is_expected.to have_one(:jira_project_config).dependent(:destroy) }
     it { is_expected.to have_many(:flow_impacts).dependent(:destroy) }
     it { is_expected.to have_many(:project_consolidations).dependent(:destroy) }
 

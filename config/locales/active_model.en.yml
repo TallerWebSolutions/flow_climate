@@ -133,6 +133,8 @@ en:
             key_result: "Key Result"
             impact: "Impact"
             source: "Source"
+      jira/jira_project_config:
+        fix_version_name: "Fix Version Name"
     errors:
       messages:
         record_invalid: 'Validation failed: %{errors}'
@@ -173,10 +175,10 @@ en:
   jira_custom_field_mapping:
     uniqueness:
       demand_field: "Should have only one demand field per Jira account."
-  project_jira_config:
+  jira_product_config:
     validations:
-      jira_project_key_uniqueness:
-        message: "Should have only one Jira Project Key per account domain and fix version name"
+      jira_product_key_uniqueness:
+        message: "Should have only one Jira product key per product"
   user_plan:
     validations:
       user_plan_active: "Você já tem um plano para o período."
@@ -192,3 +194,7 @@ en:
   portfolio_unit:
     validations:
       name: "You can have only one unit name to each product."
+  jira_project_config:
+    validations:
+      fix_version_name_uniqueness:
+        message: "You should have only one fix version name per project."

@@ -9,8 +9,9 @@ module Jira
       return if issue_key.blank?
 
       demand = Demand.where(company_id: project.company.id, demand_id: issue_key).first_or_initialize
+      project_in_jira = Jira::JiraReader.instance.read_project(jira_issue.attrs, jira_account) || project
 
-      update_demand!(demand, jira_account, jira_issue, project)
+      update_demand!(demand, jira_account, jira_issue, project_in_jira)
 
       demand
     end
@@ -18,41 +19,19 @@ module Jira
     private
 
     def update_demand!(demand, jira_account, jira_issue, project)
-      demand.update(project: read_project(jira_account, jira_issue.attrs['fields']) || project, company: project.company, created_date: issue_fields_value(jira_issue, 'created'), demand_type: read_issue_type(jira_issue), artifact_type: read_artifact_type(jira_issue),
-                    class_of_service: read_class_of_service(jira_account, jira_issue), demand_title: issue_fields_value(jira_issue, 'summary'),
+      demand.update(project: project, company: project.company, created_date: issue_fields_value(jira_issue, 'created'), demand_type: read_issue_type(jira_issue),
+                    artifact_type: Jira::JiraReader.instance.read_artifact_type(jira_issue.attrs),
+                    class_of_service: Jira::JiraReader.instance.read_class_of_service(jira_account, jira_issue.attrs), demand_title: issue_fields_value(jira_issue, 'summary'),
                     url: build_jira_url(jira_account, demand.demand_id), commitment_date: nil, discarded_at: nil)
 
+      read_demand_details(demand, jira_account, jira_issue)
+    end
+
+    def read_demand_details(demand, jira_account, jira_issue)
       read_responsibles_info(demand, jira_account, jira_issue)
       read_comments(demand, jira_issue)
       read_blocks(demand, jira_issue)
       read_transitions!(demand, jira_issue.changelog) if jira_issue.respond_to?(:changelog)
-    end
-
-    def read_project(jira_account, jira_issue_fields)
-      labels = jira_issue_fields['labels'] || []
-      fix_version_name = read_fix_version_name(jira_issue_fields)
-
-      labels << fix_version_name
-      labels.reject!(&:empty?)
-
-      project_key = jira_issue_fields['project']['key']
-
-      jira_config = nil
-
-      labels.each do |label|
-        jira_config = jira_account.company.project_jira_configs.find_by(jira_project_key: project_key, fix_version_name: label)
-        break if jira_config.present?
-      end
-
-      return if jira_config.blank?
-
-      jira_config.project
-    end
-
-    def read_fix_version_name(jira_issue_fields)
-      return '' if jira_issue_fields['fixVersions'].blank?
-
-      jira_issue_fields['fixVersions'][0]['name']
     end
 
     def read_blocks(demand, jira_issue)
@@ -100,73 +79,13 @@ module Jira
 
     def read_issue_type(jira_issue)
       issue_type_name = jira_issue.attrs['fields']['issuetype']['name']
-      return :feature if check_feature(issue_type_name)
+      return :bug if issue_type_name.casecmp('bug').zero?
       return :chore if issue_type_name.casecmp('chore').zero?
       return :performance_improvement if issue_type_name.casecmp('performance improvement').zero?
       return :wireframe if issue_type_name.casecmp('wireframes').zero?
       return :ui if issue_type_name.casecmp('ui').zero?
 
-      :bug
-    end
-
-    def check_feature(issue_type_name)
-      issue_type_name.casecmp('story').zero? || issue_type_name.casecmp('epic').zero? || issue_type_name.casecmp('feature').zero?
-    end
-
-    def read_artifact_type(jira_issue)
-      issue_type_name = jira_issue.attrs['fields']['issuetype']['name']
-      return :epic if issue_type_name.casecmp('epic').zero?
-
-      :story
-    end
-
-    def read_class_of_service(jira_account, jira_issue)
-      class_of_service_name = read_class_of_service_by_tag_name(jira_issue)
-
-      class_of_service_name = read_class_of_service_custom_field_id(jira_account, jira_issue) if class_of_service_name.blank?
-
-      if class_of_service_name.casecmp('expedite').zero?
-        :expedite
-      elsif class_of_service_name.casecmp('fixed date').zero?
-        :fixed_date
-      elsif class_of_service_name.casecmp('intangible').zero?
-        :intangible
-      else
-        :standard
-      end
-    end
-
-    def read_class_of_service_custom_field_id(jira_account, jira_issue)
-      class_of_service_custom_field_name = jira_account.class_of_service_custom_field&.custom_field_machine_name
-
-      if class_of_service_custom_field_name.blank?
-        class_of_service_name = 'standard'
-      else
-        class_of_service_hash = jira_issue.attrs['fields'][class_of_service_custom_field_name]
-
-        class_of_service_name = if class_of_service_hash.blank?
-                                  'standard'
-                                else
-                                  class_of_service_hash['value']
-                                end
-      end
-      class_of_service_name
-    end
-
-    def read_class_of_service_by_tag_name(jira_issue)
-      class_of_service = ''
-      return class_of_service if jira_issue.attrs['changelog'].blank?
-
-      jira_issue.attrs['changelog']['histories'].each do |history|
-        next unless history['items'].present? && class_of_service_field?(history)
-
-        class_of_service = history['items'].first['toString']
-      end
-      class_of_service
-    end
-
-    def class_of_service_field?(history)
-      (history['items'].first['field'].downcase.include?('class of service') || history['items'].first['field'].downcase.include?('classe de serviço'))
+      :feature
     end
 
     def read_responsibles_info(demand, jira_account, jira_issue)

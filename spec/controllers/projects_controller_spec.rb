@@ -500,7 +500,7 @@ RSpec.describe ProjectsController, type: :controller do
       let(:project) { Fabricate :project, customers: [customer] }
 
       context 'passing valid parameters' do
-        let!(:jira_config) { Fabricate :project_jira_config, project: project }
+        let!(:jira_config) { Fabricate :jira_project_config, project: project }
 
         it 'calls the services and the reader' do
           expect(Jira::ProcessJiraProjectJob).to receive(:perform_later).once

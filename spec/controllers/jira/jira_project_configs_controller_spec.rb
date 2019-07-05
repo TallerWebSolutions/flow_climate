@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Jira::ProjectJiraConfigsController, type: :controller do
+RSpec.describe Jira::JiraProjectConfigsController, type: :controller do
   context 'unauthenticated' do
     describe 'GET #new' do
       before { get :new, params: { company_id: 'bar', project_id: 'foo' } }
@@ -27,15 +27,19 @@ RSpec.describe Jira::ProjectJiraConfigsController, type: :controller do
 
     let(:company) { Fabricate :company, users: [user] }
     let(:customer) { Fabricate :customer, company: company }
-    let!(:project) { Fabricate :project, customers: [customer] }
+    let!(:product) { Fabricate :product, customer: customer }
+
+    let!(:project) { Fabricate :project, customers: [customer], products: [product] }
+    let!(:jira_product_config) { Fabricate :jira_product_config, product: product }
 
     describe 'GET #new' do
       context 'valid parameters' do
         before { get :new, params: { company_id: company, project_id: project }, xhr: true }
 
         it 'instantiates a new project jira config and renders the template' do
-          expect(response).to render_template 'jira/project_jira_configs/new'
-          expect(assigns(:project_jira_config)).to be_a_new Jira::ProjectJiraConfig
+          expect(response).to render_template 'jira/jira_project_configs/new'
+          expect(assigns(:jira_project_config)).to be_a_new Jira::JiraProjectConfig
+          expect(assigns(:jira_product_configs)).to eq [jira_product_config]
         end
       end
 
@@ -64,49 +68,51 @@ RSpec.describe Jira::ProjectJiraConfigsController, type: :controller do
 
     describe 'POST #create' do
       context 'passing valid parameters' do
-        before { post :create, params: { company_id: company, project_id: project, jira_project_jira_config: { jira_project_key: 'bar', fix_version_name: 'xpto' } }, xhr: true }
+        let(:jira_product_config) { Fabricate :jira_product_config, product: product, company: product.company }
+
+        before { post :create, params: { company_id: company, project_id: project, jira_jira_project_config: { fix_version_name: 'xpto', jira_product_config_id: jira_product_config.id } }, xhr: true }
 
         it 'creates the new project jira config' do
-          created_config = Jira::ProjectJiraConfig.last
-          expect(created_config.jira_project_key).to eq 'bar'
+          created_config = Jira::JiraProjectConfig.last
           expect(created_config.fix_version_name).to eq 'xpto'
+          expect(created_config.jira_product_config).to eq jira_product_config
 
-          expect(response).to render_template 'jira/project_jira_configs/create'
+          expect(response).to render_template 'jira/jira_project_configs/create'
         end
       end
 
       context 'passing invalid' do
         context 'parameters' do
-          before { post :create, params: { company_id: company, project_id: project, jira_project_jira_config: { name: '' } }, xhr: true }
+          before { post :create, params: { company_id: company, project_id: project, jira_jira_project_config: { name: '' } }, xhr: true }
 
           it 'does not create the project jira config' do
-            expect(Jira::ProjectJiraConfig.last).to be_nil
-            expect(response).to render_template 'jira/project_jira_configs/create'
-            expect(assigns(:project_jira_config).errors.full_messages).to eq ['Chave do Projeto no Jira não pode ficar em branco']
+            expect(Jira::JiraProjectConfig.last).to be_nil
+            expect(response).to render_template 'jira/jira_project_configs/create'
+            expect(assigns(:jira_project_config).errors.full_messages).to eq ['Fix Version ou Label no Jira não pode ficar em branco', 'Config do Produto não pode ficar em branco']
           end
         end
 
         context 'breaking unique index' do
-          let!(:project_jira_config) { Fabricate :project_jira_config, project: project, jira_project_key: 'bar', fix_version_name: 'xpto' }
+          let!(:jira_project_config) { Fabricate :jira_project_config, project: project, fix_version_name: 'xpto' }
 
-          before { post :create, params: { company_id: company, project_id: project, jira_project_jira_config: { jira_project_key: 'bar', fix_version_name: 'xpto' } }, xhr: true }
+          before { post :create, params: { company_id: company, project_id: project, jira_jira_project_config: { jira_project_key: 'bar', fix_version_name: 'xpto' } }, xhr: true }
 
           it 'does not create the project jira config' do
-            expect(Jira::ProjectJiraConfig.count).to eq 1
-            expect(response).to render_template 'jira/project_jira_configs/create'
-            expect(assigns(:project_jira_config).errors_on(:jira_project_key)).to eq [I18n.t('project_jira_config.validations.jira_project_key_uniqueness.message')]
-            expect(flash[:error]).to eq I18n.t('project_jira_config.validations.jira_project_key_uniqueness.message')
+            expect(Jira::JiraProjectConfig.count).to eq 1
+            expect(response).to render_template 'jira/jira_project_configs/create'
+            expect(assigns(:jira_project_config).errors_on(:fix_version_name)).to eq [I18n.t('jira_project_config.validations.fix_version_name_uniqueness.message')]
+            expect(flash[:error]).to eq I18n.t('jira_project_config.validations.fix_version_name_uniqueness.message')
           end
         end
 
         context 'non-existent project' do
-          before { post :create, params: { company_id: company, project_id: 'foo', jira_project_jira_config: { name: '' } }, xhr: true }
+          before { post :create, params: { company_id: company, project_id: 'foo', jira_jira_project_config: { name: '' } }, xhr: true }
 
           it { expect(response).to have_http_status :not_found }
         end
 
         context 'non-existent company' do
-          before { post :create, params: { company_id: 'foo', project_id: project, jira_project_jira_config: { name: '' } }, xhr: true }
+          before { post :create, params: { company_id: 'foo', project_id: project, jira_jira_project_config: { name: '' } }, xhr: true }
 
           it { expect(response).to have_http_status :not_found }
         end
@@ -114,7 +120,7 @@ RSpec.describe Jira::ProjectJiraConfigsController, type: :controller do
         context 'not-permitted company' do
           let(:company) { Fabricate :company, users: [] }
 
-          before { post :create, params: { company_id: company, project_id: project, jira_project_jira_config: { name: '' } }, xhr: true }
+          before { post :create, params: { company_id: company, project_id: project, jira_jira_project_config: { name: '' } }, xhr: true }
 
           it { expect(response).to have_http_status :not_found }
         end
@@ -122,14 +128,14 @@ RSpec.describe Jira::ProjectJiraConfigsController, type: :controller do
     end
 
     describe 'DELETE #destroy' do
-      let!(:project_jira_config) { Fabricate :project_jira_config, project: project }
+      let!(:jira_project_config) { Fabricate :jira_project_config, project: project }
 
       context 'valid parameters' do
-        before { delete :destroy, params: { company_id: company, project_id: project, id: project_jira_config }, xhr: true }
+        before { delete :destroy, params: { company_id: company, project_id: project, id: jira_project_config }, xhr: true }
 
         it 'deletes the jira config' do
-          expect(response).to render_template 'jira/project_jira_configs/destroy'
-          expect(Jira::ProjectJiraConfig.last).to be_nil
+          expect(response).to render_template 'jira/jira_project_configs/destroy'
+          expect(Jira::JiraProjectConfig.last).to be_nil
         end
       end
 
@@ -141,13 +147,13 @@ RSpec.describe Jira::ProjectJiraConfigsController, type: :controller do
         end
 
         context 'non-existent project' do
-          before { delete :destroy, params: { company_id: company, project_id: 'foo', id: project_jira_config }, xhr: true }
+          before { delete :destroy, params: { company_id: company, project_id: 'foo', id: jira_project_config }, xhr: true }
 
           it { expect(response).to have_http_status :not_found }
         end
 
         context 'non-existent company' do
-          before { delete :destroy, params: { company_id: 'foo', project_id: project, id: project_jira_config }, xhr: true }
+          before { delete :destroy, params: { company_id: 'foo', project_id: project, id: jira_project_config }, xhr: true }
 
           it { expect(response).to have_http_status :not_found }
         end
@@ -155,7 +161,7 @@ RSpec.describe Jira::ProjectJiraConfigsController, type: :controller do
         context 'not-permitted company' do
           let(:company) { Fabricate :company, users: [] }
 
-          before { delete :destroy, params: { company_id: company, project_id: project, id: project_jira_config }, xhr: true }
+          before { delete :destroy, params: { company_id: company, project_id: project, id: jira_project_config }, xhr: true }
 
           it { expect(response).to have_http_status :not_found }
         end

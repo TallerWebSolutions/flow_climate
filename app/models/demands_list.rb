@@ -45,12 +45,11 @@ class DemandsList < ApplicationRecord
   scope :finished_with_leadtime, -> { kept.story.where('demands_lists.end_date IS NOT NULL AND demands_lists.leadtime IS NOT NULL') }
   scope :in_wip, -> { kept.where('demands_lists.commitment_date IS NOT NULL AND demands_lists.end_date IS NULL') }
   scope :not_started, -> { kept.where('demands_lists.commitment_date IS NULL AND demands_lists.end_date IS NULL') }
-
   scope :grouped_end_date_by_month, -> { kept.finished.order(end_date: :desc).group_by { |demand| [demand.end_date.to_date.cwyear, demand.end_date.to_date.month] } }
-
   scope :with_effort, -> { story.where('demands_lists.effort_downstream > 0 OR demands_lists.effort_upstream > 0') }
-
   scope :to_dates, ->(start_date, end_date) { where('(demands_lists.end_date IS NULL AND demands_lists.created_date BETWEEN :start_date AND :end_date) OR (demands_lists.end_date BETWEEN :start_date AND :end_date)', start_date: start_date.beginning_of_day, end_date: end_date.end_of_day) }
+
+  delegate :portfolio_unit_name, to: :demand, allow_nil: true
 
   def leadtime_in_days
     return 0.0 if leadtime.blank?

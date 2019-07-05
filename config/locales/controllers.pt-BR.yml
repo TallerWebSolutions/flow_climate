@@ -792,7 +792,7 @@ pt-BR:
         std_dev_cost_per_hour: "Desvio Padrão das Saídas"
         std_dev_income_outcome: "Desvio Padrão das Entradas e Saídas"
         mean_cost_per_hour: "Evolução da Média do Custo por Hora"
-  project_jira_configs:
+  jira_project_configs:
     new:
       title: "Nova Configuração do Jira"
       fix_version_field:
@@ -875,3 +875,6 @@ pt-BR:
       title: "Unidades do Portfólio"
     new:
       button: "Nova Unidade do Portfólio"
+  jira_product_configs:
+    new:
+      button: "Nova Config de Produto"

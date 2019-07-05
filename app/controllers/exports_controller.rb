@@ -30,7 +30,7 @@ class ExportsController < AuthenticatedController
 
   def jira_demand_import_fields_params
     { username: params[:username], api_token: params[:api_token], base_uri: params[:base_uri], customer_domain: params[:customer_domain],
-      project_name: params[:project_name], jira_project_key: params[:jira_project_key], fix_version_name: params[:fix_version_name],
+      project_name: params[:project_name], fix_version_name: params[:fix_version_name],
       class_of_service_field: params['class_of_service_field'] }
   end
 end

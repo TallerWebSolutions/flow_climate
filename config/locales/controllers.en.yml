@@ -778,7 +778,7 @@ en:
         std_dev_income_per_hour: "Std Dev Incomes"
         std_dev_income_outcome: "Std Dev Income and Outcome"
         mean_cost_per_hour: "Mean of Cost per Hour in Time"
-  project_jira_configs:
+  jira_project_configs:
     new:
       title: "New Jira Config"
       fix_version_field:
@@ -886,3 +886,6 @@ en:
       title: "Portfolio Units"
     new:
       button: "New Portfolio Unit"
+  jira_product_configs:
+    new:
+      button: "New Jira Product Config"

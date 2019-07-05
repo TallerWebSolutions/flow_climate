@@ -42,7 +42,7 @@ class Project < ApplicationRecord
   has_and_belongs_to_many :customers, dependent: :destroy
   has_and_belongs_to_many :products, dependent: :destroy
 
-  has_one :project_jira_config, class_name: 'Jira::ProjectJiraConfig', dependent: :destroy, autosave: true, inverse_of: :project
+  has_one :jira_project_config, class_name: 'Jira::JiraProjectConfig', dependent: :destroy, autosave: true, inverse_of: :project
 
   has_many :project_risk_configs, dependent: :destroy
   has_many :project_risk_alerts, dependent: :destroy

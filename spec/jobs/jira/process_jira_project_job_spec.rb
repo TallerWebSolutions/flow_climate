@@ -16,8 +16,11 @@ RSpec.describe Jira::ProcessJiraProjectJob, type: :active_job do
       let(:jira_project) { client.Project.build({ key: 'FC', name: 'Example', projectTypeKey: 'business', lead: 'username' }.with_indifferent_access) }
       let!(:jira_issue) { client.Issue.build({ key: '10000', summary: 'foo of bar', fields: { created: '2018-07-02T11:20:18.998-0300', issuetype: { name: 'Story' }, customfield_10028: { value: 'Expedite' }, project: { key: 'FC' }, customfield_10024: [{ name: 'foo' }, { name: 'bar' }] }, changelog: { startAt: 0, maxResults: 2, total: 2, histories: [{ id: '10039', from: 'first_stage', to: 'second_stage', created: '2018-07-08T22:34:47.440-0300' }, { id: '10038', from: 'third_stage', to: 'first_stage', created: '2018-07-06T09:40:43.886-0300' }] } }.with_indifferent_access) }
       let(:jira_account) { Fabricate :jira_account, base_uri: 'http://foo.bar', username: 'foo', api_token: 'bar', customer_domain: 'xpto' }
-      let(:project) { Fabricate :project }
-      let!(:jira_config) { Fabricate :project_jira_config, project: project, jira_project_key: 'FC' }
+      let(:product) { Fabricate :product }
+      let(:project) { Fabricate :project, products: [product] }
+      let!(:jira_product_config) { Fabricate :jira_product_config, product: product, jira_product_key: 'FC' }
+
+      let!(:jira_config) { Fabricate :jira_project_config, jira_product_config: jira_product_config, project: project }
 
       let(:team) { Fabricate :team }
 

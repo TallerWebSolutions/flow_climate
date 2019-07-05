@@ -229,6 +229,9 @@ RSpec.describe ProductsController, type: :controller do
       let!(:portfolio_unit) { Fabricate :portfolio_unit, product: product, name: 'zzz' }
       let!(:other_portfolio_unit) { Fabricate :portfolio_unit, product: product, name: 'aaa' }
 
+      let!(:jira_product_config) { Fabricate :jira_product_config, product: product, jira_product_key: 'zzz' }
+      let!(:other_jira_product_config) { Fabricate :jira_product_config, product: product, jira_product_key: 'aaa' }
+
       let!(:first_project) { Fabricate :project, customers: [product.customer], products: [product], end_date: 5.days.from_now }
       let!(:second_project) { Fabricate :project, customers: [product.customer], products: [product], end_date: 7.days.from_now }
 
@@ -242,6 +245,7 @@ RSpec.describe ProductsController, type: :controller do
             expect(assigns(:product)).to eq product
             expect(assigns(:product_projects)).to eq [second_project, first_project]
             expect(assigns(:portfolio_units)).to eq [other_portfolio_unit, portfolio_unit]
+            expect(assigns(:jira_product_configs)).to eq [other_jira_product_config, jira_product_config]
             expect(assigns(:projects_summary).total_flow_pressure).to be_within(0.9).of(8.5)
           end
         end
