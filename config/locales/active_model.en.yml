@@ -133,6 +133,7 @@ en:
             key_result: "Key Result"
             impact: "Impact"
             source: "Source"
+            epic: "Epic"
       jira/jira_project_config:
         fix_version_name: "Fix Version Name"
     errors:

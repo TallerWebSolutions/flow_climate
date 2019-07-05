@@ -83,7 +83,7 @@ module Jira
     def build_history_fields_hash(jira_issue)
       jira_history_fields_hash = {}
 
-      jira_issue['histories'].each do |history|
+      jira_issue['histories'].sort_by { |history| history['created'] }.each do |history|
         next if history['items'].blank?
 
         history['items'].each do |item|
