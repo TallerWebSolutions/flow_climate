@@ -418,6 +418,7 @@ pt-BR:
             key_result: Key Result
             impact: Impacto
             source: Origem
+            epic: Épico
       jira/jira_project_config:
         jira_product_config: Config do Produto
         active: Ativo?
