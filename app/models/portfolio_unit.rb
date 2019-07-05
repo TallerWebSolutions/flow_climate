@@ -33,7 +33,7 @@ class PortfolioUnit < ApplicationRecord
   belongs_to :parent, class_name: 'PortfolioUnit', foreign_key: :parent_id, inverse_of: :children
   has_many :children, class_name: 'PortfolioUnit', foreign_key: :parent_id, inverse_of: :parent, dependent: :destroy
 
-  has_many :demands, dependent: :restrict_with_error
+  has_many :demands, dependent: :nullify
 
   has_one :jira_portfolio_unit_config, class_name: 'Jira::JiraPortfolioUnitConfig', dependent: :destroy
   accepts_nested_attributes_for :jira_portfolio_unit_config, reject_if: :all_blank

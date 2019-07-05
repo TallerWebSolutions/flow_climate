@@ -21,6 +21,13 @@ class PortfolioUnitsController < AuthenticatedController
     respond_to { |format| format.js { render 'portfolio_units/create' } }
   end
 
+  def destroy
+    @portfolio_unit = PortfolioUnit.find(params[:id])
+    @portfolio_unit.destroy
+    @portfolio_units = @product.portfolio_units.order(:name)
+    render 'portfolio_units/destroy'
+  end
+
   private
 
   def assign_product
