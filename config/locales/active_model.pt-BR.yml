@@ -472,7 +472,7 @@ pt-BR:
       user_plan_active: "You already have a plan to this period."
   slack_configurations:
     notifications:
-      cmd_text: "*%{name}* | Custo Médio por Demanda: *%{cmd_value}* | Variação: *%{cmd_difference_to_last_week}%* com relação à média das últimas 4 semanas (%{previous_cmd})."
+      cmd_text: "*%{name}* | Custo Médio por Demanda: *%{cmd_value}* | Última semana: %{last_week_cmd} | Variação: *%{cmd_difference_to_last_week}%* com relação à média das últimas 4 semanas (%{previous_cmd})."
       th_week_text: "*%{name}* | Throughput na semana: *%{th_current_week} demandas* | Variação: *%{difference_last_week_th_value}%* para a média das últimas 4 semanas (%{four_weeks_th_average})."
       th_last_week_text: "*%{name}* | Throughput: *%{th_last_week} demandas* na semana passada."
       th_last_week_demand_info_text: "*%{demand_id}* %{demand_title} | *Responsáveis:* %{responsibles_names} | *Custo pro Projeto:* %{cost_to_project}"
