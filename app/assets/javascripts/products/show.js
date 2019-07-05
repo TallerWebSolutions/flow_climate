@@ -1,6 +1,7 @@
 const navItemStamps = $("#nav-item-stamps");
 const navItemPortfolio = $("#nav-item-portfolio-unit");
 const navItemList = $("#nav-item-list");
+const navItemSettings = $("#nav-item-product-settings");
 
 hideAllComponents();
 
@@ -11,18 +12,24 @@ navItemStamps.addClass("active");
 navItemStamps.on("click", function(){
     hideAllComponents();
     $("#stamps").show();
-    $("#nav-item-stamps").addClass("active");
+    navItemStamps.addClass("active");
 });
 navItemList.on("click", function(){
     hideAllComponents();
     $("#project-list").show();
-    $("#nav-item-list").addClass("active");
+    navItemList.addClass("active");
 });
 
 navItemPortfolio.on("click", function(){
     hideAllComponents();
     $("#portfolio-units").show();
-    $("#nav-item-portfolio-unit").addClass("active");
+    navItemPortfolio.addClass("active");
+});
+
+navItemSettings.on("click", function(){
+    hideAllComponents();
+    $("#product-settings-content").show();
+    navItemSettings.addClass("active");
 });
 
 function hideAllComponents() {

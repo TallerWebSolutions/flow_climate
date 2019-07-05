@@ -886,3 +886,6 @@ en:
       title: "Portfolio Units"
     new:
       button: "New Portfolio Unit"
+  jira_product_configs:
+    new:
+      button: "New Jira Product Config"

@@ -1,17 +1,9 @@
-<%= form_for jira_product_config, url: company_project_jira_project_configs_path(company, project), remote: true do |form| %>
+<%= form_for jira_product_config, url: company_product_jira_product_configs_path(company, product), remote: true do |form| %>
   <div class="row">
-    <div class='col-xs-12 form-group <%= 'has-error' if jira_project_config.errors[:fix_version_name].present? %>'>
-      <%= form.label :fix_version_name, class: 'control-label required' %>
-      <i class="far fa-question-circle" title="<%= t('jira_project_configs.new.fix_version_field.help') %>"></i>
-      <%= form.text_field :fix_version_name, class: 'form-control' %>
-      <span class="help-block"><%= jira_project_config.errors[:fix_version_name].join(', ') %></span>
-    </div>
-  </div>
-  <div class="row">
-    <div class='col-xs-12 form-group <%= 'has-error' if jira_project_config.errors[:jira_project_key].present? %>'>
-      <%= form.label :jira_project_key, class: 'control-label required' %>
-      <%= form.text_field :jira_project_key, class: 'form-control' %>
-      <span class="help-block"><%= jira_project_config.errors[:jira_project_key].join(', ') %></span>
+    <div class='col-xs-12 form-group <%= 'has-error' if jira_product_config.errors[:jira_product_key].present? %>'>
+      <%= form.label :jira_product_key, class: 'control-label required' %>
+      <%= form.text_field :jira_product_key, class: 'form-control' %>
+      <span class="help-block"><%= jira_product_config.errors[:jira_product_key].join(', ') %></span>
     </div>
   </div>
 

@@ -81,6 +81,10 @@ Rails.application.routes.draw do
       get 'products_for_customer/(:customer_id)', action: :products_for_customer, on: :collection
 
       resources :portfolio_units, only: %i[new create]
+
+      scope :jira do
+        resources :jira_product_configs, only: %i[new create destroy], module: 'jira'
+      end
     end
 
     resources :projects do

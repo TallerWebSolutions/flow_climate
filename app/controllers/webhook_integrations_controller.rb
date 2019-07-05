@@ -40,7 +40,7 @@ class WebhookIntegrationsController < ApplicationController
   end
 
   def jira_issue_attrs
-    @jira_issue_attrs ||= @data['issue']['attrs']
+    @jira_issue_attrs ||= @data['issue']
   end
 
   def check_request

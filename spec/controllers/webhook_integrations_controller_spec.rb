@@ -32,7 +32,7 @@ RSpec.describe WebhookIntegrationsController, type: :controller do
           it 'enqueues the job' do
             request.headers['Content-Type'] = 'application/json'
             expect(Jira::ProcessJiraIssueJob).to receive(:perform_later).once
-            post :jira_webhook, params: { issue: jira_issue }
+            post :jira_webhook, params: { issue: jira_issue.attrs }
             expect(response).to have_http_status :ok
           end
         end
@@ -43,7 +43,7 @@ RSpec.describe WebhookIntegrationsController, type: :controller do
           it 'enqueues the job' do
             request.headers['Content-Type'] = 'application/json'
             expect(Jira::ProcessJiraIssueJob).to receive(:perform_later).once
-            post :jira_webhook, params: { issue: jira_issue }
+            post :jira_webhook, params: { issue: jira_issue.attrs }
             expect(response).to have_http_status :ok
           end
         end
@@ -58,7 +58,7 @@ RSpec.describe WebhookIntegrationsController, type: :controller do
         it 'does not enqueue the job' do
           request.headers['Content-Type'] = 'application/json'
           expect(Jira::ProcessJiraIssueJob).not_to receive(:perform_later)
-          post :jira_webhook, params: { issue: jira_issue }
+          post :jira_webhook, params: { issue: jira_issue.attrs }
           expect(response).to have_http_status :ok
         end
       end
@@ -72,7 +72,7 @@ RSpec.describe WebhookIntegrationsController, type: :controller do
         it 'does not enqueue the job' do
           request.headers['Content-Type'] = 'application/json'
           expect(Jira::ProcessJiraIssueJob).not_to receive(:perform_later)
-          post :jira_webhook, params: { issue: jira_issue }
+          post :jira_webhook, params: { issue: jira_issue.attrs }
           expect(response).to have_http_status :ok
         end
       end
@@ -108,7 +108,7 @@ RSpec.describe WebhookIntegrationsController, type: :controller do
 
           it 'deletes the demand' do
             request.headers['Content-Type'] = 'application/json'
-            post :jira_delete_card_webhook, params: { issue: jira_issue }
+            post :jira_delete_card_webhook, params: { issue: jira_issue.attrs }
             expect(response).to have_http_status :ok
             expect(Demand.kept.count).to eq 0
           end
@@ -117,7 +117,7 @@ RSpec.describe WebhookIntegrationsController, type: :controller do
         context 'when the demand does not exist' do
           it 'does nothing' do
             request.headers['Content-Type'] = 'application/json'
-            post :jira_delete_card_webhook, params: { issue: jira_issue }
+            post :jira_delete_card_webhook, params: { issue: jira_issue.attrs }
             expect(response).to have_http_status :ok
           end
         end
@@ -129,7 +129,7 @@ RSpec.describe WebhookIntegrationsController, type: :controller do
 
         it 'does nothing' do
           request.headers['Content-Type'] = 'application/json'
-          post :jira_delete_card_webhook, params: { issue: jira_issue }
+          post :jira_delete_card_webhook, params: { issue: jira_issue.attrs }
           expect(response).to have_http_status :ok
         end
       end

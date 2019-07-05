@@ -88,6 +88,7 @@ class Demand < ApplicationRecord
   scope :dates_inconsistent_to_project, ->(project) { kept.story.where('demands.commitment_date < :start_date OR demands.end_date > :end_date', start_date: project.start_date, end_date: project.end_date.end_of_day) }
 
   delegate :name, to: :project, prefix: true
+  delegate :name, to: :portfolio_unit, prefix: true, allow_nil: true
 
   before_save :compute_and_update_automatic_fields
   after_discard :discard_transitions_and_blocks

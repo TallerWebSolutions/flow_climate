@@ -420,10 +420,12 @@ pt-BR:
             source: Origem
       jira/jira_project_config:
         jira_product_config: Config do Produto
-        jira_project_key: Chave do Projeto no Jira
         active: Ativo?
         project: Projeto
         fix_version_name: Fix Version ou Label no Jira
+      jira/jira_product_config:
+        jira_product_key: Chave do Produto no Jira
+        product: Produto
       jira/jira_account:
         username: Nome de usuário
         api_token: Token da API

@@ -875,3 +875,6 @@ pt-BR:
       title: "Unidades do Portfólio"
     new:
       button: "Nova Unidade do Portfólio"
+  jira_product_configs:
+    new:
+      button: "Nova Config de Produto"
