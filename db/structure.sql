@@ -9,6 +9,20 @@ SET xmloption = content;
 SET client_min_messages = warning;
 SET row_security = off;
 
+--
+-- Name: pg_stat_statements; Type: EXTENSION; Schema: -; Owner: -
+--
+
+CREATE EXTENSION IF NOT EXISTS pg_stat_statements WITH SCHEMA public;
+
+
+--
+-- Name: EXTENSION pg_stat_statements; Type: COMMENT; Schema: -; Owner: -
+--
+
+COMMENT ON EXTENSION pg_stat_statements IS 'track execution statistics of all SQL statements executed';
+
+
 SET default_tablespace = '';
 
 SET default_with_oids = false;
@@ -343,7 +357,8 @@ CREATE TABLE public.demands (
     artifact_type integer DEFAULT 0,
     parent_id integer,
     slug character varying,
-    company_id integer NOT NULL
+    company_id integer NOT NULL,
+    portfolio_unit_id integer
 );
 
 
@@ -638,6 +653,104 @@ ALTER SEQUENCE public.jira_custom_field_mappings_id_seq OWNED BY public.jira_cus
 
 
 --
+-- Name: jira_portfolio_unit_configs; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.jira_portfolio_unit_configs (
+    id bigint NOT NULL,
+    portfolio_unit_id integer NOT NULL,
+    jira_field_name character varying NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: jira_portfolio_unit_configs_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.jira_portfolio_unit_configs_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: jira_portfolio_unit_configs_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.jira_portfolio_unit_configs_id_seq OWNED BY public.jira_portfolio_unit_configs.id;
+
+
+--
+-- Name: jira_product_configs; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.jira_product_configs (
+    id bigint NOT NULL,
+    company_id integer NOT NULL,
+    product_id integer NOT NULL,
+    jira_product_key character varying NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: jira_product_configs_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.jira_product_configs_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: jira_product_configs_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.jira_product_configs_id_seq OWNED BY public.jira_product_configs.id;
+
+
+--
+-- Name: jira_project_configs; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.jira_project_configs (
+    id bigint NOT NULL,
+    project_id integer NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    fix_version_name character varying NOT NULL,
+    jira_product_config_id integer NOT NULL
+);
+
+
+--
+-- Name: jira_project_configs_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.jira_project_configs_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: jira_project_configs_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.jira_project_configs_id_seq OWNED BY public.jira_project_configs.id;
+
+
+--
 -- Name: plans; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -673,6 +786,40 @@ CREATE SEQUENCE public.plans_id_seq
 --
 
 ALTER SEQUENCE public.plans_id_seq OWNED BY public.plans.id;
+
+
+--
+-- Name: portfolio_units; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.portfolio_units (
+    id bigint NOT NULL,
+    product_id integer NOT NULL,
+    parent_id integer,
+    name character varying NOT NULL,
+    portfolio_unit_type integer NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: portfolio_units_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.portfolio_units_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: portfolio_units_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.portfolio_units_id_seq OWNED BY public.portfolio_units.id;
 
 
 --
@@ -851,39 +998,6 @@ ALTER SEQUENCE public.project_consolidations_id_seq OWNED BY public.project_cons
 
 
 --
--- Name: project_jira_configs; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.project_jira_configs (
-    id bigint NOT NULL,
-    project_id integer NOT NULL,
-    jira_project_key character varying NOT NULL,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
-    fix_version_name character varying
-);
-
-
---
--- Name: project_jira_configs_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.project_jira_configs_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: project_jira_configs_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.project_jira_configs_id_seq OWNED BY public.project_jira_configs.id;
-
-
---
 -- Name: project_risk_alerts; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1018,7 +1132,8 @@ CREATE TABLE public.slack_configurations (
     updated_at timestamp without time zone NOT NULL,
     info_type integer DEFAULT 0 NOT NULL,
     weekday_to_notify integer DEFAULT 0 NOT NULL,
-    notification_minute integer DEFAULT 0 NOT NULL
+    notification_minute integer DEFAULT 0 NOT NULL,
+    active boolean DEFAULT true
 );
 
 
@@ -1455,10 +1570,38 @@ ALTER TABLE ONLY public.jira_custom_field_mappings ALTER COLUMN id SET DEFAULT n
 
 
 --
+-- Name: jira_portfolio_unit_configs id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.jira_portfolio_unit_configs ALTER COLUMN id SET DEFAULT nextval('public.jira_portfolio_unit_configs_id_seq'::regclass);
+
+
+--
+-- Name: jira_product_configs id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.jira_product_configs ALTER COLUMN id SET DEFAULT nextval('public.jira_product_configs_id_seq'::regclass);
+
+
+--
+-- Name: jira_project_configs id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.jira_project_configs ALTER COLUMN id SET DEFAULT nextval('public.jira_project_configs_id_seq'::regclass);
+
+
+--
 -- Name: plans id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.plans ALTER COLUMN id SET DEFAULT nextval('public.plans_id_seq'::regclass);
+
+
+--
+-- Name: portfolio_units id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.portfolio_units ALTER COLUMN id SET DEFAULT nextval('public.portfolio_units_id_seq'::regclass);
 
 
 --
@@ -1487,13 +1630,6 @@ ALTER TABLE ONLY public.project_change_deadline_histories ALTER COLUMN id SET DE
 --
 
 ALTER TABLE ONLY public.project_consolidations ALTER COLUMN id SET DEFAULT nextval('public.project_consolidations_id_seq'::regclass);
-
-
---
--- Name: project_jira_configs id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.project_jira_configs ALTER COLUMN id SET DEFAULT nextval('public.project_jira_configs_id_seq'::regclass);
 
 
 --
@@ -1717,11 +1853,43 @@ ALTER TABLE ONLY public.jira_custom_field_mappings
 
 
 --
+-- Name: jira_portfolio_unit_configs jira_portfolio_unit_configs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.jira_portfolio_unit_configs
+    ADD CONSTRAINT jira_portfolio_unit_configs_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: jira_product_configs jira_product_configs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.jira_product_configs
+    ADD CONSTRAINT jira_product_configs_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: jira_project_configs jira_project_configs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.jira_project_configs
+    ADD CONSTRAINT jira_project_configs_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: plans plans_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.plans
     ADD CONSTRAINT plans_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: portfolio_units portfolio_units_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.portfolio_units
+    ADD CONSTRAINT portfolio_units_pkey PRIMARY KEY (id);
 
 
 --
@@ -1754,14 +1922,6 @@ ALTER TABLE ONLY public.project_change_deadline_histories
 
 ALTER TABLE ONLY public.project_consolidations
     ADD CONSTRAINT project_consolidations_pkey PRIMARY KEY (id);
-
-
---
--- Name: project_jira_configs project_jira_configs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.project_jira_configs
-    ADD CONSTRAINT project_jira_configs_pkey PRIMARY KEY (id);
 
 
 --
@@ -2107,6 +2267,83 @@ CREATE INDEX index_jira_custom_field_mappings_on_jira_account_id ON public.jira_
 
 
 --
+-- Name: index_jira_portfolio_unit_configs_on_portfolio_unit_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_jira_portfolio_unit_configs_on_portfolio_unit_id ON public.jira_portfolio_unit_configs USING btree (portfolio_unit_id);
+
+
+--
+-- Name: index_jira_product_configs_on_company_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_jira_product_configs_on_company_id ON public.jira_product_configs USING btree (company_id);
+
+
+--
+-- Name: index_jira_product_configs_on_company_id_and_jira_product_key; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_jira_product_configs_on_company_id_and_jira_product_key ON public.jira_product_configs USING btree (company_id, jira_product_key);
+
+
+--
+-- Name: index_jira_product_configs_on_product_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_jira_product_configs_on_product_id ON public.jira_product_configs USING btree (product_id);
+
+
+--
+-- Name: index_jira_project_configs_on_project_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_jira_project_configs_on_project_id ON public.jira_project_configs USING btree (project_id);
+
+
+--
+-- Name: index_jira_project_configs_on_project_id_and_fix_version_name; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_jira_project_configs_on_project_id_and_fix_version_name ON public.jira_project_configs USING btree (project_id, fix_version_name);
+
+
+--
+-- Name: index_portfolio_units_on_name; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_portfolio_units_on_name ON public.portfolio_units USING btree (name);
+
+
+--
+-- Name: index_portfolio_units_on_name_and_product_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_portfolio_units_on_name_and_product_id ON public.portfolio_units USING btree (name, product_id);
+
+
+--
+-- Name: index_portfolio_units_on_parent_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_portfolio_units_on_parent_id ON public.portfolio_units USING btree (parent_id);
+
+
+--
+-- Name: index_portfolio_units_on_portfolio_unit_type; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_portfolio_units_on_portfolio_unit_type ON public.portfolio_units USING btree (portfolio_unit_type);
+
+
+--
+-- Name: index_portfolio_units_on_product_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_portfolio_units_on_product_id ON public.portfolio_units USING btree (product_id);
+
+
+--
 -- Name: index_products_on_customer_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2153,20 +2390,6 @@ CREATE INDEX index_project_change_deadline_histories_on_project_id ON public.pro
 --
 
 CREATE INDEX index_project_change_deadline_histories_on_user_id ON public.project_change_deadline_histories USING btree (user_id);
-
-
---
--- Name: index_project_jira_configs_on_jira_project_key; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_project_jira_configs_on_jira_project_key ON public.project_jira_configs USING btree (jira_project_key);
-
-
---
--- Name: index_project_jira_configs_on_project_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_project_jira_configs_on_project_id ON public.project_jira_configs USING btree (project_id);
 
 
 --
@@ -2371,6 +2594,14 @@ CREATE OR REPLACE VIEW public.demands_lists AS
 
 
 --
+-- Name: jira_project_configs fk_rails_039cb02c5a; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.jira_project_configs
+    ADD CONSTRAINT fk_rails_039cb02c5a FOREIGN KEY (jira_product_config_id) REFERENCES public.jira_product_configs(id);
+
+
+--
 -- Name: project_consolidations fk_rails_09ca62cd76; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2392,6 +2623,14 @@ ALTER TABLE ONLY public.demands_team_members
 
 ALTER TABLE ONLY public.demand_blocks
     ADD CONSTRAINT fk_rails_0c8fa8d3a7 FOREIGN KEY (demand_id) REFERENCES public.demands(id);
+
+
+--
+-- Name: portfolio_units fk_rails_111d0b277b; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.portfolio_units
+    ADD CONSTRAINT fk_rails_111d0b277b FOREIGN KEY (product_id) REFERENCES public.products(id);
 
 
 --
@@ -2475,6 +2714,14 @@ ALTER TABLE ONLY public.demand_transitions
 
 
 --
+-- Name: portfolio_units fk_rails_2af43d471c; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.portfolio_units
+    ADD CONSTRAINT fk_rails_2af43d471c FOREIGN KEY (parent_id) REFERENCES public.portfolio_units(id);
+
+
+--
 -- Name: demand_data_processments fk_rails_337e2008a8; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2488,6 +2735,22 @@ ALTER TABLE ONLY public.demand_data_processments
 
 ALTER TABLE ONLY public.integration_errors
     ADD CONSTRAINT fk_rails_3505c123da FOREIGN KEY (company_id) REFERENCES public.companies(id);
+
+
+--
+-- Name: jira_portfolio_unit_configs fk_rails_36a483c30d; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.jira_portfolio_unit_configs
+    ADD CONSTRAINT fk_rails_36a483c30d FOREIGN KEY (portfolio_unit_id) REFERENCES public.portfolio_units(id);
+
+
+--
+-- Name: jira_product_configs fk_rails_3b969f1e33; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.jira_product_configs
+    ADD CONSTRAINT fk_rails_3b969f1e33 FOREIGN KEY (company_id) REFERENCES public.companies(id);
 
 
 --
@@ -2539,10 +2802,10 @@ ALTER TABLE ONLY public.financial_informations
 
 
 --
--- Name: project_jira_configs fk_rails_5de62c9ca2; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: jira_project_configs fk_rails_5de62c9ca2; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.project_jira_configs
+ALTER TABLE ONLY public.jira_project_configs
     ADD CONSTRAINT fk_rails_5de62c9ca2 FOREIGN KEY (project_id) REFERENCES public.projects(id);
 
 
@@ -2659,6 +2922,14 @@ ALTER TABLE ONLY public.project_risk_alerts
 
 
 --
+-- Name: jira_product_configs fk_rails_c55dd7e748; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.jira_product_configs
+    ADD CONSTRAINT fk_rails_c55dd7e748 FOREIGN KEY (product_id) REFERENCES public.products(id);
+
+
+--
 -- Name: demand_transitions fk_rails_c63024fc81; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2672,6 +2943,14 @@ ALTER TABLE ONLY public.demand_transitions
 
 ALTER TABLE ONLY public.products_projects
     ADD CONSTRAINT fk_rails_c648f2cd3e FOREIGN KEY (product_id) REFERENCES public.products(id);
+
+
+--
+-- Name: demands fk_rails_c9b5eaaa7f; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.demands
+    ADD CONSTRAINT fk_rails_c9b5eaaa7f FOREIGN KEY (portfolio_unit_id) REFERENCES public.portfolio_units(id);
 
 
 --
@@ -2880,6 +3159,10 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190613192708'),
 ('20190614134919'),
 ('20190621150621'),
-('20190621191628');
+('20190621191628'),
+('20190624141355'),
+('20190701193809'),
+('20190701194645'),
+('20190704193534');
 
 

@@ -4,6 +4,7 @@
 #
 # Table name: slack_configurations
 #
+#  active              :boolean          default(TRUE)
 #  created_at          :datetime         not null
 #  id                  :bigint(8)        not null, primary key
 #  info_type           :integer          default("average_demand_cost"), not null, indexed => [team_id]

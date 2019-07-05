@@ -2,6 +2,11 @@
 
 class CreateJiraProductConfigs < ActiveRecord::Migration[5.2]
   def up
+    execute("UPDATE project_jira_configs SET jira_project_key = jira_project_key || '_' || id WHERE jira_project_key = 'BIO';")
+    execute("UPDATE project_jira_configs SET jira_project_key = jira_project_key || '_' || id WHERE jira_project_key = 'SMART';")
+    execute("UPDATE project_jira_configs SET jira_project_key = jira_project_key || '_' || id WHERE jira_project_key = 'AP';")
+    execute("UPDATE project_jira_configs SET jira_project_key = jira_project_key || '_' || id WHERE jira_project_key = 'SFC';")
+
     create_table :jira_product_configs do |t|
       t.integer :company_id, null: false, index: true
       t.integer :product_id, null: false, index: true
@@ -17,7 +22,7 @@ class CreateJiraProductConfigs < ActiveRecord::Migration[5.2]
 
     execute <<-SQL
       INSERT INTO jira_product_configs(company_id, product_id, jira_product_key, created_at, updated_at)
-      SELECT proj.company_id, prod_proj.product_id, proj_jira.jira_project_key, proj_jira.created_at, proj_jira.updated_at
+      SELECT DISTINCT ON (prod_proj.product_id, proj_jira.jira_project_key) proj.company_id, prod_proj.product_id, proj_jira.jira_project_key, proj_jira.created_at, proj_jira.updated_at
       FROM products_projects prod_proj, project_jira_configs proj_jira, projects proj
       WHERE prod_proj.project_id = proj_jira.project_id
       AND proj.id = prod_proj.project_id
@@ -33,10 +38,12 @@ class CreateJiraProductConfigs < ActiveRecord::Migration[5.2]
     add_foreign_key :jira_project_configs, :jira_product_configs, column: :jira_product_config_id
 
     Jira::JiraProjectConfig.all.each do |project_config|
-      project_config.update(jira_product_config_id: Jira::JiraProductConfig.where(jira_product_key: project_config.jira_project_key).first.id)
+      product_config = Jira::JiraProductConfig.where(jira_product_key: project_config.jira_project_key)&.first&.id
+      project_config.update(jira_product_config_id: product_config) if product_config.present?
     end
 
-    # execute('UPDATE jira_project_configs proj_config SET jira_product_config_id = subquery.id FROM (SELECT id, jira_product_key FROM jira_product_configs) AS subquery WHERE proj_config.jira_project_key = subquery.jira_product_key')
+    execute('UPDATE jira_project_configs proj_config SET jira_product_config_id = subquery.id FROM (SELECT id, jira_product_key FROM jira_product_configs) AS subquery WHERE proj_config.jira_project_key = subquery.jira_product_key')
+    execute('DELETE FROM jira_project_configs WHERE jira_product_config_id IS NULL;')
 
     change_table :jira_project_configs, bulk: true do |t|
       t.remove :jira_project_key

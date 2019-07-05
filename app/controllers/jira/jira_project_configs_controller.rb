@@ -7,6 +7,7 @@ module Jira
 
     def new
       @jira_project_config = JiraProjectConfig.new
+      @jira_product_configs = @project.products.map(&:jira_product_configs).flatten
       respond_to { |format| format.js }
     end
 
@@ -26,7 +27,7 @@ module Jira
     private
 
     def jira_project_config_params
-      params.require(:jira_jira_project_config).permit(:fix_version_name)
+      params.require(:jira_jira_project_config).permit(:jira_product_config_id, :fix_version_name)
     end
 
     def assign_project

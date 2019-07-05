@@ -4,97 +4,60 @@ require 'addressable/uri'
 
 class WebhookIntegrationsController < ApplicationController
   skip_before_action :verify_authenticity_token
+
   before_action :check_request
+  before_action :assigns_data
+  before_action :valid_jira_call?
 
   def jira_webhook
-    data = JSON.parse(request.body.read)
+    Jira::ProcessJiraIssueJob.perform_later(jira_account, project, Jira::JiraReader.instance.read_demand_key(jira_issue_attrs), nil, nil, nil)
 
-    jira_account_domain = extract_account_domain(project_url(data))
-    jira_account = define_jira_account(jira_account_domain)
-    return head :ok if jira_account.blank?
-
-    project = define_project(data, jira_account)
-    return head :ok if project.blank?
-
-    Jira::ProcessJiraIssueJob.perform_later(jira_account, project, read_demand_key(data), nil, nil, nil)
     head :ok
   end
 
   def jira_delete_card_webhook
-    data = JSON.parse(request.body.read)
-
-    jira_account_domain = extract_account_domain(project_url(data))
-    jira_account = define_jira_account(jira_account_domain)
-    return head :ok if jira_account.blank?
-
-    project = define_project(data, jira_account)
-    return head :ok if project.blank?
-
-    demand = Demand.find_by(project: project, demand_id: read_demand_key(data))
+    demand = Demand.find_by(project: project, demand_id: Jira::JiraReader.instance.read_demand_key(jira_issue_attrs))
     demand.discard if demand.present?
+
     head :ok
   end
 
   private
 
-  def read_demand_key(data)
-    data['issue']['key']
+  def valid_jira_call?
+    return head :ok if jira_issue_attrs.blank?
+    return head :ok if jira_account.blank?
+
+    head :ok if project.blank?
+  end
+
+  def project
+    @project ||= Jira::JiraReader.instance.read_project(jira_issue_attrs, jira_account)
+  end
+
+  def assigns_data
+    @data = JSON.parse(request.body.read)
+  end
+
+  def jira_issue_attrs
+    @jira_issue_attrs ||= @data['issue']['attrs']
   end
 
   def check_request
     head :bad_request unless valid_content_type?
   end
 
-  def define_jira_account(jira_account_domain)
-    Jira::JiraAccount.find_by(customer_domain: jira_account_domain)
-  end
+  def jira_account
+    return @jira_account if @jira_account.present?
+    return if jira_issue_attrs.blank?
 
-  def define_project(data, jira_account)
-    labels = read_project_name(data)
+    uri_host = Addressable::URI.parse(Jira::JiraReader.instance.read_project_url(jira_issue_attrs)).host
+    jira_account_domain = ActionDispatch::Http::URL.extract_subdomain(uri_host, 1)
 
-    jira_config = nil
-
-    company = Jira::JiraAccount.where(customer_domain: jira_account.customer_domain)&.first&.company
-    return nil if company.blank?
-
-    labels.each do |label|
-      jira_config = company.jira_project_configs.find_by(jira_project_key: project_jira_key(data), fix_version_name: label)
-      break if jira_config.present?
-    end
-
-    return if jira_config.blank?
-
-    jira_config.project
-  end
-
-  def read_project_name(data)
-    labels = data['issue']['fields']['labels'] || []
-    fix_version_name = fix_version_name(data)
-
-    labels << fix_version_name
-    labels.reject(&:empty?)
+    @jira_account = Jira::JiraAccount.find_by(customer_domain: jira_account_domain)
   end
 
   def valid_content_type?
     request.headers['Content-Type'].include?('application/json')
-  end
-
-  def fix_version_name(data)
-    return '' if data['issue']['fields']['fixVersions'].blank?
-
-    data['issue']['fields']['fixVersions'][0]['name']
-  end
-
-  def project_jira_key(data)
-    data['issue']['fields']['project']['key']
-  end
-
-  def project_url(data)
-    data['issue']['fields']['project']['self']
-  end
-
-  def extract_account_domain(project_url)
-    uri_host = Addressable::URI.parse(project_url).host
-    ActionDispatch::Http::URL.extract_subdomain(uri_host, 1)
   end
 end

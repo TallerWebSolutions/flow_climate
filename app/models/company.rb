@@ -23,15 +23,18 @@ class Company < ApplicationRecord
   friendly_id :abbreviation, use: :slugged
 
   has_and_belongs_to_many :users
+
   has_many :financial_informations, dependent: :restrict_with_error
   has_many :customers, dependent: :restrict_with_error
   has_many :products, through: :customers
   has_many :projects, counter_cache: true, dependent: :restrict_with_error
   has_many :jira_project_configs, through: :projects
+  has_many :jira_product_configs, through: :products
   has_many :demands, through: :projects
   has_many :teams, dependent: :restrict_with_error
   has_many :stages, dependent: :restrict_with_error
   has_many :jira_accounts, class_name: 'Jira::JiraAccount', dependent: :destroy, inverse_of: :company
+
   has_one :company_settings, dependent: :destroy
 
   validates :name, :abbreviation, presence: true

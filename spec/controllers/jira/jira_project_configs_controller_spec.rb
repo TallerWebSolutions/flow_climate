@@ -27,7 +27,10 @@ RSpec.describe Jira::JiraProjectConfigsController, type: :controller do
 
     let(:company) { Fabricate :company, users: [user] }
     let(:customer) { Fabricate :customer, company: company }
-    let!(:project) { Fabricate :project, customers: [customer] }
+    let!(:product) { Fabricate :product, customer: customer }
+
+    let!(:project) { Fabricate :project, customers: [customer], products: [product] }
+    let!(:jira_product_config) { Fabricate :jira_product_config, product: product }
 
     describe 'GET #new' do
       context 'valid parameters' do
@@ -36,6 +39,7 @@ RSpec.describe Jira::JiraProjectConfigsController, type: :controller do
         it 'instantiates a new project jira config and renders the template' do
           expect(response).to render_template 'jira/jira_project_configs/new'
           expect(assigns(:jira_project_config)).to be_a_new Jira::JiraProjectConfig
+          expect(assigns(:jira_product_configs)).to eq [jira_product_config]
         end
       end
 
@@ -64,11 +68,14 @@ RSpec.describe Jira::JiraProjectConfigsController, type: :controller do
 
     describe 'POST #create' do
       context 'passing valid parameters' do
-        before { post :create, params: { company_id: company, project_id: project, jira_jira_project_config: { jira_project_key: 'bar', fix_version_name: 'xpto' } }, xhr: true }
+        let(:jira_product_config) { Fabricate :jira_product_config, product: product, company: product.company }
+
+        before { post :create, params: { company_id: company, project_id: project, jira_jira_project_config: { fix_version_name: 'xpto', jira_product_config_id: jira_product_config.id } }, xhr: true }
 
         it 'creates the new project jira config' do
           created_config = Jira::JiraProjectConfig.last
           expect(created_config.fix_version_name).to eq 'xpto'
+          expect(created_config.jira_product_config).to eq jira_product_config
 
           expect(response).to render_template 'jira/jira_project_configs/create'
         end
@@ -81,7 +88,7 @@ RSpec.describe Jira::JiraProjectConfigsController, type: :controller do
           it 'does not create the project jira config' do
             expect(Jira::JiraProjectConfig.last).to be_nil
             expect(response).to render_template 'jira/jira_project_configs/create'
-            expect(assigns(:jira_project_config).errors.full_messages).to eq ['Fix Version ou Label no Jira não pode ficar em branco']
+            expect(assigns(:jira_project_config).errors.full_messages).to eq ['Fix Version ou Label no Jira não pode ficar em branco', 'Config do Produto não pode ficar em branco']
           end
         end
 

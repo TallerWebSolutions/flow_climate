@@ -419,6 +419,7 @@ pt-BR:
             impact: Impacto
             source: Origem
       jira/jira_project_config:
+        jira_product_config: Config do Produto
         jira_project_key: Chave do Projeto no Jira
         active: Ativo?
         project: Projeto

@@ -33,4 +33,5 @@ class Product < ApplicationRecord
   validates :name, uniqueness: { scope: :customer, message: I18n.t('product.name.uniqueness') }
 
   delegate :name, to: :customer, prefix: true
+  delegate :company, to: :customer, prefix: false
 end
