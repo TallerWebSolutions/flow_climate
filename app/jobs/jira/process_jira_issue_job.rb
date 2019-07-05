@@ -8,7 +8,7 @@ module Jira
 
       return if jira_issue_with_transitions.attrs['key'].blank?
 
-      Jira::JiraIssueAdapter.instance.process_issue!(jira_account, project, jira_issue_with_transitions)
+      Jira::JiraIssueAdapter.instance.process_issue!(jira_account, Jira::JiraReader.instance.read_product(jira_issue_with_transitions.attrs, jira_account), project, jira_issue_with_transitions)
 
       finished_time = Time.zone.now
 

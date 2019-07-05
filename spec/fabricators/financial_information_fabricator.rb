@@ -3,6 +3,6 @@
 Fabricator(:financial_information) do
   company
   finances_date { Time.zone.today }
-  income_total { Faker::Number.decimal }
-  expenses_total { Faker::Number.decimal }
+  income_total { Faker::Number.number }
+  expenses_total { Faker::Number.number }
 end

@@ -77,6 +77,11 @@ RSpec.describe DemandsList, type: :model do
     end
   end
 
+  context 'delegations' do
+    it { is_expected.to delegate_method(:product_name).to(:demand) }
+    it { is_expected.to delegate_method(:portfolio_unit_name).to(:demand) }
+  end
+
   describe '#leadtime_in_days' do
     context 'having leadtime' do
       subject(:demands_list) { DemandsList.first }

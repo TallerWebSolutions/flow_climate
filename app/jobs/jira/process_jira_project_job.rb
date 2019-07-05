@@ -11,7 +11,7 @@ module Jira
         next if jira_issue.attrs['key'].blank?
 
         jira_issue_with_transitions = Jira::JiraApiService.new(jira_account.username, jira_account.api_token, jira_account.base_uri).request_issue_details(jira_issue.attrs['key'])
-        Jira::JiraIssueAdapter.instance.process_issue!(jira_account, jira_project_config.project, jira_issue_with_transitions)
+        Jira::JiraIssueAdapter.instance.process_issue!(jira_account, jira_project_config.jira_product_config.product, jira_project_config.project, jira_issue_with_transitions)
       end
 
       finished_time = Time.zone.now

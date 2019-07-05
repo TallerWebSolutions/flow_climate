@@ -9,20 +9,6 @@ SET xmloption = content;
 SET client_min_messages = warning;
 SET row_security = off;
 
---
--- Name: pg_stat_statements; Type: EXTENSION; Schema: -; Owner: -
---
-
-CREATE EXTENSION IF NOT EXISTS pg_stat_statements WITH SCHEMA public;
-
-
---
--- Name: EXTENSION pg_stat_statements; Type: COMMENT; Schema: -; Owner: -
---
-
-COMMENT ON EXTENSION pg_stat_statements IS 'track execution statistics of all SQL statements executed';
-
-
 SET default_tablespace = '';
 
 SET default_with_oids = false;
@@ -358,7 +344,8 @@ CREATE TABLE public.demands (
     parent_id integer,
     slug character varying,
     company_id integer NOT NULL,
-    portfolio_unit_id integer
+    portfolio_unit_id integer,
+    product_id integer
 );
 
 
@@ -2850,6 +2837,14 @@ ALTER TABLE ONLY public.stage_project_configs
 
 
 --
+-- Name: demands fk_rails_73cc77780a; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.demands
+    ADD CONSTRAINT fk_rails_73cc77780a FOREIGN KEY (product_id) REFERENCES public.products(id);
+
+
+--
 -- Name: user_project_roles fk_rails_7402a518b4; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -3163,6 +3158,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190624141355'),
 ('20190701193809'),
 ('20190701194645'),
-('20190704193534');
+('20190704193534'),
+('20190705190605');
 
 

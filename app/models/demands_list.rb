@@ -50,6 +50,7 @@ class DemandsList < ApplicationRecord
   scope :to_dates, ->(start_date, end_date) { where('(demands_lists.end_date IS NULL AND demands_lists.created_date BETWEEN :start_date AND :end_date) OR (demands_lists.end_date BETWEEN :start_date AND :end_date)', start_date: start_date.beginning_of_day, end_date: end_date.end_of_day) }
 
   delegate :portfolio_unit_name, to: :demand, allow_nil: true
+  delegate :product_name, to: :demand, allow_nil: true
 
   def leadtime_in_days
     return 0.0 if leadtime.blank?

@@ -8,7 +8,7 @@ Fabricator(:project) do
   status 0
   project_type 0
   initial_scope 30
-  value { Faker::Number.decimal }
+  value { Faker::Number.number }
   qty_hours { Faker::Number.number(3) }
-  hour_value { Faker::Number.decimal(2) }
+  hour_value { Faker::Number.number(2) }
 end
