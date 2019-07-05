@@ -10,13 +10,16 @@ RSpec.describe Demand, type: :model do
   context 'associations' do
     it { is_expected.to belong_to :company }
     it { is_expected.to belong_to :project }
+    it { is_expected.to belong_to :product }
     it { is_expected.to belong_to :portfolio_unit }
     it { is_expected.to belong_to(:parent).class_name('Demand').inverse_of(:children) }
+
     it { is_expected.to have_many(:children).class_name('Demand').inverse_of(:parent).dependent(:destroy) }
     it { is_expected.to have_many(:demand_transitions).dependent(:destroy) }
     it { is_expected.to have_many(:demand_blocks).dependent(:destroy) }
     it { is_expected.to have_many(:demand_comments).dependent(:destroy) }
     it { is_expected.to have_many(:stages).through(:demand_transitions) }
+
     it { is_expected.to have_and_belong_to_many(:team_members).dependent(:destroy) }
   end
 
@@ -178,6 +181,8 @@ RSpec.describe Demand, type: :model do
 
   context 'delegations' do
     it { is_expected.to delegate_method(:name).to(:project).with_prefix }
+    it { is_expected.to delegate_method(:name).to(:product).with_prefix }
+    it { is_expected.to delegate_method(:name).to(:portfolio_unit).with_prefix }
   end
 
   context 'soft deletion' do

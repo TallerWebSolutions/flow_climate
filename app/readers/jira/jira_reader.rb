@@ -22,6 +22,14 @@ module Jira
       jira_config.project
     end
 
+    def read_product(jira_issue, jira_account)
+      jira_product_key = read_product_jira_key(jira_issue)
+      jira_product = jira_account.company.jira_product_configs.where(jira_product_key: jira_product_key).first
+      return if jira_product.blank?
+
+      jira_product.product
+    end
+
     def read_demand_key(jira_issue)
       jira_issue['key']
     end
@@ -53,7 +61,38 @@ module Jira
       end
     end
 
+    def read_portfolio_unit(jira_issue, product)
+      jira_history_fields_hash = build_history_fields_hash(jira_issue)
+
+      portfolio_units = product.portfolio_units
+
+      portfolio_unit = nil
+      portfolio_units.each do |unit|
+        portfolio_unit_value = jira_history_fields_hash[unit.jira_portfolio_unit_config.jira_field_name]
+        next if portfolio_unit_value.blank?
+
+        portfolio_unit = portfolio_units.find_by(name: portfolio_unit_value)
+        break
+      end
+
+      portfolio_unit
+    end
+
     private
+
+    def build_history_fields_hash(jira_issue)
+      jira_history_fields_hash = {}
+
+      jira_issue['histories'].each do |history|
+        next if history['items'].blank?
+
+        history['items'].each do |item|
+          jira_history_fields_hash[item['field']] = item['toString']
+        end
+      end
+
+      jira_history_fields_hash
+    end
 
     def read_project_name(jira_issue)
       labels = jira_issue['fields']['labels'] || []
@@ -69,8 +108,8 @@ module Jira
       jira_issue['fields']['fixVersions'][0]['name']
     end
 
-    def read_product_jira_key(data)
-      data['fields']['project']['key']
+    def read_product_jira_key(jira_issue)
+      jira_issue['fields']['project']['key']
     end
 
     def read_class_of_service_custom_field_id(jira_account, jira_issue)

@@ -24,6 +24,7 @@
 #  manual_effort     :boolean          default(FALSE)
 #  parent_id         :integer
 #  portfolio_unit_id :integer
+#  product_id        :integer
 #  project_id        :integer          not null
 #  slug              :string           indexed
 #  total_queue_time  :integer          default(0)
@@ -41,6 +42,7 @@
 #
 #  fk_rails_19bdd8aa1e  (project_id => projects.id)
 #  fk_rails_1abfdc9ca0  (parent_id => demands.id)
+#  fk_rails_73cc77780a  (product_id => products.id)
 #  fk_rails_c9b5eaaa7f  (portfolio_unit_id => portfolio_units.id)
 #
 
@@ -56,6 +58,7 @@ class Demand < ApplicationRecord
 
   belongs_to :company
   belongs_to :project
+  belongs_to :product
   belongs_to :portfolio_unit
 
   belongs_to :parent, class_name: 'Demand', foreign_key: :parent_id, inverse_of: :children
@@ -88,6 +91,7 @@ class Demand < ApplicationRecord
   scope :dates_inconsistent_to_project, ->(project) { kept.story.where('demands.commitment_date < :start_date OR demands.end_date > :end_date', start_date: project.start_date, end_date: project.end_date.end_of_day) }
 
   delegate :name, to: :project, prefix: true
+  delegate :name, to: :product, prefix: true, allow_nil: true
   delegate :name, to: :portfolio_unit, prefix: true, allow_nil: true
 
   before_save :compute_and_update_automatic_fields
