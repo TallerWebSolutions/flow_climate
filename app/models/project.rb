@@ -332,6 +332,11 @@ class Project < ApplicationRecord
     project_consolidations.order(:consolidation_date).last
   end
 
+  def failure_load
+    total_demands = demands.kept
+    Stats::StatisticsService.instance.compute_percentage(total_demands.bug.count, (total_demands.count - total_demands.bug.count))
+  end
+
   private
 
   def no_pressure_set(date)

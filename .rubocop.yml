@@ -72,6 +72,7 @@ Metrics/AbcSize:
     - 'app/routes/**/*'
     - 'db/migrate/**/*'
     - 'app/controllers/home_controller.rb'
+    - 'app/services/slack/slack_notification_service.rb'
   Max: 18.5
 
 Metrics/ParameterLists:

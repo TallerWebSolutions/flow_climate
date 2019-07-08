@@ -1173,4 +1173,21 @@ RSpec.describe Project, type: :model do
       it { expect(project.consolidations_last_update).to be_nil }
     end
   end
+
+  describe '#failure_load' do
+    let(:project) { Fabricate :project, end_date: 4.weeks.from_now, qty_hours: 2000 }
+    let(:other_project) { Fabricate :project, end_date: 4.weeks.from_now }
+
+    context 'with data' do
+      let!(:first_demand) { Fabricate :demand, project: project, demand_type: :feature, created_date: 2.weeks.ago, end_date: 1.week.ago, effort_downstream: 20, effort_upstream: 30 }
+      let!(:second_demand) { Fabricate :demand, project: project, demand_type: :bug, created_date: 2.weeks.ago, end_date: 1.week.ago, effort_downstream: 40, effort_upstream: 35 }
+      let!(:third_demand) { Fabricate :demand, project: project, demand_type: :bug, created_date: 1.week.ago, end_date: 2.days.ago, effort_downstream: 10, effort_upstream: 78 }
+
+      it { expect(project.failure_load).to eq 66.66666666666666 }
+    end
+
+    context 'with no data' do
+      it { expect(project.failure_load).to eq 0 }
+    end
+  end
 end

@@ -2,7 +2,7 @@
 
 RSpec.describe SlackConfiguration, type: :model do
   context 'enums' do
-    it { is_expected.to define_enum_for(:info_type).with_values(average_demand_cost: 0, current_week_throughput: 1, last_week_delivered_demands_info: 2, demands_wip_info: 3, outdated_demands: 4) }
+    it { is_expected.to define_enum_for(:info_type).with_values(average_demand_cost: 0, current_week_throughput: 1, last_week_delivered_demands_info: 2, demands_wip_info: 3, outdated_demands: 4, failure_load: 5) }
   end
 
   context 'associations' do
