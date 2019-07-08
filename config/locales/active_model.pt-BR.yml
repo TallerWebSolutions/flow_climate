@@ -400,6 +400,7 @@ pt-BR:
             last_week_delivered_demands_info: Infos de Entrega da Última Semana
             demands_wip_info: Demandas em WiP
             outdated_demands: Demandas atrasadas
+            failure_load: Carga de Falha
           weekday_to_notify:
             all_weekdays: Todos
             monday: Segunda
@@ -472,13 +473,15 @@ pt-BR:
       user_plan_active: "You already have a plan to this period."
   slack_configurations:
     notifications:
-      cmd_text: "*%{name}* | Custo Médio por Demanda: *%{cmd_value}* | Última semana: %{last_week_cmd} | Variação: *%{cmd_difference_to_last_week}%* com relação à média das últimas 4 semanas (%{previous_cmd})."
+      cmd_text: "*%{name}* | Custo Médio por Demanda: *%{cmd_value}* | Variação: *%{cmd_difference_to_last_week}%* com relação à média das últimas 4 semanas (%{previous_cmd}) | CMD da últ. semana: *%{last_week_cmd}*."
       th_week_text: "*%{name}* | Throughput na semana: *%{th_current_week} demandas* | Variação: *%{difference_last_week_th_value}%* para a média das últimas 4 semanas (%{four_weeks_th_average})."
       th_last_week_text: "*%{name}* | Throughput: *%{th_last_week} demandas* na semana passada."
       th_last_week_demand_info_text: "*%{demand_id}* %{demand_title} | *Responsáveis:* %{responsibles_names} | *Custo pro Projeto:* %{cost_to_project}"
       qty_demands_in_wip: "*%{team_name}* | Trabalho em progresso: %{in_wip} demanda(s)."
       demands_in_wip_info_text: "*%{demand_id}* %{demand_title} | *Responsáveis:* %{responsibles_names} | *Custo pro Projeto:* %{cost_to_project} | *Etapa atual:* %{current_stage} | *Tempo na Etapa:* %{time_in_current_stage} | *% Fluxo Concluído*: %{percentage_concluded}"
       outdated_demands_info_text: "*%{demand_id}* %{demand_title} | *Etapa atual:* %{current_stage} | *Tempo na Etapa:* %{time_in_current_stage}"
+      failure_load: "*%{team_name}* | Carga de falha do time: *%{failure_load}*."
+      project_failure_load: "*%{team_name}* | *%{project_name}* | Carga de falha do projeto: *%{failure_load}*."
   portfolio_unit:
     validations:
       name: "Você só pode ter um nome de unidade para cada produto."

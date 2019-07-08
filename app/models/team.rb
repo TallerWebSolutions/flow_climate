@@ -52,4 +52,9 @@ class Team < ApplicationRecord
   def lead_time(start_date, end_date, percentile = 80)
     Stats::StatisticsService.instance.percentile(percentile, demands.finished.where('demands.end_date BETWEEN :start_date AND :end_date', start_date: start_date, end_date: end_date).map(&:leadtime))
   end
+
+  def failure_load
+    total_demands = demands.kept
+    Stats::StatisticsService.instance.compute_percentage(total_demands.bug.count, (total_demands.count - total_demands.bug.count))
+  end
 end

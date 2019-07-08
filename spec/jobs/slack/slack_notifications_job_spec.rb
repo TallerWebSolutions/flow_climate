@@ -32,36 +32,25 @@ RSpec.describe Slack::SlackNotificationsJob, type: :active_job do
     let!(:third_slack_config) { Fabricate :slack_configuration, team: team, info_type: :last_week_delivered_demands_info, room_webhook: 'http://foo.com' }
     let!(:fourth_slack_config) { Fabricate :slack_configuration, team: team, info_type: :demands_wip_info, room_webhook: 'http://foo.com' }
     let!(:fifth_slack_config) { Fabricate :slack_configuration, team: team, info_type: :outdated_demands, room_webhook: 'http://foo.com' }
-
-    let!(:first_demand) { Fabricate :demand, project: project, end_date: 1.week.ago, effort_downstream: 100, effort_upstream: 10 }
-    let!(:second_demand) { Fabricate :demand, project: project, end_date: 3.weeks.ago }
-    let!(:third_demand) { Fabricate :demand, project: project, end_date: 2.days.ago }
-    let!(:fourth_demand) { Fabricate :demand, project: project, end_date: 3.weeks.ago }
-    let!(:fifth_demand) { Fabricate :demand, project: project, end_date: Time.zone.now }
-    let!(:sixth_demand) { Fabricate :demand, project: project, end_date: 2.weeks.ago }
-    let!(:seventh_demand) { Fabricate :demand, project: project, end_date: Time.zone.now }
-    let!(:eighth_demand) { Fabricate :demand, project: project, commitment_date: Time.zone.now, end_date: nil, effort_downstream: 200, effort_upstream: 300 }
-
-    let!(:demand_transition) { Fabricate :demand_transition, demand: eighth_demand, stage: stage, last_time_in: 3.days.ago }
+    let!(:sixth_slack_config) { Fabricate :slack_configuration, team: team, info_type: :failure_load, room_webhook: 'http://foo.com' }
 
     context 'with average_demand_cost notification' do
       it 'calls slack notification method' do
-        expect_any_instance_of(Slack::Notifier).to receive(:ping).with("*#{team.name}* | Custo Médio por Demanda: *R$ 833,33* | Última semana: R$ 2.500,00 | Variação: *-61,90%* com relação à média das últimas 4 semanas (R$ 2.187,50).").once
+        expect_any_instance_of(Slack::SlackNotificationService).to receive(:notify_cmd).once
         Slack::SlackNotificationsJob.perform_now(first_slack_config, team)
       end
     end
 
     context 'with current_week_throughput notification' do
       it 'calls slack notification method' do
-        expect_any_instance_of(Slack::Notifier).to receive(:ping).with("*#{team.name}* | Throughput na semana: *3 demandas* | Variação: *200,00%* para a média das últimas 4 semanas (1.0).").once
+        expect_any_instance_of(Slack::SlackNotificationService).to receive(:notify_week_throughput).once
         Slack::SlackNotificationsJob.perform_now(second_slack_config, team)
       end
     end
 
     context 'with last_week_delivered_demands_info notification' do
       it 'calls slack notification method' do
-        expect_any_instance_of(Slack::Notifier).to receive(:ping).with("*#{team.name}* | Throughput: *1 demandas* na semana passada.").once
-        expect_any_instance_of(Slack::Notifier).to receive(:ping).with("*#{first_demand.demand_id}* #{first_demand.demand_title} | *Responsáveis:*  | *Custo pro Projeto:* #{number_to_currency(first_demand.cost_to_project)}").once
+        expect_any_instance_of(Slack::SlackNotificationService).to receive(:notify_last_week_delivered_demands_info).once
 
         Slack::SlackNotificationsJob.perform_now(third_slack_config, team)
       end
@@ -69,8 +58,7 @@ RSpec.describe Slack::SlackNotificationsJob, type: :active_job do
 
     context 'with demands_wip_info notification' do
       it 'calls slack notification method' do
-        expect_any_instance_of(Slack::Notifier).to receive(:ping).with("*#{team.name}* | Trabalho em progresso: 1 demanda(s).").once
-        expect_any_instance_of(Slack::Notifier).to receive(:ping).with("*#{eighth_demand.demand_id}* #{eighth_demand.demand_title} | *Responsáveis:*  | *Custo pro Projeto:* #{number_to_currency(eighth_demand.cost_to_project)} | *Etapa atual:* #{stage.name} | *Tempo na Etapa:* 3 dias | *% Fluxo Concluído*: 100,00%").once
+        expect_any_instance_of(Slack::SlackNotificationService).to receive(:notify_wip_demands).once
 
         Slack::SlackNotificationsJob.perform_now(fourth_slack_config, team)
       end
@@ -78,10 +66,17 @@ RSpec.describe Slack::SlackNotificationsJob, type: :active_job do
 
     context 'with outdated_demands notification' do
       it 'calls slack notification method' do
-        expect_any_instance_of(Slack::Notifier).to receive(:ping).with(I18n.t('slack_configurations.notifications.beyond_expected_title', team_name: team.name, beyond_expected_count: 1)).once
-        expect_any_instance_of(Slack::Notifier).to receive(:ping).with("*#{eighth_demand.demand_id}* #{eighth_demand.demand_title} | *Etapa atual:* #{stage.name} | *Tempo na Etapa:* 3 dias").once
+        expect_any_instance_of(Slack::SlackNotificationService).to receive(:notify_beyond_expected_time_in_stage).once
 
         Slack::SlackNotificationsJob.perform_now(fifth_slack_config, team)
+      end
+    end
+
+    context 'with failure_load notification' do
+      it 'calls slack notification method' do
+        expect_any_instance_of(Slack::SlackNotificationService).to receive(:notify_failure_load).once
+
+        Slack::SlackNotificationsJob.perform_now(sixth_slack_config, team)
       end
     end
   end
