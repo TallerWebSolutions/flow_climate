@@ -384,6 +384,7 @@ pt-BR:
             customer_not_available: Cliente indisponível
       demand_comment:
         demand: Demanda
+        team_member: Comentado por
         comment_date: Data do Comentário
         comment_text: Texto
       slack_configuration:

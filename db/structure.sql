@@ -222,7 +222,8 @@ CREATE TABLE public.demand_comments (
     comment_date timestamp without time zone NOT NULL,
     comment_text character varying NOT NULL,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    team_member_id integer
 );
 
 
@@ -2909,6 +2910,14 @@ ALTER TABLE ONLY public.stage_project_configs
 
 
 --
+-- Name: demand_comments fk_rails_b68ee35cab; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.demand_comments
+    ADD CONSTRAINT fk_rails_b68ee35cab FOREIGN KEY (team_member_id) REFERENCES public.team_members(id);
+
+
+--
 -- Name: project_risk_alerts fk_rails_b8b501e2eb; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -3159,6 +3168,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190701193809'),
 ('20190701194645'),
 ('20190704193534'),
-('20190705190605');
+('20190705190605'),
+('20190708211541');
 
 
