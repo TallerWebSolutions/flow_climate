@@ -65,6 +65,12 @@ RSpec.describe DemandsController, type: :controller do
 
       it { expect(response).to have_http_status :unauthorized }
     end
+
+    describe 'DELETE #destroy_physically' do
+      before { delete :destroy_physically, params: { company_id: 'foo', id: 'sbbrubles' }, xhr: true }
+
+      it { expect(response).to have_http_status :unauthorized }
+    end
   end
 
   context 'authenticated as gold' do
@@ -190,7 +196,7 @@ RSpec.describe DemandsController, type: :controller do
       context 'passing valid IDs' do
         it 'assigns the instance variable and renders the template' do
           delete :destroy, params: { company_id: company, id: demand, demands_ids: Demand.all.map(&:id) }, xhr: true
-          expect(response).to render_template 'demands/search_demands.js.erb'
+          expect(response).to render_template 'demands/search_demands'
           expect(demand.reload.discarded_at).not_to be_nil
           expect(assigns(:grouped_delivered_demands)).to be_nil
           expect(assigns(:demands).map(&:id)).to eq [first_demand.id, second_demand.id, third_demand.id, fourth_demand.id, fifth_demand.id, sixth_demand.id, seventh_demand.id, eigth_demand.id]
@@ -519,7 +525,7 @@ RSpec.describe DemandsController, type: :controller do
 
         it 'builds the operation report and respond the JS render the template' do
           get :demands_in_projects, params: { company_id: company, projects_ids: [first_project, second_project].map(&:id).to_csv, period: :all }, xhr: true
-          expect(response).to render_template 'demands/demands_tab.js.erb'
+          expect(response).to render_template 'demands/demands_tab'
           expect(assigns(:demands).map(&:id)).to match_array [first_demand.id, second_demand.id]
           expect(assigns(:discarded_demands).map(&:id)).to eq [third_demand.id]
           expect(assigns(:demands_count_per_week)[first_project.start_date.end_of_week][:arrived_in_week]).to match_array [second_demand, first_demand]
@@ -584,7 +590,7 @@ RSpec.describe DemandsController, type: :controller do
               it 'finds the correct demands and responds with the correct JS' do
                 get :search_demands, params: { company_id: company, projects_ids: Project.all.map(&:id).join(','), start_date: start_date, end_date: end_date, grouping: 'no_grouping', period: :all }, xhr: true
 
-                expect(response).to render_template 'demands/search_demands.js.erb'
+                expect(response).to render_template 'demands/search_demands'
                 expect(assigns(:demands).map(&:id)).to eq [first_demand.id, fifth_demand.id, second_demand.id, sixth_demand.id, eigth_demand.id, fourth_demand.id, seventh_demand.id, third_demand.id]
                 expect(assigns(:grouped_delivered_demands)).to be_nil
                 expect(assigns(:confidence_95_leadtime)).to be_within(0.3).of(4.3)
@@ -599,7 +605,7 @@ RSpec.describe DemandsController, type: :controller do
               it 'finds the correct demands and responds with the correct JS' do
                 get :search_demands, params: { company_id: company, projects_ids: Project.all.map(&:id).join(','), start_date: start_date, end_date: end_date, grouping: 'grouped_by_month', period: :all }, xhr: true
 
-                expect(response).to render_template 'demands/search_demands.js.erb'
+                expect(response).to render_template 'demands/search_demands'
                 expect(assigns(:demands).map(&:id)).to eq [first_demand.id, fifth_demand.id, second_demand.id, sixth_demand.id, eigth_demand.id, fourth_demand.id, seventh_demand.id, third_demand.id]
                 expect(assigns(:grouped_delivered_demands)[[2019, 1]].map(&:id)).to eq [eigth_demand.id, fourth_demand.id, seventh_demand.id, third_demand.id]
                 expect(assigns(:confidence_95_leadtime)).to be_within(0.3).of(4.3)
@@ -614,7 +620,7 @@ RSpec.describe DemandsController, type: :controller do
               it 'finds the correct demands and responds with the correct JS' do
                 get :search_demands, params: { company_id: company, projects_ids: Project.all.map(&:id).join(','), start_date: start_date, end_date: end_date, grouping: 'no_grouping', flow_status: 'not_started', period: :all }, xhr: true
 
-                expect(response).to render_template 'demands/search_demands.js.erb'
+                expect(response).to render_template 'demands/search_demands'
                 expect(assigns(:demands).map(&:id)).to eq [first_demand.id, fifth_demand.id]
                 expect(assigns(:grouped_delivered_demands)).to be_nil
                 expect(assigns(:confidence_95_leadtime)).to eq 0
@@ -625,7 +631,7 @@ RSpec.describe DemandsController, type: :controller do
               it 'finds the correct demands and responds with the correct JS' do
                 get :search_demands, params: { company_id: company, projects_ids: Project.all.map(&:id).join(','), start_date: start_date, end_date: end_date, grouping: 'grouped_by_month', flow_status: 'not_started', period: :all }, xhr: true
 
-                expect(response).to render_template 'demands/search_demands.js.erb'
+                expect(response).to render_template 'demands/search_demands'
                 expect(assigns(:demands).map(&:id)).to eq [first_demand.id, fifth_demand.id]
                 expect(assigns(:grouped_delivered_demands)).to eq({})
                 expect(assigns(:confidence_95_leadtime)).to eq 0
@@ -638,7 +644,7 @@ RSpec.describe DemandsController, type: :controller do
               it 'finds the correct demands and responds with the correct JS' do
                 get :search_demands, params: { company_id: company, projects_ids: Project.all.map(&:id).join(','), start_date: start_date, end_date: end_date, grouping: 'no_grouping', flow_status: 'wip', period: :all }, xhr: true
 
-                expect(response).to render_template 'demands/search_demands.js.erb'
+                expect(response).to render_template 'demands/search_demands'
                 expect(assigns(:demands).map(&:id)).to match_array [second_demand.id, sixth_demand.id]
                 expect(assigns(:grouped_delivered_demands)).to be_nil
                 expect(assigns(:confidence_95_leadtime)).to eq 0
@@ -649,7 +655,7 @@ RSpec.describe DemandsController, type: :controller do
               it 'finds the correct demands and responds with the correct JS' do
                 get :search_demands, params: { company_id: company, projects_ids: Project.all.map(&:id).join(','), start_date: start_date, end_date: end_date, grouping: 'grouped_by_month', flow_status: 'wip', period: :all }, xhr: true
 
-                expect(response).to render_template 'demands/search_demands.js.erb'
+                expect(response).to render_template 'demands/search_demands'
                 expect(assigns(:demands).map(&:id)).to match_array [second_demand.id, sixth_demand.id]
                 expect(assigns(:grouped_delivered_demands)).to eq({})
                 expect(assigns(:confidence_95_leadtime)).to eq 0
@@ -660,7 +666,7 @@ RSpec.describe DemandsController, type: :controller do
               it 'finds the correct demands and responds with the correct JS' do
                 get :search_demands, params: { company_id: company, projects_ids: Project.all.map(&:id).join(','), start_date: start_date, end_date: end_date, grouping: 'grouped_by_customer', flow_status: 'wip', period: :all }, xhr: true
 
-                expect(response).to render_template 'demands/search_demands.js.erb'
+                expect(response).to render_template 'demands/search_demands'
                 expect(assigns(:demands).map(&:id)).to match_array [second_demand.id, sixth_demand.id]
                 expect(assigns(:grouped_delivered_demands)).to be_nil
                 expect(assigns(:confidence_95_leadtime)).to eq 0
@@ -673,7 +679,7 @@ RSpec.describe DemandsController, type: :controller do
               it 'finds the correct demands and responds with the correct JS' do
                 get :search_demands, params: { company_id: company, projects_ids: Project.all.map(&:id).join(','), start_date: start_date, end_date: end_date, grouping: 'no_grouping', flow_status: 'delivered', period: :all }, xhr: true
 
-                expect(response).to render_template 'demands/search_demands.js.erb'
+                expect(response).to render_template 'demands/search_demands'
                 expect(assigns(:demands).map(&:id)).to eq [eigth_demand.id, fourth_demand.id, seventh_demand.id, third_demand.id]
                 expect(assigns(:grouped_delivered_demands)).to be_nil
                 expect(assigns(:confidence_95_leadtime)).to be_within(0.00001).of(4.34583)
@@ -686,7 +692,7 @@ RSpec.describe DemandsController, type: :controller do
               it 'finds the correct demands and responds with the correct JS' do
                 get :search_demands, params: { company_id: company, projects_ids: Project.all.map(&:id).join(','), start_date: start_date, end_date: end_date, grouping: 'grouped_by_month', flow_status: 'delivered', period: :all }, xhr: true
 
-                expect(response).to render_template 'demands/search_demands.js.erb'
+                expect(response).to render_template 'demands/search_demands'
                 expect(assigns(:demands).map(&:id)).to eq [eigth_demand.id, fourth_demand.id, seventh_demand.id, third_demand.id]
                 expect(assigns(:grouped_delivered_demands)[[2019, 1]].map(&:id)).to eq [eigth_demand.id, fourth_demand.id, seventh_demand.id, third_demand.id]
                 expect(assigns(:confidence_95_leadtime)).to be_within(0.00001).of(4.34583)
@@ -699,7 +705,7 @@ RSpec.describe DemandsController, type: :controller do
               context 'feature' do
                 it 'returns the feature demands' do
                   get :search_demands, params: { company_id: company, projects_ids: Project.all.map(&:id).join(','), start_date: start_date, end_date: end_date, demand_type: 'feature', period: :all }, xhr: true
-                  expect(response).to render_template 'demands/search_demands.js.erb'
+                  expect(response).to render_template 'demands/search_demands'
                   expect(assigns(:demands).map(&:id)).to eq [first_demand.id, sixth_demand.id, third_demand.id]
                   expect(assigns(:confidence_95_leadtime)).to be_within(0.5).of(2.6)
                   expect(assigns(:confidence_80_leadtime)).to be_within(0.5).of(3.0)
@@ -710,7 +716,7 @@ RSpec.describe DemandsController, type: :controller do
               context 'bug' do
                 it 'returns the bugs' do
                   get :search_demands, params: { company_id: company, projects_ids: Project.all.map(&:id).join(','), start_date: start_date, end_date: end_date, demand_type: 'bug', period: :all }, xhr: true
-                  expect(response).to render_template 'demands/search_demands.js.erb'
+                  expect(response).to render_template 'demands/search_demands'
                   expect(assigns(:demands).map(&:id)).to eq [second_demand.id]
                   expect(assigns(:confidence_95_leadtime)).to eq 0
                   expect(assigns(:confidence_80_leadtime)).to eq 0
@@ -721,7 +727,7 @@ RSpec.describe DemandsController, type: :controller do
               context 'chore' do
                 it 'returns the chores' do
                   get :search_demands, params: { company_id: company, projects_ids: Project.all.map(&:id).join(','), start_date: start_date, end_date: end_date, demand_type: 'chore', period: :all }, xhr: true
-                  expect(response).to render_template 'demands/search_demands.js.erb'
+                  expect(response).to render_template 'demands/search_demands'
                   expect(assigns(:demands).map(&:id)).to eq [fourth_demand.id]
                   expect(assigns(:confidence_95_leadtime)).to be_within(0.00001).of(4.58333)
                   expect(assigns(:confidence_80_leadtime)).to be_within(0.00001).of(4.58333)
@@ -732,7 +738,7 @@ RSpec.describe DemandsController, type: :controller do
               context 'performance improvement' do
                 it 'returns the performances demands' do
                   get :search_demands, params: { company_id: company, projects_ids: Project.all.map(&:id).join(','), start_date: start_date, end_date: end_date, demand_type: 'performance_improvement', period: :all }, xhr: true
-                  expect(response).to render_template 'demands/search_demands.js.erb'
+                  expect(response).to render_template 'demands/search_demands'
                   expect(assigns(:demands).map(&:id)).to eq [seventh_demand.id]
                   expect(assigns(:confidence_95_leadtime)).to eq 1.0
                   expect(assigns(:confidence_80_leadtime)).to eq 1.0
@@ -743,7 +749,7 @@ RSpec.describe DemandsController, type: :controller do
               context 'ui' do
                 it 'returns the ui demands' do
                   get :search_demands, params: { company_id: company, projects_ids: Project.all.map(&:id).join(','), start_date: start_date, end_date: end_date, demand_type: 'ui', period: :all }, xhr: true
-                  expect(response).to render_template 'demands/search_demands.js.erb'
+                  expect(response).to render_template 'demands/search_demands'
                   expect(assigns(:demands).map(&:id)).to eq [fifth_demand.id]
                   expect(assigns(:confidence_95_leadtime)).to eq 0
                   expect(assigns(:confidence_80_leadtime)).to eq 0
@@ -754,7 +760,7 @@ RSpec.describe DemandsController, type: :controller do
               context 'wireframe' do
                 it 'returns the wireframe demands' do
                   get :search_demands, params: { company_id: company, projects_ids: Project.all.map(&:id).join(','), start_date: start_date, end_date: end_date, demand_type: 'wireframe', period: :all }, xhr: true
-                  expect(response).to render_template 'demands/search_demands.js.erb'
+                  expect(response).to render_template 'demands/search_demands'
                   expect(assigns(:demands).map(&:id)).to eq [eigth_demand.id]
                   expect(assigns(:confidence_95_leadtime)).to be_within(0.00001).of(0.58333)
                   expect(assigns(:confidence_80_leadtime)).to be_within(0.00001).of(0.58333)
@@ -767,7 +773,7 @@ RSpec.describe DemandsController, type: :controller do
               context 'standard' do
                 it 'returns the standard demands' do
                   get :search_demands, params: { company_id: company, projects_ids: Project.all.map(&:id).join(','), start_date: start_date, end_date: end_date, demand_class_of_service: 'standard', period: :all }, xhr: true
-                  expect(response).to render_template 'demands/search_demands.js.erb'
+                  expect(response).to render_template 'demands/search_demands'
                   expect(assigns(:demands).map(&:id)).to eq [first_demand.id, sixth_demand.id, fourth_demand.id]
                   expect(assigns(:confidence_95_leadtime)).to be_within(0.3).of(4.5)
                   expect(assigns(:confidence_80_leadtime)).to be_within(0.3).of(4.8)
@@ -778,7 +784,7 @@ RSpec.describe DemandsController, type: :controller do
               context 'fixed date' do
                 it 'returns the fixed dates' do
                   get :search_demands, params: { company_id: company, projects_ids: Project.all.map(&:id).join(','), start_date: start_date, end_date: end_date, demand_class_of_service: 'fixed_date', period: :all }, xhr: true
-                  expect(response).to render_template 'demands/search_demands.js.erb'
+                  expect(response).to render_template 'demands/search_demands'
                   expect(assigns(:demands).map(&:id)).to eq [fifth_demand.id, eigth_demand.id]
                   expect(assigns(:confidence_95_leadtime)).to be_within(0.5).of(0.5)
                   expect(assigns(:confidence_80_leadtime)).to be_within(0.5).of(0.4)
@@ -789,7 +795,7 @@ RSpec.describe DemandsController, type: :controller do
               context 'intangible' do
                 it 'returns the intagibles' do
                   get :search_demands, params: { company_id: company, projects_ids: Project.all.map(&:id).join(','), start_date: start_date, end_date: end_date, demand_class_of_service: 'intangible', period: :all }, xhr: true
-                  expect(response).to render_template 'demands/search_demands.js.erb'
+                  expect(response).to render_template 'demands/search_demands'
                   expect(assigns(:demands).map(&:id)).to eq [third_demand.id]
                   expect(assigns(:confidence_95_leadtime)).to eq 3.0
                   expect(assigns(:confidence_80_leadtime)).to eq 3.0
@@ -800,7 +806,7 @@ RSpec.describe DemandsController, type: :controller do
               context 'expedite' do
                 it 'returns the expeditees' do
                   get :search_demands, params: { company_id: company, projects_ids: Project.all.map(&:id).join(','), start_date: start_date, end_date: end_date, demand_class_of_service: 'expedite', period: :all }, xhr: true
-                  expect(response).to render_template 'demands/search_demands.js.erb'
+                  expect(response).to render_template 'demands/search_demands'
                   expect(assigns(:demands).map(&:id)).to eq [second_demand.id, seventh_demand.id]
                   expect(assigns(:confidence_95_leadtime)).to eq 1.0
                   expect(assigns(:confidence_80_leadtime)).to eq 1.0
@@ -814,7 +820,7 @@ RSpec.describe DemandsController, type: :controller do
             context 'on demand title' do
               it 'returns the matches' do
                 get :search_demands, params: { company_id: company, projects_ids: Project.all.map(&:id).join(','), start_date: start_date, end_date: end_date, search_text: 'foo', period: :all }, xhr: true
-                expect(response).to render_template 'demands/search_demands.js.erb'
+                expect(response).to render_template 'demands/search_demands'
                 expect(assigns(:demands).map(&:id)).to eq [first_demand.id, second_demand.id, third_demand.id]
                 expect(assigns(:confidence_95_leadtime)).to be_within(0.1).of(3)
                 expect(assigns(:confidence_80_leadtime)).to be_within(0.1).of(3)
@@ -825,7 +831,7 @@ RSpec.describe DemandsController, type: :controller do
             context 'on project name' do
               it 'returns the matches' do
                 get :search_demands, params: { company_id: company, projects_ids: Project.all.map(&:id).join(','), start_date: start_date, end_date: end_date, search_text: 'qqq', period: :all }, xhr: true
-                expect(response).to render_template 'demands/search_demands.js.erb'
+                expect(response).to render_template 'demands/search_demands'
                 expect(assigns(:demands).map(&:id)).to eq [first_demand.id, second_demand.id, fourth_demand.id, third_demand.id]
                 expect(assigns(:confidence_95_leadtime)).to be_within(0.3).of(4.3)
                 expect(assigns(:confidence_80_leadtime)).to be_within(0.3).of(4.3)
@@ -836,7 +842,7 @@ RSpec.describe DemandsController, type: :controller do
             context 'on demand id' do
               it 'returns the matches' do
                 get :search_demands, params: { company_id: company, projects_ids: Project.all.map(&:id).join(','), start_date: start_date, end_date: end_date, search_text: 'hhh', period: :all }, xhr: true
-                expect(response).to render_template 'demands/search_demands.js.erb'
+                expect(response).to render_template 'demands/search_demands'
                 expect(assigns(:demands).map(&:id)).to eq [first_demand.id]
                 expect(assigns(:confidence_95_leadtime)).to eq 0
                 expect(assigns(:confidence_80_leadtime)).to eq 0
@@ -849,7 +855,7 @@ RSpec.describe DemandsController, type: :controller do
         context 'having no data' do
           it 'assigns the instance variable and renders the template' do
             get :search_demands, params: { company_id: company, projects_ids: ['foo'], start_date: start_date, end_date: end_date, not_started: 'true', wip: 'false', delivered: 'false', period: :all }, xhr: true
-            expect(response).to render_template 'demands/search_demands.js.erb'
+            expect(response).to render_template 'demands/search_demands'
             expect(assigns(:confidence_95_leadtime)).to eq 0
             expect(assigns(:confidence_80_leadtime)).to eq 0
             expect(assigns(:confidence_65_leadtime)).to eq 0
@@ -869,6 +875,36 @@ RSpec.describe DemandsController, type: :controller do
           let(:company) { Fabricate :company, users: [] }
 
           before { get :search_demands, params: { company_id: company, id: first_project }, xhr: true }
+
+          it { expect(response).to have_http_status :not_found }
+        end
+      end
+    end
+
+    describe 'DELETE #destroy_physically' do
+      let(:project) { Fabricate :project, customers: [customer], products: [product] }
+
+      let(:demand) { Fabricate :demand, project: project }
+
+      context 'passing valid IDs' do
+        it 'assigns the instance variable and renders the template' do
+          delete :destroy_physically, params: { company_id: company, id: demand }, xhr: true
+          expect(response).to render_template 'demands/destroy_physically'
+          expect(Demand.all.count).to eq 0
+        end
+      end
+
+      context 'passing an invalid ID' do
+        context 'non-existent company' do
+          before { delete :destroy_physically, params: { company_id: 'foo', id: demand }, xhr: true }
+
+          it { expect(response).to have_http_status :not_found }
+        end
+
+        context 'not permitted' do
+          let(:company) { Fabricate :company, users: [] }
+
+          before { delete :destroy_physically, params: { company_id: company, id: demand }, xhr: true }
 
           it { expect(response).to have_http_status :not_found }
         end

@@ -4,8 +4,8 @@ class DemandsController < AuthenticatedController
   before_action :user_gold_check
 
   before_action :assign_company
-  before_action :assign_demand, only: %i[edit update show synchronize_jira destroy]
-  before_action :assign_project, except: %i[demands_csv demands_in_projects search_demands show destroy]
+  before_action :assign_demand, only: %i[edit update show synchronize_jira destroy destroy_physically]
+  before_action :assign_project, except: %i[demands_csv demands_in_projects search_demands show destroy destroy_physically]
   before_action :assign_projects_for_queries, only: %i[demands_in_projects search_demands]
 
   def new
@@ -29,7 +29,7 @@ class DemandsController < AuthenticatedController
     build_initial_dates
     @demands_chart_adapter = Highchart::DemandsChartsAdapter.new(@demands, @start_date, @end_date, params[:grouping_period])
 
-    respond_to { |format| format.js { render 'demands/search_demands.js.erb' } }
+    respond_to { |format| format.js { render 'demands/search_demands' } }
   end
 
   def edit
@@ -87,7 +87,7 @@ class DemandsController < AuthenticatedController
 
     @demands_chart_adapter = Highchart::DemandsChartsAdapter.new(@demands, @start_date, @end_date, 'week')
 
-    respond_to { |format| format.js { render 'demands/demands_tab.js.erb' } }
+    respond_to { |format| format.js { render 'demands/demands_tab' } }
   end
 
   def search_demands
@@ -102,7 +102,13 @@ class DemandsController < AuthenticatedController
 
     @demands_chart_adapter = Highchart::DemandsChartsAdapter.new(@demands, @start_date, @end_date, params[:grouping_period])
 
-    respond_to { |format| format.js { render 'demands/search_demands.js.erb' } }
+    respond_to { |format| format.js { render 'demands/search_demands' } }
+  end
+
+  def destroy_physically
+    flash[:error] = @demand.errors.full_messages.join(',') unless @demand.destroy
+
+    respond_to { |format| format.js { render 'demands/destroy_physically' } }
   end
 
   private

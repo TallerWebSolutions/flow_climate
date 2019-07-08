@@ -147,6 +147,8 @@ Rails.application.routes.draw do
     end
 
     resources :demands, only: [] do
+      delete :destroy_physically, on: :member
+
       collection do
         get 'demands_csv/(:demands_ids)', action: :demands_csv, as: 'demands_csv'
         get :demands_in_projects

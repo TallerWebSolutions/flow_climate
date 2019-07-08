@@ -28,6 +28,7 @@
           <th><%= Demand.human_attribute_name :discarded_at %></th>
           <th><%= t('demands.index.discarded_stage') %></th>
           <th><%= Demand.human_attribute_name :demand_title %></th>
+          <th></th>
         </tr>
       </thead>
       <tbody>
@@ -40,6 +41,11 @@
             <td><%= I18n.l(demand.discarded_at, format: :short) %></td>
             <td><%= demand.current_stage&.name %></td>
             <td><%= demand.demand_title %></td>
+            <td>
+              <%= link_to destroy_physically_company_demand_path(company, demand), method: :delete, data: { confirm: I18n.t('general.destroy.confirm') }, remote: true do %>
+                <i class="fa fa-times"></i>
+              <% end %>
+            </td>
           </tr>
         <% end %>
       </tbody>
