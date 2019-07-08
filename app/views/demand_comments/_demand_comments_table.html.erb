@@ -4,6 +4,7 @@
       <tr>
         <th><%= Project.model_name.human %></th>
         <th><%= DemandComment.human_attribute_name :demand %></th>
+        <th><%= DemandComment.human_attribute_name :team_member %></th>
         <th><%= DemandComment.human_attribute_name :comment_date %></th>
         <th><%= DemandComment.human_attribute_name :comment_text %></th>
       </tr>
@@ -13,6 +14,7 @@
         <tr>
           <td><%= comment.demand.project_name %></td>
           <td><%= comment.demand.demand_id %></td>
+          <td><%= comment.team_member&.name %></td>
           <td><%= I18n.l(comment.comment_date, format: :short) %></td>
           <td><%= comment.comment_text %></td>
         </tr>

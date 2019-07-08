@@ -36,7 +36,7 @@ class DemandsController < AuthenticatedController
     demands = Demand.where(id: params[:demands_ids])
     @demands_ids = demands.map(&:id)
 
-    respond_to { |format| format.js }
+    respond_to { |format| format.js { render 'demands/edit' } }
   end
 
   def update
@@ -44,7 +44,7 @@ class DemandsController < AuthenticatedController
     demands = Demand.where(id: params[:demands_ids])
     @demands_ids = demands.map(&:id)
     @updated_demand = DemandsList.find(@demand.id)
-    render 'demands/update'
+    respond_to { |format| format.js { render 'demands/update' } }
   end
 
   def show

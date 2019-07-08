@@ -73,7 +73,10 @@ module Jira
 
       demand.demand_comments.map(&:destroy)
       comments = jira_issue.attrs['fields']['comment']['comments']
-      comments.each { |comment| DemandComment.create(demand: demand, comment_text: comment['body'], comment_date: comment['created']) }
+      comments.each do |comment|
+        comment_author = TeamMember.find_by(jira_account_user_email: comment['author']['emailAddress'])
+        DemandComment.create(demand: demand, team_member: comment_author, comment_text: comment['body'], comment_date: comment['created'])
+      end
     end
 
     def issue_fields_value(jira_issue, field_name)

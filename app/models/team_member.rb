@@ -27,6 +27,8 @@ class TeamMember < ApplicationRecord
   enum billable_type: { outsourcing: 0, consulting: 1, training: 2, domestic_product: 3 }
 
   belongs_to :team
+  has_many :demand_comments, dependent: :nullify
+
   has_and_belongs_to_many :demands, dependent: :destroy
 
   validates :team, :name, :monthly_payment, :hours_per_month, presence: true

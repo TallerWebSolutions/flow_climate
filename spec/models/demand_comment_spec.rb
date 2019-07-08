@@ -3,6 +3,7 @@
 RSpec.describe DemandComment, type: :model do
   context 'associations' do
     it { is_expected.to belong_to :demand }
+    it { is_expected.to belong_to :team_member }
   end
 
   context 'validations' do
