@@ -27,6 +27,7 @@
 #  product_id        :integer
 #  project_id        :integer          not null
 #  slug              :string           indexed
+#  team_id           :integer          not null
 #  total_queue_time  :integer          default(0)
 #  total_touch_time  :integer          default(0)
 #  updated_at        :datetime         not null
@@ -40,6 +41,7 @@
 #
 # Foreign Keys
 #
+#  fk_rails_095fb2481e  (team_id => teams.id)
 #  fk_rails_19bdd8aa1e  (project_id => projects.id)
 #  fk_rails_1abfdc9ca0  (parent_id => demands.id)
 #  fk_rails_73cc77780a  (product_id => products.id)
@@ -60,6 +62,7 @@ class Demand < ApplicationRecord
   belongs_to :project
   belongs_to :product
   belongs_to :portfolio_unit
+  belongs_to :team
 
   belongs_to :parent, class_name: 'Demand', foreign_key: :parent_id, inverse_of: :children
   has_many :children, class_name: 'Demand', foreign_key: :parent_id, inverse_of: :parent, dependent: :destroy
@@ -68,11 +71,12 @@ class Demand < ApplicationRecord
   has_many :demand_blocks, dependent: :destroy
   has_many :stages, -> { distinct }, through: :demand_transitions
   has_many :demand_comments, dependent: :destroy
+
   has_one :demands_list, inverse_of: :demand, dependent: :restrict_with_error
 
   has_and_belongs_to_many :team_members, dependent: :destroy, counter_cache: :assignees_count
 
-  validates :project, :created_date, :demand_id, :demand_type, :class_of_service, :assignees_count, presence: true
+  validates :project, :created_date, :demand_id, :demand_type, :class_of_service, :assignees_count, :team, presence: true
   validates :demand_id, uniqueness: { scope: :company_id, message: I18n.t('demand.validations.demand_id_unique.message') }
 
   scope :opened_after_date, ->(date) { kept.story.where('created_date >= :date', date: date.beginning_of_day) }

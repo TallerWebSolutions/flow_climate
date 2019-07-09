@@ -7,7 +7,7 @@
     <div class="modal-body">
       <%= form_for demand, url: company_project_demand_url(company, project, demand), remote: true, method: :put, class: 'form' do |f| %>
         <%= hidden_field_tag :demands_ids, demands_ids.join(',') %>
-        <%= render 'demands/form', form: f, demand: demand %>
+        <%= render 'demands/form', company: company, demand: demand, form: f %>
       <% end %>
     </div>
   </div>

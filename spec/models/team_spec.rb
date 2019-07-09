@@ -5,7 +5,7 @@ RSpec.describe Team, type: :model do
     it { is_expected.to belong_to :company }
     it { is_expected.to have_many(:team_members).dependent(:destroy) }
     it { is_expected.to have_many(:projects) }
-    it { is_expected.to have_many(:demands).through(:projects) }
+    it { is_expected.to have_many(:demands).dependent(:restrict_with_error) }
     it { is_expected.to have_and_belong_to_many(:stages) }
     it { is_expected.to have_many(:slack_configurations).dependent(:destroy) }
   end
@@ -87,9 +87,9 @@ RSpec.describe Team, type: :model do
     let(:other_project) { Fabricate :project, team: team, end_date: 4.weeks.from_now }
     let(:other_customer_project) { Fabricate :project, team: other_team, end_date: 4.weeks.from_now }
 
-    let!(:first_demand) { Fabricate :demand, project: project, created_date: 2.weeks.ago, end_date: 1.week.ago, demand_type: :bug, effort_downstream: 20, effort_upstream: 30 }
-    let!(:second_demand) { Fabricate :demand, project: project, created_date: 2.weeks.ago, end_date: 1.week.ago, effort_downstream: 40, effort_upstream: 35 }
-    let!(:third_demand) { Fabricate :demand, project: project, created_date: 1.week.ago, end_date: 2.days.ago, effort_downstream: 10, effort_upstream: 78 }
+    let!(:first_demand) { Fabricate :demand, team: team, project: project, created_date: 2.weeks.ago, end_date: 1.week.ago, demand_type: :bug, effort_downstream: 20, effort_upstream: 30 }
+    let!(:second_demand) { Fabricate :demand, team: team, project: project, created_date: 2.weeks.ago, end_date: 1.week.ago, effort_downstream: 40, effort_upstream: 35 }
+    let!(:third_demand) { Fabricate :demand, team: team, project: project, created_date: 1.week.ago, end_date: 2.days.ago, effort_downstream: 10, effort_upstream: 78 }
   end
 
   describe '#last_week_scope' do
@@ -183,9 +183,9 @@ RSpec.describe Team, type: :model do
     let(:other_project) { Fabricate :project, team: team, end_date: 4.weeks.from_now }
 
     context 'with data' do
-      let!(:first_demand) { Fabricate :demand, project: project, commitment_date: 2.weeks.ago, end_date: 1.week.ago, demand_type: :bug, effort_downstream: 20, effort_upstream: 30 }
-      let!(:second_demand) { Fabricate :demand, project: project, commitment_date: 2.weeks.ago, end_date: 1.week.ago, effort_downstream: 40, effort_upstream: 35 }
-      let!(:third_demand) { Fabricate :demand, project: project, commitment_date: 1.week.ago, end_date: 2.days.ago, effort_downstream: 10, effort_upstream: 78 }
+      let!(:first_demand) { Fabricate :demand, team: team, project: project, commitment_date: 2.weeks.ago, end_date: 1.week.ago, demand_type: :bug, effort_downstream: 20, effort_upstream: 30 }
+      let!(:second_demand) { Fabricate :demand, team: team, project: project, commitment_date: 2.weeks.ago, end_date: 1.week.ago, effort_downstream: 40, effort_upstream: 35 }
+      let!(:third_demand) { Fabricate :demand, team: team, project: project, commitment_date: 1.week.ago, end_date: 2.days.ago, effort_downstream: 10, effort_upstream: 78 }
 
       it { expect(team.lead_time(4.weeks.ago, Time.zone.now)).to be_within(0.1).of 604_800.0 }
       it { expect(team.lead_time(4.weeks.ago, Time.zone.now, 40)).to be_within(0.1).of 570_240.0 }
@@ -203,9 +203,9 @@ RSpec.describe Team, type: :model do
     let(:other_project) { Fabricate :project, team: team, end_date: 4.weeks.from_now }
 
     context 'with data' do
-      let!(:first_demand) { Fabricate :demand, project: project, demand_type: :feature, created_date: 2.weeks.ago, end_date: 1.week.ago, effort_downstream: 20, effort_upstream: 30 }
-      let!(:second_demand) { Fabricate :demand, project: project, demand_type: :bug, created_date: 2.weeks.ago, end_date: 1.week.ago, effort_downstream: 40, effort_upstream: 35 }
-      let!(:third_demand) { Fabricate :demand, project: other_project, demand_type: :bug, created_date: 1.week.ago, end_date: 2.days.ago, effort_downstream: 10, effort_upstream: 78 }
+      let!(:first_demand) { Fabricate :demand, team: team, project: project, demand_type: :feature, created_date: 2.weeks.ago, end_date: 1.week.ago, effort_downstream: 20, effort_upstream: 30 }
+      let!(:second_demand) { Fabricate :demand, team: team, project: project, demand_type: :bug, created_date: 2.weeks.ago, end_date: 1.week.ago, effort_downstream: 40, effort_upstream: 35 }
+      let!(:third_demand) { Fabricate :demand, team: team, project: other_project, demand_type: :bug, created_date: 1.week.ago, end_date: 2.days.ago, effort_downstream: 10, effort_upstream: 78 }
 
       it { expect(team.failure_load).to eq 66.66666666666666 }
     end

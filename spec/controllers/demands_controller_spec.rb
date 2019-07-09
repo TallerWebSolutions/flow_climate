@@ -126,7 +126,7 @@ RSpec.describe DemandsController, type: :controller do
         let(:date_to_demand) { 1.day.ago.change(usec: 0) }
 
         it 'creates the new demand and redirects' do
-          post :create, params: { company_id: company, project_id: project, demand: { demand_id: 'xpto', demand_type: 'bug', manual_effort: true, class_of_service: 'expedite', assignees_count: 3, effort_upstream: 5, effort_downstream: 2, created_date: date_to_demand, commitment_date: date_to_demand, end_date: date_to_demand } }
+          post :create, params: { company_id: company, project_id: project, demand: { team_id: team, demand_id: 'xpto', demand_type: 'bug', manual_effort: true, class_of_service: 'expedite', assignees_count: 3, effort_upstream: 5, effort_downstream: 2, created_date: date_to_demand, commitment_date: date_to_demand, end_date: date_to_demand } }
 
           expect(assigns(:company)).to eq company
           expect(assigns(:project)).to eq project
@@ -153,7 +153,7 @@ RSpec.describe DemandsController, type: :controller do
           it 'does not create the demand and re-render the template with the errors' do
             expect(Demand.last).to be_nil
             expect(response).to render_template :new
-            expect(assigns(:demand).errors.full_messages).to eq ['Data de Criação não pode ficar em branco', 'Id da Demanda não pode ficar em branco', 'Tipo da Demanda não pode ficar em branco']
+            expect(assigns(:demand).errors.full_messages).to eq ['Data de Criação não pode ficar em branco', 'Id da Demanda não pode ficar em branco', 'Tipo da Demanda não pode ficar em branco', 'Time não pode ficar em branco']
           end
         end
 

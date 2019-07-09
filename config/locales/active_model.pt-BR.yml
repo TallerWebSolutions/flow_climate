@@ -221,6 +221,7 @@ pt-BR:
         demands: Demandas
         slack_configurations: Configurações do Slack
       demand:
+        team: Time
         demand_id: Id da Demanda
         portfolio_unit: Unidade do Portfolio
         team_members: Responsáveis
