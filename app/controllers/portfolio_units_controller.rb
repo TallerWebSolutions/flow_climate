@@ -35,6 +35,6 @@ class PortfolioUnitsController < AuthenticatedController
   end
 
   def portfolio_unit_params
-    params.require(:portfolio_unit).permit(:portfolio_unit_type, :name, jira_portfolio_unit_config_attributes: [:jira_field_name])
+    params.require(:portfolio_unit).permit(:parent_id, :portfolio_unit_type, :name, jira_portfolio_unit_config_attributes: [:jira_field_name])
   end
 end

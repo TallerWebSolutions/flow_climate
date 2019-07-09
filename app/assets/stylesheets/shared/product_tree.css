@@ -1,0 +1,14 @@
+.product-branch {
+    background-color: #EEFF41;
+    padding: 20px;
+}
+
+.demand-branch {
+    background-color: #ffa11b;
+    padding: 20px;
+}
+
+.product-tree-connector {
+    font-size: x-large;
+    text-align: center;
+}

@@ -1,4 +1,8 @@
 <div class="row">
+  <div class="col-xs-12 stamp">
+    <div class="stamp-title"><%= Demand.human_attribute_name :demand_title %></div>
+    <div class="stamp-content"><%= demand.demand_title %></div>
+  </div>
   <div class="col-xs-3 stamp">
     <div class="stamp-title"><%= Project.model_name.human %></div>
     <div class="stamp-content"><%= demand.project.name %></div>

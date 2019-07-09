@@ -41,4 +41,6 @@ class PortfolioUnit < ApplicationRecord
   validates :product, :portfolio_unit_type, :name, presence: true
 
   validates :name, uniqueness: { scope: :product, message: I18n.t('portfolio_unit.validations.name') }
+
+  delegate :name, to: :parent, allow_nil: true, prefix: true
 end

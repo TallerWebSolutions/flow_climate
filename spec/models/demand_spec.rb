@@ -760,4 +760,20 @@ RSpec.describe Demand, type: :model do
       it { expect(demand.beyond_limit_time?).to be false }
     end
   end
+
+  describe '#product_tree' do
+    let(:product) { Fabricate :product, name: 'Flow Climate' }
+
+    let(:portfolio_unit) { Fabricate :portfolio_unit, product: product, name: 'Statistics' }
+    let(:child_portfolio_unit) { Fabricate :portfolio_unit, product: product, name: 'Lead time', parent: portfolio_unit }
+    let(:grandchild_portfolio_unit) { Fabricate :portfolio_unit, product: product, name: 'Average', parent: child_portfolio_unit }
+
+    let!(:demand) { Fabricate :demand, product: product, portfolio_unit: grandchild_portfolio_unit }
+    let!(:product_demand) { Fabricate :demand, product: product, portfolio_unit: nil }
+    let!(:no_product_demand) { Fabricate :demand, product: nil, portfolio_unit: nil }
+
+    it { expect(demand.product_tree).to eq [product.name, portfolio_unit.name, child_portfolio_unit.name, grandchild_portfolio_unit.name, demand.demand_id] }
+    it { expect(product_demand.product_tree).to eq [product.name, product_demand.demand_id] }
+    it { expect(no_product_demand.product_tree).to eq [no_product_demand.demand_id] }
+  end
 end

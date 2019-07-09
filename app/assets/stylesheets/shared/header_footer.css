@@ -30,3 +30,13 @@ ul.breadcrumb li a {
 ul.breadcrumb li a:hover {
     text-decoration: underline;
 }
+
+.footer {
+    margin-top: 15px;
+    padding: 30px;
+    background-color: #6c62df;
+    color: #FFFF;
+    text-align: center;
+    font-style: italic;
+    font-size: small;
+}

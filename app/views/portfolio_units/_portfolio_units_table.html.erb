@@ -10,6 +10,7 @@
   <table class="table table-striped">
     <thead>
       <tr>
+        <th><%= PortfolioUnit.human_attribute_name :parent %></th>
         <th><%= PortfolioUnit.human_attribute_name :name %></th>
         <th><%= PortfolioUnit.human_attribute_name :portfolio_unit_type %></th>
         <th><%= PortfolioUnit.human_attribute_name :jira_portfolio_unit_config %></th>
@@ -19,6 +20,7 @@
     <tbody>
       <% portfolio_units.each do |unit| %>
         <tr>
+          <td><%= unit.parent_name %></td>
           <td><%= unit.name %></td>
           <td><%= I18n.t("activerecord.attributes.portfolio_unit.enums.portfolio_unit_type.#{unit.portfolio_unit_type}") %></td>
           <td><%= unit.jira_portfolio_unit_config&.jira_field_name %></td>

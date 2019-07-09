@@ -6,6 +6,9 @@ $(document).ready(function() {
     const streamElement = document.getElementById('queue-bar');
     const maxStreamValue = $("#upstream_percentage").val();
     runProgressBar(streamElement, maxStreamValue);
+
+    $('#demand-structure-tab').addClass('active');
+    $('#content-structure').show();
 });
 
 function runProgressBar(element, maxValue) {

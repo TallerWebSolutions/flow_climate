@@ -23,52 +23,86 @@
 </div>
 
 <div class="row">
-  <div class="col-xs-6">
-    <%= "#{I18n.t('projects.charts.queue_touch_time.queue')}: #{time_distance_in_words(@demand.total_queue_time)} (#{number_with_precision(@queue_percentage, precision: 2)}%)" %>
-  </div>
-  <div class="col-xs-6">
-    <%= "#{I18n.t('projects.charts.queue_touch_time.touch')}: #{time_distance_in_words(@demand.total_touch_time)} (#{number_with_precision(@touch_percentage, precision: 2)}%)" %>
-  </div>
-</div>
-<div class="row bottom-spaced-component">
   <div class="col-xs-12">
-    <div id="queue-progress" class="queue-progress">
-      <%= hidden_field_tag :queue_percentage, @queue_percentage %>
-      <div id="queue-bar" class="queue-bar"></div>
+    <div class="tab">
+      <button class="tablinks demand-tab" id="demand-structure-tab" onclick="openTab(event, 'content-structure', 'tablinks', 'tabcontent')"><%= I18n.t('demands.show.structure_tab') %></button>
+      <button class="tablinks demand-tab" onclick="openTab(event, 'content-flow-efficiency', 'tablinks', 'tabcontent')"><%= I18n.t('demands.show.flow_efficiency_tab') %></button>
+      <button class="tablinks demand-tab" onclick="openTab(event, 'content-block', 'tablinks', 'tabcontent')"><%= I18n.t('demands.show.blocks_tab') %></button>
+      <button class="tablinks demand-tab" onclick="openTab(event, 'content-transitions', 'tablinks', 'tabcontent')"><%= I18n.t('demands.show.transitions_tab') %></button>
     </div>
   </div>
 </div>
 
-<div class="row">
-  <div class="col-xs-6">
-    <%= "#{I18n.t('projects.charts.throughput.stage_stream.upstream')}: #{number_with_precision(@demand.working_time_upstream, precision: 2)} h (#{number_with_precision(@upstream_percentage, precision: 2)}%)" %>
-  </div>
-  <div class="col-xs-6">
-    <%= "#{I18n.t('projects.charts.throughput.stage_stream.downstream')}: #{number_with_precision(@demand.working_time_downstream, precision: 2)} h (#{number_with_precision(@downstream_percentage, precision: 2)}%)" %>
+<div id="content-structure" class="tabcontent">
+  <div class="row">
+    <% @demand.product_tree.each do |branch| %>
+      <div class="col-xs-4 col-xs-offset-4 center <%= branch != @demand.product_tree.last ? 'product-branch' : 'demand-branch' %>">
+        <h4><%= branch %></h4>
+      </div>
+
+      <% if branch != @demand.product_tree.last %>
+        <div class="col-xs-4 col-xs-offset-4 product-tree-connector">
+          <i class="fas fa-arrow-down"></i>
+        </div>
+      <% end %>
+    <% end %>
   </div>
 </div>
 
-<div class="row">
-  <div class="col-xs-12">
-    <div id="stream-progress" class="general-progress">
-      <%= hidden_field_tag :upstream_percentage, @upstream_percentage %>
-      <div id="stream-bar" class="general-bar"></div>
+<div id="content-flow-efficiency" class="tabcontent">
+  <div class="row">
+    <div class="col-xs-6">
+      <%= "#{I18n.t('projects.charts.queue_touch_time.queue')}: #{time_distance_in_words(@demand.total_queue_time)} (#{number_with_precision(@queue_percentage, precision: 2)}%)" %>
+    </div>
+    <div class="col-xs-6">
+      <%= "#{I18n.t('projects.charts.queue_touch_time.touch')}: #{time_distance_in_words(@demand.total_touch_time)} (#{number_with_precision(@touch_percentage, precision: 2)}%)" %>
+    </div>
+  </div>
+
+
+  <div class="row bottom-spaced-component">
+    <div class="col-xs-12">
+      <div id="queue-progress" class="queue-progress">
+        <%= hidden_field_tag :queue_percentage, @queue_percentage %>
+        <div id="queue-bar" class="queue-bar"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-xs-6">
+      <%= "#{I18n.t('projects.charts.throughput.stage_stream.upstream')}: #{number_with_precision(@demand.working_time_upstream, precision: 2)} h (#{number_with_precision(@upstream_percentage, precision: 2)}%)" %>
+    </div>
+    <div class="col-xs-6">
+      <%= "#{I18n.t('projects.charts.throughput.stage_stream.downstream')}: #{number_with_precision(@demand.working_time_downstream, precision: 2)} h (#{number_with_precision(@downstream_percentage, precision: 2)}%)" %>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-xs-12">
+      <div id="stream-progress" class="general-progress">
+        <%= hidden_field_tag :upstream_percentage, @upstream_percentage %>
+        <div id="stream-bar" class="general-bar"></div>
+      </div>
     </div>
   </div>
 </div>
 
-<%= render 'demand_blocks/demand_blocks_data', demand_blocks_list: @demand_blocks %>
-
-<div class="row">
-  <div class="col-xs-12">
-    <h3><%= DemandComment.model_name.human %></h3>
+<div id="content-block" class="tabcontent">
+  <%= render 'demand_blocks/demand_blocks_data', demand_blocks_list: @demand_blocks %>
+  <div class="row">
+    <div class="col-xs-12">
+      <h3><%= DemandComment.model_name.human %></h3>
+    </div>
   </div>
+  <%= render 'demand_comments/demand_comments_table', demand_comments_list: @demand_comments %>
 </div>
-<%= render 'demand_comments/demand_comments_table', demand_comments_list: @demand_comments %>
 
-<%= render 'demand_transitions/demand_transitions_table', demand_transitions_list: @demand_transitions, demand: @demand %>
-
+<div id="content-transitions" class="tabcontent">
+  <%= render 'demand_transitions/demand_transitions_table', demand_transitions_list: @demand_transitions, demand: @demand %>
+</div>
 
 <% content_for :javascript do %>
+  <%= javascript_include_tag 'components/components' %>
   <%= javascript_include_tag 'demands/show' %>
 <% end %>
