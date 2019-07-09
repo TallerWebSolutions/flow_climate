@@ -37,6 +37,7 @@ RSpec.describe Jira::JiraIssueAdapter, type: :service do
           expect(Demand.last.project).to eq first_project
           expect(Demand.last.assignees_count).to eq 2
           expect(Demand.last.team_members).to match_array [team_member, other_team_member]
+          expect(Demand.last.team).to eq team
           expect(Demand.last.demand_title).to eq 'foo of bar'
           expect(Demand.last.downstream_demand?).to be false
           expect(Demand.last).to be_feature

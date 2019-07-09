@@ -346,7 +346,8 @@ CREATE TABLE public.demands (
     slug character varying,
     company_id integer NOT NULL,
     portfolio_unit_id integer,
-    product_id integer
+    product_id integer,
+    team_id integer NOT NULL
 );
 
 
@@ -1073,7 +1074,7 @@ CREATE TABLE public.projects (
     updated_at timestamp without time zone NOT NULL,
     nickname character varying,
     percentage_effort_to_bugs integer DEFAULT 0 NOT NULL,
-    team_id integer,
+    team_id integer NOT NULL,
     max_work_in_progress integer DEFAULT 0 NOT NULL,
     company_id integer NOT NULL
 );
@@ -2590,6 +2591,14 @@ ALTER TABLE ONLY public.jira_project_configs
 
 
 --
+-- Name: demands fk_rails_095fb2481e; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.demands
+    ADD CONSTRAINT fk_rails_095fb2481e FOREIGN KEY (team_id) REFERENCES public.teams(id);
+
+
+--
 -- Name: project_consolidations fk_rails_09ca62cd76; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -3169,6 +3178,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190701194645'),
 ('20190704193534'),
 ('20190705190605'),
-('20190708211541');
+('20190708211541'),
+('20190709144816');
 
 

@@ -12,7 +12,7 @@
 <%= form_for [@company, @project, @demand] do |f| %>
   <div class="row bottom-spaced-component">
     <div class="col-xs-12">
-      <%= render 'demands/form', form: f, demand: @demand %>
+      <%= render 'demands/form', company: @company, form: f, demand: @demand %>
     </div>
   </div>
 <% end %>

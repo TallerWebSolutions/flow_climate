@@ -18,7 +18,7 @@
 #  qty_hours                 :decimal(, )
 #  start_date                :date             not null
 #  status                    :integer          not null
-#  team_id                   :integer
+#  team_id                   :integer          not null
 #  updated_at                :datetime         not null
 #  value                     :decimal(, )
 #
@@ -57,7 +57,7 @@ class Project < ApplicationRecord
   has_many :user_project_roles, dependent: :destroy
   has_many :users, through: :user_project_roles
 
-  validates :company, :qty_hours, :project_type, :name, :status, :start_date, :end_date, :status, :initial_scope, :percentage_effort_to_bugs, :max_work_in_progress, presence: true
+  validates :company, :team, :qty_hours, :project_type, :name, :status, :start_date, :end_date, :status, :initial_scope, :percentage_effort_to_bugs, :max_work_in_progress, presence: true
   validates :name, uniqueness: { scope: :company, message: I18n.t('project.name.uniqueness') }
   validate :hour_value_project_value?
 

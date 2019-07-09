@@ -13,6 +13,7 @@ RSpec.describe Demand, type: :model do
     it { is_expected.to belong_to :product }
     it { is_expected.to belong_to :portfolio_unit }
     it { is_expected.to belong_to(:parent).class_name('Demand').inverse_of(:children) }
+    it { is_expected.to belong_to :team }
 
     it { is_expected.to have_many(:children).class_name('Demand').inverse_of(:parent).dependent(:destroy) }
     it { is_expected.to have_many(:demand_transitions).dependent(:destroy) }
@@ -26,6 +27,7 @@ RSpec.describe Demand, type: :model do
   context 'validations' do
     context 'simple ones' do
       it { is_expected.to validate_presence_of :project }
+      it { is_expected.to validate_presence_of :team }
       it { is_expected.to validate_presence_of :demand_id }
       it { is_expected.to validate_presence_of :created_date }
       it { is_expected.to validate_presence_of :demand_type }

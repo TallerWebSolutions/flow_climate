@@ -29,7 +29,7 @@ class Team < ApplicationRecord
 
   has_many :team_members, dependent: :destroy
   has_many :projects, dependent: :restrict_with_error
-  has_many :demands, -> { distinct }, through: :projects
+  has_many :demands, dependent: :restrict_with_error
   has_many :slack_configurations, dependent: :destroy
 
   validates :company, :name, :max_work_in_progress, presence: true
