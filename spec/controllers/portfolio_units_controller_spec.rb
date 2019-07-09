@@ -87,10 +87,11 @@ RSpec.describe PortfolioUnitsController, type: :controller do
         let(:product) { Fabricate :product, customer: customer }
 
         it 'creates the portfolio unit and renders the template' do
-          post :create, params: { company_id: company, product_id: product, portfolio_unit: { name: 'bla', portfolio_unit_type: :product_module, jira_portfolio_unit_config_attributes: { jira_field_name: 'foo' } } }, xhr: true
+          post :create, params: { company_id: company, product_id: product, portfolio_unit: { parent_id: portfolio_unit.id, name: 'bla', portfolio_unit_type: :product_module, jira_portfolio_unit_config_attributes: { jira_field_name: 'foo' } } }, xhr: true
           created_unit = PortfolioUnit.last
           expect(created_unit.name).to eq 'bla'
           expect(created_unit.product_module?).to be true
+          expect(created_unit.parent).to eq portfolio_unit
 
           created_jira_config = Jira::JiraPortfolioUnitConfig.last
           expect(created_jira_config.jira_field_name).to eq 'foo'

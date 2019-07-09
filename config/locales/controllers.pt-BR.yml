@@ -534,6 +534,10 @@ pt-BR:
       progress_bars:
         streams: "Streams do Fluxo"
       sync_jira: "Sincronizar Demanda"
+      flow_efficiency_tab: "Eficiência de Fluxo"
+      blocks_tab: "Bloqueios"
+      transitions_tab: "Transições"
+      structure_tab: "Estrutura"
     sync:
       enqueued: "Sua solicitação foi colocada na fila. Será processada em breve."
       done: "Sua sincronização foi realizada."

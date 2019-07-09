@@ -499,6 +499,10 @@ en:
       progress_bars:
         streams: "Flow Streams Occupation"
       sync_jira: "Sync Demand"
+      flow_efficiency_tab: "Flow Efficiency"
+      blocks_tab: "Blocks"
+      transitions_tab: "Transitions"
+      structure_tab: "Structure"
     sync:
       enqueued: "Your request was enqueued. It will be processed soon."
       done: "The sync is done."
