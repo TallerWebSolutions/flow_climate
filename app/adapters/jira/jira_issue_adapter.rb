@@ -12,8 +12,6 @@ module Jira
       project_in_jira = Jira::JiraReader.instance.read_project(jira_issue.attrs, jira_account) || project
 
       update_demand!(demand, jira_account, jira_issue, project_in_jira, product_in_jira)
-
-      demand
     end
 
     private
@@ -24,7 +22,11 @@ module Jira
                     class_of_service: Jira::JiraReader.instance.read_class_of_service(jira_account, jira_issue.attrs), demand_title: issue_fields_value(jira_issue, 'summary'),
                     url: build_jira_url(jira_account, demand.demand_id), commitment_date: nil, discarded_at: nil)
 
-      read_demand_details(demand, jira_account, jira_issue)
+      return demand unless demand.valid?
+
+      demand = read_demand_details(demand, jira_account, jira_issue)
+
+      demand
     end
 
     def read_demand_details(demand, jira_account, jira_issue)
@@ -35,6 +37,8 @@ module Jira
 
       read_transitions!(demand, jira_issue.changelog)
       demand.update(portfolio_unit: Jira::JiraReader.instance.read_portfolio_unit(jira_issue.changelog, demand.product)) if demand.product.present?
+
+      demand
     end
 
     def read_blocks(demand, jira_issue)
