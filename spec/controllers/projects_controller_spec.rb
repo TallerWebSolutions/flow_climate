@@ -903,5 +903,43 @@ RSpec.describe ProjectsController, type: :controller do
         end
       end
     end
+
+    describe 'GET #closing_dashboard' do
+      let(:company) { Fabricate :company, users: [user] }
+      let(:customer) { Fabricate :customer, company: company }
+      let!(:project) { Fabricate :project, company: company }
+
+      context 'passing valid parameters' do
+        it 'assigns the instance variables and renders the template' do
+          get :closing_dashboard, params: { company_id: company, id: project }, xhr: true
+          expect(response).to render_template 'projects/closing_info'
+          expect(assigns(:project)).to eq project
+        end
+      end
+
+      context 'passing an invalid' do
+        context 'non-existent project' do
+          before { get :closing_dashboard, params: { company_id: company, id: 'foo' }, xhr: true }
+
+          it { expect(response).to have_http_status :not_found }
+        end
+
+        context 'company' do
+          context 'non-existent' do
+            before { get :closing_dashboard, params: { company_id: 'foo', id: project }, xhr: true }
+
+            it { expect(response).to have_http_status :not_found }
+          end
+
+          context 'not permitted' do
+            let(:company) { Fabricate :company, users: [] }
+
+            before { get :closing_dashboard, params: { company_id: company, id: project }, xhr: true }
+
+            it { expect(response).to have_http_status :not_found }
+          end
+        end
+      end
+    end
   end
 end

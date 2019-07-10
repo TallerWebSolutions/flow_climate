@@ -651,7 +651,7 @@ RSpec.describe Project, type: :model do
   describe '#current_cost' do
     context 'having cost' do
       include_context 'demands with effort'
-      it { expect(project.current_cost).to eq 0.13e4 }
+      it { expect(project.current_cost.to_f).to eq 49_500.0 }
     end
 
     context 'having no cost yet' do
@@ -938,6 +938,30 @@ RSpec.describe Project, type: :model do
     end
   end
 
+  describe '#demands_of_class_of_service' do
+    let(:project) { Fabricate :project }
+
+    context 'when there is no expedites' do
+      let!(:intangible_demand) { Fabricate :demand, class_of_service: :intangible, project: project }
+      let!(:fixed_date_demand) { Fabricate :demand, class_of_service: :fixed_date, project: project }
+
+      it { expect(project.demands_of_class_of_service(:expedite)).to eq [] }
+    end
+
+    context 'when there is no demands' do
+      it { expect(project.demands_of_class_of_service).to eq [] }
+    end
+
+    context 'when there is expedites' do
+      let!(:intangible_demand) { Fabricate :demand, class_of_service: :intangible, project: project }
+      let!(:fixed_date_demand) { Fabricate :demand, class_of_service: :fixed_date, project: project }
+      let!(:standard_demand) { Fabricate :demand, class_of_service: :standard, project: project }
+      let!(:expedite_demand) { Fabricate :demand, class_of_service: :expedite, project: project }
+
+      it { expect(project.demands_of_class_of_service(:expedite)).to eq [expedite_demand] }
+    end
+  end
+
   describe '#percentage_standard' do
     let(:project) { Fabricate :project }
 
@@ -1190,6 +1214,52 @@ RSpec.describe Project, type: :model do
 
     context 'with no data' do
       it { expect(project.failure_load).to eq 0 }
+    end
+  end
+
+  describe '#first_deadline' do
+    let(:project) { Fabricate :project, end_date: 4.weeks.from_now, qty_hours: 2000 }
+
+    context 'with data' do
+      let!(:project_change_deadline_history) { Fabricate :project_change_deadline_history, project: project, previous_date: 3.days.ago }
+      let!(:other_project_change_deadline_history) { Fabricate :project_change_deadline_history, project: project, previous_date: 5.days.ago }
+
+      it { expect(project.first_deadline).to eq other_project_change_deadline_history.previous_date }
+    end
+
+    context 'with no data' do
+      it { expect(project.first_deadline).to eq project.end_date }
+    end
+  end
+
+  describe '#days_difference_between_first_and_last_deadlines' do
+    let(:project) { Fabricate :project, end_date: 4.weeks.from_now, qty_hours: 2000 }
+
+    context 'with data' do
+      let!(:project_change_deadline_history) { Fabricate :project_change_deadline_history, project: project, previous_date: 3.days.ago }
+      let!(:other_project_change_deadline_history) { Fabricate :project_change_deadline_history, project: project, previous_date: 5.days.ago }
+
+      it { expect(project.days_difference_between_first_and_last_deadlines).to eq 33 }
+    end
+
+    context 'with no data' do
+      it { expect(project.days_difference_between_first_and_last_deadlines).to eq 0 }
+    end
+  end
+
+  describe '#total_weeks' do
+    let(:project) { Fabricate :project, start_date: Time.zone.today, end_date: 4.weeks.from_now, qty_hours: 2000 }
+
+    it { expect(project.total_weeks).to eq 5.1428571428571415 }
+  end
+
+  describe '#average_speed_per_week' do
+    describe '#total_weeks' do
+      let(:project) { Fabricate :project, start_date: Time.zone.today, end_date: 4.weeks.from_now, qty_hours: 2000 }
+
+      let!(:demands) { Fabricate.times(40, :demand, project: project, end_date: 2.days.from_now) }
+
+      it { expect(project.average_speed_per_week).to eq 7.7777777777777795 }
     end
   end
 end

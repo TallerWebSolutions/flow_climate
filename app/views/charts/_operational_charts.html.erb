@@ -6,7 +6,7 @@
          data-weeks='<%= report_data.x_axis.to_json %>'
          data-xtitle='<%= t('projects.charts.xlabel.time') %>'
          data-ytitle='<%= t('projects.charts.burnup.ylabel') %>'
-         data-suffix='<%= t('projects.charts.burnup.tooltipsufix') %>'
+         data-tooltipsuffix='<%= t('projects.charts.burnup.tooltipsufix') %>'
          data-prefix=''
          data-ideal='<%= report_data.demands_burnup_data.ideal_per_period %>'
          data-current='<%= report_data.demands_burnup_data.current_per_period %>'
@@ -70,7 +70,7 @@
          data-xtitle='<%= t('projects.charts.xlabel.weeks') %>'
          data-ytitle='<%= t('general.percentage.title') %>'
          data-prefix=''
-         data-suffix='<%= t('general.percentage.symbol') %>'
+         data-tooltipsuffix='<%= t('general.percentage.symbol') %>'
          data-series='<%= [{ name: I18n.t('projects.charts.bugs_in_time.share'), data: report_data.bugs_share_accumulated_hash[:bugs_opened_share_array] }].to_json %>'
          data-decimals='2'>
     </div>
@@ -82,7 +82,7 @@
            data-xcategories='<%= report_data.hours_blocked_per_stage[:x_axis] %>'
            data-title='<%= t('demand_blocks.charts.hours_per_stage.title', target_name: target_name) %>'
            data-ytitle='<%= t('demand_blocks.charts.hours_per_stage.ylabel') %>'
-           data-suffix='<%= t('demand_blocks.charts.hours_per_stage.ylabel') %>'
+           data-tooltipsuffix='<%= t('demand_blocks.charts.hours_per_stage.ylabel') %>'
            data-series='<%= [{ name: I18n.t('demand_blocks.charts.hours_per_stage.legend'), data: report_data.hours_blocked_per_stage[:data] }].to_json %>'
            data-decimals='0'>
       </div>
@@ -96,7 +96,7 @@
            data-xcategories='<%= report_data.count_blocked_per_stage[:x_axis] %>'
            data-title='<%= t('demand_blocks.charts.blocks_per_stage.title', target_name: target_name) %>'
            data-ytitle='<%= t('demand_blocks.charts.blocks_per_stage.ylabel') %>'
-           data-suffix='<%= t('demand_blocks.charts.blocks_per_stage.ylabel') %>'
+           data-tooltipsuffix='<%= t('demand_blocks.charts.blocks_per_stage.ylabel') %>'
            data-series='<%= [{ name: I18n.t('demand_blocks.charts.blocks_per_stage.legend'), data: report_data.count_blocked_per_stage[:data] }].to_json %>'
            data-decimals='0'>
       </div>
@@ -124,7 +124,7 @@
            data-xcategories='<%= report_data.aging_per_demand[:x_axis].to_json %>'
            data-title='<%= t('demands.charts.aging_per_demand.title', target_name: target_name) %>'
            data-ytitle='<%= t('demands.charts.aging_per_demand.ylabel') %>'
-           data-suffix='<%= t('demands.charts.aging_per_demand.ylabel') %>'
+           data-tooltipsuffix='<%= t('demands.charts.aging_per_demand.ylabel') %>'
            data-series='<%= report_data.aging_per_demand[:data].to_json %>'
            data-decimals='2'>
       </div>
@@ -150,7 +150,7 @@
          data-xtitle='<%= t('projects.charts.xlabel.weeks') %>'
          data-ytitle='<%= t('general.percentage.title') %>'
          data-prefix=''
-         data-suffix='<%= t('general.percentage.symbol') %>'
+         data-tooltipsuffix='<%= t('general.percentage.symbol') %>'
          data-series='<%= [{ name: I18n.t('projects.charts.flow_efficiency.share'), data: report_data.queue_touch_share_hash[:flow_efficiency_array] }].to_json %>'
          data-decimals='2'>
     </div>
@@ -161,7 +161,7 @@
          data-xcategories='<%= report_data.effort_hours_per_month[:keys].map { |year, month| Date.new(year, month, 1).to_s } %>'
          data-title='<%= t('projects.charts.hours_per_month.title', target_name: target_name) %>'
          data-ytitle='<%= t('projects.charts.hours_per_month.ylabel') %>'
-         data-suffix='<%= t('projects.charts.hours_per_month.ylabel') %>'
+         data-tooltipsuffix='<%= t('projects.charts.hours_per_month.ylabel') %>'
          data-series='<%= [{name: I18n.t('projects.charts.throughput.stage_stream.upstream'), data: report_data.effort_hours_per_month[:data][:upstream]&.map(&:to_f)}, {name: I18n.t('projects.charts.throughput.stage_stream.downstream'), data: report_data.effort_hours_per_month[:data][:downstream]&.map(&:to_f)}].to_json %>'
          data-stacking='normal'
          data-decimals='0'>
@@ -173,7 +173,7 @@
          data-xcategories='<%= report_data.lead_time_control_chart[:xcategories] %>'
          data-series='<%= [{ name: 'Lead time', color: 'rgb(51, 51, 255)', data: report_data.lead_time_control_chart[:dispersion_source] }].to_json %>'
          data-title='<%= t('projects.charts.lead_time_chart.title', target_name: target_name) %>'
-         data-suffix='<%= t('projects.charts.lead_time_chart.ylabel') %>'
+         data-tooltipsuffix='<%= t('projects.charts.lead_time_chart.ylabel') %>'
          data-percentile95='<%= report_data.lead_time_control_chart[:percentile_95_data] || 0 %>'
          data-percentile80='<%= report_data.lead_time_control_chart[:percentile_80_data] || 0 %>'
          data-percentile60='<%= report_data.lead_time_control_chart[:percentile_60_data] || 0 %>'>
@@ -214,7 +214,7 @@
            data-xtitle='<%= t('teams.charts.average_demand_cost.xlabel') %>'
            data-ytitle='<%= t('teams.charts.average_demand_cost.ylabel') %>'
            data-prefix='<%= t('general.money') %>'
-           data-suffix=''
+           data-tooltipsuffix=''
            data-series='<%= [{ name: I18n.t('teams.charts.average_demand_cost.data_legend'), data: @team_chart_data.average_demand_cost[:data] }].to_json %>'
            data-decimals='2'>
       </div>

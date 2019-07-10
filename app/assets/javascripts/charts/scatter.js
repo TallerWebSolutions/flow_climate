@@ -18,7 +18,7 @@ function buildScatterChart(scatterDiv) {
         },
         yAxis: {
             title: {
-                text: scatterDiv.data('suffix')
+                text: scatterDiv.data('tooltipsuffix')
             },
             plotLines: [{
                 value: scatterDiv.data('percentile95'),
@@ -29,7 +29,7 @@ function buildScatterChart(scatterDiv) {
                     style: {
                         color: 'green'
                     },
-                    text: 'percentile 95% (' + parseFloat(scatterDiv.data('percentile95')).toFixed(2) + ' ' + scatterDiv.data('suffix') + ')'
+                    text: `percentile 95% (${parseFloat(scatterDiv.data('percentile95')).toFixed(2)} ${scatterDiv.data('tooltipsuffix')})`
                 }
             },{
                 value: scatterDiv.data('percentile80'),
@@ -40,7 +40,7 @@ function buildScatterChart(scatterDiv) {
                     style: {
                         color: 'yellow'
                     },
-                    text: 'percentile 80% (' + parseFloat(scatterDiv.data('percentile80')).toFixed(2) + ' ' + scatterDiv.data('suffix') + ')'
+                    text: `percentile 80% (${parseFloat(scatterDiv.data('percentile80')).toFixed(2)} ${scatterDiv.data('tooltipsuffix')})`
                 }
             },{
                 value: scatterDiv.data('percentile60'),
@@ -51,13 +51,13 @@ function buildScatterChart(scatterDiv) {
                     style: {
                         color: 'red'
                     },
-                    text: 'percentile 60% (' + parseFloat(scatterDiv.data('percentile60')).toFixed(2) + ' ' + scatterDiv.data('suffix') + ')'
+                    text: `percentile 60% (${parseFloat(scatterDiv.data('percentile60')).toFixed(2)} ${scatterDiv.data('tooltipsuffix')})`
                 }
             }]
         },
         tooltip: {
             formatter:function(){
-                return this.key + ': ' + this.y.toFixed(2) + ' ' + scatterDiv.data('suffix');
+                return `${this.key}: ${this.y.toFixed(2)} ${scatterDiv.data('tooltipsuffix')}`;
             }
         },
         legend: {
@@ -86,7 +86,7 @@ function buildScatterChart(scatterDiv) {
                 },
                 tooltip: {
                     headerFormat: '<b>{series.name}</b><br>',
-                    pointFormat: '{point.x}: {point.y:.2f} ' + scatterDiv.data('suffix')
+                    pointFormat: `{point.x}: {point.y:.2f} ${scatterDiv.data('tooltipsuffix')}`
                 }
             }
         },

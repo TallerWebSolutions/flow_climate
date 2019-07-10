@@ -43,14 +43,14 @@ RSpec.describe Slack::SlackNotificationService, type: :service do
 
     describe '#notify_week_throughput' do
       it 'calls slack notification method' do
-        expect_any_instance_of(Slack::Notifier).to receive(:ping).with("*#{team.name}* | Throughput na semana: *3 demandas* | Variação: *200,00%* para a média das últimas 4 semanas (1.0).").once
+        expect_any_instance_of(Slack::Notifier).to receive(:ping).with("*#{team.name}* | Throughput na semana: *3 demanda(s)* | Variação: *200,00%* para a média das últimas 4 semanas (1.0).").once
         Slack::SlackNotificationService.instance.notify_week_throughput(first_slack_notifier, team)
       end
     end
 
     describe '#notify_last_week_delivered_demands_info' do
       it 'calls slack notification method' do
-        expect_any_instance_of(Slack::Notifier).to receive(:ping).with("*#{team.name}* | Throughput: *1 demandas* na semana passada.").once
+        expect_any_instance_of(Slack::Notifier).to receive(:ping).with("*#{team.name}* | Throughput: *1 demanda(s)* na semana passada.").once
         expect_any_instance_of(Slack::Notifier).to receive(:ping).with("*#{first_demand.demand_id}* #{first_demand.demand_title} | *Responsáveis:*  | *Custo pro Projeto:* #{number_to_currency(first_demand.cost_to_project)}").once
 
         Slack::SlackNotificationService.instance.notify_last_week_delivered_demands_info(first_slack_notifier, team)
@@ -95,14 +95,14 @@ RSpec.describe Slack::SlackNotificationService, type: :service do
 
     describe '#notify_week_throughput' do
       it 'calls slack notification method' do
-        expect_any_instance_of(Slack::Notifier).to receive(:ping).with("*#{team.name}* | Throughput na semana: *0 demandas* | Variação: *0,00%* para a média das últimas 4 semanas (0.0).").once
+        expect_any_instance_of(Slack::Notifier).to receive(:ping).with("*#{team.name}* | Throughput na semana: *0 demanda(s)* | Variação: *0,00%* para a média das últimas 4 semanas (0.0).").once
         Slack::SlackNotificationService.instance.notify_week_throughput(first_slack_notifier, team)
       end
     end
 
     describe '#notify_last_week_delivered_demands_info' do
       it 'calls slack notification method' do
-        expect_any_instance_of(Slack::Notifier).to receive(:ping).with("*#{team.name}* | Throughput: *0 demandas* na semana passada.").once
+        expect_any_instance_of(Slack::Notifier).to receive(:ping).with("*#{team.name}* | Throughput: *0 demanda(s)* na semana passada.").once
 
         Slack::SlackNotificationService.instance.notify_last_week_delivered_demands_info(first_slack_notifier, team)
       end

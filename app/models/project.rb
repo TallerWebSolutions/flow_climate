@@ -109,6 +109,10 @@ class Project < ApplicationRecord
     ((end_date.end_of_day - start_date.beginning_of_day) / 1.day) + 1
   end
 
+  def total_weeks
+    ((end_date.end_of_day - start_date.beginning_of_day) / 1.week) + 1
+  end
+
   def remaining_weeks(from_date = Time.zone.today)
     start_date_limit = [start_date, from_date].max
     return 0 if end_date < start_date_limit
@@ -200,7 +204,7 @@ class Project < ApplicationRecord
   end
 
   def total_hours_consumed
-    total_hours_upstream + total_hours_downstream
+    @total_hours_consumed ||= total_hours_upstream + total_hours_downstream
   end
 
   def required_hours_per_available_hours
@@ -254,9 +258,7 @@ class Project < ApplicationRecord
   end
 
   def current_cost
-    return 0 if team.blank?
-
-    team.active_monthly_cost_for_billable_types(project_type)
+    @current_cost ||= total_hours_consumed * hour_value
   end
 
   def percentage_of_demand_type(demand_type)
@@ -287,7 +289,7 @@ class Project < ApplicationRecord
   def percentage_expedite
     return 0 if demands.kept.story.count.zero?
 
-    (demands.kept.story.expedite.count.to_f / demands.kept.story.count) * 100
+    (demands_of_class_of_service(:expedite).count.to_f / demands.kept.story.count) * 100
   end
 
   def percentage_standard
@@ -335,6 +337,26 @@ class Project < ApplicationRecord
   def failure_load
     total_demands = demands.kept
     Stats::StatisticsService.instance.compute_percentage(total_demands.bug.count, (total_demands.count - total_demands.bug.count))
+  end
+
+  def average_speed_per_week
+    return 0 if demands.kept.count.zero? || total_weeks.zero?
+
+    demands.kept.count / total_weeks
+  end
+
+  def demands_of_class_of_service(class_of_service = :standard)
+    demands.kept.story.send(class_of_service)
+  end
+
+  def first_deadline
+    return end_date if project_change_deadline_histories.blank?
+
+    project_change_deadline_histories.order(:previous_date).first.previous_date
+  end
+
+  def days_difference_between_first_and_last_deadlines
+    (end_date - first_deadline).to_i
   end
 
   private

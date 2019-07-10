@@ -107,6 +107,11 @@ pt-BR:
     days: "dias"
     hours: "horas"
     hours_text: "%{hour_value} horas"
+    demands: "Demanda(s)"
+    avg_speed_per_week: "%{speed_value} itens/semana"
+    items_text: "%{items_count} item(ns)"
+    flow: "Fluxo"
+    class_of_service: "Classe de Serviço (Perfil de Risco)"
   header:
     logout: Sair
     sign_up: Cadastre-se
@@ -259,10 +264,28 @@ pt-BR:
       inconsistent_demands:
         title: "Demandas Inconsistentes"
         no_demands: "Nenhuma demanda inconsistente"
-        demands: "%{value} demandas"
+        demands: "%{value} demanda(s)"
         help: "Demandas inconsistentes são demandas com seu ponto de comprometimento antes da data de início do projeto ou com data fim depois da data final do projeto."
       not_associated_products: "Produtos não associados"
       project_products: "Produtos no Projeto"
+      closing_info:
+        title: "Informações de Fechamento para %{project_name}"
+        project_name: "Nome do Projeto"
+        discovered_after_demands: "Descobertas depois do início"
+        discovered_before_demands: "Descobertas antes do início"
+        discovered_demands: "Descobertas do Escopo"
+        final_numbers: "Números Finais"
+        hours: "Tempo Consumido"
+        average_speed_per_week: "Velocidade Média"
+        class_of_service: "Classes de Serviço"
+        failure_load: "Carga de Falha"
+        cost: "Custo Final"
+        delivered_items: "Entrega"
+        deadline_changes: "Mudanças no Prazo"
+        delivered_at: "Entregue em"
+        first_deadline: "Prazo Inicial"
+        deadlines_difference: "Última Diferença"
+        deadlines_change_count: "Qtd Mudanças"
     charts:
       xlabel:
         weeks: "Semanas"
@@ -291,7 +314,7 @@ pt-BR:
         ylabel: "Pressão do Fluxo"
       throughput:
         title: "Throughput para %{target_name}"
-        tooltipsufix: " demandas"
+        tooltipsufix: " demanda(s)"
         ylabel: "Demandas"
         stage_stream:
           upstream: "Upstream"
@@ -369,8 +392,8 @@ pt-BR:
       title: "Configurações de Risco"
     general:
       deadline: "Data do Prazo"
-      scope: "Escopo"
-      leadtime: "Lead time com %{confidence} de confiança"
+      scope: "Itens Descobertos"
+      leadtime: "Lead time (%{confidence})"
     finish_project:
       success_message: "Projeto finalizado."
     actions:
@@ -514,7 +537,7 @@ pt-BR:
       blocked_working_time_downstream: "Tempo Útil Bloqueado no Downstream"
       downstream: "Downstream?"
       manual_effort: "Esforço Atualizado Manualmente?"
-      count: "%{demands_count} demandas"
+      count: "%{demands_count} demanda(s)"
       current_stage: "Etapa Atual"
       qty_closed_blocks: "Bloqueios Resolvidos"
       hours_blocks_queue: "Horas Bloqueada em Filas"
@@ -545,7 +568,7 @@ pt-BR:
       processing_rate:
         title: "Processamento de demandas para %{name}"
         ylabel: "Demandas"
-        tooltipsufix: "demandas"
+        tooltipsufix: "demanda(s)"
         arrived: "Total Entrada"
         processed: "Total Processada"
         processed_downstream: "Processadas no Downstream"
@@ -663,7 +686,7 @@ pt-BR:
         text: "Horas Consumidas"
     hours_available:
       title: "Horas Vendidas"
-      suffix: "Horas Consumidas"
+      tooltipsuffix: "Horas Consumidas"
     team_hours_available:
       title: "Horas Disponíveis"
     risk_alert_color:
@@ -686,7 +709,7 @@ pt-BR:
       title_downstream: "Downstream Cumulative Flow Diagram para %{target_name}"
       title_upstream: "Upstream Cumulative Flow Diagram para %{target_name}"
       ytitle: "Demandas"
-      data_suffix: "demandas"
+      data_suffix: "demanda(s)"
     period:
       label: "Período"
     lead_time_data_range_evolution:
@@ -731,16 +754,16 @@ pt-BR:
       stage_teams: "Times na Etapa"
     charts:
       entrances_per_weekday:
-        ylabel: "demandas chegando"
-        tooltip_prefix: "demandas chegando"
+        ylabel: "demanda(s) chegando"
+        tooltip_prefix: "demanda(s) chegando"
         title: "Demandas Chegando para %{target_name}"
       avg_hours_in_stage:
         title: "Média de Horas em %{target_name}"
         ylabel: "média de horas na etapa"
       out_per_weekday:
         title: "Demandas Saindo de %{target_name}"
-        ylabel: "demandas saindo"
-        tooltip_prefix: "demandas saindo"
+        ylabel: "demanda(s) saindo"
+        tooltip_prefix: "demanda(s) saindo"
     import_from_jira:
       title: "Importar do Jira"
       warning: "Esta ação irá importar todos os statuses de todos os workflows configurados. Não funcionará caso você esteja usando projetos new gen."

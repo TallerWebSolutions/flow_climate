@@ -1,0 +1,125 @@
+<div class="modal-dialog modal-lg">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+      <h4 class="modal-title" id="closingProject"><%= I18n.t('projects.show.closing_info.title', project_name: project.name) %></h4>
+    </div>
+    <div class="modal-body">
+      <% if project_summary.present? %>
+        <div class="row">
+          <div class="col-xs-12 div-group-title">
+            <%= I18n.t('projects.show.closing_info.final_numbers') %>
+          </div>
+        </div>
+
+        <div class="row bottom-spaced-component">
+          <div class="col-xs-4 center">
+            <div class="stamp-title"><%= I18n.t('projects.show.closing_info.cost') %></div>
+            <div class="stamp-content"><%= number_to_currency(project.current_cost, decimal: 2) %></div>
+          </div>
+          <div class="col-xs-4 center">
+            <div class="stamp-title"><%= I18n.t('projects.show.closing_info.hours') %></div>
+            <div class="stamp-content"><%= I18n.t('general.hours_text', hour_value: number_with_precision(project.total_hours_consumed, precision: 2)) %></div>
+          </div>
+          <div class="col-xs-4 center">
+            <div class="stamp-title"><%= I18n.t('projects.show.closing_info.average_speed_per_week') %></div>
+            <div class="stamp-content"><%= I18n.t('general.avg_speed_per_week', speed_value: number_with_precision(project.average_speed_per_week, precision: 2)) %></div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-xs-12 div-group-title">
+            <%= I18n.t('projects.show.closing_info.deadline_changes') %>
+          </div>
+        </div>
+
+        <div class="row bottom-spaced-component">
+          <div class="col-xs-3 center">
+            <div class="stamp-title"><%= I18n.t('projects.show.closing_info.delivered_at') %></div>
+            <div class="stamp-content"><%= I18n.l(project.end_date) %></div>
+          </div>
+          <div class="col-xs-3 center">
+            <div class="stamp-title"><%= I18n.t('projects.show.closing_info.first_deadline') %></div>
+            <div class="stamp-content"><%= I18n.l(project.first_deadline) %></div>
+          </div>
+          <div class="col-xs-3 center">
+            <div class="stamp-title"><%= I18n.t('projects.show.closing_info.deadlines_difference') %></div>
+            <div class="stamp-content"><%= I18n.t('general.days_text', days: project.days_difference_between_first_and_last_deadlines) %></div>
+          </div>
+          <div class="col-xs-3 center">
+            <div class="stamp-title"><%= I18n.t('projects.show.closing_info.deadlines_change_count') %></div>
+            <div class="stamp-content"><%= project.project_change_deadline_histories.count %></div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-xs-12 div-group-title">
+            <%= I18n.t('projects.general.scope') %>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-xs-12 div-group-title">
+            <div id="scope-discovered"
+                 data-title=''
+                 data-chart-height='220px'
+                 data-legend-enabled='true'
+                 data-xcategories='<%= project_summary.projects.map(&:name).to_json %>'
+                 data-xtitle=''
+                 data-ytitle='<%= I18n.t('general.demands') %>'
+                 data-tooltipsufix='<%= I18n.t('general.demands') %>'
+                 data-series='<%= [{ name: I18n.t('projects.show.closing_info.discovered_after_demands'), data: [project_summary.discovered_scope[:discovered_after].count], legendIndex: 1 }, { name: I18n.t('projects.show.closing_info.discovered_before_demands'), data: [project_summary.discovered_scope[:discovered_before_project_starts].count], legendIndex: 0 }].to_json %>'
+                 data-stacking='normal'
+                 data-decimals='0'>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-xs-12 div-group-title">
+            <%= I18n.t('general.flow') %>
+          </div>
+        </div>
+
+        <div class="row bottom-spaced-component">
+          <div class="col-xs-4 center">
+            <div class="stamp-title"><%= I18n.t('projects.show.closing_info.delivered_items') %></div>
+            <div class="stamp-content"><%= I18n.t('general.items_text', items_count: project.total_throughput) %></div>
+          </div>
+          <div class="col-xs-4 center">
+            <div class="stamp-title"><%= I18n.t('projects.show.closing_info.failure_load') %></div>
+            <div class="stamp-content"><%= number_to_percentage(project.failure_load, precision: 2) %></div>
+          </div>
+          <div class="col-xs-4 center">
+            <div class="stamp-title"><%= I18n.t('projects.general.leadtime', confidence: '80%') %></div>
+            <div class="stamp-content"><%= time_distance_in_words(project.general_leadtime) %></div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-xs-12 div-group-title">
+            <%= I18n.t('general.class_of_service') %>
+          </div>
+        </div>
+
+        <div class="row bottom-spaced-component">
+          <div class="col-xs-4 center">
+            <div class="stamp-title"><%= I18n.t('activerecord.attributes.demand.enums.class_of_service.standard') %></div>
+            <div class="stamp-content"><%= "#{I18n.t('general.items_text', items_count: project.demands_of_class_of_service(:standard).count)} (#{number_to_percentage(project.percentage_standard, precision: 2)})" %></div>
+          </div>
+          <div class="col-xs-4 center">
+            <div class="stamp-title"><%= I18n.t('activerecord.attributes.demand.enums.class_of_service.expedite') %></div>
+            <div class="stamp-content"><%= "#{I18n.t('general.items_text', items_count: project.demands_of_class_of_service(:expedite).count)} (#{number_to_percentage(project.percentage_expedite, precision: 2)})" %></div>
+          </div>
+          <div class="col-xs-4 center">
+            <div class="stamp-title"><%= I18n.t('activerecord.attributes.demand.enums.class_of_service.fixed_date') %></div>
+            <div class="stamp-content"><%= "#{I18n.t('general.items_text', items_count: project.demands_of_class_of_service(:fixed_date).count)} (#{number_to_percentage(project.percentage_fixed_date, precision: 2)})" %></div>
+          </div>
+        </div>
+
+      <% else %>
+        <%= render 'layouts/no_data', missing_data: Project.model_name.human %>
+      <% end %>
+    </div>
+  </div>
+</div>

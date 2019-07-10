@@ -121,6 +121,7 @@ Rails.application.routes.draw do
         patch :finish_project
         get :statistics
         get :risk_drill_down
+        get :closing_dashboard
         patch :copy_stages_from
         patch 'associate_customer/:customer_id', action: :associate_customer, as: 'associate_customer'
         patch 'dissociate_customer/:customer_id', action: :dissociate_customer, as: 'dissociate_customer'
