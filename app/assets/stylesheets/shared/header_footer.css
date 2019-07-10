@@ -35,8 +35,8 @@ ul.breadcrumb li a:hover {
     position: fixed;
     bottom: 0;
     left: 0;
-    padding: 30px;
-    background-color: #6c62df;
+    padding: 15px;
+    background-color: #333333;
     color: #FFFF;
     text-align: center;
     font-style: italic;
@@ -45,5 +45,5 @@ ul.breadcrumb li a:hover {
 
 .page-body {
     position: relative;
-    margin-bottom: 80px;
+    margin-bottom: 50px;
 }

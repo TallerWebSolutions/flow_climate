@@ -43,4 +43,18 @@ class PortfolioUnit < ApplicationRecord
   validates :name, uniqueness: { scope: :product, message: I18n.t('portfolio_unit.validations.name') }
 
   delegate :name, to: :parent, allow_nil: true, prefix: true
+
+  def parent_branches
+    portfolio_unit_parent = self
+
+    product_tree_array = []
+    until (portfolio_unit_parent = portfolio_unit_parent.parent).nil?
+      product_tree_array << portfolio_unit_parent.name
+    end
+    product_tree_array
+  end
+
+  def total_demands
+    (demands.kept + children.map(&:total_demands).flatten).flatten
+  end
 end

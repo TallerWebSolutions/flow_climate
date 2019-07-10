@@ -32,4 +32,32 @@ RSpec.describe PortfolioUnit, type: :model do
       end
     end
   end
+
+  describe '#parent_branches' do
+    let(:portfolio_unit) { Fabricate :portfolio_unit, name: 'bla' }
+    let(:child_portfolio_unit) { Fabricate :portfolio_unit, parent: portfolio_unit, name: 'foo' }
+    let(:granchild_portfolio_unit) { Fabricate :portfolio_unit, parent: child_portfolio_unit, name: 'bar' }
+    let(:great_granchild_portfolio_unit) { Fabricate :portfolio_unit, parent: granchild_portfolio_unit, name: 'sbbrubles' }
+    let(:other_child_portfolio_unit) { Fabricate :portfolio_unit, parent: portfolio_unit, name: 'xpto' }
+
+    it { expect(portfolio_unit.parent_branches).to eq [] }
+    it { expect(child_portfolio_unit.parent_branches).to eq ['bla'] }
+    it { expect(other_child_portfolio_unit.parent_branches).to eq ['bla'] }
+    it { expect(granchild_portfolio_unit.parent_branches).to eq %w[foo bla] }
+    it { expect(great_granchild_portfolio_unit.parent_branches).to eq %w[bar foo bla] }
+  end
+
+  describe '#total_demands' do
+    let(:portfolio_unit) { Fabricate :portfolio_unit }
+    let(:child_portfolio_unit) { Fabricate :portfolio_unit, parent: portfolio_unit }
+    let(:other_child_portfolio_unit) { Fabricate :portfolio_unit, parent: portfolio_unit }
+
+    let!(:portfolio_unit_demands) { Fabricate.times(5, :demand, portfolio_unit: portfolio_unit) }
+    let!(:child_portfolio_unit_demands) { Fabricate.times(7, :demand, portfolio_unit: child_portfolio_unit) }
+    let!(:other_child_portfolio_unit_demands) { Fabricate.times(3, :demand, portfolio_unit: other_child_portfolio_unit) }
+
+    it { expect(portfolio_unit.total_demands.map(&:id)).to match_array Demand.all.map(&:id) }
+    it { expect(child_portfolio_unit.total_demands.map(&:id)).to match_array child_portfolio_unit_demands.map(&:id) }
+    it { expect(other_child_portfolio_unit.total_demands.map(&:id)).to match_array other_child_portfolio_unit_demands.map(&:id) }
+  end
 end
