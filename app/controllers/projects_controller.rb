@@ -132,6 +132,12 @@ class ProjectsController < AuthenticatedController
     respond_to { |format| format.js { render 'projects/closing_info' } }
   end
 
+  def status_report_dashboard
+    @project_summary = ProjectsSummaryData.new([@project])
+
+    respond_to { |format| format.js { render 'projects/status_report_dashboard' } }
+  end
+
   private
 
   def assign_project_stages

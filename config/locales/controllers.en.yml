@@ -270,6 +270,12 @@ en:
         first_deadline: "First deadline"
         deadlines_difference: "Last Difference"
         deadlines_change_count: "Change Deadline Times"
+      status_report:
+        title: "Status Report for %{project_name}"
+        cost: "Current Cost"
+        deadline: "Current Deadline"
+        current_numbers: "Current Numbers"
+        remaining_scope: "Remaining Backlog"
     charts:
       xlabel:
         weeks: "Weeks"
