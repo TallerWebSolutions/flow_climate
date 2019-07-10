@@ -65,10 +65,10 @@ function buildGaugeChart(gaugeDiv) {
             dataLabels: {
                 format: '<div style="text-align:center"><span style="font-size:25px;color:' +
                 ((Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black') + '">{y}</span><br/>' +
-                '<span style="font-size:12px;color:silver">' + gaugeDiv.data('suffix') + '</span></div>'
+                '<span style="font-size:12px;color:silver">' + gaugeDiv.data('tooltipsuffix') + '</span></div>'
             },
             tooltip: {
-                valueSuffix: gaugeDiv.data('suffix')
+                valueSuffix: gaugeDiv.data('tooltipsuffix')
             }
         }]
     });

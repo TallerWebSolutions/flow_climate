@@ -79,7 +79,7 @@
          data-xtitle='<%= t('charts.xlabel.months') %>'
          data-ytitle='<%= t('general.charts.hours') %>'
          data-prefix=''
-         data-suffix='<%= t('general.charts.hours') %>'
+         data-tooltipsuffix='<%= t('general.charts.hours') %>'
          data-series='<%= [{ name: I18n.t('stages.charts.avg_hours_in_stage.ylabel'), data: stage_analytic_data.avg_time_in_stage_per_month.values }].to_json %>'
          data-decimals='2'>
     </div>

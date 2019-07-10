@@ -3,7 +3,8 @@ function buildBarChart(barDiv) {
         chart: {
             renderTo: barDiv.attr('id'),
             type: 'bar',
-            zoomType: 'x'
+            zoomType: 'x',
+            height: barDiv.data('chart-height')
         },
         title: {
             text: barDiv.data('title'),
@@ -30,20 +31,26 @@ function buildBarChart(barDiv) {
             }
         },
         legend: {
+            enabled: barDiv.data('legend-enabled'),
             type: 'line',
             align: 'center',
-            verticalAlign: 'bottom',
+            verticalAlign: 'top',
             x: 0,
             y: 0
         },
         plotOptions: {
+            bar: {
+                dataLabels: {
+                    enabled: true
+                }
+            },
             series: {
                 stacking: barDiv.data('stacking')
             }
         },
         tooltip: {
             formatter: function () {
-                return Highcharts.numberFormat(this.y, barDiv.data('decimals'), '.') + ' ' + barDiv.data('suffix');
+                return `${Highcharts.numberFormat(this.y, barDiv.data('decimals'), '.')} ${barDiv.data('tooltipsufix')}`;
             }
         },
         series: barDiv.data('series')

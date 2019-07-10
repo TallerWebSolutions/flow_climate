@@ -7,7 +7,7 @@
          data-xtitle='<%= t('portfolio.charts.throughput_by_project.xtitle') %>'
          data-ytitle='<%= t('projects.charts.burnup.ylabel') %>'
          data-prefix=''
-         data-suffix=''
+         data-tooltipsuffix=''
          data-series='<%= portfolio_data.throughput_by_project[:series].to_json %>'
          data-decimals='0'>
     </div>
@@ -21,7 +21,7 @@
          data-xtitle='<%= t('projects.charts.xlabel.time') %>'
          data-ytitle='<%= t('projects.charts.burnup.ylabel') %>'
          data-prefix=''
-         data-suffix='<%= t('general.charts.hours') %>'
+         data-tooltipsuffix='<%= t('general.charts.hours') %>'
          data-ideal='<%= status_report_data.hours_burnup_per_week_data.ideal_per_period %>'
          data-current='<%= status_report_data.hours_burnup_per_week_data.current_per_period %>'
          data-scope='<%= status_report_data.hours_burnup_per_week_data.scope_per_period %>'
@@ -35,7 +35,7 @@
          data-xcategories='<%= ['Scope'] %>'
          data-title='<%= t('projects.charts.delivered.title', target_name: target_name) %>'
          data-ytitle='<%= t('projects.charts.throughput.ylabel') %>'
-         data-suffix='<%= t('projects.charts.throughput.ylabel') %>'
+         data-tooltipsuffix='<%= t('projects.charts.throughput.ylabel') %>'
          data-series='<%= status_report_data.delivered_vs_remaining.to_json %>'
          data-decimals='0'>
     </div>
@@ -47,7 +47,7 @@
          data-xcategories='<%= status_report_data.hours_per_stage_upstream[:xcategories] %>'
          data-title='<%= t('projects.status_report_chart.hours_per_stage.title_upstream', target_name: target_name) %>'
          data-ytitle='<%= t('projects.status_report_chart.hours_per_stage.labels.y') %>'
-         data-suffix='<%= t('projects.status_report_chart.hours_per_stage.labels.y') %>'
+         data-tooltipsuffix='<%= t('projects.status_report_chart.hours_per_stage.labels.y') %>'
          data-series='<%= [{ name: I18n.t('projects.status_report_chart.hours_per_stage.series.hours_per_stage'), data: status_report_data.hours_per_stage_upstream[:hours_per_stage] }].to_json %>'
          data-decimals='0'>
     </div>
@@ -58,7 +58,7 @@
          data-xcategories='<%= status_report_data.hours_per_stage_downstream[:xcategories] %>'
          data-title='<%= t('projects.status_report_chart.hours_per_stage.title_downstream', target_name: target_name) %>'
          data-ytitle='<%= t('projects.status_report_chart.hours_per_stage.labels.y') %>'
-         data-suffix='<%= t('projects.status_report_chart.hours_per_stage.labels.y') %>'
+         data-tooltipsuffix='<%= t('projects.status_report_chart.hours_per_stage.labels.y') %>'
          data-series='<%= [{ name: I18n.t('projects.status_report_chart.hours_per_stage.series.hours_per_stage'), data: status_report_data.hours_per_stage_downstream[:hours_per_stage] }].to_json %>'
          data-decimals='0'>
     </div>
@@ -70,7 +70,7 @@
          data-xcategories='<%= status_report_data.x_axis.to_json %>'
          data-title='<%= t('charts.cfd.title_upstream', target_name: target_name) %>'
          data-ytitle='<%= t('charts.cfd.ytitle') %>'
-         data-suffix='<%= t('charts.cfd.data_suffix') %>'
+         data-tooltipsuffix='<%= t('charts.cfd.data_suffix') %>'
          data-series='<%= status_report_data.cumulative_flow_diagram_upstream.to_json %>'
          data-stacking='normal'
          data-decimals='0'>
@@ -83,7 +83,7 @@
          data-xcategories='<%= status_report_data.x_axis.to_json %>'
          data-title='<%= t('charts.cfd.title_downstream', target_name: target_name) %>'
          data-ytitle='<%= t('charts.cfd.ytitle') %>'
-         data-suffix='<%= t('charts.cfd.data_suffix') %>'
+         data-tooltipsuffix='<%= t('charts.cfd.data_suffix') %>'
          data-series='<%= status_report_data.cumulative_flow_diagram_downstream.to_json %>'
          data-decimals='0'>
     </div>

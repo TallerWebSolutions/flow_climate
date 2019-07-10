@@ -7,7 +7,7 @@
          data-xcategories='<%= [t('projects.general.deadline')] %>'
          data-title='<%= t('projects.charts.deadline.title', target_name: target_name) %>'
          data-ytitle='<%= t('projects.charts.xlabel.days') %>'
-         data-suffix='<%= t('projects.charts.xlabel.days') %>'
+         data-tooltipsuffix='<%= t('projects.charts.xlabel.days') %>'
          data-series='<%= status_report_data.deadline.to_json %>'
          data-stacking='normal'
          data-decimals='0'>
@@ -19,7 +19,7 @@
          data-xcategories='<%= [t('charts.date_odds.xtitle')] %>'
          data-title='<%= t('charts.date_odds.title') %>'
          data-ytitle='<%= t('charts.date_odds.ytitle') %>'
-         data-suffix='<%= t('projects.charts.date_odds.tooltipsufix') %>'
+         data-tooltipsuffix='<%= t('projects.charts.date_odds.tooltipsufix') %>'
          data-tooltipsufix='<%= t('projects.charts.date_odds.tooltipsufix') %>'
          data-series='<%= status_report_data.deadline_vs_montecarlo_durations.to_json %>'
          data-decimals='0'>

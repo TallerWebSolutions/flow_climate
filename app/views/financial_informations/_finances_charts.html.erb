@@ -24,7 +24,7 @@
            data-xtitle='<%= t('charts.xlabel.months') %>'
            data-ytitle='<%= t('charts.ylabel.money.text') %>'
            data-prefix=''
-           data-suffix=''
+           data-tooltipsuffix=''
            data-series='<%= [
                                 { color: '#0066ff', name: I18n.t('finances.charts.finance.income_per_hour'), data: finances_hash.map { |hash| hash['income_per_hour'].to_f } },
                                 { color: '#f90000', name: I18n.t('finances.charts.finance.cost_per_hour'), data: finances_hash.map { |hash| hash['cost_per_hour'].to_f } }

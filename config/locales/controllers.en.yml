@@ -105,6 +105,11 @@ en:
     days: "days"
     hours: "hours"
     hours_text: "%{hour_value} hours"
+    demands: "Demand(s)"
+    avg_speed_per_week: "%{speed_value} items/week"
+    items_text: "%{items_count} item(ns)"
+    flow: "Flow"
+    class_of_service: "Class of Service (Risk Profile)"
   header:
     logout: Logout
     explore: Explore
@@ -247,6 +252,24 @@ en:
         help: "Inconsistent demands are demands committed before project's start date or ended after project's end date."
       not_associated_products: "Not associated products"
       project_products: "Products in Project"
+      closing_info:
+        title: "Closing Informations for %{project_name}"
+        project_name: "Project Name"
+        discovered_after_demands: "Discovered after project begins"
+        discovered_before_demands: "Discovered before project begins"
+        discovered_demands: "Scope Discoveries"
+        final_numbers: "Final Numbers"
+        hours: "Time Consumed"
+        average_speed_per_week: "Average Speed"
+        class_of_service: "Classes of Service"
+        failure_load: "Failure Load"
+        cost: "Final Cost"
+        delivered_items: "Delivered"
+        deadline_changes: "Changes in Deadline"
+        delivered_at: "Delivered at"
+        first_deadline: "First deadline"
+        deadlines_difference: "Last Difference"
+        deadlines_change_count: "Change Deadline Times"
     charts:
       xlabel:
         weeks: "Weeks"
@@ -350,9 +373,9 @@ en:
     portfolio_bulletin:
       red_projects: "Red Alert Projects"
     general:
-      scope: "Scope"
+      scope: "Discovered items"
       deadline: "Deadline"
-      leadtime: "Lead time confidence %{confidence}"
+      leadtime: "Lead time (%{confidence})"
     finish_project:
       success_message: "Project finished."
     actions:
@@ -626,7 +649,7 @@ en:
         text: "Consumed Hours"
     hours_available:
       title: "Hours Sold"
-      suffix: "Hours Consumed"
+      tooltipsuffix: "Hours Consumed"
     team_hours_available:
       title: "Available Hours"
     risk_alert_color:

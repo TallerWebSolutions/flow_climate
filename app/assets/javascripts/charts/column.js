@@ -14,7 +14,7 @@ function buildColumnChart(columnDiv) {
         },
         xAxis: {
             type: 'datetime',
-            dateTimeLabelFormats: { // don't display the dummy year
+            dateTimeLabelFormats: {
                 month: '%e. %b',
                 year: '%b'
             },
@@ -36,10 +36,10 @@ function buildColumnChart(columnDiv) {
         },
         tooltip: {
             formatter: function () {
-                if (!columnDiv.data('suffix')) {
+                if (!columnDiv.data('tooltipsuffix')) {
                     return Highcharts.numberFormat(this.y, columnDiv.data('decimals'), '.');
                 } else {
-                    return Highcharts.numberFormat(this.y, columnDiv.data('decimals'), '.') + ' ' + columnDiv.data('suffix');
+                    return Highcharts.numberFormat(this.y, columnDiv.data('decimals'), '.') + ' ' + columnDiv.data('tooltipsuffix');
                 }
             }
         },
@@ -56,10 +56,10 @@ function buildColumnChart(columnDiv) {
                     enabled: true,
                     color: 'black',
                     formatter: function () {
-                        if (!columnDiv.data('suffix')) {
+                        if (!columnDiv.data('tooltipsuffix')) {
                             return Highcharts.numberFormat(this.y, columnDiv.data('decimals'), '.');
                         } else {
-                            return Highcharts.numberFormat(this.y, columnDiv.data('decimals'), '.') + ' ' + columnDiv.data('suffix');
+                            return Highcharts.numberFormat(this.y, columnDiv.data('decimals'), '.') + ' ' + columnDiv.data('tooltipsuffix');
                         }
                     }
                 },

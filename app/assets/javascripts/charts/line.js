@@ -34,7 +34,7 @@ function buildLineChart(lineDiv) {
         tooltip: {
             enabled: true,
             valuePrefix: lineDiv.data('prefix'),
-            valueSuffix: lineDiv.data('suffix'),
+            valueSuffix: lineDiv.data('tooltipsuffix'),
             valueDecimals: lineDiv.data('decimals'),
             shared: true
         },
@@ -50,7 +50,7 @@ function buildLineChart(lineDiv) {
                     enabled: true,
                     color: 'black',
                     formatter: function () {
-                        return `${lineDiv.data('prefix') + Highcharts.numberFormat(this.y, lineDiv.data("decimals"), ",", ".")} ${lineDiv.data('suffix')}`;
+                        return `${lineDiv.data('prefix') + Highcharts.numberFormat(this.y, lineDiv.data("decimals"), ",", ".")} ${lineDiv.data('tooltipsuffix')}`;
                     }
                 }
             }

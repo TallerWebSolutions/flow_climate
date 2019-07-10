@@ -17,7 +17,7 @@ module Jira
     private
 
     def update_demand!(demand, jira_account, jira_issue, project, product)
-      demand.update(project: project, company: project.company, product: product, created_date: issue_fields_value(jira_issue, 'created'),
+      demand.update(project: project, company: project.company, product: product, team: project.team, created_date: issue_fields_value(jira_issue, 'created'),
                     demand_type: read_issue_type(jira_issue), artifact_type: Jira::JiraReader.instance.read_artifact_type(jira_issue.attrs),
                     class_of_service: Jira::JiraReader.instance.read_class_of_service(jira_account, jira_issue.attrs), demand_title: issue_fields_value(jira_issue, 'summary'),
                     url: build_jira_url(jira_account, demand.demand_id), commitment_date: nil, discarded_at: nil)
