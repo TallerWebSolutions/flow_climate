@@ -450,6 +450,26 @@ RSpec.describe Project, type: :model do
     end
   end
 
+  describe '#percentage_remaining_backlog' do
+    context 'having demands' do
+      context 'specifying no date' do
+        include_context 'demands with effort'
+        it { expect(project.percentage_remaining_backlog).to eq 0.8823529411764706 }
+      end
+
+      context 'specifying a date' do
+        include_context 'demands with effort'
+        it { expect(project.percentage_remaining_backlog(2.weeks.ago)).to eq 0.9411764705882353 }
+      end
+    end
+
+    context 'having no demands' do
+      let(:project) { Fabricate :project, initial_scope: 30, start_date: 1.week.ago, end_date: 1.week.from_now }
+
+      it { expect(project.percentage_remaining_backlog).to eq 1 }
+    end
+  end
+
   describe '#backlog_for' do
     context 'having data' do
       include_context 'demands with effort'
@@ -1253,13 +1273,35 @@ RSpec.describe Project, type: :model do
     it { expect(project.total_weeks).to eq 5.1428571428571415 }
   end
 
+  describe '#past_weeks' do
+    context 'with running project' do
+      let(:project) { Fabricate :project, status: :executing, start_date: Time.zone.today, end_date: 4.weeks.from_now, qty_hours: 2000 }
+
+      it { expect(project.past_weeks).to eq 1.1428571428571412 }
+    end
+
+    context 'with finished project' do
+      let(:project) { Fabricate :project, status: :finished, start_date: Time.zone.today, end_date: 4.weeks.from_now, qty_hours: 2000 }
+
+      it { expect(project.past_weeks).to eq 5.1428571428571415 }
+    end
+  end
+
   describe '#average_speed_per_week' do
     describe '#total_weeks' do
-      let(:project) { Fabricate :project, start_date: Time.zone.today, end_date: 4.weeks.from_now, qty_hours: 2000 }
+      context 'with running project' do
+        let(:project) { Fabricate :project, status: :executing, start_date: Time.zone.today, end_date: 4.weeks.from_now, qty_hours: 2000 }
+        let!(:demands) { Fabricate.times(40, :demand, project: project, end_date: 2.days.from_now) }
 
-      let!(:demands) { Fabricate.times(40, :demand, project: project, end_date: 2.days.from_now) }
+        it { expect(project.average_speed_per_week).to eq 35.00000000000005 }
+      end
 
-      it { expect(project.average_speed_per_week).to eq 7.7777777777777795 }
+      context 'with finished project' do
+        let(:project) { Fabricate :project, status: :finished, start_date: Time.zone.today, end_date: 4.weeks.from_now, qty_hours: 2000 }
+        let!(:demands) { Fabricate.times(40, :demand, project: project, end_date: 2.days.from_now) }
+
+        it { expect(project.average_speed_per_week).to eq 7.7777777777777795 }
+      end
     end
   end
 end

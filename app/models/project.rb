@@ -113,6 +113,13 @@ class Project < ApplicationRecord
     ((end_date.end_of_day - start_date.beginning_of_day) / 1.week) + 1
   end
 
+  def past_weeks
+    return total_weeks if finished?
+    return 0 unless running?
+
+    ((Time.zone.today.end_of_day - start_date.beginning_of_day) / 1.week) + 1
+  end
+
   def remaining_weeks(from_date = Time.zone.today)
     start_date_limit = [start_date, from_date].max
     return 0 if end_date < start_date_limit
@@ -219,6 +226,12 @@ class Project < ApplicationRecord
 
   def remaining_backlog(date = Time.zone.now)
     DemandsRepository.instance.remaining_backlog_to_date([self], date.end_of_day)
+  end
+
+  def percentage_remaining_backlog(date = Time.zone.now)
+    return 0 unless (demands.kept.count + initial_scope).positive?
+
+    remaining_backlog(date).to_f / (demands.kept.count + initial_scope)
   end
 
   def required_hours
@@ -340,9 +353,9 @@ class Project < ApplicationRecord
   end
 
   def average_speed_per_week
-    return 0 if demands.kept.count.zero? || total_weeks.zero?
+    return 0 if demands.kept.count.zero? || past_weeks.zero?
 
-    demands.kept.count / total_weeks
+    demands.kept.count / past_weeks
   end
 
   def demands_of_class_of_service(class_of_service = :standard)
@@ -360,6 +373,10 @@ class Project < ApplicationRecord
   end
 
   private
+
+  def running?
+    executing? || maintenance?
+  end
 
   def no_pressure_set(date)
     remaining_days_to_period(date).zero? || total_days.zero? || remaining_backlog(date).zero?

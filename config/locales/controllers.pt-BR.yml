@@ -283,9 +283,15 @@ pt-BR:
         delivered_items: "Entrega"
         deadline_changes: "Mudanças no Prazo"
         delivered_at: "Entregue em"
-        first_deadline: "Prazo Inicial"
+        first_deadline: "Primeiro Prazo"
         deadlines_difference: "Última Diferença"
         deadlines_change_count: "Qtd Mudanças"
+      status_report:
+        title: "Relatório de Status para %{project_name}"
+        cost: "Custo Atual"
+        deadline: "Prazo Atual"
+        current_numbers: "Números Atuais"
+        remaining_scope: "Backlog Restante"
     charts:
       xlabel:
         weeks: "Semanas"
