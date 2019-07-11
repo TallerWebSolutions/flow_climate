@@ -160,6 +160,7 @@ pt-BR:
       team_member:
         name: Nome
         jira_account_user_email: Email na Conta do Jira
+        jira_account_id: Id da Conta no Jira
         monthly_payment: Pagamento mensal
         hours_per_month: Horas por mês
         billable: Faturável?

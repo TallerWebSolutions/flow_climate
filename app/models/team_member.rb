@@ -11,6 +11,7 @@
 #  end_date                :date
 #  hours_per_month         :integer          not null
 #  id                      :bigint(8)        not null, primary key
+#  jira_account_id         :string
 #  jira_account_user_email :string
 #  monthly_payment         :decimal(, )      not null
 #  name                    :string           not null

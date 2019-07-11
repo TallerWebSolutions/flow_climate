@@ -26,6 +26,12 @@
       <span class="help-block"><%= team_member.errors[:jira_account_user_email].join(', ') %></span>
     </div>
 
+    <div class='col-xs-6 form-group <%= 'has-error' if team_member.errors[:jira_account_id].present? %>'>
+      <%= f.label :jira_account_id, class: 'control-label' %>
+      <%= f.text_field :jira_account_id, class: 'form-control', placeholder: '557058:1443bd4b-d660-4319-946e-1ed68fd24b64' %>
+      <span class="help-block"><%= team_member.errors[:jira_account_id].join(', ') %></span>
+    </div>
+
     <div class='col-xs-3 form-group <%= 'has-error' if team_member.errors[:start_date].present? %>'>
       <%= f.label :start_date, class: 'control-label required' %>
       <%= f.date_field :start_date, class: 'form-control' %>

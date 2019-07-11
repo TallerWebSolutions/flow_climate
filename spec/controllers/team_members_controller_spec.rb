@@ -80,12 +80,13 @@ RSpec.describe TeamMembersController, type: :controller do
       let(:company) { Fabricate :company, users: [user] }
 
       context 'passing valid parameters' do
-        before { post :create, params: { company_id: company, team_id: team, team_member: { name: 'foo', jira_account_user_email: 'foo@bar.com', billable: false, active: false, monthly_payment: 100, hours_per_month: 10, billable_type: :outsourcing, start_date: 1.day.ago.to_date, end_date: Time.zone.today } } }
+        before { post :create, params: { company_id: company, team_id: team, team_member: { name: 'foo', jira_account_user_email: 'foo@bar.com', jira_account_id: 'jira_account_id', billable: false, active: false, monthly_payment: 100, hours_per_month: 10, billable_type: :outsourcing, start_date: 1.day.ago.to_date, end_date: Time.zone.today } } }
 
         it 'creates the new team member and redirects to team show' do
           expect(response).to redirect_to company_team_path(company, Team.last)
           expect(TeamMember.last.name).to eq 'foo'
           expect(TeamMember.last.jira_account_user_email).to eq 'foo@bar.com'
+          expect(TeamMember.last.jira_account_id).to eq 'jira_account_id'
           expect(TeamMember.last.billable).to be false
           expect(TeamMember.last.active).to be false
           expect(TeamMember.last.monthly_payment).to eq 100
@@ -159,13 +160,14 @@ RSpec.describe TeamMembersController, type: :controller do
       let(:team_member) { Fabricate :team_member, team: team }
 
       context 'passing valid parameters' do
-        before { put :update, params: { company_id: company, team_id: team, id: team_member, team_member: { team: other_team, name: 'foo', jira_account_user_email: 'foo@bar.com', billable: false, active: false, monthly_payment: 100, hours_per_month: 10, billable_type: :outsourcing, start_date: 1.day.ago.to_date, end_date: Time.zone.today } } }
+        before { put :update, params: { company_id: company, team_id: team, id: team_member, team_member: { team: other_team, name: 'foo', jira_account_user_email: 'foo@bar.com', jira_account_id: 'jira_account_id', billable: false, active: false, monthly_payment: 100, hours_per_month: 10, billable_type: :outsourcing, start_date: 1.day.ago.to_date, end_date: Time.zone.today } } }
 
         it 'updates the member and redirects to team show' do
           team_member_updated = team_member.reload
           expect(team_member_updated.team).to eq other_team
           expect(team_member_updated.name).to eq 'foo'
           expect(team_member_updated.jira_account_user_email).to eq 'foo@bar.com'
+          expect(team_member_updated.jira_account_id).to eq 'jira_account_id'
           expect(team_member_updated.billable).to be false
           expect(team_member_updated.active).to be false
           expect(team_member_updated.monthly_payment.to_f).to be 100.0

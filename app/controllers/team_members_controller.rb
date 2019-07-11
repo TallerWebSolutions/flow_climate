@@ -49,6 +49,6 @@ class TeamMembersController < AuthenticatedController
   end
 
   def team_member_params
-    params.require(:team_member).permit(:team, :name, :jira_account_user_email, :monthly_payment, :hours_per_month, :billable, :active, :billable_type, :start_date, :end_date)
+    params.require(:team_member).permit(:team, :name, :jira_account_user_email, :jira_account_id, :monthly_payment, :hours_per_month, :billable, :active, :billable_type, :start_date, :end_date)
   end
 end
