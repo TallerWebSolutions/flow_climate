@@ -227,7 +227,7 @@ RSpec.describe Jira::JiraIssueAdapter, type: :service do
           Jira::JiraIssueAdapter.instance.process_issue!(jira_account, product, first_project, jira_issue)
           expect(Demand.count).to eq 1
           expect(Demand.last.project).to eq second_project
-          expect(Demand.last.assignees_count).to eq 1
+          expect(Demand.last.assignees_count).to eq 0
           expect(Demand.last.demand_title).to eq 'foo of bar'
           expect(Demand.last.downstream_demand?).to be false
           expect(Demand.last.demand_comments.first.comment_text).to eq 'comment example'
@@ -245,7 +245,7 @@ RSpec.describe Jira::JiraIssueAdapter, type: :service do
         it 'updates the demand' do
           Jira::JiraIssueAdapter.instance.process_issue!(jira_account, product, first_project, jira_issue)
           expect(Demand.count).to eq 1
-          expect(Demand.last.assignees_count).to eq 1
+          expect(Demand.last.assignees_count).to eq 0
           expect(Demand.last.demand_title).to eq 'foo of bar'
           expect(Demand.last.downstream_demand?).to be false
           expect(Demand.last.url).to eq "#{jira_account.base_uri}browse/10000"
@@ -268,7 +268,7 @@ RSpec.describe Jira::JiraIssueAdapter, type: :service do
         it 'updates the demand throwing no errors' do
           Jira::JiraIssueAdapter.instance.process_issue!(jira_account, product, first_project, jira_issue)
           expect(Demand.count).to eq 1
-          expect(Demand.last.assignees_count).to eq 1
+          expect(Demand.last.assignees_count).to eq 0
           expect(Demand.last.demand_title).to eq 'foo of bar'
           expect(Demand.last.downstream_demand?).to be false
           expect(Demand.last.created_date).to eq Time.zone.parse('2018-07-02T11:20:18.998-0300')

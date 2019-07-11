@@ -9,11 +9,11 @@
   </div>
   <div class="col-xs-3 stamp">
     <div class="stamp-title"><%= Demand.human_attribute_name :created_date %></div>
-    <div class="stamp-content"><%= l(demand.created_date, format: :short)  %></div>
+    <div class="stamp-content"><%= I18n.l(demand.created_date, format: :short)  %></div>
   </div>
   <div class="col-xs-3 stamp">
     <div class="stamp-title"><%= Demand.human_attribute_name :commitment_date %></div>
-    <div class="stamp-content"><%= l(demand.commitment_date, format: :short) if demand.commitment_date.present? %></div>
+    <div class="stamp-content"><%= I18n.l(demand.commitment_date, format: :short) if demand.commitment_date.present? %></div>
   </div>
   <div class="col-xs-3 stamp">
     <div class="stamp-title"><%= Demand.human_attribute_name :end_date %></div>
@@ -24,7 +24,7 @@
     <div class="stamp-content"><%= I18n.t("activerecord.attributes.demand.enums.demand_type.#{demand.demand_type}") %></div>
   </div>
   <div class="col-xs-6 stamp">
-    <div class="stamp-title"><%= Demand.human_attribute_name :team_members %></div>
+    <div class="stamp-title"><span><%= Demand.human_attribute_name :team_members %></span><sup><%= " (#{demand.assignees_count})" %></sup></div>
     <div class="stamp-content"><%= demand.team_members.map(&:name).join(', ') %></div>
   </div>
   <div class="col-xs-6 stamp">
