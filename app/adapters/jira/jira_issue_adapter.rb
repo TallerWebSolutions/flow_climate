@@ -103,16 +103,25 @@ module Jira
 
       return if responsibles.blank?
 
+      responsibles_account_ids = read_responsibles_account_ids(responsibles)
       responsibles_emails = read_responsibles_emails(responsibles)
-      return if responsibles_emails.blank?
+      return if responsibles_emails.blank? && responsibles_account_ids.blank?
 
-      responsibles = project.company.team_members.where(jira_account_user_email: responsibles_emails)
+      responsibles = define_responsibles(project, responsibles_account_ids, responsibles_emails)
 
       demand.update(team_members: responsibles, team: define_team(project, responsibles), assignees_count: responsibles.count)
     end
 
+    def define_responsibles(project, responsibles_account_ids, responsibles_emails)
+      project.company.team_members.where(jira_account_id: responsibles_account_ids).or(project.company.team_members.where(jira_account_user_email: responsibles_emails))
+    end
+
     def read_responsibles_emails(responsibles)
       responsibles.map { |responsible| responsible['emailAddress'] }.flatten.uniq.compact
+    end
+
+    def read_responsibles_account_ids(responsibles)
+      responsibles.map { |responsible| responsible['accountId'] }.flatten.uniq.compact
     end
 
     def define_team(project, responsibles)
