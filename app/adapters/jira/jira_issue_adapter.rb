@@ -21,7 +21,7 @@ module Jira
                     demand_type: read_issue_type(jira_issue), artifact_type: Jira::JiraReader.instance.read_artifact_type(jira_issue.attrs),
                     class_of_service: Jira::JiraReader.instance.read_class_of_service(jira_account, jira_issue.attrs), demand_title: issue_fields_value(jira_issue, 'summary'),
                     url: build_jira_url(jira_account, demand.demand_id),
-                    team_members: [], commitment_date: nil, discarded_at: nil)
+                    team_members: [], assignees_count: 0, commitment_date: nil, discarded_at: nil)
 
       read_demand_details(demand, jira_account, jira_issue, project)
     end

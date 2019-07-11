@@ -284,7 +284,7 @@ class Demand < ApplicationRecord
   end
 
   def pairing_value(stage_config)
-    return assignees_count if assignees_count == 1
+    return assignees_count if assignees_count == 1 || assignees_count.zero?
 
     pair_count = assignees_count - 1
     1 + (pair_count * (stage_config.pairing_percentage / 100.0))
