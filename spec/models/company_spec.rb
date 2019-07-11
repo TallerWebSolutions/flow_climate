@@ -13,6 +13,7 @@ RSpec.describe Company, type: :model do
     it { is_expected.to have_many(:projects) }
     it { is_expected.to have_many(:jira_project_configs).through(:projects) }
     it { is_expected.to have_many(:demands).through(:projects) }
+    it { is_expected.to have_many(:team_members).through(:teams) }
     it { is_expected.to have_many(:teams).dependent(:restrict_with_error) }
     it { is_expected.to have_one(:company_settings).dependent(:destroy) }
     it { is_expected.to have_many(:jira_accounts).dependent(:destroy) }

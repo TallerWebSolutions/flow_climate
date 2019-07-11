@@ -671,7 +671,7 @@ RSpec.describe Project, type: :model do
   describe '#current_cost' do
     context 'having cost' do
       include_context 'demands with effort'
-      it { expect(project.current_cost.to_f).to eq 49_500.0 }
+      it { expect(project.current_cost.to_f).to eq 50_600.0 }
     end
 
     context 'having no cost yet' do

@@ -32,6 +32,7 @@ class Company < ApplicationRecord
   has_many :jira_product_configs, through: :products
   has_many :demands, through: :projects
   has_many :teams, dependent: :restrict_with_error
+  has_many :team_members, through: :teams
   has_many :stages, dependent: :restrict_with_error
   has_many :jira_accounts, class_name: 'Jira::JiraAccount', dependent: :destroy, inverse_of: :company
 
