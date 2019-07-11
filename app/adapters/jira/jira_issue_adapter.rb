@@ -96,15 +96,22 @@ module Jira
 
     def read_responsibles_info(demand, jira_account, jira_issue, project)
       responsibles_custom_field_name = jira_account.responsibles_custom_field&.custom_field_machine_name
-      return 1 if responsibles_custom_field_name.blank?
+      return if responsibles_custom_field_name.blank?
 
       responsibles = jira_issue.attrs['fields'][responsibles_custom_field_name]
 
-      return 1 if responsibles.blank?
+      return if responsibles.blank?
 
-      responsibles = TeamMember.where(jira_account_user_email: jira_issue.attrs['fields'][responsibles_custom_field_name].map { |responsible| responsible['emailAddress'] })
+      responsibles_emails = read_responsibles_emails(responsibles)
+      return if responsibles_emails.blank?
+
+      responsibles = project.company.team_members.where(jira_account_user_email: responsibles_emails)
 
       demand.update(team_members: responsibles, team: define_team(project, responsibles), assignees_count: responsibles.count)
+    end
+
+    def read_responsibles_emails(responsibles)
+      responsibles.map { |responsible| responsible['emailAddress'] }.flatten.uniq.compact
     end
 
     def define_team(project, responsibles)

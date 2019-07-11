@@ -139,7 +139,7 @@ pt-BR:
       project_count: "Projetos"
       product_count: "Produtos"
       customers_count: "Clientes"
-      current_hours_per_demand: "Horas/demanda do Mês"
+      current_hours_per_demand: "Horas/demanda Atual"
       current_month_throughput: "Throughput do Mês"
       current_cost_per_hour: "Custo/Hora do Mês"
       current_month_closed_bugs: "Bugs Fechados no Mês"
