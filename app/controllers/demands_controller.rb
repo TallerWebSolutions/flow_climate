@@ -22,7 +22,7 @@ class DemandsController < AuthenticatedController
   def destroy
     @demand.discard
 
-    @demands = DemandsList.kept.where(id: params[:demands_ids])
+    @demands = DemandsList.kept.where(id: params[:demands_ids].split(','))
     build_grouping_query(@demands, params[:grouping])
 
     assign_consolidations
