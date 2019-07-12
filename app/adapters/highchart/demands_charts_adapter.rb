@@ -52,7 +52,7 @@ module Highchart
         delivered_data << @demands_in_chart.where('demands.end_date BETWEEN :start_date AND :end_date', start_date: beginning_of_period_for_query(date), end_date: end_of_period_for_query(date)).count
       end
 
-      @throughput_chart_data = { x_axis: build_x_axis_for_date(@start_date, @end_date), y_axis: [{ name: I18n.t('general.throughput'), data: delivered_data }] }
+      @throughput_chart_data = { x_axis: build_x_axis_for_date(@start_date, @end_date), y_axis: [{ name: I18n.t('general.delivered'), data: delivered_data }] }
     end
 
     def build_leadtime_percentiles_on_time

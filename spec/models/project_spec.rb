@@ -326,18 +326,10 @@ RSpec.describe Project, type: :model do
       end
 
       context 'with no demands and no total pressure' do
-        before { travel_to Time.zone.local(2018, 3, 6, 10, 0, 0) }
-
-        after { travel_back }
-
         it { expect(project.relative_flow_pressure(nil)).to eq 0 }
       end
 
       context 'with no demands and 0 as total pressure' do
-        before { travel_to Time.zone.local(2018, 3, 6, 10, 0, 0) }
-
-        after { travel_back }
-
         it { expect(project.relative_flow_pressure(0)).to eq 0 }
       end
     end
@@ -669,9 +661,13 @@ RSpec.describe Project, type: :model do
   end
 
   describe '#current_cost' do
+    before { travel_to Time.zone.local(2018, 3, 6, 10, 0, 0) }
+
+    after { travel_back }
+
     context 'having cost' do
       include_context 'demands with effort'
-      it { expect(project.current_cost.to_f).to eq 50_600.0 }
+      it { expect(project.current_cost.to_f).to eq 42_240.0 }
     end
 
     context 'having no cost yet' do

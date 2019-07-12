@@ -27,7 +27,7 @@ RSpec.describe Highchart::DemandsChartsAdapter, type: :data_object do
         throughput_chart_data = Highchart::DemandsChartsAdapter.new(Demand.all, start_date, end_date, 'week').throughput_chart_data
 
         expect(throughput_chart_data[:x_axis]).to eq TimeService.instance.weeks_between_of(Date.new(2018, 3, 4), Date.new(2018, 9, 2))
-        expect(throughput_chart_data[:y_axis][0][:name]).to eq I18n.t('general.throughput')
+        expect(throughput_chart_data[:y_axis][0][:name]).to eq I18n.t('general.delivered')
         expect(throughput_chart_data[:y_axis][0][:data]).to eq [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0]
       end
     end

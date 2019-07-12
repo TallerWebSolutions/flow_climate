@@ -51,7 +51,8 @@ pt-BR:
     destroy:
       confirm: "Confirma a exclusão do registro?"
     period: "Período"
-    throughput: "Vazão"
+    throughput: "Vazão (itens/semana)"
+    delivered: "Entregas"
     filter:
       period:
         option:
@@ -61,8 +62,6 @@ pt-BR:
           last_week: "Última Semana"
     total: "Total"
     days_text: "%{days} dia(s)"
-    leadtime:
-      title: "Lead time %{percentile}"
     search_text: "Procurar no nome do produto ou do projeto e no ID da demanda"
     data: "Dados"
     error:
@@ -112,6 +111,7 @@ pt-BR:
     items_text: "%{items_count} item(ns)"
     flow: "Fluxo"
     class_of_service: "Classe de Serviço (Perfil de Risco)"
+    leadtime: "Lead time"
   header:
     logout: Sair
     sign_up: Cadastre-se
@@ -399,7 +399,7 @@ pt-BR:
     general:
       deadline: "Data do Prazo"
       scope: "Itens Descobertos"
-      leadtime: "Lead time (%{confidence})"
+      leadtime: "Lead time (%{percentil})"
     finish_project:
       success_message: "Projeto finalizado."
     actions:
@@ -476,6 +476,7 @@ pt-BR:
       drill_down_flow_title: "Fluxo (Últimas 8 semanas)"
       drill_down_wip_title: "Limite do WiP"
       drill_down_little_law_title: "Lei de Little"
+    remaining_time: "Tempo Restante"
   teams:
     index:
       title: "Times"
