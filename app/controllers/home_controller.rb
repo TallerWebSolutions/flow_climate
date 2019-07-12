@@ -15,7 +15,7 @@ class HomeController < AuthenticatedController
     else
       return redirect_to no_company_path if current_user.companies.blank?
 
-      redirect_to company_path(current_user.companies.last)
+      redirect_to company_path(current_user.last_company_id || current_user.companies.last)
     end
   end
 end

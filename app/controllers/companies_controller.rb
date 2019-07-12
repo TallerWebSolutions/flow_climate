@@ -17,6 +17,7 @@ class CompaniesController < AuthenticatedController
     @products_list = @company.products.includes(:team).includes(:customer).order(name: :asc)
     @customers_list = @company.customers.order(name: :asc)
 
+    assign_last_company
     assign_company_settings
     assign_jira_accounts_list
   end
@@ -94,6 +95,10 @@ class CompaniesController < AuthenticatedController
   end
 
   private
+
+  def assign_last_company
+    current_user.update(last_company_id: @company.id)
+  end
 
   def assign_company_settings
     @company_settings = @company.company_settings || CompanySettings.new(company: @company)
