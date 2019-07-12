@@ -372,6 +372,12 @@ class Project < ApplicationRecord
     (end_date - first_deadline).to_i
   end
 
+  def average_demand_aging
+    return 0 if demands.kept.blank?
+
+    demands.kept.sum(&:aging_when_finished) / demands.kept.count
+  end
+
   private
 
   def running?

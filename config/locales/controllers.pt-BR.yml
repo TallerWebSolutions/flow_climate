@@ -89,7 +89,7 @@ pt-BR:
     last_update:
       text: "Última atualização em %{last_update}"
     risk:
-      text: "Risco matemático para o deadline é %{risk_value}"
+      text: "Risco: %{risk_value}"
     detail: "Detalhamento do Risco"
     minimum: "Mínimo"
     maximum: "Máximo"
@@ -292,6 +292,7 @@ pt-BR:
         deadline: "Prazo Atual"
         current_numbers: "Números Atuais"
         remaining_scope: "Backlog Restante"
+        average_demand_aging: "Idade Média dos Itens"
     charts:
       xlabel:
         weeks: "Semanas"
