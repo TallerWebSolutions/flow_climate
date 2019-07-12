@@ -51,7 +51,8 @@ en:
     destroy:
       confirm: "You are about to delete a record. Are you sure?"
     period: "Period"
-    throughput: "Throughput"
+    throughput: "Throughput (items/week)"
+    delivered: "Delivered"
     filter:
       period:
         option:
@@ -110,6 +111,7 @@ en:
     items_text: "%{items_count} item(ns)"
     flow: "Flow"
     class_of_service: "Class of Service (Risk Profile)"
+    leadtime: "Lead time"
   header:
     logout: Logout
     explore: Explore
@@ -381,7 +383,7 @@ en:
     general:
       scope: "Discovered items"
       deadline: "Deadline"
-      leadtime: "Lead time (%{confidence})"
+      leadtime: "Lead time (%{percentil})"
     finish_project:
       success_message: "Project finished."
     actions:
@@ -457,7 +459,8 @@ en:
       drill_down_title: "Risk Drill Down"
       drill_down_flow_title: "Flow (Last 8 weeks)"
       drill_down_wip_title: "WiP Limit"
-      drill_down_little_law_title: "LIttle's Law"
+      drill_down_little_law_title: "Little's Law"
+    remaining_time: "Remaining Time"
   project:
     new:
       title: "New Project"

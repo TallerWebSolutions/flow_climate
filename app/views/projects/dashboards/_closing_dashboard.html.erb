@@ -91,7 +91,7 @@
             <div class="stamp-content"><%= number_to_percentage(project.failure_load, precision: 2) %></div>
           </div>
           <div class="col-xs-4 center">
-            <div class="stamp-title"><%= I18n.t('projects.general.leadtime', confidence: '80%') %></div>
+            <div class="stamp-title"><%= I18n.t('projects.general.leadtime', percentil: '80%') %></div>
             <div class="stamp-content"><%= time_distance_in_words(project.general_leadtime) %></div>
           </div>
         </div>

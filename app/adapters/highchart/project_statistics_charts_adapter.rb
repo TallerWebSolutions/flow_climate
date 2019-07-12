@@ -38,7 +38,7 @@ module Highchart
         accumulated_leadtime_in_time << Stats::StatisticsService.instance.percentile(confidence, demands_to_period.map(&:leadtime_in_days))
       end
 
-      [{ name: I18n.t('projects.general.leadtime', confidence: confidence), data: accumulated_leadtime_in_time, marker: { enabled: true } }]
+      [{ name: I18n.t('projects.general.leadtime', percentil: confidence), data: accumulated_leadtime_in_time, marker: { enabled: true } }]
     end
 
     def block_data_evolution_chart

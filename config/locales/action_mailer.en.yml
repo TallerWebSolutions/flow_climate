@@ -36,9 +36,6 @@ en:
       subject: "A new plan was requested"
     alert:
       alreary_has_a_plan: "You already has a plan"
-  general:
-    leadtime:
-      title: "Lead time %{percentile}"
     signature:
       regards: "Best Regards"
       flow_climate_team: "Flow Cliamate Team"
