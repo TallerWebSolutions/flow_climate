@@ -1,6 +1,13 @@
-<div class="col-xs-6">
+<div class="col-xs-2">
   <%= link_to root_path do %>
     <% image_tag 'https://res.cloudinary.com/dmphguydp/image/upload/v1550266141/Logo_preto_uyepsn.png', size: '131x45' %>
+  <% end %>
+</div>
+
+<div class="col-xs-3 header-nav">
+  <% if company.present? && company.persisted? %>
+    <span><%= link_to t('navbar.customers_list'), company_customers_path(company), class: 'nav-link top-nav-bar-item' %> | </span>
+    <span><%= link_to t('navbar.products_list'), company_products_path(company), class: 'nav-link top-nav-bar-item' %></span>
   <% end %>
 </div>
 
@@ -19,11 +26,6 @@
           <li><%= link_to 'Desligar Notificações', deactivate_email_notifications_users_path, method: :patch, remote: true, class: 'nav-link dropdown-item' %></li>
         <% else %>
           <li><%= link_to 'Ligar Notificações', activate_email_notifications_users_path, method: :patch, remote: true, class: 'nav-link dropdown-item' %></li>
-        <% end %>
-        <% if company.present? && company.persisted? %>
-          <li class="divider"></li>
-          <li><%= link_to t('navbar.customers_list'), company_customers_path(company), class: 'nav-link dropdown-item' %></li>
-          <li><%= link_to t('navbar.products_list'), company_products_path(company), class: 'nav-link dropdown-item' %></li>
         <% end %>
         <% if current_user.admin? || current_user.gold? %>
           <li class="divider"></li>

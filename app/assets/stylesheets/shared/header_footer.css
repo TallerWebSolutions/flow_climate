@@ -1,6 +1,21 @@
 .header {
     padding: 10px;
     background-color: #8fa9df;
+    height: 100%;
+}
+
+.header-nav {
+    font-size: large;
+    height: 100%;
+
+    padding: 15px;
+    margin-left: -30px;
+}
+
+.top-nav-bar-item {
+    text-decoration: none;
+    color: black;
+    vertical-align: bottom;
 }
 
 /* Style the list */
