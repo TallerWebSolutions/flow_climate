@@ -185,15 +185,15 @@ en:
       user_plan_active: "Você já tem um plano para o período."
   slack_configurations:
     notifications:
-      cmd_text: "*%{team_name}* | Average Demand Cost: %{cmd_value} | Variation: *%{cmd_difference_to_last_week}%* for the average of previous 4 weeks (%{previous_cmd}) | Last week: *%{last_week_cmd}*"
-      th_week_text: "*%{team_name}* | Throughput: %{th_current_week} demands | Variation: *%{difference_last_week_th_value}%* for the average of previous 4 weeks (%{four_weeks_th_average})."
-      th_last_week_text: "*%{team_name}* | Throughput: %{th_last_week} demands last week."
-      th_last_week_demand_info_text: "*%{demand_id}* %{demand_title} | *Responsibles:* %{responsibles_names} | *Cost to Project:* %{cost_to_project}"
-      qty_demands_in_wip: "*%{team_name}* | Work in Progress: %{in_wip} demands."
-      demands_in_wip_info_text: "*%{demand_id}* %{demand_title} | *Responsibles:* %{responsibles_names} | *Cost to Project:* %{cost_to_project} | *Current Stage:* %{current_stage} | *Time in Stage:* %{time_in_current_stage} | *% Flow Concluded:* %{percentage_concluded}"
-      outdated_demands_info_text: "*%{demand_id}* %{demand_title} | *Current Stage:* %{current_stage} | *Time in Stage:* %{time_in_current_stage}"
-      failure_load: "*%{team_name}* | Team failure load: %{failure_load}."
-      project_failure_load: "*%{team_name}* | *%{project_name}* | Project failure load: *%{failure_load}*."
+      cmd_text: "> *%{team_name}* | Average Demand Cost: %{cmd_value} | Variation: *%{cmd_difference_to_last_week}%* for the average of previous 4 weeks (%{previous_cmd}) | Last week: *%{last_week_cmd}*"
+      th_week_text: "> *%{team_name}* | Throughput: %{th_current_week} demands | Variation: *%{difference_last_week_th_value}%* for the average of previous 4 weeks (%{four_weeks_th_average})."
+      th_last_week_text: "> *%{team_name}* | Throughput: %{th_last_week} demands last week."
+      th_last_week_demand_info_text: "> *%{demand_id}* %{demand_title} | *Responsibles:* %{responsibles_names} | *Cost to Project:* %{cost_to_project}"
+      qty_demands_in_wip: "> *%{team_name}* | Work in Progress: %{in_wip} demands."
+      demands_in_wip_info_text: "> *%{demand_id}* %{demand_title} | *Responsibles:* %{responsibles_names} | *Cost to Project:* %{cost_to_project} | *Current Stage:* %{current_stage} | *Time in Stage:* %{time_in_current_stage} | *% Flow Concluded:* %{percentage_concluded}"
+      outdated_demands_info_text: "> *%{demand_id}* %{demand_title} | *Current Stage:* %{current_stage} | *Time in Stage:* %{time_in_current_stage}"
+      failure_load: "> *%{team_name}* | Team failure load: %{failure_load}."
+      project_failure_load: "> *%{team_name}* | *%{project_name}* | Project failure load: *%{failure_load}*."
   portfolio_unit:
     validations:
       name: "You can have only one unit name to each product."

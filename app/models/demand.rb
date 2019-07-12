@@ -163,9 +163,11 @@ class Demand < ApplicationRecord
   end
 
   def flow_percentage_concluded
-    return 0 if current_stage.blank?
+    return 0 if current_stage.blank? || !downstream_demand?
 
-    stage_orders_array = project.stages.order(:order).map(&:order)
+    stage_orders_array = project.stages.downstream.order(:order).map(&:order)
+    return 0 if stage_orders_array.blank?
+
     stage_orders_array.count { |order| order <= current_stage.order }.to_f / stage_orders_array.count
   end
 

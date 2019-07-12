@@ -1284,20 +1284,33 @@ RSpec.describe Project, type: :model do
   end
 
   describe '#average_speed_per_week' do
-    describe '#total_weeks' do
-      context 'with running project' do
-        let(:project) { Fabricate :project, status: :executing, start_date: Time.zone.today, end_date: 4.weeks.from_now, qty_hours: 2000 }
-        let!(:demands) { Fabricate.times(40, :demand, project: project, end_date: 2.days.from_now) }
+    context 'with demands' do
+      let(:project) { Fabricate :project, status: :executing, start_date: Time.zone.today, end_date: 4.weeks.from_now, qty_hours: 2000 }
+      let!(:demands) { Fabricate.times(40, :demand, project: project, end_date: 2.days.from_now) }
 
-        it { expect(project.average_speed_per_week).to eq 35.00000000000005 }
-      end
+      it { expect(project.average_speed_per_week).to eq 35.00000000000005 }
+    end
 
-      context 'with finished project' do
-        let(:project) { Fabricate :project, status: :finished, start_date: Time.zone.today, end_date: 4.weeks.from_now, qty_hours: 2000 }
-        let!(:demands) { Fabricate.times(40, :demand, project: project, end_date: 2.days.from_now) }
+    context 'with no demands' do
+      let(:project) { Fabricate :project, status: :finished, start_date: Time.zone.today, end_date: 4.weeks.from_now, qty_hours: 2000 }
 
-        it { expect(project.average_speed_per_week).to eq 7.7777777777777795 }
-      end
+      it { expect(project.average_speed_per_week).to eq 0 }
+    end
+  end
+
+  describe '#average_demand_aging' do
+    context 'with demands' do
+      let(:project) { Fabricate :project, status: :executing, start_date: Time.zone.today, end_date: 4.weeks.from_now, qty_hours: 2000 }
+      let!(:demands) { Fabricate.times(10, :demand, project: project, created_date: 1.day.ago, end_date: 2.days.from_now) }
+      let!(:older_demands) { Fabricate.times(10, :demand, project: project, created_date: 3.days.ago, end_date: 2.days.from_now) }
+
+      it { expect(project.average_demand_aging.round(2)).to eq 4.00 }
+    end
+
+    context 'with no demands' do
+      let(:project) { Fabricate :project, status: :finished, start_date: Time.zone.today, end_date: 4.weeks.from_now, qty_hours: 2000 }
+
+      it { expect(project.average_demand_aging).to eq 0 }
     end
   end
 end

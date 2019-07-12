@@ -89,7 +89,7 @@ en:
     last_update:
       text: "Last update: %{last_update}"
     risk:
-      text: "Math risk to deadline %{risk_value}"
+      text: "Risk: %{risk_value}"
     detail: "Risk Detail"
     minimum: "Minimum"
     maximum: "Maximum"
@@ -278,6 +278,7 @@ en:
         deadline: "Current Deadline"
         current_numbers: "Current Numbers"
         remaining_scope: "Remaining Backlog"
+        average_demand_aging: "Average Item Aging"
     charts:
       xlabel:
         weeks: "Weeks"

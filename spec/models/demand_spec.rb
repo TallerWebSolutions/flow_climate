@@ -711,13 +711,13 @@ RSpec.describe Demand, type: :model do
       it { expect(demand.flow_percentage_concluded).to eq 0 }
     end
 
-    context 'with transitions' do
+    context 'with no downstream transitions' do
       let(:project) { Fabricate :project, hour_value: 100 }
 
-      let!(:first_stage) { Fabricate :stage, projects: [project], order: 0 }
-      let!(:second_stage) { Fabricate :stage, projects: [project], order: 1 }
-      let!(:third_stage) { Fabricate :stage, projects: [project], order: 2 }
-      let!(:fourth_stage) { Fabricate :stage, projects: [project], order: 3 }
+      let!(:first_stage) { Fabricate :stage, projects: [project], stage_stream: :upstream, order: 0 }
+      let!(:second_stage) { Fabricate :stage, projects: [project], stage_stream: :upstream, order: 1 }
+      let!(:third_stage) { Fabricate :stage, projects: [project], stage_stream: :upstream, order: 2 }
+      let!(:fourth_stage) { Fabricate :stage, projects: [project], stage_stream: :upstream, order: 3 }
 
       let!(:demand) { Fabricate :demand, project: project }
 
@@ -725,7 +725,24 @@ RSpec.describe Demand, type: :model do
       let!(:second_demand_transition) { Fabricate :demand_transition, demand: demand, stage: second_stage, last_time_in: 2.days.ago }
       let!(:third_demand_transition) { Fabricate :demand_transition, demand: demand, stage: first_stage, last_time_in: 3.days.ago }
 
-      it { expect(demand.flow_percentage_concluded).to eq 0.75 }
+      it { expect(demand.flow_percentage_concluded).to eq 0 }
+    end
+
+    context 'with downstream transitions' do
+      let(:project) { Fabricate :project, hour_value: 100 }
+
+      let!(:first_stage) { Fabricate :stage, projects: [project], stage_stream: :upstream, order: 0 }
+      let!(:second_stage) { Fabricate :stage, projects: [project], stage_stream: :downstream, order: 1 }
+      let!(:third_stage) { Fabricate :stage, projects: [project], stage_stream: :downstream, order: 2 }
+      let!(:fourth_stage) { Fabricate :stage, projects: [project], stage_stream: :downstream, order: 3 }
+
+      let!(:demand) { Fabricate :demand, project: project }
+
+      let!(:first_demand_transition) { Fabricate :demand_transition, demand: demand, stage: third_stage, last_time_in: 1.day.ago }
+      let!(:second_demand_transition) { Fabricate :demand_transition, demand: demand, stage: second_stage, last_time_in: 2.days.ago }
+      let!(:third_demand_transition) { Fabricate :demand_transition, demand: demand, stage: first_stage, last_time_in: 3.days.ago }
+
+      it { expect(demand.flow_percentage_concluded).to eq 0.6666666666666666 }
     end
   end
 
