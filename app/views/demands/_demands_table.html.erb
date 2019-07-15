@@ -4,7 +4,9 @@
       <div id="demands_count">
         <h4>
           <%= "#{t('general.total')}: #{t('demands.index.count', demands_count: demands.count)}" %>
-          <sup><%= "(#{I18n.t('demands.stats.share_demands_blocked', percentage_blocks: number_to_percentage(@share_demands_blocked * 100, precision: 2))})" %></sup>
+          <% if share_demands_blocked.present? %>
+            <sup><%= "(#{I18n.t('demands.stats.share_demands_blocked', percentage_blocks: number_to_percentage(share_demands_blocked * 100, precision: 2))})" %></sup>
+          <% end %>
         </h4>
       </div>
     </div>

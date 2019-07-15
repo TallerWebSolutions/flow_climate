@@ -2,6 +2,7 @@ var demandsTab = $('#demands-tab');
 
 demandsTab.html("<%= escape_javascript(render 'demands/demands_tab', company: @company,
                                                                      demands: @demands,
+                                                                     share_demands_blocked: @share_demands_blocked,
                                                                      demands_count_per_week: @demands_count_per_week,
                                                                      demands_chart_adapter: @demands_chart_adapter,
                                                                      confidence_65_leadtime: @confidence_65_leadtime,

@@ -2,7 +2,7 @@
   <h4><%= t('demands.index.count', demands_count: demands.map { |demands_hash| demands_hash[1].count }.sum) %></h4>
   <% demands.each do |customer_name, demands_to_customer| %>
     <h2><%= customer_name %></h2>
-    <%= render 'demands/demands_table', company: company, demands: demands_to_customer %>
+    <%= render 'demands/demands_table', company: company, demands: demands_to_customer, share_demands_blocked: share_demands_blocked %>
   <% end %>
 
 <% else %>

@@ -791,8 +791,8 @@ RSpec.describe Demand, type: :model do
     let!(:product_demand) { Fabricate :demand, product: product, portfolio_unit: nil }
     let!(:no_product_demand) { Fabricate :demand, product: nil, portfolio_unit: nil }
 
-    it { expect(demand.product_tree).to eq [product.name, portfolio_unit.name, child_portfolio_unit.name, grandchild_portfolio_unit.name, demand.demand_id] }
-    it { expect(product_demand.product_tree).to eq [product.name, product_demand.demand_id] }
-    it { expect(no_product_demand.product_tree).to eq [no_product_demand.demand_id] }
+    it { expect(demand.product_tree).to eq [product, portfolio_unit, child_portfolio_unit, grandchild_portfolio_unit, demand] }
+    it { expect(product_demand.product_tree).to eq [product, product_demand] }
+    it { expect(no_product_demand.product_tree).to eq [no_product_demand] }
   end
 end

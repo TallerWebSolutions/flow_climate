@@ -910,6 +910,10 @@ pt-BR:
       title: "Unidades do Portfólio"
     new:
       button: "Nova Unidade do Portfólio"
+    show:
+      navbar:
+        demands: "Demandas"
+        structure: "Estrutura"
   jira_product_configs:
     new:
       button: "Nova Config de Produto"
