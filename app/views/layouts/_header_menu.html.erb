@@ -11,7 +11,7 @@
   <% end %>
 </div>
 
-<div class="col-xs-6">
+<div class="col-xs-7 pull-right">
   <div class="dropdown topnav-right">
     <% if current_user.present? && current_user.avatar.present? %>
       <%= image_tag current_user.avatar.url, size: '50x50', class: 'user-avatar dropdown-toggle', 'data-toggle' => 'dropdown' %>

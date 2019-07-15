@@ -49,12 +49,34 @@ class PortfolioUnit < ApplicationRecord
 
     product_tree_array = []
     until (portfolio_unit_parent = portfolio_unit_parent.parent).nil?
-      product_tree_array << portfolio_unit_parent.name
+      product_tree_array << portfolio_unit_parent
     end
     product_tree_array
   end
 
-  def total_demands
-    (demands.kept + children.map(&:total_demands).flatten).flatten
+  def portfolio_structure
+    portfolio_structure = parent_branches.reverse
+
+    portfolio_structure.unshift(product)
+
+    portfolio_structure << self
+  end
+
+  def total_portfolio_demands
+    Demand.where(id: (demands.kept + children.map(&:total_portfolio_demands).flatten).flatten.map { |demand| demand['id'] })
+  end
+
+  def percentage_complete
+    return 0 unless total_portfolio_demands.count.positive?
+
+    total_portfolio_demands.finished.count.to_f / total_portfolio_demands.count
+  end
+
+  def total_cost
+    total_portfolio_demands.sum(&:cost_to_project)
+  end
+
+  def total_hours
+    total_portfolio_demands.sum(&:total_effort)
   end
 end

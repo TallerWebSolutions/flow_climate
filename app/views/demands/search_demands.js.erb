@@ -8,28 +8,28 @@ $('#container-leadtime-div').html("<%= escape_javascript(render 'demands/demands
 $('#content-charts').html("<%= escape_javascript(render 'demands/demands_charts', demands: @demands, demands_chart_adapter: @demands_chart_adapter).html_safe %>");
 
 <% if @grouped_delivered_demands.present? %>
-  demandsGroupedPerMonth.html("<%= escape_javascript(render 'demands/grouped_by_month_demands_table', company: @company, demands: @grouped_delivered_demands).html_safe %>");
+  demandsGroupedPerMonth.html("<%= escape_javascript(render 'demands/grouped_by_month_demands_table', company: @company, demands: @grouped_delivered_demands, share_demands_blocked: @share_demands_blocked).html_safe %>");
   flatDemands.hide();
   demandsGroupedPerMonth.show();
   demandsGroupedPerCustomer.hide();
   demandsGroupedPerStage.hide();
 
 <% elsif @grouped_customer_demands.present? %>
-  demandsGroupedPerCustomer.html("<%= escape_javascript(render 'demands/grouped_by_customer_demands_table', company: @company, demands: @grouped_customer_demands).html_safe %>");
+  demandsGroupedPerCustomer.html("<%= escape_javascript(render 'demands/grouped_by_customer_demands_table', company: @company, demands: @grouped_customer_demands, share_demands_blocked: @share_demands_blocked).html_safe %>");
   flatDemands.hide();
   demandsGroupedPerMonth.hide();
   demandsGroupedPerStage.hide();
   demandsGroupedPerCustomer.show();
 
 <% elsif @grouped_by_stage_demands.present? %>
-  demandsGroupedPerStage.html("<%= escape_javascript(render 'demands/grouped_by_stage_demands_table', company: @company, demands: @grouped_by_stage_demands).html_safe %>");
+  demandsGroupedPerStage.html("<%= escape_javascript(render 'demands/grouped_by_stage_demands_table', company: @company, demands: @grouped_by_stage_demands, share_demands_blocked: @share_demands_blocked).html_safe %>");
   flatDemands.hide();
   demandsGroupedPerMonth.hide();
   demandsGroupedPerStage.show();
   demandsGroupedPerCustomer.hide();
 
 <% else %>
-  flatDemands.html("<%= escape_javascript(render 'demands/demands_table', company: @company, demands: @demands).html_safe %>");
+  flatDemands.html("<%= escape_javascript(render 'demands/demands_table', company: @company, demands: @demands, share_demands_blocked: @share_demands_blocked).html_safe %>");
   flatDemands.show();
   demandsGroupedPerMonth.hide();
   demandsGroupedPerCustomer.hide();

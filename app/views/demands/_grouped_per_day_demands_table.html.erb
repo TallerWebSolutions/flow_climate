@@ -1,9 +1,0 @@
-<h3><%= t('demands.flow.wip') %></h3>
-
-<% grouped_per_day_demand_list.each_pair do |day, demands| %>
-  <button class="accordion"><%= "#{l(Date.parse(day), format: :short)} (#{demands.count})" %></button>
-
-  <div class="panel">
-    <%= render 'demands/summarized_demand_list', demands: demands %>
-  </div>
-<% end %>

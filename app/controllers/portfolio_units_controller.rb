@@ -3,6 +3,7 @@
 class PortfolioUnitsController < AuthenticatedController
   before_action :assign_company
   before_action :assign_product
+  before_action :assign_portfolio_unit, only: %i[show destroy]
 
   def new
     @portfolio_unit = PortfolioUnit.new(product: @product)
@@ -22,13 +23,18 @@ class PortfolioUnitsController < AuthenticatedController
   end
 
   def destroy
-    @portfolio_unit = PortfolioUnit.find(params[:id])
     @portfolio_unit.destroy
     @portfolio_units = @product.portfolio_units.order(:name)
     render 'portfolio_units/destroy'
   end
 
+  def show; end
+
   private
+
+  def assign_portfolio_unit
+    @portfolio_unit = PortfolioUnit.find(params[:id])
+  end
 
   def assign_product
     @product = @company.products.find(params[:product_id])

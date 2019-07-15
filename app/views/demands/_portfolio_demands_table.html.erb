@@ -1,0 +1,49 @@
+<% if demands.count.positive? %>
+  <div class="row">
+    <div class="col-xs-12">
+      <div id="demands_count">
+        <h4><%= "#{t('general.total')}: #{t('demands.index.count', demands_count: demands.count)}" %></h4>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="form-group">
+        <%= link_to t('general.download_csv'), demands_csv_company_demands_path(company, demands.map(&:id).to_csv, format: :csv), class: 'btn btn-sm btn-primary pull-right' %>
+      </div>
+    </div>
+  </div>
+<% end %>
+
+<% if demands.present? %>
+  <div id="demands_table">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th><%= Demand.human_attribute_name :demand_id %></th>
+          <th><%= Demand.human_attribute_name :artifact_type %></th>
+          <th><%= Demand.human_attribute_name :demand_type %></th>
+          <th><%= Demand.human_attribute_name :class_of_service %></th>
+          <th><%= Demand.human_attribute_name :leadtime %></th>
+          <th><%= Demand.human_attribute_name :demand_title %></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% demands.each do |demand| %>
+          <tr id='demand_<%= demand.id %>'>
+            <td><%= link_to demand.demand_id, company_demand_path(company, demand.slug) %></td>
+            <td><%= I18n.t("activerecord.attributes.demand.enums.artifact_type.#{demand.artifact_type}") %></td>
+            <td><%= I18n.t("activerecord.attributes.demand.enums.demand_type.#{demand.demand_type}") %></td>
+            <td><%= I18n.t("activerecord.attributes.demand.enums.class_of_service.#{demand.class_of_service}") %></td>
+            <td><%= time_distance_in_words(demand.leadtime) %></td>
+            <td><%= demand.demand_title %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+
+<% else %>
+  <%= render 'layouts/no_data', missing_data: Demand.model_name.human.pluralize.downcase %>
+<% end %>

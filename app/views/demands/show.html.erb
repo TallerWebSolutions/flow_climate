@@ -37,7 +37,7 @@
   <div class="row">
     <% @demand.product_tree.each do |branch| %>
       <div class="col-xs-4 col-xs-offset-4 center <%= branch != @demand.product_tree.last ? 'product-branch' : 'demand-branch' %>">
-        <h4><%= branch %></h4>
+        <h4><%= branch.name %></h4>
       </div>
 
       <% if branch != @demand.product_tree.last %>

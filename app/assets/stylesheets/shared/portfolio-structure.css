@@ -1,0 +1,18 @@
+.card-header {
+    margin-top: -10px;
+    margin-bottom: 15px;
+}
+
+.card-title {
+    text-align: center;
+}
+
+.card-subtitle {
+    font-size: smaller;
+    font-style: italic;
+    margin-bottom: 30px;
+}
+
+.card-progress-bar {
+    margin-bottom: -19px;
+}

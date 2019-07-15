@@ -1,8 +1,0 @@
-<h3><%= t('demands.flow.processed_demand') %></h3>
-<% grouped_per_project_demand_list.each_pair do |project, demands| %>
-  <button class="accordion"><%= "#{project.name} (#{demands.count})" %></button>
-
-  <div class="panel">
-    <%= render 'demands/summarized_demand_list', demands: demands %>
-  </div>
-<% end %>

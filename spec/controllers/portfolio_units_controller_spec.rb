@@ -19,6 +19,12 @@ RSpec.describe PortfolioUnitsController, type: :controller do
 
       it { expect(response).to redirect_to new_user_session_path }
     end
+
+    describe 'GET #show' do
+      before { get :show, params: { company_id: 'bar', product_id: 'foo', id: 'bar' } }
+
+      it { expect(response).to redirect_to new_user_session_path }
+    end
   end
 
   context 'authenticated' do
@@ -176,6 +182,59 @@ RSpec.describe PortfolioUnitsController, type: :controller do
           let(:company) { Fabricate :company, users: [] }
 
           before { delete :destroy, params: { company_id: company, product_id: product, id: portfolio_unit }, xhr: true }
+
+          it { expect(response).to have_http_status :not_found }
+        end
+      end
+    end
+
+    describe 'GET #show' do
+      let!(:portfolio_unit) { Fabricate :portfolio_unit, product: product, name: 'zzz' }
+      let!(:other_portfolio_unit) { Fabricate :portfolio_unit, product: product, name: 'aaa' }
+
+      let!(:out_portfolio_unit) { Fabricate :portfolio_unit, name: 'aaa' }
+
+      context 'with valid data' do
+        it 'assigns the instance variables and render the template' do
+          get :show, params: { company_id: company, product_id: product, id: portfolio_unit }, xhr: true
+          expect(assigns(:company)).to eq company
+          expect(assigns(:product)).to eq product
+          expect(assigns(:portfolio_unit)).to eq portfolio_unit
+          expect(response).to render_template 'portfolio_units/show'
+        end
+      end
+
+      context 'with invalid' do
+        context 'portfolio_unit' do
+          before { get :show, params: { company_id: company, product_id: product, id: 'foo' }, xhr: true }
+
+          it { expect(response).to have_http_status :not_found }
+        end
+
+        context 'product' do
+          before { get :show, params: { company_id: company, product_id: 'foo', id: portfolio_unit }, xhr: true }
+
+          it { expect(response).to have_http_status :not_found }
+        end
+
+        context 'product in other company' do
+          let(:other_product) { Fabricate :product }
+
+          before { get :show, params: { company_id: company, product_id: other_product, id: portfolio_unit }, xhr: true }
+
+          it { expect(response).to have_http_status :not_found }
+        end
+
+        context 'company' do
+          before { get :show, params: { company_id: 'foo', product_id: product, id: portfolio_unit }, xhr: true }
+
+          it { expect(response).to have_http_status :not_found }
+        end
+
+        context 'unpermitted company' do
+          let(:other_company) { Fabricate :company }
+
+          before { get :new, params: { company_id: other_company, product_id: product }, xhr: true }
 
           it { expect(response).to have_http_status :not_found }
         end

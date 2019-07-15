@@ -219,10 +219,14 @@ class Demand < ApplicationRecord
   end
 
   def product_tree
-    return [demand_id] if product.blank?
-    return [product.name, demand_id] if portfolio_unit.blank?
+    return [self] if product.blank?
+    return [product, self] if portfolio_unit.blank?
 
     build_product_tree_array.flatten
+  end
+
+  def name
+    demand_id
   end
 
   private
@@ -230,8 +234,8 @@ class Demand < ApplicationRecord
   def build_product_tree_array
     product_tree_array = portfolio_unit.parent_branches
     product_tree_array = product_tree_array.reverse
-    product_tree_array.unshift(product.name)
-    product_tree_array << [portfolio_unit.name, demand_id]
+    product_tree_array.unshift(product)
+    product_tree_array << [portfolio_unit, self]
     product_tree_array
   end
 

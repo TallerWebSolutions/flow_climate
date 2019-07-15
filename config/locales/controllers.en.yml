@@ -923,6 +923,10 @@ en:
       title: "Portfolio Units"
     new:
       button: "New Portfolio Unit"
+    show:
+      navbar:
+        demands: "Demands"
+        structure: "Structure"
   jira_product_configs:
     new:
       button: "New Jira Product Config"

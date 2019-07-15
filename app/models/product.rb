@@ -28,10 +28,29 @@ class Product < ApplicationRecord
   has_many :teams, -> { distinct }, through: :projects
   has_many :jira_product_configs, class_name: 'Jira::JiraProductConfig', dependent: :destroy
   has_many :portfolio_units, dependent: :destroy
+  has_many :demands, dependent: :restrict_with_error
 
   validates :name, :customer, presence: true
   validates :name, uniqueness: { scope: :customer, message: I18n.t('product.name.uniqueness') }
 
   delegate :name, to: :customer, prefix: true
   delegate :company, to: :customer, prefix: false
+
+  def percentage_complete
+    return 0 unless demands.count.positive?
+
+    demands.finished.count.to_f / demands.count
+  end
+
+  def total_portfolio_demands
+    (demands + portfolio_units.map(&:total_portfolio_demands).flatten).uniq
+  end
+
+  def total_cost
+    total_portfolio_demands.sum(&:cost_to_project)
+  end
+
+  def total_hours
+    total_portfolio_demands.sum(&:total_effort)
+  end
 end
