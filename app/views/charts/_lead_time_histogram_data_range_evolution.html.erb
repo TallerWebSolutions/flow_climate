@@ -3,8 +3,8 @@
     <div id="line-histogram-data-range-evolution"
          class="flow-chart"
          data-xcategories='<%= x_axis.to_json %>'
-         data-title='<%= t('charts.lead_time_histogram_range_evolution.title') %>'
-         data-ytitle='<%= t('projects.charts.xlabel.days') %>'
+         data-title='<%= I18n.t('charts.lead_time_histogram_range_evolution.title') %>'
+         data-ytitle='<%= I18n.t('projects.charts.xlabel.days') %>'
          data-prefix=''
          data-tooltipsuffix=''
          data-series='<%= y_axis.to_json %>'
@@ -14,11 +14,11 @@
   </div>
 
   <div class="col-xs-2 center-text">
-    <div><%= t('general.start') %></div>
+    <div><%= I18n.t('general.start') %></div>
     <h3><%= number_with_precision(y_axis[0][:data].first, precision: 4) %></h3>
   </div>
   <div class="col-xs-2 center-text bottom-spaced-component">
-    <div><%= t('general.finish') %></div>
+    <div><%= I18n.t('general.finish') %></div>
     <h3><%= number_with_precision(y_axis[0][:data].last, precision: 4) %></h3>
   </div>
 

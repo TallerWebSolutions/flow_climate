@@ -4,38 +4,38 @@
     <div class="stamp-content"><%= customer.name  %></div>
   </div>
   <div class="col-xs-2 stamp">
-    <div class="stamp-title"><%= t('projects.show.last_week_scope') %></div>
+    <div class="stamp-title"><%= I18n.t('projects.show.last_week_scope') %></div>
     <div class="stamp-content"><%= customer.last_week_scope  %></div>
   </div>
   <div class="col-xs-2 stamp">
-    <div class="stamp-title"><%= t('general.delivered') %></div>
+    <div class="stamp-title"><%= I18n.t('general.delivered') %></div>
     <div class="stamp-content"><%= customer.delivered_scope  %></div>
   </div>
   <div class="col-xs-2 stamp">
-    <div class="stamp-title"><%= t('projects.index.remaining_backlog') %></div>
+    <div class="stamp-title"><%= I18n.t('projects.index.remaining_backlog') %></div>
     <div class="stamp-content"><%= customer.remaining_backlog  %></div>
   </div>
   <div class="col-xs-2 stamp">
-    <div class="stamp-title"><%= t('projects.index.percentage_remaining_scope') %></div>
+    <div class="stamp-title"><%= I18n.t('projects.index.percentage_remaining_scope') %></div>
     <div class="stamp-content"><%= number_to_percentage(customer.percentage_remaining_scope, precision: 2)  %></div>
   </div>
   <div class="col-xs-2 stamp">
-    <div class="stamp-title"><%= t('projects.index.flow_pressure') %></div>
+    <div class="stamp-title"><%= I18n.t('projects.index.flow_pressure') %></div>
     <div class="stamp-content"><%= number_with_precision(customer.total_flow_pressure, precision: 3)  %></div>
   </div>
 </div>
 
 <div class="row">
   <div class="col-xs-4 green-stamp">
-    <div class="stamp-title"><%= t('customers.show.total_value') %></div>
+    <div class="stamp-title"><%= I18n.t('customers.show.total_value') %></div>
     <div class="stamp-content"><%= number_to_currency(customer.total_value) %></div>
   </div>
   <div class="col-xs-4 green-stamp">
-    <div class="stamp-title"><%= t('projects.index.remaining_money') %></div>
+    <div class="stamp-title"><%= I18n.t('projects.index.remaining_money') %></div>
     <div class="stamp-content"><%= number_to_currency(customer.remaining_money) %></div>
   </div>
   <div class="col-xs-4 green-stamp">
-    <div class="stamp-title"><%= t('projects.index.percentage_remaining_money') %></div>
+    <div class="stamp-title"><%= I18n.t('projects.index.percentage_remaining_money') %></div>
     <div class="stamp-content"><%= number_to_percentage(customer.percentage_remaining_money, precision: 2)  %></div>
   </div>
 </div>

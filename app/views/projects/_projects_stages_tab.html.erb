@@ -5,14 +5,14 @@
   </div>
   <div class="row">
     <div class="col-xs-12">
-      <%= submit_tag t('projects.show.import_stages'), class: 'btn btn-success' %>
+      <%= submit_tag I18n.t('projects.show.import_stages'), class: 'btn btn-success' %>
     </div>
   </div>
 <% end %>
 
 <% if project.stages.empty? %>
   <div class="no-data">
-    <%= t('general.no_data', missing_data: Stage.model_name.human.pluralize(2).downcase) %>
+    <%= I18n.t('general.no_data', missing_data: Stage.model_name.human.pluralize(2).downcase) %>
   </div>
 <% else %>
   <div id="stages-to-project-table">

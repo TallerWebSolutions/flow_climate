@@ -18,12 +18,12 @@
   <div class="row">
     <div class='col-xs-3 form-group <%= 'has-error' if project.errors[:name].present? %>'>
       <%= f.label :status, class: 'control-label required' %>
-      <%= f.select :status, Project.statuses.map { |key, _value| [t("activerecord.attributes.project.enums.status.#{key}"), key] }, { include_blank: t('general.select'), selected: project.status }, class: 'form-control' %>
+      <%= f.select :status, Project.statuses.map { |key, _value| [t("activerecord.attributes.project.enums.status.#{key}"), key] }, { include_blank: I18n.t('general.select'), selected: project.status }, class: 'form-control' %>
       <span class="help-block"><%= project.errors[:status].join(', ') %></span>
     </div>
     <div class='col-xs-3 form-group <%= 'has-error' if project.errors[:project_type].present? %>'>
       <%= f.label :project_type, class: 'control-label required' %>
-      <%= f.select :project_type, Project.project_types.map { |key, _value| [t("activerecord.attributes.project.enums.project_type.#{key}"), key] }, { include_blank: t('general.select'), selected: project.project_type }, class: 'form-control' %>
+      <%= f.select :project_type, Project.project_types.map { |key, _value| [t("activerecord.attributes.project.enums.project_type.#{key}"), key] }, { include_blank: I18n.t('general.select'), selected: project.project_type }, class: 'form-control' %>
       <span class="help-block"><%= project.errors[:project_type].join(', ') %></span>
     </div>
     <div class='col-xs-3 form-group <%= 'has-error' if project.errors[:start_date].present? %>'>
@@ -41,7 +41,7 @@
   <div class="row">
     <div class='col-xs-3 form-group'>
       <%= f.label :team, class: 'control-label' %>
-      <%= f.select :team_id, company.teams.map { |team| [team.name, team.id] }, { include_blank: t('general.select'), selected: project.team_id }, class: 'form-control' %>
+      <%= f.select :team_id, company.teams.map { |team| [team.name, team.id] }, { include_blank: I18n.t('general.select'), selected: project.team_id }, class: 'form-control' %>
       <span class="help-block"><%= project.errors[:team].join(', ') %></span>
     </div>
 
@@ -82,7 +82,7 @@
 
   <div class="row">
     <div class="col-xs-12">
-      <%= f.submit t('general.buttons.save'), class: 'btn btn-success' %>
+      <%= f.submit I18n.t('general.buttons.save'), class: 'btn btn-success' %>
     </div>
   </div>
 </div>

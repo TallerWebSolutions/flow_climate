@@ -1,7 +1,7 @@
 <div class="row">
   <div class="col-xs-12">
     <ul class="breadcrumb">
-      <li><%= link_to t('general.home.title'), root_path %></li>
+      <li><%= link_to I18n.t('general.home.title'), root_path %></li>
       <li><%= link_to @company.abbreviation&.upcase, company_path(@company) %></li>
       <li><%= link_to @demand.project.name, company_project_path(@company, @demand.project) %></li>
       <li><%= @demand.demand_id %></li>
@@ -16,7 +16,7 @@
 <div class="row bottom-spaced-component">
   <div class="col-xs-6">
     <%= link_to synchronize_jira_company_project_demand_path(@company, @demand.project, @demand), method: :put do %>
-      <span class="btn btn-sm"><i class="fas fa-sync-alt"></i></span><span><%= t('demands.show.sync_jira') %></span>
+      <span class="btn btn-sm"><i class="fas fa-sync-alt"></i></span><span><%= I18n.t('demands.show.sync_jira') %></span>
     <% end %>
     <span class="detailed"><%= "(#{t('general.last_update.text', last_update: I18n.l(@demand.updated_at, format: :short))})" %></span>
   </div>
@@ -36,12 +36,12 @@
 <div id="content-structure" class="tabcontent">
   <div class="row">
     <% @demand.product_tree.each do |branch| %>
-      <div class="col-xs-4 col-xs-offset-4 center <%= branch != @demand.product_tree.last ? 'product-branch' : 'demand-branch' %>">
+      <div class="col-xs-2 col-xs-offset-5 center <%= branch != @demand.product_tree.last ? 'product-branch' : 'demand-branch' %>">
         <h4><%= branch.name %></h4>
       </div>
 
       <% if branch != @demand.product_tree.last %>
-        <div class="col-xs-4 col-xs-offset-4 product-tree-connector">
+        <div class="col-xs-2 col-xs-offset-5 product-tree-connector">
           <i class="fas fa-arrow-down"></i>
         </div>
       <% end %>

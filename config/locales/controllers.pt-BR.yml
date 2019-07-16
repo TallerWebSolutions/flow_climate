@@ -451,9 +451,6 @@ pt-BR:
       aging: "Idade"
       throughput_data_mode: "Moda do Throughput"
       last_four_weeks_lead_time: "Lead Time das Últ, 4 Sem."
-    sync:
-      jira:
-        no_config_error: "Por favor primeiro configure o Jira para o projeto."
     statistics:
       scope_tab: "Variação do Escopo"
       leadtime_tab: "Variação do lead time"

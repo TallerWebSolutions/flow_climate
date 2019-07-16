@@ -1,9 +1,9 @@
 <div class="row">
   <div class="col-xs-12">
     <ul class="breadcrumb">
-      <li><%= link_to t('general.home.title'), root_path %></li>
+      <li><%= link_to I18n.t('general.home.title'), root_path %></li>
       <li><%= link_to @company.abbreviation&.upcase, company_path(@company) %></li>
-      <li><%= t('stages.new.title') %></li>
+      <li><%= I18n.t('stages.new.title') %></li>
     </ul>
   </div>
 </div>

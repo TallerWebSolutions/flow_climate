@@ -17,7 +17,7 @@
   </div>
   <div class="col-xs-3 stamp">
     <div class="stamp-title"><%= Demand.human_attribute_name :end_date %></div>
-    <div class="stamp-content"><%= l(demand.end_date, format: :short) if demand.end_date.present? %></div>
+    <div class="stamp-content"><%= I18n.l(demand.end_date, format: :short) if demand.end_date.present? %></div>
   </div>
   <div class="col-xs-6 stamp">
     <div class="stamp-title"><%= Demand.human_attribute_name :demand_type %></div>

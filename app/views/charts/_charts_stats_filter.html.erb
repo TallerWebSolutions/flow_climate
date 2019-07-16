@@ -16,7 +16,7 @@
 
   <div class="col-xs-3">
     <div class="form-group">
-      <%= label_tag t('charts.period.label') %>
+      <%= label_tag I18n.t('charts.period.label') %>
       <%= select_tag :stats_chart_period, grouping_period_to_charts_options(params['period']), class: 'form-control filter-checks' %>
     </div>
   </div>
@@ -24,7 +24,7 @@
   <% if projects_count > 1 %>
     <div class="col-xs-3">
       <div class="form-group">
-        <%= label_tag t('filters.options.project_status') %>
+        <%= label_tag I18n.t('filters.options.project_status') %>
         <%= select_tag :project_status, options_for_select(Project.statuses.keys.map { |status| [I18n.t("activerecord.attributes.project.enums.status.#{status}"), status] }, selected: params[:project_status]), include_blank: I18n.t('general.select'),class: 'form-control filter-checks' %>
       </div>
     </div>
@@ -33,6 +33,6 @@
 
 <div class="row bottom-spaced-component">
   <div class="col-xs-3">
-    <%= link_to t('general.search'), '#', class: 'btn btn-primary', id: 'search-stats' %>
+    <%= link_to I18n.t('general.search'), '#', class: 'btn btn-primary', id: 'search-stats' %>
   </div>
 </div>

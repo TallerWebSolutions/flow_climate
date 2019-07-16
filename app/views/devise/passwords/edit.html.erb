@@ -1,7 +1,7 @@
 <div class="row">
   <div class="col-xs-4 col-xs-offset-4">
 
-    <h2><%= t('devise.passwords.change_password.title') %></h2>
+    <h2><%= I18n.t('devise.passwords.change_password.title') %></h2>
 
     <%= form_for(resource, as: resource_name, url: password_path(resource_name), method: :put, class: 'form-horizontal') do |f| %>
       <%= f.hidden_field :reset_password_token %>
@@ -11,7 +11,7 @@
         <%= f.label :password %>
         <%= f.password_field :password, autofocus: true, autocomplete: 'off', class: 'form-control' %>
         <% if @minimum_password_length %>
-          <span class="help-block"><%= t('devise.passwords.minimum', minimum_length_value: @minimum_password_length) %></span>
+          <span class="help-block"><%= I18n.t('devise.passwords.minimum', minimum_length_value: @minimum_password_length) %></span>
         <% end %>
       </div>
 
@@ -21,7 +21,7 @@
       </div>
 
       <div class="actions">
-        <%= f.submit t('devise.registrations.change_password'), class: 'btn btn-primary' %>
+        <%= f.submit I18n.t('devise.registrations.change_password'), class: 'btn btn-primary' %>
       </div>
     <% end %>
 

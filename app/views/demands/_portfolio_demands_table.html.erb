@@ -10,7 +10,7 @@
   <div class="row">
     <div class="col-xs-12">
       <div class="form-group">
-        <%= link_to t('general.download_csv'), demands_csv_company_demands_path(company, demands.map(&:id).to_csv, format: :csv), class: 'btn btn-sm btn-primary pull-right' %>
+        <%= link_to I18n.t('general.download_csv'), demands_csv_company_demands_path(company, demands.map(&:id).to_csv, format: :csv), class: 'btn btn-sm btn-primary pull-right' %>
       </div>
     </div>
   </div>

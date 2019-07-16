@@ -1,7 +1,7 @@
 <% if demand_blocks_list.empty? %>
   <div class="row">
     <div class="col-xs-12">
-      <%= t('demands.show.no_demand_blocks') %>
+      <%= I18n.t('demands.show.no_demand_blocks') %>
     </div>
   </div>
 <% else %>
@@ -19,7 +19,7 @@
         <th><%= DemandBlock.human_attribute_name :unblocker_username %></th>
         <th><%= DemandBlock.human_attribute_name :unblock_time %></th>
         <th class="center"><%= DemandBlock.human_attribute_name :active %></th>
-        <th class="center"><%= t('general.table.actions') %></th>
+        <th class="center"><%= I18n.t('general.table.actions') %></th>
       </tr>
     </thead>
     <tbody>

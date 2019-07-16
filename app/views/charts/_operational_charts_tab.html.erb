@@ -21,7 +21,7 @@
 
     <div class="col-xs-3">
       <div class="form-group">
-        <%= label_tag t('charts.period.label') %>
+        <%= label_tag I18n.t('charts.period.label') %>
         <%= select_tag :operational_charts_period, grouping_period_to_charts_options(params['period']), class: 'form-control' %>
       </div>
     </div>
@@ -29,7 +29,7 @@
 
   <div class="row bottom-spaced-component">
     <div class="col-xs-3">
-      <%= link_to t('general.search'), '#', class: 'btn btn-primary', id: 'search_operational_charts' %>
+      <%= link_to I18n.t('general.search'), '#', class: 'btn btn-primary', id: 'search_operational_charts' %>
     </div>
   </div>
 <% end %>

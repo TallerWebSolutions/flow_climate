@@ -48,7 +48,7 @@ class CompaniesController < AuthenticatedController
 
   def add_user
     user = User.find_by(email: params[:user_email])
-    return redirect_to(edit_company_path(@company), error: t('general.user_not_found')) if user.blank?
+    return redirect_to(edit_company_path(@company), error: I18n.t('general.user_not_found')) if user.blank?
 
     @company.add_user(user)
     redirect_to edit_company_path(@company)
@@ -57,9 +57,9 @@ class CompaniesController < AuthenticatedController
   def send_company_bulletin
     mail_sent = UserNotifierMailer.company_weekly_bulletin(User.where(id: current_user.id), @company).deliver
     if mail_sent.instance_of?(Mail::Message)
-      flash[:notice] = t('companies.send_company_bulletin.sent')
+      flash[:notice] = I18n.t('companies.send_company_bulletin.sent')
     else
-      flash[:error] = t('companies.send_company_bulletin.error')
+      flash[:error] = I18n.t('companies.send_company_bulletin.error')
     end
     redirect_to company_path(@company)
   end

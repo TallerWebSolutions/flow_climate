@@ -1,6 +1,6 @@
 <div class="row">
   <div class="col-xs-12">
-    <%= link_to t('products.new.title'), new_company_product_path(company), class: 'btn btn-sm btn-success bottom-spaced-component pull-right' %>
+    <%= link_to I18n.t('products.new.title'), new_company_product_path(company), class: 'btn btn-sm btn-success bottom-spaced-component pull-right' %>
   </div>
 </div>
 
@@ -10,11 +10,11 @@
       <tr>
         <th><%= Product.human_attribute_name(:customer) %></th>
         <th><%= Product.human_attribute_name(:name) %></th>
-        <th><%= t('customers.show.total_value') %></th>
-        <th><%= t('projects.index.remaining_money') %></th>
-        <th><%= t('projects.show.avg_hours_per_demand') %></th>
-        <th><%= t('projects.index.flow_pressure') %></th>
-        <th><%= t('general.table.actions') %></th>
+        <th><%= I18n.t('customers.show.total_value') %></th>
+        <th><%= I18n.t('projects.index.remaining_money') %></th>
+        <th><%= I18n.t('projects.show.avg_hours_per_demand') %></th>
+        <th><%= I18n.t('projects.index.flow_pressure') %></th>
+        <th><%= I18n.t('general.table.actions') %></th>
       </tr>
     </thead>
     <tbody>
@@ -39,5 +39,5 @@
     </tbody>
   </table>
 <% else %>
-  <%= t('products.index.no_data') %>
+  <%= I18n.t('products.index.no_data') %>
 <% end %>

@@ -23,9 +23,9 @@
 <td><%= demand_list.blocks_count %></td>
 <td><%= I18n.t('general.hours_text', hour_value: number_with_precision((demand_list.blocked_time || 0) / 1.hour, precision: 2)) %></td>
 <td><%= I18n.t('general.hours_text', hour_value: number_with_precision((demand_list.demand.total_bloked_working_time), precision: 2)) %></td>
-<td><%= l(demand_list.created_date, format: :short) if demand_list.created_date.present? %></td>
-<td><%= l(demand_list.commitment_date, format: :short) if demand_list.commitment_date.present? %></td>
-<td><%= l(demand_list.end_date, format: :short) if demand_list.end_date.present? %></td>
+<td><%= I18n.l(demand_list.created_date, format: :short) if demand_list.created_date.present? %></td>
+<td><%= I18n.l(demand_list.commitment_date, format: :short) if demand_list.commitment_date.present? %></td>
+<td><%= I18n.l(demand_list.end_date, format: :short) if demand_list.end_date.present? %></td>
 
 <td><%= demand_list.project.name %></td>
 <td><%= demand_list.demand_title %></td>

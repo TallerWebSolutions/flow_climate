@@ -12,18 +12,19 @@ RSpec.describe Jira::JiraProjectConfig, type: :model do
   end
 
   context 'uniqueness' do
-    let(:project) { Fabricate :project }
+    let(:jira_product_config) { Fabricate :jira_product_config }
 
     context 'project jira key to account domain and fix version name' do
-      let!(:jira_project_config) { Fabricate :jira_project_config, project: project, fix_version_name: 'bar' }
+      let!(:jira_project_config) { Fabricate :jira_project_config, jira_product_config: jira_product_config, fix_version_name: 'bar' }
 
       context 'same jira account domain and fix version name' do
-        let(:other_jira_project_config) { Fabricate.build :jira_project_config, project: project, fix_version_name: 'bar' }
+        let(:other_jira_project_config) { Fabricate.build :jira_project_config, jira_product_config: jira_product_config, fix_version_name: 'bar' }
 
         it 'does not accept the model' do
           expect(other_jira_project_config.valid?).to be false
           expect(other_jira_project_config.errors[:fix_version_name]).to eq [I18n.t('jira_project_config.validations.fix_version_name_uniqueness.message')]
         end
+
         context 'same fix version name' do
           let(:other_jira_project_config) { Fabricate.build :jira_project_config, fix_version_name: 'bar' }
 
@@ -31,7 +32,7 @@ RSpec.describe Jira::JiraProjectConfig, type: :model do
         end
 
         context 'other jira project key' do
-          let(:other_jira_project_config) { Fabricate.build :jira_project_config, fix_version_name: 'bar' }
+          let(:other_jira_project_config) { Fabricate.build :jira_project_config, jira_product_config: jira_product_config, fix_version_name: 'xpto' }
 
           it { expect(other_jira_project_config.valid?).to be true }
         end

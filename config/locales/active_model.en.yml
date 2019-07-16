@@ -200,4 +200,4 @@ en:
   jira_project_config:
     validations:
       fix_version_name_uniqueness:
-        message: "You should have only one fix version name per project."
+        message: "You should have only one fix version name per product."

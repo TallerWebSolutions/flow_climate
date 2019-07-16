@@ -1,27 +1,27 @@
 <div class="row">
   <div class="col-xs-12 bottom-spaced-component">
-    <%= link_to t('projects.index.all_filter'), search_for_projects_company_projects_path(company_id: company, status_filter: :all, projects_ids: projects_ids), remote: true, class: 'btn btn-sm btn-info' %>
-    <%= link_to t('projects.index.waiting_filter'), search_for_projects_company_projects_path(company_id: company, status_filter: :waiting, projects_ids: projects_ids), remote: true, class: 'btn btn-sm btn-info' %>
-    <%= link_to t('projects.index.executing_filter'), search_for_projects_company_projects_path(company_id: company, status_filter: :executing, projects_ids: projects_ids), remote: true, class: 'btn btn-sm btn-info' %>
-    <%= link_to t('projects.index.maintenance_filter'), search_for_projects_company_projects_path(company_id: company, status_filter: :maintenance, projects_ids: projects_ids), remote: true, class: 'btn btn-sm btn-info' %>
-    <%= link_to t('projects.index.finished_filter'), search_for_projects_company_projects_path(company_id: company, status_filter: :finished, projects_ids: projects_ids), remote: true, class: 'btn btn-sm btn-info' %>
-    <%= link_to t('projects.index.cancelled_filter'), search_for_projects_company_projects_path(company_id: company, status_filter: :cancelled, projects_ids: projects_ids), remote: true, class: 'btn btn-sm btn-info' %>
+    <%= link_to I18n.t('projects.index.all_filter'), search_for_projects_company_projects_path(company_id: company, status_filter: :all, projects_ids: projects_ids), remote: true, class: 'btn btn-sm btn-info' %>
+    <%= link_to I18n.t('projects.index.waiting_filter'), search_for_projects_company_projects_path(company_id: company, status_filter: :waiting, projects_ids: projects_ids), remote: true, class: 'btn btn-sm btn-info' %>
+    <%= link_to I18n.t('projects.index.executing_filter'), search_for_projects_company_projects_path(company_id: company, status_filter: :executing, projects_ids: projects_ids), remote: true, class: 'btn btn-sm btn-info' %>
+    <%= link_to I18n.t('projects.index.maintenance_filter'), search_for_projects_company_projects_path(company_id: company, status_filter: :maintenance, projects_ids: projects_ids), remote: true, class: 'btn btn-sm btn-info' %>
+    <%= link_to I18n.t('projects.index.finished_filter'), search_for_projects_company_projects_path(company_id: company, status_filter: :finished, projects_ids: projects_ids), remote: true, class: 'btn btn-sm btn-info' %>
+    <%= link_to I18n.t('projects.index.cancelled_filter'), search_for_projects_company_projects_path(company_id: company, status_filter: :cancelled, projects_ids: projects_ids), remote: true, class: 'btn btn-sm btn-info' %>
   </div>
 </div>
 
 <div class="row">
   <div class="col-xs-12">
-    <%= link_to t('project.new.title'), new_company_project_path(company), class: 'btn btn-sm btn-primary bottom-spaced-component' %>
+    <%= link_to I18n.t('project.new.title'), new_company_project_path(company), class: 'btn btn-sm btn-primary bottom-spaced-component' %>
   </div>
 </div>
 
 <% if projects_list.blank? || projects_list.empty? %>
-  <%= t('projects.index.no_data') %>
+  <%= I18n.t('projects.index.no_data') %>
 <% else %>
   <table class="table table-index table-striped table-ordered">
     <thead>
       <tr>
-        <th><%= t('general.table.actions') %></th>
+        <th><%= I18n.t('general.table.actions') %></th>
         <th><%= Project.model_name.human %></th>
         <th><%= Project.human_attribute_name :team %></th>
         <th><%= Project.human_attribute_name :start_date %></th>
@@ -29,26 +29,26 @@
         <th><%= Project.human_attribute_name :status %></th>
         <th><%= Project.human_attribute_name :project_type %></th>
         <th><%= Project.human_attribute_name :qty_hours %></th>
-        <th><%= t('projects.index.consumed_hours') %></th>
-        <th><%= t('projects.show.demand_blocks_count') %></th>
-        <th><%= t('projects.show.demand_blocks_duration_average') %></th>
-        <th><%= t('projects.show.demands_count') %></th>
-        <th><%= t('projects.show.features_count') %></th>
-        <th><%= t('projects.show.bugs_count') %></th>
-        <th><%= t('projects.show.chore_count') %></th>
-        <th><%= t('projects.show.throughput') %></th>
-        <th><%= t('projects.show.scope_gap') %></th>
+        <th><%= I18n.t('projects.index.consumed_hours') %></th>
+        <th><%= I18n.t('projects.show.demand_blocks_count') %></th>
+        <th><%= I18n.t('projects.show.demand_blocks_duration_average') %></th>
+        <th><%= I18n.t('projects.show.demands_count') %></th>
+        <th><%= I18n.t('projects.show.features_count') %></th>
+        <th><%= I18n.t('projects.show.bugs_count') %></th>
+        <th><%= I18n.t('projects.show.chore_count') %></th>
+        <th><%= I18n.t('projects.show.throughput') %></th>
+        <th><%= I18n.t('projects.show.scope_gap') %></th>
         <th><%= Project.human_attribute_name :value %></th>
-        <th><%= t('projects.index.remaining_money') %></th>
-        <th><%= t('projects.index.total_remaining_days') %></th>
-        <th><%= t('projects.index.flow_pressure') %></th>
-        <th><%= t('projects.index.percentage_flow_pressure') %></th>
+        <th><%= I18n.t('projects.index.remaining_money') %></th>
+        <th><%= I18n.t('projects.index.total_remaining_days') %></th>
+        <th><%= I18n.t('projects.index.flow_pressure') %></th>
+        <th><%= I18n.t('projects.index.percentage_flow_pressure') %></th>
         <th>
-          <%= t('projects.index.inconsistent_demands_count') %>
-          <i class="far fa-question-circle" title="<%= t('projects.show.inconsistent_demands.help') %>"></i>
+          <%= I18n.t('projects.index.inconsistent_demands_count') %>
+          <i class="far fa-question-circle" title="<%= I18n.t('projects.show.inconsistent_demands.help') %>"></i>
         </th>
-        <th class="center"><%= t('projects.index.risk_alerts') %></th>
-        <th><%= t('general.table.actions') %></th>
+        <th class="center"><%= I18n.t('projects.index.risk_alerts') %></th>
+        <th><%= I18n.t('general.table.actions') %></th>
       </tr>
     </thead>
     <tbody>
@@ -57,10 +57,10 @@
           <td><%= render 'projects/project_actions', company: company, project: project %></td>
           <td><%= link_to project.name, company_project_path(company, project) %></td>
           <td><%= link_to project.team.name, company_team_path(company, project.team) if project.team.present? %></td>
-          <td><%= l(project.start_date) %></td>
-          <td><%= l(project.end_date) %></td>
-          <td><%= t("activerecord.attributes.project.enums.status.#{project.status}") %></td>
-          <td><%= t("activerecord.attributes.project.enums.project_type.#{project.project_type}") %></td>
+          <td><%= I18n.l(project.start_date) %></td>
+          <td><%= I18n.l(project.end_date) %></td>
+          <td><%= I18n.t("activerecord.attributes.project.enums.status.#{project.status}") %></td>
+          <td><%= I18n.t("activerecord.attributes.project.enums.project_type.#{project.project_type}") %></td>
           <td><%= number_with_precision(project.qty_hours, precision: 2) %></td>
           <td><%= number_with_precision(project.consumed_hours, precision: 2) %></td>
           <td>

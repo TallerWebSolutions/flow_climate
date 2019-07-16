@@ -1,6 +1,6 @@
 <div class="row">
   <div class="col-xs-6">
-    <h3><%= t('projects.show.not_associated_products') %></h3>
+    <h3><%= I18n.t('projects.show.not_associated_products') %></h3>
     <ul>
       <% not_associated_products.each do |product| %>
         <li>
@@ -13,7 +13,7 @@
     </ul>
   </div>
   <div class="col-xs-6">
-    <h3><%= t('projects.show.project_products') %></h3>
+    <h3><%= I18n.t('projects.show.project_products') %></h3>
     <ul>
       <% project_products.each do |product| %>
         <li>

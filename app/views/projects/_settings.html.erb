@@ -1,23 +1,20 @@
 <div class="row">
   <div class="col-xs-4">
-    <%= link_to t('projects.actions.edit.title'), edit_company_project_path(company, project), class: 'btn btn-primary btn-block bottom-spaced-component' %>
+    <%= link_to I18n.t('projects.actions.edit.title'), edit_company_project_path(company, project), class: 'btn btn-primary btn-block bottom-spaced-component' %>
   </div>
   <div class="col-xs-4">
-    <%= link_to t('projects.show.sync_jira'), synchronize_jira_company_project_path(company, project), method: :put, class: 'btn btn-primary btn-block bottom-spaced-component' %>
-  </div>
-  <div class="col-xs-4">
-    <%= link_to t('demands.new.title'), new_company_project_demand_path(company, project), class: 'btn btn-primary btn-block bottom-spaced-component' %>
+    <%= link_to I18n.t('demands.new.title'), new_company_project_demand_path(company, project), class: 'btn btn-primary btn-block bottom-spaced-component' %>
   </div>
 </div>
 
 <div class="row">
   <div class="col-xs-12">
     <div class="tab">
-      <button class="tablinks tablinks-project-settings" id="tab-project-risks" onclick="openTab(event, 'content-project-risks', 'tablinks-project-settings', 'tabcontent')"><%= t('projects.settings.risks') %></button>
-      <button class="tablinks tablinks-project-settings" id="tab-project-stages" onclick="openTab(event, 'content-project-stages', 'tablinks-project-settings', 'tabcontent')"><%= t('projects.settings.stages') %></button>
-      <button class="tablinks tablinks-project-settings" id="tab-project-jira" onclick="openTab(event, 'content-project-jira', 'tablinks-project-settings', 'tabcontent')"><%= t('projects.settings.jira') %></button>
-      <button class="tablinks tablinks-project-settings" id="tab-project-customers" onclick="openTab(event, 'project-customers-associations', 'tablinks-project-settings', 'tabcontent')"><%= t('projects.settings.customers') %></button>
-      <button class="tablinks tablinks-project-settings" id="tab-project-products" onclick="openTab(event, 'project-products-associations', 'tablinks-project-settings', 'tabcontent')"><%= t('projects.settings.products') %></button>
+      <button class="tablinks tablinks-project-settings" id="tab-project-risks" onclick="openTab(event, 'content-project-risks', 'tablinks-project-settings', 'tabcontent')"><%= I18n.t('projects.settings.risks') %></button>
+      <button class="tablinks tablinks-project-settings" id="tab-project-stages" onclick="openTab(event, 'content-project-stages', 'tablinks-project-settings', 'tabcontent')"><%= I18n.t('projects.settings.stages') %></button>
+      <button class="tablinks tablinks-project-settings" id="tab-project-jira" onclick="openTab(event, 'content-project-jira', 'tablinks-project-settings', 'tabcontent')"><%= I18n.t('projects.settings.jira') %></button>
+      <button class="tablinks tablinks-project-settings" id="tab-project-customers" onclick="openTab(event, 'project-customers-associations', 'tablinks-project-settings', 'tabcontent')"><%= I18n.t('projects.settings.customers') %></button>
+      <button class="tablinks tablinks-project-settings" id="tab-project-products" onclick="openTab(event, 'project-products-associations', 'tablinks-project-settings', 'tabcontent')"><%= I18n.t('projects.settings.products') %></button>
     </div>
   </div>
 </div>

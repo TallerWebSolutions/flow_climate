@@ -5,9 +5,9 @@
     <table class="table table-striped">
       <thead>
         <tr>
-          <th><%= t('activerecord.attributes.demand.demand_id') %></th>
-          <th><%= t('demands.grouped_by_stage.time_in_stage') %></th>
-          <th><%= t('demands.grouped_by_stage.hours_in_stage') %></th>
+          <th><%= I18n.t('activerecord.attributes.demand.demand_id') %></th>
+          <th><%= I18n.t('demands.grouped_by_stage.time_in_stage') %></th>
+          <th><%= I18n.t('demands.grouped_by_stage.hours_in_stage') %></th>
         </tr>
       </thead>
 
@@ -35,7 +35,7 @@
 
 <% else %>
   <div class="no-data">
-    <%= t('general.no_data', missing_data: Demand.model_name.human.pluralize(2).downcase) %>
+    <%= I18n.t('general.no_data', missing_data: Demand.model_name.human.pluralize(2).downcase) %>
   </div>
 
 <% end %>

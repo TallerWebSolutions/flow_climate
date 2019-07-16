@@ -61,7 +61,7 @@ class DemandsController < AuthenticatedController
     jira_account = @company.jira_accounts.first
     demand_url = company_project_demand_url(@demand.project.company, @demand.project, @demand)
     Jira::ProcessJiraIssueJob.perform_later(jira_account, @project, @demand.demand_id, current_user.email, current_user.full_name, demand_url)
-    flash[:notice] = t('general.enqueued')
+    flash[:notice] = I18n.t('general.enqueued')
     redirect_to company_demand_path(@company, @demand)
   end
 

@@ -1,4 +1,4 @@
-<h3><%= t('user_plans.index.table.title') %></h3>
+<h3><%= I18n.t('user_plans.index.table.title') %></h3>
 <table class="table">
   <thead>
     <tr>
@@ -20,8 +20,8 @@
     <% user_plans.each do |user_plan| %>
       <tr>
         <td><%= user_plan.description %></td>
-        <td><%= l(user_plan.start_at, format: :short) %></td>
-        <td><%= l(user_plan.finish_at, format: :short) %></td>
+        <td><%= I18n.l(user_plan.start_at, format: :short) %></td>
+        <td><%= I18n.l(user_plan.finish_at, format: :short) %></td>
         <td><%= user_plan.plan_billing_period.capitalize %></td>
         <td><%= number_to_currency(user_plan.plan_value) %></td>
         <td><%= user_plan.demand_data_processments.count %></td>

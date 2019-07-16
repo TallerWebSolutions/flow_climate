@@ -1,21 +1,21 @@
 <div class="row">
   <div class="col-xs-12">
-    <%= link_to t('customers.new.title'), new_company_customer_path(company), class: 'btn btn-sm btn-success bottom-spaced-component pull-right' %>
+    <%= link_to I18n.t('customers.new.title'), new_company_customer_path(company), class: 'btn btn-sm btn-success bottom-spaced-component pull-right' %>
   </div>
 </div>
 
 <% if customers_list.empty? %>
-  <%= t('customers.index.no_customers_message') %>
+  <%= I18n.t('customers.index.no_customers_message') %>
 <% else %>
   <table class="table">
     <thead>
       <tr>
         <th><%= Customer.human_attribute_name :name %></th>
-        <th><%= t('customers.show.total_value') %></th>
-        <th><%= t('projects.index.remaining_money') %></th>
-        <th><%= t('projects.show.avg_hours_per_demand') %></th>
-        <th><%= t('projects.index.flow_pressure') %></th>
-        <th><%= t('general.table.actions') %></th>
+        <th><%= I18n.t('customers.show.total_value') %></th>
+        <th><%= I18n.t('projects.index.remaining_money') %></th>
+        <th><%= I18n.t('projects.show.avg_hours_per_demand') %></th>
+        <th><%= I18n.t('projects.index.flow_pressure') %></th>
+        <th><%= I18n.t('general.table.actions') %></th>
       </tr>
     </thead>
     <tbody>

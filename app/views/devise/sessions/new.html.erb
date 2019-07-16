@@ -1,6 +1,6 @@
 <div class="row">
   <div class="col-xs-4 col-xs-offset-4">
-    <h1><%= t('devise.sessions.login') %></h1>
+    <h1><%= I18n.t('devise.sessions.login') %></h1>
     <%= form_for(resource, as: resource_name, url: session_path(resource_name), class: 'form-horizontal') do |f| %>
       <div class="form-group">
         <%= f.label :email %>
@@ -20,7 +20,7 @@
       <% end -%>
 
       <div class="form-group">
-        <%= f.submit t('devise.sessions.login'), class: 'btn btn-primary' %>
+        <%= f.submit I18n.t('devise.sessions.login'), class: 'btn btn-primary' %>
       </div>
     <% end %>
 

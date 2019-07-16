@@ -1,4 +1,4 @@
-<h4><%= t('projects.project_risk_alert_table') %></h4>
+<h4><%= I18n.t('projects.project_risk_alert_table') %></h4>
 <table class="table">
   <thead>
     <th><%= ProjectRiskAlert.human_attribute_name :alert_color %></th>
@@ -12,7 +12,7 @@
     <% ordered_project_risk_alerts.each do |alert| %>
       <tr>
         <td><figure class='circle-<%= alert.alert_color %>'></figure></td>
-        <td><%= l(alert.created_at, format: :short) %></td>
+        <td><%= I18n.l(alert.created_at, format: :short) %></td>
         <td><%= t("activerecord.attributes.project_risk_config.enums.risk_type.#{alert.project_risk_config.risk_type}") %></td>
         <td><%= number_with_precision(alert.project_risk_config.low_yellow_value, precision: 2) %></td>
         <td><%= number_with_precision(alert.project_risk_config.high_yellow_value, precision: 2) %></td>

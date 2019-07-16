@@ -4,18 +4,18 @@
   <table class="table table-striped">
     <thead>
       <tr>
-        <th><%= t('general.week') %></th>
-        <th><%= t('demands.flow.committed_with') %></th>
-        <th><%= t('general.delivered') %></th>
-        <th><%= t('demands.flow.real_throughput') %></th>
-        <th><%= t('demands.stats.std_committed_with') %></th>
-        <th><%= t('demands.stats.std_throughput') %></th>
+        <th><%= I18n.t('general.week') %></th>
+        <th><%= I18n.t('demands.flow.committed_with') %></th>
+        <th><%= I18n.t('general.delivered') %></th>
+        <th><%= I18n.t('demands.flow.real_throughput') %></th>
+        <th><%= I18n.t('demands.stats.std_committed_with') %></th>
+        <th><%= I18n.t('demands.stats.std_throughput') %></th>
       </tr>
     </thead>
     <tbody>
       <% demands_count_per_week.each do |week, behaviour_data| %>
         <tr>
-          <td><%= l(week, format: :default) %></td>
+          <td><%= I18n.l(week, format: :default) %></td>
           <td><%= behaviour_data[:arrived_in_week].count %></td>
           <td><%= behaviour_data[:throughput_in_week].count %></td>
           <td><%= behaviour_data[:throughput_in_week].count - behaviour_data[:arrived_in_week].count %></td>

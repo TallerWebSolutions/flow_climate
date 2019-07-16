@@ -2292,13 +2292,6 @@ CREATE INDEX index_jira_project_configs_on_project_id ON public.jira_project_con
 
 
 --
--- Name: index_jira_project_configs_on_project_id_and_fix_version_name; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX index_jira_project_configs_on_project_id_and_fix_version_name ON public.jira_project_configs USING btree (project_id, fix_version_name);
-
-
---
 -- Name: index_portfolio_units_on_name; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2541,6 +2534,13 @@ CREATE UNIQUE INDEX index_users_on_reset_password_token ON public.users USING bt
 --
 
 CREATE UNIQUE INDEX unique_custom_field_to_jira_account ON public.jira_custom_field_mappings USING btree (jira_account_id, demand_field);
+
+
+--
+-- Name: unique_fix_version_to_jira_product; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX unique_fix_version_to_jira_product ON public.jira_project_configs USING btree (jira_product_config_id, fix_version_name);
 
 
 --
@@ -3181,6 +3181,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190705190605'),
 ('20190708211541'),
 ('20190709144816'),
-('20190711211958');
+('20190711211958'),
+('20190716135342');
 
 

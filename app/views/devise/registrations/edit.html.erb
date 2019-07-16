@@ -1,4 +1,4 @@
-<h2><%= t('devise.registrations.edit.title', resource_name.to_s.humanize) %></h2>
+<h2><%= I18n.t('devise.registrations.edit.title', resource_name.to_s.humanize) %></h2>
 
 <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
   <%= devise_error_messages! %>
@@ -24,7 +24,7 @@
 
   <div class="field">
     <%= f.label :current_password %>
-    <span class="label-hint"><%= t('devise.registrations.edit.password_info') %></span>
+    <span class="label-hint"><%= I18n.t('devise.registrations.edit.password_info') %></span>
     <%= f.password_field :current_password, autocomplete: "off" %>
   </div>
 
@@ -33,4 +33,4 @@
   </div>
 <% end %>
 
-<%= link_to t('general.buttons.back'), :back %>
+<%= link_to I18n.t('general.buttons.back'), :back %>

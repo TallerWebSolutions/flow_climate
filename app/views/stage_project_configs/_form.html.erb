@@ -8,11 +8,11 @@
     </div>
     <div class='col-xs-4 form-group'>
       <%= check_box_tag :replicate_to_projects %>
-      <%= label_tag t('stage_project_config.edit.replicate_to_projects'), nil, class: 'control-label' %>
+      <%= label_tag I18n.t('stage_project_config.edit.replicate_to_projects'), nil, class: 'control-label' %>
     </div>
     <div class='col-xs-4 form-group'>
       <%= check_box_tag :recompute_manual_efforts %>
-      <%= label_tag t('stage_project_config.edit.recompute_manual_efforts'), nil, class: 'control-label' %>
+      <%= label_tag I18n.t('stage_project_config.edit.recompute_manual_efforts'), nil, class: 'control-label' %>
     </div>
   </div>
   <div class="row">
@@ -39,7 +39,7 @@
   </div>
   <div class="row">
     <div class='col-xs-12 form-group'>
-      <%= f.submit t('general.buttons.save'), class: 'btn btn-success' %>
+      <%= f.submit I18n.t('general.buttons.save'), class: 'btn btn-success' %>
     </div>
   </div>
 </div>

@@ -4,9 +4,9 @@
     <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
   </head>
   <body>
-    <h1><%= t('projects.portfolio_bulletin.portfolio_bulletin_text') %></h1>
+    <h1><%= I18n.t('projects.portfolio_bulletin.portfolio_bulletin_text') %></h1>
 
-    <h3><%= t('projects.bulletin.starting_title', company_name: @company.name) %></h3>
+    <h3><%= I18n.t('projects.bulletin.starting_title', company_name: @company.name) %></h3>
     <% if @projects_starting.present? %>
       <% @projects_starting.each do |project| %>
         <ul>
@@ -14,10 +14,10 @@
         </ul>
       <% end %>
     <% else %>
-      <%= t('projects.no_project_starting_week') %>
+      <%= I18n.t('projects.no_project_starting_week') %>
     <% end %>
 
-    <h3><%= t('projects.portfolio_bulletin.finishing_title') %></h3>
+    <h3><%= I18n.t('projects.portfolio_bulletin.finishing_title') %></h3>
     <% if @projects_finishing.present? %>
       <% @projects_finishing.each do |project| %>
         <ul>
@@ -25,28 +25,28 @@
         </ul>
       <% end %>
     <% else %>
-      <%= t('projects.no_project_finishing_week') %>
+      <%= I18n.t('projects.no_project_finishing_week') %>
     <% end %>
 
-    <h3><%= t('projects.portfolio_bulletin.next_starting_project') %></h3>
+    <h3><%= I18n.t('projects.portfolio_bulletin.next_starting_project') %></h3>
     <% if @next_starting_project.present? %>
       <ul>
         <li><%= link_to "#{@next_starting_project.name} (#{l(@next_starting_project.start_date)}) [#{number_with_precision(@next_starting_project.flow_pressure , precision: 3)}]", company_project_url(@company, @next_starting_project) %></li>
       </ul>
     <% else %>
-      <%= t('projects.no_project_starting') %>
+      <%= I18n.t('projects.no_project_starting') %>
     <% end %>
 
-    <h3><%= t('projects.portfolio_bulletin.next_finishing_project') %></h3>
+    <h3><%= I18n.t('projects.portfolio_bulletin.next_finishing_project') %></h3>
     <% if @next_finishing_project.present? %>
       <ul>
         <li><%= link_to "#{@next_finishing_project.name} (#{l(@next_finishing_project.end_date)}) [#{number_with_precision(@next_finishing_project.flow_pressure , precision: 3)}]", company_project_url(@company, @next_finishing_project) %></li>
       </ul>
     <% else %>
-      <%= t('projects.no_project_finishing') %>
+      <%= I18n.t('projects.no_project_finishing') %>
     <% end %>
 
-    <h3><%= t('projects.portfolio_bulletin.red_projects') %></h3>
+    <h3><%= I18n.t('projects.portfolio_bulletin.red_projects') %></h3>
     <% if @red_projects.present? %>
       <% @red_projects.each do |red_project| %>
         <ul>
@@ -54,10 +54,10 @@
         </ul>
       <% end %>
     <% else %>
-      <%= t('projects.no_red_projects') %>
+      <%= I18n.t('projects.no_red_projects') %>
     <% end %>
 
-    <h3><%= t('projects.portfolio_bulletin.top_three_flow_pressure') %></h3>
+    <h3><%= I18n.t('projects.portfolio_bulletin.top_three_flow_pressure') %></h3>
     <% if @top_three_flow_pressure.present? %>
       <% @top_three_flow_pressure.each do |project| %>
         <ul>
@@ -65,10 +65,10 @@
         </ul>
       <% end %>
     <% else %>
-      <%= t('projects.no_top_three_flow_pressure') %>
+      <%= I18n.t('projects.no_top_three_flow_pressure') %>
     <% end %>
 
-    <h3><%= t('projects.portfolio_bulletin.top_three_throughput') %></h3>
+    <h3><%= I18n.t('projects.portfolio_bulletin.top_three_throughput') %></h3>
     <% if @top_three_throughput.present? %>
       <% @top_three_throughput.each do |project| %>
         <ul>
@@ -76,10 +76,10 @@
         </ul>
       <% end %>
     <% else %>
-      <%= t('projects.no_top_three_throughput') %>
+      <%= I18n.t('projects.no_top_three_throughput') %>
     <% end %>
 
-    <h3><%= t('projects.portfolio_bulletin.delivered_demands') %></h3>
+    <h3><%= I18n.t('projects.portfolio_bulletin.delivered_demands') %></h3>
     <% if @demands_delivered_last_week.present? %>
       <% @demands_delivered_last_week.each do |demand| %>
         <ul>
@@ -87,7 +87,7 @@
         </ul>
       <% end %>
     <% else %>
-      <%= t('projects.no_demands_delivered') %>
+      <%= I18n.t('projects.no_demands_delivered') %>
     <% end %>
 
     <%= render 'email_signature' %>

@@ -1,17 +1,17 @@
 <div class="row pull-right">
   <% if @company.jira_accounts.present? %>
     <div class="col-xs-6">
-      <%= link_to t('stages.import_from_jira.title'), import_from_jira_company_stages_path(company), method: :post, data: { confirm: I18n.t('stages.import_from_jira.warning') }, remote: true, class: 'btn btn-success bottom-spaced-component' %>
+      <%= link_to I18n.t('stages.import_from_jira.title'), import_from_jira_company_stages_path(company), method: :post, data: { confirm: I18n.t('stages.import_from_jira.warning') }, remote: true, class: 'btn btn-success bottom-spaced-component' %>
     </div>
   <% end %>
   <div class="col-xs-6">
-    <%= link_to t('stages.new.title'), new_company_stage_path(company), class: 'btn btn-success bottom-spaced-component' %>
+    <%= link_to I18n.t('stages.new.title'), new_company_stage_path(company), class: 'btn btn-success bottom-spaced-component' %>
   </div>
 </div>
 
 <div class="row">
   <div class="col-xs-3">
-    <h2><%= t('stages.index.title') %></h2>
+    <h2><%= I18n.t('stages.index.title') %></h2>
   </div>
 </div>
 
@@ -23,16 +23,16 @@
       <th><%= Stage.human_attribute_name :name %></th>
       <th>
         <%= Stage.human_attribute_name :integration_pipe_id %>
-        <i class="far fa-question-circle" title="<%= t('activerecord.attributes.stage.help.integration_pipe_id') %>"></i>
+        <i class="far fa-question-circle" title="<%= I18n.t('activerecord.attributes.stage.help.integration_pipe_id') %>"></i>
       </th>
       <th><%= Stage.human_attribute_name :integration_id %></th>
-      <th><%= t('stages.index.project_count') %></th>
+      <th><%= I18n.t('stages.index.project_count') %></th>
       <th><%= Stage.human_attribute_name :stage_type %></th>
       <th><%= Stage.human_attribute_name :stage_stream %></th>
       <th class="center"><%= Stage.human_attribute_name :queue %></th>
       <th class="center"><%= Stage.human_attribute_name :commitment_point %></th>
       <th class="center"><%= Stage.human_attribute_name :end_point %></th>
-      <th><%= t('general.table.actions') %></th>
+      <th><%= I18n.t('general.table.actions') %></th>
     </tr>
   </thead>
   <tbody>

@@ -1,7 +1,7 @@
 <div class="row">
   <div class="col-xs-12">
     <ul class="breadcrumb">
-      <li><%= link_to t('general.home.title'), root_path %></li>
+      <li><%= link_to I18n.t('general.home.title'), root_path %></li>
       <li><%= link_to @company.abbreviation&.upcase, company_path(@company) %></li>
       <li><%= @stage.name %></li>
     </ul>
@@ -22,9 +22,9 @@
 <div class="row">
   <div class="col-xs-12">
     <div class="tab">
-      <button class="tablinks tab-stages" id="stage-charts-tab" onclick="openTab(event, 'stage-charts', 'tab-stages', 'tabcontent-stages')"><%= t('general.tabs.charts') %></button>
-      <button class="tablinks tab-stages" onclick="openTab(event, 'stage-config', 'tab-stages', 'tabcontent-stages')"><%= t('general.tabs.config') %></button>
-      <button class="tablinks tab-stages" onclick="openTab(event, 'stage-transitions', 'tab-stages', 'tabcontent-stages')"><%= t('general.tabs.transitions') %></button>
+      <button class="tablinks tab-stages" id="stage-charts-tab" onclick="openTab(event, 'stage-charts', 'tab-stages', 'tabcontent-stages')"><%= I18n.t('general.tabs.charts') %></button>
+      <button class="tablinks tab-stages" onclick="openTab(event, 'stage-config', 'tab-stages', 'tabcontent-stages')"><%= I18n.t('general.tabs.config') %></button>
+      <button class="tablinks tab-stages" onclick="openTab(event, 'stage-transitions', 'tab-stages', 'tabcontent-stages')"><%= I18n.t('general.tabs.transitions') %></button>
     </div>
   </div>
 </div>

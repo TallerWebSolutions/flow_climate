@@ -4,7 +4,7 @@
     <% if team_member.persisted? %>
       <div class='col-xs-12 form-group <%= 'has-error' if team_member.errors[:team].present? %>'>
         <%= f.label :team, class: 'control-label' %>
-        <%= f.select :team, company.teams.map { |team| [team.name, team.id] }, { include_blank: t('general.select'), selected: team_member.team_id }, class: 'form-control' %>
+        <%= f.select :team, company.teams.map { |team| [team.name, team.id] }, { include_blank: I18n.t('general.select'), selected: team_member.team_id }, class: 'form-control' %>
         <span class="help-block"><%= team_member.errors[:team].join(', ') %></span>
       </div>
     <% end %>
@@ -16,7 +16,7 @@
     </div>
     <div class='col-xs-6 form-group <%= 'has-error' if team_member.errors[:billable_type].present? %>'>
       <%= f.label :billable_type, class: 'control-label' %>
-      <%= f.select :billable_type, TeamMember.billable_types.map { |key, _value| [t("activerecord.attributes.team_member.enums.billable_type.#{key}"), key] }, { include_blank: t('general.select'), selected: team_member.billable_type }, class: 'form-control' %>
+      <%= f.select :billable_type, TeamMember.billable_types.map { |key, _value| [t("activerecord.attributes.team_member.enums.billable_type.#{key}"), key] }, { include_blank: I18n.t('general.select'), selected: team_member.billable_type }, class: 'form-control' %>
       <span class="help-block"><%= team_member.errors[:billable_type].join(', ') %></span>
     </div>
 
