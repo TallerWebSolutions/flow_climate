@@ -1,6 +1,6 @@
 <div class="row">
   <div class="col-xs-12">
-    <h3><%= t('demand_transitions.index.title') %></h3>
+    <h3><%= I18n.t('demand_transitions.index.title') %></h3>
   </div>
 </div>
 
@@ -13,18 +13,18 @@
         <th><%= DemandTransition.human_attribute_name :stage %></th>
         <th><%= DemandTransition.human_attribute_name :last_time_in %></th>
         <th><%= DemandTransition.human_attribute_name :last_time_out %></th>
-        <th><%= t('demand_transitions.total_time_in_transition') %></th>
-        <th><%= t('demand_transitions.working_time_in_transition') %></th>
-        <th><%= t('demand_transitions.effort_time_in_transition') %></th>
-        <th><%= t('demand_transitions.block_time_in_transition') %></th>
+        <th><%= I18n.t('demand_transitions.total_time_in_transition') %></th>
+        <th><%= I18n.t('demand_transitions.working_time_in_transition') %></th>
+        <th><%= I18n.t('demand_transitions.effort_time_in_transition') %></th>
+        <th><%= I18n.t('demand_transitions.block_time_in_transition') %></th>
       </tr>
     </thead>
     <tbody>
       <% demand_transitions_list.each do |transition| %>
         <tr>
           <td><%= transition.stage_name %></td>
-          <td><%= l(transition.last_time_in, format: :short) %></td>
-          <td><%= l(transition.last_time_out, format: :short) if transition.last_time_out.present? %></td>
+          <td><%= I18n.l(transition.last_time_in, format: :short) %></td>
+          <td><%= I18n.l(transition.last_time_out, format: :short) if transition.last_time_out.present? %></td>
           <td><%= time_distance_in_words(transition.total_seconds_in_transition) %></td>
           <td><%= "#{transition.working_time_in_transition} h" %></td>
           <% if transition.stage.stage_project_configs.find_by(project: demand.project).stage_percentage.present? %>

@@ -1,6 +1,6 @@
-<h2><%= t('team_members.index.title') %></h2>
+<h2><%= I18n.t('team_members.index.title') %></h2>
 
-<%= link_to t('team_members.new.title'), new_company_team_team_member_path(company, team), class: 'btn btn-sm btn-primary bottom-spaced-component' %>
+<%= link_to I18n.t('team_members.new.title'), new_company_team_team_member_path(company, team), class: 'btn btn-sm btn-primary bottom-spaced-component' %>
 
 <table class="table">
   <thead>
@@ -15,7 +15,7 @@
       <th><%= TeamMember.human_attribute_name :billable %></th>
       <th><%= TeamMember.human_attribute_name :billable_type %></th>
       <th><%= TeamMember.human_attribute_name :active %></th>
-      <th><%= t('general.table.actions') %></th>
+      <th><%= I18n.t('general.table.actions') %></th>
     </tr>
   </thead>
   <tbody>
@@ -24,8 +24,8 @@
         <td><%= member.name %></td>
         <td><%= member.jira_account_user_email %></td>
         <td><%= member.jira_account_id %></td>
-        <td><%= l(member.start_date) if member.start_date.present? %></td>
-        <td><%= l(member.end_date) if member.end_date.present? %></td>
+        <td><%= I18n.l(member.start_date) if member.start_date.present? %></td>
+        <td><%= I18n.l(member.end_date) if member.end_date.present? %></td>
         <td><%= number_to_currency(member.monthly_payment) %></td>
         <td><%= member.hours_per_month %></td>
         <td><%= t(member.billable&.to_s) %></td>

@@ -6,8 +6,8 @@
 
 <div class="col-xs-3 header-nav">
   <% if company.present? && company.persisted? %>
-    <span><%= link_to t('navbar.customers_list'), company_customers_path(company), class: 'nav-link top-nav-bar-item' %> | </span>
-    <span><%= link_to t('navbar.products_list'), company_products_path(company), class: 'nav-link top-nav-bar-item' %></span>
+    <span><%= link_to I18n.t('navbar.customers_list'), company_customers_path(company), class: 'nav-link top-nav-bar-item' %> | </span>
+    <span><%= link_to I18n.t('navbar.products_list'), company_products_path(company), class: 'nav-link top-nav-bar-item' %></span>
   <% end %>
 </div>
 
@@ -21,7 +21,7 @@
 
     <ul class="dropdown-menu dropdown-menu-right">
       <% if current_user.present? %>
-        <li><%= link_to t('users.account.self'), current_user, class: 'nav-link dropdown-item'%></li>
+        <li><%= link_to I18n.t('users.account.self'), current_user, class: 'nav-link dropdown-item'%></li>
         <% if current_user.email_notifications? %>
           <li><%= link_to 'Desligar Notificações', deactivate_email_notifications_users_path, method: :patch, remote: true, class: 'nav-link dropdown-item' %></li>
         <% else %>
@@ -34,7 +34,7 @@
               <li><%= link_to company.abbreviation&.upcase, company_path(company) %></li>
             <% end %>
           <% else %>
-            <li><%= link_to t('companies.new.title'), new_company_path %></li>
+            <li><%= link_to I18n.t('companies.new.title'), new_company_path %></li>
           <% end %>
         <% end %>
         <% if current_user.admin? %>
@@ -42,10 +42,10 @@
           <li><%= link_to 'Admin Dashboard', users_path %></li>
         <% end %>
         <li class="divider"></li>
-        <li><%= link_to t('header.logout'), destroy_user_session_path, method: :delete, class: 'nav-link dropdown-item'%></li>
+        <li><%= link_to I18n.t('header.logout'), destroy_user_session_path, method: :delete, class: 'nav-link dropdown-item'%></li>
       <% else %>
         <li class="divider"></li>
-        <li><%= link_to t('devise.sessions.login'), new_user_session_path, class: 'nav-link dropdown-item'%></li>
+        <li><%= link_to I18n.t('devise.sessions.login'), new_user_session_path, class: 'nav-link dropdown-item'%></li>
       <% end %>
     </ul>
   </div>

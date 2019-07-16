@@ -1,14 +1,14 @@
 <div class="row">
   <div class="col-xs-12">
     <ul class="breadcrumb">
-      <li><%= link_to t('general.home.title'), root_path %></li>
+      <li><%= link_to I18n.t('general.home.title'), root_path %></li>
       <li><%= link_to @company.abbreviation&.upcase, company_path(@company) %></li>
-      <li><%= t('projects.index.title') %></li>
+      <li><%= I18n.t('projects.index.title') %></li>
     </ul>
   </div>
 </div>
 
-<h2><%= t('projects.index.title') %></h2>
+<h2><%= I18n.t('projects.index.title') %></h2>
 
 <div id="projects-table">
   <%= render 'projects/projects_table', company: @company, projects_list: @projects, projects_summary: @projects_summary, projects_ids: @projects.map(&:id).flatten.join(',') %>

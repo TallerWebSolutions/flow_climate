@@ -1,7 +1,7 @@
 <div class="row">
   <div class='col-xs-12 form-group <%= 'has-error' if flow_impact.errors[:demand].present? %>'>
     <%= f.label :demand, class: 'control-label' %>
-    <%= f.select :demand_id, demands_for_impact_form.map { |demand| [demand.demand_id, demand.id] }, {include_blank: t('general.select'), selected: flow_impact.demand_id }, class: 'form-control' %>
+    <%= f.select :demand_id, demands_for_impact_form.map { |demand| [demand.demand_id, demand.id] }, {include_blank: I18n.t('general.select'), selected: flow_impact.demand_id }, class: 'form-control' %>
     <span class="help-block"><%= flow_impact.errors[:demand].join(', ') %></span>
   </div>
 </div>
@@ -9,7 +9,7 @@
 <div class="row">
   <div class='col-xs-6 form-group <%= 'has-error' if flow_impact.errors[:impact_type].present? %>'>
     <%= f.label :impact_type, class: 'control-label' %>
-    <%= f.select :impact_type, FlowImpact.impact_types.map { |key, _value| [t("activerecord.attributes.flow_impact.enums.impact_type.#{key}"), key] }, {include_blank: t('general.select'), selected: flow_impact.impact_type }, class: 'form-control' %>
+    <%= f.select :impact_type, FlowImpact.impact_types.map { |key, _value| [t("activerecord.attributes.flow_impact.enums.impact_type.#{key}"), key] }, {include_blank: I18n.t('general.select'), selected: flow_impact.impact_type }, class: 'form-control' %>
     <span class="help-block"><%= flow_impact.errors[:impact_type].join(', ') %></span>
   </div>
   <div class='col-xs-6 form-group <%= 'has-error' if flow_impact.errors[:impact_description].present? %>'>
@@ -33,6 +33,6 @@
 
 <div class="row">
   <div class="col-xs-12">
-    <%= f.submit t('general.buttons.save'), class: 'btn btn-success' %>
+    <%= f.submit I18n.t('general.buttons.save'), class: 'btn btn-success' %>
   </div>
 </div>

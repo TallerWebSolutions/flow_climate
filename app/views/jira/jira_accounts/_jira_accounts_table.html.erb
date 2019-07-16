@@ -13,10 +13,10 @@
           <td><%= account.base_uri %></td>
           <td><%= account.username %></td>
           <td><%= account.customer_domain %></td>
-          <td><%= l(account.created_at, format: :short) %></td>
+          <td><%= I18n.l(account.created_at, format: :short) %></td>
           <td>
             <%= link_to company_jira_account_path(account.company, account), method: :delete, data: { confirm: I18n.t('general.destroy.confirm') }, remote: true do %>
-              <i class="fa fa-times" title='<%= t('jira_accounts.destroy.tooltip') %>'></i>
+              <i class="fa fa-times" title='<%= I18n.t('jira_accounts.destroy.tooltip') %>'></i>
             <% end %>
           </td>
         </tr>
@@ -26,32 +26,32 @@
 
   <div class="help-frame">
     <p class="bottom-spaced-component help-title">
-      <%= t('jira_accounts.webhooks.help') %>
+      <%= I18n.t('jira_accounts.webhooks.help') %>
       <%= link_to "#{jira_accounts_list.first.base_uri}plugins/servlet/webhooks#", target: :_blank do %>
-        <i class="fas fa-external-link-alt" title="<%= t('jira_accounts.webhooks.link_form_hint') %>"></i>
+        <i class="fas fa-external-link-alt" title="<%= I18n.t('jira_accounts.webhooks.link_form_hint') %>"></i>
       <% end %>
     </p>
     <p>
-      <%= t('jira_accounts.webhooks.help_create_update_card') %>
+      <%= I18n.t('jira_accounts.webhooks.help_create_update_card') %>
       <%= link_to "https://res.cloudinary.com/dmphguydp/image/upload/v1558722720/update-webhook-config-help_vpu8mu.png", target: :_blank do %>
-        <i class="far fa-question-circle" title="<%= t('jira_accounts.webhooks.link_form_help_hint') %>"></i>
+        <i class="far fa-question-circle" title="<%= I18n.t('jira_accounts.webhooks.link_form_help_hint') %>"></i>
       <% end %>
     </p>
     <p>
-      <%= t('jira_accounts.webhooks.help_delete_card') %>
+      <%= I18n.t('jira_accounts.webhooks.help_delete_card') %>
       <%= link_to "https://res.cloudinary.com/dmphguydp/image/upload/v1558723666/delete-webhook-config-help_ui2pdr.png", target: :_blank do %>
-        <i class="far fa-question-circle" title="<%= t('jira_accounts.webhooks.help_create_update_card') %>"></i>
+        <i class="far fa-question-circle" title="<%= I18n.t('jira_accounts.webhooks.help_create_update_card') %>"></i>
       <% end %>
     </p>
   </div>
 <% else %>
   <div class="row">
     <div class="col-xs-12">
-      <%= link_to t('jira_accounts.new.title'), new_company_jira_account_path(company), class: 'btn btn-success bottom-spaced-component pull-right' %>
+      <%= link_to I18n.t('jira_accounts.new.title'), new_company_jira_account_path(company), class: 'btn btn-success bottom-spaced-component pull-right' %>
     </div>
   </div>
 
   <div class="no-data">
-    <%= t('general.no_data', missing_data: I18n.t('activerecord.models.jira/jira_account', count: 2).downcase) %>
+    <%= I18n.t('general.no_data', missing_data: I18n.t('activerecord.models.jira/jira_account', count: 2).downcase) %>
   </div>
 <% end %>

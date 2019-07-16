@@ -25,7 +25,7 @@
             <span class="help-block"><%= @user.errors[:last_name].join(', ') %></span>
           </div>
         </div>
-        <%= form.submit t('general.buttons.save'), class: 'btn btn-success' %>
+        <%= form.submit I18n.t('general.buttons.save'), class: 'btn btn-success' %>
       </div>
     </div>
   <% end %>
@@ -33,8 +33,8 @@
   <div class="row">
     <div class="col-xs-12">
       <div class="tab">
-        <button class="tablinks" onclick="openTab(event, 'plans', 'tablinks', 'tabcontent')"><%= t('user_plans.index.table.title') %></button>
-        <button class="tablinks" onclick="openTab(event, 'data-processement', 'tablinks', 'tabcontent')"><%= t('user_profile.show.data_processed_table') %></button>
+        <button class="tablinks" onclick="openTab(event, 'plans', 'tablinks', 'tabcontent')"><%= I18n.t('user_plans.index.table.title') %></button>
+        <button class="tablinks" onclick="openTab(event, 'data-processement', 'tablinks', 'tabcontent')"><%= I18n.t('user_profile.show.data_processed_table') %></button>
       </div>
     </div>
   </div>

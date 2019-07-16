@@ -3,28 +3,28 @@
 <div class="row bottom-spaced-component">
   <div class="col-xs-3">
     <div class="form-group">
-      <%= label_tag t('demands.filter.grouping.title') %>
+      <%= label_tag I18n.t('demands.filter.grouping.title') %>
       <%= select_tag :grouping, grouping_options, class: 'form-control', id: 'demands-table-grouping', selected: params[:grouping] %>
     </div>
   </div>
 
   <div class="col-xs-3">
     <div class="form-group">
-      <%= label_tag t('demands.filter.flow_status.title') %>
+      <%= label_tag I18n.t('demands.filter.flow_status.title') %>
       <%= select_tag :flow_status, flow_status_options, class: 'form-control', id: 'demands-table-flow-status', selected: params[:flow_status] %>
     </div>
   </div>
 
   <div class="col-xs-3">
     <div class="form-group">
-      <%= label_tag t('demands.filter.demand_type.title') %>
+      <%= label_tag I18n.t('demands.filter.demand_type.title') %>
       <%= select_tag :demand_type, demand_type_options, class: 'form-control', id: 'demands-table-demand-type', selected: params[:demand_type] %>
     </div>
   </div>
 
   <div class="col-xs-3">
     <div class="form-group">
-      <%= label_tag t('demands.filter.class_of_service.title') %>
+      <%= label_tag I18n.t('demands.filter.class_of_service.title') %>
       <%= select_tag :class_of_service, class_of_service_options, class: 'form-control', id: 'demands-table-class-of-service', selected: params[:class_of_service] %>
     </div>
   </div>
@@ -41,18 +41,18 @@
     <%= date_field_tag :demands_end_date, end_date, class: 'form-control' %>
   </div>
   <div class="col-xs-2">
-    <%= label_tag t('demands.index.grouping_to_charts') %>
+    <%= label_tag I18n.t('demands.index.grouping_to_charts') %>
     <%= select_tag :period, grouping_period_to_charts_options('week'), class: 'form-control', id: 'demands-table-grouping-period', selected: params[:period] %>
   </div>
   <div class="col-xs-6">
-    <%= label_tag t('general.search_text') %>
+    <%= label_tag I18n.t('general.search_text') %>
     <%= text_field_tag :search_text, nil, class: 'form-control', id: 'search_text' %>
   </div>
 </div>
 
 <div class="row">
   <div class="col-xs-2">
-    <%= button_tag t('general.search'), class: 'btn btn-success filter-button' %>
+    <%= button_tag I18n.t('general.search'), class: 'btn btn-success filter-button' %>
   </div>
 </div>
 
@@ -60,8 +60,8 @@
 <div class="row bottom-spaced-component" id="list-charts-button">
   <hr>
   <div class="col-xs-12 center">
-    <button class="btn btn-default listing-tab" onclick="openDemandsDiv(event, 'listing', 'content-charts')" id="demands-table-list"><%= t('demands.data_analysis.list') %></button>
-    <button class="btn btn-default listing-tab" onclick="openDemandsDiv(event, 'content-charts', 'listing')"><%= t('demands.data_analysis.charts') %></button>
+    <button class="btn btn-default listing-tab" onclick="openDemandsDiv(event, 'listing', 'content-charts')" id="demands-table-list"><%= I18n.t('demands.data_analysis.list') %></button>
+    <button class="btn btn-default listing-tab" onclick="openDemandsDiv(event, 'content-charts', 'listing')"><%= I18n.t('demands.data_analysis.charts') %></button>
   </div>
 </div>
 

@@ -2,11 +2,11 @@
   <div class="col-xs-4 bottom-spaced-component">
     <div id="entrances-per-weekday-column"
          class="flow-chart"
-         data-title='<%= t('stages.charts.entrances_per_weekday.title', target_name: @stage.name) %>'
+         data-title='<%= I18n.t('stages.charts.entrances_per_weekday.title', target_name: @stage.name) %>'
          data-xcategories='<%= stage_analytic_data.entrances_per_weekday.keys %>'
-         data-xtitle='<%= t('general.charts.xlabel.weekdays') %>'
-         data-ytitle='<%= t('stages.charts.entrances_per_weekday.ylabel') %>'
-         data-prefix='<%= t('stages.charts.entrances_per_weekday.tooltip_prefix') %>'
+         data-xtitle='<%= I18n.t('general.charts.xlabel.weekdays') %>'
+         data-ytitle='<%= I18n.t('stages.charts.entrances_per_weekday.ylabel') %>'
+         data-prefix='<%= I18n.t('stages.charts.entrances_per_weekday.tooltip_prefix') %>'
          data-series='<%= [{ name: I18n.t('stages.charts.entrances_per_weekday.ylabel'), data: stage_analytic_data.entrances_per_weekday.values }].to_json %>'
          data-decimals='0'>
     </div>
@@ -14,11 +14,11 @@
   <div class="col-xs-4 bottom-spaced-component">
     <div id="entrances-per-day-column"
          class="flow-chart"
-         data-title='<%= t('stages.charts.entrances_per_weekday.title', target_name: @stage.name) %>'
+         data-title='<%= I18n.t('stages.charts.entrances_per_weekday.title', target_name: @stage.name) %>'
          data-xcategories='<%= stage_analytic_data.entrances_per_day.keys %>'
-         data-xtitle='<%= t('general.charts.xlabel.weekdays') %>'
-         data-ytitle='<%= t('stages.charts.entrances_per_weekday.ylabel') %>'
-         data-prefix='<%= t('stages.charts.entrances_per_weekday.tooltip_prefix') %>'
+         data-xtitle='<%= I18n.t('general.charts.xlabel.weekdays') %>'
+         data-ytitle='<%= I18n.t('stages.charts.entrances_per_weekday.ylabel') %>'
+         data-prefix='<%= I18n.t('stages.charts.entrances_per_weekday.tooltip_prefix') %>'
          data-series='<%= [{ name: I18n.t('stages.charts.entrances_per_weekday.ylabel'), data: stage_analytic_data.entrances_per_day.values }].to_json %>'
          data-decimals='0'>
     </div>
@@ -26,11 +26,11 @@
   <div class="col-xs-4 bottom-spaced-component">
     <div id="entrances-per-hour-column"
          class="flow-chart"
-         data-title='<%= t('stages.charts.entrances_per_weekday.title', target_name: @stage.name) %>'
+         data-title='<%= I18n.t('stages.charts.entrances_per_weekday.title', target_name: @stage.name) %>'
          data-xcategories='<%= stage_analytic_data.entrances_per_hour.keys %>'
-         data-xtitle='<%= t('general.charts.hours') %>'
-         data-ytitle='<%= t('stages.charts.entrances_per_weekday.ylabel') %>'
-         data-prefix='<%= t('stages.charts.entrances_per_weekday.tooltip_prefix') %>'
+         data-xtitle='<%= I18n.t('general.charts.hours') %>'
+         data-ytitle='<%= I18n.t('stages.charts.entrances_per_weekday.ylabel') %>'
+         data-prefix='<%= I18n.t('stages.charts.entrances_per_weekday.tooltip_prefix') %>'
          data-series='<%= [{ name: I18n.t('stages.charts.entrances_per_weekday.ylabel'), data: stage_analytic_data.entrances_per_hour.values }].to_json %>'
          data-decimals='0'>
     </div>
@@ -38,11 +38,11 @@
   <div class="col-xs-4 bottom-spaced-component">
     <div id="out-per-weekday-column"
          class="flow-chart"
-         data-title='<%= t('stages.charts.out_per_weekday.title', target_name: @stage.name) %>'
+         data-title='<%= I18n.t('stages.charts.out_per_weekday.title', target_name: @stage.name) %>'
          data-xcategories='<%= stage_analytic_data.entrances_per_weekday.keys %>'
-         data-xtitle='<%= t('general.charts.xlabel.weekdays') %>'
-         data-ytitle='<%= t('stages.charts.out_per_weekday.ylabel') %>'
-         data-prefix='<%= t('stages.charts.out_per_weekday.tooltip_prefix') %>'
+         data-xtitle='<%= I18n.t('general.charts.xlabel.weekdays') %>'
+         data-ytitle='<%= I18n.t('stages.charts.out_per_weekday.ylabel') %>'
+         data-prefix='<%= I18n.t('stages.charts.out_per_weekday.tooltip_prefix') %>'
          data-series='<%= [{ name: I18n.t('stages.charts.out_per_weekday.ylabel'), data: stage_analytic_data.out_per_weekday.values }].to_json %>'
          data-decimals='0'>
     </div>
@@ -50,11 +50,11 @@
   <div class="col-xs-4 bottom-spaced-component">
     <div id="out-per-day-column"
          class="flow-chart"
-         data-title='<%= t('stages.charts.out_per_weekday.title', target_name: @stage.name) %>'
+         data-title='<%= I18n.t('stages.charts.out_per_weekday.title', target_name: @stage.name) %>'
          data-xcategories='<%= stage_analytic_data.entrances_per_day.keys %>'
-         data-xtitle='<%= t('general.charts.xlabel.weekdays') %>'
-         data-ytitle='<%= t('stages.charts.out_per_weekday.ylabel') %>'
-         data-prefix='<%= t('stages.charts.out_per_weekday.tooltip_prefix') %>'
+         data-xtitle='<%= I18n.t('general.charts.xlabel.weekdays') %>'
+         data-ytitle='<%= I18n.t('stages.charts.out_per_weekday.ylabel') %>'
+         data-prefix='<%= I18n.t('stages.charts.out_per_weekday.tooltip_prefix') %>'
          data-series='<%= [{ name: I18n.t('stages.charts.out_per_weekday.ylabel'), data: stage_analytic_data.out_per_day.values }].to_json %>'
          data-decimals='0'>
     </div>
@@ -62,11 +62,11 @@
   <div class="col-xs-4 bottom-spaced-component">
     <div id="out-per-hour-column"
          class="flow-chart"
-         data-title='<%= t('stages.charts.out_per_weekday.title', target_name: @stage.name) %>'
+         data-title='<%= I18n.t('stages.charts.out_per_weekday.title', target_name: @stage.name) %>'
          data-xcategories='<%= stage_analytic_data.entrances_per_hour.keys %>'
-         data-xtitle='<%= t('general.charts.hours') %>'
-         data-ytitle='<%= t('stages.charts.out_per_weekday.ylabel') %>'
-         data-prefix='<%= t('stages.charts.out_per_weekday.tooltip_prefix') %>'
+         data-xtitle='<%= I18n.t('general.charts.hours') %>'
+         data-ytitle='<%= I18n.t('stages.charts.out_per_weekday.ylabel') %>'
+         data-prefix='<%= I18n.t('stages.charts.out_per_weekday.tooltip_prefix') %>'
          data-series='<%= [{ name: I18n.t('stages.charts.out_per_weekday.ylabel'), data: stage_analytic_data.out_per_hour.values }].to_json %>'
          data-decimals='0'>
     </div>
@@ -74,12 +74,12 @@
   <div class="col-xs-12 bottom-spaced-component">
     <div id="line-avg-hours-in-stage"
          class="flow-chart"
-         data-title='<%= t('stages.charts.avg_hours_in_stage.title', target_name: @stage.name) %>'
+         data-title='<%= I18n.t('stages.charts.avg_hours_in_stage.title', target_name: @stage.name) %>'
          data-xcategories='<%= stage_analytic_data.avg_time_in_stage_per_month.keys %>'
-         data-xtitle='<%= t('charts.xlabel.months') %>'
-         data-ytitle='<%= t('general.charts.hours') %>'
+         data-xtitle='<%= I18n.t('charts.xlabel.months') %>'
+         data-ytitle='<%= I18n.t('general.charts.hours') %>'
          data-prefix=''
-         data-tooltipsuffix='<%= t('general.charts.hours') %>'
+         data-tooltipsuffix='<%= I18n.t('general.charts.hours') %>'
          data-series='<%= [{ name: I18n.t('stages.charts.avg_hours_in_stage.ylabel'), data: stage_analytic_data.avg_time_in_stage_per_month.values }].to_json %>'
          data-decimals='2'>
     </div>

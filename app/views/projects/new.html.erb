@@ -1,10 +1,10 @@
 <div class="row">
   <div class="col-xs-12">
     <ul class="breadcrumb">
-      <li><%= link_to t('general.home.title'), root_path %></li>
+      <li><%= link_to I18n.t('general.home.title'), root_path %></li>
       <li><%= link_to @company.abbreviation&.upcase, company_path(@company) %></li>
       <li><%= link_to Project.model_name.human.pluralize.capitalize, company_projects_path(@company) %></li>
-      <li><%= t('project.new.title') %></li>
+      <li><%= I18n.t('project.new.title') %></li>
     </ul>
   </div>
 </div>

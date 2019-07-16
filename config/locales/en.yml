@@ -8,7 +8,7 @@
 #
 # In views, this is aliased to just `t`:
 #
-#     <%= t('hello') %>
+#     <%= I18n.t('hello') %>
 #
 # To use a different locale, set it with `I18n.locale`:
 #

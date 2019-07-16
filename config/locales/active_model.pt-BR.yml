@@ -492,4 +492,4 @@ pt-BR:
   jira_project_config:
     validations:
       fix_version_name_uniqueness:
-        message: "Você deveria ter apenas um nome da fix version por projeto"
+        message: "Você deveria ter apenas um nome de fix version por produto"

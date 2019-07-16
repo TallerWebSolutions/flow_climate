@@ -11,7 +11,7 @@ class UserNotifierMailer < ApplicationMailer
 
     @demands_delivered_last_week = Demand.kept.where('EXTRACT(week FROM end_date) = :week AND EXTRACT(year FROM end_date) = :year', week: 1.week.ago.to_date.cweek, year: 1.week.ago.to_date.cwyear)
     Rails.logger.info("Notifying users #{emails}")
-    mail(to: emails, subject: t('projects.portfolio_bulletin.subject'))
+    mail(to: emails, subject: I18n.t('projects.portfolio_bulletin.subject'))
   end
 
   def notify_new_red_alert(project, risk, previous_color, alert_value)
@@ -21,7 +21,7 @@ class UserNotifierMailer < ApplicationMailer
     @alert_value = alert_value
     emails = project.company.users.to_notify_email.pluck(:email)
     Rails.logger.info("Notifying users on red project #{emails}")
-    mail(to: emails, subject: t('projects.red_alert.subject', target_name: project.name))
+    mail(to: emails, subject: I18n.t('projects.red_alert.subject', target_name: project.name))
   end
 
   def jira_requested_csv(user, content)

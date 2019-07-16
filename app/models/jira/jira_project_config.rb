@@ -5,16 +5,16 @@
 # Table name: jira_project_configs
 #
 #  created_at             :datetime         not null
-#  fix_version_name       :string           not null, indexed => [project_id]
+#  fix_version_name       :string           not null, indexed => [jira_product_config_id]
 #  id                     :bigint(8)        not null, primary key
-#  jira_product_config_id :integer          not null
-#  project_id             :integer          not null, indexed, indexed => [fix_version_name]
+#  jira_product_config_id :integer          not null, indexed => [fix_version_name]
+#  project_id             :integer          not null, indexed
 #  updated_at             :datetime         not null
 #
 # Indexes
 #
-#  index_jira_project_configs_on_project_id                       (project_id)
-#  index_jira_project_configs_on_project_id_and_fix_version_name  (project_id,fix_version_name) UNIQUE
+#  index_jira_project_configs_on_project_id  (project_id)
+#  unique_fix_version_to_jira_product        (jira_product_config_id,fix_version_name) UNIQUE
 #
 # Foreign Keys
 #
@@ -29,6 +29,6 @@ module Jira
 
     validates :project, :fix_version_name, :jira_product_config, presence: true
 
-    validates :fix_version_name, uniqueness: { scope: :project, message: I18n.t('jira_project_config.validations.fix_version_name_uniqueness.message') }
+    validates :fix_version_name, uniqueness: { scope: :jira_product_config, message: I18n.t('jira_project_config.validations.fix_version_name_uniqueness.message') }
   end
 end

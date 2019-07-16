@@ -2,15 +2,15 @@
   <div class="row">
     <div class="col-xs-2">
       <div class="tab">
-        <button class="tablinks stats-tab" onclick="openTab(event, 'stats-scope', 'tablinks', 'tabcontent')"><%= t('projects.statistics.scope_tab') %></button>
-        <button class="tablinks stats-tab" onclick="openTab(event, 'stats-leadtime', 'tablinks', 'tabcontent')"><%= t('projects.statistics.leadtime_tab') %></button>
-        <button class="tablinks stats-tab" onclick="openTab(event, 'stats-blocks', 'tablinks', 'tabcontent')"><%= t('projects.statistics.block_tab') %></button>
+        <button class="tablinks stats-tab" onclick="openTab(event, 'stats-scope', 'tablinks', 'tabcontent')"><%= I18n.t('projects.statistics.scope_tab') %></button>
+        <button class="tablinks stats-tab" onclick="openTab(event, 'stats-leadtime', 'tablinks', 'tabcontent')"><%= I18n.t('projects.statistics.leadtime_tab') %></button>
+        <button class="tablinks stats-tab" onclick="openTab(event, 'stats-blocks', 'tablinks', 'tabcontent')"><%= I18n.t('projects.statistics.block_tab') %></button>
         <% if defined?(block_by_project_x_axis).present? %>
-          <button class="tablinks stats-tab" onclick="openTab(event, 'stats-blocks-by-project', 'tablinks', 'tabcontent')"><%= t('projects.statistics.block_by_project_tab') %></button>
-          <button class="tablinks stats-tab" onclick="openTab(event, 'stats-aging-by-project', 'tablinks', 'tabcontent')"><%= t('projects.statistics.aging_by_project_tab') %></button>
-          <button class="tablinks stats-tab" onclick="openTab(event, 'stats-lead-time-data-range', 'tablinks', 'tabcontent')"><%= t('projects.statistics.lead_time_data_range_tab') %></button>
-          <button class="tablinks stats-tab" onclick="openTab(event, 'stats-lead-time-histrogram-data-range', 'tablinks', 'tabcontent')"><%= t('projects.statistics.lead_time_histogram_data_range_tab') %></button>
-          <button class="tablinks stats-tab" onclick="openTab(event, 'stats-lead-time-interquartile-data-range', 'tablinks', 'tabcontent')"><%= t('projects.statistics.lead_time_interquartile_data_range_evolution_tab') %></button>
+          <button class="tablinks stats-tab" onclick="openTab(event, 'stats-blocks-by-project', 'tablinks', 'tabcontent')"><%= I18n.t('projects.statistics.block_by_project_tab') %></button>
+          <button class="tablinks stats-tab" onclick="openTab(event, 'stats-aging-by-project', 'tablinks', 'tabcontent')"><%= I18n.t('projects.statistics.aging_by_project_tab') %></button>
+          <button class="tablinks stats-tab" onclick="openTab(event, 'stats-lead-time-data-range', 'tablinks', 'tabcontent')"><%= I18n.t('projects.statistics.lead_time_data_range_tab') %></button>
+          <button class="tablinks stats-tab" onclick="openTab(event, 'stats-lead-time-histrogram-data-range', 'tablinks', 'tabcontent')"><%= I18n.t('projects.statistics.lead_time_histogram_data_range_tab') %></button>
+          <button class="tablinks stats-tab" onclick="openTab(event, 'stats-lead-time-interquartile-data-range', 'tablinks', 'tabcontent')"><%= I18n.t('projects.statistics.lead_time_interquartile_data_range_evolution_tab') %></button>
         <% end %>
       </div>
     </div>
@@ -54,6 +54,6 @@
     </div>
   </div>
 <% else %>
-  <%= t('general.no_data', missing_data: t('general.data')) %>
+  <%= I18n.t('general.no_data', missing_data: I18n.t('general.data')) %>
 
 <% end %>

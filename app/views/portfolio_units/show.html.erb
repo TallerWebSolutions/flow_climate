@@ -1,7 +1,7 @@
 <div class="row">
   <div class="col-xs-12">
     <ul class="breadcrumb">
-      <li><%= link_to t('general.home.title'), root_path %></li>
+      <li><%= link_to I18n.t('general.home.title'), root_path %></li>
       <li><%= link_to @company.abbreviation&.upcase, company_path(@company) %></li>
       <li><%= link_to @product.name, company_product_path(@company, @product) %></li>
       <li><%= @portfolio_unit.name %></li>
@@ -12,8 +12,8 @@
 <div class="row">
   <div class="col-xs-12">
     <div class="tab">
-      <button class="tablinks portfolio-unit-demands-tab" onclick="openTab(event, 'portfolio-unit-demands', 'tablinks', 'tabcontent')"><%= t('portfolio_units.show.navbar.demands') %></button>
-      <button class="tablinks" onclick="openTab(event, 'portfolio-unit-structure', 'tablinks', 'tabcontent')"><%= t('portfolio_units.show.navbar.structure') %></button>
+      <button class="tablinks portfolio-unit-demands-tab" onclick="openTab(event, 'portfolio-unit-demands', 'tablinks', 'tabcontent')"><%= I18n.t('portfolio_units.show.navbar.demands') %></button>
+      <button class="tablinks" onclick="openTab(event, 'portfolio-unit-structure', 'tablinks', 'tabcontent')"><%= I18n.t('portfolio_units.show.navbar.structure') %></button>
     </div>
   </div>
 </div>
@@ -44,7 +44,7 @@
         </div>
 
         <div class="progress card-progress-bar">
-          <div class="progress-bar bg-success" role="progressbar" style="width: <%= "#{branch.percentage_complete * 100}" %>%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"><%= "#{number_with_precision(branch.percentage_complete * 100, precision: 2)}%" %></div>
+          <div class="progress-bar" role="progressbar" style="width: <%= "#{branch.percentage_complete * 100}" %>%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"><%= "#{number_with_precision(branch.percentage_complete * 100, precision: 2)}%" %></div>
         </div>
       </div>
 

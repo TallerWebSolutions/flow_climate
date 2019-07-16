@@ -60,12 +60,6 @@ RSpec.describe ProjectsController, type: :controller do
       it { expect(response).to redirect_to new_user_session_path }
     end
 
-    describe 'PUT #synchronize_jira' do
-      before { put :synchronize_jira, params: { company_id: 'foo', id: 'bar' } }
-
-      it { expect(response).to redirect_to new_user_session_path }
-    end
-
     describe 'PATCH #finish_project' do
       before { put :finish_project, params: { company_id: 'foo', id: 'bar' } }
 
@@ -501,59 +495,6 @@ RSpec.describe ProjectsController, type: :controller do
           before { delete :destroy, params: { company_id: company, id: project } }
 
           it { expect(response).to have_http_status :not_found }
-        end
-      end
-    end
-
-    describe 'PUT #synchronize_jira' do
-      let(:company) { Fabricate :company, users: [user] }
-
-      let(:customer) { Fabricate :customer, company: company }
-      let(:project) { Fabricate :project, customers: [customer] }
-
-      context 'passing valid parameters' do
-        let!(:jira_config) { Fabricate :jira_project_config, project: project }
-
-        it 'calls the services and the reader' do
-          expect(Jira::ProcessJiraProjectJob).to receive(:perform_later).once
-          put :synchronize_jira, params: { company_id: company, id: project }
-          expect(response).to redirect_to company_project_path(company, project)
-          expect(flash[:notice]).to eq I18n.t('general.enqueued')
-        end
-      end
-
-      context 'invalid' do
-        context 'project' do
-          before { put :synchronize_jira, params: { company_id: company, id: 'foo' } }
-
-          it { expect(response).to have_http_status :not_found }
-        end
-
-        context 'non existent jira project config' do
-          let(:project) { Fabricate :project, customers: [customer] }
-
-          before { put :synchronize_jira, params: { company_id: company, id: project } }
-
-          it 'redirects to the project page with an alert informing about the missing config' do
-            expect(response).to redirect_to company_project_path(company, project)
-            expect(flash[:alert]).to eq I18n.t('projects.sync.jira.no_config_error')
-          end
-        end
-
-        context 'company' do
-          context 'non-existent' do
-            before { put :synchronize_jira, params: { company_id: 'foo', id: project } }
-
-            it { expect(response).to have_http_status :not_found }
-          end
-
-          context 'not-permitted' do
-            let(:company) { Fabricate :company, users: [] }
-
-            before { put :synchronize_jira, params: { company_id: company, id: project } }
-
-            it { expect(response).to have_http_status :not_found }
-          end
         end
       end
     end

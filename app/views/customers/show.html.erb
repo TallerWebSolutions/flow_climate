@@ -1,7 +1,7 @@
 <div class="row">
   <div class="col-xs-12">
     <ul class="breadcrumb">
-      <li><%= link_to t('general.home.title'), root_path %></li>
+      <li><%= link_to I18n.t('general.home.title'), root_path %></li>
       <li><%= link_to @company.abbreviation&.upcase, company_path(@company) %></li>
       <li><%= link_to Customer.model_name.human.pluralize, company_customers_path(@company) %></li>
       <li><%= @customer.name %></li>
@@ -11,8 +11,8 @@
 
 <div class="row">
   <div class="topnav">
-    <%= link_to t('navbar.details'), '#', id: 'nav-item-stamps', class: 'active' %>
-    <%= link_to t('navbar.projects_list'), '#', id: 'nav-item-list' %>
+    <%= link_to I18n.t('navbar.details'), '#', id: 'nav-item-stamps', class: 'active' %>
+    <%= link_to I18n.t('navbar.projects_list'), '#', id: 'nav-item-list' %>
   </div>
 </div>
 
@@ -22,7 +22,7 @@
 
 <div id="project-list">
 
-  <h2><%= t('projects.index.title') %></h2>
+  <h2><%= I18n.t('projects.index.title') %></h2>
 
   <div id="projects-table">
     <%= render 'projects/projects_table', company: @company, projects_list: @customer_projects, projects_summary: @projects_summary, projects_ids: @customer_projects.map(&:id).flatten.join(',') %>

@@ -2,11 +2,11 @@
   <thead>
     <tr>
       <th><%= Project.human_attribute_name :max_work_in_progress %></th>
-      <th><%= t('projects.replenishing.throughput_last_week') %></th>
-      <th><%= t('projects.replenishing.throughput_data_size') %></th>
-      <th><%= t('projects.replenishing.throughput_data_mode') %></th>
-      <th><%= t('projects.replenishing.throughput_data_stddev') %></th>
-      <th><%= t('projects.replenishing.team_based_weeks_montecarlo') %></th>
+      <th><%= I18n.t('projects.replenishing.throughput_last_week') %></th>
+      <th><%= I18n.t('projects.replenishing.throughput_data_size') %></th>
+      <th><%= I18n.t('projects.replenishing.throughput_data_mode') %></th>
+      <th><%= I18n.t('projects.replenishing.throughput_data_stddev') %></th>
+      <th><%= I18n.t('projects.replenishing.team_based_weeks_montecarlo') %></th>
       <th><%= 'MC - Min - Max' %></th>
       <th><%= 'Chances da Data - Time' %></th>
     </tr>

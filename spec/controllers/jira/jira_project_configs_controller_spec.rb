@@ -19,6 +19,12 @@ RSpec.describe Jira::JiraProjectConfigsController, type: :controller do
 
       it { expect(response).to redirect_to new_user_session_path }
     end
+
+    describe 'PUT #synchronize_jira' do
+      before { put :synchronize_jira, params: { company_id: 'foo', project_id: 'xpto', id: 'bar' } }
+
+      it { expect(response).to redirect_to new_user_session_path }
+    end
   end
 
   context 'authenticated' do
@@ -68,7 +74,7 @@ RSpec.describe Jira::JiraProjectConfigsController, type: :controller do
 
     describe 'POST #create' do
       context 'passing valid parameters' do
-        let(:jira_product_config) { Fabricate :jira_product_config, product: product, company: product.company }
+        let(:jira_product_config) { Fabricate :jira_product_config, product: product, company: product.company, jira_product_key: 'bar' }
 
         before { post :create, params: { company_id: company, project_id: project, jira_jira_project_config: { fix_version_name: 'xpto', jira_product_config_id: jira_product_config.id } }, xhr: true }
 
@@ -93,9 +99,9 @@ RSpec.describe Jira::JiraProjectConfigsController, type: :controller do
         end
 
         context 'breaking unique index' do
-          let!(:jira_project_config) { Fabricate :jira_project_config, project: project, fix_version_name: 'xpto' }
+          let!(:jira_project_config) { Fabricate :jira_project_config, jira_product_config: jira_product_config, fix_version_name: 'xpto' }
 
-          before { post :create, params: { company_id: company, project_id: project, jira_jira_project_config: { jira_project_key: 'bar', fix_version_name: 'xpto' } }, xhr: true }
+          before { post :create, params: { company_id: company, project_id: project, jira_jira_project_config: { jira_product_config_id: jira_product_config, fix_version_name: 'xpto' } }, xhr: true }
 
           it 'does not create the project jira config' do
             expect(Jira::JiraProjectConfig.count).to eq 1
@@ -164,6 +170,63 @@ RSpec.describe Jira::JiraProjectConfigsController, type: :controller do
           before { delete :destroy, params: { company_id: company, project_id: project, id: jira_project_config }, xhr: true }
 
           it { expect(response).to have_http_status :not_found }
+        end
+      end
+    end
+
+    describe 'PUT #synchronize_jira' do
+      let(:company) { Fabricate :company, users: [user] }
+
+      let(:customer) { Fabricate :customer, company: company }
+      let(:project) { Fabricate :project, customers: [customer] }
+      let!(:jira_config) { Fabricate :jira_project_config, project: project }
+
+      context 'passing valid parameters' do
+        it 'calls the services and the reader' do
+          expect(Jira::ProcessJiraProjectJob).to receive(:perform_later).once
+          put :synchronize_jira, params: { company_id: company, project_id: project, id: jira_config }
+          expect(response).to redirect_to company_project_path(company, project)
+          expect(flash[:notice]).to eq I18n.t('general.enqueued')
+        end
+      end
+
+      context 'invalid' do
+        context 'project' do
+          before { put :synchronize_jira, params: { company_id: company, project_id: 'foo', id: jira_config } }
+
+          it { expect(response).to have_http_status :not_found }
+        end
+
+        context 'invalid' do
+          let(:project) { Fabricate :project, customers: [customer] }
+
+          context 'project' do
+            before { put :synchronize_jira, params: { company_id: company, project_id: 'foo', id: jira_config } }
+
+            it { expect(response).to have_http_status :not_found }
+          end
+
+          context 'jira project config' do
+            before { put :synchronize_jira, params: { company_id: company, project_id: project, id: 'foo' } }
+
+            it { expect(response).to have_http_status :not_found }
+          end
+        end
+
+        context 'company' do
+          context 'non-existent' do
+            before { put :synchronize_jira, params: { company_id: 'foo', project_id: project, id: jira_config } }
+
+            it { expect(response).to have_http_status :not_found }
+          end
+
+          context 'not-permitted' do
+            let(:company) { Fabricate :company, users: [] }
+
+            before { put :synchronize_jira, params: { company_id: company, project_id: project, id: jira_config } }
+
+            it { expect(response).to have_http_status :not_found }
+          end
         end
       end
     end

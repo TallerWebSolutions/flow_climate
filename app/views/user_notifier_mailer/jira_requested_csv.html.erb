@@ -4,9 +4,9 @@
     <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
   </head>
   <body>
-    <h3><%= t('exports.request_project_information.title') %></h3>
-    <p><%= t('exports.request_project_information.csv_attached') %></p>
-    <p><%= link_to t('exports.request_project_information.address_in_web'), user_url(@user) %></p>
+    <h3><%= I18n.t('exports.request_project_information.title') %></h3>
+    <p><%= I18n.t('exports.request_project_information.csv_attached') %></p>
+    <p><%= link_to I18n.t('exports.request_project_information.address_in_web'), user_url(@user) %></p>
 
     <%= render 'email_signature' %>
   </body>

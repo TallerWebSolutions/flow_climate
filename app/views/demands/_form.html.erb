@@ -3,17 +3,17 @@
   <div class="row">
     <div class='col-xs-4 form-group <%= 'has-error' if demand.errors[:team].present? %>'>
       <%= form.label :team, class: 'control-label' %>
-      <%= form.select :team_id, teams_in_company_options(company), { include_blank: t('general.select'), selected: demand.team_id }, class: 'form-control' %>
+      <%= form.select :team_id, teams_in_company_options(company), { include_blank: I18n.t('general.select'), selected: demand.team_id }, class: 'form-control' %>
       <span class="help-block"><%= demand.errors[:team].join(', ') %></span>
     </div>
     <div class='col-xs-4 form-group <%= 'has-error' if demand.errors[:demand_type].present? %>'>
       <%= form.label :demand_type, class: 'control-label' %>
-      <%= form.select :demand_type, Demand.demand_types.map { |key, _value| [t("activerecord.attributes.demand.enums.demand_type.#{key}"), key] }, {include_blank: t('general.select'), selected: demand.demand_type }, class: 'form-control' %>
+      <%= form.select :demand_type, Demand.demand_types.map { |key, _value| [t("activerecord.attributes.demand.enums.demand_type.#{key}"), key] }, {include_blank: I18n.t('general.select'), selected: demand.demand_type }, class: 'form-control' %>
       <span class="help-block"><%= demand.errors[:demand_type].join(', ') %></span>
     </div>
     <div class='col-xs-4 form-group <%= 'has-error' if demand.errors[:class_of_service].present? %>'>
       <%= form.label :class_of_service, class: 'control-label' %>
-      <%= form.select :class_of_service, Demand.class_of_services.map { |key, _value| [t("activerecord.attributes.demand.enums.class_of_service.#{key}"), key] }, { include_blank: t('general.select'), selected: demand.class_of_service }, class: 'form-control' %>
+      <%= form.select :class_of_service, Demand.class_of_services.map { |key, _value| [t("activerecord.attributes.demand.enums.class_of_service.#{key}"), key] }, { include_blank: I18n.t('general.select'), selected: demand.class_of_service }, class: 'form-control' %>
       <span class="help-block"><%= demand.errors[:class_of_service].join(', ') %></span>
     </div>
   </div>

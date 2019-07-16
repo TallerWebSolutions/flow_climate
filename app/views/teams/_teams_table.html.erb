@@ -1,15 +1,15 @@
-<h2><%= t('teams.index.title') %></h2>
-<%= link_to t('teams.new.title'), new_company_team_path(company), class: 'btn btn-sm btn-primary bottom-spaced-component' %>
+<h2><%= I18n.t('teams.index.title') %></h2>
+<%= link_to I18n.t('teams.new.title'), new_company_team_path(company), class: 'btn btn-sm btn-primary bottom-spaced-component' %>
 
 <table class="table table-striped">
   <thead>
     <tr>
       <th><%= Team.human_attribute_name :name %></th>
-      <th><%= t('customers.show.total_value') %></th>
-      <th><%= t('projects.index.remaining_money') %></th>
-      <th><%= t('projects.show.avg_hours_per_demand') %></th>
-      <th><%= t('projects.index.flow_pressure') %></th>
-      <th><%= t('general.table.actions') %></th>
+      <th><%= I18n.t('customers.show.total_value') %></th>
+      <th><%= I18n.t('projects.index.remaining_money') %></th>
+      <th><%= I18n.t('projects.show.avg_hours_per_demand') %></th>
+      <th><%= I18n.t('projects.index.flow_pressure') %></th>
+      <th><%= I18n.t('general.table.actions') %></th>
     </tr>
   </thead>
   <tbody id="team_fields">

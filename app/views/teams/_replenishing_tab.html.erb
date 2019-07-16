@@ -2,25 +2,25 @@
   <div class="row header-summary">
     <div class="col-xs-3 leadtime-frame">
       <div class="leadtime-content">
-        <p class="leadtime-title"><%= t('projects.replenishing.last_four_weeks_throughput') %></p>
+        <p class="leadtime-title"><%= I18n.t('projects.replenishing.last_four_weeks_throughput') %></p>
         <p class="leadtime-value"><%= summary_infos[:four_last_throughputs].join(' | ') %></p>
       </div>
     </div>
     <div class="col-xs-3 leadtime-frame">
       <div class="leadtime-content">
-        <p class="leadtime-title"><%= t('projects.replenishing.average_throughput') %></p>
+        <p class="leadtime-title"><%= I18n.t('projects.replenishing.average_throughput') %></p>
         <p class="leadtime-value"><%= summary_infos[:average_throughput] %></p>
       </div>
     </div>
     <div class="col-xs-3 leadtime-frame">
       <div class="leadtime-content">
-        <p class="leadtime-title"><%= t('projects.replenishing.last_four_weeks_lead_time') %></p>
+        <p class="leadtime-title"><%= I18n.t('projects.replenishing.last_four_weeks_lead_time') %></p>
         <p class="leadtime-value"><%= number_with_precision(summary_infos[:team_lead_time], precision: 2) %></p>
       </div>
     </div>
     <div class="col-xs-3 leadtime-frame">
       <div class="leadtime-content">
-        <p class="leadtime-title"><%= t('projects.replenishing.team_wip') %></p>
+        <p class="leadtime-title"><%= I18n.t('projects.replenishing.team_wip') %></p>
         <p class="leadtime-value"><%= summary_infos[:team_wip] %></p>
       </div>
     </div>
@@ -30,6 +30,6 @@
 
 <% else %>
   <div class="no-data">
-    <%= t('general.no_data', missing_data: t('general.data')) %>
+    <%= I18n.t('general.no_data', missing_data: I18n.t('general.data')) %>
   </div>
 <% end %>

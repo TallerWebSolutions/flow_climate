@@ -1,18 +1,18 @@
 <div class="row">
   <div class="col-xs-6">
-    <%= link_to t('companies.edit.title'), edit_company_path(company), class: 'btn btn-primary btn-block bottom-spaced-component' %>
+    <%= link_to I18n.t('companies.edit.title'), edit_company_path(company), class: 'btn btn-primary btn-block bottom-spaced-component' %>
   </div>
   <div class="col-xs-6">
-    <%= link_to t('companies.send_company_bulletin.button'), send_company_bulletin_company_path(company), class: 'btn btn-primary btn-block' %>
+    <%= link_to I18n.t('companies.send_company_bulletin.button'), send_company_bulletin_company_path(company), class: 'btn btn-primary btn-block' %>
   </div>
 </div>
 
 <div class="row">
   <div class="col-xs-12">
     <div class="tab">
-      <button class="tablinks company-config-tab" onclick="openTab(event, 'company-settings', 'tablinks', 'tabcontent')"><%= t('navbar.settings') %></button>
-      <button class="tablinks" onclick="openTab(event, 'company-stages', 'tablinks', 'tabcontent')"><%= t('navbar.stages') %></button>
-      <button class="tablinks" onclick="openTab(event, 'company-jira', 'tablinks', 'tabcontent')"><%= t('navbar.jira') %></button>
+      <button class="tablinks company-config-tab" onclick="openTab(event, 'company-settings', 'tablinks', 'tabcontent')"><%= I18n.t('navbar.settings') %></button>
+      <button class="tablinks" onclick="openTab(event, 'company-stages', 'tablinks', 'tabcontent')"><%= I18n.t('navbar.stages') %></button>
+      <button class="tablinks" onclick="openTab(event, 'company-jira', 'tablinks', 'tabcontent')"><%= I18n.t('navbar.jira') %></button>
     </div>
   </div>
 </div>
@@ -34,7 +34,7 @@
 
     <div class="row">
       <div class="col-xs-12">
-        <%= f.submit t('general.buttons.save'), class: 'btn btn-success' %>
+        <%= f.submit I18n.t('general.buttons.save'), class: 'btn btn-success' %>
       </div>
     </div>
   <% end %>

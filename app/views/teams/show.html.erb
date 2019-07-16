@@ -1,7 +1,7 @@
 <div class="row">
   <div class="col-xs-12">
     <ul class="breadcrumb">
-      <li><%= link_to t('general.home.title'), root_path %></li>
+      <li><%= link_to I18n.t('general.home.title'), root_path %></li>
       <li><%= link_to @company.abbreviation&.upcase, company_path(@company) %></li>
       <li><%= @team.name %></li>
     </ul>
@@ -15,17 +15,17 @@
 
 <div class="row">
   <div class="topnav">
-    <%= link_to t('navbar.details'), '#', id: 'nav-item-stamps', class: 'nav-item active', data: { container: '#stamps' } %>
-    <%= link_to t('navbar.members_table'), '#', id: 'nav-item-members', class: 'nav-item', data: { container: '#members-table' } %>
-    <%= link_to t('navbar.projects_list'), '#', id: 'nav-item-list', class: 'nav-item', data: { container: '#project-list' } %>
-    <%= link_to t('navbar.demands'), '#', id: 'nav-item-demands', class: 'nav-item', data: { container: '#demands-tab' } %>
-    <%= link_to t('navbar.demand_blocks'), '#', id: 'nav-item-demands-blocks', class: 'nav-item', data: { container: '#demands-blocks-tab' } %>
-    <%= link_to t('navbar.flow_impacts'), '#', id: 'nav-item-flow-impacts', class: 'nav-item', data: { container: '#flow-impacts-tab' } %>
-    <%= link_to t('navbar.replenishing'), '#', id: 'nav-item-replenishingDiv', class: 'nav-item', data: { container: '#replenishingDiv-tab' } %>
-    <%= link_to t('navbar.strategic'), '#', id: 'nav-item-strategic', class: 'nav-item', data: { container: '#strategic' } %>
-    <%= link_to t('navbar.risks'), '#', id: 'nav-item-risks', class: 'nav-item', data: { container: '#risks' } %>
-    <%= link_to t('navbar.charts'), '#', id: 'nav-item-charts', class: 'nav-item', data: { container: '#operational-charts' } %>
-    <%= link_to t('navbar.statistics'), '#', id: 'nav-item-statistics', class: 'nav-item', data: { container: '#statistics-charts' } %>
+    <%= link_to I18n.t('navbar.details'), '#', id: 'nav-item-stamps', class: 'nav-item active', data: { container: '#stamps' } %>
+    <%= link_to I18n.t('navbar.members_table'), '#', id: 'nav-item-members', class: 'nav-item', data: { container: '#members-table' } %>
+    <%= link_to I18n.t('navbar.projects_list'), '#', id: 'nav-item-list', class: 'nav-item', data: { container: '#project-list' } %>
+    <%= link_to I18n.t('navbar.demands'), '#', id: 'nav-item-demands', class: 'nav-item', data: { container: '#demands-tab' } %>
+    <%= link_to I18n.t('navbar.demand_blocks'), '#', id: 'nav-item-demands-blocks', class: 'nav-item', data: { container: '#demands-blocks-tab' } %>
+    <%= link_to I18n.t('navbar.flow_impacts'), '#', id: 'nav-item-flow-impacts', class: 'nav-item', data: { container: '#flow-impacts-tab' } %>
+    <%= link_to I18n.t('navbar.replenishing'), '#', id: 'nav-item-replenishingDiv', class: 'nav-item', data: { container: '#replenishingDiv-tab' } %>
+    <%= link_to I18n.t('navbar.strategic'), '#', id: 'nav-item-strategic', class: 'nav-item', data: { container: '#strategic' } %>
+    <%= link_to I18n.t('navbar.risks'), '#', id: 'nav-item-risks', class: 'nav-item', data: { container: '#risks' } %>
+    <%= link_to I18n.t('navbar.charts'), '#', id: 'nav-item-charts', class: 'nav-item', data: { container: '#operational-charts' } %>
+    <%= link_to I18n.t('navbar.statistics'), '#', id: 'nav-item-statistics', class: 'nav-item', data: { container: '#statistics-charts' } %>
   </div>
 </div>
 
@@ -40,7 +40,7 @@
 </div>
 
 <div id="project-list" class="tab-container">
-  <h2><%= t('projects.index.title') %></h2>
+  <h2><%= I18n.t('projects.index.title') %></h2>
 
   <div id="projects-table">
     <%= render 'projects/projects_table', company: @company, projects_list: @team_projects, projects_summary: @projects_summary, projects_ids: @team_projects.map(&:id).flatten.join(',') %>

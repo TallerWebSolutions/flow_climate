@@ -10,7 +10,7 @@
   <div class="row">
     <div class="col-xs-12">
       <div class="form-group">
-        <%= link_to t('general.download_csv'), demands_csv_company_demands_path(company, discarded_demands.map(&:id).to_csv, format: :csv), class: 'btn btn-sm btn-primary pull-right' %>
+        <%= link_to I18n.t('general.download_csv'), demands_csv_company_demands_path(company, discarded_demands.map(&:id).to_csv, format: :csv), class: 'btn btn-sm btn-primary pull-right' %>
       </div>
     </div>
   </div>
@@ -26,7 +26,7 @@
           <th><%= Demand.human_attribute_name :demand_type %></th>
           <th><%= Demand.human_attribute_name :class_of_service %></th>
           <th><%= Demand.human_attribute_name :discarded_at %></th>
-          <th><%= t('demands.index.discarded_stage') %></th>
+          <th><%= I18n.t('demands.index.discarded_stage') %></th>
           <th><%= Demand.human_attribute_name :demand_title %></th>
           <th></th>
         </tr>

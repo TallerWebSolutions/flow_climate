@@ -1,7 +1,7 @@
 <% if demand_blocks_list.empty? %>
   <div class="row">
     <div class="col-xs-12">
-      <%= t('demands.show.no_demand_blocks') %>
+      <%= I18n.t('demands.show.no_demand_blocks') %>
     </div>
   </div>
 <% else %>
@@ -23,8 +23,8 @@
           <td><%= "#{block.block_duration} h" if block.block_duration.present? %></td>
           <td><%= block.blocker_username %></td>
           <td><%= block.unblocker_username %></td>
-          <td><%= l(block.block_time, format: :short) %></td>
-          <td><%= l(block.unblock_time, format: :short) if block.unblock_time.present? %></td>
+          <td><%= I18n.l(block.block_time, format: :short) %></td>
+          <td><%= I18n.l(block.unblock_time, format: :short) if block.unblock_time.present? %></td>
         </tr>
       <% end %>
     </tbody>

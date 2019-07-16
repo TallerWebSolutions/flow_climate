@@ -1,11 +1,11 @@
 <%= form_tag copy_projects_from_company_stage_url(company, stage), method: :patch, class: 'form-inline' do %>
   <%= select_tag :provider_stage_id, options_from_collection_for_select(provider_stages, :id, :name, params[:provider_stage_id]), class: 'form-control' %>
-  <%= submit_tag t('stages.show.import_projects'), class: 'btn btn-success' %>
+  <%= submit_tag I18n.t('stages.show.import_projects'), class: 'btn btn-success' %>
 <% end %>
 
 <div class="row">
   <div class="col-xs-6">
-    <h3><%= t('stages.show.not_associated_projects') %></h3>
+    <h3><%= I18n.t('stages.show.not_associated_projects') %></h3>
     <ul>
       <% not_associated_projects.each do |project| %>
         <li>
@@ -18,7 +18,7 @@
     </ul>
   </div>
   <div class="col-xs-6">
-    <h3><%= t('stages.show.stage_projects') %></h3>
+    <h3><%= I18n.t('stages.show.stage_projects') %></h3>
     <ul>
       <% stage_projects.each do |project| %>
         <li>

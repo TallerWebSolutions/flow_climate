@@ -65,19 +65,9 @@ class ProjectsController < AuthenticatedController
     redirect_to company_projects_path(@company)
   end
 
-  def synchronize_jira
-    if @project.jira_project_config.blank?
-      flash[:alert] = I18n.t('projects.sync.jira.no_config_error')
-    else
-      synchronize_project
-    end
-
-    redirect_to company_project_path(@company, @project)
-  end
-
   def finish_project
     ProjectsRepository.instance.finish_project!(@project)
-    flash[:notice] = t('projects.finish_project.success_message')
+    flash[:notice] = I18n.t('projects.finish_project.success_message')
     redirect_to company_project_path(@company, @project)
   end
 
@@ -142,14 +132,6 @@ class ProjectsController < AuthenticatedController
 
   def assign_project_stages
     @stages_list = @project.reload.stages.order(:order, :name)
-  end
-
-  def synchronize_project
-    jira_account = @company.jira_accounts.first
-
-    project_url = company_project_url(@company, @project)
-    Jira::ProcessJiraProjectJob.perform_later(jira_account, @project.jira_project_config, current_user.email, current_user.full_name, project_url)
-    flash[:notice] = t('general.enqueued')
   end
 
   def project_params

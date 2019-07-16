@@ -3,7 +3,7 @@
   <div class="row">
     <div class='col-xs-4 form-group <%= 'has-error' if project_risk_config.errors[:risk_type].present? %>'>
       <%= f.label :risk_type, class: 'control-label required' %>
-      <%= f.select :risk_type, ProjectRiskConfig.risk_types.map { |key, _value| [t("activerecord.attributes.project_risk_config.enums.risk_type.#{key}"), key] }, { include_blank: t('general.select'), selected: project_risk_config.risk_type, autofocus: true }, class: 'form-control', id: 'select_risk_type' %>
+      <%= f.select :risk_type, ProjectRiskConfig.risk_types.map { |key, _value| [t("activerecord.attributes.project_risk_config.enums.risk_type.#{key}"), key] }, { include_blank: I18n.t('general.select'), selected: project_risk_config.risk_type, autofocus: true }, class: 'form-control', id: 'select_risk_type' %>
       <span class="help-block"><%= project_risk_config.errors[:risk_type].join(', ') %></span>
     </div>
 

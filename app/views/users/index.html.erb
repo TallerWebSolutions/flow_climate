@@ -1,4 +1,4 @@
-<h1><%= t('users.index.title') %></h1>
+<h1><%= I18n.t('users.index.title') %></h1>
 
 <table class="table table-striped">
   <thead>
@@ -16,7 +16,7 @@
     <% User.all.order(:last_name, :first_name).each do |user| %>
       <tr>
         <td><%= link_to user.full_name, user_path(user) %></td>
-        <td><%= l(user.created_at, format: :short) %></td>
+        <td><%= I18n.l(user.created_at, format: :short) %></td>
         <td><%= number_to_currency(user.user_money_credits) %></td>
         <td><%= user.sign_in_count %></td>
         <td><%= user.projects.count %></td>
