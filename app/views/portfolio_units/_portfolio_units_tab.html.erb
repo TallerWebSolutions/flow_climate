@@ -1,0 +1,18 @@
+<div class="row">
+  <div class="col-xs-12">
+    <div class="tab">
+      <button class="tablinks" onclick="openTab(event, 'tree-list', 'tablinks', 'tabcontent')"><%= I18n.t('general.list') %></button>
+      <button class="tablinks" onclick="openTab(event, 'tree-map', 'tablinks', 'tabcontent')"><%= I18n.t('general.map') %></button>
+    </div>
+  </div>
+</div>
+
+<div id="tree-list" class="tabcontent">
+  <div id="portfolio-units-table">
+    <%= render 'portfolio_units/portfolio_units_table', company: company, product: product, portfolio_units: portfolio_units %>
+  </div>
+</div>
+
+<div id="tree-map" class="tabcontent">
+  <%= render 'products/product_tree', portfolio_unit: product, children: product.portfolio_units.root_units %>
+</div>

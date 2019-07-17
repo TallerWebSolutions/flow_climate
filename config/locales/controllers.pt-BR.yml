@@ -112,6 +112,8 @@ pt-BR:
     flow: "Fluxo"
     class_of_service: "Classe de Serviço (Perfil de Risco)"
     leadtime: "Lead time"
+    list: "Lista"
+    map: "Mapa"
   header:
     logout: Sair
     sign_up: Cadastre-se

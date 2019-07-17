@@ -112,6 +112,8 @@ en:
     flow: "Flow"
     class_of_service: "Class of Service (Risk Profile)"
     leadtime: "Lead time"
+    list: "List"
+    map: "Map"
   header:
     logout: Logout
     explore: Explore
