@@ -11,8 +11,8 @@ class ProductsController < AuthenticatedController
   end
 
   def show
-    @product_projects = @product.projects.order(end_date: :desc)
-    @portfolio_units = @product.portfolio_units.order(:name)
+    @product_projects = @product.projects.includes(:customers).includes(:products).includes(:team).includes(projects_products: :product).order(end_date: :desc)
+    @portfolio_units = @product.portfolio_units.includes(:parent).includes(:children).includes(:jira_portfolio_unit_config).order(:name)
     @projects_summary = ProjectsSummaryData.new(@product.projects)
     @jira_product_configs = @product.jira_product_configs.order(:jira_product_key)
     render :show

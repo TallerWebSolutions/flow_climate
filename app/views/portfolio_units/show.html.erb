@@ -27,34 +27,7 @@
 </div>
 
 <div id="portfolio-unit-structure" class="tabcontent">
-  <div class="row">
-    <% @portfolio_unit.portfolio_structure.each do |branch| %>
-      <div class="col-xs-2 col-xs-offset-5 center product-branch">
-        <div class="card-header">
-          <small class="pull-left bottom-spaced-component"><%= number_to_currency(branch.total_cost, precision: 2) %></small>
-          <small class="pull-right bottom-spaced-component"><%= I18n.t('general.hours_text', hour_value: branch.total_hours) %></small>
-        </div>
-
-        <div class="card-title">
-          <%= branch.name %>
-        </div>
-
-        <div class="card-subtitle">
-          <%= I18n.t('general.demands_text', demands_count: branch.total_portfolio_demands.count) %>
-        </div>
-
-        <div class="progress card-progress-bar">
-          <div class="progress-bar" role="progressbar" style="width: <%= "#{branch.percentage_complete * 100}" %>%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"><%= "#{number_with_precision(branch.percentage_complete * 100, precision: 2)}%" %></div>
-        </div>
-      </div>
-
-      <% if branch != @portfolio_unit.portfolio_structure.last %>
-        <div class="col-xs-2 col-xs-offset-5 product-tree-connector">
-          <i class="fas fa-arrow-down"></i>
-        </div>
-      <% end %>
-    <% end %>
-  </div>
+  <%= render 'products/product_tree', portfolio_unit: @portfolio_unit, children: @portfolio_unit.children %>
 </div>
 
 <% content_for :javascript do %>

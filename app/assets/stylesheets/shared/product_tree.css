@@ -12,3 +12,43 @@
     font-size: x-large;
     text-align: center;
 }
+
+.tf-nc {
+    padding: 40px;
+}
+
+.tf-nc-title {
+    margin-top: 15px;
+}
+
+.tf-custom .tf-nc {
+    background-color: #F9FCB3;
+    padding: 10px;
+    min-width: 270px;
+}
+
+.tf-header {
+    font-size: x-small;
+}
+
+.card-header {
+    margin-top: -10px;
+    margin-bottom: 30px;
+    font-size: smaller;
+    padding: 1px;
+}
+
+.card-title {
+    text-align: center;
+}
+
+.card-subtitle {
+    font-size: smaller;
+    font-style: italic;
+    margin-bottom: 20px;
+}
+
+.card-progress-bar {
+    margin-bottom: -19px;
+}
+

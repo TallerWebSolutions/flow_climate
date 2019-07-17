@@ -39,10 +39,15 @@ class PortfolioUnit < ApplicationRecord
   accepts_nested_attributes_for :jira_portfolio_unit_config, reject_if: :all_blank
 
   validates :product, :portfolio_unit_type, :name, presence: true
-
   validates :name, uniqueness: { scope: :product, message: I18n.t('portfolio_unit.validations.name') }
 
+  scope :root_units, -> { where(parent: nil) }
+
   delegate :name, to: :parent, allow_nil: true, prefix: true
+
+  def children?
+    children.present?
+  end
 
   def parent_branches
     portfolio_unit_parent = self
@@ -52,14 +57,6 @@ class PortfolioUnit < ApplicationRecord
       product_tree_array << portfolio_unit_parent
     end
     product_tree_array
-  end
-
-  def portfolio_structure
-    portfolio_structure = parent_branches.reverse
-
-    portfolio_structure.unshift(product)
-
-    portfolio_structure << self
   end
 
   def total_portfolio_demands
