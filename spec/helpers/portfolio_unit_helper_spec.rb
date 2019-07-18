@@ -30,6 +30,11 @@ RSpec.describe PortfolioUnitHelper, type: :helper do
       it { expect(html_output).to include('bar') }
       it { expect(html_output).to include('foo') }
       it { expect(html_output).to include('bla') }
+      it { expect(html_output).to include('0%') }
+      it { expect(html_output).to include(I18n.t("activerecord.attributes.portfolio_unit.enums.portfolio_unit_type.#{portfolio_unit.portfolio_unit_type}")) }
+      it { expect(html_output).to include(I18n.t("activerecord.attributes.portfolio_unit.enums.portfolio_unit_type.#{child_portfolio_unit.portfolio_unit_type}")) }
+      it { expect(html_output).to include(I18n.t("activerecord.attributes.portfolio_unit.enums.portfolio_unit_type.#{granchild_portfolio_unit.portfolio_unit_type}")) }
+      it { expect(html_output).to include(I18n.t("activerecord.attributes.portfolio_unit.enums.portfolio_unit_type.#{other_child_portfolio_unit.portfolio_unit_type}")) }
     end
 
     context 'with no data' do
