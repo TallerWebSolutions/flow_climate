@@ -11,12 +11,14 @@
     <div class="col-xs-12">
       <table class="table table-striped">
         <thead>
+          <th><%= Jira::JiraProjectConfig.human_attribute_name :jira_product_config %></th>
           <th><%= Jira::JiraProjectConfig.human_attribute_name :fix_version_name %></th>
           <th></th>
         </thead>
         <tbody>
           <% project.jira_project_configs.each do |config| %>
             <tr>
+              <td><%= config.jira_product_config.jira_product_key %></td>
               <td><%= config.fix_version_name %></td>
               <td>
                 <%= link_to company_project_jira_project_config_path(company, project, config), method: :delete, data: { confirm: I18n.t('general.destroy.confirm') }, remote: true do %>
