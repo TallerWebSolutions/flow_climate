@@ -21,6 +21,7 @@
     <table class="table table-striped">
       <thead>
         <tr>
+          <th><%= Demand.human_attribute_name :portfolio_unit %></th>
           <th><%= Demand.human_attribute_name :demand_id %></th>
           <th><%= Demand.human_attribute_name :artifact_type %></th>
           <th><%= Demand.human_attribute_name :demand_type %></th>
@@ -32,6 +33,7 @@
       <tbody>
         <% demands.each do |demand| %>
           <tr id='demand_<%= demand.id %>'>
+            <td><%= link_to demand.portfolio_unit.name, company_product_portfolio_unit_path(company, product, demand.portfolio_unit) if demand.portfolio_unit.present? %></td>
             <td><%= link_to demand.demand_id, company_demand_path(company, demand.slug) %></td>
             <td><%= I18n.t("activerecord.attributes.demand.enums.artifact_type.#{demand.artifact_type}") %></td>
             <td><%= I18n.t("activerecord.attributes.demand.enums.demand_type.#{demand.demand_type}") %></td>

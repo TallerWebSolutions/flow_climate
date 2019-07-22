@@ -359,62 +359,6 @@ RSpec.describe Demand, type: :model do
     end
   end
 
-  describe '#working_time_upstream' do
-    let(:company) { Fabricate :company }
-    let(:customer) { Fabricate :customer, company: company }
-    let(:project) { Fabricate :project, customers: [customer] }
-    let(:other_project) { Fabricate :project, customers: [customer] }
-    let(:effort_stage) { Fabricate :stage, stage_stream: :upstream }
-    let!(:stage_project_config) { Fabricate :stage_project_config, project: project, stage: effort_stage, compute_effort: true, pairing_percentage: 60, stage_percentage: 90, management_percentage: 20 }
-    let!(:other_stage_project_config) { Fabricate :stage_project_config, project: other_project, stage: effort_stage, compute_effort: true, pairing_percentage: 40, stage_percentage: 100, management_percentage: 10 }
-
-    context 'having only one assined' do
-      let(:demand) { Fabricate :demand, project: project, assignees_count: 1 }
-      let!(:demand_transition) { Fabricate :demand_transition, demand: demand, stage: effort_stage, last_time_in: Time.zone.parse('2018-03-05 22:00'), last_time_out: Time.zone.parse('2018-03-06 13:00') }
-      let!(:discarded_demand_transition) { Fabricate :demand_transition, demand: demand, stage: effort_stage, last_time_in: Time.zone.parse('2018-03-05 22:00'), last_time_out: Time.zone.parse('2018-03-06 13:00'), discarded_at: Time.zone.now }
-
-      let(:other_demand) { Fabricate :demand, project: other_project, assignees_count: 1 }
-      let!(:other_demand_transition) { Fabricate :demand_transition, demand: other_demand, stage: effort_stage, last_time_in: Time.zone.parse('2018-03-08 22:00'), last_time_out: Time.zone.parse('2018-03-20 20:00') }
-
-      it { expect(demand.working_time_upstream.to_f).to eq 6.48 }
-    end
-
-    context 'having a pair assined' do
-      let(:demand) { Fabricate :demand, project: project, assignees_count: 2, effort_upstream: 0, effort_downstream: 0 }
-      let!(:demand_transition) { Fabricate :demand_transition, demand: demand, stage: effort_stage, last_time_in: Time.zone.parse('2018-03-05 22:00'), last_time_out: Time.zone.parse('2018-03-06 13:00') }
-
-      it { expect(demand.working_time_upstream.to_f).to eq 10.368 }
-    end
-  end
-
-  describe '#working_time_downstream' do
-    let(:company) { Fabricate :company }
-    let(:customer) { Fabricate :customer, company: company }
-    let(:project) { Fabricate :project, customers: [customer] }
-    let(:other_project) { Fabricate :project, customers: [customer] }
-    let(:effort_stage) { Fabricate :stage, stage_stream: :downstream }
-    let!(:stage_project_config) { Fabricate :stage_project_config, project: project, stage: effort_stage, compute_effort: true, pairing_percentage: 80, stage_percentage: 100, management_percentage: 10 }
-    let!(:other_stage_project_config) { Fabricate :stage_project_config, project: other_project, stage: effort_stage, compute_effort: true, pairing_percentage: 30, stage_percentage: 90, management_percentage: 10 }
-
-    context 'having only one assined' do
-      let(:demand) { Fabricate :demand, project: project, assignees_count: 1 }
-      let!(:demand_transition) { Fabricate :demand_transition, demand: demand, stage: effort_stage, last_time_in: Time.zone.parse('2018-03-05 22:00'), last_time_out: Time.zone.parse('2018-03-06 13:00') }
-      let!(:discarded_demand_transition) { Fabricate :demand_transition, demand: demand, stage: effort_stage, last_time_in: Time.zone.parse('2018-03-05 22:00'), last_time_out: Time.zone.parse('2018-03-06 13:00'), discarded_at: Time.zone.now }
-
-      let(:other_demand) { Fabricate :demand, project: other_project, assignees_count: 1 }
-      let!(:other_demand_transition) { Fabricate :demand_transition, demand: other_demand, stage: effort_stage, last_time_in: Time.zone.parse('2018-03-08 22:00'), last_time_out: Time.zone.parse('2018-03-20 20:00') }
-
-      it { expect(demand.working_time_downstream.to_f).to eq 6.6000000000000005 }
-    end
-
-    context 'having a pair assined' do
-      let(:demand) { Fabricate :demand, project: project, assignees_count: 2, effort_upstream: 0, effort_downstream: 0 }
-      let!(:demand_transition) { Fabricate :demand_transition, demand: demand, stage: effort_stage, last_time_in: Time.zone.parse('2018-03-05 22:00'), last_time_out: Time.zone.parse('2018-03-06 13:00') }
-
-      it { expect(demand.working_time_downstream.to_f).to eq 11.880000000000003 }
-    end
-  end
-
   describe '#blocked_working_time_upstream' do
     let(:company) { Fabricate :company }
     let(:customer) { Fabricate :customer, company: company }
@@ -534,7 +478,7 @@ RSpec.describe Demand, type: :model do
 
   describe '#csv_array' do
     context 'having no stages' do
-      let!(:demand) { Fabricate :demand, effort_downstream: nil, end_date: Time.zone.today }
+      let!(:demand) { Fabricate :demand, effort_downstream: 0, end_date: Time.zone.today }
 
       it { expect(demand.csv_array).to eq [demand.id, demand.current_stage&.name, demand.demand_id, demand.demand_title, demand.demand_type, demand.class_of_service, demand.effort_downstream.to_f.to_s.gsub('.', I18n.t('number.format.separator')), demand.effort_upstream.to_f.to_s.gsub('.', I18n.t('number.format.separator')), demand.created_date&.iso8601, demand.commitment_date&.iso8601, demand.end_date&.iso8601] }
     end
@@ -547,7 +491,7 @@ RSpec.describe Demand, type: :model do
       let(:project) { Fabricate :project, products: [product] }
       let!(:stage) { Fabricate :stage, company: company, projects: [project], end_point: false, commitment_point: false, stage_stream: :downstream, order: 0 }
       let!(:demand_transition) { Fabricate :demand_transition, demand: demand, stage: stage }
-      let!(:demand) { Fabricate :demand, project: project, effort_downstream: nil }
+      let!(:demand) { Fabricate :demand, project: project, effort_downstream: 0 }
 
       it { expect(demand.csv_array).to eq [demand.id, demand.current_stage&.name, demand.demand_id, demand.demand_title, demand.demand_type, demand.class_of_service, demand.effort_downstream.to_f.to_s.gsub('.', I18n.t('number.format.separator')), demand.effort_upstream.to_f.to_s.gsub('.', I18n.t('number.format.separator')), demand.created_date&.iso8601, demand.commitment_date&.iso8601, nil] }
     end
@@ -587,7 +531,7 @@ RSpec.describe Demand, type: :model do
     end
   end
 
-  describe '#sum_touch_blocked_time' do
+  describe '#total_touch_blocked_time' do
     context 'having transitions and blocks' do
       let(:company) { Fabricate :company }
       let(:customer) { Fabricate :customer, company: company }
@@ -598,6 +542,7 @@ RSpec.describe Demand, type: :model do
       let!(:touch_stage) { Fabricate :stage, company: company, projects: [project], end_point: false, commitment_point: false, queue: true, stage_stream: :downstream }
 
       let!(:demand) { Fabricate :demand, project: project, leadtime: 453_223 }
+
       let!(:first_demand_transition) { Fabricate :demand_transition, demand: demand, stage: queue_stage, last_time_in: 2.days.ago, last_time_out: 5.hours.ago }
       let!(:second_demand_transition) { Fabricate :demand_transition, demand: demand, stage: touch_stage, last_time_in: 1.day.ago, last_time_out: Time.zone.now }
       let!(:discarded_demand_transition) { Fabricate :demand_transition, demand: demand, stage: touch_stage, last_time_in: 1.day.ago, last_time_out: Time.zone.now, discarded_at: Time.zone.now }
@@ -607,13 +552,13 @@ RSpec.describe Demand, type: :model do
 
       let!(:discarded_demand_block) { Fabricate :demand_block, demand: demand, active: true, block_time: Time.zone.parse('2018-03-06 10:00'), unblock_time: Time.zone.parse('2018-03-06 12:00'), discarded_at: Time.zone.now }
 
-      it { expect(demand.sum_touch_blocked_time.to_i).to eq 90_000 }
+      it { expect(demand.total_touch_blocked_time.to_i).to eq 90_000 }
     end
 
     context 'having no transitions' do
       let!(:demand) { Fabricate :demand, leadtime: nil }
 
-      it { expect(demand.sum_touch_blocked_time.to_f).to eq 0 }
+      it { expect(demand.total_touch_blocked_time.to_f).to eq 0 }
     end
   end
 

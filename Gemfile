@@ -51,13 +51,13 @@ end
 
 group :development do
   gem 'annotate'
-  gem 'bullet'
+  # gem 'bullet'
   gem 'flamegraph'
   gem 'listen'
-  gem 'memory_profiler'
+  # gem 'memory_profiler'
   gem 'rack-mini-profiler', require: false
   gem 'rails_best_practices'
-  gem 'rubycritic', require: false
+  # gem 'rubycritic', require: false
   gem 'stackprof'
   gem 'traceroute'
   gem 'web-console'

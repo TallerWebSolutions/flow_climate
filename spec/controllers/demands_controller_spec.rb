@@ -364,8 +364,8 @@ RSpec.describe DemandsController, type: :controller do
             expect(assigns(:demand_blocks)).to eq [second_block, first_block]
             expect(assigns(:queue_percentage)).to eq 0
             expect(assigns(:touch_percentage)).to eq 100
-            expect(assigns(:upstream_percentage)).to eq 0
-            expect(assigns(:downstream_percentage)).to eq 100
+            expect(assigns(:upstream_percentage)).to eq 55.55555555555556
+            expect(assigns(:downstream_percentage)).to eq 44.44444444444444
             expect(assigns(:demand_comments)).to eq [other_demand_comment, demand_comment]
           end
         end
@@ -381,8 +381,8 @@ RSpec.describe DemandsController, type: :controller do
             expect(assigns(:demand_blocks)).to eq []
             expect(assigns(:queue_percentage)).to eq 0
             expect(assigns(:touch_percentage)).to eq 100
-            expect(assigns(:upstream_percentage)).to eq 0
-            expect(assigns(:downstream_percentage)).to eq 100
+            expect(assigns(:upstream_percentage)).to eq 55.55555555555556
+            expect(assigns(:downstream_percentage)).to eq 44.44444444444444
             expect(assigns(:demand_comments)).to eq []
           end
         end

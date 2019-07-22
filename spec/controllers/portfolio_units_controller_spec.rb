@@ -194,12 +194,17 @@ RSpec.describe PortfolioUnitsController, type: :controller do
 
       let!(:out_portfolio_unit) { Fabricate :portfolio_unit, name: 'aaa' }
 
+      let!(:demand) { Fabricate :demand, portfolio_unit: portfolio_unit, end_date: 2.days.ago }
+      let!(:other_demand) { Fabricate :demand, portfolio_unit: portfolio_unit, end_date: 1.day.ago }
+
       context 'with valid data' do
         it 'assigns the instance variables and render the template' do
           get :show, params: { company_id: company, product_id: product, id: portfolio_unit }, xhr: true
           expect(assigns(:company)).to eq company
           expect(assigns(:product)).to eq product
           expect(assigns(:portfolio_unit)).to eq portfolio_unit
+          expect(assigns(:demands)).to eq [other_demand, demand]
+          expect(assigns(:demands_chart_adapter)).to be_a Highchart::DemandsChartsAdapter
           expect(response).to render_template 'portfolio_units/show'
         end
       end

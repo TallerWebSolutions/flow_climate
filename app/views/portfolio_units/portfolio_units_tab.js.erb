@@ -1,0 +1,8 @@
+var portfolioUnitsDiv = $('#portfolio-units')
+
+portfolioUnitsDiv.html("<%= escape_javascript(render 'portfolio_units/portfolio_units_tab', company: @company, product: @product, portfolio_units: @portfolio_units) %>")
+
+$('#general-loader').hide();
+portfolioUnitsDiv.show();
+
+enableTabs();

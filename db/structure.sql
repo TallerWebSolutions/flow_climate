@@ -347,7 +347,12 @@ CREATE TABLE public.demands (
     company_id integer NOT NULL,
     portfolio_unit_id integer,
     product_id integer,
-    team_id integer NOT NULL
+    team_id integer NOT NULL,
+    cost_to_project numeric DEFAULT 0,
+    blocked_working_time_downstream numeric DEFAULT 0,
+    blocked_working_time_upstream numeric DEFAULT 0,
+    total_bloked_working_time numeric DEFAULT 0,
+    total_touch_blocked_time numeric DEFAULT 0
 );
 
 
@@ -3182,6 +3187,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190708211541'),
 ('20190709144816'),
 ('20190711211958'),
-('20190716135342');
+('20190716135342'),
+('20190719194438');
 
 

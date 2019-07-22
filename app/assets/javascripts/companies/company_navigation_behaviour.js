@@ -1,8 +1,5 @@
-hideAllComponents();
-
 function activateTab() {
     $('.nav-item').on('click', function(){
-        hideAllComponents();
         $(this).addClass('active');
 
         const companyId = $('#company_id').val();
@@ -28,9 +25,4 @@ function activateTab() {
             document.getElementById("company-settings").style.display = "block";
         }
     });
-}
-
-function hideAllComponents() {
-    $('.tab-container').hide();
-    $('.nav-item').removeClass('active');
 }

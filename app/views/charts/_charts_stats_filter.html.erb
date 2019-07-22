@@ -1,20 +1,20 @@
 <div class="row bottom-spaced-component">
-  <div class="col-xs-3">
+  <div class="col-xs-4">
     <%= label_tag Project.human_attribute_name(:start_date), nil, class: 'control-label' %>
     <%= date_field_tag :stats_start_date, start_date, class: 'form-control' %>
   </div>
 
-  <div class="col-xs-3">
+  <div class="col-xs-4">
     <%= label_tag Project.human_attribute_name(:end_date), nil, class: 'control-label' %>
     <%= date_field_tag :stats_end_date, end_date, class: 'form-control' %>
   </div>
 
-  <div class="col-xs-3">
+  <div class="col-xs-4">
     <%= label_tag I18n.t('projects.charts.deadline_vs_montecarlo_durations.confidence'), nil, class: 'control-label' %>
     <%= number_field_tag :stats_leadtime_confidence, (params['leadtime_confidence'] || 80), class: 'form-control' %>
   </div>
 
-  <div class="col-xs-3">
+  <div class="col-xs-6">
     <div class="form-group">
       <%= label_tag I18n.t('charts.period.label') %>
       <%= select_tag :stats_chart_period, grouping_period_to_charts_options(params['period']), class: 'form-control filter-checks' %>
@@ -22,7 +22,7 @@
   </div>
 
   <% if projects_count > 1 %>
-    <div class="col-xs-3">
+    <div class="col-xs-6">
       <div class="form-group">
         <%= label_tag I18n.t('filters.options.project_status') %>
         <%= select_tag :project_status, options_for_select(Project.statuses.keys.map { |status| [I18n.t("activerecord.attributes.project.enums.status.#{status}"), status] }, selected: params[:project_status]), include_blank: I18n.t('general.select'),class: 'form-control filter-checks' %>

@@ -1,38 +1,7 @@
-<%= form_tag company_build_operational_charts_path(company, projects_ids: projects.map(&:id)), method: :get, remote: true do %>
-  <%= hidden_field_tag :company_id, company.id %>
-  <%= hidden_field_tag :target_name, target_name %>
-  <%= hidden_field_tag :projects_ids, projects.map(&:id).join(',') %>
+<%= hidden_field_tag :target_name, target_name %>
+<%= hidden_field_tag :projects_ids, projects.map(&:id).join(',') %>
 
-  <div class="row bottom-spaced-component">
-    <div class="col-xs-3">
-      <%= label_tag Project.human_attribute_name(:start_date), nil, class: 'control-label' %>
-      <%= date_field_tag :operational_charts_start_date, (params['start_date'] || start_date), class: 'form-control' %>
-    </div>
-
-    <div class="col-xs-3">
-      <%= label_tag Project.human_attribute_name(:end_date), nil, class: 'control-label' %>
-      <%= date_field_tag :operational_charts_end_date, (params['end_date'] || end_date), class: 'form-control' %>
-    </div>
-
-    <div class="col-xs-3">
-      <%= label_tag I18n.t('projects.charts.deadline_vs_montecarlo_durations.confidence'), nil, class: 'control-label' %>
-      <%= number_field_tag :operational_charts_leadtime_confidence, (params['leadtime_confidence'] || 80), class: 'form-control' %>
-    </div>
-
-    <div class="col-xs-3">
-      <div class="form-group">
-        <%= label_tag I18n.t('charts.period.label') %>
-        <%= select_tag :operational_charts_period, grouping_period_to_charts_options(params['period']), class: 'form-control' %>
-      </div>
-    </div>
-  </div>
-
-  <div class="row bottom-spaced-component">
-    <div class="col-xs-3">
-      <%= link_to I18n.t('general.search'), '#', class: 'btn btn-primary', id: 'search_operational_charts' %>
-    </div>
-  </div>
-<% end %>
+<%= render 'charts/charts_filter', start_date: (params['start_date'] || start_date), end_date: (params['end_date'] || end_date), period: params[:period] %>
 
 <hr>
 

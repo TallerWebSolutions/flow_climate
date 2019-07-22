@@ -1,0 +1,8 @@
+var portfolioDemandsDiv = $('#portfolio-demands')
+
+portfolioDemandsDiv.html("<%= escape_javascript(render 'demands/portfolio_demands_table', company: @company, product: @product, demands: @product.total_portfolio_demands) %>")
+
+$('#general-loader').hide();
+portfolioDemandsDiv.show();
+
+enableTabs();

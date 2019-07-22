@@ -26,6 +26,6 @@ function statisticsChartsRoute(companyId, projectsIds, period, targetName, start
     jQuery.ajax({
         url: `/companies/${companyId}/statistics_charts.js`,
         type: "GET",
-        data: `projects_ids=${projectsIds}&period=${period}&target_name=${targetName}&start_date=${startDate}&end_date=${endDate}&period=${period}&project_status=${projectStatus}&leadtime_confidence=${statsLeadtimeConfidence}`
+        data: `projects_ids=${projectsIds}&period=${period}&target_name=${targetName}&start_date=${startDate}&end_date=${endDate}&project_status=${projectStatus}&leadtime_confidence=${statsLeadtimeConfidence}`
     });
 }

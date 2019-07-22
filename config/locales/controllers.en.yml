@@ -505,8 +505,8 @@ en:
       title: "Create Demand"
     index:
       title: "Demands List"
-      working_time_upstream: "Total Working Time in Upstream"
-      working_time_downstream: "Total Working Time in Downstream"
+      effort_upstream: "Effort in Upstream"
+      effort_downstream: "Effort in Downstream"
       blocked_working_time_upstream: "Blocked Working Time in Upstream"
       blocked_working_time_downstream: "Blocked Working Time in Downstream"
       downstream: "Downstream?"

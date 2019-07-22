@@ -11,35 +11,61 @@
   </div>
 </div>
 
+<%= hidden_field_tag :company_id, @company.id %>
+<%= hidden_field_tag :product_id, @product.id %>
+
 <div class="row">
   <div class="topnav">
-    <%= link_to I18n.t('navbar.details'), '#', id: 'nav-item-stamps', class: 'active nav-tab' %>
-    <%= link_to I18n.t('navbar.projects_list'), '#', id: 'nav-item-list', class: 'nav-tab' %>
-    <%= link_to I18n.t('navbar.portfolio_units'), '#', id: 'nav-item-portfolio-unit', class: 'nav-tab' %>
-    <%= link_to I18n.t('navbar.settings'), '#', id: 'nav-item-product-settings', class: 'nav-tab' %>
+    <%= link_to I18n.t('navbar.details'), '#', id: 'nav-item-stamps', class: 'active nav-item', data: { container: '#stamps' } %>
+    <%= link_to I18n.t('navbar.projects_list'), '#', id: 'nav-projects-table', class: 'nav-item', data: { container: '#project-table' } %>
+    <%= link_to I18n.t('navbar.demands'), '#', id: 'nav-portfolio-demands', class: 'nav-item', data: { container: '#portfolio-demands' } %>
+    <%= link_to I18n.t('navbar.portfolio_units'), '#', id: 'nav-portfolio-unit', class: 'nav-item', data: { container: '#portfolio-units' } %>
+    <%= link_to I18n.t('navbar.charts'), '#', id: 'nav-portfolio-charts', class: 'nav-item', data: { container: '#portfolio-charts' } %>
+    <%= link_to I18n.t('navbar.settings'), '#', id: 'nav-product-settings', class: 'nav-item', data: { container: '#product-settings' } %>
   </div>
 </div>
 
-<div id="stamps" class="tab-detail">
+<div id="stamps" class="tab-container">
   <%= render 'products/product_stamps', company: @company, product: @product %>
 </div>
 
-<div id="project-list" class="tab-detail">
-  <h2><%= I18n.t('projects.index.title') %></h2>
-
-  <div id="projects-table">
-    <%= render 'projects/projects_table', company: @company, projects_list: @product_projects, projects_summary: @projects_summary, projects_ids: @product_projects.map(&:id).flatten.join(',') %>
+<div class="row">
+  <div class="col-xs-12">
+    <div class="center loader" id="general-loader"></div>
   </div>
 </div>
 
-<div id="portfolio-units" class="tab-detail">
-  <%= render 'portfolio_units/portfolio_units_tab', company: @company, product: @product, portfolio_units: @portfolio_units %>
+<div id="projects-table" class="tab-container">
+
 </div>
 
-<div id="product-settings-content" class="tab-detail">
+<div id="portfolio-demands" class="tab-container">
+
+</div>
+
+<div id="portfolio-units" class="tab-container">
+
+</div>
+
+<div id="portfolio-charts" class="tab-container">
+</div>
+
+<div id="product-settings" class="tab-container">
   <%= render 'products/product_settings', company: @company, product: @product, jira_product_configs: @jira_product_configs %>
 </div>
 
 <% content_for :javascript do %>
+  <%= javascript_include_tag 'charts/line' %>
+  <%= javascript_include_tag 'charts/column' %>
+
+  <%= javascript_include_tag 'components/components' %>
+
+  <%= javascript_include_tag 'top_navigation/tab-navigation' %>
+
+  <%= javascript_include_tag 'routes/product_routes' %>
+
+  <%= javascript_include_tag 'demands/demands_charts' %>
+
+  <%= javascript_include_tag 'products/product_navigation_behaviour' %>
   <%= javascript_include_tag 'products/show' %>
 <% end %>

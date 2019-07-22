@@ -1,4 +1,4 @@
-hideAllComponents();
+hideAllComponents($('.nav-item'));
 
 const stampsDiv = $('#nav-item-stamps');
 stampsDiv.addClass('active');
@@ -10,13 +10,13 @@ const projectsIds = $("#projects_ids").val();
 const targetName = $("#target_name").val();
 
 $('.nav-item').on('click', function(event){
-    hideAllComponents();
+    hideAllComponents($('.nav-item'));
     const disabled = $(this).attr('disabled');
 
-    const startDate = $('#operational_charts_start_date').val();
-    const endDate = $('#operational_charts_end_date').val();
+    const startDate = $('#charts_filter_start_date').val();
+    const endDate = $('#charts_filter_end_date').val();
 
-    const period = $('#operational_charts_period').val();
+    const period = $('#charts_filter_period').val();
 
     if (disabled === 'disabled') {
         event.preventDefault();
@@ -57,8 +57,3 @@ $('.nav-item').on('click', function(event){
         $(this).addClass('active');
     }
 });
-
-function hideAllComponents() {
-    $('.tab-container').hide();
-    $('.nav-item').removeClass('active');
-}
