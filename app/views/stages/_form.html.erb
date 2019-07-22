@@ -4,10 +4,6 @@
       <%= form.label :order, class: 'control-label' %>
       <%= form.number_field :order, class: 'form-control', autofocus: true, step: 1 %>
     </div>
-    <div class='col-xs-6 form-group'>
-      <%= label_tag Team.model_name.human %>
-      <%= select_tag :team_id, teams_in_company_options(company), class: 'form-control', include_blank: I18n.t('general.select') %>
-    </div>
     <div class='col-xs-6 form-group <%= 'has-error' if stage.errors[:name].present? %>'>
       <%= form.label :name, class: 'control-label required' %>
       <%= form.text_field :name, class: 'form-control' %>
