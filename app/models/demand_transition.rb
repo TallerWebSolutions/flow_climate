@@ -78,6 +78,7 @@ class DemandTransition < ApplicationRecord
 
     demand.update(total_queue_time: current_queue_time, total_touch_time: current_touch_time)
     demand.update_effort!
+    demand.send(:compute_and_update_automatic_fields)
   end
 
   def same_stage_project?

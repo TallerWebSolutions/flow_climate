@@ -1,11 +1,13 @@
+var portfolioChartsDiv = $('#portfolio-charts')
+
+portfolioChartsDiv.html("<%= escape_javascript(render 'charts/portfolio_charts', demands: @demands, demands_chart_adapter: @demands_chart_adapter, start_date: @start_date, end_date: @end_date) %>")
+
 $('#general-loader').hide();
 
-$('.portfolio-unit-demands-tab').addClass('active');
-$('#portfolio-unit-demands').show();
-
-$('#demands-charts-div').show();
-
 buildDemandsTabCharts();
+
+portfolioChartsDiv.show();
+$('#demands-charts-div').show();
 
 $('#search_charts').on('click', function() {
     $('#demands-charts-div').hide();

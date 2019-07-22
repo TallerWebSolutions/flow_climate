@@ -43,6 +43,12 @@ RSpec.describe ProductsController, type: :controller do
 
       it { expect(response).to redirect_to new_user_session_path }
     end
+
+    describe 'GET #portfolio_units_tab' do
+      before { get :portfolio_units_tab, params: { company_id: 'bar', id: 'foo' } }
+
+      it { expect(response).to redirect_to new_user_session_path }
+    end
   end
 
   context 'authenticated as gold' do
@@ -226,14 +232,9 @@ RSpec.describe ProductsController, type: :controller do
       let(:customer) { Fabricate :customer, company: company, name: 'zzz' }
 
       let(:product) { Fabricate :product, customer: customer }
-      let!(:portfolio_unit) { Fabricate :portfolio_unit, product: product, name: 'zzz' }
-      let!(:other_portfolio_unit) { Fabricate :portfolio_unit, product: product, name: 'aaa' }
 
       let!(:jira_product_config) { Fabricate :jira_product_config, product: product, jira_product_key: 'zzz' }
       let!(:other_jira_product_config) { Fabricate :jira_product_config, product: product, jira_product_key: 'aaa' }
-
-      let!(:first_project) { Fabricate :project, customers: [product.customer], products: [product], end_date: 5.days.from_now }
-      let!(:second_project) { Fabricate :project, customers: [product.customer], products: [product], end_date: 7.days.from_now }
 
       context 'passing a valid ID' do
         context 'having data' do
@@ -243,10 +244,7 @@ RSpec.describe ProductsController, type: :controller do
             expect(response).to render_template :show
             expect(assigns(:company)).to eq company
             expect(assigns(:product)).to eq product
-            expect(assigns(:product_projects)).to eq [second_project, first_project]
-            expect(assigns(:portfolio_units)).to eq [other_portfolio_unit, portfolio_unit]
             expect(assigns(:jira_product_configs)).to eq [other_jira_product_config, jira_product_config]
-            expect(assigns(:projects_summary).total_flow_pressure).to be_within(0.9).of(8.5)
           end
         end
 
@@ -259,8 +257,6 @@ RSpec.describe ProductsController, type: :controller do
             expect(response).to render_template :show
             expect(assigns(:company)).to eq company
             expect(assigns(:product)).to eq empty_product
-            expect(assigns(:report_data)).to be_nil
-            expect(assigns(:product_projects)).to eq []
           end
         end
       end
@@ -374,6 +370,226 @@ RSpec.describe ProductsController, type: :controller do
           before { delete :destroy, params: { company_id: company, id: product } }
 
           it { expect(response).to have_http_status :not_found }
+        end
+      end
+    end
+
+    describe 'GET #portfolio_units_tab' do
+      let(:customer) { Fabricate :customer, company: company }
+
+      let!(:first_product) { Fabricate :product, customer: customer }
+      let!(:second_product) { Fabricate :product, customer: customer }
+
+      context 'with valid parameters' do
+        context 'having data' do
+          let!(:root_portfolio_unit) { Fabricate :portfolio_unit, product: first_product, name: 'root unit' }
+          let!(:child_portfolio_unit) { Fabricate :portfolio_unit, product: first_product, parent: root_portfolio_unit, name: 'child unit' }
+          let!(:grandchild_portfolio_unit) { Fabricate :portfolio_unit, product: first_product, parent: child_portfolio_unit, name: 'grandchild unit' }
+
+          let!(:other_portfolio_unit) { Fabricate :portfolio_unit, product: second_product, name: 'other unit' }
+
+          it 'creates the objects and renders the tab' do
+            get :portfolio_units_tab, params: { company_id: company, id: first_product }, xhr: true
+            expect(response).to render_template 'portfolio_units/portfolio_units_tab'
+            expect(assigns(:portfolio_units)).to eq [child_portfolio_unit, grandchild_portfolio_unit, root_portfolio_unit]
+          end
+        end
+      end
+
+      context 'with no data' do
+        it 'render the template with empty data' do
+          get :portfolio_units_tab, params: { company_id: company, id: first_product }, xhr: true
+          expect(assigns(:portfolio_units)).to eq []
+          expect(response).to render_template 'portfolio_units/portfolio_units_tab'
+        end
+      end
+
+      context 'with invalid' do
+        context 'product' do
+          before { get :portfolio_units_tab, params: { company_id: company, id: 'foo' }, xhr: true }
+
+          it { expect(response).to have_http_status :not_found }
+        end
+
+        context 'company' do
+          context 'no existent' do
+            before { get :portfolio_units_tab, params: { company_id: 'foo', id: first_product } }
+
+            it { expect(response).to have_http_status :not_found }
+          end
+
+          context 'not permitted' do
+            let(:company) { Fabricate :company, users: [] }
+
+            before { get :portfolio_units_tab, params: { company_id: company, id: first_product } }
+
+            it { expect(response).to have_http_status :not_found }
+          end
+        end
+      end
+    end
+
+    describe 'GET #projects_tab' do
+      let(:customer) { Fabricate :customer, company: company }
+
+      let!(:first_product) { Fabricate :product, customer: customer }
+      let!(:second_product) { Fabricate :product, customer: customer }
+
+      context 'with valid parameters' do
+        context 'having data' do
+          let!(:first_project) { Fabricate :project, products: [first_product, second_product], end_date: 1.day.ago }
+          let!(:second_project) { Fabricate :project, products: [first_product], end_date: Time.zone.today }
+
+          let!(:other_project) { Fabricate :project, products: [second_product] }
+
+          it 'creates the objects and renders the tab' do
+            get :projects_tab, params: { company_id: company, id: first_product }, xhr: true
+            expect(response).to render_template 'projects/projects_tab'
+            expect(assigns(:projects_summary)).to be_a ProjectsSummaryData
+            expect(assigns(:product_projects)).to eq [second_project, first_project]
+          end
+        end
+      end
+
+      context 'with no data' do
+        it 'render the template with empty data' do
+          get :projects_tab, params: { company_id: company, id: first_product }, xhr: true
+          expect(assigns(:product_projects)).to eq []
+          expect(response).to render_template 'projects/projects_tab'
+        end
+      end
+
+      context 'with invalid' do
+        context 'product' do
+          before { get :projects_tab, params: { company_id: company, id: 'foo' }, xhr: true }
+
+          it { expect(response).to have_http_status :not_found }
+        end
+
+        context 'company' do
+          context 'no existent' do
+            before { get :projects_tab, params: { company_id: 'foo', id: first_product } }
+
+            it { expect(response).to have_http_status :not_found }
+          end
+
+          context 'not permitted' do
+            let(:company) { Fabricate :company, users: [] }
+
+            before { get :projects_tab, params: { company_id: company, id: first_product } }
+
+            it { expect(response).to have_http_status :not_found }
+          end
+        end
+      end
+    end
+
+    describe 'GET #portfolio_demands_tab' do
+      let(:customer) { Fabricate :customer, company: company }
+
+      let!(:first_product) { Fabricate :product, customer: customer }
+      let!(:second_product) { Fabricate :product, customer: customer }
+
+      context 'with valid parameters' do
+        context 'having data' do
+          let!(:first_demand) { Fabricate :demand, product: first_product, end_date: 1.day.ago }
+          let!(:second_demand) { Fabricate :demand, product: first_product, end_date: Time.zone.today }
+          let!(:third_demand) { Fabricate :demand, product: first_product, end_date: nil }
+
+          let!(:other_demand) { Fabricate :demand, product: second_product }
+
+          it 'creates the objects and renders the tab' do
+            get :portfolio_demands_tab, params: { company_id: company, id: first_product }, xhr: true
+            expect(response).to render_template 'demands/portfolio_demands_tab'
+            expect(assigns(:demands)).to eq [third_demand, second_demand, first_demand]
+          end
+        end
+      end
+
+      context 'with no data' do
+        it 'render the template with empty data' do
+          get :portfolio_demands_tab, params: { company_id: company, id: first_product }, xhr: true
+          expect(assigns(:demands)).to eq []
+          expect(response).to render_template 'demands/portfolio_demands_tab'
+        end
+      end
+
+      context 'with invalid' do
+        context 'product' do
+          before { get :portfolio_demands_tab, params: { company_id: company, id: 'foo' }, xhr: true }
+
+          it { expect(response).to have_http_status :not_found }
+        end
+
+        context 'company' do
+          context 'no existent' do
+            before { get :portfolio_demands_tab, params: { company_id: 'foo', id: first_product } }
+
+            it { expect(response).to have_http_status :not_found }
+          end
+
+          context 'not permitted' do
+            let(:company) { Fabricate :company, users: [] }
+
+            before { get :portfolio_demands_tab, params: { company_id: company, id: first_product } }
+
+            it { expect(response).to have_http_status :not_found }
+          end
+        end
+      end
+    end
+
+    describe 'GET #portfolio_charts_tab' do
+      let(:customer) { Fabricate :customer, company: company }
+
+      let!(:first_product) { Fabricate :product, customer: customer }
+      let!(:second_product) { Fabricate :product, customer: customer }
+
+      context 'with valid parameters' do
+        context 'having data' do
+          let!(:first_demand) { Fabricate :demand, product: first_product, end_date: 1.day.ago }
+          let!(:second_demand) { Fabricate :demand, product: first_product, end_date: Time.zone.today }
+          let!(:third_demand) { Fabricate :demand, product: first_product, end_date: nil }
+
+          let!(:other_demand) { Fabricate :demand, product: second_product }
+
+          it 'creates the objects and renders the tab' do
+            get :portfolio_charts_tab, params: { company_id: company, id: first_product }, xhr: true
+            expect(response).to render_template 'portfolio_units/portfolio_charts_tab'
+            expect(assigns(:demands)).to eq [third_demand, second_demand, first_demand]
+          end
+        end
+      end
+
+      context 'with no data' do
+        it 'render the template with empty data' do
+          get :portfolio_charts_tab, params: { company_id: company, id: first_product }, xhr: true
+          expect(assigns(:demands)).to eq []
+          expect(response).to render_template 'portfolio_units/portfolio_charts_tab'
+        end
+      end
+
+      context 'with invalid' do
+        context 'product' do
+          before { get :portfolio_charts_tab, params: { company_id: company, id: 'foo' }, xhr: true }
+
+          it { expect(response).to have_http_status :not_found }
+        end
+
+        context 'company' do
+          context 'no existent' do
+            before { get :portfolio_charts_tab, params: { company_id: 'foo', id: first_product } }
+
+            it { expect(response).to have_http_status :not_found }
+          end
+
+          context 'not permitted' do
+            let(:company) { Fabricate :company, users: [] }
+
+            before { get :portfolio_charts_tab, params: { company_id: company, id: first_product } }
+
+            it { expect(response).to have_http_status :not_found }
+          end
         end
       end
     end

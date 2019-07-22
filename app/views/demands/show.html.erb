@@ -71,10 +71,10 @@
 
   <div class="row">
     <div class="col-xs-6">
-      <%= "#{I18n.t('projects.charts.throughput.stage_stream.upstream')}: #{number_with_precision(@demand.working_time_upstream, precision: 2)} h (#{number_with_precision(@upstream_percentage, precision: 2)}%)" %>
+      <%= "#{I18n.t('projects.charts.throughput.stage_stream.upstream')}: #{number_with_precision(@demand.effort_upstream, precision: 2)} h (#{number_with_precision(@upstream_percentage, precision: 2)}%)" %>
     </div>
     <div class="col-xs-6">
-      <%= "#{I18n.t('projects.charts.throughput.stage_stream.downstream')}: #{number_with_precision(@demand.working_time_downstream, precision: 2)} h (#{number_with_precision(@downstream_percentage, precision: 2)}%)" %>
+      <%= "#{I18n.t('projects.charts.throughput.stage_stream.downstream')}: #{number_with_precision(@demand.effort_downstream, precision: 2)} h (#{number_with_precision(@downstream_percentage, precision: 2)}%)" %>
     </div>
   </div>
 

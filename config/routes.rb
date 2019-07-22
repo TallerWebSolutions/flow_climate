@@ -78,6 +78,13 @@ Rails.application.routes.draw do
     resources :customers
 
     resources :products do
+      member do
+        get :portfolio_units_tab
+        get :projects_tab
+        get :portfolio_demands_tab
+        get :portfolio_charts_tab
+      end
+
       get 'products_for_customer/(:customer_id)', action: :products_for_customer, on: :collection
 
       resources :portfolio_units, only: %i[new create destroy show]

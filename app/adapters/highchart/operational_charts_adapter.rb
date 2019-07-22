@@ -231,7 +231,7 @@ module Highchart
     end
 
     def compute_demands_touch_block_total_time(date)
-      @all_projects.map { |project| project.demands.finished_in_downstream.kept.where('end_date BETWEEN :start_date AND :end_date', start_date: start_of_period_for_date(date), end_date: end_of_period_for_date(date)).sum(&:sum_touch_blocked_time) }.sum
+      @all_projects.map { |project| project.demands.finished_in_downstream.kept.where('end_date BETWEEN :start_date AND :end_date', start_date: start_of_period_for_date(date), end_date: end_of_period_for_date(date)).sum(&:total_touch_blocked_time) }.sum
     end
 
     def compute_time_in_seconds_to_hours(date, times_per_period_hash, blocking_time)

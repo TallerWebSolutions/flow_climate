@@ -52,7 +52,7 @@ class DemandsController < AuthenticatedController
     @demand_transitions = @demand.demand_transitions.order(:last_time_in)
     @queue_percentage = Stats::StatisticsService.instance.compute_percentage(@demand.total_queue_time, @demand.total_touch_time)
     @touch_percentage = 100 - @queue_percentage
-    @upstream_percentage = Stats::StatisticsService.instance.compute_percentage(@demand.working_time_upstream, @demand.working_time_downstream)
+    @upstream_percentage = Stats::StatisticsService.instance.compute_percentage(@demand.effort_upstream, @demand.effort_downstream)
     @downstream_percentage = 100 - @upstream_percentage
     @demand_comments = @demand.demand_comments.order(:comment_date)
   end

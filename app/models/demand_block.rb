@@ -80,5 +80,7 @@ class DemandBlock < ApplicationRecord
   def update_computed_fields!
     self.block_duration = TimeService.instance.compute_working_hours_for_dates(block_time, unblock_time) if unblock_time.present?
     self.stage = demand.stage_at(block_time)
+
+    demand.send(:compute_and_update_automatic_fields)
   end
 end

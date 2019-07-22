@@ -538,8 +538,8 @@ pt-BR:
       title: "Criar Demanda"
     index:
       title: "Lista de Demandas"
-      working_time_upstream: "Tempo Útil Total no Upstream"
-      working_time_downstream: "Tempo Útil Total no Downstream"
+      effort_upstream: "Esforço no Upstream"
+      effort_downstream: "Esforço no Downstream"
       blocked_working_time_upstream: "Tempo Útil Bloqueado no Upstream"
       blocked_working_time_downstream: "Tempo Útil Bloqueado no Downstream"
       downstream: "Downstream?"

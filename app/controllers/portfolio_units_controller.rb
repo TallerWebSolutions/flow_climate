@@ -28,7 +28,11 @@ class PortfolioUnitsController < AuthenticatedController
     render 'portfolio_units/destroy'
   end
 
-  def show; end
+  def show
+    @demands = @portfolio_unit.total_portfolio_demands.kept.order(end_date: :desc)
+    assign_filter_parameters_to_charts
+    @demands_chart_adapter = Highchart::DemandsChartsAdapter.new(@demands, @start_date, @end_date, @period) if @demands.present?
+  end
 
   private
 
@@ -42,5 +46,11 @@ class PortfolioUnitsController < AuthenticatedController
 
   def portfolio_unit_params
     params.require(:portfolio_unit).permit(:parent_id, :portfolio_unit_type, :name, jira_portfolio_unit_config_attributes: [:jira_field_name])
+  end
+
+  def assign_filter_parameters_to_charts
+    @start_date = params[:start_date]&.to_date || [@demands.map(&:created_date).min, 3.months.ago.to_date].compact.max
+    @end_date = params[:end_date]&.to_date || Time.zone.today
+    @period = params[:period] || 'week'
   end
 end

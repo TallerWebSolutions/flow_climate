@@ -47,3 +47,10 @@ function toggleTableDetails(componentId) {
     $(`#${componentId}`).toggle();
     $('.toggle-table-details').blur();
 }
+
+
+function hideAllComponents(navItem) {
+    $('.tab-container').hide();
+    navItem.removeClass('active');
+}
+

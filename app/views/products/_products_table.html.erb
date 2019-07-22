@@ -30,7 +30,7 @@
             <%= link_to edit_company_product_path(company, product) do %>
               <i class="fas fa-edit"></i>
             <% end %>
-            <%= link_to company_product_path(company, product), method: :delete do %>
+            <%= link_to company_product_path(company, product), method: :delete, data: { confirm: I18n.t('general.destroy.confirm') } do %>
               <i class="fa fa-times"></i>
             <% end %>
           </td>

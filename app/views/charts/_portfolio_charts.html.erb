@@ -1,0 +1,9 @@
+<div id="portfolio-charts-tab">
+  <% if demands_chart_adapter&.demands_in_chart.present? %>
+    <%= render 'charts/charts_filter', start_date: (params['start_date'] || start_date), end_date: (params['end_date'] || end_date), period: params[:period] %>
+
+    <%= render 'demands/demands_charts', demands: demands, demands_chart_adapter: demands_chart_adapter %>
+  <% else %>
+    <%= render 'layouts/no_data', missing_data: Demand.model_name.human.pluralize.downcase %>
+  <% end %>
+</div>

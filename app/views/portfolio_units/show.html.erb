@@ -9,19 +9,29 @@
   </div>
 </div>
 
+<%= hidden_field_tag :company_id, @company.id %>
+<%= hidden_field_tag :product_id, @product.id %>
+
 <div class="row">
   <div class="col-xs-12">
     <div class="tab">
       <button class="tablinks portfolio-unit-demands-tab" onclick="openTab(event, 'portfolio-unit-demands', 'tablinks', 'tabcontent')"><%= I18n.t('portfolio_units.show.navbar.demands') %></button>
       <button class="tablinks" onclick="openTab(event, 'portfolio-unit-structure', 'tablinks', 'tabcontent')"><%= I18n.t('portfolio_units.show.navbar.structure') %></button>
+      <button class="tablinks" onclick="openTab(event, 'portfolio-unit-charts', 'tablinks', 'tabcontent')"><%= I18n.t('general.tabs.charts') %></button>
     </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-xs-12">
+    <div class="center loader" id="general-loader"></div>
   </div>
 </div>
 
 <div id="portfolio-unit-demands" class="tabcontent">
   <div class="row">
     <div class="col-xs-12">
-      <%= render 'demands/portfolio_demands_table', company: @company, demands: @portfolio_unit.total_portfolio_demands %>
+      <%= render 'demands/portfolio_demands_table', company: @company, product: @product, demands: @portfolio_unit.total_portfolio_demands %>
     </div>
   </div>
 </div>
@@ -30,8 +40,18 @@
   <%= render 'products/product_tree', portfolio_unit: @portfolio_unit, children: @portfolio_unit.children %>
 </div>
 
+<div id="portfolio-unit-charts" class="tabcontent">
+  <%= render 'demands/demands_charts', demands: @demands, demands_chart_adapter: @demands_chart_adapter %>
+</div>
+
 <% content_for :javascript do %>
+  <%= javascript_include_tag 'charts/line' %>
+  <%= javascript_include_tag 'charts/column' %>
+
   <%= javascript_include_tag 'components/components' %>
+
+  <%= javascript_include_tag 'routes/product_routes' %>
+  <%= javascript_include_tag 'demands/demands_charts' %>
 
   <%= javascript_include_tag 'portfolio_units/show' %>
 <% end %>

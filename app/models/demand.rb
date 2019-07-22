@@ -4,34 +4,39 @@
 #
 # Table name: demands
 #
-#  artifact_type     :integer          default("story")
-#  assignees_count   :integer          default(0), not null
-#  class_of_service  :integer          default("standard"), not null
-#  commitment_date   :datetime
-#  company_id        :integer          not null, indexed => [demand_id]
-#  created_at        :datetime         not null
-#  created_date      :datetime         not null
-#  demand_id         :string           not null, indexed => [company_id]
-#  demand_title      :string
-#  demand_type       :integer          not null
-#  demand_url        :string
-#  discarded_at      :datetime         indexed
-#  effort_downstream :decimal(, )      default(0.0)
-#  effort_upstream   :decimal(, )      default(0.0)
-#  end_date          :datetime
-#  id                :bigint(8)        not null, primary key
-#  leadtime          :decimal(, )
-#  manual_effort     :boolean          default(FALSE)
-#  parent_id         :integer
-#  portfolio_unit_id :integer
-#  product_id        :integer
-#  project_id        :integer          not null
-#  slug              :string           indexed
-#  team_id           :integer          not null
-#  total_queue_time  :integer          default(0)
-#  total_touch_time  :integer          default(0)
-#  updated_at        :datetime         not null
-#  url               :string
+#  artifact_type                   :integer          default("story")
+#  assignees_count                 :integer          default(0), not null
+#  blocked_working_time_downstream :decimal(, )      default(0.0)
+#  blocked_working_time_upstream   :decimal(, )      default(0.0)
+#  class_of_service                :integer          default("standard"), not null
+#  commitment_date                 :datetime
+#  company_id                      :integer          not null, indexed => [demand_id]
+#  cost_to_project                 :decimal(, )      default(0.0)
+#  created_at                      :datetime         not null
+#  created_date                    :datetime         not null
+#  demand_id                       :string           not null, indexed => [company_id]
+#  demand_title                    :string
+#  demand_type                     :integer          not null
+#  demand_url                      :string
+#  discarded_at                    :datetime         indexed
+#  effort_downstream               :decimal(, )      default(0.0)
+#  effort_upstream                 :decimal(, )      default(0.0)
+#  end_date                        :datetime
+#  id                              :bigint(8)        not null, primary key
+#  leadtime                        :decimal(, )
+#  manual_effort                   :boolean          default(FALSE)
+#  parent_id                       :integer
+#  portfolio_unit_id               :integer
+#  product_id                      :integer
+#  project_id                      :integer          not null
+#  slug                            :string           indexed
+#  team_id                         :integer          not null
+#  total_bloked_working_time       :decimal(, )      default(0.0)
+#  total_queue_time                :integer          default(0)
+#  total_touch_blocked_time        :decimal(, )      default(0.0)
+#  total_touch_time                :integer          default(0)
+#  updated_at                      :datetime         not null
+#  url                             :string
 #
 # Indexes
 #
@@ -124,26 +129,6 @@ class Demand < ApplicationRecord
     update(effort_downstream: compute_effort_downstream, effort_upstream: compute_effort_upstream)
   end
 
-  def working_time_upstream
-    effort_transitions = demand_transitions.kept.upstream_transitions.effort_transitions_to_project(project_id)
-    sum_effort(effort_transitions)
-  end
-
-  def working_time_downstream
-    effort_transitions = demand_transitions.kept.downstream_transitions.effort_transitions_to_project(project_id)
-    sum_effort(effort_transitions)
-  end
-
-  def blocked_working_time_downstream
-    effort_transitions = demand_transitions.kept.downstream_transitions.effort_transitions_to_project(project_id)
-    sum_blocked_effort(effort_transitions)
-  end
-
-  def blocked_working_time_upstream
-    effort_transitions = demand_transitions.kept.upstream_transitions.effort_transitions_to_project(project_id)
-    sum_blocked_effort(effort_transitions)
-  end
-
   def downstream_demand?
     commitment_date.present?
   end
@@ -184,14 +169,6 @@ class Demand < ApplicationRecord
     Time.zone.now - commitment_date
   end
 
-  def sum_touch_blocked_time
-    sum_blocked_time_for_transitions(demand_transitions.kept.touch_transitions)
-  end
-
-  def total_bloked_working_time
-    demand_blocks.kept.closed.sum(&:block_duration)
-  end
-
   def stage_at(analysed_date = Time.zone.now)
     transitions_at = demand_transitions.where('last_time_in <= :analysed_date AND (last_time_out IS NULL OR last_time_out >= :analysed_date)', analysed_date: analysed_date)
     transitions_at&.first&.stage
@@ -201,12 +178,6 @@ class Demand < ApplicationRecord
     return 0 if end_date.blank?
 
     (end_date - created_date) / 1.day
-  end
-
-  def cost_to_project
-    return 0 if project.hour_value.blank?
-
-    (effort_downstream + effort_upstream) * project.hour_value
   end
 
   def beyond_limit_time?
@@ -263,6 +234,16 @@ class Demand < ApplicationRecord
     valid_effort
   end
 
+  def working_time_upstream
+    effort_transitions = demand_transitions.kept.upstream_transitions.effort_transitions_to_project(project_id)
+    sum_effort(effort_transitions)
+  end
+
+  def working_time_downstream
+    effort_transitions = demand_transitions.kept.downstream_transitions.effort_transitions_to_project(project_id)
+    sum_effort(effort_transitions)
+  end
+
   def sum_effort(effort_transitions)
     total_effort = 0
     effort_transitions.each do |transition|
@@ -275,14 +256,6 @@ class Demand < ApplicationRecord
 
   def compute_blocked_effort(stage_config, transition)
     demand_blocks.kept.closed.active.for_date_interval(transition.last_time_in, transition.last_time_out).sum(:block_duration) * (stage_config.stage_percentage / 100.0)
-  end
-
-  def sum_blocked_effort(effort_transitions)
-    total_blocked = 0
-    effort_transitions.each do |transition|
-      total_blocked += demand_blocks.kept.closed.active.for_date_interval(transition.last_time_in, transition.last_time_out).sum(:block_duration)
-    end
-    total_blocked
   end
 
   def compute_effort_in_transition(transition, stage_config)
@@ -299,6 +272,43 @@ class Demand < ApplicationRecord
   def compute_and_update_automatic_fields
     self.leadtime = (end_date - commitment_date if commitment_date.present? && end_date.present?)
     self.company = project.company
+    self.blocked_working_time_downstream = compute_blocked_working_time_downstream
+    self.blocked_working_time_upstream = compute_blocked_working_time_upstream
+    self.total_bloked_working_time = compute_total_bloked_working_time
+    self.total_touch_blocked_time = compute_total_touch_blocked_time
+    self.cost_to_project = compute_cost_to_project
+  end
+
+  def compute_total_touch_blocked_time
+    sum_blocked_time_for_transitions(demand_transitions.kept.touch_transitions)
+  end
+
+  def compute_total_bloked_working_time
+    demand_blocks.kept.closed.sum(&:block_duration)
+  end
+
+  def compute_cost_to_project
+    return 0 if project.hour_value.blank?
+
+    (effort_downstream + effort_upstream) * project.hour_value
+  end
+
+  def compute_blocked_working_time_downstream
+    effort_transitions = demand_transitions.kept.downstream_transitions.effort_transitions_to_project(project_id)
+    sum_blocked_effort(effort_transitions)
+  end
+
+  def compute_blocked_working_time_upstream
+    effort_transitions = demand_transitions.kept.upstream_transitions.effort_transitions_to_project(project_id)
+    sum_blocked_effort(effort_transitions)
+  end
+
+  def sum_blocked_effort(effort_transitions)
+    total_blocked = 0
+    effort_transitions.each do |transition|
+      total_blocked += demand_blocks.kept.closed.active.for_date_interval(transition.last_time_in, transition.last_time_out).sum(:block_duration)
+    end
+    total_blocked
   end
 
   def discard_transitions_and_blocks
