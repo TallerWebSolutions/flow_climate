@@ -563,6 +563,8 @@ en:
         legend: "day(s)"
       aging:
         series: "aging"
+      demands_by_project:
+        title: "Demands by Project"
     flow:
       processed_demand: "Processed Demands"
       wip: "Work in Progress"

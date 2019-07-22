@@ -70,4 +70,22 @@
   <% else %>
     <%= render 'layouts/no_data', missing_data: Demand.model_name.human.pluralize.downcase %>
   <% end %>
+
+  <% if demands_chart_adapter.demands_by_project.present? %>
+    <div class="col-xs-6 bottom-spaced-component">
+      <div id="demands-by-project"
+           class="flow-chart"
+           data-title='<%= I18n.t('demands.charts.demands_by_project.title') %>'
+           data-xcategories='<%= demands_chart_adapter.demands_by_project[:x_axis].to_json %>'
+           data-series='<%= demands_chart_adapter.demands_by_project[:y_axis].to_json %>'
+           data-xtitle='<%= I18n.t('portfolio.charts.throughput_by_project.xtitle') %>'
+           data-ytitle='<%= I18n.t('projects.charts.burnup.ylabel') %>'
+           data-prefix=''
+           data-tooltipsuffix=''
+           data-decimals='0'>
+      </div>
+    </div>
+  <% else %>
+    <%= render 'layouts/no_data', missing_data: Demand.model_name.human.pluralize.downcase %>
+  <% end %>
 </div>

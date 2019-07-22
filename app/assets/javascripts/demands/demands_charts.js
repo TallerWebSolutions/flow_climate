@@ -18,4 +18,9 @@ function buildDemandsTabCharts() {
     if (leadtimeEvolution.length !== 0) {
         buildLineChart(leadtimeEvolution);
     }
+
+    const demandsByProject = $('#demands-by-project');
+    if (demandsByProject.length !== 0) {
+        buildColumnChart(demandsByProject);
+    }
 }

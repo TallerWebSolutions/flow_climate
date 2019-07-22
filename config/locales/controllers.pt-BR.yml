@@ -598,6 +598,8 @@ pt-BR:
         legend: "dia(s)"
       aging:
         series: "idade"
+      demands_by_project:
+        title: "Demandas por Projeto"
     flow:
       processed_demand: "Demandas Processadas"
       wip: "Trabalho em Progresso"
