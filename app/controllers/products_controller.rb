@@ -72,6 +72,7 @@ class ProductsController < AuthenticatedController
 
   def portfolio_charts_tab
     assign_filter_parameters_to_charts
+
     @demands_chart_adapter = Highchart::DemandsChartsAdapter.new(@demands, @start_date, @end_date, @period) if @demands.present?
 
     respond_to { |format| format.js { render 'portfolio_units/portfolio_charts_tab' } }

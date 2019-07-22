@@ -41,7 +41,7 @@
 </div>
 
 <div id="portfolio-unit-charts" class="tabcontent">
-  <%= render 'demands/demands_charts', demands: @demands, demands_chart_adapter: @demands_chart_adapter %>
+  <%= render 'charts/portfolio_charts', demands: @demands, demands_chart_adapter: @demands_chart_adapter, start_date: @start_date, end_date: @end_date %>
 </div>
 
 <% content_for :javascript do %>

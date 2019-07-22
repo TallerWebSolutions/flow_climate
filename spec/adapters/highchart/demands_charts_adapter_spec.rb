@@ -12,9 +12,9 @@ RSpec.describe Highchart::DemandsChartsAdapter, type: :data_object do
     let(:company) { Fabricate :company }
     let(:customer) { Fabricate :customer, company: company }
 
-    let(:first_project) { Fabricate :project, customers: [customer], status: :executing, start_date: 4.months.ago, end_date: 1.week.from_now }
-    let(:second_project) { Fabricate :project, customers: [customer], status: :waiting, start_date: 5.months.ago, end_date: 2.weeks.from_now }
-    let(:third_project) { Fabricate :project, customers: [customer], status: :maintenance, start_date: 3.months.ago, end_date: 3.weeks.from_now }
+    let(:first_project) { Fabricate :project, customers: [customer], status: :executing, start_date: 4.months.ago, end_date: 1.week.from_now, name: 'first_project' }
+    let(:second_project) { Fabricate :project, customers: [customer], status: :waiting, start_date: 5.months.ago, end_date: 2.weeks.from_now, name: 'second_project' }
+    let(:third_project) { Fabricate :project, customers: [customer], status: :maintenance, start_date: 3.months.ago, end_date: 3.weeks.from_now, name: 'third_project' }
 
     let!(:first_demand) { Fabricate :demand, project: first_project, commitment_date: 4.months.ago, end_date: 3.months.ago, effort_downstream: 16, effort_upstream: 123 }
     let!(:second_demand) { Fabricate :demand, project: second_project, commitment_date: 5.months.ago, end_date: 3.months.ago, effort_downstream: 7, effort_upstream: 221 }
@@ -62,6 +62,24 @@ RSpec.describe Highchart::DemandsChartsAdapter, type: :data_object do
 
         expect(leadtime_on_time_chart_data[:y_axis][1][:name]).to eq I18n.t('projects.charts.leadtime_evolution.legend.leadtime_80_confidence_accumulated')
         expect(leadtime_on_time_chart_data[:y_axis][1][:data]).to eq [0, 55.0, 55.0, 55.0, 55.0, 49.0, 49.0, 49.0, 49.0, 43.000000000000014, 43.000000000000014, 43.000000000000014, 43.000000000000014, 43.000000000000014, 61.097150462962965]
+      end
+    end
+
+    describe '#demands_per_project_chart' do
+      context 'with data' do
+        it 'computes and extracts the information of the demands count' do
+          demands_by_project = Highchart::DemandsChartsAdapter.new(Demand.all, start_date, end_date, 'week').demands_by_project
+
+          expect(demands_by_project[:x_axis]).to match_array Demand.all.map(&:project_name).uniq
+          expect(demands_by_project[:y_axis][0][:name]).to eq I18n.t('general.demands')
+          expect(demands_by_project[:y_axis][0][:data]).to match_array [1, 2, 2]
+        end
+      end
+
+      context 'with no data' do
+        subject(:demands_by_project) { Highchart::DemandsChartsAdapter.new(Demand.none, start_date, end_date, 'week').demands_by_project }
+
+        it { expect(demands_by_project).to be_nil }
       end
     end
   end

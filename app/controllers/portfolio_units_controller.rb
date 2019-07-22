@@ -30,6 +30,7 @@ class PortfolioUnitsController < AuthenticatedController
 
   def show
     @demands = @portfolio_unit.total_portfolio_demands.kept.order(end_date: :desc)
+    @portfolio_data = Highchart::PortfolioChartsAdapter.new(@projects, @start_date, @end_date, '') if @projects.present?
     assign_filter_parameters_to_charts
     @demands_chart_adapter = Highchart::DemandsChartsAdapter.new(@demands, @start_date, @end_date, @period) if @demands.present?
   end

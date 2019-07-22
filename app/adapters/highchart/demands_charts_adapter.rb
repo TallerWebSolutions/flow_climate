@@ -2,7 +2,8 @@
 
 module Highchart
   class DemandsChartsAdapter
-    attr_reader :demands_in_chart, :grouped_period, :throughput_chart_data, :creation_chart_data, :committed_chart_data, :leadtime_percentiles_on_time_chart_data
+    attr_reader :demands_in_chart, :grouped_period, :throughput_chart_data, :creation_chart_data, :committed_chart_data,
+                :leadtime_percentiles_on_time_chart_data, :demands_by_project
 
     def initialize(demands, start_date, end_date, grouped_period)
       @grouped_period = grouped_period
@@ -18,6 +19,7 @@ module Highchart
       build_commitment_chart_data
       build_throughput_chart_data
       build_leadtime_percentiles_on_time
+      build_demands_by_project
     end
 
     private
@@ -78,6 +80,12 @@ module Highchart
       end
 
       @leadtime_percentiles_on_time_chart_data = { x_axis: x_axis, y_axis: [{ name: I18n.t('projects.charts.leadtime_evolution.legend.leadtime_80_confidence'), data: leadtime_data }, { name: I18n.t('projects.charts.leadtime_evolution.legend.leadtime_80_confidence_accumulated'), data: accumulated_leadtime_data }] }
+    end
+
+    def build_demands_by_project
+      demands_grouped = @demands_in_chart.joins(:project).group('projects.name').count.sort_by { |_key, value| value }.reverse.to_h
+
+      @demands_by_project = { x_axis: demands_grouped.keys, y_axis: [{ name: I18n.t('general.demands'), data: demands_grouped.values, marker: { enabled: true } }] }
     end
 
     def beginning_of_period_for_query(date)
