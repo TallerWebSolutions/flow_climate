@@ -27,7 +27,7 @@ module FilterHelper
     options_for_select([[I18n.t('general.days'), 'day'], [I18n.t('general.weeks'), 'week'], [I18n.t('general.hours'), 'hour']], selected_value)
   end
 
-  def teams_in_company_options(company)
-    options_for_select(company.teams.map{ |team| [team.name, team.id.to_s] })
+  def teams_in_company_options(company, selected_value)
+    options_for_select(company.teams.map{ |team| [team.name, team.id.to_s] }, selected_value)
   end
 end

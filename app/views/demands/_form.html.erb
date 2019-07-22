@@ -3,7 +3,7 @@
   <div class="row">
     <div class='col-xs-4 form-group <%= 'has-error' if demand.errors[:team].present? %>'>
       <%= form.label :team, class: 'control-label' %>
-      <%= form.select :team_id, teams_in_company_options(company), { include_blank: I18n.t('general.select'), selected: demand.team_id }, class: 'form-control' %>
+      <%= form.select :team_id, teams_in_company_options(company, demand.team_id), { include_blank: I18n.t('general.select') }, class: 'form-control' %>
       <span class="help-block"><%= demand.errors[:team].join(', ') %></span>
     </div>
     <div class='col-xs-4 form-group <%= 'has-error' if demand.errors[:demand_type].present? %>'>

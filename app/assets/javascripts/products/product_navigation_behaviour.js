@@ -36,6 +36,8 @@ navItem.on('click', function(event){
             getPortfolioChartsTab(companyId, productId)
 
         } else {
+            console.log("enabling settings");
+
             enableTabs();
             $($(this).data('container')).show();
         }

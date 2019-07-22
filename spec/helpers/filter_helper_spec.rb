@@ -33,6 +33,6 @@ RSpec.describe FilterHelper, type: :helper do
     let(:company) { Fabricate :company }
     let!(:team) { Fabricate :team, company: company }
 
-    it { expect(helper.teams_in_company_options(company)).to eq options_for_select([[team.name, team.id.to_s]]) }
+    it { expect(helper.teams_in_company_options(company, team.id)).to eq options_for_select([[team.name, team.id.to_s]], team.id) }
   end
 end

@@ -1,5 +1,8 @@
 function activateTab() {
-    $('.nav-item').on('click', function(){
+    var navItem = $('.nav-item');
+    navItem.on('click', function(){
+        hideAllComponents(navItem);
+
         $(this).addClass('active');
 
         const companyId = $('#company_id').val();
