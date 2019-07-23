@@ -36,7 +36,8 @@ CREATE TABLE public.companies (
     updated_at timestamp without time zone NOT NULL,
     abbreviation character varying NOT NULL,
     customers_count integer DEFAULT 0,
-    slug character varying
+    slug character varying,
+    api_token character varying NOT NULL
 );
 
 
@@ -2031,6 +2032,13 @@ CREATE UNIQUE INDEX index_companies_on_abbreviation ON public.companies USING bt
 
 
 --
+-- Name: index_companies_on_api_token; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_companies_on_api_token ON public.companies USING btree (api_token);
+
+
+--
 -- Name: index_companies_on_slug; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -3188,6 +3196,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190709144816'),
 ('20190711211958'),
 ('20190716135342'),
-('20190719194438');
+('20190719194438'),
+('20190723195649');
 
 

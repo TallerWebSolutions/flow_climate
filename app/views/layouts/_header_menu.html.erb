@@ -30,6 +30,10 @@
         <% if current_user.admin? || current_user.gold? %>
           <li class="divider"></li>
           <% if current_user.companies.present? %>
+
+            <li><%= link_to I18n.t('navbar.copy_api_token'), '#', 'data-clipboard-text' => company.api_token, id: 'copy_token' %></li>
+            <li class="divider"></li>
+
             <% current_user.companies.each do |company| %>
               <li><%= link_to company.abbreviation&.upcase, company_path(company) %></li>
             <% end %>

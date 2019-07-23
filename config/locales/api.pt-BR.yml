@@ -1,0 +1,9 @@
+pt-BR:
+  teams:
+    average_demand_cost:
+      message: "Custo Médio por Demanda"
+  general:
+    not_found:
+      message: "Objeto não encontrado"
+  navbar:
+    copy_api_token: "Copiar API Token"

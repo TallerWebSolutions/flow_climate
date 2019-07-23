@@ -1,0 +1,9 @@
+en:
+  teams:
+    average_demand_cost:
+      message: "Average Demand Cost"
+  general:
+    not_found:
+      message: "Object not found"
+  navbar:
+    copy_api_token: "Copy API Token"

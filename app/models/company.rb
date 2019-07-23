@@ -5,6 +5,7 @@
 # Table name: companies
 #
 #  abbreviation    :string           not null, indexed
+#  api_token       :string           not null, indexed
 #  created_at      :datetime         not null
 #  customers_count :integer          default(0)
 #  id              :bigint(8)        not null, primary key
@@ -15,6 +16,7 @@
 # Indexes
 #
 #  index_companies_on_abbreviation  (abbreviation) UNIQUE
+#  index_companies_on_api_token     (api_token) UNIQUE
 #  index_companies_on_slug          (slug) UNIQUE
 #
 
@@ -39,6 +41,8 @@ class Company < ApplicationRecord
   has_one :company_settings, dependent: :destroy
 
   validates :name, :abbreviation, presence: true
+
+  before_save :generate_token
 
   def add_user(user)
     return if users.include?(user)
@@ -135,5 +139,12 @@ class Company < ApplicationRecord
 
   def compute_current_cost_per_hour(finance)
     finance.expenses_total / consumed_hours_in_month
+  end
+
+  def generate_token
+    self.api_token = loop do
+      random_token = SecureRandom.urlsafe_base64(nil, false)
+      break random_token unless self.class.exists?(api_token: random_token)
+    end
   end
 end

@@ -3,6 +3,14 @@
 require 'sidekiq/web'
 
 Rails.application.routes.draw do
+  namespace 'api' do
+    namespace 'v1' do
+      resources :teams, only: [] do
+        get :average_demand_cost, on: :member
+      end
+    end
+  end
+
   controller :webhook_integrations do
     post 'jira_webhook'
     post 'jira_delete_card_webhook'

@@ -100,6 +100,12 @@ RSpec.describe Company, type: :model do
     it { expect(company.active_projects_count).to eq 3 }
   end
 
+  describe '#generate_token' do
+    let(:company) { Fabricate :company }
+
+    it { expect(company.api_token).not_to be_nil }
+  end
+
   describe '#waiting_projects_count' do
     let(:company) { Fabricate :company }
     let(:customer) { Fabricate :customer, company: company }
