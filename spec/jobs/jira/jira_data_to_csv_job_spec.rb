@@ -3,8 +3,8 @@
 RSpec.describe Jira::JiraDataToCsvJob, type: :active_job do
   describe '.perform_later' do
     it 'enqueues after calling perform_later' do
-      Jira::JiraDataToCsvJob.perform_later(bla: 'foo')
-      expect(Jira::JiraDataToCsvJob).to have_been_enqueued.on_queue('default')
+      described_class.perform_later(bla: 'foo')
+      expect(described_class).to have_been_enqueued.on_queue('default')
     end
   end
 
@@ -29,7 +29,7 @@ RSpec.describe Jira::JiraDataToCsvJob, type: :active_job do
 
           expect(UserNotifierMailer).to receive(:jira_requested_csv).once.and_call_original
 
-          Jira::JiraDataToCsvJob.perform_now('foo', 'bar', 'https://foo.atlassian.net/', 'NSC', 'NSCT', 'Fase 1', 'class_of_service_field', user.id)
+          described_class.perform_now('foo', 'bar', 'https://foo.atlassian.net/', 'NSC', 'NSCT', 'Fase 1', 'class_of_service_field', user.id)
 
           expect(DemandDataProcessment.count).to eq 1
           expect(DemandDataProcessment.first.user).to eq user
@@ -49,7 +49,7 @@ RSpec.describe Jira::JiraDataToCsvJob, type: :active_job do
 
           expect(JIRA::Resource::Issue).not_to(receive(:jql))
 
-          Jira::JiraDataToCsvJob.perform_now('foo', 'bar', 'https://foo.atlassian.net/', 'NSC', 'FC', nil, 'class_of_service_field', user.id)
+          described_class.perform_now('foo', 'bar', 'https://foo.atlassian.net/', 'NSC', 'FC', nil, 'class_of_service_field', user.id)
 
           expect(DemandDataProcessment.count).to eq 1
           expect(DemandDataProcessment.first.user).to eq user

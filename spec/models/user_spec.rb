@@ -22,11 +22,11 @@ RSpec.describe User, type: :model do
         let(:second_user) { Fabricate :user, email_notifications: true }
         let(:third_user) { Fabricate :user, email_notifications: false }
 
-        it { expect(User.to_notify_email).to match_array [first_user, second_user] }
+        it { expect(described_class.to_notify_email).to match_array [first_user, second_user] }
       end
 
       context 'having no data' do
-        it { expect(User.to_notify_email).to eq [] }
+        it { expect(described_class.to_notify_email).to eq [] }
       end
     end
 
@@ -36,11 +36,11 @@ RSpec.describe User, type: :model do
         let(:second_user) { Fabricate :user, admin: true }
         let(:third_user) { Fabricate :user, admin: false }
 
-        it { expect(User.admins).to match_array [first_user, second_user] }
+        it { expect(described_class.admins).to match_array [first_user, second_user] }
       end
 
       context 'having no data' do
-        it { expect(User.admins).to eq [] }
+        it { expect(described_class.admins).to eq [] }
       end
     end
   end

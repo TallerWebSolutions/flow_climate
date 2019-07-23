@@ -23,7 +23,7 @@ RSpec.describe Highchart::TeamChartsAdapter, type: :service do
 
       context 'monthly basis x axis' do
         it 'builds the data structure for average_demand_cost monthly' do
-          team_chart_data = Highchart::TeamChartsAdapter.new(team, first_project.start_date, second_project.end_date, 'month')
+          team_chart_data = described_class.new(team, first_project.start_date, second_project.end_date, 'month')
 
           expect(team_chart_data.average_demand_cost).to eq(data: [10_000.0, 10_000.0, 5000.0], x_axis: TimeService.instance.months_between_of(first_project.start_date, second_project.end_date))
         end
@@ -31,7 +31,7 @@ RSpec.describe Highchart::TeamChartsAdapter, type: :service do
 
       context 'weekly basis x axis' do
         it 'builds the data structure for average_demand_cost weekly' do
-          team_chart_data = Highchart::TeamChartsAdapter.new(team, first_project.start_date, second_project.end_date, 'week')
+          team_chart_data = described_class.new(team, first_project.start_date, second_project.end_date, 'week')
 
           expect(team_chart_data.average_demand_cost).to eq(data: [2500.0, 2500.0, 2500.0, 2500.0, 2500.0, 2500.0, 2500.0, 2500.0, 1250.0], x_axis: TimeService.instance.weeks_between_of(first_project.start_date, second_project.end_date))
         end
@@ -39,7 +39,7 @@ RSpec.describe Highchart::TeamChartsAdapter, type: :service do
 
       context 'dayly basis x axis' do
         it 'builds the data structure for average_demand_cost dayly' do
-          team_chart_data = Highchart::TeamChartsAdapter.new(team, second_project.start_date, second_project.end_date, 'day')
+          team_chart_data = described_class.new(team, second_project.start_date, second_project.end_date, 'day')
 
           expect(team_chart_data.average_demand_cost).to eq(data: [333.3333333333333, 333.3333333333333, 333.3333333333333, 333.3333333333333, 333.3333333333333, 333.3333333333333, 333.3333333333333, 333.3333333333333, 333.3333333333333, 333.3333333333333], x_axis: TimeService.instance.days_between_of(second_project.start_date, second_project.end_date))
         end

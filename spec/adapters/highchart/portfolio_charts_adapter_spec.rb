@@ -29,7 +29,7 @@ RSpec.describe Highchart::PortfolioChartsAdapter, type: :service do
 
       context 'passing no status filter' do
         it 'builds the data structure for block_count_by_project' do
-          statistics_data = Highchart::PortfolioChartsAdapter.new([first_project, second_project], [first_project.start_date, second_project.start_date].min, [first_project.end_date, second_project.end_date].max, '')
+          statistics_data = described_class.new([first_project, second_project], [first_project.start_date, second_project.start_date].min, [first_project.end_date, second_project.end_date].max, '')
 
           expect(statistics_data.block_count_by_project[:series]).to eq [{ data: [5], marker: { enabled: true }, name: I18n.t('portfolio.charts.block_count') }]
           expect(statistics_data.block_count_by_project[:x_axis]).to eq([first_project.name])
@@ -38,7 +38,7 @@ RSpec.describe Highchart::PortfolioChartsAdapter, type: :service do
 
       context 'passing a status filter' do
         it 'builds the data structure for block_count_by_project' do
-          statistics_data = Highchart::PortfolioChartsAdapter.new([first_project, second_project], 10.days.ago, Time.zone.now, 'executing')
+          statistics_data = described_class.new([first_project, second_project], 10.days.ago, Time.zone.now, 'executing')
 
           expect(statistics_data.block_count_by_project[:series]).to eq [{ data: [1], marker: { enabled: true }, name: I18n.t('portfolio.charts.block_count') }]
           expect(statistics_data.block_count_by_project[:x_axis]).to eq([second_project.name])
@@ -51,7 +51,7 @@ RSpec.describe Highchart::PortfolioChartsAdapter, type: :service do
       let!(:second_project) { Fabricate :project, customers: [customer], status: :executing, start_date: 3.days.ago, end_date: Time.zone.today, qty_hours: 500, initial_scope: 40, value: 3_453_220.0 }
 
       it 'builds the data structure for scope_data_evolution' do
-        statistics_data = Highchart::PortfolioChartsAdapter.new([first_project, second_project], [first_project.start_date, second_project.start_date].min, [first_project.end_date, second_project.end_date].max, '')
+        statistics_data = described_class.new([first_project, second_project], [first_project.start_date, second_project.start_date].min, [first_project.end_date, second_project.end_date].max, '')
 
         expect(statistics_data.block_count_by_project[:series]).to eq [{ data: [], marker: { enabled: true }, name: I18n.t('portfolio.charts.block_count') }]
         expect(statistics_data.block_count_by_project[:x_axis]).to eq([])
@@ -68,7 +68,7 @@ RSpec.describe Highchart::PortfolioChartsAdapter, type: :service do
       let!(:second_project) { Fabricate :project, customers: [customer], status: :executing, start_date: 3.days.ago, end_date: Time.zone.today, qty_hours: 500, initial_scope: 40, value: 3_453_220.0 }
 
       it 'builds the data structure for aging_by_project' do
-        portfolio_data = Highchart::PortfolioChartsAdapter.new([first_project, second_project], [first_project.start_date, second_project.start_date].min, [first_project.end_date, second_project.end_date].max, '')
+        portfolio_data = described_class.new([first_project, second_project], [first_project.start_date, second_project.start_date].min, [first_project.end_date, second_project.end_date].max, '')
 
         expect(portfolio_data.aging_by_project[:series]).to eq [{ data: [1, 3], marker: { enabled: true }, name: I18n.t('portfolio.charts.aging_by_project.data_title') }]
         expect(portfolio_data.aging_by_project[:x_axis]).to eq([first_project.name, second_project.name])
@@ -90,7 +90,7 @@ RSpec.describe Highchart::PortfolioChartsAdapter, type: :service do
         let!(:third_demand) { Fabricate :demand, project: second_project, end_date: nil }
 
         it 'builds the empty structure' do
-          portfolio_data = Highchart::PortfolioChartsAdapter.new([first_project, second_project], [first_project.start_date, second_project.start_date].min, [first_project.end_date, second_project.end_date].max, '')
+          portfolio_data = described_class.new([first_project, second_project], [first_project.start_date, second_project.start_date].min, [first_project.end_date, second_project.end_date].max, '')
 
           expect(portfolio_data.throughput_by_project[:series]).to eq [{ data: [], marker: { enabled: true }, name: I18n.t('portfolio.charts.throughput_by_project.data_title') }]
           expect(portfolio_data.throughput_by_project[:x_axis]).to eq([])
@@ -105,7 +105,7 @@ RSpec.describe Highchart::PortfolioChartsAdapter, type: :service do
         let!(:fifth_demand) { Fabricate :demand, project: first_project, end_date: 1.day.ago }
 
         it 'builds the data structure for scope_data_evolution' do
-          portfolio_data = Highchart::PortfolioChartsAdapter.new([first_project, second_project], [first_project.start_date, second_project.start_date].min, [first_project.end_date, second_project.end_date].max, '')
+          portfolio_data = described_class.new([first_project, second_project], [first_project.start_date, second_project.start_date].min, [first_project.end_date, second_project.end_date].max, '')
 
           expect(portfolio_data.throughput_by_project[:series]).to eq [{ data: [3, 1], marker: { enabled: true }, name: I18n.t('portfolio.charts.throughput_by_project.data_title') }]
           expect(portfolio_data.throughput_by_project[:x_axis]).to eq [first_project.name, second_project.name]
@@ -115,7 +115,7 @@ RSpec.describe Highchart::PortfolioChartsAdapter, type: :service do
 
     context 'having no projects' do
       it 'builds the data structure for scope_data_evolution' do
-        portfolio_data = Highchart::PortfolioChartsAdapter.new([], 1.year.ago.to_date, Time.zone.today, '')
+        portfolio_data = described_class.new([], 1.year.ago.to_date, Time.zone.today, '')
 
         expect(portfolio_data.throughput_by_project[:series]).to eq [{ data: [], marker: { enabled: true }, name: I18n.t('portfolio.charts.throughput_by_project.data_title') }]
         expect(portfolio_data.throughput_by_project[:x_axis]).to eq []

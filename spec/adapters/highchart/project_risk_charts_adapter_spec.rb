@@ -23,7 +23,7 @@ RSpec.describe Highchart::ProjectRiskChartsAdapter, type: :data_object do
     let!(:seventh_alert) { Fabricate :project_risk_alert, project_risk_config: six_risk_config, project: third_project, alert_color: :yellow, created_at: 30.minutes.ago }
 
     describe '.initialize' do
-      subject(:risk_data) { Highchart::ProjectRiskChartsAdapter.new(Project.all) }
+      subject(:risk_data) { described_class.new(Project.all) }
 
       it 'retrieves the last risk alert informations and mounts the data to the charts' do
         expect(risk_data.backlog_risk_alert_data).to eq [{ name: 'Vermelho', y: 1, color: '#FB283D' }]

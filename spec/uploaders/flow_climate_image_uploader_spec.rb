@@ -3,12 +3,12 @@
 RSpec.describe FlowClimateImageUploader, type: :image_uploader do
   include CarrierWave::Test::Matchers
 
-  before { FlowClimateImageUploader.enable_processing = true }
+  before { described_class.enable_processing = true }
 
-  after { FlowClimateImageUploader.enable_processing = false }
+  after { described_class.enable_processing = false }
 
   describe '#thumb' do
-    let(:uploader) { FlowClimateImageUploader.new(User.new) }
+    let(:uploader) { described_class.new(User.new) }
 
     before { uploader.store!(File.open('spec/fixtures/default_image.png')) }
 
@@ -16,13 +16,13 @@ RSpec.describe FlowClimateImageUploader, type: :image_uploader do
   end
 
   describe '#extension_whitelist' do
-    let(:uploader) { FlowClimateImageUploader.new(User.new(id: 1)) }
+    let(:uploader) { described_class.new(User.new(id: 1)) }
 
     it { expect(uploader.extension_whitelist).to eq %w[jpg jpeg gif png] }
   end
 
   describe '#store_dir' do
-    let(:uploader) { FlowClimateImageUploader.new(User.new(id: 1)) }
+    let(:uploader) { described_class.new(User.new(id: 1)) }
 
     before { uploader.store!(File.open('spec/fixtures/default_image.png')) }
 
@@ -30,7 +30,7 @@ RSpec.describe FlowClimateImageUploader, type: :image_uploader do
   end
 
   describe '#public_id' do
-    let(:uploader) { FlowClimateImageUploader.new(User.new(id: 1)) }
+    let(:uploader) { described_class.new(User.new(id: 1)) }
 
     before { uploader.store!(File.open('spec/fixtures/default_image.png')) }
 

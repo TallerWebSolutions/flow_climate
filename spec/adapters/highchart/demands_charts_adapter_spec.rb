@@ -24,7 +24,7 @@ RSpec.describe Highchart::DemandsChartsAdapter, type: :data_object do
 
     describe '#throughput_chart_data' do
       it 'computes and extracts the information of the throughput' do
-        throughput_chart_data = Highchart::DemandsChartsAdapter.new(Demand.all, start_date, end_date, 'week').throughput_chart_data
+        throughput_chart_data = described_class.new(Demand.all, start_date, end_date, 'week').throughput_chart_data
 
         expect(throughput_chart_data[:x_axis]).to eq TimeService.instance.weeks_between_of(Date.new(2018, 3, 4), Date.new(2018, 9, 2))
         expect(throughput_chart_data[:y_axis][0][:name]).to eq I18n.t('general.delivered')
@@ -34,7 +34,7 @@ RSpec.describe Highchart::DemandsChartsAdapter, type: :data_object do
 
     describe '#creation_chart_data' do
       it 'computes and extracts the information of the creation_date' do
-        creation_chart_data = Highchart::DemandsChartsAdapter.new(Demand.all, start_date, end_date, 'week').creation_chart_data
+        creation_chart_data = described_class.new(Demand.all, start_date, end_date, 'week').creation_chart_data
 
         expect(creation_chart_data[:x_axis]).to eq TimeService.instance.weeks_between_of(Date.new(2018, 3, 4), Date.new(2018, 9, 2))
         expect(creation_chart_data[:y_axis][0][:name]).to eq I18n.t('demands.charts.creation_date')
@@ -44,7 +44,7 @@ RSpec.describe Highchart::DemandsChartsAdapter, type: :data_object do
 
     describe '#committed_chart_data' do
       it 'computes and extracts the information of the throughput' do
-        committed_chart_data = Highchart::DemandsChartsAdapter.new(Demand.all, start_date, end_date, 'week').committed_chart_data
+        committed_chart_data = described_class.new(Demand.all, start_date, end_date, 'week').committed_chart_data
 
         expect(committed_chart_data[:x_axis]).to eq TimeService.instance.weeks_between_of(Date.new(2018, 3, 4), Date.new(2018, 9, 2))
         expect(committed_chart_data[:y_axis][0][:name]).to eq I18n.t('demands.charts.commitment_date')
@@ -54,7 +54,7 @@ RSpec.describe Highchart::DemandsChartsAdapter, type: :data_object do
 
     describe '#leadtime_on_time_chart_data' do
       it 'computes and extracts the information of the throughput' do
-        leadtime_on_time_chart_data = Highchart::DemandsChartsAdapter.new(Demand.all, start_date, end_date, 'week').leadtime_percentiles_on_time_chart_data
+        leadtime_on_time_chart_data = described_class.new(Demand.all, start_date, end_date, 'week').leadtime_percentiles_on_time_chart_data
 
         expect(leadtime_on_time_chart_data[:x_axis]).to eq TimeService.instance.weeks_between_of(Date.new(2018, 5, 28), Date.new(2018, 9, 3))
         expect(leadtime_on_time_chart_data[:y_axis][0][:name]).to eq I18n.t('projects.charts.leadtime_evolution.legend.leadtime_80_confidence')
@@ -68,7 +68,7 @@ RSpec.describe Highchart::DemandsChartsAdapter, type: :data_object do
     describe '#demands_per_project_chart' do
       context 'with data' do
         it 'computes and extracts the information of the demands count' do
-          demands_by_project = Highchart::DemandsChartsAdapter.new(Demand.all, start_date, end_date, 'week').demands_by_project
+          demands_by_project = described_class.new(Demand.all, start_date, end_date, 'week').demands_by_project
 
           expect(demands_by_project[:x_axis]).to match_array Demand.all.map(&:project_name).uniq
           expect(demands_by_project[:y_axis][0][:name]).to eq I18n.t('general.demands')
@@ -77,7 +77,7 @@ RSpec.describe Highchart::DemandsChartsAdapter, type: :data_object do
       end
 
       context 'with no data' do
-        subject(:demands_by_project) { Highchart::DemandsChartsAdapter.new(Demand.none, start_date, end_date, 'week').demands_by_project }
+        subject(:demands_by_project) { described_class.new(Demand.none, start_date, end_date, 'week').demands_by_project }
 
         it { expect(demands_by_project).to be_nil }
       end
@@ -86,7 +86,7 @@ RSpec.describe Highchart::DemandsChartsAdapter, type: :data_object do
 
   context 'having no demands' do
     describe '.initialize' do
-      subject(:throughput_chart_data) { Highchart::DemandsChartsAdapter.new(Demand.all, start_date, end_date, 'week').throughput_chart_data }
+      subject(:throughput_chart_data) { described_class.new(Demand.all, start_date, end_date, 'week').throughput_chart_data }
 
       it 'returns empty information' do
         expect(throughput_chart_data).to be_nil

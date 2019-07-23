@@ -57,7 +57,7 @@ RSpec.describe DemandBlock, type: :model do
       let!(:second_demand_block) { Fabricate :demand_block, block_time: Time.zone.parse('2018-03-06 10:00'), unblock_time: Time.zone.parse('2018-03-06 12:00') }
       let!(:out_demand_block) { Fabricate :demand_block, block_time: Time.zone.parse('2018-03-06 14:00'), unblock_time: Time.zone.parse('2018-03-06 15:00') }
 
-      it { expect(DemandBlock.for_date_interval(Time.zone.parse('2018-03-05 23:00'), Time.zone.parse('2018-03-06 13:00'))).to match_array [first_demand_block, second_demand_block] }
+      it { expect(described_class.for_date_interval(Time.zone.parse('2018-03-05 23:00'), Time.zone.parse('2018-03-06 13:00'))).to match_array [first_demand_block, second_demand_block] }
     end
 
     describe '.open' do
@@ -65,7 +65,7 @@ RSpec.describe DemandBlock, type: :model do
       let!(:second_demand_block) { Fabricate :demand_block, block_time: Time.zone.parse('2018-03-06 10:00'), unblock_time: nil }
       let!(:third_demand_block) { Fabricate :demand_block, block_time: Time.zone.parse('2018-03-06 14:00'), unblock_time: Time.zone.parse('2018-03-06 15:00') }
 
-      it { expect(DemandBlock.open).to match_array [first_demand_block, second_demand_block] }
+      it { expect(described_class.open).to match_array [first_demand_block, second_demand_block] }
     end
 
     describe '.closed' do
@@ -73,7 +73,7 @@ RSpec.describe DemandBlock, type: :model do
       let!(:second_demand_block) { Fabricate :demand_block, block_time: Time.zone.parse('2018-03-06 10:00'), unblock_time: Time.zone.parse('2018-03-06 15:00') }
       let!(:third_demand_block) { Fabricate :demand_block, block_time: Time.zone.parse('2018-03-06 14:00'), unblock_time: Time.zone.parse('2018-03-06 15:00') }
 
-      it { expect(DemandBlock.closed).to match_array [second_demand_block, third_demand_block] }
+      it { expect(described_class.closed).to match_array [second_demand_block, third_demand_block] }
     end
 
     describe '.active' do
@@ -81,7 +81,7 @@ RSpec.describe DemandBlock, type: :model do
       let!(:second_demand_block) { Fabricate :demand_block, active: true }
       let!(:third_demand_block) { Fabricate :demand_block, active: false }
 
-      it { expect(DemandBlock.active).to match_array [first_demand_block, second_demand_block] }
+      it { expect(described_class.active).to match_array [first_demand_block, second_demand_block] }
     end
   end
 

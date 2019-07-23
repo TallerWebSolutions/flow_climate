@@ -45,7 +45,7 @@ RSpec.describe Highchart::StatusReportChartsAdapter, type: :data_object do
 
       describe '.initialize' do
         context 'having projects' do
-          subject(:report_data) { Highchart::StatusReportChartsAdapter.new(Project.all, Project.all.map(&:start_date).min, Project.all.map(&:end_date).max, 'week') }
+          subject(:report_data) { described_class.new(Project.all, Project.all.map(&:start_date).min, Project.all.map(&:end_date).max, 'week') }
 
           before { travel_to Time.zone.local(2019, 2, 15, 10, 0, 0) }
 
@@ -75,7 +75,7 @@ RSpec.describe Highchart::StatusReportChartsAdapter, type: :data_object do
         end
 
         context 'having no projects' do
-          subject(:report_data) { Highchart::StatusReportChartsAdapter.new(Project.none, Project.all.map(&:start_date).min, Project.all.map(&:end_date).max, 'week') }
+          subject(:report_data) { described_class.new(Project.none, Project.all.map(&:start_date).min, Project.all.map(&:end_date).max, 'week') }
 
           it 'return empty sets' do
             expect(report_data.all_projects).to eq []

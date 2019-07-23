@@ -37,14 +37,14 @@ RSpec.describe Slack::SlackNotificationService, type: :service do
     describe '#notify_cmd' do
       it 'calls slack notification method' do
         expect_any_instance_of(Slack::Notifier).to receive(:ping).with("> *#{team.name}* | Custo Médio por Demanda: *R$ 833,33* | Variação: *-61,90%* com relação à média das últimas 4 semanas (R$ 2.187,50) | CMD da últ. semana: *R$ 2.500,00*.").once
-        Slack::SlackNotificationService.instance.notify_cmd(first_slack_notifier, team)
+        described_class.instance.notify_cmd(first_slack_notifier, team)
       end
     end
 
     describe '#notify_week_throughput' do
       it 'calls slack notification method' do
         expect_any_instance_of(Slack::Notifier).to receive(:ping).with("> *#{team.name}* | Throughput na semana: *3 demanda(s)* | Variação: *200,00%* para a média das últimas 4 semanas (1.0).").once
-        Slack::SlackNotificationService.instance.notify_week_throughput(first_slack_notifier, team)
+        described_class.instance.notify_week_throughput(first_slack_notifier, team)
       end
     end
 
@@ -53,7 +53,7 @@ RSpec.describe Slack::SlackNotificationService, type: :service do
         expect_any_instance_of(Slack::Notifier).to receive(:ping).with("> *#{team.name}* | Throughput: *1 demanda(s)* na semana passada.").once
         expect_any_instance_of(Slack::Notifier).to receive(:ping).with("> *#{first_demand.demand_id}* #{first_demand.demand_title} | *Responsáveis:*  | *Custo pro Projeto:* #{number_to_currency(first_demand.cost_to_project)}").once
 
-        Slack::SlackNotificationService.instance.notify_last_week_delivered_demands_info(first_slack_notifier, team)
+        described_class.instance.notify_last_week_delivered_demands_info(first_slack_notifier, team)
       end
     end
 
@@ -62,7 +62,7 @@ RSpec.describe Slack::SlackNotificationService, type: :service do
         expect_any_instance_of(Slack::Notifier).to receive(:ping).with("> *#{team.name}* | Trabalho em progresso: 1 demanda(s).").once
         expect_any_instance_of(Slack::Notifier).to receive(:ping).with("> *#{eighth_demand.demand_id}* #{eighth_demand.demand_title} | *Responsáveis:*  | *Custo pro Projeto:* #{number_to_currency(eighth_demand.cost_to_project)} | *Etapa atual:* #{stage.name} | *Tempo na Etapa:* 3 dias | *% Fluxo Concluído*: 100,00%").once
 
-        Slack::SlackNotificationService.instance.notify_wip_demands(first_slack_notifier, team)
+        described_class.instance.notify_wip_demands(first_slack_notifier, team)
       end
     end
 
@@ -71,7 +71,7 @@ RSpec.describe Slack::SlackNotificationService, type: :service do
         expect_any_instance_of(Slack::Notifier).to receive(:ping).with(I18n.t('slack_configurations.notifications.beyond_expected_title', team_name: team.name, beyond_expected_count: 1)).once
         expect_any_instance_of(Slack::Notifier).to receive(:ping).with("> *#{eighth_demand.demand_id}* #{eighth_demand.demand_title} | *Etapa atual:* #{stage.name} | *Tempo na Etapa:* 3 dias").once
 
-        Slack::SlackNotificationService.instance.notify_beyond_expected_time_in_stage(first_slack_notifier, team)
+        described_class.instance.notify_beyond_expected_time_in_stage(first_slack_notifier, team)
       end
     end
 
@@ -80,7 +80,7 @@ RSpec.describe Slack::SlackNotificationService, type: :service do
         expect_any_instance_of(Slack::Notifier).to receive(:ping).with(I18n.t('slack_configurations.notifications.failure_load', team_name: team.name, failure_load: number_to_percentage(team.failure_load, precision: 2))).once
         expect_any_instance_of(Slack::Notifier).to receive(:ping).with(I18n.t('slack_configurations.notifications.project_failure_load', team_name: team.name, project_name: project.name, failure_load: number_to_percentage(project.failure_load, precision: 2))).once
 
-        Slack::SlackNotificationService.instance.notify_failure_load(first_slack_notifier, team)
+        described_class.instance.notify_failure_load(first_slack_notifier, team)
       end
     end
   end
@@ -89,14 +89,14 @@ RSpec.describe Slack::SlackNotificationService, type: :service do
     describe '#notify_cmd' do
       it 'calls slack notification method' do
         expect_any_instance_of(Slack::Notifier).to receive(:ping).with("> *#{team.name}* | Custo Médio por Demanda: *R$ 2.500,00* | Variação: *0,00%* com relação à média das últimas 4 semanas (R$ 2.500,00) | CMD da últ. semana: *R$ 2.500,00*.").once
-        Slack::SlackNotificationService.instance.notify_cmd(first_slack_notifier, team)
+        described_class.instance.notify_cmd(first_slack_notifier, team)
       end
     end
 
     describe '#notify_week_throughput' do
       it 'calls slack notification method' do
         expect_any_instance_of(Slack::Notifier).to receive(:ping).with("> *#{team.name}* | Throughput na semana: *0 demanda(s)* | Variação: *0,00%* para a média das últimas 4 semanas (0.0).").once
-        Slack::SlackNotificationService.instance.notify_week_throughput(first_slack_notifier, team)
+        described_class.instance.notify_week_throughput(first_slack_notifier, team)
       end
     end
 
@@ -104,7 +104,7 @@ RSpec.describe Slack::SlackNotificationService, type: :service do
       it 'calls slack notification method' do
         expect_any_instance_of(Slack::Notifier).to receive(:ping).with("> *#{team.name}* | Throughput: *0 demanda(s)* na semana passada.").once
 
-        Slack::SlackNotificationService.instance.notify_last_week_delivered_demands_info(first_slack_notifier, team)
+        described_class.instance.notify_last_week_delivered_demands_info(first_slack_notifier, team)
       end
     end
 
@@ -112,7 +112,7 @@ RSpec.describe Slack::SlackNotificationService, type: :service do
       it 'calls slack notification method' do
         expect_any_instance_of(Slack::Notifier).to receive(:ping).with("> *#{team.name}* | Trabalho em progresso: 0 demanda(s).").once
 
-        Slack::SlackNotificationService.instance.notify_wip_demands(first_slack_notifier, team)
+        described_class.instance.notify_wip_demands(first_slack_notifier, team)
       end
     end
 
@@ -120,7 +120,7 @@ RSpec.describe Slack::SlackNotificationService, type: :service do
       it 'calls slack notification method' do
         expect_any_instance_of(Slack::Notifier).not_to receive(:ping)
 
-        Slack::SlackNotificationService.instance.notify_beyond_expected_time_in_stage(first_slack_notifier, team)
+        described_class.instance.notify_beyond_expected_time_in_stage(first_slack_notifier, team)
       end
     end
 
@@ -128,7 +128,7 @@ RSpec.describe Slack::SlackNotificationService, type: :service do
       it 'calls slack notification method' do
         expect_any_instance_of(Slack::Notifier).not_to receive(:ping)
 
-        Slack::SlackNotificationService.instance.notify_failure_load(first_slack_notifier, team)
+        described_class.instance.notify_failure_load(first_slack_notifier, team)
       end
     end
   end

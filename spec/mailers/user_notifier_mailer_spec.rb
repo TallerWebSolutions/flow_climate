@@ -6,7 +6,7 @@ RSpec.describe UserNotifierMailer, type: :mailer do
   after { travel_back }
 
   describe '#company_weekly_bulletin' do
-    subject(:mail) { UserNotifierMailer.company_weekly_bulletin(company.users, company).deliver_now }
+    subject(:mail) { described_class.company_weekly_bulletin(company.users, company).deliver_now }
 
     let!(:company) { Fabricate :company, users: [first_user, second_user, third_user] }
     let(:customer) { Fabricate :customer, company: company }
@@ -62,7 +62,7 @@ RSpec.describe UserNotifierMailer, type: :mailer do
   end
 
   describe '#notify_new_red_alert' do
-    subject(:mail) { UserNotifierMailer.notify_new_red_alert(first_project, first_risk_config, 'green', 30.0).deliver_now }
+    subject(:mail) { described_class.notify_new_red_alert(first_project, first_risk_config, 'green', 30.0).deliver_now }
 
     let(:first_user) { Fabricate :user, email_notifications: true }
     let(:second_user) { Fabricate :user, email_notifications: true }
@@ -89,7 +89,7 @@ RSpec.describe UserNotifierMailer, type: :mailer do
   end
 
   describe '#jira_requested_csv' do
-    subject(:mail) { UserNotifierMailer.jira_requested_csv(user, 'bla').deliver_now }
+    subject(:mail) { described_class.jira_requested_csv(user, 'bla').deliver_now }
 
     let(:user) { Fabricate :user, email_notifications: true }
 
@@ -102,7 +102,7 @@ RSpec.describe UserNotifierMailer, type: :mailer do
   end
 
   describe '#jira_requested_csv' do
-    subject(:mail) { UserNotifierMailer.jira_requested_csv(user, 'bla').deliver_now }
+    subject(:mail) { described_class.jira_requested_csv(user, 'bla').deliver_now }
 
     let(:user) { Fabricate :user, email_notifications: true }
 
@@ -115,7 +115,7 @@ RSpec.describe UserNotifierMailer, type: :mailer do
   end
 
   describe '#plan_requested' do
-    subject(:mail) { UserNotifierMailer.plan_requested(user, user_plan).deliver_now }
+    subject(:mail) { described_class.plan_requested(user, user_plan).deliver_now }
 
     let(:user) { Fabricate :user, admin: true }
     let(:user_plan) { Fabricate :user_plan, user: user }
@@ -126,7 +126,7 @@ RSpec.describe UserNotifierMailer, type: :mailer do
   end
 
   describe '#jira_requested_csv' do
-    subject(:mail) { UserNotifierMailer.jira_requested_csv(user, 'bla').deliver_now }
+    subject(:mail) { described_class.jira_requested_csv(user, 'bla').deliver_now }
 
     let(:user) { Fabricate :user, email_notifications: true }
 
@@ -139,7 +139,7 @@ RSpec.describe UserNotifierMailer, type: :mailer do
   end
 
   describe '#sync_finished' do
-    subject(:mail) { UserNotifierMailer.sync_finished('foo@bla.com.br', 'Foo Bar', 'demand', 'XPTO-100', 1.day.ago, 20.hours.ago, 'http://foo.com.br').deliver_now }
+    subject(:mail) { described_class.sync_finished('foo@bla.com.br', 'Foo Bar', 'demand', 'XPTO-100', 1.day.ago, 20.hours.ago, 'http://foo.com.br').deliver_now }
 
     let(:user) { Fabricate :user, email_notifications: true }
 

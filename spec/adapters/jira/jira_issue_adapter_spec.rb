@@ -35,7 +35,7 @@ RSpec.describe Jira::JiraIssueAdapter, type: :service do
         let!(:jira_issue) { client.Issue.build({ key: '10000', fields: { created: '2018-07-02T11:20:18.998-0300', summary: 'foo of bar', issuetype: { name: 'Story' }, customfield_10028: { value: 'Expedite' }, project: { key: 'foo' }, customfield_10024: [{ emailAddress: 'foo' }, { emailAddress: 'bar' }] }, changelog: { startAt: 0, maxResults: 2, total: 2, histories: [{ id: '10039', created: '2018-07-08T22:34:47.440-0300', items: [{ field: 'status', from: 'first_stage', to: 'second_stage' }] }, { id: '10038', created: '2018-07-06T09:40:43.886-0300', items: [{ field: 'status', from: 'third_stage', to: 'first_stage' }] }] } }.with_indifferent_access) }
 
         it 'creates the demand' do
-          Jira::JiraIssueAdapter.instance.process_issue!(jira_account, product, first_project, jira_issue)
+          described_class.instance.process_issue!(jira_account, product, first_project, jira_issue)
           expect(Demand.count).to eq 1
           expect(Demand.last.project).to eq first_project
           expect(Demand.last.assignees_count).to eq 2
@@ -74,7 +74,7 @@ RSpec.describe Jira::JiraIssueAdapter, type: :service do
         let!(:jira_issue) { client.Issue.build({ key: '10000', fields: { created: '2018-07-02T11:20:18.998-0300', summary: 'foo of bar', issuetype: { name: 'Story' }, customfield_10028: { value: 'Expedite' }, project: { key: 'foo' }, customfield_10024: [{ accountId: 'xpto' }, { emailAddress: 'bar' }, { accountId: 'sbbrubles' }] }, changelog: { startAt: 0, maxResults: 2, total: 2, histories: [{ id: '10039', created: '2018-07-08T22:34:47.440-0300', items: [{ field: 'status', from: 'first_stage', to: 'second_stage' }] }, { id: '10038', created: '2018-07-06T09:40:43.886-0300', items: [{ field: 'status', from: 'third_stage', to: 'first_stage' }] }] } }.with_indifferent_access) }
 
         it 'creates the demand and adds the members' do
-          Jira::JiraIssueAdapter.instance.process_issue!(jira_account, product, first_project, jira_issue)
+          described_class.instance.process_issue!(jira_account, product, first_project, jira_issue)
 
           expect(Demand.count).to eq 1
           expect(Demand.last.assignees_count).to eq 2
@@ -92,7 +92,7 @@ RSpec.describe Jira::JiraIssueAdapter, type: :service do
         let!(:jira_issue) { client.Issue.build({ key: '10000', summary: 'foo of bar', fields: { created: '2018-07-03T11:20:18.998-0300', issuetype: { name: 'Bug' }, project: { key: 'foo' }, customfield_10024: [{ name: 'foo' }, { name: 'bar' }] } }.with_indifferent_access) }
 
         it 'creates the demand' do
-          Jira::JiraIssueAdapter.instance.process_issue!(jira_account, product, first_project, jira_issue)
+          described_class.instance.process_issue!(jira_account, product, first_project, jira_issue)
           expect(Demand.last.assignees_count).to eq 0
           expect(Demand.last.team_members).to eq []
           expect(Demand.last).to be_bug
@@ -103,7 +103,7 @@ RSpec.describe Jira::JiraIssueAdapter, type: :service do
         let!(:jira_issue) { client.Issue.build({ key: '10000', summary: 'foo of bar', fields: { created: '2018-07-03T11:20:18.998-0300', issuetype: { name: 'FeaTurE' }, project: { key: 'foo' }, customfield_10024: [{ name: 'foo' }, { name: 'bar' }] } }.with_indifferent_access) }
 
         it 'creates the demand' do
-          Jira::JiraIssueAdapter.instance.process_issue!(jira_account, product, first_project, jira_issue)
+          described_class.instance.process_issue!(jira_account, product, first_project, jira_issue)
           expect(Demand.last).to be_feature
           expect(Demand.last.team_members).to eq []
         end
@@ -113,7 +113,7 @@ RSpec.describe Jira::JiraIssueAdapter, type: :service do
         let!(:jira_issue) { client.Issue.build({ key: '10000', summary: 'foo of bar', fields: { created: '2018-07-03T11:20:18.998-0300', issuetype: { name: 'ChoRe' }, project: { key: 'foo' }, customfield_10024: [{ name: 'foo' }, { name: 'bar' }] } }.with_indifferent_access) }
 
         it 'creates the demand as chore as type and standard as class of service' do
-          Jira::JiraIssueAdapter.instance.process_issue!(jira_account, product, first_project, jira_issue)
+          described_class.instance.process_issue!(jira_account, product, first_project, jira_issue)
           expect(Demand.last).to be_chore
           expect(Demand.last).to be_standard
         end
@@ -123,7 +123,7 @@ RSpec.describe Jira::JiraIssueAdapter, type: :service do
         let!(:jira_issue) { client.Issue.build({ key: '10000', summary: 'foo of bar', fields: { created: '2018-07-03T11:20:18.998-0300', issuetype: { name: 'ePIc' }, project: { key: 'foo' }, customfield_10024: [{ name: 'foo' }, { name: 'bar' }] } }.with_indifferent_access) }
 
         it 'creates the demand as chore as type and standard as class of service' do
-          Jira::JiraIssueAdapter.instance.process_issue!(jira_account, product, first_project, jira_issue)
+          described_class.instance.process_issue!(jira_account, product, first_project, jira_issue)
           expect(Demand.last).to be_feature
           expect(Demand.last).to be_epic
         end
@@ -133,7 +133,7 @@ RSpec.describe Jira::JiraIssueAdapter, type: :service do
         let!(:jira_issue) { client.Issue.build({ key: '10000', summary: 'foo of bar', fields: { created: '2018-07-03T11:20:18.998-0300', issuetype: { name: 'fixed date' }, project: { key: 'foo' }, customfield_10024: [{ name: 'foo' }, { name: 'bar' }], customfield_10028: { value: 'FixEd DatE' } } }.with_indifferent_access) }
 
         it 'creates the demand as fixed date class of service' do
-          Jira::JiraIssueAdapter.instance.process_issue!(jira_account, product, first_project, jira_issue)
+          described_class.instance.process_issue!(jira_account, product, first_project, jira_issue)
           expect(Demand.last).to be_fixed_date
         end
       end
@@ -143,7 +143,7 @@ RSpec.describe Jira::JiraIssueAdapter, type: :service do
           let!(:jira_issue) { client.Issue.build({ key: '10000', summary: 'foo of bar', fields: { created: '2018-07-03T11:20:18.998-0300', issuetype: { name: 'Chore' }, project: { key: 'foo' }, customfield_10024: [{ name: 'foo' }, { name: 'bar' }], customfield_10028: { value: 'intangible' } } }.with_indifferent_access) }
 
           it 'creates the demand as intangible class of service' do
-            Jira::JiraIssueAdapter.instance.process_issue!(jira_account, product, first_project, jira_issue)
+            described_class.instance.process_issue!(jira_account, product, first_project, jira_issue)
             expect(Demand.last).to be_intangible
           end
         end
@@ -153,7 +153,7 @@ RSpec.describe Jira::JiraIssueAdapter, type: :service do
             let!(:jira_issue) { client.Issue.build({ key: '10000', summary: 'foo of bar', fields: { created: '2018-07-02T11:20:18.998-0300', issuetype: { name: 'Story' }, customfield_10028: { value: 'Expedite' }, project: { key: 'foo' }, customfield_10024: [{ name: 'foo' }, { name: 'bar' }] }, changelog: { startAt: 0, maxResults: 2, total: 2, histories: [{ id: '10041', created: '2018-07-09T23:34:47.440-0300', items: [{ field: 'status', from: 'first_stage', to: 'second_stage' }] }, { id: '10040', created: '2018-07-09T22:34:47.440-0300', items: [{ field: 'status', from: 'second_stage', to: 'first_stage' }] }, { id: '10039', created: '2018-07-08T22:34:47.440-0300', items: [{ field: 'status', from: 'first_stage', to: 'second_stage' }] }, { id: '10038', created: '2018-07-06T09:40:43.886-0300', items: [{ field: 'status', from: 'third_stage', to: 'first_stage' }] }, { id: '10055', created: '2018-07-06T09:40:43.886-0300', items: [{ field: 'foo', from: 'third_stage', to: 'first_stage' }] }, { id: '66821', created: '2019-05-08T16:48:41.160-0300', items: [{ field: 'Class of Service (apoio)', fieldtype: 'custom', fieldId: 'customfield_10093', from: '10065', fromString: 'Standard', to: '10064', toString: 'INTangiBle' }] }] } }.with_indifferent_access) }
 
             it 'creates the demand as intangible class of service' do
-              Jira::JiraIssueAdapter.instance.process_issue!(jira_account, product, first_project, jira_issue)
+              described_class.instance.process_issue!(jira_account, product, first_project, jira_issue)
               expect(Demand.last).to be_intangible
             end
           end
@@ -162,7 +162,7 @@ RSpec.describe Jira::JiraIssueAdapter, type: :service do
             let!(:jira_issue) { client.Issue.build({ key: '10000', summary: 'foo of bar', fields: { created: '2018-07-02T11:20:18.998-0300', issuetype: { name: 'Story' }, customfield_10028: { value: 'Expedite' }, project: { key: 'foo' }, customfield_10024: [{ name: 'foo' }, { name: 'bar' }] }, changelog: { startAt: 0, maxResults: 2, total: 2, histories: [{ id: '10041', created: '2018-07-09T23:34:47.440-0300', items: [{ field: 'status', from: 'first_stage', to: 'second_stage' }] }, { id: '10040', created: '2018-07-09T22:34:47.440-0300', items: [{ field: 'status', from: 'second_stage', to: 'first_stage' }] }, { id: '10039', created: '2018-07-08T22:34:47.440-0300', items: [{ field: 'status', from: 'first_stage', to: 'second_stage' }] }, { id: '10038', created: '2018-07-06T09:40:43.886-0300', items: [{ field: 'status', from: 'third_stage', to: 'first_stage' }] }, { id: '10055', created: '2018-07-06T09:40:43.886-0300', items: [{ field: 'foo', from: 'third_stage', to: 'first_stage' }] }, { id: '66821', created: '2019-05-08T16:48:41.160-0300', items: [{ field: 'ClassE de ServiçO (apoio)', fieldtype: 'custom', fieldId: 'customfield_10093', from: '10065', fromString: 'Standard', to: '10064', toString: 'INTangiBle' }] }] } }.with_indifferent_access) }
 
             it 'creates the demand as intangible class of service' do
-              Jira::JiraIssueAdapter.instance.process_issue!(jira_account, product, first_project, jira_issue)
+              described_class.instance.process_issue!(jira_account, product, first_project, jira_issue)
               expect(Demand.last).to be_intangible
             end
           end
@@ -173,7 +173,7 @@ RSpec.describe Jira::JiraIssueAdapter, type: :service do
         let!(:jira_issue) { client.Issue.build({ key: '10000', summary: 'foo of bar', fields: { created: '2018-07-03T11:20:18.998-0300', issuetype: { name: 'chore' }, project: { key: 'foo' }, customfield_10024: [{ name: 'foo' }, { name: 'bar' }], customfield_10028: { value: 'sTandard' } } }.with_indifferent_access) }
 
         it 'creates the demand as standard class of service' do
-          Jira::JiraIssueAdapter.instance.process_issue!(jira_account, product, first_project, jira_issue)
+          described_class.instance.process_issue!(jira_account, product, first_project, jira_issue)
           expect(Demand.last).to be_standard
         end
       end
@@ -182,7 +182,7 @@ RSpec.describe Jira::JiraIssueAdapter, type: :service do
         let!(:jira_issue) { client.Issue.build({ key: '10000', summary: 'foo of bar', fields: { created: '2018-07-03T11:20:18.998-0300', issuetype: { name: 'chore' }, project: { key: 'foo' }, customfield_10024: [{ name: 'foo' }, { name: 'bar' }], customfield_10028: { value: 'sTandard' }, comment: { comments: [{ created: '2018-07-06T09:40:43.886000000-0300', body: '(flag) comment example', author: { emailAddress: 'bla@bar.com' } }] } }, changelog: { histories: [{ id: '10038', author: { displayName: 'bla' }, created: '2018-07-06T09:40:43.886-0300', items: [{ field: 'Impediment', fromString: '', to: '10055', toString: 'Impediment' }] }, { id: '10055', author: { displayName: 'xpto' }, created: '2018-07-06T13:40:43.886-0300', items: [{ field: 'Impediment', fromString: 'Impediment', to: '10055', toString: '' }] }, { id: '10057', author: { displayName: 'foo' }, created: '2018-07-09T13:40:43.886-0300', items: [{ field: 'Impediment', fromString: '', to: '10055', toString: 'Impediment' }] }] } }.with_indifferent_access) }
 
         it 'creates the demand and the blocks information' do
-          Jira::JiraIssueAdapter.instance.process_issue!(jira_account, product, first_project, jira_issue)
+          described_class.instance.process_issue!(jira_account, product, first_project, jira_issue)
           demand_created = Demand.last
           expect(demand_created.demand_blocks.count).to eq 2
 
@@ -210,7 +210,7 @@ RSpec.describe Jira::JiraIssueAdapter, type: :service do
         let!(:jira_issue) { client.Issue.build({ key: '10000', summary: 'foo of bar', fields: { created: '2018-07-02T11:20:18.998-0300', issuetype: { name: 'Story' }, customfield_10028: { value: 'Expedite' }, project: { key: 'foo' }, customfield_10024: [{ name: 'foo' }, { name: 'bar' }] }, changelog: { startAt: 0, maxResults: 2, total: 2, histories: [{ id: '10041', created: '2018-07-09T23:34:47.440-0300', items: [{ field: 'status', from: 'first_stage', to: 'second_stage' }] }, { id: '10040', created: '2018-07-09T22:34:47.440-0300', items: [{ field: 'status', from: 'second_stage', to: 'first_stage' }] }, { id: '10039', created: '2018-07-08T22:34:47.440-0300', items: [{ field: 'status', from: 'first_stage', to: 'second_stage' }] }, { id: '10038', created: '2018-07-06T09:40:43.886-0300', items: [{ field: 'status', from: 'third_stage', to: 'first_stage' }] }, { id: '10055', created: '2018-07-06T09:40:43.886-0300', items: [{ field: 'foo', from: 'third_stage', to: 'first_stage' }] }] } }.with_indifferent_access) }
 
         it 'creates the demand and the transitions using the last time it passed in the stage' do
-          Jira::JiraIssueAdapter.instance.process_issue!(jira_account, product, first_project, jira_issue)
+          described_class.instance.process_issue!(jira_account, product, first_project, jira_issue)
 
           expect(DemandTransition.count).to eq 3
 
@@ -246,7 +246,7 @@ RSpec.describe Jira::JiraIssueAdapter, type: :service do
 
       context 'and the demand is not archived' do
         it 'updates the demand' do
-          Jira::JiraIssueAdapter.instance.process_issue!(jira_account, product, first_project, jira_issue)
+          described_class.instance.process_issue!(jira_account, product, first_project, jira_issue)
           expect(Demand.count).to eq 1
           expect(Demand.last.project).to eq second_project
           expect(Demand.last.assignees_count).to eq 0
@@ -265,7 +265,7 @@ RSpec.describe Jira::JiraIssueAdapter, type: :service do
         let!(:archived_demand_transition) { Fabricate :demand_transition, stage: archived_stage, demand: demand }
 
         it 'updates the demand' do
-          Jira::JiraIssueAdapter.instance.process_issue!(jira_account, product, first_project, jira_issue)
+          described_class.instance.process_issue!(jira_account, product, first_project, jira_issue)
           expect(Demand.count).to eq 1
           expect(Demand.last.assignees_count).to eq 0
           expect(Demand.last.demand_title).to eq 'foo of bar'
@@ -279,7 +279,7 @@ RSpec.describe Jira::JiraIssueAdapter, type: :service do
         let!(:discarded_demand) { Fabricate :demand, project: first_project, demand_id: '10010', discarded_at: Time.zone.yesterday }
         let!(:jira_issue) { client.Issue.build({ key: '10010', fields: { created: '2018-07-02T11:20:18.998-0300', summary: 'foo of bar', issuetype: { name: 'Story' }, customfield_10028: { value: 'Expedite' }, project: { key: 'foo' } }, changelog: { startAt: 0, maxResults: 2, total: 2, histories: [{ id: '10039', from: 'first_stage', to: 'second_stage', created: '2018-07-08T22:34:47.440-0300' }, { id: '10038', from: 'third_stage', to: 'first_stage', created: '2018-07-06T09:40:43.886-0300' }] } }.with_indifferent_access) }
 
-        before { Jira::JiraIssueAdapter.instance.process_issue!(jira_account, product, first_project, jira_issue) }
+        before { described_class.instance.process_issue!(jira_account, product, first_project, jira_issue) }
 
         it { expect(discarded_demand.reload.discarded_at).to be nil }
       end
@@ -287,14 +287,27 @@ RSpec.describe Jira::JiraIssueAdapter, type: :service do
       context 'and there is config to the custom responsibles field and the json does not have the field' do
         let!(:jira_issue) { client.Issue.build({ key: '10000', fields: { created: '2018-07-02T11:20:18.998-0300', summary: 'foo of bar', issuetype: { name: 'Story' }, customfield_10028: { value: 'Expedite' }, project: { key: 'foo' } }, changelog: { startAt: 0, maxResults: 2, total: 2, histories: [{ id: '10039', from: 'first_stage', to: 'second_stage', created: '2018-07-08T22:34:47.440-0300' }, { id: '10038', from: 'third_stage', to: 'first_stage', created: '2018-07-06T09:40:43.886-0300' }] } }.with_indifferent_access) }
 
-        it 'updates the demand throwing no errors' do
-          Jira::JiraIssueAdapter.instance.process_issue!(jira_account, product, first_project, jira_issue)
+        it 'adds no assignees to demand' do
+          described_class.instance.process_issue!(jira_account, product, first_project, jira_issue)
           expect(Demand.count).to eq 1
           expect(Demand.last.assignees_count).to eq 0
           expect(Demand.last.demand_title).to eq 'foo of bar'
           expect(Demand.last.downstream_demand?).to be false
           expect(Demand.last.created_date).to eq Time.zone.parse('2018-07-02T11:20:18.998-0300')
         end
+      end
+    end
+
+    context 'with no transitions' do
+      let!(:jira_issue) { client.Issue.build({ key: '10000', fields: { created: '2018-07-02T11:20:18.998-0300', summary: 'foo of bar', issuetype: { name: 'Story' }, customfield_10028: { value: 'Expedite' }, project: { key: 'foo' }, status: { id: first_stage.integration_id } }, changelog: { startAt: 0, maxResults: 2, total: 2, histories: [] } }.with_indifferent_access) }
+
+      it 'adds the transition to the status using the created date' do
+        described_class.instance.process_issue!(jira_account, product, first_project, jira_issue)
+
+        first_stage_updated = first_stage.reload
+        expect(first_stage_updated.demand_transitions.count).to eq 1
+        expect(first_stage_updated.demand_transitions.first.last_time_in).to eq Time.zone.parse('2018-07-02T11:20:18.998-0300')
+        expect(first_stage_updated.demand_transitions.first.last_time_out).to eq nil
       end
     end
   end

@@ -72,7 +72,7 @@ RSpec.describe SlackConfiguration, type: :model do
       let!(:second_slack_configuration) { Fabricate :slack_configuration, active: true }
       let!(:third_slack_configuration) { Fabricate :slack_configuration, active: true }
 
-      it { expect(SlackConfiguration.active_configurations).to match_array [second_slack_configuration, third_slack_configuration] }
+      it { expect(described_class.active_configurations).to match_array [second_slack_configuration, third_slack_configuration] }
     end
   end
 

@@ -26,11 +26,11 @@ RSpec.describe ProjectFinancesService, type: :service do
       let!(:sixth_demand) { Fabricate :demand, project: second_project, end_date: Time.zone.now, effort_downstream: 140, effort_upstream: 148 }
 
       it 'returns the share of used hours in the project in the month' do
-        expect(ProjectFinancesService.instance.effort_share_in_month(first_project, 1.month.ago)).to eq 0.46586345381526106
-        expect(ProjectFinancesService.instance.effort_share_in_month(first_project, Time.zone.now)).to eq 0.29411764705882354
+        expect(described_class.instance.effort_share_in_month(first_project, 1.month.ago)).to eq 0.46586345381526106
+        expect(described_class.instance.effort_share_in_month(first_project, Time.zone.now)).to eq 0.29411764705882354
 
-        expect(ProjectFinancesService.instance.effort_share_in_month(second_project, 1.month.ago)).to eq 0.5341365461847389
-        expect(ProjectFinancesService.instance.effort_share_in_month(second_project, Time.zone.now)).to eq 0.7058823529411765
+        expect(described_class.instance.effort_share_in_month(second_project, 1.month.ago)).to eq 0.5341365461847389
+        expect(described_class.instance.effort_share_in_month(second_project, Time.zone.now)).to eq 0.7058823529411765
       end
     end
 
@@ -38,8 +38,8 @@ RSpec.describe ProjectFinancesService, type: :service do
       let(:first_project) { Fabricate :project, project_type: :outsourcing, start_date: 1.month.ago }
 
       it 'returns 0 to the share of the used effort' do
-        expect(ProjectFinancesService.instance.effort_share_in_month(first_project, 1.month.ago)).to eq 0
-        expect(ProjectFinancesService.instance.effort_share_in_month(first_project, Time.zone.now)).to eq 0
+        expect(described_class.instance.effort_share_in_month(first_project, 1.month.ago)).to eq 0
+        expect(described_class.instance.effort_share_in_month(first_project, Time.zone.now)).to eq 0
       end
     end
   end

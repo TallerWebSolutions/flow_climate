@@ -22,14 +22,14 @@ RSpec.describe DemandBlocksRepository, type: :repository do
       let!(:seventh_block) { Fabricate :demand_block, demand: second_demand, block_time: 2.days.ago, unblock_time: Time.zone.today, active: true, discarded_at: Time.zone.today }
 
       it 'returns the grouped data' do
-        blocks_grouped_data = DemandBlocksRepository.instance.closed_blocks_to_projects_and_period_grouped([first_project, second_project], first_project.start_date, second_project.end_date)
+        blocks_grouped_data = described_class.instance.closed_blocks_to_projects_and_period_grouped([first_project, second_project], first_project.start_date, second_project.end_date)
         expect(blocks_grouped_data.keys).to eq([first_project.name])
         expect(blocks_grouped_data.values[0].first).to eq third_block
       end
     end
 
     context 'having no data' do
-      it { expect(DemandBlocksRepository.instance.closed_blocks_to_projects_and_period_grouped([first_project, second_project], first_project.start_date, second_project.end_date)).to eq({}) }
+      it { expect(described_class.instance.closed_blocks_to_projects_and_period_grouped([first_project, second_project], first_project.start_date, second_project.end_date)).to eq({}) }
     end
   end
 
@@ -57,13 +57,13 @@ RSpec.describe DemandBlocksRepository, type: :repository do
       let!(:eigth_block) { Fabricate :demand_block, demand: fifth_demand, block_time: 2.days.ago, unblock_time: Time.zone.today, active: true }
 
       it 'returns the grouped data' do
-        blocks_grouped_data = DemandBlocksRepository.instance.active_blocks_to_projects_and_period([first_project, second_project], first_project.start_date, second_project.end_date)
+        blocks_grouped_data = described_class.instance.active_blocks_to_projects_and_period([first_project, second_project], first_project.start_date, second_project.end_date)
         expect(blocks_grouped_data).to match_array [first_block, second_block, third_block, fourth_block, sixth_block]
       end
     end
 
     context 'having no data' do
-      it { expect(DemandBlocksRepository.instance.active_blocks_to_projects_and_period([first_project, second_project], first_project.start_date, second_project.end_date)).to eq [] }
+      it { expect(described_class.instance.active_blocks_to_projects_and_period([first_project, second_project], first_project.start_date, second_project.end_date)).to eq [] }
     end
   end
 
@@ -88,13 +88,13 @@ RSpec.describe DemandBlocksRepository, type: :repository do
       let!(:seventh_block) { Fabricate :demand_block, demand: second_demand, block_time: 4.days.ago, unblock_time: 2.days.ago, discarded_at: Time.zone.today }
 
       it 'returns the grouped data' do
-        blocks_grouped_data = DemandBlocksRepository.instance.accumulated_blocks_to_date([first_project, second_project], 2.days.ago)
+        blocks_grouped_data = described_class.instance.accumulated_blocks_to_date([first_project, second_project], 2.days.ago)
         expect(blocks_grouped_data).to eq 3
       end
     end
 
     context 'having no data' do
-      it { expect(DemandBlocksRepository.instance.accumulated_blocks_to_date([first_project, second_project], second_project.end_date)).to eq 0 }
+      it { expect(described_class.instance.accumulated_blocks_to_date([first_project, second_project], second_project.end_date)).to eq 0 }
     end
   end
 
@@ -136,7 +136,7 @@ RSpec.describe DemandBlocksRepository, type: :repository do
       let!(:eigth_block) { Fabricate :demand_block, demand: second_demand, block_time: 2.days.ago, unblock_time: Time.zone.today, active: true, discarded_at: Time.zone.today }
 
       it 'returns the grouped data' do
-        blocks_grouped_data = DemandBlocksRepository.instance.blocks_duration_per_stage(team.projects, 6.days.ago, Time.zone.now)
+        blocks_grouped_data = described_class.instance.blocks_duration_per_stage(team.projects, 6.days.ago, Time.zone.now)
         expect(blocks_grouped_data[0][0]).to eq first_stage.name
         expect(blocks_grouped_data[0][1]).to eq 0
         expect(blocks_grouped_data[0][2] / 1.hour).to be_within(2.5).of(31.0)
@@ -148,7 +148,7 @@ RSpec.describe DemandBlocksRepository, type: :repository do
     end
 
     context 'having no data' do
-      it { expect(DemandBlocksRepository.instance.blocks_duration_per_stage(team.projects, 6.days.ago, Time.zone.now)).to eq [] }
+      it { expect(described_class.instance.blocks_duration_per_stage(team.projects, 6.days.ago, Time.zone.now)).to eq [] }
     end
   end
 
@@ -190,7 +190,7 @@ RSpec.describe DemandBlocksRepository, type: :repository do
       let!(:eigth_block) { Fabricate :demand_block, demand: second_demand, block_time: 2.days.ago, unblock_time: Time.zone.today, active: true, discarded_at: Time.zone.today }
 
       it 'returns the grouped data' do
-        block_count_data = DemandBlocksRepository.instance.blocks_count_per_stage(team.projects, 6.days.ago, Time.zone.now)
+        block_count_data = described_class.instance.blocks_count_per_stage(team.projects, 6.days.ago, Time.zone.now)
         expect(block_count_data[0][0]).to eq first_stage.name
         expect(block_count_data[0][1]).to eq 0
         expect(block_count_data[0][2]).to eq 2
@@ -202,7 +202,7 @@ RSpec.describe DemandBlocksRepository, type: :repository do
     end
 
     context 'having no data' do
-      it { expect(DemandBlocksRepository.instance.blocks_duration_per_stage(team.projects, 6.days.ago, Time.zone.now)).to eq [] }
+      it { expect(described_class.instance.blocks_duration_per_stage(team.projects, 6.days.ago, Time.zone.now)).to eq [] }
     end
   end
 end

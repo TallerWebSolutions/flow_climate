@@ -5,8 +5,8 @@ RSpec.describe Slack::SlackNotificationsJob, type: :active_job do
 
   describe '.perform_later' do
     it 'enqueues after calling perform_later' do
-      Slack::SlackNotificationsJob.perform_later
-      expect(Slack::SlackNotificationsJob).to have_been_enqueued.on_queue('default')
+      described_class.perform_later
+      expect(described_class).to have_been_enqueued.on_queue('default')
     end
   end
 
@@ -37,14 +37,14 @@ RSpec.describe Slack::SlackNotificationsJob, type: :active_job do
     context 'with average_demand_cost notification' do
       it 'calls slack notification method' do
         expect_any_instance_of(Slack::SlackNotificationService).to receive(:notify_cmd).once
-        Slack::SlackNotificationsJob.perform_now(first_slack_config, team)
+        described_class.perform_now(first_slack_config, team)
       end
     end
 
     context 'with current_week_throughput notification' do
       it 'calls slack notification method' do
         expect_any_instance_of(Slack::SlackNotificationService).to receive(:notify_week_throughput).once
-        Slack::SlackNotificationsJob.perform_now(second_slack_config, team)
+        described_class.perform_now(second_slack_config, team)
       end
     end
 
@@ -52,7 +52,7 @@ RSpec.describe Slack::SlackNotificationsJob, type: :active_job do
       it 'calls slack notification method' do
         expect_any_instance_of(Slack::SlackNotificationService).to receive(:notify_last_week_delivered_demands_info).once
 
-        Slack::SlackNotificationsJob.perform_now(third_slack_config, team)
+        described_class.perform_now(third_slack_config, team)
       end
     end
 
@@ -60,7 +60,7 @@ RSpec.describe Slack::SlackNotificationsJob, type: :active_job do
       it 'calls slack notification method' do
         expect_any_instance_of(Slack::SlackNotificationService).to receive(:notify_wip_demands).once
 
-        Slack::SlackNotificationsJob.perform_now(fourth_slack_config, team)
+        described_class.perform_now(fourth_slack_config, team)
       end
     end
 
@@ -68,7 +68,7 @@ RSpec.describe Slack::SlackNotificationsJob, type: :active_job do
       it 'calls slack notification method' do
         expect_any_instance_of(Slack::SlackNotificationService).to receive(:notify_beyond_expected_time_in_stage).once
 
-        Slack::SlackNotificationsJob.perform_now(fifth_slack_config, team)
+        described_class.perform_now(fifth_slack_config, team)
       end
     end
 
@@ -76,7 +76,7 @@ RSpec.describe Slack::SlackNotificationsJob, type: :active_job do
       it 'calls slack notification method' do
         expect_any_instance_of(Slack::SlackNotificationService).to receive(:notify_failure_load).once
 
-        Slack::SlackNotificationsJob.perform_now(sixth_slack_config, team)
+        described_class.perform_now(sixth_slack_config, team)
       end
     end
   end

@@ -67,6 +67,7 @@ class ProductsController < AuthenticatedController
   end
 
   def portfolio_demands_tab
+    @portfolio_demands = @product.total_portfolio_demands.order(end_date: :desc)
     respond_to { |format| format.js { render 'demands/portfolio_demands_tab' } }
   end
 

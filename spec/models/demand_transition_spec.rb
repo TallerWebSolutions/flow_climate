@@ -52,11 +52,11 @@ RSpec.describe DemandTransition, type: :model do
         let!(:done_downstream_transition) { Fabricate :demand_transition, demand: demand, stage: end_stage }
         let!(:upstream_demand_transition) { Fabricate :demand_transition, demand: demand, stage: other_stage }
 
-        it { expect(DemandTransition.downstream_transitions).to match_array [demand_transition, other_demand_transition] }
+        it { expect(described_class.downstream_transitions).to match_array [demand_transition, other_demand_transition] }
       end
 
       context 'having no data' do
-        it { expect(DemandTransition.downstream_transitions).to match_array [] }
+        it { expect(described_class.downstream_transitions).to match_array [] }
       end
     end
 
@@ -71,11 +71,11 @@ RSpec.describe DemandTransition, type: :model do
         let!(:other_demand_transition) { Fabricate :demand_transition, demand: demand, stage: other_stage }
         let!(:upstream_demand_transition) { Fabricate :demand_transition, demand: demand, stage: stage }
 
-        it { expect(DemandTransition.upstream_transitions).to match_array [demand_transition, other_demand_transition] }
+        it { expect(described_class.upstream_transitions).to match_array [demand_transition, other_demand_transition] }
       end
 
       context 'having no data' do
-        it { expect(DemandTransition.upstream_transitions).to eq [] }
+        it { expect(described_class.upstream_transitions).to eq [] }
       end
     end
 
@@ -98,11 +98,11 @@ RSpec.describe DemandTransition, type: :model do
         let!(:out_stream_touch_transition) { Fabricate :demand_transition, demand: demand, stage: out_stream_touch_stage }
         let!(:upstream_touch_transition) { Fabricate :demand_transition, demand: demand, stage: upstream_touch_stage }
 
-        it { expect(DemandTransition.touch_transitions).to match_array [touch_transition, other_touch_transition] }
+        it { expect(described_class.touch_transitions).to match_array [touch_transition, other_touch_transition] }
       end
 
       context 'having no data' do
-        it { expect(DemandTransition.touch_transitions).to eq [] }
+        it { expect(described_class.touch_transitions).to eq [] }
       end
     end
 
@@ -125,11 +125,11 @@ RSpec.describe DemandTransition, type: :model do
         let!(:out_stream_touch_transition) { Fabricate :demand_transition, demand: demand, stage: out_stream_queue_stage }
         let!(:upstream_touch_transition) { Fabricate :demand_transition, demand: demand, stage: upstream_queue_stage }
 
-        it { expect(DemandTransition.queue_transitions).to match_array [queue_transition, other_queue_transition] }
+        it { expect(described_class.queue_transitions).to match_array [queue_transition, other_queue_transition] }
       end
 
       context 'having no data' do
-        it { expect(DemandTransition.queue_transitions).to eq [] }
+        it { expect(described_class.queue_transitions).to eq [] }
       end
     end
 

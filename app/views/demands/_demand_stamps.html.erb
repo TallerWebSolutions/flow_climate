@@ -19,11 +19,15 @@
     <div class="stamp-title"><%= Demand.human_attribute_name :end_date %></div>
     <div class="stamp-content"><%= I18n.l(demand.end_date, format: :short) if demand.end_date.present? %></div>
   </div>
-  <div class="col-xs-6 stamp">
+  <div class="col-xs-4 stamp">
     <div class="stamp-title"><%= Demand.human_attribute_name :demand_type %></div>
     <div class="stamp-content"><%= I18n.t("activerecord.attributes.demand.enums.demand_type.#{demand.demand_type}") %></div>
   </div>
-  <div class="col-xs-6 stamp">
+  <div class="col-xs-4 stamp">
+    <div class="stamp-title"><span><%= Demand.human_attribute_name :class_of_service %></span></div>
+    <div class="stamp-content"><%= I18n.t("activerecord.attributes.demand.enums.class_of_service.#{demand.class_of_service}") %></div>
+  </div>
+  <div class="col-xs-4 stamp">
     <div class="stamp-title"><span><%= Demand.human_attribute_name :team_members %></span><sup><%= " (#{demand.assignees_count})" %></sup></div>
     <div class="stamp-content"><%= demand.team_members.map(&:name).join(', ') %></div>
   </div>

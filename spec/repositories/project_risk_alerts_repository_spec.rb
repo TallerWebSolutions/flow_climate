@@ -25,7 +25,7 @@ RSpec.describe ProjectRiskAlertsRepository, type: :repository do
     let!(:six_alert) { Fabricate :project_risk_alert, project_risk_config: six_risk_config, project: third_project, alert_color: :red, created_at: 1.hour.ago }
     let!(:seventh_alert) { Fabricate :project_risk_alert, project_risk_config: six_risk_config, project: third_project, alert_color: :yellow, created_at: 30.minutes.ago }
 
-    it { expect(ProjectRiskAlertsRepository.instance.group_projects_risk_colors(Project.all, :backlog_growth_rate)).to eq('red' => 1) }
-    it { expect(ProjectRiskAlertsRepository.instance.group_projects_risk_colors(Project.all, :no_money_to_deadline)).to eq('green' => 2, 'yellow' => 1) }
+    it { expect(described_class.instance.group_projects_risk_colors(Project.all, :backlog_growth_rate)).to eq('red' => 1) }
+    it { expect(described_class.instance.group_projects_risk_colors(Project.all, :no_money_to_deadline)).to eq('green' => 2, 'yellow' => 1) }
   end
 end

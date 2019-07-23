@@ -41,10 +41,10 @@ RSpec.describe Jira::JiraReader do
   end
 
   describe '#read_class_of_service' do
-    it { expect(described_class.instance.read_class_of_service(jira_account, jira_issue.attrs)).to eq :standard }
+    it { expect(described_class.instance.read_class_of_service(jira_account, jira_issue.attrs, jira_issue.changelog)).to eq :standard }
   end
 
   describe '#read_portfolio_unit' do
-    it { expect(described_class.instance.read_portfolio_unit(jira_issue.changelog, product)).to eq portfolio_unit }
+    it { expect(described_class.instance.read_portfolio_unit(jira_issue.changelog, jira_issue.attrs, product)).to eq portfolio_unit }
   end
 end

@@ -29,11 +29,11 @@ RSpec.describe DemandsRepository, type: :repository do
 
     let!(:first_epic) { Fabricate :demand, project: first_project, artifact_type: :epic }
 
-    it { expect(DemandsRepository.instance.known_scope_to_date([first_project, second_project], 2.days.ago)).to eq 65 }
+    it { expect(described_class.instance.known_scope_to_date([first_project, second_project], 2.days.ago)).to eq 65 }
   end
 
   describe '#demands_created_before_date_to_projects' do
-    subject(:query_return) { DemandsRepository.instance.demands_created_before_date_to_projects([first_project]) }
+    subject(:query_return) { described_class.instance.demands_created_before_date_to_projects([first_project]) }
 
     let!(:first_demand) { Fabricate :demand, project: first_project, demand_id: 'first_demand', created_date: 4.days.ago, end_date: 3.days.ago, discarded_at: nil }
     let!(:second_demand) { Fabricate :demand, project: first_project, demand_id: 'second_demand', created_date: 3.days.ago, end_date: 2.days.ago, discarded_at: nil }
@@ -59,11 +59,11 @@ RSpec.describe DemandsRepository, type: :repository do
 
       let!(:first_epic) { Fabricate :demand, project: first_project, artifact_type: :epic }
 
-      it { expect(DemandsRepository.instance.committed_demands_by_project_and_week(Project.all, 1.week.ago.to_date.cweek, 1.week.ago.to_date.cwyear)).to match_array [third_demand, fourth_demand, fifth_demand] }
+      it { expect(described_class.instance.committed_demands_by_project_and_week(Project.all, 1.week.ago.to_date.cweek, 1.week.ago.to_date.cwyear)).to match_array [third_demand, fourth_demand, fifth_demand] }
     end
 
     context 'having no data' do
-      it { expect(DemandsRepository.instance.committed_demands_by_project_and_week(Project.all, 1.week.ago.to_date.cweek, 1.week.ago.to_date.cwyear)).to eq [] }
+      it { expect(described_class.instance.committed_demands_by_project_and_week(Project.all, 1.week.ago.to_date.cweek, 1.week.ago.to_date.cwyear)).to eq [] }
     end
   end
 
@@ -78,11 +78,11 @@ RSpec.describe DemandsRepository, type: :repository do
 
       let!(:first_epic) { Fabricate :demand, project: first_project, artifact_type: :epic }
 
-      it { expect(DemandsRepository.instance.created_to_projects_and_period(Project.all, 1.week.ago.beginning_of_week, 1.week.ago.end_of_week)).to match_array [third_demand, fourth_demand, fifth_demand] }
+      it { expect(described_class.instance.created_to_projects_and_period(Project.all, 1.week.ago.beginning_of_week, 1.week.ago.end_of_week)).to match_array [third_demand, fourth_demand, fifth_demand] }
     end
 
     context 'having no data' do
-      it { expect(DemandsRepository.instance.created_to_projects_and_period(Project.all, 1.week.ago.beginning_of_week, 1.week.ago.end_of_week)).to eq [] }
+      it { expect(described_class.instance.created_to_projects_and_period(Project.all, 1.week.ago.beginning_of_week, 1.week.ago.end_of_week)).to eq [] }
     end
   end
 
@@ -97,11 +97,11 @@ RSpec.describe DemandsRepository, type: :repository do
 
       let!(:first_epic) { Fabricate :demand, project: first_project, artifact_type: :epic }
 
-      it { expect(DemandsRepository.instance.throughput_to_projects_and_period(Project.all, 1.week.ago.beginning_of_week, 1.week.ago.end_of_week)).to match_array [third_demand, fourth_demand, fifth_demand] }
+      it { expect(described_class.instance.throughput_to_projects_and_period(Project.all, 1.week.ago.beginning_of_week, 1.week.ago.end_of_week)).to match_array [third_demand, fourth_demand, fifth_demand] }
     end
 
     context 'having no data' do
-      it { expect(DemandsRepository.instance.throughput_to_projects_and_period(Project.all, 1.week.ago.beginning_of_week, 1.week.ago.end_of_week)).to eq [] }
+      it { expect(described_class.instance.throughput_to_projects_and_period(Project.all, 1.week.ago.beginning_of_week, 1.week.ago.end_of_week)).to eq [] }
     end
   end
 
@@ -121,13 +121,13 @@ RSpec.describe DemandsRepository, type: :repository do
       let!(:first_epic) { Fabricate :demand, project: first_project, artifact_type: :epic }
 
       context 'having demands' do
-        it { expect(DemandsRepository.instance.effort_upstream_grouped_by_month(Project.all, 57.days.ago.to_date, Time.zone.today)).to eq([2018.0, 2.0] => 22.0, [2018.0, 3.0] => 195.0) }
-        it { expect(DemandsRepository.instance.effort_upstream_grouped_by_month(Project.all, 24.days.ago.to_date, Time.zone.today)).to eq([2018.0, 3.0] => 195.0) }
+        it { expect(described_class.instance.effort_upstream_grouped_by_month(Project.all, 57.days.ago.to_date, Time.zone.today)).to eq([2018.0, 2.0] => 22.0, [2018.0, 3.0] => 195.0) }
+        it { expect(described_class.instance.effort_upstream_grouped_by_month(Project.all, 24.days.ago.to_date, Time.zone.today)).to eq([2018.0, 3.0] => 195.0) }
       end
     end
 
     context 'having no demands' do
-      it { expect(DemandsRepository.instance.effort_upstream_grouped_by_month(Project.all, 57.days.ago.to_date, Time.zone.today)).to eq({}) }
+      it { expect(described_class.instance.effort_upstream_grouped_by_month(Project.all, 57.days.ago.to_date, Time.zone.today)).to eq({}) }
     end
   end
 
@@ -147,14 +147,14 @@ RSpec.describe DemandsRepository, type: :repository do
       let!(:first_epic) { Fabricate :demand, project: first_project, artifact_type: :epic }
 
       context 'having demands in progress' do
-        it { expect(DemandsRepository.instance.grouped_by_effort_downstream_per_month(Project.all, 57.days.ago.to_date, Time.zone.today)).to eq([2018.0, 2.0] => 25.0, [2018.0, 3.0] => 186.0) }
-        it { expect(DemandsRepository.instance.grouped_by_effort_downstream_per_month(Project.all, 24.days.ago.to_date, Time.zone.today)).to eq([2018.0, 3.0] => 186.0) }
+        it { expect(described_class.instance.grouped_by_effort_downstream_per_month(Project.all, 57.days.ago.to_date, Time.zone.today)).to eq([2018.0, 2.0] => 25.0, [2018.0, 3.0] => 186.0) }
+        it { expect(described_class.instance.grouped_by_effort_downstream_per_month(Project.all, 24.days.ago.to_date, Time.zone.today)).to eq([2018.0, 3.0] => 186.0) }
       end
     end
 
     context 'having no demands' do
       context 'having demands in progress' do
-        it { expect(DemandsRepository.instance.grouped_by_effort_downstream_per_month(Project.all, 57.days.ago.to_date, Time.zone.today)).to eq({}) }
+        it { expect(described_class.instance.grouped_by_effort_downstream_per_month(Project.all, 57.days.ago.to_date, Time.zone.today)).to eq({}) }
       end
     end
   end
@@ -177,19 +177,19 @@ RSpec.describe DemandsRepository, type: :repository do
       let!(:first_epic) { Fabricate :demand, project: first_project, artifact_type: :epic }
 
       context 'upstream' do
-        it { expect(DemandsRepository.instance.delivered_until_date_to_projects_in_stream(Project.all, 'upstream')).to match_array [first_demand, second_demand, third_demand] }
-        it { expect(DemandsRepository.instance.delivered_until_date_to_projects_in_stream(Project.all, 'upstream', 1.day.ago)).to match_array [first_demand, second_demand] }
+        it { expect(described_class.instance.delivered_until_date_to_projects_in_stream(Project.all, 'upstream')).to match_array [first_demand, second_demand, third_demand] }
+        it { expect(described_class.instance.delivered_until_date_to_projects_in_stream(Project.all, 'upstream', 1.day.ago)).to match_array [first_demand, second_demand] }
       end
 
       context 'downstream' do
-        it { expect(DemandsRepository.instance.delivered_until_date_to_projects_in_stream(Project.all, 'downstream')).to match_array [fourth_demand, fifth_demand] }
-        it { expect(DemandsRepository.instance.delivered_until_date_to_projects_in_stream(Project.all, 'downstream', 1.day.ago)).to eq [fourth_demand] }
+        it { expect(described_class.instance.delivered_until_date_to_projects_in_stream(Project.all, 'downstream')).to match_array [fourth_demand, fifth_demand] }
+        it { expect(described_class.instance.delivered_until_date_to_projects_in_stream(Project.all, 'downstream', 1.day.ago)).to eq [fourth_demand] }
       end
     end
 
     context 'having no demands' do
       context 'having no demands' do
-        it { expect(DemandsRepository.instance.delivered_until_date_to_projects_in_stream(Project.all, 'upstream')).to eq [] }
+        it { expect(described_class.instance.delivered_until_date_to_projects_in_stream(Project.all, 'upstream')).to eq [] }
       end
     end
   end
@@ -212,13 +212,13 @@ RSpec.describe DemandsRepository, type: :repository do
 
       let!(:first_epic) { Fabricate :demand, project: first_project, artifact_type: :epic }
 
-      it { expect(DemandsRepository.instance.delivered_hours_in_month_for_projects(Project.all).to_f).to eq 3374.0 }
-      it { expect(DemandsRepository.instance.delivered_hours_in_month_for_projects(Project.all, Date.new(2018, 3, 1)).to_f).to eq 2632.0 }
+      it { expect(described_class.instance.delivered_hours_in_month_for_projects(Project.all).to_f).to eq 3374.0 }
+      it { expect(described_class.instance.delivered_hours_in_month_for_projects(Project.all, Date.new(2018, 3, 1)).to_f).to eq 2632.0 }
     end
 
     context 'having no demands' do
       context 'having no demands' do
-        it { expect(DemandsRepository.instance.delivered_hours_in_month_for_projects(Project.all)).to eq 0 }
+        it { expect(described_class.instance.delivered_hours_in_month_for_projects(Project.all)).to eq 0 }
       end
     end
   end
@@ -241,12 +241,12 @@ RSpec.describe DemandsRepository, type: :repository do
 
       let!(:first_epic) { Fabricate :demand, project: first_project, artifact_type: :epic }
 
-      it { expect(DemandsRepository.instance.demands_delivered_for_period(Demand.all, 4.days.ago, Time.zone.now)).to match_array [first_demand, second_demand] }
+      it { expect(described_class.instance.demands_delivered_for_period(Demand.all, 4.days.ago, Time.zone.now)).to match_array [first_demand, second_demand] }
     end
 
     context 'having no demands' do
       context 'having no demands' do
-        it { expect(DemandsRepository.instance.demands_delivered_for_period(Demand.all, 4.days.ago, Time.zone.now)).to eq [] }
+        it { expect(described_class.instance.demands_delivered_for_period(Demand.all, 4.days.ago, Time.zone.now)).to eq [] }
       end
     end
   end
@@ -269,12 +269,12 @@ RSpec.describe DemandsRepository, type: :repository do
 
       let!(:first_epic) { Fabricate :demand, project: first_project, artifact_type: :epic }
 
-      it { expect(DemandsRepository.instance.demands_delivered_for_period_accumulated(Demand.all, 1.week.ago)).to match_array [third_demand, fifth_demand, sixth_demand] }
+      it { expect(described_class.instance.demands_delivered_for_period_accumulated(Demand.all, 1.week.ago)).to match_array [third_demand, fifth_demand, sixth_demand] }
     end
 
     context 'having no demands' do
       context 'having no demands' do
-        it { expect(DemandsRepository.instance.demands_delivered_for_period_accumulated(Demand.all, 4.days.ago)).to eq [] }
+        it { expect(described_class.instance.demands_delivered_for_period_accumulated(Demand.all, 4.days.ago)).to eq [] }
       end
     end
   end
@@ -308,12 +308,12 @@ RSpec.describe DemandsRepository, type: :repository do
       let!(:sixth_transition) { Fabricate :demand_transition, stage: first_stage, demand: seventh_demand, last_time_in: '2018-03-01T17:09:58-03:00', last_time_out: nil }
       let!(:seventh_transition) { Fabricate :demand_transition, stage: first_stage, demand: eigth_demand, last_time_in: '2018-04-01T17:09:58-03:00', last_time_out: nil }
 
-      it { expect(DemandsRepository.instance.cumulative_flow_for_date(Demand.all.map(&:id), Date.new(2018, 2, 27), 1.week.ago, :downstream)).to eq(first_stage.name => 4, second_stage.name => 2) }
+      it { expect(described_class.instance.cumulative_flow_for_date(Demand.all.map(&:id), Date.new(2018, 2, 27), 1.week.ago, :downstream)).to eq(first_stage.name => 4, second_stage.name => 2) }
     end
 
     context 'having no demands' do
       context 'having no demands' do
-        it { expect(DemandsRepository.instance.cumulative_flow_for_date(Demand.all.map(&:id), 2.months.ago, 1.week.ago, :downstream)).to eq({}) }
+        it { expect(described_class.instance.cumulative_flow_for_date(Demand.all.map(&:id), 2.months.ago, 1.week.ago, :downstream)).to eq({}) }
       end
     end
   end
@@ -351,12 +351,12 @@ RSpec.describe DemandsRepository, type: :repository do
     let!(:eleventh_transition) { Fabricate :demand_transition, stage: fourth_stage, demand: upstream_demand, last_time_in: '2018-03-26T17:09:58-03:00', last_time_out: '2018-10-10T17:09:58-03:00' }
     let!(:twefth_transition) { Fabricate :demand_transition, stage: fifth_stage, demand: upstream_demand, last_time_in: '2018-03-26T17:09:58-03:00', last_time_out: '2018-10-10T17:09:58-03:00' }
 
-    it { expect(DemandsRepository.instance.total_time_for(Project.all, 'total_queue_time', 'week')).to eq([10, 2018] => 3_715_200.0, [13, 2018] => 1.day.to_f) }
-    it { expect(DemandsRepository.instance.total_time_for(Project.all, 'total_touch_time', 'week')).to eq([10, 2018] => 864_000.0, [13, 2018] => 172_800.0) }
-    it { expect(DemandsRepository.instance.total_time_for(Project.all, 'total_queue_time', 'month')).to eq([3, 2018] => 3_801_600.0) }
-    it { expect(DemandsRepository.instance.total_time_for(Project.all, 'total_touch_time', 'month')).to eq([3, 2018] => 1_036_800.0) }
-    it { expect(DemandsRepository.instance.total_time_for(Project.all, 'total_queue_time', 'day')).to eq('2018-03-08' => 3_715_200.0, '2018-03-26' => 86_400.0) }
-    it { expect(DemandsRepository.instance.total_time_for(Project.all, 'total_touch_time', 'day')).to eq('2018-03-08' => 864_000.0, '2018-03-26' => 172_800.0) }
+    it { expect(described_class.instance.total_time_for(Project.all, 'total_queue_time', 'week')).to eq([10, 2018] => 3_715_200.0, [13, 2018] => 1.day.to_f) }
+    it { expect(described_class.instance.total_time_for(Project.all, 'total_touch_time', 'week')).to eq([10, 2018] => 864_000.0, [13, 2018] => 172_800.0) }
+    it { expect(described_class.instance.total_time_for(Project.all, 'total_queue_time', 'month')).to eq([3, 2018] => 3_801_600.0) }
+    it { expect(described_class.instance.total_time_for(Project.all, 'total_touch_time', 'month')).to eq([3, 2018] => 1_036_800.0) }
+    it { expect(described_class.instance.total_time_for(Project.all, 'total_queue_time', 'day')).to eq('2018-03-08' => 3_715_200.0, '2018-03-26' => 86_400.0) }
+    it { expect(described_class.instance.total_time_for(Project.all, 'total_touch_time', 'day')).to eq('2018-03-08' => 864_000.0, '2018-03-26' => 172_800.0) }
   end
 
   describe '#demands_delivered_grouped_by_projects_to_period' do
@@ -369,8 +369,8 @@ RSpec.describe DemandsRepository, type: :repository do
     let!(:fourth_demand) { Fabricate :demand, project: first_project, end_date: 1.day.ago }
     let!(:fifth_demand) { Fabricate :demand, project: first_project, end_date: 1.day.ago }
 
-    it { expect(DemandsRepository.instance.demands_delivered_grouped_by_projects_to_period([first_project, second_project], 3.days.ago, 2.days.from_now)[first_project.name]).to match_array [first_demand, second_demand, fourth_demand, fifth_demand] }
-    it { expect(DemandsRepository.instance.demands_delivered_grouped_by_projects_to_period([first_project, second_project], 3.days.ago, 2.days.from_now)[second_project.name]).to match_array [third_demand] }
+    it { expect(described_class.instance.demands_delivered_grouped_by_projects_to_period([first_project, second_project], 3.days.ago, 2.days.from_now)[first_project.name]).to match_array [first_demand, second_demand, fourth_demand, fifth_demand] }
+    it { expect(described_class.instance.demands_delivered_grouped_by_projects_to_period([first_project, second_project], 3.days.ago, 2.days.from_now)[second_project.name]).to match_array [third_demand] }
   end
 
   pending '#bugs_opened_until_limit_date'

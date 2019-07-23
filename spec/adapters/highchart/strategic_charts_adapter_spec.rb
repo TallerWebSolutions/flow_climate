@@ -32,7 +32,7 @@ RSpec.describe Highchart::StrategicChartsAdapter, type: :service do
       let!(:third_demand) { Fabricate :demand, project: third_project, effort_downstream: 100, effort_upstream: 20, end_date: 2.months.from_now }
 
       it 'mounts the data structure to the active project counts in months' do
-        strategic_data = Highchart::StrategicChartsAdapter.new(company, company.projects, company.total_available_hours)
+        strategic_data = described_class.new(company, company.projects, company.total_available_hours)
         expect(strategic_data.array_of_months).to eq [3.months.ago.to_date.end_of_month, 2.months.ago.to_date.end_of_month, 1.month.ago.to_date.end_of_month, Time.zone.today.end_of_month, 1.month.from_now.to_date.end_of_month, 2.months.from_now.to_date.end_of_month, 3.months.from_now.to_date.end_of_month]
         expect(strategic_data.active_projects_count_data).to eq [2, 2, 1, 0, 2, 4, 2]
         expect(strategic_data.sold_hours_in_month).to eq [1175.5952380952385, 1175.5952380952385, 238.09523809523813, 0, 2000.0000000000011, 6875.000000000003, 4875.000000000002]
@@ -46,7 +46,7 @@ RSpec.describe Highchart::StrategicChartsAdapter, type: :service do
 
     context 'having no projects' do
       it 'returns an empty array' do
-        strategic_data = Highchart::StrategicChartsAdapter.new(company, company.projects, company.total_available_hours)
+        strategic_data = described_class.new(company, company.projects, company.total_available_hours)
         expect(strategic_data.array_of_months).to eq []
         expect(strategic_data.active_projects_count_data).to eq []
       end

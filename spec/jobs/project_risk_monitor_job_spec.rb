@@ -3,8 +3,8 @@
 RSpec.describe ProjectRiskMonitorJob, type: :active_job do
   describe '.perform_later' do
     it 'enqueues after calling perform_later' do
-      ProjectRiskMonitorJob.perform_later
-      expect(ProjectRiskMonitorJob).to have_been_enqueued.on_queue('default')
+      described_class.perform_later
+      expect(described_class).to have_been_enqueued.on_queue('default')
     end
   end
 
@@ -32,7 +32,7 @@ RSpec.describe ProjectRiskMonitorJob, type: :active_job do
             allow_any_instance_of(Project).to receive(:required_hours_per_available_hours).and_return(4)
             allow_any_instance_of(Project).to receive(:flow_pressure).and_return(1)
 
-            ProjectRiskMonitorJob.perform_now
+            described_class.perform_now
             expect(first_project.reload.project_risk_alerts.count).to eq 4
             expect(second_project.reload.project_risk_alerts.count).to eq 0
             expect(third_project.reload.project_risk_alerts.count).to eq 0
@@ -50,7 +50,7 @@ RSpec.describe ProjectRiskMonitorJob, type: :active_job do
             allow_any_instance_of(Project).to receive(:required_hours_per_available_hours).and_return(27)
             allow_any_instance_of(Project).to receive(:flow_pressure).and_return(29)
 
-            ProjectRiskMonitorJob.perform_now
+            described_class.perform_now
             expect(first_project.reload.project_risk_alerts.count).to eq 4
             expect(first_project.reload.project_risk_alerts.pluck(:alert_color)).to eq %w[yellow yellow yellow yellow]
             expect(first_project.reload.project_risk_alerts.pluck(:project_risk_config_id)).to match_array [first_risk_config.id, third_risk_config.id, fourth_risk_config.id, fifth_risk_config.id]
@@ -69,7 +69,7 @@ RSpec.describe ProjectRiskMonitorJob, type: :active_job do
 
             expect(UserNotifierMailer).to receive(:notify_new_red_alert).exactly(3).times.and_call_original
 
-            ProjectRiskMonitorJob.perform_now
+            described_class.perform_now
             expect(first_project.reload.project_risk_alerts.count).to eq 4
             expect(first_project.reload.project_risk_alerts.pluck(:alert_color)).to eq %w[red red red red]
             expect(first_project.reload.project_risk_alerts.pluck(:project_risk_config_id)).to match_array [first_risk_config.id, third_risk_config.id, fourth_risk_config.id, fifth_risk_config.id]
@@ -87,7 +87,7 @@ RSpec.describe ProjectRiskMonitorJob, type: :active_job do
             ProjectRiskAlert.create(created_at: Time.zone.today, project: first_project, project_risk_config: first_risk_config, alert_color: :green, alert_value: 30)
             allow_any_instance_of(Project).to receive(:money_per_deadline).and_return(40)
 
-            ProjectRiskMonitorJob.perform_now
+            described_class.perform_now
             expect(first_project.reload.project_risk_alerts.count).to eq 1
             expect(first_project.reload.project_risk_alerts.pluck(:alert_color)).to eq %w[red]
             expect(first_project.reload.project_risk_alerts.pluck(:project_risk_config_id)).to match_array [first_risk_config.id]

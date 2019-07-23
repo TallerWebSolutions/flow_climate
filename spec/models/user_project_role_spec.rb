@@ -19,7 +19,7 @@ RSpec.describe UserProjectRole, type: :model do
       user = Fabricate :user
       project = Fabricate :project
 
-      UserProjectRole.create(user: user, project: project)
+      described_class.create(user: user, project: project)
 
       expect(Fabricate.build(:user_project_role, user: user, project: project)).not_to be_valid
       expect(Fabricate.build(:user_project_role, user: user)).to be_valid

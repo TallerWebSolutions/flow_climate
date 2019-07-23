@@ -3,7 +3,7 @@
 RSpec.describe ProjectsSummaryData, type: :data_object do
   describe '#total_flow_pressure' do
     context 'having projects' do
-      subject(:projects_summary) { ProjectsSummaryData.new(Project.all) }
+      subject(:projects_summary) { described_class.new(Project.all) }
 
       let!(:project) { Fabricate :project, start_date: 1.day.ago.beginning_of_day, end_date: 2.days.from_now.beginning_of_day, initial_scope: 0 }
       let!(:second_project) { Fabricate :project, start_date: 1.day.ago.beginning_of_day, end_date: 1.day.from_now.beginning_of_day, initial_scope: 0 }
@@ -19,7 +19,7 @@ RSpec.describe ProjectsSummaryData, type: :data_object do
     end
 
     context 'having no projects' do
-      subject(:projects_summary) { ProjectsSummaryData.new(Project.all) }
+      subject(:projects_summary) { described_class.new(Project.all) }
 
       it { expect(projects_summary.total_flow_pressure).to eq 0 }
       it { expect(projects_summary.discovered_scope).to eq({}) }

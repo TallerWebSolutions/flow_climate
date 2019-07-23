@@ -25,7 +25,7 @@ RSpec.describe Highchart::FinancesChartsAdapter, type: :data_object do
 
     describe '.initialize' do
       it 'computes and extracts the information of finances' do
-        finances_hash = Highchart::FinancesChartsAdapter.new(FinancialInformation.all).finances_hash_with_computed_informations
+        finances_hash = described_class.new(FinancialInformation.all).finances_hash_with_computed_informations
 
         expect(finances_hash[0]['income_total']).to eq 430.0
         expect(finances_hash[0]['std_dev_income']).to eq 0
@@ -74,7 +74,7 @@ RSpec.describe Highchart::FinancesChartsAdapter, type: :data_object do
 
   context 'having no projects' do
     describe '.initialize' do
-      let(:finances_hash) { Highchart::FinancesChartsAdapter.new(FinancialInformation.all).finances_hash_with_computed_informations }
+      let(:finances_hash) { described_class.new(FinancialInformation.all).finances_hash_with_computed_informations }
 
       it { expect(finances_hash).to be_empty }
     end
