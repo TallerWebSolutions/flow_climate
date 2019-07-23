@@ -3,8 +3,8 @@
 RSpec.describe ProjectConsolidationJob, type: :active_job do
   describe '.perform_later' do
     it 'enqueues after calling perform_later' do
-      ProjectConsolidationJob.perform_later
-      expect(ProjectConsolidationJob).to have_been_enqueued.on_queue('default')
+      described_class.perform_later
+      expect(described_class).to have_been_enqueued.on_queue('default')
     end
   end
 
@@ -34,7 +34,7 @@ RSpec.describe ProjectConsolidationJob, type: :active_job do
     it 'calls the mailer to send the data' do
       # TODO: improve this spec
 
-      ProjectConsolidationJob.perform_now
+      described_class.perform_now
 
       expect(ProjectConsolidation.count).to eq 8
     end

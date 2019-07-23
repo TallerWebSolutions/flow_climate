@@ -15,7 +15,7 @@ RSpec.describe Highchart::HighchartAdapter, type: :data_object do
 
     describe '.initialize' do
       context 'querying all the time' do
-        subject(:chart_data) { Highchart::HighchartAdapter.new(Project.all, Project.all.map(&:start_date).min, Project.all.map(&:end_date).max, 'week') }
+        subject(:chart_data) { described_class.new(Project.all, Project.all.map(&:start_date).min, Project.all.map(&:end_date).max, 'week') }
 
         before { travel_to Time.zone.local(2018, 5, 30, 10, 0, 0) }
 
@@ -31,7 +31,7 @@ RSpec.describe Highchart::HighchartAdapter, type: :data_object do
 
   context 'having no projects' do
     describe '.initialize' do
-      subject(:chart_data) { Highchart::HighchartAdapter.new(Project.all, 1.day.ago, 1.day.from_now, 'week') }
+      subject(:chart_data) { described_class.new(Project.all, 1.day.ago, 1.day.from_now, 'week') }
 
       it 'returns empty data' do
         expect(chart_data.x_axis).to eq []

@@ -3,8 +3,8 @@
 RSpec.describe PurgeIntegrationErrorsJob, type: :active_job do
   describe '.perform_later' do
     it 'enqueues after calling perform_later' do
-      PurgeIntegrationErrorsJob.perform_later
-      expect(PurgeIntegrationErrorsJob).to have_been_enqueued.on_queue('default')
+      described_class.perform_later
+      expect(described_class).to have_been_enqueued.on_queue('default')
     end
   end
 
@@ -14,7 +14,7 @@ RSpec.describe PurgeIntegrationErrorsJob, type: :active_job do
     let!(:third_integration_error) { Fabricate :integration_error, created_at: 2.days.ago }
 
     it 'collects a new cost to the week' do
-      PurgeIntegrationErrorsJob.perform_now
+      described_class.perform_now
       expect(IntegrationError.count).to eq 1
       expect(IntegrationError.last).to eq third_integration_error
     end

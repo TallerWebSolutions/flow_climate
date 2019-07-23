@@ -6,7 +6,7 @@ RSpec.describe FlowAnalyticData, type: :data_objects do
     let(:customer) { Fabricate :customer, company: company }
 
     context 'having the company config' do
-      subject(:analytic) { FlowAnalyticData.new(company) }
+      subject(:analytic) { described_class.new(company) }
 
       let!(:company_config) { Fabricate :company_settings, company: company, max_active_parallel_projects: 2, max_flow_pressure: 3 }
       let!(:projects) { Fabricate.times(2, :project, company: company, customers: [customer], start_date: Time.zone.today, end_date: Time.zone.today) }
@@ -19,7 +19,7 @@ RSpec.describe FlowAnalyticData, type: :data_objects do
     end
 
     context 'having no company config' do
-      subject(:analytic) { FlowAnalyticData.new(company) }
+      subject(:analytic) { described_class.new(company) }
 
       let!(:projects) { Fabricate.times(2, :project, company: company, customers: [customer], start_date: Time.zone.today, end_date: Time.zone.today) }
       let!(:other_projects) { Fabricate.times(2, :project, company: company, customers: [customer], start_date: 1.month.from_now, end_date: 1.month.from_now) }
@@ -33,7 +33,7 @@ RSpec.describe FlowAnalyticData, type: :data_objects do
     let(:customer) { Fabricate :customer, company: company }
 
     context 'having the financial informations' do
-      subject(:analytic) { FlowAnalyticData.new(company) }
+      subject(:analytic) { described_class.new(company) }
 
       let!(:company_config) { Fabricate :company_settings, company: company, max_active_parallel_projects: 2, max_flow_pressure: 3 }
       let!(:financial_information) { Fabricate :financial_information, company: company, expenses_total: 10 }
@@ -47,7 +47,7 @@ RSpec.describe FlowAnalyticData, type: :data_objects do
     end
 
     context 'having no company config' do
-      subject(:analytic) { FlowAnalyticData.new(company) }
+      subject(:analytic) { described_class.new(company) }
 
       let!(:projects) { Fabricate.times(2, :project, company: company, customers: [customer], start_date: Time.zone.today, end_date: Time.zone.today) }
       let!(:other_projects) { Fabricate.times(2, :project, company: company, customers: [customer], start_date: 1.month.from_now, end_date: 1.month.from_now) }

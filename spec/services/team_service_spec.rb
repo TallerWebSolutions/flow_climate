@@ -27,13 +27,13 @@ RSpec.describe TeamService, type: :service do
       let!(:sixth_demand) { Fabricate :demand, project: second_project, end_date: Time.zone.now }
 
       it 'returns the average demand cost to the selected period' do
-        expect(TeamService.instance.compute_average_demand_cost_to_team(team, 1.month.ago.to_date, Time.zone.today, 'month')).to eq(Date.new(2018, 5, 31) => 2500.0, Date.new(2018, 6, 30) => 5000.0)
+        expect(described_class.instance.compute_average_demand_cost_to_team(team, 1.month.ago.to_date, Time.zone.today, 'month')).to eq(Date.new(2018, 5, 31) => 2500.0, Date.new(2018, 6, 30) => 5000.0)
       end
     end
 
     context 'without data' do
       it 'returns an empty hash' do
-        expect(TeamService.instance.compute_average_demand_cost_to_team(team, 1.month.ago.to_date, Time.zone.today, 'month')).to eq(Date.new(2018, 5, 31) => 10_000.0, Date.new(2018, 6, 30) => 10_000.0)
+        expect(described_class.instance.compute_average_demand_cost_to_team(team, 1.month.ago.to_date, Time.zone.today, 'month')).to eq(Date.new(2018, 5, 31) => 10_000.0, Date.new(2018, 6, 30) => 10_000.0)
       end
     end
   end

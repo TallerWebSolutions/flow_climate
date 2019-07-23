@@ -3,8 +3,8 @@
 RSpec.describe Jira::ProcessJiraProjectJob, type: :active_job do
   describe '.perform_later' do
     it 'enqueues after calling perform_later' do
-      Jira::ProcessJiraProjectJob.perform_later(bla: 'foo')
-      expect(Jira::ProcessJiraProjectJob).to have_been_enqueued.on_queue('default')
+      described_class.perform_later(bla: 'foo')
+      expect(described_class).to have_been_enqueued.on_queue('default')
     end
   end
 
@@ -31,7 +31,7 @@ RSpec.describe Jira::ProcessJiraProjectJob, type: :active_job do
               expect_any_instance_of(Jira::JiraApiService).to(receive(:request_issues_by_fix_version) { [jira_issue] })
               expect_any_instance_of(Jira::JiraApiService).to(receive(:request_issue_details).with('10000') { jira_issue })
               expect(Jira::JiraIssueAdapter.instance).to receive(:process_issue!).with(jira_account, product, project, jira_issue).once
-              Jira::ProcessJiraProjectJob.perform_now(jira_account, jira_config, 'foo@bar.com', 'Foo Bar', 'http://foo.com.br')
+              described_class.perform_now(jira_account, jira_config, 'foo@bar.com', 'Foo Bar', 'http://foo.com.br')
             end
           end
         end
@@ -45,7 +45,7 @@ RSpec.describe Jira::ProcessJiraProjectJob, type: :active_job do
             expect_any_instance_of(Jira::JiraApiService).to(receive(:request_issues_by_fix_version) { [jira_issue] })
             expect_any_instance_of(Jira::JiraApiService).not_to(receive(:request_issue_details))
             expect(Jira::JiraIssueAdapter.instance).not_to receive(:process_issue!)
-            Jira::ProcessJiraProjectJob.perform_now(jira_account, jira_config, 'foo@bar.com', 'Foo Bar', 'http://foo.com.br')
+            described_class.perform_now(jira_account, jira_config, 'foo@bar.com', 'Foo Bar', 'http://foo.com.br')
           end
         end
       end

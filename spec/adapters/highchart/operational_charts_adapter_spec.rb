@@ -63,7 +63,7 @@ RSpec.describe Highchart::OperationalChartsAdapter, type: :data_object do
 
       context 'having projects' do
         context 'and using the week period interval' do
-          subject(:report_data) { Highchart::OperationalChartsAdapter.new(Project.all, Project.all.map(&:start_date).min, Project.all.map(&:end_date).max, 'week') }
+          subject(:report_data) { described_class.new(Project.all, Project.all.map(&:start_date).min, Project.all.map(&:end_date).max, 'week') }
 
           it 'do the math and provides the correct information' do
             expect(report_data.all_projects).to match_array [first_project, second_project, third_project]
@@ -91,7 +91,7 @@ RSpec.describe Highchart::OperationalChartsAdapter, type: :data_object do
         end
 
         context 'and using the month period interval' do
-          subject(:report_data) { Highchart::OperationalChartsAdapter.new(Project.all, Project.all.map(&:start_date).min, Project.all.map(&:end_date).max, 'month') }
+          subject(:report_data) { described_class.new(Project.all, Project.all.map(&:start_date).min, Project.all.map(&:end_date).max, 'month') }
 
           before { travel_to Time.zone.local(2018, 5, 15, 10, 0, 0) }
 
@@ -130,7 +130,7 @@ RSpec.describe Highchart::OperationalChartsAdapter, type: :data_object do
           after { travel_back }
 
           it 'does the math and provides the correct information' do
-            report_data = Highchart::OperationalChartsAdapter.new(Project.all, Date.new(2018, 2, 25), Date.new(2018, 5, 2), 'day')
+            report_data = described_class.new(Project.all, Date.new(2018, 2, 25), Date.new(2018, 5, 2), 'day')
 
             expect(report_data.all_projects).to match_array Project.all
             expect(report_data.x_axis).to eq TimeService.instance.days_between_of(Date.new(2018, 2, 25), Date.new(2018, 5, 2))
@@ -157,7 +157,7 @@ RSpec.describe Highchart::OperationalChartsAdapter, type: :data_object do
       end
 
       context 'having no projects' do
-        subject(:report_data) { Highchart::OperationalChartsAdapter.new(Project.none, Date.new(2018, 2, 1), Date.new(2018, 2, 10), 'day') }
+        subject(:report_data) { described_class.new(Project.none, Date.new(2018, 2, 1), Date.new(2018, 2, 10), 'day') }
 
         it 'does the math and provides the correct information' do
           expect(report_data.all_projects).to eq []
@@ -181,7 +181,7 @@ RSpec.describe Highchart::OperationalChartsAdapter, type: :data_object do
     end
 
     describe '#hours_per_demand' do
-      subject(:report_data) { Highchart::OperationalChartsAdapter.new(Project.all, Project.all.map(&:start_date).min, Project.all.map(&:end_date).max, 'week') }
+      subject(:report_data) { described_class.new(Project.all, Project.all.map(&:start_date).min, Project.all.map(&:end_date).max, 'week') }
 
       before { travel_to Time.zone.local(2018, 5, 21, 10, 0, 0) }
 
@@ -191,14 +191,14 @@ RSpec.describe Highchart::OperationalChartsAdapter, type: :data_object do
     end
 
     describe '#hours_blocked_per_stage' do
-      subject(:report_data) { Highchart::OperationalChartsAdapter.new(Project.all, Time.zone.iso8601('2018-02-27T17:30:58-03:00').to_date, 1.day.from_now.to_date, 'week') }
+      subject(:report_data) { described_class.new(Project.all, Time.zone.iso8601('2018-02-27T17:30:58-03:00').to_date, 1.day.from_now.to_date, 'week') }
 
       it { expect(report_data.hours_blocked_per_stage[:x_axis].count).to be_positive }
       it { expect(report_data.hours_blocked_per_stage[:data].count).to be_positive }
     end
 
     describe '#count_blocked_per_stage' do
-      subject(:report_data) { Highchart::OperationalChartsAdapter.new(Project.all, Time.zone.iso8601('2018-02-27T17:30:58-03:00').to_date, 1.day.from_now.to_date, 'week') }
+      subject(:report_data) { described_class.new(Project.all, Time.zone.iso8601('2018-02-27T17:30:58-03:00').to_date, 1.day.from_now.to_date, 'week') }
 
       it { expect(report_data.count_blocked_per_stage[:x_axis].count).to be_positive }
       it { expect(report_data.count_blocked_per_stage[:data].count).to be_positive }

@@ -3,8 +3,8 @@
 RSpec.describe Jira::ProcessJiraIssueJob, type: :active_job do
   describe '.perform_later' do
     it 'enqueues after calling perform_later' do
-      Jira::ProcessJiraIssueJob.perform_later(bla: 'foo')
-      expect(Jira::ProcessJiraIssueJob).to have_been_enqueued.on_queue('default')
+      described_class.perform_later(bla: 'foo')
+      expect(described_class).to have_been_enqueued.on_queue('default')
     end
   end
 
@@ -31,7 +31,7 @@ RSpec.describe Jira::ProcessJiraIssueJob, type: :active_job do
               expect(UserNotifierMailer).to receive(:sync_finished).once.and_call_original
               expect_any_instance_of(Jira::JiraApiService).to(receive(:request_issue_details).with('foo') { jira_issue })
               expect(Jira::JiraIssueAdapter.instance).to(receive(:process_issue!).once { demand })
-              Jira::ProcessJiraIssueJob.perform_now(jira_account, project, 'foo', 'foo@bar.com', 'Foo Bar', 'http://foo.com.br')
+              described_class.perform_now(jira_account, project, 'foo', 'foo@bar.com', 'Foo Bar', 'http://foo.com.br')
             end
           end
         end
@@ -44,7 +44,7 @@ RSpec.describe Jira::ProcessJiraIssueJob, type: :active_job do
           it 'returns doing nothing' do
             expect_any_instance_of(Jira::JiraApiService).to(receive(:request_issue_details).with('foo') { jira_issue })
             expect(Jira::JiraIssueAdapter.instance).not_to receive(:process_issue!)
-            Jira::ProcessJiraIssueJob.perform_now(jira_account, project, 'foo', 'foo@bar.com', 'Foo Bar', 'http://foo.com.br')
+            described_class.perform_now(jira_account, project, 'foo', 'foo@bar.com', 'Foo Bar', 'http://foo.com.br')
           end
         end
       end

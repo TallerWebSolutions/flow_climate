@@ -18,7 +18,7 @@ RSpec.describe ReplenishingData, type: :data_objects do
 
   describe '#summary_infos' do
     context 'with data' do
-      subject(:replenishing_data) { ReplenishingData.new(team) }
+      subject(:replenishing_data) { described_class.new(team) }
 
       let!(:first_demand) { Fabricate :demand, project: first_project, commitment_date: 3.months.ago, end_date: 1.week.ago }
       let!(:second_demand) { Fabricate :demand, project: first_project, commitment_date: 2.months.ago, end_date: 4.weeks.ago }
@@ -106,7 +106,7 @@ RSpec.describe ReplenishingData, type: :data_objects do
     end
 
     context 'with no data in project' do
-      subject(:replenishing_data) { ReplenishingData.new(team) }
+      subject(:replenishing_data) { described_class.new(team) }
 
       let(:other_team) { Fabricate :team, company: company }
 
@@ -118,7 +118,7 @@ RSpec.describe ReplenishingData, type: :data_objects do
     end
 
     context 'with no data' do
-      subject(:replenishing_data) { ReplenishingData.new(other_team) }
+      subject(:replenishing_data) { described_class.new(other_team) }
 
       let(:other_team) { Fabricate :team, company: company }
 

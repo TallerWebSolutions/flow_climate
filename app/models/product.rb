@@ -44,7 +44,7 @@ class Product < ApplicationRecord
   end
 
   def total_portfolio_demands
-    (demands + portfolio_units.map(&:total_portfolio_demands).flatten).uniq
+    demands.kept
   end
 
   def total_cost

@@ -13,7 +13,7 @@ RSpec.describe StageAnalyticData, type: :data_object do
     after { travel_back }
 
     context 'and the stage has transitions with duration' do
-      subject(:stage_analytic_data) { StageAnalyticData.new(stage) }
+      subject(:stage_analytic_data) { described_class.new(stage) }
 
       let(:demand) { Fabricate :demand, project: project }
       let(:other_demand) { Fabricate :demand, project: project }
@@ -40,7 +40,7 @@ RSpec.describe StageAnalyticData, type: :data_object do
     end
 
     context 'and the stage has transitions without duration' do
-      subject(:stage_analytic_data) { StageAnalyticData.new(stage) }
+      subject(:stage_analytic_data) { described_class.new(stage) }
 
       let(:demand) { Fabricate :demand, project: project }
       let(:other_demand) { Fabricate :demand, project: project }

@@ -72,7 +72,7 @@ RSpec.describe Demand, type: :model do
       let!(:second_demand) { Fabricate :demand, created_date: Time.zone.parse('2018-02-03 11:00') }
       let!(:third_demand) { Fabricate :demand, created_date: Time.zone.parse('2018-02-05 11:00') }
 
-      it { expect(Demand.opened_after_date(Date.new(2018, 2, 3))).to match_array [second_demand, third_demand] }
+      it { expect(described_class.opened_after_date(Date.new(2018, 2, 3))).to match_array [second_demand, third_demand] }
     end
 
     describe '.finished' do
@@ -80,7 +80,7 @@ RSpec.describe Demand, type: :model do
       let!(:second_demand) { Fabricate :demand, project: project, end_date: Time.zone.now }
       let!(:third_demand) { Fabricate :demand, project: project, end_date: nil }
 
-      it { expect(Demand.finished).to match_array [first_demand, second_demand] }
+      it { expect(described_class.finished).to match_array [first_demand, second_demand] }
     end
 
     describe '.finished_with_leadtime' do
@@ -88,7 +88,7 @@ RSpec.describe Demand, type: :model do
       let!(:second_demand) { Fabricate :demand, project: project, end_date: Time.zone.now, leadtime: 3 }
       let!(:third_demand) { Fabricate :demand, project: project, commitment_date: nil, end_date: Time.zone.now }
 
-      it { expect(Demand.finished_with_leadtime).to match_array [first_demand, second_demand] }
+      it { expect(described_class.finished_with_leadtime).to match_array [first_demand, second_demand] }
     end
 
     describe '.finished_until_date' do
@@ -96,7 +96,7 @@ RSpec.describe Demand, type: :model do
       let!(:second_demand) { Fabricate :demand, project: project, end_date: 1.day.ago, leadtime: nil }
       let!(:third_demand) { Fabricate :demand, project: project, end_date: Time.zone.now }
 
-      it { expect(Demand.finished_until_date(1.day.ago)).to match_array [first_demand, second_demand] }
+      it { expect(described_class.finished_until_date(1.day.ago)).to match_array [first_demand, second_demand] }
     end
 
     describe '.finished_after_date' do
@@ -104,7 +104,7 @@ RSpec.describe Demand, type: :model do
       let!(:second_demand) { Fabricate :demand, project: project, end_date: 1.day.ago, leadtime: 3 }
       let!(:third_demand) { Fabricate :demand, project: project, end_date: Time.zone.now }
 
-      it { expect(Demand.finished_after_date(1.day.ago)).to match_array [second_demand, third_demand] }
+      it { expect(described_class.finished_after_date(1.day.ago)).to match_array [second_demand, third_demand] }
     end
 
     describe '.not_finished' do
@@ -112,7 +112,7 @@ RSpec.describe Demand, type: :model do
       let!(:second_demand) { Fabricate :demand, project: project, end_date: nil }
       let!(:third_demand) { Fabricate :demand, project: project, end_date: Time.zone.now }
 
-      it { expect(Demand.not_finished).to match_array [first_demand, second_demand] }
+      it { expect(described_class.not_finished).to match_array [first_demand, second_demand] }
     end
 
     describe '.finished_in_month' do
@@ -125,9 +125,9 @@ RSpec.describe Demand, type: :model do
       let(:third_demand) { Fabricate :demand, end_date: 1.month.ago }
       let(:fourth_demand) { Fabricate :demand, end_date: Time.zone.today }
 
-      it { expect(Demand.finished_in_month(2.months.ago.to_date.month, 2.months.ago.to_date.year)).to eq [first_demand] }
-      it { expect(Demand.finished_in_month(1.month.ago.to_date.month, 1.month.ago.to_date.year)).to match_array [second_demand, third_demand] }
-      it { expect(Demand.finished_in_month(Time.zone.today.to_date.month, Time.zone.today.to_date.year)).to eq [fourth_demand] }
+      it { expect(described_class.finished_in_month(2.months.ago.to_date.month, 2.months.ago.to_date.year)).to eq [first_demand] }
+      it { expect(described_class.finished_in_month(1.month.ago.to_date.month, 1.month.ago.to_date.year)).to match_array [second_demand, third_demand] }
+      it { expect(described_class.finished_in_month(Time.zone.today.to_date.month, Time.zone.today.to_date.year)).to eq [fourth_demand] }
     end
 
     describe '.finished_in_week' do
@@ -140,9 +140,9 @@ RSpec.describe Demand, type: :model do
       let(:third_demand) { Fabricate :demand, end_date: 1.week.ago }
       let(:fourth_demand) { Fabricate :demand, end_date: Time.zone.today }
 
-      it { expect(Demand.finished_in_week(2.weeks.ago.to_date.cweek, 2.weeks.ago.to_date.cwyear)).to eq [first_demand] }
-      it { expect(Demand.finished_in_week(1.week.ago.to_date.cweek, 1.week.ago.to_date.cwyear)).to match_array [second_demand, third_demand] }
-      it { expect(Demand.finished_in_week(Time.zone.today.to_date.cweek, Time.zone.today.to_date.cwyear)).to eq [fourth_demand] }
+      it { expect(described_class.finished_in_week(2.weeks.ago.to_date.cweek, 2.weeks.ago.to_date.cwyear)).to eq [first_demand] }
+      it { expect(described_class.finished_in_week(1.week.ago.to_date.cweek, 1.week.ago.to_date.cwyear)).to match_array [second_demand, third_demand] }
+      it { expect(described_class.finished_in_week(Time.zone.today.to_date.cweek, Time.zone.today.to_date.cwyear)).to eq [fourth_demand] }
     end
 
     describe '.in_wip' do
@@ -150,7 +150,7 @@ RSpec.describe Demand, type: :model do
       let!(:second_demand) { Fabricate :demand, project: project, commitment_date: Time.zone.now, end_date: nil }
       let!(:third_demand) { Fabricate :demand, project: project, commitment_date: Time.zone.now, end_date: nil }
 
-      it { expect(Demand.in_wip.map(&:id)).to match_array [second_demand.id, third_demand.id] }
+      it { expect(described_class.in_wip.map(&:id)).to match_array [second_demand.id, third_demand.id] }
     end
 
     describe '.to_dates' do
@@ -159,7 +159,7 @@ RSpec.describe Demand, type: :model do
       let!(:third_demand) { Fabricate :demand, created_date: 2.months.ago, end_date: Time.zone.now }
       let!(:fourth_demand) { Fabricate :demand, created_date: 4.months.ago, end_date: 1.day.from_now }
 
-      it { expect(Demand.to_dates(1.month.ago, Time.zone.now).map(&:id)).to match_array [second_demand.id, third_demand.id, first_epic.id] }
+      it { expect(described_class.to_dates(1.month.ago, Time.zone.now).map(&:id)).to match_array [second_demand.id, third_demand.id, first_epic.id] }
     end
 
     describe '.finished_in_downstream' do
@@ -168,7 +168,7 @@ RSpec.describe Demand, type: :model do
       let!(:third_demand) { Fabricate :demand, commitment_date: nil, end_date: Time.zone.now }
       let!(:fourth_demand) { Fabricate :demand, commitment_date: nil, end_date: 1.day.from_now }
 
-      it { expect(Demand.finished_in_downstream.map(&:id)).to match_array [first_demand.id, second_demand.id] }
+      it { expect(described_class.finished_in_downstream.map(&:id)).to match_array [first_demand.id, second_demand.id] }
     end
 
     describe '.finished_in_upstream' do
@@ -177,7 +177,7 @@ RSpec.describe Demand, type: :model do
       let!(:third_demand) { Fabricate :demand, commitment_date: nil, end_date: Time.zone.now }
       let!(:fourth_demand) { Fabricate :demand, commitment_date: nil, end_date: 1.day.from_now }
 
-      it { expect(Demand.finished_in_upstream.map(&:id)).to match_array [third_demand.id, fourth_demand.id] }
+      it { expect(described_class.finished_in_upstream.map(&:id)).to match_array [third_demand.id, fourth_demand.id] }
     end
   end
 
@@ -568,7 +568,7 @@ RSpec.describe Demand, type: :model do
 
       before { demand.save }
 
-      it { expect(Demand.last.leadtime.to_f).to eq((demand.end_date - demand.commitment_date)) }
+      it { expect(described_class.last.leadtime.to_f).to eq((demand.end_date - demand.commitment_date)) }
     end
 
     context 'when the end date is null' do
@@ -576,7 +576,7 @@ RSpec.describe Demand, type: :model do
 
       before { demand.save }
 
-      it { expect(Demand.last.leadtime).to be_nil }
+      it { expect(described_class.last.leadtime).to be_nil }
     end
 
     context 'when the commitment date is null' do
@@ -584,7 +584,7 @@ RSpec.describe Demand, type: :model do
 
       before { demand.save }
 
-      it { expect(Demand.last.leadtime).to be_nil }
+      it { expect(described_class.last.leadtime).to be_nil }
     end
   end
 

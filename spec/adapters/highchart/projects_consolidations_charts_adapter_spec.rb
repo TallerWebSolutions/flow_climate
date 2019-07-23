@@ -19,7 +19,7 @@ RSpec.describe Highchart::ProjectsConsolidationsChartsAdapter, type: :service do
 
       context 'passing no date filter' do
         it 'builds the data structure for scope_data_evolution' do
-          consolidation_data = Highchart::ProjectsConsolidationsChartsAdapter.new(ProjectConsolidation.all, first_project.start_date, second_project.end_date)
+          consolidation_data = described_class.new(ProjectConsolidation.all, first_project.start_date, second_project.end_date)
 
           expect(consolidation_data.lead_time_data_range_evolution[:x_axis]).to eq [Date.new(2017, 12, 17), Date.new(2018, 1, 17)]
           expect(consolidation_data.lead_time_data_range_evolution[:y_axis][0][:name]).to eq I18n.t('charts.lead_time_data_range_evolution.total_range')
@@ -48,7 +48,7 @@ RSpec.describe Highchart::ProjectsConsolidationsChartsAdapter, type: :service do
 
       context 'passing no date filter' do
         it 'builds the data structure for scope_data_evolution' do
-          consolidation_data = Highchart::ProjectsConsolidationsChartsAdapter.new(ProjectConsolidation.all, first_project.start_date, first_project.end_date)
+          consolidation_data = described_class.new(ProjectConsolidation.all, first_project.start_date, first_project.end_date)
 
           expect(consolidation_data.lead_time_histogram_data_range_evolution[:x_axis]).to eq [65.days.ago.to_date]
           expect(consolidation_data.lead_time_histogram_data_range_evolution[:y_axis][0][:name]).to eq I18n.t('charts.lead_time_histogram_data_range_evolution.total_range')
@@ -77,7 +77,7 @@ RSpec.describe Highchart::ProjectsConsolidationsChartsAdapter, type: :service do
 
       context 'passing no date filter' do
         it 'builds the data structure for scope_data_evolution' do
-          consolidation_data = Highchart::ProjectsConsolidationsChartsAdapter.new(ProjectConsolidation.all, first_project.start_date, first_project.end_date)
+          consolidation_data = described_class.new(ProjectConsolidation.all, first_project.start_date, first_project.end_date)
 
           expect(consolidation_data.lead_time_interquartile_data_range_evolution[:x_axis]).to eq [65.days.ago.to_date]
           expect(consolidation_data.lead_time_interquartile_data_range_evolution[:y_axis][0][:name]).to eq I18n.t('charts.lead_time_interquartile_data_range_evolution.total_range')

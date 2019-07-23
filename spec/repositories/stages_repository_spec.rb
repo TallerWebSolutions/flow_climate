@@ -25,13 +25,13 @@ RSpec.describe StagesRepository, type: :repository do
       let!(:sixth_transition) { Fabricate :demand_transition, demand: demand, stage: stage, last_time_in: 1.day.ago, last_time_out: nil }
       let!(:seventh_transition) { Fabricate :demand_transition, demand: demand, stage: other_stage, last_time_in: Time.zone.now, last_time_out: Time.zone.tomorrow }
 
-      it { expect(StagesRepository.instance.qty_hits_by_weekday(stage, :last_time_in)).to eq(0.0 => 2, 1.0 => 3, 2.0 => 1) }
-      it { expect(StagesRepository.instance.qty_hits_by_weekday(stage, :last_time_out)).to eq(1.0 => 2, 2.0 => 2, 3.0 => 1) }
+      it { expect(described_class.instance.qty_hits_by_weekday(stage, :last_time_in)).to eq(0.0 => 2, 1.0 => 3, 2.0 => 1) }
+      it { expect(described_class.instance.qty_hits_by_weekday(stage, :last_time_out)).to eq(1.0 => 2, 2.0 => 2, 3.0 => 1) }
     end
 
     context 'having no transitions' do
-      it { expect(StagesRepository.instance.qty_hits_by_weekday(stage, :last_time_in)).to eq({}) }
-      it { expect(StagesRepository.instance.qty_hits_by_weekday(stage, :last_time_out)).to eq({}) }
+      it { expect(described_class.instance.qty_hits_by_weekday(stage, :last_time_in)).to eq({}) }
+      it { expect(described_class.instance.qty_hits_by_weekday(stage, :last_time_out)).to eq({}) }
     end
   end
 
@@ -53,13 +53,13 @@ RSpec.describe StagesRepository, type: :repository do
       let!(:sixth_transition) { Fabricate :demand_transition, demand: demand, stage: stage, last_time_in: 1.day.ago, last_time_out: nil }
       let!(:seventh_transition) { Fabricate :demand_transition, demand: demand, stage: other_stage, last_time_in: Time.zone.now, last_time_out: Time.zone.tomorrow }
 
-      it { expect(StagesRepository.instance.qty_hits_by_day(stage, :last_time_in)).to eq(27.0 => 2, 28.0 => 3, 29.0 => 1) }
-      it { expect(StagesRepository.instance.qty_hits_by_day(stage, :last_time_out)).to eq(28.0 => 2, 29.0 => 2, 30.0 => 1) }
+      it { expect(described_class.instance.qty_hits_by_day(stage, :last_time_in)).to eq(27.0 => 2, 28.0 => 3, 29.0 => 1) }
+      it { expect(described_class.instance.qty_hits_by_day(stage, :last_time_out)).to eq(28.0 => 2, 29.0 => 2, 30.0 => 1) }
     end
 
     context 'having no transitions' do
-      it { expect(StagesRepository.instance.qty_hits_by_day(stage, :last_time_in)).to eq({}) }
-      it { expect(StagesRepository.instance.qty_hits_by_day(stage, :last_time_out)).to eq({}) }
+      it { expect(described_class.instance.qty_hits_by_day(stage, :last_time_in)).to eq({}) }
+      it { expect(described_class.instance.qty_hits_by_day(stage, :last_time_out)).to eq({}) }
     end
   end
 
@@ -81,13 +81,13 @@ RSpec.describe StagesRepository, type: :repository do
       let!(:sixth_transition) { Fabricate :demand_transition, demand: demand, stage: stage, last_time_in: 1.hour.ago, last_time_out: nil }
       let!(:seventh_transition) { Fabricate :demand_transition, demand: demand, stage: other_stage, last_time_in: Time.zone.now, last_time_out: Time.zone.tomorrow }
 
-      it { expect(StagesRepository.instance.qty_hits_by_hour(stage, :last_time_in)).to eq(19.0 => 2, 20.0 => 3, 21.0 => 1) }
-      it { expect(StagesRepository.instance.qty_hits_by_hour(stage, :last_time_out)).to eq(3.0 => 1, 20.0 => 4) }
+      it { expect(described_class.instance.qty_hits_by_hour(stage, :last_time_in)).to eq(19.0 => 2, 20.0 => 3, 21.0 => 1) }
+      it { expect(described_class.instance.qty_hits_by_hour(stage, :last_time_out)).to eq(3.0 => 1, 20.0 => 4) }
     end
 
     context 'having no transitions' do
-      it { expect(StagesRepository.instance.qty_hits_by_hour(stage, :last_time_in)).to eq({}) }
-      it { expect(StagesRepository.instance.qty_hits_by_hour(stage, :last_time_out)).to eq({}) }
+      it { expect(described_class.instance.qty_hits_by_hour(stage, :last_time_in)).to eq({}) }
+      it { expect(described_class.instance.qty_hits_by_hour(stage, :last_time_out)).to eq({}) }
     end
   end
 
@@ -108,11 +108,11 @@ RSpec.describe StagesRepository, type: :repository do
       let!(:fifth_transition) { Fabricate :demand_transition, demand: other_demand, stage: stage, last_time_in: 1.month.ago, last_time_out: nil }
       let!(:sixth_transition) { Fabricate :demand_transition, demand: demand, stage: other_stage, last_time_in: Time.zone.yesterday, last_time_out: 1.hour.ago }
 
-      it { expect(StagesRepository.instance.average_seconds_in_stage_per_month(stage)).to eq([[2018.0, 3.0, 1_814_400.0], [2018.0, 4.0, 432_000.0], [2018.0, 5.0, 149_100.0]]) }
+      it { expect(described_class.instance.average_seconds_in_stage_per_month(stage)).to eq([[2018.0, 3.0, 1_814_400.0], [2018.0, 4.0, 432_000.0], [2018.0, 5.0, 149_100.0]]) }
     end
 
     context 'having no transitions' do
-      it { expect(StagesRepository.instance.average_seconds_in_stage_per_month(stage)).to eq [] }
+      it { expect(described_class.instance.average_seconds_in_stage_per_month(stage)).to eq [] }
     end
   end
 
@@ -122,7 +122,7 @@ RSpec.describe StagesRepository, type: :repository do
 
     it 'saves the stage and adds team projects' do
       stage_params = { team_id: team.id }
-      saved_stage = StagesRepository.instance.save_stage(stage, stage_params)
+      saved_stage = described_class.instance.save_stage(stage, stage_params)
       expect(saved_stage.projects.map(&:id)).to match_array [new_project.id, project.id]
     end
   end

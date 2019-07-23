@@ -109,19 +109,19 @@ RSpec.describe Project, type: :model do
     let!(:sixth_project) { Fabricate :project, status: :finished, end_date: Time.zone.today }
 
     describe '.waiting_projects_starting_within_week' do
-      it { expect(Project.waiting_projects_starting_within_week).to match_array [first_project, second_project] }
+      it { expect(described_class.waiting_projects_starting_within_week).to match_array [first_project, second_project] }
     end
 
     describe '.running_projects_finishing_within_week' do
-      it { expect(Project.running_projects_finishing_within_week).to match_array [third_project, fourth_project] }
+      it { expect(described_class.running_projects_finishing_within_week).to match_array [third_project, fourth_project] }
     end
 
     describe '.running' do
-      it { expect(Project.running).to match_array [third_project, fourth_project] }
+      it { expect(described_class.running).to match_array [third_project, fourth_project] }
     end
 
     describe '.active' do
-      it { expect(Project.active).to match_array [first_project, second_project, third_project, fourth_project] }
+      it { expect(described_class.active).to match_array [first_project, second_project, third_project, fourth_project] }
     end
   end
 

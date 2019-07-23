@@ -23,7 +23,7 @@ RSpec.describe TeamMember, type: :model do
       let(:other_active) { Fabricate :team_member, active: true }
       let(:inactive) { Fabricate :team_member, active: false }
 
-      it { expect(TeamMember.active).to match_array [active, other_active] }
+      it { expect(described_class.active).to match_array [active, other_active] }
     end
   end
 end

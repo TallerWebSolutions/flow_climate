@@ -3,8 +3,8 @@
 RSpec.describe CompaniesBulletimJob, type: :active_job do
   describe '.perform_later' do
     it 'enqueues after calling perform_later' do
-      CompaniesBulletimJob.perform_later
-      expect(CompaniesBulletimJob).to have_been_enqueued.on_queue('default')
+      described_class.perform_later
+      expect(described_class).to have_been_enqueued.on_queue('default')
     end
   end
 
@@ -24,7 +24,7 @@ RSpec.describe CompaniesBulletimJob, type: :active_job do
     it 'calls the mailer to send the data' do
       allow(Time.zone).to receive(:today).and_return Time.zone.today.beginning_of_week + 1.day
       expect(UserNotifierMailer).to receive(:company_weekly_bulletin).with(company.users, company).once
-      CompaniesBulletimJob.perform_now
+      described_class.perform_now
     end
   end
 end

@@ -20,7 +20,7 @@ RSpec.describe DemandsList, type: :model do
       let!(:second_demand) { Fabricate :demand, project: project, end_date: Time.zone.now }
       let!(:third_demand) { Fabricate :demand, project: project, end_date: nil }
 
-      it { expect(DemandsList.finished.map(&:id)).to match_array [first_demand.id, second_demand.id] }
+      it { expect(described_class.finished.map(&:id)).to match_array [first_demand.id, second_demand.id] }
     end
 
     describe '.in_wip' do
@@ -28,7 +28,7 @@ RSpec.describe DemandsList, type: :model do
       let!(:second_demand) { Fabricate :demand, project: project, commitment_date: Time.zone.now, end_date: nil }
       let!(:third_demand) { Fabricate :demand, project: project, commitment_date: Time.zone.now, end_date: nil }
 
-      it { expect(DemandsList.in_wip.map(&:id)).to match_array [second_demand.id, third_demand.id] }
+      it { expect(described_class.in_wip.map(&:id)).to match_array [second_demand.id, third_demand.id] }
     end
 
     describe '.not_started' do
@@ -36,7 +36,7 @@ RSpec.describe DemandsList, type: :model do
       let!(:second_demand) { Fabricate :demand, project: project, commitment_date: Time.zone.now, end_date: nil }
       let!(:third_demand) { Fabricate :demand, project: project, commitment_date: nil, end_date: nil }
 
-      it { expect(DemandsList.not_started.map(&:id)).to match_array [third_demand.id] }
+      it { expect(described_class.not_started.map(&:id)).to match_array [third_demand.id] }
     end
 
     describe '.grouped_end_date_by_month' do
@@ -45,8 +45,8 @@ RSpec.describe DemandsList, type: :model do
       let!(:third_demand) { Fabricate :demand, commitment_date: Time.zone.now, end_date: 1.month.ago }
       let!(:fourth_demand) { Fabricate :demand, commitment_date: nil }
 
-      it { expect(DemandsList.grouped_end_date_by_month[[2.months.ago.to_date.cwyear, 2.months.ago.to_date.month]].map(&:id)).to match_array [first_demand.id, second_demand.id] }
-      it { expect(DemandsList.grouped_end_date_by_month[[1.month.ago.to_date.cwyear, 1.month.ago.to_date.month]].map(&:id)).to eq [third_demand.id] }
+      it { expect(described_class.grouped_end_date_by_month[[2.months.ago.to_date.cwyear, 2.months.ago.to_date.month]].map(&:id)).to match_array [first_demand.id, second_demand.id] }
+      it { expect(described_class.grouped_end_date_by_month[[1.month.ago.to_date.cwyear, 1.month.ago.to_date.month]].map(&:id)).to eq [third_demand.id] }
     end
 
     describe '.to_dates' do
@@ -55,7 +55,7 @@ RSpec.describe DemandsList, type: :model do
       let!(:third_demand) { Fabricate :demand, commitment_date: Time.zone.now, created_date: 2.months.ago, end_date: Time.zone.now }
       let!(:fourth_demand) { Fabricate :demand, commitment_date: nil, created_date: 4.months.ago, end_date: 1.day.from_now }
 
-      it { expect(DemandsList.to_dates(1.month.ago, Time.zone.now).map(&:id)).to match_array [second_demand.id, third_demand.id] }
+      it { expect(described_class.to_dates(1.month.ago, Time.zone.now).map(&:id)).to match_array [second_demand.id, third_demand.id] }
     end
 
     describe '.finished_with_leadtime' do
@@ -63,7 +63,7 @@ RSpec.describe DemandsList, type: :model do
       let!(:second_demand) { Fabricate :demand, project: project, end_date: Time.zone.now, leadtime: 3 }
       let!(:third_demand) { Fabricate :demand, project: project, commitment_date: nil, end_date: Time.zone.now }
 
-      it { expect(DemandsList.finished_with_leadtime.map(&:id)).to match_array [first_demand.id, second_demand.id] }
+      it { expect(described_class.finished_with_leadtime.map(&:id)).to match_array [first_demand.id, second_demand.id] }
     end
 
     describe '.with_effort' do
@@ -72,7 +72,7 @@ RSpec.describe DemandsList, type: :model do
         second_demand = Fabricate :demand, project: project, effort_downstream: 0, effort_upstream: 10
         Fabricate :demand, project: project, effort_downstream: 0, effort_upstream: 0
 
-        expect(DemandsList.with_effort.map(&:id)).to match_array [first_demand.id, second_demand.id]
+        expect(described_class.with_effort.map(&:id)).to match_array [first_demand.id, second_demand.id]
       end
     end
   end
@@ -84,7 +84,7 @@ RSpec.describe DemandsList, type: :model do
 
   describe '#leadtime_in_days' do
     context 'having leadtime' do
-      subject(:demands_list) { DemandsList.first }
+      subject(:demands_list) { described_class.first }
 
       let!(:demand) { Fabricate :demand }
 
@@ -92,7 +92,7 @@ RSpec.describe DemandsList, type: :model do
     end
 
     context 'having no leadtime' do
-      subject(:demands_list) { DemandsList.first }
+      subject(:demands_list) { described_class.first }
 
       let!(:demand) { Fabricate :demand, commitment_date: nil, end_date: nil, leadtime: nil }
 
@@ -101,7 +101,7 @@ RSpec.describe DemandsList, type: :model do
   end
 
   describe '#total_effort' do
-    subject(:demands_list) { DemandsList.first }
+    subject(:demands_list) { described_class.first }
 
     let!(:demand) { Fabricate :demand, effort_upstream: 10, effort_downstream: 20 }
 
