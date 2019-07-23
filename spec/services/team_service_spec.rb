@@ -37,4 +37,36 @@ RSpec.describe TeamService, type: :service do
       end
     end
   end
+
+  describe '#compute_average_demand_cost_to_team' do
+    let(:company) { Fabricate :company }
+    let!(:team) { Fabricate :team, company: company }
+
+    context 'with data' do
+      let!(:team_member) { Fabricate :team_member, active: true, billable_type: :outsourcing, billable: true, team: team, monthly_payment: 10_000, start_date: 1.month.ago, end_date: nil }
+      let!(:other_team_member) { Fabricate :team_member, active: true, billable_type: :outsourcing, billable: true, team: team, monthly_payment: 10_000, start_date: 2.months.ago, end_date: 1.month.ago }
+
+      let(:customer) { Fabricate :customer, company: company }
+
+      let!(:product) { Fabricate :product, customer: customer }
+      let(:first_project) { Fabricate :project, company: company, team: team, customers: [customer], project_type: :outsourcing, start_date: 1.month.ago, end_date: Time.zone.tomorrow }
+      let(:second_project) { Fabricate :project, company: company, team: team, customers: [customer], project_type: :outsourcing, start_date: 1.month.ago, end_date: Time.zone.tomorrow }
+
+      let!(:first_demand) { Fabricate :demand, project: first_project, end_date: 1.week.ago }
+      let!(:second_demand) { Fabricate :demand, project: first_project, end_date: 1.week.ago }
+      let!(:third_demand) { Fabricate :demand, project: first_project, end_date: Time.zone.now }
+
+      let!(:fourth_demand) { Fabricate :demand, project: second_project, end_date: 2.weeks.ago }
+      let!(:fifth_demand) { Fabricate :demand, project: second_project, end_date: nil }
+      let!(:sixth_demand) { Fabricate :demand, project: second_project, end_date: nil }
+
+      it 'returns the average demand cost informations in a hash' do
+        expect(described_class.instance.average_demand_cost_info_hash(team)).to eq(cmd_difference_to_avg_last_four_weeks: 14.285714285714285, current_week: 2500.0, four_weeks_cmd_average: 2187.5, last_week: 1250.0, team_name: team.name)
+      end
+    end
+
+    context 'without data' do
+      it { expect(described_class.instance.average_demand_cost_info_hash(team)).to eq(cmd_difference_to_avg_last_four_weeks: 0, current_week: 0, four_weeks_cmd_average: 0, last_week: 0, team_name: team.name) }
+    end
+  end
 end
