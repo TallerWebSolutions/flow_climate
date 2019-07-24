@@ -1,0 +1,3 @@
+<%= form_for portfolio_unit, url: company_product_portfolio_unit_path(company, product, portfolio_unit), method: :put, remote: true, class: 'form' do |f| %>
+  <%= render 'portfolio_units/form', f: f, portfolio_unit: portfolio_unit %>
+<% end %>

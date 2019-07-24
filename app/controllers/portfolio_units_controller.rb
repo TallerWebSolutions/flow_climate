@@ -3,7 +3,7 @@
 class PortfolioUnitsController < AuthenticatedController
   before_action :assign_company
   before_action :assign_product
-  before_action :assign_portfolio_unit, only: %i[show destroy]
+  before_action :assign_portfolio_unit, only: %i[show destroy edit update]
 
   def new
     @portfolio_unit = PortfolioUnit.new(product: @product)
@@ -33,6 +33,19 @@ class PortfolioUnitsController < AuthenticatedController
     @portfolio_data = Highchart::PortfolioChartsAdapter.new(@projects, @start_date, @end_date, '') if @projects.present?
     assign_filter_parameters_to_charts
     @demands_chart_adapter = Highchart::DemandsChartsAdapter.new(@demands, @start_date, @end_date, @period) if @demands.present?
+  end
+
+  def edit
+    @portfolio_units = @product.portfolio_units.order(:name) - [@portfolio_unit]
+  end
+
+  def update
+    @portfolio_unit.update(portfolio_unit_params)
+    flash[:error] = @portfolio_unit.errors.full_messages.join(', ') unless @portfolio_unit.valid?
+
+    @portfolio_units = @product.portfolio_units.order(:name) - [@portfolio_unit]
+
+    respond_to { |format| format.js { render 'portfolio_units/update' } }
   end
 
   private

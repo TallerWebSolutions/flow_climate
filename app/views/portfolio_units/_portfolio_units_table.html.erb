@@ -30,6 +30,9 @@
             <%= link_to company_product_portfolio_unit_path(company, product, unit), method: :delete, data: { confirm: I18n.t('general.destroy.confirm') }, remote: true do %>
               <i class="fa fa-times" aria-hidden="true"></i>
             <% end %>
+            <%= link_to edit_company_product_portfolio_unit_path(company, product, unit), remote: true do %>
+              <i class="fas fa-edit" aria-hidden="true"></i>
+            <% end %>
           </td>
         </tr>
       <% end %>

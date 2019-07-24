@@ -1,0 +1,34 @@
+<div class="row">
+  <div class="col-xs-3">
+    <div class="form-group">
+      <%= f.label :parent %>
+      <%= f.select :parent_id, options_for_select(@portfolio_units.map { |unit| [unit.name, unit.id] }, params['parent']), { include_blank: I18n.t('general.select') }, class: 'form-control filter-checks' %>
+    </div>
+  </div>
+
+  <div class='col-xs-3 form-group <%= 'has-error' if portfolio_unit.errors[:name].present? %>'>
+    <%= f.label :name, class: 'control-label required' %>
+    <%= f.text_field :name, class: 'form-control', value: portfolio_unit.name, autofocus: true %>
+    <span class="help-block"><%= portfolio_unit.errors[:name].join(', ') %></span>
+  </div>
+
+  <div class="col-xs-3">
+    <div class="form-group">
+      <%= f.label :portfolio_unit_type %>
+      <%= f.select :portfolio_unit_type, portfolio_unit_type_options(params['portfolio_unit_type']), {}, class: 'form-control filter-checks' %>
+    </div>
+  </div>
+
+  <%= f.fields_for :jira_portfolio_unit_config do |nested_fields| %>
+    <div class='col-xs-3 form-group'>
+      <%= nested_fields.label :jira_field_name, class: 'control-label' %>
+      <%= nested_fields.text_field :jira_field_name, class: 'form-control', value: portfolio_unit.jira_portfolio_unit_config.jira_field_name %>
+    </div>
+  <% end %>
+
+</div>
+<div class="row">
+  <div class="col-xs-12">
+    <%= f.submit I18n.t('general.buttons.save'), class: 'btn btn-success' %>
+  </div>
+</div>
