@@ -27,7 +27,7 @@
 #
 
 class FlowImpact < ApplicationRecord
-  enum impact_type: { other_team_dependency: 0, api_not_ready: 1, customer_not_available: 2 }
+  enum impact_type: { other_team_dependency: 0, api_not_ready: 1, customer_not_available: 2, other_demand_dependency: 3, fixes_out_of_scope: 4 }
 
   belongs_to :project
   belongs_to :demand

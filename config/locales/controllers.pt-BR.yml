@@ -879,6 +879,7 @@ pt-BR:
       tooltip: "Excluir Impacto"
     create:
       success: "Impacto de fluxo criado."
+      error: "Problemas foram encontrados para salvar o Impacto"
   jira_accounts:
     new:
       title: "Nova Conta do Jira"

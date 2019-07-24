@@ -8,6 +8,10 @@ Rails.application.routes.draw do
       resources :teams, only: [] do
         get :average_demand_cost, on: :member
       end
+
+      resources :projects, only: [] do
+        resources :flow_impacts, only: :create
+      end
     end
   end
 

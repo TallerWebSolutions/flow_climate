@@ -892,6 +892,7 @@ en:
       tooltip: "Delete Impact"
     create:
       success: "Flow impact created."
+      error: "Problems were found while creating the Flow Impact"
   jira_accounts:
     new:
       title: "New Jira Account"

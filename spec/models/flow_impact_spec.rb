@@ -2,7 +2,7 @@
 
 RSpec.describe FlowImpact, type: :model do
   context 'enums' do
-    it { is_expected.to define_enum_for(:impact_type).with_values(other_team_dependency: 0, api_not_ready: 1, customer_not_available: 2) }
+    it { is_expected.to define_enum_for(:impact_type).with_values(other_team_dependency: 0, api_not_ready: 1, customer_not_available: 2, other_demand_dependency: 3, fixes_out_of_scope: 4) }
   end
 
   context 'associations' do
