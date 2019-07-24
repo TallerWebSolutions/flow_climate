@@ -2,7 +2,7 @@
   <div class="col-xs-3">
     <div class="form-group">
       <%= f.label :parent %>
-      <%= f.select :parent_id, options_for_select(@portfolio_units.map { |unit| [unit.name, unit.id] }, params['parent']), { include_blank: I18n.t('general.select') }, class: 'form-control filter-checks' %>
+      <%= f.select :parent_id, options_for_select(parent_portfolio_units.map { |unit| [unit.name, unit.id] }, params['parent']), { include_blank: I18n.t('general.select') }, class: 'form-control filter-checks' %>
     </div>
   </div>
 
@@ -25,10 +25,11 @@
       <%= nested_fields.text_field :jira_field_name, class: 'form-control', value: portfolio_unit.jira_portfolio_unit_config.jira_field_name %>
     </div>
   <% end %>
-
 </div>
+
 <div class="row">
   <div class="col-xs-12">
     <%= f.submit I18n.t('general.buttons.save'), class: 'btn btn-success' %>
+    <%= link_to I18n.t('general.buttons.cancel'), '#', class: 'btn btn-danger', id: 'cancel-form-portfolio-unit' %>
   </div>
 </div>

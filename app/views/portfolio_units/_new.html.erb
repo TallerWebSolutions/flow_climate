@@ -1,3 +1,3 @@
 <%= form_for [company, product, portfolio_unit], url: company_product_portfolio_units_url(company, product, portfolio_unit), remote: true, class: 'form' do |f| %>
-  <%= render 'portfolio_units/form', f: f, portfolio_unit: portfolio_unit %>
+  <%= render 'portfolio_units/form', f: f, portfolio_unit: portfolio_unit, parent_portfolio_units: parent_portfolio_units %>
 <% end %>

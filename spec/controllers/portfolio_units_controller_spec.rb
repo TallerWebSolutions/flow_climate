@@ -63,6 +63,7 @@ RSpec.describe PortfolioUnitsController, type: :controller do
           expect(assigns(:product)).to eq product
           expect(assigns(:portfolio_unit)).to be_a_new PortfolioUnit
           expect(assigns(:portfolio_units)).to eq [other_portfolio_unit, portfolio_unit]
+          expect(assigns(:parent_portfolio_units)).to eq [other_portfolio_unit, portfolio_unit]
           expect(response).to render_template 'portfolio_units/new'
         end
       end
@@ -112,6 +113,7 @@ RSpec.describe PortfolioUnitsController, type: :controller do
           created_jira_config = Jira::JiraPortfolioUnitConfig.last
           expect(created_jira_config.jira_field_name).to eq 'foo'
           expect(assigns(:portfolio_units)).to eq [created_unit, portfolio_unit]
+          expect(assigns(:parent_portfolio_units)).to be_nil
 
           expect(response).to render_template 'portfolio_units/create'
         end
@@ -268,7 +270,8 @@ RSpec.describe PortfolioUnitsController, type: :controller do
           expect(assigns(:company)).to eq company
           expect(assigns(:product)).to eq product
           expect(assigns(:portfolio_unit)).to eq portfolio_unit
-          expect(assigns(:portfolio_units)).to eq [other_portfolio_unit]
+          expect(assigns(:portfolio_units)).to eq [other_portfolio_unit, portfolio_unit]
+          expect(assigns(:parent_portfolio_units)).to eq [other_portfolio_unit]
           expect(response).to render_template 'portfolio_units/edit'
         end
       end
@@ -324,7 +327,8 @@ RSpec.describe PortfolioUnitsController, type: :controller do
 
           updated_jira_config = Jira::JiraPortfolioUnitConfig.last
           expect(updated_jira_config.jira_field_name).to eq 'foo'
-          expect(assigns(:portfolio_units)).to eq [parent_portfolio_unit]
+          expect(assigns(:portfolio_units)).to eq [parent_portfolio_unit, portfolio_unit]
+          expect(assigns(:parent_portfolio_units)).to be_nil
 
           expect(response).to render_template 'portfolio_units/update'
         end
@@ -334,6 +338,9 @@ RSpec.describe PortfolioUnitsController, type: :controller do
         context 'parameters' do
           it 'adds errors to the model and to flash' do
             put :update, params: { company_id: company, product_id: product, id: portfolio_unit, portfolio_unit: { name: '', portfolio_unit_type: nil, jira_portfolio_unit_config_attributes: { jira_field_name: '' } } }, xhr: true
+
+            expect(assigns(:portfolio_units)).to eq [parent_portfolio_unit, portfolio_unit]
+            expect(assigns(:parent_portfolio_units)).to eq [parent_portfolio_unit]
 
             expect(assigns(:portfolio_unit).errors.full_messages).to eq ['Tipo da Unidade não pode ficar em branco', 'Nome não pode ficar em branco']
             expect(flash[:error]).to eq 'Tipo da Unidade não pode ficar em branco, Nome não pode ficar em branco'
