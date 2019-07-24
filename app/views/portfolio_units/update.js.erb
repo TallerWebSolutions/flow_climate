@@ -1,7 +1,7 @@
 var portfolioUnitsTable = $('#portfolio-units-table');
 
 <% if flash[:error].present? %>
-  portfolioUnitsTable.html("<%= escape_javascript(render('portfolio_units/new', company: @company, product: @product, portfolio_unit: @portfolio_unit, parent_portfolio_units: @parent_portfolio_units)) %>")
+  portfolioUnitsTable.html("<%= escape_javascript(render('portfolio_units/edit', company: @company, product: @product, portfolio_unit: @portfolio_unit, parent_portfolio_units: @parent_portfolio_units)) %>")
 <% else %>
   portfolioUnitsTable.html("<%= escape_javascript(render('portfolio_units/portfolio_units_table', company: @company, product: @product, portfolio_units: @portfolio_units)) %>")
 <% end %>
