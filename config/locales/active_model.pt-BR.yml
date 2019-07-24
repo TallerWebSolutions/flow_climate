@@ -384,6 +384,8 @@ pt-BR:
             other_team_dependency: Dependência de outro time
             api_not_ready: API não está pronta
             customer_not_available: Cliente indisponível
+            other_demand_dependency: Dependência de outra demanda
+            fixes_out_of_scope: Ajustes fora do escopo
       demand_comment:
         demand: Demanda
         team_member: Comentado por

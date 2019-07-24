@@ -14,7 +14,7 @@
       <tr>
         <td><%= I18n.t("activerecord.attributes.flow_impact.enums.impact_type.#{flow_impact.impact_type}") %></td>
         <td><%= flow_impact.demand&.demand_id %></td>
-        <td><%= I18n.l(flow_impact.start_date) %></td>flow_impacts_controller_spec.rb:86
+        <td><%= I18n.l(flow_impact.start_date) %></td>
         <td><%= I18n.l(flow_impact.end_date) if flow_impact.end_date.present? %></td>
         <td><%= flow_impact.impact_description %></td>
         <td>
