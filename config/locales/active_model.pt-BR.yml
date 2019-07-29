@@ -337,6 +337,8 @@ pt-BR:
             customer_low_urgency: Urgência Baixa do Cliente
             integration_needed: Integração Necessária
             customer_unavailable: Cliente Indisponível
+            other_demand_dependency: Dependência de Outra Demanda
+            external_dependency: Dependência Externa
       project_change_deadline_history:
         project: Projeto
         user: Usuário
