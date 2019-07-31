@@ -9,26 +9,28 @@ RSpec.describe DemandsRepository, type: :repository do
   let(:customer) { Fabricate :customer, company: company }
   let(:other_customer) { Fabricate :customer }
 
+  let(:team) { Fabricate :team, company: company }
+
   let(:product) { Fabricate :product, customer: customer }
   let(:other_product) { Fabricate :product, customer: customer }
 
-  let(:first_project) { Fabricate :project, company: company, customers: [customer], products: [product, other_product], start_date: 4.weeks.ago }
-  let(:second_project) { Fabricate :project, company: company, customers: [customer], products: [product, other_product], start_date: 3.weeks.ago }
-  let(:third_project) { Fabricate :project, customers: [other_customer], products: [product, other_product], end_date: 1.week.from_now }
-  let(:fourth_project) { Fabricate :project, company: company, customers: [customer], products: [product, other_product], end_date: 1.week.from_now }
+  let(:first_project) { Fabricate :project, company: company, customers: [customer], products: [product, other_product], team: team, start_date: 4.weeks.ago }
+  let(:second_project) { Fabricate :project, company: company, customers: [customer], products: [product, other_product], team: team, start_date: 3.weeks.ago }
+  let(:third_project) { Fabricate :project, customers: [other_customer], products: [product, other_product], team: team, end_date: 1.week.from_now }
+  let(:fourth_project) { Fabricate :project, company: company, customers: [customer], products: [product, other_product], team: team, end_date: 1.week.from_now }
 
   describe '#known_scope_to_date' do
-    let!(:first_demand) { Fabricate :demand, project: first_project, created_date: 3.days.ago, discarded_at: nil }
-    let!(:second_demand) { Fabricate :demand, project: first_project, created_date: 2.days.ago, discarded_at: nil }
-    let!(:third_demand) { Fabricate :demand, project: first_project, created_date: 2.days.ago, discarded_at: nil }
-    let!(:fourth_demand) { Fabricate :demand, project: first_project, created_date: 1.day.ago, discarded_at: nil }
+    let!(:first_demand) { Fabricate :demand, project: first_project, team: team, created_date: 3.days.ago, discarded_at: nil }
+    let!(:second_demand) { Fabricate :demand, project: first_project, team: team, created_date: 2.days.ago, discarded_at: nil }
+    let!(:third_demand) { Fabricate :demand, project: first_project, team: team, created_date: 2.days.ago, discarded_at: nil }
+    let!(:fourth_demand) { Fabricate :demand, project: first_project, team: team, created_date: 1.day.ago, discarded_at: nil }
 
-    let!(:fifth_demand) { Fabricate :demand, project: first_project, created_date: 2.days.ago, discarded_at: 3.days.ago }
-    let!(:sixth_demand) { Fabricate :demand, project: first_project, created_date: 2.days.ago, discarded_at: 2.days.ago }
-    let!(:seventh_demand) { Fabricate :demand, project: first_project, created_date: 3.days.ago, discarded_at: Time.zone.now }
+    let!(:fifth_demand) { Fabricate :demand, project: first_project, team: team, created_date: 2.days.ago, discarded_at: 3.days.ago }
+    let!(:sixth_demand) { Fabricate :demand, project: first_project, team: team, created_date: 2.days.ago, discarded_at: 2.days.ago }
+    let!(:seventh_demand) { Fabricate :demand, project: first_project, team: team, created_date: 3.days.ago, discarded_at: Time.zone.now }
 
-    let!(:eigth_demand) { Fabricate :demand, project: second_project, created_date: 4.days.ago, discarded_at: nil }
-    let!(:nineth_demand) { Fabricate :demand, project: third_project, created_date: 4.days.ago, discarded_at: nil }
+    let!(:eigth_demand) { Fabricate :demand, project: second_project, team: team, created_date: 4.days.ago, discarded_at: nil }
+    let!(:nineth_demand) { Fabricate :demand, project: third_project, team: team, created_date: 4.days.ago, discarded_at: nil }
 
     let!(:first_epic) { Fabricate :demand, project: first_project, artifact_type: :epic }
 
@@ -110,21 +112,21 @@ RSpec.describe DemandsRepository, type: :repository do
 
   describe '#throughput_to_products_and_period' do
     context 'with data' do
-      let!(:first_demand) { Fabricate :demand, project: first_project, product: product, end_date: 3.weeks.ago }
-      let!(:second_demand) { Fabricate :demand, project: first_project, product: product, end_date: 2.weeks.ago }
-      let!(:third_demand) { Fabricate :demand, project: first_project, product: other_product, end_date: 1.week.ago }
-      let!(:fourth_demand) { Fabricate :demand, project: first_project, product: product, end_date: 1.week.ago }
-      let!(:fifth_demand) { Fabricate :demand, project: second_project, product: product, end_date: 1.week.ago }
+      let!(:first_demand) { Fabricate :demand, project: first_project, product: product, team: team, end_date: 3.weeks.ago }
+      let!(:second_demand) { Fabricate :demand, project: first_project, product: product, team: team, end_date: 2.weeks.ago }
+      let!(:third_demand) { Fabricate :demand, project: first_project, product: other_product, team: team, end_date: 1.week.ago }
+      let!(:fourth_demand) { Fabricate :demand, project: first_project, product: product, team: team, end_date: 1.week.ago }
+      let!(:fifth_demand) { Fabricate :demand, project: second_project, product: product, team: team, end_date: 1.week.ago }
 
-      let!(:sixth_demand) { Fabricate :demand, end_date: 1.week.ago, discarded_at: Time.zone.today }
+      let!(:sixth_demand) { Fabricate :demand, end_date: 1.week.ago, team: team, discarded_at: Time.zone.today }
 
-      let!(:first_epic) { Fabricate :demand, project: first_project, product: product, artifact_type: :epic }
+      let!(:first_epic) { Fabricate :demand, project: first_project, product: product, team: team, artifact_type: :epic }
 
-      it { expect(described_class.instance.throughput_to_products_and_period(Product.all, 1.week.ago.beginning_of_week, 1.week.ago.end_of_week)).to match_array [third_demand, fourth_demand, fifth_demand] }
+      it { expect(described_class.instance.throughput_to_products_and_period(Product.all, first_project.team, 1.week.ago.beginning_of_week, 1.week.ago.end_of_week)).to match_array [third_demand, fourth_demand, fifth_demand] }
     end
 
     context 'with no data' do
-      it { expect(described_class.instance.throughput_to_products_and_period(Product.all, 1.week.ago.beginning_of_week, 1.week.ago.end_of_week)).to eq [] }
+      it { expect(described_class.instance.throughput_to_products_and_period(Product.all, first_project.team, 1.week.ago.beginning_of_week, 1.week.ago.end_of_week)).to eq [] }
     end
   end
 

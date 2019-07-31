@@ -23,7 +23,7 @@ class ProjectConsolidationJob < ApplicationJob
           projects_in_products = project.products.map(&:projects).flatten.uniq
           start_date_to_product = projects_in_products.map(&:start_date).min || project.start_date
 
-          products_throughput_data_per_week = DemandsRepository.instance.throughput_to_products_and_period(project.products, start_date_to_product, end_of_week).group('EXTRACT(WEEK FROM end_date)', 'EXTRACT(YEAR FROM end_date)').count
+          products_throughput_data_per_week = DemandsRepository.instance.throughput_to_products_and_period(project.products, project.team, start_date_to_product, end_of_week).group('EXTRACT(WEEK FROM end_date)', 'EXTRACT(YEAR FROM end_date)').count
           product_throughput_data = DemandInfoDataBuilder.instance.build_data_from_hash_per_week(products_throughput_data_per_week, projects_in_products.map(&:start_date).min, end_of_week)
 
           projects_dates_intervals = projects_in_products.map { |project| [project.start_date, project.end_date] }

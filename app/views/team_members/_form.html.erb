@@ -53,17 +53,18 @@
       <span class="help-block"><%= team_member.errors[:hours_per_month].join(', ') %></span>
     </div>
     <div class='col-xs-6 form-check bottom-spaced-component'>
-      <%= f.check_box :active, class: 'form-check-input', checked: true %>
+      <%= f.check_box :active, class: 'form-check-input', checked: team_member.active? %>
       <%= f.label :active, class: 'form-check-label' %>
     </div>
     <div class='col-xs-6 form-check bottom-spaced-component'>
-      <%= f.check_box :billable, class: 'form-check-input', checked: true %>
+      <%= f.check_box :billable, class: 'form-check-input', checked: team_member.billable? %>
       <%= f.label :billable, class: 'form-check-label' %>
     </div>
   </div>
   <div class="row">
     <div class="col-xs-12">
       <%= f.submit class: 'btn btn-success' %>
+      <%= link_to I18n.t('general.buttons.cancel'), company_team_path(company, team), class: 'btn btn-danger' %>
     </div>
   </div>
 </div>
