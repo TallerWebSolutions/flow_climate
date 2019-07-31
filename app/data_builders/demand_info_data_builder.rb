@@ -6,6 +6,8 @@ class DemandInfoDataBuilder
   def build_data_from_hash_per_week(info_grouped_by_date_hash, start_date, end_date)
     data_grouped_hash = {}
 
+    return data_grouped_hash if start_date.blank? || end_date.blank?
+
     (start_date..end_date).each do |date|
       data_grouped_hash[date.beginning_of_week] = info_grouped_by_date_hash[[date.to_date.cweek.to_f, date.to_date.cwyear.to_f]] || 0
     end

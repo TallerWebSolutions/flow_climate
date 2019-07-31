@@ -8,7 +8,7 @@ RSpec.describe Stats::StatisticsService, type: :service do
   describe '#percentile' do
     let(:empty_population) { [] }
 
-    context 'having no nil value in the population' do
+    context 'with no nil value in the population' do
       let(:population) { [2, 4, 10, 56, 5, 4, 4, 89, 2] }
 
       it 'computes the values' do
@@ -21,7 +21,7 @@ RSpec.describe Stats::StatisticsService, type: :service do
       end
     end
 
-    context 'having nil values in the population' do
+    context 'with nil values in the population' do
       let(:population) { [2, 4, nil, 10, 56, 5, nil, 4, 4, 89, 2] }
 
       it 'computes the values after nil removal' do
@@ -44,7 +44,7 @@ RSpec.describe Stats::StatisticsService, type: :service do
   end
 
   describe '#run_montecarlo' do
-    context 'having data' do
+    context 'with data' do
       context 'with some throughput' do
         subject(:monte_carlo_durations_data) { described_class.instance.run_montecarlo(30, [10, 15, 12, 15], 100) }
 
@@ -53,7 +53,7 @@ RSpec.describe Stats::StatisticsService, type: :service do
         end
       end
 
-      context 'having no throughput' do
+      context 'with no throughput' do
         subject(:monte_carlo_durations_data) { described_class.instance.run_montecarlo(30, [0, 0, 0, 0], 100) }
 
         it 'returns an empty array' do
@@ -62,7 +62,7 @@ RSpec.describe Stats::StatisticsService, type: :service do
       end
     end
 
-    context 'having no data' do
+    context 'with no data' do
       subject(:monte_carlo_durations_data) { described_class.instance.run_montecarlo(0, [], 5) }
 
       it 'returns an empty array' do
@@ -104,35 +104,46 @@ RSpec.describe Stats::StatisticsService, type: :service do
   end
 
   describe '#standard_deviation' do
-    context 'having two or more units in the population' do
+    context 'with two or more units in the population' do
       it { expect(described_class.instance.standard_deviation([10, 30])).to eq 14.142135623730951 }
     end
 
-    context 'having one unit in the population' do
+    context 'with one unit in the population' do
       it { expect(described_class.instance.standard_deviation([10])).to eq 0 }
     end
   end
 
   describe '#mode' do
-    context 'having data in the population' do
+    context 'with data' do
       it { expect(described_class.instance.mode([10, 30, 10])).to eq 10 }
     end
 
-    context 'having no data in the population' do
+    context 'with no data' do
       it { expect(described_class.instance.mode([])).to eq nil }
     end
   end
 
+  describe '#population_average' do
+    context 'with data' do
+      it { expect(described_class.instance.population_average([10, 30, 10, 18, 21, 15])).to eq 17.333333333333332 }
+      it { expect(described_class.instance.population_average([10, 30, 10, 18, 21, 15], 3)).to eq 18 }
+    end
+
+    context 'with no data' do
+      it { expect(described_class.instance.population_average([])).to eq 0 }
+    end
+  end
+
   describe '#tail_events_boundary' do
-    context 'having two or more units in the population' do
+    context 'with two or more units in the population' do
       it { expect(described_class.instance.tail_events_boundary([10, 30, 20, 5, 100])).to eq 187.66091943344964 }
     end
 
-    context 'having one unit in the population' do
+    context 'with one unit in the population' do
       it { expect(described_class.instance.tail_events_boundary([10])).to eq 10.0 }
     end
 
-    context 'having nothing in the population' do
+    context 'with nothing in the population' do
       it { expect(described_class.instance.tail_events_boundary([])).to eq 0 }
     end
   end

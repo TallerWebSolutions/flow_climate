@@ -9,10 +9,13 @@ RSpec.describe DemandsRepository, type: :repository do
   let(:customer) { Fabricate :customer, company: company }
   let(:other_customer) { Fabricate :customer }
 
-  let(:first_project) { Fabricate :project, company: company, customers: [customer], start_date: 4.weeks.ago }
-  let(:second_project) { Fabricate :project, company: company, customers: [customer], start_date: 3.weeks.ago }
-  let(:third_project) { Fabricate :project, customers: [other_customer], end_date: 1.week.from_now }
-  let(:fourth_project) { Fabricate :project, company: company, customers: [customer], end_date: 1.week.from_now }
+  let(:product) { Fabricate :product, customer: customer }
+  let(:other_product) { Fabricate :product, customer: customer }
+
+  let(:first_project) { Fabricate :project, company: company, customers: [customer], products: [product, other_product], start_date: 4.weeks.ago }
+  let(:second_project) { Fabricate :project, company: company, customers: [customer], products: [product, other_product], start_date: 3.weeks.ago }
+  let(:third_project) { Fabricate :project, customers: [other_customer], products: [product, other_product], end_date: 1.week.from_now }
+  let(:fourth_project) { Fabricate :project, company: company, customers: [customer], products: [product, other_product], end_date: 1.week.from_now }
 
   describe '#known_scope_to_date' do
     let!(:first_demand) { Fabricate :demand, project: first_project, created_date: 3.days.ago, discarded_at: nil }
@@ -49,7 +52,7 @@ RSpec.describe DemandsRepository, type: :repository do
   end
 
   describe '#committed_demands_by_project_and_week' do
-    context 'having data' do
+    context 'with data' do
       let!(:first_demand) { Fabricate :demand, project: first_project, commitment_date: 3.weeks.ago }
       let!(:second_demand) { Fabricate :demand, project: first_project, commitment_date: 2.weeks.ago }
       let!(:third_demand) { Fabricate :demand, project: first_project, commitment_date: 1.week.ago }
@@ -62,13 +65,13 @@ RSpec.describe DemandsRepository, type: :repository do
       it { expect(described_class.instance.committed_demands_by_project_and_week(Project.all, 1.week.ago.to_date.cweek, 1.week.ago.to_date.cwyear)).to match_array [third_demand, fourth_demand, fifth_demand] }
     end
 
-    context 'having no data' do
+    context 'with no data' do
       it { expect(described_class.instance.committed_demands_by_project_and_week(Project.all, 1.week.ago.to_date.cweek, 1.week.ago.to_date.cwyear)).to eq [] }
     end
   end
 
   describe '#created_to_projects_and_period' do
-    context 'having data' do
+    context 'with data' do
       let!(:first_demand) { Fabricate :demand, project: first_project, created_date: 3.weeks.ago }
       let!(:second_demand) { Fabricate :demand, project: first_project, created_date: 2.weeks.ago }
       let!(:third_demand) { Fabricate :demand, project: first_project, created_date: 1.week.ago }
@@ -81,13 +84,13 @@ RSpec.describe DemandsRepository, type: :repository do
       it { expect(described_class.instance.created_to_projects_and_period(Project.all, 1.week.ago.beginning_of_week, 1.week.ago.end_of_week)).to match_array [third_demand, fourth_demand, fifth_demand] }
     end
 
-    context 'having no data' do
+    context 'with no data' do
       it { expect(described_class.instance.created_to_projects_and_period(Project.all, 1.week.ago.beginning_of_week, 1.week.ago.end_of_week)).to eq [] }
     end
   end
 
   describe '#throughput_to_projects_and_period' do
-    context 'having data' do
+    context 'with data' do
       let!(:first_demand) { Fabricate :demand, project: first_project, end_date: 3.weeks.ago }
       let!(:second_demand) { Fabricate :demand, project: first_project, end_date: 2.weeks.ago }
       let!(:third_demand) { Fabricate :demand, project: first_project, end_date: 1.week.ago }
@@ -100,15 +103,35 @@ RSpec.describe DemandsRepository, type: :repository do
       it { expect(described_class.instance.throughput_to_projects_and_period(Project.all, 1.week.ago.beginning_of_week, 1.week.ago.end_of_week)).to match_array [third_demand, fourth_demand, fifth_demand] }
     end
 
-    context 'having no data' do
+    context 'with no data' do
       it { expect(described_class.instance.throughput_to_projects_and_period(Project.all, 1.week.ago.beginning_of_week, 1.week.ago.end_of_week)).to eq [] }
+    end
+  end
+
+  describe '#throughput_to_products_and_period' do
+    context 'with data' do
+      let!(:first_demand) { Fabricate :demand, project: first_project, product: product, end_date: 3.weeks.ago }
+      let!(:second_demand) { Fabricate :demand, project: first_project, product: product, end_date: 2.weeks.ago }
+      let!(:third_demand) { Fabricate :demand, project: first_project, product: other_product, end_date: 1.week.ago }
+      let!(:fourth_demand) { Fabricate :demand, project: first_project, product: product, end_date: 1.week.ago }
+      let!(:fifth_demand) { Fabricate :demand, project: second_project, product: product, end_date: 1.week.ago }
+
+      let!(:sixth_demand) { Fabricate :demand, end_date: 1.week.ago, discarded_at: Time.zone.today }
+
+      let!(:first_epic) { Fabricate :demand, project: first_project, product: product, artifact_type: :epic }
+
+      it { expect(described_class.instance.throughput_to_products_and_period(Product.all, 1.week.ago.beginning_of_week, 1.week.ago.end_of_week)).to match_array [third_demand, fourth_demand, fifth_demand] }
+    end
+
+    context 'with no data' do
+      it { expect(described_class.instance.throughput_to_products_and_period(Product.all, 1.week.ago.beginning_of_week, 1.week.ago.end_of_week)).to eq [] }
     end
   end
 
   describe '#effort_upstream_grouped_by_month' do
     let(:project) { Fabricate :project, start_date: 2.months.ago, end_date: 2.months.from_now }
 
-    context 'having demands' do
+    context 'with demands' do
       let!(:first_demand) { Fabricate :demand, project: project, commitment_date: 60.days.ago, end_date: 57.days.ago, effort_upstream: 10, effort_downstream: 5 }
       let!(:second_demand) { Fabricate :demand, project: project, commitment_date: 58.days.ago, end_date: 55.days.ago, effort_upstream: 12, effort_downstream: 20 }
       let!(:third_demand) { Fabricate :demand, project: project, commitment_date: 30.days.ago, end_date: 24.days.ago, effort_upstream: 27, effort_downstream: 40 }
@@ -120,13 +143,11 @@ RSpec.describe DemandsRepository, type: :repository do
 
       let!(:first_epic) { Fabricate :demand, project: first_project, artifact_type: :epic }
 
-      context 'having demands' do
-        it { expect(described_class.instance.effort_upstream_grouped_by_month(Project.all, 57.days.ago.to_date, Time.zone.today)).to eq([2018.0, 2.0] => 22.0, [2018.0, 3.0] => 195.0) }
-        it { expect(described_class.instance.effort_upstream_grouped_by_month(Project.all, 24.days.ago.to_date, Time.zone.today)).to eq([2018.0, 3.0] => 195.0) }
-      end
+      it { expect(described_class.instance.effort_upstream_grouped_by_month(Project.all, 57.days.ago.to_date, Time.zone.today)).to eq([2018.0, 2.0] => 22.0, [2018.0, 3.0] => 195.0) }
+      it { expect(described_class.instance.effort_upstream_grouped_by_month(Project.all, 24.days.ago.to_date, Time.zone.today)).to eq([2018.0, 3.0] => 195.0) }
     end
 
-    context 'having no demands' do
+    context 'with no demands' do
       it { expect(described_class.instance.effort_upstream_grouped_by_month(Project.all, 57.days.ago.to_date, Time.zone.today)).to eq({}) }
     end
   end
@@ -134,7 +155,7 @@ RSpec.describe DemandsRepository, type: :repository do
   describe '#grouped_by_effort_downstream_per_month' do
     let(:project) { Fabricate :project, start_date: 2.months.ago, end_date: 2.months.from_now }
 
-    context 'having demands' do
+    context 'with demands' do
       let!(:first_demand) { Fabricate :demand, project: project, commitment_date: 60.days.ago, end_date: 57.days.ago, effort_upstream: 10, effort_downstream: 5 }
       let!(:second_demand) { Fabricate :demand, project: project, commitment_date: 58.days.ago, end_date: 55.days.ago, effort_upstream: 12, effort_downstream: 20 }
       let!(:third_demand) { Fabricate :demand, project: project, commitment_date: 30.days.ago, end_date: 24.days.ago, effort_upstream: 27, effort_downstream: 40 }
@@ -146,16 +167,14 @@ RSpec.describe DemandsRepository, type: :repository do
 
       let!(:first_epic) { Fabricate :demand, project: first_project, artifact_type: :epic }
 
-      context 'having demands in progress' do
+      context 'with demands in progress' do
         it { expect(described_class.instance.grouped_by_effort_downstream_per_month(Project.all, 57.days.ago.to_date, Time.zone.today)).to eq([2018.0, 2.0] => 25.0, [2018.0, 3.0] => 186.0) }
         it { expect(described_class.instance.grouped_by_effort_downstream_per_month(Project.all, 24.days.ago.to_date, Time.zone.today)).to eq([2018.0, 3.0] => 186.0) }
       end
     end
 
-    context 'having no demands' do
-      context 'having demands in progress' do
-        it { expect(described_class.instance.grouped_by_effort_downstream_per_month(Project.all, 57.days.ago.to_date, Time.zone.today)).to eq({}) }
-      end
+    context 'with no demands' do
+      it { expect(described_class.instance.grouped_by_effort_downstream_per_month(Project.all, 57.days.ago.to_date, Time.zone.today)).to eq({}) }
     end
   end
 
@@ -164,7 +183,7 @@ RSpec.describe DemandsRepository, type: :repository do
     let(:second_project) { Fabricate :project, start_date: 2.months.ago, end_date: 2.months.from_now }
     let(:third_project) { Fabricate :project, start_date: 2.months.ago, end_date: 2.months.from_now }
 
-    context 'having demands' do
+    context 'with demands' do
       let(:first_stage) { Fabricate :stage, company: company, projects: [first_project, second_project], integration_pipe_id: '123', order: 0, stage_stream: :upstream }
       let(:second_stage) { Fabricate :stage, company: company, projects: [first_project, second_project], integration_pipe_id: '123', order: 1, stage_stream: :upstream, end_point: true }
 
@@ -187,10 +206,8 @@ RSpec.describe DemandsRepository, type: :repository do
       end
     end
 
-    context 'having no demands' do
-      context 'having no demands' do
-        it { expect(described_class.instance.delivered_until_date_to_projects_in_stream(Project.all, 'upstream')).to eq [] }
-      end
+    context 'with no demands' do
+      it { expect(described_class.instance.delivered_until_date_to_projects_in_stream(Project.all, 'upstream')).to eq [] }
     end
   end
 
@@ -199,7 +216,7 @@ RSpec.describe DemandsRepository, type: :repository do
     let(:second_project) { Fabricate :project, start_date: 2.months.ago, end_date: 2.months.from_now }
     let(:third_project) { Fabricate :project, start_date: 2.months.ago, end_date: 2.months.from_now }
 
-    context 'having demands' do
+    context 'with demands' do
       let!(:first_demand) { Fabricate :demand, project: first_project, commitment_date: nil, end_date: 4.days.ago, effort_upstream: 558, effort_downstream: 929 }
       let!(:second_demand) { Fabricate :demand, project: first_project, commitment_date: nil, end_date: 1.day.ago, effort_upstream: 932, effort_downstream: 112 }
       let!(:third_demand) { Fabricate :demand, project: first_project, commitment_date: Time.zone.now, end_date: 3.weeks.ago, effort_upstream: 536, effort_downstream: 643 }
@@ -216,10 +233,8 @@ RSpec.describe DemandsRepository, type: :repository do
       it { expect(described_class.instance.delivered_hours_in_month_for_projects(Project.all, Date.new(2018, 3, 1)).to_f).to eq 2632.0 }
     end
 
-    context 'having no demands' do
-      context 'having no demands' do
-        it { expect(described_class.instance.delivered_hours_in_month_for_projects(Project.all)).to eq 0 }
-      end
+    context 'with no demands' do
+      it { expect(described_class.instance.delivered_hours_in_month_for_projects(Project.all)).to eq 0 }
     end
   end
 
@@ -228,7 +243,7 @@ RSpec.describe DemandsRepository, type: :repository do
     let(:second_project) { Fabricate :project, start_date: 2.months.ago, end_date: 2.months.from_now }
     let(:third_project) { Fabricate :project, start_date: 2.months.ago, end_date: 2.months.from_now }
 
-    context 'having demands' do
+    context 'with demands' do
       let!(:first_demand) { Fabricate :demand, project: first_project, commitment_date: nil, end_date: 4.days.ago, effort_upstream: 558, effort_downstream: 929 }
       let!(:second_demand) { Fabricate :demand, project: first_project, commitment_date: nil, end_date: 1.day.ago, effort_upstream: 932, effort_downstream: 112 }
       let!(:third_demand) { Fabricate :demand, project: first_project, commitment_date: Time.zone.now, end_date: 3.weeks.ago, effort_upstream: 536, effort_downstream: 643 }
@@ -244,10 +259,8 @@ RSpec.describe DemandsRepository, type: :repository do
       it { expect(described_class.instance.demands_delivered_for_period(Demand.all, 4.days.ago, Time.zone.now)).to match_array [first_demand, second_demand] }
     end
 
-    context 'having no demands' do
-      context 'having no demands' do
-        it { expect(described_class.instance.demands_delivered_for_period(Demand.all, 4.days.ago, Time.zone.now)).to eq [] }
-      end
+    context 'with no demands' do
+      it { expect(described_class.instance.demands_delivered_for_period(Demand.all, 4.days.ago, Time.zone.now)).to eq [] }
     end
   end
 
@@ -256,7 +269,7 @@ RSpec.describe DemandsRepository, type: :repository do
     let(:second_project) { Fabricate :project, customers: [customer], start_date: 2.months.ago, end_date: 2.months.from_now }
     let(:third_project) { Fabricate :project, customers: [customer], start_date: 2.months.ago, end_date: 2.months.from_now }
 
-    context 'having demands' do
+    context 'with demands' do
       let!(:first_demand) { Fabricate :demand, project: first_project, commitment_date: nil, end_date: 4.days.ago, effort_upstream: 558, effort_downstream: 929 }
       let!(:second_demand) { Fabricate :demand, project: first_project, commitment_date: nil, end_date: 1.day.ago, effort_upstream: 932, effort_downstream: 112 }
       let!(:third_demand) { Fabricate :demand, project: first_project, commitment_date: Time.zone.now, end_date: 3.weeks.ago, effort_upstream: 536, effort_downstream: 643 }
@@ -272,10 +285,8 @@ RSpec.describe DemandsRepository, type: :repository do
       it { expect(described_class.instance.demands_delivered_for_period_accumulated(Demand.all, 1.week.ago)).to match_array [third_demand, fifth_demand, sixth_demand] }
     end
 
-    context 'having no demands' do
-      context 'having no demands' do
-        it { expect(described_class.instance.demands_delivered_for_period_accumulated(Demand.all, 4.days.ago)).to eq [] }
-      end
+    context 'with no demands' do
+      it { expect(described_class.instance.demands_delivered_for_period_accumulated(Demand.all, 4.days.ago)).to eq [] }
     end
   end
 
@@ -287,7 +298,7 @@ RSpec.describe DemandsRepository, type: :repository do
     let(:second_project) { Fabricate :project, start_date: 2.months.ago, end_date: 2.months.from_now }
     let(:third_project) { Fabricate :project, start_date: 2.months.ago, end_date: 2.months.from_now }
 
-    context 'having demands' do
+    context 'with demands' do
       let!(:first_demand) { Fabricate :demand, project: first_project, commitment_date: nil, end_date: 4.days.ago, effort_upstream: 558, effort_downstream: 929 }
       let!(:second_demand) { Fabricate :demand, project: first_project, commitment_date: nil, end_date: 1.day.ago, effort_upstream: 932, effort_downstream: 112 }
       let!(:third_demand) { Fabricate :demand, project: first_project, commitment_date: Time.zone.now, end_date: 3.weeks.ago, effort_upstream: 536, effort_downstream: 643 }
@@ -311,10 +322,8 @@ RSpec.describe DemandsRepository, type: :repository do
       it { expect(described_class.instance.cumulative_flow_for_date(Demand.all.map(&:id), Date.new(2018, 2, 27), 1.week.ago, :downstream)).to eq(first_stage.name => 4, second_stage.name => 2) }
     end
 
-    context 'having no demands' do
-      context 'having no demands' do
-        it { expect(described_class.instance.cumulative_flow_for_date(Demand.all.map(&:id), 2.months.ago, 1.week.ago, :downstream)).to eq({}) }
-      end
+    context 'with no demands' do
+      it { expect(described_class.instance.cumulative_flow_for_date(Demand.all.map(&:id), 2.months.ago, 1.week.ago, :downstream)).to eq({}) }
     end
   end
 

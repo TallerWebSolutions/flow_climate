@@ -107,7 +107,7 @@ RSpec.describe Highchart::PortfolioChartsAdapter, type: :service do
         it 'builds the data structure for scope_data_evolution' do
           portfolio_data = described_class.new([first_project, second_project], [first_project.start_date, second_project.start_date].min, [first_project.end_date, second_project.end_date].max, '')
 
-          expect(portfolio_data.throughput_by_project[:series]).to eq [{ data: [3, 1], marker: { enabled: true }, name: I18n.t('portfolio.charts.throughput_by_project.data_title') }]
+          expect(portfolio_data.throughput_by_project[:series]).to eq [{ data: [4, 1], marker: { enabled: true }, name: I18n.t('portfolio.charts.throughput_by_project.data_title') }]
           expect(portfolio_data.throughput_by_project[:x_axis]).to eq [first_project.name, second_project.name]
         end
       end

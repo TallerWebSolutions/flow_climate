@@ -162,6 +162,17 @@ RSpec.describe Demand, type: :model do
       it { expect(described_class.to_dates(1.month.ago, Time.zone.now).map(&:id)).to match_array [second_demand.id, third_demand.id, first_epic.id] }
     end
 
+    describe '.to_end_dates' do
+      let!(:first_demand) { Fabricate :demand, created_date: 3.months.ago, end_date: 2.months.ago }
+      let!(:second_demand) { Fabricate :demand, created_date: 1.month.ago, end_date: 15.days.ago }
+      let!(:third_demand) { Fabricate :demand, created_date: 2.months.ago, end_date: Time.zone.now }
+      let!(:fourth_demand) { Fabricate :demand, created_date: 4.months.ago, end_date: 1.day.from_now }
+
+      let!(:fifth_demand) { Fabricate :demand, created_date: 1.month.ago, end_date: nil }
+
+      it { expect(described_class.to_end_dates(1.month.ago, Time.zone.now).map(&:id)).to match_array [second_demand.id, third_demand.id, first_epic.id] }
+    end
+
     describe '.finished_in_downstream' do
       let!(:first_demand) { Fabricate :demand, commitment_date: 3.months.ago, end_date: 2.months.ago }
       let!(:second_demand) { Fabricate :demand, commitment_date: 1.month.ago, end_date: 15.days.ago }

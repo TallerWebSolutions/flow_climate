@@ -73,6 +73,10 @@
           <%= link_to status_report_dashboard_company_project_path(company, project), remote: true do %>
             <i class="fas fa-folder-open" title="<%= I18n.t('projects.show.status_report.title') %>"></i>
           <% end %>
+
+          <%= link_to lead_time_dashboard_company_project_path(company, project), remote: true do %>
+            <i class="fas fa-clock" title="<%= I18n.t('projects.show.lead_time.title') %>"></i>
+          <% end %>
         </h4>
       <% end %>
     <% else %>
@@ -122,3 +126,4 @@
 <div class="modal fade" id="project-risk-drill-down" tabindex="-1" role="dialog" aria-labelledby="project-risk-drill-down" aria-hidden="true"></div>
 <div class="modal fade" id="closing-info-div" tabindex="-1" role="dialog" aria-labelledby="closing-info" aria-hidden="true"></div>
 <div class="modal fade" id="status-report-div" tabindex="-1" role="dialog" aria-labelledby="status-report" aria-hidden="true"></div>
+<div class="modal fade" id="project-lead-time-div" tabindex="-1" role="dialog" aria-labelledby="project-lead-time" aria-hidden="true"></div>

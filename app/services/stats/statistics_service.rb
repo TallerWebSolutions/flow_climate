@@ -27,6 +27,15 @@ module Stats
       population_array.group_by { |e| e }.max_by { |_k, v| v.length }.first
     end
 
+    def population_average(population_array, segment_size = 0)
+      return 0 unless population_array.count.positive?
+
+      population_segment = population_array
+      population_segment = population_array.last(segment_size) if segment_size.positive?
+
+      population_segment.sum.to_f / population_segment.count
+    end
+
     def leadtime_histogram_hash(leadtime_data_array)
       create_histogram_data(leadtime_data_array)
     end

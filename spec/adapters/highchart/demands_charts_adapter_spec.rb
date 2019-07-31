@@ -58,7 +58,7 @@ RSpec.describe Highchart::DemandsChartsAdapter, type: :data_object do
 
         expect(leadtime_on_time_chart_data[:x_axis]).to eq TimeService.instance.weeks_between_of(Date.new(2018, 5, 28), Date.new(2018, 9, 3))
         expect(leadtime_on_time_chart_data[:y_axis][0][:name]).to eq I18n.t('projects.charts.leadtime_evolution.legend.leadtime_80_confidence')
-        expect(leadtime_on_time_chart_data[:y_axis][0][:data]).to eq [0, 0, 0, 0, 0, 30.0, 0, 0, 0, 31.0, 0, 0, 0, 0, 61.48575231481482]
+        expect(leadtime_on_time_chart_data[:y_axis][0][:data]).to eq [55.0, 0, 0, 0, 0, 30.0, 0, 0, 0, 31.0, 0, 0, 0, 0, 61.48575231481482]
 
         expect(leadtime_on_time_chart_data[:y_axis][1][:name]).to eq I18n.t('projects.charts.leadtime_evolution.legend.leadtime_80_confidence_accumulated')
         expect(leadtime_on_time_chart_data[:y_axis][1][:data]).to eq [0, 55.0, 55.0, 55.0, 55.0, 49.0, 49.0, 49.0, 49.0, 43.000000000000014, 43.000000000000014, 43.000000000000014, 43.000000000000014, 43.000000000000014, 61.097150462962965]

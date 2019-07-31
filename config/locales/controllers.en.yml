@@ -281,6 +281,8 @@ en:
         current_numbers: "Current Numbers"
         remaining_scope: "Remaining Backlog"
         average_demand_aging: "Average Item Aging"
+      lead_time:
+        title: "Lead time dashboard"
     charts:
       xlabel:
         weeks: "Weeks"
@@ -384,9 +386,10 @@ en:
     portfolio_bulletin:
       red_projects: "Red Alert Projects"
     general:
-      scope: "Discovered items"
+      scope: "Escopo"
       deadline: "Deadline"
       leadtime: "Lead time (%{percentil})"
+      discovered_scope: "Discovered Scope"
     finish_project:
       success_message: "Project finished."
     actions:
@@ -454,12 +457,13 @@ en:
       lead_time_interquartile_data_range_evolution_tab: "Interquartile Range"
       lead_time_interquartile_histogram_range_evolution_tab: "Histogram X Interquartile"
       montecarlo:
-        title: "Monte Carlo"
+        title: "Monte Carlo (Project)"
     risk:
-      drill_down_title: "Risk Drill Down"
+      drill_down_title: "Risk Drill Down for %{target_name}"
       drill_down_flow_title: "Flow (Last 8 weeks)"
       drill_down_wip_title: "WiP Limit"
       drill_down_little_law_title: "Little's Law"
+      drill_down_scope_deadline: "Scope and Deadline"
     remaining_time: "Remaining Time"
   project:
     new:
@@ -488,6 +492,9 @@ en:
       title: "New Product"
     edit:
       title: "Edit Product"
+    statistics:
+      montecarlo:
+        title: "Monte Carlo (Product)"
   customers:
     new:
       title: "New Customer"
@@ -861,6 +868,9 @@ en:
         xlabel: "period"
     destroy:
       success: "Team %{team_name} deleted."
+    statistics:
+      montecarlo:
+        title: "Monte Carlo (Team)"
   activerecord:
     attributes:
       demand:

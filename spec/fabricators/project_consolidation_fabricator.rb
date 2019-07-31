@@ -3,31 +3,16 @@
 Fabricator(:project_consolidation) do
   project
   consolidation_date { Time.zone.today }
-  current_wip 10
-  customer_happiness 1.2
-  demands_finished_ids [1, 2, 3]
-  demands_ids [1, 2, 3, 4]
-  demands_lead_times [1.2, 3.2, 2.1]
-  demands_lead_times_average 1.5
-  demands_lead_times_std_dev 0.3
-  flow_pressure 2.1
-  flow_pressure_percentage 50.2
-  histogram_range 10
-  interquartile_range 3
-  last_lead_time_p80 4.3
-  last_8_throughput_per_week_data [3, 2, 4, 1, 5]
-  lead_time_histogram_bin_max 4.3
-  lead_time_histogram_bin_min 2.1
-  lead_time_max 2.1
-  lead_time_min 2.2
-  lead_time_p25 3.2
-  lead_time_p75 4.4
-  population_end_date { 1.day.from_now }
-  population_start_date { 1.day.ago }
-  project_aging 10
-  project_monte_carlo_weeks_p80 5
-  team_monte_carlo_weeks_p80 6
-  total_range 1.2
-  weeks_to_deadline 4
-  wip_limit 2
+  demands_finished_ids [1, 2, 5, 7]
+  demands_ids [1, 2, 5, 7, 9, 10, 112]
+  demands_lead_times [1.2, 4.5, 6.8]
+  population_end_date { Time.zone.yesterday }
+  population_start_date { 4.days.ago }
+  products_monte_carlo_weeks [4, 3, 2, 1]
+  products_weekly_throughput [10, 54, 22, 12, 10]
+  project_monte_carlo_weeks [1, 2, 3, 5, 6, 7, 7, 7]
+  project_weekly_throughput [2, 3, 5]
+  team_monte_carlo_weeks [0, 0, 0, 2, 4, 4, 4, 4, 5]
+  team_weekly_throughput [0, 0, 0, 10, 12, 11, 18]
+  wip_limit 10
 end

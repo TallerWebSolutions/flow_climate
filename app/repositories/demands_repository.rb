@@ -20,7 +20,11 @@ class DemandsRepository
   end
 
   def throughput_to_projects_and_period(projects, start_period, end_period)
-    demands_stories_to_projects(projects).where('end_date BETWEEN :start_period AND :end_period', start_period: start_period, end_period: end_period)
+    demands_stories_to_projects(projects).to_end_dates(start_period, end_period)
+  end
+
+  def throughput_to_products_and_period(products, start_period, end_period)
+    Demand.kept.story.where(product_id: products).to_end_dates(start_period, end_period)
   end
 
   def created_to_projects_and_period(projects, start_period, end_period)
@@ -33,7 +37,7 @@ class DemandsRepository
           .story
           .select('EXTRACT(YEAR from end_date) AS year, EXTRACT(MONTH from end_date) AS month, SUM(effort_upstream) AS computed_sum_effort')
           .where(project_id: projects.map(&:id))
-          .where('end_date BETWEEN :start_date AND :end_date', start_date: start_date, end_date: end_date)
+          .to_end_dates(start_date, end_date)
           .order('year, month')
           .group('year, month')
           .map { |group_sum| effort_upstream_hash[[group_sum.year, group_sum.month]] = group_sum.computed_sum_effort.to_f }
@@ -46,7 +50,7 @@ class DemandsRepository
           .story
           .select('EXTRACT(YEAR from end_date) AS year, EXTRACT(MONTH from end_date) AS month, SUM(effort_downstream) AS computed_sum_effort')
           .where(project_id: projects.map(&:id))
-          .where('end_date BETWEEN :start_date AND :end_date', start_date: start_date, end_date: end_date)
+          .to_end_dates(start_date, end_date)
           .order('year, month')
           .group('year, month')
           .map { |group_sum| effort_downstream_hash[[group_sum.year, group_sum.month]] = group_sum.computed_sum_effort.to_f }
@@ -84,9 +88,7 @@ class DemandsRepository
   end
 
   def demands_delivered_for_period(demands, start_period, end_period)
-    Demand.kept
-          .story
-          .where(id: demands.map(&:id)).where('demands.end_date >= :bottom_limit AND demands.end_date <= :upper_limit', bottom_limit: start_period, upper_limit: end_period)
+    Demand.kept.story.where(id: demands.map(&:id)).to_end_dates(start_period, end_period)
   end
 
   def demands_delivered_for_period_accumulated(demands, upper_date_limit)
@@ -159,7 +161,7 @@ class DemandsRepository
   end
 
   def demands_for_projects_finished_in_period(projects, start_period, end_period)
-    Demand.kept.story.where(project_id: projects).where('end_date BETWEEN :start_period AND :end_period', start_period: start_period, end_period: end_period)
+    Demand.kept.story.where(project_id: projects).to_end_dates(start_period, end_period)
   end
 
   def demands_for_projects_and_finished_until_limit_date(projects, limit_date)

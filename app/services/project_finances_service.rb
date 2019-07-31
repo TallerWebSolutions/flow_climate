@@ -16,8 +16,16 @@ class ProjectFinancesService
 
   def compute_effort_share(date, other_projects_in_team, project)
     total_effort_project = total_effort_to_month([project], project.start_date, project.end_date, date.year, date.month)
-    total_effort_other_team_projects = total_effort_to_month(other_projects_in_team, other_projects_in_team.map(&:start_date).min, other_projects_in_team.map(&:end_date).max, date.year, date.month)
+    total_effort_other_team_projects = total_effort_to_month(other_projects_in_team, start_date(other_projects_in_team), end_date(other_projects_in_team), date.year, date.month)
     Stats::StatisticsService.instance.compute_percentage(total_effort_project, total_effort_other_team_projects) / 100
+  end
+
+  def end_date(other_projects_in_team)
+    (other_projects_in_team.map(&:end_date).max || Time.zone.today)
+  end
+
+  def start_date(other_projects_in_team)
+    (other_projects_in_team.map(&:start_date).min || Time.zone.today)
   end
 
   def total_effort_to_month(projects, start_date, end_date, year, month)

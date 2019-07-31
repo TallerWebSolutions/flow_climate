@@ -295,6 +295,8 @@ pt-BR:
         current_numbers: "Números Atuais"
         remaining_scope: "Backlog Restante"
         average_demand_aging: "Idade Média dos Itens"
+      lead_time:
+        title: "Lead time dashboard"
     charts:
       xlabel:
         weeks: "Semanas"
@@ -400,9 +402,10 @@ pt-BR:
     project_risk_configs:
       title: "Configurações de Risco"
     general:
-      deadline: "Data do Prazo"
-      scope: "Itens Descobertos"
+      deadline: "Prazo"
+      scope: "Escopo"
       leadtime: "Lead time (%{percentil})"
+      discovered_scope: "Itens Descobertos"
     finish_project:
       success_message: "Projeto finalizado."
     actions:
@@ -470,12 +473,13 @@ pt-BR:
       lead_time_interquartile_data_range_evolution_tab: "Amplitude do Interquartil"
       lead_time_interquartile_histogram_range_evolution_tab: "Histograma X Interquartil"
       montecarlo:
-        title: "Monte Carlo"
+        title: "Monte Carlo (Projeto)"
     risk:
-      drill_down_title: "Detalhamento do Risco"
+      drill_down_title: "Detalhamento do Risco para %{target_name}"
       drill_down_flow_title: "Fluxo (Últimas 8 semanas)"
       drill_down_wip_title: "Limite do WiP"
       drill_down_little_law_title: "Lei de Little"
+      drill_down_scope_deadline: "Escopo e Prazo"
     remaining_time: "Tempo Restante"
   teams:
     index:
@@ -495,6 +499,9 @@ pt-BR:
         xlabel: "período"
     destroy:
       success: 'Time "%{team_name}" excluído.'
+    statistics:
+      montecarlo:
+        title: "Monte Carlo (Time)"
   project:
     new:
       title: "Novo Projeto"
@@ -521,6 +528,9 @@ pt-BR:
       title: "Novo Produto"
     edit:
       title: "Editar Produto"
+    statistics:
+      montecarlo:
+        title: "Monte Carlo (Produto)"
   customers:
     new:
       title: "Novo Cliente"

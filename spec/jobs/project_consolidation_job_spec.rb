@@ -31,7 +31,7 @@ RSpec.describe ProjectConsolidationJob, type: :active_job do
     let!(:fifth_demand) { Fabricate :demand, project: first_project, commitment_date: 17.days.ago, end_date: 2.weeks.ago, effort_downstream: 400, effort_upstream: 130, created_date: 65.days.ago }
     let!(:sixth_demand) { Fabricate :demand, project: second_project, commitment_date: 2.weeks.ago, end_date: 2.weeks.ago, effort_downstream: 100, effort_upstream: 20 }
 
-    it 'calls the mailer to send the data' do
+    it 'saves de consolidation' do
       # TODO: improve this spec
 
       described_class.perform_now
