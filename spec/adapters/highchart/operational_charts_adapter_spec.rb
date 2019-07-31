@@ -72,7 +72,7 @@ RSpec.describe Highchart::OperationalChartsAdapter, type: :data_object do
             expect(report_data.demands_burnup_data.current_per_period).to eq [1, 2, 2, 4, 5, 5, 5, 5, 5, 5, 10, 10]
             expect(report_data.demands_burnup_data.scope_per_period).to eq [42, 42, 42, 42, 42, 42, 42, 42, 42, 42, 42, 42]
             expect(report_data.flow_pressure_data).to eq [0.5567068713450297, 0.5636659356725151, 0.5721354945827105, 0.6914066891631537, 0.6055391444339713, 0.5604651432650959, 0.5475944614229922, 0.5820546365037389, 1.163846545579081, 1.069684113243395, 1.0103188908273288, 1.203903427702829]
-            expect(report_data.throughput_per_period).to eq([{ name: I18n.t('projects.charts.throughput.stage_stream.upstream'), data: [0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0] }, { name: I18n.t('projects.charts.throughput.stage_stream.downstream'), data: [1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 5, 0] }])
+            expect(report_data.throughput_per_period).to eq([{ name: I18n.t('projects.charts.throughput.stage_stream.upstream'), data: [0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0] }, { name: I18n.t('projects.charts.throughput.stage_stream.downstream'), data: [1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 5, 0] }])
             expect(report_data.effort_hours_per_month).to eq(keys: [[2018.0, 2.0], [2018.0, 3.0], [2018.0, 5.0]], data: { upstream: [0.0, 0.0, 224.0], downstream: [39.6, 0.0, 284.8] })
             expect(report_data.lead_time_control_chart[:dispersion_source]).to match_array [['second_demand', 1.0], ['first_demand', 7.797361111111111], ['third_demand', 2.0], ['first_bug', 0.5416666666666666], ['sixth_demand', 1.0], ['fourth_bug', 1.0], ['third_bug', 1.0], ['second_bug', 5.0], ['seventh_demand', 30.0]]
             expect(report_data.lead_time_control_chart[:percentile_95_data]).to eq 6.818284722222221
@@ -104,7 +104,7 @@ RSpec.describe Highchart::OperationalChartsAdapter, type: :data_object do
             expect(report_data.demands_burnup_data.current_per_period).to eq [2, 5, 10, 10]
             expect(report_data.demands_burnup_data.scope_per_period).to eq [42, 42, 42, 42]
             expect(report_data.flow_pressure_data).to eq [0.5622299382716055, 0.44218216281169204, 0.37415318790620744, 0.2806148909296556]
-            expect(report_data.throughput_per_period).to eq([{ name: I18n.t('projects.charts.throughput.stage_stream.upstream'), data: [0, 2, 0, 0] }, { name: I18n.t('projects.charts.throughput.stage_stream.downstream'), data: [2, 1, 0, 5] }])
+            expect(report_data.throughput_per_period).to eq([{ name: I18n.t('projects.charts.throughput.stage_stream.upstream'), data: [0, 2, 0, 0] }, { name: I18n.t('projects.charts.throughput.stage_stream.downstream'), data: [2, 1, 5, 0] }])
             expect(report_data.effort_hours_per_month).to eq(keys: [[2018.0, 2.0], [2018.0, 3.0], [2018.0, 5.0]], data: { upstream: [0.0, 0.0, 224.0], downstream: [39.6, 0.0, 284.8] })
             expect(report_data.lead_time_control_chart[:dispersion_source]).to match_array [['second_demand', 1.0], ['first_demand', 7.797361111111111], ['third_demand', 2.0], ['first_bug', 0.5416666666666666], ['sixth_demand', 1.0], ['fourth_bug', 1.0], ['third_bug', 1.0], ['second_bug', 5.0], ['seventh_demand', 30.0]]
             expect(report_data.lead_time_control_chart[:percentile_95_data]).to eq 6.818284722222221
@@ -116,7 +116,7 @@ RSpec.describe Highchart::OperationalChartsAdapter, type: :data_object do
             expect(report_data.throughput_histogram_data).to eq [10.0, 1.0, 1.0]
             expect(report_data.bugs_count_accumulated_hash).to eq(dates_array: %w[2018-02-28 2018-03-31 2018-04-30 2018-05-31], accumulated_bugs_opened_count_array: [4, 4, 4, 4], accumulated_bugs_closed_count_array: [0, 0, 0, 4])
             expect(report_data.bugs_share_accumulated_hash).to eq(dates_array: %w[2018-02-28 2018-03-31 2018-04-30 2018-05-31], bugs_opened_share_array: [8.695652173913043, 8.695652173913043, 8.695652173913043, 8.695652173913043])
-            expect(report_data.bugs_count_to_period).to eq(dates_array: %w[2018-02-28 2018-03-31 2018-04-30 2018-05-31], bugs_opened_count_array: [0, 0, 0, 0], bugs_closed_count_array: [0, 0, 0, 4])
+            expect(report_data.bugs_count_to_period).to eq(dates_array: %w[2018-02-28 2018-03-31 2018-04-30 2018-05-31], bugs_opened_count_array: [0, 0, 0, 0], bugs_closed_count_array: [0, 0, 4, 0])
             expect(report_data.queue_touch_count_hash).to eq(dates_array: %w[2018-02-28 2018-03-31 2018-04-30 2018-05-31], queue_times: [96.0, 0, 0, 672.0], touch_times: [96.0, 0, 0, 240.0])
             expect(report_data.queue_touch_share_hash).to eq(dates_array: %w[2018-02-28 2018-03-31 2018-04-30 2018-05-31], flow_efficiency_array: [50.0, 0, 0, 26.31578947368421])
             expect(report_data.aging_per_demand[:x_axis]).to match_array %w[first_bug first_demand fourth_bug second_bug second_demand sixth_demand third_bug third_demand]

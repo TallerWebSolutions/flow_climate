@@ -144,6 +144,7 @@ Rails.application.routes.draw do
         get :risk_drill_down
         get :closing_dashboard
         get :status_report_dashboard
+        get :lead_time_dashboard
 
         patch :copy_stages_from
         patch 'associate_customer/:customer_id', action: :associate_customer, as: 'associate_customer'

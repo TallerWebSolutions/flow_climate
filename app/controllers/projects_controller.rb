@@ -128,6 +128,12 @@ class ProjectsController < AuthenticatedController
     respond_to { |format| format.js { render 'projects/status_report_dashboard' } }
   end
 
+  def lead_time_dashboard
+    @project_consolidations = @project.project_consolidations.order(:consolidation_date)
+
+    respond_to { |format| format.js { render 'projects/lead_time_dashboard' } }
+  end
+
   private
 
   def assign_project_stages

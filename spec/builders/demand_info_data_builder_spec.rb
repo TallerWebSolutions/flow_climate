@@ -13,5 +13,17 @@ RSpec.describe DemandInfoDataBuilder, type: :builder do
 
       it { expect(described_class.instance.build_data_from_hash_per_week(info_data_hash, Date.new(2019, 1, 20), Date.new(2019, 2, 1))).to eq(Date.new(2019, 1, 14) => 0, Date.new(2019, 1, 21) => 0, Date.new(2019, 1, 28) => 0) }
     end
+
+    context 'nil start date' do
+      let(:info_data_hash) { {} }
+
+      it { expect(described_class.instance.build_data_from_hash_per_week(info_data_hash, nil, Date.new(2019, 2, 1))).to eq({}) }
+    end
+
+    context 'nil end date' do
+      let(:info_data_hash) { {} }
+
+      it { expect(described_class.instance.build_data_from_hash_per_week(info_data_hash, Date.new(2019, 1, 20), nil)).to eq({}) }
+    end
   end
 end

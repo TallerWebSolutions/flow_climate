@@ -51,6 +51,7 @@ Metrics/ClassLength:
     - 'app/data_objects/replenishing_data.rb'
     - 'app/repositories/demands_repository.rb'
     - 'app/models/project.rb'
+    - 'app/models/project_consolidation.rb'
     - 'app/models/demand.rb'
     - 'app/controllers/projects_controller.rb'
     - 'app/controllers/demands_controller.rb'

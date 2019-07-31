@@ -88,9 +88,9 @@ class ReplenishingData
 
   def build_proejct_consolidation_data(project, stats_hash)
     stats_hash[:team_based_odds_to_deadline] = project.last_project_consolidation&.odds_to_deadline_team
-    stats_hash[:std_dev_weeks_montecarlo_team] = project.last_project_consolidation&.std_dev_weeks_montecarlo_team
-    stats_hash[:min_weeks_montecarlo_team] = project.last_project_consolidation&.min_weeks_montecarlo_team
-    stats_hash[:max_weeks_montecarlo_team] = project.last_project_consolidation&.max_weeks_montecarlo_team
+    stats_hash[:team_monte_carlo_weeks_std_dev] = project.last_project_consolidation&.team_monte_carlo_weeks_std_dev
+    stats_hash[:team_monte_carlo_weeks_min] = project.last_project_consolidation&.team_monte_carlo_weeks_min
+    stats_hash[:team_monte_carlo_weeks_max] = project.last_project_consolidation&.team_monte_carlo_weeks_max
   end
 
   def build_grouped_per_week_hash(project)

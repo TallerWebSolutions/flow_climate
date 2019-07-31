@@ -9,6 +9,20 @@ SET xmloption = content;
 SET client_min_messages = warning;
 SET row_security = off;
 
+--
+-- Name: pg_stat_statements; Type: EXTENSION; Schema: -; Owner: -
+--
+
+CREATE EXTENSION IF NOT EXISTS pg_stat_statements WITH SCHEMA public;
+
+
+--
+-- Name: EXTENSION pg_stat_statements; Type: COMMENT; Schema: -; Owner: -
+--
+
+COMMENT ON EXTENSION pg_stat_statements IS 'track execution statistics of all SQL statements executed';
+
+
 SET default_tablespace = '';
 
 SET default_with_oids = false;
@@ -922,54 +936,22 @@ ALTER SEQUENCE public.project_change_deadline_histories_id_seq OWNED BY public.p
 CREATE TABLE public.project_consolidations (
     id bigint NOT NULL,
     consolidation_date date NOT NULL,
-    project_aging integer DEFAULT 0 NOT NULL,
-    weeks_to_deadline integer DEFAULT 0 NOT NULL,
     population_start_date date,
     population_end_date date,
     project_id integer NOT NULL,
     demands_ids integer[],
     demands_finished_ids integer[],
     demands_lead_times numeric[],
-    demands_lead_times_average numeric,
-    demands_lead_times_std_dev numeric,
-    lead_time_min numeric,
-    lead_time_max numeric,
-    total_range numeric,
-    lead_time_histogram_bin_min numeric,
-    lead_time_histogram_bin_max numeric,
-    histogram_range numeric,
-    lead_time_p25 numeric,
-    lead_time_p75 numeric,
-    interquartile_range numeric,
-    last_8_throughput_per_week_data integer[],
-    last_lead_time_p80 numeric,
     wip_limit integer,
     current_wip integer,
-    project_monte_carlo_weeks_p80 numeric,
-    team_monte_carlo_weeks_p80 numeric,
-    flow_pressure numeric,
-    flow_pressure_percentage numeric,
-    customer_happiness numeric,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    odds_to_deadline_project double precision,
-    odds_to_deadline_team double precision,
-    min_weeks_montecarlo_project integer,
-    min_weeks_montecarlo_team integer,
-    max_weeks_montecarlo_project integer,
-    max_weeks_montecarlo_team integer,
-    std_dev_weeks_montecarlo_project double precision,
-    std_dev_weeks_montecarlo_team double precision,
-    remaining_scope integer DEFAULT 0,
-    throughput_per_week_data integer[],
-    throughput_average numeric DEFAULT 0,
-    throughput_std_dev numeric DEFAULT 0,
-    last_8_throughput_average numeric DEFAULT 0,
-    last_8_throughput_std_dev numeric DEFAULT 0,
-    all_data_little_law_weeks numeric DEFAULT 0,
-    last_8_data_little_law_weeks numeric DEFAULT 0,
-    min_weeks_montecarlo_project_percentage numeric DEFAULT 0,
-    min_weeks_montecarlo_team_percentage numeric DEFAULT 0
+    project_weekly_throughput integer[],
+    team_weekly_throughput integer[],
+    products_weekly_throughput integer[],
+    project_monte_carlo_weeks integer[],
+    team_monte_carlo_weeks integer[],
+    products_monte_carlo_weeks integer[]
 );
 
 
@@ -3197,6 +3179,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190711211958'),
 ('20190716135342'),
 ('20190719194438'),
-('20190723195649');
+('20190723195649'),
+('20190730122201');
 
 
