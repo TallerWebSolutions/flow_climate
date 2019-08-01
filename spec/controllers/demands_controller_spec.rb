@@ -514,27 +514,45 @@ RSpec.describe DemandsController, type: :controller do
     end
 
     describe 'GET #demands_in_projects' do
-      context 'passing valid parameters' do
-        let(:first_project) { Fabricate :project, customers: [customer], products: [product], start_date: 3.days.ago, end_date: 1.day.from_now, status: :executing }
-        let(:second_project) { Fabricate :project, customers: [customer], products: [product], start_date: 3.days.ago, end_date: 1.day.from_now, status: :finished }
+      context 'with valid parameters' do
+        context 'with unfinished projects' do
+          let(:first_project) { Fabricate :project, customers: [customer], products: [product], start_date: 3.days.ago, end_date: 1.day.from_now, status: :executing }
+          let(:second_project) { Fabricate :project, customers: [customer], products: [product], start_date: 3.days.ago, end_date: 1.day.from_now, status: :finished }
 
-        let!(:first_demand) { Fabricate :demand, project: first_project, commitment_date: 1.day.ago, end_date: Time.zone.now }
-        let!(:second_demand) { Fabricate :demand, project: second_project, commitment_date: 3.hours.ago, end_date: Time.zone.now }
+          let!(:first_demand) { Fabricate :demand, project: first_project, commitment_date: 1.day.ago, end_date: Time.zone.now }
+          let!(:second_demand) { Fabricate :demand, project: second_project, commitment_date: 3.hours.ago, end_date: Time.zone.now }
 
-        let!(:third_demand) { Fabricate :demand, project: second_project, commitment_date: 3.hours.ago, end_date: Time.zone.now, discarded_at: Time.zone.now }
+          let!(:third_demand) { Fabricate :demand, project: second_project, commitment_date: 3.hours.ago, end_date: Time.zone.now, discarded_at: Time.zone.now }
 
-        it 'builds the operation report and respond the JS render the template' do
-          get :demands_in_projects, params: { company_id: company, projects_ids: [first_project, second_project].map(&:id).to_csv, period: :all }, xhr: true
-          expect(response).to render_template 'demands/demands_tab'
-          expect(assigns(:demands).map(&:id)).to match_array [first_demand.id, second_demand.id]
-          expect(assigns(:discarded_demands).map(&:id)).to eq [third_demand.id]
-          expect(assigns(:demands_count_per_week)[first_project.start_date.end_of_week][:arrived_in_week]).to match_array [second_demand, first_demand]
-          expect(assigns(:demands_count_per_week)[first_project.start_date.end_of_week][:std_dev_arrived]).to eq 0
-          expect(assigns(:demands_count_per_week)[first_project.start_date.end_of_week][:std_dev_throughput]).to eq 0
-          expect(assigns(:demands_count_per_week)[first_project.start_date.end_of_week][:throughput_in_week]).to match_array [second_demand, first_demand]
-          expect(assigns(:confidence_95_leadtime).to_f).to eq 0.9562499999999999
-          expect(assigns(:confidence_80_leadtime).to_f).to eq 0.8250000000000001
-          expect(assigns(:confidence_65_leadtime).to_f).to eq 0.69375
+          it 'builds the operation report and respond the JS render the template' do
+            get :demands_in_projects, params: { company_id: company, projects_ids: [first_project, second_project].map(&:id).to_csv, period: :all }, xhr: true
+            expect(response).to render_template 'demands/demands_tab'
+            expect(assigns(:demands).map(&:id)).to match_array [first_demand.id, second_demand.id]
+            expect(assigns(:discarded_demands).map(&:id)).to eq [third_demand.id]
+            expect(assigns(:demands_count_per_week)[first_project.start_date.end_of_week][:arrived_in_week]).to match_array [second_demand, first_demand]
+            expect(assigns(:demands_count_per_week)[first_project.start_date.end_of_week][:std_dev_arrived]).to eq 0
+            expect(assigns(:demands_count_per_week)[first_project.start_date.end_of_week][:std_dev_throughput]).to eq 0
+            expect(assigns(:demands_count_per_week)[first_project.start_date.end_of_week][:throughput_in_week]).to match_array [second_demand, first_demand]
+            expect(assigns(:confidence_95_leadtime).to_f).to eq 0.9562499999999999
+            expect(assigns(:confidence_80_leadtime).to_f).to eq 0.8250000000000001
+            expect(assigns(:confidence_65_leadtime).to_f).to eq 0.69375
+          end
+        end
+
+        context 'with finished projects' do
+          let(:first_project) { Fabricate :project, customers: [customer], products: [product], start_date: 3.days.ago, end_date: 1.day.from_now, status: :finished }
+          let(:second_project) { Fabricate :project, customers: [customer], products: [product], start_date: 3.days.ago, end_date: 1.day.from_now, status: :finished }
+
+          let!(:first_demand) { Fabricate :demand, project: first_project, commitment_date: 5.days.ago, end_date: 4.days.ago }
+          let!(:second_demand) { Fabricate :demand, project: second_project, commitment_date: 3.hours.ago, end_date: Time.zone.now }
+
+          let!(:third_demand) { Fabricate :demand, project: second_project, commitment_date: 3.hours.ago, end_date: Time.zone.now, discarded_at: Time.zone.now }
+
+          it 'builds the operation report and respond the JS render the template' do
+            get :demands_in_projects, params: { company_id: company, projects_ids: [first_project, second_project].map(&:id).to_csv, period: :all }, xhr: true
+            expect(response).to render_template 'demands/demands_tab'
+            expect(assigns(:demands).map(&:id)).to eq [second_demand.id]
+          end
         end
       end
 
