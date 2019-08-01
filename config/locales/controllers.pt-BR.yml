@@ -114,6 +114,7 @@ pt-BR:
     leadtime: "Lead time"
     list: "Lista"
     map: "Mapa"
+    effort_hours_text: "%{hours_value} horas de esforço"
   header:
     logout: Sair
     sign_up: Cadastre-se

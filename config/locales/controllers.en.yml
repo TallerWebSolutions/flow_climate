@@ -114,6 +114,7 @@ en:
     leadtime: "Lead time"
     list: "List"
     map: "Map"
+    effort_hours_text: "%{hours_value} hours of effort"
   header:
     logout: Logout
     explore: Explore

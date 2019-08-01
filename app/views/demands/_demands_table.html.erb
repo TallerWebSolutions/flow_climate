@@ -3,11 +3,12 @@
     <div class="col-xs-12">
       <div id="demands_count">
         <h4>
-          <%= "#{t('general.total')}: #{t('demands.index.count', demands_count: demands.count)}" %>
+          <%= "#{I18n.t('demands.index.count', demands_count: demands.count)}" %>
           <% if share_demands_blocked.present? %>
             <sup><%= "(#{I18n.t('demands.stats.share_demands_blocked', percentage_blocks: number_to_percentage(share_demands_blocked * 100, precision: 2))})" %></sup>
           <% end %>
         </h4>
+        <div><%= "#{I18n.t('general.effort_hours_text', hours_value: number_with_precision(demands.sum(&:total_effort), precision: 2))}" %></div>
       </div>
     </div>
   </div>
