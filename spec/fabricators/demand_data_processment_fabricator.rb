@@ -4,7 +4,7 @@ Fabricator(:demand_data_processment) do
   user
   user_plan
 
-  project_key { Faker::Lorem.characters(4) }
+  project_key { Faker::Lorem.characters }
 
-  downloaded_content { Faker::Lorem.paragraph(3) }
+  downloaded_content { Faker::Lorem.paragraph }
 end

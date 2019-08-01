@@ -32,6 +32,7 @@ pt-BR:
         one: não possui o tamanho esperado (1 caracter)
         other: não possui o tamanho esperado (%{count} caracteres)
       other_than: deve ser diferente de %{count}
+      mini_magick_processing_error: 'Falha ao processar a imagem no minimagick'
     template:
       body: 'Por favor, verifique o(s) seguinte(s) campo(s):'
       header:
