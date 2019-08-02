@@ -904,6 +904,8 @@ en:
     create:
       success: "Flow impact created."
       error: "Problems were found while creating the Flow Impact"
+    edit:
+      tooltip: "Edit Impact"
   jira_accounts:
     new:
       title: "New Jira Account"

@@ -43,6 +43,18 @@ RSpec.describe FlowImpactsController, type: :controller do
 
       it { is_expected.to redirect_to new_user_session_path }
     end
+
+    describe 'GET #edit' do
+      before { get :edit, params: { company_id: 'bar', project_id: 'foo', id: 'xpto' } }
+
+      it { is_expected.to redirect_to new_user_session_path }
+    end
+
+    describe 'PUT #update' do
+      before { put :update, params: { company_id: 'bar', project_id: 'foo', id: 'xpto' } }
+
+      it { is_expected.to redirect_to new_user_session_path }
+    end
   end
 
   context 'authenticated' do
@@ -126,20 +138,26 @@ RSpec.describe FlowImpactsController, type: :controller do
     end
 
     describe 'POST #create' do
+      let!(:first_impact) { Fabricate :flow_impact, project: project, demand: demand, start_date: 1.day.ago }
+      let!(:second_impact) { Fabricate :flow_impact, project: project, demand: demand, start_date: 2.days.ago }
+
       context 'valid parameters' do
         let(:demand) { Fabricate :demand, project: project }
 
-        before { post :create, params: { company_id: company, project_id: project, flow_impact: { demand_id: demand.id, impact_type: :api_not_ready, impact_description: 'foo bar', start_date: Time.zone.local(2019, 4, 2, 12, 38, 0), end_date: Time.zone.local(2019, 4, 2, 15, 38, 0) } }, xhr: true }
+        before { post :create, params: { company_id: company, project_id: project, flow_impact: { demand_id: demand.id, impact_type: :api_not_ready, impact_description: 'foo bar', start_date: Time.zone.now.beginning_of_day, end_date: Time.zone.now.end_of_day } }, xhr: true }
 
         it 'creates the impact and renders the JS template' do
-          expect(response).to render_template 'flow_impacts/create.js.erb'
-          expect(assigns(:flow_impact)).to be_persisted
-          expect(assigns(:flow_impact).project).to eq project
-          expect(assigns(:flow_impact).demand).to eq demand
-          expect(assigns(:flow_impact).impact_type).to eq 'api_not_ready'
-          expect(assigns(:flow_impact).impact_description).to eq 'foo bar'
-          expect(assigns(:flow_impact).start_date).to eq Time.zone.local(2019, 4, 2, 12, 38, 0)
-          expect(assigns(:flow_impact).end_date).to eq Time.zone.local(2019, 4, 2, 15, 38, 0)
+          expect(response).to render_template 'flow_impacts/create_update.js.erb'
+          created_impact = assigns(:flow_impact)
+
+          expect(assigns(:flow_impacts)).to eq [created_impact, first_impact, second_impact]
+          expect(created_impact).to be_persisted
+          expect(created_impact.project).to eq project
+          expect(created_impact.demand).to eq demand
+          expect(created_impact.impact_type).to eq 'api_not_ready'
+          expect(created_impact.impact_description).to eq 'foo bar'
+          expect(created_impact.start_date).to eq Time.zone.now.beginning_of_day
+          expect(created_impact.end_date.to_i).to eq Time.zone.now.end_of_day.to_i
         end
       end
 
@@ -266,8 +284,8 @@ RSpec.describe FlowImpactsController, type: :controller do
         let!(:second_impact) { Fabricate :flow_impact, project: project, demand: demand, start_date: 2.days.ago }
 
         it 'assign the instance variable and renders the template' do
-          get :flow_impacts_tab, params: { company_id: company, projects_ids: [project.id].join(',') }, xhr: true
-          expect(response).to render_template 'flow_impacts/flow_impacts_tab'
+          get :flow_impacts_tab, params: { company_id: company, project_id: project }, xhr: true
+          expect(response).to render_template 'flow_impacts/flow_impacts_tab.js.erb'
           expect(assigns(:flow_impacts)).to eq [second_impact, first_impact]
         end
       end
@@ -275,7 +293,7 @@ RSpec.describe FlowImpactsController, type: :controller do
       context 'passing invalid' do
         context 'company' do
           context 'not found' do
-            before { get :flow_impacts_tab, params: { company_id: 'foo', projects_ids: [project.id].join(',') } }
+            before { get :flow_impacts_tab, params: { company_id: 'foo', project_id: project } }
 
             it { expect(response).to have_http_status :not_found }
           end
@@ -283,7 +301,7 @@ RSpec.describe FlowImpactsController, type: :controller do
           context 'not permitted' do
             let(:not_permitted_company) { Fabricate :company }
 
-            before { get :flow_impacts_tab, params: { company_id: not_permitted_company, projects_ids: [project.id].join(',') } }
+            before { get :flow_impacts_tab, params: { company_id: not_permitted_company, project_id: project } }
 
             it { expect(response).to have_http_status :not_found }
           end
@@ -320,6 +338,84 @@ RSpec.describe FlowImpactsController, type: :controller do
         context 'project' do
           context 'not found' do
             before { get :demands_to_project, params: { company_id: company, project_id: 'foo' } }
+
+            it { expect(response).to have_http_status :not_found }
+          end
+        end
+      end
+    end
+
+    describe 'GET #edit' do
+      let(:flow_impact) { Fabricate :flow_impact, project: project }
+
+      context 'passing valid parameters' do
+        it 'assign the instance variable and renders the template' do
+          get :edit, params: { company_id: company, project_id: project, id: flow_impact }, xhr: true
+          expect(response).to render_template 'flow_impacts/edit.js.erb'
+          expect(assigns(:demands_for_impact_form)).to eq [other_demand, demand]
+          expect(assigns(:flow_impact)).to eq flow_impact
+        end
+      end
+
+      context 'passing invalid' do
+        context 'company' do
+          context 'not found' do
+            before { get :edit, params: { company_id: 'foo', project_id: project, id: flow_impact } }
+
+            it { expect(response).to have_http_status :not_found }
+          end
+
+          context 'not permitted' do
+            let(:not_permitted_company) { Fabricate :company }
+
+            before { get :edit, params: { company_id: not_permitted_company, project_id: project, id: flow_impact } }
+
+            it { expect(response).to have_http_status :not_found }
+          end
+        end
+      end
+    end
+
+    describe 'PUT #update' do
+      let(:flow_impact) { Fabricate :flow_impact, project: project }
+
+      context 'valid parameters' do
+        let(:demand) { Fabricate :demand, project: project }
+
+        before { put :update, params: { company_id: company, project_id: project, id: flow_impact, flow_impact: { demand_id: demand.id, impact_type: :api_not_ready, impact_description: 'foo bar', start_date: Time.zone.local(2019, 4, 2, 12, 38, 0), end_date: Time.zone.local(2019, 4, 2, 15, 38, 0) } }, xhr: true }
+
+        it 'creates the impact and renders the JS template' do
+          expect(response).to render_template 'flow_impacts/create_update.js.erb'
+          expect(assigns(:flow_impacts)).to eq [flow_impact]
+
+          expect(assigns(:flow_impact)).to be_persisted
+          expect(assigns(:flow_impact).project).to eq project
+          expect(assigns(:flow_impact).demand).to eq demand
+          expect(assigns(:flow_impact).impact_type).to eq 'api_not_ready'
+          expect(assigns(:flow_impact).impact_description).to eq 'foo bar'
+          expect(assigns(:flow_impact).start_date).to eq Time.zone.local(2019, 4, 2, 12, 38, 0)
+          expect(assigns(:flow_impact).end_date).to eq Time.zone.local(2019, 4, 2, 15, 38, 0)
+        end
+      end
+
+      context 'passing invalid' do
+        context 'parameters' do
+          before { put :update, params: { company_id: company, project_id: project, id: flow_impact, flow_impact: { demand_id: '', start_date: nil, impact_type: nil, impact_description: nil } } }
+
+          it { expect(assigns(:flow_impact).errors.full_messages).to eq ['Iniciou em não pode ficar em branco', 'Tipo do Impacto não pode ficar em branco', 'Descrição do Impacto não pode ficar em branco'] }
+        end
+
+        context 'company' do
+          context 'not found' do
+            before { put :update, params: { company_id: 'foo', project_id: project, id: flow_impact } }
+
+            it { expect(response).to have_http_status :not_found }
+          end
+
+          context 'not permitted' do
+            let(:not_permitted_company) { Fabricate :company }
+
+            before { put :update, params: { company_id: not_permitted_company, project_id: project, id: flow_impact } }
 
             it { expect(response).to have_http_status :not_found }
           end

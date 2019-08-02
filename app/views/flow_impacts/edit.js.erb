@@ -1,6 +1,6 @@
 var flow_impact_div = $('#flow-impacts-tab');
 
-flow_impact_div.html("<%= escape_javascript(render('flow_impacts/new', company: @company.id, project: @project.id, flow_impact: @flow_impact, demands_for_impact_form: @demands_for_impact_form)) %>");
+flow_impact_div.html("<%= escape_javascript(render('flow_impacts/edit', company: @company, project: @project, flow_impact: @flow_impact, demands_for_impact_form: @demands_for_impact_form)) %>");
 
 $('#general-loader').hide();
 flow_impact_div.show();

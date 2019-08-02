@@ -891,6 +891,8 @@ pt-BR:
     create:
       success: "Impacto de fluxo criado."
       error: "Problemas foram encontrados para salvar o Impacto"
+    edit:
+      tooltip: "Editar Impacto"
   jira_accounts:
     new:
       title: "Nova Conta do Jira"

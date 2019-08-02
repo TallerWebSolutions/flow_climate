@@ -23,7 +23,7 @@ class DemandsRepository
     demands_stories_to_projects(projects).to_end_dates(start_period, end_period)
   end
 
-  def throughput_to_products_and_period(products, team, start_period, end_period)
+  def throughput_to_products_team_and_period(products, team, start_period, end_period)
     Demand.kept.story.where(product_id: products, team: team).to_end_dates(start_period, end_period)
   end
 

@@ -21,6 +21,10 @@
           <%= link_to company_flow_impact_path(company, flow_impact), method: :delete, data: { confirm: I18n.t('general.destroy.confirm') }, remote: true do %>
             <i class="fa fa-times" title='<%= I18n.t('flow_impacts.destroy.tooltip') %>'></i>
           <% end %>
+
+          <%= link_to edit_company_project_flow_impact_path(company, flow_impact.project, flow_impact), remote: true do %>
+            <i class="fas fa-edit" title='<%= I18n.t('flow_impacts.edit.tooltip') %>'></i>
+          <% end %>
         </td>
       </tr>
     <% end %>

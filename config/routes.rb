@@ -125,10 +125,12 @@ Rails.application.routes.draw do
         end
       end
 
-      resources :flow_impacts, only: %i[new create]
+      resources :flow_impacts, except: :index do
+        get :flow_impacts_tab, on: :collection
+      end
 
       scope :jira do
-        resources :jira_project_configs, only: %i[new create destroy], module: 'jira' do
+        resources :jira_project_configs, only: %i[new create destroy edit], module: 'jira' do
           put :synchronize_jira, on: :member
         end
       end
@@ -194,7 +196,6 @@ Rails.application.routes.draw do
         get :new_direct_link
         post :create_direct_link
         get 'demands_to_project/(:project_id)', action: :demands_to_project
-        get :flow_impacts_tab
       end
     end
 
