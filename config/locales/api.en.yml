@@ -9,3 +9,6 @@ en:
       message: "Object not found"
   navbar:
     copy_api_token: "Copy API Token"
+  demands:
+    show:
+      title: "Item Show"
