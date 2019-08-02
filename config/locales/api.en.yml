@@ -2,6 +2,8 @@ en:
   teams:
     average_demand_cost:
       message: "Average Demand Cost"
+    items_in_wip:
+      message: "Items in Progress"
   general:
     not_found:
       message: "Object not found"

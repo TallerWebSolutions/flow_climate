@@ -26,4 +26,10 @@ RSpec.describe TeamMember, type: :model do
       it { expect(described_class.active).to match_array [active, other_active] }
     end
   end
+
+  describe '#to_hash' do
+    let(:team_member) { Fabricate :team_member }
+
+    it { expect(team_member.to_hash).to eq(member_name: team_member.name, jira_account_id: team_member.jira_account_id) }
+  end
 end

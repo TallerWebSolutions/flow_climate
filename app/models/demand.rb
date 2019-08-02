@@ -124,6 +124,22 @@ class Demand < ApplicationRecord
     ]
   end
 
+  def to_hash
+    {
+      id: id,
+      demand_id: demand_id,
+      demand_title: demand_title,
+      effort_upstream: effort_upstream,
+      effort_downstream: effort_downstream,
+      cost_to_project: cost_to_project,
+      current_stage: current_stage&.name,
+      time_in_current_stage: time_in_current_stage,
+      partial_leadtime: partial_leadtime,
+      responsibles: team_members.map(&:to_hash),
+      demand_blocks: demand_blocks.map(&:to_hash)
+    }
+  end
+
   def update_effort!(update_manual_effort = false)
     return if manual_effort? && !update_manual_effort
 
