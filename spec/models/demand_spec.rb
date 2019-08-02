@@ -751,4 +751,10 @@ RSpec.describe Demand, type: :model do
     it { expect(product_demand.product_tree).to eq [product, product_demand] }
     it { expect(no_product_demand.product_tree).to eq [no_product_demand] }
   end
+
+  describe '#to_hash' do
+    let(:demand) { Fabricate :demand }
+
+    it { expect(demand.to_hash).to eq(id: demand.id, demand_id: demand.demand_id, demand_title: demand.demand_title, effort_upstream: demand.effort_upstream, effort_downstream: demand.effort_downstream, cost_to_project: demand.cost_to_project, current_stage: demand.current_stage&.name, time_in_current_stage: demand.time_in_current_stage, partial_leadtime: demand.partial_leadtime, responsibles: demand.team_members.map { |member| { member_name: member.name, jira_account_id: member.jira_account_id } }, demand_blocks: demand.demand_blocks.map { |block| { blocker_username: block.blocker_username, block_time: block.block_time, block_reason: block.block_reason, unblock_time: block.unblock_time } }) }
+  end
 end

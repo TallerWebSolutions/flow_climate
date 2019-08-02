@@ -35,4 +35,8 @@ class TeamMember < ApplicationRecord
   validates :team, :name, :monthly_payment, :hours_per_month, presence: true
 
   scope :active, -> { where active: true }
+
+  def to_hash
+    { member_name: name, jira_account_id: jira_account_id }
+  end
 end

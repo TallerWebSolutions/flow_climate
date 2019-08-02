@@ -118,4 +118,10 @@ RSpec.describe DemandBlock, type: :model do
       it { expect(demand_block.total_blocked_time).to eq 0 }
     end
   end
+
+  describe '#to_hash' do
+    let(:demand_block) { Fabricate :demand_block }
+
+    it { expect(demand_block.to_hash).to eq(blocker_username: demand_block.blocker_username, block_time: demand_block.block_time, block_reason: demand_block.block_reason, unblock_time: demand_block.unblock_time) }
+  end
 end

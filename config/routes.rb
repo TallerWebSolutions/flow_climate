@@ -6,7 +6,10 @@ Rails.application.routes.draw do
   namespace 'api' do
     namespace 'v1' do
       resources :teams, only: [] do
-        get :average_demand_cost, on: :member
+        member do
+          get :average_demand_cost
+          get :items_in_wip
+        end
       end
 
       resources :projects, only: [] do

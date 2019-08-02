@@ -2,6 +2,8 @@ pt-BR:
   teams:
     average_demand_cost:
       message: "Custo Médio por Demanda"
+    items_in_wip:
+      message: "Items em Andamento"
   general:
     not_found:
       message: "Objeto não encontrado"

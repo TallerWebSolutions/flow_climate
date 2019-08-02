@@ -57,6 +57,10 @@ class DemandBlock < ApplicationRecord
     ]
   end
 
+  def to_hash
+    { blocker_username: blocker_username, block_time: block_time, block_reason: block_reason, unblock_time: unblock_time }
+  end
+
   def activate!
     update(active: true)
   end
