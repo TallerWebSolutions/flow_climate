@@ -15,6 +15,8 @@ Rails.application.routes.draw do
       resources :projects, only: [] do
         resources :flow_impacts, only: :create
       end
+
+      resources :demands, only: :show
     end
   end
 

@@ -9,3 +9,6 @@ pt-BR:
       message: "Objeto não encontrado"
   navbar:
     copy_api_token: "Copiar API Token"
+  demands:
+    show:
+      title: "Show Item"
