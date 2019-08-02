@@ -2,33 +2,33 @@
 
 class FlowImpactsController < AuthenticatedController
   before_action :assign_company
-  before_action :assign_project, except: %i[flow_impacts_tab new_direct_link create_direct_link]
+  before_action :assign_project, except: %i[new_direct_link create_direct_link]
+  before_action :assign_flow_impact, only: %i[destroy edit update]
 
   def new
-    @flow_impact = FlowImpact.new
+    @flow_impact = FlowImpact.new(project: @project)
     @demands_for_impact_form = @project.demands.in_wip.order(:demand_id)
+    assign_flow_impacts_list
     render 'flow_impacts/new.js.erb'
   end
 
   def create
     @flow_impact = FlowImpact.new(flow_impact_params.merge(project: @project))
     @flow_impact.save
-    @flow_impacts = @project.flow_impacts.order(:start_date)
+    assign_flow_impacts_list
     @demands_for_impact_form = @project.demands.in_wip
-    render 'flow_impacts/create.js.erb'
+    render 'flow_impacts/create_update.js.erb'
   end
 
   def destroy
-    @flow_impact = FlowImpact.find(params[:id])
     @flow_impact.destroy
-    @flow_impacts = @project.flow_impacts.order(:start_date)
+    assign_flow_impacts_list
     render 'flow_impacts/destroy.js.erb'
   end
 
   def flow_impacts_tab
-    @projects = Project.where(id: params[:projects_ids].split(','))
-    @flow_impacts = FlowImpact.where(id: @projects.map { |project| project.flow_impacts.map(&:id) }.flatten).order(:start_date)
-    respond_to { |format| format.js { render 'flow_impacts/flow_impacts_tab' } }
+    @flow_impacts = FlowImpact.where(project_id: @project).order(:start_date)
+    respond_to { |format| format.js { render 'flow_impacts/flow_impacts_tab.js.erb' } }
   end
 
   def new_direct_link
@@ -55,7 +55,28 @@ class FlowImpactsController < AuthenticatedController
     render 'flow_impacts/demands_to_project.js.erb'
   end
 
+  def edit
+    assign_flow_impacts_list
+    @demands_for_impact_form = @project.demands.in_wip.order(:demand_id)
+    render 'flow_impacts/edit.js.erb'
+  end
+
+  def update
+    @flow_impact.update(flow_impact_params)
+    assign_flow_impacts_list
+    @demands_for_impact_form = @project.demands.in_wip
+    render 'flow_impacts/create_update.js.erb'
+  end
+
   private
+
+  def assign_flow_impacts_list
+    @flow_impacts = @project.flow_impacts.order(start_date: :desc)
+  end
+
+  def assign_flow_impact
+    @flow_impact = FlowImpact.find(params[:id])
+  end
 
   def flow_impact_params
     params.require(:flow_impact).permit(:demand_id, :start_date, :end_date, :impact_description, :impact_type)
