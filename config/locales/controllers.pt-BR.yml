@@ -482,6 +482,8 @@ pt-BR:
       drill_down_little_law_title: "Lei de Little"
       drill_down_scope_deadline: "Escopo e Prazo"
     remaining_time: "Tempo Restante"
+    leadtime:
+      drill_down_title: "Detalhamento do lead time de %{target_name}"
   teams:
     index:
       title: "Times"
@@ -651,6 +653,17 @@ pt-BR:
     grouped_by_stage:
       time_in_stage: "Tempo na Etapa"
       hours_in_stage: "Horas na Etapa"
+    statistics:
+      leadtime_by_type:
+        title: "Lead time por tipo - 80%"
+        feature: "Nova Funcionalidade"
+        bug: "Bug"
+        chore: "Chore"
+      leadtime_by_class_of_service:
+        title: "Lead time por classe de serviço - 80%"
+        standard: "Padrão"
+        fixed_date: "Data Fixa"
+        expedite: "Expedição"
   project_risk_configs:
     new:
       title: "Nova Configuração de Risco"

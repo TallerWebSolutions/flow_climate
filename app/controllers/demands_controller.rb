@@ -22,11 +22,13 @@ class DemandsController < AuthenticatedController
   def destroy
     @demand.discard
 
+    assign_dates_to_query
+
     @demands = DemandsList.kept.where(id: params[:demands_ids].split(','))
     build_grouping_query(@demands, params[:grouping])
 
     assign_consolidations
-    @demands_chart_adapter = Highchart::DemandsChartsAdapter.new(@demands, start_date_to_query, end_date_to_query, params[:grouping_period])
+    @demands_chart_adapter = Highchart::DemandsChartsAdapter.new(@demands, @start_date, @end_date, params[:grouping_period])
 
     respond_to { |format| format.js { render 'demands/search_demands' } }
   end
@@ -77,25 +79,29 @@ class DemandsController < AuthenticatedController
   def demands_in_projects
     filtered_demands_list_view = DemandsRepository.instance.demands_created_before_date_to_projects(@projects)
 
-    @demands = build_date_query_and_order(filtered_demands_list_view, start_date_to_query, end_date_to_query)
+    assign_dates_to_query
+
+    @demands = build_date_query_and_order(filtered_demands_list_view, @start_date, @end_date)
     @demands_count_per_week = DemandService.instance.quantitative_consolidation_per_week_to_projects(@projects)
     @discarded_demands = DemandsRepository.instance.discarded_demands_to_projects(@projects)
 
     assign_consolidations
 
-    @demands_chart_adapter = Highchart::DemandsChartsAdapter.new(@demands, start_date_to_query, end_date_to_query, 'week')
+    @demands_chart_adapter = Highchart::DemandsChartsAdapter.new(@demands, @start_date, @end_date, 'week')
 
     respond_to { |format| format.js { render 'demands/demands_tab' } }
   end
 
   def search_demands
-    @demands = query_demands(start_date_to_query, end_date_to_query)
+    assign_dates_to_query
+
+    @demands = query_demands(@start_date, @end_date)
 
     build_grouping_query(@demands, params[:grouping])
 
     assign_consolidations
 
-    @demands_chart_adapter = Highchart::DemandsChartsAdapter.new(@demands, start_date_to_query, end_date_to_query, params[:grouping_period])
+    @demands_chart_adapter = Highchart::DemandsChartsAdapter.new(@demands, @start_date, @end_date, params[:grouping_period])
 
     respond_to { |format| format.js { render 'demands/search_demands' } }
   end
@@ -108,18 +114,21 @@ class DemandsController < AuthenticatedController
 
   private
 
+  def assign_dates_to_query
+    @start_date = start_date_to_query
+    @end_date = end_date_to_query
+  end
+
   def start_date_to_query
-    if params['start_date'].present?
-      params['start_date'].to_date
-    elsif @projects.present? && @projects.executing.blank?
-      @projects.map(&:start_date).min
-    else
-      [@demands&.map(&:created_date)&.min, 3.months.ago].compact.max.to_date
-    end
+    return params['start_date'].to_date if params['start_date'].present?
+
+    @projects&.map(&:start_date)&.min || Time.zone.today
   end
 
   def end_date_to_query
-    (params['end_date'] || @demands&.map(&:end_date)&.compact&.max || Time.zone.today).to_date
+    return params['end_date'].to_date if params['end_date'].present?
+
+    [@projects&.map(&:end_date)&.max, Time.zone.today].compact.min.to_date
   end
 
   def query_demands(start_date, end_date)

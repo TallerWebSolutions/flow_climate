@@ -493,4 +493,111 @@ RSpec.describe ProjectConsolidation, type: :model do
       it { expect(project_consolidation.customer_happiness.to_f).to eq 0 }
     end
   end
+
+  RSpec.shared_context 'demands with lead time', shared_context: :metadata do
+    let(:project) { Fabricate :project, end_date: 4.weeks.from_now }
+
+    let!(:first_demand) { Fabricate :demand, project: project, commitment_date: 3.days.ago, end_date: 2.hours.ago, demand_type: :feature, class_of_service: :standard }
+    let!(:second_demand) { Fabricate :demand, project: project, commitment_date: 4.days.ago, end_date: Time.zone.now, demand_type: :feature, class_of_service: :fixed_date }
+    let!(:third_demand) { Fabricate :demand, project: project, commitment_date: 4.hours.ago, end_date: Time.zone.now, demand_type: :bug, class_of_service: :standard }
+    let!(:fourth_demand) { Fabricate :demand, project: project, commitment_date: 4.hours.ago, end_date: Time.zone.now, demand_type: :chore, class_of_service: :expedite }
+    let!(:fifth_demand) { Fabricate :demand, project: project, commitment_date: 4.hours.ago, end_date: Time.zone.now, demand_type: :chore, class_of_service: :standard }
+    let!(:sixth_demand) { Fabricate :demand, project: project, commitment_date: 4.hours.ago, end_date: Time.zone.now, demand_type: :bug, class_of_service: :expedite }
+  end
+
+  describe '#lead_time_feature' do
+    include_context 'demands with lead time'
+
+    context 'with data' do
+      let!(:project_consolidation) { Fabricate :project_consolidation, project: project, consolidation_date: 1.day.ago, demands_ids: Demand.all.map(&:id) }
+
+      it { expect(project_consolidation.lead_time_feature.to_f).to be_within(0.01).of(326_880.00) }
+    end
+
+    context 'with no data' do
+      let!(:project_consolidation) { Fabricate :project_consolidation, project: project, consolidation_date: 1.day.ago, demands_ids: [] }
+
+      it { expect(project_consolidation.lead_time_feature.to_f).to eq 0 }
+    end
+  end
+
+  describe '#lead_time_bug' do
+    include_context 'demands with lead time'
+
+    context 'with data' do
+      let!(:project_consolidation) { Fabricate :project_consolidation, project: project, consolidation_date: 1.day.ago, demands_ids: Demand.all.map(&:id) }
+
+      it { expect(project_consolidation.lead_time_bug.to_f).to be_within(0.01).of(14_400.00) }
+    end
+
+    context 'with no data' do
+      let!(:project_consolidation) { Fabricate :project_consolidation, project: project, consolidation_date: 1.day.ago, demands_ids: [] }
+
+      it { expect(project_consolidation.lead_time_bug.to_f).to eq 0 }
+    end
+  end
+
+  describe '#lead_time_chore' do
+    include_context 'demands with lead time'
+
+    context 'with data' do
+      let!(:project_consolidation) { Fabricate :project_consolidation, project: project, consolidation_date: 1.day.ago, demands_ids: Demand.all.map(&:id) }
+
+      it { expect(project_consolidation.lead_time_chore.to_f).to be_within(0.01).of(14_400.00) }
+    end
+
+    context 'with no data' do
+      let!(:project_consolidation) { Fabricate :project_consolidation, project: project, consolidation_date: 1.day.ago, demands_ids: [] }
+
+      it { expect(project_consolidation.lead_time_chore.to_f).to eq 0 }
+    end
+  end
+
+  describe '#lead_time_standard' do
+    include_context 'demands with lead time'
+
+    context 'with data' do
+      let!(:project_consolidation) { Fabricate :project_consolidation, project: project, consolidation_date: 1.day.ago, demands_ids: Demand.all.map(&:id) }
+
+      it { expect(project_consolidation.lead_time_standard.to_f).to be_within(0.01).of(156_960.00) }
+    end
+
+    context 'with no data' do
+      let!(:project_consolidation) { Fabricate :project_consolidation, project: project, consolidation_date: 1.day.ago, demands_ids: [] }
+
+      it { expect(project_consolidation.lead_time_standard.to_f).to eq 0 }
+    end
+  end
+
+  describe '#lead_time_fixed_date' do
+    include_context 'demands with lead time'
+
+    context 'with data' do
+      let!(:project_consolidation) { Fabricate :project_consolidation, project: project, consolidation_date: 1.day.ago, demands_ids: Demand.all.map(&:id) }
+
+      it { expect(project_consolidation.lead_time_fixed_date.to_f).to be_within(0.01).of(345_600.00) }
+    end
+
+    context 'with no data' do
+      let!(:project_consolidation) { Fabricate :project_consolidation, project: project, consolidation_date: 1.day.ago, demands_ids: [] }
+
+      it { expect(project_consolidation.lead_time_fixed_date.to_f).to eq 0 }
+    end
+  end
+
+  describe '#lead_time_expedite' do
+    include_context 'demands with lead time'
+
+    context 'with data' do
+      let!(:project_consolidation) { Fabricate :project_consolidation, project: project, consolidation_date: 1.day.ago, demands_ids: Demand.all.map(&:id) }
+
+      it { expect(project_consolidation.lead_time_expedite.to_f).to be_within(0.01).of(14_400.00) }
+    end
+
+    context 'with no data' do
+      let!(:project_consolidation) { Fabricate :project_consolidation, project: project, consolidation_date: 1.day.ago, demands_ids: [] }
+
+      it { expect(project_consolidation.lead_time_expedite.to_f).to eq 0 }
+    end
+  end
 end
