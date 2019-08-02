@@ -198,6 +198,8 @@ RSpec.describe DemandsController, type: :controller do
           delete :destroy, params: { company_id: company, id: demand, demands_ids: Demand.all.map(&:id) }, xhr: true
           expect(response).to render_template 'demands/search_demands'
           expect(demand.reload.discarded_at).not_to be_nil
+          expect(assigns(:start_date)).to eq Time.zone.today
+          expect(assigns(:end_date)).to eq Time.zone.today
           expect(assigns(:grouped_delivered_demands)).to be_nil
           expect(assigns(:demands).map(&:id)).to eq [first_demand.id, second_demand.id, third_demand.id, fourth_demand.id, fifth_demand.id, sixth_demand.id, seventh_demand.id, eigth_demand.id]
           expect(assigns(:confidence_95_leadtime)).to be_within(0.3).of(4.3)
@@ -519,14 +521,16 @@ RSpec.describe DemandsController, type: :controller do
           let(:first_project) { Fabricate :project, customers: [customer], products: [product], start_date: 3.days.ago, end_date: 1.day.from_now, status: :executing }
           let(:second_project) { Fabricate :project, customers: [customer], products: [product], start_date: 3.days.ago, end_date: 1.day.from_now, status: :finished }
 
-          let!(:first_demand) { Fabricate :demand, project: first_project, commitment_date: 1.day.ago, end_date: Time.zone.now }
-          let!(:second_demand) { Fabricate :demand, project: second_project, commitment_date: 3.hours.ago, end_date: Time.zone.now }
+          let!(:first_demand) { Fabricate :demand, project: first_project, created_date: 4.days.ago, commitment_date: 1.day.ago, end_date: Time.zone.now }
+          let!(:second_demand) { Fabricate :demand, project: second_project, created_date: 1.day.ago, commitment_date: 3.hours.ago, end_date: Time.zone.now }
 
-          let!(:third_demand) { Fabricate :demand, project: second_project, commitment_date: 3.hours.ago, end_date: Time.zone.now, discarded_at: Time.zone.now }
+          let!(:third_demand) { Fabricate :demand, project: second_project, created_date: 2.days.ago, commitment_date: 3.hours.ago, end_date: Time.zone.now, discarded_at: Time.zone.now }
 
           it 'builds the operation report and respond the JS render the template' do
             get :demands_in_projects, params: { company_id: company, projects_ids: [first_project, second_project].map(&:id).to_csv, period: :all }, xhr: true
             expect(response).to render_template 'demands/demands_tab'
+            expect(assigns(:start_date)).to eq 3.days.ago.to_date
+            expect(assigns(:end_date)).to eq Time.zone.today
             expect(assigns(:demands).map(&:id)).to match_array [first_demand.id, second_demand.id]
             expect(assigns(:discarded_demands).map(&:id)).to eq [third_demand.id]
             expect(assigns(:demands_count_per_week)[first_project.start_date.end_of_week][:arrived_in_week]).to match_array [second_demand, first_demand]

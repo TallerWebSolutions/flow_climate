@@ -466,6 +466,8 @@ en:
       drill_down_little_law_title: "Little's Law"
       drill_down_scope_deadline: "Scope and Deadline"
     remaining_time: "Remaining Time"
+    leadtime:
+      drill_down_title: "Lead time drill down for %{target_name}"
   project:
     new:
       title: "New Project"
@@ -613,6 +615,17 @@ en:
     grouped_by_stage:
       time_in_stage: "Time in Stage"
       hours_in_stage: "Hours in Stage"
+    statistics:
+      leadtime_by_type:
+        title: "Lead time by type - 80%"
+        feature: "New Feature"
+        bug: "Bug"
+        chore: "Chore"
+      leadtime_by_class_of_service:
+        title: "Lead time by class of service - 80%"
+        standard: "Standard"
+        fixed_date: "Fixed Date"
+        expedite: "Expedite"
   project_risk_configs:
     new:
       title: "New Risk Configuration"

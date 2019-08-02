@@ -198,6 +198,36 @@ class ProjectConsolidation < ApplicationRecord
     project.remaining_weeks((consolidation_date || Time.zone.today).end_of_week).to_f / project_monte_carlo_weeks_percentil
   end
 
+  def lead_time_feature(percentil = 80)
+    bugs_lead_time_compact = Demand.where(id: demands_ids).kept.feature.map(&:leadtime).compact
+    @lead_time_feature ||= Stats::StatisticsService.instance.percentile(percentil, bugs_lead_time_compact)
+  end
+
+  def lead_time_bug(percentil = 80)
+    bugs_lead_time_compact = Demand.where(id: demands_ids).kept.bug.map(&:leadtime).compact
+    @lead_time_bug ||= Stats::StatisticsService.instance.percentile(percentil, bugs_lead_time_compact)
+  end
+
+  def lead_time_chore(percentil = 80)
+    bugs_lead_time_compact = Demand.where(id: demands_ids).kept.chore.map(&:leadtime).compact
+    @lead_time_chore ||= Stats::StatisticsService.instance.percentile(percentil, bugs_lead_time_compact)
+  end
+
+  def lead_time_standard(percentil = 80)
+    bugs_lead_time_compact = Demand.where(id: demands_ids).kept.standard.map(&:leadtime).compact
+    @lead_time_standard ||= Stats::StatisticsService.instance.percentile(percentil, bugs_lead_time_compact)
+  end
+
+  def lead_time_fixed_date(percentil = 80)
+    bugs_lead_time_compact = Demand.where(id: demands_ids).kept.fixed_date.map(&:leadtime).compact
+    @lead_time_fixed_date ||= Stats::StatisticsService.instance.percentile(percentil, bugs_lead_time_compact)
+  end
+
+  def lead_time_expedite(percentil = 80)
+    bugs_lead_time_compact = Demand.where(id: demands_ids).kept.expedite.map(&:leadtime).compact
+    @lead_time_expedite ||= Stats::StatisticsService.instance.percentile(percentil, bugs_lead_time_compact)
+  end
+
   private
 
   def demands_lead_time_compact
