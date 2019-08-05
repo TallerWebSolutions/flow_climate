@@ -15,7 +15,7 @@
         <div class="row bottom-spaced-component">
           <div class="col-xs-3 center">
             <div class="stamp-title"><%= I18n.t('projects.show.status_report.cost') %></div>
-            <div class="stamp-content"><%= sanitize "#{number_to_currency(project.current_cost, decimal: 2)} <sup>#{number_to_percentage(100 - project.percentage_remaining_money, precision: 2)}</sup>" %></div>
+            <div class="stamp-content"><%= "#{number_to_currency(project.current_cost, decimal: 2)} <sup>#{number_to_percentage(100 - project.percentage_remaining_money, precision: 2)}</sup>".html_safe %></div>
           </div>
           <div class="col-xs-3 center">
             <div class="stamp-title"><%= I18n.t('projects.show.closing_info.hours') %></div>
@@ -40,7 +40,7 @@
         <div class="row bottom-spaced-component">
           <div class="col-xs-3 center">
             <div class="stamp-title"><%= I18n.t('projects.show.status_report.deadline') %></div>
-            <div class="stamp-content"><%= sanitize "#{I18n.l(project.end_date)} <sup>(#{I18n.t('general.risk.text', risk_value: number_to_percentage(project.current_risk_to_deadline * 100, precision: 2))})<sup>" %></div>
+            <div class="stamp-content"><%= "#{I18n.l(project.end_date)} <sup>(#{I18n.t('general.risk.text', risk_value: number_to_percentage(project.current_risk_to_deadline * 100, precision: 2))})<sup>".html_safe %></div>
           </div>
           <div class="col-xs-3 center">
             <div class="stamp-title"><%= I18n.t('projects.show.closing_info.first_deadline') %></div>

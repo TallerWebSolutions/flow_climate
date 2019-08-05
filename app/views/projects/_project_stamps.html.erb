@@ -80,7 +80,7 @@
         </h4>
       <% end %>
     <% else %>
-      <h2 class="center"><%= sanitize(I18n.t('projects.show.status_information_html', status_description: I18n.t("activerecord.attributes.project.enums.status.#{project.status}"))) %>
+      <h2 class="center"><%= (I18n.t('projects.show.status_information_html', status_description: I18n.t("activerecord.attributes.project.enums.status.#{project.status}")))&.html_safe %>
         <%= link_to closing_dashboard_company_project_path(company, project), remote: true do %>
           <i class="fas fa-archive" title="<%= I18n.t('projects.show.closing_info.title') %>"></i>
         <% end %>
@@ -117,7 +117,7 @@
     <% else %>
       <p><%= I18n.t('projects.show.inconsistent_demands.demands', value: inconsistent_demands.count ) %></p>
       <p>
-        <%= sanitize inconsistent_demands.map { |demand| link_to demand.demand_id, company_demand_url(company, demand) }.join(' | ') %>
+        <%= inconsistent_demands.map { |demand| link_to demand.demand_id, company_demand_url(company, demand) }.join(' | ')&.html_safe %>
       </p>
     <% end %>
   </div>

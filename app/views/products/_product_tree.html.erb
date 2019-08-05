@@ -19,7 +19,7 @@
               <div class='pull-right bottom-spaced-component'><%= Product.model_name.human %></div>
             </div>
           </span>
-          <%= sanitize(build_portfolio_tree(children)) %>
+          <%= build_portfolio_tree(children)&.html_safe %>
         </li>
       </ul>
     </div>
