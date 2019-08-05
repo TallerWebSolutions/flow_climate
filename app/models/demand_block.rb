@@ -4,21 +4,22 @@
 #
 # Table name: demand_blocks
 #
-#  active             :boolean          default(TRUE), not null
-#  block_duration     :integer
-#  block_reason       :string
-#  block_time         :datetime         not null
-#  block_type         :integer          default("coding_needed"), not null
-#  blocker_username   :string           not null
-#  created_at         :datetime         not null
-#  demand_block_id    :integer          not null
-#  demand_id          :integer          not null, indexed
-#  discarded_at       :datetime
-#  id                 :bigint(8)        not null, primary key
-#  stage_id           :integer
-#  unblock_time       :datetime
-#  unblocker_username :string
-#  updated_at         :datetime         not null
+#  active          :boolean          default(TRUE), not null
+#  block_duration  :integer
+#  block_reason    :string
+#  block_time      :datetime         not null
+#  block_type      :integer          default("coding_needed"), not null
+#  blocker_id      :integer          not null
+#  created_at      :datetime         not null
+#  demand_block_id :integer          not null
+#  demand_id       :integer          not null, indexed
+#  discarded_at    :datetime
+#  id              :bigint(8)        not null, primary key
+#  stage_id        :integer
+#  unblock_reason  :string
+#  unblock_time    :datetime
+#  unblocker_id    :integer
+#  updated_at      :datetime         not null
 #
 # Indexes
 #
@@ -27,6 +28,8 @@
 # Foreign Keys
 #
 #  fk_rails_0c8fa8d3a7  (demand_id => demands.id)
+#  fk_rails_11fee31fef  (blocker_id => team_members.id)
+#  fk_rails_196a395613  (unblocker_id => team_members.id)
 #  fk_rails_d25cb2ae7e  (stage_id => stages.id)
 #
 
@@ -37,8 +40,10 @@ class DemandBlock < ApplicationRecord
 
   belongs_to :demand
   belongs_to :stage
+  belongs_to :blocker, class_name: 'TeamMember', foreign_key: :blocker_id, inverse_of: :demand_blocks
+  belongs_to :unblocker, class_name: 'TeamMember', foreign_key: :unblocker_id, inverse_of: :demand_blocks
 
-  validates :demand, :demand_id, :demand_block_id, :blocker_username, :block_time, :block_type, presence: true
+  validates :demand, :demand_id, :demand_block_id, :blocker, :block_time, :block_type, presence: true
 
   before_save :update_computed_fields!
 
@@ -58,7 +63,7 @@ class DemandBlock < ApplicationRecord
   end
 
   def to_hash
-    { blocker_username: blocker_username, block_time: block_time, block_reason: block_reason, unblock_time: unblock_time }
+    { blocker_username: blocker.name, block_time: block_time, block_reason: block_reason, unblock_time: unblock_time }
   end
 
   def activate!

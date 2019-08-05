@@ -38,11 +38,11 @@ class Team < ApplicationRecord
   delegate :count, to: :projects, prefix: true
 
   def active_monthly_cost_for_billable_types(billable_type)
-    team_members.active.where(billable: true, billable_type: billable_type).sum(&:monthly_payment)
+    team_members.active.where(billable: true, billable_type: billable_type).map(&:monthly_payment).compact.sum
   end
 
   def active_monthly_available_hours_for_billable_types(billable_type)
-    team_members.active.where(billable: true, billable_type: billable_type).sum(&:hours_per_month)
+    team_members.active.where(billable: true, billable_type: billable_type).map(&:hours_per_month).compact.sum
   end
 
   def consumed_hours_in_month(required_date)

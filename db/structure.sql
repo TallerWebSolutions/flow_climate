@@ -193,9 +193,7 @@ CREATE TABLE public.demand_blocks (
     id bigint NOT NULL,
     demand_id integer NOT NULL,
     demand_block_id integer NOT NULL,
-    blocker_username character varying NOT NULL,
     block_time timestamp without time zone NOT NULL,
-    unblocker_username character varying,
     unblock_time timestamp without time zone,
     block_duration integer,
     created_at timestamp without time zone NOT NULL,
@@ -204,7 +202,10 @@ CREATE TABLE public.demand_blocks (
     block_type integer DEFAULT 0 NOT NULL,
     discarded_at timestamp without time zone,
     stage_id integer,
-    block_reason character varying
+    block_reason character varying,
+    blocker_id integer NOT NULL,
+    unblocker_id integer,
+    unblock_reason character varying
 );
 
 
@@ -1249,8 +1250,8 @@ ALTER SEQUENCE public.stages_teams_id_seq OWNED BY public.stages_teams.id;
 CREATE TABLE public.team_members (
     id bigint NOT NULL,
     name character varying NOT NULL,
-    monthly_payment numeric NOT NULL,
-    hours_per_month integer NOT NULL,
+    monthly_payment numeric,
+    hours_per_month integer,
     active boolean DEFAULT true,
     billable boolean DEFAULT true,
     billable_type integer DEFAULT 0,
@@ -2462,6 +2463,13 @@ CREATE INDEX index_stages_teams_on_team_id ON public.stages_teams USING btree (t
 
 
 --
+-- Name: index_team_members_on_team_id_and_name_and_jira_account_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_team_members_on_team_id_and_name_and_jira_account_id ON public.team_members USING btree (team_id, name, jira_account_id);
+
+
+--
 -- Name: index_teams_on_company_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2627,6 +2635,14 @@ ALTER TABLE ONLY public.portfolio_units
 
 
 --
+-- Name: demand_blocks fk_rails_11fee31fef; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.demand_blocks
+    ADD CONSTRAINT fk_rails_11fee31fef FOREIGN KEY (blocker_id) REFERENCES public.team_members(id);
+
+
+--
 -- Name: products_projects fk_rails_170b9c6651; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2640,6 +2656,14 @@ ALTER TABLE ONLY public.products_projects
 
 ALTER TABLE ONLY public.team_members
     ADD CONSTRAINT fk_rails_194b5b076d FOREIGN KEY (team_id) REFERENCES public.teams(id);
+
+
+--
+-- Name: demand_blocks fk_rails_196a395613; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.demand_blocks
+    ADD CONSTRAINT fk_rails_196a395613 FOREIGN KEY (unblocker_id) REFERENCES public.team_members(id);
 
 
 --
@@ -3180,6 +3204,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190716135342'),
 ('20190719194438'),
 ('20190723195649'),
-('20190730122201');
+('20190730122201'),
+('20190805181747');
 
 

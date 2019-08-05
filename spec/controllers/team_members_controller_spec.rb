@@ -37,6 +37,12 @@ RSpec.describe TeamMembersController, type: :controller do
 
       it { expect(response).to redirect_to new_user_session_path }
     end
+
+    describe 'DELETE #destroy' do
+      before { delete :destroy, params: { company_id: 'xpto', team_id: 'bar', id: 'foo' } }
+
+      it { expect(response).to redirect_to new_user_session_path }
+    end
   end
 
   context 'authenticated' do
@@ -103,7 +109,7 @@ RSpec.describe TeamMembersController, type: :controller do
         it 'does not create the team member and re-render the template with the errors' do
           expect(TeamMember.last).to be_nil
           expect(response).to render_template :new
-          expect(assigns(:team_member).errors.full_messages).to eq ['Nome não pode ficar em branco', 'Pagamento mensal não pode ficar em branco', 'Horas por mês não pode ficar em branco']
+          expect(assigns(:team_member).errors.full_messages).to eq ['Nome não pode ficar em branco']
         end
       end
     end
@@ -185,7 +191,7 @@ RSpec.describe TeamMembersController, type: :controller do
 
           it 'does not update the member and re-render the template with the errors' do
             expect(response).to render_template :edit
-            expect(assigns(:team_member).errors.full_messages).to eq ['Nome não pode ficar em branco', 'Pagamento mensal não pode ficar em branco', 'Horas por mês não pode ficar em branco']
+            expect(assigns(:team_member).errors.full_messages).to eq ['Nome não pode ficar em branco']
           end
         end
 
@@ -277,6 +283,42 @@ RSpec.describe TeamMembersController, type: :controller do
           let(:company) { Fabricate :company, users: [] }
 
           before { patch :deactivate, params: { company_id: company, team_id: team, id: team_member } }
+
+          it { expect(response).to have_http_status :not_found }
+        end
+      end
+    end
+
+    describe 'DELETE #destroy' do
+      let(:team) { Fabricate :team, company: company }
+      let(:team_member) { Fabricate :team_member, team: team }
+
+      context 'with valid data' do
+        it 'deletes the member and renders the template' do
+          delete :destroy, params: { company_id: company, team_id: team, id: team_member }, xhr: true
+
+          expect(TeamMember.all.count).to eq 0
+          expect(response).to render_template 'team_members/destroy'
+        end
+      end
+
+      context 'with invalid' do
+        context 'non-existent team member' do
+          before { delete :destroy, params: { company_id: company, team_id: team, id: 'foo' } }
+
+          it { expect(response).to have_http_status :not_found }
+        end
+
+        context 'non-existent team' do
+          before { delete :destroy, params: { company_id: company, team_id: 'foo', id: team_member } }
+
+          it { expect(response).to have_http_status :not_found }
+        end
+
+        context 'unpermitted company' do
+          let(:company) { Fabricate :company, users: [] }
+
+          before { delete :destroy, params: { company_id: company, team_id: team, id: team_member } }
 
           it { expect(response).to have_http_status :not_found }
         end

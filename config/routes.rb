@@ -76,7 +76,7 @@ Rails.application.routes.draw do
     end
 
     resources :teams do
-      resources :team_members, only: %i[new create edit update] do
+      resources :team_members, only: %i[new create edit update destroy] do
         member do
           patch :activate
           patch :deactivate

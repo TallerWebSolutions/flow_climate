@@ -5,7 +5,7 @@ class TeamMembersController < AuthenticatedController
 
   before_action :assign_company
   before_action :assign_team
-  before_action :assign_team_member, only: %i[edit update activate deactivate]
+  before_action :assign_team_member, only: %i[edit update activate deactivate destroy]
 
   def new
     @team_member = TeamMember.new(team: @team)
@@ -36,6 +36,12 @@ class TeamMembersController < AuthenticatedController
   def deactivate
     @team_member.update(active: false)
     redirect_to company_team_path(@company, @team)
+  end
+
+  def destroy
+    @team_member.destroy
+
+    respond_to { |format| format.js { render 'team_members/destroy' } }
   end
 
   private

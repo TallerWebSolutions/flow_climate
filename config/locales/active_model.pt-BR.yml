@@ -175,6 +175,8 @@ pt-BR:
             consulting: Consultoria
             training: Treinamento
             domestic_product: Produto Interno
+        validations:
+          name_unique: "Apenas um nome para o time e o id de conta do Jira."
       customer:
         name: Nome
         products: Produtos
@@ -323,9 +325,9 @@ pt-BR:
         demand_block_id: Id
         stage: Bloqueado em
         block_reason: Motivo
-        blocker_username: Bloqueado por
+        blocker: Bloqueado por
         block_time: Bloqueado em
-        unblocker_username: Desbloqueado por
+        unblocker: Desbloqueado por
         unblock_time: Desbloqueado em
         block_duration: Duração Útil
         active: Ativo?

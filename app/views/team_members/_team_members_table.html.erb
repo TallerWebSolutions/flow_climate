@@ -20,7 +20,7 @@
   </thead>
   <tbody>
     <% team_members.each do |member| %>
-      <tr>
+      <tr id="team_member_<%= member.id %>">
         <td><%= member.name %></td>
         <td><%= member.jira_account_user_email %></td>
         <td><%= member.jira_account_id %></td>
@@ -38,6 +38,9 @@
         <td>
           <%= link_to edit_company_team_team_member_path(company, team, member) do %>
             <i class="fas fa-edit"></i>
+          <% end %>
+          <%= link_to company_team_team_member_path(company, team, member), method: :delete, data: { confirm: I18n.t('general.destroy.confirm') }, remote: true do %>
+            <i class="fa fa-times"></i>
           <% end %>
           <% if member.active? %>
             <%= link_to deactivate_company_team_team_member_path(company, team, member), method: :patch do %>

@@ -182,20 +182,25 @@ RSpec.describe DemandBlocksController, type: :controller do
 
     describe 'PUT #update' do
       let(:company) { Fabricate :company, users: [user] }
+
+      let(:team) { Fabricate :team, company: company }
+      let(:team_member) { Fabricate :team_member, team: team }
+      let(:other_team_member) { Fabricate :team_member, team: team }
+
       let(:customer) { Fabricate :customer, company: company }
-      let!(:project) { Fabricate :project, customers: [customer] }
-      let(:demand) { Fabricate :demand, project: project }
+      let!(:project) { Fabricate :project, customers: [customer], team: team }
+      let(:demand) { Fabricate :demand, project: project, team: team }
       let(:demand_block) { Fabricate :demand_block, demand: demand, active: true }
 
       context 'passing valid parameters' do
-        before { put :update, params: { company_id: company, project_id: project, demand_id: demand, id: demand_block, demand_block: { block_type: :specification_needed, block_reason: 'bla', unblock_reason: 'foo', blocker_username: 'sbbrubles', unblocker_username: 'unblocker sbrubbles' } }, xhr: true }
+        before { put :update, params: { company_id: company, project_id: project, demand_id: demand, id: demand_block, demand_block: { block_type: :specification_needed, block_reason: 'bla', unblock_reason: 'foo', blocker_id: team_member.id, unblocker_id: other_team_member.id } }, xhr: true }
 
         it 'assigns the instance variable and renders the template' do
           updated_demand_block = assigns(:demand_block)
           expect(updated_demand_block.block_type).to eq 'specification_needed'
           expect(updated_demand_block.block_reason).to eq 'bla'
-          expect(updated_demand_block.blocker_username).to eq 'sbbrubles'
-          expect(updated_demand_block.unblocker_username).to eq 'unblocker sbrubbles'
+          expect(updated_demand_block.blocker).to eq team_member
+          expect(updated_demand_block.unblocker).to eq other_team_member
           expect(response).to render_template 'demand_blocks/update'
         end
       end

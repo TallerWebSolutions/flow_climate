@@ -3,9 +3,9 @@
 <td><%= block.block_reason %></td>
 <td><%= block.stage&.name %></td>
 <td><%= "#{block.block_duration} h" if block.block_duration.present? %></td>
-<td><%= block.blocker_username %></td>
+<td><%= block.blocker.name %></td>
 <td><%= I18n.l(block.block_time, format: :short) %></td>
-<td><%= block.unblocker_username %></td>
+<td><%= block.unblocker&.name %></td>
 <td><%= I18n.l(block.unblock_time, format: :short) if block.unblock_time.present? %></td>
 <td class="center">
   <% if block.active? %>

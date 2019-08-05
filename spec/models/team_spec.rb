@@ -54,6 +54,7 @@ RSpec.describe Team, type: :model do
     let(:company) { Fabricate :company }
     let(:team) { Fabricate :team, company: company }
     let!(:members) { Fabricate.times(4, :team_member, team: team, billable_type: :outsourcing) }
+    let!(:nil_monthly_payment_members) { Fabricate.times(10, :team_member, team: team, billable_type: :outsourcing, monthly_payment: nil, hours_per_month: nil) }
     let!(:consulting_members) { Fabricate.times(2, :team_member, team: team, billable_type: :consulting) }
     let!(:training_members) { Fabricate.times(6, :team_member, team: team, billable_type: :training) }
     let!(:not_billable_members) { Fabricate.times(10, :team_member, team: team, billable: false, billable_type: nil) }
@@ -66,6 +67,7 @@ RSpec.describe Team, type: :model do
     let(:company) { Fabricate :company }
     let(:team) { Fabricate :team, company: company }
     let!(:members) { Fabricate.times(4, :team_member, team: team, billable_type: :outsourcing) }
+    let!(:nil_monthly_payment_members) { Fabricate.times(10, :team_member, team: team, billable_type: :outsourcing, monthly_payment: nil, hours_per_month: nil) }
     let!(:consulting_members) { Fabricate.times(2, :team_member, team: team, billable_type: :consulting) }
     let!(:training_members) { Fabricate.times(6, :team_member, team: team, billable_type: :training) }
     let!(:not_billable_members) { Fabricate.times(10, :team_member, team: team, billable: false, billable_type: nil) }

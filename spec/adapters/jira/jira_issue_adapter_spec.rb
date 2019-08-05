@@ -11,12 +11,12 @@ RSpec.describe Jira::JiraIssueAdapter, type: :service do
   let(:customer) { Fabricate :customer, company: company }
 
   let(:team) { Fabricate :team, company: company }
-  let!(:default_member) { Fabricate :team_member, team: team }
-  let!(:other_company_member) { Fabricate :team_member, team: team }
+  let!(:default_member) { Fabricate :team_member, team: team, name: 'default member', jira_account_id: 'default member id' }
+  let!(:other_company_member) { Fabricate :team_member, team: team, name: 'other default member', jira_account_id: 'other default member id' }
 
   let(:product) { Fabricate :product, customer: customer }
 
-  let!(:first_project) { Fabricate :project, company: company, customers: [customer], products: [product] }
+  let!(:first_project) { Fabricate :project, company: company, team: team, customers: [customer], products: [product] }
 
   let!(:first_stage) { Fabricate :stage, company: company, integration_id: 'first_stage', projects: [first_project] }
   let!(:second_stage) { Fabricate :stage, company: company, integration_id: 'second_stage', projects: [first_project] }
@@ -179,30 +179,63 @@ RSpec.describe Jira::JiraIssueAdapter, type: :service do
       end
 
       context 'and it was blocked' do
-        let!(:jira_issue) { client.Issue.build({ key: '10000', summary: 'foo of bar', fields: { created: '2018-07-03T11:20:18.998-0300', issuetype: { name: 'chore' }, project: { key: 'foo' }, customfield_10024: [{ name: 'foo' }, { name: 'bar' }], customfield_10028: { value: 'sTandard' }, comment: { comments: [{ created: '2018-07-06T09:40:43.886000000-0300', body: '(flag) comment example', author: { emailAddress: 'bla@bar.com' } }] } }, changelog: { histories: [{ id: '10038', author: { displayName: 'bla' }, created: '2018-07-06T09:40:43.886-0300', items: [{ field: 'Impediment', fromString: '', to: '10055', toString: 'Impediment' }] }, { id: '10055', author: { displayName: 'xpto' }, created: '2018-07-06T13:40:43.886-0300', items: [{ field: 'Impediment', fromString: 'Impediment', to: '10055', toString: '' }] }, { id: '10057', author: { displayName: 'foo' }, created: '2018-07-09T13:40:43.886-0300', items: [{ field: 'Impediment', fromString: '', to: '10055', toString: 'Impediment' }] }] } }.with_indifferent_access) }
+        context 'with team members as blockers' do
+          let!(:team_member) { Fabricate :team_member, team: team, name: 'bla', jira_account_id: 'foo' }
+          let!(:other_team_member) { Fabricate :team_member, team: team, name: 'xpto', jira_account_id: 'bar' }
 
-        it 'creates the demand and the blocks information' do
-          described_class.instance.process_issue!(jira_account, product, first_project, jira_issue)
-          demand_created = Demand.last
-          expect(demand_created.demand_blocks.count).to eq 2
+          let!(:jira_issue) { client.Issue.build({ key: '10000', summary: 'foo of bar', fields: { created: '2018-07-03T11:20:18.998-0300', issuetype: { name: 'chore' }, project: { key: 'foo' }, customfield_10024: [{ name: 'foo' }, { name: 'bar' }], customfield_10028: { value: 'sTandard' }, comment: { comments: [{ created: '2018-07-06T09:40:43.886000000-0300', body: '(flag) comment example', author: { emailAddress: 'bla@bar.com' } }] } }, changelog: { histories: [{ id: '10038', author: { displayName: 'bla', accountId: 'foo' }, created: '2018-07-06T09:40:43.886-0300', items: [{ field: 'Impediment', fromString: '', to: '10055', toString: 'Impediment' }] }, { id: '10055', author: { displayName: 'xpto', accountId: 'bar' }, created: '2018-07-06T13:40:43.886-0300', items: [{ field: 'Impediment', fromString: 'Impediment', to: '10055', toString: '' }] }, { id: '10057', author: { displayName: 'xpto', accountId: 'bar' }, created: '2018-07-09T13:40:43.886-0300', items: [{ field: 'Impediment', fromString: '', to: '10055', toString: 'Impediment' }] }] } }.with_indifferent_access) }
 
-          first_demand_block = demand_created.demand_blocks.order(created_at: :asc).first
-          expect(first_demand_block.blocker_username).to eq 'bla'
-          expect(first_demand_block.block_reason).to eq '(flag) comment example'
-          expect(first_demand_block.block_time).to eq '2018-07-06T09:40:43.886000000-0300'
+          it 'creates the demand and the blocks information' do
+            described_class.instance.process_issue!(jira_account, product, first_project, jira_issue)
+            demand_created = Demand.last
+            expect(demand_created.demand_blocks.count).to eq 2
 
-          expect(first_demand_block.unblocker_username).to eq 'xpto'
-          expect(first_demand_block.unblock_time).to eq '2018-07-06T13:40:43.886-0300'
+            first_demand_block = demand_created.demand_blocks.order(created_at: :asc).first
+            expect(first_demand_block.blocker).to eq team_member
+            expect(first_demand_block.block_reason).to eq '(flag) comment example'
+            expect(first_demand_block.block_time).to eq '2018-07-06T09:40:43.886000000-0300'
 
-          second_demand_block = demand_created.demand_blocks.second
-          expect(second_demand_block.blocker_username).to eq 'foo'
-          expect(second_demand_block.block_time).to eq '2018-07-09T13:40:43.886-0300'
+            expect(first_demand_block.unblocker).to eq other_team_member
+            expect(first_demand_block.unblock_time).to eq '2018-07-06T13:40:43.886-0300'
 
-          expect(second_demand_block.unblocker_username).to be_nil
-          expect(second_demand_block.unblock_time).to be_nil
+            second_demand_block = demand_created.demand_blocks.second
+            expect(second_demand_block.blocker).to eq other_team_member
+            expect(second_demand_block.block_time).to eq '2018-07-09T13:40:43.886-0300'
 
-          expect(Demand.last.demand_comments.count).to eq 1
-          expect(Demand.last.demand_comments.last.team_member).to be_nil
+            expect(second_demand_block.unblocker).to be_nil
+            expect(second_demand_block.unblock_time).to be_nil
+
+            expect(Demand.last.demand_comments.count).to eq 1
+            expect(Demand.last.demand_comments.last.team_member).to be_nil
+          end
+        end
+
+        context 'with no team members previous created' do
+          let!(:jira_issue) { client.Issue.build({ key: '10000', summary: 'foo of bar', fields: { created: '2018-07-03T11:20:18.998-0300', issuetype: { name: 'chore' }, project: { key: 'foo' }, customfield_10024: [{ name: 'foo' }, { name: 'bar' }], customfield_10028: { value: 'sTandard' }, comment: { comments: [{ created: '2018-07-06T09:40:43.886000000-0300', body: '(flag) comment example', author: { emailAddress: 'bla@bar.com' } }] } }, changelog: { histories: [{ id: '10038', author: { displayName: 'bla', accountId: 'foo' }, created: '2018-07-06T09:40:43.886-0300', items: [{ field: 'Impediment', fromString: '', to: '10055', toString: 'Impediment' }] }, { id: '10055', author: { displayName: 'xpto', accountId: 'bar' }, created: '2018-07-06T13:40:43.886-0300', items: [{ field: 'Impediment', fromString: 'Impediment', to: '10055', toString: '' }] }, { id: '10057', author: { displayName: 'xpto', accountId: 'bar' }, created: '2018-07-09T13:40:43.886-0300', items: [{ field: 'Impediment', fromString: '', to: '10055', toString: 'Impediment' }] }] } }.with_indifferent_access) }
+
+          it 'creates the demand and the blocks information' do
+            described_class.instance.process_issue!(jira_account, product, first_project, jira_issue)
+            demand_created = Demand.last
+            expect(demand_created.demand_blocks.count).to eq 2
+
+            first_demand_block = demand_created.demand_blocks.order(created_at: :asc).first
+            expect(first_demand_block.blocker).to be_a TeamMember
+            expect(first_demand_block.block_reason).to eq '(flag) comment example'
+            expect(first_demand_block.block_time).to eq '2018-07-06T09:40:43.886000000-0300'
+
+            expect(first_demand_block.unblocker).to be_a TeamMember
+            expect(first_demand_block.unblock_time).to eq '2018-07-06T13:40:43.886-0300'
+
+            second_demand_block = demand_created.demand_blocks.second
+            expect(second_demand_block.blocker).to be_a TeamMember
+            expect(second_demand_block.block_time).to eq '2018-07-09T13:40:43.886-0300'
+
+            expect(second_demand_block.unblocker).to be_nil
+            expect(second_demand_block.unblock_time).to be_nil
+
+            expect(Demand.last.demand_comments.count).to eq 1
+            expect(Demand.last.demand_comments.last.team_member).to be_nil
+          end
         end
       end
 
@@ -234,15 +267,15 @@ RSpec.describe Jira::JiraIssueAdapter, type: :service do
 
     context 'when the demand exists' do
       let!(:jira_custom_field_mapping) { Fabricate :jira_custom_field_mapping, jira_account: jira_account, demand_field: :responsibles, custom_field_machine_name: 'customfield_10024' }
-      let!(:demand) { Fabricate :demand, project: first_project, demand_id: '10000' }
-      let!(:second_project) { Fabricate :project, company: company, customers: [customer], products: [product] }
+      let!(:demand) { Fabricate :demand, project: first_project, team: team, demand_id: '10000' }
+      let!(:second_project) { Fabricate :project, company: company, team: team, customers: [customer], products: [product] }
       let!(:jira_project_config) { Fabricate :jira_project_config, jira_product_config: jira_product_config, project: second_project, fix_version_name: 'bar' }
 
-      let!(:team_member) { Fabricate :team_member, team: team, jira_account_user_email: 'foo' }
+      let!(:team_member) { Fabricate :team_member, team: team, jira_account_user_email: 'foo', jira_account_id: 'bar', name: 'team_member' }
 
       let!(:jira_product_config) { Fabricate :jira_product_config, product: product, jira_product_key: 'foo' }
 
-      let!(:jira_issue) { client.Issue.build({ key: '10000', fields: { created: '2018-07-02T11:20:18.998-0300', summary: 'foo of bar', issuetype: { name: 'Story' }, customfield_10028: { value: 'Expedite' }, project: { key: 'foo' }, customfield_10024: [{ name: 'foo' }, { name: 'bar' }], comment: { comments: [{ created: Time.zone.local(2019, 5, 27, 10, 0, 0).iso8601, body: 'comment example', author: { emailAddress: team_member.jira_account_user_email } }] }, fixVersions: [{ name: 'bar' }] }, changelog: { startAt: 0, maxResults: 2, total: 2, histories: [{ id: '10039', from: 'first_stage', to: 'second_stage', created: '2018-07-08T22:34:47.440-0300' }, { id: '10038', from: 'third_stage', to: 'first_stage', created: '2018-07-06T09:40:43.886-0300' }] } }.with_indifferent_access) }
+      let!(:jira_issue) { client.Issue.build({ key: '10000', fields: { created: '2018-07-02T11:20:18.998-0300', summary: 'foo of bar', issuetype: { name: 'Story' }, customfield_10028: { value: 'Expedite' }, project: { key: 'foo' }, customfield_10024: [{ name: 'foo' }, { name: 'bar' }], comment: { comments: [{ created: Time.zone.local(2019, 5, 27, 10, 0, 0).iso8601, body: 'comment example', author: { emailAddress: team_member.jira_account_user_email, displayName: team_member.name, accountId: team_member.jira_account_id } }] }, fixVersions: [{ name: 'bar' }] }, changelog: { startAt: 0, maxResults: 2, total: 2, histories: [{ id: '10039', from: 'first_stage', to: 'second_stage', created: '2018-07-08T22:34:47.440-0300' }, { id: '10038', from: 'third_stage', to: 'first_stage', created: '2018-07-06T09:40:43.886-0300' }] } }.with_indifferent_access) }
 
       context 'and the demand is not archived' do
         it 'updates the demand' do

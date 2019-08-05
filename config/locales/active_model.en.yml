@@ -136,6 +136,9 @@ en:
             epic: "Epic"
       jira/jira_project_config:
         fix_version_name: "Fix Version Name"
+      team_member:
+        validations:
+          name_unique: "Only one name by team and jira account id is allowed"
     errors:
       messages:
         record_invalid: 'Validation failed: %{errors}'

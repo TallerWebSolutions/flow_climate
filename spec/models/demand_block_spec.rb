@@ -8,13 +8,15 @@ RSpec.describe DemandBlock, type: :model do
   context 'associations' do
     it { is_expected.to belong_to(:demand) }
     it { is_expected.to belong_to(:stage) }
+    it { is_expected.to belong_to(:blocker).class_name(TeamMember).inverse_of(:demand_blocks) }
+    it { is_expected.to belong_to(:unblocker).class_name(TeamMember).inverse_of(:demand_blocks) }
   end
 
   context 'validations' do
     it { is_expected.to validate_presence_of :demand }
     it { is_expected.to validate_presence_of :demand_id }
     it { is_expected.to validate_presence_of :demand_block_id }
-    it { is_expected.to validate_presence_of :blocker_username }
+    it { is_expected.to validate_presence_of :blocker }
     it { is_expected.to validate_presence_of :block_time }
     it { is_expected.to validate_presence_of :block_type }
   end
@@ -122,6 +124,6 @@ RSpec.describe DemandBlock, type: :model do
   describe '#to_hash' do
     let(:demand_block) { Fabricate :demand_block }
 
-    it { expect(demand_block.to_hash).to eq(blocker_username: demand_block.blocker_username, block_time: demand_block.block_time, block_reason: demand_block.block_reason, unblock_time: demand_block.unblock_time) }
+    it { expect(demand_block.to_hash).to eq(blocker_username: demand_block.blocker.name, block_time: demand_block.block_time, block_reason: demand_block.block_reason, unblock_time: demand_block.unblock_time) }
   end
 end
