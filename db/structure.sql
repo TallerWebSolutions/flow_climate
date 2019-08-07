@@ -178,7 +178,6 @@ ALTER SEQUENCE public.customers_projects_id_seq OWNED BY public.customers_projec
 CREATE TABLE public.demand_blocks (
     id bigint NOT NULL,
     demand_id integer NOT NULL,
-    demand_block_id integer NOT NULL,
     block_time timestamp without time zone NOT NULL,
     unblock_time timestamp without time zone,
     block_duration integer,
@@ -3277,6 +3276,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190723195649'),
 ('20190730122201'),
 ('20190805181747'),
-('20190806135316');
+('20190806135316'),
+('20190807202613');
 
 

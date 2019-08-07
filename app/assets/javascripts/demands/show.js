@@ -7,8 +7,10 @@ $(document).ready(function() {
     const maxStreamValue = $("#upstream_percentage").val();
     runProgressBar(streamElement, maxStreamValue);
 
-    $('#demand-structure-tab').addClass('active');
-    $('#content-structure').show();
+    $('#demand-block-tab').addClass('active');
+    $('#content-block').show();
+
+    bindBlockFormModalAction();
 });
 
 function runProgressBar(element, maxValue) {
