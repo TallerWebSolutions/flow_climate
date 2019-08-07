@@ -54,8 +54,6 @@ module Jira
 
       history_array = jira_issue_changelog['histories'].select(&method(:impediment_field?))
 
-      demand.demand_blocks.map(&:destroy)
-
       history_array.sort_by { |history_hash| Time.zone.parse(history_hash['created']) }.each do |history|
         next if history['items'].blank?
 

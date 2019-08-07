@@ -4,22 +4,21 @@
 #
 # Table name: demand_blocks
 #
-#  active          :boolean          default(TRUE), not null
-#  block_duration  :integer
-#  block_reason    :string
-#  block_time      :datetime         not null
-#  block_type      :integer          default("coding_needed"), not null
-#  blocker_id      :integer          not null
-#  created_at      :datetime         not null
-#  demand_block_id :integer          not null
-#  demand_id       :integer          not null, indexed
-#  discarded_at    :datetime
-#  id              :bigint(8)        not null, primary key
-#  stage_id        :integer
-#  unblock_reason  :string
-#  unblock_time    :datetime
-#  unblocker_id    :integer
-#  updated_at      :datetime         not null
+#  active         :boolean          default(TRUE), not null
+#  block_duration :integer
+#  block_reason   :string
+#  block_time     :datetime         not null
+#  block_type     :integer          default("coding_needed"), not null
+#  blocker_id     :integer          not null
+#  created_at     :datetime         not null
+#  demand_id      :integer          not null, indexed
+#  discarded_at   :datetime
+#  id             :bigint(8)        not null, primary key
+#  stage_id       :integer
+#  unblock_reason :string
+#  unblock_time   :datetime
+#  unblocker_id   :integer
+#  updated_at     :datetime         not null
 #
 # Indexes
 #
@@ -43,7 +42,7 @@ class DemandBlock < ApplicationRecord
   belongs_to :blocker, class_name: 'TeamMember', foreign_key: :blocker_id, inverse_of: :demand_blocks
   belongs_to :unblocker, class_name: 'TeamMember', foreign_key: :unblocker_id, inverse_of: :demand_blocks
 
-  validates :demand, :demand_id, :demand_block_id, :blocker, :block_time, :block_type, presence: true
+  validates :demand, :demand_id, :blocker, :block_time, :block_type, presence: true
 
   before_save :update_computed_fields!
 
