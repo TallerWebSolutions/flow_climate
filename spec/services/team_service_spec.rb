@@ -8,9 +8,13 @@ RSpec.describe TeamService, type: :service do
   describe '#compute_average_demand_cost_to_team' do
     let(:company) { Fabricate :company }
     let!(:team) { Fabricate :team, company: company }
-    let!(:first_team_member) { Fabricate :team_member, active: true, billable_type: :outsourcing, billable: true, teams: [team], monthly_payment: 10_000, start_date: 1.month.ago, end_date: nil }
-    let!(:second_team_member) { Fabricate :team_member, active: true, billable_type: :outsourcing, billable: true, teams: [team], monthly_payment: 10_000, start_date: 2.months.ago, end_date: 1.month.ago }
-    let!(:third_team_member) { Fabricate :team_member, active: true, billable_type: :outsourcing, billable: false, teams: [team], monthly_payment: 10_000, start_date: 1.month.ago, end_date: nil }
+    let!(:first_team_member) { Fabricate :team_member, active: true, billable_type: :outsourcing, billable: true, monthly_payment: 10_000, start_date: 1.month.ago, end_date: nil }
+    let!(:second_team_member) { Fabricate :team_member, active: true, billable_type: :outsourcing, billable: true, monthly_payment: 10_000, start_date: 2.months.ago, end_date: 1.month.ago }
+    let!(:third_team_member) { Fabricate :team_member, active: true, billable_type: :outsourcing, billable: true, monthly_payment: 10_000, start_date: 1.month.ago, end_date: nil }
+
+    let!(:first_membership) { Fabricate :membership, team: team, team_member: first_team_member, member_role: :developer }
+    let!(:second_membership) { Fabricate :membership, team: team, team_member: second_team_member, member_role: :developer }
+    let!(:third_membership) { Fabricate :membership, team: team, team_member: third_team_member, member_role: :client }
 
     let(:customer) { Fabricate :customer, company: company }
 

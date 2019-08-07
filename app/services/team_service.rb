@@ -15,7 +15,7 @@ class TeamService
       break if end_date_to_cmd > end_of_period_for_date(Time.zone.today, grouping_period)
 
       demands_count = DemandsRepository.instance.throughput_to_projects_and_period(projects, start_date_to_cmd, end_date_to_cmd).count
-      active_billable_members = team.team_members.where('start_date <= :end_date AND (end_date IS NULL OR end_date > :end_date)', end_date: end_date_to_cmd).where(billable: true)
+      active_billable_members = team.team_members.joins(:memberships).where('start_date <= :end_date AND (end_date IS NULL OR end_date > :end_date)', end_date: end_date_to_cmd).where(memberships: { member_role: :developer })
 
       average_demand_cost = compute_average_demand_cost(active_billable_members, demands_count, grouping_period)
 
