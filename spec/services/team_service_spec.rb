@@ -8,8 +8,9 @@ RSpec.describe TeamService, type: :service do
   describe '#compute_average_demand_cost_to_team' do
     let(:company) { Fabricate :company }
     let!(:team) { Fabricate :team, company: company }
-    let!(:team_member) { Fabricate :team_member, active: true, billable_type: :outsourcing, billable: true, team: team, monthly_payment: 10_000, start_date: 1.month.ago, end_date: nil }
-    let!(:other_team_member) { Fabricate :team_member, active: true, billable_type: :outsourcing, billable: true, team: team, monthly_payment: 10_000, start_date: 2.months.ago, end_date: 1.month.ago }
+    let!(:first_team_member) { Fabricate :team_member, active: true, billable_type: :outsourcing, billable: true, teams: [team], monthly_payment: 10_000, start_date: 1.month.ago, end_date: nil }
+    let!(:second_team_member) { Fabricate :team_member, active: true, billable_type: :outsourcing, billable: true, teams: [team], monthly_payment: 10_000, start_date: 2.months.ago, end_date: 1.month.ago }
+    let!(:third_team_member) { Fabricate :team_member, active: true, billable_type: :outsourcing, billable: false, teams: [team], monthly_payment: 10_000, start_date: 1.month.ago, end_date: nil }
 
     let(:customer) { Fabricate :customer, company: company }
 
@@ -43,8 +44,8 @@ RSpec.describe TeamService, type: :service do
     let!(:team) { Fabricate :team, company: company }
 
     context 'with data' do
-      let!(:team_member) { Fabricate :team_member, active: true, billable_type: :outsourcing, billable: true, team: team, monthly_payment: 10_000, start_date: 1.month.ago, end_date: nil }
-      let!(:other_team_member) { Fabricate :team_member, active: true, billable_type: :outsourcing, billable: true, team: team, monthly_payment: 10_000, start_date: 2.months.ago, end_date: 1.month.ago }
+      let!(:team_member) { Fabricate :team_member, active: true, billable_type: :outsourcing, billable: true, teams: [team], monthly_payment: 10_000, start_date: 1.month.ago, end_date: nil }
+      let!(:other_team_member) { Fabricate :team_member, active: true, billable_type: :outsourcing, billable: true, teams: [team], monthly_payment: 10_000, start_date: 2.months.ago, end_date: 1.month.ago }
 
       let(:customer) { Fabricate :customer, company: company }
 

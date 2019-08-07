@@ -3,9 +3,10 @@
 RSpec.describe Team, type: :model do
   context 'associations' do
     it { is_expected.to belong_to :company }
-    it { is_expected.to have_many(:team_members).dependent(:destroy) }
     it { is_expected.to have_many(:projects) }
     it { is_expected.to have_many(:demands).dependent(:restrict_with_error) }
+    it { is_expected.to have_many(:memberships).dependent(:destroy) }
+    it { is_expected.to have_many(:team_members).through(:memberships) }
     it { is_expected.to have_and_belong_to_many(:stages) }
     it { is_expected.to have_many(:slack_configurations).dependent(:destroy) }
   end
@@ -53,12 +54,12 @@ RSpec.describe Team, type: :model do
   describe '#active_monthly_cost_for_billable_types' do
     let(:company) { Fabricate :company }
     let(:team) { Fabricate :team, company: company }
-    let!(:members) { Fabricate.times(4, :team_member, team: team, billable_type: :outsourcing) }
-    let!(:nil_monthly_payment_members) { Fabricate.times(10, :team_member, team: team, billable_type: :outsourcing, monthly_payment: nil, hours_per_month: nil) }
-    let!(:consulting_members) { Fabricate.times(2, :team_member, team: team, billable_type: :consulting) }
-    let!(:training_members) { Fabricate.times(6, :team_member, team: team, billable_type: :training) }
-    let!(:not_billable_members) { Fabricate.times(10, :team_member, team: team, billable: false, billable_type: nil) }
-    let!(:not_active_members) { Fabricate.times(3, :team_member, team: team, billable: true, billable_type: :outsourcing, active: false) }
+    let!(:members) { Fabricate.times(4, :team_member, teams: [team], billable_type: :outsourcing) }
+    let!(:nil_monthly_payment_members) { Fabricate.times(10, :team_member, teams: [team], billable_type: :outsourcing, monthly_payment: nil, hours_per_month: nil) }
+    let!(:consulting_members) { Fabricate.times(2, :team_member, teams: [team], billable_type: :consulting) }
+    let!(:training_members) { Fabricate.times(6, :team_member, teams: [team], billable_type: :training) }
+    let!(:not_billable_members) { Fabricate.times(10, :team_member, teams: [team], billable: false, billable_type: nil) }
+    let!(:not_active_members) { Fabricate.times(3, :team_member, teams: [team], billable: true, billable_type: :outsourcing, active: false) }
 
     it { expect(team.active_monthly_cost_for_billable_types(%i[outsourcing consulting])).to eq(members.concat(consulting_members).sum(&:monthly_payment)) }
   end
@@ -66,12 +67,12 @@ RSpec.describe Team, type: :model do
   describe '#active_monthly_available_hours_for_billable_types' do
     let(:company) { Fabricate :company }
     let(:team) { Fabricate :team, company: company }
-    let!(:members) { Fabricate.times(4, :team_member, team: team, billable_type: :outsourcing) }
-    let!(:nil_monthly_payment_members) { Fabricate.times(10, :team_member, team: team, billable_type: :outsourcing, monthly_payment: nil, hours_per_month: nil) }
-    let!(:consulting_members) { Fabricate.times(2, :team_member, team: team, billable_type: :consulting) }
-    let!(:training_members) { Fabricate.times(6, :team_member, team: team, billable_type: :training) }
-    let!(:not_billable_members) { Fabricate.times(10, :team_member, team: team, billable: false, billable_type: nil) }
-    let!(:not_active_members) { Fabricate.times(3, :team_member, team: team, billable_type: :outsourcing, active: false) }
+    let!(:members) { Fabricate.times(4, :team_member, teams: [team], billable_type: :outsourcing) }
+    let!(:nil_monthly_payment_members) { Fabricate.times(10, :team_member, teams: [team], billable_type: :outsourcing, monthly_payment: nil, hours_per_month: nil) }
+    let!(:consulting_members) { Fabricate.times(2, :team_member, teams: [team], billable_type: :consulting) }
+    let!(:training_members) { Fabricate.times(6, :team_member, teams: [team], billable_type: :training) }
+    let!(:not_billable_members) { Fabricate.times(10, :team_member, teams: [team], billable: false, billable_type: nil) }
+    let!(:not_active_members) { Fabricate.times(3, :team_member, teams: [team], billable_type: :outsourcing, active: false) }
 
     it { expect(team.active_monthly_available_hours_for_billable_types(%i[outsourcing consulting])).to eq members.concat(consulting_members).sum(&:hours_per_month) }
   end

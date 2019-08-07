@@ -13,7 +13,8 @@ RSpec.describe Company, type: :model do
     it { is_expected.to have_many(:projects) }
     it { is_expected.to have_many(:jira_project_configs).through(:projects) }
     it { is_expected.to have_many(:demands).through(:projects) }
-    it { is_expected.to have_many(:team_members).through(:teams) }
+    it { is_expected.to have_many(:team_members) }
+    it { is_expected.to have_many(:memberships).through(:team_members) }
     it { is_expected.to have_many(:teams).dependent(:restrict_with_error) }
     it { is_expected.to have_one(:company_settings).dependent(:destroy) }
     it { is_expected.to have_many(:jira_accounts).dependent(:destroy) }
@@ -50,7 +51,7 @@ RSpec.describe Company, type: :model do
     let!(:customer) { Fabricate :customer, company: company }
     let!(:product) { Fabricate :product, customer: customer }
     let!(:team) { Fabricate :team, company: company }
-    let!(:team_member) { Fabricate :team_member, team: team, hours_per_month: 100, monthly_payment: 1200 }
+    let!(:team_member) { Fabricate :team_member, teams: [team], hours_per_month: 100, monthly_payment: 1200 }
 
     let!(:active_project) { Fabricate :project, company: company, start_date: 4.weeks.ago, customers: [customer], products: [product], status: :executing, qty_hours: 200 }
     let!(:other_active_project) { Fabricate :project, company: company, start_date: 4.weeks.ago, customers: [customer], products: [product], status: :executing, qty_hours: 260 }

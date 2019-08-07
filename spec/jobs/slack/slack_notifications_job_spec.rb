@@ -20,7 +20,7 @@ RSpec.describe Slack::SlackNotificationsJob, type: :active_job do
     let!(:company) { Fabricate :company, users: [first_user] }
 
     let(:team) { Fabricate :team, company: company }
-    let!(:team_member) { Fabricate :team_member, team: team, monthly_payment: 10_000, start_date: 5.weeks.ago, end_date: nil }
+    let!(:team_member) { Fabricate :team_member, teams: [team], monthly_payment: 10_000, start_date: 5.weeks.ago, end_date: nil }
 
     let(:project) { Fabricate :project, team: team, company: company }
 

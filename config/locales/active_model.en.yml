@@ -138,7 +138,7 @@ en:
         fix_version_name: "Fix Version Name"
       team_member:
         validations:
-          name_unique: "Only one name by team and jira account id is allowed"
+          name_unique: "Only one name by company and jira account id is allowed"
     errors:
       messages:
         record_invalid: 'Validation failed: %{errors}'
@@ -204,3 +204,6 @@ en:
     validations:
       fix_version_name_uniqueness:
         message: "You should have only one fix version name per product."
+  membership:
+    validations:
+      team_team_member_uniqueness: "Only one membership is allowed per team and team member."

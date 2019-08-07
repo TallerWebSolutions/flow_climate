@@ -12,16 +12,7 @@ class ChangeBlockerStringToTeamMember < ActiveRecord::Migration[5.2]
     add_foreign_key :demand_blocks, :team_members, column: :blocker_id
     add_foreign_key :demand_blocks, :team_members, column: :unblocker_id
 
-    DemandBlock.all.each do |block|
-      blocker_member = block.demand.company.team_members.where(name: block.blocker_username).first
-      unblocker_member = block.demand.company.team_members.where(name: block.unblocker_username).first
-
-      next if blocker_member.blank?
-
-      block.update(blocker_id: blocker_member.id, unblocker_id: unblocker_member&.id)
-    end
-
-    DemandBlock.where('blocker_id IS NULL OR unblocker_id IS NULL').map(&:destroy)
+    DemandBlock.all.map(&:destroy)
 
     change_column_null :demand_blocks, :blocker_id, false
 

@@ -6,7 +6,9 @@ RSpec.describe TeamMember, type: :model do
   end
 
   context 'associations' do
-    it { is_expected.to belong_to :team }
+    it { is_expected.to belong_to(:company) }
+    it { is_expected.to have_many(:memberships).dependent(:destroy) }
+    it { is_expected.to have_many(:teams).through(:memberships) }
     it { is_expected.to have_many(:demand_comments).dependent(:nullify) }
     it { is_expected.to have_many(:demand_blocks).inverse_of(:blocker).dependent(:destroy) }
     it { is_expected.to have_many(:demand_unblocks).class_name('DemandBlock').inverse_of(:unblocker).dependent(:destroy) }
@@ -14,22 +16,22 @@ RSpec.describe TeamMember, type: :model do
   end
 
   context 'validations' do
-    it { is_expected.to validate_presence_of :team }
     it { is_expected.to validate_presence_of :name }
 
     context 'uniqueness' do
-      let(:team) { Fabricate :team }
+      let(:company) { Fabricate :company }
+      let(:team) { Fabricate :team, company: company }
 
-      let!(:first_team_member) { Fabricate :team_member, team: team, name: 'bla', jira_account_id: 'foo' }
-      let(:second_team_member) { Fabricate.build :team_member, team: team, name: 'bla', jira_account_id: 'foo' }
+      let!(:first_team_member) { Fabricate :team_member, company: company, name: 'bla', jira_account_id: 'foo' }
+      let(:second_team_member) { Fabricate.build :team_member, company: company, name: 'bla', jira_account_id: 'foo' }
 
-      let(:third_team_member) { Fabricate.build :team_member, team: team, name: 'xpto', jira_account_id: 'foo' }
-      let(:fourth_team_member) { Fabricate.build :team_member, team: team, name: 'bla', jira_account_id: 'sbbrubles' }
+      let(:third_team_member) { Fabricate.build :team_member, company: company, name: 'xpto', jira_account_id: 'foo' }
+      let(:fourth_team_member) { Fabricate.build :team_member, company: company, name: 'bla', jira_account_id: 'sbbrubles' }
       let(:fifth_team_member) { Fabricate.build :team_member, name: 'bla', jira_account_id: 'foo' }
 
       it 'invalidates the model and add the errors' do
         expect(second_team_member.valid?).to be false
-        expect(second_team_member.errors.full_messages).to eq ['Nome Apenas um nome para o time e o id de conta do Jira.']
+        expect(second_team_member.errors.full_messages).to eq ['Nome Apenas um nome para a empresa e o id de conta do Jira.']
 
         expect(third_team_member.valid?).to be true
         expect(fourth_team_member.valid?).to be true

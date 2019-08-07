@@ -12,11 +12,8 @@ class CompaniesController < AuthenticatedController
   def show
     @financial_informations = @company.financial_informations.select(:id, :finances_date, :income_total, :expenses_total)
     @finances_hash_with_computed_informations = Highchart::FinancesChartsAdapter.new(@financial_informations).finances_hash_with_computed_informations
-    @teams = @company.teams.includes(:projects).order(:name)
 
-    @products_list = @company.products.includes(:team).includes(:customer).order(name: :asc)
-    @customers_list = @company.customers.order(name: :asc)
-
+    assign_company_children
     assign_last_company
     assign_company_settings
     assign_jira_accounts_list
@@ -95,6 +92,13 @@ class CompaniesController < AuthenticatedController
   end
 
   private
+
+  def assign_company_children
+    @teams = @company.teams.includes(:projects).order(:name)
+    @products_list = @company.products.includes(:team).includes(:customer).order(name: :asc)
+    @customers_list = @company.customers.order(name: :asc)
+    @team_members = @company.team_members.order(:name)
+  end
 
   def assign_last_company
     current_user.update(last_company_id: @company.id)

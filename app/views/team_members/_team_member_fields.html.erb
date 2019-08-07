@@ -1,0 +1,28 @@
+<td><%= member.teams.map(&:name).compact.join(', ') %></td>
+<td><%= member.name %></td>
+<td><%= member.demand_comments.count %></td>
+<td><%= member.demand_blocks.count %></td>
+<td><%= member.jira_account_user_email %></td>
+<td><%= member.jira_account_id %></td>
+<td><%= I18n.l(member.start_date) if member.start_date.present? %></td>
+<td><%= I18n.l(member.end_date) if member.end_date.present? %></td>
+<td><%= member.hours_per_month %></td>
+<td><%= t(member.billable&.to_s) %></td>
+<td><%= t(member.active.to_s) %></td>
+<td>
+  <%= link_to edit_company_team_member_path(company, member), remote: true do %>
+    <i class="fas fa-edit"></i>
+  <% end %>
+  <%= link_to company_team_member_path(company, member), method: :delete, data: { confirm: I18n.t('general.destroy.confirm') }, remote: true do %>
+    <i class="fa fa-times"></i>
+  <% end %>
+  <% if member.active? %>
+    <%= link_to deactivate_company_team_member_path(company, member), method: :patch, remote: true do %>
+      <i class="fa fa-power-off"></i>
+    <% end %>
+  <% else %>
+    <%= link_to activate_company_team_member_path(company, member), method: :patch, remote: true do %>
+      <i class="fa fa-check"></i>
+    <% end %>
+  <% end %>
+</td>

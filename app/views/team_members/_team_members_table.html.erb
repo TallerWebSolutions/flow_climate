@@ -1,19 +1,20 @@
 <h2><%= I18n.t('team_members.index.title') %></h2>
 
-<%= link_to I18n.t('team_members.new.title'), new_company_team_team_member_path(company, team), class: 'btn btn-sm btn-primary bottom-spaced-component' %>
+<%= link_to I18n.t('team_members.new.title'), new_company_team_member_path(company), class: 'btn btn-sm btn-primary bottom-spaced-component', remote: true %>
 
 <table class="table">
   <thead>
     <tr>
+      <th><%= TeamMember.human_attribute_name :teams %></th>
       <th><%= TeamMember.human_attribute_name :name %></th>
+      <th><%= TeamMember.human_attribute_name :demand_comments %></th>
+      <th><%= TeamMember.human_attribute_name :demand_blocks %></th>
       <th><%= TeamMember.human_attribute_name :jira_account_user_email %></th>
       <th><%= TeamMember.human_attribute_name :jira_account_id %></th>
       <th><%= TeamMember.human_attribute_name :start_date %></th>
       <th><%= TeamMember.human_attribute_name :end_date %></th>
-      <th><%= TeamMember.human_attribute_name :monthly_payment %></th>
       <th><%= TeamMember.human_attribute_name :hours_per_month %></th>
       <th><%= TeamMember.human_attribute_name :billable %></th>
-      <th><%= TeamMember.human_attribute_name :billable_type %></th>
       <th><%= TeamMember.human_attribute_name :active %></th>
       <th><%= I18n.t('general.table.actions') %></th>
     </tr>
@@ -21,37 +22,7 @@
   <tbody>
     <% team_members.each do |member| %>
       <tr id="team_member_<%= member.id %>">
-        <td><%= member.name %></td>
-        <td><%= member.jira_account_user_email %></td>
-        <td><%= member.jira_account_id %></td>
-        <td><%= I18n.l(member.start_date) if member.start_date.present? %></td>
-        <td><%= I18n.l(member.end_date) if member.end_date.present? %></td>
-        <td><%= number_to_currency(member.monthly_payment) %></td>
-        <td><%= member.hours_per_month %></td>
-        <td><%= t(member.billable&.to_s) %></td>
-        <td>
-          <% if member.billable_type.present? %>
-            <%= I18n.t("activerecord.attributes.team_member.enums.billable_type.#{member.billable_type}") %>
-          <% end %>
-        </td>
-        <td><%= t(member.active.to_s) %></td>
-        <td>
-          <%= link_to edit_company_team_team_member_path(company, team, member) do %>
-            <i class="fas fa-edit"></i>
-          <% end %>
-          <%= link_to company_team_team_member_path(company, team, member), method: :delete, data: { confirm: I18n.t('general.destroy.confirm') }, remote: true do %>
-            <i class="fa fa-times"></i>
-          <% end %>
-          <% if member.active? %>
-            <%= link_to deactivate_company_team_team_member_path(company, team, member), method: :patch do %>
-              <i class="fa fa-power-off"></i>
-            <% end %>
-          <% else %>
-            <%= link_to activate_company_team_team_member_path(company, team, member), method: :patch do %>
-              <i class="fa fa-check"></i>
-            <% end %>
-          <% end %>
-        </td>
+        <%= render 'team_members/team_member_fields', company: company, member: member %>
       </tr>
     <% end %>
   </tbody>

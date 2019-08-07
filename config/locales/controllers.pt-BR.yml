@@ -945,3 +945,8 @@ pt-BR:
   jira_product_configs:
     new:
       button: "Nova Config de Produto"
+  memberships:
+    new:
+      title: "Nova Associação"
+    edit:
+      title: "Nova Associação"

@@ -27,7 +27,8 @@ class Team < ApplicationRecord
   belongs_to :company
   has_and_belongs_to_many :stages
 
-  has_many :team_members, dependent: :destroy
+  has_many :memberships, dependent: :destroy
+  has_many :team_members, through: :memberships
   has_many :projects, dependent: :restrict_with_error
   has_many :demands, dependent: :restrict_with_error
   has_many :slack_configurations, dependent: :destroy

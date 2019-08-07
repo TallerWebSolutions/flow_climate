@@ -958,3 +958,8 @@ en:
   jira_product_configs:
     new:
       button: "New Jira Product Config"
+  memberships:
+    new:
+      title: "New Membership"
+    edit:
+      title: "New Membership"

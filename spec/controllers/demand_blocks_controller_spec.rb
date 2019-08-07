@@ -184,8 +184,8 @@ RSpec.describe DemandBlocksController, type: :controller do
       let(:company) { Fabricate :company, users: [user] }
 
       let(:team) { Fabricate :team, company: company }
-      let(:team_member) { Fabricate :team_member, team: team }
-      let(:other_team_member) { Fabricate :team_member, team: team }
+      let(:team_member) { Fabricate :team_member, teams: [team] }
+      let(:other_team_member) { Fabricate :team_member, teams: [team] }
 
       let(:customer) { Fabricate :customer, company: company }
       let!(:project) { Fabricate :project, customers: [customer], team: team }

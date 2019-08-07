@@ -76,18 +76,20 @@ Rails.application.routes.draw do
     end
 
     resources :teams do
-      resources :team_members, only: %i[new create edit update destroy] do
-        member do
-          patch :activate
-          patch :deactivate
-        end
-      end
-
       resources :slack_configurations, only: %i[new create edit update] do
         patch :toggle_active, on: :member
       end
 
+      resources :memberships, except: :index
+
       get :replenishing_input, on: :member
+    end
+
+    resources :team_members, except: :index do
+      member do
+        patch :activate
+        patch :deactivate
+      end
     end
 
     resources :financial_informations, only: %i[new create edit update destroy]

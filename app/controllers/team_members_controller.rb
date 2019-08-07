@@ -4,50 +4,60 @@ class TeamMembersController < AuthenticatedController
   before_action :user_gold_check
 
   before_action :assign_company
-  before_action :assign_team
   before_action :assign_team_member, only: %i[edit update activate deactivate destroy]
 
   def new
-    @team_member = TeamMember.new(team: @team)
+    @team_member = TeamMember.new(company: @company)
+
+    assign_team_members
+
+    respond_to { |format| format.js { render 'team_members/new.js.erb' } }
   end
 
   def create
-    @team_member = TeamMember.new(team_member_params.merge(team: @team))
-    return redirect_to company_team_path(@company, @team) if @team_member.save
+    @team_member = TeamMember.create(team_member_params.merge(company: @company))
 
-    render :new
+    assign_team_members
+
+    respond_to { |format| format.js { render 'team_members/create.js.erb' } }
   end
 
-  def edit; end
+  def edit
+    assign_team_members
+
+    respond_to { |format| format.js { render 'team_members/edit.js.erb' } }
+  end
 
   def update
-    team = @company.teams.find_by(id: team_member_params[:team])
-    @team_member.update(team_member_params.merge(team: team))
-    return redirect_to company_team_path(@company, @team) if @team_member.save
+    @team_member.update(team_member_params)
 
-    render :edit
+    assign_team_members
+
+    respond_to { |format| format.js { render 'team_members/update.js.erb' } }
   end
 
   def activate
     @team_member.update(active: true)
-    redirect_to company_team_path(@company, @team)
+    assign_team_members
+    respond_to { |format| format.js { render 'team_members/update.js.erb' } }
   end
 
   def deactivate
     @team_member.update(active: false)
-    redirect_to company_team_path(@company, @team)
+    assign_team_members
+    respond_to { |format| format.js { render 'team_members/update.js.erb' } }
   end
 
   def destroy
     @team_member.destroy
 
-    respond_to { |format| format.js { render 'team_members/destroy' } }
+    respond_to { |format| format.js { render 'team_members/destroy.js.erb' } }
   end
 
   private
 
-  def assign_team
-    @team = Team.find(params[:team_id])
+  def assign_team_members
+    @team_members = @company.team_members.order(:name)
   end
 
   def assign_team_member
@@ -55,6 +65,6 @@ class TeamMembersController < AuthenticatedController
   end
 
   def team_member_params
-    params.require(:team_member).permit(:team, :name, :jira_account_user_email, :jira_account_id, :monthly_payment, :hours_per_month, :billable, :active, :billable_type, :start_date, :end_date)
+    params.require(:team_member).permit(:name, :jira_account_user_email, :jira_account_id, :monthly_payment, :hours_per_month, :billable, :active, :billable_type, :start_date, :end_date)
   end
 end

@@ -100,7 +100,7 @@ module Jira
       demand.demand_comments.map(&:destroy)
       comments = jira_issue_attrs['fields']['comment']['comments']
       comments.each do |comment|
-        comment_author = build_author(demand.team, comment)
+        comment_author = build_author(demand.team, comment, :client)
         DemandComment.create(demand: demand, team_member: comment_author, comment_text: comment['body'], comment_date: comment['created'])
       end
     end
@@ -134,7 +134,7 @@ module Jira
 
       responsibles = define_responsibles(project, responsibles_account_ids, responsibles_emails)
 
-      demand.update(team_members: responsibles, team: define_team(project, responsibles), assignees_count: responsibles.count)
+      demand.update(team_members: responsibles, team: project.team, assignees_count: responsibles.count)
     end
 
     def define_responsibles(project, responsibles_account_ids, responsibles_emails)
@@ -147,10 +147,6 @@ module Jira
 
     def read_responsibles_account_ids(responsibles)
       responsibles.map { |responsible| responsible['accountId'] }.flatten.uniq.compact
-    end
-
-    def define_team(project, responsibles)
-      responsibles.first&.team || project.team
     end
 
     def impediment_field?(history)
@@ -167,7 +163,7 @@ module Jira
     def process_demand_block(demand, history, history_item)
       created = history['created']
 
-      author = build_author(demand.team, history)
+      author = build_author(demand.team, history, :developer)
 
       return if author.blank?
 
@@ -184,17 +180,26 @@ module Jira
       history_item['toString'].casecmp('impediment').zero? || history_item['toString'].casecmp('impedimento').zero?
     end
 
-    def build_author(team, history)
+    def build_author(team, history, member_role)
       author_display_name = history['author']['displayName']
       author_account_id = history['author']['accountId']
 
       return if author_account_id.blank? || author_display_name.blank?
 
-      team_member = TeamMember.where(team: team).where(jira_account_id: author_account_id).first
-      team_member = TeamMember.where(team: team).where(name: author_display_name).first_or_initialize if team_member.blank?
+      team_member = define_team_member(author_account_id, author_display_name, team)
+      membership = Membership.where(team: team, team_member: team_member).first_or_initialize
+      membership.update(member_role: member_role) unless membership.persisted?
 
       team_member.update(name: author_display_name, jira_account_id: author_account_id)
+      membership.save
 
+      team_member
+    end
+
+    def define_team_member(author_account_id, author_display_name, team)
+      team_member = TeamMember.where(company: team.company).where(jira_account_id: author_account_id).first
+      team_member = TeamMember.where(company: team.company).where('lower(name) LIKE :author_name', author_name: "%#{author_display_name.downcase}%").first_or_initialize if team_member.blank?
+      team_member.update(start_date: Time.zone.today) unless team_member.persisted?
       team_member
     end
 

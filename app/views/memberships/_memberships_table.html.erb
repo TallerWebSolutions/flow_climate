@@ -1,0 +1,29 @@
+<%= link_to I18n.t('memberships.new.title'), new_company_team_membership_path(company, team), class: 'btn btn-sm btn-success bottom-spaced-component pull-right', remote: true %>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th><%= Membership.human_attribute_name :member_name %></th>
+      <th><%= Membership.human_attribute_name :member_role %></th>
+      <th><%= TeamMember.human_attribute_name :jira_account_id %></th>
+      <th><%= TeamMember.human_attribute_name :monthly_payment %></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% memberships.each do |membership| %>
+      <tr id="membership_<%= membership.id %>">
+        <%= render 'memberships/membership_fields', company: company, team: team, membership: membership %>
+      </tr>
+    <% end %>
+  </tbody>
+  <tfoot>
+    <tr>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td><%= number_to_currency(memberships.sum(&:monthly_payment), precision: 2) %></td>
+      <td></td>
+    </tr>
+  </tfoot>
+</table>

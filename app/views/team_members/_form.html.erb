@@ -1,25 +1,20 @@
 <div class="standard-form">
 
   <div class="row">
-    <% if team_member.persisted? %>
-      <div class='col-xs-12 form-group <%= 'has-error' if team_member.errors[:team].present? %>'>
-        <%= f.label :team, class: 'control-label' %>
-        <%= f.select :team, company.teams.map { |team| [team.name, team.id] }, { include_blank: I18n.t('general.select'), selected: team_member.team_id }, class: 'form-control' %>
-        <span class="help-block"><%= team_member.errors[:team].join(', ') %></span>
-      </div>
-    <% end %>
-
     <div class='col-xs-6 form-group <%= 'has-error' if team_member.errors[:name].present? %>'>
       <%= f.label :name, class: 'control-label required' %>
       <%= f.text_field :name, class: 'form-control', autofocus: true %>
       <span class="help-block"><%= team_member.errors[:name].join(', ') %></span>
     </div>
+
     <div class='col-xs-6 form-group <%= 'has-error' if team_member.errors[:billable_type].present? %>'>
       <%= f.label :billable_type, class: 'control-label' %>
       <%= f.select :billable_type, TeamMember.billable_types.map { |key, _value| [t("activerecord.attributes.team_member.enums.billable_type.#{key}"), key] }, { include_blank: I18n.t('general.select'), selected: team_member.billable_type }, class: 'form-control' %>
       <span class="help-block"><%= team_member.errors[:billable_type].join(', ') %></span>
     </div>
+  </div>
 
+  <div class="row">
     <div class='col-xs-6 form-group <%= 'has-error' if team_member.errors[:jira_account_user_email].present? %>'>
       <%= f.label :jira_account_user_email, class: 'control-label' %>
       <%= f.text_field :jira_account_user_email, class: 'form-control' %>
@@ -52,11 +47,11 @@
       <%= f.number_field :hours_per_month, class: 'form-control', step: 1, id: 'hours_per_month' %>
       <span class="help-block"><%= team_member.errors[:hours_per_month].join(', ') %></span>
     </div>
-    <div class='col-xs-6 form-check bottom-spaced-component'>
+    <div class='col-xs-6 form-check'>
       <%= f.check_box :active, class: 'form-check-input', checked: team_member.active? %>
       <%= f.label :active, class: 'form-check-label' %>
     </div>
-    <div class='col-xs-6 form-check bottom-spaced-component'>
+    <div class='col-xs-6 form-check'>
       <%= f.check_box :billable, class: 'form-check-input', checked: team_member.billable? %>
       <%= f.label :billable, class: 'form-check-label' %>
     </div>
@@ -64,7 +59,7 @@
   <div class="row">
     <div class="col-xs-12">
       <%= f.submit class: 'btn btn-success' %>
-      <%= link_to I18n.t('general.buttons.cancel'), company_team_path(company, team), class: 'btn btn-danger' %>
+      <%= link_to I18n.t('general.buttons.cancel'), '#', class: 'btn btn-danger', id: 'cancel-form-team-member' %>
     </div>
   </div>
 </div>

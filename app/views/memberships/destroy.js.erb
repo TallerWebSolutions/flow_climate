@@ -1,0 +1,5 @@
+var destroyedRow = $('#membership_<%= @membership.id %>');
+
+destroyedRow.fadeTo('slow', 0.7, function() {
+    $(this).remove();
+});
