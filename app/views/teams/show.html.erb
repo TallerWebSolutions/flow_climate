@@ -16,7 +16,7 @@
 <div class="row">
   <div class="topnav">
     <%= link_to I18n.t('navbar.details'), '#', id: 'nav-item-stamps', class: 'nav-item active', data: { container: '#stamps' } %>
-    <%= link_to I18n.t('navbar.members_table'), '#', id: 'nav-item-members', class: 'nav-item', data: { container: '#members-table' } %>
+    <%= link_to I18n.t('navbar.members_table'), '#', id: 'nav-item-members', class: 'nav-item', data: { container: '#membership-table' } %>
     <%= link_to I18n.t('navbar.projects_list'), '#', id: 'nav-item-list', class: 'nav-item', data: { container: '#project-list' } %>
     <%= link_to I18n.t('navbar.demands'), '#', id: 'nav-item-demands', class: 'nav-item', data: { container: '#demands-tab' } %>
     <%= link_to I18n.t('navbar.demand_blocks'), '#', id: 'nav-item-demands-blocks', class: 'nav-item', data: { container: '#demands-blocks-tab' } %>
@@ -35,8 +35,8 @@
   <%= render 'team_stamps', company: @company, team: @team, slack_configurations: @slack_configurations %>
 </div>
 
-<div id="members-table" class="tab-container">
-  <%= render 'team_members/team_members_table', company: @company, team: @team, team_members: @team_members %>
+<div id="membership-table" class="tab-container">
+  <%= render 'memberships/memberships_table', company: @company, team: @team, memberships: @memberships %>
 </div>
 
 <div id="project-list" class="tab-container">

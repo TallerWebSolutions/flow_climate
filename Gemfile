@@ -8,13 +8,13 @@ gem 'rails'
 
 gem 'addressable'
 gem 'attr_encrypted'
-gem 'carrierwave', '~> 1.0'
+gem 'carrierwave'
 gem 'cloudinary'
 gem 'coffee-rails'
 gem 'devise'
 gem 'discard'
 gem 'figaro'
-gem 'friendly_id', '~> 5.2.4'
+gem 'friendly_id'
 gem 'histogram'
 gem 'httparty'
 gem 'jira-ruby', require: false
@@ -32,10 +32,9 @@ gem 'yui-compressor'
 group :test, :development do
   gem 'brakeman'
   gem 'database_cleaner'
-  gem 'debase', '~> 0.2.3.beta3'
+  gem 'debase'
   gem 'fabrication'
   gem 'faker'
-  gem 'hashdiff', ['>= 1.0.0.beta1', '< 2.0.0']
   gem 'parser'
   gem 'rspec-collection_matchers'
   gem 'rspec-rails'
@@ -43,8 +42,8 @@ group :test, :development do
   gem 'rubocop-performance'
   gem 'rubocop-rails'
   gem 'rubocop-rspec'
-  gem 'ruby-debug-ide', '~> 0.7.0.beta7'
-  gem 'shoulda-matchers', '4.0.0.rc1'
+  gem 'ruby-debug-ide'
+  gem 'shoulda-matchers'
   gem 'simplecov', require: false
   gem 'webmock'
 end

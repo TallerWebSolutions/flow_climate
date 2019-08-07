@@ -108,8 +108,8 @@ RSpec.describe CompaniesController, type: :controller do
           let!(:finances) { Fabricate :financial_information, company: company, finances_date: 2.days.ago }
           let!(:other_finances) { Fabricate :financial_information, company: company, finances_date: Time.zone.today }
 
-          let!(:team_member) { Fabricate :team_member, team: team, name: 'aaa' }
-          let!(:other_team_member) { Fabricate :team_member, team: team, name: 'zzz' }
+          let!(:team_member) { Fabricate :team_member, company: company, teams: [team], name: 'aaa' }
+          let!(:other_team_member) { Fabricate :team_member, company: company, teams: [team], name: 'zzz' }
 
           let!(:first_project) { Fabricate :project, company: company, customers: [customer], status: :executing, start_date: Time.zone.today, end_date: Time.zone.now }
           let!(:second_project) { Fabricate :project, company: company, customers: [customer], status: :maintenance, start_date: 1.month.from_now, end_date: 1.month.from_now }
@@ -137,6 +137,7 @@ RSpec.describe CompaniesController, type: :controller do
             expect(assigns(:stages_list)).to eq [third_stage, second_stage, first_stage]
             expect(assigns(:jira_accounts_list)).to eq [second_account, first_account]
             expect(assigns(:company_settings)).to be_a_new CompanySettings
+            expect(assigns(:team_members)).to eq [team_member, other_team_member]
           end
         end
 

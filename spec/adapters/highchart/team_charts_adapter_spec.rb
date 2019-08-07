@@ -10,8 +10,8 @@ RSpec.describe Highchart::TeamChartsAdapter, type: :service do
     let(:customer) { Fabricate :customer, company: company }
 
     let(:team) { Fabricate :team, company: company }
-    let!(:team_member) { Fabricate :team_member, team: team, hours_per_month: 20, start_date: 3.months.ago, end_date: nil, monthly_payment: 10_000 }
-    let!(:other_team_member) { Fabricate :team_member, team: team, hours_per_month: 160, start_date: 4.months.ago, end_date: 3.months.ago }
+    let!(:team_member) { Fabricate :team_member, teams: [team], hours_per_month: 20, start_date: 3.months.ago, end_date: nil, monthly_payment: 10_000 }
+    let!(:other_team_member) { Fabricate :team_member, teams: [team], hours_per_month: 160, start_date: 4.months.ago, end_date: 3.months.ago }
 
     context 'having projects' do
       let!(:first_project) { Fabricate :project, company: company, team: team, customers: [customer], status: :maintenance, start_date: 3.months.ago, end_date: 2.months.ago }

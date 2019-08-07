@@ -31,9 +31,9 @@ RSpec.describe ChartsController, type: :controller do
 
     let(:company) { Fabricate :company, users: [user] }
     let(:team) { Fabricate :team, company: company }
-    let(:first_team_member) { Fabricate :team_member, team: team }
-    let(:second_team_member) { Fabricate :team_member, team: team }
-    let(:third_team_member) { Fabricate :team_member, team: team }
+    let(:first_team_member) { Fabricate :team_member, teams: [team] }
+    let(:second_team_member) { Fabricate :team_member, teams: [team] }
+    let(:third_team_member) { Fabricate :team_member, teams: [team] }
 
     let(:customer) { Fabricate :customer, company: company }
     let(:product) { Fabricate :product, customer: customer }

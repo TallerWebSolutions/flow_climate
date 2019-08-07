@@ -1,0 +1,7 @@
+<%= form_for membership, url: company_team_membership_path(company, team, membership), method: :put, class: 'form', remote: true do |f| %>
+  <div class="row bottom-spaced-component">
+    <div class="col-xs-12">
+      <%= render 'memberships/form', f: f, membership: membership, team_members: team_members, company: company %>
+    </div>
+  </div>
+<% end %>

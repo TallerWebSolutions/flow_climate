@@ -141,6 +141,9 @@ pt-BR:
       project_consolidation:
         one: Consolidação de Projeto
         other: Consolidações de Projeto
+      membership:
+        one: Associação
+        other: Associações
     attributes:
       user:
         first_name: Nome
@@ -159,6 +162,9 @@ pt-BR:
         income_total: Entradas totais
         expenses_total: Saídas totais
       team_member:
+        teams: Times
+        demand_comments: Comentários
+        demand_blocks: Bloqueios
         name: Nome
         jira_account_user_email: Email na Conta do Jira
         jira_account_id: Id da Conta no Jira
@@ -175,6 +181,8 @@ pt-BR:
             consulting: Consultoria
             training: Treinamento
             domestic_product: Produto Interno
+        validations:
+          name_unique: "Apenas um nome para a empresa e o id de conta do Jira."
       customer:
         name: Nome
         products: Produtos
@@ -323,9 +331,9 @@ pt-BR:
         demand_block_id: Id
         stage: Bloqueado em
         block_reason: Motivo
-        blocker_username: Bloqueado por
+        blocker: Bloqueado por
         block_time: Bloqueado em
-        unblocker_username: Desbloqueado por
+        unblocker: Desbloqueado por
         unblock_time: Desbloqueado em
         block_duration: Duração Útil
         active: Ativo?
@@ -450,6 +458,14 @@ pt-BR:
         portfolio_unit: Unidade do Portfólio
       project_consolidation:
         last_8_throughput_per_week_data: Throughput das últimas 8 Semanas
+      membership:
+        member_role: Função
+        member_name: Nome do Membro
+        enums:
+          member_role:
+            developer: 'Desenvolvedor'
+            manager: 'Gestor'
+            client: 'Cliente'
   product:
     name:
       uniqueness: "Não deve repetir nome de produto para o mesmo cliente."
@@ -498,3 +514,6 @@ pt-BR:
     validations:
       fix_version_name_uniqueness:
         message: "Você deveria ter apenas um nome de fix version por produto"
+  membership:
+    validations:
+      team_team_member_uniqueness: "Um membro só pode ter uma participação por time."

@@ -11,6 +11,7 @@
     <%= link_to I18n.t('navbar.details'), '#', id: 'nav-item-stamps', class: 'nav-item active', data: { container: '#stamps' } %>
     <%= link_to I18n.t('navbar.projects_list'), '#', id: 'nav-item-projects-list', class: 'nav-item', data: { container: '#project-list' } %>
     <%= link_to I18n.t('navbar.teams'), '#', id: 'nav-item-teams', class: 'nav-item', data: { container: '#teams' } %>
+    <%= link_to I18n.t('navbar.members_table'), '#', id: 'nav-item-members', class: 'nav-item', data: { container: '#members-table' } %>
     <%= link_to I18n.t('navbar.finance'), '#', id: 'nav-item-finance', class: 'nav-item', data: { container: '#finance' } %>
     <%= link_to I18n.t('navbar.risks'), '#', id: 'nav-item-risks', class: 'nav-item', data: { container: '#risks' } %>
     <%= link_to I18n.t('navbar.strategic'), '#', id: 'nav-item-strategic-charts', class: 'nav-item', data: { container: '#strategic-charts' } %>
@@ -26,6 +27,10 @@
 
 <div id="teams" class="tab-container">
   <%= render 'teams/teams_table', teams: @teams, company: @company %>
+</div>
+
+<div id="members-table" class="tab-container">
+  <%= render 'team_members/team_members_table', company: @company, team_members: @team_members %>
 </div>
 
 <div id="finance" class="tab-container">

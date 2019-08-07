@@ -1,0 +1,24 @@
+<div class="standard-form">
+
+  <div class="row">
+    <div class='col-xs-6 form-group <%= 'has-error' if membership.errors[:team_member].present? %>'>
+      <%= f.label :team_member, class: 'control-label' %>
+      <%= f.select :team_member_id, team_members.map { |member| [member.name, member.id] }, { selected: membership.team_member_id }, class: 'form-control' %>
+      <span class="help-block"><%= membership.errors[:team_member].join(', ') %></span>
+    </div>
+
+    <div class='col-xs-6 form-group <%= 'has-error' if membership.errors[:member_role].present? %>'>
+      <%= f.label :member_role, class: 'control-label' %>
+      <%= f.select :member_role, Membership.member_roles.map { |key, _value| [t("activerecord.attributes.membership.enums.member_role.#{key}"), key] }, { selected: membership.member_role }, class: 'form-control' %>
+      <span class="help-block"><%= membership.errors[:member_role].join(', ') %></span>
+    </div>
+
+  </div>
+
+  <div class="row">
+    <div class="col-xs-12">
+      <%= f.submit class: 'btn btn-success' %>
+      <%= link_to I18n.t('general.buttons.cancel'), '#', class: 'btn btn-danger', id: 'cancel-form-membership' %>
+    </div>
+  </div>
+</div>

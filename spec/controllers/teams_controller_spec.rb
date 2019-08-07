@@ -58,9 +58,9 @@ RSpec.describe TeamsController, type: :controller do
 
     let(:company) { Fabricate :company, users: [user] }
     let(:team) { Fabricate :team, company: company }
-    let(:first_team_member) { Fabricate :team_member, team: team }
-    let(:second_team_member) { Fabricate :team_member, team: team }
-    let(:third_team_member) { Fabricate :team_member, team: team }
+    let(:first_team_member) { Fabricate :team_member, teams: [team] }
+    let(:second_team_member) { Fabricate :team_member, teams: [team] }
+    let(:third_team_member) { Fabricate :team_member, teams: [team] }
 
     let!(:slack_config) { Fabricate :slack_configuration, team: team, info_type: 1 }
     let!(:other_slack_config) { Fabricate :slack_configuration, team: team, info_type: 0 }

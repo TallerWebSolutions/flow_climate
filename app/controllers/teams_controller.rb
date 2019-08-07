@@ -56,7 +56,7 @@ class TeamsController < AuthenticatedController
   private
 
   def assign_team_objects
-    @team_members = @team.team_members.order(:name)
+    @memberships = @company.memberships.where(team: @team).sort_by(&:team_member_name)
     @team_projects = ProjectsRepository.instance.all_projects_for_team(@team)
     @active_team_projects = @team_projects.active
     @projects_summary = ProjectsSummaryData.new(@team.projects)

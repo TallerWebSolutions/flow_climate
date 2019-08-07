@@ -9,20 +9,6 @@ SET xmloption = content;
 SET client_min_messages = warning;
 SET row_security = off;
 
---
--- Name: pg_stat_statements; Type: EXTENSION; Schema: -; Owner: -
---
-
-CREATE EXTENSION IF NOT EXISTS pg_stat_statements WITH SCHEMA public;
-
-
---
--- Name: EXTENSION pg_stat_statements; Type: COMMENT; Schema: -; Owner: -
---
-
-COMMENT ON EXTENSION pg_stat_statements IS 'track execution statistics of all SQL statements executed';
-
-
 SET default_tablespace = '';
 
 SET default_with_oids = false;
@@ -193,9 +179,7 @@ CREATE TABLE public.demand_blocks (
     id bigint NOT NULL,
     demand_id integer NOT NULL,
     demand_block_id integer NOT NULL,
-    blocker_username character varying NOT NULL,
     block_time timestamp without time zone NOT NULL,
-    unblocker_username character varying,
     unblock_time timestamp without time zone,
     block_duration integer,
     created_at timestamp without time zone NOT NULL,
@@ -204,7 +188,10 @@ CREATE TABLE public.demand_blocks (
     block_type integer DEFAULT 0 NOT NULL,
     discarded_at timestamp without time zone,
     stage_id integer,
-    block_reason character varying
+    block_reason character varying,
+    blocker_id integer NOT NULL,
+    unblocker_id integer,
+    unblock_reason character varying
 );
 
 
@@ -760,6 +747,39 @@ ALTER SEQUENCE public.jira_project_configs_id_seq OWNED BY public.jira_project_c
 
 
 --
+-- Name: memberships; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.memberships (
+    id bigint NOT NULL,
+    team_member_id integer NOT NULL,
+    team_id integer NOT NULL,
+    member_role integer DEFAULT 0 NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: memberships_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.memberships_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: memberships_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.memberships_id_seq OWNED BY public.memberships.id;
+
+
+--
 -- Name: plans; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1249,18 +1269,18 @@ ALTER SEQUENCE public.stages_teams_id_seq OWNED BY public.stages_teams.id;
 CREATE TABLE public.team_members (
     id bigint NOT NULL,
     name character varying NOT NULL,
-    monthly_payment numeric NOT NULL,
-    hours_per_month integer NOT NULL,
+    monthly_payment numeric,
+    hours_per_month integer,
     active boolean DEFAULT true,
     billable boolean DEFAULT true,
     billable_type integer DEFAULT 0,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    team_id integer NOT NULL,
     start_date date,
     end_date date,
     jira_account_user_email character varying,
-    jira_account_id character varying
+    jira_account_id character varying,
+    company_id integer NOT NULL
 );
 
 
@@ -1569,6 +1589,13 @@ ALTER TABLE ONLY public.jira_project_configs ALTER COLUMN id SET DEFAULT nextval
 
 
 --
+-- Name: memberships id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.memberships ALTER COLUMN id SET DEFAULT nextval('public.memberships_id_seq'::regclass);
+
+
+--
 -- Name: plans id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1852,6 +1879,14 @@ ALTER TABLE ONLY public.jira_product_configs
 
 ALTER TABLE ONLY public.jira_project_configs
     ADD CONSTRAINT jira_project_configs_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: memberships memberships_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.memberships
+    ADD CONSTRAINT memberships_pkey PRIMARY KEY (id);
 
 
 --
@@ -2287,6 +2322,27 @@ CREATE INDEX index_jira_project_configs_on_project_id ON public.jira_project_con
 
 
 --
+-- Name: index_memberships_on_team_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_memberships_on_team_id ON public.memberships USING btree (team_id);
+
+
+--
+-- Name: index_memberships_on_team_id_and_team_member_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_memberships_on_team_id_and_team_member_id ON public.memberships USING btree (team_id, team_member_id);
+
+
+--
+-- Name: index_memberships_on_team_member_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_memberships_on_team_member_id ON public.memberships USING btree (team_member_id);
+
+
+--
 -- Name: index_portfolio_units_on_name; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2462,6 +2518,13 @@ CREATE INDEX index_stages_teams_on_team_id ON public.stages_teams USING btree (t
 
 
 --
+-- Name: index_team_members_on_company_id_and_name_and_jira_account_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_team_members_on_company_id_and_name_and_jira_account_id ON public.team_members USING btree (company_id, name, jira_account_id);
+
+
+--
 -- Name: index_teams_on_company_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2627,6 +2690,22 @@ ALTER TABLE ONLY public.portfolio_units
 
 
 --
+-- Name: memberships fk_rails_1138510838; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.memberships
+    ADD CONSTRAINT fk_rails_1138510838 FOREIGN KEY (team_member_id) REFERENCES public.team_members(id);
+
+
+--
+-- Name: demand_blocks fk_rails_11fee31fef; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.demand_blocks
+    ADD CONSTRAINT fk_rails_11fee31fef FOREIGN KEY (blocker_id) REFERENCES public.team_members(id);
+
+
+--
 -- Name: products_projects fk_rails_170b9c6651; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2635,11 +2714,11 @@ ALTER TABLE ONLY public.products_projects
 
 
 --
--- Name: team_members fk_rails_194b5b076d; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: demand_blocks fk_rails_196a395613; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.team_members
-    ADD CONSTRAINT fk_rails_194b5b076d FOREIGN KEY (team_id) REFERENCES public.teams(id);
+ALTER TABLE ONLY public.demand_blocks
+    ADD CONSTRAINT fk_rails_196a395613 FOREIGN KEY (unblocker_id) REFERENCES public.team_members(id);
 
 
 --
@@ -2744,6 +2823,14 @@ ALTER TABLE ONLY public.jira_portfolio_unit_configs
 
 ALTER TABLE ONLY public.jira_product_configs
     ADD CONSTRAINT fk_rails_3b969f1e33 FOREIGN KEY (company_id) REFERENCES public.companies(id);
+
+
+--
+-- Name: team_members fk_rails_3ec60e399b; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.team_members
+    ADD CONSTRAINT fk_rails_3ec60e399b FOREIGN KEY (company_id) REFERENCES public.companies(id);
 
 
 --
@@ -2896,6 +2983,14 @@ ALTER TABLE ONLY public.users
 
 ALTER TABLE ONLY public.customers_projects
     ADD CONSTRAINT fk_rails_9b68bbaf49 FOREIGN KEY (customer_id) REFERENCES public.customers(id);
+
+
+--
+-- Name: memberships fk_rails_ae2aedcfaf; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.memberships
+    ADD CONSTRAINT fk_rails_ae2aedcfaf FOREIGN KEY (team_id) REFERENCES public.teams(id);
 
 
 --
@@ -3180,6 +3275,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190716135342'),
 ('20190719194438'),
 ('20190723195649'),
-('20190730122201');
+('20190730122201'),
+('20190805181747'),
+('20190806135316');
 
 

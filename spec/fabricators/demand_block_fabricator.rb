@@ -3,6 +3,6 @@
 Fabricator(:demand_block) do
   demand
   demand_block_id 1
-  blocker_username { Faker::Internet.user_name }
+  blocker { Fabricate :team_member }
   block_time Time.zone.now
 end

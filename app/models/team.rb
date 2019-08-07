@@ -27,7 +27,8 @@ class Team < ApplicationRecord
   belongs_to :company
   has_and_belongs_to_many :stages
 
-  has_many :team_members, dependent: :destroy
+  has_many :memberships, dependent: :destroy
+  has_many :team_members, through: :memberships
   has_many :projects, dependent: :restrict_with_error
   has_many :demands, dependent: :restrict_with_error
   has_many :slack_configurations, dependent: :destroy
@@ -38,11 +39,11 @@ class Team < ApplicationRecord
   delegate :count, to: :projects, prefix: true
 
   def active_monthly_cost_for_billable_types(billable_type)
-    team_members.active.where(billable: true, billable_type: billable_type).sum(&:monthly_payment)
+    team_members.active.where(billable: true, billable_type: billable_type).map(&:monthly_payment).compact.sum
   end
 
   def active_monthly_available_hours_for_billable_types(billable_type)
-    team_members.active.where(billable: true, billable_type: billable_type).sum(&:hours_per_month)
+    team_members.active.where(billable: true, billable_type: billable_type).map(&:hours_per_month).compact.sum
   end
 
   def consumed_hours_in_month(required_date)

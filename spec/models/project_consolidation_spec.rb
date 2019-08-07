@@ -479,6 +479,10 @@ RSpec.describe ProjectConsolidation, type: :model do
   end
 
   describe '#customer_happiness' do
+    before { travel_to Time.zone.local(2019, 7, 31, 10, 0, 0) }
+
+    after { travel_back }
+
     let(:project) { Fabricate :project, end_date: 4.weeks.from_now }
 
     context 'with data' do
