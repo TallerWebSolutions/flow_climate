@@ -122,6 +122,8 @@ class DemandsController < AuthenticatedController
   def start_date_to_query
     return params['start_date'].to_date if params['start_date'].present?
 
+    return [@projects&.map(&:start_date)&.min, 3.months.ago.to_date].max if @projects&.map(&:executing?).present?
+
     @projects&.map(&:start_date)&.min || Time.zone.today
   end
 
