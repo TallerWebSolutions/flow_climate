@@ -51,6 +51,8 @@ class DemandBlock < ApplicationRecord
   scope :closed, -> { where('unblock_time IS NOT NULL') }
   scope :active, -> { where(active: true) }
 
+  delegate :name, to: :blocker, prefix: true
+
   def csv_array
     [
       id,

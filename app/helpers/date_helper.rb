@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DateHelper
   def time_distance_in_words(time_in_seconds)
     return I18n.t('general.days_text', days: 0) if time_in_seconds.blank?
@@ -16,6 +18,7 @@ module DateHelper
     return "#{minutes} #{I18n.t('datetime.date_attributes.minute', count: minutes)}" if days < 1 && hours < 1
     return "#{hours} #{I18n.t('datetime.date_attributes.hour', count: hours)}" if days < 1
     return "#{days} #{I18n.t('datetime.date_attributes.day', count: days)} #{I18n.t('geenral.connector.and')} #{hours} #{I18n.t('datetime.date_attributes.hour', count: hours)}" if hours.positive?
+
     "#{days} #{I18n.t('datetime.date_attributes.day', count: days)}"
   end
 
@@ -33,12 +36,12 @@ module DateHelper
 
   def weekdays_options(selected)
     options_for_select([
-                           [I18n.t('activerecord.attributes.slack_configuration.enums.weekday_to_notify.all_weekdays'), :all_weekdays],
-                           [I18n.t('activerecord.attributes.slack_configuration.enums.weekday_to_notify.monday'), :monday],
-                           [I18n.t('activerecord.attributes.slack_configuration.enums.weekday_to_notify.tuesday'), :tuesday],
-                           [I18n.t('activerecord.attributes.slack_configuration.enums.weekday_to_notify.wednesday'), :wednesday],
-                           [I18n.t('activerecord.attributes.slack_configuration.enums.weekday_to_notify.thursday'), :thursday],
-                           [I18n.t('activerecord.attributes.slack_configuration.enums.weekday_to_notify.friday'), :friday]
+                         [I18n.t('activerecord.attributes.slack_configuration.enums.weekday_to_notify.all_weekdays'), :all_weekdays],
+                         [I18n.t('activerecord.attributes.slack_configuration.enums.weekday_to_notify.monday'), :monday],
+                         [I18n.t('activerecord.attributes.slack_configuration.enums.weekday_to_notify.tuesday'), :tuesday],
+                         [I18n.t('activerecord.attributes.slack_configuration.enums.weekday_to_notify.wednesday'), :wednesday],
+                         [I18n.t('activerecord.attributes.slack_configuration.enums.weekday_to_notify.thursday'), :thursday],
+                         [I18n.t('activerecord.attributes.slack_configuration.enums.weekday_to_notify.friday'), :friday]
                        ], selected)
   end
 end

@@ -113,23 +113,23 @@
     animation: spin 600ms linear infinite;
 }
 
-.leadtime-frame {
+.summary-card-frame {
     padding: 0 2px 0px 2px;
 }
 
-.leadtime-content {
+.summary-card-content {
     padding: 3px 0 0 0;
     background-color: #DADADA;
     border-bottom: 3px solid red;
     text-align: center;
 }
 
-.leadtime-title {
+.summary-card-title {
     font-size: smaller;
     font-weight: bold;
 }
 
-.leadtime-value {
+.summary-card-value {
     font-size: small;
 }
 

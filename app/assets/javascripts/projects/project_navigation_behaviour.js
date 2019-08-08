@@ -35,7 +35,7 @@ $('.nav-item').on('click', function(event){
 
         } else if ($(this).attr('id') === 'nav-item-demands-blocks') {
             $('#demands-blocks-tab').hide();
-            getDemandBlocks(companyId, projectsIds, startDate, endDate);
+            getDemandBlocksForProjects(companyId, projectsIds, startDate, endDate);
 
         } else if ($(this).attr('id') === 'nav-item-flow-impacts') {
             $('#flow-impacts-tab').hide();

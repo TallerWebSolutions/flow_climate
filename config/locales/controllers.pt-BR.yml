@@ -581,6 +581,7 @@ pt-BR:
       blocks_tab: "Bloqueios"
       transitions_tab: "Transições"
       structure_tab: "Estrutura"
+      comments_tab: "Comentários"
     sync:
       enqueued: "Sua solicitação foi colocada na fila. Será processada em breve."
       done: "Sua sincronização foi realizada."
@@ -803,6 +804,15 @@ pt-BR:
   demand_blocks:
     index:
       title: "Bloqueios de Demanda"
+      filter:
+        team_member: "Membro do Time"
+        stage: "Etapa"
+        ordering: "Ordenação"
+        start_date: "Data inicial"
+        end_date: "Data final"
+      average_time_per_block: "Tempo Médio por Bloqueio"
+      total_blocks: "Total"
+      total_time: "Tempo Total"
     edit:
       title: "Editar Bloqueio"
     charts:

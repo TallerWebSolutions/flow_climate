@@ -3,15 +3,7 @@
     <h3><%= I18n.t('demand_blocks.index.title') %></h3>
   </div>
 </div>
-<div class="row stamp bottom-spaced-component">
-  <div class="col-xs-6">
-    <%= "#{I18n.t('demands.index.blocked_working_time_upstream')}: #{number_with_precision(@demand.blocked_working_time_upstream, precision: 2)} h" %>
-  </div>
-  <div class="col-xs-6">
-    <%= "#{I18n.t('demands.index.blocked_working_time_downstream')}: #{number_with_precision(@demand.blocked_working_time_downstream, precision: 2)} h" %>
-  </div>
-</div>
 
 <div id="demand-blocks">
-  <%= render 'demand_blocks/demand_blocks_table', demand_blocks_list: demand_blocks_list %>
+  <%= render 'demand_blocks/demand_blocks_table', company: company, demand: demand, demand_blocks_list: demand_blocks_list, demand_blocks_ids: demand_blocks_ids %>
 </div>

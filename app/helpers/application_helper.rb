@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ApplicationHelper
   def alert
     render('layouts/alert', message: flash[:alert].html_safe) if flash[:alert]

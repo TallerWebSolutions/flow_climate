@@ -208,8 +208,10 @@ Rails.application.routes.draw do
 
     resources :demand_blocks, only: :index do
       collection do
-        get :demands_blocks_tab
-        get :demands_blocks_csv
+        get :demand_blocks_tab
+        get :demand_blocks_csv
+
+        get :search
       end
     end
 
