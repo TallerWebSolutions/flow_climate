@@ -3,10 +3,10 @@
 class DemandBlocksController < AuthenticatedController
   before_action :user_gold_check
   before_action :assign_company
-  before_action :assign_project, except: %i[index demands_blocks_tab demands_blocks_csv]
-  before_action :assign_demand, except: %i[index demands_blocks_tab demands_blocks_csv]
-  before_action :assign_demand_block, except: %i[index demands_blocks_tab demands_blocks_csv]
-  before_action :assign_projects, only: %i[index demands_blocks_tab demands_blocks_csv]
+  before_action :assign_project, except: %i[index demand_blocks_tab demand_blocks_csv search]
+  before_action :assign_demand, except: %i[index demand_blocks_tab demand_blocks_csv search]
+  before_action :assign_demand_block, except: %i[index demand_blocks_tab demand_blocks_csv search]
+  before_action :assign_projects, only: %i[index demand_blocks_tab]
 
   def activate
     @demand_block.activate!
@@ -32,24 +32,62 @@ class DemandBlocksController < AuthenticatedController
     render 'demand_blocks/index'
   end
 
-  def demands_blocks_tab
-    @demands_blocks = DemandBlocksRepository.instance.active_blocks_to_projects_and_period(@projects, start_date_to_query, end_date_to_query).order(block_time: :desc)
+  def demand_blocks_tab
+    @demand_blocks = DemandBlocksRepository.instance.active_blocks_to_projects_and_period(@projects, start_date_to_query, end_date_to_query).order(block_time: :desc)
 
-    'demand_blocks/demands_blocks_tab'
+    respond_to { |format| format.js { 'demand_blocks/demand_blocks_tab' } }
   end
 
-  def demands_blocks_csv
-    @demands_blocks = DemandBlocksRepository.instance.active_blocks_to_projects_and_period(@projects, start_date_to_query, end_date_to_query).order(block_time: :desc)
+  def demand_blocks_csv
+    @demand_blocks_ids = params[:demand_blocks_ids]
+    @demand_blocks = DemandBlock.where(id: @demand_blocks_ids)
 
     attributes = %w[id block_time unblock_time block_duration demand_id]
     blocks_csv = CSV.generate(headers: true) do |csv|
       csv << attributes
-      @demands_blocks.each { |block| csv << block.csv_array }
+      @demand_blocks.each { |block| csv << block.csv_array }
     end
     respond_to { |format| format.csv { send_data blocks_csv, filename: "demands-blocks-#{Time.zone.now}.csv" } }
   end
 
+  def search
+    @demand_blocks_ids = params[:demand_blocks_ids].split(',')
+    @demand_blocks = DemandBlock.where(id: @demand_blocks_ids.map(&:to_i))
+    @demand_blocks = build_date_query(@demand_blocks)
+    @demand_blocks = build_member_query(@demand_blocks)
+    @demand_blocks = build_stage_query(@demand_blocks)
+    @demand_blocks = build_ordering_query(@demand_blocks)
+
+    respond_to { |format| format.js { render 'demand_blocks/search.js.erb' } }
+  end
+
   private
+
+  def build_date_query(demand_blocks)
+    return demand_blocks if params[:blocks_start_date].blank? && params[:blocks_end_date].blank?
+
+    demand_blocks.where('(block_time BETWEEN :start_date AND :end_date) OR (unblock_time IS NOT NULL AND unblock_time BETWEEN :start_date AND :end_date)', start_date: params[:blocks_start_date].to_date.beginning_of_day, end_date: params[:blocks_end_date].to_date.end_of_day)
+  end
+
+  def build_member_query(demand_blocks)
+    return demand_blocks if params[:blocks_team_member].blank?
+
+    demand_blocks.where('(blocker_id = :member_id) OR (unblocker_id = :member_id)', member_id: params[:blocks_team_member])
+  end
+
+  def build_stage_query(demand_blocks)
+    return demand_blocks if params[:blocks_stage].blank?
+
+    demand_blocks.where(stage_id: params[:blocks_stage].to_i)
+  end
+
+  def build_ordering_query(demand_blocks)
+    if params[:blocks_ordering] == 'member_name'
+      DemandBlock.where(id: demand_blocks.sort_by(&:blocker_name).map(&:id))
+    else
+      demand_blocks.order(:block_time)
+    end
+  end
 
   def assign_projects
     @projects = Project.where(id: params[:projects_ids].split(','))

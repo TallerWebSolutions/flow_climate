@@ -12,7 +12,7 @@
     </div>
     <div class='col-xs-6 form-group <%= 'has-error' if @demand_block.errors[:blocker_username].present? %>'>
       <%= f.label :blocker, class: 'control-label required' %>
-      <%= f.select :blocker_id, team_members_options(@demand_block.demand.team, @demand_block.blocker_id), {}, class: 'form-control filter-checks' %>
+      <%= f.select :blocker_id, team_members_options(@demand_block.demand.team.team_members.active, @demand_block.blocker_id), {}, class: 'form-control filter-checks' %>
       <span class="help-block"><%= @demand_block.errors[:blocker_username].join(', ') %></span>
     </div>
     <div class='col-xs-12 form-group <%= 'has-error' if @demand_block.errors[:block_reason].present? %>'>
@@ -27,7 +27,7 @@
     </div>
     <div class='col-xs-6 form-group <%= 'has-error' if @demand_block.errors[:unblocker_username].present? %>'>
       <%= f.label :unblocker, class: 'control-label required' %>
-      <%= f.select :unblocker_id, team_members_options(@demand_block.demand.team, @demand_block.unblocker_id), {}, class: 'form-control filter-checks' %>
+      <%= f.select :unblocker_id, team_members_options(@demand_block.demand.team.team_members.active, @demand_block.unblocker_id), {}, class: 'form-control filter-checks' %>
       <span class="help-block"><%= @demand_block.errors[:unblocker_username].join(', ') %></span>
     </div>
   </div>

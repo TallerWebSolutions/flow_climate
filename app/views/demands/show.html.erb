@@ -26,6 +26,7 @@
   <div class="col-xs-12">
     <div class="tab">
       <button class="tablinks demand-tab" id="demand-block-tab" onclick="openTab(event, 'content-block', 'tablinks', 'tabcontent')"><%= I18n.t('demands.show.blocks_tab') %></button>
+      <button class="tablinks demand-tab" onclick="openTab(event, 'content-comments', 'tablinks', 'tabcontent')"><%= I18n.t('demands.show.comments_tab') %></button>
       <button class="tablinks demand-tab" id="demand-structure-tab" onclick="openTab(event, 'content-structure', 'tablinks', 'tabcontent')"><%= I18n.t('demands.show.structure_tab') %></button>
       <button class="tablinks demand-tab" onclick="openTab(event, 'content-flow-efficiency', 'tablinks', 'tabcontent')"><%= I18n.t('demands.show.flow_efficiency_tab') %></button>
       <button class="tablinks demand-tab" onclick="openTab(event, 'content-transitions', 'tablinks', 'tabcontent')"><%= I18n.t('demands.show.transitions_tab') %></button>
@@ -89,7 +90,10 @@
 </div>
 
 <div id="content-block" class="tabcontent">
-  <%= render 'demand_blocks/demand_blocks_data', demand_blocks_list: @demand_blocks %>
+  <%= render 'demand_blocks/demand_blocks_data', company: @company, demand: @demand, demand_blocks_list: @demand_blocks, demand_blocks_ids: @demand_blocks.map(&:id).join(',') %>
+</div>
+
+<div id="content-comments" class="tabcontent">
   <div class="row">
     <div class="col-xs-12">
       <h3><%= DemandComment.model_name.human %></h3>

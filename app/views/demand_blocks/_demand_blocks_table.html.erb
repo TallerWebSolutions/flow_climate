@@ -1,3 +1,5 @@
+<%= render 'demand_blocks/demand_blocks_filter', company: company, demand_blocks_list: demand_blocks_list, demand_blocks_ids: demand_blocks_ids, demand_blocks: demand_blocks_list %>
+
 <% if demand_blocks_list.empty? %>
   <div class="row">
     <div class="col-xs-12">
@@ -5,6 +7,33 @@
     </div>
   </div>
 <% else %>
+  <div class="row bottom-spaced-component">
+    <div class="col-xs-4 summary-card-frame">
+      <div class="summary-card-content">
+        <p class="summary-card-title"><%= I18n.t('demand_blocks.index.total_blocks') %></p>
+        <p class="summary-card-value"><%= demand_blocks_list.count %></p>
+      </div>
+    </div>
+    <div class="col-xs-4 summary-card-frame">
+      <div class="summary-card-content">
+        <p class="summary-card-title"><%= I18n.t('demand_blocks.index.total_time') %></p>
+        <p class="summary-card-value"><%= I18n.t('general.hours_text', hour_value: number_with_precision((demand_blocks_list.sum(&:total_blocked_time) / 1.hour), precision: 2)) %></p>
+      </div>
+    </div>
+    <div class="col-xs-4 summary-card-frame">
+      <div class="summary-card-content">
+        <p class="summary-card-title"><%= I18n.t('demand_blocks.index.average_time_per_block') %></p>
+        <p class="summary-card-value"><%= I18n.t('general.hours_text', hour_value: number_with_precision((demand_blocks_list.sum(&:total_blocked_time) / 1.hour) / demand_blocks_list.count, precision: 2)) %></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-xs-12 form-group">
+      <%= link_to I18n.t('general.download_csv'), demand_blocks_csv_company_demand_blocks_path(company, demand_blocks_ids, format: :csv), class: 'btn btn-sm btn-success pull-right' %>
+    </div>
+  </div>
+
   <table class="table table-striped">
     <thead>
       <tr>
@@ -30,7 +59,6 @@
     </tbody>
     <tfoot>
       <tr>
-        <td></td>
         <td></td>
         <td></td>
         <td></td>

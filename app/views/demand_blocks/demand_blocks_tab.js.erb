@@ -1,0 +1,10 @@
+var demandsBlocksDiv = $('#demands-blocks-tab')
+
+demandsBlocksDiv.html("<%= escape_javascript(render 'demand_blocks/demand_blocks_tab', company: @company, demand_blocks: @demand_blocks, projects_ids: @projects_ids, demand_blocks_ids: @demand_blocks.map(&:id).join(',')) %>");
+
+$('#general-loader').hide();
+demandsBlocksDiv.show();
+
+enableTabs();
+
+bindBlockFormModalAction();
