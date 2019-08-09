@@ -4,6 +4,8 @@ pt-BR:
       message: "Custo Médio por Demanda"
     items_in_wip:
       message: "Items em Andamento"
+    items_delivered_last_week:
+      message: "Entregues na última semana"
   general:
     not_found:
       message: "Objeto não encontrado"

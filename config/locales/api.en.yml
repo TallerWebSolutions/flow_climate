@@ -4,6 +4,8 @@ en:
       message: "Average Demand Cost"
     items_in_wip:
       message: "Items in Progress"
+    items_delivered_last_week:
+      message: "Delivered within last week"
   general:
     not_found:
       message: "Object not found"

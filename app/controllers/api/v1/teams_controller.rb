@@ -16,6 +16,13 @@ module Api
 
         render json: { status: 'SUCCESS', message: I18n.t('teams.items_in_wip.message'), data: team_demands_in_wip.map(&:to_hash) }, status: :ok
       end
+
+      def items_delivered_last_week
+        team = @company.teams.find(params[:id])
+
+        th_last_week = DemandsRepository.instance.throughput_to_projects_and_period(team.projects, 1.week.ago.beginning_of_week, 1.week.ago.end_of_week)
+        render json: { status: 'SUCCESS', message: I18n.t('teams.items_delivered_last_week.message'), data: th_last_week.map(&:to_hash) }, status: :ok
+      end
     end
   end
 end

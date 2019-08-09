@@ -9,6 +9,7 @@ Rails.application.routes.draw do
         member do
           get :average_demand_cost
           get :items_in_wip
+          get :items_delivered_last_week
         end
       end
 
