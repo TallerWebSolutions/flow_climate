@@ -22,7 +22,7 @@
       <td></td>
       <td></td>
       <td></td>
-      <td><%= number_to_currency(memberships.sum(&:monthly_payment), precision: 2) %></td>
+      <td><%= number_to_currency(memberships.map(&:monthly_payment).compact.sum, precision: 2) %></td>
       <td></td>
     </tr>
   </tfoot>
