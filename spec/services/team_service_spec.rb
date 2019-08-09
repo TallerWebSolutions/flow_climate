@@ -50,6 +50,7 @@ RSpec.describe TeamService, type: :service do
     context 'with data' do
       let!(:team_member) { Fabricate :team_member, active: true, billable_type: :outsourcing, billable: true, teams: [team], monthly_payment: 10_000, start_date: 1.month.ago, end_date: nil }
       let!(:other_team_member) { Fabricate :team_member, active: true, billable_type: :outsourcing, billable: true, teams: [team], monthly_payment: 10_000, start_date: 2.months.ago, end_date: 1.month.ago }
+      let!(:null_payment_team_member) { Fabricate :team_member, active: true, billable_type: :outsourcing, billable: true, teams: [team], monthly_payment: nil, start_date: 2.months.ago, end_date: nil }
 
       let(:customer) { Fabricate :customer, company: company }
 
