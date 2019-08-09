@@ -49,7 +49,7 @@ class TeamService
   end
 
   def compute_average_demand_cost(active_billable_members, demands_count, grouping_period)
-    average_demand_cost = active_billable_members.sum(&:monthly_payment) / fraction_of_month_to_period(grouping_period)
+    average_demand_cost = active_billable_members.map(&:monthly_payment).compact.sum / fraction_of_month_to_period(grouping_period)
     average_demand_cost = (average_demand_cost / demands_count.to_f) if demands_count.positive?
     average_demand_cost
   end
