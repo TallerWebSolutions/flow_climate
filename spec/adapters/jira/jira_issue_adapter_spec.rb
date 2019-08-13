@@ -28,24 +28,29 @@ RSpec.describe Jira::JiraIssueAdapter, type: :service do
       let!(:class_of_service_custom_field) { Fabricate :jira_custom_field_mapping, jira_account: jira_account, demand_field: :class_of_service, custom_field_machine_name: 'customfield_10028' }
 
       context 'and it is a feature' do
-        let!(:team_member) { Fabricate :team_member, company: company, teams: [team], jira_account_user_email: 'foo', jira_account_id: 'xpto' }
-        let!(:other_team_member) { Fabricate :team_member, company: company, teams: [team], jira_account_user_email: 'bar', jira_account_id: 'xpto' }
+        let!(:team_member) { Fabricate :team_member, company: company, teams: [team], jira_account_user_email: 'foo', jira_account_id: 'xpto', name: 'team_member' }
+        let!(:other_team_member) { Fabricate :team_member, company: company, teams: [team], jira_account_user_email: 'bar', jira_account_id: 'xpto', name: 'other_team_member' }
+        let!(:out_team_member) { Fabricate :team_member, company: company, teams: [team], jira_account_user_email: 'xyz', jira_account_id: 'abc', name: 'out_team_member' }
         let!(:other_company_team_member) { Fabricate :team_member, jira_account_user_email: 'bar', jira_account_id: 'sbbrubles' }
 
-        let!(:jira_issue) { client.Issue.build({ key: '10000', fields: { created: '2018-07-02T11:20:18.998-0300', summary: 'foo of bar', issuetype: { name: 'Story' }, customfield_10028: { value: 'Expedite' }, project: { key: 'foo' }, customfield_10024: [{ emailAddress: 'foo' }, { emailAddress: 'bar' }] }, changelog: { startAt: 0, maxResults: 2, total: 2, histories: [{ id: '10039', created: '2018-07-08T22:34:47.440-0300', items: [{ field: 'status', from: 'first_stage', to: 'second_stage' }] }, { id: '10038', created: '2018-07-06T09:40:43.886-0300', items: [{ field: 'status', from: 'third_stage', to: 'first_stage' }] }] } }.with_indifferent_access) }
+        let!(:jira_issue) { client.Issue.build({ key: '10000', fields: { created: '2018-07-02T11:20:18.998-0300', summary: 'foo of bar', issuetype: { name: 'Story' }, customfield_10028: { value: 'Expedite' }, project: { key: 'foo' }, customfield_10024: [{ emailAddress: 'foo' }, { emailAddress: 'bar' }] }, changelog: { startAt: 0, maxResults: 2, total: 2, histories: [{ id: '10039', created: '2018-07-08T22:34:47.440-0300', items: [{ field: 'status', from: 'first_stage', to: 'second_stage' }] }, { id: '10038', created: '2018-07-06T09:40:43.886-0300', items: [{ field: 'status', from: 'third_stage', to: 'first_stage' }] }, { id: '10431', created: '2018-07-06T09:10:43.886-0300', items: [{ field: 'Responsible', fieldId: 'customfield_10024', from: nil, fromString: nil, to: "[#{out_team_member.name}, #{team_member.name}, 'foobarxpto']", toString: "[#{out_team_member.name}, #{team_member.name}]" }] }, { id: '10432', created: '2018-07-06T09:40:43.886-0300', items: [{ field: 'Responsible', fieldId: 'customfield_10024', from: "[#{team_member.name}, #{out_team_member.name}]", fromString: "[#{team_member.name}, #{out_team_member.name}]", to: "[#{team_member.name}, #{other_team_member.name}]", toString: "[#{team_member.name}, #{other_team_member.name}]" }] }] } }.with_indifferent_access) }
 
         it 'creates the demand' do
           described_class.instance.process_issue!(jira_account, product, first_project, jira_issue)
           expect(Demand.count).to eq 1
-          expect(Demand.last.project).to eq first_project
-          expect(Demand.last.assignees_count).to eq 2
-          expect(Demand.last.team_members).to match_array [team_member, other_team_member]
-          expect(Demand.last.team).to eq team
-          expect(Demand.last.demand_title).to eq 'foo of bar'
-          expect(Demand.last.downstream_demand?).to be false
-          expect(Demand.last).to be_feature
-          expect(Demand.last).to be_expedite
-          expect(Demand.last.created_date).to eq Time.zone.parse('2018-07-02T11:20:18.998-0300')
+          created_demand = Demand.last
+          expect(created_demand.project).to eq first_project
+
+          expect(created_demand.team_members).to match_array [out_team_member, team_member, other_team_member]
+          expect(created_demand.active_team_members).to match_array [team_member, other_team_member]
+          expect(created_demand.item_assignments.find_by(team_member: out_team_member).finish_time).not_to be_nil
+
+          expect(created_demand.team).to eq team
+          expect(created_demand.demand_title).to eq 'foo of bar'
+          expect(created_demand.downstream_demand?).to be false
+          expect(created_demand).to be_feature
+          expect(created_demand).to be_expedite
+          expect(created_demand.created_date).to eq Time.zone.parse('2018-07-02T11:20:18.998-0300')
 
           expect(DemandTransition.count).to eq 3
 
@@ -66,18 +71,17 @@ RSpec.describe Jira::JiraIssueAdapter, type: :service do
         end
       end
 
-      context 'with account id to team member' do
-        let!(:team_member) { Fabricate :team_member, company: company, teams: [team], jira_account_user_email: 'foo', jira_account_id: 'xpto' }
-        let!(:other_team_member) { Fabricate :team_member, company: company, teams: [team], jira_account_user_email: 'bar', jira_account_id: 'sbbrubles' }
+      context 'with existent team members' do
+        let!(:team_member) { Fabricate :team_member, company: company, teams: [team], jira_account_user_email: 'foo', jira_account_id: 'xpto', name: 'team_member' }
+        let!(:other_team_member) { Fabricate :team_member, company: company, teams: [team], jira_account_user_email: 'bar', jira_account_id: 'sbbrubles', name: 'other_team_member' }
         let!(:other_company_team_member) { Fabricate :team_member, jira_account_user_email: 'bar', jira_account_id: 'xpto' }
 
-        let!(:jira_issue) { client.Issue.build({ key: '10000', fields: { created: '2018-07-02T11:20:18.998-0300', summary: 'foo of bar', issuetype: { name: 'Story' }, customfield_10028: { value: 'Expedite' }, project: { key: 'foo' }, customfield_10024: [{ accountId: 'xpto' }, { emailAddress: 'bar' }, { accountId: 'sbbrubles' }] }, changelog: { startAt: 0, maxResults: 2, total: 2, histories: [{ id: '10039', created: '2018-07-08T22:34:47.440-0300', items: [{ field: 'status', from: 'first_stage', to: 'second_stage' }] }, { id: '10038', created: '2018-07-06T09:40:43.886-0300', items: [{ field: 'status', from: 'third_stage', to: 'first_stage' }] }] } }.with_indifferent_access) }
+        let!(:jira_issue) { client.Issue.build({ key: '10000', fields: { created: '2018-07-02T11:20:18.998-0300', summary: 'foo of bar', issuetype: { name: 'Story' }, customfield_10028: { value: 'Expedite' }, project: { key: 'foo' }, customfield_10024: [{ accountId: 'xpto', name: team_member.name }, { emailAddress: 'bar' }, { accountId: 'sbbrubles' }] }, changelog: { startAt: 0, maxResults: 2, total: 2, histories: [{ id: '10039', created: '2018-07-08T22:34:47.440-0300', items: [{ field: 'status', from: 'first_stage', to: 'second_stage' }] }, { id: '10038', created: '2018-07-06T09:40:43.886-0300', items: [{ field: 'status', from: 'third_stage', to: 'first_stage' }] }, { id: '10432', created: '2018-07-06T09:40:43.886-0300', items: [{ field: 'Responsible', fieldId: 'customfield_10024', from: "[#{team_member.name}]", to: "[#{team_member.name}]", toString: "[#{team_member.name}, #{other_team_member.name}]" }] }] } }.with_indifferent_access) }
 
         it 'creates the demand and adds the members' do
           described_class.instance.process_issue!(jira_account, product, first_project, jira_issue)
 
           expect(Demand.count).to eq 1
-          expect(Demand.last.assignees_count).to eq 2
           expect(Demand.last.team_members).to match_array [team_member, other_team_member]
           expect(Demand.last.team).to eq team
           expect(Demand.last.demand_title).to eq 'foo of bar'
@@ -88,24 +92,14 @@ RSpec.describe Jira::JiraIssueAdapter, type: :service do
         end
       end
 
-      context 'and it is a bug with no team member registered' do
-        let!(:jira_issue) { client.Issue.build({ key: '10000', summary: 'foo of bar', fields: { created: '2018-07-03T11:20:18.998-0300', issuetype: { name: 'Bug' }, project: { key: 'foo' }, customfield_10024: [{ name: 'foo' }, { name: 'bar' }] } }.with_indifferent_access) }
+      context 'with non existent team members' do
+        let!(:team_member) { Fabricate :team_member, company: company, teams: [team], jira_account_user_email: 'foo', jira_account_id: 'xpto', name: 'team_member' }
+
+        let!(:jira_issue) { client.Issue.build({ key: '10000', summary: 'foo of bar', fields: { created: '2018-07-03T11:20:18.998-0300', issuetype: { name: 'Bug' }, project: { key: 'foo' }, customfield_10024: [{ name: 'foo' }, { name: 'bar' }] }, changelog: { startAt: 0, maxResults: 2, total: 2, histories: [{ id: '10432', created: '2018-07-06T09:40:43.886-0300', items: [{ field: 'Responsible', fieldId: 'customfield_10024', from: "[#{team_member.name}]", to: "[#{team_member.name}]", toString: "['foo do xpto']" }] }] } }.with_indifferent_access) }
 
         it 'creates the demand' do
           described_class.instance.process_issue!(jira_account, product, first_project, jira_issue)
-          expect(Demand.last.assignees_count).to eq 0
-          expect(Demand.last.team_members).to eq []
-          expect(Demand.last).to be_bug
-        end
-      end
-
-      context 'and it is a feature' do
-        let!(:jira_issue) { client.Issue.build({ key: '10000', summary: 'foo of bar', fields: { created: '2018-07-03T11:20:18.998-0300', issuetype: { name: 'FeaTurE' }, project: { key: 'foo' }, customfield_10024: [{ name: 'foo' }, { name: 'bar' }] } }.with_indifferent_access) }
-
-        it 'creates the demand' do
-          described_class.instance.process_issue!(jira_account, product, first_project, jira_issue)
-          expect(Demand.last).to be_feature
-          expect(Demand.last.team_members).to eq []
+          expect(Demand.last.team_members).to be_empty
         end
       end
 

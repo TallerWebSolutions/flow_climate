@@ -517,3 +517,6 @@ pt-BR:
   membership:
     validations:
       team_team_member_uniqueness: "Um membro só pode ter uma participação por time."
+  item_assignment:
+    validations:
+      demand_unique: "Você só pode ter uma demanda atribuída para o mesmo membro do time ao mesmo tempo."

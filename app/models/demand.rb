@@ -76,10 +76,10 @@ class Demand < ApplicationRecord
   has_many :demand_blocks, dependent: :destroy
   has_many :stages, -> { distinct }, through: :demand_transitions
   has_many :demand_comments, dependent: :destroy
+  has_many :item_assignments, dependent: :destroy
+  has_many :team_members, through: :item_assignments
 
   has_one :demands_list, inverse_of: :demand, dependent: :restrict_with_error
-
-  has_and_belongs_to_many :team_members, dependent: :destroy, counter_cache: :assignees_count
 
   validates :project, :created_date, :demand_id, :demand_type, :class_of_service, :assignees_count, :team, presence: true
   validates :demand_id, uniqueness: { scope: :company_id, message: I18n.t('demand.validations.demand_id_unique.message') }
@@ -138,6 +138,10 @@ class Demand < ApplicationRecord
       responsibles: team_members.map(&:to_hash),
       demand_blocks: demand_blocks.map(&:to_hash)
     }
+  end
+
+  def active_team_members
+    team_members.includes(:item_assignments).where(item_assignments: { finish_time: nil })
   end
 
   def update_effort!(update_manual_effort = false)

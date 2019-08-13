@@ -40,7 +40,8 @@ class TeamMember < ApplicationRecord
   has_many :demand_blocks, inverse_of: :blocker, dependent: :destroy, foreign_key: :blocker_id
   has_many :demand_unblocks, class_name: 'DemandBlock', inverse_of: :unblocker, dependent: :destroy, foreign_key: :unblocker_id
 
-  has_and_belongs_to_many :demands, dependent: :destroy
+  has_many :item_assignments, dependent: :destroy
+  has_many :demands, through: :item_assignments
 
   validates :name, presence: true
   validates :name, uniqueness: { scope: %i[company_id jira_account_id], message: I18n.t('activerecord.attributes.team_member.validations.name_unique') }

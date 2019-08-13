@@ -13,21 +13,23 @@
     </div>
   </div>
 
-  <div class="col-xs-6 bottom-spaced-component">
-    <div id="burnup-hours-per-week"
-         class="flow-chart"
-         data-title='<%= I18n.t('projects.charts.burnup.hours.title', target_name: target_name) %>'
-         data-weeks='<%= status_report_data.x_axis.to_json %>'
-         data-xtitle='<%= I18n.t('projects.charts.xlabel.time') %>'
-         data-ytitle='<%= I18n.t('projects.charts.burnup.ylabel') %>'
-         data-prefix=''
-         data-tooltipsuffix='<%= I18n.t('general.charts.hours') %>'
-         data-ideal='<%= status_report_data.hours_burnup_per_week_data.ideal_per_period %>'
-         data-current='<%= status_report_data.hours_burnup_per_week_data.current_per_period %>'
-         data-scope='<%= status_report_data.hours_burnup_per_week_data.scope_per_period %>'
-         data-decimals='0'>
+  <% if status_report_data.hours_burnup_per_week_data.present? %>
+    <div class="col-xs-6 bottom-spaced-component">
+      <div id="burnup-hours-per-week"
+           class="flow-chart"
+           data-title='<%= I18n.t('projects.charts.burnup.hours.title', target_name: target_name) %>'
+           data-weeks='<%= status_report_data.x_axis.to_json %>'
+           data-xtitle='<%= I18n.t('projects.charts.xlabel.time') %>'
+           data-ytitle='<%= I18n.t('projects.charts.burnup.ylabel') %>'
+           data-prefix=''
+           data-tooltipsuffix='<%= I18n.t('general.charts.hours') %>'
+           data-ideal='<%= status_report_data.hours_burnup_per_week_data.ideal_per_period %>'
+           data-current='<%= status_report_data.hours_burnup_per_week_data.current_per_period %>'
+           data-scope='<%= status_report_data.hours_burnup_per_week_data.scope_per_period %>'
+           data-decimals='0'>
+      </div>
     </div>
-  </div>
+  <% end %>
 
   <div class="col-xs-6 bottom-spaced-component">
     <div id="status-report-delivered-column"

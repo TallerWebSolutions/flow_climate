@@ -21,7 +21,8 @@ RSpec.describe Demand, type: :model do
     it { is_expected.to have_many(:demand_comments).dependent(:destroy) }
     it { is_expected.to have_many(:stages).through(:demand_transitions) }
 
-    it { is_expected.to have_and_belong_to_many(:team_members).dependent(:destroy) }
+    it { is_expected.to have_many(:item_assignments).dependent(:destroy) }
+    it { is_expected.to have_many(:team_members).through(:item_assignments) }
   end
 
   context 'validations' do
