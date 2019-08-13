@@ -546,6 +546,7 @@ en:
       transitions_tab: "Transitions"
       structure_tab: "Structure"
       comments_tab: "Comments"
+      responsibles_tab: "Responsibles"
     sync:
       enqueued: "Your request was enqueued. It will be processed soon."
       done: "The sync is done."

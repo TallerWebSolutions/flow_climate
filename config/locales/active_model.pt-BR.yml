@@ -183,6 +183,12 @@ pt-BR:
             domestic_product: Produto Interno
         validations:
           name_unique: "Apenas um nome para a empresa e o id de conta do Jira."
+      item_assignment:
+        start_time: Início
+        finish_time: Fim
+        working_time: Tempo Útil
+        stage_start: Iniciou em
+        stage_finish: Terminou em
       customer:
         name: Nome
         products: Produtos
