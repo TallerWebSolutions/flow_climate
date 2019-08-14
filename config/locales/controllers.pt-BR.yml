@@ -582,6 +582,7 @@ pt-BR:
       transitions_tab: "Transições"
       structure_tab: "Estrutura"
       comments_tab: "Comentários"
+      responsibles_tab: "Responsáveis"
     sync:
       enqueued: "Sua solicitação foi colocada na fila. Será processada em breve."
       done: "Sua sincronização foi realizada."

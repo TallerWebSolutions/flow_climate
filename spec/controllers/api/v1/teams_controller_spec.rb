@@ -79,6 +79,10 @@ RSpec.describe Api::V1::TeamsController, type: :controller do
   end
 
   describe 'GET #items_delivered_last_week' do
+    before { travel_to Time.zone.local(2019, 8, 12, 10, 0, 0) }
+
+    after { travel_back }
+
     let(:company) { Fabricate :company }
     let(:customer) { Fabricate :customer, company: company }
     let!(:team) { Fabricate :team, company: company }
@@ -103,8 +107,8 @@ RSpec.describe Api::V1::TeamsController, type: :controller do
             get :items_delivered_last_week, params: { id: team.id }
 
             expect(response).to have_http_status :ok
-            expect(JSON.parse(response.body)['data'][0]['id']).to eq first_demand.id
-            expect(JSON.parse(response.body)['data'][0]['demand_id']).to eq first_demand.demand_id
+            expect(JSON.parse(response.body)['data'].map { |demand| demand['id'] }).to match_array [first_demand.id, third_demand.id]
+            expect(JSON.parse(response.body)['data'].map { |demand| demand['demand_id'] }).to match_array [first_demand.demand_id, third_demand.demand_id]
           end
         end
 

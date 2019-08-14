@@ -26,6 +26,7 @@
   <div class="col-xs-12">
     <div class="tab">
       <button class="tablinks demand-tab" id="demand-block-tab" onclick="openTab(event, 'content-block', 'tablinks', 'tabcontent')"><%= I18n.t('demands.show.blocks_tab') %></button>
+      <button class="tablinks demand-tab" onclick="openTab(event, 'content-responsibles', 'tablinks', 'tabcontent')"><%= I18n.t('demands.show.responsibles_tab') %></button>
       <button class="tablinks demand-tab" onclick="openTab(event, 'content-comments', 'tablinks', 'tabcontent')"><%= I18n.t('demands.show.comments_tab') %></button>
       <button class="tablinks demand-tab" id="demand-structure-tab" onclick="openTab(event, 'content-structure', 'tablinks', 'tabcontent')"><%= I18n.t('demands.show.structure_tab') %></button>
       <button class="tablinks demand-tab" onclick="openTab(event, 'content-flow-efficiency', 'tablinks', 'tabcontent')"><%= I18n.t('demands.show.flow_efficiency_tab') %></button>
@@ -102,8 +103,8 @@
   <%= render 'demand_comments/demand_comments_table', demand_comments_list: @demand_comments %>
 </div>
 
-<div id="content-transitions" class="tabcontent">
-  <%= render 'demand_transitions/demand_transitions_table', demand_transitions_list: @demand_transitions, demand: @demand %>
+<div id="content-responsibles" class="tabcontent">
+  <%= render 'item_assignments/item_assignments_table', demand: @demand %>
 </div>
 
 <% content_for :javascript do %>

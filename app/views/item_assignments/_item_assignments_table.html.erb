@@ -1,0 +1,26 @@
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th><%= TeamMember.human_attribute_name(:name) %></th>
+      <th><%= ItemAssignment.human_attribute_name(:start_time) %></th>
+      <th><%= ItemAssignment.human_attribute_name(:stage_start) %></th>
+      <th><%= ItemAssignment.human_attribute_name(:finish_time) %></th>
+      <th><%= ItemAssignment.human_attribute_name(:stage_finish) %></th>
+      <th><%= ItemAssignment.human_attribute_name(:working_time) %></th>
+    </tr>
+
+  </thead>
+
+  <tbody>
+    <% demand.item_assignments.order(:start_time).each do |assignment| %>
+      <tr>
+        <td><%= assignment.team_member.name %></td>
+        <td><%= I18n.l(assignment.start_time, format: :short) %></td>
+        <td><%= demand.stage_at(assignment.start_time)&.name %></td>
+        <td><%= I18n.l(assignment.finish_time, format: :short) if assignment.finish_time.present? %></td>
+        <td><%= demand.stage_at(assignment.finish_time)&.name if assignment.finish_time.present? %></td>
+        <td><%= I18n.t('general.hours_text', hour_value: assignment.working_hours) %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

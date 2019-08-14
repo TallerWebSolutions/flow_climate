@@ -28,8 +28,8 @@
     <div class="stamp-content"><%= I18n.t("activerecord.attributes.demand.enums.class_of_service.#{demand.class_of_service}") %></div>
   </div>
   <div class="col-xs-4 stamp">
-    <div class="stamp-title"><span><%= Demand.human_attribute_name :team_members %></span><sup><%= " (#{demand.assignees_count})" %></sup></div>
-    <div class="stamp-content"><%= demand.team_members.map(&:name).join(', ') %></div>
+    <div class="stamp-title"><span><%= Demand.human_attribute_name :team_members %></span><sup><%= " (#{demand.active_team_members.count})" %></sup></div>
+    <div class="stamp-content"><%= demand.active_team_members.map(&:name).join(', ') %></div>
   </div>
   <div class="col-xs-6 stamp">
     <div class="stamp-title"><%= Demand.human_attribute_name :effort_upstream %></div>

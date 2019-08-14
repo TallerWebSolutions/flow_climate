@@ -354,7 +354,7 @@ RSpec.describe Project, type: :model do
     let(:company) { Fabricate :company }
     let!(:customer) { Fabricate :customer, company: company }
     let!(:team) { Fabricate :team, company: company }
-    let!(:team_member) { Fabricate :team_member, teams: [team], hours_per_month: 100, monthly_payment: 1300 }
+    let!(:team_member) { Fabricate :team_member, teams: [team], company: company, hours_per_month: 100, monthly_payment: 1300 }
     let!(:project) { Fabricate :project, team: team, customers: [customer], start_date: 2.months.ago, end_date: 3.months.from_now, qty_hours: 3000, value: 1_000_000, hour_value: 200, percentage_effort_to_bugs: 100 }
 
     let(:first_stage) { Fabricate :stage, company: company, stage_stream: :downstream, queue: false, end_point: false }
@@ -365,10 +365,15 @@ RSpec.describe Project, type: :model do
     let!(:second_stage_project_config) { Fabricate :stage_project_config, project: project, stage: second_stage, compute_effort: true, pairing_percentage: 80, stage_percentage: 100, management_percentage: 10 }
     let!(:third_stage_project_config) { Fabricate :stage_project_config, project: project, stage: third_stage, compute_effort: true, pairing_percentage: 80, stage_percentage: 100, management_percentage: 10 }
 
-    let!(:first_demand) { Fabricate :demand, project: project, created_date: 2.weeks.ago, commitment_date: 8.days.ago, end_date: 1.week.ago, demand_type: :bug }
-    let!(:second_demand) { Fabricate :demand, project: project, created_date: 2.weeks.ago, commitment_date: 9.days.ago, end_date: 1.week.ago }
-    let!(:third_demand) { Fabricate :demand, project: project, created_date: 1.week.ago, commitment_date: 10.days.ago, end_date: 2.days.ago }
-    let!(:fourth_demand) { Fabricate :demand, project: project, created_date: Time.zone.now, commitment_date: Time.zone.now, end_date: nil }
+    let!(:first_demand) { Fabricate :demand, project: project, team: team, created_date: 2.weeks.ago, commitment_date: 8.days.ago, end_date: 1.week.ago, demand_type: :bug }
+    let!(:second_demand) { Fabricate :demand, project: project, team: team, created_date: 2.weeks.ago, commitment_date: 9.days.ago, end_date: 1.week.ago }
+    let!(:third_demand) { Fabricate :demand, project: project, team: team, created_date: 1.week.ago, commitment_date: 10.days.ago, end_date: 2.days.ago }
+    let!(:fourth_demand) { Fabricate :demand, project: project, team: team, created_date: Time.zone.now, commitment_date: Time.zone.now, end_date: nil }
+
+    let!(:first_item_assignment) { Fabricate :item_assignment, demand: first_demand, team_member: team_member, start_time: 1.month.ago, finish_time: nil }
+    let!(:second_item_assignment) { Fabricate :item_assignment, demand: second_demand, team_member: team_member, start_time: 1.month.ago, finish_time: nil }
+    let!(:third_item_assignment) { Fabricate :item_assignment, demand: third_demand, team_member: team_member, start_time: 7.weeks.ago, finish_time: nil }
+    let!(:fourth_item_assignment) { Fabricate :item_assignment, demand: fourth_demand, team_member: team_member, start_time: 1.month.ago, finish_time: nil }
 
     let!(:first_transition) { Fabricate :demand_transition, stage: first_stage, demand: first_demand, last_time_in: 1.month.ago, last_time_out: 2.weeks.ago }
     let!(:second_transition) { Fabricate :demand_transition, stage: first_stage, demand: second_demand, last_time_in: 1.month.ago, last_time_out: 3.weeks.ago }
@@ -399,7 +404,7 @@ RSpec.describe Project, type: :model do
 
     context 'having data' do
       include_context 'demands with effort'
-      it { expect(project.avg_hours_per_demand).to eq 77.0 }
+      it { expect(project.avg_hours_per_demand).to eq 59.4 }
     end
 
     context 'having no data' do
@@ -484,7 +489,7 @@ RSpec.describe Project, type: :model do
 
     context 'having data' do
       include_context 'demands with effort'
-      it { expect(project.total_hours_upstream).to eq 118.8 }
+      it { expect(project.total_hours_upstream).to eq 0.66e2 }
     end
 
     context 'having no data' do
@@ -518,7 +523,7 @@ RSpec.describe Project, type: :model do
 
     context 'having data' do
       include_context 'demands with effort'
-      it { expect(project.total_hours_consumed.to_f).to eq 231.0 }
+      it { expect(project.total_hours_consumed.to_f).to eq 178.2 }
     end
 
     context 'having no data' do
@@ -535,7 +540,7 @@ RSpec.describe Project, type: :model do
 
     context 'having data' do
       include_context 'demands with effort'
-      it { expect(project.remaining_hours.to_f).to eq 2769.0 }
+      it { expect(project.remaining_hours.to_f).to eq 2821.8 }
     end
 
     context 'having no data' do
@@ -552,7 +557,7 @@ RSpec.describe Project, type: :model do
 
     context 'having data' do
       include_context 'demands with effort'
-      it { expect(project.required_hours).to eq 2310.0 }
+      it { expect(project.required_hours).to eq 1782.0 }
     end
 
     context 'having no data' do
@@ -569,7 +574,7 @@ RSpec.describe Project, type: :model do
 
     context 'having data' do
       include_context 'demands with effort'
-      it { expect(project.required_hours_per_available_hours).to be_within(0.02).of(0.83) }
+      it { expect(project.required_hours_per_available_hours).to be_within(0.02).of(0.63) }
     end
 
     context 'having no data' do
@@ -633,7 +638,7 @@ RSpec.describe Project, type: :model do
 
     context 'having data' do
       include_context 'demands with effort'
-      it { expect(project.money_per_deadline.to_f).to be_within(5).of(10_062) }
+      it { expect(project.money_per_deadline.to_f).to be_within(0.01).of(10_175.91) }
     end
 
     context 'having no data' do
@@ -667,7 +672,7 @@ RSpec.describe Project, type: :model do
 
     context 'having cost' do
       include_context 'demands with effort'
-      it { expect(project.current_cost.to_f).to eq 42_240.0 }
+      it { expect(project.current_cost.to_f).to eq 33_000.0 }
     end
 
     context 'having no cost yet' do

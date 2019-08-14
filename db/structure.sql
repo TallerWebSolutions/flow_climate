@@ -333,7 +333,6 @@ CREATE TABLE public.demands (
     url character varying,
     class_of_service integer DEFAULT 0 NOT NULL,
     project_id integer NOT NULL,
-    assignees_count integer DEFAULT 0 NOT NULL,
     effort_downstream numeric DEFAULT 0,
     effort_upstream numeric DEFAULT 0,
     leadtime numeric,
@@ -405,38 +404,6 @@ SELECT
     NULL::double precision AS blocked_time,
     NULL::double precision AS queued_time,
     NULL::double precision AS touch_time;
-
-
---
--- Name: demands_team_members; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.demands_team_members (
-    id bigint NOT NULL,
-    demand_id integer NOT NULL,
-    team_member_id integer NOT NULL,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
-);
-
-
---
--- Name: demands_team_members_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.demands_team_members_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: demands_team_members_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.demands_team_members_id_seq OWNED BY public.demands_team_members.id;
 
 
 --
@@ -576,6 +543,40 @@ CREATE SEQUENCE public.integration_errors_id_seq
 --
 
 ALTER SEQUENCE public.integration_errors_id_seq OWNED BY public.integration_errors.id;
+
+
+--
+-- Name: item_assignments; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.item_assignments (
+    id bigint NOT NULL,
+    demand_id integer NOT NULL,
+    team_member_id integer NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    start_time timestamp without time zone NOT NULL,
+    finish_time timestamp without time zone
+);
+
+
+--
+-- Name: item_assignments_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.item_assignments_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: item_assignments_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.item_assignments_id_seq OWNED BY public.item_assignments.id;
 
 
 --
@@ -1518,13 +1519,6 @@ ALTER TABLE ONLY public.demands ALTER COLUMN id SET DEFAULT nextval('public.dema
 
 
 --
--- Name: demands_team_members id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.demands_team_members ALTER COLUMN id SET DEFAULT nextval('public.demands_team_members_id_seq'::regclass);
-
-
---
 -- Name: financial_informations id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1550,6 +1544,13 @@ ALTER TABLE ONLY public.friendly_id_slugs ALTER COLUMN id SET DEFAULT nextval('p
 --
 
 ALTER TABLE ONLY public.integration_errors ALTER COLUMN id SET DEFAULT nextval('public.integration_errors_id_seq'::regclass);
+
+
+--
+-- Name: item_assignments id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.item_assignments ALTER COLUMN id SET DEFAULT nextval('public.item_assignments_id_seq'::regclass);
 
 
 --
@@ -1801,14 +1802,6 @@ ALTER TABLE ONLY public.demands
 
 
 --
--- Name: demands_team_members demands_team_members_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.demands_team_members
-    ADD CONSTRAINT demands_team_members_pkey PRIMARY KEY (id);
-
-
---
 -- Name: financial_informations financial_informations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1838,6 +1831,14 @@ ALTER TABLE ONLY public.friendly_id_slugs
 
 ALTER TABLE ONLY public.integration_errors
     ADD CONSTRAINT integration_errors_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: item_assignments item_assignments_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.item_assignments
+    ADD CONSTRAINT item_assignments_pkey PRIMARY KEY (id);
 
 
 --
@@ -2041,6 +2042,13 @@ ALTER TABLE ONLY public.users
 
 
 --
+-- Name: demand_member_start_time_unique; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX demand_member_start_time_unique ON public.item_assignments USING btree (demand_id, team_member_id, start_time);
+
+
+--
 -- Name: index_companies_on_abbreviation; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2181,20 +2189,6 @@ CREATE UNIQUE INDEX index_demands_on_slug ON public.demands USING btree (slug);
 
 
 --
--- Name: index_demands_team_members_on_demand_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_demands_team_members_on_demand_id ON public.demands_team_members USING btree (demand_id);
-
-
---
--- Name: index_demands_team_members_on_team_member_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_demands_team_members_on_team_member_id ON public.demands_team_members USING btree (team_member_id);
-
-
---
 -- Name: index_financial_informations_on_company_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2255,6 +2249,20 @@ CREATE INDEX index_integration_errors_on_company_id ON public.integration_errors
 --
 
 CREATE INDEX index_integration_errors_on_integration_type ON public.integration_errors USING btree (integration_type);
+
+
+--
+-- Name: index_item_assignments_on_demand_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_item_assignments_on_demand_id ON public.item_assignments USING btree (demand_id);
+
+
+--
+-- Name: index_item_assignments_on_team_member_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_item_assignments_on_team_member_id ON public.item_assignments USING btree (team_member_id);
 
 
 --
@@ -2665,10 +2673,10 @@ ALTER TABLE ONLY public.project_consolidations
 
 
 --
--- Name: demands_team_members fk_rails_0af34c141e; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: item_assignments fk_rails_0af34c141e; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.demands_team_members
+ALTER TABLE ONLY public.item_assignments
     ADD CONSTRAINT fk_rails_0af34c141e FOREIGN KEY (demand_id) REFERENCES public.demands(id);
 
 
@@ -2945,10 +2953,10 @@ ALTER TABLE ONLY public.user_project_roles
 
 
 --
--- Name: demands_team_members fk_rails_78b4938f25; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: item_assignments fk_rails_78b4938f25; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.demands_team_members
+ALTER TABLE ONLY public.item_assignments
     ADD CONSTRAINT fk_rails_78b4938f25 FOREIGN KEY (team_member_id) REFERENCES public.team_members(id);
 
 
@@ -3277,6 +3285,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190730122201'),
 ('20190805181747'),
 ('20190806135316'),
-('20190807202613');
+('20190807202613'),
+('20190812154723');
 
 

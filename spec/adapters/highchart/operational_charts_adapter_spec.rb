@@ -37,6 +37,14 @@ RSpec.describe Highchart::OperationalChartsAdapter, type: :data_object do
     let!(:third_bug) { Fabricate :demand, project: first_project, demand_id: 'third_bug', demand_type: :bug, created_date: Time.zone.iso8601('2018-01-15T23:01:46-02:00'), commitment_date: Time.zone.iso8601('2018-04-29T23:01:46-02:00'), end_date: Time.zone.iso8601('2018-04-30T23:01:46-02:00'), effort_upstream: 56, effort_downstream: 25 }
     let!(:fourth_bug) { Fabricate :demand, project: first_project, demand_id: 'fourth_bug', demand_type: :bug, created_date: Time.zone.iso8601('2018-01-15T23:01:46-02:00'), commitment_date: Time.zone.iso8601('2018-04-29T23:01:46-02:00'), end_date: Time.zone.iso8601('2018-04-30T23:01:46-02:00'), effort_upstream: 56, effort_downstream: 25 }
 
+    let!(:first_item_assignment) { Fabricate :item_assignment, demand: first_demand, start_time: Time.zone.iso8601('2018-01-08T17:09:58-03:00'), finish_time: nil }
+    let!(:second_item_assignment) { Fabricate :item_assignment, demand: second_demand, start_time: Time.zone.iso8601('2018-01-08T17:09:58-03:00'), finish_time: nil }
+    let!(:third_item_assignment) { Fabricate :item_assignment, demand: third_demand, start_time: Time.zone.iso8601('2018-01-08T17:09:58-03:00'), finish_time: nil }
+    let!(:fourth_item_assignment) { Fabricate :item_assignment, demand: fourth_demand, start_time: Time.zone.iso8601('2018-01-08T17:09:58-03:00'), finish_time: nil }
+    let!(:fifth_item_assignment) { Fabricate :item_assignment, demand: fifth_demand, start_time: Time.zone.iso8601('2018-01-08T17:09:58-03:00'), finish_time: nil }
+    let!(:sixth_item_assignment) { Fabricate :item_assignment, demand: sixth_demand, start_time: Time.zone.iso8601('2018-01-08T17:09:58-03:00'), finish_time: nil }
+    let!(:seventh_item_assignment) { Fabricate :item_assignment, demand: seventh_demand, start_time: Time.zone.iso8601('2018-01-08T17:09:58-03:00'), finish_time: nil }
+
     let!(:queue_ongoing_transition) { Fabricate :demand_transition, stage: queue_ongoing_stage, demand: first_demand, last_time_in: Time.zone.iso8601('2018-02-10T17:09:58-03:00'), last_time_out: Time.zone.iso8601('2018-02-14T17:09:58-03:00') }
     let!(:touch_ongoing_transition) { Fabricate :demand_transition, stage: touch_ongoing_stage, demand: first_demand, last_time_in: Time.zone.iso8601('2018-03-10T17:09:58-03:00'), last_time_out: Time.zone.iso8601('2018-03-14T17:09:58-03:00') }
 
