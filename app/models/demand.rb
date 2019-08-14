@@ -134,7 +134,7 @@ class Demand < ApplicationRecord
       current_stage: current_stage&.name,
       time_in_current_stage: time_in_current_stage,
       partial_leadtime: partial_leadtime,
-      responsibles: team_members.map(&:to_hash),
+      responsibles: active_team_members.map(&:to_hash),
       demand_blocks: demand_blocks.map(&:to_hash)
     }
   end
