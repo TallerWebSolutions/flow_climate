@@ -46,7 +46,7 @@ module Slack
         slack_notifier.ping(
           I18n.t('slack_configurations.notifications.demands_in_wip_info_text',
                  demand_id: demand.demand_id,
-                 responsibles_names: demand.team_members.map(&:name).join(', '),
+                 responsibles_names: demand.active_team_members.map(&:name).join(', '),
                  cost_to_project: number_to_currency(demand.cost_to_project),
                  demand_title: demand.demand_title,
                  current_stage: demand.current_stage&.name,
