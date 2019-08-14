@@ -17,5 +17,7 @@ class CreateItemAssignments < ActiveRecord::Migration[5.2]
     change_column_null :item_assignments, :start_time, false
 
     add_index :item_assignments, %i[demand_id team_member_id start_time], unique: true, name: 'demand_member_start_time_unique'
+
+    remove_column :demands, :assignees_count, :integer
   end
 end

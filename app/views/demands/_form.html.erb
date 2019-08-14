@@ -61,15 +61,7 @@
       <%= form.date_field :end_date, class: 'form-control' %>
       <span class="help-block"><%= demand.errors[:end_date].join(', ') %></span>
     </div>
-    <div class='col-xs-6 form-group <%= 'has-error' if demand.errors[:assignees_count].present? %>'>
-      <%= form.label :assignees_count, class: 'control-label required' %>
-      <%= form.number_field :assignees_count, class: 'form-control', step: 1 %>
-      <span class="help-block"><%= demand.errors[:assignees_count].join(', ') %></span>
-    </div>
-  </div>
-
-  <div class="row">
-    <div class='col-xs-12 form-group'>
+    <div class='col-xs-6 form-group'>
       <%= form.label :url, class: 'control-label required' %>
       <%= form.text_field :url, class: 'form-control' %>
     </div>

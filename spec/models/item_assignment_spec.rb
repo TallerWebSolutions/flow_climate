@@ -32,7 +32,7 @@ RSpec.describe ItemAssignment, type: :model do
     end
   end
 
-  describe '#working_hours' do
+  describe '#working_hours_until' do
     before { travel_to Time.zone.local(2019, 8, 13, 10, 0, 0) }
 
     after { travel_back }
@@ -40,7 +40,7 @@ RSpec.describe ItemAssignment, type: :model do
     let(:item_assignment) { Fabricate :item_assignment, start_time: 2.days.ago }
     let(:other_item_assignment) { Fabricate :item_assignment, start_time: 3.days.ago, finish_time: 1.day.ago }
 
-    it { expect(item_assignment.working_hours).to eq 12 }
-    it { expect(other_item_assignment.working_hours).to eq 6 }
+    it { expect(item_assignment.working_hours_until).to eq 12 }
+    it { expect(other_item_assignment.working_hours_until).to eq 6 }
   end
 end

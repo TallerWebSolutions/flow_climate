@@ -11,7 +11,6 @@ Fabricator(:demand) do
   demand_type 0
   class_of_service 0
   demand_id { Random.new.rand(3000..1_000_000) }
-  assignees_count 1
   effort_downstream { 40 }
   effort_upstream { 50 }
 end

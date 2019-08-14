@@ -5,7 +5,6 @@
 # Table name: demands
 #
 #  artifact_type                   :integer          default("story")
-#  assignees_count                 :integer          default(0), not null
 #  blocked_working_time_downstream :decimal(, )      default(0.0)
 #  blocked_working_time_upstream   :decimal(, )      default(0.0)
 #  class_of_service                :integer          default("standard"), not null
@@ -141,7 +140,7 @@ class Demand < ApplicationRecord
   end
 
   def active_team_members
-    team_members.includes(:item_assignments).where(item_assignments: { finish_time: nil })
+    team_members.includes(:item_assignments).where(item_assignments: { finish_time: nil }).uniq
   end
 
   def update_effort!(update_manual_effort = false)
@@ -221,6 +220,10 @@ class Demand < ApplicationRecord
     demand_id
   end
 
+  def assignees_count
+    active_team_members.count
+  end
+
   private
 
   def build_product_tree_array
@@ -268,26 +271,28 @@ class Demand < ApplicationRecord
   def sum_effort(effort_transitions)
     total_effort = 0
     effort_transitions.each do |transition|
+      last_time_out_to_effort = transition.last_time_out || Time.zone.now
       stage_config = transition.stage.stage_project_configs.find_by(project: project)
-      total_blocked = compute_blocked_effort(stage_config, transition)
-      total_effort += ((compute_effort_in_transition(transition, stage_config) * pairing_value(stage_config))) * (1 + (stage_config.management_percentage / 100.0)) - total_blocked
+
+      effort_in_transition = compute_assignments_effort(transition.last_time_in, last_time_out_to_effort, stage_config.stage_percentage_decimal, stage_config.pairing_percentage_decimal) * (1 + stage_config.management_percentage_decimal)
+      total_effort += effort_in_transition
     end
     total_effort
   end
 
-  def compute_blocked_effort(stage_config, transition)
-    demand_blocks.kept.closed.active.for_date_interval(transition.last_time_in, transition.last_time_out).sum(:block_duration) * (stage_config.stage_percentage / 100.0)
+  def compute_assignments_effort(start_date, end_date, stage_percentage, pairing_percentage)
+    total_blocked = demand_blocks.kept.closed.active.for_date_interval(start_date, end_date).sum(:block_duration) * stage_percentage
+    assignments_in_dates = item_assignments.for_dates(start_date, end_date)
+    return (assignments_in_dates.map { |assign_in_date| assign_in_date.working_hours_until(start_date, end_date) }.sum - total_blocked) * stage_percentage unless assignees_count > 1
+
+    compute_paired_effort(assignments_in_dates, start_date, end_date, pairing_percentage)
   end
 
-  def compute_effort_in_transition(transition, stage_config)
-    transition.working_time_in_transition * (stage_config.stage_percentage / 100.0)
-  end
+  def compute_paired_effort(assignments_in_dates, start_date, end_date, pairing_percentage)
+    top_effort = assignments_in_dates.max_by { |assign_in_date| assign_in_date.working_hours_until(start_date, end_date) }
+    pairing_efforts = assignments_in_dates - [top_effort]
 
-  def pairing_value(stage_config)
-    return assignees_count if assignees_count == 1 || assignees_count.zero?
-
-    pair_count = assignees_count - 1
-    1 + (pair_count * (stage_config.pairing_percentage / 100.0))
+    top_effort.working_hours_until(start_date, end_date) + pairing_efforts.map { |assign_in_date| assign_in_date.working_hours_until(start_date, end_date) }.sum * (1 + pairing_percentage)
   end
 
   def compute_and_update_automatic_fields

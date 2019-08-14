@@ -73,6 +73,10 @@ RSpec.describe Company, type: :model do
     let!(:second_demand) { Fabricate :demand, project: active_project, created_date: 2.weeks.ago, end_date: 1.week.ago }
     let!(:third_demand) { Fabricate :demand, project: active_project, created_date: 1.week.ago, end_date: 2.days.ago }
 
+    let!(:first_item_assignment) { Fabricate :item_assignment, demand: first_demand, team_member: team_member, start_time: 1.month.ago, finish_time: nil }
+    let!(:second_item_assignment) { Fabricate :item_assignment, demand: second_demand, team_member: team_member, start_time: 1.month.ago, finish_time: nil }
+    let!(:third_item_assignment) { Fabricate :item_assignment, demand: third_demand, team_member: team_member, start_time: 7.weeks.ago, finish_time: nil }
+
     let!(:first_transition) { Fabricate :demand_transition, stage: first_stage, demand: first_demand, last_time_in: 1.month.ago, last_time_out: 2.weeks.ago }
     let!(:second_transition) { Fabricate :demand_transition, stage: first_stage, demand: second_demand, last_time_in: 1.month.ago, last_time_out: 3.weeks.ago }
 
@@ -149,7 +153,7 @@ RSpec.describe Company, type: :model do
       let!(:third_finance) { Fabricate :financial_information, company: company, finances_date: 1.month.from_now, expenses_total: 100 }
 
       include_context 'demands with effort for company'
-      it { expect(company.current_cost_per_hour.to_f).to eq 0.6313131313131313 }
+      it { expect(company.current_cost_per_hour.to_f).to eq 0.946969696969697 }
 
       pending 'having no efforts'
     end
@@ -165,7 +169,7 @@ RSpec.describe Company, type: :model do
     context 'having finances' do
       include_context 'demands with effort for company'
 
-      it { expect(company.current_hours_per_demand.to_f).to eq 158.4 }
+      it { expect(company.current_hours_per_demand.to_f).to eq 105.6 }
     end
 
     context 'having no finances' do
@@ -184,13 +188,13 @@ RSpec.describe Company, type: :model do
   describe '#avg_hours_per_demand' do
     include_context 'demands with effort for company'
 
-    it { expect(company.avg_hours_per_demand).to eq 52.800000000000004 }
+    it { expect(company.avg_hours_per_demand).to eq 35.199999999999996 }
   end
 
   describe '#consumed_hours_in_month' do
     include_context 'demands with effort for company'
 
-    it { expect(company.consumed_hours_in_month.to_f).to eq 158.4 }
+    it { expect(company.consumed_hours_in_month.to_f).to eq 105.6 }
   end
 
   describe '#throughput_in_month' do
@@ -289,7 +293,7 @@ RSpec.describe Company, type: :model do
   describe '#total_active_consumed_hours' do
     context 'having data' do
       include_context 'demands with effort for company'
-      it { expect(company.total_active_consumed_hours.to_f).to eq 158.4 }
+      it { expect(company.total_active_consumed_hours.to_f).to eq 105.6 }
     end
 
     context 'having no data' do

@@ -136,7 +136,6 @@ RSpec.describe DemandsController, type: :controller do
           expect(created_demand.class_of_service).to eq 'expedite'
           expect(created_demand.downstream_demand?).to be true
           expect(created_demand.manual_effort).to be true
-          expect(created_demand.assignees_count).to eq 3
           expect(created_demand.effort_upstream).to eq 5
           expect(created_demand.effort_downstream.to_f).to eq 2
           expect(created_demand.created_date).to eq date_to_demand

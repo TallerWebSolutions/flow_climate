@@ -237,6 +237,9 @@ RSpec.describe Demand, type: :model do
   describe '#update_effort!' do
     let(:company) { Fabricate :company }
     let(:customer) { Fabricate :customer, company: company }
+    let(:team) { Fabricate :team, company: company }
+    let(:team_member) { Fabricate :team_member, company: company, teams: [team] }
+    let(:other_team_member) { Fabricate :team_member, company: company, teams: [team] }
     let(:project) { Fabricate :project, customers: [customer], percentage_effort_to_bugs: 20 }
     let(:upstream_effort_stage) { Fabricate :stage, stage_stream: :upstream }
     let(:downstream_effort_stage) { Fabricate :stage, stage_stream: :downstream }
@@ -246,10 +249,12 @@ RSpec.describe Demand, type: :model do
 
     context 'having only one assined' do
       context 'having no blockings' do
-        let(:demand) { Fabricate :demand, project: project, assignees_count: 1 }
+        let(:demand) { Fabricate :demand, project: project }
         let!(:upstream_demand_transition) { Fabricate :demand_transition, demand: demand, stage: upstream_effort_stage, last_time_in: Time.zone.parse('2018-03-05 22:00'), last_time_out: Time.zone.parse('2018-03-06 13:00') }
         let!(:downstream_demand_transition) { Fabricate :demand_transition, demand: demand, stage: downstream_effort_stage, last_time_in: Time.zone.parse('2018-03-06 13:00'), last_time_out: Time.zone.parse('2018-03-06 15:00') }
         let!(:discarded_demand_transition) { Fabricate :demand_transition, demand: demand, stage: downstream_effort_stage, last_time_in: Time.zone.parse('2018-03-06 13:00'), last_time_out: Time.zone.parse('2018-03-06 15:00'), discarded_at: Time.zone.now }
+
+        let!(:item_assignment) { Fabricate :item_assignment, demand: demand, team_member: team_member, start_time: Time.zone.parse('2018-03-05 22:00'), finish_time: nil }
 
         it 'changes the effort informations' do
           demand.update_effort!
@@ -259,23 +264,25 @@ RSpec.describe Demand, type: :model do
       end
 
       context 'having blockings' do
-        let(:demand) { Fabricate :demand, project: project, assignees_count: 1 }
-        let!(:demand_transition) { Fabricate :demand_transition, demand: demand, stage: upstream_effort_stage, last_time_in: Time.zone.parse('2018-03-05 22:00'), last_time_out: Time.zone.parse('2018-03-06 13:00') }
-        let!(:first_demand_block) { Fabricate :demand_block, demand: demand, block_duration: 2.0, block_time: Time.zone.parse('2018-03-05 23:00'), unblock_time: Time.zone.parse('2018-03-06 00:00') }
-        let!(:second_demand_block) { Fabricate :demand_block, demand: demand, block_duration: 1.0, block_time: Time.zone.parse('2018-03-06 10:00'), unblock_time: Time.zone.parse('2018-03-06 12:00') }
-        let!(:third_demand_block) { Fabricate :demand_block, demand: demand, block_duration: 123.0, block_time: Time.zone.parse('2018-03-06 10:00') }
-        let!(:out_demand_block) { Fabricate :demand_block, demand: demand, block_duration: 5.0, block_time: Time.zone.parse('2018-03-06 14:00'), unblock_time: Time.zone.parse('2018-03-06 15:00') }
+        let(:demand) { Fabricate :demand, project: project }
+        let!(:demand_transition) { Fabricate :demand_transition, demand: demand, stage: upstream_effort_stage, last_time_in: Time.zone.parse('2018-03-05 22:00'), last_time_out: Time.zone.parse('2018-03-07 13:00') }
+        let!(:first_demand_block) { Fabricate :demand_block, demand: demand, block_time: Time.zone.parse('2018-03-05 23:00'), unblock_time: Time.zone.parse('2018-03-06 00:00') }
+        let!(:second_demand_block) { Fabricate :demand_block, demand: demand, block_time: Time.zone.parse('2018-03-06 10:00'), unblock_time: Time.zone.parse('2018-03-06 12:00') }
+        let!(:third_demand_block) { Fabricate :demand_block, demand: demand, block_time: Time.zone.parse('2018-03-06 10:00') }
+        let!(:out_demand_block) { Fabricate :demand_block, demand: demand, block_time: Time.zone.parse('2018-03-06 14:00'), unblock_time: Time.zone.parse('2018-03-06 15:00') }
         let!(:discarded_demand_block) { Fabricate :demand_block, demand: demand, active: true, block_time: Time.zone.parse('2018-03-06 10:00'), unblock_time: Time.zone.parse('2018-03-06 12:00'), discarded_at: Time.zone.now }
+
+        let!(:item_assignment) { Fabricate :item_assignment, demand: demand, team_member: team_member, start_time: Time.zone.parse('2018-03-05 22:00'), finish_time: nil }
 
         it 'changes the effort informations' do
           demand.update_effort!
-          expect(demand.effort_upstream.to_f).to eq 3.6
+          expect(demand.effort_upstream.to_f).to eq 8.8
           expect(demand.effort_downstream.to_f).to eq 0.0
         end
       end
 
       context 'having no transition in the effort stage' do
-        let(:demand) { Fabricate :demand, project: project, assignees_count: 1, effort_upstream: 0, effort_downstream: 0 }
+        let(:demand) { Fabricate :demand, project: project, effort_upstream: 0, effort_downstream: 0 }
         let!(:demand_transition) { Fabricate :demand_transition, demand: demand, last_time_in: Time.zone.parse('2018-03-05 22:00'), last_time_out: Time.zone.parse('2018-03-06 13:00') }
 
         it 'does not change the effort informations' do
@@ -287,29 +294,34 @@ RSpec.describe Demand, type: :model do
     end
 
     context 'having a pair assigned' do
-      let(:demand) { Fabricate :demand, project: project, assignees_count: 2, effort_upstream: 0, effort_downstream: 0 }
+      let(:demand) { Fabricate :demand, project: project, effort_upstream: 0, effort_downstream: 0 }
 
       context 'having no blockings' do
         let!(:upstream_demand_transition) { Fabricate :demand_transition, demand: demand, stage: upstream_effort_stage, last_time_in: Time.zone.parse('2018-03-05 22:00'), last_time_out: Time.zone.parse('2018-03-06 13:00') }
         let!(:downstream_demand_transition) { Fabricate :demand_transition, demand: demand, stage: downstream_effort_stage, last_time_in: Time.zone.parse('2018-03-06 13:00'), last_time_out: Time.zone.parse('2018-03-06 15:00') }
 
+        let!(:item_assignment) { Fabricate :item_assignment, demand: demand, team_member: team_member, start_time: Time.zone.parse('2018-03-05 22:00'), finish_time: nil }
+        let!(:other_item_assignment) { Fabricate :item_assignment, demand: demand, team_member: other_team_member, start_time: Time.zone.parse('2018-03-05 22:00'), finish_time: nil }
+
         it 'changes the effort informations' do
           demand.update_effort!
-          expect(demand.effort_upstream.to_f).to eq 10.56
-          expect(demand.effort_downstream.to_f).to eq 2.484
+          expect(demand.effort_upstream.to_f).to eq 13.86
+          expect(demand.effort_downstream.to_f).to eq 4.945
         end
       end
 
       context 'having blockings' do
-        let!(:demand_transition) { Fabricate :demand_transition, demand: demand, stage: upstream_effort_stage, last_time_in: Time.zone.parse('2018-03-05 22:00'), last_time_out: Time.zone.parse('2018-03-06 13:00') }
-        let!(:first_demand_block) { Fabricate :demand_block, demand: demand, block_duration: 2.0, block_time: Time.zone.parse('2018-03-05 22:00'), unblock_time: Time.zone.parse('2018-03-06 13:00') }
-        let!(:second_demand_block) { Fabricate :demand_block, demand: demand, block_duration: 1.0, block_time: Time.zone.parse('2018-03-06 10:00'), unblock_time: Time.zone.parse('2018-03-06 13:00') }
-        let!(:out_demand_block) { Fabricate :demand_block, demand: demand, block_duration: 1.0, block_time: Time.zone.parse('2018-03-06 22:00'), unblock_time: Time.zone.parse('2018-03-06 23:00') }
+        let!(:demand_transition) { Fabricate :demand_transition, demand: demand, stage: upstream_effort_stage, last_time_in: Time.zone.parse('2018-03-05 22:00'), last_time_out: Time.zone.parse('2018-03-08 13:00') }
+        let!(:first_demand_block) { Fabricate :demand_block, demand: demand, block_time: Time.zone.parse('2018-03-05 22:00'), unblock_time: Time.zone.parse('2018-03-06 05:00') }
+        let!(:second_demand_block) { Fabricate :demand_block, demand: demand, block_time: Time.zone.parse('2018-03-06 10:00'), unblock_time: Time.zone.parse('2018-03-06 11:00') }
+        let!(:out_demand_block) { Fabricate :demand_block, block_time: Time.zone.parse('2018-03-06 22:00'), unblock_time: Time.zone.parse('2018-03-06 23:00') }
         let!(:discarded_demand_block) { Fabricate :demand_block, demand: demand, active: true, block_time: Time.zone.parse('2018-03-06 10:00'), unblock_time: Time.zone.parse('2018-03-06 12:00'), discarded_at: Time.zone.now }
+
+        let!(:item_assignment) { Fabricate :item_assignment, demand: demand, team_member: team_member, start_time: Time.zone.parse('2018-03-05 22:00'), finish_time: nil }
 
         it 'changes the effort informations' do
           demand.update_effort!
-          expect(demand.effort_upstream.to_f).to eq 1.56
+          expect(demand.effort_upstream.to_f).to eq 12.1
           expect(demand.effort_downstream.to_f).to eq 0.0
         end
       end
@@ -325,7 +337,7 @@ RSpec.describe Demand, type: :model do
       end
 
       context 'when the demand has manual effort' do
-        let(:demand) { Fabricate :demand, project: project, assignees_count: 2, effort_upstream: 30, effort_downstream: 23, manual_effort: true }
+        let(:demand) { Fabricate :demand, project: project, effort_upstream: 30, effort_downstream: 23, manual_effort: true }
         let!(:demand_transition) { Fabricate :demand_transition, demand: demand, last_time_in: Time.zone.parse('2018-03-05 22:00'), last_time_out: Time.zone.parse('2018-03-06 13:00') }
 
         it 'does not change the effort informations' do
@@ -336,14 +348,16 @@ RSpec.describe Demand, type: :model do
       end
 
       context 'when the demand is a bug' do
-        let(:demand) { Fabricate :demand, project: project, demand_type: :bug, assignees_count: 2, effort_upstream: 30, effort_downstream: 23, manual_effort: false }
+        let(:demand) { Fabricate :demand, project: project, demand_type: :bug, effort_upstream: 30, effort_downstream: 23, manual_effort: false }
         let!(:upstream_demand_transition) { Fabricate :demand_transition, demand: demand, stage: upstream_effort_stage, last_time_in: Time.zone.parse('2018-03-05 22:00'), last_time_out: Time.zone.parse('2018-03-20 13:00') }
         let!(:downstream_demand_transition) { Fabricate :demand_transition, demand: demand, stage: downstream_effort_stage, last_time_in: Time.zone.parse('2018-03-06 13:00'), last_time_out: Time.zone.parse('2018-03-14 15:00') }
 
+        let!(:item_assignment) { Fabricate :item_assignment, demand: demand, start_time: Time.zone.parse('2018-03-05 22:00'), finish_time: nil }
+
         it 'changes the effort based on the bug configuration' do
           demand.update_effort!
-          expect(demand.effort_upstream.to_f).to eq 23.232
-          expect(demand.effort_downstream.to_f).to eq 9.4392
+          expect(demand.effort_upstream.to_f).to eq 14.52
+          expect(demand.effort_downstream.to_f).to eq 7.866
         end
       end
     end
@@ -377,7 +391,7 @@ RSpec.describe Demand, type: :model do
     let(:project) { Fabricate :project, customers: [customer] }
     let(:effort_stage) { Fabricate :stage, stage_stream: :upstream }
     let!(:stage_project_config) { Fabricate :stage_project_config, project: project, stage: effort_stage, compute_effort: true }
-    let(:demand) { Fabricate :demand, project: project, assignees_count: 1 }
+    let(:demand) { Fabricate :demand, project: project }
 
     context 'having no blockings' do
       let!(:demand_transition) { Fabricate :demand_transition, demand: demand, stage: effort_stage, last_time_in: Time.zone.parse('2018-03-05 22:00'), last_time_out: Time.zone.parse('2018-03-06 13:00') }
@@ -403,7 +417,7 @@ RSpec.describe Demand, type: :model do
     let(:project) { Fabricate :project, customers: [customer] }
     let(:effort_stage) { Fabricate :stage, stage_stream: :downstream }
     let!(:stage_project_config) { Fabricate :stage_project_config, project: project, stage: effort_stage, compute_effort: true }
-    let(:demand) { Fabricate :demand, project: project, assignees_count: 1 }
+    let(:demand) { Fabricate :demand, project: project }
 
     context 'having no blockings' do
       let!(:demand_transition) { Fabricate :demand_transition, demand: demand, stage: effort_stage, last_time_in: Time.zone.parse('2018-03-05 22:00'), last_time_out: Time.zone.parse('2018-03-06 13:00') }
@@ -757,5 +771,22 @@ RSpec.describe Demand, type: :model do
     let(:demand) { Fabricate :demand }
 
     it { expect(demand.to_hash).to eq(id: demand.id, demand_id: demand.demand_id, demand_title: demand.demand_title, effort_upstream: demand.effort_upstream, effort_downstream: demand.effort_downstream, cost_to_project: demand.cost_to_project, current_stage: demand.current_stage&.name, time_in_current_stage: demand.time_in_current_stage, partial_leadtime: demand.partial_leadtime, responsibles: demand.team_members.map { |member| { member_name: member.name, jira_account_id: member.jira_account_id } }, demand_blocks: demand.demand_blocks.map { |block| { blocker_username: block.blocker_username, block_time: block.block_time, block_reason: block.block_reason, unblock_time: block.unblock_time } }) }
+  end
+
+  describe '#assignees_count' do
+    let(:company) { Fabricate :company }
+    let(:team) { Fabricate :team, company: company }
+    let(:first_demand) { Fabricate :demand, team: team }
+    let(:first_team_member) { Fabricate :team_member, teams: [team], company: company }
+    let(:second_team_member) { Fabricate :team_member, teams: [team], company: company }
+
+    let!(:first_item_assignment) { Fabricate :item_assignment, demand: first_demand, team_member: first_team_member, start_time: 1.day.ago, finish_time: nil }
+    let!(:second_item_assignment) { Fabricate :item_assignment, demand: first_demand, team_member: second_team_member, start_time: 2.days.ago, finish_time: nil }
+    let!(:third_item_assignment) { Fabricate :item_assignment, demand: first_demand, team_member: first_team_member, start_time: 2.days.ago, finish_time: nil }
+
+    let(:second_demand) { Fabricate :demand, team: team }
+
+    it { expect(first_demand.assignees_count).to eq 2 }
+    it { expect(second_demand.assignees_count).to eq 0 }
   end
 end

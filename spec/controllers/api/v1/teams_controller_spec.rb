@@ -79,6 +79,10 @@ RSpec.describe Api::V1::TeamsController, type: :controller do
   end
 
   describe 'GET #items_delivered_last_week' do
+    before { travel_to Time.zone.local(2019, 8, 12, 10, 0, 0) }
+
+    after { travel_back }
+
     let(:company) { Fabricate :company }
     let(:customer) { Fabricate :customer, company: company }
     let!(:team) { Fabricate :team, company: company }

@@ -40,6 +40,10 @@ RSpec.describe FinancialInformation, type: :model do
     let!(:second_demand) { Fabricate :demand, project: project }
     let!(:third_demand) { Fabricate :demand, project: project }
 
+    let!(:first_item_assignment) { Fabricate :item_assignment, demand: first_demand, start_time: 1.month.ago, finish_time: nil }
+    let!(:second_item_assignment) { Fabricate :item_assignment, demand: second_demand, start_time: 1.month.ago, finish_time: nil }
+    let!(:third_item_assignment) { Fabricate :item_assignment, demand: third_demand, start_time: 7.weeks.ago, finish_time: nil }
+
     let!(:first_transition) { Fabricate :demand_transition, stage: first_stage, demand: first_demand, last_time_in: 1.month.ago }
     let!(:second_transition) { Fabricate :demand_transition, stage: first_stage, demand: second_demand, last_time_in: 1.month.ago }
     let!(:third_transition) { Fabricate :demand_transition, stage: first_stage, demand: third_demand, last_time_in: 2.months.ago }
@@ -63,6 +67,10 @@ RSpec.describe FinancialInformation, type: :model do
     let!(:first_demand) { Fabricate :demand, project: project, end_date: 1.month.ago }
     let!(:second_demand) { Fabricate :demand, project: project, end_date: 1.month.ago }
     let!(:third_demand) { Fabricate :demand, project: project, end_date: 2.months.ago }
+
+    let!(:first_item_assignment) { Fabricate :item_assignment, demand: first_demand, start_time: 1.month.ago, finish_time: nil }
+    let!(:second_item_assignment) { Fabricate :item_assignment, demand: second_demand, start_time: 1.month.ago, finish_time: nil }
+    let!(:third_item_assignment) { Fabricate :item_assignment, demand: third_demand, start_time: 7.weeks.ago, finish_time: nil }
 
     let!(:first_transition) { Fabricate :demand_transition, stage: first_stage, demand: first_demand, last_time_in: 1.month.ago, last_time_out: 2.weeks.ago }
     let!(:second_transition) { Fabricate :demand_transition, stage: first_stage, demand: second_demand, last_time_in: 1.month.ago, last_time_out: 3.weeks.ago }

@@ -33,4 +33,16 @@ class StageProjectConfig < ApplicationRecord
 
   validates :project, :stage, presence: true
   validates :project, uniqueness: { scope: :stage, message: I18n.t('stage_project_config.validations.stage_project_unique.message') }
+
+  def management_percentage_decimal
+    management_percentage / 100.0
+  end
+
+  def pairing_percentage_decimal
+    management_percentage / 100.0
+  end
+
+  def stage_percentage_decimal
+    stage_percentage / 100.0
+  end
 end

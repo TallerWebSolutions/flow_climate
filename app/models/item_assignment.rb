@@ -32,9 +32,12 @@ class ItemAssignment < ApplicationRecord
 
   validates :demand, uniqueness: { scope: %i[team_member start_time], message: I18n.t('item_assignment.validations.demand_unique') }
 
-  def working_hours
-    end_time = finish_time || Time.zone.now
+  scope :for_dates, ->(start_date, end_date) { where('(start_time <= :end_date) AND (finish_time IS NULL OR finish_time >= :start_date)', start_date: start_date, end_date: end_date) }
 
-    TimeService.instance.compute_working_hours_for_dates(start_time, end_time)
+  def working_hours_until(beginning_time = nil, end_time = Time.zone.now)
+    start_effort_time = [start_time, beginning_time].compact.max
+    end_effort_time = [finish_time, end_time].compact.min
+
+    TimeService.instance.compute_working_hours_for_dates(start_effort_time, end_effort_time)
   end
 end
