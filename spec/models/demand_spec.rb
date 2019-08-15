@@ -298,10 +298,13 @@ RSpec.describe Demand, type: :model do
 
       context 'having no blockings' do
         let!(:upstream_demand_transition) { Fabricate :demand_transition, demand: demand, stage: upstream_effort_stage, last_time_in: Time.zone.parse('2018-03-05 22:00'), last_time_out: Time.zone.parse('2018-03-06 13:00') }
-        let!(:downstream_demand_transition) { Fabricate :demand_transition, demand: demand, stage: downstream_effort_stage, last_time_in: Time.zone.parse('2018-03-06 13:00'), last_time_out: Time.zone.parse('2018-03-06 15:00') }
+        let!(:downstream_demand_transition) { Fabricate :demand_transition, demand: demand, stage: downstream_effort_stage, last_time_in: Time.zone.parse('2018-03-06 13:01'), last_time_out: Time.zone.parse('2018-03-06 15:00') }
 
-        let!(:item_assignment) { Fabricate :item_assignment, demand: demand, team_member: team_member, start_time: Time.zone.parse('2018-03-05 22:00'), finish_time: nil }
-        let!(:other_item_assignment) { Fabricate :item_assignment, demand: demand, team_member: other_team_member, start_time: Time.zone.parse('2018-03-05 22:00'), finish_time: nil }
+        let!(:upstream_item_assignment) { Fabricate :item_assignment, demand: demand, team_member: team_member, start_time: Time.zone.parse('2018-03-05 22:00'), finish_time: Time.zone.parse('2018-03-06 13:00') }
+        let!(:other_upstream_item_assignment) { Fabricate :item_assignment, demand: demand, team_member: other_team_member, start_time: Time.zone.parse('2018-03-05 22:00'), finish_time: Time.zone.parse('2018-03-06 13:00') }
+
+        let!(:downstream_item_assignment) { Fabricate :item_assignment, demand: demand, team_member: team_member, start_time: Time.zone.parse('2018-03-06 13:00'), finish_time: nil }
+        let!(:other_downstream_item_assignment) { Fabricate :item_assignment, demand: demand, team_member: other_team_member, start_time: Time.zone.parse('2018-03-06 13:00'), finish_time: nil }
 
         it 'changes the effort informations' do
           demand.update_effort!

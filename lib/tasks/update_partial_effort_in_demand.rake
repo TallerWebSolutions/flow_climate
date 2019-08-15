@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-desc 'Start of plans'
+desc 'Update partial efforts'
 
 namespace :demands do
   task update_partial_effort: :environment do
