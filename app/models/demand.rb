@@ -283,7 +283,7 @@ class Demand < ApplicationRecord
   def compute_assignments_effort(start_date, end_date, stage_percentage, pairing_percentage)
     total_blocked = demand_blocks.kept.closed.active.for_date_interval(start_date, end_date).sum(:block_duration) * stage_percentage
     assignments_in_dates = item_assignments.for_dates(start_date, end_date)
-    return (assignments_in_dates.map { |assign_in_date| assign_in_date.working_hours_until(start_date, end_date) }.sum - total_blocked) * stage_percentage unless assignees_count > 1
+    return (assignments_in_dates.map { |assign_in_date| assign_in_date.working_hours_until(start_date, end_date) }.sum - total_blocked) * stage_percentage unless assignments_in_dates.count > 1
 
     compute_paired_effort(assignments_in_dates, start_date, end_date, pairing_percentage)
   end
