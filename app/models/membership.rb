@@ -35,4 +35,7 @@ class Membership < ApplicationRecord
   delegate :name, to: :team_member, prefix: true
   delegate :jira_account_id, to: :team_member
   delegate :monthly_payment, to: :team_member
+  delegate :hours_per_month, to: :team_member
+  delegate :start_date, to: :team_member
+  delegate :end_date, to: :team_member
 end

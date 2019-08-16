@@ -30,7 +30,17 @@ function buildLineChart(lineDiv) {
             labels: {
                 format: '{value:.2f}'
             }
-        }],
+        },
+            {
+                title: {
+                    text: lineDiv.data('ytitleright')
+                },
+                labels: {
+                    format: '{value:.2f}%'
+                },
+                opposite: true
+            }
+        ],
         tooltip: {
             enabled: true,
             valuePrefix: lineDiv.data('prefix'),
@@ -39,9 +49,9 @@ function buildLineChart(lineDiv) {
             shared: true
         },
         legend: {
-            layout: 'vertical',
+            layout: 'horizontal',
             align: 'center',
-            verticalAlign: 'bottom',
+            verticalAlign: 'top',
             borderWidth: 0
         },
         plotOptions: {

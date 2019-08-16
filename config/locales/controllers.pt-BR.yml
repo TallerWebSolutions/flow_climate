@@ -500,6 +500,16 @@ pt-BR:
         title: "Custo Médio por Demanda"
         ylabel: "$ / Demanda"
         xlabel: "período"
+      hours_efficiency:
+        title: "Eficiência nas Horas"
+        xlabel: "Tempo"
+        ylabel: "horas"
+      hours_consumed:
+        data_legend: "Horas Consumidas"
+      available_hours:
+        data_legend: "Horas Disponíveis"
+      operational_loss:
+        data_legend: "Perda Operacional"
     destroy:
       success: 'Time "%{team_name}" excluído.'
     statistics:

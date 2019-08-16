@@ -48,10 +48,6 @@
       <span class="help-block"><%= team_member.errors[:hours_per_month].join(', ') %></span>
     </div>
     <div class='col-xs-6 form-check'>
-      <%= f.check_box :active, class: 'form-check-input', checked: team_member.active? %>
-      <%= f.label :active, class: 'form-check-label' %>
-    </div>
-    <div class='col-xs-6 form-check'>
       <%= f.check_box :billable, class: 'form-check-input', checked: team_member.billable? %>
       <%= f.label :billable, class: 'form-check-label' %>
     </div>

@@ -4,7 +4,6 @@
 #
 # Table name: team_members
 #
-#  active                  :boolean          default(TRUE)
 #  billable                :boolean          default(TRUE)
 #  billable_type           :integer          default("outsourcing")
 #  company_id              :integer          not null, indexed => [name, jira_account_id]
@@ -46,9 +45,17 @@ class TeamMember < ApplicationRecord
   validates :name, presence: true
   validates :name, uniqueness: { scope: %i[company_id jira_account_id], message: I18n.t('activerecord.attributes.team_member.validations.name_unique') }
 
-  scope :active, -> { where active: true }
+  scope :active, -> { where('end_date IS NULL') }
 
   def to_hash
     { member_name: name, jira_account_id: jira_account_id }
+  end
+
+  def hours_per_day
+    hours_per_month.to_f / 30.0
+  end
+
+  def active?
+    end_date.blank?
   end
 end

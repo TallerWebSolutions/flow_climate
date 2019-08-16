@@ -86,12 +86,7 @@ Rails.application.routes.draw do
       get :replenishing_input, on: :member
     end
 
-    resources :team_members, except: :index do
-      member do
-        patch :activate
-        patch :deactivate
-      end
-    end
+    resources :team_members, except: :index
 
     resources :financial_informations, only: %i[new create edit update destroy]
 

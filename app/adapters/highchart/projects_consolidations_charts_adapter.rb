@@ -7,7 +7,7 @@ module Highchart
     attr_reader :projects_consolidations, :x_axis
 
     def initialize(projects_consolidations, start_date, end_date)
-      @projects_consolidations = projects_consolidations.where('consolidation_date BETWEEN :start_date AND :end_date', start_date: start_date, end_date: end_date)
+      @projects_consolidations = projects_consolidations.where('consolidation_date BETWEEN :start_date AND :end_date', start_date: start_date, end_date: end_date).order(:consolidation_date)
       @x_axis = @projects_consolidations.map(&:consolidation_date).uniq
     end
 

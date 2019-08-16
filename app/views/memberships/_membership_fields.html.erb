@@ -1,7 +1,10 @@
 <td><%= membership.team_member_name %></td>
+<td><%= I18n.l(membership.start_date) %></td>
+<td><%= I18n.l(membership.end_date) if membership.end_date.present? %></td>
 <td><%= I18n.t("activerecord.attributes.membership.enums.member_role.#{membership.member_role}") %></td>
 <td><%= membership.jira_account_id %></td>
 <td><%= number_to_currency(membership.monthly_payment, precision: 2) %></td>
+<td><%= membership.hours_per_month %></td>
 <td>
   <%= link_to edit_company_team_membership_path(company, team, membership), remote: true do %>
     <i class="fas fa-edit"></i>

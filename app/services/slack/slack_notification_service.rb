@@ -8,7 +8,7 @@ module Slack
     include DateHelper
 
     def notify_cmd(slack_notifier, team)
-      average_demand_cost_info = TeamService.instance.average_demand_cost_info_hash(team)
+      average_demand_cost_info = TeamService.instance.average_demand_cost_stats_info_hash(team)
 
       slack_notifier.ping(I18n.t('slack_configurations.notifications.cmd_text',
                                  name: average_demand_cost_info[:team_name],

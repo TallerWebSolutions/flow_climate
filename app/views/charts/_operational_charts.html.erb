@@ -1,4 +1,35 @@
 <% if report_data.present? %>
+
+  <% if @team_chart_data.present? %>
+    <div class="col-xs-6 bottom-spaced-component">
+      <div id="average-demand-cost"
+           class="flow-chart"
+           data-title='<%= I18n.t('teams.charts.average_demand_cost.title', target_name: target_name) %>'
+           data-xcategories='<%= @team_chart_data.average_demand_cost[:x_axis].to_json %>'
+           data-xtitle='<%= I18n.t('teams.charts.average_demand_cost.xlabel') %>'
+           data-ytitle='<%= I18n.t('teams.charts.average_demand_cost.ylabel') %>'
+           data-prefix='<%= I18n.t('general.money') %>'
+           data-tooltipsuffix=''
+           data-series='<%= [{ name: I18n.t('teams.charts.average_demand_cost.data_legend'), data: @team_chart_data.average_demand_cost[:data] }].to_json %>'
+           data-decimals='2'>
+      </div>
+    </div>
+    <div class="col-xs-6 bottom-spaced-component">
+      <div id="hours-efficiency"
+           class="flow-chart"
+           data-title='<%= I18n.t('teams.charts.hours_efficiency.title', target_name: target_name) %>'
+           data-xcategories='<%= @team_chart_data.hours_efficiency[:x_axis].to_json %>'
+           data-xtitle='<%= I18n.t('teams.charts.hours_efficiency.xlabel') %>'
+           data-ytitle='<%= I18n.t('teams.charts.hours_efficiency.ylabel') %>'
+           data-ytitleright='<%= I18n.t('teams.charts.operational_loss.data_legend') %>'
+           data-prefix=''
+           data-tooltipsuffix='h'
+           data-series='<%= @team_chart_data.hours_efficiency[:y_axis].to_json %>'
+           data-decimals='2'>
+      </div>
+    </div>
+  <% end %>
+
   <div class="col-xs-6 bottom-spaced-component">
     <div id="burnup-demands"
          class="flow-chart"
@@ -204,22 +235,6 @@
          data-decimals='2'>
     </div>
   </div>
-
-  <% if @team_chart_data.present? %>
-    <div class="col-xs-6 bottom-spaced-component">
-      <div id="average-demand-cost"
-           class="flow-chart"
-           data-title='<%= I18n.t('teams.charts.average_demand_cost.title', target_name: target_name) %>'
-           data-xcategories='<%= @team_chart_data.average_demand_cost[:x_axis].to_json %>'
-           data-xtitle='<%= I18n.t('teams.charts.average_demand_cost.xlabel') %>'
-           data-ytitle='<%= I18n.t('teams.charts.average_demand_cost.ylabel') %>'
-           data-prefix='<%= I18n.t('general.money') %>'
-           data-tooltipsuffix=''
-           data-series='<%= [{ name: I18n.t('teams.charts.average_demand_cost.data_legend'), data: @team_chart_data.average_demand_cost[:data] }].to_json %>'
-           data-decimals='2'>
-      </div>
-    </div>
-  <% end %>
 
 <% else %>
   <%= render 'layouts/no_data', missing_data: I18n.t('general.data') %>

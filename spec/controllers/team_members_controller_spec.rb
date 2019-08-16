@@ -26,18 +26,6 @@ RSpec.describe TeamMembersController, type: :controller do
       it { expect(response).to redirect_to new_user_session_path }
     end
 
-    describe 'PATCH #activate' do
-      before { patch :activate, params: { company_id: 'xpto', id: 'foo' } }
-
-      it { expect(response).to redirect_to new_user_session_path }
-    end
-
-    describe 'PATCH #deactivate' do
-      before { patch :activate, params: { company_id: 'xpto', id: 'foo' } }
-
-      it { expect(response).to redirect_to new_user_session_path }
-    end
-
     describe 'DELETE #destroy' do
       before { delete :destroy, params: { company_id: 'xpto', id: 'foo' } }
 
@@ -96,7 +84,6 @@ RSpec.describe TeamMembersController, type: :controller do
           expect(TeamMember.last.jira_account_user_email).to eq 'foo@bar.com'
           expect(TeamMember.last.jira_account_id).to eq 'jira_account_id'
           expect(TeamMember.last.billable).to be false
-          expect(TeamMember.last.active).to be false
           expect(TeamMember.last.monthly_payment).to eq 100
           expect(TeamMember.last.hours_per_month).to eq 10
           expect(TeamMember.last.billable_type).to eq 'outsourcing'
@@ -171,7 +158,6 @@ RSpec.describe TeamMembersController, type: :controller do
           expect(team_member_updated.jira_account_user_email).to eq 'foo@bar.com'
           expect(team_member_updated.jira_account_id).to eq 'jira_account_id'
           expect(team_member_updated.billable).to be false
-          expect(team_member_updated.active).to be false
           expect(team_member_updated.monthly_payment.to_f).to be 100.0
           expect(team_member_updated.hours_per_month).to be 10
           expect(team_member_updated.billable_type).to eq 'outsourcing'
@@ -202,66 +188,6 @@ RSpec.describe TeamMembersController, type: :controller do
           let(:company) { Fabricate :company, users: [] }
 
           before { put :update, params: { company_id: company, id: team_member, team_member: { team: other_team, name: 'foo', billable: false, active: false, monthly_payment: 100, hours_per_month: 10, billable_type: :outsourcing } }, xhr: true }
-
-          it { expect(response).to have_http_status :not_found }
-        end
-      end
-    end
-
-    describe 'PATCH #activate' do
-      let(:team) { Fabricate :team, company: company }
-
-      context 'passing valid parameters' do
-        before { patch :activate, params: { company_id: company, id: team_member }, xhr: true }
-
-        it 'updates the team member and redirects to team show' do
-          expect(team_member.reload).to be_active
-          expect(assigns(:team_members)).to eq company.reload.team_members.order(:name)
-          expect(response).to render_template 'team_members/update.js.erb'
-        end
-      end
-
-      context 'passing invalid' do
-        context 'non-existent team member' do
-          before { patch :activate, params: { company_id: company, id: 'foo' }, xhr: true }
-
-          it { expect(response).to have_http_status :not_found }
-        end
-
-        context 'unpermitted company' do
-          let(:company) { Fabricate :company, users: [] }
-
-          before { patch :update, params: { company_id: company, id: team_member }, xhr: true }
-
-          it { expect(response).to have_http_status :not_found }
-        end
-      end
-    end
-
-    describe 'PATCH #deactivate' do
-      let(:team) { Fabricate :team, company: company }
-
-      context 'passing valid parameters' do
-        before { patch :deactivate, params: { company_id: company, id: team_member }, xhr: true }
-
-        it 'activates the member and redirects to team show' do
-          expect(team_member.reload).not_to be_active
-          expect(assigns(:team_members)).to eq company.reload.team_members.order(:name)
-          expect(response).to render_template 'team_members/update.js.erb'
-        end
-      end
-
-      context 'passing invalid' do
-        context 'non-existent team member' do
-          before { patch :deactivate, params: { company_id: company, id: 'foo' }, xhr: true }
-
-          it { expect(response).to have_http_status :not_found }
-        end
-
-        context 'unpermitted company' do
-          let(:company) { Fabricate :company, users: [] }
-
-          before { patch :deactivate, params: { company_id: company, id: team_member }, xhr: true }
 
           it { expect(response).to have_http_status :not_found }
         end

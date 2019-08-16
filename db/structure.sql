@@ -9,6 +9,20 @@ SET xmloption = content;
 SET client_min_messages = warning;
 SET row_security = off;
 
+--
+-- Name: pg_stat_statements; Type: EXTENSION; Schema: -; Owner: -
+--
+
+CREATE EXTENSION IF NOT EXISTS pg_stat_statements WITH SCHEMA public;
+
+
+--
+-- Name: EXTENSION pg_stat_statements; Type: COMMENT; Schema: -; Owner: -
+--
+
+COMMENT ON EXTENSION pg_stat_statements IS 'track execution statistics of all SQL statements executed';
+
+
 SET default_tablespace = '';
 
 SET default_with_oids = false;
@@ -1271,7 +1285,6 @@ CREATE TABLE public.team_members (
     name character varying NOT NULL,
     monthly_payment numeric,
     hours_per_month integer,
-    active boolean DEFAULT true,
     billable boolean DEFAULT true,
     billable_type integer DEFAULT 0,
     created_at timestamp without time zone NOT NULL,
@@ -3286,6 +3299,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190805181747'),
 ('20190806135316'),
 ('20190807202613'),
-('20190812154723');
+('20190812154723'),
+('20190815151526');
 
 
