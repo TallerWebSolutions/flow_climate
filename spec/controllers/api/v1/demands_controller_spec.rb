@@ -22,7 +22,7 @@ RSpec.describe Api::V1::DemandsController, type: :controller do
     context 'with invalid team' do
       it 'never calls the service to build the response and returns unauthorized' do
         request.headers.merge! headers
-        expect(TeamService.instance).not_to receive(:average_demand_cost_info_hash)
+        expect(TeamService.instance).not_to receive(:average_demand_cost_stats_info_hash)
         get :show, params: { id: 'foo' }
 
         expect(response).to have_http_status :not_found
@@ -31,7 +31,7 @@ RSpec.describe Api::V1::DemandsController, type: :controller do
 
     context 'unauthenticated' do
       it 'never calls the service to build the response and returns unauthorized' do
-        expect(TeamService.instance).not_to receive(:average_demand_cost_info_hash)
+        expect(TeamService.instance).not_to receive(:average_demand_cost_stats_info_hash)
         get :show, params: { id: 'foo' }
 
         expect(response).to have_http_status :unauthorized

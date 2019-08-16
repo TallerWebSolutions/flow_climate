@@ -66,6 +66,7 @@ class TimeService
       array_of_dates << min_date.to_date
       min_date = (min_date + period_frame).send(end_of_period)
     end
+
     array_of_dates
   end
 

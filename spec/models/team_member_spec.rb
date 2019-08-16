@@ -43,8 +43,8 @@ RSpec.describe TeamMember, type: :model do
 
   context 'scopes' do
     describe '.active' do
-      let(:active) { Fabricate :team_member, active: true }
-      let(:other_active) { Fabricate :team_member, active: true }
+      let(:active) { Fabricate :team_member, end_date: nil }
+      let(:other_active) { Fabricate :team_member, end_date: nil }
       let(:inactive) { Fabricate :team_member, active: false }
 
       it { expect(described_class.active).to match_array [active, other_active] }
@@ -55,5 +55,21 @@ RSpec.describe TeamMember, type: :model do
     let(:team_member) { Fabricate :team_member }
 
     it { expect(team_member.to_hash).to eq(member_name: team_member.name, jira_account_id: team_member.jira_account_id) }
+  end
+
+  describe '#hours_per_day' do
+    let(:team_member) { Fabricate :team_member, hours_per_month: 60 }
+    let(:other_team_member) { Fabricate :team_member, hours_per_month: nil }
+
+    it { expect(team_member.hours_per_day).to eq 2 }
+    it { expect(other_team_member.hours_per_day).to eq 0 }
+  end
+
+  describe '#active?' do
+    let(:team_member) { Fabricate :team_member, end_date: 1.day.ago }
+    let(:other_team_member) { Fabricate :team_member, end_date: nil }
+
+    it { expect(team_member.active?).to be false }
+    it { expect(other_team_member.active?).to be true }
   end
 end

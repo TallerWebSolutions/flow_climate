@@ -15,7 +15,7 @@ class TeamService
       break if end_date_to_cmd > end_of_period_for_date(Time.zone.today, grouping_period)
 
       demands_count = DemandsRepository.instance.throughput_to_projects_and_period(projects, start_date_to_cmd, end_date_to_cmd).count
-      active_billable_members = team.team_members.joins(:memberships).where('start_date <= :end_date AND (end_date IS NULL OR end_date > :end_date)', end_date: end_date_to_cmd).where(memberships: { member_role: :developer })
+      active_billable_members = team.team_members.joins(:memberships).where('start_date <= :end_date AND (end_date IS NULL OR end_date > :end_date) AND billable = true', end_date: end_date_to_cmd).where(memberships: { member_role: :developer })
 
       average_demand_cost = compute_average_demand_cost(active_billable_members, demands_count, grouping_period)
 
@@ -25,8 +25,8 @@ class TeamService
     average_demand_cost_hash
   end
 
-  def average_demand_cost_info_hash(team)
-    five_weeks_cmd = TeamService.instance.compute_average_demand_cost_to_team(team, 5.weeks.ago.beginning_of_week.to_date, Time.zone.today.end_of_week.to_date, 'week')
+  def average_demand_cost_stats_info_hash(team)
+    five_weeks_cmd = compute_average_demand_cost_to_team(team, 5.weeks.ago.beginning_of_week.to_date, Time.zone.today.end_of_week.to_date, 'week')
 
     return if five_weeks_cmd.nil?
 
@@ -34,6 +34,36 @@ class TeamService
     four_weeks_cmd_average = four_weeks_cmd_array.sum / four_weeks_cmd_array.count
 
     compute_and_build_average_demand_cost_hash(five_weeks_cmd, four_weeks_cmd_average, team)
+  end
+
+  def compute_available_hours_to_team(team, start_date, end_date, grouping_period)
+    hours_efficiency_hash = {}
+
+    (start_date..end_date).each do |date|
+      start_date_to_hours = start_of_period_for_date(date, grouping_period)
+      end_date_to_hours = end_of_period_for_date(date, grouping_period)
+
+      break if end_date_to_hours > end_of_period_for_date(Time.zone.today, grouping_period)
+
+      hours_efficiency_hash[end_date_to_hours] = team.available_hours_at(start_date_to_hours.to_date, end_date_to_hours.to_date).to_f
+    end
+
+    hours_efficiency_hash
+  end
+
+  def compute_consumed_hours_to_team(team, start_date, end_date, grouping_period)
+    hours_consumed_hash = {}
+
+    (start_date..end_date).each do |date|
+      start_date_to_hours = start_of_period_for_date(date, grouping_period)
+      end_date_to_hours = end_of_period_for_date(date, grouping_period)
+
+      break if end_date_to_hours > end_of_period_for_date(Time.zone.today, grouping_period)
+
+      hours_consumed_hash[end_date_to_hours] = team.demands.to_end_dates(start_date_to_hours.to_date, end_date_to_hours.to_date).map(&:total_effort).sum.to_f
+    end
+
+    hours_consumed_hash
   end
 
   private

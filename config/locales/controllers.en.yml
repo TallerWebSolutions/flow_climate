@@ -891,6 +891,16 @@ en:
         title: "Average Demand Cost"
         ylabel: "$ / Demand"
         xlabel: "period"
+      hours_efficiency:
+        title: "Hours Efficiency"
+        xlabel: "Time"
+        ylabel: "hours"
+      hours_consumed:
+        data_legend: "Hours Consumed"
+      available_hours:
+        data_legend: "Available Hours"
+      operational_loss:
+        data_legend: "Operational Loss"
     destroy:
       success: "Team %{team_name} deleted."
     statistics:

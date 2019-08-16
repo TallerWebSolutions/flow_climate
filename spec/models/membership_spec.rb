@@ -37,5 +37,9 @@ RSpec.describe Membership, type: :model do
   context 'delegations' do
     it { is_expected.to delegate_method(:name).to(:team_member).with_prefix }
     it { is_expected.to delegate_method(:jira_account_id).to(:team_member) }
+    it { is_expected.to delegate_method(:monthly_payment).to(:team_member) }
+    it { is_expected.to delegate_method(:hours_per_month).to(:team_member) }
+    it { is_expected.to delegate_method(:start_date).to(:team_member) }
+    it { is_expected.to delegate_method(:end_date).to(:team_member) }
   end
 end

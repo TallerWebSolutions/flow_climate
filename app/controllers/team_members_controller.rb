@@ -4,7 +4,7 @@ class TeamMembersController < AuthenticatedController
   before_action :user_gold_check
 
   before_action :assign_company
-  before_action :assign_team_member, only: %i[edit update activate deactivate destroy]
+  before_action :assign_team_member, only: %i[edit update destroy]
 
   def new
     @team_member = TeamMember.new(company: @company)
@@ -36,18 +36,6 @@ class TeamMembersController < AuthenticatedController
     respond_to { |format| format.js { render 'team_members/update.js.erb' } }
   end
 
-  def activate
-    @team_member.update(active: true)
-    assign_team_members
-    respond_to { |format| format.js { render 'team_members/update.js.erb' } }
-  end
-
-  def deactivate
-    @team_member.update(active: false)
-    assign_team_members
-    respond_to { |format| format.js { render 'team_members/update.js.erb' } }
-  end
-
   def destroy
     @team_member.destroy
 
@@ -65,6 +53,6 @@ class TeamMembersController < AuthenticatedController
   end
 
   def team_member_params
-    params.require(:team_member).permit(:name, :jira_account_user_email, :jira_account_id, :monthly_payment, :hours_per_month, :billable, :active, :billable_type, :start_date, :end_date)
+    params.require(:team_member).permit(:name, :jira_account_user_email, :jira_account_id, :monthly_payment, :hours_per_month, :billable, :billable_type, :start_date, :end_date)
   end
 end

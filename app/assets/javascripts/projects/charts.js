@@ -57,4 +57,9 @@ function buildOperationalHighcharts() {
     if (avgDemandCost.length !== 0) {
         buildLineChart(avgDemandCost);
     }
+
+    const hoursEfficiency = $('#hours-efficiency');
+    if (hoursEfficiency.length !== 0) {
+        buildLineChart(hoursEfficiency);
+    }
 }

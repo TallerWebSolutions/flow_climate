@@ -466,7 +466,7 @@ pt-BR:
         last_8_throughput_per_week_data: Throughput das últimas 8 Semanas
       membership:
         member_role: Função
-        member_name: Nome do Membro
+        member_name: Nome
         enums:
           member_role:
             developer: 'Desenvolvedor'
