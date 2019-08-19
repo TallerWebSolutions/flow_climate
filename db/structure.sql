@@ -770,7 +770,10 @@ CREATE TABLE public.memberships (
     team_id integer NOT NULL,
     member_role integer DEFAULT 0 NOT NULL,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    hours_per_month integer,
+    start_date date NOT NULL,
+    end_date date
 );
 
 
@@ -1284,7 +1287,6 @@ CREATE TABLE public.team_members (
     id bigint NOT NULL,
     name character varying NOT NULL,
     monthly_payment numeric,
-    hours_per_month integer,
     billable boolean DEFAULT true,
     billable_type integer DEFAULT 0,
     created_at timestamp without time zone NOT NULL,
@@ -2349,13 +2351,6 @@ CREATE INDEX index_memberships_on_team_id ON public.memberships USING btree (tea
 
 
 --
--- Name: index_memberships_on_team_id_and_team_member_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX index_memberships_on_team_id_and_team_member_id ON public.memberships USING btree (team_id, team_member_id);
-
-
---
 -- Name: index_memberships_on_team_member_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -3300,6 +3295,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190806135316'),
 ('20190807202613'),
 ('20190812154723'),
-('20190815151526');
+('20190815151526'),
+('20190816185103');
 
 

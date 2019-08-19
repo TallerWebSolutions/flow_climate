@@ -238,8 +238,12 @@ RSpec.describe Demand, type: :model do
     let(:company) { Fabricate :company }
     let(:customer) { Fabricate :customer, company: company }
     let(:team) { Fabricate :team, company: company }
-    let(:team_member) { Fabricate :team_member, company: company, teams: [team] }
-    let(:other_team_member) { Fabricate :team_member, company: company, teams: [team] }
+
+    let(:team_member) { Fabricate :team_member, company: company }
+    let(:other_team_member) { Fabricate :team_member, company: company }
+    let!(:membership) { Fabricate :membership, team: team, team_member: team_member, hours_per_month: 120, start_date: 1.month.ago, end_date: nil }
+    let!(:other_membership) { Fabricate :membership, team: team, team_member: other_team_member, hours_per_month: 40, start_date: 2.months.ago, end_date: 1.month.ago }
+
     let(:project) { Fabricate :project, customers: [customer], percentage_effort_to_bugs: 20 }
     let(:upstream_effort_stage) { Fabricate :stage, stage_stream: :upstream }
     let(:downstream_effort_stage) { Fabricate :stage, stage_stream: :downstream }
@@ -780,8 +784,11 @@ RSpec.describe Demand, type: :model do
     let(:company) { Fabricate :company }
     let(:team) { Fabricate :team, company: company }
     let(:first_demand) { Fabricate :demand, team: team }
-    let(:first_team_member) { Fabricate :team_member, teams: [team], company: company }
-    let(:second_team_member) { Fabricate :team_member, teams: [team], company: company }
+
+    let(:first_team_member) { Fabricate :team_member, company: company }
+    let(:second_team_member) { Fabricate :team_member, company: company }
+    let!(:first_membership) { Fabricate :membership, team: team, team_member: first_team_member, hours_per_month: 120, start_date: 1.month.ago, end_date: nil }
+    let!(:second_membership) { Fabricate :membership, team: team, team_member: second_team_member, hours_per_month: 40, start_date: 2.months.ago, end_date: 1.month.ago }
 
     let!(:first_item_assignment) { Fabricate :item_assignment, demand: first_demand, team_member: first_team_member, start_time: 1.day.ago, finish_time: nil }
     let!(:second_item_assignment) { Fabricate :item_assignment, demand: first_demand, team_member: second_team_member, start_time: 2.days.ago, finish_time: nil }

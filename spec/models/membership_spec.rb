@@ -13,24 +13,16 @@ RSpec.describe Membership, type: :model do
   context 'validations' do
     it { is_expected.to validate_presence_of :team }
     it { is_expected.to validate_presence_of :team_member }
+    it { is_expected.to validate_presence_of :start_date }
+  end
 
-    context 'uniqueness' do
-      let(:team) { Fabricate :team }
-      let(:team_member) { Fabricate :team_member }
+  context 'scopes' do
+    describe '.active' do
+      let(:active) { Fabricate :membership, end_date: nil }
+      let(:other_active) { Fabricate :membership, end_date: nil }
+      let(:inactive) { Fabricate :membership, active: false }
 
-      let!(:first_membership) { Fabricate :membership, team: team, team_member: team_member }
-      let!(:second_membership) { Fabricate.build :membership, team: team, team_member: team_member }
-      let!(:third_membership) { Fabricate.build :membership, team_member: team_member }
-      let!(:fourth_membership) { Fabricate.build :membership, team: team }
-
-      it 'invalidates equal membership' do
-        expect(second_membership.valid?).to be false
-        expect(second_membership.errors.full_messages).to eq ['Team member Um membro só pode ter uma participação por time.']
-      end
-
-      it { expect(first_membership.valid?).to be true }
-      it { expect(third_membership.valid?).to be true }
-      it { expect(fourth_membership.valid?).to be true }
+      it { expect(described_class.active).to match_array [active, other_active] }
     end
   end
 
@@ -38,8 +30,13 @@ RSpec.describe Membership, type: :model do
     it { is_expected.to delegate_method(:name).to(:team_member).with_prefix }
     it { is_expected.to delegate_method(:jira_account_id).to(:team_member) }
     it { is_expected.to delegate_method(:monthly_payment).to(:team_member) }
-    it { is_expected.to delegate_method(:hours_per_month).to(:team_member) }
-    it { is_expected.to delegate_method(:start_date).to(:team_member) }
-    it { is_expected.to delegate_method(:end_date).to(:team_member) }
+  end
+
+  describe '#hours_per_day' do
+    let(:team_membership) { Fabricate :membership, hours_per_month: 60 }
+    let(:other_membership) { Fabricate :membership, hours_per_month: nil }
+
+    it { expect(team_membership.hours_per_day).to eq 2 }
+    it { expect(other_membership.hours_per_day).to eq 0 }
   end
 end

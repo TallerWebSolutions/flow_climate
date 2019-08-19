@@ -57,14 +57,6 @@ RSpec.describe TeamMember, type: :model do
     it { expect(team_member.to_hash).to eq(member_name: team_member.name, jira_account_id: team_member.jira_account_id) }
   end
 
-  describe '#hours_per_day' do
-    let(:team_member) { Fabricate :team_member, hours_per_month: 60 }
-    let(:other_team_member) { Fabricate :team_member, hours_per_month: nil }
-
-    it { expect(team_member.hours_per_day).to eq 2 }
-    it { expect(other_team_member.hours_per_day).to eq 0 }
-  end
-
   describe '#active?' do
     let(:team_member) { Fabricate :team_member, end_date: 1.day.ago }
     let(:other_team_member) { Fabricate :team_member, end_date: nil }

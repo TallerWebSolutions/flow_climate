@@ -12,7 +12,8 @@ RSpec.describe Slack::SlackNotificationService, type: :service do
   let!(:company) { Fabricate :company, users: [first_user] }
 
   let(:team) { Fabricate :team, company: company }
-  let!(:team_member) { Fabricate :team_member, teams: [team], monthly_payment: 10_000, start_date: 5.weeks.ago, end_date: nil }
+  let!(:team_member) { Fabricate :team_member, monthly_payment: 10_000, start_date: 5.weeks.ago, end_date: nil }
+  let!(:membership) { Fabricate :membership, team: team, team_member: team_member, hours_per_month: 120, start_date: 1.month.ago, end_date: nil }
 
   let!(:first_slack_config) { Fabricate :slack_configuration, team: team, info_type: :current_week_throughput, room_webhook: 'http://foo.com' }
   let!(:first_slack_notifier) { Slack::Notifier.new(first_slack_config.room_webhook) }

@@ -36,17 +36,13 @@
       <%= f.label :end_date, class: 'control-label' %>
       <%= f.date_field :end_date, class: 'form-control' %>
     </div>
+
     <div class='col-xs-6 form-group <%= 'has-error' if team_member.errors[:monthly_payment].present? %>'>
       <%= f.label :monthly_payment, class: 'control-label required' %>
       <%= f.number_field :monthly_payment, class: 'form-control', step: 0.01 %>
       <span class="help-block"><%= team_member.errors[:monthly_payment].join(', ') %></span>
     </div>
 
-    <div class='col-xs-6 form-group <%= 'has-error' if team_member.errors[:hours_per_month].present? %>'>
-      <%= f.label :hours_per_month, class: 'control-label required' %>
-      <%= f.number_field :hours_per_month, class: 'form-control', step: 1, id: 'hours_per_month' %>
-      <span class="help-block"><%= team_member.errors[:hours_per_month].join(', ') %></span>
-    </div>
     <div class='col-xs-6 form-check'>
       <%= f.check_box :billable, class: 'form-check-input', checked: team_member.billable? %>
       <%= f.label :billable, class: 'form-check-label' %>

@@ -207,7 +207,7 @@ module Jira
 
       team_member = define_team_member(author_account_id, author_display_name, team)
       membership = Membership.where(team: team, team_member: team_member).first_or_initialize
-      membership.update(member_role: member_role) unless membership.persisted?
+      membership.update(member_role: member_role, start_date: Time.zone.today) unless membership.persisted?
 
       team_member.update(name: author_display_name, jira_account_id: author_account_id)
       membership.save
@@ -218,7 +218,7 @@ module Jira
     def define_team_member(author_account_id, author_display_name, team)
       team_member = TeamMember.where(company: team.company).where(jira_account_id: author_account_id).first
       team_member = TeamMember.where(company: team.company).where('lower(name) LIKE :author_name', author_name: "%#{author_display_name.downcase}%").first_or_initialize if team_member.blank?
-      team_member.update(start_date: Time.zone.today) unless team_member.persisted?
+      team_member.update(start_date: Time.zone.today, name: author_display_name) unless team_member.persisted?
       team_member
     end
 

@@ -204,9 +204,6 @@ en:
     validations:
       fix_version_name_uniqueness:
         message: "You should have only one fix version name per product."
-  membership:
-    validations:
-      team_team_member_uniqueness: "Only one membership is allowed per team and team member."
   item_assignment:
     validations:
       demand_unique: "You can have only one demand assigned to the same team member at the same time."

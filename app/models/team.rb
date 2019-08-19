@@ -43,7 +43,7 @@ class Team < ApplicationRecord
   end
 
   def active_monthly_available_hours_for_billable_types(billable_type)
-    team_members.active.where(billable: true, billable_type: billable_type).map(&:hours_per_month).compact.sum
+    memberships.joins(:team_member).active.where(team_members: { billable: true, billable_type: billable_type }).map(&:hours_per_month).compact.sum
   end
 
   def consumed_hours_in_month(required_date)
@@ -60,30 +60,28 @@ class Team < ApplicationRecord
   end
 
   def available_hours_at(start_date, end_date)
-    team_members_at_date = team_members.where('(end_date >= :start_date AND start_date <= :end_date) OR (start_date <= :end_date AND end_date IS NULL) AND billable = true', start_date: start_date, end_date: end_date)
+    memberships_at_date = memberships.joins(:team_member).where('(memberships.end_date >= :start_date AND memberships.start_date <= :end_date) OR (memberships.start_date <= :end_date AND memberships.end_date IS NULL) AND team_members.billable = true', start_date: start_date, end_date: end_date)
 
     total_hours = 0
     full_period = (end_date - start_date).to_i + 1
 
     return total_hours unless full_period.positive?
 
-    team_members_at_date.each do |member|
-      total_hours += compute_available_hours_to_member(end_date, full_period, member, start_date)
-    end
+    memberships_at_date.each { |membership| total_hours += compute_available_hours_to_member(membership, start_date, end_date, full_period) }
 
     total_hours
   end
 
   private
 
-  def compute_available_hours_to_member(end_date, full_period, member, start_date)
-    start_period = [start_date, member.start_date].compact.max
-    end_period = [end_date, member.end_date].compact.min
+  def compute_available_hours_to_member(membership, start_date, end_date, full_period)
+    start_period = [start_date, membership.start_date].compact.max
+    end_period = [end_date, membership.end_date].compact.min
 
     member_period = (end_period - start_period).to_i + 1
 
     participation_ratio = member_period.to_f / full_period
 
-    (member.hours_per_day.to_f * full_period) * participation_ratio
+    (membership.hours_per_day.to_f * full_period) * participation_ratio
   end
 end

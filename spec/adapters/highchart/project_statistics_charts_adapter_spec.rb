@@ -10,8 +10,11 @@ RSpec.describe Highchart::ProjectStatisticsChartsAdapter, type: :service do
     let(:customer) { Fabricate :customer, company: company }
 
     let(:team) { Fabricate :team, company: company }
-    let!(:team_member) { Fabricate :team_member, teams: [team], hours_per_month: 20 }
-    let!(:other_team_member) { Fabricate :team_member, teams: [team], hours_per_month: 160 }
+    let!(:team_member) { Fabricate :team_member }
+    let!(:other_team_member) { Fabricate :team_member }
+
+    let!(:membership) { Fabricate :membership, team: team, team_member: team_member, hours_per_month: 20, start_date: 1.month.ago, end_date: nil }
+    let!(:other_membership) { Fabricate :membership, team: team, team_member: other_team_member, hours_per_month: 160, start_date: 2.months.ago, end_date: 1.month.ago }
 
     context 'having projects' do
       let!(:first_project) { Fabricate :project, customers: [customer], status: :maintenance, start_date: 3.months.ago, end_date: 2.months.ago, qty_hours: 1000, initial_scope: 95, value: 200.0 }
@@ -72,8 +75,11 @@ RSpec.describe Highchart::ProjectStatisticsChartsAdapter, type: :service do
     let(:customer) { Fabricate :customer, company: company }
 
     let(:team) { Fabricate :team, company: company }
-    let!(:team_member) { Fabricate :team_member, teams: [team], hours_per_month: 20 }
-    let!(:other_team_member) { Fabricate :team_member, teams: [team], hours_per_month: 160 }
+    let!(:team_member) { Fabricate :team_member }
+    let!(:other_team_member) { Fabricate :team_member }
+
+    let!(:membership) { Fabricate :membership, team: team, team_member: team_member, hours_per_month: 20, start_date: 1.month.ago, end_date: nil }
+    let!(:other_membership) { Fabricate :membership, team: team, team_member: other_team_member, hours_per_month: 160, start_date: 2.months.ago, end_date: 1.month.ago }
 
     context 'having demands' do
       let!(:first_project) { Fabricate :project, customers: [customer], status: :maintenance, start_date: 3.days.ago, end_date: Time.zone.now, qty_hours: 1000, initial_scope: 95, value: 200.0 }
@@ -120,8 +126,11 @@ RSpec.describe Highchart::ProjectStatisticsChartsAdapter, type: :service do
     let(:customer) { Fabricate :customer, company: company }
 
     let(:team) { Fabricate :team, company: company }
-    let!(:team_member) { Fabricate :team_member, teams: [team], hours_per_month: 20 }
-    let!(:other_team_member) { Fabricate :team_member, teams: [team], hours_per_month: 160 }
+    let!(:team_member) { Fabricate :team_member }
+    let!(:other_team_member) { Fabricate :team_member }
+
+    let!(:membership) { Fabricate :membership, team: team, team_member: team_member, hours_per_month: 20, start_date: 1.month.ago, end_date: nil }
+    let!(:other_membership) { Fabricate :membership, team: team, team_member: other_team_member, hours_per_month: 160, start_date: 2.months.ago, end_date: 1.month.ago }
 
     context 'having blocks' do
       let!(:first_project) { Fabricate :project, customers: [customer], status: :maintenance, start_date: 3.days.ago, end_date: Time.zone.now, qty_hours: 1000, initial_scope: 95, value: 200.0 }
