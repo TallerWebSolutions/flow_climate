@@ -85,7 +85,6 @@ RSpec.describe TeamMembersController, type: :controller do
           expect(TeamMember.last.jira_account_id).to eq 'jira_account_id'
           expect(TeamMember.last.billable).to be false
           expect(TeamMember.last.monthly_payment).to eq 100
-          expect(TeamMember.last.hours_per_month).to eq 10
           expect(TeamMember.last.billable_type).to eq 'outsourcing'
           expect(TeamMember.last.start_date).to eq 1.day.ago.to_date
           expect(TeamMember.last.end_date).to eq Time.zone.today
@@ -106,7 +105,8 @@ RSpec.describe TeamMembersController, type: :controller do
 
     describe 'GET #edit' do
       let(:team) { Fabricate :team, company: company }
-      let(:team_member) { Fabricate :team_member, teams: [team] }
+      let(:team_member) { Fabricate :team_member }
+      let!(:membership) { Fabricate :membership, team: team, team_member: team_member, hours_per_month: 120, start_date: 1.month.ago, end_date: nil }
 
       context 'valid parameters' do
         before { get :edit, params: { company_id: company.id, id: team_member }, xhr: true }
@@ -147,7 +147,8 @@ RSpec.describe TeamMembersController, type: :controller do
     describe 'PUT #update' do
       let(:team) { Fabricate :team, company: company }
       let(:other_team) { Fabricate :team, company: company }
-      let(:team_member) { Fabricate :team_member, teams: [team] }
+      let(:team_member) { Fabricate :team_member }
+      let!(:membership) { Fabricate :membership, team: team, team_member: team_member, hours_per_month: 120, start_date: 1.month.ago, end_date: nil }
 
       context 'passing valid parameters' do
         before { put :update, params: { company_id: company, id: team_member, team_member: { team: other_team, name: 'foo', jira_account_user_email: 'foo@bar.com', jira_account_id: 'jira_account_id', billable: false, active: false, monthly_payment: 100, hours_per_month: 10, billable_type: :outsourcing, start_date: 1.day.ago.to_date, end_date: Time.zone.today } }, xhr: true }
@@ -159,7 +160,6 @@ RSpec.describe TeamMembersController, type: :controller do
           expect(team_member_updated.jira_account_id).to eq 'jira_account_id'
           expect(team_member_updated.billable).to be false
           expect(team_member_updated.monthly_payment.to_f).to be 100.0
-          expect(team_member_updated.hours_per_month).to be 10
           expect(team_member_updated.billable_type).to eq 'outsourcing'
           expect(team_member_updated.start_date).to eq 1.day.ago.to_date
           expect(team_member_updated.end_date).to eq Time.zone.today
@@ -196,7 +196,8 @@ RSpec.describe TeamMembersController, type: :controller do
 
     describe 'DELETE #destroy' do
       let(:team) { Fabricate :team, company: company }
-      let(:team_member) { Fabricate :team_member, teams: [team] }
+      let(:team_member) { Fabricate :team_member }
+      let!(:membership) { Fabricate :membership, team: team, team_member: team_member, hours_per_month: 120, start_date: 1.month.ago, end_date: nil }
 
       context 'with valid data' do
         it 'deletes the member and renders the template' do

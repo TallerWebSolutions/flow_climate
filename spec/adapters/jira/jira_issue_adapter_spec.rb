@@ -11,8 +11,11 @@ RSpec.describe Jira::JiraIssueAdapter, type: :service do
   let(:customer) { Fabricate :customer, company: company }
 
   let(:team) { Fabricate :team, company: company }
-  let!(:default_member) { Fabricate :team_member, company: company, teams: [team], name: 'default member', jira_account_id: 'default member id' }
+  let!(:default_member) { Fabricate :team_member, company: company, name: 'default member', jira_account_id: 'default member id' }
   let!(:other_company_member) { Fabricate :team_member, name: 'other default member', jira_account_id: 'other default member id' }
+
+  let!(:default_membership) { Fabricate :membership, team: team, team_member: default_member, hours_per_month: 120, start_date: 1.month.ago, end_date: nil }
+  let!(:other_default_membership) { Fabricate :membership, team: team, team_member: other_company_member, hours_per_month: 120, start_date: 1.month.ago, end_date: nil }
 
   let(:product) { Fabricate :product, customer: customer }
 
@@ -28,10 +31,15 @@ RSpec.describe Jira::JiraIssueAdapter, type: :service do
       let!(:class_of_service_custom_field) { Fabricate :jira_custom_field_mapping, jira_account: jira_account, demand_field: :class_of_service, custom_field_machine_name: 'customfield_10028' }
 
       context 'and it is a feature' do
-        let!(:team_member) { Fabricate :team_member, company: company, teams: [team], jira_account_user_email: 'foo', jira_account_id: 'xpto', name: 'team_member' }
-        let!(:other_team_member) { Fabricate :team_member, company: company, teams: [team], jira_account_user_email: 'bar', jira_account_id: 'xpto', name: 'other_team_member' }
-        let!(:out_team_member) { Fabricate :team_member, company: company, teams: [team], jira_account_user_email: 'xyz', jira_account_id: 'abc', name: 'out_team_member' }
+        let!(:team_member) { Fabricate :team_member, company: company, jira_account_user_email: 'foo', jira_account_id: 'xpto', name: 'team_member' }
+        let!(:other_team_member) { Fabricate :team_member, company: company, jira_account_user_email: 'bar', jira_account_id: 'xpto', name: 'other_team_member' }
+        let!(:out_team_member) { Fabricate :team_member, company: company, jira_account_user_email: 'xyz', jira_account_id: 'abc', name: 'out_team_member' }
         let!(:other_company_team_member) { Fabricate :team_member, jira_account_user_email: 'bar', jira_account_id: 'sbbrubles' }
+
+        let!(:membership) { Fabricate :membership, team: team, team_member: team_member, hours_per_month: 120, start_date: 1.month.ago, end_date: nil }
+        let!(:other_membership) { Fabricate :membership, team: team, team_member: other_team_member, hours_per_month: 40, start_date: 2.months.ago, end_date: 1.month.ago }
+        let!(:out_team_member_membership) { Fabricate :membership, team: team, team_member: out_team_member, hours_per_month: 120, start_date: 2.months.ago, end_date: nil }
+        let!(:other_company_membership) { Fabricate :membership, team: team, team_member: other_company_team_member, hours_per_month: 120, start_date: 2.months.ago, end_date: nil }
 
         let!(:jira_issue) { client.Issue.build({ key: '10000', fields: { created: '2018-07-02T11:20:18.998-0300', summary: 'foo of bar', issuetype: { name: 'Story' }, customfield_10028: { value: 'Expedite' }, project: { key: 'foo' }, customfield_10024: [{ emailAddress: 'foo' }, { emailAddress: 'bar' }] }, changelog: { startAt: 0, maxResults: 2, total: 2, histories: [{ id: '10039', created: '2018-07-08T22:34:47.440-0300', items: [{ field: 'status', from: 'first_stage', to: 'second_stage' }] }, { id: '10038', created: '2018-07-06T09:40:43.886-0300', items: [{ field: 'status', from: 'third_stage', to: 'first_stage' }] }, { id: '10431', created: '2018-07-06T09:10:43.886-0300', items: [{ field: 'Responsible', fieldId: 'customfield_10024', from: nil, fromString: nil, to: "[#{out_team_member.name}, #{team_member.name}, 'foobarxpto']", toString: "[#{out_team_member.name}, #{team_member.name}]" }] }, { id: '10432', created: '2018-07-06T09:40:43.886-0300', items: [{ field: 'Responsible', fieldId: 'customfield_10024', from: "[#{team_member.name}, #{out_team_member.name}]", fromString: "[#{team_member.name}, #{out_team_member.name}]", to: "[#{team_member.name}, #{other_team_member.name}]", toString: "[#{team_member.name}, #{other_team_member.name}]" }] }] } }.with_indifferent_access) }
 
@@ -72,9 +80,13 @@ RSpec.describe Jira::JiraIssueAdapter, type: :service do
       end
 
       context 'with existent team members' do
-        let!(:team_member) { Fabricate :team_member, company: company, teams: [team], jira_account_user_email: 'foo', jira_account_id: 'xpto', name: 'team_member' }
-        let!(:other_team_member) { Fabricate :team_member, company: company, teams: [team], jira_account_user_email: 'bar', jira_account_id: 'sbbrubles', name: 'other_team_member' }
+        let!(:team_member) { Fabricate :team_member, company: company, jira_account_user_email: 'foo', jira_account_id: 'xpto', name: 'team_member' }
+        let!(:other_team_member) { Fabricate :team_member, company: company, jira_account_user_email: 'bar', jira_account_id: 'sbbrubles', name: 'other_team_member' }
         let!(:other_company_team_member) { Fabricate :team_member, jira_account_user_email: 'bar', jira_account_id: 'xpto' }
+
+        let!(:membership) { Fabricate :membership, team: team, team_member: team_member, hours_per_month: 120, start_date: 1.month.ago, end_date: nil }
+        let!(:other_membership) { Fabricate :membership, team: team, team_member: other_team_member, hours_per_month: 40, start_date: 2.months.ago, end_date: 1.month.ago }
+        let!(:other_company_membership) { Fabricate :membership, team: team, team_member: other_company_team_member, hours_per_month: 120, start_date: 2.months.ago, end_date: nil }
 
         let!(:jira_issue) { client.Issue.build({ key: '10000', fields: { created: '2018-07-02T11:20:18.998-0300', summary: 'foo of bar', issuetype: { name: 'Story' }, customfield_10028: { value: 'Expedite' }, project: { key: 'foo' }, customfield_10024: [{ accountId: 'xpto', name: team_member.name }, { emailAddress: 'bar' }, { accountId: 'sbbrubles' }] }, changelog: { startAt: 0, maxResults: 2, total: 2, histories: [{ id: '10039', created: '2018-07-08T22:34:47.440-0300', items: [{ field: 'status', from: 'first_stage', to: 'second_stage' }] }, { id: '10038', created: '2018-07-06T09:40:43.886-0300', items: [{ field: 'status', from: 'third_stage', to: 'first_stage' }] }, { id: '10432', created: '2018-07-06T09:40:43.886-0300', items: [{ field: 'Responsible', fieldId: 'customfield_10024', from: "[#{team_member.name}]", to: "[#{team_member.name}]", toString: "[#{team_member.name}, #{other_team_member.name}]" }] }] } }.with_indifferent_access) }
 
@@ -93,11 +105,12 @@ RSpec.describe Jira::JiraIssueAdapter, type: :service do
       end
 
       context 'with non existent team members' do
-        let!(:team_member) { Fabricate :team_member, company: company, teams: [team], jira_account_user_email: 'foo', jira_account_id: 'xpto', name: 'team_member' }
+        let!(:team_member) { Fabricate :team_member, company: company, jira_account_user_email: 'foo', jira_account_id: 'xpto', name: 'team_member' }
+        let!(:membership) { Fabricate :membership, team: team, team_member: team_member, hours_per_month: 120, start_date: 1.month.ago, end_date: nil }
 
-        let!(:jira_issue) { client.Issue.build({ key: '10000', summary: 'foo of bar', fields: { created: '2018-07-03T11:20:18.998-0300', issuetype: { name: 'Bug' }, project: { key: 'foo' }, customfield_10024: [{ name: 'foo' }, { name: 'bar' }] }, changelog: { startAt: 0, maxResults: 2, total: 2, histories: [{ id: '10432', created: '2018-07-06T09:40:43.886-0300', items: [{ field: 'Responsible', fieldId: 'customfield_10024', from: "[#{team_member.name}]", to: "[#{team_member.name}]", toString: "['foo do xpto']" }] }] } }.with_indifferent_access) }
+        let!(:jira_issue) { client.Issue.build({ key: '10000', summary: 'foo of bar', fields: { created: '2018-07-03T11:20:18.998-0300', issuetype: { name: 'Bug' }, project: { key: 'foo' }, customfield_10024: [{ name: 'foo' }, { name: 'bar' }] }, changelog: { startAt: 0, maxResults: 2, total: 2, histories: [{ id: '10432', created: '2018-07-06T09:40:43.886-0300', items: [{ field: 'Responsible', fieldId: 'customfield_10024', from: "[#{team_member.name}]", to: "['foo do xpto']", toString: "['foo do xpto']" }] }] } }.with_indifferent_access) }
 
-        it 'creates the demand' do
+        it 'creates the demand without members' do
           described_class.instance.process_issue!(jira_account, product, first_project, jira_issue)
           expect(Demand.last.team_members).to be_empty
         end
@@ -174,8 +187,11 @@ RSpec.describe Jira::JiraIssueAdapter, type: :service do
 
       context 'and it was blocked' do
         context 'with team members as blockers' do
-          let!(:team_member) { Fabricate :team_member, company: company, teams: [team], name: 'bla', jira_account_id: 'foo' }
-          let!(:other_team_member) { Fabricate :team_member, company: company, teams: [team], name: 'xpto', jira_account_id: 'bar' }
+          let!(:team_member) { Fabricate :team_member, company: company, name: 'bla', jira_account_id: 'foo' }
+          let!(:other_team_member) { Fabricate :team_member, company: company, name: 'xpto', jira_account_id: 'bar' }
+
+          let!(:membership) { Fabricate :membership, team: team, team_member: team_member, hours_per_month: 120, start_date: 1.month.ago, end_date: nil }
+          let!(:other_membership) { Fabricate :membership, team: team, team_member: other_team_member, hours_per_month: 40, start_date: 2.months.ago, end_date: 1.month.ago }
 
           let!(:jira_issue) { client.Issue.build({ key: '10000', summary: 'foo of bar', fields: { created: '2018-07-03T11:20:18.998-0300', issuetype: { name: 'chore' }, project: { key: 'foo' }, customfield_10024: [{ name: 'foo' }, { name: 'bar' }], customfield_10028: { value: 'sTandard' }, comment: { comments: [{ created: '2018-07-06T09:40:43.886000000-0300', body: '(flag) comment example', author: { emailAddress: 'bla@bar.com' } }] } }, changelog: { histories: [{ id: '10038', author: { displayName: 'bla', accountId: 'foo' }, created: '2018-07-06T09:40:43.886-0300', items: [{ field: 'Impediment', fromString: '', to: '10055', toString: 'Impediment' }] }, { id: '10055', author: { displayName: 'xpto', accountId: 'bar' }, created: '2018-07-06T13:40:43.886-0300', items: [{ field: 'Impediment', fromString: 'Impediment', to: '10055', toString: '' }] }, { id: '10057', author: { displayName: 'xpto', accountId: 'bar' }, created: '2018-07-09T13:40:43.886-0300', items: [{ field: 'Impediment', fromString: '', to: '10055', toString: 'Impediment' }] }] } }.with_indifferent_access) }
 
@@ -213,11 +229,17 @@ RSpec.describe Jira::JiraIssueAdapter, type: :service do
             expect(demand_created.demand_blocks.count).to eq 2
 
             first_demand_block = demand_created.demand_blocks.order(created_at: :asc).first
-            expect(first_demand_block.blocker).to be_a TeamMember
+            expect(first_demand_block.blocker.memberships.last.team).to eq team
+            expect(first_demand_block.blocker.name).to eq 'bla'
+            expect(first_demand_block.blocker.memberships.last.start_date).to eq Time.zone.today
+            expect(first_demand_block.blocker.memberships.last).to be_developer
             expect(first_demand_block.block_reason).to eq '(flag) comment example'
             expect(first_demand_block.block_time).to eq '2018-07-06T09:40:43.886000000-0300'
 
-            expect(first_demand_block.unblocker).to be_a TeamMember
+            expect(first_demand_block.blocker.memberships.last.team).to eq team
+            expect(first_demand_block.unblocker.name).to eq 'xpto'
+            expect(first_demand_block.unblocker.memberships.last.start_date).to eq Time.zone.today
+            expect(first_demand_block.unblocker.memberships.last).to be_developer
             expect(first_demand_block.unblock_time).to eq '2018-07-06T13:40:43.886-0300'
 
             second_demand_block = demand_created.demand_blocks.second
@@ -265,7 +287,8 @@ RSpec.describe Jira::JiraIssueAdapter, type: :service do
       let!(:second_project) { Fabricate :project, company: company, team: team, customers: [customer], products: [product] }
       let!(:jira_project_config) { Fabricate :jira_project_config, jira_product_config: jira_product_config, project: second_project, fix_version_name: 'bar' }
 
-      let!(:team_member) { Fabricate :team_member, company: company, teams: [team], jira_account_user_email: 'foo', jira_account_id: 'bar', name: 'team_member' }
+      let!(:team_member) { Fabricate :team_member, company: company, jira_account_user_email: 'foo', jira_account_id: 'bar', name: 'team_member' }
+      let!(:membership) { Fabricate :membership, team: team, team_member: team_member, hours_per_month: 120, start_date: 1.month.ago, end_date: nil }
 
       let!(:jira_product_config) { Fabricate :jira_product_config, product: product, jira_product_key: 'foo' }
 

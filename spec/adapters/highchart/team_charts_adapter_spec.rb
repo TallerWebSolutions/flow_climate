@@ -10,12 +10,16 @@ RSpec.describe Highchart::TeamChartsAdapter, type: :service do
     let(:customer) { Fabricate :customer, company: company }
 
     let(:team) { Fabricate :team, company: company }
-    let!(:team_member) { Fabricate :team_member, teams: [team], hours_per_month: 20, start_date: 3.months.ago.to_date, end_date: nil, monthly_payment: 10_000 }
-    let!(:other_team_member) { Fabricate :team_member, teams: [team], hours_per_month: 160, start_date: 4.months.ago.to_date, end_date: 3.months.ago.to_date }
+
+    let!(:team_member) { Fabricate :team_member, start_date: 3.months.ago.to_date, end_date: nil, monthly_payment: 10_000 }
+    let!(:other_team_member) { Fabricate :team_member, start_date: 4.months.ago.to_date, end_date: 3.months.ago.to_date }
+
+    let!(:membership) { Fabricate :membership, team: team, team_member: team_member, hours_per_month: 20, start_date: 3.months.ago, end_date: nil }
+    let!(:other_membership) { Fabricate :membership, team: team, team_member: other_team_member, hours_per_month: 160, start_date: 4.months.ago, end_date: 3.months.ago }
 
     context 'having projects' do
-      let!(:first_project) { Fabricate :project, company: company, team: team, customers: [customer], status: :maintenance, start_date: 3.months.ago.to_date, end_date: 2.months.ago.to_date }
-      let!(:second_project) { Fabricate :project, company: company, team: team, customers: [customer], status: :executing, start_date: 40.days.ago.to_date, end_date: 1.month.ago.to_date }
+      let!(:first_project) { Fabricate :project, company: company, team: team, customers: [customer], status: :maintenance, start_date: 3.months.ago, end_date: 2.months.ago }
+      let!(:second_project) { Fabricate :project, company: company, team: team, customers: [customer], status: :executing, start_date: 40.days.ago, end_date: 1.month.ago }
 
       let!(:first_demand) { Fabricate :demand, project: first_project, effort_downstream: 200, effort_upstream: 10, created_date: 74.days.ago, end_date: 35.days.ago }
       let!(:second_demand) { Fabricate :demand, project: first_project, effort_downstream: 400, effort_upstream: 130, created_date: 65.days.ago, end_date: 1.month.ago }
@@ -52,8 +56,11 @@ RSpec.describe Highchart::TeamChartsAdapter, type: :service do
     let(:customer) { Fabricate :customer, company: company }
 
     let(:team) { Fabricate :team, company: company }
-    let!(:team_member) { Fabricate :team_member, teams: [team], hours_per_month: 20, start_date: 3.months.ago, end_date: nil, monthly_payment: 10_000 }
-    let!(:other_team_member) { Fabricate :team_member, teams: [team], hours_per_month: 160, start_date: 4.months.ago, end_date: 3.months.ago }
+    let!(:team_member) { Fabricate :team_member, start_date: 3.months.ago, end_date: nil, monthly_payment: 10_000 }
+    let!(:other_team_member) { Fabricate :team_member, start_date: 4.months.ago, end_date: 3.months.ago }
+
+    let!(:membership) { Fabricate :membership, team: team, team_member: team_member, hours_per_month: 20, start_date: 3.months.ago.to_date, end_date: nil }
+    let!(:other_membership) { Fabricate :membership, team: team, team_member: other_team_member, hours_per_month: 160, start_date: 4.months.ago, end_date: 3.months.ago }
 
     context 'having projects' do
       let!(:first_project) { Fabricate :project, company: company, team: team, customers: [customer], status: :maintenance, start_date: 3.months.ago, end_date: 2.months.ago }

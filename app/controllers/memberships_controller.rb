@@ -54,7 +54,7 @@ class MembershipsController < AuthenticatedController
   end
 
   def assign_team_members_list
-    @team_members = @company.team_members.order(:name) - @team.memberships.map(&:team_member)
+    @team_members = @company.team_members.order(:name) - @team.memberships.active.map(&:team_member)
   end
 
   def assign_team
@@ -66,6 +66,6 @@ class MembershipsController < AuthenticatedController
   end
 
   def membership_params
-    params.require(:membership).permit(:member_role, :team_member_id)
+    params.require(:membership).permit(:member_role, :team_member_id, :hours_per_month, :start_date, :end_date)
   end
 end

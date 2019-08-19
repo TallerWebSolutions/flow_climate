@@ -108,8 +108,10 @@ RSpec.describe CompaniesController, type: :controller do
           let!(:finances) { Fabricate :financial_information, company: company, finances_date: 2.days.ago }
           let!(:other_finances) { Fabricate :financial_information, company: company, finances_date: Time.zone.today }
 
-          let!(:team_member) { Fabricate :team_member, company: company, teams: [team], name: 'aaa' }
-          let!(:other_team_member) { Fabricate :team_member, company: company, teams: [team], name: 'zzz' }
+          let!(:team_member) { Fabricate :team_member, company: company, name: 'aaa' }
+          let!(:other_team_member) { Fabricate :team_member, company: company, name: 'zzz' }
+          let!(:membership) { Fabricate :membership, team: team, team_member: team_member, hours_per_month: 20, start_date: 1.month.ago, end_date: nil }
+          let!(:other_membership) { Fabricate :membership, team: team, team_member: other_team_member, hours_per_month: 160, start_date: 2.months.ago, end_date: 1.month.ago }
 
           let!(:first_project) { Fabricate :project, company: company, customers: [customer], status: :executing, start_date: Time.zone.today, end_date: Time.zone.now }
           let!(:second_project) { Fabricate :project, company: company, customers: [customer], status: :maintenance, start_date: 1.month.from_now, end_date: 1.month.from_now }

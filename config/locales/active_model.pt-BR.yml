@@ -467,6 +467,9 @@ pt-BR:
       membership:
         member_role: Função
         member_name: Nome
+        start_date: Início
+        end_date: Fim
+        hours_per_month: Horas/Mês
         enums:
           member_role:
             developer: 'Desenvolvedor'
@@ -520,9 +523,6 @@ pt-BR:
     validations:
       fix_version_name_uniqueness:
         message: "Você deveria ter apenas um nome de fix version por produto"
-  membership:
-    validations:
-      team_team_member_uniqueness: "Um membro só pode ter uma participação por time."
   item_assignment:
     validations:
       demand_unique: "Você só pode ter uma demanda atribuída para o mesmo membro do time ao mesmo tempo."

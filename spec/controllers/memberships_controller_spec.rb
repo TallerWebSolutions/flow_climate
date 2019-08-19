@@ -46,8 +46,8 @@ RSpec.describe MembershipsController, type: :controller do
     let!(:team_member) { Fabricate :team_member, company: company }
     let!(:other_team_member) { Fabricate :team_member, company: company }
 
-    let!(:membership) { Fabricate :membership, team: team, team_member: team_member }
-    let!(:other_membership) { Fabricate :membership, team: team }
+    let!(:membership) { Fabricate :membership, team: team, team_member: team_member, end_date: nil }
+    let!(:other_membership) { Fabricate :membership, team: team, team_member: other_team_member, end_date: Time.zone.today }
 
     describe 'GET #new' do
       context 'valid parameters' do
@@ -80,13 +80,19 @@ RSpec.describe MembershipsController, type: :controller do
     describe 'POST #create' do
       let!(:new_team_member) { Fabricate :team_member, company: company }
 
+      let!(:start_date) { 3.days.ago }
+      let!(:end_date) { 1.day.ago }
+
       context 'passing valid parameters' do
-        before { post :create, params: { company_id: company, team_id: team, membership: { member_role: 'client', team_member_id: new_team_member.id } }, xhr: true }
+        before { post :create, params: { company_id: company, team_id: team, membership: { start_date: start_date, end_date: end_date, member_role: 'client', team_member_id: new_team_member.id, hours_per_month: 10 } }, xhr: true }
 
         it 'creates the new team member and redirects to team show' do
           expect(response).to render_template 'memberships/create.js.erb'
           expect(assigns(:membership).errors.full_messages).to eq []
           expect(assigns(:membership)).to be_persisted
+          expect(assigns(:membership).start_date).to eq start_date.to_date
+          expect(assigns(:membership).end_date).to eq end_date.to_date
+          expect(assigns(:membership).hours_per_month).to eq 10
           expect(assigns(:membership).team).to eq team
           expect(assigns(:membership).team_member).to eq new_team_member
           expect(assigns(:membership).member_role).to eq 'client'
@@ -100,7 +106,7 @@ RSpec.describe MembershipsController, type: :controller do
         it 'does not create the team member and re-render the template with the errors' do
           expect(Membership.all.count).to eq 2
           expect(response).to render_template 'memberships/create.js.erb'
-          expect(assigns(:membership).errors.full_messages).to eq ['Team member não pode ficar em branco']
+          expect(assigns(:membership).errors.full_messages).to eq ['Team member não pode ficar em branco', 'Início não pode ficar em branco']
         end
       end
     end
@@ -108,10 +114,10 @@ RSpec.describe MembershipsController, type: :controller do
     describe 'GET #edit' do
       let(:team) { Fabricate :team, company: company }
 
-      let!(:team_member) { Fabricate :team_member, company: company }
-      let!(:other_team_member) { Fabricate :team_member, company: company }
+      # let!(:team_member) { Fabricate :team_member, company: company }
+      # let!(:other_team_member) { Fabricate :team_member, company: company, end }
 
-      let(:membership) { Fabricate :membership, team: team, team_member: team_member }
+      # let(:membership) { Fabricate :membership, team: team, team_member: team_member }
 
       context 'valid parameters' do
         before { get :edit, params: { company_id: company.id, team_id: team, id: membership }, xhr: true }

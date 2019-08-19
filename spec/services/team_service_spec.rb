@@ -8,13 +8,14 @@ RSpec.describe TeamService, type: :service do
   describe '#compute_average_demand_cost_to_team' do
     let(:company) { Fabricate :company }
     let!(:team) { Fabricate :team, company: company }
-    let!(:first_team_member) { Fabricate :team_member, billable_type: :outsourcing, billable: true, monthly_payment: 10_000, hours_per_month: 120, start_date: 1.month.ago, end_date: nil }
-    let!(:second_team_member) { Fabricate :team_member, billable_type: :outsourcing, billable: true, monthly_payment: 10_000, hours_per_month: 40, start_date: 2.months.ago, end_date: 1.month.ago }
-    let!(:third_team_member) { Fabricate :team_member, billable_type: :outsourcing, billable: true, monthly_payment: 10_000, hours_per_month: 120, start_date: 1.month.ago, end_date: nil }
 
-    let!(:first_membership) { Fabricate :membership, team: team, team_member: first_team_member, member_role: :developer }
-    let!(:second_membership) { Fabricate :membership, team: team, team_member: second_team_member, member_role: :developer }
-    let!(:third_membership) { Fabricate :membership, team: team, team_member: third_team_member, member_role: :client }
+    let!(:first_team_member) { Fabricate :team_member, billable_type: :outsourcing, billable: true, monthly_payment: 10_000, start_date: 1.month.ago, end_date: nil }
+    let!(:second_team_member) { Fabricate :team_member, billable_type: :outsourcing, billable: true, monthly_payment: 10_000, start_date: 2.months.ago, end_date: 1.month.ago }
+    let!(:third_team_member) { Fabricate :team_member, billable_type: :outsourcing, billable: true, monthly_payment: 10_000, start_date: 1.month.ago, end_date: nil }
+
+    let!(:first_membership) { Fabricate :membership, team: team, team_member: first_team_member, start_date: 1.month.ago, end_date: nil, member_role: :developer, hours_per_month: 120 }
+    let!(:second_membership) { Fabricate :membership, team: team, team_member: second_team_member, start_date: 2.months.ago, end_date: 1.month.ago, member_role: :developer, hours_per_month: 40 }
+    let!(:third_membership) { Fabricate :membership, team: team, team_member: third_team_member, start_date: 1.month.ago, end_date: nil, member_role: :client, hours_per_month: 120 }
 
     let(:customer) { Fabricate :customer, company: company }
 
@@ -48,9 +49,13 @@ RSpec.describe TeamService, type: :service do
     let!(:team) { Fabricate :team, company: company }
 
     context 'with data' do
-      let!(:team_member) { Fabricate :team_member, billable_type: :outsourcing, billable: true, teams: [team], monthly_payment: 10_000, start_date: 1.month.ago, end_date: nil }
-      let!(:other_team_member) { Fabricate :team_member, billable_type: :outsourcing, billable: true, teams: [team], monthly_payment: 10_000, start_date: 2.months.ago, end_date: 1.month.ago }
-      let!(:null_payment_team_member) { Fabricate :team_member, billable_type: :outsourcing, billable: true, teams: [team], monthly_payment: nil, start_date: 2.months.ago, end_date: nil }
+      let!(:team_member) { Fabricate :team_member, billable_type: :outsourcing, billable: true, monthly_payment: 10_000, start_date: 1.month.ago, end_date: nil }
+      let!(:other_team_member) { Fabricate :team_member, billable_type: :outsourcing, billable: true, monthly_payment: 10_000, start_date: 2.months.ago, end_date: 1.month.ago }
+      let!(:null_payment_team_member) { Fabricate :team_member, billable_type: :outsourcing, billable: true, monthly_payment: nil, start_date: 2.months.ago, end_date: nil }
+
+      let!(:membership) { Fabricate :membership, team: team, team_member: team_member, hours_per_month: 120, start_date: 1.month.ago, end_date: nil }
+      let!(:other_membership) { Fabricate :membership, team: team, team_member: other_team_member, hours_per_month: 40, start_date: 2.months.ago, end_date: 1.month.ago }
+      let!(:null_payment_membership) { Fabricate :membership, team: team, team_member: null_payment_team_member, hours_per_month: 120, start_date: 2.months.ago, end_date: nil }
 
       let(:customer) { Fabricate :customer, company: company }
 
@@ -80,9 +85,13 @@ RSpec.describe TeamService, type: :service do
       let!(:team) { Fabricate :team, company: company }
 
       context 'with data' do
-        let!(:team_member) { Fabricate :team_member, billable_type: :outsourcing, billable: true, teams: [team], monthly_payment: 10_000, hours_per_month: 120, start_date: 1.month.ago, end_date: nil }
-        let!(:other_team_member) { Fabricate :team_member, billable_type: :outsourcing, billable: true, teams: [team], monthly_payment: 10_000, hours_per_month: 40, start_date: 2.months.ago, end_date: 1.month.ago }
-        let!(:null_payment_team_member) { Fabricate :team_member, billable_type: :outsourcing, billable: true, teams: [team], monthly_payment: nil, hours_per_month: 120, start_date: 2.months.ago, end_date: nil }
+        let!(:team_member) { Fabricate :team_member, billable_type: :outsourcing, billable: true, monthly_payment: 10_000, start_date: 1.month.ago, end_date: nil }
+        let!(:other_team_member) { Fabricate :team_member, billable_type: :outsourcing, billable: true, monthly_payment: 10_000, start_date: 2.months.ago, end_date: 1.month.ago }
+        let!(:null_payment_team_member) { Fabricate :team_member, billable_type: :outsourcing, billable: true, monthly_payment: nil, start_date: 2.months.ago, end_date: nil }
+
+        let!(:membership) { Fabricate :membership, team: team, team_member: team_member, hours_per_month: 120, start_date: 1.month.ago, end_date: nil }
+        let!(:other_membership) { Fabricate :membership, team: team, team_member: other_team_member, hours_per_month: 40, start_date: 2.months.ago, end_date: 1.month.ago }
+        let!(:null_payment_membership) { Fabricate :membership, team: team, team_member: null_payment_team_member, hours_per_month: 120, start_date: 2.months.ago, end_date: nil }
 
         it 'returns the average demand cost informations in a hash' do
           expect(described_class.instance.compute_available_hours_to_team(team, 3.months.ago.to_date, Time.zone.today, :monthly)).to eq(Date.new(2018, 3, 31) => 0.0, Date.new(2018, 4, 30) => 58.666666666666664, Date.new(2018, 5, 31) => 198.66666666666666, Date.new(2018, 6, 30) => 240.0)

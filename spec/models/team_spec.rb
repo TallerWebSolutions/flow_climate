@@ -54,27 +54,43 @@ RSpec.describe Team, type: :model do
   describe '#active_monthly_cost_for_billable_types' do
     let(:company) { Fabricate :company }
     let(:team) { Fabricate :team, company: company }
-    let!(:members) { Fabricate.times(4, :team_member, teams: [team], billable_type: :outsourcing, end_date: nil) }
-    let!(:nil_monthly_payment_members) { Fabricate.times(10, :team_member, teams: [team], billable_type: :outsourcing, monthly_payment: nil, hours_per_month: nil, end_date: nil) }
-    let!(:consulting_members) { Fabricate.times(2, :team_member, teams: [team], billable_type: :consulting, end_date: nil) }
-    let!(:training_members) { Fabricate.times(6, :team_member, teams: [team], billable_type: :training, end_date: nil) }
-    let!(:not_billable_members) { Fabricate.times(10, :team_member, teams: [team], billable: false, billable_type: nil, end_date: nil) }
-    let!(:not_active_members) { Fabricate.times(3, :team_member, teams: [team], billable: true, billable_type: :outsourcing, end_date: 1.day.ago) }
 
-    it { expect(team.active_monthly_cost_for_billable_types(%i[outsourcing consulting])).to eq(members.concat(consulting_members).sum(&:monthly_payment)) }
+    let!(:team_member) { Fabricate :team_member, billable_type: :outsourcing, start_date: 2.days.ago, end_date: nil, monthly_payment: 100 }
+    let!(:null_monthly_payment_member) { Fabricate :team_member, billable_type: :outsourcing, monthly_payment: nil, end_date: nil }
+    let!(:consulting_member) { Fabricate :team_member, billable_type: :consulting, end_date: nil, monthly_payment: 200 }
+    let!(:training_member) { Fabricate :team_member, billable_type: :training, end_date: nil, monthly_payment: 300 }
+    let!(:not_billable_member) { Fabricate :team_member, billable: false, billable_type: nil, end_date: nil, monthly_payment: 150 }
+    let!(:not_active_member) { Fabricate :team_member, billable_type: :outsourcing, end_date: 1.day.ago, monthly_payment: 123.12 }
+
+    let!(:membership) { Fabricate :membership, team: team, team_member: team_member, hours_per_month: 100, start_date: 2.days.ago, end_date: nil }
+    let!(:null_payment_membership) { Fabricate :membership, team: team, team_member: null_monthly_payment_member, hours_per_month: nil, start_date: 2.months.ago, end_date: nil }
+    let!(:consulting_membership) { Fabricate :membership, team: team, team_member: consulting_member, hours_per_month: 120, start_date: 2.months.ago, end_date: nil }
+    let!(:training_membership) { Fabricate :membership, team: team, team_member: training_member, hours_per_month: 120, start_date: 2.months.ago, end_date: nil }
+    let!(:not_billable_member_membership) { Fabricate :membership, team: team, team_member: not_billable_member, hours_per_month: 120, start_date: 2.months.ago, end_date: nil }
+    let!(:not_active_member_membership) { Fabricate :membership, team: team, team_member: not_active_member, hours_per_month: 120, start_date: 2.months.ago, end_date: nil }
+
+    it { expect(team.active_monthly_cost_for_billable_types(%i[outsourcing consulting])).to eq 300.0 }
   end
 
   describe '#active_monthly_available_hours_for_billable_types' do
     let(:company) { Fabricate :company }
     let(:team) { Fabricate :team, company: company }
-    let!(:members) { Fabricate.times(4, :team_member, teams: [team], billable_type: :outsourcing, end_date: nil) }
-    let!(:nil_monthly_payment_members) { Fabricate.times(10, :team_member, teams: [team], billable_type: :outsourcing, monthly_payment: nil, hours_per_month: nil, end_date: nil) }
-    let!(:consulting_members) { Fabricate.times(2, :team_member, teams: [team], billable_type: :consulting, end_date: nil) }
-    let!(:training_members) { Fabricate.times(6, :team_member, teams: [team], billable_type: :training, end_date: nil) }
-    let!(:not_billable_members) { Fabricate.times(10, :team_member, teams: [team], billable: false, billable_type: nil, end_date: nil) }
-    let!(:not_active_members) { Fabricate.times(3, :team_member, teams: [team], billable_type: :outsourcing, end_date: 1.day.ago) }
 
-    it { expect(team.active_monthly_available_hours_for_billable_types(%i[outsourcing consulting])).to eq members.concat(consulting_members).sum(&:hours_per_month) }
+    let!(:team_member) { Fabricate :team_member, billable_type: :outsourcing, start_date: 2.days.ago, end_date: nil }
+    let!(:null_monthly_payment_member) { Fabricate :team_member, billable_type: :outsourcing, monthly_payment: nil, end_date: nil }
+    let!(:consulting_member) { Fabricate :team_member, billable_type: :consulting, end_date: nil }
+    let!(:training_member) { Fabricate :team_member, billable_type: :training, end_date: nil }
+    let!(:not_billable_member) { Fabricate :team_member, billable: false, billable_type: nil, end_date: nil }
+    let!(:not_active_member) { Fabricate :team_member, billable_type: :outsourcing, end_date: 1.day.ago }
+
+    let!(:membership) { Fabricate :membership, team: team, team_member: team_member, hours_per_month: 100, start_date: 2.days.ago, end_date: nil }
+    let!(:null_payment_membership) { Fabricate :membership, team: team, team_member: null_monthly_payment_member, hours_per_month: nil, start_date: 2.months.ago, end_date: nil }
+    let!(:consulting_membership) { Fabricate :membership, team: team, team_member: consulting_member, hours_per_month: 120, start_date: 2.months.ago, end_date: nil }
+    let!(:training_membership) { Fabricate :membership, team: team, team_member: training_member, hours_per_month: 120, start_date: 2.months.ago, end_date: nil }
+    let!(:not_billable_member_membership) { Fabricate :membership, team: team, team_member: not_billable_member, hours_per_month: 120, start_date: 2.months.ago, end_date: nil }
+    let!(:not_active_member_membership) { Fabricate :membership, team: team, team_member: not_active_member, hours_per_month: 120, start_date: 2.months.ago, end_date: nil }
+
+    it { expect(team.active_monthly_available_hours_for_billable_types(%i[outsourcing consulting])).to eq 340 }
   end
 
   RSpec.shared_context 'consolidations data for team', shared_context: :metadata do
@@ -221,15 +237,23 @@ RSpec.describe Team, type: :model do
   describe '#available_hours_at' do
     let(:company) { Fabricate :company }
     let(:team) { Fabricate :team, company: company }
-    let!(:members) { Fabricate.times(4, :team_member, teams: [team], billable_type: :outsourcing, start_date: 2.days.ago, end_date: nil, hours_per_month: 100) }
-    let!(:nil_monthly_payment_members) { Fabricate.times(10, :team_member, teams: [team], billable_type: :outsourcing, monthly_payment: nil, hours_per_month: nil, end_date: nil) }
-    let!(:consulting_members) { Fabricate.times(2, :team_member, teams: [team], billable_type: :consulting, end_date: nil, hours_per_month: 80) }
-    let!(:training_members) { Fabricate.times(6, :team_member, teams: [team], billable_type: :training, end_date: nil, hours_per_month: 120) }
-    let!(:not_billable_members) { Fabricate.times(10, :team_member, teams: [team], billable: false, billable_type: nil, end_date: nil, hours_per_month: 100) }
-    let!(:not_active_members) { Fabricate.times(3, :team_member, teams: [team], billable_type: :outsourcing, end_date: 1.day.ago, hours_per_month: 100) }
 
-    it { expect(team.available_hours_at(2.days.ago.to_date, 1.day.ago.to_date)).to eq 105.33333333333336 }
-    it { expect(team.available_hours_at(20.days.ago.to_date, 15.days.ago.to_date)).to eq 0 }
-    it { expect(team.available_hours_at(20.days.ago.to_date, Time.zone.today)).to eq 147.99999999999997 }
+    let!(:team_member) { Fabricate :team_member, billable_type: :outsourcing, start_date: 2.days.ago, end_date: nil }
+    let!(:null_monthly_payment_member) { Fabricate :team_member, billable_type: :outsourcing, monthly_payment: nil, end_date: nil }
+    let!(:consulting_member) { Fabricate :team_member, billable_type: :consulting, end_date: nil }
+    let!(:training_member) { Fabricate :team_member, billable_type: :training, end_date: nil }
+    let!(:not_billable_member) { Fabricate :team_member, billable: false, billable_type: nil, end_date: nil }
+    let!(:not_active_member) { Fabricate :team_member, billable_type: :outsourcing, end_date: 1.day.ago }
+
+    let!(:membership) { Fabricate :membership, team: team, team_member: team_member, hours_per_month: 100, start_date: 2.days.ago, end_date: nil }
+    let!(:null_payment_membership) { Fabricate :membership, team: team, team_member: null_monthly_payment_member, hours_per_month: nil, start_date: 2.months.ago, end_date: nil }
+    let!(:consulting_membership) { Fabricate :membership, team: team, team_member: consulting_member, hours_per_month: 120, start_date: 2.months.ago, end_date: nil }
+    let!(:training_membership) { Fabricate :membership, team: team, team_member: training_member, hours_per_month: 120, start_date: 2.months.ago, end_date: nil }
+    let!(:not_billable_member_membership) { Fabricate :membership, team: team, team_member: not_billable_member, hours_per_month: 120, start_date: 2.months.ago, end_date: nil }
+    let!(:not_active_member_membership) { Fabricate :membership, team: team, team_member: not_active_member, hours_per_month: 120, start_date: 2.months.ago, end_date: nil }
+
+    it { expect(team.available_hours_at(2.days.ago.to_date, 1.day.ago.to_date)).to eq 30.666666666666668 }
+    it { expect(team.available_hours_at(20.days.ago.to_date, 15.days.ago.to_date)).to eq 72.0 }
+    it { expect(team.available_hours_at(20.days.ago.to_date, Time.zone.today)).to eq 262.0 }
   end
 end

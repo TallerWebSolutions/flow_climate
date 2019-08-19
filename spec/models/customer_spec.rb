@@ -48,7 +48,8 @@ RSpec.describe Customer, type: :model do
     let(:company) { Fabricate :company }
     let!(:customer) { Fabricate :customer, company: company }
     let!(:team) { Fabricate :team, company: company }
-    let!(:team_member) { Fabricate :team_member, teams: [team], hours_per_month: 100, monthly_payment: 1200 }
+    let!(:team_member) { Fabricate :team_member, monthly_payment: 1200 }
+    let!(:membership) { Fabricate :membership, team: team, team_member: team_member, hours_per_month: 100, start_date: 3.months.ago.to_date, end_date: nil }
     let!(:project) { Fabricate :project, team: team, customers: [customer], start_date: 2.months.ago, end_date: 3.months.from_now, qty_hours: 3000, value: 400_000, hour_value: 200, percentage_effort_to_bugs: 100 }
 
     let(:first_stage) { Fabricate :stage, company: company, stage_stream: :downstream, queue: false, end_point: false, order: 0 }
