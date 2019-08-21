@@ -144,6 +144,9 @@ pt-BR:
       membership:
         one: Associação
         other: Associações
+      risk_review:
+        one: Revisão de Risco
+        other: Revisões de Risco
     attributes:
       user:
         first_name: Nome
@@ -475,6 +478,13 @@ pt-BR:
             developer: 'Desenvolvedor'
             manager: 'Gestor'
             client: 'Cliente'
+      risk_review:
+        product: Produto
+        company: Empresa
+        start_date: Início dos Dados
+        end_date: Fim dos Dados
+        meeting_date: Data da Reunião
+        lead_time_outlier_limit: Outlier no lead time
   product:
     name:
       uniqueness: "Não deve repetir nome de produto para o mesmo cliente."

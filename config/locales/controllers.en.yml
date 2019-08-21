@@ -984,3 +984,7 @@ en:
       title: "New Membership"
     edit:
       title: "New Membership"
+  risk_review:
+    attributes:
+      validations:
+        product_uniqueness: "You can have only one meeting to the product starting at the same date."

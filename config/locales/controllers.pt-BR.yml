@@ -971,3 +971,7 @@ pt-BR:
       title: "Nova Associação"
     edit:
       title: "Nova Associação"
+  risk_review:
+    attributes:
+      validations:
+        product_uniqueness: "Você só pode ter uma reunião para o produto começando na mesma data."

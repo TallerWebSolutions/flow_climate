@@ -1125,6 +1125,46 @@ ALTER SEQUENCE public.projects_id_seq OWNED BY public.projects.id;
 
 
 --
+-- Name: risk_reviews; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.risk_reviews (
+    id bigint NOT NULL,
+    company_id integer NOT NULL,
+    product_id integer NOT NULL,
+    demand_blocks_ids integer[],
+    projects_ids integer[],
+    demands_ids_in_period integer[],
+    start_date date NOT NULL,
+    end_date date NOT NULL,
+    meeting_date date NOT NULL,
+    lead_time_outlier_limit numeric NOT NULL,
+    outlier_demands_id integer[],
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: risk_reviews_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.risk_reviews_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: risk_reviews_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.risk_reviews_id_seq OWNED BY public.risk_reviews.id;
+
+
+--
 -- Name: schema_migrations; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1674,6 +1714,13 @@ ALTER TABLE ONLY public.projects ALTER COLUMN id SET DEFAULT nextval('public.pro
 
 
 --
+-- Name: risk_reviews id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.risk_reviews ALTER COLUMN id SET DEFAULT nextval('public.risk_reviews_id_seq'::regclass);
+
+
+--
 -- Name: slack_configurations id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1974,6 +2021,14 @@ ALTER TABLE ONLY public.project_risk_configs
 
 ALTER TABLE ONLY public.projects
     ADD CONSTRAINT projects_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: risk_reviews risk_reviews_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.risk_reviews
+    ADD CONSTRAINT risk_reviews_pkey PRIMARY KEY (id);
 
 
 --
@@ -2463,6 +2518,27 @@ CREATE UNIQUE INDEX index_projects_on_company_id_and_name ON public.projects USI
 
 
 --
+-- Name: index_risk_reviews_on_company_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_risk_reviews_on_company_id ON public.risk_reviews USING btree (company_id);
+
+
+--
+-- Name: index_risk_reviews_on_meeting_date_and_product_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_risk_reviews_on_meeting_date_and_product_id ON public.risk_reviews USING btree (meeting_date, product_id);
+
+
+--
+-- Name: index_risk_reviews_on_product_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_risk_reviews_on_product_id ON public.risk_reviews USING btree (product_id);
+
+
+--
 -- Name: index_slack_configurations_on_info_type_and_team_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2694,6 +2770,14 @@ ALTER TABLE ONLY public.item_assignments
 
 ALTER TABLE ONLY public.demand_blocks
     ADD CONSTRAINT fk_rails_0c8fa8d3a7 FOREIGN KEY (demand_id) REFERENCES public.demands(id);
+
+
+--
+-- Name: risk_reviews fk_rails_0e13c6d551; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.risk_reviews
+    ADD CONSTRAINT fk_rails_0e13c6d551 FOREIGN KEY (company_id) REFERENCES public.companies(id);
 
 
 --
@@ -3105,6 +3189,14 @@ ALTER TABLE ONLY public.demand_comments
 
 
 --
+-- Name: risk_reviews fk_rails_dd98df4301; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.risk_reviews
+    ADD CONSTRAINT fk_rails_dd98df4301 FOREIGN KEY (product_id) REFERENCES public.products(id);
+
+
+--
 -- Name: teams fk_rails_e080df8a94; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -3296,6 +3388,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190807202613'),
 ('20190812154723'),
 ('20190815151526'),
-('20190816185103');
+('20190816185103'),
+('20190821145655');
 
 
