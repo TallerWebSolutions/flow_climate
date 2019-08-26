@@ -46,7 +46,7 @@
     <tbody>
       <% finances_hash_with_computed_informations.sort_by { |finances_hash| finances_hash['finances_date'] }.reverse.each do |finance_hash| %>
         <tr>
-          <td><%= I18n.l(finance_hash['finances_date'], format: :month_year) %></td>
+          <td><%= I18n.l(finance_hash['finances_date'].to_date, format: :month_year) %></td>
           <td><%= number_to_currency(finance_hash['income_total']) %></td>
           <td><%= number_to_currency(finance_hash['expenses_total']) %></td>
           <td><%= finance_hash['throughput_in_month'] %></td>

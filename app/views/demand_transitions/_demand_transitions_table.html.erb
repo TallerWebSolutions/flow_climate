@@ -28,7 +28,7 @@
           <td><%= time_distance_in_words(transition.total_seconds_in_transition) %></td>
           <td><%= "#{transition.working_time_in_transition} h" %></td>
           <% if transition.stage.stage_project_configs.find_by(project: demand.project).stage_percentage.present? %>
-            <td><%= "#{TimeService.instance.compute_working_hours_for_dates(transition.last_time_in, transition.last_time_out) * (transition.stage.stage_project_configs.find_by(project: demand.project).stage_percentage / 100.0)} h" %></td>
+            <td><%= "#{number_with_precision(TimeService.instance.compute_working_hours_for_dates(transition.last_time_in, transition.last_time_out) * (transition.stage.stage_project_configs.find_by(project: demand.project).stage_percentage / 100.0), precision: 2)} h" %></td>
           <% else %>
             <td>0 h</td>
           <% end %>
@@ -36,15 +36,5 @@
         </tr>
       <% end %>
     </tbody>
-    <tfoot>
-      <tr>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-      </tr>
-    </tfoot>
   </table>
 <% end %>

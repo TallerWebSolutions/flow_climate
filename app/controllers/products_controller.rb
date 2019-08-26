@@ -60,7 +60,7 @@ class ProductsController < AuthenticatedController
   end
 
   def projects_tab
-    @product_projects = @product.projects.includes(:customers).includes(:products).includes(:team).includes(projects_products: :product).order(end_date: :desc)
+    @product_projects = @product.projects.includes(:customers).includes(:products).includes(:team).order(end_date: :desc)
     @projects_summary = ProjectsSummaryData.new(@product_projects)
 
     respond_to { |format| format.js { render 'projects/projects_tab' } }

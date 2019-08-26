@@ -514,7 +514,7 @@ RSpec.describe Demand, type: :model do
     context 'having no stages' do
       let!(:demand) { Fabricate :demand, effort_downstream: 0, end_date: Time.zone.today }
 
-      it { expect(demand.csv_array).to eq [demand.id, demand.current_stage&.name, demand.demand_id, demand.demand_title, demand.demand_type, demand.class_of_service, demand.effort_downstream.to_f.to_s.gsub('.', I18n.t('number.format.separator')), demand.effort_upstream.to_f.to_s.gsub('.', I18n.t('number.format.separator')), demand.created_date&.iso8601, demand.commitment_date&.iso8601, demand.end_date&.iso8601] }
+      it { expect(demand.csv_array).to eq [demand.id, demand.current_stage&.name, demand.project.id, demand.demand_id, demand.demand_title, demand.demand_type, demand.class_of_service, demand.effort_downstream.to_f.to_s.gsub('.', I18n.t('number.format.separator')), demand.effort_upstream.to_f.to_s.gsub('.', I18n.t('number.format.separator')), demand.created_date&.iso8601, demand.commitment_date&.iso8601, demand.end_date&.iso8601] }
     end
 
     context 'having a stage and no end date' do
@@ -527,7 +527,7 @@ RSpec.describe Demand, type: :model do
       let!(:demand_transition) { Fabricate :demand_transition, demand: demand, stage: stage }
       let!(:demand) { Fabricate :demand, project: project, effort_downstream: 0 }
 
-      it { expect(demand.csv_array).to eq [demand.id, demand.current_stage&.name, demand.demand_id, demand.demand_title, demand.demand_type, demand.class_of_service, demand.effort_downstream.to_f.to_s.gsub('.', I18n.t('number.format.separator')), demand.effort_upstream.to_f.to_s.gsub('.', I18n.t('number.format.separator')), demand.created_date&.iso8601, demand.commitment_date&.iso8601, nil] }
+      it { expect(demand.csv_array).to eq [demand.id, demand.current_stage&.name, demand.project.id, demand.demand_id, demand.demand_title, demand.demand_type, demand.class_of_service, demand.effort_downstream.to_f.to_s.gsub('.', I18n.t('number.format.separator')), demand.effort_upstream.to_f.to_s.gsub('.', I18n.t('number.format.separator')), demand.created_date&.iso8601, demand.commitment_date&.iso8601, nil] }
     end
   end
 
@@ -778,7 +778,7 @@ RSpec.describe Demand, type: :model do
   describe '#to_hash' do
     let(:demand) { Fabricate :demand }
 
-    it { expect(demand.to_hash).to eq(id: demand.id, demand_id: demand.demand_id, demand_title: demand.demand_title, effort_upstream: demand.effort_upstream, effort_downstream: demand.effort_downstream, cost_to_project: demand.cost_to_project, current_stage: demand.current_stage&.name, time_in_current_stage: demand.time_in_current_stage, partial_leadtime: demand.partial_leadtime, responsibles: demand.team_members.map { |member| { member_name: member.name, jira_account_id: member.jira_account_id } }, demand_blocks: demand.demand_blocks.map { |block| { blocker_username: block.blocker_username, block_time: block.block_time, block_reason: block.block_reason, unblock_time: block.unblock_time } }) }
+    it { expect(demand.to_hash).to eq(id: demand.id, demand_id: demand.demand_id, project_id: demand.project.id, demand_title: demand.demand_title, effort_upstream: demand.effort_upstream, effort_downstream: demand.effort_downstream, cost_to_project: demand.cost_to_project, current_stage: demand.current_stage&.name, time_in_current_stage: demand.time_in_current_stage, partial_leadtime: demand.partial_leadtime, responsibles: demand.team_members.map { |member| { member_name: member.name, jira_account_id: member.jira_account_id } }, demand_blocks: demand.demand_blocks.map { |block| { blocker_username: block.blocker_username, block_time: block.block_time, block_reason: block.block_reason, unblock_time: block.unblock_time } }) }
   end
 
   describe '#assignees_count' do

@@ -28,6 +28,10 @@ class FinancialInformation < ApplicationRecord
 
   scope :for_month, ->(date) { where('EXTRACT(MONTH FROM finances_date) = :month AND EXTRACT(YEAR FROM finances_date) = :year', month: date.month, year: date.year) }
 
+  def to_h
+    { id: id, finances_date: finances_date, income_total: income_total, expenses_total: expenses_total }.with_indifferent_access
+  end
+
   def financial_result
     income_total.to_f - expenses_total.to_f
   end
