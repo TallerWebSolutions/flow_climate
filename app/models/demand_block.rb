@@ -14,6 +14,7 @@
 #  demand_id      :integer          not null, indexed
 #  discarded_at   :datetime
 #  id             :bigint(8)        not null, primary key
+#  risk_review_id :integer
 #  stage_id       :integer
 #  unblock_reason :string
 #  unblock_time   :datetime
@@ -29,6 +30,7 @@
 #  fk_rails_0c8fa8d3a7  (demand_id => demands.id)
 #  fk_rails_11fee31fef  (blocker_id => team_members.id)
 #  fk_rails_196a395613  (unblocker_id => team_members.id)
+#  fk_rails_6c21b271de  (risk_review_id => risk_reviews.id)
 #  fk_rails_d25cb2ae7e  (stage_id => stages.id)
 #
 
@@ -41,6 +43,7 @@ class DemandBlock < ApplicationRecord
   belongs_to :stage
   belongs_to :blocker, class_name: 'TeamMember', foreign_key: :blocker_id, inverse_of: :demand_blocks
   belongs_to :unblocker, class_name: 'TeamMember', foreign_key: :unblocker_id, inverse_of: :demand_blocks
+  belongs_to :risk_review
 
   validates :demand, :demand_id, :blocker, :block_time, :block_type, presence: true
 

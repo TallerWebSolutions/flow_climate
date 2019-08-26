@@ -146,7 +146,7 @@ class Project < ApplicationRecord
 
   def remaining_money
     hour_value_calc = hour_value || (value / qty_hours)
-    value - (consumed_hours * hour_value_calc)
+    (value || 0) - (consumed_hours * hour_value_calc)
   end
 
   def percentage_remaining_money

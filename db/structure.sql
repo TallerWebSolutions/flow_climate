@@ -204,7 +204,8 @@ CREATE TABLE public.demand_blocks (
     block_reason character varying,
     blocker_id integer NOT NULL,
     unblocker_id integer,
-    unblock_reason character varying
+    unblock_reason character varying,
+    risk_review_id integer
 );
 
 
@@ -366,7 +367,8 @@ CREATE TABLE public.demands (
     blocked_working_time_downstream numeric DEFAULT 0,
     blocked_working_time_upstream numeric DEFAULT 0,
     total_bloked_working_time numeric DEFAULT 0,
-    total_touch_blocked_time numeric DEFAULT 0
+    total_touch_blocked_time numeric DEFAULT 0,
+    risk_review_id integer
 );
 
 
@@ -1125,6 +1127,40 @@ ALTER SEQUENCE public.projects_id_seq OWNED BY public.projects.id;
 
 
 --
+-- Name: risk_reviews; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.risk_reviews (
+    id bigint NOT NULL,
+    company_id integer NOT NULL,
+    product_id integer NOT NULL,
+    meeting_date date NOT NULL,
+    lead_time_outlier_limit numeric NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: risk_reviews_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.risk_reviews_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: risk_reviews_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.risk_reviews_id_seq OWNED BY public.risk_reviews.id;
+
+
+--
 -- Name: schema_migrations; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1674,6 +1710,13 @@ ALTER TABLE ONLY public.projects ALTER COLUMN id SET DEFAULT nextval('public.pro
 
 
 --
+-- Name: risk_reviews id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.risk_reviews ALTER COLUMN id SET DEFAULT nextval('public.risk_reviews_id_seq'::regclass);
+
+
+--
 -- Name: slack_configurations id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1974,6 +2017,14 @@ ALTER TABLE ONLY public.project_risk_configs
 
 ALTER TABLE ONLY public.projects
     ADD CONSTRAINT projects_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: risk_reviews risk_reviews_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.risk_reviews
+    ADD CONSTRAINT risk_reviews_pkey PRIMARY KEY (id);
 
 
 --
@@ -2463,6 +2514,27 @@ CREATE UNIQUE INDEX index_projects_on_company_id_and_name ON public.projects USI
 
 
 --
+-- Name: index_risk_reviews_on_company_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_risk_reviews_on_company_id ON public.risk_reviews USING btree (company_id);
+
+
+--
+-- Name: index_risk_reviews_on_meeting_date_and_product_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_risk_reviews_on_meeting_date_and_product_id ON public.risk_reviews USING btree (meeting_date, product_id);
+
+
+--
+-- Name: index_risk_reviews_on_product_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_risk_reviews_on_product_id ON public.risk_reviews USING btree (product_id);
+
+
+--
 -- Name: index_slack_configurations_on_info_type_and_team_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2697,6 +2769,14 @@ ALTER TABLE ONLY public.demand_blocks
 
 
 --
+-- Name: risk_reviews fk_rails_0e13c6d551; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.risk_reviews
+    ADD CONSTRAINT fk_rails_0e13c6d551 FOREIGN KEY (company_id) REFERENCES public.companies(id);
+
+
+--
 -- Name: portfolio_units fk_rails_111d0b277b; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2817,6 +2897,14 @@ ALTER TABLE ONLY public.demand_data_processments
 
 
 --
+-- Name: demands fk_rails_34f0dad22e; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.demands
+    ADD CONSTRAINT fk_rails_34f0dad22e FOREIGN KEY (risk_review_id) REFERENCES public.risk_reviews(id);
+
+
+--
 -- Name: integration_errors fk_rails_3505c123da; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2934,6 +3022,14 @@ ALTER TABLE ONLY public.companies_users
 
 ALTER TABLE ONLY public.user_plans
     ADD CONSTRAINT fk_rails_6bb6a01b63 FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
+-- Name: demand_blocks fk_rails_6c21b271de; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.demand_blocks
+    ADD CONSTRAINT fk_rails_6c21b271de FOREIGN KEY (risk_review_id) REFERENCES public.risk_reviews(id);
 
 
 --
@@ -3102,6 +3198,14 @@ ALTER TABLE ONLY public.demand_blocks
 
 ALTER TABLE ONLY public.demand_comments
     ADD CONSTRAINT fk_rails_dc14d53db5 FOREIGN KEY (demand_id) REFERENCES public.demands(id);
+
+
+--
+-- Name: risk_reviews fk_rails_dd98df4301; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.risk_reviews
+    ADD CONSTRAINT fk_rails_dd98df4301 FOREIGN KEY (product_id) REFERENCES public.products(id);
 
 
 --
@@ -3296,6 +3400,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190807202613'),
 ('20190812154723'),
 ('20190815151526'),
-('20190816185103');
+('20190816185103'),
+('20190821145655');
 
 

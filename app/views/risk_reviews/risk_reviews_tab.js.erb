@@ -1,0 +1,6 @@
+var riskReviewsDiv = $('#risk-reviews')
+
+riskReviewsDiv.html("<%= escape_javascript(render 'risk_reviews/risk_reviews_table', company: @company, product: @product, risk_reviews: @risk_reviews) %>");
+
+$('#general-loader').hide();
+riskReviewsDiv.show();

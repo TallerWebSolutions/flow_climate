@@ -4,7 +4,7 @@ class ProductsController < AuthenticatedController
   before_action :user_gold_check
 
   before_action :assign_company
-  before_action :assign_product, only: %i[show edit update destroy portfolio_units_tab projects_tab portfolio_demands_tab portfolio_charts_tab]
+  before_action :assign_product, only: %i[show edit update destroy portfolio_units_tab projects_tab portfolio_demands_tab portfolio_charts_tab risk_reviews_tab]
   before_action :assign_demands, only: %i[portfolio_demands_tab portfolio_charts_tab]
 
   def index
@@ -77,6 +77,11 @@ class ProductsController < AuthenticatedController
     @demands_chart_adapter = Highchart::DemandsChartsAdapter.new(@demands, @start_date, @end_date, @period) if @demands.present?
 
     respond_to { |format| format.js { render 'portfolio_units/portfolio_charts_tab' } }
+  end
+
+  def risk_reviews_tab
+    @risk_reviews = @product.risk_reviews.order(meeting_date: :desc)
+    respond_to { |format| format.js { render 'risk_reviews/risk_reviews_tab' } }
   end
 
   private

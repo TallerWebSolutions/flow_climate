@@ -23,7 +23,7 @@ module ProjectAggregator
   end
 
   def total_value
-    projects.sum(&:value)
+    projects.map(&:value).compact.sum
   end
 
   def remaining_money

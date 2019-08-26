@@ -114,11 +114,6 @@ RSpec.describe MembershipsController, type: :controller do
     describe 'GET #edit' do
       let(:team) { Fabricate :team, company: company }
 
-      # let!(:team_member) { Fabricate :team_member, company: company }
-      # let!(:other_team_member) { Fabricate :team_member, company: company, end }
-
-      # let(:membership) { Fabricate :membership, team: team, team_member: team_member }
-
       context 'valid parameters' do
         before { get :edit, params: { company_id: company.id, team_id: team, id: membership }, xhr: true }
 

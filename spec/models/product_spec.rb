@@ -7,6 +7,8 @@ RSpec.describe Product, type: :model do
     it { is_expected.to have_and_belong_to_many(:projects).dependent(:destroy) }
     it { is_expected.to have_many(:portfolio_units).dependent(:destroy) }
     it { is_expected.to have_many(:demands).dependent(:restrict_with_error) }
+    it { is_expected.to have_many(:demand_blocks).through(:demands) }
+    it { is_expected.to have_many(:risk_reviews).dependent(:destroy) }
   end
 
   context 'validations' do
@@ -82,6 +84,7 @@ RSpec.describe Product, type: :model do
     let(:other_product) { Fabricate :product, name: 'zzz' }
 
     let!(:project) { Fabricate :project, start_date: 4.weeks.ago, end_date: 3.weeks.from_now, customers: [product.customer], products: [product], value: 15_000, qty_hours: 5000, hour_value: 2.5 }
+    let!(:nil_value_project) { Fabricate :project, start_date: 4.weeks.ago, customers: [product.customer], products: [product], status: :executing, value: nil }
     let!(:other_project) { Fabricate :project, start_date: 4.weeks.ago, end_date: 3.weeks.from_now, customers: [product.customer], products: [product], value: 5000, qty_hours: 10_000, hour_value: 2 }
     let!(:other_product_project) { Fabricate :project, customers: [other_product.customer], products: [other_product], start_date: 4.weeks.ago, end_date: 3.weeks.from_now, value: 22_000, qty_hours: 50_000, hour_value: 0.44 }
 
@@ -115,7 +118,7 @@ RSpec.describe Product, type: :model do
     after { travel_back }
 
     include_context 'consolidations variables data for product'
-    it { expect(product.last_week_scope).to eq 60 }
+    it { expect(product.last_week_scope).to eq 90 }
   end
 
   describe '#avg_hours_per_demand' do
