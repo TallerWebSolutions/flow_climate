@@ -653,6 +653,7 @@ en:
     jira: "Jira"
     stages: "Stages"
     portfolio_units: "Portfolio Units"
+    risk_reviews: "Risk Reviews"
   charts:
     xlabel:
       months: "Months"
@@ -988,3 +989,6 @@ en:
     attributes:
       validations:
         product_uniqueness: "You can have only one meeting to the product starting at the same date."
+  risk_reviews:
+    new:
+      title: "New Risk Review"

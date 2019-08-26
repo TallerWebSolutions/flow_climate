@@ -11,7 +11,7 @@
 <%= form_for [@company, @product] do |f| %>
   <div class="row bottom-spaced-component">
     <div class="col-xs-12">
-      <%= render 'form', f: f, company: @company, product: @product, company_customers: @company_customers %>
+      <%= render 'products/form', f: f, company: @company, product: @product, company_customers: @company_customers %>
     </div>
   </div>
 <% end %>

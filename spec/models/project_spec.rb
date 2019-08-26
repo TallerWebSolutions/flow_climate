@@ -208,10 +208,14 @@ RSpec.describe Project, type: :model do
   describe '#remaining_money' do
     context 'having hour_value' do
       let(:project) { Fabricate :project, qty_hours: 1000, value: 100_000, hour_value: 100 }
+      let!(:other_project) { Fabricate :project, qty_hours: 1000, value: nil, hour_value: 100 }
       let!(:demand) { Fabricate :demand, project: project, effort_downstream: 200, effort_upstream: 10, end_date: 2.weeks.ago }
       let!(:other_demand) { Fabricate :demand, project: project, effort_downstream: 200, effort_upstream: 10, end_date: 2.weeks.ago }
 
+      let!(:nil_project_value_demand) { Fabricate :demand, project: other_project, effort_downstream: 200, effort_upstream: 10, end_date: 2.weeks.ago }
+
       it { expect(project.remaining_money.to_f).to eq 58_000.0 }
+      it { expect(other_project.remaining_money.to_f).to eq(-21_000.0) }
     end
 
     context 'having no hour_value' do

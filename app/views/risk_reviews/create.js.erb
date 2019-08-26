@@ -1,0 +1,10 @@
+<% if @risk_review.errors.empty? %>
+  riskReviewsDiv.html("<%= escape_javascript(render 'risk_reviews/risk_reviews_table', company: @company, product: @product, risk_reviews: @risk_reviews) %>");
+
+<% else %>
+riskReviewsDiv.html("<%= escape_javascript(render 'risk_reviews/new', company: @company, product: @product, risk_review: @risk_review) %>");
+
+  $('#cancel-form-risk-review').on('click', function() {
+      riskReviewsDiv.html("<%= escape_javascript(render 'risk_reviews/risk_reviews_table', company: @company, product: @product, risk_reviews: @risk_reviews) %>");
+  });
+<% end %>

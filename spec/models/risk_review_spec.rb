@@ -4,13 +4,13 @@ RSpec.describe RiskReview, type: :model do
   context 'associations' do
     it { is_expected.to belong_to :company }
     it { is_expected.to belong_to :product }
+    it { is_expected.to have_many(:demand_blocks).dependent(:nullify) }
+    it { is_expected.to have_many(:demands).dependent(:nullify) }
   end
 
   context 'validations' do
     it { is_expected.to validate_presence_of :company }
     it { is_expected.to validate_presence_of :product }
-    it { is_expected.to validate_presence_of :start_date }
-    it { is_expected.to validate_presence_of :end_date }
 
     context 'uniqueness' do
       let(:company) { Fabricate :company }
@@ -29,5 +29,9 @@ RSpec.describe RiskReview, type: :model do
       it { expect(other_date_risk_review.valid?).to be true }
       it { expect(other_product_risk_review.valid?).to be true }
     end
+  end
+
+  context 'delegations' do
+    it { is_expected.to delegate_method(:name).to(:product).with_prefix }
   end
 end

@@ -43,3 +43,12 @@ function searchPortfolioChartsTab(companyId, productId, startDate, endDate, peri
         data: `period=${period}&start_date=${startDate}&end_date=${endDate}`
     });
 }
+
+function getRiskReviewsTab(companyId, productId) {
+    $("#general-loader").show();
+
+    jQuery.ajax({
+        url: `/companies/${companyId}/products/${productId}/risk_reviews_tab.js`,
+        type: "GET"
+    });
+}

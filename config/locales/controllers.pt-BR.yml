@@ -701,6 +701,7 @@ pt-BR:
     jira: "Jira"
     stages: "Etapas"
     portfolio_units: "Unidades do Portfólio"
+    risk_reviews: "Revisões de Risco"
   charts:
     xlabel:
       months: "Meses"
@@ -975,3 +976,6 @@ pt-BR:
     attributes:
       validations:
         product_uniqueness: "Você só pode ter uma reunião para o produto começando na mesma data."
+  risk_reviews:
+    new:
+      title: "Nova Revisão de Risco"

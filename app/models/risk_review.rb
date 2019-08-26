@@ -6,16 +6,10 @@
 #
 #  company_id              :integer          not null, indexed
 #  created_at              :datetime         not null
-#  demand_blocks_ids       :integer          is an Array
-#  demands_ids_in_period   :integer          is an Array
-#  end_date                :date             not null
 #  id                      :bigint(8)        not null, primary key
 #  lead_time_outlier_limit :decimal(, )      not null
 #  meeting_date            :date             not null, indexed => [product_id]
-#  outlier_demands_id      :integer          is an Array
 #  product_id              :integer          not null, indexed => [meeting_date], indexed
-#  projects_ids            :integer          is an Array
-#  start_date              :date             not null
 #  updated_at              :datetime         not null
 #
 # Indexes
@@ -34,7 +28,12 @@ class RiskReview < ApplicationRecord
   belongs_to :company
   belongs_to :product
 
-  validates :company, :product, :start_date, :end_date, :lead_time_outlier_limit, :meeting_date, presence: true
+  has_many :demands, dependent: :nullify
+  has_many :demand_blocks, dependent: :nullify
+
+  validates :company, :product, :lead_time_outlier_limit, :meeting_date, presence: true
 
   validates :product, uniqueness: { scope: :meeting_date, message: I18n.t('risk_review.attributes.validations.product_uniqueness') }
+
+  delegate :name, to: :product, prefix: true
 end

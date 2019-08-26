@@ -35,6 +35,10 @@ navItem.on('click', function(event){
             $('.col-table-details').hide();
             getPortfolioChartsTab(companyId, productId)
 
+        } else if ($(this).attr('id') === 'nav-risk-reviews') {
+            $('.col-table-details').hide();
+            getRiskReviewsTab(companyId, productId)
+
         } else {
             enableTabs();
             $($(this).data('container')).show();

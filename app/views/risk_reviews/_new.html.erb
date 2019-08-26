@@ -1,0 +1,7 @@
+<%= form_for [company, product, risk_review], class: 'form', remote: true do |f| %>
+  <div class="row bottom-spaced-component">
+    <div class="col-xs-12">
+      <%= render 'risk_reviews/form', f: f, company: company, risk_review: risk_review %>
+    </div>
+  </div>
+<% end %>

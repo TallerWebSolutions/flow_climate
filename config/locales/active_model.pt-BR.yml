@@ -481,8 +481,9 @@ pt-BR:
       risk_review:
         product: Produto
         company: Empresa
-        start_date: Início dos Dados
-        end_date: Fim dos Dados
+        demands: Demandas
+        demand_blocks: Bloqueios
+        blocks_per_demand: Bloqueios/Demanda
         meeting_date: Data da Reunião
         lead_time_outlier_limit: Outlier no lead time
   product:

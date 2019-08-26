@@ -204,7 +204,8 @@ CREATE TABLE public.demand_blocks (
     block_reason character varying,
     blocker_id integer NOT NULL,
     unblocker_id integer,
-    unblock_reason character varying
+    unblock_reason character varying,
+    risk_review_id integer
 );
 
 
@@ -366,7 +367,8 @@ CREATE TABLE public.demands (
     blocked_working_time_downstream numeric DEFAULT 0,
     blocked_working_time_upstream numeric DEFAULT 0,
     total_bloked_working_time numeric DEFAULT 0,
-    total_touch_blocked_time numeric DEFAULT 0
+    total_touch_blocked_time numeric DEFAULT 0,
+    risk_review_id integer
 );
 
 
@@ -1132,14 +1134,8 @@ CREATE TABLE public.risk_reviews (
     id bigint NOT NULL,
     company_id integer NOT NULL,
     product_id integer NOT NULL,
-    demand_blocks_ids integer[],
-    projects_ids integer[],
-    demands_ids_in_period integer[],
-    start_date date NOT NULL,
-    end_date date NOT NULL,
     meeting_date date NOT NULL,
     lead_time_outlier_limit numeric NOT NULL,
-    outlier_demands_id integer[],
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL
 );
@@ -2901,6 +2897,14 @@ ALTER TABLE ONLY public.demand_data_processments
 
 
 --
+-- Name: demands fk_rails_34f0dad22e; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.demands
+    ADD CONSTRAINT fk_rails_34f0dad22e FOREIGN KEY (risk_review_id) REFERENCES public.risk_reviews(id);
+
+
+--
 -- Name: integration_errors fk_rails_3505c123da; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -3018,6 +3022,14 @@ ALTER TABLE ONLY public.companies_users
 
 ALTER TABLE ONLY public.user_plans
     ADD CONSTRAINT fk_rails_6bb6a01b63 FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
+-- Name: demand_blocks fk_rails_6c21b271de; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.demand_blocks
+    ADD CONSTRAINT fk_rails_6c21b271de FOREIGN KEY (risk_review_id) REFERENCES public.risk_reviews(id);
 
 
 --
