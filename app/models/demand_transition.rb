@@ -43,8 +43,8 @@ class DemandTransition < ApplicationRecord
   scope :touch_transitions, -> { joins(:stage).where('stages.queue = false AND stages.end_point = false AND stages.stage_stream = :downstream', downstream: Stage.stage_streams[:downstream]) }
   scope :queue_transitions, -> { joins(:stage).where('stages.queue = true AND stages.end_point = false AND stages.stage_stream = :downstream', downstream: Stage.stage_streams[:downstream]) }
 
-  after_save :set_demand_dates, on: %i[create update]
-  after_save :set_demand_computed_fields, on: %i[create update]
+  after_save :set_demand_dates
+  after_save :set_demand_computed_fields
 
   def total_seconds_in_transition
     out_time = [last_time_out, Time.zone.now].compact.min

@@ -61,7 +61,6 @@
     </div>
   </div>
 
-
   <div class="row bottom-spaced-component">
     <div class="col-xs-12">
       <div id="queue-progress" class="queue-progress">
@@ -105,6 +104,10 @@
 
 <div id="content-responsibles" class="tabcontent">
   <%= render 'item_assignments/item_assignments_table', demand: @demand %>
+</div>
+
+<div id="content-transitions" class="tabcontent">
+  <%= render 'demand_transitions/demand_transitions_table', demand_transitions_list: @demand.demand_transitions.order(:last_time_in), demand: @demand %>
 </div>
 
 <% content_for :javascript do %>

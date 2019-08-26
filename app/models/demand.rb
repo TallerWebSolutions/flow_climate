@@ -114,6 +114,7 @@ class Demand < ApplicationRecord
     [
       id,
       current_stage&.name,
+      project_id,
       demand_id,
       demand_title,
       demand_type,
@@ -130,6 +131,7 @@ class Demand < ApplicationRecord
     {
       id: id,
       demand_id: demand_id,
+      project_id: project_id,
       demand_title: demand_title,
       effort_upstream: effort_upstream,
       effort_downstream: effort_downstream,
