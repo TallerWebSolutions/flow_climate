@@ -144,4 +144,10 @@ RSpec.describe FinancialInformation, type: :model do
       it { expect(finances.red?).to be false }
     end
   end
+
+  describe '#to_h' do
+    let(:finance) { Fabricate :financial_information }
+
+    it { expect(finance.to_h).to eq('id' => finance.id, 'finances_date' => finance.finances_date, 'income_total' => finance.income_total, 'expenses_total' => finance.expenses_total) }
+  end
 end
