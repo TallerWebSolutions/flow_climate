@@ -1,0 +1,66 @@
+<div class="row">
+  <div class="col-xs-12">
+    <ul class="breadcrumb">
+      <li><%= link_to I18n.t('general.home.title'), root_path %></li>
+      <li><%= link_to @company.abbreviation&.upcase, company_path(@company) %></li>
+      <li><%= @team_member.name %></li>
+    </ul>
+  </div>
+</div>
+
+<% @team_member.memberships.each do |membership| %>
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="dashboard-info-frame">
+        <p class="dashboard-info-title">
+          <%= membership.team.name %>
+        </p>
+      </div>
+    </div>
+
+    <div class="col-xs-3 bottom-spaced-component">
+      <div class="summary-card-frame ">
+        <div class="summary-card-content">
+          <p class="summary-card-title"><%= I18n.t('team_members.show.deliveries') %></p>
+          <p class="summary-card-value"><%= I18n.t('general.demands_text', count: membership.demands.finished.count) %></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xs-3 bottom-spaced-component">
+      <div class="summary-card-frame ">
+        <div class="summary-card-content">
+          <p class="summary-card-title"><%= DemandBlock.model_name.human(count: 2) %></p>
+          <p class="summary-card-value"><%= I18n.t('general.demand_blocks_text', count: membership.demand_blocks.count) %></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xs-3 bottom-spaced-component">
+      <div class="summary-card-frame ">
+        <div class="summary-card-content">
+          <p class="summary-card-title"><%= DemandComment.model_name.human(count: 2) %></p>
+          <p class="summary-card-value"><%= I18n.t('general.demand_comments_text', count: membership.demand_comments.count) %></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xs-3 bottom-spaced-component">
+      <div class="summary-card-frame ">
+        <div class="summary-card-content">
+          <p class="summary-card-title"><%= I18n.t('projects.general.leadtime', percentil: '80%') %></p>
+          <p class="summary-card-value"><%= time_distance_in_words(membership.leadtime) %></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xs-3 bottom-spaced-component">
+      <div class="summary-card-frame ">
+        <div class="summary-card-content">
+          <p class="summary-card-title"><%= I18n.t('demands.show.pairing') %></p>
+          <p class="summary-card-value"><%= membership.pairing.first(3).map { |key, value| "#{key} (#{value})" }.join(', ') %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>

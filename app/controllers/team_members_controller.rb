@@ -4,7 +4,11 @@ class TeamMembersController < AuthenticatedController
   before_action :user_gold_check
 
   before_action :assign_company
-  before_action :assign_team_member, only: %i[edit update destroy]
+  before_action :assign_team_member, only: %i[edit update destroy show]
+
+  def show
+    render 'team_members/show'
+  end
 
   def new
     @team_member = TeamMember.new(company: @company)

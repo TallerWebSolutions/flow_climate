@@ -2,8 +2,14 @@
 
 RSpec.describe TeamMembersController, type: :controller do
   context 'unauthenticated' do
+    describe 'GET #show' do
+      before { get :show, params: { company_id: 'bar', id: 'foo' } }
+
+      it { expect(response).to redirect_to new_user_session_path }
+    end
+
     describe 'GET #new' do
-      before { get :new, params: { company_id: 'bar', team_id: 'foo' } }
+      before { get :new, params: { company_id: 'bar' } }
 
       it { expect(response).to redirect_to new_user_session_path }
     end
@@ -45,6 +51,46 @@ RSpec.describe TeamMembersController, type: :controller do
 
     let!(:team_member) { Fabricate :team_member, company: company, name: 'ddd' }
     let!(:other_team_member) { Fabricate :team_member, company: company, name: 'aaas' }
+
+    describe 'GET #show' do
+      let(:team) { Fabricate :team, company: company }
+      let(:team_member) { Fabricate :team_member }
+      let!(:membership) { Fabricate :membership, team: team, team_member: team_member, hours_per_month: 120, start_date: 1.month.ago, end_date: nil }
+
+      context 'valid parameters' do
+        before { get :show, params: { company_id: company.id, id: team_member }, xhr: true }
+
+        it 'assigns the instance variables and renders the template' do
+          expect(response).to render_template 'team_members/show'
+          expect(assigns(:company)).to eq company
+          expect(assigns(:team_member)).to eq team_member
+        end
+      end
+
+      context 'invalid' do
+        context 'team_member' do
+          before { get :show, params: { company_id: company, id: 'foo' }, xhr: true }
+
+          it { expect(response).to have_http_status :not_found }
+        end
+
+        context 'company' do
+          context 'non-existent' do
+            before { get :show, params: { company_id: 'foo', id: team_member }, xhr: true }
+
+            it { expect(response).to have_http_status :not_found }
+          end
+
+          context 'not-permitted' do
+            let(:company) { Fabricate :company, users: [] }
+
+            before { get :show, params: { company_id: company, id: team_member }, xhr: true }
+
+            it { expect(response).to have_http_status :not_found }
+          end
+        end
+      end
+    end
 
     describe 'GET #new' do
       context 'valid parameters' do

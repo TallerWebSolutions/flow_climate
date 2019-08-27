@@ -32,11 +32,11 @@
 
           <div class="col-xs-3">
             <p class="stamp-title"><%= I18n.t('projects.general.scope' ) %></p>
-            <p class="stamp-content"><%= I18n.t('general.demands_text', demands_count: project.backlog_for) %></p>
+            <p class="stamp-content"><%= I18n.t('general.demands_text', count: project.backlog_for) %></p>
           </div>
           <div class="col-xs-3">
             <p class="stamp-title"><%= I18n.t('projects.index.remaining_backlog' ) %></p>
-            <p class="stamp-content"><%= I18n.t('general.demands_text', demands_count: project.remaining_backlog) %></p>
+            <p class="stamp-content"><%= I18n.t('general.demands_text', count: project.remaining_backlog) %></p>
           </div>
           <div class="col-xs-3">
             <p class="stamp-title"><%= I18n.t('projects.index.passed_time' ) %></p>

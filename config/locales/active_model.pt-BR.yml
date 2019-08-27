@@ -124,8 +124,8 @@ pt-BR:
         one: Impacto no Fluxo
         other: Impactos no Fluxo
       demand_comment:
-        one: Comentário
-        other: Comentários
+        one: Comentário de Demanda
+        other: Comentários de Demanda
       jira/jira_project_config:
         one: Configuração do Jira para o Projeto
         other: Configurações do Jira para o Projeto

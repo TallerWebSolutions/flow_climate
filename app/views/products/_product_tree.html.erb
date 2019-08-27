@@ -12,7 +12,7 @@
               <%= portfolio_unit.name %>
             </div>
             <div class='card-subtitle'>
-              <%= I18n.t('general.demands_text', demands_count: portfolio_unit.total_portfolio_demands.count) %>
+              <%= I18n.t('general.demands_text', count: portfolio_unit.total_portfolio_demands.count) %>
             </div>
             <div class='tf-footer'>
               <div class='pull-left bottom-spaced-component'><%= number_to_percentage(portfolio_unit.percentage_complete * 100, precision: 2) %></div>

@@ -1,4 +1,6 @@
-<%= link_to I18n.t('memberships.new.title'), new_company_team_membership_path(company, team), class: 'btn btn-sm btn-success bottom-spaced-component pull-right', remote: true %>
+<% if company.present? && team.present? %>
+  <%= link_to I18n.t('memberships.new.title'), new_company_team_membership_path(company, team), class: 'btn btn-sm btn-success bottom-spaced-component pull-right', remote: true %>
+<% end %>
 
 <table class="table table-striped">
   <thead>
