@@ -110,11 +110,9 @@
 <div class="modal fade" id="list-blocks-page" tabindex="-1" role="dialog" aria-labelledby="list-blocks-page" aria-hidden="true"></div>
 <div class="modal fade" id="project-statistics-page" tabindex="-1" role="dialog" aria-labelledby="project-statistics-page" aria-hidden="true"></div>
 
-<% content_for :javascript do %>
-  <%= javascript_include_tag 'charts/donut' %>
-  <%= javascript_include_tag 'projects/demand_classification_charts' %>
+<%= javascript_include_tag 'charts/donut' %>
+<%= javascript_include_tag 'projects/demand_classification_charts' %>
 
-  <%= javascript_include_tag 'demand_blocks/list_modal' %>
-  <%= javascript_include_tag 'components/components' %>
-  <%= javascript_include_tag 'projects/index' %>
-<% end %>
+<%= javascript_include_tag 'demand_blocks/list_modal' %>
+<%= javascript_include_tag 'components/components' %>
+<%= javascript_include_tag 'projects/index' %>
