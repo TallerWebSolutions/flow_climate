@@ -25,7 +25,7 @@
         <td><%= link_to '+', '#', class: 'toggle-table-details', onclick: "toggleTableDetails(#{project_hash[:id]})" %></td>
         <td><%= link_to project_hash[:name], company_project_path(company, project_hash[:id]) %></td>
         <td><%= I18n.l(project_hash[:start_date], format: :default) %></td>
-        <td><%= I18n.t('general.days_text', days: project_hash[:aging_today]) %></td>
+        <td><%= I18n.t('general.days_text', count: project_hash[:aging_today]) %></td>
         <td><%= I18n.l(project_hash[:end_date], format: :default) %></td>
         <td>
           <%= project_hash[:weeks_to_end_date] %>

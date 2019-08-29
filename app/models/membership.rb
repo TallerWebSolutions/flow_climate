@@ -42,4 +42,33 @@ class Membership < ApplicationRecord
   def hours_per_day
     hours_per_month.to_f / 30.0
   end
+
+  def demands
+    Demand.joins(:item_assignments).where(demands: { team: team }).where(item_assignments: { team_member: team_member })
+  end
+
+  def demand_comments
+    DemandComment.joins(:demand).where(demands: { team: team }).where(team_member: team_member)
+  end
+
+  def demand_blocks
+    DemandBlock.joins(:demand).where(demands: { team: team }).where(blocker: team_member)
+  end
+
+  def leadtime(percentile = 80)
+    Stats::StatisticsService.instance.percentile(percentile, demands.finished_with_leadtime.map(&:leadtime))
+  end
+
+  def elapsed_time
+    ((end_date || Time.zone.today) - start_date).to_i
+  end
+
+  def pairing_count
+    pairing_members.group_by(&:itself).map { |key, value| [key, value.count] }.sort_by { |_key, value| value }.reverse.to_h
+  end
+
+  def pairing_members
+    demands_member_in = team_member.demands.where(team: team)
+    @pairing_members = demands_member_in.map { |demand| demand.team_members.joins(:memberships).where(memberships: { member_role: member_role }).map(&:name) }.flatten - [team_member.name]
+  end
 end

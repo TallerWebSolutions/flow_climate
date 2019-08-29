@@ -19,7 +19,7 @@ RSpec.describe DateHelper, type: :helper do
     end
 
     context 'nil time ' do
-      it { expect(helper.time_distance_in_words(nil)).to eq '0 dia(s)' }
+      it { expect(helper.time_distance_in_words(nil)).to eq 'sem dados' }
     end
   end
 

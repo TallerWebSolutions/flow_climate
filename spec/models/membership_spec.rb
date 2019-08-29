@@ -39,4 +39,87 @@ RSpec.describe Membership, type: :model do
     it { expect(team_membership.hours_per_day).to eq 2 }
     it { expect(other_membership.hours_per_day).to eq 0 }
   end
+
+  shared_context 'membership demands methods data' do
+    let(:company) { Fabricate :company }
+    let(:team) { Fabricate :team, company: company }
+
+    let(:first_team_member) { Fabricate :team_member, company: company, name: 'first_member' }
+    let(:second_team_member) { Fabricate :team_member, company: company, name: 'second_member' }
+    let(:third_team_member) { Fabricate :team_member, company: company, name: 'third_member' }
+    let(:fourth_team_member) { Fabricate :team_member, company: company, name: 'fourth_member' }
+    let(:fifth_team_member) { Fabricate :team_member, company: company, name: 'fifth_member' }
+
+    let!(:first_membership) { Fabricate :membership, team: team, team_member: first_team_member, member_role: :developer }
+    let!(:second_membership) { Fabricate :membership, team: team, team_member: second_team_member, member_role: :developer }
+
+    let!(:third_membership) { Fabricate :membership, team: team, team_member: third_team_member, member_role: :developer }
+    let!(:fourth_membership) { Fabricate :membership, team: team, team_member: fourth_team_member, member_role: :client }
+    let!(:fifth_membership) { Fabricate :membership, team: team, team_member: fifth_team_member, member_role: :developer }
+
+    let(:first_demand) { Fabricate :demand, company: company, team: team, commitment_date: 2.days.ago, end_date: 1.day.ago }
+    let(:second_demand) { Fabricate :demand, company: company, team: team, commitment_date: 3.days.ago, end_date: 2.days.ago }
+    let(:third_demand) { Fabricate :demand, company: company, team: team, commitment_date: 3.days.ago, end_date: 2.days.ago }
+
+    let!(:first_assignment) { Fabricate :item_assignment, team_member: first_team_member, demand: first_demand }
+    let!(:second_assignment) { Fabricate :item_assignment, team_member: first_team_member, demand: second_demand }
+    let!(:third_assignment) { Fabricate :item_assignment, team_member: second_team_member, demand: first_demand }
+    let!(:fourth_assignment) { Fabricate :item_assignment, team_member: second_team_member, demand: second_demand }
+    let!(:fifth_assignment) { Fabricate :item_assignment, team_member: fourth_team_member, demand: first_demand }
+    let!(:sixth_assignment) { Fabricate :item_assignment, team_member: fifth_team_member, demand: third_demand }
+
+    let!(:first_block) { Fabricate :demand_block, blocker: first_team_member, demand: first_demand }
+    let!(:second_block) { Fabricate :demand_block, blocker: first_team_member, demand: second_demand }
+
+    let!(:first_comment) { Fabricate :demand_comment, team_member: first_team_member, demand: first_demand }
+    let!(:second_comment) { Fabricate :demand_comment, team_member: first_team_member, demand: second_demand }
+  end
+
+  describe '#demands' do
+    include_context 'membership demands methods data'
+
+    it { expect(first_membership.demands).to match_array [first_demand, second_demand] }
+    it { expect(second_membership.demands).to match_array [first_demand, second_demand] }
+    it { expect(third_membership.demands).to eq [] }
+  end
+
+  describe '#demand_comments' do
+    include_context 'membership demands methods data'
+
+    it { expect(first_membership.demand_comments).to match_array [first_comment, second_comment] }
+    it { expect(second_membership.demand_comments).to eq [] }
+    it { expect(third_membership.demand_comments).to eq [] }
+  end
+
+  describe '#demand_blocks' do
+    include_context 'membership demands methods data'
+
+    it { expect(first_membership.demand_blocks).to match_array [first_block, second_block] }
+    it { expect(second_membership.demand_blocks).to eq [] }
+    it { expect(third_membership.demand_blocks).to eq [] }
+  end
+
+  describe '#leadtime' do
+    include_context 'membership demands methods data'
+
+    it { expect(first_membership.leadtime).to be_within(0.1).of(86_400.0) }
+    it { expect(second_membership.leadtime).to be_within(0.1).of(86_400.0) }
+    it { expect(third_membership.leadtime).to eq 0 }
+  end
+
+  describe '#pairing_count' do
+    include_context 'membership demands methods data'
+
+    it { expect(first_membership.pairing_count).to eq(second_team_member.name => 2) }
+    it { expect(second_membership.pairing_count).to eq(first_team_member.name => 2) }
+    it { expect(third_membership.pairing_count).to eq({}) }
+  end
+
+  describe '#pairing_members' do
+    include_context 'membership demands methods data'
+
+    it { expect(first_membership.pairing_members).to eq [second_team_member.name, second_team_member.name] }
+    it { expect(second_membership.pairing_members).to eq [first_team_member.name, first_team_member.name] }
+    it { expect(third_membership.pairing_members).to eq [] }
+  end
 end

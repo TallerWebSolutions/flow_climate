@@ -61,7 +61,10 @@ pt-BR:
           all_period: "Todo o Período"
           last_week: "Última Semana"
     total: "Total"
-    days_text: "%{days} dia(s)"
+    days_text:
+      zero: "sem dados"
+      one: "%{count} dia"
+      other: "%{count} dias"
     search_text: "Procurar no nome do produto ou do projeto e no ID da demanda"
     data: "Dados"
     error:
@@ -100,7 +103,10 @@ pt-BR:
       histogram_bin_max: "Bin Máximo do Histograma"
       average: "Média"
       sample_size: "Tamanho da Amostra"
-    demands_text: "%{demands_count} demanda(s)"
+    demands_text:
+      zero: "sem demandas"
+      one: "%{count} demanda"
+      other: "%{count} demandas"
     months: "meses"
     weeks: "semanas"
     days: "dias"
@@ -115,6 +121,14 @@ pt-BR:
     list: "Lista"
     map: "Mapa"
     effort_hours_text: "%{hours_value} horas de esforço"
+    demand_blocks_text:
+      zero: "sem bloqueios"
+      one: "%{count} bloqueio"
+      other: "%{count} bloqueios"
+    demand_comments_text:
+      zero: "sem comentários"
+      one: "%{count} comentário"
+      other: "%{count} comentários"
   header:
     logout: Sair
     sign_up: Cadastre-se
@@ -194,8 +208,13 @@ pt-BR:
   team_members:
     index:
       title: "Membros do Time"
+      elapsed_time: "Tempo"
     new:
       title: "Novo Membro do Time"
+    show:
+      deliveries: "Entregas"
+      member_pair: "Pareado com"
+      paired_times: "Vezes pareado"
   projects:
     index:
       title: "Projetos"
@@ -593,6 +612,7 @@ pt-BR:
       structure_tab: "Estrutura"
       comments_tab: "Comentários"
       responsibles_tab: "Responsáveis"
+      pairing: "Pareamento"
     sync:
       enqueued: "Sua solicitação foi colocada na fila. Será processada em breve."
       done: "Sua sincronização foi realizada."

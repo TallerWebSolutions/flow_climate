@@ -104,7 +104,7 @@ pt-BR:
         other: Transições da Demanda
       demand_block:
         one: Bloqueio da Demanda
-        other: Bloqueios da Demanda
+        other: Bloqueios de Demanda
       project_change_deadline_history:
         one: Neogicação de Prazo
         other: Negociações de Prazo
@@ -124,8 +124,8 @@ pt-BR:
         one: Impacto no Fluxo
         other: Impactos no Fluxo
       demand_comment:
-        one: Comentário
-        other: Comentários
+        one: Comentário de Demanda
+        other: Comentários de Demanda
       jira/jira_project_config:
         one: Configuração do Jira para o Projeto
         other: Configurações do Jira para o Projeto

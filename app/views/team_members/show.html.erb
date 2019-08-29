@@ -1,0 +1,107 @@
+<div class="row">
+  <div class="col-xs-12">
+    <ul class="breadcrumb">
+      <li><%= link_to I18n.t('general.home.title'), root_path %></li>
+      <li><%= link_to @company.abbreviation&.upcase, company_path(@company) %></li>
+      <li><%= @team_member.name %></li>
+    </ul>
+  </div>
+</div>
+
+<% @team_member.memberships.each do |membership| %>
+
+  <% demands_finished = DemandsList.kept.where(id: membership.demands.finished.map(&:id)) %>
+  <% share_demands_blocked = demands_finished.count { |demand_list| demand_list.demand.demand_blocks.count.positive? }.to_f / demands_finished.count %>
+
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="dashboard-info-frame">
+        <p class="dashboard-info-title">
+          <%= membership.team.name %>
+        </p>
+      </div>
+    </div>
+
+    <div class="col-xs-3 bottom-spaced-component">
+      <div class="summary-card-frame ">
+        <div class="summary-card-content">
+          <p class="summary-card-title"><%= I18n.t('team_members.show.deliveries') %></p>
+          <p class="summary-card-value"><%= link_to I18n.t('general.demands_text', count: demands_finished.count), '#', class: 'toggle-table-details', onclick: "toggleTableDetails('demands_table_#{membership.id}')" %></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xs-3 bottom-spaced-component">
+      <div class="summary-card-frame ">
+        <div class="summary-card-content">
+          <p class="summary-card-title"><%= DemandBlock.model_name.human(count: 2) %></p>
+          <p class="summary-card-value"><%=  %></p>
+          <p class="summary-card-value"><%= link_to I18n.t('general.demand_blocks_text', count: membership.demand_blocks.count), '#', class: 'toggle-table-details', onclick: "toggleTableDetails('demand_blocks_#{membership.id}')" %></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xs-3 bottom-spaced-component">
+      <div class="summary-card-frame ">
+        <div class="summary-card-content">
+          <p class="summary-card-title"><%= DemandComment.model_name.human(count: 2) %></p>
+          <p class="summary-card-value"><%= link_to I18n.t('general.demand_comments_text', count: membership.demand_comments.count), '#', class: 'toggle-table-details', onclick: "toggleTableDetails('demand_comments_#{membership.id}')" %></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xs-3 bottom-spaced-component">
+      <div class="summary-card-frame ">
+        <div class="summary-card-content">
+          <p class="summary-card-title"><%= I18n.t('projects.general.leadtime', percentil: '80%') %></p>
+          <p class="summary-card-value"><%= time_distance_in_words(membership.leadtime) %></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xs-3 bottom-spaced-component">
+      <div class="summary-card-frame ">
+        <div class="summary-card-content">
+          <p class="summary-card-title"><%= I18n.t('demands.show.pairing') %></p>
+          <p class="summary-card-value"><%= link_to membership.pairing_count.first(3).map { |key, value| "#{key} (#{value})" }.join(', '), '#', class: 'toggle-table-details', onclick: "toggleTableDetails('pairing_#{membership.id}')" %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="demands_table_<%= membership.id %>" class="col-table-details">
+    <%= render 'demands/demands_table', company: @company, demands: demands_finished.order(end_date: :desc), share_demands_blocked: share_demands_blocked %>
+  </div>
+
+  <div id="demand_blocks_<%= membership.id %>" class="col-table-details">
+    <%= render 'demand_blocks/demand_blocks_table_reduced', demand_blocks_list: membership.demand_blocks.order(block_time: :desc) %>
+  </div>
+
+  <div id="demand_comments_<%= membership.id %>" class="col-table-details">
+    <%= render 'demand_comments/demand_comments_table', demand_comments_list: membership.demand_comments.order(comment_date: :desc) %>
+  </div>
+
+  <div id="pairing_<%= membership.id %>" class="col-table-details">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th><%= I18n.t('team_members.show.member_pair') %></th>
+          <th><%= I18n.t('team_members.show.paired_times') %></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% membership.pairing_count.each do |member_name, pairing_times| %>
+          <tr>
+            <td><%= member_name %></td>
+            <td><%= pairing_times %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+<% end %>
+
+<% content_for :javascript do %>
+  <%= javascript_include_tag 'team_members/show' %>
+  <%= javascript_include_tag 'components/components' %>
+<% end %>

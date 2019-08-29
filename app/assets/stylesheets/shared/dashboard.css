@@ -1,0 +1,10 @@
+.dashboard-info-frame {
+    text-align: center;
+
+    padding: 20px;
+}
+
+.dashboard-info-title {
+    font-size: larger;
+    font-weight: bold;
+}

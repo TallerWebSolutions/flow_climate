@@ -8,6 +8,7 @@
   <table class="table table-striped table-index">
     <thead>
       <tr>
+        <th><%= DemandBlock.human_attribute_name :demand_id %></th>
         <th><%= DemandBlock.human_attribute_name :block_type %></th>
         <th><%= DemandBlock.human_attribute_name :block_duration %></th>
         <th><%= DemandBlock.human_attribute_name :blocker_username %></th>
@@ -19,6 +20,7 @@
     <tbody>
       <% demand_blocks_list.each do |block| %>
         <tr>
+          <td><%= block.demand.demand_id %></td>
           <td><%= t("activerecord.attributes.demand_block.enums.block_type.#{block.block_type}") %></td>
           <td><%= "#{block.block_duration} h" if block.block_duration.present? %></td>
           <td><%= block.blocker.name %></td>

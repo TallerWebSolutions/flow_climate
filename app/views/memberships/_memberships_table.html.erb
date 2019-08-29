@@ -1,4 +1,6 @@
-<%= link_to I18n.t('memberships.new.title'), new_company_team_membership_path(company, team), class: 'btn btn-sm btn-success bottom-spaced-component pull-right', remote: true %>
+<% if company.present? && team.present? %>
+  <%= link_to I18n.t('memberships.new.title'), new_company_team_membership_path(company, team), class: 'btn btn-sm btn-success bottom-spaced-component pull-right', remote: true %>
+<% end %>
 
 <table class="table table-striped">
   <thead>
@@ -7,9 +9,12 @@
       <th><%= Membership.human_attribute_name :start_date %></th>
       <th><%= Membership.human_attribute_name :end_date %></th>
       <th><%= Membership.human_attribute_name :member_role %></th>
-      <th><%= TeamMember.human_attribute_name :jira_account_id %></th>
+      <th><%= I18n.t('team_members.index.elapsed_time') %></th>
       <th><%= TeamMember.human_attribute_name :monthly_payment %></th>
       <th><%= TeamMember.human_attribute_name :hours_per_month %></th>
+      <th><%= I18n.t('team_members.show.deliveries') %></th>
+      <th><%= I18n.t('projects.general.leadtime', percentil: '80%') %></th>
+      <th><%= I18n.t('demands.show.pairing') %></th>
       <th></th>
     </tr>
   </thead>
