@@ -61,7 +61,10 @@ en:
           all_period: "All Period"
           last_week: "Last Week"
     total: "Total"
-    days_text: "%{days} day(s)"
+    days_text:
+      zero: "no data"
+      one: "%{count} day"
+      other: "%{count} days"
     search_text: "Search in product or project name or demand title or demand id"
     data: "Data"
     error:
@@ -191,10 +194,13 @@ en:
   team_members:
     index:
       title: "Team members"
+      elapsed_time: "Elapsed Time"
     new:
       title: "New Team Member"
     show:
       deliveries: "Deliveries"
+      member_pair: "Paired with"
+      paired_times: "Paired times"
   projects:
     index:
       title: "Projects"

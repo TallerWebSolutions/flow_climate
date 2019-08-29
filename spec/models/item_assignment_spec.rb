@@ -32,6 +32,10 @@ RSpec.describe ItemAssignment, type: :model do
     end
   end
 
+  context 'delegations' do
+    it { is_expected.to delegate_method(:name).to(:team_member).with_prefix }
+  end
+
   describe '#working_hours_until' do
     before { travel_to Time.zone.local(2019, 8, 13, 10, 0, 0) }
 

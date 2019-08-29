@@ -44,7 +44,7 @@
           </div>
           <div class="col-xs-3 center">
             <div class="stamp-title"><%= I18n.t('projects.show.closing_info.deadlines_difference') %></div>
-            <div class="stamp-content"><%= I18n.t('general.days_text', days: project.days_difference_between_first_and_last_deadlines) %></div>
+            <div class="stamp-content"><%= I18n.t('general.days_text', count: project.days_difference_between_first_and_last_deadlines) %></div>
           </div>
           <div class="col-xs-3 center">
             <div class="stamp-title"><%= I18n.t('projects.show.closing_info.deadlines_change_count') %></div>

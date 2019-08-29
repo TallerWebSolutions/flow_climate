@@ -61,7 +61,10 @@ pt-BR:
           all_period: "Todo o Período"
           last_week: "Última Semana"
     total: "Total"
-    days_text: "%{days} dia(s)"
+    days_text:
+      zero: "sem dados"
+      one: "%{count} dia"
+      other: "%{count} dias"
     search_text: "Procurar no nome do produto ou do projeto e no ID da demanda"
     data: "Dados"
     error:
@@ -205,10 +208,13 @@ pt-BR:
   team_members:
     index:
       title: "Membros do Time"
+      elapsed_time: "Tempo"
     new:
       title: "Novo Membro do Time"
     show:
       deliveries: "Entregas"
+      member_pair: "Pareado com"
+      paired_times: "Vezes pareado"
   projects:
     index:
       title: "Projetos"

@@ -34,6 +34,8 @@ class ItemAssignment < ApplicationRecord
 
   scope :for_dates, ->(start_date, end_date) { where('(start_time <= :end_date) AND (finish_time IS NULL OR finish_time >= :start_date)', start_date: start_date, end_date: end_date) }
 
+  delegate :name, to: :team_member, prefix: true
+
   def working_hours_until(beginning_time = nil, end_time = Time.zone.now)
     start_effort_time = [start_time, beginning_time].compact.max
     end_effort_time = [finish_time, end_time].compact.min

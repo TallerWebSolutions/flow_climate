@@ -2,19 +2,19 @@
   <div class="col-xs-2 summary-card-frame">
     <div class="summary-card-content">
       <p class="summary-card-title"><%= I18n.t('projects.general.leadtime', percentil: '65%') %></p>
-      <p class="summary-card-value"><%= I18n.t('general.days_text', days: number_with_precision(confidence_65_leadtime, precision: 3)) %></p>
+      <p class="summary-card-value"><%= I18n.t('general.days_text', count: number_with_precision(confidence_65_leadtime, precision: 3)) %></p>
     </div>
   </div>
   <div class="col-xs-2 summary-card-frame">
     <div class="summary-card-content">
       <p class="summary-card-title"><%= I18n.t('projects.general.leadtime', percentil: '80%') %></p>
-      <p class="summary-card-value"><%= I18n.t('general.days_text', days: number_with_precision(confidence_80_leadtime, precision: 3)) %></p>
+      <p class="summary-card-value"><%= I18n.t('general.days_text', count: number_with_precision(confidence_80_leadtime, precision: 3)) %></p>
     </div>
   </div>
   <div class="col-xs-2 summary-card-frame">
     <div class="summary-card-content">
       <p class="summary-card-title"><%= I18n.t('projects.general.leadtime', percentil: '95%') %></p>
-      <p class="summary-card-value"><%= I18n.t('general.days_text', days: number_with_precision(confidence_95_leadtime, precision: 3)) %></p>
+      <p class="summary-card-value"><%= I18n.t('general.days_text', count: number_with_precision(confidence_95_leadtime, precision: 3)) %></p>
     </div>
   </div>
   <div class="col-xs-2 summary-card-frame">
