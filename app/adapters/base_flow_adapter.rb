@@ -5,7 +5,7 @@ class BaseFlowAdapter
 
   def persist_block!(demand, author, created_at)
     demand_block = demand.demand_blocks.where(block_time: created_at).first_or_initialize
-    demand_block.update(blocker: author, block_reason: read_reason(demand, created_at))
+    demand_block.update(blocker: author, block_reason: read_reason(demand, created_at), unblock_time: nil, unblocker: nil)
   end
 
   def read_reason(demand, created)
@@ -15,7 +15,7 @@ class BaseFlowAdapter
   end
 
   def persist_unblock!(demand, author, unblock_time)
-    demand_block = demand.demand_blocks.open.where(demand: demand).first
+    demand_block = demand.demand_blocks.open.first
     return if demand_block.blank?
 
     demand_block.update(unblocker: author, unblock_time: unblock_time)

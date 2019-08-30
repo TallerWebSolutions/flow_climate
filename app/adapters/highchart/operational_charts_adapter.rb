@@ -227,7 +227,7 @@ module Highchart
         queue_times << compute_time_in_seconds_to_hours(date, queue_times_per_period_hash, demands_touch_block_total_time)
         touch_times << compute_time_in_seconds_to_hours(date, touch_times_per_period_hash, (demands_touch_block_total_time * -1))
       end
-      @queue_touch_count_hash = { dates_array: dates_array, queue_times: queue_times, touch_times: touch_times }
+      @queue_touch_count_hash = { dates_array: dates_array, queue_times: queue_times.map(&:to_f), touch_times: touch_times.map(&:to_f) }
     end
 
     def compute_demands_touch_block_total_time(date)
