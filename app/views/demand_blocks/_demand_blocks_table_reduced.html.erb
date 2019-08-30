@@ -15,18 +15,24 @@
         <th><%= DemandBlock.human_attribute_name :unblocker_username %></th>
         <th><%= DemandBlock.human_attribute_name :block_time %></th>
         <th><%= DemandBlock.human_attribute_name :unblock_time %></th>
+        <th><%= DemandBlock.human_attribute_name :stage %></th>
+        <th><%= DemandBlock.human_attribute_name :stage_when_unblocked %></th>
+        <th><%= DemandBlock.human_attribute_name :block_reason %></th>
       </tr>
     </thead>
     <tbody>
       <% demand_blocks_list.each do |block| %>
         <tr>
-          <td><%= block.demand.demand_id %></td>
+          <td><%= link_to block.demand.demand_id, company_demand_path(company, block.demand) %></td>
           <td><%= t("activerecord.attributes.demand_block.enums.block_type.#{block.block_type}") %></td>
           <td><%= "#{block.block_duration} h" if block.block_duration.present? %></td>
           <td><%= block.blocker.name %></td>
           <td><%= block.unblocker&.name %></td>
           <td><%= I18n.l(block.block_time, format: :short) %></td>
           <td><%= I18n.l(block.unblock_time, format: :short) if block.unblock_time.present? %></td>
+          <td><%= block.stage&.name %></td>
+          <td><%= block.stage_when_unblocked&.name %></td>
+          <td><%= block.block_reason %></td>
         </tr>
       <% end %>
     </tbody>

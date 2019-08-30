@@ -1,5 +1,11 @@
 var updatedRow = $('#demand_<%= @updated_demand.id %>');
-updatedRow.html("<%= escape_javascript(render 'demands/demand_fields', company: @company, demand_list: @updated_demand, projects_ids: @projects_ids, demands_ids: @demands_ids).html_safe %>");
+var unscoredDemandsDiv = $('#project-unscored-demands');
+
+if (updatedRow.val() !== undefined) {
+    updatedRow.html("<%= escape_javascript(render 'demands/demand_fields', company: @company, demand_list: @updated_demand, projects_ids: @projects_ids, demands_ids: @demands_ids).html_safe %>");
+} else if (unscoredDemandsDiv.val() !== undefined) {
+    unscoredDemandsDiv.html("<%= escape_javascript(render 'demands/unscored_demands', company: @company, unscored_demands: @unscored_demands).html_safe %>");
+}
 
 $("#edit-demand-form").modal('toggle');
 $('body').removeClass('modal-open');

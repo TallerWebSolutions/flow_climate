@@ -10,12 +10,13 @@ class ProjectsController < AuthenticatedController
     assign_project_stages
     assign_customer_projects
     assign_product_projects
+    assign_projects_to_copy_stages_from
+    assign_demands_ids
 
     @ordered_project_risk_alerts = @project.project_risk_alerts.order(created_at: :desc)
     @project_change_deadline_histories = @project.project_change_deadline_histories.includes(:user)
-    @projects_to_copy_stages_from = (@company.projects - [@project]).sort_by(&:name)
-    @demands_ids = DemandsRepository.instance.demands_created_before_date_to_projects([@project]).map(&:id)
     @inconsistent_demands = @project.demands.dates_inconsistent_to_project(@project)
+    @unscored_demands = @project.demands.unscored_demands.order(demand_id: :asc)
 
     @start_date = @project.start_date
     @end_date = @project.end_date
@@ -135,6 +136,14 @@ class ProjectsController < AuthenticatedController
   end
 
   private
+
+  def assign_demands_ids
+    @demands_ids = DemandsRepository.instance.demands_created_before_date_to_projects([@project]).map(&:id)
+  end
+
+  def assign_projects_to_copy_stages_from
+    @projects_to_copy_stages_from = (@company.projects - [@project]).sort_by(&:name)
+  end
 
   def assign_project_stages
     @stages_list = @project.reload.stages.order(:order, :name)

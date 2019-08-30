@@ -32,7 +32,7 @@
 <%= render 'commons/loader_spinner' %>
 
 <div id="stamps" class="tab-container">
-  <%= render 'projects/project_stamps', company: @company, project: @project, inconsistent_demands: @inconsistent_demands %>
+  <%= render 'projects/project_stamps', company: @company, project: @project, inconsistent_demands: @inconsistent_demands, unscored_demands: @unscored_demands %>
 </div>
 
 <div id="demands-tab" class="tab-container">
@@ -95,4 +95,6 @@
   <%= javascript_include_tag 'projects/show' %>
 
   <%= javascript_include_tag 'demands/filter_binding' %>
+  <%= javascript_include_tag 'routes/demand_routes' %>
+  <%= javascript_include_tag 'demands/form_modal' %>
 <% end %>

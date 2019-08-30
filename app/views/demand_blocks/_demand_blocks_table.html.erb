@@ -46,6 +46,7 @@
         <th><%= DemandBlock.human_attribute_name :block_time %></th>
         <th><%= DemandBlock.human_attribute_name :unblocker_username %></th>
         <th><%= DemandBlock.human_attribute_name :unblock_time %></th>
+        <th><%= DemandBlock.human_attribute_name :stage_when_unblocked %></th>
         <th class="center"><%= DemandBlock.human_attribute_name :active %></th>
         <th class="center"><%= I18n.t('general.table.actions') %></th>
       </tr>
@@ -53,7 +54,7 @@
     <tbody>
       <% demand_blocks_list.each do |block| %>
         <tr id="block_row_<%= block.id %>">
-          <%= render 'demand_blocks/demand_block_fields', block: block %>
+          <%= render 'demand_blocks/demand_block_fields', company: company, block: block %>
         </tr>
       <% end %>
     </tbody>

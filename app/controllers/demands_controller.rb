@@ -45,6 +45,8 @@ class DemandsController < AuthenticatedController
     demands = Demand.where(id: params[:demands_ids])
     @demands_ids = demands.map(&:id)
     @updated_demand = DemandsList.find(@demand.id)
+    @unscored_demands = @project.demands.unscored_demands.order(demand_id: :asc)
+
     respond_to { |format| format.js { render 'demands/update' } }
   end
 
@@ -143,7 +145,7 @@ class DemandsController < AuthenticatedController
   end
 
   def demand_params
-    params.require(:demand).permit(:team_id, :demand_id, :demand_type, :downstream, :manual_effort, :class_of_service, :effort_upstream, :effort_downstream, :created_date, :commitment_date, :end_date)
+    params.require(:demand).permit(:team_id, :demand_id, :demand_type, :downstream, :manual_effort, :class_of_service, :effort_upstream, :effort_downstream, :created_date, :commitment_date, :end_date, :business_score)
   end
 
   def assign_project

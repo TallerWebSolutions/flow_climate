@@ -368,7 +368,8 @@ CREATE TABLE public.demands (
     blocked_working_time_upstream numeric DEFAULT 0,
     total_bloked_working_time numeric DEFAULT 0,
     total_touch_blocked_time numeric DEFAULT 0,
-    risk_review_id integer
+    risk_review_id integer,
+    business_score numeric
 );
 
 
@@ -3401,6 +3402,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190812154723'),
 ('20190815151526'),
 ('20190816185103'),
-('20190821145655');
+('20190821145655'),
+('20190830144220');
 
 
