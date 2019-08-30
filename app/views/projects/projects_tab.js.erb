@@ -2,10 +2,10 @@ var projectsDiv = $('#projects-table')
 
 projectsDiv.html("<%= escape_javascript(render 'projects/projects_table', company: @company, projects_list: @product_projects, projects_summary: @projects_summary, projects_ids: @product_projects.map(&:id).flatten.join(',')) %>")
 
-$(".col-table-details").hide();
 
 $('#general-loader').hide();
 
 projectsDiv.show();
 
 enableTabs();
+$(".col-table-details").hide();
