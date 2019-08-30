@@ -112,6 +112,10 @@ en:
     days: "days"
     hours: "hours"
     hours_text: "%{hour_value} hours"
+    score_text:
+      zero: "no score"
+      one: "%{count} point"
+      other: "%{count} points"
     demands: "Demand(s)"
     avg_speed_per_week: "%{speed_value} items/week"
     items_text: "%{items_count} item(ns)"
@@ -303,6 +307,9 @@ en:
         average_demand_aging: "Average Item Aging"
       lead_time:
         title: "Lead time dashboard"
+      unscored_demands:
+        no_demands: "no unscored demands"
+        title: "Unscored Demands"
     charts:
       xlabel:
         weeks: "Weeks"

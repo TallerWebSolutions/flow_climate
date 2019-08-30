@@ -245,6 +245,7 @@ pt-BR:
         portfolio_unit: Unidade do Portfolio
         team_members: Responsáveis
         demand_title: Título da Demanda
+        business_score: Pontuação de Negócio
         project: Projeto
         total_queue_time: Tempo Total de Fila
         total_touch_time: Tempo Total de Trabalho
@@ -347,6 +348,7 @@ pt-BR:
         block_duration: Duração Útil
         active: Ativo?
         block_type: Tipo do Bloqueio
+        stage_when_unblocked: Desbloqueado em
         enums:
           block_type:
             coding_needed: Necessidade de Código

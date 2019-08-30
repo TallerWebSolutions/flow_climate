@@ -123,7 +123,12 @@
   </div>
 </div>
 
+<div class="row" id="project-unscored-demands">
+  <%= render 'demands/unscored_demands', company: company, unscored_demands: unscored_demands %>
+</div>
+
 <div class="modal fade" id="project-risk-drill-down" tabindex="-1" role="dialog" aria-labelledby="project-risk-drill-down" aria-hidden="true"></div>
 <div class="modal fade" id="closing-info-div" tabindex="-1" role="dialog" aria-labelledby="closing-info" aria-hidden="true"></div>
 <div class="modal fade" id="status-report-div" tabindex="-1" role="dialog" aria-labelledby="status-report" aria-hidden="true"></div>
 <div class="modal fade" id="project-lead-time-div" tabindex="-1" role="dialog" aria-labelledby="project-lead-time" aria-hidden="true"></div>
+<div class="modal fade" id="edit-demand-form" tabindex="-1" role="dialog" aria-labelledby="edit-demand-form" aria-hidden="true"></div>

@@ -5,7 +5,7 @@
       <h4 class="modal-title" id="indexBlocks"><%= I18n.t('demand_blocks.index.title') %></h4>
     </div>
     <div class="modal-body">
-      <%= render 'demand_blocks/demand_blocks_table_reduced', demand_blocks_list: @demand_blocks %>
+      <%= render 'demand_blocks/demand_blocks_table_reduced', company: company, demand_blocks_list: demand_blocks_list %>
     </div>
   </div>
 </div>

@@ -118,9 +118,9 @@ RSpec.describe ProjectsController, type: :controller do
         let!(:first_alert) { Fabricate :project_risk_alert, project: first_project, created_at: 1.week.ago }
         let!(:second_alert) { Fabricate :project_risk_alert, project: first_project, created_at: Time.zone.now }
 
-        let!(:first_demand) { Fabricate :demand, project: first_project, end_date: Date.new(2018, 3, 10), leadtime: 2000 }
-        let!(:second_demand) { Fabricate :demand, project: first_project, end_date: Date.new(2018, 5, 25), leadtime: 6000 }
-        let!(:third_demand) { Fabricate :demand, project: first_project, end_date: nil }
+        let!(:first_demand) { Fabricate :demand, project: first_project, business_score: 10.5, end_date: Date.new(2018, 3, 10), leadtime: 2000 }
+        let!(:second_demand) { Fabricate :demand, project: first_project, demand_id: 'zzz', end_date: Date.new(2018, 5, 25), leadtime: 6000 }
+        let!(:third_demand) { Fabricate :demand, project: first_project, demand_id: 'aaa', end_date: nil }
 
         let!(:fourth_demand) { Fabricate :demand, end_date: Time.zone.today }
         let!(:first_change_deadline) { Fabricate :project_change_deadline_history, project: first_project }
@@ -136,6 +136,7 @@ RSpec.describe ProjectsController, type: :controller do
             expect(assigns(:ordered_project_risk_alerts)).to eq [second_alert, first_alert]
             expect(assigns(:project_change_deadline_histories)).to match_array [first_change_deadline, second_change_deadline]
             expect(assigns(:inconsistent_demands)).to eq [second_demand]
+            expect(assigns(:unscored_demands)).to eq [third_demand, second_demand]
           end
         end
       end

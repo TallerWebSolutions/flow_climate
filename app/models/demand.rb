@@ -7,6 +7,7 @@
 #  artifact_type                   :integer          default("story")
 #  blocked_working_time_downstream :decimal(, )      default(0.0)
 #  blocked_working_time_upstream   :decimal(, )      default(0.0)
+#  business_score                  :decimal(, )
 #  class_of_service                :integer          default("standard"), not null
 #  commitment_date                 :datetime
 #  company_id                      :integer          not null, indexed => [demand_id]
@@ -101,6 +102,7 @@ class Demand < ApplicationRecord
   scope :to_dates, ->(start_date, end_date) { where('(demands.end_date IS NULL AND demands.created_date BETWEEN :start_date AND :end_date) OR (demands.end_date BETWEEN :start_date AND :end_date)', start_date: start_date.beginning_of_day, end_date: end_date.end_of_day) }
   scope :to_end_dates, ->(start_date, end_date) { where('demands.end_date BETWEEN :start_date AND :end_date', start_date: start_date.beginning_of_day, end_date: end_date.end_of_day) }
   scope :dates_inconsistent_to_project, ->(project) { kept.story.where('demands.commitment_date < :start_date OR demands.end_date > :end_date', start_date: project.start_date, end_date: project.end_date.end_of_day) }
+  scope :unscored_demands, -> { kept.story.where('demands.business_score IS NULL') }
 
   delegate :name, to: :project, prefix: true
   delegate :name, to: :product, prefix: true, allow_nil: true
@@ -113,18 +115,20 @@ class Demand < ApplicationRecord
   def csv_array
     [
       id,
-      current_stage&.name,
+      current_stage_name,
       project_id,
       demand_id,
       demand_title,
       demand_type,
       class_of_service,
+      decimal_value_to_csv(business_score),
       decimal_value_to_csv(effort_downstream),
-      decimal_value_to_csv(effort_upstream),
-      created_date&.iso8601,
-      commitment_date&.iso8601,
-      end_date&.iso8601
-    ]
+      decimal_value_to_csv(effort_upstream)
+    ] + build_date_values_array
+  end
+
+  def build_date_values_array
+    [created_date&.iso8601, commitment_date&.iso8601, end_date&.iso8601]
   end
 
   def to_hash
@@ -133,6 +137,7 @@ class Demand < ApplicationRecord
       demand_id: demand_id,
       project_id: project_id,
       demand_title: demand_title,
+      business_score: business_score,
       effort_upstream: effort_upstream,
       effort_downstream: effort_downstream,
       cost_to_project: cost_to_project,
@@ -230,6 +235,10 @@ class Demand < ApplicationRecord
   end
 
   private
+
+  def current_stage_name
+    current_stage&.name
+  end
 
   def build_product_tree_array
     product_tree_array = portfolio_unit.parent_branches

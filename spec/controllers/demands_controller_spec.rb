@@ -126,7 +126,7 @@ RSpec.describe DemandsController, type: :controller do
         let(:date_to_demand) { 1.day.ago.change(usec: 0) }
 
         it 'creates the new demand and redirects' do
-          post :create, params: { company_id: company, project_id: project, demand: { team_id: team, demand_id: 'xpto', demand_type: 'bug', manual_effort: true, class_of_service: 'expedite', assignees_count: 3, effort_upstream: 5, effort_downstream: 2, created_date: date_to_demand, commitment_date: date_to_demand, end_date: date_to_demand } }
+          post :create, params: { company_id: company, project_id: project, demand: { team_id: team, demand_id: 'xpto', demand_type: 'bug', manual_effort: true, class_of_service: 'expedite', assignees_count: 3, effort_upstream: 5, effort_downstream: 2, created_date: date_to_demand, commitment_date: date_to_demand, end_date: date_to_demand, business_score: 10.5 } }
 
           expect(assigns(:company)).to eq company
           expect(assigns(:project)).to eq project
@@ -134,6 +134,7 @@ RSpec.describe DemandsController, type: :controller do
           expect(created_demand.demand_id).to eq 'xpto'
           expect(created_demand.demand_type).to eq 'bug'
           expect(created_demand.class_of_service).to eq 'expedite'
+          expect(created_demand.business_score).to eq 10.5
           expect(created_demand.downstream_demand?).to be true
           expect(created_demand.manual_effort).to be true
           expect(created_demand.effort_upstream).to eq 5
@@ -292,13 +293,14 @@ RSpec.describe DemandsController, type: :controller do
 
       context 'passing valid parameters' do
         it 'updates the demand and redirects to projects index' do
-          put :update, params: { company_id: company, project_id: project, id: demand, demands_ids: Demand.all.map(&:id), demand: { demand_id: 'xpto', demand_type: 'bug', manual_effort: true, class_of_service: 'expedite', effort_upstream: 5, effort_downstream: 2, created_date: created_date, commitment_date: created_date, end_date: end_date } }, xhr: true
+          put :update, params: { company_id: company, project_id: project, id: demand, demands_ids: Demand.all.map(&:id), demand: { demand_id: 'xpto', demand_type: 'bug', manual_effort: true, class_of_service: 'expedite', effort_upstream: 5, effort_downstream: 2, created_date: created_date, commitment_date: created_date, end_date: end_date, business_score: 10.5 } }, xhr: true
           updated_demand = Demand.last
           expect(updated_demand.demand_id).to eq 'xpto'
           expect(updated_demand.demand_type).to eq 'bug'
           expect(updated_demand.downstream_demand?).to be true
           expect(updated_demand.manual_effort).to be true
           expect(updated_demand.class_of_service).to eq 'expedite'
+          expect(updated_demand.business_score).to eq 10.5
           expect(updated_demand.effort_upstream.to_f).to eq 5
           expect(updated_demand.effort_downstream.to_f).to eq 2
           expect(updated_demand.created_date).to eq created_date
@@ -491,9 +493,10 @@ RSpec.describe DemandsController, type: :controller do
           expect(csv.first[6]).to eq 'standard'
           expect(csv.first[7]).to eq demand.effort_downstream.to_f.to_s.gsub('.', I18n.t('number.format.separator'))
           expect(csv.first[8]).to eq demand.effort_upstream.to_f.to_s.gsub('.', I18n.t('number.format.separator'))
-          expect(csv.first[9]).to eq demand.created_date.iso8601
-          expect(csv.first[10]).to eq demand.commitment_date.iso8601
-          expect(csv.first[11]).to eq demand.end_date.iso8601
+          expect(csv.first[9]).to eq demand.business_score.to_f.to_s.gsub('.', I18n.t('number.format.separator'))
+          expect(csv.first[10]).to eq demand.created_date.iso8601
+          expect(csv.first[11]).to eq demand.commitment_date.iso8601
+          expect(csv.first[12]).to eq demand.end_date.iso8601
         end
       end
 

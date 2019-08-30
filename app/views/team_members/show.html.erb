@@ -74,7 +74,7 @@
   </div>
 
   <div id="demand_blocks_<%= membership.id %>" class="col-table-details">
-    <%= render 'demand_blocks/demand_blocks_table_reduced', demand_blocks_list: membership.demand_blocks.order(block_time: :desc) %>
+    <%= render 'demand_blocks/demand_blocks_table_reduced', company: @company, demand_blocks_list: membership.demand_blocks.order(block_time: :desc) %>
   </div>
 
   <div id="demand_comments_<%= membership.id %>" class="col-table-details">

@@ -24,19 +24,25 @@
       <%= form.text_field :demand_id, class: 'form-control', autofocus: true %>
       <span class="help-block"><%= demand.errors[:demand_id].join(', ') %></span>
     </div>
-    <div class='col-xs-6 form-check bottom-spaced-component'>
-      <%= form.check_box :manual_effort, class: 'form-check-input' %>
-      <%= form.label :manual_effort, class: 'form-check-label' %>
+
+    <div class='col-xs-6 form-group <%= 'has-error' if demand.errors[:business_score].present? %>'>
+      <%= form.label :business_score, class: 'control-label' %>
+      <%= form.number_field :business_score, class: 'form-control', step: 0.01 %>
+      <span class="help-block"><%= demand.errors[:business_score].join(', ') %></span>
     </div>
   </div>
 
   <div class="row">
-    <div class='col-xs-6 form-group <%= 'has-error' if demand.errors[:effort_upstream].present? %>'>
+    <div class='col-xs-4 form-check bottom-spaced-component'>
+      <%= form.check_box :manual_effort, class: 'form-check-input' %>
+      <%= form.label :manual_effort, class: 'form-check-label' %>
+    </div>
+    <div class='col-xs-4 form-group <%= 'has-error' if demand.errors[:effort_upstream].present? %>'>
       <%= form.label :effort_upstream, class: 'control-label' %>
       <%= form.number_field :effort_upstream, class: 'form-control', step: 0.01 %>
       <span class="help-block"><%= demand.errors[:effort_upstream].join(', ') %></span>
     </div>
-    <div class='col-xs-6 form-group <%= 'has-error' if demand.errors[:effort_downstream].present? %>'>
+    <div class='col-xs-4 form-group <%= 'has-error' if demand.errors[:effort_downstream].present? %>'>
       <%= form.label :effort_downstream, class: 'control-label' %>
       <%= form.number_field :effort_downstream, class: 'form-control', step: 0.01 %>
       <span class="help-block"><%= demand.errors[:effort_downstream].join(', ') %></span>

@@ -84,6 +84,12 @@ class DemandBlock < ApplicationRecord
     unblock_time - block_time
   end
 
+  def stage_when_unblocked
+    return nil if unblock_time.blank?
+
+    demand.stage_at(unblock_time)
+  end
+
   private
 
   def closed?

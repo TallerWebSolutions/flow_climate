@@ -112,6 +112,10 @@ pt-BR:
     days: "dias"
     hours: "horas"
     hours_text: "%{hour_value} horas"
+    score_text:
+      zero: "sem pontos"
+      one: "%{count} pontos"
+      other: "%{count} pontos"
     demands: "Demanda(s)"
     avg_speed_per_week: "%{speed_value} itens/semana"
     items_text: "%{items_count} item(ns)"
@@ -317,6 +321,9 @@ pt-BR:
         average_demand_aging: "Idade Média dos Itens"
       lead_time:
         title: "Lead time dashboard"
+      unscored_demands:
+        no_demands: "sem demandas sem pontuação"
+        title: "Demandas sem Pontuação"
     charts:
       xlabel:
         weeks: "Semanas"
