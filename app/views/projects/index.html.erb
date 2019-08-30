@@ -13,3 +13,7 @@
 <div id="projects-table">
   <%= render 'projects/projects_table', company: @company, projects_list: @projects, projects_summary: @projects_summary, projects_ids: @projects.map(&:id).flatten.join(',') %>
 </div>
+
+<% content_for :javascript do %>
+  <%= javascript_include_tag 'projects/index' %>
+<% end %>
