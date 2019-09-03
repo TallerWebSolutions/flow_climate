@@ -14,6 +14,7 @@ class ProductsController < AuthenticatedController
 
   def show
     @jira_product_configs = @product.jira_product_configs.order(:jira_product_key)
+    assign_filter_parameters_to_charts
 
     render :show
   end

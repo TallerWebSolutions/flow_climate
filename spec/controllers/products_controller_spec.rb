@@ -250,6 +250,9 @@ RSpec.describe ProductsController, type: :controller do
             expect(response).to render_template :show
             expect(assigns(:company)).to eq company
             expect(assigns(:product)).to eq product
+            expect(assigns(:start_date)).to eq 3.months.ago.to_date
+            expect(assigns(:end_date)).to eq Time.zone.today
+            expect(assigns(:period)).to eq 'month'
             expect(assigns(:jira_product_configs)).to eq [other_jira_product_config, jira_product_config]
           end
         end
