@@ -94,12 +94,12 @@ RSpec.describe TeamService, type: :service do
         let!(:null_payment_membership) { Fabricate :membership, team: team, team_member: null_payment_team_member, hours_per_month: 120, start_date: 2.months.ago, end_date: nil }
 
         it 'returns the average demand cost informations in a hash' do
-          expect(described_class.instance.compute_available_hours_to_team(team, 3.months.ago.to_date, Time.zone.today, :monthly)).to eq(Date.new(2018, 3, 31) => 0.0, Date.new(2018, 4, 30) => 58.666666666666664, Date.new(2018, 5, 31) => 198.66666666666666, Date.new(2018, 6, 30) => 240.0)
+          expect(described_class.instance.compute_available_hours_to_team([team], 3.months.ago.to_date, Time.zone.today, :monthly)).to eq(Date.new(2018, 3, 31) => 0.0, Date.new(2018, 4, 30) => 58.666666666666664, Date.new(2018, 5, 31) => 198.66666666666666, Date.new(2018, 6, 30) => 240.0)
         end
       end
 
       context 'without data' do
-        it { expect(described_class.instance.compute_available_hours_to_team(team, 3.months.ago.to_date, Time.zone.today, :monthly)).to eq(Date.new(2018, 3, 31) => 0.0, Date.new(2018, 4, 30) => 0.0, Date.new(2018, 5, 31) => 0.0, Date.new(2018, 6, 30) => 0.0) }
+        it { expect(described_class.instance.compute_available_hours_to_team([team], 3.months.ago.to_date, Time.zone.today, :monthly)).to eq(Date.new(2018, 3, 31) => 0.0, Date.new(2018, 4, 30) => 0.0, Date.new(2018, 5, 31) => 0.0, Date.new(2018, 6, 30) => 0.0) }
       end
     end
   end

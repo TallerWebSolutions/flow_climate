@@ -51,4 +51,8 @@ class AuthenticatedController < ApplicationController
 
     redirect_to root_path
   end
+
+  def build_limit_date(date)
+    [date, 4.weeks.ago].compact.max.to_date
+  end
 end

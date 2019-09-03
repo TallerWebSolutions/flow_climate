@@ -24,10 +24,7 @@ $('.nav-item').on('click', function(event){
         disableTabs();
 
         if ($(this).attr('id') === 'nav-item-charts') {
-            buildOperationalCharts(companyId, projectsIds, period, targetName, startDate, endDate, "");
-
-        } else if ($(this).attr('id') === 'nav-item-strategic') {
-            buildStrategicCharts(companyId, projectsIds, targetName);
+            buildOperationalCharts(companyId, projectsIds, targetName, period, startDate, endDate, "");
 
         } else if ($(this).attr('id') === 'nav-item-demands') {
             $('#demands-tab').hide();

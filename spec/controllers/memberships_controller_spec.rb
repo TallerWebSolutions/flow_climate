@@ -55,7 +55,7 @@ RSpec.describe MembershipsController, type: :controller do
 
         it 'instantiates a new Team Member and renders the template' do
           expect(response).to render_template 'memberships/new.js.erb'
-          expect(assigns(:team_members)).to eq [other_team_member]
+          expect(assigns(:team_members)).to match_array [team_member, other_team_member]
           expect(assigns(:membership)).to be_a_new Membership
         end
       end
@@ -121,7 +121,7 @@ RSpec.describe MembershipsController, type: :controller do
           expect(response).to render_template 'memberships/edit.js.erb'
           expect(assigns(:company)).to eq company
           expect(assigns(:membership)).to eq membership
-          expect(assigns(:team_members)).to eq [other_team_member]
+          expect(assigns(:team_members)).to match_array [team_member, other_team_member]
           expect(assigns(:memberships)).to eq team.reload.memberships.sort_by(&:team_member_name)
         end
       end

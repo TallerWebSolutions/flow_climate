@@ -1,22 +1,16 @@
-hideAllComponents($('.nav-item'));
-
-const stampsDiv = $('#nav-item-stamps');
-stampsDiv.addClass('active');
-$('#stamps').show();
-
-const companyId = $("#company_id").val();
-const teamId = $("#team_id").val();
-const projectsIds = $("#projects_ids").val();
-const targetName = $("#target_name").val();
-
 $('.nav-item').on('click', function(event){
     hideAllComponents($('.nav-item'));
+
+    const companyId = $("#company_id").val();
+    const teamId = $("#team_id").val();
+    const projectsIds = $("#projects_ids").val();
+    const teamsIds = $("#teams_ids").val();
+    const targetName = $("#target_name").val();
+
     const disabled = $(this).attr('disabled');
 
-    const period = $('#charts_filter_period').val();
-
-    const startDate = $('#charts_filter_start_date').val();
-    const endDate = $('#charts_filter_end_date').val();
+    const startDate = $('#default_start_date_to_filter').val();
+    const endDate = $('#default_end_date_to_filter').val();
 
     if (disabled === 'disabled') {
         event.preventDefault();
@@ -24,10 +18,10 @@ $('.nav-item').on('click', function(event){
         disableTabs();
 
         if ($(this).attr('id') === 'nav-item-charts') {
-            buildOperationalCharts(companyId, projectsIds, period, targetName, startDate, endDate, teamId);
+            buildOperationalCharts(companyId, projectsIds, targetName, 'month', startDate, endDate, teamId);
 
         } else if ($(this).attr('id') === 'nav-item-strategic') {
-            buildStrategicCharts(companyId, projectsIds, targetName);
+            buildStrategicCharts(companyId, projectsIds, teamsIds, targetName, 'month', startDate, endDate);
 
         } else if ($(this).attr('id') === 'nav-item-demands') {
             getDemands(companyId, projectsIds);

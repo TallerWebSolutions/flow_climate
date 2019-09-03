@@ -8,9 +8,7 @@ class TeamsController < AuthenticatedController
 
   def show
     assign_team_objects
-
-    @start_date = build_limit_date(@team_projects.map(&:start_date).min)
-    @end_date = build_limit_date(@team_projects.map(&:end_date).max)
+    build_query_dates
   end
 
   def new
@@ -50,22 +48,27 @@ class TeamsController < AuthenticatedController
     end
 
     @teams = @company.teams.order(:name)
+    build_query_dates
     respond_to { |format| format.js { render 'teams/destroy' } }
   end
 
   private
 
+  def build_query_dates
+    @start_date = build_limit_date(team_projects.map(&:start_date).min)
+    @end_date = build_limit_date(team_projects.map(&:end_date).max)
+  end
+
   def assign_team_objects
     @memberships = @company.memberships.where(team: @team).sort_by(&:team_member_name)
-    @team_projects = ProjectsRepository.instance.all_projects_for_team(@team)
-    @active_team_projects = @team_projects.active
+    @active_team_projects = team_projects.active
     @projects_summary = ProjectsSummaryData.new(@team.projects)
     @projects_risk_chart_data = Highchart::ProjectRiskChartsAdapter.new(@team.projects)
     @slack_configurations = @team.slack_configurations.order(:created_at)
   end
 
-  def build_limit_date(date)
-    [date, 4.weeks.ago].compact.max.to_date
+  def team_projects
+    @team_projects ||= ProjectsRepository.instance.all_projects_for_team(@team)
   end
 
   def assign_team

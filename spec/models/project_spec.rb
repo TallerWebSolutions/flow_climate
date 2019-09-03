@@ -197,12 +197,12 @@ RSpec.describe Project, type: :model do
     end
   end
 
-  describe '#consumed_hours' do
+  describe '#consumed_hours_in_period' do
     let(:project) { Fabricate :project, end_date: 4.weeks.from_now }
     let!(:demand) { Fabricate :demand, project: project, effort_downstream: 200, effort_upstream: 10, end_date: 2.weeks.ago }
     let!(:other_demand) { Fabricate :demand, project: project, effort_downstream: 200, effort_upstream: 10, end_date: 2.weeks.ago }
 
-    it { expect(project.consumed_hours.to_f).to eq 420 }
+    it { expect(project.consumed_hours_in_period(project.start_date, 4.weeks.from_now).to_f).to eq 420 }
   end
 
   describe '#remaining_money' do
@@ -214,8 +214,8 @@ RSpec.describe Project, type: :model do
 
       let!(:nil_project_value_demand) { Fabricate :demand, project: other_project, effort_downstream: 200, effort_upstream: 10, end_date: 2.weeks.ago }
 
-      it { expect(project.remaining_money.to_f).to eq 58_000.0 }
-      it { expect(other_project.remaining_money.to_f).to eq(-21_000.0) }
+      it { expect(project.remaining_money(2.weeks.ago).to_f).to eq 58_000.0 }
+      it { expect(other_project.remaining_money(2.weeks.ago).to_f).to eq(-21_000.0) }
     end
 
     context 'having no hour_value' do
@@ -223,21 +223,7 @@ RSpec.describe Project, type: :model do
       let!(:demand) { Fabricate :demand, project: project, effort_downstream: 200, effort_upstream: 10, end_date: 2.weeks.ago }
       let!(:other_demand) { Fabricate :demand, project: project, effort_downstream: 200, effort_upstream: 10, end_date: 2.weeks.ago }
 
-      it { expect(project.remaining_money.to_f).to eq 58_000.0 }
-    end
-  end
-
-  describe '#percentage_remaining_money' do
-    context 'total_days is higher than 0' do
-      let(:project) { Fabricate :project, start_date: 4.months.ago, qty_hours: 1000, value: 100_000, hour_value: 100 }
-
-      it { expect(project.percentage_remaining_money).to eq((project.remaining_money / project.value) * 100) }
-    end
-
-    context 'value is 0' do
-      let(:project) { Fabricate :project, value: 0 }
-
-      it { expect(project.percentage_remaining_money).to eq 0 }
+      it { expect(project.remaining_money(2.weeks.ago).to_f).to eq 58_000.0 }
     end
   end
 
@@ -643,7 +629,7 @@ RSpec.describe Project, type: :model do
 
     context 'having data' do
       include_context 'demands with effort'
-      it { expect(project.money_per_deadline.to_f).to be_within(0.01).of(10_175.91) }
+      it { expect(project.money_per_deadline.to_f).to be_within(0.01).of(10_369.46) }
     end
 
     context 'having no data' do
@@ -746,10 +732,22 @@ RSpec.describe Project, type: :model do
     it { expect(project.hours_per_month).to be_within(0.2).of(31.9) }
   end
 
+  describe '#hours_per_day' do
+    let(:project) { Fabricate :project, qty_hours: 100, start_date: Date.new(2018, 2, 20), end_date: Date.new(2018, 5, 23) }
+
+    it { expect(project.hours_per_day).to be_within(0.01).of(1.06) }
+  end
+
   describe '#money_per_month' do
     let(:project) { Fabricate :project, value: 100, start_date: Date.new(2018, 2, 20), end_date: Date.new(2018, 5, 23) }
 
     it { expect(project.money_per_month.to_f).to be_within(0.2).of(31.9) }
+  end
+
+  describe '#money_per_day' do
+    let(:project) { Fabricate :project, value: 100, start_date: Date.new(2018, 2, 20), end_date: Date.new(2018, 5, 23) }
+
+    it { expect(project.money_per_day.to_f).to be_within(0.01).of(1.06) }
   end
 
   describe '#total_throughput_until' do

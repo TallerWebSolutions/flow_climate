@@ -11,9 +11,14 @@
 <h2><%= I18n.t('projects.index.title') %></h2>
 
 <div id="projects-table">
-  <%= render 'projects/projects_table', company: @company, projects_list: @projects, projects_summary: @projects_summary, projects_ids: @projects.map(&:id).flatten.join(',') %>
+  <%= render 'projects/projects_table', company: @company, start_date: @start_date, end_date: @end_date, projects_list: @projects, projects_summary: @projects_summary, projects_ids: @projects.map(&:id).flatten.join(',') %>
 </div>
 
 <% content_for :javascript do %>
+  <%= javascript_include_tag 'charts/donut' %>
+  <%= javascript_include_tag 'projects/demand_classification_charts' %>
+
+  <%= javascript_include_tag 'demand_blocks/list_modal' %>
+
   <%= javascript_include_tag 'projects/index' %>
 <% end %>

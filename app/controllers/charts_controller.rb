@@ -22,7 +22,7 @@ class ChartsController < AuthenticatedController
   end
 
   def build_strategic_charts
-    @strategic_chart_data = Highchart::StrategicChartsAdapter.new(@company, @projects, @available_hours_in_month)
+    @strategic_chart_data = Highchart::StrategicChartsAdapter.new(@company, teams, @projects, @start_date, @end_date, @period)
     respond_to { |format| format.js { render 'charts/strategic_charts' } }
   end
 
@@ -54,6 +54,10 @@ class ChartsController < AuthenticatedController
 
   def assign_team
     @team = Team.find_by(id: params[:team_id])
+  end
+
+  def teams
+    @teams ||= Team.where(id: params[:teams_ids].split(','))
   end
 
   def assign_target_name

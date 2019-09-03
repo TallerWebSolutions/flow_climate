@@ -17,6 +17,10 @@ class CompaniesController < AuthenticatedController
     assign_last_company
     assign_company_settings
     assign_jira_accounts_list
+
+    @projects = @company.projects.includes(:team).order(end_date: :desc)
+
+    build_query_dates
   end
 
   def new
@@ -70,23 +74,28 @@ class CompaniesController < AuthenticatedController
   end
 
   def projects_tab
-    @company_projects = @company.projects.includes(:team).order(end_date: :desc)
-    @projects_summary = ProjectsSummaryData.new(@company_projects)
+    @projects = @company.projects.includes(:team).order(end_date: :desc)
+    @projects_summary = ProjectsSummaryData.new(@projects)
     @parent = @company
     @parent_type = 'company'
+    build_query_dates
+
     respond_to { |format| format.js { render 'companies/projects_tab.js.erb' } }
   end
 
   def strategic_chart_tab
-    @company_projects = @company.projects.order(end_date: :desc)
-    @strategic_chart_data = Highchart::StrategicChartsAdapter.new(@company, @company_projects, @company.total_available_hours)
-    respond_to { |format| format.js { render 'companies/strategic_chart_tab.js.erb' } }
+    @projects = @company.projects.order(end_date: :desc)
+    build_query_dates
+    @strategic_chart_data = Highchart::StrategicChartsAdapter.new(@company, @company.teams, @projects, @start_date, @end_date, @period)
+    assign_company_children
+    respond_to { |format| format.js { render 'charts/strategic_charts.js.erb' } }
   end
 
   def risks_tab
-    @company_projects = @company.projects.order(end_date: :desc)
-    @strategic_chart_data = Highchart::StrategicChartsAdapter.new(@company, @company_projects, @company.total_available_hours)
-    @projects_risk_chart_data = Highchart::ProjectRiskChartsAdapter.new(@company_projects)
+    @projects = @company.projects.order(end_date: :desc)
+    build_query_dates
+    @strategic_chart_data = Highchart::StrategicChartsAdapter.new(@company, @company.teams, @projects, @start_date, @end_date, @period)
+    @projects_risk_chart_data = Highchart::ProjectRiskChartsAdapter.new(@projects)
 
     respond_to { |format| format.js { render 'companies/risks_tab.js.erb' } }
   end
@@ -131,5 +140,10 @@ class CompaniesController < AuthenticatedController
 
   def company_settings_params
     params.require(:company_settings).permit(:max_active_parallel_projects, :max_flow_pressure)
+  end
+
+  def build_query_dates
+    @start_date = build_limit_date(@projects.map(&:start_date).min)
+    @end_date = build_limit_date(@projects.map(&:end_date).max)
   end
 end

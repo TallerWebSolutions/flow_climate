@@ -35,22 +35,22 @@ RSpec.describe Highchart::StrategicChartsAdapter, type: :service do
       let!(:third_demand) { Fabricate :demand, project: third_project, effort_downstream: 100, effort_upstream: 20, end_date: 2.months.from_now }
 
       it 'mounts the data structure to the active project counts in months' do
-        strategic_data = described_class.new(company, company.projects, company.total_available_hours)
-        expect(strategic_data.array_of_months).to eq [3.months.ago.to_date.end_of_month, 2.months.ago.to_date.end_of_month, 1.month.ago.to_date.end_of_month, Time.zone.today.end_of_month, 1.month.from_now.to_date.end_of_month, 2.months.from_now.to_date.end_of_month, 3.months.from_now.to_date.end_of_month]
-        expect(strategic_data.active_projects_count_data).to eq [2, 2, 1, 0, 2, 4, 2]
-        expect(strategic_data.sold_hours_in_month).to eq [1175.5952380952385, 1175.5952380952385, 238.09523809523813, 0, 2000.0000000000011, 6875.000000000003, 4875.000000000002]
+        strategic_data = described_class.new(company, company.teams, company.projects, 3.months.ago, 3.months.from_now, 'month')
+        expect(strategic_data.x_axis).to eq [3.months.ago.to_date.end_of_month, 2.months.ago.to_date.end_of_month, 1.month.ago.to_date.end_of_month, Time.zone.today.end_of_month, 1.month.from_now.to_date.end_of_month, 2.months.from_now.to_date.end_of_month, 3.months.from_now.to_date.end_of_month]
+        expect(strategic_data.active_projects_count_data).to eq [2, 1, 1, 0, 2, 6, 4]
+        expect(strategic_data.sold_hours_in_month).to eq [1175.5952380952385, 937.5000000000003, 238.09523809523816, 0.0, 2000.000000000001, 16_247.187500000005, 14_247.187500000005]
         expect(strategic_data.consumed_hours_per_month).to eq [0.0, 210.0, 530.0, 0.0, 0.0, 120.0, 0.0]
-        expect(strategic_data.available_hours_per_month).to eq [20, 20, 20, 20, 20, 20, 20]
-        expect(strategic_data.flow_pressure_per_month_data.map { |pressure| pressure.round(2) }).to eq [0.0, 0.0, 0.0, 0, 3.7, 7.45, 3.75]
-        expect(strategic_data.money_per_month_data.map { |money| money.round(2) }).to eq [1_644_577.98, 1_644_577.98, 1_644_390.48, 0.0, 9727.27, 10_030.09, 302.81]
+        expect(strategic_data.available_hours_per_period).to eq [0.0, 63.99999999999999, 114.66666666666666, 18.666666666666664]
+        expect(strategic_data.flow_pressure_per_month_data.map { |pressure| pressure.round(2) }).to eq [0.0, 0.0, 0.0, 0.0, 3.7, 10.54, 6.84]
+        expect(strategic_data.money_per_month_data.map { |money| money.round(2) }).to eq [1_644_577.98, 187.5, 1_644_390.48, 0.0, 9727.27, 10_239.15, 511.88]
         expect(strategic_data.expenses_per_month_data.map { |expense| expense.round(2) }).to eq [300.0, 300.0, 200.0, 200.0, 200.0, 100.0, 100.0]
       end
     end
 
     context 'having no projects' do
       it 'returns an empty array' do
-        strategic_data = described_class.new(company, company.projects, company.total_available_hours)
-        expect(strategic_data.array_of_months).to eq []
+        strategic_data = described_class.new(company, company.teams, company.projects, 2.months.ago, 1.day.ago, 'month')
+        expect(strategic_data.x_axis).to eq []
         expect(strategic_data.active_projects_count_data).to eq []
       end
     end

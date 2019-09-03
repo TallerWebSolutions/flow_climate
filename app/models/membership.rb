@@ -32,6 +32,7 @@ class Membership < ApplicationRecord
   belongs_to :team_member
 
   validates :team, :team_member, :start_date, presence: true
+  validate :active_team_member_unique
 
   scope :active, -> { where('memberships.end_date IS NULL') }
 
@@ -70,5 +71,14 @@ class Membership < ApplicationRecord
   def pairing_members
     demands_member_in = team_member.demands.where(team: team)
     @pairing_members = demands_member_in.map { |demand| demand.team_members.joins(:memberships).where(memberships: { member_role: member_role }).map(&:name) }.flatten - [team_member.name]
+  end
+
+  private
+
+  def active_team_member_unique
+    existent_memberships = Membership.where(team: team, team_member: team_member, end_date: nil)
+    return if existent_memberships == [self]
+
+    errors.add(:team_member, I18n.t('activerecord.errors.models.membership.team_member.already_existent_active')) if existent_memberships.present?
   end
 end

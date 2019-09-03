@@ -12,18 +12,19 @@ class ProjectsController < AuthenticatedController
     assign_product_projects
     assign_projects_to_copy_stages_from
     assign_demands_ids
+    build_query_dates
 
     @ordered_project_risk_alerts = @project.project_risk_alerts.order(created_at: :desc)
     @project_change_deadline_histories = @project.project_change_deadline_histories.includes(:user)
     @inconsistent_demands = @project.demands.dates_inconsistent_to_project(@project)
     @unscored_demands = @project.demands.unscored_demands.order(demand_id: :asc)
-
-    @start_date = @project.start_date
-    @end_date = @project.end_date
   end
 
   def index
     @projects = add_status_filter(Project.where('company_id = ?', @company.id)).includes(:team).order(end_date: :desc)
+
+    build_query_dates_to_projects(@projects)
+
     @projects_summary = ProjectsSummaryData.new(@projects)
   end
 
@@ -58,6 +59,9 @@ class ProjectsController < AuthenticatedController
     @projects = @company.projects.where(id: params[:projects_ids].split(',')).order(end_date: :desc)
     @searched_projects = @projects.where(status: params[:status_filter]) if params[:status_filter] != 'all'
     @projects_summary = ProjectsSummaryData.new(@projects)
+
+    build_query_dates_to_projects(@projects)
+
     respond_to { |format| format.js { render 'projects/projects_search' } }
   end
 
@@ -137,6 +141,11 @@ class ProjectsController < AuthenticatedController
 
   private
 
+  def build_query_dates_to_projects(projects)
+    @start_date = projects.map(&:start_date).min
+    @end_date = projects.map(&:end_date).max
+  end
+
   def assign_demands_ids
     @demands_ids = DemandsRepository.instance.demands_created_before_date_to_projects([@project]).map(&:id)
   end
@@ -177,5 +186,10 @@ class ProjectsController < AuthenticatedController
   def assign_product_projects
     @project_products = @project.products.order(:name)
     @not_associated_products = @company.products - @project_products
+  end
+
+  def build_query_dates
+    @start_date = @project.start_date
+    @end_date = @project.end_date
   end
 end

@@ -1,4 +1,4 @@
-$("#team_fields").html("<%= escape_javascript(render 'teams/team_fields', company: @company, teams: @teams) %>")
+$("#team_fields").html("<%= escape_javascript(render 'teams/team_fields', company: @company, start_date: @start_date, end_date: @end_date, teams: @teams) %>")
 
 var alertsDiv = $(".alerts");
 <% if flash[:error].present? %>

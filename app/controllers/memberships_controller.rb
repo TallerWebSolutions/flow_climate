@@ -54,7 +54,7 @@ class MembershipsController < AuthenticatedController
   end
 
   def assign_team_members_list
-    @team_members = @company.team_members.order(:name) - @team.memberships.active.map(&:team_member)
+    @team_members = @company.team_members.order(:name)
   end
 
   def assign_team

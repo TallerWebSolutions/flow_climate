@@ -1,31 +1,37 @@
-function activateTab() {
-    var navItem = $('.nav-item');
-    navItem.on('click', function(){
-        hideAllComponents(navItem);
+$('.nav-item').on('click', function(){
+    hideAllComponents($('.nav-item'));
 
-        $(this).addClass('active');
+    let loader = $("#general-loader");
+    loader.show();
 
-        const companyId = $('#company_id').val();
+    $(this).addClass('active');
 
-        if ($(this).attr('id') === 'nav-item-risks') {
-            getRisksTab(companyId);
+    const companyId = $('#company_id').val();
+    const projectsIds = $("#projects_ids").val();
+    const teamsIds = $("#teams_ids").val();
+    const targetName = $("#target_name").val();
 
-        } else if ($(this).attr('id') === 'nav-item-projects-list') {
-            getCompanyProjectsTab(companyId);
+    const startDate = $('#default_start_date_to_filter').val();
+    const endDate = $('#default_end_date_to_filter').val();
 
-        } else if ($(this).attr('id') === 'nav-item-strategic-charts') {
-            getStrategicChartsTab(companyId);
+    if ($(this).attr('id') === 'nav-item-risks') {
+        getRisksTab(companyId);
 
-        } else {
-            $($(this).data('container')).show();
-            enableTabs();
+    } else if ($(this).attr('id') === 'nav-item-projects-list') {
+        getProjectsTab(companyId);
 
-            $("#general-loader").hide();
-        }
+    } else if ($(this).attr('id') === 'nav-item-strategic-charts') {
+        buildStrategicCharts(companyId, projectsIds, teamsIds, targetName, 'month', startDate, endDate);
 
-        if ($(this).attr('id') === 'nav-item-settings') {
-            document.getElementsByClassName("company-config-tab")[0].className += " active";
-            document.getElementById("company-settings").style.display = "block";
-        }
-    });
-}
+    } else {
+        enableTabs();
+        $($(this).data('container')).show();
+
+        loader.hide();
+    }
+
+    if ($(this).attr('id') === 'nav-item-settings') {
+        document.getElementsByClassName("company-config-tab")[0].className += " active";
+        document.getElementById("company-settings").style.display = "block";
+    }
+});

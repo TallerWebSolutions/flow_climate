@@ -14,6 +14,25 @@ RSpec.describe Membership, type: :model do
     it { is_expected.to validate_presence_of :team }
     it { is_expected.to validate_presence_of :team_member }
     it { is_expected.to validate_presence_of :start_date }
+
+    context 'unique active membership for team member' do
+      let(:team) { Fabricate :team }
+      let(:team_member) { Fabricate :team_member }
+      let(:other_team_member) { Fabricate :team_member }
+
+      let!(:membership) { Fabricate :membership, team: team, team_member: team_member, end_date: nil }
+      let!(:duplicated_membership) { Fabricate.build :membership, team: team, team_member: team_member, end_date: nil }
+      let!(:second_valid_membership) { Fabricate.build :membership, team_member: team_member, end_date: nil }
+      let!(:third_valid_membership) { Fabricate.build :membership, team: team, end_date: nil }
+
+      before { duplicated_membership.valid? }
+
+      it { expect(membership.valid?).to be true }
+      it { expect(second_valid_membership.valid?).to be true }
+      it { expect(third_valid_membership.valid?).to be true }
+
+      it { expect(duplicated_membership.errors_on(:team_member)).to eq [I18n.t('activerecord.errors.models.membership.team_member.already_existent_active')] }
+    end
   end
 
   context 'scopes' do

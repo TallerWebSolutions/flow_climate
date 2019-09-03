@@ -20,7 +20,7 @@ module Highchart
     end
 
     def build_hours_efficiency
-      hours_available_hash = TeamService.instance.compute_available_hours_to_team(@team, @start_date.to_date, @end_date.to_date, @chart_period_interval)
+      hours_available_hash = TeamService.instance.compute_available_hours_to_team([@team], @start_date.to_date, @end_date.to_date, @chart_period_interval)
       hours_consumed_hash = TeamService.instance.compute_consumed_hours_to_team(@team, @start_date.to_date, @end_date.to_date, @chart_period_interval)
 
       @hours_efficiency = { x_axis: hours_available_hash.keys,

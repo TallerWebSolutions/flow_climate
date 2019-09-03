@@ -5,6 +5,12 @@
 </div>
 
 <%= hidden_field_tag :company_id, @company.id %>
+<%= hidden_field_tag :projects_ids, @projects.map(&:id).join(',') %>
+<%= hidden_field_tag :teams_ids, @company.teams.map(&:id).join(',') %>
+<%= hidden_field_tag :target_name, @company.name %>
+
+<%= hidden_field_tag :default_start_date_to_filter, @start_date %>
+<%= hidden_field_tag :default_end_date_to_filter, @end_date %>
 
 <div class="row">
   <div class="topnav">
@@ -22,11 +28,11 @@
 <%= render 'commons/loader_spinner' %>
 
 <div id="stamps" class="tab-container">
-  <%= render 'company_stamps', company: @company, customer: @customer %>
+  <%= render 'companies/company_stamps', company: @company, customer: @customer %>
 </div>
 
 <div id="teams" class="tab-container">
-  <%= render 'teams/teams_table', teams: @teams, company: @company %>
+  <%= render 'teams/teams_table', teams: @teams, company: @company, start_date: @start_date, end_date: @end_date %>
 </div>
 
 <div id="members-table" class="tab-container">
@@ -50,11 +56,8 @@
   </div>
 </div>
 
+<div id="strategic" class="tab-container">
 
-<div id="strategic-charts" class="tab-container">
-  <div id="strategic-table">
-    <%= render 'companies/strategic_table', model_name: @company.name, strategic_chart_data: @strategic_chart_data %>
-  </div>
 </div>
 
 <div id="settings" class="tab-container">
@@ -62,20 +65,28 @@
 </div>
 
 <% content_for :javascript do %>
+  <%= javascript_include_tag 'charts/donut' %>
+  <%= javascript_include_tag 'projects/demand_classification_charts' %>
+
+  <%= javascript_include_tag 'demand_blocks/list_modal' %>
+
   <%= javascript_include_tag 'charts/column-line' %>
   <%= javascript_include_tag 'charts/line' %>
   <%= javascript_include_tag 'charts/gauge' %>
 
   <%= javascript_include_tag 'components/components' %>
+  <%= javascript_include_tag 'finances/chart_builder' %>
+
+  <%= javascript_include_tag 'companies/show' %>
+
   <%= javascript_include_tag 'routes/company_routes' %>
+  <%= javascript_include_tag 'routes/chart_routes' %>
 
   <%= javascript_include_tag 'companies/strategic_charts' %>
   <%= javascript_include_tag 'projects/risk_alert_color_chart' %>
 
-  <%= javascript_include_tag 'finances/chart_builder' %>
-
   <%= javascript_include_tag 'top_navigation/tab-navigation' %>
-  <%= javascript_include_tag 'companies/company_navigation_behaviour' %>
-  <%= javascript_include_tag 'companies/show' %>
   <%= javascript_include_tag 'finances/show' %>
+
+  <%= javascript_include_tag 'companies/company_navigation_behaviour' %>
 <% end %>

@@ -66,6 +66,7 @@ class Project < ApplicationRecord
   scope :running_projects_finishing_within_week, -> { running.where('EXTRACT(week FROM end_date) = :week AND EXTRACT(year FROM end_date) = :year', week: Time.zone.today.cweek, year: Time.zone.today.cwyear) }
   scope :running, -> { where('status = 1 OR status = 2') }
   scope :active, -> { where('status = 0 OR status = 1 OR status = 2') }
+  scope :active_in_period, ->(start_period, end_period) { where('(start_date BETWEEN :start_period AND :end_period) OR (end_date BETWEEN :start_period AND :end_period)', start_period: start_period, end_period: end_period) }
 
   def add_user(user)
     return if users.include?(user)
@@ -141,19 +142,13 @@ class Project < ApplicationRecord
     ((remaining_days.to_f / total_days) * 100).round(2)
   end
 
-  def consumed_hours
-    demands.kept.sum(&:total_effort)
+  def consumed_hours_in_period(start_date, end_date)
+    demands.kept.to_end_dates(start_date, end_date).sum(&:total_effort)
   end
 
-  def remaining_money
+  def remaining_money(end_period)
     hour_value_calc = hour_value || (value / qty_hours)
-    (value || 0) - (consumed_hours * hour_value_calc)
-  end
-
-  def percentage_remaining_money
-    return 0 if value.zero?
-
-    (remaining_money / value) * 100
+    (value || 0) - (consumed_hours_in_period(start_date, end_period) * hour_value_calc)
   end
 
   def last_week_scope
@@ -250,7 +245,7 @@ class Project < ApplicationRecord
   end
 
   def money_per_deadline
-    remaining_money.to_f / remaining_days
+    remaining_money(end_date).to_f / remaining_days
   end
 
   def backlog_growth_throughput_rate
@@ -264,11 +259,19 @@ class Project < ApplicationRecord
   end
 
   def hours_per_month
-    qty_hours.to_f / (total_days.to_f / 30)
+    hours_per_day * 30
+  end
+
+  def hours_per_day
+    qty_hours.to_f / total_days
   end
 
   def money_per_month
-    value / (total_days.to_f / 30)
+    money_per_day * 30
+  end
+
+  def money_per_day
+    value / total_days.to_f
   end
 
   def current_cost

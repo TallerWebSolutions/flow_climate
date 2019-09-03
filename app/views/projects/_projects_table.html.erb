@@ -18,7 +18,7 @@
 <% if projects_list.blank? || projects_list.empty? %>
   <%= I18n.t('projects.index.no_data') %>
 <% else %>
-  <table class="table table-index table-striped table-ordered">
+  <table class="table table-index table-striped">
     <thead>
       <tr>
         <th><%= I18n.t('general.table.actions') %></th>
@@ -62,7 +62,7 @@
           <td><%= I18n.t("activerecord.attributes.project.enums.status.#{project.status}") %></td>
           <td><%= I18n.t("activerecord.attributes.project.enums.project_type.#{project.project_type}") %></td>
           <td><%= number_with_precision(project.qty_hours, precision: 2) %></td>
-          <td><%= number_with_precision(project.consumed_hours, precision: 2) %></td>
+          <td><%= number_with_precision(project.consumed_hours_in_period(start_date, end_date), precision: 2) %></td>
           <td>
             <%= link_to company_demand_blocks_path(company, projects_ids: project.id), class: 'list-block', remote: true do %>
               <%= project.active_kept_closed_blocks.count %>
@@ -76,7 +76,7 @@
           <td><%= number_with_precision(project.total_throughput_for(1.week.ago), precision: 0) %></td>
           <td><%= number_with_precision(project.remaining_backlog, precision: 0) %></td>
           <td><%= number_to_currency(project.value) %></td>
-          <td><%= number_to_currency(project.remaining_money) %></td>
+          <td><%= number_to_currency(project.remaining_money(end_date)) %></td>
           <td><%= project.remaining_days %></td>
           <td><%= number_with_precision(project.flow_pressure, precision: 3) %></td>
           <td>
@@ -109,9 +109,3 @@
 
 <div class="modal fade" id="list-blocks-page" tabindex="-1" role="dialog" aria-labelledby="list-blocks-page" aria-hidden="true"></div>
 <div class="modal fade" id="project-statistics-page" tabindex="-1" role="dialog" aria-labelledby="project-statistics-page" aria-hidden="true"></div>
-
-<%= javascript_include_tag 'charts/donut' %>
-<%= javascript_include_tag 'projects/demand_classification_charts' %>
-
-<%= javascript_include_tag 'demand_blocks/list_modal' %>
-<%= javascript_include_tag 'components/components' %>

@@ -9,6 +9,7 @@ class ProductsController < AuthenticatedController
 
   def index
     @products = @company.products.order(:name)
+    assign_filter_parameters_to_charts
   end
 
   def show
@@ -62,6 +63,7 @@ class ProductsController < AuthenticatedController
   def projects_tab
     @product_projects = @product.projects.includes(:customers).includes(:products).includes(:team).order(end_date: :desc)
     @projects_summary = ProjectsSummaryData.new(@product_projects)
+    assign_filter_parameters_to_charts
 
     respond_to { |format| format.js { render 'projects/projects_tab' } }
   end
@@ -99,7 +101,7 @@ class ProductsController < AuthenticatedController
   end
 
   def assign_filter_parameters_to_charts
-    @start_date = params[:start_date]&.to_date || [@demands.map(&:created_date).min, 3.months.ago.to_date].compact.max
+    @start_date = params[:start_date]&.to_date || [@demands&.map(&:created_date)&.min, 3.months.ago.to_date].compact.max
     @end_date = params[:end_date]&.to_date || Time.zone.today
     @period = params[:period] || 'month'
   end

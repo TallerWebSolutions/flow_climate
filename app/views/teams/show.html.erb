@@ -10,8 +10,11 @@
 
 <%= hidden_field_tag :company_id, @company.id %>
 <%= hidden_field_tag :team_id, @team.id %>
-<%= hidden_field_tag :projects_ids, @team_projects.map(&:id).join(',') %>
+<%= hidden_field_tag :teams_ids, [@team.id] %>
 <%= hidden_field_tag :target_name, @team.name %>
+<%= hidden_field_tag :projects_ids, @team_projects.map(&:id).join(',') %>
+<%= hidden_field_tag :default_start_date_to_filter, @start_date %>
+<%= hidden_field_tag :default_end_date_to_filter, @end_date %>
 
 <div class="row">
   <div class="topnav">
@@ -43,7 +46,7 @@
   <h2><%= I18n.t('projects.index.title') %></h2>
 
   <div id="projects-table">
-    <%= render 'projects/projects_table', company: @company, projects_list: @team_projects, projects_summary: @projects_summary, projects_ids: @team_projects.map(&:id).flatten.join(',') %>
+    <%= render 'projects/projects_table', company: @company, start_date: @start_date, end_date: @end_date, projects_list: @team_projects, projects_summary: @projects_summary, projects_ids: @team_projects.map(&:id).flatten.join(',') %>
   </div>
 </div>
 
@@ -64,7 +67,7 @@
 </div>
 
 <div id="strategic" class="tab-container">
-  <%= render 'companies/strategic_table', model_name: @team.name, strategic_chart_data: @strategic_chart_data %>
+
 </div>
 
 <div id="risks" class="tab-container">
@@ -84,6 +87,11 @@
 </div>
 
 <% content_for :javascript do %>
+  <%= javascript_include_tag 'charts/donut' %>
+  <%= javascript_include_tag 'projects/demand_classification_charts' %>
+
+  <%= javascript_include_tag 'demand_blocks/list_modal' %>
+
   <%= javascript_include_tag 'charts/burnup' %>
   <%= javascript_include_tag 'charts/column' %>
   <%= javascript_include_tag 'charts/bar' %>
@@ -93,6 +101,8 @@
   <%= javascript_include_tag 'charts/gauge' %>
   <%= javascript_include_tag 'charts/scatter' %>
   <%= javascript_include_tag 'charts/stacked_area' %>
+
+  <%= javascript_include_tag 'components/components' %>
 
   <%= javascript_include_tag 'stats_charts/statistics_charts' %>
 
@@ -116,6 +126,4 @@
   <%= javascript_include_tag 'demands/column_throughput_week' %>
 
   <%= javascript_include_tag 'projects/risk_alert_color_chart' %>
-
-  <%= javascript_include_tag 'components/components' %>
 <% end %>

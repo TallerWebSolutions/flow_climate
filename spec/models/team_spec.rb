@@ -51,7 +51,7 @@ RSpec.describe Team, type: :model do
     it { is_expected.to delegate_method(:count).to(:projects).with_prefix }
   end
 
-  describe '#active_monthly_cost_for_billable_types' do
+  RSpec.shared_context 'memberships for team', shared_context: :metadata do
     let(:company) { Fabricate :company }
     let(:team) { Fabricate :team, company: company }
 
@@ -68,27 +68,16 @@ RSpec.describe Team, type: :model do
     let!(:training_membership) { Fabricate :membership, team: team, team_member: training_member, hours_per_month: 120, start_date: 2.months.ago, end_date: nil }
     let!(:not_billable_member_membership) { Fabricate :membership, team: team, team_member: not_billable_member, hours_per_month: 120, start_date: 2.months.ago, end_date: nil }
     let!(:not_active_member_membership) { Fabricate :membership, team: team, team_member: not_active_member, hours_per_month: 120, start_date: 2.months.ago, end_date: nil }
+  end
+
+  describe '#active_monthly_cost_for_billable_types' do
+    include_context 'memberships for team'
 
     it { expect(team.active_monthly_cost_for_billable_types(%i[outsourcing consulting])).to eq 300.0 }
   end
 
   describe '#active_monthly_available_hours_for_billable_types' do
-    let(:company) { Fabricate :company }
-    let(:team) { Fabricate :team, company: company }
-
-    let!(:team_member) { Fabricate :team_member, billable_type: :outsourcing, start_date: 2.days.ago, end_date: nil }
-    let!(:null_monthly_payment_member) { Fabricate :team_member, billable_type: :outsourcing, monthly_payment: nil, end_date: nil }
-    let!(:consulting_member) { Fabricate :team_member, billable_type: :consulting, end_date: nil }
-    let!(:training_member) { Fabricate :team_member, billable_type: :training, end_date: nil }
-    let!(:not_billable_member) { Fabricate :team_member, billable: false, billable_type: nil, end_date: nil }
-    let!(:not_active_member) { Fabricate :team_member, billable_type: :outsourcing, end_date: 1.day.ago }
-
-    let!(:membership) { Fabricate :membership, team: team, team_member: team_member, hours_per_month: 100, start_date: 2.days.ago, end_date: nil }
-    let!(:null_payment_membership) { Fabricate :membership, team: team, team_member: null_monthly_payment_member, hours_per_month: nil, start_date: 2.months.ago, end_date: nil }
-    let!(:consulting_membership) { Fabricate :membership, team: team, team_member: consulting_member, hours_per_month: 120, start_date: 2.months.ago, end_date: nil }
-    let!(:training_membership) { Fabricate :membership, team: team, team_member: training_member, hours_per_month: 120, start_date: 2.months.ago, end_date: nil }
-    let!(:not_billable_member_membership) { Fabricate :membership, team: team, team_member: not_billable_member, hours_per_month: 120, start_date: 2.months.ago, end_date: nil }
-    let!(:not_active_member_membership) { Fabricate :membership, team: team, team_member: not_active_member, hours_per_month: 120, start_date: 2.months.ago, end_date: nil }
+    include_context 'memberships for team'
 
     it { expect(team.active_monthly_available_hours_for_billable_types(%i[outsourcing consulting])).to eq 340 }
   end
@@ -102,9 +91,9 @@ RSpec.describe Team, type: :model do
     let(:product) { Fabricate :product, name: 'zzz' }
     let(:other_product) { Fabricate :product, name: 'zzz' }
 
-    let(:project) { Fabricate :project, team: team, end_date: 4.weeks.from_now, qty_hours: 2000 }
-    let(:other_project) { Fabricate :project, team: team, end_date: 4.weeks.from_now }
-    let(:other_customer_project) { Fabricate :project, team: other_team, end_date: 4.weeks.from_now }
+    let(:project) { Fabricate :project, team: team, end_date: 4.weeks.from_now, qty_hours: 2000, value: 100_000, hour_value: 50 }
+    let(:other_project) { Fabricate :project, team: team, end_date: 4.weeks.from_now, value: 20_000, hour_value: 100 }
+    let(:other_customer_project) { Fabricate :project, team: other_team, end_date: 4.weeks.from_now, value: 45_000, hour_value: 20 }
 
     let!(:first_demand) { Fabricate :demand, team: team, project: project, created_date: 2.weeks.ago, end_date: 1.week.ago, demand_type: :bug, effort_downstream: 20, effort_upstream: 30 }
     let!(:second_demand) { Fabricate :demand, team: team, project: project, created_date: 2.weeks.ago, end_date: 1.week.ago, effort_downstream: 40, effort_upstream: 35 }
@@ -128,32 +117,32 @@ RSpec.describe Team, type: :model do
 
   describe '#remaining_money' do
     include_context 'consolidations data for team'
-    it { expect(team.remaining_money).to eq team.projects.sum(&:remaining_money) }
+    it { expect(team.remaining_money(4.weeks.from_now).to_f).to eq 89_350.0 }
   end
 
   describe '#percentage_remaining_money' do
     context 'having data' do
       include_context 'consolidations data for team'
-      it { expect(team.percentage_remaining_money).to eq((team.remaining_money / team.total_value) * 100) }
+      it { expect(team.percentage_remaining_money(4.weeks.from_now).to_f).to be_within(0.01).of 89.35 }
     end
 
     context 'having no data' do
       let(:company) { Fabricate :company }
       let(:team) { Fabricate :team, company: company }
 
-      it { expect(team.percentage_remaining_money).to eq 0 }
+      it { expect(team.percentage_remaining_money(4.weeks.from_now).to_f).to eq 0 }
     end
   end
 
   describe '#remaining_backlog' do
     include_context 'consolidations data for team'
-    it { expect(team.remaining_backlog).to eq team.projects.sum(&:remaining_backlog) }
+    it { expect(team.remaining_backlog).to eq 30 }
   end
 
   describe '#percentage_remaining_scope' do
     context 'having data' do
       include_context 'consolidations data for team'
-      it { expect(team.percentage_remaining_scope).to eq((team.remaining_backlog.to_f / team.last_week_scope) * 100) }
+      it { expect(team.percentage_remaining_scope).to eq 90.9090909090909 }
     end
 
     context 'having no data' do
@@ -171,7 +160,7 @@ RSpec.describe Team, type: :model do
 
   describe '#delivered_scope' do
     include_context 'consolidations data for team'
-    it { expect(team.delivered_scope).to eq team.projects.sum(&:total_throughput) }
+    it { expect(team.delivered_scope).to eq 3 }
   end
 
   describe '#consumed_hours_in_month' do

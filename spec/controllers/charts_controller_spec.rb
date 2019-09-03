@@ -89,9 +89,9 @@ RSpec.describe ChartsController, type: :controller do
         let!(:second_project) { Fabricate :project, company: company, customers: [customer], products: [product], team: team, status: :executing, start_date: Time.zone.yesterday, end_date: 50.days.from_now }
 
         it 'builds the operation report and respond the JS render the template' do
-          get :build_strategic_charts, params: { company_id: company, projects_ids: team.projects.map(&:id).to_csv }, xhr: true
+          get :build_strategic_charts, params: { company_id: company, projects_ids: team.projects.map(&:id).to_csv, teams_ids: team.id }, xhr: true
           expect(response).to render_template 'charts/strategic_charts'
-          expect(assigns(:strategic_chart_data).array_of_months).to eq [Time.zone.today.end_of_month, 1.month.from_now.to_date.end_of_month]
+          expect(assigns(:strategic_chart_data).x_axis).to eq [Time.zone.today.end_of_month, 1.month.from_now.to_date.end_of_month]
           expect(assigns(:strategic_chart_data).active_projects_count_data).to eq [2, 1]
         end
       end
