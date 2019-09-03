@@ -3,7 +3,7 @@
 Fabricator(:project) do
   company
   team
-  name { Faker::Name.unique.name }
+  name { Faker::Name.unique.name.gsub(/\W/, '') }
   start_date 2.months.ago
   end_date 2.months.from_now
   status 0

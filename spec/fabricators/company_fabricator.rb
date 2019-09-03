@@ -2,5 +2,5 @@
 
 Fabricator(:company) do
   abbreviation { Faker::Alphanumeric.letterify('??????') }
-  name { Faker::Company.name }
+  name { Faker::Company.name.gsub(/\W/, '') }
 end

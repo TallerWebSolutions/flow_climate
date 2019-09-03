@@ -79,6 +79,9 @@ RSpec.describe ProductsController, type: :controller do
 
         it 'assigns the instance variable and renders the template' do
           expect(assigns(:products)).to eq [other_product, product]
+          expect(assigns(:start_date)).to eq 3.months.ago.to_date
+          expect(assigns(:end_date)).to eq Time.zone.today
+          expect(assigns(:period)).to eq 'month'
           expect(response).to render_template :index
         end
       end
@@ -250,6 +253,9 @@ RSpec.describe ProductsController, type: :controller do
             expect(response).to render_template :show
             expect(assigns(:company)).to eq company
             expect(assigns(:product)).to eq product
+            expect(assigns(:start_date)).to eq 3.months.ago.to_date
+            expect(assigns(:end_date)).to eq Time.zone.today
+            expect(assigns(:period)).to eq 'month'
             expect(assigns(:jira_product_configs)).to eq [other_jira_product_config, jira_product_config]
           end
         end
@@ -453,6 +459,9 @@ RSpec.describe ProductsController, type: :controller do
             expect(response).to render_template 'projects/projects_tab'
             expect(assigns(:projects_summary)).to be_a ProjectsSummaryData
             expect(assigns(:product_projects)).to eq [second_project, first_project]
+            expect(assigns(:start_date)).to eq 3.months.ago.to_date
+            expect(assigns(:end_date)).to eq Time.zone.today
+            expect(assigns(:period)).to eq 'month'
           end
         end
       end
@@ -563,6 +572,9 @@ RSpec.describe ProductsController, type: :controller do
             get :portfolio_charts_tab, params: { company_id: company, id: first_product }, xhr: true
             expect(response).to render_template 'portfolio_units/portfolio_charts_tab'
             expect(assigns(:demands)).to eq [third_demand, second_demand, first_demand]
+            expect(assigns(:start_date)).to eq [third_demand, second_demand, first_demand].map(&:created_date).compact.min.to_date
+            expect(assigns(:end_date)).to eq Time.zone.today
+            expect(assigns(:period)).to eq 'month'
           end
         end
       end
