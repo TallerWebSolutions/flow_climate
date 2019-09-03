@@ -17,7 +17,7 @@
 </div>
 
 <div id="stamps">
-  <%= render 'customer_stamps', customer: @customer %>
+  <%= render 'customer_stamps', customer: @customer, start_date: @start_date, end_date: @end_date %>
 </div>
 
 <div id="project-list">
@@ -25,10 +25,15 @@
   <h2><%= I18n.t('projects.index.title') %></h2>
 
   <div id="projects-table">
-    <%= render 'projects/projects_table', company: @company, projects_list: @customer_projects, projects_summary: @projects_summary, projects_ids: @customer_projects.map(&:id).flatten.join(',') %>
+    <%= render 'projects/projects_table', company: @company, start_date: @start_date, end_date: @end_date, projects_list: @customer_projects, projects_summary: @projects_summary, projects_ids: @customer_projects.map(&:id).flatten.join(',') %>
   </div>
 </div>
 
 <% content_for :javascript do %>
+  <%= javascript_include_tag 'charts/donut' %>
+  <%= javascript_include_tag 'projects/demand_classification_charts' %>
+
+  <%= javascript_include_tag 'demand_blocks/list_modal' %>
+
   <%= javascript_include_tag 'customers/show' %>
 <% end %>

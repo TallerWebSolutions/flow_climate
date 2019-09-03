@@ -133,12 +133,12 @@ RSpec.describe Product, type: :model do
 
   describe '#remaining_money' do
     include_context 'consolidations variables data for product'
-    it { expect(product.remaining_money).to eq product.projects.sum(&:remaining_money) }
+    it { expect(product.remaining_money(3.weeks.from_now).to_f).to eq 15_250.0 }
   end
 
   describe '#percentage_remaining_money' do
     include_context 'consolidations variables data for product'
-    it { expect(product.percentage_remaining_money.to_f).to eq 64.375 }
+    it { expect(product.percentage_remaining_money(3.weeks.from_now).to_f).to eq 76.25 }
   end
 
   describe '#remaining_backlog' do

@@ -56,6 +56,9 @@ pt-BR:
         demand_transition:
           stage:
             not_same: "A etapa deve ser a mesma do projeto da demanda"
+        membership:
+          team_member:
+            already_existent_active: "Você deveria ter apenas uma associação ativa no time para o membro do time"
     models:
       user:
         one: Usuários

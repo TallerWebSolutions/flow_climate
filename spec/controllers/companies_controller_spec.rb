@@ -421,7 +421,7 @@ RSpec.describe CompaniesController, type: :controller do
           it 'builds the statistic adapter and renders the view using the dates in project to a monthly period' do
             get :projects_tab, params: { id: company }, xhr: true
             expect(response).to render_template 'companies/projects_tab.js.erb'
-            expect(assigns(:company_projects)).to eq [second_project, first_project]
+            expect(assigns(:projects)).to eq [second_project, first_project]
             expect(assigns(:projects_summary)).to be_a ProjectsSummaryData
           end
         end
@@ -431,7 +431,7 @@ RSpec.describe CompaniesController, type: :controller do
         it 'returns empty data set' do
           get :projects_tab, params: { id: company }, xhr: true
           expect(response).to render_template 'companies/projects_tab.js.erb'
-          expect(assigns(:company_projects)).to eq []
+          expect(assigns(:projects)).to eq []
         end
       end
     end
@@ -447,7 +447,7 @@ RSpec.describe CompaniesController, type: :controller do
         context 'passing valid parameters' do
           it 'builds the statistic adapter and renders the view using the dates in project to a monthly period' do
             get :strategic_chart_tab, params: { id: company }, xhr: true
-            expect(response).to render_template 'companies/strategic_chart_tab.js.erb'
+            expect(response).to render_template 'charts/strategic_charts.js.erb'
             expect(assigns(:strategic_chart_data)).to be_a Highchart::StrategicChartsAdapter
           end
         end
@@ -456,8 +456,8 @@ RSpec.describe CompaniesController, type: :controller do
       context 'having no data' do
         it 'returns empty data set' do
           get :strategic_chart_tab, params: { id: company }, xhr: true
-          expect(response).to render_template 'companies/strategic_chart_tab.js.erb'
-          expect(assigns(:company_projects)).to eq []
+          expect(response).to render_template 'charts/strategic_charts.js.erb'
+          expect(assigns(:projects)).to eq []
         end
       end
     end
@@ -484,7 +484,7 @@ RSpec.describe CompaniesController, type: :controller do
         it 'returns empty data set' do
           get :risks_tab, params: { id: company }, xhr: true
           expect(response).to render_template 'companies/risks_tab.js.erb'
-          expect(assigns(:company_projects)).to eq []
+          expect(assigns(:projects)).to eq []
         end
       end
     end

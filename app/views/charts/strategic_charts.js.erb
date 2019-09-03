@@ -1,5 +1,4 @@
-$("#strategic").html("<%= escape_javascript(render 'companies/strategic_table', model_name: @target_name, strategic_chart_data: @strategic_chart_data).html_safe %>");
-
+$("#strategic").html("<%= escape_javascript(render 'charts/strategic_charts_tab', model_name: @target_name, strategic_chart_data: @strategic_chart_data, target_name: @target_name, teams_ids: @teams.map(&:id), projects: @projects, start_date: @start_date, end_date: @end_date).html_safe %>");
 
 $('#strategic').show();
 $('#nav-item-strategic').addClass('active');
@@ -7,3 +6,16 @@ $('#nav-item-strategic').addClass('active');
 buildStrategicHighcharts();
 
 enableTabs();
+
+$('#search_charts').on('click', function() {
+    const companyId = $('#company_id').val();
+    const projectsIds = $("#projects_ids").val();
+    const teamsIds = $("#teams_ids").val();
+    const startDate = $('#charts_filter_start_date').val();
+    const endDate = $('#charts_filter_end_date').val();
+    const period = $('#charts_filter_period').val();
+    const targetName = $('#target_name').val();
+
+    buildStrategicCharts(companyId, projectsIds, teamsIds, targetName, period, startDate, endDate)
+});
+

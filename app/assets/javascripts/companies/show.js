@@ -1,9 +1,8 @@
 hideAllComponents($('.nav-item'));
 
-activateTab();
+const stampsDiv = $('#nav-item-stamps');
+stampsDiv.addClass('active');
 $('#stamps').show();
-
-$('#nav-item-stamps').addClass('active');
 
 $("#general-loader").hide();
 

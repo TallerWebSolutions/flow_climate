@@ -1,9 +1,15 @@
 $("#general-loader").hide();
 
+hideAllComponents($('.nav-item'));
+
 const hoursGauge = $('#hours-gauge');
 buildGaugeChart(hoursGauge);
 
 accordionBehaviour();
+
+const stampsDiv = $('#nav-item-stamps');
+stampsDiv.addClass('active');
+$('#stamps').show();
 
 $('#search_charts').on('click', function() {
     const companyId = $('#company_id').val();
@@ -14,5 +20,7 @@ $('#search_charts').on('click', function() {
     const period = $('#charts_filter_period').val();
     const targetName = $('#target_name').val();
 
-    buildOperationalCharts(companyId, projects_ids, period, targetName, startDate, endDate, teamId)
+    buildOperationalCharts(companyId, projects_ids, targetName, period, startDate, endDate, teamId)
 });
+
+$(".col-table-details").hide();

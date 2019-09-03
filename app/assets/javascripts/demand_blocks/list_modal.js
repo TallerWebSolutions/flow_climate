@@ -1,5 +1,5 @@
 $(document).on('click', '.list-block', {} ,function(e){
     e.preventDefault();
-    var $this = $(this);
+    let $this = $(this);
     $("#list-blocks-page").modal("toggle", $this);
 });

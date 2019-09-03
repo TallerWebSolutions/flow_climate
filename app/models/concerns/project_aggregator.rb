@@ -26,14 +26,14 @@ module ProjectAggregator
     projects.map(&:value).compact.sum
   end
 
-  def remaining_money
-    projects.sum(&:remaining_money)
+  def remaining_money(end_period)
+    projects.map { |project| project.remaining_money(end_period) }.sum
   end
 
-  def percentage_remaining_money
+  def percentage_remaining_money(end_period)
     return 0 if total_value.zero?
 
-    (remaining_money / total_value) * 100
+    (remaining_money(end_period) / total_value) * 100
   end
 
   def remaining_backlog

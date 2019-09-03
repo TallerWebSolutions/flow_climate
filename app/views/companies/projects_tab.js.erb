@@ -1,6 +1,6 @@
 var projectsTableDiv = $('#projects-table')
 
-projectsTableDiv.html("<%= escape_javascript(render 'projects/projects_table', company: @company, projects_list: @company_projects, projects_summary: @projects_summary, projects_ids: @company_projects.map(&:id).flatten.join(',')).html_safe %>");
+projectsTableDiv.html("<%= escape_javascript(render 'projects/projects_table', company: @company, start_date: @start_date, end_date: @end_date, projects_list: @projects, projects_summary: @projects_summary, projects_ids: @projects.map(&:id).flatten.join(',')).html_safe %>");
 
 $('#general-loader').hide();
 $('#project-list').show();

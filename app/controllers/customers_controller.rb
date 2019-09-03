@@ -7,11 +7,14 @@ class CustomersController < AuthenticatedController
 
   def index
     @customers = @company.customers.sort_by(&:total_flow_pressure).reverse
+
+    @start_date = @customers.map(&:projects).flatten.map(&:start_date).min
+    @end_date = @customers.map(&:projects).flatten.map(&:end_date).max
   end
 
   def show
-    @customer_projects = @customer.projects.order(end_date: :desc)
-    @projects_summary = ProjectsSummaryData.new(@customer.projects)
+    build_query_dates
+    @projects_summary = ProjectsSummaryData.new(customer_projects)
   end
 
   def new
@@ -42,11 +45,20 @@ class CustomersController < AuthenticatedController
 
   private
 
+  def customer_projects
+    @customer_projects ||= @customer.projects.order(end_date: :desc)
+  end
+
   def assign_customer
     @customer = Customer.find(params[:id])
   end
 
   def customer_params
     params.require(:customer).permit(:name)
+  end
+
+  def build_query_dates
+    @start_date = build_limit_date(customer_projects.map(&:start_date).min)
+    @end_date = build_limit_date(customer_projects.map(&:end_date).max)
   end
 end

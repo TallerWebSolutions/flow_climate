@@ -11,7 +11,7 @@
       <div id="projects-count-column"
            class="flow-chart"
            data-title='<%= I18n.t('companies.charts.active_projects.title', target_name: model_name) %>'
-           data-xcategories='<%= strategic_chart_data.array_of_months.to_json %>'
+           data-xcategories='<%= strategic_chart_data.x_axis.to_json %>'
            data-xtitle='<%= I18n.t('charts.xlabel.months') %>'
            data-ytitle='<%= I18n.t('charts.ylabel.projects.text') %>'
            data-ylinetitle='<%= I18n.t('charts.ylabel.total_hours.text') %>'
@@ -28,7 +28,7 @@
       <div id="hours-per-month-line"
            class="flow-chart"
            data-title='<%= I18n.t('companies.charts.hours_per_month.title', target_name: model_name) %>'
-           data-xcategories='<%= strategic_chart_data.array_of_months.to_json %>'
+           data-xcategories='<%= strategic_chart_data.x_axis.to_json %>'
            data-xtitle='<%= I18n.t('charts.xlabel.months') %>'
            data-ytitle='<%= I18n.t('charts.ylabel.hours.text') %>'
            data-prefix=''
@@ -37,7 +37,7 @@
            data-series='<%= [
                                 { name: I18n.t('charts.series.consumed_hours.text'), data: strategic_chart_data.consumed_hours_per_month },
                                 { name: I18n.t('charts.ylabel.total_hours.text'), data: strategic_chart_data.sold_hours_in_month },
-                                { name: I18n.t('charts.ylabel.available.text'), data: strategic_chart_data.available_hours_per_month }].to_json %>'
+                                { name: I18n.t('charts.ylabel.available.text'), data: strategic_chart_data.available_hours_per_period }].to_json %>'
            data-decimals='0'>
       </div>
     </div>
@@ -48,7 +48,7 @@
       <div id="flowpressure-per-month-line"
            class="flow-chart"
            data-title='<%= I18n.t('companies.charts.flowpressure_per_month.title', target_name: model_name) %>'
-           data-xcategories='<%= strategic_chart_data.array_of_months.to_json %>'
+           data-xcategories='<%= strategic_chart_data.x_axis.to_json %>'
            data-xtitle='<%= I18n.t('charts.xlabel.months') %>'
            data-ytitle='<%= I18n.t('charts.ylabel.hours.text') %>'
            data-ylinetitle='<%= I18n.t('charts.ylabel.flow_pressure.text') %>'
@@ -62,7 +62,7 @@
       <div id="money-per-month-line"
            class="flow-chart"
            data-title='<%= I18n.t('companies.charts.money_per_month.title', target_name: model_name) %>'
-           data-xcategories='<%= strategic_chart_data.array_of_months.to_json %>'
+           data-xcategories='<%= strategic_chart_data.x_axis.to_json %>'
            data-xtitle='<%= I18n.t('charts.xlabel.months') %>'
            data-ytitle='<%= I18n.t('charts.ylabel.hours.text') %>'
            data-ylinetitle='<%= I18n.t('charts.ylabel.money.text') %>'

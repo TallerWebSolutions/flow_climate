@@ -149,6 +149,9 @@ en:
         demand_transition:
           stage:
             not_same: "The stage needs to be the same as the stage in project"
+        membership:
+          team_member:
+            already_existent_active: "You should have only one active membership to the same team to team member"
     models:
       jira/jira_account: "Jira Accounts"
       portfolio_unit:

@@ -36,16 +36,16 @@ class TeamService
     compute_and_build_average_demand_cost_hash(five_weeks_cmd, four_weeks_cmd_average, team)
   end
 
-  def compute_available_hours_to_team(team, start_date, end_date, grouping_period)
+  def compute_available_hours_to_team(array_of_teams, start_date, end_date, grouping_period)
     hours_efficiency_hash = {}
 
     (start_date..end_date).each do |date|
-      start_date_to_hours = start_of_period_for_date(date, grouping_period)
-      end_date_to_hours = end_of_period_for_date(date, grouping_period)
+      start_period = start_of_period_for_date(date, grouping_period)
+      end_period = end_of_period_for_date(date, grouping_period)
 
-      break if end_date_to_hours > end_of_period_for_date(Time.zone.today, grouping_period)
+      break if end_period > end_of_period_for_date(Time.zone.today, grouping_period)
 
-      hours_efficiency_hash[end_date_to_hours] = team.available_hours_at(start_date_to_hours.to_date, end_date_to_hours.to_date).to_f
+      hours_efficiency_hash[end_period] = array_of_teams.map { |team| team.available_hours_at(start_period.to_date, end_period.to_date).to_f }.sum
     end
 
     hours_efficiency_hash

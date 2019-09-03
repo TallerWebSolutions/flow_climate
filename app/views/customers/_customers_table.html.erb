@@ -23,7 +23,7 @@
         <tr>
           <td><%= link_to customer.name, company_customer_path(company, customer) %></td>
           <td><%= number_to_currency(customer.total_value) %></td>
-          <td><%= number_to_currency(customer.remaining_money) %></td>
+          <td><%= number_to_currency(customer.remaining_money(end_date)) %></td>
           <td><%= number_with_precision(customer.avg_hours_per_demand, precision: 2) %></td>
           <td><%= number_with_precision(customer.total_flow_pressure, precision: 3) %></td>
           <td>

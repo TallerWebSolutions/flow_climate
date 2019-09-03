@@ -1,4 +1,4 @@
-function buildOperationalCharts(companyId, projectsIds, period, targetName, startDate, endDate, teamId) {
+function buildOperationalCharts(companyId, projectsIds, targetName, period, startDate, endDate, teamId) {
     $("#general-loader").show();
     $("#operational-charts-div").hide();
     $("#status-report-charts-current-div").hide();
@@ -11,11 +11,11 @@ function buildOperationalCharts(companyId, projectsIds, period, targetName, star
     });
 }
 
-function buildStrategicCharts(companyId, projectsIds, targetName) {
+function buildStrategicCharts(companyId, projectsIds, teamsIds, targetName, period, startDate, endDate) {
     jQuery.ajax({
         url: `/companies/${companyId}/build_strategic_charts.js`,
         type: "GET",
-        data: `projects_ids=${projectsIds}&target_name=${targetName}`
+        data: `projects_ids=${projectsIds}&teams_ids=${teamsIds}&target_name=${targetName}&period=${period}&start_date=${startDate}&end_date=${endDate}&period=${period}`
     });
 }
 

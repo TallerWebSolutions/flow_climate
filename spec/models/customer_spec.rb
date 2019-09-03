@@ -136,13 +136,21 @@ RSpec.describe Customer, type: :model do
   end
 
   describe '#remaining_money' do
+    before { travel_to Time.zone.local(2019, 9, 3, 10, 0, 0) }
+
+    after { travel_back }
+
     include_context 'demands with effort for customer'
-    it { expect(customer.remaining_money).to eq customer.projects.sum(&:remaining_money) }
+    it { expect(customer.remaining_money(3.months.from_now).to_f).to eq 361_720.0 }
   end
 
   describe '#percentage_remaining_money' do
+    before { travel_to Time.zone.local(2019, 9, 3, 10, 0, 0) }
+
+    after { travel_back }
+
     include_context 'demands with effort for customer'
-    it { expect(customer.percentage_remaining_money).to eq((customer.remaining_money / customer.total_value) * 100) }
+    it { expect(customer.percentage_remaining_money(3.months.from_now).to_f).to eq 90.43 }
   end
 
   describe '#remaining_backlog' do
