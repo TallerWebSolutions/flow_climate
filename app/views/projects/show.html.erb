@@ -67,6 +67,8 @@
   <%= render 'projects/settings', company: @company, project: @project, project_stages: @stages_list, project_risk_configs: @project.project_risk_configs, projects_to_copy_stages_from: @projects_to_copy_stages_from %>
 </div>
 
+<div class="modal fade" id="edit-demand-form" tabindex="-1" role="dialog" aria-labelledby="edit-demand-form" aria-hidden="true"></div>
+
 <% content_for :javascript do %>
   <%= javascript_include_tag 'charts/burnup' %>
   <%= javascript_include_tag 'charts/column' %>
@@ -95,6 +97,7 @@
   <%= javascript_include_tag 'projects/show' %>
 
   <%= javascript_include_tag 'demands/filter_binding' %>
-  <%= javascript_include_tag 'routes/demand_routes' %>
+  <%= javascript_include_tag 'demands/demands_charts' %>
+  <%= javascript_include_tag 'demands/demands_list' %>
   <%= javascript_include_tag 'demands/form_modal' %>
 <% end %>
