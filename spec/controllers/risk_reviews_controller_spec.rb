@@ -2,6 +2,12 @@
 
 RSpec.describe RiskReviewsController, type: :controller do
   context 'unauthenticated' do
+    describe 'GET #show' do
+      before { get :show, params: { company_id: 'bar', product_id: 'foo', id: 'xpto' } }
+
+      it { expect(response).to redirect_to new_user_session_path }
+    end
+
     describe 'GET #new' do
       before { get :new, params: { company_id: 'bar', product_id: 'foo' } }
 
@@ -47,6 +53,42 @@ RSpec.describe RiskReviewsController, type: :controller do
           let(:company) { Fabricate :company, users: [] }
 
           before { get :new, params: { company_id: company, product_id: product }, xhr: true }
+
+          it { expect(response).to have_http_status :not_found }
+        end
+      end
+    end
+
+    describe 'GET #show' do
+      let(:risk_review) { Fabricate :risk_review, product: product }
+      let(:other_risk_review) { Fabricate :risk_review }
+
+      context 'valid parameters' do
+        before { get :show, params: { company_id: company, product_id: product, id: risk_review } }
+
+        it 'instantiates a new Team Member and renders the template' do
+          expect(response).to render_template :show
+          expect(assigns(:risk_review)).to eq risk_review
+        end
+      end
+
+      context 'invalid parameters' do
+        context 'invalid risk review' do
+          before { get :show, params: { company_id: company, product_id: product, id: other_risk_review } }
+
+          it { expect(response).to have_http_status :not_found }
+        end
+
+        context 'non-existent company' do
+          before { get :show, params: { company_id: 'foo', product_id: product, id: risk_review } }
+
+          it { expect(response).to have_http_status :not_found }
+        end
+
+        context 'not-permitted company' do
+          let(:company) { Fabricate :company, users: [] }
+
+          before { get :show, params: { company_id: company, product_id: product, id: risk_review } }
 
           it { expect(response).to have_http_status :not_found }
         end
