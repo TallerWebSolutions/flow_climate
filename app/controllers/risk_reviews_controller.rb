@@ -4,6 +4,8 @@ class RiskReviewsController < AuthenticatedController
   before_action :assign_company
   before_action :assign_product
 
+  before_action :assign_risk_review, only: :show
+
   def new
     @risk_review = RiskReview.new(product: @product)
     @risk_reviews = @product.risk_reviews.order(meeting_date: :desc)
@@ -21,7 +23,13 @@ class RiskReviewsController < AuthenticatedController
     respond_to { |format| format.js { render 'risk_reviews/create.js.erb' } }
   end
 
+  def show; end
+
   private
+
+  def assign_risk_review
+    @risk_review = @product.risk_reviews.find(params[:id])
+  end
 
   def risk_review_params
     params.require(:risk_review).permit(:meeting_date, :lead_time_outlier_limit)

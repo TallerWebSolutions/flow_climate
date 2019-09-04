@@ -21,7 +21,7 @@
       <% risk_reviews.each do |risk_review| %>
         <tr>
           <td><%= risk_review.product_name %></td>
-          <td><%= I18n.l(risk_review.meeting_date) %></td>
+          <td><%= link_to I18n.l(risk_review.meeting_date), company_product_risk_review_path(@company, @product, risk_review) %></td>
           <td><%= risk_review.demands.count %></td>
           <td><%= risk_review.demand_blocks.count %></td>
           <td><%= risk_review.demand_blocks.count.to_f / risk_review.demands.count %></td>

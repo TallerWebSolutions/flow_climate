@@ -36,4 +36,8 @@ class RiskReview < ApplicationRecord
   validates :product, uniqueness: { scope: :meeting_date, message: I18n.t('risk_review.attributes.validations.product_uniqueness') }
 
   delegate :name, to: :product, prefix: true
+
+  def outlier_demands
+    demands.where('leadtime >= :outlier_value', outlier_value: lead_time_outlier_limit * 1.day)
+  end
 end

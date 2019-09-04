@@ -1006,3 +1006,5 @@ pt-BR:
   risk_reviews:
     new:
       title: "Nova Revisão de Risco"
+    show:
+      outlier_demands_label: "Demandas Outlier no Lead Time"
