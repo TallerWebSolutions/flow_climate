@@ -15,6 +15,7 @@
         <th><%= RiskReview.human_attribute_name :demands %></th>
         <th><%= RiskReview.human_attribute_name :demand_blocks %></th>
         <th><%= RiskReview.human_attribute_name :blocks_per_demand %></th>
+        <th></th>
       </tr>
     </thead>
     <tbody>
@@ -25,6 +26,11 @@
           <td><%= risk_review.demands.count %></td>
           <td><%= risk_review.demand_blocks.count %></td>
           <td><%= number_with_precision(risk_review.blocks_per_demand, precision: 3) %></td>
+          <td>
+            <%= link_to company_product_risk_review_path(company, product, risk_review), method: :delete, data: { confirm: I18n.t('general.destroy.confirm') }, remote: true do %>
+              <i class="fa fa-times"></i>
+            <% end %>
+          </td>
         </tr>
       <% end %>
     </tbody>

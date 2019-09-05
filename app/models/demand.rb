@@ -365,6 +365,7 @@ class Demand < ApplicationRecord
     demand_transitions.undiscard_all
     demand_blocks.undiscard_all
     demand_comments.undiscard_all
+    item_assignments.undiscard_all
     flow_impacts.undiscard_all
   end
 end
