@@ -6,6 +6,7 @@
 #
 #  created_at         :datetime         not null
 #  demand_id          :integer          indexed
+#  discarded_at       :datetime
 #  end_date           :datetime
 #  id                 :bigint(8)        not null, primary key
 #  impact_description :string           not null
@@ -29,6 +30,8 @@
 #
 
 class FlowImpact < ApplicationRecord
+  include Discard::Model
+
   enum impact_type: { other_team_dependency: 0, api_not_ready: 1, customer_not_available: 2, other_demand_dependency: 3, fixes_out_of_scope: 4 }
 
   belongs_to :project

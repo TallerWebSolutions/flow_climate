@@ -6,6 +6,7 @@
 #
 #  created_at     :datetime         not null
 #  demand_id      :integer          not null, indexed => [team_member_id, start_time], indexed
+#  discarded_at   :datetime
 #  finish_time    :datetime
 #  id             :bigint(8)        not null, primary key
 #  start_time     :datetime         not null, indexed => [demand_id, team_member_id]
@@ -25,6 +26,8 @@
 #
 
 class ItemAssignment < ApplicationRecord
+  include Discard::Model
+
   belongs_to :demand
   belongs_to :team_member
 

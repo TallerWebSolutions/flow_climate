@@ -20,6 +20,7 @@ RSpec.describe Demand, type: :model do
     it { is_expected.to have_many(:demand_transitions).dependent(:destroy) }
     it { is_expected.to have_many(:demand_blocks).dependent(:destroy) }
     it { is_expected.to have_many(:demand_comments).dependent(:destroy) }
+    it { is_expected.to have_many(:flow_impacts).dependent(:destroy) }
     it { is_expected.to have_many(:stages).through(:demand_transitions) }
 
     it { is_expected.to have_many(:item_assignments).dependent(:destroy) }

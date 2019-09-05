@@ -507,6 +507,8 @@ en:
       product_blank: "it is mandatory to outsourcing projects"
     destroy:
       confirm: "Are you sure? All demands in this project will be deleted as well."
+      success: "Project deleted."
+      error: "The project was not deleted"
     modal:
       statistics: "Statistics for %{target_name}"
   team_member:

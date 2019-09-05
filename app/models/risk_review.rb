@@ -37,6 +37,7 @@ class RiskReview < ApplicationRecord
   validates :product, uniqueness: { scope: :meeting_date, message: I18n.t('risk_review.attributes.validations.product_uniqueness') }
 
   delegate :name, to: :product, prefix: true
+  delegate :count, to: :bugs, prefix: true
 
   def bugs
     demands.bug
@@ -57,8 +58,6 @@ class RiskReview < ApplicationRecord
 
     flow_impacts.count.to_f / demands.count
   end
-
-  delegate :count, to: :bugs, prefix: true
 
   def bug_percentage
     return 0 unless demands.count.positive?

@@ -239,7 +239,8 @@ CREATE TABLE public.demand_comments (
     comment_text character varying NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    team_member_id integer
+    team_member_id integer,
+    discarded_at timestamp without time zone
 );
 
 
@@ -471,7 +472,8 @@ CREATE TABLE public.flow_impacts (
     end_date timestamp without time zone,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    risk_review_id integer
+    risk_review_id integer,
+    discarded_at timestamp without time zone
 );
 
 
@@ -574,7 +576,8 @@ CREATE TABLE public.item_assignments (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     start_time timestamp without time zone NOT NULL,
-    finish_time timestamp without time zone
+    finish_time timestamp without time zone,
+    discarded_at timestamp without time zone
 );
 
 
@@ -3413,6 +3416,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190816185103'),
 ('20190821145655'),
 ('20190830144220'),
-('20190905151751');
+('20190905151751'),
+('20190905215441');
 
 

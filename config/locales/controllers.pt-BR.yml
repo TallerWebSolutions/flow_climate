@@ -553,6 +553,8 @@ pt-BR:
       product_blank: "é obrigatório para projeto de outsourcing"
     destroy:
       confirm: "Tem certeza que deseja apagar o projeto? Todas as demandas deste projeto também serão excluídas."
+      success: "Projeto excluído."
+      error: "O projeto não foi excluído"
     modal:
       statistics: "Estatísticas de %{target_name}"
   team_member:
