@@ -8,6 +8,7 @@
 #  comment_text   :string           not null
 #  created_at     :datetime         not null
 #  demand_id      :integer          not null, indexed
+#  discarded_at   :datetime
 #  id             :bigint(8)        not null, primary key
 #  team_member_id :integer
 #  updated_at     :datetime         not null
@@ -23,6 +24,8 @@
 #
 
 class DemandComment < ApplicationRecord
+  include Discard::Model
+
   belongs_to :demand
   belongs_to :team_member
 

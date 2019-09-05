@@ -66,7 +66,12 @@ class ProjectsController < AuthenticatedController
   end
 
   def destroy
-    @project.destroy
+    if @project.destroy
+      flash[:notice] = I18n.t('project.destroy.success')
+    else
+      flash[:error] = "#{I18n.t('project.destroy.error')} - #{@project.errors.full_messages.join(' | ')}"
+    end
+
     redirect_to company_projects_path(@company)
   end
 

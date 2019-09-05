@@ -77,9 +77,11 @@ class Demand < ApplicationRecord
 
   has_many :demand_transitions, dependent: :destroy
   has_many :demand_blocks, dependent: :destroy
-  has_many :stages, -> { distinct }, through: :demand_transitions
   has_many :demand_comments, dependent: :destroy
   has_many :item_assignments, dependent: :destroy
+  has_many :flow_impacts, dependent: :destroy
+
+  has_many :stages, -> { distinct }, through: :demand_transitions
   has_many :team_members, through: :item_assignments
 
   has_one :demands_list, inverse_of: :demand, dependent: :restrict_with_error
@@ -109,8 +111,8 @@ class Demand < ApplicationRecord
   delegate :name, to: :portfolio_unit, prefix: true, allow_nil: true
 
   before_save :compute_and_update_automatic_fields
-  after_discard :discard_transitions_and_blocks
-  after_undiscard :undiscard_transitions_and_blocks
+  after_discard :discard_dependencies
+  after_undiscard :undiscard_dependencies
 
   def csv_array
     [
@@ -351,13 +353,18 @@ class Demand < ApplicationRecord
     total_blocked
   end
 
-  def discard_transitions_and_blocks
+  def discard_dependencies
     demand_transitions.discard_all
     demand_blocks.discard_all
+    demand_comments.discard_all
+    item_assignments.discard_all
+    flow_impacts.discard_all
   end
 
-  def undiscard_transitions_and_blocks
+  def undiscard_dependencies
     demand_transitions.undiscard_all
     demand_blocks.undiscard_all
+    demand_comments.undiscard_all
+    flow_impacts.undiscard_all
   end
 end

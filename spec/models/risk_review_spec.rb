@@ -113,7 +113,7 @@ RSpec.describe RiskReview, type: :model do
     include_context 'risk reviews data'
 
     it 'returns the demands with lead time above the outlier limit' do
-      expect(risk_review.demands_lead_time_p80).to be_within(0.0001).of 725_760.0001
+      expect(risk_review.demands_lead_time_p80).to be_within(0.01).of 725_760.00
       expect(other_risk_review.demands_lead_time_p80).to eq 0
     end
   end

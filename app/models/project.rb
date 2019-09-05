@@ -47,7 +47,7 @@ class Project < ApplicationRecord
 
   has_many :project_risk_configs, dependent: :destroy
   has_many :project_risk_alerts, dependent: :destroy
-  has_many :demands, dependent: :destroy
+  has_many :demands, dependent: :restrict_with_error
   has_many :integration_errors, dependent: :destroy
   has_many :project_change_deadline_histories, dependent: :destroy
   has_many :stage_project_configs, dependent: :destroy

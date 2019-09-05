@@ -208,10 +208,9 @@ RSpec.describe ProjectRiskConfigsController, type: :controller do
 
           before { delete :destroy, params: { company_id: company, project_id: project, id: project_risk_config } }
 
-          it 'does not delete the project and show the error' do
+          it 'deletes the risk config' do
             expect(response).to redirect_to company_project_path(company, project)
-            expect(Project.last).to eq project
-            expect(flash[:error]).to eq assigns(:project_risk_config).errors.full_messages.join(',')
+            expect(ProjectRiskConfig.last).to be_nil
           end
         end
       end

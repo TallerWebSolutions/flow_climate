@@ -470,15 +470,17 @@ RSpec.describe ProjectsController, type: :controller do
           end
         end
 
-        context 'having dependencies' do
+        context 'having restrictive dependencies' do
           let!(:project) { Fabricate :project, customers: [customer] }
+
+          let!(:demand) { Fabricate :demand, project: project }
 
           before { delete :destroy, params: { company_id: company, id: project } }
 
           it 'does delete the project and the dependecies' do
             expect(response).to redirect_to company_projects_path(company)
-            expect(Project.last).to be_nil
-            expect(flash[:error]).to be_blank
+            expect(Project.last).not_to be_nil
+            expect(flash[:error]).to eq "#{I18n.t('project.destroy.error')} - #{assigns(:project).errors.full_messages.join(' | ')}"
           end
         end
       end

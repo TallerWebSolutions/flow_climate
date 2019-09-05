@@ -207,6 +207,7 @@ pt-BR:
       project:
         company: Empresa
         product: Produto
+        demands: Demandas
         team: Time
         name: Nome
         qty_hours: Qtd de Horas

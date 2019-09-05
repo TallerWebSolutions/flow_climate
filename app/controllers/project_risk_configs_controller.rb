@@ -29,9 +29,8 @@ class ProjectRiskConfigsController < AuthenticatedController
   end
 
   def destroy
-    return redirect_to company_project_path(@company, @project) if @project_risk_config.destroy
-
-    redirect_to(company_project_path(@company, @project), flash: { error: @project_risk_config.errors.full_messages.join(',') })
+    @project_risk_config.destroy
+    redirect_to company_project_path(@company, @project)
   end
 
   private
