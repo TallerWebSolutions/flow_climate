@@ -116,11 +116,11 @@ pt-BR:
       zero: "sem pontos"
       one: "%{count} pontos"
       other: "%{count} pontos"
-    demands: "Demanda(s)"
+    demands: "demanda(s)"
     avg_speed_per_week: "%{speed_value} itens/semana"
     items_text: "%{items_count} item(ns)"
     flow: "Fluxo"
-    class_of_service: "Classe de Serviço (Perfil de Risco)"
+    class_of_service: "Classe de Serviço"
     leadtime: "Lead time"
     list: "Lista"
     map: "Mapa"
@@ -133,6 +133,8 @@ pt-BR:
       zero: "sem comentários"
       one: "%{count} comentário"
       other: "%{count} comentários"
+    leadtime_p80_label: "Lead time (p80)"
+    demand_blocks: "bloqueio(s)"
   header:
     logout: Sair
     sign_up: Cadastre-se
@@ -689,6 +691,8 @@ pt-BR:
       class_of_service:
         title: "Classe de Serviço"
         all_classes: "Todas as Classes"
+      block_categories:
+        title: "Bloqueios de Demanda"
     grouped_by_stage:
       time_in_stage: "Tempo na Etapa"
       hours_in_stage: "Horas na Etapa"
@@ -1007,4 +1011,12 @@ pt-BR:
     new:
       title: "Nova Revisão de Risco"
     show:
-      outlier_demands_label: "Demandas Outlier no Lead Time"
+      outlier_demands_label: "Demandas Outlier"
+      demands_blocks_label: "Bloqueios de Demanda"
+      class_of_services:
+        title: "Classes de Serviço"
+      demands_label: "Demandas"
+      flow_impacts_label: "Impactos de Fluxo"
+      impacts_per_demand_label: "Impacto/Demanda"
+      bugs_label: "Defeitos"
+      blocks_per_demand_label: "Bloqueios/Demanda"

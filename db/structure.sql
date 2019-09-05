@@ -470,7 +470,8 @@ CREATE TABLE public.flow_impacts (
     start_date timestamp without time zone NOT NULL,
     end_date timestamp without time zone,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    risk_review_id integer
 );
 
 
@@ -3162,6 +3163,14 @@ ALTER TABLE ONLY public.products_projects
 
 
 --
+-- Name: flow_impacts fk_rails_c718f8e04c; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.flow_impacts
+    ADD CONSTRAINT fk_rails_c718f8e04c FOREIGN KEY (risk_review_id) REFERENCES public.risk_reviews(id);
+
+
+--
 -- Name: demands fk_rails_c9b5eaaa7f; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -3403,6 +3412,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190815151526'),
 ('20190816185103'),
 ('20190821145655'),
-('20190830144220');
+('20190830144220'),
+('20190905151751');
 
 

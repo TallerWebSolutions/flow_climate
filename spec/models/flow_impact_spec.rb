@@ -8,6 +8,7 @@ RSpec.describe FlowImpact, type: :model do
   context 'associations' do
     it { is_expected.to belong_to(:project) }
     it { is_expected.to belong_to(:demand) }
+    it { is_expected.to belong_to(:risk_review) }
   end
 
   context 'validations' do

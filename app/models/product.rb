@@ -31,6 +31,7 @@ class Product < ApplicationRecord
   has_many :portfolio_units, dependent: :destroy
   has_many :demands, dependent: :restrict_with_error
   has_many :demand_blocks, through: :demands
+  has_many :flow_impacts, through: :projects
   has_many :risk_reviews, dependent: :destroy
 
   validates :name, :customer, presence: true

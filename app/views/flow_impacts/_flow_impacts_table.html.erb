@@ -1,3 +1,4 @@
+<% if flow_impacts_list.present? %>
 <table class="table table-striped">
   <thead>
     <tr>
@@ -30,3 +31,6 @@
     <% end %>
   </tbody>
 </table>
+<% else %>
+  <%= render 'layouts/no_data', missing_data: FlowImpact.model_name.human.pluralize.downcase %>
+<% end %>

@@ -362,6 +362,7 @@ pt-BR:
             customer_unavailable: Cliente Indisponível
             other_demand_dependency: Dependência de Outra Demanda
             external_dependency: Dependência Externa
+            other_demand_priority: Prioridade para Outra Demanda
       project_change_deadline_history:
         project: Projeto
         user: Usuário

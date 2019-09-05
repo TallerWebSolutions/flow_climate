@@ -8,6 +8,7 @@ RSpec.describe Product, type: :model do
     it { is_expected.to have_many(:portfolio_units).dependent(:destroy) }
     it { is_expected.to have_many(:demands).dependent(:restrict_with_error) }
     it { is_expected.to have_many(:demand_blocks).through(:demands) }
+    it { is_expected.to have_many(:flow_impacts).through(:projects) }
     it { is_expected.to have_many(:risk_reviews).dependent(:destroy) }
   end
 
