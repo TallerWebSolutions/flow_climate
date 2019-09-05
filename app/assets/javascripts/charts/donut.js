@@ -16,6 +16,9 @@ function buildDonutChart(donutDiv) {
                 text: donutDiv.data('ytitle')
             }
         },
+        tooltip: {
+            valueSuffix: ` ${donutDiv.data("tooltipsuffix")}`
+        },
         plotOptions: {
             pie: {
                 center: ['50%', '50%'],
@@ -23,11 +26,11 @@ function buildDonutChart(donutDiv) {
                 cursor: 'pointer',
                 dataLabels: {
                     enabled: true,
-                    format: '<b>{point.name}</b>: {point.percentage:.1f} %',
-                    style: {
-                        color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                    formatter: function() {
+                        return `${Math.round(this.percentage * 100) / 100} %`;
                     }
-                }
+                },
+                showInLegend: true
             }
         },
         series: [{
@@ -35,7 +38,7 @@ function buildDonutChart(donutDiv) {
             colorByPoint: true,
             data: donutDiv.data('series'),
             size: '80%',
-            innerSize: '40%'
+            innerSize: '20%'
         }]
     })
 }

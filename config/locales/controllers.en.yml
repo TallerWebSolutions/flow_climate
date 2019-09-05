@@ -116,11 +116,11 @@ en:
       zero: "no score"
       one: "%{count} point"
       other: "%{count} points"
-    demands: "Demand(s)"
+    demands: "demand(s)"
     avg_speed_per_week: "%{speed_value} items/week"
     items_text: "%{items_count} item(ns)"
     flow: "Flow"
-    class_of_service: "Class of Service (Risk Profile)"
+    class_of_service: "Class of Service"
     leadtime: "Lead time"
     list: "List"
     map: "Map"
@@ -133,6 +133,8 @@ en:
       zero: "no comments"
       one: "%{count} comment"
       other: "%{count} comments"
+    leadtime_p80_label: "Lead time (p80)"
+    demand_blocks: "block(s)"
   header:
     logout: Logout
     explore: Explore
@@ -641,6 +643,8 @@ en:
       class_of_service:
         title: "Class of Service"
         all_classes: "All Classes"
+      block_categories:
+        title: "Demand Blocks"
     grouped_by_stage:
       time_in_stage: "Time in Stage"
       hours_in_stage: "Hours in Stage"
@@ -1020,4 +1024,12 @@ en:
     new:
       title: "New Risk Review"
     show:
-      outlier_demands_label: "Lead Time Outlier Demands"
+      outlier_demands_label: "Outlier Demands"
+      demands_blocks_label: "Demands Blocks"
+      class_of_services:
+        title: "Class of Services"
+      demands_label: "Demands"
+      flow_impacts_label: "Flow Impacts"
+      impacts_per_demand_label: "Impact/Demand"
+      bugs_label: "Bugs"
+      blocks_per_demand_label: "Blocks/Demand"

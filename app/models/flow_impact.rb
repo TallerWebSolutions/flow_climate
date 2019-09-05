@@ -11,6 +11,7 @@
 #  impact_description :string           not null
 #  impact_type        :integer          not null, indexed
 #  project_id         :integer          not null, indexed
+#  risk_review_id     :integer
 #  start_date         :datetime         not null
 #  updated_at         :datetime         not null
 #
@@ -22,6 +23,7 @@
 #
 # Foreign Keys
 #
+#  fk_rails_c718f8e04c  (risk_review_id => risk_reviews.id)
 #  fk_rails_cda32ac094  (project_id => projects.id)
 #  fk_rails_f6118b7a74  (demand_id => demands.id)
 #
@@ -31,6 +33,7 @@ class FlowImpact < ApplicationRecord
 
   belongs_to :project
   belongs_to :demand
+  belongs_to :risk_review
 
   validates :project, :start_date, :impact_type, :impact_description, presence: true
 end

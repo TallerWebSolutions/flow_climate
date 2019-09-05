@@ -1,4 +1,4 @@
-<div class="row">
+<div class="row bottom-spaced-component">
   <div class="row">
     <div class="col-xs-12">
       <ul class="breadcrumb">
@@ -12,15 +12,119 @@
   </div>
 </div>
 
-<h4><%= "#{RiskReview.human_attribute_name :meeting_date}: #{I18n.l(@risk_review.meeting_date)}" %></h4>
-<h4><%= "#{RiskReview.human_attribute_name :demands}: #{I18n.t('general.demands_text', count: @risk_review.demands.count)}" %></h4>
-<h4><%= "#{RiskReview.human_attribute_name :lead_time_outlier_limit}: #{I18n.t('general.days_text', count: number_with_precision(@risk_review.lead_time_outlier_limit, precision: 2))}" %></h4>
-<h4><%= "#{I18n.t('risk_reviews.show.outlier_demands_label')}: #{I18n.t('general.demands_text', count: @risk_review.outlier_demands.count)}" %></h4>
+<div class="row">
+
+  <div class="col-xs-2">
+    <div class="row-fluid">
+      <div class="col-xs-12">
+        <span><%= RiskReview.human_attribute_name :meeting_date %></span>
+        <h1 class="section-title"><%= I18n.l(@risk_review.meeting_date) %></h1>
+      </div>
+      <div class="row-fluid">
+        <table class="table">
+          <tbody>
+            <tr>
+              <td><b><%= RiskReview.human_attribute_name :demands %></b></td>
+              <td><%= @risk_review.demands.count %></td>
+            </tr>
+            <tr>
+              <td><b><%= t('general.leadtime_p80_label') %></b></td>
+              <td><%= I18n.t('general.days_text', count: number_with_precision(@risk_review.demands_lead_time_p80 / 1.day, precision: 3)) %></td>
+            </tr>
+            <tr>
+              <td><b><%= RiskReview.human_attribute_name :lead_time_outlier_limit %></b></td>
+              <td><%= I18n.t('general.days_text', count: number_with_precision(@risk_review.lead_time_outlier_limit, precision: 2)) %></td>
+            </tr>
+            <tr>
+              <td><b><%= I18n.t('risk_reviews.show.outlier_demands_label') %></b></td>
+              <td><%= @risk_review.outlier_demands.count %><sup><%= " (#{number_to_percentage(@risk_review.outlier_demands_percentage, precision: 2)})" %></sup></td>
+            </tr>
+            <tr>
+              <td><b><%= I18n.t('risk_reviews.show.bugs_label') %></b></td>
+              <td><%= @risk_review.bugs_count %><sup><%= " (#{number_to_percentage(@risk_review.bug_percentage, precision: 2)})" %></sup></td>
+            </tr>
+            <tr>
+              <td><b><%= I18n.t('risk_reviews.show.blocks_per_demand_label') %></b></td>
+              <td><%= number_with_precision(@risk_review.blocks_per_demand, precision: 3) %></td>
+            </tr>
+            <tr>
+              <td><b><%= I18n.t('risk_reviews.show.flow_impacts_label') %></b></td>
+              <td><%= @risk_review.flow_impacts.count %></td>
+            </tr>
+            <tr>
+              <td><b><%= I18n.t('risk_reviews.show.impacts_per_demand_label') %></b></td>
+              <td><%= number_with_precision(@risk_review.impacts_per_demand, precision: 3) %></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-xs-5">
+    <span><%= I18n.t('risk_reviews.show.class_of_services.title') %></span>
+
+    <div id="risk-review-class-of-services-donut"
+         class="flow-chart"
+         data-title=''
+         data-seriesname='<%= I18n.t('general.class_of_service') %>'
+         data-tooltipsuffix=<%= I18n.t('general.demands') %>
+         data-series='<%= Demand.class_of_services.map { |class_of_service| { name: I18n.t("activerecord.attributes.demand.enums.class_of_service.#{class_of_service[0]}"), y: @risk_review.demands.send(class_of_service[0]).count } if @risk_review.demands.send(class_of_service[0]).count.positive? }.compact.to_json %>'
+         data-decimals='0'>
+    </div>
+  </div>
+
+  <div class="col-xs-5">
+    <span><%= I18n.t('demands.filter.block_categories.title') %></span>
+
+    <div id="risk-review-block-categories-donut"
+         class="flow-chart"
+         data-title=''
+         data-seriesname=''
+         data-tooltipsuffix=<%= I18n.t('general.demand_blocks') %>
+         data-series='<%= DemandBlock.block_types.map { |block_type| { name: I18n.t("activerecord.attributes.demand_block.enums.block_type.#{block_type[0]}"), y: @risk_review.demand_blocks.send(block_type[0]).count } if @risk_review.demand_blocks.send(block_type[0]).count.positive? }.compact.to_json %>'
+         data-decimals='0'>
+    </div>
+  </div>
+</div>
 
 <hr>
 
-<h4>Demandas Outliers de Lead Time <%= "(#{number_to_percentage((@risk_review.outlier_demands.count.to_f / @risk_review.demands.count) * 100, precision: 2)})" %></h4>
+<div class="row">
+  <div class="col-xs-12">
+    <div class="tab">
+      <button class="tablinks" onclick="openTab(event, 'demands', 'tablinks', 'tabcontent')"><%= I18n.t('risk_reviews.show.demands_label') %></button>
+      <button class="tablinks" onclick="openTab(event, 'outlier-demands', 'tablinks', 'tabcontent')"><%= I18n.t('risk_reviews.show.outlier_demands_label') %></button>
+      <button class="tablinks" onclick="openTab(event, 'bugs-list', 'tablinks', 'tabcontent')"><%= I18n.t('risk_reviews.show.bugs_label') %></button>
+      <button class="tablinks" onclick="openTab(event, 'demands-blocks', 'tablinks', 'tabcontent')"><%= I18n.t('risk_reviews.show.demands_blocks_label') %></button>
+      <button class="tablinks" onclick="openTab(event, 'flow-impacts', 'tablinks', 'tabcontent')"><%= I18n.t('risk_reviews.show.flow_impacts_label') %></button>
+    </div>
+  </div>
+</div>
 
-<span>
-  <%= render 'demands/portfolio_demands_table', company: @company, product: @product, demands: @risk_review.outlier_demands %>
-</span>
+<div id="demands" class="tabcontent">
+  <%= render 'demands/portfolio_demands_table', company: @company, product: @product, demands: @risk_review.demands.order(end_date: :desc) %>
+</div>
+
+<div id="outlier-demands" class="tabcontent">
+  <%= render 'demands/portfolio_demands_table', company: @company, product: @product, demands: @risk_review.outlier_demands.order(end_date: :desc) %>
+</div>
+
+<div id="bugs-list" class="tabcontent">
+  <%= render 'demands/portfolio_demands_table', company: @company, product: @product, demands: @risk_review.bugs.order(end_date: :desc) %>
+</div>
+
+<div id="demands-blocks" class="tabcontent">
+  <%= render 'demand_blocks/demand_blocks_table_reduced', company: @company, demand_blocks_list: @risk_review.demand_blocks.order(:block_time) %>
+</div>
+
+<div id="flow-impacts" class="tabcontent">
+  <%= render 'flow_impacts/flow_impacts_table', company: @company, flow_impacts_list: @risk_review.flow_impacts.order(start_date: :desc) %>
+</div>
+
+<% content_for :javascript do %>
+  <%= javascript_include_tag 'charts/donut' %>
+
+  <%= javascript_include_tag 'components/components' %>
+  <%= javascript_include_tag 'risk_reviews/show' %>
+<% end %>
