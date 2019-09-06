@@ -1,0 +1,22 @@
+<div class="standard-form">
+
+  <div class="row">
+    <div class='col-xs-6 form-group <%= 'has-error' if team_resource.errors[:resource_type].present? %>'>
+      <%= f.label :resource_type, class: 'control-label required' %>
+      <%= f.select :resource_type, TeamResource.resource_types.map { |key, _value| [I18n.t("activerecord.attributes.team_resource.enums.resource_type.#{key}"), key] }, { include_blank: I18n.t('general.select'), selected: team_resource.resource_type }, class: 'form-control' %>
+      <span class="help-block"><%= team_resource.errors[:resource_type].join(', ') %></span>
+    </div>
+    <div class='col-xs-6 form-group <%= 'has-error' if team_resource.errors[:resource_name].present? %>'>
+      <%= f.label :resource_name, class: 'control-label required' %>
+      <%= f.text_field :resource_name, class: 'form-control' %>
+      <span class="help-block"><%= team_resource.errors[:resource_name].join(', ') %></span>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-xs-12">
+      <%= f.submit class: 'btn btn-success' %>
+      <%= link_to I18n.t('general.buttons.cancel'), '#', class: 'btn btn-danger', id: 'cancel-form-team-resource' %>
+    </div>
+  </div>
+</div>

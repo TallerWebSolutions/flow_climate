@@ -1022,3 +1022,6 @@ pt-BR:
       impacts_per_demand_label: "Impacto/Demanda"
       bugs_label: "Defeitos"
       blocks_per_demand_label: "Bloqueios/Demanda"
+  team_resources:
+    new:
+      title: "Novo Recurso"

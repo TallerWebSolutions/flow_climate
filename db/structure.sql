@@ -1360,6 +1360,74 @@ ALTER SEQUENCE public.team_members_id_seq OWNED BY public.team_members.id;
 
 
 --
+-- Name: team_resource_allocations; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.team_resource_allocations (
+    id bigint NOT NULL,
+    team_resource_id integer NOT NULL,
+    team_id integer NOT NULL,
+    monthly_payment numeric NOT NULL,
+    start_date date NOT NULL,
+    end_date date,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: team_resource_allocations_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.team_resource_allocations_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: team_resource_allocations_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.team_resource_allocations_id_seq OWNED BY public.team_resource_allocations.id;
+
+
+--
+-- Name: team_resources; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.team_resources (
+    id bigint NOT NULL,
+    company_id integer NOT NULL,
+    resource_type integer NOT NULL,
+    resource_name character varying NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: team_resources_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.team_resources_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: team_resources_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.team_resources_id_seq OWNED BY public.team_resources.id;
+
+
+--
 -- Name: teams; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1757,6 +1825,20 @@ ALTER TABLE ONLY public.team_members ALTER COLUMN id SET DEFAULT nextval('public
 
 
 --
+-- Name: team_resource_allocations id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.team_resource_allocations ALTER COLUMN id SET DEFAULT nextval('public.team_resource_allocations_id_seq'::regclass);
+
+
+--
+-- Name: team_resources id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.team_resources ALTER COLUMN id SET DEFAULT nextval('public.team_resources_id_seq'::regclass);
+
+
+--
 -- Name: teams id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -2078,6 +2160,22 @@ ALTER TABLE ONLY public.stages_teams
 
 ALTER TABLE ONLY public.team_members
     ADD CONSTRAINT team_members_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: team_resource_allocations team_resource_allocations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.team_resource_allocations
+    ADD CONSTRAINT team_resource_allocations_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: team_resources team_resources_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.team_resources
+    ADD CONSTRAINT team_resources_pkey PRIMARY KEY (id);
 
 
 --
@@ -2617,6 +2715,41 @@ CREATE UNIQUE INDEX index_team_members_on_company_id_and_name_and_jira_account_i
 
 
 --
+-- Name: index_team_resource_allocations_on_team_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_team_resource_allocations_on_team_id ON public.team_resource_allocations USING btree (team_id);
+
+
+--
+-- Name: index_team_resource_allocations_on_team_resource_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_team_resource_allocations_on_team_resource_id ON public.team_resource_allocations USING btree (team_resource_id);
+
+
+--
+-- Name: index_team_resources_on_company_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_team_resources_on_company_id ON public.team_resources USING btree (company_id);
+
+
+--
+-- Name: index_team_resources_on_resource_name; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_team_resources_on_resource_name ON public.team_resources USING btree (resource_name);
+
+
+--
+-- Name: index_team_resources_on_resource_type; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_team_resources_on_resource_type ON public.team_resources USING btree (resource_type);
+
+
+--
 -- Name: index_teams_on_company_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2779,6 +2912,14 @@ ALTER TABLE ONLY public.demand_blocks
 
 ALTER TABLE ONLY public.risk_reviews
     ADD CONSTRAINT fk_rails_0e13c6d551 FOREIGN KEY (company_id) REFERENCES public.companies(id);
+
+
+--
+-- Name: team_resources fk_rails_0e82f4e026; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.team_resources
+    ADD CONSTRAINT fk_rails_0e82f4e026 FOREIGN KEY (company_id) REFERENCES public.companies(id);
 
 
 --
@@ -2995,6 +3136,14 @@ ALTER TABLE ONLY public.financial_informations
 
 ALTER TABLE ONLY public.jira_project_configs
     ADD CONSTRAINT fk_rails_5de62c9ca2 FOREIGN KEY (project_id) REFERENCES public.projects(id);
+
+
+--
+-- Name: team_resource_allocations fk_rails_600e78ae6c; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.team_resource_allocations
+    ADD CONSTRAINT fk_rails_600e78ae6c FOREIGN KEY (team_resource_id) REFERENCES public.team_resources(id);
 
 
 --
@@ -3230,6 +3379,14 @@ ALTER TABLE ONLY public.teams
 
 
 --
+-- Name: team_resource_allocations fk_rails_e11bdf0f2c; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.team_resource_allocations
+    ADD CONSTRAINT fk_rails_e11bdf0f2c FOREIGN KEY (team_id) REFERENCES public.teams(id);
+
+
+--
 -- Name: projects fk_rails_ecc227a0c2; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -3417,6 +3574,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190821145655'),
 ('20190830144220'),
 ('20190905151751'),
-('20190905215441');
+('20190905215441'),
+('20190906135154');
 
 

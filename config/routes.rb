@@ -92,6 +92,8 @@ Rails.application.routes.draw do
 
     resources :customers
 
+    resources :team_resources, only: %i[new create destroy]
+
     resources :products do
       member do
         get :portfolio_units_tab

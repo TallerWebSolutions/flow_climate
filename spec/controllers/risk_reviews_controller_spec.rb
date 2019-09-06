@@ -122,7 +122,7 @@ RSpec.describe RiskReviewsController, type: :controller do
 
         before { post :create, params: { company_id: company, product_id: product, risk_review: { meeting_date: Time.zone.today, lead_time_outlier_limit: 10 } }, xhr: true }
 
-        it 'creates the new team member and redirects to team show' do
+        it 'creates the new risk review' do
           expect(response).to render_template 'risk_reviews/create.js.erb'
           expect(assigns(:risk_review).errors.full_messages).to eq []
           expect(assigns(:risk_review)).to be_persisted

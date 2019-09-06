@@ -1,8 +1,10 @@
 hideAllComponents($('.nav-item'));
 
-const stampsDiv = $('#nav-item-stamps');
-stampsDiv.addClass('active');
+$('#nav-item-stamps').addClass('active');
 $('#stamps').show();
+
+$('#company-teams-tab').addClass('active');
+$('#teams-list').show();
 
 $("#general-loader").hide();
 

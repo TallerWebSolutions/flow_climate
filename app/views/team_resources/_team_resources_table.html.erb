@@ -1,0 +1,34 @@
+<div class="row">
+  <div class="col-xs-12">
+    <%= link_to I18n.t('team_resources.new.title'), new_company_team_resource_path(company), class: 'btn btn-success bottom-spaced-component pull-right', remote: true %>
+  </div>
+</div>
+
+<% if team_resources.blank? %>
+  <%= render 'layouts/no_data', missing_data: TeamResource.model_name.human %>
+<% else %>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th><%= TeamResource.human_attribute_name :resource_type %></th>
+        <th><%= TeamResource.human_attribute_name :resource_name %></th>
+        <th><%= TeamResource.human_attribute_name :team_resource_allocations %></th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% team_resources.each do |team_resource| %>
+        <tr>
+          <td><%= I18n.t("activerecord.attributes.team_resource.enums.resource_type.#{team_resource.resource_type}") %></td>
+          <td><%= team_resource.resource_name %></td>
+          <td><%= team_resource.team_resource_allocations.count %></td>
+          <td>
+            <%= link_to company_team_resource_path(company, team_resource), method: :delete, data: { confirm: I18n.t('general.destroy.confirm') }, remote: true do %>
+              <i class="fa fa-times"></i>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% end %>

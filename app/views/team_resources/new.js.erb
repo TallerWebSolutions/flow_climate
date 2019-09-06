@@ -1,0 +1,7 @@
+var teamResourcesDiv = $('#team-resources')
+
+teamResourcesDiv.html("<%= escape_javascript(render 'team_resources/new', company: @company, team_resource: @team_resource) %>");
+
+$('#cancel-form-team_resource').on('click', function() {
+    teamResourcesDiv.html("<%= escape_javascript(render 'team_resources/team_resources_table', company: @company, team_resources: @team_resources) %>");
+});
