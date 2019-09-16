@@ -4,7 +4,7 @@ class RiskReviewsController < AuthenticatedController
   before_action :assign_company
   before_action :assign_product
 
-  before_action :assign_risk_review, only: %i[show destroy]
+  before_action :assign_risk_review, only: %i[show destroy edit update]
 
   def new
     @risk_review = RiskReview.new(product: @product)
@@ -20,7 +20,7 @@ class RiskReviewsController < AuthenticatedController
 
     risk_reviews
 
-    respond_to { |format| format.js { render 'risk_reviews/create.js.erb' } }
+    respond_to { |format| format.js { render 'risk_reviews/create' } }
   end
 
   def show; end
@@ -28,6 +28,21 @@ class RiskReviewsController < AuthenticatedController
   def destroy
     @risk_review.destroy
     respond_to { |format| format.js { render 'risk_reviews/destroy' } }
+  end
+
+  def edit
+    risk_reviews
+    render 'risk_reviews/edit'
+  end
+
+  def update
+    @risk_review.update(risk_review_params)
+    if @risk_review.valid?
+      RiskReviewService.instance.associate_demands_data(@product, @risk_review)
+      @risk_reviews = @product.risk_reviews.order(meeting_date: :desc)
+    end
+
+    render 'risk_reviews/update'
   end
 
   private

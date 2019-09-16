@@ -25,6 +25,18 @@ RSpec.describe RiskReviewsController, type: :controller do
 
       it { expect(response).to redirect_to new_user_session_path }
     end
+
+    describe 'GET #edit' do
+      before { get :edit, params: { company_id: 'foo', product_id: 'bar', id: 'xpto' } }
+
+      it { expect(response).to redirect_to new_user_session_path }
+    end
+
+    describe 'PUT #update' do
+      before { put :update, params: { company_id: 'foo', product_id: 'bar', id: 'xpto' } }
+
+      it { expect(response).to redirect_to new_user_session_path }
+    end
   end
 
   context 'authenticated' do
@@ -103,17 +115,18 @@ RSpec.describe RiskReviewsController, type: :controller do
 
     describe 'POST #create' do
       context 'passing valid parameters' do
-        let(:risk_review) { Fabricate :risk_review, product: product, meeting_date: 1.year.ago }
+        let!(:first_risk) { Fabricate :risk_review, product: product, meeting_date: 3.days.ago }
+        let!(:second_risk) { Fabricate :risk_review, product: product, meeting_date: 2.days.ago }
 
         let!(:first_demand) { Fabricate :demand, product: product, risk_review: nil, end_date: 2.days.ago }
         let!(:second_demand) { Fabricate :demand, product: product, risk_review: nil, end_date: 26.hours.ago }
-        let!(:third_demand) { Fabricate :demand, product: product, risk_review: risk_review, end_date: 26.hours.ago }
+        let!(:third_demand) { Fabricate :demand, product: product, risk_review: second_risk, end_date: 26.hours.ago }
         let!(:fourth_demand) { Fabricate :demand, product: product, risk_review: nil, end_date: 4.days.ago }
         let!(:fifth_demand) { Fabricate :demand, product: product, risk_review: nil, end_date: Time.zone.tomorrow }
 
         let!(:first_block) { Fabricate :demand_block, demand: first_demand, risk_review: nil, unblock_time: 2.days.ago }
         let!(:second_block) { Fabricate :demand_block, demand: first_demand, risk_review: nil, unblock_time: 26.hours.ago }
-        let!(:third_block) { Fabricate :demand_block, demand: second_demand, risk_review: risk_review, unblock_time: 26.hours.ago }
+        let!(:third_block) { Fabricate :demand_block, demand: second_demand, risk_review: second_risk, unblock_time: 26.hours.ago }
         let!(:fourth_block) { Fabricate :demand_block, demand: third_demand, risk_review: nil, unblock_time: 4.days.ago }
         let!(:fifth_block) { Fabricate :demand_block, demand: third_demand, risk_review: nil, unblock_time: Time.zone.tomorrow }
 
@@ -123,12 +136,13 @@ RSpec.describe RiskReviewsController, type: :controller do
         before { post :create, params: { company_id: company, product_id: product, risk_review: { meeting_date: Time.zone.today, lead_time_outlier_limit: 10 } }, xhr: true }
 
         it 'creates the new risk review' do
-          expect(response).to render_template 'risk_reviews/create.js.erb'
+          expect(response).to render_template 'risk_reviews/create'
           expect(assigns(:risk_review).errors.full_messages).to eq []
           expect(assigns(:risk_review)).to be_persisted
           expect(assigns(:risk_review).lead_time_outlier_limit).to eq 10
           expect(assigns(:risk_review).demands).to match_array [first_demand, second_demand, fourth_demand]
           expect(assigns(:risk_review).demand_blocks).to match_array [first_block, second_block, fourth_block]
+          expect(assigns(:risk_reviews)).to eq product.reload.risk_reviews.order(meeting_date: :desc)
         end
       end
 
@@ -137,7 +151,7 @@ RSpec.describe RiskReviewsController, type: :controller do
 
         it 'does not create the team member and re-render the template with the errors' do
           expect(RiskReview.all.count).to eq 0
-          expect(response).to render_template 'risk_reviews/create.js.erb'
+          expect(response).to render_template 'risk_reviews/create'
           expect(assigns(:risk_review).errors.full_messages).to eq ['Outlier no lead time não pode ficar em branco', 'Data da Reunião não pode ficar em branco']
         end
       end
@@ -184,6 +198,111 @@ RSpec.describe RiskReviewsController, type: :controller do
           let(:company) { Fabricate :company, users: [] }
 
           before { delete :destroy, params: { company_id: company, product_id: product, id: risk_review } }
+
+          it { expect(response).to have_http_status :not_found }
+        end
+      end
+    end
+
+    describe 'GET #edit' do
+      let!(:first_risk) { Fabricate :risk_review, product: product, meeting_date: 1.day.ago }
+      let!(:second_risk) { Fabricate :risk_review, product: product, meeting_date: Time.zone.today }
+
+      let!(:first_demand) { Fabricate :demand, product: product, risk_review: nil, end_date: 2.days.ago }
+      let!(:second_demand) { Fabricate :demand, product: product, risk_review: nil, end_date: 26.hours.ago }
+      let!(:third_demand) { Fabricate :demand, product: product, risk_review: first_risk, end_date: 26.hours.ago }
+      let!(:fourth_demand) { Fabricate :demand, product: product, risk_review: nil, end_date: 4.days.ago }
+      let!(:fifth_demand) { Fabricate :demand, product: product, risk_review: nil, end_date: Time.zone.tomorrow }
+
+      let!(:first_block) { Fabricate :demand_block, demand: first_demand, risk_review: nil, unblock_time: 2.days.ago }
+      let!(:second_block) { Fabricate :demand_block, demand: first_demand, risk_review: nil, unblock_time: 26.hours.ago }
+      let!(:third_block) { Fabricate :demand_block, demand: second_demand, risk_review: first_risk, unblock_time: 26.hours.ago }
+      let!(:fourth_block) { Fabricate :demand_block, demand: third_demand, risk_review: nil, unblock_time: 4.days.ago }
+      let!(:fifth_block) { Fabricate :demand_block, demand: third_demand, risk_review: nil, unblock_time: Time.zone.tomorrow }
+
+      let!(:start_date) { 3.days.ago }
+      let!(:end_date) { 1.day.ago }
+
+      context 'passing valid parameters' do
+        before { get :edit, params: { company_id: company, product_id: product, id: first_risk }, xhr: true }
+
+        it 'assigns the instance variable and renders the template' do
+          expect(response).to have_http_status :ok
+          expect(response).to render_template 'risk_reviews/edit'
+          expect(assigns(:risk_review)).to eq first_risk
+          expect(assigns(:risk_reviews)).to eq [second_risk, first_risk]
+        end
+      end
+
+      context 'passing invalid' do
+        context 'company' do
+          before { get :edit, params: { company_id: 'foo', product_id: product, id: first_risk }, xhr: true }
+
+          it { expect(response).to have_http_status :not_found }
+        end
+
+        context 'product' do
+          before { get :edit, params: { company_id: company, product_id: 'foo', id: first_risk }, xhr: true }
+
+          it { expect(response).to have_http_status :not_found }
+        end
+
+        context 'risk_review' do
+          before { get :edit, params: { company_id: company, product_id: product, id: 'foo' }, xhr: true }
+
+          it { expect(response).to have_http_status :not_found }
+        end
+      end
+    end
+
+    describe 'PUT #update' do
+      let!(:first_risk) { Fabricate :risk_review, product: product, meeting_date: 1.day.ago }
+      let!(:second_risk) { Fabricate :risk_review, product: product, meeting_date: Time.zone.today }
+
+      let!(:first_demand) { Fabricate :demand, product: product, risk_review: nil, end_date: 2.days.ago }
+      let!(:second_demand) { Fabricate :demand, product: product, risk_review: nil, end_date: 26.hours.ago }
+      let!(:third_demand) { Fabricate :demand, product: product, risk_review: second_risk, end_date: 26.hours.ago }
+      let!(:fourth_demand) { Fabricate :demand, product: product, risk_review: nil, end_date: 4.days.ago }
+      let!(:fifth_demand) { Fabricate :demand, product: product, risk_review: nil, end_date: Time.zone.tomorrow }
+
+      let!(:first_block) { Fabricate :demand_block, demand: first_demand, risk_review: nil, unblock_time: 2.days.ago }
+      let!(:second_block) { Fabricate :demand_block, demand: first_demand, risk_review: nil, unblock_time: 26.hours.ago }
+      let!(:third_block) { Fabricate :demand_block, demand: second_demand, risk_review: second_risk, unblock_time: 26.hours.ago }
+      let!(:fourth_block) { Fabricate :demand_block, demand: third_demand, risk_review: nil, unblock_time: 4.days.ago }
+      let!(:fifth_block) { Fabricate :demand_block, demand: third_demand, risk_review: nil, unblock_time: Time.zone.tomorrow }
+
+      let!(:start_date) { 3.days.ago }
+      let!(:end_date) { 1.day.ago }
+
+      context 'passing valid parameters' do
+        before { put :update, params: { company_id: company, product_id: product, id: first_risk, risk_review: { meeting_date: Time.zone.tomorrow, lead_time_outlier_limit: 10 } }, xhr: true }
+
+        it 'assigns the instance variable and renders the template' do
+          expect(response).to render_template 'risk_reviews/update'
+          expect(assigns(:risk_review).errors.full_messages).to eq []
+          expect(assigns(:risk_review)).to be_persisted
+          expect(assigns(:risk_review).lead_time_outlier_limit).to eq 10
+          expect(assigns(:risk_review).demands).to match_array [first_demand, second_demand, fourth_demand, fifth_demand]
+          expect(assigns(:risk_review).demand_blocks).to match_array [first_block, second_block, fourth_block, fifth_block]
+          expect(assigns(:risk_reviews)).to eq [first_risk, second_risk]
+        end
+      end
+
+      context 'passing invalid' do
+        context 'company' do
+          before { put :update, params: { company_id: 'foo', product_id: product, id: first_risk }, xhr: true }
+
+          it { expect(response).to have_http_status :not_found }
+        end
+
+        context 'product' do
+          before { put :update, params: { company_id: company, product_id: 'foo', id: first_risk }, xhr: true }
+
+          it { expect(response).to have_http_status :not_found }
+        end
+
+        context 'risk_review' do
+          before { put :update, params: { company_id: company, product_id: product, id: 'foo' }, xhr: true }
 
           it { expect(response).to have_http_status :not_found }
         end
