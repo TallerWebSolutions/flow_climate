@@ -1,0 +1,7 @@
+<%= form_for risk_review, url: company_product_risk_review_path(company, product, risk_review), method: :put, class: 'form', remote: true do |f| %>
+  <div class="row bottom-spaced-component">
+    <div class="col-xs-12">
+      <%= render 'risk_reviews/form', f: f, risk_review: risk_review, company: company %>
+    </div>
+  </div>
+<% end %>
