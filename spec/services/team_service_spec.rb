@@ -17,6 +17,12 @@ RSpec.describe TeamService, type: :service do
     let!(:second_membership) { Fabricate :membership, team: team, team_member: second_team_member, start_date: 2.months.ago, end_date: 1.month.ago, member_role: :developer, hours_per_month: 40 }
     let!(:third_membership) { Fabricate :membership, team: team, team_member: third_team_member, start_date: 1.month.ago, end_date: nil, member_role: :client, hours_per_month: 120 }
 
+    let!(:first_team_resource) { Fabricate :team_resource, company: company }
+    let!(:second_team_resource) { Fabricate :team_resource, company: company }
+
+    let!(:first_allocation) { Fabricate :team_resource_allocation, team: team, team_resource: first_team_resource, start_date: 1.month.ago, end_date: nil, monthly_payment: 2000 }
+    let!(:second_allocation) { Fabricate :team_resource_allocation, team: team, team_resource: second_team_resource, start_date: 1.month.ago, end_date: nil, monthly_payment: 25_000 }
+
     let(:customer) { Fabricate :customer, company: company }
 
     context 'with data' do
@@ -33,18 +39,18 @@ RSpec.describe TeamService, type: :service do
       let!(:sixth_demand) { Fabricate :demand, project: second_project, end_date: Time.zone.now }
 
       it 'returns the average demand cost to the selected period' do
-        expect(described_class.instance.compute_average_demand_cost_to_team(team, 1.month.ago.to_date, Time.zone.today, 'month')).to eq(Date.new(2018, 5, 31) => 2500.0, Date.new(2018, 6, 30) => 5000.0)
+        expect(described_class.instance.compute_average_demand_cost_to_team(team, 1.month.ago.to_date, Time.zone.today, 'month')).to eq(Date.new(2018, 5, 31) => 9250.0, Date.new(2018, 6, 30) => 18_500.0)
       end
     end
 
     context 'without data' do
       it 'returns an empty hash' do
-        expect(described_class.instance.compute_average_demand_cost_to_team(team, 1.month.ago.to_date, Time.zone.today, 'month')).to eq(Date.new(2018, 5, 31) => 10_000.0, Date.new(2018, 6, 30) => 10_000.0)
+        expect(described_class.instance.compute_average_demand_cost_to_team(team, 1.month.ago.to_date, Time.zone.today, 'month')).to eq(Date.new(2018, 5, 31) => 37_000.0, Date.new(2018, 6, 30) => 37_000.0)
       end
     end
   end
 
-  describe '#compute_average_demand_cost_to_team' do
+  describe '#average_demand_cost_stats_info_hash' do
     let(:company) { Fabricate :company }
     let!(:team) { Fabricate :team, company: company }
 

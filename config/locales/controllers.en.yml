@@ -1038,3 +1038,6 @@ en:
   team_resources:
     new:
       title: "New Resource"
+  team_resource_allocations:
+    new:
+      title: "New Resource Allocation"

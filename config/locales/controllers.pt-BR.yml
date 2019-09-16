@@ -1025,3 +1025,6 @@ pt-BR:
   team_resources:
     new:
       title: "Novo Recurso"
+  team_resource_allocations:
+    new:
+      title: "Nova Alocação de Recurso"

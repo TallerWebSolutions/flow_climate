@@ -1,0 +1,36 @@
+<div class="row">
+  <div class="col-xs-12">
+    <%= link_to I18n.t('team_resource_allocations.new.title'), new_company_team_team_resource_allocation_path(company, team), class: 'btn btn-success bottom-spaced-component pull-right', remote: true %>
+  </div>
+</div>
+
+<% if team_resource_allocations.blank? %>
+  <%= render 'layouts/no_data', missing_data: TeamResourceAllocation.model_name.human %>
+<% else %>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th><%= TeamResource.human_attribute_name :team_resource %></th>
+        <th><%= TeamResource.human_attribute_name :start_date %></th>
+        <th><%= TeamResource.human_attribute_name :end_date %></th>
+        <th><%= TeamResource.human_attribute_name :monthly_payment %></th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% team_resource_allocations.each do |team_resource_allocation| %>
+        <tr>
+          <td><%= team_resource_allocation.team_resource.resource_name %></td>
+          <td><%= I18n.l(team_resource_allocation.start_date, format: :short) %></td>
+          <td><%= I18n.l(team_resource_allocation.end_date, format: :short) if team_resource_allocation.end_date.present? %></td>
+          <td><%= number_to_currency(team_resource_allocation.monthly_payment, precision: 2) %></td>
+          <td>
+            <%= link_to company_team_team_resource_allocation_path(company, team, team_resource_allocation), method: :delete, data: { confirm: I18n.t('general.destroy.confirm') }, remote: true do %>
+              <i class="fa fa-times"></i>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% end %>

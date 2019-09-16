@@ -82,6 +82,7 @@ Rails.application.routes.draw do
       end
 
       resources :memberships, except: :index
+      resources :team_resource_allocations, only: %i[new create destroy]
 
       get :replenishing_input, on: :member
     end

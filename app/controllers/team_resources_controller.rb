@@ -8,14 +8,14 @@ class TeamResourcesController < AuthenticatedController
   def new
     @team_resource = TeamResource.new(company: @company)
 
-    respond_to { |format| format.js { render 'team_resources/new.js.erb' } }
+    respond_to { |format| format.js { render 'team_resources/new' } }
   end
 
   def create
     @team_resource = TeamResource.create(team_resource_params.merge(company: @company))
     @team_resources = @company.team_resources.order(:resource_name)
 
-    respond_to { |format| format.js { render 'team_resources/create.js.erb' } }
+    respond_to { |format| format.js { render 'team_resources/create' } }
   end
 
   def destroy

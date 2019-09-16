@@ -9,6 +9,8 @@ RSpec.describe Team, type: :model do
     it { is_expected.to have_many(:team_members).through(:memberships) }
     it { is_expected.to have_and_belong_to_many(:stages) }
     it { is_expected.to have_many(:slack_configurations).dependent(:destroy) }
+    it { is_expected.to have_many(:team_resource_allocations).dependent(:destroy) }
+    it { is_expected.to have_many(:team_resources).through(:team_resource_allocations) }
   end
 
   context 'validations' do

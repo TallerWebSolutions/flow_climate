@@ -36,8 +36,8 @@ RSpec.describe TeamResourcesController, type: :controller do
       context 'valid parameters' do
         before { get :new, params: { company_id: company }, xhr: true }
 
-        it 'instantiates a new Team Member and renders the template' do
-          expect(response).to render_template 'team_resources/new.js.erb'
+        it 'instantiates a new Team Resource and renders the template' do
+          expect(response).to render_template 'team_resources/new'
           expect(assigns(:team_resource)).to be_a_new TeamResource
         end
       end
@@ -63,8 +63,8 @@ RSpec.describe TeamResourcesController, type: :controller do
       context 'passing valid parameters' do
         before { post :create, params: { company_id: company, team_resource: { resource_type: :library_manager, resource_name: 'foo' } }, xhr: true }
 
-        it 'creates the new team member and redirects to team show' do
-          expect(response).to render_template 'team_resources/create.js.erb'
+        it 'creates the new team resource and redirects to team show' do
+          expect(response).to render_template 'team_resources/create'
           expect(assigns(:team_resource).errors.full_messages).to eq []
           expect(assigns(:team_resource)).to be_persisted
           expect(assigns(:team_resource).resource_type).to eq 'library_manager'
@@ -75,9 +75,9 @@ RSpec.describe TeamResourcesController, type: :controller do
       context 'passing invalid parameters' do
         before { post :create, params: { company_id: company, team_resource: { resource_type: nil } }, xhr: true }
 
-        it 'does not create the team member and re-render the template with the errors' do
+        it 'does not create the team resource and re-render the template with the errors' do
           expect(TeamResource.all.count).to eq 0
-          expect(response).to render_template 'team_resources/create.js.erb'
+          expect(response).to render_template 'team_resources/create'
           expect(assigns(:team_resource).errors.full_messages).to eq ['Tipo do Recurso não pode ficar em branco']
         end
       end

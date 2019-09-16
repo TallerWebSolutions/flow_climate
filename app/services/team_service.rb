@@ -14,10 +14,7 @@ class TeamService
 
       break if end_date_to_cmd > end_of_period_for_date(Time.zone.today, grouping_period)
 
-      demands_count = DemandsRepository.instance.throughput_to_projects_and_period(projects, start_date_to_cmd, end_date_to_cmd).count
-      active_billable_members = team.team_members.joins(:memberships).where('memberships.start_date <= :end_date AND (memberships.end_date IS NULL OR memberships.end_date > :end_date) AND team_members.billable = true', end_date: end_date_to_cmd).where(memberships: { member_role: :developer })
-
-      average_demand_cost = compute_average_demand_cost(active_billable_members, demands_count, grouping_period)
+      average_demand_cost = compute_average_demand_cost_to_all_costs(team, projects, start_date_to_cmd, end_date_to_cmd, grouping_period)
 
       average_demand_cost_hash[end_date_to_cmd] = average_demand_cost.to_f
     end
@@ -68,6 +65,15 @@ class TeamService
 
   private
 
+  def compute_average_demand_cost_to_all_costs(team, projects, start_date_to_cmd, end_date_to_cmd, grouping_period)
+    demands_count = DemandsRepository.instance.throughput_to_projects_and_period(projects, start_date_to_cmd, end_date_to_cmd).count
+    active_billable_members = team.team_members.joins(:memberships).where('memberships.start_date <= :end_date AND (memberships.end_date IS NULL OR memberships.end_date > :end_date) AND team_members.billable = true', end_date: end_date_to_cmd).where(memberships: { member_role: :developer })
+    active_resources = team.team_resource_allocations.where('team_resource_allocations.start_date <= :end_date AND (team_resource_allocations.end_date IS NULL OR team_resource_allocations.end_date > :end_date)', end_date: end_date_to_cmd)
+
+    monthly_payments_array = active_billable_members.map(&:monthly_payment) + active_resources.map(&:monthly_payment)
+    compute_average_demand_cost(monthly_payments_array, demands_count, grouping_period)
+  end
+
   def compute_and_build_average_demand_cost_hash(five_weeks_cmd, four_weeks_cmd_average, team)
     current_week = five_weeks_cmd.values[-1]
     last_week = five_weeks_cmd.values[-2] || 0
@@ -78,8 +84,8 @@ class TeamService
     { team_name: team.name, current_week: current_week, last_week: last_week, cmd_difference_to_avg_last_four_weeks: cmd_difference_to_avg_last_four_weeks, four_weeks_cmd_average: four_weeks_cmd_average }
   end
 
-  def compute_average_demand_cost(active_billable_members, demands_count, grouping_period)
-    average_demand_cost = active_billable_members.map(&:monthly_payment).compact.sum / fraction_of_month_to_period(grouping_period)
+  def compute_average_demand_cost(monthly_payments_array, demands_count, grouping_period)
+    average_demand_cost = monthly_payments_array.compact.sum / fraction_of_month_to_period(grouping_period)
     average_demand_cost = (average_demand_cost / demands_count.to_f) if demands_count.positive?
     average_demand_cost
   end
