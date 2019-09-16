@@ -1,0 +1,12 @@
+var teamResourceAllocationsDiv = $('#team-resource-allocations')
+
+<% if @team_resource_allocation.errors.empty? %>
+  teamResourceAllocationsDiv.html("<%= escape_javascript(render 'team_resource_allocations/team_resource_allocations_table', company: @company, team: @team, team_resource_allocations: @team_resource_allocations) %>");
+
+<% else %>
+  teamResourceAllocationsDiv.html("<%= escape_javascript(render 'team_resource_allocations/new', company: @company, team: @team, team_resources: @team_resources, team_resource_allocation: @team_resource_allocation) %>");
+
+  $('#cancel-form-team-resource-allocation').on('click', function() {
+      teamResourceAllocationsDiv.html("<%= escape_javascript(render 'team_resource_allocations/team_resource_allocations_table', company: @company, team: @team, team_resource_allocations: @team_resource_allocations) %>");
+  });
+<% end %>

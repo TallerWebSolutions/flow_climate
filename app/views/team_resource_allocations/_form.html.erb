@@ -1,0 +1,31 @@
+<div class="standard-form">
+
+  <div class="row">
+    <div class='col-xs-3 form-group <%= 'has-error' if team_resource_allocation.errors[:team_resource].present? %>'>
+      <%= f.label :team_resource, class: 'control-label required' %>
+      <%= f.select :team_resource, @team_resources.map { |resource| [resource.resource_name, resource.id] }, { include_blank: I18n.t('general.select'), selected: team_resource_allocation.team_resource_id }, class: 'form-control' %>
+      <span class="help-block"><%= team_resource_allocation.errors[:team_resource].join(', ') %></span>
+    </div>
+    <div class='col-xs-3 form-group <%= 'has-error' if team_resource_allocation.errors[:start_date].present? %>'>
+      <%= f.label :start_date, class: 'control-label required' %>
+      <%= f.date_field :start_date, class: 'form-control' %>
+      <span class="help-block"><%= team_resource_allocation.errors[:start_date].join(', ') %></span>
+    </div>
+    <div class='col-xs-3 form-group'>
+      <%= f.label :end_date, class: 'control-label' %>
+      <%= f.date_field :end_date, class: 'form-control' %>
+    </div>
+    <div class='col-xs-3 form-group <%= 'has-error' if team_resource_allocation.errors[:monthly_payment].present? %>'>
+      <%= f.label :monthly_payment, class: 'control-label' %>
+      <%= f.number_field :monthly_payment, class: 'form-control', step: 0.01 %>
+      <span class="help-block"><%= team_resource_allocation.errors[:monthly_payment].join(', ') %></span>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-xs-12">
+      <%= f.submit class: 'btn btn-success' %>
+      <%= link_to I18n.t('general.buttons.cancel'), '#', class: 'btn btn-danger', id: 'cancel-form-team-resource-allocation' %>
+    </div>
+  </div>
+</div>

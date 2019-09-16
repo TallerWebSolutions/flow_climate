@@ -434,7 +434,7 @@ RSpec.describe DemandBlocksController, type: :controller do
             it 'builds the block list and render the template' do
               get :search, params: { company_id: company, demand_blocks_ids: DemandBlock.all.map(&:id).join(','), blocks_team_member: other_team_member.id, blocks_ordering: :member_name }, xhr: true
               expect(response).to have_http_status :ok
-              expect(assigns(:demand_blocks)).to eq [second_block, third_block, fourth_block, fifth_block]
+              expect(assigns(:demand_blocks)).to match_array [second_block, third_block, fourth_block, fifth_block]
               expect(response).to render_template 'demand_blocks/search.js.erb'
             end
           end

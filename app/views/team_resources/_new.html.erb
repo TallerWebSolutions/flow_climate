@@ -1,0 +1,7 @@
+<%= form_for [company, team_resource], class: 'form', remote: true do |f| %>
+  <div class="row bottom-spaced-component">
+    <div class="col-xs-12">
+      <%= render 'team_resources/form', f: f, company: company, team_resource: team_resource %>
+    </div>
+  </div>
+<% end %>

@@ -107,6 +107,7 @@ class CompaniesController < AuthenticatedController
     @products_list = @company.products.includes(:team).includes(:customer).order(name: :asc)
     @customers_list = @company.customers.order(name: :asc)
     @team_members = @company.team_members.order(:name)
+    @team_resources = @company.team_resources.order(:resource_name)
   end
 
   def assign_last_company

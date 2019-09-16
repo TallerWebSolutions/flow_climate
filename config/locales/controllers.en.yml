@@ -1035,3 +1035,9 @@ en:
       impacts_per_demand_label: "Impact/Demand"
       bugs_label: "Bugs"
       blocks_per_demand_label: "Blocks/Demand"
+  team_resources:
+    new:
+      title: "New Resource"
+  team_resource_allocations:
+    new:
+      title: "New Resource Allocation"

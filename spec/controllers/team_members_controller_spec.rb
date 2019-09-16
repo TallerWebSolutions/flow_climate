@@ -97,7 +97,7 @@ RSpec.describe TeamMembersController, type: :controller do
         before { get :new, params: { company_id: company }, xhr: true }
 
         it 'instantiates a new Team Member and renders the template' do
-          expect(response).to render_template 'team_members/new.js.erb'
+          expect(response).to render_template 'team_members/new'
           expect(assigns(:team_members)).to eq company.reload.team_members.order(:name)
           expect(assigns(:team_member)).to be_a_new TeamMember
         end
@@ -125,7 +125,7 @@ RSpec.describe TeamMembersController, type: :controller do
         before { post :create, params: { company_id: company, team_member: { name: 'foo', jira_account_user_email: 'foo@bar.com', jira_account_id: 'jira_account_id', billable: false, active: false, monthly_payment: 100, hours_per_month: 10, billable_type: :outsourcing, start_date: 1.day.ago.to_date, end_date: Time.zone.today } }, xhr: true }
 
         it 'creates the new team member and redirects to team show' do
-          expect(response).to render_template 'team_members/create.js.erb'
+          expect(response).to render_template 'team_members/create'
           expect(TeamMember.last.name).to eq 'foo'
           expect(TeamMember.last.jira_account_user_email).to eq 'foo@bar.com'
           expect(TeamMember.last.jira_account_id).to eq 'jira_account_id'
@@ -143,7 +143,7 @@ RSpec.describe TeamMembersController, type: :controller do
 
         it 'does not create the team member and re-render the template with the errors' do
           expect(TeamMember.all.count).to eq 2
-          expect(response).to render_template 'team_members/create.js.erb'
+          expect(response).to render_template 'team_members/create'
           expect(assigns(:team_member).errors.full_messages).to eq ['Nome não pode ficar em branco']
         end
       end
@@ -158,7 +158,7 @@ RSpec.describe TeamMembersController, type: :controller do
         before { get :edit, params: { company_id: company.id, id: team_member }, xhr: true }
 
         it 'assigns the instance variables and renders the template' do
-          expect(response).to render_template 'team_members/edit.js.erb'
+          expect(response).to render_template 'team_members/edit'
           expect(assigns(:company)).to eq company
           expect(assigns(:team_member)).to eq team_member
           expect(assigns(:team_members)).to eq company.reload.team_members.order(:name)
@@ -210,7 +210,7 @@ RSpec.describe TeamMembersController, type: :controller do
           expect(team_member_updated.start_date).to eq 1.day.ago.to_date
           expect(team_member_updated.end_date).to eq Time.zone.today
           expect(assigns(:team_members)).to eq company.reload.team_members.order(:name)
-          expect(response).to render_template 'team_members/update.js.erb'
+          expect(response).to render_template 'team_members/update'
         end
       end
 
@@ -219,7 +219,7 @@ RSpec.describe TeamMembersController, type: :controller do
           before { put :update, params: { company_id: company, id: team_member, team_member: { team: other_team, name: '', billable: nil, active: nil, monthly_payment: nil, hours_per_month: nil, billable_type: nil } }, xhr: true }
 
           it 'does not update the member and re-render the template with the errors' do
-            expect(response).to render_template 'team_members/update.js.erb'
+            expect(response).to render_template 'team_members/update'
             expect(assigns(:team_member).errors.full_messages).to eq ['Nome não pode ficar em branco']
           end
         end
@@ -250,7 +250,7 @@ RSpec.describe TeamMembersController, type: :controller do
           delete :destroy, params: { company_id: company, id: team_member }, xhr: true
 
           expect(TeamMember.all.count).to eq 1
-          expect(response).to render_template 'team_members/destroy.js.erb'
+          expect(response).to render_template 'team_members/destroy'
         end
       end
 

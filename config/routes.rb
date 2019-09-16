@@ -82,6 +82,7 @@ Rails.application.routes.draw do
       end
 
       resources :memberships, except: :index
+      resources :team_resource_allocations, only: %i[new create destroy]
 
       get :replenishing_input, on: :member
     end
@@ -91,6 +92,8 @@ Rails.application.routes.draw do
     resources :financial_informations, only: %i[new create edit update destroy]
 
     resources :customers
+
+    resources :team_resources, only: %i[new create destroy]
 
     resources :products do
       member do

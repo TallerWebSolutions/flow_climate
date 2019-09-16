@@ -110,8 +110,9 @@ RSpec.describe CompaniesController, type: :controller do
 
           let!(:team_member) { Fabricate :team_member, company: company, name: 'aaa' }
           let!(:other_team_member) { Fabricate :team_member, company: company, name: 'zzz' }
-          let!(:membership) { Fabricate :membership, team: team, team_member: team_member, hours_per_month: 20, start_date: 1.month.ago, end_date: nil }
-          let!(:other_membership) { Fabricate :membership, team: team, team_member: other_team_member, hours_per_month: 160, start_date: 2.months.ago, end_date: 1.month.ago }
+
+          let!(:team_resource) { Fabricate :team_resource, company: company, resource_name: 'zzz' }
+          let!(:other_team_resource) { Fabricate :team_resource, company: company, resource_name: 'aaa' }
 
           let!(:first_project) { Fabricate :project, company: company, customers: [customer], status: :executing, start_date: Time.zone.today, end_date: Time.zone.now }
           let!(:second_project) { Fabricate :project, company: company, customers: [customer], status: :maintenance, start_date: 1.month.from_now, end_date: 1.month.from_now }
@@ -140,6 +141,7 @@ RSpec.describe CompaniesController, type: :controller do
             expect(assigns(:jira_accounts_list)).to eq [second_account, first_account]
             expect(assigns(:company_settings)).to be_a_new CompanySettings
             expect(assigns(:team_members)).to eq [team_member, other_team_member]
+            expect(assigns(:team_resources)).to eq [other_team_resource, team_resource]
           end
         end
 

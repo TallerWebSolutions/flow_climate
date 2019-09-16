@@ -150,6 +150,12 @@ pt-BR:
       risk_review:
         one: Revisão de Risco
         other: Revisões de Risco
+      team_resource:
+        one: Recurso do Time
+        other: Recursos do Time
+      team_resource_alloacation:
+        one: Alocação de Recurso no Time
+        other: Alocações de Recurso no Time
     attributes:
       user:
         first_name: Nome
@@ -163,6 +169,9 @@ pt-BR:
       company:
         name: Nome
         abbreviation: Sigla
+        team_resources: Recursos do Time
+        team_members: Membros do Time
+        teams: Times
       financial_information:
         finances_date: Data das Finanças
         income_total: Entradas totais
@@ -493,6 +502,23 @@ pt-BR:
         blocks_per_demand: Bloqueios/Demanda
         meeting_date: Data da Reunião
         lead_time_outlier_limit: Outlier no lead time
+      team_resource:
+        company: Empresa
+        resource_type: Tipo do Recurso
+        resource_name: Nome do Recurso
+        team_resource_allocations: Alocações de Recurso no Time
+        enums:
+          resource_type:
+            cloud: Nuvem
+            continuous_integration: Integração Contínua
+            library_manager: Gerenciador de Libs
+            code_hosting_platform: Plataforma de Hospedagem de Código
+      team_resource_alloacation:
+        team: Time
+        team_resource: Recurso do Time
+        monthly_payment: Pagamento Mensal
+        start_date: Data de Início
+        end_date: Data Final
   product:
     name:
       uniqueness: "Não deve repetir nome de produto para o mesmo cliente."
