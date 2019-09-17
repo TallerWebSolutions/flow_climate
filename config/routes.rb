@@ -14,7 +14,7 @@ Rails.application.routes.draw do
       end
 
       resources :projects, only: [] do
-        resources :flow_impacts, only: :create
+        resources :flow_impacts, only: %i[new create]
       end
 
       resources :demands, only: :show
@@ -133,9 +133,7 @@ Rails.application.routes.draw do
         end
       end
 
-      resources :flow_impacts, except: :index do
-        get :flow_impacts_tab, on: :collection
-      end
+      resources :flow_impacts, only: %i[new create]
 
       scope :jira do
         resources :jira_project_configs, only: %i[new create destroy edit], module: 'jira' do
@@ -199,14 +197,6 @@ Rails.application.routes.draw do
 
     resources :demands, only: %i[show destroy]
 
-    resources :flow_impacts, only: [:destroy] do
-      collection do
-        get :new_direct_link
-        post :create_direct_link
-        get 'demands_to_project/(:project_id)', action: :demands_to_project
-      end
-    end
-
     resources :demand_blocks, only: :index do
       collection do
         get :demand_blocks_tab
@@ -218,6 +208,15 @@ Rails.application.routes.draw do
 
     scope :jira do
       resources :jira_accounts, only: %i[new create destroy], module: 'jira'
+    end
+
+    resources :flow_impacts, except: %i[index new create] do
+      collection do
+        get :new_direct_link
+        post :create_direct_link
+        get 'demands_to_project/(:project_id)', action: :demands_to_project
+        get :flow_impacts_tab
+      end
     end
   end
 

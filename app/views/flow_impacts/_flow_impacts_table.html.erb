@@ -1,32 +1,34 @@
 <% if flow_impacts_list.present? %>
-<table class="table table-striped">
+<table class="table table-striped table-index">
   <thead>
     <tr>
+      <th></th>
       <th><%= FlowImpact.human_attribute_name :impact_type %></th>
+      <th><%= FlowImpact.human_attribute_name :project %></th>
       <th><%= FlowImpact.human_attribute_name :demand %></th>
       <th><%= FlowImpact.human_attribute_name :start_date %></th>
       <th><%= FlowImpact.human_attribute_name :end_date %></th>
       <th><%= FlowImpact.human_attribute_name :impact_description %></th>
-      <th></th>
     </tr>
   </thead>
   <tbody>
     <% flow_impacts_list.each do |flow_impact| %>
       <tr>
-        <td><%= I18n.t("activerecord.attributes.flow_impact.enums.impact_type.#{flow_impact.impact_type}") %></td>
-        <td><%= flow_impact.demand&.demand_id %></td>
-        <td><%= I18n.l(flow_impact.start_date) %></td>
-        <td><%= I18n.l(flow_impact.end_date) if flow_impact.end_date.present? %></td>
-        <td><%= flow_impact.impact_description %></td>
         <td>
           <%= link_to company_flow_impact_path(company, flow_impact), method: :delete, data: { confirm: I18n.t('general.destroy.confirm') }, remote: true do %>
             <i class="fa fa-times" title='<%= I18n.t('flow_impacts.destroy.tooltip') %>'></i>
           <% end %>
 
-          <%= link_to edit_company_project_flow_impact_path(company, flow_impact.project, flow_impact), remote: true do %>
+          <%= link_to edit_company_flow_impact_path(company, flow_impact), remote: true do %>
             <i class="fas fa-edit" title='<%= I18n.t('flow_impacts.edit.tooltip') %>'></i>
           <% end %>
         </td>
+        <td><%= I18n.t("activerecord.attributes.flow_impact.enums.impact_type.#{flow_impact.impact_type}") %></td>
+        <td><%= flow_impact.project.name %></td>
+        <td><%= flow_impact.demand&.demand_id %></td>
+        <td><%= I18n.l(flow_impact.start_date, format: :short) %></td>
+        <td><%= I18n.l(flow_impact.end_date, format: :short) if flow_impact.end_date.present? %></td>
+        <td><%= flow_impact.impact_description %></td>
       </tr>
     <% end %>
   </tbody>

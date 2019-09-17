@@ -1,0 +1,11 @@
+var flow_impact_div = $('#flow-impacts-tab');
+
+flow_impact_div.hide();
+
+<% if @flow_impact.errors.empty? %>
+  flow_impact_div.html("<%= escape_javascript(render('flow_impacts/flow_impacts_tab', company: @company, project: nil, flow_impacts_list: @flow_impacts)) %>");
+<% else %>
+  flow_impact_div.html("<%= escape_javascript(render('flow_impacts/edit', company: @company, flow_impact: @flow_impact, demands_for_impact_form: @demands_for_impact_form)) %>");
+<% end %>
+
+flow_impact_div.show();

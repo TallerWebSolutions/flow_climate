@@ -1,15 +1,15 @@
-hideAllComponents($('.nav-item'));
+const projectNavItem = $('.nav-item');
+hideAllComponents(projectNavItem);
 
 const stampsDiv = $('#nav-item-stamps');
 stampsDiv.addClass('active');
 $('#stamps').show();
 
 const companyId = $("#company_id").val();
-const projectId = $("#project_id").val();
 const projectsIds = $("#projects_ids").val();
 const targetName = $("#target_name").val();
 
-$('.nav-item').on('click', function(event){
+projectNavItem.on('click', function(event){
     hideAllComponents($('.nav-item'));
     const disabled = $(this).attr('disabled');
 
@@ -36,7 +36,7 @@ $('.nav-item').on('click', function(event){
 
         } else if ($(this).attr('id') === 'nav-item-flow-impacts') {
             $('#flow-impacts-tab').hide();
-            getProjectFlowImpacts(companyId, projectId);
+            getFlowImpacts(companyId, projectsIds);
 
         } else if ($(this).attr('id') === 'nav-item-statistics') {
             const statsStartDate = '';
