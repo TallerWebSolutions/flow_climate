@@ -32,7 +32,7 @@ $('.nav-item').on('click', function(event){
 
         } else if ($(this).attr('id') === 'nav-item-flow-impacts') {
             $('#flow-impacts-tab').hide();
-            getTeamFlowImpacts(companyId, projectsIds);
+            getFlowImpacts(companyId, projectsIds);
 
         } else if ($(this).attr('id') === 'nav-item-replenishingDiv') {
             buildReplenishingMeeting(companyId, teamId);
