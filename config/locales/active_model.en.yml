@@ -210,3 +210,7 @@ en:
   item_assignment:
     validations:
       demand_unique: "You can have only one demand assigned to the same team member at the same time."
+  service_delivery_review:
+    attributes:
+      validations:
+        product_uniqueness: "You can have only one meeting to the product starting at the same date."

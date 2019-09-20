@@ -6,7 +6,7 @@
       <%= f.date_field :meeting_date, class: 'form-control' %>
       <span class="help-block"><%= risk_review.errors[:meeting_date].join(', ') %></span>
     </div>
-    <div class='col-xs-6 form-group <%= 'has-error' if risk_review.errors[:hours_per_month].present? %>'>
+    <div class='col-xs-6 form-group <%= 'has-error' if risk_review.errors[:lead_time_outlier_limit].present? %>'>
       <%= f.label :lead_time_outlier_limit, class: 'control-label required' %>
       <%= f.number_field :lead_time_outlier_limit, class: 'form-control', step: 1 %>
       <span class="help-block"><%= risk_review.errors[:lead_time_outlier_limit].join(', ') %></span>

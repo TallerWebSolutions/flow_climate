@@ -1,0 +1,203 @@
+<div class="row bottom-spaced-component">
+  <div class="col-xs-12">
+    <ul class="breadcrumb">
+      <li><%= link_to I18n.t('general.home.title'), root_path %></li>
+      <li><%= link_to @company.abbreviation&.upcase, company_path(@company) %></li>
+      <li><%= link_to Product.model_name.human.pluralize, company_products_path(@company) %></li>
+      <li><%= link_to @product.name, company_product_path(@company, @product) %></li>
+      <li><%= ServiceDeliveryReview.model_name.human %></li>
+    </ul>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-xs-4">
+    <div class="row-fluid">
+      <div class="col-xs-12">
+        <h4><%= ServiceDeliveryReview.human_attribute_name :meeting_date %></h4>
+        <h1 class="section-title"><%= I18n.l(@service_delivery_review.meeting_date) %></h1>
+      </div>
+      <div class="row-fluid">
+        <div class="col-xs-12">
+          <div class="tab">
+            <button class="tablinks" onclick="openTab(event, 'sdr-general-info', 'tablinks', 'tabcontent')"><%= I18n.t('service_delivery_reviews.show.general_info') %></button>
+            <button class="tablinks" onclick="openTab(event, 'sdr-kpis-ranges', 'tablinks', 'tabcontent')"><%= I18n.t('service_delivery_reviews.show.kpis') %></button>
+          </div>
+        </div>
+        <div id="sdr-general-info" class="tabcontent">
+          <%= render 'service_delivery_reviews/general_info', service_delivery_review: @service_delivery_review %>
+        </div>
+
+        <div id="sdr-kpis-ranges" class="tabcontent">
+          <%= render 'service_delivery_reviews/kpis', service_delivery_review: @service_delivery_review %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-xs-4">
+    <h4><%= I18n.t('service_delivery_reviews.show.class_of_services.title') %></h4>
+
+    <div id="service-delivery-review-class-of-services-donut"
+         class="flow-chart"
+         data-title=''
+         data-seriesname='<%= I18n.t('general.class_of_service') %>'
+         data-tooltipsuffix='<%= I18n.t('general.demands') %>'
+         data-series='<%= Demand.class_of_services.map { |class_of_service| { name: I18n.t("activerecord.attributes.demand.enums.class_of_service.#{class_of_service[0]}"), y: @service_delivery_review.demands.send(class_of_service[0]).count } if @service_delivery_review.demands.send(class_of_service[0]).count.positive? }.compact.to_json %>'
+         data-decimals='2'>
+    </div>
+  </div>
+
+  <div class="col-xs-4">
+    <h4><%= I18n.t('service_delivery_reviews.show.expedites_delayded.title') %></h4>
+
+    <div id="service-delivery-review-delayed-expedites-donut"
+         class="flow-chart"
+         data-title=''
+         data-seriesname='<%= I18n.t('service_delivery_reviews.show.expedites_delayded.title') %>'
+         data-tooltipsuffix='<%= I18n.t('general.demands') %>'
+         data-series='<%= [{ name: I18n.t('service_delivery_reviews.show.expedites_delayded.title'), y: @service_delivery_review.expedites_delayed.count }, { name: I18n.t('service_delivery_reviews.show.expedites_not_delayded.title'), y: @service_delivery_review.expedites_not_delayed.count }].compact.to_json %>'
+         data-decimals='2'>
+    </div>
+  </div>
+</div>
+
+<hr>
+
+<div class="row">
+  <div class="col-xs-4">
+    <h4><%= I18n.t('service_delivery_reviews.show.bugs_label') %></h4>
+
+    <div id="service-delivery-review-bugs-donut"
+         class="flow-chart"
+         data-title=''
+         data-seriesname='<%= I18n.t('service_delivery_reviews.show.bugs_label') %>'
+         data-qualitytitle='<%= I18n.t('service_delivery_reviews.show.bugs_label') %>'
+         data-bottomquality='<%= @service_delivery_review.quality_bottom_threshold.to_f * 100 %>'
+         data-topquality='<%= @service_delivery_review.quality_top_threshold.to_f * 100 %>'
+         data-tooltipsuffix='<%= I18n.t('general.demands') %>'
+         data-series='<%= [{ name: I18n.t('service_delivery_reviews.show.bugs_label'), data: [@service_delivery_review.bug_percentage] }].to_json %>'
+         data-decimals='2'>
+    </div>
+  </div>
+
+  <div class="col-xs-4">
+    <h4><%= I18n.t('service_delivery_reviews.show.portfolio_units.title') %></h4>
+
+    <div id="service-delivery-review-portfolio-units-donut"
+         class="flow-chart"
+         data-title=''
+         data-seriesname=''
+         data-tooltipsuffix='<%= I18n.t('general.demands') %>'
+         data-series='<%= @service_delivery_review.portfolio_module_breakdown.to_a.last(5).map { |portfolio_unit, demands| { name: portfolio_unit.name, y: demands.count } }.to_json %>'
+         data-decimals='2'>
+    </div>
+  </div>
+
+  <div class="col-xs-4">
+    <h4><%= I18n.t('service_delivery_reviews.show.lead_time_breakdown_label') %></h4>
+
+    <div id="service-delivery-review-lead-time-breakdown-column"
+         class="flow-chart"
+         data-title=''
+         data-xcategories='<%= @service_delivery_review.lead_time_breakdown.keys %>'
+         data-xtitle='<%= I18n.t('service_delivery_reviews.show.stages') %>'
+         data-ytitle='<%= I18n.t('general.hours') %>'
+         data-prefix=''
+         data-series='<%= [{ name: I18n.t('service_delivery_reviews.show.lead_time_breakdown_label'), data: @service_delivery_review.lead_time_breakdown.values.map { |transitions| (transitions.sum(&:total_seconds_in_transition) / 1.hour) } }].to_json %>'
+         data-decimals='0'>
+    </div>
+  </div>
+</div>
+
+<hr>
+
+<div class="row">
+  <div class="col-xs-8 bottom-spaced-component">
+    <div id="service-delivery-review-flow-data-column"
+         class="flow-chart"
+         data-title='<%= I18n.t('demands.charts.flow_data') %>'
+         data-xcategories='<%= @demands_chart_adapter.x_axis.to_json %>'
+         data-xtitle='<%= I18n.t('general.period') %>'
+         data-ytitle='<%= I18n.t('demands.charts.demands.title') %>'
+         data-tooltipsuffix='<%= I18n.t('projects.charts.throughput.tooltipsufix') %>'
+         data-series='<%= [
+                              { name: I18n.t('demands.charts.creation_date'), data: @demands_chart_adapter.creation_chart_data },
+                              { name: I18n.t('demands.charts.committed_date'), data: @demands_chart_adapter.committed_chart_data },
+                              { name: I18n.t('general.pull_transaction'), data: @demands_chart_adapter.pull_transaction_rate },
+                              { name: I18n.t('general.delivered'), data: @demands_chart_adapter.throughput_chart_data }
+                          ].to_json %>'
+         data-stacking=''
+         data-decimals='0'>
+    </div>
+  </div>
+</div>
+
+<hr>
+
+<div class="row">
+  <div class="col-xs-8 bottom-spaced-component">
+    <div id="service-delivery-review-leadtime-control-chart"
+         class="flow-chart"
+         data-title=''
+         data-xcategories='<%= @service_delivery_review.demands.finished.order(:end_date).map(&:demand_id).to_json %>'
+         data-xtitle='<%= I18n.t('general.demands') %>'
+         data-ytitle='<%= I18n.t('general.days') %>'
+         data-tooltipsuffix='<%= I18n.t('general.days') %>'
+         data-bottomthreshold='<%= @service_delivery_review.lead_time_bottom_threshold.to_f / 1.day %>'
+         data-topthreshold='<%= @service_delivery_review.lead_time_top_threshold.to_f / 1.day %>'
+         data-bottomthresholdtext='<%= "#{I18n.t('activerecord.attributes.service_delivery_review.lead_time_bottom_threshold')}: #{I18n.t('general.days_text', count: @service_delivery_review.lead_time_bottom_threshold.to_f / 1.day)}" %>'
+         data-topthresholdtext='<%= "#{I18n.t('activerecord.attributes.service_delivery_review.lead_time_top_threshold')}: #{I18n.t('general.days_text', count: @service_delivery_review.lead_time_top_threshold.to_f / 1.day)}" %>'
+         data-series='<%= [{ type: 'scatter', yAxis: 1, name: I18n.t('general.demands'), data: @service_delivery_review.demands.kept.finished.order(:end_date).map { |demand| { name: demand.demand_id, y: (demand.leadtime.to_f / 1.day), end_date: I18n.l(demand.end_date, format: :short) } } }].to_json %>'
+         data-decimals='2'>
+    </div>
+  </div>
+  <div class="col-xs-4">
+    <table class="table">
+      <tbody>
+        <tr>
+          <td><b><%= 'Overserved' %></b></td>
+          <td><%= "#{I18n.t('general.demands_text', count: @service_delivery_review.overserved_demands[:value].count)} (#{number_to_percentage(@service_delivery_review.overserved_demands[:share] * 100, precision: 2)})" %></td>
+        </tr>
+        <tr>
+          <td><b><%= 'Underserved' %></b></td>
+          <td><%= "#{I18n.t('general.demands_text', count: @service_delivery_review.underserved_demands[:value].count)} (#{number_to_percentage(@service_delivery_review.underserved_demands[:share] * 100, precision: 2)})" %></td>
+        </tr>
+        <tr>
+          <td><b><%= 'Fit For Purpose' %></b></td>
+          <td><%= "#{I18n.t('general.demands_text', count: @service_delivery_review.fit_for_purpose_demands[:value].count)} (#{number_to_percentage(@service_delivery_review.fit_for_purpose_demands[:share] * 100, precision: 2)})" %></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<hr>
+
+<div class="row">
+  <div class="col-xs-12">
+    <div class="tab">
+      <button class="tablinks" onclick="openTab(event, 'demands', 'tablinks', 'tabcontent')"><%= I18n.t('service_delivery_reviews.show.demands_label') %></button>
+      <button class="tablinks" onclick="openTab(event, 'bugs-list', 'tablinks', 'tabcontent')"><%= I18n.t('service_delivery_reviews.show.bugs_label') %></button>
+    </div>
+  </div>
+</div>
+
+<div id="demands" class="tabcontent">
+  <%= render 'demands/portfolio_demands_table', company: @company, product: @product, demands: @service_delivery_review.demands.order(end_date: :desc) %>
+</div>
+
+<div id="bugs-list" class="tabcontent">
+  <%= render 'demands/portfolio_demands_table', company: @company, product: @product, demands: @service_delivery_review.bugs.order(end_date: :desc) %>
+</div>
+
+<% content_for :javascript do %>
+  <%= javascript_include_tag 'charts/donut' %>
+  <%= javascript_include_tag 'charts/column' %>
+  <%= javascript_include_tag 'charts/line' %>
+  <%= javascript_include_tag 'charts/chart-with-two-thresholds' %>
+  <%= javascript_include_tag 'charts/speedometer' %>
+
+  <%= javascript_include_tag 'components/components' %>
+  <%= javascript_include_tag 'service_delivery_reviews/show' %>
+<% end %>

@@ -1,0 +1,26 @@
+<table class="table">
+  <tbody>
+    <tr>
+      <td><b><%= ServiceDeliveryReview.human_attribute_name :demands %></b></td>
+      <td><%= @service_delivery_review.demands.count %></td>
+    </tr>
+    <tr>
+      <td><b><%= I18n.t('service_delivery_reviews.show.discarded_demands_label') %></b></td>
+      <td><%= @service_delivery_review.demands.discarded.count %></td>
+    </tr>
+    <tr>
+      <td><b><%= t('general.leadtime_p80_label') %></b></td>
+      <td><%= I18n.t('general.days_text', count: number_with_precision(@service_delivery_review.demands_lead_time_p80 / 1.day, precision: 3)) %></td>
+    </tr>
+    <tr>
+      <td><b><%= I18n.t('service_delivery_reviews.show.bugs_label') %></b></td>
+      <td><%= @service_delivery_review.bugs_count %><sup><%= " (#{number_to_percentage(@service_delivery_review.bug_percentage, precision: 2)})" %></sup></td>
+    </tr>
+    <% if @service_delivery_review.demands.present? %>
+      <tr>
+        <td><b><%= I18n.t('service_delivery_reviews.show.highest_stage_time') %></b></td>
+        <td><%= @service_delivery_review.longest_stage[:name] %><sup><%= " (#{I18n.t('general.hours_text', hour_value: number_with_precision(@service_delivery_review.longest_stage[:time_in_stage] / 1.hour, precision: 2))})" %></sup></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

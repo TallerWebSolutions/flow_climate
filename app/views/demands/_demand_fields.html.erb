@@ -8,6 +8,9 @@
 <td><%= number_to_currency(demand_list.demand.cost_to_project) %></td>
 <td><%= demand_list.demand.current_stage&.name %></td>
 <td>
+  <%= time_distance_in_words(demand_list.demand.time_between_commitment_and_pull) %>
+</td>
+<td>
   <% if demand_list.leadtime.present? %>
     <%= time_distance_in_words(demand_list.leadtime) %>
   <% elsif demand_list.commitment_date.present? %>

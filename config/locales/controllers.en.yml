@@ -116,7 +116,7 @@ en:
       zero: "no score"
       one: "%{count} point"
       other: "%{count} points"
-    demands: "demand(s)"
+    demands: "demand"
     avg_speed_per_week: "%{speed_value} items/week"
     items_text: "%{items_count} item(ns)"
     flow: "Flow"
@@ -135,6 +135,7 @@ en:
       other: "%{count} comments"
     leadtime_p80_label: "Lead time (p80)"
     demand_blocks: "block(s)"
+    pull_transaction: "Pull Transaction"
   header:
     logout: Logout
     explore: Explore
@@ -578,6 +579,7 @@ en:
       comments_tab: "Comments"
       responsibles_tab: "Responsibles"
       pairing: "Pairing"
+      consolidations: "Consolidations"
     sync:
       enqueued: "Your request was enqueued. It will be processed soon."
       done: "The sync is done."
@@ -597,7 +599,7 @@ en:
       hours_per_month:
         title: "Hours per Month for %{name}"
       throughput: "Throughput for the Period"
-      creation_date: "Creation Rate"
+      creation_date: "Created"
       commitment_date: "Commitment Date"
       committed_date: "Committed to"
       aging_per_demand:
@@ -608,6 +610,7 @@ en:
         series: "aging"
       demands_by_project:
         title: "Demands by Project"
+      flow_data: "Flow Data"
     flow:
       processed_demand: "Processed Demands"
       wip: "Work in Progress"
@@ -687,6 +690,7 @@ en:
     stages: "Stages"
     portfolio_units: "Portfolio Units"
     risk_reviews: "Risk Reviews"
+    service_delivery_reviews: "Service Delivery Review"
   charts:
     xlabel:
       months: "Months"
@@ -944,6 +948,9 @@ en:
     attributes:
       demand:
         demand_id: "Demand ID"
+      service_delivery_review:
+        lead_time_bottom_threshold: "Lead Time Bottom Threshold"
+        lead_time_top_threshold: "Lead Time Top Threshold"
     models:
       demand_comment:
         other: "Demand Comments"
@@ -1041,3 +1048,24 @@ en:
   team_resource_allocations:
     new:
       title: "New Resource Allocation"
+  service_delivery_reviews:
+    new:
+      title: "New Review"
+    show:
+      bugs_label: "Bugs"
+      class_of_services:
+        title: "Classes of Service"
+      demands_label: "Demands"
+      expedites_delayded:
+        title: "Expedites Delayed"
+      expedites_not_delayded:
+        title: "In Deadline Expedites"
+      no_bugs_label: "demands"
+      lead_time_breakdown_label: "Lead Time Breakdown"
+      stages: "Stages"
+      portfolio_units:
+        title: "Portfolio Units Progress"
+      highest_stage_time: "Longest Stage"
+      discarded_demands_label: "Discarded"
+      general_info: "General"
+      kpis: "KPIs"

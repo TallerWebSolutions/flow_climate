@@ -1,0 +1,12 @@
+var serviceDeliveryReviewsDiv = $('#service-delivery-reviews')
+
+<% if @service_delivery_review.errors.empty? %>
+  serviceDeliveryReviewsDiv.html("<%= escape_javascript(render 'service_delivery_reviews/service_delivery_reviews_table', company: @company, product: @product, service_delivery_reviews: @service_delivery_reviews) %>");
+
+<% else %>
+  serviceDeliveryReviewsDiv.html("<%= escape_javascript(render 'service_delivery_reviews/new', company: @company, product: @product, service_delivery_review: @service_delivery_review) %>");
+
+  $('#cancel-form-service-delivery-review').on('click', function() {
+      serviceDeliveryReviewsDiv.html("<%= escape_javascript(render 'service_delivery_reviews/service_delivery_reviews_table', company: @company, product: @product, service_delivery_reviews: @service_delivery_reviews) %>");
+  });
+<% end %>

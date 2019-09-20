@@ -15,6 +15,7 @@ RSpec.describe Demand, type: :model do
     it { is_expected.to belong_to(:parent).class_name('Demand').inverse_of(:children) }
     it { is_expected.to belong_to :team }
     it { is_expected.to belong_to :risk_review }
+    it { is_expected.to belong_to :service_delivery_review }
 
     it { is_expected.to have_many(:children).class_name('Demand').inverse_of(:parent).dependent(:destroy) }
     it { is_expected.to have_many(:demand_transitions).dependent(:destroy) }
@@ -685,22 +686,23 @@ RSpec.describe Demand, type: :model do
   end
 
   describe '#flow_percentage_concluded' do
-    context 'without transitions' do
-      let(:demand) { Fabricate :demand }
+    let(:project) { Fabricate :project, hour_value: 100 }
 
+    let!(:first_stage) { Fabricate :stage, projects: [project], stage_stream: :upstream, order: 0 }
+    let!(:second_stage) { Fabricate :stage, projects: [project], stage_stream: :upstream, order: 1 }
+    let!(:third_stage) { Fabricate :stage, projects: [project], stage_stream: :upstream, order: 2 }
+
+    let!(:fourth_stage) { Fabricate :stage, projects: [project], commitment_point: true, stage_stream: :downstream, order: 3 }
+    let!(:fifth_stage) { Fabricate :stage, projects: [project], stage_stream: :downstream, order: 4 }
+    let!(:sixth_stage) { Fabricate :stage, projects: [project], stage_stream: :downstream, order: 5 }
+
+    let!(:demand) { Fabricate :demand, project: project }
+
+    context 'without transitions' do
       it { expect(demand.flow_percentage_concluded).to eq 0 }
     end
 
     context 'with no downstream transitions' do
-      let(:project) { Fabricate :project, hour_value: 100 }
-
-      let!(:first_stage) { Fabricate :stage, projects: [project], stage_stream: :upstream, order: 0 }
-      let!(:second_stage) { Fabricate :stage, projects: [project], stage_stream: :upstream, order: 1 }
-      let!(:third_stage) { Fabricate :stage, projects: [project], stage_stream: :upstream, order: 2 }
-      let!(:fourth_stage) { Fabricate :stage, projects: [project], stage_stream: :upstream, order: 3 }
-
-      let!(:demand) { Fabricate :demand, project: project }
-
       let!(:first_demand_transition) { Fabricate :demand_transition, demand: demand, stage: third_stage, last_time_in: 1.day.ago }
       let!(:second_demand_transition) { Fabricate :demand_transition, demand: demand, stage: second_stage, last_time_in: 2.days.ago }
       let!(:third_demand_transition) { Fabricate :demand_transition, demand: demand, stage: first_stage, last_time_in: 3.days.ago }
@@ -709,18 +711,8 @@ RSpec.describe Demand, type: :model do
     end
 
     context 'with downstream transitions' do
-      let(:project) { Fabricate :project, hour_value: 100 }
-
-      let!(:first_stage) { Fabricate :stage, projects: [project], stage_stream: :upstream, order: 0 }
-      let!(:second_stage) { Fabricate :stage, projects: [project], stage_stream: :downstream, order: 1 }
-      let!(:third_stage) { Fabricate :stage, projects: [project], stage_stream: :downstream, order: 2 }
-      let!(:fourth_stage) { Fabricate :stage, projects: [project], stage_stream: :downstream, order: 3 }
-
-      let!(:demand) { Fabricate :demand, project: project }
-
-      let!(:first_demand_transition) { Fabricate :demand_transition, demand: demand, stage: third_stage, last_time_in: 1.day.ago }
-      let!(:second_demand_transition) { Fabricate :demand_transition, demand: demand, stage: second_stage, last_time_in: 2.days.ago }
-      let!(:third_demand_transition) { Fabricate :demand_transition, demand: demand, stage: first_stage, last_time_in: 3.days.ago }
+      let!(:first_demand_transition) { Fabricate :demand_transition, demand: demand, stage: fifth_stage, last_time_in: 2.days.ago }
+      let!(:second_demand_transition) { Fabricate :demand_transition, demand: demand, stage: fourth_stage, last_time_in: 3.days.ago }
 
       it { expect(demand.flow_percentage_concluded).to eq 0.6666666666666666 }
     end
@@ -800,5 +792,45 @@ RSpec.describe Demand, type: :model do
 
     it { expect(first_demand.assignees_count).to eq 2 }
     it { expect(second_demand.assignees_count).to eq 0 }
+  end
+
+  describe '#time_between_commitment_and_pull' do
+    let(:project) { Fabricate :project, hour_value: 100 }
+
+    let!(:first_stage) { Fabricate :stage, projects: [project], stage_stream: :upstream, order: 0 }
+    let!(:second_stage) { Fabricate :stage, projects: [project], stage_stream: :upstream, order: 1 }
+    let!(:third_stage) { Fabricate :stage, projects: [project], stage_stream: :upstream, order: 2 }
+
+    let!(:fourth_stage) { Fabricate :stage, projects: [project], commitment_point: true, stage_stream: :downstream, order: 3 }
+    let!(:fifth_stage) { Fabricate :stage, projects: [project], stage_stream: :downstream, order: 4 }
+    let!(:sixth_stage) { Fabricate :stage, projects: [project], stage_stream: :downstream, order: 5 }
+
+    let!(:demand) { Fabricate :demand, project: project }
+
+    context 'without transitions' do
+      it { expect(demand.time_between_commitment_and_pull).to eq 0 }
+    end
+
+    context 'with only upstream transitions' do
+      let!(:first_demand_transition) { Fabricate :demand_transition, demand: demand, stage: third_stage, last_time_in: 1.day.ago }
+      let!(:second_demand_transition) { Fabricate :demand_transition, demand: demand, stage: second_stage, last_time_in: 2.days.ago }
+      let!(:third_demand_transition) { Fabricate :demand_transition, demand: demand, stage: first_stage, last_time_in: 3.days.ago }
+
+      it { expect(demand.time_between_commitment_and_pull).to eq 0 }
+    end
+
+    context 'with downstream transitions' do
+      let!(:first_demand_transition) { Fabricate :demand_transition, demand: demand, stage: sixth_stage, last_time_in: 1.day.ago, last_time_out: 1.hour.ago }
+      let!(:second_demand_transition) { Fabricate :demand_transition, demand: demand, stage: fifth_stage, last_time_in: 2.days.ago, last_time_out: 1.day.ago }
+      let!(:third_demand_transition) { Fabricate :demand_transition, demand: demand, stage: fourth_stage, last_time_in: 3.days.ago, last_time_out: 2.days.ago }
+
+      it { expect(demand.time_between_commitment_and_pull).to be_within(0.001).of(86_400.000) }
+    end
+
+    context 'with only ongoing downstream transitions' do
+      let!(:third_demand_transition) { Fabricate :demand_transition, demand: demand, stage: fourth_stage, last_time_in: 3.days.ago, last_time_out: nil }
+
+      it { expect(demand.time_between_commitment_and_pull).to eq 0 }
+    end
   end
 end

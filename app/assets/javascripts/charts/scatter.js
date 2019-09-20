@@ -86,7 +86,7 @@ function buildScatterChart(scatterDiv) {
                 },
                 tooltip: {
                     headerFormat: '<b>{series.name}</b><br>',
-                    pointFormat: `{point.x}: {point.y:.2f} ${scatterDiv.data('tooltipsuffix')}`
+                    pointFormat: `{point.name}: {point.y:.2f} ${scatterDiv.data('tooltipsuffix')}`
                 }
             }
         },

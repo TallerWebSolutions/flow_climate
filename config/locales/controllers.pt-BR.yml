@@ -116,7 +116,7 @@ pt-BR:
       zero: "sem pontos"
       one: "%{count} pontos"
       other: "%{count} pontos"
-    demands: "demanda(s)"
+    demands: "demanda"
     avg_speed_per_week: "%{speed_value} itens/semana"
     items_text: "%{items_count} item(ns)"
     flow: "Fluxo"
@@ -135,6 +135,7 @@ pt-BR:
       other: "%{count} comentários"
     leadtime_p80_label: "Lead time (p80)"
     demand_blocks: "bloqueio(s)"
+    pull_transaction: "Pull Transaction"
   header:
     logout: Sair
     sign_up: Cadastre-se
@@ -624,6 +625,7 @@ pt-BR:
       comments_tab: "Comentários"
       responsibles_tab: "Responsáveis"
       pairing: "Pareamento"
+      consolidations: "Consolidações"
     sync:
       enqueued: "Sua solicitação foi colocada na fila. Será processada em breve."
       done: "Sua sincronização foi realizada."
@@ -643,10 +645,10 @@ pt-BR:
       hours_per_month:
         title: "Horas por Mês para %{name}"
       throughput: "Vazão no Período"
-      creation_date: "Taxa de Criação"
+      creation_date: "Criadas"
       demands:
         title: "Demandas"
-      commitment_date: "Data de Compromisso"
+      commitment_date: "Compromisso"
       committed_date: "Comprometidas"
       aging_per_demand:
         title: "Idade quando a demanda foi finalizada"
@@ -656,6 +658,7 @@ pt-BR:
         series: "idade"
       demands_by_project:
         title: "Demandas por Projeto"
+      flow_data: "Dados do Fluxo"
     flow:
       processed_demand: "Demandas Processadas"
       wip: "Trabalho em Progresso"
@@ -735,6 +738,7 @@ pt-BR:
     stages: "Etapas"
     portfolio_units: "Unidades do Portfólio"
     risk_reviews: "Revisões de Risco"
+    service_delivery_reviews: "Service Delivery Review"
   charts:
     xlabel:
       months: "Meses"
@@ -1028,3 +1032,24 @@ pt-BR:
   team_resource_allocations:
     new:
       title: "Nova Alocação de Recurso"
+  service_delivery_reviews:
+    new:
+      title: "Nova Revisão"
+    show:
+      bugs_label: "Defeitos"
+      class_of_services:
+        title: "Classes de Serviço"
+      demands_label: "Demandas"
+      expedites_delayded:
+        title: "Expedites Atrasadas"
+      expedites_not_delayded:
+        title: "Expedites no Prazo"
+      no_bugs_label: "demandas"
+      lead_time_breakdown_label: "Lead Time Breakdown"
+      stages: "Etapas"
+      portfolio_units:
+        title: "Progresso das Unidades de Portfólio"
+      highest_stage_time: "Etapa Mais Longa"
+      discarded_demands_label: "Descartadas"
+      general_info: "Geral"
+      kpis: "KPIs"
