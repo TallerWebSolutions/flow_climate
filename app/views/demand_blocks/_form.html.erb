@@ -27,7 +27,7 @@
     </div>
     <div class='col-xs-6 form-group <%= 'has-error' if @demand_block.errors[:unblocker_username].present? %>'>
       <%= f.label :unblocker, class: 'control-label required' %>
-      <%= f.select :unblocker_id, team_members_options(@demand_block.demand.team.team_members.active, @demand_block.unblocker_id), {}, class: 'form-control filter-checks' %>
+      <%= f.select :unblocker_id, team_members_options(@demand_block.demand.team.team_members.active, @demand_block.unblocker_id), { include_blank: I18n.t('general.select') }, class: 'form-control filter-checks' %>
       <span class="help-block"><%= @demand_block.errors[:unblocker_username].join(', ') %></span>
     </div>
   </div>
