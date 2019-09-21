@@ -1,0 +1,20 @@
+<table class="table">
+  <tbody>
+    <tr>
+      <td><b><%= ServiceDeliveryReview.human_attribute_name :delayed_expedite_bottom_threshold %></b></td>
+      <td><%= number_to_percentage(@service_delivery_review.delayed_expedite_bottom_threshold * 100, precision: 2) %></td>
+    </tr>
+    <tr>
+      <td><b><%= ServiceDeliveryReview.human_attribute_name :delayed_expedite_top_threshold %></b></td>
+      <td><%= number_to_percentage(@service_delivery_review.delayed_expedite_top_threshold * 100, precision: 2) %></td>
+    </tr>
+    <tr>
+      <td><b><%= ServiceDeliveryReview.human_attribute_name :lead_time_bottom_threshold %></b></td>
+      <td><%= @service_delivery_review.lead_time_bottom_threshold / 1.hour %></td>
+    </tr>
+    <tr>
+      <td><b><%= ServiceDeliveryReview.human_attribute_name :lead_time_top_threshold %></b></td>
+      <td><%= @service_delivery_review.lead_time_top_threshold / 1.hour %></td>
+    </tr>
+  </tbody>
+</table>

@@ -84,7 +84,7 @@ class DemandsController < AuthenticatedController
     assign_dates_to_query
 
     @demands = build_date_query_and_order(filtered_demands_list_view, @start_date, @end_date)
-    @demands_count_per_week = DemandService.instance.quantitative_consolidation_per_week_to_projects(@projects)
+    @demands_count_per_week = DemandService.instance.arrival_and_departure_data_per_week(@projects)
     @discarded_demands = DemandsRepository.instance.discarded_demands_to_projects(@projects)
 
     assign_consolidations

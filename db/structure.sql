@@ -370,7 +370,8 @@ CREATE TABLE public.demands (
     total_bloked_working_time numeric DEFAULT 0,
     total_touch_blocked_time numeric DEFAULT 0,
     risk_review_id integer,
-    business_score numeric
+    business_score numeric,
+    service_delivery_review_id integer
 );
 
 
@@ -1175,6 +1176,46 @@ CREATE TABLE public.schema_migrations (
 
 
 --
+-- Name: service_delivery_reviews; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.service_delivery_reviews (
+    id bigint NOT NULL,
+    company_id integer NOT NULL,
+    product_id integer NOT NULL,
+    meeting_date date NOT NULL,
+    lead_time_top_threshold numeric NOT NULL,
+    lead_time_bottom_threshold numeric NOT NULL,
+    quality_top_threshold numeric NOT NULL,
+    quality_bottom_threshold numeric NOT NULL,
+    expedite_max_pull_time_sla integer NOT NULL,
+    delayed_expedite_top_threshold numeric NOT NULL,
+    delayed_expedite_bottom_threshold numeric NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: service_delivery_reviews_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.service_delivery_reviews_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: service_delivery_reviews_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.service_delivery_reviews_id_seq OWNED BY public.service_delivery_reviews.id;
+
+
+--
 -- Name: slack_configurations; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1790,6 +1831,13 @@ ALTER TABLE ONLY public.risk_reviews ALTER COLUMN id SET DEFAULT nextval('public
 
 
 --
+-- Name: service_delivery_reviews id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.service_delivery_reviews ALTER COLUMN id SET DEFAULT nextval('public.service_delivery_reviews_id_seq'::regclass);
+
+
+--
 -- Name: slack_configurations id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -2120,6 +2168,14 @@ ALTER TABLE ONLY public.risk_reviews
 
 ALTER TABLE ONLY public.schema_migrations
     ADD CONSTRAINT schema_migrations_pkey PRIMARY KEY (version);
+
+
+--
+-- Name: service_delivery_reviews service_delivery_reviews_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.service_delivery_reviews
+    ADD CONSTRAINT service_delivery_reviews_pkey PRIMARY KEY (id);
 
 
 --
@@ -2638,6 +2694,27 @@ CREATE INDEX index_risk_reviews_on_product_id ON public.risk_reviews USING btree
 
 
 --
+-- Name: index_service_delivery_reviews_on_company_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_service_delivery_reviews_on_company_id ON public.service_delivery_reviews USING btree (company_id);
+
+
+--
+-- Name: index_service_delivery_reviews_on_meeting_date_and_product_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_service_delivery_reviews_on_meeting_date_and_product_id ON public.service_delivery_reviews USING btree (meeting_date, product_id);
+
+
+--
+-- Name: index_service_delivery_reviews_on_product_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_service_delivery_reviews_on_product_id ON public.service_delivery_reviews USING btree (product_id);
+
+
+--
 -- Name: index_slack_configurations_on_info_type_and_team_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -3035,6 +3112,14 @@ ALTER TABLE ONLY public.portfolio_units
 
 
 --
+-- Name: service_delivery_reviews fk_rails_2ee3d597b3; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.service_delivery_reviews
+    ADD CONSTRAINT fk_rails_2ee3d597b3 FOREIGN KEY (product_id) REFERENCES public.products(id);
+
+
+--
 -- Name: demand_data_processments fk_rails_337e2008a8; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -3291,6 +3376,14 @@ ALTER TABLE ONLY public.project_risk_alerts
 
 
 --
+-- Name: service_delivery_reviews fk_rails_bfbae75414; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.service_delivery_reviews
+    ADD CONSTRAINT fk_rails_bfbae75414 FOREIGN KEY (company_id) REFERENCES public.companies(id);
+
+
+--
 -- Name: jira_product_configs fk_rails_c55dd7e748; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -3416,6 +3509,14 @@ ALTER TABLE ONLY public.customers
 
 ALTER TABLE ONLY public.flow_impacts
     ADD CONSTRAINT fk_rails_f6118b7a74 FOREIGN KEY (demand_id) REFERENCES public.demands(id);
+
+
+--
+-- Name: demands fk_rails_fcc44c0e5d; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.demands
+    ADD CONSTRAINT fk_rails_fcc44c0e5d FOREIGN KEY (service_delivery_review_id) REFERENCES public.service_delivery_reviews(id);
 
 
 --
@@ -3575,6 +3676,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190830144220'),
 ('20190905151751'),
 ('20190905215441'),
-('20190906135154');
+('20190906135154'),
+('20190917120310');
 
 

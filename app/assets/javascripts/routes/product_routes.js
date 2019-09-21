@@ -52,3 +52,12 @@ function getRiskReviewsTab(companyId, productId) {
         type: "GET"
     });
 }
+
+function getServiceDeliveryReviewsTab(companyId, productId) {
+    $("#general-loader").show();
+
+    jQuery.ajax({
+        url: `/companies/${companyId}/products/${productId}/service_delivery_reviews_tab.js`,
+        type: "GET"
+    });
+}

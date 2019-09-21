@@ -30,6 +30,7 @@
 #  product_id                      :integer
 #  project_id                      :integer          not null
 #  risk_review_id                  :integer
+#  service_delivery_review_id      :integer
 #  slug                            :string           indexed
 #  team_id                         :integer          not null
 #  total_bloked_working_time       :decimal(, )      default(0.0)
@@ -53,6 +54,7 @@
 #  fk_rails_34f0dad22e  (risk_review_id => risk_reviews.id)
 #  fk_rails_73cc77780a  (product_id => products.id)
 #  fk_rails_c9b5eaaa7f  (portfolio_unit_id => portfolio_units.id)
+#  fk_rails_fcc44c0e5d  (service_delivery_review_id => service_delivery_reviews.id)
 #
 
 class Demand < ApplicationRecord
@@ -71,6 +73,7 @@ class Demand < ApplicationRecord
   belongs_to :portfolio_unit
   belongs_to :team
   belongs_to :risk_review
+  belongs_to :service_delivery_review
 
   belongs_to :parent, class_name: 'Demand', foreign_key: :parent_id, inverse_of: :children
   has_many :children, class_name: 'Demand', foreign_key: :parent_id, inverse_of: :parent, dependent: :destroy
@@ -236,7 +239,21 @@ class Demand < ApplicationRecord
     active_team_members.count
   end
 
+  def time_between_commitment_and_pull
+    return 0 if commitment_date.blank? || commitment_transition.blank? || commitment_transition.last_time_out.blank?
+
+    commitment_transition.last_time_out - commitment_transition.last_time_in
+  end
+
   private
+
+  def commitment_transition
+    commitment_point = stages.find_by(commitment_point: true)
+
+    return nil if commitment_point.blank?
+
+    demand_transitions.where(stage: commitment_point).order(:last_time_in).last
+  end
 
   def current_stage_name
     current_stage&.name

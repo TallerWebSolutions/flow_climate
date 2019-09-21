@@ -36,6 +36,7 @@
           <th><%= PortfolioUnit.model_name.human %></th>
           <th><%= I18n.t('demands.index.cost_to_project') %></th>
           <th><%= I18n.t('demands.index.current_stage') %></th>
+          <th><%= Demand.human_attribute_name :pull_time %></th>
           <th><%= Demand.human_attribute_name :leadtime %></th>
           <th><%= Demand.human_attribute_name :effort_upstream %></th>
           <th><%= Demand.human_attribute_name :effort_downstream %></th>

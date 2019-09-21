@@ -39,6 +39,10 @@ navItem.on('click', function(event){
             $('.col-table-details').hide();
             getRiskReviewsTab(companyId, productId)
 
+        } else if ($(this).attr('id') === 'nav-service-delivery-reviews') {
+            $('.col-table-details').hide();
+            getServiceDeliveryReviewsTab(companyId, productId)
+
         } else {
             enableTabs();
             $($(this).data('container')).show();

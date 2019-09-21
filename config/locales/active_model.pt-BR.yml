@@ -156,6 +156,9 @@ pt-BR:
       team_resource_alloacation:
         one: Alocação de Recurso no Time
         other: Alocações de Recurso no Time
+      service_delivery_review:
+        one: Service Delivery Review
+        other: Service Delivery Reviews
     attributes:
       user:
         first_name: Nome
@@ -274,6 +277,7 @@ pt-BR:
         leadtime: Lead time
         artifact_type: Tipo do Artefato
         discarded_at: Descartada em
+        pull_time: Tempo para Puxar
         enums:
           demand_type:
             bug: Bug
@@ -347,8 +351,8 @@ pt-BR:
       demand_transition:
         demand: Demanda
         stage: Etapa
-        last_time_in: Primeira vez na etapa
-        last_time_out: Última saída da etapa
+        last_time_in: Entrada
+        last_time_out: Saída
       demand_block:
         demand: Demanda
         demand_block_id: Id
@@ -519,6 +523,16 @@ pt-BR:
         monthly_payment: Pagamento Mensal
         start_date: Data de Início
         end_date: Data Final
+      service_delivery_review:
+        meeting_date: Data da Reunião
+        demands: Demandas
+        delayed_expedite_bottom_threshold: Min Expedites Atrasadas (%)
+        delayed_expedite_top_threshold: Max Expedites Atrasadas (%)
+        expedite_max_pull_time_sla: SLA pra Puxar Expedite (horas)
+        lead_time_bottom_threshold: Min Lead Time (horas)
+        lead_time_top_threshold: Max Lead Time (horas)
+        quality_bottom_threshold: Min Qualidade (%)
+        quality_top_threshold: Max Qualidade (%)
   product:
     name:
       uniqueness: "Não deve repetir nome de produto para o mesmo cliente."
@@ -570,3 +584,7 @@ pt-BR:
   item_assignment:
     validations:
       demand_unique: "Você só pode ter uma demanda atribuída para o mesmo membro do time ao mesmo tempo."
+  service_delivery_review:
+    attributes:
+      validations:
+        product_uniqueness: "Você só pode ter uma reunião para o produto começando na mesma data."
