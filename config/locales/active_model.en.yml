@@ -214,3 +214,11 @@ en:
     attributes:
       validations:
         product_uniqueness: "You can have only one meeting to the product starting at the same date."
+    help:
+      delayed_expedite_top_threshold: "Maximum delayed expedites percentage (0%, 10%, 22%, etc.)"
+      delayed_expedite_bottom_threshold: "Minimum delayed expedites percentage (0%, 10%, 22%, etc.)"
+      expedite_max_pull_time_sla: "Max hours to pull an expedite"
+      lead_time_top_threshold: "Top threshold to lead time"
+      lead_time_bottom_threshold: "Bottom threshold to lead time"
+      quality_bottom_threshold: "Minimum share of defects"
+      quality_top_threshold: "Maximum share of defects"

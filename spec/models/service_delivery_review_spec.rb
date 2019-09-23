@@ -89,7 +89,7 @@ RSpec.describe ServiceDeliveryReview, type: :model do
     include_context 'service delivery data'
 
     it 'returns the lead time percentile 80 value' do
-      expect(service_delivery_review.demands_lead_time_p80).to be_within(0.1).of 535_679.8
+      expect(service_delivery_review.demands_lead_time_p80).to be_within(0.3).of 535_679.8
       expect(other_service_delivery_review.demands_lead_time_p80).to eq 0
     end
   end
