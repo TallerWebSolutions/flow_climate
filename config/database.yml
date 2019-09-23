@@ -6,6 +6,8 @@ default: &default
 development:
   <<: *default
   database: flowcontrol_development
+  username:
+  password:
 
 test:
   <<: *default

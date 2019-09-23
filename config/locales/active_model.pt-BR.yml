@@ -588,3 +588,11 @@ pt-BR:
     attributes:
       validations:
         product_uniqueness: "Você só pode ter uma reunião para o produto começando na mesma data."
+    help:
+      delayed_expedite_top_threshold: "Porcentagem máxima de expedites atrasadas (0%, 10%, 22%, etc.)"
+      delayed_expedite_bottom_threshold: "Porcentagem mínima de expedites atrasadas (0%, 10%, 22%, etc.)"
+      expedite_max_pull_time_sla: "Tempo máximo em horas para puxar uma expedite"
+      lead_time_bottom_threshold: "Lead time mínimo em horas"
+      lead_time_top_threshold: "Limite inferior da faixa de lead time aceitável"
+      quality_bottom_threshold: "Porcentagem mínima de defeitos"
+      quality_top_threshold: "Porcentagem máxima de defeitos"

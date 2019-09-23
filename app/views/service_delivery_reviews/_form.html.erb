@@ -8,36 +8,43 @@
     </div>
     <div class='col-xs-6 form-group <%= 'has-error' if service_delivery_review.errors[:expedite_max_pull_time_sla].present? %>'>
       <%= f.label :expedite_max_pull_time_sla, class: 'control-label required' %>
+      <i class="far fa-question-circle" title="<%= I18n.t('service_delivery_review.help.expedite_max_pull_time_sla') %>"></i>
       <%= f.number_field :expedite_max_pull_time_sla, class: 'form-control', step: 0.1 %>
       <span class="help-block"><%= service_delivery_review.errors[:expedite_max_pull_time_sla].join(', ') %></span>
     </div>
     <div class='col-xs-6 form-group <%= 'has-error' if service_delivery_review.errors[:delayed_expedite_bottom_threshold].present? %>'>
       <%= f.label :delayed_expedite_bottom_threshold, class: 'control-label required' %>
+      <i class="far fa-question-circle" title="<%= I18n.t('service_delivery_review.help.delayed_expedite_bottom_threshold') %>"></i>
       <%= f.number_field :delayed_expedite_bottom_threshold, class: 'form-control', step: 0.1 %>
       <span class="help-block"><%= service_delivery_review.errors[:delayed_expedite_bottom_threshold].join(', ') %></span>
     </div>
     <div class='col-xs-6 form-group <%= 'has-error' if service_delivery_review.errors[:delayed_expedite_top_threshold].present? %>'>
       <%= f.label :delayed_expedite_top_threshold, class: 'control-label required' %>
+      <i class="far fa-question-circle" title="<%= I18n.t('service_delivery_review.help.delayed_expedite_top_threshold') %>"></i>
       <%= f.number_field :delayed_expedite_top_threshold, class: 'form-control', step: 0.1 %>
       <span class="help-block"><%= service_delivery_review.errors[:delayed_expedite_top_threshold].join(', ') %></span>
     </div>
     <div class='col-xs-6 form-group <%= 'has-error' if service_delivery_review.errors[:lead_time_bottom_threshold].present? %>'>
       <%= f.label :lead_time_bottom_threshold, class: 'control-label required' %>
+      <i class="far fa-question-circle" title="<%= I18n.t('service_delivery_review.help.lead_time_bottom_threshold') %>"></i>
       <%= f.number_field :lead_time_bottom_threshold, class: 'form-control', step: 0.1 %>
       <span class="help-block"><%= service_delivery_review.errors[:lead_time_bottom_threshold].join(', ') %></span>
     </div>
     <div class='col-xs-6 form-group <%= 'has-error' if service_delivery_review.errors[:lead_time_top_threshold].present? %>'>
       <%= f.label :lead_time_top_threshold, class: 'control-label required' %>
+      <i class="far fa-question-circle" title="<%= I18n.t('service_delivery_review.help.lead_time_top_threshold') %>"></i>
       <%= f.number_field :lead_time_top_threshold, class: 'form-control', step: 0.1 %>
       <span class="help-block"><%= service_delivery_review.errors[:lead_time_top_threshold].join(', ') %></span>
     </div>
     <div class='col-xs-6 form-group <%= 'has-error' if service_delivery_review.errors[:quality_bottom_threshold].present? %>'>
       <%= f.label :quality_bottom_threshold, class: 'control-label required' %>
+      <i class="far fa-question-circle" title="<%= I18n.t('service_delivery_review.help.quality_bottom_threshold') %>"></i>
       <%= f.number_field :quality_bottom_threshold, class: 'form-control', step: 0.1 %>
       <span class="help-block"><%= service_delivery_review.errors[:quality_bottom_threshold].join(', ') %></span>
     </div>
     <div class='col-xs-6 form-group <%= 'has-error' if service_delivery_review.errors[:quality_top_threshold].present? %>'>
       <%= f.label :quality_top_threshold, class: 'control-label required' %>
+      <i class="far fa-question-circle" title="<%= I18n.t('service_delivery_review.help.quality_top_threshold') %>"></i>
       <%= f.number_field :quality_top_threshold, class: 'form-control', step: 0.1 %>
       <span class="help-block"><%= service_delivery_review.errors[:quality_top_threshold].join(', ') %></span>
     </div>
@@ -46,7 +53,7 @@
   <div class="row">
     <div class="col-xs-12">
       <%= f.submit class: 'btn btn-success' %>
-      <%= link_to I18n.t('general.buttons.cancel'), '#', class: 'btn btn-danger', id: 'cancel-form-risk-review' %>
+      <%= link_to I18n.t('general.buttons.cancel'), '#', class: 'btn btn-danger', id: 'cancel-form-service-delivery-review' %>
     </div>
   </div>
 </div>
