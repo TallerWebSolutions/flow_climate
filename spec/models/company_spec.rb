@@ -172,7 +172,7 @@ RSpec.describe Company, type: :model do
     context 'having finances' do
       include_context 'demands with effort for company'
 
-      it { expect(company.current_hours_per_demand.to_f).to eq 105.6 }
+      it { expect(company.current_hours_per_demand.to_f).to eq 35.199999999999996 }
     end
 
     context 'having no finances' do
