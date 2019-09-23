@@ -1274,7 +1274,7 @@ RSpec.describe Project, type: :model do
   describe '#total_weeks' do
     let(:project) { Fabricate :project, start_date: Time.zone.today, end_date: 4.weeks.from_now, qty_hours: 2000 }
 
-    it { expect(project.total_weeks).to eq 5.1428571428571415 }
+    it { expect(project.total_weeks).to be_within(0.01).of(5.14) }
   end
 
   describe '#past_weeks' do
