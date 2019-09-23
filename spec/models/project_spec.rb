@@ -1287,7 +1287,7 @@ RSpec.describe Project, type: :model do
     context 'with finished project' do
       let(:project) { Fabricate :project, status: :finished, start_date: Time.zone.today, end_date: 4.weeks.from_now, qty_hours: 2000 }
 
-      it { expect(project.past_weeks).to eq 5.1428571428571415 }
+      it { expect(project.past_weeks).to be_within(0.01).of(5.14) }
     end
   end
 
