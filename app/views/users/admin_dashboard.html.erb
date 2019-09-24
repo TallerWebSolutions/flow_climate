@@ -1,0 +1,23 @@
+<h1><%= I18n.t('users.index.title') %></h1>
+
+<div class="row">
+  <div class="col-xs-12">
+    <div class="tab">
+      <button class="tablinks" id="users-tab" onclick="openTab(event, 'users-table', 'tablinks', 'tabcontent')"><%= I18n.t('users.admin_dashboard.users_table.title') %></button>
+      <button class="tablinks" onclick="openTab(event, 'companies-table', 'tablinks', 'tabcontent')"><%= I18n.t('users.admin_dashboard.companies_table.title') %></button>
+    </div>
+  </div>
+</div>
+
+<div id="users-table" class="tabcontent">
+  <%= render 'users/users_table', users_list: @users_list %>
+</div>
+
+<div id="companies-table" class="tabcontent">
+  <%= render 'companies/companies_table', companies_list: @companies_list %>
+</div>
+
+<% content_for :javascript do %>
+  <%= javascript_include_tag 'components/components' %>
+  <%= javascript_include_tag 'users/admin_dashboard' %>
+<% end %>

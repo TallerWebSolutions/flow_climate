@@ -31,21 +31,41 @@ RSpec.describe UsersController, type: :controller do
 
       it { expect(response).to redirect_to new_user_session_path }
     end
+
+    describe 'GET #admin_dashboard' do
+      before { get :admin_dashboard }
+
+      it { expect(response).to redirect_to new_user_session_path }
+    end
   end
 
   context 'authenticated as admin' do
-    let(:user) { Fabricate :user, admin: true }
+    let(:user) { Fabricate :user, admin: true, first_name: 'aaa', last_name: 'zzz' }
 
     before { sign_in user }
 
     describe 'PATCH #toggle_admin' do
       let(:tested_user) { Fabricate :user, admin: true }
 
-      before { patch :toggle_admin, params: { id: tested_user } }
+      it 'toggles admin and redirects to the users_path' do
+        patch :toggle_admin, params: { id: tested_user }
+
+        expect(tested_user.reload).not_to be_admin
+        expect(response).to redirect_to admin_dashboard_users_path
+      end
+    end
+
+    describe 'GET #admin_dashboard' do
+      let!(:other_user) { Fabricate :user, admin: false, first_name: 'rrr', last_name: 'vvv' }
+      let!(:company) { Fabricate :company, name: 'zzz' }
+      let!(:other_company) { Fabricate :company, name: 'aaa' }
 
       it 'toggles admin and redirects to the users_path' do
-        expect(tested_user.reload).not_to be_admin
-        expect(response).to redirect_to users_path
+        get :admin_dashboard
+
+        expect(assigns(:users_list)).to eq [other_user, user]
+        expect(assigns(:companies_list)).to eq [other_company, company]
+        expect(response).to render_template :admin_dashboard
       end
     end
   end
@@ -146,6 +166,12 @@ RSpec.describe UsersController, type: :controller do
           it { expect(response).to have_http_status :not_found }
         end
       end
+    end
+
+    describe 'GET #admin_dashboard' do
+      before { get :admin_dashboard }
+
+      it { expect(response).to redirect_to root_path }
     end
   end
 end

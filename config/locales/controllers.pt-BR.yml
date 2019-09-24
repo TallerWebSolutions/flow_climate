@@ -147,10 +147,17 @@ pt-BR:
       title: "Perfil do Usuário"
     index:
       title: "Usuários"
+      turn_off_notifications: "Desligar Notificações"
+      turn_on_notifications: "Ligar Notificações"
     account:
       self: "Minha Conta"
     edit:
       title: "Editar Usuário"
+    admin_dashboard:
+      users_table:
+        title: "Usuários"
+      companies_table:
+        title: "Empresas"
   companies:
     index:
       title: "Empresas"

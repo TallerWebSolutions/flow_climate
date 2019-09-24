@@ -1,0 +1,21 @@
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th><%= Company.human_attribute_name(:name) %></th>
+      <th><%= Company.human_attribute_name(:customers) %></th>
+      <th><%= Company.human_attribute_name(:products) %></th>
+      <th><%= Company.human_attribute_name(:projects) %></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% companies_list.each do |company| %>
+      <tr>
+        <td><%= link_to company.name, company_path(company) %></td>
+        <td><%= company.customers.count %></td>
+        <td><%= company.products.count %></td>
+        <td><%= company.projects.count %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

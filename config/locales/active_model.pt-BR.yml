@@ -170,6 +170,9 @@ pt-BR:
         created_at: Chegou em
         sign_in_count: Qty Logins
       company:
+        customers: Clientes
+        products: Produtos
+        projects: Projetos
         name: Nome
         abbreviation: Sigla
         team_resources: Recursos do Time

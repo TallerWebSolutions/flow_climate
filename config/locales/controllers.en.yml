@@ -148,10 +148,17 @@ en:
       title: "User Profile"
     index:
       title: "Users"
+      turn_off_notifications: "Turn Off Notifications"
+      turn_on_notifications: "Turn On Notifications"
     account:
       self: "My Account"
     edit:
       title: "Edit User"
+    admin_dashboard:
+      users_table:
+        title: "Users"
+      companies_table:
+        title: "Companies"
   companies:
     index:
       title: "Companies"
