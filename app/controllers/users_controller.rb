@@ -1,10 +1,13 @@
 # frozen_string_literal: true
 
 class UsersController < AuthenticatedController
-  before_action :check_admin, only: :toggle_admin
+  before_action :check_admin, only: %i[toggle_admin admin_dashboard]
   before_action :assign_user, only: %i[toggle_admin update]
 
-  def index; end
+  def admin_dashboard
+    @users_list = User.all.order(%i[last_name first_name])
+    @companies_list = Company.all.order(:name)
+  end
 
   def activate_email_notifications
     current_user.update(email_notifications: true)
@@ -18,7 +21,7 @@ class UsersController < AuthenticatedController
 
   def toggle_admin
     @user.toggle_admin
-    redirect_to users_path
+    redirect_to admin_dashboard_users_path
   end
 
   def show

@@ -49,8 +49,9 @@ Rails.application.routes.draw do
     post :plan_choose
   end
 
-  resources :users, only: %i[show index update] do
+  resources :users, only: %i[show update] do
     collection do
+      get :admin_dashboard
       patch :activate_email_notifications
       patch :deactivate_email_notifications
     end

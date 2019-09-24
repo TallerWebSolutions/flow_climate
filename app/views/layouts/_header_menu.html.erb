@@ -23,9 +23,9 @@
       <% if current_user.present? %>
         <li><%= link_to I18n.t('users.account.self'), current_user, class: 'nav-link dropdown-item'%></li>
         <% if current_user.email_notifications? %>
-          <li><%= link_to 'Desligar Notificações', deactivate_email_notifications_users_path, method: :patch, remote: true, class: 'nav-link dropdown-item' %></li>
+          <li><%= link_to t('users.index.turn_off_notifications'), deactivate_email_notifications_users_path, method: :patch, remote: true, class: 'nav-link dropdown-item' %></li>
         <% else %>
-          <li><%= link_to 'Ligar Notificações', activate_email_notifications_users_path, method: :patch, remote: true, class: 'nav-link dropdown-item' %></li>
+          <li><%= link_to t('users.index.turn_on_notifications'), activate_email_notifications_users_path, method: :patch, remote: true, class: 'nav-link dropdown-item' %></li>
         <% end %>
         <% if current_user.admin? || current_user.gold? %>
           <li class="divider"></li>
@@ -45,7 +45,7 @@
         <% end %>
         <% if current_user.admin? %>
           <li class="divider"></li>
-          <li><%= link_to 'Admin Dashboard', users_path %></li>
+          <li><%= link_to 'Admin Dashboard', admin_dashboard_users_path %></li>
         <% end %>
         <li class="divider"></li>
         <li><%= link_to I18n.t('header.logout'), destroy_user_session_path, method: :delete, class: 'nav-link dropdown-item'%></li>
