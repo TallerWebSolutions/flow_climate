@@ -35,9 +35,11 @@
       <div class="tab">
         <button class="tablinks" onclick="openTab(event, 'plans', 'tablinks', 'tabcontent')"><%= I18n.t('user_plans.index.table.title') %></button>
         <button class="tablinks" onclick="openTab(event, 'data-processement', 'tablinks', 'tabcontent')"><%= I18n.t('user_profile.show.data_processed_table') %></button>
+        <button class="tablinks" onclick="openTab(event, 'companies-table', 'tablinks', 'tabcontent')"><%= I18n.t('users.admin_dashboard.companies_table.title') %></button>
       </div>
     </div>
   </div>
+
 
   <div id="plans" class="tabcontent">
     <% if @user_plans.blank? %>
@@ -53,6 +55,10 @@
     <% else %>
       <%= render 'users/data_processed_table', demand_data_processment: @demand_data_processment %>
     <% end %>
+  </div>
+
+  <div id="companies-table" class="tabcontent">
+    <%= render 'companies/companies_table', companies_list: @companies_list %>
   </div>
 </div>
 

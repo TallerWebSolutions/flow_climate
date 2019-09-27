@@ -105,11 +105,15 @@ RSpec.describe UsersController, type: :controller do
           let!(:user_plan) { Fabricate :user_plan, user: user, finish_at: Time.zone.today }
           let!(:other_user_plan) { Fabricate :user_plan, user: user, finish_at: Time.zone.tomorrow }
 
+          let!(:company) { Fabricate :company, users: [user], name: 'zzz' }
+          let!(:other_company) { Fabricate :company, users: [user], name: 'aaa' }
+
           before { get :show, params: { id: user } }
 
           it 'assigns the instance variable and renders the template' do
             expect(assigns(:user)).to eq user
             expect(assigns(:user_plans)).to eq [other_user_plan, user_plan]
+            expect(assigns(:companies_list)).to eq [other_company, company]
             expect(response).to render_template :show
           end
         end
