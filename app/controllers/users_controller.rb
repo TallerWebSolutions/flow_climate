@@ -26,12 +26,14 @@ class UsersController < AuthenticatedController
 
   def show
     @user = User.find(params[:id])
+    @companies_list = @user.companies.order(:name)
     assign_user_dependencies
   end
 
   def update
     return redirect_to user_path(@user) if @user.update(user_params)
 
+    @companies_list = @user.companies.order(:name)
     assign_user_dependencies
     render :show
   end
