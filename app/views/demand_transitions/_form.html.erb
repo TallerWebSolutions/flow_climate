@@ -3,7 +3,7 @@
   <div class="row">
     <div class='col-xs-4 form-group <%= 'has-error' if demand_transition.errors[:stage].present? %>'>
       <%= f.label :stage, class: 'control-label required' %>
-      <%= f.select :stage_id, stages_to_select.map { |stage| [stage.name, stage.id] }, { prompt: I18n.t('general.select'), selected: demand_transition.stage_name }, class: 'form-control' %>
+      <%= f.select :stage_id, stages_to_select.map { |stage| [stage.name, stage.id] }, { prompt: I18n.t('general.select'), selected: demand_transition.stage_id }, class: 'form-control' %>
       <span class="help-block"><%= demand_transition.errors[:stage].join(', ') %></span>
     </div>
     <div class='col-xs-4 form-group <%= 'has-error' if demand_transition.errors[:last_time_in].present? %>'>

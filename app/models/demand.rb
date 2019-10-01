@@ -112,6 +112,7 @@ class Demand < ApplicationRecord
   delegate :name, to: :project, prefix: true
   delegate :name, to: :product, prefix: true, allow_nil: true
   delegate :name, to: :portfolio_unit, prefix: true, allow_nil: true
+  delegate :name, to: :team, prefix: true, allow_nil: true
 
   before_save :compute_and_update_automatic_fields
   after_discard :discard_dependencies

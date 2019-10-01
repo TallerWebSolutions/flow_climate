@@ -19,6 +19,18 @@ RSpec.describe DemandTransitionsController, type: :controller do
 
       it { expect(response).to redirect_to new_user_session_path }
     end
+
+    describe 'GET #edit' do
+      before { get :edit, params: { company_id: 'bar', demand_id: 'foo', id: 'xpto' } }
+
+      it { expect(response).to redirect_to new_user_session_path }
+    end
+
+    describe 'PUT #update' do
+      before { put :update, params: { company_id: 'bar', demand_id: 'foo', id: 'xpto' } }
+
+      it { expect(response).to redirect_to new_user_session_path }
+    end
   end
 
   context 'authenticated as gold' do
@@ -120,6 +132,90 @@ RSpec.describe DemandTransitionsController, type: :controller do
           expect(DemandTransition.all.count).to eq 0
           expect(response).to render_template 'demand_transitions/create'
           expect(assigns(:demand_transition).errors.full_messages).to eq ['Etapa não pode ficar em branco', 'Entrada não pode ficar em branco']
+        end
+      end
+    end
+
+    describe 'GET #edit' do
+      let!(:first_demand) { Fabricate :demand, project: project, team: team }
+
+      let!(:first_transition) { Fabricate :demand_transition, demand: demand }
+
+      context 'passing valid parameters' do
+        let!(:first_stage) { Fabricate :stage, company: company, teams: [team], order: 1 }
+        let!(:second_stage) { Fabricate :stage, company: company, teams: [team], order: 0 }
+
+        before { get :edit, params: { company_id: company, demand_id: demand, id: first_transition }, xhr: true }
+
+        it 'assigns the instance variable and renders the template' do
+          expect(response).to have_http_status :ok
+          expect(response).to render_template 'demand_transitions/edit'
+          expect(assigns(:demand_transition)).to eq first_transition
+          expect(assigns(:stages_to_select)).to eq [second_stage, first_stage]
+        end
+      end
+
+      context 'passing invalid' do
+        context 'company' do
+          before { get :edit, params: { company_id: 'foo', demand_id: demand, id: first_transition }, xhr: true }
+
+          it { expect(response).to have_http_status :not_found }
+        end
+
+        context 'demand' do
+          before { get :edit, params: { company_id: company, demand_id: 'foo', id: first_transition }, xhr: true }
+
+          it { expect(response).to have_http_status :not_found }
+        end
+
+        context 'demand_transition' do
+          before { get :edit, params: { company_id: company, demand_id: demand, id: 'foo' }, xhr: true }
+
+          it { expect(response).to have_http_status :not_found }
+        end
+      end
+    end
+
+    describe 'PUT #update' do
+      let!(:first_demand) { Fabricate :demand, project: project, team: team }
+
+      let!(:first_transition) { Fabricate :demand_transition, demand: demand }
+
+      let!(:last_time_in) { 3.days.ago }
+      let!(:last_time_out) { 1.day.ago }
+
+      context 'passing valid parameters' do
+        let!(:first_stage) { Fabricate :stage, company: company, teams: [team], order: 1 }
+        let!(:second_stage) { Fabricate :stage, company: company, teams: [team], order: 0 }
+
+        before { put :update, params: { company_id: company, demand_id: demand, id: first_transition, demand_transition: { stage_id: stage, last_time_in: last_time_in, last_time_out: last_time_out } }, xhr: true }
+
+        it 'updates the demand transition and renders the template' do
+          expect(response).to render_template 'demand_transitions/update'
+          expect(assigns(:demand_transition).errors.full_messages).to eq []
+          expect(assigns(:demand_transition)).to be_persisted
+          expect(assigns(:demand_transition).stage).to eq stage
+          expect(assigns(:stages_to_select)).to eq [second_stage, first_stage]
+        end
+      end
+
+      context 'passing invalid' do
+        context 'company' do
+          before { put :update, params: { company_id: 'foo', demand_id: demand, id: first_transition }, xhr: true }
+
+          it { expect(response).to have_http_status :not_found }
+        end
+
+        context 'product' do
+          before { put :update, params: { company_id: company, demand_id: 'foo', id: first_transition }, xhr: true }
+
+          it { expect(response).to have_http_status :not_found }
+        end
+
+        context 'demand_transition' do
+          before { put :update, params: { company_id: company, demand_id: demand, id: 'foo' }, xhr: true }
+
+          it { expect(response).to have_http_status :not_found }
         end
       end
     end

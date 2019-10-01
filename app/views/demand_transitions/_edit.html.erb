@@ -1,0 +1,7 @@
+<%= form_for demand_transition, url: company_demand_demand_transition_path(company, demand, demand_transition), method: :put, class: 'form', remote: true do |f| %>
+  <div class="row bottom-spaced-component">
+    <div class="col-xs-12">
+      <%= render 'demand_transitions/form', f: f, demand_transition: demand_transition, demand: demand, company: company, stages_to_select: stages_to_select %>
+    </div>
+  </div>
+<% end %>
