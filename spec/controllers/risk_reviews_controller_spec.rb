@@ -277,7 +277,7 @@ RSpec.describe RiskReviewsController, type: :controller do
       context 'passing valid parameters' do
         before { put :update, params: { company_id: company, product_id: product, id: first_risk, risk_review: { meeting_date: Time.zone.tomorrow, lead_time_outlier_limit: 10 } }, xhr: true }
 
-        it 'assigns the instance variable and renders the template' do
+        it 'updates the risk review and renders the template' do
           expect(response).to render_template 'risk_reviews/update'
           expect(assigns(:risk_review).errors.full_messages).to eq []
           expect(assigns(:risk_review)).to be_persisted

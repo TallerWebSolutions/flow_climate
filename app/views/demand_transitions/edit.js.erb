@@ -1,0 +1,7 @@
+var demandTransitionsDiv = $('#demand-transitions-table');
+
+demandTransitionsDiv.html("<%= escape_javascript(render 'demand_transitions/edit', company: @company, demand: @demand, demand_transition: @demand_transition, stages_to_select: @stages_to_select) %>");
+
+$('#cancel-form-demand-transition').on('click', function() {
+    demandTransitionsDiv.html("<%= escape_javascript(render 'demand_transitions/demand_transitions_table', company: @company, demand: @demand, demand_transitions_list: @demand_transitions, stages_to_select: @stages_to_select) %>");
+});

@@ -200,6 +200,7 @@ RSpec.describe Demand, type: :model do
     it { is_expected.to delegate_method(:name).to(:project).with_prefix }
     it { is_expected.to delegate_method(:name).to(:product).with_prefix }
     it { is_expected.to delegate_method(:name).to(:portfolio_unit).with_prefix }
+    it { is_expected.to delegate_method(:name).to(:team).with_prefix }
   end
 
   context 'soft deletion' do

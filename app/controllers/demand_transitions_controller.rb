@@ -4,7 +4,7 @@ class DemandTransitionsController < AuthenticatedController
   before_action :user_gold_check
 
   before_action :assign_company
-  before_action :assign_stage, except: %i[new create]
+  before_action :assign_stage, except: %i[new create edit update]
   before_action :assign_demand, except: :destroy
   before_action :assign_demand_transition, except: %i[new create]
 
@@ -30,10 +30,25 @@ class DemandTransitionsController < AuthenticatedController
     respond_to { |format| format.js { render 'demand_transitions/create' } }
   end
 
+  def edit
+    demand_transitions
+    stages_to_select
+
+    respond_to { |format| format.js { render 'demand_transitions/edit' } }
+  end
+
+  def update
+    @demand_transition.update(demand_transition_params)
+    demand_transitions
+    stages_to_select
+
+    respond_to { |format| format.js { render 'demand_transitions/update' } }
+  end
+
   private
 
   def stages_to_select
-    @stages_to_select ||= @company.stages.joins(:teams).where(teams: { id: @demand.team.id }).order(:order) - [@demand_transition.stage]
+    @stages_to_select ||= @company.stages.joins(:teams).where(teams: { id: @demand.team.id }).order(:order)
   end
 
   def demand_transition_params
