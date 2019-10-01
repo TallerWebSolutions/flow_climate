@@ -1,5 +1,16 @@
 <% if report_data.present? %>
 
+  <div class="col-xs-6 bottom-spaced-component">
+    <div id="operational-charts-scope-uncertainty-donut"
+         class="flow-chart"
+         data-title='<%= I18n.t('charts.scope.uncertainty_title') %>'
+         data-seriesname='<%= I18n.t('general.demands') %>'
+         data-tooltipsuffix='<%= I18n.t('general.demands') %>'
+         data-series='<%= report_data.scope_uncertainty.to_json %>'
+         data-decimals='2'>
+    </div>
+  </div>
+
   <% if @team_chart_data.present? %>
     <div class="col-xs-6 bottom-spaced-component">
       <div id="average-demand-cost"

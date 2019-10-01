@@ -776,6 +776,10 @@ en:
       total_range: "Total Range"
       interquartile: "Interquartile"
       histogram: "Histogram"
+    scope:
+      uncertainty: "Uncertainty Scope"
+      created: "Created Scope"
+      uncertainty_title: "Scope Uncertainty"
   finances_params:
     edit:
       title: "Edit Financial Information"

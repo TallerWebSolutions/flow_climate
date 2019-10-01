@@ -45,6 +45,13 @@ module Highchart
       { x_axis: aging_x_axis, data: [{ name: I18n.t('demands.charts.aging.series'), data: aging_series }] }
     end
 
+    def scope_uncertainty
+      uncertain_scope = @all_projects.sum(&:initial_scope)
+      created_scope = @all_projects.map { |project| project.demands.kept.count }.sum
+
+      [{ name: I18n.t('charts.scope.uncertainty'), y: uncertain_scope }, { name: I18n.t('charts.scope.created'), y: created_scope }].compact
+    end
+
     def throughput_per_period
       upstream_result_data = []
       downstream_result_data = []

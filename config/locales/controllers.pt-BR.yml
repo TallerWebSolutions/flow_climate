@@ -824,6 +824,10 @@ pt-BR:
       total_range: "Amplitude Total"
       interquartile: "Interquartil"
       histogram: "Histograma"
+    scope:
+      uncertainty: "Escopo Incerto"
+      created: "Escopo Criado"
+      uncertainty_title: "Incerteza do Escopo"
   finances_params:
     edit:
       title: "Editar Informação Financeira"
