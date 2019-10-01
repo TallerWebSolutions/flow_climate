@@ -62,4 +62,9 @@ function buildOperationalHighcharts() {
     if (hoursEfficiency.length !== 0) {
         buildLineChart(hoursEfficiency);
     }
+
+    const scopeUncertainty = $('#operational-charts-scope-uncertainty-donut');
+    if (scopeUncertainty.length !== 0) {
+        buildDonutChart(scopeUncertainty);
+    }
 }
