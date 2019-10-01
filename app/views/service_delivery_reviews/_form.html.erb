@@ -9,43 +9,43 @@
     <div class='col-xs-6 form-group <%= 'has-error' if service_delivery_review.errors[:expedite_max_pull_time_sla].present? %>'>
       <%= f.label :expedite_max_pull_time_sla, class: 'control-label required' %>
       <i class="far fa-question-circle" title="<%= I18n.t('service_delivery_review.help.expedite_max_pull_time_sla') %>"></i>
-      <%= f.number_field :expedite_max_pull_time_sla, class: 'form-control', step: 0.1 %>
+      <%= f.number_field :expedite_max_pull_time_sla, value: service_delivery_review.expedite_max_pull_time_sla.to_f / 1.second, class: 'form-control', step: 0.1 %>
       <span class="help-block"><%= service_delivery_review.errors[:expedite_max_pull_time_sla].join(', ') %></span>
     </div>
     <div class='col-xs-6 form-group <%= 'has-error' if service_delivery_review.errors[:delayed_expedite_bottom_threshold].present? %>'>
       <%= f.label :delayed_expedite_bottom_threshold, class: 'control-label required' %>
       <i class="far fa-question-circle" title="<%= I18n.t('service_delivery_review.help.delayed_expedite_bottom_threshold') %>"></i>
-      <%= f.number_field :delayed_expedite_bottom_threshold, class: 'form-control', step: 0.1 %>
+      <%= f.number_field :delayed_expedite_bottom_threshold, value: service_delivery_review.delayed_expedite_bottom_threshold.to_f * 100, class: 'form-control', step: 0.1 %>
       <span class="help-block"><%= service_delivery_review.errors[:delayed_expedite_bottom_threshold].join(', ') %></span>
     </div>
     <div class='col-xs-6 form-group <%= 'has-error' if service_delivery_review.errors[:delayed_expedite_top_threshold].present? %>'>
       <%= f.label :delayed_expedite_top_threshold, class: 'control-label required' %>
       <i class="far fa-question-circle" title="<%= I18n.t('service_delivery_review.help.delayed_expedite_top_threshold') %>"></i>
-      <%= f.number_field :delayed_expedite_top_threshold, class: 'form-control', step: 0.1 %>
+      <%= f.number_field :delayed_expedite_top_threshold, value: service_delivery_review.delayed_expedite_top_threshold.to_f * 100, class: 'form-control', step: 0.1 %>
       <span class="help-block"><%= service_delivery_review.errors[:delayed_expedite_top_threshold].join(', ') %></span>
     </div>
     <div class='col-xs-6 form-group <%= 'has-error' if service_delivery_review.errors[:lead_time_bottom_threshold].present? %>'>
       <%= f.label :lead_time_bottom_threshold, class: 'control-label required' %>
       <i class="far fa-question-circle" title="<%= I18n.t('service_delivery_review.help.lead_time_bottom_threshold') %>"></i>
-      <%= f.number_field :lead_time_bottom_threshold, class: 'form-control', step: 0.1 %>
+      <%= f.number_field :lead_time_bottom_threshold, value: service_delivery_review.lead_time_bottom_threshold.to_f / 1.second, class: 'form-control', step: 0.1 %>
       <span class="help-block"><%= service_delivery_review.errors[:lead_time_bottom_threshold].join(', ') %></span>
     </div>
     <div class='col-xs-6 form-group <%= 'has-error' if service_delivery_review.errors[:lead_time_top_threshold].present? %>'>
       <%= f.label :lead_time_top_threshold, class: 'control-label required' %>
       <i class="far fa-question-circle" title="<%= I18n.t('service_delivery_review.help.lead_time_top_threshold') %>"></i>
-      <%= f.number_field :lead_time_top_threshold, class: 'form-control', step: 0.1 %>
+      <%= f.number_field :lead_time_top_threshold, value: service_delivery_review.lead_time_bottom_threshold.to_f / 1.second, class: 'form-control', step: 0.1 %>
       <span class="help-block"><%= service_delivery_review.errors[:lead_time_top_threshold].join(', ') %></span>
     </div>
     <div class='col-xs-6 form-group <%= 'has-error' if service_delivery_review.errors[:quality_bottom_threshold].present? %>'>
       <%= f.label :quality_bottom_threshold, class: 'control-label required' %>
       <i class="far fa-question-circle" title="<%= I18n.t('service_delivery_review.help.quality_bottom_threshold') %>"></i>
-      <%= f.number_field :quality_bottom_threshold, class: 'form-control', step: 0.1 %>
+      <%= f.number_field :quality_bottom_threshold, value: service_delivery_review.quality_bottom_threshold.to_f * 100, class: 'form-control', step: 0.1 %>
       <span class="help-block"><%= service_delivery_review.errors[:quality_bottom_threshold].join(', ') %></span>
     </div>
     <div class='col-xs-6 form-group <%= 'has-error' if service_delivery_review.errors[:quality_top_threshold].present? %>'>
       <%= f.label :quality_top_threshold, class: 'control-label required' %>
       <i class="far fa-question-circle" title="<%= I18n.t('service_delivery_review.help.quality_top_threshold') %>"></i>
-      <%= f.number_field :quality_top_threshold, class: 'form-control', step: 0.1 %>
+      <%= f.number_field :quality_top_threshold, value: service_delivery_review.quality_top_threshold.to_f * 100, class: 'form-control', step: 0.1 %>
       <span class="help-block"><%= service_delivery_review.errors[:quality_top_threshold].join(', ') %></span>
     </div>
   </div>

@@ -17,8 +17,7 @@ class CompaniesController < AuthenticatedController
     assign_last_company
     assign_company_settings
     assign_jira_accounts_list
-
-    @projects = @company.projects.includes(:team).order(end_date: :desc)
+    @projects = @company.projects.order(end_date: :desc)
 
     build_query_dates
   end
@@ -74,7 +73,7 @@ class CompaniesController < AuthenticatedController
   end
 
   def projects_tab
-    @projects = @company.projects.includes(:team).order(end_date: :desc)
+    assign_projects
     @projects_summary = ProjectsSummaryData.new(@projects)
     @parent = @company
     @parent_type = 'company'
@@ -102,11 +101,21 @@ class CompaniesController < AuthenticatedController
 
   private
 
+  def assign_projects
+    @projects = @company.projects.order(end_date: :desc)
+                        .includes(:team)
+                        .includes(:customers_projects)
+                        .includes(customers_projects: :customer)
+                        .includes(:customers)
+                        .includes(:products)
+                        .includes(products_projects: :product)
+  end
+
   def assign_company_children
     @teams = @company.teams.includes(:projects).order(:name)
     @products_list = @company.products.includes(:team).includes(:customer).order(name: :asc)
     @customers_list = @company.customers.order(name: :asc)
-    @team_members = @company.team_members.order(:name)
+    @team_members = @company.team_members.order(:name).includes(:teams)
     @team_resources = @company.team_resources.order(:resource_name)
   end
 
@@ -123,7 +132,7 @@ class CompaniesController < AuthenticatedController
   end
 
   def assign_stages_list
-    @stages_list = @company.stages.order('stages.integration_pipe_id, stages.order')
+    @stages_list = @company.stages.joins(stages_teams: :team).order('stages.integration_pipe_id, stages.order').includes(stages_teams: :team).includes(:teams)
   end
 
   def assign_users_in_company

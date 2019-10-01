@@ -8,7 +8,7 @@ class ProductsController < AuthenticatedController
   before_action :assign_demands, only: %i[portfolio_demands_tab portfolio_charts_tab]
 
   def index
-    @products = @company.products.order(:name)
+    @products = @company.products.order(:name).includes(:customer).includes(:projects).includes(products_projects: :project)
     assign_filter_parameters_to_charts
   end
 
