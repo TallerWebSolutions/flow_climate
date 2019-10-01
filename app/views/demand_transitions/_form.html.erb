@@ -1,0 +1,31 @@
+<div class="standard-form">
+
+  <div class="row">
+    <div class='col-xs-4 form-group <%= 'has-error' if demand_transition.errors[:stage].present? %>'>
+      <%= f.label :stage, class: 'control-label required' %>
+      <%= f.select :stage_id, stages_to_select.map { |stage| [stage.name, stage.id] }, { prompt: I18n.t('general.select'), selected: demand_transition.stage_name }, class: 'form-control' %>
+      <span class="help-block"><%= demand_transition.errors[:stage].join(', ') %></span>
+    </div>
+    <div class='col-xs-4 form-group <%= 'has-error' if demand_transition.errors[:last_time_in].present? %>'>
+      <%= f.label :last_time_in, class: 'control-label required' %>
+      <%= f.datetime_field :last_time_in, class: 'form-control' %>
+      <span class="help-block"><%= demand_transition.errors[:last_time_in].join(', ') %></span>
+    </div>
+    <div class='col-xs-4 form-group <%= 'has-error' if demand_transition.errors[:last_time_out].present? %>'>
+      <%= f.label :last_time_out, class: 'control-label' %>
+      <%= f.datetime_field :last_time_out, class: 'form-control' %>
+      <span class="help-block"><%= demand_transition.errors[:last_time_out].join(', ') %></span>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-xs-12">
+      <%= f.button :submit, class: 'btn btn-success' do %>
+        <i class="fa fa-check"></i>
+      <% end %>
+      <%= link_to '#', class: 'btn btn-danger', id: 'cancel-form-demand-transition' do %>
+        <i class="fa fa-times"></i>
+      <% end %>
+    </div>
+  </div>
+</div>

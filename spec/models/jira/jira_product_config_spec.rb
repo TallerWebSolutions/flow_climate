@@ -24,6 +24,7 @@ RSpec.describe Jira::JiraProductConfig, type: :model do
           expect(other_product_jira_config.valid?).to be false
           expect(other_product_jira_config.errors[:jira_product_key]).to eq [I18n.t('jira_product_config.validations.jira_product_key_uniqueness.message')]
         end
+
         context 'same fix version name' do
           let(:other_product_jira_config) { Fabricate.build :jira_product_config, jira_product_key: 'bla' }
 

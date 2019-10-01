@@ -133,7 +133,7 @@ RSpec.describe Company, type: :model do
     it { expect(company.waiting_projects_count).to eq 3 }
   end
 
-  context '#projects_count' do
+  describe '#projects_count' do
     let(:company) { Fabricate :company }
     let(:customer) { Fabricate :customer, company: company }
     let(:other_customer) { Fabricate :customer }

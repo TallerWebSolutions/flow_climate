@@ -4,6 +4,12 @@
   </div>
 </div>
 
+<div class="row">
+  <div class="col-xs-12">
+    <%= link_to I18n.t('demand_transitions.new.title'), new_company_demand_demand_transition_path(company, demand), class: 'btn btn-success bottom-spaced-component pull-right', remote: true %>
+  </div>
+</div>
+
 <% if demand_transitions_list.empty? %>
   <%= render 'layouts/no_data', missing_data: DemandTransition.model_name.human.downcase %>
 <% else %>

@@ -10,7 +10,7 @@ class RiskReviewsController < AuthenticatedController
     @risk_review = RiskReview.new(product: @product)
     risk_reviews
 
-    respond_to { |format| format.js { render 'risk_reviews/new.js.erb' } }
+    respond_to { |format| format.js { render 'risk_reviews/new' } }
   end
 
   def create

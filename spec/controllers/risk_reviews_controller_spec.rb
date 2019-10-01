@@ -55,7 +55,7 @@ RSpec.describe RiskReviewsController, type: :controller do
         before { get :new, params: { company_id: company, product_id: product }, xhr: true }
 
         it 'instantiates a new Team Member and renders the template' do
-          expect(response).to render_template 'risk_reviews/new.js.erb'
+          expect(response).to render_template 'risk_reviews/new'
           expect(assigns(:risk_review)).to be_a_new RiskReview
         end
       end
@@ -149,7 +149,7 @@ RSpec.describe RiskReviewsController, type: :controller do
       context 'passing invalid parameters' do
         before { post :create, params: { company_id: company, product_id: product, risk_review: { meeting_date: nil, lead_time_outlier_limit: nil } }, xhr: true }
 
-        it 'does not create the team member and re-render the template with the errors' do
+        it 'does not create the review and re-render the template with the errors' do
           expect(RiskReview.all.count).to eq 0
           expect(response).to render_template 'risk_reviews/create'
           expect(assigns(:risk_review).errors.full_messages).to eq ['Outlier no lead time não pode ficar em branco', 'Data da Reunião não pode ficar em branco']

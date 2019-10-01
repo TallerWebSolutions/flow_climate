@@ -16,7 +16,7 @@
          class="flow-chart"
          data-title='<%= I18n.t('stages.charts.entrances_per_weekday.title', target_name: @stage.name) %>'
          data-xcategories='<%= stage_analytic_data.entrances_per_day.keys %>'
-         data-xtitle='<%= I18n.t('general.charts.xlabel.weekdays') %>'
+         data-xtitle='<%= I18n.t('general.charts.xlabel.monthdays') %>'
          data-ytitle='<%= I18n.t('stages.charts.entrances_per_weekday.ylabel') %>'
          data-prefix='<%= I18n.t('stages.charts.entrances_per_weekday.tooltip_prefix') %>'
          data-series='<%= [{ name: I18n.t('stages.charts.entrances_per_weekday.ylabel'), data: stage_analytic_data.entrances_per_day.values }].to_json %>'
