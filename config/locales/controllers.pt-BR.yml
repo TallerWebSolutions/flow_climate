@@ -37,6 +37,7 @@ pt-BR:
       title: "Gráficos"
       xlabel:
         weekdays: "Dias da Semana"
+        monthdays: "Dias do Mês"
       hours: "horas"
     stamps:
       cmd:
@@ -887,6 +888,8 @@ pt-BR:
       title: "Transições da Demanda"
     block_time_in_transition: "Tempo Bloqueio na Transição"
     effort_time_in_transition: "Esforço na Transição"
+    new:
+      title: "Nova Transição"
   project_change_deadline_histories:
     index:
       dates_difference: "Diferença (dias)"

@@ -1,49 +1,45 @@
 <div class="row">
-  <div class="col-xs-12 stamp">
+  <div class="col-xs-12">
     <div class="stamp-title"><%= Demand.human_attribute_name :demand_title %></div>
     <div class="stamp-content"><%= demand.demand_title %></div>
   </div>
-  <div class="col-xs-3 stamp">
+  <div class="col-xs-4">
     <div class="stamp-title"><%= Project.model_name.human %></div>
     <div class="stamp-content"><%= demand.project.name %></div>
   </div>
-  <div class="col-xs-3 stamp">
+  <div class="col-xs-4">
     <div class="stamp-title"><%= Demand.human_attribute_name :created_date %></div>
     <div class="stamp-content"><%= I18n.l(demand.created_date, format: :short)  %></div>
   </div>
-  <div class="col-xs-3 stamp">
+  <div class="col-xs-4">
     <div class="stamp-title"><%= Demand.human_attribute_name :commitment_date %></div>
     <div class="stamp-content"><%= I18n.l(demand.commitment_date, format: :short) if demand.commitment_date.present? %></div>
   </div>
-  <div class="col-xs-3 stamp">
+  <div class="col-xs-4">
     <div class="stamp-title"><%= Demand.human_attribute_name :end_date %></div>
-    <% if demand.end_date.present? %>
-      <div class="stamp-content"><%= I18n.l(demand.end_date, format: :short) %></div>
-    <% else %>
-      <div class="stamp-content">&nbsp;</div>
-    <% end %>
+    <div class="stamp-content"><%= I18n.l(demand.end_date, format: :short) if demand.end_date.present? %></div>
   </div>
-  <div class="col-xs-4 stamp">
+  <div class="col-xs-4">
     <div class="stamp-title"><%= Demand.human_attribute_name :demand_type %></div>
     <div class="stamp-content"><%= I18n.t("activerecord.attributes.demand.enums.demand_type.#{demand.demand_type}") %></div>
   </div>
-  <div class="col-xs-4 stamp">
+  <div class="col-xs-4">
     <div class="stamp-title"><span><%= Demand.human_attribute_name :class_of_service %></span></div>
     <div class="stamp-content"><%= I18n.t("activerecord.attributes.demand.enums.class_of_service.#{demand.class_of_service}") %></div>
   </div>
-  <div class="col-xs-4 stamp">
+  <div class="col-xs-4">
     <div class="stamp-title"><span><%= Demand.human_attribute_name :team_members %></span><sup><%= " (#{demand.active_team_members.count})" %></sup></div>
     <div class="stamp-content"><%= demand.active_team_members.map(&:name).join(', ') %></div>
   </div>
-  <div class="col-xs-4 stamp">
+  <div class="col-xs-4">
     <div class="stamp-title"><%= Demand.human_attribute_name :effort_upstream %></div>
     <div class="stamp-content"><%= I18n.t('general.hours_text', hour_value: number_with_precision(demand.effort_upstream, precision: 3))  %></div>
   </div>
-  <div class="col-xs-4 stamp">
+  <div class="col-xs-4">
     <div class="stamp-title"><%= Demand.human_attribute_name :effort_downstream %></div>
     <div class="stamp-content"><%= I18n.t('general.hours_text', hour_value: number_with_precision(demand.effort_downstream, precision: 3))  %></div>
   </div>
-  <div class="col-xs-4 stamp">
+  <div class="col-xs-4">
     <div class="stamp-title"><%= I18n.t('demands.index.cost_to_project') %></div>
     <div class="stamp-content"><%= number_to_currency(demand.cost_to_project)  %></div>
   </div>

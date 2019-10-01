@@ -190,6 +190,8 @@ Rails.application.routes.draw do
         get :demands_in_projects
         get 'search_demands'
       end
+
+      resources :demand_transitions, except: %i[destroy index]
     end
 
     controller :charts do

@@ -18,6 +18,7 @@ RSpec.describe UserPlan, type: :model do
     it { is_expected.to validate_presence_of :start_at }
     it { is_expected.to validate_presence_of :finish_at }
     it { is_expected.to validate_presence_of :plan_value }
+
     it 'uniqueness of user and plan and activation' do
       user = Fabricate :user
       plan = Fabricate :plan

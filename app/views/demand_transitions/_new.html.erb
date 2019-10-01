@@ -1,0 +1,7 @@
+<%= form_for [company, demand, demand_transition], class: 'form', remote: true do |f| %>
+  <div class="row bottom-spaced-component">
+    <div class="col-xs-12">
+      <%= render 'demand_transitions/form', f: f, company: company, demand: demand, demand_transition: demand_transition, demand_transitions_list: demand_transitions_list, stages_to_select: stages_to_select %>
+    </div>
+  </div>
+<% end %>

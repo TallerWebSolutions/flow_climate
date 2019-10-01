@@ -34,7 +34,7 @@ class DemandTransition < ApplicationRecord
   validates :demand, :stage, :last_time_in, presence: true
   validate :same_stage_project?
 
-  delegate :name, to: :stage, prefix: true
+  delegate :name, to: :stage, prefix: true, allow_nil: true
   delegate :compute_effort, to: :stage, prefix: true
 
   scope :upstream_transitions, -> { joins(:stage).where('stages.stage_stream = :stream', stream: Stage.stage_streams[:upstream]) }

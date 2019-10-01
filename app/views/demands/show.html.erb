@@ -107,7 +107,9 @@
 </div>
 
 <div id="content-transitions" class="tabcontent">
-  <%= render 'demand_transitions/demand_transitions_table', demand_transitions_list: @demand.demand_transitions.order(:last_time_in), demand: @demand %>
+  <div id="demand-transitions-table">
+    <%= render 'demand_transitions/demand_transitions_table', company: @company, demand: @demand, demand_transitions_list: @demand.demand_transitions.order(:last_time_in) %>
+  </div>
 </div>
 
 <% content_for :javascript do %>
