@@ -83,7 +83,7 @@ class DemandsController < AuthenticatedController
 
     assign_dates_to_query
 
-    @demands = build_date_query_and_order(filtered_demands_list_view, @start_date, @end_date)
+    @demands = build_date_query_and_order(filtered_demands_list_view, @start_date, @end_date).includes(demand: :portfolio_unit).includes(demand: :product)
     @demands_count_per_week = DemandService.instance.arrival_and_departure_data_per_week(@projects)
     @discarded_demands = DemandsRepository.instance.discarded_demands_to_projects(@projects)
 
@@ -97,7 +97,7 @@ class DemandsController < AuthenticatedController
   def search_demands
     assign_dates_to_query
 
-    @demands = query_demands(@start_date, @end_date)
+    @demands = query_demands(@start_date, @end_date).includes(demand: :portfolio_unit).includes(demand: :product)
 
     build_grouping_query(@demands, params[:grouping])
 

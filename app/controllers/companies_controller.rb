@@ -17,7 +17,7 @@ class CompaniesController < AuthenticatedController
     assign_last_company
     assign_company_settings
     assign_jira_accounts_list
-    assign_projects
+    @projects = @company.projects.order(end_date: :desc)
 
     build_query_dates
   end
@@ -83,7 +83,7 @@ class CompaniesController < AuthenticatedController
   end
 
   def strategic_chart_tab
-    assign_projects
+    @projects = @company.projects.order(end_date: :desc)
     build_query_dates
     @strategic_chart_data = Highchart::StrategicChartsAdapter.new(@company, @company.teams, @projects, @start_date, @end_date, @period)
     assign_company_children
@@ -104,9 +104,9 @@ class CompaniesController < AuthenticatedController
   def assign_projects
     @projects = @company.projects.order(end_date: :desc)
                         .includes(:team)
-                        .includes(:customers)
-                        .joins(customers_projects: :customer)
+                        .includes(:customers_projects)
                         .includes(customers_projects: :customer)
+                        .includes(:customers)
                         .includes(:products)
                         .includes(products_projects: :product)
   end

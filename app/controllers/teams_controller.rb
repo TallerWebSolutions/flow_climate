@@ -60,7 +60,7 @@ class TeamsController < AuthenticatedController
   end
 
   def assign_team_objects
-    @memberships = @company.memberships.where(team: @team).sort_by(&:team_member_name)
+    @memberships = @company.memberships.includes(:team).includes(:team_member).where(team: @team).sort_by(&:team_member_name)
     @active_team_projects = team_projects.active
     @projects_summary = ProjectsSummaryData.new(@team.projects)
     @projects_risk_chart_data = Highchart::ProjectRiskChartsAdapter.new(@team.projects)
@@ -68,7 +68,12 @@ class TeamsController < AuthenticatedController
   end
 
   def team_projects
-    @team_projects ||= ProjectsRepository.instance.all_projects_for_team(@team)
+    @team_projects ||= ProjectsRepository.instance.all_projects_for_team(@team).includes(:team)
+                                         .includes(:customers)
+                                         .joins(customers_projects: :customer)
+                                         .includes(customers_projects: :customer)
+                                         .includes(:products)
+                                         .includes(products_projects: :product)
   end
 
   def assign_team
