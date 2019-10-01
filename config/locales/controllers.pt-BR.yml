@@ -137,6 +137,7 @@ pt-BR:
     leadtime_p80_label: "Lead time (p80)"
     demand_blocks: "bloqueio(s)"
     pull_transaction: "Pull Transaction"
+    demand_impact: "impacto"
   header:
     logout: Sair
     sign_up: Cadastre-se
@@ -706,6 +707,8 @@ pt-BR:
         all_classes: "Todas as Classes"
       block_categories:
         title: "Bloqueios de Demanda"
+      impact_categories:
+        title: "Impactos no Fluxo"
     grouped_by_stage:
       time_in_stage: "Tempo na Etapa"
       hours_in_stage: "Horas na Etapa"
