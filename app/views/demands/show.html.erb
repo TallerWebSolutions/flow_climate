@@ -113,6 +113,8 @@
 </div>
 
 <% content_for :javascript do %>
+  <%= javascript_include_tag 'charts/column' %>
+
   <%= javascript_include_tag 'components/components' %>
   <%= javascript_include_tag 'demands/show' %>
 <% end %>

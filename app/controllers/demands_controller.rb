@@ -58,6 +58,7 @@ class DemandsController < AuthenticatedController
     @upstream_percentage = Stats::StatisticsService.instance.compute_percentage(@demand.effort_upstream, @demand.effort_downstream)
     @downstream_percentage = 100 - @upstream_percentage
     @demand_comments = @demand.demand_comments.order(:comment_date)
+    lead_time_breakdown
   end
 
   def synchronize_jira
@@ -159,6 +160,10 @@ class DemandsController < AuthenticatedController
 
   def assign_demand
     @demand = Demand.friendly.find(params[:id]&.downcase)
+  end
+
+  def lead_time_breakdown
+    @lead_time_breakdown ||= DemandService.instance.lead_time_breakdown([@demand])
   end
 
   def build_date_query_and_order(demands_list_view, start_date, end_date)

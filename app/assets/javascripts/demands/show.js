@@ -26,3 +26,8 @@ function runProgressBar(element, maxValue) {
         }
     }
 }
+
+let columnDemandShowLeadTimeBreakdownDiv = $('#demand-show-lead-time-breakdown-column');
+if (columnDemandShowLeadTimeBreakdownDiv.length !== 0) {
+    buildColumnChart(columnDemandShowLeadTimeBreakdownDiv);
+}

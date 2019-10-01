@@ -347,8 +347,8 @@ RSpec.describe DemandsController, type: :controller do
       let(:customer) { Fabricate :customer, company: company }
       let(:product) { Fabricate :product, customer: customer }
       let!(:project) { Fabricate :project, customers: [product.customer], products: [product], end_date: 5.days.from_now }
-      let!(:first_demand) { Fabricate :demand }
-      let!(:second_demand) { Fabricate :demand }
+      let!(:first_demand) { Fabricate :demand, product: product, project: project, commitment_date: 2.days.ago, end_date: 1.day.ago }
+      let!(:second_demand) { Fabricate :demand, product: product, project: project, commitment_date: 3.days.ago, end_date: Time.zone.today }
 
       context 'passing a valid ID' do
         context 'with data' do
@@ -371,6 +371,7 @@ RSpec.describe DemandsController, type: :controller do
             expect(assigns(:upstream_percentage)).to eq 55.55555555555556
             expect(assigns(:downstream_percentage)).to eq 44.44444444444444
             expect(assigns(:demand_comments)).to eq [other_demand_comment, demand_comment]
+            expect(assigns(:lead_time_breakdown)).to eq({})
           end
         end
 
@@ -388,6 +389,7 @@ RSpec.describe DemandsController, type: :controller do
             expect(assigns(:upstream_percentage)).to eq 55.55555555555556
             expect(assigns(:downstream_percentage)).to eq 44.44444444444444
             expect(assigns(:demand_comments)).to eq []
+            expect(assigns(:lead_time_breakdown)).to eq({})
           end
         end
       end
