@@ -368,7 +368,7 @@ en:
         tooltipsufix: "weeks"
       hours_per_month:
         ylabel: "Produced Hours"
-        title: "Effort Hours per Month to %{target_name}"
+        title: "Effort Hours to %{target_name}"
         xlabel: "Months"
       lead_time_chart:
         title: "Lead time control chart for %{target_name}"
@@ -429,6 +429,7 @@ en:
       deadline: "Deadline"
       leadtime: "Lead time (%{percentil})"
       discovered_scope: "Discovered Scope"
+      work_items: "Work Items"
     finish_project:
       success_message: "Project finished."
     actions:
@@ -612,7 +613,7 @@ en:
       commitment_date: "Commitment Date"
       committed_date: "Committed to"
       aging_per_demand:
-        title: "Aging when the demand was finished"
+        title: "Average age when the demand was finished"
         ylabel: "day(s)"
         legend: "day(s)"
       aging:
@@ -832,12 +833,12 @@ en:
     edit:
       title: "Edit Block"
     charts:
-      hours_per_stage:
-        title: "Hours Blocked per Stage for %{target_name}"
+      hours_blocked:
+        title: "Hours Blocked for %{target_name}"
         ylabel: "Hours"
         legend: "Hours Blocked"
-      blocks_per_stage:
-        title: "Blocks per Stage for %{target_name}"
+      blocks:
+        title: "Blocks for %{target_name}"
         ylabel: "block(s)"
         legend: "blocks"
   demand_transitions:

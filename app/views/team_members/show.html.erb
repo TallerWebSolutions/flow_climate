@@ -10,7 +10,7 @@
 
 <% @team_member.memberships.each do |membership| %>
 
-  <% demands_finished = DemandsList.kept.where(id: membership.demands.finished.map(&:id)) %>
+  <% demands_finished = Demand.kept.where(id: membership.demands.finished.map(&:id)) %>
   <% share_demands_blocked = demands_finished.count { |demand_list| demand_list.demand.demand_blocks.count.positive? }.to_f / demands_finished.count %>
 
   <div class="row">

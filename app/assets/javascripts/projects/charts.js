@@ -23,17 +23,11 @@ function buildOperationalHighcharts() {
     const burnupDemands = $('#burnup-demands');
     buildBurnupChart(burnupDemands);
 
-    const flowPressureDiv = $('#flowpressure-column');
-    buildColumnChart(flowPressureDiv);
-
     const leadtimeControlChart = $('#leadtime-control-chart');
     buildScatterChart(leadtimeControlChart);
 
     const leadtimeHistogramChart = $('#leadtime-histogram');
     buildColumnChart(leadtimeHistogramChart);
-
-    const throughputHistogramChart = $('#throughput-histogram');
-    buildColumnChart(throughputHistogramChart);
 
     const hoursConsumedColumnDiv = $('#hours-consumed-column');
     buildColumnChart(hoursConsumedColumnDiv);

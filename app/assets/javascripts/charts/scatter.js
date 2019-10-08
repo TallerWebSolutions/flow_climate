@@ -33,12 +33,12 @@ function buildScatterChart(scatterDiv) {
                 }
             },{
                 value: scatterDiv.data('percentile80'),
-                color: 'yellow',
+                color: '#DAA520',
                 dashStyle: 'shortdash',
                 width: 2,
                 label: {
                     style: {
-                        color: 'yellow'
+                        color: '#DAA520'
                     },
                     text: `percentile 80% (${parseFloat(scatterDiv.data('percentile80')).toFixed(2)} ${scatterDiv.data('tooltipsuffix')})`
                 }

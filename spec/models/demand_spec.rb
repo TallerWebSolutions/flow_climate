@@ -2,7 +2,6 @@
 
 RSpec.describe Demand, type: :model do
   context 'enums' do
-    it { is_expected.to define_enum_for(:artifact_type).with_values(story: 0, epic: 1, theme: 2) }
     it { is_expected.to define_enum_for(:demand_type).with_values(feature: 0, bug: 1, performance_improvement: 2, ui: 3, chore: 4, wireframe: 5) }
     it { is_expected.to define_enum_for(:class_of_service).with_values(standard: 0, expedite: 1, fixed_date: 2, intangible: 3) }
   end
@@ -16,6 +15,7 @@ RSpec.describe Demand, type: :model do
     it { is_expected.to belong_to :team }
     it { is_expected.to belong_to :risk_review }
     it { is_expected.to belong_to :service_delivery_review }
+    it { is_expected.to belong_to(:current_stage).class_name('Stage').inverse_of(:current_demands) }
 
     it { is_expected.to have_many(:children).class_name('Demand').inverse_of(:parent).dependent(:destroy) }
     it { is_expected.to have_many(:demand_transitions).dependent(:destroy) }
@@ -69,15 +69,6 @@ RSpec.describe Demand, type: :model do
 
   context 'scopes' do
     let(:project) { Fabricate :project }
-    let!(:first_epic) { Fabricate :demand, project: project, artifact_type: :epic }
-
-    describe '.opened_after_date' do
-      let!(:first_demand) { Fabricate :demand, created_date: Time.zone.parse('2018-02-02 11:00') }
-      let!(:second_demand) { Fabricate :demand, created_date: Time.zone.parse('2018-02-03 11:00') }
-      let!(:third_demand) { Fabricate :demand, created_date: Time.zone.parse('2018-02-05 11:00') }
-
-      it { expect(described_class.opened_after_date(Date.new(2018, 2, 3))).to match_array [second_demand, third_demand] }
-    end
 
     describe '.finished' do
       let!(:first_demand) { Fabricate :demand, project: project, end_date: Time.zone.now }
@@ -103,50 +94,12 @@ RSpec.describe Demand, type: :model do
       it { expect(described_class.finished_until_date(1.day.ago)).to match_array [first_demand, second_demand] }
     end
 
-    describe '.finished_after_date' do
-      let!(:first_demand) { Fabricate :demand, project: project, end_date: 2.days.ago, leadtime: 2 }
-      let!(:second_demand) { Fabricate :demand, project: project, end_date: 1.day.ago, leadtime: 3 }
-      let!(:third_demand) { Fabricate :demand, project: project, end_date: Time.zone.now }
-
-      it { expect(described_class.finished_after_date(1.day.ago)).to match_array [second_demand, third_demand] }
-    end
-
     describe '.not_finished' do
       let!(:first_demand) { Fabricate :demand, project: project, end_date: nil }
       let!(:second_demand) { Fabricate :demand, project: project, end_date: nil }
       let!(:third_demand) { Fabricate :demand, project: project, end_date: Time.zone.now }
 
       it { expect(described_class.not_finished).to match_array [first_demand, second_demand] }
-    end
-
-    describe '.finished_in_month' do
-      before { travel_to Date.new(2018, 10, 23) }
-
-      after { travel_back }
-
-      let(:first_demand) { Fabricate :demand, end_date: 2.months.ago }
-      let(:second_demand) { Fabricate :demand, end_date: 1.month.ago }
-      let(:third_demand) { Fabricate :demand, end_date: 1.month.ago }
-      let(:fourth_demand) { Fabricate :demand, end_date: Time.zone.today }
-
-      it { expect(described_class.finished_in_month(2.months.ago.to_date.month, 2.months.ago.to_date.year)).to eq [first_demand] }
-      it { expect(described_class.finished_in_month(1.month.ago.to_date.month, 1.month.ago.to_date.year)).to match_array [second_demand, third_demand] }
-      it { expect(described_class.finished_in_month(Time.zone.today.to_date.month, Time.zone.today.to_date.year)).to eq [fourth_demand] }
-    end
-
-    describe '.finished_in_week' do
-      before { travel_to Date.new(2018, 10, 23) }
-
-      after { travel_back }
-
-      let(:first_demand) { Fabricate :demand, end_date: 2.weeks.ago }
-      let(:second_demand) { Fabricate :demand, end_date: 1.week.ago }
-      let(:third_demand) { Fabricate :demand, end_date: 1.week.ago }
-      let(:fourth_demand) { Fabricate :demand, end_date: Time.zone.today }
-
-      it { expect(described_class.finished_in_week(2.weeks.ago.to_date.cweek, 2.weeks.ago.to_date.cwyear)).to eq [first_demand] }
-      it { expect(described_class.finished_in_week(1.week.ago.to_date.cweek, 1.week.ago.to_date.cwyear)).to match_array [second_demand, third_demand] }
-      it { expect(described_class.finished_in_week(Time.zone.today.to_date.cweek, Time.zone.today.to_date.cwyear)).to eq [fourth_demand] }
     end
 
     describe '.in_wip' do
@@ -163,7 +116,7 @@ RSpec.describe Demand, type: :model do
       let!(:third_demand) { Fabricate :demand, created_date: 2.months.ago, end_date: Time.zone.now }
       let!(:fourth_demand) { Fabricate :demand, created_date: 4.months.ago, end_date: 1.day.from_now }
 
-      it { expect(described_class.to_dates(1.month.ago, Time.zone.now).map(&:id)).to match_array [second_demand.id, third_demand.id, first_epic.id] }
+      it { expect(described_class.to_dates(1.month.ago, Time.zone.now).map(&:id)).to match_array [second_demand.id, third_demand.id] }
     end
 
     describe '.to_end_dates' do
@@ -174,7 +127,7 @@ RSpec.describe Demand, type: :model do
 
       let!(:fifth_demand) { Fabricate :demand, created_date: 1.month.ago, end_date: nil }
 
-      it { expect(described_class.to_end_dates(1.month.ago, Time.zone.now).map(&:id)).to match_array [second_demand.id, third_demand.id, first_epic.id] }
+      it { expect(described_class.to_end_dates(1.month.ago, Time.zone.now).map(&:id)).to match_array [second_demand.id, third_demand.id] }
     end
 
     describe '.finished_in_downstream' do
@@ -194,6 +147,46 @@ RSpec.describe Demand, type: :model do
 
       it { expect(described_class.finished_in_upstream.map(&:id)).to match_array [third_demand.id, fourth_demand.id] }
     end
+
+    describe '.with_effort' do
+      it 'returns only the demands with effort' do
+        first_demand = Fabricate :demand, project: project, effort_downstream: 10, effort_upstream: 0
+        second_demand = Fabricate :demand, project: project, effort_downstream: 0, effort_upstream: 10
+        Fabricate :demand, project: project, effort_downstream: 0, effort_upstream: 0
+
+        expect(described_class.with_effort.map(&:id)).to match_array [first_demand.id, second_demand.id]
+      end
+    end
+
+    describe '.grouped_end_date_by_month' do
+      let!(:first_demand) { Fabricate :demand, commitment_date: Time.zone.now, end_date: 2.months.ago }
+      let!(:second_demand) { Fabricate :demand, commitment_date: Time.zone.now, end_date: 2.months.ago }
+      let!(:third_demand) { Fabricate :demand, commitment_date: Time.zone.now, end_date: 1.month.ago }
+      let!(:fourth_demand) { Fabricate :demand, commitment_date: nil }
+
+      it { expect(described_class.grouped_end_date_by_month[[2.months.ago.to_date.cwyear, 2.months.ago.to_date.month]].map(&:id)).to match_array [first_demand.id, second_demand.id] }
+      it { expect(described_class.grouped_end_date_by_month[[1.month.ago.to_date.cwyear, 1.month.ago.to_date.month]].map(&:id)).to eq [third_demand.id] }
+    end
+
+    describe '.not_started' do
+      let!(:first_demand) { Fabricate :demand, project: project, commitment_date: nil, end_date: Time.zone.now }
+      let!(:second_demand) { Fabricate :demand, project: project, commitment_date: Time.zone.now, end_date: nil }
+      let!(:third_demand) { Fabricate :demand, project: project, commitment_date: nil, end_date: nil }
+
+      it { expect(described_class.not_started.map(&:id)).to match_array [third_demand.id] }
+    end
+
+    describe '.opened_before_date' do
+      let!(:first_demand) { Fabricate :demand, demand_id: 'first_demand', created_date: 4.days.ago, end_date: 3.days.ago, discarded_at: nil }
+      let!(:second_demand) { Fabricate :demand, demand_id: 'second_demand', created_date: 3.days.ago, end_date: 2.days.ago, discarded_at: nil }
+      let!(:third_demand) { Fabricate :demand, demand_id: 'third_demand', created_date: 2.days.ago, end_date: nil, discarded_at: nil }
+      let!(:fourth_demand) { Fabricate :demand, demand_id: 'fourth_demand', created_date: 1.day.ago, end_date: 1.day.ago, discarded_at: nil }
+      let!(:fifth_demand) { Fabricate :demand, demand_id: 'fifth_demand', created_date: 2.days.ago, end_date: 2.days.ago, discarded_at: nil }
+
+      let!(:sixth_demand) { Fabricate :demand, demand_id: 'sixth_demand', discarded_at: Time.zone.today }
+
+      it { expect(described_class.opened_before_date(Time.zone.now).map(&:demand_id)).to match_array [first_demand.demand_id, second_demand.demand_id, third_demand.demand_id, fifth_demand.demand_id, fourth_demand.demand_id] }
+    end
   end
 
   context 'delegations' do
@@ -201,6 +194,7 @@ RSpec.describe Demand, type: :model do
     it { is_expected.to delegate_method(:name).to(:product).with_prefix }
     it { is_expected.to delegate_method(:name).to(:portfolio_unit).with_prefix }
     it { is_expected.to delegate_method(:name).to(:team).with_prefix }
+    it { is_expected.to delegate_method(:count).to(:demand_blocks).with_prefix }
   end
 
   context 'soft deletion' do
@@ -501,10 +495,10 @@ RSpec.describe Demand, type: :model do
       end
 
       context 'and it is defined by the non existence of last time out' do
-        let!(:demand_transition) { Fabricate :demand_transition, demand: demand, stage: other_stage, last_time_in: Time.zone.now, last_time_out: Time.zone.tomorrow }
-        let!(:other_demand_transition) { Fabricate :demand_transition, demand: demand, stage: stage, last_time_in: 1.day.ago, last_time_out: nil }
+        let!(:demand_transition) { Fabricate :demand_transition, demand: demand, stage: other_stage, last_time_in: Time.zone.now, last_time_out: nil }
+        let!(:other_demand_transition) { Fabricate :demand_transition, demand: demand, stage: stage, last_time_in: 1.day.ago, last_time_out: Time.zone.tomorrow }
 
-        it { expect(demand.current_stage).to eq stage }
+        it { expect(demand.current_stage).to eq other_stage }
       end
     end
 

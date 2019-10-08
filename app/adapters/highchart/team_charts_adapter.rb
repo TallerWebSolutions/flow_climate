@@ -15,7 +15,7 @@ module Highchart
     private
 
     def build_average_demand_cost
-      average_demand_cost_hash = TeamService.instance.compute_average_demand_cost_to_team(@team, @start_date, @end_date, @chart_period_interval)
+      average_demand_cost_hash = TeamService.instance.compute_average_demand_cost_to_team(@team, @start_date.to_date, @end_date.to_date, @chart_period_interval)
       @average_demand_cost = { x_axis: average_demand_cost_hash.keys, data: average_demand_cost_hash.values }
     end
 

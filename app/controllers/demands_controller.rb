@@ -24,7 +24,7 @@ class DemandsController < AuthenticatedController
 
     assign_dates_to_query
 
-    @demands = DemandsList.kept.where(id: params[:demands_ids].split(','))
+    @demands = Demand.kept.where(id: params[:demands_ids].split(','))
     build_grouping_query(@demands, params[:grouping])
 
     assign_consolidations
@@ -44,7 +44,7 @@ class DemandsController < AuthenticatedController
     @demand.update(demand_params)
     demands = Demand.where(id: params[:demands_ids])
     @demands_ids = demands.map(&:id)
-    @updated_demand = DemandsList.find(@demand.id)
+    @updated_demand = Demand.find(@demand.id)
     @unscored_demands = @project.demands.unscored_demands.order(demand_id: :asc)
 
     respond_to { |format| format.js { render 'demands/update' } }
@@ -80,11 +80,9 @@ class DemandsController < AuthenticatedController
   end
 
   def demands_in_projects
-    filtered_demands_list_view = DemandsRepository.instance.demands_created_before_date_to_projects(@projects)
-
     assign_dates_to_query
 
-    @demands = build_date_query_and_order(filtered_demands_list_view, @start_date, @end_date).includes(demand: :portfolio_unit).includes(demand: :product)
+    @demands = build_date_query_and_order(demands_list, @start_date, @end_date).includes(:portfolio_unit).includes(:product)
     @demands_count_per_week = DemandService.instance.arrival_and_departure_data_per_week(@projects)
     @discarded_demands = DemandsRepository.instance.discarded_demands_to_projects(@projects)
 
@@ -98,7 +96,7 @@ class DemandsController < AuthenticatedController
   def search_demands
     assign_dates_to_query
 
-    @demands = query_demands(@start_date, @end_date).includes(demand: :portfolio_unit).includes(demand: :product)
+    @demands = query_demands(@start_date, @end_date).includes(:portfolio_unit).includes(:product)
 
     build_grouping_query(@demands, params[:grouping])
 
@@ -137,8 +135,7 @@ class DemandsController < AuthenticatedController
   end
 
   def query_demands(start_date, end_date)
-    demands_created_before_date_to_projects = DemandsRepository.instance.demands_created_before_date_to_projects(@projects)
-    demands_list_view = build_date_query_and_order(demands_created_before_date_to_projects, start_date, end_date)
+    demands_list_view = build_date_query_and_order(demands_list, start_date, end_date)
     demands_list_view = filter_text(demands_list_view)
     demands_list_view = build_flow_status_query(demands_list_view, params[:flow_status])
     demands_list_view = buld_demand_type_query(demands_list_view, params[:demand_type])
@@ -166,14 +163,14 @@ class DemandsController < AuthenticatedController
     @lead_time_breakdown ||= DemandService.instance.lead_time_breakdown([@demand])
   end
 
-  def build_date_query_and_order(demands_list_view, start_date, end_date)
-    prepared_query_demands = demands_list_view.includes(:project).includes(:demand)
+  def build_date_query_and_order(demands_list, start_date, end_date)
+    prepared_query_demands = demands_list.includes(:project)
 
     return prepared_query_demands unless start_date.present? && end_date.present?
 
     filtered_demands = prepared_query_demands.to_dates(start_date, end_date)
 
-    filtered_demands.order('demands_lists.end_date DESC, demands_lists.commitment_date DESC, demands_lists.created_date DESC')
+    filtered_demands.order('demands.end_date DESC, demands.commitment_date DESC, demands.created_date DESC')
   end
 
   def build_grouping_query(demands, params_grouping)
@@ -212,10 +209,10 @@ class DemandsController < AuthenticatedController
     filtered_demands
   end
 
-  def filter_text(demands_list_view)
-    return demands_list_view.includes(:project) if params[:search_text].blank?
+  def filter_text(demands_list)
+    return demands_list.includes(:project) if params[:search_text].blank?
 
-    demands_list_view.includes(:project).joins(:project).where('demands_lists.demand_title ILIKE :search_param OR demands_lists.demand_id ILIKE :search_param OR projects.name ILIKE :search_param', search_param: "%#{params[:search_text].downcase}%")
+    demands_list.includes(:project).joins(:project).where('demands.demand_title ILIKE :search_param OR demands.demand_id ILIKE :search_param OR projects.name ILIKE :search_param', search_param: "%#{params[:search_text].downcase}%")
   end
 
   def assign_consolidations
@@ -246,6 +243,10 @@ class DemandsController < AuthenticatedController
   end
 
   def build_block_informations
-    @share_demands_blocked = @demands.count { |demand_list| demand_list.demand.demand_blocks.count.positive? }.to_f / @demands.count
+    @share_demands_blocked = @demands.count { |demand_list| demand_list.demand_blocks.count.positive? }.to_f / @demands.count
+  end
+
+  def demands_list
+    @demands_list ||= Demand.kept.where(id: @projects.map { |project| project.demands.opened_before_date(Time.zone.now).map(&:id) }.flatten)
   end
 end

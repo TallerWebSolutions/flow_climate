@@ -382,7 +382,7 @@ pt-BR:
         tooltipsufix: "semanas"
       hours_per_month:
         ylabel: "Horas Produzidas"
-        title: "Horas por Mês de Esforço para %{target_name}"
+        title: "Horas de Esforço para %{target_name}"
         xlabel: "Meses"
       lead_time_chart:
         title: "Control chart do lead time para %{target_name}"
@@ -445,6 +445,7 @@ pt-BR:
       scope: "Escopo"
       leadtime: "Lead time (%{percentil})"
       discovered_scope: "Itens Descobertos"
+      work_items: "Items de Trabalho"
     finish_project:
       success_message: "Projeto finalizado."
     actions:
@@ -660,7 +661,7 @@ pt-BR:
       commitment_date: "Compromisso"
       committed_date: "Comprometidas"
       aging_per_demand:
-        title: "Idade quando a demanda foi finalizada"
+        title: "Idade média quando a demanda foi finalizada"
         ylabel: "dia(s)"
         legend: "dia(s)"
       aging:
@@ -880,12 +881,12 @@ pt-BR:
     edit:
       title: "Editar Bloqueio"
     charts:
-      hours_per_stage:
-        title: "Horas Bloqueadas por Etapa para %{target_name}"
+      hours_blocked:
+        title: "Horas Bloqueadas para %{target_name}"
         ylabel: "Horas"
         legend: "Horas Bloqueadas"
-      blocks_per_stage:
-        title: "Bloqueios por Etapa para %{target_name}"
+      blocks:
+        title: "Bloqueios para %{target_name}"
         ylabel: "bloqueios"
         legend: "bloqueios"
   demand_transitions:

@@ -4,7 +4,6 @@
 #
 # Table name: demands
 #
-#  artifact_type                   :integer          default("story")
 #  blocked_working_time_downstream :decimal(, )      default(0.0)
 #  blocked_working_time_upstream   :decimal(, )      default(0.0)
 #  business_score                  :decimal(, )
@@ -63,7 +62,6 @@ class Demand < ApplicationRecord
   extend FriendlyId
   friendly_id :demand_id, use: :slugged
 
-  enum artifact_type: { story: 0, epic: 1, theme: 2 }
   enum demand_type: { feature: 0, bug: 1, performance_improvement: 2, ui: 3, chore: 4, wireframe: 5 }
   enum class_of_service: { standard: 0, expedite: 1, fixed_date: 2, intangible: 3 }
 
@@ -74,6 +72,7 @@ class Demand < ApplicationRecord
   belongs_to :team
   belongs_to :risk_review
   belongs_to :service_delivery_review
+  belongs_to :current_stage, class_name: 'Stage', foreign_key: :current_stage_id, inverse_of: :current_demands
 
   belongs_to :parent, class_name: 'Demand', foreign_key: :parent_id, inverse_of: :children
   has_many :children, class_name: 'Demand', foreign_key: :parent_id, inverse_of: :parent, dependent: :destroy
@@ -87,32 +86,31 @@ class Demand < ApplicationRecord
   has_many :stages, -> { distinct }, through: :demand_transitions
   has_many :team_members, through: :item_assignments
 
-  has_one :demands_list, inverse_of: :demand, dependent: :restrict_with_error
-
   validates :project, :created_date, :demand_id, :demand_type, :class_of_service, :assignees_count, :team, presence: true
   validates :demand_id, uniqueness: { scope: :company_id, message: I18n.t('demand.validations.demand_id_unique.message') }
 
-  scope :opened_after_date, ->(date) { kept.story.where('created_date >= :date', date: date.beginning_of_day) }
-  scope :finished_in_downstream, -> { kept.story.where('commitment_date IS NOT NULL AND end_date IS NOT NULL') }
-  scope :finished_in_upstream, -> { kept.story.where('commitment_date IS NULL AND end_date IS NOT NULL') }
-  scope :finished, -> { kept.story.where('demands.end_date IS NOT NULL') }
-  scope :finished_with_leadtime, -> { kept.story.where('demands.end_date IS NOT NULL AND demands.leadtime IS NOT NULL') }
+  scope :opened_before_date, ->(date) { where('demands.created_date <= :analysed_date AND (demands.discarded_at IS NULL OR demands.discarded_at > :analysed_date)', analysed_date: date.end_of_day) }
+  scope :finished_in_downstream, -> { kept.where('commitment_date IS NOT NULL AND end_date IS NOT NULL') }
+  scope :finished_in_upstream, -> { kept.where('commitment_date IS NULL AND end_date IS NOT NULL') }
+  scope :finished, -> { kept.where('demands.end_date IS NOT NULL') }
+  scope :finished_with_leadtime, -> { kept.where('demands.end_date IS NOT NULL AND demands.leadtime IS NOT NULL') }
   scope :finished_until_date, ->(limit_date) { finished.where('demands.end_date <= :limit_date', limit_date: limit_date) }
-  scope :finished_after_date, ->(limit_date) { finished.where('demands.end_date >= :limit_date', limit_date: limit_date.beginning_of_day) }
-  scope :finished_with_leadtime_after_date, ->(limit_date) { finished_with_leadtime.where('demands.end_date >= :limit_date', limit_date: limit_date.beginning_of_day) }
-  scope :finished_in_month, ->(month, year) { finished.where('EXTRACT(month FROM end_date) = :month AND EXTRACT(year FROM end_date) = :year', month: month, year: year) }
-  scope :finished_in_week, ->(week, year) { finished.where('EXTRACT(week FROM end_date) = :week AND EXTRACT(year FROM end_date) = :year', week: week, year: year) }
-  scope :not_finished, -> { kept.story.where('end_date IS NULL') }
-  scope :in_wip, -> { kept.story.where('demands.commitment_date IS NOT NULL AND demands.end_date IS NULL') }
+  scope :not_finished, -> { kept.where('end_date IS NULL') }
+  scope :in_wip, -> { kept.where('demands.commitment_date IS NOT NULL AND demands.end_date IS NULL') }
   scope :to_dates, ->(start_date, end_date) { where('(demands.end_date IS NULL AND demands.created_date BETWEEN :start_date AND :end_date) OR (demands.end_date BETWEEN :start_date AND :end_date)', start_date: start_date.beginning_of_day, end_date: end_date.end_of_day) }
   scope :to_end_dates, ->(start_date, end_date) { where('demands.end_date BETWEEN :start_date AND :end_date', start_date: start_date.beginning_of_day, end_date: end_date.end_of_day) }
-  scope :dates_inconsistent_to_project, ->(project) { kept.story.where('demands.commitment_date < :start_date OR demands.end_date > :end_date', start_date: project.start_date, end_date: project.end_date.end_of_day) }
-  scope :unscored_demands, -> { kept.story.where('demands.business_score IS NULL') }
+  scope :dates_inconsistent_to_project, ->(project) { kept.where('demands.commitment_date < :start_date OR demands.end_date > :end_date', start_date: project.start_date, end_date: project.end_date.end_of_day) }
+  scope :unscored_demands, -> { kept.where('demands.business_score IS NULL') }
+  scope :with_effort, -> { where('demands.effort_downstream > 0 OR demands.effort_upstream > 0') }
+  scope :grouped_end_date_by_month, -> { kept.finished.order(end_date: :desc).group_by { |demand| [demand.end_date.to_date.cwyear, demand.end_date.to_date.month] } }
+  scope :not_started, -> { kept.where('demands.commitment_date IS NULL AND demands.end_date IS NULL') }
 
   delegate :name, to: :project, prefix: true
   delegate :name, to: :product, prefix: true, allow_nil: true
   delegate :name, to: :portfolio_unit, prefix: true, allow_nil: true
   delegate :name, to: :team, prefix: true, allow_nil: true
+  delegate :name, to: :current_stage, prefix: true, allow_nil: true
+  delegate :count, to: :demand_blocks, prefix: true, allow_nil: true
 
   before_save :compute_and_update_automatic_fields
   after_discard :discard_dependencies
@@ -171,10 +169,6 @@ class Demand < ApplicationRecord
 
   def total_effort
     effort_upstream + effort_downstream
-  end
-
-  def current_stage
-    demand_transitions.where(last_time_out: nil).order(:last_time_in).last&.stage || demand_transitions.order(:last_time_in)&.last&.stage
   end
 
   def time_in_current_stage
@@ -246,6 +240,10 @@ class Demand < ApplicationRecord
     commitment_transition.last_time_out - commitment_transition.last_time_in
   end
 
+  def blocked_time
+    demand_blocks.sum(&:total_blocked_time)
+  end
+
   private
 
   def commitment_transition
@@ -254,10 +252,6 @@ class Demand < ApplicationRecord
     return nil if commitment_point.blank?
 
     demand_transitions.where(stage: commitment_point).order(:last_time_in).last
-  end
-
-  def current_stage_name
-    current_stage&.name
   end
 
   def build_product_tree_array

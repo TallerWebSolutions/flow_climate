@@ -461,15 +461,15 @@ RSpec.describe Project, type: :model do
   describe '#backlog_for' do
     context 'having data' do
       include_context 'demands with effort'
-      it { expect(project.backlog_for(1.week.ago)).to eq 33 }
-      it { expect(project.backlog_for(2.weeks.ago)).to eq 32 }
-      it { expect(project.backlog_for).to eq 34 }
+      it { expect(project.backlog_for(1.week.ago).count).to eq 3 }
+      it { expect(project.backlog_for(2.weeks.ago).count).to eq 2 }
+      it { expect(project.backlog_for.count).to eq 4 }
     end
 
     context 'having no data' do
       let!(:project) { Fabricate :project, end_date: 4.weeks.from_now, initial_scope: 30 }
 
-      it { expect(project.backlog_for(1.week.ago)).to eq 30 }
+      it { expect(project.backlog_for(1.week.ago).count).to eq 0 }
     end
   end
 

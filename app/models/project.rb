@@ -152,23 +152,23 @@ class Project < ApplicationRecord
   end
 
   def last_week_scope
-    backlog_for(1.week.ago)
+    backlog_for(1.week.ago).count + initial_scope
   end
 
   def backlog_unit_growth
-    backlog_for(Time.zone.now) - last_week_scope
+    (backlog_for(Time.zone.now).count + initial_scope) - last_week_scope
   end
 
   def backlog_growth_rate
-    return 0 if demands.kept.story.blank? || last_week_scope.zero?
+    return 0 if demands.kept.blank? || last_week_scope.zero?
 
     backlog_unit_growth.to_f / last_week_scope
   end
 
   def backlog_for(date = Time.zone.now)
-    return demands.kept.story.count if date.blank?
+    return demands.kept.count if date.blank?
 
-    DemandsRepository.instance.known_scope_to_date([self], date)
+    DemandsRepository.instance.known_scope_to_date(demands.map(&:id), date)
   end
 
   def flow_pressure(date = Time.zone.now)
@@ -185,25 +185,25 @@ class Project < ApplicationRecord
   end
 
   def total_throughput
-    demands.kept.story.finished.count
+    demands.kept.finished.count
   end
 
   def total_throughput_for(date = Time.zone.today)
-    demands.kept.story.finished.where('EXTRACT(week FROM end_date) = :week AND EXTRACT(year FROM end_date) = :year', week: date.to_date.cweek, year: date.to_date.cwyear).count
+    demands.kept.finished.where('EXTRACT(week FROM end_date) = :week AND EXTRACT(year FROM end_date) = :year', week: date.to_date.cweek, year: date.to_date.cwyear).count
   end
 
   def total_throughput_until(date)
     return total_throughput if date.blank?
 
-    demands.kept.story.finished_until_date(date).count
+    demands.kept.finished_until_date(date).count
   end
 
   def total_hours_upstream
-    demands.kept.story.finished.sum(&:effort_upstream)
+    demands.kept.finished.sum(&:effort_upstream)
   end
 
   def total_hours_downstream
-    demands.kept.story.finished.sum(&:effort_downstream)
+    demands.kept.finished.sum(&:effort_downstream)
   end
 
   def total_hours_consumed
@@ -221,7 +221,7 @@ class Project < ApplicationRecord
   end
 
   def remaining_backlog(date = Time.zone.now)
-    DemandsRepository.instance.remaining_backlog_to_date([self], date.end_of_day)
+    DemandsRepository.instance.remaining_backlog_to_date(demands, date.end_of_day) + initial_scope
   end
 
   def percentage_remaining_backlog(date = Time.zone.now)
@@ -279,19 +279,19 @@ class Project < ApplicationRecord
   end
 
   def percentage_of_demand_type(demand_type)
-    return 0 if demands.kept.story.count.zero?
+    return 0 if demands.kept.count.zero?
 
-    (demands.kept.story.send(demand_type).count.to_f / demands.kept.story.count) * 100
+    (demands.kept.send(demand_type).count.to_f / demands.kept.count) * 100
   end
 
   def average_block_duration
-    return 0 if demands.kept.story.blank? || demand_blocks.kept.blank?
+    return 0 if demands.kept.blank? || demand_blocks.kept.blank?
 
     active_kept_closed_blocks.average(:block_duration)
   end
 
   def leadtime_for_class_of_service(class_of_service, desired_percentile = 80)
-    demands_in_class_of_service = demands.kept.story.send(class_of_service).finished
+    demands_in_class_of_service = demands.kept.send(class_of_service).finished
     Stats::StatisticsService.instance.percentile(desired_percentile, demands_in_class_of_service.map(&:leadtime))
   end
 
@@ -304,27 +304,27 @@ class Project < ApplicationRecord
   end
 
   def percentage_expedite
-    return 0 if demands.kept.story.count.zero?
+    return 0 if demands.kept.count.zero?
 
-    (demands_of_class_of_service(:expedite).count.to_f / demands.kept.story.count) * 100
+    (demands_of_class_of_service(:expedite).count.to_f / demands.kept.count) * 100
   end
 
   def percentage_standard
-    return 0 if demands.kept.story.count.zero?
+    return 0 if demands.kept.count.zero?
 
-    (demands.kept.story.standard.count.to_f / demands.kept.story.count) * 100
+    (demands.kept.standard.count.to_f / demands.kept.count) * 100
   end
 
   def percentage_fixed_date
-    return 0 if demands.kept.story.count.zero?
+    return 0 if demands.kept.count.zero?
 
-    (demands.kept.story.fixed_date.count.to_f / demands.kept.story.count) * 100
+    (demands.kept.fixed_date.count.to_f / demands.kept.count) * 100
   end
 
   def percentage_intangible
-    return 0 if demands.kept.story.count.zero?
+    return 0 if demands.kept.count.zero?
 
-    (demands.kept.story.intangible.count.to_f / demands.kept.story.count) * 100
+    (demands.kept.intangible.count.to_f / demands.kept.count) * 100
   end
 
   def aging
@@ -363,7 +363,7 @@ class Project < ApplicationRecord
   end
 
   def demands_of_class_of_service(class_of_service = :standard)
-    demands.kept.story.send(class_of_service)
+    demands.kept.send(class_of_service)
   end
 
   def first_deadline

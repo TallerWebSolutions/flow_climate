@@ -22,7 +22,6 @@
       <thead>
         <tr>
           <th><%= Demand.human_attribute_name :demand_id %></th>
-          <th><%= Demand.human_attribute_name :artifact_type %></th>
           <th><%= Demand.human_attribute_name :demand_type %></th>
           <th><%= Demand.human_attribute_name :class_of_service %></th>
           <th><%= Demand.human_attribute_name :discarded_at %></th>
@@ -35,7 +34,6 @@
         <% discarded_demands.each do |demand| %>
           <tr id='demand_<%= demand.id %>'>
             <td><%= link_to demand.demand_id, company_demand_path(company, demand.slug) %></td>
-            <td><%= t("activerecord.attributes.demand.enums.artifact_type.#{demand.artifact_type}") %></td>
             <td><%= t("activerecord.attributes.demand.enums.demand_type.#{demand.demand_type}") %></td>
             <td><%= t("activerecord.attributes.demand.enums.class_of_service.#{demand.class_of_service}") %></td>
             <td><%= I18n.l(demand.discarded_at, format: :short) %></td>

@@ -5,16 +5,24 @@ module Highchart
     attr_reader :x_axis, :all_projects, :active_projects_demands_ids, :start_date, :end_date, :chart_period_interval
 
     def initialize(projects, start_date, end_date, chart_period_interval)
-      @start_date = start_date
-      @end_date = end_date
+      @chart_period_interval = chart_period_interval
+      @start_date = start_of_period_for_date(start_date)
+      @end_date = end_of_period_for_date(end_date)
 
       @all_projects = search_projects_by_dates(projects)
-      @chart_period_interval = chart_period_interval
 
       build_x_axis
     end
 
     private
+
+    def uncertain_scope
+      @uncertain_scope ||= @all_projects.sum(&:initial_scope)
+    end
+
+    def demands_list
+      @demands_list ||= Demand.where(id: @all_projects.map { |project| project.demands.map(&:id) }.flatten)
+    end
 
     def daily?
       @chart_period_interval == 'day'

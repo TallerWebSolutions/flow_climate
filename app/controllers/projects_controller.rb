@@ -152,7 +152,7 @@ class ProjectsController < AuthenticatedController
   end
 
   def assign_demands_ids
-    @demands_ids = DemandsRepository.instance.demands_created_before_date_to_projects([@project]).map(&:id)
+    @demands_ids = @project.demands.opened_before_date(Time.zone.now).map(&:id)
   end
 
   def assign_projects_to_copy_stages_from
