@@ -11,7 +11,7 @@ class BaseFlowAdapter
   def read_reason(demand, created)
     created_date = Time.zone.iso8601(created)
     demand_comments = demand.demand_comments.where(comment_date: (created_date.beginning_of_minute..created_date.end_of_minute))
-    demand_comments.select { |comment| comment.comment_text.downcase.include?('(flag)') }.first&.comment_text || ''
+    demand_comments.find { |comment| comment.comment_text.downcase.include?('(flag)') }&.comment_text || ''
   end
 
   def persist_unblock!(demand, author, unblock_time)

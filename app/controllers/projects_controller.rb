@@ -134,6 +134,8 @@ class ProjectsController < AuthenticatedController
 
   def status_report_dashboard
     @project_summary = ProjectsSummaryData.new([@project])
+    x_axis = TimeService.instance.weeks_between_of(@project.start_date.beginning_of_week, @project.end_date.end_of_week)
+    @work_item_flow_information = Flow::WorkItemFlowInformations.new(x_axis, Time.zone.now.end_of_week, @project.demands, @project.initial_scope)
 
     respond_to { |format| format.js { render 'projects/status_report_dashboard' } }
   end
@@ -152,7 +154,7 @@ class ProjectsController < AuthenticatedController
   end
 
   def assign_demands_ids
-    @demands_ids = DemandsRepository.instance.demands_created_before_date_to_projects([@project]).map(&:id)
+    @demands_ids = @project.demands.opened_before_date(Time.zone.now).map(&:id)
   end
 
   def assign_projects_to_copy_stages_from

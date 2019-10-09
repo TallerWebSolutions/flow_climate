@@ -5,7 +5,7 @@ class DemandService
 
   def arrival_and_departure_data_per_week(projects)
     start_date = projects.map(&:start_date).min
-    end_date = [projects.map(&:end_date).max, Time.zone.today].min
+    end_date = [projects.map(&:end_date).max, Time.zone.today].compact.min
 
     weeks_array = TimeService.instance.weeks_between_of(start_date, end_date)
 

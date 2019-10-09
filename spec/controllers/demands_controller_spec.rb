@@ -201,7 +201,7 @@ RSpec.describe DemandsController, type: :controller do
           expect(assigns(:start_date)).to eq Time.zone.today
           expect(assigns(:end_date)).to eq Time.zone.today
           expect(assigns(:grouped_delivered_demands)).to be_nil
-          expect(assigns(:demands).map(&:id)).to eq [first_demand.id, second_demand.id, third_demand.id, fourth_demand.id, fifth_demand.id, sixth_demand.id, seventh_demand.id, eigth_demand.id]
+          expect(assigns(:demands).map(&:id)).to match_array [first_demand.id, second_demand.id, third_demand.id, fourth_demand.id, fifth_demand.id, sixth_demand.id, seventh_demand.id, eigth_demand.id]
           expect(assigns(:confidence_95_leadtime)).to be_within(0.3).of(4.3)
           expect(assigns(:confidence_80_leadtime)).to be_within(0.3).of(3.6)
           expect(assigns(:confidence_65_leadtime)).to be_within(0.3).of(2.9)

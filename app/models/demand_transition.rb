@@ -74,9 +74,13 @@ class DemandTransition < ApplicationRecord
     current_queue_time = demand.demand_transitions.queue_transitions.sum(&:total_seconds_in_transition)
     current_touch_time = demand.demand_transitions.touch_transitions.sum(&:total_seconds_in_transition)
 
-    demand.update(total_queue_time: current_queue_time, total_touch_time: current_touch_time)
+    demand.update(total_queue_time: current_queue_time, total_touch_time: current_touch_time, current_stage: current_stage)
     demand.update_effort!
     demand.send(:compute_and_update_automatic_fields)
+  end
+
+  def current_stage
+    demand.demand_transitions.order(:last_time_in)&.last&.stage
   end
 
   def same_stage_project?

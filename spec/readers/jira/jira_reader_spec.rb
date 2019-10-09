@@ -36,10 +36,6 @@ RSpec.describe Jira::JiraReader do
     it { expect(described_class.instance.read_project_url(jira_issue.attrs)).to eq 'http://foo.bar' }
   end
 
-  describe '#read_artifact_type' do
-    it { expect(described_class.instance.read_artifact_type(jira_issue.attrs)).to eq :story }
-  end
-
   describe '#read_class_of_service' do
     it { expect(described_class.instance.read_class_of_service(jira_account, jira_issue.attrs, jira_issue.changelog)).to eq :standard }
   end

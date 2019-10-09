@@ -2,7 +2,7 @@ var statusReportDiv = $("#status-report-div").modal({
     show: false
 });
 
-statusReportDiv.html("<%= escape_javascript(render 'projects/dashboards/status_report_dashboard', project: @project, project_summary: @project_summary) %>");
+statusReportDiv.html("<%= escape_javascript(render 'projects/dashboards/status_report_dashboard', project: @project, project_summary: @project_summary, work_item_flow_information: @work_item_flow_information) %>");
 
 statusReportDiv.modal("show");
 

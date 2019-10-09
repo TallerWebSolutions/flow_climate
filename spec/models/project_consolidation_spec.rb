@@ -483,10 +483,10 @@ RSpec.describe ProjectConsolidation, type: :model do
 
     after { travel_back }
 
-    let(:project) { Fabricate :project, end_date: 4.weeks.from_now }
+    let(:project) { Fabricate :project, start_date: 2.weeks.ago, end_date: 4.weeks.from_now, initial_scope: 30 }
 
     context 'with data' do
-      let!(:project_consolidation) { Fabricate :project_consolidation, project: project, consolidation_date: 1.day.ago, project_monte_carlo_weeks: [3, 10, 9, 2, 7, 4, 5, 6, 6, 6, 7] }
+      let!(:project_consolidation) { Fabricate :project_consolidation, project: project, consolidation_date: 1.day.ago, project_monte_carlo_weeks: [3, 10, 9, 2, 7, 4, 5, 6, 6, 6, 7, 10, 9, 2, 7, 4, 5, 6, 6, 6, 7] }
 
       it { expect(project_consolidation.customer_happiness).to eq 0.7142857142857143 }
     end

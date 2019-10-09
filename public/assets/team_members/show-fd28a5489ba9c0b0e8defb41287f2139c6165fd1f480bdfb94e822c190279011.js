@@ -1,0 +1,1 @@
+$('.col-table-details').hide();

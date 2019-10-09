@@ -132,7 +132,6 @@ RSpec.describe Jira::JiraIssueAdapter, type: :service do
         it 'creates the demand as chore as type and standard as class of service' do
           described_class.instance.process_issue!(jira_account, product, first_project, jira_issue)
           expect(Demand.last).to be_feature
-          expect(Demand.last).to be_epic
         end
       end
 

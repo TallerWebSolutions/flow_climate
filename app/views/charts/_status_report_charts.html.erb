@@ -44,29 +44,6 @@
   </div>
 
   <div class="col-xs-6 bottom-spaced-component">
-    <div id="status-report-hours-per-stage-upstream"
-         class="flow-chart"
-         data-xcategories='<%= status_report_data.hours_per_stage_upstream[:xcategories] %>'
-         data-title='<%= I18n.t('projects.status_report_chart.hours_per_stage.title_upstream', target_name: target_name) %>'
-         data-ytitle='<%= I18n.t('projects.status_report_chart.hours_per_stage.labels.y') %>'
-         data-tooltipsuffix='<%= I18n.t('projects.status_report_chart.hours_per_stage.labels.y') %>'
-         data-series='<%= [{ name: I18n.t('projects.status_report_chart.hours_per_stage.series.hours_per_stage'), data: status_report_data.hours_per_stage_upstream[:hours_per_stage] }].to_json %>'
-         data-decimals='0'>
-    </div>
-  </div>
-  <div class="col-xs-6 bottom-spaced-component">
-    <div id="status-report-hours-per-stage-downstream"
-         class="flow-chart"
-         data-xcategories='<%= status_report_data.hours_per_stage_downstream[:xcategories] %>'
-         data-title='<%= I18n.t('projects.status_report_chart.hours_per_stage.title_downstream', target_name: target_name) %>'
-         data-ytitle='<%= I18n.t('projects.status_report_chart.hours_per_stage.labels.y') %>'
-         data-tooltipsuffix='<%= I18n.t('projects.status_report_chart.hours_per_stage.labels.y') %>'
-         data-series='<%= [{ name: I18n.t('projects.status_report_chart.hours_per_stage.series.hours_per_stage'), data: status_report_data.hours_per_stage_downstream[:hours_per_stage] }].to_json %>'
-         data-decimals='0'>
-    </div>
-  </div>
-
-  <div class="col-xs-6 bottom-spaced-component">
     <div id="cfd-upstream-area"
          class="flow-chart"
          data-xcategories='<%= status_report_data.x_axis.to_json %>'

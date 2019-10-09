@@ -911,9 +911,14 @@ RSpec.describe ProjectsController, type: :controller do
 
       context 'passing valid parameters' do
         it 'assigns the instance variables and renders the template' do
+          work_flow_info = instance_double('Flow::WorkItemFlowInformations', dates_array: [], upstream_delivered_per_period: [], downstream_delivered_per_period: [], throughput_per_period: [])
+          expect(Flow::WorkItemFlowInformations).to(receive(:new).once { work_flow_info })
+
           get :status_report_dashboard, params: { company_id: company, id: project }, xhr: true
           expect(response).to render_template 'projects/status_report_dashboard'
           expect(assigns(:project)).to eq project
+          expect(assigns(:work_item_flow_information).dates_array).to eq []
+          expect(assigns(:work_item_flow_information).throughput_per_period).to eq []
         end
       end
 

@@ -13,17 +13,10 @@ module Highchart
     end
 
     def scope_data_evolution_chart
-      accumulated_scope_in_time = []
+      demands_list = Demand.kept.where(id: @projects.map { |project| project.demands.opened_before_date(Time.zone.now).map(&:id) }.flatten)
+      @work_item_flow_information = Flow::WorkItemFlowInformations.new(@x_axis, end_of_period_for_date(Time.zone.now), demands_list, @projects.sum(&:initial_scope))
 
-      @x_axis.each do |x_axis_date|
-        break unless add_data_to_chart?(x_axis_date)
-
-        end_date = end_of_period_for_date(x_axis_date)
-
-        accumulated_scope_in_time << DemandsRepository.instance.known_scope_to_date(@projects, end_date.end_of_day)
-      end
-
-      [{ name: I18n.t('projects.general.scope'), data: accumulated_scope_in_time, marker: { enabled: true } }]
+      [{ name: I18n.t('projects.general.scope'), data: @work_item_flow_information.scope_per_period, marker: { enabled: true } }]
     end
 
     def leadtime_data_evolution_chart(confidence)

@@ -38,13 +38,6 @@ module Jira
       jira_issue_attrs['fields']['project']['self']
     end
 
-    def read_artifact_type(jira_issue_attrs)
-      issue_type_name = jira_issue_attrs['fields']['issuetype']['name']
-      return :epic if issue_type_name.casecmp('epic').zero?
-
-      :story
-    end
-
     def read_class_of_service(jira_account, jira_issue_attrs, jira_issue_changelog)
       class_of_service_name = read_class_of_service_by_tag_name(jira_issue_changelog)
 
