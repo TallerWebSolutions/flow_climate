@@ -122,7 +122,7 @@ RSpec.describe RiskReviewsController, type: :controller do
         let!(:second_demand) { Fabricate :demand, product: product, risk_review: nil, end_date: 26.hours.ago }
         let!(:third_demand) { Fabricate :demand, product: product, risk_review: second_risk, end_date: 26.hours.ago }
         let!(:fourth_demand) { Fabricate :demand, product: product, risk_review: nil, end_date: 4.days.ago }
-        let!(:fifth_demand) { Fabricate :demand, product: product, risk_review: nil, end_date: Time.zone.tomorrow }
+        let!(:fifth_demand) { Fabricate :demand, product: product, risk_review: nil, created_date: Time.zone.tomorrow, end_date: Time.zone.tomorrow }
 
         let!(:first_block) { Fabricate :demand_block, demand: first_demand, risk_review: nil, unblock_time: 2.days.ago }
         let!(:second_block) { Fabricate :demand_block, demand: first_demand, risk_review: nil, unblock_time: 26.hours.ago }
@@ -263,7 +263,7 @@ RSpec.describe RiskReviewsController, type: :controller do
       let!(:second_demand) { Fabricate :demand, product: product, risk_review: nil, end_date: 26.hours.ago }
       let!(:third_demand) { Fabricate :demand, product: product, risk_review: second_risk, end_date: 26.hours.ago }
       let!(:fourth_demand) { Fabricate :demand, product: product, risk_review: nil, end_date: 4.days.ago }
-      let!(:fifth_demand) { Fabricate :demand, product: product, risk_review: nil, end_date: Time.zone.tomorrow }
+      let!(:fifth_demand) { Fabricate :demand, product: product, risk_review: nil, created_date: Time.zone.tomorrow, end_date: Time.zone.tomorrow }
 
       let!(:first_block) { Fabricate :demand_block, demand: first_demand, risk_review: nil, unblock_time: 2.days.ago }
       let!(:second_block) { Fabricate :demand_block, demand: first_demand, risk_review: nil, unblock_time: 26.hours.ago }

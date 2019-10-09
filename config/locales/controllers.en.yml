@@ -1047,6 +1047,8 @@ en:
     attributes:
       validations:
         product_uniqueness: "You can have only one meeting to the product starting at the same date."
+    help:
+      lead_time_outlier_limit: "Max days to be an outlier"
   risk_reviews:
     new:
       title: "New Risk Review"
