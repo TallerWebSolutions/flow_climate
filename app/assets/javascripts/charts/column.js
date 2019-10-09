@@ -52,17 +52,6 @@ function buildColumnChart(columnDiv) {
         },
         plotOptions: {
             column: {
-                dataLabels: {
-                    enabled: true,
-                    color: 'black',
-                    formatter: function () {
-                        if (!columnDiv.data('tooltipsuffix')) {
-                            return Highcharts.numberFormat(this.y, columnDiv.data('decimals'), '.');
-                        } else {
-                            return Highcharts.numberFormat(this.y, columnDiv.data('decimals'), '.') + ' ' + columnDiv.data('tooltipsuffix');
-                        }
-                    }
-                },
                 stacking: columnDiv.data('stacking')
             }
         },

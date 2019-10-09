@@ -914,6 +914,8 @@ RSpec.describe ProjectsController, type: :controller do
           get :status_report_dashboard, params: { company_id: company, id: project }, xhr: true
           expect(response).to render_template 'projects/status_report_dashboard'
           expect(assigns(:project)).to eq project
+          expect(assigns(:work_item_flow_information).dates_array).to eq TimeService.instance.weeks_between_of(project.start_date.beginning_of_week, project.end_date.end_of_week)
+          expect(assigns(:work_item_flow_information).throughput_per_period).to eq [0, 0, 0, 0, 0, 0, 0, 0, 0]
         end
       end
 
