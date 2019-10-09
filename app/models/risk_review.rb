@@ -44,7 +44,7 @@ class RiskReview < ApplicationRecord
   end
 
   def outlier_demands
-    demands.where('leadtime >= :outlier_value', outlier_value: lead_time_outlier_limit * 1.day)
+    demands.finished_with_leadtime.where('leadtime >= :outlier_value', outlier_value: lead_time_outlier_limit * 1.day)
   end
 
   def blocks_per_demand
@@ -72,6 +72,6 @@ class RiskReview < ApplicationRecord
   end
 
   def demands_lead_time_p80
-    Stats::StatisticsService.instance.percentile(80, demands.map(&:leadtime))
+    Stats::StatisticsService.instance.percentile(80, demands.finished_with_leadtime.map(&:leadtime))
   end
 end

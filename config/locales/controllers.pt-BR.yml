@@ -1031,6 +1031,8 @@ pt-BR:
     attributes:
       validations:
         product_uniqueness: "Você só pode ter uma reunião para o produto começando na mesma data."
+    help:
+      lead_time_outlier_limit: "Máximo de dias pra considerar outliers"
   risk_reviews:
     new:
       title: "Nova Revisão de Risco"

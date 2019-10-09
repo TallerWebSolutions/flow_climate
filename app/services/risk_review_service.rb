@@ -4,7 +4,7 @@ class RiskReviewService
   include Singleton
 
   def associate_demands_data(product, risk_review)
-    demands = product.demands.kept.where('demands.end_date <= :end_date AND demands.risk_review_id IS NULL', end_date: risk_review.meeting_date.end_of_day)
+    demands = product.demands.kept.opened_before_date(risk_review.meeting_date.end_of_day).where('demands.risk_review_id IS NULL')
     demands.map { |demand| demand.update(risk_review: risk_review) }
 
     update_blocks(product, risk_review)
