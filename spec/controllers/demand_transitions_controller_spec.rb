@@ -121,7 +121,9 @@ RSpec.describe DemandTransitionsController, type: :controller do
           expect(assigns(:demand_transition).errors.full_messages).to eq []
           expect(assigns(:demand_transition)).to be_persisted
           expect(assigns(:demand_transition).stage).to eq stage
+          expect(assigns(:demand_transition).demand).to eq demand
           expect(assigns(:stages_to_select)).to eq [second_stage, first_stage]
+          expect(demand.reload.current_stage).to eq stage
         end
       end
 
