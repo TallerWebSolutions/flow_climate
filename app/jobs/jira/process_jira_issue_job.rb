@@ -12,7 +12,7 @@ module Jira
 
       finished_time = Time.zone.now
 
-      UserNotifierMailer.sync_finished(user_email, user_name, Demand.model_name.human.downcase, issue_key, started_time, finished_time, demand_url).deliver if user_email.present?
+      UserNotifierMailer.async_activity_finished(user_email, user_name, Demand.model_name.human.downcase, issue_key, started_time, finished_time, demand_url).deliver if user_email.present?
     end
   end
 end

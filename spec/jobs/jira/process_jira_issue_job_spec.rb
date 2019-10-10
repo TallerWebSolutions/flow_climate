@@ -28,7 +28,7 @@ RSpec.describe Jira::ProcessJiraIssueJob, type: :active_job do
         context 'and a jira config' do
           context 'and demand' do
             it 'calls the adapter to translation' do
-              expect(UserNotifierMailer).to receive(:sync_finished).once.and_call_original
+              expect(UserNotifierMailer).to receive(:async_activity_finished).once.and_call_original
               expect_any_instance_of(Jira::JiraApiService).to(receive(:request_issue_details).with('foo') { jira_issue })
               expect(Jira::JiraIssueAdapter.instance).to(receive(:process_issue!).once { demand })
               described_class.perform_now(jira_account, project, 'foo', 'foo@bar.com', 'Foo Bar', 'http://foo.com.br')

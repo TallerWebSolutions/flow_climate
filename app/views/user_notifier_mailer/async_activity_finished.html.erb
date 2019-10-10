@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+    <p style="font-size: x-large"><%= I18n.t('devise.general.greetings', name: @user_name) %></p>
+    <p style="font-size: larger"><%= I18n.t('async_activity.notification.activity_info', activity_title: @activity_title, started_at: I18n.l(@activity_started_at, format: :short), finished_at: I18n.l(@activity_finished_at, format: :short) ) %></p>
+    <p><%= "#{I18n.t('async_activity.notification.activity_link')} #{link_to @object_title, @object_url}".html_safe %> </p>
+  </body>
+
+  <%= render 'email_signature' %>
+</html>
