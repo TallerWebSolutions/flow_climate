@@ -751,6 +751,7 @@ pt-BR:
     portfolio_units: "Unidades do Portfólio"
     risk_reviews: "Revisões de Risco"
     service_delivery_reviews: "Service Delivery Review"
+    projects_gantt: "Gantt Chart"
   charts:
     xlabel:
       months: "Meses"

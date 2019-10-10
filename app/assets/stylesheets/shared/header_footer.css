@@ -46,18 +46,6 @@ ul.breadcrumb li a:hover {
     text-decoration: underline;
 }
 
-.footer {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    padding: 15px;
-    background-color: #333333;
-    color: #FFFF;
-    text-align: center;
-    font-style: italic;
-    font-size: small;
-}
-
 .page-body {
     position: relative;
     margin-bottom: 50px;

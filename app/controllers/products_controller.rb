@@ -64,6 +64,7 @@ class ProductsController < AuthenticatedController
   def projects_tab
     @product_projects = @product.projects.includes(:customers).includes(:products).includes(:team).order(end_date: :desc)
     @projects_summary = ProjectsSummaryData.new(@product_projects)
+    @target_name = @product.name
     assign_filter_parameters_to_charts
 
     respond_to { |format| format.js { render 'projects/projects_tab' } }

@@ -4,7 +4,7 @@ class ProjectsController < AuthenticatedController
   before_action :user_gold_check
 
   before_action :assign_company
-  before_action :assign_project, except: %i[new create index search_for_projects]
+  before_action :assign_project, except: %i[new create index]
 
   def show
     assign_project_stages
@@ -53,16 +53,6 @@ class ProjectsController < AuthenticatedController
 
     assign_customers
     render :edit
-  end
-
-  def search_for_projects
-    @projects = @company.projects.where(id: params[:projects_ids].split(',')).order(end_date: :desc)
-    @searched_projects = @projects.where(status: params[:status_filter]) if params[:status_filter] != 'all'
-    @projects_summary = ProjectsSummaryData.new(@projects)
-
-    build_query_dates_to_projects(@projects)
-
-    respond_to { |format| format.js { render 'projects/projects_search' } }
   end
 
   def destroy

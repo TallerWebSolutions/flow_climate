@@ -24,3 +24,5 @@ $('#search_charts').on('click', function() {
 });
 
 $(".col-table-details").hide();
+
+projectsTableTabBehaviour();
