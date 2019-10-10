@@ -15,7 +15,7 @@ module Jira
       end
 
       finished_time = Time.zone.now
-      UserNotifierMailer.sync_finished(user_email, user_name, Project.model_name.human.downcase, jira_product_key, started_time, finished_time, project_url).deliver if user_email.present? && user_name.present? && project_url.present?
+      UserNotifierMailer.async_activity_finished(user_email, user_name, Project.model_name.human.downcase, jira_product_key, started_time, finished_time, project_url).deliver if user_email.present? && user_name.present? && project_url.present?
     end
   end
 end

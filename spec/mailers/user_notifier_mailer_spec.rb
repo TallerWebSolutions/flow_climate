@@ -138,13 +138,13 @@ RSpec.describe UserNotifierMailer, type: :mailer do
     end
   end
 
-  describe '#sync_finished' do
-    subject(:mail) { described_class.sync_finished('foo@bla.com.br', 'Foo Bar', 'demand', 'XPTO-100', 1.day.ago, 20.hours.ago, 'http://foo.com.br').deliver_now }
+  describe '#async_activity_finished' do
+    subject(:mail) { described_class.async_activity_finished('foo@bla.com.br', 'Foo Bar', 'demand', 'XPTO-100', 1.day.ago, 20.hours.ago, 'http://foo.com.br').deliver_now }
 
     let(:user) { Fabricate :user, email_notifications: true }
 
     it 'renders the email' do
-      expect(mail.subject).to eq I18n.t('demands.sync.notification.subject', sync_title: 'demand', object_title: 'XPTO-100')
+      expect(mail.subject).to eq I18n.t('async_activity.notification.subject', activity_title: 'demand', object_title: 'XPTO-100')
       expect(mail.body.encoded).to match 'Foo Bar'
       expect(mail.body.encoded).to match 'XPTO-100'
       expect(mail.body.encoded).to match I18n.t('general.signature.regards')

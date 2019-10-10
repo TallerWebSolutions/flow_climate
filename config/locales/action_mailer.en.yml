@@ -39,13 +39,9 @@ en:
     signature:
       regards: "Best Regards"
       flow_climate_team: "Flow Cliamate Team"
-  demands:
-    charts:
-      demands:
-        title: "Demands"
-    sync:
-      notification:
-        subject: "The sync %{sync_title} - %{object_title} was concluded."
-        sync_info: "The sync you requested started at %{started_at} and finished at %{finished_at}."
-        sync_link: "See the results at "
+  async_activity:
+    notification:
+      subject: "%{activity_title} - %{object_title} was concluded."
+      activity_info: "%{activity_title} started at %{started_at} and finished at %{finished_at}."
+      activity_link: "See the results at "
 

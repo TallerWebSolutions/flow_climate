@@ -41,16 +41,16 @@ class UserNotifierMailer < ApplicationMailer
     mail(to: emails, subject: I18n.t('plans.request.subject'))
   end
 
-  def sync_finished(user_email, user_name, sync_title, object_title, sync_started_at, sync_finished_at, object_url)
+  def async_activity_finished(user_email, user_name, activity_title, object_title, activity_started_at, activity_finished_at, object_url)
     @user_name = user_name
-    @sync_title = sync_title
+    @activity_title = activity_title
     @object_title = object_title
-    @sync_started_at = sync_started_at
-    @sync_finished_at = sync_finished_at
+    @activity_started_at = activity_started_at
+    @activity_finished_at = activity_finished_at
     @object_url = object_url
 
-    Rails.logger.info("Sync finished email notification sent to #{user_email}")
-    mail(to: user_email, subject: I18n.t('demands.sync.notification.subject', sync_title: @sync_title, object_title: @object_title))
+    Rails.logger.info("Activity #{@activity_title}-#{@object_title} finished email notification sent to #{@user_email}")
+    mail(to: user_email, subject: I18n.t('async_activity.notification.subject', activity_title: @activity_title, object_title: @object_title))
   end
 
   private

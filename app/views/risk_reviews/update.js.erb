@@ -9,3 +9,7 @@ var riskReviewsDiv = $('#risk-reviews');
       riskReviewsDiv.html("<%= escape_javascript(render 'risk_reviews/risk_reviews_table', company: @company, product: @product, risk_reviews: @risk_reviews) %>");
   });
 <% end %>
+
+<% if flash[:notice].present? %>
+$(".alerts").html("<%= escape_javascript(render('layouts/notice', message: flash[:notice].html_safe)) %>")
+<% end %>
