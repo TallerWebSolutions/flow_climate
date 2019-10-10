@@ -11,7 +11,7 @@
 <h2><%= I18n.t('projects.index.title') %></h2>
 
 <div id="projects-table">
-  <%= render 'projects/projects_table', company: @company, start_date: @start_date, end_date: @end_date, projects_list: @projects, projects_summary: @projects_summary, projects_ids: @projects.map(&:id).flatten.join(',') %>
+  <%= render 'projects/projects_table', company: @company, target_name: '', projects_list: @projects, projects_summary: @projects_summary, projects_ids: @projects.map(&:id).flatten.join(',') %>
 </div>
 
 <% content_for :javascript do %>

@@ -144,10 +144,6 @@ Rails.application.routes.draw do
         end
       end
 
-      collection do
-        get 'search_for_projects/:status_filter/:projects_ids', action: :search_for_projects, as: 'search_for_projects'
-      end
-
       member do
         patch :finish_project
 

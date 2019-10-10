@@ -46,7 +46,7 @@
   <h2><%= I18n.t('projects.index.title') %></h2>
 
   <div id="projects-table">
-    <%= render 'projects/projects_table', company: @company, start_date: @start_date, end_date: @end_date, projects_list: @team_projects, projects_summary: @projects_summary, projects_ids: @team_projects.map(&:id).flatten.join(',') %>
+    <%= render 'projects/projects_table', company: @company, target_name: @team.name, projects_list: @team_projects, projects_summary: @projects_summary %>
   </div>
 </div>
 
@@ -103,12 +103,11 @@
   <%= javascript_include_tag 'charts/gauge' %>
   <%= javascript_include_tag 'charts/scatter' %>
   <%= javascript_include_tag 'charts/stacked_area' %>
+  <%= javascript_include_tag 'charts/gantt' %>
 
   <%= javascript_include_tag 'components/components' %>
 
   <%= javascript_include_tag 'stats_charts/statistics_charts' %>
-
-  <%= javascript_include_tag 'teams/show' %>
 
   <%= javascript_include_tag 'routes/chart_routes' %>
   <%= javascript_include_tag 'routes/demand_routes' %>
@@ -119,6 +118,7 @@
   <%= javascript_include_tag 'projects/charts' %>
   <%= javascript_include_tag 'projects/status_report_current' %>
   <%= javascript_include_tag 'projects/status_report_projection' %>
+  <%= javascript_include_tag 'projects/projects_table' %>
 
   <%= javascript_include_tag 'companies/strategic_charts' %>
 
@@ -132,4 +132,6 @@
   <%= javascript_include_tag 'demands/demands_charts' %>
   <%= javascript_include_tag 'demands/demands_list' %>
   <%= javascript_include_tag 'demands/form_modal' %>
+
+  <%= javascript_include_tag 'teams/show' %>
 <% end %>

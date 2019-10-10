@@ -9,3 +9,5 @@ $('#teams-list').show();
 $("#general-loader").hide();
 
 buildFinancesHighcharts();
+
+projectsTableTabBehaviour();

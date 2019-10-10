@@ -1,6 +1,6 @@
 var projectsDiv = $('#projects-table')
 
-projectsDiv.html("<%= escape_javascript(render 'projects/projects_table', company: @company, start_date: @start_date, end_date: @end_date, projects_list: @product_projects, projects_summary: @projects_summary, projects_ids: @product_projects.map(&:id).flatten.join(',')) %>")
+projectsDiv.html("<%= escape_javascript(render 'projects/projects_table', company: @company, target_name: @target_name, projects_list: @product_projects, projects_summary: @projects_summary) %>")
 
 $('#general-loader').hide();
 
@@ -8,3 +8,5 @@ projectsDiv.show();
 
 enableTabs();
 $(".col-table-details").hide();
+
+projectsTableTabBehaviour();
