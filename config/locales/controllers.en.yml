@@ -1092,3 +1092,5 @@ en:
       discarded_demands_label: "Discarded"
       general_info: "General"
       kpis: "KPIs"
+    update:
+      enqueued_associations: "The building of your service delivery review was enqueued. You will receive an email when it finishes."
