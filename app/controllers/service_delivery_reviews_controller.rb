@@ -16,9 +16,7 @@ class ServiceDeliveryReviewsController < AuthenticatedController
   def create
     @service_delivery_review = ServiceDeliveryReview.create(service_delivery_review_params.merge(company: @company, product: @product).merge(time_computed_params).merge(percent_computed_params))
 
-    ServiceDeliveryReviewService.instance.associate_demands_data(@product, @service_delivery_review) if @service_delivery_review.valid?
-
-    service_delivery_reviews
+    process_valid_service_delivery_review if @service_delivery_review.valid?
 
     respond_to { |format| format.js { render 'service_delivery_reviews/create' } }
   end
@@ -39,15 +37,19 @@ class ServiceDeliveryReviewsController < AuthenticatedController
 
   def update
     @service_delivery_review.update(service_delivery_review_params.merge(time_computed_params).merge(percent_computed_params))
-    if @service_delivery_review.valid?
-      ServiceDeliveryReviewService.instance.associate_demands_data(@product, @service_delivery_review)
-      @service_delivery_reviews = @product.service_delivery_reviews.order(meeting_date: :desc)
-    end
+
+    process_valid_service_delivery_review if @service_delivery_review.valid?
 
     render 'service_delivery_reviews/update'
   end
 
   private
+
+  def process_valid_service_delivery_review
+    flash[:notice] = I18n.t('service_delivery_reviews.update.enqueued_associations')
+    ServiceDeliveryReviewGeneratorJob.perform_later(@product, @service_delivery_review, current_user.email, current_user.full_name, @service_delivery_review.id, service_delivery_review_url)
+    service_delivery_reviews
+  end
 
   def service_delivery_reviews
     @service_delivery_reviews ||= @product.service_delivery_reviews.order(meeting_date: :desc)
@@ -80,5 +82,9 @@ class ServiceDeliveryReviewsController < AuthenticatedController
 
   def assign_product
     @product = Product.find(params[:product_id])
+  end
+
+  def service_delivery_review_url
+    company_product_service_delivery_review_path(@company, @product, @service_delivery_review)
   end
 end

@@ -118,18 +118,10 @@ RSpec.describe ServiceDeliveryReviewsController, type: :controller do
         let!(:first_service_delivery) { Fabricate :service_delivery_review, product: product, meeting_date: 3.days.ago }
         let!(:second_service_delivery) { Fabricate :service_delivery_review, product: product, meeting_date: 2.days.ago }
 
-        let!(:first_demand) { Fabricate :demand, product: product, service_delivery_review: nil, end_date: 2.days.ago }
-        let!(:second_demand) { Fabricate :demand, product: product, service_delivery_review: nil, end_date: 26.hours.ago }
-        let!(:third_demand) { Fabricate :demand, product: product, service_delivery_review: second_service_delivery, end_date: 26.hours.ago }
-        let!(:fourth_demand) { Fabricate :demand, product: product, service_delivery_review: nil, end_date: 4.days.ago }
-        let!(:fifth_demand) { Fabricate :demand, product: product, service_delivery_review: nil, end_date: Time.zone.tomorrow }
-
-        let!(:start_date) { 3.days.ago }
-        let!(:end_date) { 1.day.ago }
-
-        before { post :create, params: { company_id: company, product_id: product, service_delivery_review: { meeting_date: Time.zone.tomorrow, delayed_expedite_bottom_threshold: 10, delayed_expedite_top_threshold: 20, expedite_max_pull_time_sla: 2, lead_time_bottom_threshold: 3, lead_time_top_threshold: 2, quality_bottom_threshold: 10, quality_top_threshold: 20 } }, xhr: true }
-
         it 'creates the new service_delivery review' do
+          expect(ServiceDeliveryReviewGeneratorJob).to receive(:perform_later).once
+          post :create, params: { company_id: company, product_id: product, service_delivery_review: { meeting_date: Time.zone.tomorrow, delayed_expedite_bottom_threshold: 10, delayed_expedite_top_threshold: 20, expedite_max_pull_time_sla: 2, lead_time_bottom_threshold: 3, lead_time_top_threshold: 2, quality_bottom_threshold: 10, quality_top_threshold: 20 } }, xhr: true
+
           expect(response).to render_template 'service_delivery_reviews/create'
           expect(assigns(:service_delivery_review).errors.full_messages).to eq []
           expect(assigns(:service_delivery_review)).to be_persisted
@@ -245,19 +237,11 @@ RSpec.describe ServiceDeliveryReviewsController, type: :controller do
       let!(:first_service_delivery) { Fabricate :service_delivery_review, product: product, meeting_date: 1.day.ago }
       let!(:second_service_delivery) { Fabricate :service_delivery_review, product: product, meeting_date: Time.zone.today }
 
-      let!(:first_demand) { Fabricate :demand, product: product, service_delivery_review: nil, end_date: 2.days.ago }
-      let!(:second_demand) { Fabricate :demand, product: product, service_delivery_review: nil, end_date: 26.hours.ago }
-      let!(:third_demand) { Fabricate :demand, product: product, service_delivery_review: second_service_delivery, end_date: 26.hours.ago }
-      let!(:fourth_demand) { Fabricate :demand, product: product, service_delivery_review: nil, end_date: 4.days.ago }
-      let!(:fifth_demand) { Fabricate :demand, product: product, service_delivery_review: nil, end_date: Time.zone.tomorrow }
-
-      let!(:start_date) { 3.days.ago }
-      let!(:end_date) { 1.day.ago }
-
       context 'passing valid parameters' do
-        before { put :update, params: { company_id: company, product_id: product, id: first_service_delivery, service_delivery_review: { meeting_date: Time.zone.tomorrow, delayed_expedite_bottom_threshold: 10, delayed_expedite_top_threshold: 20, expedite_max_pull_time_sla: 2, lead_time_bottom_threshold: 3, lead_time_top_threshold: 2, quality_bottom_threshold: 10, quality_top_threshold: 20 } }, xhr: true }
-
         it 'assigns the instance variable and renders the template' do
+          expect(ServiceDeliveryReviewGeneratorJob).to receive(:perform_later).once
+          put :update, params: { company_id: company, product_id: product, id: first_service_delivery, service_delivery_review: { meeting_date: Time.zone.tomorrow, delayed_expedite_bottom_threshold: 10, delayed_expedite_top_threshold: 20, expedite_max_pull_time_sla: 2, lead_time_bottom_threshold: 3, lead_time_top_threshold: 2, quality_bottom_threshold: 10, quality_top_threshold: 20 } }, xhr: true
+
           expect(response).to render_template 'service_delivery_reviews/update'
           expect(assigns(:service_delivery_review).errors.full_messages).to eq []
           expect(assigns(:service_delivery_review)).to be_valid
