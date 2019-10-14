@@ -299,7 +299,7 @@ RSpec.describe DemandBlocksController, type: :controller do
             it 'builds the block list and render the template' do
               get :demand_blocks_tab, params: { company_id: company, projects_ids: [first_project.id, second_project.id].join(','), start_date: 2.days.ago, end_date: Time.zone.today }, xhr: true
               expect(response).to have_http_status :ok
-              expect(assigns(:demand_blocks)).to eq [first_block, sixth_block, fourth_block, third_block]
+              expect(assigns(:demand_blocks)).to eq [first_block, sixth_block, fourth_block, third_block, second_block, fifth_block]
               expect(response).to render_template 'demand_blocks/demand_blocks_tab'
             end
           end
@@ -389,7 +389,7 @@ RSpec.describe DemandBlocksController, type: :controller do
           context 'no start nor end dates nor period provided' do
             it 'builds the statistic adapter and renders the view using the dates in project to a monthly period' do
               get :search, params: { company_id: company, demand_blocks_ids: DemandBlock.all.map(&:id).join(',') }, xhr: true
-              expect(response).to render_template 'demand_blocks/search.js.erb'
+              expect(response).to render_template 'demand_blocks/search'
               expect(assigns(:demand_blocks)).to eq [seventh_block, sixth_block, third_block, fifth_block, fourth_block, second_block, first_block]
             end
           end
@@ -399,7 +399,7 @@ RSpec.describe DemandBlocksController, type: :controller do
               get :search, params: { company_id: company, demand_blocks_ids: DemandBlock.all.map(&:id).join(','), blocks_start_date: 2.days.ago, blocks_end_date: Time.zone.today }, xhr: true
               expect(response).to have_http_status :ok
               expect(assigns(:demand_blocks)).to eq [fourth_block, second_block, first_block]
-              expect(response).to render_template 'demand_blocks/search.js.erb'
+              expect(response).to render_template 'demand_blocks/search'
             end
           end
 
@@ -408,7 +408,7 @@ RSpec.describe DemandBlocksController, type: :controller do
               get :search, params: { company_id: company, demand_blocks_ids: DemandBlock.all.map(&:id).join(','), blocks_team_member: other_team_member.id }, xhr: true
               expect(response).to have_http_status :ok
               expect(assigns(:demand_blocks)).to eq [third_block, fifth_block, fourth_block, second_block]
-              expect(response).to render_template 'demand_blocks/search.js.erb'
+              expect(response).to render_template 'demand_blocks/search'
             end
           end
 
@@ -417,7 +417,7 @@ RSpec.describe DemandBlocksController, type: :controller do
               get :search, params: { company_id: company, demand_blocks_ids: DemandBlock.all.map(&:id).join(','), blocks_stage: stage.id }, xhr: true
               expect(response).to have_http_status :ok
               expect(assigns(:demand_blocks)).to eq [fifth_block, fourth_block]
-              expect(response).to render_template 'demand_blocks/search.js.erb'
+              expect(response).to render_template 'demand_blocks/search'
             end
           end
 
@@ -426,7 +426,7 @@ RSpec.describe DemandBlocksController, type: :controller do
               get :search, params: { company_id: company, demand_blocks_ids: DemandBlock.all.map(&:id).join(','), blocks_stage: stage.id, blocks_team_member: other_team_member.id, blocks_start_date: 2.days.ago, blocks_end_date: Time.zone.today }, xhr: true
               expect(response).to have_http_status :ok
               expect(assigns(:demand_blocks)).to eq [fourth_block]
-              expect(response).to render_template 'demand_blocks/search.js.erb'
+              expect(response).to render_template 'demand_blocks/search'
             end
           end
 
@@ -435,7 +435,7 @@ RSpec.describe DemandBlocksController, type: :controller do
               get :search, params: { company_id: company, demand_blocks_ids: DemandBlock.all.map(&:id).join(','), blocks_team_member: other_team_member.id, blocks_ordering: :member_name }, xhr: true
               expect(response).to have_http_status :ok
               expect(assigns(:demand_blocks)).to match_array [second_block, third_block, fourth_block, fifth_block]
-              expect(response).to render_template 'demand_blocks/search.js.erb'
+              expect(response).to render_template 'demand_blocks/search'
             end
           end
 
@@ -444,7 +444,7 @@ RSpec.describe DemandBlocksController, type: :controller do
               get :search, params: { company_id: company, demand_blocks_ids: DemandBlock.all.map(&:id).join(','), blocks_team_member: other_team_member.id, blocks_ordering: :block_time }, xhr: true
               expect(response).to have_http_status :ok
               expect(assigns(:demand_blocks)).to eq [third_block, fifth_block, fourth_block, second_block]
-              expect(response).to render_template 'demand_blocks/search.js.erb'
+              expect(response).to render_template 'demand_blocks/search'
             end
           end
         end
@@ -454,7 +454,7 @@ RSpec.describe DemandBlocksController, type: :controller do
         it 'render the template with empty data' do
           get :search, params: { company_id: company, demand_blocks_ids: DemandBlock.all.map(&:id).join(','), blocks_start_date: 2.days.ago, blocks_end_date: Time.zone.today }, xhr: true
           expect(assigns(:demand_blocks)).to eq []
-          expect(response).to render_template 'demand_blocks/search.js.erb'
+          expect(response).to render_template 'demand_blocks/search'
         end
       end
     end

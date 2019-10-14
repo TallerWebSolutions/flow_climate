@@ -5,11 +5,11 @@
   <div class="row">
     <div class="col-xs-4 form-group">
       <%= label_tag I18n.t('demand_blocks.index.filter.start_date'), nil, class: 'control-label' %>
-      <%= date_field_tag :blocks_start_date, params[:blocks_start_date], class: 'form-control' %>
+      <%= date_field_tag :blocks_start_date, params[:blocks_start_date] || 3.months.ago, class: 'form-control' %>
     </div>
     <div class="col-xs-4 form-group">
       <%= label_tag I18n.t('demand_blocks.index.filter.end_date'), nil, class: 'control-label' %>
-      <%= date_field_tag :blocks_end_date, params[:blocks_end_date], class: 'form-control' %>
+      <%= date_field_tag :blocks_end_date, params[:blocks_end_date] || Time.zone.today, class: 'form-control' %>
     </div>
     <div class="col-xs-4 form-group">
       <%= label_tag I18n.t('demand_blocks.index.filter.team_member'), nil, class: 'control-label' %>

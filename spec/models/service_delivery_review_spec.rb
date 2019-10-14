@@ -86,6 +86,10 @@ RSpec.describe ServiceDeliveryReview, type: :model do
   end
 
   describe '#demands_lead_time_p80' do
+    before { travel_to Time.zone.local(2019, 10, 14, 17, 20, 0) }
+
+    after { travel_back }
+
     include_context 'service delivery data'
 
     it 'returns the lead time percentile 80 value' do

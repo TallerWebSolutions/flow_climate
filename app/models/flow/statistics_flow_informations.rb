@@ -29,7 +29,11 @@ module Flow
         next if @current_limit_date < date
 
         demands_finished_until_date = @demands.finished_until_date(date) # query
-        @average_aging_per_period << demands_finished_until_date.map(&:aging_when_finished).sum.to_f / demands_finished_until_date.count
+        @average_aging_per_period << if demands_finished_until_date.count.positive?
+                                       demands_finished_until_date.map(&:aging_when_finished).sum.to_f / demands_finished_until_date.count
+                                     else
+                                       0
+                                     end
       end
     end
 
