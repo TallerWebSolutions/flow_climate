@@ -14,7 +14,7 @@ module Highchart
 
     def scope_data_evolution_chart
       demands_list = Demand.kept.where(id: @projects.map { |project| project.demands.opened_before_date(Time.zone.now).map(&:id) }.flatten)
-      @work_item_flow_information = Flow::WorkItemFlowInformations.new(@x_axis, end_of_period_for_date(Time.zone.now), demands_list, @projects.sum(&:initial_scope))
+      @work_item_flow_information = Flow::WorkItemFlowInformations.new(@x_axis, start_of_period_for_date(@start_date), end_of_period_for_date(Time.zone.now), demands_list, @projects.sum(&:initial_scope))
 
       [{ name: I18n.t('projects.general.scope'), data: @work_item_flow_information.scope_per_period, marker: { enabled: true } }]
     end

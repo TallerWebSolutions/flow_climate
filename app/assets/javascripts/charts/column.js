@@ -31,16 +31,15 @@ function buildColumnChart(columnDiv) {
                 color: '#808080'
             }],
             stackLabels: {
-                enabled: true
+                enabled: true,
+                formatter: function() {
+                    return Highcharts.numberFormat(this.total, 2, ',');
+                }
             }
         },
         tooltip: {
             formatter: function () {
-                if (!columnDiv.data('tooltipsuffix')) {
-                    return Highcharts.numberFormat(this.y, columnDiv.data('decimals'), '.');
-                } else {
-                    return Highcharts.numberFormat(this.y, columnDiv.data('decimals'), '.') + ' ' + columnDiv.data('tooltipsuffix');
-                }
+                return Highcharts.numberFormat(this.y, 2, ',');
             }
         },
         legend: {

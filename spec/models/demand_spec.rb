@@ -94,6 +94,17 @@ RSpec.describe Demand, type: :model do
       it { expect(described_class.finished_until_date(1.day.ago)).to match_array [first_demand, second_demand] }
     end
 
+    describe '.finished_after_date' do
+      let!(:one_day_ago) { 1.day.ago }
+      let!(:two_days_ago) { 2.days.ago }
+
+      let!(:first_demand) { Fabricate :demand, project: project, end_date: two_days_ago, leadtime: 2 }
+      let!(:second_demand) { Fabricate :demand, project: project, end_date: one_day_ago, leadtime: nil }
+      let!(:third_demand) { Fabricate :demand, project: project, end_date: Time.zone.now }
+
+      it { expect(described_class.finished_after_date(one_day_ago)).to match_array [second_demand, third_demand] }
+    end
+
     describe '.not_finished' do
       let!(:first_demand) { Fabricate :demand, project: project, end_date: nil }
       let!(:second_demand) { Fabricate :demand, project: project, end_date: nil }

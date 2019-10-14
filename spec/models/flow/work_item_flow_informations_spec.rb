@@ -73,7 +73,7 @@ RSpec.describe Flow::WorkItemFlowInformations, type: :model do
     context 'having data' do
       include_context 'demand data'
 
-      subject(:item_flow_info) { described_class.new(dates_array, Time.zone.today, Demand.all, 30) }
+      subject(:item_flow_info) { described_class.new(dates_array, Date.new(2018, 2, 20), Time.zone.today, Demand.all, 30) }
 
       let(:dates_array) { TimeService.instance.weeks_between_of(Project.all.map(&:start_date).min, Project.all.map(&:end_date).max) }
 
@@ -102,7 +102,7 @@ RSpec.describe Flow::WorkItemFlowInformations, type: :model do
     end
 
     context 'having no data' do
-      subject(:item_flow_info) { described_class.new(dates_array, Time.zone.today, Demand.all, 30) }
+      subject(:item_flow_info) { described_class.new(dates_array, Date.new(2018, 2, 20), Time.zone.today, Demand.all, 30) }
 
       let(:dates_array) { TimeService.instance.weeks_between_of(Project.all.map(&:start_date).min, Project.all.map(&:end_date).max) }
 

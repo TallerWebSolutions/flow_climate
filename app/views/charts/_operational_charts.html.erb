@@ -61,12 +61,13 @@
     <div id="hours-column"
          class="flow-chart"
          data-title='<%= I18n.t('projects.charts.hours_per_demand.title', target_name: target_name) %>'
-         data-xcategories='<%= report_data.x_axis.to_json %>'
+         data-xcategories='<%= report_data.time_flow_informations.dates_array.to_json %>'
          data-xtitle='<%= I18n.t('projects.charts.xlabel.time') %>'
          data-ytitle='<%= I18n.t('projects.charts.hours_per_demand.ylabel') %>'
-         data-tooltipsufix='<%= I18n.t('projects.charts.hours_per_demand.tooltipsufix') %>'
+         data-tooltipsuffix='<%= I18n.t('projects.charts.hours_per_demand.tooltipsufix') %>'
          data-series='<%= [{ name: I18n.t('projects.charts.hours_per_demand.ylabel'), data: report_data.time_flow_informations.hours_per_demand }].to_json %>'
-         data-decimals='3'>
+         data-stacking='normal'
+         data-decimals='2'>
     </div>
   </div>
 
@@ -74,10 +75,10 @@
     <div id="throughput-column"
          class="flow-chart"
          data-title='<%= I18n.t('projects.charts.throughput.title', target_name: target_name) %>'
-         data-xcategories='<%= report_data.x_axis.to_json %>'
+         data-xcategories='<%= report_data.work_item_flow_information.dates_array.to_json %>'
          data-xtitle='<%= I18n.t('projects.charts.xlabel.time') %>'
          data-ytitle='<%= I18n.t('projects.charts.throughput.ylabel') %>'
-         data-tooltipsufix='<%= I18n.t('projects.charts.throughput.tooltipsufix') %>'
+         data-tooltipsuffix='<%= I18n.t('projects.charts.throughput.tooltipsufix') %>'
          data-series='<%= [{ name: I18n.t('projects.charts.throughput.stage_stream.upstream'), data: report_data.work_item_flow_information.upstream_delivered_per_period }, { name: I18n.t('projects.charts.throughput.stage_stream.downstream'), data: report_data.work_item_flow_information.downstream_delivered_per_period }].to_json %>'
          data-stacking='normal'
          data-decimals='0'>
@@ -219,7 +220,7 @@
     <div id="leadtime-histogram"
          class="flow-chart"
          data-title='<%= I18n.t('projects.charts.leadtime_histogram.title', target_name: target_name) %>'
-         data-xcategories='<%= report_data.leadtime_bins %>'
+         data-xcategories='<%= report_data.statistics_flow_information.lead_time_bins %>'
          data-xtitle='<%= I18n.t('projects.charts.xlabel.days') %>'
          data-ytitle='<%= I18n.t('projects.charts.leadtime_histogram.ylabel') %>'
          data-prefix=''

@@ -22,7 +22,7 @@ module Highchart
     private
 
     def build_demand_data_processors
-      @work_item_flow_information = Flow::WorkItemFlowInformations.new(@x_axis, end_of_period_for_now, demands_list, uncertain_scope)
+      @work_item_flow_information = Flow::WorkItemFlowInformations.new(@x_axis, start_of_period_for_date(@start_date), end_of_period_for_now, demands_list, uncertain_scope)
       @time_flow_informations = Flow::TimeFlowInformations.new(@x_axis, end_of_period_for_now, demands_list)
       @statistics_flow_information = Flow::StatisticsFlowInformations.new(@x_axis, end_of_period_for_now, demands_list)
       @block_flow_information = Flow::BlockFlowInformations.new(@x_axis, end_of_period_for_now, demands_list)
