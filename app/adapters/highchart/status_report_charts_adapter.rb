@@ -9,7 +9,7 @@ module Highchart
 
       return unless @all_projects.count.positive?
 
-      @work_item_flow_information = Flow::WorkItemFlowInformations.new(@x_axis, end_of_period_for_date(Time.zone.now), demands_list, uncertain_scope)
+      @work_item_flow_information = Flow::WorkItemFlowInformations.new(@x_axis, start_of_period_for_date(start_date), end_of_period_for_date(Time.zone.now), demands_list, uncertain_scope)
 
       montecarlo_durations = Stats::StatisticsService.instance.run_montecarlo(@work_item_flow_information.scope_per_period.last, @work_item_flow_information.throughput_per_period, 500)
       build_montecarlo_perecentage_confidences(montecarlo_durations)
