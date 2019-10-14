@@ -28,12 +28,12 @@ class DemandBlocksController < AuthenticatedController
   end
 
   def index
-    @demand_blocks = DemandBlocksRepository.instance.active_blocks_to_projects_and_period(@projects, start_date_to_query, end_date_to_query).order(block_time: :desc)
+    @demand_blocks = DemandBlocksRepository.instance.active_blocks_to_projects_and_period(@projects, 3.months.ago, end_date_to_query).order(block_time: :desc)
     render 'demand_blocks/index'
   end
 
   def demand_blocks_tab
-    @demand_blocks = DemandBlocksRepository.instance.active_blocks_to_projects_and_period(@projects, start_date_to_query, end_date_to_query).order(block_time: :desc)
+    @demand_blocks = DemandBlocksRepository.instance.active_blocks_to_projects_and_period(@projects, 3.months.ago, end_date_to_query).order(block_time: :desc)
 
     respond_to { |format| format.js { 'demand_blocks/demand_blocks_tab' } }
   end
@@ -58,7 +58,7 @@ class DemandBlocksController < AuthenticatedController
     @demand_blocks = build_stage_query(@demand_blocks)
     @demand_blocks = build_ordering_query(@demand_blocks)
 
-    respond_to { |format| format.js { render 'demand_blocks/search.js.erb' } }
+    respond_to { |format| format.js { render 'demand_blocks/search' } }
   end
 
   private
@@ -109,11 +109,7 @@ class DemandBlocksController < AuthenticatedController
     @demand_block = DemandBlock.find(params[:id])
   end
 
-  def start_date_to_query
-    (params['start_date'] || @projects.map(&:start_date).min).to_date
-  end
-
   def end_date_to_query
-    (params['end_date'] || @projects.map(&:end_date).max).to_date
+    (params['end_date'] || Time.zone.today).to_date
   end
 end
