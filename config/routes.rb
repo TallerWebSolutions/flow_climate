@@ -208,7 +208,9 @@ Rails.application.routes.draw do
     end
 
     scope :jira do
-      resources :jira_accounts, only: %i[new create destroy], module: 'jira'
+      resources :jira_accounts, only: %i[new create destroy show], module: 'jira' do
+        resources :jira_custom_field_mappings, except: :index
+      end
     end
 
     resources :flow_impacts, except: %i[index new create] do

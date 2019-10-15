@@ -1,0 +1,7 @@
+<%= form_for [company, jira_account, jira_custom_field_mapping], url: company_jira_account_jira_custom_field_mappings_path(company, jira_account), class: 'form', remote: true do |f| %>
+  <div class="row bottom-spaced-component">
+    <div class="col-xs-12">
+      <%= render 'jira/jira_custom_field_mappings/form', f: f, company: company, jira_account: jira_account, jira_custom_field_mapping: jira_custom_field_mapping %>
+    </div>
+  </div>
+<% end %>

@@ -1,0 +1,10 @@
+var customFieldMappingTable = $("#jira-custom-field-mapping-table")
+
+<% if @jira_custom_field_mapping.errors.empty? %>
+  customFieldMappingTable.html("<%= escape_javascript(render 'jira/jira_custom_field_mappings/jira_custom_field_mappings_table', company: @company, jira_account: @jira_account, jira_custom_field_mappings: @jira_custom_field_mappings).html_safe %>");
+<% else %>
+  customFieldMappingTable.html("<%= escape_javascript(render('jira/jira_custom_field_mappings/edit', company: @company, jira_account: @jira_account, jira_custom_field_mapping: @jira_custom_field_mapping)) %>");
+  $('#cancel-form-jira-custom-field-mapping').on('click', function() {
+    $("#jira-custom-field-mapping-table").html("<%= escape_javascript(render 'jira/jira_custom_field_mappings/jira_custom_field_mappings_table', company: @company, jira_account: @jira_account, jira_custom_field_mappings: @jira_custom_field_mappings).html_safe %>");
+  });
+<% end %>

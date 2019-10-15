@@ -1,0 +1,10 @@
+<td><%= I18n.t("activerecord.attributes.jira/jira_custom_field_mapping.enums.demand_field.#{jira_custom_field_mapping.demand_field}") %></td>
+<td><%= jira_custom_field_mapping.custom_field_machine_name %></td>
+<td>
+  <%= link_to edit_company_jira_account_jira_custom_field_mapping_path(company, jira_account, jira_custom_field_mapping), remote: true do %>
+    <i class="fas fa-edit"></i>
+  <% end %>
+  <%= link_to company_jira_account_jira_custom_field_mapping_path(company, jira_account, jira_custom_field_mapping), method: :delete, data: { confirm: I18n.t('general.destroy.confirm') }, remote: true do %>
+    <i class="fa fa-times"></i>
+  <% end %>
+</td>

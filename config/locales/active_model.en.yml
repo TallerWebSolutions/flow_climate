@@ -139,6 +139,11 @@ en:
       team_member:
         validations:
           name_unique: "Only one name by company and jira account id is allowed"
+      jira/jira_custom_field_machine_name:
+        enums:
+          demand_field:
+            class_of_service: "Class of Service"
+            responsibles: "Responsibles"
     errors:
       messages:
         record_invalid: 'Validation failed: %{errors}'

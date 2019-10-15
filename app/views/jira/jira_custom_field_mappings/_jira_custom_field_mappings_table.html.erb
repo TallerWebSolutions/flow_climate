@@ -1,0 +1,22 @@
+
+<% if @jira_custom_field_mappings.present? %>
+  <h4><%= Jira::JiraCustomFieldMapping.model_name.human.pluralize %></h4>
+  <table class="table">
+    <thead>
+      <tr>
+        <th><%= Jira::JiraCustomFieldMapping.human_attribute_name :demand_field %></th>
+        <th><%= Jira::JiraCustomFieldMapping.human_attribute_name :custom_field_machine_name %></th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% jira_custom_field_mappings.each do |jira_custom_field_mapping| %>
+        <tr id="jira_custom_field_mapping_<%= jira_custom_field_mapping.id %>">
+          <%= render 'jira/jira_custom_field_mappings/jira_custom_field_mapping_fields', company: company, jira_account: jira_account, jira_custom_field_mapping: jira_custom_field_mapping %>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <%= render 'layouts/no_data', missing_data: Jira::JiraCustomFieldMapping.model_name.human.pluralize %>
+<% end %>

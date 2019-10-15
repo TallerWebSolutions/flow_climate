@@ -19,6 +19,12 @@ RSpec.describe Jira::JiraAccountsController, type: :controller do
 
       it { expect(response).to redirect_to new_user_session_path }
     end
+
+    describe 'GET #show' do
+      before { get :show, params: { company_id: 'bar', id: 'foo' } }
+
+      it { expect(response).to redirect_to new_user_session_path }
+    end
   end
 
   context 'authenticated' do
@@ -133,6 +139,56 @@ RSpec.describe Jira::JiraAccountsController, type: :controller do
           before { delete :destroy, params: { company_id: company, id: first_account }, xhr: true }
 
           it { expect(response).to have_http_status :not_found }
+        end
+      end
+    end
+
+    describe 'GET #show' do
+      let(:jira_account) { Fabricate :jira_account, company: company }
+      let!(:jira_custom_field_mapping) { Fabricate :jira_custom_field_mapping, jira_account: jira_account, demand_field: :class_of_service }
+      let!(:other_jira_custom_field_mapping) { Fabricate :jira_custom_field_mapping, jira_account: jira_account, demand_field: :responsibles }
+
+      context 'valid parameters' do
+        it 'assigns the instance variable and renders the template' do
+          get :show, params: { company_id: company, id: jira_account }
+          expect(response).to render_template :show
+          expect(assigns(:jira_account)).to eq jira_account
+          expect(assigns(:jira_custom_field_mappings)).to eq [jira_custom_field_mapping, other_jira_custom_field_mapping]
+        end
+      end
+
+      context 'invalid' do
+        context 'jira_account' do
+          context 'not found' do
+            before { get :show, params: { company_id: company, id: 'foo' }, xhr: true }
+
+            it { expect(response).to have_http_status :not_found }
+          end
+
+          context 'not permitted' do
+            let(:not_permitted_account) { Fabricate :jira_account }
+
+            before { get :show, params: { company_id: company, id: not_permitted_account }, xhr: true }
+
+            it { expect(response).to have_http_status :not_found }
+          end
+        end
+
+        context 'company' do
+          context 'not found' do
+            before { get :show, params: { company_id: 'foo', id: jira_account }, xhr: true }
+
+            it { expect(response).to have_http_status :not_found }
+          end
+
+          context 'not permitted' do
+            let(:not_permitted_company) { Fabricate :company }
+            let(:jira_account) { Fabricate :jira_account, company: company }
+
+            before { get :show, params: { company_id: not_permitted_company, id: jira_account }, xhr: true }
+
+            it { expect(response).to have_http_status :not_found }
+          end
         end
       end
     end

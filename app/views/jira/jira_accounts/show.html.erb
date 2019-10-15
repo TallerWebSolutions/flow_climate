@@ -1,0 +1,9 @@
+<h1><%= @jira_account.customer_domain %></h1>
+
+<hr>
+
+<%= link_to I18n.t('jira_custom_field_mappings.new.title'), new_company_jira_account_jira_custom_field_mapping_path(@company, @jira_account), class: 'btn btn-sm btn-success bottom-spaced-component pull-right', remote: true %>
+
+<div id="jira-custom-field-mapping-table">
+  <%= render 'jira/jira_custom_field_mappings/jira_custom_field_mappings_table', company: @company, jira_account: @jira_account, jira_custom_field_mappings: @jira_custom_field_mappings %>
+</div>
