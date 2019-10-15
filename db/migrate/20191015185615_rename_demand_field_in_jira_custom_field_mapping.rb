@@ -2,7 +2,7 @@
 
 class RenameDemandFieldInJiraCustomFieldMapping < ActiveRecord::Migration[6.0]
   def change
-    rename_column :jira_custom_field_mappings, :custom_field_type, :custom_field_type
+    rename_column :jira_custom_field_mappings, :demand_field, :custom_field_type
 
     change_table :demands, bulk: true do |t|
       t.rename :url, :external_url
