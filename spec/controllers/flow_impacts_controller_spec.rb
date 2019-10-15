@@ -70,13 +70,13 @@ RSpec.describe FlowImpactsController, type: :controller do
     let(:other_customer) { Fabricate :customer, company: other_company }
     let(:other_project) { Fabricate :project, customers: [other_customer] }
 
-    let!(:demand) { Fabricate :demand, project: project, commitment_date: 1.day.ago, end_date: nil, demand_id: 'bbb' }
-    let!(:other_demand) { Fabricate :demand, project: project, commitment_date: 1.day.ago, end_date: nil, demand_id: 'aaa' }
+    let!(:demand) { Fabricate :demand, project: project, commitment_date: 1.day.ago, end_date: nil, external_id: 'bbb' }
+    let!(:other_demand) { Fabricate :demand, project: project, commitment_date: 1.day.ago, end_date: nil, external_id: 'aaa' }
 
-    let!(:out_demand) { Fabricate :demand, project: other_project, commitment_date: 1.day.ago, end_date: nil, demand_id: 'ccc' }
+    let!(:out_demand) { Fabricate :demand, project: other_project, commitment_date: 1.day.ago, end_date: nil, external_id: 'ccc' }
 
-    let!(:not_started_demand) { Fabricate :demand, project: project, commitment_date: nil, end_date: nil, demand_id: 'ddd' }
-    let!(:finished_demand) { Fabricate :demand, project: project, commitment_date: 1.day.ago, end_date: Time.zone.today, demand_id: 'eee' }
+    let!(:not_started_demand) { Fabricate :demand, project: project, commitment_date: nil, end_date: nil, external_id: 'ddd' }
+    let!(:finished_demand) { Fabricate :demand, project: project, commitment_date: 1.day.ago, end_date: Time.zone.today, external_id: 'eee' }
 
     describe 'GET #new' do
       context 'passing valid parameters' do

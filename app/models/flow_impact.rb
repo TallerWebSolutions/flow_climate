@@ -16,12 +16,6 @@
 #  start_date         :datetime         not null
 #  updated_at         :datetime         not null
 #
-# Indexes
-#
-#  index_flow_impacts_on_demand_id    (demand_id)
-#  index_flow_impacts_on_impact_type  (impact_type)
-#  index_flow_impacts_on_project_id   (project_id)
-#
 # Foreign Keys
 #
 #  fk_rails_c718f8e04c  (risk_review_id => risk_reviews.id)

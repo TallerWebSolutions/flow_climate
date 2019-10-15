@@ -338,7 +338,7 @@ ALTER SEQUENCE public.demand_transitions_id_seq OWNED BY public.demand_transitio
 
 CREATE TABLE public.demands (
     id bigint NOT NULL,
-    demand_id character varying NOT NULL,
+    external_id character varying NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     demand_type integer NOT NULL,
@@ -346,7 +346,7 @@ CREATE TABLE public.demands (
     commitment_date timestamp without time zone,
     end_date timestamp without time zone,
     created_date timestamp without time zone NOT NULL,
-    url character varying,
+    external_url character varying,
     class_of_service integer DEFAULT 0 NOT NULL,
     project_id integer NOT NULL,
     effort_downstream numeric DEFAULT 0,
@@ -613,7 +613,7 @@ ALTER SEQUENCE public.jira_accounts_id_seq OWNED BY public.jira_accounts.id;
 CREATE TABLE public.jira_custom_field_mappings (
     id bigint NOT NULL,
     jira_account_id integer NOT NULL,
-    demand_field integer NOT NULL,
+    custom_field_type integer NOT NULL,
     custom_field_machine_name character varying NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL
@@ -2369,17 +2369,17 @@ CREATE INDEX index_demands_on_current_stage_id ON public.demands USING btree (cu
 
 
 --
--- Name: index_demands_on_demand_id_and_company_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX index_demands_on_demand_id_and_company_id ON public.demands USING btree (demand_id, company_id);
-
-
---
 -- Name: index_demands_on_discarded_at; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_demands_on_discarded_at ON public.demands USING btree (discarded_at);
+
+
+--
+-- Name: index_demands_on_external_id_and_company_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_demands_on_external_id_and_company_id ON public.demands USING btree (external_id, company_id);
 
 
 --
@@ -2869,7 +2869,7 @@ CREATE UNIQUE INDEX index_users_on_reset_password_token ON public.users USING bt
 -- Name: unique_custom_field_to_jira_account; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX unique_custom_field_to_jira_account ON public.jira_custom_field_mappings USING btree (jira_account_id, demand_field);
+CREATE UNIQUE INDEX unique_custom_field_to_jira_account ON public.jira_custom_field_mappings USING btree (jira_account_id, custom_field_type);
 
 
 --
@@ -3622,6 +3622,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190905215441'),
 ('20190906135154'),
 ('20190917120310'),
-('20191002140915');
+('20191002140915'),
+('20191015185615');
 
 

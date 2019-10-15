@@ -11,12 +11,6 @@
 #  resource_type :integer          not null, indexed
 #  updated_at    :datetime         not null
 #
-# Indexes
-#
-#  index_team_resources_on_company_id     (company_id)
-#  index_team_resources_on_resource_name  (resource_name)
-#  index_team_resources_on_resource_type  (resource_type)
-#
 # Foreign Keys
 #
 #  fk_rails_0e82f4e026  (company_id => companies.id)

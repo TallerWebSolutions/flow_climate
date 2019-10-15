@@ -19,7 +19,7 @@
     </div>
     <div class='col-xs-6 form-group <%= 'has-error' if @flow_impact.errors[:demand].present? %>'>
       <%= f.label :demand, class: 'control-label' %>
-      <%= f.select :demand_id, @demands_to_direct_link.map { |demand| [demand.demand_id, demand.id] }, { prompt: I18n.t('general.select'), selected: @flow_impact.demand_id }, class: 'form-control' %>
+      <%= f.select :demand_id, @demands_to_direct_link.map { |demand| [demand.external_id, demand.id] }, { prompt: I18n.t('general.select'), selected: @flow_impact.demand_id }, class: 'form-control' %>
       <span class="help-block"><%= @flow_impact.errors[:demand].join(', ') %></span>
     </div>
   </div>

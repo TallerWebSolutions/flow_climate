@@ -6,7 +6,7 @@ RSpec.describe Api::V1::DemandsController, type: :controller do
     let!(:headers) { { HTTP_API_TOKEN: company.api_token } }
 
     let!(:team) { Fabricate :team, company: company }
-    let!(:demand) { Fabricate :demand, team: team, demand_id: 'AbC-302', business_score: 10.5 }
+    let!(:demand) { Fabricate :demand, team: team, external_id: 'AbC-302', business_score: 10.5 }
 
     context 'authenticated' do
       context 'with valid parameters' do

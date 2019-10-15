@@ -9,11 +9,11 @@
 #  business_score                  :decimal(, )
 #  class_of_service                :integer          default("standard"), not null
 #  commitment_date                 :datetime
-#  company_id                      :integer          not null, indexed => [demand_id]
+#  company_id                      :integer          not null, indexed => [external_id]
 #  cost_to_project                 :decimal(, )      default(0.0)
 #  created_at                      :datetime         not null
 #  created_date                    :datetime         not null
-#  demand_id                       :string           not null, indexed => [company_id]
+#  current_stage_id                :integer          indexed
 #  demand_title                    :string
 #  demand_type                     :integer          not null
 #  demand_url                      :string
@@ -21,6 +21,8 @@
 #  effort_downstream               :decimal(, )      default(0.0)
 #  effort_upstream                 :decimal(, )      default(0.0)
 #  end_date                        :datetime
+#  external_id                     :string           not null, indexed => [company_id]
+#  external_url                    :string
 #  id                              :bigint(8)        not null, primary key
 #  leadtime                        :decimal(, )
 #  manual_effort                   :boolean          default(FALSE)
@@ -37,13 +39,6 @@
 #  total_touch_blocked_time        :decimal(, )      default(0.0)
 #  total_touch_time                :integer          default(0)
 #  updated_at                      :datetime         not null
-#  url                             :string
-#
-# Indexes
-#
-#  index_demands_on_demand_id_and_company_id  (demand_id,company_id) UNIQUE
-#  index_demands_on_discarded_at              (discarded_at)
-#  index_demands_on_slug                      (slug) UNIQUE
 #
 # Foreign Keys
 #
@@ -51,6 +46,7 @@
 #  fk_rails_19bdd8aa1e  (project_id => projects.id)
 #  fk_rails_1abfdc9ca0  (parent_id => demands.id)
 #  fk_rails_34f0dad22e  (risk_review_id => risk_reviews.id)
+#  fk_rails_35680c72ae  (current_stage_id => stages.id)
 #  fk_rails_73cc77780a  (product_id => products.id)
 #  fk_rails_c9b5eaaa7f  (portfolio_unit_id => portfolio_units.id)
 #  fk_rails_fcc44c0e5d  (service_delivery_review_id => service_delivery_reviews.id)
@@ -60,7 +56,7 @@ class Demand < ApplicationRecord
   include Discard::Model
 
   extend FriendlyId
-  friendly_id :demand_id, use: :slugged
+  friendly_id :external_id, use: :slugged
 
   enum demand_type: { feature: 0, bug: 1, performance_improvement: 2, ui: 3, chore: 4, wireframe: 5 }
   enum class_of_service: { standard: 0, expedite: 1, fixed_date: 2, intangible: 3 }
@@ -86,8 +82,8 @@ class Demand < ApplicationRecord
   has_many :stages, -> { distinct }, through: :demand_transitions
   has_many :team_members, through: :item_assignments
 
-  validates :project, :created_date, :demand_id, :demand_type, :class_of_service, :assignees_count, :team, presence: true
-  validates :demand_id, uniqueness: { scope: :company_id, message: I18n.t('demand.validations.demand_id_unique.message') }
+  validates :project, :created_date, :external_id, :demand_type, :class_of_service, :assignees_count, :team, presence: true
+  validates :external_id, uniqueness: { scope: :company_id, message: I18n.t('demand.validations.external_id_unique.message') }
 
   scope :opened_before_date, ->(date) { where('demands.created_date <= :analysed_date AND (demands.discarded_at IS NULL OR demands.discarded_at > :analysed_date)', analysed_date: date.end_of_day) }
   scope :finished_in_downstream, -> { kept.where('commitment_date IS NOT NULL AND end_date IS NOT NULL') }
@@ -122,7 +118,7 @@ class Demand < ApplicationRecord
       id,
       current_stage_name,
       project_id,
-      demand_id,
+      external_id,
       demand_title,
       demand_type,
       class_of_service,
@@ -139,7 +135,7 @@ class Demand < ApplicationRecord
   def to_hash
     {
       id: id,
-      demand_id: demand_id,
+      external_id: external_id,
       project_id: project_id,
       demand_title: demand_title,
       business_score: business_score,
@@ -228,7 +224,7 @@ class Demand < ApplicationRecord
   end
 
   def name
-    demand_id
+    external_id
   end
 
   def assignees_count

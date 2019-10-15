@@ -10,7 +10,7 @@ Fabricator(:demand) do
   end_date { Time.zone.now }
   demand_type 0
   class_of_service 0
-  demand_id { Random.new.rand(3000..1_000_000) }
+  external_id { Random.new.rand(3000..1_000_000) }
   effort_downstream { 40 }
   effort_upstream { 50 }
 end

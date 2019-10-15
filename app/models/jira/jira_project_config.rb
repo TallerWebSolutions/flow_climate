@@ -11,11 +11,6 @@
 #  project_id             :integer          not null, indexed
 #  updated_at             :datetime         not null
 #
-# Indexes
-#
-#  index_jira_project_configs_on_project_id  (project_id)
-#  unique_fix_version_to_jira_product        (jira_product_config_id,fix_version_name) UNIQUE
-#
 # Foreign Keys
 #
 #  fk_rails_039cb02c5a  (jira_product_config_id => jira_product_configs.id)

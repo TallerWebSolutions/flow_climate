@@ -18,12 +18,6 @@
 #  quality_top_threshold             :decimal(, )      not null
 #  updated_at                        :datetime         not null
 #
-# Indexes
-#
-#  index_service_delivery_reviews_on_company_id                   (company_id)
-#  index_service_delivery_reviews_on_meeting_date_and_product_id  (meeting_date,product_id) UNIQUE
-#  index_service_delivery_reviews_on_product_id                   (product_id)
-#
 # Foreign Keys
 #
 #  fk_rails_2ee3d597b3  (product_id => products.id)

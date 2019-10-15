@@ -33,7 +33,7 @@ module Slack
       slack_notifier.ping(I18n.t('slack_configurations.notifications.th_last_week_text', name: team.name, th_last_week: th_last_week.count))
 
       th_last_week.each do |demand|
-        slack_notifier.ping(I18n.t('slack_configurations.notifications.th_last_week_demand_info_text', demand_id: demand.demand_id, responsibles_names: demand.team_members.map(&:name).join(', '), cost_to_project: number_to_currency(demand.cost_to_project), demand_title: demand.demand_title))
+        slack_notifier.ping(I18n.t('slack_configurations.notifications.th_last_week_demand_info_text', external_id: demand.external_id, responsibles_names: demand.team_members.map(&:name).join(', '), cost_to_project: number_to_currency(demand.cost_to_project), demand_title: demand.demand_title))
       end
     end
 
@@ -45,7 +45,7 @@ module Slack
       demands_in_wip.each do |demand|
         slack_notifier.ping(
           I18n.t('slack_configurations.notifications.demands_in_wip_info_text',
-                 demand_id: demand.demand_id,
+                 external_id: demand.external_id,
                  responsibles_names: demand.active_team_members.map(&:name).join(', '),
                  cost_to_project: number_to_currency(demand.cost_to_project),
                  demand_title: demand.demand_title,
@@ -67,7 +67,7 @@ module Slack
       demands_beyond_time.each do |outdated_demand|
         slack_notifier.ping(
           I18n.t('slack_configurations.notifications.outdated_demands_info_text',
-                 demand_id: outdated_demand.demand_id,
+                 external_id: outdated_demand.external_id,
                  demand_title: outdated_demand.demand_title,
                  current_stage: outdated_demand.current_stage&.name,
                  time_in_current_stage: time_distance_in_words(outdated_demand.time_in_current_stage))

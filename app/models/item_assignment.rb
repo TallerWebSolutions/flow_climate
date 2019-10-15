@@ -13,12 +13,6 @@
 #  team_member_id :integer          not null, indexed => [demand_id, start_time], indexed
 #  updated_at     :datetime         not null
 #
-# Indexes
-#
-#  demand_member_start_time_unique           (demand_id,team_member_id,start_time) UNIQUE
-#  index_item_assignments_on_demand_id       (demand_id)
-#  index_item_assignments_on_team_member_id  (team_member_id)
-#
 # Foreign Keys
 #
 #  fk_rails_0af34c141e  (demand_id => demands.id)

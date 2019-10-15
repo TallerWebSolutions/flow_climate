@@ -11,12 +11,6 @@
 #  updated_at      :datetime         not null
 #  user_id         :integer          not null, indexed, indexed => [project_id]
 #
-# Indexes
-#
-#  index_user_project_roles_on_project_id              (project_id)
-#  index_user_project_roles_on_user_id                 (user_id)
-#  index_user_project_roles_on_user_id_and_project_id  (user_id,project_id) UNIQUE
-#
 # Foreign Keys
 #
 #  fk_rails_4bed04fd76  (user_id => users.id)

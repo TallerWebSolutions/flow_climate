@@ -13,7 +13,7 @@ RSpec.describe Api::V1::FlowImpactsController, type: :controller do
 
         it 'creates the flow impact' do
           request.headers.merge! headers
-          post :create, params: { project_id: project.id, flow_impact: { demand_id: demand.demand_id, impact_type: :api_not_ready, impact_description: 'foo bar', start_date: Time.zone.local(2019, 4, 2, 12, 38, 0), end_date: Time.zone.local(2019, 4, 2, 15, 38, 0) } }
+          post :create, params: { project_id: project.id, flow_impact: { demand_id: demand.external_id, impact_type: :api_not_ready, impact_description: 'foo bar', start_date: Time.zone.local(2019, 4, 2, 12, 38, 0), end_date: Time.zone.local(2019, 4, 2, 15, 38, 0) } }
 
           expect(response).to have_http_status :ok
 

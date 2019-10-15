@@ -10,11 +10,6 @@
 #  name        :string           not null, indexed => [customer_id]
 #  updated_at  :datetime         not null
 #
-# Indexes
-#
-#  index_products_on_customer_id           (customer_id)
-#  index_products_on_customer_id_and_name  (customer_id,name) UNIQUE
-#
 # Foreign Keys
 #
 #  fk_rails_252452a41b  (customer_id => customers.id)

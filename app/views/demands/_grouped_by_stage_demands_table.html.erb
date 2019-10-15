@@ -5,17 +5,17 @@
     <table class="table table-striped">
       <thead>
         <tr>
-          <th><%= I18n.t('activerecord.attributes.demand.demand_id') %></th>
+          <th><%= I18n.t('activerecord.attributes.demand.external_id') %></th>
           <th><%= I18n.t('demands.grouped_by_stage.time_in_stage') %></th>
           <th><%= I18n.t('demands.grouped_by_stage.hours_in_stage') %></th>
         </tr>
       </thead>
 
       <tbody>
-        <% demands_in_stage[:data].each do |demand_id, time| %>
+        <% demands_in_stage[:data].each do |external_id, time| %>
           <% if time.present? %>
             <tr>
-              <td><%= link_to demand_id, company_demand_path(company, demand_id) %></td>
+              <td><%= link_to external_id, company_demand_path(company, external_id) %></td>
               <td><%= time_distance_in_words(time) %></td>
               <td><%= number_with_precision((time / 1.hour), precision: 4) %></td>
             </tr>

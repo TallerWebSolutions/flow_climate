@@ -11,11 +11,6 @@
 #  name                 :string           not null, indexed => [company_id]
 #  updated_at           :datetime         not null
 #
-# Indexes
-#
-#  index_teams_on_company_id           (company_id)
-#  index_teams_on_company_id_and_name  (company_id,name) UNIQUE
-#
 # Foreign Keys
 #
 #  fk_rails_e080df8a94  (company_id => companies.id)

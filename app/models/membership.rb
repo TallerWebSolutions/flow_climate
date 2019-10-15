@@ -14,11 +14,6 @@
 #  team_member_id  :integer          not null, indexed
 #  updated_at      :datetime         not null
 #
-# Indexes
-#
-#  index_memberships_on_team_id         (team_id)
-#  index_memberships_on_team_member_id  (team_member_id)
-#
 # Foreign Keys
 #
 #  fk_rails_1138510838  (team_member_id => team_members.id)

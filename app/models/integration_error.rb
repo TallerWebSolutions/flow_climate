@@ -14,11 +14,6 @@
 #  project_id              :integer
 #  updated_at              :datetime         not null
 #
-# Indexes
-#
-#  index_integration_errors_on_company_id        (company_id)
-#  index_integration_errors_on_integration_type  (integration_type)
-#
 # Foreign Keys
 #
 #  fk_rails_3505c123da  (company_id => companies.id)

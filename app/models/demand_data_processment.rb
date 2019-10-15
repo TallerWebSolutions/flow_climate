@@ -12,10 +12,6 @@
 #  user_id            :integer          not null, indexed
 #  user_plan_id       :integer          not null
 #
-# Indexes
-#
-#  index_demand_data_processments_on_user_id  (user_id)
-#
 # Foreign Keys
 #
 #  fk_rails_1e9a84a8ab  (user_plan_id => user_plans.id)

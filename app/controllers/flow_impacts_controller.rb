@@ -7,7 +7,7 @@ class FlowImpactsController < AuthenticatedController
 
   def new
     @flow_impact = FlowImpact.new(project: @project)
-    @demands_for_impact_form = @project.demands.in_wip.order(:demand_id)
+    @demands_for_impact_form = @project.demands.in_wip.order(:external_id)
     assign_flow_impacts_list
     respond_to { |format| format.js { render 'flow_impacts/new' } }
   end
@@ -50,14 +50,14 @@ class FlowImpactsController < AuthenticatedController
 
   def demands_to_project
     project = @company.projects.find(params[:project_id])
-    @demands_to_project = project.demands.in_wip.order(:demand_id)
+    @demands_to_project = project.demands.in_wip.order(:external_id)
 
     respond_to { |format| format.js { render 'flow_impacts/demands_to_project' } }
   end
 
   def edit
     assign_flow_impacts_list
-    @demands_for_impact_form = @flow_impact.project.demands.in_wip.order(:demand_id)
+    @demands_for_impact_form = @flow_impact.project.demands.in_wip.order(:external_id)
     respond_to { |format| format.js { render 'flow_impacts/edit' } }
   end
 

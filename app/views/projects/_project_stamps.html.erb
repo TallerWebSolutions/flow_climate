@@ -117,7 +117,7 @@
     <% else %>
       <p><%= I18n.t('projects.show.inconsistent_demands.demands', value: inconsistent_demands.count ) %></p>
       <p>
-        <%= inconsistent_demands.map { |demand| link_to demand.demand_id, company_demand_url(company, demand) }.join(' | ')&.html_safe %>
+        <%= inconsistent_demands.map { |demand| link_to demand.external_id, company_demand_url(company, demand) }.join(' | ')&.html_safe %>
       </p>
     <% end %>
   </div>

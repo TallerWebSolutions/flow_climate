@@ -334,7 +334,7 @@ RSpec.describe DemandBlocksController, type: :controller do
           expect(csv.first[1]).to eq demand_block.block_time&.iso8601
           expect(csv.first[2]).to eq demand_block.unblock_time&.iso8601
           expect(csv.first[3].to_i).to eq 0
-          expect(csv.first[4]).to eq demand.demand_id
+          expect(csv.first[4]).to eq demand.external_id
         end
       end
 

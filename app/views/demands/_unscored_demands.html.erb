@@ -10,7 +10,7 @@
     <p>
       <%= unscored_demands.map do |demand| %>
         <% link_to '#', class: 'edit-demand-button', onclick: "editDemand(#{company.id}, #{demand.project_id}, #{demand.id}, null)" do %>
-          <span><%= demand.demand_id %></span>
+          <span><%= demand.external_id %></span>
           <span><i class="fas fa-edit"></i></span>
         <% end %>
       <% end.join(' | ')&.html_safe %>

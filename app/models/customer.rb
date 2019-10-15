@@ -12,11 +12,6 @@
 #  projects_count :integer          default(0)
 #  updated_at     :datetime         not null
 #
-# Indexes
-#
-#  index_customers_on_company_id           (company_id)
-#  index_customers_on_company_id_and_name  (company_id,name) UNIQUE
-#
 # Foreign Keys
 #
 #  fk_rails_ef51a916ef  (company_id => companies.id)

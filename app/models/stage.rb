@@ -18,11 +18,6 @@
 #  stage_type          :integer          default("backlog"), not null
 #  updated_at          :datetime         not null
 #
-# Indexes
-#
-#  index_stages_on_integration_id  (integration_id)
-#  index_stages_on_name            (name)
-#
 # Foreign Keys
 #
 #  fk_rails_ffd4cca0d4  (company_id => companies.id)

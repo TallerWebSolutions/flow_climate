@@ -45,7 +45,7 @@ class DemandsController < AuthenticatedController
     demands = Demand.where(id: params[:demands_ids])
     @demands_ids = demands.map(&:id)
     @updated_demand = Demand.find(@demand.id)
-    @unscored_demands = @project.demands.unscored_demands.order(demand_id: :asc)
+    @unscored_demands = @project.demands.unscored_demands.order(external_id: :asc)
 
     respond_to { |format| format.js { render 'demands/update' } }
   end
@@ -64,14 +64,14 @@ class DemandsController < AuthenticatedController
   def synchronize_jira
     jira_account = @company.jira_accounts.first
     demand_url = company_project_demand_url(@demand.project.company, @demand.project, @demand)
-    Jira::ProcessJiraIssueJob.perform_later(jira_account, @project, @demand.demand_id, current_user.email, current_user.full_name, demand_url)
+    Jira::ProcessJiraIssueJob.perform_later(jira_account, @project, @demand.external_id, current_user.email, current_user.full_name, demand_url)
     flash[:notice] = I18n.t('general.enqueued')
     redirect_to company_demand_path(@company, @demand)
   end
 
   def demands_csv
     @demands_in_csv = Demand.where(id: params['demands_ids'].split(',')).kept.order(end_date: :desc)
-    attributes = %w[id current_stage project_id demand_id demand_title demand_type class_of_service business_score effort_downstream effort_upstream created_date commitment_date end_date]
+    attributes = %w[id current_stage project_id external_id demand_title demand_type class_of_service business_score effort_downstream effort_upstream created_date commitment_date end_date]
     demands_csv = CSV.generate(headers: true) do |csv|
       csv << attributes
       @demands_in_csv.each { |demand| csv << demand.csv_array }
@@ -143,7 +143,7 @@ class DemandsController < AuthenticatedController
   end
 
   def demand_params
-    params.require(:demand).permit(:team_id, :demand_id, :demand_type, :downstream, :manual_effort, :class_of_service, :effort_upstream, :effort_downstream, :created_date, :commitment_date, :end_date, :business_score)
+    params.require(:demand).permit(:team_id, :external_id, :demand_type, :downstream, :manual_effort, :class_of_service, :effort_upstream, :effort_downstream, :created_date, :commitment_date, :end_date, :business_score, :external_url)
   end
 
   def assign_project
@@ -212,7 +212,7 @@ class DemandsController < AuthenticatedController
   def filter_text(demands_list)
     return demands_list.includes(:project) if params[:search_text].blank?
 
-    demands_list.includes(:project).joins(:project).where('demands.demand_title ILIKE :search_param OR demands.demand_id ILIKE :search_param OR projects.name ILIKE :search_param', search_param: "%#{params[:search_text].downcase}%")
+    demands_list.includes(:project).joins(:project).where('demands.demand_title ILIKE :search_param OR demands.external_id ILIKE :search_param OR projects.name ILIKE :search_param', search_param: "%#{params[:search_text].downcase}%")
   end
 
   def assign_consolidations

@@ -104,7 +104,7 @@ RSpec.describe WebhookIntegrationsController, type: :controller do
         let!(:jira_project_config) { Fabricate :jira_project_config, project: project, jira_product_config: jira_product_config, fix_version_name: 'foo' }
 
         context 'when the demand exists' do
-          let!(:demand) { Fabricate :demand, project: project, demand_id: '10000' }
+          let!(:demand) { Fabricate :demand, project: project, external_id: '10000' }
 
           it 'deletes the demand' do
             request.headers['Content-Type'] = 'application/json'

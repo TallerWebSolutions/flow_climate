@@ -4,12 +4,12 @@
   <div class="col-xs-6">
     <div class="row-fluid">
       <div class="col-xs-12">
-        <span><%= Demand.human_attribute_name :demand_id %></span>
+        <span><%= Demand.human_attribute_name :external_id %></span>
         <h3>
-          <%= demand.demand_id %>
-          <% if demand.url.present? %>
-            <%= link_to demand.url, target: :_blank do %>
-              <i class="fas fa-external-link-alt" title="<%= I18n.t('activerecord.attributes.demand.url') %>"></i>
+          <%= demand.external_id %>
+          <% if demand.external_url.present? %>
+            <%= link_to demand.external_url, target: :_blank do %>
+              <i class="fas fa-external-link-alt" title="<%= I18n.t('activerecord.attributes.demand.external_url') %>"></i>
             <% end %>
           <% end %>
         </h3>

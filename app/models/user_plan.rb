@@ -16,11 +16,6 @@
 #  updated_at          :datetime         not null
 #  user_id             :integer          not null, indexed
 #
-# Indexes
-#
-#  index_user_plans_on_plan_id  (plan_id)
-#  index_user_plans_on_user_id  (user_id)
-#
 # Foreign Keys
 #
 #  fk_rails_406c835a0f  (plan_id => plans.id)

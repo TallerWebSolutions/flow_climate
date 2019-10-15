@@ -27,7 +27,7 @@ module Jira
     end
 
     def show
-      @jira_custom_field_mappings = @jira_account.jira_custom_field_mappings.order(:demand_field)
+      @jira_custom_field_mappings = @jira_account.jira_custom_field_mappings.order(:custom_field_type)
     end
 
     private
