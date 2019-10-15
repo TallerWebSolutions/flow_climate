@@ -6,7 +6,7 @@ module Api
       before_action :assigns_project
 
       def create
-        @demand = @company.demands.find_by(demand_id: flow_impact_params[:demand_id])
+        @demand = @company.demands.find_by(external_id: flow_impact_params[:demand_id])
         @flow_impact = FlowImpact.new(flow_impact_params.merge(project: @project, demand: @demand))
 
         if @flow_impact.save

@@ -55,7 +55,7 @@ RSpec.describe Api::V1::TeamsController, type: :controller do
 
           expect(response).to have_http_status :ok
           expect(JSON.parse(response.body)['data'][0]['id']).to eq demand.id
-          expect(JSON.parse(response.body)['data'][0]['demand_id']).to eq demand.demand_id
+          expect(JSON.parse(response.body)['data'][0]['external_id']).to eq demand.external_id
         end
       end
     end
@@ -108,7 +108,7 @@ RSpec.describe Api::V1::TeamsController, type: :controller do
 
             expect(response).to have_http_status :ok
             expect(JSON.parse(response.body)['data'].map { |demand| demand['id'] }).to match_array [first_demand.id, third_demand.id]
-            expect(JSON.parse(response.body)['data'].map { |demand| demand['demand_id'] }).to match_array [first_demand.demand_id, third_demand.demand_id]
+            expect(JSON.parse(response.body)['data'].map { |demand| demand['external_id'] }).to match_array [first_demand.external_id, third_demand.external_id]
           end
         end
 

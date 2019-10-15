@@ -22,10 +22,6 @@
 #  updated_at                :datetime         not null
 #  value                     :decimal(, )
 #
-# Indexes
-#
-#  index_projects_on_company_id_and_name  (company_id,name) UNIQUE
-#
 # Foreign Keys
 #
 #  fk_rails_44a549d7b3  (company_id => companies.id)

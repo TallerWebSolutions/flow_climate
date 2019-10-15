@@ -14,12 +14,6 @@
 #  updated_at             :datetime         not null
 #  username               :string           not null
 #
-# Indexes
-#
-#  index_jira_accounts_on_base_uri         (base_uri) UNIQUE
-#  index_jira_accounts_on_company_id       (company_id)
-#  index_jira_accounts_on_customer_domain  (customer_domain) UNIQUE
-#
 # Foreign Keys
 #
 #  fk_rails_b16d2de302  (company_id => companies.id)
@@ -36,11 +30,11 @@ module Jira
     validates :customer_domain, :base_uri, uniqueness: true
 
     def responsibles_custom_field
-      jira_custom_field_mappings.find_by(demand_field: :responsibles)
+      jira_custom_field_mappings.find_by(custom_field_type: :responsibles)
     end
 
     def class_of_service_custom_field
-      jira_custom_field_mappings.find_by(demand_field: :class_of_service)
+      jira_custom_field_mappings.find_by(custom_field_type: :class_of_service)
     end
   end
 end

@@ -11,10 +11,6 @@
 #  max_flow_pressure            :decimal(, )      not null
 #  updated_at                   :datetime         not null
 #
-# Indexes
-#
-#  index_company_settings_on_company_id  (company_id)
-#
 # Foreign Keys
 #
 #  fk_rails_6434bf6768  (company_id => companies.id)

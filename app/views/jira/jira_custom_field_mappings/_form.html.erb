@@ -1,10 +1,10 @@
 <div class="standard-form">
 
   <div class="row">
-    <div class='col-xs-6 form-group <%= 'has-error' if jira_custom_field_mapping.errors[:demand_field].present? %>'>
-      <%= f.label :demand_field, class: 'control-label' %>
-      <%= f.select :demand_field, Jira::JiraCustomFieldMapping.demand_fields.map { |key, _value| [I18n.t("activerecord.attributes.jira/jira_custom_field_mapping.enums.demand_field.#{key}"), key] }, { selected: jira_custom_field_mapping.demand_field }, class: 'form-control' %>
-      <span class="help-block"><%= jira_custom_field_mapping.errors[:demand_field].join(', ') %></span>
+    <div class='col-xs-6 form-group <%= 'has-error' if jira_custom_field_mapping.errors[:custom_field_type].present? %>'>
+      <%= f.label :custom_field_type, class: 'control-label' %>
+      <%= f.select :custom_field_type, Jira::JiraCustomFieldMapping.custom_field_types.map { |key, _value| [I18n.t("activerecord.attributes.jira/jira_custom_field_mapping.enums.custom_field_type.#{key}"), key] }, { selected: jira_custom_field_mapping.custom_field_type }, class: 'form-control' %>
+      <span class="help-block"><%= jira_custom_field_mapping.errors[:custom_field_type].join(', ') %></span>
     </div>
 
       <div class='col-xs-6 form-group <%= 'has-error' if jira_custom_field_mapping.errors[:custom_field_machine_name].present? %>'>

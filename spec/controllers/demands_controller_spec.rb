@@ -126,12 +126,12 @@ RSpec.describe DemandsController, type: :controller do
         let(:date_to_demand) { 1.day.ago.change(usec: 0) }
 
         it 'creates the new demand and redirects' do
-          post :create, params: { company_id: company, project_id: project, demand: { team_id: team, demand_id: 'xpto', demand_type: 'bug', manual_effort: true, class_of_service: 'expedite', assignees_count: 3, effort_upstream: 5, effort_downstream: 2, created_date: date_to_demand, commitment_date: date_to_demand, end_date: date_to_demand, business_score: 10.5 } }
+          post :create, params: { company_id: company, project_id: project, demand: { team_id: team, external_id: 'xpto', demand_type: 'bug', manual_effort: true, class_of_service: 'expedite', assignees_count: 3, effort_upstream: 5, effort_downstream: 2, created_date: date_to_demand, commitment_date: date_to_demand, end_date: date_to_demand, business_score: 10.5 } }
 
           expect(assigns(:company)).to eq company
           expect(assigns(:project)).to eq project
           created_demand = Demand.last
-          expect(created_demand.demand_id).to eq 'xpto'
+          expect(created_demand.external_id).to eq 'xpto'
           expect(created_demand.demand_type).to eq 'bug'
           expect(created_demand.class_of_service).to eq 'expedite'
           expect(created_demand.business_score).to eq 10.5
@@ -181,7 +181,7 @@ RSpec.describe DemandsController, type: :controller do
 
     describe 'DELETE #destroy' do
       let(:project) { Fabricate :project, customers: [customer], products: [product] }
-      let!(:first_demand) { Fabricate :demand, project: project, demand_id: 'hhh', demand_title: 'foo', demand_type: :feature, class_of_service: :standard, created_date: 2.days.ago, commitment_date: nil, end_date: nil, effort_downstream: 20, effort_upstream: 0 }
+      let!(:first_demand) { Fabricate :demand, project: project, external_id: 'hhh', demand_title: 'foo', demand_type: :feature, class_of_service: :standard, created_date: 2.days.ago, commitment_date: nil, end_date: nil, effort_downstream: 20, effort_upstream: 0 }
       let!(:second_demand) { Fabricate :demand, project: project, demand_title: 'foo bar', demand_type: :bug, class_of_service: :expedite, created_date: 1.day.ago, commitment_date: Time.zone.today, end_date: nil, effort_downstream: 0, effort_upstream: 0 }
       let!(:third_demand) { Fabricate :demand, project: project, demand_title: 'bar foo', demand_type: :feature, class_of_service: :intangible, created_date: 5.days.ago, commitment_date: 4.days.ago, end_date: 1.day.ago, effort_downstream: 0, effort_upstream: 10 }
       let!(:fourth_demand) { Fabricate :demand, project: project, demand_title: 'xpto', demand_type: :chore, class_of_service: :standard, created_date: 10.days.ago, commitment_date: 5.days.ago, end_date: Time.zone.today, effort_downstream: 0, effort_upstream: 0 }
@@ -293,9 +293,9 @@ RSpec.describe DemandsController, type: :controller do
 
       context 'passing valid parameters' do
         it 'updates the demand and redirects to projects index' do
-          put :update, params: { company_id: company, project_id: project, id: demand, demands_ids: Demand.all.map(&:id), demand: { demand_id: 'xpto', demand_type: 'bug', manual_effort: true, class_of_service: 'expedite', effort_upstream: 5, effort_downstream: 2, created_date: created_date, commitment_date: created_date, end_date: end_date, business_score: 10.5 } }, xhr: true
+          put :update, params: { company_id: company, project_id: project, id: demand, demands_ids: Demand.all.map(&:id), demand: { external_id: 'xpto', demand_type: 'bug', manual_effort: true, class_of_service: 'expedite', effort_upstream: 5, effort_downstream: 2, created_date: created_date, commitment_date: created_date, end_date: end_date, business_score: 10.5 } }, xhr: true
           updated_demand = Demand.last
-          expect(updated_demand.demand_id).to eq 'xpto'
+          expect(updated_demand.external_id).to eq 'xpto'
           expect(updated_demand.demand_type).to eq 'bug'
           expect(updated_demand.downstream_demand?).to be true
           expect(updated_demand.manual_effort).to be true
@@ -319,7 +319,7 @@ RSpec.describe DemandsController, type: :controller do
 
         context 'demand parameters' do
           it 'does not update the demand and re-render the template with the errors' do
-            put :update, params: { company_id: company, project_id: project, id: demand, demands_ids: Demand.all.map(&:id), demand: { demand_id: '', demand_type: '', effort: nil, created_date: nil, commitment_date: nil, end_date: nil } }, xhr: true
+            put :update, params: { company_id: company, project_id: project, id: demand, demands_ids: Demand.all.map(&:id), demand: { external_id: '', demand_type: '', effort: nil, created_date: nil, commitment_date: nil, end_date: nil } }, xhr: true
             expect(response).to render_template 'demands/update'
             expect(assigns(:demand).errors.full_messages).to match_array ['Data de Criação não pode ficar em branco', 'Id da Demanda não pode ficar em branco', 'Tipo da Demanda não pode ficar em branco']
           end
@@ -489,7 +489,7 @@ RSpec.describe DemandsController, type: :controller do
           expect(csv.first[0].to_i).to eq demand.id
           expect(csv.first[1]).to eq demand.current_stage&.name
           expect(csv.first[2].to_i).to eq demand.project_id
-          expect(csv.first[3]).to eq demand.demand_id
+          expect(csv.first[3]).to eq demand.external_id
           expect(csv.first[4]).to eq demand.demand_title
           expect(csv.first[5]).to eq 'feature'
           expect(csv.first[6]).to eq 'standard'
@@ -601,7 +601,7 @@ RSpec.describe DemandsController, type: :controller do
 
       context 'passing valid parameters' do
         context 'having data' do
-          let!(:first_demand) { Fabricate :demand, project: first_project, demand_id: 'hhh', demand_title: 'foo', demand_type: :feature, class_of_service: :standard, created_date: 2.days.ago, commitment_date: nil, end_date: nil, effort_downstream: 20, effort_upstream: 0 }
+          let!(:first_demand) { Fabricate :demand, project: first_project, external_id: 'hhh', demand_title: 'foo', demand_type: :feature, class_of_service: :standard, created_date: 2.days.ago, commitment_date: nil, end_date: nil, effort_downstream: 20, effort_upstream: 0 }
           let!(:second_demand) { Fabricate :demand, project: first_project, demand_title: 'foo bar', demand_type: :bug, class_of_service: :expedite, created_date: 1.day.ago, commitment_date: Time.zone.today, end_date: nil, effort_downstream: 0, effort_upstream: 0 }
           let!(:third_demand) { Fabricate :demand, project: first_project, demand_title: 'bar foo', demand_type: :feature, class_of_service: :intangible, created_date: 5.days.ago, commitment_date: 4.days.ago, end_date: 1.day.ago, effort_downstream: 0, effort_upstream: 10 }
           let!(:fourth_demand) { Fabricate :demand, project: first_project, demand_title: 'xpto', demand_type: :chore, class_of_service: :standard, created_date: 10.days.ago, commitment_date: 5.days.ago, end_date: Time.zone.today, effort_downstream: 0, effort_upstream: 0 }

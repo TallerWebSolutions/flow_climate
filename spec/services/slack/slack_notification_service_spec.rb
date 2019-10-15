@@ -52,7 +52,7 @@ RSpec.describe Slack::SlackNotificationService, type: :service do
     describe '#notify_last_week_delivered_demands_info' do
       it 'calls slack notification method' do
         expect_any_instance_of(Slack::Notifier).to receive(:ping).with("> *#{team.name}* | Throughput: *1 demanda(s)* na semana passada.").once
-        expect_any_instance_of(Slack::Notifier).to receive(:ping).with("> *#{first_demand.demand_id}* #{first_demand.demand_title} | *Responsáveis:*  | *Custo pro Projeto:* #{number_to_currency(first_demand.cost_to_project)}").once
+        expect_any_instance_of(Slack::Notifier).to receive(:ping).with("> *#{first_demand.external_id}* #{first_demand.demand_title} | *Responsáveis:*  | *Custo pro Projeto:* #{number_to_currency(first_demand.cost_to_project)}").once
 
         described_class.instance.notify_last_week_delivered_demands_info(first_slack_notifier, team)
       end
@@ -61,7 +61,7 @@ RSpec.describe Slack::SlackNotificationService, type: :service do
     describe '#notify_wip_demands' do
       it 'calls slack notification method' do
         expect_any_instance_of(Slack::Notifier).to receive(:ping).with("> *#{team.name}* | Trabalho em progresso: 1 demanda(s).").once
-        expect_any_instance_of(Slack::Notifier).to receive(:ping).with("> *#{eighth_demand.demand_id}* #{eighth_demand.demand_title} | *Responsáveis:*  | *Custo pro Projeto:* #{number_to_currency(eighth_demand.cost_to_project)} | *Etapa atual:* #{stage.name} | *Tempo na Etapa:* 3 dias | *% Fluxo Concluído*: 100,00%").once
+        expect_any_instance_of(Slack::Notifier).to receive(:ping).with("> *#{eighth_demand.external_id}* #{eighth_demand.demand_title} | *Responsáveis:*  | *Custo pro Projeto:* #{number_to_currency(eighth_demand.cost_to_project)} | *Etapa atual:* #{stage.name} | *Tempo na Etapa:* 3 dias | *% Fluxo Concluído*: 100,00%").once
 
         described_class.instance.notify_wip_demands(first_slack_notifier, team)
       end
@@ -70,7 +70,7 @@ RSpec.describe Slack::SlackNotificationService, type: :service do
     describe '#notify_beyond_expected_time_in_stage' do
       it 'calls slack notification method' do
         expect_any_instance_of(Slack::Notifier).to receive(:ping).with(I18n.t('slack_configurations.notifications.beyond_expected_title', team_name: team.name, beyond_expected_count: 1)).once
-        expect_any_instance_of(Slack::Notifier).to receive(:ping).with("> *#{eighth_demand.demand_id}* #{eighth_demand.demand_title} | *Etapa atual:* #{stage.name} | *Tempo na Etapa:* 3 dias").once
+        expect_any_instance_of(Slack::Notifier).to receive(:ping).with("> *#{eighth_demand.external_id}* #{eighth_demand.demand_title} | *Etapa atual:* #{stage.name} | *Tempo na Etapa:* 3 dias").once
 
         described_class.instance.notify_beyond_expected_time_in_stage(first_slack_notifier, team)
       end

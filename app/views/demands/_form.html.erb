@@ -19,10 +19,10 @@
   </div>
 
   <div class="row">
-    <div class='col-xs-6 form-group <%= 'has-error' if demand.errors[:demand_id].present? %>'>
-      <%= form.label :demand_id, class: 'control-label required' %>
-      <%= form.text_field :demand_id, class: 'form-control', autofocus: true %>
-      <span class="help-block"><%= demand.errors[:demand_id].join(', ') %></span>
+    <div class='col-xs-6 form-group <%= 'has-error' if demand.errors[:external_id].present? %>'>
+      <%= form.label :external_id, class: 'control-label required' %>
+      <%= form.text_field :external_id, class: 'form-control', autofocus: true %>
+      <span class="help-block"><%= demand.errors[:external_id].join(', ') %></span>
     </div>
 
     <div class='col-xs-6 form-group <%= 'has-error' if demand.errors[:business_score].present? %>'>
@@ -68,8 +68,8 @@
       <span class="help-block"><%= demand.errors[:end_date].join(', ') %></span>
     </div>
     <div class='col-xs-6 form-group'>
-      <%= form.label :url, class: 'control-label required' %>
-      <%= form.text_field :url, class: 'form-control' %>
+      <%= form.label :external_url, class: 'control-label required' %>
+      <%= form.text_field :external_url, class: 'form-control' %>
     </div>
   </div>
 

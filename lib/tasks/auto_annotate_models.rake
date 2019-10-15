@@ -9,7 +9,9 @@ if Rails.env.development?
     # You can override any of these by setting an environment variable of the
     # same name.
     Annotate.set_defaults(
+      'additional_file_patterns' => [],
       'routes' => 'false',
+      'models' => 'false',
       'position_in_routes' => 'before',
       'position_in_class' => 'before',
       'position_in_test' => 'before',
@@ -17,9 +19,9 @@ if Rails.env.development?
       'position_in_factory' => 'before',
       'position_in_serializer' => 'before',
       'show_foreign_keys' => 'true',
-      'show_complete_foreign_keys' => 'true',
+      'show_complete_foreign_keys' => 'false',
       'show_indexes' => 'true',
-      'simple_indexes' => 'true',
+      'simple_indexes' => 'false',
       'model_dir' => 'app/models',
       'root_dir' => '',
       'include_version' => 'false',
@@ -36,18 +38,20 @@ if Rails.env.development?
       'ignore_columns' => nil,
       'ignore_routes' => nil,
       'ignore_unknown_models' => 'false',
-      'hide_limit_column_types' => 'integer,boolean',
+      'hide_limit_column_types' => 'integer,bigint,boolean',
       'hide_default_column_types' => 'json,jsonb,hstore',
       'skip_on_db_migrate' => 'false',
       'format_bare' => 'true',
       'format_rdoc' => 'false',
       'format_markdown' => 'false',
-      'sort' => 'true',
+      'sort' => 'false',
       'force' => 'false',
+      'frozen' => 'false',
+      'classified_sort' => 'true',
       'trace' => 'false',
       'wrapper_open' => nil,
       'wrapper_close' => nil,
-      'with_comment' => true
+      'with_comment' => 'true'
     )
   end
 

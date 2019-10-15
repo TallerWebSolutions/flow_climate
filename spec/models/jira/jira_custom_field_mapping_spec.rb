@@ -2,7 +2,7 @@
 
 RSpec.describe Jira::JiraCustomFieldMapping, type: :model do
   context 'enums' do
-    it { is_expected.to define_enum_for(:demand_field).with_values(class_of_service: 0, responsibles: 1) }
+    it { is_expected.to define_enum_for(:custom_field_type).with_values(class_of_service: 0, responsibles: 1) }
   end
 
   context 'associations' do
@@ -11,27 +11,27 @@ RSpec.describe Jira::JiraCustomFieldMapping, type: :model do
 
   context 'validations' do
     context 'complex ones' do
-      context 'demand_field uniqueness' do
+      context 'custom_field_type uniqueness' do
         let!(:jira_account) { Fabricate :jira_account }
-        let!(:jira_custom_field_mapping) { Fabricate :jira_custom_field_mapping, jira_account: jira_account, demand_field: :responsibles }
+        let!(:jira_custom_field_mapping) { Fabricate :jira_custom_field_mapping, jira_account: jira_account, custom_field_type: :responsibles }
 
-        context 'same demand_field in same jira account' do
-          let!(:other_custom_field) { Fabricate.build :jira_custom_field_mapping, jira_account: jira_account, demand_field: :responsibles }
+        context 'same custom_field_type in same jira account' do
+          let!(:other_custom_field) { Fabricate.build :jira_custom_field_mapping, jira_account: jira_account, custom_field_type: :responsibles }
 
           it 'does not accept the model' do
             expect(other_custom_field.valid?).to be false
-            expect(other_custom_field.errors[:demand_field]).to eq [I18n.t('jira_custom_field_mapping.uniqueness.demand_field')]
+            expect(other_custom_field.errors[:custom_field_type]).to eq [I18n.t('jira_custom_field_mapping.uniqueness.custom_field_type')]
           end
         end
 
-        context 'other demand_field in same jira_account' do
-          let!(:other_custom_field) { Fabricate.build :jira_custom_field_mapping, jira_account: jira_account, demand_field: :class_of_service }
+        context 'other custom_field_type in same jira_account' do
+          let!(:other_custom_field) { Fabricate.build :jira_custom_field_mapping, jira_account: jira_account, custom_field_type: :class_of_service }
 
           it { expect(other_custom_field.valid?).to be true }
         end
 
-        context 'same demand_field in different jira_account' do
-          let!(:other_custom_field) { Fabricate.build :jira_custom_field_mapping, demand_field: :responsibles }
+        context 'same custom_field_type in different jira_account' do
+          let!(:other_custom_field) { Fabricate.build :jira_custom_field_mapping, custom_field_type: :responsibles }
 
           it { expect(other_custom_field.valid?).to be true }
         end
@@ -41,7 +41,7 @@ RSpec.describe Jira::JiraCustomFieldMapping, type: :model do
     context 'simple ones' do
       it { is_expected.to validate_presence_of :jira_account }
       it { is_expected.to validate_presence_of :custom_field_machine_name }
-      it { is_expected.to validate_presence_of :demand_field }
+      it { is_expected.to validate_presence_of :custom_field_type }
     end
   end
 end

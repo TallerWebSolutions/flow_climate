@@ -13,12 +13,6 @@
 #  slug            :string           indexed
 #  updated_at      :datetime         not null
 #
-# Indexes
-#
-#  index_companies_on_abbreviation  (abbreviation) UNIQUE
-#  index_companies_on_api_token     (api_token) UNIQUE
-#  index_companies_on_slug          (slug) UNIQUE
-#
 
 class Company < ApplicationRecord
   extend FriendlyId

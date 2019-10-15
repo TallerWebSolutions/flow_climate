@@ -17,7 +17,7 @@ class ProjectsController < AuthenticatedController
     @ordered_project_risk_alerts = @project.project_risk_alerts.order(created_at: :desc)
     @project_change_deadline_histories = @project.project_change_deadline_histories.includes(:user)
     @inconsistent_demands = @project.demands.dates_inconsistent_to_project(@project)
-    @unscored_demands = @project.demands.unscored_demands.order(demand_id: :asc)
+    @unscored_demands = @project.demands.unscored_demands.order(external_id: :asc)
   end
 
   def index

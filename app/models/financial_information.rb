@@ -12,10 +12,6 @@
 #  income_total   :decimal(, )      not null
 #  updated_at     :datetime         not null
 #
-# Indexes
-#
-#  index_financial_informations_on_company_id  (company_id)
-#
 # Foreign Keys
 #
 #  fk_rails_573f757bcf  (company_id => companies.id)

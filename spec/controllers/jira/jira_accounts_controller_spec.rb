@@ -145,8 +145,8 @@ RSpec.describe Jira::JiraAccountsController, type: :controller do
 
     describe 'GET #show' do
       let(:jira_account) { Fabricate :jira_account, company: company }
-      let!(:jira_custom_field_mapping) { Fabricate :jira_custom_field_mapping, jira_account: jira_account, demand_field: :class_of_service }
-      let!(:other_jira_custom_field_mapping) { Fabricate :jira_custom_field_mapping, jira_account: jira_account, demand_field: :responsibles }
+      let!(:jira_custom_field_mapping) { Fabricate :jira_custom_field_mapping, jira_account: jira_account, custom_field_type: :class_of_service }
+      let!(:other_jira_custom_field_mapping) { Fabricate :jira_custom_field_mapping, jira_account: jira_account, custom_field_type: :responsibles }
 
       context 'valid parameters' do
         it 'assigns the instance variable and renders the template' do

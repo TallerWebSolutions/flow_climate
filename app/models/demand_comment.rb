@@ -13,10 +13,6 @@
 #  team_member_id :integer
 #  updated_at     :datetime         not null
 #
-# Indexes
-#
-#  index_demand_comments_on_demand_id  (demand_id)
-#
 # Foreign Keys
 #
 #  fk_rails_b68ee35cab  (team_member_id => team_members.id)

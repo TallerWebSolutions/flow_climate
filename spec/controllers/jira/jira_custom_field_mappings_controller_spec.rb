@@ -75,19 +75,19 @@ RSpec.describe Jira::JiraCustomFieldMappingsController, type: :controller do
       let!(:end_date) { 1.day.ago }
 
       context 'passing valid parameters' do
-        before { post :create, params: { company_id: company, jira_account_id: jira_account, jira_jira_custom_field_mapping: { demand_field: 'class_of_service', custom_field_machine_name: 'custom_10040' } }, xhr: true }
+        before { post :create, params: { company_id: company, jira_account_id: jira_account, jira_jira_custom_field_mapping: { custom_field_type: 'class_of_service', custom_field_machine_name: 'custom_10040' } }, xhr: true }
 
         it 'creates the new jira custom field mapping and renders the template' do
           expect(response).to render_template 'jira/jira_custom_field_mappings/create'
           expect(assigns(:jira_custom_field_mapping).errors.full_messages).to eq []
           expect(assigns(:jira_custom_field_mapping)).to be_persisted
-          expect(assigns(:jira_custom_field_mapping).demand_field).to eq 'class_of_service'
+          expect(assigns(:jira_custom_field_mapping).custom_field_type).to eq 'class_of_service'
           expect(assigns(:jira_custom_field_mapping).custom_field_machine_name).to eq 'custom_10040'
         end
       end
 
       context 'passing invalid parameters' do
-        before { post :create, params: { company_id: company, jira_account_id: jira_account, jira_jira_custom_field_mapping: { demand_field: nil, custom_field_machine_name: nil } }, xhr: true }
+        before { post :create, params: { company_id: company, jira_account_id: jira_account, jira_jira_custom_field_mapping: { custom_field_type: nil, custom_field_machine_name: nil } }, xhr: true }
 
         it 'does not create the jira custom field and re-render the template with the errors' do
           expect(Jira::JiraCustomFieldMapping.all.count).to eq 0
@@ -143,18 +143,18 @@ RSpec.describe Jira::JiraCustomFieldMappingsController, type: :controller do
       let!(:jira_custom_field_mapping) { Fabricate :jira_custom_field_mapping, jira_account: jira_account }
 
       context 'passing valid parameters' do
-        before { put :update, params: { company_id: company, jira_account_id: jira_account, id: jira_custom_field_mapping, jira_jira_custom_field_mapping: { demand_field: 'class_of_service', custom_field_machine_name: 'custom_10040' } }, xhr: true }
+        before { put :update, params: { company_id: company, jira_account_id: jira_account, id: jira_custom_field_mapping, jira_jira_custom_field_mapping: { custom_field_type: 'class_of_service', custom_field_machine_name: 'custom_10040' } }, xhr: true }
 
         it 'updates the jira custom field mapping and renders the template' do
           expect(response).to render_template 'jira/jira_custom_field_mappings/update'
-          expect(assigns(:jira_custom_field_mapping).demand_field).to eq 'class_of_service'
+          expect(assigns(:jira_custom_field_mapping).custom_field_type).to eq 'class_of_service'
           expect(assigns(:jira_custom_field_mapping).custom_field_machine_name).to eq 'custom_10040'
         end
       end
 
       context 'passing invalid' do
         context 'jira custom field mapping parameters' do
-          before { put :update, params: { company_id: company, jira_account_id: jira_account, id: jira_custom_field_mapping, jira_jira_custom_field_mapping: { demand_field: nil, custom_field_machine_name: nil } }, xhr: true }
+          before { put :update, params: { company_id: company, jira_account_id: jira_account, id: jira_custom_field_mapping, jira_jira_custom_field_mapping: { custom_field_type: nil, custom_field_machine_name: nil } }, xhr: true }
 
           it 'does not update the jira custom field mapping and re-render the template with the errors' do
             expect(response).to render_template 'jira/jira_custom_field_mappings/update'
@@ -163,7 +163,7 @@ RSpec.describe Jira::JiraCustomFieldMappingsController, type: :controller do
         end
 
         context 'non-existent jira custom field mapping' do
-          before { put :update, params: { company_id: company, jira_account_id: jira_account, id: 'foo', jira_custom_field_mapping: { demand_field: 'class_of_service', custom_field_machine_name: 'custom_10040' } }, xhr: true }
+          before { put :update, params: { company_id: company, jira_account_id: jira_account, id: 'foo', jira_custom_field_mapping: { custom_field_type: 'class_of_service', custom_field_machine_name: 'custom_10040' } }, xhr: true }
 
           it { expect(response).to have_http_status :not_found }
         end
@@ -171,7 +171,7 @@ RSpec.describe Jira::JiraCustomFieldMappingsController, type: :controller do
         context 'unpermitted company' do
           let(:company) { Fabricate :company, users: [] }
 
-          before { put :update, params: { company_id: company, jira_account_id: jira_account, id: jira_custom_field_mapping, jira_jira_custom_field_mapping: { demand_field: 'class_of_service', custom_field_machine_name: 'custom_10040' } }, xhr: true }
+          before { put :update, params: { company_id: company, jira_account_id: jira_account, id: jira_custom_field_mapping, jira_jira_custom_field_mapping: { custom_field_type: 'class_of_service', custom_field_machine_name: 'custom_10040' } }, xhr: true }
 
           it { expect(response).to have_http_status :not_found }
         end

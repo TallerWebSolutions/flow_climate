@@ -12,12 +12,6 @@
 #  product_id              :integer          not null, indexed => [meeting_date], indexed
 #  updated_at              :datetime         not null
 #
-# Indexes
-#
-#  index_risk_reviews_on_company_id                   (company_id)
-#  index_risk_reviews_on_meeting_date_and_product_id  (meeting_date,product_id) UNIQUE
-#  index_risk_reviews_on_product_id                   (product_id)
-#
 # Foreign Keys
 #
 #  fk_rails_0e13c6d551  (company_id => companies.id)

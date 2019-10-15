@@ -13,12 +13,6 @@
 #  stage_id      :integer          not null, indexed
 #  updated_at    :datetime         not null
 #
-# Indexes
-#
-#  index_demand_transitions_on_demand_id     (demand_id)
-#  index_demand_transitions_on_discarded_at  (discarded_at)
-#  index_demand_transitions_on_stage_id      (stage_id)
-#
 # Foreign Keys
 #
 #  fk_rails_2a5bc4c3f8  (demand_id => demands.id)

@@ -25,11 +25,6 @@
 #  updated_at             :datetime         not null
 #  user_money_credits     :decimal(, )      default(0.0), not null
 #
-# Indexes
-#
-#  index_users_on_email                 (email) UNIQUE
-#  index_users_on_reset_password_token  (reset_password_token) UNIQUE
-#
 # Foreign Keys
 #
 #  fk_rails_971bf2d9a1  (last_company_id => companies.id)

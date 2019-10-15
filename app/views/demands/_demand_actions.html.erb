@@ -8,8 +8,8 @@
   <i class="fas fa-edit"></i>
 <% end %>
 
-<% if demand.url.present? %>
-  <%= link_to demand.url, target: :_blank do %>
+<% if demand.external_url.present? %>
+  <%= link_to demand.external_url, target: :_blank do %>
     <i class="fas fa-external-link-alt"></i>
   <% end %>
 <% end %>

@@ -21,10 +21,6 @@
 #  unblocker_id   :integer
 #  updated_at     :datetime         not null
 #
-# Indexes
-#
-#  index_demand_blocks_on_demand_id  (demand_id)
-#
 # Foreign Keys
 #
 #  fk_rails_0c8fa8d3a7  (demand_id => demands.id)
@@ -62,7 +58,7 @@ class DemandBlock < ApplicationRecord
       block_time&.iso8601,
       unblock_time&.iso8601,
       block_duration,
-      demand.demand_id
+      demand.external_id
     ]
   end
 

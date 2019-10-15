@@ -15,11 +15,6 @@
 #  updated_at          :datetime         not null
 #  weekday_to_notify   :integer          default("all_weekdays"), not null
 #
-# Indexes
-#
-#  index_slack_configurations_on_info_type_and_team_id  (info_type,team_id) UNIQUE
-#  index_slack_configurations_on_team_id                (team_id)
-#
 # Foreign Keys
 #
 #  fk_rails_52597683c1  (team_id => teams.id)

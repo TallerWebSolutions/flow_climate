@@ -9,10 +9,10 @@ class DemandTransitionsRepository
     DemandTransition.kept
                     .joins(:stage)
                     .joins(demand: :project)
-                    .select('stages.name AS grouped_stage_name, projects.id AS project_id, demands.demand_id AS grouped_demand_id, SUM(EXTRACT(EPOCH FROM (demand_transitions.last_time_out - demand_transitions.last_time_in))) AS time_in_stage')
+                    .select('stages.name AS grouped_stage_name, projects.id AS project_id, demands.external_id AS grouped_external_id, SUM(EXTRACT(EPOCH FROM (demand_transitions.last_time_out - demand_transitions.last_time_in))) AS time_in_stage')
                     .where(demand_id: demands_ids)
-                    .group('grouped_stage_name, grouped_demand_id, projects.id, stages.order')
-                    .order('stages.order, grouped_demand_id')
+                    .group('grouped_stage_name, grouped_external_id, projects.id, stages.order')
+                    .order('stages.order, grouped_external_id')
                     .map { |times| demands_grouped_in_stages = build_grouped_hash(demands_grouped_in_stages, times) }
 
     demands_grouped_in_stages
@@ -44,12 +44,12 @@ class DemandTransitionsRepository
 
   def build_data_hash(demands_grouped_in_stages, times)
     demand_hash = {}
-    demand_hash[times.grouped_demand_id] = times.time_in_stage
+    demand_hash[times.grouped_external_id] = times.time_in_stage
 
     demands_build_hash = if demands_grouped_in_stages[times.grouped_stage_name].present?
                            demands_grouped_in_stages[times.grouped_stage_name][:data].merge(demand_hash)
                          else
-                           { times.grouped_demand_id => demand_hash[times.grouped_demand_id] }
+                           { times.grouped_external_id => demand_hash[times.grouped_external_id] }
                          end
 
     demands_build_hash

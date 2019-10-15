@@ -115,6 +115,7 @@ en:
             story: Story
             epic: Epic
             theme: Theme
+        demand_url: "Demand URL"
       slack_configuration:
         enums:
           weekday_to_notify:
@@ -141,7 +142,7 @@ en:
           name_unique: "Only one name by company and jira account id is allowed"
       jira/jira_custom_field_machine_name:
         enums:
-          demand_field:
+          custom_field_type:
             class_of_service: "Class of Service"
             responsibles: "Responsibles"
     errors:
@@ -182,11 +183,11 @@ en:
         message: "You can have only one configuration to stage and project."
   demand:
     validations:
-      demand_id_unique:
+      external_id_unique:
         message: "You can have only one demand id per company."
   jira_custom_field_mapping:
     uniqueness:
-      demand_field: "Should have only one demand field per Jira account."
+      custom_field_type: "Should have only one demand field per Jira account."
   jira_product_config:
     validations:
       jira_product_key_uniqueness:
@@ -199,10 +200,10 @@ en:
       cmd_text: "> *%{team_name}* | Average Demand Cost: %{cmd_value} | Variation: *%{cmd_difference_to_last_week}%* for the average of previous 4 weeks (%{previous_cmd}) | Last week: *%{last_week_cmd}*"
       th_week_text: "> *%{team_name}* | Throughput: %{th_current_week} demands | Variation: *%{difference_last_week_th_value}%* for the average of previous 4 weeks (%{four_weeks_th_average})."
       th_last_week_text: "> *%{team_name}* | Throughput: %{th_last_week} demands last week."
-      th_last_week_demand_info_text: "> *%{demand_id}* %{demand_title} | *Responsibles:* %{responsibles_names} | *Cost to Project:* %{cost_to_project}"
+      th_last_week_demand_info_text: "> *%{external_id}* %{demand_title} | *Responsibles:* %{responsibles_names} | *Cost to Project:* %{cost_to_project}"
       qty_demands_in_wip: "> *%{team_name}* | Work in Progress: %{in_wip} demands."
-      demands_in_wip_info_text: "> *%{demand_id}* %{demand_title} | *Responsibles:* %{responsibles_names} | *Cost to Project:* %{cost_to_project} | *Current Stage:* %{current_stage} | *Time in Stage:* %{time_in_current_stage} | *% Flow Concluded:* %{percentage_concluded}"
-      outdated_demands_info_text: "> *%{demand_id}* %{demand_title} | *Current Stage:* %{current_stage} | *Time in Stage:* %{time_in_current_stage}"
+      demands_in_wip_info_text: "> *%{external_id}* %{demand_title} | *Responsibles:* %{responsibles_names} | *Cost to Project:* %{cost_to_project} | *Current Stage:* %{current_stage} | *Time in Stage:* %{time_in_current_stage} | *% Flow Concluded:* %{percentage_concluded}"
+      outdated_demands_info_text: "> *%{external_id}* %{demand_title} | *Current Stage:* %{current_stage} | *Time in Stage:* %{time_in_current_stage}"
       failure_load: "> *%{team_name}* | Team failure load: %{failure_load}."
       project_failure_load: "> *%{team_name}* | *%{project_name}* | Project failure load: *%{failure_load}*."
   portfolio_unit:

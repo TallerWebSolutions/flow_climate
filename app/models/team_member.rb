@@ -17,10 +17,6 @@
 #  start_date              :date
 #  updated_at              :datetime         not null
 #
-# Indexes
-#
-#  index_team_members_on_company_id_and_name_and_jira_account_id  (company_id,name,jira_account_id) UNIQUE
-#
 # Foreign Keys
 #
 #  fk_rails_3ec60e399b  (company_id => companies.id)

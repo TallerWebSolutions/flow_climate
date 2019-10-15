@@ -13,11 +13,6 @@
 #  team_resource_id :integer          not null, indexed
 #  updated_at       :datetime         not null
 #
-# Indexes
-#
-#  index_team_resource_allocations_on_team_id           (team_id)
-#  index_team_resource_allocations_on_team_resource_id  (team_resource_id)
-#
 # Foreign Keys
 #
 #  fk_rails_600e78ae6c  (team_resource_id => team_resources.id)

@@ -11,12 +11,6 @@
 #  product_id       :integer          not null, indexed
 #  updated_at       :datetime         not null
 #
-# Indexes
-#
-#  index_jira_product_configs_on_company_id                       (company_id)
-#  index_jira_product_configs_on_company_id_and_jira_product_key  (company_id,jira_product_key) UNIQUE
-#  index_jira_product_configs_on_product_id                       (product_id)
-#
 # Foreign Keys
 #
 #  fk_rails_3b969f1e33  (company_id => companies.id)

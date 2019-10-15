@@ -12,14 +12,6 @@
 #  product_id          :integer          not null, indexed => [name], indexed
 #  updated_at          :datetime         not null
 #
-# Indexes
-#
-#  index_portfolio_units_on_name                 (name)
-#  index_portfolio_units_on_name_and_product_id  (name,product_id) UNIQUE
-#  index_portfolio_units_on_parent_id            (parent_id)
-#  index_portfolio_units_on_portfolio_unit_type  (portfolio_unit_type)
-#  index_portfolio_units_on_product_id           (product_id)
-#
 # Foreign Keys
 #
 #  fk_rails_111d0b277b  (product_id => products.id)

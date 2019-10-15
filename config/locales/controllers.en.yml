@@ -966,7 +966,7 @@ en:
   activerecord:
     attributes:
       demand:
-        demand_id: "Demand ID"
+        external_id: "Demand ID"
       service_delivery_review:
         lead_time_bottom_threshold: "Lead Time Bottom Threshold"
         lead_time_top_threshold: "Lead Time Top Threshold"

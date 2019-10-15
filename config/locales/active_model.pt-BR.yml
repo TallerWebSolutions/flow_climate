@@ -263,7 +263,7 @@ pt-BR:
         slack_configurations: Configurações do Slack
       demand:
         team: Time
-        demand_id: Id da Demanda
+        external_id: Id da Demanda
         portfolio_unit: Unidade do Portfolio
         team_members: Responsáveis
         demand_title: Título da Demanda
@@ -487,10 +487,10 @@ pt-BR:
         jira_field_name: Nome do Campo no Jira
         portfolio_unit: Unidade do Portfólio
       jira/jira_custom_field_mapping:
-        demand_field: Tipo do Campo
+        custom_field_type: Tipo do Campo
         custom_field_machine_name: Machine Name do Jira
         enums:
-          demand_field:
+          custom_field_type:
             class_of_service: Classe de Serviço
             responsibles: Responsáveis
       project_consolidation:
@@ -559,11 +559,11 @@ pt-BR:
         message: "Você só pode ter uma configuração por projeto e etapa."
   demand:
     validations:
-      demand_id_unique:
+      external_id_unique:
         message: "Só pode haver um ID da Demanda por Empresa."
   jira_custom_field_mapping:
     uniqueness:
-      demand_field: "Apenas uma configuração de campo é permitida por conta do Jira."
+      custom_field_type: "Apenas uma configuração de campo é permitida por conta do Jira."
   jira_product_config:
     validations:
       jira_product_key_uniqueness:
@@ -576,10 +576,10 @@ pt-BR:
       cmd_text: "> *%{name}* | Custo Médio por Demanda: *%{cmd_value}* | Variação: *%{cmd_difference_to_last_week}%* com relação à média das últimas 4 semanas (%{previous_cmd}) | CMD da últ. semana: *%{last_week_cmd}*."
       th_week_text: "> *%{name}* | Throughput na semana: *%{th_current_week} demanda(s)* | Variação: *%{difference_last_week_th_value}%* para a média das últimas 4 semanas (%{four_weeks_th_average})."
       th_last_week_text: "> *%{name}* | Throughput: *%{th_last_week} demanda(s)* na semana passada."
-      th_last_week_demand_info_text: "> *%{demand_id}* %{demand_title} | *Responsáveis:* %{responsibles_names} | *Custo pro Projeto:* %{cost_to_project}"
+      th_last_week_demand_info_text: "> *%{external_id}* %{demand_title} | *Responsáveis:* %{responsibles_names} | *Custo pro Projeto:* %{cost_to_project}"
       qty_demands_in_wip: "> *%{team_name}* | Trabalho em progresso: %{in_wip} demanda(s)."
-      demands_in_wip_info_text: "> *%{demand_id}* %{demand_title} | *Responsáveis:* %{responsibles_names} | *Custo pro Projeto:* %{cost_to_project} | *Etapa atual:* %{current_stage} | *Tempo na Etapa:* %{time_in_current_stage} | *% Fluxo Concluído*: %{percentage_concluded}"
-      outdated_demands_info_text: "> *%{demand_id}* %{demand_title} | *Etapa atual:* %{current_stage} | *Tempo na Etapa:* %{time_in_current_stage}"
+      demands_in_wip_info_text: "> *%{external_id}* %{demand_title} | *Responsáveis:* %{responsibles_names} | *Custo pro Projeto:* %{cost_to_project} | *Etapa atual:* %{current_stage} | *Tempo na Etapa:* %{time_in_current_stage} | *% Fluxo Concluído*: %{percentage_concluded}"
+      outdated_demands_info_text: "> *%{external_id}* %{demand_title} | *Etapa atual:* %{current_stage} | *Tempo na Etapa:* %{time_in_current_stage}"
       failure_load: "> *%{team_name}* | Carga de falha do time: *%{failure_load}*."
       project_failure_load: "> *%{team_name}* | *%{project_name}* | Carga de falha do projeto: *%{failure_load}*."
   portfolio_unit:

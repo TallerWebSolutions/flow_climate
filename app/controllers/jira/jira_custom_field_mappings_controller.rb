@@ -60,7 +60,7 @@ module Jira
     end
 
     def jira_custom_field_mapping_params
-      params.require(:jira_jira_custom_field_mapping).permit(:custom_field_machine_name, :demand_field)
+      params.require(:jira_jira_custom_field_mapping).permit(:custom_field_machine_name, :custom_field_type)
     end
   end
 end

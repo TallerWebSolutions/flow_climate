@@ -8,7 +8,7 @@ module Jira
       issue_key = jira_issue_attrs(jira_issue)['key']
       return if issue_key.blank?
 
-      demand = Demand.where(company_id: project.company.id, demand_id: issue_key).first_or_initialize
+      demand = Demand.where(company_id: project.company.id, external_id: issue_key).first_or_initialize
       project_in_jira = Jira::JiraReader.instance.read_project(jira_issue_attrs(jira_issue), jira_account) || project
 
       update_demand!(demand, jira_account, jira_issue, project_in_jira, product_in_jira)
@@ -30,7 +30,7 @@ module Jira
       demand.update(project: project, company: project.company, product: product, team: project.team, created_date: issue_fields_value(jira_issue, 'created'),
                     demand_type: read_issue_type(jira_issue_attrs(jira_issue)),
                     class_of_service: Jira::JiraReader.instance.read_class_of_service(jira_account, jira_issue_attrs(jira_issue), jira_issue_changelog(jira_issue)), demand_title: issue_fields_value(jira_issue, 'summary'),
-                    url: build_jira_url(jira_account, demand.demand_id),
+                    external_url: build_jira_url(jira_account, demand.external_id),
                     team_members: [], commitment_date: nil, discarded_at: nil)
 
       read_demand_details(demand, project.team, jira_account, jira_issue, project)

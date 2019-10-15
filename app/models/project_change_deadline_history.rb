@@ -12,11 +12,6 @@
 #  updated_at    :datetime         not null
 #  user_id       :integer          not null, indexed
 #
-# Indexes
-#
-#  index_project_change_deadline_histories_on_project_id  (project_id)
-#  index_project_change_deadline_histories_on_user_id     (user_id)
-#
 # Foreign Keys
 #
 #  fk_rails_1f60eef53a  (project_id => projects.id)

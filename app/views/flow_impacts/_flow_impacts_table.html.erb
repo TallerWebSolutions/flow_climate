@@ -25,7 +25,7 @@
         </td>
         <td><%= I18n.t("activerecord.attributes.flow_impact.enums.impact_type.#{flow_impact.impact_type}") %></td>
         <td><%= flow_impact.project.name %></td>
-        <td><%= flow_impact.demand&.demand_id %></td>
+        <td><%= flow_impact.demand&.external_id %></td>
         <td><%= I18n.l(flow_impact.start_date, format: :short) %></td>
         <td><%= I18n.l(flow_impact.end_date, format: :short) if flow_impact.end_date.present? %></td>
         <td><%= flow_impact.impact_description %></td>

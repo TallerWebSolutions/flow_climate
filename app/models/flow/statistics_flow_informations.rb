@@ -12,7 +12,7 @@ module Flow
 
       demands_with_lead_time = demands.finished_with_leadtime.order(:end_date)
 
-      @demands_charts_ids = demands_with_lead_time.map(&:demand_id)
+      @demands_charts_ids = demands_with_lead_time.map(&:external_id)
 
       histogram_data = Stats::StatisticsService.instance.leadtime_histogram_hash(demands_with_lead_time.map(&:leadtime_in_days).flatten)
       @lead_time_bins = histogram_data.keys.map { |leadtime| leadtime.round(2) }
