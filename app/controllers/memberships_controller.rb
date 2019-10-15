@@ -13,7 +13,7 @@ class MembershipsController < AuthenticatedController
     assign_memberships_list
     assign_team_members_list
 
-    respond_to { |format| format.js { render 'memberships/new.js.erb' } }
+    respond_to { |format| format.js { render 'memberships/new' } }
   end
 
   def create
@@ -22,14 +22,14 @@ class MembershipsController < AuthenticatedController
     assign_memberships_list
     assign_team_members_list
 
-    respond_to { |format| format.js { render 'memberships/create.js.erb' } }
+    respond_to { |format| format.js { render 'memberships/create' } }
   end
 
   def edit
     assign_memberships_list
     assign_team_members_list
 
-    respond_to { |format| format.js { render 'memberships/edit.js.erb' } }
+    respond_to { |format| format.js { render 'memberships/edit' } }
   end
 
   def update
@@ -38,13 +38,13 @@ class MembershipsController < AuthenticatedController
     assign_memberships_list
     assign_team_members_list
 
-    respond_to { |format| format.js { render 'memberships/update.js.erb' } }
+    respond_to { |format| format.js { render 'memberships/update' } }
   end
 
   def destroy
     @membership.destroy
 
-    respond_to { |format| format.js { render 'memberships/destroy.js.erb' } }
+    respond_to { |format| format.js { render 'memberships/destroy' } }
   end
 
   private

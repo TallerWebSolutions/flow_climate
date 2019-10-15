@@ -53,8 +53,8 @@ RSpec.describe MembershipsController, type: :controller do
       context 'valid parameters' do
         before { get :new, params: { company_id: company, team_id: team }, xhr: true }
 
-        it 'instantiates a new Team Member and renders the template' do
-          expect(response).to render_template 'memberships/new.js.erb'
+        it 'instantiates a new membership and renders the template' do
+          expect(response).to render_template 'memberships/new'
           expect(assigns(:team_members)).to match_array [team_member, other_team_member]
           expect(assigns(:membership)).to be_a_new Membership
         end
@@ -86,8 +86,8 @@ RSpec.describe MembershipsController, type: :controller do
       context 'passing valid parameters' do
         before { post :create, params: { company_id: company, team_id: team, membership: { start_date: start_date, end_date: end_date, member_role: 'client', team_member_id: new_team_member.id, hours_per_month: 10 } }, xhr: true }
 
-        it 'creates the new team member and redirects to team show' do
-          expect(response).to render_template 'memberships/create.js.erb'
+        it 'creates the new membership and renders the template' do
+          expect(response).to render_template 'memberships/create'
           expect(assigns(:membership).errors.full_messages).to eq []
           expect(assigns(:membership)).to be_persisted
           expect(assigns(:membership).start_date).to eq start_date.to_date
@@ -103,9 +103,9 @@ RSpec.describe MembershipsController, type: :controller do
       context 'passing invalid parameters' do
         before { post :create, params: { company_id: company, team_id: team, membership: { team_member_id: '', member_role: nil } }, xhr: true }
 
-        it 'does not create the team member and re-render the template with the errors' do
+        it 'does not create the membership and re-render the template with the errors' do
           expect(Membership.all.count).to eq 2
-          expect(response).to render_template 'memberships/create.js.erb'
+          expect(response).to render_template 'memberships/create'
           expect(assigns(:membership).errors.full_messages).to eq ['Team member não pode ficar em branco', 'Início não pode ficar em branco']
         end
       end
@@ -118,7 +118,7 @@ RSpec.describe MembershipsController, type: :controller do
         before { get :edit, params: { company_id: company.id, team_id: team, id: membership }, xhr: true }
 
         it 'assigns the instance variables and renders the template' do
-          expect(response).to render_template 'memberships/edit.js.erb'
+          expect(response).to render_template 'memberships/edit'
           expect(assigns(:company)).to eq company
           expect(assigns(:membership)).to eq membership
           expect(assigns(:team_members)).to match_array [team_member, other_team_member]
@@ -163,21 +163,21 @@ RSpec.describe MembershipsController, type: :controller do
       context 'passing valid parameters' do
         before { put :update, params: { company_id: company, team_id: team, id: membership, membership: { member_role: :manager, team_member_id: other_team_member.id } }, xhr: true }
 
-        it 'updates the member and redirects to team show' do
+        it 'updates the membership and renders the template' do
           membership_updated = membership.reload
           expect(membership_updated.member_role).to eq 'manager'
           expect(membership_updated.team_member).to eq other_team_member
           expect(assigns(:memberships)).to eq team.reload.memberships.sort_by(&:team_member_name)
-          expect(response).to render_template 'memberships/update.js.erb'
+          expect(response).to render_template 'memberships/update'
         end
       end
 
       context 'passing invalid' do
-        context 'team member parameters' do
+        context 'membeership parameters' do
           before { put :update, params: { company_id: company, team_id: team, id: membership, membership: { member_role: '', team_member_id: nil } }, xhr: true }
 
-          it 'does not update the member and re-render the template with the errors' do
-            expect(response).to render_template 'memberships/update.js.erb'
+          it 'does not update the membership and re-render the template with the errors' do
+            expect(response).to render_template 'memberships/update'
             expect(assigns(:membership).errors.full_messages).to eq ['Team member não pode ficar em branco']
           end
         end
@@ -202,11 +202,11 @@ RSpec.describe MembershipsController, type: :controller do
       let(:team) { Fabricate :team, company: company }
 
       context 'with valid data' do
-        it 'deletes the member and renders the template' do
+        it 'deletes the membership and renders the template' do
           delete :destroy, params: { company_id: company, team_id: team, id: membership }, xhr: true
 
           expect(Membership.all.count).to eq 1
-          expect(response).to render_template 'memberships/destroy.js.erb'
+          expect(response).to render_template 'memberships/destroy'
         end
       end
 

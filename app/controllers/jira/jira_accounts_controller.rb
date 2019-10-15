@@ -3,6 +3,7 @@
 module Jira
   class JiraAccountsController < AuthenticatedController
     before_action :assign_company
+    before_action :assign_jira_account, only: %i[destroy show]
 
     def new
       @jira_account = JiraAccount.new(company_id: @company.id)
@@ -20,16 +21,23 @@ module Jira
     end
 
     def destroy
-      @jira_account = JiraAccount.find(params[:id])
       @jira_account.destroy
       @jira_accounts_list = @company.reload.jira_accounts.order(:created_at)
       render 'jira/jira_accounts/destroy'
+    end
+
+    def show
+      @jira_custom_field_mappings = @jira_account.jira_custom_field_mappings.order(:demand_field)
     end
 
     private
 
     def jira_account_params
       params.require(:jira_jira_account).permit(:base_uri, :username, :api_token, :customer_domain)
+    end
+
+    def assign_jira_account
+      @jira_account = @company.jira_accounts.find(params[:id])
     end
   end
 end

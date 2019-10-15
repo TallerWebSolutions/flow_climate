@@ -141,6 +141,9 @@ pt-BR:
       jira/jira_portfolio_unit_config:
         one: Config da Unidade no Jira
         other: Configs da Unidade no Jira
+      jira/jira_custom_field_mapping:
+        one: Mapeamento de Campo Customizado
+        other: Mapeamentos de Campos Customizados
       project_consolidation:
         one: Consolidação de Projeto
         other: Consolidações de Projeto
@@ -483,6 +486,13 @@ pt-BR:
       jira/jira_portfolio_unit_config:
         jira_field_name: Nome do Campo no Jira
         portfolio_unit: Unidade do Portfólio
+      jira/jira_custom_field_mapping:
+        demand_field: Tipo do Campo
+        custom_field_machine_name: Machine Name do Jira
+        enums:
+          demand_field:
+            class_of_service: Classe de Serviço
+            responsibles: Responsáveis
       project_consolidation:
         last_8_throughput_per_week_data: Throughput das últimas 8 Semanas
       membership:

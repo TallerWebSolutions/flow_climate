@@ -1,0 +1,5 @@
+var destroyedRow = $('#jira_custom_field_mapping_<%= @jira_custom_field_mapping.id %>');
+
+destroyedRow.fadeTo('slow', 0.7, function() {
+    $(this).remove();
+});
