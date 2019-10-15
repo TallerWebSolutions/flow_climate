@@ -5,22 +5,29 @@
     <div class="row-fluid">
       <div class="col-xs-12">
         <span><%= Demand.human_attribute_name :demand_id %></span>
-        <h3><%= @demand.demand_id %></h3>
+        <h3>
+          <%= demand.demand_id %>
+          <% if demand.url.present? %>
+            <%= link_to demand.url, target: :_blank do %>
+              <i class="fas fa-external-link-alt" title="<%= I18n.t('activerecord.attributes.demand.url') %>"></i>
+            <% end %>
+          <% end %>
+        </h3>
       </div>
       <div class="row-fluid">
         <table class="table">
           <tbody>
             <tr>
               <td><b><%= Demand.human_attribute_name :demand_title %></b></td>
-              <td><%= @demand.demand_title %></td>
+              <td><%= demand.demand_title %></td>
             </tr>
             <tr>
               <td><b><%= Project.model_name.human %></b></td>
-              <td><%= @demand.project_name %></td>
+              <td><%= demand.project_name %></td>
             </tr>
             <tr>
               <td><b><%= Team.model_name.human %></b></td>
-              <td><%= @demand.team_name %></td>
+              <td><%= demand.team_name %></td>
             </tr>
             <tr>
               <td><b><%= Demand.human_attribute_name :created_date %></b></td>
@@ -71,11 +78,11 @@
     <div id="demand-show-lead-time-breakdown-column"
          class="flow-chart"
          data-title=''
-         data-xcategories='<%= @lead_time_breakdown.keys %>'
+         data-xcategories='<%= lead_time_breakdown.keys %>'
          data-xtitle='<%= I18n.t('service_delivery_reviews.show.stages') %>'
          data-ytitle='<%= I18n.t('general.hours') %>'
          data-prefix=''
-         data-series='<%= [{ name: I18n.t('service_delivery_reviews.show.lead_time_breakdown_label'), data: @lead_time_breakdown.values.map { |transitions| (transitions.sum(&:total_seconds_in_transition) / 1.hour) } }].to_json %>'
+         data-series='<%= [{ name: I18n.t('service_delivery_reviews.show.lead_time_breakdown_label'), data: lead_time_breakdown.values.map { |transitions| (transitions.sum(&:total_seconds_in_transition) / 1.hour) } }].to_json %>'
          data-decimals='2'>
     </div>
   </div>

@@ -86,7 +86,7 @@ RSpec.describe Flow::StatisticsFlowInformations, type: :model do
         expect(stats_flow_info.lead_time_bins).to eq [73.75, 220.18, 366.6]
         expect(stats_flow_info.lead_time_histogram_data).to eq [5.0, 1.0, 3.0]
         expect(stats_flow_info.demands_charts_ids).to match_array %w[first_demand third_bug second_bug first_bug fourth_bug seventh_demand third_demand second_demand sixth_demand]
-        expect(stats_flow_info.lead_time_data_array).to eq [7.755694444444444, 4.9999768518518515, 0.999988425925926, 0.5416666666666666, 1.000023148148148, 236.77430555555554, 415.81474537037036, 439.81474537037036, 372.81474537037036]
+        expect(stats_flow_info.lead_time_data_array).to match_array [7.755694444444444, 4.9999768518518515, 0.999988425925926, 0.5416666666666666, 1.000023148148148, 236.77430555555554, 415.81474537037036, 439.81474537037036, 372.81474537037036]
         expect(stats_flow_info.lead_time_95p).to eq 430.21474537037034
         expect(stats_flow_info.lead_time_80p).to eq 390.0147453703704
         expect(stats_flow_info.lead_time_65p).to eq 190.9705833333333

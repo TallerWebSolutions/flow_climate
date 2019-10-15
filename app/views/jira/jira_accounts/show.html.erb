@@ -1,4 +1,14 @@
-<h1><%= @jira_account.customer_domain %></h1>
+<div class="row">
+  <div class="col-xs-12">
+    <ul class="breadcrumb">
+      <li><%= link_to I18n.t('general.home.title'), root_path %></li>
+      <li><%= Company.model_name.human %></li>
+      <li><%= link_to @company.abbreviation&.upcase, company_path(@company) %></li>
+      <li><%= Jira::JiraAccount.model_name.human %></li>
+      <li><b><%= @jira_account.customer_domain %></b></li>
+    </ul>
+  </div>
+</div>
 
 <hr>
 

@@ -115,6 +115,7 @@ en:
             story: Story
             epic: Epic
             theme: Theme
+        demand_url: "Demand URL"
       slack_configuration:
         enums:
           weekday_to_notify:
