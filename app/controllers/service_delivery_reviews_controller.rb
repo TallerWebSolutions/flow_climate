@@ -4,7 +4,7 @@ class ServiceDeliveryReviewsController < AuthenticatedController
   before_action :assign_company
   before_action :assign_product
 
-  before_action :assign_service_delivery_review, only: %i[show destroy edit update]
+  before_action :assign_service_delivery_review, only: %i[show destroy edit update refresh]
 
   def new
     @service_delivery_review = ServiceDeliveryReview.new(product: @product)
@@ -15,7 +15,7 @@ class ServiceDeliveryReviewsController < AuthenticatedController
 
   def create
     @service_delivery_review = ServiceDeliveryReview.create(service_delivery_review_params.merge(company: @company, product: @product).merge(time_computed_params).merge(percent_computed_params))
-
+    service_delivery_reviews
     process_valid_service_delivery_review if @service_delivery_review.valid?
 
     respond_to { |format| format.js { render 'service_delivery_reviews/create' } }
@@ -32,7 +32,7 @@ class ServiceDeliveryReviewsController < AuthenticatedController
 
   def edit
     service_delivery_reviews
-    render 'service_delivery_reviews/edit'
+    respond_to { |format| format.js { render 'service_delivery_reviews/edit' } }
   end
 
   def update
@@ -40,7 +40,12 @@ class ServiceDeliveryReviewsController < AuthenticatedController
 
     process_valid_service_delivery_review if @service_delivery_review.valid?
 
-    render 'service_delivery_reviews/update'
+    respond_to { |format| format.js { render 'service_delivery_reviews/update' } }
+  end
+
+  def refresh
+    process_valid_service_delivery_review
+    respond_to { |format| format.js { render 'service_delivery_reviews/update' } }
   end
 
   private

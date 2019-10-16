@@ -29,6 +29,9 @@
           <td><%= number_to_percentage(service_delivery_review.quality_bottom_threshold * 100, precision: 2) %></td>
           <td><%= number_to_percentage(service_delivery_review.quality_top_threshold * 100, precision: 2) %></td>
           <td>
+            <%= link_to refresh_company_product_service_delivery_review_path(company, product, service_delivery_review), method: :patch, remote: true do %>
+              <i class="fas fa-sync-alt"></i>
+            <% end %>
             <%= link_to edit_company_product_service_delivery_review_path(company, product, service_delivery_review), remote: true do %>
               <i class="fas fa-edit"></i>
             <% end %>
