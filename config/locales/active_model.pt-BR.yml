@@ -531,6 +531,8 @@ pt-BR:
         start_date: Data de Início
         end_date: Data Final
       service_delivery_review:
+        company: Empresa
+        product: Produto
         meeting_date: Data da Reunião
         demands: Demandas
         delayed_expedite_bottom_threshold: Min Expedites Atrasadas (%)

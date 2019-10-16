@@ -24,7 +24,7 @@ RSpec.describe ServiceDeliveryReview, type: :model do
 
       it { expect(service_delivery_review.valid?).to be true }
       it { expect(same_service_delivery_review.valid?).to be false }
-      it { expect(same_service_delivery_review.errors_on(:product)).to eq [I18n.t('service_delivery_review.attributes.validations.product_uniqueness')] }
+      it { expect(same_service_delivery_review.errors_on(:meeting_date)).to eq [I18n.t('service_delivery_review.attributes.validations.product_uniqueness')] }
       it { expect(other_date_service_delivery_review.valid?).to be true }
       it { expect(other_product_service_delivery_review.valid?).to be true }
     end

@@ -32,7 +32,7 @@ class ServiceDeliveryReview < ApplicationRecord
 
   validates :company, :product, :meeting_date, presence: true
 
-  validates :product, uniqueness: { scope: :meeting_date, message: I18n.t('service_delivery_review.attributes.validations.product_uniqueness') }
+  validates :meeting_date, uniqueness: { scope: :product, message: I18n.t('service_delivery_review.attributes.validations.product_uniqueness') }
 
   delegate :name, to: :product, prefix: true
   delegate :count, to: :bugs, prefix: true

@@ -110,7 +110,9 @@ Rails.application.routes.draw do
 
       resources :portfolio_units, except: :index
       resources :risk_reviews, except: :index
-      resources :service_delivery_reviews, except: :index
+      resources :service_delivery_reviews, except: :index do
+        patch :refresh, on: :member
+      end
 
       scope :jira do
         resources :jira_product_configs, only: %i[new create destroy], module: 'jira'

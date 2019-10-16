@@ -37,6 +37,12 @@ RSpec.describe ServiceDeliveryReviewsController, type: :controller do
 
       it { expect(response).to redirect_to new_user_session_path }
     end
+
+    describe 'PATCH #refresh' do
+      before { patch :refresh, params: { company_id: 'foo', product_id: 'bar', id: 'xpto' } }
+
+      it { expect(response).to redirect_to new_user_session_path }
+    end
   end
 
   context 'authenticated' do
@@ -267,6 +273,50 @@ RSpec.describe ServiceDeliveryReviewsController, type: :controller do
           before { put :update, params: { company_id: company, product_id: product, id: 'foo' }, xhr: true }
 
           it { expect(response).to have_http_status :not_found }
+        end
+      end
+    end
+
+    describe 'PATCH #refresh' do
+      let(:demand) { Fabricate :demand, product: product }
+      let(:service_delivery_review) { Fabricate :service_delivery_review, product: product, demands: [demand], meeting_date: Time.zone.now }
+
+      context 'with valid data' do
+        it 'updates the information in the service delivery review' do
+          expect(ServiceDeliveryReviewGeneratorJob).to receive(:perform_later).once
+          patch :refresh, params: { company_id: company, product_id: product, id: service_delivery_review }, xhr: true
+
+          expect(response).to render_template 'service_delivery_reviews/update'
+        end
+      end
+
+      context 'with invalid' do
+        context 'service delivery review' do
+          before { patch :refresh, params: { company_id: company, product_id: product, id: 'foo' }, xhr: true }
+
+          it { expect(response).to have_http_status :not_found }
+        end
+
+        context 'product' do
+          before { patch :refresh, params: { company_id: company, product_id: 'foo', id: service_delivery_review }, xhr: true }
+
+          it { expect(response).to have_http_status :not_found }
+        end
+
+        context 'company' do
+          context 'not found' do
+            before { patch :refresh, params: { company_id: 'foo', product_id: product, id: service_delivery_review }, xhr: true }
+
+            it { expect(response).to have_http_status :not_found }
+          end
+
+          context 'not permitted' do
+            let(:company) { Fabricate :company, users: [] }
+
+            before { patch :refresh, params: { company_id: company, product_id: product, id: service_delivery_review }, xhr: true }
+
+            it { expect(response).to have_http_status :not_found }
+          end
         end
       end
     end
