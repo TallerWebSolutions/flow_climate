@@ -116,6 +116,7 @@ en:
             epic: Epic
             theme: Theme
         demand_url: "Demand URL"
+        external_url: "External Link"
       slack_configuration:
         enums:
           weekday_to_notify:

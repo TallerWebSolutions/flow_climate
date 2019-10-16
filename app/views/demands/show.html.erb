@@ -28,18 +28,24 @@
       <button class="tablinks demand-tab" id="demand-block-tab" onclick="openTab(event, 'content-block', 'tablinks', 'tabcontent')"><%= I18n.t('demands.show.blocks_tab') %></button>
       <button class="tablinks demand-tab" onclick="openTab(event, 'content-responsibles', 'tablinks', 'tabcontent')"><%= I18n.t('demands.show.responsibles_tab') %></button>
       <button class="tablinks demand-tab" onclick="openTab(event, 'content-comments', 'tablinks', 'tabcontent')"><%= I18n.t('demands.show.comments_tab') %></button>
-      <button class="tablinks demand-tab" id="demand-structure-tab" onclick="openTab(event, 'content-structure', 'tablinks', 'tabcontent')"><%= I18n.t('demands.show.structure_tab') %></button>
+      <button class="tablinks demand-tab" id="demand-structure-tab" onclick="openTab(event, 'demand-structure', 'tablinks', 'tabcontent')"><%= I18n.t('demands.show.structure_tab') %></button>
       <button class="tablinks demand-tab" onclick="openTab(event, 'content-flow-efficiency', 'tablinks', 'tabcontent')"><%= I18n.t('demands.show.flow_efficiency_tab') %></button>
       <button class="tablinks demand-tab" onclick="openTab(event, 'content-transitions', 'tablinks', 'tabcontent')"><%= I18n.t('demands.show.transitions_tab') %></button>
     </div>
   </div>
 </div>
 
-<div id="content-structure" class="tabcontent">
+<div id="demand-structure" class="tabcontent">
   <div class="row">
     <% @demand.product_tree.each do |branch| %>
       <div class="col-xs-2 col-xs-offset-5 center <%= branch != @demand.product_tree.last ? 'product-branch' : 'demand-branch' %>">
-        <h4><%= branch.name %></h4>
+        <% if branch == @demand.product_tree.first %>
+          <h4><%= link_to branch.name, company_product_path(@company, @demand.product), target: :_blank %></h4>
+        <% elsif branch != @demand.product_tree.last %>
+          <h4><%= link_to branch.name, company_product_portfolio_unit_path(@company, @demand.product, branch), target: :_blank %></h4>
+        <% else %>
+          <h4><%= branch.name %></h4>
+        <% end %>
       </div>
 
       <% if branch != @demand.product_tree.last %>

@@ -1081,3 +1081,7 @@ pt-BR:
   jira_custom_field_mappings:
     new:
       title: "Novo Mapeamento de Campo"
+  activerecord:
+    attributes:
+      demand:
+        external_url: "Link Externo"
