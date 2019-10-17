@@ -1,4 +1,4 @@
-<td><%= link_to block.demand.external_id, company_demand_path(company, block.demand) %></td>
+<td><%= link_to block.demand.external_id, company_demand_path(company, block.demand), target: :_blank %></td>
 <td><%= t("activerecord.attributes.demand_block.enums.block_type.#{block.block_type}") %></td>
 <td><%= block.block_reason %></td>
 <td><%= block.stage&.name %></td>

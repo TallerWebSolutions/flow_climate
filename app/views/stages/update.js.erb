@@ -2,6 +2,7 @@ var updatedRow = $('#stage_row_<%= @stage.id %>');
 updatedRow.html("<%= escape_javascript(render 'stages/stage_fields', company: @company, stage: @stage).html_safe %>");
 
 $("#edit-stage-form").modal('toggle');
+
 $('body').removeClass('modal-open');
 $('.modal-backdrop').remove();
 

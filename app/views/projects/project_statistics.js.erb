@@ -1,5 +1,7 @@
 var statsModal = $("#project-statistics-page").modal({
-    show: false
+    show: false,
+    backdrop: 'static',
+    keyboard: false
 });
 
 statsModal.html("<%= escape_javascript(render 'projects/statistics_summary', project: @project) %>");
