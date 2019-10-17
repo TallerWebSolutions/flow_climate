@@ -132,7 +132,7 @@ class CompaniesController < AuthenticatedController
   end
 
   def assign_stages_list
-    @stages_list = @company.stages.joins(stages_teams: :team).order('stages.integration_pipe_id, stages.order').includes(stages_teams: :team).includes(:teams)
+    @stages_list = @company.stages.order('stages.integration_pipe_id, stages.order').includes(stages_teams: :team).includes(:teams)
   end
 
   def assign_users_in_company
