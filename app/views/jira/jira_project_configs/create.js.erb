@@ -2,5 +2,6 @@ $('#content-project-jira').html("<%= escape_javascript(render 'jira/jira_project
 $('.alerts').html("<%= escape_javascript(render('layouts/error', message: flash[:error].html_safe)) if flash[:error] %>")
 
 $("#new-project-jira-config-form").modal('toggle');
+
 $('body').removeClass('modal-open');
 $('.modal-backdrop').remove();

@@ -23,7 +23,7 @@
     <tbody>
       <% demand_blocks_list.each do |block| %>
         <tr>
-          <td><%= link_to block.demand.external_id, company_demand_path(company, block.demand) %></td>
+          <td><%= link_to block.demand.external_id, company_demand_path(company, block.demand), target: :_blank %></td>
           <td><%= t("activerecord.attributes.demand_block.enums.block_type.#{block.block_type}") %></td>
           <td><%= "#{block.block_duration} h" if block.block_duration.present? %></td>
           <td><%= block.blocker.name %></td>

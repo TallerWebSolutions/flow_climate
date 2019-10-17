@@ -63,8 +63,8 @@ class FlowImpactsController < AuthenticatedController
 
   def update
     @flow_impact.update(flow_impact_params)
-    assign_flow_impacts_list
     @demands_for_impact_form = @flow_impact.project.demands.in_wip
+    assign_flow_impacts_list
     respond_to { |format| format.js { render 'flow_impacts/update' } }
   end
 
