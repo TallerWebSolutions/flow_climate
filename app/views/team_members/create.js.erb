@@ -1,4 +1,4 @@
-var teamMemberTable = $("#members-table")
+var teamMemberTable = $("#team-members-table")
 
 <% if @team_member.errors.empty? %>
   teamMemberTable.html("<%= escape_javascript(render 'team_members/team_members_table', company: @company, team_members: @team_members).html_safe %>");
