@@ -25,6 +25,7 @@
 
 class FlowImpact < ApplicationRecord
   include Discard::Model
+  include Rails.application.routes.url_helpers
 
   enum impact_type: { other_team_dependency: 0, api_not_ready: 1, customer_not_available: 2, other_demand_dependency: 3, fixes_out_of_scope: 4, external_service_unavailable: 5 }
 
@@ -34,9 +35,23 @@ class FlowImpact < ApplicationRecord
 
   validates :project, :start_date, :impact_type, :impact_description, presence: true
 
+  scope :opened, -> { where(end_date: nil) }
+
   def impact_duration
     return Time.zone.now - start_date if end_date.blank?
 
     end_date - start_date
+  end
+
+  def to_hash
+    {
+      project_name: project.name,
+      impact_type: I18n.t("activerecord.attributes.flow_impact.enums.impact_type.#{impact_type}"),
+      demand: demand&.external_id,
+      start_date: start_date.iso8601,
+      end_date: end_date&.iso8601,
+      impact_duration: impact_duration,
+      impact_url: company_flow_impact_path(project.company, self)
+    }
   end
 end

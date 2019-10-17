@@ -14,3 +14,6 @@ en:
   demands:
     show:
       title: "Item Show"
+  flow_impacts:
+    opened_impacts:
+      title: "Opened impacts for the project %{project_name}"

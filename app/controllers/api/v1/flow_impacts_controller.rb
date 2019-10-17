@@ -16,6 +16,12 @@ module Api
         end
       end
 
+      def opened_impacts
+        flow_impacts = @project.flow_impacts.opened.order(:start_date)
+
+        render json: { status: 'SUCCESS', message: I18n.t('flow_impacts.opened_impacts.title', project_name: @project.name), data: flow_impacts.map(&:to_hash) }, status: :ok
+      end
+
       private
 
       def assigns_project
