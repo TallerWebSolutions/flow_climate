@@ -26,11 +26,17 @@
 class FlowImpact < ApplicationRecord
   include Discard::Model
 
-  enum impact_type: { other_team_dependency: 0, api_not_ready: 1, customer_not_available: 2, other_demand_dependency: 3, fixes_out_of_scope: 4 }
+  enum impact_type: { other_team_dependency: 0, api_not_ready: 1, customer_not_available: 2, other_demand_dependency: 3, fixes_out_of_scope: 4, external_service_unavailable: 5 }
 
   belongs_to :project
   belongs_to :demand
   belongs_to :risk_review
 
   validates :project, :start_date, :impact_type, :impact_description, presence: true
+
+  def impact_duration
+    return Time.zone.now - start_date if end_date.blank?
+
+    end_date - start_date
+  end
 end

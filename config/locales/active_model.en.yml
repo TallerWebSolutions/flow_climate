@@ -146,6 +146,21 @@ en:
           custom_field_type:
             class_of_service: "Class of Service"
             responsibles: "Responsibles"
+      flow_impact:
+        project: Project
+        impact_type: Impact Type
+        impact_description: Impact Description
+        demand: Demand
+        start_date: Started at
+        end_date: Ended at
+        enums:
+          impact_type:
+            other_team_dependency: Other team dependency
+            api_not_ready: API is not ready
+            customer_not_available: Customer unavailable
+            other_demand_dependency: Other demand dependency
+            fixes_out_of_scope: Fixes outside scope
+            external_service_unavailable: External service unavailable
     errors:
       messages:
         record_invalid: 'Validation failed: %{errors}'
@@ -229,3 +244,6 @@ en:
       lead_time_bottom_threshold: "Bottom threshold to lead time"
       quality_bottom_threshold: "Minimum share of defects"
       quality_top_threshold: "Maximum share of defects"
+  flow_impacts:
+    show:
+      impact_duration: "Impact Duration"

@@ -8,6 +8,7 @@
       <th><%= FlowImpact.human_attribute_name :demand %></th>
       <th><%= FlowImpact.human_attribute_name :start_date %></th>
       <th><%= FlowImpact.human_attribute_name :end_date %></th>
+      <th><%= I18n.t('flow_impacts.show.impact_duration') %></th>
       <th><%= FlowImpact.human_attribute_name :impact_description %></th>
     </tr>
   </thead>
@@ -23,11 +24,12 @@
             <i class="fas fa-edit" title='<%= I18n.t('flow_impacts.edit.tooltip') %>'></i>
           <% end %>
         </td>
-        <td><%= I18n.t("activerecord.attributes.flow_impact.enums.impact_type.#{flow_impact.impact_type}") %></td>
+        <td><%= link_to I18n.t("activerecord.attributes.flow_impact.enums.impact_type.#{flow_impact.impact_type}"), company_flow_impact_path(company, flow_impact) %></td>
         <td><%= flow_impact.project.name %></td>
         <td><%= flow_impact.demand&.external_id %></td>
         <td><%= I18n.l(flow_impact.start_date, format: :short) %></td>
         <td><%= I18n.l(flow_impact.end_date, format: :short) if flow_impact.end_date.present? %></td>
+        <td><%= time_distance_in_words(flow_impact.impact_duration) %></td>
         <td><%= flow_impact.impact_description %></td>
       </tr>
     <% end %>

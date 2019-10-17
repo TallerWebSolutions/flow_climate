@@ -1,0 +1,12 @@
+.help-frame {
+    padding: 10px;
+    border: 3px solid #CCC;
+    margin-left: 20%;
+    margin-right: 20%;
+}
+
+.help-title {
+    font-size: large;
+    text-align: center;
+    font-weight: bold;
+}
