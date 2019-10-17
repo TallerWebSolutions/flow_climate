@@ -55,6 +55,12 @@ RSpec.describe FlowImpactsController, type: :controller do
 
       it { is_expected.to redirect_to new_user_session_path }
     end
+
+    describe 'GET #show' do
+      before { get :show, params: { company_id: 'foo', id: 'bar' } }
+
+      it { is_expected.to redirect_to new_user_session_path }
+    end
   end
 
   context 'authenticated' do
@@ -412,6 +418,42 @@ RSpec.describe FlowImpactsController, type: :controller do
 
             it { expect(response).to have_http_status :not_found }
           end
+        end
+      end
+    end
+
+    describe 'GET #show' do
+      let(:flow_impact) { Fabricate :flow_impact, project: project }
+      let(:other_flow_impact) { Fabricate :flow_impact }
+
+      context 'valid parameters' do
+        before { get :show, params: { company_id: company, id: flow_impact } }
+
+        it 'instantiates a new Team Member and renders the template' do
+          expect(response).to render_template :show
+          expect(assigns(:flow_impact)).to eq flow_impact
+        end
+      end
+
+      context 'invalid parameters' do
+        context 'invalid flow impact' do
+          before { get :show, params: { company_id: company, id: 'foo' } }
+
+          it { expect(response).to have_http_status :not_found }
+        end
+
+        context 'non-existent company' do
+          before { get :show, params: { company_id: 'foo', id: flow_impact } }
+
+          it { expect(response).to have_http_status :not_found }
+        end
+
+        context 'not-permitted company' do
+          let(:company) { Fabricate :company, users: [] }
+
+          before { get :show, params: { company_id: company, id: flow_impact } }
+
+          it { expect(response).to have_http_status :not_found }
         end
       end
     end

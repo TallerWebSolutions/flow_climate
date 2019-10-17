@@ -427,6 +427,7 @@ pt-BR:
             customer_not_available: Cliente indisponível
             other_demand_dependency: Dependência de outra demanda
             fixes_out_of_scope: Ajustes fora do escopo
+            external_service_unavailable: Serviço externo indisponível
       demand_comment:
         demand: Demanda
         team_member: Comentado por

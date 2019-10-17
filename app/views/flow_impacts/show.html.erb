@@ -1,0 +1,34 @@
+<div class="row bottom-spaced-component">
+  <div class="col-xs-12">
+    <ul class="breadcrumb">
+      <li><%= link_to I18n.t('general.home.title'), root_path %></li>
+      <li><%= link_to @company.abbreviation&.upcase, company_path(@company) %></li>
+      <li><%= link_to Project.model_name.human.pluralize, company_projects_path(@company) %></li>
+      <li><%= link_to @flow_impact.project.name, company_project_path(@company, @flow_impact.project) %></li>
+      <li><%= FlowImpact.model_name.human %></li>
+    </ul>
+  </div>
+</div>
+
+<h3><%= I18n.t("activerecord.attributes.flow_impact.enums.impact_type.#{@flow_impact.impact_type}") %></h3>
+
+<table class="table table-striped">
+  <tbody>
+    <tr>
+      <td><b><%= FlowImpact.human_attribute_name :impact_description %></b></td>
+      <td><%= @flow_impact.impact_description %></td>
+    </tr>
+    <tr>
+      <td><b><%= FlowImpact.human_attribute_name :start_date %></b></td>
+      <td><%= I18n.l(@flow_impact.start_date, format: :short) %></td>
+    </tr>
+    <tr>
+      <td><b><%= FlowImpact.human_attribute_name :end_date %></b></td>
+      <td><%= I18n.l(@flow_impact.end_date, format: :short) if @flow_impact.end_date.present? %></td>
+    </tr>
+    <tr>
+      <td><b><%= I18n.t('flow_impacts.show.impact_duration') %></b></td>
+      <td><%= time_distance_in_words(@flow_impact.impact_duration) %></td>
+    </tr>
+  </tbody>
+</table>

@@ -2,8 +2,8 @@
 
 class FlowImpactsController < AuthenticatedController
   before_action :assign_company
-  before_action :assign_project, except: %i[new_direct_link create_direct_link flow_impacts_tab edit update destroy]
-  before_action :assign_flow_impact, only: %i[destroy edit update]
+  before_action :assign_project, except: %i[new_direct_link create_direct_link flow_impacts_tab edit update destroy show]
+  before_action :assign_flow_impact, only: %i[destroy edit update show]
 
   def new
     @flow_impact = FlowImpact.new(project: @project)
@@ -67,6 +67,8 @@ class FlowImpactsController < AuthenticatedController
     @demands_for_impact_form = @flow_impact.project.demands.in_wip
     respond_to { |format| format.js { render 'flow_impacts/update' } }
   end
+
+  def show; end
 
   private
 

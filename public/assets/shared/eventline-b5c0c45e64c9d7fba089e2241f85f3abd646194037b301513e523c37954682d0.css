@@ -1,0 +1,20 @@
+.timeline {
+    background-color: #3498db;
+
+}
+
+.timeline-day {
+    border: 1px solid #f0f2fb;
+    background-color: #3498db;
+    min-width: 45px;
+    display: inline-block;
+    text-align: center;
+    color: white;
+}
+
+.timeline-legend {
+    min-width: 15px;
+    min-height: 15px;
+    display: inline-block;
+    margin-right: 5px;
+}
