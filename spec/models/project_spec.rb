@@ -1316,7 +1316,7 @@ RSpec.describe Project, type: :model do
       let!(:demands) { Fabricate.times(10, :demand, project: project, created_date: 1.day.ago, end_date: nil) }
       let!(:older_demands) { Fabricate.times(10, :demand, project: project, created_date: 3.days.ago, end_date: 2.days.from_now) }
 
-      it { expect(project.average_demand_aging.round(2)).to eq 2.5 }
+      it { expect(project.average_demand_aging.round(2)).to be_within(0.2).of(2.5) }
     end
 
     context 'with no demands' do
