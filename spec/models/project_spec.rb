@@ -1307,12 +1307,16 @@ RSpec.describe Project, type: :model do
   end
 
   describe '#average_demand_aging' do
+    before { travel_to Time.zone.local(2019, 10, 18, 10, 16, 0) }
+
+    after { travel_back }
+
     context 'with demands' do
       let(:project) { Fabricate :project, status: :executing, start_date: Time.zone.today, end_date: 4.weeks.from_now, qty_hours: 2000 }
-      let!(:demands) { Fabricate.times(10, :demand, project: project, created_date: 1.day.ago, end_date: 2.days.from_now) }
+      let!(:demands) { Fabricate.times(10, :demand, project: project, created_date: 1.day.ago, end_date: nil) }
       let!(:older_demands) { Fabricate.times(10, :demand, project: project, created_date: 3.days.ago, end_date: 2.days.from_now) }
 
-      it { expect(project.average_demand_aging.round(2)).to eq 4.00 }
+      it { expect(project.average_demand_aging.round(2)).to eq 2.5 }
     end
 
     context 'with no demands' do
