@@ -70,7 +70,6 @@ class TeamsController < AuthenticatedController
   def team_projects
     @team_projects ||= ProjectsRepository.instance.all_projects_for_team(@team).includes(:team)
                                          .includes(:customers)
-                                         .joins(customers_projects: :customer)
                                          .includes(customers_projects: :customer)
                                          .includes(:products)
                                          .includes(products_projects: :product)
