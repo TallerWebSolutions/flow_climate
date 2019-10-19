@@ -184,6 +184,10 @@ RSpec.describe Project, type: :model do
   end
 
   describe '#percentage_remaining_days' do
+    before { travel_to Time.zone.local(2018, 9, 18, 10, 0, 0) }
+
+    after { travel_back }
+
     context 'total_days is higher than 0' do
       let(:project) { Fabricate :project, start_date: 1.day.ago, end_date: 1.day.from_now }
 
