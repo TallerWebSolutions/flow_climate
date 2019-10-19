@@ -115,7 +115,7 @@ class Company < ApplicationRecord
   def demands_delivered_last_week
     return [] if projects.blank?
 
-    DemandsRepository.instance.throughput_to_projects_and_period(projects, projects.map(&:start_date).min.beginning_of_week, 1.week.ago.end_of_week)
+    DemandsRepository.instance.throughput_to_period(demands, projects.map(&:start_date).min.beginning_of_week, 1.week.ago.end_of_week)
   end
 
   def total_active_hours

@@ -21,9 +21,9 @@ RSpec.describe Highchart::TeamChartsAdapter, type: :service do
       let!(:first_project) { Fabricate :project, company: company, team: team, customers: [customer], status: :maintenance, start_date: 3.months.ago, end_date: 2.months.ago }
       let!(:second_project) { Fabricate :project, company: company, team: team, customers: [customer], status: :executing, start_date: 40.days.ago, end_date: 1.month.ago }
 
-      let!(:first_demand) { Fabricate :demand, project: first_project, effort_downstream: 200, effort_upstream: 10, created_date: 74.days.ago, end_date: 35.days.ago }
-      let!(:second_demand) { Fabricate :demand, project: first_project, effort_downstream: 400, effort_upstream: 130, created_date: 65.days.ago, end_date: 1.month.ago }
-      let!(:third_demand) { Fabricate :demand, project: second_project, effort_downstream: 100, effort_upstream: 20, end_date: nil }
+      let!(:first_demand) { Fabricate :demand, team: team, project: first_project, effort_downstream: 200, effort_upstream: 10, created_date: 74.days.ago, end_date: 35.days.ago }
+      let!(:second_demand) { Fabricate :demand, team: team, project: first_project, effort_downstream: 400, effort_upstream: 130, created_date: 65.days.ago, end_date: 1.month.ago }
+      let!(:third_demand) { Fabricate :demand, team: team, project: second_project, effort_downstream: 100, effort_upstream: 20, end_date: nil }
 
       context 'monthly basis x axis' do
         it 'builds the data structure for average_demand_cost monthly' do

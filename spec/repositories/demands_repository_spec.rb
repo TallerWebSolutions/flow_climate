@@ -35,7 +35,7 @@ RSpec.describe DemandsRepository, type: :repository do
     it { expect(described_class.instance.known_scope_to_date(Demand.all.map(&:id), 2.days.ago).count).to eq 6 }
   end
 
-  describe '#committed_demands_by_project_and_week' do
+  describe '#committed_demands_to_period' do
     context 'with data' do
       let!(:first_demand) { Fabricate :demand, project: first_project, commitment_date: 3.weeks.ago }
       let!(:second_demand) { Fabricate :demand, project: first_project, commitment_date: 2.weeks.ago }
@@ -44,11 +44,11 @@ RSpec.describe DemandsRepository, type: :repository do
       let!(:fifth_demand) { Fabricate :demand, project: second_project, commitment_date: 1.week.ago }
       let!(:sixth_demand) { Fabricate :demand, project: first_project, commitment_date: 1.week.ago, discarded_at: Time.zone.today }
 
-      it { expect(described_class.instance.committed_demands_by_project_and_week(Project.all, 1.week.ago.to_date.cweek, 1.week.ago.to_date.cwyear)).to match_array [third_demand, fourth_demand, fifth_demand] }
+      it { expect(described_class.instance.committed_demands_to_period(Demand.all, 1.week.ago.to_date.cweek, 1.week.ago.to_date.cwyear)).to match_array [third_demand, fourth_demand, fifth_demand] }
     end
 
     context 'with no data' do
-      it { expect(described_class.instance.committed_demands_by_project_and_week(Project.all, 1.week.ago.to_date.cweek, 1.week.ago.to_date.cwyear)).to eq [] }
+      it { expect(described_class.instance.committed_demands_to_period(Demand.all, 1.week.ago.to_date.cweek, 1.week.ago.to_date.cwyear)).to eq [] }
     end
   end
 
@@ -69,7 +69,7 @@ RSpec.describe DemandsRepository, type: :repository do
     end
   end
 
-  describe '#throughput_to_projects_and_period' do
+  describe '#throughput_to_period' do
     context 'with data' do
       let!(:first_demand) { Fabricate :demand, project: first_project, end_date: 3.weeks.ago }
       let!(:second_demand) { Fabricate :demand, project: first_project, end_date: 2.weeks.ago }
@@ -78,11 +78,11 @@ RSpec.describe DemandsRepository, type: :repository do
       let!(:fifth_demand) { Fabricate :demand, project: second_project, end_date: 1.week.ago }
       let!(:sixth_demand) { Fabricate :demand, project: first_project, end_date: 1.week.ago, discarded_at: Time.zone.today }
 
-      it { expect(described_class.instance.throughput_to_projects_and_period(Project.all, 1.week.ago.beginning_of_week, 1.week.ago.end_of_week)).to match_array [third_demand, fourth_demand, fifth_demand] }
+      it { expect(described_class.instance.throughput_to_period(Demand.all, 1.week.ago.beginning_of_week, 1.week.ago.end_of_week)).to match_array [third_demand, fourth_demand, fifth_demand] }
     end
 
     context 'with no data' do
-      it { expect(described_class.instance.throughput_to_projects_and_period(Project.all, 1.week.ago.beginning_of_week, 1.week.ago.end_of_week)).to eq [] }
+      it { expect(described_class.instance.throughput_to_period(Demand.all, 1.week.ago.beginning_of_week, 1.week.ago.end_of_week)).to eq [] }
     end
   end
 
@@ -268,12 +268,11 @@ RSpec.describe DemandsRepository, type: :repository do
     let!(:fourth_demand) { Fabricate :demand, project: first_project, end_date: 1.day.ago }
     let!(:fifth_demand) { Fabricate :demand, project: first_project, end_date: 1.day.ago }
 
-    it { expect(described_class.instance.demands_delivered_grouped_by_projects_to_period([first_project, second_project], 3.days.ago, 2.days.from_now)[first_project.name]).to match_array [first_demand, second_demand, fourth_demand, fifth_demand] }
-    it { expect(described_class.instance.demands_delivered_grouped_by_projects_to_period([first_project, second_project], 3.days.ago, 2.days.from_now)[second_project.name]).to match_array [third_demand] }
+    it { expect(described_class.instance.demands_delivered_grouped_by_projects_to_period(Demand.all, 3.days.ago, 2.days.from_now)[first_project.name]).to match_array [first_demand, second_demand, fourth_demand, fifth_demand] }
+    it { expect(described_class.instance.demands_delivered_grouped_by_projects_to_period(Demand.all, 3.days.ago, 2.days.from_now)[second_project.name]).to match_array [third_demand] }
   end
 
   pending '#bugs_opened_until_limit_date'
   pending '#bugs_closed_until_limit_date'
   pending '#remaining_backlog_to_date'
-  pending '#discarded_demands_to_projects'
 end

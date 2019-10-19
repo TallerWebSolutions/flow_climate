@@ -102,7 +102,6 @@ Rails.application.routes.draw do
       member do
         get :portfolio_units_tab
         get :projects_tab
-        get :portfolio_demands_tab
         get :portfolio_charts_tab
         get :risk_reviews_tab
         get :service_delivery_reviews_tab
@@ -187,7 +186,7 @@ Rails.application.routes.draw do
 
       collection do
         get 'demands_csv/(:demands_ids)', action: :demands_csv, as: 'demands_csv'
-        get :demands_in_projects
+        get :demands_tab
         get 'search_demands'
       end
 

@@ -2,9 +2,8 @@ var demandsTab = $('#demands-tab');
 
 demandsTab.html("<%= escape_javascript(render 'demands/demands_tab', company: @company,
                                                                      demands: @demands,
+                                                                     unpaged_demands: @unpaged_demands,
                                                                      share_demands_blocked: @share_demands_blocked,
-                                                                     demands_count_per_week: @demands_count_per_week,
-                                                                     demands_chart_adapter: @demands_chart_adapter,
                                                                      confidence_65_leadtime: @confidence_65_leadtime,
                                                                      confidence_80_leadtime: @confidence_80_leadtime,
                                                                      confidence_95_leadtime: @confidence_95_leadtime,
@@ -14,6 +13,7 @@ demandsTab.html("<%= escape_javascript(render 'demands/demands_tab', company: @c
                                                                      end_date: @end_date,
                                                                      discarded_demands: @discarded_demands,
                                                                      projects_ids: @projects_ids).html_safe %>");
+
 
 demandsTab.show();
 
@@ -28,7 +28,9 @@ $('#demands-grouped-per-customer-div').hide();
 $('#demands-grouped-per-stage-div').hide();
 $('#content-charts').hide();
 $('#flat-demands-div').show();
-$('#list-charts-button').show();
 
+
+$('#list-charts-button').show();
 buildDemandsTabCharts();
+
 bindDemandFilterActions();

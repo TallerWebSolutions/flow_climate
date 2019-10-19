@@ -1,14 +1,14 @@
-function getDemands(companyId, projectsIds) {
+function getDemands(companyId, demandsIds) {
     $("#general-loader").show();
 
     jQuery.ajax({
-        url: `/companies/${companyId}/demands/demands_in_projects.js`,
+        url: `/companies/${companyId}/demands/demands_tab.js`,
         type: "GET",
-        data: `projects_ids=${projectsIds}`
+        data: `demands_ids=${demandsIds}`
     });
 }
 
-function searchDemands(companyId, projectsIds, grouping, flowStatus, demandType, demandClassOfService, searchText, startDate, endDate, groupingPeriod) {
+function searchDemands(companyId, demandsIds, grouping, flowStatus, demandType, demandClassOfService, searchText, startDate, endDate, groupingPeriod) {
     $("#general-loader").show();
 
     $(".form-control").prop('disabled', true);
@@ -16,13 +16,13 @@ function searchDemands(companyId, projectsIds, grouping, flowStatus, demandType,
     jQuery.ajax({
         url: `/companies/${companyId}/demands/search_demands.js`,
         type: "GET",
-        data: `&projects_ids=${projectsIds}&grouping=${grouping}&flow_status=${flowStatus}&demand_type=${demandType}&demand_class_of_service=${demandClassOfService}&search_text=${searchText}&start_date=${startDate}&end_date=${endDate}&grouping_period=${groupingPeriod}`
+        data: `&demands_ids=${demandsIds}&grouping=${grouping}&flow_status=${flowStatus}&demand_type=${demandType}&demand_class_of_service=${demandClassOfService}&search_text=${searchText}&start_date=${startDate}&end_date=${endDate}&grouping_period=${groupingPeriod}`
     });
 }
 
 function destroyDemand(companyId, demandId, confirmationMessage, demandsIds) {
     if (window.confirm(confirmationMessage)) {
-        var grouping = $('#demands-table-grouping-period').val();
+        let grouping = $('#demands-table-grouping-period').val();
         jQuery.ajax({
             url: `/companies/${companyId}/demands/${demandId}.js`,
             type: "DELETE",

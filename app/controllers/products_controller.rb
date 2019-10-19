@@ -4,8 +4,8 @@ class ProductsController < AuthenticatedController
   before_action :user_gold_check
 
   before_action :assign_company
-  before_action :assign_product, only: %i[show edit update destroy portfolio_units_tab projects_tab portfolio_demands_tab portfolio_charts_tab risk_reviews_tab service_delivery_reviews_tab]
-  before_action :assign_demands, only: %i[portfolio_demands_tab portfolio_charts_tab]
+  before_action :assign_product, only: %i[show edit update destroy portfolio_units_tab projects_tab portfolio_charts_tab risk_reviews_tab service_delivery_reviews_tab]
+  before_action :assign_demands, only: %i[portfolio_charts_tab]
 
   def index
     @products = @company.products.order(:name).includes(:customer).includes(:projects).includes(products_projects: :project)
@@ -15,6 +15,7 @@ class ProductsController < AuthenticatedController
   def show
     @jira_product_configs = @product.jira_product_configs.order(:jira_product_key)
     assign_filter_parameters_to_charts
+    assign_demands_ids
 
     render :show
   end
@@ -70,11 +71,6 @@ class ProductsController < AuthenticatedController
     respond_to { |format| format.js { render 'projects/projects_tab' } }
   end
 
-  def portfolio_demands_tab
-    @portfolio_demands = @product.total_portfolio_demands.order(end_date: :desc)
-    respond_to { |format| format.js { render 'demands/portfolio_demands_tab' } }
-  end
-
   def portfolio_charts_tab
     assign_filter_parameters_to_charts
 
@@ -111,5 +107,9 @@ class ProductsController < AuthenticatedController
     @start_date = params[:start_date]&.to_date || [@demands&.map(&:created_date)&.min, 3.months.ago].compact.max.to_date
     @end_date = params[:end_date]&.to_date || Time.zone.today
     @period = params[:period] || 'month'
+  end
+
+  def assign_demands_ids
+    @demands_ids = @product.demands.opened_before_date(Time.zone.now).map(&:id)
   end
 end

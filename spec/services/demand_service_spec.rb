@@ -15,10 +15,10 @@ RSpec.describe DemandService, type: :service do
   let(:end_stage) { Fabricate :stage, company: company, commitment_point: false, end_point: true, order: 2, projects: [project], stage_stream: :downstream }
   let(:out_stream_stage) { Fabricate :stage, company: company, commitment_point: false, end_point: false, order: 3, projects: [project], stage_stream: :out_stream }
 
-  let!(:first_demand) { Fabricate :demand, project: project, demand_type: :bug, class_of_service: :expedite }
-  let!(:second_demand) { Fabricate :demand, project: project, demand_type: :bug, class_of_service: :standard }
-  let!(:third_demand) { Fabricate :demand, project: project, demand_type: :feature, class_of_service: :expedite }
-  let!(:fourth_demand) { Fabricate :demand, project: project, demand_type: :chore, class_of_service: :expedite }
+  let!(:first_demand) { Fabricate :demand, project: project, demand_type: :bug, class_of_service: :expedite, created_date: 19.days.ago }
+  let!(:second_demand) { Fabricate :demand, project: project, demand_type: :bug, class_of_service: :standard, created_date: 8.days.ago }
+  let!(:third_demand) { Fabricate :demand, project: project, demand_type: :feature, class_of_service: :expedite, created_date: 2.days.ago }
+  let!(:fourth_demand) { Fabricate :demand, project: project, demand_type: :chore, class_of_service: :expedite, created_date: 12.days.ago }
 
   let!(:first_transition) { Fabricate :demand_transition, stage: other_stage, demand: first_demand, last_time_in: 18.days.ago, last_time_out: 10.days.ago }
   let!(:second_transition) { Fabricate :demand_transition, stage: other_stage, demand: second_demand, last_time_in: 7.days.ago, last_time_out: 6.days.ago }
@@ -37,12 +37,10 @@ RSpec.describe DemandService, type: :service do
 
   describe '#arrival_and_departure_data_per_week' do
     it 'returns the arrival and departure data by week' do
-      arrival_departure_rate_data = described_class.instance.arrival_and_departure_data_per_week([project])
+      arrival_departure_rate_data = described_class.instance.arrival_and_departure_data_per_week(Demand.all, 19.days.ago, Time.zone.now)
       expect(arrival_departure_rate_data.keys).to eq [Date.new(2019, 9, 22), Date.new(2019, 9, 15), Date.new(2019, 9, 8), Date.new(2019, 9, 1)]
       expect(arrival_departure_rate_data[Date.new(2019, 9, 22)]).to eq(arrived_in_week: [], std_dev_arrived: 0.0, std_dev_throughput: 0.0, throughput_in_week: [fourth_demand])
       expect(arrival_departure_rate_data[Date.new(2019, 9, 15)]).to eq(arrived_in_week: [second_demand, third_demand], std_dev_arrived: 1.4142135623730951, std_dev_throughput: 1.4142135623730951, throughput_in_week: [first_demand, second_demand, third_demand])
-      expect(arrival_departure_rate_data[Date.new(2019, 9, 8)]).to eq(arrived_in_week: [fourth_demand], std_dev_arrived: 1.0, std_dev_throughput: 1.5275252316519468, throughput_in_week: [])
-      expect(arrival_departure_rate_data[Date.new(2019, 9, 1)]).to eq(arrived_in_week: [first_demand], std_dev_arrived: 0.816496580927726, std_dev_throughput: 1.4142135623730951, throughput_in_week: [])
     end
   end
 

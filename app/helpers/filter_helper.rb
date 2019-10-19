@@ -5,10 +5,6 @@ module FilterHelper
     options_for_select([[I18n.t('general.filter.period.option.last_week'), 'week'], [I18n.t('general.filter.period.option.last_month'), 'month'], [I18n.t('general.filter.period.option.last_quarter'), 'quarter'], [I18n.t('general.filter.period.option.all_period'), 'all']], selected_value)
   end
 
-  def grouping_options(selected_value = :no_grouping)
-    options_for_select([[I18n.t('demands.filter.grouping.no_grouping'), :no_grouping], [I18n.t('demands.filter.grouping.grouped_by_month'), :grouped_by_month], [I18n.t('demands.filter.grouping.grouped_by_customer'), :grouped_by_customer], [I18n.t('demands.filter.grouping.grouped_by_stage'), :grouped_by_stage]], selected_value)
-  end
-
   def flow_status_options(selected_value = :all_demands)
     options_for_select([[I18n.t('demands.filter.flow_status.all_demands'), :all_demands], [I18n.t('demands.filter.flow_status.not_started'), :not_started], [I18n.t('demands.filter.flow_status.work_in_progress'), :wip], [I18n.t('demands.filter.flow_status.delivered_demands'), :delivered]], selected_value)
   end

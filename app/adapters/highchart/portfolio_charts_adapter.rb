@@ -7,6 +7,7 @@ module Highchart
     def initialize(projects, start_date, end_date, project_status)
       @projects = Project.where(id: projects.map(&:id))
       @projects = @projects.where(status: project_status) if project_status.present?
+      @demands = Demand.kept.where(id: @projects.map { |project| project.demands.opened_before_date(Time.zone.now).map(&:id) }.flatten)
 
       @start_date = start_date
       @end_date = end_date
@@ -37,7 +38,7 @@ module Highchart
     def throughput_by_project
       return {} if @start_date.blank? || @end_date.blank?
 
-      throughput_by_project_data = DemandsRepository.instance.demands_delivered_grouped_by_projects_to_period(@projects, @start_date, @end_date)
+      throughput_by_project_data = DemandsRepository.instance.demands_delivered_grouped_by_projects_to_period(@demands, @start_date, @end_date)
       x_axis = throughput_by_project_data.keys
       { x_axis: x_axis, series: [{ name: I18n.t('portfolio.charts.throughput_by_project.data_title'), data: throughput_by_project_data.values.map(&:count), marker: { enabled: true } }] }
     end

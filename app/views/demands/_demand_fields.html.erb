@@ -1,35 +1,40 @@
-<td><%= render 'demands/demand_actions', company: company, demand: demand_list, demands_ids: demands_ids %></td>
-<td><%= link_to demand_list.external_id, company_demand_path(company, demand_list.slug) %></td>
-<td><%= t("activerecord.attributes.demand.enums.demand_type.#{demand_list.demand_type}") %></td>
-<td><%= t("activerecord.attributes.demand.enums.class_of_service.#{demand_list.class_of_service}") %></td>
-<td><%= demand_list.product_name %></td>
-<td><%= demand_list.portfolio_unit_name %></td>
-<td><%= number_to_currency(demand_list.cost_to_project) %></td>
-<td><%= demand_list.current_stage&.name %></td>
+<td><%= render 'demands/demand_actions', company: company, demand: demand, demands_ids: demands_ids %></td>
+<td><%= link_to demand.external_id, company_demand_path(company, demand.slug), target: :_blank %></td>
+<td><%= I18n.t("activerecord.attributes.demand.enums.demand_type.#{demand.demand_type}") %></td>
+<td><%= I18n.t("activerecord.attributes.demand.enums.class_of_service.#{demand.class_of_service}") %></td>
+<% if demand.product.present? %>
+  <td><%= link_to demand.product_name, company_product_path(company, demand.product), target: :_blank %></td>
+<% else %>
+  <td><%= demand.product_name %></td>
+<% end %>
+<td><%= demand.portfolio_unit_name %></td>
+<td><%= link_to demand.project_name, company_project_path(company, demand.project), target: :_blank %></td>
+<td><%= number_to_currency(demand.cost_to_project) %></td>
+<td><%= demand.current_stage&.name %></td>
 <td>
-  <%= time_distance_in_words(demand_list.time_between_commitment_and_pull) %>
+  <%= time_distance_in_words(demand.time_between_commitment_and_pull) %>
 </td>
 <td>
-  <% if demand_list.leadtime.present? %>
-    <%= time_distance_in_words(demand_list.leadtime) %>
-  <% elsif demand_list.commitment_date.present? %>
-    <span><%= time_distance_in_words(demand_list.partial_leadtime) %></span>
+  <% if demand.leadtime.present? %>
+    <%= time_distance_in_words(demand.leadtime) %>
+  <% elsif demand.commitment_date.present? %>
+    <span><%= time_distance_in_words(demand.partial_leadtime) %></span>
     <span class="small"><%= I18n.t('general.partial') %></span>
   <% end %>
 </td>
-<td><%= I18n.t('general.hours_text', hour_value: number_with_precision(demand_list.effort_upstream, precision: 2)) %></td>
-<td><%= I18n.t('general.hours_text', hour_value: number_with_precision(demand_list.effort_downstream, precision: 2)) %></td>
-<td><%= I18n.t('general.score_text', count: number_with_precision(demand_list.business_score, precision: 2)) if demand_list.business_score.present? %></td>
-<td><%= I18n.t('general.hours_text', hour_value: number_with_precision((demand_list.total_queue_time || 0) / 1.hour, precision: 2)) %></td>
-<td><%= I18n.t('general.hours_text', hour_value: number_with_precision((demand_list.total_touch_time || 0) / 1.hour, precision: 2)) %></td>
-<td><%= demand_list.demand_blocks.count %></td>
-<td><%= I18n.t('general.hours_text', hour_value: number_with_precision((demand_list.blocked_time || 0) / 1.hour, precision: 2)) %></td>
-<td><%= I18n.t('general.hours_text', hour_value: number_with_precision((demand_list.total_bloked_working_time), precision: 2)) %></td>
-<td><%= I18n.l(demand_list.created_date, format: :short) if demand_list.created_date.present? %></td>
-<td><%= I18n.l(demand_list.commitment_date, format: :short) if demand_list.commitment_date.present? %></td>
-<td><%= I18n.l(demand_list.end_date, format: :short) if demand_list.end_date.present? %></td>
+<td><%= I18n.t('general.hours_text', hour_value: number_with_precision(demand.effort_upstream, precision: 2)) %></td>
+<td><%= I18n.t('general.hours_text', hour_value: number_with_precision(demand.effort_downstream, precision: 2)) %></td>
+<td><%= I18n.t('general.score_text', count: number_with_precision(demand.business_score, precision: 2)) if demand.business_score.present? %></td>
+<td><%= I18n.t('general.hours_text', hour_value: number_with_precision((demand.total_queue_time || 0) / 1.hour, precision: 2)) %></td>
+<td><%= I18n.t('general.hours_text', hour_value: number_with_precision((demand.total_touch_time || 0) / 1.hour, precision: 2)) %></td>
+<td><%= demand.demand_blocks.count %></td>
+<td><%= I18n.t('general.hours_text', hour_value: number_with_precision((demand.blocked_time || 0) / 1.hour, precision: 2)) %></td>
+<td><%= I18n.t('general.hours_text', hour_value: number_with_precision((demand.total_bloked_working_time), precision: 2)) %></td>
+<td><%= I18n.l(demand.created_date, format: :short) if demand.created_date.present? %></td>
+<td><%= I18n.l(demand.commitment_date, format: :short) if demand.commitment_date.present? %></td>
+<td><%= I18n.l(demand.end_date, format: :short) if demand.end_date.present? %></td>
 
-<td><%= demand_list.project.name %></td>
-<td><%= demand_list.demand_title %></td>
+<td><%= demand.project.name %></td>
+<td><%= demand.demand_title %></td>
 
-<td><%= render 'demands/demand_actions', company: company, demand: demand_list, demands_ids: demands_ids %></td>
+<td><%= render 'demands/demand_actions', company: company, demand: demand, demands_ids: demands_ids %></td>

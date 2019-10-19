@@ -1,12 +1,13 @@
 # frozen_string_literal: true
 
 class DemandsController < AuthenticatedController
+  protect_from_forgery except: %i[demands_tab search_demands]
+
   before_action :user_gold_check
 
   before_action :assign_company
   before_action :assign_demand, only: %i[edit update show synchronize_jira destroy destroy_physically]
-  before_action :assign_project, except: %i[demands_csv demands_in_projects search_demands show destroy destroy_physically]
-  before_action :assign_projects_for_queries, only: %i[demands_in_projects search_demands]
+  before_action :assign_project, except: %i[demands_csv demands_tab search_demands show destroy destroy_physically]
 
   def new
     @demand = Demand.new(project: @project)
@@ -21,30 +22,26 @@ class DemandsController < AuthenticatedController
 
   def destroy
     @demand.discard
-
     assign_dates_to_query
-
-    @demands = Demand.kept.where(id: params[:demands_ids].split(','))
-    build_grouping_query(@demands, params[:grouping])
-
+    @demands = demands.order('demands.end_date DESC, demands.commitment_date DESC, demands.created_date DESC').page(page_param)
+    @unpaged_demands = @demands.except(:limit, :offset)
     assign_consolidations
-    @demands_chart_adapter = Highchart::DemandsChartsAdapter.new(@demands, @start_date, @end_date, params[:grouping_period])
 
     respond_to { |format| format.js { render 'demands/search_demands' } }
   end
 
   def edit
-    demands = Demand.where(id: params[:demands_ids])
-    @demands_ids = demands.map(&:id)
+    @demands = demands.order('demands.end_date DESC, demands.commitment_date DESC, demands.created_date DESC').page(page_param)
+    @demands_ids = @demands.map(&:id)
 
     respond_to { |format| format.js { render 'demands/edit' } }
   end
 
   def update
     @demand.update(demand_params)
-    demands = Demand.where(id: params[:demands_ids])
-    @demands_ids = demands.map(&:id)
-    @updated_demand = Demand.find(@demand.id)
+    @demands = demands.order('demands.end_date DESC, demands.commitment_date DESC, demands.created_date DESC').page(page_param)
+    @demands_ids = @demands.map(&:id)
+    @unpaged_demands = @demands.except(:limit, :offset)
     @unscored_demands = @project.demands.unscored_demands.order(external_id: :asc)
 
     respond_to { |format| format.js { render 'demands/update' } }
@@ -79,16 +76,14 @@ class DemandsController < AuthenticatedController
     respond_to { |format| format.csv { send_data demands_csv, filename: "demands-#{Time.zone.now}.csv" } }
   end
 
-  def demands_in_projects
+  def demands_tab
     assign_dates_to_query
 
-    @demands = build_date_query_and_order(demands_list, @start_date, @end_date).includes(:portfolio_unit).includes(:product)
-    @demands_count_per_week = DemandService.instance.arrival_and_departure_data_per_week(@projects)
-    @discarded_demands = DemandsRepository.instance.discarded_demands_to_projects(@projects)
+    @discarded_demands = demands.discarded
+    @demands = query_demands(@start_date, @end_date)
+    @unpaged_demands = @demands.except(:limit, :offset)
 
     assign_consolidations
-
-    @demands_chart_adapter = Highchart::DemandsChartsAdapter.new(@demands, @start_date, @end_date, 'week')
 
     respond_to { |format| format.js { render 'demands/demands_tab' } }
   end
@@ -96,13 +91,10 @@ class DemandsController < AuthenticatedController
   def search_demands
     assign_dates_to_query
 
-    @demands = query_demands(@start_date, @end_date).includes(:portfolio_unit).includes(:product)
-
-    build_grouping_query(@demands, params[:grouping])
+    @demands = query_demands(@start_date, @end_date)
+    @unpaged_demands = @demands.except(:limit, :offset)
 
     assign_consolidations
-
-    @demands_chart_adapter = Highchart::DemandsChartsAdapter.new(@demands, @start_date, @end_date, params[:grouping_period])
 
     respond_to { |format| format.js { render 'demands/search_demands' } }
   end
@@ -115,31 +107,17 @@ class DemandsController < AuthenticatedController
 
   private
 
-  def assign_dates_to_query
-    @start_date = start_date_to_query
-    @end_date = end_date_to_query
-  end
-
-  def start_date_to_query
-    return params['start_date'].to_date if params['start_date'].present?
-
-    return [@projects&.map(&:start_date)&.min, 3.months.ago.to_date].max if @projects&.select(&:executing?).present?
-
-    @projects&.map(&:start_date)&.min || Time.zone.today
-  end
-
-  def end_date_to_query
-    return params['end_date'].to_date if params['end_date'].present?
-
-    [@projects&.map(&:end_date)&.max, Time.zone.today].compact.min.to_date
+  def demands
+    @demands ||= Demand.where(id: params[:demands_ids].split(',')).includes(:portfolio_unit).includes(:product)
   end
 
   def query_demands(start_date, end_date)
-    demands_list_view = build_date_query_and_order(demands_list, start_date, end_date)
+    demands_list_view = demands.kept.to_dates(start_date, end_date)
     demands_list_view = filter_text(demands_list_view)
     demands_list_view = build_flow_status_query(demands_list_view, params[:flow_status])
-    demands_list_view = buld_demand_type_query(demands_list_view, params[:demand_type])
-    build_class_of_service_query(demands_list_view, params[:demand_class_of_service])
+    demands_list_view = build_demand_type_query(demands_list_view, params[:demand_type])
+    demands_list_view = build_class_of_service_query(demands_list_view, params[:demand_class_of_service])
+    demands_list_view.order('demands.end_date DESC, demands.commitment_date DESC, demands.created_date DESC').page(page_param)
   end
 
   def demand_params
@@ -150,34 +128,12 @@ class DemandsController < AuthenticatedController
     @project = Project.find(params[:project_id])
   end
 
-  def assign_projects_for_queries
-    @projects = Project.where(id: params[:projects_ids].split(','))
-    @projects_ids = @projects.map(&:id)
-  end
-
   def assign_demand
     @demand = Demand.friendly.find(params[:id]&.downcase)
   end
 
   def lead_time_breakdown
     @lead_time_breakdown ||= DemandService.instance.lead_time_breakdown([@demand])
-  end
-
-  def build_date_query_and_order(demands_list, start_date, end_date)
-    prepared_query_demands = demands_list.includes(:project)
-
-    return prepared_query_demands unless start_date.present? && end_date.present?
-
-    filtered_demands = prepared_query_demands.to_dates(start_date, end_date)
-
-    filtered_demands.order('demands.end_date DESC, demands.commitment_date DESC, demands.created_date DESC')
-  end
-
-  def build_grouping_query(demands, params_grouping)
-    return if params[:grouping] == 'no_grouping'
-
-    @grouped_delivered_demands = demands.grouped_end_date_by_month if params_grouping == 'grouped_by_month'
-    @grouped_by_stage_demands = DemandTransitionsRepository.instance.summed_transitions_time_grouped_by_stage_demand_for(demands.map(&:id)) if params_grouping == 'grouped_by_stage'
   end
 
   def build_flow_status_query(demands, params_flow_status)
@@ -189,24 +145,16 @@ class DemandsController < AuthenticatedController
     filtered_demands
   end
 
-  def buld_demand_type_query(demands, params_demand_type)
-    filtered_demands = demands
-    filtered_demands = filtered_demands.feature if params_demand_type == 'feature'
-    filtered_demands = filtered_demands.bug if params_demand_type == 'bug'
-    filtered_demands = filtered_demands.chore if params_demand_type == 'chore'
-    filtered_demands = filtered_demands.performance_improvement if params_demand_type == 'performance_improvement'
-    filtered_demands = filtered_demands.ui if params_demand_type == 'ui'
-    filtered_demands = filtered_demands.wireframe if params_demand_type == 'wireframe'
-    filtered_demands
+  def build_demand_type_query(demands, params_demand_type)
+    return demands.where(demand_type: params_demand_type) if params_demand_type.present? && params_demand_type != 'all_types'
+
+    demands
   end
 
   def build_class_of_service_query(demands, params_class_of_service)
-    filtered_demands = demands
-    filtered_demands = filtered_demands.standard if params_class_of_service == 'standard'
-    filtered_demands = filtered_demands.expedite if params_class_of_service == 'expedite'
-    filtered_demands = filtered_demands.fixed_date if params_class_of_service == 'fixed_date'
-    filtered_demands = filtered_demands.intangible if params_class_of_service == 'intangible'
-    filtered_demands
+    return demands.where(class_of_service: params_class_of_service) if params_class_of_service.present? && params_class_of_service != 'all_classes'
+
+    demands
   end
 
   def filter_text(demands_list)
@@ -217,9 +165,9 @@ class DemandsController < AuthenticatedController
 
   def assign_consolidations
     if @demands.present?
-      @confidence_95_leadtime = Stats::StatisticsService.instance.percentile(95, @demands.finished_with_leadtime.map(&:leadtime_in_days))
-      @confidence_80_leadtime = Stats::StatisticsService.instance.percentile(80, @demands.finished_with_leadtime.map(&:leadtime_in_days))
-      @confidence_65_leadtime = Stats::StatisticsService.instance.percentile(65, @demands.finished_with_leadtime.map(&:leadtime_in_days))
+      @confidence_95_leadtime = Stats::StatisticsService.instance.percentile(95, @unpaged_demands.finished_with_leadtime.map(&:leadtime_in_days))
+      @confidence_80_leadtime = Stats::StatisticsService.instance.percentile(80, @unpaged_demands.finished_with_leadtime.map(&:leadtime_in_days))
+      @confidence_65_leadtime = Stats::StatisticsService.instance.percentile(65, @unpaged_demands.finished_with_leadtime.map(&:leadtime_in_days))
       build_flow_informations
     else
       @confidence_95_leadtime = 0
@@ -234,19 +182,36 @@ class DemandsController < AuthenticatedController
   end
 
   def build_flow_informations
-    @total_queue_time = @demands.sum(&:total_queue_time).to_f / 1.hour
-    @total_touch_time = @demands.sum(&:total_touch_time).to_f / 1.hour
-    @average_queue_time = @total_queue_time / @demands.count
-    @average_touch_time = @total_touch_time / @demands.count
-    @avg_work_hours_per_demand = @demands.with_effort.sum(&:total_effort) / @demands.count
+    @total_queue_time = @unpaged_demands.sum(&:total_queue_time).to_f / 1.hour
+    @total_touch_time = @unpaged_demands.sum(&:total_touch_time).to_f / 1.hour
+    @average_queue_time = @total_queue_time / @unpaged_demands.count
+    @average_touch_time = @total_touch_time / @unpaged_demands.count
+    @avg_work_hours_per_demand = @unpaged_demands.with_effort.sum(&:total_effort) / @unpaged_demands.count
     build_block_informations
   end
 
   def build_block_informations
-    @share_demands_blocked = @demands.count { |demand_list| demand_list.demand_blocks.count.positive? }.to_f / @demands.count
+    @share_demands_blocked = @unpaged_demands.count { |demand_list| demand_list.demand_blocks.count.positive? }.to_f / @unpaged_demands.count
   end
 
-  def demands_list
-    @demands_list ||= Demand.kept.where(id: @projects.map { |project| project.demands.opened_before_date(Time.zone.now).map(&:id) }.flatten)
+  def page_param
+    @page_param ||= params[:page] || 1
+  end
+
+  def assign_dates_to_query
+    @start_date = start_date_to_query
+    @end_date = end_date_to_query
+  end
+
+  def start_date_to_query
+    return params['start_date'].to_date if params['start_date'].present?
+
+    3.months.ago.to_date
+  end
+
+  def end_date_to_query
+    return params['end_date'].to_date if params['end_date'].present?
+
+    Time.zone.today
   end
 end

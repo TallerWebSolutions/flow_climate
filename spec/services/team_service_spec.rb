@@ -30,13 +30,13 @@ RSpec.describe TeamService, type: :service do
       let(:first_project) { Fabricate :project, company: company, team: team, customers: [customer], project_type: :outsourcing, start_date: 1.month.ago, end_date: Time.zone.tomorrow }
       let(:second_project) { Fabricate :project, company: company, team: team, customers: [customer], project_type: :outsourcing, start_date: 1.month.ago, end_date: Time.zone.tomorrow }
 
-      let!(:first_demand) { Fabricate :demand, project: first_project, end_date: 1.month.ago }
-      let!(:second_demand) { Fabricate :demand, project: first_project, end_date: 1.month.ago }
-      let!(:third_demand) { Fabricate :demand, project: first_project, end_date: Time.zone.now }
+      let!(:first_demand) { Fabricate :demand, project: first_project, team: team, end_date: 1.month.ago }
+      let!(:second_demand) { Fabricate :demand, project: first_project, team: team, end_date: 1.month.ago }
+      let!(:third_demand) { Fabricate :demand, project: first_project, team: team, end_date: Time.zone.now }
 
-      let!(:fourth_demand) { Fabricate :demand, project: second_project, end_date: 1.month.ago }
-      let!(:fifth_demand) { Fabricate :demand, project: second_project, end_date: 1.month.ago }
-      let!(:sixth_demand) { Fabricate :demand, project: second_project, end_date: Time.zone.now }
+      let!(:fourth_demand) { Fabricate :demand, project: second_project, team: team, end_date: 1.month.ago }
+      let!(:fifth_demand) { Fabricate :demand, project: second_project, team: team, end_date: 1.month.ago }
+      let!(:sixth_demand) { Fabricate :demand, project: second_project, team: team, end_date: Time.zone.now }
 
       it 'returns the average demand cost to the selected period' do
         expect(described_class.instance.compute_average_demand_cost_to_team(team, 1.month.ago.to_date, Time.zone.today, 'month')).to eq(Date.new(2018, 5, 31) => 9250.0, Date.new(2018, 6, 30) => 18_500.0)
@@ -69,13 +69,13 @@ RSpec.describe TeamService, type: :service do
       let(:first_project) { Fabricate :project, company: company, team: team, customers: [customer], project_type: :outsourcing, start_date: 1.month.ago, end_date: Time.zone.tomorrow }
       let(:second_project) { Fabricate :project, company: company, team: team, customers: [customer], project_type: :outsourcing, start_date: 1.month.ago, end_date: Time.zone.tomorrow }
 
-      let!(:first_demand) { Fabricate :demand, project: first_project, end_date: 1.week.ago }
-      let!(:second_demand) { Fabricate :demand, project: first_project, end_date: 1.week.ago }
-      let!(:third_demand) { Fabricate :demand, project: first_project, end_date: Time.zone.now }
+      let!(:first_demand) { Fabricate :demand, project: first_project, team: team, end_date: 1.week.ago }
+      let!(:second_demand) { Fabricate :demand, project: first_project, team: team, end_date: 1.week.ago }
+      let!(:third_demand) { Fabricate :demand, project: first_project, team: team, end_date: Time.zone.now }
 
-      let!(:fourth_demand) { Fabricate :demand, project: second_project, end_date: 2.weeks.ago }
-      let!(:fifth_demand) { Fabricate :demand, project: second_project, end_date: nil }
-      let!(:sixth_demand) { Fabricate :demand, project: second_project, end_date: nil }
+      let!(:fourth_demand) { Fabricate :demand, project: second_project, team: team, end_date: 2.weeks.ago }
+      let!(:fifth_demand) { Fabricate :demand, project: second_project, team: team, end_date: nil }
+      let!(:sixth_demand) { Fabricate :demand, project: second_project, team: team, end_date: nil }
 
       it 'returns the average demand cost informations in a hash' do
         expect(described_class.instance.average_demand_cost_stats_info_hash(team)).to eq(cmd_difference_to_avg_last_four_weeks: 14.285714285714285, current_week: 2500.0, four_weeks_cmd_average: 2187.5, last_week: 1250.0, team_name: team.name)

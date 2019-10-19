@@ -13,6 +13,7 @@ navItem.on('click', function(event){
 
     const companyId = $("#company_id").val();
     const productId = $("#product_id").val();
+    const demandsIds = $("#demands_ids").val();
 
     if (disabled === 'disabled') {
         event.preventDefault();
@@ -29,7 +30,7 @@ navItem.on('click', function(event){
 
         } else if ($(this).attr('id') === 'nav-portfolio-demands') {
             $('.col-table-details').hide();
-            getPortfolioDemandsTab(companyId, productId)
+            getDemands(companyId, demandsIds)
 
         } else if ($(this).attr('id') === 'nav-portfolio-charts') {
             $('.col-table-details').hide();

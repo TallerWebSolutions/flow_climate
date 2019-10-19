@@ -16,15 +16,6 @@ function getProjectsTab(companyId, productId) {
     });
 }
 
-function getPortfolioDemandsTab(companyId, productId) {
-    $("#general-loader").show();
-
-    jQuery.ajax({
-        url: `/companies/${companyId}/products/${productId}/portfolio_demands_tab.js`,
-        type: "GET"
-    });
-}
-
 function getPortfolioChartsTab(companyId, productId) {
     $("#general-loader").show();
 

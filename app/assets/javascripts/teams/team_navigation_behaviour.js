@@ -4,6 +4,7 @@ $('.nav-item').on('click', function(event){
     const companyId = $("#company_id").val();
     const teamId = $("#team_id").val();
     const projectsIds = $("#projects_ids").val();
+    const demandsIds = $("#demands_ids").val();
     const teamsIds = $("#teams_ids").val();
     const targetName = $("#target_name").val();
 
@@ -24,7 +25,7 @@ $('.nav-item').on('click', function(event){
             buildStrategicCharts(companyId, projectsIds, teamsIds, targetName, 'month', startDate, endDate);
 
         } else if ($(this).attr('id') === 'nav-item-demands') {
-            getDemands(companyId, projectsIds);
+            getDemands(companyId, demandsIds);
 
         } else if ($(this).attr('id') === 'nav-item-demands-blocks') {
             $('#demands-blocks-tab').hide();

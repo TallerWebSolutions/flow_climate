@@ -20,22 +20,22 @@ RSpec.describe ReplenishingData, type: :data_objects do
     context 'with data' do
       subject(:replenishing_data) { described_class.new(team) }
 
-      let!(:first_demand) { Fabricate :demand, project: first_project, commitment_date: 3.months.ago, end_date: 1.week.ago }
-      let!(:second_demand) { Fabricate :demand, project: first_project, commitment_date: 2.months.ago, end_date: 4.weeks.ago }
-      let!(:third_demand) { Fabricate :demand, project: second_project, commitment_date: 2.days.ago, end_date: 1.day.ago }
-      let!(:fourth_demand) { Fabricate :demand, project: third_project, commitment_date: 1.day.ago, end_date: Time.zone.today }
-      let!(:fifth_demand) { Fabricate :demand, project: third_project, commitment_date: nil, end_date: 1.week.ago }
+      let!(:first_demand) { Fabricate :demand, team: team, project: first_project, created_date: 91.days.ago, commitment_date: 3.months.ago, end_date: 1.week.ago }
+      let!(:second_demand) { Fabricate :demand, team: team, project: first_project, created_date: 62.days.ago, commitment_date: 2.months.ago, end_date: 4.weeks.ago }
+      let!(:third_demand) { Fabricate :demand, team: team, project: second_project, created_date: 6.days.ago, commitment_date: 2.days.ago, end_date: 1.day.ago }
+      let!(:fourth_demand) { Fabricate :demand, team: team, project: third_project, created_date: 3.days.ago, commitment_date: 1.day.ago, end_date: Time.zone.today }
+      let!(:fifth_demand) { Fabricate :demand, team: team, project: third_project, created_date: 2.weeks.ago, commitment_date: nil, end_date: 1.week.ago }
 
-      let!(:first_project_closed_demands) { Fabricate.times(6, :demand, project: first_project, commitment_date: 1.week.ago, end_date: 1.week.ago) }
-      let!(:second_project_closed_demands) { Fabricate.times(2, :demand, project: second_project, commitment_date: 1.week.ago, end_date: 1.week.ago) }
+      let!(:first_project_closed_demands) { Fabricate.times(6, :demand, team: team, project: first_project, commitment_date: 1.week.ago, end_date: 1.week.ago) }
+      let!(:second_project_closed_demands) { Fabricate.times(2, :demand, team: team, project: second_project, commitment_date: 1.week.ago, end_date: 1.week.ago) }
 
       let!(:company_config) { Fabricate :company_settings, company: company, max_active_parallel_projects: 2, max_flow_pressure: 3 }
       let!(:projects) { Fabricate.times(2, :project, company: company, customers: [customer], start_date: 2.weeks.ago, end_date: Time.zone.today) }
       let!(:other_projects) { Fabricate.times(2, :project, company: company, customers: [customer], start_date: 1.month.from_now, end_date: 1.month.from_now) }
 
       it 'returns the hash value' do
-        expect(replenishing_data.projects).to eq [first_project, second_project, third_project, fourth_project]
-        expect(replenishing_data.summary_infos[:four_last_throughputs]).to eq [1, 0, 0, 9]
+        expect(replenishing_data.team_projects).to eq [first_project, second_project, third_project, fourth_project]
+        expect(replenishing_data.summary_infos[:four_last_throughputs]).to eq [1, 0, 0, 10]
         expect(replenishing_data.summary_infos[:average_throughput]).to eq 2
         expect(replenishing_data.summary_infos[:team_wip]).to eq 12
 
@@ -56,7 +56,7 @@ RSpec.describe ReplenishingData, type: :data_objects do
         expect(project_data_to_replenish[0][:qty_selected_last_week]).to eq 6
         expect(project_data_to_replenish[0][:work_in_progress]).to eq 0
         expect(project_data_to_replenish[0][:montecarlo_80_percent]).to be_within(12).of(54)
-        expect(project_data_to_replenish[0][:team_based_montecarlo_80_percent]).to be_within(30).of(135)
+        expect(project_data_to_replenish[0][:team_based_montecarlo_80_percent]).to be_within(10).of(65)
         expect(project_data_to_replenish[0][:throughput_last_week]).to eq 7
         expect(project_data_to_replenish[0][:customer_happiness]).to be_within(0.05).of(0.04)
         expect(project_data_to_replenish[0][:max_work_in_progress]).to eq 3
@@ -96,11 +96,11 @@ RSpec.describe ReplenishingData, type: :data_objects do
         expect(project_data_to_replenish[2][:leadtime_80]).to be_within(0.2).of(0.50)
         expect(project_data_to_replenish[2][:qty_selected_last_week]).to eq 0
         expect(project_data_to_replenish[2][:work_in_progress]).to eq 0
-        expect(project_data_to_replenish[2][:montecarlo_80_percent]).to eq 0
-        expect(project_data_to_replenish[2][:throughput_last_week]).to eq 0
+        expect(project_data_to_replenish[2][:montecarlo_80_percent]).to be_within(20).of(130)
+        expect(project_data_to_replenish[2][:throughput_last_week]).to eq 1
         expect(project_data_to_replenish[2][:max_work_in_progress]).to eq 5
         expect(project_data_to_replenish[2][:throughput_data_mode]).to eq 0
-        expect(project_data_to_replenish[2][:throughput_data_stddev]).to eq 0.0
+        expect(project_data_to_replenish[2][:throughput_data_stddev]).to eq 0.5
         expect(project_data_to_replenish[2][:throughput_data_size]).to eq 4
       end
     end
