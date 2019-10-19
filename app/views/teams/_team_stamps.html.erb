@@ -28,7 +28,7 @@
 <div class="row bottom-spaced-component">
   <div class="col-xs-4 green-stamp">
     <div class="stamp-title"><%= I18n.t('customers.show.active_projects_value') %></div>
-    <div class="stamp-content"><%= number_to_currency(team.active_projects.sum(&:value)) %></div>
+    <div class="stamp-content"><%= number_to_currency(team.active_projects.map(&:value).compact.sum) %></div>
   </div>
   <div class="col-xs-4 green-stamp">
     <div class="stamp-title"><%= I18n.t('projects.index.remaining_money') %></div>

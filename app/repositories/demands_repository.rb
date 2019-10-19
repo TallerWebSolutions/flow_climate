@@ -13,16 +13,16 @@ class DemandsRepository
     demands.where('(end_date IS NULL OR end_date > :analysed_date) AND (commitment_date IS NULL OR commitment_date > :analysed_date)', analysed_date: analysed_date).count
   end
 
-  def committed_demands_by_project_and_week(projects, week, year)
-    demands_stories_to_projects(projects).where('EXTRACT(WEEK FROM commitment_date) = :week AND EXTRACT(YEAR FROM commitment_date) = :year', week: week, year: year)
+  def committed_demands_to_period(demands, week, year)
+    demands.kept.where('EXTRACT(WEEK FROM commitment_date) = :week AND EXTRACT(YEAR FROM commitment_date) = :year', week: week, year: year)
   end
 
-  def demands_delivered_grouped_by_projects_to_period(projects, start_period, end_period)
-    throughput_to_projects_and_period(projects, start_period, end_period).group_by(&:project_name)
+  def demands_delivered_grouped_by_projects_to_period(demands, start_period, end_period)
+    throughput_to_period(demands, start_period, end_period).group_by(&:project_name)
   end
 
-  def throughput_to_projects_and_period(projects, start_period, end_period)
-    demands_stories_to_projects(projects).to_end_dates(start_period, end_period)
+  def throughput_to_period(demands, start_period, end_period)
+    demands.kept.to_end_dates(start_period, end_period)
   end
 
   def throughput_to_products_team_and_period(products, team, start_period, end_period)
@@ -88,10 +88,6 @@ class DemandsRepository
     stages = Stage.where(id: stages_id)
 
     build_cumulative_stage_hash(end_date, demands, stages)
-  end
-
-  def discarded_demands_to_projects(projects)
-    Demand.where(project_id: projects.map(&:id)).where('discarded_at IS NOT NULL').order(discarded_at: :desc)
   end
 
   private

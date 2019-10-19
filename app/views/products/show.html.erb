@@ -13,12 +13,13 @@
 
 <%= hidden_field_tag :company_id, @company.id %>
 <%= hidden_field_tag :product_id, @product.id %>
+<%= hidden_field_tag :demands_ids, @demands_ids.join(',') %>
 
 <div class="row">
   <div class="topnav">
     <%= link_to I18n.t('navbar.details'), '#', id: 'nav-item-stamps', class: 'active nav-item', data: { container: '#stamps' } %>
     <%= link_to I18n.t('navbar.projects_list'), '#', id: 'nav-projects-table', class: 'nav-item', data: { container: '#project-table' } %>
-    <%= link_to I18n.t('navbar.demands'), '#', id: 'nav-portfolio-demands', class: 'nav-item', data: { container: '#portfolio-demands' } %>
+    <%= link_to I18n.t('navbar.demands'), '#', id: 'nav-portfolio-demands', class: 'nav-item', data: { container: '#demands-tab' } %>
     <%= link_to I18n.t('navbar.risk_reviews'), '#', id: 'nav-risk-reviews', class: 'nav-item', data: { container: '#risk-reviews' } %>
     <%= link_to I18n.t('navbar.service_delivery_reviews'), '#', id: 'nav-service-delivery-reviews', class: 'nav-item', data: { container: '#service-delivery-reviews' } %>
     <%= link_to I18n.t('navbar.portfolio_units'), '#', id: 'nav-portfolio-unit', class: 'nav-item', data: { container: '#portfolio-units' } %>
@@ -41,7 +42,7 @@
 
 </div>
 
-<div id="portfolio-demands" class="tab-container">
+<div id="demands-tab" class="tab-container">
 
 </div>
 
@@ -80,7 +81,9 @@
   <%= javascript_include_tag 'top_navigation/tab-navigation' %>
 
   <%= javascript_include_tag 'routes/product_routes' %>
+  <%= javascript_include_tag 'routes/demand_routes' %>
 
+  <%= javascript_include_tag 'demands/filter_binding' %>
   <%= javascript_include_tag 'demands/demands_charts' %>
 
   <%= javascript_include_tag 'products/product_navigation_behaviour' %>

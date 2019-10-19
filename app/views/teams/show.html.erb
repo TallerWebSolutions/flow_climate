@@ -13,6 +13,7 @@
 <%= hidden_field_tag :teams_ids, [@team.id] %>
 <%= hidden_field_tag :target_name, @team.name %>
 <%= hidden_field_tag :projects_ids, @team_projects.map(&:id).join(',') %>
+<%= hidden_field_tag :demands_ids, @demands_ids.join(',') %>
 <%= hidden_field_tag :default_start_date_to_filter, @start_date %>
 <%= hidden_field_tag :default_end_date_to_filter, @end_date %>
 

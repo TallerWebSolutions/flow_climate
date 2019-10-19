@@ -19,8 +19,8 @@ module Slack
     end
 
     def notify_week_throughput(slack_notifier, team)
-      th_current_week = DemandsRepository.instance.throughput_to_projects_and_period(team.projects, Time.zone.now.beginning_of_week, Time.zone.now.end_of_week).count
-      average_th_four_last_weeks = DemandsRepository.instance.throughput_to_projects_and_period(team.projects, 4.weeks.ago.beginning_of_week, 1.week.ago.end_of_week).count.to_f / 4.0
+      th_current_week = DemandsRepository.instance.throughput_to_period(team.demands, Time.zone.now.beginning_of_week, Time.zone.now.end_of_week).count
+      average_th_four_last_weeks = DemandsRepository.instance.throughput_to_period(team.demands, 4.weeks.ago.beginning_of_week, 1.week.ago.end_of_week).count.to_f / 4.0
 
       th_difference_to_avg_last_four_weeks = 0
       th_difference_to_avg_last_four_weeks = ((th_current_week.to_f - average_th_four_last_weeks) / average_th_four_last_weeks) * 100 if average_th_four_last_weeks.positive?
@@ -29,7 +29,7 @@ module Slack
     end
 
     def notify_last_week_delivered_demands_info(slack_notifier, team)
-      th_last_week = DemandsRepository.instance.throughput_to_projects_and_period(team.projects, 1.week.ago.beginning_of_week, 1.week.ago.end_of_week)
+      th_last_week = DemandsRepository.instance.throughput_to_period(team.demands, 1.week.ago.beginning_of_week, 1.week.ago.end_of_week)
       slack_notifier.ping(I18n.t('slack_configurations.notifications.th_last_week_text', name: team.name, th_last_week: th_last_week.count))
 
       th_last_week.each do |demand|

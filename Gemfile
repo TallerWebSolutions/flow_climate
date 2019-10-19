@@ -19,6 +19,7 @@ gem 'histogram'
 gem 'httparty'
 gem 'jira-ruby', require: false
 gem 'jquery-rails'
+gem 'kaminari'
 gem 'mini_magick'
 gem 'oj'
 gem 'pg'

@@ -16,15 +16,15 @@ class ProjectConsolidationJob < ApplicationJob
 
           team_throughput_data = build_team_throughput_data(project)
 
-          project_throughput_data_per_week = DemandsRepository.instance.throughput_to_projects_and_period([project], project.start_date, end_of_week).group('EXTRACT(WEEK FROM end_date)', 'EXTRACT(YEAR FROM end_date)').count
-          project_throughput_data = DemandInfoDataBuilder.instance.build_data_from_hash_per_week(project_throughput_data_per_week, project.start_date, end_of_week)
+          project_throughput_data_per_week = DemandsRepository.instance.throughput_to_period(project.demands, project.start_date, end_of_week).group('EXTRACT(WEEK FROM end_date)', 'EXTRACT(YEAR FROM end_date)').count
+          project_throughput_data = DemandInfoDataBuilder.instance.build_data_from_hash_per_week(project_throughput_data_per_week, project.start_date.beginning_of_week, end_of_week.end_of_week)
           project_based_montecarlo_durations = Stats::StatisticsService.instance.run_montecarlo(project.remaining_backlog(end_of_week), project_throughput_data.values.last(20), 500)
 
           projects_in_products = project.products.map(&:projects).flatten.uniq
-          start_date_to_product = projects_in_products.map(&:start_date).min || project.start_date
+          start_date_to_product = (projects_in_products.map(&:start_date).min || project.start_date).beginning_of_week
 
           products_throughput_data_per_week = DemandsRepository.instance.throughput_to_products_team_and_period(project.products, project.team, start_date_to_product, end_of_week).group('EXTRACT(WEEK FROM end_date)', 'EXTRACT(YEAR FROM end_date)').count
-          product_throughput_data = DemandInfoDataBuilder.instance.build_data_from_hash_per_week(products_throughput_data_per_week, projects_in_products.map(&:start_date).min, end_of_week)
+          product_throughput_data = DemandInfoDataBuilder.instance.build_data_from_hash_per_week(products_throughput_data_per_week, start_date_to_product, end_of_week)
 
           projects_dates_intervals = projects_in_products.map { |project| [project.start_date, project.end_date] }
 
@@ -71,8 +71,8 @@ class ProjectConsolidationJob < ApplicationJob
     team_projects = team.projects
 
     minimum_start_date = team_projects.minimum(:start_date)
-    team_throughput_data_per_week = DemandsRepository.instance.throughput_to_projects_and_period(team_projects.order(:end_date), minimum_start_date, 1.week.ago.end_of_week).group('EXTRACT(WEEK FROM end_date)', 'EXTRACT(YEAR FROM end_date)').count
-    DemandInfoDataBuilder.instance.build_data_from_hash_per_week(team_throughput_data_per_week, minimum_start_date, 1.week.ago)
+    team_throughput_data_per_week = DemandsRepository.instance.throughput_to_period(team.demands, minimum_start_date, 1.week.ago.end_of_week).group('EXTRACT(WEEK FROM end_date)', 'EXTRACT(YEAR FROM end_date)').count
+    DemandInfoDataBuilder.instance.build_data_from_hash_per_week(team_throughput_data_per_week, minimum_start_date.beginning_of_week, 1.week.ago.end_of_week)
   end
 
   def compute_team_monte_carlo_weeks(end_of_week, project, team_throughput_data)

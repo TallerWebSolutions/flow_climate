@@ -4,7 +4,7 @@ class TeamService
   include Singleton
 
   def compute_average_demand_cost_to_team(team, start_date, end_date, grouping_period)
-    projects = team.projects
+    demands = team.demands
 
     average_demand_cost_hash = {}
 
@@ -14,7 +14,7 @@ class TeamService
 
       break if end_date_to_cmd > end_of_period_for_date(Time.zone.today, grouping_period)
 
-      average_demand_cost = compute_average_demand_cost_to_all_costs(team, projects, start_date_to_cmd, end_date_to_cmd, grouping_period)
+      average_demand_cost = compute_average_demand_cost_to_all_costs(team, demands, start_date_to_cmd, end_date_to_cmd, grouping_period)
 
       average_demand_cost_hash[end_date_to_cmd] = average_demand_cost.to_f
     end
@@ -65,8 +65,8 @@ class TeamService
 
   private
 
-  def compute_average_demand_cost_to_all_costs(team, projects, start_date_to_cmd, end_date_to_cmd, grouping_period)
-    demands_count = DemandsRepository.instance.throughput_to_projects_and_period(projects, start_date_to_cmd, end_date_to_cmd).count
+  def compute_average_demand_cost_to_all_costs(team, demands, start_date_to_cmd, end_date_to_cmd, grouping_period)
+    demands_count = DemandsRepository.instance.throughput_to_period(demands, start_date_to_cmd, end_date_to_cmd).count
     active_billable_members = team.team_members.joins(:memberships).where('memberships.start_date <= :end_date AND (memberships.end_date IS NULL OR memberships.end_date > :end_date) AND team_members.billable = true', end_date: end_date_to_cmd).where(memberships: { member_role: :developer })
     active_resources = team.team_resource_allocations.where('team_resource_allocations.start_date <= :end_date AND (team_resource_allocations.end_date IS NULL OR team_resource_allocations.end_date > :end_date)', end_date: end_date_to_cmd)
 

@@ -1,15 +1,16 @@
 # frozen_string_literal: true
 
 class ReplenishingData
-  attr_reader :team, :projects, :running_projects, :total_pressure, :summary_infos, :project_data_to_replenish
+  attr_reader :team, :team_projects, :running_projects, :total_pressure, :summary_infos, :project_data_to_replenish
 
   def initialize(team)
     @team = team
-    @projects = @team.projects
-    @running_projects = @projects.running.sort_by(&:flow_pressure).reverse
+    @team_projects = @team.projects
+    @team_demands = @team.demands
+    @running_projects = @team_projects.running.sort_by(&:flow_pressure).reverse
     @total_pressure = @running_projects.sum(&:flow_pressure)
 
-    @start_date = 4.weeks.ago.beginning_of_week.to_date
+    @start_date = 5.weeks.ago.beginning_of_week.to_date
     @end_date = 1.week.ago.end_of_week.to_date
 
     build_summary_infos
@@ -19,9 +20,9 @@ class ReplenishingData
   private
 
   def build_summary_infos
-    if @projects.present?
-      th_per_week_hash = DemandsRepository.instance.throughput_to_projects_and_period(projects, @start_date, @end_date).finished_with_leadtime.group('EXTRACT(WEEK FROM end_date)', 'EXTRACT(YEAR FROM end_date)').count
-      build_basic_summary_infos(th_per_week_hash)
+    if @team_projects.present?
+      th_for_team_per_week_hash = build_grouped_per_week_hash(@team_demands, @start_date, @end_date, @team_projects.map(&:initial_scope).compact.sum)
+      build_basic_summary_infos(th_for_team_per_week_hash)
       @summary_infos[:average_throughput] = @summary_infos[:four_last_throughputs].sum / @summary_infos[:four_last_throughputs].count
     else
       @summary_infos = {}
@@ -30,7 +31,7 @@ class ReplenishingData
 
   def build_basic_summary_infos(th_per_week_hash)
     @summary_infos = {
-      four_last_throughputs: DemandInfoDataBuilder.instance.build_data_from_hash_per_week(th_per_week_hash, @start_date, @end_date).values,
+      four_last_throughputs: th_per_week_hash.last(4),
       team_wip: @team.max_work_in_progress,
       team_lead_time: @team.lead_time(4.weeks.ago.beginning_of_week, 1.week.ago.end_of_week) / 1.day
     }
@@ -40,7 +41,7 @@ class ReplenishingData
     @project_data_to_replenish = []
     @running_projects.each do |project|
       project_info_hash = build_project_hash(project)
-      throughput_grouped_per_week_hash = build_grouped_per_week_hash(project).values
+      throughput_grouped_per_week_hash = build_grouped_per_week_hash(project.demands.kept, project.start_date, 1.week.ago.end_of_week, project.initial_scope)
 
       project_info_hash = project_info_hash.merge(build_stats_info(project, throughput_grouped_per_week_hash))
       project_info_hash = project_info_hash.merge(build_qty_items_info(project))
@@ -75,7 +76,7 @@ class ReplenishingData
     stats_hash[:throughput_last_week] = throughput_grouped_per_week_hash.last
     stats_hash[:montecarlo_80_percent] = build_monte_carlo_info(project, throughput_grouped_per_week_hash.last(10))
     stats_hash[:project_based_risks_to_deadline] = project.current_risk_to_deadline
-    stats_hash[:team_based_montecarlo_80_percent] = build_monte_carlo_info(project, build_project_share_in_team_throughput(project, build_team_throughput_per_week_data.values.last(10)))
+    stats_hash[:team_based_montecarlo_80_percent] = build_monte_carlo_info(project, build_project_share_in_team_throughput(project, build_grouped_per_week_hash(@team_demands, @start_date, @end_date, uncertain_scope_for_team).last(10)))
 
     build_proejct_consolidation_data(project, stats_hash)
 
@@ -86,6 +87,10 @@ class ReplenishingData
     stats_hash
   end
 
+  def uncertain_scope_for_team
+    @team_projects.map(&:initial_scope).compact.sum
+  end
+
   def build_proejct_consolidation_data(project, stats_hash)
     stats_hash[:team_based_odds_to_deadline] = project.last_project_consolidation&.odds_to_deadline_team
     stats_hash[:team_monte_carlo_weeks_std_dev] = project.last_project_consolidation&.team_monte_carlo_weeks_std_dev
@@ -93,18 +98,10 @@ class ReplenishingData
     stats_hash[:team_monte_carlo_weeks_max] = project.last_project_consolidation&.team_monte_carlo_weeks_max
   end
 
-  def build_grouped_per_week_hash(project)
-    throughput_data_per_week = DemandsRepository.instance.throughput_to_projects_and_period([project], project.start_date, 1.week.ago.end_of_week).finished_with_leadtime.group('EXTRACT(WEEK FROM end_date)', 'EXTRACT(YEAR FROM end_date)').count
-    DemandInfoDataBuilder.instance.build_data_from_hash_per_week(throughput_data_per_week, project.start_date, 1.week.ago)
-  end
-
-  def build_team_throughput_per_week_data
-    throughput_data_per_week = DemandsRepository.instance.throughput_to_projects_and_period(@projects.order(:end_date), minimum_date, 1.week.ago.end_of_week).finished_with_leadtime.group('EXTRACT(WEEK FROM end_date)', 'EXTRACT(YEAR FROM end_date)').count
-    DemandInfoDataBuilder.instance.build_data_from_hash_per_week(throughput_data_per_week, minimum_date, 1.week.ago)
-  end
-
-  def minimum_date
-    @minimum_date ||= @projects.minimum(:start_date)
+  def build_grouped_per_week_hash(demands, start_date, end_date, initial_scope)
+    dates_array = TimeService.instance.weeks_between_of(start_date, end_date)
+    work_item_flow_information = Flow::WorkItemFlowInformations.new(dates_array, start_date.beginning_of_week, end_date.end_of_week, demands, initial_scope)
+    work_item_flow_information.throughput_per_period
   end
 
   def build_project_share_in_team_throughput(project, team_throughput_per_week_array)
@@ -118,7 +115,7 @@ class ReplenishingData
   def build_qty_items_info(project)
     qty_items_hash = {}
     qty_items_hash[:qty_using_pressure] = compute_qty_using_pressure(project)
-    qty_items_hash[:qty_selected_last_week] = DemandsRepository.instance.committed_demands_by_project_and_week([project], 1.week.ago.to_date.cweek, 1.week.ago.to_date.cwyear).count
+    qty_items_hash[:qty_selected_last_week] = DemandsRepository.instance.committed_demands_to_period(project.demands, 1.week.ago.to_date.cweek, 1.week.ago.to_date.cwyear).count
     qty_items_hash[:work_in_progress] = project.demands.in_wip.count
     qty_items_hash
   end

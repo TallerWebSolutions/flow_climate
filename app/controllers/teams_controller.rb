@@ -7,6 +7,7 @@ class TeamsController < AuthenticatedController
   before_action :assign_team, only: %i[show edit update replenishing_input destroy]
 
   def show
+    assign_demands_ids
     assign_team_objects
     build_query_dates
   end
@@ -81,5 +82,9 @@ class TeamsController < AuthenticatedController
 
   def team_params
     params.require(:team).permit(:name, :max_work_in_progress)
+  end
+
+  def assign_demands_ids
+    @demands_ids = @team.demands.map(&:id)
   end
 end

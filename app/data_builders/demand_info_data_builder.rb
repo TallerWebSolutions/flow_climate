@@ -8,9 +8,9 @@ class DemandInfoDataBuilder
 
     return data_grouped_hash if start_date.blank? || end_date.blank?
 
-    (start_date..end_date).each do |date|
-      data_grouped_hash[date.beginning_of_week] = info_grouped_by_date_hash[[date.to_date.cweek.to_f, date.to_date.cwyear.to_f]] || 0
-    end
+    dates_array = TimeService.instance.weeks_between_of(start_date, end_date)
+
+    dates_array.each { |date| data_grouped_hash[date] = info_grouped_by_date_hash[date] || 0 }
 
     data_grouped_hash
   end

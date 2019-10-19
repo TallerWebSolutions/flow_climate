@@ -37,22 +37,26 @@
 
 <div id="demand-structure" class="tabcontent">
   <div class="row">
-    <% @demand.product_tree.each do |branch| %>
-      <div class="col-xs-2 col-xs-offset-5 center <%= branch != @demand.product_tree.last ? 'product-branch' : 'demand-branch' %>">
-        <% if branch == @demand.product_tree.first %>
-          <h4><%= link_to branch.name, company_product_path(@company, @demand.product), target: :_blank %></h4>
-        <% elsif branch != @demand.product_tree.last %>
-          <h4><%= link_to branch.name, company_product_portfolio_unit_path(@company, @demand.product, branch), target: :_blank %></h4>
-        <% else %>
-          <h4><%= branch.name %></h4>
-        <% end %>
-      </div>
-
-      <% if branch != @demand.product_tree.last %>
-        <div class="col-xs-2 col-xs-offset-5 product-tree-connector">
-          <i class="fas fa-arrow-down"></i>
+    <% if @demand.product_tree.count > 1 %>
+      <% @demand.product_tree.each do |branch| %>
+        <div class="col-xs-2 col-xs-offset-5 center <%= branch != @demand.product_tree.last ? 'product-branch' : 'demand-branch' %>">
+          <% if branch == @demand.product_tree.first %>
+            <h4><%= link_to branch.name, company_product_path(@company, @demand.product), target: :_blank %></h4>
+          <% elsif branch != @demand.product_tree.last %>
+            <h4><%= link_to branch.name, company_product_portfolio_unit_path(@company, @demand.product, branch), target: :_blank %></h4>
+          <% else %>
+            <h4><%= branch.name %></h4>
+          <% end %>
         </div>
+
+        <% if branch != @demand.product_tree.last %>
+          <div class="col-xs-2 col-xs-offset-5 product-tree-connector">
+            <i class="fas fa-arrow-down"></i>
+          </div>
+        <% end %>
       <% end %>
+    <% else %>
+      <%= render 'layouts/no_data', missing_data: PortfolioUnit.model_name.human.pluralize.downcase %>
     <% end %>
   </div>
 </div>

@@ -7,6 +7,7 @@ $('#stamps').show();
 
 const companyId = $("#company_id").val();
 const projectsIds = $("#projects_ids").val();
+const demandsIds = $("#demands_ids").val();
 const targetName = $("#target_name").val();
 
 projectNavItem.on('click', function(event){
@@ -28,7 +29,7 @@ projectNavItem.on('click', function(event){
 
         } else if ($(this).attr('id') === 'nav-item-demands') {
             $('#demands-tab').hide();
-            getDemands(companyId, projectsIds);
+            getDemands(companyId, demandsIds);
 
         } else if ($(this).attr('id') === 'nav-item-demands-blocks') {
             $('#demands-blocks-tab').hide();

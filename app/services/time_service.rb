@@ -18,8 +18,8 @@ class TimeService
   def weeks_between_of(start_date, end_date)
     return [] if start_date.blank? || end_date.blank?
 
-    min_date = start_date.end_of_week
-    max_date = end_date.end_of_week
+    min_date = start_date.end_of_week.to_date
+    max_date = end_date.end_of_week.to_date
 
     compute_dates(min_date, max_date, 1.week, :end_of_week)
   end
@@ -27,8 +27,8 @@ class TimeService
   def months_between_of(start_date, end_date)
     return [] if start_date.blank? || end_date.blank?
 
-    min_date = start_date.end_of_month
-    max_date = end_date.end_of_month
+    min_date = start_date.end_of_month.to_date
+    max_date = end_date.end_of_month.to_date
 
     compute_dates(min_date, max_date, 1.month, :end_of_month)
   end
@@ -36,8 +36,8 @@ class TimeService
   def years_between_of(start_date, end_date)
     return [] if start_date.blank? || end_date.blank?
 
-    min_date = start_date.end_of_year
-    max_date = end_date.end_of_year
+    min_date = start_date.end_of_year.to_date
+    max_date = end_date.end_of_year.to_date
 
     compute_dates(min_date, max_date, 1.year, :end_of_year)
   end
