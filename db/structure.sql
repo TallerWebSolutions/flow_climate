@@ -965,7 +965,9 @@ CREATE TABLE public.project_consolidations (
     products_weekly_throughput integer[],
     project_monte_carlo_weeks integer[],
     team_monte_carlo_weeks integer[],
-    products_monte_carlo_weeks integer[]
+    products_monte_carlo_weeks integer[],
+    demands_finished_in_week integer[],
+    lead_time_in_week numeric[]
 );
 
 
@@ -2628,6 +2630,20 @@ CREATE INDEX index_project_change_deadline_histories_on_user_id ON public.projec
 
 
 --
+-- Name: index_project_consolidations_on_demands_finished_in_week; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_project_consolidations_on_demands_finished_in_week ON public.project_consolidations USING btree (demands_finished_in_week);
+
+
+--
+-- Name: index_project_consolidations_on_lead_time_in_week; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_project_consolidations_on_lead_time_in_week ON public.project_consolidations USING btree (lead_time_in_week);
+
+
+--
 -- Name: index_project_risk_alerts_on_project_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -3623,6 +3639,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190906135154'),
 ('20190917120310'),
 ('20191002140915'),
-('20191015185615');
+('20191015185615'),
+('20191021222025');
 
 

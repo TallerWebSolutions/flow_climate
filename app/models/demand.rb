@@ -4,52 +4,59 @@
 #
 # Table name: demands
 #
+#  id                              :bigint           not null, primary key
 #  blocked_working_time_downstream :decimal(, )      default(0.0)
 #  blocked_working_time_upstream   :decimal(, )      default(0.0)
 #  business_score                  :decimal(, )
 #  class_of_service                :integer          default("standard"), not null
 #  commitment_date                 :datetime
-#  company_id                      :integer          not null, indexed => [external_id]
 #  cost_to_project                 :decimal(, )      default(0.0)
-#  created_at                      :datetime         not null
 #  created_date                    :datetime         not null
-#  current_stage_id                :integer          indexed
 #  demand_title                    :string
 #  demand_type                     :integer          not null
 #  demand_url                      :string
-#  discarded_at                    :datetime         indexed
+#  discarded_at                    :datetime
 #  effort_downstream               :decimal(, )      default(0.0)
 #  effort_upstream                 :decimal(, )      default(0.0)
 #  end_date                        :datetime
-#  external_id                     :string           not null, indexed => [company_id]
 #  external_url                    :string
-#  id                              :bigint(8)        not null, primary key
 #  leadtime                        :decimal(, )
 #  manual_effort                   :boolean          default(FALSE)
+#  slug                            :string
+#  total_bloked_working_time       :decimal(, )      default(0.0)
+#  total_queue_time                :integer          default(0)
+#  total_touch_blocked_time        :decimal(, )      default(0.0)
+#  total_touch_time                :integer          default(0)
+#  created_at                      :datetime         not null
+#  updated_at                      :datetime         not null
+#  company_id                      :integer          not null
+#  current_stage_id                :integer
+#  external_id                     :string           not null
 #  parent_id                       :integer
 #  portfolio_unit_id               :integer
 #  product_id                      :integer
 #  project_id                      :integer          not null
 #  risk_review_id                  :integer
 #  service_delivery_review_id      :integer
-#  slug                            :string           indexed
 #  team_id                         :integer          not null
-#  total_bloked_working_time       :decimal(, )      default(0.0)
-#  total_queue_time                :integer          default(0)
-#  total_touch_blocked_time        :decimal(, )      default(0.0)
-#  total_touch_time                :integer          default(0)
-#  updated_at                      :datetime         not null
+#
+# Indexes
+#
+#  index_demands_on_current_stage_id            (current_stage_id)
+#  index_demands_on_discarded_at                (discarded_at)
+#  index_demands_on_external_id_and_company_id  (external_id,company_id) UNIQUE
+#  index_demands_on_slug                        (slug) UNIQUE
 #
 # Foreign Keys
 #
-#  fk_rails_095fb2481e  (team_id => teams.id)
-#  fk_rails_19bdd8aa1e  (project_id => projects.id)
-#  fk_rails_1abfdc9ca0  (parent_id => demands.id)
-#  fk_rails_34f0dad22e  (risk_review_id => risk_reviews.id)
-#  fk_rails_35680c72ae  (current_stage_id => stages.id)
-#  fk_rails_73cc77780a  (product_id => products.id)
-#  fk_rails_c9b5eaaa7f  (portfolio_unit_id => portfolio_units.id)
-#  fk_rails_fcc44c0e5d  (service_delivery_review_id => service_delivery_reviews.id)
+#  fk_rails_...  (current_stage_id => stages.id)
+#  fk_rails_...  (parent_id => demands.id)
+#  fk_rails_...  (portfolio_unit_id => portfolio_units.id)
+#  fk_rails_...  (product_id => products.id)
+#  fk_rails_...  (project_id => projects.id)
+#  fk_rails_...  (risk_review_id => risk_reviews.id)
+#  fk_rails_...  (service_delivery_review_id => service_delivery_reviews.id)
+#  fk_rails_...  (team_id => teams.id)
 #
 
 class Demand < ApplicationRecord

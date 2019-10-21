@@ -4,22 +4,26 @@
 #
 # Table name: team_members
 #
+#  id                      :bigint           not null, primary key
 #  billable                :boolean          default(TRUE)
 #  billable_type           :integer          default("outsourcing")
-#  company_id              :integer          not null, indexed => [name, jira_account_id]
-#  created_at              :datetime         not null
 #  end_date                :date
-#  id                      :bigint(8)        not null, primary key
-#  jira_account_id         :string           indexed => [company_id, name]
 #  jira_account_user_email :string
 #  monthly_payment         :decimal(, )
-#  name                    :string           not null, indexed => [company_id, jira_account_id]
+#  name                    :string           not null
 #  start_date              :date
+#  created_at              :datetime         not null
 #  updated_at              :datetime         not null
+#  company_id              :integer          not null
+#  jira_account_id         :string
+#
+# Indexes
+#
+#  index_team_members_on_company_id_and_name_and_jira_account_id  (company_id,name,jira_account_id) UNIQUE
 #
 # Foreign Keys
 #
-#  fk_rails_3ec60e399b  (company_id => companies.id)
+#  fk_rails_...  (company_id => companies.id)
 #
 
 class TeamMember < ApplicationRecord

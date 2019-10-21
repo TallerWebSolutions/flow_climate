@@ -4,18 +4,26 @@
 #
 # Table name: portfolio_units
 #
+#  id                  :bigint           not null, primary key
+#  name                :string           not null
+#  portfolio_unit_type :integer          not null
 #  created_at          :datetime         not null
-#  id                  :bigint(8)        not null, primary key
-#  name                :string           not null, indexed, indexed => [product_id]
-#  parent_id           :integer          indexed
-#  portfolio_unit_type :integer          not null, indexed
-#  product_id          :integer          not null, indexed => [name], indexed
 #  updated_at          :datetime         not null
+#  parent_id           :integer
+#  product_id          :integer          not null
+#
+# Indexes
+#
+#  index_portfolio_units_on_name                 (name)
+#  index_portfolio_units_on_name_and_product_id  (name,product_id) UNIQUE
+#  index_portfolio_units_on_parent_id            (parent_id)
+#  index_portfolio_units_on_portfolio_unit_type  (portfolio_unit_type)
+#  index_portfolio_units_on_product_id           (product_id)
 #
 # Foreign Keys
 #
-#  fk_rails_111d0b277b  (product_id => products.id)
-#  fk_rails_2af43d471c  (parent_id => portfolio_units.id)
+#  fk_rails_...  (parent_id => portfolio_units.id)
+#  fk_rails_...  (product_id => products.id)
 #
 
 class PortfolioUnit < ApplicationRecord

@@ -4,15 +4,19 @@
 #
 # Table name: jira_portfolio_unit_configs
 #
-#  created_at        :datetime         not null
-#  id                :bigint(8)        not null, primary key
+#  id                :bigint           not null, primary key
 #  jira_field_name   :string           not null
-#  portfolio_unit_id :integer          not null, indexed
+#  created_at        :datetime         not null
 #  updated_at        :datetime         not null
+#  portfolio_unit_id :integer          not null
+#
+# Indexes
+#
+#  index_jira_portfolio_unit_configs_on_portfolio_unit_id  (portfolio_unit_id)
 #
 # Foreign Keys
 #
-#  fk_rails_36a483c30d  (portfolio_unit_id => portfolio_units.id)
+#  fk_rails_...  (portfolio_unit_id => portfolio_units.id)
 #
 
 module Jira

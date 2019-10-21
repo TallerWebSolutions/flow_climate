@@ -71,7 +71,7 @@
           <% end %>
 
           <%= link_to status_report_dashboard_company_project_path(company, project), remote: true do %>
-            <i class="fas fa-folder-open" title="<%= I18n.t('projects.show.status_report.title') %>"></i>
+            <i class="fas fa-folder-open" title="<%= I18n.t('projects.show.status_report.title', project_name: project.name) %>"></i>
           <% end %>
 
           <%= link_to lead_time_dashboard_company_project_path(company, project), remote: true do %>

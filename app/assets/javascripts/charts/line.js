@@ -60,7 +60,7 @@ function buildLineChart(lineDiv) {
                     enabled: true,
                     color: 'black',
                     formatter: function () {
-                        return `${lineDiv.data('prefix') + Highcharts.numberFormat(this.y, lineDiv.data("decimals"), ",", ".")} ${lineDiv.data('tooltipsuffix')}`;
+                        return `${lineDiv.data('prefix') + Highcharts.numberFormat(this.y, lineDiv.data("decimals"), ",", ".") + " " + lineDiv.data('tooltipsuffix')}`;
                     }
                 }
             }

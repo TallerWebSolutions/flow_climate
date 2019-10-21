@@ -4,21 +4,27 @@
 #
 # Table name: stage_project_configs
 #
+#  id                    :bigint           not null, primary key
 #  compute_effort        :boolean          default(FALSE)
-#  created_at            :datetime         not null
-#  id                    :bigint(8)        not null, primary key
 #  management_percentage :integer          default(0)
 #  max_seconds_in_stage  :integer          default(0)
 #  pairing_percentage    :integer          default(0)
-#  project_id            :integer          not null, indexed, indexed => [stage_id]
-#  stage_id              :integer          not null, indexed => [project_id], indexed
 #  stage_percentage      :integer          default(0)
+#  created_at            :datetime         not null
 #  updated_at            :datetime         not null
+#  project_id            :integer          not null
+#  stage_id              :integer          not null
+#
+# Indexes
+#
+#  index_stage_project_configs_on_project_id               (project_id)
+#  index_stage_project_configs_on_project_id_and_stage_id  (project_id,stage_id) UNIQUE
+#  index_stage_project_configs_on_stage_id                 (stage_id)
 #
 # Foreign Keys
 #
-#  fk_rails_713ceb31a3  (project_id => projects.id)
-#  fk_rails_b25c287b60  (stage_id => stages.id)
+#  fk_rails_...  (project_id => projects.id)
+#  fk_rails_...  (stage_id => stages.id)
 #
 
 class StageProjectConfig < ApplicationRecord

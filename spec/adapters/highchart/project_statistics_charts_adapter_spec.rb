@@ -80,7 +80,7 @@ RSpec.describe Highchart::ProjectStatisticsChartsAdapter, type: :service do
         it 'builds the data structure for scope_data_evolution' do
           statistics_data = described_class.new([first_project], first_project.start_date, first_project.end_date, 'day', '')
 
-          expect(statistics_data.leadtime_data_evolution_chart(80)).to eq [{ data: [4.0, 9.241666666666667, 9.241666666666667, 7.041666666666667], marker: { enabled: true }, name: I18n.t('projects.general.leadtime', percentil: 80) }]
+          expect(statistics_data.leadtime_data_evolution_chart(80)).to match_array [{ data: [4.0, 10.641666666666666, 0, 5.441666666666666], marker: { enabled: true }, name: I18n.t('projects.general.leadtime', percentil: 80) }, { data: [4.0, 9.241666666666667, 9.241666666666667, 7.041666666666667], marker: { enabled: true }, name: I18n.t('projects.general.accumulated_leadtime', percentil: 80) }]
           expect(statistics_data.x_axis).to eq(TimeService.instance.days_between_of(first_project.start_date, first_project.end_date))
         end
       end
@@ -89,7 +89,7 @@ RSpec.describe Highchart::ProjectStatisticsChartsAdapter, type: :service do
         it 'builds the data structure for scope_data_evolution' do
           statistics_data = described_class.new([first_project], first_project.start_date, first_project.end_date, 'week', '')
 
-          expect(statistics_data.leadtime_data_evolution_chart(80)).to eq [{ data: [9.241666666666667, 7.041666666666667], marker: { enabled: true }, name: I18n.t('projects.general.leadtime', percentil: 80) }]
+          expect(statistics_data.leadtime_data_evolution_chart(80)).to match_array [{ data: [9.241666666666667, 5.441666666666666], marker: { enabled: true }, name: I18n.t('projects.general.leadtime', percentil: 80) }, { data: [9.241666666666667, 7.041666666666667], marker: { enabled: true }, name: I18n.t('projects.general.accumulated_leadtime', percentil: 80) }]
           expect(statistics_data.x_axis).to eq(TimeService.instance.weeks_between_of(first_project.start_date, first_project.end_date))
         end
       end
@@ -98,7 +98,7 @@ RSpec.describe Highchart::ProjectStatisticsChartsAdapter, type: :service do
         it 'builds the data structure for scope_data_evolution' do
           statistics_data = described_class.new([first_project], first_project.start_date, first_project.end_date, 'month', '')
 
-          expect(statistics_data.leadtime_data_evolution_chart(80)).to eq [{ data: [7.041666666666667], marker: { enabled: true }, name: I18n.t('projects.general.leadtime', percentil: 80) }]
+          expect(statistics_data.leadtime_data_evolution_chart(80)).to match_array [{ data: [7.041666666666667], marker: { enabled: true }, name: I18n.t('projects.general.accumulated_leadtime', percentil: 80) }, { data: [7.041666666666667], marker: { enabled: true }, name: I18n.t('projects.general.leadtime', percentil: 80) }]
           expect(statistics_data.x_axis).to eq(TimeService.instance.months_between_of(first_project.start_date, first_project.end_date))
         end
       end

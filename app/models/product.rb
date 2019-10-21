@@ -4,15 +4,20 @@
 #
 # Table name: products
 #
+#  id          :bigint           not null, primary key
+#  name        :string           not null
 #  created_at  :datetime         not null
-#  customer_id :integer          not null, indexed, indexed => [name]
-#  id          :bigint(8)        not null, primary key
-#  name        :string           not null, indexed => [customer_id]
 #  updated_at  :datetime         not null
+#  customer_id :integer          not null
+#
+# Indexes
+#
+#  index_products_on_customer_id           (customer_id)
+#  index_products_on_customer_id_and_name  (customer_id,name) UNIQUE
 #
 # Foreign Keys
 #
-#  fk_rails_252452a41b  (customer_id => customers.id)
+#  fk_rails_...  (customer_id => customers.id)
 #
 
 class Product < ApplicationRecord

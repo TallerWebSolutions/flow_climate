@@ -4,20 +4,25 @@
 #
 # Table name: memberships
 #
-#  created_at      :datetime         not null
+#  id              :bigint           not null, primary key
 #  end_date        :date
 #  hours_per_month :integer
-#  id              :bigint(8)        not null, primary key
 #  member_role     :integer          default("developer"), not null
 #  start_date      :date             not null
-#  team_id         :integer          not null, indexed
-#  team_member_id  :integer          not null, indexed
+#  created_at      :datetime         not null
 #  updated_at      :datetime         not null
+#  team_id         :integer          not null
+#  team_member_id  :integer          not null
+#
+# Indexes
+#
+#  index_memberships_on_team_id         (team_id)
+#  index_memberships_on_team_member_id  (team_member_id)
 #
 # Foreign Keys
 #
-#  fk_rails_1138510838  (team_member_id => team_members.id)
-#  fk_rails_ae2aedcfaf  (team_id => teams.id)
+#  fk_rails_...  (team_id => teams.id)
+#  fk_rails_...  (team_member_id => team_members.id)
 #
 
 class Membership < ApplicationRecord

@@ -4,24 +4,30 @@
 #
 # Table name: service_delivery_reviews
 #
-#  company_id                        :integer          not null, indexed
-#  created_at                        :datetime         not null
+#  id                                :bigint           not null, primary key
 #  delayed_expedite_bottom_threshold :decimal(, )      not null
 #  delayed_expedite_top_threshold    :decimal(, )      not null
 #  expedite_max_pull_time_sla        :integer          not null
-#  id                                :bigint(8)        not null, primary key
 #  lead_time_bottom_threshold        :decimal(, )      not null
 #  lead_time_top_threshold           :decimal(, )      not null
-#  meeting_date                      :date             not null, indexed => [product_id]
-#  product_id                        :integer          not null, indexed => [meeting_date], indexed
+#  meeting_date                      :date             not null
 #  quality_bottom_threshold          :decimal(, )      not null
 #  quality_top_threshold             :decimal(, )      not null
+#  created_at                        :datetime         not null
 #  updated_at                        :datetime         not null
+#  company_id                        :integer          not null
+#  product_id                        :integer          not null
+#
+# Indexes
+#
+#  index_service_delivery_reviews_on_company_id                   (company_id)
+#  index_service_delivery_reviews_on_meeting_date_and_product_id  (meeting_date,product_id) UNIQUE
+#  index_service_delivery_reviews_on_product_id                   (product_id)
 #
 # Foreign Keys
 #
-#  fk_rails_2ee3d597b3  (product_id => products.id)
-#  fk_rails_bfbae75414  (company_id => companies.id)
+#  fk_rails_...  (company_id => companies.id)
+#  fk_rails_...  (product_id => products.id)
 #
 
 class ServiceDeliveryReview < ApplicationRecord

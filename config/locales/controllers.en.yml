@@ -427,7 +427,8 @@ en:
     general:
       scope: "Escopo"
       deadline: "Deadline"
-      leadtime: "Lead time (%{percentil})"
+      leadtime: "LT (%{percentil})"
+      accumulated_leadtime: "Accumulated LT (%{percentil})"
       discovered_scope: "Discovered Scope"
       work_items: "Work Items"
     finish_project:
