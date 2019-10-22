@@ -9,6 +9,7 @@ cache: bundler
 rvm:
   - 2.6.4
 before_install:
+  - export TZ=America/Sao_Paulo
   - gem install bundler
 services:
 - postgresql
