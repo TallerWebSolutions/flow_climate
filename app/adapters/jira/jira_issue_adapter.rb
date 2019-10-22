@@ -77,7 +77,7 @@ module Jira
     end
 
     def read_transition_history(demand, issue_changelog)
-      last_time_out = demand.created_date
+      transition_enter_date = demand.created_date
 
       sorted_histories(issue_changelog).each do |history|
         next if history['items'].blank?
@@ -85,9 +85,9 @@ module Jira
         history['items'].each do |item|
           next unless item['field'].casecmp('status').zero?
 
-          transition_created_at = history['created']
-          create_transitions!(demand, item['from'], item['to'], last_time_out, transition_created_at)
-          last_time_out = transition_created_at
+          to_transition_date = history['created']
+          create_transitions!(demand, item['from'], item['to'], transition_enter_date, to_transition_date)
+          transition_enter_date = to_transition_date
         end
       end
     end
@@ -222,15 +222,15 @@ module Jira
       team_member
     end
 
-    def create_transitions!(demand, from_id, to_id, last_time_out, transition_created_at)
+    def create_transitions!(demand, from_id, to_id, from_transition_out, to_transition_date)
       stage_from = demand.project.stages.find_by(integration_id: from_id)
       stage_to = demand.project.stages.find_by(integration_id: to_id)
 
-      transition_from = DemandTransition.where(demand: demand, stage: stage_from).first_or_initialize
-      transition_from.update(last_time_in: last_time_out, last_time_out: transition_created_at)
+      transition_from = DemandTransition.where(demand: demand, stage: stage_from, last_time_in: from_transition_out).first_or_initialize
+      transition_from.update(last_time_out: to_transition_date)
 
-      transition_to = DemandTransition.where(demand: demand, stage: stage_to).first_or_initialize
-      transition_to.update(demand: demand, last_time_in: transition_created_at, last_time_out: nil)
+      transition_to = DemandTransition.where(demand: demand, stage: stage_to, last_time_in: to_transition_date).first_or_initialize
+      transition_to.update(demand: demand, last_time_in: to_transition_date, last_time_out: nil)
     end
 
     def build_jira_url(jira_account, issue_key)
