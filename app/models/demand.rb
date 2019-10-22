@@ -77,9 +77,6 @@ class Demand < ApplicationRecord
   belongs_to :service_delivery_review
   belongs_to :current_stage, class_name: 'Stage', foreign_key: :current_stage_id, inverse_of: :current_demands
 
-  belongs_to :parent, class_name: 'Demand', foreign_key: :parent_id, inverse_of: :children
-  has_many :children, class_name: 'Demand', foreign_key: :parent_id, inverse_of: :parent, dependent: :destroy
-
   has_many :demand_transitions, dependent: :destroy
   has_many :demand_blocks, dependent: :destroy
   has_many :demand_comments, dependent: :destroy

@@ -510,6 +510,10 @@ RSpec.describe ProjectConsolidation, type: :model do
   end
 
   describe '#lead_time_feature' do
+    before { travel_to Time.zone.local(2019, 10, 17, 10, 0, 0) }
+
+    after { travel_back }
+
     include_context 'demands with lead time'
 
     context 'with data' do
@@ -558,12 +562,16 @@ RSpec.describe ProjectConsolidation, type: :model do
   end
 
   describe '#lead_time_standard' do
+    before { travel_to Time.zone.local(2019, 10, 17, 10, 0, 0) }
+
+    after { travel_back }
+
     include_context 'demands with lead time'
 
     context 'with data' do
       let!(:project_consolidation) { Fabricate :project_consolidation, project: project, consolidation_date: 1.day.ago, demands_ids: Demand.all.map(&:id) }
 
-      it { expect(project_consolidation.lead_time_standard.to_f).to be_within(0.01).of(156_960.00) }
+      it { expect(project_consolidation.lead_time_standard.to_f).to be_within(200).of(156_960.00) }
     end
 
     context 'with no data' do
@@ -574,6 +582,10 @@ RSpec.describe ProjectConsolidation, type: :model do
   end
 
   describe '#lead_time_fixed_date' do
+    before { travel_to Time.zone.local(2019, 10, 17, 10, 0, 0) }
+
+    after { travel_back }
+
     include_context 'demands with lead time'
 
     context 'with data' do

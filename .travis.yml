@@ -10,6 +10,7 @@ rvm:
   - 2.6.4
 before_install:
   - export TZ=America/Sao_Paulo
+  - date
   - gem install bundler
 services:
 - postgresql
