@@ -18,6 +18,8 @@ class ChartsController < AuthenticatedController
 
     @portfolio_data = Highchart::PortfolioChartsAdapter.new(@projects, @start_date, @end_date, '') if @projects.present?
 
+    @demands_chart_adapter = Highchart::DemandsChartsAdapter.new(demands, @start_date, @end_date, @period)
+
     respond_to { |format| format.js { render 'charts/operational_charts' } }
   end
 
@@ -42,6 +44,10 @@ class ChartsController < AuthenticatedController
   end
 
   private
+
+  def demands
+    @demands ||= Demand.where(id: @projects.map { |project| project.demands.map(&:id) }.flatten)
+  end
 
   def assign_projects
     @projects = Project.where(id: params[:projects_ids].split(','))

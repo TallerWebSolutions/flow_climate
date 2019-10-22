@@ -23,9 +23,9 @@ if (donutServiceDeliveryReviewPortfolioUnitsDiv.length !== 0) {
     buildDonutChart(donutServiceDeliveryReviewPortfolioUnitsDiv);
 }
 
-let donutServiceDeliveryReviewFlowDataDiv = $('#service-delivery-review-flow-data-column');
-if (donutServiceDeliveryReviewFlowDataDiv.length !== 0) {
-    buildColumnChart(donutServiceDeliveryReviewFlowDataDiv);
+let columnServiceDeliveryReviewFlowDataDiv = $('#service-delivery-review-flow-data-column');
+if (columnServiceDeliveryReviewFlowDataDiv.length !== 0) {
+    buildColumnChart(columnServiceDeliveryReviewFlowDataDiv);
 }
 
 const leadtimeControlChart = $('#service-delivery-review-leadtime-control-chart');

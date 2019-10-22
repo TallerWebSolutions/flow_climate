@@ -11,6 +11,29 @@
     </div>
   </div>
 
+  <div class="col-xs-6 bottom-spaced-component">
+    <% if demands_chart_adapter.demands_in_chart.present? %>
+      <div id="operational-charts-flow-data-column"
+           class="flow-chart"
+           data-title='<%= I18n.t('demands.charts.flow_data') %>'
+           data-xcategories='<%= demands_chart_adapter.x_axis.to_json %>'
+           data-xtitle='<%= I18n.t('general.period') %>'
+           data-ytitle='<%= I18n.t('demands.charts.demands.title') %>'
+           data-tooltipsuffix='<%= I18n.t('projects.charts.throughput.tooltipsufix') %>'
+           data-series='<%= [
+                                { name: I18n.t('demands.charts.creation_date'), data: demands_chart_adapter.creation_chart_data },
+                                { name: I18n.t('demands.charts.committed_date'), data: demands_chart_adapter.committed_chart_data },
+                                { name: I18n.t('general.pull_transaction'), data: demands_chart_adapter.pull_transaction_rate },
+                                { name: I18n.t('general.delivered'), data: demands_chart_adapter.throughput_chart_data }
+                            ].to_json %>'
+           data-stacking=''
+           data-decimals='0'>
+      </div>
+    <% else %>
+      <%= render 'layouts/no_data', missing_data: Demand.model_name.human.pluralize.downcase %>
+    <% end %>
+  </div>
+
   <% if @team_chart_data.present? %>
     <div class="col-xs-6 bottom-spaced-component">
       <div id="average-demand-cost"

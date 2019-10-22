@@ -47,10 +47,12 @@ RSpec.describe ChartsController, type: :controller do
 
           it 'builds the operation and status report and respond the JS render the template' do
             get :build_operational_charts, params: { company_id: company, projects_ids: team.projects.map(&:id).to_csv }, xhr: true
+
             expect(response).to render_template 'charts/operational_charts'
             expect(assigns(:report_data)).to be_a Highchart::OperationalChartsAdapter
             expect(assigns(:status_report_data)).to be_a Highchart::StatusReportChartsAdapter
             expect(assigns(:report_data).all_projects).to match_array [first_project, second_project]
+            expect(assigns(:demands_chart_adapter)).to be_a Highchart::DemandsChartsAdapter
           end
         end
 
@@ -148,6 +150,7 @@ RSpec.describe ChartsController, type: :controller do
               context 'and the project started after 3 months ago' do
                 it 'builds the statistic adapter and renders the view using the dates in project to a monthly period' do
                   get :statistics_charts, params: { company_id: company, projects_ids: team.projects.map(&:id).join(','), project_status: '' }, xhr: true
+
                   expect(response).to render_template 'charts/statistics_tab'
                   expect(response).to render_template 'charts/_statistics_charts'
 
