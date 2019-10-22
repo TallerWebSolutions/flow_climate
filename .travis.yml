@@ -9,8 +9,8 @@ cache: bundler
 rvm:
   - 2.6.4
 before_install:
-  - export TZ=America/Sao_Paulo
-  - date
+  - echo America/Sao_Paulo | sudo tee /etc/timezone
+  - sudo dpkg-reconfigure --frontend noninteractive tzdata
   - gem install bundler
 services:
 - postgresql
