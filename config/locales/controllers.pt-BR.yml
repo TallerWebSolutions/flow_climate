@@ -38,7 +38,7 @@ pt-BR:
       xlabel:
         weekdays: "Dias da Semana"
         monthdays: "Dias do Mês"
-      hours: "horas"
+      hours: "hora(s)"
     stamps:
       cmd:
         title: "Custo Médio por Demanda"
@@ -354,7 +354,7 @@ pt-BR:
       hours_per_demand:
         title: "Horas por demanda no tempo para %{target_name}"
         ylabel: "Horas/Demanda"
-        tooltipsufix: " horas por demanda"
+        tooltipsufix: " horas/demanda"
       flow_pressure:
         title: "Pressão do Fluxo para %{target_name}"
         ylabel: "Pressão do Fluxo"
@@ -399,6 +399,7 @@ pt-BR:
         closed: "Bugs Fechados"
         ylabel: "bugs"
         share: "Porcentagem de Bugs"
+        suffix: "bug(s)"
       bugs_percentage_in_time:
         title: "Porcentagem de Bugs no Tempo para %{target_name}"
       accumulated_bugs_in_time:
@@ -670,6 +671,8 @@ pt-BR:
       demands_by_project:
         title: "Demandas por Projeto"
       flow_data: "Dados do Fluxo"
+      hours:
+        suffix: "hora(s)"
     flow:
       processed_demand: "Demandas Processadas"
       wip: "Trabalho em Progresso"

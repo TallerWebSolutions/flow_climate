@@ -38,7 +38,7 @@ en:
       xlabel:
         weekdays: "Weekdays"
         monthdays: "Month Days"
-      hours: "hours"
+      hours: "hour(s)"
     stamps:
       cmd:
         title: "Avg Demand Cost"
@@ -340,7 +340,7 @@ en:
       hours_per_demand:
         title: "Hours per demand on time for %{target_name}"
         ylabel: "Hours/Demand"
-        tooltipsufix: " hours per demand"
+        tooltipsufix: " hours/demand"
       flow_pressure:
         title: "Flow Pressure for %{target_name}"
         ylabel: "Flow Pressure"
@@ -385,6 +385,7 @@ en:
         closed: "Bugs Closed"
         ylabel: "bugs"
         share: "Percentage of Bugs"
+        suffix: "bug(s)"
       bugs_percentage_in_time:
         title: "Percentage of bugs in time for %{target_name}"
       accumulated_bugs_in_time:
@@ -624,6 +625,8 @@ en:
       flow_data: "Flow Data"
       demands:
         title: "Demands"
+      hours:
+        suffix: "hour(s)"
     flow:
       processed_demand: "Processed Demands"
       wip: "Work in Progress"

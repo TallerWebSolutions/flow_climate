@@ -108,6 +108,22 @@
     </div>
   </div>
 
+  <% if report_data.work_item_flow_information.accumulated_bugs_opened_data_array.present? %>
+    <div class="col-xs-6 bottom-spaced-component">
+      <div id="bugs-in-time"
+           class="flow-chart"
+           data-title='<%= I18n.t('projects.charts.bugs_in_time.title', target_name: target_name) %>'
+           data-xcategories='<%= report_data.x_axis.to_json %>'
+           data-xtitle='<%= I18n.t('projects.charts.xlabel.time') %>'
+           data-ytitle='<%= I18n.t('projects.charts.bugs_in_time.ylabel') %>'
+           data-prefix=''
+           data-tooltipsuffix='<%= I18n.t('projects.charts.bugs_in_time.suffix') %>'
+           data-series='<%= [{ name: I18n.t('projects.charts.bugs_in_time.opened'), data: report_data.work_item_flow_information.bugs_opened_data_array }, { name: I18n.t('projects.charts.bugs_in_time.closed'), data: report_data.work_item_flow_information.bugs_closed_data_array }].to_json %>'
+           data-decimals='0'>
+      </div>
+    </div>
+  <% end %>
+
   <div class="col-xs-6 bottom-spaced-component">
     <div id="accumulated-bugs-in-time"
          class="flow-chart"
@@ -116,8 +132,9 @@
          data-xtitle='<%= I18n.t('projects.charts.xlabel.time') %>'
          data-ytitle='<%= I18n.t('projects.charts.bugs_in_time.ylabel') %>'
          data-prefix=''
+         data-tooltipsuffix='<%= I18n.t('projects.charts.bugs_in_time.suffix') %>'
          data-series='<%= [{ name: I18n.t('projects.charts.bugs_in_time.opened'), data: report_data.work_item_flow_information.accumulated_bugs_opened_data_array }, { name: I18n.t('projects.charts.bugs_in_time.closed'), data: report_data.work_item_flow_information.accumulated_bugs_closed_data_array }].to_json %>'
-         data-decimals='2'>
+         data-decimals='0'>
     </div>
   </div>
 
@@ -163,20 +180,6 @@
     </div>
   <% end %>
 
-  <% if report_data.work_item_flow_information.accumulated_bugs_opened_data_array.present? %>
-    <div class="col-xs-6 bottom-spaced-component">
-      <div id="bugs-in-time"
-           class="flow-chart"
-           data-title='<%= I18n.t('projects.charts.bugs_in_time.title', target_name: target_name) %>'
-           data-xcategories='<%= report_data.x_axis.to_json %>'
-           data-xtitle='<%= I18n.t('projects.charts.xlabel.time') %>'
-           data-ytitle='<%= I18n.t('projects.charts.bugs_in_time.ylabel') %>'
-           data-prefix=''
-           data-series='<%= [{ name: I18n.t('projects.charts.bugs_in_time.opened'), data: report_data.work_item_flow_information.bugs_opened_data_array }, { name: I18n.t('projects.charts.bugs_in_time.closed'), data: report_data.work_item_flow_information.bugs_closed_data_array }].to_json %>'
-           data-decimals='2'>
-      </div>
-    </div>
-  <% end %>
   <% if report_data.statistics_flow_information.average_aging_per_period.present? %>
     <div class="col-xs-6 bottom-spaced-component">
       <div id="aging-per-demand-div"
@@ -198,6 +201,7 @@
          data-xtitle='<%= I18n.t('projects.charts.xlabel.weeks') %>'
          data-ytitle='<%= I18n.t('projects.charts.queue_touch_time.ylabel') %>'
          data-prefix=''
+         data-tooltipsuffix='<%= I18n.t('demands.charts.hours.suffix') %>'
          data-series='<%= [{ name: I18n.t('projects.charts.queue_touch_time.queue'), data: report_data.time_flow_informations.queue_time }, { name: I18n.t('projects.charts.queue_touch_time.touch'), data: report_data.time_flow_informations.touch_time }].to_json %>'
          data-decimals='2'>
     </div>
@@ -247,6 +251,7 @@
          data-xtitle='<%= I18n.t('projects.charts.xlabel.days') %>'
          data-ytitle='<%= I18n.t('projects.charts.leadtime_histogram.ylabel') %>'
          data-prefix=''
+         data-tooltipsuffix=''
          data-series='<%= [{ name: I18n.t('projects.charts.leadtime_histogram.ylabel'), data: report_data.statistics_flow_information.lead_time_histogram_data }].to_json %>'
          data-decimals='2'>
     </div>
