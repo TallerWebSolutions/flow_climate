@@ -8,6 +8,7 @@
       <th><%= FlowImpact.human_attribute_name :demand %></th>
       <th><%= FlowImpact.human_attribute_name :start_date %></th>
       <th><%= FlowImpact.human_attribute_name :end_date %></th>
+      <th><%= Stage.model_name.human %></th>
       <th><%= I18n.t('flow_impacts.show.impact_duration') %></th>
       <th><%= FlowImpact.human_attribute_name :impact_description %></th>
     </tr>
@@ -29,6 +30,7 @@
         <td><%= flow_impact.demand&.external_id %></td>
         <td><%= I18n.l(flow_impact.start_date, format: :short) %></td>
         <td><%= I18n.l(flow_impact.end_date, format: :short) if flow_impact.end_date.present? %></td>
+        <td><%= flow_impact.demand.stage_at(flow_impact.start_date)&.name if flow_impact.demand.present? %></td>
         <td><%= time_distance_in_words(flow_impact.impact_duration) %></td>
         <td><%= flow_impact.impact_description %></td>
       </tr>

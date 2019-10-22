@@ -57,7 +57,7 @@ class FlowImpactsController < AuthenticatedController
 
   def edit
     assign_flow_impacts_list
-    @demands_for_impact_form = @flow_impact.project.demands.in_wip.order(:external_id)
+    @demands_for_impact_form = @flow_impact.project.demands.kept.order(:external_id)
     respond_to { |format| format.js { render 'flow_impacts/edit' } }
   end
 
@@ -78,6 +78,8 @@ class FlowImpactsController < AuthenticatedController
       @flow_impacts = FlowImpact.where(project_id: params[:projects_ids].split(',')).order(:start_date)
     elsif @project.present?
       @flow_impacts = @project.flow_impacts.order(:start_date)
+    elsif @flow_impact.present?
+      @flow_impacts = @flow_impact.project.flow_impacts.order(:start_date)
     end
   end
 
