@@ -61,4 +61,9 @@ function buildOperationalHighcharts() {
     if (scopeUncertainty.length !== 0) {
         buildDonutChart(scopeUncertainty);
     }
+
+    let columnFlowDataDiv = $('#operational-charts-flow-data-column');
+    if (columnFlowDataDiv.length !== 0) {
+        buildColumnChart(columnFlowDataDiv);
+    }
 }
