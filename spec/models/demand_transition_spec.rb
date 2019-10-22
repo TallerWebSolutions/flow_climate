@@ -254,6 +254,10 @@ RSpec.describe DemandTransition, type: :model do
   end
 
   describe '#working_time_in_transition' do
+    before { travel_to Time.zone.local(2018, 3, 20, 10, 0, 0) }
+
+    after { travel_back }
+
     let(:project) { Fabricate :project }
     let(:stage) { Fabricate :stage, commitment_point: true, end_point: false, projects: [project] }
     let(:demand) { Fabricate :demand, project: project, created_date: Time.zone.parse('2018-02-04 12:00:00') }
@@ -265,13 +269,62 @@ RSpec.describe DemandTransition, type: :model do
     end
 
     context 'when there is no last_time_out' do
-      before { travel_to Time.zone.local(2018, 3, 20, 10, 0, 0) }
-
-      after { travel_back }
-
       let(:demand_transition) { Fabricate :demand_transition, stage: stage, demand: demand, last_time_in: Time.zone.parse('2018-03-13 12:00:00'), last_time_out: nil }
 
       it { expect(demand_transition.working_time_in_transition).to eq 30 }
+    end
+  end
+
+  describe '#effort_in_transition' do
+    before { travel_to Time.zone.local(2018, 3, 22, 10, 0, 0) }
+
+    after { travel_back }
+
+    let(:project) { Fabricate :project }
+    let(:stage) { Fabricate :stage, commitment_point: true, end_point: false }
+    let!(:stage_project_config) { Fabricate :stage_project_config, project: project, stage: stage, compute_effort: true, pairing_percentage: 60, stage_percentage: 100, management_percentage: 10 }
+    let(:demand) { Fabricate :demand, project: project, created_date: Time.zone.local(2018, 2, 4, 12, 0, 0) }
+    let!(:first_item_assignment) { Fabricate :item_assignment, demand: demand, start_time: Time.zone.local(2018, 3, 15, 17, 9, 58), finish_time: Time.zone.local(2018, 3, 22, 12, 0, 0) }
+
+    context 'when there is last_time_out' do
+      let!(:demand_transition) { Fabricate :demand_transition, stage: stage, demand: demand, last_time_in: Time.zone.local(2018, 3, 14, 17, 9, 58), last_time_out: Time.zone.local(2018, 3, 20, 12, 0, 0) }
+
+      it { expect(demand_transition.effort_in_transition).to eq 19.8 }
+    end
+
+    context 'when there is no last_time_out' do
+      let(:demand_transition) { Fabricate :demand_transition, stage: stage, demand: demand, last_time_in: Time.zone.local(2018, 3, 15, 17, 9, 58), last_time_out: nil }
+
+      it { expect(demand_transition.effort_in_transition).to eq 33.0 }
+    end
+  end
+
+  describe '#time_blocked_in_transition' do
+    before { travel_to Time.zone.local(2018, 3, 7, 10, 0, 0) }
+
+    after { travel_back }
+
+    let(:project) { Fabricate :project }
+    let(:stage) { Fabricate :stage, commitment_point: true, end_point: false }
+    let!(:stage_project_config) { Fabricate :stage_project_config, project: project, stage: stage, compute_effort: true, pairing_percentage: 60, stage_percentage: 100, management_percentage: 10 }
+    let(:demand) { Fabricate :demand, project: project, created_date: Time.zone.local(2018, 2, 4, 12, 0, 0) }
+
+    let!(:first_demand_block) { Fabricate :demand_block, demand: demand, block_time: Time.zone.local(2018, 3, 5, 17, 9, 58), unblock_time: Time.zone.local(2018, 3, 6, 15, 12, 32) }
+    let!(:second_demand_block) { Fabricate :demand_block, demand: demand, block_time: Time.zone.local(2018, 3, 6, 10, 9, 58), unblock_time: Time.zone.local(2018, 3, 6, 17, 9, 58) }
+    let!(:third_demand_block) { Fabricate :demand_block, demand: demand, block_time: Time.zone.local(2018, 3, 6, 17, 9, 58) }
+    let!(:out_demand_block) { Fabricate :demand_block, demand: demand, block_time: Time.zone.local(2018, 3, 6, 9, 9, 58), unblock_time: Time.zone.local(2018, 3, 6, 14, 9, 58) }
+    let!(:discarded_demand_block) { Fabricate :demand_block, demand: demand, active: true, block_time: Time.zone.local(2018, 3, 6, 10, 9, 58), unblock_time: Time.zone.local(2018, 3, 6, 17, 9, 58), discarded_at: Time.zone.now }
+
+    context 'when there is last_time_out' do
+      let!(:demand_transition) { Fabricate :demand_transition, stage: stage, demand: demand, last_time_in: Time.zone.local(2018, 3, 5, 6, 9, 58), last_time_out: Time.zone.local(2018, 3, 6, 17, 9, 58) }
+
+      it { expect(demand_transition.time_blocked_in_transition).to eq 17 }
+    end
+
+    context 'when there is no last_time_out' do
+      let(:demand_transition) { Fabricate :demand_transition, stage: stage, demand: demand, last_time_in: Time.zone.local(2018, 3, 5, 5, 9, 58), last_time_out: nil }
+
+      it { expect(demand_transition.time_blocked_in_transition).to eq 17 }
     end
   end
 end
