@@ -4,18 +4,22 @@
 #
 # Table name: demand_data_processments
 #
-#  created_at         :datetime         not null
+#  id                 :bigint           not null, primary key
 #  downloaded_content :text             not null
-#  id                 :bigint(8)        not null, primary key
 #  project_key        :string           not null
+#  created_at         :datetime         not null
 #  updated_at         :datetime         not null
-#  user_id            :integer          not null, indexed
+#  user_id            :integer          not null
 #  user_plan_id       :integer          not null
+#
+# Indexes
+#
+#  index_demand_data_processments_on_user_id  (user_id)
 #
 # Foreign Keys
 #
-#  fk_rails_1e9a84a8ab  (user_plan_id => user_plans.id)
-#  fk_rails_337e2008a8  (user_id => users.id)
+#  fk_rails_...  (user_id => users.id)
+#  fk_rails_...  (user_plan_id => user_plans.id)
 #
 
 class DemandDataProcessment < ApplicationRecord

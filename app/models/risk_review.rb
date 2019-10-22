@@ -4,18 +4,24 @@
 #
 # Table name: risk_reviews
 #
-#  company_id              :integer          not null, indexed
-#  created_at              :datetime         not null
-#  id                      :bigint(8)        not null, primary key
+#  id                      :bigint           not null, primary key
 #  lead_time_outlier_limit :decimal(, )      not null
-#  meeting_date            :date             not null, indexed => [product_id]
-#  product_id              :integer          not null, indexed => [meeting_date], indexed
+#  meeting_date            :date             not null
+#  created_at              :datetime         not null
 #  updated_at              :datetime         not null
+#  company_id              :integer          not null
+#  product_id              :integer          not null
+#
+# Indexes
+#
+#  index_risk_reviews_on_company_id                   (company_id)
+#  index_risk_reviews_on_meeting_date_and_product_id  (meeting_date,product_id) UNIQUE
+#  index_risk_reviews_on_product_id                   (product_id)
 #
 # Foreign Keys
 #
-#  fk_rails_0e13c6d551  (company_id => companies.id)
-#  fk_rails_dd98df4301  (product_id => products.id)
+#  fk_rails_...  (company_id => companies.id)
+#  fk_rails_...  (product_id => products.id)
 #
 
 class RiskReview < ApplicationRecord

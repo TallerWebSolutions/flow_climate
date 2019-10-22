@@ -4,14 +4,14 @@
 #
 # Table name: project_risk_configs
 #
-#  id                :bigint(8)        not null, primary key
-#  risk_type         :integer          not null
+#  id                :bigint           not null, primary key
+#  active            :boolean          default(TRUE)
 #  high_yellow_value :decimal(, )      not null
 #  low_yellow_value  :decimal(, )      not null
+#  risk_type         :integer          not null
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
 #  project_id        :integer          not null
-#  active            :boolean          default(TRUE)
 #
 
 class ProjectRiskConfig < ApplicationRecord

@@ -4,19 +4,24 @@
 #
 # Table name: team_resource_allocations
 #
-#  created_at       :datetime         not null
+#  id               :bigint           not null, primary key
 #  end_date         :date
-#  id               :bigint(8)        not null, primary key
 #  monthly_payment  :decimal(, )      not null
 #  start_date       :date             not null
-#  team_id          :integer          not null, indexed
-#  team_resource_id :integer          not null, indexed
+#  created_at       :datetime         not null
 #  updated_at       :datetime         not null
+#  team_id          :integer          not null
+#  team_resource_id :integer          not null
+#
+# Indexes
+#
+#  index_team_resource_allocations_on_team_id           (team_id)
+#  index_team_resource_allocations_on_team_resource_id  (team_resource_id)
 #
 # Foreign Keys
 #
-#  fk_rails_600e78ae6c  (team_resource_id => team_resources.id)
-#  fk_rails_e11bdf0f2c  (team_id => teams.id)
+#  fk_rails_...  (team_id => teams.id)
+#  fk_rails_...  (team_resource_id => team_resources.id)
 #
 
 class TeamResourceAllocation < ApplicationRecord

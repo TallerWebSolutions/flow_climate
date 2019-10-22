@@ -4,14 +4,20 @@
 #
 # Table name: companies
 #
-#  abbreviation    :string           not null, indexed
-#  api_token       :string           not null, indexed
-#  created_at      :datetime         not null
+#  id              :bigint           not null, primary key
+#  abbreviation    :string           not null
+#  api_token       :string           not null
 #  customers_count :integer          default(0)
-#  id              :bigint(8)        not null, primary key
 #  name            :string           not null
-#  slug            :string           indexed
+#  slug            :string
+#  created_at      :datetime         not null
 #  updated_at      :datetime         not null
+#
+# Indexes
+#
+#  index_companies_on_abbreviation  (abbreviation) UNIQUE
+#  index_companies_on_api_token     (api_token) UNIQUE
+#  index_companies_on_slug          (slug) UNIQUE
 #
 
 class Company < ApplicationRecord

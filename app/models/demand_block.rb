@@ -4,30 +4,34 @@
 #
 # Table name: demand_blocks
 #
+#  id             :bigint           not null, primary key
 #  active         :boolean          default(TRUE), not null
 #  block_duration :integer
 #  block_reason   :string
 #  block_time     :datetime         not null
 #  block_type     :integer          default("coding_needed"), not null
-#  blocker_id     :integer          not null
-#  created_at     :datetime         not null
-#  demand_id      :integer          not null, indexed
 #  discarded_at   :datetime
-#  id             :bigint(8)        not null, primary key
-#  risk_review_id :integer
-#  stage_id       :integer
 #  unblock_reason :string
 #  unblock_time   :datetime
-#  unblocker_id   :integer
+#  created_at     :datetime         not null
 #  updated_at     :datetime         not null
+#  blocker_id     :integer          not null
+#  demand_id      :integer          not null
+#  risk_review_id :integer
+#  stage_id       :integer
+#  unblocker_id   :integer
+#
+# Indexes
+#
+#  index_demand_blocks_on_demand_id  (demand_id)
 #
 # Foreign Keys
 #
-#  fk_rails_0c8fa8d3a7  (demand_id => demands.id)
-#  fk_rails_11fee31fef  (blocker_id => team_members.id)
-#  fk_rails_196a395613  (unblocker_id => team_members.id)
-#  fk_rails_6c21b271de  (risk_review_id => risk_reviews.id)
-#  fk_rails_d25cb2ae7e  (stage_id => stages.id)
+#  fk_rails_...  (blocker_id => team_members.id)
+#  fk_rails_...  (demand_id => demands.id)
+#  fk_rails_...  (risk_review_id => risk_reviews.id)
+#  fk_rails_...  (stage_id => stages.id)
+#  fk_rails_...  (unblocker_id => team_members.id)
 #
 
 class DemandBlock < ApplicationRecord

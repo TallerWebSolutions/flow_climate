@@ -110,6 +110,10 @@ RSpec.describe RiskReview, type: :model do
   end
 
   describe '#demands_lead_time_p80' do
+    before { travel_to Time.zone.local(2019, 10, 17, 10, 0, 0) }
+
+    after { travel_back }
+
     include_context 'risk reviews data'
 
     it 'returns the demands with lead time above the outlier limit' do

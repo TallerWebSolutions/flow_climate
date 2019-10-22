@@ -119,6 +119,10 @@ RSpec.describe Membership, type: :model do
   end
 
   describe '#leadtime' do
+    before { travel_to Time.zone.local(2019, 10, 17, 10, 0, 0) }
+
+    after { travel_back }
+
     include_context 'membership demands methods data'
 
     it { expect(first_membership.leadtime).to be_within(0.1).of(86_400.0) }

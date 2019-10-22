@@ -4,22 +4,27 @@
 #
 # Table name: user_plans
 #
+#  id                  :bigint           not null, primary key
 #  active              :boolean          default(FALSE), not null
-#  created_at          :datetime         not null
 #  finish_at           :datetime         not null
-#  id                  :bigint(8)        not null, primary key
 #  paid                :boolean          default(FALSE), not null
 #  plan_billing_period :integer          default("monthly"), not null
-#  plan_id             :integer          not null, indexed
 #  plan_value          :decimal(, )      default(0.0), not null
 #  start_at            :datetime         not null
+#  created_at          :datetime         not null
 #  updated_at          :datetime         not null
-#  user_id             :integer          not null, indexed
+#  plan_id             :integer          not null
+#  user_id             :integer          not null
+#
+# Indexes
+#
+#  index_user_plans_on_plan_id  (plan_id)
+#  index_user_plans_on_user_id  (user_id)
 #
 # Foreign Keys
 #
-#  fk_rails_406c835a0f  (plan_id => plans.id)
-#  fk_rails_6bb6a01b63  (user_id => users.id)
+#  fk_rails_...  (plan_id => plans.id)
+#  fk_rails_...  (user_id => users.id)
 #
 
 class UserPlan < ApplicationRecord

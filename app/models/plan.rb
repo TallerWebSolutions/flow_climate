@@ -4,9 +4,8 @@
 #
 # Table name: plans
 #
-#  created_at              :datetime         not null
+#  id                      :bigint           not null, primary key
 #  extra_download_value    :decimal(, )      not null
-#  id                      :bigint(8)        not null, primary key
 #  max_days_in_history     :integer          not null
 #  max_number_of_downloads :integer          not null
 #  max_number_of_users     :integer          not null
@@ -14,6 +13,7 @@
 #  plan_period             :integer          not null
 #  plan_type               :integer          not null
 #  plan_value              :integer          not null
+#  created_at              :datetime         not null
 #  updated_at              :datetime         not null
 #
 

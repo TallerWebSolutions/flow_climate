@@ -4,30 +4,35 @@
 #
 # Table name: users
 #
+#  id                     :integer          not null, primary key
 #  admin                  :boolean          default(FALSE), not null
 #  avatar                 :string
-#  created_at             :datetime         not null
 #  current_sign_in_at     :datetime
 #  current_sign_in_ip     :inet
-#  email                  :string           not null, indexed
+#  email                  :string           not null
 #  email_notifications    :boolean          default(FALSE), not null
 #  encrypted_password     :string           not null
 #  first_name             :string           not null
-#  id                     :integer          not null, primary key
-#  last_company_id        :integer
 #  last_name              :string           not null
 #  last_sign_in_at        :datetime
 #  last_sign_in_ip        :inet
 #  remember_created_at    :datetime
 #  reset_password_sent_at :datetime
-#  reset_password_token   :string           indexed
+#  reset_password_token   :string
 #  sign_in_count          :integer          default(0), not null
-#  updated_at             :datetime         not null
 #  user_money_credits     :decimal(, )      default(0.0), not null
+#  created_at             :datetime         not null
+#  updated_at             :datetime         not null
+#  last_company_id        :integer
+#
+# Indexes
+#
+#  index_users_on_email                 (email) UNIQUE
+#  index_users_on_reset_password_token  (reset_password_token) UNIQUE
 #
 # Foreign Keys
 #
-#  fk_rails_971bf2d9a1  (last_company_id => companies.id)
+#  fk_rails_...  (last_company_id => companies.id)
 #
 
 class User < ApplicationRecord

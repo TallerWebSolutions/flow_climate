@@ -4,23 +4,28 @@
 #
 # Table name: stages
 #
+#  id                  :bigint           not null, primary key
 #  commitment_point    :boolean          default(FALSE)
-#  company_id          :integer          not null
-#  created_at          :datetime         not null
 #  end_point           :boolean          default(FALSE)
-#  id                  :bigint(8)        not null, primary key
-#  integration_id      :string           not null, indexed
-#  integration_pipe_id :string
-#  name                :string           not null, indexed
+#  name                :string           not null
 #  order               :integer          default(0), not null
 #  queue               :boolean          default(FALSE)
 #  stage_stream        :integer          default("upstream"), not null
 #  stage_type          :integer          default("backlog"), not null
+#  created_at          :datetime         not null
 #  updated_at          :datetime         not null
+#  company_id          :integer          not null
+#  integration_id      :string           not null
+#  integration_pipe_id :string
+#
+# Indexes
+#
+#  index_stages_on_integration_id  (integration_id)
+#  index_stages_on_name            (name)
 #
 # Foreign Keys
 #
-#  fk_rails_ffd4cca0d4  (company_id => companies.id)
+#  fk_rails_...  (company_id => companies.id)
 #
 
 class Stage < ApplicationRecord

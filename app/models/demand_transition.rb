@@ -4,19 +4,25 @@
 #
 # Table name: demand_transitions
 #
-#  created_at    :datetime         not null
-#  demand_id     :integer          not null, indexed
-#  discarded_at  :datetime         indexed
-#  id            :bigint(8)        not null, primary key
+#  id            :bigint           not null, primary key
+#  discarded_at  :datetime
 #  last_time_in  :datetime         not null
 #  last_time_out :datetime
-#  stage_id      :integer          not null, indexed
+#  created_at    :datetime         not null
 #  updated_at    :datetime         not null
+#  demand_id     :integer          not null
+#  stage_id      :integer          not null
+#
+# Indexes
+#
+#  index_demand_transitions_on_demand_id     (demand_id)
+#  index_demand_transitions_on_discarded_at  (discarded_at)
+#  index_demand_transitions_on_stage_id      (stage_id)
 #
 # Foreign Keys
 #
-#  fk_rails_2a5bc4c3f8  (demand_id => demands.id)
-#  fk_rails_c63024fc81  (stage_id => stages.id)
+#  fk_rails_...  (demand_id => demands.id)
+#  fk_rails_...  (stage_id => stages.id)
 #
 
 class DemandTransition < ApplicationRecord

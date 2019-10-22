@@ -4,19 +4,25 @@
 #
 # Table name: item_assignments
 #
-#  created_at     :datetime         not null
-#  demand_id      :integer          not null, indexed => [team_member_id, start_time], indexed
+#  id             :bigint           not null, primary key
 #  discarded_at   :datetime
 #  finish_time    :datetime
-#  id             :bigint(8)        not null, primary key
-#  start_time     :datetime         not null, indexed => [demand_id, team_member_id]
-#  team_member_id :integer          not null, indexed => [demand_id, start_time], indexed
+#  start_time     :datetime         not null
+#  created_at     :datetime         not null
 #  updated_at     :datetime         not null
+#  demand_id      :integer          not null
+#  team_member_id :integer          not null
+#
+# Indexes
+#
+#  demand_member_start_time_unique           (demand_id,team_member_id,start_time) UNIQUE
+#  index_item_assignments_on_demand_id       (demand_id)
+#  index_item_assignments_on_team_member_id  (team_member_id)
 #
 # Foreign Keys
 #
-#  fk_rails_0af34c141e  (demand_id => demands.id)
-#  fk_rails_78b4938f25  (team_member_id => team_members.id)
+#  fk_rails_...  (demand_id => demands.id)
+#  fk_rails_...  (team_member_id => team_members.id)
 #
 
 class ItemAssignment < ApplicationRecord

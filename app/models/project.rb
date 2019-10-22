@@ -4,28 +4,32 @@
 #
 # Table name: projects
 #
-#  company_id                :integer          not null, indexed => [name]
-#  created_at                :datetime         not null
+#  id                        :bigint           not null, primary key
 #  end_date                  :date             not null
 #  hour_value                :decimal(, )
-#  id                        :bigint(8)        not null, primary key
 #  initial_scope             :integer          not null
 #  max_work_in_progress      :integer          default(0), not null
-#  name                      :string           not null, indexed => [company_id]
+#  name                      :string           not null
 #  nickname                  :string
 #  percentage_effort_to_bugs :integer          default(0), not null
 #  project_type              :integer          not null
 #  qty_hours                 :decimal(, )
 #  start_date                :date             not null
 #  status                    :integer          not null
-#  team_id                   :integer          not null
-#  updated_at                :datetime         not null
 #  value                     :decimal(, )
+#  created_at                :datetime         not null
+#  updated_at                :datetime         not null
+#  company_id                :integer          not null
+#  team_id                   :integer          not null
+#
+# Indexes
+#
+#  index_projects_on_company_id_and_name  (company_id,name) UNIQUE
 #
 # Foreign Keys
 #
-#  fk_rails_44a549d7b3  (company_id => companies.id)
-#  fk_rails_ecc227a0c2  (team_id => teams.id)
+#  fk_rails_...  (company_id => companies.id)
+#  fk_rails_...  (team_id => teams.id)
 #
 
 class Project < ApplicationRecord

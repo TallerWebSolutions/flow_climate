@@ -4,28 +4,35 @@
 #
 # Table name: project_consolidations
 #
+#  id                         :bigint           not null, primary key
 #  consolidation_date         :date             not null
-#  created_at                 :datetime         not null
 #  current_wip                :integer
 #  demands_finished_ids       :integer          is an Array
+#  demands_finished_in_week   :integer          is an Array
 #  demands_ids                :integer          is an Array
 #  demands_lead_times         :decimal(, )      is an Array
-#  id                         :bigint(8)        not null, primary key
+#  lead_time_in_week          :decimal(, )      is an Array
 #  population_end_date        :date
 #  population_start_date      :date
 #  products_monte_carlo_weeks :integer          is an Array
 #  products_weekly_throughput :integer          is an Array
-#  project_id                 :integer          not null
 #  project_monte_carlo_weeks  :integer          is an Array
 #  project_weekly_throughput  :integer          is an Array
 #  team_monte_carlo_weeks     :integer          is an Array
 #  team_weekly_throughput     :integer          is an Array
-#  updated_at                 :datetime         not null
 #  wip_limit                  :integer
+#  created_at                 :datetime         not null
+#  updated_at                 :datetime         not null
+#  project_id                 :integer          not null
+#
+# Indexes
+#
+#  index_project_consolidations_on_demands_finished_in_week  (demands_finished_in_week)
+#  index_project_consolidations_on_lead_time_in_week         (lead_time_in_week)
 #
 # Foreign Keys
 #
-#  fk_rails_09ca62cd76  (project_id => projects.id)
+#  fk_rails_...  (project_id => projects.id)
 #
 
 class ProjectConsolidation < ApplicationRecord

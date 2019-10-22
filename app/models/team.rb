@@ -4,16 +4,21 @@
 #
 # Table name: teams
 #
-#  company_id           :integer          not null, indexed, indexed => [name]
-#  created_at           :datetime         not null
-#  id                   :bigint(8)        not null, primary key
+#  id                   :bigint           not null, primary key
 #  max_work_in_progress :integer          default(0), not null
-#  name                 :string           not null, indexed => [company_id]
+#  name                 :string           not null
+#  created_at           :datetime         not null
 #  updated_at           :datetime         not null
+#  company_id           :integer          not null
+#
+# Indexes
+#
+#  index_teams_on_company_id           (company_id)
+#  index_teams_on_company_id_and_name  (company_id,name) UNIQUE
 #
 # Foreign Keys
 #
-#  fk_rails_e080df8a94  (company_id => companies.id)
+#  fk_rails_...  (company_id => companies.id)
 #
 
 class Team < ApplicationRecord

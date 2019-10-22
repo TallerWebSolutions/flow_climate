@@ -4,23 +4,29 @@
 #
 # Table name: flow_impacts
 #
-#  created_at         :datetime         not null
-#  demand_id          :integer          indexed
+#  id                 :bigint           not null, primary key
 #  discarded_at       :datetime
 #  end_date           :datetime
-#  id                 :bigint(8)        not null, primary key
 #  impact_description :string           not null
-#  impact_type        :integer          not null, indexed
-#  project_id         :integer          not null, indexed
-#  risk_review_id     :integer
+#  impact_type        :integer          not null
 #  start_date         :datetime         not null
+#  created_at         :datetime         not null
 #  updated_at         :datetime         not null
+#  demand_id          :integer
+#  project_id         :integer          not null
+#  risk_review_id     :integer
+#
+# Indexes
+#
+#  index_flow_impacts_on_demand_id    (demand_id)
+#  index_flow_impacts_on_impact_type  (impact_type)
+#  index_flow_impacts_on_project_id   (project_id)
 #
 # Foreign Keys
 #
-#  fk_rails_c718f8e04c  (risk_review_id => risk_reviews.id)
-#  fk_rails_cda32ac094  (project_id => projects.id)
-#  fk_rails_f6118b7a74  (demand_id => demands.id)
+#  fk_rails_...  (demand_id => demands.id)
+#  fk_rails_...  (project_id => projects.id)
+#  fk_rails_...  (risk_review_id => risk_reviews.id)
 #
 
 class FlowImpact < ApplicationRecord

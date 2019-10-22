@@ -443,7 +443,8 @@ pt-BR:
     general:
       deadline: "Prazo"
       scope: "Escopo"
-      leadtime: "Lead time (%{percentil})"
+      leadtime: "LT (%{percentil})"
+      accumulated_leadtime: "LT Acumulado (%{percentil})"
       discovered_scope: "Itens Descobertos"
       work_items: "Items de Trabalho"
     finish_project:
