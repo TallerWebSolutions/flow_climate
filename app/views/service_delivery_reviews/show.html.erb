@@ -116,6 +116,7 @@
            data-xtitle='<%= I18n.t('service_delivery_reviews.show.stages') %>'
            data-ytitle='<%= I18n.t('general.hours') %>'
            data-prefix=''
+           data-tooltipsuffix='<%= I18n.t('general.charts.hours') %>'
            data-series='<%= [{ name: I18n.t('service_delivery_reviews.show.lead_time_breakdown_label'), data: @service_delivery_review.lead_time_breakdown.values.map { |transitions| (transitions.sum(&:total_seconds_in_transition) / 1.hour) } }].to_json %>'
            data-decimals='0'>
       </div>

@@ -14,12 +14,8 @@ function buildColumnChart(columnDiv) {
         },
         xAxis: {
             type: 'datetime',
-            dateTimeLabelFormats: {
-                month: '%e. %b',
-                year: '%b'
-            },
-            categories: columnDiv.data('xcategories'),
-            title: {text: columnDiv.data('xtitle')}
+            categories: columnDiv.data("xcategories"),
+            title: { text: columnDiv.data("xtitle") }
         },
         yAxis: {
             title: {
@@ -31,28 +27,97 @@ function buildColumnChart(columnDiv) {
                 color: '#808080'
             }],
             stackLabels: {
-                enabled: true,
+                enabled: columnDiv.data('stacking') === "normal",
                 formatter: function() {
-                    return Highcharts.numberFormat(this.total, 2, ',');
+                    return Highcharts.numberFormat(this.total, columnDiv.data('decimals'), ',');
                 }
             }
         },
         tooltip: {
-            formatter: function () {
-                return Highcharts.numberFormat(this.y, 2, ',');
+            formatter:function(){
+                return `<b>${this.series.name}</b><br>${this.key}: ${this.y.toFixed(2)} ${columnDiv.data('tooltipsuffix')}`;
             }
         },
         legend: {
             type: 'line',
             align: 'center',
-            verticalAlign: 'bottom',
+            verticalAlign: 'top',
             x: 0,
             y: 0
         },
         plotOptions: {
             column: {
-                stacking: columnDiv.data('stacking')
+                stacking: columnDiv.data('stacking'),
+                dataLabels: {
+                    enabled: columnDiv.data('stacking') !== "normal",
+                    formatter: function() {
+                        return Highcharts.numberFormat(this.y, columnDiv.data('decimals'), ',');
+                    }
+                }
             }
+        },
+        responsive: {
+            rules: [{
+                condition: {
+                    maxWidth: 1000
+                },
+                chartOptions: {
+                    xAxis: {
+                        labels: {
+                            step: 1
+                        }
+                    }
+                }
+            }, {
+                condition: {
+                    maxWidth: 500
+                },
+                chartOptions: {
+                    xAxis: {
+                        labels: {
+                            step: 3,
+                            style: {
+                                fontSize: "0.7em"
+                            }
+                        }
+                    }
+                }
+            }, {
+                condition: {
+                    maxWidth: 350
+                },
+                chartOptions: {
+                    xAxis: {
+                        labels: {
+                            step: 5
+                        }
+                    }
+                }
+            }, {
+                condition: {
+                    maxWidth: 200
+                },
+                chartOptions: {
+                    xAxis: {
+                        labels: {
+                            step: 8
+                        }
+                    }
+                }
+            }, {
+                condition: {
+                    maxWidth: 150
+                },
+                chartOptions: {
+                    xAxis: {
+                        labels: {
+                            formatter: function() {
+                                return '';
+                            }
+                        }
+                    }
+                }
+            }]
         },
         series: columnDiv.data('series')
     });
