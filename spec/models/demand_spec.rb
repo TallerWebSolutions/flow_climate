@@ -11,7 +11,6 @@ RSpec.describe Demand, type: :model do
     it { is_expected.to belong_to :project }
     it { is_expected.to belong_to :product }
     it { is_expected.to belong_to :portfolio_unit }
-    it { is_expected.to belong_to(:parent).class_name('Demand').inverse_of(:children) }
     it { is_expected.to belong_to :team }
     it { is_expected.to belong_to :risk_review }
     it { is_expected.to belong_to :service_delivery_review }
