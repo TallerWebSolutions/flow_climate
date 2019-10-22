@@ -58,7 +58,33 @@ class DemandTransition < ApplicationRecord
     TimeService.instance.compute_working_hours_for_dates(last_time_in, out_time)
   end
 
+  def effort_in_transition
+    stage_config = stage.stage_project_configs.find_by(project: demand.project)
+    last_time_out_to_effort = last_time_out || Time.zone.now
+    compute_assignments_effort(last_time_in, last_time_out_to_effort, stage_config.stage_percentage_decimal, stage_config.pairing_percentage_decimal) * (1 + stage_config.management_percentage_decimal)
+  end
+
+  def time_blocked_in_transition
+    last_time_out_to_block = last_time_out || Time.zone.now
+    demand.demand_blocks.kept.closed.active.for_date_interval(last_time_in, last_time_out_to_block).map(&:block_duration).compact.sum
+  end
+
   private
+
+  def compute_assignments_effort(start_date, end_date, stage_percentage, pairing_percentage)
+    total_blocked = demand.demand_blocks.kept.closed.active.for_date_interval(start_date, end_date).sum(:block_duration) * stage_percentage
+    assignments_in_dates = demand.item_assignments.for_dates(start_date, end_date)
+    return (assignments_in_dates.map { |assign_in_date| assign_in_date.working_hours_until(start_date, end_date) }.sum - total_blocked) * stage_percentage unless assignments_in_dates.count > 1
+
+    compute_paired_effort(assignments_in_dates, start_date, end_date, pairing_percentage)
+  end
+
+  def compute_paired_effort(assignments_in_dates, start_date, end_date, pairing_percentage)
+    top_effort_in_demand = assignments_in_dates.max_by { |assign_in_date| assign_in_date.working_hours_until(start_date, end_date) }
+    pairing_efforts = assignments_in_dates - [top_effort_in_demand]
+
+    top_effort_in_demand.working_hours_until(start_date, end_date) + pairing_efforts.map { |assign_in_date| assign_in_date.working_hours_until(start_date, end_date) }.sum * (1 + pairing_percentage)
+  end
 
   def set_demand_dates
     if stage.commitment_point?

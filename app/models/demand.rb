@@ -289,39 +289,22 @@ class Demand < ApplicationRecord
 
   def working_time_upstream
     effort_transitions = demand_transitions.kept.upstream_transitions.effort_transitions_to_project(project_id)
-    sum_effort(effort_transitions)
+    return sum_effort(effort_transitions) if effort_transitions.count.positive?
+
+    0
   end
 
   def working_time_downstream
     effort_transitions = demand_transitions.kept.downstream_transitions.effort_transitions_to_project(project_id)
-    sum_effort(effort_transitions)
+    return sum_effort(effort_transitions) if effort_transitions.count.positive?
+
+    0
   end
 
   def sum_effort(effort_transitions)
     total_effort = 0
-    effort_transitions.each do |transition|
-      last_time_out_to_effort = transition.last_time_out || Time.zone.now
-      stage_config = transition.stage.stage_project_configs.find_by(project: project)
-
-      effort_in_transition = compute_assignments_effort(transition.last_time_in, last_time_out_to_effort, stage_config.stage_percentage_decimal, stage_config.pairing_percentage_decimal) * (1 + stage_config.management_percentage_decimal)
-      total_effort += effort_in_transition
-    end
+    effort_transitions.each { |transition| total_effort += transition.effort_in_transition }
     total_effort
-  end
-
-  def compute_assignments_effort(start_date, end_date, stage_percentage, pairing_percentage)
-    total_blocked = demand_blocks.kept.closed.active.for_date_interval(start_date, end_date).sum(:block_duration) * stage_percentage
-    assignments_in_dates = item_assignments.for_dates(start_date, end_date)
-    return (assignments_in_dates.map { |assign_in_date| assign_in_date.working_hours_until(start_date, end_date) }.sum - total_blocked) * stage_percentage unless assignments_in_dates.count > 1
-
-    compute_paired_effort(assignments_in_dates, start_date, end_date, pairing_percentage)
-  end
-
-  def compute_paired_effort(assignments_in_dates, start_date, end_date, pairing_percentage)
-    top_effort = assignments_in_dates.max_by { |assign_in_date| assign_in_date.working_hours_until(start_date, end_date) }
-    pairing_efforts = assignments_in_dates - [top_effort]
-
-    top_effort.working_hours_until(start_date, end_date) + pairing_efforts.map { |assign_in_date| assign_in_date.working_hours_until(start_date, end_date) }.sum * (1 + pairing_percentage)
   end
 
   def compute_and_update_automatic_fields
