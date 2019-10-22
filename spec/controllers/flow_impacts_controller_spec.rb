@@ -351,8 +351,9 @@ RSpec.describe FlowImpactsController, type: :controller do
         it 'assign the instance variable and renders the template' do
           get :edit, params: { company_id: company, id: flow_impact }, xhr: true
           expect(response).to render_template 'flow_impacts/edit'
-          expect(assigns(:demands_for_impact_form)).to eq [other_demand, demand]
+          expect(assigns(:demands_for_impact_form)).to eq [other_demand, demand, not_started_demand, finished_demand]
           expect(assigns(:flow_impact)).to eq flow_impact
+          expect(assigns(:flow_impacts)).to eq [flow_impact]
         end
       end
 
