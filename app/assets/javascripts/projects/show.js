@@ -1,6 +1,6 @@
 $("#general-loader").hide();
 
-$('#search_charts').on('click', function() {
+$('#search-charts').on('click', function() {
     const companyId = $('#company_id').val();
     const projectsIds = $("#projects_ids").val();
     const startDate = $('#charts_filter_start_date').val();

@@ -11,7 +11,7 @@ const stampsDiv = $('#nav-item-stamps');
 stampsDiv.addClass('active');
 $('#stamps').show();
 
-$('#search_charts').on('click', function() {
+$('#search-charts').on('click', function() {
     const companyId = $('#company_id').val();
     const teamId = $('#team_id').val();
     const projects_ids = $("#projects_ids").val();
@@ -24,5 +24,5 @@ $('#search_charts').on('click', function() {
 });
 
 $(".col-table-details").hide();
-
 projectsTableTabBehaviour();
+bindSearchProjects();

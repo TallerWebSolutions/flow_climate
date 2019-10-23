@@ -4,7 +4,7 @@ class ProjectsController < AuthenticatedController
   before_action :user_gold_check
 
   before_action :assign_company
-  before_action :assign_project, except: %i[new create index]
+  before_action :assign_project, except: %i[new create index search_projects]
 
   def show
     assign_project_stages
@@ -12,7 +12,6 @@ class ProjectsController < AuthenticatedController
     assign_product_projects
     assign_projects_to_copy_stages_from
     assign_demands_ids
-    build_query_dates
 
     @ordered_project_risk_alerts = @project.project_risk_alerts.order(created_at: :desc)
     @project_change_deadline_histories = @project.project_change_deadline_histories.includes(:user)
@@ -21,9 +20,7 @@ class ProjectsController < AuthenticatedController
   end
 
   def index
-    @projects = add_status_filter(Project.where('company_id = ?', @company.id)).includes(:team).order(end_date: :desc)
-
-    build_query_dates_to_projects(@projects)
+    @projects = @company.projects.includes(:team).order(end_date: :desc)
 
     @projects_summary = ProjectsSummaryData.new(@projects)
   end
@@ -136,11 +133,25 @@ class ProjectsController < AuthenticatedController
     respond_to { |format| format.js { render 'projects/lead_time_dashboard' } }
   end
 
+  def search_projects
+    @target_name = params[:target_name]
+
+    @projects = build_projects_search(params[:start_date], params[:end_date], params[:project_status])
+    @projects = @projects.order(end_date: :desc)
+
+    @projects_summary = ProjectsSummaryData.new(@projects)
+
+    respond_to { |format| format.js { render 'projects/search_projects' } }
+  end
+
   private
 
-  def build_query_dates_to_projects(projects)
-    @start_date = projects.map(&:start_date).min
-    @end_date = projects.map(&:end_date).max
+  def build_projects_search(start_date, end_date, project_status)
+    @projects = Project.where(id: params[:projects_ids].split(','))
+    @projects = @projects.where(status: project_status) if project_status.present?
+    @projects = @projects.where('start_date >= :start_date', start_date: start_date) if params[:start_date].present?
+    @projects = @projects.where('end_date <= :end_date', end_date: end_date) if params[:end_date].present?
+    @projects
   end
 
   def assign_demands_ids
@@ -163,12 +174,6 @@ class ProjectsController < AuthenticatedController
     @project = Project.includes(:team).find(params[:id])
   end
 
-  def add_status_filter(projects)
-    return projects if params[:status_filter].blank? || projects.blank?
-
-    projects.where(status: params[:status_filter])
-  end
-
   def check_change_in_deadline!
     return if project_params[:end_date].blank? || @project.end_date == Date.parse(project_params[:end_date])
 
@@ -183,10 +188,5 @@ class ProjectsController < AuthenticatedController
   def assign_product_projects
     @project_products = @project.products.order(:name)
     @not_associated_products = @company.products - @project_products
-  end
-
-  def build_query_dates
-    @start_date = @project.start_date
-    @end_date = @project.end_date
   end
 end

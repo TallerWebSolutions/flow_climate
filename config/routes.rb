@@ -162,6 +162,10 @@ Rails.application.routes.draw do
         patch 'associate_product/:product_id', action: :associate_product, as: 'associate_product'
         patch 'dissociate_product/:product_id', action: :dissociate_product, as: 'dissociate_product'
       end
+
+      collection do
+        get :search_projects
+      end
     end
 
     resources :stages, except: :index do

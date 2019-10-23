@@ -13,3 +13,7 @@ $('#nav-item-list').on('click', function(){
     $('#project-list').show();
     $('#nav-item-list').addClass('active');
 });
+
+$(".col-table-details").hide();
+projectsTableTabBehaviour();
+bindSearchProjects();

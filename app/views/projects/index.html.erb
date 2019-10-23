@@ -8,7 +8,9 @@
   </div>
 </div>
 
-<h2><%= I18n.t('projects.index.title') %></h2>
+<%= hidden_field_tag :company_id, @company.id %>
+<%= hidden_field_tag :target_name, @company.name %>
+<%= hidden_field_tag :projects_ids, @projects.map(&:id).join(',') %>
 
 <div id="projects-table">
   <%= render 'projects/projects_table', company: @company, target_name: '', projects_list: @projects, projects_summary: @projects_summary, projects_ids: @projects.map(&:id).flatten.join(',') %>
@@ -18,12 +20,15 @@
   <%= javascript_include_tag 'charts/donut' %>
   <%= javascript_include_tag 'charts/gantt' %>
 
-  <%= javascript_include_tag 'projects/demand_classification_charts' %>
-  <%= javascript_include_tag 'projects/projects_table' %>
-
   <%= javascript_include_tag 'components/components' %>
 
   <%= javascript_include_tag 'demand_blocks/list_modal' %>
+
+  <%= javascript_include_tag 'routes/project_routes' %>
+
+  <%= javascript_include_tag 'projects/demand_classification_charts' %>
+  <%= javascript_include_tag 'projects/projects_table' %>
+  <%= javascript_include_tag 'projects/projects_search' %>
 
   <%= javascript_include_tag 'projects/index' %>
 <% end %>

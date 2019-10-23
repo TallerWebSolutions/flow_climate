@@ -7,7 +7,7 @@ $('#demands-charts-div').show();
 
 buildDemandsTabCharts();
 
-$('#search_charts').on('click', function() {
+$('#search-charts').on('click', function() {
     $('#demands-charts-div').hide();
 
     const companyId = $("#company_id").val();

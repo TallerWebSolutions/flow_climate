@@ -1,0 +1,24 @@
+<div class="row bottom-spaced-component">
+  <div class="col-xs-4">
+    <%= label_tag Project.human_attribute_name(:start_date), nil, class: 'control-label' %>
+    <%= date_field_tag :projects_filter_start_date, params[:start_date], class: 'form-control' %>
+  </div>
+
+  <div class="col-xs-4">
+    <%= label_tag Project.human_attribute_name(:end_date), nil, class: 'control-label' %>
+    <%= date_field_tag :projects_filter_end_date, params[:end_date], class: 'form-control' %>
+  </div>
+
+  <div class="col-xs-4">
+    <div class="form-group">
+      <%= label_tag :status, nil, class: 'control-label' %>
+      <%= select_tag :projects_filter_status, project_statuses_options(params[:project_status]), class: 'form-control', include_blank: I18n.t('general.select') %>
+    </div>
+  </div>
+</div>
+
+<div class="row bottom-spaced-component">
+  <div class="col-xs-3">
+    <%= link_to I18n.t('general.search'), '#', class: 'btn btn-primary', id: 'search-projects' %>
+  </div>
+</div>
