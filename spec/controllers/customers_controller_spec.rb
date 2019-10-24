@@ -43,6 +43,12 @@ RSpec.describe CustomersController, type: :controller do
 
       it { expect(response).to redirect_to new_user_session_path }
     end
+
+    describe 'GET #projects_tab' do
+      before { get :projects_tab, params: { company_id: 'bar', id: 'foo' } }
+
+      it { expect(response).to redirect_to new_user_session_path }
+    end
   end
 
   context 'authenticated' do
@@ -330,6 +336,59 @@ RSpec.describe CustomersController, type: :controller do
             let(:company) { Fabricate :company, users: [] }
 
             before { delete :destroy, params: { company_id: company, id: customer } }
+
+            it { expect(response).to have_http_status :not_found }
+          end
+        end
+      end
+    end
+
+    describe 'GET #projects_tab' do
+      let(:first_customer) { Fabricate :customer, company: company }
+      let(:second_customer) { Fabricate :customer, company: company }
+
+      context 'with valid parameters' do
+        context 'having data' do
+          let!(:first_project) { Fabricate :project, customers: [first_customer, second_customer], end_date: 1.day.ago }
+          let!(:second_project) { Fabricate :project, customers: [first_customer], end_date: Time.zone.today }
+
+          let!(:other_project) { Fabricate :project, customers: [] }
+
+          it 'creates the objects and renders the tab' do
+            get :projects_tab, params: { company_id: company, id: first_customer }, xhr: true
+            expect(response).to render_template 'projects/projects_tab'
+            expect(assigns(:projects_summary)).to be_a ProjectsSummaryData
+            expect(assigns(:projects)).to eq [second_project, first_project]
+          end
+        end
+      end
+
+      context 'with no data' do
+        it 'render the template with empty data' do
+          get :projects_tab, params: { company_id: company, id: first_customer }, xhr: true
+          expect(assigns(:projects)).to eq []
+          expect(response).to render_template 'projects/projects_tab'
+        end
+      end
+
+      context 'with invalid' do
+        context 'product' do
+          before { get :projects_tab, params: { company_id: company, id: 'foo' }, xhr: true }
+
+          it { expect(response).to have_http_status :not_found }
+        end
+
+        context 'company' do
+          context 'no existent' do
+            before { get :projects_tab, params: { company_id: 'foo', id: first_customer } }
+
+            it { expect(response).to have_http_status :not_found }
+          end
+
+          context 'not permitted' do
+            let(:company) { Fabricate :company, users: [] }
+
+            before { get :projects_tab, params: { company_id: company, id: first_customer } }
 
             it { expect(response).to have_http_status :not_found }
           end

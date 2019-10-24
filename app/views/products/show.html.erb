@@ -36,11 +36,7 @@
   <%= render 'products/product_stamps', company: @company, product: @product, start_date: @start_date, end_date: @end_date %>
 </div>
 
-<div class="row">
-  <div class="col-xs-12">
-    <div class="center loader" id="general-loader"></div>
-  </div>
-</div>
+<%= render 'layouts/load_spinner' %>
 
 <div id="projects-table" class="tab-container">
 

@@ -14,4 +14,8 @@ class ApplicationController < ActionController::Base
       format.csv { render plain: '404 Not Found', status: :not_found }
     end
   end
+
+  def page_param
+    @page_param ||= params[:page] || 1
+  end
 end

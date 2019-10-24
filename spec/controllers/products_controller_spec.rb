@@ -61,6 +61,12 @@ RSpec.describe ProductsController, type: :controller do
 
       it { expect(response).to redirect_to new_user_session_path }
     end
+
+    describe 'GET #projects_tab' do
+      before { get :projects_tab, params: { company_id: 'bar', id: 'foo' } }
+
+      it { expect(response).to redirect_to new_user_session_path }
+    end
   end
 
   context 'authenticated as gold' do
@@ -464,7 +470,7 @@ RSpec.describe ProductsController, type: :controller do
             get :projects_tab, params: { company_id: company, id: first_product }, xhr: true
             expect(response).to render_template 'projects/projects_tab'
             expect(assigns(:projects_summary)).to be_a ProjectsSummaryData
-            expect(assigns(:product_projects)).to eq [second_project, first_project]
+            expect(assigns(:projects)).to eq [second_project, first_project]
             expect(assigns(:start_date)).to eq 3.months.ago.to_date
             expect(assigns(:end_date)).to eq Time.zone.today
             expect(assigns(:period)).to eq 'month'
@@ -475,7 +481,7 @@ RSpec.describe ProductsController, type: :controller do
       context 'with no data' do
         it 'render the template with empty data' do
           get :projects_tab, params: { company_id: company, id: first_product }, xhr: true
-          expect(assigns(:product_projects)).to eq []
+          expect(assigns(:projects)).to eq []
           expect(response).to render_template 'projects/projects_tab'
         end
       end

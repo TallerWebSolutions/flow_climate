@@ -4,7 +4,7 @@
 
 <hr>
 
-<h3><%= I18n.t('general.projects_count', count: projects_list.count) %></h3>
+<h3><%= I18n.t('general.projects_count', count: projects_summary.projects.count) %></h3>
 <h4><%= I18n.t('general.demands_per_day', count: number_with_precision(projects_summary.total_flow_pressure, precision: 2)) %></h4>
 
 <hr>
@@ -24,6 +24,12 @@
       <%= link_to I18n.t('project.new.title'), new_company_project_path(company), class: 'btn btn-sm btn-primary bottom-spaced-component' %>
     </div>
   </div>
+
+  <% if request.xhr? %>
+    <%= paginate projects_list, remote: true %>
+  <% else %>
+    <%= paginate projects_list  %>
+  <% end %>
 
   <% if projects_list.blank? || projects_list.empty? %>
     <%= I18n.t('projects.index.no_data') %>

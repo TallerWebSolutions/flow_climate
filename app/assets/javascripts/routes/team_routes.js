@@ -6,3 +6,12 @@ function buildReplenishingMeeting(companyId, teamId) {
         type: "GET"
     });
 }
+
+function getProjectsTab(companyId, teamId) {
+    $("#general-loader").show();
+
+    jQuery.ajax({
+        url: `/companies/${companyId}/teams/${teamId}/projects_tab.js`,
+        type: "GET"
+    });
+}

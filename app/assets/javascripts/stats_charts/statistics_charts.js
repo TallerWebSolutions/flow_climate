@@ -1,12 +1,18 @@
 function buildStatisticsCharts() {
     const scopeGrowthInTime = $('#area-scope-growth');
-    buildAreaChart(scopeGrowthInTime);
+    if (scopeGrowthInTime.length !== 0) {
+        buildAreaChart(scopeGrowthInTime);
+    }
 
     const lineLeadtimeAccumulated = $('#line-leadtime-accumalated');
-    buildLineChart(lineLeadtimeAccumulated);
+    if (lineLeadtimeAccumulated.length !== 0) {
+        buildLineChart(lineLeadtimeAccumulated);
+    }
 
     const lineBlocksAccumulated = $('#line-blocks-accumalated');
-    buildLineChart(lineBlocksAccumulated);
+    if (lineBlocksAccumulated.length !== 0) {
+        buildLineChart(lineBlocksAccumulated);
+    }
 
     const lineStatsPopulationDataRange = $('#line-lead-time-data-range-evolution');
     if (lineStatsPopulationDataRange.length !== 0) {

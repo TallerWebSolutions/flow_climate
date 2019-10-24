@@ -24,6 +24,9 @@ $('.nav-item').on('click', function(event){
         } else if ($(this).attr('id') === 'nav-item-strategic') {
             buildStrategicCharts(companyId, projectsIds, teamsIds, targetName, 'month', startDate, endDate);
 
+        } else if ($(this).attr('id') === 'nav-item-projects-list') {
+            getProjectsTab(companyId, teamId)
+
         } else if ($(this).attr('id') === 'nav-item-demands') {
             getDemands(companyId, demandsIds);
 

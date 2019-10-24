@@ -1,5 +1,6 @@
 $('.nav-item').on('click', function(){
     hideAllComponents($('.nav-item'));
+    hideAllComponents($('.nav-item'));
 
     let loader = $("#general-loader");
     loader.show();

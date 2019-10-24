@@ -21,7 +21,7 @@
   <div class="topnav">
     <%= link_to I18n.t('navbar.details'), '#', id: 'nav-item-stamps', class: 'nav-item active', data: { container: '#stamps' } %>
     <%= link_to I18n.t('navbar.members_table'), '#', id: 'nav-item-members', class: 'nav-item', data: { container: '#membership-table' } %>
-    <%= link_to I18n.t('navbar.projects_list'), '#', id: 'nav-item-list', class: 'nav-item', data: { container: '#project-list' } %>
+    <%= link_to I18n.t('navbar.projects_list'), '#', id: 'nav-item-projects-list', class: 'nav-item', data: { container: '#projects-table' } %>
     <%= link_to I18n.t('navbar.demands'), '#', id: 'nav-item-demands', class: 'nav-item', data: { container: '#demands-tab' } %>
     <%= link_to I18n.t('navbar.demand_blocks'), '#', id: 'nav-item-demands-blocks', class: 'nav-item', data: { container: '#demands-blocks-tab' } %>
     <%= link_to I18n.t('navbar.flow_impacts'), '#', id: 'nav-item-flow-impacts', class: 'nav-item', data: { container: '#flow-impacts-tab' } %>
@@ -33,7 +33,7 @@
   </div>
 </div>
 
-<%= render 'commons/loader_spinner' %>
+<%= render 'layouts/load_spinner' %>
 
 <div id="stamps" class="tab-container">
   <%= render 'team_stamps', company: @company, team: @team, slack_configurations: @slack_configurations %>
@@ -43,12 +43,8 @@
   <%= render 'memberships/memberships_table', company: @company, team: @team, memberships: @memberships %>
 </div>
 
-<div id="project-list" class="tab-container">
-  <h2><%= I18n.t('projects.index.title') %></h2>
+<div id="projects-table" class="tab-container">
 
-  <div id="projects-table">
-    <%= render 'projects/projects_table', company: @company, target_name: @team.name, projects_list: @team_projects, projects_summary: @projects_summary %>
-  </div>
 </div>
 
 <div id="demands-tab" class="tab-container">
@@ -120,15 +116,14 @@
   <%= javascript_include_tag 'projects/charts' %>
   <%= javascript_include_tag 'projects/status_report_current' %>
   <%= javascript_include_tag 'projects/status_report_projection' %>
-  <%= javascript_include_tag 'projects/projects_table' %>
   <%= javascript_include_tag 'projects/risk_alert_color_chart' %>
+  <%= javascript_include_tag 'projects/projects_table' %>
   <%= javascript_include_tag 'projects/projects_search' %>
 
   <%= javascript_include_tag 'companies/strategic_charts' %>
 
   <%= javascript_include_tag 'top_navigation/tab-navigation' %>
   <%= javascript_include_tag 'teams/team_navigation_behaviour' %>
-
 
   <%= javascript_include_tag 'demands/column_throughput_week' %>
   <%= javascript_include_tag 'demands/filter_binding' %>

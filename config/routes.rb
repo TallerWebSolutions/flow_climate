@@ -87,14 +87,19 @@ Rails.application.routes.draw do
       resources :memberships, except: :index
       resources :team_resource_allocations, only: %i[new create destroy]
 
-      get :replenishing_input, on: :member
+      member do
+        get :replenishing_input
+        get :projects_tab
+      end
     end
 
     resources :team_members, except: :index
 
     resources :financial_informations, only: %i[new create edit update destroy]
 
-    resources :customers
+    resources :customers do
+      get :projects_tab, on: :member
+    end
 
     resources :team_resources, only: %i[new create destroy]
 

@@ -17,7 +17,7 @@ class CompaniesController < AuthenticatedController
     assign_last_company
     assign_company_settings
     assign_jira_accounts_list
-    @projects = @company.projects.order(end_date: :desc)
+    @projects = @company.projects.order(end_date: :desc).page(page_param)
 
     build_query_dates
   end
@@ -74,12 +74,10 @@ class CompaniesController < AuthenticatedController
 
   def projects_tab
     assign_projects
-    @projects_summary = ProjectsSummaryData.new(@projects)
-    @parent = @company
-    @parent_type = 'company'
+    @projects_summary = ProjectsSummaryData.new(@projects.except(:limit, :offset))
     build_query_dates
 
-    respond_to { |format| format.js { render 'companies/projects_tab.js.erb' } }
+    respond_to { |format| format.js { render 'projects/projects_tab' } }
   end
 
   def strategic_chart_tab
@@ -102,13 +100,14 @@ class CompaniesController < AuthenticatedController
   private
 
   def assign_projects
-    @projects = @company.projects.order(end_date: :desc)
-                        .includes(:team)
+    @projects = @company.projects.includes(:team)
                         .includes(:customers_projects)
                         .includes(customers_projects: :customer)
                         .includes(:customers)
                         .includes(:products)
                         .includes(products_projects: :product)
+                        .order(end_date: :desc)
+                        .page(page_param)
   end
 
   def assign_company_children

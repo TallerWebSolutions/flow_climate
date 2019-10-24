@@ -422,7 +422,7 @@ RSpec.describe CompaniesController, type: :controller do
         context 'passing valid parameters' do
           it 'builds the statistic adapter and renders the view using the dates in project to a monthly period' do
             get :projects_tab, params: { id: company }, xhr: true
-            expect(response).to render_template 'companies/projects_tab.js.erb'
+            expect(response).to render_template 'projects/projects_tab'
             expect(assigns(:projects)).to eq [second_project, first_project]
             expect(assigns(:projects_summary)).to be_a ProjectsSummaryData
           end
@@ -432,7 +432,7 @@ RSpec.describe CompaniesController, type: :controller do
       context 'having no data' do
         it 'returns empty data set' do
           get :projects_tab, params: { id: company }, xhr: true
-          expect(response).to render_template 'companies/projects_tab.js.erb'
+          expect(response).to render_template 'projects/projects_tab'
           expect(assigns(:projects)).to eq []
         end
       end

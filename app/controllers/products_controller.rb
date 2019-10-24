@@ -63,8 +63,9 @@ class ProductsController < AuthenticatedController
   end
 
   def projects_tab
-    @product_projects = @product.projects.includes(:customers).includes(:products).includes(:team).order(end_date: :desc)
-    @projects_summary = ProjectsSummaryData.new(@product_projects)
+    @projects = @product.projects.includes(:customers).includes(:products).includes(:team).order(end_date: :desc).page(page_param)
+
+    @projects_summary = ProjectsSummaryData.new(@projects.except(:limit, :offset))
     @target_name = @product.name
     assign_filter_parameters_to_charts
 

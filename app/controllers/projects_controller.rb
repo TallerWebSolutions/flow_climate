@@ -20,9 +20,10 @@ class ProjectsController < AuthenticatedController
   end
 
   def index
-    @projects = @company.projects.includes(:team).order(end_date: :desc)
+    @projects = @company.projects.includes(:team).order(end_date: :desc).page(page_param)
+    unpaged_projects = @projects.except(:limit, :offset)
 
-    @projects_summary = ProjectsSummaryData.new(@projects)
+    @projects_summary = ProjectsSummaryData.new(unpaged_projects)
   end
 
   def new
@@ -137,9 +138,10 @@ class ProjectsController < AuthenticatedController
     @target_name = params[:target_name]
 
     @projects = build_projects_search(params[:start_date], params[:end_date], params[:project_status])
-    @projects = @projects.order(end_date: :desc)
+    @projects = @projects.order(end_date: :desc).page(page_param)
+    unpaged_projects = @projects.except(:limit, :offset)
 
-    @projects_summary = ProjectsSummaryData.new(@projects)
+    @projects_summary = ProjectsSummaryData.new(unpaged_projects)
 
     respond_to { |format| format.js { render 'projects/search_projects' } }
   end
