@@ -64,7 +64,7 @@ class DemandBlocksController < AuthenticatedController
   private
 
   def build_date_query(demand_blocks)
-    return demand_blocks if params[:blocks_start_date].blank? && params[:blocks_end_date].blank?
+    return demand_blocks if params[:blocks_start_date].blank? || params[:blocks_end_date].blank?
 
     demand_blocks.where('(block_time BETWEEN :start_date AND :end_date) OR (unblock_time IS NOT NULL AND unblock_time BETWEEN :start_date AND :end_date)', start_date: params[:blocks_start_date].to_date.beginning_of_day, end_date: params[:blocks_end_date].to_date.end_of_day)
   end

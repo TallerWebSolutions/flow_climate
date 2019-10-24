@@ -36,5 +36,20 @@
         </tr>
       <% end %>
     </tbody>
+    <tfoot>
+      <tr>
+        <td></td>
+        <td></td>
+        <td><%= "#{demand_blocks_list.map(&:block_duration).compact.sum} h" %></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+    </tfoot>
   </table>
 <% end %>
