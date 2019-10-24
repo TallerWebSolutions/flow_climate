@@ -8,10 +8,15 @@
   </div>
 </div>
 
+<div id="associate-user-buttons">
+  <%= render 'team_members/associate_user_to_team_member', company: @company, team_member: @team_member %>
+</div>
+
 <% @team_member.memberships.each do |membership| %>
 
-  <% demands_finished = Demand.kept.where(id: membership.demands.finished.map(&:id)) %>
-  <% share_demands_blocked = demands_finished.count { |demand_list| demand_list.demand.demand_blocks.count.positive? }.to_f / demands_finished.count %>
+  <% demands_finished = membership.demands.finished.order(end_date: :desc).page(params[:page]) %>
+  <% unpaged_demands = demands_finished.except(:limit, :offset) %>
+  <% share_demands_blocked = unpaged_demands.count { |demand| demand.demand_blocks.count.positive? }.to_f / demands_finished.count %>
 
   <div class="row">
     <div class="col-xs-12">
@@ -70,7 +75,7 @@
   </div>
 
   <div id="demands_table_<%= membership.id %>" class="col-table-details">
-    <%= render 'demands/demands_table', company: @company, demands: demands_finished.order(end_date: :desc), share_demands_blocked: share_demands_blocked %>
+    <%= render 'demands/demands_table', company: @company, demands: demands_finished, unpaged_demands: unpaged_demands, share_demands_blocked: share_demands_blocked %>
   </div>
 
   <div id="demand_blocks_<%= membership.id %>" class="col-table-details">

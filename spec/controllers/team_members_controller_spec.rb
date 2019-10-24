@@ -37,6 +37,18 @@ RSpec.describe TeamMembersController, type: :controller do
 
       it { expect(response).to redirect_to new_user_session_path }
     end
+
+    describe 'PATCH #associate_user' do
+      before { patch :associate_user, params: { company_id: 'xpto', id: 'foo' } }
+
+      it { expect(response).to redirect_to new_user_session_path }
+    end
+
+    describe 'PATCH #dissociate_user' do
+      before { patch :dissociate_user, params: { company_id: 'xpto', id: 'foo' } }
+
+      it { expect(response).to redirect_to new_user_session_path }
+    end
   end
 
   context 'authenticated' do
@@ -265,6 +277,72 @@ RSpec.describe TeamMembersController, type: :controller do
           let(:company) { Fabricate :company, users: [] }
 
           before { delete :destroy, params: { company_id: company, id: team_member }, xhr: true }
+
+          it { expect(response).to have_http_status :not_found }
+        end
+      end
+    end
+
+    describe 'PATCH #associate_user' do
+      let(:team) { Fabricate :team, company: company }
+      let(:other_team) { Fabricate :team, company: company }
+      let(:team_member) { Fabricate :team_member }
+      let!(:membership) { Fabricate :membership, team: team, team_member: team_member, hours_per_month: 120, start_date: 1.month.ago, end_date: nil }
+
+      context 'passing valid parameters' do
+        before { patch :associate_user, params: { company_id: company, id: team_member }, xhr: true }
+
+        it 'associates the user to the team member and renders the template' do
+          team_member_updated = team_member.reload
+          expect(team_member_updated.user).to eq user
+          expect(response).to render_template 'team_members/associate_dissociate_user'
+        end
+      end
+
+      context 'passing invalid' do
+        context 'non-existent team member' do
+          before { patch :associate_user, params: { company_id: company, id: 'foo' }, xhr: true }
+
+          it { expect(response).to have_http_status :not_found }
+        end
+
+        context 'unpermitted company' do
+          let(:company) { Fabricate :company, users: [] }
+
+          before { patch :associate_user, params: { company_id: company, id: team_member }, xhr: true }
+
+          it { expect(response).to have_http_status :not_found }
+        end
+      end
+    end
+
+    describe 'PATCH #dissociate_user' do
+      let(:team) { Fabricate :team, company: company }
+      let(:other_team) { Fabricate :team, company: company }
+      let(:team_member) { Fabricate :team_member }
+      let!(:membership) { Fabricate :membership, team: team, team_member: team_member, hours_per_month: 120, start_date: 1.month.ago, end_date: nil }
+
+      context 'passing valid parameters' do
+        before { patch :dissociate_user, params: { company_id: company, id: team_member }, xhr: true }
+
+        it 'associates the user to the team member and renders the template' do
+          team_member_updated = team_member.reload
+          expect(team_member_updated.user).to be_nil
+          expect(response).to render_template 'team_members/associate_dissociate_user'
+        end
+      end
+
+      context 'passing invalid' do
+        context 'non-existent team member' do
+          before { patch :dissociate_user, params: { company_id: company, id: 'foo' }, xhr: true }
+
+          it { expect(response).to have_http_status :not_found }
+        end
+
+        context 'unpermitted company' do
+          let(:company) { Fabricate :company, users: [] }
+
+          before { patch :dissociate_user, params: { company_id: company, id: team_member }, xhr: true }
 
           it { expect(response).to have_http_status :not_found }
         end

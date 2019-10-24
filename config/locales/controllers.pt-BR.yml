@@ -237,6 +237,8 @@ pt-BR:
       deliveries: "Entregas"
       member_pair: "Pareado com"
       paired_times: "Vezes pareado"
+      its_me: "Sou eu!"
+      its_not_me: "Não sou eu"
   projects:
     index:
       title: "Projetos"
