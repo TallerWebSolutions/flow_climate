@@ -31,4 +31,8 @@ RSpec.describe FilterHelper, type: :helper do
 
     it { expect(helper.teams_in_company_options(company, team.id)).to eq options_for_select([[team.name, team.id.to_s]], team.id) }
   end
+
+  describe '#project_statuses_options' do
+    it { expect(helper.project_statuses_options('waiting')).to eq options_for_select(Project.statuses.map { |key, _value| [t("activerecord.attributes.project.enums.status.#{key}"), key] }, 'waiting') }
+  end
 end

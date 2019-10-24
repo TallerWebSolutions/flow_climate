@@ -14,6 +14,10 @@
 <%= hidden_field_tag :company_id, @company.id %>
 <%= hidden_field_tag :product_id, @product.id %>
 <%= hidden_field_tag :demands_ids, @demands_ids.join(',') %>
+<%= hidden_field_tag :target_name, @product.name %>
+
+<%= hidden_field_tag :projects_ids, @product.projects.map(&:id).join(',') %>
+
 
 <div class="row">
   <div class="topnav">
@@ -32,11 +36,7 @@
   <%= render 'products/product_stamps', company: @company, product: @product, start_date: @start_date, end_date: @end_date %>
 </div>
 
-<div class="row">
-  <div class="col-xs-12">
-    <div class="center loader" id="general-loader"></div>
-  </div>
-</div>
+<%= render 'layouts/load_spinner' %>
 
 <div id="projects-table" class="tab-container">
 
@@ -73,6 +73,7 @@
   <%= javascript_include_tag 'charts/gantt' %>
 
   <%= javascript_include_tag 'projects/projects_table' %>
+  <%= javascript_include_tag 'projects/projects_search' %>
 
   <%= javascript_include_tag 'stats_charts/statistics_charts' %>
 
@@ -82,6 +83,7 @@
 
   <%= javascript_include_tag 'routes/product_routes' %>
   <%= javascript_include_tag 'routes/demand_routes' %>
+  <%= javascript_include_tag 'routes/project_routes' %>
 
   <%= javascript_include_tag 'demands/filter_binding' %>
   <%= javascript_include_tag 'demands/demands_charts' %>

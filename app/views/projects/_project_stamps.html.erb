@@ -9,13 +9,13 @@
   </div>
   <div class="col-xs-4 green-stamp">
     <div class="stamp-title"><%= I18n.t('projects.index.remaining_money') %></div>
-    <div class="stamp-content"><%= number_to_currency(project.remaining_money(end_date)) %></div>
+    <div class="stamp-content"><%= number_to_currency(project.remaining_money(Time.zone.today)) %></div>
   </div>
   <div class="col-xs-4 green-stamp">
     <div class="stamp-title"><%= I18n.t('projects.index.percentage_remaining_money') %></div>
     <div class="stamp-content">
       <% if project.value != 0 %>
-        <%= number_to_percentage((project.remaining_money(end_date).to_f / project.value.to_f) * 100, precision: 2)  %>
+        <%= number_to_percentage((project.remaining_money(Time.zone.today).to_f / project.value.to_f) * 100, precision: 2)  %>
       <% end %>
     </div>
   </div>

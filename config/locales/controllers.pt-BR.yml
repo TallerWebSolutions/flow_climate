@@ -138,6 +138,12 @@ pt-BR:
     demand_blocks: "bloqueio(s)"
     pull_transaction: "Pull Transaction"
     demand_impact: "impacto"
+    projects_count:
+      one: "%{count} Projeto"
+      other: "%{count} Projetos"
+    demands_per_day:
+      one: "%{count} demanda/dia"
+      other: "%{count} demandas/dia"
   header:
     logout: Sair
     sign_up: Cadastre-se

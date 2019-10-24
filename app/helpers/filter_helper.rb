@@ -28,4 +28,8 @@ module FilterHelper
   def teams_in_company_options(company, selected_value)
     options_for_select(company.teams.map { |team| [team.name, team.id.to_s] }, selected_value)
   end
+
+  def project_statuses_options(selected_value)
+    options_for_select(Project.statuses.map { |key, _value| [t("activerecord.attributes.project.enums.status.#{key}"), key] }, selected_value)
+  end
 end

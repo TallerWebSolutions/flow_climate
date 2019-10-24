@@ -86,7 +86,7 @@ RSpec.describe Highchart::StatusReportChartsAdapter, type: :data_object do
           expect(report_data.x_axis).to eq [Date.new(2018, 2, 25), Date.new(2018, 3, 4), Date.new(2018, 3, 11), Date.new(2018, 3, 18), Date.new(2018, 3, 25), Date.new(2018, 4, 1), Date.new(2018, 4, 8), Date.new(2018, 4, 15), Date.new(2018, 4, 22), Date.new(2018, 4, 29), Date.new(2018, 5, 6), Date.new(2018, 5, 13)]
           expect(report_data.delivered_vs_remaining).to eq([{ name: I18n.t('projects.show.delivered_demands.opened_in_period'), data: [42] }, { name: I18n.t('projects.show.delivered_demands.delivered'), data: [5] }])
           expect(report_data.dates_to_montecarlo_duration).not_to be_empty
-          expect(report_data.confidence_95_duration).to be_within(10).of(150)
+          expect(report_data.confidence_95_duration).to be_within(15).of(150)
           expect(report_data.confidence_80_duration).to be_within(10).of(126)
           expect(report_data.confidence_60_duration).to be_within(10).of(108)
           expect(report_data.deadline).to eq [{ data: [-277], name: 'Dias (restantes)' }, { color: '#F45830', data: [361], name: 'Tempo Decorrido' }]

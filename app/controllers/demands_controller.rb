@@ -194,10 +194,6 @@ class DemandsController < AuthenticatedController
     @share_demands_blocked = @unpaged_demands.count { |demand_list| demand_list.demand_blocks.count.positive? }.to_f / @unpaged_demands.count
   end
 
-  def page_param
-    @page_param ||= params[:page] || 1
-  end
-
   def assign_dates_to_query
     @start_date = start_date_to_query
     @end_date = end_date_to_query

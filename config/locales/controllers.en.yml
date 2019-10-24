@@ -138,6 +138,12 @@ en:
     demand_blocks: "block(s)"
     pull_transaction: "Pull Transaction"
     demand_impact: "impact"
+    projects_count:
+      one: "%{count} Project"
+      other: "%{count} Projects"
+    demands_per_day:
+      one: "%{count} demand/day"
+      other: "%{count} demands/day"
   header:
     logout: Logout
     explore: Explore

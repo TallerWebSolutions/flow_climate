@@ -43,6 +43,12 @@ RSpec.describe TeamsController, type: :controller do
 
       it { expect(response).to redirect_to new_user_session_path }
     end
+
+    describe 'GET #projects_tab' do
+      before { get :projects_tab, params: { company_id: 'bar', id: 'foo' } }
+
+      it { expect(response).to redirect_to new_user_session_path }
+    end
   end
 
   context 'authenticated as gold' do
@@ -95,9 +101,6 @@ RSpec.describe TeamsController, type: :controller do
             expect(assigns(:company)).to eq company
             expect(assigns(:team)).to eq team
             expect(assigns(:team_projects)).to eq [third_project, fifth_project, fourth_project, second_project, first_project]
-            expect(assigns(:active_team_projects)).to eq [third_project, second_project, first_project]
-            expect(assigns(:projects_risk_chart_data).backlog_risk_alert_data).to eq [{ name: 'Vermelho', y: 1, color: '#FB283D' }]
-            expect(assigns(:projects_risk_chart_data).money_risk_alert_data).to eq [{ name: 'Verde', y: 1, color: '#179A02' }]
             expect(assigns(:slack_configurations)).to eq [slack_config, other_slack_config]
           end
         end
@@ -326,6 +329,60 @@ RSpec.describe TeamsController, type: :controller do
           before { delete :destroy, params: { company_id: 'foo', id: team } }
 
           it { expect(response).to have_http_status :not_found }
+        end
+      end
+    end
+
+    describe 'GET #projects_tab' do
+      let!(:first_team) { Fabricate :team, company: company }
+      let!(:second_team) { Fabricate :team, company: company }
+
+      context 'with valid parameters' do
+        context 'having data' do
+          let!(:first_project) { Fabricate :project, team: first_team, end_date: 1.day.ago }
+          let!(:second_project) { Fabricate :project, team: first_team, end_date: Time.zone.today }
+
+          let!(:other_project) { Fabricate :project, team: second_team }
+
+          it 'creates the objects and renders the tab' do
+            get :projects_tab, params: { company_id: company, id: first_team }, xhr: true
+
+            expect(response).to render_template 'projects/projects_tab'
+            expect(assigns(:projects_summary)).to be_a ProjectsSummaryData
+            expect(assigns(:projects)).to eq [second_project, first_project]
+          end
+        end
+      end
+
+      context 'with no data' do
+        it 'render the template with empty data' do
+          get :projects_tab, params: { company_id: company, id: first_team }, xhr: true
+          expect(assigns(:projects)).to eq []
+          expect(response).to render_template 'projects/projects_tab'
+        end
+      end
+
+      context 'with invalid' do
+        context 'team' do
+          before { get :projects_tab, params: { company_id: company, id: 'foo' }, xhr: true }
+
+          it { expect(response).to have_http_status :not_found }
+        end
+
+        context 'company' do
+          context 'no existent' do
+            before { get :projects_tab, params: { company_id: 'foo', id: first_team } }
+
+            it { expect(response).to have_http_status :not_found }
+          end
+
+          context 'not permitted' do
+            let(:company) { Fabricate :company, users: [] }
+
+            before { get :projects_tab, params: { company_id: company, id: first_team } }
+
+            it { expect(response).to have_http_status :not_found }
+          end
         end
       end
     end

@@ -24,7 +24,7 @@
   </div>
 </div>
 
-<%= render 'commons/loader_spinner' %>
+<%= render 'layouts/load_spinner' %>
 
 <div id="stamps" class="tab-container">
   <%= render 'companies/company_stamps', company: @company, customer: @customer %>
@@ -38,11 +38,7 @@
   <%= render 'financial_informations/finances_tab', company: @company, finances: @finances, financial_informations: @financial_informations, finances_hash_with_computed_informations: @finances_hash_with_computed_informations %>
 </div>
 
-<div id="project-list" class="tab-container">
-  <h2><%= I18n.t('projects.index.title') %></h2>
-
-  <div id="projects-table">
-  </div>
+<div id="projects-table" class="tab-container">
 </div>
 
 <div id="risks" class="tab-container">
@@ -80,7 +76,7 @@
   <%= javascript_include_tag 'projects/demand_classification_charts' %>
   <%= javascript_include_tag 'projects/risk_alert_color_chart' %>
   <%= javascript_include_tag 'projects/projects_table' %>
-  <%= javascript_include_tag 'projects/projects_table' %>
+  <%= javascript_include_tag 'projects/projects_search' %>
 
   <%= javascript_include_tag 'companies/company_navigation_behaviour' %>
   <%= javascript_include_tag 'companies/strategic_charts' %>

@@ -3,7 +3,7 @@
 class CustomersController < AuthenticatedController
   before_action :user_gold_check
   before_action :assign_company
-  before_action :assign_customer, only: %i[edit update show destroy]
+  before_action :assign_customer, only: %i[edit update show destroy projects_tab]
 
   def index
     @customers = @company.customers.sort_by(&:total_flow_pressure).reverse
@@ -14,7 +14,7 @@ class CustomersController < AuthenticatedController
 
   def show
     build_query_dates
-    @projects_summary = ProjectsSummaryData.new(customer_projects)
+    @projects_summary = ProjectsSummaryData.new(customer_projects.except(:limit, :offset))
   end
 
   def new
@@ -41,6 +41,15 @@ class CustomersController < AuthenticatedController
     return redirect_to company_customers_path(@company) if @customer.destroy
 
     redirect_to(company_customers_path(@company), flash: { error: @customer.errors.full_messages.join(',') })
+  end
+
+  def projects_tab
+    @projects = @customer.projects.includes(:customers).includes(:products).includes(:team).order(end_date: :desc).page(page_param)
+
+    @projects_summary = ProjectsSummaryData.new(@projects.except(:limit, :offset))
+    @target_name = @customer.name
+
+    respond_to { |format| format.js { render 'projects/projects_tab' } }
   end
 
   private

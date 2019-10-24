@@ -33,6 +33,8 @@
 #
 
 class Project < ApplicationRecord
+  paginates_per 10
+
   enum status: { waiting: 0, executing: 1, maintenance: 2, finished: 3, cancelled: 4, negotiating: 5 }
   enum project_type: { outsourcing: 0, consulting: 1, training: 2, domestic_product: 3 }
 

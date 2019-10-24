@@ -4,7 +4,7 @@ class TeamsController < AuthenticatedController
   before_action :user_gold_check
 
   before_action :assign_company
-  before_action :assign_team, only: %i[show edit update replenishing_input destroy]
+  before_action :assign_team, only: %i[show edit update replenishing_input destroy projects_tab]
 
   def show
     assign_demands_ids
@@ -53,6 +53,15 @@ class TeamsController < AuthenticatedController
     respond_to { |format| format.js { render 'teams/destroy' } }
   end
 
+  def projects_tab
+    @projects = @team.projects.includes(:customers).includes(:products).includes(:team).order(end_date: :desc).page(page_param)
+
+    @projects_summary = ProjectsSummaryData.new(@projects.except(:limit, :offset))
+    @target_name = @team.name
+
+    respond_to { |format| format.js { render 'projects/projects_tab' } }
+  end
+
   private
 
   def build_query_dates
@@ -62,18 +71,18 @@ class TeamsController < AuthenticatedController
 
   def assign_team_objects
     @memberships = @company.memberships.includes(:team).includes(:team_member).where(team: @team).sort_by(&:team_member_name)
-    @active_team_projects = team_projects.active
-    @projects_summary = ProjectsSummaryData.new(@team.projects)
-    @projects_risk_chart_data = Highchart::ProjectRiskChartsAdapter.new(@team.projects)
     @slack_configurations = @team.slack_configurations.order(:created_at)
   end
 
   def team_projects
-    @team_projects ||= ProjectsRepository.instance.all_projects_for_team(@team).includes(:team)
+    @team_projects ||= ProjectsRepository.instance.all_projects_for_team(@team)
+                                         .includes(:team)
                                          .includes(:customers)
                                          .includes(customers_projects: :customer)
                                          .includes(:products)
                                          .includes(products_projects: :product)
+                                         .order(end_date: :desc)
+                                         .page(page_param)
   end
 
   def assign_team
