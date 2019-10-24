@@ -93,7 +93,12 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :team_members, except: :index
+    resources :team_members, except: :index do
+      member do
+        get :associate_user
+        get :dissociate_user
+      end
+    end
 
     resources :financial_informations, only: %i[new create edit update destroy]
 

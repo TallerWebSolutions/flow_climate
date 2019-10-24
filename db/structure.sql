@@ -1348,7 +1348,8 @@ CREATE TABLE public.team_members (
     end_date date,
     jira_account_user_email character varying,
     jira_account_id character varying,
-    company_id integer NOT NULL
+    company_id integer NOT NULL,
+    user_id integer
 );
 
 
@@ -3296,6 +3297,14 @@ ALTER TABLE ONLY public.customers_projects
 
 
 --
+-- Name: team_members fk_rails_9ec2d5e75e; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.team_members
+    ADD CONSTRAINT fk_rails_9ec2d5e75e FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
 -- Name: memberships fk_rails_ae2aedcfaf; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -3640,6 +3649,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190917120310'),
 ('20191002140915'),
 ('20191015185615'),
-('20191021222025');
+('20191021222025'),
+('20191024212617');
 
 

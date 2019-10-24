@@ -223,6 +223,8 @@ en:
       deliveries: "Deliveries"
       member_pair: "Paired with"
       paired_times: "Paired times"
+      its_me: "It's me!"
+      its_not_me: "It's not me"
   projects:
     index:
       title: "Projects"

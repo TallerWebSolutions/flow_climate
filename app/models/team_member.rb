@@ -30,6 +30,7 @@ class TeamMember < ApplicationRecord
   enum billable_type: { outsourcing: 0, consulting: 1, training: 2, domestic_product: 3 }
 
   belongs_to :company
+  belongs_to :user
 
   has_many :memberships, dependent: :destroy
   has_many :teams, through: :memberships
