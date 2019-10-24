@@ -34,9 +34,9 @@ RSpec.describe ProjectConsolidationJob, type: :active_job do
     it 'saves de consolidation' do
       # TODO: improve this spec
 
-      described_class.perform_now
+      described_class.perform_now(first_project)
 
-      expect(ProjectConsolidation.count).to eq 8
+      expect(ProjectConsolidation.count).to eq 4
     end
   end
 end

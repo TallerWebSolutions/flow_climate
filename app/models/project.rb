@@ -69,6 +69,7 @@ class Project < ApplicationRecord
   scope :running, -> { where('status = 1 OR status = 2') }
   scope :active, -> { where('status = 0 OR status = 1 OR status = 2') }
   scope :active_in_period, ->(start_period, end_period) { where('(start_date BETWEEN :start_period AND :end_period) OR (end_date BETWEEN :start_period AND :end_period)', start_period: start_period, end_period: end_period) }
+  scope :finishing_after, ->(date) { where('end_date >= :end_date', end_date: date) }
 
   def add_user(user)
     return if users.include?(user)
