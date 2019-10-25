@@ -32,7 +32,6 @@
 #  company_id                      :integer          not null
 #  current_stage_id                :integer
 #  external_id                     :string           not null
-#  parent_id                       :integer
 #  portfolio_unit_id               :integer
 #  product_id                      :integer
 #  project_id                      :integer          not null
@@ -49,14 +48,13 @@
 #
 # Foreign Keys
 #
-#  fk_rails_...  (current_stage_id => stages.id)
-#  fk_rails_...  (parent_id => demands.id)
-#  fk_rails_...  (portfolio_unit_id => portfolio_units.id)
-#  fk_rails_...  (product_id => products.id)
-#  fk_rails_...  (project_id => projects.id)
-#  fk_rails_...  (risk_review_id => risk_reviews.id)
-#  fk_rails_...  (service_delivery_review_id => service_delivery_reviews.id)
-#  fk_rails_...  (team_id => teams.id)
+#  fk_rails_095fb2481e  (team_id => teams.id)
+#  fk_rails_19bdd8aa1e  (project_id => projects.id)
+#  fk_rails_34f0dad22e  (risk_review_id => risk_reviews.id)
+#  fk_rails_35680c72ae  (current_stage_id => stages.id)
+#  fk_rails_73cc77780a  (product_id => products.id)
+#  fk_rails_c9b5eaaa7f  (portfolio_unit_id => portfolio_units.id)
+#  fk_rails_fcc44c0e5d  (service_delivery_review_id => service_delivery_reviews.id)
 #
 
 class Demand < ApplicationRecord

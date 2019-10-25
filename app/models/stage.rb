@@ -25,7 +25,7 @@
 #
 # Foreign Keys
 #
-#  fk_rails_...  (company_id => companies.id)
+#  fk_rails_ffd4cca0d4  (company_id => companies.id)
 #
 
 class Stage < ApplicationRecord

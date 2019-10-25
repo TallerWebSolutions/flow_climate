@@ -19,8 +19,8 @@
 #
 # Foreign Keys
 #
-#  fk_rails_...  (demand_id => demands.id)
-#  fk_rails_...  (team_member_id => team_members.id)
+#  fk_rails_b68ee35cab  (team_member_id => team_members.id)
+#  fk_rails_dc14d53db5  (demand_id => demands.id)
 #
 
 class DemandComment < ApplicationRecord

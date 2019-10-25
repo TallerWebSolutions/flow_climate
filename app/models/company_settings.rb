@@ -17,7 +17,7 @@
 #
 # Foreign Keys
 #
-#  fk_rails_...  (company_id => companies.id)
+#  fk_rails_6434bf6768  (company_id => companies.id)
 #
 
 class CompanySettings < ApplicationRecord

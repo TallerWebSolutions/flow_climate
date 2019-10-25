@@ -19,8 +19,8 @@
 #
 # Foreign Keys
 #
-#  fk_rails_...  (project_id => projects.id)
-#  fk_rails_...  (user_id => users.id)
+#  fk_rails_4bed04fd76  (user_id => users.id)
+#  fk_rails_7402a518b4  (project_id => projects.id)
 #
 
 class UserProjectRole < ApplicationRecord

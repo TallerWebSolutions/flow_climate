@@ -27,11 +27,11 @@
 #
 # Foreign Keys
 #
-#  fk_rails_...  (blocker_id => team_members.id)
-#  fk_rails_...  (demand_id => demands.id)
-#  fk_rails_...  (risk_review_id => risk_reviews.id)
-#  fk_rails_...  (stage_id => stages.id)
-#  fk_rails_...  (unblocker_id => team_members.id)
+#  fk_rails_0c8fa8d3a7  (demand_id => demands.id)
+#  fk_rails_11fee31fef  (blocker_id => team_members.id)
+#  fk_rails_196a395613  (unblocker_id => team_members.id)
+#  fk_rails_6c21b271de  (risk_review_id => risk_reviews.id)
+#  fk_rails_d25cb2ae7e  (stage_id => stages.id)
 #
 
 class DemandBlock < ApplicationRecord

@@ -28,8 +28,8 @@
 #
 # Foreign Keys
 #
-#  fk_rails_...  (company_id => companies.id)
-#  fk_rails_...  (team_id => teams.id)
+#  fk_rails_44a549d7b3  (company_id => companies.id)
+#  fk_rails_ecc227a0c2  (team_id => teams.id)
 #
 
 class Project < ApplicationRecord

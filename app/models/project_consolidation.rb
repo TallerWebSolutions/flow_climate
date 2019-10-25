@@ -32,7 +32,7 @@
 #
 # Foreign Keys
 #
-#  fk_rails_...  (project_id => projects.id)
+#  fk_rails_09ca62cd76  (project_id => projects.id)
 #
 
 class ProjectConsolidation < ApplicationRecord

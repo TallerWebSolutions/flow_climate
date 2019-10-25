@@ -22,8 +22,8 @@
 #
 # Foreign Keys
 #
-#  fk_rails_...  (parent_id => portfolio_units.id)
-#  fk_rails_...  (product_id => products.id)
+#  fk_rails_111d0b277b  (product_id => products.id)
+#  fk_rails_2af43d471c  (parent_id => portfolio_units.id)
 #
 
 class PortfolioUnit < ApplicationRecord

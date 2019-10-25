@@ -18,7 +18,7 @@
 #
 # Foreign Keys
 #
-#  fk_rails_...  (jira_account_id => jira_accounts.id)
+#  fk_rails_1c34addc50  (jira_account_id => jira_accounts.id)
 #
 
 module Jira

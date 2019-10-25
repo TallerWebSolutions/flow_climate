@@ -12,4 +12,5 @@ Fabricator(:project) do
   value { Faker::Number.number }
   qty_hours { Faker::Number.number(digits: 3) }
   hour_value { Faker::Number.number(digits: 2) }
+  max_work_in_progress { 5 }
 end

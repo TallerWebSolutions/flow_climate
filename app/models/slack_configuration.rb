@@ -22,7 +22,7 @@
 #
 # Foreign Keys
 #
-#  fk_rails_...  (team_id => teams.id)
+#  fk_rails_52597683c1  (team_id => teams.id)
 #
 
 class SlackConfiguration < ApplicationRecord

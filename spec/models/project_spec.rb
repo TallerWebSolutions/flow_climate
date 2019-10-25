@@ -101,11 +101,11 @@ RSpec.describe Project, type: :model do
   end
 
   context 'scopes' do
-    let!(:first_project) { Fabricate :project, status: :waiting, start_date: Time.zone.today }
-    let!(:second_project) { Fabricate :project, status: :waiting, start_date: Time.zone.today }
-    let!(:third_project) { Fabricate :project, status: :executing, end_date: Time.zone.today }
+    let!(:first_project) { Fabricate :project, status: :waiting, start_date: Time.zone.today, end_date: Time.zone.tomorrow }
+    let!(:second_project) { Fabricate :project, status: :waiting, start_date: 3.days.ago, end_date: 2.days.ago }
+    let!(:third_project) { Fabricate :project, status: :executing, end_date: 3.days.ago }
     let!(:fourth_project) { Fabricate :project, status: :maintenance, end_date: Time.zone.today }
-    let!(:fifth_project) { Fabricate :project, status: :cancelled, end_date: Time.zone.today }
+    let!(:fifth_project) { Fabricate :project, status: :cancelled, end_date: 1.day.ago }
     let!(:sixth_project) { Fabricate :project, status: :finished, end_date: Time.zone.today }
 
     describe '.waiting_projects_starting_within_week' do
@@ -122,6 +122,10 @@ RSpec.describe Project, type: :model do
 
     describe '.active' do
       it { expect(described_class.active).to match_array [first_project, second_project, third_project, fourth_project] }
+    end
+
+    describe '.finishing_after' do
+      it { expect(described_class.finishing_after(26.hours.ago)).to match_array [first_project, fourth_project, fifth_project, sixth_project] }
     end
   end
 

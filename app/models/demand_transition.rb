@@ -21,8 +21,8 @@
 #
 # Foreign Keys
 #
-#  fk_rails_...  (demand_id => demands.id)
-#  fk_rails_...  (stage_id => stages.id)
+#  fk_rails_2a5bc4c3f8  (demand_id => demands.id)
+#  fk_rails_c63024fc81  (stage_id => stages.id)
 #
 
 class DemandTransition < ApplicationRecord
@@ -45,6 +45,7 @@ class DemandTransition < ApplicationRecord
 
   after_save :set_demand_dates
   after_save :set_demand_computed_fields
+  after_save :check_project_wip
 
   def total_seconds_in_transition
     out_time = [last_time_out, Time.zone.now].compact.min
@@ -114,5 +115,12 @@ class DemandTransition < ApplicationRecord
     return if stage.blank? || stage.projects.include?(demand.project)
 
     errors.add(:stage, I18n.t('activerecord.errors.models.demand_transition.stage.not_same'))
+  end
+
+  def check_project_wip
+    project = demand.project
+    return if project.demands.in_wip.count <= project.max_work_in_progress
+
+    ProjectBrokenWipLog.where(project: project, project_wip: project.max_work_in_progress, demands_ids: project.demands.in_wip.map(&:id)).first_or_create
   end
 end

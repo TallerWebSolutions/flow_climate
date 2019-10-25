@@ -16,6 +16,7 @@
 #  updated_at              :datetime         not null
 #  company_id              :integer          not null
 #  jira_account_id         :string
+#  user_id                 :integer
 #
 # Indexes
 #
@@ -23,7 +24,8 @@
 #
 # Foreign Keys
 #
-#  fk_rails_...  (company_id => companies.id)
+#  fk_rails_3ec60e399b  (company_id => companies.id)
+#  fk_rails_9ec2d5e75e  (user_id => users.id)
 #
 
 class TeamMember < ApplicationRecord

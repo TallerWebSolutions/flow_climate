@@ -20,8 +20,8 @@
 #
 # Foreign Keys
 #
-#  fk_rails_...  (team_id => teams.id)
-#  fk_rails_...  (team_resource_id => team_resources.id)
+#  fk_rails_600e78ae6c  (team_resource_id => team_resources.id)
+#  fk_rails_e11bdf0f2c  (team_id => teams.id)
 #
 
 class TeamResourceAllocation < ApplicationRecord

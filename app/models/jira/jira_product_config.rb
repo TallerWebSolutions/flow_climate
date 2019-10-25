@@ -19,8 +19,8 @@
 #
 # Foreign Keys
 #
-#  fk_rails_...  (company_id => companies.id)
-#  fk_rails_...  (product_id => products.id)
+#  fk_rails_3b969f1e33  (company_id => companies.id)
+#  fk_rails_c55dd7e748  (product_id => products.id)
 #
 
 module Jira

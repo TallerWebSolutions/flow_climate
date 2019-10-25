@@ -23,8 +23,8 @@
 #
 # Foreign Keys
 #
-#  fk_rails_...  (project_id => projects.id)
-#  fk_rails_...  (stage_id => stages.id)
+#  fk_rails_713ceb31a3  (project_id => projects.id)
+#  fk_rails_b25c287b60  (stage_id => stages.id)
 #
 
 class StageProjectConfig < ApplicationRecord

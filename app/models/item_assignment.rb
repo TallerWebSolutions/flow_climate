@@ -21,8 +21,8 @@
 #
 # Foreign Keys
 #
-#  fk_rails_...  (demand_id => demands.id)
-#  fk_rails_...  (team_member_id => team_members.id)
+#  fk_rails_0af34c141e  (demand_id => demands.id)
+#  fk_rails_78b4938f25  (team_member_id => team_members.id)
 #
 
 class ItemAssignment < ApplicationRecord
