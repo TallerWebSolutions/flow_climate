@@ -16,7 +16,7 @@
 #
 # Foreign Keys
 #
-#  fk_rails_...  (portfolio_unit_id => portfolio_units.id)
+#  fk_rails_36a483c30d  (portfolio_unit_id => portfolio_units.id)
 #
 
 module Jira

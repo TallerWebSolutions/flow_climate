@@ -1,12 +1,12 @@
 <div class="row bottom-spaced-component">
   <div class="col-xs-4">
     <%= label_tag Project.human_attribute_name(:start_date), nil, class: 'control-label' %>
-    <%= date_field_tag :charts_filter_start_date, start_date, class: 'form-control' %>
+    <%= date_field_tag :charts_filter_start_date, start_date, class: 'form-control', disabled: projects_count <= 1 %>
   </div>
 
   <div class="col-xs-4">
     <%= label_tag Project.human_attribute_name(:end_date), nil, class: 'control-label' %>
-    <%= date_field_tag :charts_filter_end_date, end_date, class: 'form-control' %>
+    <%= date_field_tag :charts_filter_end_date, end_date, class: 'form-control', disabled: projects_count <= 1 %>
   </div>
 
   <div class="col-xs-4">

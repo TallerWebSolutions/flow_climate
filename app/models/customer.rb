@@ -19,7 +19,7 @@
 #
 # Foreign Keys
 #
-#  fk_rails_...  (company_id => companies.id)
+#  fk_rails_ef51a916ef  (company_id => companies.id)
 #
 
 class Customer < ApplicationRecord

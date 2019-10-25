@@ -21,8 +21,8 @@
 #
 # Foreign Keys
 #
-#  fk_rails_...  (company_id => companies.id)
-#  fk_rails_...  (project_id => projects.id)
+#  fk_rails_3505c123da  (company_id => companies.id)
+#  fk_rails_6533e9d0da  (project_id => projects.id)
 #
 
 class IntegrationError < ApplicationRecord

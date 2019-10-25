@@ -18,7 +18,7 @@
 #
 # Foreign Keys
 #
-#  fk_rails_...  (company_id => companies.id)
+#  fk_rails_573f757bcf  (company_id => companies.id)
 #
 
 class FinancialInformation < ApplicationRecord

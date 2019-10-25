@@ -19,8 +19,8 @@
 #
 # Foreign Keys
 #
-#  fk_rails_...  (project_id => projects.id)
-#  fk_rails_...  (project_risk_config_id => project_risk_configs.id)
+#  fk_rails_4685dfa1bb  (project_id => projects.id)
+#  fk_rails_b8b501e2eb  (project_risk_config_id => project_risk_configs.id)
 #
 
 class ProjectRiskAlert < ApplicationRecord

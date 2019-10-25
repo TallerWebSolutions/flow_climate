@@ -22,7 +22,7 @@
 #
 # Foreign Keys
 #
-#  fk_rails_...  (company_id => companies.id)
+#  fk_rails_b16d2de302  (company_id => companies.id)
 #
 
 module Jira

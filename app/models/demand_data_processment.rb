@@ -18,8 +18,8 @@
 #
 # Foreign Keys
 #
-#  fk_rails_...  (user_id => users.id)
-#  fk_rails_...  (user_plan_id => user_plans.id)
+#  fk_rails_1e9a84a8ab  (user_plan_id => user_plans.id)
+#  fk_rails_337e2008a8  (user_id => users.id)
 #
 
 class DemandDataProcessment < ApplicationRecord

@@ -114,16 +114,47 @@ RSpec.describe DemandTransitionsController, type: :controller do
         let!(:first_stage) { Fabricate :stage, company: company, teams: [team], order: 1 }
         let!(:second_stage) { Fabricate :stage, company: company, teams: [team], order: 0 }
 
-        before { post :create, params: { company_id: company, demand_id: demand, demand_transition: { stage_id: stage, last_time_in: 3.days.ago, last_time_out: 1.day.ago } }, xhr: true }
+        context 'with no wip limit broken' do
+          before { post :create, params: { company_id: company, demand_id: demand, demand_transition: { stage_id: stage, last_time_in: 3.days.ago, last_time_out: 1.day.ago } }, xhr: true }
 
-        it 'creates the new demand transition' do
-          expect(response).to render_template 'demand_transitions/create'
-          expect(assigns(:demand_transition).errors.full_messages).to eq []
-          expect(assigns(:demand_transition)).to be_persisted
-          expect(assigns(:demand_transition).stage).to eq stage
-          expect(assigns(:demand_transition).demand).to eq demand
-          expect(assigns(:stages_to_select)).to eq [second_stage, first_stage]
-          expect(demand.reload.current_stage).to eq stage
+          it 'creates the new demand transition and no broken wip log' do
+            expect(response).to render_template 'demand_transitions/create'
+            expect(assigns(:demand_transition).errors.full_messages).to eq []
+            expect(assigns(:demand_transition)).to be_persisted
+            expect(assigns(:demand_transition).stage).to eq stage
+            expect(assigns(:demand_transition).demand).to eq demand
+            expect(assigns(:stages_to_select)).to eq [second_stage, first_stage]
+            expect(demand.reload.current_stage).to eq stage
+
+            expect(ProjectBrokenWipLog.all.count).to eq 0
+          end
+        end
+
+        context 'with wip limit broken' do
+          let(:project) { Fabricate :project, customers: [customer], team: team, max_work_in_progress: 0 }
+          let!(:demand) { Fabricate :demand, project: project, team: team }
+
+          context 'with no broken wip log created yet' do
+            before { post :create, params: { company_id: company, demand_id: demand, demand_transition: { stage_id: stage, last_time_in: 3.days.ago, last_time_out: 1.day.ago } }, xhr: true }
+
+            it 'creates the new demand transition and the new broken wip log' do
+              expect(response).to render_template 'demand_transitions/create'
+              expect(ProjectBrokenWipLog.first.demands_ids).to eq [demand.id]
+              expect(ProjectBrokenWipLog.first.project).to eq project
+              expect(ProjectBrokenWipLog.first.project_wip).to eq project.max_work_in_progress
+            end
+          end
+
+          context 'with broken wip log created yet' do
+            let!(:broken_wip_log) { Fabricate :project_broken_wip_log, project: project, demands_ids: [demand.id], project_wip: project.max_work_in_progress }
+
+            before { post :create, params: { company_id: company, demand_id: demand, demand_transition: { stage_id: stage, last_time_in: 3.days.ago, last_time_out: 1.day.ago } }, xhr: true }
+
+            it 'creates the new demand transition and does not create the new broken wip log' do
+              expect(response).to render_template 'demand_transitions/create'
+              expect(ProjectBrokenWipLog.all.count).to eq 1
+            end
+          end
         end
       end
 

@@ -23,8 +23,8 @@
 #
 # Foreign Keys
 #
-#  fk_rails_...  (plan_id => plans.id)
-#  fk_rails_...  (user_id => users.id)
+#  fk_rails_406c835a0f  (plan_id => plans.id)
+#  fk_rails_6bb6a01b63  (user_id => users.id)
 #
 
 class UserPlan < ApplicationRecord

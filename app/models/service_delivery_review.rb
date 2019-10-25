@@ -26,8 +26,8 @@
 #
 # Foreign Keys
 #
-#  fk_rails_...  (company_id => companies.id)
-#  fk_rails_...  (product_id => products.id)
+#  fk_rails_2ee3d597b3  (product_id => products.id)
+#  fk_rails_bfbae75414  (company_id => companies.id)
 #
 
 class ServiceDeliveryReview < ApplicationRecord

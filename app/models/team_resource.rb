@@ -19,7 +19,7 @@
 #
 # Foreign Keys
 #
-#  fk_rails_...  (company_id => companies.id)
+#  fk_rails_0e82f4e026  (company_id => companies.id)
 #
 
 class TeamResource < ApplicationRecord

@@ -1077,6 +1077,7 @@ en:
       impacts_per_demand_label: "Impact/Demand"
       bugs_label: "Bugs"
       blocks_per_demand_label: "Blocks/Demand"
+      projects_broken_wip: "Broken WiP Count"
     update:
       enqueued_associations: "The building of your risk review was enqueued. You will receive an email when it finishes."
   team_resources:

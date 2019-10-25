@@ -21,8 +21,8 @@
 #
 # Foreign Keys
 #
-#  fk_rails_...  (team_id => teams.id)
-#  fk_rails_...  (team_member_id => team_members.id)
+#  fk_rails_1138510838  (team_member_id => team_members.id)
+#  fk_rails_ae2aedcfaf  (team_id => teams.id)
 #
 
 class Membership < ApplicationRecord

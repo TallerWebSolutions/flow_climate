@@ -19,8 +19,8 @@
 #
 # Foreign Keys
 #
-#  fk_rails_...  (project_id => projects.id)
-#  fk_rails_...  (user_id => users.id)
+#  fk_rails_1f60eef53a  (project_id => projects.id)
+#  fk_rails_7e0b9bce8f  (user_id => users.id)
 #
 
 class ProjectChangeDeadlineHistory < ApplicationRecord

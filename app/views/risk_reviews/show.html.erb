@@ -55,6 +55,10 @@
               <td><b><%= I18n.t('risk_reviews.show.impacts_per_demand_label') %></b></td>
               <td><%= number_with_precision(@risk_review.impacts_per_demand, precision: 3) %></td>
             </tr>
+            <tr>
+              <td><b><%= I18n.t('risk_reviews.show.projects_broken_wip') %></b></td>
+              <td><%= @risk_review.demands.map { |demand| demand.project }.uniq.map { |project| project.project_broken_wip_logs.count }.compact.sum %></td>
+            </tr>
           </tbody>
         </table>
       </div>

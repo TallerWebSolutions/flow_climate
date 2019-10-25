@@ -18,8 +18,8 @@
 #
 # Foreign Keys
 #
-#  fk_rails_...  (jira_product_config_id => jira_product_configs.id)
-#  fk_rails_...  (project_id => projects.id)
+#  fk_rails_039cb02c5a  (jira_product_config_id => jira_product_configs.id)
+#  fk_rails_5de62c9ca2  (project_id => projects.id)
 #
 
 module Jira

@@ -910,6 +910,39 @@ ALTER SEQUENCE public.products_projects_id_seq OWNED BY public.products_projects
 
 
 --
+-- Name: project_broken_wip_logs; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.project_broken_wip_logs (
+    id bigint NOT NULL,
+    project_id integer NOT NULL,
+    project_wip integer NOT NULL,
+    demands_ids integer[] NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: project_broken_wip_logs_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.project_broken_wip_logs_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: project_broken_wip_logs_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.project_broken_wip_logs_id_seq OWNED BY public.project_broken_wip_logs.id;
+
+
+--
 -- Name: project_change_deadline_histories; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1761,6 +1794,13 @@ ALTER TABLE ONLY public.products_projects ALTER COLUMN id SET DEFAULT nextval('p
 
 
 --
+-- Name: project_broken_wip_logs id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.project_broken_wip_logs ALTER COLUMN id SET DEFAULT nextval('public.project_broken_wip_logs_id_seq'::regclass);
+
+
+--
 -- Name: project_change_deadline_histories id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -2084,6 +2124,14 @@ ALTER TABLE ONLY public.products
 
 ALTER TABLE ONLY public.products_projects
     ADD CONSTRAINT products_projects_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: project_broken_wip_logs project_broken_wip_logs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.project_broken_wip_logs
+    ADD CONSTRAINT project_broken_wip_logs_pkey PRIMARY KEY (id);
 
 
 --
@@ -2614,6 +2662,13 @@ CREATE UNIQUE INDEX index_products_projects_on_product_id_and_project_id ON publ
 --
 
 CREATE INDEX index_products_projects_on_project_id ON public.products_projects USING btree (project_id);
+
+
+--
+-- Name: index_project_broken_wip_logs_on_project_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_project_broken_wip_logs_on_project_id ON public.project_broken_wip_logs USING btree (project_id);
 
 
 --
@@ -3265,6 +3320,14 @@ ALTER TABLE ONLY public.item_assignments
 
 
 --
+-- Name: project_broken_wip_logs fk_rails_79ce1654a8; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.project_broken_wip_logs
+    ADD CONSTRAINT fk_rails_79ce1654a8 FOREIGN KEY (project_id) REFERENCES public.projects(id);
+
+
+--
 -- Name: project_change_deadline_histories fk_rails_7e0b9bce8f; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -3650,6 +3713,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20191002140915'),
 ('20191015185615'),
 ('20191021222025'),
-('20191024212617');
+('20191024212617'),
+('20191025150906');
 
 

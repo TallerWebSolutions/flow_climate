@@ -24,9 +24,9 @@
 #
 # Foreign Keys
 #
-#  fk_rails_...  (demand_id => demands.id)
-#  fk_rails_...  (project_id => projects.id)
-#  fk_rails_...  (risk_review_id => risk_reviews.id)
+#  fk_rails_c718f8e04c  (risk_review_id => risk_reviews.id)
+#  fk_rails_cda32ac094  (project_id => projects.id)
+#  fk_rails_f6118b7a74  (demand_id => demands.id)
 #
 
 class FlowImpact < ApplicationRecord

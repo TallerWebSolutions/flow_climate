@@ -20,8 +20,8 @@
 #
 # Foreign Keys
 #
-#  fk_rails_...  (company_id => companies.id)
-#  fk_rails_...  (product_id => products.id)
+#  fk_rails_0e13c6d551  (company_id => companies.id)
+#  fk_rails_dd98df4301  (product_id => products.id)
 #
 
 class RiskReview < ApplicationRecord
