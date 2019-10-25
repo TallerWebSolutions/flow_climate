@@ -21,6 +21,7 @@ RSpec.describe Project, type: :model do
     it { is_expected.to have_many(:jira_project_configs).dependent(:destroy) }
     it { is_expected.to have_many(:flow_impacts).dependent(:destroy) }
     it { is_expected.to have_many(:project_consolidations).dependent(:destroy) }
+    it { is_expected.to have_many(:project_broken_wip_logs).dependent(:destroy) }
 
     it { is_expected.to have_many(:user_project_roles).dependent(:destroy) }
     it { is_expected.to have_many(:users).through(:user_project_roles) }

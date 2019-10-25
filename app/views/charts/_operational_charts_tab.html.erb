@@ -1,7 +1,7 @@
 <%= hidden_field_tag :target_name, target_name %>
 <%= hidden_field_tag :projects_ids, projects.map(&:id).join(',') %>
 
-<%= render 'charts/charts_filter', start_date: (params['start_date'] || start_date), end_date: (params['end_date'] || end_date), period: params[:period] %>
+<%= render 'charts/charts_filter', start_date: (params['start_date'] || start_date), end_date: (params['end_date'] || end_date), period: params[:period], projects_count: projects.count %>
 
 <hr>
 

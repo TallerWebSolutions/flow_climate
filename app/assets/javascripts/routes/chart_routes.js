@@ -7,7 +7,7 @@ function buildOperationalCharts(companyId, projectsIds, targetName, period, star
     jQuery.ajax({
         url: `/companies/${companyId}/build_operational_charts.js`,
         type: "GET",
-        data: `projects_ids=${projectsIds}&period=${period}&target_name=${targetName}&start_date=${startDate}&end_date=${endDate}&period=${period}&team_id=${teamId}`
+        data: `projects_ids=${projectsIds}&period=${period}&target_name=${targetName}&start_date=${startDate}&end_date=${endDate}&team_id=${teamId}`
     });
 }
 
