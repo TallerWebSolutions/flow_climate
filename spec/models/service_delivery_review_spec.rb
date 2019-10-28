@@ -213,6 +213,10 @@ RSpec.describe ServiceDeliveryReview, type: :model do
   end
 
   describe '#longest_stage' do
+    before { travel_to Time.zone.local(2019, 10, 24, 10, 0, 0) }
+
+    after { travel_back }
+
     include_context 'service delivery data'
 
     it 'returns the longest stage in demands array' do
