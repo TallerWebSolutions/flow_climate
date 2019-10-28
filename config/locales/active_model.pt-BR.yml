@@ -363,7 +363,8 @@ pt-BR:
         block_time: Bloqueado em
         unblocker: Desbloqueado por
         unblock_time: Desbloqueado em
-        block_duration: Duração Útil
+        block_working_time_duration: Duração Útil
+        block_duration: Duração
         active: Ativo?
         block_type: Tipo do Bloqueio
         stage_when_unblocked: Desbloqueado em

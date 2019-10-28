@@ -102,6 +102,10 @@ RSpec.describe Project, type: :model do
   end
 
   context 'scopes' do
+    before { travel_to Time.zone.local(2019, 10, 24, 10, 0, 0) }
+
+    after { travel_back }
+
     let!(:first_project) { Fabricate :project, status: :waiting, start_date: Time.zone.today, end_date: Time.zone.tomorrow }
     let!(:second_project) { Fabricate :project, status: :waiting, start_date: 3.days.ago, end_date: 2.days.ago }
     let!(:third_project) { Fabricate :project, status: :executing, end_date: 3.days.ago }
@@ -868,7 +872,7 @@ RSpec.describe Project, type: :model do
 
     context 'having no valid blocks' do
       let(:demand) { Fabricate :demand, demand_type: :bug, project: project }
-      let!(:discarded_demand_block) { Fabricate :demand_block, demand: demand, discarded_at: 1.day.ago, block_duration: 100 }
+      let!(:discarded_demand_block) { Fabricate :demand_block, demand: demand, discarded_at: 1.day.ago, block_working_time_duration: 100 }
 
       it { expect(project.average_block_duration).to eq 0 }
     end

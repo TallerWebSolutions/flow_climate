@@ -67,13 +67,13 @@ class DemandTransition < ApplicationRecord
 
   def time_blocked_in_transition
     last_time_out_to_block = last_time_out || Time.zone.now
-    demand.demand_blocks.kept.closed.active.for_date_interval(last_time_in, last_time_out_to_block).map(&:block_duration).compact.sum
+    demand.demand_blocks.kept.closed.active.for_date_interval(last_time_in, last_time_out_to_block).map(&:block_working_time_duration).compact.sum
   end
 
   private
 
   def compute_assignments_effort(start_date, end_date, stage_percentage, pairing_percentage)
-    total_blocked = demand.demand_blocks.kept.closed.active.for_date_interval(start_date, end_date).sum(:block_duration) * stage_percentage
+    total_blocked = demand.demand_blocks.kept.closed.active.for_date_interval(start_date, end_date).sum(:block_working_time_duration) * stage_percentage
     assignments_in_dates = demand.item_assignments.for_dates(start_date, end_date)
     return (assignments_in_dates.map { |assign_in_date| assign_in_date.working_hours_until(start_date, end_date) }.sum - total_blocked) * stage_percentage unless assignments_in_dates.count > 1
 

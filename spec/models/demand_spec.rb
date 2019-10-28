@@ -415,10 +415,10 @@ RSpec.describe Demand, type: :model do
 
     context 'having blockings' do
       let!(:demand_transition) { Fabricate :demand_transition, demand: demand, stage: effort_stage, last_time_in: Time.zone.parse('2018-03-05 22:00'), last_time_out: Time.zone.parse('2018-03-06 13:00') }
-      let!(:first_demand_block) { Fabricate :demand_block, demand: demand, active: true, block_duration: 2.0, block_time: Time.zone.parse('2018-03-05 22:00'), unblock_time: Time.zone.parse('2018-03-06 13:00') }
-      let!(:second_demand_block) { Fabricate :demand_block, demand: demand, active: true, block_duration: 1.0, block_time: Time.zone.parse('2018-03-06 10:00'), unblock_time: Time.zone.parse('2018-03-06 13:00') }
-      let!(:third_demand_block) { Fabricate :demand_block, demand: demand, active: false, block_duration: 1.0, block_time: Time.zone.parse('2018-03-06 10:00'), unblock_time: Time.zone.parse('2018-03-06 13:00') }
-      let!(:out_demand_block) { Fabricate :demand_block, demand: demand, active: true, block_duration: 1.0, block_time: Time.zone.parse('2018-03-06 22:00'), unblock_time: Time.zone.parse('2018-03-06 23:00') }
+      let!(:first_demand_block) { Fabricate :demand_block, demand: demand, active: true, block_working_time_duration: 2.0, block_time: Time.zone.parse('2018-03-05 22:00'), unblock_time: Time.zone.parse('2018-03-06 13:00') }
+      let!(:second_demand_block) { Fabricate :demand_block, demand: demand, active: true, block_working_time_duration: 1.0, block_time: Time.zone.parse('2018-03-06 10:00'), unblock_time: Time.zone.parse('2018-03-06 13:00') }
+      let!(:third_demand_block) { Fabricate :demand_block, demand: demand, active: false, block_working_time_duration: 1.0, block_time: Time.zone.parse('2018-03-06 10:00'), unblock_time: Time.zone.parse('2018-03-06 13:00') }
+      let!(:out_demand_block) { Fabricate :demand_block, demand: demand, active: true, block_working_time_duration: 1.0, block_time: Time.zone.parse('2018-03-06 22:00'), unblock_time: Time.zone.parse('2018-03-06 23:00') }
       let!(:discarded_demand_block) { Fabricate :demand_block, demand: demand, active: true, block_time: Time.zone.parse('2018-03-06 10:00'), unblock_time: Time.zone.parse('2018-03-06 12:00'), discarded_at: Time.zone.now }
 
       it { expect(demand.blocked_working_time_upstream.to_f).to eq 9.0 }

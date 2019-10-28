@@ -88,7 +88,8 @@ en:
         block_time: Blocked at
         unblocker_username: Unblocked by
         unblock_time: Unblocked at
-        block_duration: Duration
+        block_working_time_duration: Working Time Duration
+        block_duration: Block Duration
         active: Active?
         enums:
           coding_needed: Coding Needed

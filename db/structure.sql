@@ -194,7 +194,6 @@ CREATE TABLE public.demand_blocks (
     demand_id integer NOT NULL,
     block_time timestamp without time zone NOT NULL,
     unblock_time timestamp without time zone,
-    block_duration integer,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     active boolean DEFAULT true NOT NULL,
@@ -205,7 +204,8 @@ CREATE TABLE public.demand_blocks (
     blocker_id integer NOT NULL,
     unblocker_id integer,
     unblock_reason character varying,
-    risk_review_id integer
+    risk_review_id integer,
+    block_working_time_duration numeric
 );
 
 
@@ -3714,6 +3714,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20191015185615'),
 ('20191021222025'),
 ('20191024212617'),
-('20191025150906');
+('20191025150906'),
+('20191028155108');
 
 

@@ -34,13 +34,13 @@ RSpec.describe DemandBlock, type: :model do
       context 'when there is unblock_time' do
         before { demand_block.update(unblock_time: Time.zone.now) }
 
-        it { expect(demand_block.reload.block_duration).to eq 12 }
+        it { expect(demand_block.reload.block_working_time_duration).to eq 12 }
       end
 
       context 'when there is no unblock_time' do
         before { demand_block.update(block_time: Time.zone.now) }
 
-        it { expect(demand_block.reload.block_duration).to eq nil }
+        it { expect(demand_block.reload.block_working_time_duration).to eq nil }
       end
 
       context 'when there is a demand current stage' do
@@ -104,20 +104,20 @@ RSpec.describe DemandBlock, type: :model do
   end
 
   describe '#total_blocked_time' do
+    before { travel_to Time.zone.local(2019, 1, 10, 10, 0, 0) }
+
+    after { travel_back }
+
     context 'when it was unblocked' do
-      before { travel_to Time.zone.local(2019, 1, 10, 10, 0, 0) }
-
-      after { travel_back }
-
       let(:demand_block) { Fabricate :demand_block, active: true, block_time: 1.day.ago, unblock_time: Time.zone.now }
 
       it { expect(demand_block.total_blocked_time).to eq 1.day.to_f }
     end
 
     context 'when it still blocked' do
-      let(:demand_block) { Fabricate :demand_block, active: true, unblock_time: nil }
+      let(:demand_block) { Fabricate :demand_block, active: true, block_time: 1.hour.ago, unblock_time: nil }
 
-      it { expect(demand_block.total_blocked_time).to eq 0 }
+      it { expect(demand_block.total_blocked_time).to eq 3600.0 }
     end
   end
 

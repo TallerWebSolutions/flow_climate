@@ -42,7 +42,7 @@ class DemandBlocksController < AuthenticatedController
     @demand_blocks_ids = params[:demand_blocks_ids]
     @demand_blocks = DemandBlock.where(id: @demand_blocks_ids)
 
-    attributes = %w[id block_time unblock_time block_duration external_id]
+    attributes = %w[id block_time unblock_time block_working_time_duration external_id]
     blocks_csv = CSV.generate(headers: true) do |csv|
       csv << attributes
       @demand_blocks.each { |block| csv << block.csv_array }
