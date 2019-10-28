@@ -11,6 +11,7 @@
         <th><%= DemandBlock.human_attribute_name :external_id %></th>
         <th><%= DemandBlock.human_attribute_name :block_type %></th>
         <th><%= DemandBlock.human_attribute_name :block_duration %></th>
+        <th><%= DemandBlock.human_attribute_name :block_working_time_duration %></th>
         <th><%= DemandBlock.human_attribute_name :blocker_username %></th>
         <th><%= DemandBlock.human_attribute_name :unblocker_username %></th>
         <th><%= DemandBlock.human_attribute_name :block_time %></th>
@@ -25,7 +26,8 @@
         <tr>
           <td><%= link_to block.demand.external_id, company_demand_path(company, block.demand), target: :_blank %></td>
           <td><%= t("activerecord.attributes.demand_block.enums.block_type.#{block.block_type}") %></td>
-          <td><%= "#{block.block_duration} h" if block.block_duration.present? %></td>
+          <td><%= time_distance_in_words(block.total_blocked_time) %></td>
+          <td><%= "#{block.block_working_time_duration} h" if block.block_working_time_duration.present? %></td>
           <td><%= block.blocker.name %></td>
           <td><%= block.unblocker&.name %></td>
           <td><%= I18n.l(block.block_time, format: :short) %></td>
@@ -40,7 +42,8 @@
       <tr>
         <td></td>
         <td></td>
-        <td><%= "#{demand_blocks_list.map(&:block_duration).compact.sum} h" %></td>
+        <td><%= time_distance_in_words(demand_blocks_list.map(&:total_blocked_time).compact.sum) %></td>
+        <td><%= "#{demand_blocks_list.map(&:block_working_time_duration).compact.sum} h" %></td>
         <td></td>
         <td></td>
         <td></td>

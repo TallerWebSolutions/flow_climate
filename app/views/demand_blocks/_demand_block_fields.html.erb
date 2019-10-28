@@ -1,8 +1,9 @@
 <td><%= link_to block.demand.external_id, company_demand_path(company, block.demand), target: :_blank %></td>
-<td><%= t("activerecord.attributes.demand_block.enums.block_type.#{block.block_type}") %></td>
+<td><%= I18n.t("activerecord.attributes.demand_block.enums.block_type.#{block.block_type}") %></td>
 <td><%= block.block_reason %></td>
 <td><%= block.stage&.name %></td>
-<td><%= "#{block.block_duration} h" if block.block_duration.present? %></td>
+<td><%= time_distance_in_words(block.total_blocked_time) %></td>
+<td><%= "#{block.block_working_time_duration} h" if block.block_working_time_duration.present? %></td>
 <td><%= block.blocker.name %></td>
 <td><%= I18n.l(block.block_time, format: :short) %></td>
 <td><%= block.unblocker&.name %></td>

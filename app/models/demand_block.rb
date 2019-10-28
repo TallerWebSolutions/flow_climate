@@ -4,22 +4,23 @@
 #
 # Table name: demand_blocks
 #
-#  id             :bigint           not null, primary key
-#  active         :boolean          default(TRUE), not null
-#  block_duration :integer
-#  block_reason   :string
-#  block_time     :datetime         not null
-#  block_type     :integer          default("coding_needed"), not null
-#  discarded_at   :datetime
-#  unblock_reason :string
-#  unblock_time   :datetime
-#  created_at     :datetime         not null
-#  updated_at     :datetime         not null
-#  blocker_id     :integer          not null
-#  demand_id      :integer          not null
-#  risk_review_id :integer
-#  stage_id       :integer
-#  unblocker_id   :integer
+#  id                          :bigint           not null, primary key
+#  active                      :boolean          default(TRUE), not null
+#  block_duration              :integer
+#  block_reason                :string
+#  block_time                  :datetime         not null
+#  block_type                  :integer          default("coding_needed"), not null
+#  block_working_time_duration :decimal(, )
+#  discarded_at                :datetime
+#  unblock_reason              :string
+#  unblock_time                :datetime
+#  created_at                  :datetime         not null
+#  updated_at                  :datetime         not null
+#  blocker_id                  :integer          not null
+#  demand_id                   :integer          not null
+#  risk_review_id              :integer
+#  stage_id                    :integer
+#  unblocker_id                :integer
 #
 # Indexes
 #
@@ -61,7 +62,7 @@ class DemandBlock < ApplicationRecord
       id,
       block_time&.iso8601,
       unblock_time&.iso8601,
-      block_duration,
+      block_working_time_duration,
       demand.external_id
     ]
   end
@@ -79,9 +80,9 @@ class DemandBlock < ApplicationRecord
   end
 
   def total_blocked_time
-    return 0 unless closed? && unblock_time > block_time
+    return (unblock_time - block_time) if unblock_time.present?
 
-    unblock_time - block_time
+    Time.zone.now - block_time
   end
 
   def stage_when_unblocked
@@ -92,12 +93,8 @@ class DemandBlock < ApplicationRecord
 
   private
 
-  def closed?
-    unblock_time.present?
-  end
-
   def update_computed_fields!
-    self.block_duration = TimeService.instance.compute_working_hours_for_dates(block_time, unblock_time) if unblock_time.present?
+    self.block_working_time_duration = TimeService.instance.compute_working_hours_for_dates(block_time, unblock_time) if unblock_time.present?
     self.stage = demand.stage_at(block_time)
 
     demand.send(:compute_and_update_automatic_fields)

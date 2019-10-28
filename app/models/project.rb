@@ -291,7 +291,7 @@ class Project < ApplicationRecord
   def average_block_duration
     return 0 if demands.kept.blank? || demand_blocks.kept.blank?
 
-    active_kept_closed_blocks.average(:block_duration)
+    active_kept_closed_blocks.average(:block_working_time_duration)
   end
 
   def leadtime_for_class_of_service(class_of_service, desired_percentile = 80)

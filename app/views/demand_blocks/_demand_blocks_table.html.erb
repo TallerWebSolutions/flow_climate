@@ -42,6 +42,7 @@
         <th><%= DemandBlock.human_attribute_name :block_reason %></th>
         <th><%= DemandBlock.human_attribute_name :stage %></th>
         <th><%= DemandBlock.human_attribute_name :block_duration %></th>
+        <th><%= DemandBlock.human_attribute_name :block_working_time_duration %></th>
         <th><%= DemandBlock.human_attribute_name :blocker_username %></th>
         <th><%= DemandBlock.human_attribute_name :block_time %></th>
         <th><%= DemandBlock.human_attribute_name :unblocker_username %></th>
@@ -63,8 +64,8 @@
         <td></td>
         <td></td>
         <td></td>
-        <td></td>
-        <td><%= "#{demand_blocks_list.map(&:block_duration).compact.sum} h" %></td>
+        <td><%= time_distance_in_words(demand_blocks_list.map(&:total_blocked_time).compact.sum) %>
+        <td><%= "#{demand_blocks_list.map(&:block_working_time_duration).compact.sum} h" %></td>
         <td></td>
         <td></td>
         <td></td>
