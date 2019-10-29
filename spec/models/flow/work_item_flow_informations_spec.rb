@@ -70,46 +70,61 @@ RSpec.describe Flow::WorkItemFlowInformations, type: :model do
   end
 
   describe '.initialize' do
-    context 'having data' do
+    context 'with data' do
       include_context 'demand data'
-
-      subject(:item_flow_info) { described_class.new(dates_array, Date.new(2018, 2, 20), Time.zone.today, Demand.all, 30) }
 
       let(:dates_array) { TimeService.instance.weeks_between_of(Project.all.map(&:start_date).min, Project.all.map(&:end_date).max) }
 
       it 'assigns the correct information' do
-        expect(item_flow_info.dates_array).to eq TimeService.instance.weeks_between_of(Project.all.map(&:start_date).min, Project.all.map(&:end_date).max)
+        item_flow_info = described_class.new(Demand.all, 10, dates_array.length, dates_array.last)
         expect(item_flow_info.demands).to match_array Demand.all
-        expect(item_flow_info.current_limit_date).to eq Time.zone.today
-
-        expect(item_flow_info.scope_per_period).to eq [42, 42, 42, 42, 42, 42, 42, 42, 42, 42, 42, 42]
-        expect(item_flow_info.ideal_per_period).to eq [3.5, 7.0, 10.5, 14.0, 17.5, 21.0, 24.5, 28.0, 31.5, 35.0, 38.5, 42.0]
-        expect(item_flow_info.throughput_per_period).to eq [0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0]
-        expect(item_flow_info.accumulated_throughput).to eq [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5, 5]
-        expect(item_flow_info.accumulated_bugs_opened_data_array).to eq [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4]
-        expect(item_flow_info.accumulated_bugs_closed_data_array).to eq [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4]
-        expect(item_flow_info.bugs_opened_data_array).to eq [4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-        expect(item_flow_info.bugs_closed_data_array).to eq [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0]
-        expect(item_flow_info.bugs_share_data_array).to eq [33.33333333333333, 33.33333333333333, 33.33333333333333, 33.33333333333333, 33.33333333333333, 33.33333333333333, 33.33333333333333, 33.33333333333333, 33.33333333333333, 33.33333333333333, 33.33333333333333, 33.33333333333333]
-        expect(item_flow_info.upstream_total_delivered).to eq [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-        expect(item_flow_info.upstream_delivered_per_period).to eq [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-        expect(item_flow_info.downstream_total_delivered).to eq [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5, 5]
-        expect(item_flow_info.downstream_delivered_per_period).to eq [0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0]
-        expect(item_flow_info.uncertain_scope).to eq 30
-        expect(item_flow_info.current_scope).to eq 42
+        expect(item_flow_info.current_limit_date).to eq Time.zone.today.end_of_week
+        expect(item_flow_info.uncertain_scope).to eq 10
+        expect(item_flow_info.current_scope).to eq 22
         expect(item_flow_info.period_size).to eq 12.0
+
+        item_flow_info.work_items_flow_behaviour(dates_array.first, dates_array.first, 0)
+        expect(item_flow_info.scope_per_period).to eq [22]
+        expect(item_flow_info.ideal_per_period).to eq [1.8333333333333333]
+        expect(item_flow_info.throughput_per_period).to eq [0]
+        expect(item_flow_info.accumulated_throughput).to eq [0]
+        expect(item_flow_info.accumulated_bugs_opened_data_array).to eq [4]
+        expect(item_flow_info.accumulated_bugs_closed_data_array).to eq [0]
+        expect(item_flow_info.bugs_opened_data_array).to eq [4]
+        expect(item_flow_info.bugs_closed_data_array).to eq [0]
+        expect(item_flow_info.bugs_share_data_array).to eq [33.33333333333333]
+        expect(item_flow_info.upstream_total_delivered).to eq [0]
+        expect(item_flow_info.upstream_delivered_per_period).to eq [0]
+        expect(item_flow_info.downstream_total_delivered).to eq [0]
+        expect(item_flow_info.downstream_delivered_per_period).to eq [0]
+
+        item_flow_info.work_items_flow_behaviour(dates_array.first, dates_array.second, 1)
+        expect(item_flow_info.scope_per_period).to eq [22, 22]
+        expect(item_flow_info.ideal_per_period).to eq [1.8333333333333333, 3.6666666666666665]
+        expect(item_flow_info.throughput_per_period).to eq [0, 1]
+        expect(item_flow_info.accumulated_throughput).to eq [0, 1]
+        expect(item_flow_info.accumulated_bugs_opened_data_array).to eq [4, 4]
+        expect(item_flow_info.accumulated_bugs_closed_data_array).to eq [0, 0]
+        expect(item_flow_info.bugs_opened_data_array).to eq [4, 0]
+        expect(item_flow_info.bugs_closed_data_array).to eq [0, 0]
+        expect(item_flow_info.bugs_share_data_array).to eq [33.33333333333333, 33.33333333333333]
+        expect(item_flow_info.upstream_total_delivered).to eq [0, 0]
+        expect(item_flow_info.upstream_delivered_per_period).to eq [0, 0]
+        expect(item_flow_info.downstream_total_delivered).to eq [0, 1]
+        expect(item_flow_info.downstream_delivered_per_period).to eq [0, 1]
       end
     end
 
-    context 'having no data' do
-      subject(:item_flow_info) { described_class.new(dates_array, Date.new(2018, 2, 20), Time.zone.today, Demand.all, 30) }
-
+    context 'with no data' do
       let(:dates_array) { TimeService.instance.weeks_between_of(Project.all.map(&:start_date).min, Project.all.map(&:end_date).max) }
 
       it 'assigns the correct information' do
-        expect(item_flow_info.dates_array).to eq TimeService.instance.weeks_between_of(Project.all.map(&:start_date).min, Project.all.map(&:end_date).max)
+        item_flow_info = described_class.new(Demand.all, 10, dates_array.length, dates_array.last)
+
+        item_flow_info.work_items_flow_behaviour(dates_array.first, dates_array.first, 0)
+
         expect(item_flow_info.demands).to eq []
-        expect(item_flow_info.current_limit_date).to eq Time.zone.today
+        expect(item_flow_info.current_limit_date).to eq Time.zone.today.end_of_week
 
         expect(item_flow_info.scope_per_period).to eq []
         expect(item_flow_info.ideal_per_period).to eq []
@@ -124,8 +139,8 @@ RSpec.describe Flow::WorkItemFlowInformations, type: :model do
         expect(item_flow_info.upstream_delivered_per_period).to eq []
         expect(item_flow_info.downstream_total_delivered).to eq []
         expect(item_flow_info.downstream_delivered_per_period).to eq []
-        expect(item_flow_info.uncertain_scope).to eq 30
-        expect(item_flow_info.current_scope).to eq 30
+        expect(item_flow_info.uncertain_scope).to eq 0
+        expect(item_flow_info.current_scope).to eq 0
         expect(item_flow_info.period_size).to eq 0
       end
     end

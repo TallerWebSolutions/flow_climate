@@ -111,7 +111,7 @@ RSpec.describe ReplenishingData, type: :data_objects do
       let(:other_team) { Fabricate :team, company: company }
 
       it 'returns nil' do
-        expect(replenishing_data.summary_infos[:four_last_throughputs]).to eq [0, 0, 0, 0]
+        expect(replenishing_data.summary_infos[:four_last_throughputs]).to be_nil
         project_data_to_replenish = replenishing_data.project_data_to_replenish
         expect(project_data_to_replenish[0][:qty_using_pressure]).to eq 0.0
       end

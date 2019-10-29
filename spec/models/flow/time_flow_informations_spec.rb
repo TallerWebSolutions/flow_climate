@@ -69,34 +69,40 @@ RSpec.describe Flow::TimeFlowInformations, type: :model do
     context 'having data' do
       include_context 'demand data'
 
-      subject(:time_flow_info) { described_class.new(dates_array, Time.zone.today, Demand.all) }
-
       let(:dates_array) { TimeService.instance.weeks_between_of(Project.all.map(&:start_date).min, Project.all.map(&:end_date).max) }
 
       it 'assigns the correct information' do
-        expect(time_flow_info.dates_array).to eq TimeService.instance.weeks_between_of(Project.all.map(&:start_date).min, Project.all.map(&:end_date).max)
+        time_flow_info = described_class.new(Demand.all)
         expect(time_flow_info.demands).to match_array Demand.all
-        expect(time_flow_info.current_limit_date).to eq Time.zone.today
+        expect(time_flow_info.current_limit_date).to eq Time.zone.today.end_of_week
 
-        expect(time_flow_info.hours_delivered_upstream).to eq [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 224.0, 0.0]
-        expect(time_flow_info.hours_delivered_downstream).to eq [0.0, 39.6, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 284.79999999999995, 0.0]
-        expect(time_flow_info.hours_per_demand).to eq [0.0, 19.8, 19.8, 13.200000000000001, 7.92, 7.92, 7.92, 7.92, 7.92, 7.92, 54.839999999999996, 54.839999999999996]
-        expect(time_flow_info.queue_time).to eq [0.0, 96.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 672.0, 0.0]
-        expect(time_flow_info.touch_time).to eq [0.0, 96.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 240.0, 0.0]
-        expect(time_flow_info.flow_efficiency).to eq [0, 50.0, 50.0, 50.0, 50.0, 50.0, 50.0, 50.0, 50.0, 50.0, 30.434782608695656, 30.434782608695656]
+        time_flow_info.hours_flow_behaviour(dates_array.first)
+        expect(time_flow_info.hours_delivered_upstream).to eq [0.0]
+        expect(time_flow_info.hours_delivered_downstream).to eq [0.0]
+        expect(time_flow_info.hours_per_demand).to eq [0.0]
+        expect(time_flow_info.queue_time).to eq [0.0]
+        expect(time_flow_info.touch_time).to eq [0.0]
+        expect(time_flow_info.flow_efficiency).to eq [0]
+
+        time_flow_info.hours_flow_behaviour(dates_array.second)
+        expect(time_flow_info.hours_delivered_upstream).to eq [0.0, 0.0]
+        expect(time_flow_info.hours_delivered_downstream).to eq [0.0, 39.6]
+        expect(time_flow_info.hours_per_demand).to eq [0.0, 19.8]
+        expect(time_flow_info.queue_time).to eq [0.0, 96.0]
+        expect(time_flow_info.touch_time).to eq [0.0, 96.0]
+        expect(time_flow_info.flow_efficiency).to eq [0, 50.0]
       end
     end
 
     context 'having no data' do
-      subject(:time_flow_info) { described_class.new(dates_array, Time.zone.today, Demand.all) }
-
       let(:dates_array) { TimeService.instance.weeks_between_of(Project.all.map(&:start_date).min, Project.all.map(&:end_date).max) }
 
       it 'assigns the correct information' do
-        expect(time_flow_info.dates_array).to eq TimeService.instance.weeks_between_of(Project.all.map(&:start_date).min, Project.all.map(&:end_date).max)
+        time_flow_info = described_class.new(Demand.all)
         expect(time_flow_info.demands).to eq []
-        expect(time_flow_info.current_limit_date).to eq Time.zone.today
+        expect(time_flow_info.current_limit_date).to eq Time.zone.today.end_of_week
 
+        time_flow_info.hours_flow_behaviour(dates_array.first)
         expect(time_flow_info.hours_delivered_upstream).to eq []
         expect(time_flow_info.hours_delivered_downstream).to eq []
         expect(time_flow_info.hours_per_demand).to eq []

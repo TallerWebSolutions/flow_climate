@@ -73,37 +73,39 @@ RSpec.describe Flow::StatisticsFlowInformations, type: :model do
     context 'having data' do
       include_context 'demand data'
 
-      subject(:stats_flow_info) { described_class.new(dates_array, Time.zone.today, Demand.all) }
-
       let(:dates_array) { TimeService.instance.weeks_between_of(Project.all.map(&:start_date).min, Project.all.map(&:end_date).max) }
 
       it 'assigns the correct information' do
-        expect(stats_flow_info.dates_array).to eq TimeService.instance.weeks_between_of(Project.all.map(&:start_date).min, Project.all.map(&:end_date).max)
-        expect(stats_flow_info.demands).to match_array Demand.all
-        expect(stats_flow_info.current_limit_date).to eq Time.zone.today
+        stats_flow_info = described_class.new(Demand.all)
 
-        expect(stats_flow_info.average_aging_per_period).to eq [0, 36.79736111111111, 36.79736111111111, 36.79736111111111, 36.79736111111111, 36.79736111111111, 36.79736111111111, 36.79736111111111, 36.79736111111111, 36.79736111111111, 91.39280324074073, 91.39280324074073]
-        expect(stats_flow_info.lead_time_bins).to eq [73.75, 220.18, 366.6]
-        expect(stats_flow_info.lead_time_histogram_data).to eq [5.0, 1.0, 3.0]
+        expect(stats_flow_info.demands).to match_array Demand.all
+        expect(stats_flow_info.current_limit_date).to eq Time.zone.today.end_of_week
         expect(stats_flow_info.demands_charts_ids).to match_array %w[first_demand third_bug second_bug first_bug fourth_bug seventh_demand third_demand second_demand sixth_demand]
-        expect(stats_flow_info.lead_time_data_array).to match_array [7.755694444444444, 4.9999768518518515, 0.999988425925926, 0.5416666666666666, 1.000023148148148, 236.77430555555554, 415.81474537037036, 439.81474537037036, 372.81474537037036]
+        expect(stats_flow_info.lead_time_bins).to eq [73.75, 220.18, 366.6]
         expect(stats_flow_info.lead_time_95p).to eq 430.21474537037034
         expect(stats_flow_info.lead_time_80p).to eq 390.0147453703704
         expect(stats_flow_info.lead_time_65p).to eq 190.9705833333333
+        expect(stats_flow_info.lead_time_histogram_data).to eq [5.0, 1.0, 3.0]
+        expect(stats_flow_info.lead_time_data_array).to match_array [0.5416666666666666, 0.999988425925926, 1.000023148148148, 4.9999768518518515, 7.755694444444444, 236.77430555555554, 372.81474537037036, 415.81474537037036, 439.81474537037036]
+
+        stats_flow_info.statistics_flow_behaviour(dates_array.first)
+        expect(stats_flow_info.average_aging_per_period).to eq [0]
+        expect(stats_flow_info.lead_time_accumulated).to eq [0]
+
+        stats_flow_info.statistics_flow_behaviour(dates_array.second)
+        expect(stats_flow_info.average_aging_per_period).to eq [0, 36.79736111111111]
+        expect(stats_flow_info.lead_time_accumulated).to eq [0, 7.755694444444444]
       end
     end
 
     context 'having no data' do
-      subject(:stats_flow_info) { described_class.new(dates_array, Time.zone.today, Demand.all) }
-
       let(:dates_array) { TimeService.instance.weeks_between_of(Project.all.map(&:start_date).min, Project.all.map(&:end_date).max) }
 
-      it 'assigns the correct information' do
-        expect(stats_flow_info.dates_array).to eq TimeService.instance.weeks_between_of(Project.all.map(&:start_date).min, Project.all.map(&:end_date).max)
-        expect(stats_flow_info.demands).to eq []
-        expect(stats_flow_info.current_limit_date).to eq Time.zone.today
+      it 'initializes empty attributes' do
+        stats_flow_info = described_class.new(Demand.all)
 
-        expect(stats_flow_info.average_aging_per_period).to eq []
+        expect(stats_flow_info.demands).to eq []
+        expect(stats_flow_info.current_limit_date).to eq Time.zone.today.end_of_week
         expect(stats_flow_info.lead_time_bins).to eq []
         expect(stats_flow_info.lead_time_histogram_data).to eq []
         expect(stats_flow_info.demands_charts_ids).to eq []
@@ -111,6 +113,10 @@ RSpec.describe Flow::StatisticsFlowInformations, type: :model do
         expect(stats_flow_info.lead_time_95p).to eq 0
         expect(stats_flow_info.lead_time_80p).to eq 0
         expect(stats_flow_info.lead_time_65p).to eq 0
+
+        stats_flow_info.statistics_flow_behaviour(dates_array.first)
+        expect(stats_flow_info.average_aging_per_period).to eq []
+        expect(stats_flow_info.lead_time_accumulated).to eq []
       end
     end
   end

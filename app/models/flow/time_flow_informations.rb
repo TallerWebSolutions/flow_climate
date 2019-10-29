@@ -4,30 +4,29 @@ module Flow
   class TimeFlowInformations < SystemFlowInformations
     attr_reader :hours_delivered_upstream, :hours_delivered_downstream, :hours_per_demand, :queue_time, :touch_time, :flow_efficiency
 
-    def initialize(dates_array, current_limit_date, demands)
-      super(dates_array, current_limit_date, demands)
+    def initialize(demands)
+      super(demands)
+      start_attributes_values
+    end
 
+    def hours_flow_behaviour(analysed_date)
+      return if demands.blank?
+
+      demands_finished_until_date = @demands.finished_until_date(analysed_date) # query
+
+      build_hours_data_array(demands_finished_until_date)
+      build_queue_touch_hash(demands_finished_until_date)
+    end
+
+    private
+
+    def start_attributes_values
       @hours_delivered_upstream = []
       @hours_delivered_downstream = []
       @hours_per_demand = []
       @queue_time = []
       @touch_time = []
       @flow_efficiency = []
-
-      hours_flow_behaviour
-    end
-
-    private
-
-    def hours_flow_behaviour
-      @dates_array.each do |date|
-        next if @current_limit_date < date
-
-        demands_finished_until_date = @demands.finished_until_date(date) # query
-
-        build_hours_data_array(demands_finished_until_date)
-        build_queue_touch_hash(demands_finished_until_date)
-      end
     end
 
     def build_queue_touch_hash(demands_finished_until_date)

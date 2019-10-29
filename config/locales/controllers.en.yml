@@ -144,6 +144,9 @@ en:
     demands_per_day:
       one: "%{count} demand/day"
       other: "%{count} demands/day"
+    scope: "Scope"
+    all: "All"
+    active: "Active"
   header:
     logout: Logout
     explore: Explore
@@ -535,6 +538,9 @@ en:
   team_member:
     edit:
       title: "Edit Team Member"
+    team_members_count:
+      one: "%{count} team member"
+      other: "%{count} team members"
   team:
     edit:
       title: "Edit Team Member"
@@ -557,7 +563,6 @@ en:
       no_customers_message: "You do not have teams yet."
     show:
       total_value: "Projects Total Value"
-      active_projects_value: "Active Projects Value"
   customer:
     edit:
       title: "Edit Customer"
@@ -768,8 +773,7 @@ en:
     demand:
       title: "demand(s)"
     cfd:
-      title_downstream: "Downstream Cumulative Flow Diagram for %{target_name}"
-      title_upstream: "Upstream Cumulative Flow Diagram for %{target_name}"
+      title_downstream: "Cumulative Flow Diagram for %{target_name}"
       ytitle: "Demands"
       data_suffix: "demands"
     period:
@@ -799,6 +803,14 @@ en:
       uncertainty: "Uncertainty Scope"
       created: "Created Scope"
       uncertainty_title: "Scope Uncertainty"
+    burnup:
+      scope: "Scope"
+      ideal: "Ideal"
+      current: "Current"
+    lead_time:
+      text: "Lead time"
+    histogram:
+      text: "Histogram"
   finances_params:
     edit:
       title: "Edit Financial Information"
@@ -950,6 +962,18 @@ en:
     show:
       demands_flow:
         title: "Flow between %{start_date} and %{end_date}"
+      general_info: "General"
+      lead_time_p80_accumulated: "Accumulated Lead Time p80"
+      quality_share:
+        title: "Bugs Share (%)"
+        series: "Bugs (%)"
+      projects_info: "Projects"
+      active_projects_count: "Active Projects"
+      active_projects_value: "Active Projects Value"
+      lead_time_p80: "Lead time p80"
+      search_info: "Search Info"
+      dashboard_tab: "Dashboard"
+      demands_tab: "Demands"
     new:
       title: "New Team"
     index:

@@ -6,7 +6,7 @@ module Highchart
 
     def initialize(team, start_date, end_date, chart_period_interval)
       @team = team
-      super(@team.projects, start_date, end_date, chart_period_interval)
+      super(@team.demands.kept, start_date, end_date, chart_period_interval)
 
       build_average_demand_cost
       build_hours_efficiency

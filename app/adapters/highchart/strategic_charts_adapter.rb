@@ -2,14 +2,13 @@
 
 module Highchart
   class StrategicChartsAdapter < HighchartAdapter
-    attr_reader :company, :array_of_teams, :active_projects_count_data, :sold_hours_in_month, :consumed_hours_per_month, :available_hours_per_period,
+    attr_reader :company, :active_projects_count_data, :sold_hours_in_month, :consumed_hours_per_month, :available_hours_per_period,
                 :flow_pressure_per_month_data, :money_per_month_data, :expenses_per_month_data
 
-    def initialize(company, array_of_teams, projects, start_date, end_date, chart_period_interval)
-      super(projects, start_date, end_date, chart_period_interval)
+    def initialize(company, teams, projects, demands, start_date, end_date, chart_period_interval)
+      super(demands, start_date, end_date, chart_period_interval)
 
       @company = company
-      @array_of_teams = array_of_teams
       @active_projects_count_data = []
       @sold_hours_in_month = []
       @consumed_hours_per_month = []
@@ -17,7 +16,7 @@ module Highchart
       @money_per_month_data = []
       @expenses_per_month_data = []
 
-      @available_hours_per_period = TeamService.instance.compute_available_hours_to_team(@array_of_teams, start_date.to_date, end_date.to_date, @chart_period_interval).values
+      @available_hours_per_period = TeamService.instance.compute_available_hours_to_team(teams, start_date.to_date, end_date.to_date, @chart_period_interval).values
 
       assign_attributes(projects)
     end

@@ -5,32 +5,44 @@ module Flow
     attr_reader :start_population_date, :scope_per_period, :ideal_per_period, :throughput_per_period, :accumulated_throughput,
                 :accumulated_bugs_opened_data_array, :accumulated_bugs_closed_data_array, :bugs_opened_data_array, :bugs_closed_data_array, :bugs_share_data_array,
                 :upstream_total_delivered, :upstream_delivered_per_period, :downstream_total_delivered, :downstream_delivered_per_period,
-                :uncertain_scope, :current_scope, :period_size
+                :uncertain_scope, :current_scope, :period_size, :demands_stages_count_hash
 
-    def initialize(dates_array, start_population_date, current_limit_date, demands, uncertain_scope_amount)
-      super(dates_array, current_limit_date, demands)
+    def initialize(demands, uncertain_scope_amount, period_size, end_sample_date)
+      super(demands)
+      start_attributes_values
+
+      return if demands.blank?
+
       @uncertain_scope = uncertain_scope_amount
-      @start_population_date = start_population_date
-      start_arrays
 
-      limit_data_analysis_date = dates_array.last || Time.zone.now
+      @current_scope = @demands.opened_before_date(end_sample_date).count + @uncertain_scope
+      @period_size = period_size
+      teams = demands.map(&:team).uniq
 
-      @current_scope = @demands.opened_before_date(limit_data_analysis_date).count + @uncertain_scope
-      @period_size = @dates_array.count.to_f
-
-      work_items_flow_behaviour
+      @stages = teams.last.stages.downstream.where('stages.order >= 0').order(:order)
     end
 
-    def work_items_flow_behaviour
-      @dates_array.each_with_index do |date, index|
-        demands_in_period = DemandsRepository.instance.known_scope_to_date(@demands_ids, date) # query
+    def work_items_flow_behaviour(start_population_date, analysed_date, distribution_index)
+      return if demands.blank?
 
-        @scope_per_period << demands_in_period.count + @uncertain_scope
-        build_ideal_burn_segment(index)
+      demands_in_period = DemandsRepository.instance.known_scope_to_date(@demands_ids, analysed_date) # query
 
-        next if @current_limit_date < date
+      @scope_per_period << demands_in_period.count + @uncertain_scope
+      build_ideal_burn_segment(distribution_index)
 
-        build_flow_data(@start_population_date, date, demands_in_period)
+      build_flow_data(start_population_date, analysed_date, demands_in_period) if analysed_date <= @current_limit_date
+    end
+
+    def build_cfd_hash(start_population_date, analysed_date)
+      @stages.each do |stage|
+        transitions = DemandTransition.for_demands_ids(@demands_ids).after_date(start_population_date).before_date_after_stage(analysed_date.end_of_day, stage.order)
+        delivered_count = transitions.map(&:demand_id).uniq.count
+
+        if @demands_stages_count_hash[stage.name].present?
+          @demands_stages_count_hash[stage.name] << delivered_count
+        else
+          @demands_stages_count_hash[stage.name] = [transitions.count]
+        end
       end
     end
 
@@ -78,9 +90,11 @@ module Flow
       @bugs_share_data_array << (bugs_created_until_date_count.to_f / demands_created_until_date_count) * 100
     end
 
-    def start_arrays
-      @scope_per_period = []
-      @ideal_per_period = []
+    def start_attributes_values
+      @demands_stages_count_hash = {}
+      @uncertain_scope = 0
+      @current_scope = 0
+      @period_size = 0
       @upstream_total_delivered = []
       @accumulated_throughput = []
       @throughput_per_period = []
@@ -89,11 +103,22 @@ module Flow
       @upstream_total_delivered = []
       @downstream_total_delivered = []
       @downstream_delivered_per_period = []
-      @accumulated_bugs_opened_data_array = []
-      @accumulated_bugs_closed_data_array = []
+      @stages = []
+      start_burnup_array
+      start_bugs_array
+    end
+
+    def start_burnup_array
+      @scope_per_period = []
+      @ideal_per_period = []
+    end
+
+    def start_bugs_array
       @bugs_share_data_array = []
       @bugs_opened_data_array = []
       @bugs_closed_data_array = []
+      @accumulated_bugs_opened_data_array = []
+      @accumulated_bugs_closed_data_array = []
     end
   end
 end

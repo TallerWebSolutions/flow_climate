@@ -8,25 +8,6 @@ RSpec.describe ProjectsRepository, type: :repository do
 
   after { travel_back }
 
-  describe '#all_projects_for_team' do
-    let(:other_customer) { Fabricate :customer }
-    let(:team) { Fabricate :team, company: company }
-    let(:other_team) { Fabricate :team, company: company }
-    let!(:product) { Fabricate :product, customer: customer }
-
-    let!(:first_project) { Fabricate :project, company: company, team: team, start_date: 1.week.ago, end_date: 2.months.from_now, status: :executing }
-    let!(:second_project) { Fabricate :project, company: company, team: team, start_date: 1.month.from_now, end_date: 3.months.from_now, status: :maintenance }
-    let!(:third_project) { Fabricate :project, company: company, team: team, start_date: 2.months.from_now, end_date: 2.months.from_now, status: :waiting }
-    let!(:fourth_project) { Fabricate :project, company: company, team: other_team, start_date: 2.months.from_now, end_date: 2.months.from_now, status: :maintenance }
-    let!(:fifth_project) { Fabricate :project, team: other_team, start_date: 1.week.from_now, end_date: 1.month.from_now, status: :finished }
-    let!(:sixth_project) { Fabricate :project, company: company, team: other_team, start_date: 3.months.from_now, end_date: 4.months.from_now, status: :cancelled }
-
-    let!(:seventh_project) { Fabricate :project, company: company, customers: [other_customer], start_date: 1.month.from_now, end_date: 3.months.from_now, status: :executing }
-    let!(:eigth_project) { Fabricate :project, company: company, customers: [customer], start_date: 1.month.from_now, end_date: 3.months.from_now, status: :executing }
-
-    it { expect(described_class.instance.all_projects_for_team(team)).to match_array [first_project, second_project, third_project] }
-  end
-
   describe '#add_query_to_projects_in_status' do
     let(:other_customer) { Fabricate :customer }
     let(:team) { Fabricate :team, company: company }

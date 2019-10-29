@@ -9,13 +9,13 @@ RSpec.describe Highchart::HighchartAdapter, type: :data_object do
     let!(:opened_demands) { Fabricate.times(20, :demand, project: first_project, created_date: Time.zone.parse('2018-02-21'), end_date: nil) }
     let!(:first_demand) { Fabricate :demand, project: first_project, created_date: Time.zone.parse('2018-02-21'), end_date: Time.zone.parse('2018-02-21'), leadtime: 2 * 1.day, effort_upstream: 10, effort_downstream: 5, commitment_date: nil }
     let!(:second_demand) { Fabricate :demand, project: first_project, created_date: Time.zone.parse('2018-02-21'), end_date: Time.zone.parse('2018-02-21'), leadtime: 3 * 1.day, effort_upstream: 12, effort_downstream: 20 }
-    let!(:third_demand) { Fabricate :demand, project: first_project, created_date: Time.zone.parse('2018-02-21'), end_date: Time.zone.parse('2018-03-18'), leadtime: 1 * 1.day, effort_upstream: 27, effort_downstream: 40 }
-    let!(:fourth_demand) { Fabricate :demand, project: first_project, created_date: Time.zone.parse('2018-02-21'), end_date: Time.zone.parse('2018-03-18'), leadtime: 1 * 1.day, effort_upstream: 80, effort_downstream: 34 }
+    let!(:third_demand) { Fabricate :demand, project: second_project, created_date: Time.zone.parse('2018-02-21'), end_date: Time.zone.parse('2018-03-18'), leadtime: 1 * 1.day, effort_upstream: 27, effort_downstream: 40 }
+    let!(:fourth_demand) { Fabricate :demand, project: second_project, created_date: Time.zone.parse('2018-02-21'), end_date: Time.zone.parse('2018-03-18'), leadtime: 1 * 1.day, effort_upstream: 80, effort_downstream: 34 }
     let!(:fifth_demand) { Fabricate :demand, project: first_project, created_date: Time.zone.parse('2018-02-21'), end_date: Time.zone.parse('2018-03-13'), leadtime: 4 * 1.day, effort_upstream: 56, effort_downstream: 25 }
 
     describe '.initialize' do
       context 'querying all the time' do
-        subject(:chart_data) { described_class.new(Project.all, Project.all.map(&:start_date).min, Project.all.map(&:end_date).max, 'week') }
+        subject(:chart_data) { described_class.new(Demand.all, Project.all.map(&:start_date).min, Project.all.map(&:end_date).max, 'week') }
 
         before { travel_to Time.zone.local(2018, 5, 30, 10, 0, 0) }
 
@@ -23,7 +23,7 @@ RSpec.describe Highchart::HighchartAdapter, type: :data_object do
 
         it 'do the math and provides the correct information' do
           expect(chart_data.x_axis).to eq [Date.new(2018, 2, 25), Date.new(2018, 3, 4), Date.new(2018, 3, 11), Date.new(2018, 3, 18), Date.new(2018, 3, 25)]
-          expect(chart_data.all_projects).to match_array Project.all
+          expect(chart_data.all_projects).to match_array [first_project, second_project]
         end
       end
     end

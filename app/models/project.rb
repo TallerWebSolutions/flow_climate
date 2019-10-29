@@ -69,7 +69,7 @@ class Project < ApplicationRecord
   scope :running_projects_finishing_within_week, -> { running.where('EXTRACT(week FROM end_date) = :week AND EXTRACT(year FROM end_date) = :year', week: Time.zone.today.cweek, year: Time.zone.today.cwyear) }
   scope :running, -> { where('status = 1 OR status = 2') }
   scope :active, -> { where('status = 0 OR status = 1 OR status = 2') }
-  scope :active_in_period, ->(start_period, end_period) { where('(start_date BETWEEN :start_period AND :end_period) OR (end_date BETWEEN :start_period AND :end_period)', start_period: start_period, end_period: end_period) }
+  scope :active_in_period, ->(start_period, end_period) { active.where('(start_date BETWEEN :start_period AND :end_period) OR (end_date BETWEEN :start_period AND :end_period)', start_period: start_period, end_period: end_period) }
   scope :finishing_after, ->(date) { where('end_date >= :end_date', end_date: date) }
 
   def add_user(user)

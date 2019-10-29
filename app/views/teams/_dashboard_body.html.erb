@@ -1,0 +1,140 @@
+<div class="row">
+  <div class="col-xs-4">
+    <div class="row-fluid">
+      <div class="col-xs-12">
+        <h1 class="section-title"><%= team.name %></h1>
+      </div>
+      <div class="row-fluid">
+        <div class="col-xs-12">
+          <div class="tab">
+            <button class="tablinks" id="first-team-tab" onclick="openTab(event, 'team-general-info', 'tablinks', 'tabcontent')"><%= I18n.t('teams.show.general_info') %></button>
+            <button class="tablinks" onclick="openTab(event, 'team-projects-info', 'tablinks', 'tabcontent')"><%= I18n.t('teams.show.projects_info') %></button>
+            <button class="tablinks" id="team-search-info-tab" onclick="openTab(event, 'team-search-info', 'tablinks', 'tabcontent')"><%= I18n.t('teams.show.search_info') %></button>
+          </div>
+        </div>
+        <div id="team-general-info" class="tabcontent">
+          <%= render 'teams/general_info', team: team,
+                     slack_configurations: slack_configurations,
+                     memberships: memberships,
+                     demands_count: team.demands.kept.count,
+                     delivered_scope: team.demands.kept.finished.count,
+                     remaining_backlog: team.demands.kept.count - team.demands.kept.finished.count,
+                     demands_lead_time_p80: Stats::StatisticsService.instance.percentile(80, team.demands.kept.finished_with_leadtime.map(&:leadtime_in_days)) %>
+        </div>
+
+        <div id="team-search-info" class="tabcontent">
+          <%= render 'teams/general_info', team: team,
+                     slack_configurations: slack_configurations,
+                     memberships: memberships,
+                     demands_count: report_data.demands_list.count,
+                     delivered_scope: report_data.demands_list.finished.count,
+                     remaining_backlog: report_data.demands_list.count - report_data.demands_list.finished.count,
+                     demands_lead_time_p80: Stats::StatisticsService.instance.percentile(80, report_data.demands_list.finished_with_leadtime.map(&:leadtime_in_days)) %>
+        </div>
+        <div id="team-projects-info" class="tabcontent">
+          <%= render 'teams/projects_info', team: team %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-xs-8">
+    <h4><%= I18n.t('charts.cfd.title_downstream', target_name: team.name) %></h4>
+
+    <div id="cfd-downstream-area"
+         class="flow-chart"
+         data-xcategories='<%= report_data.x_axis.to_json %>'
+         data-title=''
+         data-ytitle='<%= I18n.t('charts.cfd.ytitle') %>'
+         data-tooltipsuffix='<%= I18n.t('charts.cfd.data_suffix') %>'
+         data-series='<%= report_data.work_item_flow_information.demands_stages_count_hash.map { |key, value| { name: key, data: value } }.to_json %>'
+         data-decimals='0'>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-xs-4 bottom-spaced-component">
+    <div id="leadtime-histogram"
+         class="flow-chart"
+         data-title='<%= I18n.t('projects.charts.leadtime_histogram.title', target_name: team.name) %>'
+         data-xcategories='<%= report_data.statistics_flow_information.lead_time_bins %>'
+         data-xtitle='<%= I18n.t('projects.charts.xlabel.days') %>'
+         data-ytitle='<%= I18n.t('projects.charts.leadtime_histogram.ylabel') %>'
+         data-prefix=''
+         data-tooltipsuffix=''
+         data-series='<%= [
+                              { name: I18n.t('charts.lead_time.text'), type: 'scatter', id: 's1', marker: { radius: 2 }, data: report_data.statistics_flow_information.lead_time_data_array },
+                              { name: I18n.t('charts.histogram.text'), type: 'histogram', xAxis: 1, yAxis: 1, baseSeries: 's1', zIndex: -1, tooltip: { valueDecimals: 2 } }
+                          ].to_json %>'
+         data-decimals='2'>
+    </div>
+  </div>
+  <div class="col-xs-4">
+    <div id="line-leadtime-accumalated"
+         class="flow-chart"
+         data-xcategories='<%= report_data.x_axis.to_json %>'
+         data-title='<%= I18n.t('projects.charts.leadtime_evolution.title') %>'
+         data-ytitle='<%= I18n.t('charts.cfd.ytitle') %>'
+         data-prefix=''
+         data-tooltipsuffix='<%= I18n.t('general.days') %>'
+         data-series='<%= [{ name: I18n.t('teams.show.lead_time_p80_accumulated'), data: report_data.statistics_flow_information.lead_time_accumulated }].to_json %>'
+         data-decimals='2'>
+    </div>
+  </div>
+  <div class="col-xs-4">
+    <div id="line-bug-share-accumalated"
+         class="flow-chart"
+         data-xcategories='<%= report_data.x_axis.to_json %>'
+         data-title='<%= I18n.t('teams.show.quality_share.title') %>'
+         data-ytitle='<%= I18n.t('charts.cfd.ytitle') %>'
+         data-prefix=''
+         data-tooltipsuffix='%'
+         data-series='<%= [{ name: I18n.t('teams.show.quality_share.series'), data: report_data.work_item_flow_information.bugs_share_data_array }].to_json %>'
+         data-decimals='2'>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-xs-4 bottom-spaced-component">
+    <div id="average-demand-cost"
+         class="flow-chart"
+         data-title='<%= I18n.t('teams.charts.average_demand_cost.title', target_name: team.name) %>'
+         data-xcategories='<%= team_chart_data.average_demand_cost[:x_axis].to_json %>'
+         data-xtitle='<%= I18n.t('teams.charts.average_demand_cost.xlabel') %>'
+         data-ytitle='<%= I18n.t('teams.charts.average_demand_cost.ylabel') %>'
+         data-prefix='<%= I18n.t('general.money') %>'
+         data-tooltipsuffix=''
+         data-series='<%= [{ name: I18n.t('teams.charts.average_demand_cost.data_legend'), data: team_chart_data.average_demand_cost[:data] }].to_json %>'
+         data-decimals='2'>
+    </div>
+  </div>
+  <div class="col-xs-4">
+    <div id="burnup-demands"
+         class="flow-chart"
+         data-title='<%= I18n.t('projects.charts.burnup.demands.title', target_name: team.name) %>'
+         data-xcategories='<%= report_data.x_axis.to_json %>'
+         data-xtitle='<%= I18n.t('projects.charts.xlabel.time') %>'
+         data-ytitle='<%= I18n.t('projects.charts.burnup.ylabel') %>'
+         data-tooltipsuffix=''
+         data-prefix=''
+         data-series='<%= [{ name: I18n.t('charts.burnup.scope'), data: report_data.work_item_flow_information.scope_per_period, dataLabels: { enabled: false }, marker: false },
+                           { name: I18n.t('charts.burnup.ideal'), data: report_data.work_item_flow_information.ideal_per_period, dataLabels: { enabled: false }, marker: false },
+                           { name: I18n.t('charts.burnup.current'), data: report_data.work_item_flow_information.accumulated_throughput, dataLabels: { enabled: false }, marker: false }].to_json %>'>
+    </div>
+  </div>
+  <div class="col-xs-4">
+    <div id="throughput-column"
+         class="flow-chart"
+         data-title='<%= I18n.t('projects.charts.throughput.title', target_name: team.name) %>'
+         data-xcategories='<%= report_data.x_axis.to_json %>'
+         data-xtitle='<%= I18n.t('projects.charts.xlabel.time') %>'
+         data-ytitle='<%= I18n.t('projects.charts.throughput.ylabel') %>'
+         data-tooltipsuffix='<%= I18n.t('projects.charts.throughput.tooltipsufix') %>'
+         data-series='<%= [{ name: I18n.t('projects.charts.throughput.stage_stream.upstream'), data: report_data.work_item_flow_information.upstream_delivered_per_period }, { name: I18n.t('projects.charts.throughput.stage_stream.downstream'), data: report_data.work_item_flow_information.downstream_delivered_per_period }].to_json %>'
+         data-stacking='normal'
+         data-decimals='0'>
+    </div>
+  </div>
+</div>

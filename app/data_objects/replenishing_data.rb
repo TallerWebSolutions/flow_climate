@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class ReplenishingData
-  attr_reader :team, :team_projects, :running_projects, :total_pressure, :summary_infos, :project_data_to_replenish
+  attr_reader :team, :team_projects, :running_projects, :total_pressure, :summary_infos, :project_data_to_replenish, :throughput_per_period_array
 
   def initialize(team)
     @team = team
@@ -20,8 +20,8 @@ class ReplenishingData
   private
 
   def build_summary_infos
-    if @team_projects.present?
-      th_for_team_per_week_hash = build_grouped_per_week_hash(@team_demands, @start_date, @end_date, @team_projects.map(&:initial_scope).compact.sum)
+    if @team_projects.present? && @team_demands.present?
+      th_for_team_per_week_hash = build_throughput_per_period_array(@team_demands, @start_date, @end_date, @team_projects.map(&:initial_scope).compact.sum)
       build_basic_summary_infos(th_for_team_per_week_hash)
       @summary_infos[:average_throughput] = @summary_infos[:four_last_throughputs].sum / @summary_infos[:four_last_throughputs].count
     else
@@ -41,7 +41,7 @@ class ReplenishingData
     @project_data_to_replenish = []
     @running_projects.each do |project|
       project_info_hash = build_project_hash(project)
-      throughput_grouped_per_week_hash = build_grouped_per_week_hash(project.demands.kept, project.start_date, 1.week.ago.end_of_week, project.initial_scope)
+      throughput_grouped_per_week_hash = build_throughput_per_period_array(project.demands.kept, project.start_date, 1.week.ago.end_of_week, project.initial_scope)
 
       project_info_hash = project_info_hash.merge(build_stats_info(project, throughput_grouped_per_week_hash))
       project_info_hash = project_info_hash.merge(build_qty_items_info(project))
@@ -76,7 +76,7 @@ class ReplenishingData
     stats_hash[:throughput_last_week] = throughput_grouped_per_week_hash.last
     stats_hash[:montecarlo_80_percent] = build_monte_carlo_info(project, throughput_grouped_per_week_hash.last(10))
     stats_hash[:project_based_risks_to_deadline] = project.current_risk_to_deadline
-    stats_hash[:team_based_montecarlo_80_percent] = build_monte_carlo_info(project, build_project_share_in_team_throughput(project, build_grouped_per_week_hash(@team_demands, @start_date, @end_date, uncertain_scope_for_team).last(10)))
+    stats_hash[:team_based_montecarlo_80_percent] = build_monte_carlo_info(project, build_project_share_in_team_throughput(project, build_throughput_per_period_array(@team_demands, @start_date, @end_date, uncertain_scope_for_team).last(10)))
 
     build_proejct_consolidation_data(project, stats_hash)
 
@@ -98,10 +98,14 @@ class ReplenishingData
     stats_hash[:team_monte_carlo_weeks_max] = project.last_project_consolidation&.team_monte_carlo_weeks_max
   end
 
-  def build_grouped_per_week_hash(demands, start_date, end_date, initial_scope)
+  def build_throughput_per_period_array(demands, start_date, end_date, initial_scope)
     dates_array = TimeService.instance.weeks_between_of(start_date, end_date)
-    work_item_flow_information = Flow::WorkItemFlowInformations.new(dates_array, start_date.beginning_of_week, end_date.end_of_week, demands, initial_scope)
-    work_item_flow_information.throughput_per_period
+    work_item_flow_information = Flow::WorkItemFlowInformations.new(demands, initial_scope, dates_array.length, dates_array.last)
+
+    dates_array.each_with_index do |analysed_date, distribution_index|
+      work_item_flow_information.work_items_flow_behaviour(dates_array.first, analysed_date, distribution_index)
+    end
+    @throughput_per_period_array = work_item_flow_information.throughput_per_period
   end
 
   def build_project_share_in_team_throughput(project, team_throughput_per_week_array)
@@ -130,7 +134,7 @@ class ReplenishingData
   end
 
   def compute_qty_using_pressure(project)
-    return 0 if @total_pressure.blank? || @total_pressure.zero?
+    return 0 if @total_pressure.blank? || @total_pressure.zero? || @summary_infos.blank?
 
     @summary_infos[:average_throughput] * (project.flow_pressure / @total_pressure)
   end

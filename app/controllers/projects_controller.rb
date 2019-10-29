@@ -122,8 +122,10 @@ class ProjectsController < AuthenticatedController
 
   def status_report_dashboard
     @project_summary = ProjectsSummaryData.new([@project])
-    x_axis = TimeService.instance.weeks_between_of(@project.start_date.beginning_of_week, @project.end_date.end_of_week)
-    @work_item_flow_information = Flow::WorkItemFlowInformations.new(x_axis, @project.start_date, Time.zone.now.end_of_week, @project.demands, @project.initial_scope)
+    @x_axis = TimeService.instance.weeks_between_of(@project.start_date.beginning_of_week, @project.end_date.end_of_week)
+    @work_item_flow_information = Flow::WorkItemFlowInformations.new(@project.demands, @project.initial_scope, @x_axis.length, @x_axis.last)
+
+    build_work_item_flow_information
 
     respond_to { |format| format.js { render 'projects/status_report_dashboard' } }
   end
@@ -147,6 +149,13 @@ class ProjectsController < AuthenticatedController
   end
 
   private
+
+  def build_work_item_flow_information
+    @x_axis.each_with_index do |analysed_date, distribution_index|
+      @work_item_flow_information.work_items_flow_behaviour(@x_axis.first, analysed_date, distribution_index)
+      @work_item_flow_information.build_cfd_hash(@x_axis.first, analysed_date) if analysed_date <= Time.zone.today.end_of_week
+    end
+  end
 
   def build_projects_search(start_date, end_date, project_status)
     @projects = Project.where(id: params[:projects_ids].split(','))

@@ -12,125 +12,51 @@
 <%= hidden_field_tag :team_id, @team.id %>
 <%= hidden_field_tag :teams_ids, [@team.id] %>
 <%= hidden_field_tag :target_name, @team.name %>
-<%= hidden_field_tag :projects_ids, @team_projects.map(&:id).join(',') %>
+<%= hidden_field_tag :projects_ids, @projects.map(&:id).join(',') %>
 <%= hidden_field_tag :demands_ids, @demands_ids.join(',') %>
-<%= hidden_field_tag :default_start_date_to_filter, @start_date %>
-<%= hidden_field_tag :default_end_date_to_filter, @end_date %>
-
-<div class="row">
-  <div class="topnav">
-    <%= link_to I18n.t('navbar.details'), '#', id: 'nav-item-stamps', class: 'nav-item active', data: { container: '#stamps' } %>
-    <%= link_to I18n.t('navbar.members_table'), '#', id: 'nav-item-members', class: 'nav-item', data: { container: '#membership-table' } %>
-    <%= link_to I18n.t('navbar.projects_list'), '#', id: 'nav-item-projects-list', class: 'nav-item', data: { container: '#projects-table' } %>
-    <%= link_to I18n.t('navbar.demands'), '#', id: 'nav-item-demands', class: 'nav-item', data: { container: '#demands-tab' } %>
-    <%= link_to I18n.t('navbar.demand_blocks'), '#', id: 'nav-item-demands-blocks', class: 'nav-item', data: { container: '#demands-blocks-tab' } %>
-    <%= link_to I18n.t('navbar.flow_impacts'), '#', id: 'nav-item-flow-impacts', class: 'nav-item', data: { container: '#flow-impacts-tab' } %>
-    <%= link_to I18n.t('navbar.replenishing'), '#', id: 'nav-item-replenishingDiv', class: 'nav-item', data: { container: '#replenishingDiv-tab' } %>
-    <%= link_to I18n.t('navbar.strategic'), '#', id: 'nav-item-strategic', class: 'nav-item', data: { container: '#strategic' } %>
-    <%= link_to I18n.t('navbar.risks'), '#', id: 'nav-item-risks', class: 'nav-item', data: { container: '#risks' } %>
-    <%= link_to I18n.t('navbar.charts'), '#', id: 'nav-item-charts', class: 'nav-item', data: { container: '#operational-charts' } %>
-    <%= link_to I18n.t('navbar.statistics'), '#', id: 'nav-item-statistics', class: 'nav-item', data: { container: '#statistics-charts' } %>
-  </div>
-</div>
 
 <%= render 'layouts/load_spinner' %>
 
-<div id="stamps" class="tab-container">
-  <%= render 'team_stamps', company: @company, team: @team, slack_configurations: @slack_configurations %>
+<hr>
+
+<div class="row bottom-spaced-component">
+  <div class="col-xs-12 center">
+    <div class="tab">
+      <button class="tablinks" id="team-dashboard-tab"><%= I18n.t('teams.show.dashboard_tab') %></button>
+      <button class="tablinks" id="team-demands-tab"><%= I18n.t('teams.show.demands_tab') %></button>
+    </div>
+  </div>
 </div>
 
-<div id="membership-table" class="tab-container">
-  <%= render 'memberships/memberships_table', company: @company, team: @team, memberships: @memberships %>
+<%= render 'teams/dashboard_filter', start_date: @start_date, end_date: @end_date %>
+
+<hr>
+
+<div id="team-dashboard-info" class="tabcontent">
+  <%= render 'teams/dashboard_body', team: @team, slack_configurations: @slack_configurations, memberships: @memberships, report_data: @report_data, team_chart_data: @team_chart_data %>
 </div>
 
-<div id="projects-table" class="tab-container">
-
-</div>
-
-<div id="demands-tab" class="tab-container">
-
-</div>
-
-<div id="demands-blocks-tab" class="tab-container">
-
-</div>
-
-<div id="flow-impacts-tab" class="tab-container">
-
-</div>
-
-<div id="replenishing-tab" class="tab-container">
-
-</div>
-
-<div id="strategic" class="tab-container">
-
-</div>
-
-<div id="risks" class="tab-container">
-  <%= render 'charts/risks_and_hours_gauge_charts',
-             max_hours_gauge: @team.active_monthly_available_hours_for_billable_types(@team.projects.pluck(:project_type).uniq),
-             consumed_hours: @team.consumed_hours_in_month(Time.zone.today),
-             projects_risk_chart_data: @projects_risk_chart_data
-  %>
-</div>
-
-<div id="operational-charts" class="tab-container">
-  <%= render 'charts/operational_charts_tab', company: @company, target_name: @team.name, report_data: @report_data, status_report_data: @status_report_data, demands_chart_adapter: @demands_chart_adapter, projects: @team_projects, start_date: @start_date, end_date: @end_date %>
-</div>
-
-<div id="statistics-charts" class="tab-container">
-
+<div id="team-demands-info" class="tabcontent">
+  <%= render 'demands/demands_table', company: @company, demands: @paged_demands, unpaged_demands: @demands %>
 </div>
 
 <div class="modal fade" id="edit-demand-form" tabindex="-1" role="dialog" aria-labelledby="edit-demand-form" aria-hidden="true"></div>
 
 <% content_for :javascript do %>
   <%= javascript_include_tag 'charts/donut' %>
-  <%= javascript_include_tag 'projects/demand_classification_charts' %>
-
-  <%= javascript_include_tag 'demand_blocks/list_modal' %>
-
-  <%= javascript_include_tag 'charts/burnup' %>
   <%= javascript_include_tag 'charts/column' %>
-  <%= javascript_include_tag 'charts/bar' %>
   <%= javascript_include_tag 'charts/line' %>
-  <%= javascript_include_tag 'charts/donut' %>
-  <%= javascript_include_tag 'charts/column-line' %>
-  <%= javascript_include_tag 'charts/gauge' %>
-  <%= javascript_include_tag 'charts/scatter' %>
+  <%= javascript_include_tag 'charts/burnup' %>
+  <%= javascript_include_tag 'charts/histogram' %>
   <%= javascript_include_tag 'charts/stacked_area' %>
-  <%= javascript_include_tag 'charts/gantt' %>
 
   <%= javascript_include_tag 'components/components' %>
 
-  <%= javascript_include_tag 'stats_charts/statistics_charts' %>
-  <%= javascript_include_tag 'operational_charts/charts_filter' %>
+  <%= javascript_include_tag 'dashboards/dashboards_filter' %>
 
-  <%= javascript_include_tag 'routes/chart_routes' %>
-  <%= javascript_include_tag 'routes/demand_routes' %>
   <%= javascript_include_tag 'routes/team_routes' %>
-  <%= javascript_include_tag 'routes/flow_impact_routes' %>
-  <%= javascript_include_tag 'routes/demand_block_routes' %>
-  <%= javascript_include_tag 'routes/project_routes' %>
 
-  <%= javascript_include_tag 'projects/charts' %>
-  <%= javascript_include_tag 'projects/status_report_current' %>
-  <%= javascript_include_tag 'projects/status_report_projection' %>
-  <%= javascript_include_tag 'projects/risk_alert_color_chart' %>
-  <%= javascript_include_tag 'projects/projects_table' %>
-  <%= javascript_include_tag 'projects/projects_search' %>
-
-  <%= javascript_include_tag 'companies/strategic_charts' %>
-
-  <%= javascript_include_tag 'top_navigation/tab-navigation' %>
-  <%= javascript_include_tag 'teams/team_navigation_behaviour' %>
-
-  <%= javascript_include_tag 'demands/column_throughput_week' %>
-  <%= javascript_include_tag 'demands/filter_binding' %>
-  <%= javascript_include_tag 'demands/demands_charts' %>
-  <%= javascript_include_tag 'demands/demands_list' %>
-  <%= javascript_include_tag 'demands/form_modal' %>
-
+  <%= javascript_include_tag 'teams/team_start_charts' %>
+  <%= javascript_include_tag 'teams/team_tabs_behaviour' %>
   <%= javascript_include_tag 'teams/show' %>
 <% end %>

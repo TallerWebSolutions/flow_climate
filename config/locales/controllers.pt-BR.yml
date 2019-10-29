@@ -144,6 +144,9 @@ pt-BR:
     demands_per_day:
       one: "%{count} demanda/dia"
       other: "%{count} demandas/dia"
+    scope: "Escopo"
+    all: "Todos"
+    active: "Ativo"
   header:
     logout: Sair
     sign_up: Cadastre-se
@@ -541,6 +544,18 @@ pt-BR:
     show:
       demands_flow:
         title: "Fluxo entre os dias %{start_date} e %{end_date}"
+      general_info: "Geral"
+      lead_time_p80_accumulated: "Lead Time p80 Acumulado"
+      quality_share:
+        title: "Quantidade Relativa de Defeitos (%)"
+        series: "Defeitos (%)"
+      projects_info: "Projetos"
+      active_projects_count: "Projetos Ativos"
+      active_projects_value: "Valor dos Projetos Ativos"
+      lead_time_p80: "Lead time p80"
+      search_info: "Resultados da Busca"
+      dashboard_tab: "Dashboard"
+      demands_tab: "Demandas"
     replenishing:
       title: "Reabastecimento do Fluxo"
     charts:
@@ -581,6 +596,9 @@ pt-BR:
   team_member:
     edit:
       title: "Editar Membro do Time"
+    team_members_count:
+      one: "%{count} membro do time"
+      other: "%{count} membros do time"
   team:
     edit:
       title: "Editar Membro do Time"
@@ -603,7 +621,6 @@ pt-BR:
       no_customers_message: "Você ainda não tem times."
     show:
       total_value: "Valor Total em Projetos"
-      active_projects_value: "Valor dos Projetos Ativos"
   customer:
     edit:
       title: "Editar Cliente"
@@ -814,8 +831,7 @@ pt-BR:
     demand:
       title: "demanda(s)"
     cfd:
-      title_downstream: "Downstream Cumulative Flow Diagram para %{target_name}"
-      title_upstream: "Upstream Cumulative Flow Diagram para %{target_name}"
+      title_downstream: "Cumulative Flow Diagram para %{target_name}"
       ytitle: "Demandas"
       data_suffix: "demanda(s)"
     period:
@@ -845,6 +861,14 @@ pt-BR:
       uncertainty: "Escopo Incerto"
       created: "Escopo Criado"
       uncertainty_title: "Incerteza do Escopo"
+    burnup:
+      scope: "Escopo"
+      ideal: "Ideal"
+      current: "Atual"
+    lead_time:
+      text: "Lead time"
+    histogram:
+      text: "Histograma"
   finances_params:
     edit:
       title: "Editar Informação Financeira"

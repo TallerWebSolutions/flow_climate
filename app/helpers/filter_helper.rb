@@ -30,6 +30,6 @@ module FilterHelper
   end
 
   def project_statuses_options(selected_value)
-    options_for_select(Project.statuses.map { |key, _value| [t("activerecord.attributes.project.enums.status.#{key}"), key] }, selected_value)
+    options_for_select(Project.statuses.map { |key, _value| [I18n.t("activerecord.attributes.project.enums.status.#{key}"), key] }, selected_value)
   end
 end

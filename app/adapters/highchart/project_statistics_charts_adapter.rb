@@ -8,14 +8,14 @@ module Highchart
       @projects = Project.where(id: projects.map(&:id))
       @demands = Demand.kept.where(id: @projects.map { |project| project.demands.map(&:id) }.flatten)
 
-      super(@projects, start_date, end_date, chart_period_interval)
+      super(@demands, start_date, end_date, chart_period_interval)
 
       @projects = @projects.where(status: project_status) if project_status.present?
+
+      build_demand_data_processors
     end
 
     def scope_data_evolution_chart
-      @work_item_flow_information = Flow::WorkItemFlowInformations.new(@x_axis, start_of_period_for_date(@start_date), end_of_period_for_date(Time.zone.now), @demands, @projects.sum(&:initial_scope))
-
       [{ name: I18n.t('projects.general.scope'), data: @work_item_flow_information.scope_per_period, marker: { enabled: true } }]
     end
 
@@ -60,6 +60,14 @@ module Highchart
     def build_lead_time_in_period(confidence, end_date, start_date)
       demands_in_period = DemandsRepository.instance.throughput_to_period(@demands, start_date, end_date)
       Stats::StatisticsService.instance.percentile(confidence, demands_in_period.map(&:leadtime_in_days))
+    end
+
+    def build_demand_data_processors
+      @work_item_flow_information = Flow::WorkItemFlowInformations.new(demands_list, uncertain_scope, @x_axis.length, @x_axis.last)
+      @x_axis.each_with_index do |analysed_date, distribution_index|
+        @work_item_flow_information.work_items_flow_behaviour(@x_axis.first, analysed_date, distribution_index)
+        @work_item_flow_information.build_cfd_hash(@x_axis.first, analysed_date) if analysed_date <= Time.zone.today.end_of_week
+      end
     end
   end
 end

@@ -4,24 +4,22 @@ module Flow
   class BlockFlowInformations < SystemFlowInformations
     attr_reader :blocks_count, :blocks_time
 
-    def initialize(dates_array, current_limit_date, demands)
-      super(dates_array, current_limit_date, demands)
+    def initialize(demands)
+      super(demands)
 
       @blocks_count = []
       @blocks_time = []
-
-      blocks_flow_behaviour
     end
 
-    def blocks_flow_behaviour
-      @dates_array.each do |date|
-        next if @current_limit_date < date
+    def blocks_flow_behaviour(analysed_date)
+      return if @demands.blank?
 
-        demands_finished_until_date = @demands.finished_until_date(date) # query
+      demands_finished_until_date = @demands.finished_until_date(analysed_date) # query
 
-        build_block_flow_info(demands_finished_until_date)
-      end
+      build_block_flow_info(demands_finished_until_date)
     end
+
+    private
 
     def build_block_flow_info(demands_finished_until_date)
       block_time = demands_finished_until_date.sum(&:blocked_time).to_f / 1.hour

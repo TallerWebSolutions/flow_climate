@@ -134,6 +134,9 @@ RSpec.describe DemandTransition, type: :model do
     end
 
     pending '.effort_transitions_to_project'
+    pending '.before_date_after_stage'
+    pending '.for_demands_ids'
+    pending '.after_date'
   end
 
   context 'delegations' do

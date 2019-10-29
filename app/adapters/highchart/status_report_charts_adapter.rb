@@ -4,12 +4,12 @@ module Highchart
   class StatusReportChartsAdapter < HighchartAdapter
     attr_reader :hours_burnup_per_week_data, :hours_burnup_per_month_data, :dates_to_montecarlo_duration, :confidence_95_duration, :confidence_80_duration, :confidence_60_duration
 
-    def initialize(projects, start_date, end_date, chart_period_interval)
-      super(projects, start_date, end_date, chart_period_interval)
+    def initialize(demands, start_date, end_date, chart_period_interval)
+      super(demands, start_date, end_date, chart_period_interval)
 
       return unless @all_projects.count.positive?
 
-      @work_item_flow_information = Flow::WorkItemFlowInformations.new(@x_axis, start_of_period_for_date(start_date), end_of_period_for_date(Time.zone.now), demands_list, uncertain_scope)
+      build_demand_data_processors
 
       montecarlo_durations = Stats::StatisticsService.instance.run_montecarlo(@work_item_flow_information.scope_per_period.last, @work_item_flow_information.throughput_per_period, 500)
       build_montecarlo_perecentage_confidences(montecarlo_durations)
@@ -45,61 +45,37 @@ module Highchart
     end
 
     def cumulative_flow_diagram_downstream
-      demands_ids = @all_projects.map(&:demands).flatten.map(&:id)
-      cumulative_hash = {}
+      demands = demands_list.order('end_date, commitment_date, created_date')
+      teams = demands.map(&:team).uniq
+      return [] if teams.count != 1
 
-      @x_axis.each do |date|
-        break unless date <= end_of_period_for_date(Time.zone.today)
+      stages = teams.first.stages.downstream.where('stages.order >= 0').order(:order)
+      demands_stages_count = build_cfd_hash(demands.map(&:id), stages, end_of_period_for_date(Time.zone.today))
 
-        cumulative_data_to_week = DemandsRepository.instance.cumulative_flow_for_date(demands_ids, @start_date, end_of_period_for_date(date), :downstream)
-        cumulative_hash = cumulative_hash.merge(build_cumulative_hash(cumulative_data_to_week, cumulative_hash))
-      end
-
-      build_cumulative_array(cumulative_hash)
-    end
-
-    def cumulative_flow_diagram_upstream
-      demands_ids = @all_projects.map(&:demands).flatten.map(&:id)
-      cumulative_hash = {}
-
-      @x_axis.each do |date|
-        break unless date <= Time.zone.today
-
-        cumulative_data_to_week = DemandsRepository.instance.cumulative_flow_for_date(demands_ids, @start_date, date, :upstream)
-
-        cumulative_hash = cumulative_hash.merge(build_cumulative_hash(cumulative_data_to_week, cumulative_hash))
-      end
-
-      build_cumulative_array(cumulative_hash)
+      demands_stages_count.map { |key, value| { name: key, data: value } } # build the chart
     end
 
     private
 
-    def build_cumulative_hash(cumulative_data_to_week, previous_cumulative_hash)
-      cumulative_hash = previous_cumulative_hash
+    def build_cfd_hash(demands_ids, stages, bottom_limit_date)
+      demands_stages_count = {}
 
-      cumulative_data_to_week.keys.each do |stage_name|
-        if cumulative_hash[stage_name].present?
-          cumulative_hash[stage_name] << cumulative_data_to_week[stage_name]
-        else
-          cumulative_hash[stage_name] = [cumulative_data_to_week[stage_name]]
+      @x_axis.each do |date|
+        break unless date <= bottom_limit_date
+
+        stages.each do |stage|
+          transitions = DemandTransition.for_demands_ids(demands_ids).before_date_after_stage(date.end_of_day, stage.order)
+          delivered_count = transitions.map(&:demand_id).uniq.count
+
+          if demands_stages_count[stage.name].present?
+            demands_stages_count[stage.name] << delivered_count
+          else
+            demands_stages_count[stage.name] = [transitions.count]
+          end
         end
       end
 
-      cumulative_hash
-    end
-
-    def build_cumulative_array(cumulative_hash)
-      cumulative_array = []
-
-      max_array_size = cumulative_hash.values.map(&:size).max
-
-      cumulative_hash.each do |key, data|
-        data << data.last while data.size < max_array_size
-        cumulative_array << { name: key, data: data, marker: { enabled: false } }
-      end
-
-      cumulative_array
+      demands_stages_count
     end
 
     def build_montecarlo_perecentage_confidences(montecarlo_durations)
@@ -117,6 +93,14 @@ module Highchart
       @dates_to_montecarlo_duration << { name: I18n.t('projects.charts.montecarlo_dates.confidence_95'), date: TimeService.instance.add_weeks_to_today(@confidence_95_duration), color: '#B7950B' }
       @dates_to_montecarlo_duration << { name: I18n.t('projects.charts.montecarlo_dates.confidence_80'), date: TimeService.instance.add_weeks_to_today(@confidence_80_duration), color: '#F4D03F' }
       @dates_to_montecarlo_duration << { name: I18n.t('projects.charts.montecarlo_dates.confidence_60'), date: TimeService.instance.add_weeks_to_today(@confidence_60_duration), color: '#CB4335' }
+    end
+
+    def build_demand_data_processors
+      @work_item_flow_information = Flow::WorkItemFlowInformations.new(demands_list, uncertain_scope, @x_axis.length, @x_axis.last)
+      @x_axis.each_with_index do |analysed_date, distribution_index|
+        @work_item_flow_information.work_items_flow_behaviour(@x_axis.first, analysed_date, distribution_index)
+        @work_item_flow_information.build_cfd_hash(@x_axis.first, analysed_date) if analysed_date <= Time.zone.today.end_of_week
+      end
     end
 
     def project_start_date

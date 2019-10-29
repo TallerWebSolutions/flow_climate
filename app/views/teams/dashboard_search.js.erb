@@ -1,0 +1,6 @@
+$("#team-dashboard-info").html("<%= escape_javascript(render 'teams/dashboard_body', team: @team, slack_configurations: @slack_configurations, memberships: @memberships, report_data: @report_data, team_chart_data: @team_chart_data) %>")
+
+$('#team-search-info').show();
+$('#team-search-info-tab').addClass('active');
+
+startCharts();

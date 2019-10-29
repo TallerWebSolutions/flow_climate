@@ -3,14 +3,17 @@
 module Flow
   class StatisticsFlowInformations < SystemFlowInformations
     attr_reader :average_aging_per_period, :lead_time_bins, :lead_time_histogram_data, :throughput_bins,
-                :demands_charts_ids, :lead_time_data_array, :lead_time_95p, :lead_time_80p, :lead_time_65p
+                :demands_charts_ids, :lead_time_data_array, :lead_time_accumulated,
+                :lead_time_95p, :lead_time_80p, :lead_time_65p
 
-    def initialize(dates_array, current_limit_date, demands)
-      super(dates_array, current_limit_date, demands)
+    def initialize(demands)
+      super(demands)
 
-      @average_aging_per_period = []
+      start_attributes
 
-      demands_with_lead_time = demands.finished_with_leadtime.order(:end_date)
+      return if demands.blank?
+
+      demands_with_lead_time = demands.finished_with_leadtime.order(:end_date) # query
 
       @demands_charts_ids = demands_with_lead_time.map(&:external_id)
 
@@ -18,23 +21,26 @@ module Flow
       @lead_time_bins = histogram_data.keys.map { |leadtime| leadtime.round(2) }
       @lead_time_histogram_data = histogram_data.values
 
-      statistics_flow_behaviour
       build_lead_time_data(demands_with_lead_time)
+      build_demands_external_ids_arrays(demands_with_lead_time)
+    end
+
+    def statistics_flow_behaviour(analysed_date)
+      return if @demands.blank?
+
+      demands_finished_with_lead_time_until_date = @demands.finished_with_leadtime.finished_until_date(analysed_date).order(:end_date) # query
+      @lead_time_accumulated << Stats::StatisticsService.instance.percentile(80, demands_finished_with_lead_time_until_date.map(&:leadtime_in_days))
+      @average_aging_per_period << if demands_finished_with_lead_time_until_date.count.positive?
+                                     demands_finished_with_lead_time_until_date.map(&:aging_when_finished).sum.to_f / demands_finished_with_lead_time_until_date.count
+                                   else
+                                     0
+                                   end
     end
 
     private
 
-    def statistics_flow_behaviour
-      @dates_array.each do |date|
-        next if @current_limit_date < date
-
-        demands_finished_until_date = @demands.finished_until_date(date) # query
-        @average_aging_per_period << if demands_finished_until_date.count.positive?
-                                       demands_finished_until_date.map(&:aging_when_finished).sum.to_f / demands_finished_until_date.count
-                                     else
-                                       0
-                                     end
-      end
+    def build_demands_external_ids_arrays(demands_with_lead_time)
+      @demands_charts_ids = demands_with_lead_time.map(&:external_id)
     end
 
     def build_lead_time_data(demands_with_lead_time)
@@ -42,6 +48,19 @@ module Flow
       @lead_time_95p = Stats::StatisticsService.instance.percentile(95, @lead_time_data_array)
       @lead_time_80p = Stats::StatisticsService.instance.percentile(80, @lead_time_data_array)
       @lead_time_65p = Stats::StatisticsService.instance.percentile(60, @lead_time_data_array)
+    end
+
+    def start_attributes
+      @lead_time_data_array = []
+      @lead_time_bins = []
+      @average_aging_per_period = []
+      @lead_time_accumulated = []
+      @lead_time_histogram_data = []
+      @demands_charts_ids = []
+
+      @lead_time_95p = 0
+      @lead_time_80p = 0
+      @lead_time_65p = 0
     end
   end
 end
