@@ -485,7 +485,7 @@ pt-BR:
         customer_domain: Domínio do Usuário
         created_at: Criado em
       jira/jira_portfolio_unit_config:
-        jira_field_name: Nome do Campo no Jira
+        jira_field_name: Machine Name do Jira
         portfolio_unit: Unidade do Portfólio
       jira/jira_custom_field_mapping:
         custom_field_type: Tipo do Campo

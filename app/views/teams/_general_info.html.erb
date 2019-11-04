@@ -1,0 +1,32 @@
+<table class="table">
+  <tbody>
+    <tr>
+      <td><b><%= I18n.t('general.scope') %></b></td>
+      <td><%= I18n.t('general.demands_text', count: demands_count) %></td>
+    </tr>
+    <tr>
+      <td><b><%= I18n.t('general.delivered') %></b></td>
+      <td><%= I18n.t('general.demands_text', count: delivered_scope) %></td>
+    </tr>
+    <tr>
+      <td><b><%= I18n.t('projects.index.remaining_backlog') %></b></td>
+      <td><%= I18n.t('general.demands_text', count: remaining_backlog) %></td>
+    </tr>
+    <tr>
+      <td><b><%= I18n.t('projects.index.flow_pressure') %></b></td>
+      <td><%= number_with_precision(team.total_flow_pressure, precision: 3) %></td>
+    </tr>
+    <tr>
+      <td><b><%= I18n.t('teams.show.lead_time_p80') %></b></td>
+      <td><%= I18n.t('general.days_text', count: number_with_precision(demands_lead_time_p80, precision: 2)) %></td>
+    </tr>
+    <tr>
+      <td><b><%= SlackConfiguration.model_name.human(count: slack_configurations.count) %></b></td>
+      <td><%= slack_configurations.count %></td>
+    </tr>
+    <tr>
+      <td><b><%= TeamMember.model_name.human(count: memberships.count) %></b></td>
+      <td><%= memberships.count %></td>
+    </tr>
+  </tbody>
+</table>

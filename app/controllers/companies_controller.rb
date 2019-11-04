@@ -83,7 +83,7 @@ class CompaniesController < AuthenticatedController
   def strategic_chart_tab
     @projects = @company.projects.order(end_date: :desc)
     build_query_dates
-    @strategic_chart_data = Highchart::StrategicChartsAdapter.new(@company, @company.teams, @projects, @start_date, @end_date, @period)
+    @strategic_chart_data = Highchart::StrategicChartsAdapter.new(@company, @company.teams, @projects, @company.demands.kept, @start_date, @end_date, @period)
     assign_company_children
     respond_to { |format| format.js { render 'charts/strategic_charts.js.erb' } }
   end
@@ -91,7 +91,7 @@ class CompaniesController < AuthenticatedController
   def risks_tab
     @projects = @company.projects.order(end_date: :desc)
     build_query_dates
-    @strategic_chart_data = Highchart::StrategicChartsAdapter.new(@company, @company.teams, @projects, @start_date, @end_date, @period)
+    @strategic_chart_data = Highchart::StrategicChartsAdapter.new(@company, @company.teams, @projects, @company.demands.kept, @start_date, @end_date, @period)
     @projects_risk_chart_data = Highchart::ProjectRiskChartsAdapter.new(@projects)
 
     respond_to { |format| format.js { render 'companies/risks_tab.js.erb' } }

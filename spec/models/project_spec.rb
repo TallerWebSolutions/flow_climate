@@ -132,6 +132,8 @@ RSpec.describe Project, type: :model do
     describe '.finishing_after' do
       it { expect(described_class.finishing_after(26.hours.ago)).to match_array [first_project, fourth_project, fifth_project, sixth_project] }
     end
+
+    pending '.active_in_period'
   end
 
   describe '#total_days' do
@@ -935,7 +937,7 @@ RSpec.describe Project, type: :model do
       let!(:other_active_demand_block) { Fabricate :demand_block, demand: demand, active: true, unblock_time: 1.day.from_now, discarded_at: nil }
       let!(:opened_active_demand_block) { Fabricate :demand_block, demand: demand, active: true, unblock_time: nil, discarded_at: nil }
 
-      it { expect(project.active_kept_closed_blocks).to eq [active_demand_block, other_active_demand_block] }
+      it { expect(project.active_kept_closed_blocks).to match_array [active_demand_block, other_active_demand_block] }
     end
 
     context 'having no active and not discarded blocks' do

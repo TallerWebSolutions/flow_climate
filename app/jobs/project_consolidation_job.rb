@@ -23,9 +23,16 @@ class ProjectConsolidationJob < ApplicationJob
 
       team_product_demands = DemandsRepository.instance.throughput_to_products_team_and_period(products_in_project, team, start_date_to_product, end_of_week)
 
-      project_work_item_flow_information = Flow::WorkItemFlowInformations.new(x_axis, min_date, end_of_week, project.demands, team.projects.map(&:initial_scope).compact.sum)
-      team_work_item_flow_information = Flow::WorkItemFlowInformations.new(x_axis, min_date, end_of_week, team.demands, team.projects.map(&:initial_scope).compact.sum)
-      product_work_item_flow_information = Flow::WorkItemFlowInformations.new(x_axis, min_date, end_of_week, team_product_demands, team.projects.map(&:initial_scope).compact.sum)
+      project_work_item_flow_information = Flow::WorkItemFlowInformations.new(project.demands, project.initial_scope, x_axis.length, x_axis.last)
+      team_work_item_flow_information = Flow::WorkItemFlowInformations.new(team.demands, team.projects.map(&:initial_scope).compact.sum, x_axis.length, x_axis.last)
+      product_work_item_flow_information = Flow::WorkItemFlowInformations.new(team_product_demands, project.initial_scope, x_axis.length, x_axis.last)
+
+      x_axis.each_with_index do |analysed_date, distribution_index|
+        project_work_item_flow_information.work_items_flow_behaviour(x_axis.first, analysed_date, distribution_index)
+        team_work_item_flow_information.work_items_flow_behaviour(x_axis.first, analysed_date, distribution_index)
+        product_work_item_flow_information.work_items_flow_behaviour(x_axis.first, analysed_date, distribution_index)
+      end
+
       product_throughput_data = product_work_item_flow_information.throughput_per_period.select(&:positive?)
 
       project_based_montecarlo_durations = Stats::StatisticsService.instance.run_montecarlo(project.remaining_backlog(end_of_week), project_work_item_flow_information.throughput_per_period.last(20), 500)

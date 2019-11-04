@@ -2,14 +2,16 @@
 
 module Highchart
   class HighchartAdapter
-    attr_reader :x_axis, :all_projects, :active_projects_demands_ids, :start_date, :end_date, :chart_period_interval
+    attr_reader :x_axis, :all_projects, :start_date, :end_date, :chart_period_interval, :demands_list
 
-    def initialize(projects, start_date, end_date, chart_period_interval)
+    def initialize(demands, start_date, end_date, chart_period_interval)
       @chart_period_interval = chart_period_interval
       @start_date = start_of_period_for_date(start_date)
       @end_date = end_of_period_for_date(end_date)
 
-      @all_projects = search_projects_by_dates(projects)
+      @all_projects = search_projects_by_dates(demands.map(&:project_id))
+
+      @demands_list = demands.where('(demands.end_date IS NOT NULL AND demands.end_date >= :base_date) OR (demands.commitment_date IS NOT NULL AND demands.commitment_date >= :base_date) OR (demands.created_date IS NOT NULL AND demands.created_date >= :base_date)', base_date: start_date).order(:end_date)
 
       build_x_axis
     end
@@ -18,10 +20,6 @@ module Highchart
 
     def uncertain_scope
       @uncertain_scope ||= @all_projects.sum(&:initial_scope)
-    end
-
-    def demands_list
-      @demands_list ||= Demand.where(id: @all_projects.map { |project| project.demands.map(&:id) }.flatten)
     end
 
     def daily?
@@ -36,7 +34,8 @@ module Highchart
       @chart_period_interval == 'month'
     end
 
-    def search_projects_by_dates(projects)
+    def search_projects_by_dates(projects_ids)
+      projects = Project.where(id: projects_ids)
       return projects if @start_date.blank?
 
       ProjectsRepository.instance.projects_ending_after(projects, @start_date)

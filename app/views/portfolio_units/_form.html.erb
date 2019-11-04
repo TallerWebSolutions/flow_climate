@@ -22,7 +22,7 @@
   <%= f.fields_for :jira_portfolio_unit_config do |nested_fields| %>
     <div class='col-xs-3 form-group'>
       <%= nested_fields.label :jira_field_name, class: 'control-label' %>
-      <%= nested_fields.text_field :jira_field_name, class: 'form-control', value: portfolio_unit.jira_portfolio_unit_config.jira_field_name %>
+      <%= nested_fields.text_field :jira_field_name, class: 'form-control', value: portfolio_unit.jira_portfolio_unit_config.jira_field_name, placeholder: 'customfield_10052' %>
     </div>
   <% end %>
 </div>

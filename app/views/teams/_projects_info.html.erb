@@ -1,0 +1,16 @@
+<table class="table">
+  <tbody>
+    <tr>
+      <td><b><%= Project.model_name.human.pluralize %></b></td>
+      <td><%= team.projects.count %></td>
+    </tr>
+    <tr>
+      <td><b><%= I18n.t('teams.show.active_projects_count') %></b></td>
+      <td><%= team.active_projects.count %></td>
+    </tr>
+    <tr>
+      <td><b><%= I18n.t('teams.show.active_projects_value') %></b></td>
+      <td><%= number_to_currency(team.active_projects.map(&:value).compact.sum) %></td>
+    </tr>
+  </tbody>
+</table>

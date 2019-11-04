@@ -42,6 +42,9 @@ class DemandTransition < ApplicationRecord
   scope :effort_transitions_to_project, ->(project_id) { joins(stage: :stage_project_configs).where('stage_project_configs.compute_effort = true AND stage_project_configs.project_id = :project_id', project_id: project_id) }
   scope :touch_transitions, -> { joins(:stage).where('stages.queue = false AND stages.end_point = false AND stages.stage_stream = :downstream', downstream: Stage.stage_streams[:downstream]) }
   scope :queue_transitions, -> { joins(:stage).where('stages.queue = true AND stages.end_point = false AND stages.stage_stream = :downstream', downstream: Stage.stage_streams[:downstream]) }
+  scope :before_date_after_stage, ->(limit_date, base_order) { joins(:stage).where('last_time_in <= :limit_date AND stages.order >= :stage_order', limit_date: limit_date, stage_order: base_order) }
+  scope :for_demands_ids, ->(demands_ids) { where(demand_id: demands_ids) }
+  scope :after_date, ->(date) { where('last_time_in >= :limit_date', limit_date: date) }
 
   after_save :set_demand_dates
   after_save :set_demand_computed_fields

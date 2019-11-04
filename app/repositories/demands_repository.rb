@@ -77,33 +77,10 @@ class DemandsRepository
     Demand.kept.where(id: demands.map(&:id)).where('demands.end_date <= :upper_limit', upper_limit: upper_date_limit)
   end
 
-  def cumulative_flow_for_date(demands_ids, start_date, end_date, stream)
-    demands = Demand.joins(demand_transitions: :stage)
-                    .where(id: demands_ids)
-                    .where('demands.discarded_at IS NULL OR demands.discarded_at > :end_date', end_date: end_date)
-                    .where('(demands.end_date IS NULL OR demands.end_date >= :start_date)', start_date: start_date)
-                    .where('stages.stage_stream = :stream', stream: Stage.stage_streams[stream])
-
-    stages_id = demands.select('stages.id AS stage_id').map(&:stage_id).uniq
-    stages = Stage.where(id: stages_id)
-
-    build_cumulative_stage_hash(end_date, demands, stages)
-  end
-
   private
 
   def demands_list_data(demands_ids)
     Demand.where(id: demands_ids)
-  end
-
-  def build_cumulative_stage_hash(analysed_date, demands, stages)
-    cumulative_hash = {}
-    stages.order('stages.order DESC').each do |stage|
-      stage_demands_count = demands.where('demand_transitions.last_time_in <= :limit_date', limit_date: analysed_date).where(stages: { id: stage.id }).uniq.count
-      cumulative_hash[stage.name] = stage_demands_count
-    end
-
-    cumulative_hash.to_a.reverse.to_h
   end
 
   def demands_stories_to_projects(projects)

@@ -10,11 +10,10 @@ class ChartsController < AuthenticatedController
 
   def build_operational_charts
     @report_data = {}
-    @report_data = Highchart::OperationalChartsAdapter.new(@projects, @start_date, @end_date, @period) if @projects.present?
+    @report_data = Highchart::OperationalChartsAdapter.new(demands.kept, @start_date, @end_date, @period) if @projects.present?
     @team_chart_data = Highchart::TeamChartsAdapter.new(@team, @start_date, @end_date, @period) if @team.present?
 
-    @status_report_data = {}
-    @status_report_data = Highchart::StatusReportChartsAdapter.new(@projects, @start_date, @end_date, @period) if @projects.present?
+    build_status_report_data
 
     @portfolio_data = Highchart::PortfolioChartsAdapter.new(@projects, @start_date, @end_date, '') if @projects.present?
 
@@ -24,7 +23,7 @@ class ChartsController < AuthenticatedController
   end
 
   def build_strategic_charts
-    @strategic_chart_data = Highchart::StrategicChartsAdapter.new(@company, teams, @projects, @start_date, @end_date, @period)
+    @strategic_chart_data = Highchart::StrategicChartsAdapter.new(@company, teams, @projects, demands, @start_date, @end_date, @period)
     respond_to { |format| format.js { render 'charts/strategic_charts' } }
   end
 
@@ -44,6 +43,11 @@ class ChartsController < AuthenticatedController
   end
 
   private
+
+  def build_status_report_data
+    @status_report_data = {}
+    @status_report_data = Highchart::StatusReportChartsAdapter.new(demands.kept, @start_date, @end_date, @period) if @projects.present?
+  end
 
   def demands
     @demands ||= Demand.where(id: @projects.map { |project| project.demands.map(&:id) }.flatten)

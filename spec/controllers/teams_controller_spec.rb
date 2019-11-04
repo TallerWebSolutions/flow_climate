@@ -49,6 +49,24 @@ RSpec.describe TeamsController, type: :controller do
 
       it { expect(response).to redirect_to new_user_session_path }
     end
+
+    describe 'GET #dashboard_search' do
+      before { get :dashboard_search, params: { company_id: 'bar', id: 'foo' } }
+
+      it { expect(response).to redirect_to new_user_session_path }
+    end
+
+    describe 'GET #demands_tab' do
+      before { get :demands_tab, params: { company_id: 'bar', id: 'foo' } }
+
+      it { expect(response).to redirect_to new_user_session_path }
+    end
+
+    describe 'GET #dashboard_tab' do
+      before { get :dashboard_tab, params: { company_id: 'bar', id: 'foo' } }
+
+      it { expect(response).to redirect_to new_user_session_path }
+    end
   end
 
   context 'authenticated as gold' do
@@ -74,7 +92,7 @@ RSpec.describe TeamsController, type: :controller do
     let(:customer) { Fabricate :customer, company: company }
     let(:product) { Fabricate :product, customer: customer }
 
-    describe 'GET #show' do
+    shared_context 'demands to filters' do
       let!(:first_project) { Fabricate :project, customers: [customer], team: team, status: :executing, start_date: 4.months.ago, end_date: Time.zone.today }
       let!(:second_project) { Fabricate :project, customers: [customer], team: team, status: :maintenance, start_date: 2.months.ago, end_date: 34.days.from_now }
       let!(:third_project) { Fabricate :project, customers: [customer], team: team, status: :waiting, start_date: 1.month.ago, end_date: 2.months.from_now }
@@ -86,10 +104,15 @@ RSpec.describe TeamsController, type: :controller do
       let!(:first_alert) { Fabricate :project_risk_alert, project_risk_config: first_risk_config, project: first_project, alert_color: :green, created_at: Time.zone.now }
       let!(:second_alert) { Fabricate :project_risk_alert, project_risk_config: second_risk_config, project: first_project, alert_color: :red, created_at: 1.hour.ago }
 
-      let!(:first_demand) { Fabricate :demand, project: first_project, commitment_date: 3.months.ago, end_date: 2.months.ago, effort_upstream: 200, effort_downstream: 150 }
-      let!(:second_demand) { Fabricate :demand, project: first_project, commitment_date: 2.months.ago, end_date: 1.month.ago, leadtime: 2003, effort_upstream: 200, effort_downstream: 150 }
-      let!(:third_demand) { Fabricate :demand, project: first_project, end_date: 1.day.ago, leadtime: 2203, effort_upstream: 200, effort_downstream: 150 }
-      let!(:fourth_demand) { Fabricate :demand, project: first_project, end_date: Time.zone.today, leadtime: 3003, effort_upstream: 200, effort_downstream: 150 }
+      let!(:first_demand) { Fabricate :demand, team: team, project: first_project, demand_type: :feature, class_of_service: :standard, external_id: 'first_demand', commitment_date: 3.months.ago, end_date: 2.months.ago }
+      let!(:second_demand) { Fabricate :demand, team: team, project: second_project, demand_type: :bug, class_of_service: :standard, external_id: 'second_demand', commitment_date: 2.months.ago, end_date: 1.month.ago }
+      let!(:third_demand) { Fabricate :demand, team: team, project: third_project, demand_type: :performance_improvement, class_of_service: :expedite, external_id: 'third_demand', end_date: 1.day.ago }
+      let!(:fourth_demand) { Fabricate :demand, team: team, project: first_project, demand_type: :ui, class_of_service: :fixed_date, external_id: 'fourth_demand', end_date: 2.hours.ago }
+      let!(:fifth_demand) { Fabricate :demand, team: team, project: fourth_project, demand_type: :chore, class_of_service: :intangible, external_id: 'fifth_demand', end_date: 3.hours.ago }
+    end
+
+    describe 'GET #show' do
+      include_context 'demands to filters'
 
       context 'passing a valid ID' do
         context 'having data' do
@@ -100,8 +123,11 @@ RSpec.describe TeamsController, type: :controller do
             expect(response).to render_template :show
             expect(assigns(:company)).to eq company
             expect(assigns(:team)).to eq team
-            expect(assigns(:team_projects)).to eq [third_project, fifth_project, fourth_project, second_project, first_project]
+            expect(assigns(:projects)).to eq [third_project, fifth_project, fourth_project, second_project, first_project]
             expect(assigns(:slack_configurations)).to eq [slack_config, other_slack_config]
+
+            expect(assigns(:report_data)).to be_a Highchart::OperationalChartsAdapter
+            expect(assigns(:team_chart_data)).to be_a Highchart::TeamChartsAdapter
           end
         end
 
@@ -112,10 +138,11 @@ RSpec.describe TeamsController, type: :controller do
           it 'assigns the empty instance variables and renders the template' do
             expect_any_instance_of(AuthenticatedController).to(receive(:user_gold_check).once.and_return(true))
             get :show, params: { company_id: other_company, id: empty_team }
+
             expect(response).to render_template :show
             expect(assigns(:company)).to eq other_company
             expect(assigns(:team)).to eq empty_team
-            expect(assigns(:team_projects)).to eq []
+            expect(assigns(:projects)).to eq []
           end
         end
       end
@@ -265,9 +292,7 @@ RSpec.describe TeamsController, type: :controller do
 
     describe 'GET #replenishing_input' do
       context 'having data' do
-        let!(:first_project) { Fabricate :project, customers: [customer], team: team, name: 'first_project', status: :executing, start_date: 4.months.ago, end_date: Time.zone.today }
-        let!(:second_project) { Fabricate :project, customers: [customer], team: team, name: 'second_project', status: :executing, start_date: 2.months.ago, end_date: 3.days.from_now }
-        let!(:third_project) { Fabricate :project, customers: [customer], team: team, name: 'third_project', status: :executing, start_date: 1.month.ago, end_date: 1.week.from_now }
+        include_context 'demands to filters'
 
         it 'returns the data and redirects' do
           get :replenishing_input, params: { company_id: company, id: team }, xhr: true
@@ -380,6 +405,236 @@ RSpec.describe TeamsController, type: :controller do
             let(:company) { Fabricate :company, users: [] }
 
             before { get :projects_tab, params: { company_id: company, id: first_team } }
+
+            it { expect(response).to have_http_status :not_found }
+          end
+        end
+      end
+    end
+
+    describe 'GET #dashboard_search' do
+      context 'with data' do
+        include_context 'demands to filters'
+
+        context 'with valid parameters' do
+          context 'with no search parameters' do
+            it 'search the informations and renders the template' do
+              get :dashboard_search, params: { company_id: company, id: team }, xhr: true
+
+              expect(response).to render_template 'teams/dashboard_search'
+              expect(assigns(:report_data).demands_list).to eq [first_demand, second_demand, third_demand, fifth_demand, fourth_demand]
+              expect(assigns(:team_chart_data).demands_list).to eq [first_demand, second_demand, third_demand, fifth_demand, fourth_demand]
+            end
+          end
+
+          context 'with search by project status' do
+            it 'search the informations and renders the template' do
+              get :dashboard_search, params: { company_id: company, id: team, project_status: 'active' }, xhr: true
+
+              expect(response).to render_template 'teams/dashboard_search'
+              expect(assigns(:report_data).demands_list).to eq [first_demand, second_demand, third_demand, fourth_demand]
+              expect(assigns(:team_chart_data).demands_list).to eq [first_demand, second_demand, third_demand, fifth_demand, fourth_demand]
+            end
+          end
+
+          context 'with search by demand type bug' do
+            it 'search the informations and renders the template' do
+              get :dashboard_search, params: { company_id: company, id: team, demand_type: 'bug' }, xhr: true
+
+              expect(response).to render_template 'teams/dashboard_search'
+              expect(assigns(:report_data).demands_list).to eq [second_demand]
+            end
+          end
+
+          context 'with search by demand type feature' do
+            it 'search the informations and renders the template' do
+              get :dashboard_search, params: { company_id: company, id: team, demand_type: 'feature' }, xhr: true
+
+              expect(response).to render_template 'teams/dashboard_search'
+              expect(assigns(:report_data).demands_list).to eq [first_demand]
+            end
+          end
+
+          context 'with search by demand type chore' do
+            it 'search the informations and renders the template' do
+              get :dashboard_search, params: { company_id: company, id: team, demand_type: 'chore' }, xhr: true
+
+              expect(response).to render_template 'teams/dashboard_search'
+              expect(assigns(:report_data).demands_list).to eq [fifth_demand]
+            end
+          end
+
+          context 'with search by demand type performance_improvement' do
+            it 'search the informations and renders the template' do
+              get :dashboard_search, params: { company_id: company, id: team, demand_type: 'performance_improvement' }, xhr: true
+
+              expect(response).to render_template 'teams/dashboard_search'
+              expect(assigns(:report_data).demands_list).to eq [third_demand]
+            end
+          end
+
+          context 'with search by demand type ui' do
+            it 'search the informations and renders the template' do
+              get :dashboard_search, params: { company_id: company, id: team, demand_type: 'ui' }, xhr: true
+
+              expect(response).to render_template 'teams/dashboard_search'
+              expect(assigns(:report_data).demands_list).to eq [fourth_demand]
+            end
+          end
+
+          context 'with search by invalid demand type' do
+            it 'search the informations and renders the template' do
+              get :dashboard_search, params: { company_id: company, id: team, demand_type: 'foo' }, xhr: true
+
+              expect(response).to render_template 'teams/dashboard_search'
+              expect(assigns(:report_data).demands_list).to eq [first_demand, second_demand, third_demand, fifth_demand, fourth_demand]
+            end
+          end
+
+          context 'with search by class of service standard' do
+            it 'search the informations and renders the template' do
+              get :dashboard_search, params: { company_id: company, id: team, class_of_service: 'standard' }, xhr: true
+
+              expect(response).to render_template 'teams/dashboard_search'
+              expect(assigns(:report_data).demands_list).to eq [first_demand, second_demand]
+            end
+          end
+
+          context 'with search by class of service expedite' do
+            it 'search the informations and renders the template' do
+              get :dashboard_search, params: { company_id: company, id: team, class_of_service: 'expedite' }, xhr: true
+
+              expect(response).to render_template 'teams/dashboard_search'
+              expect(assigns(:report_data).demands_list).to eq [third_demand]
+            end
+          end
+
+          context 'with search by class of service fixed_date' do
+            it 'search the informations and renders the template' do
+              get :dashboard_search, params: { company_id: company, id: team, class_of_service: 'fixed_date' }, xhr: true
+
+              expect(response).to render_template 'teams/dashboard_search'
+              expect(assigns(:report_data).demands_list).to eq [fourth_demand]
+            end
+          end
+
+          context 'with search by class of service intangible' do
+            it 'search the informations and renders the template' do
+              get :dashboard_search, params: { company_id: company, id: team, class_of_service: 'intangible' }, xhr: true
+
+              expect(response).to render_template 'teams/dashboard_search'
+              expect(assigns(:report_data).demands_list).to eq [fifth_demand]
+            end
+          end
+        end
+
+        context 'with invalid' do
+          context 'team' do
+            before { get :dashboard_search, params: { company_id: company, id: 'foo' }, xhr: true }
+
+            it { expect(response).to have_http_status :not_found }
+          end
+
+          context 'company' do
+            context 'no existent' do
+              before { get :dashboard_search, params: { company_id: 'foo', id: team } }
+
+              it { expect(response).to have_http_status :not_found }
+            end
+
+            context 'not permitted' do
+              let(:company) { Fabricate :company, users: [] }
+
+              before { get :dashboard_search, params: { company_id: company, id: team } }
+
+              it { expect(response).to have_http_status :not_found }
+            end
+          end
+        end
+      end
+    end
+
+    describe 'GET #demands_tab' do
+      context 'with valid parameters' do
+        context 'with data' do
+          include_context 'demands to filters'
+
+          it 'creates the objects and renders the tab' do
+            get :demands_tab, params: { company_id: company, id: team }, xhr: true
+
+            expect(response).to render_template 'teams/demands_tab'
+            expect(assigns(:demands)).to eq [first_demand, second_demand, third_demand, fifth_demand, fourth_demand]
+            expect(assigns(:paged_demands)).to eq [first_demand, second_demand, third_demand, fifth_demand, fourth_demand]
+          end
+        end
+      end
+
+      context 'with no data' do
+        it 'render the template with empty data' do
+          get :demands_tab, params: { company_id: company, id: team }, xhr: true
+
+          expect(response).to render_template 'teams/demands_tab'
+          expect(assigns(:demands)).to eq []
+          expect(assigns(:paged_demands)).to eq []
+        end
+      end
+
+      context 'with invalid' do
+        context 'team' do
+          before { get :demands_tab, params: { company_id: company, id: 'foo' }, xhr: true }
+
+          it { expect(response).to have_http_status :not_found }
+        end
+
+        context 'company' do
+          context 'no existent' do
+            before { get :demands_tab, params: { company_id: 'foo', id: team } }
+
+            it { expect(response).to have_http_status :not_found }
+          end
+
+          context 'not permitted' do
+            let(:company) { Fabricate :company, users: [] }
+
+            before { get :demands_tab, params: { company_id: company, id: team } }
+
+            it { expect(response).to have_http_status :not_found }
+          end
+        end
+      end
+    end
+
+    describe 'GET #dashboard_tab' do
+      context 'with valid parameters' do
+        context 'with data' do
+          include_context 'demands to filters'
+
+          it 'creates the objects and renders the tab' do
+            get :dashboard_tab, params: { company_id: company, id: team }, xhr: true
+
+            expect(response).to render_template 'teams/dashboard_tab'
+          end
+        end
+      end
+
+      context 'with invalid' do
+        context 'team' do
+          before { get :dashboard_tab, params: { company_id: company, id: 'foo' }, xhr: true }
+
+          it { expect(response).to have_http_status :not_found }
+        end
+
+        context 'company' do
+          context 'no existent' do
+            before { get :dashboard_tab, params: { company_id: 'foo', id: team } }
+
+            it { expect(response).to have_http_status :not_found }
+          end
+
+          context 'not permitted' do
+            let(:company) { Fabricate :company, users: [] }
+
+            before { get :dashboard_tab, params: { company_id: company, id: team } }
 
             it { expect(response).to have_http_status :not_found }
           end

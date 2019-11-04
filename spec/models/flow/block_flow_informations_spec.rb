@@ -70,32 +70,34 @@ RSpec.describe Flow::BlockFlowInformations, type: :model do
   end
 
   describe '.initialize' do
-    context 'having data' do
+    context 'with data' do
       include_context 'demand data'
-
-      subject(:block_flow_info) { described_class.new(dates_array, Time.zone.today, Demand.all) }
 
       let(:dates_array) { TimeService.instance.weeks_between_of(Project.all.map(&:start_date).min, Project.all.map(&:end_date).max) }
 
       it 'assigns the correct information' do
-        expect(block_flow_info.dates_array).to eq TimeService.instance.weeks_between_of(Project.all.map(&:start_date).min, Project.all.map(&:end_date).max)
+        block_flow_info = described_class.new(Demand.all)
         expect(block_flow_info.demands).to match_array Demand.all
-        expect(block_flow_info.current_limit_date).to eq Time.zone.today
+        expect(block_flow_info.current_limit_date).to eq Time.zone.today.end_of_week
 
-        expect(block_flow_info.blocks_count).to eq [1, 3, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0]
-        expect(block_flow_info.blocks_time).to eq [24.0, 47.06666666666666, 0.0, 0.0, 77.41666666666666, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+        block_flow_info.blocks_flow_behaviour(dates_array.first)
+        expect(block_flow_info.blocks_count).to eq [1]
+        expect(block_flow_info.blocks_time).to eq [24.0]
+
+        block_flow_info.blocks_flow_behaviour(dates_array.second)
+        expect(block_flow_info.blocks_count).to eq [1, 3]
+        expect(block_flow_info.blocks_time).to eq [24.0, 47.06666666666666]
       end
     end
 
-    context 'having no data' do
-      subject(:block_flow_info) { described_class.new(dates_array, Time.zone.today, Demand.all) }
-
+    context 'with no data' do
       let(:dates_array) { TimeService.instance.weeks_between_of(Project.all.map(&:start_date).min, Project.all.map(&:end_date).max) }
 
       it 'assigns the correct information' do
-        expect(block_flow_info.dates_array).to eq TimeService.instance.weeks_between_of(Project.all.map(&:start_date).min, Project.all.map(&:end_date).max)
+        block_flow_info = described_class.new(Demand.all)
+
         expect(block_flow_info.demands).to eq []
-        expect(block_flow_info.current_limit_date).to eq Time.zone.today
+        expect(block_flow_info.current_limit_date).to eq Time.zone.today.end_of_week
 
         expect(block_flow_info.blocks_count).to eq []
         expect(block_flow_info.blocks_time).to eq []

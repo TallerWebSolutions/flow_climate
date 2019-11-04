@@ -9,11 +9,12 @@ RSpec.describe CompaniesBulletimJob, type: :active_job do
   end
 
   context 'having projects to collect data' do
-    let(:first_user) { Fabricate :user }
-    let(:second_user) { Fabricate :user }
-    let(:third_user) { Fabricate :user }
+    let!(:company) { Fabricate :company }
 
-    let!(:company) { Fabricate :company, users: [first_user, second_user] }
+    let!(:first_user) { Fabricate :user, companies: [company] }
+    let!(:second_user) { Fabricate :user, companies: [company] }
+    let!(:third_user) { Fabricate :user }
+
     let(:customer) { Fabricate :customer, company: company }
 
     let!(:first_project) { Fabricate :project, company: company, customers: [customer], start_date: Time.zone.today }

@@ -70,7 +70,7 @@ function buildColumnChart(columnDiv) {
                 }
             }, {
                 condition: {
-                    maxWidth: 500
+                    maxWidth: 600
                 },
                 chartOptions: {
                     xAxis: {
