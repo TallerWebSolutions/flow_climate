@@ -47,6 +47,10 @@ class MembershipsController < AuthenticatedController
     respond_to { |format| format.js { render 'memberships/destroy' } }
   end
 
+  def index
+    @memberships = @team.memberships.order(:start_date)
+  end
+
   private
 
   def assign_memberships_list

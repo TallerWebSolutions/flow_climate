@@ -84,7 +84,7 @@ Rails.application.routes.draw do
         patch :toggle_active, on: :member
       end
 
-      resources :memberships, except: :index
+      resources :memberships
       resources :team_resource_allocations, only: %i[new create destroy]
 
       member do
