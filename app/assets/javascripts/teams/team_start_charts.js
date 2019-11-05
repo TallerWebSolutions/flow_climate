@@ -11,9 +11,6 @@ function startCharts() {
     const lineBugsAccumulated = $('#line-bug-share-accumalated');
     buildLineChart(lineBugsAccumulated);
 
-    const avgDemandCost = $('#average-demand-cost');
-    buildLineChart(avgDemandCost);
-
     const burnupDemands = $('#burnup-demands');
     buildLineChart(burnupDemands);
 

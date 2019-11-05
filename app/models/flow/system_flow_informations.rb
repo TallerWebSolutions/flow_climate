@@ -16,7 +16,7 @@ module Flow
     private
 
     def start_common_attributes
-      @demands = []
+      @demands = Demand.none
       @demands_ids = []
       @current_limit_date = Time.zone.today.end_of_week
     end

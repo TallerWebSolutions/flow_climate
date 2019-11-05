@@ -33,3 +33,12 @@ function getDashboardTab(companyId, teamId) {
         type: "GET"
     });
 }
+
+function getDashboardPageTwo(companyId, teamId) {
+    $("#general-loader").show();
+
+    jQuery.ajax({
+        url: `/companies/${companyId}/teams/${teamId}/dashboard_page_two.js`,
+        type: "GET"
+    });
+}

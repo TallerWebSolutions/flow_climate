@@ -147,6 +147,9 @@ en:
     scope: "Scope"
     all: "All"
     active: "Active"
+    page:
+      one: "1"
+      two: "2"
   header:
     logout: Logout
     explore: Explore

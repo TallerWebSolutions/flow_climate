@@ -1,0 +1,16 @@
+$('#team-dashboard-container-page-two').html("<%= escape_javascript(render 'teams/dashboard_tab_page_two', company: @company, team: @team, team_chart_data: @team_chart_data) %>")
+
+$("#general-loader").hide();
+
+$("#team-dashboard-container-page-two").show();
+
+$("#team-dashboard-info").hide();
+$("#team-demands-info").hide();
+
+$('#team-dashboard-page-one').removeClass('active');
+$('#team-dashboard-page-two').addClass('active');
+
+$('#page-buttons').show();
+
+var avgDemandCost = $('#average-demand-cost');
+buildLineChart(avgDemandCost);

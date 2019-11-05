@@ -35,11 +35,20 @@
   </div>
 </div>
 
-<div class="row bottom-spaced-component">
+<div class="row">
   <div class="col-xs-12 center">
     <div class="tab">
       <button class="tablinks" id="team-dashboard-tab"><%= I18n.t('teams.show.dashboard_tab') %></button>
       <button class="tablinks" id="team-demands-tab"><%= I18n.t('teams.show.demands_tab') %></button>
+    </div>
+  </div>
+</div>
+
+<div class="row bottom-spaced-component" id="page-buttons">
+  <div class="col-xs-12 center">
+    <div class="tab">
+      <button class="tablinks btn btn-sm" id="team-dashboard-page-one"><%= I18n.t('general.page.one') %></button>
+      <button class="tablinks btn btn-sm" id="team-dashboard-page-two"><%= I18n.t('general.page.two') %></button>
     </div>
   </div>
 </div>
@@ -49,7 +58,17 @@
 <hr>
 
 <div id="team-dashboard-info" class="tabcontent">
-  <%= render 'teams/dashboard_body', team: @team, slack_configurations: @slack_configurations, memberships: @memberships, report_data: @report_data, team_chart_data: @team_chart_data %>
+  <%= render 'teams/dashboard_body',
+             team: @team,
+             slack_configurations: @slack_configurations,
+             memberships: @memberships,
+             dates_array: @array_of_dates,
+             work_item_flow_information: @work_item_flow_information,
+             statistics_flow_information: @statistics_flow_information %>
+</div>
+
+<div id="team-dashboard-container-page-two" class="tabcontent">
+
 </div>
 
 <div id="team-demands-info" class="tabcontent">
