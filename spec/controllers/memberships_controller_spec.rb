@@ -31,6 +31,12 @@ RSpec.describe MembershipsController, type: :controller do
 
       it { expect(response).to redirect_to new_user_session_path }
     end
+
+    describe 'GET #index' do
+      before { get :index, params: { company_id: 'bar', team_id: 'foo' } }
+
+      it { expect(response).to redirect_to new_user_session_path }
+    end
   end
 
   context 'authenticated' do
@@ -46,8 +52,8 @@ RSpec.describe MembershipsController, type: :controller do
     let!(:team_member) { Fabricate :team_member, company: company }
     let!(:other_team_member) { Fabricate :team_member, company: company }
 
-    let!(:membership) { Fabricate :membership, team: team, team_member: team_member, end_date: nil }
-    let!(:other_membership) { Fabricate :membership, team: team, team_member: other_team_member, end_date: Time.zone.today }
+    let!(:membership) { Fabricate :membership, team: team, team_member: team_member, start_date: 2.days.ago, end_date: nil }
+    let!(:other_membership) { Fabricate :membership, team: team, team_member: other_team_member, start_date: 3.days.ago, end_date: Time.zone.today }
 
     describe 'GET #new' do
       context 'valid parameters' do
@@ -221,6 +227,34 @@ RSpec.describe MembershipsController, type: :controller do
           let(:company) { Fabricate :company, users: [] }
 
           before { delete :destroy, params: { company_id: company, team_id: team, id: membership }, xhr: true }
+
+          it { expect(response).to have_http_status :not_found }
+        end
+      end
+    end
+
+    describe 'GET #index' do
+      context 'valid parameters' do
+        before { get :index, params: { company_id: company, team_id: team } }
+
+        it 'instantiates a new membership and renders the template' do
+          expect(response).to render_template 'memberships/index'
+          expect(response).to render_template 'memberships/_memberships_table'
+          expect(assigns(:memberships)).to eq [other_membership, membership]
+        end
+      end
+
+      context 'invalid parameters' do
+        context 'non-existent company' do
+          before { get :index, params: { company_id: 'foo', team_id: team }, xhr: true }
+
+          it { expect(response).to have_http_status :not_found }
+        end
+
+        context 'not-permitted company' do
+          let(:company) { Fabricate :company, users: [] }
+
+          before { get :index, params: { company_id: company, team_id: team }, xhr: true }
 
           it { expect(response).to have_http_status :not_found }
         end
