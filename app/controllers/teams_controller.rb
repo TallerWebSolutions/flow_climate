@@ -12,8 +12,7 @@ class TeamsController < AuthenticatedController
     assign_team_objects
     build_query_dates
 
-    @report_data = Highchart::OperationalChartsAdapter.new(@demands, start_date, end_date, 'week')
-    @team_chart_data = Highchart::TeamChartsAdapter.new(@team, start_date, end_date, 'week')
+    build_charts_data(@team.demands)
   end
 
   def new
@@ -72,8 +71,7 @@ class TeamsController < AuthenticatedController
     @demands_searched = search_demand_type(@demands_searched)
     @demands_searched = search_class_of_service(@demands_searched)
 
-    @report_data = Highchart::OperationalChartsAdapter.new(@demands_searched, start_date, end_date, 'week')
-    @team_chart_data = Highchart::TeamChartsAdapter.new(@team, start_date, end_date, 'week')
+    build_charts_data(@demands_searched)
 
     respond_to { |format| format.js { render 'teams/dashboard_search' } }
   end
@@ -87,7 +85,33 @@ class TeamsController < AuthenticatedController
     respond_to { |format| format.js { render 'teams/dashboard_tab' } }
   end
 
+  def dashboard_page_two
+    @team_chart_data = Highchart::TeamChartsAdapter.new(@team, start_date, end_date, 'week')
+
+    respond_to { |format| format.js { render 'teams/dashboard_page_two' } }
+  end
+
   private
+
+  def build_charts_data(demands)
+    array_of_dates = TimeService.instance.weeks_between_of(start_date, end_date)
+    @work_item_flow_information = Flow::WorkItemFlowInformations.new(demands, uncertain_scope, array_of_dates.length, array_of_dates.last)
+    @statistics_flow_information = Flow::StatisticsFlowInformations.new(demands)
+
+    array_of_dates.each_with_index do |analysed_date, distribution_index|
+      @work_item_flow_information.work_items_flow_behaviour(array_of_dates.first, analysed_date, distribution_index)
+      @work_item_flow_information.build_cfd_hash(array_of_dates.first, analysed_date) if add_data?(analysed_date)
+      @statistics_flow_information.statistics_flow_behaviour(analysed_date) if add_data?(analysed_date)
+    end
+  end
+
+  def add_data?(analysed_date)
+    analysed_date < Time.zone.now.end_of_week
+  end
+
+  def uncertain_scope
+    @team.projects.map(&:initial_scope).compact.sum
+  end
 
   def search_status
     if params['project_status'] == 'active'

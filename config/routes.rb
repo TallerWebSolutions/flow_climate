@@ -93,6 +93,7 @@ Rails.application.routes.draw do
         get :dashboard_search
         get :demands_tab
         get :dashboard_tab
+        get :dashboard_page_two
       end
     end
 

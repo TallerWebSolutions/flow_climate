@@ -19,7 +19,7 @@ module Highchart
     private
 
     def uncertain_scope
-      @uncertain_scope ||= @all_projects.sum(&:initial_scope)
+      @uncertain_scope ||= @all_projects.map(&:initial_scope).compact.sum
     end
 
     def daily?

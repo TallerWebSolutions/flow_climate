@@ -1,0 +1,13 @@
+<div class="col-xs-6 bottom-spaced-component">
+  <div id="average-demand-cost"
+       class="flow-chart"
+       data-title='<%= I18n.t('teams.charts.average_demand_cost.title', target_name: team.name) %>'
+       data-xcategories='<%= team_chart_data.average_demand_cost[:x_axis].to_json %>'
+       data-xtitle='<%= I18n.t('teams.charts.average_demand_cost.xlabel') %>'
+       data-ytitle='<%= I18n.t('teams.charts.average_demand_cost.ylabel') %>'
+       data-prefix='<%= I18n.t('general.money') %>'
+       data-tooltipsuffix=''
+       data-series='<%= [{ name: I18n.t('teams.charts.average_demand_cost.data_legend'), data: team_chart_data.average_demand_cost[:data] }].to_json %>'
+       data-decimals='2'>
+  </div>
+</div>
