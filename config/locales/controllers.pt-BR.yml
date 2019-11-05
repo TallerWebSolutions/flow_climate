@@ -601,7 +601,7 @@ pt-BR:
       other: "%{count} membros do time"
   team:
     edit:
-      title: "Editar Membro do Time"
+      title: "Editar Time"
   products:
     index:
       no_data: "Não há produtos aqui. Cadastre um."

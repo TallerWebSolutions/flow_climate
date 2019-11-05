@@ -8,3 +8,9 @@
     font-size: larger;
     font-weight: bold;
 }
+
+.main-config-cogs {
+    font-size: xx-large;
+    padding-right: 15px;
+    margin-top: 5px;
+}

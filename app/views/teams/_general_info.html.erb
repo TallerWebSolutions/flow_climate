@@ -20,13 +20,5 @@
       <td><b><%= I18n.t('teams.show.lead_time_p80') %></b></td>
       <td><%= I18n.t('general.days_text', count: number_with_precision(demands_lead_time_p80, precision: 2)) %></td>
     </tr>
-    <tr>
-      <td><b><%= SlackConfiguration.model_name.human(count: slack_configurations.count) %></b></td>
-      <td><%= slack_configurations.count %></td>
-    </tr>
-    <tr>
-      <td><b><%= TeamMember.model_name.human(count: memberships.count) %></b></td>
-      <td><%= memberships.count %></td>
-    </tr>
   </tbody>
 </table>
