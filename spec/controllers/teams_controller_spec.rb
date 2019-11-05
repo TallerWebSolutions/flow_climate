@@ -260,7 +260,7 @@ RSpec.describe TeamsController, type: :controller do
           put :update, params: { company_id: company, id: team, team: { name: 'foo', max_work_in_progress: 12 } }
           expect(team.reload.name).to eq 'foo'
           expect(team.reload.max_work_in_progress).to eq 12
-          expect(response).to redirect_to company_path(company)
+          expect(response).to redirect_to company_team_path(company, team)
         end
       end
 

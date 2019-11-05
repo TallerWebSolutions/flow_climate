@@ -31,7 +31,7 @@ class TeamsController < AuthenticatedController
 
   def update
     @team.update(team_params.merge(company: @company))
-    return redirect_to company_path(@company) if @team.save
+    return redirect_to company_team_path(@company, @team) if @team.save
 
     render :edit
   end

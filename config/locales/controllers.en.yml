@@ -543,7 +543,7 @@ en:
       other: "%{count} team members"
   team:
     edit:
-      title: "Edit Team Member"
+      title: "Edit Team"
   products:
     index:
       no_data: "There is no products here. Register a new one."
