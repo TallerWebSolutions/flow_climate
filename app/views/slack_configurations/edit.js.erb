@@ -1,1 +1,5 @@
 $('#slack-config-table').html("<%= escape_javascript(render 'slack_configurations/edit', company: @company, team: @team, slack_configuration: @slack_configuration) %>")
+
+$('#cancel-form-slack-config').on('click', function() {
+    $('#slack-config-table').html("<%= escape_javascript(render 'slack_configurations/slack_config_table', company: @company, team: @team, slack_configurations: @slack_configurations) %>");
+});

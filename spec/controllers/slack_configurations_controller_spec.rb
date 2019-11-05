@@ -31,6 +31,12 @@ RSpec.describe SlackConfigurationsController, type: :controller do
 
       it { expect(response).to redirect_to new_user_session_path }
     end
+
+    describe 'GET #index' do
+      before { get :index, params: { company_id: 'bar', team_id: 'foo' } }
+
+      it { expect(response).to redirect_to new_user_session_path }
+    end
   end
 
   context 'authenticated as gold' do
@@ -47,11 +53,16 @@ RSpec.describe SlackConfigurationsController, type: :controller do
     let(:company) { Fabricate :company, users: [user] }
     let(:team) { Fabricate :team, company: company }
 
+    let!(:first_slack_config) { Fabricate :slack_configuration, team: team, info_type: :last_week_delivered_demands_info, created_at: 1.hour.ago, active: true }
+    let!(:second_slack_config) { Fabricate :slack_configuration, team: team, info_type: :outdated_demands, created_at: 1.day.ago, active: true }
+
     describe 'GET #new' do
       context 'valid parameters' do
         it 'instantiates a new Slack Config and renders the template' do
           get :new, params: { company_id: company, team_id: team }, xhr: true
+
           expect(response).to render_template 'slack_configurations/new'
+          expect(assigns(:slack_configurations)).to eq [second_slack_config, first_slack_config]
           expect(assigns(:slack_configuration)).to be_a_new SlackConfiguration
         end
       end
@@ -82,6 +93,7 @@ RSpec.describe SlackConfigurationsController, type: :controller do
           expect(SlackConfiguration.last.notification_hour).to eq 4
           expect(SlackConfiguration.last.notification_minute).to eq 0
           expect(SlackConfiguration.last.weekday_to_notify).to eq 'monday'
+          expect(assigns(:slack_configurations)).to eq [second_slack_config, first_slack_config, SlackConfiguration.last]
           expect(response).to render_template 'slack_configurations/create_update'
         end
       end
@@ -102,17 +114,17 @@ RSpec.describe SlackConfigurationsController, type: :controller do
         context 'and activated slack config' do
           it 'deactivate the slack configuration' do
             patch :toggle_active, params: { company_id: company, team_id: team, id: slack_config }, xhr: true
-            expect(SlackConfiguration.last.active).to be false
+            expect(slack_config.reload.active).to be false
             expect(response).to render_template 'slack_configurations/toggle_active'
           end
         end
 
         context 'and inactive slack config' do
-          let!(:inactive_slack_config) { Fabricate :slack_configuration, team: team, active: false }
+          let!(:inactive_slack_config) { Fabricate :slack_configuration, team: team, info_type: :failure_load, active: false }
 
           it 'deactivate the slack configuration' do
             patch :toggle_active, params: { company_id: company, team_id: team, id: inactive_slack_config }, xhr: true
-            expect(SlackConfiguration.last.active).to be true
+            expect(slack_config.reload.active).to be true
             expect(response).to render_template 'slack_configurations/toggle_active'
           end
         end
@@ -145,6 +157,8 @@ RSpec.describe SlackConfigurationsController, type: :controller do
       context 'with valid parameters' do
         it 'finds the slack config and renders the form' do
           get :edit, params: { company_id: company, team_id: team, id: slack_config }, xhr: true
+
+          expect(assigns(:slack_configurations)).to eq [second_slack_config, first_slack_config, slack_config]
           expect(response).to render_template 'slack_configurations/edit'
           expect(assigns(:slack_configuration)).to eq slack_config
         end
@@ -185,11 +199,15 @@ RSpec.describe SlackConfigurationsController, type: :controller do
       context 'passing valid parameters' do
         it 'updates the slack config' do
           put :update, params: { company_id: company, team_id: team, id: slack_config, slack_configuration: { info_type: :current_week_throughput, room_webhook: 'http://xpto', notification_hour: 4, notification_minute: 0, weekday_to_notify: :monday } }, xhr: true
-          expect(SlackConfiguration.last.room_webhook).to eq 'http://xpto'
-          expect(SlackConfiguration.last.info_type).to eq 'current_week_throughput'
-          expect(SlackConfiguration.last.notification_hour).to eq 4
-          expect(SlackConfiguration.last.notification_minute).to eq 0
-          expect(SlackConfiguration.last.weekday_to_notify).to eq 'monday'
+
+          expect(assigns(:slack_configurations)).to eq [second_slack_config, first_slack_config, slack_config]
+
+          slack_config_updated = slack_config.reload
+          expect(slack_config_updated.room_webhook).to eq 'http://xpto'
+          expect(slack_config_updated.info_type).to eq 'current_week_throughput'
+          expect(slack_config_updated.notification_hour).to eq 4
+          expect(slack_config_updated.notification_minute).to eq 0
+          expect(slack_config_updated.weekday_to_notify).to eq 'monday'
           expect(response).to render_template 'slack_configurations/create_update'
         end
       end
@@ -199,6 +217,34 @@ RSpec.describe SlackConfigurationsController, type: :controller do
           put :update, params: { company_id: company, team_id: team, id: slack_config, slack_configuration: { room_webhook: '' } }, xhr: true
           expect(response).to render_template 'slack_configurations/edit'
           expect(assigns(:slack_configuration).errors.full_messages).to eq ['Webhook da sala não pode ficar em branco', 'Webhook da sala não é válido']
+        end
+      end
+    end
+
+    describe 'GET #index' do
+      context 'valid parameters' do
+        before { get :index, params: { company_id: company, team_id: team } }
+
+        it 'assigns the slack configurations variable and renders the templates' do
+          expect(response).to render_template 'slack_configurations/index'
+          expect(response).to render_template 'slack_configurations/_slack_config_table'
+          expect(assigns(:slack_configurations)).to eq [second_slack_config, first_slack_config]
+        end
+      end
+
+      context 'invalid parameters' do
+        context 'non-existent company' do
+          before { get :index, params: { company_id: 'foo', team_id: team }, xhr: true }
+
+          it { expect(response).to have_http_status :not_found }
+        end
+
+        context 'not-permitted company' do
+          let(:company) { Fabricate :company, users: [] }
+
+          before { get :index, params: { company_id: company, team_id: team }, xhr: true }
+
+          it { expect(response).to have_http_status :not_found }
         end
       end
     end

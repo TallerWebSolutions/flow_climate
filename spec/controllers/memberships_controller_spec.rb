@@ -237,7 +237,7 @@ RSpec.describe MembershipsController, type: :controller do
       context 'valid parameters' do
         before { get :index, params: { company_id: company, team_id: team } }
 
-        it 'instantiates a new membership and renders the template' do
+        it 'assigns the memberships variable and renders the template' do
           expect(response).to render_template 'memberships/index'
           expect(response).to render_template 'memberships/_memberships_table'
           expect(assigns(:memberships)).to eq [other_membership, membership]

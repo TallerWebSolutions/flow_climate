@@ -1,9 +1,3 @@
 <%= form_for slack_configuration, url: company_team_slack_configuration_url(company, team, slack_configuration), method: :put, remote: true do |form| %>
   <%= render 'slack_configurations/form', slack_configuration: slack_configuration, form: form %>
-
-  <div class="row">
-    <div class="col-xs-12">
-      <%= form.submit I18n.t('general.buttons.save'), class: 'btn btn-success' %>
-    </div>
-  </div>
 <% end %>

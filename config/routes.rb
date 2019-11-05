@@ -80,7 +80,7 @@ Rails.application.routes.draw do
     end
 
     resources :teams do
-      resources :slack_configurations, only: %i[new create edit update] do
+      resources :slack_configurations, except: :show do
         patch :toggle_active, on: :member
       end
 
