@@ -1,0 +1,15 @@
+<div class="row">
+  <div class="col-xs-10">
+    <ul class="breadcrumb">
+      <li><%= link_to I18n.t('general.home.title'), root_path %></li>
+      <li><%= link_to @company.abbreviation&.upcase, company_path(@company) %></li>
+      <li><%= Team.model_name.human(count: 2) %></li>
+      <li><%= link_to @team.name, company_team_path(@company, @team) %></li>
+      <li><%= SlackConfiguration.model_name.human(cound: 2) %></li>
+    </ul>
+  </div>
+</div>
+
+<div id="slack-config-table">
+  <%= render 'slack_configurations/slack_config_table', company: @company, team: @team, slack_configurations: @slack_configurations %>
+</div>

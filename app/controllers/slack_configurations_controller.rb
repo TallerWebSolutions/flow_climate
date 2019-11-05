@@ -7,6 +7,7 @@ class SlackConfigurationsController < AuthenticatedController
 
   def new
     @slack_configuration = SlackConfiguration.new(team: @team)
+    @slack_configurations = @team.slack_configurations.order(:created_at)
 
     respond_to { |format| format.js { render 'slack_configurations/new' } }
   end
@@ -14,8 +15,9 @@ class SlackConfigurationsController < AuthenticatedController
   def create
     @slack_configuration = SlackConfiguration.new(slack_configuration_params.merge(team: @team))
 
+    @slack_configurations = @team.slack_configurations.order(:created_at)
+
     if @slack_configuration.save
-      @slack_configurations = @team.slack_configurations.order(:created_at)
       respond_to { |format| format.js { render 'slack_configurations/create_update' } }
     else
       respond_to { |format| format.js { render 'slack_configurations/new' } }
@@ -23,12 +25,14 @@ class SlackConfigurationsController < AuthenticatedController
   end
 
   def edit
+    @slack_configurations = @team.slack_configurations.order(:created_at)
     respond_to { |format| format.js { render 'slack_configurations/edit' } }
   end
 
   def update
+    @slack_configurations = @team.slack_configurations.order(:created_at)
+
     if @slack_configuration.update(slack_configuration_params)
-      @slack_configurations = @team.slack_configurations.order(:created_at)
       respond_to { |format| format.js { render 'slack_configurations/create_update' } }
     else
       respond_to { |format| format.js { render 'slack_configurations/edit' } }
@@ -38,6 +42,10 @@ class SlackConfigurationsController < AuthenticatedController
   def toggle_active
     @slack_configuration.toggle_active
     respond_to { |format| format.js { render 'slack_configurations/toggle_active' } }
+  end
+
+  def index
+    @slack_configurations = @team.slack_configurations.order(:created_at)
   end
 
   private
