@@ -12,7 +12,9 @@ class TeamsController < AuthenticatedController
     assign_team_objects
     build_query_dates
 
-    build_charts_data(@team.demands)
+    demands_searched = team_demands_search_engine(@demands)
+
+    build_charts_data(demands_searched)
   end
 
   def new
@@ -67,9 +69,7 @@ class TeamsController < AuthenticatedController
     assign_team_objects
     assign_demands_list
 
-    @demands_searched = search_status
-    @demands_searched = search_demand_type(@demands_searched)
-    @demands_searched = search_class_of_service(@demands_searched)
+    @demands_searched = team_demands_search_engine(@demands)
 
     build_charts_data(@demands_searched)
 
@@ -93,6 +93,14 @@ class TeamsController < AuthenticatedController
 
   private
 
+  def team_demands_search_engine(demands)
+    demands_searched = demands.to_dates(start_date, end_date)
+    demands_searched = search_demand_status(demands_searched)
+    demands_searched = search_project_status(demands_searched)
+    demands_searched = search_demand_type(demands_searched)
+    search_class_of_service(demands_searched)
+  end
+
   def build_charts_data(demands)
     array_of_dates = TimeService.instance.weeks_between_of(start_date, end_date)
     @work_item_flow_information = Flow::WorkItemFlowInformations.new(demands, uncertain_scope, array_of_dates.length, array_of_dates.last)
@@ -113,11 +121,19 @@ class TeamsController < AuthenticatedController
     @team.projects.map(&:initial_scope).compact.sum
   end
 
-  def search_status
+  def search_project_status(demands_searched)
     if params['project_status'] == 'active'
-      @demands.joins(:project).merge(Project.active)
+      demands_searched.joins(:project).merge(Project.active)
     else
-      @demands
+      demands_searched
+    end
+  end
+
+  def search_demand_status(demands_searched)
+    if params['demand_status'] == 'finished'
+      demands_searched.finished
+    else
+      demands_searched
     end
   end
 
