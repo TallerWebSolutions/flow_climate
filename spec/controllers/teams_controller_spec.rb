@@ -417,6 +417,7 @@ RSpec.describe TeamsController, type: :controller do
 
               expect(response).to render_template 'teams/dashboard_search'
               expect(assigns(:work_item_flow_information).demands).to eq [first_demand, second_demand, fifth_demand, third_demand, fourth_demand]
+              expect(assigns(:paged_demands_searched)).to eq [first_demand, second_demand, fifth_demand, third_demand, fourth_demand]
             end
           end
 

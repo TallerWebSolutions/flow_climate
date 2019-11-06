@@ -72,6 +72,7 @@ class TeamsController < AuthenticatedController
     @demands_searched = team_demands_search_engine(@demands)
 
     build_charts_data(@demands_searched)
+    @paged_demands_searched = @demands_searched.page(page_param)
 
     respond_to { |format| format.js { render 'teams/dashboard_search' } }
   end
