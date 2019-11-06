@@ -150,6 +150,7 @@ pt-BR:
     page:
       one: "1"
       two: "2"
+    finished: "Finalizado"
   header:
     logout: Sair
     sign_up: Cadastre-se
@@ -1042,6 +1043,7 @@ pt-BR:
   filters:
     options:
       project_status: "Status do Projeto"
+      demand_status: "Status da Demanda"
   slack_configuration:
     info_type:
       uniqueness: "Você só pode ter um tipo de configuração por cada time."

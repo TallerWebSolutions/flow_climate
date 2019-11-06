@@ -97,17 +97,11 @@ RSpec.describe TeamsController, type: :controller do
       let!(:second_project) { Fabricate :project, customers: [customer], team: team, status: :maintenance, start_date: 2.months.ago, end_date: 34.days.from_now }
       let!(:third_project) { Fabricate :project, customers: [customer], team: team, status: :waiting, start_date: 1.month.ago, end_date: 2.months.from_now }
       let!(:fourth_project) { Fabricate :project, customers: [customer], team: team, products: [product], status: :cancelled, start_date: 35.days.from_now, end_date: 37.days.from_now }
-      let!(:fifth_project) { Fabricate :project, customers: [customer], team: team, products: [product], status: :finished, start_date: 38.days.from_now, end_date: 39.days.from_now }
 
-      let(:first_risk_config) { Fabricate :project_risk_config, project: first_project, risk_type: :no_money_to_deadline }
-      let(:second_risk_config) { Fabricate :project_risk_config, project: first_project, risk_type: :backlog_growth_rate }
-      let!(:first_alert) { Fabricate :project_risk_alert, project_risk_config: first_risk_config, project: first_project, alert_color: :green, created_at: Time.zone.now }
-      let!(:second_alert) { Fabricate :project_risk_alert, project_risk_config: second_risk_config, project: first_project, alert_color: :red, created_at: 1.hour.ago }
-
-      let!(:first_demand) { Fabricate :demand, team: team, project: first_project, demand_type: :feature, class_of_service: :standard, external_id: 'first_demand', commitment_date: 3.months.ago, end_date: 2.months.ago }
-      let!(:second_demand) { Fabricate :demand, team: team, project: second_project, demand_type: :bug, class_of_service: :standard, external_id: 'second_demand', commitment_date: 2.months.ago, end_date: 1.month.ago }
-      let!(:third_demand) { Fabricate :demand, team: team, project: third_project, demand_type: :performance_improvement, class_of_service: :expedite, external_id: 'third_demand', end_date: 1.day.ago }
-      let!(:fourth_demand) { Fabricate :demand, team: team, project: first_project, demand_type: :ui, class_of_service: :fixed_date, external_id: 'fourth_demand', end_date: 2.hours.ago }
+      let!(:first_demand) { Fabricate :demand, team: team, project: first_project, demand_type: :feature, class_of_service: :standard, external_id: 'first_demand', created_date: 4.days.ago, commitment_date: 3.days.ago, end_date: 2.days.ago }
+      let!(:second_demand) { Fabricate :demand, team: team, project: second_project, demand_type: :bug, class_of_service: :standard, external_id: 'second_demand', created_date: 1.day.ago, commitment_date: 1.day.ago, end_date: 1.day.ago }
+      let!(:third_demand) { Fabricate :demand, team: team, project: third_project, demand_type: :performance_improvement, class_of_service: :expedite, external_id: 'third_demand', created_date: 7.days.ago, commitment_date: 7.days.ago, end_date: Time.zone.now }
+      let!(:fourth_demand) { Fabricate :demand, team: team, project: first_project, demand_type: :ui, class_of_service: :fixed_date, external_id: 'fourth_demand', created_date: 7.days.ago, commitment_date: 7.days.ago, end_date: nil }
       let!(:fifth_demand) { Fabricate :demand, team: team, project: fourth_project, demand_type: :chore, class_of_service: :intangible, external_id: 'fifth_demand', end_date: 3.hours.ago }
     end
 
@@ -123,7 +117,7 @@ RSpec.describe TeamsController, type: :controller do
             expect(response).to render_template :show
             expect(assigns(:company)).to eq company
             expect(assigns(:team)).to eq team
-            expect(assigns(:projects)).to eq [third_project, fifth_project, fourth_project, second_project, first_project]
+            expect(assigns(:projects)).to eq [third_project, fourth_project, second_project, first_project]
             expect(assigns(:slack_configurations)).to eq [slack_config, other_slack_config]
 
             expect(assigns(:work_item_flow_information)).to be_a Flow::WorkItemFlowInformations
@@ -422,7 +416,17 @@ RSpec.describe TeamsController, type: :controller do
               get :dashboard_search, params: { company_id: company, id: team }, xhr: true
 
               expect(response).to render_template 'teams/dashboard_search'
-              expect(assigns(:work_item_flow_information).demands).to eq [first_demand, second_demand, third_demand, fifth_demand, fourth_demand]
+              expect(assigns(:work_item_flow_information).demands).to eq [first_demand, second_demand, fifth_demand, third_demand, fourth_demand]
+              expect(assigns(:paged_demands_searched)).to eq [first_demand, second_demand, fifth_demand, third_demand, fourth_demand]
+            end
+          end
+
+          context 'with search by start and end dates' do
+            it 'search the informations and renders the template' do
+              get :dashboard_search, params: { company_id: company, id: team, start_date: 1.day.ago, end_date: Time.zone.now }, xhr: true
+
+              expect(response).to render_template 'teams/dashboard_search'
+              expect(assigns(:work_item_flow_information).demands).to eq [second_demand, fifth_demand, third_demand]
             end
           end
 
@@ -432,6 +436,15 @@ RSpec.describe TeamsController, type: :controller do
 
               expect(response).to render_template 'teams/dashboard_search'
               expect(assigns(:work_item_flow_information).demands).to eq [first_demand, second_demand, third_demand, fourth_demand]
+            end
+          end
+
+          context 'with search by demand status' do
+            it 'search the informations and renders the template' do
+              get :dashboard_search, params: { company_id: company, id: team, demand_status: 'finished' }, xhr: true
+
+              expect(response).to render_template 'teams/dashboard_search'
+              expect(assigns(:work_item_flow_information).demands).to eq [first_demand, second_demand, fifth_demand, third_demand]
             end
           end
 
@@ -485,7 +498,7 @@ RSpec.describe TeamsController, type: :controller do
               get :dashboard_search, params: { company_id: company, id: team, demand_type: 'foo' }, xhr: true
 
               expect(response).to render_template 'teams/dashboard_search'
-              expect(assigns(:work_item_flow_information).demands).to eq [first_demand, second_demand, third_demand, fifth_demand, fourth_demand]
+              expect(assigns(:work_item_flow_information).demands).to eq [first_demand, second_demand, fifth_demand, third_demand, fourth_demand]
             end
           end
 
@@ -561,8 +574,8 @@ RSpec.describe TeamsController, type: :controller do
             get :demands_tab, params: { company_id: company, id: team }, xhr: true
 
             expect(response).to render_template 'teams/demands_tab'
-            expect(assigns(:demands)).to eq [first_demand, second_demand, third_demand, fifth_demand, fourth_demand]
-            expect(assigns(:paged_demands)).to eq [first_demand, second_demand, third_demand, fifth_demand, fourth_demand]
+            expect(assigns(:demands)).to eq [first_demand, second_demand, fifth_demand, third_demand, fourth_demand]
+            expect(assigns(:paged_demands)).to eq [first_demand, second_demand, fifth_demand, third_demand, fourth_demand]
           end
         end
       end

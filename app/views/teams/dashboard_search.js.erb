@@ -4,7 +4,9 @@ $("#team-dashboard-info").html("<%= escape_javascript(render 'teams/dashboard_bo
              memberships: @memberships,
              dates_array: @array_of_dates,
              work_item_flow_information: @work_item_flow_information,
-             statistics_flow_information: @statistics_flow_information) %>")
+             statistics_flow_information: @statistics_flow_information) %>");
+
+$('#team-demands-info').html("<%= escape_javascript(render 'demands/demands_table', company: @company, demands: @paged_demands_searched, unpaged_demands: @demands_searched) %>");
 
 $('#team-search-info').show();
 $('#team-search-info-tab').addClass('active');

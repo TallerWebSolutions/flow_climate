@@ -11,22 +11,29 @@
 
   <div class="col-xs-2">
     <div class="form-group">
-      <%= label_tag I18n.t('filters.options.project_status'), nil, class: 'control-label' %>
-      <%= select_tag :project_status, options_for_select([[I18n.t('general.all'), :all], [I18n.t('general.active'), :active]], params[:project_status] || :active), class: 'form-control' %>
+      <%= label_tag I18n.t('filters.options.demand_status'), nil, class: 'control-label' %>
+      <%= select_tag :project_status, options_for_select([[I18n.t('general.all'), :all], [I18n.t('general.finished'), :finished]], params[:demand_status] || :finished), class: 'form-control' %>
     </div>
   </div>
 
-  <div class="col-xs-3">
+  <div class="col-xs-2">
     <div class="form-group">
       <%= label_tag I18n.t('demands.filter.demand_type.title') %>
       <%= select_tag :demand_type, demand_type_options, class: 'form-control', id: 'demands-table-demand-type', selected: params[:demand_type] %>
     </div>
   </div>
 
-  <div class="col-xs-3">
+  <div class="col-xs-2">
     <div class="form-group">
       <%= label_tag I18n.t('demands.filter.class_of_service.title') %>
       <%= select_tag :class_of_service, class_of_service_options, class: 'form-control', id: 'demands-table-class-of-service', selected: params[:class_of_service] %>
+    </div>
+  </div>
+
+  <div class="col-xs-2">
+    <div class="form-group">
+      <%= label_tag I18n.t('filters.options.project_status'), nil, class: 'control-label' %>
+      <%= select_tag :project_status, options_for_select([[I18n.t('general.all'), :all], [I18n.t('general.active'), :active]], params[:project_status] || :active), class: 'form-control' %>
     </div>
   </div>
 </div>

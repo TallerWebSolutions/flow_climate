@@ -150,6 +150,7 @@ en:
     page:
       one: "1"
       two: "2"
+    finished: "Finished"
   header:
     logout: Logout
     explore: Explore
@@ -1058,6 +1059,7 @@ en:
   filters:
     options:
       project_status: "Project Status"
+      demand_status: "Demand Status"
   slack_configuration:
     info_type:
       uniqueness: "You can have only one type of configuration to each team."
