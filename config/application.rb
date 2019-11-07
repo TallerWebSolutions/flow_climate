@@ -39,5 +39,12 @@ module FlowControl
 
     config.active_job.queue_adapter = :sidekiq
     config.action_mailer.delivery_method = :smtp
+
+    Thread.new do
+      loop do
+        sleep(5)
+        GC.start
+      end
+    end
   end
 end
