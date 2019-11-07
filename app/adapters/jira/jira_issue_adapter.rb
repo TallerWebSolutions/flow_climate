@@ -150,7 +150,7 @@ module Jira
         next if exiting_team_member.blank?
 
         item_assignment_exiting = ItemAssignment.where(demand: demand, team_member: exiting_team_member, finish_time: nil).first
-        item_assignment_exiting.update(finish_time: responsible_history['created'])
+        item_assignment_exiting.update(finish_time: responsible_history['created']) if item_assignment_exiting.present?
       end
     end
 
