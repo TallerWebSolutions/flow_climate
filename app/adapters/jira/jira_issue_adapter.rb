@@ -73,7 +73,7 @@ module Jira
     end
 
     def sorted_histories(issue_changelog)
-      issue_changelog['histories'].sort_by { |history_hash| history_hash['id'] }
+      issue_changelog['histories'].sort_by { |history_hash| history_hash['created'] }
     end
 
     def read_transition_history(demand, issue_changelog)

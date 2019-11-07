@@ -31,7 +31,7 @@
                      memberships: memberships,
                      demands_count: work_item_flow_information.demands.count,
                      delivered_scope: work_item_flow_information.demands.finished.count,
-                     remaining_backlog: work_item_flow_information.demands.count - work_item_flow_information.demands.finished.count,
+                     remaining_backlog: work_item_flow_information.demands.kept.count - work_item_flow_information.demands.kept.finished.count,
                      demands_lead_time_p80: Stats::StatisticsService.instance.percentile(80, work_item_flow_information.demands.finished_with_leadtime.map(&:leadtime_in_days)) %>
         </div>
         <div id="team-projects-info" class="tabcontent tabcontent-dashboard-info">
