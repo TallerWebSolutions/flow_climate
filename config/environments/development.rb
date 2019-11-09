@@ -34,7 +34,7 @@ Rails.application.configure do
   logger = ActiveSupport::Logger.new(STDOUT)
   logger.formatter = config.log_formatter
   config.logger = ActiveSupport::TaggedLogging.new(logger)
-  config.log_level = :debug
+  config.log_level = ENV.fetch('LOG_LEVEL') { :debug }
 
   config.after_initialize do
     Bullet.enable = true

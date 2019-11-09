@@ -24,19 +24,19 @@
         </tr>
         <tr>
           <td><b><%= Product.model_name.human %></b></td>
-          <td><%= demand.product_name %></td>
+          <td><%= link_to demand.product_name, company_product_path(company, demand.product) %></td>
         </tr>
         <tr>
           <td><b><%= PortfolioUnit.model_name.human %></b></td>
-          <td><%= demand.portfolio_unit_name %></td>
+          <td><%= link_to demand.portfolio_unit_name, company_product_portfolio_unit_path(company, demand.product, demand.portfolio_unit) if demand.portfolio_unit_name.present? %></td>
         </tr>
         <tr>
           <td><b><%= Project.model_name.human %></b></td>
-          <td><%= demand.project_name %></td>
+          <td><%= link_to demand.project_name, company_project_path(company, demand.project) %></td>
         </tr>
         <tr>
           <td><b><%= Team.model_name.human %></b></td>
-          <td><%= demand.team_name %></td>
+          <td><%= link_to demand.team_name, company_team_path(company, demand.team) %></td>
         </tr>
         <tr>
           <td><b><%= Demand.human_attribute_name :created_date %></b></td>
