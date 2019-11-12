@@ -74,6 +74,8 @@ class TeamsController < AuthenticatedController
     build_charts_data(@demands_searched)
     @paged_demands_searched = @demands_searched.page(page_param)
 
+    @demands_ids = @demands_searched.map(&:id)
+
     respond_to { |format| format.js { render 'teams/dashboard_search' } }
   end
 
@@ -83,16 +85,29 @@ class TeamsController < AuthenticatedController
   end
 
   def dashboard_tab
+    demands
     respond_to { |format| format.js { render 'teams/dashboard_tab' } }
   end
 
   def dashboard_page_two
+    demands
     @team_chart_data = Highchart::TeamChartsAdapter.new(@team, start_date, end_date, 'week')
 
     respond_to { |format| format.js { render 'teams/dashboard_page_two' } }
   end
 
+  def dashboard_page_three
+    @demands_chart_adapter = Highchart::DemandsChartsAdapter.new(demands, start_date, Time.zone.today, 'week')
+    @array_of_dates = @demands_chart_adapter.x_axis
+
+    respond_to { |format| format.js { render 'teams/dashboard_page_three' } }
+  end
+
   private
+
+  def demands
+    @demands ||= Demand.where(id: params[:demands_ids]&.split(','))
+  end
 
   def team_demands_search_engine(demands)
     demands_searched = demands.to_dates(start_date, end_date)
@@ -103,14 +118,20 @@ class TeamsController < AuthenticatedController
   end
 
   def build_charts_data(demands)
-    array_of_dates = TimeService.instance.weeks_between_of(start_date, end_date)
-    @work_item_flow_information = Flow::WorkItemFlowInformations.new(demands, uncertain_scope, array_of_dates.length, array_of_dates.last)
+    @array_of_dates = TimeService.instance.weeks_between_of(start_date, end_date)
+    @work_item_flow_information = Flow::WorkItemFlowInformations.new(demands, uncertain_scope, @array_of_dates.length, @array_of_dates.last)
     @statistics_flow_information = Flow::StatisticsFlowInformations.new(demands)
+    @time_flow_informations = Flow::TimeFlowInformations.new(demands)
 
-    array_of_dates.each_with_index do |analysed_date, distribution_index|
-      @work_item_flow_information.work_items_flow_behaviour(array_of_dates.first, analysed_date, distribution_index)
-      @work_item_flow_information.build_cfd_hash(array_of_dates.first, analysed_date) if add_data?(analysed_date)
+    build_chart_objects
+  end
+
+  def build_chart_objects
+    @array_of_dates.each_with_index do |analysed_date, distribution_index|
+      @work_item_flow_information.work_items_flow_behaviour(@array_of_dates.first, analysed_date, distribution_index)
+      @work_item_flow_information.build_cfd_hash(@array_of_dates.first, analysed_date) if add_data?(analysed_date)
       @statistics_flow_information.statistics_flow_behaviour(analysed_date) if add_data?(analysed_date)
+      @time_flow_informations.hours_flow_behaviour(analysed_date) if add_data?(analysed_date)
     end
   end
 

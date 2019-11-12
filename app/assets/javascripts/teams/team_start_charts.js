@@ -16,4 +16,13 @@ function startCharts() {
 
     const throughputDiv = $('#throughput-column');
     buildColumnChart(throughputDiv);
+
+    const leadtimeControlChart = $('#leadtime-control-chart');
+    buildScatterChart(leadtimeControlChart);
+
+    const flowEfficiencyDiv = $('#flow-efficiency');
+    buildLineChart(flowEfficiencyDiv);
+
+    const bugsInTimeDiv = $('#bugs-in-time');
+    buildColumnChart(bugsInTimeDiv);
 }

@@ -150,6 +150,7 @@ pt-BR:
     page:
       one: "1"
       two: "2"
+      three: "3"
     finished: "Finalizado"
   header:
     logout: Sair
@@ -560,6 +561,10 @@ pt-BR:
       search_info: "Resultados da Busca"
       dashboard_tab: "Dashboard"
       demands_tab: "Demandas"
+      lead_time_p95: "Lead time p95"
+      lead_time_p65: "Lead time p65"
+      average_queue_time: "Tempo Médio de Fila"
+      average_touch_time: "Tempo Médio de Trabalho"
     replenishing:
       title: "Reabastecimento do Fluxo"
     charts:

@@ -25,20 +25,32 @@ function getDemandsTab(companyId, teamId) {
     });
 }
 
-function getDashboardTab(companyId, teamId) {
+function getDashboardTab(companyId, teamId, demandsIds) {
     $("#general-loader").show();
 
     jQuery.ajax({
         url: `/companies/${companyId}/teams/${teamId}/dashboard_tab.js`,
-        type: "GET"
+        type: "GET",
+        data: `demands_ids=${demandsIds}`
     });
 }
 
-function getDashboardPageTwo(companyId, teamId) {
+function getDashboardPageTwo(companyId, teamId, demandsIds) {
     $("#general-loader").show();
 
     jQuery.ajax({
         url: `/companies/${companyId}/teams/${teamId}/dashboard_page_two.js`,
-        type: "GET"
+        type: "GET",
+        data: `demands_ids=${demandsIds}`
+    });
+}
+
+function getDashboardPageThree(companyId, teamId, demandsIds) {
+    $("#general-loader").show();
+
+    jQuery.ajax({
+        url: `/companies/${companyId}/teams/${teamId}/dashboard_page_three.js`,
+        type: "GET",
+        data: `demands_ids=${demandsIds}`
     });
 }

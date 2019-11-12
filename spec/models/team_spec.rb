@@ -247,4 +247,38 @@ RSpec.describe Team, type: :model do
     it { expect(team.available_hours_at(20.days.ago.to_date, 15.days.ago.to_date)).to eq 72.0 }
     it { expect(team.available_hours_at(20.days.ago.to_date, Time.zone.today)).to eq 262.0 }
   end
+
+  describe '#average_queue_time' do
+    let(:company) { Fabricate :company }
+
+    let(:project) { Fabricate :project, team: team, end_date: 4.weeks.from_now, qty_hours: 2000 }
+    let(:other_project) { Fabricate :project, team: team, end_date: 4.weeks.from_now }
+
+    let(:team) { Fabricate :team, company: company }
+    let(:other_team) { Fabricate :team, company: company }
+
+    let!(:first_demand) { Fabricate :demand, team: team, project: project, demand_type: :feature, created_date: 2.weeks.ago, end_date: 1.week.ago, total_queue_time: 20, total_touch_time: 30 }
+    let!(:second_demand) { Fabricate :demand, team: team, project: project, demand_type: :bug, created_date: 2.weeks.ago, end_date: 1.week.ago, total_queue_time: 40, total_touch_time: 35 }
+    let!(:third_demand) { Fabricate :demand, team: team, project: other_project, demand_type: :bug, created_date: 1.week.ago, end_date: 2.days.ago, total_queue_time: 10, total_touch_time: 78 }
+
+    it { expect(team.average_queue_time).to eq 23.333333333333332 }
+    it { expect(other_team.average_queue_time).to eq 0 }
+  end
+
+  describe '#average_touch_time' do
+    let(:company) { Fabricate :company }
+
+    let(:project) { Fabricate :project, team: team, end_date: 4.weeks.from_now, qty_hours: 2000 }
+    let(:other_project) { Fabricate :project, team: team, end_date: 4.weeks.from_now }
+
+    let(:team) { Fabricate :team, company: company }
+    let(:other_team) { Fabricate :team, company: company }
+
+    let!(:first_demand) { Fabricate :demand, team: team, project: project, demand_type: :feature, created_date: 2.weeks.ago, end_date: 1.week.ago, total_queue_time: 20, total_touch_time: 30 }
+    let!(:second_demand) { Fabricate :demand, team: team, project: project, demand_type: :bug, created_date: 2.weeks.ago, end_date: 1.week.ago, total_queue_time: 40, total_touch_time: 35 }
+    let!(:third_demand) { Fabricate :demand, team: team, project: other_project, demand_type: :bug, created_date: 1.week.ago, end_date: 2.days.ago, total_queue_time: 10, total_touch_time: 78 }
+
+    it { expect(team.average_touch_time).to eq 47.666666666666664 }
+    it { expect(other_team.average_touch_time).to eq 0 }
+  end
 end

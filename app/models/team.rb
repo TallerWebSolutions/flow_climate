@@ -74,6 +74,24 @@ class Team < ApplicationRecord
     total_hours
   end
 
+  def average_queue_time
+    total_queue_time = demands.kept.map(&:total_queue_time).sum
+    total_demands = demands.kept.count
+
+    return 0 if total_queue_time.zero? || total_demands.zero?
+
+    total_queue_time.to_f / total_demands
+  end
+
+  def average_touch_time
+    total_touch_time = demands.kept.map(&:total_touch_time).sum
+    total_demands = demands.kept.count
+
+    return 0 if total_touch_time.zero? || total_demands.zero?
+
+    total_touch_time.to_f / total_demands
+  end
+
   private
 
   def compute_available_hours_to_member(membership, start_date, end_date, full_period)

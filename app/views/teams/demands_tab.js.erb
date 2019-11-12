@@ -1,9 +1,11 @@
 $('#team-demands-info').html("<%= escape_javascript(render 'demands/demands_table', company: @company, demands: @paged_demands, unpaged_demands: @demands) %>")
 
 $("#general-loader").hide();
-$("#team-dashboard-info").hide();
+$("#team-dashboard-container-page-one").hide();
+$("#team-dashboard-container-page-two").hide();
+$("#team-dashboard-container-page-three").hide();
 
 $('#team-general-info').show();
-$('#first-team-tab').addClass('active');
+$('#general-info-team-tab').addClass('active');
 
 $("#team-demands-info").show();

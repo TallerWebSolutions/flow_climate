@@ -1,6 +1,6 @@
 function bindDashboardSelectors() {
     $("#team-demands-tab").on("click", function() {
-        $("#team-dashboard-info").hide();
+        $("#team-dashboard-container-page-one").hide();
 
         let companyId = $("#company_id").val();
         let teamId = $("#team_id").val();
@@ -15,28 +15,50 @@ function bindDashboardSelectors() {
 
     $("#team-dashboard-tab, #team-dashboard-page-one").on("click", function() {
         $("#team-dashboard-container-page-two").hide();
+        $("#team-dashboard-container-page-three").hide();
         $("#team-demands-info").hide();
 
         let companyId = $("#company_id").val();
         let teamId = $("#team_id").val();
+        let demandsIds = $('#demands_ids').val();
 
         $("#team-demands-tab").removeClass('active');
         $("#team-dashboard-page-two").removeClass('active');
+        $("#team-dashboard-page-three").removeClass('active');
         $("#team-dashboard-tab").addClass('active');
 
-        getDashboardTab(companyId, teamId);
+        getDashboardTab(companyId, teamId, demandsIds);
     });
 
     $("#team-dashboard-page-two").on("click", function() {
         $("#team-demands-info").hide();
-        $("#team-dashboard-info").hide();
+        $("#team-dashboard-container-page-two").hide();
+        $("#team-dashboard-container-page-three").hide();
 
         let companyId = $("#company_id").val();
         let teamId = $("#team_id").val();
+        let demandsIds = $('#demands_ids').val();
 
         $("#team-demands-tab").removeClass('active');
+        $("#team-dashboard-page-three").removeClass('active');
         $("#team-dashboard-page-two").addClass('active');
 
-        getDashboardPageTwo(companyId, teamId);
+        getDashboardPageTwo(companyId, teamId, demandsIds);
+    });
+
+    $("#team-dashboard-page-three").on("click", function() {
+        $("#team-demands-info").hide();
+        $("#team-dashboard-container-page-one").hide();
+        $("#team-dashboard-container-page-two").hide();
+
+        let companyId = $("#company_id").val();
+        let teamId = $("#team_id").val();
+        let demandsIds = $('#demands_ids').val();
+
+        $("#team-demands-tab").removeClass('active');
+        $("#team-dashboard-page-two").removeClass('active');
+        $("#team-dashboard-page-three").addClass('active');
+
+        getDashboardPageThree(companyId, teamId, demandsIds);
     });
 }

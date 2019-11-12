@@ -1,14 +1,19 @@
 $('.dashboard-info-tab').removeClass('active');
 
 $("#general-loader").hide();
-$("#team-dashboard-info").show();
-
-$("#team-demands-info").hide();
-$("#team-search-info").hide();
-
-$('#team-general-info').show();
-$('#first-team-tab').addClass('active');
 
 $('#team-dashboard-page-one').addClass('active');
+$('#team-dashboard-page-two').removeClass('active');
+$('#team-dashboard-page-three').removeClass('active');
+$('#general-info-team-tab').removeClass('active');
+$('#team-search-info-tab').addClass('active');
+
+$("#team-demands-info").hide();
+$("#team-search-info").show();
+$("#team-dashboard-container-page-one").show();
+$("#team-dashboard-container-page-three").hide();
+$("#team-dashboard-container-page-two").hide();
+
+$('#team-general-info').hide();
 
 $('#page-buttons').show();
