@@ -49,6 +49,7 @@
     <div class="tab">
       <button class="tablinks btn btn-sm" id="team-dashboard-page-one"><%= I18n.t('general.page.one') %></button>
       <button class="tablinks btn btn-sm" id="team-dashboard-page-two"><%= I18n.t('general.page.two') %></button>
+      <button class="tablinks btn btn-sm" id="team-dashboard-page-three"><%= I18n.t('general.page.three') %></button>
     </div>
   </div>
 </div>
@@ -57,17 +58,24 @@
 
 <hr>
 
-<div id="team-dashboard-info" class="tabcontent">
+<div id="team-dashboard-container-page-one" class="tabcontent">
   <%= render 'teams/dashboard_body',
              team: @team,
              slack_configurations: @slack_configurations,
              memberships: @memberships,
              dates_array: @array_of_dates,
              work_item_flow_information: @work_item_flow_information,
-             statistics_flow_information: @statistics_flow_information %>
+             time_flow_informations: @time_flow_informations,
+             statistics_flow_information: @statistics_flow_information,
+             demands_chart_adapter: @demands_chart_adapter,
+             demands_ids: @demands.map(&:id) %>
 </div>
 
 <div id="team-dashboard-container-page-two" class="tabcontent">
+
+</div>
+
+<div id="team-dashboard-container-page-three" class="tabcontent">
 
 </div>
 
@@ -84,6 +92,7 @@
   <%= javascript_include_tag 'charts/burnup' %>
   <%= javascript_include_tag 'charts/histogram' %>
   <%= javascript_include_tag 'charts/stacked_area' %>
+  <%= javascript_include_tag 'charts/scatter' %>
 
   <%= javascript_include_tag 'components/components' %>
 

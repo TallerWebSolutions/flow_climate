@@ -2,7 +2,8 @@
 
 module Flow
   class TimeFlowInformations < SystemFlowInformations
-    attr_reader :hours_delivered_upstream, :hours_delivered_downstream, :hours_per_demand, :queue_time, :touch_time, :flow_efficiency
+    attr_reader :hours_delivered_upstream, :hours_delivered_downstream, :hours_per_demand, :queue_time, :touch_time, :flow_efficiency,
+                :average_queue_time, :average_touch_time
 
     def initialize(demands)
       super(demands)
@@ -26,6 +27,8 @@ module Flow
       @hours_per_demand = []
       @queue_time = []
       @touch_time = []
+      @average_queue_time = []
+      @average_touch_time = []
       @flow_efficiency = []
     end
 
@@ -35,7 +38,15 @@ module Flow
 
       @queue_time << queue_time - @queue_time.sum
       @touch_time << touch_time - @touch_time.sum
+
+      build_average_flow_times
+
       @flow_efficiency << Stats::StatisticsService.instance.compute_percentage(touch_time, queue_time)
+    end
+
+    def build_average_flow_times
+      @average_queue_time << @queue_time.compact.sum / @demands.kept.count
+      @average_touch_time << @touch_time.compact.sum / @demands.kept.count
     end
 
     def build_hours_data_array(demands_delivered)

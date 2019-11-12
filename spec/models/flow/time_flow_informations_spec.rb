@@ -91,6 +91,8 @@ RSpec.describe Flow::TimeFlowInformations, type: :model do
         expect(time_flow_info.queue_time).to eq [0.0, 96.0]
         expect(time_flow_info.touch_time).to eq [0.0, 96.0]
         expect(time_flow_info.flow_efficiency).to eq [0, 50.0]
+        expect(time_flow_info.average_queue_time).to eq [0.0, 7.384615384615385]
+        expect(time_flow_info.average_touch_time).to eq [0.0, 7.384615384615385]
       end
     end
 
@@ -109,6 +111,8 @@ RSpec.describe Flow::TimeFlowInformations, type: :model do
         expect(time_flow_info.queue_time).to eq []
         expect(time_flow_info.touch_time).to eq []
         expect(time_flow_info.flow_efficiency).to eq []
+        expect(time_flow_info.average_queue_time).to eq []
+        expect(time_flow_info.average_touch_time).to eq []
       end
     end
   end

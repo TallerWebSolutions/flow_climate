@@ -1,3 +1,5 @@
+<%= hidden_field_tag :demands_ids, demands_ids.join(',') %>
+
 <div class="row">
   <div class="col-xs-4">
     <div class="row-fluid">
@@ -9,20 +11,10 @@
       <div class="row-fluid">
         <div class="col-xs-12">
           <div class="tab">
-            <button class="tablinks dashboard-info-tab" id="first-team-tab" onclick="openTab(event, 'team-general-info', 'dashboard-info-tab', 'tabcontent-dashboard-info')"><%= I18n.t('teams.show.general_info') %></button>
-            <button class="tablinks dashboard-info-tab" onclick="openTab(event, 'team-projects-info', 'dashboard-info-tab', 'tabcontent-dashboard-info')"><%= I18n.t('teams.show.projects_info') %></button>
             <button class="tablinks dashboard-info-tab" id="team-search-info-tab" onclick="openTab(event, 'team-search-info', 'dashboard-info-tab', 'tabcontent-dashboard-info')"><%= I18n.t('teams.show.search_info') %></button>
+            <button class="tablinks dashboard-info-tab" onclick="openTab(event, 'team-projects-info', 'dashboard-info-tab', 'tabcontent-dashboard-info')"><%= I18n.t('teams.show.projects_info') %></button>
+            <button class="tablinks dashboard-info-tab" id="general-info-team-tab" onclick="openTab(event, 'team-general-info', 'dashboard-info-tab', 'tabcontent-dashboard-info')"><%= I18n.t('teams.show.general_info') %></button>
           </div>
-        </div>
-
-        <div id="team-general-info" class="tabcontent tabcontent-dashboard-info">
-          <%= render 'teams/general_info', team: team,
-                     slack_configurations: slack_configurations,
-                     memberships: memberships,
-                     demands_count: team.demands.kept.count,
-                     delivered_scope: team.demands.kept.finished.count,
-                     remaining_backlog: team.demands.kept.count - team.demands.kept.finished.count,
-                     demands_lead_time_p80: Stats::StatisticsService.instance.percentile(80, team.demands.kept.finished_with_leadtime.map(&:leadtime_in_days)) %>
         </div>
 
         <div id="team-search-info" class="tabcontent tabcontent-dashboard-info">
@@ -32,10 +24,28 @@
                      demands_count: work_item_flow_information.demands.count,
                      delivered_scope: work_item_flow_information.demands.finished.count,
                      remaining_backlog: work_item_flow_information.demands.kept.count - work_item_flow_information.demands.kept.finished.count,
-                     demands_lead_time_p80: Stats::StatisticsService.instance.percentile(80, work_item_flow_information.demands.finished_with_leadtime.map(&:leadtime_in_days)) %>
+                     average_queue_time: time_flow_informations.average_queue_time.last,
+                     average_touch_time: time_flow_informations.average_touch_time.last,
+                     demands_lead_time_p95: Stats::StatisticsService.instance.percentile(95, work_item_flow_information.demands.finished_with_leadtime.map(&:leadtime_in_days)),
+                     demands_lead_time_p80: Stats::StatisticsService.instance.percentile(80, work_item_flow_information.demands.finished_with_leadtime.map(&:leadtime_in_days)),
+                     demands_lead_time_p65: Stats::StatisticsService.instance.percentile(65, work_item_flow_information.demands.finished_with_leadtime.map(&:leadtime_in_days)) %>
         </div>
         <div id="team-projects-info" class="tabcontent tabcontent-dashboard-info">
           <%= render 'teams/projects_info', team: team %>
+        </div>
+
+        <div id="team-general-info" class="tabcontent tabcontent-dashboard-info">
+          <%= render 'teams/general_info', team: team,
+                     slack_configurations: slack_configurations,
+                     memberships: memberships,
+                     demands_count: team.demands.kept.count,
+                     delivered_scope: team.demands.kept.finished.count,
+                     remaining_backlog: team.demands.kept.count - team.demands.kept.finished.count,
+                     average_queue_time: team.average_queue_time / 1.hour,
+                     average_touch_time: team.average_touch_time / 1.hour,
+                     demands_lead_time_p95: Stats::StatisticsService.instance.percentile(95, team.demands.kept.finished_with_leadtime.map(&:leadtime_in_days)),
+                     demands_lead_time_p80: Stats::StatisticsService.instance.percentile(80, team.demands.kept.finished_with_leadtime.map(&:leadtime_in_days)),
+                     demands_lead_time_p65: Stats::StatisticsService.instance.percentile(65, team.demands.kept.finished_with_leadtime.map(&:leadtime_in_days)) %>
         </div>
       </div>
     </div>
@@ -124,6 +134,47 @@
          data-tooltipsuffix='<%= I18n.t('projects.charts.throughput.tooltipsufix') %>'
          data-series='<%= [{ name: I18n.t('projects.charts.throughput.stage_stream.upstream'), data: work_item_flow_information.upstream_delivered_per_period }, { name: I18n.t('projects.charts.throughput.stage_stream.downstream'), data: work_item_flow_information.downstream_delivered_per_period }].to_json %>'
          data-stacking='normal'
+         data-decimals='0'>
+    </div>
+  </div>
+  <div class="col-xs-4">
+    <div id="leadtime-control-chart"
+         class="flow-chart"
+         data-xcategories='<%= statistics_flow_information.demands_charts_ids %>'
+         data-series='<%= [{ name: 'Lead time', color: 'rgb(51, 51, 255)', data: statistics_flow_information.lead_time_data_array }].to_json %>'
+         data-title='<%= I18n.t('projects.charts.lead_time_chart.title', target_name: team.name) %>'
+         data-tooltipsuffix='<%= I18n.t('projects.charts.lead_time_chart.ylabel') %>'
+         data-percentile95='<%= statistics_flow_information.lead_time_95p %>'
+         data-percentile80='<%= statistics_flow_information.lead_time_80p %>'
+         data-percentile60='<%= statistics_flow_information.lead_time_65p %>'>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-xs-4">
+    <div id="flow-efficiency"
+         class="flow-chart"
+         data-title='<%= I18n.t('projects.charts.flow_efficiency.title', target_name: @team.name) %>'
+         data-xcategories='<%= dates_array.to_json %>'
+         data-xtitle='<%= I18n.t('projects.charts.xlabel.weeks') %>'
+         data-ytitle='<%= I18n.t('general.percentage.title') %>'
+         data-prefix=''
+         data-tooltipsuffix='<%= I18n.t('general.percentage.symbol') %>'
+         data-series='<%= [{ name: I18n.t('projects.charts.flow_efficiency.share'), data: time_flow_informations.flow_efficiency }].to_json %>'
+         data-decimals='2'>
+    </div>
+  </div>
+  <div class="col-xs-4">
+    <div id="bugs-in-time"
+         class="flow-chart"
+         data-title='<%= I18n.t('projects.charts.bugs_in_time.title', target_name: team.name) %>'
+         data-xcategories='<%= dates_array.to_json %>'
+         data-xtitle='<%= I18n.t('projects.charts.xlabel.time') %>'
+         data-ytitle='<%= I18n.t('projects.charts.bugs_in_time.ylabel') %>'
+         data-prefix=''
+         data-tooltipsuffix='<%= I18n.t('projects.charts.bugs_in_time.suffix') %>'
+         data-series='<%= [{ name: I18n.t('projects.charts.bugs_in_time.opened'), data: work_item_flow_information.bugs_opened_data_array }, { name: I18n.t('projects.charts.bugs_in_time.closed'), data: work_item_flow_information.bugs_closed_data_array }].to_json %>'
          data-decimals='0'>
     </div>
   </div>

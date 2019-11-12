@@ -1,4 +1,6 @@
-<div class="col-xs-6 bottom-spaced-component">
+<%= hidden_field_tag :demands_ids, demands_ids.join(',') %>
+
+<div class="col-xs-12">
   <div id="average-demand-cost"
        class="flow-chart"
        data-title='<%= I18n.t('teams.charts.average_demand_cost.title', target_name: team.name) %>'

@@ -150,6 +150,7 @@ en:
     page:
       one: "1"
       two: "2"
+      three: "3"
     finished: "Finished"
   header:
     logout: Logout
@@ -978,6 +979,10 @@ en:
       search_info: "Search Info"
       dashboard_tab: "Dashboard"
       demands_tab: "Demands"
+      lead_time_p95: "Lead time p95"
+      lead_time_p65: "Lead time p65"
+      average_queue_time: "Average Queue Time"
+      average_touch_time: "Average Queue Time"
     new:
       title: "New Team"
     index:

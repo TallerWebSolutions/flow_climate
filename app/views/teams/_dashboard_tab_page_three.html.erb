@@ -1,0 +1,20 @@
+<%= hidden_field_tag :demands_ids, demands_ids.join(',') %>
+
+<div class="col-xs-12">
+  <div id="operational-charts-flow-data-column"
+       class="flow-chart"
+       data-title='<%= I18n.t('demands.charts.flow_data') %>'
+       data-xcategories='<%= dates_array.to_json %>'
+       data-xtitle='<%= I18n.t('general.period') %>'
+       data-ytitle='<%= I18n.t('demands.charts.demands.title') %>'
+       data-tooltipsuffix='<%= I18n.t('projects.charts.throughput.tooltipsufix') %>'
+       data-series='<%= [
+                            { name: I18n.t('demands.charts.creation_date'), data: demands_chart_adapter.creation_chart_data },
+                            { name: I18n.t('demands.charts.committed_date'), data: demands_chart_adapter.committed_chart_data },
+                            { name: I18n.t('general.pull_transaction'), data: demands_chart_adapter.pull_transaction_rate },
+                            { name: I18n.t('general.delivered'), data: demands_chart_adapter.throughput_chart_data }
+                        ].to_json %>'
+       data-stacking=''
+       data-decimals='0'>
+  </div>
+</div>
