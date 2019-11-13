@@ -4,13 +4,14 @@ function bindDashboardSelectors() {
 
         let companyId = $("#company_id").val();
         let teamId = $("#team_id").val();
+        let demandsIds = $('#demands_ids').val();
 
         $("#team-dashboard-tab").removeClass('active');
         $("#team-demands-tab").addClass('active');
 
         $('#page-buttons').hide();
 
-        getDemandsTab(companyId, teamId);
+        getDemandsTab(companyId, teamId, demandsIds);
     });
 
     $("#team-dashboard-tab, #team-dashboard-page-one").on("click", function() {

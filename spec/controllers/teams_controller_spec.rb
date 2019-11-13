@@ -583,7 +583,7 @@ RSpec.describe TeamsController, type: :controller do
           include_context 'demands to filters'
 
           it 'creates the objects and renders the tab' do
-            get :demands_tab, params: { company_id: company, id: team }, xhr: true
+            get :demands_tab, params: { company_id: company, id: team, demands_ids: team.demands.map(&:id).join(',') }, xhr: true
 
             expect(response).to render_template 'teams/demands_tab'
             expect(assigns(:demands)).to eq [first_demand, second_demand, fifth_demand, third_demand, fourth_demand]

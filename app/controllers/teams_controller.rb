@@ -80,7 +80,8 @@ class TeamsController < AuthenticatedController
   end
 
   def demands_tab
-    assign_demands_list
+    demands
+    @paged_demands = @demands.page(page_param)
     respond_to { |format| format.js { render 'teams/demands_tab' } }
   end
 
@@ -106,7 +107,7 @@ class TeamsController < AuthenticatedController
   private
 
   def demands
-    @demands ||= Demand.where(id: params[:demands_ids]&.split(','))
+    @demands ||= Demand.where(id: params[:demands_ids]&.split(',')).order(:end_date, :commitment_date, :created_date)
   end
 
   def team_demands_search_engine(demands)

@@ -16,12 +16,13 @@ function getProjectsTab(companyId, teamId) {
     });
 }
 
-function getDemandsTab(companyId, teamId) {
+function getDemandsTab(companyId, teamId, demandsIds) {
     $("#general-loader").show();
 
     jQuery.ajax({
         url: `/companies/${companyId}/teams/${teamId}/demands_tab.js`,
-        type: "GET"
+        type: "GET",
+        data: `demands_ids=${demandsIds}`
     });
 }
 
