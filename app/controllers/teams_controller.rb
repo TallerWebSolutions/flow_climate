@@ -161,13 +161,13 @@ class TeamsController < AuthenticatedController
   end
 
   def search_class_of_service(demands_searched)
-    if params['class_of_service'] == 'standard'
+    if params['demand_class_of_service'] == 'standard'
       demands_searched.standard
-    elsif params['class_of_service'] == 'expedite'
+    elsif params['demand_class_of_service'] == 'expedite'
       demands_searched.expedite
-    elsif params['class_of_service'] == 'fixed_date'
+    elsif params['demand_class_of_service'] == 'fixed_date'
       demands_searched.fixed_date
-    elsif params['class_of_service'] == 'intangible'
+    elsif params['demand_class_of_service'] == 'intangible'
       demands_searched.intangible
     else
       demands_searched

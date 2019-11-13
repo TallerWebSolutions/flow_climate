@@ -33,18 +33,21 @@ function bindDashboardSelectors() {
 
     $("#team-dashboard-page-two").on("click", function() {
         $("#team-demands-info").hide();
+        $("#team-dashboard-container-page-one").hide();
         $("#team-dashboard-container-page-two").hide();
         $("#team-dashboard-container-page-three").hide();
 
         let companyId = $("#company_id").val();
         let teamId = $("#team_id").val();
         let demandsIds = $('#demands_ids').val();
+        let startDate = $("#demands_start_date").val();
+        let endDate = $("#demands_end_date").val();
 
         $("#team-demands-tab").removeClass('active');
         $("#team-dashboard-page-three").removeClass('active');
         $("#team-dashboard-page-two").addClass('active');
 
-        getDashboardPageTwo(companyId, teamId, demandsIds);
+        getDashboardPageTwo(companyId, teamId, demandsIds, startDate, endDate);
     });
 
     $("#team-dashboard-page-three").on("click", function() {
@@ -55,11 +58,13 @@ function bindDashboardSelectors() {
         let companyId = $("#company_id").val();
         let teamId = $("#team_id").val();
         let demandsIds = $('#demands_ids').val();
+        let startDate = $("#demands_start_date").val();
+        let endDate = $("#demands_end_date").val();
 
         $("#team-demands-tab").removeClass('active');
         $("#team-dashboard-page-two").removeClass('active');
         $("#team-dashboard-page-three").addClass('active');
 
-        getDashboardPageThree(companyId, teamId, demandsIds);
+        getDashboardPageThree(companyId, teamId, demandsIds, startDate, endDate);
     });
 }

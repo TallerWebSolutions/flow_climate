@@ -36,22 +36,22 @@ function getDashboardTab(companyId, teamId, demandsIds) {
     });
 }
 
-function getDashboardPageTwo(companyId, teamId, demandsIds) {
+function getDashboardPageTwo(companyId, teamId, demandsIds, startDate, endDate) {
     $("#general-loader").show();
 
     jQuery.ajax({
         url: `/companies/${companyId}/teams/${teamId}/dashboard_page_two.js`,
         type: "GET",
-        data: `demands_ids=${demandsIds}`
+        data: `demands_ids=${demandsIds}&start_date=${startDate}&end_date=${endDate}`
     });
 }
 
-function getDashboardPageThree(companyId, teamId, demandsIds) {
+function getDashboardPageThree(companyId, teamId, demandsIds, startDate, endDate) {
     $("#general-loader").show();
 
     jQuery.ajax({
         url: `/companies/${companyId}/teams/${teamId}/dashboard_page_three.js`,
         type: "GET",
-        data: `demands_ids=${demandsIds}`
+        data: `demands_ids=${demandsIds}&start_date=${startDate}&end_date=${endDate}`
     });
 }
