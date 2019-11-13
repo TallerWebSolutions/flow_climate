@@ -516,7 +516,7 @@ RSpec.describe TeamsController, type: :controller do
 
           context 'with search by class of service standard' do
             it 'search the informations and renders the template' do
-              get :dashboard_search, params: { company_id: company, id: team, class_of_service: 'standard' }, xhr: true
+              get :dashboard_search, params: { company_id: company, id: team, demand_class_of_service: 'standard' }, xhr: true
 
               expect(response).to render_template 'teams/dashboard_search'
               expect(assigns(:work_item_flow_information).demands).to eq [first_demand, second_demand]
@@ -525,7 +525,7 @@ RSpec.describe TeamsController, type: :controller do
 
           context 'with search by class of service expedite' do
             it 'search the informations and renders the template' do
-              get :dashboard_search, params: { company_id: company, id: team, class_of_service: 'expedite' }, xhr: true
+              get :dashboard_search, params: { company_id: company, id: team, demand_class_of_service: 'expedite' }, xhr: true
 
               expect(response).to render_template 'teams/dashboard_search'
               expect(assigns(:work_item_flow_information).demands).to eq [third_demand]
@@ -534,7 +534,7 @@ RSpec.describe TeamsController, type: :controller do
 
           context 'with search by class of service fixed_date' do
             it 'search the informations and renders the template' do
-              get :dashboard_search, params: { company_id: company, id: team, class_of_service: 'fixed_date' }, xhr: true
+              get :dashboard_search, params: { company_id: company, id: team, demand_class_of_service: 'fixed_date' }, xhr: true
 
               expect(response).to render_template 'teams/dashboard_search'
               expect(assigns(:work_item_flow_information).demands).to eq [fourth_demand]
@@ -543,7 +543,7 @@ RSpec.describe TeamsController, type: :controller do
 
           context 'with search by class of service intangible' do
             it 'search the informations and renders the template' do
-              get :dashboard_search, params: { company_id: company, id: team, class_of_service: 'intangible' }, xhr: true
+              get :dashboard_search, params: { company_id: company, id: team, demand_class_of_service: 'intangible' }, xhr: true
 
               expect(response).to render_template 'teams/dashboard_search'
               expect(assigns(:work_item_flow_information).demands).to eq [fifth_demand]

@@ -1,5 +1,7 @@
 $("#general-loader").hide();
 
+$('#team-dashboard-tab').addClass('active');
+
 $('#team-dashboard-page-one').addClass('active');
 $('#team-dashboard-page-two').removeClass('active');
 $('#team-dashboard-page-three').removeClass('active');
