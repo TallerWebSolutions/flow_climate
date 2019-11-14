@@ -111,7 +111,7 @@ class DemandTransition < ApplicationRecord
 
   def current_stage
     first_stage = demand.team.stages.order(:order).first
-    demand.demand_transitions.order(:last_time_in)&.last&.stage || first_stage
+    demand.demand_transitions.includes(:stage).order(:last_time_in)&.last&.stage || first_stage
   end
 
   def same_stage_project?

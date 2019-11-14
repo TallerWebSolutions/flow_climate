@@ -189,7 +189,7 @@ class TeamsController < AuthenticatedController
   end
 
   def projects
-    @projects ||= @team.projects.includes(:customers).includes(:products).includes(:team).order(end_date: :desc).page(page_param)
+    @projects ||= @team.projects.order(end_date: :desc).page(page_param)
   end
 
   def build_query_dates
@@ -198,7 +198,7 @@ class TeamsController < AuthenticatedController
   end
 
   def assign_team_objects
-    @memberships = @company.memberships.includes(:team).includes(:team_member).where(team: @team).sort_by(&:team_member_name)
+    @memberships = @company.memberships.includes(:team_member).where(team: @team).sort_by(&:team_member_name)
     @slack_configurations = @team.slack_configurations.order(:created_at)
   end
 
@@ -212,7 +212,7 @@ class TeamsController < AuthenticatedController
 
   def assign_demands_list
     @demands = @team.demands.kept.order(:end_date)
-    @paged_demands = @demands.page(page_param)
+    @paged_demands = @demands.includes(:demand_blocks).includes(:current_stage).includes(:project).includes(:portfolio_unit).includes(:product).page(page_param)
   end
 
   def assign_demands_ids
