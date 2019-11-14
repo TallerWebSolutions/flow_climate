@@ -24,8 +24,8 @@
                      demands_count: work_item_flow_information.demands.count,
                      delivered_scope: work_item_flow_information.demands.finished.count,
                      remaining_backlog: work_item_flow_information.demands.kept.count - work_item_flow_information.demands.kept.finished.count,
-                     average_queue_time: time_flow_informations.average_queue_time.last,
-                     average_touch_time: time_flow_informations.average_touch_time.last,
+                     average_queue_time: time_flow_informations.average_queue_time.last || 0,
+                     average_touch_time: time_flow_informations.average_touch_time.last || 0,
                      demands_lead_time_p95: Stats::StatisticsService.instance.percentile(95, work_item_flow_information.demands.finished_with_leadtime.map(&:leadtime_in_days)),
                      demands_lead_time_p80: Stats::StatisticsService.instance.percentile(80, work_item_flow_information.demands.finished_with_leadtime.map(&:leadtime_in_days)),
                      demands_lead_time_p65: Stats::StatisticsService.instance.percentile(65, work_item_flow_information.demands.finished_with_leadtime.map(&:leadtime_in_days)) %>
