@@ -231,7 +231,7 @@ class Project < ApplicationRecord
   def percentage_remaining_backlog(date = Time.zone.now)
     return 0 unless (demands.kept.count + initial_scope).positive?
 
-    remaining_backlog(date).to_f / (demands.kept.count + initial_scope)
+    (remaining_backlog(date).to_f + demands.in_wip.count) / (demands.kept.count + initial_scope)
   end
 
   def required_hours

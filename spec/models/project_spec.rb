@@ -457,12 +457,12 @@ RSpec.describe Project, type: :model do
     context 'having demands' do
       context 'specifying no date' do
         include_context 'demands with effort'
-        it { expect(project.percentage_remaining_backlog).to eq 0.8823529411764706 }
+        it { expect(project.percentage_remaining_backlog).to eq 0.9117647058823529 }
       end
 
       context 'specifying a date' do
         include_context 'demands with effort'
-        it { expect(project.percentage_remaining_backlog(2.weeks.ago)).to eq 0.9411764705882353 }
+        it { expect(project.percentage_remaining_backlog(2.weeks.ago)).to eq 0.9705882352941176 }
       end
     end
 
