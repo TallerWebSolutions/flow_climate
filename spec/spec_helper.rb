@@ -20,7 +20,7 @@ require 'rspec/collection_matchers'
 require 'webmock/rspec'
 require 'jira-ruby'
 
-Dir[Rails.root.join('spec', 'support', '**', '*.rb')].each { |f| require f }
+Dir[Rails.root.join('spec/support/*.rb')].each { |f| require f }
 
 Rails.logger.level = 4
 Devise.stretches = 1
@@ -37,7 +37,7 @@ ActiveRecord::Migration.maintain_test_schema!
 RSpec.configure do |config|
   config.order = :random
   config.profile_examples = 10
-  config.fixture_path = Rails.root.join('spec', 'fixtures')
+  config.fixture_path = Rails.root.join('spec/fixtures')
   config.use_transactional_fixtures = true
   config.infer_spec_type_from_file_location!
   config.filter_rails_from_backtrace!
@@ -76,6 +76,6 @@ RSpec.configure do |config|
   end
 
   config.after(:all) do
-    FileUtils.rm_rf(Dir[Rails.root.join('public', 'uploads', 'tmp', '[^.]*')]) if Rails.env.test?
+    FileUtils.rm_rf(Dir[Rails.root.join('public/uploads/tmp/*')]) if Rails.env.test?
   end
 end

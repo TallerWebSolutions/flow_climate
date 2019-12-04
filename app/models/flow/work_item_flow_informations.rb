@@ -34,14 +34,15 @@ module Flow
     end
 
     def build_cfd_hash(start_population_date, analysed_date)
+      demand_transitions = DemandTransition.for_demands_ids(@demands_ids)
+
       @stages.each do |stage|
-        transitions = DemandTransition.for_demands_ids(@demands_ids).after_date(start_population_date).before_date_after_stage(analysed_date.end_of_day, stage.order)
-        delivered_count = transitions.map(&:demand_id).uniq.count
+        delivered_count = demand_transitions.select('DISTINCT demand_id').after_date(start_population_date).before_date_after_stage(analysed_date.end_of_day, stage.order).count
 
         if @demands_stages_count_hash[stage.name].present?
           @demands_stages_count_hash[stage.name] << delivered_count
         else
-          @demands_stages_count_hash[stage.name] = [transitions.count]
+          @demands_stages_count_hash[stage.name] = [delivered_count]
         end
       end
     end

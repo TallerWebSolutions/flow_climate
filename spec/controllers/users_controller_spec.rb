@@ -141,7 +141,7 @@ RSpec.describe UsersController, type: :controller do
         let(:user) { Fabricate :user }
 
         context 'and valid attributes' do
-          let(:file) { Rack::Test::UploadedFile.new(Rails.root.join('spec', 'fixtures', 'default_image.png'), 'image/png') }
+          let(:file) { Rack::Test::UploadedFile.new(Rails.root.join('spec/fixtures/default_image.png'), 'image/png') }
 
           it 'updates the user and redirects to the show' do
             put :update, params: { id: user, user: { first_name: 'Bla', last_name: 'Foo', avatar: file } }
