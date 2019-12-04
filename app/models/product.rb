@@ -44,7 +44,7 @@ class Product < ApplicationRecord
   def percentage_complete
     return 0 unless demands.count.positive?
 
-    demands.finished.count.to_f / demands.count
+    demands.kept.finished.count.to_f / demands.kept.count
   end
 
   def total_portfolio_demands
