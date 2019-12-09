@@ -39,7 +39,7 @@ class StageProjectConfig < ApplicationRecord
   end
 
   def pairing_percentage_decimal
-    management_percentage / 100.0
+    pairing_percentage / 100.0
   end
 
   def stage_percentage_decimal
