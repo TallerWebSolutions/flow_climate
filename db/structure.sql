@@ -9,23 +9,9 @@ SET xmloption = content;
 SET client_min_messages = warning;
 SET row_security = off;
 
---
--- Name: pg_stat_statements; Type: EXTENSION; Schema: -; Owner: -
---
-
-CREATE EXTENSION IF NOT EXISTS pg_stat_statements WITH SCHEMA public;
-
-
---
--- Name: EXTENSION pg_stat_statements; Type: COMMENT; Schema: -; Owner: -
---
-
-COMMENT ON EXTENSION pg_stat_statements IS 'track execution statistics of all SQL statements executed';
-
-
 SET default_tablespace = '';
 
-SET default_with_oids = false;
+SET default_table_access_method = heap;
 
 --
 -- Name: ar_internal_metadata; Type: TABLE; Schema: public; Owner: -
@@ -34,8 +20,8 @@ SET default_with_oids = false;
 CREATE TABLE public.ar_internal_metadata (
     key character varying NOT NULL,
     value character varying,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
 );
 
 
@@ -349,25 +335,24 @@ CREATE TABLE public.demands (
     external_url character varying,
     class_of_service integer DEFAULT 0 NOT NULL,
     project_id integer NOT NULL,
-    effort_downstream numeric DEFAULT 0,
-    effort_upstream numeric DEFAULT 0,
+    effort_downstream numeric DEFAULT 0.0,
+    effort_upstream numeric DEFAULT 0.0,
     leadtime numeric,
     manual_effort boolean DEFAULT false,
     total_queue_time integer DEFAULT 0,
     total_touch_time integer DEFAULT 0,
     demand_title character varying,
     discarded_at timestamp without time zone,
-    parent_id integer,
     slug character varying,
     company_id integer NOT NULL,
     portfolio_unit_id integer,
     product_id integer,
     team_id integer NOT NULL,
-    cost_to_project numeric DEFAULT 0,
-    blocked_working_time_downstream numeric DEFAULT 0,
-    blocked_working_time_upstream numeric DEFAULT 0,
-    total_bloked_working_time numeric DEFAULT 0,
-    total_touch_blocked_time numeric DEFAULT 0,
+    cost_to_project numeric DEFAULT 0.0,
+    blocked_working_time_downstream numeric DEFAULT 0.0,
+    blocked_working_time_upstream numeric DEFAULT 0.0,
+    total_bloked_working_time numeric DEFAULT 0.0,
+    total_touch_blocked_time numeric DEFAULT 0.0,
     risk_review_id integer,
     business_score numeric,
     service_delivery_review_id integer,
@@ -1515,7 +1500,7 @@ CREATE TABLE public.user_plans (
     user_id integer NOT NULL,
     plan_id integer NOT NULL,
     plan_billing_period integer DEFAULT 0 NOT NULL,
-    plan_value numeric DEFAULT 0 NOT NULL,
+    plan_value numeric DEFAULT 0.0 NOT NULL,
     start_at timestamp without time zone NOT NULL,
     finish_at timestamp without time zone NOT NULL,
     active boolean DEFAULT false NOT NULL,
@@ -1600,7 +1585,7 @@ CREATE TABLE public.users (
     admin boolean DEFAULT false NOT NULL,
     last_company_id integer,
     email_notifications boolean DEFAULT false NOT NULL,
-    user_money_credits numeric DEFAULT 0 NOT NULL,
+    user_money_credits numeric DEFAULT 0.0 NOT NULL,
     avatar character varying
 );
 
@@ -2371,10 +2356,31 @@ CREATE INDEX index_customers_projects_on_project_id ON public.customers_projects
 
 
 --
+-- Name: index_demand_blocks_on_blocker_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_demand_blocks_on_blocker_id ON public.demand_blocks USING btree (blocker_id);
+
+
+--
 -- Name: index_demand_blocks_on_demand_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_demand_blocks_on_demand_id ON public.demand_blocks USING btree (demand_id);
+
+
+--
+-- Name: index_demand_blocks_on_stage_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_demand_blocks_on_stage_id ON public.demand_blocks USING btree (stage_id);
+
+
+--
+-- Name: index_demand_blocks_on_unblocker_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_demand_blocks_on_unblocker_id ON public.demand_blocks USING btree (unblocker_id);
 
 
 --
@@ -2389,6 +2395,13 @@ CREATE INDEX index_demand_comments_on_demand_id ON public.demand_comments USING 
 --
 
 CREATE INDEX index_demand_data_processments_on_user_id ON public.demand_data_processments USING btree (user_id);
+
+
+--
+-- Name: index_demand_data_processments_on_user_plan_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_demand_data_processments_on_user_plan_id ON public.demand_data_processments USING btree (user_plan_id);
 
 
 --
@@ -2413,10 +2426,31 @@ CREATE INDEX index_demand_transitions_on_stage_id ON public.demand_transitions U
 
 
 --
+-- Name: index_demands_on_class_of_service; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_demands_on_class_of_service ON public.demands USING btree (class_of_service);
+
+
+--
+-- Name: index_demands_on_company_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_demands_on_company_id ON public.demands USING btree (company_id);
+
+
+--
 -- Name: index_demands_on_current_stage_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_demands_on_current_stage_id ON public.demands USING btree (current_stage_id);
+
+
+--
+-- Name: index_demands_on_demand_type; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_demands_on_demand_type ON public.demands USING btree (demand_type);
 
 
 --
@@ -2431,6 +2465,20 @@ CREATE INDEX index_demands_on_discarded_at ON public.demands USING btree (discar
 --
 
 CREATE UNIQUE INDEX index_demands_on_external_id_and_company_id ON public.demands USING btree (external_id, company_id);
+
+
+--
+-- Name: index_demands_on_product_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_demands_on_product_id ON public.demands USING btree (product_id);
+
+
+--
+-- Name: index_demands_on_project_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_demands_on_project_id ON public.demands USING btree (project_id);
 
 
 --
@@ -2497,10 +2545,24 @@ CREATE INDEX index_integration_errors_on_company_id ON public.integration_errors
 
 
 --
+-- Name: index_integration_errors_on_integratable_model_name; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_integration_errors_on_integratable_model_name ON public.integration_errors USING btree (integratable_model_name);
+
+
+--
 -- Name: index_integration_errors_on_integration_type; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_integration_errors_on_integration_type ON public.integration_errors USING btree (integration_type);
+
+
+--
+-- Name: index_integration_errors_on_project_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_integration_errors_on_project_id ON public.integration_errors USING btree (project_id);
 
 
 --
@@ -2571,6 +2633,13 @@ CREATE UNIQUE INDEX index_jira_product_configs_on_company_id_and_jira_product_ke
 --
 
 CREATE INDEX index_jira_product_configs_on_product_id ON public.jira_product_configs USING btree (product_id);
+
+
+--
+-- Name: index_jira_project_configs_on_jira_product_config_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_jira_project_configs_on_jira_product_config_id ON public.jira_project_configs USING btree (jira_product_config_id);
 
 
 --
@@ -2714,6 +2783,20 @@ CREATE INDEX index_project_risk_alerts_on_project_risk_config_id ON public.proje
 
 
 --
+-- Name: index_project_risk_configs_on_project_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_project_risk_configs_on_project_id ON public.project_risk_configs USING btree (project_id);
+
+
+--
+-- Name: index_projects_on_company_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_projects_on_company_id ON public.projects USING btree (company_id);
+
+
+--
 -- Name: index_projects_on_company_id_and_name; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2833,10 +2916,24 @@ CREATE INDEX index_stages_teams_on_team_id ON public.stages_teams USING btree (t
 
 
 --
+-- Name: index_team_members_on_company_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_team_members_on_company_id ON public.team_members USING btree (company_id);
+
+
+--
 -- Name: index_team_members_on_company_id_and_name_and_jira_account_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE UNIQUE INDEX index_team_members_on_company_id_and_name_and_jira_account_id ON public.team_members USING btree (company_id, name, jira_account_id);
+
+
+--
+-- Name: index_team_members_on_jira_account_user_email; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_team_members_on_jira_account_user_email ON public.team_members USING btree (jira_account_user_email);
 
 
 --
@@ -3053,14 +3150,6 @@ ALTER TABLE ONLY public.demand_blocks
 
 ALTER TABLE ONLY public.demands
     ADD CONSTRAINT fk_rails_19bdd8aa1e FOREIGN KEY (project_id) REFERENCES public.projects(id);
-
-
---
--- Name: demands fk_rails_1abfdc9ca0; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.demands
-    ADD CONSTRAINT fk_rails_1abfdc9ca0 FOREIGN KEY (parent_id) REFERENCES public.demands(id);
 
 
 --

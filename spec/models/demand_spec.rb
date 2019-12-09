@@ -319,8 +319,8 @@ RSpec.describe Demand, type: :model do
 
         it 'changes the effort informations' do
           demand.update_effort!
-          expect(demand.effort_upstream.to_f).to eq 13.86
-          expect(demand.effort_downstream.to_f).to eq 4.945
+          expect(demand.effort_upstream.to_f).to eq 17.16
+          expect(demand.effort_downstream.to_f).to eq 5.06
         end
       end
 
