@@ -2,7 +2,7 @@
 
 class UsersController < AuthenticatedController
   before_action :check_admin, only: %i[toggle_admin admin_dashboard]
-  before_action :assign_user, only: %i[toggle_admin update]
+  before_action :assign_user, only: %i[toggle_admin show edit update companies]
 
   def admin_dashboard
     @users_list = User.all.order(%i[last_name first_name])
@@ -25,9 +25,12 @@ class UsersController < AuthenticatedController
   end
 
   def show
-    @user = User.find(params[:id])
     @companies_list = @user.companies.order(:name)
     assign_user_dependencies
+  end
+
+  def edit
+    @companies_list = @user.companies.order(:name)
   end
 
   def update
@@ -36,6 +39,12 @@ class UsersController < AuthenticatedController
     @companies_list = @user.companies.order(:name)
     assign_user_dependencies
     render :show
+  end
+
+  def companies
+    @companies = @user.companies.order(:name)
+
+    render 'companies/index'
   end
 
   private

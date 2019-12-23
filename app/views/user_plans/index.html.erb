@@ -1,0 +1,16 @@
+<div class="row">
+  <div class="col-xs-10">
+    <ul class="breadcrumb">
+      <li><%= link_to I18n.t('general.home.title'), root_path %></li>
+      <li><%= UserPlan.model_name.human(count: 2) %></li>
+    </ul>
+  </div>
+</div>
+
+<div id="plans">
+  <% if @user_plans.blank? %>
+    <%= render 'layouts/no_data', missing_data: UserPlan.model_name.human %>
+  <% else %>
+    <%= render 'users/user_plans_table', user: @user, user_plans: @user_plans %>
+  <% end %>
+</div>

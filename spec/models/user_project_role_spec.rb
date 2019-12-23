@@ -2,7 +2,7 @@
 
 RSpec.describe UserProjectRole, type: :model do
   context 'enums' do
-    it { is_expected.to define_enum_for(:role_in_project).with_values(user: 0, manager: 1, owner: 2) }
+    it { is_expected.to define_enum_for(:role_in_project).with_values(team: 0, manager: 1, customer: 2) }
   end
 
   context 'associations' do

@@ -36,7 +36,6 @@ Rails.application.routes.draw do
 
   controller :home do
     get :show
-    get :no_company
   end
 
   controller :exports do
@@ -51,15 +50,19 @@ Rails.application.routes.draw do
     post :plan_choose
   end
 
-  resources :users, only: %i[show update] do
+  resources :users, only: %i[show edit update] do
     collection do
       get :admin_dashboard
       patch :activate_email_notifications
       patch :deactivate_email_notifications
     end
-    patch :toggle_admin, on: :member
 
-    resources :user_plans, only: [] do
+    member do
+      get :companies
+      patch :toggle_admin
+    end
+
+    resources :user_plans, only: [:index] do
       member do
         patch :activate_user_plan
         patch :deactivate_user_plan

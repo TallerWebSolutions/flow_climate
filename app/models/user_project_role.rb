@@ -24,7 +24,7 @@
 #
 
 class UserProjectRole < ApplicationRecord
-  enum role_in_project: { user: 0, manager: 1, owner: 2 }
+  enum role_in_project: { team: 0, manager: 1, customer: 2 }
 
   belongs_to :user
   belongs_to :project

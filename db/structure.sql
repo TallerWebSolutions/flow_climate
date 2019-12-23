@@ -1583,7 +1583,6 @@ CREATE TABLE public.users (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     admin boolean DEFAULT false NOT NULL,
-    last_company_id integer,
     email_notifications boolean DEFAULT false NOT NULL,
     user_money_credits numeric DEFAULT 0.0 NOT NULL,
     avatar character varying
@@ -3433,14 +3432,6 @@ ALTER TABLE ONLY public.stages_teams
 
 
 --
--- Name: users fk_rails_971bf2d9a1; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.users
-    ADD CONSTRAINT fk_rails_971bf2d9a1 FOREIGN KEY (last_company_id) REFERENCES public.companies(id);
-
-
---
 -- Name: customers_projects fk_rails_9b68bbaf49; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -3804,6 +3795,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20191021222025'),
 ('20191024212617'),
 ('20191025150906'),
-('20191028155108');
+('20191028155108'),
+('20191223134739');
 
 

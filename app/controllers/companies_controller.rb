@@ -14,7 +14,6 @@ class CompaniesController < AuthenticatedController
     @finances_hash_with_computed_informations = Highchart::FinancesChartsAdapter.new(@financial_informations).finances_hash_with_computed_informations
 
     assign_company_children
-    assign_last_company
     assign_company_settings
     assign_jira_accounts_list
     @projects = @company.projects.order(end_date: :desc).page(page_param)
@@ -116,10 +115,6 @@ class CompaniesController < AuthenticatedController
     @customers_list = @company.customers.order(name: :asc)
     @team_members = @company.team_members.order(:name).includes(:teams)
     @team_resources = @company.team_resources.order(:resource_name)
-  end
-
-  def assign_last_company
-    current_user.update(last_company_id: @company.id)
   end
 
   def assign_company_settings

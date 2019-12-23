@@ -1,66 +1,20 @@
-<div class="user-container">
-  <%= form_for @user, class: 'form' do |form| %>
-    <div class="row">
-      <div class="col-xs-2">
-        <p>
-          <% if @user.avatar.present? %>
-            <%= image_tag @user.avatar.url, size: '200x200', class: 'user-avatar dropdown-toggle', 'data-toggle' => 'dropdown' %>
-          <% else %>
-            <%= image_tag 'img-empty.png', size: '200x200', class: 'user-avatar dropdown-toggle', 'data-toggle' => 'dropdown' %>
-          <% end %>
-        </p>
-        <p class="center user-info"><%= @user.email %></p>
-        <p><%= form.file_field :avatar, class: 'form-control' %></p>
-      </div>
-      <div class="col-xs-10">
-        <div class="row">
-          <div class='col-xs-6 form-group <%= 'has-error' if @user.errors[:first_name].present? %>'>
-            <%= form.label :first_name, class: 'control-label required' %>
-            <%= form.text_field :first_name, class: 'form-control', step: 1 %>
-            <span class="help-block"><%= @user.errors[:first_name].join(', ') %></span>
-          </div>
-          <div class='col-xs-6 form-group <%= 'has-error' if @user.errors[:last_name].present? %>'>
-            <%= form.label :last_name, class: 'control-label required' %>
-            <%= form.text_field :last_name, class: 'form-control' %>
-            <span class="help-block"><%= @user.errors[:last_name].join(', ') %></span>
-          </div>
-        </div>
-        <%= form.submit I18n.t('general.buttons.save'), class: 'btn btn-success' %>
-      </div>
-    </div>
-  <% end %>
+<% if current_user == @user || user.admin? %>
+  <div class="col-xs-2 pull-right">
+    <div class="dropdown topnav-right">
 
-  <div class="row">
-    <div class="col-xs-12">
-      <div class="tab">
-        <button class="tablinks" onclick="openTab(event, 'plans', 'tablinks', 'tabcontent')"><%= I18n.t('user_plans.index.table.title') %></button>
-        <button class="tablinks" onclick="openTab(event, 'data-processement', 'tablinks', 'tabcontent')"><%= I18n.t('user_profile.show.data_processed_table') %></button>
-        <button class="tablinks" onclick="openTab(event, 'companies-table', 'tablinks', 'tabcontent')"><%= I18n.t('users.admin_dashboard.companies_table.title') %></button>
-      </div>
+      <i class="fas fa-cogs dropdown-toggle main-config-cogs" data-toggle='dropdown'></i>
+
+      <ul class="dropdown-menu dropdown-menu-right">
+        <li><%= link_to I18n.t('users.edit.title'), edit_user_path(@user), class: 'nav-link dropdown-item' %></li>
+        <li class="divider"></li>
+        <li><%= link_to I18n.t('user_plans.index.table.title'), user_user_plans_path(@user), class: 'nav-link dropdown-item' %></li>
+        <li><%= link_to Company.model_name.human(count: 2), companies_path(@user), class: 'nav-link dropdown-item' %></li>
+      </ul>
     </div>
   </div>
+<% end %>
 
-
-  <div id="plans" class="tabcontent">
-    <% if @user_plans.blank? %>
-      <%= render 'layouts/no_data', missing_data: UserPlan.model_name.human %>
-    <% else %>
-      <%= render 'users/user_plans_table', user_plans: @user_plans, user: @user %>
-    <% end %>
-  </div>
-
-  <div id="data-processement" class="tabcontent">
-    <% if @demand_data_processment.blank? %>
-      <%= render 'layouts/no_data', missing_data: DemandDataProcessment.model_name.human %>
-    <% else %>
-      <%= render 'users/data_processed_table', demand_data_processment: @demand_data_processment %>
-    <% end %>
-  </div>
-
-  <div id="companies-table" class="tabcontent">
-    <%= render 'companies/companies_table', companies_list: @companies_list %>
-  </div>
-</div>
+<%= render 'users/user_personal_info', company: @company, user: @user %>
 
 <% content_for :javascript do %>
   <%= javascript_include_tag 'components/components' %>

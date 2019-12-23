@@ -1,6 +1,15 @@
-<h1><%= I18n.t('companies.index.title') %></h1>
+<div class="row">
+  <div class="col-xs-10">
+    <ul class="breadcrumb">
+      <li><%= link_to I18n.t('general.home.title'), root_path %></li>
+      <li><%= Company.model_name.human(count: 2) %></li>
+    </ul>
+  </div>
+</div>
 
-<%= link_to I18n.t('companies.new.title'), new_company_path, class: 'btn btn-sm btn-success bottom-spaced-component' %>
+<% if current_user.admin? %>
+  <%= link_to I18n.t('companies.new.title'), new_company_path, class: 'btn btn-sm btn-success bottom-spaced-component pull-right' %>
+<% end %>
 
 <% if @companies.empty? %>
   Você ainda não tem empresas.

@@ -37,6 +37,18 @@ RSpec.describe UsersController, type: :controller do
 
       it { expect(response).to redirect_to new_user_session_path }
     end
+
+    describe 'GET #edit' do
+      before { get :edit, params: { id: 'foo' } }
+
+      it { expect(response).to redirect_to new_user_session_path }
+    end
+
+    describe 'GET #companies' do
+      before { get :companies, params: { id: 'foo' } }
+
+      it { expect(response).to redirect_to new_user_session_path }
+    end
   end
 
   context 'authenticated as admin' do
@@ -118,7 +130,7 @@ RSpec.describe UsersController, type: :controller do
           end
         end
 
-        context 'having no user plans' do
+        context 'with no user plans' do
           before { get :show, params: { id: user } }
 
           it 'assigns the instance variable and renders the template' do
@@ -136,11 +148,40 @@ RSpec.describe UsersController, type: :controller do
       it { expect(response).to redirect_to root_path }
     end
 
+    describe 'GET #edit' do
+      context 'with valid parameters' do
+        context 'with user plans' do
+          let!(:user_plan) { Fabricate :user_plan, user: user, finish_at: Time.zone.today }
+          let!(:other_user_plan) { Fabricate :user_plan, user: user, finish_at: Time.zone.tomorrow }
+
+          let!(:company) { Fabricate :company, users: [user], name: 'zzz' }
+          let!(:other_company) { Fabricate :company, users: [user], name: 'aaa' }
+
+          before { get :edit, params: { id: user } }
+
+          it 'assigns the instance variable and renders the template' do
+            expect(assigns(:user)).to eq user
+            expect(assigns(:companies_list)).to eq [other_company, company]
+            expect(response).to render_template :edit
+          end
+        end
+
+        context 'with no user plans' do
+          before { get :edit, params: { id: user } }
+
+          it 'assigns the instance variable and renders the template' do
+            expect(assigns(:user)).to eq user
+            expect(response).to render_template :edit
+          end
+        end
+      end
+    end
+
     describe 'PUT #update' do
       context 'with a valid user' do
         let(:user) { Fabricate :user }
 
-        context 'and valid attributes' do
+        context 'with valid attributes' do
           let(:file) { Rack::Test::UploadedFile.new(Rails.root.join('spec/fixtures/default_image.png'), 'image/png') }
 
           it 'updates the user and redirects to the show' do
@@ -164,10 +205,12 @@ RSpec.describe UsersController, type: :controller do
           end
         end
 
-        context 'and invalid attributes' do
-          before { put :update, params: { id: 'foo', user: { first_name: nil, last_name: nil, avatar: nil } } }
+        context 'with invalid' do
+          context 'attributes' do
+            before { put :update, params: { id: 'foo', user: { first_name: nil, last_name: nil, avatar: nil } } }
 
-          it { expect(response).to have_http_status :not_found }
+            it { expect(response).to have_http_status :not_found }
+          end
         end
       end
     end
@@ -176,6 +219,21 @@ RSpec.describe UsersController, type: :controller do
       before { get :admin_dashboard }
 
       it { expect(response).to redirect_to root_path }
+    end
+
+    describe 'GET #companies' do
+      context 'with valid params' do
+        let(:company) { Fabricate :company, users: [user], name: 'zzz' }
+        let(:other_company) { Fabricate :company, users: [user], name: 'aaa' }
+        let(:out_company) { Fabricate :company }
+
+        it 'assigns the instance variable and renders the template' do
+          get :companies, params: { id: user }
+
+          expect(response).to render_template :index
+          expect(assigns(:companies)).to eq [other_company, company]
+        end
+      end
     end
   end
 end
