@@ -45,7 +45,7 @@ class Membership < ApplicationRecord
   end
 
   def demands
-    Demand.joins(:item_assignments).where(demands: { team: team }).where(item_assignments: { team_member: team_member })
+    Demand.distinct.joins(:item_assignments).where(demands: { team: team }).where(item_assignments: { team_member: team_member })
   end
 
   def demand_comments
@@ -65,12 +65,21 @@ class Membership < ApplicationRecord
   end
 
   def pairing_count
-    pairing_members.group_by(&:itself).map { |key, value| [key, value.count] }.sort_by { |_key, value| value }.reverse.to_h
+    pairing_members.flatten.map(&:name).flatten.group_by(&:itself).map { |key, value| [key, value.count] }.sort_by { |_key, value| value }.reverse.to_h
   end
 
   def pairing_members
-    demands_member_in = team_member.demands.where(team: team)
-    @pairing_members = demands_member_in.map { |demand| demand.team_members.joins(:memberships).where(memberships: { member_role: member_role }).map(&:name) }.flatten - [team_member.name]
+    pairing_members = []
+    same_team_demands = team_member.demands.where(team: team)
+    same_team_demands.each do |demand|
+      assignments_for_member = demand.item_assignments.where(team_member: team_member)
+      assignments_for_member.each do |member_assignment|
+        pairing_members << demand.item_assignments.for_dates(member_assignment.start_time, member_assignment.finish_time)
+                                 .where('team_member_id <> :team_member', team_member: team_member.id).map(&:team_member)
+      end
+    end
+
+    pairing_members.flatten
   end
 
   private

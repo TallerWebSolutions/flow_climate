@@ -45,6 +45,11 @@ class User < ApplicationRecord
   has_many :user_project_roles, dependent: :destroy
   has_many :projects, through: :user_project_roles
 
+  has_one :team_member, dependent: :restrict_with_error
+
+  has_many :item_assignments, through: :team_member
+  has_many :demands, through: :item_assignments
+
   has_many :demand_data_processments, dependent: :destroy
   has_many :user_plans, dependent: :destroy
 
@@ -52,6 +57,8 @@ class User < ApplicationRecord
 
   scope :to_notify_email, -> { where email_notifications: true }
   scope :admins, -> { where admin: true }
+
+  delegate :pairing_members, to: :team_member, allow_nil: true
 
   def current_plan
     current_user_plan&.plan
@@ -93,5 +100,9 @@ class User < ApplicationRecord
     return update(admin: false) if admin?
 
     update(admin: true)
+  end
+
+  def acting_projects
+    Project.all.running.where(id: demands.kept.map(&:project_id))
   end
 end

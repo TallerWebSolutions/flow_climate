@@ -152,6 +152,8 @@ pt-BR:
       two: "2"
       three: "3"
     finished: "Finalizado"
+    name: "Nome"
+    bugs: "Defeitos"
   header:
     logout: Sair
     sign_up: Cadastre-se
@@ -1150,3 +1152,6 @@ pt-BR:
           other: "Exibindo <b>%{count}</b> %{entry_name}"
       more_pages:
         display_entries: "Exibindo %{entry_name} <b>%{first}&nbsp;-&nbsp;%{last}</b> de <b>%{total}</b> no total"
+  user:
+    dashboard:
+      pairing_info: "Pareamento"

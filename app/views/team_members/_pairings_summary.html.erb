@@ -1,0 +1,20 @@
+<h4>Pareamentos</h4>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Nome</th>
+      <th>Qtd</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% if team_member.present? %>
+      <% team_member.pairing_members.first(5).to_h.each do |name, qty| %>
+        <tr>
+          <td><%= name %></td>
+          <td><%= qty %></td>
+        </tr>
+      <% end %>
+    <% end %>
+  </tbody>
+</table>

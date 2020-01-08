@@ -1,0 +1,24 @@
+<h4>Last Deliveries</h4>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Project</th>
+      <th>ID</th>
+      <th>Date</th>
+      <th>Lead time</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% if team_member.present? %>
+      <% team_member.demands.kept.finished.order(end_date: :desc).last(5).each do |demand| %>
+        <tr>
+          <td><%= demand.project_name %></td>
+          <td><%= demand.external_id %></td>
+          <td><%= I18n.l(demand.end_date, format: :short) %></td>
+          <td><%= time_distance_in_words(demand.leadtime) %></td>
+        </tr>
+      <% end %>
+    <% end %>
+  </tbody>
+</table>

@@ -42,7 +42,7 @@ class TeamMember < ApplicationRecord
   has_many :demand_unblocks, class_name: 'DemandBlock', inverse_of: :unblocker, dependent: :destroy, foreign_key: :unblocker_id
 
   has_many :item_assignments, dependent: :destroy
-  has_many :demands, through: :item_assignments
+  has_many :demands, -> { distinct }, through: :item_assignments
 
   validates :name, presence: true
   validates :name, uniqueness: { scope: %i[company_id jira_account_id], message: I18n.t('activerecord.attributes.team_member.validations.name_unique') }
@@ -55,5 +55,9 @@ class TeamMember < ApplicationRecord
 
   def active?
     end_date.blank?
+  end
+
+  def pairing_members
+    memberships.map(&:pairing_members).flatten.map(&:name).flatten.group_by(&:itself).map { |key, value| [key, value.count] }.to_h.sort_by { |_key, value| value }.reverse.to_h
   end
 end

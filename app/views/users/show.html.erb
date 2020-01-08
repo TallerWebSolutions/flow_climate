@@ -1,20 +1,32 @@
-<% if current_user == @user || user.admin? %>
-  <div class="col-xs-2 pull-right">
-    <div class="dropdown topnav-right">
+<% if current_user == @user || current_user.admin? %>
+  <div class="row>">
+    <div class="col-xs-12 pull-right">
+      <div class="dropdown topnav-right">
 
-      <i class="fas fa-cogs dropdown-toggle main-config-cogs" data-toggle='dropdown'></i>
+        <i class="fas fa-cogs dropdown-toggle main-config-cogs" data-toggle='dropdown'></i>
 
-      <ul class="dropdown-menu dropdown-menu-right">
-        <li><%= link_to I18n.t('users.edit.title'), edit_user_path(@user), class: 'nav-link dropdown-item' %></li>
-        <li class="divider"></li>
-        <li><%= link_to I18n.t('user_plans.index.table.title'), user_user_plans_path(@user), class: 'nav-link dropdown-item' %></li>
-        <li><%= link_to Company.model_name.human(count: 2), companies_path(@user), class: 'nav-link dropdown-item' %></li>
-      </ul>
+        <ul class="dropdown-menu dropdown-menu-right">
+          <li><%= link_to I18n.t('users.edit.title'), edit_user_path(@user), class: 'nav-link dropdown-item' %></li>
+          <li class="divider"></li>
+          <li><%= link_to I18n.t('user_plans.index.table.title'), user_user_plans_path(@user), class: 'nav-link dropdown-item' %></li>
+          <li><%= link_to Company.model_name.human(count: 2), companies_path(@user), class: 'nav-link dropdown-item' %></li>
+        </ul>
+      </div>
     </div>
   </div>
 <% end %>
 
-<%= render 'users/user_personal_info', company: @company, user: @user %>
+<div class="row">
+  <div class="col-xs-4">
+    <%= render 'users/user_personal_info', company: @company, user: @user %>
+  </div>
+  <div class="col-xs-4">
+    <%= render 'team_members/last_deliveries', company: @company, team_member: @user.team_member %>
+  </div>
+  <div class="col-xs-4">
+    <%= render 'team_members/pairings_summary', company: @company, team_member: @user.team_member %>
+  </div>
+</div>
 
 <% content_for :javascript do %>
   <%= javascript_include_tag 'components/components' %>

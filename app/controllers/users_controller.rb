@@ -51,7 +51,6 @@ class UsersController < AuthenticatedController
 
   def assign_user_dependencies
     @user_plans = @user.user_plans.order(finish_at: :desc)
-    @demand_data_processment = @user.demand_data_processments.order(created_at: :desc)
   end
 
   def user_params
