@@ -20,7 +20,7 @@ class ProjectsController < AuthenticatedController
   end
 
   def index
-    @projects = @company.projects.includes(:team).order(end_date: :desc).page(page_param)
+    @projects = @company.projects.distinct.includes(:team).order(end_date: :desc).page(page_param)
     unpaged_projects = @projects.except(:limit, :offset)
 
     @projects_summary = ProjectsSummaryData.new(unpaged_projects)
