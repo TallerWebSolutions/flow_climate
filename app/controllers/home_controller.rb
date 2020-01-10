@@ -3,8 +3,6 @@
 class HomeController < AuthenticatedController
   before_action :authenticate_user!
 
-  def no_company; end
-
   def show
     if current_user.lite?
       redirect_to request_project_information_path
@@ -13,9 +11,7 @@ class HomeController < AuthenticatedController
     elsif current_user.no_plan?
       redirect_to no_plan_path
     else
-      return redirect_to no_company_path if current_user.companies.blank?
-
-      redirect_to company_path(current_user.last_company_id || current_user.companies.last)
+      redirect_to user_path(current_user)
     end
   end
 end

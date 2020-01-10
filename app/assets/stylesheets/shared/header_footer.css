@@ -1,6 +1,6 @@
 .header {
     padding: 10px;
-    background-color: #8fa9df;
+    background-color: #26182d;
     height: 100%;
 }
 
@@ -12,9 +12,13 @@
     margin-left: -30px;
 }
 
+.top-nav-bar-text {
+    color: white;
+}
+
 .top-nav-bar-item {
+    color: white;
     text-decoration: none;
-    color: black;
     vertical-align: bottom;
 }
 

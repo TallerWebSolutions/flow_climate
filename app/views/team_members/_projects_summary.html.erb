@@ -1,0 +1,22 @@
+<h4>Projetos</h4>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Nome</th>
+      <th>Inicio</th>
+      <th>Fim</th>
+      <th>Risco</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% member_projects.each do |project| %>
+      <tr>
+        <td><%= link_to project.name, company_project_path(project.company, project) %></td>
+        <td><%= I18n.l(project.start_date) %></td>
+        <td><%= I18n.l(project.end_date) %></td>
+        <td><%= number_to_percentage(project.current_risk_to_deadline * 100, precision: 2) %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

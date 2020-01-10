@@ -5,7 +5,7 @@
 # Table name: user_project_roles
 #
 #  id              :bigint           not null, primary key
-#  role_in_project :integer          default("user"), not null
+#  role_in_project :integer          default("team"), not null
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
 #  project_id      :integer          not null
@@ -24,7 +24,7 @@
 #
 
 class UserProjectRole < ApplicationRecord
-  enum role_in_project: { user: 0, manager: 1, owner: 2 }
+  enum role_in_project: { team: 0, manager: 1, customer: 2 }
 
   belongs_to :user
   belongs_to :project

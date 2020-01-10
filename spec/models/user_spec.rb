@@ -7,6 +7,9 @@ RSpec.describe User, type: :model do
     it { is_expected.to have_many(:projects).through(:user_project_roles) }
     it { is_expected.to have_many(:demand_data_processments).dependent(:destroy) }
     it { is_expected.to have_many(:user_plans).dependent(:destroy) }
+    it { is_expected.to have_one(:team_member).dependent(:restrict_with_error) }
+    it { is_expected.to have_many(:item_assignments).through(:team_member) }
+    it { is_expected.to have_many(:demands).through(:item_assignments) }
   end
 
   context 'validations' do
@@ -175,5 +178,22 @@ RSpec.describe User, type: :model do
     let(:user) { Fabricate :user }
 
     it { expect(user.full_name).to eq "#{user.last_name}, #{user.first_name}" }
+  end
+
+  describe '#acting_projects' do
+    let(:user) { Fabricate :user }
+    let(:company) { Fabricate :company, users: [user] }
+    let(:customer) { Fabricate :customer, company: company }
+    let(:product) { Fabricate :product, customer: customer }
+    let(:project) { Fabricate :project, products: [product], customers: [customer], status: :executing }
+    let(:inactive_project) { Fabricate :project, products: [product], customers: [customer], status: :waiting }
+    let(:out_project) { Fabricate :project, products: [product], customers: [customer], status: :executing }
+    let(:demand) { Fabricate :demand, project: project }
+    let(:inactive_demand) { Fabricate :demand, project: inactive_project }
+    let(:team_member) { Fabricate :team_member, user: user }
+    let!(:item_assignment) { Fabricate :item_assignment, demand: demand, team_member: team_member }
+    let!(:inactive_item_assignment) { Fabricate :item_assignment, demand: inactive_demand, team_member: team_member }
+
+    it { expect(user.acting_projects).to eq [project] }
   end
 end

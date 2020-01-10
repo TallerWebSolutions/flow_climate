@@ -1,0 +1,32 @@
+<h4>Infos Gerais</h4>
+
+<table class="table">
+  <tbody>
+    <tr>
+      <td><b><%= I18n.t('general.name') %></b></td>
+      <td><%= user.full_name %></td>
+    </tr>
+    <tr>
+      <td><b><%= I18n.t('general.delivered') %></b></td>
+      <td><%= user.demands.kept.finished.count %></td>
+    </tr>
+    <tr>
+      <td><b><%= I18n.t('general.bugs') %></b></td>
+      <td><%= user.demands.kept.bug.count %></td>
+    </tr>
+    <tr>
+      <td><b><%= I18n.t('general.leadtime_p80_label') %></b></td>
+      <td><%= time_distance_in_words(Stats::StatisticsService.instance.percentile(80, user.demands.kept.finished_with_leadtime.map(&:leadtime))) %></td>
+    </tr>
+    <tr>
+      <td><b><%= Project.model_name.human(count: 2) %></b></td>
+      <td><%= user.acting_projects.count %></td>
+    </tr>
+    <% if user.pairing_members.present? %>
+      <tr>
+        <td><b><%= I18n.t('user.dashboard.pairing_info') %></b></td>
+        <td><%= "#{user.pairing_members.keys.first} (#{user.pairing_members.values.first})" %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

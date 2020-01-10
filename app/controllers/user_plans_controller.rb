@@ -3,7 +3,7 @@
 class UserPlansController < AuthenticatedController
   before_action :check_admin
   before_action :assign_user
-  before_action :assign_user_plan
+  before_action :assign_user_plan, except: [:index]
 
   def activate_user_plan
     @user_plan.activate
@@ -23,6 +23,10 @@ class UserPlansController < AuthenticatedController
   def unpay_plan
     @user_plan.unpay
     redirect_to user_path(@user)
+  end
+
+  def index
+    @user_plans = @user.user_plans.order(:created_at)
   end
 
   private

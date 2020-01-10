@@ -188,7 +188,7 @@ class ProjectConsolidation < ApplicationRecord
   end
 
   def odds_to_deadline_project
-    return 0 unless project_monte_carlo_weeks.count.positive?
+    return 0 unless project_monte_carlo_weeks&.count&.positive?
 
     Stats::StatisticsService.instance.compute_odds_to_deadline(project.remaining_weeks, project_monte_carlo_weeks)
   end

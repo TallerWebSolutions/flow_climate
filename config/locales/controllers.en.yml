@@ -152,6 +152,9 @@ en:
       two: "2"
       three: "3"
     finished: "Finished"
+    name: "Name"
+    bugs: "Bugs"
+    people: "People"
   header:
     logout: Logout
     explore: Explore
@@ -162,6 +165,8 @@ en:
       title: "Change to this company"
     show:
       title: "User Profile"
+      pairing_counts: "Pairings"
+      last_deliveries: "Last Deliveries"
     index:
       title: "Users"
       turn_off_notifications: "Turn Off Notifications"
@@ -1162,3 +1167,6 @@ en:
           other: "Displaying <b>all %{count}</b> %{entry_name}"
       more_pages:
         display_entries: "Displaying %{entry_name} <b>%{first}&nbsp;-&nbsp;%{last}</b> of <b>%{total}</b> in total"
+  user:
+    dashboard:
+      pairing_info: "Pairing"

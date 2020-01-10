@@ -118,8 +118,8 @@ pt-BR:
         one: Plano
         other: Planos
       user_plan:
-        one: Plano de Usuário
-        other: Planos de Usuário
+        one: Plano do Usuário
+        other: Planos do Usuário
       demand_data_processment:
         one: Processamento de Demandas
         other: Processamentos de Demandas

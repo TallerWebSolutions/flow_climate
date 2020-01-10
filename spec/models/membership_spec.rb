@@ -80,12 +80,12 @@ RSpec.describe Membership, type: :model do
     let(:second_demand) { Fabricate :demand, company: company, team: team, commitment_date: 3.days.ago, end_date: 2.days.ago }
     let(:third_demand) { Fabricate :demand, company: company, team: team, commitment_date: 3.days.ago, end_date: 2.days.ago }
 
-    let!(:first_assignment) { Fabricate :item_assignment, team_member: first_team_member, demand: first_demand }
-    let!(:second_assignment) { Fabricate :item_assignment, team_member: first_team_member, demand: second_demand }
-    let!(:third_assignment) { Fabricate :item_assignment, team_member: second_team_member, demand: first_demand }
-    let!(:fourth_assignment) { Fabricate :item_assignment, team_member: second_team_member, demand: second_demand }
-    let!(:fifth_assignment) { Fabricate :item_assignment, team_member: fourth_team_member, demand: first_demand }
-    let!(:sixth_assignment) { Fabricate :item_assignment, team_member: fifth_team_member, demand: third_demand }
+    let!(:first_assignment) { Fabricate :item_assignment, team_member: first_team_member, demand: first_demand, start_time: 4.days.ago, finish_time: 1.day.ago }
+    let!(:second_assignment) { Fabricate :item_assignment, team_member: first_team_member, demand: second_demand, start_time: 4.days.ago, finish_time: 1.day.ago }
+    let!(:third_assignment) { Fabricate :item_assignment, team_member: second_team_member, demand: first_demand, start_time: 4.days.ago, finish_time: 1.day.ago }
+    let!(:fourth_assignment) { Fabricate :item_assignment, team_member: second_team_member, demand: second_demand, start_time: 4.days.ago, finish_time: 1.day.ago }
+    let!(:fifth_assignment) { Fabricate :item_assignment, team_member: fourth_team_member, demand: first_demand, start_time: 4.days.ago, finish_time: 1.day.ago }
+    let!(:sixth_assignment) { Fabricate :item_assignment, team_member: fifth_team_member, demand: third_demand, start_time: 4.days.ago, finish_time: 1.day.ago }
 
     let!(:first_block) { Fabricate :demand_block, blocker: first_team_member, demand: first_demand }
     let!(:second_block) { Fabricate :demand_block, blocker: first_team_member, demand: second_demand }
@@ -133,16 +133,16 @@ RSpec.describe Membership, type: :model do
   describe '#pairing_count' do
     include_context 'membership demands methods data'
 
-    it { expect(first_membership.pairing_count).to eq(second_team_member.name => 2) }
-    it { expect(second_membership.pairing_count).to eq(first_team_member.name => 2) }
+    it { expect(first_membership.pairing_count).to eq(fourth_team_member.name => 1, second_team_member.name => 2) }
+    it { expect(second_membership.pairing_count).to eq(first_team_member.name => 2, fourth_team_member.name => 1) }
     it { expect(third_membership.pairing_count).to eq({}) }
   end
 
   describe '#pairing_members' do
     include_context 'membership demands methods data'
 
-    it { expect(first_membership.pairing_members).to eq [second_team_member.name, second_team_member.name] }
-    it { expect(second_membership.pairing_members).to eq [first_team_member.name, first_team_member.name] }
+    it { expect(first_membership.pairing_members).to match_array [second_team_member, fourth_team_member, second_team_member] }
+    it { expect(second_membership.pairing_members).to eq [first_team_member, fourth_team_member, first_team_member] }
     it { expect(third_membership.pairing_members).to eq [] }
   end
 end

@@ -2,7 +2,7 @@
 
 class UsersController < AuthenticatedController
   before_action :check_admin, only: %i[toggle_admin admin_dashboard]
-  before_action :assign_user, only: %i[toggle_admin update]
+  before_action :assign_user, only: %i[toggle_admin show edit update companies]
 
   def admin_dashboard
     @users_list = User.all.order(%i[last_name first_name])
@@ -25,9 +25,13 @@ class UsersController < AuthenticatedController
   end
 
   def show
-    @user = User.find(params[:id])
     @companies_list = @user.companies.order(:name)
+    assign_team_member_dependencies
     assign_user_dependencies
+  end
+
+  def edit
+    @companies_list = @user.companies.order(:name)
   end
 
   def update
@@ -38,11 +42,27 @@ class UsersController < AuthenticatedController
     render :show
   end
 
+  def companies
+    @companies = @user.companies.order(:name)
+
+    render 'companies/index'
+  end
+
   private
+
+  def assign_team_member_dependencies
+    @pairing_chart = {}
+    @teams = []
+    return if @user.team_member.blank?
+
+    @user.team_member.pairing_members.each { |name, qty| @pairing_chart[name] = qty }
+    @member_teams = @user.team_member.teams.order(:name)
+    @demand_blocks = @user.team_member.demand_blocks.order(block_time: :desc).last(5)
+    @member_projects = @user.team_member.projects.order(end_date: :desc).last(5)
+  end
 
   def assign_user_dependencies
     @user_plans = @user.user_plans.order(finish_at: :desc)
-    @demand_data_processment = @user.demand_data_processments.order(created_at: :desc)
   end
 
   def user_params

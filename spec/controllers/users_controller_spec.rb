@@ -37,6 +37,18 @@ RSpec.describe UsersController, type: :controller do
 
       it { expect(response).to redirect_to new_user_session_path }
     end
+
+    describe 'GET #edit' do
+      before { get :edit, params: { id: 'foo' } }
+
+      it { expect(response).to redirect_to new_user_session_path }
+    end
+
+    describe 'GET #companies' do
+      before { get :companies, params: { id: 'foo' } }
+
+      it { expect(response).to redirect_to new_user_session_path }
+    end
   end
 
   context 'authenticated as admin' do
@@ -107,6 +119,35 @@ RSpec.describe UsersController, type: :controller do
 
           let!(:company) { Fabricate :company, users: [user], name: 'zzz' }
           let!(:other_company) { Fabricate :company, users: [user], name: 'aaa' }
+          let!(:project) { Fabricate :project, company: company, end_date: 2.days.ago }
+          let!(:other_project) { Fabricate :project, company: company, end_date: 1.day.ago }
+
+          let(:team) { Fabricate :team, company: company }
+          let(:first_demand) { Fabricate :demand, team: team, project: other_project }
+          let(:second_demand) { Fabricate :demand, team: team, project: other_project }
+          let(:third_demand) { Fabricate :demand, team: team, project: project }
+
+          let(:first_team_member) { Fabricate :team_member, company: company, user: user }
+          let(:second_team_member) { Fabricate :team_member, company: company, user: user }
+          let(:third_team_member) { Fabricate :team_member, company: company, user: user }
+          let(:fourth_team_member) { Fabricate :team_member, company: company, user: user }
+          let(:fifth_team_member) { Fabricate :team_member, company: company, user: user }
+
+          let!(:first_membership) { Fabricate :membership, team: team, team_member: first_team_member, hours_per_month: 120, start_date: 1.month.ago, end_date: nil }
+          let!(:second_membership) { Fabricate :membership, team: team, team_member: second_team_member, hours_per_month: 40, start_date: 2.months.ago, end_date: 1.month.ago }
+          let!(:third_membership) { Fabricate :membership, team: team, team_member: third_team_member, hours_per_month: 40, start_date: 2.months.ago, end_date: 1.month.ago }
+          let!(:fourth_membership) { Fabricate :membership, team: team, team_member: fourth_team_member, hours_per_month: 40, start_date: 2.months.ago, end_date: 1.month.ago }
+          let!(:fifth_membership) { Fabricate :membership, team: team, team_member: fifth_team_member, hours_per_month: 40, start_date: 2.months.ago, end_date: 1.month.ago }
+
+          let!(:first_item_assignment) { Fabricate :item_assignment, demand: first_demand, team_member: first_team_member, start_time: 1.day.ago, finish_time: 2.days.ago }
+          let!(:second_item_assignment) { Fabricate :item_assignment, demand: first_demand, team_member: second_team_member, start_time: 2.days.ago, finish_time: nil }
+          let!(:third_item_assignment) { Fabricate :item_assignment, demand: first_demand, team_member: first_team_member, start_time: 2.days.ago, finish_time: nil }
+          let!(:fourth_item_assignment) { Fabricate :item_assignment, demand: second_demand, team_member: third_team_member, start_time: 2.days.ago, finish_time: nil }
+          let!(:fifth_item_assignment) { Fabricate :item_assignment, demand: second_demand, team_member: fourth_team_member, start_time: 2.days.ago, finish_time: nil }
+          let!(:sixth_item_assignment) { Fabricate :item_assignment, demand: second_demand, team_member: first_team_member, start_time: 2.days.ago, finish_time: nil }
+          let!(:seventh_item_assignment) { Fabricate :item_assignment, demand: third_demand, team_member: first_team_member, start_time: 2.days.ago, finish_time: nil }
+          let!(:eigth_item_assignment) { Fabricate :item_assignment, demand: third_demand, team_member: second_team_member, start_time: 2.days.ago, finish_time: nil }
+          let!(:nineth_item_assignment) { Fabricate :item_assignment, demand: third_demand, team_member: fifth_team_member, start_time: 4.days.ago, finish_time: 3.days.ago }
 
           before { get :show, params: { id: user } }
 
@@ -114,11 +155,14 @@ RSpec.describe UsersController, type: :controller do
             expect(assigns(:user)).to eq user
             expect(assigns(:user_plans)).to eq [other_user_plan, user_plan]
             expect(assigns(:companies_list)).to eq [other_company, company]
+            expect(assigns(:pairing_chart)).to eq(second_team_member.name => 2, third_team_member.name => 1, fourth_team_member.name => 1)
+            expect(assigns(:member_teams)).to eq [team]
+            expect(assigns(:member_projects)).to eq [other_project, project]
             expect(response).to render_template :show
           end
         end
 
-        context 'having no user plans' do
+        context 'with no user plans' do
           before { get :show, params: { id: user } }
 
           it 'assigns the instance variable and renders the template' do
@@ -136,11 +180,40 @@ RSpec.describe UsersController, type: :controller do
       it { expect(response).to redirect_to root_path }
     end
 
+    describe 'GET #edit' do
+      context 'with valid parameters' do
+        context 'with user plans' do
+          let!(:user_plan) { Fabricate :user_plan, user: user, finish_at: Time.zone.today }
+          let!(:other_user_plan) { Fabricate :user_plan, user: user, finish_at: Time.zone.tomorrow }
+
+          let!(:company) { Fabricate :company, users: [user], name: 'zzz' }
+          let!(:other_company) { Fabricate :company, users: [user], name: 'aaa' }
+
+          before { get :edit, params: { id: user } }
+
+          it 'assigns the instance variable and renders the template' do
+            expect(assigns(:user)).to eq user
+            expect(assigns(:companies_list)).to eq [other_company, company]
+            expect(response).to render_template :edit
+          end
+        end
+
+        context 'with no user plans' do
+          before { get :edit, params: { id: user } }
+
+          it 'assigns the instance variable and renders the template' do
+            expect(assigns(:user)).to eq user
+            expect(response).to render_template :edit
+          end
+        end
+      end
+    end
+
     describe 'PUT #update' do
       context 'with a valid user' do
         let(:user) { Fabricate :user }
 
-        context 'and valid attributes' do
+        context 'with valid attributes' do
           let(:file) { Rack::Test::UploadedFile.new(Rails.root.join('spec/fixtures/default_image.png'), 'image/png') }
 
           it 'updates the user and redirects to the show' do
@@ -164,10 +237,12 @@ RSpec.describe UsersController, type: :controller do
           end
         end
 
-        context 'and invalid attributes' do
-          before { put :update, params: { id: 'foo', user: { first_name: nil, last_name: nil, avatar: nil } } }
+        context 'with invalid' do
+          context 'attributes' do
+            before { put :update, params: { id: 'foo', user: { first_name: nil, last_name: nil, avatar: nil } } }
 
-          it { expect(response).to have_http_status :not_found }
+            it { expect(response).to have_http_status :not_found }
+          end
         end
       end
     end
@@ -176,6 +251,21 @@ RSpec.describe UsersController, type: :controller do
       before { get :admin_dashboard }
 
       it { expect(response).to redirect_to root_path }
+    end
+
+    describe 'GET #companies' do
+      context 'with valid params' do
+        let(:company) { Fabricate :company, users: [user], name: 'zzz' }
+        let(:other_company) { Fabricate :company, users: [user], name: 'aaa' }
+        let(:out_company) { Fabricate :company }
+
+        it 'assigns the instance variable and renders the template' do
+          get :companies, params: { id: user }
+
+          expect(response).to render_template :index
+          expect(assigns(:companies)).to eq [other_company, company]
+        end
+      end
     end
   end
 end

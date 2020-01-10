@@ -32,6 +32,27 @@ RSpec.describe ItemAssignment, type: :model do
     end
   end
 
+  context 'scopes' do
+    describe '.for_dates' do
+      context 'with data' do
+        let!(:first_item_assignment) { Fabricate :item_assignment, start_time: 10.days.ago, finish_time: 7.days.ago }
+        let!(:second_item_assignment) { Fabricate :item_assignment, start_time: 9.days.ago, finish_time: 8.days.ago }
+        let!(:third_item_assignment) { Fabricate :item_assignment, start_time: 4.days.ago, finish_time: 1.day.ago }
+        let!(:fourth_item_assignment) { Fabricate :item_assignment, start_time: 4.days.ago, finish_time: nil }
+
+        it { expect(described_class.for_dates(10.days.ago, 7.days.ago)).to match_array [first_item_assignment, second_item_assignment] }
+        it { expect(described_class.for_dates(169.hours.ago, 6.days.ago)).to eq [first_item_assignment] }
+        it { expect(described_class.for_dates(5.days.ago, 2.days.ago)).to eq [third_item_assignment, fourth_item_assignment] }
+        it { expect(described_class.for_dates(9.days.ago, 6.days.ago)).to eq [first_item_assignment, second_item_assignment] }
+        it { expect(described_class.for_dates(4.days.ago, nil)).to eq [third_item_assignment, fourth_item_assignment] }
+      end
+
+      context 'with no data' do
+        it { expect(described_class.for_dates(7.days.ago, 6.days.ago)).to eq [] }
+      end
+    end
+  end
+
   context 'delegations' do
     it { is_expected.to delegate_method(:name).to(:team_member).with_prefix }
   end

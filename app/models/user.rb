@@ -23,16 +23,11 @@
 #  user_money_credits     :decimal(, )      default(0.0), not null
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
-#  last_company_id        :integer
 #
 # Indexes
 #
 #  index_users_on_email                 (email) UNIQUE
 #  index_users_on_reset_password_token  (reset_password_token) UNIQUE
-#
-# Foreign Keys
-#
-#  fk_rails_971bf2d9a1  (last_company_id => companies.id)
 #
 
 class User < ApplicationRecord
@@ -45,6 +40,11 @@ class User < ApplicationRecord
   has_many :user_project_roles, dependent: :destroy
   has_many :projects, through: :user_project_roles
 
+  has_one :team_member, dependent: :restrict_with_error
+
+  has_many :item_assignments, through: :team_member
+  has_many :demands, through: :item_assignments
+
   has_many :demand_data_processments, dependent: :destroy
   has_many :user_plans, dependent: :destroy
 
@@ -52,6 +52,8 @@ class User < ApplicationRecord
 
   scope :to_notify_email, -> { where email_notifications: true }
   scope :admins, -> { where admin: true }
+
+  delegate :pairing_members, to: :team_member, allow_nil: true
 
   def current_plan
     current_user_plan&.plan
@@ -93,5 +95,13 @@ class User < ApplicationRecord
     return update(admin: false) if admin?
 
     update(admin: true)
+  end
+
+  def acting_projects
+    Project.all.running.where(id: demands.kept.map(&:project_id))
+  end
+
+  def last_company
+    Company.find(last_company_id) if last_company_id.present?
   end
 end
