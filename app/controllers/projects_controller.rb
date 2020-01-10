@@ -141,9 +141,9 @@ class ProjectsController < AuthenticatedController
 
     @projects = build_projects_search(params[:start_date], params[:end_date], params[:project_status])
     @projects = @projects.order(end_date: :desc).page(page_param)
-    unpaged_projects = @projects.except(:limit, :offset)
+    @unpaged_projects = @projects.except(:limit, :offset)
 
-    @projects_summary = ProjectsSummaryData.new(unpaged_projects)
+    @projects_summary = ProjectsSummaryData.new(@unpaged_projects)
 
     respond_to { |format| format.js { render 'projects/search_projects' } }
   end
