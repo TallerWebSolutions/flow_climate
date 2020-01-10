@@ -154,6 +154,7 @@ en:
     finished: "Finished"
     name: "Name"
     bugs: "Bugs"
+    people: "People"
   header:
     logout: Logout
     explore: Explore
@@ -164,6 +165,8 @@ en:
       title: "Change to this company"
     show:
       title: "User Profile"
+      pairing_counts: "Pairings"
+      last_deliveries: "Last Deliveries"
     index:
       title: "Users"
       turn_off_notifications: "Turn Off Notifications"

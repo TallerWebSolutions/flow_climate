@@ -15,6 +15,7 @@ RSpec.describe TeamMember, type: :model do
     it { is_expected.to have_many(:demand_unblocks).class_name('DemandBlock').inverse_of(:unblocker).dependent(:destroy) }
     it { is_expected.to have_many(:item_assignments).dependent(:destroy) }
     it { is_expected.to have_many(:demands).through(:item_assignments) }
+    it { is_expected.to have_many(:projects).through(:demands) }
   end
 
   context 'validations' do

@@ -119,6 +119,35 @@ RSpec.describe UsersController, type: :controller do
 
           let!(:company) { Fabricate :company, users: [user], name: 'zzz' }
           let!(:other_company) { Fabricate :company, users: [user], name: 'aaa' }
+          let!(:project) { Fabricate :project, company: company, end_date: 2.days.ago }
+          let!(:other_project) { Fabricate :project, company: company, end_date: 1.day.ago }
+
+          let(:team) { Fabricate :team, company: company }
+          let(:first_demand) { Fabricate :demand, team: team, project: other_project }
+          let(:second_demand) { Fabricate :demand, team: team, project: other_project }
+          let(:third_demand) { Fabricate :demand, team: team, project: project }
+
+          let(:first_team_member) { Fabricate :team_member, company: company, user: user }
+          let(:second_team_member) { Fabricate :team_member, company: company, user: user }
+          let(:third_team_member) { Fabricate :team_member, company: company, user: user }
+          let(:fourth_team_member) { Fabricate :team_member, company: company, user: user }
+          let(:fifth_team_member) { Fabricate :team_member, company: company, user: user }
+
+          let!(:first_membership) { Fabricate :membership, team: team, team_member: first_team_member, hours_per_month: 120, start_date: 1.month.ago, end_date: nil }
+          let!(:second_membership) { Fabricate :membership, team: team, team_member: second_team_member, hours_per_month: 40, start_date: 2.months.ago, end_date: 1.month.ago }
+          let!(:third_membership) { Fabricate :membership, team: team, team_member: third_team_member, hours_per_month: 40, start_date: 2.months.ago, end_date: 1.month.ago }
+          let!(:fourth_membership) { Fabricate :membership, team: team, team_member: fourth_team_member, hours_per_month: 40, start_date: 2.months.ago, end_date: 1.month.ago }
+          let!(:fifth_membership) { Fabricate :membership, team: team, team_member: fifth_team_member, hours_per_month: 40, start_date: 2.months.ago, end_date: 1.month.ago }
+
+          let!(:first_item_assignment) { Fabricate :item_assignment, demand: first_demand, team_member: first_team_member, start_time: 1.day.ago, finish_time: 2.days.ago }
+          let!(:second_item_assignment) { Fabricate :item_assignment, demand: first_demand, team_member: second_team_member, start_time: 2.days.ago, finish_time: nil }
+          let!(:third_item_assignment) { Fabricate :item_assignment, demand: first_demand, team_member: first_team_member, start_time: 2.days.ago, finish_time: nil }
+          let!(:fourth_item_assignment) { Fabricate :item_assignment, demand: second_demand, team_member: third_team_member, start_time: 2.days.ago, finish_time: nil }
+          let!(:fifth_item_assignment) { Fabricate :item_assignment, demand: second_demand, team_member: fourth_team_member, start_time: 2.days.ago, finish_time: nil }
+          let!(:sixth_item_assignment) { Fabricate :item_assignment, demand: second_demand, team_member: first_team_member, start_time: 2.days.ago, finish_time: nil }
+          let!(:seventh_item_assignment) { Fabricate :item_assignment, demand: third_demand, team_member: first_team_member, start_time: 2.days.ago, finish_time: nil }
+          let!(:eigth_item_assignment) { Fabricate :item_assignment, demand: third_demand, team_member: second_team_member, start_time: 2.days.ago, finish_time: nil }
+          let!(:nineth_item_assignment) { Fabricate :item_assignment, demand: third_demand, team_member: fifth_team_member, start_time: 4.days.ago, finish_time: 3.days.ago }
 
           before { get :show, params: { id: user } }
 
@@ -126,6 +155,9 @@ RSpec.describe UsersController, type: :controller do
             expect(assigns(:user)).to eq user
             expect(assigns(:user_plans)).to eq [other_user_plan, user_plan]
             expect(assigns(:companies_list)).to eq [other_company, company]
+            expect(assigns(:pairing_chart)).to eq(second_team_member.name => 2, third_team_member.name => 1, fourth_team_member.name => 1)
+            expect(assigns(:member_teams)).to eq [team]
+            expect(assigns(:member_projects)).to eq [other_project, project]
             expect(response).to render_template :show
           end
         end

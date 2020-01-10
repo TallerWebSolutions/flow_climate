@@ -2,3 +2,8 @@
     font-size: smaller;
     font-style: italic;
 }
+
+.equal-heights {
+    display: flex;
+    flex-wrap: wrap;
+}

@@ -154,6 +154,7 @@ pt-BR:
     finished: "Finalizado"
     name: "Nome"
     bugs: "Defeitos"
+    people: "Pessoas"
   header:
     logout: Sair
     sign_up: Cadastre-se
@@ -163,6 +164,8 @@ pt-BR:
       title: "Mudar para esta empresa"
     show:
       title: "Perfil do Usuário"
+      pairing_counts: "Pareamentos"
+      last_deliveries: "Últimas Entregas"
     index:
       title: "Usuários"
       turn_off_notifications: "Desligar Notificações"

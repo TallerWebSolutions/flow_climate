@@ -74,8 +74,7 @@ class Membership < ApplicationRecord
     same_team_demands.each do |demand|
       assignments_for_member = demand.item_assignments.where(team_member: team_member)
       assignments_for_member.each do |member_assignment|
-        pairing_members << demand.item_assignments.for_dates(member_assignment.start_time, member_assignment.finish_time)
-                                 .where('team_member_id <> :team_member', team_member: team_member.id).map(&:team_member)
+        pairing_members << demand.item_assignments.for_dates(member_assignment.start_time, member_assignment.finish_time).not_for_team_member(team_member).map(&:team_member)
       end
     end
 

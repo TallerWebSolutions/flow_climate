@@ -456,7 +456,7 @@ RSpec.describe ProjectConsolidation, type: :model do
     end
 
     context 'with no data' do
-      let!(:project_consolidation) { Fabricate :project_consolidation, project: project, consolidation_date: 1.day.ago, project_monte_carlo_weeks: [] }
+      let!(:project_consolidation) { Fabricate :project_consolidation, project: project, consolidation_date: 1.day.ago, project_monte_carlo_weeks: nil }
 
       it { expect(project_consolidation.odds_to_deadline_project.to_f).to eq 0 }
     end

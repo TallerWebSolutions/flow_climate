@@ -99,7 +99,8 @@ class CompaniesController < AuthenticatedController
   private
 
   def assign_projects
-    @projects = @company.projects.includes(:team)
+    @projects = @company.projects.distinct
+                        .includes(:team)
                         .includes(:customers_projects)
                         .includes(customers_projects: :customer)
                         .includes(:customers)

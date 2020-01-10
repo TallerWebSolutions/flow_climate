@@ -16,18 +16,45 @@
   </div>
 <% end %>
 
-<div class="row">
+<div class="row equal-heights">
   <div class="col-xs-4">
-    <%= render 'users/user_personal_info', company: @company, user: @user %>
+    <%= render 'users/user_personal_info', user: @user %>
   </div>
-  <div class="col-xs-4">
-    <%= render 'team_members/last_deliveries', company: @company, team_member: @user.team_member %>
-  </div>
-  <div class="col-xs-4">
-    <%= render 'team_members/pairings_summary', company: @company, team_member: @user.team_member %>
-  </div>
+
+  <% if @user.team_member.present? %>
+    <div class="col-xs-4">
+      <%= render 'team_members/last_deliveries', team_member: @user.team_member %>
+    </div>
+  <% end %>
+
+  <% if @member_teams.present? %>
+    <div class="col-xs-4">
+      <%= render 'team_members/teams_summary', member_teams: @member_teams %>
+    </div>
+  <% end %>
+
+  <% if @member_teams.present? %>
+    <div class="col-xs-4">
+      <%= render 'team_members/blocks_summary', demand_blocks: @demand_blocks %>
+    </div>
+  <% end %>
+
+  <% if @member_projects.present? %>
+    <div class="col-xs-4">
+      <%= render 'team_members/projects_summary', member_projects: @member_projects %>
+    </div>
+  <% end %>
+
+  <% if @pairing_chart.present? %>
+    <div class="col-xs-12">
+      <%= render 'team_members/pairings_summary', pairing_chart: @pairing_chart %>
+    </div>
+  <% end %>
 </div>
 
 <% content_for :javascript do %>
+  <%= javascript_include_tag 'charts/column' %>
+
   <%= javascript_include_tag 'components/components' %>
+  <%= javascript_include_tag 'users/show' %>
 <% end %>

@@ -43,6 +43,7 @@ class TeamMember < ApplicationRecord
 
   has_many :item_assignments, dependent: :destroy
   has_many :demands, -> { distinct }, through: :item_assignments
+  has_many :projects, -> { distinct }, through: :demands
 
   validates :name, presence: true
   validates :name, uniqueness: { scope: %i[company_id jira_account_id], message: I18n.t('activerecord.attributes.team_member.validations.name_unique') }

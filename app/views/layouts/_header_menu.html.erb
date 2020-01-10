@@ -1,13 +1,13 @@
 <div class="col-xs-2">
-  <%= link_to root_path do %>
-    <% image_tag 'https://res.cloudinary.com/dmphguydp/image/upload/v1550266141/Logo_preto_uyepsn.png', size: '131x45' %>
-  <% end %>
+  <%= image_tag 'https://res.cloudinary.com/dmphguydp/image/upload/v1578667381/2_taller_branco_horizontal_t1tbwo.png', size: '131x67' %>
 </div>
 
 <div class="col-xs-8 header-nav">
   <% if company.present? && company.persisted? %>
-    <span><%= link_to I18n.t('navbar.customers_list'), company_customers_path(company), class: 'nav-link top-nav-bar-item' %> | </span>
-    <span><%= link_to I18n.t('navbar.products_list'), company_products_path(company), class: 'nav-link top-nav-bar-item' %></span>
+    <span class="top-nav-bar-text"><%= link_to company.abbreviation.capitalize, company_path(company), class: 'nav-link top-nav-bar-item' %> | </span>
+    <span class="top-nav-bar-text"><%= link_to I18n.t('navbar.customers_list'), company_customers_path(company), class: 'nav-link top-nav-bar-item' %> | </span>
+    <span class="top-nav-bar-text"><%= link_to I18n.t('navbar.products_list'), company_products_path(company), class: 'nav-link top-nav-bar-item' %> | </span>
+    <span class="top-nav-bar-text"><%= link_to I18n.t('navbar.projects_list'), company_projects_path(company), class: 'nav-link top-nav-bar-item' %></span>
   <% end %>
 </div>
 

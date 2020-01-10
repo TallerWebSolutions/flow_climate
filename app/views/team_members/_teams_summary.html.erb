@@ -1,0 +1,16 @@
+<h4>Times</h4>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Nome</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% member_teams.each do |team| %>
+      <tr>
+        <td><%= link_to team.name, company_team_path(team.company, team) %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

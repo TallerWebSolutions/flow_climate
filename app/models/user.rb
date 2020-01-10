@@ -23,16 +23,11 @@
 #  user_money_credits     :decimal(, )      default(0.0), not null
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
-#  last_company_id        :integer
 #
 # Indexes
 #
 #  index_users_on_email                 (email) UNIQUE
 #  index_users_on_reset_password_token  (reset_password_token) UNIQUE
-#
-# Foreign Keys
-#
-#  fk_rails_971bf2d9a1  (last_company_id => companies.id)
 #
 
 class User < ApplicationRecord
@@ -104,5 +99,9 @@ class User < ApplicationRecord
 
   def acting_projects
     Project.all.running.where(id: demands.kept.map(&:project_id))
+  end
+
+  def last_company
+    Company.find(last_company_id) if last_company_id.present?
   end
 end

@@ -1,20 +1,13 @@
 <h4>Pareamentos</h4>
 
-<table class="table table-striped">
-  <thead>
-    <tr>
-      <th>Nome</th>
-      <th>Qtd</th>
-    </tr>
-  </thead>
-  <tbody>
-    <% if team_member.present? %>
-      <% team_member.pairing_members.first(5).to_h.each do |name, qty| %>
-        <tr>
-          <td><%= name %></td>
-          <td><%= qty %></td>
-        </tr>
-      <% end %>
-    <% end %>
-  </tbody>
-</table>
+<div id="user-dashboard-pairing-column"
+     class="flow-chart"
+     data-title=''
+     data-xcategories='<%= pairing_chart.keys %>'
+     data-xtitle='<%= 'Pessoas' %>'
+     data-ytitle='<%= I18n.t('general.demands') %>'
+     data-prefix=''
+     data-tooltipsuffix=''
+     data-series='<%= [{ name: I18n.t('general.people'), data: pairing_chart.values }].to_json %>'
+     data-decimals='0'>
+</div>

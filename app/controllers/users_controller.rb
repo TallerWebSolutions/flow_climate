@@ -26,6 +26,7 @@ class UsersController < AuthenticatedController
 
   def show
     @companies_list = @user.companies.order(:name)
+    assign_team_member_dependencies
     assign_user_dependencies
   end
 
@@ -48,6 +49,17 @@ class UsersController < AuthenticatedController
   end
 
   private
+
+  def assign_team_member_dependencies
+    @pairing_chart = {}
+    @teams = []
+    return if @user.team_member.blank?
+
+    @user.team_member.pairing_members.each { |name, qty| @pairing_chart[name] = qty }
+    @member_teams = @user.team_member.teams.order(:name)
+    @demand_blocks = @user.team_member.demand_blocks.order(block_time: :desc).last(5)
+    @member_projects = @user.team_member.projects.order(end_date: :desc).last(5)
+  end
 
   def assign_user_dependencies
     @user_plans = @user.user_plans.order(finish_at: :desc)
