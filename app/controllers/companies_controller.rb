@@ -16,7 +16,7 @@ class CompaniesController < AuthenticatedController
     assign_company_children
     assign_company_settings
     assign_jira_accounts_list
-    @projects = @company.projects.order(end_date: :desc).page(page_param)
+    assign_projects
 
     build_query_dates
   end
@@ -108,6 +108,8 @@ class CompaniesController < AuthenticatedController
                         .includes(products_projects: :product)
                         .order(end_date: :desc)
                         .page(page_param)
+
+    @unpaged_projects = @projects.except(:limit, :offset)
   end
 
   def assign_company_children
