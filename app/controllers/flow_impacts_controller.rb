@@ -75,7 +75,7 @@ class FlowImpactsController < AuthenticatedController
   def assign_flow_impacts_list
     @flow_impacts = []
     if params[:projects_ids].present?
-      @flow_impacts = FlowImpact.where(project_id: params[:projects_ids].split(',')).order(:start_date)
+      @flow_impacts = FlowImpact.where(project_id: projects_ids).order(:start_date)
     elsif @project.present?
       @flow_impacts = @project.flow_impacts.order(:start_date)
     elsif @flow_impact.present?

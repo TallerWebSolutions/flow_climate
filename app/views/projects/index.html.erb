@@ -10,7 +10,7 @@
 
 <%= hidden_field_tag :company_id, @company.id %>
 <%= hidden_field_tag :target_name, @company.name %>
-<%= hidden_field_tag :projects_ids, @projects.map(&:id).join(',') %>
+<%= hidden_field_tag :projects_ids, @unpaged_projects.map(&:id).join(',') %>
 
 <div id="projects-table">
   <%= render 'projects/projects_table', company: @company, target_name: '', projects_list: @projects, projects_summary: @projects_summary, projects_ids: @projects.map(&:id).flatten.join(',') %>

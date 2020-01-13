@@ -183,8 +183,8 @@ RSpec.describe ProjectsController, type: :controller do
 
         it 'assigns the instances variables and renders the template' do
           expect(response).to render_template :index
-          projects = assigns(:projects)
-          expect(projects).to eq [other_project, project]
+          expect(assigns(:projects)).to eq [other_project, project]
+          expect(assigns(:unpaged_projects)).to eq [other_project, project]
           expect(assigns(:projects_summary)).to be_a ProjectsSummaryData
           expect(assigns(:projects_summary).projects).to eq [other_project, project]
         end
@@ -913,10 +913,10 @@ RSpec.describe ProjectsController, type: :controller do
 
     describe 'GET #search_projects' do
       let(:company) { Fabricate :company, users: [user] }
-      let!(:first_project) { Fabricate :project, company: company, start_date: 2.months.ago, end_date: 1.month.ago, status: :waiting }
-      let!(:second_project) { Fabricate :project, company: company, start_date: 1.month.ago, end_date: 15.days.ago, status: :executing }
-      let!(:third_project) { Fabricate :project, company: company, start_date: 2.days.ago, end_date: 1.day.ago, status: :finished }
-      let!(:fourth_project) { Fabricate :project, company: company, start_date: 2.days.ago, end_date: 1.hour.ago, status: :executing }
+      let!(:first_project) { Fabricate :project, company: company, start_date: 2.months.ago, end_date: 1.month.ago, status: :waiting, name: 'FooBarXpTO' }
+      let!(:second_project) { Fabricate :project, company: company, start_date: 1.month.ago, end_date: 15.days.ago, status: :executing, name: 'XpTO' }
+      let!(:third_project) { Fabricate :project, company: company, start_date: 2.days.ago, end_date: 1.day.ago, status: :finished, name: 'FooBar' }
+      let!(:fourth_project) { Fabricate :project, company: company, start_date: 2.days.ago, end_date: 1.hour.ago, status: :executing, name: 'Foo' }
 
       context 'passing valid parameters' do
         context 'with no search parameters' do
@@ -961,6 +961,16 @@ RSpec.describe ProjectsController, type: :controller do
 
             expect(response).to render_template 'projects/search_projects'
             expect(assigns(:projects)).to eq [fourth_project]
+          end
+        end
+
+        context 'with search by project name' do
+          it 'retrieves all executing the projects to the company' do
+            get :search_projects, params: { company_id: company, projects_ids: [first_project, second_project, third_project, fourth_project].map(&:id).join(','), project_name: 'bar' }, xhr: true
+
+            expect(response).to render_template 'projects/search_projects'
+            expect(assigns(:projects)).to eq [third_project, first_project]
+            expect(assigns(:unpaged_projects)).to eq [third_project, first_project]
           end
         end
       end

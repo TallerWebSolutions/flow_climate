@@ -90,7 +90,7 @@ class DemandBlocksController < AuthenticatedController
   end
 
   def assign_projects
-    @projects = Project.where(id: params[:projects_ids].split(','))
+    @projects = Project.where(id: projects_ids)
   end
 
   def demand_block_params
