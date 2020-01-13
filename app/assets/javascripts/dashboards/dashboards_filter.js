@@ -6,10 +6,11 @@ $('.dashboard-filter-button').on('click', function() {
     const projectStatus = $("#project_status").val();
     const demandsType = $("#demands-table-demand-type").val();
     const demandsClassOfService = $("#demands-table-class-of-service").val();
+    const demandStatus = $("#demand_status").val();
 
     jQuery.ajax({
         url: `/companies/${companyId}/teams/${teamId}/dashboard_search.js`,
         type: "GET",
-        data: `&project_status=${projectStatus}&demand_type=${demandsType}&demand_class_of_service=${demandsClassOfService}&start_date=${startDate}&end_date=${endDate}`
+        data: `&project_status=${projectStatus}&demand_status=${demandStatus}&demand_type=${demandsType}&demand_class_of_service=${demandsClassOfService}&start_date=${startDate}&end_date=${endDate}`
     });
 });
