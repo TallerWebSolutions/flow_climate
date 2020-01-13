@@ -54,7 +54,7 @@ class ChartsController < AuthenticatedController
   end
 
   def assign_projects
-    @projects = Project.where(id: params[:projects_ids].split(','))
+    @projects = Project.where(id: projects_ids)
     return if @projects.blank?
 
     teams = @projects.includes(:team).map(&:team).uniq.compact

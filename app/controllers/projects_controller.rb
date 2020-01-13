@@ -21,9 +21,9 @@ class ProjectsController < AuthenticatedController
 
   def index
     @projects = @company.projects.distinct.includes(:team).order(end_date: :desc).page(page_param)
-    unpaged_projects = @projects.except(:limit, :offset)
+    @unpaged_projects = @projects.except(:limit, :offset)
 
-    @projects_summary = ProjectsSummaryData.new(unpaged_projects)
+    @projects_summary = ProjectsSummaryData.new(@unpaged_projects)
   end
 
   def new
@@ -139,8 +139,7 @@ class ProjectsController < AuthenticatedController
   def search_projects
     @target_name = params[:target_name]
 
-    @projects = build_projects_search(params[:start_date], params[:end_date], params[:project_status])
-    @projects = @projects.order(end_date: :desc).page(page_param)
+    @projects = build_projects_search(projects_ids, params[:start_date], params[:end_date], params[:project_status], params[:project_name])
     @unpaged_projects = @projects.except(:limit, :offset)
 
     @projects_summary = ProjectsSummaryData.new(@unpaged_projects)
@@ -157,12 +156,13 @@ class ProjectsController < AuthenticatedController
     end
   end
 
-  def build_projects_search(start_date, end_date, project_status)
-    @projects = Project.where(id: params[:projects_ids].split(','))
-    @projects = @projects.where(status: project_status) if project_status.present?
-    @projects = @projects.where('start_date >= :start_date', start_date: start_date) if params[:start_date].present?
-    @projects = @projects.where('end_date <= :end_date', end_date: end_date) if params[:end_date].present?
-    @projects
+  def build_projects_search(projects_ids, start_date, end_date, project_status, project_name)
+    projects = Project.where(id: projects_ids)
+    projects = projects.where('name ILIKE :name', name: "%#{project_name.tr(' ', '%')}%") if project_name.present?
+    projects = projects.where(status: project_status) if project_status.present?
+    projects = projects.where('start_date >= :start_date', start_date: start_date) if start_date.present?
+    projects = projects.where('end_date <= :end_date', end_date: end_date) if end_date.present?
+    projects.order(end_date: :desc).page(page_param)
   end
 
   def assign_demands_ids
