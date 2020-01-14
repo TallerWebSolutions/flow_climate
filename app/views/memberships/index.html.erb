@@ -5,7 +5,7 @@
       <li><%= link_to @company.abbreviation&.upcase, company_path(@company) %></li>
       <li><%= Team.model_name.human(count: 2) %></li>
       <li><%= link_to @team.name, company_team_path(@company, @team) %></li>
-      <li><%= Membership.model_name.human(cound: 2) %></li>
+      <li><%= Membership.model_name.human(count: 2) %></li>
     </ul>
   </div>
 </div>

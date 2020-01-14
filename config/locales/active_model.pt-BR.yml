@@ -132,6 +132,9 @@ pt-BR:
       jira/jira_project_config:
         one: Configuração do Jira para o Projeto
         other: Configurações do Jira para o Projeto
+      jira/jira_product_config:
+        one: Configuração do Jira para o Produto
+        other: Configurações do Jira para o Produto
       portfolio_unit:
         one: Unidade do Portfólio
         other: Unidades do Portfólio
