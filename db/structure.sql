@@ -1195,7 +1195,8 @@ CREATE TABLE public.service_delivery_reviews (
     delayed_expedite_top_threshold numeric NOT NULL,
     delayed_expedite_bottom_threshold numeric NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    bugs_ids integer[]
 );
 
 
@@ -3707,6 +3708,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20191024212617'),
 ('20191025150906'),
 ('20191028155108'),
-('20191223134739');
+('20191223134739'),
+('20200114153736');
 
 

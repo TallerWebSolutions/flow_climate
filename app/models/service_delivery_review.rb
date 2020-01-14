@@ -5,6 +5,7 @@
 # Table name: service_delivery_reviews
 #
 #  id                                :bigint           not null, primary key
+#  bugs_ids                          :integer          is an Array
 #  delayed_expedite_bottom_threshold :decimal(, )      not null
 #  delayed_expedite_top_threshold    :decimal(, )      not null
 #  expedite_max_pull_time_sla        :integer          not null
@@ -45,17 +46,17 @@ class ServiceDeliveryReview < ApplicationRecord
   delegate :count, to: :expedites, prefix: true
 
   def bugs
-    demands.kept.bug
+    Demand.where(id: bugs_ids)
   end
 
   def no_bugs
-    demands.kept - demands.kept.bug
+    demands.kept - bugs
   end
 
   def bug_percentage
-    return 0 unless demands.kept.count.positive?
+    return 0 unless demands.kept.count.positive? && bugs_ids.count.positive?
 
-    (bugs_count.to_f / demands.kept.count) * 100
+    (bugs_ids.count.to_f / demands.kept.count) * 100
   end
 
   def expedites

@@ -1,6 +1,7 @@
+# frozen_string_literal: true
+
 module Slack
   class SlackNotificationsJob < ApplicationJob
-
     def perform(slack_configuration, team)
       slack_notifier = Slack::Notifier.new(slack_configuration.room_webhook)
 

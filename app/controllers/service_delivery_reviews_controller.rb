@@ -27,6 +27,7 @@ class ServiceDeliveryReviewsController < AuthenticatedController
 
   def destroy
     @service_delivery_review.destroy
+    service_delivery_reviews
     respond_to { |format| format.js { render 'service_delivery_reviews/destroy' } }
   end
 

@@ -21,6 +21,18 @@
         <td><b><%= I18n.t('service_delivery_reviews.show.highest_stage_time') %></b></td>
         <td><%= service_delivery_review.longest_stage[:name] %><sup><%= " (#{I18n.t('general.hours_text', hour_value: number_with_precision(service_delivery_review.longest_stage[:time_in_stage] / 1.hour, precision: 2))})" %></sup></td>
       </tr>
+      <tr>
+        <td><b><%= 'Overserved' %></b></td>
+        <td><%= "#{I18n.t('general.demands_text', count: @service_delivery_review.overserved_demands[:value].count)} (#{number_to_percentage(service_delivery_review.overserved_demands[:share] * 100, precision: 2)})" %></td>
+      </tr>
+      <tr>
+        <td><b><%= 'Underserved' %></b></td>
+        <td><%= "#{I18n.t('general.demands_text', count: @service_delivery_review.underserved_demands[:value].count)} (#{number_to_percentage(service_delivery_review.underserved_demands[:share] * 100, precision: 2)})" %></td>
+      </tr>
+      <tr>
+        <td><b><%= 'Fit For Purpose' %></b></td>
+        <td><%= "#{I18n.t('general.demands_text', count: @service_delivery_review.fit_for_purpose_demands[:value].count)} (#{number_to_percentage(service_delivery_review.fit_for_purpose_demands[:share] * 100, precision: 2)})" %></td>
+      </tr>
     <% end %>
   </tbody>
 </table>

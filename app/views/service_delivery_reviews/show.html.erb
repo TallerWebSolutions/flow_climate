@@ -20,7 +20,7 @@
       <div class="row-fluid">
         <div class="col-xs-12">
           <div class="tab">
-            <button class="tablinks" onclick="openTab(event, 'sdr-general-info', 'tablinks', 'tabcontent')"><%= I18n.t('service_delivery_reviews.show.general_info') %></button>
+            <button class="tablinks" id="general-info-tab" onclick="openTab(event, 'sdr-general-info', 'tablinks', 'tabcontent')"><%= I18n.t('service_delivery_reviews.show.general_info') %></button>
             <button class="tablinks" onclick="openTab(event, 'sdr-kpis-ranges', 'tablinks', 'tabcontent')"><%= I18n.t('service_delivery_reviews.show.kpis') %></button>
           </div>
         </div>
@@ -173,24 +173,6 @@
            data-decimals='2'>
       </div>
     </div>
-    <div class="col-xs-4">
-      <table class="table">
-        <tbody>
-          <tr>
-            <td><b><%= 'Overserved' %></b></td>
-            <td><%= "#{I18n.t('general.demands_text', count: @service_delivery_review.overserved_demands[:value].count)} (#{number_to_percentage(@service_delivery_review.overserved_demands[:share] * 100, precision: 2)})" %></td>
-          </tr>
-          <tr>
-            <td><b><%= 'Underserved' %></b></td>
-            <td><%= "#{I18n.t('general.demands_text', count: @service_delivery_review.underserved_demands[:value].count)} (#{number_to_percentage(@service_delivery_review.underserved_demands[:share] * 100, precision: 2)})" %></td>
-          </tr>
-          <tr>
-            <td><b><%= 'Fit For Purpose' %></b></td>
-            <td><%= "#{I18n.t('general.demands_text', count: @service_delivery_review.fit_for_purpose_demands[:value].count)} (#{number_to_percentage(@service_delivery_review.fit_for_purpose_demands[:share] * 100, precision: 2)})" %></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
   <% else %>
     <%= render 'layouts/no_data', missing_data: Demand.model_name.human(count: 2).downcase %>
   <% end %>
@@ -201,17 +183,17 @@
 <div class="row">
   <div class="col-xs-12">
     <div class="tab">
-      <button class="tablinks" onclick="openTab(event, 'demands', 'tablinks', 'tabcontent')"><%= I18n.t('service_delivery_reviews.show.demands_label') %></button>
-      <button class="tablinks" onclick="openTab(event, 'bugs-list', 'tablinks', 'tabcontent')"><%= I18n.t('service_delivery_reviews.show.bugs_label') %></button>
+      <button class="tablinks tablinks-sdr-details" onclick="openTab(event, 'demands', 'tablinks-sdr-details', 'tabcontent-sdr-details')"><%= I18n.t('service_delivery_reviews.show.demands_label') %></button>
+      <button class="tablinks tablinks-sdr-details" onclick="openTab(event, 'bugs-list', 'tablinks-sdr-details', 'tabcontent-sdr-details')"><%= I18n.t('service_delivery_reviews.show.bugs_label') %></button>
     </div>
   </div>
 </div>
 
-<div id="demands" class="tabcontent">
+<div id="demands" class="tabcontent tabcontent-sdr-details">
   <%= render 'demands/portfolio_demands_table', company: @company, product: @product, demands: @service_delivery_review.demands.order(end_date: :desc) %>
 </div>
 
-<div id="bugs-list" class="tabcontent">
+<div id="bugs-list" class="tabcontent tabcontent-sdr-details">
   <%= render 'demands/portfolio_demands_table', company: @company, product: @product, demands: @service_delivery_review.bugs.order(end_date: :desc) %>
 </div>
 

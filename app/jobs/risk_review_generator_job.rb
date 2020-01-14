@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RiskReviewGeneratorJob < ApplicationJob
   queue_as :default
 
@@ -11,5 +13,4 @@ class RiskReviewGeneratorJob < ApplicationJob
     finished_time = Time.zone.now
     UserNotifierMailer.async_activity_finished(user_email, user_name, RiskReview.model_name.human.downcase, risk_id, started_time, finished_time, risk_review_url).deliver if user_email.present?
   end
-
 end

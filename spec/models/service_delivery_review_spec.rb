@@ -70,6 +70,8 @@ RSpec.describe ServiceDeliveryReview, type: :model do
   describe '#bugs_count' do
     include_context 'service delivery data'
 
+    before { service_delivery_review.update(bugs_ids: [first_demand.id, second_demand.id]) }
+
     it 'returns the bugs count' do
       expect(service_delivery_review.bugs_count).to eq 2
       expect(other_service_delivery_review.bugs_count).to eq 0
@@ -78,6 +80,8 @@ RSpec.describe ServiceDeliveryReview, type: :model do
 
   describe '#bug_percentage' do
     include_context 'service delivery data'
+
+    before { service_delivery_review.update(bugs_ids: [first_demand.id, second_demand.id]) }
 
     it 'returns the bugs count percentage' do
       expect(service_delivery_review.bug_percentage).to eq 50.0
@@ -100,6 +104,8 @@ RSpec.describe ServiceDeliveryReview, type: :model do
 
   describe '#bugs' do
     include_context 'service delivery data'
+
+    before { service_delivery_review.update(bugs_ids: [first_demand.id, second_demand.id]) }
 
     it 'returns the bugs' do
       expect(service_delivery_review.bugs).to match_array [first_demand, second_demand]
@@ -145,6 +151,8 @@ RSpec.describe ServiceDeliveryReview, type: :model do
 
   describe '#no_bugs' do
     include_context 'service delivery data'
+
+    before { service_delivery_review.update(bugs_ids: [first_demand.id, second_demand.id]) }
 
     it 'returns the bug demands' do
       expect(service_delivery_review.no_bugs).to match_array [third_demand, fourth_demand]

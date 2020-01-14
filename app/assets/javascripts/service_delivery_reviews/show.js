@@ -32,3 +32,6 @@ const leadtimeControlChart = $('#service-delivery-review-leadtime-control-chart'
 if (leadtimeControlChart.length !== 0) {
     buildTwoThresholdsChart(leadtimeControlChart);
 }
+
+$('#general-info-tab').addClass('active');
+$('#sdr-general-info').show();
