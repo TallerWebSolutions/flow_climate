@@ -3,7 +3,7 @@
     <ul class="breadcrumb">
       <li><%= link_to I18n.t('general.home.title'), root_path %></li>
       <li><%= link_to @company.abbreviation&.upcase, company_path(@company) %></li>
-      <li><%= link_to Project.model_name.human.pluralize.capitalize, company_projects_path(@company) %></li>
+      <li><%= link_to Project.model_name.human(count: 2).capitalize, company_projects_path(@company) %></li>
       <li><%= I18n.t('project.new.title') %></li>
     </ul>
   </div>

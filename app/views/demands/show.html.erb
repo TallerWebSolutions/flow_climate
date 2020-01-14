@@ -56,7 +56,7 @@
         <% end %>
       <% end %>
     <% else %>
-      <%= render 'layouts/no_data', missing_data: PortfolioUnit.model_name.human.pluralize.downcase %>
+      <%= render 'layouts/no_data', missing_data: PortfolioUnit.model_name.human(count: 2).downcase %>
     <% end %>
   </div>
 </div>

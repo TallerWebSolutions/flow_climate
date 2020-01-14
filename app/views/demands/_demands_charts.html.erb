@@ -19,7 +19,7 @@
       </div>
     </div>
   <% else %>
-    <%= render 'layouts/no_data', missing_data: Demand.model_name.human.pluralize.downcase %>
+    <%= render 'layouts/no_data', missing_data: Demand.model_name.human(count: 2).downcase %>
   <% end %>
 
   <% if demands_chart_adapter.leadtime_percentiles_on_time_chart_data.present? %>
@@ -37,7 +37,7 @@
       </div>
     </div>
   <% else %>
-    <%= render 'layouts/no_data', missing_data: Demand.model_name.human.pluralize.downcase %>
+    <%= render 'layouts/no_data', missing_data: Demand.model_name.human(count: 2).downcase %>
   <% end %>
 
   <% if demands_chart_adapter.demands_by_project.present? %>
@@ -55,6 +55,6 @@
       </div>
     </div>
   <% else %>
-    <%= render 'layouts/no_data', missing_data: Demand.model_name.human.pluralize.downcase %>
+    <%= render 'layouts/no_data', missing_data: Demand.model_name.human(count: 2).downcase %>
   <% end %>
 </div>

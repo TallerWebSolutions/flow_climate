@@ -13,7 +13,7 @@
         <th><%= PortfolioUnit.human_attribute_name :parent %></th>
         <th><%= PortfolioUnit.human_attribute_name :name %></th>
         <th><%= PortfolioUnit.human_attribute_name :portfolio_unit_type %></th>
-        <th><%= Demand.model_name.human.pluralize %></th>
+        <th><%= Demand.model_name.human(count: 2) %></th>
         <th><%= PortfolioUnit.human_attribute_name :jira_portfolio_unit_config %></th>
         <th></th>
       </tr>

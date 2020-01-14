@@ -30,7 +30,7 @@
            data-decimals='0'>
       </div>
     <% else %>
-      <%= render 'layouts/no_data', missing_data: Demand.model_name.human.pluralize.downcase %>
+      <%= render 'layouts/no_data', missing_data: Demand.model_name.human(count: 2).downcase %>
     <% end %>
   </div>
 

@@ -1,6 +1,6 @@
 <%= form_tag copy_stages_from_company_project_url(company, project), method: :patch, class: 'form', remote: true do %>
   <div class="form-group">
-    <%= label_tag Project.model_name.human.pluralize, nil, class: 'control-label' %>
+    <%= label_tag Project.model_name.human(count: 2), nil, class: 'control-label' %>
     <%= select_tag :project_to_copy_stages_from, options_from_collection_for_select(projects_to_copy_stages_from, :id, :name), class: 'form-control' %>
   </div>
   <div class="row">
@@ -13,7 +13,7 @@
 <div id="stages-table">
   <% if project.stages.empty? %>
     <div class="no-data">
-      <%= I18n.t('general.no_data', missing_data: Stage.model_name.human.pluralize(2).downcase) %>
+      <%= I18n.t('general.no_data', missing_data: Stage.model_name.human(count: 2).downcase) %>
     </div>
   <% else %>
     <div id="stages-to-project-table">
