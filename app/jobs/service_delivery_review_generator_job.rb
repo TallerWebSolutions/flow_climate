@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ServiceDeliveryReviewGeneratorJob < ApplicationJob
   queue_as :default
 
@@ -11,5 +13,4 @@ class ServiceDeliveryReviewGeneratorJob < ApplicationJob
     finished_time = Time.zone.now
     UserNotifierMailer.async_activity_finished(user_email, user_name, ServiceDeliveryReview.model_name.human.downcase, service_delivery_review_id, started_time, finished_time, service_delivery_review_url).deliver if user_email.present?
   end
-
 end

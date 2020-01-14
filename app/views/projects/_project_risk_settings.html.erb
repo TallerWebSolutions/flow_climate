@@ -41,6 +41,6 @@
 </table>
 <% else %>
   <div class="no-data">
-    <%= I18n.t('general.no_data', missing_data: ProjectRiskConfig.model_name.human.pluralize(2).downcase) %>
+    <%= I18n.t('general.no_data', missing_data: ProjectRiskConfig.model_name.human(count: 2).downcase) %>
   </div>
 <% end %>

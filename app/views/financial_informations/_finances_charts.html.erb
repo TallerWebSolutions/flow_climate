@@ -34,5 +34,5 @@
     </div>
   </div>
 <% else %>
-  <%= I18n.t('general.no_data', missing_data: FinancialInformation.model_name.human.pluralize(2).downcase) %>
+  <%= I18n.t('general.no_data', missing_data: FinancialInformation.model_name.human(count: 2).downcase) %>
 <% end %>

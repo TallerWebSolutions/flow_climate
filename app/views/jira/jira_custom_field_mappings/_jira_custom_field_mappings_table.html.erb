@@ -1,6 +1,6 @@
 
 <% if @jira_custom_field_mappings.present? %>
-  <h4><%= Jira::JiraCustomFieldMapping.model_name.human.pluralize %></h4>
+  <h4><%= Jira::JiraCustomFieldMapping.model_name.human(count: 2) %></h4>
   <table class="table">
     <thead>
       <tr>
@@ -18,5 +18,5 @@
     </tbody>
   </table>
 <% else %>
-  <%= render 'layouts/no_data', missing_data: Jira::JiraCustomFieldMapping.model_name.human.pluralize %>
+  <%= render 'layouts/no_data', missing_data: Jira::JiraCustomFieldMapping.model_name.human(count: 2) %>
 <% end %>
