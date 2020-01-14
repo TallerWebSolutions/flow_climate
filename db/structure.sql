@@ -437,12 +437,13 @@ CREATE TABLE public.flow_impacts (
     demand_id integer,
     impact_type integer NOT NULL,
     impact_description character varying NOT NULL,
-    start_date timestamp without time zone NOT NULL,
-    end_date timestamp without time zone,
+    impact_date timestamp without time zone NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     risk_review_id integer,
-    discarded_at timestamp without time zone
+    discarded_at timestamp without time zone,
+    impact_size integer DEFAULT 0 NOT NULL,
+    user_id integer
 );
 
 
@@ -2455,6 +2456,13 @@ CREATE INDEX index_flow_impacts_on_demand_id ON public.flow_impacts USING btree 
 
 
 --
+-- Name: index_flow_impacts_on_impact_size; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_flow_impacts_on_impact_size ON public.flow_impacts USING btree (impact_size);
+
+
+--
 -- Name: index_flow_impacts_on_impact_type; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2466,6 +2474,13 @@ CREATE INDEX index_flow_impacts_on_impact_type ON public.flow_impacts USING btre
 --
 
 CREATE INDEX index_flow_impacts_on_project_id ON public.flow_impacts USING btree (project_id);
+
+
+--
+-- Name: index_flow_impacts_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_flow_impacts_on_user_id ON public.flow_impacts USING btree (user_id);
 
 
 --
@@ -3328,6 +3343,14 @@ ALTER TABLE ONLY public.project_change_deadline_histories
 
 
 --
+-- Name: flow_impacts fk_rails_80b183dabb; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.flow_impacts
+    ADD CONSTRAINT fk_rails_80b183dabb FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
 -- Name: stages_teams fk_rails_8d8a97b7b3; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -3709,6 +3732,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20191025150906'),
 ('20191028155108'),
 ('20191223134739'),
-('20200114153736');
+('20200114153736'),
+('20200114190057');
 
 

@@ -418,12 +418,13 @@ pt-BR:
         project_key: Chave do Projeto
         user: Usuário
       flow_impact:
+        user: Criada por
         project: Projeto
         impact_type: Tipo do Impacto
+        impact_size: Tamanho do Impacto
         impact_description: Descrição do Impacto
         demand: Demanda
-        start_date: Iniciou em
-        end_date: Finalizou em
+        impact_date: Data do Impacto
         enums:
           impact_type:
             other_team_dependency: Dependência de outro time
@@ -432,6 +433,10 @@ pt-BR:
             other_demand_dependency: Dependência de outra demanda
             fixes_out_of_scope: Ajustes fora do escopo
             external_service_unavailable: Serviço externo indisponível
+          impact_size:
+            small: Pequeno
+            medium: Médio
+            large: Grande
       demand_comment:
         demand: Demanda
         team_member: Comentado por

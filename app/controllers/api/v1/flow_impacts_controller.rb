@@ -17,7 +17,7 @@ module Api
       end
 
       def opened_impacts
-        flow_impacts = @project.flow_impacts.opened.order(:start_date)
+        flow_impacts = @project.flow_impacts.order(:impact_date)
 
         render json: { status: 'SUCCESS', message: I18n.t('flow_impacts.opened_impacts.title', project_name: @project.name), data: flow_impacts.map(&:to_hash) }, status: :ok
       end
@@ -29,7 +29,7 @@ module Api
       end
 
       def flow_impact_params
-        params.require(:flow_impact).permit(:demand_id, :start_date, :end_date, :impact_description, :impact_type)
+        params.require(:flow_impact).permit(:demand_id, :impact_date, :impact_description, :impact_type, :impact_size)
       end
     end
   end

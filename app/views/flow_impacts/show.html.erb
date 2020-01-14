@@ -11,6 +11,7 @@
 </div>
 
 <h3><%= I18n.t("activerecord.attributes.flow_impact.enums.impact_type.#{@flow_impact.impact_type}") %></h3>
+<h4><%= I18n.t("activerecord.attributes.flow_impact.enums.impact_size.#{@flow_impact.impact_size}") %></h4>
 
 <table class="table table-striped">
   <tbody>
@@ -20,15 +21,7 @@
     </tr>
     <tr>
       <td><b><%= FlowImpact.human_attribute_name :start_date %></b></td>
-      <td><%= I18n.l(@flow_impact.start_date, format: :short) %></td>
-    </tr>
-    <tr>
-      <td><b><%= FlowImpact.human_attribute_name :end_date %></b></td>
-      <td><%= I18n.l(@flow_impact.end_date, format: :short) if @flow_impact.end_date.present? %></td>
-    </tr>
-    <tr>
-      <td><b><%= I18n.t('flow_impacts.show.impact_duration') %></b></td>
-      <td><%= time_distance_in_words(@flow_impact.impact_duration) %></td>
+      <td><%= I18n.l(@flow_impact.impact_date, format: :short) %></td>
     </tr>
   </tbody>
 </table>

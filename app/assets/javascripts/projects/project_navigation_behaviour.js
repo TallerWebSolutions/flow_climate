@@ -7,6 +7,7 @@ $('#stamps').show();
 
 const companyId = $("#company_id").val();
 const projectsIds = $("#projects_ids").val();
+const projectId = $("#project_id").val();
 const demandsIds = $("#demands_ids").val();
 const targetName = $("#target_name").val();
 
@@ -37,7 +38,7 @@ projectNavItem.on('click', function(event){
 
         } else if ($(this).attr('id') === 'nav-item-flow-impacts') {
             $('#flow-impacts-tab').hide();
-            getFlowImpacts(companyId, projectsIds);
+            getFlowImpacts(companyId, projectId, projectsIds);
 
         } else if ($(this).attr('id') === 'nav-item-statistics') {
             const statsStartDate = '';

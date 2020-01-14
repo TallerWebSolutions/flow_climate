@@ -6,14 +6,14 @@ class FlowImpactsController < AuthenticatedController
   before_action :assign_flow_impact, only: %i[destroy edit update show]
 
   def new
-    @flow_impact = FlowImpact.new(project: @project)
+    @flow_impact = FlowImpact.new(project: @project, impact_date: Time.zone.now)
     @demands_for_impact_form = @project.demands.in_wip.order(:external_id)
     assign_flow_impacts_list
     respond_to { |format| format.js { render 'flow_impacts/new' } }
   end
 
   def create
-    @flow_impact = FlowImpact.new(flow_impact_params.merge(project: @project))
+    @flow_impact = FlowImpact.new(flow_impact_params.merge(project: @project, user: current_user))
     @flow_impact.save
     assign_flow_impacts_list
     @demands_for_impact_form = @project.demands.in_wip
@@ -28,17 +28,18 @@ class FlowImpactsController < AuthenticatedController
 
   def flow_impacts_tab
     assign_flow_impacts_list
+    @project = Project.find(params[:project_id]) if params[:project_id].present?
     respond_to { |format| format.js { render 'flow_impacts/flow_impacts_tab' } }
   end
 
   def new_direct_link
-    @flow_impact = FlowImpact.new
+    @flow_impact = FlowImpact.new(impact_date: Time.zone.now)
     @projects_to_direct_link = @company.projects.running
     @demands_to_direct_link = []
   end
 
   def create_direct_link
-    @flow_impact = FlowImpact.new(flow_impact_direct_link_params)
+    @flow_impact = FlowImpact.new(flow_impact_direct_link_params.merge(user: current_user))
     if @flow_impact.save
       flash[:notice] = I18n.t('flow_impacts.create.success')
     else
@@ -75,11 +76,11 @@ class FlowImpactsController < AuthenticatedController
   def assign_flow_impacts_list
     @flow_impacts = []
     if params[:projects_ids].present?
-      @flow_impacts = FlowImpact.where(project_id: projects_ids).order(:start_date)
+      @flow_impacts = FlowImpact.where(project_id: projects_ids).order(:impact_date)
     elsif @project.present?
-      @flow_impacts = @project.flow_impacts.order(:start_date)
+      @flow_impacts = @project.flow_impacts.order(:impact_date)
     elsif @flow_impact.present?
-      @flow_impacts = @flow_impact.project.flow_impacts.order(:start_date)
+      @flow_impacts = @flow_impact.project.flow_impacts.order(:impact_date)
     end
   end
 
@@ -88,11 +89,11 @@ class FlowImpactsController < AuthenticatedController
   end
 
   def flow_impact_params
-    params.require(:flow_impact).permit(:demand_id, :start_date, :end_date, :impact_description, :impact_type)
+    params.require(:flow_impact).permit(:demand_id, :impact_date, :impact_description, :impact_type, :impact_size)
   end
 
   def flow_impact_direct_link_params
-    params.require(:flow_impact).permit(:project_id, :demand_id, :start_date, :end_date, :impact_description, :impact_type)
+    params.require(:flow_impact).permit(:project_id, :demand_id, :impact_date, :impact_description, :impact_type, :impact_size)
   end
 
   def assign_project

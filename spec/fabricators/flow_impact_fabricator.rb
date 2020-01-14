@@ -5,7 +5,8 @@ Fabricator(:flow_impact) do
   demand
 
   impact_type { [0, 1, 2].sample }
+  impact_size { [0, 1, 2].sample }
   impact_description { Faker::Lorem.sentences }
 
-  start_date { 1.day.ago }
+  impact_date { 1.day.ago }
 end
