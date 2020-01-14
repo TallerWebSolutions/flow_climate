@@ -54,7 +54,7 @@ class ServiceDeliveryReview < ApplicationRecord
   end
 
   def bug_percentage
-    return 0 unless demands.kept.count.positive? && bugs_ids.count.positive?
+    return 0 unless demands.kept.count.positive? && bugs_ids&.count&.positive?
 
     (bugs_ids.count.to_f / demands.kept.count) * 100
   end
