@@ -50,9 +50,9 @@ RSpec.describe RiskReview, type: :model do
     let!(:second_demand_block) { Fabricate :demand_block, demand: first_demand, risk_review: risk_review, block_time: Time.zone.parse('2018-03-06 10:00'), unblock_time: nil }
     let!(:third_demand_block) { Fabricate :demand_block, demand: second_demand, risk_review: risk_review, block_time: Time.zone.parse('2018-03-06 14:00'), unblock_time: Time.zone.parse('2018-03-06 15:00') }
 
-    let!(:first_flow_impact) { Fabricate :flow_impact, demand: first_demand, risk_review: risk_review, start_date: Time.zone.parse('2018-03-05 23:00') }
-    let!(:second_flow_impact) { Fabricate :flow_impact, demand: first_demand, risk_review: risk_review, start_date: Time.zone.parse('2018-03-06 10:00') }
-    let!(:third_flow_impact) { Fabricate :flow_impact, demand: second_demand, risk_review: risk_review, start_date: Time.zone.parse('2018-03-06 14:00') }
+    let!(:first_flow_impact) { Fabricate :flow_impact, demand: first_demand, risk_review: risk_review, impact_date: Time.zone.parse('2018-03-05 23:00') }
+    let!(:second_flow_impact) { Fabricate :flow_impact, demand: first_demand, risk_review: risk_review, impact_date: Time.zone.parse('2018-03-06 10:00') }
+    let!(:third_flow_impact) { Fabricate :flow_impact, demand: second_demand, risk_review: risk_review, impact_date: Time.zone.parse('2018-03-06 14:00') }
   end
 
   describe '#outlier_demands' do

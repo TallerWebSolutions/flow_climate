@@ -148,7 +148,7 @@
 </div>
 
 <div id="flow-impacts" class="tabcontent">
-  <%= render 'flow_impacts/flow_impacts_table', company: @company, flow_impacts_list: @risk_review.flow_impacts.order(start_date: :desc) %>
+  <%= render 'flow_impacts/flow_impacts_table', company: @company, flow_impacts_list: @risk_review.flow_impacts.order(impact_date: :desc) %>
 </div>
 
 <% content_for :javascript do %>

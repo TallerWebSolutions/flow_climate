@@ -1,42 +1,42 @@
 <% if flow_impacts_list.present? %>
-<table class="table table-striped table-index">
-  <thead>
-    <tr>
-      <th></th>
-      <th><%= FlowImpact.human_attribute_name :impact_type %></th>
-      <th><%= FlowImpact.human_attribute_name :project %></th>
-      <th><%= FlowImpact.human_attribute_name :demand %></th>
-      <th><%= FlowImpact.human_attribute_name :start_date %></th>
-      <th><%= FlowImpact.human_attribute_name :end_date %></th>
-      <th><%= Stage.model_name.human %></th>
-      <th><%= I18n.t('flow_impacts.show.impact_duration') %></th>
-      <th><%= FlowImpact.human_attribute_name :impact_description %></th>
-    </tr>
-  </thead>
-  <tbody>
-    <% flow_impacts_list.each do |flow_impact| %>
+  <table class="table table-striped">
+    <thead>
       <tr>
-        <td>
-          <%= link_to company_flow_impact_path(company, flow_impact), method: :delete, data: { confirm: I18n.t('general.destroy.confirm') }, remote: true do %>
-            <i class="fa fa-times" title='<%= I18n.t('flow_impacts.destroy.tooltip') %>'></i>
-          <% end %>
-
-          <%= link_to edit_company_flow_impact_path(company, flow_impact), remote: true do %>
-            <i class="fas fa-edit" title='<%= I18n.t('flow_impacts.edit.tooltip') %>'></i>
-          <% end %>
-        </td>
-        <td><%= link_to I18n.t("activerecord.attributes.flow_impact.enums.impact_type.#{flow_impact.impact_type}"), company_flow_impact_path(company, flow_impact) %></td>
-        <td><%= flow_impact.project.name %></td>
-        <td><%= flow_impact.demand&.external_id %></td>
-        <td><%= I18n.l(flow_impact.start_date, format: :short) %></td>
-        <td><%= I18n.l(flow_impact.end_date, format: :short) if flow_impact.end_date.present? %></td>
-        <td><%= flow_impact.demand.stage_at(flow_impact.start_date)&.name if flow_impact.demand.present? %></td>
-        <td><%= time_distance_in_words(flow_impact.impact_duration) %></td>
-        <td><%= flow_impact.impact_description %></td>
+        <th></th>
+        <th><%= FlowImpact.human_attribute_name :user %></th>
+        <th><%= FlowImpact.human_attribute_name :impact_type %></th>
+        <th><%= FlowImpact.human_attribute_name :impact_size %></th>
+        <th><%= FlowImpact.human_attribute_name :project %></th>
+        <th><%= FlowImpact.human_attribute_name :demand %></th>
+        <th><%= FlowImpact.human_attribute_name :impact_date %></th>
+        <th><%= Stage.model_name.human %></th>
+        <th><%= FlowImpact.human_attribute_name :impact_description %></th>
       </tr>
-    <% end %>
-  </tbody>
-</table>
+    </thead>
+    <tbody>
+      <% flow_impacts_list.each do |flow_impact| %>
+        <tr>
+          <td>
+            <%= link_to company_flow_impact_path(company, flow_impact), method: :delete, data: { confirm: I18n.t('general.destroy.confirm') }, remote: true do %>
+              <i class="fa fa-times" title='<%= I18n.t('flow_impacts.destroy.tooltip') %>'></i>
+            <% end %>
+
+            <%= link_to edit_company_flow_impact_path(company, flow_impact), remote: true do %>
+              <i class="fas fa-edit" title='<%= I18n.t('flow_impacts.edit.tooltip') %>'></i>
+            <% end %>
+          </td>
+          <td><%= flow_impact.user&.full_name %></td>
+          <td><%= link_to I18n.t("activerecord.attributes.flow_impact.enums.impact_type.#{flow_impact.impact_type}"), company_flow_impact_path(company, flow_impact) %></td>
+          <td><%= I18n.t("activerecord.attributes.flow_impact.enums.impact_size.#{flow_impact.impact_size}") %></td>
+          <td><%= flow_impact.project.name %></td>
+          <td><%= flow_impact.demand&.external_id %></td>
+          <td><%= I18n.l(flow_impact.impact_date, format: :short) %></td>
+          <td><%= flow_impact.demand.stage_at(flow_impact.impact_date)&.name if flow_impact.demand.present? %></td>
+          <td><%= flow_impact.impact_description %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
 <% else %>
   <%= render 'layouts/no_data', missing_data: FlowImpact.model_name.human(count: 2).downcase %>
 <% end %>

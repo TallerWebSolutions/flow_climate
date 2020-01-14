@@ -1,33 +1,33 @@
 <div class="row">
-  <div class='col-xs-12 form-group <%= 'has-error' if flow_impact.errors[:demand].present? %>'>
+  <div class='col-xs-3 form-group <%= 'has-error' if flow_impact.errors[:demand].present? %>'>
     <%= f.label :demand, class: 'control-label' %>
-    <%= f.select :demand_id, demands_for_impact_form.map { |demand| [demand.external_id, demand.id] }, { include_blank: I18n.t('general.select'), selected: flow_impact.demand_id }, class: 'form-control' %>
+    <%= f.select :demand_id, demands_for_impact_form.map { |demand| [demand.external_id, demand.id] }, { include_blank: I18n.t('general.select'), selected: flow_impact.demand_id }, class: 'form-control', autofocus: true %>
     <span class="help-block"><%= flow_impact.errors[:demand].join(', ') %></span>
   </div>
-</div>
 
-<div class="row">
-  <div class='col-xs-6 form-group <%= 'has-error' if flow_impact.errors[:impact_type].present? %>'>
+  <div class='col-xs-3 form-group <%= 'has-error' if flow_impact.errors[:impact_date].present? %>'>
+    <%= f.label :impact_date, class: 'control-label required' %>
+    <%= f.datetime_field :impact_date, class: 'form-control' %>
+    <span class="help-block"><%= flow_impact.errors[:impact_date].join(', ') %></span>
+  </div>
+  <div class='col-xs-3 form-group <%= 'has-error' if flow_impact.errors[:impact_type].present? %>'>
     <%= f.label :impact_type, class: 'control-label' %>
     <%= f.select :impact_type, FlowImpact.impact_types.map { |key, _value| [I18n.t("activerecord.attributes.flow_impact.enums.impact_type.#{key}"), key] }, { include_blank: I18n.t('general.select'), selected: flow_impact.impact_type }, class: 'form-control' %>
     <span class="help-block"><%= flow_impact.errors[:impact_type].join(', ') %></span>
   </div>
-  <div class='col-xs-6 form-group <%= 'has-error' if flow_impact.errors[:impact_description].present? %>'>
-    <%= f.label :impact_description, class: 'control-label required' %>
-    <%= f.text_field :impact_description, class: 'form-control' %>
-    <span class="help-block"><%= flow_impact.errors[:impact_description].join(', ') %></span>
+
+  <div class='col-xs-3 form-group <%= 'has-error' if flow_impact.errors[:impact_size].present? %>'>
+    <%= f.label :impact_size, class: 'control-label' %>
+    <%= f.select :impact_size, FlowImpact.impact_sizes.map { |key, _value| [I18n.t("activerecord.attributes.flow_impact.enums.impact_size.#{key}"), key] }, { include_blank: I18n.t('general.select'), selected: flow_impact.impact_size }, class: 'form-control' %>
+    <span class="help-block"><%= flow_impact.errors[:impact_size].join(', ') %></span>
   </div>
 </div>
 
 <div class="row">
-  <div class='col-xs-6 form-group <%= 'has-error' if flow_impact.errors[:start_date].present? %>'>
-    <%= f.label :start_date, class: 'control-label required' %>
-    <%= f.datetime_field :start_date, class: 'form-control' %>
-    <span class="help-block"><%= flow_impact.errors[:start_date].join(', ') %></span>
-  </div>
-  <div class='col-xs-6 form-group'>
-    <%= f.label :end_date, class: 'control-label' %>
-    <%= f.datetime_field :end_date, class: 'form-control' %>
+  <div class='col-xs-12 form-group <%= 'has-error' if flow_impact.errors[:impact_description].present? %>'>
+    <%= f.label :impact_description, class: 'control-label required' %>
+    <%= f.text_field :impact_description, class: 'form-control' %>
+    <span class="help-block"><%= flow_impact.errors[:impact_description].join(', ') %></span>
   </div>
 </div>
 

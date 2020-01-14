@@ -14,7 +14,7 @@ class RiskReviewService
   private
 
   def update_flow_impacts(product, risk_review)
-    flow_impacts = product.flow_impacts.kept.where('flow_impacts.start_date <= :end_date AND flow_impacts.risk_review_id IS NULL', end_date: risk_review.meeting_date.end_of_day)
+    flow_impacts = product.flow_impacts.kept.where('flow_impacts.risk_review_id IS NULL')
     flow_impacts.map { |impact| impact.update(risk_review: risk_review) }
   end
 

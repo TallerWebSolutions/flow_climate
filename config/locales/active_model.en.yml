@@ -134,7 +134,6 @@ en:
           portfolio_unit_type:
             product_module: "Product Module"
             key_result: "Key Result"
-            impact: "Impact"
             source: "Source"
             epic: "Epic"
       jira/jira_project_config:
@@ -148,12 +147,13 @@ en:
             class_of_service: "Class of Service"
             responsibles: "Responsibles"
       flow_impact:
+        user: Created by
         project: Project
         impact_type: Impact Type
+        impact_size: Impact Size
         impact_description: Impact Description
         demand: Demand
-        start_date: Started at
-        end_date: Ended at
+        impact_date: IMpact Date
         enums:
           impact_type:
             other_team_dependency: Other team dependency
@@ -162,6 +162,10 @@ en:
             other_demand_dependency: Other demand dependency
             fixes_out_of_scope: Fixes outside scope
             external_service_unavailable: External service unavailable
+          impact_size:
+            small: Small
+            medium: Medium
+            large: Large
     errors:
       messages:
         record_invalid: 'Validation failed: %{errors}'
