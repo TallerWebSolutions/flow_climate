@@ -1,19 +1,3 @@
-<td><%= link_to block.demand.external_id, company_demand_path(company, block.demand), target: :_blank %></td>
-<td><%= I18n.t("activerecord.attributes.demand_block.enums.block_type.#{block.block_type}") %></td>
-<td><%= block.block_reason %></td>
-<td><%= block.stage&.name %></td>
-<td><%= time_distance_in_words(block.total_blocked_time) %></td>
-<td><%= "#{block.block_working_time_duration} h" if block.block_working_time_duration.present? %></td>
-<td><%= block.blocker.name %></td>
-<td><%= I18n.l(block.block_time, format: :short) %></td>
-<td><%= block.unblocker&.name %></td>
-<td><%= I18n.l(block.unblock_time, format: :short) if block.unblock_time.present? %></td>
-<td><%= block.stage_when_unblocked&.name %></td>
-<td class="center">
-  <% if block.active? %>
-    <i class="fa fa-check" aria-hidden="true"></i>
-  <% end %>
-</td>
 <td>
   <% if block.active? %>
     <%= link_to deactivate_company_project_demand_demand_block_path(@company, block.demand.project, block.demand, block), method: :patch, remote: true do %>
@@ -28,3 +12,22 @@
     <i class="fas fa-edit"></i>
   <% end %>
 </td>
+
+<td><%= link_to block.demand.external_id, company_demand_path(company, block.demand), target: :_blank %></td>
+<td><%= I18n.t("activerecord.attributes.demand_block.enums.block_type.#{block.block_type}") %></td>
+<td><%= block.stage&.name %></td>
+<td><%= time_distance_in_words(block.total_blocked_time) %></td>
+<td><%= "#{block.block_working_time_duration} h" if block.block_working_time_duration.present? %></td>
+<td><%= block.blocker.name %></td>
+<td><%= I18n.l(block.block_time, format: :short) %></td>
+<td><%= block.unblocker&.name %></td>
+<td><%= I18n.l(block.unblock_time, format: :short) if block.unblock_time.present? %></td>
+<td><%= block.stage_when_unblocked&.name %></td>
+
+<td class="center">
+  <% if block.active? %>
+    <i class="fa fa-check" aria-hidden="true"></i>
+  <% end %>
+</td>
+
+<td><%= block.block_reason %></td>

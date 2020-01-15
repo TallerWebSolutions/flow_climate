@@ -78,8 +78,8 @@
     <%= render 'demands/demands_table', company: @company, demands: demands_finished, unpaged_demands: unpaged_demands, share_demands_blocked: share_demands_blocked %>
   </div>
 
-  <div id="demand_blocks_<%= membership.id %>" class="col-table-details">
-    <%= render 'demand_blocks/demand_blocks_table_reduced', company: @company, demand_blocks_list: membership.demand_blocks.order(block_time: :desc) %>
+  <div id="demand-blocks" class="col-table-details">
+    <%= render 'demand_blocks/demand_blocks_table', company: @company, demand_blocks_list: membership.demand_blocks.order(block_time: :desc), demand_blocks_ids: membership.demand_blocks.order(block_time: :desc).map(&:id).join(',') %>
   </div>
 
   <div id="demand_comments_<%= membership.id %>" class="col-table-details">

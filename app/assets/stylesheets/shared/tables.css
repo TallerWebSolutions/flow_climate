@@ -7,3 +7,17 @@
     display: flex;
     flex-wrap: wrap;
 }
+
+.table-filter {
+    font-size: smaller;
+}
+
+.relative-row {
+    position: relative;
+}
+
+.bottom-button {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+}

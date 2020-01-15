@@ -125,7 +125,7 @@
       <button class="tablinks" onclick="openTab(event, 'demands', 'tablinks', 'tabcontent')"><%= I18n.t('risk_reviews.show.demands_label') %></button>
       <button class="tablinks" onclick="openTab(event, 'outlier-demands', 'tablinks', 'tabcontent')"><%= I18n.t('risk_reviews.show.outlier_demands_label') %></button>
       <button class="tablinks" onclick="openTab(event, 'bugs-list', 'tablinks', 'tabcontent')"><%= I18n.t('risk_reviews.show.bugs_label') %></button>
-      <button class="tablinks" onclick="openTab(event, 'demands-blocks', 'tablinks', 'tabcontent')"><%= I18n.t('risk_reviews.show.demands_blocks_label') %></button>
+      <button class="tablinks" onclick="openTab(event, 'demand-blocks-table', 'tablinks', 'tabcontent')"><%= I18n.t('risk_reviews.show.demands_blocks_label') %></button>
       <button class="tablinks" onclick="openTab(event, 'flow-impacts', 'tablinks', 'tabcontent')"><%= I18n.t('risk_reviews.show.flow_impacts_label') %></button>
     </div>
   </div>
@@ -143,8 +143,8 @@
   <%= render 'demands/portfolio_demands_table', company: @company, product: @product, demands: @risk_review.bugs.order(end_date: :desc) %>
 </div>
 
-<div id="demands-blocks" class="tabcontent">
-  <%= render 'demand_blocks/demand_blocks_table_reduced', company: @company, demand_blocks_list: @risk_review.demand_blocks.order(:block_time) %>
+<div id="demand-blocks-table" class="tabcontent">
+  <%= render 'demand_blocks/demand_blocks_table', company: @company, demand_blocks_list: @risk_review.demand_blocks.order(:block_time), demand_blocks_ids: @risk_review.demand_blocks.order(:block_time).map(&:id).join(',') %>
 </div>
 
 <div id="flow-impacts" class="tabcontent">

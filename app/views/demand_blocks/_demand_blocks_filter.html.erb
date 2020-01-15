@@ -3,34 +3,35 @@
   <%= hidden_field_tag :demand_blocks_ids, demand_blocks_ids %>
 
   <div class="row">
-    <div class="col-xs-4 form-group">
+    <div class="col-xs-3 form-group">
       <%= label_tag I18n.t('demand_blocks.index.filter.start_date'), nil, class: 'control-label' %>
       <%= date_field_tag :blocks_start_date, params[:blocks_start_date] || 3.months.ago, class: 'form-control' %>
     </div>
-    <div class="col-xs-4 form-group">
+    <div class="col-xs-3 form-group">
       <%= label_tag I18n.t('demand_blocks.index.filter.end_date'), nil, class: 'control-label' %>
       <%= date_field_tag :blocks_end_date, params[:blocks_end_date] || Time.zone.today, class: 'form-control' %>
     </div>
-    <div class="col-xs-4 form-group">
+    <div class="col-xs-3 form-group">
+      <%= label_tag I18n.t('demand_blocks.index.filter.block_type'), nil, class: 'control-label' %>
+      <%= select_tag :blocks_type, options_for_select(DemandBlock.block_types.map { |key, value| [I18n.t("activerecord.attributes.demand_block.enums.block_type.#{key}"), value] }, params[:blocks_type]), include_blank: I18n.t('general.select'), class: 'form-control' %>
+    </div>
+    <div class="col-xs-3 form-group">
       <%= label_tag I18n.t('demand_blocks.index.filter.team_member'), nil, class: 'control-label' %>
       <%= select_tag :blocks_team_member, team_members_options(TeamMember.where(id: demand_blocks.map(&:blocker_id).flatten), params[:blocks_team_member]), include_blank: I18n.t('general.select'), class: 'form-control' %>
     </div>
   </div>
 
-  <div class="row">
-    <div class="col-xs-6 form-group">
+  <div class="row relative-row">
+    <div class="col-xs-4 form-group">
       <%= label_tag I18n.t('demand_blocks.index.filter.stage'), nil, class: 'control-label' %>
       <%= select_tag :blocks_stage, stage_options(Stage.where(id: demand_blocks.map(&:stage_id).flatten), params[:blocks_stage]), include_blank: I18n.t('general.select'), class: 'form-control' %>
     </div>
-    <div class="col-xs-6 form-group">
+    <div class="col-xs-4 form-group">
       <%= label_tag I18n.t('demand_blocks.index.filter.ordering'), nil, class: 'control-label' %>
-      <%= select_tag :blocks_ordering, options_for_select([
-          [DemandBlock.human_attribute_name(:block_time), 'block_time'],
-          [DemandBlock.human_attribute_name(:blocker), 'member_name']],
-          params[:blocks_ordering]), include_blank: I18n.t('general.select'), class: 'form-control' %>
+      <%= select_tag :blocks_ordering, options_for_select([[DemandBlock.human_attribute_name(:block_time), 'block_time'], [DemandBlock.human_attribute_name(:blocker), 'member_name']], params[:blocks_ordering]), include_blank: I18n.t('general.select'), class: 'form-control' %>
     </div>
-    <div class="col-xs-6 form-group">
-      <%= submit_tag I18n.t('general.search'), class: 'btn btn-primary' %>
+    <div class="col-xs-4 form-group bottom-button">
+      <%= submit_tag I18n.t('general.search'), class: 'btn btn-sm btn-primary' %>
     </div>
   </div>
 
