@@ -54,6 +54,7 @@ class DemandBlocksController < AuthenticatedController
     @demand_blocks_ids = params[:demand_blocks_ids].split(',')
     @demand_blocks = DemandBlock.where(id: @demand_blocks_ids.map(&:to_i))
     @demand_blocks = build_date_query(@demand_blocks)
+    @demand_blocks = build_type_query(@demand_blocks)
     @demand_blocks = build_member_query(@demand_blocks)
     @demand_blocks = build_stage_query(@demand_blocks)
     @demand_blocks = build_ordering_query(@demand_blocks)
@@ -67,6 +68,12 @@ class DemandBlocksController < AuthenticatedController
     return demand_blocks if params[:blocks_start_date].blank? || params[:blocks_end_date].blank?
 
     demand_blocks.where('(block_time BETWEEN :start_date AND :end_date) OR (unblock_time IS NOT NULL AND unblock_time BETWEEN :start_date AND :end_date)', start_date: params[:blocks_start_date].to_date.beginning_of_day, end_date: params[:blocks_end_date].to_date.end_of_day)
+  end
+
+  def build_type_query(demand_blocks)
+    return demand_blocks if params[:blocks_type].blank?
+
+    demand_blocks.where('block_type = :block_type', block_type: params[:blocks_type])
   end
 
   def build_member_query(demand_blocks)

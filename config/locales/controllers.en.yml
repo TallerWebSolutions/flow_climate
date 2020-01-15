@@ -602,7 +602,6 @@ en:
     edit:
       title: "Edit Demand"
     show:
-      no_demand_blocks: "There is no demand blocks"
       no_demand_transitions: "No transitions to this demand."
       progress_bars:
         streams: "Flow Streams Occupation"
@@ -864,6 +863,7 @@ en:
         ordering: "Order"
         start_date: "Start date"
         end_date: "End date"
+        block_type: "Type"
       average_time_per_block: "Tempo Médio por Bloqueio"
       total_blocks: "Total"
       total_time: "Total Time"

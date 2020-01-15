@@ -664,7 +664,6 @@ pt-BR:
     edit:
       title: "Editar Demanda"
     show:
-      no_demand_blocks: "Não existem bloqueios na demanda"
       no_demand_transitions: "Esta demanda não tem transições."
       progress_bars:
         streams: "Streams do Fluxo"
@@ -926,6 +925,7 @@ pt-BR:
         ordering: "Ordenação"
         start_date: "Data inicial"
         end_date: "Data final"
+        block_type: "Tipo"
       average_time_per_block: "Tempo Médio por Bloqueio"
       total_blocks: "Total"
       total_time: "Tempo Total"

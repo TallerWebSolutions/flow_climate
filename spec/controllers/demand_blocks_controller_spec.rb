@@ -378,13 +378,13 @@ RSpec.describe DemandBlocksController, type: :controller do
           let(:team_member) { Fabricate :team_member, company: company, name: 'zzz' }
           let(:other_team_member) { Fabricate :team_member, company: company, name: 'aaa' }
 
-          let!(:first_block) { Fabricate :demand_block, demand: first_demand, blocker: team_member, unblocker: team_member, block_reason: 'first_block', block_time: 1.hour.ago, unblock_time: Time.zone.today, active: true }
-          let!(:second_block) { Fabricate :demand_block, demand: first_demand, blocker: team_member, unblocker: other_team_member, block_reason: 'second_block', block_time: 3.days.ago, unblock_time: 2.days.ago, active: true }
-          let!(:third_block) { Fabricate :demand_block, demand: second_demand, blocker: other_team_member, unblocker: other_team_member, block_reason: 'third_block', block_time: 5.days.ago, unblock_time: 4.days.ago, active: true }
-          let!(:fourth_block) { Fabricate :demand_block, demand: first_demand, blocker: other_team_member, unblocker: other_team_member, block_reason: 'fourth_block', block_time: 4.days.ago, unblock_time: Time.zone.yesterday, active: true }
-          let!(:fifth_block) { Fabricate :demand_block, demand: first_demand, blocker: other_team_member, unblocker: team_member, block_reason: 'fifth_block', block_time: 5.days.ago, unblock_time: 3.days.ago, active: true }
-          let!(:sixth_block) { Fabricate :demand_block, demand: second_demand, blocker: team_member, unblocker: team_member, block_reason: 'sixth_block', block_time: 6.days.ago, unblock_time: 5.days.ago, active: true }
-          let!(:seventh_block) { Fabricate :demand_block, demand: second_demand, blocker: team_member, unblocker: team_member, block_reason: 'seventh_block', block_time: 7.days.ago, unblock_time: 6.days.ago, active: true, discarded_at: Time.zone.today }
+          let!(:first_block) { Fabricate :demand_block, demand: first_demand, block_type: :coding_needed, blocker: team_member, unblocker: team_member, block_reason: 'first_block', block_time: 1.hour.ago, unblock_time: Time.zone.today, active: true }
+          let!(:second_block) { Fabricate :demand_block, demand: first_demand, block_type: :coding_needed, blocker: team_member, unblocker: other_team_member, block_reason: 'second_block', block_time: 3.days.ago, unblock_time: 2.days.ago, active: true }
+          let!(:third_block) { Fabricate :demand_block, demand: second_demand, block_type: :specification_needed, blocker: other_team_member, unblocker: other_team_member, block_reason: 'third_block', block_time: 5.days.ago, unblock_time: 4.days.ago, active: true }
+          let!(:fourth_block) { Fabricate :demand_block, demand: first_demand, block_type: :specification_needed, blocker: other_team_member, unblocker: other_team_member, block_reason: 'fourth_block', block_time: 4.days.ago, unblock_time: Time.zone.yesterday, active: true }
+          let!(:fifth_block) { Fabricate :demand_block, demand: first_demand, block_type: :waiting_external_supplier, blocker: other_team_member, unblocker: team_member, block_reason: 'fifth_block', block_time: 5.days.ago, unblock_time: 3.days.ago, active: true }
+          let!(:sixth_block) { Fabricate :demand_block, demand: second_demand, block_type: :waiting_external_supplier, blocker: team_member, unblocker: team_member, block_reason: 'sixth_block', block_time: 6.days.ago, unblock_time: 5.days.ago, active: true }
+          let!(:seventh_block) { Fabricate :demand_block, demand: second_demand, block_type: :coding_needed, blocker: team_member, unblocker: team_member, block_reason: 'seventh_block', block_time: 7.days.ago, unblock_time: 6.days.ago, active: true, discarded_at: Time.zone.today }
 
           context 'no start nor end dates nor period provided' do
             it 'builds the statistic adapter and renders the view using the dates in project to a monthly period' do
@@ -403,7 +403,16 @@ RSpec.describe DemandBlocksController, type: :controller do
             end
           end
 
-          context 'and a team member is provided' do
+          context 'and a type was provided' do
+            it 'builds the block list and render the template' do
+              get :search, params: { company_id: company, demand_blocks_ids: DemandBlock.all.map(&:id).join(','), blocks_type: 1 }, xhr: true
+              expect(response).to have_http_status :ok
+              expect(assigns(:demand_blocks)).to eq [third_block, fourth_block]
+              expect(response).to render_template 'demand_blocks/search'
+            end
+          end
+
+          context 'and a team member was provided' do
             it 'builds the block list and render the template' do
               get :search, params: { company_id: company, demand_blocks_ids: DemandBlock.all.map(&:id).join(','), blocks_team_member: other_team_member.id }, xhr: true
               expect(response).to have_http_status :ok
@@ -412,7 +421,7 @@ RSpec.describe DemandBlocksController, type: :controller do
             end
           end
 
-          context 'and a stage is provided' do
+          context 'and a stage was provided' do
             it 'builds the block list and render the template' do
               get :search, params: { company_id: company, demand_blocks_ids: DemandBlock.all.map(&:id).join(','), blocks_stage: stage.id }, xhr: true
               expect(response).to have_http_status :ok
