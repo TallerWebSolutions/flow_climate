@@ -28,6 +28,7 @@ class UsersController < AuthenticatedController
     @companies_list = @user.companies.order(:name)
     assign_team_member_dependencies
     assign_user_dependencies
+    assign_stats_info
   end
 
   def edit
@@ -57,12 +58,22 @@ class UsersController < AuthenticatedController
 
     @user.team_member.pairing_members.each { |name, qty| @pairing_chart[name] = qty }
     @member_teams = @user.team_member.teams.order(:name)
-    @demand_blocks = @user.team_member.demand_blocks.order(block_time: :desc).last(5)
-    @member_projects = @user.team_member.projects.order(end_date: :desc).last(5)
+    @demand_blocks = @user.team_member.demand_blocks.order(block_time: :desc).first(5)
+    @member_projects = @user.team_member.projects.active.order(end_date: :desc).last(5)
   end
 
   def assign_user_dependencies
     @user_plans = @user.user_plans.order(finish_at: :desc)
+  end
+
+  def assign_stats_info
+    user_demands = @user.demands
+
+    @array_of_dates = TimeService.instance.months_between_of(user_demands.map(&:end_date).compact.min, Time.zone.today.end_of_month)
+
+    @statistics_informations = Flow::StatisticsFlowInformations.new(user_demands)
+
+    @array_of_dates.each { |analysed_date| @statistics_informations.statistics_flow_behaviour(analysed_date) }
   end
 
   def user_params

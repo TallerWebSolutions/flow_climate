@@ -61,4 +61,12 @@ class TeamMember < ApplicationRecord
   def pairing_members
     memberships.map(&:pairing_members).flatten.map(&:name).flatten.group_by(&:itself).map { |key, value| [key, value.count] }.to_h.sort_by { |_key, value| value }.reverse.to_h
   end
+
+  def lead_time_min
+    demands.kept.with_valid_leadtime.order(:leadtime).first
+  end
+
+  def lead_time_max
+    demands.kept.with_valid_leadtime.order(:leadtime).last
+  end
 end

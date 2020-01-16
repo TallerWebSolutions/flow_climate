@@ -243,6 +243,8 @@ pt-BR:
         initial_scope: Escopo inicial
         percentage_effort_to_bugs: "% de Esforço Cobrado nos Bugs"
         max_work_in_progress: Limite WiP
+        risk: Risco
+        quality: Qualidade
         enums:
           status:
             waiting: Aguardando Início

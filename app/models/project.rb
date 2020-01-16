@@ -386,6 +386,12 @@ class Project < ApplicationRecord
     demands.kept.sum(&:aging_when_finished) / demands.kept.count
   end
 
+  def quality
+    return 1 if demands.kept.count.zero? || demands.kept.bug.count.zero?
+
+    demands.kept.bug.count.to_f / demands.kept.count
+  end
+
   private
 
   def running?

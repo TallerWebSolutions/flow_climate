@@ -279,6 +279,7 @@ pt-BR:
         title: "Lead time em dias"
       total_remaining_weeks: "Semanas Restantes"
       inconsistent_demands_count: "Qtd Demandas Inconsistentes"
+      active_projects: "Projetos Ativos"
     show:
       initial_scope: "Escopo Inicial"
       last_team: "Time atual"
@@ -1158,3 +1159,6 @@ pt-BR:
   user:
     dashboard:
       pairing_info: "Pareamento"
+      general_info: "Informações Gerais"
+      lead_time_min: "Lead time menor"
+      lead_time_max: "Lead time maior"

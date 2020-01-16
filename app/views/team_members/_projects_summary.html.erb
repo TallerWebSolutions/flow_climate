@@ -1,21 +1,25 @@
-<h4>Projetos</h4>
+<h4><%= I18n.t('projects.index.active_projects') %></h4>
 
 <table class="table table-striped">
   <thead>
     <tr>
-      <th>Nome</th>
-      <th>Inicio</th>
-      <th>Fim</th>
-      <th>Risco</th>
+      <th><%= Project.human_attribute_name :name %></th>
+      <th><%= Project.human_attribute_name :start_date %></th>
+      <th><%= Project.human_attribute_name :end_date %></th>
+      <th><%= Project.human_attribute_name :risk %></th>
+      <th><%= Project.human_attribute_name :quality %></th>
+      <th><%= I18n.t('projects.show.leadtime_80_confidence') %></th>
     </tr>
   </thead>
   <tbody>
     <% member_projects.each do |project| %>
       <tr>
-        <td><%= link_to project.name, company_project_path(project.company, project) %></td>
+        <td><%= link_to project.name, company_project_path(project.company, project), target: :_blank %></td>
         <td><%= I18n.l(project.start_date) %></td>
         <td><%= I18n.l(project.end_date) %></td>
         <td><%= number_to_percentage(project.current_risk_to_deadline * 100, precision: 2) %></td>
+        <td><%= number_to_percentage(project.quality * 100, precision: 2) %></td>
+        <td><%= time_distance_in_words(project.general_leadtime) %></td>
       </tr>
     <% end %>
   </tbody>

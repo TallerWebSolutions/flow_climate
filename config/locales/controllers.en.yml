@@ -265,6 +265,7 @@ en:
         title: "Lead time in days"
       total_remaining_weeks: "Remaining Weeks"
       inconsistent_demands_count: "Qty Inconsistent Demands"
+      active_projects: "Active Projects"
     show:
       initial_scope: "Initial Scope"
       last_team: "Current team"
@@ -1170,3 +1171,6 @@ en:
   user:
     dashboard:
       pairing_info: "Pairing"
+      general_info: "General Info"
+      lead_time_min: "Shortest lead time"
+      lead_time_max: "Largest lead time"
