@@ -1340,4 +1340,24 @@ RSpec.describe Project, type: :model do
       it { expect(project.average_demand_aging).to eq 0 }
     end
   end
+
+  describe '#quality' do
+    context 'with data' do
+      include_context 'demands with effort'
+      it { expect(project.quality).to eq 0.25 }
+    end
+
+    context 'with no bugs' do
+      let!(:project) { Fabricate :project, end_date: 4.weeks.from_now, initial_scope: 30 }
+      let!(:demands) { Fabricate.times(10, :demand, project: project, created_date: 1.day.ago, end_date: nil, demand_type: :feature) }
+
+      it { expect(project.quality).to eq 1 }
+    end
+
+    context 'with no data' do
+      let!(:project) { Fabricate :project, end_date: 4.weeks.from_now, initial_scope: 30 }
+
+      it { expect(project.quality).to eq 1 }
+    end
+  end
 end

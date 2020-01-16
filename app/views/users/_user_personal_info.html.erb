@@ -1,4 +1,4 @@
-<h4>Infos Gerais</h4>
+<h4><%= I18n.t('user.dashboard.general_info') %></h4>
 
 <table class="table">
   <tbody>
@@ -14,6 +14,16 @@
       <td><b><%= I18n.t('general.bugs') %></b></td>
       <td><%= user.demands.kept.bug.count %></td>
     </tr>
+    <% if user.team_member %>
+      <tr>
+        <td><b><%= I18n.t('user.dashboard.lead_time_min') %></b></td>
+        <td><%= link_to time_distance_in_words(user.team_member.lead_time_min.leadtime), company_demand_path(user.team_member.lead_time_min.company, user.team_member.lead_time_min), target: :_blank %></td>
+      </tr>
+      <tr>
+        <td><b><%= I18n.t('user.dashboard.lead_time_max') %></b></td>
+        <td><%= link_to time_distance_in_words(user.team_member.lead_time_max.leadtime), company_demand_path(user.team_member.lead_time_max.company, user.team_member.lead_time_max), target: :_blank %></td>
+      </tr>
+    <% end %>
     <tr>
       <td><b><%= I18n.t('general.leadtime_p80_label') %></b></td>
       <td><%= time_distance_in_words(Stats::StatisticsService.instance.percentile(80, user.demands.kept.finished_with_leadtime.map(&:leadtime))) %></td>

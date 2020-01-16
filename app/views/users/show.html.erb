@@ -40,20 +40,27 @@
   <% end %>
 
   <% if @member_projects.present? %>
-    <div class="col-xs-4">
+    <div class="col-xs-8">
       <%= render 'team_members/projects_summary', member_projects: @member_projects %>
     </div>
   <% end %>
 
   <% if @pairing_chart.present? %>
-    <div class="col-xs-12">
+    <div class="col-xs-6">
       <%= render 'team_members/pairings_summary', pairing_chart: @pairing_chart %>
+    </div>
+  <% end %>
+
+  <% if @statistics_informations.present? %>
+    <div class="col-xs-6">
+      <%= render 'team_members/statistics_informations', dates_array: @array_of_dates, statistics_flow_informations: @statistics_informations %>
     </div>
   <% end %>
 </div>
 
 <% content_for :javascript do %>
   <%= javascript_include_tag 'charts/column' %>
+  <%= javascript_include_tag 'charts/line' %>
 
   <%= javascript_include_tag 'components/components' %>
   <%= javascript_include_tag 'users/show' %>

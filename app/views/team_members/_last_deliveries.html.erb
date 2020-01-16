@@ -10,10 +10,10 @@
     </tr>
   </thead>
   <tbody>
-    <% team_member.demands.kept.finished.order(end_date: :desc).last(5).each do |demand| %>
+    <% team_member.demands.kept.finished.order(end_date: :desc).first(5).each do |demand| %>
       <tr>
-        <td><%= link_to demand.project_name, company_project_path(demand.company, demand.project) %></td>
-        <td><%= link_to demand.external_id, company_project_demand_path(demand.company, demand.project, demand) %></td>
+        <td><%= link_to demand.project_name, company_project_path(demand.company, demand.project), target: :_blank %></td>
+        <td><%= link_to demand.external_id, company_project_demand_path(demand.company, demand.project, demand), target: :_blank %></td>
         <td><%= I18n.l(demand.end_date, format: :short) %></td>
         <td><%= time_distance_in_words(demand.leadtime) %></td>
       </tr>

@@ -1,17 +1,17 @@
-<h4>Bloqueios</h4>
+<h4><%= DemandBlock.model_name.human(count: demand_blocks.count) %></h4>
 
 <table class="table table-striped">
   <thead>
     <tr>
-      <th>Demanda</th>
-      <th>Data do Bloqueio</th>
-      <th>Data do Desbloqueio</th>
+      <th><%= DemandBlock.human_attribute_name :demand %></th>
+      <th><%= DemandBlock.human_attribute_name :block_time %></th>
+      <th><%= DemandBlock.human_attribute_name :unblock_time %></th>
     </tr>
   </thead>
   <tbody>
     <% demand_blocks.each do |block| %>
       <tr>
-        <td><%= block.demand.external_id %></td>
+        <td><%= link_to block.demand.external_id, company_demand_path(block.demand.company, block.demand) %></td>
         <td><%= I18n.l(block.block_time, format: :short) %></td>
         <td><%= I18n.l(block.unblock_time, format: :short) %></td>
       </tr>

@@ -67,12 +67,13 @@ RSpec.describe TeamMember, type: :model do
     it { expect(other_team_member.active?).to be true }
   end
 
-  describe '#pairings_members' do
+  shared_context 'demands' do
     let(:company) { Fabricate :company }
     let(:team) { Fabricate :team, company: company }
-    let(:first_demand) { Fabricate :demand, team: team }
-    let(:second_demand) { Fabricate :demand, team: team }
-    let(:third_demand) { Fabricate :demand, team: team }
+
+    let(:first_demand) { Fabricate :demand, team: team, external_id: 'first_demand', commitment_date: 2.days.ago, end_date: Time.zone.now }
+    let(:second_demand) { Fabricate :demand, team: team, external_id: 'second_demand', commitment_date: 5.hours.ago, end_date: Time.zone.now }
+    let(:third_demand) { Fabricate :demand, team: team, external_id: 'third_demand', commitment_date: 2.weeks.ago, end_date: Time.zone.now }
 
     let(:first_team_member) { Fabricate :team_member, company: company }
     let(:second_team_member) { Fabricate :team_member, company: company }
@@ -95,7 +96,23 @@ RSpec.describe TeamMember, type: :model do
     let!(:seventh_item_assignment) { Fabricate :item_assignment, demand: third_demand, team_member: first_team_member, start_time: 2.days.ago, finish_time: nil }
     let!(:eigth_item_assignment) { Fabricate :item_assignment, demand: third_demand, team_member: second_team_member, start_time: 2.days.ago, finish_time: nil }
     let!(:nineth_item_assignment) { Fabricate :item_assignment, demand: third_demand, team_member: fifth_team_member, start_time: 4.days.ago, finish_time: 3.days.ago }
+  end
+
+  describe '#pairings_members' do
+    include_context 'demands'
 
     it { expect(first_team_member.pairing_members).to eq(second_team_member.name => 2, third_team_member.name => 1, fourth_team_member.name => 1) }
+  end
+
+  describe '#lead_time_min' do
+    include_context 'demands'
+
+    it { expect(first_team_member.lead_time_min).to eq second_demand }
+  end
+
+  describe '#lead_time_max' do
+    include_context 'demands'
+
+    it { expect(first_team_member.lead_time_max).to eq third_demand }
   end
 end

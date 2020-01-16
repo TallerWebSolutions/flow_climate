@@ -26,7 +26,6 @@ gem 'pg'
 gem 'rollbar'
 gem 'sidekiq'
 gem 'slack-notifier'
-gem 'therubyracer', platforms: :ruby
 gem 'uglifier'
 gem 'yui-compressor'
 
@@ -43,7 +42,6 @@ group :test, :development do
   gem 'rubocop-performance'
   gem 'rubocop-rails'
   gem 'rubocop-rspec'
-  gem 'ruby-debug-ide'
   gem 'shoulda-matchers'
   gem 'simplecov', require: false
   gem 'webmock'
