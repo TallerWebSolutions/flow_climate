@@ -112,7 +112,7 @@ RSpec.describe UsersController, type: :controller do
     end
 
     describe 'GET #show' do
-      before { travel_to Time.zone.local(2020, 1, 16, 10, 0, 0) }
+      before { travel_to Time.zone.local(2020, 1, 16, 14, 0, 0) }
 
       after { travel_back }
 
@@ -164,7 +164,10 @@ RSpec.describe UsersController, type: :controller do
             expect(assigns(:member_teams)).to eq [team]
             expect(assigns(:member_projects)).to eq [other_project, project]
             expect(assigns(:array_of_dates)).to eq [Date.new(2019, 10, 31), Date.new(2019, 11, 30), Date.new(2019, 12, 31), Date.new(2020, 1, 31)]
-            expect(assigns(:statistics_informations).lead_time_accumulated).to eq [7.0, 7.0, 7.0, 26.0]
+            expect(assigns(:statistics_informations).lead_time_accumulated[0]).to be_within(1).of(7.0)
+            expect(assigns(:statistics_informations).lead_time_accumulated[1]).to be_within(1).of(7.0)
+            expect(assigns(:statistics_informations).lead_time_accumulated[2]).to be_within(1).of(7.0)
+            expect(assigns(:statistics_informations).lead_time_accumulated[3]).to be_within(1).of(26.0)
             expect(response).to render_template :show
           end
         end
