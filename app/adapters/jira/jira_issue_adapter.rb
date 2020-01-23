@@ -226,10 +226,10 @@ module Jira
       stage_from = demand.project.stages.find_by(integration_id: from_id)
       stage_to = demand.project.stages.find_by(integration_id: to_id)
 
-      transition_from = DemandTransition.where(demand: demand, stage: stage_from, last_time_in: from_transition_out).first_or_initialize
-      transition_from.update(last_time_out: to_transition_date)
+      transition_from = DemandTransition.where(demand: demand, stage: stage_from).first_or_initialize
+      transition_from.update(last_time_in: from_transition_out, last_time_out: to_transition_date)
 
-      transition_to = DemandTransition.where(demand: demand, stage: stage_to, last_time_in: to_transition_date).first_or_initialize
+      transition_to = DemandTransition.where(demand: demand, stage: stage_to).first_or_initialize
       transition_to.update(demand: demand, last_time_in: to_transition_date, last_time_out: nil)
     end
 
