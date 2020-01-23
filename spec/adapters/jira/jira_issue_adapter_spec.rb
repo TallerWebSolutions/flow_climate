@@ -260,21 +260,17 @@ RSpec.describe Jira::JiraIssueAdapter, type: :service do
         it 'creates the demand and the transitions using the last time it passed in the stage' do
           described_class.instance.process_issue!(jira_account, product, first_project, jira_issue)
 
-          expect(DemandTransition.count).to eq 5
+          expect(DemandTransition.count).to eq 3
 
           first_stage_updated = first_stage.reload
-          expect(first_stage_updated.demand_transitions.count).to eq 2
-          expect(first_stage_updated.demand_transitions.first.last_time_in).to eq Time.zone.parse('2018-07-06T09:40:43.886-0300')
-          expect(first_stage_updated.demand_transitions.first.last_time_out).to eq Time.zone.parse('2018-07-08T22:34:47.440-0300')
-          expect(first_stage_updated.demand_transitions.second.last_time_in).to eq Time.zone.parse('2018-07-09T22:34:47.440-0300')
-          expect(first_stage_updated.demand_transitions.second.last_time_out).to eq Time.zone.parse('2018-07-09T23:34:47.440-0300')
+          expect(first_stage_updated.demand_transitions.count).to eq 1
+          expect(first_stage_updated.demand_transitions.first.last_time_in).to eq Time.zone.parse('2018-07-09T22:34:47.440-0300')
+          expect(first_stage_updated.demand_transitions.first.last_time_out).to eq Time.zone.parse('2018-07-09T23:34:47.440-0300')
 
           second_stage_updated = second_stage.reload
-          expect(second_stage_updated.demand_transitions.count).to eq 2
-          expect(second_stage_updated.demand_transitions.first.last_time_in).to eq Time.zone.parse('2018-07-08T22:34:47.440-0300')
-          expect(second_stage_updated.demand_transitions.first.last_time_out).to eq Time.zone.parse('2018-07-09T22:34:47.440-0300')
-          expect(second_stage_updated.demand_transitions.second.last_time_in).to eq Time.zone.parse('2018-07-09T23:34:47.440-0300')
-          expect(second_stage_updated.demand_transitions.second.last_time_out).to be_nil
+          expect(second_stage_updated.demand_transitions.count).to eq 1
+          expect(second_stage_updated.demand_transitions.first.last_time_in).to eq Time.zone.parse('2018-07-09T23:34:47.440-0300')
+          expect(second_stage_updated.demand_transitions.first.last_time_out).to be_nil
 
           third_stage_updated = third_stage.reload
           expect(third_stage_updated.demand_transitions.count).to eq 1
