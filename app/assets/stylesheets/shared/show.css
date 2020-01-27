@@ -73,6 +73,10 @@
     white-space: nowrap;
 }
 
+.table-detail {
+    font-size: smaller;
+}
+
 .upstream {
     font-style: italic;
 }
