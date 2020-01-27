@@ -1,6 +1,6 @@
 <h4><%= DemandBlock.model_name.human(count: demand_blocks.count) %></h4>
 
-<table class="table table-striped">
+<table class="table table-striped table-detail">
   <thead>
     <tr>
       <th><%= DemandBlock.human_attribute_name :demand %></th>
@@ -13,7 +13,7 @@
       <tr>
         <td><%= link_to block.demand.external_id, company_demand_path(block.demand.company, block.demand) %></td>
         <td><%= I18n.l(block.block_time, format: :short) %></td>
-        <td><%= I18n.l(block.unblock_time, format: :short) %></td>
+        <td><%= I18n.l(block.unblock_time, format: :short) if block.unblock_time.present? %></td>
       </tr>
     <% end %>
   </tbody>
