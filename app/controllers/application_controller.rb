@@ -3,6 +3,8 @@
 class ApplicationController < ActionController::Base
   rescue_from ActiveRecord::RecordNotFound, with: :not_found
 
+  before_action :redirect_subdomain
+
   protect_from_forgery with: :exception
 
   private
@@ -13,6 +15,10 @@ class ApplicationController < ActionController::Base
       format.js { render plain: '404 Not Found', status: :not_found }
       format.csv { render plain: '404 Not Found', status: :not_found }
     end
+  end
+
+  def redirect_subdomain
+    redirect_to('https://flowclimate.com' + request.fullpath, status: 301) if request.host == 'www.flowclimate.com'
   end
 
   def page_param
