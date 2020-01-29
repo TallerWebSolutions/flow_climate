@@ -38,8 +38,10 @@ RSpec.describe StageProjectConfig, type: :model do
 
   describe '#pairing_percentage_decimal' do
     let!(:stage_project_config) { Fabricate :stage_project_config, pairing_percentage: 30 }
+    let!(:blank_pairing_percentage_stage_project_config) { Fabricate :stage_project_config, pairing_percentage: nil }
 
     it { expect(stage_project_config.pairing_percentage_decimal).to eq 0.3 }
+    it { expect(blank_pairing_percentage_stage_project_config.pairing_percentage_decimal).to eq 0 }
   end
 
   describe '#management_percentage_decimal' do
