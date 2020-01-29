@@ -129,7 +129,7 @@ module Jira
       class_of_service = ''
       return class_of_service if jira_issue_changelog.blank?
 
-      jira_issue_changelog['histories'].each do |history|
+      jira_issue_changelog['histories'].sort_by { |history_hash| history_hash['created'] }.each do |history|
         next unless history['items'].present? && class_of_service_field?(history)
 
         class_of_service = history['items'].first['toString']
