@@ -39,6 +39,8 @@ class StageProjectConfig < ApplicationRecord
   end
 
   def pairing_percentage_decimal
+    return 0 if pairing_percentage.blank?
+
     pairing_percentage / 100.0
   end
 

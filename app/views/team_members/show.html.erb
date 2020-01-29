@@ -31,7 +31,7 @@
       <div class="summary-card-frame ">
         <div class="summary-card-content">
           <p class="summary-card-title"><%= I18n.t('team_members.show.deliveries') %></p>
-          <p class="summary-card-value"><%= link_to I18n.t('general.demands_text', count: demands_finished.count), '#', class: 'toggle-table-details', onclick: "toggleTableDetails('demands_table_#{membership.id}')" %></p>
+          <p class="summary-card-value"><%= link_to I18n.t('general.demands_text', count: unpaged_demands.count), '#', class: 'toggle-table-details', onclick: "toggleTableDetails('demands_table_#{membership.id}')" %></p>
         </div>
       </div>
     </div>

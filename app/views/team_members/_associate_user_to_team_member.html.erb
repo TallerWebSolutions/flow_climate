@@ -1,8 +1,8 @@
 <div class="row">
   <div class="col-xs-12">
-    <% if team_member.user.present? %>
+    <% if team_member.user.present? && team_member.user == current_user %>
       <%= link_to I18n.t('team_members.show.its_not_me'), dissociate_user_company_team_member_path(company, team_member), class: 'btn btn-danger bottom-spaced-component', remote: true %>
-    <% else %>
+    <% elsif team_member.user.blank? %>
       <%= link_to I18n.t('team_members.show.its_me'), associate_user_company_team_member_path(company, team_member), class: 'btn btn-success bottom-spaced-component', remote: true %>
     <% end %>
   </div>
