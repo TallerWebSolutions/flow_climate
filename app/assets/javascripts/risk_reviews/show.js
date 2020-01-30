@@ -1,3 +1,5 @@
+bindBlockFormModalAction();
+
 let donutRiskReviewClassesOfServiceDiv = $('#risk-review-class-of-services-donut');
 if (donutRiskReviewClassesOfServiceDiv.length !== 0) {
     buildDonutChart(donutRiskReviewClassesOfServiceDiv);
