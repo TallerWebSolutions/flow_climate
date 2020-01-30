@@ -107,6 +107,7 @@
 <% end %>
 
 <div class="modal fade" id="edit-demand-form" tabindex="-1" role="dialog" aria-labelledby="edit-demand-form" aria-hidden="true"></div>
+<div class="modal fade" id="edit-block-form" tabindex="-1" role="dialog" aria-labelledby="edit-block-form" aria-hidden="true"></div>
 
 <% content_for :javascript do %>
   <%= javascript_include_tag 'team_members/show' %>
@@ -118,4 +119,5 @@
   <%= javascript_include_tag 'demands/demands_charts' %>
   <%= javascript_include_tag 'demands/demands_list' %>
   <%= javascript_include_tag 'demands/form_modal' %>
+  <%= javascript_include_tag 'demand_blocks/form_modal' %>
 <% end %>
