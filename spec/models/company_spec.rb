@@ -6,7 +6,8 @@ RSpec.describe Company, type: :model do
   after { travel_back }
 
   context 'associations' do
-    it { is_expected.to have_and_belong_to_many :users }
+    it { is_expected.to have_many(:users).through(:user_company_roles) }
+    it { is_expected.to have_many(:user_company_roles) }
     it { is_expected.to have_many(:financial_informations).dependent(:restrict_with_error) }
     it { is_expected.to have_many(:customers).dependent(:restrict_with_error) }
     it { is_expected.to have_many(:products).through(:customers) }

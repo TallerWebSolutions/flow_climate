@@ -1174,3 +1174,8 @@ en:
       general_info: "General Info"
       lead_time_min: "Shortest lead time"
       lead_time_max: "Largest lead time"
+  user_company_roles:
+    new:
+      title: "New User Role"
+    edit:
+      title: "Edit User Role"

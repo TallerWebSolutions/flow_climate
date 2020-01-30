@@ -24,7 +24,8 @@ class Company < ApplicationRecord
   extend FriendlyId
   friendly_id :abbreviation, use: :slugged
 
-  has_and_belongs_to_many :users
+  has_many :user_company_roles, dependent: :destroy
+  has_many :users, through: :user_company_roles
 
   has_many :financial_informations, dependent: :restrict_with_error
   has_many :customers, dependent: :restrict_with_error

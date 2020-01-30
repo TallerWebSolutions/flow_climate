@@ -8,7 +8,7 @@
 #  discarded_at       :datetime
 #  impact_date        :datetime         not null
 #  impact_description :string           not null
-#  impact_size        :integer          default(0), not null
+#  impact_size        :integer          default("small"), not null
 #  impact_type        :integer          not null
 #  created_at         :datetime         not null
 #  updated_at         :datetime         not null

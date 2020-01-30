@@ -70,6 +70,10 @@ Rails.application.routes.draw do
         patch :unpay_plan
       end
     end
+
+    resources :companies, only: [] do
+      resources :user_company_roles, only: %i[new create edit update]
+    end
   end
 
   resources :companies, except: :destroy do

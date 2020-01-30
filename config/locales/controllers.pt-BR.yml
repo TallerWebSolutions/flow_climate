@@ -1162,3 +1162,8 @@ pt-BR:
       general_info: "Informações Gerais"
       lead_time_min: "Lead time menor"
       lead_time_max: "Lead time maior"
+  user_company_roles:
+    new:
+      title: "Nova Função de Usuário"
+    edit:
+      title: "Editar Função do Usuário"

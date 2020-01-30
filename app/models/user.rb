@@ -40,7 +40,8 @@ class User < ApplicationRecord
 
   mount_uploader :avatar, FlowClimateImageUploader
 
-  has_and_belongs_to_many :companies
+  has_many :user_company_roles, dependent: :destroy
+  has_many :companies, through: :user_company_roles
 
   has_many :user_project_roles, dependent: :destroy
   has_many :projects, through: :user_project_roles

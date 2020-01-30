@@ -75,18 +75,6 @@ ALTER SEQUENCE public.companies_id_seq OWNED BY public.companies.id;
 
 
 --
--- Name: companies_users; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.companies_users (
-    user_id integer,
-    company_id integer,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
-);
-
-
---
 -- Name: company_settings; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1508,6 +1496,42 @@ ALTER SEQUENCE public.teams_id_seq OWNED BY public.teams.id;
 
 
 --
+-- Name: user_company_roles; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.user_company_roles (
+    user_id integer,
+    company_id integer,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    id integer NOT NULL,
+    user_role integer DEFAULT 0 NOT NULL,
+    start_date date,
+    end_date date
+);
+
+
+--
+-- Name: user_company_roles_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.user_company_roles_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: user_company_roles_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.user_company_roles_id_seq OWNED BY public.user_company_roles.id;
+
+
+--
 -- Name: user_plans; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1907,6 +1931,13 @@ ALTER TABLE ONLY public.teams ALTER COLUMN id SET DEFAULT nextval('public.teams_
 
 
 --
+-- Name: user_company_roles id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.user_company_roles ALTER COLUMN id SET DEFAULT nextval('public.user_company_roles_id_seq'::regclass);
+
+
+--
 -- Name: user_plans id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -2264,6 +2295,14 @@ ALTER TABLE ONLY public.teams
 
 
 --
+-- Name: user_company_roles user_company_roles_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.user_company_roles
+    ADD CONSTRAINT user_company_roles_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: user_plans user_plans_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2313,20 +2352,6 @@ CREATE UNIQUE INDEX index_companies_on_api_token ON public.companies USING btree
 --
 
 CREATE UNIQUE INDEX index_companies_on_slug ON public.companies USING btree (slug);
-
-
---
--- Name: index_companies_users_on_company_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_companies_users_on_company_id ON public.companies_users USING btree (company_id);
-
-
---
--- Name: index_companies_users_on_user_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_companies_users_on_user_id ON public.companies_users USING btree (user_id);
 
 
 --
@@ -2904,6 +2929,41 @@ CREATE UNIQUE INDEX index_teams_on_company_id_and_name ON public.teams USING btr
 
 
 --
+-- Name: index_user_company_roles_on_company_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_user_company_roles_on_company_id ON public.user_company_roles USING btree (company_id);
+
+
+--
+-- Name: index_user_company_roles_on_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_user_company_roles_on_id ON public.user_company_roles USING btree (id);
+
+
+--
+-- Name: index_user_company_roles_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_user_company_roles_on_user_id ON public.user_company_roles USING btree (user_id);
+
+
+--
+-- Name: index_user_company_roles_on_user_id_and_company_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_user_company_roles_on_user_id_and_company_id ON public.user_company_roles USING btree (user_id, company_id);
+
+
+--
+-- Name: index_user_company_roles_on_user_role; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_user_company_roles_on_user_role ON public.user_company_roles USING btree (user_role);
+
+
+--
 -- Name: index_user_plans_on_plan_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -3103,10 +3163,10 @@ ALTER TABLE ONLY public.products
 
 
 --
--- Name: companies_users fk_rails_27539b2fc9; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: user_company_roles fk_rails_27539b2fc9; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.companies_users
+ALTER TABLE ONLY public.user_company_roles
     ADD CONSTRAINT fk_rails_27539b2fc9 FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
@@ -3271,10 +3331,10 @@ ALTER TABLE ONLY public.integration_errors
 
 
 --
--- Name: companies_users fk_rails_667cd952fb; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: user_company_roles fk_rails_667cd952fb; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.companies_users
+ALTER TABLE ONLY public.user_company_roles
     ADD CONSTRAINT fk_rails_667cd952fb FOREIGN KEY (company_id) REFERENCES public.companies(id);
 
 
@@ -3733,6 +3793,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20191028155108'),
 ('20191223134739'),
 ('20200114153736'),
-('20200114190057');
+('20200114190057'),
+('20200130181814');
 
 

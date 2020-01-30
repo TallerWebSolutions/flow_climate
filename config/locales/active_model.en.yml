@@ -252,3 +252,6 @@ en:
   flow_impacts:
     show:
       impact_duration: "Impact Duration"
+  user_company_role:
+    validations:
+      user_company: "You can't have the same user twice in the company."

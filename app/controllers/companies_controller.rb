@@ -133,7 +133,7 @@ class CompaniesController < AuthenticatedController
   end
 
   def assign_users_in_company
-    @users_in_company = @company.users.order(:first_name, :last_name)
+    @users_in_company = @company.user_company_roles.joins(:user).order('users.first_name, users.last_name')
   end
 
   def assign_company
