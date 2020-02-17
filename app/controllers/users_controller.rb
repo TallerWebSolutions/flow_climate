@@ -109,7 +109,7 @@ class UsersController < AuthenticatedController
 
     @user.companies.each do |company|
       projects_leadtime = {}
-      company.projects.active.each { |project| projects_leadtime[project] = project.general_leadtime / 1.day }
+      company.projects.active.each { |project| projects_leadtime[project] = (project.general_leadtime / 1.day).round(3) }
 
       @companies_lead_time_info[company] = projects_leadtime
     end
