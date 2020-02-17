@@ -211,4 +211,21 @@ RSpec.describe User, type: :model do
     it { expect(user.role_in_company(company)).to eq user_company_role }
     it { expect(user.role_in_company(other_company)).to eq other_company_role }
   end
+
+  describe '#managing_company?' do
+    let(:company) { Fabricate :company }
+    let(:other_company) { Fabricate :company }
+
+    let(:user) { Fabricate :user }
+    let(:other_user) { Fabricate :user }
+    let(:ops_user) { Fabricate :user }
+
+    let!(:user_company_role) { Fabricate :user_company_role, company: company, user: user, user_role: :manager }
+    let!(:other_company_role) { Fabricate :user_company_role, company: other_company, user: user, user_role: :director }
+    let!(:ops_company_role) { Fabricate :user_company_role, company: other_company, user: ops_user, user_role: :operations }
+
+    it { expect(user.managing_company?(company)).to be true }
+    it { expect(user.managing_company?(other_company)).to be true }
+    it { expect(ops_user.managing_company?(other_company)).to be false }
+  end
 end

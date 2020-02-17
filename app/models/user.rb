@@ -114,4 +114,8 @@ class User < ApplicationRecord
   def role_in_company(company)
     user_company_roles.find_by(company: company)
   end
+
+  def managing_company?(company)
+    user_company_roles.find_by(company: company).user_role_before_type_cast.positive?
+  end
 end
