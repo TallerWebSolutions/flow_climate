@@ -165,6 +165,9 @@ pt-BR:
       service_delivery_review:
         one: Service Delivery Review
         other: Service Delivery Reviews
+      user_company_role:
+        one: Papel na empresa
+        other: Papeis nas empresas
     attributes:
       user:
         first_name: Nome
@@ -554,6 +557,17 @@ pt-BR:
         lead_time_top_threshold: Max Lead Time (horas)
         quality_bottom_threshold: Min Qualidade (%)
         quality_top_threshold: Max Qualidade (%)
+      user_company_role:
+        user: Usuário
+        company: Empresa
+        user_role: Função do usuário
+        start_date: Início
+        end_date: Fim
+        enums:
+          user_role:
+            operations: Operação
+            manager: Gestão
+            director: Diretor
   product:
     name:
       uniqueness: "Não deve repetir nome de produto para o mesmo cliente."
@@ -617,3 +631,6 @@ pt-BR:
       lead_time_top_threshold: "Limite inferior da faixa de lead time aceitável"
       quality_bottom_threshold: "Porcentagem mínima de defeitos"
       quality_top_threshold: "Porcentagem máxima de defeitos"
+  user_company_role:
+    validations:
+      user_company: "Você não pode ter o mesmo usuário duplicado na empresa."

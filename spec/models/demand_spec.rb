@@ -378,6 +378,10 @@ RSpec.describe Demand, type: :model do
   end
 
   context 'computed fields' do
+    before { travel_to Time.zone.local(2019, 10, 17, 10, 0, 0) }
+
+    after { travel_back }
+
     context 'leadtime' do
       context 'having commitment and end dates' do
         let!(:demand) { Fabricate :demand, commitment_date: 2.days.ago, end_date: 1.hour.ago }
@@ -558,6 +562,10 @@ RSpec.describe Demand, type: :model do
   end
 
   describe '#partial_leadtime' do
+    before { travel_to Time.zone.local(2019, 10, 17, 10, 0, 0) }
+
+    after { travel_back }
+
     context 'having leadtime' do
       let!(:demand) { Fabricate :demand, commitment_date: 2.days.ago, end_date: 1.day.ago }
 

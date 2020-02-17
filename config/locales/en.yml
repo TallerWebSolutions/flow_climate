@@ -49,3 +49,6 @@ en:
   number:
     format:
       separator: "."
+    currency:
+      format:
+        unit: "$"

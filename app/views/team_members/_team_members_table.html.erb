@@ -1,6 +1,8 @@
 <h2><%= I18n.t('team_members.index.title') %></h2>
 
-<%= link_to I18n.t('team_members.new.title'), new_company_team_member_path(company), class: 'btn btn-sm btn-primary bottom-spaced-component', remote: true %>
+<% if current_user.managing_company?(company) %>
+  <%= link_to I18n.t('team_members.new.title'), new_company_team_member_path(company), class: 'btn btn-sm btn-primary bottom-spaced-component', remote: true %>
+<% end %>
 
 <table class="table">
   <thead>
@@ -14,7 +16,9 @@
       <th><%= TeamMember.human_attribute_name :start_date %></th>
       <th><%= TeamMember.human_attribute_name :end_date %></th>
       <th><%= TeamMember.human_attribute_name :billable %></th>
-      <th><%= I18n.t('general.table.actions') %></th>
+      <% if current_user.managing_company?(company) %>
+        <th></th>
+      <% end %>
     </tr>
   </thead>
   <tbody>

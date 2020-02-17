@@ -46,13 +46,21 @@
         <th><%= User.human_attribute_name :first_name %></th>
         <th><%= User.human_attribute_name :last_name %></th>
         <th><%= User.human_attribute_name :email %></th>
+        <th><%= UserCompanyRole.human_attribute_name :user_role %></th>
+        <th></th>
       </thead>
       <tbody>
-        <% @users_in_company.each do |user| %>
+        <% @users_in_company.each do |user_company_role| %>
           <tr>
-            <td><%= user.first_name %></td>
-            <td><%= user.last_name %></td>
-            <td><%= user.email %></td>
+            <td><%= user_company_role.first_name %></td>
+            <td><%= user_company_role.last_name %></td>
+            <td><%= user_company_role.email %></td>
+            <td><%= I18n.t("activerecord.attributes.user_company_role.enums.user_role.#{user_company_role.user_role}") %></td>
+            <td>
+              <%= link_to edit_user_company_user_company_role_path(user_company_role.user, @company, user_company_role) do %>
+                <i class="fas fa-edit"></i>
+              <% end %>
+            </td>
           </tr>
         <% end %>
       </tbody>

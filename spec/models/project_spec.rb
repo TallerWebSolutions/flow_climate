@@ -1344,7 +1344,7 @@ RSpec.describe Project, type: :model do
   describe '#quality' do
     context 'with data' do
       include_context 'demands with effort'
-      it { expect(project.quality).to eq 0.25 }
+      it { expect(project.quality).to eq 0.75 }
     end
 
     context 'with no bugs' do

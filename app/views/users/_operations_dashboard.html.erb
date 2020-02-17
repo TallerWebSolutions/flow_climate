@@ -1,0 +1,42 @@
+<div class="row equal-heights">
+
+  <div class="col-xs-4">
+    <%= render 'users/operations_personal_info', user: user %>
+  </div>
+
+  <% if user.team_member.present? %>
+    <div class="col-xs-4">
+      <%= render 'team_members/last_deliveries', team_member: user.team_member %>
+    </div>
+  <% end %>
+
+  <% if member_teams.present? %>
+    <div class="col-xs-4">
+      <%= render 'team_members/teams_summary', member_teams: member_teams %>
+    </div>
+  <% end %>
+
+  <% if member_teams.present? %>
+    <div class="col-xs-4">
+      <%= render 'team_members/blocks_summary', demand_blocks: demand_blocks %>
+    </div>
+  <% end %>
+
+  <% if member_projects.present? %>
+    <div class="col-xs-8">
+      <%= render 'team_members/projects_summary', member_projects: member_projects %>
+    </div>
+  <% end %>
+
+  <% if pairing_chart.present? %>
+    <div class="col-xs-6">
+      <%= render 'team_members/pairings_summary', pairing_chart: pairing_chart %>
+    </div>
+  <% end %>
+
+  <% if statistics_informations.present? %>
+    <div class="col-xs-6">
+      <%= render 'team_members/statistics_informations', dates_array: array_of_dates, statistics_flow_informations: statistics_informations %>
+    </div>
+  <% end %>
+</div>

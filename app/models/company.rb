@@ -24,7 +24,8 @@ class Company < ApplicationRecord
   extend FriendlyId
   friendly_id :abbreviation, use: :slugged
 
-  has_and_belongs_to_many :users
+  has_many :user_company_roles, dependent: :destroy
+  has_many :users, through: :user_company_roles
 
   has_many :financial_informations, dependent: :restrict_with_error
   has_many :customers, dependent: :restrict_with_error
@@ -136,6 +137,13 @@ class Company < ApplicationRecord
     total_available = 0
     teams.sum { |team| total_available += team.active_monthly_available_hours_for_billable_types(projects.pluck(:project_type).uniq) }
     total_available
+  end
+
+  def role_for_user(user)
+    user_company_role = user_company_roles.find_by(user: user)
+    return nil if team_members.find_by(user: user).blank? && user_company_role&.operations?
+
+    user_company_role
   end
 
   private

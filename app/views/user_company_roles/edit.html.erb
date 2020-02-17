@@ -1,0 +1,16 @@
+<div class="col-xs-12">
+  <ul class="breadcrumb">
+    <li><%= link_to I18n.t('general.home.title'), root_path %></li>
+    <li><%= link_to 'Admin Dashboard', admin_dashboard_users_path %></li>
+    <li><%= I18n.t('user_company_roles.edit.title') %></li>
+  </ul>
+</div>
+</div>
+
+<%= form_for @user_company_role, url: user_company_user_company_role_path(@user, @company, @user_company_role), method: :put, class: 'form' do |f| %>
+  <div class="row bottom-spaced-component">
+    <div class="col-xs-12">
+      <%= render 'user_company_roles/form', f: f, user_company_role: @user_company_role %>
+    </div>
+  </div>
+<% end %>

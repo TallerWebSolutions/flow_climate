@@ -1,4 +1,4 @@
-<% if company.present? && team.present? %>
+<% if company.present? && team.present? && current_user.managing_company?(company) %>
   <%= link_to I18n.t('memberships.new.title'), new_company_team_membership_path(company, team), class: 'btn btn-sm btn-success bottom-spaced-component pull-right', remote: true %>
 <% end %>
 
@@ -10,12 +10,19 @@
       <th><%= Membership.human_attribute_name :end_date %></th>
       <th><%= I18n.t('team_members.index.elapsed_time') %></th>
       <th><%= Membership.human_attribute_name :member_role %></th>
-      <th><%= TeamMember.human_attribute_name :monthly_payment %></th>
-      <th><%= TeamMember.human_attribute_name :hours_per_month %></th>
+
+      <% if current_user.managing_company?(company) %>
+        <th><%= TeamMember.human_attribute_name :monthly_payment %></th>
+        <th><%= TeamMember.human_attribute_name :hours_per_month %></th>
+      <% end %>
+
       <th><%= I18n.t('team_members.show.deliveries') %></th>
       <th><%= I18n.t('projects.general.leadtime', percentil: '80%') %></th>
       <th><%= I18n.t('demands.show.pairing') %></th>
-      <th></th>
+
+      <% if current_user.managing_company?(company) %>
+        <th></th>
+      <% end %>
     </tr>
   </thead>
   <tbody>
@@ -32,12 +39,16 @@
       <td></td>
       <td></td>
       <td></td>
-      <td><%= number_to_currency(memberships.map(&:monthly_payment).compact.sum, precision: 2) %></td>
+      <% if current_user.managing_company?(company) %>
+        <td><%= number_to_currency(memberships.map(&:monthly_payment).compact.sum, precision: 2) %></td>
+      <% end %>
       <td></td>
       <td></td>
       <td></td>
       <td></td>
-      <td></td>
+      <% if current_user.managing_company?(company) %>
+        <td></td>
+      <% end %>
     </tr>
   </tfoot>
 </table>

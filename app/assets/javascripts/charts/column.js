@@ -51,7 +51,7 @@ function buildColumnChart(columnDiv) {
                 dataLabels: {
                     enabled: columnDiv.data('stacking') !== "normal",
                     formatter: function() {
-                        return Highcharts.numberFormat(this.y, columnDiv.data('decimals'), ',');
+                        return columnDiv.data('prefix') + ' ' + Highcharts.numberFormat(this.y, columnDiv.data('decimals'), ',', '.') + ' ' + columnDiv.data('tooltipsuffix');
                     }
                 }
             }

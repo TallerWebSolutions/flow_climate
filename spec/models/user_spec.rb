@@ -2,7 +2,8 @@
 
 RSpec.describe User, type: :model do
   context 'associations' do
-    it { is_expected.to have_and_belong_to_many :companies }
+    it { is_expected.to have_many(:companies).through(:user_company_roles) }
+    it { is_expected.to have_many(:user_company_roles) }
     it { is_expected.to have_many(:user_project_roles).dependent(:destroy) }
     it { is_expected.to have_many(:projects).through(:user_project_roles) }
     it { is_expected.to have_many(:demand_data_processments).dependent(:destroy) }
@@ -195,5 +196,36 @@ RSpec.describe User, type: :model do
     let!(:inactive_item_assignment) { Fabricate :item_assignment, demand: inactive_demand, team_member: team_member }
 
     it { expect(user.acting_projects).to eq [project] }
+  end
+
+  describe '#role_in_company' do
+    let(:company) { Fabricate :company }
+    let(:other_company) { Fabricate :company }
+
+    let(:user) { Fabricate :user }
+    let(:other_user) { Fabricate :user }
+
+    let!(:user_company_role) { Fabricate :user_company_role, company: company, user: user, user_role: :manager }
+    let!(:other_company_role) { Fabricate :user_company_role, company: other_company, user: user, user_role: :director }
+
+    it { expect(user.role_in_company(company)).to eq user_company_role }
+    it { expect(user.role_in_company(other_company)).to eq other_company_role }
+  end
+
+  describe '#managing_company?' do
+    let(:company) { Fabricate :company }
+    let(:other_company) { Fabricate :company }
+
+    let(:user) { Fabricate :user }
+    let(:other_user) { Fabricate :user }
+    let(:ops_user) { Fabricate :user }
+
+    let!(:user_company_role) { Fabricate :user_company_role, company: company, user: user, user_role: :manager }
+    let!(:other_company_role) { Fabricate :user_company_role, company: other_company, user: user, user_role: :director }
+    let!(:ops_company_role) { Fabricate :user_company_role, company: other_company, user: ops_user, user_role: :operations }
+
+    it { expect(user.managing_company?(company)).to be true }
+    it { expect(user.managing_company?(other_company)).to be true }
+    it { expect(ops_user.managing_company?(other_company)).to be false }
   end
 end

@@ -34,6 +34,10 @@ RSpec.describe ItemAssignment, type: :model do
 
   context 'scopes' do
     describe '.for_dates' do
+      before { travel_to Time.zone.local(2019, 10, 17, 10, 0, 0) }
+
+      after { travel_back }
+
       context 'with data' do
         let!(:first_item_assignment) { Fabricate :item_assignment, start_time: 10.days.ago, finish_time: 7.days.ago }
         let!(:second_item_assignment) { Fabricate :item_assignment, start_time: 9.days.ago, finish_time: 8.days.ago }

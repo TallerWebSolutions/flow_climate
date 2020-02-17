@@ -204,7 +204,10 @@ RSpec.describe CompaniesController, type: :controller do
 
     describe 'GET #edit' do
       let(:other_user) { Fabricate :user, first_name: 'aaa' }
-      let(:company) { Fabricate :company, users: [user, other_user] }
+      let(:company) { Fabricate :company }
+
+      let!(:user_company_role) { Fabricate :user_company_role, company: company, user: user }
+      let!(:other_user_company_role) { Fabricate :user_company_role, company: company, user: other_user }
 
       context 'valid parameters' do
         before { get :edit, params: { id: company } }
@@ -212,7 +215,7 @@ RSpec.describe CompaniesController, type: :controller do
         it 'assigns the instance variables and renders the template' do
           expect(response).to render_template :edit
           expect(assigns(:company)).to eq company
-          expect(assigns(:users_in_company)).to eq [other_user, user]
+          expect(assigns(:users_in_company)).to eq [other_user_company_role, user_company_role]
         end
       end
 
@@ -225,9 +228,9 @@ RSpec.describe CompaniesController, type: :controller do
           end
 
           context 'not-permitted' do
-            let(:company) { Fabricate :company, users: [] }
+            let(:no_user_company) { Fabricate :company, users: [] }
 
-            before { get :edit, params: { id: company } }
+            before { get :edit, params: { id: no_user_company } }
 
             it { expect(response).to have_http_status :not_found }
           end

@@ -3,16 +3,23 @@
 <td><%= I18n.l(membership.end_date) if membership.end_date.present? %></td>
 <td><%= I18n.t('general.days_text', count: membership.elapsed_time) %></td>
 <td><%= I18n.t("activerecord.attributes.membership.enums.member_role.#{membership.member_role}") %></td>
-<td><%= number_to_currency(membership.monthly_payment, precision: 2) %></td>
-<td><%= membership.hours_per_month %></td>
+
+<% if current_user.managing_company?(company) %>
+  <td><%= number_to_currency(membership.monthly_payment, precision: 2) %></td>
+  <td><%= membership.hours_per_month %></td>
+<% end %>
+
 <td><%= I18n.t('general.demands_text', count: membership.demands.finished.count) %></td>
 <td><%= time_distance_in_words(membership.leadtime) %></td>
 <td title='<%= membership.pairing_members.uniq.join(', ') %>'><%= membership.pairing_members.uniq.count %></td>
-<td>
-  <%= link_to edit_company_team_membership_path(company, team, membership), remote: true do %>
-    <i class="fas fa-edit"></i>
-  <% end %>
-  <%= link_to company_team_membership_path(company, team, membership), method: :delete, data: { confirm: I18n.t('general.destroy.confirm') }, remote: true do %>
-    <i class="fa fa-times"></i>
-  <% end %>
-</td>
+
+<% if current_user.managing_company?(membership.company) %>
+  <td>
+    <%= link_to edit_company_team_membership_path(company, team, membership), remote: true do %>
+      <i class="fas fa-edit"></i>
+    <% end %>
+    <%= link_to company_team_membership_path(company, team, membership), method: :delete, data: { confirm: I18n.t('general.destroy.confirm') }, remote: true do %>
+      <i class="fa fa-times"></i>
+    <% end %>
+  </td>
+<% end %>

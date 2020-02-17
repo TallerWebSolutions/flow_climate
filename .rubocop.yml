@@ -58,6 +58,7 @@ Metrics/ClassLength:
     - 'app/controllers/demands_controller.rb'
     - 'app/controllers/companies_controller.rb'
     - 'app/controllers/teams_controller.rb'
+    - 'app/controllers/users_controller.rb'
     - 'app/adapters/**/*'
     - 'app/readers/**/*'
 
