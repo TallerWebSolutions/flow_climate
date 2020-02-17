@@ -387,12 +387,22 @@ class Project < ApplicationRecord
   end
 
   def quality
-    return 1 if demands.kept.count.zero? || demands.kept.bug.count.zero?
+    return 1 if bugs?
 
-    demands.kept.bug.count.to_f / demands.kept.count
+    1 - (demands.kept.bug.count.to_f / demands.kept.count)
+  end
+
+  def value_per_demand
+    return value if backlog_for.count.zero? || backlog_for == 1
+
+    value.to_f / backlog_for.count
   end
 
   private
+
+  def bugs?
+    demands.kept.count.zero? || demands.kept.bug.count.zero?
+  end
 
   def running?
     executing? || maintenance?

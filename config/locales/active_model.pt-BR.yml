@@ -566,7 +566,7 @@ pt-BR:
         enums:
           user_role:
             operations: Operação
-            manager: Gerente
+            manager: Gestão
             director: Diretor
   product:
     name:

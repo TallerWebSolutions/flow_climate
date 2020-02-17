@@ -94,6 +94,9 @@ pt-BR:
       text: "Última atualização em %{last_update}"
     risk:
       text: "Risco: %{risk_value}"
+      deadline:
+        label: "Risco do Prazo"
+      label: ""
     detail: "Detalhamento do Risco"
     minimum: "Mínimo"
     maximum: "Máximo"
@@ -155,6 +158,8 @@ pt-BR:
     name: "Nome"
     bugs: "Defeitos"
     people: "Pessoas"
+    quality: "Qualidade"
+    role: "Função"
   header:
     logout: Sair
     sign_up: Cadastre-se
@@ -166,6 +171,12 @@ pt-BR:
       title: "Perfil do Usuário"
       pairing_counts: "Pareamentos"
       last_deliveries: "Últimas Entregas"
+      manager:
+        active_projects: "Projetos ativos"
+        active_products: "Produtos ativos"
+        active_customers: "Clientes ativos"
+        value_per_demand: "Valor por Demanda"
+        flow_pressure: "Pressão do Fluxo"
     index:
       title: "Usuários"
       turn_off_notifications: "Desligar Notificações"

@@ -94,6 +94,9 @@ en:
       text: "Last update: %{last_update}"
     risk:
       text: "Risk: %{risk_value}"
+      deadline:
+        label: "Deadline Risk"
+      label: "Risk"
     detail: "Risk Detail"
     minimum: "Minimum"
     maximum: "Maximum"
@@ -155,6 +158,8 @@ en:
     name: "Name"
     bugs: "Bugs"
     people: "People"
+    quality: "Quality"
+    role: "Role"
   header:
     logout: Logout
     explore: Explore
@@ -167,6 +172,12 @@ en:
       title: "User Profile"
       pairing_counts: "Pairings"
       last_deliveries: "Last Deliveries"
+      manager:
+        active_projects: "Active projects"
+        active_products: "Active products"
+        active_customers: "Active customers"
+        value_per_demand: "Value per Demand"
+        flow_pressure: "Flow Pressure"
     index:
       title: "Users"
       turn_off_notifications: "Turn Off Notifications"

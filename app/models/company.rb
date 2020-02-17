@@ -139,6 +139,13 @@ class Company < ApplicationRecord
     total_available
   end
 
+  def role_for_user(user)
+    user_company_role = user_company_roles.find_by(user: user)
+    return nil if team_members.find_by(user: user).blank? && user_company_role&.operations?
+
+    user_company_role
+  end
+
   private
 
   def compute_current_cost_per_hour(finance)

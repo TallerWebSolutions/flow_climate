@@ -110,4 +110,8 @@ class User < ApplicationRecord
   def last_company
     Company.find(last_company_id) if last_company_id.present?
   end
+
+  def role_in_company(company)
+    user_company_roles.find_by(company: company)
+  end
 end

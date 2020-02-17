@@ -1,0 +1,101 @@
+<div class="col-xs-8">
+  <h4><%= I18n.t('general.leadtime_p80_label') %></h4>
+
+  <div id="manager-dashboard-lead-time-column"
+       class="flow-chart"
+       data-title=''
+       data-xcategories='<%= company_lead_time_info.keys.map(&:name) %>'
+       data-xtitle='<%= Project.model_name.human(count: 2) %>'
+       data-ytitle='<%= " #{I18n.t('general.leadtime')}" %>'
+       data-prefix=''
+       data-suffix=''
+       data-tooltipsuffix=<%= I18n.t('general.days') %>
+           data-series='<%= [{ name: I18n.t('general.leadtime'), data: company_lead_time_info.values }].to_json %>'
+       data-decimals='2'>
+  </div>
+</div>
+
+<div class="col-xs-6">
+  <h4><%= I18n.t('general.quality') %></h4>
+
+  <div id="manager-dashboard-quality-column"
+       class="flow-chart"
+       data-title=''
+       data-xcategories='<%= company_quality_info.keys.map(&:name) %>'
+       data-xtitle='<%= Project.model_name.human(count: 2) %>'
+       data-ytitle='<%= I18n.t('general.quality') %>'
+       data-prefix=''
+       data-suffix=''
+       data-tooltipsuffix='%'
+       data-series='<%= [{ name: I18n.t('general.quality'), data: company_quality_info.values }].to_json %>'
+       data-decimals='2'>
+  </div>
+</div>
+
+<div class="col-xs-6">
+  <h4><%= I18n.t('general.risk.deadline.label') %></h4>
+
+  <div id="manager-dashboard-risk-column"
+       class="flow-chart"
+       data-title=''
+       data-xcategories='<%= company_risk_info.keys.map(&:name) %>'
+       data-xtitle='<%= Project.model_name.human(count: 2) %>'
+       data-ytitle='<%= " #{I18n.t('general.risk.label')}" %>'
+       data-prefix=''
+       data-suffix=''
+       data-tooltipsuffix='%'
+       data-series='<%= [{ name: I18n.t('general.risk.label'), data: company_risk_info.values }].to_json %>'
+       data-decimals='2'>
+  </div>
+</div>
+
+<div class="col-xs-6">
+  <h4><%= I18n.t('users.show.manager.flow_pressure') %></h4>
+
+  <div id="manager-dashboard-flow-pressure-column"
+       class="flow-chart"
+       data-title=''
+       data-xcategories='<%= company_flow_pressure_info.keys.map(&:name) %>'
+       data-xtitle='<%= Project.model_name.human(count: 2) %>'
+       data-ytitle='<%= " #{I18n.t('users.show.manager.flow_pressure')}" %>'
+       data-prefix=''
+       data-suffix=''
+       data-tooltipsuffix=''
+       data-series='<%= [{ name: I18n.t('users.show.manager.flow_pressure'), data: company_flow_pressure_info.values }].to_json %>'
+       data-decimals='2'>
+  </div>
+</div>
+
+<div class="col-xs-6">
+  <h4><%= I18n.t('general.scope') %></h4>
+
+  <div id="manager-dashboard-scope-column"
+       class="flow-chart"
+       data-title=''
+       data-xcategories='<%= company_scope_info.keys.map(&:name) %>'
+       data-xtitle='<%= Project.model_name.human(count: 2) %>'
+       data-ytitle='<%= " #{I18n.t('general.scope')}" %>'
+       data-prefix=''
+       data-suffix=''
+       data-tooltipsuffix=''
+       data-series='<%= [{ name: I18n.t('general.scope'), data: company_scope_info.values }].to_json %>'
+       data-decimals='0'>
+  </div>
+</div>
+
+<div class="col-xs-6">
+  <h4><%= I18n.t('users.show.manager.value_per_demand') %></h4>
+
+  <div id="manager-dashboard-value-per-demand-column"
+       class="flow-chart"
+       data-title=''
+       data-xcategories='<%= company_value_per_demand_info.keys.map(&:name) %>'
+       data-xtitle='<%= Project.model_name.human(count: 2) %>'
+       data-ytitle='<%= " #{I18n.t('users.show.manager.value_per_demand')}" %>'
+       data-prefix='<%= I18n.t('number.currency.format.unit') %>'
+       data-suffix=''
+       data-tooltipsuffix=''
+       data-series='<%= [{ name: I18n.t('users.show.manager.value_per_demand'), data: company_value_per_demand_info.values }].to_json %>'
+       data-decimals='2'>
+  </div>
+</div>

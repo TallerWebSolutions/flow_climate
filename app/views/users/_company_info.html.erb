@@ -1,0 +1,31 @@
+<h4><%= company.name %></h4>
+<h3></h3>
+
+<table class="table">
+  <tbody>
+    <tr>
+      <td><b><%= I18n.t('general.name') %></b></td>
+      <td><%= user.full_name %></td>
+    </tr>
+    <tr>
+      <td><b><%= I18n.t('general.role') %></b></td>
+      <td><%= I18n.t("activerecord.attributes.user_company_role.enums.user_role.#{user.role_in_company(company).user_role}") %></td>
+    </tr>
+    <tr>
+      <td><b><%= I18n.t('users.show.manager.active_customers') %></b></td>
+      <td><%= company.projects.active.map(&:customers).flatten.uniq.count %></td>
+    </tr>
+    <tr>
+      <td><b><%= I18n.t('users.show.manager.active_products') %></b></td>
+      <td><%= company.projects.active.map(&:products).flatten.uniq.count %></td>
+    </tr>
+    <tr>
+      <td><b><%= I18n.t('users.show.manager.active_projects') %></b></td>
+      <td><%= company.active_projects_count %></td>
+    </tr>
+    <tr>
+      <td><b><%= Team.model_name.human(count: 2) %></b></td>
+      <td><%= company.teams.count %></td>
+    </tr>
+  </tbody>
+</table>

@@ -123,9 +123,9 @@ RSpec.describe UsersController, type: :controller do
 
           let!(:company) { Fabricate :company, users: [user], name: 'zzz' }
           let!(:other_company) { Fabricate :company, users: [user], name: 'aaa' }
-          let!(:project) { Fabricate :project, status: :executing, company: company, end_date: 2.days.ago }
-          let!(:other_project) { Fabricate :project, status: :executing, company: company, end_date: 1.day.ago }
-          let!(:finished_project) { Fabricate :project, status: :finished, company: company, end_date: 2.days.ago }
+          let!(:project) { Fabricate :project, status: :executing, company: company, end_date: 2.days.ago, value: 1000 }
+          let!(:other_project) { Fabricate :project, status: :executing, company: company, end_date: 1.day.ago, value: 3500 }
+          let!(:finished_project) { Fabricate :project, status: :finished, company: company, end_date: 2.days.ago, value: 500 }
 
           let(:team) { Fabricate :team, company: company }
           let(:first_demand) { Fabricate :demand, team: team, project: other_project, commitment_date: 3.months.ago, end_date: 85.days.ago }
@@ -168,6 +168,13 @@ RSpec.describe UsersController, type: :controller do
             expect(assigns(:statistics_informations).lead_time_accumulated[1]).to be_within(1).of(7.0)
             expect(assigns(:statistics_informations).lead_time_accumulated[2]).to be_within(1).of(7.0)
             expect(assigns(:statistics_informations).lead_time_accumulated[3]).to be_within(1).of(26.0)
+            expect(assigns(:companies_quality_info)).to eq(company => { project => 100, other_project => 100 }, other_company => {})
+            expect(assigns(:companies_lead_time_info)).to eq(company => { project => 26, other_project => 6.8 }, other_company => {})
+            expect(assigns(:companies_risk_info)).to eq(company => { project => 100, other_project => 100 }, other_company => {})
+            expect(assigns(:companies_scope_info)).to eq(company => { project => 30, other_project => 30 }, other_company => {})
+            expect(assigns(:companies_value_per_demand_info)).to eq(company => { project => 1000, other_project => 1750 }, other_company => {})
+            expect(assigns(:companies_flow_pressure_info)).to eq(company => { project => 0, other_project => 0 }, other_company => {})
+
             expect(response).to render_template :show
           end
         end

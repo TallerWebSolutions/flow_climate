@@ -197,4 +197,18 @@ RSpec.describe User, type: :model do
 
     it { expect(user.acting_projects).to eq [project] }
   end
+
+  describe '#role_in_company' do
+    let(:company) { Fabricate :company }
+    let(:other_company) { Fabricate :company }
+
+    let(:user) { Fabricate :user }
+    let(:other_user) { Fabricate :user }
+
+    let!(:user_company_role) { Fabricate :user_company_role, company: company, user: user, user_role: :manager }
+    let!(:other_company_role) { Fabricate :user_company_role, company: other_company, user: user, user_role: :director }
+
+    it { expect(user.role_in_company(company)).to eq user_company_role }
+    it { expect(user.role_in_company(other_company)).to eq other_company_role }
+  end
 end

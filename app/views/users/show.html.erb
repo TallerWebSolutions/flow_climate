@@ -16,44 +16,28 @@
   </div>
 <% end %>
 
-<div class="row equal-heights">
-  <div class="col-xs-4">
-    <%= render 'users/user_personal_info', user: @user %>
+<div class="row">
+  <div class="col-xs-12">
+    <div class="tab user-dashboard-companies-tab">
+      <% @companies_list.each do |company| %>
+        <button class="tablinks user-dashboard-info-tab <%= 'active' if @user.last_company_id == company.id %>" id="user-dashboard-<%= company.id %>" onclick="openTab(event, 'user-dashboard-tab-<%= company.id %>', 'user-dashboard-info-tab', 'tabcontent-user-dashboard-info')"><%= company.abbreviation.upcase %></button>
+      <% end %>
+    </div>
   </div>
+</div>
 
-  <% if @user.team_member.present? %>
-    <div class="col-xs-4">
-      <%= render 'team_members/last_deliveries', team_member: @user.team_member %>
-    </div>
-  <% end %>
+<div class="row">
+  <% @companies_list.each do |company| %>
+    <div id="user-dashboard-tab-<%= company.id %>" class="tabcontent tabcontent-user-dashboard-info <%= 'visible' if @user.last_company_id == company.id %>">
+      <div class="col-xs-4">
+        <%= render 'users/company_info', user: @user, company: company %>
+      </div>
 
-  <% if @member_teams.present? %>
-    <div class="col-xs-4">
-      <%= render 'team_members/teams_summary', member_teams: @member_teams %>
-    </div>
-  <% end %>
-
-  <% if @member_teams.present? %>
-    <div class="col-xs-4">
-      <%= render 'team_members/blocks_summary', demand_blocks: @demand_blocks %>
-    </div>
-  <% end %>
-
-  <% if @member_projects.present? %>
-    <div class="col-xs-8">
-      <%= render 'team_members/projects_summary', member_projects: @member_projects %>
-    </div>
-  <% end %>
-
-  <% if @pairing_chart.present? %>
-    <div class="col-xs-6">
-      <%= render 'team_members/pairings_summary', pairing_chart: @pairing_chart %>
-    </div>
-  <% end %>
-
-  <% if @statistics_informations.present? %>
-    <div class="col-xs-6">
-      <%= render 'team_members/statistics_informations', dates_array: @array_of_dates, statistics_flow_informations: @statistics_informations %>
+      <% if company.role_for_user(@user)&.operations? %>
+        <%= render 'users/operations_dashboard', user: @user, member_teams: @member_teams, demand_blocks: @demand_blocks, member_projects: @member_projects, pairing_chart: @pairing_chart, statistics_informations: @statistics_informations, array_of_dates: @array_of_dates %>
+      <% elsif company.role_for_user(@user)&.manager? %>
+        <%= render 'users/manager_dashboard', user: @user, company: company, company_quality_info: @companies_quality_info[company], company_lead_time_info: @companies_lead_time_info[company], company_risk_info: @companies_risk_info[company], company_scope_info: @companies_scope_info[company], company_value_per_demand_info: @companies_value_per_demand_info[company], company_flow_pressure_info: @companies_flow_pressure_info[company] %>
+      <% end %>
     </div>
   <% end %>
 </div>

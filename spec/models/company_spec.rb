@@ -319,4 +319,27 @@ RSpec.describe Company, type: :model do
       it { expect(company.total_active_consumed_hours).to eq 0 }
     end
   end
+
+  describe '#role_for_user' do
+    let(:company) { Fabricate :company }
+    let(:other_company) { Fabricate :company }
+
+    let(:user) { Fabricate :user }
+    let(:other_user) { Fabricate :user }
+    let(:operations_user) { Fabricate :user }
+    let(:team_member_operations_user) { Fabricate :user }
+
+    let!(:team_member) { Fabricate :team_member, company: other_company, user: team_member_operations_user }
+
+    let!(:user_company_role) { Fabricate :user_company_role, company: company, user: user, user_role: :manager }
+    let!(:other_company_role) { Fabricate :user_company_role, company: company, user: other_user, user_role: :director }
+    let!(:operations_company_role) { Fabricate :user_company_role, company: company, user: operations_user, user_role: :operations }
+    let!(:team_member_company_role) { Fabricate :user_company_role, company: other_company, user: team_member_operations_user, user_role: :operations }
+
+    it { expect(company.role_for_user(user)).to eq user_company_role }
+    it { expect(company.role_for_user(other_user)).to eq other_company_role }
+    it { expect(other_company.role_for_user(user)).to be_nil }
+    it { expect(company.role_for_user(operations_user)).to be_nil }
+    it { expect(other_company.role_for_user(team_member_operations_user)).to eq team_member_company_role }
+  end
 end
