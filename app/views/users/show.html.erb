@@ -26,21 +26,16 @@
   </div>
 </div>
 
-<div class="row">
-  <% @companies_list.each do |company| %>
-    <div id="user-dashboard-tab-<%= company.id %>" class="tabcontent tabcontent-user-dashboard-info <%= 'visible' if @user.last_company_id == company.id %>">
-      <div class="col-xs-4">
-        <%= render 'users/company_info', user: @user, company: company %>
-      </div>
 
-      <% if company.role_for_user(@user)&.operations? %>
-        <%= render 'users/operations_dashboard', user: @user, member_teams: @member_teams, demand_blocks: @demand_blocks, member_projects: @member_projects, pairing_chart: @pairing_chart, statistics_informations: @statistics_informations, array_of_dates: @array_of_dates %>
-      <% elsif company.role_for_user(@user)&.manager? %>
-        <%= render 'users/manager_dashboard', user: @user, company: company, company_quality_info: @companies_quality_info[company], company_lead_time_info: @companies_lead_time_info[company], company_risk_info: @companies_risk_info[company], company_scope_info: @companies_scope_info[company], company_value_per_demand_info: @companies_value_per_demand_info[company], company_flow_pressure_info: @companies_flow_pressure_info[company] %>
-      <% end %>
-    </div>
-  <% end %>
-</div>
+<% @companies_list.each do |company| %>
+  <div id="user-dashboard-tab-<%= company.id %>" class="tabcontent tabcontent-user-dashboard-info <%= 'visible' if @user.last_company_id == company.id %>">
+    <% if company.role_for_user(@user)&.operations? %>
+      <%= render 'users/operations_dashboard', user: @user, member_teams: @member_teams, demand_blocks: @demand_blocks, member_projects: @member_projects, pairing_chart: @pairing_chart, statistics_informations: @statistics_informations, array_of_dates: @array_of_dates %>
+    <% elsif company.role_for_user(@user)&.manager? %>
+      <%= render 'users/manager_dashboard', user: @user, company: company, company_quality_info: @companies_quality_info[company], company_lead_time_info: @companies_lead_time_info[company], company_risk_info: @companies_risk_info[company], company_scope_info: @companies_scope_info[company], company_value_per_demand_info: @companies_value_per_demand_info[company], company_flow_pressure_info: @companies_flow_pressure_info[company] %>
+    <% end %>
+  </div>
+<% end %>
 
 <% content_for :javascript do %>
   <%= javascript_include_tag 'charts/column' %>

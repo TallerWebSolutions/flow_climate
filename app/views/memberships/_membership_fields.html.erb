@@ -4,7 +4,7 @@
 <td><%= I18n.t('general.days_text', count: membership.elapsed_time) %></td>
 <td><%= I18n.t("activerecord.attributes.membership.enums.member_role.#{membership.member_role}") %></td>
 
-<% if current_user.managing_company?(company) %>
+<% if current_user.managing_company?(company) || current_user.admin? %>
   <td><%= number_to_currency(membership.monthly_payment, precision: 2) %></td>
   <td><%= membership.hours_per_month %></td>
 <% end %>
