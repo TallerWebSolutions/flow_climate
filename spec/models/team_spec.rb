@@ -39,7 +39,7 @@ RSpec.describe Team, type: :model do
           it { expect(other_team.valid?).to be true }
         end
 
-        context 'different name in same customer' do
+        context 'same name in different customer' do
           let!(:team) { Fabricate :team, company: company, name: 'zzz' }
           let!(:other_team) { Fabricate.build :team, name: 'zzz' }
 

@@ -150,7 +150,7 @@ RSpec.describe Company, type: :model do
   end
 
   describe '#current_cost_per_hour' do
-    context 'having finances' do
+    context 'with finances' do
       let(:company) { Fabricate :company }
       let!(:first_finance) { Fabricate :financial_information, company: company, finances_date: 1.month.ago, expenses_total: 300 }
       let!(:second_finance) { Fabricate :financial_information, company: company, finances_date: 1.week.ago, expenses_total: 200 }
@@ -159,10 +159,10 @@ RSpec.describe Company, type: :model do
       include_context 'demands with effort for company'
       it { expect(company.current_cost_per_hour.to_f).to eq 0.946969696969697 }
 
-      pending 'having no efforts'
+      pending 'with no efforts'
     end
 
-    context 'having no finances' do
+    context 'with no finances' do
       let(:company) { Fabricate :company }
 
       it { expect(company.current_cost_per_hour).to eq 0 }
@@ -170,13 +170,13 @@ RSpec.describe Company, type: :model do
   end
 
   describe '#current_hours_per_demand' do
-    context 'having finances' do
+    context 'with finances' do
       include_context 'demands with effort for company'
 
       it { expect(company.current_hours_per_demand.to_f).to eq 35.199999999999996 }
     end
 
-    context 'having no finances' do
+    context 'with no finances' do
       let(:company) { Fabricate :company }
 
       it { expect(company.current_hours_per_demand.to_f).to eq 0 }
@@ -263,7 +263,7 @@ RSpec.describe Company, type: :model do
   describe '#demands_delivered_last_week' do
     let(:company) { Fabricate :company }
 
-    context 'having no projects' do
+    context 'with projects' do
       let(:customer) { Fabricate :customer, company: company }
       let!(:project) { Fabricate :project, company: company, customers: [customer] }
 
@@ -273,7 +273,7 @@ RSpec.describe Company, type: :model do
       end
     end
 
-    context 'having no projects' do
+    context 'with no projects' do
       it 'calls the repository' do
         expect(DemandsRepository.instance).not_to receive(:throughput_to_period)
         expect(company.demands_delivered_last_week).to eq []
@@ -282,12 +282,12 @@ RSpec.describe Company, type: :model do
   end
 
   describe '#total_active_hours' do
-    context 'having data' do
+    context 'with data' do
       include_context 'demands with effort for company'
       it { expect(company.total_active_hours).to eq 0.1632e4 }
     end
 
-    context 'having no data' do
+    context 'with no data' do
       let(:company) { Fabricate :company }
 
       it { expect(company.total_active_hours).to eq 0 }
@@ -295,12 +295,12 @@ RSpec.describe Company, type: :model do
   end
 
   describe '#total_active_consumed_hours' do
-    context 'having data' do
+    context 'with data' do
       include_context 'demands with effort for company'
       it { expect(company.total_active_consumed_hours.to_f).to eq 105.6 }
     end
 
-    context 'having no data' do
+    context 'with no data' do
       let(:company) { Fabricate :company }
 
       it { expect(company.total_active_consumed_hours).to eq 0 }
@@ -308,12 +308,12 @@ RSpec.describe Company, type: :model do
   end
 
   describe '#total_available_hours' do
-    context 'having data' do
+    context 'with data' do
       include_context 'demands with effort for company'
       it { expect(company.total_available_hours).to eq 100 }
     end
 
-    context 'having no data' do
+    context 'with no data' do
       let(:company) { Fabricate :company }
 
       it { expect(company.total_active_consumed_hours).to eq 0 }

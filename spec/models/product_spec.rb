@@ -40,7 +40,7 @@ RSpec.describe Product, type: :model do
           it { expect(other_product.valid?).to be true }
         end
 
-        context 'different name in same customer' do
+        context 'same name in different customer' do
           let!(:product) { Fabricate :product, customer: customer, name: 'zzz' }
           let!(:other_product) { Fabricate.build :product, name: 'zzz' }
 
@@ -93,19 +93,6 @@ RSpec.describe Product, type: :model do
     let!(:first_demand) { Fabricate :demand, product: product, project: project, created_date: Time.zone.local(2018, 11, 14, 10, 0, 0), end_date: nil, effort_downstream: 900, effort_upstream: 50 }
     let!(:second_demand) { Fabricate :demand, product: product, project: project, created_date: Time.zone.local(2018, 11, 14, 10, 0, 0), end_date: Time.zone.now, effort_downstream: 900, effort_upstream: 50 }
     let!(:third_demand) { Fabricate :demand, product: product, portfolio_unit: portfolio_unit, project: project, created_date: Time.zone.local(2018, 11, 14, 10, 0, 0), end_date: Time.zone.now, effort_downstream: 900, effort_upstream: 50 }
-  end
-
-  describe '#waiting_projects' do
-    let(:customer) { Fabricate :customer }
-    let(:product) { Fabricate :product, customer: customer, name: 'zzz' }
-
-    let!(:active_project) { Fabricate :project, start_date: 4.weeks.ago, customers: [customer], products: [product], status: :executing }
-    let!(:waiting_project) { Fabricate :project, start_date: 4.weeks.ago, customers: [customer], products: [product], status: :waiting }
-    let!(:other_waiting_project) { Fabricate :project, start_date: 4.weeks.ago, customers: [customer], products: [product], status: :waiting }
-    let!(:finished_project) { Fabricate :project, start_date: 4.weeks.ago, customers: [customer], products: [product], status: :finished }
-    let!(:cancelled_project) { Fabricate :project, start_date: 4.weeks.ago, customers: [customer], products: [product], status: :cancelled }
-
-    it { expect(product.waiting_projects).to match_array [waiting_project, other_waiting_project] }
   end
 
   describe '#waiting_projects' do

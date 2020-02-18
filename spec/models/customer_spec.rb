@@ -8,7 +8,7 @@ RSpec.describe Customer, type: :model do
   end
 
   context 'validations' do
-    context 'complex ones' do
+    context 'simple ones' do
       it { is_expected.to validate_presence_of :company }
       it { is_expected.to validate_presence_of :name }
     end
@@ -34,7 +34,7 @@ RSpec.describe Customer, type: :model do
           it { expect(other_customer.valid?).to be true }
         end
 
-        context 'different name in same customer' do
+        context 'same name in different customer' do
           let!(:customer) { Fabricate :customer, company: company, name: 'zzz' }
           let!(:other_customer) { Fabricate.build :customer, name: 'zzz' }
 
@@ -88,19 +88,6 @@ RSpec.describe Customer, type: :model do
     let!(:cancelled_project) { Fabricate :project, start_date: 4.weeks.ago, customers: [customer], products: [product], status: :cancelled }
 
     it { expect(customer.active_projects).to match_array [active_project, other_active_project] }
-  end
-
-  describe '#waiting_projects' do
-    let(:customer) { Fabricate :customer }
-    let(:product) { Fabricate :product, customer: customer, name: 'zzz' }
-
-    let!(:active_project) { Fabricate :project, start_date: 4.weeks.ago, customers: [customer], products: [product], status: :executing }
-    let!(:waiting_project) { Fabricate :project, start_date: 4.weeks.ago, customers: [customer], products: [product], status: :waiting }
-    let!(:other_waiting_project) { Fabricate :project, start_date: 4.weeks.ago, customers: [customer], products: [product], status: :waiting }
-    let!(:finished_project) { Fabricate :project, start_date: 4.weeks.ago, customers: [customer], products: [product], status: :finished }
-    let!(:cancelled_project) { Fabricate :project, start_date: 4.weeks.ago, customers: [customer], products: [product], status: :cancelled }
-
-    it { expect(customer.waiting_projects).to match_array [waiting_project, other_waiting_project] }
   end
 
   describe '#waiting_projects' do

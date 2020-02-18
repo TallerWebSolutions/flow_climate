@@ -101,19 +101,6 @@ RSpec.describe UserNotifierMailer, type: :mailer do
     end
   end
 
-  describe '#jira_requested_csv' do
-    subject(:mail) { described_class.jira_requested_csv(user, 'bla').deliver_now }
-
-    let(:user) { Fabricate :user, email_notifications: true }
-
-    it 'renders the email' do
-      expect(mail.subject).to eq I18n.t('exports.jira_requested_csv.subject')
-      expect(mail.body.encoded).to match I18n.t('exports.request_project_information.csv_attached')
-      expect(mail.body.encoded).to match I18n.t('general.signature.regards')
-      expect(mail.body.encoded).to match I18n.t('general.signature.flow_climate_team')
-    end
-  end
-
   describe '#plan_requested' do
     subject(:mail) { described_class.plan_requested(user, user_plan).deliver_now }
 
@@ -122,19 +109,6 @@ RSpec.describe UserNotifierMailer, type: :mailer do
 
     it 'renders the email' do
       expect(mail.subject).to eq I18n.t('plans.request.subject')
-    end
-  end
-
-  describe '#jira_requested_csv' do
-    subject(:mail) { described_class.jira_requested_csv(user, 'bla').deliver_now }
-
-    let(:user) { Fabricate :user, email_notifications: true }
-
-    it 'renders the email' do
-      expect(mail.subject).to eq I18n.t('exports.jira_requested_csv.subject')
-      expect(mail.body.encoded).to match I18n.t('exports.request_project_information.csv_attached')
-      expect(mail.body.encoded).to match I18n.t('general.signature.regards')
-      expect(mail.body.encoded).to match I18n.t('general.signature.flow_climate_team')
     end
   end
 

@@ -56,13 +56,13 @@ RSpec.describe Project, type: :model do
           end
         end
 
-        context 'with both value and hour value null' do
+        context 'with hour value null' do
           let(:project) { Fabricate.build :project, value: 10, hour_value: nil }
 
           it { expect(project.valid?).to be true }
         end
 
-        context 'with both value and hour value null' do
+        context 'with value null' do
           let(:project) { Fabricate.build :project, value: nil, hour_value: 10 }
 
           it { expect(project.valid?).to be true }
@@ -1076,7 +1076,7 @@ RSpec.describe Project, type: :model do
   describe '#add_user' do
     context 'when already has the user' do
       let(:user) { Fabricate :user }
-      let!(:project) { Fabricate :project }
+      let!(:project) { Fabricate :project, users: [user] }
 
       before { project.add_user(user) }
 

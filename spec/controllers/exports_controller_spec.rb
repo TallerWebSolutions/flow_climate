@@ -15,7 +15,7 @@ RSpec.describe ExportsController, type: :controller do
     end
 
     describe 'GET #send_csv_data_by_email' do
-      before { post :process_requested_information }
+      before { post :send_csv_data_by_email }
 
       it { expect(response).to redirect_to new_user_session_path }
     end
@@ -67,7 +67,7 @@ RSpec.describe ExportsController, type: :controller do
       end
 
       context 'having a lite plan' do
-        let(:plan) { Fabricate :plan }
+        let(:plan) { Fabricate :plan, plan_type: :lite }
         let!(:user_plan) { Fabricate :user_plan, plan: plan, user: user, active: true, paid: true }
         let!(:demand_data_processment) { Fabricate :demand_data_processment, user_plan: user_plan, user: user }
 

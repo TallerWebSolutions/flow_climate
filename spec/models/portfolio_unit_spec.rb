@@ -47,20 +47,6 @@ RSpec.describe PortfolioUnit, type: :model do
     it { expect(great_granchild_portfolio_unit.parent_branches).to eq [granchild_portfolio_unit, child_portfolio_unit, portfolio_unit] }
   end
 
-  describe '#total_portfolio_demands' do
-    let(:portfolio_unit) { Fabricate :portfolio_unit }
-    let(:child_portfolio_unit) { Fabricate :portfolio_unit, parent: portfolio_unit }
-    let(:other_child_portfolio_unit) { Fabricate :portfolio_unit, parent: portfolio_unit }
-
-    let!(:portfolio_unit_demands) { Fabricate.times(5, :demand, portfolio_unit: portfolio_unit) }
-    let!(:child_portfolio_unit_demands) { Fabricate.times(7, :demand, portfolio_unit: child_portfolio_unit) }
-    let!(:other_child_portfolio_unit_demands) { Fabricate.times(3, :demand, portfolio_unit: other_child_portfolio_unit) }
-
-    it { expect(portfolio_unit.total_portfolio_demands.map(&:id)).to match_array Demand.all.map(&:id) }
-    it { expect(child_portfolio_unit.total_portfolio_demands.map(&:id)).to match_array child_portfolio_unit_demands.map(&:id) }
-    it { expect(other_child_portfolio_unit.total_portfolio_demands.map(&:id)).to match_array other_child_portfolio_unit_demands.map(&:id) }
-  end
-
   describe '#percentage_complete' do
     let(:portfolio_unit) { Fabricate :portfolio_unit }
     let(:child_portfolio_unit) { Fabricate :portfolio_unit, parent: portfolio_unit }
