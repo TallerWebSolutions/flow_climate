@@ -21,7 +21,7 @@ RSpec.describe UserPlansController, type: :controller do
     end
 
     describe 'PATCH #unpay_plan' do
-      before { patch :pay_plan, params: { user_id: 'foo', id: 'bar' } }
+      before { patch :unpay_plan, params: { user_id: 'foo', id: 'bar' } }
 
       it { expect(response).to redirect_to new_user_session_path }
     end
@@ -57,7 +57,7 @@ RSpec.describe UserPlansController, type: :controller do
     end
 
     describe 'PATCH #unpay_plan' do
-      before { patch :pay_plan, params: { user_id: 'foo', id: 'bar' } }
+      before { patch :unpay_plan, params: { user_id: 'foo', id: 'bar' } }
 
       it { expect(response).to redirect_to root_path }
     end

@@ -44,4 +44,8 @@ en:
       subject: "%{activity_title} - %{object_title} was concluded."
       activity_info: "%{activity_title} started at %{started_at} and finished at %{finished_at}."
       activity_link: "See the results at "
+  general:
+    signature:
+      regards: "Best regards"
+      flow_climate_team: "Flow Climate team"
 

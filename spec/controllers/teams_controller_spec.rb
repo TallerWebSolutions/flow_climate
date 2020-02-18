@@ -33,7 +33,7 @@ RSpec.describe TeamsController, type: :controller do
     end
 
     describe 'GET #replenishing_input' do
-      before { put :update, params: { company_id: 'xpto', id: 'foo' } }
+      before { get :replenishing_input, params: { company_id: 'xpto', id: 'foo' } }
 
       it { expect(response).to redirect_to new_user_session_path }
     end
