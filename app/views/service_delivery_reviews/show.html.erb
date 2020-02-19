@@ -137,6 +137,7 @@
            data-xcategories='<%= @demands_chart_adapter.x_axis.to_json %>'
            data-xtitle='<%= I18n.t('general.period') %>'
            data-ytitle='<%= I18n.t('demands.charts.demands.title') %>'
+           data-prefix=''
            data-tooltipsuffix='<%= I18n.t('projects.charts.throughput.tooltipsufix') %>'
            data-series='<%= [
                                 { name: I18n.t('demands.charts.creation_date'), data: @demands_chart_adapter.creation_chart_data },
@@ -164,6 +165,7 @@
            data-xcategories='<%= @service_delivery_review.demands.finished.order(:end_date).map(&:external_id).to_json %>'
            data-xtitle='<%= I18n.t('general.demands') %>'
            data-ytitle='<%= I18n.t('general.days') %>'
+           data-prefix=''
            data-tooltipsuffix='<%= I18n.t('general.days') %>'
            data-bottomthreshold='<%= @service_delivery_review.lead_time_bottom_threshold.to_f / 1.day %>'
            data-topthreshold='<%= @service_delivery_review.lead_time_top_threshold.to_f / 1.day %>'
