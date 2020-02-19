@@ -252,7 +252,7 @@ RSpec.describe UsersController, type: :controller do
             put :update, params: { id: user, user: { first_name: nil, last_name: nil, avatar: nil } }
 
             expect(assigns(:user).errors.full_messages).to eq ['Nome não pode ficar em branco', 'Sobrenome não pode ficar em branco']
-            expect(response).to render_template :show
+            expect(response).to redirect_to user_path
           end
         end
 
