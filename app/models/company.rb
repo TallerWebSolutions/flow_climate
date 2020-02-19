@@ -44,6 +44,7 @@ class Company < ApplicationRecord
   has_one :company_settings, dependent: :destroy
 
   validates :name, :abbreviation, presence: true
+  validates :abbreviation, uniqueness: { case_sensitive: false }
 
   before_save :generate_token
 
