@@ -47,7 +47,7 @@ class UsersController < AuthenticatedController
 
     @companies_list = @user.companies.order(:name)
     assign_user_dependencies
-    render :show
+    redirect_to user_path(@user)
   end
 
   def companies
