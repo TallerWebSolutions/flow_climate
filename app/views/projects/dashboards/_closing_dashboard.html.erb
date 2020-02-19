@@ -67,6 +67,7 @@
                  data-xcategories='<%= project_summary.projects.map(&:name).to_json %>'
                  data-xtitle=''
                  data-ytitle='<%= I18n.t('general.demands') %>'
+                 data-prefix=''
                  data-tooltipsufix='<%= I18n.t('general.demands') %>'
                  data-series='<%= [{ name: I18n.t('projects.show.closing_info.discovered_after_demands'), data: [project_summary.discovered_scope[:discovered_after].count], legendIndex: 1 }, { name: I18n.t('projects.show.closing_info.discovered_before_demands'), data: [project_summary.discovered_scope[:discovered_before_project_starts].count], legendIndex: 0 }].to_json %>'
                  data-stacking='normal'

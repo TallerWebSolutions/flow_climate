@@ -81,6 +81,7 @@
                  data-xcategories='<%= x_axis.to_json %>'
                  data-xtitle='<%= I18n.t('projects.charts.xlabel.time') %>'
                  data-ytitle='<%= I18n.t('projects.charts.throughput.ylabel') %>'
+                 data-prefix=''
                  data-tooltipsuffix='<%= I18n.t('projects.charts.throughput.tooltipsufix') %>'
                  data-series='<%= [{ name: I18n.t('projects.charts.throughput.stage_stream.upstream'), data: work_item_flow_information.upstream_delivered_per_period }, { name: I18n.t('projects.charts.throughput.stage_stream.downstream'), data: work_item_flow_information.downstream_delivered_per_period }].to_json %>'
                  data-stacking='normal'

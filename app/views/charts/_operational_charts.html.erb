@@ -19,6 +19,7 @@
            data-xcategories='<%= demands_chart_adapter.x_axis.to_json %>'
            data-xtitle='<%= I18n.t('general.period') %>'
            data-ytitle='<%= I18n.t('demands.charts.demands.title') %>'
+           data-prefix=''
            data-tooltipsuffix='<%= I18n.t('projects.charts.throughput.tooltipsufix') %>'
            data-series='<%= [
                                 { name: I18n.t('demands.charts.creation_date'), data: demands_chart_adapter.creation_chart_data },
@@ -87,6 +88,7 @@
          data-xcategories='<%= report_data.x_axis.to_json %>'
          data-xtitle='<%= I18n.t('projects.charts.xlabel.time') %>'
          data-ytitle='<%= I18n.t('projects.charts.hours_per_demand.ylabel') %>'
+         data-prefix=''
          data-tooltipsuffix='<%= I18n.t('projects.charts.hours_per_demand.tooltipsufix') %>'
          data-series='<%= [{ name: I18n.t('projects.charts.hours_per_demand.ylabel'), data: report_data.time_flow_informations.hours_per_demand }].to_json %>'
          data-stacking='normal'
@@ -101,6 +103,7 @@
          data-xcategories='<%= report_data.x_axis.to_json %>'
          data-xtitle='<%= I18n.t('projects.charts.xlabel.time') %>'
          data-ytitle='<%= I18n.t('projects.charts.throughput.ylabel') %>'
+         data-prefix=''
          data-tooltipsuffix='<%= I18n.t('projects.charts.throughput.tooltipsufix') %>'
          data-series='<%= [{ name: I18n.t('projects.charts.throughput.stage_stream.upstream'), data: report_data.work_item_flow_information.upstream_delivered_per_period }, { name: I18n.t('projects.charts.throughput.stage_stream.downstream'), data: report_data.work_item_flow_information.downstream_delivered_per_period }].to_json %>'
          data-stacking='normal'
@@ -159,6 +162,7 @@
            data-xcategories='<%= report_data.x_axis.to_json %>'
            data-title='<%= I18n.t('demand_blocks.charts.hours_blocked.title', target_name: target_name) %>'
            data-ytitle='<%= I18n.t('demand_blocks.charts.hours_blocked.ylabel') %>'
+           data-prefix=''
            data-tooltipsuffix='<%= I18n.t('demand_blocks.charts.hours_blocked.ylabel') %>'
            data-series='<%= [{ name: I18n.t('demand_blocks.charts.hours_blocked.legend'), data: report_data.block_flow_information.blocks_time }].to_json %>'
            data-decimals='0'>
@@ -173,6 +177,7 @@
            data-xcategories='<%= report_data.x_axis.to_json %>'
            data-title='<%= I18n.t('demand_blocks.charts.blocks.title', target_name: target_name) %>'
            data-ytitle='<%= I18n.t('demand_blocks.charts.blocks.ylabel') %>'
+           data-prefix=''
            data-tooltipsuffix='<%= I18n.t('demand_blocks.charts.blocks.ylabel') %>'
            data-series='<%= [{ name: I18n.t('demand_blocks.charts.blocks.legend'), data: report_data.block_flow_information.blocks_count }].to_json %>'
            data-decimals='0'>
@@ -187,6 +192,7 @@
            data-xcategories='<%= report_data.x_axis.to_json %>'
            data-title='<%= I18n.t('demands.charts.aging_per_demand.title', target_name: target_name) %>'
            data-ytitle='<%= I18n.t('demands.charts.aging_per_demand.ylabel') %>'
+           data-prefix=''
            data-tooltipsuffix='<%= I18n.t('demands.charts.aging_per_demand.ylabel') %>'
            data-series='<%= [{ name: I18n.t('demands.charts.aging.series'), data: report_data.statistics_flow_information.average_aging_per_period }].to_json %>'
            data-decimals='2'>
@@ -225,6 +231,7 @@
          data-xcategories='<%= report_data.x_axis.to_json %>'
          data-title='<%= I18n.t('projects.charts.hours_per_month.title', target_name: target_name) %>'
          data-ytitle='<%= I18n.t('projects.charts.hours_per_month.ylabel') %>'
+         data-prefix=''
          data-tooltipsuffix='<%= I18n.t('projects.charts.hours_per_month.ylabel') %>'
          data-series='<%= [{ name: I18n.t('projects.charts.throughput.stage_stream.upstream'), data: report_data.time_flow_informations.hours_delivered_upstream }, {name: I18n.t('projects.charts.throughput.stage_stream.downstream'), data: report_data.time_flow_informations.hours_delivered_downstream }].to_json %>'
          data-stacking='normal'
@@ -237,6 +244,7 @@
          data-xcategories='<%= report_data.statistics_flow_information.demands_charts_ids %>'
          data-series='<%= [{ name: 'Lead time', color: 'rgb(51, 51, 255)', data: report_data.statistics_flow_information.lead_time_data_array }].to_json %>'
          data-title='<%= I18n.t('projects.charts.lead_time_chart.title', target_name: target_name) %>'
+         data-prefix=''
          data-tooltipsuffix='<%= I18n.t('projects.charts.lead_time_chart.ylabel') %>'
          data-percentile95='<%= report_data.statistics_flow_information.lead_time_95p %>'
          data-percentile80='<%= report_data.statistics_flow_information.lead_time_80p %>'

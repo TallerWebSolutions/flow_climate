@@ -59,6 +59,7 @@
          data-xcategories='<%= dates_array.to_json %>'
          data-title=''
          data-ytitle='<%= I18n.t('charts.cfd.ytitle') %>'
+         data-prefix=''
          data-tooltipsuffix='<%= I18n.t('charts.cfd.data_suffix') %>'
          data-series='<%= work_item_flow_information.demands_stages_count_hash.map { |key, value| { name: key, data: value } }.to_json %>'
          data-decimals='0'>
@@ -131,6 +132,7 @@
          data-xcategories='<%= dates_array.to_json %>'
          data-xtitle='<%= I18n.t('projects.charts.xlabel.time') %>'
          data-ytitle='<%= I18n.t('projects.charts.throughput.ylabel') %>'
+         data-prefix=''
          data-tooltipsuffix='<%= I18n.t('projects.charts.throughput.tooltipsufix') %>'
          data-series='<%= [{ name: I18n.t('projects.charts.throughput.stage_stream.upstream'), data: work_item_flow_information.upstream_delivered_per_period }, { name: I18n.t('projects.charts.throughput.stage_stream.downstream'), data: work_item_flow_information.downstream_delivered_per_period }].to_json %>'
          data-stacking='normal'
@@ -143,6 +145,7 @@
          data-xcategories='<%= statistics_flow_information.demands_charts_ids %>'
          data-series='<%= [{ name: 'Lead time', color: 'rgb(51, 51, 255)', data: statistics_flow_information.lead_time_data_array }].to_json %>'
          data-title='<%= I18n.t('projects.charts.lead_time_chart.title', target_name: team.name) %>'
+         data-prefix=''
          data-tooltipsuffix='<%= I18n.t('projects.charts.lead_time_chart.ylabel') %>'
          data-percentile95='<%= statistics_flow_information.lead_time_95p %>'
          data-percentile80='<%= statistics_flow_information.lead_time_80p %>'
