@@ -28,6 +28,15 @@ RSpec.describe Company, type: :model do
     it { is_expected.to validate_presence_of :abbreviation }
   end
 
+  context 'uniqueness' do
+    let!(:company) { Fabricate :company, abbreviation: 'xpTo' }
+    let(:same_company) { Fabricate.build :company, abbreviation: 'xpto' }
+    let(:other_same_company) { Fabricate.build :company, abbreviation: 'xpTo foo' }
+
+    it { expect(other_same_company).to be_valid }
+    it { expect(same_company).not_to be_valid }
+  end
+
   describe '#add_user' do
     context 'when already has the user' do
       let(:user) { Fabricate :user }
