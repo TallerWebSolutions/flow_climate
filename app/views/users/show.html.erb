@@ -20,27 +20,25 @@
   <div class="col-xs-12">
     <div class="tab user-dashboard-companies-tab">
       <% @companies_list.each do |company| %>
-        <button class="tablinks user-dashboard-info-tab <%= 'active' if @user.last_company_id == company.id %>" id="user-dashboard-<%= company.id %>" onclick="openTab(event, 'user-dashboard-tab-<%= company.id %>', 'user-dashboard-info-tab', 'tabcontent-user-dashboard-info')"><%= company.abbreviation.upcase %></button>
+        <button class="tablinks user-dashboard-info-tab <%= 'active' if @user.last_company_id == company.id %>" id="user-dashboard-<%= company.id %>" onclick="getUserDashboardCompanyTab(<%= @user.id %>, <%= company.id %>)"><%= company.abbreviation.upcase %></button>
       <% end %>
     </div>
   </div>
 </div>
 
+<%= render 'layouts/load_spinner' %>
 
-<% @companies_list.each do |company| %>
-  <div id="user-dashboard-tab-<%= company.id %>" class="tabcontent tabcontent-user-dashboard-info <%= 'visible' if @user.last_company_id == company.id %>">
-    <% if company.role_for_user(@user)&.operations? %>
-      <%= render 'users/operations_dashboard', user: @user, member_teams: @member_teams, demand_blocks: @demand_blocks, member_projects: @member_projects, pairing_chart: @pairing_chart, statistics_informations: @statistics_informations, array_of_dates: @array_of_dates %>
-    <% elsif company.role_for_user(@user)&.manager? %>
-      <%= render 'users/manager_dashboard', user: @user, company: company, company_quality_info: @companies_quality_info[company], company_lead_time_info: @companies_lead_time_info[company], company_risk_info: @companies_risk_info[company], company_scope_info: @companies_scope_info[company], company_value_per_demand_info: @companies_value_per_demand_info[company], company_flow_pressure_info: @companies_flow_pressure_info[company] %>
-    <% end %>
-  </div>
-<% end %>
+<div id="user-dashboard-tab">
+  <%= render 'users/user_dashboard_company_tab', user: @user, company: @company %>
+</div>
 
 <% content_for :javascript do %>
   <%= javascript_include_tag 'charts/column' %>
   <%= javascript_include_tag 'charts/line' %>
 
   <%= javascript_include_tag 'components/components' %>
+  <%= javascript_include_tag 'routes/user_routes' %>
+  <%= javascript_include_tag 'users/user_dashboard_operations_charts' %>
+  <%= javascript_include_tag 'users/user_dashboard_manager_charts' %>
   <%= javascript_include_tag 'users/show' %>
 <% end %>

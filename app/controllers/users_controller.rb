@@ -2,7 +2,7 @@
 
 class UsersController < AuthenticatedController
   before_action :check_admin, only: %i[toggle_admin admin_dashboard]
-  before_action :assign_user, only: %i[toggle_admin show edit update companies]
+  before_action :assign_user, only: %i[toggle_admin show edit update companies user_dashboard_company_tab]
 
   def admin_dashboard
     @users_list = User.all.order(%i[last_name first_name])
@@ -26,16 +26,12 @@ class UsersController < AuthenticatedController
 
   def show
     @companies_list = @user.companies.order(:name)
+    @company = @user.last_company || @user.companies.last
+    assign_charts_objects(@company) if @company.present?
 
     assign_team_member_dependencies
     assign_user_dependencies
     assign_stats_info
-    assign_active_projects_quality_info
-    assign_active_projects_lead_time_info
-    assign_active_projects_risk_info
-    assign_active_projects_scope_info
-    assign_active_projects_value_per_demand_info
-    assign_active_projects_flow_pressure_info
   end
 
   def edit
@@ -56,7 +52,27 @@ class UsersController < AuthenticatedController
     render 'companies/index'
   end
 
+  def user_dashboard_company_tab
+    assign_company
+
+    assign_charts_objects(@company)
+    assign_team_member_dependencies
+    assign_user_dependencies
+    assign_stats_info
+
+    respond_to { |format| format.js { render 'users/user_dashboard_company_tab.js.erb' } }
+  end
+
   private
+
+  def assign_charts_objects(company)
+    assign_active_projects_quality_info(company)
+    assign_active_projects_lead_time_info(company)
+    assign_active_projects_risk_info(company)
+    assign_active_projects_scope_info(company)
+    assign_active_projects_value_per_demand_info(company)
+    assign_active_projects_flow_pressure_info(company)
+  end
 
   def assign_team_member_dependencies
     @pairing_chart = {}
@@ -93,69 +109,33 @@ class UsersController < AuthenticatedController
 
   # TODO: the following methods should be in a service
 
-  def assign_active_projects_quality_info
-    @companies_quality_info = {}
-
-    @user.companies.each do |company|
-      projects_quality = {}
-      company.projects.active.each { |project| projects_quality[project] = project.quality * 100 }
-
-      @companies_quality_info[company] = projects_quality
-    end
+  def assign_active_projects_quality_info(company)
+    @projects_quality = {}
+    company.projects.active.each { |project| @projects_quality[project] = project.quality * 100 }
   end
 
-  def assign_active_projects_lead_time_info
-    @companies_lead_time_info = {}
-
-    @user.companies.each do |company|
-      projects_leadtime = {}
-      company.projects.active.each { |project| projects_leadtime[project] = (project.general_leadtime / 1.day).round(3) }
-
-      @companies_lead_time_info[company] = projects_leadtime
-    end
+  def assign_active_projects_lead_time_info(company)
+    @projects_leadtime = {}
+    company.projects.active.each { |project| @projects_leadtime[project] = (project.general_leadtime / 1.day).round(3) }
   end
 
-  def assign_active_projects_risk_info
-    @companies_risk_info = {}
-
-    @user.companies.each do |company|
-      projects_risk = {}
-      company.projects.active.each { |project| projects_risk[project] = project.current_risk_to_deadline * 100 }
-
-      @companies_risk_info[company] = projects_risk
-    end
+  def assign_active_projects_risk_info(company)
+    @projects_risk = {}
+    company.projects.active.each { |project| @projects_risk[project] = project.current_risk_to_deadline * 100 }
   end
 
-  def assign_active_projects_scope_info
-    @companies_scope_info = {}
-
-    @user.companies.each do |company|
-      projects_scope = {}
-      company.projects.active.each { |project| projects_scope[project] = project.remaining_backlog }
-
-      @companies_scope_info[company] = projects_scope
-    end
+  def assign_active_projects_scope_info(company)
+    @projects_scope = {}
+    company.projects.active.each { |project| @projects_scope[project] = project.remaining_backlog }
   end
 
-  def assign_active_projects_value_per_demand_info
-    @companies_value_per_demand_info = {}
-
-    @user.companies.each do |company|
-      projects_value_per_demand = {}
-      company.projects.active.each { |project| projects_value_per_demand[project] = project.value_per_demand }
-
-      @companies_value_per_demand_info[company] = projects_value_per_demand
-    end
+  def assign_active_projects_value_per_demand_info(company)
+    @projects_value_per_demand = {}
+    company.projects.active.each { |project| @projects_value_per_demand[project] = project.value_per_demand }
   end
 
-  def assign_active_projects_flow_pressure_info
-    @companies_flow_pressure_info = {}
-
-    @user.companies.each do |company|
-      projects_flow_pressure = {}
-      company.projects.active.each { |project| projects_flow_pressure[project] = project.flow_pressure.to_f }
-
-      @companies_flow_pressure_info[company] = projects_flow_pressure
-    end
+  def assign_active_projects_flow_pressure_info(company)
+    @projects_flow_pressure = {}
+    company.projects.active.each { |project| @projects_flow_pressure[project] = project.flow_pressure.to_f }
   end
 end

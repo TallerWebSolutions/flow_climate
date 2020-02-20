@@ -49,6 +49,12 @@ RSpec.describe UsersController, type: :controller do
 
       it { expect(response).to redirect_to new_user_session_path }
     end
+
+    describe 'GET #user_dashboard_company_tab' do
+      before { get :user_dashboard_company_tab, params: { id: 'foo' } }
+
+      it { expect(response).to redirect_to new_user_session_path }
+    end
   end
 
   context 'authenticated as admin' do
@@ -111,82 +117,104 @@ RSpec.describe UsersController, type: :controller do
       end
     end
 
+    shared_context 'user demands data', shared_context: :metadata do
+      let!(:user_plan) { Fabricate :user_plan, user: user, finish_at: Time.zone.today }
+      let!(:other_user_plan) { Fabricate :user_plan, user: user, finish_at: Time.zone.tomorrow }
+
+      let!(:company) { Fabricate :company, users: [user], name: 'zzz' }
+      let!(:other_company) { Fabricate :company, users: [user], name: 'aaa' }
+      let!(:project) { Fabricate :project, status: :executing, company: company, end_date: 2.days.ago, value: 1000 }
+      let!(:other_project) { Fabricate :project, status: :executing, company: company, end_date: 1.day.ago, value: 3500 }
+      let!(:finished_project) { Fabricate :project, status: :finished, company: company, end_date: 2.days.ago, value: 500 }
+
+      let(:team) { Fabricate :team, company: company }
+      let(:first_demand) { Fabricate :demand, team: team, project: other_project, commitment_date: 3.months.ago, end_date: 85.days.ago }
+      let(:second_demand) { Fabricate :demand, team: team, project: other_project, commitment_date: 1.month.ago, end_date: 25.days.ago }
+      let(:third_demand) { Fabricate :demand, team: team, project: project, commitment_date: 1.month.ago, end_date: 5.days.ago }
+
+      let(:first_team_member) { Fabricate :team_member, company: company, user: user }
+      let(:second_team_member) { Fabricate :team_member, company: company, user: user }
+      let(:third_team_member) { Fabricate :team_member, company: company, user: user }
+      let(:fourth_team_member) { Fabricate :team_member, company: company, user: user }
+      let(:fifth_team_member) { Fabricate :team_member, company: company, user: user }
+
+      let!(:first_membership) { Fabricate :membership, team: team, team_member: first_team_member, hours_per_month: 120, start_date: 1.month.ago, end_date: nil }
+      let!(:second_membership) { Fabricate :membership, team: team, team_member: second_team_member, hours_per_month: 40, start_date: 2.months.ago, end_date: 1.month.ago }
+      let!(:third_membership) { Fabricate :membership, team: team, team_member: third_team_member, hours_per_month: 40, start_date: 2.months.ago, end_date: 1.month.ago }
+      let!(:fourth_membership) { Fabricate :membership, team: team, team_member: fourth_team_member, hours_per_month: 40, start_date: 2.months.ago, end_date: 1.month.ago }
+      let!(:fifth_membership) { Fabricate :membership, team: team, team_member: fifth_team_member, hours_per_month: 40, start_date: 2.months.ago, end_date: 1.month.ago }
+
+      let!(:first_item_assignment) { Fabricate :item_assignment, demand: first_demand, team_member: first_team_member, start_time: 3.days.ago, finish_time: 52.hours.ago }
+      let!(:second_item_assignment) { Fabricate :item_assignment, demand: first_demand, team_member: second_team_member, start_time: 2.days.ago, finish_time: nil }
+      let!(:third_item_assignment) { Fabricate :item_assignment, demand: first_demand, team_member: first_team_member, start_time: 2.days.ago, finish_time: nil }
+      let!(:fourth_item_assignment) { Fabricate :item_assignment, demand: second_demand, team_member: third_team_member, start_time: 2.days.ago, finish_time: nil }
+      let!(:fifth_item_assignment) { Fabricate :item_assignment, demand: second_demand, team_member: fourth_team_member, start_time: 2.days.ago, finish_time: nil }
+      let!(:sixth_item_assignment) { Fabricate :item_assignment, demand: second_demand, team_member: first_team_member, start_time: 2.days.ago, finish_time: nil }
+      let!(:seventh_item_assignment) { Fabricate :item_assignment, demand: third_demand, team_member: first_team_member, start_time: 2.days.ago, finish_time: nil }
+      let!(:eigth_item_assignment) { Fabricate :item_assignment, demand: third_demand, team_member: second_team_member, start_time: 2.days.ago, finish_time: nil }
+      let!(:nineth_item_assignment) { Fabricate :item_assignment, demand: third_demand, team_member: fifth_team_member, start_time: 4.days.ago, finish_time: 3.days.ago }
+    end
+
     describe 'GET #show' do
       before { travel_to Time.zone.local(2020, 1, 16, 14, 0, 0) }
 
       after { travel_back }
 
       context 'with valid parameters' do
-        context 'having user plans' do
-          let!(:user_plan) { Fabricate :user_plan, user: user, finish_at: Time.zone.today }
-          let!(:other_user_plan) { Fabricate :user_plan, user: user, finish_at: Time.zone.tomorrow }
+        context 'with data' do
+          include_context 'user demands data'
 
-          let!(:company) { Fabricate :company, users: [user], name: 'zzz' }
-          let!(:other_company) { Fabricate :company, users: [user], name: 'aaa' }
-          let!(:project) { Fabricate :project, status: :executing, company: company, end_date: 2.days.ago, value: 1000 }
-          let!(:other_project) { Fabricate :project, status: :executing, company: company, end_date: 1.day.ago, value: 3500 }
-          let!(:finished_project) { Fabricate :project, status: :finished, company: company, end_date: 2.days.ago, value: 500 }
-
-          let(:team) { Fabricate :team, company: company }
-          let(:first_demand) { Fabricate :demand, team: team, project: other_project, commitment_date: 3.months.ago, end_date: 85.days.ago }
-          let(:second_demand) { Fabricate :demand, team: team, project: other_project, commitment_date: 1.month.ago, end_date: 25.days.ago }
-          let(:third_demand) { Fabricate :demand, team: team, project: project, commitment_date: 1.month.ago, end_date: 5.days.ago }
-
-          let(:first_team_member) { Fabricate :team_member, company: company, user: user }
-          let(:second_team_member) { Fabricate :team_member, company: company, user: user }
-          let(:third_team_member) { Fabricate :team_member, company: company, user: user }
-          let(:fourth_team_member) { Fabricate :team_member, company: company, user: user }
-          let(:fifth_team_member) { Fabricate :team_member, company: company, user: user }
-
-          let!(:first_membership) { Fabricate :membership, team: team, team_member: first_team_member, hours_per_month: 120, start_date: 1.month.ago, end_date: nil }
-          let!(:second_membership) { Fabricate :membership, team: team, team_member: second_team_member, hours_per_month: 40, start_date: 2.months.ago, end_date: 1.month.ago }
-          let!(:third_membership) { Fabricate :membership, team: team, team_member: third_team_member, hours_per_month: 40, start_date: 2.months.ago, end_date: 1.month.ago }
-          let!(:fourth_membership) { Fabricate :membership, team: team, team_member: fourth_team_member, hours_per_month: 40, start_date: 2.months.ago, end_date: 1.month.ago }
-          let!(:fifth_membership) { Fabricate :membership, team: team, team_member: fifth_team_member, hours_per_month: 40, start_date: 2.months.ago, end_date: 1.month.ago }
-
-          let!(:first_item_assignment) { Fabricate :item_assignment, demand: first_demand, team_member: first_team_member, start_time: 3.days.ago, finish_time: 52.hours.ago }
-          let!(:second_item_assignment) { Fabricate :item_assignment, demand: first_demand, team_member: second_team_member, start_time: 2.days.ago, finish_time: nil }
-          let!(:third_item_assignment) { Fabricate :item_assignment, demand: first_demand, team_member: first_team_member, start_time: 2.days.ago, finish_time: nil }
-          let!(:fourth_item_assignment) { Fabricate :item_assignment, demand: second_demand, team_member: third_team_member, start_time: 2.days.ago, finish_time: nil }
-          let!(:fifth_item_assignment) { Fabricate :item_assignment, demand: second_demand, team_member: fourth_team_member, start_time: 2.days.ago, finish_time: nil }
-          let!(:sixth_item_assignment) { Fabricate :item_assignment, demand: second_demand, team_member: first_team_member, start_time: 2.days.ago, finish_time: nil }
-          let!(:seventh_item_assignment) { Fabricate :item_assignment, demand: third_demand, team_member: first_team_member, start_time: 2.days.ago, finish_time: nil }
-          let!(:eigth_item_assignment) { Fabricate :item_assignment, demand: third_demand, team_member: second_team_member, start_time: 2.days.ago, finish_time: nil }
-          let!(:nineth_item_assignment) { Fabricate :item_assignment, demand: third_demand, team_member: fifth_team_member, start_time: 4.days.ago, finish_time: 3.days.ago }
-
-          before { get :show, params: { id: user } }
+          before do
+            user.update(last_company_id: company.id)
+            get :show, params: { id: user }
+          end
 
           it 'assigns the instance variable and renders the template' do
             expect(assigns(:user)).to eq user
             expect(assigns(:user_plans)).to eq [other_user_plan, user_plan]
             expect(assigns(:companies_list)).to eq [other_company, company]
+
             expect(assigns(:pairing_chart)).to eq(second_team_member.name => 2, third_team_member.name => 1, fourth_team_member.name => 1)
             expect(assigns(:member_teams)).to eq [team]
             expect(assigns(:member_projects)).to eq [other_project, project]
             expect(assigns(:array_of_dates)).to eq [Date.new(2019, 10, 31), Date.new(2019, 11, 30), Date.new(2019, 12, 31), Date.new(2020, 1, 31)]
+
             expect(assigns(:statistics_informations).lead_time_accumulated[0]).to be_within(1).of(7.0)
             expect(assigns(:statistics_informations).lead_time_accumulated[1]).to be_within(1).of(7.0)
             expect(assigns(:statistics_informations).lead_time_accumulated[2]).to be_within(1).of(7.0)
             expect(assigns(:statistics_informations).lead_time_accumulated[3]).to be_within(1).of(26.0)
-            expect(assigns(:companies_quality_info)).to eq(company => { project => 100, other_project => 100 }, other_company => {})
-            expect(assigns(:companies_lead_time_info)[company][project]).to be_within(0.5).of(26)
-            expect(assigns(:companies_lead_time_info)[company][other_project]).to be_within(0.5).of(6.8)
-            expect(assigns(:companies_lead_time_info)[other_company]).to eq({})
-            expect(assigns(:companies_risk_info)).to eq(company => { project => 100, other_project => 100 }, other_company => {})
-            expect(assigns(:companies_scope_info)).to eq(company => { project => 30, other_project => 30 }, other_company => {})
-            expect(assigns(:companies_value_per_demand_info)).to eq(company => { project => 1000, other_project => 1750 }, other_company => {})
-            expect(assigns(:companies_flow_pressure_info)).to eq(company => { project => 0, other_project => 0 }, other_company => {})
+
+            expect(assigns(:projects_quality)).to eq(project => 100, other_project => 100)
+            expect(assigns(:projects_leadtime)[project]).to be_within(0.5).of(26)
+            expect(assigns(:projects_leadtime)[other_project]).to be_within(0.5).of(6.8)
+            expect(assigns(:projects_risk)).to eq({ project => 100, other_project => 100 })
+            expect(assigns(:projects_scope)).to eq({ project => 30, other_project => 30 })
+            expect(assigns(:projects_value_per_demand)).to eq({ project => 1000, other_project => 1750 })
+            expect(assigns(:projects_flow_pressure)).to eq({ project => 0, other_project => 0 })
 
             expect(response).to render_template :show
           end
         end
 
-        context 'with no user plans' do
+        context 'with no data' do
           before { get :show, params: { id: user } }
 
           it 'assigns the instance variable and renders the template' do
             expect(assigns(:user)).to eq user
             expect(assigns(:user_plans)).to eq []
+            expect(response).to render_template :show
+          end
+        end
+
+        context 'with no last company id' do
+          let!(:company) { Fabricate :company, users: [user], name: 'zzz' }
+          let!(:other_company) { Fabricate :company, users: [user], name: 'aaa' }
+
+          before { get :show, params: { id: user } }
+
+          it 'assigns the instance variable and renders the template' do
+            expect(assigns(:user)).to eq user
+            expect(assigns(:company)).to eq other_company
             expect(response).to render_template :show
           end
         end
@@ -217,7 +245,7 @@ RSpec.describe UsersController, type: :controller do
           end
         end
 
-        context 'with no user plans' do
+        context 'with no data' do
           before { get :edit, params: { id: user } }
 
           it 'assigns the instance variable and renders the template' do
@@ -283,6 +311,53 @@ RSpec.describe UsersController, type: :controller do
 
           expect(response).to render_template :index
           expect(assigns(:companies)).to eq [other_company, company]
+        end
+      end
+    end
+
+    describe 'GET #user_dashboard_company_tab' do
+      before { travel_to Time.zone.local(2020, 1, 16, 14, 0, 0) }
+
+      after { travel_back }
+
+      context 'with valid parameters' do
+        context 'with data' do
+          include_context 'user demands data'
+
+          before do
+            user.update(last_company_id: company.id)
+            get :user_dashboard_company_tab, params: { id: user, company_id: company }, xhr: true
+          end
+
+          it 'assigns the instance variable and renders the template' do
+            expect(assigns(:pairing_chart)).to eq(second_team_member.name => 2, third_team_member.name => 1, fourth_team_member.name => 1)
+            expect(assigns(:member_teams)).to eq [team]
+            expect(assigns(:member_projects)).to eq [other_project, project]
+            expect(assigns(:array_of_dates)).to eq [Date.new(2019, 10, 31), Date.new(2019, 11, 30), Date.new(2019, 12, 31), Date.new(2020, 1, 31)]
+
+            expect(assigns(:statistics_informations).lead_time_accumulated[0]).to be_within(1).of(7.0)
+            expect(assigns(:statistics_informations).lead_time_accumulated[1]).to be_within(1).of(7.0)
+            expect(assigns(:statistics_informations).lead_time_accumulated[2]).to be_within(1).of(7.0)
+            expect(assigns(:statistics_informations).lead_time_accumulated[3]).to be_within(1).of(26.0)
+
+            expect(assigns(:projects_quality)).to eq(project => 100, other_project => 100)
+            expect(assigns(:projects_leadtime)[project]).to be_within(0.5).of(26)
+            expect(assigns(:projects_leadtime)[other_project]).to be_within(0.5).of(6.8)
+            expect(assigns(:projects_risk)).to eq({ project => 100, other_project => 100 })
+            expect(assigns(:projects_scope)).to eq({ project => 30, other_project => 30 })
+            expect(assigns(:projects_value_per_demand)).to eq({ project => 1000, other_project => 1750 })
+            expect(assigns(:projects_flow_pressure)).to eq({ project => 0, other_project => 0 })
+
+            expect(response).to render_template 'users/user_dashboard_company_tab.js.erb'
+          end
+        end
+
+        context 'with invalid' do
+          context 'company' do
+            before { get :user_dashboard_company_tab, params: { id: user, company_id: 'foo' } }
+
+            it { expect(response).to have_http_status :not_found }
+          end
         end
       end
     end
