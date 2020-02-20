@@ -134,6 +134,7 @@ RSpec.describe CompaniesController, type: :controller do
           it 'assigns the instance variable and renders the template' do
             expect(response).to render_template :show
             expect(assigns(:company)).to eq company
+            expect(assigns(:current_user).last_company).to eq company
             expect(assigns(:financial_informations)).to match_array [other_finances, finances]
             expect(assigns(:teams)).to eq [team, other_team]
             expect(assigns(:stages_list)).to eq [third_stage, second_stage, first_stage]

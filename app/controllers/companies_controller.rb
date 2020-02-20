@@ -19,6 +19,8 @@ class CompaniesController < AuthenticatedController
     assign_projects
 
     build_query_dates
+
+    current_user.update(last_company_id: @company.id)
   end
 
   def new
