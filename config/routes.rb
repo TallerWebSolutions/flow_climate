@@ -59,6 +59,7 @@ Rails.application.routes.draw do
 
     member do
       get :companies
+      get :user_dashboard_company_tab
       patch :toggle_admin
     end
 

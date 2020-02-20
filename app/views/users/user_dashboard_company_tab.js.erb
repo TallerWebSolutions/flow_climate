@@ -1,0 +1,12 @@
+$('#user-dashboard-tab').html("<%= escape_javascript(render 'users/user_dashboard_company_tab', user: @user, company: @company) %>")
+
+$("#general-loader").hide();
+$("#user-dashboard-tab").show();
+
+$("#user-dashboard-<%= @company.id %>").addClass('active');
+
+$('.tablinks').removeClass('active');
+$("#user-dashboard-<%= @company.id %>").addClass('active');
+
+buildOperationsCharts();
+buildManagerCharts();
