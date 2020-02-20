@@ -270,7 +270,7 @@ RSpec.describe Demand, type: :model do
         it 'changes the effort informations' do
           demand.update_effort!
           expect(demand.effort_upstream.to_f).to eq 6.6
-          expect(demand.effort_downstream.to_f).to eq 2.07
+          expect(demand.effort_downstream.to_f).to eq 4.14
         end
       end
 
@@ -457,7 +457,7 @@ RSpec.describe Demand, type: :model do
       let!(:discarded_demand_block) { Fabricate :demand_block, demand: demand, active: true, block_time: Time.zone.parse('2018-03-06 10:00'), unblock_time: Time.zone.parse('2018-03-06 12:00'), discarded_at: Time.zone.now }
       let!(:no_effort_demand_block) { Fabricate :demand_block, demand: demand, active: true, block_time: Time.zone.parse('2018-03-06 13:10'), unblock_time: Time.zone.parse('2018-03-06 16:00') }
 
-      it { expect(demand.blocked_working_time_downstream.to_f).to eq 9.0 }
+      it { expect(demand.blocked_working_time_downstream.to_f).to eq 11.0 }
     end
   end
 

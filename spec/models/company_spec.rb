@@ -115,7 +115,7 @@ RSpec.describe Company, type: :model do
     let!(:finished_project) { Fabricate :project, company: company, start_date: 4.weeks.ago, customers: [customer], products: [product], status: :finished }
     let!(:cancelled_project) { Fabricate :project, company: company, start_date: 4.weeks.ago, customers: [customer], products: [product], status: :cancelled }
 
-    it { expect(company.active_projects_count).to eq 3 }
+    it { expect(company.active_projects_count).to eq 4 }
   end
 
   describe '#generate_token' do

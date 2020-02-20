@@ -55,7 +55,7 @@ class Company < ApplicationRecord
   end
 
   def active_projects_count
-    customers.sum { |p| p.active_projects.count }
+    projects.active.count
   end
 
   def waiting_projects_count

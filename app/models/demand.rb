@@ -265,7 +265,7 @@ class Demand < ApplicationRecord
   def sum_blocked_time_for_transitions(transitions)
     total_blocked = 0
     transitions.each do |transition|
-      total_blocked += demand_blocks.kept.closed.active.for_date_interval(transition.last_time_in, transition.last_time_out).sum(&:total_blocked_time)
+      total_blocked += demand_blocks.closed.active.for_date_interval(transition.last_time_in, transition.last_time_out).sum(&:total_blocked_time)
     end
     total_blocked
   end
@@ -287,14 +287,14 @@ class Demand < ApplicationRecord
   end
 
   def working_time_upstream
-    effort_transitions = demand_transitions.kept.upstream_transitions.effort_transitions_to_project(project_id)
+    effort_transitions = demand_transitions.upstream_transitions.effort_transitions_to_project(project_id)
     return sum_effort(effort_transitions) if effort_transitions.count.positive?
 
     0
   end
 
   def working_time_downstream
-    effort_transitions = demand_transitions.kept.downstream_transitions.effort_transitions_to_project(project_id)
+    effort_transitions = demand_transitions.downstream_transitions.effort_transitions_to_project(project_id)
     return sum_effort(effort_transitions) if effort_transitions.count.positive?
 
     0
@@ -317,11 +317,11 @@ class Demand < ApplicationRecord
   end
 
   def compute_total_touch_blocked_time
-    sum_blocked_time_for_transitions(demand_transitions.kept.touch_transitions)
+    sum_blocked_time_for_transitions(demand_transitions.touch_transitions)
   end
 
   def compute_total_bloked_working_time
-    demand_blocks.kept.closed.map(&:block_working_time_duration).compact.sum
+    demand_blocks.closed.map(&:block_working_time_duration).compact.sum
   end
 
   def compute_cost_to_project
@@ -331,19 +331,19 @@ class Demand < ApplicationRecord
   end
 
   def compute_blocked_working_time_downstream
-    effort_transitions = demand_transitions.kept.downstream_transitions.effort_transitions_to_project(project_id)
+    effort_transitions = demand_transitions.downstream_transitions.effort_transitions_to_project(project_id)
     sum_blocked_effort(effort_transitions)
   end
 
   def compute_blocked_working_time_upstream
-    effort_transitions = demand_transitions.kept.upstream_transitions.effort_transitions_to_project(project_id)
+    effort_transitions = demand_transitions.upstream_transitions.effort_transitions_to_project(project_id)
     sum_blocked_effort(effort_transitions)
   end
 
   def sum_blocked_effort(effort_transitions)
     total_blocked = 0
     effort_transitions.each do |transition|
-      total_blocked += demand_blocks.kept.closed.active.for_date_interval(transition.last_time_in, transition.last_time_out).sum(:block_working_time_duration)
+      total_blocked += demand_blocks.closed.active.for_date_interval(transition.last_time_in, transition.last_time_out).sum(:block_working_time_duration)
     end
     total_blocked
   end
