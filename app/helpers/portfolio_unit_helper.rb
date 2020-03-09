@@ -18,7 +18,7 @@ module PortfolioUnitHelper
         html_output += "<span class='tf-nc'>"
         html_output += "<div class='tf-header'>"
         html_output += "<div class='pull-left bottom-spaced-component'>#{number_to_currency(child.total_cost, precision: 2)}</div>"
-        html_output += "<div class='pull-right bottom-spaced-component'>#{I18n.t('general.hours_text', hour_value: child.total_hours)}</div>"
+        html_output += "<div class='pull-right bottom-spaced-component'>#{I18n.t('general.hours_text', hour_value: number_with_precision(child.total_hours, precision: 2))}</div>"
         html_output += '</div>'
         html_output += "<div class='tf-nc-title'>#{link_to child.name, company_product_portfolio_unit_path(child.product.company, child.product, child), target: :_blank}</div>"
         html_output += "<div class='card-subtitle'>"
