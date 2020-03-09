@@ -15,11 +15,11 @@ before_install:
 services:
   - postgresql
 addons:
-  postgresql: '12'
+  postgresql: '10'
   apt:
     packages:
-    - postgresql-12
-    - postgresql-client-12
+    - postgresql-10
+    - postgresql-client-10
 before_script:
   - cp config/database.yml.travis config/database.yml
   - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64
