@@ -7,25 +7,20 @@ env:
 language: ruby
 cache: bundler
 rvm:
-  - 2.6.4
+  - 2.7.0
 before_install:
   - echo America/Sao_Paulo | sudo tee /etc/timezone
   - sudo dpkg-reconfigure --frontend noninteractive tzdata
   - gem install bundler
 services:
-- postgresql
-addons:
-  postgresql: '10'
-  apt:
-    packages:
-    - postgresql-10
-    - postgresql-client-10
+  - postgresql
 before_script:
   - cp config/database.yml.travis config/database.yml
   - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64
     > ./cc-test-reporter
   - chmod +x ./cc-test-reporter
   - "./cc-test-reporter before-build"
+  - export RUBYOPT='-W:no-deprecated -W:no-experimental'
 script:
   - RAILS_ENV=test bundle exec rake db:create --trace
   - RAILS_ENV=test bundle exec rake db:migrate --trace
