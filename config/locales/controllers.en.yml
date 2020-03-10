@@ -178,6 +178,8 @@ en:
         active_customers: "Active customers"
         value_per_demand: "Value per Demand"
         flow_pressure: "Flow Pressure"
+      dashboard:
+        invalid_role: "You don't have a valid role in this company. Please ask an admin for help."
     index:
       title: "Users"
       turn_off_notifications: "Turn Off Notifications"

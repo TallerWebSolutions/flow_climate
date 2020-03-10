@@ -177,6 +177,8 @@ pt-BR:
         active_customers: "Clientes ativos"
         value_per_demand: "Valor por Demanda"
         flow_pressure: "Pressão do Fluxo"
+      dashboard:
+        invalid_role: "Você não tem um papel válido nesta empresa. Solicite ajuda ao administrator."
     index:
       title: "Usuários"
       turn_off_notifications: "Desligar Notificações"
