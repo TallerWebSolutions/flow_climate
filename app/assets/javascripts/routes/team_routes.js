@@ -55,3 +55,13 @@ function getDashboardPageThree(companyId, teamId, demandsIds, startDate, endDate
         data: `demands_ids=${demandsIds}&start_date=${startDate}&end_date=${endDate}`
     });
 }
+
+function searchDashboard(companyId, teamId, projectStatus, demandStatus, demandsType, demandsClassOfService, startDate, endDate) {
+    $("#general-loader").show();
+
+    jQuery.ajax({
+        url: `/companies/${companyId}/teams/${teamId}/dashboard_search.js`,
+        type: "GET",
+        data: `&project_status=${projectStatus}&demand_status=${demandStatus}&demand_type=${demandsType}&demand_class_of_service=${demandsClassOfService}&start_date=${startDate}&end_date=${endDate}`
+    });
+}

@@ -1,6 +1,8 @@
 $('#team-demands-info').html("<%= escape_javascript(render 'demands/demands_table', company: @company, demands: @paged_demands, unpaged_demands: @demands) %>")
 
 $("#general-loader").hide();
+$("#dashboard-controls").show();
+
 $("#team-dashboard-container-page-one").hide();
 $("#team-dashboard-container-page-two").hide();
 $("#team-dashboard-container-page-three").hide();
