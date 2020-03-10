@@ -40,21 +40,25 @@
     <div class="tab">
       <button class="tablinks" id="team-dashboard-tab"><%= I18n.t('teams.show.dashboard_tab') %></button>
       <button class="tablinks" id="team-demands-tab"><%= I18n.t('teams.show.demands_tab') %></button>
+      <button class="tablinks" id="team-replenishing-tab"><%= I18n.t('navbar.replenishing') %></button>
     </div>
   </div>
 </div>
 
-<div class="row bottom-spaced-component" id="page-buttons">
-  <div class="col-xs-12 center">
-    <div class="tab">
-      <button class="tablinks btn btn-sm" id="team-dashboard-page-one"><%= I18n.t('general.page.one') %></button>
-      <button class="tablinks btn btn-sm" id="team-dashboard-page-two"><%= I18n.t('general.page.two') %></button>
-      <button class="tablinks btn btn-sm" id="team-dashboard-page-three"><%= I18n.t('general.page.three') %></button>
+<div id="dashboard-controls">
+  <div class="row bottom-spaced-component" id="page-buttons">
+    <div class="col-xs-12 center">
+      <div class="tab">
+        <button class="tablinks btn btn-sm" id="team-dashboard-page-one"><%= I18n.t('general.page.one') %></button>
+        <button class="tablinks btn btn-sm" id="team-dashboard-page-two"><%= I18n.t('general.page.two') %></button>
+        <button class="tablinks btn btn-sm" id="team-dashboard-page-three"><%= I18n.t('general.page.three') %></button>
+      </div>
     </div>
   </div>
-</div>
 
-<%= render 'teams/dashboard_filter', start_date: @start_date, end_date: @end_date %>
+  <%= render 'teams/dashboard_filter', start_date: @start_date, end_date: @end_date %>
+
+</div>
 
 <hr>
 
@@ -79,6 +83,10 @@
 
 </div>
 
+<div id="team-replenishing-container" class="tabcontent">
+
+</div>
+
 <div id="team-demands-info" class="tabcontent">
   <%= render 'demands/demands_table', company: @company, demands: @paged_demands, unpaged_demands: @demands %>
 </div>
@@ -95,8 +103,6 @@
   <%= javascript_include_tag 'charts/scatter' %>
 
   <%= javascript_include_tag 'components/components' %>
-
-  <%= javascript_include_tag 'dashboards/dashboards_filter' %>
 
   <%= javascript_include_tag 'routes/team_routes' %>
   <%= javascript_include_tag 'routes/demand_routes' %>

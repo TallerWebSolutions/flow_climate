@@ -12,8 +12,10 @@ $('#team-demands-info').html("<%= escape_javascript(render 'demands/demands_tabl
 $('#demands_ids').val("<%= @demands_ids.join(',') %>");
 
 $("#general-loader").hide();
+$("#dashboard-controls").show();
 
 $('#team-search-info-tab').addClass('active');
 $("#team-search-info").show();
+$('#team-demands-info').show();
 
 startCharts();
