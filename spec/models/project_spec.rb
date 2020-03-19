@@ -113,6 +113,8 @@ RSpec.describe Project, type: :model do
     let!(:fifth_project) { Fabricate :project, status: :cancelled, end_date: 1.day.ago }
     let!(:sixth_project) { Fabricate :project, status: :finished, end_date: Time.zone.today }
 
+    let!(:seventh_project) { Fabricate :project, status: :executing, start_date: Time.zone.tomorrow, end_date: 3.days.from_now }
+
     describe '.waiting_projects_starting_within_week' do
       it { expect(described_class.waiting_projects_starting_within_week).to match_array [first_project, second_project] }
     end
@@ -130,7 +132,7 @@ RSpec.describe Project, type: :model do
     end
 
     describe '.finishing_after' do
-      it { expect(described_class.finishing_after(26.hours.ago)).to match_array [first_project, fourth_project, fifth_project, sixth_project] }
+      it { expect(described_class.finishing_after(26.hours.ago)).to match_array [first_project, fourth_project, fifth_project, sixth_project, seventh_project] }
     end
 
     pending '.active_in_period'

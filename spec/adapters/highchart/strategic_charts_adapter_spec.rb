@@ -23,12 +23,12 @@ RSpec.describe Highchart::StrategicChartsAdapter, type: :service do
     context 'having projects' do
       let!(:first_project) { Fabricate :project, company: company, customers: [customer], status: :maintenance, start_date: 3.months.ago, end_date: 2.months.ago, qty_hours: 1000, initial_scope: 95, value: 200.0 }
       let!(:second_project) { Fabricate :project, company: company, customers: [customer], status: :executing, start_date: 3.months.ago, end_date: 1.month.ago, qty_hours: 500, initial_scope: 40, value: 3_453_220.0 }
-      let!(:third_project) { Fabricate :project, company: company, customers: [customer], status: :maintenance, start_date: 1.month.from_now, end_date: 2.months.from_now, qty_hours: 1500, initial_scope: 22, value: 10_000.0 }
-      let!(:fourth_project) { Fabricate :project, company: company, customers: [customer], status: :executing, start_date: 1.month.from_now, end_date: 2.months.from_now, qty_hours: 700, initial_scope: 100, value: 700.0 }
-      let!(:fifth_project) { Fabricate :project, company: company, customers: [customer], status: :maintenance, start_date: 2.months.from_now, end_date: 3.months.from_now, qty_hours: 200, initial_scope: 42, value: 200.0 }
+      let!(:third_project) { Fabricate :project, company: company, customers: [customer], status: :maintenance, start_date: 1.month.ago, end_date: 2.months.from_now, qty_hours: 1500, initial_scope: 22, value: 10_000.0 }
+      let!(:fourth_project) { Fabricate :project, company: company, customers: [customer], status: :executing, start_date: 1.month.ago, end_date: 2.months.from_now, qty_hours: 700, initial_scope: 100, value: 700.0 }
+      let!(:fifth_project) { Fabricate :project, company: company, customers: [customer], status: :maintenance, start_date: 2.months.ago, end_date: 3.months.from_now, qty_hours: 200, initial_scope: 42, value: 200.0 }
       let!(:sixth_project) { Fabricate :project, company: company, customers: [customer], status: :waiting, start_date: 2.months.from_now, end_date: 3.months.from_now, qty_hours: 5000, initial_scope: 78, value: 123.0 }
-      let!(:seventh_project) { Fabricate :project, company: company, customers: [customer], status: :finished, start_date: 2.months.from_now, end_date: 3.months.from_now, qty_hours: 8765, initial_scope: 88, value: 23.0 }
-      let!(:eighth_project) { Fabricate :project, company: company, customers: [customer], status: :cancelled, start_date: 2.months.from_now, end_date: 3.months.from_now, qty_hours: 1232, initial_scope: 11, value: 200.0 }
+      let!(:seventh_project) { Fabricate :project, company: company, customers: [customer], status: :finished, start_date: 2.months.ago, end_date: 3.months.from_now, qty_hours: 8765, initial_scope: 88, value: 23.0 }
+      let!(:eighth_project) { Fabricate :project, company: company, customers: [customer], status: :cancelled, start_date: 2.months.ago, end_date: 3.months.from_now, qty_hours: 1232, initial_scope: 11, value: 200.0 }
 
       let!(:first_demand) { Fabricate :demand, project: first_project, effort_downstream: 200, effort_upstream: 10, end_date: 2.months.ago }
       let!(:second_demand) { Fabricate :demand, project: second_project, effort_downstream: 400, effort_upstream: 130, end_date: 1.month.ago }
@@ -37,12 +37,12 @@ RSpec.describe Highchart::StrategicChartsAdapter, type: :service do
       it 'mounts the data structure to the active project counts in months' do
         strategic_data = described_class.new(company, company.teams, company.projects, Demand.all, 3.months.ago, 3.months.from_now, 'month')
         expect(strategic_data.x_axis).to eq [3.months.ago.to_date.end_of_month, 2.months.ago.to_date.end_of_month, 1.month.ago.to_date.end_of_month, Time.zone.today.end_of_month, 1.month.from_now.to_date.end_of_month, 2.months.from_now.to_date.end_of_month, 3.months.from_now.to_date.end_of_month]
-        expect(strategic_data.active_projects_count_data).to eq [2, 1, 1, 0, 2, 4, 2]
-        expect(strategic_data.sold_hours_in_month).to eq [1175.5952380952385, 937.5000000000003, 238.09523809523816, 0.0, 2000.000000000001, 6875.000000000002, 4875.000000000002]
+        expect(strategic_data.active_projects_count_data).to eq [2, 2, 3, 0, 0, 2, 1]
+        expect(strategic_data.sold_hours_in_month).to eq [1175.5952380952385, 976.7050095289958, 955.1617840436312, 0.0, 0.0, 717.066545948393, 39.20500952899537]
         expect(strategic_data.consumed_hours_per_month).to eq [0.0, 210.0, 530.0, 0.0, 0.0, 120.0, 0.0]
         expect(strategic_data.available_hours_per_period).to eq [0.0, 63.99999999999999, 114.66666666666666, 18.666666666666664]
-        expect(strategic_data.flow_pressure_per_month_data.map { |pressure| pressure.round(2) }).to eq [0.0, 0.0, 0.0, 0.0, 3.7, 7.45, 3.75]
-        expect(strategic_data.money_per_month_data.map { |money| money.round(2) }).to eq [1_644_577.98, 187.5, 1_644_390.48, 0.0, 9727.27, 10_030.09, 302.81]
+        expect(strategic_data.flow_pressure_per_month_data.map { |pressure| pressure.round(2) }).to eq [0.0, 0.46, 2.01, 0.0, 0.0, 2.01, 0.46]
+        expect(strategic_data.money_per_month_data.map { |money| money.round(2) }).to eq [1_644_577.98, 226.71, 1_647_878.03, 0.0, 0.0, 3487.55, 39.21]
         expect(strategic_data.expenses_per_month_data.map { |expense| expense.round(2) }).to eq [300.0, 300.0, 200.0, 200.0, 200.0, 100.0, 100.0]
       end
     end
