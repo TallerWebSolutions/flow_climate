@@ -3,7 +3,7 @@
 RSpec.describe Slack::SlackNotificationService, type: :service do
   include ActionView::Helpers::NumberHelper
 
-  before { travel_to Time.zone.local(2019, 6, 12, 10, 0, 0) }
+  before { travel_to Time.zone.local(2020, 3, 19, 10, 0, 0) }
 
   after { travel_back }
 

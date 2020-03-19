@@ -26,6 +26,7 @@ before_script:
     > ./cc-test-reporter
   - chmod +x ./cc-test-reporter
   - "./cc-test-reporter before-build"
+  - export RUBYOPT='-W:no-deprecated -W:no-experimental'
 script:
   - RAILS_ENV=test bundle exec rake db:create --trace
   - RAILS_ENV=test bundle exec rake db:migrate --trace

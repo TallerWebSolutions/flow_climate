@@ -33,11 +33,11 @@ module Jira
                     external_url: build_jira_url(jira_account, demand.external_id),
                     team_members: [], commitment_date: nil, discarded_at: nil)
 
-      read_demand_details(demand, project.team, jira_account, jira_issue, project)
+      read_demand_details(demand, project.team, jira_account, jira_issue)
     end
 
-    def read_demand_details(demand, team, jira_account, jira_issue, project)
-      read_responsibles_info(demand, team, jira_account, jira_issue, project)
+    def read_demand_details(demand, team, jira_account, jira_issue)
+      read_responsibles_info(demand, team, jira_account, jira_issue)
       return unless demand.valid?
 
       read_comments(demand, jira_issue_attrs(jira_issue))
@@ -118,7 +118,7 @@ module Jira
       :feature
     end
 
-    def read_responsibles_info(demand, team, jira_account, jira_issue, _project)
+    def read_responsibles_info(demand, team, jira_account, jira_issue)
       responsibles_custom_field_name = jira_account.responsibles_custom_field&.custom_field_machine_name
       return unless responsibles_custom_field_name.present? && jira_issue.respond_to?(:changelog)
 
@@ -226,10 +226,10 @@ module Jira
       stage_from = demand.project.stages.find_by(integration_id: from_id)
       stage_to = demand.project.stages.find_by(integration_id: to_id)
 
-      transition_from = DemandTransition.where(demand: demand, stage: stage_from).first_or_initialize
+      transition_from = DemandTransition.where(demand: demand, stage: stage_from, last_time_in: from_transition_out).first_or_initialize
       transition_from.update(last_time_in: from_transition_out, last_time_out: to_transition_date)
 
-      transition_to = DemandTransition.where(demand: demand, stage: stage_to).first_or_initialize
+      transition_to = DemandTransition.where(demand: demand, stage: stage_to, last_time_in: to_transition_date).first_or_initialize
       transition_to.update(demand: demand, last_time_in: to_transition_date, last_time_out: nil)
     end
 
