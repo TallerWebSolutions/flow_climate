@@ -4,5 +4,5 @@ Fabricator(:jira_product_config, from: 'Jira::JiraProductConfig') do
   product
   company
 
-  jira_product_key { Faker::Name.first_name }
+  jira_product_key { Faker::Name.first_name.gsub(/\W/, '') }
 end

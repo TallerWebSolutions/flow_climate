@@ -3,7 +3,7 @@
 Fabricator(:stage) do
   company
   integration_id { Faker::IDNumber.valid }
-  name { Faker::Name.first_name }
+  name { Faker::Name.first_name.gsub(/\W/, '') }
   stage_type { [0, 1, 2, 3, 4, 5, 6].sample }
   stage_stream 0
   integration_pipe_id 1

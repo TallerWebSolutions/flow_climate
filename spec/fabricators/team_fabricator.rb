@@ -2,5 +2,5 @@
 
 Fabricator(:team) do
   company
-  name { Faker::Name.unique.name }
+  name { Faker::Name.unique.name.gsub(/\W/, '') }
 end

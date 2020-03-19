@@ -3,5 +3,5 @@
 Fabricator(:jira_portfolio_unit_config, from: 'Jira::JiraPortfolioUnitConfig') do
   portfolio_unit
 
-  jira_field_name { Faker::Company.name }
+  jira_field_name { Faker::Company.name.gsub(/\W/, '') }
 end
