@@ -14,10 +14,10 @@ class UserNotifierMailer < ApplicationMailer
     mail(to: emails, subject: I18n.t('projects.portfolio_bulletin.subject'))
   end
 
-  def notify_new_red_alert(project, risk, previous_color, alert_value)
+  def notify_new_red_alert(project, risk, project_color, alert_value)
     @project = project
     @risk = risk
-    @previous_color = previous_color
+    @previous_color = project_color
     @alert_value = alert_value
     emails = project.company.users.to_notify_email.pluck(:email)
     Rails.logger.info("Notifying users on red project #{emails}")

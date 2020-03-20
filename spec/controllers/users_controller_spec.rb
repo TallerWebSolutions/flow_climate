@@ -123,9 +123,9 @@ RSpec.describe UsersController, type: :controller do
 
       let!(:company) { Fabricate :company, users: [user], name: 'zzz' }
       let!(:other_company) { Fabricate :company, users: [user], name: 'aaa' }
-      let!(:project) { Fabricate :project, status: :executing, company: company, end_date: 2.days.from_now, value: 1000 }
-      let!(:other_project) { Fabricate :project, status: :executing, company: company, end_date: 1.day.from_now, value: 3500 }
-      let!(:finished_project) { Fabricate :project, status: :finished, company: company, end_date: 2.days.ago, value: 500 }
+      let!(:project) { Fabricate :project, status: :executing, company: company, start_date: 1.month.ago, end_date: 2.days.from_now, value: 1000 }
+      let!(:other_project) { Fabricate :project, status: :executing, company: company, start_date: 2.months.ago, end_date: 1.day.from_now, value: 3500 }
+      let!(:finished_project) { Fabricate :project, status: :finished, company: company, start_date: 4.days.ago, end_date: 2.days.ago, value: 500 }
 
       let(:team) { Fabricate :team, company: company }
       let(:first_demand) { Fabricate :demand, team: team, project: other_project, commitment_date: 3.months.ago, end_date: 85.days.ago }
