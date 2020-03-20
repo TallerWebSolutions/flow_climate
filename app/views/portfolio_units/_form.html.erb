@@ -2,7 +2,7 @@
   <div class="col-xs-3">
     <div class="form-group">
       <%= f.label :parent %>
-      <%= f.select :parent_id, options_for_select(parent_portfolio_units.map { |unit| [unit.name, unit.id] }, params['parent']), { include_blank: I18n.t('general.select') }, class: 'form-control filter-checks' %>
+      <%= f.select :parent_id, options_for_select(parent_portfolio_units.map { |unit| [unit.name, unit.id] }, portfolio_unit.parent_id), { include_blank: I18n.t('general.select') }, class: 'form-control filter-checks' %>
     </div>
   </div>
 
@@ -15,7 +15,7 @@
   <div class="col-xs-3">
     <div class="form-group">
       <%= f.label :portfolio_unit_type %>
-      <%= f.select :portfolio_unit_type, portfolio_unit_type_options(params['portfolio_unit_type']), {}, class: 'form-control filter-checks' %>
+      <%= f.select :portfolio_unit_type, portfolio_unit_type_options(portfolio_unit.portfolio_unit_type), {}, class: 'form-control filter-checks' %>
     </div>
   </div>
 
