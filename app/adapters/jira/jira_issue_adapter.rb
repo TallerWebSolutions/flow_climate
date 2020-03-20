@@ -122,50 +122,45 @@ module Jira
       responsibles_custom_field_name = jira_account.responsibles_custom_field&.custom_field_machine_name
       return unless responsibles_custom_field_name.present? && jira_issue.respond_to?(:changelog)
 
-      responsibles_history_hash = ordered_responsibles_data(jira_issue, responsibles_custom_field_name)
+      ordered_history_data(jira_issue).each do |history_hash|
+        next if history_hash['items'].blank?
 
-      responsibles_history_hash.each do |responsible_history|
-        assigned_responsibles = read_responsibles_array(responsible_history, 'toString')
-
-        read_assigned_responsibles(demand, team, responsible_history, assigned_responsibles)
-
-        unassigned_responsibles = read_responsibles_array(responsible_history, 'fromString')
-        next if unassigned_responsibles.blank?
-
-        unassigned_responsibles -= assigned_responsibles
-
-        read_unassigned_responsibles(demand, team, responsible_history, unassigned_responsibles)
+        history_hash_processment(demand, history_hash, responsibles_custom_field_name, team)
       end
     end
 
-    def read_responsibles_array(responsible_history, field)
-      return [] if responsible_history['items'][0][field].blank?
+    def history_hash_processment(demand, history_hash, responsibles_custom_field_name, team)
+      history_hash['items'].each do |history_item|
+        next unless history_item['fieldId'] == responsibles_custom_field_name
 
-      responsible_history['items'][0][field].delete(']').delete('[').split(',').map(&:strip)
-    end
-
-    def read_unassigned_responsibles(demand, team, responsible_history, unassigned_responsibles)
-      unassigned_responsibles.each do |unassgined_responsible|
-        exiting_team_member = TeamMember.where(company: team.company).where('lower(name) = :member_name', member_name: unassgined_responsible.downcase).first
-        next if exiting_team_member.blank?
-
-        item_assignment_exiting = ItemAssignment.where(demand: demand, team_member: exiting_team_member, finish_time: nil).first
-        item_assignment_exiting.update(finish_time: responsible_history['created']) if item_assignment_exiting.present?
+        history_item_processment(demand, team, history_hash, history_item)
       end
     end
 
-    def read_assigned_responsibles(demand, team, responsible_history, assigned_responsibles)
-      assigned_responsibles.each do |responsible|
-        team_member = TeamMember.where(company: team.company).where('lower(name) = :member_name', member_name: responsible.downcase).first_or_initialize
-        next if team_member.blank?
-
-        assignment = ItemAssignment.where(demand: demand, team_member: team_member, finish_time: nil).first_or_initialize
-        assignment.update(start_time: responsible_history['created']) unless assignment.persisted?
-      end
+    def history_item_processment(demand, team, history_hash, history_item)
+      responsible_string_processment(history_item['toString']).each { |to_responsible| read_assigned_responsibles(demand, team, history_hash['created'], to_responsible.strip) } if history_item['toString'].present?
+      responsible_string_processment(history_item['fromString']).each { |from_responsible| read_unassigned_responsibles(demand, team, history_hash['created'], from_responsible.strip) } if history_item['fromString'].present?
     end
 
-    def ordered_responsibles_data(jira_issue, responsibles_custom_field_name)
-      jira_issue.changelog['histories'].select { |history| history.try(:[], 'items').try(:[], 0).try(:[], 'fieldId') == responsibles_custom_field_name }.sort_by { |history| history['created'] }
+    def responsible_string_processment(responsible_string)
+      responsible_string.delete(']').delete('[').split(',')
+    end
+
+    def read_unassigned_responsibles(demand, team, history_date, responsible_name)
+      exiting_team_member = TeamMember.where(company: team.company).where('lower(name) = :member_name', member_name: responsible_name.downcase).first
+
+      item_assignment_exiting = ItemAssignment.where(demand: demand, team_member: exiting_team_member, finish_time: nil).first
+      item_assignment_exiting.update(finish_time: history_date) if item_assignment_exiting.present?
+    end
+
+    def read_assigned_responsibles(demand, team, history_date, responsible_name)
+      team_member = TeamMember.where(company: team.company).where('lower(name) = :member_name', member_name: responsible_name.downcase).first_or_initialize
+      assignment = ItemAssignment.where(demand: demand, team_member: team_member, finish_time: nil).first_or_initialize
+      assignment.update(start_time: history_date) unless assignment.persisted?
+    end
+
+    def ordered_history_data(jira_issue)
+      jira_issue.changelog['histories'].sort_by { |history| history['created'] }
     end
 
     def impediment_field?(history)
