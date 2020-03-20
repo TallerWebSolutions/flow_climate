@@ -15,9 +15,9 @@ RSpec.describe CompaniesBulletimJob, type: :active_job do
   context 'having projects to collect data' do
     let!(:company) { Fabricate :company }
 
-    let!(:first_user) { Fabricate :user, companies: [company] }
-    let!(:second_user) { Fabricate :user, companies: [company] }
-    let!(:third_user) { Fabricate :user }
+    let!(:first_user) { Fabricate :user, companies: [company], email_notifications: true }
+    let!(:second_user) { Fabricate :user, companies: [company], email_notifications: true }
+    let!(:third_user) { Fabricate :user, email_notifications: true }
 
     let(:customer) { Fabricate :customer, company: company }
 
