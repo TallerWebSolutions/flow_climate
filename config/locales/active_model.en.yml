@@ -162,6 +162,7 @@ en:
             other_demand_dependency: Other demand dependency
             fixes_out_of_scope: Fixes outside scope
             external_service_unavailable: External service unavailable
+            waiting_for_code_review: Waiting for code review
           impact_size:
             small: Small
             medium: Medium
