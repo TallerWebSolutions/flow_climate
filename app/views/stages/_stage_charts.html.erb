@@ -6,7 +6,8 @@
          data-xcategories='<%= stage_analytic_data.entrances_per_weekday.keys %>'
          data-xtitle='<%= I18n.t('general.charts.xlabel.weekdays') %>'
          data-ytitle='<%= I18n.t('stages.charts.entrances_per_weekday.ylabel') %>'
-         data-prefix='<%= I18n.t('stages.charts.entrances_per_weekday.tooltip_prefix') %>'
+         data-prefix=''
+         data-tooltipsuffix=''
          data-series='<%= [{ name: I18n.t('stages.charts.entrances_per_weekday.ylabel'), data: stage_analytic_data.entrances_per_weekday.values }].to_json %>'
          data-decimals='0'>
     </div>
@@ -18,7 +19,8 @@
          data-xcategories='<%= stage_analytic_data.entrances_per_day.keys %>'
          data-xtitle='<%= I18n.t('general.charts.xlabel.monthdays') %>'
          data-ytitle='<%= I18n.t('stages.charts.entrances_per_weekday.ylabel') %>'
-         data-prefix='<%= I18n.t('stages.charts.entrances_per_weekday.tooltip_prefix') %>'
+         data-prefix=''
+         data-tooltipsuffix=''
          data-series='<%= [{ name: I18n.t('stages.charts.entrances_per_weekday.ylabel'), data: stage_analytic_data.entrances_per_day.values }].to_json %>'
          data-decimals='0'>
     </div>
@@ -30,7 +32,8 @@
          data-xcategories='<%= stage_analytic_data.entrances_per_hour.keys %>'
          data-xtitle='<%= I18n.t('general.charts.hours') %>'
          data-ytitle='<%= I18n.t('stages.charts.entrances_per_weekday.ylabel') %>'
-         data-prefix='<%= I18n.t('stages.charts.entrances_per_weekday.tooltip_prefix') %>'
+         data-prefix=''
+         data-tooltipsuffix=''
          data-series='<%= [{ name: I18n.t('stages.charts.entrances_per_weekday.ylabel'), data: stage_analytic_data.entrances_per_hour.values }].to_json %>'
          data-decimals='0'>
     </div>
@@ -42,7 +45,8 @@
          data-xcategories='<%= stage_analytic_data.entrances_per_weekday.keys %>'
          data-xtitle='<%= I18n.t('general.charts.xlabel.weekdays') %>'
          data-ytitle='<%= I18n.t('stages.charts.out_per_weekday.ylabel') %>'
-         data-prefix='<%= I18n.t('stages.charts.out_per_weekday.tooltip_prefix') %>'
+         data-prefix=''
+         data-tooltipsuffix=''
          data-series='<%= [{ name: I18n.t('stages.charts.out_per_weekday.ylabel'), data: stage_analytic_data.out_per_weekday.values }].to_json %>'
          data-decimals='0'>
     </div>
@@ -54,7 +58,8 @@
          data-xcategories='<%= stage_analytic_data.entrances_per_day.keys %>'
          data-xtitle='<%= I18n.t('general.charts.xlabel.weekdays') %>'
          data-ytitle='<%= I18n.t('stages.charts.out_per_weekday.ylabel') %>'
-         data-prefix='<%= I18n.t('stages.charts.out_per_weekday.tooltip_prefix') %>'
+         data-prefix=''
+         data-tooltipsuffix=''
          data-series='<%= [{ name: I18n.t('stages.charts.out_per_weekday.ylabel'), data: stage_analytic_data.out_per_day.values }].to_json %>'
          data-decimals='0'>
     </div>
@@ -66,7 +71,8 @@
          data-xcategories='<%= stage_analytic_data.entrances_per_hour.keys %>'
          data-xtitle='<%= I18n.t('general.charts.hours') %>'
          data-ytitle='<%= I18n.t('stages.charts.out_per_weekday.ylabel') %>'
-         data-prefix='<%= I18n.t('stages.charts.out_per_weekday.tooltip_prefix') %>'
+         data-prefix=''
+         data-tooltipsuffix=''
          data-series='<%= [{ name: I18n.t('stages.charts.out_per_weekday.ylabel'), data: stage_analytic_data.out_per_hour.values }].to_json %>'
          data-decimals='0'>
     </div>
