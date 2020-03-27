@@ -35,6 +35,17 @@ function editDemand(companyId, projectId, demandId, demandsIds) {
     jQuery.ajax({
         url: `/companies/${companyId}/projects/${projectId}/demands/${demandId}/edit.js`,
         type: "GET",
-        data: `&demands_ids=${demandsIds}`
+        data: `demands_ids=${demandsIds}`
+    });
+}
+
+function getMonteCarloComputation(companyId, demandsIds) {
+    $('#spinner-div').show();
+    $('#montecarlo-data-div').hide();
+
+    jQuery.ajax({
+        url: `/companies/${companyId}/demands/montecarlo_dialog.js`,
+        type: "GET",
+        data: `demands_ids=${demandsIds}`
     });
 }

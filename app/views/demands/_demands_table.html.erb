@@ -18,7 +18,7 @@
         <%= link_to I18n.t('general.download_csv'), demands_csv_company_demands_path(company, unpaged_demands.map(&:id).to_csv, format: :csv), class: 'btn btn-sm btn-primary pull-right grouped-button' %>
       </div>
       <div>
-        <%= link_to I18n.t('general.show_montecarlo'), montecarlo_dialog_company_demands_path(company, unpaged_demands.map(&:id).join(',')), class: 'btn btn-sm btn-primary pull-right grouped-button show-montecarlo-dialog', remote: true %>
+        <%= link_to I18n.t('general.show_montecarlo'), '#', onclick: "monteCarloDialog(#{company.id}, '#{unpaged_demands.map(&:id).join(',')}')", class: 'btn btn-sm btn-primary pull-right grouped-button show-montecarlo-dialog' %>
       </div>
     </div>
   </div>

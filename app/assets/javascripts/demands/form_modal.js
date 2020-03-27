@@ -7,11 +7,13 @@ $(document).on('click', '.edit-demand-button', {} ,function(e) {
     });
 });
 
-$(document).on('click', '.show-montecarlo-dialog', {} ,function(e) {
-    e.preventDefault();
+function monteCarloDialog(companyId, demandsIds) {
+    event.preventDefault();
 
     $("#show-montecarlo-dialog").modal({
         backdrop: 'static',
         keyboard: false
     });
-});
+
+    getMonteCarloComputation(companyId, demandsIds);
+}
