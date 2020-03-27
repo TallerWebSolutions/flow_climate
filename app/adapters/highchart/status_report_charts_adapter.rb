@@ -2,16 +2,19 @@
 
 module Highchart
   class StatusReportChartsAdapter < HighchartAdapter
-    attr_reader :hours_burnup_per_week_data, :hours_burnup_per_month_data, :dates_to_montecarlo_duration, :confidence_95_duration, :confidence_80_duration, :confidence_60_duration
+    attr_reader :hours_burnup_per_week_data, :hours_burnup_per_month_data, :dates_to_montecarlo_duration, :confidence_95_duration, :confidence_80_duration, :confidence_60_duration,
+                :work_item_flow_information
 
     def initialize(demands, start_date, end_date, chart_period_interval)
       super(demands, start_date, end_date, chart_period_interval)
+
+      @work_item_flow_information = Flow::WorkItemFlowInformations.new(demands_list, uncertain_scope, @x_axis.length, @x_axis.last)
 
       return unless @all_projects.count.positive?
 
       build_demand_data_processors
 
-      montecarlo_durations = Stats::StatisticsService.instance.run_montecarlo(@work_item_flow_information.scope_per_period.last, @work_item_flow_information.throughput_per_period, 500)
+      montecarlo_durations = Stats::StatisticsService.instance.run_montecarlo((demands.kept.not_finished.count + uncertain_scope), @work_item_flow_information.throughput_array_for_monte_carlo, 500)
       build_montecarlo_perecentage_confidences(montecarlo_durations)
       build_dates_to_montecarlo_duration_chart_hash
     end
@@ -96,7 +99,6 @@ module Highchart
     end
 
     def build_demand_data_processors
-      @work_item_flow_information = Flow::WorkItemFlowInformations.new(demands_list, uncertain_scope, @x_axis.length, @x_axis.last)
       @x_axis.each_with_index do |analysed_date, distribution_index|
         @work_item_flow_information.work_items_flow_behaviour(@x_axis.first, analysed_date, distribution_index)
         @work_item_flow_information.build_cfd_hash(@x_axis.first, analysed_date) if analysed_date <= Time.zone.today.end_of_week

@@ -7,28 +7,29 @@ RSpec.describe ReplenishingData, type: :data_objects do
 
   let(:company) { Fabricate :company }
   let(:customer) { Fabricate :customer, company: company }
+  let(:product) { Fabricate :product, customer: customer }
 
   let(:team) { Fabricate :team, company: company, max_work_in_progress: 12 }
 
-  let!(:first_project) { Fabricate :project, company: company, customers: [customer], team: team, name: 'first_project', status: :executing, start_date: 4.months.ago, end_date: 2.weeks.from_now, max_work_in_progress: 3 }
-  let!(:second_project) { Fabricate :project, company: company, customers: [customer], team: team, name: 'second_project', status: :executing, start_date: 2.months.ago, end_date: 3.weeks.from_now, max_work_in_progress: 2 }
-  let!(:third_project) { Fabricate :project, company: company, customers: [customer], team: team, name: 'third_project', status: :executing, start_date: 1.month.ago, end_date: 4.weeks.from_now, max_work_in_progress: 5 }
+  let!(:first_project) { Fabricate :project, company: company, products: [product], customers: [customer], team: team, name: 'first_project', status: :executing, start_date: 4.months.ago, end_date: 2.weeks.from_now, max_work_in_progress: 3 }
+  let!(:second_project) { Fabricate :project, company: company, products: [product], customers: [customer], team: team, name: 'second_project', status: :executing, start_date: 2.months.ago, end_date: 3.weeks.from_now, max_work_in_progress: 2 }
+  let!(:third_project) { Fabricate :project, company: company, products: [product], customers: [customer], team: team, name: 'third_project', status: :executing, start_date: 1.month.ago, end_date: 4.weeks.from_now, max_work_in_progress: 5 }
 
-  let!(:fourth_project) { Fabricate :project, company: company, customers: [customer], team: team, name: 'fourth_project', status: :executing, start_date: 1.month.from_now, end_date: 4.months.from_now, max_work_in_progress: 5 }
-  let!(:fifth_project) { Fabricate :project, company: company, customers: [customer], team: team, name: 'fifth_project', status: :finished, start_date: 1.month.ago, end_date: 1.week.ago }
+  let!(:fourth_project) { Fabricate :project, company: company, products: [product], customers: [customer], team: team, name: 'fourth_project', status: :executing, start_date: 1.month.from_now, end_date: 4.months.from_now, max_work_in_progress: 5 }
+  let!(:fifth_project) { Fabricate :project, company: company, products: [product], customers: [customer], team: team, name: 'fifth_project', status: :finished, start_date: 1.month.ago, end_date: 1.week.ago }
 
   describe '#summary_infos' do
     context 'with data' do
       subject(:replenishing_data) { described_class.new(team) }
 
-      let!(:first_demand) { Fabricate :demand, team: team, project: first_project, created_date: 91.days.ago, commitment_date: 3.months.ago, end_date: 1.week.ago }
-      let!(:second_demand) { Fabricate :demand, team: team, project: first_project, created_date: 62.days.ago, commitment_date: 2.months.ago, end_date: 4.weeks.ago }
-      let!(:third_demand) { Fabricate :demand, team: team, project: second_project, created_date: 6.days.ago, commitment_date: 2.days.ago, end_date: 1.day.ago }
-      let!(:fourth_demand) { Fabricate :demand, team: team, project: third_project, created_date: 3.days.ago, commitment_date: 1.day.ago, end_date: Time.zone.today }
-      let!(:fifth_demand) { Fabricate :demand, team: team, project: third_project, created_date: 2.weeks.ago, commitment_date: nil, end_date: 1.week.ago }
+      let!(:first_demand) { Fabricate :demand, product: product, team: team, project: first_project, created_date: 91.days.ago, commitment_date: 3.months.ago, end_date: 1.week.ago }
+      let!(:second_demand) { Fabricate :demand, product: product, team: team, project: first_project, created_date: 62.days.ago, commitment_date: 2.months.ago, end_date: 4.weeks.ago }
+      let!(:third_demand) { Fabricate :demand, product: product, team: team, project: second_project, created_date: 6.days.ago, commitment_date: 2.days.ago, end_date: 1.day.ago }
+      let!(:fourth_demand) { Fabricate :demand, product: product, team: team, project: third_project, created_date: 3.days.ago, commitment_date: 1.day.ago, end_date: Time.zone.today }
+      let!(:fifth_demand) { Fabricate :demand, product: product, team: team, project: third_project, created_date: 2.weeks.ago, commitment_date: nil, end_date: 1.week.ago }
 
-      let!(:first_project_closed_demands) { Fabricate.times(6, :demand, team: team, project: first_project, commitment_date: 1.week.ago, end_date: 1.week.ago) }
-      let!(:second_project_closed_demands) { Fabricate.times(2, :demand, team: team, project: second_project, commitment_date: 1.week.ago, end_date: 1.week.ago) }
+      let!(:first_project_closed_demands) { Fabricate.times(6, :demand, product: product, team: team, project: first_project, commitment_date: 1.week.ago, end_date: 1.week.ago) }
+      let!(:second_project_closed_demands) { Fabricate.times(2, :demand, product: product, team: team, project: second_project, commitment_date: 1.week.ago, end_date: 1.week.ago) }
 
       let!(:company_config) { Fabricate :company_settings, company: company, max_active_parallel_projects: 2, max_flow_pressure: 3 }
       let!(:projects) { Fabricate.times(2, :project, company: company, customers: [customer], start_date: 2.weeks.ago, end_date: Time.zone.today) }

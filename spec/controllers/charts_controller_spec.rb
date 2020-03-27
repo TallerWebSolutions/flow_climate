@@ -47,10 +47,10 @@ RSpec.describe ChartsController, type: :controller do
           let!(:second_project) { Fabricate :project, company: company, customers: [customer], products: [product], team: team, status: :executing, start_date: 8.days.ago, end_date: 5.days.from_now }
           let!(:third_project) { Fabricate :project, company: company, customers: [customer], products: [product], team: team, status: :finished, start_date: 8.days.ago, end_date: 5.days.from_now }
 
-          let!(:first_demand) { Fabricate :demand, project: first_project, created_date: 4.days.ago, commitment_date: 3.days.ago, end_date: 2.days.ago }
-          let!(:second_demand) { Fabricate :demand, project: first_project, created_date: 1.day.ago, commitment_date: 1.day.ago, end_date: 1.day.ago }
-          let!(:third_demand) { Fabricate :demand, project: second_project, created_date: 7.days.ago, commitment_date: 7.days.ago, end_date: Time.zone.now }
-          let!(:fourth_demand) { Fabricate :demand, project: third_project, created_date: 7.days.ago, commitment_date: 7.days.ago, end_date: Time.zone.now }
+          let!(:first_demand) { Fabricate :demand, product: product, project: first_project, created_date: 4.days.ago, commitment_date: 3.days.ago, end_date: 2.days.ago }
+          let!(:second_demand) { Fabricate :demand, product: product, project: first_project, created_date: 1.day.ago, commitment_date: 1.day.ago, end_date: 1.day.ago }
+          let!(:third_demand) { Fabricate :demand, product: product, project: second_project, created_date: 7.days.ago, commitment_date: 7.days.ago, end_date: Time.zone.now }
+          let!(:fourth_demand) { Fabricate :demand, product: product, project: third_project, created_date: 7.days.ago, commitment_date: 7.days.ago, end_date: Time.zone.now }
 
           it 'builds the operation and status report and respond the JS render the template' do
             get :build_operational_charts, params: { company_id: company, projects_ids: team.projects.map(&:id).to_csv }, xhr: true
@@ -98,13 +98,14 @@ RSpec.describe ChartsController, type: :controller do
         let!(:second_project) { Fabricate :project, company: company, customers: [customer], products: [product], team: team, status: :executing, start_date: 8.days.ago, end_date: 5.days.from_now }
         let!(:third_project) { Fabricate :project, company: company, customers: [customer], products: [product], team: team, status: :finished, start_date: 8.days.ago, end_date: 5.days.from_now }
 
-        let!(:first_demand) { Fabricate :demand, project: first_project, created_date: 4.days.ago, commitment_date: 3.days.ago, end_date: 2.days.ago }
-        let!(:second_demand) { Fabricate :demand, project: first_project, created_date: 1.day.ago, commitment_date: 1.day.ago, end_date: 1.day.ago }
-        let!(:third_demand) { Fabricate :demand, project: second_project, created_date: 7.days.ago, commitment_date: 7.days.ago, end_date: Time.zone.now }
-        let!(:fourth_demand) { Fabricate :demand, project: third_project, created_date: 7.days.ago, commitment_date: 7.days.ago, end_date: Time.zone.now }
+        let!(:first_demand) { Fabricate :demand, product: product, project: first_project, created_date: 4.days.ago, commitment_date: 3.days.ago, end_date: 2.days.ago }
+        let!(:second_demand) { Fabricate :demand, product: product, project: first_project, created_date: 1.day.ago, commitment_date: 1.day.ago, end_date: 1.day.ago }
+        let!(:third_demand) { Fabricate :demand, product: product, project: second_project, created_date: 7.days.ago, commitment_date: 7.days.ago, end_date: Time.zone.now }
+        let!(:fourth_demand) { Fabricate :demand, product: product, project: third_project, created_date: 7.days.ago, commitment_date: 7.days.ago, end_date: Time.zone.now }
 
         it 'builds the operation report and respond the JS render the template' do
           get :build_strategic_charts, params: { company_id: company, projects_ids: team.projects.map(&:id).to_csv, teams_ids: team.id }, xhr: true
+
           expect(response).to render_template 'charts/strategic_charts'
           expect(assigns(:strategic_chart_data).x_axis).to eq [7.days.ago.to_date.end_of_month, Time.zone.today.end_of_month]
           expect(assigns(:strategic_chart_data).active_projects_count_data).to eq [2, 2]
@@ -138,14 +139,14 @@ RSpec.describe ChartsController, type: :controller do
 
         let!(:other_project) { Fabricate :project, company: company, customers: [customer], team: other_team, start_date: 3.weeks.ago, end_date: 1.day.from_now }
 
-        let!(:first_demand) { Fabricate :demand, project: first_project, commitment_date: 3.days.ago, end_date: Time.zone.now, effort_downstream: 200, effort_upstream: 10, created_date: 74.days.ago }
-        let!(:second_demand) { Fabricate :demand, project: first_project, commitment_date: 1.day.ago, end_date: Time.zone.now, effort_downstream: 400, effort_upstream: 130, created_date: 65.days.ago }
-        let!(:third_demand) { Fabricate :demand, project: first_project, commitment_date: 7.days.ago, end_date: Time.zone.now, effort_downstream: 100, effort_upstream: 20 }
+        let!(:first_demand) { Fabricate :demand, product: product, project: first_project, commitment_date: 3.days.ago, end_date: Time.zone.now, effort_downstream: 200, effort_upstream: 10, created_date: 74.days.ago }
+        let!(:second_demand) { Fabricate :demand, product: product, project: first_project, commitment_date: 1.day.ago, end_date: Time.zone.now, effort_downstream: 400, effort_upstream: 130, created_date: 65.days.ago }
+        let!(:third_demand) { Fabricate :demand, product: product, project: first_project, commitment_date: 7.days.ago, end_date: Time.zone.now, effort_downstream: 100, effort_upstream: 20 }
 
-        let!(:fourth_demand) { Fabricate :demand, project: first_project, commitment_date: 7.days.ago, end_date: 2.days.ago, effort_downstream: 200, effort_upstream: 10, created_date: 74.days.ago }
-        let!(:fifth_demand) { Fabricate :demand, project: first_project, commitment_date: 14.days.ago, end_date: 2.days.ago, effort_downstream: 400, effort_upstream: 130, created_date: 65.days.ago }
-        let!(:sixth_demand) { Fabricate :demand, project: second_project, commitment_date: 7.days.ago, end_date: 3.days.ago, effort_downstream: 100, effort_upstream: 20 }
-        let!(:seventh_demand) { Fabricate :demand, project: other_project, commitment_date: 7.days.ago, end_date: 3.days.ago, effort_downstream: 100, effort_upstream: 20 }
+        let!(:fourth_demand) { Fabricate :demand, product: product, project: first_project, commitment_date: 7.days.ago, end_date: 2.days.ago, effort_downstream: 200, effort_upstream: 10, created_date: 74.days.ago }
+        let!(:fifth_demand) { Fabricate :demand, product: product, project: first_project, commitment_date: 14.days.ago, end_date: 2.days.ago, effort_downstream: 400, effort_upstream: 130, created_date: 65.days.ago }
+        let!(:sixth_demand) { Fabricate :demand, product: product, project: second_project, commitment_date: 7.days.ago, end_date: 3.days.ago, effort_downstream: 100, effort_upstream: 20 }
+        let!(:seventh_demand) { Fabricate :demand, product: product, project: other_project, commitment_date: 7.days.ago, end_date: 3.days.ago, effort_downstream: 100, effort_upstream: 20 }
 
         let!(:first_block) { Fabricate :demand_block, demand: first_demand, block_time: 1.hour.ago, unblock_time: Time.zone.today, active: true }
         let!(:second_block) { Fabricate :demand_block, demand: first_demand, block_time: 2.days.ago, unblock_time: 2.days.ago }
@@ -228,6 +229,7 @@ RSpec.describe ChartsController, type: :controller do
         context 'without projects consolidations' do
           it 'returns empty data set' do
             get :statistics_charts, params: { company_id: company, projects_ids: team.projects.map(&:id).join(','), project_status: '' }, xhr: true
+
             expect(response).to render_template 'charts/statistics_tab'
             expect(response).to render_template 'charts/_statistics_charts'
 
@@ -241,6 +243,7 @@ RSpec.describe ChartsController, type: :controller do
       context 'having no projects' do
         it 'returns empty data set' do
           get :statistics_charts, params: { company_id: company, projects_ids: team.projects.map(&:id).join(','), project_status: '' }, xhr: true
+
           expect(response).to render_template 'charts/statistics_tab'
           expect(response).to render_template 'charts/_statistics_charts'
 

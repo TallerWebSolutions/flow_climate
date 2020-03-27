@@ -123,14 +123,17 @@ RSpec.describe UsersController, type: :controller do
 
       let!(:company) { Fabricate :company, users: [user], name: 'zzz' }
       let!(:other_company) { Fabricate :company, users: [user], name: 'aaa' }
-      let!(:project) { Fabricate :project, status: :executing, company: company, start_date: 1.month.ago, end_date: 2.days.from_now, value: 1000 }
-      let!(:other_project) { Fabricate :project, status: :executing, company: company, start_date: 2.months.ago, end_date: 1.day.from_now, value: 3500 }
-      let!(:finished_project) { Fabricate :project, status: :finished, company: company, start_date: 4.days.ago, end_date: 2.days.ago, value: 500 }
+      let(:customer) { Fabricate :customer, company: company }
+      let(:product) { Fabricate :product, customer: customer }
+
+      let!(:project) { Fabricate :project, products: [product], status: :executing, company: company, start_date: 1.month.ago, end_date: 2.days.from_now, value: 1000 }
+      let!(:other_project) { Fabricate :project, products: [product], status: :executing, company: company, start_date: 2.months.ago, end_date: 1.day.from_now, value: 3500 }
+      let!(:finished_project) { Fabricate :project, products: [product], status: :finished, company: company, start_date: 4.days.ago, end_date: 2.days.ago, value: 500 }
 
       let(:team) { Fabricate :team, company: company }
-      let(:first_demand) { Fabricate :demand, team: team, project: other_project, commitment_date: 3.months.ago, end_date: 85.days.ago }
-      let(:second_demand) { Fabricate :demand, team: team, project: other_project, commitment_date: 1.month.ago, end_date: 25.days.ago }
-      let(:third_demand) { Fabricate :demand, team: team, project: project, commitment_date: 1.month.ago, end_date: 5.days.ago }
+      let(:first_demand) { Fabricate :demand, team: team, product: product, project: other_project, commitment_date: 3.months.ago, end_date: 85.days.ago }
+      let(:second_demand) { Fabricate :demand, team: team, product: product, project: other_project, commitment_date: 1.month.ago, end_date: 25.days.ago }
+      let(:third_demand) { Fabricate :demand, team: team, product: product, project: project, commitment_date: 1.month.ago, end_date: 5.days.ago }
 
       let(:first_team_member) { Fabricate :team_member, company: company, user: user }
       let(:second_team_member) { Fabricate :team_member, company: company, user: user }

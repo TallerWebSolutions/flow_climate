@@ -71,6 +71,12 @@ RSpec.describe DemandsController, type: :controller do
 
       it { expect(response).to have_http_status :unauthorized }
     end
+
+    describe 'GET #montecarlo_dialog' do
+      before { get :montecarlo_dialog, params: { company_id: 'foo' }, xhr: true }
+
+      it { expect(response).to have_http_status :unauthorized }
+    end
   end
 
   context 'authenticated as gold' do
@@ -893,6 +899,59 @@ RSpec.describe DemandsController, type: :controller do
           before { delete :destroy_physically, params: { company_id: company, id: demand }, xhr: true }
 
           it { expect(response).to have_http_status :not_found }
+        end
+      end
+    end
+
+    describe 'GET #montecarlo_dialog' do
+      let(:company) { Fabricate :company, users: [user] }
+
+      context 'with data' do
+        let!(:first_demand) { Fabricate :demand, company: company, created_date: Time.zone.today, commitment_date: nil, end_date: nil }
+        let!(:second_demand) { Fabricate :demand, company: company, created_date: Time.zone.yesterday, commitment_date: nil, end_date: nil }
+
+        context 'valid parameters' do
+          before { get :montecarlo_dialog, params: { company_id: company, demands_ids: "#{first_demand.id},#{second_demand.id}".to_s }, xhr: true }
+
+          it 'assigns the instance variables and renders the template' do
+            expect(assigns(:company)).to eq company
+            expect(assigns(:status_report_data)).to be_a Highchart::StatusReportChartsAdapter
+            expect(assigns(:demands_left)).to eq [first_demand, second_demand]
+            expect(assigns(:demands_delivered)).to eq []
+            expect(assigns(:throughput_per_period)).to eq []
+            expect(response).to render_template 'demands/montecarlo_dialog'
+          end
+        end
+      end
+
+      context 'without data' do
+        before { get :montecarlo_dialog, params: { company_id: company, demands_ids: [] }, xhr: true }
+
+        it 'assigns the instance variables and renders the template' do
+          expect(assigns(:company)).to eq company
+          expect(assigns(:status_report_data)).to be_a Highchart::StatusReportChartsAdapter
+          expect(assigns(:demands_left)).to eq []
+          expect(assigns(:demands_delivered)).to eq []
+          expect(assigns(:throughput_per_period)).to eq []
+          expect(response).to render_template 'demands/montecarlo_dialog'
+        end
+      end
+
+      context 'invalid' do
+        context 'company' do
+          context 'non-existent' do
+            before { get :montecarlo_dialog, params: { company_id: 'foo' }, xhr: true }
+
+            it { expect(response).to have_http_status :not_found }
+          end
+
+          context 'not-permitted' do
+            let(:company) { Fabricate :company, users: [] }
+
+            before { get :montecarlo_dialog, params: { company_id: company }, xhr: true }
+
+            it { expect(response).to have_http_status :not_found }
+          end
         end
       end
     end

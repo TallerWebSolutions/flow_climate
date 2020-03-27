@@ -8,12 +8,13 @@ RSpec.describe Highchart::StatusReportChartsAdapter, type: :data_object do
     shared_context 'demands data' do
       let(:company) { Fabricate :company }
       let(:customer) { Fabricate :customer, company: company }
+      let(:product) { Fabricate :product, customer: customer }
 
       let(:team) { Fabricate :team, company: company }
 
-      let(:first_project) { Fabricate :project, team: team, customers: [customer], status: :executing, name: 'first_project', start_date: Date.new(2018, 2, 20), end_date: Date.new(2018, 4, 22), qty_hours: 1000, initial_scope: 10 }
-      let(:second_project) { Fabricate :project, team: team, customers: [customer], status: :waiting, name: 'second_project', start_date: Date.new(2018, 3, 13), end_date: Date.new(2018, 3, 21), qty_hours: 400, initial_scope: 10 }
-      let(:third_project) { Fabricate :project, team: team, customers: [customer], status: :maintenance, name: 'third_project', start_date: Date.new(2018, 3, 12), end_date: Date.new(2018, 5, 13), qty_hours: 800, initial_scope: 10 }
+      let(:first_project) { Fabricate :project, team: team, customers: [customer], products: [product], status: :executing, name: 'first_project', start_date: Date.new(2018, 2, 20), end_date: Date.new(2018, 4, 22), qty_hours: 1000, initial_scope: 10 }
+      let(:second_project) { Fabricate :project, team: team, customers: [customer], products: [product], status: :waiting, name: 'second_project', start_date: Date.new(2018, 3, 13), end_date: Date.new(2018, 3, 21), qty_hours: 400, initial_scope: 10 }
+      let(:third_project) { Fabricate :project, team: team, customers: [customer], products: [product], status: :maintenance, name: 'third_project', start_date: Date.new(2018, 3, 12), end_date: Date.new(2018, 5, 13), qty_hours: 800, initial_scope: 10 }
 
       let(:queue_ongoing_stage) { Fabricate :stage, teams: [team], company: company, stage_stream: :downstream, queue: false, name: 'queue_stage' }
       let(:touch_ongoing_stage) { Fabricate :stage, teams: [team], company: company, stage_stream: :downstream, queue: true, name: 'ongoing_stage' }
@@ -27,21 +28,21 @@ RSpec.describe Highchart::StatusReportChartsAdapter, type: :data_object do
       let!(:first_stage_project_config) { Fabricate :stage_project_config, project: first_project, stage: queue_ongoing_stage, compute_effort: true, pairing_percentage: 60, stage_percentage: 100, management_percentage: 10 }
       let!(:second_stage_project_config) { Fabricate :stage_project_config, project: first_project, stage: touch_ongoing_stage, compute_effort: true, pairing_percentage: 60, stage_percentage: 100, management_percentage: 10 }
 
-      let!(:first_opened_demand) { Fabricate :demand, project: first_project, team: team, demand_title: 'first_opened_demand', created_date: Time.zone.local(2018, 2, 21, 23, 1, 46), end_date: nil }
-      let!(:second_opened_demand) { Fabricate :demand, project: first_project, team: team, demand_title: 'second_opened_demand', created_date: Time.zone.local(2018, 2, 21, 23, 1, 46), end_date: nil }
+      let!(:first_opened_demand) { Fabricate :demand, product: product, project: first_project, team: team, demand_title: 'first_opened_demand', created_date: Time.zone.local(2018, 2, 21, 23, 1, 46), end_date: nil }
+      let!(:second_opened_demand) { Fabricate :demand, product: product, project: first_project, team: team, demand_title: 'second_opened_demand', created_date: Time.zone.local(2018, 2, 21, 23, 1, 46), end_date: nil }
 
-      let!(:first_demand) { Fabricate :demand, project: first_project, team: team, external_id: 'first_demand', created_date: Time.zone.local(2018, 1, 21, 23, 1, 46), commitment_date: Time.zone.local(2018, 2, 19, 23, 1, 46), effort_upstream: 10, effort_downstream: 5 }
-      let!(:second_demand) { Fabricate :demand, project: first_project, team: team, external_id: 'second_demand', created_date: Time.zone.local(2018, 1, 20, 23, 1, 46), commitment_date: Time.zone.local(2018, 2, 21, 23, 1, 46), effort_upstream: 12, effort_downstream: 20 }
-      let!(:third_demand) { Fabricate :demand, project: second_project, team: team, external_id: 'third_demand', created_date: Time.zone.local(2018, 2, 18, 23, 1, 46), commitment_date: Time.zone.local(2018, 3, 17, 23, 1, 46), effort_upstream: 27, effort_downstream: 40 }
-      let!(:fourth_demand) { Fabricate :demand, project: second_project, team: team, external_id: 'fourth_demand', created_date: Time.zone.local(2018, 2, 3, 23, 1, 46), commitment_date: nil, effort_upstream: 80, effort_downstream: 34 }
-      let!(:fifth_demand) { Fabricate :demand, project: third_project, team: team, external_id: 'fifth_demand', created_date: Time.zone.local(2018, 1, 21, 23, 1, 46), commitment_date: nil, effort_upstream: 56, effort_downstream: 25 }
-      let!(:sixth_demand) { Fabricate :demand, project: first_project, team: team, external_id: 'sixth_demand', created_date: Time.zone.local(2018, 1, 15, 23, 1, 46), commitment_date: Time.zone.local(2018, 4, 29, 23, 1, 46), effort_upstream: 56, effort_downstream: 25 }
-      let!(:seventh_demand) { Fabricate :demand, project: first_project, team: team, external_id: 'seventh_demand', created_date: Project.all.map(&:end_date).max + 3.months, commitment_date: Project.all.map(&:end_date).max + 4.months, effort_upstream: 56, effort_downstream: 25 }
+      let!(:first_demand) { Fabricate :demand, product: product, project: first_project, team: team, external_id: 'first_demand', created_date: Time.zone.local(2018, 1, 21, 23, 1, 46), commitment_date: Time.zone.local(2018, 2, 19, 23, 1, 46), effort_upstream: 10, effort_downstream: 5 }
+      let!(:second_demand) { Fabricate :demand, product: product, project: first_project, team: team, external_id: 'second_demand', created_date: Time.zone.local(2018, 1, 20, 23, 1, 46), commitment_date: Time.zone.local(2018, 2, 21, 23, 1, 46), effort_upstream: 12, effort_downstream: 20 }
+      let!(:third_demand) { Fabricate :demand, product: product, project: second_project, team: team, external_id: 'third_demand', created_date: Time.zone.local(2018, 2, 18, 23, 1, 46), commitment_date: Time.zone.local(2018, 3, 17, 23, 1, 46), effort_upstream: 27, effort_downstream: 40 }
+      let!(:fourth_demand) { Fabricate :demand, product: product, project: second_project, team: team, external_id: 'fourth_demand', created_date: Time.zone.local(2018, 2, 3, 23, 1, 46), commitment_date: nil, effort_upstream: 80, effort_downstream: 34 }
+      let!(:fifth_demand) { Fabricate :demand, product: product, project: third_project, team: team, external_id: 'fifth_demand', created_date: Time.zone.local(2018, 1, 21, 23, 1, 46), commitment_date: nil, effort_upstream: 56, effort_downstream: 25 }
+      let!(:sixth_demand) { Fabricate :demand, product: product, project: first_project, team: team, external_id: 'sixth_demand', created_date: Time.zone.local(2018, 1, 15, 23, 1, 46), commitment_date: Time.zone.local(2018, 4, 29, 23, 1, 46), effort_upstream: 56, effort_downstream: 25 }
+      let!(:seventh_demand) { Fabricate :demand, product: product, project: first_project, team: team, external_id: 'seventh_demand', created_date: Project.all.map(&:end_date).max + 3.months, commitment_date: Project.all.map(&:end_date).max + 4.months, effort_upstream: 56, effort_downstream: 25 }
 
-      let!(:first_bug) { Fabricate :demand, project: first_project, team: team, external_id: 'first_bug', demand_type: :bug, created_date: Time.zone.local(2018, 1, 15, 23, 1, 46), commitment_date: Time.zone.local(2018, 4, 30, 10, 1, 46), end_date: Time.zone.local(2018, 4, 30, 23, 1, 46), effort_upstream: 56, effort_downstream: 25 }
-      let!(:second_bug) { Fabricate :demand, project: first_project, team: team, external_id: 'second_bug', demand_type: :bug, created_date: Time.zone.local(2018, 1, 15, 23, 1, 46), commitment_date: Time.zone.local(2018, 4, 25, 23, 1, 46), end_date: Time.zone.local(2018, 4, 30, 23, 1, 46), effort_upstream: 56, effort_downstream: 25 }
-      let!(:third_bug) { Fabricate :demand, project: first_project, team: team, external_id: 'third_bug', demand_type: :bug, created_date: Time.zone.local(2018, 1, 15, 23, 1, 46), commitment_date: Time.zone.local(2018, 4, 29, 23, 1, 46), end_date: Time.zone.local(2018, 4, 30, 23, 1, 46), effort_upstream: 56, effort_downstream: 25 }
-      let!(:fourth_bug) { Fabricate :demand, project: first_project, team: team, external_id: 'fourth_bug', demand_type: :bug, created_date: Time.zone.local(2018, 1, 15, 23, 1, 46), commitment_date: Time.zone.local(2018, 4, 29, 23, 1, 46), end_date: Time.zone.local(2018, 4, 30, 23, 1, 46), effort_upstream: 56, effort_downstream: 25 }
+      let!(:first_bug) { Fabricate :demand, product: product, project: first_project, team: team, external_id: 'first_bug', demand_type: :bug, created_date: Time.zone.local(2018, 1, 15, 23, 1, 46), commitment_date: Time.zone.local(2018, 4, 30, 10, 1, 46), end_date: Time.zone.local(2018, 4, 30, 23, 1, 46), effort_upstream: 56, effort_downstream: 25 }
+      let!(:second_bug) { Fabricate :demand, product: product, project: first_project, team: team, external_id: 'second_bug', demand_type: :bug, created_date: Time.zone.local(2018, 1, 15, 23, 1, 46), commitment_date: Time.zone.local(2018, 4, 25, 23, 1, 46), end_date: Time.zone.local(2018, 4, 30, 23, 1, 46), effort_upstream: 56, effort_downstream: 25 }
+      let!(:third_bug) { Fabricate :demand, product: product, project: first_project, team: team, external_id: 'third_bug', demand_type: :bug, created_date: Time.zone.local(2018, 1, 15, 23, 1, 46), commitment_date: Time.zone.local(2018, 4, 29, 23, 1, 46), end_date: Time.zone.local(2018, 4, 30, 23, 1, 46), effort_upstream: 56, effort_downstream: 25 }
+      let!(:fourth_bug) { Fabricate :demand, product: product, project: first_project, team: team, external_id: 'fourth_bug', demand_type: :bug, created_date: Time.zone.local(2018, 1, 15, 23, 1, 46), commitment_date: Time.zone.local(2018, 4, 29, 23, 1, 46), end_date: Time.zone.local(2018, 4, 30, 23, 1, 46), effort_upstream: 56, effort_downstream: 25 }
 
       let!(:first_item_assignment) { Fabricate :item_assignment, demand: first_demand, start_time: Time.zone.local(2018, 1, 8, 17, 9, 58), finish_time: nil }
       let!(:second_item_assignment) { Fabricate :item_assignment, demand: second_demand, start_time: Time.zone.local(2018, 1, 8, 17, 9, 58), finish_time: nil }
@@ -88,9 +89,9 @@ RSpec.describe Highchart::StatusReportChartsAdapter, type: :data_object do
           expect(report_data.x_axis).to eq [Date.new(2018, 2, 25), Date.new(2018, 3, 4), Date.new(2018, 3, 11), Date.new(2018, 3, 18), Date.new(2018, 3, 25), Date.new(2018, 4, 1), Date.new(2018, 4, 8), Date.new(2018, 4, 15), Date.new(2018, 4, 22), Date.new(2018, 4, 29), Date.new(2018, 5, 6), Date.new(2018, 5, 13)]
           expect(report_data.delivered_vs_remaining).to eq([{ name: I18n.t('projects.show.delivered_demands.opened_in_period'), data: [42] }, { name: I18n.t('projects.show.delivered_demands.delivered'), data: [5] }])
           expect(report_data.dates_to_montecarlo_duration).not_to be_empty
-          expect(report_data.confidence_95_duration).to be_within(15).of(150)
-          expect(report_data.confidence_80_duration).to be_within(10).of(126)
-          expect(report_data.confidence_60_duration).to be_within(10).of(108)
+          expect(report_data.confidence_95_duration).to be_within(5).of(130)
+          expect(report_data.confidence_80_duration).to be_within(5).of(100)
+          expect(report_data.confidence_60_duration).to be_within(10).of(90)
           expect(report_data.deadline).to eq [{ data: [-277], name: 'Dias (restantes)' }, { color: '#F45830', data: [361], name: 'Tempo Decorrido' }]
           expect(report_data.cumulative_flow_diagram_downstream).to match_array([{ name: 'queue_stage', data: [3, 3, 4, 4, 5, 5, 6, 6, 6, 6, 6, 6] }, { name: 'ongoing_stage', data: [3, 3, 4, 4, 5, 5, 6, 6, 6, 6, 6, 6] }, { name: 'first_stage', data: [3, 3, 4, 4, 5, 5, 6, 6, 6, 6, 6, 6] }, { name: 'second_stage', data: [3, 3, 4, 4, 5, 5, 6, 6, 6, 6, 6, 6] }, { name: 'third_stage', data: [3, 3, 4, 4, 5, 5, 6, 6, 6, 6, 6, 6] }])
         end

@@ -3,13 +3,14 @@
 module Flow
   class WorkItemFlowInformations < SystemFlowInformations
     attr_reader :start_population_date, :scope_per_period, :ideal_per_period, :throughput_per_period, :accumulated_throughput,
-                :accumulated_bugs_opened_data_array, :accumulated_bugs_closed_data_array, :bugs_opened_data_array, :bugs_closed_data_array, :bugs_share_data_array,
+                :products_throughput_per_period, :accumulated_products_throughput, :accumulated_bugs_opened_data_array,
+                :accumulated_bugs_closed_data_array, :bugs_opened_data_array, :bugs_closed_data_array, :bugs_share_data_array,
                 :upstream_total_delivered, :upstream_delivered_per_period, :downstream_total_delivered, :downstream_delivered_per_period,
                 :uncertain_scope, :current_scope, :period_size, :demands_stages_count_hash
 
     def initialize(demands, uncertain_scope_amount, period_size, end_sample_date)
       super(demands)
-      start_attributes_values
+      start_attributes
 
       return if demands.blank?
 
@@ -26,11 +27,13 @@ module Flow
       return if demands.blank?
 
       demands_in_period = DemandsRepository.instance.known_scope_to_date(@demands_ids, analysed_date) # query
+      demands_in_product = DemandsRepository.instance.known_scope_to_date(@demands_ids_in_products, analysed_date).order(:end_date) # query
 
       @scope_per_period << demands_in_period.count + @uncertain_scope
       build_ideal_burn_segment(distribution_index)
 
       build_flow_data(start_population_date, analysed_date, demands_in_period) if analysed_date <= @current_limit_date
+      build_products_flow_data(start_population_date, analysed_date, demands_in_product) if analysed_date <= @current_limit_date
     end
 
     def build_cfd_hash(start_population_date, analysed_date)
@@ -47,6 +50,14 @@ module Flow
       end
     end
 
+    def throughput_array_for_monte_carlo
+      if throughput_per_period.size >= 10
+        @throughput_per_period.last(10)
+      else
+        @products_throughput_per_period.last(10)
+      end
+    end
+
     private
 
     def build_flow_data(bottom_limit_date, upper_limit_date, demands_in_period)
@@ -58,6 +69,14 @@ module Flow
       build_downstream_data_array(demands_delivered_downstream)
       build_throughput_per_period_data_array(demands_delivered_upstream, demands_delivered_downstream)
       build_bugs_data_array(demands_in_period.kept.bug.count, demands_delivered_to_date.kept.bug.count, demands_in_period.kept.count)
+    end
+
+    def build_products_flow_data(bottom_limit_date, upper_limit_date, demands_in_period)
+      demands_delivered_to_date = demands_in_period.finished_after_date(bottom_limit_date).finished_until_date(upper_limit_date).count
+
+      @products_throughput_per_period << (demands_delivered_to_date - @accumulated_products_throughput.last.to_i)
+
+      @accumulated_products_throughput << demands_delivered_to_date
     end
 
     def build_ideal_burn_segment(index)
@@ -91,22 +110,28 @@ module Flow
       @bugs_share_data_array << (bugs_created_until_date_count.to_f / demands_created_until_date_count) * 100
     end
 
-    def start_attributes_values
+    def start_attributes
       @demands_stages_count_hash = {}
       @uncertain_scope = 0
       @current_scope = 0
       @period_size = 0
       @upstream_total_delivered = []
-      @accumulated_throughput = []
-      @throughput_per_period = []
-      @accumulated_throughput = []
       @upstream_delivered_per_period = []
       @upstream_total_delivered = []
       @downstream_total_delivered = []
       @downstream_delivered_per_period = []
       @stages = []
+
+      start_throughputs_array
       start_burnup_array
       start_bugs_array
+    end
+
+    def start_throughputs_array
+      @accumulated_throughput = []
+      @throughput_per_period = []
+      @products_throughput_per_period = []
+      @accumulated_products_throughput = []
     end
 
     def start_burnup_array
