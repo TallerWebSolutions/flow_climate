@@ -20,25 +20,16 @@ class ProjectConsolidationJob < ApplicationJob
 
       x_axis = TimeService.instance.weeks_between_of(min_date.end_of_week, start_date.end_of_week)
 
-      products_in_project = project.products
-      start_date_to_product = Project.where(id: products_in_project.map { |product| product.projects.map(&:id) }.flatten).map(&:start_date).compact.min || project.start_date
-
-      team_product_demands = DemandsRepository.instance.throughput_to_products_team_and_period(products_in_project, team, start_date_to_product, end_of_week)
-
-      project_work_item_flow_information = Flow::WorkItemFlowInformations.new(project.demands, project.initial_scope, x_axis.length, x_axis.last)
-      team_work_item_flow_information = Flow::WorkItemFlowInformations.new(team.demands, team.projects.map(&:initial_scope).compact.sum, x_axis.length, x_axis.last)
-      product_work_item_flow_information = Flow::WorkItemFlowInformations.new(team_product_demands, project.initial_scope, x_axis.length, x_axis.last)
+      project_work_item_flow_information = Flow::WorkItemFlowInformations.new(project.demands.kept, project.initial_scope, x_axis.length, x_axis.last)
+      team_work_item_flow_information = Flow::WorkItemFlowInformations.new(team.demands.kept, team.projects.map(&:initial_scope).compact.sum, x_axis.length, x_axis.last)
 
       x_axis.each_with_index do |analysed_date, distribution_index|
         project_work_item_flow_information.work_items_flow_behaviour(x_axis.first, analysed_date, distribution_index)
         team_work_item_flow_information.work_items_flow_behaviour(x_axis.first, analysed_date, distribution_index)
-        product_work_item_flow_information.work_items_flow_behaviour(x_axis.first, analysed_date, distribution_index)
       end
 
-      product_throughput_data = product_work_item_flow_information.throughput_per_period.select(&:positive?)
-
-      project_based_montecarlo_durations = Stats::StatisticsService.instance.run_montecarlo(project.remaining_backlog(end_of_week), project_work_item_flow_information.throughput_per_period.last(20), 500)
-      product_based_montecarlo_durations = Stats::StatisticsService.instance.run_montecarlo(project.remaining_backlog(end_of_week), product_throughput_data.last(20), 500)
+      project_based_montecarlo_durations = Stats::StatisticsService.instance.run_montecarlo(project.remaining_backlog(end_of_week), project_work_item_flow_information.throughput_array_for_monte_carlo.last(10), 500)
+      product_based_montecarlo_durations = Stats::StatisticsService.instance.run_montecarlo(project.remaining_backlog(end_of_week), project_work_item_flow_information.products_throughput_per_period.last(10), 500)
       team_based_montecarlo_durations = compute_team_monte_carlo_weeks(end_of_week, project, team_work_item_flow_information.throughput_per_period.last(20))
 
       consolidation = ProjectConsolidation.find_or_initialize_by(project: project, consolidation_date: end_of_week)
@@ -53,7 +44,7 @@ class ProjectConsolidationJob < ApplicationJob
                            lead_time_in_week: demands_finished_in_week.map(&:leadtime),
                            project_weekly_throughput: project_work_item_flow_information.throughput_per_period,
                            team_weekly_throughput: team_work_item_flow_information.throughput_per_period,
-                           products_weekly_throughput: product_throughput_data,
+                           products_weekly_throughput: project_work_item_flow_information.products_throughput_per_period,
                            project_monte_carlo_weeks: project_based_montecarlo_durations,
                            products_monte_carlo_weeks: product_based_montecarlo_durations,
                            team_monte_carlo_weeks: team_based_montecarlo_durations)

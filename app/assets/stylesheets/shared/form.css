@@ -17,7 +17,6 @@
 
 .bottom-spaced-component {margin-bottom: 8px;}
 
-label.required:after{content: " *"}
 
 .label-hint { color: #768899; }
 
@@ -28,6 +27,12 @@ label.required:after{content: " *"}
 .data-yellow {
     color: #EEE1B7;
 }
+
+.grouped-button {
+    margin-left: 2px;
+}
+
+label.required:after{content: " *"}
 
 h1 {font-size: xx-large;}
 

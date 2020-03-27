@@ -7,7 +7,7 @@ class DemandsController < AuthenticatedController
 
   before_action :assign_company
   before_action :assign_demand, only: %i[edit update show synchronize_jira destroy destroy_physically]
-  before_action :assign_project, except: %i[demands_csv demands_tab search_demands show destroy destroy_physically]
+  before_action :assign_project, except: %i[demands_csv demands_tab search_demands show destroy destroy_physically montecarlo_dialog]
 
   def new
     @demand = Demand.new(project: @project)
@@ -67,7 +67,7 @@ class DemandsController < AuthenticatedController
   end
 
   def demands_csv
-    @demands_in_csv = Demand.where(id: params['demands_ids'].split(',')).kept.order(end_date: :desc)
+    @demands_in_csv = demands_from_ids.kept.order(end_date: :desc)
     attributes = %w[id current_stage project_id external_id demand_title demand_type class_of_service business_score effort_downstream effort_upstream created_date commitment_date end_date]
     demands_csv = CSV.generate(headers: true) do |csv|
       csv << attributes
@@ -105,7 +105,29 @@ class DemandsController < AuthenticatedController
     respond_to { |format| format.js { render 'demands/destroy_physically' } }
   end
 
+  def montecarlo_dialog
+    @status_report_data = Highchart::StatusReportChartsAdapter.new(demands_from_ids, start_date_to_status_report(demands_from_ids), end_date_to_status_report(demands_from_ids), 'week')
+
+    @demands_left = demands.kept.not_finished
+    @demands_delivered = demands.kept.finished
+    @throughput_per_period = @status_report_data.work_item_flow_information.throughput_array_for_monte_carlo
+
+    respond_to { |format| format.js { render 'demands/montecarlo_dialog' } }
+  end
+
   private
+
+  def demands_from_ids
+    @demands_from_ids ||= Demand.where(id: params['demands_ids'].split(',')).kept
+  end
+
+  def end_date_to_status_report(demands)
+    demands.finished.map(&:end_date).max || Time.zone.today
+  end
+
+  def start_date_to_status_report(demands)
+    demands.map(&:end_date).compact.min || Time.zone.today
+  end
 
   def demands
     @demands ||= Demand.where(id: params[:demands_ids].split(',')).includes(:portfolio_unit).includes(:product)

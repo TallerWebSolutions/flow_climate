@@ -8,6 +8,7 @@ RSpec.describe Highchart::ProjectStatisticsChartsAdapter, type: :service do
   shared_context 'demands data' do
     let(:company) { Fabricate :company }
     let(:customer) { Fabricate :customer, company: company }
+    let(:product) { Fabricate :product, customer: customer }
 
     let(:team) { Fabricate :team, company: company }
     let!(:team_member) { Fabricate :team_member }
@@ -16,16 +17,16 @@ RSpec.describe Highchart::ProjectStatisticsChartsAdapter, type: :service do
     let!(:membership) { Fabricate :membership, team: team, team_member: team_member, hours_per_month: 20, start_date: 1.month.ago, end_date: nil }
     let!(:other_membership) { Fabricate :membership, team: team, team_member: other_team_member, hours_per_month: 160, start_date: 2.months.ago, end_date: 1.month.ago }
 
-    let!(:first_project) { Fabricate :project, customers: [customer], status: :maintenance, start_date: 3.days.ago, end_date: Time.zone.now, qty_hours: 1000, initial_scope: 95, value: 200.0 }
-    let!(:second_project) { Fabricate :project, customers: [customer], status: :executing, start_date: 3.months.ago, end_date: 1.month.ago, qty_hours: 500, initial_scope: 40, value: 3_453_220.0 }
+    let!(:first_project) { Fabricate :project, products: [product], customers: [customer], status: :maintenance, start_date: 3.days.ago, end_date: Time.zone.now, qty_hours: 1000, initial_scope: 95, value: 200.0 }
+    let!(:second_project) { Fabricate :project, products: [product], customers: [customer], status: :executing, start_date: 3.months.ago, end_date: 1.month.ago, qty_hours: 500, initial_scope: 40, value: 3_453_220.0 }
 
-    let!(:first_demand) { Fabricate :demand, project: first_project, commitment_date: 3.days.ago, end_date: Time.zone.now, effort_downstream: 200, effort_upstream: 10, created_date: 74.days.ago }
-    let!(:second_demand) { Fabricate :demand, project: first_project, commitment_date: 1.day.ago, end_date: Time.zone.now, effort_downstream: 400, effort_upstream: 130, created_date: 65.days.ago }
-    let!(:third_demand) { Fabricate :demand, project: first_project, commitment_date: 7.days.ago, end_date: Time.zone.now, effort_downstream: 100, effort_upstream: 20 }
+    let!(:first_demand) { Fabricate :demand, product: product, project: first_project, commitment_date: 3.days.ago, end_date: Time.zone.now, effort_downstream: 200, effort_upstream: 10, created_date: 74.days.ago }
+    let!(:second_demand) { Fabricate :demand, product: product, project: first_project, commitment_date: 1.day.ago, end_date: Time.zone.now, effort_downstream: 400, effort_upstream: 130, created_date: 65.days.ago }
+    let!(:third_demand) { Fabricate :demand, product: product, project: first_project, commitment_date: 7.days.ago, end_date: Time.zone.now, effort_downstream: 100, effort_upstream: 20 }
 
-    let!(:fourth_demand) { Fabricate :demand, project: first_project, commitment_date: 7.days.ago, end_date: 2.days.ago, effort_downstream: 200, effort_upstream: 10, created_date: 74.days.ago }
-    let!(:fifth_demand) { Fabricate :demand, project: first_project, commitment_date: 14.days.ago, end_date: 2.days.ago, effort_downstream: 400, effort_upstream: 130, created_date: 65.days.ago }
-    let!(:sixth_demand) { Fabricate :demand, project: first_project, commitment_date: 7.days.ago, end_date: 3.days.ago, effort_downstream: 100, effort_upstream: 20 }
+    let!(:fourth_demand) { Fabricate :demand, product: product, project: first_project, commitment_date: 7.days.ago, end_date: 2.days.ago, effort_downstream: 200, effort_upstream: 10, created_date: 74.days.ago }
+    let!(:fifth_demand) { Fabricate :demand, product: product, project: first_project, commitment_date: 14.days.ago, end_date: 2.days.ago, effort_downstream: 400, effort_upstream: 130, created_date: 65.days.ago }
+    let!(:sixth_demand) { Fabricate :demand, product: product, project: first_project, commitment_date: 7.days.ago, end_date: 3.days.ago, effort_downstream: 100, effort_upstream: 20 }
   end
 
   describe '#scope_data_evolution_chart' do

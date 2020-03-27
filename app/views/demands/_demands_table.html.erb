@@ -1,19 +1,24 @@
 <% if demands.count.positive? %>
   <div class="row">
-    <div class="col-xs-12">
+    <div class="col-xs-4">
       <div id="demands_count">
         <h4>
-          <%= "#{I18n.t('demands.index.count', demands_count: unpaged_demands.count)}" %>
+          <div><%= "#{I18n.t('demands.index.count', demands_count: unpaged_demands.count)}" %></div>
         </h4>
-        <div><%= "#{I18n.t('general.effort_hours_text', hours_value: number_with_precision(demands.sum(&:total_effort), precision: 2))}" %></div>
       </div>
+    </div>
+    <div class="col-xs-12">
+      <div><%= "#{I18n.t('general.effort_hours_text', hours_value: number_with_precision(demands.sum(&:total_effort), precision: 2))}" %></div>
     </div>
   </div>
 
   <div class="row">
     <div class="col-xs-12">
-      <div class="form-group">
-        <%= link_to I18n.t('general.download_csv'), demands_csv_company_demands_path(company, unpaged_demands.map(&:id).to_csv, format: :csv), class: 'btn btn-sm btn-primary pull-right' %>
+      <div>
+        <%= link_to I18n.t('general.download_csv'), demands_csv_company_demands_path(company, unpaged_demands.map(&:id).to_csv, format: :csv), class: 'btn btn-sm btn-primary pull-right grouped-button' %>
+      </div>
+      <div>
+        <%= link_to I18n.t('general.show_montecarlo'), '#', onclick: "monteCarloDialog(#{company.id}, '#{unpaged_demands.map(&:id).join(',')}')", class: 'btn btn-sm btn-primary pull-right grouped-button show-montecarlo-dialog' %>
       </div>
     </div>
   </div>

@@ -8,7 +8,7 @@ class DemandsRepository
   end
 
   def remaining_backlog_to_date(demands_ids, analysed_date)
-    demands = demands_list_data(demands_ids).opened_before_date(analysed_date)
+    demands = demands_list_data(demands_ids).kept.opened_before_date(analysed_date)
 
     demands.where('(end_date IS NULL OR end_date > :analysed_date) AND (commitment_date IS NULL OR commitment_date > :analysed_date)', analysed_date: analysed_date).count
   end

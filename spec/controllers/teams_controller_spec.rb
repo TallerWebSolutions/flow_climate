@@ -105,16 +105,16 @@ RSpec.describe TeamsController, type: :controller do
     let(:product) { Fabricate :product, customer: customer }
 
     shared_context 'demands to filters' do
-      let!(:first_project) { Fabricate :project, customers: [customer], team: team, status: :executing, start_date: 4.months.ago, end_date: Time.zone.today }
-      let!(:second_project) { Fabricate :project, customers: [customer], team: team, status: :maintenance, start_date: 2.months.ago, end_date: 34.days.from_now }
-      let!(:third_project) { Fabricate :project, customers: [customer], team: team, status: :waiting, start_date: 1.month.ago, end_date: 2.months.from_now }
-      let!(:fourth_project) { Fabricate :project, customers: [customer], team: team, products: [product], status: :cancelled, start_date: 35.days.from_now, end_date: 37.days.from_now }
+      let!(:first_project) { Fabricate :project, products: [product], customers: [customer], team: team, status: :executing, start_date: 4.months.ago, end_date: Time.zone.today }
+      let!(:second_project) { Fabricate :project, products: [product], customers: [customer], team: team, status: :maintenance, start_date: 2.months.ago, end_date: 34.days.from_now }
+      let!(:third_project) { Fabricate :project, products: [product], customers: [customer], team: team, status: :waiting, start_date: 1.month.ago, end_date: 2.months.from_now }
+      let!(:fourth_project) { Fabricate :project, products: [product], customers: [customer], team: team, status: :cancelled, start_date: 35.days.from_now, end_date: 37.days.from_now }
 
-      let!(:first_demand) { Fabricate :demand, team: team, project: first_project, demand_type: :feature, class_of_service: :standard, external_id: 'first_demand', created_date: 4.days.ago, commitment_date: 3.days.ago, end_date: 2.days.ago }
-      let!(:second_demand) { Fabricate :demand, team: team, project: second_project, demand_type: :bug, class_of_service: :standard, external_id: 'second_demand', created_date: 1.day.ago, commitment_date: 1.day.ago, end_date: 1.day.ago }
-      let!(:third_demand) { Fabricate :demand, team: team, project: third_project, demand_type: :performance_improvement, class_of_service: :expedite, external_id: 'third_demand', created_date: 7.days.ago, commitment_date: 7.days.ago, end_date: Time.zone.now }
-      let!(:fourth_demand) { Fabricate :demand, team: team, project: first_project, demand_type: :ui, class_of_service: :fixed_date, external_id: 'fourth_demand', created_date: 7.days.ago, commitment_date: 7.days.ago, end_date: nil }
-      let!(:fifth_demand) { Fabricate :demand, team: team, project: fourth_project, demand_type: :chore, class_of_service: :intangible, external_id: 'fifth_demand', end_date: 3.hours.ago }
+      let!(:first_demand) { Fabricate :demand, product: product, team: team, project: first_project, demand_type: :feature, class_of_service: :standard, external_id: 'first_demand', created_date: 4.days.ago, commitment_date: 3.days.ago, end_date: 2.days.ago }
+      let!(:second_demand) { Fabricate :demand, product: product, team: team, project: second_project, demand_type: :bug, class_of_service: :standard, external_id: 'second_demand', created_date: 1.day.ago, commitment_date: 1.day.ago, end_date: 1.day.ago }
+      let!(:third_demand) { Fabricate :demand, product: product, team: team, project: third_project, demand_type: :performance_improvement, class_of_service: :expedite, external_id: 'third_demand', created_date: 7.days.ago, commitment_date: 7.days.ago, end_date: Time.zone.now }
+      let!(:fourth_demand) { Fabricate :demand, product: product, team: team, project: first_project, demand_type: :ui, class_of_service: :fixed_date, external_id: 'fourth_demand', created_date: 7.days.ago, commitment_date: 7.days.ago, end_date: nil }
+      let!(:fifth_demand) { Fabricate :demand, product: product, team: team, project: fourth_project, demand_type: :chore, class_of_service: :intangible, external_id: 'fifth_demand', end_date: 3.hours.ago }
     end
 
     describe 'GET #show' do

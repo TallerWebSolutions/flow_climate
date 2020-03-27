@@ -160,6 +160,7 @@ en:
     people: "People"
     quality: "Quality"
     role: "Role"
+    show_montecarlo: "Show Monte Carlo Projection"
   header:
     logout: Logout
     explore: Explore
@@ -537,7 +538,7 @@ en:
         title: "Monte Carlo (Project)"
     risk:
       drill_down_title: "Risk Drill Down for %{target_name}"
-      drill_down_flow_title: "Flow (Last 8 weeks)"
+      drill_down_flow_title: "Flow (Last 10 weeks)"
       drill_down_wip_title: "WiP Limit"
       drill_down_little_law_title: "Little's Law"
       drill_down_scope_deadline: "Scope and Deadline"
@@ -613,6 +614,11 @@ en:
       cost_to_project: "Cost to Project"
       total_queue_time: "Queue"
       total_touch_time: "Touch"
+      montecarlo_projection:
+        80_percent_data: "Weeks With 80% of Confidence"
+        remaining_scope: "Remaining Scope"
+        total_delivered: "Scope Delivered"
+        throughput_per_period: "Used Throughput"
     edit:
       title: "Edit Demand"
     show:
@@ -718,6 +724,8 @@ en:
         standard: "Standard"
         fixed_date: "Fixed Date"
         expedite: "Expedite"
+    montecarlo_dialog:
+      title: "Monte Carlo Simulation to Demands"
   project_risk_configs:
     new:
       title: "New Risk Configuration"

@@ -160,6 +160,7 @@ pt-BR:
     people: "Pessoas"
     quality: "Qualidade"
     role: "Função"
+    show_montecarlo: "Mostrar Simulação de Monte Carlo"
   header:
     logout: Sair
     sign_up: Cadastre-se
@@ -553,7 +554,7 @@ pt-BR:
         title: "Monte Carlo (Projeto)"
     risk:
       drill_down_title: "Detalhamento do Risco para %{target_name}"
-      drill_down_flow_title: "Fluxo (Últimas 8 semanas)"
+      drill_down_flow_title: "Fluxo (Últimas 10 semanas)"
       drill_down_wip_title: "Limite do WiP"
       drill_down_little_law_title: "Lei de Little"
       drill_down_scope_deadline: "Escopo e Prazo"
@@ -675,6 +676,11 @@ pt-BR:
       cost_to_project: "Custo pro Projeto"
       total_queue_time: "Fila"
       total_touch_time: "Trabalho"
+      montecarlo_projection:
+        80_percent_data: "Semanas Restantes com 80% de Confiança"
+        remaining_scope: "Escopo Restante"
+        total_delivered: "Escopo Entregue"
+        throughput_per_period: "Throughput Usado"
     edit:
       title: "Editar Demanda"
     show:
@@ -780,6 +786,8 @@ pt-BR:
         standard: "Padrão"
         fixed_date: "Data Fixa"
         expedite: "Expedição"
+    montecarlo_dialog:
+      title: "Simulação de Monte Carlo para Demandas"
   project_risk_configs:
     new:
       title: "Nova Configuração de Risco"

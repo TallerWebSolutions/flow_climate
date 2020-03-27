@@ -66,6 +66,8 @@
   <%= render 'products/product_settings', company: @company, product: @product, jira_product_configs: @jira_product_configs %>
 </div>
 
+<div class="modal fade" id="show-montecarlo-dialog" tabindex="-1" role="dialog" aria-labelledby="show-montecarlo-dialog" aria-hidden="true"></div>
+
 <% content_for :javascript do %>
   <%= javascript_include_tag 'charts/line' %>
   <%= javascript_include_tag 'charts/column' %>
@@ -87,6 +89,7 @@
 
   <%= javascript_include_tag 'demands/filter_binding' %>
   <%= javascript_include_tag 'demands/demands_charts' %>
+  <%= javascript_include_tag 'demands/form_modal' %>
 
   <%= javascript_include_tag 'products/product_navigation_behaviour' %>
   <%= javascript_include_tag 'products/show' %>

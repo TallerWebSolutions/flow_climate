@@ -400,6 +400,7 @@ pt-BR:
         stage_percentage: Porcentagem da Etapa
         pairing_percentage: Porcentagem de Pareamento
         management_percentage: Porcentagem de Gestão
+        max_seconds_in_stage: Tempo Máximo na Etapa
       plan:
         plan_type: Tipo do Plano
         plan_period: Período Mensal ou Anual
