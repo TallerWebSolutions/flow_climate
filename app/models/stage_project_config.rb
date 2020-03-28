@@ -31,7 +31,7 @@ class StageProjectConfig < ApplicationRecord
   belongs_to :project
   belongs_to :stage
 
-  validates :project, :stage, presence: true
+  validates :project, :stage, :management_percentage, :pairing_percentage, :stage_percentage, presence: true
   validates :project, uniqueness: { scope: :stage, message: I18n.t('stage_project_config.validations.stage_project_unique.message') }
 
   def management_percentage_decimal
