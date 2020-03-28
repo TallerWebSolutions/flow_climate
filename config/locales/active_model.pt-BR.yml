@@ -228,6 +228,7 @@ pt-BR:
         name: Nome
         projects: Projetos
         teams: Times
+        demands: Demandas
       project:
         company: Empresa
         product: Produto

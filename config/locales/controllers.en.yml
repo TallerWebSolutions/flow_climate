@@ -51,6 +51,7 @@ en:
       title: "Percentage"
     destroy:
       confirm: "You are about to delete a record. Are you sure?"
+      success: "Excluded"
     period: "Period"
     throughput: "Throughput (items/week)"
     delivered: "Delivered"
