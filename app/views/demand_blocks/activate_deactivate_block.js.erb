@@ -1,0 +1,6 @@
+var updatedRow = $('#block_row_<%= @demand_block.id %>');
+updatedRow.html("<%= escape_javascript(render 'demand_blocks/demand_block_fields', company: @company, block: @demand_block).html_safe %>");
+
+bindBlockFormModalActionToSpecificElement(updatedRow);
+
+updatedRow.effect("highlight", { color: "lightgreen" }, 2000);

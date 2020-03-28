@@ -10,12 +10,12 @@ class DemandBlocksController < AuthenticatedController
 
   def activate
     @demand_block.activate!
-    render 'demand_blocks/update'
+    render 'demand_blocks/activate_deactivate_block'
   end
 
   def deactivate
     @demand_block.deactivate!
-    render 'demand_blocks/update'
+    render 'demand_blocks/activate_deactivate_block'
   end
 
   def edit
