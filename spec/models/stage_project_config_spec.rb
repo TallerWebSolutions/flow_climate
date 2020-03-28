@@ -10,6 +10,9 @@ RSpec.describe StageProjectConfig, type: :model do
     context 'simple ones' do
       it { is_expected.to validate_presence_of :project }
       it { is_expected.to validate_presence_of :stage }
+      it { is_expected.to validate_presence_of :stage_percentage }
+      it { is_expected.to validate_presence_of :pairing_percentage }
+      it { is_expected.to validate_presence_of :management_percentage }
     end
 
     context 'complex ones' do
@@ -38,7 +41,7 @@ RSpec.describe StageProjectConfig, type: :model do
 
   describe '#pairing_percentage_decimal' do
     let!(:stage_project_config) { Fabricate :stage_project_config, pairing_percentage: 30 }
-    let!(:blank_pairing_percentage_stage_project_config) { Fabricate :stage_project_config, pairing_percentage: nil }
+    let!(:blank_pairing_percentage_stage_project_config) { Fabricate :stage_project_config, pairing_percentage: 0 }
 
     it { expect(stage_project_config.pairing_percentage_decimal).to eq 0.3 }
     it { expect(blank_pairing_percentage_stage_project_config.pairing_percentage_decimal).to eq 0 }

@@ -10,7 +10,11 @@ class StageProjectConfigsController < AuthenticatedController
   def edit; end
 
   def update
-    @stage_project_config.update(stage_project_config_params.merge(max_seconds_in_stage: time_in_seconds_from_params))
+    @stage_project_config.update(stage_project_config_params.merge(max_seconds_in_stage: time_in_seconds_from_params,
+                                                                   stage_percentage: not_null_parameter('stage_percentage'),
+                                                                   pairing_percentage: not_null_parameter('pairing_percentage'),
+                                                                   management_percentage: not_null_parameter('management_percentage')))
+
     recompute_manual_efforts_to_transitions_in_stage
     replicate_to_other_projects if params['replicate_to_projects'] == '1'
     redirect_to edit_company_stage_stage_project_config_path(@company, @stage, @stage_project_config)
@@ -57,5 +61,11 @@ class StageProjectConfigsController < AuthenticatedController
 
   def assign_stage_project_config
     @stage_project_config = StageProjectConfig.find(params[:id])
+  end
+
+  def not_null_parameter(param_name)
+    return stage_project_config_params[param_name] if stage_project_config_params[param_name].present?
+
+    0
   end
 end

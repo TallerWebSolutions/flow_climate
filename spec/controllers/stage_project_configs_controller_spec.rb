@@ -28,7 +28,7 @@ RSpec.describe StageProjectConfigsController, type: :controller do
     before { sign_in user }
 
     describe 'GET #edit' do
-      let!(:stage_project_config) { Fabricate :stage_project_config, stage: stage, project: project, stage_percentage: nil, pairing_percentage: nil, management_percentage: nil }
+      let!(:stage_project_config) { Fabricate :stage_project_config, stage: stage, project: project }
 
       context 'passing valid IDs' do
         it 'assigns the instance variable and renders the template' do
@@ -70,10 +70,10 @@ RSpec.describe StageProjectConfigsController, type: :controller do
     end
 
     describe 'PUT #update' do
-      let!(:stage_project_config) { Fabricate :stage_project_config, stage: stage, project: project, stage_percentage: nil, pairing_percentage: nil, management_percentage: nil }
+      let!(:stage_project_config) { Fabricate :stage_project_config, stage: stage, project: project }
 
       let(:other_project) { Fabricate :project, customers: [customer] }
-      let!(:other_stage_project_config) { Fabricate :stage_project_config, stage: stage, project: other_project, stage_percentage: nil, pairing_percentage: nil, management_percentage: nil }
+      let!(:other_stage_project_config) { Fabricate :stage_project_config, stage: stage, project: other_project }
 
       context 'with valid parameters' do
         context 'with replication to other projects' do
@@ -120,9 +120,24 @@ RSpec.describe StageProjectConfigsController, type: :controller do
 
             other_stage_project_config_updated = other_stage_project_config.reload
             expect(other_stage_project_config_updated.compute_effort?).to be true
-            expect(other_stage_project_config_updated.stage_percentage).to eq nil
-            expect(other_stage_project_config_updated.pairing_percentage).to eq nil
-            expect(other_stage_project_config_updated.management_percentage).to eq nil
+            expect(other_stage_project_config_updated.stage_percentage).to eq other_stage_project_config.stage_percentage
+            expect(other_stage_project_config_updated.pairing_percentage).to eq other_stage_project_config.pairing_percentage
+            expect(other_stage_project_config_updated.management_percentage).to eq other_stage_project_config.management_percentage
+          end
+        end
+
+        context 'nil stage_project_config params' do
+          before { put :update, params: { company_id: company, stage_id: stage, id: stage_project_config, stage_project_config: { compute_effort: true, stage_percentage: nil, pairing_percentage: nil, management_percentage: nil } } }
+
+          it 'save the model with the default informations' do
+            stage_project_config_updated = stage_project_config.reload
+            expect(stage_project_config_updated.compute_effort?).to be true
+            expect(stage_project_config_updated.stage_percentage).to eq 0
+            expect(stage_project_config_updated.pairing_percentage).to eq 0
+            expect(stage_project_config_updated.management_percentage).to eq 0
+            expect(stage_project_config_updated.max_seconds_in_stage).to eq 0
+
+            expect(response).to redirect_to edit_company_stage_stage_project_config_path(company, stage, stage_project_config)
           end
         end
       end
