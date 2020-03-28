@@ -69,7 +69,7 @@ RSpec.describe DemandBlocksController, type: :controller do
         before { patch :activate, params: { company_id: company, project_id: project, demand_id: demand, id: demand_block }, xhr: true }
 
         it 'assigns the instance variable and renders the template' do
-          expect(response).to render_template 'demand_blocks/update'
+          expect(response).to render_template 'demand_blocks/activate_deactivate_block'
           expect(demand_block.reload.active).to be true
         end
       end
@@ -112,7 +112,7 @@ RSpec.describe DemandBlocksController, type: :controller do
         before { patch :deactivate, params: { company_id: company, project_id: project, demand_id: demand, id: demand_block }, xhr: true }
 
         it 'assigns the instance variable and renders the template' do
-          expect(response).to render_template 'demand_blocks/update'
+          expect(response).to render_template 'demand_blocks/activate_deactivate_block'
           expect(demand_block.reload.active).to be false
         end
       end
