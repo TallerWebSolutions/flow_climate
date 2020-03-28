@@ -369,13 +369,15 @@ RSpec.describe ProductsController, type: :controller do
           before { delete :destroy, params: { company_id: company, id: product } }
 
           it 'deletes the product and redirects' do
+            expect(flash[:error]).to be_nil
+            expect(flash[:notice]).to eq I18n.t('general.destroy.success')
             expect(response).to redirect_to company_products_path(company)
             expect(Product.last).to be_nil
           end
         end
       end
 
-      context 'passing an invalid ID' do
+      context 'invalid' do
         context 'non-existent product' do
           before { delete :destroy, params: { company_id: company, id: 'foo' } }
 
@@ -394,6 +396,18 @@ RSpec.describe ProductsController, type: :controller do
           before { delete :destroy, params: { company_id: company, id: product } }
 
           it { expect(response).to have_http_status :not_found }
+        end
+
+        context 'having dependencies' do
+          let!(:demand) { Fabricate :demand, product: product }
+
+          before { delete :destroy, params: { company_id: company, id: product } }
+
+          it 'redirects to the products index showing the error' do
+            expect(flash[:error]).to eq 'Não é possível excluir o registro pois existem demandas dependentes'
+            expect(flash[:notice]).to be_nil
+            expect(response).to redirect_to company_products_path(company)
+          end
         end
       end
     end

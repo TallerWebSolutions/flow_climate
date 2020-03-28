@@ -21,6 +21,7 @@
     <table class="table table-striped">
       <thead>
         <tr>
+          <th><%= Demand.human_attribute_name :project %></th>
           <th><%= Demand.human_attribute_name :external_id %></th>
           <th><%= Demand.human_attribute_name :demand_type %></th>
           <th><%= Demand.human_attribute_name :class_of_service %></th>
@@ -33,6 +34,7 @@
       <tbody>
         <% discarded_demands.each do |demand| %>
           <tr id='demand_<%= demand.id %>'>
+            <td><%= demand.project_name %></td>
             <td><%= link_to demand.external_id, company_demand_path(company, demand.slug) %></td>
             <td><%= t("activerecord.attributes.demand.enums.demand_type.#{demand.demand_type}") %></td>
             <td><%= t("activerecord.attributes.demand.enums.class_of_service.#{demand.class_of_service}") %></td>

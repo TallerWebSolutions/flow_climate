@@ -51,6 +51,7 @@ pt-BR:
       title: "Porcentagem"
     destroy:
       confirm: "Confirma a exclusão do registro?"
+      success: "Excluído com sucesso"
     period: "Período"
     throughput: "Vazão (itens/semana)"
     delivered: "Entregas"

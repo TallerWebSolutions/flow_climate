@@ -52,7 +52,12 @@ class ProductsController < AuthenticatedController
   end
 
   def destroy
-    @product.destroy
+    if @product.destroy
+      flash[:notice] = I18n.t('general.destroy.success')
+    else
+      flash[:error] = @product.errors.full_messages.join(' | ')
+    end
+
     redirect_to company_products_path(@company)
   end
 
@@ -111,6 +116,6 @@ class ProductsController < AuthenticatedController
   end
 
   def assign_demands_ids
-    @demands_ids = @product.demands.opened_before_date(Time.zone.now).map(&:id)
+    @demands_ids = @product.demands.map(&:id)
   end
 end
