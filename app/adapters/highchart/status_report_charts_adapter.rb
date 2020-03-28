@@ -8,7 +8,7 @@ module Highchart
     def initialize(demands, start_date, end_date, chart_period_interval)
       super(demands, start_date, end_date, chart_period_interval)
 
-      @work_item_flow_information = Flow::WorkItemFlowInformations.new(demands_list, uncertain_scope, @x_axis.length, @x_axis.last)
+      @work_item_flow_information = Flow::WorkItemFlowInformations.new(demands_list, uncertain_scope, @x_axis.length, end_date)
 
       return unless @all_projects.count.positive?
 
