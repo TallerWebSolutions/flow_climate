@@ -21,9 +21,11 @@ RSpec.describe Jira::JiraIssueAdapter, type: :service do
 
   let!(:first_project) { Fabricate :project, company: company, team: team, customers: [customer], products: [product] }
 
-  let!(:first_stage) { Fabricate :stage, company: company, integration_id: 'first_stage', projects: [first_project] }
-  let!(:second_stage) { Fabricate :stage, company: company, integration_id: 'second_stage', projects: [first_project] }
-  let!(:third_stage) { Fabricate :stage, company: company, integration_id: 'third_stage', projects: [first_project] }
+  let!(:backlog) { Fabricate :stage, company: company, teams: [team], integration_id: 'backlog', name: 'backlog', projects: [first_project], order: 0 }
+
+  let!(:first_stage) { Fabricate :stage, company: company, teams: [team], integration_id: 'first_stage', name: 'first_stage', projects: [first_project], order: 1 }
+  let!(:second_stage) { Fabricate :stage, company: company, teams: [team], integration_id: 'second_stage', name: 'second_stage', projects: [first_project], order: 2 }
+  let!(:third_stage) { Fabricate :stage, company: company, teams: [team], integration_id: 'third_stage', name: 'third_stage', projects: [first_project], order: 3 }
 
   describe '#process_issue!' do
     context 'when the demand does not exist' do
@@ -41,7 +43,7 @@ RSpec.describe Jira::JiraIssueAdapter, type: :service do
         let!(:out_team_member_membership) { Fabricate :membership, team: team, team_member: out_team_member, hours_per_month: 120, start_date: 2.months.ago, end_date: nil }
         let!(:other_company_membership) { Fabricate :membership, team: team, team_member: other_company_team_member, hours_per_month: 120, start_date: 2.months.ago, end_date: nil }
 
-        let!(:jira_issue) { client.Issue.build({ key: '10000', fields: { created: '2018-07-02T11:20:18.998-0300', summary: 'foo of bar', issuetype: { name: 'Story' }, customfield_10028: { value: 'Expedite' }, project: { key: 'foo' }, customfield_10024: [{ emailAddress: 'foo' }, { emailAddress: 'bar' }] }, changelog: { startAt: 0, maxResults: 2, total: 2, histories: [{ id: '10039', created: '2018-07-08T22:34:47.440-0300', items: [{ field: 'status', from: 'first_stage', to: 'second_stage' }] }, { id: '10038', created: '2018-07-06T09:40:43.886-0300', items: [{ field: 'status', from: 'third_stage', to: 'first_stage' }] }, { id: '10431', created: '2018-07-06T09:10:43.886-0300', items: [{ field: 'Responsible', fieldId: 'customfield_10024', from: nil, fromString: nil, to: "[#{out_team_member.name}, #{team_member.name}, 'foobarxpto']", toString: "[#{out_team_member.name}, #{team_member.name}]" }] }, { id: '10432', created: '2018-07-06T09:40:43.886-0300', items: [{ field: 'Responsible', fieldId: 'customfield_10024', from: "[#{team_member.name}, #{out_team_member.name}]", fromString: "[#{team_member.name}, #{out_team_member.name}]", to: "[#{team_member.name}, #{other_team_member.name}]", toString: "[#{team_member.name}, #{other_team_member.name}]" }] }] } }.with_indifferent_access) }
+        let!(:jira_issue) { client.Issue.build({ key: '10000', fields: { created: '2018-07-02T11:20:18.998-0300', summary: 'foo of bar', issuetype: { name: 'Story' }, customfield_10028: { value: 'Expedite' }, project: { key: 'foo' }, customfield_10024: [{ emailAddress: 'foo' }, { emailAddress: 'bar' }] }, changelog: { startAt: 0, maxResults: 2, total: 2, histories: [{ id: '10039', created: '2018-07-08T22:34:47.440-0300', items: [{ field: 'status', from: 'backlog', to: 'first_stage' }] }, { id: '10038', created: '2018-07-09T09:40:43.886-0300', items: [{ field: 'status', from: 'first_stage', to: 'second_stage' }] }, { id: '10431', created: '2018-07-06T09:10:43.886-0300', items: [{ field: 'Responsible', fieldId: 'customfield_10024', from: nil, fromString: nil, to: "[#{out_team_member.name}, #{team_member.name}, 'foobarxpto']", toString: "[#{out_team_member.name}, #{team_member.name}]" }] }, { id: '10432', created: '2018-07-06T09:40:43.886-0300', items: [{ field: 'Responsible', fieldId: 'customfield_10024', from: "[#{team_member.name}, #{out_team_member.name}]", fromString: "[#{team_member.name}, #{out_team_member.name}]", to: "[#{team_member.name}, #{other_team_member.name}]", toString: "[#{team_member.name}, #{other_team_member.name}]" }] }] } }.with_indifferent_access) }
 
         it 'creates the demand' do
           described_class.instance.process_issue!(jira_account, product, first_project, jira_issue)
@@ -60,22 +62,28 @@ RSpec.describe Jira::JiraIssueAdapter, type: :service do
           expect(created_demand).to be_expedite
           expect(created_demand.created_date).to eq Time.zone.parse('2018-07-02T11:20:18.998-0300')
 
-          expect(DemandTransition.count).to eq 3
+          expect(created_demand.demand_transitions.count).to eq 3
+
+          backlog_updated = backlog.reload
+          expect(backlog_updated.demand_transitions.count).to eq 1
+          expect(backlog_updated.demand_transitions.first.stage).to eq backlog
+          expect(backlog_updated.demand_transitions.first.last_time_in).to eq Time.zone.parse('2018-07-02T11:20:18.998-0300')
+          expect(backlog_updated.demand_transitions.first.last_time_out).to eq Time.zone.parse('2018-07-08T22:34:47.440-0300')
 
           first_stage_updated = first_stage.reload
           expect(first_stage_updated.demand_transitions.count).to eq 1
-          expect(first_stage_updated.demand_transitions.first.last_time_in).to eq Time.zone.parse('2018-07-06T09:40:43.886-0300')
-          expect(first_stage_updated.demand_transitions.first.last_time_out).to eq Time.zone.parse('2018-07-08T22:34:47.440-0300')
+          expect(first_stage_updated.demand_transitions.first.stage).to eq first_stage
+          expect(first_stage_updated.demand_transitions.first.last_time_in).to eq Time.zone.parse('2018-07-08T22:34:47.440-0300')
+          expect(first_stage_updated.demand_transitions.first.last_time_out).to eq Time.zone.parse('2018-07-09T09:40:43.886-0300')
 
           second_stage_updated = second_stage.reload
           expect(second_stage_updated.demand_transitions.count).to eq 1
-          expect(second_stage_updated.demand_transitions.first.last_time_in).to eq Time.zone.parse('2018-07-08T22:34:47.440-0300')
+          expect(second_stage_updated.demand_transitions.first.stage).to eq second_stage
+          expect(second_stage_updated.demand_transitions.first.last_time_in).to eq Time.zone.parse('2018-07-09T09:40:43.886-0300')
           expect(second_stage_updated.demand_transitions.first.last_time_out).to be_nil
 
           third_stage_updated = third_stage.reload
-          expect(third_stage_updated.demand_transitions.count).to eq 1
-          expect(third_stage_updated.demand_transitions.first.last_time_in).to eq Time.zone.parse('2018-07-02T11:20:18.998-0300')
-          expect(third_stage_updated.demand_transitions.first.last_time_out).to eq Time.zone.parse('2018-07-06T09:40:43.886-0300')
+          expect(third_stage_updated.demand_transitions.count).to eq 0
         end
       end
 
@@ -260,21 +268,21 @@ RSpec.describe Jira::JiraIssueAdapter, type: :service do
         it 'creates the demand and the transitions using the last time it passed in the stage' do
           described_class.instance.process_issue!(jira_account, product, first_project, jira_issue)
 
-          expect(DemandTransition.count).to eq 5
+          expect(DemandTransition.count).to eq 6
 
           first_stage_updated = first_stage.reload
           expect(first_stage_updated.demand_transitions.count).to eq 2
           expect(first_stage_updated.demand_transitions.first.last_time_in).to eq Time.zone.parse('2018-07-06T09:40:43.886-0300')
           expect(first_stage_updated.demand_transitions.first.last_time_out).to eq Time.zone.parse('2018-07-08T22:34:47.440-0300')
-          expect(first_stage_updated.demand_transitions.last.last_time_in).to eq Time.zone.parse('2018-07-09T22:34:47.440-0300')
-          expect(first_stage_updated.demand_transitions.last.last_time_out).to eq Time.zone.parse('2018-07-09T23:34:47.440-0300')
+          expect(first_stage_updated.demand_transitions.second.last_time_in).to eq Time.zone.parse('2018-07-09T22:34:47.440-0300')
+          expect(first_stage_updated.demand_transitions.second.last_time_out).to eq Time.zone.parse('2018-07-09T23:34:47.440-0300')
 
           second_stage_updated = second_stage.reload
           expect(second_stage_updated.demand_transitions.count).to eq 2
           expect(second_stage_updated.demand_transitions.first.last_time_in).to eq Time.zone.parse('2018-07-08T22:34:47.440-0300')
           expect(second_stage_updated.demand_transitions.first.last_time_out).to eq Time.zone.parse('2018-07-09T22:34:47.440-0300')
-          expect(second_stage_updated.demand_transitions.last.last_time_in).to eq Time.zone.parse('2018-07-09T23:34:47.440-0300')
-          expect(second_stage_updated.demand_transitions.last.last_time_out).to be_nil
+          expect(second_stage_updated.demand_transitions.second.last_time_in).to eq Time.zone.parse('2018-07-09T23:34:47.440-0300')
+          expect(second_stage_updated.demand_transitions.second.last_time_out).to be_nil
 
           third_stage_updated = third_stage.reload
           expect(third_stage_updated.demand_transitions.count).to eq 1
@@ -352,15 +360,15 @@ RSpec.describe Jira::JiraIssueAdapter, type: :service do
     end
 
     context 'with no transitions' do
-      let!(:jira_issue) { client.Issue.build({ key: '10000', fields: { created: '2018-07-02T11:20:18.998-0300', summary: 'foo of bar', issuetype: { name: 'Story' }, customfield_10028: { value: 'Expedite' }, project: { key: 'foo' }, status: { id: first_stage.integration_id } }, changelog: { startAt: 0, maxResults: 2, total: 2, histories: [] } }.with_indifferent_access) }
+      let!(:jira_issue) { client.Issue.build({ key: '10000', fields: { created: '2018-07-02T11:20:18.998-0300', summary: 'foo of bar', issuetype: { name: 'Story' }, customfield_10028: { value: 'Expedite' }, project: { key: 'foo' }, status: { id: backlog.integration_id } }, changelog: { startAt: 0, maxResults: 2, total: 2, histories: [] } }.with_indifferent_access) }
 
       it 'adds the transition to the status using the created date' do
         described_class.instance.process_issue!(jira_account, product, first_project, jira_issue)
 
-        first_stage_updated = first_stage.reload
-        expect(first_stage_updated.demand_transitions.count).to eq 1
-        expect(first_stage_updated.demand_transitions.first.last_time_in).to eq Time.zone.parse('2018-07-02T11:20:18.998-0300')
-        expect(first_stage_updated.demand_transitions.first.last_time_out).to eq nil
+        backlog_updated = backlog.reload
+        expect(backlog_updated.demand_transitions.count).to eq 1
+        expect(backlog_updated.demand_transitions.first.last_time_in).to eq Time.zone.parse('2018-07-02T11:20:18.998-0300')
+        expect(backlog_updated.demand_transitions.first.last_time_out).to eq nil
       end
     end
   end

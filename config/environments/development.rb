@@ -20,7 +20,7 @@ Rails.application.configure do
   end
 
   config.active_support.deprecation = :log
-  config.active_record.migration_error = :page_load
+  config.active_record.migration_error = false
   config.assets.debug = true
   config.assets.quiet = true
   config.action_view.raise_on_missing_translations = true

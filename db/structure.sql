@@ -2334,6 +2334,13 @@ CREATE UNIQUE INDEX demand_member_start_time_unique ON public.item_assignments U
 
 
 --
+-- Name: idx_transitions_unique; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_transitions_unique ON public.demand_transitions USING btree (demand_id, stage_id, last_time_in);
+
+
+--
 -- Name: index_companies_on_abbreviation; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -3795,6 +3802,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200114153736'),
 ('20200114190057'),
 ('20200130181814'),
-('20200328160133');
+('20200328160133'),
+('20200330185149');
 
 

@@ -50,6 +50,12 @@
           <td><b><%= Demand.human_attribute_name :end_date %></b></td>
           <td><%= I18n.l(demand.end_date, format: :short) if demand.end_date.present? %></td>
         </tr>
+        <% if demand.discarded_at.present? %>
+          <tr>
+            <td><b><%= Demand.human_attribute_name :discarded_at %></b></td>
+            <td><%= I18n.l(demand.discarded_at, format: :short) %></td>
+          </tr>
+        <% end %>
         <tr>
           <td><b><%= Demand.human_attribute_name :demand_type %></b></td>
           <td><%= I18n.t("activerecord.attributes.demand.enums.demand_type.#{demand.demand_type}") %></td>
