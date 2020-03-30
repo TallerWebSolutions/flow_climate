@@ -263,7 +263,7 @@ RSpec.describe Demand, type: :model do
         let(:demand) { Fabricate :demand, project: project }
         let!(:upstream_demand_transition) { Fabricate :demand_transition, demand: demand, stage: upstream_effort_stage, last_time_in: Time.zone.parse('2018-03-05 22:00'), last_time_out: Time.zone.parse('2018-03-06 13:00') }
         let!(:downstream_demand_transition) { Fabricate :demand_transition, demand: demand, stage: downstream_effort_stage, last_time_in: Time.zone.parse('2018-03-06 13:00'), last_time_out: Time.zone.parse('2018-03-06 15:00') }
-        let!(:discarded_demand_transition) { Fabricate :demand_transition, demand: demand, stage: downstream_effort_stage, last_time_in: Time.zone.parse('2018-03-06 13:00'), last_time_out: Time.zone.parse('2018-03-06 15:00'), discarded_at: Time.zone.now }
+        let!(:discarded_demand_transition) { Fabricate :demand_transition, demand: demand, stage: downstream_effort_stage, last_time_in: Time.zone.parse('2018-03-06 13:10'), last_time_out: Time.zone.parse('2018-03-06 15:00'), discarded_at: Time.zone.now }
 
         let!(:item_assignment) { Fabricate :item_assignment, demand: demand, team_member: team_member, start_time: Time.zone.parse('2018-03-05 22:00'), finish_time: nil }
 
@@ -854,5 +854,20 @@ RSpec.describe Demand, type: :model do
 
       it { expect(demand.time_between_commitment_and_pull).to eq 0 }
     end
+  end
+
+  describe '#first_stage_in_the_flow' do
+    let(:company) { Fabricate :company }
+    let(:team) { Fabricate :team, company: company }
+
+    let!(:first_stage) { Fabricate :stage, teams: [team], stage_stream: :upstream, order: 0 }
+    let!(:second_stage) { Fabricate :stage, teams: [team], stage_stream: :upstream, order: 1 }
+    let!(:third_stage) { Fabricate :stage, teams: [team], stage_stream: :upstream, order: -1 }
+
+    let!(:demand) { Fabricate :demand, team: team }
+    let!(:other_demand) { Fabricate :demand }
+
+    it { expect(demand.first_stage_in_the_flow).to eq first_stage }
+    it { expect(other_demand.first_stage_in_the_flow).to be_nil }
   end
 end

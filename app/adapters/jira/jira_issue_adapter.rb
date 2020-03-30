@@ -45,7 +45,7 @@ module Jira
       return unless jira_issue.respond_to?(:changelog)
 
       read_blocks(demand, jira_issue_changelog(jira_issue))
-      read_transitions!(demand, jira_issue_changelog(jira_issue), jira_issue_attrs(jira_issue))
+      read_transitions!(demand, jira_issue_changelog(jira_issue))
       demand.update(portfolio_unit: Jira::JiraReader.instance.read_portfolio_unit(jira_issue_changelog(jira_issue), jira_issue_attrs(jira_issue), demand.product)) if demand.product.present?
     end
 
@@ -61,15 +61,13 @@ module Jira
       end
     end
 
-    def read_transitions!(demand, issue_changelog, jira_issue_attrs)
+    def read_transitions!(demand, issue_changelog)
       demand.demand_transitions.map(&:destroy)
-      last_time_out = demand.created_date
-      read_transition_history(demand, issue_changelog)
-      create_transitions!(demand, read_status_id(jira_issue_attrs), read_status_id(jira_issue_attrs), last_time_out, last_time_out) if demand.demand_transitions.blank? && jira_issue_attrs['fields']['status'].present?
-    end
+      backlog_transition_date = demand.created_date
+      backlog_stage = demand.first_stage_in_the_flow.integration_id
+      create_from_transition(demand, backlog_stage, backlog_transition_date)
 
-    def read_status_id(jira_issue_attrs)
-      jira_issue_attrs['fields']['status']['id']
+      read_transition_history(demand, issue_changelog)
     end
 
     def sorted_histories(issue_changelog)
@@ -77,7 +75,7 @@ module Jira
     end
 
     def read_transition_history(demand, issue_changelog)
-      transition_enter_date = demand.created_date
+      from_transition_date = demand.created_date
 
       sorted_histories(issue_changelog).each do |history|
         next if history['items'].blank?
@@ -86,10 +84,23 @@ module Jira
           next unless item['field'].casecmp('status').zero?
 
           to_transition_date = history['created']
-          create_transitions!(demand, item['from'], item['to'], transition_enter_date, to_transition_date)
-          transition_enter_date = to_transition_date
+          from_transition = create_from_transition(demand, item['from'], from_transition_date)
+          create_to_transition(demand, from_transition, item['to'], to_transition_date)
+          from_transition_date = to_transition_date
         end
       end
+    end
+
+    def create_from_transition(demand, from_stage_id, from_transition_date)
+      stage_from = demand.project.stages.find_by(integration_id: from_stage_id)
+      DemandTransition.where(demand: demand, stage: stage_from, last_time_in: from_transition_date).first_or_create
+    end
+
+    def create_to_transition(demand, from_transistion, to_stage_id, to_transition_date)
+      from_transistion.update(last_time_out: to_transition_date)
+
+      stage_to = demand.project.stages.find_by(integration_id: to_stage_id)
+      DemandTransition.where(demand: demand, stage: stage_to, last_time_in: to_transition_date).first_or_create
     end
 
     def read_comments(demand, jira_issue_attrs)
@@ -215,17 +226,6 @@ module Jira
       team_member = TeamMember.where(company: team.company).where('lower(name) LIKE :author_name', author_name: "%#{author_display_name.downcase}%").first_or_initialize if team_member.blank?
       team_member.update(start_date: Time.zone.today, name: author_display_name) unless team_member.persisted?
       team_member
-    end
-
-    def create_transitions!(demand, from_id, to_id, from_transition_out, to_transition_date)
-      stage_from = demand.project.stages.find_by(integration_id: from_id)
-      stage_to = demand.project.stages.find_by(integration_id: to_id)
-
-      transition_from = DemandTransition.where(demand: demand, stage: stage_from, last_time_in: from_transition_out).first_or_initialize
-      transition_from.update(last_time_in: from_transition_out, last_time_out: to_transition_date)
-
-      transition_to = DemandTransition.where(demand: demand, stage: stage_to, last_time_in: to_transition_date).first_or_initialize
-      transition_to.update(demand: demand, last_time_in: to_transition_date, last_time_out: nil)
     end
 
     def build_jira_url(jira_account, issue_key)

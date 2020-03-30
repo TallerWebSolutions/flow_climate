@@ -244,6 +244,10 @@ class Demand < ApplicationRecord
     demand_blocks.map(&:total_blocked_time).compact.sum
   end
 
+  def first_stage_in_the_flow
+    team.stages.where('stages.order >= 0').order(:order).first
+  end
+
   private
 
   def commitment_transition
