@@ -107,7 +107,7 @@ class TeamsController < AuthenticatedController
   private
 
   def demands
-    @demands ||= Demand.where(id: params[:demands_ids]&.split(',')).order(:end_date, :commitment_date, :created_date)
+    @demands ||= @team.demands.where(id: params[:demands_ids]&.split(',')).order(:end_date, :commitment_date, :created_date)
   end
 
   def team_demands_search_engine(demands)
@@ -203,7 +203,7 @@ class TeamsController < AuthenticatedController
   end
 
   def assign_team
-    @team = Team.find(params[:id])
+    @team = @company.teams.find(params[:id])
   end
 
   def team_params

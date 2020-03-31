@@ -268,7 +268,7 @@ RSpec.describe CustomersController, type: :controller do
         end
       end
 
-      context 'passing invalid' do
+      context 'invalid' do
         context 'company' do
           before { get :show, params: { company_id: 'foo', id: customer } }
 
@@ -285,6 +285,15 @@ RSpec.describe CustomersController, type: :controller do
           let(:company) { Fabricate :company, users: [] }
 
           before { get :show, params: { company_id: company, id: customer } }
+
+          it { expect(response).to have_http_status :not_found }
+        end
+
+        context 'a different company' do
+          let(:other_company) { Fabricate :company, users: [user] }
+          let!(:customer) { Fabricate :customer, company: company }
+
+          before { get :show, params: { company_id: other_company, id: customer } }
 
           it { expect(response).to have_http_status :not_found }
         end

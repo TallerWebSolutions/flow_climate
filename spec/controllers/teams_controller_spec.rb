@@ -153,7 +153,7 @@ RSpec.describe TeamsController, type: :controller do
         end
       end
 
-      context 'passing invalid parameters' do
+      context 'invalid' do
         context 'non-existent company' do
           before { get :show, params: { company_id: 'foo', id: team } }
 
@@ -170,6 +170,15 @@ RSpec.describe TeamsController, type: :controller do
           let(:company) { Fabricate :company, users: [] }
 
           before { get :show, params: { company_id: company, id: team } }
+
+          it { expect(response).to have_http_status :not_found }
+        end
+
+        context 'a different company' do
+          let(:other_company) { Fabricate :company, users: [user] }
+          let!(:team) { Fabricate :team, company: company }
+
+          before { get :show, params: { company_id: other_company, id: team } }
 
           it { expect(response).to have_http_status :not_found }
         end

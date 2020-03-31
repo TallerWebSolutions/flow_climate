@@ -66,7 +66,7 @@ RSpec.describe TeamMembersController, type: :controller do
 
     describe 'GET #show' do
       let(:team) { Fabricate :team, company: company }
-      let(:team_member) { Fabricate :team_member }
+      let(:team_member) { Fabricate :team_member, company: company }
       let!(:membership) { Fabricate :membership, team: team, team_member: team_member, hours_per_month: 120, start_date: 1.month.ago, end_date: nil }
 
       context 'valid parameters' do
@@ -97,6 +97,15 @@ RSpec.describe TeamMembersController, type: :controller do
             let(:company) { Fabricate :company, users: [] }
 
             before { get :show, params: { company_id: company, id: team_member }, xhr: true }
+
+            it { expect(response).to have_http_status :not_found }
+          end
+
+          context 'a different company' do
+            let(:other_company) { Fabricate :company, users: [user] }
+            let!(:team_member) { Fabricate :team_member, company: company }
+
+            before { get :show, params: { company_id: other_company, id: team_member } }
 
             it { expect(response).to have_http_status :not_found }
           end
@@ -163,7 +172,7 @@ RSpec.describe TeamMembersController, type: :controller do
 
     describe 'GET #edit' do
       let(:team) { Fabricate :team, company: company }
-      let(:team_member) { Fabricate :team_member }
+      let(:team_member) { Fabricate :team_member, company: company }
       let!(:membership) { Fabricate :membership, team: team, team_member: team_member, hours_per_month: 120, start_date: 1.month.ago, end_date: nil }
 
       context 'valid parameters' do
@@ -205,7 +214,7 @@ RSpec.describe TeamMembersController, type: :controller do
     describe 'PUT #update' do
       let(:team) { Fabricate :team, company: company }
       let(:other_team) { Fabricate :team, company: company }
-      let(:team_member) { Fabricate :team_member }
+      let(:team_member) { Fabricate :team_member, company: company }
       let!(:membership) { Fabricate :membership, team: team, team_member: team_member, hours_per_month: 120, start_date: 1.month.ago, end_date: nil }
 
       context 'passing valid parameters' do
@@ -254,7 +263,7 @@ RSpec.describe TeamMembersController, type: :controller do
 
     describe 'DELETE #destroy' do
       let(:team) { Fabricate :team, company: company }
-      let(:team_member) { Fabricate :team_member }
+      let(:team_member) { Fabricate :team_member, company: company }
       let!(:membership) { Fabricate :membership, team: team, team_member: team_member, hours_per_month: 120, start_date: 1.month.ago, end_date: nil }
 
       context 'with valid data' do
@@ -286,7 +295,7 @@ RSpec.describe TeamMembersController, type: :controller do
     describe 'PATCH #associate_user' do
       let(:team) { Fabricate :team, company: company }
       let(:other_team) { Fabricate :team, company: company }
-      let(:team_member) { Fabricate :team_member }
+      let(:team_member) { Fabricate :team_member, company: company }
       let!(:membership) { Fabricate :membership, team: team, team_member: team_member, hours_per_month: 120, start_date: 1.month.ago, end_date: nil }
 
       context 'passing valid parameters' do
@@ -319,7 +328,7 @@ RSpec.describe TeamMembersController, type: :controller do
     describe 'PATCH #dissociate_user' do
       let(:team) { Fabricate :team, company: company }
       let(:other_team) { Fabricate :team, company: company }
-      let(:team_member) { Fabricate :team_member }
+      let(:team_member) { Fabricate :team_member, company: company }
       let!(:membership) { Fabricate :membership, team: team, team_member: team_member, hours_per_month: 120, start_date: 1.month.ago, end_date: nil }
 
       context 'passing valid parameters' do

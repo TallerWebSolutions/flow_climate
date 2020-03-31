@@ -63,7 +63,7 @@ class TeamMembersController < AuthenticatedController
   end
 
   def assign_team_member
-    @team_member = TeamMember.find(params[:id])
+    @team_member = @company.team_members.find(params[:id])
   end
 
   def team_member_params
