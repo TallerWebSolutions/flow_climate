@@ -71,7 +71,7 @@ class PortfolioUnitsController < AuthenticatedController
   end
 
   def assign_portfolio_unit
-    @portfolio_unit = PortfolioUnit.find(params[:id])
+    @portfolio_unit = @product.portfolio_units.find(params[:id])
   end
 
   def assign_product
