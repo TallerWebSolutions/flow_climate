@@ -528,9 +528,16 @@ RSpec.describe Demand, type: :model do
 
   describe '#csv_array' do
     context 'having no stages' do
-      let!(:demand) { Fabricate :demand, business_score: 10.5, effort_downstream: 0, end_date: Time.zone.today }
+      let(:product) { Fabricate :product, name: 'Flow Climate' }
 
-      it { expect(demand.csv_array).to eq [demand.id, demand.current_stage&.name, demand.project.id, demand.external_id, demand.demand_title, demand.demand_type, demand.class_of_service, '10,5', demand.effort_downstream.to_f.to_s.gsub('.', I18n.t('number.format.separator')), demand.effort_upstream.to_f.to_s.gsub('.', I18n.t('number.format.separator')), demand.created_date&.iso8601, demand.commitment_date&.iso8601, demand.end_date&.iso8601] }
+      let(:portfolio_unit) { Fabricate :portfolio_unit, product: product, name: 'Statistics' }
+      let(:child_portfolio_unit) { Fabricate :portfolio_unit, product: product, name: 'Lead time', parent: portfolio_unit }
+
+      let!(:demand_with_portfolio_unit) { Fabricate :demand, product: product, portfolio_unit: child_portfolio_unit }
+      let!(:demand) { Fabricate :demand, product: product, business_score: 10.5, effort_downstream: 0, end_date: Time.zone.today }
+
+      it { expect(demand.csv_array).to eq [demand.id, demand.portfolio_unit_name, demand.current_stage&.name, demand.project.id, demand.external_id, demand.demand_title, demand.demand_type, demand.class_of_service, '10,5', demand.effort_downstream.to_f.to_s.gsub('.', I18n.t('number.format.separator')), demand.effort_upstream.to_f.to_s.gsub('.', I18n.t('number.format.separator')), demand.created_date&.iso8601, demand.commitment_date&.iso8601, demand.end_date&.iso8601] }
+      it { expect(demand_with_portfolio_unit.csv_array).to eq [demand_with_portfolio_unit.id, demand_with_portfolio_unit.portfolio_unit_name, demand_with_portfolio_unit.current_stage&.name, demand_with_portfolio_unit.project.id, demand_with_portfolio_unit.external_id, demand_with_portfolio_unit.demand_title, demand_with_portfolio_unit.demand_type, demand_with_portfolio_unit.class_of_service, '0,0', demand_with_portfolio_unit.effort_downstream.to_f.to_s.gsub('.', I18n.t('number.format.separator')), demand_with_portfolio_unit.effort_upstream.to_f.to_s.gsub('.', I18n.t('number.format.separator')), demand_with_portfolio_unit.created_date&.iso8601, demand_with_portfolio_unit.commitment_date&.iso8601, demand_with_portfolio_unit.end_date&.iso8601] }
     end
 
     context 'having a stage and no end date' do
@@ -541,9 +548,9 @@ RSpec.describe Demand, type: :model do
       let(:project) { Fabricate :project, products: [product] }
       let!(:stage) { Fabricate :stage, company: company, projects: [project], end_point: false, commitment_point: false, stage_stream: :downstream, order: 0 }
       let!(:demand_transition) { Fabricate :demand_transition, demand: demand, stage: stage }
-      let!(:demand) { Fabricate :demand, project: project, business_score: 10.5, effort_downstream: 0 }
+      let!(:demand) { Fabricate :demand, product: product, project: project, business_score: 10.5, effort_downstream: 0 }
 
-      it { expect(demand.csv_array).to eq [demand.id, demand.current_stage&.name, demand.project.id, demand.external_id, demand.demand_title, demand.demand_type, demand.class_of_service, '10,5', demand.effort_downstream.to_f.to_s.gsub('.', I18n.t('number.format.separator')), demand.effort_upstream.to_f.to_s.gsub('.', I18n.t('number.format.separator')), demand.created_date&.iso8601, demand.commitment_date&.iso8601, nil] }
+      it { expect(demand.csv_array).to eq [demand.id, demand.portfolio_unit_name, demand.current_stage&.name, demand.project.id, demand.external_id, demand.demand_title, demand.demand_type, demand.class_of_service, '10,5', demand.effort_downstream.to_f.to_s.gsub('.', I18n.t('number.format.separator')), demand.effort_upstream.to_f.to_s.gsub('.', I18n.t('number.format.separator')), demand.created_date&.iso8601, demand.commitment_date&.iso8601, nil] }
     end
   end
 
@@ -787,9 +794,16 @@ RSpec.describe Demand, type: :model do
   end
 
   describe '#to_hash' do
+    let(:product) { Fabricate :product, name: 'Flow Climate' }
+
+    let(:portfolio_unit) { Fabricate :portfolio_unit, product: product, name: 'Statistics' }
+    let(:child_portfolio_unit) { Fabricate :portfolio_unit, product: product, name: 'Lead time', parent: portfolio_unit }
+
+    let!(:demand_with_portfolio_unit) { Fabricate :demand, product: product, portfolio_unit: child_portfolio_unit }
     let(:demand) { Fabricate :demand, business_score: 10.5 }
 
-    it { expect(demand.to_hash).to eq(id: demand.id, external_id: demand.external_id, project_id: demand.project.id, demand_title: demand.demand_title, business_score: 10.5, effort_upstream: demand.effort_upstream, effort_downstream: demand.effort_downstream, cost_to_project: demand.cost_to_project, current_stage: demand.current_stage&.name, time_in_current_stage: demand.time_in_current_stage, partial_leadtime: demand.partial_leadtime, responsibles: demand.team_members.map { |member| { member_name: member.name, jira_account_id: member.jira_account_id } }, demand_blocks: demand.demand_blocks.map { |block| { blocker_username: block.blocker_username, block_time: block.block_time, block_reason: block.block_reason, unblock_time: block.unblock_time } }) }
+    it { expect(demand.to_hash).to eq(id: demand.id, portfolio_unit: demand.portfolio_unit_name, external_id: demand.external_id, project_id: demand.project.id, demand_title: demand.demand_title, business_score: 10.5, effort_upstream: demand.effort_upstream, effort_downstream: demand.effort_downstream, cost_to_project: demand.cost_to_project, current_stage: demand.current_stage&.name, time_in_current_stage: demand.time_in_current_stage, partial_leadtime: demand.partial_leadtime, responsibles: demand.team_members.map { |member| { member_name: member.name, jira_account_id: member.jira_account_id } }, demand_blocks: demand.demand_blocks.map { |block| { blocker_username: block.blocker_username, block_time: block.block_time, block_reason: block.block_reason, unblock_time: block.unblock_time } }) }
+    it { expect(demand_with_portfolio_unit.to_hash).to eq(id: demand_with_portfolio_unit.id, portfolio_unit: demand_with_portfolio_unit.portfolio_unit_name, external_id: demand_with_portfolio_unit.external_id, project_id: demand_with_portfolio_unit.project.id, demand_title: demand_with_portfolio_unit.demand_title, business_score: nil, effort_upstream: demand_with_portfolio_unit.effort_upstream, effort_downstream: demand_with_portfolio_unit.effort_downstream, cost_to_project: demand_with_portfolio_unit.cost_to_project, current_stage: demand_with_portfolio_unit.current_stage&.name, time_in_current_stage: demand_with_portfolio_unit.time_in_current_stage, partial_leadtime: demand_with_portfolio_unit.partial_leadtime, responsibles: demand_with_portfolio_unit.team_members.map { |member| { member_name: member.name, jira_account_id: member.jira_account_id } }, demand_blocks: demand_with_portfolio_unit.demand_blocks.map { |block| { blocker_username: block.blocker_username, block_time: block.block_time, block_reason: block.block_reason, unblock_time: block.unblock_time } }) }
   end
 
   describe '#assignees_count' do
