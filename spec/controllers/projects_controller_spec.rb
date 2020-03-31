@@ -153,7 +153,7 @@ RSpec.describe ProjectsController, type: :controller do
         end
       end
 
-      context 'passing an invalid ID' do
+      context 'invalid' do
         context 'non-existent' do
           before { get :show, params: { company_id: company, customer_id: customer, id: 'foo' } }
 
@@ -164,6 +164,15 @@ RSpec.describe ProjectsController, type: :controller do
           let(:company) { Fabricate :company, users: [] }
 
           before { get :show, params: { company_id: company, customer_id: customer, id: first_project } }
+
+          it { expect(response).to have_http_status :not_found }
+        end
+
+        context 'a different company' do
+          let(:other_company) { Fabricate :company, users: [user] }
+          let!(:project) { Fabricate :demand, company: company, product: product }
+
+          before { get :show, params: { company_id: other_company, id: project } }
 
           it { expect(response).to have_http_status :not_found }
         end
