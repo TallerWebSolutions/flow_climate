@@ -51,7 +51,7 @@ module Flow
     end
 
     def throughput_array_for_monte_carlo
-      if throughput_per_period.size >= 10
+      if (throughput_per_period.size >= 10) && throughput_per_period.reject(&:zero?).present?
         @throughput_per_period.last(10)
       else
         @products_throughput_per_period.last(10)

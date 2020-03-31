@@ -122,7 +122,7 @@ class DemandsController < AuthenticatedController
   end
 
   def start_date_to_status_report(demands)
-    demands.map(&:end_date).compact.min || Time.zone.today
+    demands.map(&:created_date).compact.min || Time.zone.today
   end
 
   def demands
