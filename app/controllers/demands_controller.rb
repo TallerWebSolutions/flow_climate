@@ -67,7 +67,7 @@ class DemandsController < AuthenticatedController
   end
 
   def demands_csv
-    @demands_in_csv = demands_from_ids.kept.order(end_date: :desc)
+    @demands_in_csv = demands.kept.order(end_date: :desc)
     attributes = %w[id portfolio_unit current_stage project_id external_id demand_title demand_type class_of_service business_score effort_downstream effort_upstream created_date commitment_date end_date]
     demands_csv = CSV.generate(headers: true) do |csv|
       csv << attributes
@@ -106,7 +106,7 @@ class DemandsController < AuthenticatedController
   end
 
   def montecarlo_dialog
-    @status_report_data = Highchart::StatusReportChartsAdapter.new(demands_from_ids, start_date_to_status_report(demands_from_ids), end_date_to_status_report(demands_from_ids), 'week')
+    @status_report_data = Highchart::StatusReportChartsAdapter.new(demands, start_date_to_status_report(demands), end_date_to_status_report(demands), 'week')
 
     @demands_left = demands.kept.not_finished
     @demands_delivered = demands.kept.finished
@@ -117,10 +117,6 @@ class DemandsController < AuthenticatedController
 
   private
 
-  def demands_from_ids
-    @demands_from_ids ||= Demand.where(id: params['demands_ids'].split(',')).kept
-  end
-
   def end_date_to_status_report(demands)
     demands.finished.map(&:end_date).max || Time.zone.today
   end
@@ -130,7 +126,7 @@ class DemandsController < AuthenticatedController
   end
 
   def demands
-    @demands ||= Demand.where(id: params[:demands_ids].split(',')).includes(:portfolio_unit).includes(:product)
+    @demands ||= @company.demands.where(id: params[:demands_ids].split(',')).includes(:portfolio_unit).includes(:product)
   end
 
   def query_demands(start_date, end_date)
@@ -151,7 +147,7 @@ class DemandsController < AuthenticatedController
   end
 
   def assign_demand
-    @demand = Demand.friendly.find(params[:id]&.downcase)
+    @demand = @company.demands.friendly.find(params[:id]&.downcase)
   end
 
   def lead_time_breakdown

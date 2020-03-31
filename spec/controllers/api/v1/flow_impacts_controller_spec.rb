@@ -3,13 +3,15 @@
 RSpec.describe Api::V1::FlowImpactsController, type: :controller do
   describe 'POST #create' do
     let(:company) { Fabricate :company }
-    let!(:project) { Fabricate :project, company: company }
+    let(:customer) { Fabricate :customer, company: company }
+    let!(:product) { Fabricate :product, customer: customer }
+    let!(:project) { Fabricate :project, company: company, products: [product] }
 
     let!(:headers) { { HTTP_API_TOKEN: company.api_token } }
 
     context 'authenticated' do
       context 'with valid parameters' do
-        let!(:demand) { Fabricate :demand, project: project }
+        let!(:demand) { Fabricate :demand, company: company, product: product, project: project }
 
         it 'creates the flow impact' do
           request.headers.merge! headers
