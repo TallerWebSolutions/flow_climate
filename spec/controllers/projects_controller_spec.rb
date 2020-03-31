@@ -112,7 +112,7 @@ RSpec.describe ProjectsController, type: :controller do
 
     describe 'GET #show' do
       let!(:product) { Fabricate :product, customer: customer }
-      let!(:first_project) { Fabricate :project, customers: [customer], products: [product], start_date: 2.weeks.ago, end_date: Time.zone.today }
+      let!(:first_project) { Fabricate :project, company: company, customers: [customer], products: [product], start_date: 2.weeks.ago, end_date: Time.zone.today }
 
       context 'having results' do
         let!(:first_alert) { Fabricate :project_risk_alert, project: first_project, created_at: 1.week.ago }
@@ -384,7 +384,7 @@ RSpec.describe ProjectsController, type: :controller do
     describe 'DELETE #destroy' do
       let(:company) { Fabricate :company, users: [user] }
       let(:customer) { Fabricate :customer, company: company }
-      let!(:project) { Fabricate :project, customers: [customer] }
+      let!(:project) { Fabricate :project, company: company, customers: [customer] }
 
       context 'passing valid ID' do
         context 'having no dependencies' do
@@ -397,7 +397,7 @@ RSpec.describe ProjectsController, type: :controller do
         end
 
         context 'having restrictive dependencies' do
-          let!(:project) { Fabricate :project, customers: [customer] }
+          let!(:project) { Fabricate :project, company: company, customers: [customer] }
 
           let!(:demand) { Fabricate :demand, project: project }
 
@@ -438,7 +438,7 @@ RSpec.describe ProjectsController, type: :controller do
       let(:company) { Fabricate :company, users: [user] }
 
       let(:customer) { Fabricate :customer, company: company }
-      let(:project) { Fabricate :project, customers: [customer] }
+      let(:project) { Fabricate :project, company: company, customers: [customer] }
 
       context 'passing valid parameters' do
         it 'finishes the project' do
@@ -477,7 +477,7 @@ RSpec.describe ProjectsController, type: :controller do
     describe 'GET #statistics' do
       let(:company) { Fabricate :company, users: [user] }
       let(:customer) { Fabricate :customer, company: company }
-      let!(:project) { Fabricate :project, customers: [customer] }
+      let!(:project) { Fabricate :project, company: company, customers: [customer] }
 
       context 'passing valid parameters' do
         before { get :statistics, params: { company_id: company, id: project }, xhr: true }
@@ -510,9 +510,9 @@ RSpec.describe ProjectsController, type: :controller do
       let!(:second_stage_in_first_project) { Fabricate :stage, company: company }
       let!(:stage_in_second_project) { Fabricate :stage, company: company }
 
-      let!(:first_project) { Fabricate :project, stages: [stage_in_first_project, second_stage_in_first_project] }
-      let!(:second_project) { Fabricate :project, stages: [stage_in_second_project] }
-      let!(:third_project) { Fabricate :project, stages: [] }
+      let!(:first_project) { Fabricate :project, company: company, stages: [stage_in_first_project, second_stage_in_first_project] }
+      let!(:second_project) { Fabricate :project, company: company, stages: [stage_in_second_project] }
+      let!(:third_project) { Fabricate :project, company: company, stages: [] }
 
       context 'passing valid parameters' do
         context 'when there is no stages set in the receiver project' do
