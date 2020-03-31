@@ -68,7 +68,7 @@ class DemandsController < AuthenticatedController
 
   def demands_csv
     @demands_in_csv = demands_from_ids.kept.order(end_date: :desc)
-    attributes = %w[id current_stage project_id external_id demand_title demand_type class_of_service business_score effort_downstream effort_upstream created_date commitment_date end_date]
+    attributes = %w[id portfolio_unit current_stage project_id external_id demand_title demand_type class_of_service business_score effort_downstream effort_upstream created_date commitment_date end_date]
     demands_csv = CSV.generate(headers: true) do |csv|
       csv << attributes
       @demands_in_csv.each { |demand| csv << demand.csv_array }

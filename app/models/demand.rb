@@ -119,6 +119,7 @@ class Demand < ApplicationRecord
   def csv_array
     [
       id,
+      portfolio_unit_name,
       current_stage_name,
       project_id,
       external_id,
@@ -137,19 +138,10 @@ class Demand < ApplicationRecord
 
   def to_hash
     {
-      id: id,
-      external_id: external_id,
-      project_id: project_id,
-      demand_title: demand_title,
-      business_score: business_score,
-      effort_upstream: effort_upstream,
-      effort_downstream: effort_downstream,
-      cost_to_project: cost_to_project,
-      current_stage: current_stage&.name,
-      time_in_current_stage: time_in_current_stage,
-      partial_leadtime: partial_leadtime,
-      responsibles: active_team_members.map(&:to_hash),
-      demand_blocks: demand_blocks.map(&:to_hash)
+      id: id, portfolio_unit: portfolio_unit_name, external_id: external_id, project_id: project_id, demand_title: demand_title,
+      business_score: business_score, effort_upstream: effort_upstream, effort_downstream: effort_downstream, cost_to_project: cost_to_project,
+      current_stage: current_stage&.name, time_in_current_stage: time_in_current_stage, partial_leadtime: partial_leadtime,
+      responsibles: active_team_members.map(&:to_hash), demand_blocks: demand_blocks.map(&:to_hash)
     }
   end
 
