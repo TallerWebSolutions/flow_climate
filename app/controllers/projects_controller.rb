@@ -182,7 +182,7 @@ class ProjectsController < AuthenticatedController
   end
 
   def assign_project
-    @project = Project.includes(:team).find(params[:id])
+    @project = @company.projects.includes(:team).find(params[:id])
   end
 
   def check_change_in_deadline!

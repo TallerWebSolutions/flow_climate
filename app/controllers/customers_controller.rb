@@ -59,7 +59,7 @@ class CustomersController < AuthenticatedController
   end
 
   def assign_customer
-    @customer = Customer.find(params[:id])
+    @customer = @company.customers.find(params[:id])
   end
 
   def customer_params

@@ -294,7 +294,7 @@ RSpec.describe Jira::JiraIssueAdapter, type: :service do
 
     context 'when the demand exists' do
       let!(:jira_custom_field_mapping) { Fabricate :jira_custom_field_mapping, jira_account: jira_account, custom_field_type: :responsibles, custom_field_machine_name: 'customfield_10024' }
-      let!(:demand) { Fabricate :demand, project: first_project, team: team, external_id: '10000' }
+      let!(:demand) { Fabricate :demand, company: company, project: first_project, team: team, external_id: '10000' }
       let!(:second_project) { Fabricate :project, company: company, team: team, customers: [customer], products: [product] }
       let!(:jira_project_config) { Fabricate :jira_project_config, jira_product_config: jira_product_config, project: second_project, fix_version_name: 'bar' }
 
@@ -337,7 +337,7 @@ RSpec.describe Jira::JiraIssueAdapter, type: :service do
       end
 
       context 'and the demand was discarded' do
-        let!(:discarded_demand) { Fabricate :demand, project: first_project, external_id: '10010', discarded_at: Time.zone.yesterday }
+        let!(:discarded_demand) { Fabricate :demand, company: company, project: first_project, external_id: '10010', discarded_at: Time.zone.yesterday }
         let!(:jira_issue) { client.Issue.build({ key: '10010', fields: { created: '2018-07-02T11:20:18.998-0300', summary: 'foo of bar', issuetype: { name: 'Story' }, customfield_10028: { value: 'Expedite' }, project: { key: 'foo' } }, changelog: { startAt: 0, maxResults: 2, total: 2, histories: [{ id: '10039', from: 'first_stage', to: 'second_stage', created: '2018-07-08T22:34:47.440-0300' }, { id: '10038', from: 'third_stage', to: 'first_stage', created: '2018-07-06T09:40:43.886-0300' }] } }.with_indifferent_access) }
 
         before { described_class.instance.process_issue!(jira_account, product, first_project, jira_issue) }

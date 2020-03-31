@@ -106,7 +106,7 @@ class ProductsController < AuthenticatedController
   end
 
   def assign_product
-    @product = Product.find(params[:id])
+    @product = @company.products.find(params[:id])
   end
 
   def assign_filter_parameters_to_charts

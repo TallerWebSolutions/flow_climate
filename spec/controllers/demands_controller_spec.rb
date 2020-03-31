@@ -88,7 +88,19 @@ RSpec.describe DemandsController, type: :controller do
     let(:customer) { Fabricate :customer, company: company }
     let(:team) { Fabricate :team, company: company }
     let(:product) { Fabricate :product, customer: customer }
-    let(:project) { Fabricate :project, customers: [customer], products: [product] }
+    let(:project) { Fabricate :project, company: company, customers: [customer], products: [product] }
+
+    shared_context 'demands for controller specs' do
+      let!(:first_demand) { Fabricate :demand, company: company, product: product, project: project, external_id: 'hhh', demand_title: 'foo', demand_type: :feature, class_of_service: :standard, created_date: 2.days.ago, commitment_date: nil, end_date: nil, effort_downstream: 20, effort_upstream: 15 }
+      let!(:second_demand) { Fabricate :demand, company: company, product: product, project: project, demand_title: 'foo bar', demand_type: :bug, class_of_service: :expedite, created_date: 1.day.ago, commitment_date: Time.zone.today, end_date: nil, effort_downstream: 0, effort_upstream: 0 }
+      let!(:third_demand) { Fabricate :demand, company: company, product: product, project: project, demand_title: 'bar foo', demand_type: :feature, class_of_service: :intangible, created_date: 5.days.ago, commitment_date: nil, end_date: 1.day.ago, effort_downstream: 0, effort_upstream: 10 }
+      let!(:fourth_demand) { Fabricate :demand, company: company, product: product, project: project, demand_title: 'xpto', demand_type: :chore, class_of_service: :standard, created_date: 10.days.ago, commitment_date: 5.days.ago, end_date: Time.zone.today, effort_downstream: 10, effort_upstream: 20 }
+
+      let!(:fifth_demand) { Fabricate :demand, company: company, product: product, project: project, demand_title: 'xpto', demand_type: :ui, class_of_service: :fixed_date, created_date: 1.month.ago, commitment_date: nil, end_date: nil, effort_downstream: 30, effort_upstream: 10 }
+      let!(:sixth_demand) { Fabricate :demand, company: company, product: product, project: project, demand_title: 'sas', demand_type: :feature, class_of_service: :standard, created_date: 1.day.ago, commitment_date: Time.zone.today, end_date: nil, effort_downstream: 10, effort_upstream: 10 }
+      let!(:seventh_demand) { Fabricate :demand, company: company, product: product, project: project, demand_title: 'sas', demand_type: :performance_improvement, class_of_service: :expedite, created_date: 2.days.ago, commitment_date: 2.days.ago, end_date: 1.day.ago, effort_downstream: 40, effort_upstream: 10 }
+      let!(:eigth_demand) { Fabricate :demand, company: company, product: product, project: project, demand_title: 'sas', demand_type: :wireframe, class_of_service: :fixed_date, created_date: 3.days.ago, commitment_date: 1.day.ago, end_date: Time.zone.today, effort_downstream: 50, effort_upstream: 60 }
+    end
 
     before { sign_in user }
 
@@ -186,29 +198,22 @@ RSpec.describe DemandsController, type: :controller do
     end
 
     describe 'DELETE #destroy' do
-      let(:project) { Fabricate :project, customers: [customer], products: [product] }
-      let!(:first_demand) { Fabricate :demand, project: project, external_id: 'hhh', demand_title: 'foo', demand_type: :feature, class_of_service: :standard, created_date: 2.days.ago, commitment_date: nil, end_date: nil, effort_downstream: 20, effort_upstream: 0 }
-      let!(:second_demand) { Fabricate :demand, project: project, demand_title: 'foo bar', demand_type: :bug, class_of_service: :expedite, created_date: 1.day.ago, commitment_date: Time.zone.today, end_date: nil, effort_downstream: 0, effort_upstream: 0 }
-      let!(:third_demand) { Fabricate :demand, project: project, demand_title: 'bar foo', demand_type: :feature, class_of_service: :intangible, created_date: 5.days.ago, commitment_date: 4.days.ago, end_date: 1.day.ago, effort_downstream: 0, effort_upstream: 10 }
-      let!(:fourth_demand) { Fabricate :demand, project: project, demand_title: 'xpto', demand_type: :chore, class_of_service: :standard, created_date: 10.days.ago, commitment_date: 5.days.ago, end_date: Time.zone.today, effort_downstream: 0, effort_upstream: 0 }
-
-      let!(:fifth_demand) { Fabricate :demand, project: project, demand_title: 'xpto', demand_type: :ui, class_of_service: :fixed_date, created_date: 1.month.ago, commitment_date: nil, end_date: nil, effort_downstream: 0, effort_upstream: 0 }
-      let!(:sixth_demand) { Fabricate :demand, project: project, demand_title: 'sas', demand_type: :feature, class_of_service: :standard, created_date: 1.day.ago, commitment_date: Time.zone.today, end_date: nil, effort_downstream: 0, effort_upstream: 0 }
-      let!(:seventh_demand) { Fabricate :demand, project: project, demand_title: 'sas', demand_type: :performance_improvement, class_of_service: :expedite, created_date: 2.days.ago, commitment_date: 2.days.ago, end_date: 1.day.ago, effort_downstream: 0, effort_upstream: 0 }
-      let!(:eigth_demand) { Fabricate :demand, project: project, demand_title: 'sas', demand_type: :wireframe, class_of_service: :fixed_date, created_date: 3.days.ago, commitment_date: 1.day.ago, end_date: Time.zone.today, effort_downstream: 0, effort_upstream: 0 }
+      include_context 'demands for controller specs'
 
       context 'passing valid IDs' do
         it 'assigns the instance variable and renders the template' do
           delete :destroy, params: { company_id: company, id: first_demand, demands_ids: Demand.all.map(&:id) }, xhr: true
+
+          expect(response).to have_http_status :ok
           expect(response).to render_template 'demands/search_demands'
           expect(first_demand.reload.discarded_at).not_to be_nil
           expect(assigns(:start_date)).to eq 3.months.ago.to_date
           expect(assigns(:end_date)).to eq Time.zone.today
           expect(assigns(:demands).map(&:id)).to match_array [first_demand.id, second_demand.id, third_demand.id, fourth_demand.id, fifth_demand.id, sixth_demand.id, seventh_demand.id, eigth_demand.id]
           expect(assigns(:confidence_95_leadtime)).to be_within(0.3).of(4.3)
-          expect(assigns(:confidence_80_leadtime)).to be_within(0.3).of(3.6)
-          expect(assigns(:confidence_65_leadtime)).to be_within(0.3).of(2.9)
-          expect(assigns(:avg_work_hours_per_demand).to_f).to eq 3.75
+          expect(assigns(:confidence_80_leadtime)).to be_within(0.3).of(3.2)
+          expect(assigns(:confidence_65_leadtime)).to be_within(0.3).of(2.0)
+          expect(assigns(:avg_work_hours_per_demand).to_f).to eq 36.875
         end
       end
 
@@ -230,11 +235,7 @@ RSpec.describe DemandsController, type: :controller do
     end
 
     describe 'GET #edit' do
-      let(:company) { Fabricate :company, users: [user] }
-
-      let(:customer) { Fabricate :customer, company: company }
-      let(:project) { Fabricate :project, customers: [customer] }
-      let!(:demand) { Fabricate :demand }
+      let!(:demand) { Fabricate :demand, company: company, product: product, project: project }
 
       context 'valid parameters' do
         before { get :edit, params: { company_id: company, project_id: project, id: demand, demands_ids: Demand.all.map(&:id) }, xhr: true }
@@ -285,14 +286,10 @@ RSpec.describe DemandsController, type: :controller do
 
       let(:company) { Fabricate :company, users: [user] }
 
-      let(:team) { Fabricate :team, company: company }
-      let!(:team_member) { Fabricate(:team_member, monthly_payment: 100) }
-      let!(:membership) { Fabricate :membership, team: team, team_member: team_member, hours_per_month: 20, start_date: 1.month.ago, end_date: nil }
-
       let(:customer) { Fabricate :customer, company: company }
       let(:product) { Fabricate :product, customer: customer }
-      let(:project) { Fabricate :project, customers: [customer], products: [product] }
-      let!(:demand) { Fabricate :demand, project: project, created_date: created_date }
+      let(:project) { Fabricate :project, company: company, customers: [customer], products: [product] }
+      let!(:demand) { Fabricate :demand, company: company, product: product, project: project, created_date: created_date }
 
       context 'passing valid parameters' do
         it 'updates the demand and redirects to projects index' do
@@ -346,12 +343,7 @@ RSpec.describe DemandsController, type: :controller do
     end
 
     describe 'GET #show' do
-      let(:company) { Fabricate :company, users: [user] }
-      let(:customer) { Fabricate :customer, company: company }
-      let(:product) { Fabricate :product, customer: customer }
-      let!(:project) { Fabricate :project, customers: [product.customer], products: [product], end_date: 5.days.from_now }
-      let!(:first_demand) { Fabricate :demand, product: product, project: project, commitment_date: 2.days.ago, end_date: 1.day.ago }
-      let!(:second_demand) { Fabricate :demand, product: product, project: project, commitment_date: 3.days.ago, end_date: Time.zone.today }
+      include_context 'demands for controller specs'
 
       context 'passing a valid ID' do
         context 'with data' do
@@ -362,7 +354,7 @@ RSpec.describe DemandsController, type: :controller do
           let!(:second_block) { Fabricate :demand_block, demand: first_demand, block_time: 2.days.ago }
           let!(:out_block) { Fabricate :demand_block, demand: second_demand }
 
-          before { get :show, params: { company_id: company, project_id: project, id: first_demand } }
+          before { get :show, params: { company_id: company, id: first_demand } }
 
           it 'assigns the instance variable and renders the template' do
             expect(response).to render_template :show
@@ -371,14 +363,14 @@ RSpec.describe DemandsController, type: :controller do
             expect(assigns(:demand_blocks)).to eq [second_block, first_block]
             expect(assigns(:queue_percentage)).to eq 0
             expect(assigns(:touch_percentage)).to eq 100
-            expect(assigns(:upstream_percentage)).to eq 55.55555555555556
-            expect(assigns(:downstream_percentage)).to eq 44.44444444444444
+            expect(assigns(:upstream_percentage)).to eq 42.857142857142854
+            expect(assigns(:downstream_percentage)).to eq 57.142857142857146
             expect(assigns(:demand_comments)).to eq [other_demand_comment, demand_comment]
             expect(assigns(:lead_time_breakdown)).to eq({})
           end
         end
 
-        context 'without data' do
+        context 'without comments nor blocks' do
           let!(:demand) { Fabricate :demand, project: project }
 
           before { get :show, params: { company_id: company, id: first_demand } }
@@ -389,8 +381,8 @@ RSpec.describe DemandsController, type: :controller do
             expect(assigns(:demand_blocks)).to eq []
             expect(assigns(:queue_percentage)).to eq 0
             expect(assigns(:touch_percentage)).to eq 100
-            expect(assigns(:upstream_percentage)).to eq 55.55555555555556
-            expect(assigns(:downstream_percentage)).to eq 44.44444444444444
+            expect(assigns(:upstream_percentage)).to eq 42.857142857142854
+            expect(assigns(:downstream_percentage)).to eq 57.142857142857146
             expect(assigns(:demand_comments)).to eq []
             expect(assigns(:lead_time_breakdown)).to eq({})
           end
@@ -406,8 +398,18 @@ RSpec.describe DemandsController, type: :controller do
 
         context 'not permitted' do
           let(:company) { Fabricate :company, users: [] }
+          let(:demand) { Fabricate :demand, company: company }
 
           before { get :show, params: { company_id: company, id: first_demand } }
+
+          it { expect(response).to have_http_status :not_found }
+        end
+
+        context 'a different company' do
+          let(:other_company) { Fabricate :company, users: [user] }
+          let!(:demand) { Fabricate :demand, company: company, product: product }
+
+          before { get :show, params: { company_id: other_company, id: demand } }
 
           it { expect(response).to have_http_status :not_found }
         end
@@ -415,14 +417,9 @@ RSpec.describe DemandsController, type: :controller do
     end
 
     describe 'PUT #synchronize_jira' do
-      let(:company) { Fabricate :company, users: [user] }
+      include_context 'demands for controller specs'
 
-      let(:customer) { Fabricate :customer, company: company }
-      let(:other_customer) { Fabricate :customer, company: company }
-      let(:project) { Fabricate :project, customers: [customer] }
-      let(:other_project) { Fabricate :project, customers: [other_customer] }
       let!(:jira_project_config) { Fabricate :jira_project_config, project: project }
-      let!(:demand) { Fabricate :demand, project: project }
 
       let(:first_card_response) { { data: { card: { id: '5140999', assignees: [{ id: '101381', username: 'xpto' }, { id: '101381', username: 'xpto' }, { id: '101382', username: 'bla' }, { id: '101321', username: 'mambo' }], comments: [{ created_at: '2018-02-22T18:39:46-03:00', author: { username: 'sbbrubles' }, text: '[BLOCKED]: xpto of bla having foo.' }], fields: [{ name: 'Descrição da pesquisa', value: 'teste' }, { name: 'Title', value: 'Página dos colunistas' }, { name: 'Type', value: 'bUG' }, { name: 'JiraKey', value: 'PD-46' }, { name: 'Class of Service', value: 'Padrão' }, { name: 'Project', value: other_project.name }], phases_history: [{ phase: { id: '2481595' }, firstTimeIn: '2018-02-22T17:09:58-03:00', lastTimeOut: '2018-02-26T17:09:58-03:00' }, { phase: { id: '3481595' }, firstTimeIn: '2018-02-15T17:10:40-03:00', lastTimeOut: '2018-02-17T17:10:40-03:00' }, { phase: { id: '2481597' }, firstTimeIn: '2018-02-27T17:09:58-03:00', lastTimeOut: nil }], pipe: { id: '356355' }, url: 'http://app.jira.com/pipes/356355#cards/5140999' } } }.with_indifferent_access }
 
@@ -432,9 +429,9 @@ RSpec.describe DemandsController, type: :controller do
 
           it 'calls the services and the reader' do
             expect(Jira::ProcessJiraIssueJob).to receive(:perform_later)
-            put :synchronize_jira, params: { company_id: company, project_id: project, id: demand }
-            expect(response).to redirect_to company_demand_path(company, demand)
-            expect(demand.reload.project).to eq project
+            put :synchronize_jira, params: { company_id: company, project_id: project, id: first_demand }
+            expect(response).to redirect_to company_demand_path(company, first_demand)
+            expect(first_demand.reload.project).to eq project
             expect(flash[:notice]).to eq I18n.t('general.enqueued')
           end
         end
@@ -448,14 +445,14 @@ RSpec.describe DemandsController, type: :controller do
         end
 
         context 'project' do
-          before { put :synchronize_jira, params: { company_id: company, project_id: 'foo', id: demand } }
+          before { put :synchronize_jira, params: { company_id: company, project_id: 'foo', id: first_demand } }
 
           it { expect(response).to have_http_status :not_found }
         end
 
         context 'company' do
           context 'non-existent' do
-            before { put :synchronize_jira, params: { company_id: 'foo', project_id: project, id: demand } }
+            before { put :synchronize_jira, params: { company_id: 'foo', project_id: project, id: first_demand } }
 
             it { expect(response).to have_http_status :not_found }
           end
@@ -463,7 +460,7 @@ RSpec.describe DemandsController, type: :controller do
           context 'not-permitted' do
             let(:company) { Fabricate :company, users: [] }
 
-            before { put :synchronize_jira, params: { company_id: company, project_id: project, id: demand } }
+            before { put :synchronize_jira, params: { company_id: company, project_id: project, id: first_demand } }
 
             it { expect(response).to have_http_status :not_found }
           end
@@ -472,15 +469,11 @@ RSpec.describe DemandsController, type: :controller do
     end
 
     describe 'GET #demands_csv' do
-      let(:company) { Fabricate :company, users: [user] }
-
-      let(:customer) { Fabricate :customer, company: company }
-      let(:project) { Fabricate :project, customers: [customer] }
-      let!(:demand) { Fabricate :demand, project: project, end_date: Time.zone.today }
+      let!(:demand) { Fabricate :demand, company: company, product: product, project: project, end_date: Time.zone.today }
       let!(:stage) { Fabricate :stage, company: company, projects: [project], end_point: false, commitment_point: false, stage_stream: :downstream, order: 0 }
       let!(:end_stage) { Fabricate :stage, company: company, projects: [project], commitment_point: false, end_point: true, order: 1, stage_stream: :downstream }
       let!(:demand_transition) { Fabricate :demand_transition, demand: demand, stage: end_stage }
-      let!(:deleted_demand) { Fabricate :demand, project: project, end_date: Time.zone.today, discarded_at: Time.zone.yesterday }
+      let!(:deleted_demand) { Fabricate :demand, company: company, product: product, project: project, end_date: Time.zone.today, discarded_at: Time.zone.yesterday }
 
       context 'valid parameters' do
         it 'calls the to_csv and responds success' do
@@ -531,10 +524,10 @@ RSpec.describe DemandsController, type: :controller do
           let(:first_project) { Fabricate :project, customers: [customer], products: [product], start_date: 3.days.ago, end_date: 1.day.from_now, status: :executing }
           let(:second_project) { Fabricate :project, customers: [customer], products: [product], start_date: 3.days.ago, end_date: 1.day.from_now, status: :finished }
 
-          let!(:first_demand) { Fabricate :demand, project: first_project, created_date: 4.days.ago, commitment_date: 1.day.ago, end_date: Time.zone.now }
-          let!(:second_demand) { Fabricate :demand, project: second_project, created_date: 1.day.ago, commitment_date: 3.hours.ago, end_date: Time.zone.now }
+          let!(:first_demand) { Fabricate :demand, company: company, product: product, project: first_project, created_date: 4.days.ago, commitment_date: 1.day.ago, end_date: Time.zone.now }
+          let!(:second_demand) { Fabricate :demand, company: company, product: product, project: second_project, created_date: 1.day.ago, commitment_date: 3.hours.ago, end_date: Time.zone.now }
 
-          let!(:third_demand) { Fabricate :demand, project: second_project, created_date: 2.days.ago, commitment_date: 3.hours.ago, end_date: Time.zone.now, discarded_at: Time.zone.now }
+          let!(:third_demand) { Fabricate :demand, company: company, product: product, project: second_project, created_date: 2.days.ago, commitment_date: 3.hours.ago, end_date: Time.zone.now, discarded_at: Time.zone.now }
 
           it 'builds the operation report and respond the JS render the template' do
             get :demands_tab, params: { company_id: company, demands_ids: Demand.all.map(&:id).to_csv, period: :all }, xhr: true
@@ -585,15 +578,15 @@ RSpec.describe DemandsController, type: :controller do
 
       context 'passing valid parameters' do
         context 'having data' do
-          let!(:first_demand) { Fabricate :demand, project: first_project, external_id: 'hhh', demand_title: 'foo', demand_type: :feature, class_of_service: :standard, created_date: 2.days.ago, commitment_date: nil, end_date: nil, effort_downstream: 20, effort_upstream: 0 }
-          let!(:second_demand) { Fabricate :demand, project: first_project, demand_title: 'foo bar', demand_type: :bug, class_of_service: :expedite, created_date: 1.day.ago, commitment_date: Time.zone.today, end_date: nil, effort_downstream: 0, effort_upstream: 0 }
-          let!(:third_demand) { Fabricate :demand, project: first_project, demand_title: 'bar foo', demand_type: :feature, class_of_service: :intangible, created_date: 5.days.ago, commitment_date: 4.days.ago, end_date: 1.day.ago, effort_downstream: 0, effort_upstream: 10 }
-          let!(:fourth_demand) { Fabricate :demand, project: first_project, demand_title: 'xpto', demand_type: :chore, class_of_service: :standard, created_date: 10.days.ago, commitment_date: 5.days.ago, end_date: Time.zone.today, effort_downstream: 0, effort_upstream: 0 }
+          let!(:first_demand) { Fabricate :demand, company: company, product: product, project: first_project, external_id: 'hhh', demand_title: 'foo', demand_type: :feature, class_of_service: :standard, created_date: 2.days.ago, commitment_date: nil, end_date: nil, effort_downstream: 20, effort_upstream: 0 }
+          let!(:second_demand) { Fabricate :demand, company: company, product: product, project: first_project, demand_title: 'foo bar', demand_type: :bug, class_of_service: :expedite, created_date: 1.day.ago, commitment_date: Time.zone.today, end_date: nil, effort_downstream: 0, effort_upstream: 0 }
+          let!(:third_demand) { Fabricate :demand, company: company, product: product, project: first_project, demand_title: 'bar foo', demand_type: :feature, class_of_service: :intangible, created_date: 5.days.ago, commitment_date: 4.days.ago, end_date: 1.day.ago, effort_downstream: 0, effort_upstream: 10 }
+          let!(:fourth_demand) { Fabricate :demand, company: company, product: product, project: first_project, demand_title: 'xpto', demand_type: :chore, class_of_service: :standard, created_date: 10.days.ago, commitment_date: 5.days.ago, end_date: Time.zone.today, effort_downstream: 0, effort_upstream: 0 }
 
-          let!(:fifth_demand) { Fabricate :demand, project: second_project, demand_title: 'xpto', demand_type: :ui, class_of_service: :fixed_date, created_date: 1.month.ago, commitment_date: nil, end_date: nil, effort_downstream: 0, effort_upstream: 0 }
-          let!(:sixth_demand) { Fabricate :demand, project: second_project, demand_title: 'sas', demand_type: :feature, class_of_service: :standard, created_date: 1.day.ago, commitment_date: Time.zone.today, end_date: nil, effort_downstream: 0, effort_upstream: 0 }
-          let!(:seventh_demand) { Fabricate :demand, project: second_project, demand_title: 'sas', demand_type: :performance_improvement, class_of_service: :expedite, created_date: 2.days.ago, commitment_date: 2.days.ago, end_date: 1.day.ago, effort_downstream: 0, effort_upstream: 0 }
-          let!(:eigth_demand) { Fabricate :demand, project: second_project, demand_title: 'sas', demand_type: :wireframe, class_of_service: :fixed_date, created_date: 3.days.ago, commitment_date: 1.day.ago, end_date: Time.zone.today, effort_downstream: 0, effort_upstream: 0 }
+          let!(:fifth_demand) { Fabricate :demand, company: company, product: product, project: second_project, demand_title: 'xpto', demand_type: :ui, class_of_service: :fixed_date, created_date: 1.month.ago, commitment_date: nil, end_date: nil, effort_downstream: 0, effort_upstream: 0 }
+          let!(:sixth_demand) { Fabricate :demand, company: company, product: product, project: second_project, demand_title: 'sas', demand_type: :feature, class_of_service: :standard, created_date: 1.day.ago, commitment_date: Time.zone.today, end_date: nil, effort_downstream: 0, effort_upstream: 0 }
+          let!(:seventh_demand) { Fabricate :demand, company: company, product: product, project: second_project, demand_title: 'sas', demand_type: :performance_improvement, class_of_service: :expedite, created_date: 2.days.ago, commitment_date: 2.days.ago, end_date: 1.day.ago, effort_downstream: 0, effort_upstream: 0 }
+          let!(:eigth_demand) { Fabricate :demand, company: company, product: product, project: second_project, demand_title: 'sas', demand_type: :wireframe, class_of_service: :fixed_date, created_date: 3.days.ago, commitment_date: 1.day.ago, end_date: Time.zone.today, effort_downstream: 0, effort_upstream: 0 }
 
           let!(:demand_block) { Fabricate :demand_block, demand: first_demand }
 
@@ -875,13 +868,14 @@ RSpec.describe DemandsController, type: :controller do
     end
 
     describe 'DELETE #destroy_physically' do
-      let(:project) { Fabricate :project, customers: [customer], products: [product] }
+      let(:project) { Fabricate :project, company: company, customers: [customer], products: [product] }
 
-      let(:demand) { Fabricate :demand, project: project }
+      let!(:demand) { Fabricate :demand, company: company, product: product, project: project }
 
       context 'passing valid IDs' do
         it 'assigns the instance variable and renders the template' do
           delete :destroy_physically, params: { company_id: company, id: demand }, xhr: true
+
           expect(response).to render_template 'demands/destroy_physically'
           expect(Demand.all.count).to eq 0
         end
