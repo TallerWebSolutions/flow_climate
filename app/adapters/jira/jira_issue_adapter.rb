@@ -64,8 +64,11 @@ module Jira
     def read_transitions!(demand, issue_changelog)
       demand.demand_transitions.map(&:destroy)
       backlog_transition_date = demand.created_date
-      backlog_stage = demand.first_stage_in_the_flow.integration_id
-      create_from_transition(demand, backlog_stage, backlog_transition_date)
+
+      first_stage_in_the_flow = demand.first_stage_in_the_flow
+      return if first_stage_in_the_flow.blank?
+
+      create_from_transition(demand, first_stage_in_the_flow.integration_id, backlog_transition_date)
 
       read_transition_history(demand, issue_changelog)
     end
@@ -93,14 +96,14 @@ module Jira
 
     def create_from_transition(demand, from_stage_id, from_transition_date)
       stage_from = demand.project.stages.find_by(integration_id: from_stage_id)
-      DemandTransition.where(demand: demand, stage: stage_from, last_time_in: from_transition_date).first_or_create
+      DemandTransition.find_or_create_by(demand: demand, stage: stage_from, last_time_in: from_transition_date)
     end
 
     def create_to_transition(demand, from_transistion, to_stage_id, to_transition_date)
       from_transistion.update(last_time_out: to_transition_date)
 
       stage_to = demand.project.stages.find_by(integration_id: to_stage_id)
-      DemandTransition.where(demand: demand, stage: stage_to, last_time_in: to_transition_date).first_or_create
+      DemandTransition.find_or_create_by(demand: demand, stage: stage_to, last_time_in: to_transition_date)
     end
 
     def read_comments(demand, jira_issue_attrs)
@@ -165,8 +168,10 @@ module Jira
     end
 
     def read_assigned_responsibles(demand, team, history_date, responsible_name)
-      team_member = TeamMember.where(company: team.company).where('lower(name) = :member_name', member_name: responsible_name.downcase).first_or_initialize
-      assignment = ItemAssignment.where(demand: demand, team_member: team_member, finish_time: nil).first_or_initialize
+      team_member = TeamMember.where(company: team.company).where('lower(name) = :member_name', member_name: responsible_name.downcase).first
+      team_member = TeamMember.create(company: team.company, name: responsible_name.downcase) if team_member.blank?
+
+      assignment = ItemAssignment.find_or_initialize_by(demand: demand, team_member: team_member, finish_time: nil)
       assignment.update(start_time: history_date) unless assignment.persisted?
     end
 

@@ -118,9 +118,10 @@ RSpec.describe Jira::JiraIssueAdapter, type: :service do
 
         let!(:jira_issue) { client.Issue.build({ key: '10000', summary: 'foo of bar', fields: { created: '2018-07-03T11:20:18.998-0300', issuetype: { name: 'Bug' }, project: { key: 'foo' }, customfield_10024: [{ name: 'foo' }, { name: 'bar' }] }, changelog: { startAt: 0, maxResults: 2, total: 2, histories: [{ id: '10432', created: '2018-07-06T09:40:43.886-0300', items: [{ field: 'Responsible', fieldId: 'customfield_10024', from: "[#{team_member.name}]", to: "['foo do xpto']", toString: "['foo do xpto']" }] }] } }.with_indifferent_access) }
 
-        it 'creates the demand without members' do
+        it 'creates the demand and creates the member' do
           described_class.instance.process_issue!(jira_account, product, first_project, jira_issue)
-          expect(Demand.last.team_members).to be_empty
+          expect(Demand.last.team_members.size).to eq 1
+          expect(Demand.last.team_members).not_to eq team_member
         end
       end
 
@@ -357,18 +358,30 @@ RSpec.describe Jira::JiraIssueAdapter, type: :service do
           expect(Demand.last.created_date).to eq Time.zone.parse('2018-07-02T11:20:18.998-0300')
         end
       end
-    end
 
-    context 'with no transitions' do
-      let!(:jira_issue) { client.Issue.build({ key: '10000', fields: { created: '2018-07-02T11:20:18.998-0300', summary: 'foo of bar', issuetype: { name: 'Story' }, customfield_10028: { value: 'Expedite' }, project: { key: 'foo' }, status: { id: backlog.integration_id } }, changelog: { startAt: 0, maxResults: 2, total: 2, histories: [] } }.with_indifferent_access) }
+      context 'with no transitions' do
+        let!(:jira_issue) { client.Issue.build({ key: '10000', fields: { created: '2018-07-02T11:20:18.998-0300', summary: 'foo of bar', issuetype: { name: 'Story' }, customfield_10028: { value: 'Expedite' }, project: { key: 'foo' }, status: { id: backlog.integration_id } }, changelog: { startAt: 0, maxResults: 2, total: 2, histories: [] } }.with_indifferent_access) }
 
-      it 'adds the transition to the status using the created date' do
-        described_class.instance.process_issue!(jira_account, product, first_project, jira_issue)
+        it 'adds the transition to the status using the created date' do
+          described_class.instance.process_issue!(jira_account, product, first_project, jira_issue)
 
-        backlog_updated = backlog.reload
-        expect(backlog_updated.demand_transitions.count).to eq 1
-        expect(backlog_updated.demand_transitions.first.last_time_in).to eq Time.zone.parse('2018-07-02T11:20:18.998-0300')
-        expect(backlog_updated.demand_transitions.first.last_time_out).to eq nil
+          backlog_updated = backlog.reload
+          expect(backlog_updated.demand_transitions.count).to eq 1
+          expect(backlog_updated.demand_transitions.first.last_time_in).to eq Time.zone.parse('2018-07-02T11:20:18.998-0300')
+          expect(backlog_updated.demand_transitions.first.last_time_out).to eq nil
+        end
+      end
+
+      context 'with no stages either in the team nor in the project' do
+        let!(:demand) { Fabricate :demand, external_id: 'xpto do foo' }
+        let!(:project) { Fabricate :project, company: company }
+        let!(:jira_issue) { client.Issue.build({ key: 'xpto do foo', summary: 'foo of bar', fields: { created: '2018-07-02T11:20:18.998-0300', issuetype: { name: 'Story' }, customfield_10028: { value: 'Expedite' }, project: { key: 'foo' }, customfield_10024: [{ name: 'foo' }, { name: 'bar' }] }, changelog: { startAt: 0, maxResults: 2, total: 2, histories: [{ id: '10041', created: '2018-07-09T23:34:47.440-0300', items: [{ field: 'status', from: 'first_stage', to: 'second_stage' }] }, { id: '10040', created: '2018-07-09T22:34:47.440-0300', items: [{ field: 'status', from: 'second_stage', to: 'first_stage' }] }, { id: '10039', created: '2018-07-08T22:34:47.440-0300', items: [{ field: 'status', from: 'first_stage', to: 'second_stage' }] }, { id: '10038', created: '2018-07-06T09:40:43.886-0300', items: [{ field: 'status', from: 'third_stage', to: 'first_stage' }] }, { id: '10055', created: '2018-07-06T09:40:43.886-0300', items: [{ field: 'foo', from: 'third_stage', to: 'first_stage' }] }] } }.with_indifferent_access) }
+
+        it 'creates the demand without the transitions' do
+          described_class.instance.process_issue!(jira_account, product, project, jira_issue)
+          demand_updated = demand.reload
+          expect(demand_updated.demand_transitions).to eq []
+        end
       end
     end
   end

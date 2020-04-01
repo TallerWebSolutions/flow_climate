@@ -237,7 +237,10 @@ class Demand < ApplicationRecord
   end
 
   def first_stage_in_the_flow
-    team.stages.where('stages.order >= 0').order(:order).first
+    first_stage = team.stages.where('stages.order >= 0').order(:order).first
+    return first_stage if first_stage.present?
+
+    project.stages.where('stages.order >= 0').order(:order).first
   end
 
   private
