@@ -118,9 +118,10 @@ RSpec.describe Jira::JiraIssueAdapter, type: :service do
 
         let!(:jira_issue) { client.Issue.build({ key: '10000', summary: 'foo of bar', fields: { created: '2018-07-03T11:20:18.998-0300', issuetype: { name: 'Bug' }, project: { key: 'foo' }, customfield_10024: [{ name: 'foo' }, { name: 'bar' }] }, changelog: { startAt: 0, maxResults: 2, total: 2, histories: [{ id: '10432', created: '2018-07-06T09:40:43.886-0300', items: [{ field: 'Responsible', fieldId: 'customfield_10024', from: "[#{team_member.name}]", to: "['foo do xpto']", toString: "['foo do xpto']" }] }] } }.with_indifferent_access) }
 
-        it 'creates the demand without members' do
+        it 'creates the demand and creates the member' do
           described_class.instance.process_issue!(jira_account, product, first_project, jira_issue)
-          expect(Demand.last.team_members).to be_empty
+          expect(Demand.last.team_members.size).to eq 1
+          expect(Demand.last.team_members).not_to eq team_member
         end
       end
 
