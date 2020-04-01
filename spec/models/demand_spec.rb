@@ -878,10 +878,21 @@ RSpec.describe Demand, type: :model do
     let!(:second_stage) { Fabricate :stage, teams: [team], stage_stream: :upstream, order: 1 }
     let!(:third_stage) { Fabricate :stage, teams: [team], stage_stream: :upstream, order: -1 }
 
-    let!(:demand) { Fabricate :demand, team: team }
-    let!(:other_demand) { Fabricate :demand }
+    context 'with stages' do
+      let!(:demand) { Fabricate :demand, team: team }
+      let!(:other_demand) { Fabricate :demand }
 
-    it { expect(demand.first_stage_in_the_flow).to eq first_stage }
-    it { expect(other_demand.first_stage_in_the_flow).to be_nil }
+      it { expect(demand.first_stage_in_the_flow).to eq first_stage }
+      it { expect(other_demand.first_stage_in_the_flow).to be_nil }
+    end
+
+    context 'with no stages' do
+      let!(:project) { Fabricate :project, team: team, stages: [first_stage, second_stage, third_stage] }
+      let!(:demand) { Fabricate :demand, team: team, project: project }
+      let!(:other_demand) { Fabricate :demand }
+
+      it { expect(demand.first_stage_in_the_flow).to eq first_stage }
+      it { expect(other_demand.first_stage_in_the_flow).to be_nil }
+    end
   end
 end

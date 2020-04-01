@@ -64,8 +64,11 @@ module Jira
     def read_transitions!(demand, issue_changelog)
       demand.demand_transitions.map(&:destroy)
       backlog_transition_date = demand.created_date
-      backlog_stage = demand.first_stage_in_the_flow.integration_id
-      create_from_transition(demand, backlog_stage, backlog_transition_date)
+
+      first_stage_in_the_flow = demand.first_stage_in_the_flow
+      return if first_stage_in_the_flow.blank?
+
+      create_from_transition(demand, first_stage_in_the_flow.integration_id, backlog_transition_date)
 
       read_transition_history(demand, issue_changelog)
     end
