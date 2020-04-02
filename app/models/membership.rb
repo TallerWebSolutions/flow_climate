@@ -35,6 +35,7 @@ class Membership < ApplicationRecord
   validate :active_team_member_unique
 
   scope :active, -> { where('memberships.end_date IS NULL') }
+  scope :inactive, -> { where('memberships.end_date IS NOT NULL') }
 
   delegate :name, to: :team_member, prefix: true
   delegate :jira_account_id, to: :team_member
@@ -86,7 +87,7 @@ class Membership < ApplicationRecord
 
   def active_team_member_unique
     existent_memberships = Membership.where(team: team, team_member: team_member, end_date: nil)
-    return if existent_memberships == [self]
+    return if existent_memberships == [self] || end_date.present?
 
     errors.add(:team_member, I18n.t('activerecord.errors.models.membership.team_member.already_existent_active')) if existent_memberships.present?
   end

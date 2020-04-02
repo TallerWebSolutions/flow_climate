@@ -1122,6 +1122,9 @@ en:
       title: "New Membership"
     edit:
       title: "New Membership"
+    index:
+      search:
+        actives_members_checkbox: "active memberships"
   risk_review:
     attributes:
       validations:

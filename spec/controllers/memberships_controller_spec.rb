@@ -37,6 +37,12 @@ RSpec.describe MembershipsController, type: :controller do
 
       it { expect(response).to redirect_to new_user_session_path }
     end
+
+    describe 'GET #search_memberships' do
+      before { get :search_memberships, params: { company_id: 'xpto', team_id: 'bla', id: 'foo' } }
+
+      it { expect(response).to redirect_to new_user_session_path }
+    end
   end
 
   context 'authenticated' do
@@ -49,11 +55,13 @@ RSpec.describe MembershipsController, type: :controller do
     let(:company) { Fabricate :company, users: [user] }
     let(:team) { Fabricate :team, company: company }
 
-    let!(:team_member) { Fabricate :team_member, company: company }
-    let!(:other_team_member) { Fabricate :team_member, company: company }
+    let!(:team_member) { Fabricate :team_member, name: 'ddd', company: company }
+    let!(:other_team_member) { Fabricate :team_member, name: 'aaa', company: company }
 
     let!(:membership) { Fabricate :membership, team: team, team_member: team_member, start_date: 2.days.ago, end_date: nil }
-    let!(:other_membership) { Fabricate :membership, team: team, team_member: other_team_member, start_date: 3.days.ago, end_date: Time.zone.today }
+    let!(:other_membership) { Fabricate :membership, team: team, team_member: other_team_member, start_date: 3.days.ago, end_date: nil }
+
+    let!(:inactive_membership) { Fabricate :membership, team: team, team_member: other_team_member, start_date: 1.day.ago, end_date: Time.zone.today }
 
     describe 'GET #new' do
       context 'valid parameters' do
@@ -102,7 +110,7 @@ RSpec.describe MembershipsController, type: :controller do
           expect(assigns(:membership).team).to eq team
           expect(assigns(:membership).team_member).to eq new_team_member
           expect(assigns(:membership).member_role).to eq 'client'
-          expect(assigns(:memberships)).to eq team.reload.memberships.sort_by(&:team_member_name)
+          expect(assigns(:memberships).size).to eq 4
         end
       end
 
@@ -110,7 +118,7 @@ RSpec.describe MembershipsController, type: :controller do
         before { post :create, params: { company_id: company, team_id: team, membership: { team_member_id: '', member_role: nil } }, xhr: true }
 
         it 'does not create the membership and re-render the template with the errors' do
-          expect(Membership.all.count).to eq 2
+          expect(Membership.all.count).to eq 3
           expect(response).to render_template 'memberships/create'
           expect(assigns(:membership).errors.full_messages).to eq ['Team member não pode ficar em branco', 'Início não pode ficar em branco']
         end
@@ -158,22 +166,16 @@ RSpec.describe MembershipsController, type: :controller do
     end
 
     describe 'PUT #update' do
-      let(:team) { Fabricate :team, company: company }
-      let(:other_team) { Fabricate :team, company: company }
-
-      let(:team_member) { Fabricate :team_member, company: company }
-      let(:other_team_member) { Fabricate :team_member, company: company }
-
-      let!(:membership) { Fabricate :membership, team: team, team_member: team_member }
+      let!(:no_memberships_team_member) { Fabricate :team_member, name: 'ttt', company: company }
 
       context 'passing valid parameters' do
-        before { put :update, params: { company_id: company, team_id: team, id: membership, membership: { member_role: :manager, team_member_id: other_team_member.id } }, xhr: true }
+        before { put :update, params: { company_id: company, team_id: team, id: membership, membership: { member_role: :manager, team_member_id: no_memberships_team_member.id } }, xhr: true }
 
         it 'updates the membership and renders the template' do
           membership_updated = membership.reload
           expect(membership_updated.member_role).to eq 'manager'
-          expect(membership_updated.team_member).to eq other_team_member
-          expect(assigns(:memberships)).to eq team.reload.memberships.sort_by(&:team_member_name)
+          expect(membership_updated.team_member).to eq no_memberships_team_member
+          expect(assigns(:memberships)).to eq [other_membership, inactive_membership, membership]
           expect(response).to render_template 'memberships/update'
         end
       end
@@ -211,7 +213,7 @@ RSpec.describe MembershipsController, type: :controller do
         it 'deletes the membership and renders the template' do
           delete :destroy, params: { company_id: company, team_id: team, id: membership }, xhr: true
 
-          expect(Membership.all.count).to eq 1
+          expect(Membership.all.count).to eq 2
           expect(response).to render_template 'memberships/destroy'
         end
       end
@@ -255,6 +257,59 @@ RSpec.describe MembershipsController, type: :controller do
           let(:company) { Fabricate :company, users: [] }
 
           before { get :index, params: { company_id: company, team_id: team }, xhr: true }
+
+          it { expect(response).to have_http_status :not_found }
+        end
+      end
+    end
+
+    describe 'GET #search_memberships' do
+      context 'valid parameters' do
+        context 'with no search parameters' do
+          before { get :search_memberships, params: { company_id: company, team_id: team }, xhr: true }
+
+          it 'searches for the team members and renders the template' do
+            expect(response).to render_template 'memberships/search_memberships'
+            expect(assigns(:memberships)).to eq [other_membership, inactive_membership, membership]
+          end
+        end
+
+        context 'with active status true' do
+          before { get :search_memberships, params: { company_id: company, team_id: team, membership_status: 'true' }, xhr: true }
+
+          it 'searches for the team members and renders the template' do
+            expect(response).to render_template 'memberships/search_memberships'
+            expect(assigns(:memberships)).to eq [other_membership, membership]
+          end
+        end
+
+        context 'with active status false' do
+          before { get :search_memberships, params: { company_id: company, team_id: team, membership_status: 'false' }, xhr: true }
+
+          it 'searches for the team members and renders the template' do
+            expect(response).to render_template 'memberships/search_memberships'
+            expect(assigns(:memberships)).to eq [inactive_membership]
+          end
+        end
+      end
+
+      context 'invalid' do
+        context 'non-existent company' do
+          before { get :search_memberships, params: { company_id: 'foo', team_id: 'bar' }, xhr: true }
+
+          it { expect(response).to have_http_status :not_found }
+        end
+
+        context 'non-existent team' do
+          before { get :search_memberships, params: { company_id: company, team_id: 'bar' }, xhr: true }
+
+          it { expect(response).to have_http_status :not_found }
+        end
+
+        context 'not-permitted company' do
+          let(:company) { Fabricate :company, users: [] }
+
+          before { get :search_memberships, params: { company_id: company, team_id: team }, xhr: true }
 
           it { expect(response).to have_http_status :not_found }
         end
