@@ -97,7 +97,9 @@ module Jira
     def create_from_transition(demand, from_stage_id, from_transition_date)
       ActiveRecord::Base.transaction do
         stage_from = demand.project.stages.find_by(integration_id: from_stage_id)
-        DemandTransition.find_or_create_by(demand: demand, stage: stage_from, last_time_in: from_transition_date)
+        demand_transition = DemandTransition.find_or_initialize_by(demand: demand, stage: stage_from, last_time_in: from_transition_date)
+        demand_transition.save
+        demand_transition
       end
     end
 
@@ -106,7 +108,7 @@ module Jira
         from_transistion.update(last_time_out: to_transition_date)
 
         stage_to = demand.project.stages.find_by(integration_id: to_stage_id)
-        DemandTransition.find_or_create_by(demand: demand, stage: stage_to, last_time_in: to_transition_date)
+        DemandTransition.find_or_initialize_by(demand: demand, stage: stage_to, last_time_in: to_transition_date).save
       end
     end
 

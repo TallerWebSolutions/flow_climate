@@ -1,5 +1,5 @@
 $("#members-table").html("<%= escape_javascript(render('team_members/new', company: @company, team_member: @team_member)) %>")
 
 $('#cancel-form-team-member').on('click', function() {
-    $("#members-table").html("<%= escape_javascript(render 'team_members/team_members_table', company: @company, team_members: @team_members).html_safe %>");
+    $("#members-table").html("<%= escape_javascript(render 'team_members/team_members_tab', company: @company, team_members: @team_members).html_safe %>");
 });

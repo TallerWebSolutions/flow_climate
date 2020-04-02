@@ -259,6 +259,8 @@ pt-BR:
     index:
       title: "Membros do Time"
       elapsed_time: "Tempo"
+      search:
+        actives_members_checkbox: "membros ativos"
     new:
       title: "Novo Membro do Time"
     show:

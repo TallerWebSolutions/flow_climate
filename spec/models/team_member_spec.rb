@@ -51,6 +51,14 @@ RSpec.describe TeamMember, type: :model do
 
       it { expect(described_class.active).to match_array [active, other_active] }
     end
+
+    describe '.inactive' do
+      let(:active) { Fabricate :team_member, end_date: nil }
+      let(:other_active) { Fabricate :team_member, end_date: nil }
+      let(:inactive) { Fabricate :team_member, end_date: Time.zone.today }
+
+      it { expect(described_class.inactive).to eq [inactive] }
+    end
   end
 
   describe '#to_hash' do

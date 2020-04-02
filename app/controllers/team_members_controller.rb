@@ -48,12 +48,26 @@ class TeamMembersController < AuthenticatedController
 
   def associate_user
     @team_member.update(user: current_user)
+
     respond_to { |format| format.js { render 'team_members/associate_dissociate_user' } }
   end
 
   def dissociate_user
     @team_member.update(user: nil)
+
     respond_to { |format| format.js { render 'team_members/associate_dissociate_user' } }
+  end
+
+  def search_team_members
+    assign_team_members
+
+    if params['team_member_status'] == 'true'
+      @team_members = @team_members.active
+    elsif params['team_member_status'] == 'false'
+      @team_members = @team_members.inactive
+    end
+
+    respond_to { |format| format.js { render 'team_members/search_team_members' } }
   end
 
   private

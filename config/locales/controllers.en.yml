@@ -245,6 +245,8 @@ en:
     index:
       title: "Team members"
       elapsed_time: "Elapsed Time"
+      search:
+        actives_members_checkbox: "active members"
     new:
       title: "New Team Member"
     show:
