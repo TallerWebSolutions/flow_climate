@@ -49,6 +49,12 @@ RSpec.describe TeamMembersController, type: :controller do
 
       it { expect(response).to redirect_to new_user_session_path }
     end
+
+    describe 'GET #search_team_members' do
+      before { get :search_team_members, params: { company_id: 'xpto', id: 'foo' } }
+
+      it { expect(response).to redirect_to new_user_session_path }
+    end
   end
 
   context 'authenticated' do
@@ -61,13 +67,13 @@ RSpec.describe TeamMembersController, type: :controller do
     let(:company) { Fabricate :company, users: [user] }
     let(:team) { Fabricate :team, company: company }
 
-    let!(:team_member) { Fabricate :team_member, company: company, name: 'ddd' }
-    let!(:other_team_member) { Fabricate :team_member, company: company, name: 'aaas' }
+    let!(:team_member) { Fabricate :team_member, company: company, name: 'ddd', start_date: 1.day.ago, end_date: nil }
+    let!(:other_team_member) { Fabricate :team_member, company: company, name: 'aaa', start_date: 1.day.ago, end_date: nil }
+    let!(:inactive_team_member) { Fabricate :team_member, company: company, name: 'eee', start_date: 1.day.ago, end_date: Time.zone.today }
 
     describe 'GET #show' do
       let(:team) { Fabricate :team, company: company }
       let(:team_member) { Fabricate :team_member, company: company }
-      let!(:membership) { Fabricate :membership, team: team, team_member: team_member, hours_per_month: 120, start_date: 1.month.ago, end_date: nil }
 
       context 'valid parameters' do
         before { get :show, params: { company_id: company.id, id: team_member }, xhr: true }
@@ -119,7 +125,7 @@ RSpec.describe TeamMembersController, type: :controller do
 
         it 'instantiates a new Team Member and renders the template' do
           expect(response).to render_template 'team_members/new'
-          expect(assigns(:team_members)).to eq company.reload.team_members.order(:name)
+          expect(assigns(:team_members)).to eq [other_team_member, team_member, inactive_team_member]
           expect(assigns(:team_member)).to be_a_new TeamMember
         end
       end
@@ -147,6 +153,8 @@ RSpec.describe TeamMembersController, type: :controller do
 
         it 'creates the new team member and redirects to team show' do
           expect(response).to render_template 'team_members/create'
+
+          expect(TeamMember.all.count).to eq 4
           expect(TeamMember.last.name).to eq 'foo'
           expect(TeamMember.last.jira_account_user_email).to eq 'foo@bar.com'
           expect(TeamMember.last.jira_account_id).to eq 'jira_account_id'
@@ -163,7 +171,7 @@ RSpec.describe TeamMembersController, type: :controller do
         before { post :create, params: { company_id: company, team_member: { name: '' } }, xhr: true }
 
         it 'does not create the team member and re-render the template with the errors' do
-          expect(TeamMember.all.count).to eq 2
+          expect(TeamMember.all.count).to eq 3
           expect(response).to render_template 'team_members/create'
           expect(assigns(:team_member).errors.full_messages).to eq ['Nome não pode ficar em branco']
         end
@@ -270,7 +278,7 @@ RSpec.describe TeamMembersController, type: :controller do
         it 'deletes the member and renders the template' do
           delete :destroy, params: { company_id: company, id: team_member }, xhr: true
 
-          expect(TeamMember.all.count).to eq 1
+          expect(TeamMember.all.count).to eq 2
           expect(response).to render_template 'team_members/destroy'
         end
       end
@@ -296,7 +304,6 @@ RSpec.describe TeamMembersController, type: :controller do
       let(:team) { Fabricate :team, company: company }
       let(:other_team) { Fabricate :team, company: company }
       let(:team_member) { Fabricate :team_member, company: company }
-      let!(:membership) { Fabricate :membership, team: team, team_member: team_member, hours_per_month: 120, start_date: 1.month.ago, end_date: nil }
 
       context 'passing valid parameters' do
         before { patch :associate_user, params: { company_id: company, id: team_member }, xhr: true }
@@ -329,7 +336,6 @@ RSpec.describe TeamMembersController, type: :controller do
       let(:team) { Fabricate :team, company: company }
       let(:other_team) { Fabricate :team, company: company }
       let(:team_member) { Fabricate :team_member, company: company }
-      let!(:membership) { Fabricate :membership, team: team, team_member: team_member, hours_per_month: 120, start_date: 1.month.ago, end_date: nil }
 
       context 'passing valid parameters' do
         before { patch :dissociate_user, params: { company_id: company, id: team_member }, xhr: true }
@@ -352,6 +358,53 @@ RSpec.describe TeamMembersController, type: :controller do
           let(:company) { Fabricate :company, users: [] }
 
           before { patch :dissociate_user, params: { company_id: company, id: team_member }, xhr: true }
+
+          it { expect(response).to have_http_status :not_found }
+        end
+      end
+    end
+
+    describe 'GET #search_team_members' do
+      context 'valid parameters' do
+        context 'with no search parameters' do
+          before { get :search_team_members, params: { company_id: company }, xhr: true }
+
+          it 'searches for the team members and renders the template' do
+            expect(response).to render_template 'team_members/search_team_members'
+            expect(assigns(:team_members)).to eq [other_team_member, team_member, inactive_team_member]
+          end
+        end
+
+        context 'with active status true' do
+          before { get :search_team_members, params: { company_id: company, team_member_status: 'true' }, xhr: true }
+
+          it 'searches for the team members and renders the template' do
+            expect(response).to render_template 'team_members/search_team_members'
+            expect(assigns(:team_members)).to eq [other_team_member, team_member]
+          end
+        end
+
+        context 'with active status false' do
+          before { get :search_team_members, params: { company_id: company, team_member_status: 'false' }, xhr: true }
+
+          it 'searches for the team members and renders the template' do
+            expect(response).to render_template 'team_members/search_team_members'
+            expect(assigns(:team_members)).to eq [inactive_team_member]
+          end
+        end
+      end
+
+      context 'invalid' do
+        context 'non-existent company' do
+          before { get :search_team_members, params: { company_id: 'foo' }, xhr: true }
+
+          it { expect(response).to have_http_status :not_found }
+        end
+
+        context 'not-permitted company' do
+          let(:company) { Fabricate :company, users: [] }
+
+          before { get :search_team_members, params: { company_id: company }, xhr: true }
 
           it { expect(response).to have_http_status :not_found }
         end

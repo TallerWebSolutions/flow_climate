@@ -108,8 +108,9 @@ RSpec.describe CompaniesController, type: :controller do
           let!(:finances) { Fabricate :financial_information, company: company, finances_date: 2.days.ago }
           let!(:other_finances) { Fabricate :financial_information, company: company, finances_date: Time.zone.today }
 
-          let!(:team_member) { Fabricate :team_member, company: company, name: 'aaa' }
-          let!(:other_team_member) { Fabricate :team_member, company: company, name: 'zzz' }
+          let!(:team_member) { Fabricate :team_member, company: company, name: 'aaa', start_date: 2.weeks.ago, end_date: nil }
+          let!(:other_team_member) { Fabricate :team_member, company: company, name: 'zzz', start_date: 1.week.ago, end_date: nil }
+          let!(:inactive_team_member) { Fabricate :team_member, company: company, name: 'eee', start_date: 1.day.ago, end_date: Time.zone.today }
 
           let!(:team_resource) { Fabricate :team_resource, company: company, resource_name: 'zzz' }
           let!(:other_team_resource) { Fabricate :team_resource, company: company, resource_name: 'aaa' }

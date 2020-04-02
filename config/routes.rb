@@ -111,6 +111,8 @@ Rails.application.routes.draw do
         get :associate_user
         get :dissociate_user
       end
+
+      get :search_team_members, on: :collection
     end
 
     resources :financial_informations, only: %i[new create edit update destroy]
