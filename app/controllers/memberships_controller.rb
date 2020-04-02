@@ -48,13 +48,25 @@ class MembershipsController < AuthenticatedController
   end
 
   def index
-    @memberships = @team.memberships.order(:start_date)
+    @memberships = assign_memberships_list.active
+  end
+
+  def search_memberships
+    assign_memberships_list
+
+    if params['membership_status'] == 'true'
+      @memberships = @memberships.active
+    elsif params['membership_status'] == 'false'
+      @memberships = @memberships.inactive
+    end
+
+    respond_to { |format| format.js { render 'memberships/search_memberships' } }
   end
 
   private
 
   def assign_memberships_list
-    @memberships = @team.memberships.sort_by(&:team_member_name)
+    @memberships = @team.memberships.includes('team_member').order('team_members.name, memberships.start_date')
   end
 
   def assign_team_members_list

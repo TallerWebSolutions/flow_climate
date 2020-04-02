@@ -24,24 +24,30 @@ RSpec.describe Membership, type: :model do
       let!(:duplicated_membership) { Fabricate.build :membership, team: team, team_member: team_member, end_date: nil }
       let!(:second_valid_membership) { Fabricate.build :membership, team_member: team_member, end_date: nil }
       let!(:third_valid_membership) { Fabricate.build :membership, team: team, end_date: nil }
+      let!(:fourth_valid_membership) { Fabricate.build :membership, team_member: team_member, team: team, end_date: Time.zone.today }
 
       before { duplicated_membership.valid? }
 
       it { expect(membership.valid?).to be true }
       it { expect(second_valid_membership.valid?).to be true }
       it { expect(third_valid_membership.valid?).to be true }
+      it { expect(fourth_valid_membership.valid?).to be true }
 
       it { expect(duplicated_membership.errors_on(:team_member)).to eq [I18n.t('activerecord.errors.models.membership.team_member.already_existent_active')] }
     end
   end
 
   context 'scopes' do
-    describe '.active' do
-      let(:active) { Fabricate :membership, end_date: nil }
-      let(:other_active) { Fabricate :membership, end_date: nil }
-      let(:inactive) { Fabricate :membership, active: false }
+    let!(:active) { Fabricate :membership, end_date: nil }
+    let!(:other_active) { Fabricate :membership, end_date: nil }
+    let!(:inactive) { Fabricate :membership, end_date: Time.zone.today }
 
+    describe '.active' do
       it { expect(described_class.active).to match_array [active, other_active] }
+    end
+
+    describe '.inactive' do
+      it { expect(described_class.inactive).to eq [inactive] }
     end
   end
 

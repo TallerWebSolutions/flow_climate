@@ -1106,6 +1106,9 @@ pt-BR:
       title: "Nova Associação"
     edit:
       title: "Nova Associação"
+    index:
+      search:
+        actives_members_checkbox: "associações ativas"
   risk_review:
     attributes:
       validations:
