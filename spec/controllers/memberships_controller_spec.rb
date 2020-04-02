@@ -110,7 +110,7 @@ RSpec.describe MembershipsController, type: :controller do
           expect(assigns(:membership).team).to eq team
           expect(assigns(:membership).team_member).to eq new_team_member
           expect(assigns(:membership).member_role).to eq 'client'
-          expect(assigns(:memberships)).to eq team.reload.memberships.sort_by(&:team_member_name)
+          expect(assigns(:memberships).size).to eq 4
         end
       end
 
