@@ -53,6 +53,20 @@ function bindDashboardSelectors() {
         getDashboardPageThree(companyId, teamId, demandsIds, startDate, endDate);
     });
 
+    $("#team-dashboard-page-four").on("click", function() {
+        hideAllTeamTabs();
+
+        let companyId = $("#company_id").val();
+        let teamId = $("#team_id").val();
+        let demandsIds = $('#demands_ids').val();
+        let startDate = $("#demands_start_date").val();
+        let endDate = $("#demands_end_date").val();
+
+        activateTab($("#team-dashboard-page-four"));
+
+        getDashboardPageFour(companyId, teamId, demandsIds, startDate, endDate);
+    });
+
     $("#team-replenishing-tab").on("click", function() {
         hideAllTeamTabs();
 
@@ -83,6 +97,8 @@ function bindDashboardSelectors() {
 function hideAllTeamTabs(){
     $("#team-demands-info").hide();
     $("#dashboard-controls").hide();
+    $("#team-dashboard-filters").hide();
+
     $("#team-dashboard-container-page-one").hide();
     $("#team-dashboard-container-page-two").hide();
     $("#team-dashboard-container-page-three").hide();

@@ -13,7 +13,6 @@ function buildColumnChart(columnDiv) {
             text: 'Source: Flow Climate'
         },
         xAxis: {
-            type: 'datetime',
             categories: columnDiv.data("xcategories"),
             title: { text: columnDiv.data("xtitle") }
         },
@@ -55,69 +54,6 @@ function buildColumnChart(columnDiv) {
                     }
                 }
             }
-        },
-        responsive: {
-            rules: [{
-                condition: {
-                    maxWidth: 1000
-                },
-                chartOptions: {
-                    xAxis: {
-                        labels: {
-                            step: 1
-                        }
-                    }
-                }
-            }, {
-                condition: {
-                    maxWidth: 600
-                },
-                chartOptions: {
-                    xAxis: {
-                        labels: {
-                            step: 3,
-                            style: {
-                                fontSize: "0.7em"
-                            }
-                        }
-                    }
-                }
-            }, {
-                condition: {
-                    maxWidth: 350
-                },
-                chartOptions: {
-                    xAxis: {
-                        labels: {
-                            step: 5
-                        }
-                    }
-                }
-            }, {
-                condition: {
-                    maxWidth: 200
-                },
-                chartOptions: {
-                    xAxis: {
-                        labels: {
-                            step: 8
-                        }
-                    }
-                }
-            }, {
-                condition: {
-                    maxWidth: 150
-                },
-                chartOptions: {
-                    xAxis: {
-                        labels: {
-                            formatter: function() {
-                                return '';
-                            }
-                        }
-                    }
-                }
-            }]
         },
         series: columnDiv.data('series')
     });

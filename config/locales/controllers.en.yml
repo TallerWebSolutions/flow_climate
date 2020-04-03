@@ -151,10 +151,6 @@ en:
     scope: "Scope"
     all: "All"
     active: "Active"
-    page:
-      one: "1"
-      two: "2"
-      three: "3"
     finished: "Finished"
     name: "Name"
     bugs: "Bugs"
@@ -1013,6 +1009,11 @@ en:
       lead_time_p65: "Lead time p65"
       average_queue_time: "Average Queue Time"
       average_touch_time: "Average Queue Time"
+      dashboard:
+        tab_one: "Main operational charts"
+        tab_two: "Average demand cost"
+        tab_three: "Downstream details"
+        tab_four: "Portfolio charts"
     new:
       title: "New Team"
     index:

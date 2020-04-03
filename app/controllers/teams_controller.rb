@@ -104,6 +104,14 @@ class TeamsController < AuthenticatedController
     respond_to { |format| format.js { render 'teams/dashboard_page_three' } }
   end
 
+  def dashboard_page_four
+    @strategic_chart_data = Highchart::StrategicChartsAdapter.new(@company, [@team], @team.projects, demands, start_date, end_date, 'month')
+    @target_name = @team.name
+    @array_of_dates = @strategic_chart_data.x_axis
+
+    respond_to { |format| format.js { render 'teams/dashboard_page_four' } }
+  end
+
   private
 
   def demands

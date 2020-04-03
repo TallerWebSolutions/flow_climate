@@ -7,6 +7,7 @@
        data-xcategories='<%= dates_array.to_json %>'
        data-xtitle='<%= I18n.t('general.period') %>'
        data-ytitle='<%= I18n.t('demands.charts.demands.title') %>'
+       data-prefix=''
        data-tooltipsuffix='<%= I18n.t('projects.charts.throughput.tooltipsufix') %>'
        data-series='<%= [
                             { name: I18n.t('demands.charts.creation_date'), data: demands_chart_adapter.creation_chart_data },
