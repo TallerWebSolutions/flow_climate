@@ -151,10 +151,6 @@ pt-BR:
     scope: "Escopo"
     all: "Todos"
     active: "Ativo"
-    page:
-      one: "1"
-      two: "2"
-      three: "3"
     finished: "Finalizado"
     name: "Nome"
     bugs: "Defeitos"
@@ -588,6 +584,11 @@ pt-BR:
       lead_time_p65: "Lead time p65"
       average_queue_time: "Tempo Médio de Fila"
       average_touch_time: "Tempo Médio de Trabalho"
+      dashboard:
+        tab_one: "Principais gráficos operacionais"
+        tab_two: "Custo médio por demanda (CMD)"
+        tab_three: "Detalhes do downstream"
+        tab_four: "Gráficos do portfólio"
     replenishing:
       title: "Reabastecimento do Fluxo"
     charts:

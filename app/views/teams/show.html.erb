@@ -49,15 +49,17 @@
   <div class="row bottom-spaced-component" id="page-buttons">
     <div class="col-xs-12 center">
       <div class="tab">
-        <button class="tablinks btn btn-sm" id="team-dashboard-page-one"><%= I18n.t('general.page.one') %></button>
-        <button class="tablinks btn btn-sm" id="team-dashboard-page-two"><%= I18n.t('general.page.two') %></button>
-        <button class="tablinks btn btn-sm" id="team-dashboard-page-three"><%= I18n.t('general.page.three') %></button>
+        <button class="tablinks btn btn-sm" id="team-dashboard-page-one" title="<%= I18n.t('teams.show.dashboard.tab_one') %>">1</button>
+        <button class="tablinks btn btn-sm" id="team-dashboard-page-two" title="<%= I18n.t('teams.show.dashboard.tab_two') %>">2</button>
+        <button class="tablinks btn btn-sm" id="team-dashboard-page-three" title="<%= I18n.t('teams.show.dashboard.tab_three') %>">3</button>
+        <button class="tablinks btn btn-sm" id="team-dashboard-page-four" title="<%= I18n.t('teams.show.dashboard.tab_four') %>">4</button>
       </div>
     </div>
   </div>
+</div>
 
+<div id="team-dashboard-filters">
   <%= render 'teams/dashboard_filter', start_date: @start_date, end_date: @end_date %>
-
 </div>
 
 <hr>
@@ -83,6 +85,9 @@
 
 </div>
 
+<div id="team-dashboard-container-page-four" class="tabcontent">
+</div>
+
 <div id="team-replenishing-container" class="tabcontent">
 
 </div>
@@ -97,6 +102,7 @@
 <% content_for :javascript do %>
   <%= javascript_include_tag 'charts/donut' %>
   <%= javascript_include_tag 'charts/column' %>
+  <%= javascript_include_tag 'charts/column-line' %>
   <%= javascript_include_tag 'charts/line' %>
   <%= javascript_include_tag 'charts/burnup' %>
   <%= javascript_include_tag 'charts/histogram' %>
@@ -111,6 +117,8 @@
   <%= javascript_include_tag 'teams/team_start_charts' %>
   <%= javascript_include_tag 'teams/team_tabs_behaviour' %>
   <%= javascript_include_tag 'teams/show' %>
+
+  <%= javascript_include_tag 'companies/strategic_charts' %>
 
   <%= javascript_include_tag 'demands/form_modal' %>
 <% end %>

@@ -106,6 +106,7 @@ Rails.application.routes.draw do
         get :dashboard_tab
         get :dashboard_page_two
         get :dashboard_page_three
+        get :dashboard_page_four
       end
     end
 

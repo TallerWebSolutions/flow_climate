@@ -1,0 +1,7 @@
+<%= hidden_field_tag :demands_ids, demands_ids.join(',') %>
+
+<div class="row">
+  <div id="strategic-charts-div">
+    <%= render 'charts/strategic_charts', model_name: team.name, strategic_chart_data: strategic_chart_data %>
+  </div>
+</div>

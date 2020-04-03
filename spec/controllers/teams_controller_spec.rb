@@ -79,6 +79,12 @@ RSpec.describe TeamsController, type: :controller do
 
       it { expect(response).to redirect_to new_user_session_path }
     end
+
+    describe 'GET #dashboard_page_four' do
+      before { get :dashboard_page_four, params: { company_id: 'bar', id: 'foo' } }
+
+      it { expect(response).to redirect_to new_user_session_path }
+    end
   end
 
   context 'authenticated as gold' do
@@ -747,6 +753,47 @@ RSpec.describe TeamsController, type: :controller do
             let(:company) { Fabricate :company, users: [] }
 
             before { get :dashboard_page_three, params: { company_id: company, id: team } }
+
+            it { expect(response).to have_http_status :not_found }
+          end
+        end
+      end
+    end
+
+    describe 'GET #dashboard_page_four' do
+      context 'with valid parameters' do
+        context 'with data' do
+          include_context 'demands to filters'
+
+          it 'creates the objects and renders the tab' do
+            get :dashboard_page_four, params: { company_id: company, id: team }, xhr: true
+
+            expect(assigns(:strategic_chart_data)).to be_a Highchart::StrategicChartsAdapter
+
+            expect(response).to render_template 'teams/dashboard_page_four'
+            expect(response).to render_template 'charts/_strategic_charts'
+          end
+        end
+      end
+
+      context 'with invalid' do
+        context 'team' do
+          before { get :dashboard_page_four, params: { company_id: company, id: 'foo' }, xhr: true }
+
+          it { expect(response).to have_http_status :not_found }
+        end
+
+        context 'company' do
+          context 'no existent' do
+            before { get :dashboard_page_four, params: { company_id: 'foo', id: team } }
+
+            it { expect(response).to have_http_status :not_found }
+          end
+
+          context 'not permitted' do
+            let(:company) { Fabricate :company, users: [] }
+
+            before { get :dashboard_page_four, params: { company_id: company, id: team } }
 
             it { expect(response).to have_http_status :not_found }
           end
