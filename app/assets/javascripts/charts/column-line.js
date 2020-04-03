@@ -49,10 +49,11 @@ function buildColumnLineChart(columnDiv) {
             enabled: false
         },
         legend: {
-            layout: 'vertical',
-            align: 'right',
-            verticalAlign: 'middle',
-            borderWidth: 0
+            type: 'line',
+            align: 'center',
+            verticalAlign: 'top',
+            x: 0,
+            y: 0
         },
         plotOptions: {
             column: {
