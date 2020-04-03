@@ -58,6 +58,10 @@ class Company < ApplicationRecord
     projects.active.count
   end
 
+  def running_projects_count
+    projects.running.count
+  end
+
   def waiting_projects_count
     customers.sum { |p| p.waiting_projects.count }
   end

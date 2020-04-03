@@ -176,8 +176,10 @@ en:
         active_customers: "Active customers"
         value_per_demand: "Value per Demand"
         flow_pressure: "Flow Pressure"
+        running_projects: "Running projects"
       dashboard:
         invalid_role: "You don't have a valid role in this company. Please ask an admin for help."
+      running_projects_charts: "see charts"
     index:
       title: "Users"
       turn_off_notifications: "Turn Off Notifications"
@@ -544,6 +546,8 @@ en:
     remaining_time: "Remaining Time"
     leadtime:
       drill_down_title: "Lead time drill down for %{target_name}"
+    running_projects_charts:
+      title: "Running Projects Charts"
   project:
     new:
       title: "New Project"
