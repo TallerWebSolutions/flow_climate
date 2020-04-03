@@ -13,7 +13,6 @@
       <% end %>
 
       <th><%= I18n.t('team_members.show.deliveries') %></th>
-      <th><%= I18n.t('projects.general.leadtime', percentil: '80%') %></th>
       <th><%= I18n.t('demands.show.pairing') %></th>
 
       <% if current_user.managing_company?(company) || current_user.admin? %>

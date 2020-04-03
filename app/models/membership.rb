@@ -73,17 +73,23 @@ class Membership < ApplicationRecord
   def pairing_members
     pairing_members = []
     same_team_demands = team_member.demands.where(team: team)
-    same_team_demands.each do |demand|
-      assignments_for_member = demand.item_assignments.where(team_member: team_member)
-      assignments_for_member.each do |member_assignment|
-        pairing_members << demand.item_assignments.for_dates(member_assignment.start_time, member_assignment.finish_time).not_for_team_member(team_member).map(&:team_member)
-      end
-    end
+    same_team_demands.each { |demand| pairing_members << pairing_members_in_demand(demand) }
 
     pairing_members.flatten
   end
 
   private
+
+  def pairing_members_in_demand(demand)
+    pairing_members = []
+
+    assignments_for_member = demand.item_assignments.where(team_member: team_member)
+    assignments_for_member.each do |member_assignment|
+      pairing_members << demand.item_assignments.includes(:team_member).for_dates(member_assignment.start_time, member_assignment.finish_time).not_for_team_member(team_member).map(&:team_member)
+    end
+
+    pairing_members
+  end
 
   def active_team_member_unique
     existent_memberships = Membership.where(team: team, team_member: team_member, end_date: nil)
