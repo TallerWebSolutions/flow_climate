@@ -37,12 +37,12 @@ RSpec.describe Highchart::StrategicChartsAdapter, type: :service do
       it 'mounts the data structure to the active project counts in months' do
         strategic_data = described_class.new(company, company.teams, company.projects, Demand.all, 3.months.ago, 3.months.from_now, 'month')
         expect(strategic_data.x_axis).to eq [3.months.ago.to_date.end_of_month, 2.months.ago.to_date.end_of_month, 1.month.ago.to_date.end_of_month, Time.zone.today.end_of_month, 1.month.from_now.to_date.end_of_month, 2.months.from_now.to_date.end_of_month, 3.months.from_now.to_date.end_of_month]
-        expect(strategic_data.active_projects_count_data).to eq [2, 2, 3, 0, 0, 2, 1]
-        expect(strategic_data.sold_hours_in_month).to eq [1175.5952380952385, 976.7050095289958, 955.1617840436312, 0.0, 0.0, 717.066545948393, 39.20500952899537]
+        expect(strategic_data.active_projects_count_data).to eq [2, 5, 6, 5, 5, 6, 4]
+        expect(strategic_data.sold_hours_in_month).to eq [1175.5952380952385, 3174.4626489310676, 2954.02919487946, 2715.9339567842217, 2715.9339567842217, 7403.4339567842235, 6686.36741083583]
         expect(strategic_data.consumed_hours_per_month).to eq [0.0, 210.0, 530.0, 0.0, 0.0, 120.0, 0.0]
         expect(strategic_data.available_hours_per_period).to eq [0.0, 63.99999999999999, 114.66666666666666, 18.666666666666664]
-        expect(strategic_data.flow_pressure_per_month_data.map { |pressure| pressure.round(2) }).to eq [0.0, 0.46, 2.01, 0.0, 0.0, 2.01, 0.46]
-        expect(strategic_data.money_per_month_data.map { |money| money.round(2) }).to eq [1_644_577.98, 226.71, 1_647_878.03, 0.0, 0.0, 3487.55, 39.21]
+        expect(strategic_data.flow_pressure_per_month_data.map { |pressure| pressure.round(2) }).to eq [0.0, 1.56, 3.57, 3.57, 3.57, 6.01, 3.99]
+        expect(strategic_data.money_per_month_data.map { |money| money.round(2) }).to eq [1_644_577.98, 1_644_660.89, 1_647_960.95, 3570.47, 3570.47, 3685.78, 198.23]
         expect(strategic_data.expenses_per_month_data.map { |expense| expense.round(2) }).to eq [300.0, 300.0, 200.0, 200.0, 200.0, 100.0, 100.0]
       end
     end
