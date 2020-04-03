@@ -95,6 +95,12 @@ RSpec.describe ProjectsController, type: :controller do
 
       it { expect(response).to redirect_to new_user_session_path }
     end
+
+    describe 'GET #running_projects_charts' do
+      before { get :running_projects_charts, params: { company_id: 'foo' } }
+
+      it { expect(response).to redirect_to new_user_session_path }
+    end
   end
 
   pending 'authenticated as lite'
@@ -980,6 +986,43 @@ RSpec.describe ProjectsController, type: :controller do
             expect(response).to render_template 'projects/search_projects'
             expect(assigns(:projects)).to eq [third_project, first_project]
             expect(assigns(:unpaged_projects)).to eq [third_project, first_project]
+          end
+        end
+      end
+
+      context 'passing an invalid' do
+        context 'company' do
+          context 'non-existent' do
+            before { get :search_projects, params: { company_id: 'foo' }, xhr: true }
+
+            it { expect(response).to have_http_status :not_found }
+          end
+
+          context 'not permitted' do
+            let(:company) { Fabricate :company, users: [] }
+
+            before { get :search_projects, params: { company_id: company }, xhr: true }
+
+            it { expect(response).to have_http_status :not_found }
+          end
+        end
+      end
+    end
+
+    describe 'GET #running_projects_charts' do
+      let(:company) { Fabricate :company, users: [user] }
+      let!(:first_project) { Fabricate :project, company: company, start_date: 2.months.ago, end_date: 1.month.ago, status: :waiting, name: 'FooBarXpTO' }
+      let!(:second_project) { Fabricate :project, company: company, start_date: 1.month.ago, end_date: 15.days.ago, status: :executing, name: 'XpTO' }
+      let!(:third_project) { Fabricate :project, company: company, start_date: 2.days.ago, end_date: 1.day.ago, status: :finished, name: 'FooBar' }
+      let!(:fourth_project) { Fabricate :project, company: company, start_date: 2.days.ago, end_date: 1.hour.ago, status: :executing, name: 'Foo' }
+
+      context 'passing valid parameters' do
+        context 'with no search parameters' do
+          it 'retrieves all the projects to the company' do
+            get :running_projects_charts, params: { company_id: company }, xhr: true
+
+            expect(response).to render_template 'projects/running_projects_charts'
+            expect(assigns(:running_projects_leadtime_data).keys).to match_array [second_project, fourth_project]
           end
         end
       end

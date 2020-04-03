@@ -4,7 +4,7 @@ class ProjectsController < AuthenticatedController
   before_action :user_gold_check
 
   before_action :assign_company
-  before_action :assign_project, except: %i[new create index search_projects]
+  before_action :assign_project, except: %i[new create index search_projects running_projects_charts]
 
   def show
     assign_project_stages
@@ -145,6 +145,18 @@ class ProjectsController < AuthenticatedController
     @projects_summary = ProjectsSummaryData.new(@unpaged_projects)
 
     respond_to { |format| format.js { render 'projects/search_projects' } }
+  end
+
+  def running_projects_charts
+    @running_projects = @company.projects.running.order(:end_date)
+
+    @running_projects_leadtime_data = {}
+    @running_projects.each do |project|
+      demands_chart_adapter = Highchart::DemandsChartsAdapter.new(project.demands, project.start_date, Time.zone.today, 'week')
+      @running_projects_leadtime_data[project] = demands_chart_adapter
+    end
+
+    render 'projects/running_projects_charts'
   end
 
   private

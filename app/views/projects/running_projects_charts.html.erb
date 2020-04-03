@@ -1,0 +1,45 @@
+<div class="row">
+  <div class="col-xs-10">
+    <ul class="breadcrumb">
+      <li><%= link_to I18n.t('general.home.title'), root_path %></li>
+      <li><%= link_to @company.abbreviation&.upcase, company_path(@company) %></li>
+      <li><%= I18n.t('projects.running_projects_charts.title') %></li>
+    </ul>
+  </div>
+</div>
+
+<div class="row bottom-spaced-component">
+  <div class="col-xs-12 center">
+    <div class="tab">
+      <button class="tablinks" id="projects-lead-time-tab" onclick="openTab(event, 'projects-lead-time-container', 'tablinks', 'tabcontent')"><%= I18n.t('projects.statistics.leadtime_tab') %></button>
+    </div>
+  </div>
+</div>
+
+<div id="projects-lead-time-container" class="tabcontent">
+  <% @running_projects_leadtime_data.each do |project, demands_chart_adapter| %>
+    <% next unless demands_chart_adapter.leadtime_percentiles_on_time_chart_data.present? %>
+
+    <div class="col-xs-6 bottom-spaced-component">
+      <div id="leadtime-evolution-<%= project.id %>"
+           class="flow-chart leadtime-evolution"
+           data-title='<%= project.name %>'
+           data-xcategories='<%= demands_chart_adapter.x_axis.to_json %>'
+           data-series='<%= demands_chart_adapter.leadtime_percentiles_on_time_chart_data[:y_axis].to_json %>'
+           data-xtitle='<%= I18n.t('projects.charts.xlabel.weeks') %>'
+           data-ytitle='<%= I18n.t('projects.charts.leadtime_evolution.ylabel') %>'
+           data-tooltipsuffix='<%= I18n.t('projects.charts.leadtime_evolution.ylabel') %>'
+           data-prefix=''
+           data-decimals='2'>
+      </div>
+    </div>
+  <% end %>
+</div>
+
+<% content_for :javascript do %>
+  <%= javascript_include_tag 'charts/line' %>
+
+  <%= javascript_include_tag 'components/components' %>
+
+  <%= javascript_include_tag 'projects/running_projects_charts' %>
+<% end %>

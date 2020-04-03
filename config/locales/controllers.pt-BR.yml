@@ -175,8 +175,10 @@ pt-BR:
         active_customers: "Clientes ativos"
         value_per_demand: "Valor por Demanda"
         flow_pressure: "Pressão do Fluxo"
+        running_projects: "Projetos executando"
       dashboard:
         invalid_role: "Você não tem um papel válido nesta empresa. Solicite ajuda ao administrator."
+      running_projects_charts: "ver gráficos"
     index:
       title: "Usuários"
       turn_off_notifications: "Desligar Notificações"
@@ -560,6 +562,8 @@ pt-BR:
     remaining_time: "Tempo Restante"
     leadtime:
       drill_down_title: "Detalhamento do lead time de %{target_name}"
+    running_projects_charts:
+      title: "Gráficos dos Projetos em Execução"
   teams:
     index:
       title: "Times"

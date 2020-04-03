@@ -100,22 +100,15 @@ RSpec.describe Company, type: :model do
   end
 
   describe '#active_projects_count' do
-    let(:company) { Fabricate :company }
-    let(:customer) { Fabricate :customer, company: company }
-    let(:other_customer) { Fabricate :customer, company: company }
-
-    let(:product) { Fabricate :product, customer: customer, name: 'zzz' }
-    let(:other_product) { Fabricate :product, customer: other_customer, name: 'zzz' }
-
-    let!(:active_project) { Fabricate :project, company: company, start_date: 4.weeks.ago, customers: [customer], products: [product], status: :executing }
-    let!(:other_active_project) { Fabricate :project, company: company, start_date: 4.weeks.ago, customers: [customer], products: [product], status: :executing }
-    let!(:other_customer_active_project) { Fabricate :project, company: company, start_date: 4.weeks.ago, customers: [other_product.customer], products: [other_product], status: :executing }
-
-    let!(:waiting_project) { Fabricate :project, company: company, start_date: 4.weeks.ago, customers: [customer], products: [product], status: :waiting }
-    let!(:finished_project) { Fabricate :project, company: company, start_date: 4.weeks.ago, customers: [customer], products: [product], status: :finished }
-    let!(:cancelled_project) { Fabricate :project, company: company, start_date: 4.weeks.ago, customers: [customer], products: [product], status: :cancelled }
+    include_context 'demands with effort for company'
 
     it { expect(company.active_projects_count).to eq 4 }
+  end
+
+  describe '#running_projects_count' do
+    include_context 'demands with effort for company'
+
+    it { expect(company.running_projects_count).to eq 3 }
   end
 
   describe '#generate_token' do

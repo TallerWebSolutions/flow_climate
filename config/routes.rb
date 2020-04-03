@@ -194,6 +194,7 @@ Rails.application.routes.draw do
 
       collection do
         get :search_projects
+        get :running_projects_charts
       end
     end
 
