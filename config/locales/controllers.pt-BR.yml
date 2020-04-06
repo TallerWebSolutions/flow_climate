@@ -1199,3 +1199,6 @@ pt-BR:
       title: "Nova Função de Usuário"
     edit:
       title: "Editar Função do Usuário"
+  risk_review_action_items:
+    create:
+      success: "A ação foi criada."

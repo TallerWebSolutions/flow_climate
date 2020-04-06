@@ -5,7 +5,7 @@ Fabricator(:risk_review_action_item) do
   membership
 
   created_date { 1.day.ago }
-  description { Faker::Lorem.sentences(2) }
+  description { 'foo' }
 
   deadline { 1.month.from_now }
 end

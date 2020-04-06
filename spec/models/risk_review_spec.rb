@@ -7,6 +7,7 @@ RSpec.describe RiskReview, type: :model do
     it { is_expected.to have_many(:demand_blocks).dependent(:nullify) }
     it { is_expected.to have_many(:flow_impacts).dependent(:nullify) }
     it { is_expected.to have_many(:demands).dependent(:nullify) }
+    it { is_expected.to have_many(:risk_review_action_items).dependent(:destroy) }
   end
 
   context 'validations' do

@@ -54,7 +54,7 @@ RSpec.describe RiskReviewsController, type: :controller do
       context 'valid parameters' do
         before { get :new, params: { company_id: company, product_id: product }, xhr: true }
 
-        it 'instantiates a new Team Member and renders the template' do
+        it 'instantiates a new risk review and renders the template' do
           expect(response).to render_template 'risk_reviews/new'
           expect(assigns(:risk_review)).to be_a_new RiskReview
         end
@@ -149,6 +149,14 @@ RSpec.describe RiskReviewsController, type: :controller do
 
           context 'product' do
             before { post :create, params: { company_id: company, product_id: 'foo' }, xhr: true }
+
+            it { expect(response).to have_http_status :not_found }
+          end
+
+          context 'not-permitted company' do
+            let(:company) { Fabricate :company, users: [] }
+
+            before { post :create, params: { company_id: company, product_id: product }, xhr: true }
 
             it { expect(response).to have_http_status :not_found }
           end

@@ -31,6 +31,7 @@ class RiskReview < ApplicationRecord
   has_many :demands, dependent: :nullify
   has_many :demand_blocks, dependent: :nullify
   has_many :flow_impacts, dependent: :nullify
+  has_many :risk_review_action_items, dependent: :destroy
 
   validates :company, :product, :lead_time_outlier_limit, :meeting_date, presence: true
 

@@ -1211,3 +1211,6 @@ en:
       title: "New User Role"
     edit:
       title: "Edit User Role"
+  risk_review_action_items:
+    create:
+      success: "The action was created."

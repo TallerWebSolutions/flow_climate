@@ -1132,7 +1132,7 @@ CREATE TABLE public.risk_review_action_items (
     id bigint NOT NULL,
     risk_review_id integer NOT NULL,
     membership_id integer NOT NULL,
-    created_date timestamp without time zone NOT NULL,
+    created_date date NOT NULL,
     action_type integer DEFAULT 0 NOT NULL,
     description character varying NOT NULL,
     deadline date NOT NULL,

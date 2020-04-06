@@ -6,7 +6,7 @@ class CreateRiskReviewActionItems < ActiveRecord::Migration[6.0]
       t.integer :risk_review_id, index: true, null: false
       t.integer :membership_id, index: true, null: false
 
-      t.datetime :created_date, null: false
+      t.date :created_date, null: false
 
       t.integer :action_type, index: true, null: false, default: 0
 
