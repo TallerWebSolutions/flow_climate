@@ -1125,6 +1125,43 @@ ALTER SEQUENCE public.projects_id_seq OWNED BY public.projects.id;
 
 
 --
+-- Name: risk_review_action_items; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.risk_review_action_items (
+    id bigint NOT NULL,
+    risk_review_id integer NOT NULL,
+    membership_id integer NOT NULL,
+    created_date timestamp without time zone NOT NULL,
+    action_type integer DEFAULT 0 NOT NULL,
+    description character varying NOT NULL,
+    deadline date NOT NULL,
+    done_date date,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: risk_review_action_items_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.risk_review_action_items_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: risk_review_action_items_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.risk_review_action_items_id_seq OWNED BY public.risk_review_action_items.id;
+
+
+--
 -- Name: risk_reviews; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1861,6 +1898,13 @@ ALTER TABLE ONLY public.projects ALTER COLUMN id SET DEFAULT nextval('public.pro
 
 
 --
+-- Name: risk_review_action_items id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.risk_review_action_items ALTER COLUMN id SET DEFAULT nextval('public.risk_review_action_items_id_seq'::regclass);
+
+
+--
 -- Name: risk_reviews id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -2204,6 +2248,14 @@ ALTER TABLE ONLY public.project_risk_configs
 
 ALTER TABLE ONLY public.projects
     ADD CONSTRAINT projects_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: risk_review_action_items risk_review_action_items_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.risk_review_action_items
+    ADD CONSTRAINT risk_review_action_items_pkey PRIMARY KEY (id);
 
 
 --
@@ -2768,6 +2820,27 @@ CREATE UNIQUE INDEX index_projects_on_company_id_and_name ON public.projects USI
 
 
 --
+-- Name: index_risk_review_action_items_on_action_type; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_risk_review_action_items_on_action_type ON public.risk_review_action_items USING btree (action_type);
+
+
+--
+-- Name: index_risk_review_action_items_on_membership_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_risk_review_action_items_on_membership_id ON public.risk_review_action_items USING btree (membership_id);
+
+
+--
+-- Name: index_risk_review_action_items_on_risk_review_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_risk_review_action_items_on_risk_review_id ON public.risk_review_action_items USING btree (risk_review_id);
+
+
+--
 -- Name: index_risk_reviews_on_company_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -3135,6 +3208,14 @@ ALTER TABLE ONLY public.demand_blocks
 
 ALTER TABLE ONLY public.demands
     ADD CONSTRAINT fk_rails_19bdd8aa1e FOREIGN KEY (project_id) REFERENCES public.projects(id);
+
+
+--
+-- Name: risk_review_action_items fk_rails_1c155aea3e; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.risk_review_action_items
+    ADD CONSTRAINT fk_rails_1c155aea3e FOREIGN KEY (risk_review_id) REFERENCES public.risk_reviews(id);
 
 
 --
@@ -3634,6 +3715,14 @@ ALTER TABLE ONLY public.demands
 
 
 --
+-- Name: risk_review_action_items fk_rails_fdf17a6550; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.risk_review_action_items
+    ADD CONSTRAINT fk_rails_fdf17a6550 FOREIGN KEY (membership_id) REFERENCES public.memberships(id);
+
+
+--
 -- Name: stages fk_rails_ffd4cca0d4; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -3803,6 +3892,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200114190057'),
 ('20200130181814'),
 ('20200328160133'),
-('20200330185149');
+('20200330185149'),
+('20200406175435');
 
 

@@ -15,6 +15,7 @@
 #
 # Indexes
 #
+#  idx_transitions_unique                    (demand_id,stage_id,last_time_in) UNIQUE
 #  index_demand_transitions_on_demand_id     (demand_id)
 #  index_demand_transitions_on_discarded_at  (discarded_at)
 #  index_demand_transitions_on_stage_id      (stage_id)

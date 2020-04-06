@@ -6,10 +6,10 @@
 #
 #  id                    :bigint           not null, primary key
 #  compute_effort        :boolean          default(FALSE)
-#  management_percentage :integer          default(0)
+#  management_percentage :integer          default(0), not null
 #  max_seconds_in_stage  :integer          default(0)
-#  pairing_percentage    :integer          default(0)
-#  stage_percentage      :integer          default(0)
+#  pairing_percentage    :integer          default(0), not null
+#  stage_percentage      :integer          default(0), not null
 #  created_at            :datetime         not null
 #  updated_at            :datetime         not null
 #  project_id            :integer          not null

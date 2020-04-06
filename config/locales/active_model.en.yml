@@ -41,9 +41,12 @@ en:
     plan:
       one: Plan
       other: Plans
-      user_plan:
-        one: User Plan
-        other: User Plans
+    user_plan:
+      one: User Plan
+      other: User Plans
+    risk_review_action_item:
+      one: Risk Review Action Item
+      other: Risk Review Action Items
     attributes:
       user:
         created_at: Joined At
@@ -153,7 +156,7 @@ en:
         impact_size: Impact Size
         impact_description: Impact Description
         demand: Demand
-        impact_date: IMpact Date
+        impact_date: Impact Date
         enums:
           impact_type:
             other_team_dependency: Other team dependency
@@ -167,6 +170,22 @@ en:
             small: Small
             medium: Medium
             large: Large
+      risk_review_action_item:
+        action_type: Action Type
+        created_date: Creation Dt
+        deadline: Deadline
+        description: Description
+        done_date: Done Dt
+        membership: Responsible
+        risk_review: Risk Review
+        enums:
+          action_type:
+            technical_change: Technical Change
+            permissions_update: Permissions Update
+            customer_alignment: Customer Alignment
+            internal_process_change: Internal Process Change
+            cadences_change: Cadences Change
+            internal_comunication_change: Internal Comunication Change
     errors:
       messages:
         record_invalid: 'Validation failed: %{errors}'
