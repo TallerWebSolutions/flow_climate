@@ -1,0 +1,7 @@
+$("#risk-review-action-items-container").html("<%= escape_javascript(render('risk_review_action_items/new', company: @company, product: @product, risk_review: @risk_review, risk_review_action_item: @risk_review_action_item, memberships: @memberships)) %>")
+
+$("#cancel-risk-review-action-item-form").on("click", function(event) {
+    event.preventDefault();
+
+    $('#risk-review-action-items-container').html("<%= escape_javascript(render('risk_review_action_items/risk_review_action_items_table', risk_review_action_items: @risk_review.risk_review_action_items)) %>")
+});

@@ -27,6 +27,7 @@ class Product < ApplicationRecord
   has_and_belongs_to_many :projects, dependent: :destroy
 
   has_many :teams, -> { distinct }, through: :projects
+  has_many :memberships, -> { distinct }, through: :teams
   has_many :jira_product_configs, class_name: 'Jira::JiraProductConfig', dependent: :destroy
   has_many :portfolio_units, dependent: :destroy
   has_many :demands, dependent: :restrict_with_error

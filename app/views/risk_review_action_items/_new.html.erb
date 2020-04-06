@@ -1,0 +1,3 @@
+<%= form_for [company, product, risk_review, risk_review_action_item], url: company_product_risk_review_risk_review_action_items_path(company, product, risk_review), remote: true, class: 'form' do |form| %>
+  <%= render 'risk_review_action_items/form', form: form, risk_review_action_item: risk_review_action_item, memberships: memberships %>
+<% end %>

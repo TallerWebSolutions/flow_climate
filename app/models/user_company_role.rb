@@ -4,6 +4,7 @@
 #
 # Table name: user_company_roles
 #
+#  id         :integer          not null, primary key
 #  end_date   :date
 #  start_date :date
 #  user_role  :integer          default("operations"), not null
@@ -15,6 +16,7 @@
 # Indexes
 #
 #  index_user_company_roles_on_company_id              (company_id)
+#  index_user_company_roles_on_id                      (id)
 #  index_user_company_roles_on_user_id                 (user_id)
 #  index_user_company_roles_on_user_id_and_company_id  (user_id,company_id) UNIQUE
 #  index_user_company_roles_on_user_role               (user_role)
