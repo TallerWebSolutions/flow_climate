@@ -101,6 +101,11 @@ en:
           customer_low_urgency: Customer Low Urgency
           integration_needed: Integration Needed
           customer_unavailable: Customer Unavailable
+          other_demand_dependency: Other Demand Dependency
+          external_dependency: External Dependency
+          other_demand_priority: Other Demand Priority
+          waiting_for_code_review: Waiting for Code Review
+          budget_approval: Budget Approval
       demand:
         enums:
           class_of_service:
