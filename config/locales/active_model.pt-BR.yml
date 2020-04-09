@@ -392,6 +392,7 @@ pt-BR:
             external_dependency: Dependência Externa
             other_demand_priority: Prioridade para Outra Demanda
             waiting_for_code_review: Aguardando revisão de código
+            budget_approval: Aprovação de Orçamento
       project_change_deadline_history:
         project: Projeto
         user: Usuário
