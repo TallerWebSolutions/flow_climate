@@ -75,7 +75,13 @@ class ProjectsController < AuthenticatedController
 
   def copy_stages_from
     @project_to_copy_stages_from = Project.find(params[:project_to_copy_stages_from])
-    @project.update(stages: (@project.stages + @project_to_copy_stages_from.stages) - (@project.stages & @project_to_copy_stages_from.stages))
+
+    @project_to_copy_stages_from.stage_project_configs.each do |config|
+      new_config = StageProjectConfig.find_or_initialize_by(stage: config.stage, project: @project)
+      new_config.update(stage_percentage: config.stage_percentage, pairing_percentage: config.pairing_percentage, management_percentage: config.management_percentage,
+                        max_seconds_in_stage: config.max_seconds_in_stage, compute_effort: config.compute_effort)
+    end
+
     assign_project_stages
 
     respond_to { |format| format.js { render 'stages/update_stages_table' } }
