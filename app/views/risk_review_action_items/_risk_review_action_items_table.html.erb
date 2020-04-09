@@ -12,6 +12,7 @@
         <th><%= RiskReviewActionItem.human_attribute_name :deadline %></th>
         <th><%= RiskReviewActionItem.human_attribute_name :done_date %></th>
         <th><%= RiskReviewActionItem.human_attribute_name :description %></th>
+        <th></th>
       </tr>
     </thead>
     <tbody>
@@ -24,6 +25,11 @@
           <td><%= I18n.l(action_item.deadline, format: :short) %></td>
           <td><%= I18n.l(action_item.done_date, format: :short) if action_item.done_date.present? %></td>
           <td><%= action_item.description %></td>
+          <td>
+            <%= link_to company_product_risk_review_risk_review_action_item_path(company, action_item.product, action_item.risk_review, action_item), method: :delete, data: { confirm: I18n.t('general.destroy.confirm') }, remote: true do %>
+              <i class="fa fa-times" title='<%= I18n.t('projects.actions.delete.tooltip') %>'></i>
+            <% end %>
+          </td>
         </tr>
       <% end %>
     </tbody>

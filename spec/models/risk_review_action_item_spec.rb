@@ -18,4 +18,8 @@ RSpec.describe RiskReviewActionItem, type: :model do
     it { is_expected.to validate_presence_of :description }
     it { is_expected.to validate_presence_of :deadline }
   end
+
+  context 'delegations' do
+    it { is_expected.to delegate_method(:product).to(:risk_review) }
+  end
 end

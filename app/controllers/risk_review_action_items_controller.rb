@@ -18,11 +18,24 @@ class RiskReviewActionItemsController < AuthenticatedController
     flash[:notice] = I18n.t('risk_review_action_items.create.success') if @risk_review_action_item.valid?
 
     memberships
-    @risk_review_action_items = @risk_review.risk_review_action_items.order(:deadline)
+    risk_review_action_items
+
     respond_to { |format| format.js { render 'risk_review_action_items/create' } }
   end
 
+  def destroy
+    @risk_review_action_item = @risk_review.risk_review_action_items.find(params[:id])
+    @risk_review_action_item.destroy
+
+    risk_review_action_items
+    respond_to { |format| format.js { render 'risk_review_action_items/destroy' } }
+  end
+
   private
+
+  def risk_review_action_items
+    @risk_review_action_items = @risk_review.risk_review_action_items.order(:deadline)
+  end
 
   def memberships
     @memberships ||= @product.memberships.active.sort_by(&:team_member_name)

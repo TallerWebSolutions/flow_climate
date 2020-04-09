@@ -2,7 +2,7 @@ var riskReviewActionContainer = $('#risk-review-action-items-container');
 var alertsContainer = $(".alerts");
 
 <% if @risk_review_action_item.errors.empty? %>
-  riskReviewActionContainer.html("<%= escape_javascript(render('risk_review_action_items/risk_review_action_items_table', risk_review_action_items: @risk_review.risk_review_action_items)) %>")
+  riskReviewActionContainer.html("<%= escape_javascript(render('risk_review_action_items/risk_review_action_items_table', company: @company, risk_review_action_items: @risk_review.risk_review_action_items)) %>")
   alertsContainer.html("<%= escape_javascript(render('layouts/notice', message: flash[:notice].html_safe)) %>")
 
 <% else %>
@@ -13,6 +13,6 @@ var alertsContainer = $(".alerts");
   $("#cancel-risk-review-action-item-form").on("click", function(event) {
       event.preventDefault();
 
-      $('#risk-review-action-items-container').html("<%= escape_javascript(render('risk_review_action_items/risk_review_action_items_table', risk_review_action_items: @risk_review.risk_review_action_items)) %>")
+      $('#risk-review-action-items-container').html("<%= escape_javascript(render('risk_review_action_items/risk_review_action_items_table', company: @company, risk_review_action_items: @risk_review.risk_review_action_items)) %>")
   });
 <% end %>
