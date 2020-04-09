@@ -525,16 +525,19 @@ RSpec.describe ProjectsController, type: :controller do
       let!(:second_stage_in_first_project) { Fabricate :stage, company: company }
       let!(:stage_in_second_project) { Fabricate :stage, company: company }
 
-      let!(:first_project) { Fabricate :project, company: company, stages: [stage_in_first_project, second_stage_in_first_project] }
+      let!(:first_project) { Fabricate :project, company: company, stages: [second_stage_in_first_project] }
       let!(:second_project) { Fabricate :project, company: company, stages: [stage_in_second_project] }
-      let!(:third_project) { Fabricate :project, company: company, stages: [] }
+      let!(:third_project) { Fabricate :project, company: company, stages: [second_stage_in_first_project] }
 
-      context 'passing valid parameters' do
+      let!(:stage_project_config) { Fabricate :stage_project_config, stage: stage_in_first_project, project: first_project, stage_percentage: 20 }
+
+      context 'with valid parameters' do
         context 'when there is no stages set in the receiver project' do
-          it 'makes the copy of the stages to the receiver project' do
+          it 'makes the copy of the stages to the receiver project with its configurations as well' do
             patch :copy_stages_from, params: { company_id: company, id: third_project, project_to_copy_stages_from: first_project }, xhr: true
             expect(response).to render_template 'stages/update_stages_table'
             expect(third_project.reload.stages).to match_array [stage_in_first_project, second_stage_in_first_project]
+            expect(third_project.reload.stage_project_configs.map(&:stage_percentage)).to match_array [0, 20]
           end
         end
 
