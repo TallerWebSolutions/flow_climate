@@ -69,15 +69,19 @@ class DemandTransition < ApplicationRecord
     compute_assignments_effort(last_time_in, last_time_out_to_effort, stage_config.stage_percentage_decimal, stage_config.pairing_percentage_decimal) * (1 + stage_config.management_percentage_decimal)
   end
 
-  def time_blocked_in_transition
+  def work_time_blocked_in_transition
     last_time_out_to_block = last_time_out || Time.zone.now
     demand.demand_blocks.kept.closed.active.for_date_interval(last_time_in, last_time_out_to_block).map(&:block_working_time_duration).compact.sum
+  end
+
+  def time_blocked_in_transition
+    demand.demand_blocks.kept.closed.active.for_date_interval(last_time_in, last_time_out).map(&:total_blocked_time).compact.sum
   end
 
   private
 
   def compute_assignments_effort(start_date, end_date, stage_percentage, pairing_percentage)
-    total_blocked = demand.demand_blocks.kept.closed.active.for_date_interval(start_date, end_date).sum(:block_working_time_duration) * stage_percentage
+    total_blocked = work_time_blocked_in_transition * stage_percentage
     assignments_in_dates = demand.item_assignments.for_dates(start_date, end_date)
     return (assignments_in_dates.map { |assign_in_date| assign_in_date.working_hours_until(start_date, end_date) }.sum - total_blocked) * stage_percentage unless assignments_in_dates.count > 1
 
@@ -102,12 +106,21 @@ class DemandTransition < ApplicationRecord
   end
 
   def set_demand_computed_fields
-    current_queue_time = demand.demand_transitions.queue_transitions.sum(&:total_seconds_in_transition)
-    current_touch_time = demand.demand_transitions.touch_transitions.sum(&:total_seconds_in_transition)
-
-    demand.update(total_queue_time: current_queue_time, total_touch_time: current_touch_time, current_stage: current_stage)
+    demand.update(total_queue_time: demand_current_queue_time, total_touch_time: demand_current_touch_time, current_stage: current_stage)
     demand.update_effort!
     demand.send(:compute_and_update_automatic_fields)
+  end
+
+  def demand_current_touch_time
+    @demand_current_touch_time ||= demand.demand_transitions.touch_transitions.sum(&:total_seconds_in_transition) - time_blocked_in_touch_transitions
+  end
+
+  def demand_current_queue_time
+    @demand_current_queue_time ||= demand.demand_transitions.queue_transitions.sum(&:total_seconds_in_transition) + time_blocked_in_touch_transitions
+  end
+
+  def time_blocked_in_touch_transitions
+    @time_blocked_in_touch_transitions ||= demand.demand_transitions.touch_transitions.map(&:time_blocked_in_transition).sum
   end
 
   def current_stage

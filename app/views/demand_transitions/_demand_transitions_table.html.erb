@@ -35,7 +35,7 @@
           <td><%= time_distance_in_words(transition.total_seconds_in_transition) %></td>
           <td><%= "#{transition.working_time_in_transition} h" %></td>
           <td><%= "#{number_with_precision(transition.effort_in_transition, precision: 2)} h" %></td>
-          <td><%= "#{transition.time_blocked_in_transition} h" %></td>
+          <td><%= "#{transition.work_time_blocked_in_transition} h" %></td>
           <td>
             <%= link_to edit_company_demand_demand_transition_path(company, demand, transition), remote: true do %>
               <i class="fas fa-edit"></i>
