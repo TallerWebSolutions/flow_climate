@@ -378,86 +378,63 @@ RSpec.describe Demand, type: :model do
   end
 
   context 'computed fields' do
-    before { travel_to Time.zone.local(2019, 10, 17, 10, 0, 0) }
-
-    after { travel_back }
-
-    context 'leadtime' do
-      context 'having commitment and end dates' do
-        let!(:demand) { Fabricate :demand, commitment_date: 2.days.ago, end_date: 1.hour.ago }
-
-        it { expect(demand.leadtime.to_f).to be_within(1.second).of(169_200.001) }
-      end
-
-      context 'having no commitment date but having end date' do
-        let!(:demand) { Fabricate :demand, commitment_date: nil, end_date: 1.hour.ago }
-
-        it { expect(demand.leadtime).to eq nil }
-      end
-
-      context 'having commitment date but no end date' do
-        let(:demand) { Fabricate :demand, commitment_date: 2.days.ago, end_date: nil }
-
-        it { expect(demand.leadtime).to eq nil }
-      end
-    end
-  end
-
-  describe '#blocked_working_time_upstream' do
     let(:company) { Fabricate :company }
     let(:customer) { Fabricate :customer, company: company }
-    let(:project) { Fabricate :project, customers: [customer] }
-    let(:effort_stage) { Fabricate :stage, stage_stream: :upstream }
-    let!(:stage_project_config) { Fabricate :stage_project_config, project: project, stage: effort_stage, compute_effort: true }
-    let(:demand) { Fabricate :demand, project: project }
+    let(:product) { Fabricate :product, customer: customer }
 
-    context 'having no blockings' do
-      let!(:demand_transition) { Fabricate :demand_transition, demand: demand, stage: effort_stage, last_time_in: Time.zone.parse('2018-03-05 22:00'), last_time_out: Time.zone.parse('2018-03-06 13:00') }
+    let(:first_project) { Fabricate :project, customers: [customer], products: [product], status: :executing, name: 'first_project', start_date: Date.new(2018, 2, 20), end_date: Date.new(2018, 4, 22), qty_hours: 1000, initial_scope: 10, value: 1000, hour_value: 10 }
 
-      it { expect(demand.blocked_working_time_upstream.to_f).to eq 0.0 }
-    end
+    let(:queue_ongoing_stage) { Fabricate :stage, company: company, stage_stream: :downstream, queue: true }
+    let(:touch_ongoing_stage) { Fabricate :stage, company: company, stage_stream: :downstream, queue: false }
 
-    context 'having blockings' do
-      let!(:demand_transition) { Fabricate :demand_transition, demand: demand, stage: effort_stage, last_time_in: Time.zone.parse('2018-03-05 22:00'), last_time_out: Time.zone.parse('2018-03-06 13:00') }
-      let!(:first_demand_block) { Fabricate :demand_block, demand: demand, active: true, block_working_time_duration: 2.0, block_time: Time.zone.parse('2018-03-05 22:00'), unblock_time: Time.zone.parse('2018-03-06 13:00') }
-      let!(:second_demand_block) { Fabricate :demand_block, demand: demand, active: true, block_working_time_duration: 1.0, block_time: Time.zone.parse('2018-03-06 10:00'), unblock_time: Time.zone.parse('2018-03-06 13:00') }
-      let!(:third_demand_block) { Fabricate :demand_block, demand: demand, active: false, block_working_time_duration: 1.0, block_time: Time.zone.parse('2018-03-06 10:00'), unblock_time: Time.zone.parse('2018-03-06 13:00') }
-      let!(:out_demand_block) { Fabricate :demand_block, demand: demand, active: true, block_working_time_duration: 1.0, block_time: Time.zone.parse('2018-03-06 22:00'), unblock_time: Time.zone.parse('2018-03-06 23:00') }
-      let!(:discarded_demand_block) { Fabricate :demand_block, demand: demand, active: true, block_time: Time.zone.parse('2018-03-06 10:00'), unblock_time: Time.zone.parse('2018-03-06 12:00'), discarded_at: Time.zone.now }
+    let(:first_stage) { Fabricate :stage, company: company, stage_stream: :downstream, queue: true, commitment_point: true, end_point: false }
+    let(:second_stage) { Fabricate :stage, company: company, stage_stream: :downstream, queue: false, commitment_point: false, end_point: false }
+    let(:third_stage) { Fabricate :stage, company: company, stage_stream: :downstream, queue: true, commitment_point: false, end_point: true }
 
-      it { expect(demand.blocked_working_time_upstream.to_f).to eq 9.0 }
-    end
-  end
+    let!(:queue_ongoing_stage_project_config) { Fabricate :stage_project_config, project: first_project, stage: queue_ongoing_stage, compute_effort: true, pairing_percentage: 60, stage_percentage: 100, management_percentage: 10 }
+    let!(:touch_ongoing_second_stage_project_config) { Fabricate :stage_project_config, project: first_project, stage: touch_ongoing_stage, compute_effort: true, pairing_percentage: 60, stage_percentage: 100, management_percentage: 10 }
 
-  describe '#blocked_working_time_downstream' do
-    let(:company) { Fabricate :company }
-    let(:customer) { Fabricate :customer, company: company }
-    let(:project) { Fabricate :project, customers: [customer] }
-    let(:effort_stage) { Fabricate :stage, stage_stream: :downstream }
-    let(:no_effort_stage) { Fabricate :stage, stage_stream: :downstream }
+    let!(:first_stage_project_config) { Fabricate :stage_project_config, project: first_project, stage: first_stage, compute_effort: true, pairing_percentage: 60, stage_percentage: 100, management_percentage: 10 }
+    let!(:second_stage_project_config) { Fabricate :stage_project_config, project: first_project, stage: second_stage, compute_effort: true, pairing_percentage: 20, stage_percentage: 30, management_percentage: 20 }
+    let!(:third_stage_project_config) { Fabricate :stage_project_config, project: first_project, stage: third_stage, compute_effort: true, pairing_percentage: 40, stage_percentage: 10, management_percentage: 15 }
 
-    let!(:stage_project_config) { Fabricate :stage_project_config, project: project, stage: effort_stage, compute_effort: true }
-    let!(:other_stage_project_config) { Fabricate :stage_project_config, project: project, stage: no_effort_stage, compute_effort: false }
-    let(:demand) { Fabricate :demand, project: project }
+    let!(:first_demand) { Fabricate :demand, product: product, project: first_project, external_id: 'first_demand', created_date: Time.zone.local(2018, 1, 21, 23, 1, 46), commitment_date: Time.zone.local(2018, 2, 19, 23, 1, 46), end_date: nil, effort_upstream: 10, effort_downstream: 5 }
+    let!(:second_demand) { Fabricate :demand, product: product, project: first_project, external_id: 'second_demand', created_date: Time.zone.local(2018, 1, 21, 23, 1, 46), commitment_date: nil, end_date: Time.zone.local(2018, 2, 19, 23, 1, 46), effort_upstream: 10, effort_downstream: 5 }
+    let!(:third_demand) { Fabricate :demand, product: product, project: first_project, external_id: 'third_demand', created_date: Time.zone.local(2018, 1, 21, 23, 1, 46), commitment_date: Time.zone.local(2018, 2, 10, 23, 1, 46), end_date: Time.zone.local(2018, 2, 19, 23, 1, 46), effort_upstream: 10, effort_downstream: 5 }
 
-    context 'having no blockings' do
-      let!(:demand_transition) { Fabricate :demand_transition, demand: demand, stage: effort_stage, last_time_in: Time.zone.parse('2018-03-05 22:00'), last_time_out: Time.zone.parse('2018-03-06 13:00') }
+    let!(:first_block) { Fabricate :demand_block, demand: first_demand, block_time: Time.zone.local(2018, 2, 27, 17, 30, 58), unblock_time: Time.zone.local(2018, 3, 1, 17, 9, 58), active: true }
+    let!(:second_block) { Fabricate :demand_block, demand: first_demand, block_time: Time.zone.local(2018, 3, 2, 17, 9, 58), unblock_time: Time.zone.local(2018, 3, 3, 11, 9, 58), active: true }
+    let!(:third_block) { Fabricate :demand_block, demand: first_demand, block_time: Time.zone.local(2018, 3, 3, 11, 9, 58), unblock_time: Time.zone.local(2018, 3, 4, 9, 9, 58), active: true }
 
-      it { expect(demand.blocked_working_time_downstream.to_f).to eq 0.0 }
-    end
+    let!(:first_item_assignment) { Fabricate :item_assignment, demand: first_demand, start_time: Time.zone.local(2018, 1, 8, 17, 9, 58), finish_time: nil }
 
-    context 'having blockings' do
-      let!(:demand_transition) { Fabricate :demand_transition, demand: demand, stage: effort_stage, last_time_in: Time.zone.parse('2018-03-05 22:00'), last_time_out: Time.zone.parse('2018-03-06 13:00') }
-      let!(:other_demand_transition) { Fabricate :demand_transition, demand: demand, stage: no_effort_stage, last_time_in: Time.zone.parse('2018-03-06 13:01'), last_time_out: Time.zone.parse('2018-03-06 19:00') }
+    let!(:queue_ongoing_transition) { Fabricate :demand_transition, stage: queue_ongoing_stage, demand: first_demand, last_time_in: Time.zone.local(2018, 2, 10, 17, 9, 58), last_time_out: Time.zone.local(2018, 2, 14, 17, 9, 58) }
+    let!(:touch_ongoing_transition) { Fabricate :demand_transition, stage: touch_ongoing_stage, demand: first_demand, last_time_in: Time.zone.local(2018, 3, 10, 17, 9, 58), last_time_out: Time.zone.local(2018, 3, 19, 17, 9, 58) }
 
-      let!(:first_demand_block) { Fabricate :demand_block, demand: demand, active: true, block_time: Time.zone.parse('2018-03-05 22:00'), unblock_time: Time.zone.parse('2018-03-06 13:00') }
-      let!(:second_demand_block) { Fabricate :demand_block, demand: demand, active: true, block_time: Time.zone.parse('2018-03-06 10:00'), unblock_time: Time.zone.parse('2018-03-06 13:00') }
-      let!(:third_demand_block) { Fabricate :demand_block, demand: demand, active: false, block_time: Time.zone.parse('2018-03-06 10:00'), unblock_time: Time.zone.parse('2018-03-06 13:00') }
-      let!(:out_demand_block) { Fabricate :demand_block, demand: demand, active: true, block_time: Time.zone.parse('2018-03-06 22:00'), unblock_time: Time.zone.parse('2018-03-06 23:00') }
-      let!(:discarded_demand_block) { Fabricate :demand_block, demand: demand, active: true, block_time: Time.zone.parse('2018-03-06 10:00'), unblock_time: Time.zone.parse('2018-03-06 12:00'), discarded_at: Time.zone.now }
-      let!(:no_effort_demand_block) { Fabricate :demand_block, demand: demand, active: true, block_time: Time.zone.parse('2018-03-06 13:10'), unblock_time: Time.zone.parse('2018-03-06 16:00') }
+    let!(:first_transition) { Fabricate :demand_transition, stage: first_stage, demand: first_demand, last_time_in: Time.zone.local(2018, 2, 27, 17, 9, 58), last_time_out: Time.zone.local(2018, 3, 2, 17, 9, 58) }
+    let!(:second_transition) { Fabricate :demand_transition, stage: second_stage, demand: first_demand, last_time_in: Time.zone.local(2018, 3, 2, 17, 9, 58), last_time_out: Time.zone.local(2018, 3, 5, 17, 9, 58) }
+    let!(:third_transition) { Fabricate :demand_transition, stage: third_stage, demand: first_demand, last_time_in: Time.zone.local(2018, 3, 5, 17, 9, 58), last_time_out: Time.zone.local(2018, 3, 6, 14, 9, 58) }
 
-      it { expect(demand.blocked_working_time_downstream.to_f).to eq 11.0 }
+    it 'computes the correct values' do
+      expect(first_demand.leadtime.to_f).to eq 518_400.0
+      expect(first_demand.total_queue_time.to_f).to eq 748_800.0
+      expect(first_demand.total_touch_time.to_f).to eq 892_800.0
+      expect(first_demand.blocked_working_time_downstream.to_f).to eq 24.0
+      expect(first_demand.blocked_working_time_upstream.to_f).to eq 0.0
+      expect(first_demand.total_bloked_working_time.to_f).to eq 18.0
+      expect(first_demand.total_touch_blocked_time.to_f).to eq 144_000.0
+      expect(first_demand.cost_to_project.to_f).to eq 609.1200000000001
+
+      expect(second_demand.leadtime.to_f).to eq 0
+      expect(second_demand.total_queue_time.to_f).to eq 0
+      expect(second_demand.total_touch_time.to_f).to eq 0
+      expect(second_demand.blocked_working_time_downstream.to_f).to eq 0
+      expect(second_demand.blocked_working_time_upstream.to_f).to eq 0
+      expect(second_demand.total_bloked_working_time.to_f).to eq 0
+      expect(second_demand.total_touch_blocked_time.to_f).to eq 0
+      expect(second_demand.cost_to_project.to_f).to eq 150
+
+      expect(third_demand.leadtime.to_f).to eq 781_200.0
     end
   end
 
@@ -593,7 +570,7 @@ RSpec.describe Demand, type: :model do
   end
 
   describe '#total_touch_blocked_time' do
-    context 'having transitions and blocks' do
+    context 'with transitions and blocks' do
       let(:company) { Fabricate :company }
       let(:customer) { Fabricate :customer, company: company }
       let(:product) { Fabricate :product, customer: customer }
@@ -616,7 +593,7 @@ RSpec.describe Demand, type: :model do
       it { expect(demand.total_touch_blocked_time.to_i).to eq 90_000 }
     end
 
-    context 'having no transitions' do
+    context 'with no transitions' do
       let!(:demand) { Fabricate :demand, leadtime: nil }
 
       it { expect(demand.total_touch_blocked_time.to_f).to eq 0 }
