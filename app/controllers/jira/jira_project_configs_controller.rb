@@ -31,7 +31,7 @@ module Jira
       Jira::ProcessJiraProjectJob.perform_later(jira_account, @jira_project_config, current_user.email, current_user.full_name, project_url)
       flash[:notice] = I18n.t('general.enqueued')
 
-      redirect_to company_project_path(@company, @project)
+      respond_to { |format| format.js { render 'jira/jira_project_configs/synchronize_jira' } }
     end
 
     private

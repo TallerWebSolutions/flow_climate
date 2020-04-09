@@ -1,0 +1,3 @@
+<% if flash[:notice].present? %>
+  $(".alerts").html("<%= escape_javascript(render('layouts/notice', message: flash[:notice].html_safe)) %>")
+<% end %>

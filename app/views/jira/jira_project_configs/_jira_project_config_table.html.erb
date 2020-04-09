@@ -25,7 +25,7 @@
                   <i class="fa fa-times" aria-hidden="true"></i>
                 <% end %>
 
-                <%= link_to synchronize_jira_company_project_jira_project_config_path(company, project, config), method: :put do %>
+                <%= link_to synchronize_jira_company_project_jira_project_config_path(company, project, config), method: :put, remote: true do %>
                   <i class="fas fa-sync-alt" aria-hidden="true" title="<%= I18n.t('projects.show.sync_jira') %>"></i>
                 <% end %>
               </td>
