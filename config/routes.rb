@@ -140,7 +140,7 @@ Rails.application.routes.draw do
 
       resources :portfolio_units, except: :index
       resources :risk_reviews, except: :index do
-        resources :risk_review_action_items, only: %w[new create]
+        resources :risk_review_action_items, only: %w[new create destroy]
       end
       resources :service_delivery_reviews, except: :index do
         patch :refresh, on: :member

@@ -33,4 +33,6 @@ class RiskReviewActionItem < ApplicationRecord
   belongs_to :membership
 
   validates :risk_review, :membership, :created_date, :action_type, :description, :deadline, presence: true
+
+  delegate :product, to: :risk_review
 end

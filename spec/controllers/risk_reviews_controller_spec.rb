@@ -175,14 +175,21 @@ RSpec.describe RiskReviewsController, type: :controller do
         context 'having no dependencies' do
           before { delete :destroy, params: { company_id: company, product_id: product, id: risk_review }, xhr: true }
 
-          it 'deletes the product and redirects' do
+          it 'deletes the risk review and renders the template' do
             expect(response).to render_template 'risk_reviews/destroy'
+            expect(response).to render_template 'risk_reviews/_risk_reviews_table'
             expect(RiskReview.all).to eq [other_risk_review]
           end
         end
       end
 
-      context 'passing an invalid ID' do
+      context 'invalid' do
+        context 'non-existent risk review' do
+          before { delete :destroy, params: { company_id: company, product_id: product, id: 'foo' } }
+
+          it { expect(response).to have_http_status :not_found }
+        end
+
         context 'non-existent product' do
           before { delete :destroy, params: { company_id: company, product_id: 'foo', id: risk_review } }
 
