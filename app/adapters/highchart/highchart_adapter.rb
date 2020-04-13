@@ -2,7 +2,7 @@
 
 module Highchart
   class HighchartAdapter
-    attr_reader :x_axis, :all_projects, :start_date, :end_date, :chart_period_interval, :demands_list
+    attr_reader :x_axis, :x_axis_index, :all_projects, :start_date, :end_date, :chart_period_interval, :demands_list
 
     def initialize(demands, start_date, end_date, chart_period_interval)
       @chart_period_interval = chart_period_interval
@@ -43,11 +43,14 @@ module Highchart
 
     def build_x_axis
       @x_axis = []
+      @x_axis_index = []
       return if @all_projects.blank?
 
       @x_axis = TimeService.instance.days_between_of(@start_date, @end_date) if daily?
       @x_axis = TimeService.instance.weeks_between_of(@start_date, @end_date) if weekly?
       @x_axis = TimeService.instance.months_between_of(@start_date, @end_date) if monthly?
+
+      @x_axis_index = @x_axis.map { |value| @x_axis.find_index(value) + 1 }.flatten
     end
 
     def start_of_period_for_date(date)

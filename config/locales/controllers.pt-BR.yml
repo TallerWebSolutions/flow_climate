@@ -593,6 +593,7 @@ pt-BR:
         tab_two: "Custo médio por demanda (CMD)"
         tab_three: "Detalhes do downstream"
         tab_four: "Gráficos do portfólio"
+      projects_tab: "Projetos"
     replenishing:
       title: "Reabastecimento do Fluxo"
     charts:

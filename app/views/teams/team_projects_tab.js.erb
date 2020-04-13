@@ -1,0 +1,11 @@
+var teamProjectsCharts = $("#team-projects-charts");
+
+teamProjectsCharts.html("<%= escape_javascript(render 'teams/team_projects_tab', company: @company, x_axis: @x_axis_index,lead_time_data: @projects_lead_time_in_time).html_safe %>");
+
+$("#general-loader").hide();
+teamProjectsCharts.show();
+
+var lineLeadtimeAccumulated = $("#line-leadtime-accumalated-projects");
+if (lineLeadtimeAccumulated.length !== 0) {
+    buildLineChart(lineLeadtimeAccumulated);
+}

@@ -58,11 +58,16 @@ class TeamsController < AuthenticatedController
     respond_to { |format| format.js { render 'teams/destroy' } }
   end
 
-  def projects_tab
-    @projects_summary = ProjectsSummaryData.new(projects.except(:limit, :offset))
-    @target_name = @team.name
+  def team_projects_tab
+    executing_projects = @team.projects.running
 
-    respond_to { |format| format.js { render 'projects/projects_tab' } }
+    @projects_lead_time_in_time = []
+    array_of_dates = []
+    executing_projects.each { |project| array_of_dates << compute_project_lead_times(project) }
+
+    build_x_axis_index(array_of_dates)
+
+    respond_to { |format| format.js { render 'teams/team_projects_tab' } }
   end
 
   def dashboard_search
@@ -113,6 +118,27 @@ class TeamsController < AuthenticatedController
   end
 
   private
+
+  def build_x_axis_index(array_of_dates)
+    min_date = array_of_dates.flatten.sort_by(&:itself).min
+    max_date = array_of_dates.flatten.sort_by(&:itself).max
+
+    all_period = TimeService.instance.months_between_of(min_date, max_date)
+
+    @x_axis_index = all_period.map { |value| all_period.find_index(value) + 1 }.flatten
+  end
+
+  def compute_project_lead_times(project)
+    project_demands = project.demands
+    project_period = TimeService.instance.weeks_between_of(project.start_date, Time.zone.today)
+
+    statistics_informations = Flow::StatisticsFlowInformations.new(project_demands)
+    project_period.each { |analysed_date| statistics_informations.statistics_flow_behaviour(analysed_date) }
+
+    @projects_lead_time_in_time << { name: project.name, data: statistics_informations.lead_time_accumulated }
+
+    project_period
+  end
 
   def demands
     @demands ||= @team.demands.where(id: params[:demands_ids]&.split(',')).order(:end_date, :commitment_date, :created_date)

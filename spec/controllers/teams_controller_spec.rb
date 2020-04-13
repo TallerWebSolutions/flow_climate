@@ -44,8 +44,8 @@ RSpec.describe TeamsController, type: :controller do
       it { expect(response).to redirect_to new_user_session_path }
     end
 
-    describe 'GET #projects_tab' do
-      before { get :projects_tab, params: { company_id: 'bar', id: 'foo' } }
+    describe 'GET #team_projects_tab' do
+      before { get :team_projects_tab, params: { company_id: 'bar', id: 'foo' } }
 
       it { expect(response).to redirect_to new_user_session_path }
     end
@@ -379,45 +379,42 @@ RSpec.describe TeamsController, type: :controller do
       end
     end
 
-    describe 'GET #projects_tab' do
+    describe 'GET #team_projects_tab' do
       let!(:first_team) { Fabricate :team, company: company }
       let!(:second_team) { Fabricate :team, company: company }
 
       context 'with valid parameters' do
         context 'having data' do
-          let!(:first_project) { Fabricate :project, team: first_team, end_date: 1.day.ago }
-          let!(:second_project) { Fabricate :project, team: first_team, end_date: Time.zone.today }
-
-          let!(:other_project) { Fabricate :project, team: second_team }
+          include_context 'demands to filters'
 
           it 'creates the objects and renders the tab' do
-            get :projects_tab, params: { company_id: company, id: first_team }, xhr: true
+            get :team_projects_tab, params: { company_id: company, id: team }, xhr: true
 
-            expect(response).to render_template 'projects/projects_tab'
-            expect(assigns(:projects_summary)).to be_a ProjectsSummaryData
-            expect(assigns(:projects)).to eq [second_project, first_project]
+            expect(response).to render_template 'teams/team_projects_tab'
+            expect(assigns(:x_axis_index)).to eq [1, 2, 3, 4, 5]
+            expect(assigns(:projects_lead_time_in_time)).to match_array [{ data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1.0], name: first_project.name }, { data: [0, 0, 0, 0, 0, 0, 0, 0, 0.0], name: second_project.name }]
           end
         end
       end
 
       context 'with no data' do
         it 'render the template with empty data' do
-          get :projects_tab, params: { company_id: company, id: first_team }, xhr: true
-          expect(assigns(:projects)).to eq []
-          expect(response).to render_template 'projects/projects_tab'
+          get :team_projects_tab, params: { company_id: company, id: first_team }, xhr: true
+          expect(assigns(:x_axis_index)).to eq []
+          expect(response).to render_template 'teams/team_projects_tab'
         end
       end
 
       context 'with invalid' do
         context 'team' do
-          before { get :projects_tab, params: { company_id: company, id: 'foo' }, xhr: true }
+          before { get :team_projects_tab, params: { company_id: company, id: 'foo' }, xhr: true }
 
           it { expect(response).to have_http_status :not_found }
         end
 
         context 'company' do
           context 'no existent' do
-            before { get :projects_tab, params: { company_id: 'foo', id: first_team } }
+            before { get :team_projects_tab, params: { company_id: 'foo', id: first_team } }
 
             it { expect(response).to have_http_status :not_found }
           end
@@ -425,7 +422,7 @@ RSpec.describe TeamsController, type: :controller do
           context 'not permitted' do
             let(:company) { Fabricate :company, users: [] }
 
-            before { get :projects_tab, params: { company_id: company, id: first_team } }
+            before { get :team_projects_tab, params: { company_id: company, id: first_team } }
 
             it { expect(response).to have_http_status :not_found }
           end
