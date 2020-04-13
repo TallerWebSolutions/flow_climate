@@ -100,7 +100,7 @@ Rails.application.routes.draw do
 
       member do
         get :replenishing_input
-        get :projects_tab
+        get :team_projects_tab
         get :dashboard_search
         get :demands_tab
         get :dashboard_tab

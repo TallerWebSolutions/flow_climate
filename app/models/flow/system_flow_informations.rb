@@ -2,7 +2,7 @@
 
 module Flow
   class SystemFlowInformations
-    attr_reader :demands, :demands_ids, :demands_ids_in_products, :current_limit_date
+    attr_reader :demands, :demands_ids, :demands_ids_in_products, :current_limit_date, :data_point_index
 
     def initialize(demands)
       start_common_attributes

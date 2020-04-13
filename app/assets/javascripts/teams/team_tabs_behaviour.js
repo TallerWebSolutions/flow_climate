@@ -78,6 +78,17 @@ function bindDashboardSelectors() {
         buildReplenishingMeeting(companyId, teamId);
     });
 
+    $("#team-projects-tab").on("click", function() {
+        hideAllTeamTabs();
+
+        let companyId = $("#company_id").val();
+        let teamId = $("#team_id").val();
+
+        activateTab($("#team-projects-tab"));
+
+        getTeamProjectsTab(companyId, teamId);
+    });
+
     $('.dashboard-filter-button').on('click', function() {
         const companyId = $("#company_id").val();
         const teamId = $("#team_id").val();
@@ -96,6 +107,7 @@ function bindDashboardSelectors() {
 
 function hideAllTeamTabs(){
     $("#team-demands-info").hide();
+    $("#team-projects-charts").hide();
     $("#dashboard-controls").hide();
     $("#team-dashboard-filters").hide();
 

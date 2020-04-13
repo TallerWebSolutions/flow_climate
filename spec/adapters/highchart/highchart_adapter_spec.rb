@@ -23,6 +23,7 @@ RSpec.describe Highchart::HighchartAdapter, type: :data_object do
 
         it 'do the math and provides the correct information' do
           expect(chart_data.x_axis).to eq [Date.new(2018, 2, 25), Date.new(2018, 3, 4), Date.new(2018, 3, 11), Date.new(2018, 3, 18), Date.new(2018, 3, 25)]
+          expect(chart_data.x_axis_index).to eq [1, 2, 3, 4, 5]
           expect(chart_data.all_projects).to match_array [first_project, second_project]
         end
       end
@@ -35,6 +36,7 @@ RSpec.describe Highchart::HighchartAdapter, type: :data_object do
 
       it 'returns empty data' do
         expect(chart_data.x_axis).to eq []
+        expect(chart_data.x_axis_index).to eq []
         expect(chart_data.all_projects).to eq []
       end
     end
