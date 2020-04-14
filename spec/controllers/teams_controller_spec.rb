@@ -104,9 +104,6 @@ RSpec.describe TeamsController, type: :controller do
     let(:second_team_member) { Fabricate :team_member, teams: [team] }
     let(:third_team_member) { Fabricate :team_member, teams: [team] }
 
-    let!(:slack_config) { Fabricate :slack_configuration, team: team, info_type: 1 }
-    let!(:other_slack_config) { Fabricate :slack_configuration, team: team, info_type: 0 }
-
     let(:customer) { Fabricate :customer, company: company }
     let(:product) { Fabricate :product, customer: customer }
 
@@ -136,7 +133,6 @@ RSpec.describe TeamsController, type: :controller do
             expect(assigns(:company)).to eq company
             expect(assigns(:team)).to eq team
             expect(assigns(:projects)).to eq [third_project, fourth_project, second_project, first_project]
-            expect(assigns(:slack_configurations)).to eq [slack_config, other_slack_config]
 
             expect(assigns(:work_item_flow_information)).to be_a Flow::WorkItemFlowInformations
             expect(assigns(:statistics_flow_information)).to be_a Flow::StatisticsFlowInformations

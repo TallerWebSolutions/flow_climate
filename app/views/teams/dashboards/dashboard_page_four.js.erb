@@ -1,22 +1,14 @@
-$('#team-dashboard-container-page-four').html("<%= escape_javascript(render 'charts/strategic_charts', model_name: @target_name, strategic_chart_data: @strategic_chart_data) %>")
+var dashboardPageFour = $("#team-dashboard-container-page-four"); dashboardPageFour.html("<%= escape_javascript(render 'charts/strategic_charts', model_name: @target_name, strategic_chart_data: @strategic_chart_data) %>")
+
+hideAllTeamTabs();
 
 $("#general-loader").hide();
 
 $("#dashboard-controls").show();
-$("#team-dashboard-filters").hide();
+$("#team-dashboard-filters").show();
+dashboardPageFour.show();
 
-$("#team-dashboard-container-page-one").hide();
-$("#team-dashboard-container-page-two").hide();
-$("#team-dashboard-container-page-three").hide();
-$("#team-dashboard-container-page-four").show();
-$("#team-demands-info").hide();
-$('#team-dashboard-page-one').removeClass('active');
-
-
-$('#team-dashboard-page-two').removeClass('active');
-$('#team-dashboard-page-three').removeClass('active');
-$('#team-dashboard-page-four').addClass('active');
-
-$('#page-buttons').show();
+activateTab($("#team-dashboard-page-four"));
+$('#team-dashboard-tab').addClass("active");
 
 buildStrategicHighcharts();

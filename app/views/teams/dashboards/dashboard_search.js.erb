@@ -1,4 +1,6 @@
-$("#team-dashboard-container-page-one").html("<%= escape_javascript(render 'teams/dashboards/dashboard_body',
+var dashboardPageOne = $("#team-dashboard-container-page-one");
+
+dashboardPageOne.html("<%= escape_javascript(render 'teams/dashboards/dashboard_body',
              team: @team,
              dates_array: @array_of_dates,
              work_item_flow_information: @work_item_flow_information,
@@ -9,29 +11,18 @@ $("#team-dashboard-container-page-one").html("<%= escape_javascript(render 'team
 $('#team-demands-info').html("<%= escape_javascript(render 'demands/demands_table', company: @company, demands: @paged_demands_searched, unpaged_demands: @demands_searched) %>");
 $('#demands_ids').val("<%= @demands_ids.join(',') %>");
 
+hideAllTeamTabs();
 $('.dashboard-info-tab').removeClass('active');
 
 $("#general-loader").hide();
+
 $("#dashboard-controls").show();
-$("#team-dashboard-filters").show();
-
-$('#team-dashboard-page-one').addClass('active');
-$('#team-dashboard-page-two').removeClass('active');
-$('#team-dashboard-page-three').removeClass('active');
-$('#team-dashboard-page-four').removeClass('active');
-$('#general-info-team-tab').removeClass('active');
-$('#team-search-info-tab').addClass('active');
-
-$("#team-demands-info").hide();
-$("#team-search-info").show();
-
-$("#team-dashboard-container-page-one").show();
-$("#team-dashboard-container-page-two").hide();
-$("#team-dashboard-container-page-three").hide();
-$("#team-dashboard-container-page-four").hide();
-
-$('#team-general-info').hide();
-
 $('#page-buttons').show();
+$("#team-dashboard-filters").show();
+$("#team-search-info").show();
+dashboardPageOne.show();
+
+activateTab($("#team-dashboard-page-one"))
+
 
 startCharts();
