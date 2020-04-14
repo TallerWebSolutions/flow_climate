@@ -1,0 +1,17 @@
+var dashboardPageThree = $("#team-dashboard-container-page-three");
+
+dashboardPageThree.html("<%= escape_javascript(render 'teams/dashboards/dashboard_tab_page_three', company: @company, team: @team, demands_chart_adapter: @demands_chart_adapter, demands_ids: @demands.map(&:id), dates_array: @array_of_dates) %>")
+
+hideAllTeamTabs();
+
+$("#general-loader").hide();
+
+$("#dashboard-controls").show();
+$("#team-dashboard-filters").show();
+dashboardPageThree.show();
+$("#page-buttons").show();
+
+activateTab($("#team-dashboard-page-three"));
+$('#team-dashboard-tab').addClass("active");
+
+buildColumnChart($("#operational-charts-flow-data-column"));

@@ -19,8 +19,6 @@
 
         <div id="team-search-info" class="tabcontent tabcontent-dashboard-info">
           <%= render 'teams/general_info', team: team,
-                     slack_configurations: slack_configurations,
-                     memberships: memberships,
                      demands_count: work_item_flow_information.demands.count,
                      delivered_scope: work_item_flow_information.demands.finished.count,
                      remaining_backlog: work_item_flow_information.demands.kept.count - work_item_flow_information.demands.kept.finished.count,
@@ -36,8 +34,6 @@
 
         <div id="team-general-info" class="tabcontent tabcontent-dashboard-info">
           <%= render 'teams/general_info', team: team,
-                     slack_configurations: slack_configurations,
-                     memberships: memberships,
                      demands_count: team.demands.kept.count,
                      delivered_scope: team.demands.kept.finished.count,
                      remaining_backlog: team.demands.kept.count - team.demands.kept.finished.count,

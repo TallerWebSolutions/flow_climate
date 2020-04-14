@@ -9,7 +9,6 @@ class TeamsController < AuthenticatedController
   def show
     assign_demands_list
     assign_demands_ids
-    assign_team_objects
     build_query_dates
 
     demands_searched = team_demands_search_engine(@demands)
@@ -67,7 +66,6 @@ class TeamsController < AuthenticatedController
   end
 
   def dashboard_search
-    assign_team_objects
     assign_demands_list
 
     @demands_searched = team_demands_search_engine(@demands)
@@ -77,7 +75,7 @@ class TeamsController < AuthenticatedController
 
     @demands_ids = @demands_searched.map(&:id)
 
-    respond_to { |format| format.js { render 'teams/dashboard_search' } }
+    respond_to { |format| format.js { render 'teams/dashboards/dashboard_search' } }
   end
 
   def demands_tab
@@ -88,21 +86,21 @@ class TeamsController < AuthenticatedController
 
   def dashboard_tab
     demands
-    respond_to { |format| format.js { render 'teams/dashboard_tab' } }
+    respond_to { |format| format.js { render 'teams/dashboards/dashboard_tab' } }
   end
 
   def dashboard_page_two
     demands
     @team_chart_data = Highchart::TeamChartsAdapter.new(@team, start_date, end_date, 'week')
 
-    respond_to { |format| format.js { render 'teams/dashboard_page_two' } }
+    respond_to { |format| format.js { render 'teams/dashboards/dashboard_page_two' } }
   end
 
   def dashboard_page_three
     @demands_chart_adapter = Highchart::DemandsChartsAdapter.new(demands, start_date, Time.zone.today, 'week')
     @array_of_dates = @demands_chart_adapter.x_axis
 
-    respond_to { |format| format.js { render 'teams/dashboard_page_three' } }
+    respond_to { |format| format.js { render 'teams/dashboards/dashboard_page_three' } }
   end
 
   def dashboard_page_four
@@ -110,7 +108,7 @@ class TeamsController < AuthenticatedController
     @target_name = @team.name
     @array_of_dates = @strategic_chart_data.x_axis
 
-    respond_to { |format| format.js { render 'teams/dashboard_page_four' } }
+    respond_to { |format| format.js { render 'teams/dashboards/dashboard_page_four' } }
   end
 
   private
@@ -238,11 +236,6 @@ class TeamsController < AuthenticatedController
   def build_query_dates
     @start_date = start_date
     @end_date = end_date
-  end
-
-  def assign_team_objects
-    @memberships = @company.memberships.includes(:team_member).where(team: @team).sort_by(&:team_member_name)
-    @slack_configurations = @team.slack_configurations.order(:created_at)
   end
 
   def assign_team

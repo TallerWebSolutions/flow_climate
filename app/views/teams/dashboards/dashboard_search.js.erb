@@ -1,7 +1,7 @@
-$("#team-dashboard-container-page-one").html("<%= escape_javascript(render 'teams/dashboard_body',
+var dashboardPageOne = $("#team-dashboard-container-page-one");
+
+dashboardPageOne.html("<%= escape_javascript(render 'teams/dashboards/dashboard_body',
              team: @team,
-             slack_configurations: @slack_configurations,
-             memberships: @memberships,
              dates_array: @array_of_dates,
              work_item_flow_information: @work_item_flow_information,
              statistics_flow_information: @statistics_flow_information,
@@ -11,12 +11,18 @@ $("#team-dashboard-container-page-one").html("<%= escape_javascript(render 'team
 $('#team-demands-info').html("<%= escape_javascript(render 'demands/demands_table', company: @company, demands: @paged_demands_searched, unpaged_demands: @demands_searched) %>");
 $('#demands_ids').val("<%= @demands_ids.join(',') %>");
 
-$("#general-loader").hide();
-$("#dashboard-controls").show();
-$("#team-dashboard-filters").hide();
+hideAllTeamTabs();
+$('.dashboard-info-tab').removeClass('active');
 
-$('#team-search-info-tab').addClass('active');
+$("#general-loader").hide();
+
+$("#dashboard-controls").show();
+$('#page-buttons').show();
+$("#team-dashboard-filters").show();
 $("#team-search-info").show();
-$('#team-demands-info').show();
+dashboardPageOne.show();
+
+activateTab($("#team-dashboard-page-one"))
+
 
 startCharts();

@@ -1,0 +1,14 @@
+var dashboardPageFour = $("#team-dashboard-container-page-four"); dashboardPageFour.html("<%= escape_javascript(render 'charts/strategic_charts', model_name: @target_name, strategic_chart_data: @strategic_chart_data) %>")
+
+hideAllTeamTabs();
+
+$("#general-loader").hide();
+
+$("#dashboard-controls").show();
+$("#team-dashboard-filters").show();
+dashboardPageFour.show();
+
+activateTab($("#team-dashboard-page-four"));
+$('#team-dashboard-tab').addClass("active");
+
+buildStrategicHighcharts();
