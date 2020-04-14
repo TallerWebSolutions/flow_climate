@@ -1,0 +1,18 @@
+var dashboardPageFive = $("#team-dashboard-container-page-five");
+
+dashboardPageFive.html("<%= escape_javascript(render 'teams/dashboards/dashboard_tab_page_five', x_axis: @x_axis_index, membership_lead_time_data: @memberships_lead_time_in_time) %>")
+
+hideAllTeamTabs();
+
+$("#general-loader").hide();
+
+$("#page-buttons").show();
+dashboardPageFive.show();
+
+activateTab($("#team-dashboard-page-five"));
+$('#team-dashboard-tab').addClass("active");
+
+var lineLeadtimeMembershipsAccumulated = $("#line-leadtime-accumalated-memberships");
+if (lineLeadtimeMembershipsAccumulated.length !== 0) {
+    buildLineChart(lineLeadtimeMembershipsAccumulated);
+}

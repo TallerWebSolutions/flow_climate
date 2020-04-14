@@ -1019,6 +1019,7 @@ en:
         tab_two: "Average demand cost"
         tab_three: "Downstream details"
         tab_four: "Portfolio charts"
+        tab_five: "Memberships Charts"
       projects_tab: "Projects"
     new:
       title: "New Team"

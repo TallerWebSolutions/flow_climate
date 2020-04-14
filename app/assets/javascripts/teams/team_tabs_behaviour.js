@@ -62,9 +62,16 @@ function bindDashboardSelectors() {
         let startDate = $("#demands_start_date").val();
         let endDate = $("#demands_end_date").val();
 
-        activateTab($("#team-dashboard-page-four"));
-
         getDashboardPageFour(companyId, teamId, demandsIds, startDate, endDate);
+    });
+
+    $("#team-dashboard-page-five").on("click", function() {
+        hideAllTeamTabs();
+
+        let companyId = $("#company_id").val();
+        let teamId = $("#team_id").val();
+
+        getDashboardPageFive(companyId, teamId);
     });
 
     $("#team-replenishing-tab").on("click", function() {

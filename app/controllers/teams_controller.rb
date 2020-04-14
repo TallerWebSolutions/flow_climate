@@ -111,6 +111,14 @@ class TeamsController < AuthenticatedController
     respond_to { |format| format.js { render 'teams/dashboards/dashboard_page_four' } }
   end
 
+  def dashboard_page_five
+    active_memberships = @team.memberships.active
+
+    build_membership_lead_time_in_time_array(active_memberships)
+
+    respond_to { |format| format.js { render 'teams/dashboards/dashboard_page_five' } }
+  end
+
   private
 
   def build_projects_lead_time_in_time_array(executing_projects)
@@ -123,6 +131,18 @@ class TeamsController < AuthenticatedController
       @projects_lead_time_in_time << project_lead_times_hash[:project_data]
 
       @projects_risk_in_time << { name: project.name, data: project.project_consolidations.map { |consolidation| (1 - consolidation.odds_to_deadline_project) * 100 } }
+    end
+
+    build_x_axis_index(array_of_dates)
+  end
+
+  def build_membership_lead_time_in_time_array(active_memberships)
+    @memberships_lead_time_in_time = []
+    array_of_dates = []
+    active_memberships.each do |membership|
+      membership_lead_times_hash = compute_membership_lead_times(membership)
+      array_of_dates << membership_lead_times_hash[:membership_period]
+      @memberships_lead_time_in_time << membership_lead_times_hash[:membership_data]
     end
 
     build_x_axis_index(array_of_dates)
@@ -145,6 +165,17 @@ class TeamsController < AuthenticatedController
     project_period.each { |analysed_date| statistics_informations.statistics_flow_behaviour(analysed_date) }
 
     { project_period: project_period, project_data: { name: project.name, data: statistics_informations.lead_time_accumulated } }
+  end
+
+  def compute_membership_lead_times(membership)
+    membership_demands = membership.demands
+    start_date = [membership.start_date, membership.demands.kept.map(&:commitment_date).compact.min].max
+    membership_period = TimeService.instance.weeks_between_of(start_date, Time.zone.today)
+
+    statistics_informations = Flow::StatisticsFlowInformations.new(membership_demands)
+    membership_period.each { |analysed_date| statistics_informations.statistics_flow_behaviour(analysed_date) }
+
+    { membership_period: membership_period, membership_data: { name: membership.team_member_name, data: statistics_informations.lead_time_accumulated } }
   end
 
   def demands
