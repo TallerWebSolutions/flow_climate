@@ -68,6 +68,7 @@ function getDashboardPageFour(companyId, teamId, demandsIds, startDate, endDate)
 
 function getDashboardPageFive(companyId, teamId) {
     $("#general-loader").show();
+    hideAllTeamTabs();
 
     jQuery.ajax({
         url: `/companies/${companyId}/teams/${teamId}/dashboard_page_five.js`,

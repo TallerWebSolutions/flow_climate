@@ -88,6 +88,7 @@
          data-ytitle='<%= I18n.t('charts.cfd.ytitle') %>'
          data-prefix=''
          data-tooltipsuffix='<%= I18n.t('general.days') %>'
+         data-datalabelsuffix=''
          data-series='<%= [{ name: I18n.t('teams.show.lead_time_p80_accumulated'), data: statistics_flow_information.lead_time_accumulated }].to_json %>'
          data-decimals='2'>
     </div>
@@ -100,6 +101,7 @@
          data-ytitle='<%= I18n.t('charts.cfd.ytitle') %>'
          data-prefix=''
          data-tooltipsuffix='%'
+         data-datalabelsuffix='%'
          data-series='<%= [{ name: I18n.t('teams.show.quality_share.series'), data: work_item_flow_information.bugs_share_data_array }].to_json %>'
          data-decimals='2'>
     </div>
@@ -159,7 +161,8 @@
          data-xtitle='<%= I18n.t('projects.charts.xlabel.weeks') %>'
          data-ytitle='<%= I18n.t('general.percentage.title') %>'
          data-prefix=''
-         data-tooltipsuffix='<%= I18n.t('general.percentage.symbol') %>'
+         data-tooltipsuffix='%'
+         data-datalabelsuffix='%'
          data-series='<%= [{ name: I18n.t('projects.charts.flow_efficiency.share'), data: time_flow_informations.flow_efficiency }].to_json %>'
          data-decimals='2'>
     </div>
@@ -173,6 +176,7 @@
          data-ytitle='<%= I18n.t('projects.charts.bugs_in_time.ylabel') %>'
          data-prefix=''
          data-tooltipsuffix='<%= I18n.t('projects.charts.bugs_in_time.suffix') %>'
+         data-datalabelsuffix=''
          data-series='<%= [{ name: I18n.t('projects.charts.bugs_in_time.opened'), data: work_item_flow_information.bugs_opened_data_array }, { name: I18n.t('projects.charts.bugs_in_time.closed'), data: work_item_flow_information.bugs_closed_data_array }].to_json %>'
          data-decimals='0'>
     </div>

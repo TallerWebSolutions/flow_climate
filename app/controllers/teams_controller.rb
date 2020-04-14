@@ -112,7 +112,7 @@ class TeamsController < AuthenticatedController
   end
 
   def dashboard_page_five
-    active_memberships = @team.memberships.active
+    active_memberships = @team.memberships.active.developer.includes([:team_member])
 
     build_membership_lead_time_in_time_array(active_memberships)
 
@@ -149,8 +149,8 @@ class TeamsController < AuthenticatedController
   end
 
   def build_x_axis_index(array_of_dates)
-    min_date = array_of_dates.flatten.sort_by(&:itself).min
-    max_date = array_of_dates.flatten.sort_by(&:itself).max
+    min_date = array_of_dates.flatten.min
+    max_date = array_of_dates.flatten.max
 
     all_period = TimeService.instance.months_between_of(min_date, max_date)
 

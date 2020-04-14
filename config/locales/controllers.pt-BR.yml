@@ -47,7 +47,6 @@ pt-BR:
     no_data: "Não existem %{missing_data} para essa exibição"
     download_csv: "Download CSV"
     percentage:
-      symbol: "%"
       title: "Porcentagem"
     destroy:
       confirm: "Confirma a exclusão do registro?"

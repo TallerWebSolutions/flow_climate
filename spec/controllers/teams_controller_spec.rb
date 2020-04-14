@@ -103,10 +103,11 @@ RSpec.describe TeamsController, type: :controller do
 
     let(:first_team_member) { Fabricate :team_member }
     let(:second_team_member) { Fabricate :team_member }
-    let(:third_team_member) { Fabricate :team_member, teams: [team] }
+    let(:third_team_member) { Fabricate :team_member }
 
-    let!(:first_membership) { Fabricate :membership, team: team, team_member: first_team_member, start_date: 3.weeks.ago, end_date: nil }
-    let!(:second_membership) { Fabricate :membership, team: team, team_member: second_team_member, start_date: 1.week.ago, end_date: nil }
+    let!(:first_membership) { Fabricate :membership, team: team, team_member: first_team_member, start_date: 3.weeks.ago, end_date: nil, member_role: :developer }
+    let!(:second_membership) { Fabricate :membership, team: team, team_member: second_team_member, start_date: 1.week.ago, end_date: nil, member_role: :developer }
+    let!(:third_membership) { Fabricate :membership, team: team, team_member: third_team_member, start_date: 1.week.ago, end_date: nil, member_role: :manager }
 
     let(:customer) { Fabricate :customer, company: company }
     let(:product) { Fabricate :product, customer: customer }
@@ -125,9 +126,10 @@ RSpec.describe TeamsController, type: :controller do
 
       let!(:first_assignment) { Fabricate :item_assignment, demand: first_demand, team_member: first_team_member }
       let!(:second_assignment) { Fabricate :item_assignment, demand: first_demand, team_member: second_team_member }
+      let!(:third_assignment) { Fabricate :item_assignment, demand: first_demand, team_member: third_team_member }
 
-      let!(:third_assignment) { Fabricate :item_assignment, demand: second_demand, team_member: first_team_member }
-      let!(:fourth_assignment) { Fabricate :item_assignment, demand: third_demand, team_member: second_team_member }
+      let!(:fourth_assignment) { Fabricate :item_assignment, demand: second_demand, team_member: first_team_member }
+      let!(:fifth_assignment) { Fabricate :item_assignment, demand: third_demand, team_member: second_team_member }
     end
 
     describe 'GET #show' do

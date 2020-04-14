@@ -122,6 +122,7 @@ function hideAllTeamTabs(){
     $("#team-dashboard-container-page-two").hide();
     $("#team-dashboard-container-page-three").hide();
     $("#team-dashboard-container-page-four").hide();
+    $("#team-dashboard-container-page-five").hide();
     $("#team-replenishing-container").hide();
 }
 
