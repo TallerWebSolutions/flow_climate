@@ -1,4 +1,4 @@
-$('#team-dashboard-container-page-three').html("<%= escape_javascript(render 'teams/dashboard_tab_page_three', company: @company, team: @team, demands_chart_adapter: @demands_chart_adapter, demands_ids: @demands.map(&:id), dates_array: @array_of_dates) %>")
+$('#team-dashboard-container-page-three').html("<%= escape_javascript(render 'teams/dashboards/dashboard_tab_page_three', company: @company, team: @team, demands_chart_adapter: @demands_chart_adapter, demands_ids: @demands.map(&:id), dates_array: @array_of_dates) %>")
 
 $("#general-loader").hide();
 $("#dashboard-controls").show();
@@ -14,6 +14,7 @@ $("#team-demands-info").hide();
 $('#team-dashboard-page-one').removeClass('active');
 $('#team-dashboard-page-two').removeClass('active');
 $('#team-dashboard-page-three').addClass('active');
+$('#team-dashboard-page-four').removeClass('active');
 
 $('#page-buttons').show();
 

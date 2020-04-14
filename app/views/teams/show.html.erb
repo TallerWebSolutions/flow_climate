@@ -60,16 +60,15 @@
 </div>
 
 <div id="team-dashboard-filters">
-  <%= render 'teams/dashboard_filter', start_date: @start_date, end_date: @end_date %>
+  <%= render 'teams/dashboards/dashboard_filter', start_date: @start_date, end_date: @end_date %>
 </div>
 
 <hr>
 
 <div id="team-dashboard-container-page-one" class="tabcontent">
-  <%= render 'teams/dashboard_body',
+  <%= render 'teams/dashboards/dashboard_body',
              team: @team,
              slack_configurations: @slack_configurations,
-             memberships: @memberships,
              dates_array: @array_of_dates,
              work_item_flow_information: @work_item_flow_information,
              time_flow_informations: @time_flow_informations,

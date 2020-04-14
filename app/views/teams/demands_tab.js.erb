@@ -1,14 +1,26 @@
 $('#team-demands-info').html("<%= escape_javascript(render 'demands/demands_table', company: @company, demands: @paged_demands, unpaged_demands: @demands) %>")
 
+$('.dashboard-info-tab').removeClass('active');
+
 $("#general-loader").hide();
-$("#dashboard-controls").show();
-$("#team-dashboard-filters").show();
+$("#dashboard-controls").hide();
+$("#team-dashboard-filters").hide();
+
+$('#team-dashboard-page-one').removeClass('active');
+$('#team-dashboard-page-two').removeClass('active');
+$('#team-dashboard-page-three').removeClass('active');
+$('#team-dashboard-page-four').removeClass('active');
+$('#general-info-team-tab').removeClass('active');
+$('#team-search-info-tab').addClass('active');
+
+$("#team-demands-info").show();
+$("#team-search-info").hide();
 
 $("#team-dashboard-container-page-one").hide();
 $("#team-dashboard-container-page-two").hide();
 $("#team-dashboard-container-page-three").hide();
+$("#team-dashboard-container-page-four").hide();
 
-$('#team-general-info').show();
-$('#general-info-team-tab').addClass('active');
+$('#team-general-info').hide();
 
-$("#team-demands-info").show();
+$('#page-buttons').hide();

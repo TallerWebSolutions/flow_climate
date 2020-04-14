@@ -448,7 +448,7 @@ RSpec.describe TeamsController, type: :controller do
             it 'search the informations and renders the template' do
               get :dashboard_search, params: { company_id: company, id: team }, xhr: true
 
-              expect(response).to render_template 'teams/dashboard_search'
+              expect(response).to render_template 'teams/dashboards/dashboard_search'
               expect(assigns(:work_item_flow_information).demands).to eq [first_demand, second_demand, fifth_demand, third_demand, fourth_demand]
               expect(assigns(:paged_demands_searched)).to eq [first_demand, second_demand, fifth_demand, third_demand, fourth_demand]
             end
@@ -458,7 +458,7 @@ RSpec.describe TeamsController, type: :controller do
             it 'search the informations and renders the template' do
               get :dashboard_search, params: { company_id: company, id: team, start_date: 1.day.ago, end_date: Time.zone.now }, xhr: true
 
-              expect(response).to render_template 'teams/dashboard_search'
+              expect(response).to render_template 'teams/dashboards/dashboard_search'
               expect(assigns(:work_item_flow_information).demands).to eq [second_demand, fifth_demand, third_demand]
             end
           end
@@ -467,7 +467,7 @@ RSpec.describe TeamsController, type: :controller do
             it 'search the informations and renders the template' do
               get :dashboard_search, params: { company_id: company, id: team, project_status: 'active' }, xhr: true
 
-              expect(response).to render_template 'teams/dashboard_search'
+              expect(response).to render_template 'teams/dashboards/dashboard_search'
               expect(assigns(:work_item_flow_information).demands).to eq [first_demand, second_demand, third_demand, fourth_demand]
             end
           end
@@ -476,7 +476,7 @@ RSpec.describe TeamsController, type: :controller do
             it 'search the informations and renders the template' do
               get :dashboard_search, params: { company_id: company, id: team, demand_status: 'finished' }, xhr: true
 
-              expect(response).to render_template 'teams/dashboard_search'
+              expect(response).to render_template 'teams/dashboards/dashboard_search'
               expect(assigns(:work_item_flow_information).demands).to eq [first_demand, second_demand, fifth_demand, third_demand]
             end
           end
@@ -485,7 +485,7 @@ RSpec.describe TeamsController, type: :controller do
             it 'search the informations and renders the template' do
               get :dashboard_search, params: { company_id: company, id: team, demand_type: 'bug' }, xhr: true
 
-              expect(response).to render_template 'teams/dashboard_search'
+              expect(response).to render_template 'teams/dashboards/dashboard_search'
               expect(assigns(:work_item_flow_information).demands).to eq [second_demand]
             end
           end
@@ -494,7 +494,7 @@ RSpec.describe TeamsController, type: :controller do
             it 'search the informations and renders the template' do
               get :dashboard_search, params: { company_id: company, id: team, demand_type: 'feature' }, xhr: true
 
-              expect(response).to render_template 'teams/dashboard_search'
+              expect(response).to render_template 'teams/dashboards/dashboard_search'
               expect(assigns(:work_item_flow_information).demands).to eq [first_demand]
             end
           end
@@ -503,7 +503,7 @@ RSpec.describe TeamsController, type: :controller do
             it 'search the informations and renders the template' do
               get :dashboard_search, params: { company_id: company, id: team, demand_type: 'chore' }, xhr: true
 
-              expect(response).to render_template 'teams/dashboard_search'
+              expect(response).to render_template 'teams/dashboards/dashboard_search'
               expect(assigns(:work_item_flow_information).demands).to eq [fifth_demand]
             end
           end
@@ -512,7 +512,7 @@ RSpec.describe TeamsController, type: :controller do
             it 'search the informations and renders the template' do
               get :dashboard_search, params: { company_id: company, id: team, demand_type: 'performance_improvement' }, xhr: true
 
-              expect(response).to render_template 'teams/dashboard_search'
+              expect(response).to render_template 'teams/dashboards/dashboard_search'
               expect(assigns(:work_item_flow_information).demands).to eq [third_demand]
             end
           end
@@ -521,7 +521,7 @@ RSpec.describe TeamsController, type: :controller do
             it 'search the informations and renders the template' do
               get :dashboard_search, params: { company_id: company, id: team, demand_type: 'ui' }, xhr: true
 
-              expect(response).to render_template 'teams/dashboard_search'
+              expect(response).to render_template 'teams/dashboards/dashboard_search'
               expect(assigns(:work_item_flow_information).demands).to eq [fourth_demand]
             end
           end
@@ -530,7 +530,7 @@ RSpec.describe TeamsController, type: :controller do
             it 'search the informations and renders the template' do
               get :dashboard_search, params: { company_id: company, id: team, demand_type: 'foo' }, xhr: true
 
-              expect(response).to render_template 'teams/dashboard_search'
+              expect(response).to render_template 'teams/dashboards/dashboard_search'
               expect(assigns(:work_item_flow_information).demands).to eq [first_demand, second_demand, fifth_demand, third_demand, fourth_demand]
             end
           end
@@ -539,7 +539,7 @@ RSpec.describe TeamsController, type: :controller do
             it 'search the informations and renders the template' do
               get :dashboard_search, params: { company_id: company, id: team, demand_class_of_service: 'standard' }, xhr: true
 
-              expect(response).to render_template 'teams/dashboard_search'
+              expect(response).to render_template 'teams/dashboards/dashboard_search'
               expect(assigns(:work_item_flow_information).demands).to eq [first_demand, second_demand]
             end
           end
@@ -548,7 +548,7 @@ RSpec.describe TeamsController, type: :controller do
             it 'search the informations and renders the template' do
               get :dashboard_search, params: { company_id: company, id: team, demand_class_of_service: 'expedite' }, xhr: true
 
-              expect(response).to render_template 'teams/dashboard_search'
+              expect(response).to render_template 'teams/dashboards/dashboard_search'
               expect(assigns(:work_item_flow_information).demands).to eq [third_demand]
             end
           end
@@ -557,7 +557,7 @@ RSpec.describe TeamsController, type: :controller do
             it 'search the informations and renders the template' do
               get :dashboard_search, params: { company_id: company, id: team, demand_class_of_service: 'fixed_date' }, xhr: true
 
-              expect(response).to render_template 'teams/dashboard_search'
+              expect(response).to render_template 'teams/dashboards/dashboard_search'
               expect(assigns(:work_item_flow_information).demands).to eq [fourth_demand]
             end
           end
@@ -566,7 +566,7 @@ RSpec.describe TeamsController, type: :controller do
             it 'search the informations and renders the template' do
               get :dashboard_search, params: { company_id: company, id: team, demand_class_of_service: 'intangible' }, xhr: true
 
-              expect(response).to render_template 'teams/dashboard_search'
+              expect(response).to render_template 'teams/dashboards/dashboard_search'
               expect(assigns(:work_item_flow_information).demands).to eq [fifth_demand]
             end
           end
@@ -656,7 +656,7 @@ RSpec.describe TeamsController, type: :controller do
           it 'creates the objects and renders the tab' do
             get :dashboard_tab, params: { company_id: company, id: team }, xhr: true
 
-            expect(response).to render_template 'teams/dashboard_tab'
+            expect(response).to render_template 'teams/dashboards/dashboard_tab'
           end
         end
       end
@@ -696,7 +696,7 @@ RSpec.describe TeamsController, type: :controller do
 
             expect(assigns(:team_chart_data)).to be_a Highchart::TeamChartsAdapter
 
-            expect(response).to render_template 'teams/dashboard_page_two'
+            expect(response).to render_template 'teams/dashboards/dashboard_page_two'
           end
         end
       end
@@ -736,7 +736,7 @@ RSpec.describe TeamsController, type: :controller do
 
             expect(assigns(:demands_chart_adapter)).to be_a Highchart::DemandsChartsAdapter
 
-            expect(response).to render_template 'teams/dashboard_page_three'
+            expect(response).to render_template 'teams/dashboards/dashboard_page_three'
           end
         end
       end
@@ -776,7 +776,7 @@ RSpec.describe TeamsController, type: :controller do
 
             expect(assigns(:strategic_chart_data)).to be_a Highchart::StrategicChartsAdapter
 
-            expect(response).to render_template 'teams/dashboard_page_four'
+            expect(response).to render_template 'teams/dashboards/dashboard_page_four'
             expect(response).to render_template 'charts/_strategic_charts'
           end
         end
