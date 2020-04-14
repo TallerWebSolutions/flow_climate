@@ -47,7 +47,6 @@ pt-BR:
     no_data: "Não existem %{missing_data} para essa exibição"
     download_csv: "Download CSV"
     percentage:
-      symbol: "%"
       title: "Porcentagem"
     destroy:
       confirm: "Confirma a exclusão do registro?"
@@ -594,6 +593,7 @@ pt-BR:
         tab_two: "Custo médio por demanda (CMD)"
         tab_three: "Detalhes do downstream"
         tab_four: "Gráficos do portfólio"
+        tab_five: "Gráficos de Membros do Time"
       projects_tab: "Projetos"
     replenishing:
       title: "Reabastecimento do Fluxo"

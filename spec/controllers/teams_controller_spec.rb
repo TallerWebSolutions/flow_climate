@@ -100,9 +100,14 @@ RSpec.describe TeamsController, type: :controller do
 
     let(:company) { Fabricate :company, users: [user] }
     let(:team) { Fabricate :team, company: company }
-    let(:first_team_member) { Fabricate :team_member, teams: [team] }
-    let(:second_team_member) { Fabricate :team_member, teams: [team] }
-    let(:third_team_member) { Fabricate :team_member, teams: [team] }
+
+    let(:first_team_member) { Fabricate :team_member }
+    let(:second_team_member) { Fabricate :team_member }
+    let(:third_team_member) { Fabricate :team_member }
+
+    let!(:first_membership) { Fabricate :membership, team: team, team_member: first_team_member, start_date: 3.weeks.ago, end_date: nil, member_role: :developer }
+    let!(:second_membership) { Fabricate :membership, team: team, team_member: second_team_member, start_date: 1.week.ago, end_date: nil, member_role: :developer }
+    let!(:third_membership) { Fabricate :membership, team: team, team_member: third_team_member, start_date: 1.week.ago, end_date: nil, member_role: :manager }
 
     let(:customer) { Fabricate :customer, company: company }
     let(:product) { Fabricate :product, customer: customer }
@@ -118,6 +123,13 @@ RSpec.describe TeamsController, type: :controller do
       let!(:third_demand) { Fabricate :demand, product: product, team: team, project: third_project, demand_type: :performance_improvement, class_of_service: :expedite, external_id: 'third_demand', created_date: 7.days.ago, commitment_date: 7.days.ago, end_date: Time.zone.now }
       let!(:fourth_demand) { Fabricate :demand, product: product, team: team, project: first_project, demand_type: :ui, class_of_service: :fixed_date, external_id: 'fourth_demand', created_date: 7.days.ago, commitment_date: 7.days.ago, end_date: nil }
       let!(:fifth_demand) { Fabricate :demand, product: product, team: team, project: fourth_project, demand_type: :chore, class_of_service: :intangible, external_id: 'fifth_demand', end_date: 3.hours.ago }
+
+      let!(:first_assignment) { Fabricate :item_assignment, demand: first_demand, team_member: first_team_member }
+      let!(:second_assignment) { Fabricate :item_assignment, demand: first_demand, team_member: second_team_member }
+      let!(:third_assignment) { Fabricate :item_assignment, demand: first_demand, team_member: third_team_member }
+
+      let!(:fourth_assignment) { Fabricate :item_assignment, demand: second_demand, team_member: first_team_member }
+      let!(:fifth_assignment) { Fabricate :item_assignment, demand: third_demand, team_member: second_team_member }
     end
 
     describe 'GET #show' do
@@ -796,6 +808,60 @@ RSpec.describe TeamsController, type: :controller do
             let(:company) { Fabricate :company, users: [] }
 
             before { get :dashboard_page_four, params: { company_id: company, id: team } }
+
+            it { expect(response).to have_http_status :not_found }
+          end
+        end
+      end
+    end
+
+    describe 'GET #dashboard_page_five' do
+      let!(:first_team) { Fabricate :team, company: company }
+      let!(:second_team) { Fabricate :team, company: company }
+
+      context 'with valid parameters' do
+        context 'having data' do
+          include_context 'demands to filters'
+
+          it 'creates the objects and renders the tab' do
+            get :dashboard_page_five, params: { company_id: company, id: team }, xhr: true
+
+            expect(response).to render_template 'teams/dashboards/dashboard_page_five'
+            expect(response).to render_template 'teams/dashboards/_dashboard_tab_page_five'
+            expect(assigns(:x_axis_index)).to eq [1]
+            expect(assigns(:memberships_lead_time_in_time)).to match_array [{ data: [0.8], name: first_team_member.name }, { data: [0, 5.800000000000001], name: second_team_member.name }]
+          end
+        end
+      end
+
+      context 'with no data' do
+        it 'render the template with empty data' do
+          get :dashboard_page_five, params: { company_id: company, id: first_team }, xhr: true
+
+          expect(assigns(:x_axis_index)).to eq []
+          expect(assigns(:memberships_lead_time_in_time)).to eq []
+          expect(response).to render_template 'teams/dashboards/dashboard_page_five'
+        end
+      end
+
+      context 'with invalid' do
+        context 'team' do
+          before { get :dashboard_page_five, params: { company_id: company, id: 'foo' }, xhr: true }
+
+          it { expect(response).to have_http_status :not_found }
+        end
+
+        context 'company' do
+          context 'no existent' do
+            before { get :dashboard_page_five, params: { company_id: 'foo', id: first_team } }
+
+            it { expect(response).to have_http_status :not_found }
+          end
+
+          context 'not permitted' do
+            let(:company) { Fabricate :company, users: [] }
+
+            before { get :dashboard_page_five, params: { company_id: company, id: first_team } }
 
             it { expect(response).to have_http_status :not_found }
           end

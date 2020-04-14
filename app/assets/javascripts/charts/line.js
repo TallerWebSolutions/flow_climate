@@ -44,7 +44,7 @@ function buildLineChart(lineDiv) {
         tooltip: {
             enabled: true,
             valuePrefix: lineDiv.data('prefix'),
-            valueSuffix: lineDiv.data('tooltipsuffix'),
+            valueSuffix: ` ${lineDiv.data('tooltipsuffix')}`,
             valueDecimals: lineDiv.data('decimals'),
             shared: true
         },
@@ -58,9 +58,13 @@ function buildLineChart(lineDiv) {
             line: {
                 dataLabels: {
                     enabled: true,
-                    color: 'black',
                     formatter: function () {
-                        return `${lineDiv.data('prefix') + Highcharts.numberFormat(this.y, lineDiv.data("decimals"), ",", ".") + " " + lineDiv.data('tooltipsuffix')}`;
+                        let firstPoint = this.series.data[0];
+                        let lastPoint = this.series.data[this.series.data.length - 1];
+
+                        if ((this.point.category === firstPoint.category && this.point.y === firstPoint.y) || (this.point.category === lastPoint.category  && this.point.y === lastPoint.y)) {
+                            return `<span style='color: ${this.color}'>${lineDiv.data('prefix') + Highcharts.numberFormat(this.y, lineDiv.data("decimals"), ",", ".") + " " + lineDiv.data('datalabelsuffix')}</span>`;
+                        }
                     }
                 }
             }

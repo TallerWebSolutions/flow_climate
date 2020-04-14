@@ -107,6 +107,7 @@ Rails.application.routes.draw do
         get :dashboard_page_two
         get :dashboard_page_three
         get :dashboard_page_four
+        get :dashboard_page_five
       end
     end
 

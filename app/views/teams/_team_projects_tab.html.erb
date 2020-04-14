@@ -5,7 +5,8 @@
      data-ytitle='<%= I18n.t('general.days') %>'
      data-xtitle='<%= I18n.t('general.weeks') %>'
      data-prefix=''
-     data-tooltipsuffix=''
+     data-tooltipsuffix='<%= I18n.t('general.days') %>'
+     data-datalabelsuffix=''
      data-series='<%= lead_time_data.to_json %>'
      data-decimals='2'>
 </div>
@@ -20,6 +21,7 @@
      data-xtitle='<%= I18n.t('general.weeks') %>'
      data-prefix=''
      data-tooltipsuffix='%'
+     data-datalabelsuffix='%'
      data-series='<%= projects_risk_data.to_json %>'
      data-decimals='2'>
 </div>
