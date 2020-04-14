@@ -61,11 +61,7 @@ class TeamsController < AuthenticatedController
   def team_projects_tab
     executing_projects = @team.projects.running
 
-    @projects_lead_time_in_time = []
-    array_of_dates = []
-    executing_projects.each { |project| array_of_dates << compute_project_lead_times(project) }
-
-    build_x_axis_index(array_of_dates)
+    build_projects_lead_time_in_time_array(executing_projects)
 
     respond_to { |format| format.js { render 'teams/team_projects_tab' } }
   end
@@ -119,6 +115,21 @@ class TeamsController < AuthenticatedController
 
   private
 
+  def build_projects_lead_time_in_time_array(executing_projects)
+    @projects_lead_time_in_time = []
+    @projects_risk_in_time = []
+    array_of_dates = []
+    executing_projects.each do |project|
+      project_lead_times_hash = compute_project_lead_times(project)
+      array_of_dates << project_lead_times_hash[:project_period]
+      @projects_lead_time_in_time << project_lead_times_hash[:project_data]
+
+      @projects_risk_in_time << { name: project.name, data: project.project_consolidations.map { |consolidation| (1 - consolidation.odds_to_deadline_project) * 100 } }
+    end
+
+    build_x_axis_index(array_of_dates)
+  end
+
   def build_x_axis_index(array_of_dates)
     min_date = array_of_dates.flatten.sort_by(&:itself).min
     max_date = array_of_dates.flatten.sort_by(&:itself).max
@@ -135,9 +146,7 @@ class TeamsController < AuthenticatedController
     statistics_informations = Flow::StatisticsFlowInformations.new(project_demands)
     project_period.each { |analysed_date| statistics_informations.statistics_flow_behaviour(analysed_date) }
 
-    @projects_lead_time_in_time << { name: project.name, data: statistics_informations.lead_time_accumulated }
-
-    project_period
+    { project_period: project_period, project_data: { name: project.name, data: statistics_informations.lead_time_accumulated } }
   end
 
   def demands

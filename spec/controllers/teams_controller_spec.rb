@@ -387,12 +387,18 @@ RSpec.describe TeamsController, type: :controller do
         context 'having data' do
           include_context 'demands to filters'
 
+          let!(:first_project_consolidation) { Fabricate :project_consolidation, consolidation_date: 2.weeks.ago, project: first_project }
+          let!(:second_project_consolidation) { Fabricate :project_consolidation, consolidation_date: 1.week.ago, project: first_project }
+
+          let!(:third_project_consolidation) { Fabricate :project_consolidation, consolidation_date: 1.week.ago, project: second_project }
+
           it 'creates the objects and renders the tab' do
             get :team_projects_tab, params: { company_id: company, id: team }, xhr: true
 
             expect(response).to render_template 'teams/team_projects_tab'
             expect(assigns(:x_axis_index)).to eq [1, 2, 3, 4, 5]
             expect(assigns(:projects_lead_time_in_time)).to match_array [{ data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1.0], name: first_project.name }, { data: [0, 0, 0, 0, 0, 0, 0, 0, 0.0], name: second_project.name }]
+            expect(assigns(:projects_risk_in_time)).to match_array [{ data: [87.5, 87.5], name: first_project.name }, { data: [37.5], name: second_project.name }]
           end
         end
       end
@@ -400,7 +406,10 @@ RSpec.describe TeamsController, type: :controller do
       context 'with no data' do
         it 'render the template with empty data' do
           get :team_projects_tab, params: { company_id: company, id: first_team }, xhr: true
+
           expect(assigns(:x_axis_index)).to eq []
+          expect(assigns(:projects_lead_time_in_time)).to eq []
+          expect(assigns(:projects_risk_in_time)).to eq []
           expect(response).to render_template 'teams/team_projects_tab'
         end
       end
