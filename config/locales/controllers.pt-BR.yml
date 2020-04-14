@@ -471,6 +471,7 @@ pt-BR:
         confidence_60: "Data com 60% de Confiança"
       scope_variation:
         title: "Variação do escopo no tempo"
+      risk_evolution_in_time: "Evolução do Risco Matemático"
     project_risk_alert_table: "Alertas de risco para o projeto"
     portfolio_bulletin:
       delivered_demands: "Demandas entregues na última semana"

@@ -1,6 +1,6 @@
 var teamProjectsCharts = $("#team-projects-charts");
 
-teamProjectsCharts.html("<%= escape_javascript(render 'teams/team_projects_tab', company: @company, x_axis: @x_axis_index,lead_time_data: @projects_lead_time_in_time).html_safe %>");
+teamProjectsCharts.html("<%= escape_javascript(render 'teams/team_projects_tab', company: @company, x_axis: @x_axis_index,lead_time_data: @projects_lead_time_in_time, projects_risk_data: @projects_risk_in_time).html_safe %>");
 
 $("#general-loader").hide();
 teamProjectsCharts.show();
@@ -8,4 +8,9 @@ teamProjectsCharts.show();
 var lineLeadtimeAccumulated = $("#line-leadtime-accumalated-projects");
 if (lineLeadtimeAccumulated.length !== 0) {
     buildLineChart(lineLeadtimeAccumulated);
+}
+
+var lineRisk = $("#line-risk-projects");
+if (lineRisk.length !== 0) {
+    buildLineChart(lineRisk);
 }

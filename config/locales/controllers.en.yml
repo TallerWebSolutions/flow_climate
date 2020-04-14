@@ -457,6 +457,7 @@ en:
         confidence_60: "Date having 60% of Confidence"
       scope_variation:
         title: "Scope variation in time"
+      risk_evolution_in_time: "Math Risk Evolution"
     project_risk_alert_table: "Risk alerts to the project"
     project_risk_configs:
       title: "Risk Configurations"

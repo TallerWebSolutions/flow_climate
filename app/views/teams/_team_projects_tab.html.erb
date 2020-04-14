@@ -9,3 +9,17 @@
      data-series='<%= lead_time_data.to_json %>'
      data-decimals='2'>
 </div>
+
+<hr>
+
+<div id="line-risk-projects"
+     class="flow-chart"
+     data-xcategories='<%= x_axis.to_json %>'
+     data-title='<%= I18n.t('projects.charts.risk_evolution_in_time') %>'
+     data-ytitle='<%= I18n.t('general.days') %>'
+     data-xtitle='<%= I18n.t('general.weeks') %>'
+     data-prefix=''
+     data-tooltipsuffix='%'
+     data-series='<%= projects_risk_data.to_json %>'
+     data-decimals='2'>
+</div>
