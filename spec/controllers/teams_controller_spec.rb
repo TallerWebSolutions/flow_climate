@@ -854,7 +854,7 @@ RSpec.describe TeamsController, type: :controller do
 
         context 'company' do
           context 'no existent' do
-            before { get :dashboard_page_five, params: { company_id: 'foo', id: first_team } }
+            before { get :dashboard_page_five, params: { company_id: 'foo', id: team } }
 
             it { expect(response).to have_http_status :not_found }
           end
@@ -862,7 +862,7 @@ RSpec.describe TeamsController, type: :controller do
           context 'not permitted' do
             let(:company) { Fabricate :company, users: [] }
 
-            before { get :dashboard_page_five, params: { company_id: company, id: first_team } }
+            before { get :dashboard_page_five, params: { company_id: company, id: team } }
 
             it { expect(response).to have_http_status :not_found }
           end
