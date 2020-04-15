@@ -169,7 +169,7 @@ class TeamsController < AuthenticatedController
 
   def compute_membership_lead_times(membership)
     membership_demands = membership.demands
-    start_date = [membership.start_date, membership.demands.kept.map(&:commitment_date).compact.min].max
+    start_date = [membership.start_date, membership.demands.kept.map(&:commitment_date).compact.min].compact.max
     membership_period = TimeService.instance.weeks_between_of(start_date, Time.zone.today)
 
     statistics_informations = Flow::StatisticsFlowInformations.new(membership_demands)

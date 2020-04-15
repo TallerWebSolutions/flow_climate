@@ -101,9 +101,9 @@ RSpec.describe TeamsController, type: :controller do
     let(:company) { Fabricate :company, users: [user] }
     let(:team) { Fabricate :team, company: company }
 
-    let(:first_team_member) { Fabricate :team_member }
-    let(:second_team_member) { Fabricate :team_member }
-    let(:third_team_member) { Fabricate :team_member }
+    let(:first_team_member) { Fabricate :team_member, company: company }
+    let(:second_team_member) { Fabricate :team_member, company: company }
+    let(:third_team_member) { Fabricate :team_member, company: company }
 
     let!(:first_membership) { Fabricate :membership, team: team, team_member: first_team_member, start_date: 3.weeks.ago, end_date: nil, member_role: :developer }
     let!(:second_membership) { Fabricate :membership, team: team, team_member: second_team_member, start_date: 1.week.ago, end_date: nil, member_role: :developer }
@@ -816,11 +816,8 @@ RSpec.describe TeamsController, type: :controller do
     end
 
     describe 'GET #dashboard_page_five' do
-      let!(:first_team) { Fabricate :team, company: company }
-      let!(:second_team) { Fabricate :team, company: company }
-
       context 'with valid parameters' do
-        context 'having data' do
+        context 'with data' do
           include_context 'demands to filters'
 
           it 'creates the objects and renders the tab' do
@@ -835,11 +832,15 @@ RSpec.describe TeamsController, type: :controller do
       end
 
       context 'with no data' do
-        it 'render the template with empty data' do
-          get :dashboard_page_five, params: { company_id: company, id: first_team }, xhr: true
+        let!(:empty_team) { Fabricate :team, company: company }
+        let(:empty_team_member) { Fabricate :team_member, company: company }
+        let!(:empty_membership) { Fabricate :membership, team: empty_team, team_member: empty_team_member, start_date: 3.weeks.ago, end_date: nil, member_role: :developer }
 
-          expect(assigns(:x_axis_index)).to eq []
-          expect(assigns(:memberships_lead_time_in_time)).to eq []
+        it 'render the template with empty data' do
+          get :dashboard_page_five, params: { company_id: company, id: empty_team }, xhr: true
+
+          expect(assigns(:x_axis_index)).to eq [1, 2]
+          expect(assigns(:memberships_lead_time_in_time)).to eq [{ data: [], name: empty_team_member.name }]
           expect(response).to render_template 'teams/dashboards/dashboard_page_five'
         end
       end
@@ -853,7 +854,7 @@ RSpec.describe TeamsController, type: :controller do
 
         context 'company' do
           context 'no existent' do
-            before { get :dashboard_page_five, params: { company_id: 'foo', id: first_team } }
+            before { get :dashboard_page_five, params: { company_id: 'foo', id: team } }
 
             it { expect(response).to have_http_status :not_found }
           end
@@ -861,7 +862,7 @@ RSpec.describe TeamsController, type: :controller do
           context 'not permitted' do
             let(:company) { Fabricate :company, users: [] }
 
-            before { get :dashboard_page_five, params: { company_id: company, id: first_team } }
+            before { get :dashboard_page_five, params: { company_id: company, id: team } }
 
             it { expect(response).to have_http_status :not_found }
           end
