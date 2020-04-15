@@ -237,6 +237,70 @@ RSpec.describe DemandsRepository, type: :repository do
     it { expect(described_class.instance.demands_delivered_grouped_by_projects_to_period(Demand.all, 3.days.ago, 2.days.from_now)[second_project.name]).to match_array [third_demand] }
   end
 
+  shared_context 'demand data for filters' do
+    let(:company) { Fabricate :company }
+    let(:customer) { Fabricate :customer, company: company }
+    let(:team) { Fabricate :team, company: company }
+
+    let(:product) { Fabricate :product, customer: customer, name: 'flow climate' }
+    let(:other_product) { Fabricate :product, customer: customer, name: 'flow control' }
+
+    let!(:portfolio_unit) { Fabricate :portfolio_unit, product: product, name: 'command room' }
+    let!(:other_portfolio_unit) { Fabricate :portfolio_unit, product: other_product, name: 'command center' }
+
+    let(:project) { Fabricate :project, company: company, customers: [customer], products: [product, other_product], name: 'sbbrubles' }
+    let(:other_project) { Fabricate :project, company: company, customers: [customer], products: [product, other_product], name: 'voyager' }
+
+    let!(:first_demand) { Fabricate :demand, company: company, product: product, project: project, external_id: 'hhh', demand_title: 'foo', demand_type: :feature, class_of_service: :standard, created_date: 2.days.ago, commitment_date: nil, end_date: nil, effort_downstream: 20, effort_upstream: 15 }
+    let!(:second_demand) { Fabricate :demand, company: company, product: product, portfolio_unit: portfolio_unit, project: project, demand_title: 'foo bar', demand_type: :bug, class_of_service: :expedite, created_date: 1.day.ago, commitment_date: Time.zone.today, end_date: nil, effort_downstream: 0, effort_upstream: 0 }
+    let!(:third_demand) { Fabricate :demand, company: company, product: product, project: project, demand_title: 'bar foo', demand_type: :feature, class_of_service: :intangible, created_date: 5.days.ago, commitment_date: nil, end_date: 1.day.ago, effort_downstream: 0, effort_upstream: 10 }
+    let!(:fourth_demand) { Fabricate :demand, company: company, product: product, project: project, demand_title: 'xpto', demand_type: :chore, class_of_service: :standard, created_date: 10.days.ago, commitment_date: 5.days.ago, end_date: Time.zone.today, effort_downstream: 10, effort_upstream: 20 }
+
+    let!(:fifth_demand) { Fabricate :demand, company: company, product: other_product, portfolio_unit: other_portfolio_unit, project: project, demand_title: 'xpto', demand_type: :ui, class_of_service: :fixed_date, created_date: 1.month.ago, commitment_date: nil, end_date: nil, effort_downstream: 30, effort_upstream: 10 }
+    let!(:sixth_demand) { Fabricate :demand, company: company, product: other_product, portfolio_unit: nil, project: project, demand_title: 'voyager sas', demand_type: :feature, class_of_service: :standard, created_date: 1.day.ago, commitment_date: Time.zone.today, end_date: nil, effort_downstream: 10, effort_upstream: 10 }
+    let!(:seventh_demand) { Fabricate :demand, company: company, product: other_product, project: other_project, demand_title: 'sas', demand_type: :performance_improvement, class_of_service: :expedite, created_date: 2.days.ago, commitment_date: 2.days.ago, end_date: 1.day.ago, effort_downstream: 40, effort_upstream: 10 }
+    let!(:eigth_demand) { Fabricate :demand, company: company, product: other_product, project: other_project, demand_title: 'sas', demand_type: :wireframe, class_of_service: :fixed_date, created_date: 3.days.ago, commitment_date: 1.day.ago, end_date: Time.zone.today, effort_downstream: 50, effort_upstream: 60 }
+  end
+
+  describe '#filter_demands_by_text' do
+    include_context 'demand data for filters'
+
+    it { expect(described_class.instance.filter_demands_by_text(Demand.all, '')).to eq Demand.all }
+    it { expect(described_class.instance.filter_demands_by_text(Demand.none, '')).to eq [] }
+    it { expect(described_class.instance.filter_demands_by_text(Demand.all, 'climate')).to match_array [first_demand, second_demand, third_demand, fourth_demand] }
+    it { expect(described_class.instance.filter_demands_by_text(Demand.all, 'flow')).to match_array Demand.all }
+    it { expect(described_class.instance.filter_demands_by_text(Demand.all, 'hhh')).to eq [first_demand] }
+    it { expect(described_class.instance.filter_demands_by_text(Demand.all, 'bar')).to match_array [second_demand, third_demand] }
+    it { expect(described_class.instance.filter_demands_by_text(Demand.all, 'voyager')).to match_array [sixth_demand, seventh_demand, eigth_demand] }
+    it { expect(described_class.instance.filter_demands_by_text(Demand.all, 'command')).to match_array [second_demand, fifth_demand] }
+  end
+
+  describe '#flow_status_query' do
+    include_context 'demand data for filters'
+
+    it { expect(described_class.instance.flow_status_query(Demand.all, '')).to eq Demand.all }
+    it { expect(described_class.instance.flow_status_query(Demand.none, '')).to eq [] }
+    it { expect(described_class.instance.flow_status_query(Demand.all, 'wip')).to match_array [second_demand, sixth_demand] }
+    it { expect(described_class.instance.flow_status_query(Demand.all, 'delivered')).to match_array [third_demand, fourth_demand, seventh_demand, eigth_demand] }
+    it { expect(described_class.instance.flow_status_query(Demand.all, 'not_started')).to match_array [first_demand, fifth_demand] }
+  end
+
+  describe '#demand_type_query' do
+    include_context 'demand data for filters'
+
+    it { expect(described_class.instance.demand_type_query(Demand.all, '')).to eq Demand.all }
+    it { expect(described_class.instance.demand_type_query(Demand.none, '')).to eq [] }
+    it { expect(described_class.instance.demand_type_query(Demand.all, 'bug')).to match_array [second_demand] }
+  end
+
+  describe '#class_of_service_query' do
+    include_context 'demand data for filters'
+
+    it { expect(described_class.instance.class_of_service_query(Demand.all, '')).to eq Demand.all }
+    it { expect(described_class.instance.class_of_service_query(Demand.none, '')).to eq [] }
+    it { expect(described_class.instance.class_of_service_query(Demand.all, 'expedite')).to match_array [second_demand, seventh_demand] }
+  end
+
   pending '#bugs_opened_until_limit_date'
   pending '#bugs_closed_until_limit_date'
   pending '#remaining_backlog_to_date'

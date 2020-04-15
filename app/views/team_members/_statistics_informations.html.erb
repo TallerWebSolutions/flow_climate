@@ -1,10 +1,11 @@
 <div id="line-leadtime-accumalated-user"
      class="flow-chart"
-     data-xcategories='<%= dates_array.to_json %>'
-     data-title='<%= I18n.t('projects.charts.leadtime_evolution.title') %>'
-     data-ytitle='<%= I18n.t('charts.cfd.ytitle') %>'
-     data-prefix=''
-     data-tooltipsuffix='<%= I18n.t('general.days') %>'
-     data-series='<%= [{ name: I18n.t('teams.show.lead_time_p80_accumulated'), data: statistics_flow_informations.lead_time_accumulated }].to_json %>'
-     data-decimals='2'>
+     data-xcategories="<%= dates_array.to_json %>"
+     data-title="<%= I18n.t('projects.charts.leadtime_evolution.title') %>"
+     data-ytitle="<%= I18n.t('general.days') %>"
+     data-prefix=""
+     data-tooltipsuffix="<%= I18n.t('general.days') %>"
+     data-datalabelsuffix=""
+     data-series="<%= [{ name: I18n.t('teams.show.lead_time_p80_accumulated'), data: statistics_flow_informations.lead_time_accumulated }].to_json %>"
+     data-decimals="2">
 </div>

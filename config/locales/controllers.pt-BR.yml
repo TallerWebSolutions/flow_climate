@@ -66,7 +66,7 @@ pt-BR:
       zero: "sem dados"
       one: "%{count} dia"
       other: "%{count} dias"
-    search_text: "Procurar no nome do produto ou do projeto e no ID da demanda"
+    search_text: "Buscar"
     data: "Dados"
     error:
       not_found:
@@ -691,6 +691,9 @@ pt-BR:
         remaining_scope: "Escopo Restante"
         total_delivered: "Escopo Entregue"
         throughput_per_period: "Throughput Usado"
+      search:
+        text:
+          placeholder: "buscar por nome de produto, projeto ou unidade de portfólio ou pelo ID ou título da demanda"
     edit:
       title: "Editar Demanda"
     show:

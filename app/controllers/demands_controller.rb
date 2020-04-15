@@ -130,12 +130,8 @@ class DemandsController < AuthenticatedController
   end
 
   def query_demands(start_date, end_date)
-    demands_list_view = demands.kept.to_dates(start_date, end_date)
-    demands_list_view = filter_text(demands_list_view)
-    demands_list_view = build_flow_status_query(demands_list_view, params[:flow_status])
-    demands_list_view = build_demand_type_query(demands_list_view, params[:demand_type])
-    demands_list_view = build_class_of_service_query(demands_list_view, params[:demand_class_of_service])
-    demands_list_view.order('demands.end_date DESC, demands.commitment_date DESC, demands.created_date DESC').page(page_param)
+    searched_demands = DemandService.instance.search_engine(demands, start_date, end_date, params[:search_text], params[:flow_status], params[:demand_type], params[:demand_class_of_service])
+    searched_demands.order('demands.end_date DESC, demands.commitment_date DESC, demands.created_date DESC').page(page_param)
   end
 
   def demand_params
@@ -152,33 +148,6 @@ class DemandsController < AuthenticatedController
 
   def lead_time_breakdown
     @lead_time_breakdown ||= DemandService.instance.lead_time_breakdown([@demand])
-  end
-
-  def build_flow_status_query(demands, params_flow_status)
-    filtered_demands = demands
-    filtered_demands = filtered_demands.not_started if params_flow_status == 'not_started'
-    filtered_demands = filtered_demands.in_wip if params_flow_status == 'wip'
-    filtered_demands = filtered_demands.finished if params_flow_status == 'delivered'
-
-    filtered_demands
-  end
-
-  def build_demand_type_query(demands, params_demand_type)
-    return demands.where(demand_type: params_demand_type) if params_demand_type.present? && params_demand_type != 'all_types'
-
-    demands
-  end
-
-  def build_class_of_service_query(demands, params_class_of_service)
-    return demands.where(class_of_service: params_class_of_service) if params_class_of_service.present? && params_class_of_service != 'all_classes'
-
-    demands
-  end
-
-  def filter_text(demands_list)
-    return demands_list.includes(:project) if params[:search_text].blank?
-
-    demands_list.includes(:project).joins(:project).where('demands.demand_title ILIKE :search_param OR demands.external_id ILIKE :search_param OR projects.name ILIKE :search_param', search_param: "%#{params[:search_text].downcase}%")
   end
 
   def assign_consolidations

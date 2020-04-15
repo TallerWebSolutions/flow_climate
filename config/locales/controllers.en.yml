@@ -66,7 +66,7 @@ en:
       zero: "no data"
       one: "%{count} day"
       other: "%{count} days"
-    search_text: "Search in product or project name or demand title or demand id"
+    search_text: "Search"
     data: "Data"
     error:
       not_found:
@@ -622,6 +622,9 @@ en:
         remaining_scope: "Remaining Scope"
         total_delivered: "Scope Delivered"
         throughput_per_period: "Used Throughput"
+      search:
+        text:
+          placeholder: "search in product, project or portfolio unit names or in demand title or id"
     edit:
       title: "Edit Demand"
     show:
