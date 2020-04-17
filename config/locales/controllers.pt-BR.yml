@@ -120,7 +120,7 @@ pt-BR:
       zero: "sem pontos"
       one: "%{count} pontos"
       other: "%{count} pontos"
-    demands: "demanda"
+    demands: "demandas"
     avg_speed_per_week: "%{speed_value} itens/semana"
     items_text: "%{items_count} item(ns)"
     flow: "Fluxo"
@@ -973,7 +973,7 @@ pt-BR:
         legend: "Horas Bloqueadas"
       blocks:
         title: "Bloqueios para %{target_name}"
-        ylabel: "bloqueios"
+        ylabel: "bloqueio(s)"
         legend: "bloqueios"
   demand_transitions:
     total_time_in_transition: "Tempo total na transição"

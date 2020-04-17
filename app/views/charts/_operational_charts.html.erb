@@ -21,6 +21,7 @@
            data-ytitle='<%= I18n.t('demands.charts.demands.title') %>'
            data-prefix=''
            data-tooltipsuffix='<%= I18n.t('projects.charts.throughput.tooltipsufix') %>'
+           data-datalabelsuffix=''
            data-series='<%= [
                                 { name: I18n.t('demands.charts.creation_date'), data: demands_chart_adapter.creation_chart_data },
                                 { name: I18n.t('demands.charts.committed_date'), data: demands_chart_adapter.committed_chart_data },
@@ -90,6 +91,7 @@
          data-ytitle='<%= I18n.t('projects.charts.hours_per_demand.ylabel') %>'
          data-prefix=''
          data-tooltipsuffix='<%= I18n.t('projects.charts.hours_per_demand.tooltipsufix') %>'
+         data-datalabelsuffix=''
          data-series='<%= [{ name: I18n.t('projects.charts.hours_per_demand.ylabel'), data: report_data.time_flow_informations.hours_per_demand }].to_json %>'
          data-stacking='normal'
          data-decimals='2'>
@@ -105,6 +107,7 @@
          data-ytitle='<%= I18n.t('projects.charts.throughput.ylabel') %>'
          data-prefix=''
          data-tooltipsuffix='<%= I18n.t('projects.charts.throughput.tooltipsufix') %>'
+         data-datalabelsuffix=''
          data-series='<%= [{ name: I18n.t('projects.charts.throughput.stage_stream.upstream'), data: report_data.work_item_flow_information.upstream_delivered_per_period }, { name: I18n.t('projects.charts.throughput.stage_stream.downstream'), data: report_data.work_item_flow_information.downstream_delivered_per_period }].to_json %>'
          data-stacking='normal'
          data-decimals='0'>
@@ -121,6 +124,7 @@
            data-ytitle='<%= I18n.t('projects.charts.bugs_in_time.ylabel') %>'
            data-prefix=''
            data-tooltipsuffix='<%= I18n.t('projects.charts.bugs_in_time.suffix') %>'
+           data-datalabelsuffix=''
            data-series='<%= [{ name: I18n.t('projects.charts.bugs_in_time.opened'), data: report_data.work_item_flow_information.bugs_opened_data_array }, { name: I18n.t('projects.charts.bugs_in_time.closed'), data: report_data.work_item_flow_information.bugs_closed_data_array }].to_json %>'
            data-decimals='0'>
       </div>
@@ -136,6 +140,7 @@
          data-ytitle='<%= I18n.t('projects.charts.bugs_in_time.ylabel') %>'
          data-prefix=''
          data-tooltipsuffix='<%= I18n.t('projects.charts.bugs_in_time.suffix') %>'
+         data-datalabelsuffix=''
          data-series='<%= [{ name: I18n.t('projects.charts.bugs_in_time.opened'), data: report_data.work_item_flow_information.accumulated_bugs_opened_data_array }, { name: I18n.t('projects.charts.bugs_in_time.closed'), data: report_data.work_item_flow_information.accumulated_bugs_closed_data_array }].to_json %>'
          data-decimals='0'>
     </div>
@@ -149,7 +154,8 @@
          data-xtitle='<%= I18n.t('projects.charts.xlabel.weeks') %>'
          data-ytitle='<%= I18n.t('general.percentage.title') %>'
          data-prefix=''
-         data-tooltipsuffix='<%= I18n.t('general.percentage.symbol') %>'
+         data-tooltipsuffix='%'
+         data-datalabelsuffix='%'
          data-series='<%= [{ name: I18n.t('projects.charts.bugs_in_time.share'), data: report_data.work_item_flow_information.bugs_share_data_array }].to_json %>'
          data-decimals='2'>
     </div>
@@ -164,6 +170,7 @@
            data-ytitle='<%= I18n.t('demand_blocks.charts.hours_blocked.ylabel') %>'
            data-prefix=''
            data-tooltipsuffix='<%= I18n.t('demand_blocks.charts.hours_blocked.ylabel') %>'
+           data-datalabelsuffix=''
            data-series='<%= [{ name: I18n.t('demand_blocks.charts.hours_blocked.legend'), data: report_data.block_flow_information.blocks_time }].to_json %>'
            data-decimals='0'>
       </div>
@@ -179,6 +186,7 @@
            data-ytitle='<%= I18n.t('demand_blocks.charts.blocks.ylabel') %>'
            data-prefix=''
            data-tooltipsuffix='<%= I18n.t('demand_blocks.charts.blocks.ylabel') %>'
+           data-datalabelsuffix=''
            data-series='<%= [{ name: I18n.t('demand_blocks.charts.blocks.legend'), data: report_data.block_flow_information.blocks_count }].to_json %>'
            data-decimals='0'>
       </div>
@@ -194,6 +202,7 @@
            data-ytitle='<%= I18n.t('demands.charts.aging_per_demand.ylabel') %>'
            data-prefix=''
            data-tooltipsuffix='<%= I18n.t('demands.charts.aging_per_demand.ylabel') %>'
+           data-datalabelsuffix=''
            data-series='<%= [{ name: I18n.t('demands.charts.aging.series'), data: report_data.statistics_flow_information.average_aging_per_period }].to_json %>'
            data-decimals='2'>
       </div>
@@ -208,6 +217,7 @@
          data-ytitle='<%= I18n.t('projects.charts.queue_touch_time.ylabel') %>'
          data-prefix=''
          data-tooltipsuffix='<%= I18n.t('demands.charts.hours.suffix') %>'
+         data-datalabelsuffix=''
          data-series='<%= [{ name: I18n.t('projects.charts.queue_touch_time.queue'), data: report_data.time_flow_informations.queue_time }, { name: I18n.t('projects.charts.queue_touch_time.touch'), data: report_data.time_flow_informations.touch_time }].to_json %>'
          data-decimals='2'>
     </div>
@@ -220,7 +230,8 @@
          data-xtitle='<%= I18n.t('projects.charts.xlabel.weeks') %>'
          data-ytitle='<%= I18n.t('general.percentage.title') %>'
          data-prefix=''
-         data-tooltipsuffix='<%= I18n.t('general.percentage.symbol') %>'
+         data-tooltipsuffix='%'
+         data-datalabelsuffix='%'
          data-series='<%= [{ name: I18n.t('projects.charts.flow_efficiency.share'), data: report_data.time_flow_informations.flow_efficiency }].to_json %>'
          data-decimals='2'>
     </div>
@@ -260,6 +271,7 @@
          data-ytitle='<%= I18n.t('projects.charts.leadtime_histogram.ylabel') %>'
          data-prefix=''
          data-tooltipsuffix=''
+         data-datalabelsuffix=''
          data-series='<%= [{ name: I18n.t('projects.charts.leadtime_histogram.ylabel'), data: report_data.statistics_flow_information.lead_time_histogram_data }].to_json %>'
          data-decimals='2'>
     </div>
