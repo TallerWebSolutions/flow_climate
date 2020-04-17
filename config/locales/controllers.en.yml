@@ -120,7 +120,7 @@ en:
       zero: "no score"
       one: "%{count} point"
       other: "%{count} points"
-    demands: "demand"
+    demands: "demands"
     avg_speed_per_week: "%{speed_value} items/week"
     items_text: "%{items_count} item(ns)"
     flow: "Flow"

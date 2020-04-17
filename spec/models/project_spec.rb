@@ -497,7 +497,7 @@ RSpec.describe Project, type: :model do
 
     context 'having data' do
       include_context 'demands with effort'
-      it { expect(project.total_hours_upstream).to eq 0.66e2 }
+      it { expect(project.total_hours_upstream).to eq 66 }
     end
 
     context 'having no data' do

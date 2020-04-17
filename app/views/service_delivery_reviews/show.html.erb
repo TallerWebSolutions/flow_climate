@@ -80,6 +80,7 @@
            data-bottomquality='<%= @service_delivery_review.quality_bottom_threshold.to_f * 100 %>'
            data-topquality='<%= @service_delivery_review.quality_top_threshold.to_f * 100 %>'
            data-tooltipsuffix='<%= I18n.t('general.demands') %>'
+           data-datalabelsuffix=''
            data-series='<%= [{ name: I18n.t('service_delivery_reviews.show.bugs_label'), data: [@service_delivery_review.bug_percentage] }].to_json %>'
            data-decimals='2'>
       </div>
@@ -117,6 +118,7 @@
            data-ytitle='<%= I18n.t('general.hours') %>'
            data-prefix=''
            data-tooltipsuffix='<%= I18n.t('general.charts.hours') %>'
+           data-datalabelsuffix=''
            data-series='<%= [{ name: I18n.t('service_delivery_reviews.show.lead_time_breakdown_label'), data: @service_delivery_review.lead_time_breakdown.values.map { |transitions| (transitions.sum(&:total_seconds_in_transition) / 1.hour) } }].to_json %>'
            data-decimals='0'>
       </div>
@@ -139,6 +141,7 @@
            data-ytitle='<%= I18n.t('demands.charts.demands.title') %>'
            data-prefix=''
            data-tooltipsuffix='<%= I18n.t('projects.charts.throughput.tooltipsufix') %>'
+           data-datalabelsuffix=''
            data-series='<%= [
                                 { name: I18n.t('demands.charts.creation_date'), data: @demands_chart_adapter.creation_chart_data },
                                 { name: I18n.t('demands.charts.committed_date'), data: @demands_chart_adapter.committed_chart_data },

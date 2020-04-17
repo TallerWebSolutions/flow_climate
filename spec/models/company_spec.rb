@@ -286,7 +286,7 @@ RSpec.describe Company, type: :model do
   describe '#total_active_hours' do
     context 'with data' do
       include_context 'demands with effort for company'
-      it { expect(company.total_active_hours).to eq 0.1632e4 }
+      it { expect(company.total_active_hours).to eq 1632 }
     end
 
     context 'with no data' do
