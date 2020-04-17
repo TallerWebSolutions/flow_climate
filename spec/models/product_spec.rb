@@ -183,7 +183,7 @@ RSpec.describe Product, type: :model do
 
     context 'with demands' do
       include_context 'consolidations variables data for product'
-      it { expect(product.total_cost).to eq 0.7125e4 }
+      it { expect(product.total_cost).to eq 7125 }
     end
   end
 
@@ -195,7 +195,7 @@ RSpec.describe Product, type: :model do
 
     context 'with demands' do
       include_context 'consolidations variables data for product'
-      it { expect(product.total_hours).to eq 0.285e4 }
+      it { expect(product.total_hours).to eq 2850 }
     end
   end
 end

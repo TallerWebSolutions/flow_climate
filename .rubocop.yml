@@ -34,6 +34,12 @@ Style/AsciiComments:
 Rails/HasAndBelongsToMany:
   Enabled: false
 
+Layout/SpaceAroundMethodCallOperator:
+  Enabled: true
+
+Style/ExponentialNotation:
+  Enabled: true
+
 Metrics/MethodLength:
   Exclude:
     - 'app/routes/**/*'

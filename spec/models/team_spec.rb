@@ -174,7 +174,7 @@ RSpec.describe Team, type: :model do
 
     context 'having data' do
       include_context 'consolidations data for team'
-      it { expect(team.consumed_hours_in_month(Date.new(2018, 4, 5))).to eq 0.88e2 }
+      it { expect(team.consumed_hours_in_month(Date.new(2018, 4, 5))).to eq 88 }
     end
 
     context 'having no data' do

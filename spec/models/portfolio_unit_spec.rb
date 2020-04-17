@@ -100,7 +100,7 @@ RSpec.describe PortfolioUnit, type: :model do
       let!(:child_portfolio_unit_demands) { Fabricate.times(7, :demand, project: project, portfolio_unit: child_portfolio_unit, end_date: 1.day.from_now, effort_upstream: 300, effort_downstream: 250) }
       let!(:other_child_portfolio_unit_demands) { Fabricate.times(3, :demand, project: project, portfolio_unit: other_child_portfolio_unit, end_date: nil, effort_upstream: 140, effort_downstream: 20) }
 
-      it { expect(portfolio_unit.total_cost).to eq 0.583e6 }
+      it { expect(portfolio_unit.total_cost).to eq 583_000 }
     end
   end
 
@@ -120,7 +120,7 @@ RSpec.describe PortfolioUnit, type: :model do
 
       it { expect(other_child_portfolio_unit.total_portfolio_demands).to match_array other_child_portfolio_unit_demands }
       it { expect(child_portfolio_unit.total_portfolio_demands).to match_array child_portfolio_unit_demands }
-      it { expect(portfolio_unit.total_hours).to eq 0.135e4 }
+      it { expect(portfolio_unit.total_hours).to eq 1350 }
     end
   end
 end
