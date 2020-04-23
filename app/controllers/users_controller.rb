@@ -94,9 +94,9 @@ class UsersController < AuthenticatedController
 
     @array_of_dates = TimeService.instance.months_between_of(user_demands.map(&:end_date).compact.min, Time.zone.today.end_of_month)
 
-    @statistics_informations = Flow::StatisticsFlowInformations.new(user_demands)
+    @statistics_information = Flow::StatisticsFlowInformations.new(user_demands)
 
-    @array_of_dates.each { |analysed_date| @statistics_informations.statistics_flow_behaviour(analysed_date) }
+    @array_of_dates.each { |analysed_date| @statistics_information.statistics_flow_behaviour(analysed_date) }
   end
 
   def user_params

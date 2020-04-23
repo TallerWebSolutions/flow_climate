@@ -575,6 +575,7 @@ pt-BR:
             operations: Operação
             manager: Gestão
             director: Diretor
+            customer: Cliente
       risk_review_action_item:
         action_type: Tipo da Ação
         created_date: Dt Criação

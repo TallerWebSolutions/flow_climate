@@ -27,6 +27,8 @@
 #
 
 class PortfolioUnit < ApplicationRecord
+  include DemandsAggregator
+
   enum portfolio_unit_type: { product_module: 0, key_result: 1, source: 2, epic: 4 }
 
   belongs_to :product

@@ -7,15 +7,16 @@
 
     <div id="manager-dashboard-lead-time-column"
          class="flow-chart"
-         data-title=''
-         data-xcategories='<%= projects_leadtime.keys.map(&:name) %>'
-         data-xtitle='<%= Project.model_name.human(count: 2) %>'
-         data-ytitle='<%= " #{I18n.t('general.leadtime')}" %>'
-         data-prefix=''
-         data-suffix=''
-         data-tooltipsuffix='<%= I18n.t('general.days') %>'
-         data-series='<%= [{ name: I18n.t('general.leadtime'), data: projects_leadtime.values }].to_json %>'
-         data-decimals='2'>
+         data-title=""
+         data-xcategories="<%= projects_leadtime.keys.map(&:name) %>"
+         data-xtitle="<%= Project.model_name.human(count: 2) %>"
+         data-ytitle="<%= I18n.t('general.days') %>"
+         data-prefix=""
+         data-suffix=""
+         data-tooltipsuffix="<%= I18n.t('general.days') %>"
+         data-datalabelsuffix=""
+         data-series="<%= [{ name: I18n.t('general.leadtime'), data: projects_leadtime.values }].to_json %>"
+         data-decimals="2">
     </div>
   </div>
 
@@ -24,15 +25,16 @@
 
     <div id="manager-dashboard-quality-column"
          class="flow-chart"
-         data-title=''
-         data-xcategories='<%= projects_quality.keys.map(&:name) %>'
-         data-xtitle='<%= Project.model_name.human(count: 2) %>'
-         data-ytitle='<%= I18n.t('general.quality') %>'
-         data-prefix=''
-         data-suffix=''
-         data-tooltipsuffix='%'
-         data-series='<%= [{ name: I18n.t('general.quality'), data: projects_quality.values }].to_json %>'
-         data-decimals='2'>
+         data-title=""
+         data-xcategories="<%= projects_quality.keys.map(&:name) %>"
+         data-xtitle="<%= Project.model_name.human(count: 2) %>"
+         data-ytitle="%"
+         data-prefix=""
+         data-suffix=""
+         data-tooltipsuffix="%"
+         data-datalabelsuffix="%"
+         data-series="<%= [{ name: I18n.t('general.quality'), data: projects_quality.values }].to_json %>"
+         data-decimals="2">
     </div>
   </div>
 
@@ -41,15 +43,16 @@
 
     <div id="manager-dashboard-risk-column"
          class="flow-chart"
-         data-title=''
-         data-xcategories='<%= projects_risk.keys.map(&:name) %>'
-         data-xtitle='<%= Project.model_name.human(count: 2) %>'
-         data-ytitle='<%= " #{I18n.t('general.risk.label')}" %>'
-         data-prefix=''
-         data-suffix=''
-         data-tooltipsuffix='%'
-         data-series='<%= [{ name: I18n.t('general.risk.label'), data: projects_risk.values }].to_json %>'
-         data-decimals='2'>
+         data-title=""
+         data-xcategories="<%= projects_risk.keys.map(&:name) %>"
+         data-xtitle="<%= Project.model_name.human(count: 2) %>"
+         data-ytitle="%"
+         data-prefix=""
+         data-suffix=""
+         data-tooltipsuffix="%"
+         data-datalabelsuffix="%"
+         data-series="<%= [{ name: I18n.t('general.risk.label'), data: projects_risk.values }].to_json %>"
+         data-decimals="2">
     </div>
   </div>
 
@@ -58,15 +61,16 @@
 
     <div id="manager-dashboard-flow-pressure-column"
          class="flow-chart"
-         data-title=''
-         data-xcategories='<%= projects_flow_pressure.keys.map(&:name) %>'
-         data-xtitle='<%= Project.model_name.human(count: 2) %>'
-         data-ytitle='<%= " #{I18n.t('users.show.manager.flow_pressure')}" %>'
-         data-prefix=''
-         data-suffix=''
-         data-tooltipsuffix=''
-         data-series='<%= [{ name: I18n.t('users.show.manager.flow_pressure'), data: projects_flow_pressure.values }].to_json %>'
-         data-decimals='2'>
+         data-title=""
+         data-xcategories="<%= projects_flow_pressure.keys.map(&:name) %>"
+         data-xtitle="<%= Project.model_name.human(count: 2) %>"
+         data-ytitle="<%= I18n.t('general.demands_per_day_text') %>"
+         data-prefix=""
+         data-suffix=""
+         data-tooltipsuffix=""
+         data-datalabelsuffix=""
+         data-series="<%= [{ name: I18n.t('users.show.manager.flow_pressure'), data: projects_flow_pressure.values }].to_json %>"
+         data-decimals="2">
     </div>
   </div>
 
@@ -75,15 +79,16 @@
 
     <div id="manager-dashboard-scope-column"
          class="flow-chart"
-         data-title=''
-         data-xcategories='<%= projects_scope.keys.map(&:name) %>'
-         data-xtitle='<%= Project.model_name.human(count: 2) %>'
-         data-ytitle='<%= " #{I18n.t('general.scope')}" %>'
-         data-prefix=''
-         data-suffix=''
-         data-tooltipsuffix=''
-         data-series='<%= [{ name: I18n.t('general.scope'), data: projects_scope.values }].to_json %>'
-         data-decimals='0'>
+         data-title=""
+         data-xcategories="<%= projects_scope.keys.map(&:name) %>"
+         data-xtitle="<%= Project.model_name.human(count: 2) %>"
+         data-ytitle="<%= I18n.t('general.demands') %>"
+         data-prefix=""
+         data-suffix=""
+         data-tooltipsuffix=""
+         data-datalabelsuffix=""
+         data-series="<%= [{ name: I18n.t('general.scope'), data: projects_scope.values }].to_json %>"
+         data-decimals="0">
     </div>
   </div>
 
@@ -92,15 +97,16 @@
 
     <div id="manager-dashboard-value-per-demand-column"
          class="flow-chart"
-         data-title=''
-         data-xcategories='<%= projects_value_per_demand.keys.map(&:name) %>'
-         data-xtitle='<%= Project.model_name.human(count: 2) %>'
-         data-ytitle='<%= " #{I18n.t('users.show.manager.value_per_demand')}" %>'
-         data-prefix='<%= I18n.t('number.currency.format.unit') %>'
-         data-suffix=''
-         data-tooltipsuffix=''
-         data-series='<%= [{ name: I18n.t('users.show.manager.value_per_demand'), data: projects_value_per_demand.values }].to_json %>'
-         data-decimals='2'>
+         data-title=""
+         data-xcategories="<%= projects_value_per_demand.keys.map(&:name) %>"
+         data-xtitle="<%= Project.model_name.human(count: 2) %>"
+         data-ytitle="<%= " #{I18n.t('users.show.manager.value_per_demand')}" %>"
+         data-prefix="<%= I18n.t('number.currency.format.unit') %>"
+         data-suffix=""
+         data-tooltipsuffix=""
+         data-datalabelsuffix=""
+         data-series="<%= [{ name: I18n.t('users.show.manager.value_per_demand'), data: projects_value_per_demand.values }].to_json %>"
+         data-decimals="2">
     </div>
   </div>
 </div>

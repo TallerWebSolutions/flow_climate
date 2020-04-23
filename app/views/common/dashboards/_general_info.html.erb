@@ -14,7 +14,7 @@
     </tr>
     <tr>
       <td><b><%= I18n.t('projects.index.flow_pressure') %></b></td>
-      <td><%= number_with_precision(team.total_flow_pressure, precision: 3) %></td>
+      <td><%= I18n.t('general.demands_per_day', count: number_with_precision(total_flow_pressure, precision: 3)) %></td>
     </tr>
     <tr>
       <td><b><%= I18n.t('teams.show.average_queue_time') %></b></td>

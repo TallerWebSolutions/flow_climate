@@ -9,43 +9,97 @@
   </div>
 </div>
 
-<%= hidden_field_tag :company_id, @company.id %>
-<%= hidden_field_tag :customer_id, @customer.id %>
-<%= hidden_field_tag :projects_ids, @customer_projects.map(&:id).join(',') %>
-
 <div class="row">
-  <div class="topnav">
-    <%= link_to I18n.t('navbar.details'), '#', id: 'nav-item-stamps', class: 'nav-item', data: { container: '#customer-stamps' } %>
-    <%= link_to I18n.t('navbar.projects_list'), '#', id: 'nav-item-projects-table', class: 'nav-item', data: { container: '#projects-table' } %>
+  <div class="col-xs-4">
+    <h4><%= @customer.name %></h4>
+    <%= render 'common/dashboards/general_info',
+               dashboard_name: @customer.name,
+               total_flow_pressure: @customer.total_flow_pressure,
+               demands_count: @customer.demands.kept.count,
+               delivered_scope: @customer.demands.kept.finished.count,
+               remaining_backlog: @customer.demands.kept.count - @customer.demands.kept.finished.count,
+               average_queue_time: @customer.average_queue_time / 1.hour,
+               average_touch_time: @customer.average_touch_time / 1.hour,
+               demands_lead_time_p95: Stats::StatisticsService.instance.percentile(95, @customer.demands.kept.finished_with_leadtime.map(&:leadtime_in_days)),
+               demands_lead_time_p80: Stats::StatisticsService.instance.percentile(80, @customer.demands.kept.finished_with_leadtime.map(&:leadtime_in_days)),
+               demands_lead_time_p65: Stats::StatisticsService.instance.percentile(65, @customer.demands.kept.finished_with_leadtime.map(&:leadtime_in_days)) %>
+  </div>
+  <div class="col-xs-4">
+    <h4><%= Project.model_name.human(count: 2) %></h4>
+
+    <%= render 'common/dashboards/projects_info',
+               projects_count: @customer.projects.count,
+               active_projects_count: @customer.active_projects.count,
+               active_projects_value: @customer.active_projects.map(&:value).compact.sum,
+               active_projects_hired_hours: @customer.active_projects.map(&:qty_hours).compact.sum %>
+  </div>
+
+  <div class="col-xs-4">
+    <h4><%= I18n.t('demands.index.last_deliveries') %></h4>
+
+    <%= render 'demands/demands_short_table', company: @company, demands: @customer.demands.kept.finished.order(end_date: :desc).first(5) %>
   </div>
 </div>
 
-<%= render 'layouts/load_spinner' %>
+<hr>
 
-<div id="customer-stamps" class="tab-container">
-  <%= render 'customers/customer_stamps', customer: @customer, start_date: @start_date, end_date: @end_date %>
+<div class="row">
+  <div class="col-xs-6">
+    <h4><%= I18n.t('general.leadtime_p80_label') %></h4>
+
+    <div id="line-leadtime-accumalated-customer"
+         class="flow-chart"
+         data-xcategories="<%= @customer_dashboard_data.array_of_dates.to_json %>"
+         data-title="<%= I18n.t('projects.charts.leadtime_evolution.title') %>"
+         data-ytitle="<%= I18n.t('general.days') %>"
+         data-prefix=""
+         data-tooltipsuffix="<%= I18n.t('general.days') %>"
+         data-datalabelsuffix=""
+         data-series="<%= [{ name: I18n.t('teams.show.lead_time_p80_accumulated'), data: @customer_dashboard_data.lead_time_accumulated }].to_json %>"
+         data-decimals="2">
+    </div>
+  </div>
+
+  <div class="col-xs-6">
+    <h4><%= I18n.t('general.leadtime_p80_label') %></h4>
+
+    <div id="customer-throughput-column-dashboard"
+         class="flow-chart"
+         data-title='<%= I18n.t('projects.charts.throughput.title', target_name: @customer.name) %>'
+         data-xcategories='<%= @customer_dashboard_data.array_of_dates.to_json %>'
+         data-ytitle='<%= I18n.t('general.demands') %>'
+         data-prefix=''
+         data-tooltipsuffix='<%= I18n.t('general.demands') %>'
+         data-datalabelsuffix=''
+         data-series='<%= [{ name: I18n.t('general.delivered'), data: @customer_dashboard_data.throughput_data }].to_json %>'
+         data-stacking='normal'
+         data-decimals='0'>
+    </div>
+  </div>
 </div>
 
-<div id="projects-table" class="tab-container">
+<hr>
 
+<div class="row">
+  <div class="col-xs-6">
+    <div id="customer-hours-consumed-line"
+         class="flow-chart"
+         data-xcategories="<%= @customer_dashboard_data.array_of_dates.to_json %>"
+         data-title="<%= I18n.t('projects.charts.hours_per_month.title', target_name: @customer.name) %>"
+         data-ytitle="<%= I18n.t('projects.charts.hours_per_month.ylabel') %>"
+         data-prefix=""
+         data-tooltipsuffix="<%= I18n.t('projects.charts.hours_per_month.ylabel') %>"
+         data-datalabelsuffix=""
+         data-series="<%= [{ name: I18n.t('projects.charts.throughput.stage_stream.upstream'), data: @customer_dashboard_data.hours_delivered_upstream }, {name: I18n.t('projects.charts.throughput.stage_stream.downstream'), data: @customer_dashboard_data.hours_delivered_downstream }].to_json %>"
+         data-stacking="normal"
+         data-decimals="0">
+    </div>
+  </div>
 </div>
 
 <% content_for :javascript do %>
-  <%= javascript_include_tag 'charts/donut' %>
-  <%= javascript_include_tag 'charts/gantt' %>
+  <%= javascript_include_tag 'charts/column' %>
+  <%= javascript_include_tag 'charts/line' %>
 
-  <%= javascript_include_tag 'routes/project_routes' %>
-  <%= javascript_include_tag 'routes/customer_routes' %>
-
-  <%= javascript_include_tag 'components/components' %>
-  <%= javascript_include_tag 'top_navigation/tab-navigation' %>
-
-  <%= javascript_include_tag 'projects/demand_classification_charts' %>
-  <%= javascript_include_tag 'projects/projects_table' %>
-  <%= javascript_include_tag 'projects/projects_search' %>
-
-  <%= javascript_include_tag 'demand_blocks/list_modal' %>
-
-  <%= javascript_include_tag 'customers/customer_navigation_behaviour' %>
   <%= javascript_include_tag 'customers/show' %>
 <% end %>

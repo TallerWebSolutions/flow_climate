@@ -122,9 +122,7 @@ Rails.application.routes.draw do
 
     resources :financial_informations, only: %i[new create edit update destroy]
 
-    resources :customers do
-      get :projects_tab, on: :member
-    end
+    resources :customers
 
     resources :team_resources, only: %i[new create destroy]
 

@@ -96,7 +96,7 @@ pt-BR:
       text: "Risco: %{risk_value}"
       deadline:
         label: "Risco do Prazo"
-      label: ""
+      label: "Risco"
     detail: "Detalhamento do Risco"
     minimum: "Mínimo"
     maximum: "Máximo"
@@ -157,6 +157,7 @@ pt-BR:
     quality: "Qualidade"
     role: "Função"
     show_montecarlo: "Mostrar Simulação de Monte Carlo"
+    demands_per_day_text: "demands per day"
   header:
     logout: Sair
     sign_up: Cadastre-se
@@ -167,7 +168,6 @@ pt-BR:
     show:
       title: "Perfil do Usuário"
       pairing_counts: "Pareamentos"
-      last_deliveries: "Últimas Entregas"
       manager:
         active_projects: "Projetos ativos"
         active_products: "Produtos ativos"
@@ -694,6 +694,7 @@ pt-BR:
       search:
         text:
           placeholder: "buscar por nome de produto, projeto ou unidade de portfólio ou pelo ID ou título da demanda"
+      last_deliveries: "Últimas entregas"
     edit:
       title: "Editar Demanda"
     show:

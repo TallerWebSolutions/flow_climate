@@ -2,15 +2,15 @@
   <tbody>
     <tr>
       <td><b><%= Project.model_name.human(count: 2) %></b></td>
-      <td><%= team.projects.count %></td>
+      <td><%= projects_count %></td>
     </tr>
     <tr>
       <td><b><%= I18n.t('teams.show.active_projects_count') %></b></td>
-      <td><%= team.active_projects.count %></td>
+      <td><%= active_projects_count %></td>
     </tr>
     <tr>
       <td><b><%= I18n.t('teams.show.active_projects_value') %></b></td>
-      <td><%= number_to_currency(team.active_projects.map(&:value).compact.sum) %></td>
+      <td><%= number_to_currency(active_projects_value) %></td>
     </tr>
   </tbody>
 </table>

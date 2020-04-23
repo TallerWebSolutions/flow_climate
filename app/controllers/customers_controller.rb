@@ -3,7 +3,7 @@
 class CustomersController < AuthenticatedController
   before_action :user_gold_check
   before_action :assign_company
-  before_action :assign_customer, only: %i[edit update show destroy projects_tab]
+  before_action :assign_customer, only: %i[edit update show destroy]
 
   def index
     @customers = @company.customers.sort_by(&:total_flow_pressure).reverse
@@ -13,8 +13,7 @@ class CustomersController < AuthenticatedController
   end
 
   def show
-    build_query_dates
-    @projects_summary = ProjectsSummaryData.new(customer_projects.except(:limit, :offset))
+    @customer_dashboard_data = CustomerDashboardData.new(@customer)
   end
 
   def new
@@ -43,15 +42,6 @@ class CustomersController < AuthenticatedController
     redirect_to(company_customers_path(@company), flash: { error: @customer.errors.full_messages.join(',') })
   end
 
-  def projects_tab
-    @projects = @customer.projects.includes(:customers).includes(:products).includes(:team).order(end_date: :desc).page(page_param)
-
-    @projects_summary = ProjectsSummaryData.new(@projects.except(:limit, :offset))
-    @target_name = @customer.name
-
-    respond_to { |format| format.js { render 'projects/projects_tab' } }
-  end
-
   private
 
   def customer_projects
@@ -64,10 +54,5 @@ class CustomersController < AuthenticatedController
 
   def customer_params
     params.require(:customer).permit(:name)
-  end
-
-  def build_query_dates
-    @start_date = build_limit_date(customer_projects.map(&:start_date).min)
-    @end_date = build_limit_date(customer_projects.map(&:end_date).max)
   end
 end

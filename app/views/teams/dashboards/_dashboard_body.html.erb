@@ -2,48 +2,45 @@
 
 <div class="row">
   <div class="col-xs-4">
-    <div class="row-fluid">
-      <div class="col-xs-12">
-        <h1 class="section-title">
-          <%= team.name %>
-        </h1>
-      </div>
-      <div class="row-fluid">
-        <div class="col-xs-12">
-          <div class="tab">
-            <button class="tablinks dashboard-info-tab" id="team-search-info-tab" onclick="openTab(event, 'team-search-info', 'dashboard-info-tab', 'tabcontent-dashboard-info')"><%= I18n.t('teams.show.search_info') %></button>
-            <button class="tablinks dashboard-info-tab" onclick="openTab(event, 'team-projects-info', 'dashboard-info-tab', 'tabcontent-dashboard-info')"><%= I18n.t('teams.show.projects_info') %></button>
-            <button class="tablinks dashboard-info-tab" id="general-info-team-tab" onclick="openTab(event, 'team-general-info', 'dashboard-info-tab', 'tabcontent-dashboard-info')"><%= I18n.t('teams.show.general_info') %></button>
-          </div>
-        </div>
+    <h1><%= team.name %></h1>
+    <div class="tab">
+      <button class="tablinks dashboard-info-tab" id="team-search-info-tab" onclick="openTab(event, 'team-search-info', 'dashboard-info-tab', 'tabcontent-dashboard-info')"><%= I18n.t('teams.show.search_info') %></button>
+      <button class="tablinks dashboard-info-tab" onclick="openTab(event, 'team-projects-info', 'dashboard-info-tab', 'tabcontent-dashboard-info')"><%= I18n.t('teams.show.projects_info') %></button>
+      <button class="tablinks dashboard-info-tab" id="general-info-team-tab" onclick="openTab(event, 'team-general-info', 'dashboard-info-tab', 'tabcontent-dashboard-info')"><%= I18n.t('teams.show.general_info') %></button>
+    </div>
 
-        <div id="team-search-info" class="tabcontent tabcontent-dashboard-info">
-          <%= render 'teams/general_info', team: team,
-                     demands_count: work_item_flow_information.demands.count,
-                     delivered_scope: work_item_flow_information.demands.finished.count,
-                     remaining_backlog: work_item_flow_information.demands.kept.count - work_item_flow_information.demands.kept.finished.count,
-                     average_queue_time: time_flow_informations.average_queue_time.last || 0,
-                     average_touch_time: time_flow_informations.average_touch_time.last || 0,
-                     demands_lead_time_p95: Stats::StatisticsService.instance.percentile(95, work_item_flow_information.demands.finished_with_leadtime.map(&:leadtime_in_days)),
-                     demands_lead_time_p80: Stats::StatisticsService.instance.percentile(80, work_item_flow_information.demands.finished_with_leadtime.map(&:leadtime_in_days)),
-                     demands_lead_time_p65: Stats::StatisticsService.instance.percentile(65, work_item_flow_information.demands.finished_with_leadtime.map(&:leadtime_in_days)) %>
-        </div>
-        <div id="team-projects-info" class="tabcontent tabcontent-dashboard-info">
-          <%= render 'teams/projects_info', team: team %>
-        </div>
+    <div id="team-search-info" class="tabcontent tabcontent-dashboard-info">
+      <%= render 'common/dashboards/general_info',
+                 dashboard_name: team.name,
+                 total_flow_pressure: team.total_flow_pressure,
+                 demands_count: work_item_flow_information.demands.count,
+                 delivered_scope: work_item_flow_information.demands.finished.count,
+                 remaining_backlog: work_item_flow_information.demands.kept.count - work_item_flow_information.demands.kept.finished.count,
+                 average_queue_time: time_flow_information.average_queue_time.last || 0,
+                 average_touch_time: time_flow_information.average_touch_time.last || 0,
+                 demands_lead_time_p95: Stats::StatisticsService.instance.percentile(95, work_item_flow_information.demands.finished_with_leadtime.map(&:leadtime_in_days)),
+                 demands_lead_time_p80: Stats::StatisticsService.instance.percentile(80, work_item_flow_information.demands.finished_with_leadtime.map(&:leadtime_in_days)),
+                 demands_lead_time_p65: Stats::StatisticsService.instance.percentile(65, work_item_flow_information.demands.finished_with_leadtime.map(&:leadtime_in_days)) %>
+    </div>
+    <div id="team-projects-info" class="tabcontent tabcontent-dashboard-info">
+      <%= render 'common/dashboards/projects_info',
+                 projects_count: team.projects.count,
+                 active_projects_count: team.active_projects.count,
+                 active_projects_value: team.active_projects.map(&:value).compact.sum %>
+    </div>
 
-        <div id="team-general-info" class="tabcontent tabcontent-dashboard-info">
-          <%= render 'teams/general_info', team: team,
-                     demands_count: team.demands.kept.count,
-                     delivered_scope: team.demands.kept.finished.count,
-                     remaining_backlog: team.demands.kept.count - team.demands.kept.finished.count,
-                     average_queue_time: team.average_queue_time / 1.hour,
-                     average_touch_time: team.average_touch_time / 1.hour,
-                     demands_lead_time_p95: Stats::StatisticsService.instance.percentile(95, team.demands.kept.finished_with_leadtime.map(&:leadtime_in_days)),
-                     demands_lead_time_p80: Stats::StatisticsService.instance.percentile(80, team.demands.kept.finished_with_leadtime.map(&:leadtime_in_days)),
-                     demands_lead_time_p65: Stats::StatisticsService.instance.percentile(65, team.demands.kept.finished_with_leadtime.map(&:leadtime_in_days)) %>
-        </div>
-      </div>
+    <div id="team-general-info" class="tabcontent tabcontent-dashboard-info">
+      <%= render 'common/dashboards/general_info',
+                 dashboard_name: team.name,
+                 total_flow_pressure: team.total_flow_pressure,
+                 demands_count: team.demands.kept.count,
+                 delivered_scope: team.demands.kept.finished.count,
+                 remaining_backlog: team.demands.kept.count - team.demands.kept.finished.count,
+                 average_queue_time: team.average_queue_time / 1.hour,
+                 average_touch_time: team.average_touch_time / 1.hour,
+                 demands_lead_time_p95: Stats::StatisticsService.instance.percentile(95, team.demands.kept.finished_with_leadtime.map(&:leadtime_in_days)),
+                 demands_lead_time_p80: Stats::StatisticsService.instance.percentile(80, team.demands.kept.finished_with_leadtime.map(&:leadtime_in_days)),
+                 demands_lead_time_p65: Stats::StatisticsService.instance.percentile(65, team.demands.kept.finished_with_leadtime.map(&:leadtime_in_days)) %>
     </div>
   </div>
 
@@ -163,7 +160,7 @@
          data-prefix=''
          data-tooltipsuffix='%'
          data-datalabelsuffix='%'
-         data-series='<%= [{ name: I18n.t('projects.charts.flow_efficiency.share'), data: time_flow_informations.flow_efficiency }].to_json %>'
+         data-series='<%= [{ name: I18n.t('projects.charts.flow_efficiency.share'), data: time_flow_information.flow_efficiency }].to_json %>'
          data-decimals='2'>
     </div>
   </div>

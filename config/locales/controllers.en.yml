@@ -157,6 +157,7 @@ en:
     quality: "Quality"
     role: "Role"
     show_montecarlo: "Show Monte Carlo Projection"
+    demands_per_day_text: "demandas por dia"
   header:
     logout: Logout
     explore: Explore
@@ -168,7 +169,6 @@ en:
     show:
       title: "User Profile"
       pairing_counts: "Pairings"
-      last_deliveries: "Last Deliveries"
       manager:
         active_projects: "Active projects"
         active_products: "Active products"
@@ -625,6 +625,7 @@ en:
       search:
         text:
           placeholder: "search in product, project or portfolio unit names or in demand title or id"
+      last_deliveries: "Last deliveries"
     edit:
       title: "Edit Demand"
     show:
