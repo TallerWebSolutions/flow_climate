@@ -1,0 +1,21 @@
+<% if users.present? %>
+  <table class="table table-striped table-detail">
+    <thead>
+      <tr>
+        <th><%= User.human_attribute_name(:first_name) %></th>
+        <th><%= User.human_attribute_name(:last_name) %></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% demands.each do |demand| %>
+        <tr>
+          <td><%= demand.first_name %></td>
+          <td><%= demand.last_name %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+<% else %>
+  <%= render 'layouts/no_data', missing_data: User.model_name.human(count: 2) %>
+<% end %>

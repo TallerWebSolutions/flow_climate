@@ -122,7 +122,9 @@ Rails.application.routes.draw do
 
     resources :financial_informations, only: %i[new create edit update destroy]
 
-    resources :customers
+    resources :customers do
+      post :add_user_to_customer, on: :member
+    end
 
     resources :team_resources, only: %i[new create destroy]
 

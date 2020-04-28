@@ -174,6 +174,38 @@ ALTER SEQUENCE public.customers_projects_id_seq OWNED BY public.customers_projec
 
 
 --
+-- Name: customers_users; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.customers_users (
+    id bigint NOT NULL,
+    customer_id integer NOT NULL,
+    user_id integer NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: customers_users_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.customers_users_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: customers_users_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.customers_users_id_seq OWNED BY public.customers_users.id;
+
+
+--
 -- Name: demand_blocks; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1569,6 +1601,41 @@ ALTER SEQUENCE public.user_company_roles_id_seq OWNED BY public.user_company_rol
 
 
 --
+-- Name: user_invites; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.user_invites (
+    id bigint NOT NULL,
+    company_id integer NOT NULL,
+    invite_status integer NOT NULL,
+    invite_type integer NOT NULL,
+    invite_object_id integer NOT NULL,
+    invite_email character varying NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: user_invites_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.user_invites_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: user_invites_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.user_invites_id_seq OWNED BY public.user_invites.id;
+
+
+--
 -- Name: user_plans; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1713,6 +1780,13 @@ ALTER TABLE ONLY public.customers ALTER COLUMN id SET DEFAULT nextval('public.cu
 --
 
 ALTER TABLE ONLY public.customers_projects ALTER COLUMN id SET DEFAULT nextval('public.customers_projects_id_seq'::regclass);
+
+
+--
+-- Name: customers_users id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.customers_users ALTER COLUMN id SET DEFAULT nextval('public.customers_users_id_seq'::regclass);
 
 
 --
@@ -1982,6 +2056,13 @@ ALTER TABLE ONLY public.user_company_roles ALTER COLUMN id SET DEFAULT nextval('
 
 
 --
+-- Name: user_invites id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.user_invites ALTER COLUMN id SET DEFAULT nextval('public.user_invites_id_seq'::regclass);
+
+
+--
 -- Name: user_plans id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -2040,6 +2121,14 @@ ALTER TABLE ONLY public.customers
 
 ALTER TABLE ONLY public.customers_projects
     ADD CONSTRAINT customers_projects_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: customers_users customers_users_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.customers_users
+    ADD CONSTRAINT customers_users_pkey PRIMARY KEY (id);
 
 
 --
@@ -2355,6 +2444,14 @@ ALTER TABLE ONLY public.user_company_roles
 
 
 --
+-- Name: user_invites user_invites_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.user_invites
+    ADD CONSTRAINT user_invites_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: user_plans user_plans_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2383,6 +2480,13 @@ ALTER TABLE ONLY public.users
 --
 
 CREATE UNIQUE INDEX demand_member_start_time_unique ON public.item_assignments USING btree (demand_id, team_member_id, start_time);
+
+
+--
+-- Name: idx_customers_users_unique; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_customers_users_unique ON public.customers_users USING btree (customer_id, user_id);
 
 
 --
@@ -2453,6 +2557,20 @@ CREATE UNIQUE INDEX index_customers_projects_on_customer_id_and_project_id ON pu
 --
 
 CREATE INDEX index_customers_projects_on_project_id ON public.customers_projects USING btree (project_id);
+
+
+--
+-- Name: index_customers_users_on_customer_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_customers_users_on_customer_id ON public.customers_users USING btree (customer_id);
+
+
+--
+-- Name: index_customers_users_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_customers_users_on_user_id ON public.customers_users USING btree (user_id);
 
 
 --
@@ -3044,6 +3162,41 @@ CREATE INDEX index_user_company_roles_on_user_role ON public.user_company_roles 
 
 
 --
+-- Name: index_user_invites_on_company_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_user_invites_on_company_id ON public.user_invites USING btree (company_id);
+
+
+--
+-- Name: index_user_invites_on_invite_email; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_user_invites_on_invite_email ON public.user_invites USING btree (invite_email);
+
+
+--
+-- Name: index_user_invites_on_invite_object_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_user_invites_on_invite_object_id ON public.user_invites USING btree (invite_object_id);
+
+
+--
+-- Name: index_user_invites_on_invite_status; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_user_invites_on_invite_status ON public.user_invites USING btree (invite_status);
+
+
+--
+-- Name: index_user_invites_on_invite_type; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_user_invites_on_invite_type ON public.user_invites USING btree (invite_type);
+
+
+--
 -- Name: index_user_plans_on_plan_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -3387,6 +3540,14 @@ ALTER TABLE ONLY public.financial_informations
 
 
 --
+-- Name: customers_users fk_rails_5cebe9793f; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.customers_users
+    ADD CONSTRAINT fk_rails_5cebe9793f FOREIGN KEY (customer_id) REFERENCES public.customers(id);
+
+
+--
 -- Name: jira_project_configs fk_rails_5de62c9ca2; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -3539,6 +3700,14 @@ ALTER TABLE ONLY public.memberships
 
 
 --
+-- Name: customers_users fk_rails_afa9501106; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.customers_users
+    ADD CONSTRAINT fk_rails_afa9501106 FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
 -- Name: jira_accounts fk_rails_b16d2de302; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -3552,6 +3721,14 @@ ALTER TABLE ONLY public.jira_accounts
 
 ALTER TABLE ONLY public.stage_project_configs
     ADD CONSTRAINT fk_rails_b25c287b60 FOREIGN KEY (stage_id) REFERENCES public.stages(id);
+
+
+--
+-- Name: user_invites fk_rails_b2aa9bf2c0; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.user_invites
+    ADD CONSTRAINT fk_rails_b2aa9bf2c0 FOREIGN KEY (company_id) REFERENCES public.companies(id);
 
 
 --
@@ -3893,6 +4070,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200130181814'),
 ('20200328160133'),
 ('20200330185149'),
-('20200406175435');
+('20200406175435'),
+('20200423204628'),
+('20200423211631');
 
 

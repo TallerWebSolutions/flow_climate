@@ -3,7 +3,7 @@
 class CustomersController < AuthenticatedController
   before_action :user_gold_check
   before_action :assign_company
-  before_action :assign_customer, only: %i[edit update show destroy]
+  before_action :assign_customer, only: %i[edit update show destroy add_user_to_customer]
 
   def index
     @customers = @company.customers.sort_by(&:total_flow_pressure).reverse
@@ -14,6 +14,7 @@ class CustomersController < AuthenticatedController
 
   def show
     @customer_dashboard_data = CustomerDashboardData.new(@customer)
+    @user_invite = UserInvite.new(invite_object_id: @customer.id, invite_type: :customer)
   end
 
   def new
@@ -42,11 +43,19 @@ class CustomersController < AuthenticatedController
     redirect_to(company_customers_path(@company), flash: { error: @customer.errors.full_messages.join(',') })
   end
 
-  private
+  def add_user_to_customer
+    invite_email = user_invite_params[:invite_email]
 
-  def customer_projects
-    @customer_projects ||= @customer.projects.order(end_date: :desc)
+    if invite_email.present?
+      flash[:notice] = UserInviteService.instance.invite_customer(@company, @customer.id, invite_email, new_user_registration_url(user_email: invite_email))
+    else
+      flash[:error] = I18n.t('user_invites.create.error')
+    end
+
+    redirect_to company_customer_path(@company, @customer)
   end
+
+  private
 
   def assign_customer
     @customer = @company.customers.find(params[:id])
@@ -54,5 +63,9 @@ class CustomersController < AuthenticatedController
 
   def customer_params
     params.require(:customer).permit(:name)
+  end
+
+  def user_invite_params
+    params.require(:user_invite).permit(:invite_email, :invite_object_id, :invite_type)
   end
 end

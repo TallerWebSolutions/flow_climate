@@ -5,8 +5,8 @@
 # Table name: risk_review_action_items
 #
 #  id             :bigint           not null, primary key
-#  action_type    :integer          default(0), not null
-#  created_date   :datetime         not null
+#  action_type    :integer          default("technical_change"), not null
+#  created_date   :date             not null
 #  deadline       :date             not null
 #  description    :string           not null
 #  done_date      :date

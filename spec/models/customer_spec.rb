@@ -5,6 +5,7 @@ RSpec.describe Customer, type: :model do
     it { is_expected.to belong_to :company }
     it { is_expected.to have_many :products }
     it { is_expected.to have_and_belong_to_many :projects }
+    it { is_expected.to have_and_belong_to_many(:users).dependent(:destroy) }
   end
 
   context 'validations' do
@@ -158,5 +159,25 @@ RSpec.describe Customer, type: :model do
   describe '#delivered_scope' do
     include_context 'demands with effort for customer'
     it { expect(customer.delivered_scope).to eq customer.projects.sum(&:total_throughput) }
+  end
+
+  describe '#add_user' do
+    context 'when already has the user' do
+      let(:user) { Fabricate :user }
+      let!(:customer) { Fabricate :customer, users: [user] }
+
+      before { customer.add_user(user) }
+
+      it { expect(customer.users).to eq [user] }
+    end
+
+    context 'when does not have the user' do
+      let(:user) { Fabricate :user }
+      let!(:customer) { Fabricate :customer }
+
+      before { customer.add_user(user) }
+
+      it { expect(customer.users).to eq [user] }
+    end
   end
 end

@@ -43,6 +43,12 @@ RSpec.describe CustomersController, type: :controller do
 
       it { expect(response).to redirect_to new_user_session_path }
     end
+
+    describe 'POST #add_user_to_customer' do
+      before { post :add_user_to_customer, params: { company_id: 'foo', id: 'bar' } }
+
+      it { expect(response).to redirect_to new_user_session_path }
+    end
   end
 
   context 'authenticated' do
@@ -326,6 +332,53 @@ RSpec.describe CustomersController, type: :controller do
             let(:company) { Fabricate :company, users: [] }
 
             before { delete :destroy, params: { company_id: company, id: customer } }
+
+            it { expect(response).to have_http_status :not_found }
+          end
+        end
+      end
+    end
+
+    describe 'POST #add_user_to_customer' do
+      let(:customer) { Fabricate :customer, company: company }
+
+      context 'with valid parameters' do
+        it 'creates the user invite and sends the email do notify the new user' do
+          expect(UserInviteService.instance).to(receive(:invite_customer).with(company, customer.id, 'foo@bar.com.br', new_user_registration_url(user_email: 'foo@bar.com.br')).once { I18n.t('user_invites.create.success') })
+
+          post :add_user_to_customer, params: { company_id: company, id: customer, user_invite: { invite_email: 'foo@bar.com.br' } }
+
+          expect(flash[:notice]).to eq I18n.t('user_invites.create.success')
+        end
+      end
+
+      context 'passing invalid' do
+        context 'parameters' do
+          before { post :add_user_to_customer, params: { company_id: company, id: customer, user_invite: { invite_email: '' } } }
+
+          it 'does not create the invite and re-render the template with the errors' do
+            expect(response).to redirect_to company_customer_path(company, customer)
+            expect(flash[:error]).to eq I18n.t('user_invites.create.error')
+          end
+        end
+
+        context 'customer' do
+          before { post :add_user_to_customer, params: { company_id: company, id: 'foo', user_invite: { invite_email: 'foo' } } }
+
+          it { expect(response).to have_http_status :not_found }
+        end
+
+        context 'company' do
+          context 'non-existent' do
+            before { post :add_user_to_customer, params: { company_id: 'foo', id: customer, user_invite: { invite_email: 'foo' } } }
+
+            it { expect(response).to have_http_status :not_found }
+          end
+
+          context 'not permitted' do
+            let(:company) { Fabricate :company, users: [] }
+
+            before { post :add_user_to_customer, params: { company_id: company, id: customer, user_invite: { invite_email: 'foo' } } }
 
             it { expect(response).to have_http_status :not_found }
           end

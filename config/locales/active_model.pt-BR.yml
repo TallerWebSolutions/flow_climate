@@ -61,8 +61,8 @@ pt-BR:
             already_existent_active: "Você deveria ter apenas uma associação ativa no time para o membro do time"
     models:
       user:
-        one: Usuários
-        other: Usuário
+        one: Usuário
+        other: Usuários
       company:
         one: Empresa
         other: Empresas
@@ -171,6 +171,9 @@ pt-BR:
       risk_review_action_item:
         one: Ação da Revisão de Risco
         other: Ações da Revisão de Risco
+      user_invite:
+        one: Convite de Usuário
+        other: Convites de Usuários
     attributes:
       user:
         first_name: Nome
@@ -592,6 +595,22 @@ pt-BR:
             internal_process_change: Alteração Interna de Processo
             cadences_change: Alteração nas Cadências
             internal_comunication_change: Alteração na Comunicação Interna
+      user_invite:
+        company: Empresa
+        invite_type: Tipo do Convite
+        invite_status: Status do Convite
+        invite_email: Email Convidado
+        invite_object_id: Objeto do Convite
+        enums:
+          invite_type:
+            company: Empresa
+            customer: Cliente
+            product: Produto
+            Project: Projeto
+          invite_status:
+            pending: Pendente
+            accepted: Aceito
+            cancelled: Cancelado
   product:
     name:
       uniqueness: "Não deve repetir nome de produto para o mesmo cliente."
@@ -658,3 +677,6 @@ pt-BR:
   user_company_role:
     validations:
       user_company: "Você não pode ter o mesmo usuário duplicado na empresa."
+  user_notifier_mailer:
+    user_invite_to_customer:
+      registration_link: "Siga o link para registro"

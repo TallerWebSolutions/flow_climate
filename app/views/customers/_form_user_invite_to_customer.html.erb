@@ -1,0 +1,12 @@
+<%= form_for [company, customer, user_invite], url: add_user_to_customer_company_customer_path do |f| %>
+  <div class="col-xs-11 form-group <%= 'has-error' if user_invite.errors[:invite_email].present? %>">
+    <%= f.text_field :invite_email, value: user_invite.invite_email, autofocus: true, class: 'form-control', placeholder: 'e-mail' %>
+    <span class="help-block"><%= user_invite.errors[:invite_email].join(', ') %></span>
+  </div>
+
+  <div class="col-xs-1 form-group">
+    <%= f.button :submit, class: 'btn' do %>
+      <i class="fas fa-user-plus" title="<%= I18n.t('general.invite_user') %>"></i>
+    <% end %>
+  </div>
+<% end %>

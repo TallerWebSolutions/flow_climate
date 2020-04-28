@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class UserNotifierMailer < ApplicationMailer
-  default from: 'no-reply@taller.net.br'
-
   def company_weekly_bulletin(users, company)
     @company = company
     assign_project_informations(company)
@@ -51,6 +49,15 @@ class UserNotifierMailer < ApplicationMailer
 
     Rails.logger.info("Activity #{@activity_title}-#{@object_title} finished email notification sent to #{@user_email}")
     mail(to: user_email, subject: I18n.t('async_activity.notification.subject', activity_title: @activity_title, object_title: @object_title))
+  end
+
+  def user_invite_to_customer(user_email, customer_name, registration_url)
+    @user_name = user_email
+    @customer_name = customer_name
+    @registration_url = registration_url
+
+    Rails.logger.info("Inviting user #{user_email} for customer #{customer_name}")
+    mail(to: user_email, subject: I18n.t('user_notifier_mailer.user_invite_to_customer.subject', customer_name: customer_name))
   end
 
   private

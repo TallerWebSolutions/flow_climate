@@ -158,6 +158,7 @@ en:
     role: "Role"
     show_montecarlo: "Show Monte Carlo Projection"
     demands_per_day_text: "demandas por dia"
+    invite_user: "Invite User"
   header:
     logout: Logout
     explore: Explore
@@ -591,6 +592,8 @@ en:
       no_customers_message: "You do not have teams yet."
     show:
       total_value: "Projects Total Value"
+    add_user_to_customer:
+      success: "User added"
   customer:
     edit:
       title: "Edit Customer"
@@ -1063,6 +1066,11 @@ en:
         other: "Demand Comments"
       slack_configuration:
         other: "No Slack Configurations Data"
+    errors:
+      models:
+        user_invite:
+          invite_email:
+            not_same: "You can have only one not cancelled invite for the same email and company"
   stats:
     period:
       variation: "Period Variation"
@@ -1220,3 +1228,7 @@ en:
   risk_review_action_items:
     create:
       success: "The action was created."
+  user_invites:
+    create:
+      error: "The e-mail address should not be blank"
+      success: "User invited"
