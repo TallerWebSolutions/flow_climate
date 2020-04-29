@@ -1,0 +1,12 @@
+<% if @customer_dashboard_data.present? %>
+  <%= render 'customers/customer_dashboard', company: nil, customer: @customer, user_invite: nil, customer_dashboard_data: @customer_dashboard_data %>
+<% else %>
+  <% render 'layouts/no_data', missing_data: I18n.t('general.no_data') %>
+<% end %>
+
+<% content_for :javascript do %>
+  <%= javascript_include_tag 'charts/column' %>
+  <%= javascript_include_tag 'charts/line' %>
+
+  <%= javascript_include_tag 'customers/show' %>
+<% end %>

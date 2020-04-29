@@ -47,7 +47,7 @@ class CustomersController < AuthenticatedController
     invite_email = user_invite_params[:invite_email]
 
     if invite_email.present?
-      flash[:notice] = UserInviteService.instance.invite_customer(@company, @customer.id, invite_email, new_user_registration_url(user_email: invite_email))
+      flash[:notice] = UserInviteService.instance.invite_customer(@company, @customer.id, invite_email, new_devise_customer_registration_url(user_email: invite_email))
     else
       flash[:error] = I18n.t('user_invites.create.error')
     end

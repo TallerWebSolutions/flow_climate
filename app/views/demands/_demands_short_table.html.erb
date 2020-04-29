@@ -10,13 +10,18 @@
   <tbody>
     <% demands.each do |demand| %>
       <tr>
-        <% if company.role_for_user(current_user).customer? %>
+        <% if current_devise_customer.present? %>
           <td><%= demand.project_name %></td>
         <% else %>
           <td><%= link_to demand.project_name, company_project_path(demand.company, demand.project), target: :_blank %></td>
         <% end %>
 
-        <td><%= link_to demand.external_id, company_demand_path(demand.company, demand), target: :_blank %></td>
+        <% if current_devise_customer.present? %>
+          <td><%= demand.external_id %></td>
+        <% else %>
+          <td><%= link_to demand.external_id, company_demand_path(demand.company, demand), target: :_blank %></td>
+        <% end %>
+
         <td><%= I18n.l(demand.end_date, format: :short) %></td>
         <td><%= time_distance_in_words(demand.leadtime) %></td>
       </tr>

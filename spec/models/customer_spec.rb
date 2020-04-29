@@ -5,7 +5,7 @@ RSpec.describe Customer, type: :model do
     it { is_expected.to belong_to :company }
     it { is_expected.to have_many :products }
     it { is_expected.to have_and_belong_to_many :projects }
-    it { is_expected.to have_and_belong_to_many(:users).dependent(:destroy) }
+    it { is_expected.to have_and_belong_to_many(:devise_customers).dependent(:destroy) }
   end
 
   context 'validations' do
@@ -162,22 +162,23 @@ RSpec.describe Customer, type: :model do
   end
 
   describe '#add_user' do
+    let(:devise_customer) { Fabricate :devise_customer }
+
     context 'when already has the user' do
-      let(:user) { Fabricate :user }
-      let!(:customer) { Fabricate :customer, users: [user] }
+      let!(:customer) { Fabricate :customer, devise_customers: [devise_customer] }
 
-      before { customer.add_user(user) }
+      before { customer.add_user(devise_customer) }
 
-      it { expect(customer.users).to eq [user] }
+      it { expect(customer.devise_customers).to eq [devise_customer] }
     end
 
     context 'when does not have the user' do
-      let(:user) { Fabricate :user }
+      let(:devise_customer) { Fabricate :devise_customer }
       let!(:customer) { Fabricate :customer }
 
-      before { customer.add_user(user) }
+      before { customer.add_user(devise_customer) }
 
-      it { expect(customer.users).to eq [user] }
+      it { expect(customer.devise_customers).to eq [devise_customer] }
     end
   end
 end

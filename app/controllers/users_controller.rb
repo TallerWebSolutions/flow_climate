@@ -25,13 +25,7 @@ class UsersController < AuthenticatedController
   end
 
   def show
-    @companies_list = @user.companies.order(:name)
-    @company = @user.last_company || @user.companies.last
-    assign_charts_objects(@company) if @company.present?
-
-    assign_team_member_dependencies
-    assign_user_dependencies
-    assign_stats_info
+    build_page_objects
   end
 
   def edit
@@ -63,7 +57,25 @@ class UsersController < AuthenticatedController
     respond_to { |format| format.js { render 'users/user_dashboard_company_tab.js.erb' } }
   end
 
+  def home
+    @user = current_user
+    build_page_objects
+
+    render 'users/show'
+  end
+
   private
+
+  def build_page_objects
+    @companies_list = @user.companies.order(:name)
+    @company = @user.last_company || @user.companies.last
+
+    assign_charts_objects(@company) if @company.present?
+
+    assign_team_member_dependencies
+    assign_user_dependencies
+    assign_stats_info
+  end
 
   def assign_charts_objects(company)
     assign_active_projects_quality_info(company)

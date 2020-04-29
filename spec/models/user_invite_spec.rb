@@ -38,6 +38,14 @@ RSpec.describe UserInvite, type: :model do
           end
         end
 
+        context 'with status change' do
+          let!(:user_invite) { Fabricate :user_invite, company: company, invite_email: 'aaa@bbb.com', invite_status: :accepted }
+
+          before { user_invite.pending! }
+
+          it { expect(user_invite).to be_pending }
+        end
+
         context 'same email in the same company with the cancelled status' do
           let!(:user_invite) { Fabricate :user_invite, company: company, invite_email: 'aaa@bbb.com', invite_status: :cancelled }
           let!(:other_invite) { Fabricate.build :user_invite, company: company, invite_email: 'aaa@bbb.com', invite_status: :pending }

@@ -27,8 +27,8 @@ RSpec.describe UserInviteService, type: :service do
 
     context 'with an existent user' do
       it 'adds the user to the customer' do
-        user_stubbed = instance_double('User')
-        expect(User).to(receive(:find_by).once { user_stubbed })
+        user_stubbed = instance_double('DeviseCustomer')
+        expect(DeviseCustomer).to(receive(:find_by).once { user_stubbed })
         expect_any_instance_of(Customer).to(receive(:add_user).with(user_stubbed))
 
         invite_customer_message = described_class.instance.invite_customer(company, customer.id, user.email, 'xpto.com.br/bla')

@@ -30,14 +30,14 @@ class Customer < ApplicationRecord
   has_many :products, dependent: :restrict_with_error
   has_many :demands, through: :products
   has_and_belongs_to_many :projects, dependent: :restrict_with_error
-  has_and_belongs_to_many :users, dependent: :destroy
+  has_and_belongs_to_many :devise_customers, dependent: :destroy
 
   validates :company, :name, presence: true
   validates :name, uniqueness: { scope: :company, message: I18n.t('customer.name.uniqueness') }
 
-  def add_user(user)
-    return if users.include?(user)
+  def add_user(devise_customer)
+    return if devise_customers.include?(devise_customer)
 
-    users << user
+    devise_customers << devise_customer
   end
 end
