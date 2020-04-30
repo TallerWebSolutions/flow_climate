@@ -18,3 +18,8 @@
 .user-dashboard-companies-tab {
     text-align: center;
 }
+
+.dashboard-add-icon {
+    font-size: large;
+    float: right;
+}

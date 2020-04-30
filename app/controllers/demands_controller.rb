@@ -135,7 +135,7 @@ class DemandsController < AuthenticatedController
   end
 
   def demand_params
-    params.require(:demand).permit(:team_id, :external_id, :demand_type, :downstream, :manual_effort, :class_of_service, :effort_upstream, :effort_downstream, :created_date, :commitment_date, :end_date, :business_score, :external_url)
+    params.require(:demand).permit(:team_id, :product_id, :customer_id, :external_id, :demand_type, :downstream, :manual_effort, :class_of_service, :effort_upstream, :effort_downstream, :created_date, :commitment_date, :end_date, :business_score, :external_url)
   end
 
   def assign_project

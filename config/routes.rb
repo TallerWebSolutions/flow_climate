@@ -28,11 +28,22 @@ Rails.application.routes.draw do
     post 'jira_delete_card_webhook'
   end
 
-  authenticate :user do
+  devise_for :users, controllers: { registrations: 'devise_custom/users/registrations' }
+  devise_for :devise_customers, controllers: { registrations: 'devise_custom/devise_customers/registrations' }
+
+  authenticated :user do
     mount Sidekiq::Web => '/sidekiq'
+
+    root 'users#home', as: :user_home
   end
 
-  devise_for :users, controllers: { registrations: 'devise_custom/registrations' }
+  authenticated :devise_customer do
+    root 'devise_customers#home', as: :devise_customer_home
+  end
+
+  unauthenticated do
+    root 'home#show'
+  end
 
   controller :home do
     get :show
@@ -76,6 +87,8 @@ Rails.application.routes.draw do
       resources :user_company_roles, only: %i[new create edit update]
     end
   end
+
+  resources :devise_customers, only: :show
 
   resources :companies, except: :destroy do
     member do
@@ -123,7 +136,7 @@ Rails.application.routes.draw do
     resources :financial_informations, only: %i[new create edit update destroy]
 
     resources :customers do
-      get :projects_tab, on: :member
+      post :add_user_to_customer, on: :member
     end
 
     resources :team_resources, only: %i[new create destroy]
@@ -263,6 +276,4 @@ Rails.application.routes.draw do
       end
     end
   end
-
-  root 'home#show'
 end

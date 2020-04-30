@@ -120,4 +120,15 @@ RSpec.describe UserNotifierMailer, type: :mailer do
       expect(mail.body.encoded).to match I18n.t('general.signature.flow_climate_team')
     end
   end
+
+  describe '#user_invite_to_customer' do
+    subject(:mail) { described_class.user_invite_to_customer('foo@bla.com.br', 'xpto', 'http://foo.com.br').deliver_now }
+
+    it 'renders the email' do
+      expect(mail.subject).to eq I18n.t('user_notifier_mailer.user_invite_to_customer.subject', customer_name: 'xpto')
+      expect(mail.body.encoded).to match 'xpto'
+      expect(mail.body.encoded).to match 'foo@bla.com.br'
+      expect(mail.body.encoded).to match 'http://foo.com.br'
+    end
+  end
 end

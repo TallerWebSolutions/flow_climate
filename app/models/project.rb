@@ -35,6 +35,8 @@
 class Project < ApplicationRecord
   paginates_per 10
 
+  include DemandsAggregator
+
   enum status: { waiting: 0, executing: 1, maintenance: 2, finished: 3, cancelled: 4, negotiating: 5 }
   enum project_type: { outsourcing: 0, consulting: 1, training: 2, domestic_product: 3 }
 
@@ -150,7 +152,7 @@ class Project < ApplicationRecord
     demands.kept.to_end_dates(start_date, end_date).sum(&:total_effort)
   end
 
-  def remaining_money(end_period)
+  def remaining_money(end_period = Time.zone.today.end_of_day)
     hour_value_calc = hour_value || (value / qty_hours)
     (value || 0) - (consumed_hours_in_period(start_date, end_period) * hour_value_calc)
   end

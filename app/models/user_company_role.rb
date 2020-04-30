@@ -28,7 +28,7 @@
 #
 
 class UserCompanyRole < ApplicationRecord
-  enum user_role: { operations: 0, manager: 1, director: 2 }
+  enum user_role: { operations: 0, manager: 1, director: 2, customer: 3 }
 
   belongs_to :user
   belongs_to :company

@@ -5,7 +5,9 @@
 
   <% if user.team_member.present? %>
     <div class="col-xs-4">
-      <%= render 'team_members/last_deliveries', team_member: user.team_member %>
+      <h4><%= I18n.t('demands.index.last_deliveries') %></h4>
+
+      <%= render 'demands/demands_short_table', company: @company, demands: user.team_member.demands.kept.finished.order(end_date: :desc).first(5) %>
     </div>
   <% end %>
 

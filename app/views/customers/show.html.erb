@@ -9,43 +9,11 @@
   </div>
 </div>
 
-<%= hidden_field_tag :company_id, @company.id %>
-<%= hidden_field_tag :customer_id, @customer.id %>
-<%= hidden_field_tag :projects_ids, @customer_projects.map(&:id).join(',') %>
-
-<div class="row">
-  <div class="topnav">
-    <%= link_to I18n.t('navbar.details'), '#', id: 'nav-item-stamps', class: 'nav-item', data: { container: '#customer-stamps' } %>
-    <%= link_to I18n.t('navbar.projects_list'), '#', id: 'nav-item-projects-table', class: 'nav-item', data: { container: '#projects-table' } %>
-  </div>
-</div>
-
-<%= render 'layouts/load_spinner' %>
-
-<div id="customer-stamps" class="tab-container">
-  <%= render 'customers/customer_stamps', customer: @customer, start_date: @start_date, end_date: @end_date %>
-</div>
-
-<div id="projects-table" class="tab-container">
-
-</div>
+<%= render 'customers/customer_dashboard', company: @company, customer: @customer, user_invite: @user_invite, customer_dashboard_data: @customer_dashboard_data %>
 
 <% content_for :javascript do %>
-  <%= javascript_include_tag 'charts/donut' %>
-  <%= javascript_include_tag 'charts/gantt' %>
+  <%= javascript_include_tag 'charts/column' %>
+  <%= javascript_include_tag 'charts/line' %>
 
-  <%= javascript_include_tag 'routes/project_routes' %>
-  <%= javascript_include_tag 'routes/customer_routes' %>
-
-  <%= javascript_include_tag 'components/components' %>
-  <%= javascript_include_tag 'top_navigation/tab-navigation' %>
-
-  <%= javascript_include_tag 'projects/demand_classification_charts' %>
-  <%= javascript_include_tag 'projects/projects_table' %>
-  <%= javascript_include_tag 'projects/projects_search' %>
-
-  <%= javascript_include_tag 'demand_blocks/list_modal' %>
-
-  <%= javascript_include_tag 'customers/customer_navigation_behaviour' %>
   <%= javascript_include_tag 'customers/show' %>
 <% end %>

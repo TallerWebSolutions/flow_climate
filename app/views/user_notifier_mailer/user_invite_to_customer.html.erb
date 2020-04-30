@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+    <p style="font-size: x-large"><%= I18n.t('devise.general.greetings', name: @user_name) %></p>
+    <p style="font-size: larger"><%= I18n.t('user_notifier_mailer.user_invite_to_customer.invite', customer_name: @customer_name ) %></p>
+    <p><%= link_to I18n.t('user_notifier_mailer.user_invite_to_customer.registration_link'), @registration_url %> </p>
+  </body>
+
+  <%= render 'user_notifier_mailer/email_signature' %>
+</html>

@@ -1,17 +1,17 @@
-  <div class="row">
+<div class="row">
+  <div class="col-xs-12">
+    <ul class="breadcrumb">
+      <li><%= link_to I18n.t('general.home.title'), root_path %></li>
+      <li><%= link_to @company.abbreviation&.upcase, company_path(@company) %></li>
+      <li><%= I18n.t('customers.new.title') %></li>
+    </ul>
+  </div>
+</div>
+
+<%= form_for [@company, @customer] do |f| %>
+  <div class="row bottom-spaced-component">
     <div class="col-xs-12">
-      <ul class="breadcrumb">
-        <li><%= link_to I18n.t('general.home.title'), root_path %></li>
-        <li><%= link_to @company.abbreviation&.upcase, company_path(@company) %></li>
-        <li><%= I18n.t('customers.new.title') %></li>
-      </ul>
+      <%= render 'form', f: f %>
     </div>
   </div>
-
-  <%= form_for [@company, @customer] do |f| %>
-    <div class="row bottom-spaced-component">
-      <div class="col-xs-12">
-        <%= render 'form', f: f %>
-      </div>
-    </div>
-  <% end %>
+<% end %>

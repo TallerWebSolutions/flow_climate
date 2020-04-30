@@ -96,7 +96,7 @@ pt-BR:
       text: "Risco: %{risk_value}"
       deadline:
         label: "Risco do Prazo"
-      label: ""
+      label: "Risco"
     detail: "Detalhamento do Risco"
     minimum: "Mínimo"
     maximum: "Máximo"
@@ -157,6 +157,8 @@ pt-BR:
     quality: "Qualidade"
     role: "Função"
     show_montecarlo: "Mostrar Simulação de Monte Carlo"
+    demands_per_day_text: "demands per day"
+    invite_user: "Convidar Usuário"
   header:
     logout: Sair
     sign_up: Cadastre-se
@@ -167,7 +169,6 @@ pt-BR:
     show:
       title: "Perfil do Usuário"
       pairing_counts: "Pareamentos"
-      last_deliveries: "Últimas Entregas"
       manager:
         active_projects: "Projetos ativos"
         active_products: "Produtos ativos"
@@ -660,6 +661,8 @@ pt-BR:
       no_customers_message: "Você ainda não tem times."
     show:
       total_value: "Valor Total em Projetos"
+    add_user_to_customer:
+      success: "Usuário adicionado"
   customer:
     edit:
       title: "Editar Cliente"
@@ -694,6 +697,7 @@ pt-BR:
       search:
         text:
           placeholder: "buscar por nome de produto, projeto ou unidade de portfólio ou pelo ID ou título da demanda"
+      last_deliveries: "Últimas entregas"
     edit:
       title: "Editar Demanda"
     show:
@@ -1177,6 +1181,11 @@ pt-BR:
     attributes:
       demand:
         external_url: "Link Externo"
+    errors:
+      models:
+        user_invite:
+          invite_email:
+            not_same: "Você pode ter apenas um convite não cancelado para o mesmo email e empresa."
   views:
     pagination:
       first: "&laquo; Primeira"
@@ -1207,3 +1216,7 @@ pt-BR:
   risk_review_action_items:
     create:
       success: "A ação foi criada."
+  user_invites:
+    create:
+      error: "O e-mail não deve estar em branco."
+      success: "Usuário convidado"

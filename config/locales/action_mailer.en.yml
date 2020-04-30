@@ -48,4 +48,9 @@ en:
     signature:
       regards: "Best regards"
       flow_climate_team: "Flow Climate team"
+  user_notifier_mailer:
+    user_invite_to_customer:
+      subject: "You were invited to %{customer_name}"
+      invite: "You were invited to join the customer %{customer_name}."
+      registration_link: "Follow the link to register"
 

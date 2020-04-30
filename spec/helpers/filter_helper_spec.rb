@@ -32,6 +32,21 @@ RSpec.describe FilterHelper, type: :helper do
     it { expect(helper.teams_in_company_options(company, team.id)).to eq options_for_select([[team.name, team.id.to_s]], team.id) }
   end
 
+  describe '#customers_in_company_options' do
+    let(:company) { Fabricate :company }
+    let!(:customer) { Fabricate :customer, company: company }
+
+    it { expect(helper.customers_in_company_options(company, customer.id)).to eq options_for_select([[customer.name, customer.id.to_s]], customer.id) }
+  end
+
+  describe '#products_in_company_options' do
+    let(:company) { Fabricate :company }
+    let!(:customer) { Fabricate :customer, company: company }
+    let!(:product) { Fabricate :product, customer: customer }
+
+    it { expect(helper.products_in_company_options(company, product.id)).to eq options_for_select([[product.name, product.id.to_s]], product.id) }
+  end
+
   describe '#project_statuses_options' do
     it { expect(helper.project_statuses_options('waiting')).to eq options_for_select(Project.statuses.map { |key, _value| [t("activerecord.attributes.project.enums.status.#{key}"), key] }, 'waiting') }
   end

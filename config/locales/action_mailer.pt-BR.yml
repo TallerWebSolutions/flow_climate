@@ -42,3 +42,7 @@ pt-BR:
     signature:
       regards: "Atenciosamente"
       flow_climate_team: "Time do Flow Climate"
+  user_notifier_mailer:
+    user_invite_to_customer:
+      subject: "Você foi convidado para %{customer_name}"
+      invite: "Você foi convidado para se juntar ao cliente %{customer_name}."

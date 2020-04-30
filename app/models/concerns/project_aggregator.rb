@@ -15,13 +15,6 @@ module ProjectAggregator
     projects.sum(&:last_week_scope)
   end
 
-  def avg_hours_per_demand
-    projects_with_data = projects.select { |p| p.avg_hours_per_demand.positive? }
-    return 0 if projects_with_data.size.zero?
-
-    projects_with_data.sum(&:avg_hours_per_demand) / projects_with_data.size.to_f
-  end
-
   def total_value
     projects.map(&:value).compact.sum
   end

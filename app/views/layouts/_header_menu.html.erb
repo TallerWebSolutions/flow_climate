@@ -16,7 +16,7 @@
     <% if current_user.present? && current_user.avatar.present? %>
       <%= image_tag current_user.avatar.url, size: '50x50', class: 'user-avatar dropdown-toggle', 'data-toggle' => 'dropdown' %>
     <% else %>
-      <%= image_tag 'img-empty.png', size: '50x50', class: 'user-avatar dropdown-toggle', 'data-toggle' => 'dropdown' %>
+      <%= image_tag 'https://res.cloudinary.com/dmphguydp/image/upload/v1588172414/user_default_k86hn3.png', size: '50x50', class: 'user-avatar dropdown-toggle', 'data-toggle' => 'dropdown' %>
     <% end %>
 
     <ul class="dropdown-menu dropdown-menu-right">

@@ -10,6 +10,7 @@ RSpec.describe Demand, type: :model do
     it { is_expected.to belong_to :company }
     it { is_expected.to belong_to :project }
     it { is_expected.to belong_to :product }
+    it { is_expected.to belong_to :customer }
     it { is_expected.to belong_to :portfolio_unit }
     it { is_expected.to belong_to :team }
     it { is_expected.to belong_to :risk_review }
@@ -200,6 +201,7 @@ RSpec.describe Demand, type: :model do
 
   context 'delegations' do
     it { is_expected.to delegate_method(:name).to(:project).with_prefix }
+    it { is_expected.to delegate_method(:name).to(:customer).with_prefix }
     it { is_expected.to delegate_method(:name).to(:product).with_prefix }
     it { is_expected.to delegate_method(:name).to(:portfolio_unit).with_prefix }
     it { is_expected.to delegate_method(:name).to(:team).with_prefix }

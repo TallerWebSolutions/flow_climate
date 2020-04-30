@@ -55,6 +55,12 @@ RSpec.describe UsersController, type: :controller do
 
       it { expect(response).to redirect_to new_user_session_path }
     end
+
+    describe 'GET #home' do
+      before { get :home }
+
+      it { expect(response).to redirect_to new_user_session_path }
+    end
   end
 
   context 'authenticated as admin' do
@@ -172,7 +178,7 @@ RSpec.describe UsersController, type: :controller do
             get :show, params: { id: user }
           end
 
-          it 'assigns the instance variable and renders the template' do
+          it 'assigns the instance variable, compute the charts, and renders the template' do
             expect(assigns(:user)).to eq user
             expect(assigns(:user_plans)).to eq [other_user_plan, user_plan]
             expect(assigns(:companies_list)).to eq [other_company, company]
@@ -182,10 +188,10 @@ RSpec.describe UsersController, type: :controller do
             expect(assigns(:member_projects)).to eq [project, other_project]
             expect(assigns(:array_of_dates)).to eq [Date.new(2019, 10, 31), Date.new(2019, 11, 30), Date.new(2019, 12, 31), Date.new(2020, 1, 31)]
 
-            expect(assigns(:statistics_informations).lead_time_accumulated[0]).to be_within(1).of(7.0)
-            expect(assigns(:statistics_informations).lead_time_accumulated[1]).to be_within(1).of(7.0)
-            expect(assigns(:statistics_informations).lead_time_accumulated[2]).to be_within(1).of(7.0)
-            expect(assigns(:statistics_informations).lead_time_accumulated[3]).to be_within(1).of(26.0)
+            expect(assigns(:statistics_information).lead_time_accumulated[0]).to be_within(1).of(7.0)
+            expect(assigns(:statistics_information).lead_time_accumulated[1]).to be_within(1).of(7.0)
+            expect(assigns(:statistics_information).lead_time_accumulated[2]).to be_within(1).of(7.0)
+            expect(assigns(:statistics_information).lead_time_accumulated[3]).to be_within(1).of(26.0)
 
             expect(assigns(:projects_quality)).to eq(project => 100, other_project => 100)
             expect(assigns(:projects_leadtime)[project]).to be_within(0.5).of(26)
@@ -338,10 +344,10 @@ RSpec.describe UsersController, type: :controller do
             expect(assigns(:member_projects)).to eq [project, other_project]
             expect(assigns(:array_of_dates)).to eq [Date.new(2019, 10, 31), Date.new(2019, 11, 30), Date.new(2019, 12, 31), Date.new(2020, 1, 31)]
 
-            expect(assigns(:statistics_informations).lead_time_accumulated[0]).to be_within(1).of(7.0)
-            expect(assigns(:statistics_informations).lead_time_accumulated[1]).to be_within(1).of(7.0)
-            expect(assigns(:statistics_informations).lead_time_accumulated[2]).to be_within(1).of(7.0)
-            expect(assigns(:statistics_informations).lead_time_accumulated[3]).to be_within(1).of(26.0)
+            expect(assigns(:statistics_information).lead_time_accumulated[0]).to be_within(1).of(7.0)
+            expect(assigns(:statistics_information).lead_time_accumulated[1]).to be_within(1).of(7.0)
+            expect(assigns(:statistics_information).lead_time_accumulated[2]).to be_within(1).of(7.0)
+            expect(assigns(:statistics_information).lead_time_accumulated[3]).to be_within(1).of(26.0)
 
             expect(assigns(:projects_quality)).to eq(project => 100, other_project => 100)
             expect(assigns(:projects_leadtime)[project]).to be_within(0.5).of(26)
@@ -360,6 +366,72 @@ RSpec.describe UsersController, type: :controller do
             before { get :user_dashboard_company_tab, params: { id: user, company_id: 'foo' } }
 
             it { expect(response).to have_http_status :not_found }
+          end
+        end
+      end
+    end
+
+    describe 'GET #home' do
+      before { travel_to Time.zone.local(2020, 1, 16, 14, 0, 0) }
+
+      after { travel_back }
+
+      context 'with valid parameters' do
+        context 'with data' do
+          include_context 'user demands data'
+
+          before do
+            user.update(last_company_id: company.id)
+            get :home
+          end
+
+          it 'assigns the instance variable, compute the charts, and renders the template' do
+            expect(assigns(:user)).to eq user
+            expect(assigns(:user_plans)).to eq [other_user_plan, user_plan]
+            expect(assigns(:companies_list)).to eq [other_company, company]
+
+            expect(assigns(:pairing_chart)).to eq(second_team_member.name => 2, third_team_member.name => 1, fourth_team_member.name => 1)
+            expect(assigns(:member_teams)).to eq [team]
+            expect(assigns(:member_projects)).to eq [project, other_project]
+            expect(assigns(:array_of_dates)).to eq [Date.new(2019, 10, 31), Date.new(2019, 11, 30), Date.new(2019, 12, 31), Date.new(2020, 1, 31)]
+
+            expect(assigns(:statistics_information).lead_time_accumulated[0]).to be_within(1).of(7.0)
+            expect(assigns(:statistics_information).lead_time_accumulated[1]).to be_within(1).of(7.0)
+            expect(assigns(:statistics_information).lead_time_accumulated[2]).to be_within(1).of(7.0)
+            expect(assigns(:statistics_information).lead_time_accumulated[3]).to be_within(1).of(26.0)
+
+            expect(assigns(:projects_quality)).to eq(project => 100, other_project => 100)
+            expect(assigns(:projects_leadtime)[project]).to be_within(0.5).of(26)
+            expect(assigns(:projects_leadtime)[other_project]).to be_within(0.5).of(6.8)
+            expect(assigns(:projects_risk)).to eq({ project => 100, other_project => 100 })
+            expect(assigns(:projects_scope)).to eq({ project => 30, other_project => 30 })
+            expect(assigns(:projects_value_per_demand)).to eq({ project => 1000, other_project => 1750 })
+            expect(assigns(:projects_flow_pressure)).to eq({ project => 8.780487804878078, other_project => 12.413793103448336 })
+
+            expect(response).to render_template 'users/show'
+          end
+        end
+
+        context 'with no data' do
+          before { get :home }
+
+          it 'assigns the instance variable and renders the template' do
+            expect(assigns(:user)).to eq user
+            expect(assigns(:user_plans)).to eq []
+            expect(response).to render_template 'users/show'
+          end
+        end
+
+        context 'with no last company id' do
+          let!(:company) { Fabricate :company, users: [user], name: 'zzz' }
+          let!(:other_company) { Fabricate :company, users: [user], name: 'aaa' }
+
+          before { get :home }
+
+          it 'assigns the instance variable and renders the template' do
+            expect(assigns(:user)).to eq user
+            expect(assigns(:company)).to eq other_company
+            expect(response).to render_template 'users/show'
           end
         end
       end

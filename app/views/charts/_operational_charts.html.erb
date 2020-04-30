@@ -92,7 +92,7 @@
          data-prefix=''
          data-tooltipsuffix='<%= I18n.t('projects.charts.hours_per_demand.tooltipsufix') %>'
          data-datalabelsuffix=''
-         data-series='<%= [{ name: I18n.t('projects.charts.hours_per_demand.ylabel'), data: report_data.time_flow_informations.hours_per_demand }].to_json %>'
+         data-series='<%= [{ name: I18n.t('projects.charts.hours_per_demand.ylabel'), data: report_data.time_flow_information.hours_per_demand }].to_json %>'
          data-stacking='normal'
          data-decimals='2'>
     </div>
@@ -218,7 +218,7 @@
          data-prefix=''
          data-tooltipsuffix='<%= I18n.t('demands.charts.hours.suffix') %>'
          data-datalabelsuffix=''
-         data-series='<%= [{ name: I18n.t('projects.charts.queue_touch_time.queue'), data: report_data.time_flow_informations.queue_time }, { name: I18n.t('projects.charts.queue_touch_time.touch'), data: report_data.time_flow_informations.touch_time }].to_json %>'
+         data-series='<%= [{ name: I18n.t('projects.charts.queue_touch_time.queue'), data: report_data.time_flow_information.queue_time }, { name: I18n.t('projects.charts.queue_touch_time.touch'), data: report_data.time_flow_information.touch_time }].to_json %>'
          data-decimals='2'>
     </div>
   </div>
@@ -232,10 +232,11 @@
          data-prefix=''
          data-tooltipsuffix='%'
          data-datalabelsuffix='%'
-         data-series='<%= [{ name: I18n.t('projects.charts.flow_efficiency.share'), data: report_data.time_flow_informations.flow_efficiency }].to_json %>'
+         data-series='<%= [{ name: I18n.t('projects.charts.flow_efficiency.share'), data: report_data.time_flow_information.flow_efficiency }].to_json %>'
          data-decimals='2'>
     </div>
   </div>
+
   <div class="col-xs-6 bottom-spaced-component">
     <div id="hours-consumed-column"
          class="flow-chart"
@@ -244,7 +245,7 @@
          data-ytitle='<%= I18n.t('projects.charts.hours_per_month.ylabel') %>'
          data-prefix=''
          data-tooltipsuffix='<%= I18n.t('projects.charts.hours_per_month.ylabel') %>'
-         data-series='<%= [{ name: I18n.t('projects.charts.throughput.stage_stream.upstream'), data: report_data.time_flow_informations.hours_delivered_upstream }, {name: I18n.t('projects.charts.throughput.stage_stream.downstream'), data: report_data.time_flow_informations.hours_delivered_downstream }].to_json %>'
+         data-series='<%= [{ name: I18n.t('projects.charts.throughput.stage_stream.upstream'), data: report_data.time_flow_information.hours_delivered_upstream }, {name: I18n.t('projects.charts.throughput.stage_stream.downstream'), data: report_data.time_flow_information.hours_delivered_downstream }].to_json %>'
          data-stacking='normal'
          data-decimals='0'>
     </div>

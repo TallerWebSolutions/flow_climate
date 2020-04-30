@@ -1,5 +1,5 @@
 <% if company&.role_for_user(user)&.operations? %>
-  <%= render 'users/operations_dashboard', user: user, member_teams: @member_teams, demand_blocks: @demand_blocks, member_projects: @member_projects, pairing_chart: @pairing_chart, statistics_informations: @statistics_informations, array_of_dates: @array_of_dates %>
+  <%= render 'users/operations_dashboard', user: user, member_teams: @member_teams, demand_blocks: @demand_blocks, member_projects: @member_projects, pairing_chart: @pairing_chart, statistics_informations: @statistics_information, array_of_dates: @array_of_dates %>
 <% elsif company&.role_for_user(user)&.manager? %>
   <%= render 'users/manager_dashboard', user: user, company: company, projects_quality: @projects_quality, projects_leadtime: @projects_leadtime, projects_risk: @projects_risk, projects_scope: @projects_scope, projects_value_per_demand: @projects_value_per_demand, projects_flow_pressure: @projects_flow_pressure %>
 

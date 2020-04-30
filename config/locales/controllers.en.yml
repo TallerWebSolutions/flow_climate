@@ -157,6 +157,8 @@ en:
     quality: "Quality"
     role: "Role"
     show_montecarlo: "Show Monte Carlo Projection"
+    demands_per_day_text: "demandas por dia"
+    invite_user: "Invite User"
   header:
     logout: Logout
     explore: Explore
@@ -168,7 +170,6 @@ en:
     show:
       title: "User Profile"
       pairing_counts: "Pairings"
-      last_deliveries: "Last Deliveries"
       manager:
         active_projects: "Active projects"
         active_products: "Active products"
@@ -591,6 +592,8 @@ en:
       no_customers_message: "You do not have teams yet."
     show:
       total_value: "Projects Total Value"
+    add_user_to_customer:
+      success: "User added"
   customer:
     edit:
       title: "Edit Customer"
@@ -625,6 +628,7 @@ en:
       search:
         text:
           placeholder: "search in product, project or portfolio unit names or in demand title or id"
+      last_deliveries: "Last deliveries"
     edit:
       title: "Edit Demand"
     show:
@@ -1062,6 +1066,11 @@ en:
         other: "Demand Comments"
       slack_configuration:
         other: "No Slack Configurations Data"
+    errors:
+      models:
+        user_invite:
+          invite_email:
+            not_same: "You can have only one not cancelled invite for the same email and company"
   stats:
     period:
       variation: "Period Variation"
@@ -1219,3 +1228,7 @@ en:
   risk_review_action_items:
     create:
       success: "The action was created."
+  user_invites:
+    create:
+      error: "The e-mail address should not be blank"
+      success: "User invited"

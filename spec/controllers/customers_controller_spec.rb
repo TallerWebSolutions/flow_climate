@@ -44,8 +44,8 @@ RSpec.describe CustomersController, type: :controller do
       it { expect(response).to redirect_to new_user_session_path }
     end
 
-    describe 'GET #projects_tab' do
-      before { get :projects_tab, params: { company_id: 'bar', id: 'foo' } }
+    describe 'POST #add_user_to_customer' do
+      before { post :add_user_to_customer, params: { company_id: 'foo', id: 'bar' } }
 
       it { expect(response).to redirect_to new_user_session_path }
     end
@@ -241,30 +241,17 @@ RSpec.describe CustomersController, type: :controller do
     describe 'GET #show' do
       let(:customer) { Fabricate :customer, company: company }
 
-      context 'passing a valid ID' do
-        context 'having projects' do
-          let!(:first_project) { Fabricate :project, customers: [customer], end_date: 5.days.from_now }
-          let!(:second_project) { Fabricate :project, customers: [customer], end_date: 7.days.from_now }
+      context 'with valid data' do
+        it 'assigns the instance variable and renders the template' do
+          array_of_dates = [Time.zone.yesterday.to_date, Time.zone.today]
+          customer_data = instance_double('CustomerDashboardData', lead_time_accumulated: 10, hours_delivered_upstream: 10, hours_delivered_downstream: 20, array_of_dates: array_of_dates, throughput_data: [2, 4])
+          expect(CustomerDashboardData).to(receive(:new).once { customer_data })
 
-          before { get :show, params: { company_id: company, id: customer } }
+          get :show, params: { company_id: company, id: customer }
 
-          it 'assigns the instance variable and renders the template' do
-            expect(response).to render_template :show
-            expect(assigns(:company)).to eq company
-            expect(assigns(:customer)).to eq customer
-            expect(assigns(:customer_projects)).to eq [second_project, first_project]
-          end
-        end
-
-        context 'having no projects' do
-          before { get :show, params: { company_id: company, id: customer.id } }
-
-          it 'assigns the instance variable and renders the template' do
-            expect(response).to render_template :show
-            expect(assigns(:company)).to eq company
-            expect(assigns(:customer)).to eq customer
-            expect(assigns(:customer_projects)).to eq []
-          end
+          expect(response).to render_template :show
+          expect(assigns(:company)).to eq company
+          expect(assigns(:customer)).to eq customer
         end
       end
 
@@ -352,44 +339,38 @@ RSpec.describe CustomersController, type: :controller do
       end
     end
 
-    describe 'GET #projects_tab' do
-      let(:first_customer) { Fabricate :customer, company: company }
-      let(:second_customer) { Fabricate :customer, company: company }
+    describe 'POST #add_user_to_customer' do
+      let(:customer) { Fabricate :customer, company: company }
 
       context 'with valid parameters' do
-        context 'having data' do
-          let!(:first_project) { Fabricate :project, customers: [first_customer, second_customer], end_date: 1.day.ago }
-          let!(:second_project) { Fabricate :project, customers: [first_customer], end_date: Time.zone.today }
+        it 'creates the user invite and sends the email do notify the new user' do
+          expect(UserInviteService.instance).to(receive(:invite_customer).with(company, customer.id, 'foo@bar.com.br', new_devise_customer_registration_url(user_email: 'foo@bar.com.br')).once { I18n.t('user_invites.create.success') })
 
-          let!(:other_project) { Fabricate :project, customers: [] }
+          post :add_user_to_customer, params: { company_id: company, id: customer, user_invite: { invite_email: 'foo@bar.com.br' } }
 
-          it 'creates the objects and renders the tab' do
-            get :projects_tab, params: { company_id: company, id: first_customer }, xhr: true
-            expect(response).to render_template 'projects/projects_tab'
-            expect(assigns(:projects_summary)).to be_a ProjectsSummaryData
-            expect(assigns(:projects)).to eq [second_project, first_project]
+          expect(flash[:notice]).to eq I18n.t('user_invites.create.success')
+        end
+      end
+
+      context 'passing invalid' do
+        context 'parameters' do
+          before { post :add_user_to_customer, params: { company_id: company, id: customer, user_invite: { invite_email: '' } } }
+
+          it 'does not create the invite and re-render the template with the errors' do
+            expect(response).to redirect_to company_customer_path(company, customer)
+            expect(flash[:error]).to eq I18n.t('user_invites.create.error')
           end
         end
-      end
 
-      context 'with no data' do
-        it 'render the template with empty data' do
-          get :projects_tab, params: { company_id: company, id: first_customer }, xhr: true
-          expect(assigns(:projects)).to eq []
-          expect(response).to render_template 'projects/projects_tab'
-        end
-      end
-
-      context 'with invalid' do
-        context 'product' do
-          before { get :projects_tab, params: { company_id: company, id: 'foo' }, xhr: true }
+        context 'customer' do
+          before { post :add_user_to_customer, params: { company_id: company, id: 'foo', user_invite: { invite_email: 'foo' } } }
 
           it { expect(response).to have_http_status :not_found }
         end
 
         context 'company' do
-          context 'no existent' do
-            before { get :projects_tab, params: { company_id: 'foo', id: first_customer } }
+          context 'non-existent' do
+            before { post :add_user_to_customer, params: { company_id: 'foo', id: customer, user_invite: { invite_email: 'foo' } } }
 
             it { expect(response).to have_http_status :not_found }
           end
@@ -397,7 +378,7 @@ RSpec.describe CustomersController, type: :controller do
           context 'not permitted' do
             let(:company) { Fabricate :company, users: [] }
 
-            before { get :projects_tab, params: { company_id: company, id: first_customer } }
+            before { post :add_user_to_customer, params: { company_id: company, id: customer, user_invite: { invite_email: 'foo' } } }
 
             it { expect(response).to have_http_status :not_found }
           end

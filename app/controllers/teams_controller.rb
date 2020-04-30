@@ -194,7 +194,7 @@ class TeamsController < AuthenticatedController
     @array_of_dates = TimeService.instance.weeks_between_of(start_date, end_date)
     @work_item_flow_information = Flow::WorkItemFlowInformations.new(demands, uncertain_scope, @array_of_dates.length, @array_of_dates.last)
     @statistics_flow_information = Flow::StatisticsFlowInformations.new(demands)
-    @time_flow_informations = Flow::TimeFlowInformations.new(demands)
+    @time_flow_information = Flow::TimeFlowInformations.new(demands)
 
     build_chart_objects
   end
@@ -204,7 +204,7 @@ class TeamsController < AuthenticatedController
       @work_item_flow_information.work_items_flow_behaviour(@array_of_dates.first, analysed_date, distribution_index)
       @work_item_flow_information.build_cfd_hash(@array_of_dates.first, analysed_date) if add_data?(analysed_date)
       @statistics_flow_information.statistics_flow_behaviour(analysed_date) if add_data?(analysed_date)
-      @time_flow_informations.hours_flow_behaviour(analysed_date) if add_data?(analysed_date)
+      @time_flow_information.hours_flow_behaviour(analysed_date) if add_data?(analysed_date)
     end
   end
 
