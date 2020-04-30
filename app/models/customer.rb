@@ -23,12 +23,11 @@
 #
 
 class Customer < ApplicationRecord
-  include ProjectAggregator
   include DemandsAggregator
 
   belongs_to :company, counter_cache: true
   has_many :products, dependent: :restrict_with_error
-  has_many :demands, through: :products
+  has_many :demands, dependent: :nullify
   has_and_belongs_to_many :projects, dependent: :restrict_with_error
   has_and_belongs_to_many :devise_customers, dependent: :destroy
 
@@ -39,5 +38,26 @@ class Customer < ApplicationRecord
     return if devise_customers.include?(devise_customer)
 
     devise_customers << devise_customer
+  end
+
+  def exclusives_demands_to_customer
+    exclusive_demands_ids = (exclusive_projects.map(&:demands).flatten.map(&:id) + demands.map(&:id)).uniq
+    Demand.where(id: exclusive_demands_ids)
+  end
+
+  def exclusive_projects
+    @exclusive_projects ||= Project.where(id: projects.select { |p| p.customers == [self] }.map(&:id).flatten)
+  end
+
+  def active_exclusive_projects
+    exclusive_projects.active
+  end
+
+  def total_value
+    exclusive_projects.map(&:value).compact.sum
+  end
+
+  def remaining_money(end_date = Time.zone.today.end_of_day)
+    exclusive_projects.map { |project| project.remaining_money(end_date) }.compact.sum
   end
 end

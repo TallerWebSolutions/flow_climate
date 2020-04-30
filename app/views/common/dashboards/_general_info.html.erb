@@ -12,10 +12,12 @@
       <td><b><%= I18n.t('projects.index.remaining_backlog') %></b></td>
       <td><%= I18n.t('general.demands_text', count: remaining_backlog) %></td>
     </tr>
-    <tr>
-      <td><b><%= I18n.t('projects.index.flow_pressure') %></b></td>
-      <td><%= I18n.t('general.demands_per_day', count: number_with_precision(total_flow_pressure, precision: 3)) %></td>
-    </tr>
+    <% if total_flow_pressure.present? %>
+      <tr>
+        <td><b><%= I18n.t('projects.index.flow_pressure') %></b></td>
+        <td><%= I18n.t('general.demands_per_day', count: number_with_precision(total_flow_pressure, precision: 3)) %></td>
+      </tr>
+    <% end %>
     <tr>
       <td><b><%= I18n.t('teams.show.average_queue_time') %></b></td>
       <td><%= I18n.t('general.days_text', count: number_with_precision(average_queue_time, precision: 2)) %></td>

@@ -69,6 +69,7 @@ class Demand < ApplicationRecord
   belongs_to :company
   belongs_to :project
   belongs_to :product
+  belongs_to :customer
   belongs_to :portfolio_unit
   belongs_to :team
   belongs_to :risk_review
@@ -107,6 +108,7 @@ class Demand < ApplicationRecord
 
   delegate :name, to: :project, prefix: true
   delegate :name, to: :product, prefix: true, allow_nil: true
+  delegate :name, to: :customer, prefix: true, allow_nil: true
   delegate :name, to: :portfolio_unit, prefix: true, allow_nil: true
   delegate :name, to: :team, prefix: true, allow_nil: true
   delegate :name, to: :current_stage, prefix: true, allow_nil: true

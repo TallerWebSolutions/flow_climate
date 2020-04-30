@@ -517,6 +517,7 @@ pt-BR:
           custom_field_type:
             class_of_service: Classe de Serviço
             responsibles: Responsáveis
+            customer: Cliente
       project_consolidation:
         last_8_throughput_per_week_data: Throughput das últimas 8 Semanas
       membership:

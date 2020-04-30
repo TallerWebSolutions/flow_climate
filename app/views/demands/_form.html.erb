@@ -2,16 +2,28 @@
 
   <div class="row">
     <div class='col-xs-4 form-group <%= 'has-error' if demand.errors[:team].present? %>'>
-      <%= form.label :team, class: 'control-label' %>
+      <%= form.label :team, class: 'control-label required' %>
       <%= form.select :team_id, teams_in_company_options(company, demand.team_id), { include_blank: I18n.t('general.select') }, class: 'form-control' %>
       <span class="help-block"><%= demand.errors[:team].join(', ') %></span>
     </div>
-    <div class='col-xs-4 form-group <%= 'has-error' if demand.errors[:demand_type].present? %>'>
+    <div class='col-xs-4 form-group'>
+      <%= form.label :customer, class: 'control-label' %>
+      <%= form.select :customer_id, customers_in_company_options(company, demand.customer_id), { include_blank: I18n.t('general.select') }, class: 'form-control' %>
+    </div>
+    <div class='col-xs-4 form-group <%= 'has-error' if demand.errors[:product].present? %>'>
+      <%= form.label :product, class: 'control-label required' %>
+      <%= form.select :product_id, products_in_company_options(company, demand.product_id), { include_blank: I18n.t('general.select') }, class: 'form-control' %>
+      <span class="help-block"><%= demand.errors[:product].join(', ') %></span>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class='col-xs-6 form-group <%= 'has-error' if demand.errors[:demand_type].present? %>'>
       <%= form.label :demand_type, class: 'control-label' %>
       <%= form.select :demand_type, Demand.demand_types.map { |key, _value| [t("activerecord.attributes.demand.enums.demand_type.#{key}"), key] }, {include_blank: I18n.t('general.select'), selected: demand.demand_type }, class: 'form-control' %>
       <span class="help-block"><%= demand.errors[:demand_type].join(', ') %></span>
     </div>
-    <div class='col-xs-4 form-group <%= 'has-error' if demand.errors[:class_of_service].present? %>'>
+    <div class='col-xs-6 form-group <%= 'has-error' if demand.errors[:class_of_service].present? %>'>
       <%= form.label :class_of_service, class: 'control-label' %>
       <%= form.select :class_of_service, Demand.class_of_services.map { |key, _value| [t("activerecord.attributes.demand.enums.class_of_service.#{key}"), key] }, { include_blank: I18n.t('general.select'), selected: demand.class_of_service }, class: 'form-control' %>
       <span class="help-block"><%= demand.errors[:class_of_service].join(', ') %></span>

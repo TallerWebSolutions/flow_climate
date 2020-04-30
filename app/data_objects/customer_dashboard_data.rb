@@ -4,7 +4,7 @@ class CustomerDashboardData
   attr_reader :array_of_dates, :lead_time_accumulated, :throughput_data, :hours_delivered_upstream, :hours_delivered_downstream
 
   def initialize(customer)
-    customer_demands = customer.demands.finished.order(:end_date)
+    customer_demands = customer.exclusives_demands_to_customer.finished.order(:end_date)
 
     @array_of_dates = TimeService.instance.months_between_of(customer_demands.map(&:end_date).compact.min, end_date(customer_demands))
 

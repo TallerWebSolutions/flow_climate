@@ -20,4 +20,10 @@ module DemandsAggregator
 
     total_touch_time.to_f / total_demands
   end
+
+  def avg_hours_per_demand
+    return 0 unless demands.kept.count.positive?
+
+    demands.kept.map(&:total_effort).compact.sum / demands.kept.count
+  end
 end

@@ -961,7 +961,8 @@ CREATE TABLE public.demands (
     risk_review_id integer,
     business_score numeric,
     service_delivery_review_id integer,
-    current_stage_id integer
+    current_stage_id integer,
+    customer_id integer
 );
 
 
@@ -4558,6 +4559,14 @@ ALTER TABLE ONLY public.memberships
 
 
 --
+-- Name: demands fk_rails_b14b9efb68; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.demands
+    ADD CONSTRAINT fk_rails_b14b9efb68 FOREIGN KEY (customer_id) REFERENCES public.customers(id);
+
+
+--
 -- Name: jira_accounts fk_rails_b16d2de302; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -4922,6 +4931,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200330185149'),
 ('20200406175435'),
 ('20200423204628'),
-('20200423211631');
+('20200423211631'),
+('20200430140032');
 
 

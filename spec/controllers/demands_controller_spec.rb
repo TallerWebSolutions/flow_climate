@@ -144,11 +144,15 @@ RSpec.describe DemandsController, type: :controller do
         let(:date_to_demand) { 1.day.ago.change(usec: 0) }
 
         it 'creates the new demand and redirects' do
-          post :create, params: { company_id: company, project_id: project, demand: { team_id: team, external_id: 'xpto', demand_type: 'bug', manual_effort: true, class_of_service: 'expedite', assignees_count: 3, effort_upstream: 5, effort_downstream: 2, created_date: date_to_demand, commitment_date: date_to_demand, end_date: date_to_demand, business_score: 10.5 } }
+          post :create, params: { company_id: company, project_id: project, demand: { product_id: product, customer_id: customer, team_id: team, external_id: 'xpto', demand_type: 'bug', manual_effort: true, class_of_service: 'expedite', assignees_count: 3, effort_upstream: 5, effort_downstream: 2, created_date: date_to_demand, commitment_date: date_to_demand, end_date: date_to_demand, business_score: 10.5 } }
 
           expect(assigns(:company)).to eq company
           expect(assigns(:project)).to eq project
+
           created_demand = Demand.last
+          expect(created_demand.customer).to eq customer
+          expect(created_demand.product).to eq product
+          expect(created_demand.team).to eq team
           expect(created_demand.external_id).to eq 'xpto'
           expect(created_demand.demand_type).to eq 'bug'
           expect(created_demand.class_of_service).to eq 'expedite'
@@ -293,8 +297,11 @@ RSpec.describe DemandsController, type: :controller do
 
       context 'passing valid parameters' do
         it 'updates the demand and redirects to projects index' do
-          put :update, params: { company_id: company, project_id: project, id: demand, demands_ids: Demand.all.map(&:id), demand: { external_id: 'xpto', demand_type: 'bug', manual_effort: true, class_of_service: 'expedite', effort_upstream: 5, effort_downstream: 2, created_date: created_date, commitment_date: created_date, end_date: end_date, business_score: 10.5 } }, xhr: true
+          put :update, params: { company_id: company, project_id: project, id: demand, demands_ids: Demand.all.map(&:id), demand: { product_id: product, customer_id: customer, team_id: team, external_id: 'xpto', demand_type: 'bug', manual_effort: true, class_of_service: 'expedite', effort_upstream: 5, effort_downstream: 2, created_date: created_date, commitment_date: created_date, end_date: end_date, business_score: 10.5 } }, xhr: true
           updated_demand = Demand.last
+          expect(updated_demand.customer).to eq customer
+          expect(updated_demand.product).to eq product
+          expect(updated_demand.team).to eq team
           expect(updated_demand.external_id).to eq 'xpto'
           expect(updated_demand.demand_type).to eq 'bug'
           expect(updated_demand.downstream_demand?).to be true

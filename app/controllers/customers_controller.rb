@@ -6,7 +6,7 @@ class CustomersController < AuthenticatedController
   before_action :assign_customer, only: %i[edit update show destroy add_user_to_customer]
 
   def index
-    @customers = @company.customers.sort_by(&:total_flow_pressure).reverse
+    @customers = @company.customers.order(:name)
 
     @start_date = @customers.map(&:projects).flatten.map(&:start_date).min
     @end_date = @customers.map(&:projects).flatten.map(&:end_date).max

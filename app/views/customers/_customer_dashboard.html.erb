@@ -3,24 +3,24 @@
     <h4><%= customer.name %></h4>
     <%= render 'common/dashboards/general_info',
                dashboard_name: customer.name,
-               total_flow_pressure: customer.total_flow_pressure,
-               demands_count: customer.demands.kept.count,
-               delivered_scope: customer.demands.kept.finished.count,
-               remaining_backlog: customer.demands.kept.count - customer.demands.kept.finished.count,
+               total_flow_pressure: nil,
+               demands_count: customer.exclusives_demands_to_customer.kept.count,
+               delivered_scope: customer.exclusives_demands_to_customer.kept.finished.count,
+               remaining_backlog: customer.exclusives_demands_to_customer.kept.count - customer.demands.kept.finished.count,
                average_queue_time: customer.average_queue_time / 1.hour,
                average_touch_time: customer.average_touch_time / 1.hour,
-               demands_lead_time_p95: Stats::StatisticsService.instance.percentile(95, customer.demands.kept.finished_with_leadtime.map(&:leadtime_in_days)),
-               demands_lead_time_p80: Stats::StatisticsService.instance.percentile(80, customer.demands.kept.finished_with_leadtime.map(&:leadtime_in_days)),
-               demands_lead_time_p65: Stats::StatisticsService.instance.percentile(65, customer.demands.kept.finished_with_leadtime.map(&:leadtime_in_days)) %>
+               demands_lead_time_p95: Stats::StatisticsService.instance.percentile(95, customer.exclusives_demands_to_customer.kept.finished_with_leadtime.map(&:leadtime_in_days)),
+               demands_lead_time_p80: Stats::StatisticsService.instance.percentile(80, customer.exclusives_demands_to_customer.kept.finished_with_leadtime.map(&:leadtime_in_days)),
+               demands_lead_time_p65: Stats::StatisticsService.instance.percentile(65, customer.exclusives_demands_to_customer.kept.finished_with_leadtime.map(&:leadtime_in_days)) %>
   </div>
   <div class="col-xs-4">
     <h4><%= Project.model_name.human(count: 2) %></h4>
 
     <%= render 'common/dashboards/projects_info',
-               projects_count: customer.projects.count,
-               active_projects_count: customer.active_projects.count,
-               active_projects_value: customer.active_projects.map(&:value).compact.sum,
-               active_projects_hired_hours: customer.active_projects.map(&:qty_hours).compact.sum %>
+               projects_count: customer.exclusive_projects.count,
+               active_projects_count: customer.active_exclusive_projects.count,
+               active_projects_value: customer.active_exclusive_projects.map(&:value).compact.sum,
+               active_projects_hired_hours: customer.active_exclusive_projects.map(&:qty_hours).compact.sum %>
 
     <hr>
 
@@ -34,7 +34,7 @@
   <div class="col-xs-4">
     <h4><%= I18n.t('demands.index.last_deliveries') %></h4>
 
-    <%= render 'demands/demands_short_table', company: company, demands: customer.demands.kept.finished.order(end_date: :desc).first(5) %>
+    <%= render 'demands/demands_short_table', company: company, demands: customer.exclusives_demands_to_customer.kept.finished.order(end_date: :desc).first(5) %>
   </div>
 </div>
 

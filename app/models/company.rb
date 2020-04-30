@@ -63,12 +63,10 @@ class Company < ApplicationRecord
   end
 
   def waiting_projects_count
-    customers.sum { |p| p.waiting_projects.count }
+    projects.waiting.count
   end
 
-  def projects_count
-    customers.sum(&:projects_count)
-  end
+  delegate :count, to: :projects, prefix: true
 
   def products_count
     customers.sum(&:products_count)
@@ -93,11 +91,7 @@ class Company < ApplicationRecord
   end
 
   def last_week_scope
-    customers.joins(customers_projects: :project).includes(customers_projects: :project).includes(:projects).sum(&:last_week_scope)
-  end
-
-  def avg_hours_per_demand
-    customers.sum(&:avg_hours_per_demand) / customers_count.to_f
+    projects.map(&:last_week_scope).compact.sum
   end
 
   def consumed_hours_in_month(date = Time.zone.today)

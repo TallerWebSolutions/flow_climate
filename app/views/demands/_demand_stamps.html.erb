@@ -23,6 +23,16 @@
           <td><%= demand.demand_title %></td>
         </tr>
         <tr>
+          <td><b><%= Customer.model_name.human %></b></td>
+          <% if company.present? && demand.customer.present? %>
+            <td><%= link_to demand.customer_name, company_customer_path(company, demand.customer) %></td>
+          <% elsif demand.customer.present? && company.blank? %>
+            <td><%= demand.customer_name %></td>
+          <% else %>
+            <td></td>
+          <% end %>
+        </tr>
+        <tr>
           <td><b><%= Product.model_name.human %></b></td>
           <td><%= link_to demand.product_name, company_product_path(company, demand.product) %></td>
         </tr>
@@ -96,6 +106,7 @@
            data-ytitle='<%= I18n.t('general.hours') %>'
            data-prefix=''
            data-tooltipsuffix='<%= I18n.t('general.hours') %>'
+           data-datalabelsuffix=""
            data-series='<%= [{ name: I18n.t('service_delivery_reviews.show.lead_time_breakdown_label'), data: lead_time_breakdown.values.map { |transitions| (transitions.sum(&:total_seconds_in_transition) / 1.hour) } }].to_json %>'
            data-decimals='2'>
       </div>

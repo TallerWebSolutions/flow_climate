@@ -4,6 +4,7 @@ RSpec.describe Customer, type: :model do
   context 'associations' do
     it { is_expected.to belong_to :company }
     it { is_expected.to have_many :products }
+    it { is_expected.to have_many(:demands).dependent(:nullify) }
     it { is_expected.to have_and_belong_to_many :projects }
     it { is_expected.to have_and_belong_to_many(:devise_customers).dependent(:destroy) }
   end
@@ -78,89 +79,6 @@ RSpec.describe Customer, type: :model do
     let!(:fifth_transition) { Fabricate :demand_transition, stage: third_stage, demand: third_demand, last_time_in: 2.months.ago, last_time_out: 5.weeks.ago }
   end
 
-  describe '#active_projects' do
-    let(:customer) { Fabricate :customer }
-    let(:product) { Fabricate :product, customer: customer, name: 'zzz' }
-
-    let!(:active_project) { Fabricate :project, start_date: 4.weeks.ago, customers: [customer], products: [product], status: :executing }
-    let!(:other_active_project) { Fabricate :project, start_date: 4.weeks.ago, customers: [customer], products: [product], status: :maintenance }
-    let!(:waiting_project) { Fabricate :project, start_date: 4.weeks.ago, customers: [customer], products: [product], status: :waiting }
-    let!(:finished_project) { Fabricate :project, start_date: 4.weeks.ago, customers: [customer], products: [product], status: :finished }
-    let!(:cancelled_project) { Fabricate :project, start_date: 4.weeks.ago, customers: [customer], products: [product], status: :cancelled }
-
-    it { expect(customer.active_projects).to match_array [active_project, other_active_project] }
-  end
-
-  describe '#waiting_projects' do
-    let(:customer) { Fabricate :customer }
-    let(:product) { Fabricate :product, customer: customer, name: 'zzz' }
-
-    let!(:active_project) { Fabricate :project, start_date: 4.weeks.ago, customers: [customer], products: [product], status: :executing }
-    let!(:waiting_project) { Fabricate :project, start_date: 4.weeks.ago, customers: [customer], products: [product], status: :waiting }
-    let!(:other_waiting_project) { Fabricate :project, start_date: 4.weeks.ago, customers: [customer], products: [product], status: :waiting }
-    let!(:finished_project) { Fabricate :project, start_date: 4.weeks.ago, customers: [customer], products: [product], status: :finished }
-    let!(:cancelled_project) { Fabricate :project, start_date: 4.weeks.ago, customers: [customer], products: [product], status: :cancelled }
-
-    it { expect(customer.waiting_projects).to match_array [waiting_project, other_waiting_project] }
-  end
-
-  describe '#last_week_scope' do
-    include_context 'demands with effort for customer'
-    it { expect(customer.last_week_scope).to eq 33 }
-  end
-
-  describe '#avg_hours_per_demand' do
-    before { travel_to Date.new(2018, 11, 19) }
-
-    after { travel_back }
-
-    include_context 'demands with effort for customer'
-    it { expect(customer.avg_hours_per_demand).to eq 59.4 }
-  end
-
-  describe '#total_value' do
-    include_context 'demands with effort for customer'
-    it { expect(customer.total_value).to eq customer.projects.sum(:value) }
-  end
-
-  describe '#remaining_money' do
-    before { travel_to Time.zone.local(2019, 9, 3, 10, 0, 0) }
-
-    after { travel_back }
-
-    include_context 'demands with effort for customer'
-    it { expect(customer.remaining_money(3.months.from_now).to_f).to eq 361_720.0 }
-  end
-
-  describe '#percentage_remaining_money' do
-    before { travel_to Time.zone.local(2019, 9, 3, 10, 0, 0) }
-
-    after { travel_back }
-
-    include_context 'demands with effort for customer'
-    it { expect(customer.percentage_remaining_money(3.months.from_now).to_f).to eq 90.43 }
-  end
-
-  describe '#remaining_backlog' do
-    include_context 'demands with effort for customer'
-    it { expect(customer.remaining_backlog).to eq customer.projects.sum(&:remaining_backlog) }
-  end
-
-  describe '#percentage_remaining_scope' do
-    include_context 'demands with effort for customer'
-    it { expect(customer.percentage_remaining_scope).to eq((customer.remaining_backlog.to_f / customer.last_week_scope) * 100) }
-  end
-
-  describe '#total_flow_pressure' do
-    include_context 'demands with effort for customer'
-    it { expect(customer.total_flow_pressure).to be_within(0.9).of(customer.projects.sum(&:flow_pressure)) }
-  end
-
-  describe '#delivered_scope' do
-    include_context 'demands with effort for customer'
-    it { expect(customer.delivered_scope).to eq customer.projects.sum(&:total_throughput) }
-  end
-
   describe '#add_user' do
     let(:devise_customer) { Fabricate :devise_customer }
 
@@ -180,5 +98,54 @@ RSpec.describe Customer, type: :model do
 
       it { expect(customer.devise_customers).to eq [devise_customer] }
     end
+  end
+
+  describe '#exclusive_projects' do
+    let(:company) { Fabricate :company }
+    let(:customer) { Fabricate :customer, company: company }
+    let(:other_customer) { Fabricate :customer, company: company }
+
+    let!(:first_project) { Fabricate :project, customers: [customer] }
+    let!(:second_project) { Fabricate :project, customers: [customer, other_customer] }
+    let!(:third_project) { Fabricate :project, customers: [other_customer] }
+
+    it { expect(customer.exclusive_projects).to eq [first_project] }
+    it { expect(other_customer.exclusive_projects).to eq [third_project] }
+  end
+
+  describe '#active_exclusive_projects' do
+    let(:company) { Fabricate :company }
+    let(:customer) { Fabricate :customer, company: company }
+    let(:other_customer) { Fabricate :customer, company: company }
+
+    let!(:first_project) { Fabricate :project, customers: [customer], status: :executing }
+    let!(:second_project) { Fabricate :project, customers: [customer, other_customer], status: :waiting }
+    let!(:third_project) { Fabricate :project, customers: [customer], status: :waiting }
+    let!(:fourth_project) { Fabricate :project, customers: [customer], status: :finished }
+    let!(:fifth_project) { Fabricate :project, customers: [other_customer], status: :finished }
+
+    it { expect(customer.active_exclusive_projects).to match_array [first_project, third_project] }
+  end
+
+  describe '#exclusives_demands_to_customer' do
+    let(:company) { Fabricate :company }
+    let(:customer) { Fabricate :customer, company: company }
+    let(:other_customer) { Fabricate :customer, company: company }
+
+    let!(:first_project) { Fabricate :project, customers: [customer], status: :executing }
+    let!(:second_project) { Fabricate :project, customers: [customer, other_customer], status: :waiting }
+    let!(:third_project) { Fabricate :project, customers: [customer], status: :waiting }
+    let!(:fourth_project) { Fabricate :project, customers: [customer], status: :finished }
+    let!(:fifth_project) { Fabricate :project, customers: [other_customer], status: :finished }
+
+    let!(:first_demand) { Fabricate :demand, customer: customer }
+    let!(:second_demand) { Fabricate :demand, customer: customer }
+    let!(:third_demand) { Fabricate :demand, project: first_project }
+    let!(:fourth_demand) { Fabricate :demand, project: first_project }
+    let!(:fifth_demand) { Fabricate :demand, project: second_project }
+    let!(:sixth_demand) { Fabricate :demand, customer: other_customer }
+    let!(:seventh_demand) { Fabricate :demand, customer: customer, project: second_project }
+
+    it { expect(customer.exclusives_demands_to_customer).to match_array [first_demand, second_demand, third_demand, fourth_demand, seventh_demand] }
   end
 end
