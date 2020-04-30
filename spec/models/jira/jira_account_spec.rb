@@ -77,13 +77,34 @@ RSpec.describe Jira::JiraAccount, type: :model do
     end
 
     context 'having the custom fields but not having a field to responsibles' do
-      let!(:class_of_service_custom_field_mapping) { Fabricate :jira_custom_field_mapping, jira_account: jira_account, custom_field_type: :responsibles }
+      let!(:responsibles_jira_custom_field_mapping) { Fabricate :jira_custom_field_mapping, jira_account: jira_account, custom_field_type: :responsibles }
 
       it { expect(jira_account.class_of_service_custom_field).to be_nil }
     end
 
     context 'having no custom fields' do
       it { expect(jira_account.class_of_service_custom_field).to be_nil }
+    end
+  end
+
+  describe '#customer_custom_field' do
+    let(:jira_account) { Fabricate :jira_account }
+
+    context 'having the custom fields' do
+      let!(:customer_custom_field) { Fabricate :jira_custom_field_mapping, jira_account: jira_account, custom_field_type: :customer }
+      let!(:class_of_service_custom_field_mapping) { Fabricate :jira_custom_field_mapping, jira_account: jira_account, custom_field_type: :class_of_service }
+
+      it { expect(jira_account.customer_custom_field).to eq customer_custom_field }
+    end
+
+    context 'having the custom fields but not having a field to responsibles' do
+      let!(:responsibles_jira_custom_field_mapping) { Fabricate :jira_custom_field_mapping, jira_account: jira_account, custom_field_type: :responsibles }
+
+      it { expect(jira_account.customer_custom_field).to be_nil }
+    end
+
+    context 'having no custom fields' do
+      it { expect(jira_account.customer_custom_field).to be_nil }
     end
   end
 end

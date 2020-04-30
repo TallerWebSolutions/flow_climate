@@ -42,5 +42,9 @@ module Jira
     def class_of_service_custom_field
       jira_custom_field_mappings.find_by(custom_field_type: :class_of_service)
     end
+
+    def customer_custom_field
+      jira_custom_field_mappings.find_by(custom_field_type: :customer)
+    end
   end
 end

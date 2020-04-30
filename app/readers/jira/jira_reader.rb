@@ -30,6 +30,16 @@ module Jira
       jira_product.product
     end
 
+    def read_customer(jira_account, jira_issue_attrs)
+      customer_custom_field_name = jira_account.customer_custom_field&.custom_field_machine_name
+
+      jira_custom_fields_hash = build_jira_custom_fields_hash(jira_issue_attrs)
+
+      customer_name = jira_custom_fields_hash[customer_custom_field_name]
+
+      jira_account.company.customers.find_by(name: customer_name)
+    end
+
     def read_demand_key(jira_issue_attrs)
       jira_issue_attrs['key']
     end

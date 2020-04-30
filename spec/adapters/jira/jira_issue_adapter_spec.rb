@@ -7,8 +7,9 @@ RSpec.describe Jira::JiraIssueAdapter, type: :service do
   let(:client) { JIRA::Client.new(options) }
 
   let(:jira_account) { Fabricate :jira_account, company: company, base_uri: 'http://foo.bar', username: 'foo', api_token: 'bar' }
+  let!(:customer_custom_field) { Fabricate :jira_custom_field_mapping, jira_account: jira_account, custom_field_type: :customer, custom_field_machine_name: 'customfield_10013' }
 
-  let(:customer) { Fabricate :customer, company: company }
+  let(:customer) { Fabricate :customer, company: company, name: 'xpto of bla' }
 
   let(:team) { Fabricate :team, company: company }
   let!(:default_member) { Fabricate :team_member, company: company, name: 'default member', jira_account_id: 'default member id' }
@@ -43,7 +44,7 @@ RSpec.describe Jira::JiraIssueAdapter, type: :service do
         let!(:out_team_member_membership) { Fabricate :membership, team: team, team_member: out_team_member, hours_per_month: 120, start_date: 2.months.ago, end_date: nil }
         let!(:other_company_membership) { Fabricate :membership, team: team, team_member: other_company_team_member, hours_per_month: 120, start_date: 2.months.ago, end_date: nil }
 
-        let!(:jira_issue) { client.Issue.build({ key: '10000', fields: { created: '2018-07-02T11:20:18.998-0300', summary: 'foo of bar', issuetype: { name: 'Story' }, customfield_10028: { value: 'Expedite' }, project: { key: 'foo' }, customfield_10024: [{ emailAddress: 'foo' }, { emailAddress: 'bar' }] }, changelog: { startAt: 0, maxResults: 2, total: 2, histories: [{ id: '10039', created: '2018-07-08T22:34:47.440-0300', items: [{ field: 'status', from: 'backlog', to: 'first_stage' }] }, { id: '10038', created: '2018-07-09T09:40:43.886-0300', items: [{ field: 'status', from: 'first_stage', to: 'second_stage' }] }, { id: '10431', created: '2018-07-06T09:10:43.886-0300', items: [{ field: 'Responsible', fieldId: 'customfield_10024', from: nil, fromString: nil, to: "[#{out_team_member.name}, #{team_member.name}, 'foobarxpto']", toString: "[#{out_team_member.name}, #{team_member.name}]" }] }, { id: '10432', created: '2018-07-06T09:40:43.886-0300', items: [{ field: 'Responsible', fieldId: 'customfield_10024', from: "[#{team_member.name}, #{out_team_member.name}]", fromString: "[#{team_member.name}, #{out_team_member.name}]", to: "[#{team_member.name}, #{other_team_member.name}]", toString: "[#{team_member.name}, #{other_team_member.name}]" }] }] } }.with_indifferent_access) }
+        let!(:jira_issue) { client.Issue.build({ key: '10000', fields: { created: '2018-07-02T11:20:18.998-0300', summary: 'foo of bar', issuetype: { name: 'Story' }, customfield_10028: { value: 'Expedite' }, customfield_10013: 'xpto of bla', project: { key: 'foo' }, customfield_10024: [{ emailAddress: 'foo' }, { emailAddress: 'bar' }] }, changelog: { startAt: 0, maxResults: 2, total: 2, histories: [{ id: '10039', created: '2018-07-08T22:34:47.440-0300', items: [{ field: 'status', from: 'backlog', to: 'first_stage' }] }, { id: '10038', created: '2018-07-09T09:40:43.886-0300', items: [{ field: 'status', from: 'first_stage', to: 'second_stage' }] }, { id: '10431', created: '2018-07-06T09:10:43.886-0300', items: [{ field: 'Responsible', fieldId: 'customfield_10024', from: nil, fromString: nil, to: "[#{out_team_member.name}, #{team_member.name}, 'foobarxpto']", toString: "[#{out_team_member.name}, #{team_member.name}]" }] }, { id: '10432', created: '2018-07-06T09:40:43.886-0300', items: [{ field: 'Responsible', fieldId: 'customfield_10024', from: "[#{team_member.name}, #{out_team_member.name}]", fromString: "[#{team_member.name}, #{out_team_member.name}]", to: "[#{team_member.name}, #{other_team_member.name}]", toString: "[#{team_member.name}, #{other_team_member.name}]" }] }] } }.with_indifferent_access) }
 
         it 'creates the demand' do
           described_class.instance.process_issue!(jira_account, product, first_project, jira_issue)
@@ -56,6 +57,8 @@ RSpec.describe Jira::JiraIssueAdapter, type: :service do
           expect(created_demand.item_assignments.find_by(team_member: out_team_member).finish_time).not_to be_nil
 
           expect(created_demand.team).to eq team
+          expect(created_demand.product).to eq product
+          expect(created_demand.customer).to eq customer
           expect(created_demand.demand_title).to eq 'foo of bar'
           expect(created_demand.downstream_demand?).to be false
           expect(created_demand).to be_feature
