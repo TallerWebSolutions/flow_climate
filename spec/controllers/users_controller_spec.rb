@@ -135,6 +135,7 @@ RSpec.describe UsersController, type: :controller do
       let!(:project) { Fabricate :project, products: [product], status: :executing, company: company, start_date: 1.month.ago, end_date: 2.days.from_now, value: 1000 }
       let!(:other_project) { Fabricate :project, products: [product], status: :executing, company: company, start_date: 2.months.ago, end_date: 1.day.from_now, value: 3500 }
       let!(:finished_project) { Fabricate :project, products: [product], status: :finished, company: company, start_date: 4.days.ago, end_date: 2.days.ago, value: 500 }
+      let!(:waiting_project) { Fabricate :project, products: [product], status: :waiting, company: company, start_date: 4.days.ago, end_date: 2.days.ago, value: 500 }
 
       let(:team) { Fabricate :team, company: company }
       let(:first_demand) { Fabricate :demand, team: team, product: product, project: other_project, commitment_date: 3.months.ago, end_date: 85.days.ago }
