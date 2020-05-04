@@ -123,31 +123,35 @@ class UsersController < AuthenticatedController
 
   def assign_active_projects_quality_info(company)
     @projects_quality = {}
-    company.projects.active.each { |project| @projects_quality[project] = project.quality * 100 }
+    running_projects(company).each { |project| @projects_quality[project] = project.quality * 100 }
   end
 
   def assign_active_projects_lead_time_info(company)
     @projects_leadtime = {}
-    company.projects.active.each { |project| @projects_leadtime[project] = (project.general_leadtime / 1.day).round(3) }
+    running_projects(company).each { |project| @projects_leadtime[project] = (project.general_leadtime / 1.day).round(3) }
   end
 
   def assign_active_projects_risk_info(company)
     @projects_risk = {}
-    company.projects.active.each { |project| @projects_risk[project] = project.current_risk_to_deadline * 100 }
+    running_projects(company).each { |project| @projects_risk[project] = project.current_risk_to_deadline * 100 }
   end
 
   def assign_active_projects_scope_info(company)
     @projects_scope = {}
-    company.projects.active.each { |project| @projects_scope[project] = project.remaining_backlog }
+    running_projects(company).each { |project| @projects_scope[project] = project.remaining_backlog }
   end
 
   def assign_active_projects_value_per_demand_info(company)
     @projects_value_per_demand = {}
-    company.projects.active.each { |project| @projects_value_per_demand[project] = project.value_per_demand }
+    running_projects(company).each { |project| @projects_value_per_demand[project] = project.value_per_demand }
   end
 
   def assign_active_projects_flow_pressure_info(company)
     @projects_flow_pressure = {}
-    company.projects.active.each { |project| @projects_flow_pressure[project] = project.flow_pressure.to_f }
+    running_projects(company).each { |project| @projects_flow_pressure[project] = project.flow_pressure.to_f }
+  end
+
+  def running_projects(company)
+    @running_projects ||= company.projects.running
   end
 end

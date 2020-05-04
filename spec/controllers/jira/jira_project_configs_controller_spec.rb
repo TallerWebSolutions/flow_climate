@@ -36,7 +36,10 @@ RSpec.describe Jira::JiraProjectConfigsController, type: :controller do
     let!(:product) { Fabricate :product, customer: customer }
 
     let!(:project) { Fabricate :project, customers: [customer], products: [product] }
+
     let!(:jira_product_config) { Fabricate :jira_product_config, product: product }
+    let!(:other_jira_product_config) { Fabricate :jira_product_config, product: product }
+    let!(:jira_project_config) { Fabricate :jira_project_config, jira_product_config: other_jira_product_config, project: project }
 
     describe 'GET #new' do
       context 'valid parameters' do
@@ -92,7 +95,7 @@ RSpec.describe Jira::JiraProjectConfigsController, type: :controller do
           before { post :create, params: { company_id: company, project_id: project, jira_jira_project_config: { name: '' } }, xhr: true }
 
           it 'does not create the project jira config' do
-            expect(Jira::JiraProjectConfig.last).to be_nil
+            expect(project.reload.jira_project_configs).to eq [jira_project_config]
             expect(response).to render_template 'jira/jira_project_configs/create'
             expect(assigns(:jira_project_config).errors.full_messages).to eq ['Fix Version ou Label no Jira não pode ficar em branco', 'Config do Produto não pode ficar em branco']
           end

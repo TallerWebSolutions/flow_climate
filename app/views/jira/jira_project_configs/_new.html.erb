@@ -9,7 +9,7 @@
         <div class="row">
           <div class='col-xs-6 form-group <%= 'has-error' if jira_project_config.errors[:jira_product_config].present? %>'>
             <%= form.label :jira_product_config, class: 'control-label required' %>
-            <%= form.select :jira_product_config_id, options_for_select(@jira_product_configs.map { |config| [config.jira_product_key, config.id] }, params['jira_product_config_id']), {}, class: 'form-control filter-checks' %>
+            <%= form.select :jira_product_config_id, options_for_select(jira_product_configs.map { |config| [config.jira_product_key, config.id] }, params['jira_product_config_id']), {}, class: 'form-control filter-checks' %>
             <span class="help-block"><%= jira_project_config.errors[:jira_product_config].join(', ') %></span>
           </div>
 

@@ -8,7 +8,7 @@ module Jira
 
     def new
       @jira_project_config = JiraProjectConfig.new
-      @jira_product_configs = @project.products.map(&:jira_product_configs).flatten
+      @jira_product_configs = @project.products.map(&:jira_product_configs).flatten - @project.jira_project_configs.map(&:jira_product_config)
       respond_to { |format| format.js { render 'jira/jira_project_configs/new' } }
     end
 
