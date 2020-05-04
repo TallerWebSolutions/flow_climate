@@ -94,6 +94,45 @@ ALTER SEQUENCE public.company_settings_id_seq OWNED BY public.company_settings.i
 
 
 --
+-- Name: contracts; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.contracts (
+    id bigint NOT NULL,
+    product_id integer NOT NULL,
+    customer_id integer NOT NULL,
+    contract_id integer NOT NULL,
+    start_date date NOT NULL,
+    end_date date,
+    renewal_period integer DEFAULT 0 NOT NULL,
+    automatic_renewal boolean DEFAULT false,
+    total_hours integer NOT NULL,
+    total_value integer NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: contracts_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.contracts_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: contracts_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.contracts_id_seq OWNED BY public.contracts.id;
+
+
+--
 -- Name: customers; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -104,7 +143,8 @@ CREATE TABLE public.customers (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     products_count integer DEFAULT 0,
-    projects_count integer DEFAULT 0
+    projects_count integer DEFAULT 0,
+    customer_id integer
 );
 
 
@@ -1798,6 +1838,13 @@ ALTER TABLE ONLY public.company_settings ALTER COLUMN id SET DEFAULT nextval('pu
 
 
 --
+-- Name: contracts id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.contracts ALTER COLUMN id SET DEFAULT nextval('public.contracts_id_seq'::regclass);
+
+
+--
 -- Name: customers id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -2141,6 +2188,14 @@ ALTER TABLE ONLY public.companies
 
 ALTER TABLE ONLY public.company_settings
     ADD CONSTRAINT company_settings_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: contracts contracts_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.contracts
+    ADD CONSTRAINT contracts_pkey PRIMARY KEY (id);
 
 
 --
@@ -2566,6 +2621,27 @@ CREATE UNIQUE INDEX index_companies_on_slug ON public.companies USING btree (slu
 --
 
 CREATE INDEX index_company_settings_on_company_id ON public.company_settings USING btree (company_id);
+
+
+--
+-- Name: index_contracts_on_contract_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_contracts_on_contract_id ON public.contracts USING btree (contract_id);
+
+
+--
+-- Name: index_contracts_on_customer_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_contracts_on_customer_id ON public.contracts USING btree (customer_id);
+
+
+--
+-- Name: index_contracts_on_product_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_contracts_on_product_id ON public.contracts USING btree (product_id);
 
 
 --
@@ -3694,11 +3770,27 @@ ALTER TABLE ONLY public.customers_devise_customers
 
 
 --
+-- Name: contracts fk_rails_4bd5aca47c; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.contracts
+    ADD CONSTRAINT fk_rails_4bd5aca47c FOREIGN KEY (contract_id) REFERENCES public.contracts(id);
+
+
+--
 -- Name: user_project_roles fk_rails_4bed04fd76; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.user_project_roles
     ADD CONSTRAINT fk_rails_4bed04fd76 FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
+-- Name: customers fk_rails_4f8eb9d458; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.customers
+    ADD CONSTRAINT fk_rails_4f8eb9d458 FOREIGN KEY (customer_id) REFERENCES public.customers(id);
 
 
 --
@@ -3870,6 +3962,14 @@ ALTER TABLE ONLY public.team_members
 
 
 --
+-- Name: contracts fk_rails_a00d802491; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.contracts
+    ADD CONSTRAINT fk_rails_a00d802491 FOREIGN KEY (customer_id) REFERENCES public.customers(id);
+
+
+--
 -- Name: memberships fk_rails_ae2aedcfaf; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -3995,6 +4095,14 @@ ALTER TABLE ONLY public.flow_impacts
 
 ALTER TABLE ONLY public.demand_blocks
     ADD CONSTRAINT fk_rails_d25cb2ae7e FOREIGN KEY (stage_id) REFERENCES public.stages(id);
+
+
+--
+-- Name: contracts fk_rails_d9e2e7cf99; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.contracts
+    ADD CONSTRAINT fk_rails_d9e2e7cf99 FOREIGN KEY (product_id) REFERENCES public.products(id);
 
 
 --
@@ -4251,6 +4359,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200406175435'),
 ('20200423204628'),
 ('20200423211631'),
-('20200430140032');
+('20200430140032'),
+('20200504193716');
 
 

@@ -12,6 +12,7 @@ RSpec.describe Product, type: :model do
     it { is_expected.to have_many(:flow_impacts).through(:projects) }
     it { is_expected.to have_many(:risk_reviews).dependent(:destroy) }
     it { is_expected.to have_many(:service_delivery_reviews).dependent(:destroy) }
+    it { is_expected.to have_many(:contracts).dependent(:restrict_with_error) }
   end
 
   context 'validations' do

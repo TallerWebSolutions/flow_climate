@@ -11,6 +11,7 @@
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null
 #  company_id     :integer          not null
+#  customer_id    :integer
 #
 # Indexes
 #
@@ -19,6 +20,7 @@
 #
 # Foreign Keys
 #
+#  fk_rails_4f8eb9d458  (customer_id => customers.id)
 #  fk_rails_ef51a916ef  (company_id => companies.id)
 #
 
@@ -26,8 +28,11 @@ class Customer < ApplicationRecord
   include DemandsAggregator
 
   belongs_to :company, counter_cache: true
+  belongs_to :customer
+
   has_many :products, dependent: :restrict_with_error
   has_many :demands, dependent: :nullify
+  has_many :contracts, dependent: :restrict_with_error
   has_and_belongs_to_many :projects, dependent: :restrict_with_error
   has_and_belongs_to_many :devise_customers, dependent: :destroy
 
