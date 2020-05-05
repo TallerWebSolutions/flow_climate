@@ -158,7 +158,7 @@ pt-BR:
     role: "Função"
     show_montecarlo: "Mostrar Simulação de Monte Carlo"
     demands_per_day_text: "demands per day"
-    invite_user: "Convidar Usuário"
+    invite_user: "Convidar por Email"
   header:
     logout: Sair
     sign_up: Cadastre-se
@@ -1220,3 +1220,17 @@ pt-BR:
     create:
       error: "O e-mail não deve estar em branco."
       success: "Usuário convidado"
+  contract:
+    new:
+      title: "Novo Contrato"
+    edit:
+      title: "Editar Contrato"
+  contracts:
+    save:
+      error: "Ocorreram problemas durante a gravação do contrato. Verifique os campos do formulário."
+    new:
+      title: "Novo Contrato"
+    create:
+      success: "Contrato criado."
+    update:
+      success: "Contrato atualizado."

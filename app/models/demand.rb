@@ -31,6 +31,7 @@
 #  updated_at                      :datetime         not null
 #  company_id                      :integer          not null
 #  current_stage_id                :integer
+#  customer_id                     :integer
 #  external_id                     :string           not null
 #  portfolio_unit_id               :integer
 #  product_id                      :integer
@@ -53,6 +54,7 @@
 #  fk_rails_34f0dad22e  (risk_review_id => risk_reviews.id)
 #  fk_rails_35680c72ae  (current_stage_id => stages.id)
 #  fk_rails_73cc77780a  (product_id => products.id)
+#  fk_rails_b14b9efb68  (customer_id => customers.id)
 #  fk_rails_c9b5eaaa7f  (portfolio_unit_id => portfolio_units.id)
 #  fk_rails_fcc44c0e5d  (service_delivery_review_id => service_delivery_reviews.id)
 #

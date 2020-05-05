@@ -1,0 +1,40 @@
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th><%= Product.model_name.human %></th>
+      <th><%= Contract.human_attribute_name :start_date %></th>
+      <th><%= Contract.human_attribute_name :end_date %></th>
+      <th><%= Contract.human_attribute_name :total_hours %></th>
+      <th><%= Contract.human_attribute_name :total_value %></th>
+      <th><%= Contract.human_attribute_name :renewal_period %></th>
+      <th><%= Contract.human_attribute_name :automatic_renewal %></th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% contracts.each do |contract| %>
+      <tr>
+        <td><%= contract.product_name %></td>
+        <td><%= I18n.l(contract.start_date) %></td>
+        <td><%= I18n.l(contract.end_date) if contract.end_date.present? %></td>
+        <td><%= contract.total_hours %></td>
+        <td><%= number_to_currency(contract.total_value, precision: 2) %></td>
+        <td><%= I18n.t("activerecord.attributes.contract.enums.renewal_period.#{contract.renewal_period}") %></td>
+        <td>
+          <% if contract.automatic_renewal %>
+            <i class="fa fa-check"></i>
+          <% end %>
+        </td>
+        <td>
+          <%= link_to edit_company_customer_contract_path(company, customer, contract) do %>
+            <i class="fas fa-edit"></i>
+          <% end %>
+          <%= link_to company_customer_contract_path(company, customer, contract), method: :delete do %>
+            <i class="fa fa-times"></i>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

@@ -36,6 +36,7 @@ class Product < ApplicationRecord
   has_many :flow_impacts, through: :projects
   has_many :risk_reviews, dependent: :destroy
   has_many :service_delivery_reviews, dependent: :destroy
+  has_many :contracts, dependent: :restrict_with_error
 
   validates :name, :customer, presence: true
   validates :name, uniqueness: { scope: :customer, message: I18n.t('product.name.uniqueness') }

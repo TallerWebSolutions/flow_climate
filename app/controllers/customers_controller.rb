@@ -15,6 +15,8 @@ class CustomersController < AuthenticatedController
   def show
     @customer_dashboard_data = CustomerDashboardData.new(@customer)
     @user_invite = UserInvite.new(invite_object_id: @customer.id, invite_type: :customer)
+    @contracts = @customer.contracts.order(end_date: :desc)
+    @contract = Contract.new(customer: @customer)
   end
 
   def new

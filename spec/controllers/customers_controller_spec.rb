@@ -240,6 +240,9 @@ RSpec.describe CustomersController, type: :controller do
 
     describe 'GET #show' do
       let(:customer) { Fabricate :customer, company: company }
+      let!(:contract) { Fabricate :contract, customer: customer, end_date: 1.day.from_now }
+      let!(:other_contract) { Fabricate :contract, customer: customer, end_date: 2.days.from_now }
+      let!(:out_contract) { Fabricate :contract, end_date: 3.days.from_now }
 
       context 'with valid data' do
         it 'assigns the instance variable and renders the template' do
@@ -252,6 +255,8 @@ RSpec.describe CustomersController, type: :controller do
           expect(response).to render_template :show
           expect(assigns(:company)).to eq company
           expect(assigns(:customer)).to eq customer
+          expect(assigns(:contracts)).to eq [other_contract, contract]
+          expect(assigns(:contract)).to be_a_new Contract
         end
       end
 
