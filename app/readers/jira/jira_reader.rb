@@ -37,7 +37,7 @@ module Jira
 
       customer_name = jira_custom_fields_hash[customer_custom_field_name]
 
-      jira_account.company.customers.find_by(name: customer_name)
+      jira_account.company.customers.find_by(name: customer_name[0]['value']) if customer_name.present?
     end
 
     def read_demand_key(jira_issue_attrs)

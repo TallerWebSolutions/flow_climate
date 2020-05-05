@@ -28,7 +28,7 @@ module Jira
 
     def update_demand!(demand, jira_account, jira_issue, project, product)
       demand.update(project: project, company: project.company, product: product, team: project.team,
-                    customer: Jira::JiraReader.instance.read_customer(jira_account, jira_issue_attrs(jira_issue)),
+                    customer: define_customer(project, jira_account, jira_issue_attrs(jira_issue)),
                     created_date: issue_fields_value(jira_issue, 'created'),
                     demand_type: read_issue_type(jira_issue_attrs(jira_issue)),
                     class_of_service: Jira::JiraReader.instance.read_class_of_service(jira_account, jira_issue_attrs(jira_issue), jira_issue_changelog(jira_issue)),
@@ -244,6 +244,13 @@ module Jira
 
     def build_jira_url(jira_account, issue_key)
       "#{jira_account.base_uri}browse/#{issue_key}"
+    end
+
+    def define_customer(project, jira_account, jira_issue_attrs)
+      customer_to_card = Jira::JiraReader.instance.read_customer(jira_account, jira_issue_attrs)
+      return customer_to_card if customer_to_card.present?
+
+      project.customers.first if project.customers.count == 1
     end
   end
 end
