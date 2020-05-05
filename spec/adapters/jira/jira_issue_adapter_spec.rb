@@ -10,6 +10,7 @@ RSpec.describe Jira::JiraIssueAdapter, type: :service do
   let!(:customer_custom_field) { Fabricate :jira_custom_field_mapping, jira_account: jira_account, custom_field_type: :customer, custom_field_machine_name: 'customfield_10013' }
 
   let(:customer) { Fabricate :customer, company: company, name: 'xpto of bla' }
+  let(:other_customer) { Fabricate :customer, company: company, name: 'other_customer' }
 
   let(:team) { Fabricate :team, company: company }
   let!(:default_member) { Fabricate :team_member, company: company, name: 'default member', jira_account_id: 'default member id' }
@@ -105,6 +106,8 @@ RSpec.describe Jira::JiraIssueAdapter, type: :service do
           described_class.instance.process_issue!(jira_account, product, first_project, jira_issue)
 
           expect(Demand.count).to eq 1
+          expect(Demand.last.project).to eq first_project
+          expect(Demand.last.customer).to eq customer
           expect(Demand.last.team_members).to match_array [team_member, other_team_member]
           expect(Demand.last.team).to eq team
           expect(Demand.last.demand_title).to eq 'foo of bar'
@@ -299,7 +302,7 @@ RSpec.describe Jira::JiraIssueAdapter, type: :service do
     context 'when the demand exists' do
       let!(:jira_custom_field_mapping) { Fabricate :jira_custom_field_mapping, jira_account: jira_account, custom_field_type: :responsibles, custom_field_machine_name: 'customfield_10024' }
       let!(:demand) { Fabricate :demand, company: company, project: first_project, team: team, external_id: '10000' }
-      let!(:second_project) { Fabricate :project, company: company, team: team, customers: [customer], products: [product] }
+      let!(:second_project) { Fabricate :project, company: company, team: team, customers: [customer, other_customer], products: [product] }
       let!(:jira_project_config) { Fabricate :jira_project_config, jira_product_config: jira_product_config, project: second_project, fix_version_name: 'bar' }
 
       let!(:team_member) { Fabricate :team_member, company: company, jira_account_user_email: 'foo', jira_account_id: 'bar', name: 'team_member' }
@@ -314,6 +317,7 @@ RSpec.describe Jira::JiraIssueAdapter, type: :service do
           described_class.instance.process_issue!(jira_account, product, first_project, jira_issue)
           expect(Demand.count).to eq 1
           expect(Demand.last.project).to eq second_project
+          expect(Demand.last.customer).to be_nil
           expect(Demand.last.assignees_count).to eq 0
           expect(Demand.last.demand_title).to eq 'foo of bar'
           expect(Demand.last.downstream_demand?).to be false
