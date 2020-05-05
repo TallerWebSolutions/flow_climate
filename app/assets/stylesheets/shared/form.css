@@ -32,6 +32,14 @@
     margin-left: 2px;
 }
 
+.flex-container {
+    display: flex;
+}
+
+.input-field {
+    flex: 1;
+}
+
 label.required:after{content: " *"}
 
 h1 {font-size: xx-large;}

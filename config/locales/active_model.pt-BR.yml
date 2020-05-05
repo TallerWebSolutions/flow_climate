@@ -618,6 +618,8 @@ pt-BR:
             accepted: Aceito
             cancelled: Cancelado
       contract:
+        customer: Cliente
+        product: Produto
         start_date: Data de Início
         end_date: Data Fim
         renewal_period: Período de Renovação

@@ -1,0 +1,18 @@
+<div class="row">
+  <div class="col-xs-12">
+    <ul class="breadcrumb">
+      <li><%= link_to I18n.t('general.home.title'), root_path %></li>
+      <li><%= link_to @company.abbreviation&.upcase, company_path(@company) %></li>
+      <li><%= link_to @customer.name, company_customer_path(@company, @customer) %></li>
+      <li><%= I18n.t('contract.edit.title') %></li>
+    </ul>
+  </div>
+</div>
+
+<%= form_for @contract, url: company_customer_contract_path(@company, @customer, @contract), method: :put, class: 'form' do |f| %>
+  <div class="row bottom-spaced-component">
+    <div class="col-xs-12">
+      <%= render 'contracts/form', form: f, company: @company, customer: @customer, contract: @contract, products_in_customer: @products_in_customer %>
+    </div>
+  </div>
+<% end %>

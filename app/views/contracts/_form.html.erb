@@ -1,0 +1,56 @@
+<div class="standard-form">
+
+  <div class="row">
+    <div class='col-xs-4 form-group <%= 'has-error' if contract.errors[:product].present? %>'>
+      <%= form.label :product, class: 'control-label required' %>
+      <%= form.select :product_id, products_in_customer.map { |p| [p.name, p.id] }, { include_blank: I18n.t('general.select') }, class: 'form-control' %>
+      <span class="help-block"><%= contract.errors[:product].join(', ') %></span>
+    </div>
+
+    <div class='col-xs-4 form-group <%= 'has-error' if contract.errors[:start_date].present? %>'>
+      <%= form.label :start_date, class: 'control-label required' %>
+      <%= form.date_field :start_date, class: 'form-control' %>
+      <span class="help-block"><%= contract.errors[:start_date].join(', ') %></span>
+    </div>
+
+    <div class='col-xs-4 form-group <%= 'has-error' if contract.errors[:end_date].present? %>'>
+      <%= form.label :end_date, class: 'control-label' %>
+      <%= form.date_field :end_date, class: 'form-control' %>
+      <span class="help-block"><%= contract.errors[:end_date].join(', ') %></span>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class='col-xs-6 form-group <%= 'has-error' if contract.errors[:total_hours].present? %>'>
+      <%= form.label :total_hours, class: 'control-label required' %>
+      <%= form.number_field :total_hours, class: 'form-control', step: 1 %>
+      <span class="help-block"><%= contract.errors[:total_hours].join(', ') %></span>
+    </div>
+
+    <div class='col-xs-6 form-group <%= 'has-error' if contract.errors[:total_value].present? %>'>
+      <%= form.label :total_value, class: 'control-label required' %>
+      <%= form.number_field :total_value, class: 'form-control', step: 0.01 %>
+      <span class="help-block"><%= contract.errors[:total_value].join(', ') %></span>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class='col-xs-6 form-group <%= 'has-error' if contract.errors[:renewal_period].present? %>'>
+      <%= form.label :renewal_period, class: 'control-label required' %>
+      <%= form.select :renewal_period, Contract.renewal_periods.map { |key, _value| [I18n.t("activerecord.attributes.contract.enums.renewal_period.#{key}"), key] }, { include_blank: I18n.t('general.select'), selected: contract.renewal_period }, class: 'form-control' %>
+      <span class="help-block"><%= contract.errors[:renewal_period].join(', ') %></span>
+    </div>
+
+    <div class='col-xs-6 form-check bottom-spaced-component'>
+      <%= form.check_box :automatic_renewal, class: 'form-check-input' %>
+      <%= form.label :automatic_renewal, class: 'form-check-label' %>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-xs-12">
+      <%= link_to I18n.t('general.buttons.cancel'), company_customer_path(company, customer), class: 'btn btn-danger' %>
+      <%= form.submit I18n.t('general.buttons.save'), class: 'btn btn-success' %>
+    </div>
+  </div>
+</div>

@@ -13,6 +13,13 @@
                demands_lead_time_p80: Stats::StatisticsService.instance.percentile(80, customer.exclusives_demands_to_customer.kept.finished_with_leadtime.map(&:leadtime_in_days)),
                demands_lead_time_p65: Stats::StatisticsService.instance.percentile(65, customer.exclusives_demands_to_customer.kept.finished_with_leadtime.map(&:leadtime_in_days)) %>
   </div>
+
+  <div class="col-xs-4">
+    <%= render 'users/users_short_table', users: customer.devise_customers %>
+    <hr>
+    <%= render 'customers/form_user_invite_to_customer', company: company, customer: customer, user_invite: user_invite %>
+  </div>
+
   <div class="col-xs-4">
     <h4><%= Project.model_name.human(count: 2) %></h4>
 
@@ -23,22 +30,30 @@
                active_projects_hired_hours: customer.active_exclusive_projects.map(&:qty_hours).compact.sum %>
 
     <hr>
-
-    <%= render 'users/users_short_table', users: customer.devise_customers %>
-
-    <hr>
-
-    <%= render 'customers/form_user_invite_to_customer', company: company, customer: customer, user_invite: user_invite %>
   </div>
 
-  <div class="col-xs-4">
-    <h4><%= I18n.t('demands.index.last_deliveries') %></h4>
-
-    <%= render 'demands/demands_short_table', company: company, demands: customer.exclusives_demands_to_customer.kept.finished.order(end_date: :desc).first(5) %>
-  </div>
 </div>
 
-<hr>
+<% if contract.present? %>
+  <div class="row">
+    <div class="col-xs-8">
+      <h4><%= Contract.model_name.human(count: 2) %>
+        <%= link_to new_company_customer_contract_path(company, customer, contract), class: 'btn btn-lg', title: I18n.t('contracts.new.title').downcase do %>
+          <i class="fa fa-plus-square"></i>
+        <% end %>
+      </h4>
+      <%= render 'contracts/contracts_table', company: company, customer: customer, contracts: contracts %>
+    </div>
+
+    <div class="col-xs-4">
+      <h4><%= I18n.t('demands.index.last_deliveries') %></h4>
+
+      <%= render 'demands/demands_short_table', company: company, demands: customer.exclusives_demands_to_customer.kept.finished.order(end_date: :desc).first(5) %>
+    </div>
+  </div>
+
+  <hr>
+<% end %>
 
 <div class="row">
   <div class="col-xs-6">

@@ -158,7 +158,7 @@ en:
     role: "Role"
     show_montecarlo: "Show Monte Carlo Projection"
     demands_per_day_text: "demandas por dia"
-    invite_user: "Invite User"
+    invite_user: "Invite by Email"
   header:
     logout: Logout
     explore: Explore
@@ -1061,6 +1061,11 @@ en:
       service_delivery_review:
         lead_time_bottom_threshold: "Lead Time Bottom Threshold"
         lead_time_top_threshold: "Lead Time Top Threshold"
+      contract:
+        enums:
+          renewal_period:
+            monthly: "Monthly"
+            yearly: "Yearly"
     models:
       demand_comment:
         other: "Demand Comments"
@@ -1232,3 +1237,17 @@ en:
     create:
       error: "The e-mail address should not be blank"
       success: "User invited"
+  contract:
+    new:
+      title: "New Contract"
+    edit:
+      title: "Edit Contract"
+  contracts:
+    new:
+      title: "New Contract"
+    save:
+      error: "Problems occurred while saving the contract. Check the form fields."
+    create:
+      success: "Contract created."
+    update:
+      success: "Contract updated."

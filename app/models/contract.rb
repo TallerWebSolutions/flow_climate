@@ -13,7 +13,7 @@
 #  total_value       :integer          not null
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
-#  contract_id       :integer          not null
+#  contract_id       :integer
 #  customer_id       :integer          not null
 #  product_id        :integer          not null
 #
@@ -37,4 +37,6 @@ class Contract < ApplicationRecord
   belongs_to :product
 
   validates :customer, :product, :start_date, :total_hours, :total_value, :renewal_period, presence: true
+
+  delegate :name, to: :product, prefix: true
 end

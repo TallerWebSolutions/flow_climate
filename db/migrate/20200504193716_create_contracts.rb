@@ -5,7 +5,7 @@ class CreateContracts < ActiveRecord::Migration[6.0]
     create_table :contracts do |t|
       t.integer :product_id, index: true, null: false
       t.integer :customer_id, index: true, null: false
-      t.integer :contract_id, index: true, null: false
+      t.integer :contract_id, index: true
 
       t.date :start_date, null: false
       t.date :end_date

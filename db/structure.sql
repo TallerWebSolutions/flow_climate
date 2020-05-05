@@ -101,7 +101,7 @@ CREATE TABLE public.contracts (
     id bigint NOT NULL,
     product_id integer NOT NULL,
     customer_id integer NOT NULL,
-    contract_id integer NOT NULL,
+    contract_id integer,
     start_date date NOT NULL,
     end_date date,
     renewal_period integer DEFAULT 0 NOT NULL,

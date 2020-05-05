@@ -3,15 +3,16 @@
     <ul class="breadcrumb">
       <li><%= link_to I18n.t('general.home.title'), root_path %></li>
       <li><%= link_to @company.abbreviation&.upcase, company_path(@company) %></li>
-      <li><%= I18n.t('customers.new.title') %></li>
+      <li><%= link_to @customer.name, company_customer_path(@company, @customer) %></li>
+      <li><%= I18n.t('contract.new.title') %></li>
     </ul>
   </div>
 </div>
 
-<%= form_for [@company, @customer] do |f| %>
+<%= form_for [@company, @customer, @contract] do |f| %>
   <div class="row bottom-spaced-component">
     <div class="col-xs-12">
-      <%= render 'customers/form', f: f %>
+      <%= render 'contracts/form', form: f, company: @company, customer: @customer, contract: @contract, products_in_customer: @products_in_customer %>
     </div>
   </div>
 <% end %>
