@@ -1,0 +1,56 @@
+.header {
+    padding: 10px;
+    background-color: #26182d;
+    height: 100%;
+}
+
+.header-nav {
+    font-size: large;
+    height: 100%;
+
+    padding: 15px;
+    margin-left: -30px;
+}
+
+.top-nav-bar-text {
+    color: white;
+}
+
+.top-nav-bar-item {
+    color: white;
+    text-decoration: none;
+    vertical-align: bottom;
+}
+
+/* Style the list */
+ul.breadcrumb {
+    list-style: none;
+    background-color: transparent;
+}
+
+/* Display list items side by side */
+ul.breadcrumb li {
+    display: inline;
+    font-size: large;
+}
+
+/* Add a slash symbol (/) before/behind each list item */
+ul.breadcrumb li+li:before {
+    color: black;
+    content: "\2192";
+}
+
+/* Add a color to all links inside the list */
+ul.breadcrumb li a {
+    text-decoration: none;
+}
+
+/* Add a color on mouse-over */
+ul.breadcrumb li a:hover {
+    text-decoration: underline;
+}
+
+.page-body {
+    position: relative;
+    margin-bottom: 50px;
+}
