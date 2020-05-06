@@ -9,16 +9,7 @@
 
 <hr>
 
-<div class="row">
-  <div class="col-xs-12">
-    <div class="tab">
-      <button class="tablinks" id="projects-list-tab" onclick="openTab(event, 'projects-list', 'tablinks', 'tabcontent')"><%= I18n.t('general.list') %></button>
-      <button class="tablinks" onclick="openTab(event, 'projects-gantt', 'tablinks', 'tabcontent')"><%= I18n.t('navbar.projects_gantt') %></button>
-    </div>
-  </div>
-</div>
-
-<div id="projects-list" class="tabcontent">
+<div>
   <div class="row">
     <div class="col-xs-12">
       <%= link_to I18n.t('project.new.title'), new_company_project_path(company), class: 'btn btn-sm btn-primary bottom-spaced-component' %>
@@ -120,15 +111,6 @@
       </tbody>
     </table>
   <% end %>
-</div>
-
-<div id="projects-gantt" class="tabcontent project-tab">
-  <div class="col-xs-12 bottom-spaced-component">
-    <div id="projects-gantt-div"
-         data-title=''
-         data-series='<%= gantt_chart_to_projects(target_name, projects_list.order(:start_date)).to_json %>'>
-    </div>
-  </div>
 </div>
 
 <div class="modal fade" id="list-blocks-page" tabindex="-1" role="dialog" aria-labelledby="list-blocks-page" aria-hidden="true"></div>

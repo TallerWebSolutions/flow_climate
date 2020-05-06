@@ -763,7 +763,6 @@ en:
     portfolio_units: "Portfolio Units"
     risk_reviews: "Risk Reviews"
     service_delivery_reviews: "Service Delivery Review"
-    projects_gantt: "Gantt Chart"
   charts:
     xlabel:
       months: "Months"
