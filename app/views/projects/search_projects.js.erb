@@ -3,7 +3,6 @@ var projectsTableDiv = $('#projects-table')
 projectsTableDiv.html("<%= escape_javascript(render 'projects/projects_table', company: @company, projects_list: @projects, projects_summary: @projects_summary, target_name: @target_name).html_safe %>");
 
 $(".col-table-details").hide();
-projectsTableTabBehaviour();
 bindSearchProjects();
 
 $('#general-loader').hide();
