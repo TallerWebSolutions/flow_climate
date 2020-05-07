@@ -281,4 +281,21 @@ RSpec.describe Team, type: :model do
     it { expect(team.average_touch_time).to eq 47.666666666666664 }
     it { expect(other_team.average_touch_time).to eq 0 }
   end
+
+  describe '#larger_lead_times' do
+    let(:company) { Fabricate :company }
+
+    let(:project) { Fabricate :project, team: team, end_date: 4.weeks.from_now, qty_hours: 2000 }
+    let(:other_project) { Fabricate :project, team: team, end_date: 4.weeks.from_now }
+
+    let(:team) { Fabricate :team, company: company }
+    let(:other_team) { Fabricate :team, company: company }
+
+    let!(:first_demand) { Fabricate :demand, team: team, project: project, demand_type: :feature, created_date: 3.weeks.ago, commitment_date: 17.days.ago, end_date: 2.weeks.ago }
+    let!(:second_demand) { Fabricate :demand, team: team, project: project, demand_type: :bug, created_date: 2.weeks.ago, commitment_date: 18.days.ago, end_date: 1.week.ago }
+    let!(:third_demand) { Fabricate :demand, team: team, project: other_project, demand_type: :bug, created_date: 1.week.ago, commitment_date: 4.days.ago, end_date: 2.days.ago }
+
+    it { expect(team.larger_lead_times(0, 3)).to eq [second_demand, first_demand, third_demand] }
+    it { expect(team.larger_lead_times(1, 2)).to eq [third_demand] }
+  end
 end
