@@ -909,18 +909,20 @@ RSpec.describe DemandsController, type: :controller do
       let(:company) { Fabricate :company, users: [user] }
 
       context 'with data' do
-        let!(:first_demand) { Fabricate :demand, company: company, created_date: Time.zone.today, commitment_date: nil, end_date: nil }
-        let!(:second_demand) { Fabricate :demand, company: company, created_date: Time.zone.yesterday, commitment_date: nil, end_date: nil }
+        let!(:first_demand) { Fabricate :demand, company: company, created_date: 5.days.ago, commitment_date: 3.days.ago, end_date: 1.day.ago }
+        let!(:second_demand) { Fabricate :demand, company: company, created_date: 6.weeks.ago, commitment_date: 4.weeks.ago, end_date: 2.weeks.ago }
+        let!(:third_demand) { Fabricate :demand, company: company, created_date: 5.weeks.ago, commitment_date: 4.weeks.ago, end_date: nil }
+        let!(:fourth_demand) { Fabricate :demand, company: company, created_date: 1.week.ago, commitment_date: nil, end_date: nil }
 
         context 'valid parameters' do
-          before { get :montecarlo_dialog, params: { company_id: company, demands_ids: "#{first_demand.id},#{second_demand.id}".to_s }, xhr: true }
+          before { get :montecarlo_dialog, params: { company_id: company, demands_ids: "#{first_demand.id},#{second_demand.id},#{third_demand.id},#{fourth_demand.id}" }, xhr: true }
 
           it 'assigns the instance variables and renders the template' do
             expect(assigns(:company)).to eq company
             expect(assigns(:status_report_data)).to be_a Highchart::StatusReportChartsAdapter
-            expect(assigns(:demands_left)).to match_array [first_demand, second_demand]
-            expect(assigns(:demands_delivered)).to eq []
-            expect(assigns(:throughput_per_period)).to eq [0]
+            expect(assigns(:demands_left)).to match_array [third_demand, fourth_demand]
+            expect(assigns(:demands_delivered)).to match_array [first_demand, second_demand]
+            expect(assigns(:throughput_per_period)).to eq [0, 0, 0, 0, 1, 0, 1]
             expect(response).to render_template 'demands/montecarlo_dialog'
           end
         end

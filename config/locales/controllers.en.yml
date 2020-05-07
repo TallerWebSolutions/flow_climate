@@ -634,6 +634,8 @@ en:
         text:
           placeholder: "search in product, project or portfolio unit names or in demand title or id"
       last_deliveries: "Last deliveries"
+      last_larger_lead_times_four_weeks: "Last five largest lead times (4 weeks)"
+      last_larger_lead_times: "Last five largest lead times"
     edit:
       title: "Edit Demand"
     show:

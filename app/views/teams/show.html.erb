@@ -68,6 +68,7 @@
 
 <div id="team-dashboard-container-page-one" class="tabcontent">
   <%= render 'teams/dashboards/dashboard_body',
+             company: @company,
              team: @team,
              slack_configurations: @slack_configurations,
              dates_array: @array_of_dates,

@@ -75,6 +75,14 @@ class Team < ApplicationRecord
     total_hours
   end
 
+  def larger_lead_times(number_of_weeks, number_of_records)
+    if number_of_weeks <= 0
+      demands.kept.finished_with_leadtime.order(leadtime: :desc).first(number_of_records)
+    else
+      demands.kept.finished_with_leadtime.where('end_date >= :limit_date', limit_date: number_of_weeks.weeks.ago).order(leadtime: :desc).first(number_of_records)
+    end
+  end
+
   private
 
   def compute_available_hours_to_member(membership, start_date, end_date, full_period)

@@ -59,7 +59,7 @@ class CustomersController < AuthenticatedController
   private
 
   def customer_demands
-    @customer_demands ||= @customer.exclusives_demands_to_customer.finished.order(:end_date)
+    @customer_demands ||= @customer.exclusives_demands.finished.order(:end_date)
   end
 
   def start_date
