@@ -239,6 +239,10 @@ RSpec.describe CustomersController, type: :controller do
     end
 
     describe 'GET #show' do
+      before { travel_to Time.zone.local(2020, 5, 7, 10, 0, 0) }
+
+      after { travel_back }
+
       let(:customer) { Fabricate :customer, company: company }
       let!(:contract) { Fabricate :contract, customer: customer, end_date: 1.day.from_now }
       let!(:other_contract) { Fabricate :contract, customer: customer, end_date: 2.days.from_now }
