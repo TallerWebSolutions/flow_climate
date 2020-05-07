@@ -159,6 +159,11 @@ en:
     show_montecarlo: "Show Monte Carlo Projection"
     demands_per_day_text: "demandas por dia"
     invite_user: "Invite by Email"
+    dashboards:
+      lead_time_accumulated_p80: "Lead time accumulated (p80)"
+      lead_time_p80: "Lead time (p80)"
+      hours_delivered: "Hours"
+      hours_delivered_acc: "Hours Accumulated"
   header:
     logout: Logout
     explore: Explore

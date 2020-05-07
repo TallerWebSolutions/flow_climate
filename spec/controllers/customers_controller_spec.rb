@@ -239,16 +239,29 @@ RSpec.describe CustomersController, type: :controller do
     end
 
     describe 'GET #show' do
+      before { travel_to Time.zone.local(2020, 5, 7, 10, 0, 0) }
+
+      after { travel_back }
+
       let(:customer) { Fabricate :customer, company: company }
       let!(:contract) { Fabricate :contract, customer: customer, end_date: 1.day.from_now }
       let!(:other_contract) { Fabricate :contract, customer: customer, end_date: 2.days.from_now }
       let!(:out_contract) { Fabricate :contract, end_date: 3.days.from_now }
 
+      let(:project) { Fabricate :project, customers: [customer] }
+      let(:first_end_date) { 1.day.ago }
+      let(:second_end_date) { 1.day.from_now }
+      let!(:demand) { Fabricate :demand, project: project, end_date: first_end_date }
+      let!(:other_demand) { Fabricate :demand, project: project, end_date: second_end_date }
+
       context 'with valid data' do
         it 'assigns the instance variable and renders the template' do
           array_of_dates = [Time.zone.yesterday.to_date, Time.zone.today]
-          customer_data = instance_double('CustomerDashboardData', lead_time_accumulated: 10, hours_delivered_upstream: 10, hours_delivered_downstream: 20, array_of_dates: array_of_dates, throughput_data: [2, 4])
+          customer_data = instance_double('CustomerDashboardData', lead_time_accumulated: 10, hours_delivered_upstream: 10, hours_delivered_downstream: 20, array_of_dates: array_of_dates, throughput_data: [2, 4], total_hours_delivered: 20, total_hours_delivered_accumulated: 40)
+          demands_chart_data = instance_double('Highchart::DemandsChartsAdapter', leadtime_percentiles_on_time_chart_data: { y_axis: 'bla' }, x_axis: 'xpto')
+
           expect(CustomerDashboardData).to(receive(:new).once { customer_data })
+          expect(Highchart::DemandsChartsAdapter).to(receive(:new).once { demands_chart_data })
 
           get :show, params: { company_id: company, id: customer }
 
@@ -257,10 +270,12 @@ RSpec.describe CustomersController, type: :controller do
           expect(assigns(:customer)).to eq customer
           expect(assigns(:contracts)).to eq [other_contract, contract]
           expect(assigns(:contract)).to be_a_new Contract
+          expect(assigns(:start_date)).to eq first_end_date
+          expect(assigns(:end_date)).to eq Time.zone.today
         end
       end
 
-      context 'invalid' do
+      context 'with invalid' do
         context 'company' do
           before { get :show, params: { company_id: 'foo', id: customer } }
 

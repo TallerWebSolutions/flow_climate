@@ -57,10 +57,6 @@ module Highchart
     end
 
     def build_leadtime_percentiles_on_time
-      build_leadtime_on_time_data
-    end
-
-    def build_leadtime_on_time_data
       leadtime_data = []
       accumulated_leadtime_data = []
       @x_axis.each do |chart_date|
