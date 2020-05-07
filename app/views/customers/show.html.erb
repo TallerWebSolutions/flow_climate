@@ -9,15 +9,17 @@
   </div>
 </div>
 
-<%= render 'customers/customer_dashboard', company: @company,
-                                           customer: @customer,
-                                           user_invite: @user_invite,
-                                           customer_dashboard_data: @customer_dashboard_data,
-                                           contracts: @contracts,
-                                           contract: @contract %>
+<%= render 'customers/dashboards/customer_dashboard', company: @company,
+           customer: @customer,
+           user_invite: @user_invite,
+           customer_dashboard_data: @customer_dashboard_data,
+           demands_chart_adapter: @demands_chart_adapter,
+           contracts: @contracts,
+           contract: @contract %>
 
 <% content_for :javascript do %>
   <%= javascript_include_tag 'charts/column' %>
+  <%= javascript_include_tag 'charts/column-line' %>
   <%= javascript_include_tag 'charts/line' %>
 
   <%= javascript_include_tag 'customers/show' %>

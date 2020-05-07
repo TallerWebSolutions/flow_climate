@@ -46,6 +46,7 @@
     </div>
 
     <div class="col-xs-4">
+
       <h4><%= I18n.t('demands.index.last_deliveries') %></h4>
 
       <%= render 'demands/demands_short_table', company: company, demands: customer.exclusives_demands_to_customer.kept.finished.order(end_date: :desc).first(5) %>
@@ -56,45 +57,45 @@
 <% end %>
 
 <div class="row">
-  <div class="col-xs-6">
-    <h4><%= I18n.t('general.leadtime_p80_label') %></h4>
-
-    <div id="line-leadtime-accumalated-customer"
-         class="flow-chart"
-         data-xcategories="<%= customer_dashboard_data.array_of_dates.to_json %>"
-         data-title="<%= I18n.t('projects.charts.leadtime_evolution.title') %>"
-         data-ytitle="<%= I18n.t('general.days') %>"
-         data-prefix=""
-         data-tooltipsuffix="<%= I18n.t('general.days') %>"
-         data-datalabelsuffix=""
-         data-series="<%= [{ name: I18n.t('teams.show.lead_time_p80_accumulated'), data: customer_dashboard_data.lead_time_accumulated }].to_json %>"
-         data-decimals="2">
+  <% if demands_chart_adapter.leadtime_percentiles_on_time_chart_data.present? %>
+    <div class="col-xs-6">
+      <div id="line-leadtime-accumalated-customer"
+           class="flow-chart"
+           data-xcategories="<%= demands_chart_adapter.x_axis.to_json %>"
+           data-title="<%= I18n.t('projects.charts.leadtime_evolution.title') %>"
+           data-ytitle="<%= I18n.t('general.days') %>"
+           data-prefix=""
+           data-tooltipsuffix="<%= I18n.t('general.days') %>"
+           data-datalabelsuffix=""
+           data-series="<%= demands_chart_adapter.leadtime_percentiles_on_time_chart_data[:y_axis].to_json %>"
+           data-decimals="2">
+      </div>
     </div>
-  </div>
+  <% end %>
 
-  <div class="col-xs-6">
-    <h4><%= I18n.t('general.leadtime_p80_label') %></h4>
-
-    <div id="customer-throughput-column-dashboard"
-         class="flow-chart"
-         data-title='<%= I18n.t('projects.charts.throughput.title', target_name: customer.name) %>'
-         data-xcategories='<%= customer_dashboard_data.array_of_dates.to_json %>'
-         data-ytitle='<%= I18n.t('general.demands') %>'
-         data-prefix=''
-         data-tooltipsuffix='<%= I18n.t('general.demands') %>'
-         data-datalabelsuffix=''
-         data-series='<%= [{ name: I18n.t('general.delivered'), data: customer_dashboard_data.throughput_data }].to_json %>'
-         data-stacking='normal'
-         data-decimals='0'>
+  <% if demands_chart_adapter.leadtime_percentiles_on_time_chart_data.present? %>
+    <div class="col-xs-6">
+      <div id="customer-throughput-column-dashboard"
+           class="flow-chart"
+           data-title='<%= I18n.t('projects.charts.throughput.title', target_name: customer.name) %>'
+           data-xcategories='<%= customer_dashboard_data.array_of_dates.to_json %>'
+           data-ytitle='<%= I18n.t('general.demands') %>'
+           data-prefix=''
+           data-tooltipsuffix='<%= I18n.t('general.demands') %>'
+           data-datalabelsuffix=''
+           data-series='<%= [{ name: I18n.t('general.delivered'), data: customer_dashboard_data.throughput_data }].to_json %>'
+           data-stacking='normal'
+           data-decimals='0'>
+      </div>
     </div>
-  </div>
+  <% end %>
 </div>
 
 <hr>
 
 <div class="row">
   <div class="col-xs-6">
-    <div id="customer-hours-consumed-line"
+    <div id="customer-hours-consumed-column-line"
          class="flow-chart"
          data-xcategories="<%= customer_dashboard_data.array_of_dates.to_json %>"
          data-title="<%= I18n.t('projects.charts.hours_per_month.title', target_name: customer.name) %>"
@@ -102,7 +103,11 @@
          data-prefix=""
          data-tooltipsuffix="<%= I18n.t('projects.charts.hours_per_month.ylabel') %>"
          data-datalabelsuffix=""
-         data-series="<%= [{ name: I18n.t('projects.charts.throughput.stage_stream.upstream'), data: customer_dashboard_data.hours_delivered_upstream }, {name: I18n.t('projects.charts.throughput.stage_stream.downstream'), data: customer_dashboard_data.hours_delivered_downstream }].to_json %>"
+         data-series="<%= [
+                              { type: 'column', yAxis: 1, name: I18n.t('general.dashboards.hours_delivered'), data: customer_dashboard_data.total_hours_delivered },
+                              { type: 'spline', name: I18n.t('general.dashboards.hours_delivered_acc'), data: customer_dashboard_data.total_hours_delivered_accumulated }
+
+                          ].to_json %>"
          data-stacking="normal"
          data-decimals="0">
     </div>

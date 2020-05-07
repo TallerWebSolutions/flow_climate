@@ -7,13 +7,12 @@ class CustomersController < AuthenticatedController
 
   def index
     @customers = @company.customers.order(:name)
-
-    @start_date = @customers.map(&:projects).flatten.map(&:start_date).min
-    @end_date = @customers.map(&:projects).flatten.map(&:end_date).max
   end
 
   def show
-    @customer_dashboard_data = CustomerDashboardData.new(@customer)
+    @customers = [@customer]
+    @customer_dashboard_data = CustomerDashboardData.new(customer_demands)
+    @demands_chart_adapter = Highchart::DemandsChartsAdapter.new(customer_demands, start_date, end_date, 'month')
     @user_invite = UserInvite.new(invite_object_id: @customer.id, invite_type: :customer)
     @contracts = @customer.contracts.order(end_date: :desc)
     @contract = Contract.new(customer: @customer)
@@ -58,6 +57,18 @@ class CustomersController < AuthenticatedController
   end
 
   private
+
+  def customer_demands
+    @customer_demands ||= @customer.exclusives_demands_to_customer.finished.order(:end_date)
+  end
+
+  def start_date
+    @start_date ||= customer_demands.map(&:end_date).compact.min
+  end
+
+  def end_date
+    @end_date ||= [customer_demands.map(&:end_date).compact.max, Time.zone.today].compact.min
+  end
 
   def assign_customer
     @customer = @company.customers.find(params[:id])

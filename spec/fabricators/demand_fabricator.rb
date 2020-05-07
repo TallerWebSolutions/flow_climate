@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 Fabricator(:demand) do
+  customer
+  product
   project
   company
   team

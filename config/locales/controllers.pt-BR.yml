@@ -159,6 +159,11 @@ pt-BR:
     show_montecarlo: "Mostrar Simulação de Monte Carlo"
     demands_per_day_text: "demands per day"
     invite_user: "Convidar por Email"
+    dashboards:
+      lead_time_accumulated_p80: "Lead time acumulado (p80)"
+      lead_time_p80: "Lead time (p80)"
+      hours_delivered: "Horas"
+      hours_delivered_acc: "Horas Acumuladas"
   header:
     logout: Sair
     sign_up: Cadastre-se

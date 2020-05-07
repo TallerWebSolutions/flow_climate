@@ -3,9 +3,9 @@ if (lineLeadtimeCustomerAccumulated.length !== 0) {
     buildLineChart(lineLeadtimeCustomerAccumulated);
 }
 
-const customerHoursConsumed = $("#customer-hours-consumed-line");
+const customerHoursConsumed = $("#customer-hours-consumed-column-line");
 if (customerHoursConsumed.length !== 0) {
-    buildLineChart(customerHoursConsumed);
+    buildColumnLineChart(customerHoursConsumed);
 }
 
 const customerThroughputPerPeriod = $("#customer-throughput-column-dashboard");

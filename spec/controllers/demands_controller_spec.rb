@@ -920,7 +920,7 @@ RSpec.describe DemandsController, type: :controller do
             expect(assigns(:status_report_data)).to be_a Highchart::StatusReportChartsAdapter
             expect(assigns(:demands_left)).to match_array [first_demand, second_demand]
             expect(assigns(:demands_delivered)).to eq []
-            expect(assigns(:throughput_per_period)).to eq []
+            expect(assigns(:throughput_per_period)).to eq [0]
             expect(response).to render_template 'demands/montecarlo_dialog'
           end
         end
