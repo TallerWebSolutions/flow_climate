@@ -45,7 +45,7 @@ class Customer < ApplicationRecord
     devise_customers << devise_customer
   end
 
-  def exclusives_demands_to_customer
+  def exclusives_demands
     exclusive_demands_ids = (exclusive_projects.map(&:demands).flatten.map(&:id) + demands.map(&:id)).uniq
     Demand.where(id: exclusive_demands_ids)
   end
@@ -64,5 +64,13 @@ class Customer < ApplicationRecord
 
   def remaining_money(end_date = Time.zone.today.end_of_day)
     exclusive_projects.map { |project| project.remaining_money(end_date) }.compact.sum
+  end
+
+  def larger_lead_times(number_of_weeks, number_of_records)
+    if number_of_weeks <= 0
+      exclusives_demands.kept.finished_with_leadtime.order(leadtime: :desc).first(number_of_records)
+    else
+      exclusives_demands.kept.finished_with_leadtime.where('end_date >= :limit_date', limit_date: number_of_weeks.weeks.ago).order(leadtime: :desc).first(number_of_records)
+    end
   end
 end

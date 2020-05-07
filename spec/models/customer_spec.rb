@@ -129,7 +129,7 @@ RSpec.describe Customer, type: :model do
     it { expect(customer.active_exclusive_projects).to match_array [first_project, third_project] }
   end
 
-  describe '#exclusives_demands_to_customer' do
+  describe '#exclusives_demands' do
     let(:company) { Fabricate :company }
     let(:customer) { Fabricate :customer, company: company }
     let(:other_customer) { Fabricate :customer, company: company }
@@ -148,6 +148,24 @@ RSpec.describe Customer, type: :model do
     let!(:sixth_demand) { Fabricate :demand, customer: other_customer }
     let!(:seventh_demand) { Fabricate :demand, customer: customer, project: second_project }
 
-    it { expect(customer.exclusives_demands_to_customer).to match_array [first_demand, second_demand, third_demand, fourth_demand, seventh_demand] }
+    it { expect(customer.exclusives_demands).to match_array [first_demand, second_demand, third_demand, fourth_demand, seventh_demand] }
+  end
+
+  describe '#larger_lead_times' do
+    let(:company) { Fabricate :company }
+
+    let(:project) { Fabricate :project }
+    let(:other_project) { Fabricate :project }
+
+    let(:customer) { Fabricate :customer, company: company }
+    let(:other_customer) { Fabricate :customer, company: company }
+
+    let!(:first_demand) { Fabricate :demand, customer: customer, project: project, demand_type: :feature, created_date: 3.weeks.ago, commitment_date: 17.days.ago, end_date: 2.weeks.ago }
+    let!(:second_demand) { Fabricate :demand, customer: customer, project: project, demand_type: :bug, created_date: 2.weeks.ago, commitment_date: 18.days.ago, end_date: 1.week.ago }
+    let!(:third_demand) { Fabricate :demand, customer: customer, project: other_project, demand_type: :bug, created_date: 1.week.ago, commitment_date: 4.days.ago, end_date: 2.days.ago }
+    let!(:fourth_demand) { Fabricate :demand, customer: other_customer, project: other_project, demand_type: :bug, created_date: 1.week.ago, commitment_date: 4.days.ago, end_date: 2.days.ago }
+
+    it { expect(customer.larger_lead_times(0, 3)).to eq [second_demand, first_demand, third_demand] }
+    it { expect(customer.larger_lead_times(1, 2)).to eq [third_demand] }
   end
 end

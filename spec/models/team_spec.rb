@@ -294,6 +294,7 @@ RSpec.describe Team, type: :model do
     let!(:first_demand) { Fabricate :demand, team: team, project: project, demand_type: :feature, created_date: 3.weeks.ago, commitment_date: 17.days.ago, end_date: 2.weeks.ago }
     let!(:second_demand) { Fabricate :demand, team: team, project: project, demand_type: :bug, created_date: 2.weeks.ago, commitment_date: 18.days.ago, end_date: 1.week.ago }
     let!(:third_demand) { Fabricate :demand, team: team, project: other_project, demand_type: :bug, created_date: 1.week.ago, commitment_date: 4.days.ago, end_date: 2.days.ago }
+    let!(:fourth_demand) { Fabricate :demand, team: other_team, project: other_project, demand_type: :bug, created_date: 1.week.ago, commitment_date: 4.days.ago, end_date: 2.days.ago }
 
     it { expect(team.larger_lead_times(0, 3)).to eq [second_demand, first_demand, third_demand] }
     it { expect(team.larger_lead_times(1, 2)).to eq [third_demand] }
