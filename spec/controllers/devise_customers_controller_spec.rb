@@ -20,6 +20,7 @@ RSpec.describe DeviseCustomersController, type: :controller do
 
         it 'renders the no data layout' do
           expect(CustomerDashboardData).to(receive(:new).once.and_call_original)
+          expect(Highchart::DemandsChartsAdapter).to(receive(:new).once.and_call_original)
           get :home
 
           expect(response).to render_template 'devise_customers/home'

@@ -59,6 +59,8 @@ pt-BR:
         membership:
           team_member:
             already_existent_active: "Você deveria ter apenas uma associação ativa no time para o membro do time"
+        demand_score_matrix:
+          uniqueness: "Você pode ter apenas uma resposta para esta demanda."
     models:
       user:
         one: Usuário
@@ -177,6 +179,18 @@ pt-BR:
       contract:
         one: Contrato
         other: Contratos
+      score_matrix:
+        one: Matriz de Pontuação
+        other: Matrizes de Pontuação
+      score_matrix_question:
+        one: Pergunta da Matriz
+        other: Perguntas da Matriz
+      score_matrix_answer:
+        one: Resposta da Matriz
+        other: Respostas da Matriz
+      demand_score_matrix:
+        one: Matriz de Pontuação da Demanda
+        other: Matrizes de Pontuação da Demanda
     attributes:
       user:
         first_name: Nome
@@ -630,6 +644,22 @@ pt-BR:
           renewal_period:
             monthly: Mensalmente
             yearly: Anualmente
+      score_matrix:
+        product: Produto
+        score_matrix_questions: Perguntas da Matriz
+      score_matrix_question:
+        score_matrix: Matriz de Pontuação
+        score_matrix_answers: Respostas da Matriz
+        enum:
+          question_type:
+            customer_dimension: Dimensão do Cliente
+            service_provider_dimension: Dimensão do Provedor de Serviços
+      score_matrix_answer:
+        score_matrix_question: Pergunta da Matriz
+        answer_value: Valor da Resposta
+        description: Descrição
+      demand_score_matrix:
+        score_matrix_question: Pergunta da Matriz
   product:
     name:
       uniqueness: "Não deve repetir nome de produto para o mesmo cliente."
