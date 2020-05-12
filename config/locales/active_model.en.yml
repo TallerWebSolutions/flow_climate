@@ -205,7 +205,7 @@ en:
           team_member:
             already_existent_active: "You should have only one active membership to the same team to team member"
         demand_score_matrix:
-          uniqueness: "You can have only one answer for this demand."
+          already_answered: "Already answered question."
     models:
       jira/jira_account: "Jira Accounts"
       portfolio_unit:

@@ -13,6 +13,7 @@ RSpec.describe Product, type: :model do
     it { is_expected.to have_many(:risk_reviews).dependent(:destroy) }
     it { is_expected.to have_many(:service_delivery_reviews).dependent(:destroy) }
     it { is_expected.to have_many(:contracts).dependent(:restrict_with_error) }
+    it { is_expected.to have_one(:score_matrix).dependent(:destroy) }
   end
 
   context 'validations' do
@@ -55,6 +56,7 @@ RSpec.describe Product, type: :model do
   context 'delegations' do
     it { is_expected.to delegate_method(:name).to(:customer).with_prefix }
     it { is_expected.to delegate_method(:company).to(:customer) }
+    it { is_expected.to delegate_method(:score_matrix_questions).to(:score_matrix) }
   end
 
   describe '#active_projects' do

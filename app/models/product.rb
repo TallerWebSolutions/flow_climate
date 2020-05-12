@@ -37,12 +37,14 @@ class Product < ApplicationRecord
   has_many :risk_reviews, dependent: :destroy
   has_many :service_delivery_reviews, dependent: :destroy
   has_many :contracts, dependent: :restrict_with_error
+  has_one :score_matrix, dependent: :destroy
 
   validates :name, :customer, presence: true
   validates :name, uniqueness: { scope: :customer, message: I18n.t('product.name.uniqueness') }
 
   delegate :name, to: :customer, prefix: true
   delegate :company, to: :customer, prefix: false
+  delegate :score_matrix_questions, to: :score_matrix, prefix: false, allow_nil: true
 
   def percentage_complete
     return 0 unless demands.count.positive?

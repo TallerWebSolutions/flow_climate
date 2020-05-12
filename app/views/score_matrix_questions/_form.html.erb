@@ -1,0 +1,26 @@
+<div class="row">
+  <div class="col-xs-4">
+    <div class="form-group">
+      <%= form.label :question_type %>
+      <%= form.select :question_type, ScoreMatrixQuestion.question_types.map { |key, _value| [I18n.t("activerecord.attributes.score_matrix_question.enums.question_type.#{key}"), key] }, { include_blank: I18n.t('general.select'), selected: score_matrix_question.question_type }, class: 'form-control' %>
+    </div>
+  </div>
+  <div class="col-xs-2">
+    <div class="form-group">
+      <%= form.label :question_weight %>
+      <%= form.number_field :question_weight, class: 'form-control', step: 1 %>
+    </div>
+  </div>
+  <div class='col-xs-6 form-group <%= 'has-error' if score_matrix_question.errors[:description].present? %>'>
+    <%= form.label :description, class: 'control-label required' %>
+    <%= form.text_field :description, class: 'form-control', value: score_matrix_question.description %>
+    <span class="help-block"><%= score_matrix_question.errors[:description].join(', ') %></span>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-xs-12">
+    <%= form.submit I18n.t('general.buttons.save'), class: 'btn btn-success' %>
+    <%= link_to I18n.t('general.buttons.cancel'), '#', class: 'btn btn-danger', id: 'cancel-form-portfolio-unit' %>
+  </div>
+</div>

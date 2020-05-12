@@ -1997,7 +1997,8 @@ CREATE TABLE public.score_matrix_questions (
     question_type integer DEFAULT 0 NOT NULL,
     description character varying NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    question_weight integer NOT NULL
 );
 
 
@@ -3514,13 +3515,6 @@ CREATE UNIQUE INDEX demand_member_start_time_unique ON public.item_assignments U
 --
 
 CREATE UNIQUE INDEX idx_customers_devise_customer_unique ON public.customers_devise_customers USING btree (customer_id, devise_customer_id);
-
-
---
--- Name: idx_demand_score_matrices_unique; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX idx_demand_score_matrices_unique ON public.demand_score_matrices USING btree (demand_id, user_id, score_matrix_answer_id);
 
 
 --
@@ -5329,6 +5323,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200423211631'),
 ('20200430140032'),
 ('20200504193716'),
-('20200507203439');
+('20200507203439'),
+('20200511192312');
 
 

@@ -589,6 +589,9 @@ en:
     statistics:
       montecarlo:
         title: "Monte Carlo (Product)"
+    show:
+      score_matrices:
+        answers: "Possible Answers"
   customers:
     new:
       title: "New Customer"
@@ -1072,6 +1075,10 @@ en:
           renewal_period:
             monthly: "Monthly"
             yearly: "Yearly"
+      score_matrix_question:
+        enum:
+          question_type:
+            service_provider_dimension: "Service Provider Dimension"
     models:
       demand_comment:
         other: "Demand Comments"
@@ -1257,3 +1264,8 @@ en:
       success: "Contract created."
     update:
       success: "Contract updated."
+  score_matrix_questions:
+    create:
+      success: "Score matrix question created."
+    update:
+      success: "Score question updated."

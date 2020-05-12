@@ -31,5 +31,16 @@ class DemandScoreMatrix < ApplicationRecord
 
   validates :user, :demand, :score_matrix_answer, presence: true
 
-  validates :demand, uniqueness: { scope: %i[user demand score_matrix_answer], message: I18n.t('activerecord.errors.models.demand_score_matrix.uniqueness') }
+  validate :already_answered_question
+
+  private
+
+  def already_answered_question
+    return if score_matrix_answer.blank? || demand.blank? || user.blank?
+
+    answers = DemandScoreMatrix.joins(score_matrix_answer: :score_matrix_question).where(demand: demand).where(score_matrix_answers: { score_matrix_question: score_matrix_answer.score_matrix_question })
+    return if answers.blank?
+
+    errors.add(:demand, I18n.t('activerecord.errors.models.demand_score_matrix.already_answered'))
+  end
 end

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe PortfolioUnitsController, type: :controller do
+RSpec.describe ScoreMatrixQuestionsController, type: :controller do
   context 'unauthenticated' do
     describe 'GET #new' do
       before { get :new, params: { company_id: 'bar', product_id: 'foo' } }
@@ -49,22 +49,18 @@ RSpec.describe PortfolioUnitsController, type: :controller do
     let(:company) { Fabricate :company, users: [user] }
     let(:customer) { Fabricate :customer, company: company }
     let(:product) { Fabricate :product, customer: customer }
+    let(:score_matrix) { Fabricate :score_matrix, product: product }
 
     describe 'GET #new' do
-      let!(:portfolio_unit) { Fabricate :portfolio_unit, product: product, name: 'zzz' }
-      let!(:other_portfolio_unit) { Fabricate :portfolio_unit, product: product, name: 'aaa' }
-
-      let!(:out_portfolio_unit) { Fabricate :portfolio_unit, name: 'aaa' }
-
       context 'with valid data' do
         it 'assigns the instance variables and render the template' do
           get :new, params: { company_id: company, product_id: product }, xhr: true
+
           expect(assigns(:company)).to eq company
           expect(assigns(:product)).to eq product
-          expect(assigns(:portfolio_unit)).to be_a_new PortfolioUnit
-          expect(assigns(:portfolio_units)).to eq [other_portfolio_unit, portfolio_unit]
-          expect(assigns(:parent_portfolio_units)).to eq [other_portfolio_unit, portfolio_unit]
-          expect(response).to render_template 'portfolio_units/new'
+          expect(assigns(:score_matrix_question)).to be_a_new ScoreMatrixQuestion
+          expect(assigns(:score_matrix_question).score_matrix).to be_a ScoreMatrix
+          expect(response).to render_template 'score_matrix_questions/new'
         end
       end
 
@@ -100,32 +96,31 @@ RSpec.describe PortfolioUnitsController, type: :controller do
     end
 
     describe 'POST #create' do
-      let!(:portfolio_unit) { Fabricate :portfolio_unit, product: product, name: 'zzz' }
-
       context 'with valid data' do
         it 'creates the portfolio unit and renders the template' do
-          post :create, params: { company_id: company, product_id: product, portfolio_unit: { parent_id: portfolio_unit.id, name: 'bla', portfolio_unit_type: :product_module, jira_portfolio_unit_config_attributes: { jira_field_name: 'foo' } } }, xhr: true
-          created_unit = PortfolioUnit.last
-          expect(created_unit.name).to eq 'bla'
-          expect(created_unit.product_module?).to be true
-          expect(created_unit.parent).to eq portfolio_unit
+          post :create, params: { company_id: company, product_id: product, score_matrix_question: { description: 'bla', question_type: :service_provider_dimension, question_weight: 10 } }, xhr: true
 
-          created_jira_config = Jira::JiraPortfolioUnitConfig.last
-          expect(created_jira_config.jira_field_name).to eq 'foo'
-          expect(assigns(:portfolio_units)).to eq [created_unit, portfolio_unit]
-          expect(assigns(:parent_portfolio_units)).to be_nil
+          created_question = ScoreMatrixQuestion.last
 
-          expect(response).to render_template 'portfolio_units/create'
+          expect(created_question.score_matrix).to be_a ScoreMatrix
+          expect(created_question.question_type).to eq 'service_provider_dimension'
+          expect(created_question.description).to eq 'bla'
+          expect(created_question.question_weight).to eq 10
+
+          expect(flash[:notice]).to eq I18n.t('score_matrix_questions.create.success')
+
+          expect(response).to redirect_to company_product_path(company, product)
         end
       end
 
       context 'with invalid' do
         context 'parameters' do
           it 'adds errors to the model and to flash' do
-            post :create, params: { company_id: company, product_id: product, portfolio_unit: { name: '', portfolio_unit_type: nil, jira_portfolio_unit_config_attributes: { jira_field_name: '' } } }, xhr: true
+            post :create, params: { company_id: company, product_id: product, score_matrix_question: { description: nil, question_type: nil, question_weight: nil } }, xhr: true
 
-            expect(assigns(:portfolio_unit).errors.full_messages).to eq ['Tipo da Unidade não pode ficar em branco', 'Nome não pode ficar em branco']
-            expect(flash[:error]).to eq 'Tipo da Unidade não pode ficar em branco, Nome não pode ficar em branco'
+            expect(assigns(:score_matrix_question).errors.full_messages).to eq ['Descrição não pode ficar em branco', 'Tipo não pode ficar em branco', 'Peso não pode ficar em branco']
+            expect(flash[:error]).to eq 'Descrição não pode ficar em branco, Tipo não pode ficar em branco, Peso não pode ficar em branco'
+            expect(response).to render_template 'score_matrix_questions/new'
           end
         end
 
@@ -160,14 +155,14 @@ RSpec.describe PortfolioUnitsController, type: :controller do
     end
 
     describe 'DELETE #destroy' do
-      let!(:portfolio_unit) { Fabricate :portfolio_unit, product: product }
+      let!(:score_matrix_question) { Fabricate :score_matrix_question, score_matrix: score_matrix }
 
       context 'valid parameters' do
-        before { delete :destroy, params: { company_id: company, product_id: product, id: portfolio_unit }, xhr: true }
+        before { delete :destroy, params: { company_id: company, product_id: product, id: score_matrix_question }, xhr: true }
 
-        it 'deletes the portfolio unit' do
-          expect(response).to render_template 'portfolio_units/destroy'
-          expect(PortfolioUnit.last).to be_nil
+        it 'deletes the score matrix' do
+          expect(response).to render_template 'score_matrix_questions/destroy'
+          expect(ScoreMatrixQuestion.last).to be_nil
         end
       end
 
@@ -179,13 +174,13 @@ RSpec.describe PortfolioUnitsController, type: :controller do
         end
 
         context 'non-existent product' do
-          before { delete :destroy, params: { company_id: company, product_id: 'foo', id: portfolio_unit }, xhr: true }
+          before { delete :destroy, params: { company_id: company, product_id: 'foo', id: score_matrix_question }, xhr: true }
 
           it { expect(response).to have_http_status :not_found }
         end
 
         context 'non-existent company' do
-          before { delete :destroy, params: { company_id: 'foo', product_id: product, id: portfolio_unit }, xhr: true }
+          before { delete :destroy, params: { company_id: 'foo', product_id: product, id: score_matrix_question }, xhr: true }
 
           it { expect(response).to have_http_status :not_found }
         end
@@ -193,7 +188,7 @@ RSpec.describe PortfolioUnitsController, type: :controller do
         context 'not-permitted company' do
           let(:company) { Fabricate :company, users: [] }
 
-          before { delete :destroy, params: { company_id: company, product_id: product, id: portfolio_unit }, xhr: true }
+          before { delete :destroy, params: { company_id: company, product_id: product, id: score_matrix_question }, xhr: true }
 
           it { expect(response).to have_http_status :not_found }
         end
@@ -201,35 +196,34 @@ RSpec.describe PortfolioUnitsController, type: :controller do
     end
 
     describe 'GET #show' do
-      let!(:portfolio_unit) { Fabricate :portfolio_unit, product: product, name: 'zzz' }
-      let!(:other_portfolio_unit) { Fabricate :portfolio_unit, product: product, name: 'aaa' }
+      let(:score_matrix_question) { Fabricate :score_matrix_question, score_matrix: score_matrix }
 
-      let!(:out_portfolio_unit) { Fabricate :portfolio_unit, name: 'aaa' }
+      let!(:score_matrix_answer) { Fabricate :score_matrix_answer, score_matrix_question: score_matrix_question, answer_value: 1 }
+      let!(:other_score_matrix_answer) { Fabricate :score_matrix_answer, score_matrix_question: score_matrix_question, answer_value: 0 }
 
-      let!(:demand) { Fabricate :demand, portfolio_unit: portfolio_unit, end_date: 2.days.ago }
-      let!(:other_demand) { Fabricate :demand, portfolio_unit: portfolio_unit, end_date: 1.day.ago }
+      let!(:out_score_matrix_answer) { Fabricate :score_matrix_answer }
 
       context 'with valid data' do
         it 'assigns the instance variables and render the template' do
-          get :show, params: { company_id: company, product_id: product, id: portfolio_unit }, xhr: true
+          get :show, params: { company_id: company, product_id: product, id: score_matrix_question }, xhr: true
+
           expect(assigns(:company)).to eq company
           expect(assigns(:product)).to eq product
-          expect(assigns(:portfolio_unit)).to eq portfolio_unit
-          expect(assigns(:demands)).to eq [other_demand, demand]
-          expect(assigns(:demands_chart_adapter)).to be_a Highchart::DemandsChartsAdapter
-          expect(response).to render_template 'portfolio_units/show'
+          expect(assigns(:score_matrix_question)).to eq score_matrix_question
+          expect(assigns(:score_matrix_answers)).to eq [other_score_matrix_answer, score_matrix_answer]
+          expect(response).to render_template 'score_matrix_questions/show'
         end
       end
 
       context 'with invalid' do
-        context 'portfolio_unit' do
+        context 'score_matrix_question' do
           before { get :show, params: { company_id: company, product_id: product, id: 'foo' }, xhr: true }
 
           it { expect(response).to have_http_status :not_found }
         end
 
         context 'product' do
-          before { get :show, params: { company_id: company, product_id: 'foo', id: portfolio_unit }, xhr: true }
+          before { get :show, params: { company_id: company, product_id: 'foo', id: score_matrix_question }, xhr: true }
 
           it { expect(response).to have_http_status :not_found }
         end
@@ -237,13 +231,13 @@ RSpec.describe PortfolioUnitsController, type: :controller do
         context 'product in other company' do
           let(:other_product) { Fabricate :product }
 
-          before { get :show, params: { company_id: company, product_id: other_product, id: portfolio_unit }, xhr: true }
+          before { get :show, params: { company_id: company, product_id: other_product, id: score_matrix_question }, xhr: true }
 
           it { expect(response).to have_http_status :not_found }
         end
 
         context 'company' do
-          before { get :show, params: { company_id: 'foo', product_id: product, id: portfolio_unit }, xhr: true }
+          before { get :show, params: { company_id: 'foo', product_id: product, id: score_matrix_question }, xhr: true }
 
           it { expect(response).to have_http_status :not_found }
         end
@@ -259,20 +253,15 @@ RSpec.describe PortfolioUnitsController, type: :controller do
     end
 
     describe 'GET #edit' do
-      let!(:portfolio_unit) { Fabricate :portfolio_unit, product: product, name: 'zzz' }
-      let!(:other_portfolio_unit) { Fabricate :portfolio_unit, product: product, name: 'aaa' }
-
-      let!(:out_portfolio_unit) { Fabricate :portfolio_unit, name: 'aaa' }
+      let!(:score_matrix_question) { Fabricate :score_matrix_question, score_matrix: score_matrix, description: 'zzz' }
 
       context 'with valid data' do
         it 'assigns the instance variables and render the template' do
-          get :edit, params: { company_id: company, product_id: product, id: portfolio_unit }, xhr: true
+          get :edit, params: { company_id: company, product_id: product, id: score_matrix_question }, xhr: true
           expect(assigns(:company)).to eq company
           expect(assigns(:product)).to eq product
-          expect(assigns(:portfolio_unit)).to eq portfolio_unit
-          expect(assigns(:portfolio_units)).to eq [other_portfolio_unit, portfolio_unit]
-          expect(assigns(:parent_portfolio_units)).to eq [other_portfolio_unit]
-          expect(response).to render_template 'portfolio_units/edit'
+          expect(assigns(:score_matrix_question)).to eq score_matrix_question
+          expect(response).to render_template 'score_matrix_questions/edit'
         end
       end
 
@@ -284,7 +273,7 @@ RSpec.describe PortfolioUnitsController, type: :controller do
         end
 
         context 'product' do
-          before { get :edit, params: { company_id: company, product_id: 'foo', id: portfolio_unit }, xhr: true }
+          before { get :edit, params: { company_id: company, product_id: 'foo', id: score_matrix_question }, xhr: true }
 
           it { expect(response).to have_http_status :not_found }
         end
@@ -292,13 +281,13 @@ RSpec.describe PortfolioUnitsController, type: :controller do
         context 'product in other company' do
           let(:other_product) { Fabricate :product }
 
-          before { get :edit, params: { company_id: company, product_id: other_product, id: portfolio_unit }, xhr: true }
+          before { get :edit, params: { company_id: company, product_id: other_product, id: score_matrix_question }, xhr: true }
 
           it { expect(response).to have_http_status :not_found }
         end
 
         context 'company' do
-          before { get :edit, params: { company_id: 'foo', product_id: product, id: portfolio_unit }, xhr: true }
+          before { get :edit, params: { company_id: 'foo', product_id: product, id: score_matrix_question }, xhr: true }
 
           it { expect(response).to have_http_status :not_found }
         end
@@ -306,7 +295,7 @@ RSpec.describe PortfolioUnitsController, type: :controller do
         context 'unpermitted company' do
           let(:other_company) { Fabricate :company }
 
-          before { get :edit, params: { company_id: other_company, product_id: product, id: portfolio_unit }, xhr: true }
+          before { get :edit, params: { company_id: other_company, product_id: product, id: score_matrix_question }, xhr: true }
 
           it { expect(response).to have_http_status :not_found }
         end
@@ -314,36 +303,30 @@ RSpec.describe PortfolioUnitsController, type: :controller do
     end
 
     describe 'PUT #update' do
-      let!(:parent_portfolio_unit) { Fabricate :portfolio_unit, product: product, name: 'aaa' }
-      let!(:portfolio_unit) { Fabricate :portfolio_unit, product: product, name: 'zzz' }
+      let!(:score_matrix_question) { Fabricate :score_matrix_question, score_matrix: score_matrix, description: 'zzz' }
 
       context 'with valid data' do
         it 'updates the portfolio unit and renders the template' do
-          put :update, params: { company_id: company, product_id: product, id: portfolio_unit, portfolio_unit: { parent_id: parent_portfolio_unit.id, name: 'bla', portfolio_unit_type: :product_module, jira_portfolio_unit_config_attributes: { jira_field_name: 'foo' } } }, xhr: true
-          updated_unit = PortfolioUnit.last
-          expect(updated_unit.name).to eq 'bla'
-          expect(updated_unit.product_module?).to be true
-          expect(updated_unit.parent).to eq parent_portfolio_unit
+          put :update, params: { company_id: company, product_id: product, id: score_matrix_question, score_matrix_question: { description: 'bla', question_type: :service_provider_dimension, question_weight: 10 } }, xhr: true
 
-          updated_jira_config = Jira::JiraPortfolioUnitConfig.last
-          expect(updated_jira_config.jira_field_name).to eq 'foo'
-          expect(assigns(:portfolio_units)).to eq [parent_portfolio_unit, portfolio_unit]
-          expect(assigns(:parent_portfolio_units)).to be_nil
+          updated_question = ScoreMatrixQuestion.last
+          expect(updated_question.score_matrix).to be_a ScoreMatrix
+          expect(updated_question.question_type).to eq 'service_provider_dimension'
+          expect(updated_question.description).to eq 'bla'
+          expect(updated_question.question_weight).to eq 10
 
-          expect(response).to render_template 'portfolio_units/update'
+          expect(response).to redirect_to company_product_path(company, product)
         end
       end
 
       context 'with invalid' do
         context 'parameters' do
           it 'adds errors to the model and to flash' do
-            put :update, params: { company_id: company, product_id: product, id: portfolio_unit, portfolio_unit: { name: '', portfolio_unit_type: nil, jira_portfolio_unit_config_attributes: { jira_field_name: '' } } }, xhr: true
+            put :update, params: { company_id: company, product_id: product, id: score_matrix_question, score_matrix_question: { description: nil, question_type: nil, question_weight: nil } }, xhr: true
 
-            expect(assigns(:portfolio_units)).to eq [parent_portfolio_unit, portfolio_unit]
-            expect(assigns(:parent_portfolio_units)).to eq [parent_portfolio_unit]
-
-            expect(assigns(:portfolio_unit).errors.full_messages).to eq ['Tipo da Unidade não pode ficar em branco', 'Nome não pode ficar em branco']
-            expect(flash[:error]).to eq 'Tipo da Unidade não pode ficar em branco, Nome não pode ficar em branco'
+            expect(assigns(:score_matrix_question).errors.full_messages).to eq ['Descrição não pode ficar em branco', 'Tipo não pode ficar em branco', 'Peso não pode ficar em branco']
+            expect(flash[:error]).to eq 'Descrição não pode ficar em branco, Tipo não pode ficar em branco, Peso não pode ficar em branco'
+            expect(response).to render_template 'score_matrix_questions/edit'
           end
         end
 
@@ -354,7 +337,7 @@ RSpec.describe PortfolioUnitsController, type: :controller do
         end
 
         context 'product' do
-          before { put :update, params: { company_id: company, product_id: 'foo', id: portfolio_unit }, xhr: true }
+          before { put :update, params: { company_id: company, product_id: 'foo', id: score_matrix_question }, xhr: true }
 
           it { expect(response).to have_http_status :not_found }
         end
@@ -362,13 +345,13 @@ RSpec.describe PortfolioUnitsController, type: :controller do
         context 'product in other company' do
           let(:other_product) { Fabricate :product }
 
-          before { put :update, params: { company_id: company, product_id: other_product, id: portfolio_unit }, xhr: true }
+          before { put :update, params: { company_id: company, product_id: other_product, id: score_matrix_question }, xhr: true }
 
           it { expect(response).to have_http_status :not_found }
         end
 
         context 'company' do
-          before { put :update, params: { company_id: 'foo', product_id: product, id: portfolio_unit }, xhr: true }
+          before { put :update, params: { company_id: 'foo', product_id: product, id: score_matrix_question }, xhr: true }
 
           it { expect(response).to have_http_status :not_found }
         end
@@ -376,7 +359,7 @@ RSpec.describe PortfolioUnitsController, type: :controller do
         context 'unpermitted company' do
           let(:other_company) { Fabricate :company }
 
-          before { put :update, params: { company_id: other_company, product_id: product, id: portfolio_unit }, xhr: true }
+          before { put :update, params: { company_id: other_company, product_id: product, id: score_matrix_question }, xhr: true }
 
           it { expect(response).to have_http_status :not_found }
         end

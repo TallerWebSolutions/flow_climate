@@ -14,5 +14,6 @@ RSpec.describe ScoreMatrixQuestion, type: :model do
     it { is_expected.to validate_presence_of :question_type }
     it { is_expected.to validate_presence_of :description }
     it { is_expected.to validate_presence_of :score_matrix }
+    it { is_expected.to validate_presence_of :question_weight }
   end
 end
