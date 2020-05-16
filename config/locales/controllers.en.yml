@@ -1269,3 +1269,6 @@ en:
       success: "Score matrix question created."
     update:
       success: "Score question updated."
+  score_matrix_answers:
+    create:
+      success: "Answer created."

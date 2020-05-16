@@ -1248,3 +1248,6 @@ pt-BR:
       success: "Pergunta de pontuação criada."
     update:
       success: "Pergunta de pontuação atualizada."
+  score_matrix_answers:
+    create:
+      success: "Resposta criada."

@@ -206,6 +206,8 @@ en:
             already_existent_active: "You should have only one active membership to the same team to team member"
         demand_score_matrix:
           already_answered: "Already answered question."
+        score_matrix_answer:
+          value_already_used: "Value already used."
     models:
       jira/jira_account: "Jira Accounts"
       portfolio_unit:

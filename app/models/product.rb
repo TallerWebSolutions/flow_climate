@@ -44,7 +44,6 @@ class Product < ApplicationRecord
 
   delegate :name, to: :customer, prefix: true
   delegate :company, to: :customer, prefix: false
-  delegate :score_matrix_questions, to: :score_matrix, prefix: false, allow_nil: true
 
   def percentage_complete
     return 0 unless demands.count.positive?
@@ -62,5 +61,11 @@ class Product < ApplicationRecord
 
   def total_hours
     total_portfolio_demands.sum(&:total_effort)
+  end
+
+  def score_matrix_questions
+    return score_matrix.score_matrix_questions if score_matrix.present?
+
+    ScoreMatrixQuestion.none
   end
 end

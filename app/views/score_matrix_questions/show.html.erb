@@ -9,3 +9,8 @@
   </div>
 </div>
 
+<h2><%= @score_matrix_question.description %></h2>
+
+<div id="score-matrix-answers-table">
+  <%= render 'score_matrix_answers/score_matrix_answers_table', company: @company, product: @product, score_matrix_question: @score_matrix_question, score_matrix_answer: @score_matrix_answer, score_matrix_answers: @score_matrix_answers %>
+</div>

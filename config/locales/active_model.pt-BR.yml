@@ -61,6 +61,8 @@ pt-BR:
             already_existent_active: "Você deveria ter apenas uma associação ativa no time para o membro do time"
         demand_score_matrix:
           already_answered: "Esta pergunta já foi respondida."
+        score_matrix_answer:
+          value_already_used: "Valor já usado."
     models:
       user:
         one: Usuário

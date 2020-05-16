@@ -14,6 +14,7 @@ class ProductsController < AuthenticatedController
 
   def show
     @jira_product_configs = @product.jira_product_configs.order(:jira_product_key)
+    @score_matrix_questions = @product.score_matrix_questions.order(:question_type, :question_weight, :description)
     assign_filter_parameters_to_charts
     assign_demands_ids
 

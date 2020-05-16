@@ -157,12 +157,18 @@ RSpec.describe ScoreMatrixQuestionsController, type: :controller do
     describe 'DELETE #destroy' do
       let!(:score_matrix_question) { Fabricate :score_matrix_question, score_matrix: score_matrix }
 
+      let!(:first_score_matrix_question) { Fabricate :score_matrix_question, score_matrix: score_matrix, question_type: :customer_dimension, question_weight: 10, description: 'first_question' }
+      let!(:second_score_matrix_question) { Fabricate :score_matrix_question, score_matrix: score_matrix, question_type: :service_provider_dimension, question_weight: 20, description: 'second_question' }
+      let!(:third_score_matrix_question) { Fabricate :score_matrix_question, score_matrix: score_matrix, question_type: :service_provider_dimension, question_weight: 20, description: 'third_question' }
+      let!(:fourth_score_matrix_question) { Fabricate :score_matrix_question, score_matrix: score_matrix, question_type: :service_provider_dimension, question_weight: 5, description: 'fourth_question' }
+
       context 'valid parameters' do
         before { delete :destroy, params: { company_id: company, product_id: product, id: score_matrix_question }, xhr: true }
 
         it 'deletes the score matrix' do
           expect(response).to render_template 'score_matrix_questions/destroy'
-          expect(ScoreMatrixQuestion.last).to be_nil
+          expect(ScoreMatrixQuestion.all.count).to eq 4
+          expect(assigns(:score_matrix_questions)).to eq [first_score_matrix_question, fourth_score_matrix_question, second_score_matrix_question, third_score_matrix_question]
         end
       end
 

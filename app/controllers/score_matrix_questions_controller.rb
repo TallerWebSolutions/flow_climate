@@ -25,12 +25,13 @@ class ScoreMatrixQuestionsController < AuthenticatedController
 
   def destroy
     @score_matrix_question.destroy
-    @score_matrix_questions = @product.score_matrix_questions.order(:description)
+    @score_matrix_questions = @product.score_matrix_questions.order(:question_type, :question_weight, :description)
     render 'score_matrix_questions/destroy'
   end
 
   def show
     @score_matrix_answers = @score_matrix_question.score_matrix_answers.order(:answer_value)
+    @score_matrix_answer = ScoreMatrixAnswer.new(score_matrix_question: @score_matrix_question)
   end
 
   def edit; end
@@ -58,7 +59,7 @@ class ScoreMatrixQuestionsController < AuthenticatedController
   end
 
   def score_matrix_question_params
-    params.require(:score_matrix_question).permit(:question_weight, :question_type, :description)
+    params.require(:score_matrix_question).permit(:question_weight, :question_type, :description, score_matrix_answers: %i[answer_value description])
   end
 
   def product_score_matrix

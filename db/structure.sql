@@ -3518,6 +3518,13 @@ CREATE UNIQUE INDEX idx_customers_devise_customer_unique ON public.customers_dev
 
 
 --
+-- Name: idx_demand_score_answers_unique; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_demand_score_answers_unique ON public.score_matrix_answers USING btree (answer_value, score_matrix_question_id);
+
+
+--
 -- Name: idx_transitions_unique; Type: INDEX; Schema: public; Owner: -
 --
 
