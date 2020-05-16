@@ -1,0 +1,52 @@
+<% if score_matrix_answers.present? %>
+  <div class="row">
+    <div class="col-xs-12">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th><%= ScoreMatrixAnswer.human_attribute_name :answer_value %></th>
+            <th><%= ScoreMatrixAnswer.human_attribute_name :description %></th>
+            <th></th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <% score_matrix_answers.each do |score_answer| %>
+            <tr>
+              <td><%= score_answer.answer_value %></td>
+              <td><%= score_answer.description %></td>
+              <td>
+                <%= link_to company_product_score_matrix_question_score_matrix_answer_path(company, product, score_matrix_question, score_answer), method: :delete, data: { confirm: I18n.t('general.destroy.confirm') }, remote: true do %>
+                  <i class="fa fa-times"></i>
+                <% end %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+<% end %>
+
+<hr>
+
+<%= form_for [@company, @product, @score_matrix_question, @score_matrix_answer], url: company_product_score_matrix_question_score_matrix_answers_url(@company, @product, @score_matrix_question, @score_matrix_answer) do |form| %>
+  <div class="row">
+    <div class="form-group">
+      <div class="col-xs-6 form-group">
+        <%= form.label :answer_value, class: 'control-label required' %>
+        <%= form.number_field :answer_value, class: 'form-control' %>
+      </div>
+      <div class="col-xs-6 form-group">
+        <%= form.label :description, class: 'control-label required' %>
+        <%= form.text_field :description, class: 'form-control' %>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-xs-12 form-group">
+      <%= form.submit I18n.t('general.buttons.save'), class: 'btn btn-success' %>
+    </div>
+  </div>
+<% end %>

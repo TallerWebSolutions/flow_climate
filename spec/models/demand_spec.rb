@@ -25,6 +25,7 @@ RSpec.describe Demand, type: :model do
 
     it { is_expected.to have_many(:item_assignments).dependent(:destroy) }
     it { is_expected.to have_many(:team_members).through(:item_assignments) }
+    it { is_expected.to have_many(:demand_score_matrices).dependent(:destroy) }
   end
 
   context 'validations' do
@@ -380,6 +381,10 @@ RSpec.describe Demand, type: :model do
   end
 
   context 'computed fields' do
+    before { travel_to Time.zone.local(2019, 10, 17, 10, 0, 0) }
+
+    after { travel_back }
+
     let(:company) { Fabricate :company }
     let(:customer) { Fabricate :customer, company: company }
     let(:product) { Fabricate :product, customer: customer }

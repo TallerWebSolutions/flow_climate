@@ -31,10 +31,16 @@ Style/Documentation:
 Style/AsciiComments:
   Enabled: false
 
+Style/SlicingWithRange:
+  Enabled: true
+
 Rails/HasAndBelongsToMany:
   Enabled: false
 
 Layout/SpaceAroundMethodCallOperator:
+  Enabled: true
+
+Layout/EmptyLinesAroundAttributeAccessor:
   Enabled: true
 
 Style/ExponentialNotation:

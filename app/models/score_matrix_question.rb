@@ -7,6 +7,7 @@
 #  id              :bigint           not null, primary key
 #  description     :string           not null
 #  question_type   :integer          default("customer_dimension"), not null
+#  question_weight :integer          not null
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
 #  score_matrix_id :integer          not null
@@ -26,5 +27,5 @@ class ScoreMatrixQuestion < ApplicationRecord
 
   has_many :score_matrix_answers, dependent: :destroy
 
-  validates :description, :question_type, :score_matrix, presence: true
+  validates :description, :question_type, :score_matrix, :question_weight, presence: true
 end

@@ -658,6 +658,9 @@ pt-BR:
     statistics:
       montecarlo:
         title: "Monte Carlo (Produto)"
+    show:
+      score_matrices:
+        answers: "Respostas Possíveis"
   customers:
     new:
       title: "Novo Cliente"
@@ -1240,3 +1243,11 @@ pt-BR:
       success: "Contrato criado."
     update:
       success: "Contrato atualizado."
+  score_matrix_questions:
+    create:
+      success: "Pergunta de pontuação criada."
+    update:
+      success: "Pergunta de pontuação atualizada."
+  score_matrix_answers:
+    create:
+      success: "Resposta criada."

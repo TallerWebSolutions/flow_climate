@@ -23,4 +23,6 @@ class ScoreMatrixAnswer < ApplicationRecord
   belongs_to :score_matrix_question
 
   validates :score_matrix_question, :description, :answer_value, presence: true
+
+  validates :answer_value, uniqueness: { scope: :score_matrix_question, message: I18n.t('activerecord.errors.models.score_matrix_answer.value_already_used') }
 end

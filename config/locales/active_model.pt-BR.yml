@@ -60,7 +60,9 @@ pt-BR:
           team_member:
             already_existent_active: "Você deveria ter apenas uma associação ativa no time para o membro do time"
         demand_score_matrix:
-          uniqueness: "Você pode ter apenas uma resposta para esta demanda."
+          already_answered: "Esta pergunta já foi respondida."
+        score_matrix_answer:
+          value_already_used: "Valor já usado."
     models:
       user:
         one: Usuário
@@ -183,11 +185,11 @@ pt-BR:
         one: Matriz de Pontuação
         other: Matrizes de Pontuação
       score_matrix_question:
-        one: Pergunta da Matriz
-        other: Perguntas da Matriz
+        one: Pergunta da Matriz de Pontuação
+        other: Perguntas da Matriz de Pontuação
       score_matrix_answer:
-        one: Resposta da Matriz
-        other: Respostas da Matriz
+        one: Resposta da Matriz de Pontuação
+        other: Respostas da Matriz de Pontuação
       demand_score_matrix:
         one: Matriz de Pontuação da Demanda
         other: Matrizes de Pontuação da Demanda
@@ -650,7 +652,10 @@ pt-BR:
       score_matrix_question:
         score_matrix: Matriz de Pontuação
         score_matrix_answers: Respostas da Matriz
-        enum:
+        question_weight: Peso
+        question_type: Tipo
+        description: Descrição
+        enums:
           question_type:
             customer_dimension: Dimensão do Cliente
             service_provider_dimension: Dimensão do Provedor de Serviços

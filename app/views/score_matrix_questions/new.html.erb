@@ -1,0 +1,3 @@
+<%= form_for [@company, @product, @score_matrix_question], url: company_product_score_matrix_questions_url(@company, @product, @score_matrix_question), class: 'form' do |f| %>
+  <%= render 'score_matrix_questions/form', form: f, company: @company, product: @product, score_matrix_question: @score_matrix_question %>
+<% end %>

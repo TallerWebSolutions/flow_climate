@@ -37,6 +37,7 @@ class Product < ApplicationRecord
   has_many :risk_reviews, dependent: :destroy
   has_many :service_delivery_reviews, dependent: :destroy
   has_many :contracts, dependent: :restrict_with_error
+  has_one :score_matrix, dependent: :destroy
 
   validates :name, :customer, presence: true
   validates :name, uniqueness: { scope: :customer, message: I18n.t('product.name.uniqueness') }
@@ -60,5 +61,11 @@ class Product < ApplicationRecord
 
   def total_hours
     total_portfolio_demands.sum(&:total_effort)
+  end
+
+  def score_matrix_questions
+    return score_matrix.score_matrix_questions if score_matrix.present?
+
+    ScoreMatrixQuestion.none
   end
 end

@@ -1,0 +1,51 @@
+<div class="row">
+  <div class="col-xs-12 card-title">
+    <h4><%= ScoreMatrixQuestion.model_name.human(count: 2) %>
+      <%= link_to new_company_product_score_matrix_question_path(company, product), class: 'btn btn-primary' do %>
+        Criar
+      <% end %>
+    </h4>
+  </div>
+</div>
+
+<% if score_matrix_questions.present? %>
+  <div class="row">
+    <div class="col-xs-12">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th><%= ScoreMatrixQuestion.human_attribute_name :question_weight %></th>
+            <th><%= ScoreMatrixQuestion.human_attribute_name :question_type %></th>
+            <th><%= ScoreMatrixQuestion.human_attribute_name :description %></th>
+            <th><%= I18n.t('products.show.score_matrices.answers') %></th>
+            <th></th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <% score_matrix_questions.each do |score_question| %>
+            <tr>
+              <td><%= score_question.question_weight %></td>
+              <td><%= I18n.t("activerecord.attributes.score_matrix_question.enums.question_type.#{score_question.question_type}") %></td>
+              <td><%= link_to score_question.description, company_product_score_matrix_question_path(company, product, score_question) %></td>
+              <td><%= score_question.score_matrix_answers.count %></td>
+              <td>
+                <%= link_to edit_company_product_score_matrix_question_path(company, product, score_question) do %>
+                  <i class="fas fa-edit"></i>
+                <% end %>
+                <%= link_to company_product_score_matrix_question_path(company, product, score_question), method: :delete, data: { confirm: I18n.t('general.destroy.confirm') }, remote: true do %>
+                  <i class="fa fa-times"></i>
+                <% end %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+<% else %>
+  <div class="bottom-spaced-component">
+    <%= render 'layouts/no_data', missing_data: ScoreMatrixQuestion.model_name.human(count: 2).downcase %>
+  </div>
+<% end %>

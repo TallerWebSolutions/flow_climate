@@ -1,0 +1,3 @@
+<%= form_for @score_matrix_question, url: company_product_score_matrix_question_path(@company, @product, @score_matrix_question), method: :put, class: 'form' do |f| %>
+  <%= render 'score_matrix_questions/form', form: f, company: @company, product: @product, score_matrix_question: @score_matrix_question %>
+<% end %>

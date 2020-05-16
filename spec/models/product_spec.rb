@@ -13,6 +13,7 @@ RSpec.describe Product, type: :model do
     it { is_expected.to have_many(:risk_reviews).dependent(:destroy) }
     it { is_expected.to have_many(:service_delivery_reviews).dependent(:destroy) }
     it { is_expected.to have_many(:contracts).dependent(:restrict_with_error) }
+    it { is_expected.to have_one(:score_matrix).dependent(:destroy) }
   end
 
   context 'validations' do
@@ -197,6 +198,22 @@ RSpec.describe Product, type: :model do
     context 'with demands' do
       include_context 'consolidations variables data for product'
       it { expect(product.total_hours).to eq 2850 }
+    end
+  end
+
+  describe '#score_matrix_questions' do
+    let(:product) { Fabricate :product }
+
+    context 'with score matrix in the product' do
+      let(:score_matrix) { Fabricate :score_matrix, product: product }
+      let!(:score_matrix_question) { Fabricate :score_matrix_question, score_matrix: score_matrix }
+      let!(:other_score_matrix_question) { Fabricate :score_matrix_question, score_matrix: score_matrix }
+
+      it { expect(product.score_matrix_questions).to match_array [score_matrix_question, other_score_matrix_question] }
+    end
+
+    context 'without score matrix in the product' do
+      it { expect(product.score_matrix_questions).to eq [] }
     end
   end
 end

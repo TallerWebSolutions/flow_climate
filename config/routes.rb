@@ -165,6 +165,10 @@ Rails.application.routes.draw do
       scope :jira do
         resources :jira_product_configs, only: %i[new create destroy], module: 'jira'
       end
+
+      resources :score_matrix_questions, except: :index do
+        resources :score_matrix_answers, only: %i[create destroy]
+      end
     end
 
     resources :projects do
