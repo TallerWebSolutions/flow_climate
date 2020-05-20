@@ -906,17 +906,11 @@ RSpec.describe DemandsController, type: :controller do
     end
 
     describe 'GET #montecarlo_dialog' do
-      before { travel_to Time.zone.local(2019, 1, 24, 10, 0, 0) }
-
-      after { travel_back }
-      
-      let(:company) { Fabricate :company, users: [user] }
-
       context 'with data' do
-        let!(:first_demand) { Fabricate :demand, company: company, created_date: 5.days.ago, commitment_date: 3.days.ago, end_date: 1.day.ago }
-        let!(:second_demand) { Fabricate :demand, company: company, created_date: 6.weeks.ago, commitment_date: 4.weeks.ago, end_date: 2.weeks.ago }
-        let!(:third_demand) { Fabricate :demand, company: company, created_date: 5.weeks.ago, commitment_date: 4.weeks.ago, end_date: nil }
-        let!(:fourth_demand) { Fabricate :demand, company: company, created_date: 1.week.ago, commitment_date: nil, end_date: nil }
+        let!(:first_demand) { Fabricate :demand, company: company, product: product, created_date: 5.days.ago, commitment_date: 3.days.ago, end_date: 1.day.ago }
+        let!(:second_demand) { Fabricate :demand, company: company, product: product, created_date: 6.weeks.ago, commitment_date: 4.weeks.ago, end_date: 2.weeks.ago }
+        let!(:third_demand) { Fabricate :demand, company: company, product: product, created_date: 5.weeks.ago, commitment_date: 4.weeks.ago, end_date: nil }
+        let!(:fourth_demand) { Fabricate :demand, company: company, product: product, created_date: 1.week.ago, commitment_date: nil, end_date: nil }
 
         context 'valid parameters' do
           before { get :montecarlo_dialog, params: { company_id: company, demands_ids: "#{first_demand.id},#{second_demand.id},#{third_demand.id},#{fourth_demand.id}" }, xhr: true }
