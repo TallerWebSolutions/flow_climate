@@ -19,9 +19,9 @@ RSpec.describe Slack::SlackNotificationService, type: :service do
   let!(:first_slack_notifier) { Slack::Notifier.new(first_slack_config.room_webhook) }
 
   context 'having projects to collect data' do
-    let(:project) { Fabricate :project, team: team, company: company, status: :executing, name: 'project' }
+    let!(:project) { Fabricate :project, team: team, company: company, status: :executing, name: 'project' }
 
-    let(:stage) { Fabricate :stage, company: company, stage_stream: :downstream, name: 'stage' }
+    let!(:stage) { Fabricate :stage, company: company, stage_stream: :downstream, name: 'stage' }
     let!(:stage_project_config) { Fabricate :stage_project_config, stage: stage, project: project, max_seconds_in_stage: 1.day }
 
     let!(:first_demand) { Fabricate :demand, team: team, project: project, demand_type: :bug, end_date: 1.week.ago, effort_downstream: 100, effort_upstream: 10 }
