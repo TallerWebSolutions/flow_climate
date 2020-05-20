@@ -11,17 +11,17 @@ RSpec.describe Slack::SlackNotificationService, type: :service do
 
   let!(:company) { Fabricate :company, users: [first_user] }
 
-  let(:team) { Fabricate :team, company: company }
-  let!(:team_member) { Fabricate :team_member, monthly_payment: 10_000, start_date: 5.weeks.ago, end_date: nil }
+  let(:team) { Fabricate :team, company: company, name: 'team' }
+  let!(:team_member) { Fabricate :team_member, monthly_payment: 10_000, start_date: 5.weeks.ago, end_date: nil, name: 'team_member' }
   let!(:membership) { Fabricate :membership, team: team, team_member: team_member, hours_per_month: 120, start_date: 1.month.ago, end_date: nil }
 
   let!(:first_slack_config) { Fabricate :slack_configuration, team: team, info_type: :current_week_throughput, room_webhook: 'http://foo.com' }
   let!(:first_slack_notifier) { Slack::Notifier.new(first_slack_config.room_webhook) }
 
   context 'having projects to collect data' do
-    let(:project) { Fabricate :project, team: team, company: company, status: :executing }
+    let!(:project) { Fabricate :project, team: team, company: company, status: :executing, name: 'project' }
 
-    let(:stage) { Fabricate :stage, company: company, stage_stream: :downstream }
+    let!(:stage) { Fabricate :stage, company: company, stage_stream: :downstream, name: 'stage' }
     let!(:stage_project_config) { Fabricate :stage_project_config, stage: stage, project: project, max_seconds_in_stage: 1.day }
 
     let!(:first_demand) { Fabricate :demand, team: team, project: project, demand_type: :bug, end_date: 1.week.ago, effort_downstream: 100, effort_upstream: 10 }
@@ -78,10 +78,12 @@ RSpec.describe Slack::SlackNotificationService, type: :service do
 
     describe '#notify_failure_load' do
       it 'calls slack notification method' do
-        expect_any_instance_of(Slack::Notifier).to receive(:ping).with(I18n.t('slack_configurations.notifications.failure_load', team_name: team.name, failure_load: number_to_percentage(team.failure_load, precision: 2))).once
-        expect_any_instance_of(Slack::Notifier).to receive(:ping).with(I18n.t('slack_configurations.notifications.project_failure_load', team_name: team.name, project_name: project.name, failure_load: number_to_percentage(project.failure_load, precision: 2))).once
+        slack_notifier = instance_double('Slack::SlackNotifier')
+        expect(Project).to receive(:running) { Project.all }
+        expect(slack_notifier).to receive(:ping).with(I18n.t('slack_configurations.notifications.failure_load', team_name: team.name, failure_load: number_to_percentage(team.failure_load, precision: 2))).once
+        expect(slack_notifier).to receive(:ping).with(I18n.t('slack_configurations.notifications.project_failure_load', team_name: team.name, project_name: project.name, failure_load: number_to_percentage(project.failure_load, precision: 2))).once
 
-        described_class.instance.notify_failure_load(first_slack_notifier, team)
+        described_class.instance.notify_failure_load(slack_notifier, team)
       end
     end
   end
