@@ -906,6 +906,10 @@ RSpec.describe DemandsController, type: :controller do
     end
 
     describe 'GET #montecarlo_dialog' do
+      before { travel_to Time.zone.local(2019, 1, 24, 10, 0, 0) }
+
+      after { travel_back }
+      
       let(:company) { Fabricate :company, users: [user] }
 
       context 'with data' do
