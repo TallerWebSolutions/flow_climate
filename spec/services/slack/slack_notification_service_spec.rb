@@ -78,10 +78,11 @@ RSpec.describe Slack::SlackNotificationService, type: :service do
 
     describe '#notify_failure_load' do
       it 'calls slack notification method' do
-        expect(first_slack_notifier).to receive(:ping).with(I18n.t('slack_configurations.notifications.failure_load', team_name: team.name, failure_load: number_to_percentage(team.failure_load, precision: 2))).once
-        expect(first_slack_notifier).to receive(:ping).with(I18n.t('slack_configurations.notifications.project_failure_load', team_name: team.name, project_name: project.name, failure_load: number_to_percentage(project.failure_load, precision: 2))).once
+        slack_notifier = instance_double('Slack::SlackNotifier')
+        expect(slack_notifier).to receive(:ping).with(I18n.t('slack_configurations.notifications.failure_load', team_name: team.name, failure_load: number_to_percentage(team.failure_load, precision: 2))).once
+        expect(slack_notifier).to receive(:ping).with(I18n.t('slack_configurations.notifications.project_failure_load', team_name: team.name, project_name: project.name, failure_load: number_to_percentage(project.failure_load, precision: 2))).once
 
-        described_class.instance.notify_failure_load(first_slack_notifier, team)
+        described_class.instance.notify_failure_load(slack_notifier, team)
       end
     end
   end
