@@ -6,8 +6,8 @@ class DemandsController < AuthenticatedController
   before_action :user_gold_check
 
   before_action :assign_company
-  before_action :assign_demand, only: %i[edit update show synchronize_jira destroy destroy_physically]
-  before_action :assign_project, except: %i[demands_csv demands_tab search_demands show destroy destroy_physically montecarlo_dialog]
+  before_action :assign_demand, only: %i[edit update show synchronize_jira destroy destroy_physically score_research]
+  before_action :assign_project, except: %i[demands_csv demands_tab search_demands show destroy destroy_physically montecarlo_dialog score_research]
 
   def new
     @demand = Demand.new(project: @project)
@@ -68,7 +68,7 @@ class DemandsController < AuthenticatedController
 
   def demands_csv
     @demands_in_csv = demands.kept.order(end_date: :desc)
-    attributes = %w[id portfolio_unit current_stage project_id external_id demand_title demand_type class_of_service business_score effort_downstream effort_upstream created_date commitment_date end_date]
+    attributes = %w[id portfolio_unit current_stage project_id external_id demand_title demand_type class_of_service demand_score effort_downstream effort_upstream created_date commitment_date end_date]
     demands_csv = CSV.generate(headers: true) do |csv|
       csv << attributes
       @demands_in_csv.each { |demand| csv << demand.csv_array }
@@ -115,6 +115,17 @@ class DemandsController < AuthenticatedController
     respond_to { |format| format.js { render 'demands/montecarlo_dialog' } }
   end
 
+  def score_research
+    ScoreMatrix.create(product: @demand.product) if @demand.product.score_matrix.blank?
+
+    @demand_score_matrix = DemandScoreMatrix.new(user: current_user, demand: @demand)
+    @percentage_answered = DemandScoreMatrixService.instance.percentage_answered(@demand)
+    @current_position_in_backlog = "#{DemandScoreMatrixService.instance.current_position_in_backlog(@demand)}º"
+    @backlog_total = @demand.product.demands.not_started.count
+
+    render 'demands/score_matrix/score_research'
+  end
+
   private
 
   def end_date_to_status_report(demands)
@@ -135,7 +146,7 @@ class DemandsController < AuthenticatedController
   end
 
   def demand_params
-    params.require(:demand).permit(:team_id, :product_id, :customer_id, :external_id, :demand_type, :downstream, :manual_effort, :class_of_service, :effort_upstream, :effort_downstream, :created_date, :commitment_date, :end_date, :business_score, :external_url)
+    params.require(:demand).permit(:team_id, :product_id, :customer_id, :external_id, :demand_type, :downstream, :manual_effort, :class_of_service, :effort_upstream, :effort_downstream, :created_date, :commitment_date, :end_date, :demand_score, :external_url)
   end
 
   def assign_project

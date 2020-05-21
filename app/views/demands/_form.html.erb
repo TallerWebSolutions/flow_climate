@@ -37,10 +37,10 @@
       <span class="help-block"><%= demand.errors[:external_id].join(', ') %></span>
     </div>
 
-    <div class='col-xs-6 form-group <%= 'has-error' if demand.errors[:business_score].present? %>'>
-      <%= form.label :business_score, class: 'control-label' %>
-      <%= form.number_field :business_score, class: 'form-control', step: 0.01 %>
-      <span class="help-block"><%= demand.errors[:business_score].join(', ') %></span>
+    <div class='col-xs-6 form-group <%= 'has-error' if demand.errors[:demand_score].present? %>'>
+      <%= form.label :demand_score, class: 'control-label' %>
+      <%= form.number_field :demand_score, class: 'form-control', step: 0.01 %>
+      <span class="help-block"><%= demand.errors[:demand_score].join(', ') %></span>
     </div>
   </div>
 

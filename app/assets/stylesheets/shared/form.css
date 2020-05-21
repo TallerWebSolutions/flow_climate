@@ -15,7 +15,7 @@
     text-transform: uppercase;
 }
 
-.bottom-spaced-component {margin-bottom: 8px;}
+.bottom-spaced-component { margin-bottom: 8px; }
 
 
 .label-hint { color: #768899; }
@@ -40,15 +40,17 @@
     flex: 1;
 }
 
-label.required:after{content: " *"}
-
-h1 {font-size: xx-large;}
-
-h2 {
-    font-size: large;
-    margin-bottom: 15px;
-    font-weight: bold;
+.radio-label {
+    margin-left: 5px;
+    margin-right: 20px;
+    font-weight: normal;
 }
+
+.radio-button-quiz {
+    margin-right: 100px;
+}
+
+label.required:after{content: " *"}
 
 tfoot {
     display: table-footer-group;

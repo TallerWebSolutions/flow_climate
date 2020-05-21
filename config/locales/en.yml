@@ -43,7 +43,7 @@ en:
       year:
         one: year
         other: year
-  geenral:
+  general:
     connector:
       and: "and"
   number:

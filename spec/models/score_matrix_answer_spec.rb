@@ -36,4 +36,18 @@ RSpec.describe ScoreMatrixAnswer, type: :model do
       end
     end
   end
+
+  describe '#answer_score' do
+    let(:score_matrix) { Fabricate :score_matrix }
+    let(:other_score_matrix) { Fabricate :score_matrix }
+
+    let!(:score_matrix_question) { Fabricate :score_matrix_question, score_matrix: score_matrix, question_weight: 10 }
+    let!(:other_score_matrix_question) { Fabricate :score_matrix_question, score_matrix: score_matrix, question_weight: 30 }
+
+    let!(:score_matrix_answer) { Fabricate :score_matrix_answer, score_matrix_question: score_matrix_question, answer_value: 5 }
+    let!(:other_score_matrix_answer) { Fabricate :score_matrix_answer, score_matrix_question: other_score_matrix_question, answer_value: 2 }
+
+    it { expect(score_matrix_answer.answer_score).to eq 50 }
+    it { expect(other_score_matrix_answer.answer_score).to eq 60 }
+  end
 end

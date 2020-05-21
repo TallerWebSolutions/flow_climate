@@ -124,7 +124,7 @@ RSpec.describe ProjectsController, type: :controller do
         let!(:first_alert) { Fabricate :project_risk_alert, project: first_project, created_at: 1.week.ago }
         let!(:second_alert) { Fabricate :project_risk_alert, project: first_project, created_at: Time.zone.now }
 
-        let!(:first_demand) { Fabricate :demand, project: first_project, business_score: 10.5, end_date: Date.new(2018, 3, 10), leadtime: 2000 }
+        let!(:first_demand) { Fabricate :demand, project: first_project, demand_score: 10.5, end_date: Date.new(2018, 3, 10), leadtime: 2000 }
         let!(:second_demand) { Fabricate :demand, project: first_project, external_id: 'zzz', end_date: Date.new(2018, 5, 25), leadtime: 6000 }
         let!(:third_demand) { Fabricate :demand, project: first_project, external_id: 'aaa', end_date: nil }
 

@@ -13,7 +13,6 @@
 #
 # Indexes
 #
-#  idx_demand_score_matrices_unique                       (demand_id,user_id,score_matrix_answer_id) UNIQUE
 #  index_demand_score_matrices_on_demand_id               (demand_id)
 #  index_demand_score_matrices_on_score_matrix_answer_id  (score_matrix_answer_id)
 #  index_demand_score_matrices_on_user_id                 (user_id)

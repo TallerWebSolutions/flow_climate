@@ -1032,7 +1032,7 @@ CREATE TABLE public.demands (
     total_bloked_working_time numeric DEFAULT 0,
     total_touch_blocked_time numeric DEFAULT 0,
     risk_review_id integer,
-    business_score numeric,
+    demand_score numeric DEFAULT 0.0,
     service_delivery_review_id integer,
     current_stage_id integer,
     customer_id integer
@@ -5331,6 +5331,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200430140032'),
 ('20200504193716'),
 ('20200507203439'),
-('20200511192312');
+('20200511192312'),
+('20200520142236');
 
 

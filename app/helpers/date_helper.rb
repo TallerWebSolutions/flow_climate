@@ -17,7 +17,7 @@ module DateHelper
     return "#{time_in_seconds.to_i} #{I18n.t('datetime.date_attributes.second', count: time_in_seconds)}" if days < 1 && hours < 1 && minutes < 1
     return "#{minutes} #{I18n.t('datetime.date_attributes.minute', count: minutes)}" if days < 1 && hours < 1
     return "#{hours} #{I18n.t('datetime.date_attributes.hour', count: hours)}" if days < 1
-    return "#{days} #{I18n.t('datetime.date_attributes.day', count: days)} #{I18n.t('geenral.connector.and')} #{hours} #{I18n.t('datetime.date_attributes.hour', count: hours)}" if hours.positive?
+    return "#{days} #{I18n.t('datetime.date_attributes.day', count: days)} #{I18n.t('general.connector.and')} #{hours} #{I18n.t('datetime.date_attributes.hour', count: hours)}" if hours.positive?
 
     "#{days} #{I18n.t('datetime.date_attributes.day', count: days)}"
   end

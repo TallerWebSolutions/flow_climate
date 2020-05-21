@@ -746,6 +746,8 @@ en:
         expedite: "Expedite"
     montecarlo_dialog:
       title: "Monte Carlo Simulation to Demands"
+    score_research:
+      title: "Score Research"
   project_risk_configs:
     new:
       title: "New Risk Configuration"
@@ -1272,3 +1274,8 @@ en:
   score_matrix_answers:
     create:
       success: "Answer created."
+    new:
+      no_answer: "I don't know"
+  demand_score_matrices:
+    destroy:
+      tip: "Remove answer"

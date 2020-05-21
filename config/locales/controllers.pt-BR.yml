@@ -815,6 +815,8 @@ pt-BR:
         expedite: "Expedição"
     montecarlo_dialog:
       title: "Simulação de Monte Carlo para Demandas"
+    score_research:
+      title: "Pesquisa de Pontuação"
   project_risk_configs:
     new:
       title: "Nova Configuração de Risco"
@@ -1251,3 +1253,8 @@ pt-BR:
   score_matrix_answers:
     create:
       success: "Resposta criada."
+    new:
+      no_answer: "Não sei"
+  demand_score_matrices:
+    destroy:
+      tip: "Excluir resposta"

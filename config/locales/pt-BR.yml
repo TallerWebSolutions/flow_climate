@@ -194,6 +194,6 @@ pt-BR:
       long: "%d de %B de %Y, %H:%M"
       short: "%d/%m/%Y %H:%M"
     pm: ''
-  geenral:
+  general:
     connector:
       and: "e"

@@ -1,0 +1,46 @@
+<h1><%= I18n.t('demands.score_research.title') %></h1>
+
+<div class="row bottom-spaced-component">
+  <div class="col-xs-6">
+    <h2><%= @demand.external_id %></h2>
+    <h3><%= @demand.demand_title %></h3>
+  </div>
+
+  <div class="col-xs-2">
+    <div class="demand-score">
+      <%= number_with_precision(@demand.demand_score, precision: 3) %>
+    </div>
+  </div>
+
+  <div class="col-xs-2 demand-score">
+    <%= "#{@current_position_in_backlog} / #{@backlog_total}" %>
+  </div>
+
+  <div class="col-xs-2 demand-score">
+    <%= number_to_percentage(@percentage_answered, precision: 2) %>
+  </div>
+</div>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th class="center-text"><%= Product.model_name.human %></th>
+      <th class="center-text"><%= PortfolioUnit.model_name.human %></th>
+      <th class="center-text"><%= Demand.human_attribute_name :demand_type %></th>
+      <th class="center-text"><%= Demand.human_attribute_name :class_of_service %></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr class="center-text">
+      <td class="larger-font"><%= @demand.product_name %></td>
+      <td class="larger-font"><%= @demand.portfolio_unit_name %></td>
+      <td class="larger-font"><%= I18n.t("activerecord.attributes.demand.enums.demand_type.#{@demand.demand_type}") %></td>
+      <td class="larger-font"><%= I18n.t("activerecord.attributes.demand.enums.class_of_service.#{@demand.class_of_service}") %></td>
+    </tr>
+  </tbody>
+</table>
+
+<div id="score-research-form">
+  <%= render 'demands/score_matrix/form', demand_score_matrix: @demand_score_matrix, demand: @demand %>
+</div>

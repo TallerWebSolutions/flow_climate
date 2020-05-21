@@ -162,8 +162,17 @@
     text-align: center;
 }
 
-.large-font {
+.x-large-font {
     font-size: x-large;
+}
+
+.larger-font {
+    font-size: larger;
+}
+
+.demand-score {
+    font-size: xx-large;
+    text-align: center;
 }
 
 .div-group-title {
