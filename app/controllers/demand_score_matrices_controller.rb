@@ -22,7 +22,7 @@ class DemandScoreMatricesController < AuthenticatedController
 
     update_demand_score
 
-    render 'demand_score_matrices/destroy'
+    respond_to { |format| format.js { render 'demand_score_matrices/destroy' } }
   end
 
   private

@@ -1,43 +1,45 @@
-<%= form_tag demand_score_matrix, url: demand_score_matrices_path, class: 'form' do %>
-  <%= hidden_field_tag :demand_id, demand.id %>
+<% if demand.product.score_matrix.present? %>
+  <%= form_tag demand_score_matrix, url: demand_score_matrices_path, class: 'form' do %>
+    <%= hidden_field_tag :demand_id, demand.id %>
 
-  <% demand.product.score_matrix.score_matrix_questions.each do |score_question| %>
+    <% demand.product.score_matrix.score_matrix_questions.each do |score_question| %>
 
-    <div class="row">
-      <div class="col-xs-4 large-font bottom-spaced-component">
-        <b><%= score_question.description %></b>
-      </div>
-    </div>
-
-    <% already_answered = (demand.demand_score_matrices.map(&:score_matrix_answer) & score_question.score_matrix_answers).first %>
-
-    <% demand_score_matrix = demand.demand_score_matrices.find_by(score_matrix_answer: already_answered) %>
-
-    <% if demand_score_matrix.present? %>
-      <p>
-        <%= "#{demand_score_matrix.score_matrix_answer.description} (#{demand_score_matrix.score_matrix_answer.answer_value}) - #{demand_score_matrix.user.full_name} (#{I18n.l(demand_score_matrix.created_at, format: :short)})" %>
-        <% if demand_score_matrix.user == current_user %>
-          <%= link_to demand_score_matrix_path(demand_score_matrix), method: :delete, data: { confirm: I18n.t('general.destroy.confirm') }, remote: true do %>
-            <i class="fa fa-times" title=<%= I18n.t('demand_score_matrices.destroy.tip') %>></i>
-          <% end %>
-        <% end %>
-      </p>
-    <% else %>
       <div class="row">
-        <div class="col-xs-2">
-          <%= radio_button_tag "score_matrix_question_#{score_question.id}", -1, true, onclick: "this.form.submit();" %>
-          <%= label_tag "score_matrix_question_#{score_question.id}", I18n.t('score_matrix_answers.new.no_answer'), class: 'radio-label' %>
+        <div class="col-xs-4 large-font bottom-spaced-component">
+          <b><%= score_question.description %></b>
+        </div>
+      </div>
+
+      <% already_answered = (demand.demand_score_matrices.map(&:score_matrix_answer) & score_question.score_matrix_answers).first %>
+
+      <% demand_score_matrix = demand.demand_score_matrices.find_by(score_matrix_answer: already_answered) %>
+
+      <% if demand_score_matrix.present? %>
+        <p>
+          <%= "#{demand_score_matrix.score_matrix_answer.description} (#{demand_score_matrix.score_matrix_answer.answer_value}) - #{demand_score_matrix.user.full_name} (#{I18n.l(demand_score_matrix.created_at, format: :short)})" %>
+          <% if demand_score_matrix.user == current_user %>
+            <%= link_to demand_score_matrix_path(demand_score_matrix), method: :delete, data: { confirm: I18n.t('general.destroy.confirm') }, remote: true do %>
+              <i class="fa fa-times" title=<%= I18n.t('demand_score_matrices.destroy.tip') %>></i>
+            <% end %>
+          <% end %>
+        </p>
+      <% else %>
+        <div class="row">
+          <div class="col-xs-2">
+            <%= radio_button_tag "score_matrix_question_#{score_question.id}", -1, true, onclick: "this.form.submit();" %>
+            <%= label_tag "score_matrix_question_#{score_question.id}", I18n.t('score_matrix_answers.new.no_answer'), class: 'radio-label' %>
+          </div>
+
+          <% score_question.score_matrix_answers.order(:answer_value).each do |score_answer| %>
+            <div class="col-xs-2">
+              <%= radio_button_tag "score_matrix_question_#{score_question.id}", score_answer.id, false, class: 'radio-button-quiz', onclick: "this.form.submit();" %>
+              <%= label_tag "score_matrix_question_#{score_question.id}", "#{score_answer.description} (#{score_answer.answer_value})", class: 'radio-label' %>
+            </div>
+          <% end %>
         </div>
 
-        <% score_question.score_matrix_answers.order(:answer_value).each do |score_answer| %>
-          <div class="col-xs-2">
-            <%= radio_button_tag "score_matrix_question_#{score_question.id}", score_answer.id, false, class: 'radio-button-quiz', onclick: "this.form.submit();" %>
-            <%= label_tag "score_matrix_question_#{score_question.id}", "#{score_answer.description} (#{score_answer.answer_value})", class: 'radio-label' %>
-          </div>
-        <% end %>
-      </div>
-
-      <hr>
+        <hr>
+      <% end %>
     <% end %>
   <% end %>
 <% end %>

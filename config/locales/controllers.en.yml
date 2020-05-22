@@ -73,7 +73,6 @@ en:
         title: "Error 404"
         desc: "Page not found"
         back: "Back to the path"
-        page_title: "The page you're looking for does not exist"
     monthly: "Monthly"
     weekly: "Weekly"
     daily: "Daily"

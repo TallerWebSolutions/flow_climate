@@ -121,7 +121,7 @@ class DemandsController < AuthenticatedController
     @demand_score_matrix = DemandScoreMatrix.new(user: current_user, demand: @demand)
     @percentage_answered = DemandScoreMatrixService.instance.percentage_answered(@demand)
     @current_position_in_backlog = "#{DemandScoreMatrixService.instance.current_position_in_backlog(@demand)}º"
-    @backlog_total = @demand.product.demands.not_started.count
+    @backlog_total = DemandScoreMatrixService.instance.demands_list(@demand).count
 
     render 'demands/score_matrix/score_research'
   end

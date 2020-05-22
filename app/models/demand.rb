@@ -248,6 +248,10 @@ class Demand < ApplicationRecord
     project.stages.where('stages.order >= 0').order(:order).first
   end
 
+  def not_started?
+    commitment_date.blank? && end_date.blank?
+  end
+
   private
 
   def commitment_transition

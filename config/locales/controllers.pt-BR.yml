@@ -73,7 +73,6 @@ pt-BR:
         title: "Erro 404"
         desc: "Página não encontrada"
         back: "Volte para trilha"
-        page_title: "A página que você está procurando não existe"
     monthly: "Mensal"
     weekly: "Semanal"
     daily: "Diário"

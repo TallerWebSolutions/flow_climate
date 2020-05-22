@@ -973,6 +973,7 @@ RSpec.describe DemandsController, type: :controller do
             it 'assigns the instance variable and renders the template' do
               expect(DemandScoreMatrixService.instance).to receive(:percentage_answered).once
               expect(DemandScoreMatrixService.instance).to receive(:current_position_in_backlog).once
+              expect(DemandScoreMatrixService.instance).to(receive(:demands_list).once.and_return([1, 2]))
               get :score_research, params: { company_id: company, id: first_demand }
 
               expect(response).to render_template 'demands/score_matrix/score_research'

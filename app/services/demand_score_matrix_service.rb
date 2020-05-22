@@ -26,9 +26,15 @@ class DemandScoreMatrixService
   end
 
   def current_position_in_backlog(demand)
-    demands_list = demand.product.demands.kept.order(demand_score: :desc)
+    demands_list(demand).find_index(demand) + 1
+  end
 
-    demands_list.find_index(demand) + 1
+  def demands_list(demand)
+    if demand.not_started?
+      demand.product.demands.kept.not_started.order(demand_score: :desc)
+    else
+      demand.product.demands.kept.order(demand_score: :desc)
+    end
   end
 
   private

@@ -170,6 +170,10 @@
     font-size: larger;
 }
 
+.small-font {
+    font-size: small;
+}
+
 .demand-score {
     font-size: xx-large;
     text-align: center;

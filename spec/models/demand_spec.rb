@@ -883,4 +883,17 @@ RSpec.describe Demand, type: :model do
       it { expect(other_demand.first_stage_in_the_flow).to be_nil }
     end
   end
+
+  describe '#not_started?' do
+    let(:company) { Fabricate :company }
+    let(:team) { Fabricate :team, company: company }
+
+    let!(:first_demand) { Fabricate :demand, team: team, commitment_date: nil, end_date: nil }
+    let!(:second_demand) { Fabricate :demand, commitment_date: Time.zone.now, end_date: nil }
+    let!(:third_demand) { Fabricate :demand, commitment_date: nil, end_date: Time.zone.now }
+
+    it { expect(first_demand.not_started?).to be true }
+    it { expect(second_demand.not_started?).to be false }
+    it { expect(third_demand.not_started?).to be false }
+  end
 end
