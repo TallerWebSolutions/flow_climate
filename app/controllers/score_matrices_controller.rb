@@ -5,6 +5,7 @@ class ScoreMatricesController < AuthenticatedController
 
   def show
     @backlog_demands = @score_matrix.product.demands.not_started.order(demand_score: :desc)
+    @demand_score_matrix = DemandScoreMatrix.new
   end
 
   private

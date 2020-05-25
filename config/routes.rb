@@ -91,7 +91,10 @@ Rails.application.routes.draw do
   resources :devise_customers, only: :show
 
   resources :score_matrices, only: :show
-  resources :demand_score_matrices, only: %i[create destroy]
+  resources :demand_score_matrices, only: %i[create destroy] do
+    post :create_from_sheet, on: :collection
+    delete :destroy_from_sheet, on: :member
+  end
 
   resources :companies, except: :destroy do
     member do

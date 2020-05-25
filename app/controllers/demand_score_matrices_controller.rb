@@ -2,21 +2,19 @@
 
 class DemandScoreMatricesController < AuthenticatedController
   def create
-    @demand = Demand.find(params[:demand_id])
-
-    answers = read_answers_in_params
-
-    answers.each { |answer_id| DemandScoreMatrix.create(user: current_user, demand: @demand, score_matrix_answer_id: answer_id) }
-
-    update_demand_score
+    create_answers
 
     redirect_to score_research_company_demand_path(@demand.company, @demand)
   end
 
+  def create_from_sheet
+    create_answers
+
+    redirect_to score_matrix_path(@demand.product.score_matrix)
+  end
+
   def destroy
-    @demand_score_matrix = DemandScoreMatrix.find(params[:id])
-    @demand = @demand_score_matrix.demand
-    @demand_score_matrix.destroy
+    destroy_answer
 
     @new_demand_score_matrix = DemandScoreMatrix.new
 
@@ -25,7 +23,33 @@ class DemandScoreMatricesController < AuthenticatedController
     respond_to { |format| format.js { render 'demand_score_matrices/destroy' } }
   end
 
+  def destroy_from_sheet
+    destroy_answer
+
+    @new_demand_score_matrix = DemandScoreMatrix.new
+
+    update_demand_score
+
+    redirect_to score_matrix_path(@demand.product.score_matrix)
+  end
+
   private
+
+  def destroy_answer
+    @demand_score_matrix = DemandScoreMatrix.find(params[:id])
+    @demand = @demand_score_matrix.demand
+    @demand_score_matrix.destroy
+  end
+
+  def create_answers
+    @demand = Demand.find(params[:demand_id])
+
+    answers = read_answers_in_params
+
+    answers.each { |answer_id| DemandScoreMatrix.create(user: current_user, demand: @demand, score_matrix_answer_id: answer_id) }
+
+    update_demand_score
+  end
 
   def update_demand_score
     final_score = DemandScoreMatrixService.instance.compute_score(@demand)

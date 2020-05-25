@@ -1,7 +1,6 @@
 <p class="bottom-spaced-component"><%= link_to 'Ir para lista', score_matrix_path(@demand.product.score_matrix), class: 'btn btn-default' %></p>
 <h1><%= I18n.t('demands.score_research.title') %></h1>
 
-
 <div class="row bottom-spaced-component">
   <div class="col-xs-6">
     <h2><%= @demand.external_id %></h2>
@@ -30,6 +29,7 @@
       <th class="center-text"><%= PortfolioUnit.model_name.human %></th>
       <th class="center-text"><%= Demand.human_attribute_name :demand_type %></th>
       <th class="center-text"><%= Demand.human_attribute_name :class_of_service %></th>
+      <th class="center-text"><%= Stage.model_name.human %></th>
     </tr>
   </thead>
 
@@ -39,6 +39,7 @@
       <td class="larger-font"><%= @demand.portfolio_unit_name %></td>
       <td class="larger-font"><%= I18n.t("activerecord.attributes.demand.enums.demand_type.#{@demand.demand_type}") %></td>
       <td class="larger-font"><%= I18n.t("activerecord.attributes.demand.enums.class_of_service.#{@demand.class_of_service}") %></td>
+      <td class="larger-font"><%= @demand.current_stage_name %></td>
     </tr>
   </tbody>
 </table>
