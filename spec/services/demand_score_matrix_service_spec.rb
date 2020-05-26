@@ -4,9 +4,9 @@ RSpec.describe DemandScoreMatrixService, type: :service do
   shared_context 'demand score matrix data' do
     let(:user) { Fabricate :user }
     let(:product) { Fabricate :product }
-    let!(:first_demand) { Fabricate :demand, product: product }
-    let!(:second_demand) { Fabricate :demand, product: product }
-    let!(:third_demand) { Fabricate :demand, product: product }
+    let!(:first_demand) { Fabricate :demand, product: product, commitment_date: nil, end_date: nil }
+    let!(:second_demand) { Fabricate :demand, product: product, commitment_date: nil, end_date: nil }
+    let!(:third_demand) { Fabricate :demand, product: product, commitment_date: nil, end_date: nil }
 
     let(:score_matrix) { Fabricate :score_matrix, product: product }
     let(:first_question) { Fabricate :score_matrix_question, score_matrix: score_matrix, question_weight: 20 }
