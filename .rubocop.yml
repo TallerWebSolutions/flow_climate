@@ -25,6 +25,9 @@ Lint/RaiseException:
 Lint/StructNewOverride:
   Enabled: true
 
+Lint/DeprecatedOpenSSLConstant:
+  Enabled: true
+
 Style/Documentation:
   Enabled: false
 
