@@ -14,7 +14,7 @@ RSpec.describe DemandScoreMatrixService, type: :service do
     let(:third_question) { Fabricate :score_matrix_question, score_matrix: score_matrix, question_weight: 25 }
 
     let!(:first_answer) { Fabricate :score_matrix_answer, score_matrix_question: first_question, answer_value: 5 }
-    let!(:second_answer) { Fabricate :score_matrix_answer, score_matrix_question: second_question, answer_value: 0 }
+    let!(:second_answer) { Fabricate :score_matrix_answer, score_matrix_question: second_question, answer_value: 1 }
     let!(:third_answer) { Fabricate :score_matrix_answer, score_matrix_question: third_question, answer_value: 3 }
 
     let!(:first_demand_score_matrix) { Fabricate :demand_score_matrix, user: user, demand: first_demand, score_matrix_answer: first_answer }
@@ -124,6 +124,17 @@ RSpec.describe DemandScoreMatrixService, type: :service do
   describe '#current_position_in_backlog' do
     context 'when the product has a score matrix' do
       include_context 'demand score matrix data'
+
+      before do
+        final_score = described_class.instance.compute_score(first_demand)
+        first_demand.update(demand_score: final_score)
+
+        final_score = described_class.instance.compute_score(second_demand)
+        second_demand.update(demand_score: final_score)
+
+        final_score = described_class.instance.compute_score(third_demand)
+        third_demand.update(demand_score: final_score)
+      end
 
       it { expect(described_class.instance.current_position_in_backlog(first_demand)).to eq 1 }
       it { expect(described_class.instance.current_position_in_backlog(second_demand)).to eq 2 }
