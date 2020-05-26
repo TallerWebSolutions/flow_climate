@@ -34,6 +34,21 @@
     font-size: larger;
     font-weight: bold;
 }
+
+.main-config-cogs {
+    font-size: xx-large;
+    padding-right: 15px;
+    margin-top: 5px;
+}
+
+.user-dashboard-companies-tab {
+    text-align: center;
+}
+
+.dashboard-add-icon {
+    font-size: large;
+    float: right;
+}
 {
     transition: all 0.6s;
 }
@@ -134,9 +149,8 @@ html {
     text-transform: uppercase;
 }
 
-.bottom-spaced-component {margin-bottom: 8px;}
+.bottom-spaced-component { margin-bottom: 8px; }
 
-label.required:after{content: " *"}
 
 .label-hint { color: #768899; }
 
@@ -148,13 +162,29 @@ label.required:after{content: " *"}
     color: #EEE1B7;
 }
 
-h1 {font-size: xx-large;}
-
-h2 {
-    font-size: large;
-    margin-bottom: 15px;
-    font-weight: bold;
+.grouped-button {
+    margin-left: 2px;
 }
+
+.flex-container {
+    display: flex;
+}
+
+.input-field {
+    flex: 1;
+}
+
+.radio-label {
+    margin-left: 5px;
+    margin-right: 20px;
+    font-weight: normal;
+}
+
+.radio-button-quiz {
+    margin-right: 100px;
+}
+
+label.required:after{content: " *"}
 
 tfoot {
     display: table-footer-group;
@@ -164,7 +194,7 @@ tfoot {
 }
 .header {
     padding: 10px;
-    background-color: #8fa9df;
+    background-color: #26182d;
     height: 100%;
 }
 
@@ -176,9 +206,13 @@ tfoot {
     margin-left: -30px;
 }
 
+.top-nav-bar-text {
+    color: white;
+}
+
 .top-nav-bar-item {
+    color: white;
     text-decoration: none;
-    color: black;
     vertical-align: bottom;
 }
 
@@ -208,18 +242,6 @@ ul.breadcrumb li a {
 /* Add a color on mouse-over */
 ul.breadcrumb li a:hover {
     text-decoration: underline;
-}
-
-.footer {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    padding: 15px;
-    background-color: #333333;
-    color: #FFFF;
-    text-align: center;
-    font-style: italic;
-    font-size: small;
 }
 
 .page-body {
@@ -322,7 +344,7 @@ ul.breadcrumb li a:hover {
 
 /* Style the buttons inside the tab */
 .tab button {
-    background-color: inherit;
+    background-color: #aaa;
     text-align: left;
     border: none;
     outline: none;
@@ -330,6 +352,7 @@ ul.breadcrumb li a:hover {
     transition: 0.3s;
     font-size: 17px;
     padding: 6px 12px;
+    color: white;
 }
 
 /* Change background color of buttons on hover */
@@ -339,7 +362,7 @@ ul.breadcrumb li a:hover {
 
 /* Create an active/current tablink class */
 .tab button.active {
-    background-color: #ccc;
+    background-color: #888;
 }
 
 /* Style the tab content */
@@ -554,6 +577,10 @@ ul.breadcrumb li a:hover {
     white-space: nowrap;
 }
 
+.table-detail {
+    font-size: smaller;
+}
+
 .upstream {
     font-style: italic;
 }
@@ -595,7 +622,7 @@ ul.breadcrumb li a:hover {
 }
 
 .summary-card-frame {
-    padding: 0 2px 0px 2px;
+    padding: 0 2px 0 2px;
 }
 
 .summary-card-content {
@@ -639,6 +666,23 @@ ul.breadcrumb li a:hover {
     text-align: center;
 }
 
+.x-large-font {
+    font-size: x-large;
+}
+
+.larger-font {
+    font-size: larger;
+}
+
+.small-font {
+    font-size: small;
+}
+
+.demand-score {
+    font-size: xx-large;
+    text-align: center;
+}
+
 .div-group-title {
     margin-top: 0px;
     margin-bottom: 20px;
@@ -648,10 +692,6 @@ ul.breadcrumb li a:hover {
     background-color: #F0F0EF;
 }
 
-.section-title {
-    text-align: center;
-}
-
 @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
@@ -659,6 +699,25 @@ ul.breadcrumb li a:hover {
 .col-table-details {
     font-size: smaller;
     font-style: italic;
+}
+
+.equal-heights {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.table-filter {
+    font-size: smaller;
+}
+
+.relative-row {
+    position: relative;
+}
+
+.bottom-button {
+    position: absolute;
+    right: 0;
+    bottom: 0;
 }
 /* Add a black background color to the top navigation */
 .topnav {
@@ -704,6 +763,6 @@ ul.breadcrumb li a:hover {
 
  */
 
-input[type=radio] {
-    transform: scale(1.5);
+.visible {
+    display: block;
 }

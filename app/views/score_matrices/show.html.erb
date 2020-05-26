@@ -1,50 +1,17 @@
-<h1><%= @score_matrix.product.name %></h1>
+<h1 class="bottom-spaced-component"><%= @score_matrix.product.name %></h1>
 
-<table class="table table-striped small-font">
-  <thead>
-    <tr>
-      <th></th>
-      <th><%= Demand.human_attribute_name :external_id %></th>
-      <th><%= Demand.human_attribute_name :demand_type %></th>
-      <th><%= Demand.human_attribute_name :class_of_service %></th>
-      <th><%= Stage.model_name.human %></th>
-      <th><%= Demand.human_attribute_name :demand_score %></th>
-      <% @score_matrix.score_matrix_questions.each do |question| %>
-        <th><%= question.description %></th>
-      <% end %>
-    </tr>
-  </thead>
+<% unless @score_matrix.single_dimension? %>
+  <div class="center-text bottom-spaced-component">
+    <%= link_to I18n.t('activerecord.attributes.score_matrix_question.enums.question_type.customer_dimension'), customer_dimension_score_matrix_path(@score_matrix), class: "btn btn-default #{'active' if @questions_dimension == 'customer_dimension' || @questions_dimension.blank?}" %>
+    <%= link_to I18n.t('activerecord.attributes.score_matrix_question.enums.question_type.service_provider_dimension'), service_provider_dimension_score_matrix_path(@score_matrix), class: "btn btn-default #{'active' if @questions_dimension == 'service_provider_dimension'}" %>
+  </div>
+<% end %>
 
-  <tbody>
-    <% @backlog_demands.each do |demand| %>
-      <tr>
-        <td>
-          <%= link_to score_research_company_demand_path(demand.company, demand) do %>
-            <i class="fas fa-tasks" title="<%= I18n.t('demand_score_matrices.new.title') %>"></i>
-          <% end %>
-          <i class="far fa-question-circle" title="<%= demand.demand_title %>"></i>
-        </td>
-        <td><%= demand.external_id %></td>
-        <td><%= I18n.t("activerecord.attributes.demand.enums.demand_type.#{demand.demand_type}") %></td>
-        <td><%= I18n.t("activerecord.attributes.demand.enums.class_of_service.#{demand.class_of_service}") %></td>
-        <td><%= demand.current_stage_name %></td>
-        <td><%= number_with_precision(demand.demand_score, precision: 3) %></td>
-        <%= form_tag create_from_sheet_demand_score_matrices_path(@demand_score_matrix), class: 'form' do %>
-          <%= hidden_field_tag :demand_id, demand.id %>
-
-          <% @score_matrix.score_matrix_questions.each do |score_question| %>
-            <% already_answered = (demand.demand_score_matrices.map(&:score_matrix_answer) & score_question.score_matrix_answers).first %>
-
-            <% demand_score_matrix = demand.demand_score_matrices.find_by(score_matrix_answer: already_answered) %>
-
-            <% if demand_score_matrix.present? %>
-              <td><%= demand_score_matrix.score_matrix_answer.answer_value %></td>
-            <% else %>
-              <td><%= select_tag "score_matrix_question_#{score_question.id}", options_from_collection_for_select(score_question.score_matrix_answers, :id, :description), include_blank: I18n.t('general.select'), onchange: "this.form.submit();", class: 'form-control' %></td>
-            <% end %>
-          <% end %>
-        <% end %>
-      </tr>
-    <% end %>
-  </tbody>
+<table class="table table-striped small-font" id="score-matrix-table">
+  <%= render 'score_matrices/score_matrix_table', score_matrix: @score_matrix, demand_score_matrix: @demand_score_matrix, score_matrix_questions: @score_matrix_questions, backlog_demands: @backlog_demands  %>
 </table>
+
+<% content_for :javascript do %>
+  <%= javascript_include_tag 'routes/score_matrix_routes' %>
+  <%= javascript_include_tag 'score_matrices/show' %>
+<% end %>

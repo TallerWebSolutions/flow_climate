@@ -1270,6 +1270,8 @@ en:
       success: "Score matrix question created."
     update:
       success: "Score question updated."
+    new:
+      title: "New Question"
   score_matrix_answers:
     create:
       success: "Answer created."
@@ -1280,3 +1282,6 @@ en:
       tip: "Remove answer"
     new:
       title: "Score Demand"
+  score_matrices:
+    show:
+      title: "Score Demands"

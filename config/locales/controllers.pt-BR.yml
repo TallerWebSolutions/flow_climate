@@ -1249,6 +1249,8 @@ pt-BR:
       success: "Pergunta de pontuação criada."
     update:
       success: "Pergunta de pontuação atualizada."
+    new:
+      title: "Nova Pergunta"
   score_matrix_answers:
     create:
       success: "Resposta criada."
@@ -1259,3 +1261,6 @@ pt-BR:
       tip: "Excluir resposta"
     new:
       title: "Pontuar Demanda"
+  score_matrices:
+    show:
+      title: "Pontuar Demandas"

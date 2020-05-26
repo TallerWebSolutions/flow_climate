@@ -15,9 +15,8 @@
     text-transform: uppercase;
 }
 
-.bottom-spaced-component {margin-bottom: 8px;}
+.bottom-spaced-component { margin-bottom: 8px; }
 
-label.required:after{content: " *"}
 
 .label-hint { color: #768899; }
 
@@ -29,13 +28,29 @@ label.required:after{content: " *"}
     color: #EEE1B7;
 }
 
-h1 {font-size: xx-large;}
-
-h2 {
-    font-size: large;
-    margin-bottom: 15px;
-    font-weight: bold;
+.grouped-button {
+    margin-left: 2px;
 }
+
+.flex-container {
+    display: flex;
+}
+
+.input-field {
+    flex: 1;
+}
+
+.radio-label {
+    margin-left: 5px;
+    margin-right: 20px;
+    font-weight: normal;
+}
+
+.radio-button-quiz {
+    margin-right: 100px;
+}
+
+label.required:after{content: " *"}
 
 tfoot {
     display: table-footer-group;

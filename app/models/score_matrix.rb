@@ -27,4 +27,12 @@ class ScoreMatrix < ApplicationRecord
   def total_weight
     score_matrix_questions.map(&:question_weight).compact.sum
   end
+
+  def single_dimension?
+    questions_dimensions.count < 2
+  end
+
+  def questions_dimensions
+    score_matrix_questions.map(&:question_type).uniq
+  end
 end

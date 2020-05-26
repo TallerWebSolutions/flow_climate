@@ -20,4 +20,7 @@ RSpec.describe ScoreMatrix, type: :model do
     it { expect(score_matrix.total_weight).to eq 40 }
     it { expect(other_score_matrix.total_weight).to eq 0 }
   end
+
+  pending '#single_dimension?'
+  pending '#questions_dimensions'
 end

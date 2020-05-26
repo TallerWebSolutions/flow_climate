@@ -10,7 +10,7 @@ class DemandScoreMatricesController < AuthenticatedController
   def create_from_sheet
     create_answers
 
-    redirect_to score_matrix_path(@demand.product.score_matrix)
+    redirect_to score_matrix_path(@demand.product.score_matrix, questions_dimension: params['score_question_dimensions'])
   end
 
   def destroy
@@ -30,7 +30,7 @@ class DemandScoreMatricesController < AuthenticatedController
 
     update_demand_score
 
-    redirect_to score_matrix_path(@demand.product.score_matrix)
+    redirect_to score_matrix_path(@demand.product.score_matrix, questions_dimension: params['score_question_dimensions'])
   end
 
   private

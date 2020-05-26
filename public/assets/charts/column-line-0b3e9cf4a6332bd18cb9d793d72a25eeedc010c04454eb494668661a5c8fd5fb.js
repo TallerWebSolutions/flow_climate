@@ -49,10 +49,11 @@ function buildColumnLineChart(columnDiv) {
             enabled: false
         },
         legend: {
-            layout: 'vertical',
-            align: 'right',
-            verticalAlign: 'middle',
-            borderWidth: 0
+            type: 'line',
+            align: 'center',
+            verticalAlign: 'top',
+            x: 0,
+            y: 0
         },
         plotOptions: {
             column: {
@@ -67,14 +68,17 @@ function buildColumnLineChart(columnDiv) {
             spline: {
                 dataLabels: {
                     enabled: true,
-                    color: 'black',
                     formatter: function () {
-                        return Highcharts.numberFormat(this.y, columnDiv.data('decimals'), '.');
+                        let firstPoint = this.series.data[0];
+                        let lastPoint = this.series.data[this.series.data.length - 1];
+
+                        if ((this.point.category === firstPoint.category && this.point.y === firstPoint.y) || (this.point.category === lastPoint.category  && this.point.y === lastPoint.y)) {
+                            return `<span style='color: ${this.color}'>${columnDiv.data('prefix') + Highcharts.numberFormat(this.y, columnDiv.data("decimals"), ",", ".") + " " + columnDiv.data('datalabelsuffix')}</span>`;
+                        }
                     }
                 }
             }
         },
         series: columnDiv.data('series')
     });
-}
-;
+};

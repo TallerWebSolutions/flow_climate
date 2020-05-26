@@ -90,10 +90,10 @@ RSpec.describe DemandScoreMatricesController, type: :controller do
         let!(:first_demand_score_matrix) { Fabricate :demand_score_matrix, user: user, demand: demand, score_matrix_answer: first_answer }
         let!(:second_demand_score_matrix) { Fabricate :demand_score_matrix, user: user, demand: demand, score_matrix_answer: second_answer }
 
-        before { post :create_from_sheet, params: { demand_id: demand.id, "score_matrix_question_#{first_question.id}" => first_answer.id, "score_matrix_question_#{second_question.id}" => second_answer.id } }
+        before { post :create_from_sheet, params: { demand_id: demand.id, "score_matrix_question_#{first_question.id}" => first_answer.id, "score_matrix_question_#{second_question.id}" => second_answer.id, score_question_dimensions: 'customer_dimension' } }
 
         it 'assigns the instance variable and renders the template' do
-          expect(response).to redirect_to score_matrix_path(demand.product.score_matrix)
+          expect(response).to redirect_to score_matrix_path(demand.product.score_matrix, questions_dimension: 'customer_dimension')
           expect(DemandScoreMatrix.count).to eq 2
           expect(DemandScoreMatrix.all.map(&:score_matrix_answer)).to match_array [first_answer, second_answer]
           expect(DemandScoreMatrix.all.map(&:user)).to match_array [user, user]
@@ -179,10 +179,10 @@ RSpec.describe DemandScoreMatricesController, type: :controller do
         let!(:first_demand_score_matrix) { Fabricate :demand_score_matrix, user: user, demand: demand, score_matrix_answer: first_answer }
         let!(:second_demand_score_matrix) { Fabricate :demand_score_matrix, user: user, demand: demand, score_matrix_answer: second_answer }
 
-        before { delete :destroy_from_sheet, params: { id: first_demand_score_matrix } }
+        before { delete :destroy_from_sheet, params: { id: first_demand_score_matrix, score_question_dimensions: 'customer_dimension' } }
 
         it 'assigns the instance variable and renders the template' do
-          expect(response).to redirect_to score_matrix_path(demand.product.score_matrix)
+          expect(response).to redirect_to score_matrix_path(demand.product.score_matrix, questions_dimension: 'customer_dimension')
           expect(assigns(:demand_score_matrix)).to eq first_demand_score_matrix
           expect(assigns(:new_demand_score_matrix)).to be_a_new DemandScoreMatrix
           expect(DemandScoreMatrix.count).to eq 1
@@ -197,7 +197,7 @@ RSpec.describe DemandScoreMatricesController, type: :controller do
         it 'assigns the instance variable and renders the template' do
           expect(response).to redirect_to score_matrix_path(demand.product.score_matrix)
           expect(assigns(:demand_score_matrix)).to eq first_demand_score_matrix
-          expect(assigns(:new_demand_score_matrix)).to be_a_new DemandScoreMatrixdemands_controller_spec.rb
+          expect(assigns(:new_demand_score_matrix)).to be_a_new DemandScoreMatrix
           expect(DemandScoreMatrix.count).to eq 0
         end
       end
