@@ -13,6 +13,7 @@
 #
 # Indexes
 #
+#  idx_demand_score_answers_unique                         (answer_value,score_matrix_question_id) UNIQUE
 #  index_score_matrix_answers_on_score_matrix_question_id  (score_matrix_question_id)
 #
 # Foreign Keys
@@ -25,4 +26,8 @@ class ScoreMatrixAnswer < ApplicationRecord
   validates :score_matrix_question, :description, :answer_value, presence: true
 
   validates :answer_value, uniqueness: { scope: :score_matrix_question, message: I18n.t('activerecord.errors.models.score_matrix_answer.value_already_used') }
+
+  def answer_score
+    answer_value * score_matrix_question.question_weight
+  end
 end

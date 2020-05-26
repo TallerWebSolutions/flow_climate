@@ -1,0 +1,5 @@
+$('#score-matrix-table').html("<%= escape_javascript(render 'score_matrices/score_matrix_table', demand_score_matrix: @demand_score_matrix, score_matrix_questions: @score_matrix_questions, backlog_demands: @backlog_demands) %>");
+
+$('.select-answer').on('change', function() {
+    this.form.submit();
+});

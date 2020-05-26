@@ -178,7 +178,7 @@ RSpec.describe User, type: :model do
   describe '#full_name' do
     let(:user) { Fabricate :user }
 
-    it { expect(user.full_name).to eq "#{user.last_name}, #{user.first_name}" }
+    it { expect(user.full_name).to eq "#{user.first_name} #{user.last_name}" }
   end
 
   describe '#acting_projects' do

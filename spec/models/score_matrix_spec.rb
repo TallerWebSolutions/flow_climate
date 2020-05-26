@@ -9,4 +9,18 @@ RSpec.describe ScoreMatrix, type: :model do
   context 'validations' do
     it { is_expected.to validate_presence_of :product }
   end
+
+  describe '#total_weight' do
+    let(:score_matrix) { Fabricate :score_matrix }
+    let(:other_score_matrix) { Fabricate :score_matrix }
+
+    let!(:score_matrix_question) { Fabricate :score_matrix_question, score_matrix: score_matrix, question_weight: 10 }
+    let!(:other_score_matrix_question) { Fabricate :score_matrix_question, score_matrix: score_matrix, question_weight: 30 }
+
+    it { expect(score_matrix.total_weight).to eq 40 }
+    it { expect(other_score_matrix.total_weight).to eq 0 }
+  end
+
+  pending '#single_dimension?'
+  pending '#questions_dimensions'
 end

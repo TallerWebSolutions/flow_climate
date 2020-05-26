@@ -1,0 +1,9 @@
+function scoreMatrixTabClick(tabName, contentName) {
+    $(".score-matrix-tab").removeClass("active");
+    $(".score-matrix-content").hide();
+
+    $("#" + tabName).addClass("active");
+    $("#" + contentName).show();
+}
+
+scoreMatrixTabClick("customer-dimension-title", "customer-dimension-content");

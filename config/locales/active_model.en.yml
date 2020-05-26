@@ -191,6 +191,11 @@ en:
             internal_process_change: Internal Process Change
             cadences_change: Cadences Change
             internal_comunication_change: Internal Comunication Change
+      score_matrix_question:
+        enums:
+          question_type:
+            customer_dimension: "Customer Dimension"
+            service_provider_dimension: "Service Provider Dimension"
     errors:
       messages:
         record_invalid: 'Validation failed: %{errors}'

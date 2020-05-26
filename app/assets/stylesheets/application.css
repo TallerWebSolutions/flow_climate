@@ -14,10 +14,6 @@
  *= require_self
  */
 
-input[type=radio] {
-    transform: scale(1.5);
-}
-
 .visible {
     display: block;
 }

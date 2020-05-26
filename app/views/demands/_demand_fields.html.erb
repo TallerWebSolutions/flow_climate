@@ -24,7 +24,7 @@
 </td>
 <td><%= I18n.t('general.hours_text', hour_value: number_with_precision(demand.effort_upstream, precision: 2)) %></td>
 <td><%= I18n.t('general.hours_text', hour_value: number_with_precision(demand.effort_downstream, precision: 2)) %></td>
-<td><%= I18n.t('general.score_text', count: number_with_precision(demand.business_score, precision: 2)) if demand.business_score.present? %></td>
+<td><%= I18n.t('general.score_text', count: number_with_precision(demand.demand_score, precision: 2)) if demand.demand_score.present? %></td>
 <td><%= I18n.t('general.hours_text', hour_value: number_with_precision((demand.total_queue_time || 0) / 1.hour, precision: 2)) %></td>
 <td><%= I18n.t('general.hours_text', hour_value: number_with_precision((demand.total_touch_time || 0) / 1.hour, precision: 2)) %></td>
 <td><%= demand.demand_blocks.count %></td>

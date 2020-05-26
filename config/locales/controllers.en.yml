@@ -73,7 +73,6 @@ en:
         title: "Error 404"
         desc: "Page not found"
         back: "Back to the path"
-        page_title: "The page you're looking for does not exist"
     monthly: "Monthly"
     weekly: "Weekly"
     daily: "Daily"
@@ -746,6 +745,8 @@ en:
         expedite: "Expedite"
     montecarlo_dialog:
       title: "Monte Carlo Simulation to Demands"
+    score_research:
+      title: "Score Research"
   project_risk_configs:
     new:
       title: "New Risk Configuration"
@@ -1269,6 +1270,18 @@ en:
       success: "Score matrix question created."
     update:
       success: "Score question updated."
+    new:
+      title: "New Question"
   score_matrix_answers:
     create:
       success: "Answer created."
+    new:
+      no_answer: "I don't know"
+  demand_score_matrices:
+    destroy:
+      tip: "Remove answer"
+    new:
+      title: "Score Demand"
+  score_matrices:
+    show:
+      title: "Score Demands"

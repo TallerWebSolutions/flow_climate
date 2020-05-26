@@ -303,7 +303,7 @@ pt-BR:
         portfolio_unit: Unidade do Portfolio
         team_members: Responsáveis
         demand_title: Título da Demanda
-        business_score: Pontuação de Negócio
+        demand_score: Pontos da Demanda
         project: Projeto
         total_queue_time: Tempo Total de Fila
         total_touch_time: Tempo Total de Trabalho

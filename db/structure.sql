@@ -198,6 +198,49 @@ CREATE TABLE hdb_catalog.event_triggers (
 
 
 --
+-- Name: hdb_action; Type: TABLE; Schema: hdb_catalog; Owner: -
+--
+
+CREATE TABLE hdb_catalog.hdb_action (
+    action_name text NOT NULL,
+    action_defn jsonb NOT NULL,
+    comment text,
+    is_system_defined boolean DEFAULT false
+);
+
+
+--
+-- Name: hdb_action_log; Type: TABLE; Schema: hdb_catalog; Owner: -
+--
+
+CREATE TABLE hdb_catalog.hdb_action_log (
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    action_name text,
+    input_payload jsonb NOT NULL,
+    request_headers jsonb NOT NULL,
+    session_variables jsonb NOT NULL,
+    response_payload jsonb,
+    errors jsonb,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    response_received_at timestamp with time zone,
+    status text NOT NULL,
+    CONSTRAINT hdb_action_log_status_check CHECK ((status = ANY (ARRAY['created'::text, 'processing'::text, 'completed'::text, 'error'::text])))
+);
+
+
+--
+-- Name: hdb_action_permission; Type: TABLE; Schema: hdb_catalog; Owner: -
+--
+
+CREATE TABLE hdb_catalog.hdb_action_permission (
+    action_name text NOT NULL,
+    role_name text NOT NULL,
+    definition jsonb DEFAULT '{}'::jsonb NOT NULL,
+    comment text
+);
+
+
+--
 -- Name: hdb_allowlist; Type: TABLE; Schema: hdb_catalog; Owner: -
 --
 
@@ -251,6 +294,15 @@ CREATE VIEW hdb_catalog.hdb_computed_field_function AS
             ELSE ((hdb_computed_field.definition -> 'function'::text) ->> 'schema'::text)
         END AS function_schema
    FROM hdb_catalog.hdb_computed_field;
+
+
+--
+-- Name: hdb_custom_types; Type: TABLE; Schema: hdb_catalog; Owner: -
+--
+
+CREATE TABLE hdb_catalog.hdb_custom_types (
+    custom_types jsonb NOT NULL
+);
 
 
 --
@@ -476,6 +528,19 @@ CREATE TABLE hdb_catalog.hdb_relationship (
     is_system_defined boolean DEFAULT false,
     CONSTRAINT hdb_relationship_rel_type_check CHECK ((rel_type = ANY (ARRAY['object'::text, 'array'::text])))
 );
+
+
+--
+-- Name: hdb_role; Type: VIEW; Schema: hdb_catalog; Owner: -
+--
+
+CREATE VIEW hdb_catalog.hdb_role AS
+ SELECT DISTINCT q.role_name
+   FROM ( SELECT hdb_permission.role_name
+           FROM hdb_catalog.hdb_permission
+        UNION ALL
+         SELECT hdb_action_permission.role_name
+           FROM hdb_catalog.hdb_action_permission) q;
 
 
 --
@@ -1032,7 +1097,7 @@ CREATE TABLE public.demands (
     total_bloked_working_time numeric DEFAULT 0,
     total_touch_blocked_time numeric DEFAULT 0,
     risk_review_id integer,
-    business_score numeric,
+    demand_score numeric DEFAULT 0.0,
     service_delivery_review_id integer,
     current_stage_id integer,
     customer_id integer
@@ -2942,6 +3007,30 @@ ALTER TABLE ONLY hdb_catalog.event_triggers
 
 
 --
+-- Name: hdb_action_log hdb_action_log_pkey; Type: CONSTRAINT; Schema: hdb_catalog; Owner: -
+--
+
+ALTER TABLE ONLY hdb_catalog.hdb_action_log
+    ADD CONSTRAINT hdb_action_log_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: hdb_action_permission hdb_action_permission_pkey; Type: CONSTRAINT; Schema: hdb_catalog; Owner: -
+--
+
+ALTER TABLE ONLY hdb_catalog.hdb_action_permission
+    ADD CONSTRAINT hdb_action_permission_pkey PRIMARY KEY (action_name, role_name);
+
+
+--
+-- Name: hdb_action hdb_action_pkey; Type: CONSTRAINT; Schema: hdb_catalog; Owner: -
+--
+
+ALTER TABLE ONLY hdb_catalog.hdb_action
+    ADD CONSTRAINT hdb_action_pkey PRIMARY KEY (action_name);
+
+
+--
 -- Name: hdb_allowlist hdb_allowlist_collection_name_key; Type: CONSTRAINT; Schema: hdb_catalog; Owner: -
 --
 
@@ -3466,6 +3555,13 @@ ALTER TABLE ONLY public.users
 --
 
 CREATE INDEX event_invocation_logs_event_id_idx ON hdb_catalog.event_invocation_logs USING btree (event_id);
+
+
+--
+-- Name: event_log_created_at_idx; Type: INDEX; Schema: hdb_catalog; Owner: -
+--
+
+CREATE INDEX event_log_created_at_idx ON hdb_catalog.event_log USING btree (created_at);
 
 
 --
@@ -4392,6 +4488,14 @@ ALTER TABLE ONLY hdb_catalog.event_invocation_logs
 
 ALTER TABLE ONLY hdb_catalog.event_triggers
     ADD CONSTRAINT event_triggers_schema_name_fkey FOREIGN KEY (schema_name, table_name) REFERENCES hdb_catalog.hdb_table(table_schema, table_name) ON UPDATE CASCADE;
+
+
+--
+-- Name: hdb_action_permission hdb_action_permission_action_name_fkey; Type: FK CONSTRAINT; Schema: hdb_catalog; Owner: -
+--
+
+ALTER TABLE ONLY hdb_catalog.hdb_action_permission
+    ADD CONSTRAINT hdb_action_permission_action_name_fkey FOREIGN KEY (action_name) REFERENCES hdb_catalog.hdb_action(action_name) ON UPDATE CASCADE;
 
 
 --
@@ -5331,6 +5435,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200430140032'),
 ('20200504193716'),
 ('20200507203439'),
-('20200511192312');
+('20200511192312'),
+('20200520142236');
 
 

@@ -90,6 +90,18 @@ Rails.application.routes.draw do
 
   resources :devise_customers, only: :show
 
+  resources :score_matrices, only: :show do
+    member do
+      get :customer_dimension
+      get :service_provider_dimension
+    end
+  end
+
+  resources :demand_score_matrices, only: %i[create destroy] do
+    post :create_from_sheet, on: :collection
+    delete :destroy_from_sheet, on: :member
+  end
+
   resources :companies, except: :destroy do
     member do
       patch :add_user
@@ -237,8 +249,12 @@ Rails.application.routes.draw do
       resources :stage_project_configs, only: %i[edit update]
     end
 
-    resources :demands, only: [] do
-      delete :destroy_physically, on: :member
+    resources :demands, only: %i[show destroy] do
+      member do
+        delete :destroy_physically
+
+        get :score_research
+      end
 
       collection do
         get 'demands_csv/(:demands_ids)', action: :demands_csv, as: 'demands_csv'
@@ -255,8 +271,6 @@ Rails.application.routes.draw do
       get 'build_strategic_charts', action: :build_strategic_charts
       get 'statistics_charts', action: :statistics_charts
     end
-
-    resources :demands, only: %i[show destroy]
 
     resources :demand_blocks, only: :index do
       collection do

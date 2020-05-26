@@ -73,7 +73,6 @@ pt-BR:
         title: "Erro 404"
         desc: "Página não encontrada"
         back: "Volte para trilha"
-        page_title: "A página que você está procurando não existe"
     monthly: "Mensal"
     weekly: "Semanal"
     daily: "Diário"
@@ -815,6 +814,8 @@ pt-BR:
         expedite: "Expedição"
     montecarlo_dialog:
       title: "Simulação de Monte Carlo para Demandas"
+    score_research:
+      title: "Pesquisa de Pontuação"
   project_risk_configs:
     new:
       title: "Nova Configuração de Risco"
@@ -1248,6 +1249,18 @@ pt-BR:
       success: "Pergunta de pontuação criada."
     update:
       success: "Pergunta de pontuação atualizada."
+    new:
+      title: "Nova Pergunta"
   score_matrix_answers:
     create:
       success: "Resposta criada."
+    new:
+      no_answer: "Não sei"
+  demand_score_matrices:
+    destroy:
+      tip: "Excluir resposta"
+    new:
+      title: "Pontuar Demanda"
+  score_matrices:
+    show:
+      title: "Pontuar Demandas"

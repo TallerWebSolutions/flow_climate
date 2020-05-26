@@ -6,7 +6,7 @@ RSpec.describe Api::V1::DemandsController, type: :controller do
     let!(:headers) { { HTTP_API_TOKEN: company.api_token } }
 
     let!(:team) { Fabricate :team, company: company }
-    let!(:demand) { Fabricate :demand, team: team, external_id: 'AbC-302', business_score: 10.5 }
+    let!(:demand) { Fabricate :demand, team: team, external_id: 'AbC-302', demand_score: 10.5 }
 
     context 'authenticated' do
       context 'with valid parameters' do
@@ -15,7 +15,7 @@ RSpec.describe Api::V1::DemandsController, type: :controller do
           get :show, params: { id: 'abc-302' }
 
           expect(JSON.parse(response.body)['data']['id']).to eq demand.id
-          expect(JSON.parse(response.body)['data']['business_score']).to eq demand.business_score.to_s
+          expect(JSON.parse(response.body)['data']['demand_score']).to eq demand.demand_score.to_s
         end
       end
     end

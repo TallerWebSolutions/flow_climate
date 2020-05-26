@@ -7,11 +7,11 @@
 #  id                              :bigint           not null, primary key
 #  blocked_working_time_downstream :decimal(, )      default(0.0)
 #  blocked_working_time_upstream   :decimal(, )      default(0.0)
-#  business_score                  :decimal(, )
 #  class_of_service                :integer          default("standard"), not null
 #  commitment_date                 :datetime
 #  cost_to_project                 :decimal(, )      default(0.0)
 #  created_date                    :datetime         not null
+#  demand_score                    :decimal(, )      default(0.0)
 #  demand_title                    :string
 #  demand_type                     :integer          not null
 #  demand_url                      :string
@@ -103,7 +103,7 @@ class Demand < ApplicationRecord
   scope :to_dates, ->(start_date, end_date) { where('(demands.end_date IS NULL AND demands.created_date BETWEEN :start_date AND :end_date) OR (demands.end_date BETWEEN :start_date AND :end_date)', start_date: start_date.beginning_of_day, end_date: end_date.end_of_day) }
   scope :to_end_dates, ->(start_date, end_date) { where('demands.end_date BETWEEN :start_date AND :end_date', start_date: start_date.beginning_of_day, end_date: end_date.end_of_day) }
   scope :dates_inconsistent_to_project, ->(project) { kept.where('demands.commitment_date < :start_date OR demands.end_date > :end_date', start_date: project.start_date, end_date: project.end_date.end_of_day) }
-  scope :unscored_demands, -> { kept.where('demands.business_score IS NULL') }
+  scope :unscored_demands, -> { kept.where('demands.demand_score = 0') }
   scope :with_effort, -> { where('demands.effort_downstream > 0 OR demands.effort_upstream > 0') }
   scope :grouped_end_date_by_month, -> { kept.finished.order(end_date: :desc).group_by { |demand| [demand.end_date.to_date.cwyear, demand.end_date.to_date.month] } }
   scope :not_started, -> { kept.where('demands.commitment_date IS NULL AND demands.end_date IS NULL') }
@@ -131,7 +131,7 @@ class Demand < ApplicationRecord
       demand_title,
       demand_type,
       class_of_service,
-      decimal_value_to_csv(business_score),
+      decimal_value_to_csv(demand_score),
       decimal_value_to_csv(effort_downstream),
       decimal_value_to_csv(effort_upstream)
     ] + build_date_values_array
@@ -144,7 +144,7 @@ class Demand < ApplicationRecord
   def to_hash
     {
       id: id, portfolio_unit: portfolio_unit_name, external_id: external_id, project_id: project_id, demand_title: demand_title,
-      business_score: business_score, effort_upstream: effort_upstream, effort_downstream: effort_downstream, cost_to_project: cost_to_project,
+      demand_score: demand_score, effort_upstream: effort_upstream, effort_downstream: effort_downstream, cost_to_project: cost_to_project,
       current_stage: current_stage&.name, time_in_current_stage: time_in_current_stage, partial_leadtime: partial_leadtime,
       responsibles: active_team_members.map(&:to_hash), demand_blocks: demand_blocks.map(&:to_hash)
     }
@@ -246,6 +246,10 @@ class Demand < ApplicationRecord
     return first_stage if first_stage.present?
 
     project.stages.where('stages.order >= 0').order(:order).first
+  end
+
+  def not_started?
+    commitment_date.blank? && end_date.blank?
   end
 
   private

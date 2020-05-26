@@ -77,6 +77,12 @@ RSpec.describe DemandsController, type: :controller do
 
       it { expect(response).to have_http_status :unauthorized }
     end
+
+    describe 'GET #score_research' do
+      before { get :score_research, params: { company_id: 'foo', id: 'bar' }, xhr: true }
+
+      it { expect(response).to have_http_status :unauthorized }
+    end
   end
 
   context 'authenticated as gold' do
@@ -144,7 +150,7 @@ RSpec.describe DemandsController, type: :controller do
         let(:date_to_demand) { 1.day.ago.change(usec: 0) }
 
         it 'creates the new demand and redirects' do
-          post :create, params: { company_id: company, project_id: project, demand: { product_id: product, customer_id: customer, team_id: team, external_id: 'xpto', demand_type: 'bug', manual_effort: true, class_of_service: 'expedite', assignees_count: 3, effort_upstream: 5, effort_downstream: 2, created_date: date_to_demand, commitment_date: date_to_demand, end_date: date_to_demand, business_score: 10.5 } }
+          post :create, params: { company_id: company, project_id: project, demand: { product_id: product, customer_id: customer, team_id: team, external_id: 'xpto', demand_type: 'bug', manual_effort: true, class_of_service: 'expedite', assignees_count: 3, effort_upstream: 5, effort_downstream: 2, created_date: date_to_demand, commitment_date: date_to_demand, end_date: date_to_demand, demand_score: 10.5 } }
 
           expect(assigns(:company)).to eq company
           expect(assigns(:project)).to eq project
@@ -156,7 +162,7 @@ RSpec.describe DemandsController, type: :controller do
           expect(created_demand.external_id).to eq 'xpto'
           expect(created_demand.demand_type).to eq 'bug'
           expect(created_demand.class_of_service).to eq 'expedite'
-          expect(created_demand.business_score).to eq 10.5
+          expect(created_demand.demand_score).to eq 10.5
           expect(created_demand.downstream_demand?).to be true
           expect(created_demand.manual_effort).to be true
           expect(created_demand.effort_upstream).to eq 5
@@ -297,7 +303,7 @@ RSpec.describe DemandsController, type: :controller do
 
       context 'passing valid parameters' do
         it 'updates the demand and redirects to projects index' do
-          put :update, params: { company_id: company, project_id: project, id: demand, demands_ids: Demand.all.map(&:id), demand: { product_id: product, customer_id: customer, team_id: team, external_id: 'xpto', demand_type: 'bug', manual_effort: true, class_of_service: 'expedite', effort_upstream: 5, effort_downstream: 2, created_date: created_date, commitment_date: created_date, end_date: end_date, business_score: 10.5 } }, xhr: true
+          put :update, params: { company_id: company, project_id: project, id: demand, demands_ids: Demand.all.map(&:id), demand: { product_id: product, customer_id: customer, team_id: team, external_id: 'xpto', demand_type: 'bug', manual_effort: true, class_of_service: 'expedite', effort_upstream: 5, effort_downstream: 2, created_date: created_date, commitment_date: created_date, end_date: end_date, demand_score: 10.5 } }, xhr: true
           updated_demand = Demand.last
           expect(updated_demand.customer).to eq customer
           expect(updated_demand.product).to eq product
@@ -307,7 +313,7 @@ RSpec.describe DemandsController, type: :controller do
           expect(updated_demand.downstream_demand?).to be true
           expect(updated_demand.manual_effort).to be true
           expect(updated_demand.class_of_service).to eq 'expedite'
-          expect(updated_demand.business_score).to eq 10.5
+          expect(updated_demand.demand_score).to eq 10.5
           expect(updated_demand.effort_upstream.to_f).to eq 5
           expect(updated_demand.effort_downstream.to_f).to eq 2
           expect(updated_demand.created_date).to eq created_date
@@ -499,7 +505,7 @@ RSpec.describe DemandsController, type: :controller do
           expect(csv.first[7]).to eq 'standard'
           expect(csv.first[8]).to eq demand.effort_downstream.to_f.to_s.gsub('.', I18n.t('number.format.separator'))
           expect(csv.first[9]).to eq demand.effort_upstream.to_f.to_s.gsub('.', I18n.t('number.format.separator'))
-          expect(csv.first[10]).to eq demand.business_score.to_f.to_s.gsub('.', I18n.t('number.format.separator'))
+          expect(csv.first[10]).to eq demand.demand_score.to_f.to_s.gsub('.', I18n.t('number.format.separator'))
           expect(csv.first[11]).to eq demand.created_date.iso8601
           expect(csv.first[12]).to eq demand.commitment_date.iso8601
           expect(csv.first[13]).to eq demand.end_date.iso8601
@@ -954,6 +960,68 @@ RSpec.describe DemandsController, type: :controller do
 
             it { expect(response).to have_http_status :not_found }
           end
+        end
+      end
+    end
+
+    describe 'GET #score_research' do
+      include_context 'demands for controller specs'
+
+      context 'passing a valid ID' do
+        context 'with data' do
+          context 'when the product does not have the score matrix yet' do
+            it 'assigns the instance variable and renders the template' do
+              expect(DemandScoreMatrixService.instance).to receive(:percentage_answered).once
+              expect(DemandScoreMatrixService.instance).to receive(:current_position_in_backlog).once
+              expect(DemandScoreMatrixService.instance).to(receive(:demands_list).once.and_return([1, 2]))
+              get :score_research, params: { company_id: company, id: first_demand }
+
+              expect(response).to render_template 'demands/score_matrix/score_research'
+              expect(assigns(:company)).to eq company
+              expect(assigns(:demand)).to eq first_demand
+              expect(assigns(:demand_score_matrix)).to be_a_new DemandScoreMatrix
+              expect(product.reload.score_matrix).to be_a ScoreMatrix
+            end
+          end
+
+          context 'when the product already has the score matrix' do
+            let!(:score_matrix) { Fabricate :score_matrix, product: product }
+
+            it 'assigns the instance variable and renders the template' do
+              get :score_research, params: { company_id: company, id: first_demand }
+
+              expect(response).to render_template 'demands/score_matrix/score_research'
+              expect(assigns(:company)).to eq company
+              expect(assigns(:demand)).to eq first_demand
+              expect(product.reload.score_matrix).to eq score_matrix
+            end
+          end
+        end
+      end
+
+      context 'passing invalid parameters' do
+        context 'non-existent company' do
+          before { get :score_research, params: { company_id: 'foo', id: first_demand } }
+
+          it { expect(response).to have_http_status :not_found }
+        end
+
+        context 'not permitted' do
+          let(:company) { Fabricate :company, users: [] }
+          let(:demand) { Fabricate :demand, company: company }
+
+          before { get :score_research, params: { company_id: company, id: first_demand } }
+
+          it { expect(response).to have_http_status :not_found }
+        end
+
+        context 'a different company' do
+          let(:other_company) { Fabricate :company, users: [user] }
+          let!(:demand) { Fabricate :demand, company: company, product: product }
+
+          before { get :score_research, params: { company_id: other_company, id: demand } }
+
+          it { expect(response).to have_http_status :not_found }
         end
       end
     end

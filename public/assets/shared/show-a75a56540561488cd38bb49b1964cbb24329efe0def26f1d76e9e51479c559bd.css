@@ -73,6 +73,10 @@
     white-space: nowrap;
 }
 
+.table-detail {
+    font-size: smaller;
+}
+
 .upstream {
     font-style: italic;
 }
@@ -114,7 +118,7 @@
 }
 
 .summary-card-frame {
-    padding: 0 2px 0px 2px;
+    padding: 0 2px 0 2px;
 }
 
 .summary-card-content {
@@ -155,6 +159,23 @@
 }
 
 .center-text {
+    text-align: center;
+}
+
+.x-large-font {
+    font-size: x-large;
+}
+
+.larger-font {
+    font-size: larger;
+}
+
+.small-font {
+    font-size: small;
+}
+
+.demand-score {
+    font-size: xx-large;
     text-align: center;
 }
 

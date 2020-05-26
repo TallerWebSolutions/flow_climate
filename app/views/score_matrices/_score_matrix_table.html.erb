@@ -1,0 +1,47 @@
+<thead>
+  <tr>
+    <th></th>
+    <th><%= Demand.human_attribute_name :external_id %></th>
+    <th><%= Demand.human_attribute_name :demand_type %></th>
+    <th><%= Demand.human_attribute_name :class_of_service %></th>
+    <th><%= Stage.model_name.human %></th>
+    <th><%= Demand.human_attribute_name :demand_score %></th>
+    <% score_matrix_questions.each do |question| %>
+      <th><%= "#{question.description} (#{question.question_weight})" %></th>
+    <% end %>
+  </tr>
+</thead>
+
+<tbody>
+  <% backlog_demands.each do |demand| %>
+    <tr>
+      <td>
+        <%= link_to score_research_company_demand_path(demand.company, demand) do %>
+          <i class="fas fa-tasks" title="<%= I18n.t('demand_score_matrices.new.title') %>"></i>
+        <% end %>
+        <i class="far fa-question-circle" title="<%= demand.demand_title %>"></i>
+      </td>
+      <td><%= demand.external_id %></td>
+      <td><%= I18n.t("activerecord.attributes.demand.enums.demand_type.#{demand.demand_type}") %></td>
+      <td><%= I18n.t("activerecord.attributes.demand.enums.class_of_service.#{demand.class_of_service}") %></td>
+      <td><%= demand.current_stage_name %></td>
+      <td><%= number_with_precision(demand.demand_score, precision: 3) %></td>
+      <%= form_tag create_from_sheet_demand_score_matrices_path(demand_score_matrix), class: 'form' do %>
+        <%= hidden_field_tag :demand_id, demand.id %>
+        <%= hidden_field_tag :score_question_dimensions, score_matrix_questions.map(&:question_type).uniq.join(',') %>
+
+        <% score_matrix_questions.each do |score_question| %>
+          <% already_answered = (demand.demand_score_matrices.map(&:score_matrix_answer) & score_question.score_matrix_answers).first %>
+
+          <% demand_score_matrix = demand.demand_score_matrices.find_by(score_matrix_answer: already_answered) %>
+
+          <% if demand_score_matrix.present? %>
+            <td><%= demand_score_matrix.score_matrix_answer.answer_value %></td>
+          <% else %>
+            <td><%= select_tag "score_matrix_question_#{score_question.id}", options_from_collection_for_select(score_question.score_matrix_answers, :id, :description), include_blank: I18n.t('general.select'), class: 'form-control select-answer' %></td>
+          <% end %>
+        <% end %>
+      <% end %>
+    </tr>
+  <% end %>
+</tbody>

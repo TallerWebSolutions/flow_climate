@@ -1,0 +1,17 @@
+<h1 class="bottom-spaced-component"><%= @score_matrix.product.name %></h1>
+
+<% unless @score_matrix.single_dimension? %>
+  <div class="center-text bottom-spaced-component">
+    <%= link_to I18n.t('activerecord.attributes.score_matrix_question.enums.question_type.customer_dimension'), customer_dimension_score_matrix_path(@score_matrix), class: "btn btn-default #{'active' if @questions_dimension == 'customer_dimension' || @questions_dimension.blank?}" %>
+    <%= link_to I18n.t('activerecord.attributes.score_matrix_question.enums.question_type.service_provider_dimension'), service_provider_dimension_score_matrix_path(@score_matrix), class: "btn btn-default #{'active' if @questions_dimension == 'service_provider_dimension'}" %>
+  </div>
+<% end %>
+
+<table class="table table-striped small-font" id="score-matrix-table">
+  <%= render 'score_matrices/score_matrix_table', score_matrix: @score_matrix, demand_score_matrix: @demand_score_matrix, score_matrix_questions: @score_matrix_questions, backlog_demands: @backlog_demands  %>
+</table>
+
+<% content_for :javascript do %>
+  <%= javascript_include_tag 'routes/score_matrix_routes' %>
+  <%= javascript_include_tag 'score_matrices/show' %>
+<% end %>
