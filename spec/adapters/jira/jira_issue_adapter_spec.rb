@@ -391,5 +391,17 @@ RSpec.describe Jira::JiraIssueAdapter, type: :service do
         end
       end
     end
+
+    context 'when the product has changed' do
+      let!(:demand) { Fabricate :demand, external_id: 'foo' }
+
+      let!(:jira_issue) { client.Issue.build({ key: 'xpto do foo', summary: 'foo of bar', fields: { created: '2018-07-02T11:20:18.998-0300', issuetype: { name: 'Story' }, customfield_10028: { value: 'Expedite' }, project: { key: 'foo' }, customfield_10024: [{ name: 'foo' }, { name: 'bar' }] }, changelog: { startAt: 0, maxResults: 2, total: 2, histories: [{ id: '10041', created: '2018-07-09T23:34:47.440-0300', items: [{ field: 'status', from: 'first_stage', to: 'second_stage' }] }, { id: '10040', created: '2018-07-09T22:34:47.440-0300', items: [{ field: 'Key', fromString: demand.external_id, to: 'bla' }] }] } }.with_indifferent_access) }
+
+      it 'deletes the previous demand and creates the new one' do
+        described_class.instance.process_issue!(jira_account, product, first_project, jira_issue)
+        expect(Demand.count).to eq 1
+        expect(Demand.first.external_id).to eq 'xpto do foo'
+      end
+    end
   end
 end
