@@ -12,6 +12,7 @@ module Jira
       project_in_jira = Jira::JiraReader.instance.read_project(jira_issue_attrs(jira_issue), jira_account) || project
 
       update_demand!(demand, jira_account, jira_issue, project_in_jira, product_in_jira)
+      process_product_changes(jira_issue_changelog(jira_issue))
     end
 
     private
@@ -61,6 +62,21 @@ module Jira
         next if history['items'].blank?
 
         process_demand_block(demand, history, history['items'][0])
+      end
+    end
+
+    def process_product_changes(jira_issue_changelog)
+      return unless hash_has_histories?(jira_issue_changelog)
+
+      sorted_histories = jira_issue_changelog['histories'].sort_by { |history_hash| Time.zone.parse(history_hash['created']) }
+      history_array = jira_key_field(sorted_histories)
+
+      history_array.each do |history|
+        from_key = history['fromString']
+
+        demand = Demand.find_by(external_id: from_key)
+
+        demand.destroy if demand.present?
       end
     end
 
@@ -193,6 +209,18 @@ module Jira
 
       history_item = history['items'][0]
       history_item['field'].present? && (history_item['field'].casecmp('impediment').zero? || history_item['field'].casecmp('flagged').zero?)
+    end
+
+    def jira_key_field(histories)
+      key_change_array = []
+      histories.each do |history_hash|
+        next if history_hash['items'].blank?
+
+        change_key_elements = history_hash['items'].select { |item| item['field'] == 'Key' }
+        key_change_array << change_key_elements if change_key_elements.present?
+      end
+
+      key_change_array.flatten
     end
 
     def hash_has_histories?(jira_issue_changelog)
