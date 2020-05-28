@@ -21,10 +21,11 @@ function filterDemands(companyId, demandsIds) {
     const demandClassOfService = $('#demands-table-class-of-service').val();
 
     const searchText = $('#search_text').val();
+    const searchDemandTags = $('#search-demand-tags').val();
 
     const start_date = $('#demands_start_date').val();
     const end_date = $('#demands_end_date').val();
     const groupingPeriod = $('#demands-table-grouping-period').val();
 
-    searchDemands(companyId, demandsIds, grouping, flowStatus, demandType, demandClassOfService, searchText, start_date, end_date, groupingPeriod)
+    searchDemands(companyId, demandsIds, grouping, flowStatus, demandType, demandClassOfService, searchText, start_date, end_date, groupingPeriod, searchDemandTags)
 }

@@ -1100,7 +1100,8 @@ CREATE TABLE public.demands (
     demand_score numeric DEFAULT 0.0,
     service_delivery_review_id integer,
     current_stage_id integer,
-    customer_id integer
+    customer_id integer,
+    demand_tags character varying[] DEFAULT '{}'::character varying[]
 );
 
 
@@ -5436,6 +5437,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200504193716'),
 ('20200507203439'),
 ('20200511192312'),
-('20200520142236');
+('20200520142236'),
+('20200528154520');
 
 

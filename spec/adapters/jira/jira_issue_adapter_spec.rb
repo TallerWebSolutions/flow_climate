@@ -100,7 +100,7 @@ RSpec.describe Jira::JiraIssueAdapter, type: :service do
         let!(:other_membership) { Fabricate :membership, team: team, team_member: other_team_member, hours_per_month: 40, start_date: 2.months.ago, end_date: 1.month.ago }
         let!(:other_company_membership) { Fabricate :membership, team: team, team_member: other_company_team_member, hours_per_month: 120, start_date: 2.months.ago, end_date: nil }
 
-        let!(:jira_issue) { client.Issue.build({ key: '10000', fields: { created: '2018-07-02T11:20:18.998-0300', summary: 'foo of bar', issuetype: { name: 'Story' }, customfield_10028: { value: 'Expedite' }, project: { key: 'foo' }, customfield_10024: [{ accountId: 'xpto', name: team_member.name }, { emailAddress: 'bar' }, { accountId: 'sbbrubles' }] }, changelog: { startAt: 0, maxResults: 2, total: 2, histories: [{ id: '10039', created: '2018-07-08T22:34:47.440-0300', items: [{ field: 'status', from: 'first_stage', to: 'second_stage' }] }, { id: '10038', created: '2018-07-06T09:40:43.886-0300', items: [{ field: 'status', from: 'third_stage', to: 'first_stage' }] }, { id: '10432', created: '2018-07-06T09:40:43.886-0300', items: [{ field: 'Responsible', fieldId: 'customfield_10024', from: "[#{team_member.name}]", to: "[#{team_member.name}]", toString: "[#{team_member.name}, #{other_team_member.name}]" }] }] } }.with_indifferent_access) }
+        let!(:jira_issue) { client.Issue.build({ key: '10000', fields: { created: '2018-07-02T11:20:18.998-0300', summary: 'foo of bar', issuetype: { name: 'Story' }, customfield_10028: { value: 'Expedite' }, project: { key: 'foo' }, customfield_10024: [{ accountId: 'xpto', name: team_member.name }, { emailAddress: 'bar' }, { accountId: 'sbbrubles' }] }, changelog: { startAt: 0, maxResults: 2, total: 2, histories: [{ id: '10039', created: '2018-07-08T22:34:47.440-0300', items: [{ field: 'status', from: 'first_stage', to: 'second_stage' }] }, { id: '10038', created: '2018-07-06T09:40:43.886-0300', items: [{ field: 'status', from: 'third_stage', to: 'first_stage' }] }, { id: '10432', created: '2018-07-06T09:40:43.886-0300', items: [{ field: 'Responsible', fieldId: 'customfield_10024', from: "[#{team_member.name}]", to: "[#{team_member.name}]", toString: "[#{team_member.name}, #{other_team_member.name}]" }] }, { id: '10061', created: '2018-07-06T09:40:43.886-0300', items: [{ field: 'labels', fromString: nil, toString: 'xpto foo bla' }] }] } }.with_indifferent_access) }
 
         it 'creates the demand and adds the members' do
           described_class.instance.process_issue!(jira_account, product, first_project, jira_issue)
@@ -114,6 +114,7 @@ RSpec.describe Jira::JiraIssueAdapter, type: :service do
           expect(Demand.last.downstream_demand?).to be false
           expect(Demand.last).to be_feature
           expect(Demand.last).to be_expedite
+          expect(Demand.last.demand_tags).to eq %w[xpto foo bla]
           expect(Demand.last.created_date).to eq Time.zone.parse('2018-07-02T11:20:18.998-0300')
         end
       end

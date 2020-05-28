@@ -106,6 +106,12 @@ class DemandsRepository
     demands
   end
 
+  def demand_tags_query(demands, demand_tags)
+    return demands.where('lower(demand_tags::text)::varchar[] @> lower(ARRAY[?]::text)::varchar[]', demand_tags) if demand_tags.present?
+
+    demands
+  end
+
   def class_of_service_query(demands, class_of_service)
     return demands.where(class_of_service: class_of_service) if class_of_service.present? && class_of_service != 'all_classes'
 

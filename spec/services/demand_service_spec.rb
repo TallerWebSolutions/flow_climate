@@ -16,10 +16,10 @@ RSpec.describe DemandService, type: :service do
     let(:end_stage) { Fabricate :stage, company: company, commitment_point: false, end_point: true, order: 2, projects: [project], stage_stream: :downstream }
     let(:out_stream_stage) { Fabricate :stage, company: company, commitment_point: false, end_point: false, order: 3, projects: [project], stage_stream: :out_stream }
 
-    let!(:first_demand) { Fabricate :demand, project: project, demand_type: :bug, class_of_service: :expedite, created_date: 19.days.ago }
-    let!(:second_demand) { Fabricate :demand, project: project, demand_type: :bug, class_of_service: :standard, created_date: 8.days.ago }
-    let!(:third_demand) { Fabricate :demand, project: project, demand_type: :feature, class_of_service: :expedite, created_date: 2.days.ago }
-    let!(:fourth_demand) { Fabricate :demand, project: project, demand_type: :chore, class_of_service: :expedite, created_date: 12.days.ago }
+    let!(:first_demand) { Fabricate :demand, project: project, demand_type: :bug, class_of_service: :expedite, created_date: 19.days.ago, demand_tags: %w[aaa ccc sbbrubles] }
+    let!(:second_demand) { Fabricate :demand, project: project, demand_type: :bug, class_of_service: :standard, created_date: 8.days.ago, demand_tags: %w[sbbrubles xpto] }
+    let!(:third_demand) { Fabricate :demand, project: project, demand_type: :feature, class_of_service: :expedite, created_date: 2.days.ago, demand_tags: %w[aaa ccc] }
+    let!(:fourth_demand) { Fabricate :demand, project: project, demand_type: :chore, class_of_service: :expedite, created_date: 12.days.ago, demand_tags: %w[xpto] }
 
     let!(:first_transition) { Fabricate :demand_transition, stage: other_stage, demand: first_demand, last_time_in: 18.days.ago, last_time_out: 10.days.ago }
     let!(:second_transition) { Fabricate :demand_transition, stage: other_stage, demand: second_demand, last_time_in: 7.days.ago, last_time_out: 6.days.ago }
@@ -54,8 +54,9 @@ RSpec.describe DemandService, type: :service do
       expect(DemandsRepository.instance).to(receive(:flow_status_query).with(anything, 'bla').once { Demand.none })
       expect(DemandsRepository.instance).to(receive(:demand_type_query).with(anything, 'bug').once { Demand.none })
       expect(DemandsRepository.instance).to(receive(:class_of_service_query).with(anything, 'expedite').once { Demand.none })
+      expect(DemandsRepository.instance).to(receive(:demand_tags_query).with(anything, 'xpto sbbrubles').once { Demand.none })
 
-      described_class.instance.search_engine(Demand.all, Time.zone.now, Time.zone.now, 'foo', 'bla', 'bug', 'expedite')
+      described_class.instance.search_engine(Demand.all, Time.zone.now, Time.zone.now, 'foo', 'bla', 'bug', 'expedite', 'xpto sbbrubles')
     end
   end
 end

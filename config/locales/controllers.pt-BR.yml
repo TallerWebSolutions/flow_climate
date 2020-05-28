@@ -703,7 +703,7 @@ pt-BR:
         throughput_per_period: "Throughput Usado"
       search:
         text:
-          placeholder: "buscar por nome de produto, projeto ou unidade de portfólio ou pelo ID ou título da demanda"
+          placeholder: "nome de produto, projeto ou unidade de portfólio ou pelo ID ou título da demanda"
       last_deliveries: "Últimas entregas"
       last_larger_lead_times_four_weeks: "Últ. cinco maiores lead times (4 semanas)"
       last_larger_lead_times: "Últ. cinco maiores lead times"

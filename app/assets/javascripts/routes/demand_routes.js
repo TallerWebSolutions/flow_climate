@@ -8,7 +8,7 @@ function getDemands(companyId, demandsIds) {
     });
 }
 
-function searchDemands(companyId, demandsIds, grouping, flowStatus, demandType, demandClassOfService, searchText, startDate, endDate, groupingPeriod) {
+function searchDemands(companyId, demandsIds, grouping, flowStatus, demandType, demandClassOfService, searchText, startDate, endDate, groupingPeriod, searchDemandTags) {
     $("#general-loader").show();
 
     $(".form-control").prop('disabled', true);
@@ -16,7 +16,7 @@ function searchDemands(companyId, demandsIds, grouping, flowStatus, demandType, 
     jQuery.ajax({
         url: `/companies/${companyId}/demands/search_demands.js`,
         type: "GET",
-        data: `&demands_ids=${demandsIds}&grouping=${grouping}&flow_status=${flowStatus}&demand_type=${demandType}&demand_class_of_service=${demandClassOfService}&search_text=${searchText}&start_date=${startDate}&end_date=${endDate}&grouping_period=${groupingPeriod}`
+        data: `&demands_ids=${demandsIds}&grouping=${grouping}&flow_status=${flowStatus}&demand_type=${demandType}&demand_class_of_service=${demandClassOfService}&search_text=${searchText}&start_date=${startDate}&end_date=${endDate}&grouping_period=${groupingPeriod}&search_demand_tags=${searchDemandTags}`
     });
 }
 

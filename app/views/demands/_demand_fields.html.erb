@@ -33,8 +33,11 @@
 <td><%= I18n.l(demand.created_date, format: :short) if demand.created_date.present? %></td>
 <td><%= I18n.l(demand.commitment_date, format: :short) if demand.commitment_date.present? %></td>
 <td><%= I18n.l(demand.end_date, format: :short) if demand.end_date.present? %></td>
-
-<td><%= demand.project.name %></td>
+<td>
+  <% demand.demand_tags.each do |demand_tag| %>
+    <span class="label label-info"><%= demand_tag %></span>
+  <% end %>
+</td>
 <td><%= demand.demand_title %></td>
 
 <td><%= render 'demands/demand_actions', company: company, demand: demand, demands_ids: demands_ids %></td>

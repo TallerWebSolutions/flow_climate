@@ -591,10 +591,10 @@ RSpec.describe DemandsController, type: :controller do
 
       context 'passing valid parameters' do
         context 'having data' do
-          let!(:first_demand) { Fabricate :demand, company: company, product: product, project: first_project, external_id: 'hhh', demand_title: 'foo', demand_type: :feature, class_of_service: :standard, created_date: 2.days.ago, commitment_date: nil, end_date: nil, effort_downstream: 20, effort_upstream: 0 }
-          let!(:second_demand) { Fabricate :demand, company: company, product: product, project: first_project, demand_title: 'foo bar', demand_type: :bug, class_of_service: :expedite, created_date: 1.day.ago, commitment_date: Time.zone.today, end_date: nil, effort_downstream: 0, effort_upstream: 0 }
-          let!(:third_demand) { Fabricate :demand, company: company, product: product, project: first_project, demand_title: 'bar foo', demand_type: :feature, class_of_service: :intangible, created_date: 5.days.ago, commitment_date: 4.days.ago, end_date: 1.day.ago, effort_downstream: 0, effort_upstream: 10 }
-          let!(:fourth_demand) { Fabricate :demand, company: company, product: product, project: first_project, demand_title: 'xpto', demand_type: :chore, class_of_service: :standard, created_date: 10.days.ago, commitment_date: 5.days.ago, end_date: Time.zone.today, effort_downstream: 0, effort_upstream: 0 }
+          let!(:first_demand) { Fabricate :demand, company: company, product: product, project: first_project, external_id: 'hhh', demand_title: 'foo', demand_type: :feature, class_of_service: :standard, created_date: 2.days.ago, commitment_date: nil, end_date: nil, effort_downstream: 20, effort_upstream: 0, demand_tags: %w[aaa ccc sbbrubles] }
+          let!(:second_demand) { Fabricate :demand, company: company, product: product, project: first_project, demand_title: 'foo bar', demand_type: :bug, class_of_service: :expedite, created_date: 1.day.ago, commitment_date: Time.zone.today, end_date: nil, effort_downstream: 0, effort_upstream: 0, demand_tags: %w[sbbrubles xpto] }
+          let!(:third_demand) { Fabricate :demand, company: company, product: product, project: first_project, demand_title: 'bar foo', demand_type: :feature, class_of_service: :intangible, created_date: 5.days.ago, commitment_date: 4.days.ago, end_date: 1.day.ago, effort_downstream: 0, effort_upstream: 10, demand_tags: %w[aaa ccc] }
+          let!(:fourth_demand) { Fabricate :demand, company: company, product: product, project: first_project, demand_title: 'xpto', demand_type: :chore, class_of_service: :standard, created_date: 10.days.ago, commitment_date: 5.days.ago, end_date: Time.zone.today, effort_downstream: 0, effort_upstream: 0, demand_tags: %w[xpto] }
 
           let!(:fifth_demand) { Fabricate :demand, company: company, product: product, project: second_project, demand_title: 'xpto', demand_type: :ui, class_of_service: :fixed_date, created_date: 1.month.ago, commitment_date: nil, end_date: nil, effort_downstream: 0, effort_upstream: 0 }
           let!(:sixth_demand) { Fabricate :demand, company: company, product: product, project: second_project, demand_title: 'sas', demand_type: :feature, class_of_service: :standard, created_date: 1.day.ago, commitment_date: Time.zone.today, end_date: nil, effort_downstream: 0, effort_upstream: 0 }
@@ -847,6 +847,17 @@ RSpec.describe DemandsController, type: :controller do
                 expect(assigns(:confidence_80_leadtime)).to eq 0
                 expect(assigns(:confidence_65_leadtime)).to eq 0
               end
+            end
+          end
+
+          context 'with search on tags' do
+            it 'returns the matches' do
+              get :search_demands, params: { company_id: company, demands_ids: Demand.all.map(&:id).join(','), start_date: start_date, end_date: end_date, search_text: nil, period: :all, search_demand_tags: 'xpto' }, xhr: true
+              expect(response).to render_template 'demands/search_demands'
+              expect(assigns(:demands).map(&:id)).to eq [second_demand.id, fourth_demand.id]
+              expect(assigns(:confidence_95_leadtime)).to be_within(0.1).of(4.5)
+              expect(assigns(:confidence_80_leadtime)).to be_within(0.1).of(4.5)
+              expect(assigns(:confidence_65_leadtime)).to be_within(0.1).of(4.5)
             end
           end
         end

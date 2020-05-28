@@ -13,6 +13,7 @@ module Jira
 
       update_demand!(demand, jira_account, jira_issue, project_in_jira, product_in_jira)
       process_product_changes(jira_issue_changelog(jira_issue))
+      process_labels(demand, jira_issue_changelog(jira_issue))
     end
 
     private
@@ -69,7 +70,7 @@ module Jira
       return unless hash_has_histories?(jira_issue_changelog)
 
       sorted_histories = jira_issue_changelog['histories'].sort_by { |history_hash| Time.zone.parse(history_hash['created']) }
-      history_array = jira_key_field(sorted_histories)
+      history_array = jira_field_hash(sorted_histories, 'Key')
 
       history_array.each do |history|
         from_key = history['fromString']
@@ -78,6 +79,21 @@ module Jira
 
         demand.destroy if demand.present?
       end
+    end
+
+    def process_labels(demand, jira_issue_changelog)
+      return unless hash_has_histories?(jira_issue_changelog)
+
+      sorted_histories = jira_issue_changelog['histories'].sort_by { |history_hash| Time.zone.parse(history_hash['created']) }
+      history_array = jira_field_hash(sorted_histories, 'labels')
+
+      history = history_array.last
+
+      new_labels_to_demand = []
+
+      new_labels_to_demand = history['toString']&.split(' ') if history.present?
+
+      demand.update(demand_tags: new_labels_to_demand)
     end
 
     def read_transitions!(demand, issue_changelog)
@@ -211,12 +227,12 @@ module Jira
       history_item['field'].present? && (history_item['field'].casecmp('impediment').zero? || history_item['field'].casecmp('flagged').zero?)
     end
 
-    def jira_key_field(histories)
+    def jira_field_hash(histories, field_name)
       key_change_array = []
       histories.each do |history_hash|
         next if history_hash['items'].blank?
 
-        change_key_elements = history_hash['items'].select { |item| item['field'] == 'Key' }
+        change_key_elements = history_hash['items'].select { |item| item['field'] == field_name }
         key_change_array << change_key_elements if change_key_elements.present?
       end
 
