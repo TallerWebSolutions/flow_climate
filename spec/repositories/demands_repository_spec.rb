@@ -251,10 +251,10 @@ RSpec.describe DemandsRepository, type: :repository do
     let(:project) { Fabricate :project, company: company, customers: [customer], products: [product, other_product], name: 'sbbrubles' }
     let(:other_project) { Fabricate :project, company: company, customers: [customer], products: [product, other_product], name: 'voyager' }
 
-    let!(:first_demand) { Fabricate :demand, company: company, product: product, project: project, external_id: 'hhh', demand_title: 'foo', demand_type: :feature, class_of_service: :standard, created_date: 2.days.ago, commitment_date: nil, end_date: nil, effort_downstream: 20, effort_upstream: 15 }
-    let!(:second_demand) { Fabricate :demand, company: company, product: product, portfolio_unit: portfolio_unit, project: project, demand_title: 'foo bar', demand_type: :bug, class_of_service: :expedite, created_date: 1.day.ago, commitment_date: Time.zone.today, end_date: nil, effort_downstream: 0, effort_upstream: 0 }
-    let!(:third_demand) { Fabricate :demand, company: company, product: product, project: project, demand_title: 'bar foo', demand_type: :feature, class_of_service: :intangible, created_date: 5.days.ago, commitment_date: nil, end_date: 1.day.ago, effort_downstream: 0, effort_upstream: 10 }
-    let!(:fourth_demand) { Fabricate :demand, company: company, product: product, project: project, demand_title: 'xpto', demand_type: :chore, class_of_service: :standard, created_date: 10.days.ago, commitment_date: 5.days.ago, end_date: Time.zone.today, effort_downstream: 10, effort_upstream: 20 }
+    let!(:first_demand) { Fabricate :demand, company: company, product: product, project: project, external_id: 'hhh', demand_title: 'foo', demand_type: :feature, class_of_service: :standard, created_date: 2.days.ago, commitment_date: nil, end_date: nil, effort_downstream: 20, effort_upstream: 15, demand_tags: %w[aaa ccc sbbrubles] }
+    let!(:second_demand) { Fabricate :demand, company: company, product: product, portfolio_unit: portfolio_unit, project: project, demand_title: 'foo bar', demand_type: :bug, class_of_service: :expedite, created_date: 1.day.ago, commitment_date: Time.zone.today, end_date: nil, effort_downstream: 0, effort_upstream: 0, demand_tags: %w[sbbrubles xpto] }
+    let!(:third_demand) { Fabricate :demand, company: company, product: product, project: project, demand_title: 'bar foo', demand_type: :feature, class_of_service: :intangible, created_date: 5.days.ago, commitment_date: nil, end_date: 1.day.ago, effort_downstream: 0, effort_upstream: 10, demand_tags: %w[aaa ccc] }
+    let!(:fourth_demand) { Fabricate :demand, company: company, product: product, project: project, demand_title: 'xpto', demand_type: :chore, class_of_service: :standard, created_date: 10.days.ago, commitment_date: 5.days.ago, end_date: Time.zone.today, effort_downstream: 10, effort_upstream: 20, demand_tags: %w[xpto] }
 
     let!(:fifth_demand) { Fabricate :demand, company: company, product: other_product, portfolio_unit: other_portfolio_unit, project: project, demand_title: 'xpto', demand_type: :ui, class_of_service: :fixed_date, created_date: 1.month.ago, commitment_date: nil, end_date: nil, effort_downstream: 30, effort_upstream: 10 }
     let!(:sixth_demand) { Fabricate :demand, company: company, product: other_product, portfolio_unit: nil, project: project, demand_title: 'voyager sas', demand_type: :feature, class_of_service: :standard, created_date: 1.day.ago, commitment_date: Time.zone.today, end_date: nil, effort_downstream: 10, effort_upstream: 10 }
@@ -299,6 +299,15 @@ RSpec.describe DemandsRepository, type: :repository do
     it { expect(described_class.instance.class_of_service_query(Demand.all, '')).to eq Demand.all }
     it { expect(described_class.instance.class_of_service_query(Demand.none, '')).to eq [] }
     it { expect(described_class.instance.class_of_service_query(Demand.all, 'expedite')).to match_array [second_demand, seventh_demand] }
+  end
+
+  describe '#demand_tags_query' do
+    include_context 'demand data for filters'
+
+    it { expect(described_class.instance.demand_tags_query(Demand.all, '')).to eq Demand.all }
+    it { expect(described_class.instance.demand_tags_query(Demand.none, '')).to eq [] }
+    it { expect(described_class.instance.demand_tags_query(Demand.all, 'xpto sbbrubles'.split(' '))).to match_array [second_demand] }
+    it { expect(described_class.instance.demand_tags_query(Demand.all, 'sbbrubles'.split(' '))).to match_array [first_demand, second_demand] }
   end
 
   pending '#bugs_opened_until_limit_date'

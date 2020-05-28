@@ -1,8 +1,13 @@
 
-<div class="row">
+<div class="row bottom-spaced-component">
 
   <div class="col-xs-4">
-    <span><%= Demand.human_attribute_name :external_id %></span>
+    <h4>
+      <% demand.demand_tags.each do |label| %>
+        <span class="label label-info"><%= label %></span>
+      <% end %>
+    </h4>
+
     <h3>
       <%= demand.external_id %>
       <% if demand.external_url.present? %>

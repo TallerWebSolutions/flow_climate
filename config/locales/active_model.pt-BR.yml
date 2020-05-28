@@ -319,6 +319,7 @@ pt-BR:
         leadtime: Lead time
         discarded_at: Descartada em
         pull_time: Tempo para Puxar
+        demand_tags: Tags da Demanda
         enums:
           demand_type:
             bug: Bug

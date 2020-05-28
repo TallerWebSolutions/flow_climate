@@ -12,6 +12,7 @@
 #  cost_to_project                 :decimal(, )      default(0.0)
 #  created_date                    :datetime         not null
 #  demand_score                    :decimal(, )      default(0.0)
+#  demand_tags                     :string           default([]), is an Array
 #  demand_title                    :string
 #  demand_type                     :integer          not null
 #  demand_url                      :string
