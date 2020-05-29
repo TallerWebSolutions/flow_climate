@@ -58,12 +58,20 @@ module Flow
       end
     end
 
+    def demands_tags_hash
+      demands_tags = demands.map(&:demand_tags).flatten.compact.uniq.sort_by(&:downcase)
+
+      demands_tags_hash = {}
+      demands_tags.each { |demand_tag| demands_tags_hash[demand_tag] = DemandsRepository.instance.demand_tags_query(demands, [demand_tag]).count }
+      demands_tags_hash
+    end
+
     private
 
     def build_flow_data(bottom_limit_date, upper_limit_date, demands_in_period)
       demands_delivered_to_date = demands_in_period.finished_after_date(bottom_limit_date).finished_until_date(upper_limit_date)
-      demands_delivered_upstream = demands_delivered_to_date.finished_in_upstream # query
-      demands_delivered_downstream = demands_delivered_to_date.finished_in_downstream # query
+      demands_delivered_upstream = demands_delivered_to_date.finished_in_upstream
+      demands_delivered_downstream = demands_delivered_to_date.finished_in_downstream
 
       build_upstream_data_array(demands_delivered_upstream)
       build_downstream_data_array(demands_delivered_downstream)

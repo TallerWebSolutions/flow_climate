@@ -29,11 +29,11 @@ RSpec.describe Flow::WorkItemFlowInformations, type: :model do
     let!(:first_opened_demand) { Fabricate :demand, product: product, project: first_project, demand_title: 'first_opened_demand', created_date: Time.zone.local(2018, 2, 21, 23, 1, 46), end_date: nil }
     let!(:second_opened_demand) { Fabricate :demand, product: product, project: first_project, demand_title: 'second_opened_demand', created_date: Time.zone.local(2018, 2, 21, 23, 1, 46), end_date: nil }
 
-    let!(:first_demand) { Fabricate :demand, product: product, project: first_project, external_id: 'first_demand', created_date: Time.zone.local(2018, 1, 21, 23, 1, 46), commitment_date: Time.zone.local(2018, 2, 19, 23, 1, 46), effort_upstream: 10, effort_downstream: 5 }
-    let!(:second_demand) { Fabricate :demand, product: product, project: first_project, external_id: 'second_demand', created_date: Time.zone.local(2018, 1, 20, 23, 1, 46), commitment_date: Time.zone.local(2018, 2, 21, 23, 1, 46), effort_upstream: 12, effort_downstream: 20 }
-    let!(:third_demand) { Fabricate :demand, product: product, project: second_project, external_id: 'third_demand', created_date: Time.zone.local(2018, 2, 18, 23, 1, 46), commitment_date: Time.zone.local(2018, 3, 17, 23, 1, 46), effort_upstream: 27, effort_downstream: 40 }
-    let!(:fourth_demand) { Fabricate :demand, product: product, project: second_project, external_id: 'fourth_demand', created_date: Time.zone.local(2018, 2, 3, 23, 1, 46), commitment_date: nil, effort_upstream: 80, effort_downstream: 34 }
-    let!(:fifth_demand) { Fabricate :demand, product: product, project: third_project, external_id: 'fifth_demand', created_date: Time.zone.local(2018, 1, 21, 23, 1, 46), commitment_date: nil, effort_upstream: 56, effort_downstream: 25 }
+    let!(:first_demand) { Fabricate :demand, product: product, project: first_project, external_id: 'first_demand', created_date: Time.zone.local(2018, 1, 21, 23, 1, 46), commitment_date: Time.zone.local(2018, 2, 19, 23, 1, 46), effort_upstream: 10, effort_downstream: 5, demand_tags: %w[aaa ccc sbbrubles] }
+    let!(:second_demand) { Fabricate :demand, product: product, project: first_project, external_id: 'second_demand', created_date: Time.zone.local(2018, 1, 20, 23, 1, 46), commitment_date: Time.zone.local(2018, 2, 21, 23, 1, 46), effort_upstream: 12, effort_downstream: 20, demand_tags: %w[sbbrubles] }
+    let!(:third_demand) { Fabricate :demand, product: product, project: second_project, external_id: 'third_demand', created_date: Time.zone.local(2018, 2, 18, 23, 1, 46), commitment_date: Time.zone.local(2018, 3, 17, 23, 1, 46), effort_upstream: 27, effort_downstream: 40, demand_tags: %w[ccc] }
+    let!(:fourth_demand) { Fabricate :demand, product: product, project: second_project, external_id: 'fourth_demand', created_date: Time.zone.local(2018, 2, 3, 23, 1, 46), commitment_date: nil, effort_upstream: 80, effort_downstream: 34, demand_tags: %w[aaa ccc sbbrubles] }
+    let!(:fifth_demand) { Fabricate :demand, product: product, project: third_project, external_id: 'fifth_demand', created_date: Time.zone.local(2018, 1, 21, 23, 1, 46), commitment_date: nil, effort_upstream: 56, effort_downstream: 25, demand_tags: %w[ccc] }
     let!(:sixth_demand) { Fabricate :demand, product: product, project: first_project, external_id: 'sixth_demand', created_date: Time.zone.local(2018, 1, 15, 23, 1, 46), commitment_date: Time.zone.local(2018, 4, 29, 23, 1, 46), effort_upstream: 56, effort_downstream: 25 }
     let!(:seventh_demand) { Fabricate :demand, product: product, project: first_project, external_id: 'seventh_demand', created_date: Project.all.map(&:end_date).max + 3.months, commitment_date: Project.all.map(&:end_date).max + 4.months, effort_upstream: 56, effort_downstream: 25 }
 
@@ -113,6 +113,8 @@ RSpec.describe Flow::WorkItemFlowInformations, type: :model do
         expect(item_flow_info.upstream_delivered_per_period).to eq [0, 0]
         expect(item_flow_info.downstream_total_delivered).to eq [0, 1]
         expect(item_flow_info.downstream_delivered_per_period).to eq [0, 1]
+
+        expect(item_flow_info.demands_tags_hash.with_indifferent_access).to eq({ aaa: 2, ccc: 4, sbbrubles: 3 }.stringify_keys)
       end
     end
 

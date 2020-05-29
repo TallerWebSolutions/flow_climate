@@ -705,8 +705,8 @@ pt-BR:
         text:
           placeholder: "nome de produto, projeto ou unidade de portfólio ou pelo ID ou título da demanda"
       last_deliveries: "Últimas entregas"
-      last_larger_lead_times_four_weeks: "Últ. cinco maiores lead times (4 semanas)"
-      last_larger_lead_times: "Últ. cinco maiores lead times"
+      last_larger_lead_times_four_weeks: "Cinco maiores lead times (4 semanas)"
+      last_larger_lead_times: "Cinco maiores lead times"
     edit:
       title: "Editar Demanda"
     show:

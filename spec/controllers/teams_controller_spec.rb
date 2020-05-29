@@ -471,21 +471,12 @@ RSpec.describe TeamsController, type: :controller do
             end
           end
 
-          context 'with search by project status' do
-            it 'search the informations and renders the template' do
-              get :dashboard_search, params: { company_id: company, id: team, project_status: 'active' }, xhr: true
-
-              expect(response).to render_template 'teams/dashboards/dashboard_search'
-              expect(assigns(:work_item_flow_information).demands).to eq [first_demand, second_demand, third_demand, fourth_demand]
-            end
-          end
-
           context 'with search by demand status' do
             it 'search the informations and renders the template' do
-              get :dashboard_search, params: { company_id: company, id: team, demand_status: 'finished' }, xhr: true
+              get :dashboard_search, params: { company_id: company, id: team, flow_status: 'delivered' }, xhr: true
 
               expect(response).to render_template 'teams/dashboards/dashboard_search'
-              expect(assigns(:work_item_flow_information).demands).to eq [first_demand, second_demand, fifth_demand, third_demand]
+              expect(assigns(:work_item_flow_information).demands.map(&:external_id)).to eq [first_demand, second_demand, fifth_demand, third_demand].map(&:external_id)
             end
           end
 

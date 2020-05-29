@@ -19,3 +19,7 @@ $('#page-buttons').show();
 
 startCharts();
 bindDashboardSelectors();
+
+$('.filter-button').on('click', function() {
+    filterTeamDemands()
+});

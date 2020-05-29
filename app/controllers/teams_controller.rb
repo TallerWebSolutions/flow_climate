@@ -11,9 +11,11 @@ class TeamsController < AuthenticatedController
     assign_demands_ids
     build_query_dates
 
-    demands_searched = team_demands_search_engine(@demands)
+    @demands_searched = team_demands_search_engine(@demands)
 
-    build_charts_data(demands_searched)
+    @paged_demands_searched = @demands_searched.page(page_param)
+    @demands_ids = @demands_searched.map(&:id)
+    build_charts_data(@demands_searched)
   end
 
   def new
@@ -66,14 +68,14 @@ class TeamsController < AuthenticatedController
   end
 
   def dashboard_search
+    build_query_dates
     assign_demands_list
 
     @demands_searched = team_demands_search_engine(@demands)
 
-    build_charts_data(@demands_searched)
     @paged_demands_searched = @demands_searched.page(page_param)
-
     @demands_ids = @demands_searched.map(&:id)
+    build_charts_data(@demands_searched)
 
     respond_to { |format| format.js { render 'teams/dashboards/dashboard_search' } }
   end
@@ -183,11 +185,8 @@ class TeamsController < AuthenticatedController
   end
 
   def team_demands_search_engine(demands)
-    demands_searched = demands.to_dates(start_date, end_date)
-    demands_searched = search_demand_status(demands_searched)
-    demands_searched = search_project_status(demands_searched)
-    demands_searched = search_demand_type(demands_searched)
-    search_class_of_service(demands_searched)
+    demands_searched = DemandService.instance.search_engine(demands, start_date, end_date, params[:search_text], params[:flow_status], params[:demand_type], params[:demand_class_of_service], params[:search_demand_tags]&.split(' '))
+    demands_searched.order('demands.end_date DESC, demands.commitment_date DESC, demands.created_date DESC')
   end
 
   def build_charts_data(demands)
@@ -214,42 +213,6 @@ class TeamsController < AuthenticatedController
 
   def uncertain_scope
     @team.projects.map(&:initial_scope).compact.sum
-  end
-
-  def search_project_status(demands_searched)
-    if params['project_status'] == 'active'
-      demands_searched.joins(:project).merge(Project.active)
-    else
-      demands_searched
-    end
-  end
-
-  def search_demand_status(demands_searched)
-    if params['demand_status'] == 'finished'
-      demands_searched.finished
-    else
-      demands_searched
-    end
-  end
-
-  def search_class_of_service(demands_searched)
-    if params['demand_class_of_service'] == 'standard'
-      demands_searched.standard
-    elsif params['demand_class_of_service'] == 'expedite'
-      demands_searched.expedite
-    elsif params['demand_class_of_service'] == 'fixed_date'
-      demands_searched.fixed_date
-    elsif params['demand_class_of_service'] == 'intangible'
-      demands_searched.intangible
-    else
-      demands_searched
-    end
-  end
-
-  def search_demand_type(demands_searched)
-    return demands_searched unless params['demand_type'].present? && params['demand_type'] != 'all_types' && demands_searched.respond_to?(params['demand_type'])
-
-    demands_searched.send(params['demand_type'])
   end
 
   def start_date
