@@ -8,7 +8,7 @@ function getDemands(companyId, demandsIds) {
     });
 }
 
-function searchDemands(companyId, demandsIds, grouping, flowStatus, demandType, demandClassOfService, searchText, startDate, endDate, groupingPeriod, searchDemandTags) {
+function searchDemands(companyId, demandsIds, flowStatus, demandType, demandClassOfService, searchText, startDate, endDate, searchDemandTags) {
     $("#general-loader").show();
 
     $(".form-control").prop('disabled', true);
@@ -16,17 +16,16 @@ function searchDemands(companyId, demandsIds, grouping, flowStatus, demandType, 
     jQuery.ajax({
         url: `/companies/${companyId}/demands/search_demands.js`,
         type: "GET",
-        data: `&demands_ids=${demandsIds}&grouping=${grouping}&flow_status=${flowStatus}&demand_type=${demandType}&demand_class_of_service=${demandClassOfService}&search_text=${searchText}&start_date=${startDate}&end_date=${endDate}&grouping_period=${groupingPeriod}&search_demand_tags=${searchDemandTags}`
+        data: `&demands_ids=${demandsIds}&flow_status=${flowStatus}&demand_type=${demandType}&demand_class_of_service=${demandClassOfService}&search_text=${searchText}&start_date=${startDate}&end_date=${endDate}&search_demand_tags=${searchDemandTags}`
     });
 }
 
 function destroyDemand(companyId, demandId, confirmationMessage, demandsIds) {
     if (window.confirm(confirmationMessage)) {
-        let grouping = $('#demands-table-grouping-period').val();
         jQuery.ajax({
             url: `/companies/${companyId}/demands/${demandId}.js`,
             type: "DELETE",
-            data: `&demands_ids=${demandsIds.join(",")}&grouping=${grouping}`
+            data: `&demands_ids=${demandsIds.join(",")}`
         });
     }
 }

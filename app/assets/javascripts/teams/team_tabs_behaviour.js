@@ -95,21 +95,6 @@ function bindDashboardSelectors() {
 
         getTeamProjectsTab(companyId, teamId);
     });
-
-    $('.dashboard-filter-button').on('click', function() {
-        const companyId = $("#company_id").val();
-        const teamId = $("#team_id").val();
-        const startDate = $("#demands_start_date").val();
-        const endDate = $("#demands_end_date").val();
-        const projectStatus = $("#project_status").val();
-        const demandsType = $("#demands-table-demand-type").val();
-        const demandsClassOfService = $("#demands-table-class-of-service").val();
-        const demandStatus = $("#demand_status").val();
-
-        hideAllTeamTabs();
-
-        searchDashboard(companyId, teamId, projectStatus, demandStatus, demandsType, demandsClassOfService, startDate, endDate);
-    });
 }
 
 function hideAllTeamTabs(){

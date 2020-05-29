@@ -23,3 +23,9 @@
     font-size: large;
     float: right;
 }
+
+.demand-tag {
+    display: inline-block;
+    margin-bottom: 5px;
+    font-size: medium;
+}

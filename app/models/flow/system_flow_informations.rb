@@ -11,7 +11,7 @@ module Flow
 
       return if products_in_data(demands).blank?
 
-      @demands = demands.order('end_date, commitment_date, created_date')
+      @demands = demands.order('demands.end_date, demands.commitment_date, demands.created_date')
       @demands_ids = @demands.map(&:id)
 
       @demands_ids_in_products = Demand.where(id: products_in_data(demands).includes([:demands]).map { |product| product.demands.map(&:id) }.flatten).kept.map(&:id)

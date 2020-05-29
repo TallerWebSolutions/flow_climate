@@ -31,12 +31,6 @@
 
 <div class="row">
   <div class="col-xs-12 center">
-    <hr>
-  </div>
-</div>
-
-<div class="row">
-  <div class="col-xs-12 center">
     <div class="tab">
       <button class="tablinks" id="team-dashboard-tab"><%= I18n.t('teams.show.dashboard_tab') %></button>
       <button class="tablinks" id="team-projects-tab"><%= I18n.t('teams.show.projects_tab') %></button>
@@ -61,7 +55,7 @@
 </div>
 
 <div id="team-dashboard-filters">
-  <%= render 'teams/dashboards/dashboard_filter', start_date: @start_date, end_date: @end_date %>
+  <%= render 'demands/demands_search_filters', start_date: @start_date, end_date: @end_date %>
 </div>
 
 <hr>
@@ -129,6 +123,7 @@
 
   <%= javascript_include_tag 'teams/team_start_charts' %>
   <%= javascript_include_tag 'teams/team_tabs_behaviour' %>
+  <%= javascript_include_tag 'teams/team_demands_filter' %>
   <%= javascript_include_tag 'teams/show' %>
 
   <%= javascript_include_tag 'companies/strategic_charts' %>

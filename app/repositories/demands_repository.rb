@@ -10,7 +10,7 @@ class DemandsRepository
   def remaining_backlog_to_date(demands_ids, analysed_date)
     demands = demands_list_data(demands_ids).kept.opened_before_date(analysed_date)
 
-    demands.where('(end_date IS NULL OR end_date > :analysed_date) AND (commitment_date IS NULL OR commitment_date > :analysed_date)', analysed_date: analysed_date).count
+    demands.where('(demands.end_date IS NULL OR demands.end_date > :analysed_date) AND (demands.commitment_date IS NULL OR demands.commitment_date > :analysed_date)', analysed_date: analysed_date).count
   end
 
   def committed_demands_to_period(demands, week, year)
@@ -30,13 +30,13 @@ class DemandsRepository
   end
 
   def created_to_projects_and_period(projects, start_period, end_period)
-    demands_stories_to_projects(projects).where('created_date BETWEEN :start_period AND :end_period', start_period: start_period, end_period: end_period)
+    demands_stories_to_projects(projects).where('demands.created_date BETWEEN :start_period AND :end_period', start_period: start_period, end_period: end_period)
   end
 
   def effort_upstream_grouped_by_month(projects, start_date, end_date)
     effort_upstream_hash = {}
     Demand.kept
-          .select('EXTRACT(YEAR from end_date) AS year, EXTRACT(MONTH from end_date) AS month, SUM(effort_upstream) AS computed_sum_effort')
+          .select('EXTRACT(YEAR from demands.end_date) AS year, EXTRACT(MONTH from demands.end_date) AS month, SUM(effort_upstream) AS computed_sum_effort')
           .where(project_id: projects.map(&:id))
           .to_end_dates(start_date, end_date)
           .order('year, month')
@@ -48,7 +48,7 @@ class DemandsRepository
   def grouped_by_effort_downstream_per_month(projects, start_date, end_date)
     effort_downstream_hash = {}
     Demand.kept
-          .select('EXTRACT(YEAR from end_date) AS year, EXTRACT(MONTH from end_date) AS month, SUM(effort_downstream) AS computed_sum_effort')
+          .select('EXTRACT(YEAR from demands.end_date) AS year, EXTRACT(MONTH from demands.end_date) AS month, SUM(effort_downstream) AS computed_sum_effort')
           .where(project_id: projects.map(&:id))
           .to_end_dates(start_date, end_date)
           .order('year, month')
@@ -101,7 +101,7 @@ class DemandsRepository
   end
 
   def demand_type_query(demands, demand_type)
-    return demands.where(demand_type: demand_type) if demand_type.present? && demand_type != 'all_types'
+    return demands.where(demand_type: demand_type) if demand_type.present? && demand_type != 'all_types' && demands.respond_to?(demand_type)
 
     demands
   end

@@ -1,5 +1,9 @@
 <%= hidden_field_tag :demands_ids, demands_ids.join(',') %>
 
+<% work_item_flow_information.demands_tags_hash.each do |demand_tag, demand_count| %>
+  <span class="label label-info demand-tag"><%= "#{demand_tag} (#{demand_count})" %></span>
+<% end %>
+
 <div class="row">
   <div class="col-xs-4">
     <h1><%= team.name %></h1>
