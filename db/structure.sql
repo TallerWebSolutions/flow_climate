@@ -1885,7 +1885,7 @@ CREATE TABLE public.projects (
     nickname character varying,
     percentage_effort_to_bugs integer DEFAULT 0 NOT NULL,
     team_id integer NOT NULL,
-    max_work_in_progress integer DEFAULT 0 NOT NULL,
+    max_work_in_progress numeric DEFAULT 1.0 NOT NULL,
     company_id integer NOT NULL
 );
 
@@ -5438,6 +5438,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200507203439'),
 ('20200511192312'),
 ('20200520142236'),
-('20200528154520');
+('20200528154520'),
+('20200601145121');
 
 

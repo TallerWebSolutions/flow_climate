@@ -75,7 +75,7 @@
     </div>
     <div class='col-xs-4 form-group <%= 'has-error' if project.errors[:max_work_in_progress].present? %>'>
       <%= f.label :max_work_in_progress, class: 'control-label required' %>
-      <%= f.number_field :max_work_in_progress, value: project.max_work_in_progress, class: 'form-control', step: 1 %>
+      <%= f.number_field :max_work_in_progress, value: project.max_work_in_progress, class: 'form-control', step: 0.1 %>
       <span class="help-block"><%= project.errors[:max_work_in_progress].join(', ') %></span>
     </div>
   </div>

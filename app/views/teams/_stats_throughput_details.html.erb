@@ -8,12 +8,15 @@
       <th><%= I18n.t('projects.replenishing.throughput_data_stddev') %></th>
       <th><%= I18n.t('projects.replenishing.team_based_weeks_montecarlo') %></th>
       <th><%= 'MC - Min - Max' %></th>
-      <th><%= 'Chances da Data - Time' %></th>
+      <th>
+        <%= 'Chances da Data - Dados do Time' %>
+        <i class="far fa-question-circle" title="<%= "O sistema usa o WiP configurado no projeto para descobrir o share do projeto no WiP do time. Então o sistema pega esse share e aplica no throughput do time. Esta informação é usada para computar a projeção de monte carlo." %>"></i>
+      </th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td><%= project_hash[:max_work_in_progress] %></td>
+      <td><%= number_with_precision(project_hash[:max_work_in_progress], precision: 1) %></td>
       <td><%= project_hash[:throughput_last_week] %></td>
       <td><%= "#{project_hash[:throughput_data_size]} (#{project_hash[:throughput_data]})" %></td>
       <td><%= project_hash[:throughput_data_mode] %></td>
@@ -21,7 +24,7 @@
       <td><%= "#{number_with_precision(project_hash[:team_based_montecarlo_80_percent], precision: 2)} (#{number_with_precision(project_hash[:team_monte_carlo_weeks_std_dev], precision: 2)})" %></td>
       <td><%= "#{project_hash[:team_monte_carlo_weeks_min]} - #{project_hash[:team_monte_carlo_weeks_max]}" %></td>
       <td><%= number_to_percentage(project_hash[:team_based_odds_to_deadline] * 100, precision: 2) if project_hash[:team_based_odds_to_deadline].present? %></td>
-      <td><%=  %></td>
+      <td></td>
     </tr>
   </tbody>
 </table>
