@@ -96,6 +96,7 @@ RSpec.describe Flow::StatisticsFlowInformations, type: :model do
         stats_flow_info.statistics_flow_behaviour(dates_array.second)
         expect(stats_flow_info.average_aging_per_period).to eq [0, 36.79736111111111]
         expect(stats_flow_info.lead_time_accumulated).to eq [0, 7.755694444444444]
+        expect(stats_flow_info.current_lead_time_zones).to eq({ [46_800.0, 9_488_298.5] => 5, [9_488_298.5, 18_976_597.0] => 0, [18_976_597.0, 28_464_895.5] => 1, [28_464_895.5, 37_999_994.0] => 3 })
       end
     end
 
@@ -118,6 +119,7 @@ RSpec.describe Flow::StatisticsFlowInformations, type: :model do
         stats_flow_info.statistics_flow_behaviour(dates_array.first)
         expect(stats_flow_info.average_aging_per_period).to eq []
         expect(stats_flow_info.lead_time_accumulated).to eq []
+        expect(stats_flow_info.current_lead_time_zones).to eq({})
       end
     end
   end

@@ -6,6 +6,7 @@ dashboardPageOne.html("<%= escape_javascript(render 'teams/dashboards/dashboard_
              dates_array: @array_of_dates,
              work_item_flow_information: @work_item_flow_information,
              statistics_flow_information: @statistics_flow_information,
+             current_lead_time_zones: @statistics_flow_information.current_lead_time_zones,
              time_flow_information: @time_flow_information,
              demands_ids: @demands_searched.map(&:id)) %>");
 

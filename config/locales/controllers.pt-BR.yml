@@ -429,7 +429,7 @@ pt-BR:
         title: "Control chart do lead time para %{target_name}"
         ylabel: "dias"
       leadtime_histogram:
-        title: "Histograma de lead time para %{target_name}"
+        title: "Histograma do lead time para %{target_name}"
         ylabel: "frequências"
       throughput_histogram:
         title: "Histograma de Throughput para %{target_name}"
@@ -908,7 +908,7 @@ pt-BR:
       total_range_max: "Bin Max"
       total_range_min: "Bin Min"
     lead_time_histogram_range_evolution:
-      title: "Amplitude do Histograma de Lead Time"
+      title: "Amplitude do Histograma do Lead Time"
     lead_time_interquartile_data_range_evolution:
       title: "Amplitude do Interquartil do Lead Time"
       total_range: "Amplitude (IQR)"
@@ -931,6 +931,12 @@ pt-BR:
       text: "Lead time"
     histogram:
       text: "Histograma"
+    lead_time_zones:
+      title: "Zonas do lead time (dias)"
+      series_name: "Zonas do lead time"
+    no_data: "Sem dados suficientes"
+    tags_cloud:
+      title: "Nuvem de Tags"
   finances_params:
     edit:
       title: "Editar Informação Financeira"

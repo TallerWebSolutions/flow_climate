@@ -310,6 +310,14 @@ RSpec.describe DemandsRepository, type: :repository do
     it { expect(described_class.instance.demand_tags_query(Demand.all, 'sbbrubles'.split(' '))).to match_array [first_demand, second_demand] }
   end
 
+  describe '#lead_time_zone_count' do
+    include_context 'demand data for filters'
+
+    it { expect(described_class.instance.lead_time_zone_count(Demand.all, 86_400.0, nil)).to eq 2 }
+    it { expect(described_class.instance.lead_time_zone_count(Demand.all, nil, 86_400)).to eq 1 }
+    it { expect(described_class.instance.lead_time_zone_count(Demand.all, 50_400.0, 396_000.0)).to eq 2 }
+  end
+
   pending '#bugs_opened_until_limit_date'
   pending '#bugs_closed_until_limit_date'
   pending '#remaining_backlog_to_date'

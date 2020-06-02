@@ -37,7 +37,33 @@ module Flow
                                    end
     end
 
+    def current_lead_time_zones
+      return {} if @demands.blank?
+
+      lead_time_max = @demands.kept.finished_with_leadtime.map(&:leadtime).compact.max.to_f
+      lead_time_min = @demands.kept.finished_with_leadtime.map(&:leadtime).compact.min.to_f
+      lead_time_difference = lead_time_max - lead_time_min
+
+      build_lead_time_zones(lead_time_difference)
+
+      { [lead_time_min, @first_lead_time_zone] => @first_zone_demand_count, [@first_lead_time_zone, @second_lead_time_zone] => @second_zone_demand_count,
+        [@second_lead_time_zone, @third_lead_time_zone] => @third_zone_demand_count, [@third_lead_time_zone, lead_time_max] => @fourth_zone_demand_count }
+    end
+
     private
+
+    attr_reader :first_lead_time_zone, :second_lead_time_zone, :third_lead_time_zone, :first_zone_demand_count, :second_zone_demand_count, :third_zone_demand_count, :fourth_zone_demand_count
+
+    def build_lead_time_zones(lead_time_difference)
+      @first_lead_time_zone = lead_time_difference * 0.25
+      @second_lead_time_zone = lead_time_difference * 0.50
+      @third_lead_time_zone = lead_time_difference * 0.75
+
+      @first_zone_demand_count = DemandsRepository.instance.lead_time_zone_count(@demands, first_lead_time_zone, nil)
+      @second_zone_demand_count = DemandsRepository.instance.lead_time_zone_count(@demands, first_lead_time_zone, second_lead_time_zone)
+      @third_zone_demand_count = DemandsRepository.instance.lead_time_zone_count(@demands, second_lead_time_zone, third_lead_time_zone)
+      @fourth_zone_demand_count = DemandsRepository.instance.lead_time_zone_count(@demands, nil, third_lead_time_zone)
+    end
 
     def build_demands_external_ids_arrays(demands_with_lead_time)
       @demands_charts_ids = demands_with_lead_time.map(&:external_id)

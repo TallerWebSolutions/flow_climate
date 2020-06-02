@@ -69,6 +69,7 @@
              work_item_flow_information: @work_item_flow_information,
              time_flow_information: @time_flow_information,
              statistics_flow_information: @statistics_flow_information,
+             current_lead_time_zones: @statistics_flow_information.current_lead_time_zones,
              demands_chart_adapter: @demands_chart_adapter,
              demands_ids: @demands.map(&:id),
              projects_count: @team.projects.count,
@@ -107,6 +108,7 @@
 <div class="modal fade" id="show-montecarlo-dialog" tabindex="-1" role="dialog" aria-labelledby="show-montecarlo-dialog" aria-hidden="true"></div>
 
 <% content_for :javascript do %>
+  <%= javascript_include_tag 'charts/word_cloud' %>
   <%= javascript_include_tag 'charts/donut' %>
   <%= javascript_include_tag 'charts/column' %>
   <%= javascript_include_tag 'charts/column-line' %>

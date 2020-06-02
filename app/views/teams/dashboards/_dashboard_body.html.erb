@@ -198,3 +198,33 @@
     </div>
   </div>
 </div>
+
+<div class="row">
+  <div class="col-xs-6">
+    <% if current_lead_time_zones.present? && current_lead_time_zones.keys&.size == 4 %>
+      <div id="lead-time-zones-donut"
+           class="flow-chart"
+           data-title='<%= I18n.t('charts.lead_time_zones.title') %>'
+           data-seriesname='<%= I18n.t('charts.lead_time_zones.series_name') %>'
+           data-series='<%= [{ name: "#{number_with_precision(current_lead_time_zones.keys[0][0] / 1.day, precision: 2)}-#{number_with_precision(current_lead_time_zones.keys[0][1] / 1.day, precision: 2)}", y: current_lead_time_zones.values[0] },
+                             { name: "#{number_with_precision(current_lead_time_zones.keys[1][0] / 1.day, precision: 2)}-#{number_with_precision(current_lead_time_zones.keys[1][1] / 1.day, precision: 2)}", y: current_lead_time_zones.values[1] },
+                             { name: "#{number_with_precision(current_lead_time_zones.keys[2][0] / 1.day, precision: 2)}-#{number_with_precision(current_lead_time_zones.keys[2][1] / 1.day, precision: 2)}", y: current_lead_time_zones.values[2] },
+                             { name: "#{number_with_precision(current_lead_time_zones.keys[3][0] / 1.day, precision: 2)}-#{number_with_precision(current_lead_time_zones.keys[3][1] / 1.day, precision: 2)}", y: current_lead_time_zones.values[3] }].to_json %>'
+           data-decimals='0'
+           data-tooltipsuffix="<%= I18n.t('general.demands') %>">
+      </div>
+    <% else %>
+      <div class="no-data">
+        <%= I18n.t('charts.no_data') %>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="col-xs-6">
+    <div id="team-tags-word-count"
+         class="flow-chart"
+         data-title="<%= I18n.t('charts.tags_cloud.title') %>"
+         data-series="<%= work_item_flow_information.demands_tags_hash.map { |demand_tag, demand_count| { name: demand_tag, weight: demand_count } }.flatten.to_json %>">
+    </div>
+  </div>
+</div>
