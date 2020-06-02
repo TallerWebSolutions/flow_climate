@@ -36,7 +36,14 @@
           <% demand_score_matrix = demand.demand_score_matrices.find_by(score_matrix_answer: already_answered) %>
 
           <% if demand_score_matrix.present? %>
-            <td><%= demand_score_matrix.score_matrix_answer.answer_value %></td>
+            <td>
+              <%= demand_score_matrix.score_matrix_answer.answer_value %>
+              <% if demand_score_matrix.user == current_user %>
+                <%= link_to destroy_from_sheet_demand_score_matrix_path(demand_score_matrix), method: :delete, data: { confirm: I18n.t('general.destroy.confirm') } do %>
+                  <i class="fa fa-times" title=<%= I18n.t('demand_score_matrices.destroy.tip') %>></i>
+                <% end %>
+              <% end %>
+            </td>
           <% else %>
             <td><%= select_tag "score_matrix_question_#{score_question.id}", options_from_collection_for_select(score_question.score_matrix_answers, :id, :description), include_blank: I18n.t('general.select'), class: 'form-control select-answer' %></td>
           <% end %>
