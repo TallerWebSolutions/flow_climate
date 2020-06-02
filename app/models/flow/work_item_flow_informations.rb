@@ -59,11 +59,11 @@ module Flow
     end
 
     def demands_tags_hash
-      demands_tags = demands.map(&:demand_tags).flatten.compact.uniq.sort_by(&:downcase)
+      demands_tags = demands.map(&:demand_tags).flatten.compact.uniq
 
       demands_tags_hash = {}
       demands_tags.each { |demand_tag| demands_tags_hash[demand_tag] = DemandsRepository.instance.demand_tags_query(demands, [demand_tag]).count }
-      demands_tags_hash
+      demands_tags_hash.sort_by { |key, value| [-value, key.downcase] }
     end
 
     private

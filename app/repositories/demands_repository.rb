@@ -118,6 +118,16 @@ class DemandsRepository
     demands
   end
 
+  def lead_time_zone_count(demands, lower_limit, higher_limit)
+    if lower_limit.present? && higher_limit.blank?
+      demands.finished_with_leadtime.where('leadtime <= :lead_time_zone', lead_time_zone: lower_limit).count
+    elsif lower_limit.present? && higher_limit.present?
+      demands.finished_with_leadtime.where('leadtime > :previous_zone AND leadtime <= :lead_time_zone', previous_zone: lower_limit, lead_time_zone: higher_limit).count
+    else
+      demands.finished_with_leadtime.where('leadtime > :previous_zone', previous_zone: higher_limit).count
+    end
+  end
+
   private
 
   def demands_list_data(demands_ids)

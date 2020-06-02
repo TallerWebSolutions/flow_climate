@@ -862,6 +862,12 @@ en:
       text: "Lead time"
     histogram:
       text: "Histogram"
+    lead_time_zones:
+      title: "Lead time zones (days)"
+      series_name: "Lead time zones"
+    no_data: "Not enough data"
+    tags_cloud:
+      title: "Tags Cloud"
   finances_params:
     edit:
       title: "Edit Financial Information"

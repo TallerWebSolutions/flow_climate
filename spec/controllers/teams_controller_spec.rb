@@ -467,7 +467,7 @@ RSpec.describe TeamsController, type: :controller do
               get :dashboard_search, params: { company_id: company, id: team, start_date: 1.day.ago, end_date: Time.zone.now }, xhr: true
 
               expect(response).to render_template 'teams/dashboards/dashboard_search'
-              expect(assigns(:work_item_flow_information).demands).to eq [second_demand, fifth_demand, third_demand]
+              expect(assigns(:work_item_flow_information).demands).to eq [first_demand, second_demand, fifth_demand, third_demand]
             end
           end
 

@@ -114,7 +114,7 @@ RSpec.describe Flow::WorkItemFlowInformations, type: :model do
         expect(item_flow_info.downstream_total_delivered).to eq [0, 1]
         expect(item_flow_info.downstream_delivered_per_period).to eq [0, 1]
 
-        expect(item_flow_info.demands_tags_hash.with_indifferent_access).to eq({ aaa: 2, ccc: 4, sbbrubles: 3 }.stringify_keys)
+        expect(item_flow_info.demands_tags_hash.to_h).to eq({ ccc: 4, sbbrubles: 3, aaa: 2 }.stringify_keys)
       end
     end
 

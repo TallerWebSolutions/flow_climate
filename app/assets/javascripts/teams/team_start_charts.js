@@ -25,4 +25,10 @@ function startCharts() {
 
     const bugsInTimeDiv = $('#bugs-in-time');
     buildColumnChart(bugsInTimeDiv);
+
+    const leadTimeZonesDonut = $('#lead-time-zones-donut');
+    buildDonutChart(leadTimeZonesDonut);
+
+    const teamTagsWordCount = $('#team-tags-word-count');
+    buildWordCloudChart(teamTagsWordCount);
 }
