@@ -816,6 +816,7 @@ pt-BR:
       title: "Simulação de Monte Carlo para Demandas"
     score_research:
       title: "Pesquisa de Pontuação"
+      go_to_list: "Ir para a lista"
   project_risk_configs:
     new:
       title: "Nova Configuração de Risco"

@@ -134,10 +134,10 @@ RSpec.describe DemandScoreMatricesController, type: :controller do
         let!(:first_demand_score_matrix) { Fabricate :demand_score_matrix, user: user, demand: demand, score_matrix_answer: first_answer }
         let!(:second_demand_score_matrix) { Fabricate :demand_score_matrix, user: user, demand: demand, score_matrix_answer: second_answer }
 
-        before { delete :destroy, params: { id: first_demand_score_matrix }, xhr: true }
+        before { delete :destroy, params: { id: first_demand_score_matrix } }
 
         it 'assigns the instance variable and renders the template' do
-          expect(response).to render_template 'demand_score_matrices/destroy'
+          expect(response).to redirect_to score_research_company_demand_path(demand.company, demand)
           expect(assigns(:demand_score_matrix)).to eq first_demand_score_matrix
           expect(assigns(:new_demand_score_matrix)).to be_a_new DemandScoreMatrix
           expect(DemandScoreMatrix.count).to eq 1
@@ -145,12 +145,12 @@ RSpec.describe DemandScoreMatricesController, type: :controller do
       end
 
       context 'with no data' do
-        let!(:first_demand_score_matrix) { Fabricate :demand_score_matrix }
+        let!(:first_demand_score_matrix) { Fabricate :demand_score_matrix, demand: demand }
 
-        before { delete :destroy, params: { id: first_demand_score_matrix }, xhr: true }
+        before { delete :destroy, params: { id: first_demand_score_matrix } }
 
         it 'assigns the instance variable and renders the template' do
-          expect(response).to render_template 'demand_score_matrices/destroy'
+          expect(response).to redirect_to score_research_company_demand_path(demand.company, demand)
           expect(assigns(:demand_score_matrix)).to eq first_demand_score_matrix
           expect(assigns(:new_demand_score_matrix)).to be_a_new DemandScoreMatrix
           expect(DemandScoreMatrix.count).to eq 0
@@ -159,7 +159,7 @@ RSpec.describe DemandScoreMatricesController, type: :controller do
 
       context 'with invalid' do
         context 'score matrix' do
-          before { delete :destroy, params: { id: 'foo' }, xhr: true }
+          before { delete :destroy, params: { id: 'foo' } }
 
           it { expect(response).to have_http_status :not_found }
         end

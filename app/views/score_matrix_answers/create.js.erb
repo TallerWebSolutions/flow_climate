@@ -1,6 +1,6 @@
-$('#score-matrix-answer-table').html("<%= escape_javascript(render('score_matrix_answers/score_matrix_answers_table', company: @company, product: @product, score_matrix_question: @score_matrix_question, score_matrix_answers: @score_matrix_answers)) %>")
+$("#score-matrix-answers-table").html("<%= escape_javascript(render('score_matrix_answers/score_matrix_answers_table', company: @company, product: @product, score_matrix_question: @score_matrix_question, score_matrix_answers: @score_matrix_answers)) %>")
 
-let alertDiv = $('.alerts');
+let alertDiv = $(".alerts");
 
 <% if flash[:error].present? %>
   alertDiv.html("<%= escape_javascript(render('layouts/error', message: flash[:error].html_safe)) %>")

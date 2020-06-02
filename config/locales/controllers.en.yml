@@ -747,6 +747,7 @@ en:
       title: "Monte Carlo Simulation to Demands"
     score_research:
       title: "Score Research"
+      go_to_list: "Go to the list"
   project_risk_configs:
     new:
       title: "New Risk Configuration"

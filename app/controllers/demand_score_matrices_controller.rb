@@ -20,7 +20,7 @@ class DemandScoreMatricesController < AuthenticatedController
 
     update_demand_score
 
-    respond_to { |format| format.js { render 'demand_score_matrices/destroy' } }
+    redirect_to score_research_company_demand_path(@demand.company, @demand)
   end
 
   def destroy_from_sheet
