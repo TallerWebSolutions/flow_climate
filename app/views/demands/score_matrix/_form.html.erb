@@ -18,7 +18,7 @@
         <p>
           <%= "#{demand_score_matrix.score_matrix_answer.description} (#{demand_score_matrix.score_matrix_answer.answer_value}) - #{demand_score_matrix.user.full_name} (#{I18n.l(demand_score_matrix.created_at, format: :short)})" %>
           <% if demand_score_matrix.user == current_user %>
-            <%= link_to demand_score_matrix_path(demand_score_matrix), method: :delete, data: { confirm: I18n.t('general.destroy.confirm') }, remote: true do %>
+            <%= link_to demand_score_matrix_path(demand_score_matrix), method: :delete, data: { confirm: I18n.t('general.destroy.confirm') } do %>
               <i class="fa fa-times" title=<%= I18n.t('demand_score_matrices.destroy.tip') %>></i>
             <% end %>
           <% end %>
