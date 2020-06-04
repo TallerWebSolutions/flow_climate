@@ -9,7 +9,6 @@
   <td><%= membership.hours_per_month %></td>
 <% end %>
 
-<td><%= I18n.t('general.demands_text', count: membership.demands.finished.count) %></td>
 <td title='<%= membership.pairing_members.uniq.join(', ') %>'><%= membership.pairing_members.uniq.count %></td>
 
 <% if current_user.managing_company?(membership.company) %>

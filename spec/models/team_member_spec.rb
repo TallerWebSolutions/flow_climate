@@ -85,11 +85,11 @@ RSpec.describe TeamMember, type: :model do
     let(:fourth_team_member) { Fabricate :team_member, company: company }
     let(:fifth_team_member) { Fabricate :team_member, company: company }
 
-    let!(:first_membership) { Fabricate :membership, team: team, team_member: first_team_member, hours_per_month: 120, start_date: 1.month.ago, end_date: nil }
-    let!(:second_membership) { Fabricate :membership, team: team, team_member: second_team_member, hours_per_month: 40, start_date: 2.months.ago, end_date: 1.month.ago }
-    let!(:third_membership) { Fabricate :membership, team: team, team_member: third_team_member, hours_per_month: 40, start_date: 2.months.ago, end_date: 1.month.ago }
-    let!(:fourth_membership) { Fabricate :membership, team: team, team_member: fourth_team_member, hours_per_month: 40, start_date: 2.months.ago, end_date: 1.month.ago }
-    let!(:fifth_membership) { Fabricate :membership, team: team, team_member: fifth_team_member, hours_per_month: 40, start_date: 2.months.ago, end_date: 1.month.ago }
+    let!(:first_membership) { Fabricate :membership, team: team, team_member: first_team_member, start_date: 1.month.ago, end_date: nil, member_role: :developer }
+    let!(:second_membership) { Fabricate :membership, team: team, team_member: second_team_member, start_date: 2.months.ago, end_date: 1.month.ago, member_role: :developer }
+    let!(:third_membership) { Fabricate :membership, team: team, team_member: third_team_member, start_date: 2.months.ago, end_date: 1.month.ago, member_role: :client }
+    let!(:fourth_membership) { Fabricate :membership, team: team, team_member: fourth_team_member, start_date: 2.months.ago, end_date: 1.month.ago, member_role: :manager }
+    let!(:fifth_membership) { Fabricate :membership, team: team, team_member: fifth_team_member, start_date: 2.months.ago, end_date: 1.month.ago, member_role: :developer }
 
     let!(:first_item_assignment) { Fabricate :item_assignment, demand: first_demand, team_member: first_team_member, start_time: 1.day.ago, finish_time: 2.days.ago }
     let!(:second_item_assignment) { Fabricate :item_assignment, demand: first_demand, team_member: second_team_member, start_time: 2.days.ago, finish_time: nil }
@@ -105,18 +105,36 @@ RSpec.describe TeamMember, type: :model do
   describe '#pairings_members' do
     include_context 'demands'
 
-    it { expect(first_team_member.pairing_members).to eq(second_team_member.name => 2, third_team_member.name => 1, fourth_team_member.name => 1) }
+    it 'returns the pairs' do
+      expect_any_instance_of(Membership).to(receive(:demands_ids).twice.and_return(Demand.all.map(&:id)))
+      expect(first_team_member.pairing_members).to eq(second_team_member.name => 2, third_team_member.name => 1, fourth_team_member.name => 1)
+    end
   end
 
   describe '#lead_time_min' do
     include_context 'demands'
 
-    it { expect(first_team_member.lead_time_min).to eq second_demand }
+    it 'returns the lead time min' do
+      expect_any_instance_of(Membership).to(receive(:demands_ids).once.and_return(Demand.all.map(&:id)))
+      expect(first_team_member.lead_time_min).to eq second_demand
+    end
   end
 
   describe '#lead_time_max' do
     include_context 'demands'
 
-    it { expect(first_team_member.lead_time_max).to eq third_demand }
+    it 'returns the lead time max' do
+      expect_any_instance_of(Membership).to(receive(:demands_ids).once.and_return(Demand.all.map(&:id)))
+      expect(first_team_member.lead_time_max).to eq third_demand
+    end
+  end
+
+  describe '#demands_ids' do
+    include_context 'demands'
+
+    it 'returns the demands ids' do
+      expect_any_instance_of(Membership).to(receive(:demands_ids).once.and_return(Demand.all.map(&:id)))
+      expect(first_team_member.lead_time_max).to eq third_demand
+    end
   end
 end

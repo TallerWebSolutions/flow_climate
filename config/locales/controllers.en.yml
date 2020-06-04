@@ -653,6 +653,8 @@ en:
       responsibles_tab: "Responsibles"
       pairing: "Pairing"
       consolidations: "Consolidations"
+      memberships:
+        blank: "No role in the team %{team_name}"
     sync:
       enqueued: "Your request was enqueued. It will be processed soon."
       done: "The sync is done."

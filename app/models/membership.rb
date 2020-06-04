@@ -46,8 +46,15 @@ class Membership < ApplicationRecord
     hours_per_month.to_f / 30.0
   end
 
-  def demands
-    Demand.distinct.joins(:item_assignments).where(demands: { team: team }).where(item_assignments: { team_member: team_member })
+  def demands_ids(item_assignments = nil)
+    item_assignments = team_member.item_assignments if item_assignments.blank?
+
+    demands_list = []
+    item_assignments.each do |assignment|
+      demands_list << assignment.demand.id if stages_to_work_on.include?(assignment.demand.stage_at(assignment.start_time))
+    end
+
+    demands_list
   end
 
   def demand_comments
@@ -56,10 +63,6 @@ class Membership < ApplicationRecord
 
   def demand_blocks
     DemandBlock.joins(:demand).where(demands: { team: team }).where(blocker: team_member)
-  end
-
-  def leadtime(percentile = 80)
-    Stats::StatisticsService.instance.percentile(percentile, demands.finished_with_leadtime.map(&:leadtime))
   end
 
   def elapsed_time
@@ -71,6 +74,8 @@ class Membership < ApplicationRecord
   end
 
   def pairing_members
+    return [] if team_member.demands.blank?
+
     pairing_members = []
     same_team_demands = team_member.demands.where(team: team)
     same_team_demands.each { |demand| pairing_members << pairing_members_in_demand(demand) }
@@ -78,7 +83,17 @@ class Membership < ApplicationRecord
     pairing_members.flatten
   end
 
+  def demands
+    Demand.where(id: demands_ids)
+  end
+
   private
+
+  def stages_to_work_on
+    stages_to_work_on = team.stages
+    stages_to_work_on = team.stages.development.where(queue: false) if developer?
+    stages_to_work_on
+  end
 
   def pairing_members_in_demand(demand)
     pairing_members = []

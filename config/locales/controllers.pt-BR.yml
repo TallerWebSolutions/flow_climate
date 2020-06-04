@@ -722,6 +722,8 @@ pt-BR:
       responsibles_tab: "Responsáveis"
       pairing: "Pareamento"
       consolidations: "Consolidações"
+      memberships:
+        blank: "Sem papel no time %{team_name}"
     sync:
       enqueued: "Sua solicitação foi colocada na fila. Será processada em breve."
       done: "Sua sincronização foi realizada."

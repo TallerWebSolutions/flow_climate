@@ -1,13 +1,13 @@
 <div class="row equal-heights">
   <div class="col-xs-4">
-    <%= render 'users/operations_personal_info', user: user %>
+    <%= render 'users/operations_personal_info', name: name, demands: demands, team_member: team_member %>
   </div>
 
-  <% if user.team_member.present? %>
+  <% if team_member.present? %>
     <div class="col-xs-4">
       <h4><%= I18n.t('demands.index.last_deliveries') %></h4>
 
-      <%= render 'demands/demands_short_table', company: @company, demands: user.team_member.demands.kept.finished.order(end_date: :desc).first(5) %>
+      <%= render 'demands/demands_short_table', company: company, demands: demands.kept.finished.order(end_date: :desc).first(5) %>
     </div>
   <% end %>
 
@@ -37,9 +37,9 @@
     </div>
   <% end %>
 
-  <% if statistics_informations.present? %>
+  <% if statistics_information.present? %>
     <div class="col-xs-6">
-      <%= render 'team_members/statistics_informations', dates_array: array_of_dates, statistics_flow_informations: statistics_informations %>
+      <%= render 'team_members/statistics_informations', dates_array: array_of_dates, statistics_flow_informations: statistics_information %>
     </div>
   <% end %>
 </div>

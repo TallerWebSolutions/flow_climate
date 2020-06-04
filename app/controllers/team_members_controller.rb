@@ -7,7 +7,12 @@ class TeamMembersController < AuthenticatedController
   before_action :assign_team_member, only: %i[edit update destroy show associate_user dissociate_user]
 
   def show
-    render 'team_members/show'
+    assign_team_member_objects
+    @member_demands = @team_member.demands
+
+    assign_chart_info
+
+    render :show
   end
 
   def new
@@ -71,6 +76,22 @@ class TeamMembersController < AuthenticatedController
   end
 
   private
+
+  def assign_chart_info
+    @pairing_chart = {}
+    @team_member.pairing_members.each { |name, qty| @pairing_chart[name] = qty }
+    @array_of_dates = TimeService.instance.months_between_of(@member_demands.map(&:end_date).compact.min, Time.zone.today.end_of_month)
+
+    @statistics_information = Flow::StatisticsFlowInformations.new(@member_demands)
+
+    @array_of_dates.each { |analysed_date| @statistics_information.statistics_flow_behaviour(analysed_date) }
+  end
+
+  def assign_team_member_objects
+    @member_teams = @team_member.teams.order(:name)
+    @demand_blocks = @team_member.demand_blocks.order(block_time: :desc).first(5)
+    @member_projects = @team_member.projects.active.order(end_date: :desc).last(5)
+  end
 
   def assign_team_members
     @team_members = @company.team_members.order(:name)

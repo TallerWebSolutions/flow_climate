@@ -54,7 +54,7 @@ RSpec.describe Jira::JiraIssueAdapter, type: :service do
           expect(created_demand.project).to eq first_project
 
           expect(created_demand.team_members).to match_array [out_team_member, team_member, other_team_member]
-          expect(created_demand.active_team_members).to match_array [other_team_member]
+          expect(created_demand.active_team_members).to match_array [team_member, other_team_member]
           expect(created_demand.item_assignments.find_by(team_member: out_team_member).finish_time).not_to be_nil
 
           expect(created_demand.team).to eq team

@@ -1,0 +1,28 @@
+<div class="col-xs-12">
+  <div><%= "#{I18n.t('general.effort_hours_text', hours_value: number_with_precision(member_demands.sum(&:total_effort), precision: 2))}" %></div>
+</div>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th><%= Demand.human_attribute_name :external_id %></th>
+      <th><%= Demand.human_attribute_name :demand_type %></th>
+      <th><%= Demand.human_attribute_name :class_of_service %></th>
+      <th><%= Demand.human_attribute_name :end_date %></th>
+      <th><%= Demand.human_attribute_name :lead_time %></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% member_demands.each do |demand| %>
+      <tr>
+        <td><%= demand.external_id %></td>
+        <td><%= I18n.t("activerecord.attributes.demand.enums.demand_type.#{demand.demand_type}") %></td>
+        <td><%= I18n.t("activerecord.attributes.demand.enums.class_of_service.#{demand.class_of_service}") %></td>
+        <td><%= I18n.l(demand.end_date, format: :short) if demand.end_date.present? %></td>
+        <td><%= time_distance_in_words(demand.leadtime) %></td>
+      </tr>
+    <% end %>
+
+  </tbody>
+</table>

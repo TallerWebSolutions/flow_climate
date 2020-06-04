@@ -103,10 +103,6 @@ class User < ApplicationRecord
     update(admin: true)
   end
 
-  def acting_projects
-    Project.all.running.where(id: demands.kept.map(&:project_id))
-  end
-
   def last_company
     Company.find(last_company_id) if last_company_id.present?
   end

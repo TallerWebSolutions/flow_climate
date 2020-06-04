@@ -174,12 +174,13 @@ RSpec.describe UsersController, type: :controller do
         context 'with data' do
           include_context 'user demands data'
 
-          before do
-            user.update(last_company_id: company.id)
-            get :show, params: { id: user }
-          end
-
           it 'assigns the instance variable, compute the charts, and renders the template' do
+            user.update(last_company_id: company.id)
+
+            expect_any_instance_of(Membership).to(receive(:demands_ids).at_least(:once).and_return(Demand.all.map(&:id)))
+
+            get :show, params: { id: user }
+
             expect(assigns(:user)).to eq user
             expect(assigns(:user_plans)).to eq [other_user_plan, user_plan]
             expect(assigns(:companies_list)).to eq [other_company, company]
@@ -334,12 +335,13 @@ RSpec.describe UsersController, type: :controller do
         context 'with data' do
           include_context 'user demands data'
 
-          before do
-            user.update(last_company_id: company.id)
-            get :user_dashboard_company_tab, params: { id: user, company_id: company }, xhr: true
-          end
-
           it 'assigns the instance variable and renders the template' do
+            expect_any_instance_of(Membership).to(receive(:demands_ids).at_least(:once).and_return(Demand.all.map(&:id)))
+
+            user.update(last_company_id: company.id)
+
+            get :user_dashboard_company_tab, params: { id: user, company_id: company }, xhr: true
+
             expect(assigns(:pairing_chart)).to eq(second_team_member.name => 2, third_team_member.name => 1, fourth_team_member.name => 1)
             expect(assigns(:member_teams)).to eq [team]
             expect(assigns(:member_projects)).to eq [project, other_project]
@@ -381,12 +383,13 @@ RSpec.describe UsersController, type: :controller do
         context 'with data' do
           include_context 'user demands data'
 
-          before do
-            user.update(last_company_id: company.id)
-            get :home
-          end
-
           it 'assigns the instance variable, compute the charts, and renders the template' do
+            user.update(last_company_id: company.id)
+
+            expect_any_instance_of(Membership).to(receive(:demands_ids).at_least(:once).and_return(Demand.all.map(&:id)))
+
+            get :home
+
             expect(assigns(:user)).to eq user
             expect(assigns(:user_plans)).to eq [other_user_plan, user_plan]
             expect(assigns(:companies_list)).to eq [other_company, company]

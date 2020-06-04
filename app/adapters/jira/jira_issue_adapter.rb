@@ -193,12 +193,16 @@ module Jira
     end
 
     def history_item_processment(demand, team, history_hash, history_item)
-      responsible_string_processment(history_item['toString']).each { |to_responsible| read_assigned_responsibles(demand, team, history_hash['created'], to_responsible.strip) } if history_item['toString'].present?
-      responsible_string_processment(history_item['fromString']).each { |from_responsible| read_unassigned_responsibles(demand, team, history_hash['created'], from_responsible.strip) } if history_item['fromString'].present?
+      to_array = responsible_string_processment(history_item['toString'])
+      from_array = responsible_string_processment(history_item['fromString'])
+      unassigment_history = from_array.try(:-, to_array)
+
+      to_array.each { |to_responsible| read_assigned_responsibles(demand, team, history_hash['created'], to_responsible.strip) } if to_array.present?
+      unassigment_history.each { |from_responsible| read_unassigned_responsibles(demand, team, history_hash['created'], from_responsible.strip) } if unassigment_history.present?
     end
 
     def responsible_string_processment(responsible_string)
-      responsible_string.delete(']').delete('[').split(',')
+      responsible_string&.delete(']')&.delete('[')&.split(',')
     end
 
     def read_unassigned_responsibles(demand, team, history_date, responsible_name)
