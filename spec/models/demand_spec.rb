@@ -326,8 +326,8 @@ RSpec.describe Demand, type: :model do
 
         it 'changes the effort informations' do
           demand.update_effort!
-          expect(demand.effort_upstream.to_f).to eq 17.16
-          expect(demand.effort_downstream.to_f).to eq 5.06
+          expect(demand.effort_upstream.to_f).to eq 6.6
+          expect(demand.effort_downstream.to_f).to eq 2.3
         end
       end
 
@@ -896,4 +896,6 @@ RSpec.describe Demand, type: :model do
     it { expect(second_demand.not_started?).to be false }
     it { expect(third_demand.not_started?).to be false }
   end
+
+  pending '#membership_for_assignment'
 end

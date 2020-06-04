@@ -4,42 +4,42 @@
   <tbody>
     <tr>
       <td><b><%= I18n.t('general.name') %></b></td>
-      <td><%= user.full_name %></td>
+      <td><%= name %></td>
     </tr>
     <tr>
       <td><b><%= I18n.t('general.delivered') %></b></td>
-      <td><%= user.demands.kept.finished.count %></td>
+      <td><%= demands.kept.finished.count %></td>
     </tr>
     <tr>
       <td><b><%= I18n.t('general.bugs') %></b></td>
-      <td><%= user.demands.kept.bug.count %></td>
+      <td><%= demands.kept.bug.count %></td>
     </tr>
-    <% if user.team_member.present? %>
-      <% if user.team_member.lead_time_min.present? %>
+    <% if team_member.present? %>
+      <% if team_member.lead_time_min.present? %>
         <tr>
           <td><b><%= I18n.t('user.dashboard.lead_time_min') %></b></td>
-          <td><%= link_to time_distance_in_words(user.team_member.lead_time_min.leadtime), company_demand_path(user.team_member.lead_time_min.company, user.team_member.lead_time_min), target: :_blank %></td>
+          <td><%= link_to time_distance_in_words(team_member.lead_time_min.leadtime), company_demand_path(team_member.lead_time_min.company, team_member.lead_time_min), target: :_blank %></td>
         </tr>
       <% end %>
-      <% if user.team_member.lead_time_max.present? %>
+      <% if team_member.lead_time_max.present? %>
         <tr>
           <td><b><%= I18n.t('user.dashboard.lead_time_max') %></b></td>
-          <td><%= link_to time_distance_in_words(user.team_member.lead_time_max.leadtime), company_demand_path(user.team_member.lead_time_max.company, user.team_member.lead_time_max), target: :_blank %></td>
+          <td><%= link_to time_distance_in_words(team_member.lead_time_max.leadtime), company_demand_path(team_member.lead_time_max.company, team_member.lead_time_max), target: :_blank %></td>
         </tr>
       <% end %>
     <% end %>
     <tr>
       <td><b><%= I18n.t('general.leadtime_p80_label') %></b></td>
-      <td><%= time_distance_in_words(Stats::StatisticsService.instance.percentile(80, user.demands.kept.finished_with_leadtime.map(&:leadtime))) %></td>
+      <td><%= time_distance_in_words(Stats::StatisticsService.instance.percentile(80, demands.kept.finished_with_leadtime.map(&:leadtime))) %></td>
     </tr>
     <tr>
       <td><b><%= Project.model_name.human(count: 2) %></b></td>
-      <td><%= user.acting_projects.count %></td>
+      <td><%= team_member.projects.count %></td>
     </tr>
-    <% if user.pairing_members.present? %>
+    <% if team_member.pairing_members.present? %>
       <tr>
         <td><b><%= I18n.t('user.dashboard.pairing_info') %></b></td>
-        <td><%= "#{user.pairing_members.keys.first} (#{user.pairing_members.values.first})" %></td>
+        <td><%= "#{team_member.pairing_members.keys.first} (#{team_member.pairing_members.values.first})" %></td>
       </tr>
     <% end %>
   </tbody>

@@ -812,12 +812,16 @@ RSpec.describe TeamsController, type: :controller do
           include_context 'demands to filters'
 
           it 'creates the objects and renders the tab' do
+            expect(Membership).to(receive(:developer).and_return(Membership.all))
+
+            allow_any_instance_of(Membership).to(receive(:demands).and_return(Demand.all))
+
             get :dashboard_page_five, params: { company_id: company, id: team }, xhr: true
 
             expect(response).to render_template 'teams/dashboards/dashboard_page_five'
             expect(response).to render_template 'teams/dashboards/_dashboard_tab_page_five'
             expect(assigns(:x_axis_index)).to eq [1]
-            expect(assigns(:memberships_lead_time_in_time)).to match_array [{ data: [0.8], name: first_team_member.name }, { data: [0, 5.800000000000001], name: second_team_member.name }]
+            expect(assigns(:memberships_lead_time_in_time)).to match_array [{ data: [0, 3.400000000000002], name: first_team_member.name }, { data: [0, 3.400000000000002], name: second_team_member.name }, { data: [0, 3.400000000000002], name: third_team_member.name }]
           end
         end
       end

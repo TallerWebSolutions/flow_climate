@@ -70,4 +70,8 @@ class TeamMember < ApplicationRecord
   def lead_time_max
     demands.kept.with_valid_leadtime.order(:leadtime).last
   end
+
+  def demands
+    Demand.where(id: memberships.map { |membership| membership.demands_ids(item_assignments) }.uniq)
+  end
 end

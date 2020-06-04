@@ -253,6 +253,10 @@ class Demand < ApplicationRecord
     commitment_date.blank? && end_date.blank?
   end
 
+  def membership_for_assignment(item_assignment)
+    Membership.where(team: team, team_member: item_assignment.team_member)
+  end
+
   private
 
   def commitment_transition

@@ -70,6 +70,13 @@ RSpec.describe Membership, type: :model do
     let(:company) { Fabricate :company }
     let(:team) { Fabricate :team, company: company }
 
+    let(:customer) { Fabricate :customer, company: company }
+    let(:product) { Fabricate :product, customer: customer }
+    let(:project) { Fabricate :project, products: [product], team: team, company: company }
+
+    let(:commitment_stage) { Fabricate :stage, company: company, projects: [project], teams: [team], commitment_point: true, end_point: false, queue: true, stage_type: :development }
+    let(:end_stage) { Fabricate :stage, company: company, projects: [project], teams: [team], commitment_point: false, end_point: true, queue: false, stage_type: :development }
+
     let(:first_team_member) { Fabricate :team_member, company: company, name: 'first_member' }
     let(:second_team_member) { Fabricate :team_member, company: company, name: 'second_member' }
     let(:third_team_member) { Fabricate :team_member, company: company, name: 'third_member' }
@@ -83,14 +90,22 @@ RSpec.describe Membership, type: :model do
     let!(:fourth_membership) { Fabricate :membership, team: team, team_member: fourth_team_member, member_role: :client }
     let!(:fifth_membership) { Fabricate :membership, team: team, team_member: fifth_team_member, member_role: :developer }
 
-    let(:first_demand) { Fabricate :demand, company: company, team: team, commitment_date: 2.days.ago, end_date: 1.day.ago }
-    let(:second_demand) { Fabricate :demand, company: company, team: team, commitment_date: 3.days.ago, end_date: 2.days.ago }
-    let(:third_demand) { Fabricate :demand, company: company, team: team, commitment_date: 3.days.ago, end_date: 2.days.ago }
+    let(:first_demand) { Fabricate :demand, company: company, team: team, project: project }
+    let(:second_demand) { Fabricate :demand, company: company, team: team, project: project }
+    let(:third_demand) { Fabricate :demand, company: company, team: team, project: project }
+
+    let!(:fifth_transition) { Fabricate :demand_transition, stage: commitment_stage, demand: first_demand, last_time_in: 10.days.ago, last_time_out: 5.days.ago }
+    let!(:sixth_transition) { Fabricate :demand_transition, stage: commitment_stage, demand: second_demand, last_time_in: 6.days.ago, last_time_out: 4.days.ago }
+    let!(:seventh_transition) { Fabricate :demand_transition, stage: commitment_stage, demand: third_demand, last_time_in: 96.hours.ago, last_time_out: 95.hours.ago }
+
+    let!(:ninth_transition) { Fabricate :demand_transition, stage: end_stage, demand: first_demand, last_time_in: 5.days.ago, last_time_out: 1.minute.ago }
+    let!(:tenth_transition) { Fabricate :demand_transition, stage: end_stage, demand: second_demand, last_time_in: 4.days.ago, last_time_out: 2.days.ago }
+    let!(:eleventh_transition) { Fabricate :demand_transition, stage: end_stage, demand: third_demand, last_time_in: 95.hours.ago, last_time_out: 94.hours.ago }
 
     let!(:first_assignment) { Fabricate :item_assignment, team_member: first_team_member, demand: first_demand, start_time: 4.days.ago, finish_time: 1.day.ago }
-    let!(:second_assignment) { Fabricate :item_assignment, team_member: first_team_member, demand: second_demand, start_time: 4.days.ago, finish_time: 1.day.ago }
+    let!(:second_assignment) { Fabricate :item_assignment, team_member: first_team_member, demand: second_demand, start_time: 3.days.ago, finish_time: 1.day.ago }
     let!(:third_assignment) { Fabricate :item_assignment, team_member: second_team_member, demand: first_demand, start_time: 4.days.ago, finish_time: 1.day.ago }
-    let!(:fourth_assignment) { Fabricate :item_assignment, team_member: second_team_member, demand: second_demand, start_time: 4.days.ago, finish_time: 1.day.ago }
+    let!(:fourth_assignment) { Fabricate :item_assignment, team_member: second_team_member, demand: second_demand, start_time: 3.days.ago, finish_time: 1.day.ago }
     let!(:fifth_assignment) { Fabricate :item_assignment, team_member: fourth_team_member, demand: first_demand, start_time: 4.days.ago, finish_time: 1.day.ago }
     let!(:sixth_assignment) { Fabricate :item_assignment, team_member: fifth_team_member, demand: third_demand, start_time: 4.days.ago, finish_time: 1.day.ago }
 
@@ -99,14 +114,6 @@ RSpec.describe Membership, type: :model do
 
     let!(:first_comment) { Fabricate :demand_comment, team_member: first_team_member, demand: first_demand }
     let!(:second_comment) { Fabricate :demand_comment, team_member: first_team_member, demand: second_demand }
-  end
-
-  describe '#demands' do
-    include_context 'membership demands methods data'
-
-    it { expect(first_membership.demands).to match_array [first_demand, second_demand] }
-    it { expect(second_membership.demands).to match_array [first_demand, second_demand] }
-    it { expect(third_membership.demands).to eq [] }
   end
 
   describe '#demand_comments' do
@@ -125,18 +132,6 @@ RSpec.describe Membership, type: :model do
     it { expect(third_membership.demand_blocks).to eq [] }
   end
 
-  describe '#leadtime' do
-    before { travel_to Time.zone.local(2019, 10, 17, 10, 0, 0) }
-
-    after { travel_back }
-
-    include_context 'membership demands methods data'
-
-    it { expect(first_membership.leadtime).to be_within(0.1).of(86_400.0) }
-    it { expect(second_membership.leadtime).to be_within(0.1).of(86_400.0) }
-    it { expect(third_membership.leadtime).to eq 0 }
-  end
-
   describe '#pairing_count' do
     include_context 'membership demands methods data'
 
@@ -149,7 +144,23 @@ RSpec.describe Membership, type: :model do
     include_context 'membership demands methods data'
 
     it { expect(first_membership.pairing_members).to match_array [second_team_member, fourth_team_member, second_team_member] }
-    it { expect(second_membership.pairing_members).to eq [first_team_member, fourth_team_member, first_team_member] }
+    it { expect(second_membership.pairing_members).to match_array [first_team_member, fourth_team_member, first_team_member] }
     it { expect(third_membership.pairing_members).to eq [] }
+  end
+
+  describe '#demands_ids' do
+    include_context 'membership demands methods data'
+
+    context 'when the member is a developer' do
+      it { expect(first_membership.demands_ids([first_assignment, second_assignment])).to match_array [first_demand.id, second_demand.id] }
+    end
+  end
+
+  describe '#demands' do
+    include_context 'membership demands methods data'
+
+    context 'when the member is a developer' do
+      it { expect(first_membership.demands).to match_array [first_demand, second_demand] }
+    end
   end
 end
