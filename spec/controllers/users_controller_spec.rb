@@ -142,11 +142,11 @@ RSpec.describe UsersController, type: :controller do
       let(:second_demand) { Fabricate :demand, team: team, product: product, project: other_project, commitment_date: 1.month.ago, end_date: 25.days.ago }
       let(:third_demand) { Fabricate :demand, team: team, product: product, project: project, commitment_date: 1.month.ago, end_date: 5.days.ago }
 
-      let(:first_team_member) { Fabricate :team_member, company: company, user: user }
-      let(:second_team_member) { Fabricate :team_member, company: company, user: user }
-      let(:third_team_member) { Fabricate :team_member, company: company, user: user }
-      let(:fourth_team_member) { Fabricate :team_member, company: company, user: user }
-      let(:fifth_team_member) { Fabricate :team_member, company: company, user: user }
+      let(:first_team_member) { Fabricate :team_member, company: company, user: user, name: 'first_team_member' }
+      let(:second_team_member) { Fabricate :team_member, company: company, user: user, name: 'second_team_member' }
+      let(:third_team_member) { Fabricate :team_member, company: company, user: user, name: 'third_team_member' }
+      let(:fourth_team_member) { Fabricate :team_member, company: company, user: user, name: 'fourth_team_member' }
+      let(:fifth_team_member) { Fabricate :team_member, company: company, user: user, name: 'fifth_team_member' }
 
       let!(:first_membership) { Fabricate :membership, team: team, team_member: first_team_member, hours_per_month: 120, start_date: 1.month.ago, end_date: nil }
       let!(:second_membership) { Fabricate :membership, team: team, team_member: second_team_member, hours_per_month: 40, start_date: 2.months.ago, end_date: 1.month.ago }
@@ -177,7 +177,7 @@ RSpec.describe UsersController, type: :controller do
           it 'assigns the instance variable, compute the charts, and renders the template' do
             user.update(last_company_id: company.id)
 
-            expect_any_instance_of(Membership).to(receive(:demands_ids).at_least(:once).and_return(Demand.all.map(&:id)))
+            allow_any_instance_of(Membership).to(receive(:demands_ids).and_return(Demand.all.map(&:id)))
 
             get :show, params: { id: user }
 
@@ -202,6 +202,8 @@ RSpec.describe UsersController, type: :controller do
             expect(assigns(:projects_scope)).to eq({ project => 30, other_project => 30 })
             expect(assigns(:projects_value_per_demand)).to eq({ project => 1000, other_project => 1750 })
             expect(assigns(:projects_flow_pressure)).to eq({ project => 8.780487804878078, other_project => 12.413793103448336 })
+
+            expect(assigns(:member_effort_chart)).to eq [{ data: [0, 0, 0, 0], name: team.name }]
 
             expect(response).to render_template :show
           end
@@ -336,7 +338,7 @@ RSpec.describe UsersController, type: :controller do
           include_context 'user demands data'
 
           it 'assigns the instance variable and renders the template' do
-            expect_any_instance_of(Membership).to(receive(:demands_ids).at_least(:once).and_return(Demand.all.map(&:id)))
+            allow_any_instance_of(Membership).to(receive(:demands_ids).and_return(Demand.all.map(&:id)))
 
             user.update(last_company_id: company.id)
 
@@ -386,7 +388,7 @@ RSpec.describe UsersController, type: :controller do
           it 'assigns the instance variable, compute the charts, and renders the template' do
             user.update(last_company_id: company.id)
 
-            expect_any_instance_of(Membership).to(receive(:demands_ids).at_least(:once).and_return(Demand.all.map(&:id)))
+            allow_any_instance_of(Membership).to(receive(:demands_ids).and_return(Demand.all.map(&:id)))
 
             get :home
 

@@ -91,10 +91,27 @@ class UsersController < AuthenticatedController
     @teams = []
     return if @user.team_member.blank?
 
-    @user.team_member.pairing_members.each { |name, qty| @pairing_chart[name] = qty }
+    build_pairing_chart
+
     @member_teams = @user.team_member.teams.order(:name)
     @demand_blocks = @user.team_member.demand_blocks.order(block_time: :desc).first(5)
     @member_projects = @user.team_member.projects.active.order(end_date: :desc).last(5)
+
+    build_member_effort_chart(@user.team_member)
+  end
+
+  def build_member_effort_chart(team_member)
+    @member_effort_chart = []
+
+    team_member.memberships.active.each do |membership|
+      membership_service = Flow::MembershipFlowInformation.new(membership)
+
+      @member_effort_chart << { name: membership.team.name, data: membership_service.compute_developer_effort }
+    end
+  end
+
+  def build_pairing_chart
+    @user.team_member.pairing_members.each { |name, qty| @pairing_chart[name] = qty }
   end
 
   def assign_user_dependencies
@@ -104,7 +121,11 @@ class UsersController < AuthenticatedController
   def assign_stats_info
     user_demands = @user.demands
 
-    @array_of_dates = TimeService.instance.months_between_of(user_demands.map(&:end_date).compact.min, Time.zone.today.end_of_month)
+    start_date = user_demands.map(&:end_date).compact.min
+
+    @array_of_dates = TimeService.instance.months_between_of(start_date, Time.zone.today.end_of_month)
+
+    @demands_chart_adapter = Highchart::DemandsChartsAdapter.new(@member_demands, start_date, Time.zone.today, 'month')
 
     @statistics_information = Flow::StatisticsFlowInformations.new(user_demands)
 

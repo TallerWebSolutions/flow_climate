@@ -1,10 +1,10 @@
 <div class="row equal-heights">
   <div class="col-xs-4">
-    <%= render 'users/operations_personal_info', name: name, demands: demands, team_member: team_member %>
+    <%= render 'users/operations_personal_info', company: company, name: name, demands: demands, team_member: team_member, first_delivery: demands.kept.finished.order(:end_date).first %>
   </div>
 
-  <% if team_member.present? %>
-    <div class="col-xs-4">
+  <% if demands.present? %>
+    <div class="col-xs-6">
       <h4><%= I18n.t('demands.index.last_deliveries') %></h4>
 
       <%= render 'demands/demands_short_table', company: company, demands: demands.kept.finished.order(end_date: :desc).first(5) %>
@@ -12,7 +12,7 @@
   <% end %>
 
   <% if member_teams.present? %>
-    <div class="col-xs-4">
+    <div class="col-xs-2">
       <%= render 'team_members/teams_summary', member_teams: member_teams %>
     </div>
   <% end %>
@@ -42,4 +42,40 @@
       <%= render 'team_members/statistics_informations', dates_array: array_of_dates, statistics_flow_informations: statistics_information %>
     </div>
   <% end %>
+</div>
+
+<div class="row equal-heights">
+  <div class="col-xs-6">
+    <h4><%= I18n.t('operations_dashboard.effort_chart.title') %></h4>
+
+    <div id="member-dashboard-effort-column"
+         class="flow-chart"
+         data-title=''
+         data-xcategories='<%= array_of_dates.to_json %>'
+         data-xtitle='<%= I18n.t('general.months') %>'
+         data-ytitle='<%= I18n.t('general.hours') %>'
+         data-prefix=''
+         data-tooltipsuffix=''
+         data-datalabelsuffix=''
+         data-series='<%= member_effort_chart.to_json %>'
+         data-decimals='0'>
+    </div>
+  </div>
+
+  <div class="col-xs-6">
+    <h4><%= I18n.t('demands.charts.throughput') %></h4>
+
+    <div id="member-dashboard-throughput-column"
+         class="flow-chart"
+         data-title=''
+         data-xcategories='<%= array_of_dates.to_json %>'
+         data-xtitle='<%= I18n.t('general.months') %>'
+         data-ytitle='<%= I18n.t('general.hours') %>'
+         data-prefix=''
+         data-tooltipsuffix=''
+         data-datalabelsuffix=''
+         data-series='<%= [{ name: I18n.t('general.delivered'), data: demands_chart_adapter.throughput_chart_data }].to_json %>'
+         data-decimals='0'>
+    </div>
+  </div>
 </div>

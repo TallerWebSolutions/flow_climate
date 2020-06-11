@@ -41,6 +41,7 @@ class Membership < ApplicationRecord
   delegate :jira_account_id, to: :team_member
   delegate :monthly_payment, to: :team_member
   delegate :company, to: :team
+  delegate :projects, to: :team_member
 
   def hours_per_day
     hours_per_month.to_f / 30.0
@@ -51,7 +52,8 @@ class Membership < ApplicationRecord
 
     demands_list = []
     item_assignments.each do |assignment|
-      demands_list << assignment.demand.id if stages_to_work_on.include?(assignment.demand.stage_at(assignment.start_time))
+      stages_during_assignment = assignment.stages_during_assignment
+      demands_list << assignment.demand.id if (stages_to_work_on & stages_during_assignment).present?
     end
 
     demands_list
@@ -87,20 +89,25 @@ class Membership < ApplicationRecord
     Demand.where(id: demands_ids)
   end
 
-  private
-
   def stages_to_work_on
     stages_to_work_on = team.stages
     stages_to_work_on = team.stages.development.where(queue: false) if developer?
     stages_to_work_on
   end
 
+  private
+
   def pairing_members_in_demand(demand)
     pairing_members = []
 
     assignments_for_member = demand.item_assignments.where(team_member: team_member)
     assignments_for_member.each do |member_assignment|
-      pairing_members << demand.item_assignments.includes(:team_member).for_dates(member_assignment.start_time, member_assignment.finish_time).not_for_team_member(team_member).map(&:team_member)
+      pairing_members << demand.item_assignments
+                               .joins(team_member: :memberships)
+                               .where(team_member: { memberships: { member_role: member_role } })
+                               .for_dates(member_assignment.start_time, member_assignment.finish_time)
+                               .not_for_team_member(team_member)
+                               .map(&:team_member)
     end
 
     pairing_members

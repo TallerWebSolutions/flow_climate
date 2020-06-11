@@ -72,6 +72,6 @@ class TeamMember < ApplicationRecord
   end
 
   def demands
-    Demand.where(id: memberships.map { |membership| membership.demands_ids(item_assignments) }.uniq)
+    Demand.where(id: memberships.map { |membership| membership.demands_ids(item_assignments) }.flatten.uniq)
   end
 end

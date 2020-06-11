@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Flow::SystemFlowInformations, type: :model do
+RSpec.describe Flow::SystemFlowInformation, type: :model do
   describe '.initialize' do
     context 'with data' do
       let(:company) { Fabricate :company }

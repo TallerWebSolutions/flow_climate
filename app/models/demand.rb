@@ -253,8 +253,16 @@ class Demand < ApplicationRecord
     commitment_date.blank? && end_date.blank?
   end
 
-  def membership_for_assignment(item_assignment)
+  def memberships_for_assignment(item_assignment)
     Membership.where(team: team, team_member: item_assignment.team_member)
+  end
+
+  def stages_at(start_time, finish_time)
+    if finish_time.present?
+      demand_transitions.where('((last_time_in <= :finish_time) AND (last_time_out >= :start_time)) OR (last_time_out IS NULL AND last_time_in <= :finish_time)', start_time: start_time, finish_time: finish_time).map(&:stage).uniq
+    else
+      demand_transitions.where('(last_time_out IS NULL) OR (last_time_out >= :start_time)', start_time: start_time, finish_time: finish_time).map(&:stage).uniq
+    end
   end
 
   private

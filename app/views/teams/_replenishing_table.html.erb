@@ -40,7 +40,7 @@
         <td><%= number_with_precision(project_hash[:leadtime_80], precision: 3) %></td>
         <td><%= project_hash[:qty_selected_last_week] %></td>
         <td><%= project_hash[:work_in_progress] %></td>
-        <td><%= I18n.t('general.weeks_text', weeks: number_with_precision(project_hash[:montecarlo_80_percent], precision: 1)) %></td>
+        <td><%= I18n.t('general.weeks_text', count: number_with_precision(project_hash[:montecarlo_80_percent], precision: 1)) %></td>
         <td>
           <% if project_hash[:customer_happiness] > 2 %>
             <i class="far fa-laugh fa-2x"></i>

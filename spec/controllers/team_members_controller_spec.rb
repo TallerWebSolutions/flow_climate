@@ -75,6 +75,9 @@ RSpec.describe TeamMembersController, type: :controller do
       let(:team) { Fabricate :team, company: company }
       let(:team_member) { Fabricate :team_member, company: company }
 
+      let!(:first_membership) { Fabricate :membership, team: team, team_member: team_member, hours_per_month: 120, start_date: 1.month.ago, end_date: nil }
+      let!(:second_membership) { Fabricate :membership, team: team, team_member: team_member, hours_per_month: 40, start_date: 2.months.ago, end_date: 1.month.ago }
+
       context 'valid parameters' do
         before { get :show, params: { company_id: company.id, id: team_member }, xhr: true }
 
@@ -82,6 +85,7 @@ RSpec.describe TeamMembersController, type: :controller do
           expect(response).to render_template 'team_members/show'
           expect(assigns(:company)).to eq company
           expect(assigns(:team_member)).to eq team_member
+          expect(assigns(:member_effort_chart)).to eq [{ data: [], name: team.name }]
         end
       end
 

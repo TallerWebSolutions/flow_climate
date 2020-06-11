@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Flow
-  class TimeFlowInformations < SystemFlowInformations
+  class TimeFlowInformations < SystemFlowInformation
     attr_reader :hours_delivered_upstream, :hours_delivered_downstream, :hours_per_demand, :queue_time, :touch_time, :flow_efficiency,
                 :average_queue_time, :average_touch_time
 

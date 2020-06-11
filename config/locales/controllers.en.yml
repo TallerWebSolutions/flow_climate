@@ -82,7 +82,9 @@ en:
     max: "Maximum"
     partial: "(partial)"
     money: "US$ "
-    weeks_text: "%{weeks} week(s)"
+    weeks_text:
+      one: "%{count} week"
+      other: "%{count} weeks"
     tabs:
       config: "Configuration"
       charts: "Charts"
@@ -163,6 +165,7 @@ en:
       lead_time_p80: "Lead time (p80)"
       hours_delivered: "Hours"
       hours_delivered_acc: "Hours Accumulated"
+      first_delivery: "First delivery"
   header:
     logout: Logout
     explore: Explore
@@ -1294,3 +1297,6 @@ en:
   score_matrices:
     show:
       title: "Score Demands"
+  operations_dashboard:
+    effort_chart:
+      title: "Working Hours"

@@ -49,7 +49,7 @@ class DemandBlock < ApplicationRecord
 
   before_save :update_computed_fields!
 
-  scope :for_date_interval, ->(start_date, end_date) { where('block_time BETWEEN :last_time_in AND :last_time_out', last_time_in: start_date, last_time_out: end_date) }
+  scope :for_date_interval, ->(start_date, end_date) { where('((block_time <= :finish_time) AND (unblock_time >= :start_time)) OR (unblock_time IS NULL AND block_time <= :finish_time)', start_time: start_date, finish_time: end_date) }
   scope :open, -> { where('unblock_time IS NULL') }
   scope :closed, -> { where('unblock_time IS NOT NULL') }
   scope :active, -> { where(active: true) }
