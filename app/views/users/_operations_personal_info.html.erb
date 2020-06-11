@@ -33,6 +33,14 @@
       <td><%= time_distance_in_words(Stats::StatisticsService.instance.percentile(80, demands.kept.finished_with_leadtime.map(&:leadtime))) %></td>
     </tr>
     <tr>
+      <td><b><%= TeamMember.human_attribute_name(:start_date) %></b></td>
+      <td><%= I18n.l(team_member.start_date) %></td>
+    </tr>
+    <tr>
+      <td><b><%= I18n.t('general.dashboards.first_delivery') %></b></td>
+      <td><%= "#{link_to I18n.l(first_delivery.end_date, format: :short), company_demand_path(company, first_delivery), target: :_blank} (#{I18n.t('general.weeks_text', count: (first_delivery.end_date.to_date - team_member.start_date).to_i / 7)})".html_safe if first_delivery.present? %></td>
+    </tr>
+    <tr>
       <td><b><%= Project.model_name.human(count: 2) %></b></td>
       <td><%= team_member.projects.count %></td>
     </tr>

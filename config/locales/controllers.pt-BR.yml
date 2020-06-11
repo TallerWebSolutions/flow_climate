@@ -82,7 +82,9 @@ pt-BR:
     max: "Máximo"
     partial: "(parcial)"
     money: "R$ "
-    weeks_text: "%{weeks} semana(s)"
+    weeks_text:
+      one: "%{count} semana"
+      other: "%{count} semanas"
     tabs:
       config: "Configuração"
       charts: "Gráficos"
@@ -163,6 +165,7 @@ pt-BR:
       lead_time_p80: "Lead time (p80)"
       hours_delivered: "Horas"
       hours_delivered_acc: "Horas Acumuladas"
+      first_delivery: "Primeira entrega"
   header:
     logout: Sair
     sign_up: Cadastre-se
@@ -1273,3 +1276,6 @@ pt-BR:
   score_matrices:
     show:
       title: "Pontuar Demandas"
+  operations_dashboard:
+    effort_chart:
+      title: "Horas Úteis"

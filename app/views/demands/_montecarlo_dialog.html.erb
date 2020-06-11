@@ -25,7 +25,7 @@
         </div>
         <div class="row">
           <h4 class="center-text"><%= I18n.t('demands.index.montecarlo_projection.80_percent_data') %></h4>
-          <h2 class="center-text"><%= I18n.t('general.weeks_text', weeks: number_with_precision(status_report_data.confidence_80_duration, precision: 2)) %></h2>
+          <h2 class="center-text"><%= I18n.t('general.weeks_text', count: number_with_precision(status_report_data.confidence_80_duration, precision: 2)) %></h2>
         </div>
       </div>
     </div>

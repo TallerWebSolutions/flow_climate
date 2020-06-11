@@ -41,15 +41,15 @@ class DemandBlock < ApplicationRecord
 
   belongs_to :demand
   belongs_to :stage
-  belongs_to :blocker, class_name: 'TeamMember', foreign_key: :blocker_id, inverse_of: :demand_blocks
-  belongs_to :unblocker, class_name: 'TeamMember', foreign_key: :unblocker_id, inverse_of: :demand_blocks
+  belongs_to :blocker, class_name: 'TeamMember', inverse_of: :demand_blocks
+  belongs_to :unblocker, class_name: 'TeamMember', inverse_of: :demand_blocks
   belongs_to :risk_review
 
   validates :demand, :demand_id, :blocker, :block_time, :block_type, presence: true
 
   before_save :update_computed_fields!
 
-  scope :for_date_interval, ->(start_date, end_date) { where('block_time BETWEEN :last_time_in AND :last_time_out', last_time_in: start_date, last_time_out: end_date) }
+  scope :for_date_interval, ->(start_date, end_date) { where('((block_time <= :finish_time) AND (unblock_time >= :start_time)) OR (unblock_time IS NULL AND block_time <= :finish_time)', start_time: start_date, finish_time: end_date) }
   scope :open, -> { where('unblock_time IS NULL') }
   scope :closed, -> { where('unblock_time IS NOT NULL') }
   scope :active, -> { where(active: true) }

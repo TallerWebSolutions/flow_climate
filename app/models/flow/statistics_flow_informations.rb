@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Flow
-  class StatisticsFlowInformations < SystemFlowInformations
+  class StatisticsFlowInformations < SystemFlowInformation
     attr_reader :average_aging_per_period, :lead_time_bins, :lead_time_histogram_data, :throughput_bins,
                 :demands_charts_ids, :lead_time_data_array, :lead_time_accumulated,
                 :lead_time_95p, :lead_time_80p, :lead_time_65p

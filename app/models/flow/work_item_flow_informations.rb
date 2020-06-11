@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Flow
-  class WorkItemFlowInformations < SystemFlowInformations
+  class WorkItemFlowInformations < SystemFlowInformation
     attr_reader :start_population_date, :scope_per_period, :ideal_per_period, :throughput_per_period, :accumulated_throughput,
                 :products_throughput_per_period, :accumulated_products_throughput, :accumulated_bugs_opened_data_array,
                 :accumulated_bugs_closed_data_array, :bugs_opened_data_array, :bugs_closed_data_array, :bugs_share_data_array,

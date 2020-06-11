@@ -80,11 +80,29 @@ class TeamMembersController < AuthenticatedController
   def assign_chart_info
     @pairing_chart = {}
     @team_member.pairing_members.each { |name, qty| @pairing_chart[name] = qty }
-    @array_of_dates = TimeService.instance.months_between_of(@member_demands.map(&:end_date).compact.min, Time.zone.today.end_of_month)
+    @array_of_dates = TimeService.instance.months_between_of(start_date, Time.zone.today.end_of_month)
 
     @statistics_information = Flow::StatisticsFlowInformations.new(@member_demands)
 
     @array_of_dates.each { |analysed_date| @statistics_information.statistics_flow_behaviour(analysed_date) }
+
+    @demands_chart_adapter = Highchart::DemandsChartsAdapter.new(@member_demands, start_date, Time.zone.today, 'month')
+
+    build_member_effort_chart(@team_member)
+  end
+
+  def build_member_effort_chart(team_member)
+    @member_effort_chart = []
+
+    team_member.memberships.active.each do |membership|
+      membership_service = Flow::MembershipFlowInformation.new(membership)
+
+      @member_effort_chart << { name: membership.team.name, data: membership_service.compute_developer_effort }
+    end
+  end
+
+  def start_date
+    @start_date ||= @member_demands.map(&:end_date).compact.min
   end
 
   def assign_team_member_objects

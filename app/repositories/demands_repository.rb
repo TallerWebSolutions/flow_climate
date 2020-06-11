@@ -84,10 +84,12 @@ class DemandsRepository
            .joins(:project)
            .joins(:product)
            .left_outer_joins(:portfolio_unit)
+           .left_outer_joins(item_assignments: :team_member)
            .where('demands.demand_title ILIKE :search_param
                    OR demands.external_id ILIKE :search_param
                    OR projects.name ILIKE :search_param
                    OR portfolio_units.name ILIKE :search_param
+                   OR team_members.name ILIKE :search_param
                    OR products.name ILIKE :search_param', search_param: "%#{filter_text.downcase}%")
   end
 

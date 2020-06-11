@@ -32,7 +32,7 @@ class PortfolioUnit < ApplicationRecord
   enum portfolio_unit_type: { product_module: 0, key_result: 1, source: 2, epic: 4 }
 
   belongs_to :product
-  belongs_to :parent, class_name: 'PortfolioUnit', foreign_key: :parent_id, inverse_of: :children
+  belongs_to :parent, class_name: 'PortfolioUnit', inverse_of: :children
   has_many :children, class_name: 'PortfolioUnit', foreign_key: :parent_id, inverse_of: :parent, dependent: :destroy
 
   has_many :demands, dependent: :nullify

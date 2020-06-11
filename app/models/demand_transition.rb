@@ -46,6 +46,7 @@ class DemandTransition < ApplicationRecord
   scope :before_date_after_stage, ->(limit_date, base_order) { joins(:stage).where('last_time_in <= :limit_date AND stages.order >= :stage_order', limit_date: limit_date, stage_order: base_order) }
   scope :for_demands_ids, ->(demands_ids) { where(demand_id: demands_ids) }
   scope :after_date, ->(date) { where('last_time_in >= :limit_date', limit_date: date) }
+  scope :for_date, ->(date) { where('(last_time_in <= :limit_date AND (last_time_out IS NULL OR last_time_out >= :limit_date)) OR (last_time_in > :limit_date AND (last_time_out IS NULL OR last_time_out <= :limit_date))', limit_date: date) }
 
   after_save :set_demand_dates
   after_save :set_demand_computed_fields
@@ -90,7 +91,7 @@ class DemandTransition < ApplicationRecord
 
   def compute_paired_effort(assignments_in_dates, start_date, end_date, pairing_percentage)
     top_effort_assignment = assignments_in_dates.max_by { |assign_in_date| assign_in_date.working_hours_until(start_date, end_date) }
-    top_effort_membership = demand.membership_for_assignment(top_effort_assignment).find_by('memberships.end_date IS NULL OR memberships.end_date < :transition_date', transition_date: end_date)
+    top_effort_membership = demand.memberships_for_assignment(top_effort_assignment).find_by('memberships.end_date IS NULL OR memberships.end_date < :transition_date', transition_date: end_date)
 
     return top_effort_assignment.working_hours_until(start_date, end_date) if top_effort_membership.blank?
 

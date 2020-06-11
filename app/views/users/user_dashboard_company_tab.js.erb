@@ -1,4 +1,4 @@
-$('#user-dashboard-tab').html("<%= escape_javascript(render 'users/user_dashboard_company_tab', user: @user, company: @company, member_teams: @member_teams, demand_blocks: @demand_blocks, member_projects: @member_projects, pairing_chart: @pairing_chart, statistics_information: @statistics_information, array_of_dates: @array_of_dates) %>")
+$('#user-dashboard-tab').html("<%= escape_javascript(render 'users/user_dashboard_company_tab', user: @user, company: @company, member_teams: @member_teams, demand_blocks: @demand_blocks, member_projects: @member_projects, pairing_chart: @pairing_chart, statistics_information: @statistics_information, array_of_dates: @array_of_dates, member_effort_chart: @member_effort_chart, demands_chart_adapter: @demands_chart_adapter) %>")
 
 $("#general-loader").hide();
 $("#user-dashboard-tab").show();

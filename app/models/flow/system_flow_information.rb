@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 module Flow
-  class SystemFlowInformations
-    attr_reader :demands, :demands_ids, :demands_ids_in_products, :current_limit_date, :data_point_index
+  class SystemFlowInformation
+    attr_reader :demands, :demands_ids, :demands_ids_in_products, :current_limit_date
 
     def initialize(demands)
       start_common_attributes

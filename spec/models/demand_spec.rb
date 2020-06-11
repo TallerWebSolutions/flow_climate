@@ -897,5 +897,47 @@ RSpec.describe Demand, type: :model do
     it { expect(third_demand.not_started?).to be false }
   end
 
-  pending '#membership_for_assignment'
+  describe '#memberships_for_assignment' do
+    let(:company) { Fabricate :company }
+    let(:team) { Fabricate :team, company: company }
+
+    let(:team_member) { Fabricate :team_member, company: company }
+    let(:other_team_member) { Fabricate :team_member, company: company }
+
+    let!(:membership) { Fabricate :membership, team: team, team_member: team_member, end_date: nil }
+    let!(:other_membership) { Fabricate :membership, team: team, team_member: team_member, start_date: 2.months.ago, end_date: 1.month.ago }
+
+    let!(:demand) { Fabricate :demand, team: team }
+    let!(:item_assignment) { Fabricate :item_assignment, demand: demand, team_member: team_member }
+    let!(:other_item_assignment) { Fabricate :item_assignment, demand: demand, team_member: other_team_member }
+
+    it { expect(demand.memberships_for_assignment(item_assignment)).to match_array [membership, other_membership] }
+    it { expect(demand.memberships_for_assignment(other_item_assignment)).to eq [] }
+  end
+
+  describe '#stages_at' do
+    let(:company) { Fabricate :company }
+    let(:team) { Fabricate :team, company: company }
+
+    let!(:project) { Fabricate :project, company: company }
+
+    let(:first_stage) { Fabricate :stage, company: company, teams: [team], projects: [project], name: 'first_stage' }
+    let(:second_stage) { Fabricate :stage, company: company, teams: [team], projects: [project], name: 'second_stage' }
+    let(:third_stage) { Fabricate :stage, company: company, teams: [team], projects: [project], name: 'third_stage' }
+    let(:fourth_stage) { Fabricate :stage, company: company, teams: [team], projects: [project], name: 'fourth_stage' }
+
+    let!(:demand) { Fabricate :demand, team: team, project: project, company: company }
+    let!(:first_demand_transtion) { Fabricate :demand_transition, demand: demand,  stage: first_stage, last_time_in: 2.days.ago, last_time_out: 1.day.ago }
+    let!(:second_demand_transtion) { Fabricate :demand_transition, demand: demand, stage: second_stage, last_time_in: 3.days.ago, last_time_out: 2.days.ago }
+    let!(:third_demand_transtion) { Fabricate :demand_transition, demand: demand, stage: third_stage, last_time_in: 5.days.ago, last_time_out: 4.days.ago }
+    let!(:fourth_demand_transtion) { Fabricate :demand_transition, demand: demand, stage: fourth_stage, last_time_in: 3.days.ago, last_time_out: nil }
+
+    it { expect(demand.stages_at(27.hours.ago, 26.hours.ago)).to eq [first_stage, fourth_stage] }
+    it { expect(demand.stages_at(50.hours.ago, 1.hour.ago)).to eq [first_stage, second_stage, fourth_stage] }
+    it { expect(demand.stages_at(100.hours.ago, 1.hour.ago)).to eq [first_stage, second_stage, third_stage, fourth_stage] }
+    it { expect(demand.stages_at(100.hours.ago, 97.hours.ago)).to eq [third_stage] }
+    it { expect(demand.stages_at(80.hours.ago, nil)).to eq [first_stage, second_stage, fourth_stage] }
+    it { expect(demand.stages_at(1.hour.ago, 1.minute.ago)).to eq [fourth_stage] }
+    it { expect(demand.stages_at(7.weeks.ago, 5.weeks.ago)).to eq [] }
+  end
 end
