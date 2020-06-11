@@ -1,10 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe CompaniesBulletimJob, type: :active_job do
-  before { travel_to Time.zone.local(2020, 3, 20, 10, 0, 0) }
-
-  after { travel_back }
-
   describe '.perform_later' do
     it 'enqueues after calling perform_later' do
       described_class.perform_later
@@ -27,9 +23,11 @@ RSpec.describe CompaniesBulletimJob, type: :active_job do
     let!(:fourth_project) { Fabricate :project, company: company, customers: [customer], start_date: 2.days.ago, end_date: Time.zone.today }
 
     it 'calls the mailer to send the data' do
-      allow(Time.zone).to receive(:today).and_return Time.zone.today.beginning_of_week + 1.day
-      expect(UserNotifierMailer).to receive(:company_weekly_bulletin).with(company.users, company).once
-      described_class.perform_now
+      travel_to Time.zone.local(2020, 3, 20, 10, 0, 0) do
+        allow(Time.zone).to receive(:today).and_return Time.zone.today.beginning_of_week + 1.day
+        expect(UserNotifierMailer).to receive(:company_weekly_bulletin).with(company.users, company).once
+        described_class.perform_now
+      end
     end
   end
 end

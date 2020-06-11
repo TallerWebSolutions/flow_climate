@@ -77,7 +77,7 @@ class Demand < ApplicationRecord
   belongs_to :team
   belongs_to :risk_review
   belongs_to :service_delivery_review
-  belongs_to :current_stage, class_name: 'Stage', foreign_key: :current_stage_id, inverse_of: :current_demands
+  belongs_to :current_stage, class_name: 'Stage', inverse_of: :current_demands
 
   has_many :demand_transitions, dependent: :destroy
   has_many :demand_blocks, dependent: :destroy

@@ -41,8 +41,8 @@ class DemandBlock < ApplicationRecord
 
   belongs_to :demand
   belongs_to :stage
-  belongs_to :blocker, class_name: 'TeamMember', foreign_key: :blocker_id, inverse_of: :demand_blocks
-  belongs_to :unblocker, class_name: 'TeamMember', foreign_key: :unblocker_id, inverse_of: :demand_blocks
+  belongs_to :blocker, class_name: 'TeamMember', inverse_of: :demand_blocks
+  belongs_to :unblocker, class_name: 'TeamMember', inverse_of: :demand_blocks
   belongs_to :risk_review
 
   validates :demand, :demand_id, :blocker, :block_time, :block_type, presence: true
