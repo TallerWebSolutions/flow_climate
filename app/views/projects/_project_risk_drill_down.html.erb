@@ -82,14 +82,14 @@
           <div class="col-xs-3 bottom-spaced-component">
             <p class="stamp-title"><%= I18n.t('general.minimum') %></p>
             <p class="stamp-content">
-              <%= I18n.t('general.weeks_text', weeks: project_consolidations.last.team_monte_carlo_weeks_min) %>
+              <%= I18n.t('general.weeks_text', count: project_consolidations.last.team_monte_carlo_weeks_min) %>
               <sup><%= "(#{number_to_percentage(project_consolidations.last.team_monte_carlo_weeks_min_percentage * 100, precision: 2)})" %></sup>
             </p>
           </div>
           <div class="col-xs-3 bottom-spaced-component">
             <p class="stamp-title"><%= I18n.t('general.maximum') %></p>
             <p class="stamp-content">
-              <%= I18n.t('general.weeks_text', weeks: project_consolidations.last.team_monte_carlo_weeks_max) %>
+              <%= I18n.t('general.weeks_text', count: project_consolidations.last.team_monte_carlo_weeks_max) %>
             </p>
           </div>
           <div class="col-xs-3 bottom-spaced-component">

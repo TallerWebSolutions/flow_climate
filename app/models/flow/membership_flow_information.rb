@@ -8,8 +8,6 @@ module Flow
       super(membership.demands)
       @membership = membership
       @projects = membership.projects
-      start_population_date = @demands.kept.finished.map(&:end_date).compact.min
-      end_population_date = [@demands.kept.finished.map(&:end_date).max, Time.zone.today].compact.min
 
       @population_dates = TimeService.instance.months_between_of(start_population_date, end_population_date)
     end
@@ -32,6 +30,14 @@ module Flow
     end
 
     private
+
+    def start_population_date
+      [@demands.kept.finished.map(&:end_date).compact.min, 6.months.ago].compact.max
+    end
+
+    def end_population_date
+      [@demands.kept.finished.map(&:end_date).max, Time.zone.today].compact.min
+    end
 
     def sum_efforts_for_assignments(item_assignments, stages_to_work_on)
       efforts_for_assignments = []

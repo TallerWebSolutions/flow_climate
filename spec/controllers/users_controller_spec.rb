@@ -132,15 +132,15 @@ RSpec.describe UsersController, type: :controller do
       let(:customer) { Fabricate :customer, company: company }
       let(:product) { Fabricate :product, customer: customer }
 
-      let!(:project) { Fabricate :project, products: [product], status: :executing, company: company, start_date: 1.month.ago, end_date: 2.days.from_now, value: 1000 }
-      let!(:other_project) { Fabricate :project, products: [product], status: :executing, company: company, start_date: 2.months.ago, end_date: 1.day.from_now, value: 3500 }
-      let!(:finished_project) { Fabricate :project, products: [product], status: :finished, company: company, start_date: 4.days.ago, end_date: 2.days.ago, value: 500 }
-      let!(:waiting_project) { Fabricate :project, products: [product], status: :waiting, company: company, start_date: 4.days.ago, end_date: 2.days.ago, value: 500 }
+      let!(:project) { Fabricate :project, products: [product], status: :executing, company: company, start_date: Time.zone.local(2019, 12, 16, 14, 0, 0), end_date: Time.zone.local(2020, 1, 18, 14, 0, 0), value: 1000 }
+      let!(:other_project) { Fabricate :project, products: [product], status: :executing, company: company, start_date: Time.zone.local(2019, 11, 16, 14, 0, 0), end_date: Time.zone.local(2020, 1, 17, 14, 0, 0), value: 3500 }
+      let!(:finished_project) { Fabricate :project, products: [product], status: :finished, company: company, start_date: Time.zone.local(2020, 1, 12, 14, 0, 0), end_date: Time.zone.local(2020, 1, 14, 14, 0, 0), value: 500 }
+      let!(:waiting_project) { Fabricate :project, products: [product], status: :waiting, company: company, start_date: Time.zone.local(2020, 1, 12, 14, 0, 0), end_date: Time.zone.local(2020, 1, 14, 14, 0, 0), value: 500 }
 
       let(:team) { Fabricate :team, company: company }
-      let(:first_demand) { Fabricate :demand, team: team, product: product, project: other_project, commitment_date: 3.months.ago, end_date: 85.days.ago }
-      let(:second_demand) { Fabricate :demand, team: team, product: product, project: other_project, commitment_date: 1.month.ago, end_date: 25.days.ago }
-      let(:third_demand) { Fabricate :demand, team: team, product: product, project: project, commitment_date: 1.month.ago, end_date: 5.days.ago }
+      let(:first_demand) { Fabricate :demand, team: team, product: product, project: other_project, commitment_date: Time.zone.local(2019, 10, 16, 14, 0, 0), end_date: Time.zone.local(2020, 10, 23, 14, 0, 0) }
+      let(:second_demand) { Fabricate :demand, team: team, product: product, project: other_project, commitment_date: Time.zone.local(2019, 12, 16, 14, 0, 0), end_date: Time.zone.local(2019, 12, 22, 14, 0, 0) }
+      let(:third_demand) { Fabricate :demand, team: team, product: product, project: project, commitment_date: Time.zone.local(2019, 12, 16, 14, 0, 0), end_date: Time.zone.local(2020, 1, 11, 14, 0, 0) }
 
       let(:first_team_member) { Fabricate :team_member, company: company, user: user, name: 'first_team_member' }
       let(:second_team_member) { Fabricate :team_member, company: company, user: user, name: 'second_team_member' }
@@ -148,11 +148,11 @@ RSpec.describe UsersController, type: :controller do
       let(:fourth_team_member) { Fabricate :team_member, company: company, user: user, name: 'fourth_team_member' }
       let(:fifth_team_member) { Fabricate :team_member, company: company, user: user, name: 'fifth_team_member' }
 
-      let!(:first_membership) { Fabricate :membership, team: team, team_member: first_team_member, hours_per_month: 120, start_date: 1.month.ago, end_date: nil }
-      let!(:second_membership) { Fabricate :membership, team: team, team_member: second_team_member, hours_per_month: 40, start_date: 2.months.ago, end_date: 1.month.ago }
-      let!(:third_membership) { Fabricate :membership, team: team, team_member: third_team_member, hours_per_month: 40, start_date: 2.months.ago, end_date: 1.month.ago }
-      let!(:fourth_membership) { Fabricate :membership, team: team, team_member: fourth_team_member, hours_per_month: 40, start_date: 2.months.ago, end_date: 1.month.ago }
-      let!(:fifth_membership) { Fabricate :membership, team: team, team_member: fifth_team_member, hours_per_month: 40, start_date: 2.months.ago, end_date: 1.month.ago }
+      let!(:first_membership) { Fabricate :membership, team: team, team_member: first_team_member, hours_per_month: 120, start_date: Time.zone.local(2019, 12, 16, 14, 0, 0), end_date: nil }
+      let!(:second_membership) { Fabricate :membership, team: team, team_member: second_team_member, hours_per_month: 40, start_date: Time.zone.local(2019, 11, 16, 14, 0, 0), end_date: Time.zone.local(2019, 12, 16, 14, 0, 0) }
+      let!(:third_membership) { Fabricate :membership, team: team, team_member: third_team_member, hours_per_month: 40, start_date: Time.zone.local(2019, 11, 16, 14, 0, 0), end_date: Time.zone.local(2019, 12, 16, 14, 0, 0) }
+      let!(:fourth_membership) { Fabricate :membership, team: team, team_member: fourth_team_member, hours_per_month: 40, start_date: Time.zone.local(2019, 11, 16, 14, 0, 0), end_date: Time.zone.local(2019, 12, 16, 14, 0, 0) }
+      let!(:fifth_membership) { Fabricate :membership, team: team, team_member: fifth_team_member, hours_per_month: 40, start_date: Time.zone.local(2019, 11, 16, 14, 0, 0), end_date: Time.zone.local(2019, 12, 16, 14, 0, 0) }
 
       let!(:first_item_assignment) { Fabricate :item_assignment, demand: first_demand, team_member: first_team_member, start_time: 3.days.ago, finish_time: 52.hours.ago }
       let!(:second_item_assignment) { Fabricate :item_assignment, demand: first_demand, team_member: second_team_member, start_time: 2.days.ago, finish_time: nil }
@@ -166,10 +166,6 @@ RSpec.describe UsersController, type: :controller do
     end
 
     describe 'GET #show' do
-      before { travel_to Time.zone.local(2020, 1, 16, 14, 0, 0) }
-
-      after { travel_back }
-
       context 'with valid parameters' do
         context 'with data' do
           include_context 'user demands data'
@@ -177,35 +173,35 @@ RSpec.describe UsersController, type: :controller do
           it 'assigns the instance variable, compute the charts, and renders the template' do
             user.update(last_company_id: company.id)
 
-            allow_any_instance_of(Membership).to(receive(:demands_ids).and_return(Demand.all.map(&:id)))
+            travel_to Time.zone.local(2020, 1, 16, 14, 0, 0) do
+              allow_any_instance_of(Membership).to(receive(:demands_ids).and_return(Demand.all.map(&:id)))
 
-            get :show, params: { id: user }
+              get :show, params: { id: user }
 
-            expect(assigns(:user)).to eq user
-            expect(assigns(:user_plans)).to eq [other_user_plan, user_plan]
-            expect(assigns(:companies_list)).to eq [other_company, company]
+              expect(assigns(:user)).to eq user
+              expect(assigns(:user_plans)).to eq [other_user_plan, user_plan]
+              expect(assigns(:companies_list)).to eq [other_company, company]
 
-            expect(assigns(:pairing_chart)).to eq(second_team_member.name => 2, third_team_member.name => 1, fourth_team_member.name => 1)
-            expect(assigns(:member_teams)).to eq [team]
-            expect(assigns(:member_projects)).to eq [project, other_project]
-            expect(assigns(:array_of_dates)).to eq [Date.new(2019, 10, 31), Date.new(2019, 11, 30), Date.new(2019, 12, 31), Date.new(2020, 1, 31)]
+              expect(assigns(:pairing_chart)).to eq(second_team_member.name => 1, third_team_member.name => 1, fourth_team_member.name => 1)
+              expect(assigns(:member_teams)).to eq [team]
+              expect(assigns(:member_projects)).to eq [project, other_project]
+              expect(assigns(:array_of_dates)).to eq [Date.new(2019, 12, 31), Date.new(2020, 1, 31)]
 
-            expect(assigns(:statistics_information).lead_time_accumulated[0]).to be_within(1).of(7.0)
-            expect(assigns(:statistics_information).lead_time_accumulated[1]).to be_within(1).of(7.0)
-            expect(assigns(:statistics_information).lead_time_accumulated[2]).to be_within(1).of(7.0)
-            expect(assigns(:statistics_information).lead_time_accumulated[3]).to be_within(1).of(26.0)
+              expect(assigns(:statistics_information).lead_time_accumulated[0]).to be_within(1).of(7.0)
+              expect(assigns(:statistics_information).lead_time_accumulated[1]).to eq 26.0
 
-            expect(assigns(:projects_quality)).to eq(project => 100, other_project => 100)
-            expect(assigns(:projects_leadtime)[project]).to be_within(0.5).of(26)
-            expect(assigns(:projects_leadtime)[other_project]).to be_within(0.5).of(6.8)
-            expect(assigns(:projects_risk)).to eq({ project => 100, other_project => 100 })
-            expect(assigns(:projects_scope)).to eq({ project => 30, other_project => 30 })
-            expect(assigns(:projects_value_per_demand)).to eq({ project => 1000, other_project => 1750 })
-            expect(assigns(:projects_flow_pressure)).to eq({ project => 8.780487804878078, other_project => 12.413793103448336 })
+              expect(assigns(:projects_quality)).to eq(project => 100, other_project => 100)
+              expect(assigns(:projects_leadtime)[project]).to be_within(0.5).of(26)
+              expect(assigns(:projects_leadtime)[other_project]).to eq 299.6
+              expect(assigns(:projects_risk)).to eq({ project => 100, other_project => 100 })
+              expect(assigns(:projects_scope)).to eq({ project => 30, other_project => 30 })
+              expect(assigns(:projects_value_per_demand)).to eq({ project => 1000, other_project => 3500 })
+              expect(assigns(:projects_flow_pressure)).to eq({ project => 8.780487804878078, other_project => 12.413793103448336 })
 
-            expect(assigns(:member_effort_chart)).to eq [{ data: [0, 0, 0, 0], name: team.name }]
+              expect(assigns(:member_effort_chart)).to eq [{ data: [0, 0], name: team.name }]
 
-            expect(response).to render_template :show
+              expect(response).to render_template :show
+            end
           end
         end
 
@@ -347,16 +343,14 @@ RSpec.describe UsersController, type: :controller do
             expect(assigns(:pairing_chart)).to eq(second_team_member.name => 2, third_team_member.name => 1, fourth_team_member.name => 1)
             expect(assigns(:member_teams)).to eq [team]
             expect(assigns(:member_projects)).to eq [project, other_project]
-            expect(assigns(:array_of_dates)).to eq [Date.new(2019, 10, 31), Date.new(2019, 11, 30), Date.new(2019, 12, 31), Date.new(2020, 1, 31)]
+            expect(assigns(:array_of_dates)).to eq [Date.new(2019, 12, 31), Date.new(2020, 1, 31)]
 
             expect(assigns(:statistics_information).lead_time_accumulated[0]).to be_within(1).of(7.0)
-            expect(assigns(:statistics_information).lead_time_accumulated[1]).to be_within(1).of(7.0)
-            expect(assigns(:statistics_information).lead_time_accumulated[2]).to be_within(1).of(7.0)
-            expect(assigns(:statistics_information).lead_time_accumulated[3]).to be_within(1).of(26.0)
+            expect(assigns(:statistics_information).lead_time_accumulated[1]).to eq 26.0
 
             expect(assigns(:projects_quality)).to eq(project => 100, other_project => 100)
             expect(assigns(:projects_leadtime)[project]).to be_within(0.5).of(26)
-            expect(assigns(:projects_leadtime)[other_project]).to be_within(0.5).of(6.8)
+            expect(assigns(:projects_leadtime)[other_project]).to eq 299.6
             expect(assigns(:projects_risk)).to eq({ project => 100, other_project => 100 })
             expect(assigns(:projects_scope)).to eq({ project => 30, other_project => 30 })
             expect(assigns(:projects_value_per_demand)).to eq({ project => 1000, other_project => 1750 })
@@ -377,10 +371,6 @@ RSpec.describe UsersController, type: :controller do
     end
 
     describe 'GET #home' do
-      before { travel_to Time.zone.local(2020, 1, 16, 14, 0, 0) }
-
-      after { travel_back }
-
       context 'with valid parameters' do
         context 'with data' do
           include_context 'user demands data'
@@ -388,33 +378,33 @@ RSpec.describe UsersController, type: :controller do
           it 'assigns the instance variable, compute the charts, and renders the template' do
             user.update(last_company_id: company.id)
 
-            allow_any_instance_of(Membership).to(receive(:demands_ids).and_return(Demand.all.map(&:id)))
+            travel_to Time.zone.local(2020, 1, 16, 14, 0, 0) do
+              allow_any_instance_of(Membership).to(receive(:demands_ids).and_return(Demand.all.map(&:id)))
 
-            get :home
+              get :home
 
-            expect(assigns(:user)).to eq user
-            expect(assigns(:user_plans)).to eq [other_user_plan, user_plan]
-            expect(assigns(:companies_list)).to eq [other_company, company]
+              expect(assigns(:user)).to eq user
+              expect(assigns(:user_plans)).to eq [other_user_plan, user_plan]
+              expect(assigns(:companies_list)).to eq [other_company, company]
 
-            expect(assigns(:pairing_chart)).to eq(second_team_member.name => 2, third_team_member.name => 1, fourth_team_member.name => 1)
-            expect(assigns(:member_teams)).to eq [team]
-            expect(assigns(:member_projects)).to eq [project, other_project]
-            expect(assigns(:array_of_dates)).to eq [Date.new(2019, 10, 31), Date.new(2019, 11, 30), Date.new(2019, 12, 31), Date.new(2020, 1, 31)]
+              expect(assigns(:pairing_chart)).to eq(second_team_member.name => 1, third_team_member.name => 1, fourth_team_member.name => 1)
+              expect(assigns(:member_teams)).to eq [team]
+              expect(assigns(:member_projects)).to eq [project, other_project]
+              expect(assigns(:array_of_dates)).to eq [Date.new(2019, 12, 31), Date.new(2020, 1, 31)]
 
-            expect(assigns(:statistics_information).lead_time_accumulated[0]).to be_within(1).of(7.0)
-            expect(assigns(:statistics_information).lead_time_accumulated[1]).to be_within(1).of(7.0)
-            expect(assigns(:statistics_information).lead_time_accumulated[2]).to be_within(1).of(7.0)
-            expect(assigns(:statistics_information).lead_time_accumulated[3]).to be_within(1).of(26.0)
+              expect(assigns(:statistics_information).lead_time_accumulated[0]).to be_within(1).of(7.0)
+              expect(assigns(:statistics_information).lead_time_accumulated[1]).to eq 26.0
 
-            expect(assigns(:projects_quality)).to eq(project => 100, other_project => 100)
-            expect(assigns(:projects_leadtime)[project]).to be_within(0.5).of(26)
-            expect(assigns(:projects_leadtime)[other_project]).to be_within(0.5).of(6.8)
-            expect(assigns(:projects_risk)).to eq({ project => 100, other_project => 100 })
-            expect(assigns(:projects_scope)).to eq({ project => 30, other_project => 30 })
-            expect(assigns(:projects_value_per_demand)).to eq({ project => 1000, other_project => 1750 })
-            expect(assigns(:projects_flow_pressure)).to eq({ project => 8.780487804878078, other_project => 12.413793103448336 })
+              expect(assigns(:projects_quality)).to eq(project => 100, other_project => 100)
+              expect(assigns(:projects_leadtime)[project]).to be_within(0.5).of(26)
+              expect(assigns(:projects_leadtime)[other_project]).to eq 299.6
+              expect(assigns(:projects_risk)).to eq({ project => 100, other_project => 100 })
+              expect(assigns(:projects_scope)).to eq({ project => 30, other_project => 30 })
+              expect(assigns(:projects_value_per_demand)).to eq({ project => 1000, other_project => 3500 })
+              expect(assigns(:projects_flow_pressure)).to eq({ project => 8.780487804878078, other_project => 12.413793103448336 })
 
-            expect(response).to render_template 'users/show'
+              expect(response).to render_template 'users/show'
+            end
           end
         end
 
