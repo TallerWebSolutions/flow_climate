@@ -192,7 +192,7 @@ RSpec.describe UsersController, type: :controller do
 
               expect(assigns(:projects_quality)).to eq(project => 100, other_project => 100)
               expect(assigns(:projects_leadtime)[project]).to be_within(0.5).of(26)
-              expect(assigns(:projects_leadtime)[other_project]).to eq 299.6
+              expect(assigns(:projects_leadtime)[other_project]).to be_within(0.1).of(299.6)
               expect(assigns(:projects_risk)).to eq({ project => 100, other_project => 100 })
               expect(assigns(:projects_scope)).to eq({ project => 30, other_project => 30 })
               expect(assigns(:projects_value_per_demand)).to eq({ project => 1000, other_project => 3500 })
@@ -350,7 +350,7 @@ RSpec.describe UsersController, type: :controller do
 
             expect(assigns(:projects_quality)).to eq(project => 100, other_project => 100)
             expect(assigns(:projects_leadtime)[project]).to be_within(0.5).of(26)
-            expect(assigns(:projects_leadtime)[other_project]).to eq 299.6
+            expect(assigns(:projects_leadtime)[other_project]).to be_within(0.1).of(299.6)
             expect(assigns(:projects_risk)).to eq({ project => 100, other_project => 100 })
             expect(assigns(:projects_scope)).to eq({ project => 30, other_project => 30 })
             expect(assigns(:projects_value_per_demand)).to eq({ project => 1000, other_project => 1750 })
@@ -397,7 +397,7 @@ RSpec.describe UsersController, type: :controller do
 
               expect(assigns(:projects_quality)).to eq(project => 100, other_project => 100)
               expect(assigns(:projects_leadtime)[project]).to be_within(0.5).of(26)
-              expect(assigns(:projects_leadtime)[other_project]).to eq 299.6
+              expect(assigns(:projects_leadtime)[other_project]).to be_within(0.1).of(299.6)
               expect(assigns(:projects_risk)).to eq({ project => 100, other_project => 100 })
               expect(assigns(:projects_scope)).to eq({ project => 30, other_project => 30 })
               expect(assigns(:projects_value_per_demand)).to eq({ project => 1000, other_project => 3500 })
