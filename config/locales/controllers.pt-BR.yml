@@ -723,7 +723,6 @@ pt-BR:
       structure_tab: "Estrutura"
       comments_tab: "Comentários"
       responsibles_tab: "Responsáveis"
-      pairing: "Pareamento"
       consolidations: "Consolidações"
       memberships:
         blank: "Sem papel no time %{team_name}"

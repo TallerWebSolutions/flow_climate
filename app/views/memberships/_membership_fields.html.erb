@@ -9,8 +9,6 @@
   <td><%= membership.hours_per_month %></td>
 <% end %>
 
-<td title='<%= membership.pairing_members.uniq.join(', ') %>'><%= membership.pairing_members.uniq.count %></td>
-
 <% if current_user.managing_company?(membership.company) %>
   <td>
     <%= link_to edit_company_team_membership_path(company, team, membership), remote: true do %>
