@@ -957,10 +957,11 @@ RSpec.describe DemandsController, type: :controller do
         context 'valid parameters' do
           it 'assigns the instance variables and renders the template' do
             travel_to Time.zone.local(2019, 1, 24, 10, 0, 0) do
-              first_demand = Fabricate :demand, company: company, product: product, created_date: 5.days.ago, commitment_date: 3.days.ago, end_date: 1.day.ago
-              second_demand = Fabricate :demand, company: company, product: product, created_date: 6.weeks.ago, commitment_date: 4.weeks.ago, end_date: 2.weeks.ago
-              third_demand = Fabricate :demand, company: company, product: product, created_date: 5.weeks.ago, commitment_date: 4.weeks.ago, end_date: nil
-              fourth_demand = Fabricate :demand, company: company, product: product, created_date: 1.week.ago, commitment_date: nil, end_date: nil
+              project = Fabricate :project, company: company, customers: [customer], products: [product], start_date: 3.weeks.ago, end_date: 1.week.from_now
+              first_demand = Fabricate :demand, company: company, project: project, product: product, created_date: 5.days.ago, commitment_date: 3.days.ago, end_date: 1.day.ago
+              second_demand = Fabricate :demand, company: company, project: project, product: product, created_date: 6.weeks.ago, commitment_date: 4.weeks.ago, end_date: 2.weeks.ago
+              third_demand = Fabricate :demand, company: company, project: project, product: product, created_date: 5.weeks.ago, commitment_date: 4.weeks.ago, end_date: nil
+              fourth_demand = Fabricate :demand, company: company, project: project, product: product, created_date: 1.week.ago, commitment_date: nil, end_date: nil
 
               get :montecarlo_dialog, params: { company_id: company, demands_ids: "#{first_demand.id},#{second_demand.id},#{third_demand.id},#{fourth_demand.id}" }, xhr: true
 
