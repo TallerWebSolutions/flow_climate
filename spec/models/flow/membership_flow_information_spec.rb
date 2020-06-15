@@ -16,7 +16,7 @@ RSpec.describe Flow::MembershipFlowInformation, type: :service do
     let!(:third_stage_project_config) { Fabricate :stage_project_config, project: project, stage: third_stage, compute_effort: false, pairing_percentage: 0, stage_percentage: 0, management_percentage: 0 }
 
     context 'with demands' do
-      it 'compute the effort for the developer' do
+      it 'computes the effort for the developer' do
         travel_to Time.zone.local(2020, 6, 9, 15, 41, 52) do
           team_member = Fabricate :team_member, company: company, start_date: 40.days.ago, end_date: nil
           other_team_member = Fabricate :team_member, company: company, start_date: 40.days.ago, end_date: nil
@@ -31,8 +31,8 @@ RSpec.describe Flow::MembershipFlowInformation, type: :service do
           Fabricate :demand_transition, demand: demand, stage: second_stage, last_time_in: 7.days.ago, last_time_out: 1.day.ago
           Fabricate :demand_transition, demand: demand, stage: third_stage, last_time_in: 5.days.ago, last_time_out: 4.days.ago
 
-          Fabricate :item_assignment, demand: demand, team_member: team_member, start_time: 39.days.ago, finish_time: 27.days.ago
-          Fabricate :item_assignment, demand: demand, team_member: team_member, start_time: 7.days.ago, finish_time: 1.day.ago
+          Fabricate :item_assignment, demand: demand, membership: membership, start_time: 39.days.ago, finish_time: 27.days.ago
+          Fabricate :item_assignment, demand: demand, membership: membership, start_time: 7.days.ago, finish_time: 1.day.ago
 
           Fabricate :demand_block, demand: demand, block_time: 35.days.ago, unblock_time: 34.days.ago
           Fabricate :demand_block, demand: demand, block_time: 38.days.ago, unblock_time: nil

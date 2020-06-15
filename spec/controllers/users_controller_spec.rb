@@ -154,15 +154,15 @@ RSpec.describe UsersController, type: :controller do
       let!(:fourth_membership) { Fabricate :membership, team: team, team_member: fourth_team_member, hours_per_month: 40, start_date: Time.zone.local(2019, 11, 16, 14, 0, 0), end_date: Time.zone.local(2019, 12, 16, 14, 0, 0) }
       let!(:fifth_membership) { Fabricate :membership, team: team, team_member: fifth_team_member, hours_per_month: 40, start_date: Time.zone.local(2019, 11, 16, 14, 0, 0), end_date: Time.zone.local(2019, 12, 16, 14, 0, 0) }
 
-      let!(:first_item_assignment) { Fabricate :item_assignment, demand: first_demand, team_member: first_team_member, start_time: 3.days.ago, finish_time: 52.hours.ago }
-      let!(:second_item_assignment) { Fabricate :item_assignment, demand: first_demand, team_member: second_team_member, start_time: 2.days.ago, finish_time: nil }
-      let!(:third_item_assignment) { Fabricate :item_assignment, demand: first_demand, team_member: first_team_member, start_time: 2.days.ago, finish_time: nil }
-      let!(:fourth_item_assignment) { Fabricate :item_assignment, demand: second_demand, team_member: third_team_member, start_time: 2.days.ago, finish_time: nil }
-      let!(:fifth_item_assignment) { Fabricate :item_assignment, demand: second_demand, team_member: fourth_team_member, start_time: 2.days.ago, finish_time: nil }
-      let!(:sixth_item_assignment) { Fabricate :item_assignment, demand: second_demand, team_member: first_team_member, start_time: 2.days.ago, finish_time: nil }
-      let!(:seventh_item_assignment) { Fabricate :item_assignment, demand: third_demand, team_member: first_team_member, start_time: 2.days.ago, finish_time: nil }
-      let!(:eigth_item_assignment) { Fabricate :item_assignment, demand: third_demand, team_member: second_team_member, start_time: 2.days.ago, finish_time: nil }
-      let!(:nineth_item_assignment) { Fabricate :item_assignment, demand: third_demand, team_member: fifth_team_member, start_time: 4.days.ago, finish_time: 3.days.ago }
+      let!(:first_item_assignment) { Fabricate :item_assignment, demand: first_demand, membership: first_membership, start_time: 3.days.ago, finish_time: 52.hours.ago }
+      let!(:second_item_assignment) { Fabricate :item_assignment, demand: first_demand, membership: second_membership, start_time: 2.days.ago, finish_time: nil }
+      let!(:third_item_assignment) { Fabricate :item_assignment, demand: first_demand, membership: first_membership, start_time: 2.days.ago, finish_time: nil }
+      let!(:fourth_item_assignment) { Fabricate :item_assignment, demand: second_demand, membership: third_membership, start_time: 2.days.ago, finish_time: nil }
+      let!(:fifth_item_assignment) { Fabricate :item_assignment, demand: second_demand, membership: fourth_membership, start_time: 2.days.ago, finish_time: nil }
+      let!(:sixth_item_assignment) { Fabricate :item_assignment, demand: second_demand, membership: first_membership, start_time: 2.days.ago, finish_time: nil }
+      let!(:seventh_item_assignment) { Fabricate :item_assignment, demand: third_demand, membership: first_membership, start_time: 2.days.ago, finish_time: nil }
+      let!(:eigth_item_assignment) { Fabricate :item_assignment, demand: third_demand, membership: second_membership, start_time: 2.days.ago, finish_time: nil }
+      let!(:nineth_item_assignment) { Fabricate :item_assignment, demand: third_demand, membership: fifth_membership, start_time: 4.days.ago, finish_time: 3.days.ago }
     end
 
     describe 'GET #show' do

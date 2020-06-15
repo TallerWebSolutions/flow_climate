@@ -91,11 +91,11 @@ class DemandTransition < ApplicationRecord
 
   def compute_paired_effort(assignments_in_dates, start_date, end_date, pairing_percentage)
     top_effort_assignment = assignments_in_dates.max_by { |assign_in_date| assign_in_date.working_hours_until(start_date, end_date) }
-    top_effort_membership = demand.memberships_for_assignment(top_effort_assignment).find_by('memberships.end_date IS NULL OR memberships.end_date < :transition_date', transition_date: end_date)
+    top_effort_membership = top_effort_assignment.membership
 
     return top_effort_assignment.working_hours_until(start_date, end_date) if top_effort_membership.blank?
 
-    pairing_assignments = assignments_in_dates.joins(team_member: :memberships).where(team_member: { memberships: { member_role: top_effort_membership.member_role } }) - [top_effort_assignment]
+    pairing_assignments = assignments_in_dates.joins(:membership).where(memberships: { member_role: top_effort_membership.member_role }).to_a.delete_if { |assignment| assignment.membership == top_effort_membership }
 
     top_effort_assignment.working_hours_until(start_date, end_date) + pairing_assignments.map { |assignments_in_date| assignments_in_date.working_hours_until(start_date, end_date) }.sum * (1 + pairing_percentage)
   end

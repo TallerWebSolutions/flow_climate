@@ -4,41 +4,42 @@
 #
 # Table name: item_assignments
 #
-#  id             :bigint           not null, primary key
-#  discarded_at   :datetime
-#  finish_time    :datetime
-#  start_time     :datetime         not null
-#  created_at     :datetime         not null
-#  updated_at     :datetime         not null
-#  demand_id      :integer          not null
-#  team_member_id :integer          not null
+#  id                     :bigint           not null, primary key
+#  assignment_for_role    :boolean          default(FALSE)
+#  discarded_at           :datetime
+#  finish_time            :datetime
+#  item_assignment_effort :decimal(, )      default(0.0), not null
+#  start_time             :datetime         not null
+#  created_at             :datetime         not null
+#  updated_at             :datetime         not null
+#  demand_id              :integer          not null
+#  membership_id          :integer          not null
 #
 # Indexes
 #
-#  demand_member_start_time_unique           (demand_id,team_member_id,start_time) UNIQUE
-#  index_item_assignments_on_demand_id       (demand_id)
-#  index_item_assignments_on_team_member_id  (team_member_id)
+#  index_item_assignments_on_demand_id      (demand_id)
+#  index_item_assignments_on_membership_id  (membership_id)
 #
 # Foreign Keys
 #
 #  fk_rails_0af34c141e  (demand_id => demands.id)
-#  fk_rails_78b4938f25  (team_member_id => team_members.id)
+#  fk_rails_6ab6a3b3a4  (membership_id => memberships.id)
 #
 
 class ItemAssignment < ApplicationRecord
   include Discard::Model
 
   belongs_to :demand
-  belongs_to :team_member
+  belongs_to :membership
 
-  validates :demand, :team_member, presence: true
+  validates :demand, :membership, presence: true
 
-  validates :demand, uniqueness: { scope: %i[team_member start_time], message: I18n.t('item_assignment.validations.demand_unique') }
+  validates :demand, uniqueness: { scope: %i[membership start_time], message: I18n.t('item_assignment.validations.demand_unique') }
 
   scope :for_dates, ->(start_date, end_date) { where('(start_time <= :end_date AND finish_time >= :start_date) OR (start_time <= :end_date AND finish_time IS NULL) OR (finish_time >= :start_date AND :end_date IS NULL) OR (start_time <= :start_date AND finish_time IS NULL)', start_date: start_date, end_date: end_date) }
-  scope :not_for_team_member, ->(team_member) { where('item_assignments.team_member_id <> :team_member', team_member: team_member.id) }
+  scope :not_for_membership, ->(membership) { where('item_assignments.membership_id <> :membership', membership: membership.id) }
 
-  delegate :name, to: :team_member, prefix: true
+  delegate :name, to: :membership, prefix: true
 
   def working_hours_until(beginning_time = nil, end_time = Time.zone.now)
     start_effort_time = [start_time, beginning_time].compact.max

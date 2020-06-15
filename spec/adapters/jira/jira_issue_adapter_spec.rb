@@ -42,7 +42,7 @@ RSpec.describe Jira::JiraIssueAdapter, type: :service do
 
         let!(:membership) { Fabricate :membership, team: team, team_member: team_member, hours_per_month: 120, start_date: 1.month.ago, end_date: nil }
         let!(:other_membership) { Fabricate :membership, team: team, team_member: other_team_member, hours_per_month: 40, start_date: 2.months.ago, end_date: 1.month.ago }
-        let!(:out_team_member_membership) { Fabricate :membership, team: team, team_member: out_team_member, hours_per_month: 120, start_date: 2.months.ago, end_date: nil }
+        let!(:out_membership) { Fabricate :membership, team: team, team_member: out_team_member, hours_per_month: 120, start_date: 2.months.ago, end_date: nil }
         let!(:other_company_membership) { Fabricate :membership, team: team, team_member: other_company_team_member, hours_per_month: 120, start_date: 2.months.ago, end_date: nil }
 
         let!(:jira_issue) { client.Issue.build({ key: '10000', fields: { created: '2018-07-02T11:20:18.998-0300', summary: 'foo of bar', issuetype: { name: 'Story' }, customfield_10028: { value: 'Expedite' }, customfield_10013: 'xpto of bla', project: { key: 'foo' }, customfield_10024: [{ emailAddress: 'foo' }, { emailAddress: 'bar' }] }, changelog: { startAt: 0, maxResults: 2, total: 2, histories: [{ id: '10039', created: '2018-07-08T22:34:47.440-0300', items: [{ field: 'status', from: 'backlog', to: 'first_stage' }] }, { id: '10038', created: '2018-07-09T09:40:43.886-0300', items: [{ field: 'status', from: 'first_stage', to: 'second_stage' }] }, { id: '10431', created: '2018-07-06T09:10:43.886-0300', items: [{ field: 'Responsible', fieldId: 'customfield_10024', from: nil, fromString: nil, to: "[#{out_team_member.name}, #{team_member.name}, 'foobarxpto']", toString: "[#{out_team_member.name}, #{team_member.name}]" }] }, { id: '10432', created: '2018-07-06T09:40:43.886-0300', items: [{ field: 'Responsible', fieldId: 'customfield_10024', from: "[#{team_member.name}, #{out_team_member.name}]", fromString: "[#{team_member.name}, #{out_team_member.name}]", to: "[#{team_member.name}, #{other_team_member.name}]", toString: "[#{team_member.name}, #{other_team_member.name}]" }] }] } }.with_indifferent_access) }
@@ -53,9 +53,9 @@ RSpec.describe Jira::JiraIssueAdapter, type: :service do
           created_demand = Demand.last
           expect(created_demand.project).to eq first_project
 
-          expect(created_demand.team_members).to match_array [out_team_member, team_member, other_team_member]
-          expect(created_demand.active_team_members).to match_array [team_member, other_team_member]
-          expect(created_demand.item_assignments.find_by(team_member: out_team_member).finish_time).not_to be_nil
+          expect(created_demand.memberships).to match_array [membership, other_membership, out_membership]
+          expect(created_demand.active_team_members).to match_array [membership, other_membership]
+          expect(created_demand.item_assignments.find_by(membership: out_membership).finish_time).not_to be_nil
 
           expect(created_demand.team).to eq team
           expect(created_demand.product).to eq product
@@ -108,7 +108,7 @@ RSpec.describe Jira::JiraIssueAdapter, type: :service do
           expect(Demand.count).to eq 1
           expect(Demand.last.project).to eq first_project
           expect(Demand.last.customer).to eq customer
-          expect(Demand.last.team_members).to match_array [team_member, other_team_member]
+          expect(Demand.last.memberships).to match_array [membership, other_membership]
           expect(Demand.last.team).to eq team
           expect(Demand.last.demand_title).to eq 'foo of bar'
           expect(Demand.last.downstream_demand?).to be false
@@ -127,8 +127,8 @@ RSpec.describe Jira::JiraIssueAdapter, type: :service do
 
         it 'creates the demand and creates the member' do
           described_class.instance.process_issue!(jira_account, product, first_project, jira_issue)
-          expect(Demand.last.team_members.size).to eq 1
-          expect(Demand.last.team_members).not_to eq team_member
+          expect(Demand.last.memberships.size).to eq 1
+          expect(Demand.last.memberships).not_to eq team_member
         end
       end
 

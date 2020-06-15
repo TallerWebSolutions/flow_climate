@@ -24,7 +24,7 @@ RSpec.describe Demand, type: :model do
     it { is_expected.to have_many(:stages).through(:demand_transitions) }
 
     it { is_expected.to have_many(:item_assignments).dependent(:destroy) }
-    it { is_expected.to have_many(:team_members).through(:item_assignments) }
+    it { is_expected.to have_many(:memberships).through(:item_assignments) }
     it { is_expected.to have_many(:demand_score_matrices).dependent(:destroy) }
   end
 
@@ -255,8 +255,8 @@ RSpec.describe Demand, type: :model do
 
     let(:team_member) { Fabricate :team_member, company: company }
     let(:other_team_member) { Fabricate :team_member, company: company }
-    let!(:membership) { Fabricate :membership, team: team, team_member: team_member, hours_per_month: 120, start_date: 1.month.ago, end_date: nil }
-    let!(:other_membership) { Fabricate :membership, team: team, team_member: other_team_member, hours_per_month: 40, start_date: 2.months.ago, end_date: 1.month.ago }
+    let!(:membership) { Fabricate :membership, team: team, team_member: team_member, hours_per_month: 120, start_date: 1.month.ago, end_date: nil, member_role: :developer }
+    let!(:other_membership) { Fabricate :membership, team: team, team_member: other_team_member, hours_per_month: 40, start_date: 2.months.ago, end_date: 1.month.ago, member_role: :developer }
 
     let(:project) { Fabricate :project, customers: [customer], percentage_effort_to_bugs: 20 }
     let(:upstream_effort_stage) { Fabricate :stage, stage_stream: :upstream }
@@ -272,7 +272,7 @@ RSpec.describe Demand, type: :model do
         let!(:downstream_demand_transition) { Fabricate :demand_transition, demand: demand, stage: downstream_effort_stage, last_time_in: Time.zone.parse('2018-03-06 13:00'), last_time_out: Time.zone.parse('2018-03-06 15:00') }
         let!(:discarded_demand_transition) { Fabricate :demand_transition, demand: demand, stage: downstream_effort_stage, last_time_in: Time.zone.parse('2018-03-06 13:10'), last_time_out: Time.zone.parse('2018-03-06 15:00'), discarded_at: Time.zone.now }
 
-        let!(:item_assignment) { Fabricate :item_assignment, demand: demand, team_member: team_member, start_time: Time.zone.parse('2018-03-05 22:00'), finish_time: nil }
+        let!(:item_assignment) { Fabricate :item_assignment, demand: demand, membership: membership, start_time: Time.zone.parse('2018-03-05 22:00'), finish_time: nil }
 
         it 'changes the effort informations' do
           demand.update_effort!
@@ -290,7 +290,7 @@ RSpec.describe Demand, type: :model do
         let!(:out_demand_block) { Fabricate :demand_block, demand: demand, block_time: Time.zone.parse('2018-03-06 14:00'), unblock_time: Time.zone.parse('2018-03-06 15:00') }
         let!(:discarded_demand_block) { Fabricate :demand_block, demand: demand, active: true, block_time: Time.zone.parse('2018-03-06 10:00'), unblock_time: Time.zone.parse('2018-03-06 12:00'), discarded_at: Time.zone.now }
 
-        let!(:item_assignment) { Fabricate :item_assignment, demand: demand, team_member: team_member, start_time: Time.zone.parse('2018-03-05 22:00'), finish_time: nil }
+        let!(:item_assignment) { Fabricate :item_assignment, demand: demand, membership: membership, start_time: Time.zone.parse('2018-03-05 22:00'), finish_time: nil }
 
         it 'changes the effort informations' do
           demand.update_effort!
@@ -318,16 +318,16 @@ RSpec.describe Demand, type: :model do
         let!(:upstream_demand_transition) { Fabricate :demand_transition, demand: demand, stage: upstream_effort_stage, last_time_in: Time.zone.parse('2018-03-05 22:00'), last_time_out: Time.zone.parse('2018-03-06 13:00') }
         let!(:downstream_demand_transition) { Fabricate :demand_transition, demand: demand, stage: downstream_effort_stage, last_time_in: Time.zone.parse('2018-03-06 13:01'), last_time_out: Time.zone.parse('2018-03-06 15:00') }
 
-        let!(:upstream_item_assignment) { Fabricate :item_assignment, demand: demand, team_member: team_member, start_time: Time.zone.parse('2018-03-05 22:00'), finish_time: Time.zone.parse('2018-03-06 13:00') }
-        let!(:other_upstream_item_assignment) { Fabricate :item_assignment, demand: demand, team_member: other_team_member, start_time: Time.zone.parse('2018-03-05 22:00'), finish_time: Time.zone.parse('2018-03-06 13:00') }
+        let!(:upstream_item_assignment) { Fabricate :item_assignment, demand: demand, membership: membership, start_time: Time.zone.parse('2018-03-05 22:00'), finish_time: Time.zone.parse('2018-03-06 13:00') }
+        let!(:other_upstream_item_assignment) { Fabricate :item_assignment, demand: demand, membership: other_membership, start_time: Time.zone.parse('2018-03-05 22:00'), finish_time: Time.zone.parse('2018-03-06 13:00') }
 
-        let!(:downstream_item_assignment) { Fabricate :item_assignment, demand: demand, team_member: team_member, start_time: Time.zone.parse('2018-03-06 13:00'), finish_time: nil }
-        let!(:other_downstream_item_assignment) { Fabricate :item_assignment, demand: demand, team_member: other_team_member, start_time: Time.zone.parse('2018-03-06 13:00'), finish_time: nil }
+        let!(:downstream_item_assignment) { Fabricate :item_assignment, demand: demand, membership: membership, start_time: Time.zone.parse('2018-03-06 13:00'), finish_time: nil }
+        let!(:other_downstream_item_assignment) { Fabricate :item_assignment, demand: demand, membership: other_membership, start_time: Time.zone.parse('2018-03-06 13:00'), finish_time: nil }
 
         it 'changes the effort informations' do
           demand.update_effort!
-          expect(demand.effort_upstream.to_f).to eq 6.6
-          expect(demand.effort_downstream.to_f).to eq 2.3
+          expect(demand.effort_upstream.to_f).to eq 17.16
+          expect(demand.effort_downstream.to_f).to eq 5.06
         end
       end
 
@@ -338,7 +338,7 @@ RSpec.describe Demand, type: :model do
         let!(:out_demand_block) { Fabricate :demand_block, block_time: Time.zone.parse('2018-03-06 22:00'), unblock_time: Time.zone.parse('2018-03-06 23:00') }
         let!(:discarded_demand_block) { Fabricate :demand_block, demand: demand, active: true, block_time: Time.zone.parse('2018-03-06 10:00'), unblock_time: Time.zone.parse('2018-03-06 12:00'), discarded_at: Time.zone.now }
 
-        let!(:item_assignment) { Fabricate :item_assignment, demand: demand, team_member: team_member, start_time: Time.zone.parse('2018-03-05 22:00'), finish_time: nil }
+        let!(:item_assignment) { Fabricate :item_assignment, demand: demand, membership: membership, start_time: Time.zone.parse('2018-03-05 22:00'), finish_time: nil }
 
         it 'changes the effort informations' do
           demand.update_effort!
@@ -790,8 +790,8 @@ RSpec.describe Demand, type: :model do
     let!(:demand_with_portfolio_unit) { Fabricate :demand, product: product, portfolio_unit: child_portfolio_unit }
     let(:demand) { Fabricate :demand, demand_score: 10.5 }
 
-    it { expect(demand.to_hash).to eq(id: demand.id, portfolio_unit: demand.portfolio_unit_name, external_id: demand.external_id, project_id: demand.project.id, demand_title: demand.demand_title, demand_score: 10.5, effort_upstream: demand.effort_upstream, effort_downstream: demand.effort_downstream, cost_to_project: demand.cost_to_project, current_stage: demand.current_stage&.name, time_in_current_stage: demand.time_in_current_stage, partial_leadtime: demand.partial_leadtime, responsibles: demand.team_members.map { |member| { member_name: member.name, jira_account_id: member.jira_account_id } }, demand_blocks: demand.demand_blocks.map { |block| { blocker_username: block.blocker_username, block_time: block.block_time, block_reason: block.block_reason, unblock_time: block.unblock_time } }) }
-    it { expect(demand_with_portfolio_unit.to_hash).to eq(id: demand_with_portfolio_unit.id, portfolio_unit: demand_with_portfolio_unit.portfolio_unit_name, external_id: demand_with_portfolio_unit.external_id, project_id: demand_with_portfolio_unit.project.id, demand_title: demand_with_portfolio_unit.demand_title, demand_score: 0, effort_upstream: demand_with_portfolio_unit.effort_upstream, effort_downstream: demand_with_portfolio_unit.effort_downstream, cost_to_project: demand_with_portfolio_unit.cost_to_project, current_stage: demand_with_portfolio_unit.current_stage&.name, time_in_current_stage: demand_with_portfolio_unit.time_in_current_stage, partial_leadtime: demand_with_portfolio_unit.partial_leadtime, responsibles: demand_with_portfolio_unit.team_members.map { |member| { member_name: member.name, jira_account_id: member.jira_account_id } }, demand_blocks: demand_with_portfolio_unit.demand_blocks.map { |block| { blocker_username: block.blocker_username, block_time: block.block_time, block_reason: block.block_reason, unblock_time: block.unblock_time } }) }
+    it { expect(demand.to_hash).to eq(id: demand.id, portfolio_unit: demand.portfolio_unit_name, external_id: demand.external_id, project_id: demand.project.id, demand_title: demand.demand_title, demand_score: 10.5, effort_upstream: demand.effort_upstream, effort_downstream: demand.effort_downstream, cost_to_project: demand.cost_to_project, current_stage: demand.current_stage&.name, time_in_current_stage: demand.time_in_current_stage, partial_leadtime: demand.partial_leadtime, responsibles: demand.memberships.map { |member| { member_name: member.team_member_name, jira_account_id: member.team_member.jira_account_id } }, demand_blocks: demand.demand_blocks.map { |block| { blocker_username: block.blocker_username, block_time: block.block_time, block_reason: block.block_reason, unblock_time: block.unblock_time } }) }
+    it { expect(demand_with_portfolio_unit.to_hash).to eq(id: demand_with_portfolio_unit.id, portfolio_unit: demand_with_portfolio_unit.portfolio_unit_name, external_id: demand_with_portfolio_unit.external_id, project_id: demand_with_portfolio_unit.project.id, demand_title: demand_with_portfolio_unit.demand_title, demand_score: 0, effort_upstream: demand_with_portfolio_unit.effort_upstream, effort_downstream: demand_with_portfolio_unit.effort_downstream, cost_to_project: demand_with_portfolio_unit.cost_to_project, current_stage: demand_with_portfolio_unit.current_stage&.name, time_in_current_stage: demand_with_portfolio_unit.time_in_current_stage, partial_leadtime: demand_with_portfolio_unit.partial_leadtime, responsibles: demand_with_portfolio_unit.memberships.map { |member| { member_name: member.team_member_name, jira_account_id: member.jira_account_id } }, demand_blocks: demand_with_portfolio_unit.demand_blocks.map { |block| { blocker_username: block.blocker_username, block_time: block.block_time, block_reason: block.block_reason, unblock_time: block.unblock_time } }) }
   end
 
   describe '#assignees_count' do
@@ -804,9 +804,9 @@ RSpec.describe Demand, type: :model do
     let!(:first_membership) { Fabricate :membership, team: team, team_member: first_team_member, hours_per_month: 120, start_date: 1.month.ago, end_date: nil }
     let!(:second_membership) { Fabricate :membership, team: team, team_member: second_team_member, hours_per_month: 40, start_date: 2.months.ago, end_date: 1.month.ago }
 
-    let!(:first_item_assignment) { Fabricate :item_assignment, demand: first_demand, team_member: first_team_member, start_time: 1.day.ago, finish_time: nil }
-    let!(:second_item_assignment) { Fabricate :item_assignment, demand: first_demand, team_member: second_team_member, start_time: 2.days.ago, finish_time: nil }
-    let!(:third_item_assignment) { Fabricate :item_assignment, demand: first_demand, team_member: first_team_member, start_time: 2.days.ago, finish_time: nil }
+    let!(:first_item_assignment) { Fabricate :item_assignment, demand: first_demand, membership: first_membership, start_time: 1.day.ago, finish_time: nil }
+    let!(:second_item_assignment) { Fabricate :item_assignment, demand: first_demand, membership: second_membership, start_time: 2.days.ago, finish_time: nil }
+    let!(:third_item_assignment) { Fabricate :item_assignment, demand: first_demand, membership: first_membership, start_time: 2.days.ago, finish_time: nil }
 
     let(:second_demand) { Fabricate :demand, team: team }
 
@@ -895,24 +895,6 @@ RSpec.describe Demand, type: :model do
     it { expect(first_demand.not_started?).to be true }
     it { expect(second_demand.not_started?).to be false }
     it { expect(third_demand.not_started?).to be false }
-  end
-
-  describe '#memberships_for_assignment' do
-    let(:company) { Fabricate :company }
-    let(:team) { Fabricate :team, company: company }
-
-    let(:team_member) { Fabricate :team_member, company: company }
-    let(:other_team_member) { Fabricate :team_member, company: company }
-
-    let!(:membership) { Fabricate :membership, team: team, team_member: team_member, end_date: nil }
-    let!(:other_membership) { Fabricate :membership, team: team, team_member: team_member, start_date: 2.months.ago, end_date: 1.month.ago }
-
-    let!(:demand) { Fabricate :demand, team: team }
-    let!(:item_assignment) { Fabricate :item_assignment, demand: demand, team_member: team_member }
-    let!(:other_item_assignment) { Fabricate :item_assignment, demand: demand, team_member: other_team_member }
-
-    it { expect(demand.memberships_for_assignment(item_assignment)).to match_array [membership, other_membership] }
-    it { expect(demand.memberships_for_assignment(other_item_assignment)).to eq [] }
   end
 
   describe '#stages_at' do

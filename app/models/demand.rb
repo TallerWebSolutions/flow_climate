@@ -86,7 +86,7 @@ class Demand < ApplicationRecord
   has_many :flow_impacts, dependent: :destroy
 
   has_many :stages, -> { distinct }, through: :demand_transitions
-  has_many :team_members, through: :item_assignments
+  has_many :memberships, through: :item_assignments
   has_many :demand_score_matrices, dependent: :destroy
 
   validates :project, :created_date, :external_id, :demand_type, :class_of_service, :assignees_count, :team, presence: true
@@ -152,7 +152,7 @@ class Demand < ApplicationRecord
   end
 
   def active_team_members
-    team_members.includes(:item_assignments).where(item_assignments: { finish_time: nil }).uniq
+    memberships.includes(:item_assignments).where(item_assignments: { finish_time: nil }).uniq
   end
 
   def update_effort!(update_manual_effort = false)
@@ -251,10 +251,6 @@ class Demand < ApplicationRecord
 
   def not_started?
     commitment_date.blank? && end_date.blank?
-  end
-
-  def memberships_for_assignment(item_assignment)
-    Membership.where(team: team, team_member: item_assignment.team_member)
   end
 
   def stages_at(start_time, finish_time)
