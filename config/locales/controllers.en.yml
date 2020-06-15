@@ -654,7 +654,6 @@ en:
       structure_tab: "Structure"
       comments_tab: "Comments"
       responsibles_tab: "Responsibles"
-      pairing: "Pairing"
       consolidations: "Consolidations"
       memberships:
         blank: "No role in the team %{team_name}"
