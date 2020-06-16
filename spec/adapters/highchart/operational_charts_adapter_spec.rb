@@ -1,10 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe Highchart::OperationalChartsAdapter, type: :data_object do
-  before { travel_to Time.zone.local(2019, 10, 7, 18, 35, 0) }
-
-  after { travel_back }
-
   shared_context 'demand data' do
     let(:company) { Fabricate :company }
     let(:customer) { Fabricate :customer, company: company }
@@ -82,12 +78,14 @@ RSpec.describe Highchart::OperationalChartsAdapter, type: :data_object do
           subject(:report_data) { described_class.new(Demand.all, start_date, end_date, 'week') }
 
           it 'do the math and provides the correct information' do
-            expect(report_data.all_projects).to match_array [first_project, second_project, third_project]
-            expect(report_data.x_axis).to eq TimeService.instance.weeks_between_of(Date.new(2018, 2, 23), Date.new(2018, 5, 13))
-            expect(report_data.work_item_flow_information.ideal_per_period).to eq [3.3333333333333335, 6.666666666666667, 10.0, 13.333333333333334, 16.666666666666668, 20.0, 23.333333333333336, 26.666666666666668, 30.0, 33.333333333333336, 36.66666666666667, 40.0]
-            expect(report_data.work_item_flow_information.accumulated_throughput).to eq [0, 1, 1, 1, 1, 2, 2, 2, 2, 2, 5, 5]
-            expect(report_data.work_item_flow_information.scope_per_period).to eq [40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40]
-            expect(report_data.scope_uncertainty).to eq [{ name: I18n.t('charts.scope.uncertainty'), y: 30 }, { name: I18n.t('charts.scope.created'), y: 11 }]
+            travel_to Time.zone.local(2019, 10, 7, 18, 35, 0) do
+              expect(report_data.all_projects).to match_array [first_project, second_project, third_project]
+              expect(report_data.x_axis).to eq TimeService.instance.weeks_between_of(Date.new(2018, 2, 23), Date.new(2018, 5, 13))
+              expect(report_data.work_item_flow_information.ideal_per_period).to eq [3.3333333333333335, 6.666666666666667, 10.0, 13.333333333333334, 16.666666666666668, 20.0, 23.333333333333336, 26.666666666666668, 30.0, 33.333333333333336, 36.66666666666667, 40.0]
+              expect(report_data.work_item_flow_information.accumulated_throughput).to eq [0, 1, 1, 1, 1, 2, 2, 2, 2, 2, 5, 5]
+              expect(report_data.work_item_flow_information.scope_per_period).to eq [40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40]
+              expect(report_data.scope_uncertainty).to eq [{ name: I18n.t('charts.scope.uncertainty'), y: 30 }, { name: I18n.t('charts.scope.created'), y: 11 }]
+            end
           end
         end
 
@@ -95,25 +93,29 @@ RSpec.describe Highchart::OperationalChartsAdapter, type: :data_object do
           subject(:report_data) { described_class.new(Demand.all, start_date, end_date, 'month') }
 
           it 'do the math and provides the correct information' do
-            expect(report_data.all_projects).to match_array [first_project, second_project, third_project]
-            expect(report_data.x_axis).to eq TimeService.instance.months_between_of(Date.new(2018, 2, 4), Date.new(2018, 5, 13))
-            expect(report_data.work_item_flow_information.ideal_per_period).to eq [10.0, 20.0, 30.0, 40.0]
-            expect(report_data.work_item_flow_information.accumulated_throughput).to eq [0, 0, 1, 4]
-            expect(report_data.work_item_flow_information.scope_per_period).to eq [40, 40, 40, 40]
-            expect(report_data.scope_uncertainty).to eq [{ name: I18n.t('charts.scope.uncertainty'), y: 30 }, { name: I18n.t('charts.scope.created'), y: 11 }]
+            travel_to Time.zone.local(2019, 10, 7, 18, 35, 0) do
+              expect(report_data.all_projects).to match_array [first_project, second_project, third_project]
+              expect(report_data.x_axis).to eq TimeService.instance.months_between_of(Date.new(2018, 2, 4), Date.new(2018, 5, 13))
+              expect(report_data.work_item_flow_information.ideal_per_period).to eq [10.0, 20.0, 30.0, 40.0]
+              expect(report_data.work_item_flow_information.accumulated_throughput).to eq [0, 0, 1, 4]
+              expect(report_data.work_item_flow_information.scope_per_period).to eq [40, 40, 40, 40]
+              expect(report_data.scope_uncertainty).to eq [{ name: I18n.t('charts.scope.uncertainty'), y: 30 }, { name: I18n.t('charts.scope.created'), y: 11 }]
+            end
           end
         end
 
         context 'and using the day period interval' do
           it 'does the math and provides the correct information' do
-            report_data = described_class.new(Demand.all, start_date, end_date, 'day')
+            travel_to Time.zone.local(2019, 10, 7, 18, 35, 0) do
+              report_data = described_class.new(Demand.all, start_date, end_date, 'day')
 
-            expect(report_data.all_projects).to match_array Project.all
-            expect(report_data.x_axis).to eq TimeService.instance.days_between_of(Date.new(2018, 2, 20), Date.new(2018, 5, 13))
-            expect(report_data.work_item_flow_information.ideal_per_period).to eq [0.4819277108433735, 0.963855421686747, 1.4457831325301205, 1.927710843373494, 2.4096385542168672, 2.891566265060241, 3.3734939759036147, 3.855421686746988, 4.337349397590361, 4.8192771084337345, 5.301204819277109, 5.783132530120482, 6.265060240963855, 6.746987951807229, 7.228915662650603, 7.710843373493976, 8.19277108433735, 8.674698795180722, 9.156626506024097, 9.638554216867469, 10.120481927710843, 10.602409638554217, 11.08433734939759, 11.566265060240964, 12.048192771084338, 12.53012048192771, 13.012048192771084, 13.493975903614459, 13.975903614457831, 14.457831325301205, 14.939759036144578, 15.421686746987952, 15.903614457831326, 16.3855421686747, 16.867469879518072, 17.349397590361445, 17.83132530120482, 18.313253012048193, 18.795180722891565, 19.277108433734938, 19.759036144578314, 20.240963855421686, 20.72289156626506, 21.204819277108435, 21.686746987951807, 22.16867469879518, 22.650602409638555, 23.132530120481928, 23.6144578313253, 24.096385542168676, 24.57831325301205, 25.06024096385542, 25.542168674698797, 26.02409638554217, 26.50602409638554, 26.987951807228917, 27.46987951807229, 27.951807228915662, 28.433734939759034, 28.91566265060241, 29.397590361445783, 29.879518072289155, 30.36144578313253, 30.843373493975903, 31.325301204819276, 31.80722891566265, 32.28915662650602, 32.7710843373494, 33.25301204819277, 33.734939759036145, 34.21686746987952, 34.69879518072289, 35.18072289156626, 35.66265060240964, 36.144578313253014, 36.626506024096386, 37.10843373493976, 37.59036144578313, 38.0722891566265, 38.554216867469876, 39.036144578313255, 39.51807228915663, 40.0]
-            expect(report_data.work_item_flow_information.accumulated_throughput).to eq [0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5]
-            expect(report_data.work_item_flow_information.scope_per_period).to eq [38, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40]
-            expect(report_data.scope_uncertainty).to eq [{ name: I18n.t('charts.scope.uncertainty'), y: 30 }, { name: I18n.t('charts.scope.created'), y: 11 }]
+              expect(report_data.all_projects).to match_array Project.all
+              expect(report_data.x_axis).to eq TimeService.instance.days_between_of(Date.new(2018, 2, 20), Date.new(2018, 5, 13))
+              expect(report_data.work_item_flow_information.ideal_per_period).to eq [0.4819277108433735, 0.963855421686747, 1.4457831325301205, 1.927710843373494, 2.4096385542168672, 2.891566265060241, 3.3734939759036147, 3.855421686746988, 4.337349397590361, 4.8192771084337345, 5.301204819277109, 5.783132530120482, 6.265060240963855, 6.746987951807229, 7.228915662650603, 7.710843373493976, 8.19277108433735, 8.674698795180722, 9.156626506024097, 9.638554216867469, 10.120481927710843, 10.602409638554217, 11.08433734939759, 11.566265060240964, 12.048192771084338, 12.53012048192771, 13.012048192771084, 13.493975903614459, 13.975903614457831, 14.457831325301205, 14.939759036144578, 15.421686746987952, 15.903614457831326, 16.3855421686747, 16.867469879518072, 17.349397590361445, 17.83132530120482, 18.313253012048193, 18.795180722891565, 19.277108433734938, 19.759036144578314, 20.240963855421686, 20.72289156626506, 21.204819277108435, 21.686746987951807, 22.16867469879518, 22.650602409638555, 23.132530120481928, 23.6144578313253, 24.096385542168676, 24.57831325301205, 25.06024096385542, 25.542168674698797, 26.02409638554217, 26.50602409638554, 26.987951807228917, 27.46987951807229, 27.951807228915662, 28.433734939759034, 28.91566265060241, 29.397590361445783, 29.879518072289155, 30.36144578313253, 30.843373493975903, 31.325301204819276, 31.80722891566265, 32.28915662650602, 32.7710843373494, 33.25301204819277, 33.734939759036145, 34.21686746987952, 34.69879518072289, 35.18072289156626, 35.66265060240964, 36.144578313253014, 36.626506024096386, 37.10843373493976, 37.59036144578313, 38.0722891566265, 38.554216867469876, 39.036144578313255, 39.51807228915663, 40.0]
+              expect(report_data.work_item_flow_information.accumulated_throughput).to eq [0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5]
+              expect(report_data.work_item_flow_information.scope_per_period).to eq [38, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40]
+              expect(report_data.scope_uncertainty).to eq [{ name: I18n.t('charts.scope.uncertainty'), y: 30 }, { name: I18n.t('charts.scope.created'), y: 11 }]
+            end
           end
         end
       end
@@ -122,12 +124,14 @@ RSpec.describe Highchart::OperationalChartsAdapter, type: :data_object do
         subject(:report_data) { described_class.new(Demand.none, start_date, end_date, 'day') }
 
         it 'does the math and provides the correct information' do
-          expect(report_data.all_projects).to eq []
-          expect(report_data.x_axis).to eq []
-          expect(report_data.work_item_flow_information.ideal_per_period).to eq []
-          expect(report_data.work_item_flow_information.throughput_per_period).to eq []
-          expect(report_data.work_item_flow_information.scope_per_period).to eq []
-          expect(report_data.scope_uncertainty).to eq [{ name: I18n.t('charts.scope.uncertainty'), y: 0 }, { name: I18n.t('charts.scope.created'), y: 0 }]
+          travel_to Time.zone.local(2019, 10, 7, 18, 35, 0) do
+            expect(report_data.all_projects).to eq []
+            expect(report_data.x_axis).to eq []
+            expect(report_data.work_item_flow_information.ideal_per_period).to eq []
+            expect(report_data.work_item_flow_information.throughput_per_period).to eq []
+            expect(report_data.work_item_flow_information.scope_per_period).to eq []
+            expect(report_data.scope_uncertainty).to eq [{ name: I18n.t('charts.scope.uncertainty'), y: 0 }, { name: I18n.t('charts.scope.created'), y: 0 }]
+          end
         end
       end
     end

@@ -15,7 +15,7 @@
   <tbody>
     <% demand.item_assignments.order(:start_time).each do |assignment| %>
       <tr>
-        <td><%= assignment.team_member.name %></td>
+        <td><%= assignment.membership.team_member_name %></td>
         <td><%= I18n.t("activerecord.attributes.membership.enums.member_role.#{assignment.membership.member_role}") %></td>
         <td><%= I18n.l(assignment.start_time, format: :short) %></td>
         <td><%= demand.stage_at(assignment.start_time)&.name %></td>
