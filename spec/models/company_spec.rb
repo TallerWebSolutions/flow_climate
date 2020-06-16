@@ -66,9 +66,9 @@ RSpec.describe Company, type: :model do
 
     let!(:membership) { Fabricate :membership, team: team, team_member: team_member, hours_per_month: 100, start_date: 1.month.ago, end_date: nil }
 
-    let!(:active_project) { Fabricate :project, company: company, start_date: 4.weeks.ago, customers: [customer], products: [product], status: :executing, qty_hours: 200 }
-    let!(:other_active_project) { Fabricate :project, company: company, start_date: 4.weeks.ago, customers: [customer], products: [product], status: :executing, qty_hours: 260 }
-    let!(:other_customer_active_project) { Fabricate :project, company: company, start_date: 4.weeks.ago, customers: [product.customer], products: [product], status: :executing, qty_hours: 300 }
+    let!(:active_project) { Fabricate :project, company: company, team: team, start_date: 4.weeks.ago, customers: [customer], products: [product], status: :executing, qty_hours: 200 }
+    let!(:other_active_project) { Fabricate :project, company: company, team: team, start_date: 4.weeks.ago, customers: [customer], products: [product], status: :executing, qty_hours: 260 }
+    let!(:other_customer_active_project) { Fabricate :project, company: company, team: team, start_date: 4.weeks.ago, customers: [product.customer], products: [product], status: :executing, qty_hours: 300 }
 
     let!(:waiting_project) { Fabricate :project, company: company, start_date: 4.weeks.ago, customers: [customer], products: [product], status: :waiting, qty_hours: 872 }
     let!(:finished_project) { Fabricate :project, company: company, start_date: 4.weeks.ago, customers: [customer], products: [product], status: :finished }
@@ -82,13 +82,13 @@ RSpec.describe Company, type: :model do
     let!(:second_stage_project_config) { Fabricate :stage_project_config, project: active_project, stage: second_stage, compute_effort: true, pairing_percentage: 80, stage_percentage: 100, management_percentage: 10 }
     let!(:third_stage_project_config) { Fabricate :stage_project_config, project: active_project, stage: third_stage, compute_effort: true, pairing_percentage: 80, stage_percentage: 100, management_percentage: 10 }
 
-    let!(:first_demand) { Fabricate :demand, project: active_project, created_date: 2.weeks.ago, end_date: 1.week.ago, demand_type: :bug }
-    let!(:second_demand) { Fabricate :demand, project: active_project, created_date: 2.weeks.ago, end_date: 1.week.ago }
-    let!(:third_demand) { Fabricate :demand, project: active_project, created_date: 1.week.ago, end_date: 2.days.ago }
+    let!(:first_demand) { Fabricate :demand, project: active_project, team: team, created_date: 2.weeks.ago, end_date: 1.week.ago, demand_type: :bug }
+    let!(:second_demand) { Fabricate :demand, project: active_project, team: team, created_date: 2.weeks.ago, end_date: 1.week.ago }
+    let!(:third_demand) { Fabricate :demand, project: active_project, team: team, created_date: 1.week.ago, end_date: 2.days.ago }
 
-    let!(:first_item_assignment) { Fabricate :item_assignment, demand: first_demand, team_member: team_member, start_time: 1.month.ago, finish_time: nil }
-    let!(:second_item_assignment) { Fabricate :item_assignment, demand: second_demand, team_member: team_member, start_time: 1.month.ago, finish_time: nil }
-    let!(:third_item_assignment) { Fabricate :item_assignment, demand: third_demand, team_member: team_member, start_time: 7.weeks.ago, finish_time: nil }
+    let!(:first_item_assignment) { Fabricate :item_assignment, demand: first_demand, membership: membership, start_time: 1.month.ago, finish_time: nil }
+    let!(:second_item_assignment) { Fabricate :item_assignment, demand: second_demand, membership: membership, start_time: 1.month.ago, finish_time: nil }
+    let!(:third_item_assignment) { Fabricate :item_assignment, demand: third_demand, membership: membership, start_time: 7.weeks.ago, finish_time: nil }
 
     let!(:first_transition) { Fabricate :demand_transition, stage: first_stage, demand: first_demand, last_time_in: 1.month.ago, last_time_out: 2.weeks.ago }
     let!(:second_transition) { Fabricate :demand_transition, stage: first_stage, demand: second_demand, last_time_in: 1.month.ago, last_time_out: 3.weeks.ago }

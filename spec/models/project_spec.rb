@@ -378,10 +378,10 @@ RSpec.describe Project, type: :model do
     let!(:third_demand) { Fabricate :demand, project: project, team: team, created_date: 1.week.ago, commitment_date: 10.days.ago, end_date: 2.days.ago }
     let!(:fourth_demand) { Fabricate :demand, project: project, team: team, created_date: Time.zone.now, commitment_date: Time.zone.now, end_date: nil }
 
-    let!(:first_item_assignment) { Fabricate :item_assignment, demand: first_demand, team_member: team_member, start_time: 1.month.ago, finish_time: nil }
-    let!(:second_item_assignment) { Fabricate :item_assignment, demand: second_demand, team_member: team_member, start_time: 1.month.ago, finish_time: nil }
-    let!(:third_item_assignment) { Fabricate :item_assignment, demand: third_demand, team_member: team_member, start_time: 7.weeks.ago, finish_time: nil }
-    let!(:fourth_item_assignment) { Fabricate :item_assignment, demand: fourth_demand, team_member: team_member, start_time: 1.month.ago, finish_time: nil }
+    let!(:first_item_assignment) { Fabricate :item_assignment, demand: first_demand, membership: membership, start_time: 1.month.ago, finish_time: nil }
+    let!(:second_item_assignment) { Fabricate :item_assignment, demand: second_demand, membership: membership, start_time: 1.month.ago, finish_time: nil }
+    let!(:third_item_assignment) { Fabricate :item_assignment, demand: third_demand, membership: membership, start_time: 7.weeks.ago, finish_time: nil }
+    let!(:fourth_item_assignment) { Fabricate :item_assignment, demand: fourth_demand, membership: membership, start_time: 1.month.ago, finish_time: nil }
 
     let!(:first_transition) { Fabricate :demand_transition, stage: first_stage, demand: first_demand, last_time_in: 1.month.ago, last_time_out: 2.weeks.ago }
     let!(:second_transition) { Fabricate :demand_transition, stage: first_stage, demand: second_demand, last_time_in: 1.month.ago, last_time_out: 3.weeks.ago }

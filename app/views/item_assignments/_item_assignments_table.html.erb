@@ -15,12 +15,8 @@
   <tbody>
     <% demand.item_assignments.order(:start_time).each do |assignment| %>
       <tr>
-        <td><%= assignment.team_member.name %></td>
-        <% if demand.memberships_for_assignment(assignment).active&.first.present? %>
-          <td><%= I18n.t("activerecord.attributes.membership.enums.member_role.#{demand.memberships_for_assignment(assignment).active.first.member_role}") %></td>
-        <% else %>
-          <td><%= I18n.t('demands.show.memberships.blank', team_name: demand.team_name) %></td>
-        <% end %>
+        <td><%= assignment.membership.team_member_name %></td>
+        <td><%= I18n.t("activerecord.attributes.membership.enums.member_role.#{assignment.membership.member_role}") %></td>
         <td><%= I18n.l(assignment.start_time, format: :short) %></td>
         <td><%= demand.stage_at(assignment.start_time)&.name %></td>
         <td><%= I18n.l(assignment.finish_time, format: :short) if assignment.finish_time.present? %></td>

@@ -84,7 +84,7 @@ class DemandsRepository
            .joins(:project)
            .joins(:product)
            .left_outer_joins(:portfolio_unit)
-           .left_outer_joins(item_assignments: :team_member)
+           .left_outer_joins(item_assignments: { membership: :team_member })
            .where('demands.demand_title ILIKE :search_param
                    OR demands.external_id ILIKE :search_param
                    OR projects.name ILIKE :search_param

@@ -2,7 +2,7 @@
 
 Fabricator(:item_assignment) do
   demand
-  team_member
+  membership
 
   start_time { Time.zone.yesterday }
 end

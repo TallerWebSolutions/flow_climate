@@ -41,8 +41,7 @@ class TeamMember < ApplicationRecord
   has_many :demand_blocks, inverse_of: :blocker, dependent: :destroy, foreign_key: :blocker_id
   has_many :demand_unblocks, class_name: 'DemandBlock', inverse_of: :unblocker, dependent: :destroy, foreign_key: :unblocker_id
 
-  has_many :item_assignments, dependent: :destroy
-  has_many :demands, -> { distinct }, through: :item_assignments
+  has_many :demands, -> { distinct }, through: :memberships
   has_many :projects, -> { distinct }, through: :demands
 
   validates :name, presence: true
@@ -60,7 +59,7 @@ class TeamMember < ApplicationRecord
   end
 
   def pairing_members
-    memberships.map(&:pairing_members).flatten.map(&:name).flatten.group_by(&:itself).transform_values(&:count).sort_by { |_key, value| value }.reverse.to_h
+    memberships.map(&:pairing_members).flatten.map(&:team_member_name).flatten.group_by(&:itself).transform_values(&:count).sort_by { |_key, value| value }.reverse.to_h
   end
 
   def lead_time_min
@@ -69,9 +68,5 @@ class TeamMember < ApplicationRecord
 
   def lead_time_max
     demands.kept.with_valid_leadtime.order(:leadtime).last
-  end
-
-  def demands
-    Demand.where(id: memberships.map { |membership| membership.demands_ids(item_assignments) }.flatten.uniq)
   end
 end

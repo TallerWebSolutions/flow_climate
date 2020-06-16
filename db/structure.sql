@@ -1315,12 +1315,14 @@ ALTER SEQUENCE public.integration_errors_id_seq OWNED BY public.integration_erro
 CREATE TABLE public.item_assignments (
     id bigint NOT NULL,
     demand_id integer NOT NULL,
-    team_member_id integer NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     start_time timestamp without time zone NOT NULL,
     finish_time timestamp without time zone,
-    discarded_at timestamp without time zone
+    discarded_at timestamp without time zone,
+    item_assignment_effort numeric DEFAULT 0.0 NOT NULL,
+    assignment_for_role boolean DEFAULT false,
+    membership_id integer NOT NULL
 );
 
 
@@ -3601,13 +3603,6 @@ CREATE UNIQUE INDEX hdb_version_one_row ON hdb_catalog.hdb_version USING btree (
 
 
 --
--- Name: demand_member_start_time_unique; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX demand_member_start_time_unique ON public.item_assignments USING btree (demand_id, team_member_id, start_time);
-
-
---
 -- Name: idx_customers_devise_customer_unique; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -3916,10 +3911,10 @@ CREATE INDEX index_item_assignments_on_demand_id ON public.item_assignments USIN
 
 
 --
--- Name: index_item_assignments_on_team_member_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_item_assignments_on_membership_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_item_assignments_on_team_member_id ON public.item_assignments USING btree (team_member_id);
+CREATE INDEX index_item_assignments_on_membership_id ON public.item_assignments USING btree (membership_id);
 
 
 --
@@ -4900,6 +4895,14 @@ ALTER TABLE ONLY public.user_company_roles
 
 
 --
+-- Name: item_assignments fk_rails_6ab6a3b3a4; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.item_assignments
+    ADD CONSTRAINT fk_rails_6ab6a3b3a4 FOREIGN KEY (membership_id) REFERENCES public.memberships(id);
+
+
+--
 -- Name: user_plans fk_rails_6bb6a01b63; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -4945,14 +4948,6 @@ ALTER TABLE ONLY public.demands
 
 ALTER TABLE ONLY public.user_project_roles
     ADD CONSTRAINT fk_rails_7402a518b4 FOREIGN KEY (project_id) REFERENCES public.projects(id);
-
-
---
--- Name: item_assignments fk_rails_78b4938f25; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.item_assignments
-    ADD CONSTRAINT fk_rails_78b4938f25 FOREIGN KEY (team_member_id) REFERENCES public.team_members(id);
 
 
 --
@@ -5439,6 +5434,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200511192312'),
 ('20200520142236'),
 ('20200528154520'),
-('20200601145121');
+('20200601145121'),
+('20200615173415');
 
 

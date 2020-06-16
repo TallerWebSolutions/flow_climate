@@ -9,7 +9,8 @@ RSpec.describe User, type: :model do
     it { is_expected.to have_many(:demand_data_processments).dependent(:destroy) }
     it { is_expected.to have_many(:user_plans).dependent(:destroy) }
     it { is_expected.to have_one(:team_member).dependent(:restrict_with_error) }
-    it { is_expected.to have_many(:item_assignments).through(:team_member) }
+    it { is_expected.to have_many(:memberships).through(:team_member) }
+    it { is_expected.to have_many(:item_assignments).through(:memberships) }
     it { is_expected.to have_many(:demands).through(:item_assignments) }
   end
 

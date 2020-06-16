@@ -18,7 +18,7 @@ module Flow
       efforts_by_month = []
 
       @population_dates.each do |date|
-        item_assignments = @membership.team_member.item_assignments.where('start_time BETWEEN :bottom_limit_date AND :upper_limit_date', bottom_limit_date: date.beginning_of_month, upper_limit_date: date.end_of_month)
+        item_assignments = @membership.item_assignments.where('item_assignments.start_time BETWEEN :bottom_limit_date AND :upper_limit_date', bottom_limit_date: date.beginning_of_month, upper_limit_date: date.end_of_month)
         stages_to_work_on = @membership.stages_to_work_on
 
         efforts_for_assignments = sum_efforts_for_assignments(item_assignments, stages_to_work_on)

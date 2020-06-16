@@ -48,7 +48,8 @@ class User < ApplicationRecord
 
   has_one :team_member, dependent: :restrict_with_error
 
-  has_many :item_assignments, through: :team_member
+  has_many :memberships, through: :team_member
+  has_many :item_assignments, through: :memberships
   has_many :demands, through: :item_assignments
 
   has_many :demand_data_processments, dependent: :destroy

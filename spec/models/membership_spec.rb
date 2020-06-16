@@ -8,6 +8,7 @@ RSpec.describe Membership, type: :model do
   context 'associations' do
     it { is_expected.to belong_to :team }
     it { is_expected.to belong_to :team_member }
+    it { is_expected.to have_many(:item_assignments).dependent(:destroy) }
   end
 
   context 'validations' do
@@ -48,6 +49,10 @@ RSpec.describe Membership, type: :model do
 
     describe '.inactive' do
       it { expect(described_class.inactive).to eq [inactive] }
+    end
+
+    describe '.active_for_date' do
+      it { expect(described_class.active_for_date(Time.zone.yesterday)).to match_array [active, other_active, inactive] }
     end
   end
 
@@ -105,12 +110,12 @@ RSpec.describe Membership, type: :model do
     let!(:sixth_transition) { Fabricate :demand_transition, stage: end_stage, demand: third_demand, last_time_in: 95.hours.ago, last_time_out: 94.hours.ago }
     let!(:seventh_transition) { Fabricate :demand_transition, stage: analysis_stage, demand: first_demand, last_time_in: 120.hours.ago, last_time_out: 105.hours.ago }
 
-    let!(:first_assignment) { Fabricate :item_assignment, team_member: first_team_member, demand: first_demand, start_time: 4.days.ago, finish_time: 1.day.ago }
-    let!(:second_assignment) { Fabricate :item_assignment, team_member: first_team_member, demand: second_demand, start_time: 3.days.ago, finish_time: 1.day.ago }
-    let!(:third_assignment) { Fabricate :item_assignment, team_member: second_team_member, demand: first_demand, start_time: 4.days.ago, finish_time: 1.day.ago }
-    let!(:fourth_assignment) { Fabricate :item_assignment, team_member: second_team_member, demand: second_demand, start_time: 3.days.ago, finish_time: 1.day.ago }
-    let!(:fifth_assignment) { Fabricate :item_assignment, team_member: fourth_team_member, demand: first_demand, start_time: 120.hours.ago, finish_time: 105.hours.ago }
-    let!(:sixth_assignment) { Fabricate :item_assignment, team_member: fifth_team_member, demand: third_demand, start_time: 4.days.ago, finish_time: 1.day.ago }
+    let!(:first_assignment) { Fabricate :item_assignment, membership: first_membership, demand: first_demand, start_time: 4.days.ago, finish_time: 1.day.ago }
+    let!(:second_assignment) { Fabricate :item_assignment, membership: first_membership, demand: second_demand, start_time: 3.days.ago, finish_time: 1.day.ago }
+    let!(:third_assignment) { Fabricate :item_assignment, membership: second_membership, demand: first_demand, start_time: 4.days.ago, finish_time: 1.day.ago }
+    let!(:fourth_assignment) { Fabricate :item_assignment, membership: second_membership, demand: second_demand, start_time: 3.days.ago, finish_time: 1.day.ago }
+    let!(:fifth_assignment) { Fabricate :item_assignment, membership: fourth_membership, demand: first_demand, start_time: 120.hours.ago, finish_time: 105.hours.ago }
+    let!(:sixth_assignment) { Fabricate :item_assignment, membership: fifth_membership, demand: third_demand, start_time: 4.days.ago, finish_time: 1.day.ago }
 
     let!(:first_block) { Fabricate :demand_block, blocker: first_team_member, demand: first_demand }
     let!(:second_block) { Fabricate :demand_block, blocker: first_team_member, demand: second_demand }
@@ -146,8 +151,8 @@ RSpec.describe Membership, type: :model do
   describe '#pairing_members' do
     include_context 'membership demands methods data'
 
-    it { expect(first_membership.pairing_members).to match_array [second_team_member, second_team_member] }
-    it { expect(second_membership.pairing_members).to match_array [first_team_member, first_team_member] }
+    it { expect(first_membership.pairing_members).to match_array [second_membership, second_membership] }
+    it { expect(second_membership.pairing_members).to match_array [first_membership, first_membership] }
     it { expect(third_membership.pairing_members).to eq [] }
     it { expect(fourth_membership.pairing_members).to eq [] }
   end
@@ -156,7 +161,7 @@ RSpec.describe Membership, type: :model do
     include_context 'membership demands methods data'
 
     context 'when the member is a developer' do
-      it { expect(first_membership.demands_ids([first_assignment, second_assignment])).to match_array [first_demand.id, second_demand.id] }
+      it { expect(first_membership.demands_ids).to match_array [first_demand.id, second_demand.id] }
     end
   end
 

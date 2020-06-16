@@ -124,12 +124,12 @@ RSpec.describe TeamsController, type: :controller do
       let!(:fourth_demand) { Fabricate :demand, product: product, team: team, project: first_project, demand_type: :ui, class_of_service: :fixed_date, external_id: 'fourth_demand', created_date: 7.days.ago, commitment_date: 7.days.ago, end_date: nil }
       let!(:fifth_demand) { Fabricate :demand, product: product, team: team, project: fourth_project, demand_type: :chore, class_of_service: :intangible, external_id: 'fifth_demand', end_date: 3.hours.ago }
 
-      let!(:first_assignment) { Fabricate :item_assignment, demand: first_demand, team_member: first_team_member }
-      let!(:second_assignment) { Fabricate :item_assignment, demand: first_demand, team_member: second_team_member }
-      let!(:third_assignment) { Fabricate :item_assignment, demand: first_demand, team_member: third_team_member }
+      let!(:first_assignment) { Fabricate :item_assignment, demand: first_demand, membership: first_membership }
+      let!(:second_assignment) { Fabricate :item_assignment, demand: first_demand, membership: second_membership }
+      let!(:third_assignment) { Fabricate :item_assignment, demand: first_demand, membership: third_membership }
 
-      let!(:fourth_assignment) { Fabricate :item_assignment, demand: second_demand, team_member: first_team_member }
-      let!(:fifth_assignment) { Fabricate :item_assignment, demand: third_demand, team_member: second_team_member }
+      let!(:fourth_assignment) { Fabricate :item_assignment, demand: second_demand, membership: first_membership }
+      let!(:fifth_assignment) { Fabricate :item_assignment, demand: third_demand, membership: second_membership }
     end
 
     describe 'GET #show' do

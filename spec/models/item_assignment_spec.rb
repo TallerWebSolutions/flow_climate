@@ -3,23 +3,23 @@
 RSpec.describe ItemAssignment, type: :model do
   context 'associations' do
     it { is_expected.to belong_to :demand }
-    it { is_expected.to belong_to :team_member }
+    it { is_expected.to belong_to :membership }
   end
 
   context 'validations' do
     it { is_expected.to validate_presence_of :demand }
-    it { is_expected.to validate_presence_of :team_member }
+    it { is_expected.to validate_presence_of :membership }
 
     context 'uniqueness' do
-      let(:team_member) { Fabricate :team_member }
+      let(:membership) { Fabricate :membership }
       let(:demand) { Fabricate :demand }
       let!(:start_time) { 1.day.ago }
-      let!(:item_assignment) { Fabricate :item_assignment, demand: demand, team_member: team_member, start_time: start_time }
-      let!(:same_item_assignment) { Fabricate.build :item_assignment, demand: demand, team_member: team_member, start_time: start_time }
+      let!(:item_assignment) { Fabricate :item_assignment, demand: demand, membership: membership, start_time: start_time }
+      let!(:same_item_assignment) { Fabricate.build :item_assignment, demand: demand, membership: membership, start_time: start_time }
 
-      let!(:other_demand_assignment) { Fabricate.build :item_assignment, team_member: team_member, start_time: start_time }
+      let!(:other_demand_assignment) { Fabricate.build :item_assignment, membership: membership, start_time: start_time }
       let!(:other_member_assignment) { Fabricate.build :item_assignment, demand: demand, start_time: start_time }
-      let!(:other_date_item_assignment) { Fabricate.build :item_assignment, demand: demand, team_member: team_member, start_time: Time.zone.now }
+      let!(:other_date_item_assignment) { Fabricate.build :item_assignment, demand: demand, membership: membership, start_time: Time.zone.now }
 
       it 'returns the model invalid with errors on duplicated field' do
         expect(same_item_assignment).not_to be_valid
@@ -55,10 +55,12 @@ RSpec.describe ItemAssignment, type: :model do
         it { expect(described_class.for_dates(7.days.ago, 6.days.ago)).to eq [] }
       end
     end
+
+    pending '.not_for_membership'
   end
 
   context 'delegations' do
-    it { is_expected.to delegate_method(:name).to(:team_member).with_prefix }
+    it { is_expected.to delegate_method(:name).to(:membership).with_prefix }
   end
 
   describe '#working_hours_until' do
@@ -94,9 +96,9 @@ RSpec.describe ItemAssignment, type: :model do
     let!(:first_transition) { Fabricate :demand_transition, stage: commitment_stage, demand: first_demand, last_time_in: 10.days.ago, last_time_out: 5.days.ago }
     let!(:seventh_transition) { Fabricate :demand_transition, stage: analysis_stage, demand: first_demand, last_time_in: 119.hours.ago, last_time_out: 105.hours.ago }
 
-    let!(:first_assignment) { Fabricate :item_assignment, team_member: first_team_member, demand: first_demand, start_time: 11.days.ago, finish_time: 1.hour.ago }
-    let!(:second_assignment) { Fabricate :item_assignment, team_member: first_team_member, demand: first_demand, start_time: 10.days.ago, finish_time: 5.days.ago }
-    let!(:third_assignment) { Fabricate :item_assignment, team_member: first_team_member, demand: first_demand, start_time: 120.days.ago, finish_time: 40.days.ago }
+    let!(:first_assignment) { Fabricate :item_assignment, membership: first_membership, demand: first_demand, start_time: 11.days.ago, finish_time: 1.hour.ago }
+    let!(:second_assignment) { Fabricate :item_assignment, membership: first_membership, demand: first_demand, start_time: 10.days.ago, finish_time: 5.days.ago }
+    let!(:third_assignment) { Fabricate :item_assignment, membership: first_membership, demand: first_demand, start_time: 120.days.ago, finish_time: 40.days.ago }
 
     it { expect(first_assignment.stages_during_assignment).to match_array [analysis_stage, commitment_stage] }
     it { expect(second_assignment.stages_during_assignment).to eq [commitment_stage] }

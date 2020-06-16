@@ -8,7 +8,7 @@
 #  end_date                  :date             not null
 #  hour_value                :decimal(, )
 #  initial_scope             :integer          not null
-#  max_work_in_progress      :integer          default(0), not null
+#  max_work_in_progress      :decimal(, )      default(1.0), not null
 #  name                      :string           not null
 #  nickname                  :string
 #  percentage_effort_to_bugs :integer          default(0), not null
@@ -67,12 +67,12 @@ class Project < ApplicationRecord
   validates :name, uniqueness: { scope: :company, message: I18n.t('project.name.uniqueness') }
   validate :hour_value_project_value?
 
-  scope :waiting_projects_starting_within_week, -> { waiting.where('EXTRACT(week FROM start_date) = :week AND EXTRACT(year FROM start_date) = :year', week: Time.zone.today.cweek, year: Time.zone.today.cwyear) }
-  scope :running_projects_finishing_within_week, -> { running.where('EXTRACT(week FROM end_date) = :week AND EXTRACT(year FROM end_date) = :year', week: Time.zone.today.cweek, year: Time.zone.today.cwyear) }
-  scope :running, -> { where('(status = 1 OR status = 2) AND start_date <= :limit_date', limit_date: Time.zone.today) }
-  scope :active, -> { where('(status = 0 OR status = 1 OR  status = 2) AND start_date <= :limit_date', limit_date: Time.zone.today) }
-  scope :active_in_period, ->(start_period, end_period) { where('(start_date <= :start_period AND end_date >= :start_period) OR (start_date >= :start_period AND start_date <= :end_period)', start_period: start_period, end_period: end_period) }
-  scope :finishing_after, ->(date) { where('end_date >= :end_date', end_date: date) }
+  scope :waiting_projects_starting_within_week, -> { waiting.where('EXTRACT(week FROM projects.start_date) = :week AND EXTRACT(year FROM projects.start_date) = :year', week: Time.zone.today.cweek, year: Time.zone.today.cwyear) }
+  scope :running_projects_finishing_within_week, -> { running.where('EXTRACT(week FROM projects.end_date) = :week AND EXTRACT(year FROM projects.end_date) = :year', week: Time.zone.today.cweek, year: Time.zone.today.cwyear) }
+  scope :running, -> { where('(projects.status = 1 OR projects.status = 2) AND projects.start_date <= :limit_date', limit_date: Time.zone.today) }
+  scope :active, -> { where('(projects.status = 0 OR projects.status = 1 OR  projects.status = 2) AND projects.start_date <= :limit_date', limit_date: Time.zone.today) }
+  scope :active_in_period, ->(start_period, end_period) { where('(projects.start_date <= :start_period AND projects.end_date >= :start_period) OR (projects.start_date >= :start_period AND projects.start_date <= :end_period)', start_period: start_period, end_period: end_period) }
+  scope :finishing_after, ->(date) { where('projects.end_date >= :end_date', end_date: date) }
 
   def add_user(user)
     return if users.include?(user)

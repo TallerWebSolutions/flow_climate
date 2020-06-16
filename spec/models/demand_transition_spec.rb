@@ -297,8 +297,8 @@ RSpec.describe DemandTransition, type: :model do
     let!(:first_membership) { Fabricate :membership, team: team, team_member: first_team_member, start_date: 3.weeks.ago, end_date: nil, member_role: :developer }
     let!(:second_membership) { Fabricate :membership, team: team, team_member: second_team_member, start_date: 1.week.ago, end_date: nil, member_role: :developer }
 
-    let!(:first_item_assignment) { Fabricate :item_assignment, demand: demand, team_member: first_team_member, start_time: Time.zone.local(2018, 3, 15, 17, 9, 58), finish_time: Time.zone.local(2018, 3, 22, 12, 0, 0) }
-    let!(:second_item_assignment) { Fabricate :item_assignment, demand: demand, team_member: second_team_member, start_time: Time.zone.local(2018, 3, 17, 17, 9, 58), finish_time: Time.zone.local(2018, 3, 20, 12, 0, 0) }
+    let!(:first_item_assignment) { Fabricate :item_assignment, demand: demand, membership: first_membership, start_time: Time.zone.local(2018, 3, 15, 17, 9, 58), finish_time: Time.zone.local(2018, 3, 22, 12, 0, 0) }
+    let!(:second_item_assignment) { Fabricate :item_assignment, demand: demand, membership: second_membership, start_time: Time.zone.local(2018, 3, 17, 17, 9, 58), finish_time: Time.zone.local(2018, 3, 20, 12, 0, 0) }
 
     context 'when there is last_time_out' do
       let!(:demand_transition) { Fabricate :demand_transition, stage: stage, demand: demand, last_time_in: Time.zone.local(2018, 3, 14, 17, 9, 58), last_time_out: Time.zone.local(2018, 3, 20, 12, 0, 0) }

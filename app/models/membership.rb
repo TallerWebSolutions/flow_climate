@@ -30,12 +30,15 @@ class Membership < ApplicationRecord
 
   belongs_to :team
   belongs_to :team_member
+  has_many :item_assignments, dependent: :destroy
+  has_many :demands, through: :item_assignments
 
   validates :team, :team_member, :start_date, presence: true
   validate :active_team_member_unique
 
   scope :active, -> { where('memberships.end_date IS NULL') }
   scope :inactive, -> { where('memberships.end_date IS NOT NULL') }
+  scope :active_for_date, ->(limit_date) { where('end_date IS NULL OR end_date > :limit_date', limit_date: limit_date) }
 
   delegate :name, to: :team_member, prefix: true
   delegate :jira_account_id, to: :team_member
@@ -47,9 +50,7 @@ class Membership < ApplicationRecord
     hours_per_month.to_f / 30.0
   end
 
-  def demands_ids(item_assignments = nil)
-    item_assignments = team_member.item_assignments if item_assignments.blank?
-
+  def demands_ids
     demands_list = []
     item_assignments.each do |assignment|
       stages_during_assignment = assignment.stages_during_assignment
@@ -72,14 +73,14 @@ class Membership < ApplicationRecord
   end
 
   def pairing_count
-    pairing_members.flatten.map(&:name).flatten.group_by(&:itself).map { |key, value| [key, value.count] }.sort_by { |_key, value| value }.reverse.to_h
+    pairing_members.flatten.map(&:team_member_name).flatten.group_by(&:itself).map { |key, value| [key, value.count] }.sort_by { |_key, value| value }.reverse.to_h
   end
 
   def pairing_members
-    return [] if team_member.demands.blank?
+    return [] if demands.blank?
 
     pairing_members = []
-    same_team_demands = team_member.demands.where(team: team)
+    same_team_demands = demands.where(team: team)
     same_team_demands.each { |demand| pairing_members << pairing_members_in_demand(demand) }
 
     pairing_members.flatten
@@ -100,14 +101,14 @@ class Membership < ApplicationRecord
   def pairing_members_in_demand(demand)
     pairing_members = []
 
-    assignments_for_member = demand.item_assignments.where(team_member: team_member)
+    assignments_for_member = demand.item_assignments.where(membership: self)
     assignments_for_member.each do |member_assignment|
       pairing_members << demand.item_assignments
-                               .joins(team_member: :memberships)
-                               .where(team_member: { memberships: { member_role: member_role } })
+                               .joins(:membership)
+                               .where(memberships: { member_role: member_role })
                                .for_dates(member_assignment.start_time, member_assignment.finish_time)
-                               .not_for_team_member(team_member)
-                               .map(&:team_member)
+                               .not_for_membership(self)
+                               .map(&:membership)
     end
 
     pairing_members

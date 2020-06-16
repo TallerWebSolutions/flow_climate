@@ -36,7 +36,7 @@ module Jira
                     class_of_service: Jira::JiraReader.instance.read_class_of_service(jira_account, jira_issue_attrs(jira_issue), jira_issue_changelog(jira_issue)),
                     demand_title: issue_fields_value(jira_issue, 'summary'),
                     external_url: build_jira_url(jira_account, demand.external_id),
-                    team_members: [], commitment_date: nil, discarded_at: nil)
+                    memberships: [], commitment_date: nil, discarded_at: nil)
 
       read_demand_details(demand, project.team, jira_account, jira_issue)
     end
@@ -207,16 +207,20 @@ module Jira
 
     def read_unassigned_responsibles(demand, team, history_date, responsible_name)
       exiting_team_member = TeamMember.where(company: team.company).where('lower(name) = :member_name', member_name: responsible_name.downcase).first
+      exiting_membership = Membership.where(team_member: exiting_team_member, team: team).active_for_date(history_date).first
 
-      item_assignment_exiting = ItemAssignment.where(demand: demand, team_member: exiting_team_member, finish_time: nil).first
+      item_assignment_exiting = ItemAssignment.where(demand: demand, membership: exiting_membership, finish_time: nil).first
       item_assignment_exiting.update(finish_time: history_date) if item_assignment_exiting.present?
     end
 
     def read_assigned_responsibles(demand, team, history_date, responsible_name)
       team_member = TeamMember.where(company: team.company).where('lower(name) = :member_name', member_name: responsible_name.downcase).first
-      team_member = TeamMember.create(company: team.company, name: responsible_name.downcase) if team_member.blank?
+      membership = Membership.where(team_member: team_member, team: team).active_for_date(history_date).first
 
-      assignment = ItemAssignment.find_or_initialize_by(demand: demand, team_member: team_member, finish_time: nil)
+      team_member = TeamMember.create(company: team.company, name: responsible_name.downcase) if team_member.blank?
+      membership = Membership.create(team: team, team_member: team_member, start_date: history_date) if membership.blank?
+
+      assignment = ItemAssignment.find_or_initialize_by(demand: demand, membership: membership, finish_time: nil)
       assignment.update(start_time: history_date) unless assignment.persisted?
     end
 
