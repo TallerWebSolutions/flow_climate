@@ -8,7 +8,7 @@ class TeamMembersController < AuthenticatedController
 
   def show
     assign_team_member_objects
-    @member_demands = @team_member.demands
+    @member_demands = @team_member.demands_for_role
 
     assign_chart_info
 

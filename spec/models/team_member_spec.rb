@@ -105,7 +105,7 @@ RSpec.describe TeamMember, type: :model do
     include_context 'demands'
 
     it 'returns the pairs' do
-      expect_any_instance_of(Membership).to(receive(:demands_ids).twice.and_return(Demand.all.map(&:id)))
+      expect_any_instance_of(Membership).to(receive(:demands_ids).once.and_return(Demand.all.map(&:id)))
       expect(first_team_member.pairing_members).to eq(second_team_member.name => 2)
     end
   end
