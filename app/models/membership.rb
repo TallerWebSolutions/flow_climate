@@ -80,13 +80,13 @@ class Membership < ApplicationRecord
     return [] if demands.blank?
 
     pairing_members = []
-    same_team_demands = demands.where(team: team)
+    same_team_demands = demands_for_role.where(team: team)
     same_team_demands.each { |demand| pairing_members << pairing_members_in_demand(demand) }
 
     pairing_members.flatten
   end
 
-  def demands
+  def demands_for_role
     Demand.where(id: demands_ids)
   end
 

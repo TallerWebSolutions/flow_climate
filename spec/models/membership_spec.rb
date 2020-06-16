@@ -9,6 +9,7 @@ RSpec.describe Membership, type: :model do
     it { is_expected.to belong_to :team }
     it { is_expected.to belong_to :team_member }
     it { is_expected.to have_many(:item_assignments).dependent(:destroy) }
+    it { is_expected.to have_many(:demands).through(:item_assignments) }
   end
 
   context 'validations' do
@@ -165,15 +166,15 @@ RSpec.describe Membership, type: :model do
     end
   end
 
-  describe '#demands' do
+  describe '#demands_for_role' do
     include_context 'membership demands methods data'
 
     context 'when the member is a developer' do
-      it { expect(first_membership.demands).to match_array [first_demand, second_demand] }
+      it { expect(first_membership.demands_for_role).to match_array [first_demand, second_demand] }
     end
 
     context 'when the member is not a developer' do
-      it { expect(fourth_membership.demands).to match_array [first_demand] }
+      it { expect(fourth_membership.demands_for_role).to match_array [first_demand] }
     end
   end
 
