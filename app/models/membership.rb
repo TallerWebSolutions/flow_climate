@@ -77,7 +77,7 @@ class Membership < ApplicationRecord
   end
 
   def pairing_members
-    return [] if demands.blank?
+    return [] if demands_for_role.blank?
 
     pairing_members = []
     same_team_demands = demands_for_role.where(team: team)
@@ -91,8 +91,8 @@ class Membership < ApplicationRecord
   end
 
   def stages_to_work_on
-    stages_to_work_on = team.stages
-    stages_to_work_on = team.stages.development.where(queue: false) if developer?
+    stages_to_work_on = team.stages.where(queue: false)
+    stages_to_work_on = stages_to_work_on.development if developer?
     stages_to_work_on
   end
 

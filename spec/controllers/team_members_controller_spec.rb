@@ -85,7 +85,7 @@ RSpec.describe TeamMembersController, type: :controller do
           expect(response).to render_template 'team_members/show'
           expect(assigns(:company)).to eq company
           expect(assigns(:team_member)).to eq team_member
-          expect(assigns(:member_effort_chart)).to eq [{ data: [0, 0, 0, 0, 0, 0, 0], name: team.name }]
+          expect(assigns(:member_effort_chart)).to eq [{ data: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], name: team.name }]
         end
       end
 

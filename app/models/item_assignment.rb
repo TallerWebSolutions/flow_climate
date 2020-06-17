@@ -41,6 +41,8 @@ class ItemAssignment < ApplicationRecord
 
   delegate :name, to: :membership, prefix: true
 
+  before_save :compute_assignment_effort
+
   def working_hours_until(beginning_time = nil, end_time = Time.zone.now)
     start_effort_time = [start_time, beginning_time].compact.max
     end_effort_time = [finish_time, end_time].compact.min
@@ -50,5 +52,15 @@ class ItemAssignment < ApplicationRecord
 
   def stages_during_assignment
     demand.stages_at(start_time, finish_time)
+  end
+
+  private
+
+  def compute_assignment_effort
+    membership_flow_information = Flow::MembershipFlowInformation.new(membership)
+
+    effort_in_assignment = membership_flow_information.compute_effort_for_assignment(self)
+    self.assignment_for_role = effort_in_assignment.positive?
+    self.item_assignment_effort = effort_in_assignment
   end
 end

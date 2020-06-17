@@ -102,7 +102,7 @@ class TeamMembersController < AuthenticatedController
   end
 
   def start_date
-    @start_date ||= [@member_demands.map(&:end_date).compact.min, 6.months.ago].compact.max
+    @start_date ||= [@member_demands.map(&:end_date).compact.min, 1.year.ago].compact.max
   end
 
   def assign_team_member_objects
