@@ -82,7 +82,7 @@ RSpec.describe Membership, type: :model do
     let(:project) { Fabricate :project, products: [product], team: team, company: company }
 
     let!(:analysis_stage) { Fabricate :stage, company: company, projects: [project], teams: [team], name: 'analysis_stage', commitment_point: false, end_point: false, queue: false, stage_type: :analysis }
-    let(:commitment_stage) { Fabricate :stage, company: company, projects: [project], teams: [team], name: 'commitment_stage', commitment_point: true, end_point: false, queue: true, stage_type: :development }
+    let(:commitment_stage) { Fabricate :stage, company: company, projects: [project], teams: [team], name: 'commitment_stage', commitment_point: true, end_point: false, queue: false, stage_type: :development }
     let(:end_stage) { Fabricate :stage, company: company, projects: [project], teams: [team], name: 'end_stage', commitment_point: false, end_point: true, queue: false, stage_type: :development }
 
     let(:first_team_member) { Fabricate :team_member, company: company, name: 'first_member' }
@@ -182,7 +182,7 @@ RSpec.describe Membership, type: :model do
     include_context 'membership demands methods data'
 
     context 'when the member is a developer' do
-      it { expect(first_membership.stages_to_work_on).to match_array [end_stage] }
+      it { expect(first_membership.stages_to_work_on).to match_array [commitment_stage, end_stage] }
     end
 
     context 'when the member is not a developer' do

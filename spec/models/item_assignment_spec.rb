@@ -104,4 +104,45 @@ RSpec.describe ItemAssignment, type: :model do
     it { expect(second_assignment.stages_during_assignment).to eq [commitment_stage] }
     it { expect(third_assignment.stages_during_assignment).to eq [] }
   end
+
+  context 'callbacks' do
+    describe '#compute_assignment_effort' do
+      let(:company) { Fabricate :company }
+      let(:team) { Fabricate :team, company: company }
+
+      let(:customer) { Fabricate :customer, company: company }
+      let(:product) { Fabricate :product, customer: customer }
+      let(:project) { Fabricate :project, products: [product], team: team, company: company }
+
+      let!(:analysis_stage) { Fabricate :stage, company: company, projects: [project], teams: [team], name: 'analysis_stage', commitment_point: false, end_point: false, queue: false, stage_type: :analysis }
+      let!(:commitment_stage) { Fabricate :stage, company: company, projects: [project], teams: [team], name: 'commitment_stage', commitment_point: true, end_point: false, queue: false, stage_type: :development }
+      let!(:end_stage) { Fabricate :stage, company: company, projects: [project], teams: [team], name: 'end_stage', commitment_point: false, end_point: true, queue: false, stage_type: :development }
+
+      let(:first_team_member) { Fabricate :team_member, company: company, name: 'first_member' }
+      let(:second_team_member) { Fabricate :team_member, company: company, name: 'second_member' }
+
+      let!(:first_membership) { Fabricate :membership, team: team, team_member: first_team_member, member_role: :developer }
+      let!(:second_membership) { Fabricate :membership, team: team, team_member: second_team_member, member_role: :developer }
+
+      let(:first_demand) { Fabricate :demand, company: company, team: team, project: project }
+      let(:second_demand) { Fabricate :demand, company: company, team: team, project: project }
+
+      let!(:first_transition) { Fabricate :demand_transition, stage: commitment_stage, demand: first_demand, last_time_in: 10.days.ago, last_time_out: 5.days.ago }
+      let!(:second_transition) { Fabricate :demand_transition, stage: analysis_stage, demand: first_demand, last_time_in: 119.hours.ago, last_time_out: 105.hours.ago }
+      let!(:third_transition) { Fabricate :demand_transition, stage: analysis_stage, demand: second_demand, last_time_in: 11.days.ago, last_time_out: 4.days.ago }
+
+      let!(:first_assignment) { Fabricate :item_assignment, membership: first_membership, demand: first_demand, start_time: 11.days.ago, finish_time: 1.hour.ago }
+      let!(:second_assignment) { Fabricate :item_assignment, membership: second_membership, demand: second_demand, start_time: 10.days.ago, finish_time: 5.days.ago }
+
+      it 'computes the effort after saving' do
+        first_assignment.save
+        expect(first_assignment.reload.item_assignment_effort).to eq 30
+        expect(first_assignment.reload.assignment_for_role).to be true
+
+        second_assignment.save
+        expect(second_assignment.reload.item_assignment_effort).to eq 0
+        expect(second_assignment.reload.assignment_for_role).to be false
+      end
+    end
+  end
 end
