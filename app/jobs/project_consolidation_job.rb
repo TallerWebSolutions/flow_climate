@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class ProjectConsolidationJob < ApplicationJob
-  queue_as :default
+  queue_as :consolidations
 
   def perform(project)
     min_date = project.start_date

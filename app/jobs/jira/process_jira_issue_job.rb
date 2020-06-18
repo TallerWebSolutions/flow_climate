@@ -2,6 +2,8 @@
 
 module Jira
   class ProcessJiraIssueJob < ApplicationJob
+    queue_as :demand_update
+
     def perform(jira_account, project, issue_key, user_email, user_name, demand_url)
       started_time = Time.zone.now
       jira_issue_with_transitions = Jira::JiraApiService.new(jira_account.username, jira_account.api_token, jira_account.base_uri).request_issue_details(issue_key)

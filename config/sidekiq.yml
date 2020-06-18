@@ -6,3 +6,7 @@ production:
   :concurrency: 5
 :queues:
   - default
+  - consolidations
+  - generators
+  - project_update
+  - demand_update
