@@ -4,9 +4,11 @@ development:
   :concurrency: 5
 production:
   :concurrency: 5
-:queues:
+queues:
   - ['default', 1]
   - ['generators', 1]
   - ['project_update', 1]
   - ['demand_update', 1]
   - ['consolidations', 1]
+limits:
+  - consolidations: 4
