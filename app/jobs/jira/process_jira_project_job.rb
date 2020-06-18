@@ -2,6 +2,8 @@
 
 module Jira
   class ProcessJiraProjectJob < ApplicationJob
+    queue_as :project_update
+
     def perform(jira_account, jira_project_config, user_email = nil, user_name = nil, project_url = nil)
       started_time = Time.zone.now
       jira_product_key = jira_project_config.jira_product_config.jira_product_key

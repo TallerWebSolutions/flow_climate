@@ -222,9 +222,9 @@ RSpec.describe DemandsController, type: :controller do
             expect(assigns(:start_date)).to eq 3.months.ago.to_date
             expect(assigns(:end_date)).to eq Time.zone.today
             expect(assigns(:demands).map(&:id)).to match_array [first_demand.id, second_demand.id, third_demand.id, fourth_demand.id, fifth_demand.id, sixth_demand.id, seventh_demand.id, eigth_demand.id]
-            expect(assigns(:confidence_95_leadtime)).to be_within(1).of(459.1)
-            expect(assigns(:confidence_80_leadtime)).to be_within(1).of(307.5)
-            expect(assigns(:confidence_65_leadtime)).to be_within(1).of(156.0)
+            expect(assigns(:confidence_95_leadtime)).to be_within(5).of(459.1)
+            expect(assigns(:confidence_80_leadtime)).to be_within(5).of(307.5)
+            expect(assigns(:confidence_65_leadtime)).to be_within(5).of(156.0)
             expect(assigns(:avg_work_hours_per_demand).to_f).to be_within(0.1).of(36.8)
           end
         end
