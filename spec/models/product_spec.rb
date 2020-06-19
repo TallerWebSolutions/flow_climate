@@ -58,19 +58,6 @@ RSpec.describe Product, type: :model do
     it { is_expected.to delegate_method(:company).to(:customer) }
   end
 
-  describe '#active_projects' do
-    let(:customer) { Fabricate :customer }
-    let(:product) { Fabricate :product, customer: customer, name: 'zzz' }
-
-    let!(:active_project) { Fabricate :project, start_date: 4.weeks.ago, customers: [customer], products: [product], status: :executing }
-    let!(:other_active_project) { Fabricate :project, start_date: 4.weeks.ago, customers: [customer], products: [product], status: :maintenance }
-    let!(:waiting_project) { Fabricate :project, start_date: 4.weeks.ago, customers: [customer], products: [product], status: :waiting }
-    let!(:finished_project) { Fabricate :project, start_date: 4.weeks.ago, customers: [customer], products: [product], status: :finished }
-    let!(:cancelled_project) { Fabricate :project, start_date: 4.weeks.ago, customers: [customer], products: [product], status: :cancelled }
-
-    it { expect(product.active_projects).to match_array [active_project, other_active_project] }
-  end
-
   RSpec.shared_context 'context with no demands' do
     let(:customer) { Fabricate :customer }
     let(:product) { Fabricate :product, customer: customer, name: 'zzz' }
@@ -88,29 +75,14 @@ RSpec.describe Product, type: :model do
 
     let(:other_product) { Fabricate :product, name: 'zzz' }
 
-    let!(:project) { Fabricate :project, start_date: 4.weeks.ago, end_date: 3.weeks.from_now, customers: [product.customer], products: [product], value: 15_000, qty_hours: 5000, hour_value: 2.5 }
-    let!(:nil_value_project) { Fabricate :project, start_date: 4.weeks.ago, customers: [product.customer], products: [product], status: :executing, value: nil }
-    let!(:other_project) { Fabricate :project, start_date: 4.weeks.ago, end_date: 3.weeks.from_now, customers: [product.customer], products: [product], value: 5000, qty_hours: 10_000, hour_value: 2 }
-    let!(:other_product_project) { Fabricate :project, customers: [other_product.customer], products: [other_product], start_date: 4.weeks.ago, end_date: 3.weeks.from_now, value: 22_000, qty_hours: 50_000, hour_value: 0.44 }
+    let!(:project) { Fabricate :project, start_date: Time.zone.local(2018, 10, 17, 10, 0, 0), end_date: Time.zone.local(2018, 12, 5, 10, 0, 0), customers: [product.customer], products: [product], value: 15_000, qty_hours: 5000, hour_value: 2.5 }
+    let!(:nil_value_project) { Fabricate :project, start_date: Time.zone.local(2018, 10, 17, 10, 0, 0), customers: [product.customer], products: [product], status: :executing, value: nil }
+    let!(:other_project) { Fabricate :project, start_date: Time.zone.local(2018, 10, 17, 10, 0, 0), end_date: 3.weeks.from_now, customers: [product.customer], products: [product], value: 5000, qty_hours: 10_000, hour_value: 2 }
+    let!(:other_product_project) { Fabricate :project, customers: [other_product.customer], products: [other_product], start_date: Time.zone.local(2018, 10, 17, 10, 0, 0), end_date: Time.zone.local(2018, 12, 5, 10, 0, 0), value: 22_000, qty_hours: 50_000, hour_value: 0.44 }
 
     let!(:first_demand) { Fabricate :demand, product: product, project: project, created_date: Time.zone.local(2018, 11, 14, 10, 0, 0), end_date: nil, effort_downstream: 900, effort_upstream: 50 }
     let!(:second_demand) { Fabricate :demand, product: product, project: project, created_date: Time.zone.local(2018, 11, 14, 10, 0, 0), end_date: Time.zone.now, effort_downstream: 900, effort_upstream: 50 }
     let!(:third_demand) { Fabricate :demand, product: product, portfolio_unit: portfolio_unit, project: project, created_date: Time.zone.local(2018, 11, 14, 10, 0, 0), end_date: Time.zone.now, effort_downstream: 900, effort_upstream: 50 }
-  end
-
-  describe '#waiting_projects' do
-    include_context 'context with no demands'
-
-    it { expect(product.waiting_projects).to match_array [waiting_project, other_waiting_project] }
-  end
-
-  describe '#last_week_scope' do
-    before { travel_to Time.zone.local(2018, 11, 19, 10, 0, 0) }
-
-    after { travel_back }
-
-    include_context 'consolidations variables data for product'
-    it { expect(product.last_week_scope).to eq 90 }
   end
 
   describe '#avg_hours_per_demand' do
@@ -118,39 +90,28 @@ RSpec.describe Product, type: :model do
     it { expect(product.avg_hours_per_demand).to eq 950.0 }
   end
 
-  describe '#total_value' do
-    include_context 'consolidations variables data for product'
-    it { expect(product.total_value).to eq product.projects.sum(:value) }
-  end
-
-  describe '#remaining_money' do
-    include_context 'consolidations variables data for product'
-    it { expect(product.remaining_money(3.weeks.from_now).to_f).to eq 15_250.0 }
-  end
-
-  describe '#percentage_remaining_money' do
-    include_context 'consolidations variables data for product'
-    it { expect(product.percentage_remaining_money(3.weeks.from_now).to_f).to eq 76.25 }
-  end
-
   describe '#remaining_backlog' do
     include_context 'consolidations variables data for product'
-    it { expect(product.remaining_backlog).to eq product.projects.sum(&:remaining_backlog) }
+    it { expect(product.remaining_backlog).to eq 1 }
   end
 
   describe '#percentage_remaining_scope' do
     include_context 'consolidations variables data for product'
-    it { expect(product.percentage_remaining_scope).to eq((product.remaining_backlog.to_f / product.last_week_scope) * 100) }
+    it { expect(product.percentage_remaining_scope).to eq 0.3333333333333333 }
   end
 
   describe '#total_flow_pressure' do
     include_context 'consolidations variables data for product'
-    it { expect(product.total_flow_pressure).to be_within(0.9).of(product.projects.sum(&:flow_pressure)) }
+    it 'computes the pressure' do
+      travel_to Time.zone.local(2018, 11, 14, 10, 0, 0) do
+        expect(product.total_flow_pressure).to eq 0.0015527950310559005
+      end
+    end
   end
 
   describe '#delivered_scope' do
     include_context 'consolidations variables data for product'
-    it { expect(product.delivered_scope).to eq product.projects.sum(&:total_throughput) }
+    it { expect(product.delivered_scope).to eq 2 }
   end
 
   describe '#percentage_complete' do

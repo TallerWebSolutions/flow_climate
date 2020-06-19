@@ -8,7 +8,7 @@
       </div>
     </div>
     <div class="col-xs-12">
-      <div><%= "#{I18n.t('general.effort_hours_text', hours_value: number_with_precision(demands.sum(&:total_effort), precision: 2))}" %></div>
+      <div><%= "#{I18n.t('general.effort_hours_text', hours_value: number_with_precision(unpaged_demands.sum(&:total_effort), precision: 2))}" %></div>
     </div>
   </div>
 

@@ -7,10 +7,6 @@ module ProjectAggregator
     projects.running
   end
 
-  def waiting_projects
-    projects.where(status: :waiting)
-  end
-
   def last_week_scope
     projects.sum(&:last_week_scope)
   end

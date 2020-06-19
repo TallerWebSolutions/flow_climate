@@ -21,7 +21,6 @@
 #
 
 class Product < ApplicationRecord
-  include ProjectAggregator
   include DemandsAggregator
 
   belongs_to :customer, counter_cache: true
@@ -67,5 +66,27 @@ class Product < ApplicationRecord
     return score_matrix.score_matrix_questions if score_matrix.present?
 
     ScoreMatrixQuestion.none
+  end
+
+  def remaining_backlog
+    demands.kept.not_finished.count
+  end
+
+  def delivered_scope
+    demands.kept.finished.count
+  end
+
+  def total_flow_pressure
+    max_end_date = projects.active.map(&:end_date).compact.max
+
+    return 0 if max_end_date.blank?
+
+    remaining_time = max_end_date - Time.zone.today
+
+    remaining_backlog / remaining_time.to_f
+  end
+
+  def percentage_remaining_scope
+    remaining_backlog / demands.kept.count.to_f
   end
 end

@@ -385,10 +385,6 @@ RSpec.describe Demand, type: :model do
   end
 
   context 'computed fields' do
-    before { travel_to Time.zone.local(2019, 10, 17, 10, 0, 0) }
-
-    after { travel_back }
-
     let(:company) { Fabricate :company }
     let(:customer) { Fabricate :customer, company: company }
     let(:product) { Fabricate :product, customer: customer }
@@ -427,25 +423,27 @@ RSpec.describe Demand, type: :model do
     let!(:third_transition) { Fabricate :demand_transition, stage: third_stage, demand: first_demand, last_time_in: Time.zone.local(2018, 3, 5, 17, 9, 58), last_time_out: Time.zone.local(2018, 3, 6, 14, 9, 58) }
 
     it 'computes the correct values' do
-      expect(first_demand.leadtime.to_f).to eq 518_400.0
-      expect(first_demand.total_queue_time.to_f).to eq 748_800.0
-      expect(first_demand.total_touch_time.to_f).to eq 892_800.0
-      expect(first_demand.blocked_working_time_downstream.to_f).to eq 24.0
-      expect(first_demand.blocked_working_time_upstream.to_f).to eq 0.0
-      expect(first_demand.total_bloked_working_time.to_f).to eq 18.0
-      expect(first_demand.total_touch_blocked_time.to_f).to eq 144_000.0
-      expect(first_demand.cost_to_project.to_f).to eq 609.1200000000001
+      travel_to Time.zone.local(2019, 10, 17, 10, 0, 0) do
+        expect(first_demand.leadtime.to_f).to eq 518_400.0
+        expect(first_demand.total_queue_time.to_f).to eq 748_800.0
+        expect(first_demand.total_touch_time.to_f).to eq 892_800.0
+        expect(first_demand.blocked_working_time_downstream.to_f).to eq 24.0
+        expect(first_demand.blocked_working_time_upstream.to_f).to eq 0.0
+        expect(first_demand.total_bloked_working_time.to_f).to eq 18.0
+        expect(first_demand.total_touch_blocked_time.to_f).to eq 144_000.0
+        expect(first_demand.cost_to_project.to_f).to eq 609.1200000000001
 
-      expect(second_demand.leadtime.to_f).to eq 0
-      expect(second_demand.total_queue_time.to_f).to eq 0
-      expect(second_demand.total_touch_time.to_f).to eq 0
-      expect(second_demand.blocked_working_time_downstream.to_f).to eq 0
-      expect(second_demand.blocked_working_time_upstream.to_f).to eq 0
-      expect(second_demand.total_bloked_working_time.to_f).to eq 0
-      expect(second_demand.total_touch_blocked_time.to_f).to eq 0
-      expect(second_demand.cost_to_project.to_f).to eq 150
+        expect(second_demand.leadtime.to_f).to eq 0
+        expect(second_demand.total_queue_time.to_f).to eq 0
+        expect(second_demand.total_touch_time.to_f).to eq 0
+        expect(second_demand.blocked_working_time_downstream.to_f).to eq 0
+        expect(second_demand.blocked_working_time_upstream.to_f).to eq 0
+        expect(second_demand.total_bloked_working_time.to_f).to eq 0
+        expect(second_demand.total_touch_blocked_time.to_f).to eq 0
+        expect(second_demand.cost_to_project.to_f).to eq 150
 
-      expect(third_demand.leadtime.to_f).to eq 781_200.0
+        expect(third_demand.leadtime.to_f).to eq 781_200.0
+      end
     end
   end
 

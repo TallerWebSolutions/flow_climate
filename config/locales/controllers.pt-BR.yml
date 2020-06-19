@@ -129,7 +129,7 @@ pt-BR:
     leadtime: "Lead time"
     list: "Lista"
     map: "Mapa"
-    effort_hours_text: "%{hours_value} horas de esforço"
+    effort_hours_text: "Total: %{hours_value} horas de esforço"
     demand_blocks_text:
       zero: "sem bloqueios"
       one: "%{count} bloqueio"
