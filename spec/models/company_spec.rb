@@ -66,9 +66,9 @@ RSpec.describe Company, type: :model do
 
     let!(:membership) { Fabricate :membership, team: team, team_member: team_member, hours_per_month: 100, start_date: 1.month.ago, end_date: nil }
 
-    let!(:active_project) { Fabricate :project, company: company, team: team, start_date: 4.weeks.ago, customers: [customer], products: [product], status: :executing, qty_hours: 200 }
-    let!(:other_active_project) { Fabricate :project, company: company, team: team, start_date: 4.weeks.ago, customers: [customer], products: [product], status: :executing, qty_hours: 260 }
-    let!(:other_customer_active_project) { Fabricate :project, company: company, team: team, start_date: 4.weeks.ago, customers: [product.customer], products: [product], status: :executing, qty_hours: 300 }
+    let!(:active_project) { Fabricate :project, company: company, team: team, start_date: 4.weeks.ago, end_date: 4.days.from_now, customers: [customer], products: [product], status: :executing, qty_hours: 200 }
+    let!(:other_active_project) { Fabricate :project, company: company, team: team, start_date: 4.weeks.ago, end_date: 4.days.from_now, customers: [customer], products: [product], status: :executing, qty_hours: 260 }
+    let!(:other_customer_active_project) { Fabricate :project, company: company, team: team, start_date: 4.weeks.ago, end_date: 4.days.from_now, customers: [product.customer], products: [product], status: :executing, qty_hours: 300 }
 
     let!(:waiting_project) { Fabricate :project, company: company, start_date: 4.weeks.ago, customers: [customer], products: [product], status: :waiting, qty_hours: 872 }
     let!(:finished_project) { Fabricate :project, company: company, start_date: 4.weeks.ago, customers: [customer], products: [product], status: :finished }

@@ -104,7 +104,7 @@ RSpec.describe Product, type: :model do
     include_context 'consolidations variables data for product'
     it 'computes the pressure' do
       travel_to Time.zone.local(2018, 11, 14, 10, 0, 0) do
-        expect(product.total_flow_pressure).to eq 0.0015527950310559005
+        expect(product.total_flow_pressure).to be_within(0.001).of(0.0015527950310559005)
       end
     end
   end

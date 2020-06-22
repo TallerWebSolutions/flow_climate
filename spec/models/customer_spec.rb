@@ -120,11 +120,12 @@ RSpec.describe Customer, type: :model do
     let(:customer) { Fabricate :customer, company: company }
     let(:other_customer) { Fabricate :customer, company: company }
 
-    let!(:first_project) { Fabricate :project, customers: [customer], status: :executing }
-    let!(:second_project) { Fabricate :project, customers: [customer, other_customer], status: :waiting }
-    let!(:third_project) { Fabricate :project, customers: [customer], status: :waiting }
-    let!(:fourth_project) { Fabricate :project, customers: [customer], status: :finished }
-    let!(:fifth_project) { Fabricate :project, customers: [other_customer], status: :finished }
+    let!(:first_project) { Fabricate :project, customers: [customer], status: :executing, start_date: 2.days.ago, end_date: 4.days.from_now }
+    let!(:second_project) { Fabricate :project, customers: [customer, other_customer], status: :waiting, start_date: 2.days.from_now, end_date: 4.days.from_now }
+    let!(:third_project) { Fabricate :project, customers: [customer], status: :waiting, start_date: 3.days.from_now, end_date: 8.days.from_now }
+    let!(:fourth_project) { Fabricate :project, customers: [customer], status: :finished, start_date: 2.days.ago, end_date: 1.day.ago }
+    let!(:fifth_project) { Fabricate :project, customers: [customer], status: :executing, start_date: 2.days.ago, end_date: 1.day.ago }
+    let!(:sixth_project) { Fabricate :project, customers: [other_customer], status: :executing, start_date: 3.days.ago, end_date: 2.days.from_now }
 
     it { expect(customer.active_exclusive_projects).to match_array [first_project, third_project] }
   end

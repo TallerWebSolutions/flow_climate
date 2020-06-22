@@ -70,7 +70,7 @@ class Project < ApplicationRecord
   scope :waiting_projects_starting_within_week, -> { waiting.where('EXTRACT(week FROM projects.start_date) = :week AND EXTRACT(year FROM projects.start_date) = :year', week: Time.zone.today.cweek, year: Time.zone.today.cwyear) }
   scope :running_projects_finishing_within_week, -> { running.where('EXTRACT(week FROM projects.end_date) = :week AND EXTRACT(year FROM projects.end_date) = :year', week: Time.zone.today.cweek, year: Time.zone.today.cwyear) }
   scope :running, -> { where('(projects.status = 1 OR projects.status = 2) AND projects.start_date <= :limit_date', limit_date: Time.zone.today) }
-  scope :active, -> { where('(projects.status = 0 OR projects.status = 1 OR  projects.status = 2) AND projects.start_date <= :limit_date', limit_date: Time.zone.today) }
+  scope :active, -> { where('(projects.status = 0 OR projects.status = 1 OR  projects.status = 2) AND projects.end_date >= :limit_date', limit_date: Time.zone.today) }
   scope :active_in_period, ->(start_period, end_period) { where('(projects.start_date <= :start_period AND projects.end_date >= :start_period) OR (projects.start_date >= :start_period AND projects.start_date <= :end_period)', start_period: start_period, end_period: end_period) }
   scope :finishing_after, ->(date) { where('projects.end_date >= :end_date', end_date: date) }
 

@@ -75,9 +75,17 @@ class ChartsController < AuthenticatedController
   end
 
   def assign_filter_parameters_to_charts
-    @start_date = params[:start_date]&.to_date || [@projects.map(&:start_date).min, 3.months.ago.to_date].compact.max
-    @end_date = params[:end_date]&.to_date || @projects.map(&:end_date).max
+    @start_date = start_date
+    @end_date = end_date
     @period = params[:period] || 'month'
+  end
+
+  def end_date
+    params[:end_date]&.to_date || @projects.map(&:end_date).max
+  end
+
+  def start_date
+    params[:start_date]&.to_date || [@projects.map(&:start_date).min, 3.months.ago.to_date].compact.max
   end
 
   def assign_leadtime_confidence
