@@ -128,7 +128,7 @@ RSpec.describe Project, type: :model do
     end
 
     describe '.active' do
-      it { expect(described_class.active).to match_array [first_project, second_project, third_project, fourth_project] }
+      it { expect(described_class.active).to match_array [first_project, third_project, fourth_project, seventh_project] }
     end
 
     describe '.finishing_after' do
