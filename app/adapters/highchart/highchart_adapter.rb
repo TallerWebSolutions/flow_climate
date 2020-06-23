@@ -9,7 +9,8 @@ module Highchart
       @start_date = start_of_period_for_date(start_date)
       @end_date = end_of_period_for_date(end_date)
 
-      @all_projects = search_projects_by_dates(demands.map(&:project_id))
+      @all_projects = []
+      @all_projects = search_projects_by_dates(demands.map(&:project_id)) if demands.present?
 
       @demands_list = demands.where('(demands.end_date IS NOT NULL AND demands.end_date >= :base_date) OR (demands.commitment_date IS NOT NULL AND demands.commitment_date >= :base_date) OR (demands.created_date IS NOT NULL AND demands.created_date >= :base_date)', base_date: start_date).order(:end_date)
 

@@ -24,8 +24,8 @@ class ProjectConsolidationJob < ApplicationJob
       team_work_item_flow_information = Flow::WorkItemFlowInformations.new(team.demands.kept, team.projects.map(&:initial_scope).compact.sum, x_axis.length, x_axis.last)
 
       x_axis.each_with_index do |analysed_date, distribution_index|
-        project_work_item_flow_information.work_items_flow_behaviour(x_axis.first, analysed_date, distribution_index)
-        team_work_item_flow_information.work_items_flow_behaviour(x_axis.first, analysed_date, distribution_index)
+        project_work_item_flow_information.work_items_flow_behaviour(x_axis.first, analysed_date, distribution_index, true)
+        team_work_item_flow_information.work_items_flow_behaviour(x_axis.first, analysed_date, distribution_index, true)
       end
 
       project_based_montecarlo_durations = Stats::StatisticsService.instance.run_montecarlo(project.remaining_backlog(end_of_week), project_work_item_flow_information.throughput_array_for_monte_carlo.last(10), 500)

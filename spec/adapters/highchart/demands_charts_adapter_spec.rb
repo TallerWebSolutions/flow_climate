@@ -25,13 +25,11 @@ RSpec.describe Highchart::DemandsChartsAdapter, type: :data_object do
     let(:daily_demands_chart_adapter) { described_class.new(Demand.all, start_date, end_date, 'day') }
     let(:weekly_demands_chart_adapter) { described_class.new(Demand.all, start_date, end_date, 'week') }
     let(:monthly_demands_chart_adapter) { described_class.new(Demand.all, start_date, end_date, 'month') }
-    let(:yearly_demands_chart_adapter) { described_class.new(Demand.all, start_date, end_date, 'year') }
 
     describe '#x_axis' do
       it { expect(daily_demands_chart_adapter.x_axis).to eq TimeService.instance.days_between_of(Date.new(2018, 3, 3), Date.new(2018, 9, 3)) }
       it { expect(weekly_demands_chart_adapter.x_axis).to eq TimeService.instance.weeks_between_of(Date.new(2018, 3, 4), Date.new(2018, 9, 9)) }
       it { expect(monthly_demands_chart_adapter.x_axis).to eq TimeService.instance.months_between_of(Date.new(2018, 3, 4), Date.new(2018, 9, 9)) }
-      it { expect(yearly_demands_chart_adapter.x_axis).to eq TimeService.instance.years_between_of(Date.new(2018, 3, 4), Date.new(2018, 9, 9)) }
     end
 
     describe '#throughput_chart_data' do
@@ -39,7 +37,6 @@ RSpec.describe Highchart::DemandsChartsAdapter, type: :data_object do
         expect(daily_demands_chart_adapter.throughput_chart_data).to eq [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1]
         expect(weekly_demands_chart_adapter.throughput_chart_data).to eq [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1]
         expect(monthly_demands_chart_adapter.throughput_chart_data).to eq [0, 0, 0, 2, 1, 1, 1]
-        expect(yearly_demands_chart_adapter.throughput_chart_data).to eq [5]
       end
     end
 
@@ -48,7 +45,6 @@ RSpec.describe Highchart::DemandsChartsAdapter, type: :data_object do
         expect(daily_demands_chart_adapter.creation_chart_data).to eq [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0]
         expect(weekly_demands_chart_adapter.creation_chart_data).to eq [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0]
         expect(monthly_demands_chart_adapter.creation_chart_data).to eq [0, 0, 0, 0, 0, 5, 0]
-        expect(yearly_demands_chart_adapter.creation_chart_data).to eq [5]
       end
     end
 
@@ -57,7 +53,6 @@ RSpec.describe Highchart::DemandsChartsAdapter, type: :data_object do
         expect(daily_demands_chart_adapter.committed_chart_data).to eq [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         expect(weekly_demands_chart_adapter.committed_chart_data).to eq [0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         expect(monthly_demands_chart_adapter.committed_chart_data).to eq [0, 1, 1, 1, 2, 0, 0]
-        expect(yearly_demands_chart_adapter.committed_chart_data).to eq [5]
       end
     end
 

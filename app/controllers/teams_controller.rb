@@ -200,8 +200,8 @@ class TeamsController < AuthenticatedController
 
   def build_chart_objects
     @array_of_dates.each_with_index do |analysed_date, distribution_index|
-      @work_item_flow_information.work_items_flow_behaviour(@array_of_dates.first.beginning_of_week, analysed_date, distribution_index)
-      @work_item_flow_information.build_cfd_hash(@array_of_dates.first.beginning_of_week, analysed_date) if add_data?(analysed_date)
+      @work_item_flow_information.work_items_flow_behaviour(@array_of_dates.first.beginning_of_week, analysed_date, distribution_index, add_data?(analysed_date))
+      @work_item_flow_information.build_cfd_hash(@array_of_dates.first.beginning_of_week, analysed_date)
       @statistics_flow_information.statistics_flow_behaviour(analysed_date) if add_data?(analysed_date)
       @time_flow_information.hours_flow_behaviour(analysed_date) if add_data?(analysed_date)
     end

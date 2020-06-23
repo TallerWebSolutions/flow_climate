@@ -2,7 +2,7 @@
 
 module Flow
   class WorkItemFlowInformations < SystemFlowInformation
-    attr_reader :start_population_date, :scope_per_period, :ideal_per_period, :throughput_per_period, :accumulated_throughput,
+    attr_reader :scope_per_period, :ideal_per_period, :throughput_per_period, :accumulated_throughput,
                 :products_throughput_per_period, :accumulated_products_throughput, :accumulated_bugs_opened_data_array,
                 :accumulated_bugs_closed_data_array, :bugs_opened_data_array, :bugs_closed_data_array, :bugs_share_data_array,
                 :upstream_total_delivered, :upstream_delivered_per_period, :downstream_total_delivered, :downstream_delivered_per_period,
@@ -23,7 +23,7 @@ module Flow
       @stages = teams.last.stages.downstream.where('stages.order >= 0').order(:order)
     end
 
-    def work_items_flow_behaviour(start_population_date, analysed_date, distribution_index)
+    def work_items_flow_behaviour(start_population_date, analysed_date, distribution_index, add_data_to_chart)
       return if demands.blank?
 
       demands_in_period = DemandsRepository.instance.known_scope_to_date(@demands_ids, analysed_date) # query
@@ -32,8 +32,8 @@ module Flow
       @scope_per_period << demands_in_period.count + @uncertain_scope
       build_ideal_burn_segment(distribution_index)
 
-      build_flow_data(start_population_date, analysed_date, demands_in_period) if analysed_date <= @current_limit_date
-      build_products_flow_data(start_population_date, analysed_date, demands_in_product) if analysed_date <= @current_limit_date
+      build_flow_data(start_population_date, analysed_date, demands_in_period) if add_data_to_chart == true
+      build_products_flow_data(start_population_date, analysed_date, demands_in_product) if add_data_to_chart == true
     end
 
     def build_cfd_hash(start_population_date, analysed_date)

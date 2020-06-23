@@ -81,11 +81,18 @@ class ChartsController < AuthenticatedController
   end
 
   def end_date
-    params[:end_date]&.to_date || @projects.map(&:end_date).max
+    params[:end_date]&.to_date || @projects.map(&:end_date).max || Time.zone.today
   end
 
   def start_date
-    params[:start_date]&.to_date || [@projects.map(&:start_date).min, 3.months.ago.to_date].compact.max
+    start_of_period_for_date(params[:start_date]&.to_date || [@projects.map(&:start_date).min, 3.months.ago.to_date].compact.max)
+  end
+
+  def start_of_period_for_date(date)
+    return date.beginning_of_day if @period == 'day'
+    return date.beginning_of_week if @period == 'week'
+
+    date.beginning_of_month
   end
 
   def assign_leadtime_confidence
