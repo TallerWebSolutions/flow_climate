@@ -79,7 +79,6 @@ RSpec.describe Flow::WorkItemFlowInformations, type: :model do
       it 'assigns the correct information' do
         item_flow_info = described_class.new(Demand.all, 10, dates_array.length, dates_array.last)
         expect(item_flow_info.demands).to match_array Demand.all
-        expect(item_flow_info.current_limit_date).to eq Time.zone.today.end_of_week
         expect(item_flow_info.uncertain_scope).to eq 10
         expect(item_flow_info.current_scope).to eq 22
         expect(item_flow_info.period_size).to eq 12.0
@@ -142,7 +141,6 @@ RSpec.describe Flow::WorkItemFlowInformations, type: :model do
         item_flow_info.work_items_flow_behaviour(dates_array.first, dates_array.first, 0, true)
 
         expect(item_flow_info.demands).to eq []
-        expect(item_flow_info.current_limit_date).to eq Time.zone.today.end_of_week
 
         expect(item_flow_info.scope_per_period).to eq []
         expect(item_flow_info.ideal_per_period).to eq []

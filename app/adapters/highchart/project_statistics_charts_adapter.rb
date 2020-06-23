@@ -26,8 +26,8 @@ module Highchart
       @x_axis.each do |x_axis_date|
         break unless add_data_to_chart?(x_axis_date)
 
-        start_date = start_of_period_for_date(x_axis_date)
-        end_date = end_of_period_for_date(x_axis_date)
+        start_date = TimeService.instance.start_of_period_for_date(x_axis_date, @chart_period_interval)
+        end_date = TimeService.instance.end_of_period_for_date(x_axis_date, @chart_period_interval)
 
         accumulated_leadtime_in_time << build_accumulated_lead_time(confidence, end_date)
         leadtime_in_week << build_lead_time_in_period(confidence, end_date, start_date)
@@ -42,7 +42,7 @@ module Highchart
       @x_axis.each do |x_axis_date|
         break unless add_data_to_chart?(x_axis_date)
 
-        end_date = end_of_period_for_date(x_axis_date)
+        end_date = TimeService.instance.end_of_period_for_date(x_axis_date, @chart_period_interval)
 
         accumulated_block_in_time << DemandBlocksRepository.instance.accumulated_blocks_to_date(@projects, end_date)
       end

@@ -53,7 +53,7 @@ module Highchart
       return [] if teams.count != 1
 
       stages = teams.first.stages.downstream.where('stages.order >= 0').order(:order)
-      demands_stages_count = build_cfd_hash(demands.map(&:id), stages, end_of_period_for_date(Time.zone.today))
+      demands_stages_count = build_cfd_hash(demands.map(&:id), stages, TimeService.instance.end_of_period_for_date(Time.zone.today, @chart_period_interval))
 
       demands_stages_count.map { |key, value| { name: key, data: value } } # build the chart
     end

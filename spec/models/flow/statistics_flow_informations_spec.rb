@@ -80,7 +80,6 @@ RSpec.describe Flow::StatisticsFlowInformations, type: :model do
         stats_flow_info = described_class.new(Demand.all)
 
         expect(stats_flow_info.demands).to match_array Demand.all
-        expect(stats_flow_info.current_limit_date).to eq Time.zone.today.end_of_week
         expect(stats_flow_info.demands_charts_ids).to match_array %w[first_demand third_bug second_bug first_bug fourth_bug seventh_demand third_demand second_demand sixth_demand]
         expect(stats_flow_info.lead_time_bins).to eq [73.75, 220.18, 366.6]
         expect(stats_flow_info.lead_time_95p).to eq 430.21474537037034
@@ -107,7 +106,6 @@ RSpec.describe Flow::StatisticsFlowInformations, type: :model do
         stats_flow_info = described_class.new(Demand.all)
 
         expect(stats_flow_info.demands).to eq []
-        expect(stats_flow_info.current_limit_date).to eq Time.zone.today.end_of_week
         expect(stats_flow_info.lead_time_bins).to eq []
         expect(stats_flow_info.lead_time_histogram_data).to eq []
         expect(stats_flow_info.demands_charts_ids).to eq []

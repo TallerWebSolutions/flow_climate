@@ -86,52 +86,61 @@ RSpec.describe TimeService, type: :service do
     end
   end
 
-  describe '#years_between_of' do
-    it 'returns the months between the dates' do
-      start_date = Date.new(2018, 7, 15)
-      end_date = Date.new(2019, 8, 21)
-
-      years = described_class.instance.years_between_of(start_date, end_date)
-
-      expect(years).to eq [Date.new(2018, 12, 31), Date.new(2019, 12, 31)]
-    end
-  end
-
   describe '#add_weeks_to_today' do
-    before { travel_to Date.new(2018, 8, 30) }
-
-    after { travel_back }
-
     it 'returns the new date x weeks later than today' do
-      control_date_5_weeks_later = described_class.instance.add_weeks_to_today(5)
+      travel_to Date.new(2018, 8, 30) do
+        control_date_5_weeks_later = described_class.instance.add_weeks_to_today(5)
 
-      expect(control_date_5_weeks_later).to eq Date.new(2018, 10, 4)
+        expect(control_date_5_weeks_later).to eq Date.new(2018, 10, 4)
+      end
     end
   end
 
-  describe '#limit_date_to_period' do
-    before { travel_to Date.new(2018, 8, 30) }
+  describe '#start_of_period_for_date' do
+    it 'returns the the start period based on the period variable' do
+      start_of_period = described_class.instance.start_of_period_for_date(Time.zone.today)
 
-    after { travel_back }
+      expect(start_of_period).to eq Time.zone.today.beginning_of_month
 
-    context 'for period all' do
-      it { expect(described_class.instance.limit_date_to_period('all')).to be_nil }
+      start_of_period = described_class.instance.start_of_period_for_date(Time.zone.today, 'month')
+
+      expect(start_of_period).to eq Time.zone.today.beginning_of_month
+
+      start_of_period = described_class.instance.start_of_period_for_date(Time.zone.today, 'day')
+
+      expect(start_of_period).to eq Time.zone.today.beginning_of_day
+
+      start_of_period = described_class.instance.start_of_period_for_date(Time.zone.today, 'week')
+
+      expect(start_of_period).to eq Time.zone.today.beginning_of_week
+
+      start_of_period = described_class.instance.start_of_period_for_date(Time.zone.today, 'foo')
+
+      expect(start_of_period).to eq Time.zone.today.beginning_of_month
     end
+  end
 
-    context 'for period quarter' do
-      it { expect(described_class.instance.limit_date_to_period('quarter')).to be_within(1.minute).of(3.months.ago) }
-    end
+  describe '#end_of_period_for_date' do
+    it 'returns the the start period based on the period variable' do
+      start_of_period = described_class.instance.end_of_period_for_date(Time.zone.today)
 
-    context 'for period month' do
-      it { expect(described_class.instance.limit_date_to_period('month')).to be_within(1.minute).of(1.month.ago) }
-    end
+      expect(start_of_period).to eq Time.zone.today.end_of_month
 
-    context 'for period week' do
-      it { expect(described_class.instance.limit_date_to_period('week')).to be_within(1.minute).of(1.week.ago) }
-    end
+      start_of_period = described_class.instance.end_of_period_for_date(Time.zone.today, 'month')
 
-    context 'for period nil' do
-      it { expect(described_class.instance.limit_date_to_period(nil)).to be_within(1.minute).of(1.week.ago) }
+      expect(start_of_period).to eq Time.zone.today.end_of_month
+
+      start_of_period = described_class.instance.end_of_period_for_date(Time.zone.today, 'day')
+
+      expect(start_of_period).to eq Time.zone.today.end_of_day
+
+      start_of_period = described_class.instance.end_of_period_for_date(Time.zone.today, 'week')
+
+      expect(start_of_period).to eq Time.zone.today.end_of_week
+
+      start_of_period = described_class.instance.end_of_period_for_date(Time.zone.today, 'foo')
+
+      expect(start_of_period).to eq Time.zone.today.end_of_month
     end
   end
 end

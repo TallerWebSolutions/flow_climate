@@ -6,8 +6,8 @@ module Highchart
 
     def initialize(demands, start_date, end_date, chart_period_interval)
       @chart_period_interval = chart_period_interval
-      @start_date = start_of_period_for_date(start_date)
-      @end_date = end_of_period_for_date(end_date)
+      @start_date = TimeService.instance.start_of_period_for_date(start_date, @chart_period_interval)
+      @end_date = TimeService.instance.end_of_period_for_date(end_date, @chart_period_interval)
 
       @all_projects = []
       @all_projects = search_projects_by_dates(demands.map(&:project_id)) if demands.present?
@@ -52,20 +52,6 @@ module Highchart
       @x_axis = TimeService.instance.months_between_of(@start_date, @end_date) if monthly?
 
       @x_axis_index = @x_axis.map { |value| @x_axis.find_index(value) + 1 }.flatten
-    end
-
-    def start_of_period_for_date(date)
-      return date.beginning_of_day if daily?
-      return date.beginning_of_week if weekly?
-
-      date.beginning_of_month
-    end
-
-    def end_of_period_for_date(date)
-      return date.end_of_day if daily?
-      return date.end_of_week if weekly?
-
-      date.end_of_month
     end
 
     def add_data_to_chart?(date)

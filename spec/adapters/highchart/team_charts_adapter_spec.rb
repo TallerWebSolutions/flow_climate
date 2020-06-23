@@ -45,7 +45,8 @@ RSpec.describe Highchart::TeamChartsAdapter, type: :service do
         it 'builds the data structure for average_demand_cost dayly' do
           team_chart_data = described_class.new(team, second_project.start_date, second_project.end_date, 'day')
 
-          expect(team_chart_data.average_demand_cost).to eq(data: [333.3333333333333, 333.3333333333333, 333.3333333333333, 333.3333333333333, 333.3333333333333, 333.3333333333333, 333.3333333333333, 333.3333333333333, 333.3333333333333, 333.3333333333333], x_axis: TimeService.instance.days_between_of(second_project.start_date, second_project.end_date))
+          expect(team_chart_data.average_demand_cost[:data]).to eq [333.3333333333333, 333.3333333333333, 333.3333333333333, 333.3333333333333, 333.3333333333333, 333.3333333333333, 333.3333333333333, 333.3333333333333, 333.3333333333333, 333.3333333333333]
+          expect(team_chart_data.average_demand_cost[:x_axis]).to eq TimeService.instance.days_between_of(second_project.start_date.end_of_day, second_project.end_date.end_of_day).map(&:end_of_day)
         end
       end
     end
@@ -94,7 +95,7 @@ RSpec.describe Highchart::TeamChartsAdapter, type: :service do
         it 'builds the data structure for average_demand_cost dayly' do
           team_chart_data = described_class.new(team, 15.days.ago.to_date, Time.zone.today, 'day')
 
-          expect(team_chart_data.hours_efficiency[:x_axis]).to eq(TimeService.instance.days_between_of(15.days.ago.to_date, Time.zone.today))
+          expect(team_chart_data.hours_efficiency[:x_axis]).to eq(TimeService.instance.days_between_of(15.days.ago.to_date, Time.zone.today).map(&:end_of_day))
           expect(team_chart_data.hours_efficiency[:y_axis][0][:name]).to eq I18n.t('teams.charts.available_hours.data_legend')
           expect(team_chart_data.hours_efficiency[:y_axis][0][:data]).to eq([0.6666666666666666, 0.6666666666666666, 0.6666666666666666, 0.6666666666666666, 0.6666666666666666, 0.6666666666666666, 0.6666666666666666, 0.6666666666666666, 0.6666666666666666, 0.6666666666666666, 0.6666666666666666, 0.6666666666666666, 0.6666666666666666, 0.6666666666666666, 0.6666666666666666, 0.6666666666666666])
         end

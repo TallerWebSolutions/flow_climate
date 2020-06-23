@@ -33,29 +33,22 @@ class TimeService
     compute_dates(min_date, max_date, 1.month, :end_of_month)
   end
 
-  def years_between_of(start_date, end_date)
-    return [] if start_date.blank? || end_date.blank?
+  def start_of_period_for_date(date, period = 'month')
+    return date.beginning_of_day if period == 'day'
+    return date.beginning_of_week if period == 'week'
 
-    min_date = start_date.end_of_year.to_date
-    max_date = end_date.end_of_year.to_date
+    date.beginning_of_month
+  end
 
-    compute_dates(min_date, max_date, 1.year, :end_of_year)
+  def end_of_period_for_date(date, period = 'month')
+    return date.end_of_day if period == 'day'
+    return date.end_of_week if period == 'week'
+
+    date.end_of_month
   end
 
   def add_weeks_to_today(weeks)
     Time.zone.today + weeks.weeks
-  end
-
-  def limit_date_to_period(period, base_date = Time.zone.now)
-    if period == 'all'
-      nil
-    elsif period == 'quarter'
-      base_date - 3.months
-    elsif period == 'month'
-      base_date - 1.month
-    else
-      base_date - 1.week
-    end
   end
 
   private

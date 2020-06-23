@@ -79,7 +79,6 @@ RSpec.describe Flow::BlockFlowInformations, type: :model do
       it 'assigns the correct information' do
         block_flow_info = described_class.new(Demand.all)
         expect(block_flow_info.demands).to match_array Demand.all
-        expect(block_flow_info.current_limit_date).to eq Time.zone.today.end_of_week
 
         block_flow_info.blocks_flow_behaviour(dates_array.first)
         expect(block_flow_info.blocks_count).to eq [1]
@@ -98,7 +97,6 @@ RSpec.describe Flow::BlockFlowInformations, type: :model do
         block_flow_info = described_class.new(Demand.all)
 
         expect(block_flow_info.demands).to eq []
-        expect(block_flow_info.current_limit_date).to eq Time.zone.today.end_of_week
 
         expect(block_flow_info.blocks_count).to eq []
         expect(block_flow_info.blocks_time).to eq []

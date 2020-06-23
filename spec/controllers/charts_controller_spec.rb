@@ -169,7 +169,7 @@ RSpec.describe ChartsController, type: :controller do
                   expect(response).to render_template 'charts/_statistics_charts'
 
                   expect(assigns(:start_date)).to eq Date.new(2018, 3, 1)
-                  expect(assigns(:end_date)).to eq Date.new(2018, 4, 7)
+                  expect(assigns(:end_date)).to eq Date.new(2018, 4, 30)
                   expect(assigns(:period)).to eq 'month'
                   expect(assigns(:leadtime_confidence)).to eq 80
 
@@ -193,7 +193,7 @@ RSpec.describe ChartsController, type: :controller do
                   get :statistics_charts, params: { company_id: company, projects_ids: team.projects.map(&:id).join(','), project_status: '' }, xhr: true
 
                   expect(assigns(:start_date)).to eq Date.new(2018, 1, 1)
-                  expect(assigns(:end_date)).to eq Date.new(2018, 4, 7)
+                  expect(assigns(:end_date)).to eq Date.new(2018, 4, 30)
                   expect(assigns(:period)).to eq 'month'
                   expect(assigns(:leadtime_confidence)).to eq 80
                 end
