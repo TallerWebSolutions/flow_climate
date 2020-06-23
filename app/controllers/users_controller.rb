@@ -121,15 +121,23 @@ class UsersController < AuthenticatedController
   def assign_stats_info
     user_demands = @user.demands
 
-    start_date = user_demands.map(&:end_date).compact.min
+    @array_of_dates = TimeService.instance.months_between_of(start_date(user_demands), Time.zone.today.end_of_month)
 
-    @array_of_dates = TimeService.instance.months_between_of(start_date, Time.zone.today.end_of_month)
-
-    @demands_chart_adapter = Highchart::DemandsChartsAdapter.new(@member_demands, start_date, Time.zone.today, 'month')
+    @demands_chart_adapter = Highchart::DemandsChartsAdapter.new(member_demands, start_date(user_demands), Time.zone.today, 'month')
 
     @statistics_information = Flow::StatisticsFlowInformations.new(user_demands)
 
     @array_of_dates.each { |analysed_date| @statistics_information.statistics_flow_behaviour(analysed_date) }
+  end
+
+  def start_date(user_demands)
+    user_demands.map(&:end_date).compact.min || Time.zone.now
+  end
+
+  def member_demands
+    member_demands = Demand.none
+    member_demands = Demand.where(id: @user.team_member.demands_for_role) if @user.team_member.present?
+    member_demands
   end
 
   def user_params

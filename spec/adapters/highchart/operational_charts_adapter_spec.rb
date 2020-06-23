@@ -97,7 +97,7 @@ RSpec.describe Highchart::OperationalChartsAdapter, type: :data_object do
               expect(report_data.all_projects).to match_array [first_project, second_project, third_project]
               expect(report_data.x_axis).to eq TimeService.instance.months_between_of(Date.new(2018, 2, 4), Date.new(2018, 5, 13))
               expect(report_data.work_item_flow_information.ideal_per_period).to eq [10.0, 20.0, 30.0, 40.0]
-              expect(report_data.work_item_flow_information.accumulated_throughput).to eq [0, 0, 1, 4]
+              expect(report_data.work_item_flow_information.accumulated_throughput).to eq [1, 1, 2, 5]
               expect(report_data.work_item_flow_information.scope_per_period).to eq [40, 40, 40, 40]
               expect(report_data.scope_uncertainty).to eq [{ name: I18n.t('charts.scope.uncertainty'), y: 30 }, { name: I18n.t('charts.scope.created'), y: 11 }]
             end

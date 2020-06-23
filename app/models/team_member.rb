@@ -71,6 +71,6 @@ class TeamMember < ApplicationRecord
   end
 
   def demands_for_role
-    Demand.where(id: memberships.map(&:demands_for_role).flatten.uniq.map(&:id))
+    Demand.where(id: memberships.map(&:demands_for_role).flatten.uniq.map(&:id)) || []
   end
 end

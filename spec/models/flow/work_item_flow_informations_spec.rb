@@ -84,7 +84,7 @@ RSpec.describe Flow::WorkItemFlowInformations, type: :model do
         expect(item_flow_info.current_scope).to eq 22
         expect(item_flow_info.period_size).to eq 12.0
 
-        item_flow_info.work_items_flow_behaviour(dates_array.first, dates_array.first, 0)
+        item_flow_info.work_items_flow_behaviour(dates_array.first, dates_array.first, 0, true)
         expect(item_flow_info.scope_per_period).to eq [22]
         expect(item_flow_info.ideal_per_period).to eq [1.8333333333333333]
         expect(item_flow_info.throughput_per_period).to eq [0]
@@ -99,9 +99,24 @@ RSpec.describe Flow::WorkItemFlowInformations, type: :model do
         expect(item_flow_info.downstream_total_delivered).to eq [0]
         expect(item_flow_info.downstream_delivered_per_period).to eq [0]
 
-        item_flow_info.work_items_flow_behaviour(dates_array.first, dates_array.second, 1)
+        item_flow_info.work_items_flow_behaviour(dates_array.first, dates_array.second, 1, true)
         expect(item_flow_info.scope_per_period).to eq [22, 22]
         expect(item_flow_info.ideal_per_period).to eq [1.8333333333333333, 3.6666666666666665]
+        expect(item_flow_info.throughput_per_period).to eq [0, 1]
+        expect(item_flow_info.accumulated_throughput).to eq [0, 1]
+        expect(item_flow_info.accumulated_bugs_opened_data_array).to eq [4, 4]
+        expect(item_flow_info.accumulated_bugs_closed_data_array).to eq [0, 0]
+        expect(item_flow_info.bugs_opened_data_array).to eq [4, 0]
+        expect(item_flow_info.bugs_closed_data_array).to eq [0, 0]
+        expect(item_flow_info.bugs_share_data_array).to eq [33.33333333333333, 33.33333333333333]
+        expect(item_flow_info.upstream_total_delivered).to eq [0, 0]
+        expect(item_flow_info.upstream_delivered_per_period).to eq [0, 0]
+        expect(item_flow_info.downstream_total_delivered).to eq [0, 1]
+        expect(item_flow_info.downstream_delivered_per_period).to eq [0, 1]
+
+        item_flow_info.work_items_flow_behaviour(dates_array.first, dates_array.second, 1, false)
+        expect(item_flow_info.scope_per_period).to eq [22, 22, 22]
+        expect(item_flow_info.ideal_per_period).to eq [1.8333333333333333, 3.6666666666666665, 3.6666666666666665]
         expect(item_flow_info.throughput_per_period).to eq [0, 1]
         expect(item_flow_info.accumulated_throughput).to eq [0, 1]
         expect(item_flow_info.accumulated_bugs_opened_data_array).to eq [4, 4]
@@ -124,7 +139,7 @@ RSpec.describe Flow::WorkItemFlowInformations, type: :model do
       it 'assigns the correct information' do
         item_flow_info = described_class.new(Demand.all, 10, dates_array.length, dates_array.last)
 
-        item_flow_info.work_items_flow_behaviour(dates_array.first, dates_array.first, 0)
+        item_flow_info.work_items_flow_behaviour(dates_array.first, dates_array.first, 0, true)
 
         expect(item_flow_info.demands).to eq []
         expect(item_flow_info.current_limit_date).to eq Time.zone.today.end_of_week

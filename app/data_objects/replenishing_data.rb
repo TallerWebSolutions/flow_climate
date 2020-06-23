@@ -103,7 +103,7 @@ class ReplenishingData
     work_item_flow_information = Flow::WorkItemFlowInformations.new(demands, initial_scope, dates_array.length, dates_array.last)
 
     dates_array.each_with_index do |analysed_date, distribution_index|
-      work_item_flow_information.work_items_flow_behaviour(dates_array.first, analysed_date, distribution_index)
+      work_item_flow_information.work_items_flow_behaviour(dates_array.first, analysed_date, distribution_index, true)
     end
     @throughput_per_period_array = work_item_flow_information.throughput_per_period
   end

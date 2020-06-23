@@ -30,8 +30,8 @@ module Highchart
     end
 
     def build_data_objects(analysed_date, distribution_index)
-      @work_item_flow_information.work_items_flow_behaviour(@x_axis.first, analysed_date, distribution_index)
-      @work_item_flow_information.build_cfd_hash(@x_axis.first, analysed_date) if add_data_to_chart?(analysed_date)
+      @work_item_flow_information.work_items_flow_behaviour(@start_date, analysed_date, distribution_index, add_data_to_chart?(analysed_date))
+      @work_item_flow_information.build_cfd_hash(@start_date, analysed_date) if add_data_to_chart?(analysed_date)
       @statistics_flow_information.statistics_flow_behaviour(analysed_date) if add_data_to_chart?(analysed_date)
       @time_flow_information.hours_flow_behaviour(analysed_date) if add_data_to_chart?(analysed_date)
       @block_flow_information.blocks_flow_behaviour(analysed_date) if add_data_to_chart?(analysed_date)

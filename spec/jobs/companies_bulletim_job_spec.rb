@@ -24,7 +24,6 @@ RSpec.describe CompaniesBulletimJob, type: :active_job do
         Fabricate :project, company: company, customers: [customer], start_date: 1.month.ago, end_date: Time.zone.today
         Fabricate :project, company: company, customers: [customer], start_date: 2.days.ago, end_date: Time.zone.today
 
-        allow(Time.zone).to receive(:today).and_return Time.zone.today.beginning_of_week + 1.day
         expect(UserNotifierMailer).to receive(:company_weekly_bulletin).with(company.users, company).once
         described_class.perform_now
       end

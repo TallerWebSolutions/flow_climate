@@ -100,7 +100,7 @@ module Highchart
 
     def build_demand_data_processors
       @x_axis.each_with_index do |analysed_date, distribution_index|
-        @work_item_flow_information.work_items_flow_behaviour(@x_axis.first, analysed_date, distribution_index)
+        @work_item_flow_information.work_items_flow_behaviour(@x_axis.first, analysed_date, distribution_index, add_data_to_chart?(analysed_date))
         @work_item_flow_information.build_cfd_hash(@x_axis.first, analysed_date) if analysed_date <= Time.zone.today.end_of_week
       end
     end
