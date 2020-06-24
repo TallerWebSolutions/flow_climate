@@ -2,7 +2,7 @@
 
 module Highchart
   class OperationalChartsAdapter < HighchartAdapter
-    attr_reader :demands_burnup_data, :flow_pressure_data, :leadtime_bins, :lead_time_histogram_data,
+    attr_reader :flow_pressure_data, :leadtime_bins, :lead_time_histogram_data,
                 :queue_touch_share_hash, :average_demand_cost, :work_item_flow_information, :time_flow_information,
                 :statistics_flow_information, :block_flow_information
 

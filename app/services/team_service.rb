@@ -9,10 +9,10 @@ class TeamService
     average_demand_cost_hash = {}
 
     (start_date..end_date).each do |date|
-      start_date_to_cmd = start_of_period_for_date(date, grouping_period)
-      end_date_to_cmd = end_of_period_for_date(date, grouping_period)
+      start_date_to_cmd = TimeService.instance.start_of_period_for_date(date, grouping_period)
+      end_date_to_cmd = TimeService.instance.end_of_period_for_date(date, grouping_period)
 
-      break if end_date_to_cmd > end_of_period_for_date(Time.zone.today, grouping_period)
+      break if end_date_to_cmd > TimeService.instance.end_of_period_for_date(Time.zone.today, grouping_period)
 
       average_demand_cost = compute_average_demand_cost_to_all_costs(team, demands, start_date_to_cmd, end_date_to_cmd, grouping_period)
 
@@ -37,10 +37,10 @@ class TeamService
     hours_efficiency_hash = {}
 
     (start_date..end_date).each do |date|
-      start_period = start_of_period_for_date(date, grouping_period)
-      end_period = end_of_period_for_date(date, grouping_period)
+      start_period = TimeService.instance.start_of_period_for_date(date, grouping_period)
+      end_period = TimeService.instance.end_of_period_for_date(date, grouping_period)
 
-      break if end_period > end_of_period_for_date(Time.zone.today, grouping_period)
+      break if end_period > TimeService.instance.end_of_period_for_date(Time.zone.today, grouping_period)
 
       hours_efficiency_hash[end_period] = array_of_teams.map { |team| team.available_hours_at(start_period.to_date, end_period.to_date).to_f }.sum
     end
@@ -52,10 +52,10 @@ class TeamService
     hours_consumed_hash = {}
 
     (start_date..end_date).each do |date|
-      start_date_to_hours = start_of_period_for_date(date, grouping_period)
-      end_date_to_hours = end_of_period_for_date(date, grouping_period)
+      start_date_to_hours = TimeService.instance.start_of_period_for_date(date, grouping_period)
+      end_date_to_hours = TimeService.instance.end_of_period_for_date(date, grouping_period)
 
-      break if end_date_to_hours > end_of_period_for_date(Time.zone.today, grouping_period)
+      break if end_date_to_hours > TimeService.instance.end_of_period_for_date(Time.zone.today, grouping_period)
 
       hours_consumed_hash[end_date_to_hours] = team.demands.to_end_dates(start_date_to_hours.to_date, end_date_to_hours.to_date).map(&:total_effort).sum.to_f
     end
@@ -88,20 +88,6 @@ class TeamService
     average_demand_cost = monthly_payments_array.compact.sum / fraction_of_month_to_period(grouping_period)
     average_demand_cost = (average_demand_cost / demands_count.to_f) if demands_count.positive?
     average_demand_cost
-  end
-
-  def start_of_period_for_date(date, grouping_period)
-    return date.beginning_of_day if grouping_period == 'day'
-    return date.beginning_of_week if grouping_period == 'week'
-
-    date.beginning_of_month
-  end
-
-  def end_of_period_for_date(date, grouping_period)
-    return date if grouping_period == 'day'
-    return date.end_of_week if grouping_period == 'week'
-
-    date.end_of_month
   end
 
   def fraction_of_month_to_period(grouping_period)

@@ -18,4 +18,10 @@ RSpec.describe Contract, type: :model do
     it { is_expected.to validate_presence_of :total_hours }
     it { is_expected.to validate_presence_of :renewal_period }
   end
+
+  context 'scope' do
+    pending 'active'
+  end
+
+  pending 'hour_value'
 end

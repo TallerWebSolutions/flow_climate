@@ -272,6 +272,8 @@ RSpec.describe CustomersController, type: :controller do
           expect(assigns(:contract)).to be_a_new Contract
           expect(assigns(:start_date)).to eq first_end_date
           expect(assigns(:end_date)).to eq Time.zone.today
+
+          expect(assigns(:customer_flow_information)).to be_a Flow::CustomerFlowInformation
         end
       end
 

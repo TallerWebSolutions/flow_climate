@@ -2,7 +2,7 @@
 
 module Flow
   class SystemFlowInformation
-    attr_reader :demands, :demands_ids, :demands_ids_in_products, :current_limit_date
+    attr_reader :demands, :demands_ids, :demands_ids_in_products
 
     def initialize(demands)
       start_common_attributes
@@ -26,7 +26,6 @@ module Flow
     def start_common_attributes
       @demands = Demand.none
       @demands_ids = []
-      @current_limit_date = Time.zone.today.end_of_week
     end
   end
 end

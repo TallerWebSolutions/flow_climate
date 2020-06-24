@@ -75,7 +75,6 @@ RSpec.describe Flow::TimeFlowInformations, type: :model do
       it 'assigns the correct information' do
         time_flow_info = described_class.new(Demand.all)
         expect(time_flow_info.demands).to match_array Demand.all
-        expect(time_flow_info.current_limit_date).to eq Time.zone.today.end_of_week
 
         time_flow_info.hours_flow_behaviour(dates_array.first)
         expect(time_flow_info.hours_delivered_upstream).to eq [0.0]
@@ -103,7 +102,6 @@ RSpec.describe Flow::TimeFlowInformations, type: :model do
       it 'assigns the correct information' do
         time_flow_info = described_class.new(Demand.all)
         expect(time_flow_info.demands).to eq []
-        expect(time_flow_info.current_limit_date).to eq Time.zone.today.end_of_week
 
         time_flow_info.hours_flow_behaviour(dates_array.first)
         expect(time_flow_info.hours_delivered_upstream).to eq []

@@ -12,6 +12,7 @@ class CustomersController < AuthenticatedController
     @customers = [@customer]
     @customer_dashboard_data = CustomerDashboardData.new(customer_demands)
     @demands_chart_adapter = Highchart::DemandsChartsAdapter.new(customer_demands, start_date, end_date, 'month')
+    @customer_flow_information = Flow::CustomerFlowInformation.new(@customer, 'month')
     @user_invite = UserInvite.new(invite_object_id: @customer.id, invite_type: :customer)
     @contracts = @customer.contracts.order(end_date: :desc)
     @contract = Contract.new(customer: @customer)
