@@ -602,11 +602,17 @@ en:
       no_customers_message: "You do not have teams yet."
     show:
       total_value: "Projects Total Value"
+      active_contracts:
+        one: "%{count} active contract"
+        other: "%{count} active contracts"
     add_user_to_customer:
       success: "User added"
   customer:
     edit:
       title: "Edit Customer"
+    charts:
+      contracts_cost_burnup:
+        title: "Contracts Finances Burn-up"
   demands:
     new:
       title: "Create Demand"
@@ -875,8 +881,6 @@ en:
       title: "Tags Cloud"
     hours_burnup:
       title: "Hours Burn"
-    cost_burnup:
-      title: "Cost Burn-up"
   finances_params:
     edit:
       title: "Edit Financial Information"

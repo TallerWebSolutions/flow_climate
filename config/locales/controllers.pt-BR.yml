@@ -671,11 +671,17 @@ pt-BR:
       no_customers_message: "Você ainda não tem times."
     show:
       total_value: "Valor Total em Projetos"
+      active_contracts:
+        one: "%{count} contrato ativo"
+        other: "%{count} contratos ativos"
     add_user_to_customer:
       success: "Usuário adicionado"
   customer:
     edit:
       title: "Editar Cliente"
+    charts:
+      contracts_cost_burnup:
+        title: "Burn-up Financeiro dos Contratos"
   demands:
     new:
       title: "Criar Demanda"
@@ -944,8 +950,6 @@ pt-BR:
       title: "Nuvem de Tags"
     hours_burnup:
       title: "Queima de Horas"
-    cost_burnup:
-      title: "Burn-up de custos"
   finances_params:
     edit:
       title: "Editar Informação Financeira"
