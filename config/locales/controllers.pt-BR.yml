@@ -942,6 +942,10 @@ pt-BR:
     no_data: "Sem dados suficientes"
     tags_cloud:
       title: "Nuvem de Tags"
+    hours_burnup:
+      title: "Queima de Horas"
+    cost_burnup:
+      title: "Burn-up de custos"
   finances_params:
     edit:
       title: "Editar Informação Financeira"

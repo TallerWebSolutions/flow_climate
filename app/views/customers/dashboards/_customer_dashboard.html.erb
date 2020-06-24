@@ -128,4 +128,18 @@
          data-decimals="0">
     </div>
   </div>
+
+  <div class="col-xs-6">
+    <div id="customer-hours-burnup-line"
+         class="flow-chart"
+         data-xcategories="<%= customer_flow_information.dates_array.to_json %>"
+         data-title="<%= I18n.t('charts.cost_burnup.title') %>"
+         data-ytitle="<%= I18n.t('general.money') %>"
+         data-prefix="<%= I18n.t('number.currency.format.unit') %>"
+         data-tooltipsuffix=""
+         data-datalabelsuffix=""
+         data-series="<%= customer_flow_information.build_financial_burnup.to_json %>"
+         data-decimals="2">
+    </div>
+  </div>
 </div>

@@ -63,7 +63,11 @@ function buildLineChart(lineDiv) {
                         let lastPoint = this.series.data[this.series.data.length - 1];
 
                         if ((this.point.category === firstPoint.category && this.point.y === firstPoint.y) || (this.point.category === lastPoint.category  && this.point.y === lastPoint.y)) {
-                            return `<span style='color: ${this.color}'>${lineDiv.data('prefix') + Highcharts.numberFormat(this.y, lineDiv.data("decimals"), ",", ".") + " " + lineDiv.data('datalabelsuffix')}</span>`;
+                            if (lineDiv.data('prefix')) {
+                                return `<span style='color: ${this.color}'>${lineDiv.data('prefix') + " " + Highcharts.numberFormat(this.y, lineDiv.data("decimals"), ",", ".") + " " + lineDiv.data('datalabelsuffix')}</span>`;
+                            } else {
+                                return `<span style='color: ${this.color}'>${Highcharts.numberFormat(this.y, lineDiv.data("decimals"), ",", ".") + " " + lineDiv.data('datalabelsuffix')}</span>`;
+                            }
                         }
                     }
                 }

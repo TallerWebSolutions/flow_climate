@@ -8,6 +8,8 @@ class DeviseCustomersController < ApplicationController
 
     return render 'devise_customers/home' if @customer.blank?
 
+    @customer_flow_information = Flow::CustomerFlowInformation.new(@customer, 'month')
+
     @customer_dashboard_data = CustomerDashboardData.new(customer_demands)
     @demands_chart_adapter = Highchart::DemandsChartsAdapter.new(customer_demands, start_date, end_date, 'month')
   end

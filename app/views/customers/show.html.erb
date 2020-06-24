@@ -15,7 +15,8 @@
            customer_dashboard_data: @customer_dashboard_data,
            demands_chart_adapter: @demands_chart_adapter,
            contracts: @contracts,
-           contract: @contract %>
+           contract: @contract,
+           customer_flow_information: @customer_flow_information %>
 
 <% content_for :javascript do %>
   <%= javascript_include_tag 'charts/column' %>
