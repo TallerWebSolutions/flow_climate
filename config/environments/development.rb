@@ -37,7 +37,7 @@ Rails.application.configure do
   config.log_level = ENV.fetch('LOG_LEVEL') { :debug }
 
   config.after_initialize do
-    Bullet.enable = true
+    Bullet.enable = false
     Bullet.bullet_logger = false
     Bullet.console = false
     Bullet.rails_logger = true

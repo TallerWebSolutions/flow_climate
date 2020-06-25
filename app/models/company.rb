@@ -48,14 +48,16 @@ class Company < ApplicationRecord
 
   before_save :generate_token
 
+  delegate :count, to: :active_projects, prefix: true
+
   def add_user(user)
     return if users.include?(user)
 
     users << user
   end
 
-  def active_projects_count
-    projects.active.count
+  def active_projects
+    projects.active
   end
 
   def running_projects_count

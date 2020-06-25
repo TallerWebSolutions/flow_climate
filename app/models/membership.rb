@@ -52,7 +52,7 @@ class Membership < ApplicationRecord
 
   def demands_ids
     demands_list = []
-    item_assignments.each do |assignment|
+    item_assignments.includes([:demand]).find_each do |assignment|
       stages_during_assignment = assignment.stages_during_assignment
       demands_list << assignment.demand.id if (stages_to_work_on & stages_during_assignment).present?
     end

@@ -255,9 +255,9 @@ class Demand < ApplicationRecord
 
   def stages_at(start_time, finish_time)
     if finish_time.present?
-      demand_transitions.where('((last_time_in <= :finish_time) AND (last_time_out >= :start_time)) OR (last_time_out IS NULL AND last_time_in <= :finish_time)', start_time: start_time, finish_time: finish_time).map(&:stage).uniq
+      demand_transitions.includes([:stage]).where('((last_time_in <= :finish_time) AND (last_time_out >= :start_time)) OR (last_time_out IS NULL AND last_time_in <= :finish_time)', start_time: start_time, finish_time: finish_time).map(&:stage).uniq
     else
-      demand_transitions.where('(last_time_out IS NULL) OR (last_time_out >= :start_time)', start_time: start_time, finish_time: finish_time).map(&:stage).uniq
+      demand_transitions.includes([:stage]).where('(last_time_out IS NULL) OR (last_time_out >= :start_time)', start_time: start_time, finish_time: finish_time).map(&:stage).uniq
     end
   end
 

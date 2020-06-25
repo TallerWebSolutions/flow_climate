@@ -172,7 +172,7 @@ class UsersController < AuthenticatedController
 
   def assign_active_projects_value_per_demand_info(company)
     @projects_value_per_demand = {}
-    running_projects(company).each { |project| @projects_value_per_demand[project] = project.value_per_demand }
+    running_projects(company).includes([:demands]).each { |project| @projects_value_per_demand[project] = project.value_per_demand }
   end
 
   def assign_active_projects_flow_pressure_info(company)

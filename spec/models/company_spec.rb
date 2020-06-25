@@ -1,10 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe Company, type: :model do
-  before { travel_to Time.zone.local(2018, 11, 19, 10, 0, 0) }
-
-  after { travel_back }
-
   context 'associations' do
     it { is_expected.to have_many(:users).through(:user_company_roles) }
     it { is_expected.to have_many(:user_company_roles) }
@@ -100,9 +96,39 @@ RSpec.describe Company, type: :model do
   end
 
   describe '#active_projects_count' do
-    include_context 'demands with effort for company'
+    let(:company) { Fabricate :company }
 
-    it { expect(company.active_projects_count).to eq 4 }
+    it 'returns the active projects count' do
+      travel_to Time.zone.local(2018, 11, 19, 10, 0, 0) do
+        Fabricate :project, company: company, start_date: 4.weeks.ago, end_date: 4.days.from_now, status: :executing, qty_hours: 200
+        Fabricate :project, company: company, start_date: 4.weeks.ago, end_date: 4.days.from_now, status: :executing, qty_hours: 260
+        Fabricate :project, company: company, start_date: 4.days.from_now, end_date: 10.weeks.from_now, status: :waiting, qty_hours: 872
+
+        Fabricate :project, company: company, start_date: 4.weeks.ago, end_date: 4.days.ago, status: :executing, qty_hours: 300
+        Fabricate :project, company: company, start_date: 4.weeks.ago, status: :finished
+        Fabricate :project, company: company, start_date: 4.weeks.ago, status: :cancelled
+
+        expect(company.active_projects_count).to eq 3
+      end
+    end
+  end
+
+  describe '#active_projects' do
+    let(:company) { Fabricate :company }
+
+    it 'returns the active projects' do
+      travel_to Time.zone.local(2018, 11, 19, 10, 0, 0) do
+        first_project = Fabricate :project, company: company, start_date: 4.weeks.ago, end_date: 4.days.from_now, status: :executing, qty_hours: 200
+        second_project = Fabricate :project, company: company, start_date: 4.weeks.ago, end_date: 4.days.from_now, status: :executing, qty_hours: 260
+        third_project = Fabricate :project, company: company, start_date: 4.days.from_now, end_date: 10.weeks.from_now, status: :waiting, qty_hours: 872
+
+        Fabricate :project, company: company, start_date: 4.weeks.ago, end_date: 4.days.ago, status: :executing, qty_hours: 300
+        Fabricate :project, company: company, start_date: 4.weeks.ago, status: :finished
+        Fabricate :project, company: company, start_date: 4.weeks.ago, status: :cancelled
+
+        expect(company.active_projects).to match_array [first_project, second_project, third_project]
+      end
+    end
   end
 
   describe '#running_projects_count' do
@@ -154,12 +180,54 @@ RSpec.describe Company, type: :model do
   describe '#current_cost_per_hour' do
     context 'with finances' do
       let(:company) { Fabricate :company }
+      let!(:customer) { Fabricate :customer, company: company }
+      let!(:product) { Fabricate :product, customer: customer }
+      let!(:team) { Fabricate :team, company: company }
+      let!(:team_member) { Fabricate :team_member, monthly_payment: 1200, end_date: nil }
+
       let!(:first_finance) { Fabricate :financial_information, company: company, finances_date: 1.month.ago, expenses_total: 300 }
       let!(:second_finance) { Fabricate :financial_information, company: company, finances_date: 1.week.ago, expenses_total: 200 }
       let!(:third_finance) { Fabricate :financial_information, company: company, finances_date: 1.month.from_now, expenses_total: 100 }
 
-      include_context 'demands with effort for company'
-      it { expect(company.current_cost_per_hour.to_f).to eq 0.946969696969697 }
+      it 'returns the correct value' do
+        travel_to Time.zone.local(2018, 11, 19, 10, 0, 0) do
+          membership = Fabricate :membership, team: team, team_member: team_member, hours_per_month: 100, start_date: 1.month.ago, end_date: nil
+
+          active_project = Fabricate :project, company: company, team: team, start_date: 4.weeks.ago, end_date: 4.days.from_now, customers: [customer], products: [product], status: :executing, qty_hours: 200
+          Fabricate :project, company: company, team: team, start_date: 4.weeks.ago, end_date: 4.days.from_now, customers: [customer], products: [product], status: :executing, qty_hours: 260
+          Fabricate :project, company: company, team: team, start_date: 4.weeks.ago, end_date: 4.days.from_now, customers: [product.customer], products: [product], status: :executing, qty_hours: 300
+
+          Fabricate :project, company: company, start_date: 4.weeks.ago, customers: [customer], products: [product], status: :waiting, qty_hours: 872
+          Fabricate :project, company: company, start_date: 4.weeks.ago, customers: [customer], products: [product], status: :finished
+          Fabricate :project, company: company, start_date: 4.weeks.ago, customers: [customer], products: [product], status: :cancelled
+
+          first_stage = Fabricate :stage, company: company, stage_stream: :downstream, queue: false, end_point: false, integration_pipe_id: 1, order: 0
+          second_stage = Fabricate :stage, company: company, stage_stream: :downstream, queue: false, end_point: true, integration_pipe_id: 1, order: 1
+          third_stage = Fabricate :stage, company: company, stage_stream: :upstream, queue: false, end_point: true, integration_pipe_id: 1, order: 2
+
+          Fabricate :stage_project_config, project: active_project, stage: first_stage, compute_effort: true, pairing_percentage: 80, stage_percentage: 100, management_percentage: 10
+          Fabricate :stage_project_config, project: active_project, stage: second_stage, compute_effort: true, pairing_percentage: 80, stage_percentage: 100, management_percentage: 10
+          Fabricate :stage_project_config, project: active_project, stage: third_stage, compute_effort: true, pairing_percentage: 80, stage_percentage: 100, management_percentage: 10
+
+          first_demand = Fabricate :demand, project: active_project, team: team, created_date: 2.weeks.ago, end_date: 1.week.ago, demand_type: :bug
+          second_demand = Fabricate :demand, project: active_project, team: team, created_date: 2.weeks.ago, end_date: 1.week.ago
+          third_demand = Fabricate :demand, project: active_project, team: team, created_date: 1.week.ago, end_date: 2.days.ago
+
+          Fabricate :item_assignment, demand: first_demand, membership: membership, start_time: 1.month.ago, finish_time: nil
+          Fabricate :item_assignment, demand: second_demand, membership: membership, start_time: 1.month.ago, finish_time: nil
+          Fabricate :item_assignment, demand: third_demand, membership: membership, start_time: 7.weeks.ago, finish_time: nil
+
+          Fabricate :demand_transition, stage: first_stage, demand: first_demand, last_time_in: 1.month.ago, last_time_out: 2.weeks.ago
+          Fabricate :demand_transition, stage: first_stage, demand: second_demand, last_time_in: 1.month.ago, last_time_out: 3.weeks.ago
+
+          Fabricate :demand_transition, stage: second_stage, demand: first_demand, last_time_in: Time.zone.today
+          Fabricate :demand_transition, stage: second_stage, demand: second_demand, last_time_in: Time.zone.today
+
+          Fabricate :demand_transition, stage: third_stage, demand: third_demand, last_time_in: 2.months.ago, last_time_out: 5.weeks.ago
+
+          expect(company.current_cost_per_hour.to_f).to eq 1.893939393939394
+        end
+      end
 
       pending 'with no efforts'
     end
@@ -172,10 +240,52 @@ RSpec.describe Company, type: :model do
   end
 
   describe '#current_hours_per_demand' do
-    context 'with finances' do
-      include_context 'demands with effort for company'
+    let(:company) { Fabricate :company }
+    let!(:customer) { Fabricate :customer, company: company }
+    let!(:product) { Fabricate :product, customer: customer }
+    let!(:team) { Fabricate :team, company: company }
+    let!(:team_member) { Fabricate :team_member, monthly_payment: 1200, end_date: nil }
 
-      it { expect(company.current_hours_per_demand.to_f).to eq 35.199999999999996 }
+    context 'with finances' do
+      it 'returns the correct value' do
+        travel_to Time.zone.local(2018, 11, 19, 10, 0, 0) do
+          membership = Fabricate :membership, team: team, team_member: team_member, hours_per_month: 100, start_date: 1.month.ago, end_date: nil
+
+          active_project = Fabricate :project, company: company, team: team, start_date: 4.weeks.ago, end_date: 4.days.from_now, customers: [customer], products: [product], status: :executing, qty_hours: 200
+          Fabricate :project, company: company, team: team, start_date: 4.weeks.ago, end_date: 4.days.from_now, customers: [customer], products: [product], status: :executing, qty_hours: 260
+          Fabricate :project, company: company, team: team, start_date: 4.weeks.ago, end_date: 4.days.from_now, customers: [product.customer], products: [product], status: :executing, qty_hours: 300
+
+          Fabricate :project, company: company, start_date: 4.weeks.ago, customers: [customer], products: [product], status: :waiting, qty_hours: 872
+          Fabricate :project, company: company, start_date: 4.weeks.ago, customers: [customer], products: [product], status: :finished
+          Fabricate :project, company: company, start_date: 4.weeks.ago, customers: [customer], products: [product], status: :cancelled
+
+          first_stage = Fabricate :stage, company: company, stage_stream: :downstream, queue: false, end_point: false, integration_pipe_id: 1, order: 0
+          second_stage = Fabricate :stage, company: company, stage_stream: :downstream, queue: false, end_point: true, integration_pipe_id: 1, order: 1
+          third_stage = Fabricate :stage, company: company, stage_stream: :upstream, queue: false, end_point: true, integration_pipe_id: 1, order: 2
+
+          Fabricate :stage_project_config, project: active_project, stage: first_stage, compute_effort: true, pairing_percentage: 80, stage_percentage: 100, management_percentage: 10
+          Fabricate :stage_project_config, project: active_project, stage: second_stage, compute_effort: true, pairing_percentage: 80, stage_percentage: 100, management_percentage: 10
+          Fabricate :stage_project_config, project: active_project, stage: third_stage, compute_effort: true, pairing_percentage: 80, stage_percentage: 100, management_percentage: 10
+
+          first_demand = Fabricate :demand, project: active_project, team: team, created_date: 2.weeks.ago, end_date: 1.week.ago, demand_type: :bug
+          second_demand = Fabricate :demand, project: active_project, team: team, created_date: 2.weeks.ago, end_date: 1.week.ago
+          third_demand = Fabricate :demand, project: active_project, team: team, created_date: 1.week.ago, end_date: 2.days.ago
+
+          Fabricate :item_assignment, demand: first_demand, membership: membership, start_time: 1.month.ago, finish_time: nil
+          Fabricate :item_assignment, demand: second_demand, membership: membership, start_time: 1.month.ago, finish_time: nil
+          Fabricate :item_assignment, demand: third_demand, membership: membership, start_time: 7.weeks.ago, finish_time: nil
+
+          Fabricate :demand_transition, stage: first_stage, demand: first_demand, last_time_in: 1.month.ago, last_time_out: 2.weeks.ago
+          Fabricate :demand_transition, stage: first_stage, demand: second_demand, last_time_in: 1.month.ago, last_time_out: 3.weeks.ago
+
+          Fabricate :demand_transition, stage: second_stage, demand: first_demand, last_time_in: Time.zone.today
+          Fabricate :demand_transition, stage: second_stage, demand: second_demand, last_time_in: Time.zone.today
+
+          Fabricate :demand_transition, stage: third_stage, demand: third_demand, last_time_in: 2.months.ago, last_time_out: 5.weeks.ago
+
+          expect(company.current_hours_per_demand.to_f).to eq 35.199999999999996
+        end
+      end
     end
 
     context 'with no finances' do
@@ -192,9 +302,51 @@ RSpec.describe Company, type: :model do
   end
 
   describe '#consumed_hours_in_month' do
-    include_context 'demands with effort for company'
+    let(:company) { Fabricate :company }
+    let!(:customer) { Fabricate :customer, company: company }
+    let!(:product) { Fabricate :product, customer: customer }
+    let!(:team) { Fabricate :team, company: company }
+    let!(:team_member) { Fabricate :team_member, monthly_payment: 1200, end_date: nil }
 
-    it { expect(company.consumed_hours_in_month.to_f).to eq 105.6 }
+    it 'returns the correct value' do
+      travel_to Time.zone.local(2018, 11, 19, 10, 0, 0) do
+        membership = Fabricate :membership, team: team, team_member: team_member, hours_per_month: 100, start_date: 1.month.ago, end_date: nil
+
+        active_project = Fabricate :project, company: company, team: team, start_date: 4.weeks.ago, end_date: 4.days.from_now, customers: [customer], products: [product], status: :executing, qty_hours: 200
+        Fabricate :project, company: company, team: team, start_date: 4.weeks.ago, end_date: 4.days.from_now, customers: [customer], products: [product], status: :executing, qty_hours: 260
+        Fabricate :project, company: company, team: team, start_date: 4.weeks.ago, end_date: 4.days.from_now, customers: [product.customer], products: [product], status: :executing, qty_hours: 300
+
+        Fabricate :project, company: company, start_date: 4.weeks.ago, customers: [customer], products: [product], status: :waiting, qty_hours: 872
+        Fabricate :project, company: company, start_date: 4.weeks.ago, customers: [customer], products: [product], status: :finished
+        Fabricate :project, company: company, start_date: 4.weeks.ago, customers: [customer], products: [product], status: :cancelled
+
+        first_stage = Fabricate :stage, company: company, stage_stream: :downstream, queue: false, end_point: false, integration_pipe_id: 1, order: 0
+        second_stage = Fabricate :stage, company: company, stage_stream: :downstream, queue: false, end_point: true, integration_pipe_id: 1, order: 1
+        third_stage = Fabricate :stage, company: company, stage_stream: :upstream, queue: false, end_point: true, integration_pipe_id: 1, order: 2
+
+        Fabricate :stage_project_config, project: active_project, stage: first_stage, compute_effort: true, pairing_percentage: 80, stage_percentage: 100, management_percentage: 10
+        Fabricate :stage_project_config, project: active_project, stage: second_stage, compute_effort: true, pairing_percentage: 80, stage_percentage: 100, management_percentage: 10
+        Fabricate :stage_project_config, project: active_project, stage: third_stage, compute_effort: true, pairing_percentage: 80, stage_percentage: 100, management_percentage: 10
+
+        first_demand = Fabricate :demand, project: active_project, team: team, created_date: 2.weeks.ago, end_date: 1.week.ago, demand_type: :bug
+        second_demand = Fabricate :demand, project: active_project, team: team, created_date: 2.weeks.ago, end_date: 1.week.ago
+        third_demand = Fabricate :demand, project: active_project, team: team, created_date: 1.week.ago, end_date: 2.days.ago
+
+        Fabricate :item_assignment, demand: first_demand, membership: membership, start_time: 1.month.ago, finish_time: nil
+        Fabricate :item_assignment, demand: second_demand, membership: membership, start_time: 1.month.ago, finish_time: nil
+        Fabricate :item_assignment, demand: third_demand, membership: membership, start_time: 7.weeks.ago, finish_time: nil
+
+        Fabricate :demand_transition, stage: first_stage, demand: first_demand, last_time_in: 1.month.ago, last_time_out: 2.weeks.ago
+        Fabricate :demand_transition, stage: first_stage, demand: second_demand, last_time_in: 1.month.ago, last_time_out: 3.weeks.ago
+
+        Fabricate :demand_transition, stage: second_stage, demand: first_demand, last_time_in: Time.zone.today
+        Fabricate :demand_transition, stage: second_stage, demand: second_demand, last_time_in: Time.zone.today
+
+        Fabricate :demand_transition, stage: third_stage, demand: third_demand, last_time_in: 2.months.ago, last_time_out: 5.weeks.ago
+
+        expect(company.consumed_hours_in_month.to_f).to eq 105.6
+      end
+    end
   end
 
   describe '#throughput_in_month' do
@@ -278,9 +430,53 @@ RSpec.describe Company, type: :model do
   end
 
   describe '#total_active_hours' do
+    let(:company) { Fabricate :company }
+    let!(:customer) { Fabricate :customer, company: company }
+    let!(:product) { Fabricate :product, customer: customer }
+    let!(:team) { Fabricate :team, company: company }
+    let!(:team_member) { Fabricate :team_member, monthly_payment: 1200, end_date: nil }
+
     context 'with data' do
-      include_context 'demands with effort for company'
-      it { expect(company.total_active_hours).to eq 1632 }
+
+      it 'returns the correct value' do
+        travel_to Time.zone.local(2018, 11, 19, 10, 0, 0) do
+          membership = Fabricate :membership, team: team, team_member: team_member, hours_per_month: 100, start_date: 1.month.ago, end_date: nil
+
+          active_project = Fabricate :project, company: company, team: team, start_date: 4.weeks.ago, end_date: 4.days.from_now, customers: [customer], products: [product], status: :executing, qty_hours: 200
+          Fabricate :project, company: company, team: team, start_date: 4.weeks.ago, end_date: 4.days.from_now, customers: [customer], products: [product], status: :executing, qty_hours: 260
+          Fabricate :project, company: company, team: team, start_date: 4.weeks.ago, end_date: 4.days.from_now, customers: [product.customer], products: [product], status: :executing, qty_hours: 300
+
+          Fabricate :project, company: company, start_date: 4.weeks.ago, customers: [customer], products: [product], status: :waiting, qty_hours: 872
+          Fabricate :project, company: company, start_date: 4.weeks.ago, customers: [customer], products: [product], status: :finished
+          Fabricate :project, company: company, start_date: 4.weeks.ago, customers: [customer], products: [product], status: :cancelled
+
+          first_stage = Fabricate :stage, company: company, stage_stream: :downstream, queue: false, end_point: false, integration_pipe_id: 1, order: 0
+          second_stage = Fabricate :stage, company: company, stage_stream: :downstream, queue: false, end_point: true, integration_pipe_id: 1, order: 1
+          third_stage = Fabricate :stage, company: company, stage_stream: :upstream, queue: false, end_point: true, integration_pipe_id: 1, order: 2
+
+          Fabricate :stage_project_config, project: active_project, stage: first_stage, compute_effort: true, pairing_percentage: 80, stage_percentage: 100, management_percentage: 10
+          Fabricate :stage_project_config, project: active_project, stage: second_stage, compute_effort: true, pairing_percentage: 80, stage_percentage: 100, management_percentage: 10
+          Fabricate :stage_project_config, project: active_project, stage: third_stage, compute_effort: true, pairing_percentage: 80, stage_percentage: 100, management_percentage: 10
+
+          first_demand = Fabricate :demand, project: active_project, team: team, created_date: 2.weeks.ago, end_date: 1.week.ago, demand_type: :bug
+          second_demand = Fabricate :demand, project: active_project, team: team, created_date: 2.weeks.ago, end_date: 1.week.ago
+          third_demand = Fabricate :demand, project: active_project, team: team, created_date: 1.week.ago, end_date: 2.days.ago
+
+          Fabricate :item_assignment, demand: first_demand, membership: membership, start_time: 1.month.ago, finish_time: nil
+          Fabricate :item_assignment, demand: second_demand, membership: membership, start_time: 1.month.ago, finish_time: nil
+          Fabricate :item_assignment, demand: third_demand, membership: membership, start_time: 7.weeks.ago, finish_time: nil
+
+          Fabricate :demand_transition, stage: first_stage, demand: first_demand, last_time_in: 1.month.ago, last_time_out: 2.weeks.ago
+          Fabricate :demand_transition, stage: first_stage, demand: second_demand, last_time_in: 1.month.ago, last_time_out: 3.weeks.ago
+
+          Fabricate :demand_transition, stage: second_stage, demand: first_demand, last_time_in: Time.zone.today
+          Fabricate :demand_transition, stage: second_stage, demand: second_demand, last_time_in: Time.zone.today
+
+          Fabricate :demand_transition, stage: third_stage, demand: third_demand, last_time_in: 2.months.ago, last_time_out: 5.weeks.ago
+
+          expect(company.total_active_hours).to eq 1632
+        end
+      end
     end
 
     context 'with no data' do
@@ -291,9 +487,52 @@ RSpec.describe Company, type: :model do
   end
 
   describe '#total_active_consumed_hours' do
+    let(:company) { Fabricate :company }
+    let!(:customer) { Fabricate :customer, company: company }
+    let!(:product) { Fabricate :product, customer: customer }
+    let!(:team) { Fabricate :team, company: company }
+    let!(:team_member) { Fabricate :team_member, monthly_payment: 1200, end_date: nil }
+
     context 'with data' do
-      include_context 'demands with effort for company'
-      it { expect(company.total_active_consumed_hours.to_f).to eq 105.6 }
+      it 'returns the correct value' do
+        travel_to Time.zone.local(2018, 11, 19, 10, 0, 0) do
+          membership = Fabricate :membership, team: team, team_member: team_member, hours_per_month: 100, start_date: 1.month.ago, end_date: nil
+
+          active_project = Fabricate :project, company: company, team: team, start_date: 4.weeks.ago, end_date: 4.days.from_now, customers: [customer], products: [product], status: :executing, qty_hours: 200
+          Fabricate :project, company: company, team: team, start_date: 4.weeks.ago, end_date: 4.days.from_now, customers: [customer], products: [product], status: :executing, qty_hours: 260
+          Fabricate :project, company: company, team: team, start_date: 4.weeks.ago, end_date: 4.days.from_now, customers: [product.customer], products: [product], status: :executing, qty_hours: 300
+
+          Fabricate :project, company: company, start_date: 4.weeks.ago, customers: [customer], products: [product], status: :waiting, qty_hours: 872
+          Fabricate :project, company: company, start_date: 4.weeks.ago, customers: [customer], products: [product], status: :finished
+          Fabricate :project, company: company, start_date: 4.weeks.ago, customers: [customer], products: [product], status: :cancelled
+
+          first_stage = Fabricate :stage, company: company, stage_stream: :downstream, queue: false, end_point: false, integration_pipe_id: 1, order: 0
+          second_stage = Fabricate :stage, company: company, stage_stream: :downstream, queue: false, end_point: true, integration_pipe_id: 1, order: 1
+          third_stage = Fabricate :stage, company: company, stage_stream: :upstream, queue: false, end_point: true, integration_pipe_id: 1, order: 2
+
+          Fabricate :stage_project_config, project: active_project, stage: first_stage, compute_effort: true, pairing_percentage: 80, stage_percentage: 100, management_percentage: 10
+          Fabricate :stage_project_config, project: active_project, stage: second_stage, compute_effort: true, pairing_percentage: 80, stage_percentage: 100, management_percentage: 10
+          Fabricate :stage_project_config, project: active_project, stage: third_stage, compute_effort: true, pairing_percentage: 80, stage_percentage: 100, management_percentage: 10
+
+          first_demand = Fabricate :demand, project: active_project, team: team, created_date: 2.weeks.ago, end_date: 1.week.ago, demand_type: :bug
+          second_demand = Fabricate :demand, project: active_project, team: team, created_date: 2.weeks.ago, end_date: 1.week.ago
+          third_demand = Fabricate :demand, project: active_project, team: team, created_date: 1.week.ago, end_date: 2.days.ago
+
+          Fabricate :item_assignment, demand: first_demand, membership: membership, start_time: 1.month.ago, finish_time: nil
+          Fabricate :item_assignment, demand: second_demand, membership: membership, start_time: 1.month.ago, finish_time: nil
+          Fabricate :item_assignment, demand: third_demand, membership: membership, start_time: 7.weeks.ago, finish_time: nil
+
+          Fabricate :demand_transition, stage: first_stage, demand: first_demand, last_time_in: 1.month.ago, last_time_out: 2.weeks.ago
+          Fabricate :demand_transition, stage: first_stage, demand: second_demand, last_time_in: 1.month.ago, last_time_out: 3.weeks.ago
+
+          Fabricate :demand_transition, stage: second_stage, demand: first_demand, last_time_in: Time.zone.today
+          Fabricate :demand_transition, stage: second_stage, demand: second_demand, last_time_in: Time.zone.today
+
+          Fabricate :demand_transition, stage: third_stage, demand: third_demand, last_time_in: 2.months.ago, last_time_out: 5.weeks.ago
+
+          expect(company.total_active_consumed_hours.to_f).to eq 105.6
+        end
+      end
     end
 
     context 'with no data' do

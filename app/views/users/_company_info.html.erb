@@ -13,7 +13,7 @@
     </tr>
     <tr>
       <td><b><%= I18n.t('users.show.manager.active_customers') %></b></td>
-      <td><%= company.projects.active.map(&:customers).flatten.uniq.count %></td>
+      <td><%= company.active_projects.includes([:customers]).map(&:customers).flatten.uniq.count %></td>
     </tr>
     <tr>
       <td><b><%= I18n.t('users.show.manager.active_products') %></b></td>
