@@ -437,7 +437,6 @@ RSpec.describe Company, type: :model do
     let!(:team_member) { Fabricate :team_member, monthly_payment: 1200, end_date: nil }
 
     context 'with data' do
-
       it 'returns the correct value' do
         travel_to Time.zone.local(2018, 11, 19, 10, 0, 0) do
           membership = Fabricate :membership, team: team, team_member: team_member, hours_per_month: 100, start_date: 1.month.ago, end_date: nil
