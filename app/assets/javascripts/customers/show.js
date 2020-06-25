@@ -3,6 +3,11 @@ if (lineLeadtimeCustomerAccumulated.length !== 0) {
     buildLineChart(lineLeadtimeCustomerAccumulated);
 }
 
+const lineCustomerBurnupFinancial = $("#customer-financial-burnup-line");
+if (lineCustomerBurnupFinancial.length !== 0) {
+    buildLineChart(lineCustomerBurnupFinancial);
+}
+
 const lineCustomerBurnupHours = $("#customer-hours-burnup-line");
 if (lineCustomerBurnupHours.length !== 0) {
     buildLineChart(lineCustomerBurnupHours);

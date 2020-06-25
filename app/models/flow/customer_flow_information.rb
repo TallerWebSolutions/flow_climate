@@ -2,26 +2,36 @@
 
 module Flow
   class CustomerFlowInformation < SystemFlowInformation
-    attr_reader :financial_burnup, :dates_array, :customer, :limit_date
+    attr_reader :dates_array, :customer, :limit_date, :financial_ideal, :financial_current, :financial_total,
+                :total_financial_value, :financial_ideal_slice, :hours_current, :hours_ideal_slice, :hours_ideal,
+                :total_hours_value
 
     def initialize(customer, data_interval = 'month')
       super(customer.demands)
 
       @customer = customer
       @financial_burnup = {}
+
       build_dates_array(data_interval)
       build_limit_date(data_interval)
+      build_arrays
+
+      hour_value = @customer.contracts.active.map(&:hour_value).sum.to_f / @customer.contracts.active.count
+
+      build_burnup_constants
+      build_hours_and_cost_burnup_info(hour_value)
     end
 
     def build_financial_burnup
       return blank_burnup if @demands.blank?
 
-      total_value = @customer.contracts.active.map(&:total_value).sum
-      hour_value = @customer.contracts.active.map(&:hour_value).sum.to_f / @customer.contracts.active.count
+      [{ name: I18n.t('charts.burnup.scope'), data: @financial_total }, { name: I18n.t('charts.burnup.current'), data: @financial_current }, { name: I18n.t('charts.burnup.ideal'), data: @financial_ideal }]
+    end
 
-      ideal_slice = total_value / @dates_array.count
+    def build_hours_burnup
+      return blank_burnup if @demands.blank?
 
-      build_cost_burnup(hour_value, ideal_slice, total_value)
+      [{ name: I18n.t('charts.burnup.scope'), data: @hours_total }, { name: I18n.t('charts.burnup.current'), data: @hours_current }, { name: I18n.t('charts.burnup.ideal'), data: @hours_ideal }]
     end
 
     private
@@ -30,18 +40,22 @@ module Flow
       [{ name: I18n.t('charts.burnup.scope'), data: [] }, { name: I18n.t('charts.burnup.current'), data: [] }, { name: I18n.t('charts.burnup.ideal'), data: [] }]
     end
 
-    def build_cost_burnup(hour_value, ideal_slice, total_value)
-      ideal_burn = []
-      current_burn = []
-      total_value_array = []
-
+    def build_hours_and_cost_burnup_info(hour_value)
       @dates_array.each_with_index do |date, index|
-        ideal_burn << ideal_slice * (index + 1)
-        current_burn << @demands.kept.finished_until_date(date).finished_after_date(start_date).map(&:total_effort).flatten.sum.to_f * hour_value if date <= @limit_date
-        total_value_array << total_value
-      end
+        total_effort = @demands.kept.finished_until_date(date).finished_after_date(start_date).map(&:total_effort).flatten.sum.to_f
 
-      [{ name: I18n.t('charts.burnup.scope'), data: total_value_array }, { name: I18n.t('charts.burnup.current'), data: current_burn }, { name: I18n.t('charts.burnup.ideal'), data: ideal_burn }]
+        add_value_to_burnup_arrays(date, hour_value, index, total_effort)
+      end
+    end
+
+    def add_value_to_burnup_arrays(date, hour_value, index, total_effort)
+      @financial_ideal << financial_ideal_slice * (index + 1)
+      @financial_current << total_effort * hour_value if date <= @limit_date
+      @financial_total << total_financial_value
+
+      @hours_ideal << hours_ideal_slice * (index + 1)
+      @hours_current << total_effort if date <= @limit_date
+      @hours_total << total_hours_value
     end
 
     def build_dates_array(data_interval)
@@ -70,6 +84,24 @@ module Flow
 
     def end_date
       @customer.contracts.active.map(&:end_date).flatten.max || Time.zone.today
+    end
+
+    def build_arrays
+      @financial_total = []
+      @financial_ideal = []
+      @financial_current = []
+
+      @hours_total = []
+      @hours_ideal = []
+      @hours_current = []
+    end
+
+    def build_burnup_constants
+      @total_financial_value = @customer.contracts.active.map(&:total_value).sum
+      @financial_ideal_slice = total_financial_value / @dates_array.count
+
+      @total_hours_value = @customer.contracts.active.map(&:total_hours).sum
+      @hours_ideal_slice = total_hours_value / @dates_array.count
     end
   end
 end

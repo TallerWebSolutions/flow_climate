@@ -40,9 +40,9 @@ Rails.application.configure do
     Bullet.enable = false
     Bullet.bullet_logger = false
     Bullet.console = false
-    Bullet.rails_logger = false
+    Bullet.rails_logger = true
     Bullet.rollbar = false
-    Bullet.add_footer = false
+    Bullet.add_footer = true
     Bullet.stacktrace_includes =%w(your_gem your_middleware)
     Bullet.stacktrace_excludes = ['their_gem', 'their_middleware', %w(my_file.rb my_method), ['my_file.rb', 16..20] ]
   end
