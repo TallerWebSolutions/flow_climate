@@ -613,6 +613,8 @@ en:
     charts:
       contracts_cost_burnup:
         title: "Contracts Finances Burn-up"
+      contracts_hours_burnup:
+        title: "Contracts Hours Burn-up"
   demands:
     new:
       title: "Create Demand"

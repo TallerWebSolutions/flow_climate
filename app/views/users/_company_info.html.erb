@@ -17,7 +17,7 @@
     </tr>
     <tr>
       <td><b><%= I18n.t('users.show.manager.active_products') %></b></td>
-      <td><%= company.projects.active.map(&:products).flatten.uniq.count %></td>
+      <td><%= company.active_products.count %></td>
     </tr>
     <tr>
       <td><b><%= I18n.t('users.show.manager.active_projects') %></b></td>

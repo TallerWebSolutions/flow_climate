@@ -682,6 +682,8 @@ pt-BR:
     charts:
       contracts_cost_burnup:
         title: "Burn-up Financeiro dos Contratos"
+      contracts_hours_burnup:
+        title: "Burn-up de Horas dos Contratos"
   demands:
     new:
       title: "Criar Demanda"

@@ -49,7 +49,7 @@
 
       <h4><%= I18n.t('demands.index.last_deliveries') %></h4>
 
-      <%= render 'demands/demands_short_table', company: company, demands: customer.exclusives_demands.kept.finished.order(end_date: :desc).first(5) %>
+      <%= render 'demands/demands_short_table', company: company, demands: customer.exclusives_demands.includes([:company]).includes([:project]).kept.finished.order(end_date: :desc).first(5) %>
     </div>
   </div>
 
@@ -133,7 +133,7 @@
     <h4><%= I18n.t('customer.charts.contracts_cost_burnup.title') %></h4>
     <h5><%= I18n.t('customers.show.active_contracts', count: customer.contracts.active.count) %></h5>
     <% if customer.contracts.active.present? %>
-      <div id="customer-hours-burnup-line"
+      <div id="customer-financial-burnup-line"
            class="flow-chart"
            data-xcategories="<%= customer_flow_information.dates_array.to_json %>"
            data-title=""
@@ -142,6 +142,29 @@
            data-tooltipsuffix=""
            data-datalabelsuffix=""
            data-series="<%= customer_flow_information.build_financial_burnup.to_json %>"
+           data-decimals="2">
+      </div>
+    <% else %>
+      <%= render 'layouts/no_data', missing_data: Contract.model_name.human(count: 2) %>
+    <% end %>
+  </div>
+</div>
+
+<div class="row">
+
+  <div class="col-xs-6">
+    <h4><%= I18n.t('customer.charts.contracts_hours_burnup.title') %></h4>
+    <h5><%= I18n.t('customers.show.active_contracts', count: customer.contracts.active.count) %></h5>
+    <% if customer.contracts.active.present? %>
+      <div id="customer-hours-burnup-line"
+           class="flow-chart"
+           data-xcategories="<%= customer_flow_information.dates_array.to_json %>"
+           data-title=""
+           data-ytitle="<%= I18n.t('general.hours') %>"
+           data-prefix=""
+           data-tooltipsuffix=""
+           data-datalabelsuffix=""
+           data-series="<%= customer_flow_information.build_hours_burnup.to_json %>"
            data-decimals="2">
       </div>
     <% else %>

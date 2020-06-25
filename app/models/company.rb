@@ -145,6 +145,10 @@ class Company < ApplicationRecord
     user_company_role
   end
 
+  def active_products
+    projects.joins([:products_projects]).includes([:products]).active.map(&:products).flatten.uniq
+  end
+
   private
 
   def compute_current_cost_per_hour(finance)

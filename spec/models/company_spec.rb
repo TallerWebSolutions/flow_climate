@@ -338,4 +338,33 @@ RSpec.describe Company, type: :model do
     it { expect(company.role_for_user(operations_user)).to be_nil }
     it { expect(other_company.role_for_user(team_member_operations_user)).to eq team_member_company_role }
   end
+
+  describe '#active_products' do
+    let(:company) { Fabricate :company }
+    let(:customer) { Fabricate :customer, company: company }
+
+    context 'with products and projects' do
+      it 'returns the active products in the company' do
+        first_product = Fabricate :product, customer: customer
+        second_product = Fabricate :product, customer: customer
+        third_product = Fabricate :product, customer: customer
+        fourth_product = Fabricate :product, customer: customer
+
+        Fabricate :project, company: company, products: [first_product], start_date: 4.weeks.ago, end_date: 4.days.from_now, status: :executing, qty_hours: 200
+        Fabricate :project, company: company, products: [first_product], start_date: 4.weeks.ago, end_date: 4.days.from_now, status: :executing, qty_hours: 260
+        Fabricate :project, company: company, products: [first_product, second_product], start_date: 4.weeks.ago, end_date: 4.days.from_now, status: :executing, qty_hours: 300
+        Fabricate :project, company: company, products: [first_product], start_date: 4.weeks.ago, status: :waiting, qty_hours: 872
+        Fabricate :project, company: company, products: [third_product], start_date: 4.weeks.ago, status: :finished
+        Fabricate :project, company: company, products: [fourth_product], start_date: 4.weeks.ago, status: :cancelled
+
+        expect(company.active_products).to match_array [first_product, second_product]
+      end
+    end
+
+    context 'with no products and projects' do
+      it 'returns an empty array' do
+        expect(company.active_products).to eq []
+      end
+    end
+  end
 end
