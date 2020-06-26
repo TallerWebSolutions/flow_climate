@@ -49,13 +49,13 @@ module Flow
     end
 
     def add_value_to_burnup_arrays(date, hour_value, index, total_effort)
-      @financial_ideal << financial_ideal_slice * (index + 1)
+      @financial_ideal << @financial_ideal_slice * (index + 1)
       @financial_current << total_effort * hour_value if date <= @limit_date
-      @financial_total << total_financial_value
+      @financial_total << @total_financial_value
 
-      @hours_ideal << hours_ideal_slice * (index + 1)
+      @hours_ideal << @hours_ideal_slice * (index + 1)
       @hours_current << total_effort if date <= @limit_date
-      @hours_total << total_hours_value
+      @hours_total << @total_hours_value
     end
 
     def build_dates_array(data_interval)
@@ -98,10 +98,10 @@ module Flow
 
     def build_burnup_constants
       @total_financial_value = @customer.contracts.active.map(&:total_value).sum
-      @financial_ideal_slice = total_financial_value / @dates_array.count
+      @financial_ideal_slice = @total_financial_value / @dates_array.count
 
       @total_hours_value = @customer.contracts.active.map(&:total_hours).sum
-      @hours_ideal_slice = total_hours_value / @dates_array.count
+      @hours_ideal_slice = @total_hours_value / @dates_array.count
     end
   end
 end

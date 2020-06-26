@@ -46,6 +46,10 @@ class Membership < ApplicationRecord
   delegate :company, to: :team
   delegate :projects, to: :team_member
 
+  def to_hash
+    { member_name: team_member_name, jira_account_id: team_member.jira_account_id }
+  end
+
   def hours_per_day
     hours_per_month.to_f / 30.0
   end
