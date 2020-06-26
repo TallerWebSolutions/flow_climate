@@ -189,4 +189,16 @@ RSpec.describe Membership, type: :model do
       it { expect(fourth_membership.stages_to_work_on).to match_array [analysis_stage, commitment_stage, end_stage] }
     end
   end
+
+  describe '#to_hash' do
+    let(:company) { Fabricate :company }
+    let(:team) { Fabricate :team, company: company }
+    let!(:team_member) { Fabricate :team_member, monthly_payment: 1200, end_date: nil }
+
+    it 'returns the hash value' do
+      membership = Fabricate :membership, team: team, team_member: team_member, hours_per_month: 100, start_date: 1.month.ago, end_date: nil
+
+      expect(membership.to_hash).to eq(member_name: team_member.name, jira_account_id: team_member.jira_account_id)
+    end
+  end
 end

@@ -38,7 +38,7 @@ class Contract < ApplicationRecord
 
   validates :customer, :product, :start_date, :total_hours, :total_value, :renewal_period, presence: true
 
-  scope :active, -> { where('end_date >= current_date') }
+  scope :active, -> { where('end_date >= :limit_date', limit_date: Time.zone.today) }
 
   delegate :name, to: :product, prefix: true
 

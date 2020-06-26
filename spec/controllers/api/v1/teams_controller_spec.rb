@@ -101,8 +101,15 @@ RSpec.describe Api::V1::TeamsController, type: :controller do
           let!(:sixth_demand) { Fabricate :demand, team: team, project: project, demand_type: :feature, end_date: 2.weeks.ago }
           let!(:seventh_demand) { Fabricate :demand, team: team, project: project, demand_type: :feature, end_date: Time.zone.now }
           let!(:eighth_demand) { Fabricate :demand, team: team, project: project, demand_type: :chore, commitment_date: Time.zone.now, end_date: nil, effort_downstream: 200, effort_upstream: 300 }
+          let!(:team_member) { Fabricate :team_member, monthly_payment: 1200, end_date: nil }
 
           it 'calls the service to build the response' do
+            membership = Fabricate :membership, team: team, team_member: team_member, hours_per_month: 100, start_date: 1.month.ago, end_date: nil
+
+            Fabricate :item_assignment, demand: first_demand, membership: membership, start_time: 1.month.ago, finish_time: nil
+            Fabricate :item_assignment, demand: second_demand, membership: membership, start_time: 1.month.ago, finish_time: nil
+            Fabricate :item_assignment, demand: third_demand, membership: membership, start_time: 7.weeks.ago, finish_time: nil
+
             request.headers.merge! headers
             get :items_delivered_last_week, params: { id: team.id }
 
