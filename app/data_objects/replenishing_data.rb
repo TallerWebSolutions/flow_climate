@@ -1,14 +1,12 @@
 # frozen_string_literal: true
 
 class ReplenishingData
-  attr_reader :team, :team_projects, :running_projects, :total_pressure, :summary_infos, :project_data_to_replenish, :throughput_per_period_array
+  attr_reader :team, :team_projects, :running_projects, :total_pressure, :summary_infos, :project_data_to_replenish, :throughput_per_period_array,
+              :products_names, :customers_names
 
   def initialize(team)
     @team = team
-    @team_projects = @team.projects
-    @team_demands = @team.demands
-    @running_projects = @team_projects.running.sort_by(&:flow_pressure).reverse
-    @total_pressure = @running_projects.sum(&:flow_pressure)
+    build_team_objects
 
     @start_date = 5.weeks.ago.beginning_of_week.to_date
     @end_date = 1.week.ago.end_of_week.to_date
@@ -18,6 +16,13 @@ class ReplenishingData
   end
 
   private
+
+  def build_team_objects
+    @team_projects = @team.projects
+    @team_demands = @team.demands.includes([:team])
+    @running_projects = @team_projects.includes(%i[customers products]).running.sort_by(&:flow_pressure).reverse
+    @total_pressure = @running_projects.sum(&:flow_pressure)
+  end
 
   def build_summary_infos
     if @team_projects.present? && @team_demands.present?
@@ -53,20 +58,20 @@ class ReplenishingData
 
   def build_project_hash(project)
     project_data_to_replenish = {}
+
     project_data_to_replenish[:id] = project.id
     project_data_to_replenish[:name] = project.name
     project_data_to_replenish[:start_date] = project.start_date
     project_data_to_replenish[:end_date] = project.end_date
     project_data_to_replenish[:weeks_to_end_date] = project.remaining_weeks
     project_data_to_replenish[:remaining_backlog] = project.remaining_backlog
-    project_data_to_replenish[:leadtime_80] = project.general_leadtime / 1.day
+    project_data_to_replenish[:leadtime_80] = project.general_leadtime
 
     project_data_to_replenish[:aging_today] = project.aging_today
     project_data_to_replenish[:flow_pressure] = project.flow_pressure
     project_data_to_replenish[:relative_flow_pressure] = project.relative_flow_pressure(@total_pressure)
     project_data_to_replenish[:max_work_in_progress] = project.max_work_in_progress
-
-    project_data_to_replenish
+    project_data_to_replenish.merge(build_customers_products_names(project))
   end
 
   def build_stats_info(project, throughput_grouped_per_week_hash)
@@ -137,5 +142,12 @@ class ReplenishingData
     return 0 if @total_pressure.blank? || @total_pressure.zero? || @summary_infos.blank?
 
     @summary_infos[:average_throughput] * (project.flow_pressure / @total_pressure)
+  end
+
+  def build_customers_products_names(project)
+    customers_products_names_hash = {}
+    customers_products_names_hash[:customers_names] = project.customers.map(&:name)
+    customers_products_names_hash[:products_names] = project.products.map(&:name)
+    customers_products_names_hash
   end
 end

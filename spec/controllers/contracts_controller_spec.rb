@@ -100,7 +100,7 @@ RSpec.describe ContractsController, type: :controller do
             expect(Contract.last).to be_nil
             expect(response).to render_template :new
             expect(flash[:error]).to eq I18n.t('contracts.save.error')
-            expect(assigns(:contract).errors.full_messages).to eq ['Produto não pode ficar em branco', 'Data de Início não pode ficar em branco', 'Horas Totais não pode ficar em branco', 'Valor Total não pode ficar em branco', 'Período de Renovação não pode ficar em branco']
+            expect(assigns(:contract).errors.full_messages).to eq ['Produto não pode ficar em branco', 'Início não pode ficar em branco', 'Horas Totais não pode ficar em branco', 'Valor Total não pode ficar em branco', 'Período de Renovação não pode ficar em branco']
           end
         end
 
@@ -189,7 +189,7 @@ RSpec.describe ContractsController, type: :controller do
           it 'does not update the contract and re-render the template with the errors' do
             expect(response).to render_template :edit
             expect(flash[:error]).to eq I18n.t('contracts.save.error')
-            expect(assigns(:contract).errors.full_messages).to eq ['Produto não pode ficar em branco', 'Data de Início não pode ficar em branco', 'Horas Totais não pode ficar em branco', 'Valor Total não pode ficar em branco', 'Período de Renovação não pode ficar em branco']
+            expect(assigns(:contract).errors.full_messages).to eq ['Produto não pode ficar em branco', 'Início não pode ficar em branco', 'Horas Totais não pode ficar em branco', 'Valor Total não pode ficar em branco', 'Período de Renovação não pode ficar em branco']
           end
         end
 

@@ -278,7 +278,7 @@ en:
       percentage_remaining_money: "% Remaining ($$)"
       flow_pressure: "Flow Pressure"
       percentage_flow_pressure: "% Flow Pressure"
-      remaining_backlog: "Backlog Remaining"
+      remaining_backlog: "Backlog"
       percentage_remaining_scope: "% Remaining Scope"
       no_data: "There are no projects. Add one."
       remaining_hours: "Remaining Hours"
@@ -513,7 +513,7 @@ en:
       risk_money: "Cost"
       risk_scope: "Scope"
     replenishing:
-      weeks_to_finish: "Weeks to Finish"
+      weeks_to_finish: "Remaining"
       weeks_montecarlo: "Monte Carlo (80%)"
       team_based_weeks_montecarlo: "Monte Carlo (80%) - Team (std dev)"
       customer_happiness: "Customer Happiness"

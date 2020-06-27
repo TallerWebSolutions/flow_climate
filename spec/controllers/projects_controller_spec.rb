@@ -274,7 +274,7 @@ RSpec.describe ProjectsController, type: :controller do
           it 'does not create the project and re-render the template with the errors' do
             expect(Project.last).to be_nil
             expect(response).to render_template :new
-            expect(assigns(:project).errors.full_messages).to eq ['Time não pode ficar em branco', 'Qtd de Horas não pode ficar em branco', 'Tipo do Projeto não pode ficar em branco', 'Nome não pode ficar em branco', 'Status não pode ficar em branco', 'Data de Início não pode ficar em branco', 'Data Final não pode ficar em branco', 'Escopo inicial não pode ficar em branco', 'Valor do Projeto Valor ou Valor da hora é obrigatório', 'Valor da Hora Valor ou Valor da hora é obrigatório']
+            expect(assigns(:project).errors.full_messages).to eq ['Time não pode ficar em branco', 'Qtd de Horas não pode ficar em branco', 'Tipo do Projeto não pode ficar em branco', 'Nome não pode ficar em branco', 'Status não pode ficar em branco', 'Início não pode ficar em branco', 'Fim não pode ficar em branco', 'Escopo inicial não pode ficar em branco', 'Valor do Projeto Valor ou Valor da hora é obrigatório', 'Valor da Hora Valor ou Valor da hora é obrigatório']
             expect(assigns(:company_customers)).to eq [other_customer, customer]
           end
         end
@@ -373,7 +373,7 @@ RSpec.describe ProjectsController, type: :controller do
           it 'does not update the project and re-render the template with the errors' do
             expect(response).to render_template :edit
             expect(assigns(:company_customers)).to eq [other_customer, customer]
-            expect(assigns(:project).errors.full_messages).to eq ['Qtd de Horas não pode ficar em branco', 'Tipo do Projeto não pode ficar em branco', 'Nome não pode ficar em branco', 'Status não pode ficar em branco', 'Data de Início não pode ficar em branco', 'Data Final não pode ficar em branco', 'Escopo inicial não pode ficar em branco', 'Valor do Projeto Valor ou Valor da hora é obrigatório', 'Valor da Hora Valor ou Valor da hora é obrigatório']
+            expect(assigns(:project).errors.full_messages).to eq ['Qtd de Horas não pode ficar em branco', 'Tipo do Projeto não pode ficar em branco', 'Nome não pode ficar em branco', 'Status não pode ficar em branco', 'Início não pode ficar em branco', 'Fim não pode ficar em branco', 'Escopo inicial não pode ficar em branco', 'Valor do Projeto Valor ou Valor da hora é obrigatório', 'Valor da Hora Valor ou Valor da hora é obrigatório']
           end
         end
 
