@@ -7,6 +7,7 @@
 #  id                :bigint           not null, primary key
 #  automatic_renewal :boolean          default(FALSE)
 #  end_date          :date
+#  hours_per_demand  :integer          default(1), not null
 #  renewal_period    :integer          default("monthly"), not null
 #  start_date        :date             not null
 #  total_hours       :integer          not null
@@ -36,7 +37,7 @@ class Contract < ApplicationRecord
   belongs_to :customer
   belongs_to :product
 
-  validates :customer, :product, :start_date, :total_hours, :total_value, :renewal_period, presence: true
+  validates :customer, :product, :start_date, :total_hours, :total_value, :renewal_period, :hours_per_demand, presence: true
 
   scope :active, -> { where('end_date >= :limit_date', limit_date: Time.zone.today) }
 
@@ -44,5 +45,9 @@ class Contract < ApplicationRecord
 
   def hour_value
     total_value / total_hours
+  end
+
+  def estimated_scope
+    total_hours / hours_per_demand
   end
 end

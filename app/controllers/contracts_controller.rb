@@ -59,6 +59,6 @@ class ContractsController < AuthenticatedController
   end
 
   def contract_params
-    params.require(:contract).permit(:start_date, :end_date, :total_hours, :total_value, :renewal_period, :automatic_renewal, :product_id, :contract_id)
+    params.require(:contract).permit(:start_date, :end_date, :total_hours, :total_value, :hours_per_demand, :renewal_period, :automatic_renewal, :product_id, :contract_id)
   end
 end

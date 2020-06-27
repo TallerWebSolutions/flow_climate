@@ -666,6 +666,8 @@ pt-BR:
   customers:
     new:
       title: "Novo Cliente"
+      hours_per_demand:
+        placeholder: "Horas por demanda estimadas para o contrato"
     index:
       title: "Lista de Clientes"
       no_customers_message: "Você ainda não tem times."
@@ -684,6 +686,8 @@ pt-BR:
         title: "Burn-up Financeiro dos Contratos"
       contracts_hours_burnup:
         title: "Burn-up de Horas dos Contratos"
+      contracts_scope_burnup:
+        title: "Burn-up de Escopo para Contratos Ativos"
   demands:
     new:
       title: "Criar Demanda"

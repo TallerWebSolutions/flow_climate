@@ -643,6 +643,7 @@ pt-BR:
         total_hours: Horas Totais
         total_value: Valor Total
         automatic_renewal: Renovação Automática
+        hours_per_demand: Horas por Demanda
         enums:
           renewal_period:
             monthly: Mensalmente

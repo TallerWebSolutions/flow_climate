@@ -17,6 +17,7 @@ RSpec.describe Contract, type: :model do
     it { is_expected.to validate_presence_of :start_date }
     it { is_expected.to validate_presence_of :total_hours }
     it { is_expected.to validate_presence_of :renewal_period }
+    it { is_expected.to validate_presence_of :hours_per_demand }
   end
 
   context 'scope' do

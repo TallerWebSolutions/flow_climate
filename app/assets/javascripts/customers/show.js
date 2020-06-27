@@ -13,6 +13,11 @@ if (lineCustomerBurnupHours.length !== 0) {
     buildLineChart(lineCustomerBurnupHours);
 }
 
+const lineCustomerBurnupScope = $("#customer-scope-burnup-line");
+if (lineCustomerBurnupScope.length !== 0) {
+    buildLineChart(lineCustomerBurnupScope);
+}
+
 const customerHoursConsumed = $("#customer-hours-consumed-column-line");
 if (customerHoursConsumed.length !== 0) {
     buildColumnLineChart(customerHoursConsumed);

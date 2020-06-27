@@ -2,9 +2,10 @@
 
 module Flow
   class CustomerFlowInformation < SystemFlowInformation
-    attr_reader :dates_array, :customer, :limit_date, :financial_ideal, :financial_current, :financial_total,
-                :total_financial_value, :financial_ideal_slice, :hours_current, :hours_ideal_slice, :hours_ideal,
-                :total_hours_value
+    attr_reader :dates_array, :customer, :limit_date,
+                :financial_ideal, :financial_current, :financial_ideal_slice, :financial_total, :total_financial_value,
+                :hours_ideal, :hours_current, :hours_ideal_slice, :hours_total, :total_hours_value,
+                :scope_ideal, :scope_current, :scope_ideal_slice, :scope_total, :total_scope_value
 
     def initialize(customer, data_interval = 'month')
       super(customer.demands)
@@ -19,6 +20,7 @@ module Flow
       hour_value = @customer.contracts.active.map(&:hour_value).sum.to_f / @customer.contracts.active.count
 
       build_burnup_constants
+      build_burnup_scope_constants
       build_hours_and_cost_burnup_info(hour_value)
     end
 
@@ -34,6 +36,12 @@ module Flow
       [{ name: I18n.t('charts.burnup.scope'), data: @hours_total }, { name: I18n.t('charts.burnup.current'), data: @hours_current }, { name: I18n.t('charts.burnup.ideal'), data: @hours_ideal }]
     end
 
+    def build_scope_burnup
+      return blank_burnup if @demands.blank?
+
+      [{ name: I18n.t('charts.burnup.scope'), data: @scope_total }, { name: I18n.t('charts.burnup.current'), data: @scope_current }, { name: I18n.t('charts.burnup.ideal'), data: @scope_ideal }]
+    end
+
     private
 
     def blank_burnup
@@ -42,9 +50,11 @@ module Flow
 
     def build_hours_and_cost_burnup_info(hour_value)
       @dates_array.each_with_index do |date, index|
-        total_effort = @demands.kept.finished_until_date(date).finished_after_date(start_date).map(&:total_effort).flatten.sum.to_f
+        total_demands_delivered_to_date = @demands.kept.finished_until_date(date).finished_after_date(start_date)
+        total_effort = total_demands_delivered_to_date.map(&:total_effort).flatten.sum.to_f
 
         add_value_to_burnup_arrays(date, hour_value, index, total_effort)
+        add_value_to_scope_burnup(date, index, total_demands_delivered_to_date.count)
       end
     end
 
@@ -56,6 +66,12 @@ module Flow
       @hours_ideal << @hours_ideal_slice * (index + 1)
       @hours_current << total_effort if date <= @limit_date
       @hours_total << @total_hours_value
+    end
+
+    def add_value_to_scope_burnup(date, index, total_demands_delivered_to_date)
+      @scope_ideal << @scope_ideal_slice * (index + 1)
+      @scope_current << total_demands_delivered_to_date if date <= @limit_date
+      @scope_total << @total_scope_value
     end
 
     def build_dates_array(data_interval)
@@ -94,6 +110,10 @@ module Flow
       @hours_total = []
       @hours_ideal = []
       @hours_current = []
+
+      @scope_total = []
+      @scope_ideal = []
+      @scope_current = []
     end
 
     def build_burnup_constants
@@ -102,6 +122,11 @@ module Flow
 
       @total_hours_value = @customer.contracts.active.map(&:total_hours).sum
       @hours_ideal_slice = @total_hours_value / @dates_array.count
+    end
+
+    def build_burnup_scope_constants
+      @total_scope_value = @customer.contracts.active.sum(&:estimated_scope)
+      @scope_ideal_slice = @total_scope_value / @dates_array.count.to_f
     end
   end
 end

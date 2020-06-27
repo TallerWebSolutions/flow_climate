@@ -597,6 +597,8 @@ en:
   customers:
     new:
       title: "New Customer"
+      hours_per_demand:
+        placeholder: "Estimated hours per demand for the contract"
     index:
       title: "Customers List"
       no_customers_message: "You do not have teams yet."
@@ -615,6 +617,8 @@ en:
         title: "Contracts Finances Burn-up"
       contracts_hours_burnup:
         title: "Contracts Hours Burn-up"
+      contracts_scope_burnup:
+        title: "Scope Burn-up for Active Contracts"
   demands:
     new:
       title: "Create Demand"

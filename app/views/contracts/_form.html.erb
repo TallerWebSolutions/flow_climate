@@ -21,16 +21,22 @@
   </div>
 
   <div class="row">
-    <div class='col-xs-6 form-group <%= 'has-error' if contract.errors[:total_hours].present? %>'>
+    <div class='col-xs-4 form-group <%= 'has-error' if contract.errors[:total_hours].present? %>'>
       <%= form.label :total_hours, class: 'control-label required' %>
       <%= form.number_field :total_hours, class: 'form-control', step: 1 %>
       <span class="help-block"><%= contract.errors[:total_hours].join(', ') %></span>
     </div>
 
-    <div class='col-xs-6 form-group <%= 'has-error' if contract.errors[:total_value].present? %>'>
+    <div class='col-xs-4 form-group <%= 'has-error' if contract.errors[:total_value].present? %>'>
       <%= form.label :total_value, class: 'control-label required' %>
       <%= form.number_field :total_value, class: 'form-control', step: 0.01 %>
       <span class="help-block"><%= contract.errors[:total_value].join(', ') %></span>
+    </div>
+
+    <div class='col-xs-4 form-group <%= 'has-error' if contract.errors[:hours_per_demand].present? %>'>
+      <%= form.label :hours_per_demand, class: 'control-label required' %>
+      <%= form.number_field :hours_per_demand, class: 'form-control', step: 1, placeholder: I18n.t('customers.new.hours_per_demand.placeholder') %>
+      <span class="help-block"><%= contract.errors[:hours_per_demand].join(', ') %></span>
     </div>
   </div>
 
