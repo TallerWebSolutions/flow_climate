@@ -8,8 +8,7 @@
         <th><%= Contract.human_attribute_name :total_hours %></th>
         <th><%= Contract.human_attribute_name :total_value %></th>
         <th><%= Contract.human_attribute_name :hours_per_demand %></th>
-        <th><%= Contract.human_attribute_name :renewal_period %></th>
-        <th><%= Contract.human_attribute_name :automatic_renewal %></th>
+        <th><%= I18n.t('contracts.index.current_hours_per_demand') %></th>
         <th></th>
       </tr>
     </thead>
@@ -20,15 +19,10 @@
           <td><%= contract.product_name %></td>
           <td><%= I18n.l(contract.start_date) %></td>
           <td><%= I18n.l(contract.end_date) if contract.end_date.present? %></td>
-          <td><%= contract.total_hours %></td>
+          <td><%= I18n.t('general.hours_text', count: contract.total_hours) %></td>
           <td><%= number_to_currency(contract.total_value, precision: 2) %></td>
-          <td><%= contract.hours_per_demand %></td>
-          <td><%= I18n.t("activerecord.attributes.contract.enums.renewal_period.#{contract.renewal_period}") %></td>
-          <td>
-            <% if contract.automatic_renewal %>
-              <i class="fa fa-check"></i>
-            <% end %>
-          </td>
+          <td><%= I18n.t('general.hours_text', count: contract.hours_per_demand) %></td>
+          <td><%= I18n.t('general.hours_text', count: number_with_precision(contract.current_hours_per_demand, precision: 2)) %></td>
           <td>
             <%= link_to edit_company_customer_contract_path(company, customer, contract) do %>
               <i class="fas fa-edit"></i>

@@ -19,7 +19,7 @@
           </div>
           <div class="col-xs-4 center">
             <div class="stamp-title"><%= I18n.t('projects.show.closing_info.hours') %></div>
-            <div class="stamp-content"><%= I18n.t('general.hours_text', hour_value: number_with_precision(project.total_hours_consumed, precision: 2)) %></div>
+            <div class="stamp-content"><%= I18n.t('general.hours_text', count: number_with_precision(project.total_hours_consumed, precision: 2)) %></div>
           </div>
           <div class="col-xs-4 center">
             <div class="stamp-title"><%= I18n.t('projects.show.closing_info.average_speed_per_week') %></div>

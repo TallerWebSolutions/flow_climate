@@ -116,7 +116,9 @@ pt-BR:
     weeks: "semanas"
     days: "dias"
     hours: "horas"
-    hours_text: "%{hour_value} horas"
+    hours_text:
+      one: "%{count} hora"
+      other: "%{count} horas"
     score_text:
       zero: "sem pontos"
       one: "%{count} pontos"
@@ -1269,6 +1271,8 @@ pt-BR:
       success: "Contrato criado."
     update:
       success: "Contrato atualizado."
+    index:
+      current_hours_per_demand: "HpD Atual"
   score_matrix_questions:
     create:
       success: "Pergunta de pontuação criada."

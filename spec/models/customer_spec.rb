@@ -154,12 +154,11 @@ RSpec.describe Customer, type: :model do
 
   describe '#larger_lead_times' do
     let(:company) { Fabricate :company }
-
-    let(:project) { Fabricate :project }
-    let(:other_project) { Fabricate :project }
-
     let(:customer) { Fabricate :customer, company: company }
     let(:other_customer) { Fabricate :customer, company: company }
+
+    let(:project) { Fabricate :project, company: company, customers: [customer] }
+    let(:other_project) { Fabricate :project, company: company, customers: [customer, other_customer] }
 
     let!(:first_demand) { Fabricate :demand, customer: customer, project: project, demand_type: :feature, created_date: 3.weeks.ago, commitment_date: 17.days.ago, end_date: 2.weeks.ago }
     let!(:second_demand) { Fabricate :demand, customer: customer, project: project, demand_type: :bug, created_date: 2.weeks.ago, commitment_date: 18.days.ago, end_date: 1.week.ago }
