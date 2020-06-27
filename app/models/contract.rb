@@ -39,7 +39,7 @@ class Contract < ApplicationRecord
 
   validates :customer, :product, :start_date, :total_hours, :total_value, :renewal_period, :hours_per_demand, presence: true
 
-  scope :active, -> { where('end_date >= :limit_date', limit_date: Time.zone.today) }
+  scope :active, -> { where('start_date <= :limit_date AND end_date >= :limit_date', limit_date: Time.zone.today) }
 
   delegate :name, to: :product, prefix: true
 
@@ -49,5 +49,12 @@ class Contract < ApplicationRecord
 
   def estimated_scope
     total_hours / hours_per_demand
+  end
+
+  def current_hours_per_demand
+    demands_finished = customer.demands.kept.finished.finished_after_date(start_date).finished_until_date(end_date)
+    return 0 if demands_finished.blank?
+
+    demands_finished.map(&:total_effort).compact.sum / demands_finished.count
   end
 end

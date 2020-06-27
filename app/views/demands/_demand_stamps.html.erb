@@ -85,11 +85,11 @@
         </tr>
         <tr>
           <td><b><%= Demand.human_attribute_name :effort_upstream %></b></td>
-          <td><%= I18n.t('general.hours_text', hour_value: number_with_precision(demand.effort_upstream, precision: 3)) %></td>
+          <td><%= I18n.t('general.hours_text', count: number_with_precision(demand.effort_upstream, precision: 3)) %></td>
         </tr>
         <tr>
           <td><b><%= Demand.human_attribute_name :effort_downstream %></b></td>
-          <td><%= I18n.t('general.hours_text', hour_value: number_with_precision(demand.effort_downstream, precision: 3)) %></td>
+          <td><%= I18n.t('general.hours_text', count: number_with_precision(demand.effort_downstream, precision: 3)) %></td>
         </tr>
         <tr>
           <td><b><%= I18n.t('demands.index.cost_to_project') %></b></td>

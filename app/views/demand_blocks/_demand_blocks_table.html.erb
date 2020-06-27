@@ -19,13 +19,13 @@
     <div class="col-xs-4 summary-card-frame">
       <div class="summary-card-content">
         <p class="summary-card-title"><%= I18n.t('demand_blocks.index.total_time') %></p>
-        <p class="summary-card-value"><%= I18n.t('general.hours_text', hour_value: number_with_precision((demand_blocks_list.sum(&:total_blocked_time) / 1.hour), precision: 2)) %></p>
+        <p class="summary-card-value"><%= I18n.t('general.hours_text', count: number_with_precision((demand_blocks_list.sum(&:total_blocked_time) / 1.hour), precision: 2)) %></p>
       </div>
     </div>
     <div class="col-xs-4 summary-card-frame">
       <div class="summary-card-content">
         <p class="summary-card-title"><%= I18n.t('demand_blocks.index.average_time_per_block') %></p>
-        <p class="summary-card-value"><%= I18n.t('general.hours_text', hour_value: number_with_precision((demand_blocks_list.sum(&:total_blocked_time) / 1.hour) / demand_blocks_list.count, precision: 2)) %></p>
+        <p class="summary-card-value"><%= I18n.t('general.hours_text', count: number_with_precision((demand_blocks_list.sum(&:total_blocked_time) / 1.hour) / demand_blocks_list.count, precision: 2)) %></p>
       </div>
     </div>
   </div>

@@ -6,7 +6,7 @@
           <span class="tf-nc">
             <div class="tf-header">
               <div class="pull-left bottom-spaced-component"><%= number_to_currency(portfolio_unit.total_cost, precision: 2) %></div>
-              <div class="pull-right bottom-spaced-component"><%= I18n.t('general.hours_text', hour_value: number_with_precision(portfolio_unit.total_hours, precision: 2)) %></div>
+              <div class="pull-right bottom-spaced-component"><%= I18n.t('general.hours_text', count: number_with_precision(portfolio_unit.total_hours, precision: 2)) %></div>
             </div>
             <div class='tf-nc-title'>
               <%= portfolio_unit.name %>

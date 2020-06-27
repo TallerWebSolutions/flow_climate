@@ -21,7 +21,7 @@
         <td><%= demand.stage_at(assignment.start_time)&.name %></td>
         <td><%= I18n.l(assignment.finish_time, format: :short) if assignment.finish_time.present? %></td>
         <td><%= demand.stage_at(assignment.finish_time)&.name if assignment.finish_time.present? %></td>
-        <td><%= I18n.t('general.hours_text', hour_value: assignment.item_assignment_effort) %></td>
+        <td><%= I18n.t('general.hours_text', count: assignment.item_assignment_effort) %></td>
       </tr>
     <% end %>
   </tbody>

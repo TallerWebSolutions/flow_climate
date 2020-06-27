@@ -196,6 +196,8 @@ en:
           question_type:
             customer_dimension: "Customer Dimension"
             service_provider_dimension: "Service Provider Dimension"
+      contract:
+        hours_per_demand: Hours per Demand (HpD)
     errors:
       messages:
         record_invalid: 'Validation failed: %{errors}'

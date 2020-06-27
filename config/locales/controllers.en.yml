@@ -116,7 +116,9 @@ en:
     weeks: "weeks"
     days: "days"
     hours: "hours"
-    hours_text: "%{hour_value} hours"
+    hours_text:
+      one: "%{count} hour"
+      other: "%{count} hours"
     score_text:
       zero: "no score"
       one: "%{count} point"
@@ -1290,6 +1292,8 @@ en:
       success: "Contract created."
     update:
       success: "Contract updated."
+    index:
+      current_hours_per_demand: "Current HpD"
   score_matrix_questions:
     create:
       success: "Score matrix question created."
