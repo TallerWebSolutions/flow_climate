@@ -1,11 +1,11 @@
-<table class="table table-striped">
+<table class="table table-striped small-font">
   <thead>
     <tr>
       <th></th>
       <th><%= Project.human_attribute_name :name %></th>
       <th><%= Project.human_attribute_name :start_date %></th>
-      <th><%= I18n.t('projects.replenishing.aging') %></th>
       <th><%= Project.human_attribute_name :end_date %></th>
+      <th><%= I18n.t('projects.replenishing.aging') %></th>
       <th><%= I18n.t('projects.replenishing.weeks_to_finish') %></th>
       <th><%= I18n.t('projects.index.remaining_backlog') %></th>
       <th><%= I18n.t('projects.index.flow_pressure') %></th>
@@ -23,23 +23,27 @@
     <% projects_to_replenish.each do |project_hash| %>
       <tr>
         <td><%= link_to '+', '#', class: 'toggle-table-details', onclick: "toggleTableDetails(#{project_hash[:id]})" %></td>
-        <td><%= link_to project_hash[:name], company_project_path(company, project_hash[:id]) %></td>
-        <td><%= I18n.l(project_hash[:start_date], format: :default) %></td>
-        <td><%= I18n.t('general.days_text', count: project_hash[:aging_today]) %></td>
-        <td><%= I18n.l(project_hash[:end_date], format: :default) %></td>
         <td>
-          <%= project_hash[:weeks_to_end_date] %>
+          <%= link_to project_hash[:name], company_project_path(company, project_hash[:id]) %>
+          <i class="fas fa-users" title='<%= project_hash[:customers_names]&.join(' | ') %>'></i>
+          <i class="fas fa-boxes" title='<%= project_hash[:products_names]&.join(' | ') %>'></i>
+        </td>
+        <td><%= I18n.l(project_hash[:start_date], format: :default) %></td>
+        <td><%= I18n.l(project_hash[:end_date], format: :default) %></td>
+        <td><%= I18n.t('general.days_text', count: project_hash[:aging_today]) %></td>
+        <td>
+          <%= I18n.t('general.weeks_text', count: project_hash[:weeks_to_end_date]) %>
           <% if project_hash[:project_based_risks_to_deadline].present? %>
             <i class="fas fa-info-circle" title="<%= I18n.t('general.risk.text', risk_value: number_to_percentage(project_hash[:project_based_risks_to_deadline] * 100, precision: 2)) %>"></i>
           <% end %>
         </td>
-        <td><%= project_hash[:remaining_backlog] %></td>
+        <td><%= I18n.t('general.demands_text', count: project_hash[:remaining_backlog]) %></td>
         <td><%= number_with_precision(project_hash[:flow_pressure], precision: 3) %></td>
         <td><%= number_to_percentage(project_hash[:relative_flow_pressure], precision: 2) %></td>
-        <td><%= number_with_precision(project_hash[:qty_using_pressure], precision: 1) %></td>
-        <td><%= number_with_precision(project_hash[:leadtime_80], precision: 3) %></td>
-        <td><%= project_hash[:qty_selected_last_week] %></td>
-        <td><%= project_hash[:work_in_progress] %></td>
+        <td><%= I18n.t('general.demands_text', count: number_with_precision(project_hash[:qty_using_pressure], precision: 1)) %></td>
+        <td><%= I18n.t('general.days_text', count: number_with_precision(project_hash[:leadtime_80] / 1.day, precision: 3)) %></td>
+        <td><%= I18n.t('general.demands_text', count: project_hash[:qty_selected_last_week]) %></td>
+        <td><%= I18n.t('general.demands_text', count: project_hash[:work_in_progress]) %></td>
         <td><%= I18n.t('general.weeks_text', count: number_with_precision(project_hash[:montecarlo_80_percent], precision: 1)) %></td>
         <td>
           <% if project_hash[:customer_happiness] > 2 %>

@@ -241,7 +241,7 @@ class TeamsController < AuthenticatedController
   end
 
   def assign_demands_list
-    @demands = @team.demands.kept.order(:end_date)
+    @demands = @team.demands.includes([:product]).includes([:project]).includes([:company]).kept.order(:end_date)
     @paged_demands = @demands.includes(:demand_blocks).includes(:current_stage).includes(:project).includes(:portfolio_unit).includes(:product).page(page_param)
   end
 

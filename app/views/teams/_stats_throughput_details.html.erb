@@ -24,7 +24,6 @@
       <td><%= "#{number_with_precision(project_hash[:team_based_montecarlo_80_percent], precision: 2)} (#{number_with_precision(project_hash[:team_monte_carlo_weeks_std_dev], precision: 2)})" %></td>
       <td><%= "#{project_hash[:team_monte_carlo_weeks_min]} - #{project_hash[:team_monte_carlo_weeks_max]}" %></td>
       <td><%= number_to_percentage(project_hash[:team_based_odds_to_deadline] * 100, precision: 2) if project_hash[:team_based_odds_to_deadline].present? %></td>
-      <td></td>
     </tr>
   </tbody>
 </table>

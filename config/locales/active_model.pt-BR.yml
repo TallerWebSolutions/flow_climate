@@ -228,8 +228,8 @@ pt-BR:
         billable: Faturável?
         billable_type: Tipo do Faturamento
         active: Ativo?
-        start_date: Data de Início
-        end_date: Data Final
+        start_date: Início
+        end_date: Fim
         enums:
           billable_type:
             outsourcing: Outsourcing
@@ -265,8 +265,8 @@ pt-BR:
         qty_hours: Qtd de Horas
         value: Valor do Projeto
         hour_value: Valor da Hora
-        start_date: Data de Início
-        end_date: Data Final
+        start_date: Início
+        end_date: Fim
         project_type: Tipo do Projeto
         status: Status
         customer_name: Cliente
@@ -576,8 +576,8 @@ pt-BR:
         team: Time
         team_resource: Recurso do Time
         monthly_payment: Pagamento Mensal
-        start_date: Data de Início
-        end_date: Data Final
+        start_date: Início
+        end_date: Fim
       service_delivery_review:
         company: Empresa
         product: Produto
@@ -637,7 +637,7 @@ pt-BR:
       contract:
         customer: Cliente
         product: Produto
-        start_date: Data de Início
+        start_date: Início
         end_date: Data Fim
         renewal_period: Período de Renovação
         total_hours: Horas Totais

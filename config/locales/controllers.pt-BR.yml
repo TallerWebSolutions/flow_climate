@@ -293,7 +293,7 @@ pt-BR:
       flow_pressure: "Pressão do Fluxo"
       percentage_flow_pressure: "% Pressão do Fluxo"
       percentage_remaining_scope: "% Escopo Restante"
-      remaining_backlog: "Backlog Restante"
+      remaining_backlog: "Backlog"
       no_data: "Não há projetos aqui. Cadastre um."
       remaining_hours: "Horas Restantes"
       risk_alerts: "Alertas de Risco"
@@ -349,7 +349,7 @@ pt-BR:
         title: "Demandas Inconsistentes"
         no_demands: "Nenhuma demanda inconsistente"
         demands: "%{value} demanda(s)"
-        help: "Demandas inconsistentes são demandas com seu ponto de comprometimento antes da data de início do projeto ou com data fim depois da data final do projeto."
+        help: "Demandas inconsistentes são demandas com seu ponto de comprometimento antes do início do projeto ou com data fim depois da data final do projeto."
       not_associated_products: "Produtos não associados"
       project_products: "Produtos no Projeto"
       closing_info:
@@ -464,7 +464,7 @@ pt-BR:
         title: "Evolução da Confiança do Lead Time"
         ylabel: "Dias"
         legend:
-          leadtime_80_confidence: "LT 80% de Confiança"
+          leadtime_80_confidence: "Lead time (80%)"
           leadtime_80_confidence_accumulated: "Lead time 80% acumulado"
       class_of_service_pie:
         title: "Percentual das Classes de Serviço"
@@ -529,7 +529,7 @@ pt-BR:
       risk_money: "Custo"
       risk_scope: "Escopo"
     replenishing:
-      weeks_to_finish: "Semanas Restantes"
+      weeks_to_finish: "Restante"
       weeks_montecarlo: "Monte Carlo (80%)"
       team_based_weeks_montecarlo: "Monte Carlo (80%) - Time (std dev)"
       customer_happiness: "Felicidade do Cliente"
@@ -538,7 +538,7 @@ pt-BR:
       qty_using_pressure: "Qty pela Pressão"
       wip: "WiP"
       throughput_last_week: "TH Últ. Semana"
-      selected_last_week: "Selecionadas na Últ. Sem."
+      selected_last_week: "Selecionadas"
       team_wip: "WiP Máx do Time"
       throughput_data_size: "Qtd de Throughputs"
       throughput_data_stddev: "Throughput Std Dev"
@@ -1000,7 +1000,7 @@ pt-BR:
         stage: "Etapa"
         ordering: "Ordenação"
         start_date: "Data inicial"
-        end_date: "Data final"
+        end_date: "Fim"
         block_type: "Tipo"
       average_time_per_block: "Tempo Médio por Bloqueio"
       total_blocks: "Total"
