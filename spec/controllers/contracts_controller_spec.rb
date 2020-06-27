@@ -73,7 +73,7 @@ RSpec.describe ContractsController, type: :controller do
 
     describe 'POST #create' do
       context 'passing valid parameters' do
-        before { post :create, params: { company_id: company, customer_id: customer, contract: { product_id: product.id, start_date: 2.days.ago, end_date: 3.days.from_now, total_hours: 10, total_value: 100, renewal_period: :yearly, automatic_renewal: true } } }
+        before { post :create, params: { company_id: company, customer_id: customer, contract: { product_id: product.id, start_date: 2.days.ago, end_date: 3.days.from_now, total_hours: 10, total_value: 100, hours_per_demand: 30, renewal_period: :yearly, automatic_renewal: true } } }
 
         it 'creates the new contract and redirects to its show' do
           created_contract = Contract.last
@@ -83,6 +83,7 @@ RSpec.describe ContractsController, type: :controller do
           expect(created_contract.end_date).to eq 3.days.from_now.to_date
           expect(created_contract.total_hours).to eq 10
           expect(created_contract.total_value).to eq 100
+          expect(created_contract.hours_per_demand).to eq 30
           expect(created_contract.renewal_period).to eq 'yearly'
           expect(created_contract.automatic_renewal).to eq true
 
@@ -163,7 +164,7 @@ RSpec.describe ContractsController, type: :controller do
       let(:contract) { Fabricate :contract, customer: customer }
 
       context 'passing valid parameters' do
-        before { put :update, params: { company_id: company, customer_id: customer, id: contract, contract: { product_id: product.id, start_date: 2.days.ago, end_date: 3.days.from_now, total_hours: 10, total_value: 100, renewal_period: :yearly, automatic_renewal: true } } }
+        before { put :update, params: { company_id: company, customer_id: customer, id: contract, contract: { product_id: product.id, start_date: 2.days.ago, end_date: 3.days.from_now, total_hours: 10, total_value: 100, hours_per_demand: 30, renewal_period: :yearly, automatic_renewal: true } } }
 
         it 'updates the contract and redirects to company show' do
           updated_contract = Contract.last
@@ -172,6 +173,7 @@ RSpec.describe ContractsController, type: :controller do
           expect(updated_contract.end_date).to eq 3.days.from_now.to_date
           expect(updated_contract.total_hours).to eq 10
           expect(updated_contract.total_value).to eq 100
+          expect(updated_contract.hours_per_demand).to eq 30
           expect(updated_contract.renewal_period).to eq 'yearly'
           expect(updated_contract.automatic_renewal).to eq true
 

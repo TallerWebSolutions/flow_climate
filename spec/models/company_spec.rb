@@ -445,9 +445,9 @@ RSpec.describe Company, type: :model do
           Fabricate :project, company: company, team: team, start_date: 4.weeks.ago, end_date: 4.days.from_now, customers: [customer], products: [product], status: :executing, qty_hours: 260
           Fabricate :project, company: company, team: team, start_date: 4.weeks.ago, end_date: 4.days.from_now, customers: [product.customer], products: [product], status: :executing, qty_hours: 300
 
-          Fabricate :project, company: company, start_date: 4.weeks.ago, customers: [customer], products: [product], status: :waiting, qty_hours: 872
-          Fabricate :project, company: company, start_date: 4.weeks.ago, customers: [customer], products: [product], status: :finished
-          Fabricate :project, company: company, start_date: 4.weeks.ago, customers: [customer], products: [product], status: :cancelled
+          Fabricate :project, company: company, start_date: 4.weeks.ago, end_date: 1.week.ago, customers: [customer], products: [product], status: :waiting, qty_hours: 872
+          Fabricate :project, company: company, start_date: 4.weeks.ago, end_date: 1.week.ago, customers: [customer], products: [product], status: :finished
+          Fabricate :project, company: company, start_date: 4.weeks.ago, end_date: 1.week.ago, customers: [customer], products: [product], status: :cancelled
 
           first_stage = Fabricate :stage, company: company, stage_stream: :downstream, queue: false, end_point: false, integration_pipe_id: 1, order: 0
           second_stage = Fabricate :stage, company: company, stage_stream: :downstream, queue: false, end_point: true, integration_pipe_id: 1, order: 1
@@ -473,7 +473,7 @@ RSpec.describe Company, type: :model do
 
           Fabricate :demand_transition, stage: third_stage, demand: third_demand, last_time_in: 2.months.ago, last_time_out: 5.weeks.ago
 
-          expect(company.total_active_hours).to eq 1632
+          expect(company.total_active_hours).to eq 760
         end
       end
     end

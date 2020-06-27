@@ -171,4 +171,24 @@
       <%= render 'layouts/no_data', missing_data: Contract.model_name.human(count: 2) %>
     <% end %>
   </div>
+
+  <div class="col-xs-6">
+    <h4><%= I18n.t('customer.charts.contracts_scope_burnup.title') %></h4>
+    <h5><%= I18n.t('customers.show.active_contracts', count: customer.contracts.active.count) %></h5>
+    <% if customer.contracts.active.present? %>
+      <div id="customer-scope-burnup-line"
+           class="flow-chart"
+           data-xcategories="<%= customer_flow_information.dates_array.to_json %>"
+           data-title=""
+           data-ytitle="<%= I18n.t('general.demands') %>"
+           data-prefix=""
+           data-tooltipsuffix="<%= I18n.t('general.demands') %>"
+           data-datalabelsuffix=""
+           data-series="<%= customer_flow_information.build_scope_burnup.to_json %>"
+           data-decimals="1">
+      </div>
+    <% else %>
+      <%= render 'layouts/no_data', missing_data: Contract.model_name.human(count: 2) %>
+    <% end %>
+  </div>
 </div>
