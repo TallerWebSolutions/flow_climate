@@ -1,0 +1,75 @@
+.red-project {
+    background-color: #f0cbcf;
+}
+
+.circle-red {
+    display: block;
+    background: red;
+    border: 1px solid black;
+    border-radius: 50%;
+    height: 15px;
+    width: 15px;
+    margin: 0;
+}
+
+.circle-green {
+    display: block;
+    background: green;
+    border: 1px solid black;
+    border-radius: 50%;
+    height: 15px;
+    width: 15px;
+    margin: 0;
+}
+
+.circle-yellow {
+    display: block;
+    background: yellow;
+    border: 1px solid black;
+    border-radius: 50%;
+    height: 15px;
+    width: 15px;
+    margin: 0;
+}
+
+.circle-transparent {
+    display: block;
+    background: transparent;
+    border: 1px solid black;
+    border-radius: 50%;
+    height: 15px;
+    width: 15px;
+    margin: 0;
+}
+
+.center {
+    text-align: center;
+}
+
+.div-parent-check-group {
+    border: 1px solid;
+    background-color: rgba(11, 110, 154, 0.57);
+}
+
+.no-data {
+    font-size: large;
+    font-style: italic;
+    text-align: center;
+    width: 100%;
+}
+
+.header-summary {
+    padding: 5px;
+}
+
+#popup {
+    height: 50px;
+    width: 200px;
+    text-align: center;
+    vertical-align:middle;
+    background-color: cornflowerblue;
+    color: white;
+    display: none;
+    padding-top: 8px;
+    position: absolute;
+}

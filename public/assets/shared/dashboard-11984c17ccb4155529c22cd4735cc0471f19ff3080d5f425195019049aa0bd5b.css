@@ -1,0 +1,31 @@
+.dashboard-info-frame {
+    text-align: center;
+
+    padding: 20px;
+}
+
+.dashboard-info-title {
+    font-size: larger;
+    font-weight: bold;
+}
+
+.main-config-cogs {
+    font-size: xx-large;
+    padding-right: 15px;
+    margin-top: 5px;
+}
+
+.user-dashboard-companies-tab {
+    text-align: center;
+}
+
+.dashboard-add-icon {
+    font-size: large;
+    float: right;
+}
+
+.demand-tag {
+    display: inline-block;
+    margin-bottom: 5px;
+    font-size: medium;
+}
