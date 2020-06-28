@@ -8,7 +8,7 @@ queues:
   - ['default', 1]
   - ['generators', 1]
   - ['project_update', 1]
-  - ['demand_update', 1]
+  - ['demand_update', 2]
   - ['consolidations', 1]
 limits:
-  - consolidations: 4
+  consolidations: 3
