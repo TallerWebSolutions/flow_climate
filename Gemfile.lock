@@ -85,7 +85,7 @@ GEM
       image_processing (~> 1.1)
       mimemagic (>= 0.3.0)
       mini_mime (>= 0.1.3)
-    cloudinary (1.15.0)
+    cloudinary (1.16.0)
       aws_cf_signer
       rest-client
     code_analyzer (0.5.1)
@@ -343,7 +343,7 @@ GEM
       ffi (~> 1.9)
     ruby_parser (3.14.2)
       sexp_processor (~> 4.9)
-    rubycritic (4.5.0)
+    rubycritic (4.5.1)
       flay (~> 2.8)
       flog (~> 4.4)
       launchy (>= 2.0.0)
@@ -412,7 +412,7 @@ GEM
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
     yui-compressor (0.12.0)
-    zeitwerk (2.3.0)
+    zeitwerk (2.3.1)
 
 PLATFORMS
   ruby

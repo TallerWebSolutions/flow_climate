@@ -209,11 +209,21 @@ RSpec.describe DemandsController, type: :controller do
     end
 
     describe 'DELETE #destroy' do
-      include_context 'demands for controller specs'
-
       context 'passing valid IDs' do
         it 'assigns the instance variable and renders the template' do
           travel_to Time.zone.local(2019, 1, 24, 10, 0, 0) do
+            project = Fabricate :project, company: company, customers: [customer], products: [product]
+
+            first_demand = Fabricate :demand, company: company, product: product, project: project, external_id: 'hhh', demand_title: 'foo', demand_type: :feature, class_of_service: :standard, created_date: Time.zone.local(2019, 1, 22, 10, 0, 0), commitment_date: nil, end_date: nil, effort_downstream: 20, effort_upstream: 15
+            second_demand = Fabricate :demand, company: company, product: product, project: project, demand_title: 'foo bar', demand_type: :bug, class_of_service: :expedite, created_date: Time.zone.local(2019, 1, 23, 10, 0, 0), commitment_date: Time.zone.local(2019, 1, 24, 10, 0, 0), end_date: nil, effort_downstream: 0, effort_upstream: 0
+            third_demand = Fabricate :demand, company: company, product: product, project: project, demand_title: 'bar foo', demand_type: :feature, class_of_service: :intangible, created_date: Time.zone.local(2019, 1, 19, 10, 0, 0), commitment_date: nil, end_date: Time.zone.local(2019, 1, 23, 10, 0, 0), effort_downstream: 0, effort_upstream: 10
+            fourth_demand = Fabricate :demand, company: company, product: product, project: project, demand_title: 'xpto', demand_type: :chore, class_of_service: :standard, created_date: Time.zone.local(2019, 1, 14, 10, 0, 0), commitment_date: Time.zone.local(2019, 1, 19, 10, 0, 0), end_date: Time.zone.local(2019, 1, 24, 10, 0, 0), effort_downstream: 10, effort_upstream: 20
+
+            fifth_demand = Fabricate :demand, company: company, product: product, project: project, demand_title: 'xpto', demand_type: :ui, class_of_service: :fixed_date, created_date: 1.month.ago, commitment_date: nil, end_date: nil, effort_downstream: 30, effort_upstream: 10
+            sixth_demand = Fabricate :demand, company: company, product: product, project: project, demand_title: 'sas', demand_type: :feature, class_of_service: :standard, created_date: Time.zone.local(2019, 1, 23, 10, 0, 0), commitment_date: Time.zone.local(2019, 1, 24, 10, 0, 0), end_date: nil, effort_downstream: 10, effort_upstream: 10
+            seventh_demand = Fabricate :demand, company: company, product: product, project: project, demand_title: 'sas', demand_type: :performance_improvement, class_of_service: :expedite, created_date: Time.zone.local(2019, 1, 22, 10, 0, 0), commitment_date: Time.zone.local(2019, 1, 22, 10, 0, 0), end_date: Time.zone.local(2019, 1, 23, 10, 0, 0), effort_downstream: 40, effort_upstream: 10
+            eigth_demand = Fabricate :demand, company: company, product: product, project: project, demand_title: 'sas', demand_type: :wireframe, class_of_service: :fixed_date, created_date: Time.zone.local(2019, 1, 21, 10, 0, 0), commitment_date: Time.zone.local(2019, 1, 23, 10, 0, 0), end_date: Time.zone.today, effort_downstream: 50, effort_upstream: 60
+
             delete :destroy, params: { company_id: company, id: first_demand, demands_ids: Demand.all.map(&:id) }, xhr: true
 
             expect(response).to have_http_status :ok
@@ -222,15 +232,17 @@ RSpec.describe DemandsController, type: :controller do
             expect(assigns(:start_date)).to eq 3.months.ago.to_date
             expect(assigns(:end_date)).to eq Time.zone.today
             expect(assigns(:demands).map(&:id)).to match_array [first_demand.id, second_demand.id, third_demand.id, fourth_demand.id, fifth_demand.id, sixth_demand.id, seventh_demand.id, eigth_demand.id]
-            expect(assigns(:confidence_95_leadtime)).to be_within(10).of(459.1)
-            expect(assigns(:confidence_80_leadtime)).to be_within(10).of(307.5)
-            expect(assigns(:confidence_65_leadtime)).to be_within(10).of(156.0)
+            expect(assigns(:confidence_95_leadtime)).to be_within(0.1).of(4.6)
+            expect(assigns(:confidence_80_leadtime)).to be_within(0.1).of(3.4)
+            expect(assigns(:confidence_65_leadtime)).to be_within(0.1).of(2.2)
             expect(assigns(:avg_work_hours_per_demand).to_f).to be_within(0.1).of(36.8)
           end
         end
       end
 
       context 'passing an invalid ID' do
+        let!(:first_demand) { Fabricate :demand, company: company, product: product, project: project, external_id: 'hhh', demand_title: 'foo', demand_type: :feature, class_of_service: :standard, created_date: Time.zone.local(2019, 1, 22, 10, 0, 0), commitment_date: nil, end_date: nil, effort_downstream: 20, effort_upstream: 15 }
+
         context 'non-existent company' do
           before { delete :destroy, params: { company_id: 'foo', id: first_demand, demands_ids: Demand.all.map(&:id) }, xhr: true }
 
@@ -239,6 +251,7 @@ RSpec.describe DemandsController, type: :controller do
 
         context 'not permitted' do
           let(:company) { Fabricate :company, users: [] }
+          let!(:first_demand) { Fabricate :demand, company: company, product: product, project: project, external_id: 'hhh', demand_title: 'foo', demand_type: :feature, class_of_service: :standard, created_date: Time.zone.local(2019, 1, 22, 10, 0, 0), commitment_date: nil, end_date: nil, effort_downstream: 20, effort_upstream: 15 }
 
           before { delete :destroy, params: { company_id: company, id: first_demand, demands_ids: Demand.all.map(&:id) }, xhr: true }
 
