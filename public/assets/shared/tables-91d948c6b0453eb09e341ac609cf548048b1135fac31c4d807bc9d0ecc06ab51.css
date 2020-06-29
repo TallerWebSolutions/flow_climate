@@ -1,0 +1,23 @@
+.col-table-details {
+    font-size: smaller;
+    font-style: italic;
+}
+
+.equal-heights {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.table-filter {
+    font-size: smaller;
+}
+
+.relative-row {
+    position: relative;
+}
+
+.bottom-button {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+}

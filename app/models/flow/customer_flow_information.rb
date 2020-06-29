@@ -5,7 +5,8 @@ module Flow
     attr_reader :dates_array, :customer, :limit_date,
                 :financial_ideal, :financial_current, :financial_ideal_slice, :financial_total, :total_financial_value,
                 :hours_ideal, :hours_current, :hours_ideal_slice, :hours_total, :total_hours_value,
-                :scope_ideal, :scope_current, :scope_ideal_slice, :scope_total, :total_scope_value
+                :scope_ideal, :scope_current, :scope_ideal_slice, :scope_total, :total_scope_value,
+                :quality_info
 
     def initialize(customer, data_interval = 'month')
       super(customer.demands)
@@ -42,6 +43,12 @@ module Flow
       [{ name: I18n.t('charts.burnup.scope'), data: @scope_total }, { name: I18n.t('charts.burnup.current'), data: @scope_current }, { name: I18n.t('charts.burnup.ideal'), data: @scope_ideal }]
     end
 
+    def build_quality_info
+      return [{ name: I18n.t('charts.quality_info.bugs_by_delivery'), data: [] }] if @demands.blank?
+
+      [{ name: I18n.t('charts.quality_info.bugs_by_delivery'), data: @quality_info }]
+    end
+
     private
 
     def blank_burnup
@@ -55,6 +62,7 @@ module Flow
 
         add_value_to_burnup_arrays(date, hour_value, index, total_effort)
         add_value_to_scope_burnup(date, index, total_demands_delivered_to_date.count)
+        add_value_to_quality_chart(date, total_demands_delivered_to_date)
       end
     end
 
@@ -72,6 +80,17 @@ module Flow
       @scope_ideal << @scope_ideal_slice * (index + 1)
       @scope_current << total_demands_delivered_to_date if date <= @limit_date
       @scope_total << @total_scope_value
+    end
+
+    def add_value_to_quality_chart(date, total_demands_delivered_to_date)
+      return if date > @limit_date
+
+      bugs_opened_in_the_contract_count = @demands.kept.bug.where('created_date >= :start_date AND created_date <= :end_date', start_date: start_date, end_date: date).count
+      @quality_info << if bugs_opened_in_the_contract_count.zero?
+                         0
+                       else
+                         total_demands_delivered_to_date.count / bugs_opened_in_the_contract_count.to_f
+                       end
     end
 
     def build_dates_array(data_interval)
@@ -114,6 +133,8 @@ module Flow
       @scope_total = []
       @scope_ideal = []
       @scope_current = []
+
+      @quality_info = []
     end
 
     def build_burnup_constants

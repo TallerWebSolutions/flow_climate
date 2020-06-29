@@ -18,6 +18,11 @@ if (lineCustomerBurnupScope.length !== 0) {
     buildLineChart(lineCustomerBurnupScope);
 }
 
+const customerQualityPerPeriod = $("#customer-quality-line");
+if (customerQualityPerPeriod.length !== 0) {
+    buildLineChart(customerQualityPerPeriod);
+}
+
 const customerHoursConsumed = $("#customer-hours-consumed-column-line");
 if (customerHoursConsumed.length !== 0) {
     buildColumnLineChart(customerHoursConsumed);

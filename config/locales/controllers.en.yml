@@ -621,6 +621,8 @@ en:
         title: "Contracts Hours Burn-up"
       contracts_scope_burnup:
         title: "Scope Burn-up for Active Contracts"
+      quality_info:
+        title: "Quality"
   demands:
     new:
       title: "Create Demand"
@@ -889,6 +891,8 @@ en:
       title: "Tags Cloud"
     hours_burnup:
       title: "Hours Burn"
+    quality_info:
+      bugs_by_delivery: "Bugs by Delivery"
   finances_params:
     edit:
       title: "Edit Financial Information"
