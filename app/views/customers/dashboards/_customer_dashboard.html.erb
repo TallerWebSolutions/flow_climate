@@ -110,7 +110,7 @@
 <hr>
 
 <div class="row">
-  <div class="col-xs-6">
+  <div class="col-xs-12">
     <div id="customer-hours-consumed-column-line"
          class="flow-chart"
          data-xcategories="<%= customer_dashboard_data.array_of_dates.to_json %>"
@@ -128,7 +128,9 @@
          data-decimals="0">
     </div>
   </div>
+</div>
 
+<div class="row">
   <div class="col-xs-6">
     <h4><%= I18n.t('customer.charts.contracts_cost_burnup.title') %></h4>
     <h5><%= I18n.t('customers.show.active_contracts', count: customer.contracts.active.count) %></h5>
@@ -148,9 +150,7 @@
       <%= render 'layouts/no_data', missing_data: Contract.model_name.human(count: 2) %>
     <% end %>
   </div>
-</div>
 
-<div class="row">
   <div class="col-xs-6">
     <h4><%= I18n.t('customer.charts.contracts_hours_burnup.title') %></h4>
     <h5><%= I18n.t('customers.show.active_contracts', count: customer.contracts.active.count) %></h5>
@@ -170,7 +170,9 @@
       <%= render 'layouts/no_data', missing_data: Contract.model_name.human(count: 2) %>
     <% end %>
   </div>
+</div>
 
+<div class="row">
   <div class="col-xs-6">
     <h4><%= I18n.t('customer.charts.contracts_scope_burnup.title') %></h4>
     <h5><%= I18n.t('customers.show.active_contracts', count: customer.contracts.active.count) %></h5>
@@ -190,9 +192,7 @@
       <%= render 'layouts/no_data', missing_data: Contract.model_name.human(count: 2) %>
     <% end %>
   </div>
-</div>
 
-<div class="row">
   <div class="col-xs-6">
     <h4><%= I18n.t('customer.charts.quality_info.title') %></h4>
     <h5><%= I18n.t('customers.show.active_contracts', count: customer.contracts.active.count) %></h5>
