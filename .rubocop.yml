@@ -88,6 +88,7 @@ Metrics/ClassLength:
     - 'app/models/project_consolidation.rb'
     - 'app/models/demand.rb'
     - 'app/models/flow/work_item_flow_informations.rb'
+    - 'app/models/flow/customer_flow_information.rb'
     - 'app/controllers/projects_controller.rb'
     - 'app/controllers/demands_controller.rb'
     - 'app/controllers/companies_controller.rb'

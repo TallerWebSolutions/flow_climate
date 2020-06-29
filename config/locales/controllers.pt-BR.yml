@@ -690,6 +690,8 @@ pt-BR:
         title: "Burn-up de Horas dos Contratos"
       contracts_scope_burnup:
         title: "Burn-up de Escopo para Contratos Ativos"
+      quality_info:
+        title: "Qualidade"
   demands:
     new:
       title: "Criar Demanda"
@@ -958,6 +960,8 @@ pt-BR:
       title: "Nuvem de Tags"
     hours_burnup:
       title: "Queima de Horas"
+    quality_info:
+      bugs_by_delivery: "Bugs por Entrega"
   finances_params:
     edit:
       title: "Editar Informação Financeira"
