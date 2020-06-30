@@ -227,7 +227,7 @@ class Project < ApplicationRecord
   end
 
   def remaining_backlog(date = Time.zone.now)
-    DemandsRepository.instance.remaining_backlog_to_date(demands, date.end_of_day) + initial_scope
+    DemandsRepository.instance.remaining_backlog_to_date(demands.map(&:id), date.end_of_day) + initial_scope
   end
 
   def percentage_remaining_backlog(date = Time.zone.now)
