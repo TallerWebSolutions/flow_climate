@@ -212,17 +212,19 @@ RSpec.describe Flow::CustomerFlowInformation do
 
     context 'with demands but no contracts' do
       it 'builds the burnup with the correct information' do
-        product = Fabricate :product, customer: customer
-        project = Fabricate :project, customers: [customer], products: [product]
+        travel_to Time.zone.local(2020, 6, 24, 10, 0, 0) do
+          product = Fabricate :product, customer: customer
+          project = Fabricate :project, customers: [customer], products: [product]
 
-        3.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, end_date: Time.zone.now, effort_upstream: 10, effort_downstream: 30) }
-        5.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, end_date: 1.month.ago, effort_upstream: 40, effort_downstream: 10) }
-        2.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, end_date: 3.months.ago, effort_upstream: 0, effort_downstream: 50) }
-        6.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, end_date: 4.months.ago, effort_upstream: 100, effort_downstream: 300) }
+          3.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, end_date: Time.zone.now, effort_upstream: 10, effort_downstream: 30) }
+          5.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, end_date: 1.month.ago, effort_upstream: 40, effort_downstream: 10) }
+          2.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, end_date: 3.months.ago, effort_upstream: 0, effort_downstream: 50) }
+          6.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, end_date: 4.months.ago, effort_upstream: 100, effort_downstream: 300) }
 
-        customer_flow = described_class.new(customer)
+          customer_flow = described_class.new(customer)
 
-        expect(customer_flow.build_scope_burnup).to eq([{ name: I18n.t('charts.burnup.scope'), data: [0] }, { name: I18n.t('charts.burnup.current'), data: [3] }, { name: I18n.t('charts.burnup.ideal'), data: [0] }])
+          expect(customer_flow.build_scope_burnup).to eq([{ name: I18n.t('charts.burnup.scope'), data: [0] }, { name: I18n.t('charts.burnup.current'), data: [3] }, { name: I18n.t('charts.burnup.ideal'), data: [0] }])
+        end
       end
     end
 
