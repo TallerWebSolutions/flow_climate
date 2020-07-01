@@ -15,6 +15,8 @@ class ScoreMatrixQuestionsController < AuthenticatedController
     @score_matrix_question = ScoreMatrixQuestion.new(score_matrix_question_params.merge(score_matrix: product_score_matrix))
 
     if @score_matrix_question.save
+      update_score_for_product_demands
+
       flash[:notice] = I18n.t('score_matrix_questions.create.success')
       redirect_to company_product_path(@company, @product)
     else
@@ -40,6 +42,8 @@ class ScoreMatrixQuestionsController < AuthenticatedController
     @score_matrix_question.update(score_matrix_question_params)
 
     if @score_matrix_question.valid?
+      update_score_for_product_demands
+
       flash[:notice] = I18n.t('score_matrix_questions.update.success')
       redirect_to company_product_path(@company, @product)
     else
@@ -49,6 +53,14 @@ class ScoreMatrixQuestionsController < AuthenticatedController
   end
 
   private
+
+  def update_score_for_product_demands
+    @product.demands.kept.scored_demands.each do |demand|
+      final_score = DemandScoreMatrixService.instance.compute_score(demand)
+
+      demand.update(demand_score: final_score)
+    end
+  end
 
   def assign_score_matrix_question
     @score_matrix_question = @product.score_matrix.score_matrix_questions.find(params[:id])
