@@ -98,14 +98,29 @@ RSpec.describe ScoreMatrixQuestionsController, type: :controller do
     describe 'POST #create' do
       context 'with valid data' do
         it 'creates the portfolio unit and renders the template' do
-          post :create, params: { company_id: company, product_id: product, score_matrix_question: { description: 'bla', question_type: :service_provider_dimension, question_weight: 10 } }, xhr: true
+          demand = Fabricate :demand, product: product, demand_score: 20
+
+          first_question = Fabricate :score_matrix_question, score_matrix: score_matrix, question_weight: 20
+          second_question = Fabricate :score_matrix_question, score_matrix: score_matrix, question_weight: 10
+          third_question = Fabricate :score_matrix_question, score_matrix: score_matrix, question_weight: 25
+
+          first_answer = Fabricate :score_matrix_answer, score_matrix_question: first_question, answer_value: 5
+          second_answer = Fabricate :score_matrix_answer, score_matrix_question: second_question, answer_value: 0
+          Fabricate :score_matrix_answer, score_matrix_question: third_question, answer_value: 3
+
+          Fabricate :demand_score_matrix, user: user, demand: demand, score_matrix_answer: first_answer
+          Fabricate :demand_score_matrix, user: user, demand: demand, score_matrix_answer: second_answer
+
+          post :create, params: { company_id: company, product_id: product, score_matrix_question: { description: 'bla', question_type: :service_provider_dimension, question_weight: 40 } }, xhr: true
 
           created_question = ScoreMatrixQuestion.last
 
           expect(created_question.score_matrix).to be_a ScoreMatrix
           expect(created_question.question_type).to eq 'service_provider_dimension'
           expect(created_question.description).to eq 'bla'
-          expect(created_question.question_weight).to eq 10
+          expect(created_question.question_weight).to eq 40
+
+          expect(demand.reload.demand_score).to eq 1.05263157894737
 
           expect(flash[:notice]).to eq I18n.t('score_matrix_questions.create.success')
 
@@ -313,13 +328,28 @@ RSpec.describe ScoreMatrixQuestionsController, type: :controller do
 
       context 'with valid data' do
         it 'updates the portfolio unit and renders the template' do
+          demand = Fabricate :demand, product: product, demand_score: 20
+
+          first_question = Fabricate :score_matrix_question, score_matrix: score_matrix, question_weight: 20
+          second_question = Fabricate :score_matrix_question, score_matrix: score_matrix, question_weight: 10
+          third_question = Fabricate :score_matrix_question, score_matrix: score_matrix, question_weight: 25
+
+          first_answer = Fabricate :score_matrix_answer, score_matrix_question: first_question, answer_value: 5
+          second_answer = Fabricate :score_matrix_answer, score_matrix_question: second_question, answer_value: 0
+          Fabricate :score_matrix_answer, score_matrix_question: third_question, answer_value: 3
+
+          Fabricate :demand_score_matrix, user: user, demand: demand, score_matrix_answer: first_answer
+          Fabricate :demand_score_matrix, user: user, demand: demand, score_matrix_answer: second_answer
+
           put :update, params: { company_id: company, product_id: product, id: score_matrix_question, score_matrix_question: { description: 'bla', question_type: :service_provider_dimension, question_weight: 10 } }, xhr: true
 
-          updated_question = ScoreMatrixQuestion.last
+          updated_question = score_matrix_question.reload
           expect(updated_question.score_matrix).to be_a ScoreMatrix
           expect(updated_question.question_type).to eq 'service_provider_dimension'
           expect(updated_question.description).to eq 'bla'
           expect(updated_question.question_weight).to eq 10
+
+          expect(demand.reload.demand_score).to eq 1.53846153846154
 
           expect(response).to redirect_to company_product_path(company, product)
         end

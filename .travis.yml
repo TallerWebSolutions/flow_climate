@@ -22,11 +22,9 @@ addons:
     - postgresql-client-10
 before_script:
   - cp config/database.yml.travis config/database.yml
-  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64
-    > ./cc-test-reporter
+  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
   - chmod +x ./cc-test-reporter
-  - "./cc-test-reporter before-build"
-#  - export RUBYOPT='-W:no-deprecated -W:no-experimental'
+  - ./cc-test-reporter before-build
 script:
   - RAILS_ENV=test bundle exec rake db:create --trace
   - RAILS_ENV=test bundle exec rake db:migrate --trace
@@ -37,7 +35,7 @@ script:
   - git add public/assets
   - git commit -am 'assets precompiled'
 after_script:
-  - "./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT"
+  - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
 deploy:
   provider: heroku
   api_key:
