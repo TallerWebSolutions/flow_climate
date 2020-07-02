@@ -168,4 +168,21 @@ RSpec.describe Customer, type: :model do
     it { expect(customer.larger_lead_times(0, 3)).to eq [second_demand, first_demand, third_demand] }
     it { expect(customer.larger_lead_times(1, 2)).to eq [third_demand] }
   end
+
+  describe '#current_scope' do
+    let(:company) { Fabricate :company }
+    let(:customer) { Fabricate :customer, company: company }
+    let(:other_customer) { Fabricate :customer, company: company }
+
+    let(:project) { Fabricate :project, company: company, customers: [customer] }
+    let(:other_project) { Fabricate :project, company: company, customers: [customer, other_customer] }
+
+    let!(:first_demand) { Fabricate :demand, customer: customer, project: project, demand_type: :feature, created_date: 3.weeks.ago, commitment_date: 17.days.ago, end_date: 2.weeks.ago }
+    let!(:second_demand) { Fabricate :demand, customer: customer, project: project, demand_type: :bug, created_date: 2.weeks.ago, commitment_date: 18.days.ago, end_date: 1.week.ago }
+    let!(:third_demand) { Fabricate :demand, customer: customer, project: other_project, demand_type: :bug, created_date: 1.week.ago, commitment_date: 4.days.ago, end_date: 2.days.ago }
+    let!(:fourth_demand) { Fabricate :demand, customer: other_customer, project: other_project, demand_type: :bug, created_date: 1.week.ago, commitment_date: 4.days.ago, end_date: 2.days.ago }
+    let!(:fifth_demand) { Fabricate :demand, customer: customer, project: other_project, demand_type: :bug, created_date: 1.week.ago, commitment_date: 4.days.ago, end_date: 2.days.ago }
+
+    it { expect(customer.current_scope).to eq 4 }
+  end
 end
