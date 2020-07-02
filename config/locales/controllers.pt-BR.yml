@@ -459,7 +459,7 @@ pt-BR:
         title: "Eficiência de Fluxo para %{target_name}"
         share: "Eficiência de Fluxo"
       leadtime_evolution:
-        title: "Evolução da Confiança do Lead Time"
+        title: "Evolução do Lead Time"
         ylabel: "Dias"
         legend:
           leadtime_80_confidence: "Lead time (80%)"
