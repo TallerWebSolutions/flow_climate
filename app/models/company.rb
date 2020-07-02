@@ -92,8 +92,8 @@ class Company < ApplicationRecord
     @current_month_throughput ||= (DemandsRepository.instance.upstream_throughput_in_month_for_projects(projects).count + DemandsRepository.instance.downstream_throughput_in_month_for_projects(projects).count)
   end
 
-  def last_week_scope
-    projects.map(&:last_week_scope).compact.sum
+  def current_scope
+    demands.kept.count
   end
 
   def consumed_hours_in_month(date = Time.zone.today)

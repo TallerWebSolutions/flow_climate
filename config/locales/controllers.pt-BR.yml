@@ -29,7 +29,6 @@ pt-BR:
       title: "Dados"
     current_week: "Semana Atual"
     current_year: "Ano Atual"
-    last_week_scope: "Escopo Última Semana"
     select: "Selecione"
     user_not_found: "Usuário não encontrado"
     enqueued: "Sua solicitação foi colocada na fila. Em poucos minutos estará pronta."
@@ -307,7 +306,6 @@ pt-BR:
     show:
       initial_scope: "Escopo Inicial"
       last_team: "Time atual"
-      last_week_scope: "Escopo da Última Sem."
       avg_hours_per_demand: "Média Horas/Demanda"
       scope_gap: "Restante do escopo"
       scope_growth: "Crescimento do Escopo (%)"

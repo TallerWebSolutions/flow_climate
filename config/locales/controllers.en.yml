@@ -29,7 +29,6 @@ en:
       title: "Raw Data"
     current_week: "Current Week"
     current_year: "Current Year"
-    last_week_scope: "Last Week Scope"
     select: "Select"
     user_not_found: "User not found"
     enqueued: "Your request was enqueued. In a few minutes it will be done."
@@ -293,7 +292,6 @@ en:
     show:
       initial_scope: "Initial Scope"
       last_team: "Current team"
-      last_week_scope: "Last week scope"
       avg_hours_per_demand: "Avg Hours/Demand"
       scope_gap: "Scope Gap"
       scope_growth: "Scope Growth (%)"

@@ -78,9 +78,9 @@ RSpec.describe Company, type: :model do
     let!(:second_stage_project_config) { Fabricate :stage_project_config, project: active_project, stage: second_stage, compute_effort: true, pairing_percentage: 80, stage_percentage: 100, management_percentage: 10 }
     let!(:third_stage_project_config) { Fabricate :stage_project_config, project: active_project, stage: third_stage, compute_effort: true, pairing_percentage: 80, stage_percentage: 100, management_percentage: 10 }
 
-    let!(:first_demand) { Fabricate :demand, project: active_project, team: team, created_date: 2.weeks.ago, end_date: 1.week.ago, demand_type: :bug }
-    let!(:second_demand) { Fabricate :demand, project: active_project, team: team, created_date: 2.weeks.ago, end_date: 1.week.ago }
-    let!(:third_demand) { Fabricate :demand, project: active_project, team: team, created_date: 1.week.ago, end_date: 2.days.ago }
+    let!(:first_demand) { Fabricate :demand, company: company, project: active_project, team: team, created_date: 2.weeks.ago, end_date: 1.week.ago, demand_type: :bug }
+    let!(:second_demand) { Fabricate :demand, company: company, project: active_project, team: team, created_date: 2.weeks.ago, end_date: 1.week.ago }
+    let!(:third_demand) { Fabricate :demand, company: company, project: active_project, team: team, created_date: 1.week.ago, end_date: 2.days.ago }
 
     let!(:first_item_assignment) { Fabricate :item_assignment, demand: first_demand, membership: membership, start_time: 1.month.ago, finish_time: nil }
     let!(:second_item_assignment) { Fabricate :item_assignment, demand: second_demand, membership: membership, start_time: 1.month.ago, finish_time: nil }
@@ -295,10 +295,10 @@ RSpec.describe Company, type: :model do
     end
   end
 
-  describe '#last_week_scope' do
+  describe '#current_scope' do
     include_context 'demands with effort for company'
 
-    it { expect(company.last_week_scope).to eq 183 }
+    it { expect(company.current_scope).to eq 3 }
   end
 
   describe '#consumed_hours_in_month' do
