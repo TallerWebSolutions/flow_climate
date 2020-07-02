@@ -400,6 +400,10 @@ class Project < ApplicationRecord
     value.to_f / backlog_for.count
   end
 
+  def delivered_scope
+    demands.kept.finished.count
+  end
+
   private
 
   def bugs?

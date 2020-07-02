@@ -27,12 +27,12 @@
     <div class="stamp-content"><%= project.initial_scope %></div>
   </div>
   <div class="col-xs-3 stamp">
-    <div class="stamp-title"><%= I18n.t('projects.show.last_week_scope') %></div>
-    <div class="stamp-content"><%= project.last_week_scope %></div>
+    <div class="stamp-title"><%= I18n.t('general.delivered') %></div>
+    <div class="stamp-content"><%= project.delivered_scope  %></div>
   </div>
   <div class="col-xs-3 stamp">
-    <div class="stamp-title"><%= I18n.t('general.delivered') %></div>
-    <div class="stamp-content"><%= project.total_throughput %></div>
+    <div class="stamp-title"><%= I18n.t('projects.index.remaining_backlog') %></div>
+    <div class="stamp-content"><%= project.remaining_backlog  %></div>
   </div>
   <div class="col-xs-3 stamp">
     <div class="stamp-title"><%= I18n.t('general.stamps.flow_pressure') %></div>
