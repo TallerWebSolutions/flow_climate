@@ -1362,4 +1362,9 @@ RSpec.describe Project, type: :model do
       it { expect(project.quality).to eq 1 }
     end
   end
+
+  describe '#delivered_scope' do
+    include_context 'demands with effort'
+    it { expect(project.delivered_scope).to eq 3 }
+  end
 end
