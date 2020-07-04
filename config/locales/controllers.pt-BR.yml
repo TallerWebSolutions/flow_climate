@@ -1298,3 +1298,5 @@ pt-BR:
   operations_dashboard:
     effort_chart:
       title: "Horas Úteis"
+    pull_interval:
+      title: "Intervalo Entre Demandas Puxadas"

@@ -9,6 +9,7 @@
 #  discarded_at           :datetime
 #  finish_time            :datetime
 #  item_assignment_effort :decimal(, )      default(0.0), not null
+#  pull_interval          :decimal(, )      default(0.0)
 #  start_time             :datetime         not null
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
@@ -42,6 +43,7 @@ class ItemAssignment < ApplicationRecord
   delegate :name, to: :membership, prefix: true
 
   before_save :compute_assignment_effort
+  before_save :compute_pull_interval
 
   def working_hours_until(beginning_time = nil, end_time = Time.zone.now)
     start_effort_time = [start_time, beginning_time].compact.max
@@ -62,5 +64,29 @@ class ItemAssignment < ApplicationRecord
     effort_in_assignment = membership_flow_information.compute_effort_for_assignment(self)
     self.assignment_for_role = effort_in_assignment.positive?
     self.item_assignment_effort = effort_in_assignment
+  end
+
+  def compute_pull_interval
+    previous_assignment = membership.item_assignments.where('start_time < :start_time', start_time: start_time).order(:start_time).last
+
+    if previous_assignment.blank?
+      self.pull_interval = 0
+    else
+      previous_assignment_finish_time = assignment_finish_time(previous_assignment)
+      self.pull_interval = if previous_assignment_finish_time.present? && start_time > previous_assignment_finish_time
+                             start_time - previous_assignment_finish_time
+                           else
+                             0
+                           end
+    end
+  end
+
+  def assignment_finish_time(assignment)
+    transitions_during_assignment = assignment.demand.demand_transitions_at(assignment.start_time)
+    transition_finished_time = transitions_during_assignment.map(&:last_time_out).compact.max
+
+    return nil if transition_finished_time.blank? && assignment.finish_time.blank?
+
+    [assignment.finish_time, transition_finished_time].compact.min
   end
 end
