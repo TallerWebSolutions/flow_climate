@@ -199,6 +199,7 @@ RSpec.describe UsersController, type: :controller do
               expect(assigns(:projects_flow_pressure)).to eq({ project => 8.780487804878078, other_project => 12.413793103448336 })
 
               expect(assigns(:member_effort_chart)).to eq [{ data: [0, 0], name: team.name }]
+              expect(assigns(:member_pull_interval_average_chart)).to eq [{ data: [0.0, 0.0], name: team.name }]
 
               expect(response).to render_template :show
             end

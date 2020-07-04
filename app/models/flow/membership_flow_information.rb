@@ -25,6 +25,24 @@ module Flow
       efforts_by_month
     end
 
+    def average_pull_interval
+      return unless @membership.developer?
+
+      average_time_to_pull_by_month = []
+
+      @population_dates.each do |date|
+        item_assignments = @membership.item_assignments.where('item_assignments.start_time BETWEEN :bottom_limit_date AND :upper_limit_date', bottom_limit_date: date.beginning_of_month, upper_limit_date: date.end_of_month).order(:start_time)
+
+        average_time_to_pull_by_month << if item_assignments.count.positive?
+                                           ((item_assignments.sum(:pull_interval) / item_assignments.count.to_f) / 1.hour).to_f
+                                         else
+                                           0
+                                         end
+      end
+
+      average_time_to_pull_by_month
+    end
+
     def compute_effort_for_assignment(assignment)
       stages_to_work_on = membership.stages_to_work_on
 

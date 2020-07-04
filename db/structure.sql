@@ -1323,7 +1323,8 @@ CREATE TABLE public.item_assignments (
     discarded_at timestamp without time zone,
     item_assignment_effort numeric DEFAULT 0.0 NOT NULL,
     assignment_for_role boolean DEFAULT false,
-    membership_id integer NOT NULL
+    membership_id integer NOT NULL,
+    pull_interval numeric DEFAULT 0.0
 );
 
 
@@ -5437,6 +5438,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200528154520'),
 ('20200601145121'),
 ('20200615173415'),
-('20200627151758');
+('20200627151758'),
+('20200703124334');
 
 

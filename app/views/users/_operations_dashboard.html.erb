@@ -79,3 +79,22 @@
     </div>
   </div>
 </div>
+
+<div class="row equal-heights">
+  <div class="col-xs-6">
+    <h4><%= I18n.t('operations_dashboard.pull_interval.title') %></h4>
+
+    <div id="member-dashboard-pull-interval-line"
+         class="flow-chart"
+         data-title=''
+         data-xcategories='<%= array_of_dates.to_json %>'
+         data-xtitle='<%= I18n.t('general.months') %>'
+         data-ytitle='<%= I18n.t('general.hours') %>'
+         data-prefix=''
+         data-tooltipsuffix='<%= I18n.t('general.hours') %>'
+         data-datalabelsuffix=''
+         data-series='<%= member_pull_interval_average_chart.to_json %>'
+         data-decimals='0'>
+    </div>
+  </div>
+</div>

@@ -86,6 +86,7 @@ RSpec.describe TeamMembersController, type: :controller do
           expect(assigns(:company)).to eq company
           expect(assigns(:team_member)).to eq team_member
           expect(assigns(:member_effort_chart)).to eq [{ data: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], name: team.name }]
+          expect(assigns(:member_pull_interval_average_chart)).to eq [{ data: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], name: team.name }]
         end
       end
 

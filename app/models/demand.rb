@@ -199,8 +199,11 @@ class Demand < ApplicationRecord
   end
 
   def stage_at(analysed_date = Time.zone.now)
-    transitions_at = demand_transitions.where('last_time_in <= :analysed_date AND (last_time_out IS NULL OR last_time_out >= :analysed_date)', analysed_date: analysed_date)
-    transitions_at&.first&.stage
+    demand_transitions_at(analysed_date)&.first&.stage
+  end
+
+  def demand_transitions_at(analysed_date = Time.zone.now)
+    demand_transitions.where('last_time_in <= :analysed_date AND (last_time_out IS NULL OR last_time_out >= :analysed_date)', analysed_date: analysed_date)
   end
 
   def aging_when_finished

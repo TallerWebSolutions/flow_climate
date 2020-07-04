@@ -1319,3 +1319,5 @@ en:
   operations_dashboard:
     effort_chart:
       title: "Working Hours"
+    pull_interval:
+      title: "Demand Pull Interval"

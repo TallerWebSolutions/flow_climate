@@ -102,11 +102,13 @@ class UsersController < AuthenticatedController
 
   def build_member_effort_chart(team_member)
     @member_effort_chart = []
+    @member_pull_interval_average_chart = []
 
     team_member.memberships.active.each do |membership|
       membership_service = Flow::MembershipFlowInformation.new(membership)
 
       @member_effort_chart << { name: membership.team.name, data: membership_service.compute_developer_effort }
+      @member_pull_interval_average_chart << { name: membership.team.name, data: membership_service.average_pull_interval }
     end
   end
 

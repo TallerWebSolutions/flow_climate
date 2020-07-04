@@ -8,6 +8,11 @@ if (lineLeadtimeAccumulated.length !== 0) {
     buildLineChart(lineLeadtimeAccumulated);
 }
 
+const linePullInterval = $('#member-dashboard-pull-interval-line');
+if (linePullInterval.length !== 0) {
+    buildLineChart(linePullInterval);
+}
+
 const teamMemberEffortDiv = $('#member-dashboard-effort-column');
 if (teamMemberEffortDiv.length !== 0) {
     buildColumnChart(teamMemberEffortDiv);

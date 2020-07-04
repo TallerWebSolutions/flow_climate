@@ -9,6 +9,12 @@ function buildOperationsCharts() {
         buildLineChart(lineLeadtimeAccumulated);
     }
 
+
+    const linePullInterval = $('#member-dashboard-pull-interval-line');
+    if (linePullInterval.length !== 0) {
+        buildLineChart(linePullInterval);
+    }
+
     const userEffortDiv = $('#member-dashboard-effort-column');
     if (userEffortDiv.length !== 0) {
         buildColumnChart(userEffortDiv);
