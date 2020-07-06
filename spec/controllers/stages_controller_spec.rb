@@ -597,7 +597,7 @@ RSpec.describe StagesController, type: :controller do
       context 'passing valid parameters' do
         context 'with JiraAccount' do
           let!(:jira_account) { Fabricate :jira_account, company: company }
-          let(:options) { { username: 'foo', password: 'bar', site: 'https://foo.atlassian.net/', context_path: '/', auth_type: :basic, read_timeout: 120 } }
+          let(:options) { { username: 'foo', password: 'bar', site: 'https://foo.atlassian.net/', context_path: '/', auth_type: :basic } }
           let(:client) { JIRA::Client.new(options) }
 
           context 'and the stage does not exist' do

@@ -10,7 +10,7 @@ RSpec.describe Jira::ProcessJiraProjectJob, type: :active_job do
 
   describe '.perform' do
     context 'having params' do
-      let(:options) { { username: 'foo', password: 'bar', site: 'http://foo.bar', context_path: '/', auth_type: :basic, read_timeout: 120 } }
+      let(:options) { { username: 'foo', password: 'bar', site: 'http://foo.bar', context_path: '/', auth_type: :basic } }
       let(:client) { JIRA::Client.new(options) }
 
       let(:jira_project) { client.Project.build({ key: 'FC', name: 'Example', projectTypeKey: 'business', lead: 'username' }.with_indifferent_access) }

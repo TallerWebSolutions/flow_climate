@@ -6,7 +6,7 @@ module Flow
                 :financial_ideal, :financial_current, :financial_ideal_slice, :financial_total, :total_financial_value,
                 :hours_ideal, :hours_current, :hours_ideal_slice, :hours_total, :total_hours_value,
                 :scope_ideal, :scope_current, :scope_ideal_slice, :scope_total, :total_scope_value,
-                :quality_info
+                :quality_info, :quality_info_month, :lead_time_info, :throughput_info
 
     def initialize(customer, data_interval = 'month')
       super(customer.demands)
@@ -22,7 +22,7 @@ module Flow
 
       build_burnup_constants
       build_burnup_scope_constants
-      build_hours_and_cost_burnup_info(hour_value)
+      build_customer_charts_info(hour_value)
     end
 
     def build_financial_burnup
@@ -44,9 +44,21 @@ module Flow
     end
 
     def build_quality_info
-      return [{ name: I18n.t('charts.quality_info.bugs_by_delivery'), data: [] }] if @demands.blank?
+      return [{ name: I18n.t('charts.quality_info.bugs_by_delivery'), data: [] }, { name: I18n.t('charts.quality_info.bugs_by_delivery_month'), data: [] }] if @demands.blank?
 
-      [{ name: I18n.t('charts.quality_info.bugs_by_delivery'), data: @quality_info }]
+      [{ name: I18n.t('charts.quality_info.bugs_by_delivery'), data: @quality_info }, { name: I18n.t('charts.quality_info.bugs_by_delivery_month'), data: @quality_info_month }]
+    end
+
+    def build_lead_time_info
+      return [{ name: I18n.t('general.leadtime_p80_label'), data: [] }, { name: I18n.t('general.dashboards.lead_time_in_month'), data: [] }] if @demands.blank?
+
+      [{ name: I18n.t('general.leadtime_p80_label'), data: @lead_time_info }, { name: I18n.t('general.dashboards.lead_time_in_month'), data: @lead_time_info_month }]
+    end
+
+    def build_throughput_info
+      return [{ name: I18n.t('customer.charts.throughput.title'), data: [] }] if @demands.blank?
+
+      [{ name: I18n.t('customer.charts.throughput.title'), data: @throughput_info }]
     end
 
     private
@@ -55,18 +67,23 @@ module Flow
       [{ name: I18n.t('charts.burnup.scope'), data: [] }, { name: I18n.t('charts.burnup.current'), data: [] }, { name: I18n.t('charts.burnup.ideal'), data: [] }]
     end
 
-    def build_hours_and_cost_burnup_info(hour_value)
+    def build_customer_charts_info(hour_value)
       @dates_array.each_with_index do |date, index|
-        total_demands_delivered_to_date = @demands.kept.finished_until_date(date).finished_after_date(start_date)
-        total_effort = total_demands_delivered_to_date.map(&:total_effort).flatten.sum.to_f
+        demands_delivered_to_date = @demands.kept.finished_until_date(date).finished_after_date(start_date)
+        demands_delivered_in_month = @demands.kept.finished_until_date(date.end_of_month).finished_after_date(date.beginning_of_month)
 
-        add_value_to_burnup_arrays(date, hour_value, index, total_effort)
-        add_value_to_scope_burnup(date, index, total_demands_delivered_to_date.count)
-        add_value_to_quality_chart(date, total_demands_delivered_to_date)
+        add_value_to_burnup_arrays(date, hour_value, index, demands_delivered_to_date)
+        add_value_to_scope_burnup(date, index, demands_delivered_to_date.count)
+        add_value_to_quality_chart(date, demands_delivered_to_date)
+        add_value_to_quality_in_month_chart(date, demands_delivered_to_date)
+        add_value_to_lead_time_chart(date, demands_delivered_to_date, demands_delivered_in_month)
+        add_value_to_throughput_chart(date, demands_delivered_to_date)
       end
     end
 
-    def add_value_to_burnup_arrays(date, hour_value, index, total_effort)
+    def add_value_to_burnup_arrays(date, hour_value, index, demands_delivered_to_date)
+      total_effort = demands_delivered_to_date.map(&:total_effort).flatten.sum.to_f
+
       @financial_ideal << @financial_ideal_slice * (index + 1)
       @financial_current << total_effort * hour_value if date <= @limit_date
       @financial_total << @total_financial_value
@@ -82,15 +99,39 @@ module Flow
       @scope_total << @total_scope_value
     end
 
-    def add_value_to_quality_chart(date, total_demands_delivered_to_date)
+    def add_value_to_quality_chart(date, demands_delivered_to_date)
       return if date > @limit_date
 
       bugs_opened_in_the_contract_count = @demands.kept.bug.where('created_date >= :start_date AND created_date <= :end_date', start_date: start_date, end_date: date).count
       @quality_info << if bugs_opened_in_the_contract_count.zero?
                          0
                        else
-                         total_demands_delivered_to_date.count / bugs_opened_in_the_contract_count.to_f
+                         demands_delivered_to_date.count / bugs_opened_in_the_contract_count.to_f
                        end
+    end
+
+    def add_value_to_quality_in_month_chart(date, demands_delivered_to_date_in_month)
+      return if date > @limit_date
+
+      bugs_opened_in_the_month_count = @demands.kept.bug.where('created_date >= :start_date AND created_date <= :end_date', start_date: date.beginning_of_month, end_date: date.end_of_month).count
+      @quality_info_month << if bugs_opened_in_the_month_count.zero?
+                               0
+                             else
+                               demands_delivered_to_date_in_month.count / bugs_opened_in_the_month_count.to_f
+                             end
+    end
+
+    def add_value_to_lead_time_chart(date, demands_delivered_to_date, demands_delivered_in_month)
+      return if date > @limit_date
+
+      @lead_time_info << Stats::StatisticsService.instance.percentile(80, demands_delivered_to_date.map(&:leadtime_in_days))
+      @lead_time_info_month << Stats::StatisticsService.instance.percentile(80, demands_delivered_in_month.map(&:leadtime_in_days))
+    end
+
+    def add_value_to_throughput_chart(date, demands_delivered_to_date)
+      return if date > @limit_date
+
+      @throughput_info << demands_delivered_to_date.count
     end
 
     def build_dates_array(data_interval)
@@ -135,6 +176,12 @@ module Flow
       @scope_current = []
 
       @quality_info = []
+      @quality_info_month = []
+
+      @lead_time_info = []
+      @lead_time_info_month = []
+
+      @throughput_info = []
     end
 
     def build_burnup_constants

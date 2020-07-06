@@ -250,24 +250,24 @@ RSpec.describe Flow::CustomerFlowInformation do
 
   describe '#build_quality_info' do
     context 'with no demands' do
-      it 'builds the burnup with the correct information' do
+      it 'builds an empty quality info' do
         customer_flow = described_class.new(customer)
 
-        expect(customer_flow.build_quality_info).to eq([{ name: I18n.t('charts.quality_info.bugs_by_delivery'), data: [] }])
+        expect(customer_flow.build_quality_info).to eq([{ name: I18n.t('charts.quality_info.bugs_by_delivery'), data: [] }, { name: I18n.t('charts.quality_info.bugs_by_delivery_month'), data: [] }])
       end
     end
 
     context 'with no demands but with contracts' do
-      it 'builds the burnup with the correct information' do
+      it 'builds an empty quality info' do
         Fabricate :contract, customer: customer, total_value: 100
         customer_flow = described_class.new(customer)
 
-        expect(customer_flow.build_quality_info).to eq([{ name: I18n.t('charts.quality_info.bugs_by_delivery'), data: [] }])
+        expect(customer_flow.build_quality_info).to eq([{ name: I18n.t('charts.quality_info.bugs_by_delivery'), data: [] }, { name: I18n.t('charts.quality_info.bugs_by_delivery_month'), data: [] }])
       end
     end
 
     context 'with demands but no contracts' do
-      it 'builds the burnup with the correct information' do
+      it 'builds an empty quality info' do
         product = Fabricate :product, customer: customer
         project = Fabricate :project, customers: [customer], products: [product]
 
@@ -278,12 +278,12 @@ RSpec.describe Flow::CustomerFlowInformation do
 
         customer_flow = described_class.new(customer)
 
-        expect(customer_flow.build_quality_info).to eq([{ name: I18n.t('charts.quality_info.bugs_by_delivery'), data: [0] }])
+        expect(customer_flow.build_quality_info).to eq([{ name: I18n.t('charts.quality_info.bugs_by_delivery'), data: [0] }, { name: I18n.t('charts.quality_info.bugs_by_delivery_month'), data: [0] }])
       end
     end
 
     context 'with demands and contracts' do
-      it 'builds the burnup with the correct information' do
+      it 'builds the quality chart with the correct information' do
         travel_to Time.zone.local(2020, 6, 24, 10, 0, 0) do
           product = Fabricate :product, customer: customer
           project = Fabricate :project, customers: [customer], products: [product]
@@ -296,7 +296,119 @@ RSpec.describe Flow::CustomerFlowInformation do
 
           customer_flow = described_class.new(customer)
 
-          expect(customer_flow.build_quality_info).to eq([{ name: I18n.t('charts.quality_info.bugs_by_delivery'), data: [0, 0, 0, 1.4285714285714286] }])
+          expect(customer_flow.build_quality_info).to eq([{ name: I18n.t('charts.quality_info.bugs_by_delivery'), data: [0, 0, 0, 1.4285714285714286] }, { name: I18n.t('charts.quality_info.bugs_by_delivery_month'), data: [0, 0, 0, 1.4285714285714286] }])
+        end
+      end
+    end
+  end
+
+  describe '#build_lead_time_info' do
+    context 'with no demands' do
+      it 'builds the burnup with the correct information' do
+        customer_flow = described_class.new(customer)
+
+        expect(customer_flow.build_lead_time_info).to eq([{ name: I18n.t('general.leadtime_p80_label'), data: [] }, { name: I18n.t('general.dashboards.lead_time_in_month'), data: [] }])
+      end
+    end
+
+    context 'with no demands but with contracts' do
+      it 'builds the burnup with the correct information' do
+        Fabricate :contract, customer: customer, total_value: 100
+        customer_flow = described_class.new(customer)
+
+        expect(customer_flow.build_lead_time_info).to eq([{ name: I18n.t('general.leadtime_p80_label'), data: [] }, { name: I18n.t('general.dashboards.lead_time_in_month'), data: [] }])
+      end
+    end
+
+    context 'with demands but no contracts' do
+      it 'builds the lead time chart with the current month info' do
+        travel_to Time.zone.local(2020, 7, 6, 12, 0, 0) do
+          product = Fabricate :product, customer: customer
+          project = Fabricate :project, customers: [customer], products: [product]
+
+          3.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, commitment_date: 2.days.ago, end_date: Time.zone.now) }
+          5.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, commitment_date: 35.days.ago, end_date: 1.month.ago) }
+          2.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, commitment_date: 102.days.ago, end_date: 3.months.ago) }
+          6.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, commitment_date: 134.days.ago, end_date: 4.months.ago) }
+
+          customer_flow = described_class.new(customer)
+
+          expect(customer_flow.build_lead_time_info).to eq([{ name: I18n.t('general.leadtime_p80_label'), data: [2.0] }, { name: I18n.t('general.dashboards.lead_time_in_month'), data: [2.0] }])
+        end
+      end
+    end
+
+    context 'with demands and contracts' do
+      it 'builds the burnup with the correct information' do
+        travel_to Time.zone.local(2020, 6, 24, 10, 0, 0) do
+          product = Fabricate :product, customer: customer
+          project = Fabricate :project, customers: [customer], products: [product]
+          Fabricate :contract, customer: customer, total_value: 100_000, total_hours: 2000, hours_per_demand: 30, start_date: 3.months.ago, end_date: 1.month.from_now
+
+          3.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, demand_type: :feature, commitment_date: 2.days.ago, end_date: Time.zone.now) }
+          5.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, demand_type: :bug, commitment_date: 35.days.ago, end_date: 1.month.ago) }
+          2.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, demand_type: :bug, commitment_date: 102.days.ago, end_date: 3.months.ago) }
+          6.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, demand_type: :feature, commitment_date: 134.days.ago, end_date: 4.months.ago) }
+
+          customer_flow = described_class.new(customer)
+
+          expect(customer_flow.build_lead_time_info).to eq([{ name: I18n.t('general.leadtime_p80_label'), data: [10.0, 10.0, 8.800000000000004, 5.200000000000001] }, { name: I18n.t('general.dashboards.lead_time_in_month'), data: [10.0, 0, 4.0, 2.0] }])
+        end
+      end
+    end
+  end
+
+  describe '#build_throughput_info' do
+    context 'with no demands' do
+      it 'builds the burnup with the correct information' do
+        customer_flow = described_class.new(customer)
+
+        expect(customer_flow.build_throughput_info).to eq([{ name: I18n.t('customer.charts.throughput.title'), data: [] }])
+      end
+    end
+
+    context 'with no demands but with contracts' do
+      it 'builds the burnup with the correct information' do
+        Fabricate :contract, customer: customer, total_value: 100
+        customer_flow = described_class.new(customer)
+
+        expect(customer_flow.build_throughput_info).to eq([{ name: I18n.t('customer.charts.throughput.title'), data: [] }])
+      end
+    end
+
+    context 'with demands but no contracts' do
+      it 'builds the lead time chart with the current month info' do
+        travel_to Time.zone.local(2020, 7, 6, 12, 0, 0) do
+          product = Fabricate :product, customer: customer
+          project = Fabricate :project, customers: [customer], products: [product]
+
+          3.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, commitment_date: 2.days.ago, end_date: Time.zone.now) }
+          5.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, commitment_date: 35.days.ago, end_date: 1.month.ago) }
+          2.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, commitment_date: 102.days.ago, end_date: 3.months.ago) }
+          6.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, commitment_date: 134.days.ago, end_date: 4.months.ago) }
+
+          customer_flow = described_class.new(customer)
+
+          expect(customer_flow.build_throughput_info).to eq([{ name: I18n.t('customer.charts.throughput.title'), data: [3] }])
+        end
+      end
+    end
+
+    context 'with demands and contracts' do
+      it 'builds the burnup with the correct information' do
+        travel_to Time.zone.local(2020, 6, 24, 10, 0, 0) do
+          product = Fabricate :product, customer: customer
+          project = Fabricate :project, customers: [customer], products: [product]
+          Fabricate :contract, customer: customer, total_value: 100_000, total_hours: 2000, hours_per_demand: 30, start_date: 3.months.ago, end_date: 1.month.from_now
+
+          3.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, demand_type: :feature, commitment_date: 2.days.ago, end_date: Time.zone.now) }
+          5.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, demand_type: :bug, commitment_date: 35.days.ago, end_date: 1.month.ago) }
+          2.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, demand_type: :bug, commitment_date: 102.days.ago, end_date: 3.months.ago) }
+          6.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, demand_type: :feature, commitment_date: 134.days.ago, end_date: 4.months.ago) }
+
+          customer_flow = described_class.new(customer)
+
+          expect(customer_flow.build_throughput_info).to eq([{ name: I18n.t('customer.charts.throughput.title'), data: [2, 2, 7, 10] }])
         end
       end
     end

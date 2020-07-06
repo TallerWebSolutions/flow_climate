@@ -11,7 +11,6 @@ class CustomersController < AuthenticatedController
   def show
     @customers = [@customer]
     @customer_dashboard_data = CustomerDashboardData.new(customer_demands)
-    @demands_chart_adapter = Highchart::DemandsChartsAdapter.new(customer_demands, start_date, end_date, 'month')
     @customer_flow_information = Flow::CustomerFlowInformation.new(@customer, 'month')
     @user_invite = UserInvite.new(invite_object_id: @customer.id, invite_type: :customer)
     @contracts = @customer.contracts.order(end_date: :desc)
@@ -60,14 +59,6 @@ class CustomersController < AuthenticatedController
 
   def customer_demands
     @customer_demands ||= @customer.exclusives_demands.finished.order(:end_date)
-  end
-
-  def start_date
-    @start_date ||= customer_demands.map(&:end_date).compact.min
-  end
-
-  def end_date
-    @end_date ||= [customer_demands.map(&:end_date).compact.max, Time.zone.today].compact.min
   end
 
   def assign_customer

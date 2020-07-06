@@ -167,6 +167,7 @@ pt-BR:
       hours_delivered: "Horas"
       hours_delivered_acc: "Horas Acumuladas"
       first_delivery: "Primeira entrega"
+      lead_time_in_month: "Lead time (p80) no mês"
   header:
     logout: Sair
     sign_up: Cadastre-se
@@ -690,6 +691,10 @@ pt-BR:
         title: "Burn-up de Escopo para Contratos Ativos"
       quality_info:
         title: "Qualidade"
+      lead_time:
+        title: "Lead time"
+      throughput:
+        title: "Throughput"
   demands:
     new:
       title: "Criar Demanda"
@@ -960,6 +965,7 @@ pt-BR:
       title: "Queima de Horas"
     quality_info:
       bugs_by_delivery: "Bugs por Entrega"
+      bugs_by_delivery_month: "Bugs por entrega no mês"
   finances_params:
     edit:
       title: "Editar Informação Financeira"

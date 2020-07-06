@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe WebhookIntegrationsController, type: :controller do
-  let(:options) { { username: 'foo', password: 'bar', site: 'http://foo.bar', context_path: '/', auth_type: :basic, read_timeout: 120 } }
+  let(:options) { { username: 'foo', password: 'bar', site: 'http://foo.bar', context_path: '/', auth_type: :basic } }
   let(:client) { JIRA::Client.new(options) }
 
   describe 'POST #jira_webhook' do
