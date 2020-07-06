@@ -1,28 +1,28 @@
 # frozen_string_literal: true
 
 module Flow
-  class CustomerFlowInformation < SystemFlowInformation
-    attr_reader :dates_array, :customer, :limit_date,
+  class ContractsFlowInformation < SystemFlowInformation
+    attr_reader :dates_array, :contracts, :limit_date,
                 :financial_ideal, :financial_current, :financial_ideal_slice, :financial_total, :total_financial_value,
                 :hours_ideal, :hours_current, :hours_ideal_slice, :hours_total, :total_hours_value,
                 :scope_ideal, :scope_current, :scope_ideal_slice, :scope_total, :total_scope_value,
                 :quality_info, :quality_info_month, :lead_time_info, :throughput_info
 
-    def initialize(customer, data_interval = 'month')
-      super(customer.demands)
+    def initialize(contracts, data_interval = 'month')
+      @contracts = contracts
+      super(Demand.where(id: @contracts.map(&:demands).flatten.uniq.map(&:id)))
 
-      @customer = customer
       @financial_burnup = {}
 
       build_dates_array(data_interval)
       build_limit_date(data_interval)
       build_arrays
 
-      hour_value = @customer.contracts.active.map(&:hour_value).sum.to_f / @customer.contracts.active.count
+      hour_value = @contracts.active.map(&:hour_value).sum.to_f / @contracts.active.count
 
       build_burnup_constants
       build_burnup_scope_constants
-      build_customer_charts_info(hour_value)
+      build_operations_charts_info(hour_value)
     end
 
     def build_financial_burnup
@@ -67,7 +67,7 @@ module Flow
       [{ name: I18n.t('charts.burnup.scope'), data: [] }, { name: I18n.t('charts.burnup.current'), data: [] }, { name: I18n.t('charts.burnup.ideal'), data: [] }]
     end
 
-    def build_customer_charts_info(hour_value)
+    def build_operations_charts_info(hour_value)
       @dates_array.each_with_index do |date, index|
         demands_delivered_to_date = @demands.kept.finished_until_date(date).finished_after_date(start_date)
         demands_delivered_in_month = @demands.kept.finished_until_date(date.end_of_month).finished_after_date(date.beginning_of_month)
@@ -155,11 +155,11 @@ module Flow
     end
 
     def start_date
-      @customer.contracts.active.map(&:start_date).flatten.min || Time.zone.today
+      @contracts.active.map(&:start_date).flatten.min || Time.zone.today
     end
 
     def end_date
-      @customer.contracts.active.map(&:end_date).flatten.max || Time.zone.today
+      @contracts.active.map(&:end_date).flatten.max || Time.zone.today
     end
 
     def build_arrays
@@ -185,15 +185,15 @@ module Flow
     end
 
     def build_burnup_constants
-      @total_financial_value = @customer.contracts.active.map(&:total_value).sum
+      @total_financial_value = @contracts.active.map(&:total_value).sum
       @financial_ideal_slice = @total_financial_value / @dates_array.count
 
-      @total_hours_value = @customer.contracts.active.map(&:total_hours).sum
+      @total_hours_value = @contracts.active.map(&:total_hours).sum
       @hours_ideal_slice = @total_hours_value / @dates_array.count
     end
 
     def build_burnup_scope_constants
-      @total_scope_value = @customer.contracts.active.sum(&:estimated_scope)
+      @total_scope_value = @contracts.active.sum(&:estimated_scope)
       @scope_ideal_slice = @total_scope_value / @dates_array.count.to_f
     end
   end

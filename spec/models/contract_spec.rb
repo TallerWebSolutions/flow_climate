@@ -33,6 +33,11 @@ RSpec.describe Contract, type: :model do
     end
   end
 
+  context 'delegations' do
+    it { is_expected.to delegate_method(:name).to(:product).with_prefix }
+    it { is_expected.to delegate_method(:demands).to(:customer) }
+  end
+
   describe '#hour_value' do
     let(:company) { Fabricate :company }
 
