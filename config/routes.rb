@@ -150,7 +150,7 @@ Rails.application.routes.draw do
     resources :customers do
       post :add_user_to_customer, on: :member
 
-      resources :contracts, except: %i[index show]
+      resources :contracts, except: %i[index]
     end
 
     resources :team_resources, only: %i[new create destroy]

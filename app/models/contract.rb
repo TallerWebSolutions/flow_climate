@@ -42,6 +42,7 @@ class Contract < ApplicationRecord
   scope :active, -> { where('start_date <= :limit_date AND end_date >= :limit_date', limit_date: Time.zone.today) }
 
   delegate :name, to: :product, prefix: true
+  delegate :demands, to: :customer, prefix: false
 
   def hour_value
     total_value / total_hours
@@ -56,5 +57,9 @@ class Contract < ApplicationRecord
     return 0 if demands_finished.blank?
 
     demands_finished.map(&:total_effort).compact.sum / demands_finished.count
+  end
+
+  def current_estimate_gap
+    (current_hours_per_demand - hours_per_demand) / hours_per_demand.to_f
   end
 end

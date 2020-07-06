@@ -4,18 +4,13 @@
       <li><%= link_to I18n.t('general.home.title'), root_path %></li>
       <li><%= link_to @company.abbreviation&.upcase, company_path(@company) %></li>
       <li><%= link_to Customer.model_name.human(count: 2), company_customers_path(@company) %></li>
-      <li><%= @customer.name %></li>
+      <li><%= link_to @customer.name, company_customer_path(@company, @customer) %></li>
+      <li><%= "#{Contract.model_name.human} - #{I18n.l(@contract.start_date)}" %></li>
     </ul>
   </div>
 </div>
 
-<%= render 'customers/dashboards/customer_dashboard', company: @company,
-           customer: @customer,
-           user_invite: @user_invite,
-           customer_dashboard_data: @customer_dashboard_data,
-           contracts: @contracts,
-           contract: @contract,
-           contracts_flow_information: @contracts_flow_information %>
+<%= render 'contracts/dashboards/contracts_dashboard', contracts_flow_information: @contracts_flow_information %>
 
 <% content_for :javascript do %>
   <%= javascript_include_tag 'charts/column' %>
@@ -24,5 +19,5 @@
   <%= javascript_include_tag 'charts/donut' %>
 
   <%= javascript_include_tag 'contracts/contract-charts' %>
-  <%= javascript_include_tag 'customers/show' %>
+  <%= javascript_include_tag 'contracts/show' %>
 <% end %>

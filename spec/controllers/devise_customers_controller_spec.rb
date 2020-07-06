@@ -25,7 +25,7 @@ RSpec.describe DeviseCustomersController, type: :controller do
 
           expect(response).to render_template 'devise_customers/home'
           expect(response).to render_template 'common/dashboards/_general_info'
-          expect(assigns(:customer_flow_information)).to be_a Flow::CustomerFlowInformation
+          expect(assigns(:contracts_flow_information)).to be_a Flow::ContractsFlowInformation
         end
       end
 

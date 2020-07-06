@@ -168,6 +168,7 @@ en:
       hours_delivered_acc: "Hours Accumulated"
       first_delivery: "First delivery"
       lead_time_in_month: "Lead time (p80) in month"
+    backlog: "Backlog"
   header:
     logout: Logout
     explore: Explore
@@ -626,6 +627,8 @@ en:
         title: "Lead time"
       throughput:
         title: "Throughput"
+      delivered_scope: "% Delivered Scope"
+      delivered_hours: "% Delivered Hours"
   demands:
     new:
       title: "Create Demand"
@@ -1302,6 +1305,7 @@ en:
       success: "Contract updated."
     index:
       current_hours_per_demand: "Current HpD"
+      hours_estimate_gap: "Estimative Gap"
   score_matrix_questions:
     create:
       success: "Score matrix question created."

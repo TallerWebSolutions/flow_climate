@@ -258,10 +258,15 @@ RSpec.describe CustomersController, type: :controller do
         it 'assigns the instance variable and renders the template' do
           array_of_dates = [Time.zone.yesterday.to_date, Time.zone.today]
           customer_data = instance_double('CustomerDashboardData', hours_delivered_upstream: 10, hours_delivered_downstream: 20, array_of_dates: array_of_dates, total_hours_delivered: 20, total_hours_delivered_accumulated: 40)
-          customer_flow_info = instance_double('Flow::CustomerFlowInformation', dates_array: array_of_dates, build_financial_burnup: [1, 2], build_hours_burnup: [3, 4], build_scope_burnup: [5, 6], build_quality_info: [7, 8], build_lead_time_info: [9, 10], build_throughput_info: [11, 12])
+          contracts_info = instance_double('Flow::ContractsFlowInformation',
+                                           contracts: Contract.all, delivered_demands_count: 2, remaining_backlog_count: 4,
+                                           consumed_hours: 1, remaining_hours: 5, dates_array: [1.day.ago, Time.zone.now],
+                                           build_financial_burnup: { name: 'bla', data: [1, 2] }, build_hours_burnup: { name: 'bla', data: [1, 2] },
+                                           build_scope_burnup: { name: 'bla', data: [1, 2] }, build_quality_info: { name: 'bla', data: [1, 2] },
+                                           build_lead_time_info: { name: 'bla', data: [1, 2] }, build_throughput_info: { name: 'bla', data: [1, 2] })
 
           expect(CustomerDashboardData).to(receive(:new).once { customer_data })
-          expect(Flow::CustomerFlowInformation).to(receive(:new).once { customer_flow_info })
+          expect(Flow::ContractsFlowInformation).to(receive(:new).once { contracts_info })
 
           get :show, params: { company_id: company, id: customer }
 
