@@ -22,7 +22,7 @@ RSpec.describe ExportsController, type: :controller do
   end
 
   context 'authenticated' do
-    let(:options) { { username: 'foo', password: 'bar', site: 'https://foo.atlassian.net/', context_path: '/', auth_type: :basic, read_timeout: 120 } }
+    let(:options) { { username: 'foo', password: 'bar', site: 'https://foo.atlassian.net/', context_path: '/', auth_type: :basic } }
     let(:client) { JIRA::Client.new(options) }
 
     let(:jira_account) { Fabricate :jira_account, base_uri: 'https://foo.atlassian.net/', username: 'foo', api_token: 'bar' }
