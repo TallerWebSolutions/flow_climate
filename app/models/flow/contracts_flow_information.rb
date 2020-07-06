@@ -2,15 +2,14 @@
 
 module Flow
   class ContractsFlowInformation < SystemFlowInformation
-    attr_reader :dates_array, :contracts, :limit_date,
+    attr_reader :dates_array, :contracts, :limit_date, :consumed_hours,
                 :financial_ideal, :financial_current, :financial_ideal_slice, :financial_total, :total_financial_value,
-                :hours_ideal, :hours_current, :hours_ideal_slice, :hours_total, :total_hours_value,
-                :scope_ideal, :scope_current, :scope_ideal_slice, :scope_total, :total_scope_value,
+                :hours_ideal, :hours_current, :hours_ideal_slice, :hours_total, :total_hours_value, :remaining_hours,
+                :scope_ideal, :scope_current, :scope_ideal_slice, :scope_total, :total_scope_value, :delivered_demands_count, :remaining_backlog_count,
                 :quality_info, :quality_info_month, :lead_time_info, :throughput_info
 
     def initialize(contracts, data_interval = 'month')
-      @contracts = contracts
-      super(Demand.where(id: @contracts.map(&:demands).flatten.uniq.map(&:id)))
+      build_contracts_base_info(contracts)
 
       @financial_burnup = {}
 
@@ -20,8 +19,8 @@ module Flow
 
       hour_value = @contracts.active.map(&:hour_value).sum.to_f / @contracts.active.count
 
-      build_burnup_constants
-      build_burnup_scope_constants
+      build_hours_finances_constants
+      build_scope_constants
       build_operations_charts_info(hour_value)
     end
 
@@ -184,17 +183,33 @@ module Flow
       @throughput_info = []
     end
 
-    def build_burnup_constants
-      @total_financial_value = @contracts.active.map(&:total_value).sum
-      @financial_ideal_slice = @total_financial_value / @dates_array.count
-
-      @total_hours_value = @contracts.active.map(&:total_hours).sum
-      @hours_ideal_slice = @total_hours_value / @dates_array.count
+    def build_contracts_base_info(contracts)
+      @contracts = contracts
+      @demands_ids = @contracts.map(&:demands).flatten.uniq.map(&:id)
+      @demands = Demand.where(id: @demands_ids).kept
     end
 
-    def build_burnup_scope_constants
-      @total_scope_value = @contracts.active.sum(&:estimated_scope)
+    def build_hours_finances_constants
+      @total_financial_value = @contracts.map(&:total_value).sum
+      @financial_ideal_slice = @total_financial_value / @dates_array.count
+
+      @total_hours_value = @contracts.map(&:total_hours).sum
+      @hours_ideal_slice = @total_hours_value / @dates_array.count
+
+      @consumed_hours = demands_finished_for_contracts.sum(&:total_effort)
+      @remaining_hours = @total_hours_value - @consumed_hours
+    end
+
+    def build_scope_constants
+      @total_scope_value = @contracts.sum(&:estimated_scope)
       @scope_ideal_slice = @total_scope_value / @dates_array.count.to_f
+
+      @delivered_demands_count = demands_finished_for_contracts.count
+      @remaining_backlog_count = @total_scope_value - @delivered_demands_count
+    end
+
+    def demands_finished_for_contracts
+      @demands_finished_for_contracts ||= @demands.finished_until_date(end_date).finished_after_date(start_date)
     end
   end
 end

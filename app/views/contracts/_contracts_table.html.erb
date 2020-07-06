@@ -9,6 +9,7 @@
         <th><%= Contract.human_attribute_name :total_value %></th>
         <th><%= Contract.human_attribute_name :hours_per_demand %></th>
         <th><%= I18n.t('contracts.index.current_hours_per_demand') %></th>
+        <th><%= I18n.t('contracts.index.hours_estimate_gap') %></th>
         <th></th>
       </tr>
     </thead>
@@ -23,7 +24,11 @@
           <td><%= number_to_currency(contract.total_value, precision: 2) %></td>
           <td><%= I18n.t('general.hours_text', count: contract.hours_per_demand) %></td>
           <td><%= I18n.t('general.hours_text', count: number_with_precision(contract.current_hours_per_demand, precision: 2)) %></td>
+          <td><%= number_to_percentage(contract.current_estimate_gap * 100, precision: 2) %></td>
           <td>
+            <%= link_to company_customer_contract_path(company, customer, contract) do %>
+              <i class="fa fa-eye"></i>
+            <% end %>
             <%= link_to edit_company_customer_contract_path(company, customer, contract) do %>
               <i class="fas fa-edit"></i>
             <% end %>

@@ -3,7 +3,7 @@
 class ContractsController < AuthenticatedController
   before_action :assign_company
   before_action :assign_customer
-  before_action :assign_contract, only: %i[edit update destroy]
+  before_action :assign_contract, only: %i[edit update destroy show]
 
   def new
     @contract = Contract.new(customer: @customer)
@@ -42,6 +42,10 @@ class ContractsController < AuthenticatedController
   def destroy
     @contract.destroy
     redirect_to company_customer_path(@company, @customer)
+  end
+
+  def show
+    @contracts_flow_information = Flow::ContractsFlowInformation.new(Contract.where(id: @contract.id), 'month')
   end
 
   private

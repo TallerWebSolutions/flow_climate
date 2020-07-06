@@ -58,4 +58,8 @@ class Contract < ApplicationRecord
 
     demands_finished.map(&:total_effort).compact.sum / demands_finished.count
   end
+
+  def current_estimate_gap
+    (current_hours_per_demand - hours_per_demand) / hours_per_demand.to_f
+  end
 end

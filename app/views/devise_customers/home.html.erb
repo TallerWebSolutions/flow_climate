@@ -13,7 +13,10 @@
 
 <% content_for :javascript do %>
   <%= javascript_include_tag 'charts/column' %>
+  <%= javascript_include_tag 'charts/column-line' %>
   <%= javascript_include_tag 'charts/line' %>
+
+  <%= javascript_include_tag 'contracts/contract-charts' %>
 
   <%= javascript_include_tag 'customers/show' %>
 <% end %>

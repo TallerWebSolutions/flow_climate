@@ -31,6 +31,12 @@ RSpec.describe ContractsController, type: :controller do
 
       it { expect(response).to redirect_to new_user_session_path }
     end
+
+    describe 'GET #show' do
+      before { get :show, params: { company_id: 'foo', customer_id: 'xpto', id: 'bar' } }
+
+      it { expect(response).to redirect_to new_user_session_path }
+    end
   end
 
   context 'authenticated' do
@@ -242,6 +248,54 @@ RSpec.describe ContractsController, type: :controller do
             let(:company) { Fabricate :company, users: [] }
 
             before { delete :destroy, params: { company_id: company, customer_id: customer, id: contract } }
+
+            it { expect(response).to have_http_status :not_found }
+          end
+        end
+      end
+    end
+
+    describe 'GET #show' do
+      let(:company) { Fabricate :company, users: [user] }
+      let(:contract) { Fabricate :contract, customer: customer }
+
+      context 'passing valid ID' do
+        context 'having no dependencies' do
+          it 'assigns the instance variables and renders the template' do
+            contracts_info = instance_double('Flow::ContractsFlowInformation',
+                                             contracts: Contract.all, delivered_demands_count: 2, remaining_backlog_count: 4,
+                                             consumed_hours: 1, remaining_hours: 5, dates_array: [1.day.ago, Time.zone.now],
+                                             build_financial_burnup: { name: 'bla', data: [1, 2] }, build_hours_burnup: { name: 'bla', data: [1, 2] },
+                                             build_scope_burnup: { name: 'bla', data: [1, 2] }, build_quality_info: { name: 'bla', data: [1, 2] },
+                                             build_lead_time_info: { name: 'bla', data: [1, 2] }, build_throughput_info: { name: 'bla', data: [1, 2] })
+
+            expect(Flow::ContractsFlowInformation).to receive(:new).once.and_return(contracts_info)
+
+            get :show, params: { company_id: company, customer_id: customer, id: contract }
+            expect(response).to render_template :show
+            expect(assigns(:contract)).to eq contract
+          end
+        end
+      end
+
+      context 'passing invalid' do
+        context 'contract' do
+          before { get :show, params: { company_id: company, customer_id: customer, id: 'foo' } }
+
+          it { expect(response).to have_http_status :not_found }
+        end
+
+        context 'company' do
+          context 'non-existent' do
+            before { get :show, params: { company_id: 'foo', customer_id: customer, id: contract } }
+
+            it { expect(response).to have_http_status :not_found }
+          end
+
+          context 'not permitted' do
+            let(:company) { Fabricate :company, users: [] }
+
+            before { get :show, params: { company_id: company, customer_id: customer, id: contract } }
 
             it { expect(response).to have_http_status :not_found }
           end
