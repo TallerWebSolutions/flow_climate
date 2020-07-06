@@ -167,6 +167,7 @@ en:
       hours_delivered: "Hours"
       hours_delivered_acc: "Hours Accumulated"
       first_delivery: "First delivery"
+      lead_time_in_month: "Lead time (p80) in month"
   header:
     logout: Logout
     explore: Explore
@@ -621,6 +622,10 @@ en:
         title: "Scope Burn-up for Active Contracts"
       quality_info:
         title: "Quality"
+      lead_time:
+        title: "Lead time"
+      throughput:
+        title: "Throughput"
   demands:
     new:
       title: "Create Demand"
@@ -891,6 +896,7 @@ en:
       title: "Hours Burn"
     quality_info:
       bugs_by_delivery: "Bugs by Delivery"
+      bugs_by_delivery_month: "Bugs by delivery in month"
   finances_params:
     edit:
       title: "Edit Financial Information"

@@ -257,11 +257,11 @@ RSpec.describe CustomersController, type: :controller do
       context 'with valid data' do
         it 'assigns the instance variable and renders the template' do
           array_of_dates = [Time.zone.yesterday.to_date, Time.zone.today]
-          customer_data = instance_double('CustomerDashboardData', lead_time_accumulated: 10, hours_delivered_upstream: 10, hours_delivered_downstream: 20, array_of_dates: array_of_dates, throughput_data: [2, 4], total_hours_delivered: 20, total_hours_delivered_accumulated: 40)
-          demands_chart_data = instance_double('Highchart::DemandsChartsAdapter', leadtime_percentiles_on_time_chart_data: { y_axis: 'bla' }, x_axis: 'xpto')
+          customer_data = instance_double('CustomerDashboardData', hours_delivered_upstream: 10, hours_delivered_downstream: 20, array_of_dates: array_of_dates, total_hours_delivered: 20, total_hours_delivered_accumulated: 40)
+          customer_flow_info = instance_double('Flow::CustomerFlowInformation', dates_array: array_of_dates, build_financial_burnup: [1, 2], build_hours_burnup: [3, 4], build_scope_burnup: [5, 6], build_quality_info: [7, 8], build_lead_time_info: [9, 10], build_throughput_info: [11, 12])
 
           expect(CustomerDashboardData).to(receive(:new).once { customer_data })
-          expect(Highchart::DemandsChartsAdapter).to(receive(:new).once { demands_chart_data })
+          expect(Flow::CustomerFlowInformation).to(receive(:new).once { customer_flow_info })
 
           get :show, params: { company_id: company, id: customer }
 
@@ -270,10 +270,7 @@ RSpec.describe CustomersController, type: :controller do
           expect(assigns(:customer)).to eq customer
           expect(assigns(:contracts)).to eq [other_contract, contract]
           expect(assigns(:contract)).to be_a_new Contract
-          expect(assigns(:start_date)).to eq first_end_date
-          expect(assigns(:end_date)).to eq Time.zone.today
-
-          expect(assigns(:customer_flow_information)).to be_a Flow::CustomerFlowInformation
+          expect(assigns(:customer_demands)).to match_array [demand, other_demand]
         end
       end
 

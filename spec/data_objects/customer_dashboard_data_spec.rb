@@ -17,7 +17,6 @@ RSpec.describe CustomerDashboardData, type: :data_object do
       expect(Flow::StatisticsFlowInformations).to(receive(:new).once { statistic_info })
       expect(Flow::TimeFlowInformations).to(receive(:new).once { time_info })
       expect(TimeService.instance).to(receive(:months_between_of).once { array_of_dates })
-      expect(Demand).to(receive(:to_end_dates).twice { [demand, other_demand] })
 
       expect(statistic_info).to(receive(:statistics_flow_behaviour)).twice
       expect(time_info).to(receive(:hours_flow_behaviour)).twice
