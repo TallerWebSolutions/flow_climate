@@ -105,7 +105,7 @@ module Flow
       @quality_info << if bugs_opened_in_the_contract_count.zero?
                          0
                        else
-                         demands_delivered_to_date.count / bugs_opened_in_the_contract_count.to_f
+                         bugs_opened_in_the_contract_count.to_f / demands_delivered_to_date.count
                        end
     end
 
@@ -116,7 +116,7 @@ module Flow
       @quality_info_month << if bugs_opened_in_the_month_count.zero?
                                0
                              else
-                               demands_delivered_to_date_in_month.count / bugs_opened_in_the_month_count.to_f
+                               bugs_opened_in_the_month_count.to_f / demands_delivered_to_date_in_month.count
                              end
     end
 

@@ -301,7 +301,7 @@ RSpec.describe Flow::ContractsFlowInformation do
 
           contract_flow = described_class.new(customer.contracts)
 
-          expect(contract_flow.build_quality_info).to eq([{ name: I18n.t('charts.quality_info.bugs_by_delivery'), data: [0, 0, 0, 1.4285714285714286] }, { name: I18n.t('charts.quality_info.bugs_by_delivery_month'), data: [0, 0, 0, 1.4285714285714286] }])
+          expect(contract_flow.build_quality_info).to eq([{ name: I18n.t('charts.quality_info.bugs_by_delivery'), data: [0, 0, 0, 0.7] }, { name: I18n.t('charts.quality_info.bugs_by_delivery_month'), data: [0, 0, 0, 0.7] }])
         end
       end
     end

@@ -105,7 +105,7 @@
            data-tooltipsuffix=""
            data-datalabelsuffix=""
            data-series="<%= contracts_flow_information.build_quality_info.to_json %>"
-           data-decimals="2">
+           data-decimals="3">
       </div>
     <% else %>
       <%= render 'layouts/no_data', missing_data: Contract.model_name.human(count: 2) %>
