@@ -1,8 +1,7 @@
 # frozen_string_literal: true
 
 class CustomerDashboardData
-  attr_reader :array_of_dates, :hours_delivered_upstream, :hours_delivered_downstream, :total_hours_delivered,
-              :total_hours_delivered_accumulated
+  attr_reader :array_of_dates, :hours_delivered_upstream, :hours_delivered_downstream, :total_hours_delivered, :total_hours_delivered_accumulated, :statistics_information, :time_flow_information
 
   def initialize(customer_demands)
     @array_of_dates = TimeService.instance.months_between_of(start_date(customer_demands), end_date(customer_demands))
@@ -19,8 +18,6 @@ class CustomerDashboardData
   end
 
   private
-
-  attr_reader :statistics_information, :time_flow_information
 
   def start_date(customer_demands)
     customer_demands.map(&:end_date).compact.min

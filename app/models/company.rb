@@ -105,11 +105,11 @@ class Company < ApplicationRecord
   end
 
   def top_three_flow_pressure
-    projects.running.sort_by(&:flow_pressure).reverse.first(3)
+    projects.running.sort_by(&:flow_pressure).last(3).reverse
   end
 
   def top_three_throughput(date = Time.zone.today)
-    projects.running.sort_by { |project| project.total_throughput_for(date) }.reverse.first(3)
+    projects.running.sort_by { |project| project.total_throughput_for(date) }.last(3).reverse
   end
 
   def next_starting_project

@@ -16,6 +16,12 @@ AllCops:
     - 'config/environments/**/*'
     - 'app/jobs/**/*'
 
+Layout/SpaceAroundMethodCallOperator:
+  Enabled: true
+
+Layout/EmptyLinesAroundAttributeAccessor:
+  Enabled: true
+
 Layout/LineLength:
   Enabled: false
 
@@ -49,17 +55,53 @@ Style/SlicingWithRange:
 Style/RedundantFetchBlock:
   Enabled: true
 
-Rails/HasAndBelongsToMany:
-  Enabled: false
-
-Layout/SpaceAroundMethodCallOperator:
+Style/AccessorGrouping:
   Enabled: true
 
-Layout/EmptyLinesAroundAttributeAccessor:
+Style/BisectedAttrAccessor:
+  Enabled: true
+
+Style/RedundantAssignment:
   Enabled: true
 
 Style/ExponentialNotation:
   Enabled: true
+
+Style/HashEachMethods:
+  Enabled: true
+
+Style/HashTransformKeys:
+  Enabled: true
+
+Style/HashTransformValues:
+  Enabled: true
+
+Performance/AncestorsInclude:
+  Enabled: true
+
+Performance/BigDecimalWithNumericArgument:
+  Enabled: true
+
+Performance/RedundantSortBlock:
+  Enabled: true
+
+Performance/RedundantStringChars:
+  Enabled: true
+
+Performance/ReverseFirst:
+  Enabled: true
+
+Performance/SortReverse:
+  Enabled: true
+
+Performance/Squeeze:
+  Enabled: true
+
+Performance/StringInclude:
+  Enabled: true
+
+Rails/HasAndBelongsToMany:
+  Enabled: false
 
 Metrics/MethodLength:
   Exclude:
@@ -147,12 +189,3 @@ RSpec/AnyInstance:
 
 RSpec/ScatteredSetup:
   Enabled: false
-
-Style/HashEachMethods:
-  Enabled: true
-
-Style/HashTransformKeys:
-  Enabled: true
-
-Style/HashTransformValues:
-  Enabled: true
