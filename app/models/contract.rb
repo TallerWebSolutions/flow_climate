@@ -37,6 +37,8 @@ class Contract < ApplicationRecord
   belongs_to :customer
   belongs_to :product
 
+  has_many :contract_consolidations, dependent: :destroy
+
   validates :customer, :product, :start_date, :total_hours, :total_value, :renewal_period, :hours_per_demand, presence: true
 
   scope :active, -> { where('start_date <= :limit_date AND end_date >= :limit_date', limit_date: Time.zone.today) }
@@ -61,5 +63,18 @@ class Contract < ApplicationRecord
 
   def current_estimate_gap
     (current_hours_per_demand - hours_per_demand) / hours_per_demand.to_f
+  end
+
+  def remaining_backlog(date = Time.zone.today.end_of_month)
+    delivered_to_date = demands.kept.where('end_date IS NULL OR end_date > :date', date: date).count
+
+    estimated_scope - delivered_to_date
+  end
+
+  def remaining_weeks(date = Time.zone.today.end_of_week)
+    start_date_limit = [start_date, date].max
+    return 0 if end_date < start_date_limit
+
+    ((start_date_limit.end_of_week.upto(end_date.to_date.end_of_week).count.to_f + 1) / 7).round + 1
   end
 end

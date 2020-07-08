@@ -629,6 +629,8 @@ en:
         title: "Throughput"
       delivered_scope: "% Delivered Scope"
       delivered_hours: "% Delivered Hours"
+      operational_risk:
+        title: "Operational Risk"
   demands:
     new:
       title: "Create Demand"

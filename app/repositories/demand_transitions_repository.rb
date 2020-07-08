@@ -46,12 +46,10 @@ class DemandTransitionsRepository
     demand_hash = {}
     demand_hash[times.grouped_external_id] = times.time_in_stage
 
-    demands_build_hash = if demands_grouped_in_stages[times.grouped_stage_name].present?
-                           demands_grouped_in_stages[times.grouped_stage_name][:data].merge(demand_hash)
-                         else
-                           { times.grouped_external_id => demand_hash[times.grouped_external_id] }
-                         end
-
-    demands_build_hash
+    if demands_grouped_in_stages[times.grouped_stage_name].present?
+      demands_grouped_in_stages[times.grouped_stage_name][:data].merge(demand_hash)
+    else
+      { times.grouped_external_id => demand_hash[times.grouped_external_id] }
+    end
   end
 end

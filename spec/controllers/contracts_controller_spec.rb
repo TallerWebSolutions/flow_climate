@@ -258,16 +258,19 @@ RSpec.describe ContractsController, type: :controller do
     describe 'GET #show' do
       let(:company) { Fabricate :company, users: [user] }
       let(:contract) { Fabricate :contract, customer: customer }
+      let!(:contract_consolidation) { Fabricate :contract_consolidation, contract: contract, consolidation_date: Time.zone.today }
+      let!(:other_contract_consolidation) { Fabricate :contract_consolidation, contract: contract, consolidation_date: 1.week.ago }
 
       context 'passing valid ID' do
         context 'having no dependencies' do
           it 'assigns the instance variables and renders the template' do
             contracts_info = instance_double('Flow::ContractsFlowInformation',
-                                             contracts: Contract.all, delivered_demands_count: 2, remaining_backlog_count: 4,
+                                             contract: contract, delivered_demands_count: 2, remaining_backlog_count: 4,
                                              consumed_hours: 1, remaining_hours: 5, dates_array: [1.day.ago, Time.zone.now],
                                              build_financial_burnup: { name: 'bla', data: [1, 2] }, build_hours_burnup: { name: 'bla', data: [1, 2] },
                                              build_scope_burnup: { name: 'bla', data: [1, 2] }, build_quality_info: { name: 'bla', data: [1, 2] },
-                                             build_lead_time_info: { name: 'bla', data: [1, 2] }, build_throughput_info: { name: 'bla', data: [1, 2] })
+                                             build_lead_time_info: { name: 'bla', data: [1, 2] }, build_throughput_info: { name: 'bla', data: [1, 2] },
+                                             build_risk_info: { name: 'bla', risk_info: [2.4, 20.5] })
 
             expect(Flow::ContractsFlowInformation).to receive(:new).once.and_return(contracts_info)
 

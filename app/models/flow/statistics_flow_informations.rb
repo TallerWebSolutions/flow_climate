@@ -2,9 +2,7 @@
 
 module Flow
   class StatisticsFlowInformations < SystemFlowInformation
-    attr_reader :average_aging_per_period, :lead_time_bins, :lead_time_histogram_data, :throughput_bins,
-                :demands_charts_ids, :lead_time_data_array, :lead_time_accumulated,
-                :lead_time_95p, :lead_time_80p, :lead_time_65p
+    attr_reader :average_aging_per_period, :lead_time_bins, :lead_time_histogram_data, :throughput_bins, :demands_charts_ids, :lead_time_data_array, :lead_time_accumulated, :lead_time_95p, :lead_time_80p, :lead_time_65p, :first_lead_time_zone, :second_lead_time_zone, :third_lead_time_zone, :first_zone_demand_count, :second_zone_demand_count, :third_zone_demand_count, :fourth_zone_demand_count
 
     def initialize(demands)
       super(demands)
@@ -51,8 +49,6 @@ module Flow
     end
 
     private
-
-    attr_reader :first_lead_time_zone, :second_lead_time_zone, :third_lead_time_zone, :first_zone_demand_count, :second_zone_demand_count, :third_zone_demand_count, :fourth_zone_demand_count
 
     def build_lead_time_zones(lead_time_difference)
       @first_lead_time_zone = lead_time_difference * 0.25

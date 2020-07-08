@@ -744,6 +744,39 @@ ALTER SEQUENCE public.company_settings_id_seq OWNED BY public.company_settings.i
 
 
 --
+-- Name: contract_consolidations; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.contract_consolidations (
+    id bigint NOT NULL,
+    contract_id integer NOT NULL,
+    consolidation_date date NOT NULL,
+    operational_risk_value numeric NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: contract_consolidations_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.contract_consolidations_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: contract_consolidations_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.contract_consolidations_id_seq OWNED BY public.contract_consolidations.id;
+
+
+--
 -- Name: contracts; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -2631,6 +2664,13 @@ ALTER TABLE ONLY public.company_settings ALTER COLUMN id SET DEFAULT nextval('pu
 
 
 --
+-- Name: contract_consolidations id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.contract_consolidations ALTER COLUMN id SET DEFAULT nextval('public.contract_consolidations_id_seq'::regclass);
+
+
+--
 -- Name: contracts id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -3140,6 +3180,14 @@ ALTER TABLE ONLY public.company_settings
 
 
 --
+-- Name: contract_consolidations contract_consolidations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.contract_consolidations
+    ADD CONSTRAINT contract_consolidations_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: contracts contracts_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -3605,6 +3653,13 @@ CREATE UNIQUE INDEX hdb_version_one_row ON hdb_catalog.hdb_version USING btree (
 
 
 --
+-- Name: idx_contract_consolidation_unique; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_contract_consolidation_unique ON public.contract_consolidations USING btree (contract_id, consolidation_date);
+
+
+--
 -- Name: idx_customers_devise_customer_unique; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -3651,6 +3706,20 @@ CREATE UNIQUE INDEX index_companies_on_slug ON public.companies USING btree (slu
 --
 
 CREATE INDEX index_company_settings_on_company_id ON public.company_settings USING btree (company_id);
+
+
+--
+-- Name: index_contract_consolidations_on_consolidation_date; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_contract_consolidations_on_consolidation_date ON public.contract_consolidations USING btree (consolidation_date);
+
+
+--
+-- Name: index_contract_consolidations_on_contract_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_contract_consolidations_on_contract_id ON public.contract_consolidations USING btree (contract_id);
 
 
 --
@@ -4785,6 +4854,14 @@ ALTER TABLE ONLY public.team_members
 
 
 --
+-- Name: contract_consolidations fk_rails_3ff1f4bb7a; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.contract_consolidations
+    ADD CONSTRAINT fk_rails_3ff1f4bb7a FOREIGN KEY (contract_id) REFERENCES public.contracts(id);
+
+
+--
 -- Name: user_plans fk_rails_406c835a0f; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -5439,6 +5516,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200601145121'),
 ('20200615173415'),
 ('20200627151758'),
-('20200703124334');
+('20200703124334'),
+('20200707184608');
 
 
