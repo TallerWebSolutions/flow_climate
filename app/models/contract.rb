@@ -66,7 +66,7 @@ class Contract < ApplicationRecord
   end
 
   def remaining_backlog(date = Time.zone.today.end_of_month)
-    delivered_to_date = demands.kept.where('end_date IS NULL OR end_date > :date', date: date).count
+    delivered_to_date = demands.kept.where('end_date BETWEEN :start_date AND :end_date', start_date: start_date, end_date: date).count
 
     estimated_scope - delivered_to_date
   end

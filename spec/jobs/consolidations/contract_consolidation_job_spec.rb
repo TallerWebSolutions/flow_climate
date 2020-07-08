@@ -20,13 +20,13 @@ RSpec.describe Consolidations::ContractConsolidationJob, type: :active_job do
         product = Fabricate :product, customer: customer
         contract = Fabricate :contract, customer: customer, product: product, total_value: 100_000, total_hours: 2000, hours_per_demand: 30, start_date: 3.months.ago, end_date: 1.month.from_now
 
-        10.times { Fabricate :demand, customer: customer, created_date: 74.days.ago, commitment_date: 35.days.ago, end_date: 1.month.ago, effort_downstream: 200, effort_upstream: 10 }
-        20.times { Fabricate :demand, customer: customer, created_date: 65.days.ago, commitment_date: 34.days.ago, end_date: 1.month.ago, effort_downstream: 400, effort_upstream: 130 }
-        5.times { Fabricate :demand, customer: customer, created_date: 32.days.ago, commitment_date: 31.days.ago, end_date: 1.month.ago, effort_downstream: 100, effort_upstream: 20 }
+        5.times { Fabricate :demand, customer: customer, created_date: 74.days.ago, commitment_date: 35.days.ago, end_date: 1.month.ago, effort_downstream: 200, effort_upstream: 10 }
+        2.times { Fabricate :demand, customer: customer, created_date: 65.days.ago, commitment_date: 34.days.ago, end_date: 1.month.ago, effort_downstream: 400, effort_upstream: 130 }
+        7.times { Fabricate :demand, customer: customer, created_date: 32.days.ago, commitment_date: 31.days.ago, end_date: 1.month.ago, effort_downstream: 100, effort_upstream: 20 }
 
         10.times { Fabricate :demand, customer: customer, created_date: 74.days.ago, commitment_date: 66.days.ago, end_date: 2.months.ago, effort_downstream: 200, effort_upstream: 10 }
-        15.times { Fabricate :demand, customer: customer, created_date: 69.days.ago, commitment_date: 67.days.ago, end_date: 2.months.ago, effort_downstream: 400, effort_upstream: 130 }
-        10.times { Fabricate :demand, customer: customer, created_date: 70.days.ago, commitment_date: 2.months.ago, end_date: 2.months.ago, effort_downstream: 100, effort_upstream: 20 }
+        9.times { Fabricate :demand, customer: customer, created_date: 69.days.ago, commitment_date: 67.days.ago, end_date: 2.months.ago, effort_downstream: 400, effort_upstream: 130 }
+        2.times { Fabricate :demand, customer: customer, created_date: 70.days.ago, commitment_date: 2.months.ago, end_date: 2.months.ago, effort_downstream: 100, effort_upstream: 20 }
 
         described_class.perform_now(contract)
 
@@ -34,9 +34,9 @@ RSpec.describe Consolidations::ContractConsolidationJob, type: :active_job do
         expect(new_consolidations.count).to eq 4
 
         expect(new_consolidations[0].operational_risk_value).to eq 1
-        expect(new_consolidations[1].operational_risk_value).to be_within(0.02).of(0.22)
-        expect(new_consolidations[2].operational_risk_value).to be_within(0.3).of(0.94)
-        expect(new_consolidations[3].operational_risk_value).to be_within(0.3).of(0.94)
+        expect(new_consolidations[1].operational_risk_value).to be_within(0.2).of(0.8)
+        expect(new_consolidations[2].operational_risk_value).to be_within(0.3).of(0.9)
+        expect(new_consolidations[3].operational_risk_value).to be_within(0.3).of(0.9)
       end
     end
   end
