@@ -119,9 +119,9 @@ RSpec.describe Contract, type: :model do
       Fabricate :demand, customer: customer, project: other_project, demand_type: :bug, created_date: 1.week.ago, commitment_date: 4.days.ago, end_date: 2.days.ago, effort_downstream: 43, effort_upstream: 49
       Fabricate :demand, customer: other_customer, project: other_project, demand_type: :bug, created_date: 1.week.ago, commitment_date: 4.days.ago, end_date: 2.days.ago, effort_downstream: 38, effort_upstream: 15
 
-      expect(contract.remaining_backlog).to eq 6
-      expect(contract.remaining_backlog(2.weeks.ago)).to eq 4
-      expect(other_contract.remaining_backlog).to eq 3
+      expect(contract.remaining_backlog).to eq 3
+      expect(contract.remaining_backlog(2.weeks.ago)).to eq 5
+      expect(other_contract.remaining_backlog).to eq 2
       expect(no_data_contract.remaining_backlog).to eq 5
     end
   end
