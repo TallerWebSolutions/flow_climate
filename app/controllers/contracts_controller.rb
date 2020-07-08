@@ -45,7 +45,7 @@ class ContractsController < AuthenticatedController
   end
 
   def show
-    @contracts_flow_information = Flow::ContractsFlowInformation.new(Contract.where(id: @contract.id), 'month')
+    @contracts_flow_information = Flow::ContractsFlowInformation.new(@contract, 'month')
   end
 
   private

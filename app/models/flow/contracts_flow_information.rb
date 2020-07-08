@@ -2,14 +2,15 @@
 
 module Flow
   class ContractsFlowInformation < SystemFlowInformation
-    attr_reader :dates_array, :contracts, :limit_date, :consumed_hours,
+    attr_reader :dates_array, :contract, :limit_date, :consumed_hours,
                 :financial_ideal, :financial_current, :financial_ideal_slice, :financial_total, :total_financial_value,
                 :hours_ideal, :hours_current, :hours_ideal_slice, :hours_total, :total_hours_value, :remaining_hours,
                 :scope_ideal, :scope_current, :scope_ideal_slice, :scope_total, :total_scope_value, :delivered_demands_count, :remaining_backlog_count,
                 :quality_info, :quality_info_month, :lead_time_info, :throughput_info
 
-    def initialize(contracts, data_interval = 'month')
-      build_contracts_base_info(contracts)
+    def initialize(contract, data_interval = 'month')
+      @contract = contract
+      super(contract.demands)
 
       @financial_burnup = {}
 
@@ -17,11 +18,9 @@ module Flow
       build_limit_date(data_interval)
       build_arrays
 
-      hour_value = @contracts.active.map(&:hour_value).sum.to_f / @contracts.active.count
-
       build_hours_finances_constants
       build_scope_constants
-      build_operations_charts_info(hour_value)
+      build_operations_charts_info(@contract.hour_value)
     end
 
     def build_financial_burnup
@@ -60,6 +59,10 @@ module Flow
       [{ name: I18n.t('customer.charts.throughput.title'), data: @throughput_info }]
     end
 
+    def build_risk_info
+      [{ name: @contract.start_date, data: @contract.contract_consolidations.order(:consolidation_date).map(&:operational_risk_value).map { |risk_value| risk_value.to_f * 100 } }]
+    end
+
     private
 
     def blank_burnup
@@ -68,7 +71,7 @@ module Flow
 
     def build_operations_charts_info(hour_value)
       @dates_array.each_with_index do |date, index|
-        demands_delivered_to_date = @demands.kept.finished_until_date(date).finished_after_date(start_date)
+        demands_delivered_to_date = @demands.kept.finished_until_date(date).finished_after_date(@contract.start_date)
         demands_delivered_in_month = @demands.kept.finished_until_date(date.end_of_month).finished_after_date(date.beginning_of_month)
 
         add_value_to_burnup_arrays(date, hour_value, index, demands_delivered_to_date)
@@ -101,7 +104,7 @@ module Flow
     def add_value_to_quality_chart(date, demands_delivered_to_date)
       return if date > @limit_date
 
-      bugs_opened_in_the_contract_count = @demands.kept.bug.where('created_date >= :start_date AND created_date <= :end_date', start_date: start_date, end_date: date).count
+      bugs_opened_in_the_contract_count = @demands.kept.bug.where('created_date >= :start_date AND created_date <= :end_date', start_date: @contract.start_date, end_date: date).count
       @quality_info << if bugs_opened_in_the_contract_count.zero?
                          0
                        else
@@ -135,11 +138,11 @@ module Flow
 
     def build_dates_array(data_interval)
       @dates_array = if data_interval == 'day'
-                       TimeService.instance.days_between_of(start_date, end_date)
+                       TimeService.instance.days_between_of(@contract.start_date, @contract.end_date)
                      elsif data_interval == 'week'
-                       TimeService.instance.weeks_between_of(start_date, end_date)
+                       TimeService.instance.weeks_between_of(@contract.start_date, @contract.end_date)
                      else
-                       TimeService.instance.months_between_of(start_date, end_date)
+                       TimeService.instance.months_between_of(@contract.start_date, @contract.end_date)
                      end
     end
 
@@ -151,14 +154,6 @@ module Flow
                     else
                       Time.zone.today.end_of_month
                     end
-    end
-
-    def start_date
-      @contracts.active.map(&:start_date).flatten.min || Time.zone.today
-    end
-
-    def end_date
-      @contracts.active.map(&:end_date).flatten.max || Time.zone.today
     end
 
     def build_arrays
@@ -183,17 +178,11 @@ module Flow
       @throughput_info = []
     end
 
-    def build_contracts_base_info(contracts)
-      @contracts = contracts
-      @demands_ids = @contracts.map(&:demands).flatten.uniq.map(&:id)
-      @demands = Demand.where(id: @demands_ids).kept
-    end
-
     def build_hours_finances_constants
-      @total_financial_value = @contracts.map(&:total_value).sum
+      @total_financial_value = @contract.total_value
       @financial_ideal_slice = @total_financial_value / @dates_array.count
 
-      @total_hours_value = @contracts.map(&:total_hours).sum
+      @total_hours_value = @contract.total_hours
       @hours_ideal_slice = @total_hours_value / @dates_array.count
 
       @consumed_hours = demands_finished_for_contracts.sum(&:total_effort)
@@ -201,7 +190,7 @@ module Flow
     end
 
     def build_scope_constants
-      @total_scope_value = @contracts.sum(&:estimated_scope)
+      @total_scope_value = @contract.estimated_scope
       @scope_ideal_slice = @total_scope_value / @dates_array.count.to_f
 
       @delivered_demands_count = demands_finished_for_contracts.count
@@ -209,7 +198,7 @@ module Flow
     end
 
     def demands_finished_for_contracts
-      @demands_finished_for_contracts ||= @demands.finished_until_date(end_date).finished_after_date(start_date)
+      @demands_finished_for_contracts ||= @demands.finished_until_date(@contract.end_date).finished_after_date(@contract.start_date)
     end
   end
 end

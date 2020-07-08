@@ -248,6 +248,9 @@ RSpec.describe CustomersController, type: :controller do
       let!(:other_contract) { Fabricate :contract, customer: customer, end_date: 2.days.from_now }
       let!(:out_contract) { Fabricate :contract, end_date: 3.days.from_now }
 
+      let!(:contract_consolidation) { Fabricate :contract_consolidation, contract: contract, consolidation_date: Time.zone.today }
+      let!(:other_contract_consolidation) { Fabricate :contract_consolidation, contract: contract, consolidation_date: 1.week.ago }
+
       let(:project) { Fabricate :project, customers: [customer] }
       let(:first_end_date) { 1.day.ago }
       let(:second_end_date) { 1.day.from_now }
@@ -258,15 +261,8 @@ RSpec.describe CustomersController, type: :controller do
         it 'assigns the instance variable and renders the template' do
           array_of_dates = [Time.zone.yesterday.to_date, Time.zone.today]
           customer_data = instance_double('CustomerDashboardData', hours_delivered_upstream: 10, hours_delivered_downstream: 20, array_of_dates: array_of_dates, total_hours_delivered: 20, total_hours_delivered_accumulated: 40)
-          contracts_info = instance_double('Flow::ContractsFlowInformation',
-                                           contracts: Contract.all, delivered_demands_count: 2, remaining_backlog_count: 4,
-                                           consumed_hours: 1, remaining_hours: 5, dates_array: [1.day.ago, Time.zone.now],
-                                           build_financial_burnup: { name: 'bla', data: [1, 2] }, build_hours_burnup: { name: 'bla', data: [1, 2] },
-                                           build_scope_burnup: { name: 'bla', data: [1, 2] }, build_quality_info: { name: 'bla', data: [1, 2] },
-                                           build_lead_time_info: { name: 'bla', data: [1, 2] }, build_throughput_info: { name: 'bla', data: [1, 2] })
 
           expect(CustomerDashboardData).to(receive(:new).once { customer_data })
-          expect(Flow::ContractsFlowInformation).to(receive(:new).once { contracts_info })
 
           get :show, params: { company_id: company, id: customer }
 

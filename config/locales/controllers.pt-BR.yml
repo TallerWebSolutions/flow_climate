@@ -698,6 +698,8 @@ pt-BR:
         title: "Throughput"
       delivered_scope: "% Escopo Entregue"
       delivered_hours: "% Horas Entregues"
+      operational_risk:
+        title: "Risco Operacional"
   demands:
     new:
       title: "Criar Demanda"
