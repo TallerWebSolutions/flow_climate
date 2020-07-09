@@ -30,7 +30,19 @@ RSpec.describe Jira::JiraReader do
   end
 
   describe '#read_customer' do
-    it { expect(described_class.instance.read_customer(jira_account, jira_issue.attrs)).to eq customer }
+    context 'with an array field' do
+      it 'extracts and save the customer' do
+        jira_issue = client.Issue.build({ key: '10000', fields: { created: '2018-07-02T11:20:18.998-0300', summary: 'foo of bar', issuetype: { name: 'Story' }, customfield_10028: { value: 'Expedite' }, customfield_10013: [{ value: 'xpto of bla' }], project: { key: 'foo', self: 'http://foo.bar' }, customfield_10024: [{ emailAddress: 'foo' }, { emailAddress: 'bar' }], fixVersions: [{ name: 'bar' }] }, changelog: { startAt: 0, maxResults: 2, total: 2, histories: [{ id: '10039', created: '2018-07-08T22:34:47.440-0300', items: [{ field: 'status', from: 'first_stage', to: 'second_stage' }] }, { id: '10038', created: '2018-07-06T09:40:43.886-0300', items: [{ field: 'status', from: 'third_stage', to: 'first_stage' }, { field: 'module', toString: 'statistics' }] }] } }.with_indifferent_access)
+        expect(described_class.instance.read_customer(jira_account, jira_issue.attrs)).to eq customer
+      end
+    end
+
+    context 'with an simple hash field' do
+      it 'extracts and save the customer' do
+        jira_issue = client.Issue.build({ key: '10000', fields: { created: '2018-07-02T11:20:18.998-0300', summary: 'foo of bar', issuetype: { name: 'Story' }, customfield_10028: { value: 'Expedite' }, customfield_10013: { value: 'xpto of bla' }, project: { key: 'foo', self: 'http://foo.bar' }, customfield_10024: [{ emailAddress: 'foo' }, { emailAddress: 'bar' }], fixVersions: [{ name: 'bar' }] }, changelog: { startAt: 0, maxResults: 2, total: 2, histories: [{ id: '10039', created: '2018-07-08T22:34:47.440-0300', items: [{ field: 'status', from: 'first_stage', to: 'second_stage' }] }, { id: '10038', created: '2018-07-06T09:40:43.886-0300', items: [{ field: 'status', from: 'third_stage', to: 'first_stage' }, { field: 'module', toString: 'statistics' }] }] } }.with_indifferent_access)
+        expect(described_class.instance.read_customer(jira_account, jira_issue.attrs)).to eq customer
+      end
+    end
   end
 
   describe '#read_demand_key' do

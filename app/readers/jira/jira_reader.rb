@@ -37,7 +37,7 @@ module Jira
 
       customer_name = jira_custom_fields_hash[customer_custom_field_name]
 
-      jira_account.company.customers.find_by(name: customer_name['value']) if customer_name.present?
+      jira_account.company.customers.find_by(name: extract_customer_name(customer_name)) if customer_name.present?
     end
 
     def read_demand_key(jira_issue_attrs)
@@ -83,6 +83,14 @@ module Jira
     end
 
     private
+
+    def extract_customer_name(customer_name)
+      if customer_name.is_a?(Array)
+        customer_name[0]['value']
+      else
+        customer_name['value']
+      end
+    end
 
     def build_history_fields_hash(jira_issue)
       jira_history_fields_hash = {}
