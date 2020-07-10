@@ -16,6 +16,8 @@ module Slack
                                  last_week_cmd: number_to_currency(average_demand_cost_info[:last_week]),
                                  cmd_difference_to_last_week: number_with_precision(average_demand_cost_info[:cmd_difference_to_avg_last_four_weeks], precision: 2),
                                  previous_cmd: number_to_currency(average_demand_cost_info[:four_weeks_cmd_average])))
+    rescue Slack::Notifier::APIError
+      Rails.logger.error('Invalid Slack API - It may be caused by an API token problem')
     end
 
     def notify_week_throughput(slack_notifier, team)
@@ -26,6 +28,8 @@ module Slack
       th_difference_to_avg_last_four_weeks = ((th_current_week.to_f - average_th_four_last_weeks) / average_th_four_last_weeks) * 100 if average_th_four_last_weeks.positive?
 
       slack_notifier.ping(I18n.t('slack_configurations.notifications.th_week_text', name: team.name, th_current_week: th_current_week, difference_last_week_th_value: number_with_precision(th_difference_to_avg_last_four_weeks, precision: 2), four_weeks_th_average: average_th_four_last_weeks))
+    rescue Slack::Notifier::APIError
+      Rails.logger.error('Invalid Slack API - It may be caused by an API token problem')
     end
 
     def notify_last_week_delivered_demands_info(slack_notifier, team)
@@ -35,6 +39,8 @@ module Slack
       th_last_week.each do |demand|
         slack_notifier.ping(I18n.t('slack_configurations.notifications.th_last_week_demand_info_text', external_id: demand.external_id, responsibles_names: demand.memberships.map(&:team_member_name).join(', '), cost_to_project: number_to_currency(demand.cost_to_project), demand_title: demand.demand_title))
       end
+    rescue Slack::Notifier::APIError
+      Rails.logger.error('Invalid Slack API - It may be caused by an API token problem')
     end
 
     def notify_wip_demands(slack_notifier, team)
@@ -54,6 +60,8 @@ module Slack
                  percentage_concluded: number_to_percentage(demand.flow_percentage_concluded * 100, precision: 2))
         )
       end
+    rescue Slack::Notifier::APIError
+      Rails.logger.error('Invalid Slack API - It may be caused by an API token problem')
     end
 
     def notify_beyond_expected_time_in_stage(slack_notifier, team)
@@ -73,6 +81,8 @@ module Slack
                  time_in_current_stage: time_distance_in_words(outdated_demand.time_in_current_stage))
         )
       end
+    rescue Slack::Notifier::APIError
+      Rails.logger.error('Invalid Slack API - It may be caused by an API token problem')
     end
 
     def notify_failure_load(slack_notifier, team)
@@ -85,6 +95,8 @@ module Slack
       running_projects.each do |project|
         slack_notifier.ping(I18n.t('slack_configurations.notifications.project_failure_load', team_name: team.name, project_name: project.name, failure_load: number_to_percentage(project.failure_load, precision: 2)))
       end
+    rescue Slack::Notifier::APIError
+      Rails.logger.error('Invalid Slack API - It may be caused by an API token problem')
     end
   end
 end

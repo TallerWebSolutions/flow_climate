@@ -108,6 +108,7 @@ Metrics/MethodLength:
     - 'app/routes/**/*'
     - 'db/migrate/**/*'
     - 'app/adapters/highchart/finances_charts_adapter.rb'
+    - 'app/services/slack/slack_notification_service.rb'
   Max: 15
 
 Metrics/BlockLength:
