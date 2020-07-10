@@ -130,21 +130,19 @@ module Jira
     end
 
     def create_from_transition(demand, from_stage_id, from_transition_date)
-      ActiveRecord::Base.transaction do
-        stage_from = demand.project.stages.find_by(integration_id: from_stage_id)
-        demand_transition = DemandTransition.find_or_initialize_by(demand: demand, stage: stage_from, last_time_in: from_transition_date)
-        demand_transition.save
-        demand_transition
-      end
+      stage_from = demand.project.stages.find_by(integration_id: from_stage_id)
+      demand_transition = DemandTransition.find_or_initialize_by(demand: demand, stage: stage_from, last_time_in: from_transition_date)
+      demand_transition.with_lock { demand_transition.save }
+      demand_transition
     end
 
     def create_to_transition(demand, from_transistion, to_stage_id, to_transition_date)
-      ActiveRecord::Base.transaction do
-        from_transistion.update(last_time_out: to_transition_date)
+      from_transistion.with_lock { from_transistion.update(last_time_out: to_transition_date) }
 
-        stage_to = demand.project.stages.find_by(integration_id: to_stage_id)
-        DemandTransition.find_or_initialize_by(demand: demand, stage: stage_to, last_time_in: to_transition_date).save
-      end
+      stage_to = demand.project.stages.find_by(integration_id: to_stage_id)
+      to_transition = DemandTransition.find_or_initialize_by(demand: demand, stage: stage_to, last_time_in: to_transition_date)
+
+      to_transition.with_lock { to_transition.save }
     end
 
     def read_comments(demand, jira_issue_attrs)
