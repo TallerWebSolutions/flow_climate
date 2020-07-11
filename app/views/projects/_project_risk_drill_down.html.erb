@@ -102,33 +102,6 @@
           </div>
         </div>
 
-        <div class="row center">
-          <div class="col-xs-12 div-group-title">
-            <%= I18n.t('products.statistics.montecarlo.title') %>
-          </div>
-          <div class="col-xs-3 bottom-spaced-component">
-            <p class="stamp-title"><%= I18n.t('general.minimum') %></p>
-            <p class="stamp-content">
-              <%= I18n.t('general.weeks_text', count: project_consolidations.last.product_monte_carlo_weeks_min) %>
-              <sup><%= "(#{number_to_percentage(project_consolidations.last.product_monte_carlo_weeks_min_percentage * 100, precision: 2)})" %></sup>
-            </p>
-          </div>
-          <div class="col-xs-3 bottom-spaced-component">
-            <p class="stamp-title"><%= I18n.t('general.maximum') %></p>
-            <p class="stamp-content">
-              <%= I18n.t('general.weeks_text', count: project_consolidations.last.product_monte_carlo_weeks_max) %>
-            </p>
-          </div>
-          <div class="col-xs-3 bottom-spaced-component">
-            <p class="stamp-title"><%= I18n.t('general.statistics.p80') %></p>
-            <p class="stamp-content"><%= I18n.t('general.weeks_text', count: number_with_precision(project_consolidations.last.product_monte_carlo_weeks_percentil, precision: 2)) %></p>
-          </div>
-          <div class="col-xs-3 bottom-spaced-component">
-            <p class="stamp-title"><%= I18n.t('general.statistics.standard_deviation') %></p>
-            <p class="stamp-content"><%= I18n.t('general.weeks_text', count: number_with_precision(project_consolidations.last.product_monte_carlo_weeks_std_dev, precision: 2)) %></p>
-          </div>
-        </div>
-
       <% else %>
         <%= render 'layouts/no_data', missing_data: ProjectConsolidation.model_name.human %>
       <% end %>
