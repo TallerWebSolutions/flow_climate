@@ -1805,10 +1805,8 @@ CREATE TABLE public.project_consolidations (
     updated_at timestamp without time zone NOT NULL,
     project_weekly_throughput integer[],
     team_weekly_throughput integer[],
-    products_weekly_throughput integer[],
     project_monte_carlo_weeks integer[],
     team_monte_carlo_weeks integer[],
-    products_monte_carlo_weeks integer[],
     demands_finished_in_week integer[],
     lead_time_in_week numeric[]
 );
@@ -5517,6 +5515,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200615173415'),
 ('20200627151758'),
 ('20200703124334'),
-('20200707184608');
+('20200707184608'),
+('20200711165002');
 
 

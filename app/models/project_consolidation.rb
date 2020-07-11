@@ -4,26 +4,24 @@
 #
 # Table name: project_consolidations
 #
-#  id                         :bigint           not null, primary key
-#  consolidation_date         :date             not null
-#  current_wip                :integer
-#  demands_finished_ids       :integer          is an Array
-#  demands_finished_in_week   :integer          is an Array
-#  demands_ids                :integer          is an Array
-#  demands_lead_times         :decimal(, )      is an Array
-#  lead_time_in_week          :decimal(, )      is an Array
-#  population_end_date        :date
-#  population_start_date      :date
-#  products_monte_carlo_weeks :integer          is an Array
-#  products_weekly_throughput :integer          is an Array
-#  project_monte_carlo_weeks  :integer          is an Array
-#  project_weekly_throughput  :integer          is an Array
-#  team_monte_carlo_weeks     :integer          is an Array
-#  team_weekly_throughput     :integer          is an Array
-#  wip_limit                  :integer
-#  created_at                 :datetime         not null
-#  updated_at                 :datetime         not null
-#  project_id                 :integer          not null
+#  id                        :bigint           not null, primary key
+#  consolidation_date        :date             not null
+#  current_wip               :integer
+#  demands_finished_ids      :integer          is an Array
+#  demands_finished_in_week  :integer          is an Array
+#  demands_ids               :integer          is an Array
+#  demands_lead_times        :decimal(, )      is an Array
+#  lead_time_in_week         :decimal(, )      is an Array
+#  population_end_date       :date
+#  population_start_date     :date
+#  project_monte_carlo_weeks :integer          is an Array
+#  project_weekly_throughput :integer          is an Array
+#  team_monte_carlo_weeks    :integer          is an Array
+#  team_weekly_throughput    :integer          is an Array
+#  wip_limit                 :integer
+#  created_at                :datetime         not null
+#  updated_at                :datetime         not null
+#  project_id                :integer          not null
 #
 # Indexes
 #
@@ -89,16 +87,8 @@ class ProjectConsolidation < ApplicationRecord
     @project_monte_carlo_weeks_min ||= project_monte_carlo_weeks.min
   end
 
-  def product_monte_carlo_weeks_min
-    @product_monte_carlo_weeks_min ||= products_monte_carlo_weeks.min
-  end
-
   def project_monte_carlo_weeks_max
     @project_monte_carlo_weeks_max ||= project_monte_carlo_weeks.max
-  end
-
-  def product_monte_carlo_weeks_max
-    @product_monte_carlo_weeks_max ||= products_monte_carlo_weeks.max
   end
 
   def project_monte_carlo_weeks_percentil(percentil = 80)
@@ -113,12 +103,6 @@ class ProjectConsolidation < ApplicationRecord
     Stats::StatisticsService.instance.percentile(percentil, team_monte_carlo_weeks)
   end
 
-  def product_monte_carlo_weeks_percentil(percentil = 80)
-    return 0 unless products_monte_carlo_weeks.count.positive?
-
-    Stats::StatisticsService.instance.percentile(percentil, products_monte_carlo_weeks)
-  end
-
   def project_monte_carlo_weeks_min_percentage
     return 0 unless project_monte_carlo_weeks.count.positive?
 
@@ -129,12 +113,6 @@ class ProjectConsolidation < ApplicationRecord
     return 0 unless team_monte_carlo_weeks.count.positive?
 
     team_monte_carlo_weeks.count { |x| x <= team_monte_carlo_weeks_min }.to_f / team_monte_carlo_weeks.count
-  end
-
-  def product_monte_carlo_weeks_min_percentage
-    return 0 unless products_monte_carlo_weeks.count.positive?
-
-    products_monte_carlo_weeks.count { |x| x <= product_monte_carlo_weeks_min }.to_f / products_monte_carlo_weeks.count
   end
 
   def project_monte_carlo_weeks_std_dev
@@ -155,12 +133,6 @@ class ProjectConsolidation < ApplicationRecord
     return 0 unless team_monte_carlo_weeks.count.positive?
 
     Stats::StatisticsService.instance.standard_deviation(team_monte_carlo_weeks)
-  end
-
-  def product_monte_carlo_weeks_std_dev
-    return 0 unless products_monte_carlo_weeks.count.positive?
-
-    Stats::StatisticsService.instance.standard_deviation(products_monte_carlo_weeks)
   end
 
   def lead_time_p25
