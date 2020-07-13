@@ -647,4 +647,16 @@ RSpec.describe Company, type: :model do
       end
     end
   end
+
+  describe '#to_hash' do
+    it 'returns as company hash' do
+      company = Fabricate :company
+      expected = { id: company.id, name: company.name, customers_count: company.customers_count, products_count: company.products_count,
+                   projects_count: company.projects_count, current_scope_count: company.current_scope, current_month_throughput: company.current_month_throughput,
+                   current_cost_per_hour: company.current_cost_per_hour, current_hours_per_demand: company.current_hours_per_demand,
+                   waiting_projects_count: company.waiting_projects_count, active_projects_count: company.active_projects_count }
+
+      expect(company.to_hash).to eq expected
+    end
+  end
 end
