@@ -780,6 +780,7 @@ RSpec.describe ProjectsController, type: :controller do
       context 'passing valid parameters' do
         it 'assigns the instance variables and renders the template' do
           get :risk_drill_down, params: { company_id: company, id: project }, xhr: true
+
           expect(response).to render_template 'projects/risk_drill_down'
           expect(assigns(:project_consolidations)).to eq [other_project_consolidation, project_consolidation]
         end

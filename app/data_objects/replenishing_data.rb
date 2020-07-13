@@ -134,7 +134,7 @@ class ReplenishingData
   end
 
   def build_monte_carlo_info(project, throughput_data)
-    montecarlo_durations = Stats::StatisticsService.instance.run_montecarlo(project.remaining_backlog, throughput_data, 100)
+    montecarlo_durations = Stats::StatisticsService.instance.run_montecarlo(project.remaining_work, throughput_data, 100)
     Stats::StatisticsService.instance.percentile(80, montecarlo_durations)
   end
 

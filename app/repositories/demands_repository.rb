@@ -17,6 +17,12 @@ class DemandsRepository
     demands.kept.where('EXTRACT(WEEK FROM commitment_date) = :week AND EXTRACT(YEAR FROM commitment_date) = :year', week: week, year: year)
   end
 
+  def wip_count(demands_ids, date = Time.zone.now)
+    demands = demands_list_data(demands_ids).kept.opened_before_date(date)
+
+    demands.where('(demands.end_date IS NULL OR demands.end_date > :analysed_date) AND (demands.commitment_date <= :analysed_date)', analysed_date: date.end_of_day).count
+  end
+
   def demands_delivered_grouped_by_projects_to_period(demands, start_period, end_period)
     throughput_to_period(demands, start_period, end_period).group_by(&:project_name)
   end
@@ -33,28 +39,8 @@ class DemandsRepository
     demands_stories_to_projects(projects).where('demands.created_date BETWEEN :start_period AND :end_period', start_period: start_period, end_period: end_period)
   end
 
-  def effort_upstream_grouped_by_month(projects, start_date, end_date)
-    effort_upstream_hash = {}
-    Demand.kept
-          .select('EXTRACT(YEAR from demands.end_date) AS year, EXTRACT(MONTH from demands.end_date) AS month, SUM(effort_upstream) AS computed_sum_effort')
-          .where(project_id: projects.map(&:id))
-          .to_end_dates(start_date, end_date)
-          .order('year, month')
-          .group('year, month')
-          .map { |group_sum| effort_upstream_hash[[group_sum.year, group_sum.month]] = group_sum.computed_sum_effort.to_f }
-    effort_upstream_hash
-  end
-
-  def grouped_by_effort_downstream_per_month(projects, start_date, end_date)
-    effort_downstream_hash = {}
-    Demand.kept
-          .select('EXTRACT(YEAR from demands.end_date) AS year, EXTRACT(MONTH from demands.end_date) AS month, SUM(effort_downstream) AS computed_sum_effort')
-          .where(project_id: projects.map(&:id))
-          .to_end_dates(start_date, end_date)
-          .order('year, month')
-          .group('year, month')
-          .map { |group_sum| effort_downstream_hash[[group_sum.year, group_sum.month]] = group_sum.computed_sum_effort.to_f }
-    effort_downstream_hash
+  def demands_delivered_for_period(demands, start_period, end_period)
+    Demand.kept.where(id: demands.map(&:id)).to_end_dates(start_period, end_period)
   end
 
   def delivered_hours_in_month_for_projects(projects, date = Time.zone.today)
@@ -67,10 +53,6 @@ class DemandsRepository
 
   def downstream_throughput_in_month_for_projects(projects, date = Time.zone.today)
     demands_for_projects_finished_in_period(projects, date.beginning_of_month, date.end_of_month).finished_in_downstream
-  end
-
-  def demands_delivered_for_period(demands, start_period, end_period)
-    Demand.kept.where(id: demands.map(&:id)).to_end_dates(start_period, end_period)
   end
 
   def demands_delivered_for_period_accumulated(demands, upper_date_limit)

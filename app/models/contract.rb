@@ -65,7 +65,7 @@ class Contract < ApplicationRecord
     (current_hours_per_demand - hours_per_demand) / hours_per_demand.to_f
   end
 
-  def remaining_backlog(date = Time.zone.today.end_of_month)
+  def remaining_work(date = Time.zone.today.end_of_month)
     delivered_to_date = demands.kept.where('end_date BETWEEN :start_date AND :end_date', start_date: start_date, end_date: date).count
 
     estimated_scope - delivered_to_date
