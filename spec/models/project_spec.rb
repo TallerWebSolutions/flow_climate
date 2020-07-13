@@ -376,6 +376,7 @@ RSpec.describe Project, type: :model do
     let!(:second_demand) { Fabricate :demand, project: project, team: team, created_date: 2.weeks.ago, commitment_date: 9.days.ago, end_date: 1.week.ago }
     let!(:third_demand) { Fabricate :demand, project: project, team: team, created_date: 1.week.ago, commitment_date: 10.days.ago, end_date: 2.days.ago }
     let!(:fourth_demand) { Fabricate :demand, project: project, team: team, created_date: Time.zone.now, commitment_date: Time.zone.now, end_date: nil }
+    let!(:fifth_demand) { Fabricate :demand, project: project, team: team, created_date: 4.weeks.ago, commitment_date: nil, end_date: nil, discarded_at: 2.weeks.ago }
 
     let!(:first_item_assignment) { Fabricate :item_assignment, demand: first_demand, membership: membership, start_time: 1.month.ago, finish_time: nil }
     let!(:second_item_assignment) { Fabricate :item_assignment, demand: second_demand, membership: membership, start_time: 1.month.ago, finish_time: nil }
@@ -435,13 +436,13 @@ RSpec.describe Project, type: :model do
   end
 
   describe '#remaining_backlog' do
-    context 'having demands' do
-      context 'specifying no date' do
+    context 'with demands' do
+      context 'with no date' do
         include_context 'demands with effort'
         it { expect(project.remaining_backlog).to eq 30 }
       end
 
-      context 'specifying a date' do
+      context 'with a date' do
         include_context 'demands with effort'
         it { expect(project.remaining_backlog(2.weeks.ago)).to eq 32 }
       end
@@ -1365,5 +1366,27 @@ RSpec.describe Project, type: :model do
   describe '#delivered_scope' do
     include_context 'demands with effort'
     it { expect(project.delivered_scope).to eq 3 }
+  end
+
+  describe '#remaining_work' do
+    it 'returns the remaining item for the specified date' do
+      travel_to Time.zone.local(2020, 7, 13, 15, 21, 0) do
+        analysed_date = 1.day.ago
+        project = Fabricate :project, status: :executing, start_date: Time.zone.today, end_date: 4.weeks.from_now
+
+        allow(project).to(receive(:initial_scope)).and_return(5)
+
+        expect(DemandsRepository.instance).to(receive(:remaining_backlog_to_date)).with(any_args, Time.zone.now.end_of_day).and_return(10)
+        expect(DemandsRepository.instance).to(receive(:wip_count)).with(any_args, Time.zone.now.end_of_day).and_return(8)
+
+        expect(project.remaining_work).to eq 23
+
+        allow(project).to(receive(:initial_scope)).and_return(5)
+        expect(DemandsRepository.instance).to(receive(:remaining_backlog_to_date)).with(any_args, analysed_date.end_of_day).and_return(10)
+        expect(DemandsRepository.instance).to(receive(:wip_count)).with(any_args, analysed_date.end_of_day).and_return(8)
+
+        expect(project.remaining_work(analysed_date)).to eq 23
+      end
+    end
   end
 end

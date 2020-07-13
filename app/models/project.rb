@@ -229,6 +229,13 @@ class Project < ApplicationRecord
     DemandsRepository.instance.remaining_backlog_to_date(demands.map(&:id), date.end_of_day) + initial_scope
   end
 
+  def remaining_work(date = Time.zone.now)
+    backlog = DemandsRepository.instance.remaining_backlog_to_date(demands.map(&:id), date.end_of_day) + initial_scope
+    wip = DemandsRepository.instance.wip_count(demands.map(&:id), date.end_of_day)
+
+    backlog + wip
+  end
+
   def percentage_remaining_backlog(date = Time.zone.now)
     return 0 unless (demands.kept.count + initial_scope).positive?
 

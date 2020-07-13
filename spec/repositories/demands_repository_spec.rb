@@ -104,52 +104,6 @@ RSpec.describe DemandsRepository, type: :repository do
     end
   end
 
-  describe '#effort_upstream_grouped_by_month' do
-    let(:project) { Fabricate :project, start_date: 2.months.ago, end_date: 2.months.from_now }
-
-    context 'with demands' do
-      let!(:first_demand) { Fabricate :demand, project: project, commitment_date: 60.days.ago, end_date: 57.days.ago, effort_upstream: 10, effort_downstream: 5 }
-      let!(:second_demand) { Fabricate :demand, project: project, commitment_date: 58.days.ago, end_date: 55.days.ago, effort_upstream: 12, effort_downstream: 20 }
-      let!(:third_demand) { Fabricate :demand, project: project, commitment_date: 30.days.ago, end_date: 24.days.ago, effort_upstream: 27, effort_downstream: 40 }
-      let!(:fourth_demand) { Fabricate :demand, project: project, commitment_date: 29.days.ago, end_date: 22.days.ago, effort_upstream: 80, effort_downstream: 34 }
-      let!(:fifth_demand) { Fabricate :demand, project: project, commitment_date: 10.days.ago, end_date: 7.days.ago, effort_upstream: 56, effort_downstream: 25 }
-      let!(:sixth_demand) { Fabricate :demand, project: project, commitment_date: 10.days.ago, end_date: 5.days.ago, effort_upstream: 32, effort_downstream: 87 }
-      let!(:seventh_demand) { Fabricate :demand, project: project, commitment_date: 10.days.ago, end_date: nil, effort_upstream: 32, effort_downstream: 87 }
-      let!(:eigth_demand) { Fabricate :demand, project: project, commitment_date: 29.days.ago, end_date: 22.days.ago, effort_upstream: 80, effort_downstream: 34, discarded_at: Time.zone.today }
-
-      it { expect(described_class.instance.effort_upstream_grouped_by_month(Project.all, 57.days.ago.to_date, Time.zone.today)).to eq([2018.0, 2.0] => 22.0, [2018.0, 3.0] => 195.0) }
-      it { expect(described_class.instance.effort_upstream_grouped_by_month(Project.all, 24.days.ago.to_date, Time.zone.today)).to eq([2018.0, 3.0] => 195.0) }
-    end
-
-    context 'with no demands' do
-      it { expect(described_class.instance.effort_upstream_grouped_by_month(Project.all, 57.days.ago.to_date, Time.zone.today)).to eq({}) }
-    end
-  end
-
-  describe '#grouped_by_effort_downstream_per_month' do
-    let(:project) { Fabricate :project, start_date: 2.months.ago, end_date: 2.months.from_now }
-
-    context 'with demands' do
-      let!(:first_demand) { Fabricate :demand, project: project, commitment_date: 60.days.ago, end_date: 57.days.ago, effort_upstream: 10, effort_downstream: 5 }
-      let!(:second_demand) { Fabricate :demand, project: project, commitment_date: 58.days.ago, end_date: 55.days.ago, effort_upstream: 12, effort_downstream: 20 }
-      let!(:third_demand) { Fabricate :demand, project: project, commitment_date: 30.days.ago, end_date: 24.days.ago, effort_upstream: 27, effort_downstream: 40 }
-      let!(:fourth_demand) { Fabricate :demand, project: project, commitment_date: 29.days.ago, end_date: 22.days.ago, effort_upstream: 80, effort_downstream: 34 }
-      let!(:fifth_demand) { Fabricate :demand, project: project, commitment_date: 10.days.ago, end_date: 7.days.ago, effort_upstream: 56, effort_downstream: 25 }
-      let!(:sixth_demand) { Fabricate :demand, project: project, commitment_date: 10.days.ago, end_date: 5.days.ago, effort_upstream: 32, effort_downstream: 87 }
-      let!(:seventh_demand) { Fabricate :demand, project: project, commitment_date: 10.days.ago, end_date: nil, effort_upstream: 32, effort_downstream: 87 }
-      let!(:eigth_demand) { Fabricate :demand, project: project, commitment_date: 29.days.ago, end_date: 22.days.ago, effort_upstream: 80, effort_downstream: 34, discarded_at: Time.zone.today }
-
-      context 'with demands in progress' do
-        it { expect(described_class.instance.grouped_by_effort_downstream_per_month(Project.all, 57.days.ago.to_date, Time.zone.today)).to eq([2018.0, 2.0] => 25.0, [2018.0, 3.0] => 186.0) }
-        it { expect(described_class.instance.grouped_by_effort_downstream_per_month(Project.all, 24.days.ago.to_date, Time.zone.today)).to eq([2018.0, 3.0] => 186.0) }
-      end
-    end
-
-    context 'with no demands' do
-      it { expect(described_class.instance.grouped_by_effort_downstream_per_month(Project.all, 57.days.ago.to_date, Time.zone.today)).to eq({}) }
-    end
-  end
-
   describe '#delivered_hours_in_month_for_projects' do
     let(:first_project) { Fabricate :project, start_date: 2.months.ago, end_date: 2.months.from_now }
     let(:second_project) { Fabricate :project, start_date: 2.months.ago, end_date: 2.months.from_now }
@@ -316,6 +270,13 @@ RSpec.describe DemandsRepository, type: :repository do
     it { expect(described_class.instance.lead_time_zone_count(Demand.all, 86_400.0, nil)).to eq 2 }
     it { expect(described_class.instance.lead_time_zone_count(Demand.all, nil, 86_400)).to eq 1 }
     it { expect(described_class.instance.lead_time_zone_count(Demand.all, 50_400.0, 396_000.0)).to eq 2 }
+  end
+
+  describe '#wip_count' do
+    include_context 'demand data for filters'
+
+    it { expect(described_class.instance.wip_count(Demand.all.map(&:id))).to eq 2 }
+    it { expect(described_class.instance.wip_count(Demand.all.map(&:id), 2.weeks.ago)).to eq 0 }
   end
 
   pending '#bugs_opened_until_limit_date'

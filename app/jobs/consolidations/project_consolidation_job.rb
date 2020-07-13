@@ -29,7 +29,7 @@ module Consolidations
           team_work_item_flow_information.work_items_flow_behaviour(x_axis.first, analysed_date, distribution_index, true)
         end
 
-        project_based_montecarlo_durations = Stats::StatisticsService.instance.run_montecarlo(project.remaining_backlog(end_of_week), project_work_item_flow_information.throughput_array_for_monte_carlo.last(10), 500)
+        project_based_montecarlo_durations = Stats::StatisticsService.instance.run_montecarlo(project.remaining_work(end_of_week), project_work_item_flow_information.throughput_array_for_monte_carlo.last(10), 500)
         team_based_montecarlo_durations = compute_team_monte_carlo_weeks(end_of_week, project, team_work_item_flow_information.throughput_per_period.last(20))
 
         consolidation = ProjectConsolidation.find_or_initialize_by(project: project, consolidation_date: end_of_week)
@@ -73,7 +73,7 @@ module Consolidations
       project_share_in_flow = (project_wip.to_f / team_wip.to_f) if team_wip.positive? && project_wip.positive?
 
       project_share_team_throughput_data = team_throughput_data.map { |throughput| throughput * project_share_in_flow }
-      Stats::StatisticsService.instance.run_montecarlo(project.remaining_backlog(limit_date), project_share_team_throughput_data, 500)
+      Stats::StatisticsService.instance.run_montecarlo(project.remaining_work(limit_date), project_share_team_throughput_data, 500)
     end
   end
 end
