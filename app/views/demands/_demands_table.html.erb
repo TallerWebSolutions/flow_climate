@@ -1,31 +1,44 @@
 <% if demands.count.positive? %>
+  <div id="container-leadtime-div" class="container-leadtime">
+    <%= render 'demands/demands_leadtime_container',
+               demands: demands,
+               confidence_65_leadtime: confidence_65_leadtime,
+               confidence_80_leadtime: confidence_80_leadtime,
+               confidence_95_leadtime: confidence_95_leadtime,
+               avg_queue_time: avg_queue_time,
+               avg_touch_time: avg_touch_time,
+               avg_work_hours_per_demand: avg_work_hours_per_demand %>
+  </div>
+
+  <hr>
+
   <div class="row">
     <div class="col-xs-4">
       <div id="demands_count">
         <h4>
-          <div><%= "#{I18n.t('demands.index.count', demands_count: unpaged_demands.count)}" %></div>
+          <div><%= "#{I18n.t('demands.index.count', demands_count: demands.count)}" %></div>
         </h4>
       </div>
     </div>
     <div class="col-xs-12">
-      <div><%= "#{I18n.t('general.effort_hours_text', hours_value: number_with_precision(unpaged_demands.sum(&:total_effort), precision: 2))}" %></div>
+      <div><%= "#{I18n.t('general.effort_hours_text', hours_value: number_with_precision(demands.sum(&:total_effort), precision: 2))}" %></div>
     </div>
   </div>
 
   <div class="row">
     <div class="col-xs-12">
       <div>
-        <%= link_to I18n.t('general.download_csv'), demands_csv_company_demands_path(company, unpaged_demands.map(&:id).to_csv, format: :csv), class: 'btn btn-sm btn-primary pull-right grouped-button' %>
+        <%= link_to I18n.t('general.download_csv'), demands_csv_company_demands_path(company, demands.map(&:id).to_csv, format: :csv), class: 'btn btn-sm btn-primary pull-right grouped-button' %>
       </div>
       <div>
-        <%= link_to I18n.t('general.show_montecarlo'), '#', onclick: "monteCarloDialog(#{company.id}, '#{unpaged_demands.map(&:id).join(',')}')", class: 'btn btn-sm btn-primary pull-right grouped-button show-montecarlo-dialog' %>
+        <%= link_to I18n.t('general.show_montecarlo'), '#', onclick: "monteCarloDialog(#{company.id}, '#{demands.map(&:id).join(',')}')", class: 'btn btn-sm btn-primary pull-right grouped-button show-montecarlo-dialog' %>
       </div>
     </div>
   </div>
 <% end %>
 
-<% if demands.present? %>
-  <%= paginate demands, remote: true %>
+<% if paged_demands.present? %>
+  <%= paginate paged_demands, remote: true %>
   <div id="demands_table">
     <table class="table table-index table-striped">
       <thead>
@@ -58,9 +71,9 @@
         </tr>
       </thead>
       <tbody>
-        <% demands.each do |demand| %>
+        <% paged_demands.each do |demand| %>
           <tr id='demand_<%= demand.id %>'>
-            <%= render 'demands/demand_fields', company: company, demand: demand, demands_ids: demands.map(&:id) %>
+            <%= render 'demands/demand_fields', company: company, demand: demand, demands_ids: paged_demands.map(&:id) %>
           </tr>
         <% end %>
       </tbody>

@@ -633,7 +633,6 @@ RSpec.describe DemandsController, type: :controller do
                   expect(assigns(:confidence_80_leadtime)).to be_within(0.3).of(3.6)
                   expect(assigns(:confidence_65_leadtime)).to be_within(0.3).of(2.9)
                   expect(assigns(:avg_work_hours_per_demand).to_f).to eq 3.75
-                  expect(assigns(:share_demands_blocked).to_f).to eq 0.125
                 end
               end
             end
@@ -1134,7 +1133,6 @@ RSpec.describe DemandsController, type: :controller do
               expect(assigns(:confidence_95_leadtime)).to eq 0
               expect(assigns(:confidence_80_leadtime)).to eq 0
               expect(assigns(:confidence_65_leadtime)).to eq 0
-              expect(assigns(:share_demands_blocked).to_f).to eq 0
             end
           end
         end

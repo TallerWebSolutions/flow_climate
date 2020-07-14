@@ -20,19 +20,19 @@
   <div class="col-xs-2 summary-card-frame">
     <div class="summary-card-content">
       <p class="summary-card-title"><%= I18n.t('demands.stats.avg_queue') %></p>
-      <p class="summary-card-value"><%= number_with_precision(@average_queue_time, precision: 2) %></p>
+      <p class="summary-card-value"><%= number_with_precision(avg_queue_time, precision: 2) %></p>
     </div>
   </div>
   <div class="col-xs-2 summary-card-frame">
     <div class="summary-card-content">
       <p class="summary-card-title"><%= I18n.t('demands.stats.avg_touch') %></p>
-      <p class="summary-card-value"><%= number_with_precision(@average_touch_time, precision: 2) %></p>
+      <p class="summary-card-value"><%= number_with_precision(avg_touch_time, precision: 2) %></p>
     </div>
   </div>
   <div class="col-xs-2 summary-card-frame">
     <div class="summary-card-content">
       <p class="summary-card-title"><%= I18n.t('demands.stats.avg_work_hours_per_demand') %></p>
-      <p class="summary-card-value"><%= number_with_precision(@avg_work_hours_per_demand, precision: 2) %></p>
+      <p class="summary-card-value"><%= number_with_precision(avg_work_hours_per_demand, precision: 2) %></p>
     </div>
   </div>
 </div>

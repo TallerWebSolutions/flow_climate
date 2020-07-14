@@ -17,3 +17,7 @@ pt-BR:
   flow_impacts:
     opened_impacts:
       title: "Impactos abertos para o projeto %{project_name}"
+  companies:
+    api:
+      company_details:
+        message: "Detalhes da Empresa"

@@ -802,7 +802,6 @@ pt-BR:
       avg_touch: "Trabalho Médio (horas)"
       avg_queue: "Fila Média (horas)"
       avg_work_hours_per_demand: "Média Horas Úteis por Demanda"
-      share_demands_blocked: "%{percentage_blocks} possui algum bloqueio"
     filter:
       grouping:
         title: "Agrupado por"

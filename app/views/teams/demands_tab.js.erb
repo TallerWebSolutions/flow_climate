@@ -1,4 +1,15 @@
-$('#team-demands-info').html("<%= escape_javascript(render 'demands/demands_table', company: @company, demands: @paged_demands, unpaged_demands: @demands) %>")
+$('#team-demands-info').html("<%= escape_javascript(render 'demands/demands_table',
+                                                    company: @company,
+                                                    demands: @demands,
+                                                    paged_demands: @paged_demands,
+                                                    confidence_65_leadtime: @confidence_65_leadtime,
+                                                    confidence_80_leadtime: @confidence_80_leadtime,
+                                                    confidence_95_leadtime: @confidence_95_leadtime,
+                                                    queue_time: @total_queue_time,
+                                                    touch_time: @total_touch_time,
+                                                    avg_queue_time: @average_queue_time,
+                                                    avg_touch_time: @average_touch_time,
+                                                    avg_work_hours_per_demand: @avg_work_hours_per_demand) %>")
 
 $('.dashboard-info-tab').removeClass('active');
 

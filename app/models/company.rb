@@ -50,6 +50,13 @@ class Company < ApplicationRecord
 
   delegate :count, to: :active_projects, prefix: true
 
+  def to_hash
+    { id: id, name: name, customers_count: customers_count, products_count: products_count,
+      projects_count: projects_count, current_scope_count: current_scope, current_month_throughput: current_month_throughput,
+      current_cost_per_hour: current_cost_per_hour, current_hours_per_demand: current_hours_per_demand,
+      waiting_projects_count: waiting_projects_count, active_projects_count: active_projects_count }
+  end
+
   def add_user(user)
     return if users.include?(user)
 
