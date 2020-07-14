@@ -185,11 +185,6 @@ class DemandsController < AuthenticatedController
     @average_queue_time = @total_queue_time / @unpaged_demands.count
     @average_touch_time = @total_touch_time / @unpaged_demands.count
     @avg_work_hours_per_demand = @unpaged_demands.with_effort.sum(&:total_effort) / @unpaged_demands.count
-    build_block_informations
-  end
-
-  def build_block_informations
-    @share_demands_blocked = @unpaged_demands.count { |demand_list| demand_list.demand_blocks.count.positive? }.to_f / @unpaged_demands.count
   end
 
   def assign_dates_to_query

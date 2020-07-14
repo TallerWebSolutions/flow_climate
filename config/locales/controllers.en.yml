@@ -733,7 +733,6 @@ en:
       avg_touch: "Average Touch (hours)"
       avg_queue: "Average Queue (hours)"
       avg_work_hours_per_demand: "Avg Work Hours per Demand"
-      share_demands_blocked: "%{percentage_blocks} has blocks"
     filter:
       grouping:
         title: "Grouped By"
