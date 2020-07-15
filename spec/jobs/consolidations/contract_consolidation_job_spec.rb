@@ -20,13 +20,13 @@ RSpec.describe Consolidations::ContractConsolidationJob, type: :active_job do
         product = Fabricate :product, customer: customer
         contract = Fabricate :contract, customer: customer, product: product, total_value: 100_000, total_hours: 2000, hours_per_demand: 30, start_date: 3.months.ago, end_date: 1.month.from_now
 
-        5.times { Fabricate :demand, customer: customer, created_date: 74.days.ago, commitment_date: 35.days.ago, end_date: 1.month.ago, effort_downstream: 200, effort_upstream: 10 }
-        2.times { Fabricate :demand, customer: customer, created_date: 65.days.ago, commitment_date: 34.days.ago, end_date: 1.month.ago, effort_downstream: 400, effort_upstream: 130 }
-        7.times { Fabricate :demand, customer: customer, created_date: 32.days.ago, commitment_date: 31.days.ago, end_date: 1.month.ago, effort_downstream: 100, effort_upstream: 20 }
+        5.times { Fabricate :demand, customer: customer, contract: contract, created_date: 74.days.ago, commitment_date: 35.days.ago, end_date: 1.month.ago, effort_downstream: 200, effort_upstream: 10 }
+        2.times { Fabricate :demand, customer: customer, contract: contract, created_date: 65.days.ago, commitment_date: 34.days.ago, end_date: 1.month.ago, effort_downstream: 400, effort_upstream: 130 }
+        7.times { Fabricate :demand, customer: customer, contract: contract, created_date: 32.days.ago, commitment_date: 31.days.ago, end_date: 1.month.ago, effort_downstream: 100, effort_upstream: 20 }
 
-        10.times { Fabricate :demand, customer: customer, created_date: 74.days.ago, commitment_date: 66.days.ago, end_date: 2.months.ago, effort_downstream: 200, effort_upstream: 10 }
-        9.times { Fabricate :demand, customer: customer, created_date: 69.days.ago, commitment_date: 67.days.ago, end_date: 2.months.ago, effort_downstream: 400, effort_upstream: 130 }
-        2.times { Fabricate :demand, customer: customer, created_date: 70.days.ago, commitment_date: 2.months.ago, end_date: 2.months.ago, effort_downstream: 100, effort_upstream: 20 }
+        10.times { Fabricate :demand, customer: customer, contract: contract, created_date: 74.days.ago, commitment_date: 66.days.ago, end_date: 2.months.ago, effort_downstream: 200, effort_upstream: 10 }
+        9.times { Fabricate :demand, customer: customer, contract: contract, created_date: 69.days.ago, commitment_date: 67.days.ago, end_date: 2.months.ago, effort_downstream: 400, effort_upstream: 130 }
+        2.times { Fabricate :demand, customer: customer, contract: contract, created_date: 70.days.ago, commitment_date: 2.months.ago, end_date: 2.months.ago, effort_downstream: 100, effort_upstream: 20 }
 
         described_class.perform_now(contract)
 

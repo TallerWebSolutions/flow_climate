@@ -8,6 +8,7 @@ RSpec.describe Jira::JiraReader do
 
   let(:jira_account) { Fabricate :jira_account, company: company, base_uri: 'http://foo.bar', username: 'foo', api_token: 'bar' }
   let!(:customer_custom_field) { Fabricate :jira_custom_field_mapping, jira_account: jira_account, custom_field_type: :customer, custom_field_machine_name: 'customfield_10013' }
+  let!(:contract_custom_field) { Fabricate :jira_custom_field_mapping, jira_account: jira_account, custom_field_type: :contract, custom_field_machine_name: 'customfield_10015' }
 
   let!(:project) { Fabricate :project, company: company, customers: [customer], products: [product] }
 
@@ -42,6 +43,14 @@ RSpec.describe Jira::JiraReader do
         jira_issue = client.Issue.build({ key: '10000', fields: { created: '2018-07-02T11:20:18.998-0300', summary: 'foo of bar', issuetype: { name: 'Story' }, customfield_10028: { value: 'Expedite' }, customfield_10013: { value: 'xpto of bla' }, project: { key: 'foo', self: 'http://foo.bar' }, customfield_10024: [{ emailAddress: 'foo' }, { emailAddress: 'bar' }], fixVersions: [{ name: 'bar' }] }, changelog: { startAt: 0, maxResults: 2, total: 2, histories: [{ id: '10039', created: '2018-07-08T22:34:47.440-0300', items: [{ field: 'status', from: 'first_stage', to: 'second_stage' }] }, { id: '10038', created: '2018-07-06T09:40:43.886-0300', items: [{ field: 'status', from: 'third_stage', to: 'first_stage' }, { field: 'module', toString: 'statistics' }] }] } }.with_indifferent_access)
         expect(described_class.instance.read_customer(jira_account, jira_issue.attrs)).to eq customer
       end
+    end
+  end
+
+  describe '#read_contract' do
+    it 'extracts and save the customer' do
+      contract = Fabricate :contract, customer: customer
+      jira_issue = client.Issue.build({ key: '10000', fields: { created: '2018-07-02T11:20:18.998-0300', summary: 'foo of bar', issuetype: { name: 'Story' }, customfield_10028: { value: 'Expedite' }, customfield_10015: [contract.id], project: { key: 'foo', self: 'http://foo.bar' }, customfield_10024: [{ emailAddress: 'foo' }, { emailAddress: 'bar' }], fixVersions: [{ name: 'bar' }] }, changelog: { startAt: 0, maxResults: 2, total: 2, histories: [{ id: '10039', created: '2018-07-08T22:34:47.440-0300', items: [{ field: 'status', from: 'first_stage', to: 'second_stage' }] }, { id: '10038', created: '2018-07-06T09:40:43.886-0300', items: [{ field: 'status', from: 'third_stage', to: 'first_stage' }, { field: 'module', toString: 'statistics' }] }] } }.with_indifferent_access)
+      expect(described_class.instance.read_contract(jira_account, jira_issue.attrs)).to eq contract
     end
   end
 

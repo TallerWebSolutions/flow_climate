@@ -30,6 +30,7 @@ class Company < ApplicationRecord
   has_many :financial_informations, dependent: :restrict_with_error
   has_many :customers, dependent: :restrict_with_error
   has_many :products, through: :customers
+  has_many :contracts, through: :customers
   has_many :projects, counter_cache: true, dependent: :restrict_with_error
   has_many :jira_project_configs, through: :projects
   has_many :jira_product_configs, through: :products

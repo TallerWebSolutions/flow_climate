@@ -46,5 +46,9 @@ module Jira
     def customer_custom_field
       jira_custom_field_mappings.find_by(custom_field_type: :customer)
     end
+
+    def contract_custom_field
+      jira_custom_field_mappings.find_by(custom_field_type: :contract)
+    end
   end
 end

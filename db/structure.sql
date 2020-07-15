@@ -1135,7 +1135,8 @@ CREATE TABLE public.demands (
     service_delivery_review_id integer,
     current_stage_id integer,
     customer_id integer,
-    demand_tags character varying[] DEFAULT '{}'::character varying[]
+    demand_tags character varying[] DEFAULT '{}'::character varying[],
+    contract_id integer
 );
 
 
@@ -3854,6 +3855,13 @@ CREATE INDEX index_demand_transitions_on_stage_id ON public.demand_transitions U
 
 
 --
+-- Name: index_demands_on_contract_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_demands_on_contract_id ON public.demands USING btree (contract_id);
+
+
+--
 -- Name: index_demands_on_current_stage_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -5228,6 +5236,14 @@ ALTER TABLE ONLY public.flow_impacts
 
 
 --
+-- Name: demands fk_rails_d084bb511c; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.demands
+    ADD CONSTRAINT fk_rails_d084bb511c FOREIGN KEY (contract_id) REFERENCES public.contracts(id);
+
+
+--
 -- Name: demand_blocks fk_rails_d25cb2ae7e; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -5516,6 +5532,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200627151758'),
 ('20200703124334'),
 ('20200707184608'),
-('20200711165002');
+('20200711165002'),
+('20200714214845');
 
 

@@ -76,7 +76,7 @@ RSpec.describe Jira::JiraAccount, type: :model do
       it { expect(jira_account.class_of_service_custom_field).to eq class_of_service_custom_field_mapping }
     end
 
-    context 'having the custom fields but not having a field to responsibles' do
+    context 'having the custom fields but not having a field to class of service' do
       let!(:responsibles_jira_custom_field_mapping) { Fabricate :jira_custom_field_mapping, jira_account: jira_account, custom_field_type: :responsibles }
 
       it { expect(jira_account.class_of_service_custom_field).to be_nil }
@@ -97,10 +97,31 @@ RSpec.describe Jira::JiraAccount, type: :model do
       it { expect(jira_account.customer_custom_field).to eq customer_custom_field }
     end
 
-    context 'having the custom fields but not having a field to responsibles' do
+    context 'having the custom fields but not having a field to customer' do
       let!(:responsibles_jira_custom_field_mapping) { Fabricate :jira_custom_field_mapping, jira_account: jira_account, custom_field_type: :responsibles }
 
       it { expect(jira_account.customer_custom_field).to be_nil }
+    end
+
+    context 'having no custom fields' do
+      it { expect(jira_account.customer_custom_field).to be_nil }
+    end
+  end
+
+  describe '#contract_custom_field' do
+    let(:jira_account) { Fabricate :jira_account }
+
+    context 'having the custom fields' do
+      let!(:contract_custom_field) { Fabricate :jira_custom_field_mapping, jira_account: jira_account, custom_field_type: :contract }
+      let!(:class_of_service_custom_field_mapping) { Fabricate :jira_custom_field_mapping, jira_account: jira_account, custom_field_type: :class_of_service }
+
+      it { expect(jira_account.contract_custom_field).to eq contract_custom_field }
+    end
+
+    context 'having the custom fields but not having a field to contract' do
+      let!(:responsibles_jira_custom_field_mapping) { Fabricate :jira_custom_field_mapping, jira_account: jira_account, custom_field_type: :responsibles }
+
+      it { expect(jira_account.contract_custom_field).to be_nil }
     end
 
     context 'having no custom fields' do

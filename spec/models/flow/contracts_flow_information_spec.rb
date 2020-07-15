@@ -21,10 +21,10 @@ RSpec.describe Flow::ContractsFlowInformation do
           project = Fabricate :project, customers: [customer], products: [product]
           contract = Fabricate :contract, customer: customer, total_value: 1_000_000, total_hours: 20_000, start_date: 3.months.ago, end_date: 1.month.from_now
 
-          3.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, end_date: Time.zone.now, effort_upstream: 10, effort_downstream: 30) }
-          5.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, end_date: 1.month.ago, effort_upstream: 40, effort_downstream: 10) }
-          2.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, end_date: 3.months.ago, effort_upstream: 0, effort_downstream: 50) }
-          6.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, end_date: 4.months.ago, effort_upstream: 100, effort_downstream: 300) }
+          3.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, contract: contract, end_date: Time.zone.now, effort_upstream: 10, effort_downstream: 30) }
+          5.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, contract: contract, end_date: 1.month.ago, effort_upstream: 40, effort_downstream: 10) }
+          2.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, contract: contract, end_date: 3.months.ago, effort_upstream: 0, effort_downstream: 50) }
+          6.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, contract: contract, end_date: 4.months.ago, effort_upstream: 100, effort_downstream: 300) }
 
           contract_flow = described_class.new(contract)
 
@@ -45,10 +45,10 @@ RSpec.describe Flow::ContractsFlowInformation do
             project = Fabricate :project, customers: [customer], products: [product]
             contract = Fabricate :contract, customer: customer, total_value: 100_000, total_hours: 2000, start_date: 3.months.ago, end_date: 1.month.from_now
 
-            3.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, end_date: Time.zone.now, effort_upstream: 0, effort_downstream: 0) }
-            5.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, end_date: 1.month.ago, effort_upstream: 0, effort_downstream: 0) }
-            2.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, end_date: 3.months.ago, effort_upstream: 0, effort_downstream: 0) }
-            6.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, end_date: 4.months.ago, effort_upstream: 0, effort_downstream: 0) }
+            3.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, contract: contract, end_date: Time.zone.now, effort_upstream: 0, effort_downstream: 0) }
+            5.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, contract: contract, end_date: 1.month.ago, effort_upstream: 0, effort_downstream: 0) }
+            2.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, contract: contract, end_date: 3.months.ago, effort_upstream: 0, effort_downstream: 0) }
+            6.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, contract: contract, end_date: 4.months.ago, effort_upstream: 0, effort_downstream: 0) }
 
             contract_flow = described_class.new(contract)
 
@@ -63,10 +63,10 @@ RSpec.describe Flow::ContractsFlowInformation do
             project = Fabricate :project, customers: [customer], products: [product]
             contract = Fabricate :contract, customer: customer, total_value: 100_000, total_hours: 2000, start_date: 3.days.ago, end_date: 1.day.from_now
 
-            3.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, end_date: Time.zone.now, effort_upstream: 10, effort_downstream: 30) }
-            5.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, end_date: 1.day.ago, effort_upstream: 40, effort_downstream: 10) }
-            2.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, end_date: 3.days.ago, effort_upstream: 0, effort_downstream: 50) }
-            6.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, end_date: 4.days.ago, effort_upstream: 100, effort_downstream: 300) }
+            3.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, contract: contract, end_date: Time.zone.now, effort_upstream: 10, effort_downstream: 30) }
+            5.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, contract: contract, end_date: 1.day.ago, effort_upstream: 40, effort_downstream: 10) }
+            2.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, contract: contract, end_date: 3.days.ago, effort_upstream: 0, effort_downstream: 50) }
+            6.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, contract: contract, end_date: 4.days.ago, effort_upstream: 100, effort_downstream: 300) }
 
             contract_flow = described_class.new(contract, 'day')
 
@@ -81,10 +81,10 @@ RSpec.describe Flow::ContractsFlowInformation do
             project = Fabricate :project, customers: [customer], products: [product]
             contract = Fabricate :contract, customer: customer, total_value: 100_000, total_hours: 2000, start_date: 3.weeks.ago, end_date: 1.week.from_now
 
-            3.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, end_date: Time.zone.now, effort_upstream: 10, effort_downstream: 30) }
-            5.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, end_date: 1.week.ago, effort_upstream: 40, effort_downstream: 10) }
-            2.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, end_date: 3.weeks.ago, effort_upstream: 0, effort_downstream: 50) }
-            6.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, end_date: 4.weeks.ago, effort_upstream: 100, effort_downstream: 300) }
+            3.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, contract: contract, end_date: Time.zone.now, effort_upstream: 10, effort_downstream: 30) }
+            5.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, contract: contract, end_date: 1.week.ago, effort_upstream: 40, effort_downstream: 10) }
+            2.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, contract: contract, end_date: 3.weeks.ago, effort_upstream: 0, effort_downstream: 50) }
+            6.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, contract: contract, end_date: 4.weeks.ago, effort_upstream: 100, effort_downstream: 300) }
 
             contract_flow = described_class.new(contract, 'week')
 
@@ -112,10 +112,10 @@ RSpec.describe Flow::ContractsFlowInformation do
           project = Fabricate :project, customers: [customer], products: [product]
           contract = Fabricate :contract, customer: customer, total_value: 100_000, total_hours: 2000, start_date: 3.months.ago, end_date: 1.month.from_now
 
-          3.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, end_date: Time.zone.now, effort_upstream: 10, effort_downstream: 30) }
-          5.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, end_date: 1.month.ago, effort_upstream: 40, effort_downstream: 10) }
-          2.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, end_date: 3.months.ago, effort_upstream: 0, effort_downstream: 50) }
-          6.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, end_date: 4.months.ago, effort_upstream: 100, effort_downstream: 300) }
+          3.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, contract: contract, end_date: Time.zone.now, effort_upstream: 10, effort_downstream: 30) }
+          5.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, contract: contract, end_date: 1.month.ago, effort_upstream: 40, effort_downstream: 10) }
+          2.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, contract: contract, end_date: 3.months.ago, effort_upstream: 0, effort_downstream: 50) }
+          6.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, contract: contract, end_date: 4.months.ago, effort_upstream: 100, effort_downstream: 300) }
 
           contract_flow = described_class.new(contract)
 
@@ -131,10 +131,10 @@ RSpec.describe Flow::ContractsFlowInformation do
             project = Fabricate :project, customers: [customer], products: [product]
             contract = Fabricate :contract, customer: customer, total_value: 100_000, total_hours: 2000, start_date: 3.months.ago, end_date: 1.month.from_now
 
-            3.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, end_date: Time.zone.now, effort_upstream: 0, effort_downstream: 0) }
-            5.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, end_date: 1.month.ago, effort_upstream: 0, effort_downstream: 0) }
-            2.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, end_date: 3.months.ago, effort_upstream: 0, effort_downstream: 0) }
-            6.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, end_date: 4.months.ago, effort_upstream: 0, effort_downstream: 0) }
+            3.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, contract: contract, end_date: Time.zone.now, effort_upstream: 0, effort_downstream: 0) }
+            5.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, contract: contract, end_date: 1.month.ago, effort_upstream: 0, effort_downstream: 0) }
+            2.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, contract: contract, end_date: 3.months.ago, effort_upstream: 0, effort_downstream: 0) }
+            6.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, contract: contract, end_date: 4.months.ago, effort_upstream: 0, effort_downstream: 0) }
 
             contract_flow = described_class.new(contract)
 
@@ -149,10 +149,10 @@ RSpec.describe Flow::ContractsFlowInformation do
             project = Fabricate :project, customers: [customer], products: [product]
             contract = Fabricate :contract, customer: customer, total_value: 100_000, total_hours: 2000, start_date: 3.days.ago, end_date: 1.day.from_now
 
-            3.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, end_date: Time.zone.now, effort_upstream: 0, effort_downstream: 0) }
-            5.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, end_date: 1.day.ago, effort_upstream: 0, effort_downstream: 0) }
-            2.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, end_date: 3.days.ago, effort_upstream: 0, effort_downstream: 0) }
-            6.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, end_date: 4.days.ago, effort_upstream: 0, effort_downstream: 0) }
+            3.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, contract: contract, end_date: Time.zone.now, effort_upstream: 0, effort_downstream: 0) }
+            5.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, contract: contract, end_date: 1.day.ago, effort_upstream: 0, effort_downstream: 0) }
+            2.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, contract: contract, end_date: 3.days.ago, effort_upstream: 0, effort_downstream: 0) }
+            6.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, contract: contract, end_date: 4.days.ago, effort_upstream: 0, effort_downstream: 0) }
 
             contract_flow = described_class.new(contract, 'day')
 
@@ -167,10 +167,10 @@ RSpec.describe Flow::ContractsFlowInformation do
             project = Fabricate :project, customers: [customer], products: [product]
             contract = Fabricate :contract, customer: customer, total_value: 100_000, total_hours: 2000, start_date: 3.weeks.ago, end_date: 1.week.from_now
 
-            3.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, end_date: Time.zone.now, effort_upstream: 10, effort_downstream: 30) }
-            5.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, end_date: 1.week.ago, effort_upstream: 40, effort_downstream: 10) }
-            2.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, end_date: 3.weeks.ago, effort_upstream: 0, effort_downstream: 50) }
-            6.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, end_date: 4.weeks.ago, effort_upstream: 100, effort_downstream: 300) }
+            3.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, contract: contract, end_date: Time.zone.now, effort_upstream: 10, effort_downstream: 30) }
+            5.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, contract: contract, end_date: 1.week.ago, effort_upstream: 40, effort_downstream: 10) }
+            2.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, contract: contract, end_date: 3.weeks.ago, effort_upstream: 0, effort_downstream: 50) }
+            6.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, contract: contract, end_date: 4.weeks.ago, effort_upstream: 100, effort_downstream: 300) }
 
             contract_flow = described_class.new(contract, 'week')
 
@@ -198,10 +198,10 @@ RSpec.describe Flow::ContractsFlowInformation do
           project = Fabricate :project, customers: [customer], products: [product]
           contract = Fabricate :contract, customer: customer, total_value: 100_000, total_hours: 2000, hours_per_demand: 30, start_date: 3.months.ago, end_date: 1.month.from_now
 
-          3.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, end_date: Time.zone.now, effort_upstream: 10, effort_downstream: 30) }
-          5.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, end_date: 1.month.ago, effort_upstream: 40, effort_downstream: 10) }
-          2.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, end_date: 3.months.ago, effort_upstream: 0, effort_downstream: 50) }
-          6.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, end_date: 4.months.ago, effort_upstream: 100, effort_downstream: 300) }
+          3.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, contract: contract, end_date: Time.zone.now, effort_upstream: 10, effort_downstream: 30) }
+          5.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, contract: contract, end_date: 1.month.ago, effort_upstream: 40, effort_downstream: 10) }
+          2.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, contract: contract, end_date: 3.months.ago, effort_upstream: 0, effort_downstream: 50) }
+          6.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, contract: contract, end_date: 4.months.ago, effort_upstream: 100, effort_downstream: 300) }
 
           contract_flow = described_class.new(contract)
 
@@ -228,10 +228,10 @@ RSpec.describe Flow::ContractsFlowInformation do
           project = Fabricate :project, customers: [customer], products: [product]
           contract = Fabricate :contract, customer: customer, total_value: 100_000, total_hours: 2000, hours_per_demand: 30, start_date: 3.months.ago, end_date: 1.month.from_now
 
-          3.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, demand_type: :feature, end_date: Time.zone.now, effort_upstream: 10, effort_downstream: 30) }
-          5.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, demand_type: :bug, end_date: 1.month.ago, effort_upstream: 40, effort_downstream: 10) }
-          2.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, demand_type: :bug, end_date: 3.months.ago, effort_upstream: 0, effort_downstream: 50) }
-          6.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, demand_type: :feature, end_date: 4.months.ago, effort_upstream: 100, effort_downstream: 300) }
+          3.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, contract: contract, demand_type: :feature, end_date: Time.zone.now, effort_upstream: 10, effort_downstream: 30) }
+          5.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, contract: contract, demand_type: :bug, end_date: 1.month.ago, effort_upstream: 40, effort_downstream: 10) }
+          2.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, contract: contract, demand_type: :bug, end_date: 3.months.ago, effort_upstream: 0, effort_downstream: 50) }
+          6.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, contract: contract, demand_type: :feature, end_date: 4.months.ago, effort_upstream: 100, effort_downstream: 300) }
 
           contract_flow = described_class.new(contract)
 
@@ -258,10 +258,10 @@ RSpec.describe Flow::ContractsFlowInformation do
           project = Fabricate :project, customers: [customer], products: [product]
           contract = Fabricate :contract, customer: customer, total_value: 100_000, total_hours: 2000, hours_per_demand: 30, start_date: 3.months.ago, end_date: 1.month.from_now
 
-          3.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, demand_type: :feature, commitment_date: 2.days.ago, end_date: Time.zone.now) }
-          5.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, demand_type: :bug, commitment_date: 35.days.ago, end_date: 1.month.ago) }
-          2.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, demand_type: :bug, commitment_date: 102.days.ago, end_date: 3.months.ago) }
-          6.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, demand_type: :feature, commitment_date: 134.days.ago, end_date: 4.months.ago) }
+          3.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, contract: contract, demand_type: :feature, commitment_date: 2.days.ago, end_date: Time.zone.now) }
+          5.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, contract: contract, demand_type: :bug, commitment_date: 35.days.ago, end_date: 1.month.ago) }
+          2.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, contract: contract, demand_type: :bug, commitment_date: 102.days.ago, end_date: 3.months.ago) }
+          6.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, contract: contract, demand_type: :feature, commitment_date: 134.days.ago, end_date: 4.months.ago) }
 
           contract_flow = described_class.new(contract)
 
@@ -288,10 +288,10 @@ RSpec.describe Flow::ContractsFlowInformation do
           project = Fabricate :project, customers: [customer], products: [product]
           contract = Fabricate :contract, customer: customer, total_value: 100_000, total_hours: 2000, hours_per_demand: 30, start_date: 3.months.ago, end_date: 1.month.from_now
 
-          3.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, demand_type: :feature, commitment_date: 2.days.ago, end_date: Time.zone.now) }
-          5.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, demand_type: :bug, commitment_date: 35.days.ago, end_date: 1.month.ago) }
-          2.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, demand_type: :bug, commitment_date: 102.days.ago, end_date: 3.months.ago) }
-          6.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, demand_type: :feature, commitment_date: 134.days.ago, end_date: 4.months.ago) }
+          3.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, contract: contract, demand_type: :feature, commitment_date: 2.days.ago, end_date: Time.zone.now) }
+          5.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, contract: contract, demand_type: :bug, commitment_date: 35.days.ago, end_date: 1.month.ago) }
+          2.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, contract: contract, demand_type: :bug, commitment_date: 102.days.ago, end_date: 3.months.ago) }
+          6.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, contract: contract, demand_type: :feature, commitment_date: 134.days.ago, end_date: 4.months.ago) }
 
           contract_flow = described_class.new(contract)
 

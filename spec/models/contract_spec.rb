@@ -10,6 +10,7 @@ RSpec.describe Contract, type: :model do
     it { is_expected.to belong_to :product }
     it { is_expected.to belong_to :contract }
     it { is_expected.to have_many :contract_consolidations }
+    it { is_expected.to have_many :demands }
   end
 
   context 'validations' do
@@ -29,14 +30,13 @@ RSpec.describe Contract, type: :model do
         Fabricate :contract, start_date: 7.days.from_now, end_date: 9.days.from_now
         Fabricate :contract, start_date: 9.days.ago, end_date: 7.days.ago
 
-        expect(described_class.active).to match_array [active_contract, other_active_contract]
+        expect(described_class.active(Time.zone.today)).to match_array [active_contract, other_active_contract]
       end
     end
   end
 
   context 'delegations' do
     it { is_expected.to delegate_method(:name).to(:product).with_prefix }
-    it { is_expected.to delegate_method(:demands).to(:customer) }
   end
 
   describe '#hour_value' do
@@ -114,13 +114,13 @@ RSpec.describe Contract, type: :model do
       other_contract = Fabricate :contract, customer: other_customer, start_date: 2.months.ago, end_date: 3.weeks.from_now, total_hours: 100
       no_data_contract = Fabricate :contract, start_date: 2.months.ago, end_date: 3.weeks.from_now, total_hours: 150
 
-      Fabricate :demand, customer: customer, project: project, demand_type: :feature, created_date: 3.weeks.ago, commitment_date: 17.days.ago, end_date: 2.weeks.ago, effort_downstream: 30, effort_upstream: 10
-      Fabricate :demand, customer: customer, project: project, demand_type: :bug, created_date: 2.weeks.ago, commitment_date: 18.days.ago, end_date: 1.week.ago, effort_downstream: 2, effort_upstream: 18
-      Fabricate :demand, customer: customer, project: other_project, demand_type: :bug, created_date: 1.week.ago, commitment_date: 4.days.ago, end_date: 2.days.ago, effort_downstream: 43, effort_upstream: 49
-      Fabricate :demand, customer: other_customer, project: other_project, demand_type: :bug, created_date: 1.week.ago, commitment_date: 4.days.ago, end_date: 2.days.ago, effort_downstream: 38, effort_upstream: 15
+      Fabricate :demand, customer: customer, contract: contract, project: project, demand_type: :feature, created_date: 3.weeks.ago, commitment_date: 17.days.ago, end_date: 2.weeks.ago, effort_downstream: 30, effort_upstream: 10
+      Fabricate :demand, customer: customer, contract: contract, project: project, demand_type: :bug, created_date: 2.weeks.ago, commitment_date: 18.days.ago, end_date: 1.week.ago, effort_downstream: 2, effort_upstream: 18
+      Fabricate :demand, customer: customer, contract: contract, project: other_project, demand_type: :bug, created_date: 1.week.ago, commitment_date: 4.days.ago, end_date: 2.days.ago, effort_downstream: 43, effort_upstream: 49
+      Fabricate :demand, customer: other_customer, contract: other_contract, project: other_project, demand_type: :bug, created_date: 1.week.ago, commitment_date: 4.days.ago, end_date: 2.days.ago, effort_downstream: 38, effort_upstream: 15
 
       expect(contract.remaining_work).to eq 3
-      expect(contract.remaining_work(2.weeks.ago)).to eq 5
+      expect(contract.remaining_work(3.weeks.ago)).to eq 6
       expect(other_contract.remaining_work).to eq 2
       expect(no_data_contract.remaining_work).to eq 5
     end

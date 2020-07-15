@@ -12,7 +12,7 @@ namespace :statistics do
   task consolidate_contracts: :environment do
     Company.all.each do |company|
       company.customers.each do |customer|
-        customer.contracts.active.each do |contract|
+        customer.contracts.active(Time.zone.today).each do |contract|
           Consolidations::ContractConsolidationJob.perform_later(contract)
         end
       end

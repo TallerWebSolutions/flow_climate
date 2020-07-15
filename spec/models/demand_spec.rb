@@ -15,6 +15,7 @@ RSpec.describe Demand, type: :model do
     it { is_expected.to belong_to :team }
     it { is_expected.to belong_to :risk_review }
     it { is_expected.to belong_to :service_delivery_review }
+    it { is_expected.to belong_to :contract }
     it { is_expected.to belong_to(:current_stage).class_name('Stage').inverse_of(:current_demands) }
 
     it { is_expected.to have_many(:demand_transitions).dependent(:destroy) }
@@ -919,5 +920,21 @@ RSpec.describe Demand, type: :model do
     it { expect(demand.stages_at(80.hours.ago, nil)).to eq [first_stage, second_stage, fourth_stage] }
     it { expect(demand.stages_at(1.hour.ago, 1.minute.ago)).to eq [fourth_stage] }
     it { expect(demand.stages_at(7.weeks.ago, 5.weeks.ago)).to eq [] }
+  end
+
+  describe '#date_to_use' do
+    it 'returns the correct date' do
+      now = Time.zone.now
+      yesterday = 1.day.ago
+      two_days_ago = 2.days.ago
+
+      created_demand = Fabricate :demand, created_date: now, commitment_date: nil
+      committed_demand = Fabricate :demand, created_date: yesterday, commitment_date: now, end_date: nil
+      ended_demand = Fabricate :demand, created_date: two_days_ago, commitment_date: yesterday, end_date: now
+
+      expect(created_demand.date_to_use).to be_within(1.second).of(now)
+      expect(committed_demand.date_to_use).to be_within(1.second).of(now)
+      expect(ended_demand.date_to_use).to be_within(1.second).of(now)
+    end
   end
 end
