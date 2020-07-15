@@ -38,6 +38,16 @@
           <% end %>
         </tr>
         <tr>
+          <td><b><%= Contract.model_name.human %></b></td>
+          <% if company.present? && demand.contract.present? %>
+            <td><%= link_to demand.contract.id, company_customer_contract_path(company, demand.customer, demand.contract) %></td>
+          <% elsif demand.contract.present? && company.blank? %>
+            <td><%= demand.contract.id %></td>
+          <% else %>
+            <td></td>
+          <% end %>
+        </tr>
+        <tr>
           <td><b><%= Product.model_name.human %></b></td>
           <td><%= link_to demand.product_name, company_product_path(company, demand.product) %></td>
         </tr>

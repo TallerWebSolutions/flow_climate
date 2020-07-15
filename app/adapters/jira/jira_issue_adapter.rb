@@ -14,6 +14,8 @@ module Jira
       update_demand!(demand, jira_account, jira_issue, project_in_jira, product_in_jira)
       process_product_changes(jira_issue_changelog(jira_issue))
       process_labels(demand, jira_issue_changelog(jira_issue))
+
+      define_contract(demand, jira_account, jira_issue_attrs(jira_issue))
     end
 
     private
@@ -29,8 +31,9 @@ module Jira
     end
 
     def update_demand!(demand, jira_account, jira_issue, project, product)
+      customer = define_customer(project, jira_account, jira_issue_attrs(jira_issue))
       demand.update(project: project, company: project.company, product: product, team: project.team,
-                    customer: define_customer(project, jira_account, jira_issue_attrs(jira_issue)),
+                    customer: customer,
                     created_date: issue_fields_value(jira_issue, 'created'),
                     demand_type: read_issue_type(jira_issue_attrs(jira_issue)),
                     class_of_service: Jira::JiraReader.instance.read_class_of_service(jira_account, jira_issue_attrs(jira_issue), jira_issue_changelog(jira_issue)),
@@ -301,6 +304,17 @@ module Jira
       return customer_to_card if customer_to_card.present?
 
       project.customers.first if project.customers.count == 1
+    end
+
+    def define_contract(demand, jira_account, jira_issue_attrs)
+      contract_to_card = Jira::JiraReader.instance.read_contract(jira_account, jira_issue_attrs)
+
+      if contract_to_card.present?
+        demand.update(contract: contract_to_card)
+      else
+        active_contracts = demand.product.contracts.active(demand.date_to_use)
+        demand.update(contract: active_contracts.first)
+      end
     end
   end
 end

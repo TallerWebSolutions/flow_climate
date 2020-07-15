@@ -31,6 +31,7 @@
 #  created_at                      :datetime         not null
 #  updated_at                      :datetime         not null
 #  company_id                      :integer          not null
+#  contract_id                     :integer
 #  current_stage_id                :integer
 #  customer_id                     :integer
 #  external_id                     :string           not null
@@ -43,6 +44,7 @@
 #
 # Indexes
 #
+#  index_demands_on_contract_id                 (contract_id)
 #  index_demands_on_current_stage_id            (current_stage_id)
 #  index_demands_on_discarded_at                (discarded_at)
 #  index_demands_on_external_id_and_company_id  (external_id,company_id) UNIQUE
@@ -57,6 +59,7 @@
 #  fk_rails_73cc77780a  (product_id => products.id)
 #  fk_rails_b14b9efb68  (customer_id => customers.id)
 #  fk_rails_c9b5eaaa7f  (portfolio_unit_id => portfolio_units.id)
+#  fk_rails_d084bb511c  (contract_id => contracts.id)
 #  fk_rails_fcc44c0e5d  (service_delivery_review_id => service_delivery_reviews.id)
 #
 
@@ -77,6 +80,7 @@ class Demand < ApplicationRecord
   belongs_to :team
   belongs_to :risk_review
   belongs_to :service_delivery_review
+  belongs_to :contract
   belongs_to :current_stage, class_name: 'Stage', inverse_of: :current_demands
 
   has_many :demand_transitions, dependent: :destroy
@@ -150,6 +154,10 @@ class Demand < ApplicationRecord
       current_stage: current_stage&.name, time_in_current_stage: time_in_current_stage, partial_leadtime: partial_leadtime,
       responsibles: active_team_members.map(&:to_hash), demand_blocks: demand_blocks.map(&:to_hash)
     }
+  end
+
+  def date_to_use
+    end_date || commitment_date || created_date
   end
 
   def active_team_members

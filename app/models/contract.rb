@@ -38,13 +38,13 @@ class Contract < ApplicationRecord
   belongs_to :product
 
   has_many :contract_consolidations, dependent: :destroy
+  has_many :demands, dependent: :destroy
 
   validates :customer, :product, :start_date, :total_hours, :total_value, :renewal_period, :hours_per_demand, presence: true
 
-  scope :active, -> { where('start_date <= :limit_date AND end_date >= :limit_date', limit_date: Time.zone.today) }
+  scope :active, ->(date) { where('start_date <= :limit_date AND end_date >= :limit_date', limit_date: date) }
 
   delegate :name, to: :product, prefix: true
-  delegate :demands, to: :customer, prefix: false
 
   def hour_value
     total_value / total_hours

@@ -40,6 +40,16 @@ module Jira
       jira_account.company.customers.find_by(name: extract_customer_name(customer_name)) if customer_name.present?
     end
 
+    def read_contract(jira_account, jira_issue_attrs)
+      contract_custom_field_name = jira_account.contract_custom_field&.custom_field_machine_name
+
+      jira_custom_fields_hash = build_jira_custom_fields_hash(jira_issue_attrs)
+
+      contract_id = jira_custom_fields_hash[contract_custom_field_name].try(:[], 0)
+
+      jira_account.company.contracts.find_by(id: contract_id) if contract_id.present?
+    end
+
     def read_demand_key(jira_issue_attrs)
       jira_issue_attrs['key']
     end

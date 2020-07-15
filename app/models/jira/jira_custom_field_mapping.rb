@@ -23,7 +23,7 @@
 
 module Jira
   class JiraCustomFieldMapping < ApplicationRecord
-    enum custom_field_type: { class_of_service: 0, responsibles: 1, customer: 2 }
+    enum custom_field_type: { class_of_service: 0, responsibles: 1, customer: 2, contract: 3 }
 
     belongs_to :jira_account, class_name: 'Jira::JiraAccount'
 

@@ -606,9 +606,6 @@ en:
       no_customers_message: "You do not have teams yet."
     show:
       total_value: "Projects Total Value"
-      active_contracts:
-        one: "%{count} active contract"
-        other: "%{count} active contracts"
     add_user_to_customer:
       success: "User added"
   customer:
