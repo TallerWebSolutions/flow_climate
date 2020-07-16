@@ -33,7 +33,7 @@ module Highchart
         leadtime_in_week << build_lead_time_in_period(confidence, end_date, start_date)
       end
 
-      [{ name: I18n.t('projects.general.accumulated_leadtime', percentil: confidence), data: accumulated_leadtime_in_time, marker: { enabled: true } }, name: I18n.t('projects.general.leadtime', percentil: confidence), data: leadtime_in_week, marker: { enabled: true }]
+      [{ name: I18n.t('projects.general.accumulated_leadtime', percentil: confidence), data: accumulated_leadtime_in_time, marker: { enabled: true } }, { name: I18n.t('projects.general.leadtime', percentil: confidence), data: leadtime_in_week, marker: { enabled: true } }]
     end
 
     def block_data_evolution_chart

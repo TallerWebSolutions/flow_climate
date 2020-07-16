@@ -66,9 +66,10 @@ class TeamMembersController < AuthenticatedController
   def search_team_members
     assign_team_members
 
-    if params['team_member_status'] == 'true'
+    case params['team_member_status']
+    when 'true'
       @team_members = @team_members.active
-    elsif params['team_member_status'] == 'false'
+    when 'false'
       @team_members = @team_members.inactive
     end
 

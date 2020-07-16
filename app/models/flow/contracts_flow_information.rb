@@ -2,7 +2,7 @@
 
 module Flow
   class ContractsFlowInformation < SystemFlowInformation
-    attr_reader :dates_array, :contract, :limit_date, :consumed_hours,
+    attr_reader :dates_array, :dates_limit_now_array, :contract, :limit_date, :consumed_hours,
                 :financial_ideal, :financial_current, :financial_ideal_slice, :financial_total, :total_financial_value,
                 :hours_ideal, :hours_current, :hours_ideal_slice, :hours_total, :total_hours_value, :remaining_hours,
                 :scope_ideal, :scope_current, :scope_ideal_slice, :scope_total, :total_scope_value, :delivered_demands_count, :remaining_backlog_count,
@@ -15,6 +15,7 @@ module Flow
       @financial_burnup = {}
 
       build_dates_array(data_interval)
+      build_dates_limit_now_array(data_interval)
       build_limit_date(data_interval)
       build_arrays
 
@@ -137,19 +138,30 @@ module Flow
     end
 
     def build_dates_array(data_interval)
-      @dates_array = if data_interval == 'day'
-                       TimeService.instance.days_between_of(@contract.start_date, @contract.end_date)
-                     elsif data_interval == 'week'
-                       TimeService.instance.weeks_between_of(@contract.start_date, @contract.end_date)
-                     else
-                       TimeService.instance.months_between_of(@contract.start_date, @contract.end_date)
-                     end
+      @dates_array = dates_interval(data_interval, @contract.start_date, @contract.end_date)
+    end
+
+    def build_dates_limit_now_array(data_interval)
+      end_date = [@contract.end_date, Time.zone.now.end_of_month].min
+      @dates_limit_now_array = dates_interval(data_interval, @contract.start_date, end_date)
+    end
+
+    def dates_interval(data_interval, start_date, end_date)
+      case data_interval
+      when 'day'
+        TimeService.instance.days_between_of(start_date, end_date)
+      when 'week'
+        TimeService.instance.weeks_between_of(start_date, end_date)
+      else
+        TimeService.instance.months_between_of(start_date, end_date)
+      end
     end
 
     def build_limit_date(data_interval)
-      @limit_date = if data_interval == 'day'
+      @limit_date = case data_interval
+                    when 'day'
                       Time.zone.today.end_of_day
-                    elsif data_interval == 'week'
+                    when 'week'
                       Time.zone.today.end_of_week
                     else
                       Time.zone.today.end_of_month

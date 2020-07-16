@@ -23,9 +23,10 @@ class StageProjectConfigsController < AuthenticatedController
   private
 
   def time_in_seconds_from_params
-    if params[:max_time_in_stage_period] == 'week'
+    case params[:max_time_in_stage_period]
+    when 'week'
       time_in_stage_param * 1.week
-    elsif params[:max_time_in_stage_period] == 'day'
+    when 'day'
       time_in_stage_param * 1.day
     else
       time_in_stage_param * 1.hour
