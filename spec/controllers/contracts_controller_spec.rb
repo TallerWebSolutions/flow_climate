@@ -265,8 +265,8 @@ RSpec.describe ContractsController, type: :controller do
         context 'having no dependencies' do
           it 'assigns the instance variables and renders the template' do
             contracts_info = instance_double('Flow::ContractsFlowInformation',
-                                             contract: contract, delivered_demands_count: 2, remaining_backlog_count: 4,
-                                             consumed_hours: 1, remaining_hours: 5, dates_array: [1.day.ago, Time.zone.now],
+                                             contract: contract, delivered_demands_count: 2, remaining_backlog_count: 4, consumed_hours: 1,
+                                             remaining_hours: 5, dates_array: [1.day.ago, Time.zone.now], dates_limit_now_array: [1.day.ago, Time.zone.now],
                                              build_financial_burnup: { name: 'bla', data: [1, 2] }, build_hours_burnup: { name: 'bla', data: [1, 2] },
                                              build_scope_burnup: { name: 'bla', data: [1, 2] }, build_quality_info: { name: 'bla', data: [1, 2] },
                                              build_lead_time_info: { name: 'bla', data: [1, 2] }, build_throughput_info: { name: 'bla', data: [1, 2] },

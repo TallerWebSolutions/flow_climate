@@ -4,12 +4,17 @@
 #
 # Table name: contract_consolidations
 #
-#  id                     :bigint           not null, primary key
-#  consolidation_date     :date             not null
-#  operational_risk_value :decimal(, )      not null
-#  created_at             :datetime         not null
-#  updated_at             :datetime         not null
-#  contract_id            :integer          not null
+#  id                             :bigint           not null, primary key
+#  consolidation_date             :date             not null
+#  estimated_hours_per_demand     :integer
+#  max_monte_carlo_weeks          :integer          default(0)
+#  min_monte_carlo_weeks          :integer          default(0)
+#  monte_carlo_duration_p80_weeks :integer          default(0)
+#  operational_risk_value         :decimal(, )      not null
+#  real_hours_per_demand          :integer
+#  created_at                     :datetime         not null
+#  updated_at                     :datetime         not null
+#  contract_id                    :integer          not null
 #
 # Indexes
 #

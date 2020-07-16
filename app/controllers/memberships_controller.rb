@@ -54,9 +54,10 @@ class MembershipsController < AuthenticatedController
   def search_memberships
     assign_memberships_list
 
-    if params['membership_status'] == 'true'
+    case params['membership_status']
+    when 'true'
       @memberships = @memberships.active
-    elsif params['membership_status'] == 'false'
+    when 'false'
       @memberships = @memberships.inactive
     end
 
