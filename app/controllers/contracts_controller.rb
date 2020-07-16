@@ -14,6 +14,7 @@ class ContractsController < AuthenticatedController
     @contract = Contract.new(contract_params.merge(customer: @customer))
     if @contract.save
       flash[:notice] = I18n.t('contracts.create.success')
+      ContractService.instance.update_demands(@contract)
       redirect_to company_customer_path(@company, @customer)
     else
       assign_products_in_customer
@@ -31,6 +32,7 @@ class ContractsController < AuthenticatedController
 
     if @contract.save
       flash[:notice] = I18n.t('contracts.update.success')
+      ContractService.instance.update_demands(@contract)
       redirect_to company_customer_path(@company, @customer)
     else
       assign_products_in_customer
