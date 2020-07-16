@@ -79,9 +79,10 @@ RSpec.describe ContractsController, type: :controller do
 
     describe 'POST #create' do
       context 'passing valid parameters' do
-        before { post :create, params: { company_id: company, customer_id: customer, contract: { product_id: product.id, start_date: 2.days.ago, end_date: 3.days.from_now, total_hours: 10, total_value: 100, hours_per_demand: 30, renewal_period: :yearly, automatic_renewal: true } } }
-
         it 'creates the new contract and redirects to its show' do
+          expect(ContractService.instance).to(receive(:update_demands)).once
+          post :create, params: { company_id: company, customer_id: customer, contract: { product_id: product.id, start_date: 2.days.ago, end_date: 3.days.from_now, total_hours: 10, total_value: 100, hours_per_demand: 30, renewal_period: :yearly, automatic_renewal: true } }
+
           created_contract = Contract.last
 
           expect(created_contract.product).to eq product
@@ -100,9 +101,10 @@ RSpec.describe ContractsController, type: :controller do
 
       context 'passing invalid' do
         context 'parameters' do
-          before { post :create, params: { company_id: company, customer_id: customer, contract: { product_id: nil, start_date: nil, end_date: nil, total_hours: nil, total_value: nil, renewal_period: nil, automatic_renewal: nil } } }
-
           it 'does not create the contract and re-render the template with the errors' do
+            expect(ContractService.instance).not_to(receive(:update_demands))
+            post :create, params: { company_id: company, customer_id: customer, contract: { product_id: nil, start_date: nil, end_date: nil, total_hours: nil, total_value: nil, renewal_period: nil, automatic_renewal: nil } }
+
             expect(Contract.last).to be_nil
             expect(response).to render_template :new
             expect(flash[:error]).to eq I18n.t('contracts.save.error')
@@ -170,9 +172,10 @@ RSpec.describe ContractsController, type: :controller do
       let(:contract) { Fabricate :contract, customer: customer }
 
       context 'passing valid parameters' do
-        before { put :update, params: { company_id: company, customer_id: customer, id: contract, contract: { product_id: product.id, start_date: 2.days.ago, end_date: 3.days.from_now, total_hours: 10, total_value: 100, hours_per_demand: 30, renewal_period: :yearly, automatic_renewal: true } } }
-
         it 'updates the contract and redirects to company show' do
+          expect(ContractService.instance).to(receive(:update_demands)).once
+          put :update, params: { company_id: company, customer_id: customer, id: contract, contract: { product_id: product.id, start_date: 2.days.ago, end_date: 3.days.from_now, total_hours: 10, total_value: 100, hours_per_demand: 30, renewal_period: :yearly, automatic_renewal: true } }
+
           updated_contract = Contract.last
           expect(updated_contract.product).to eq product
           expect(updated_contract.start_date).to eq 2.days.ago.to_date
@@ -190,9 +193,10 @@ RSpec.describe ContractsController, type: :controller do
 
       context 'passing invalid' do
         context 'contract parameters' do
-          before { put :update, params: { company_id: company, customer_id: customer, id: contract, contract: { product_id: nil, start_date: nil, end_date: nil, total_hours: nil, total_value: nil, renewal_period: nil, automatic_renewal: nil } } }
-
           it 'does not update the contract and re-render the template with the errors' do
+            expect(ContractService.instance).not_to(receive(:update_demands))
+            put :update, params: { company_id: company, customer_id: customer, id: contract, contract: { product_id: nil, start_date: nil, end_date: nil, total_hours: nil, total_value: nil, renewal_period: nil, automatic_renewal: nil } }
+
             expect(response).to render_template :edit
             expect(flash[:error]).to eq I18n.t('contracts.save.error')
             expect(assigns(:contract).errors.full_messages).to eq ['Produto não pode ficar em branco', 'Início não pode ficar em branco', 'Horas Totais não pode ficar em branco', 'Valor Total não pode ficar em branco', 'Período de Renovação não pode ficar em branco']
@@ -275,6 +279,7 @@ RSpec.describe ContractsController, type: :controller do
             expect(Flow::ContractsFlowInformation).to receive(:new).once.and_return(contracts_info)
 
             get :show, params: { company_id: company, customer_id: customer, id: contract }
+
             expect(response).to render_template :show
             expect(assigns(:contract)).to eq contract
           end

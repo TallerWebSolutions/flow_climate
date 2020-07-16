@@ -45,6 +45,7 @@ class Contract < ApplicationRecord
   scope :active, ->(date) { where('start_date <= :limit_date AND end_date >= :limit_date', limit_date: date) }
 
   delegate :name, to: :product, prefix: true
+  delegate :company, to: :customer
 
   def hour_value
     total_value / total_hours
