@@ -94,6 +94,10 @@ RSpec.describe ContractsController, type: :controller do
           expect(created_contract.renewal_period).to eq 'yearly'
           expect(created_contract.automatic_renewal).to eq true
 
+          expect(ContractEstimationChangeHistory.count).to eq 1
+          expect(ContractEstimationChangeHistory.last.change_date.to_date).to eq Time.zone.today
+          expect(ContractEstimationChangeHistory.last.hours_per_demand).to eq 30
+
           expect(flash[:notice]).to eq I18n.t('contracts.create.success')
           expect(response).to redirect_to company_customer_path(company, customer)
         end
@@ -169,25 +173,55 @@ RSpec.describe ContractsController, type: :controller do
     end
 
     describe 'PUT #update' do
-      let(:contract) { Fabricate :contract, customer: customer }
+      let!(:contract) { Fabricate :contract, customer: customer, hours_per_demand: 10 }
 
-      context 'passing valid parameters' do
-        it 'updates the contract and redirects to company show' do
-          expect(ContractService.instance).to(receive(:update_demands)).once
-          put :update, params: { company_id: company, customer_id: customer, id: contract, contract: { product_id: product.id, start_date: 2.days.ago, end_date: 3.days.from_now, total_hours: 10, total_value: 100, hours_per_demand: 30, renewal_period: :yearly, automatic_renewal: true } }
+      context 'with valid parameters' do
+        context 'with estimation change' do
+          it 'updates the contract and redirects to company show and creates a new estimation change history' do
+            expect(ContractService.instance).to(receive(:update_demands)).once
+            put :update, params: { company_id: company, customer_id: customer, id: contract, contract: { product_id: product.id, start_date: 2.days.ago, end_date: 3.days.from_now, total_hours: 10, total_value: 100, hours_per_demand: 30, renewal_period: :yearly, automatic_renewal: true } }
 
-          updated_contract = Contract.last
-          expect(updated_contract.product).to eq product
-          expect(updated_contract.start_date).to eq 2.days.ago.to_date
-          expect(updated_contract.end_date).to eq 3.days.from_now.to_date
-          expect(updated_contract.total_hours).to eq 10
-          expect(updated_contract.total_value).to eq 100
-          expect(updated_contract.hours_per_demand).to eq 30
-          expect(updated_contract.renewal_period).to eq 'yearly'
-          expect(updated_contract.automatic_renewal).to eq true
+            updated_contract = Contract.last
+            expect(updated_contract.product).to eq product
+            expect(updated_contract.start_date).to eq 2.days.ago.to_date
+            expect(updated_contract.end_date).to eq 3.days.from_now.to_date
+            expect(updated_contract.total_hours).to eq 10
+            expect(updated_contract.total_value).to eq 100
+            expect(updated_contract.hours_per_demand).to eq 30
+            expect(updated_contract.renewal_period).to eq 'yearly'
+            expect(updated_contract.automatic_renewal).to eq true
 
-          expect(flash[:notice]).to eq I18n.t('contracts.update.success')
-          expect(response).to redirect_to company_customer_path(company, customer)
+            expect(ContractEstimationChangeHistory.count).to eq 2
+            expect(ContractEstimationChangeHistory.last.change_date.to_date).to eq Time.zone.today
+            expect(ContractEstimationChangeHistory.last.hours_per_demand).to eq 30
+
+            expect(flash[:notice]).to eq I18n.t('contracts.update.success')
+            expect(response).to redirect_to company_customer_path(company, customer)
+          end
+        end
+
+        context 'with no estimation change' do
+          it 'updates the contract and redirects to company show and does not create a new estimation change history' do
+            expect(ContractService.instance).to(receive(:update_demands)).once
+            put :update, params: { company_id: company, customer_id: customer, id: contract, contract: { product_id: product.id, start_date: 2.days.ago, end_date: 3.days.from_now, total_hours: 10, total_value: 100, hours_per_demand: 10, renewal_period: :yearly, automatic_renewal: true } }
+
+            updated_contract = Contract.last
+            expect(updated_contract.product).to eq product
+            expect(updated_contract.start_date).to eq 2.days.ago.to_date
+            expect(updated_contract.end_date).to eq 3.days.from_now.to_date
+            expect(updated_contract.total_hours).to eq 10
+            expect(updated_contract.total_value).to eq 100
+            expect(updated_contract.hours_per_demand).to eq 10
+            expect(updated_contract.renewal_period).to eq 'yearly'
+            expect(updated_contract.automatic_renewal).to eq true
+
+            expect(ContractEstimationChangeHistory.count).to eq 1
+            expect(ContractEstimationChangeHistory.last.change_date.to_date).to eq Time.zone.today
+            expect(ContractEstimationChangeHistory.last.hours_per_demand).to eq 10
+
+            expect(flash[:notice]).to eq I18n.t('contracts.update.success')
+            expect(response).to redirect_to company_customer_path(company, customer)
+          end
         end
       end
 

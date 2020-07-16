@@ -39,6 +39,7 @@ class Contract < ApplicationRecord
 
   has_many :contract_consolidations, dependent: :destroy
   has_many :demands, dependent: :destroy
+  has_many :contract_estimation_change_histories, dependent: :destroy
 
   validates :customer, :product, :start_date, :total_hours, :total_value, :renewal_period, :hours_per_demand, presence: true
 
@@ -46,6 +47,9 @@ class Contract < ApplicationRecord
 
   delegate :name, to: :product, prefix: true
   delegate :company, to: :customer
+
+  before_update :save_estimation_change_history
+  after_create :save_new_estimation_change_history
 
   def hour_value
     total_value / total_hours
@@ -77,5 +81,22 @@ class Contract < ApplicationRecord
     return 0 if end_date < start_date_limit
 
     ((start_date_limit.end_of_week.upto(end_date.to_date.end_of_week).count.to_f + 1) / 7).round + 1
+  end
+
+  def hours_per_demand_to_date(date = Time.zone.today.end_of_day)
+    change_histories = contract_estimation_change_histories.where('change_date <= :date', date: date).order(:change_date)
+    return change_histories.last.hours_per_demand if change_histories.present?
+
+    hours_per_demand
+  end
+
+  private
+
+  def save_estimation_change_history
+    ContractEstimationChangeHistory.create(contract: self, change_date: Time.zone.now, hours_per_demand: hours_per_demand) if hours_per_demand != hours_per_demand_was
+  end
+
+  def save_new_estimation_change_history
+    ContractEstimationChangeHistory.create(contract: self, change_date: Time.zone.now, hours_per_demand: hours_per_demand)
   end
 end
