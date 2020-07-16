@@ -753,7 +753,12 @@ CREATE TABLE public.contract_consolidations (
     consolidation_date date NOT NULL,
     operational_risk_value numeric NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    min_monte_carlo_weeks integer DEFAULT 0,
+    max_monte_carlo_weeks integer DEFAULT 0,
+    monte_carlo_duration_p80_weeks integer DEFAULT 0,
+    estimated_hours_per_demand integer,
+    real_hours_per_demand integer
 );
 
 
@@ -5533,6 +5538,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200703124334'),
 ('20200707184608'),
 ('20200711165002'),
-('20200714214845');
+('20200714214845'),
+('20200716155407');
 
 
