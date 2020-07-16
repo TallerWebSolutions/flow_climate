@@ -782,6 +782,39 @@ ALTER SEQUENCE public.contract_consolidations_id_seq OWNED BY public.contract_co
 
 
 --
+-- Name: contract_estimation_change_histories; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.contract_estimation_change_histories (
+    id bigint NOT NULL,
+    contract_id integer NOT NULL,
+    change_date timestamp without time zone NOT NULL,
+    hours_per_demand integer NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: contract_estimation_change_histories_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.contract_estimation_change_histories_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: contract_estimation_change_histories_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.contract_estimation_change_histories_id_seq OWNED BY public.contract_estimation_change_histories.id;
+
+
+--
 -- Name: contracts; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -2675,6 +2708,13 @@ ALTER TABLE ONLY public.contract_consolidations ALTER COLUMN id SET DEFAULT next
 
 
 --
+-- Name: contract_estimation_change_histories id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.contract_estimation_change_histories ALTER COLUMN id SET DEFAULT nextval('public.contract_estimation_change_histories_id_seq'::regclass);
+
+
+--
 -- Name: contracts id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -3189,6 +3229,14 @@ ALTER TABLE ONLY public.company_settings
 
 ALTER TABLE ONLY public.contract_consolidations
     ADD CONSTRAINT contract_consolidations_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: contract_estimation_change_histories contract_estimation_change_histories_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.contract_estimation_change_histories
+    ADD CONSTRAINT contract_estimation_change_histories_pkey PRIMARY KEY (id);
 
 
 --
@@ -4961,6 +5009,14 @@ ALTER TABLE ONLY public.team_resource_allocations
 
 
 --
+-- Name: contract_estimation_change_histories fk_rails_61bdbf3322; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.contract_estimation_change_histories
+    ADD CONSTRAINT fk_rails_61bdbf3322 FOREIGN KEY (contract_id) REFERENCES public.contracts(id);
+
+
+--
 -- Name: company_settings fk_rails_6434bf6768; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -5539,6 +5595,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200707184608'),
 ('20200711165002'),
 ('20200714214845'),
-('20200716155407');
+('20200716155407'),
+('20200716215041');
 
 

@@ -11,6 +11,7 @@ RSpec.describe Contract, type: :model do
     it { is_expected.to belong_to :contract }
     it { is_expected.to have_many :contract_consolidations }
     it { is_expected.to have_many :demands }
+    it { is_expected.to have_many :contract_estimation_change_histories }
   end
 
   context 'validations' do
@@ -130,13 +131,36 @@ RSpec.describe Contract, type: :model do
   describe '#remaining_weeks' do
     let(:company) { Fabricate :company }
 
-    it 'returns the remaining backlog for the estimation in the contract' do
+    it 'returns the remaining weeks for the estimation in the contract' do
       customer = Fabricate :customer, company: company
 
       contract = Fabricate :contract, customer: customer, start_date: 2.months.ago, end_date: 3.weeks.from_now, total_hours: 200
 
       expect(contract.remaining_weeks).to eq 4
       expect(contract.remaining_weeks(2.weeks.ago.to_date)).to eq 6
+    end
+  end
+
+  describe '#hours_per_demand_to_date' do
+    let(:company) { Fabricate :company }
+
+    it 'returns the hours_per_demand in date' do
+      customer = Fabricate :customer, company: company
+      now = Time.zone.now
+
+      travel_to 1.day.ago do
+        allow(Time.zone).to receive(:now).and_return(1.day.ago)
+        contract = Fabricate :contract, customer: customer, start_date: 2.months.ago, end_date: 3.weeks.from_now, hours_per_demand: 10
+
+        expect(contract.hours_per_demand_to_date).to eq 10
+        expect(contract.hours_per_demand_to_date(2.weeks.ago.to_date)).to eq 10
+      end
+
+      contract = described_class.last
+      allow(Time.zone).to receive(:now).and_return(now)
+      contract.update(hours_per_demand: 30)
+      expect(contract.hours_per_demand_to_date).to eq 30
+      expect(contract.hours_per_demand_to_date(1.day.ago)).to eq 10
     end
   end
 end

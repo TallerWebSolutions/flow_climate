@@ -33,7 +33,7 @@ module Consolidations
                                max_monte_carlo_weeks: contract_based_montecarlo_durations.max || 0,
                                monte_carlo_duration_p80_weeks: Stats::StatisticsService.instance.percentile(80, contract_based_montecarlo_durations) || 0,
                                real_hours_per_demand: real_hours_per_demand,
-                               estimated_hours_per_demand: contract.hours_per_demand)
+                               estimated_hours_per_demand: contract.hours_per_demand_to_date(start_date))
         else
           consolidation = ContractConsolidation.find_or_initialize_by(contract: contract, consolidation_date: end_of_month)
           consolidation.update(operational_risk_value: 1,
@@ -41,7 +41,7 @@ module Consolidations
                                max_monte_carlo_weeks: 0,
                                monte_carlo_duration_p80_weeks: 0,
                                real_hours_per_demand: 0,
-                               estimated_hours_per_demand: contract.hours_per_demand)
+                               estimated_hours_per_demand: contract.hours_per_demand_to_date(start_date))
         end
 
         start_date += 1.month
