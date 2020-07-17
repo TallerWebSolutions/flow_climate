@@ -43,8 +43,14 @@ function buildContractCharts() {
     if (customerThroughputPerPeriod.length !== 0) {
         buildColumnChart(customerThroughputPerPeriod);
     }
+
     const contractOperationalRiskValues = $("#line-operational-risk-contract");
     if (contractOperationalRiskValues.length !== 0) {
         buildLineChart(contractOperationalRiskValues);
+    }
+
+    const hoursBlockedPerDeliveryValues = $("#line-hours-blocked-per-delivery-contract");
+    if (hoursBlockedPerDeliveryValues.length !== 0) {
+        buildLineChart(hoursBlockedPerDeliveryValues);
     }
 }
