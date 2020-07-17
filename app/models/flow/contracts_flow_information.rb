@@ -6,7 +6,7 @@ module Flow
                 :financial_ideal, :financial_current, :financial_ideal_slice, :financial_total, :total_financial_value,
                 :hours_ideal, :hours_current, :hours_ideal_slice, :hours_total, :total_hours_value, :remaining_hours,
                 :scope_ideal, :scope_current, :scope_ideal_slice, :scope_total, :total_scope_value, :delivered_demands_count, :remaining_backlog_count,
-                :quality_info, :quality_info_month, :lead_time_info, :throughput_info
+                :quality_info, :quality_info_month, :lead_time_info, :throughput_info, :hours_blocked_per_deliver_info
 
     def initialize(contract, data_interval = 'month')
       @contract = contract
@@ -64,6 +64,12 @@ module Flow
       [{ name: @contract.start_date, data: @contract.contract_consolidations.order(:consolidation_date).map(&:operational_risk_value).map { |risk_value| risk_value.to_f * 100 } }]
     end
 
+    def build_hours_blocked_per_delivery_info
+      return [{ name: I18n.t('customer.charts.hours_blocked_per_delivery.title'), data: [] }] if @demands.blank?
+
+      [{ name: I18n.t('customer.charts.hours_blocked_per_delivery.title'), data: @hours_blocked_per_deliver_info }]
+    end
+
     private
 
     def blank_burnup
@@ -81,6 +87,7 @@ module Flow
         add_value_to_quality_in_month_chart(date, demands_delivered_to_date)
         add_value_to_lead_time_chart(date, demands_delivered_to_date, demands_delivered_in_month)
         add_value_to_throughput_chart(date, demands_delivered_to_date)
+        add_value_to_hours_blocked_per_deliver_chart(date, demands_delivered_to_date)
       end
     end
 
@@ -137,6 +144,16 @@ module Flow
       @throughput_info << demands_delivered_to_date.count
     end
 
+    def add_value_to_hours_blocked_per_deliver_chart(date, demands_delivered_to_date)
+      return if date > @limit_date
+
+      @hours_blocked_per_deliver_info << if demands_delivered_to_date.count.positive?
+                                           (demands_delivered_to_date.sum(&:blocked_time) / 1.hour) / demands_delivered_to_date.count
+                                         else
+                                           0
+                                         end
+    end
+
     def build_dates_array(data_interval)
       @dates_array = dates_interval(data_interval, @contract.start_date, @contract.end_date)
     end
@@ -188,6 +205,8 @@ module Flow
       @lead_time_info_month = []
 
       @throughput_info = []
+
+      @hours_blocked_per_deliver_info = []
     end
 
     def build_hours_finances_constants

@@ -308,7 +308,8 @@ RSpec.describe ContractsController, type: :controller do
                                              build_financial_burnup: { name: 'bla', data: [1, 2] }, build_hours_burnup: { name: 'bla', data: [1, 2] },
                                              build_scope_burnup: { name: 'bla', data: [1, 2] }, build_quality_info: { name: 'bla', data: [1, 2] },
                                              build_lead_time_info: { name: 'bla', data: [1, 2] }, build_throughput_info: { name: 'bla', data: [1, 2] },
-                                             build_risk_info: { name: 'bla', risk_info: [2.4, 20.5] })
+                                             build_risk_info: { name: 'bla', risk_info: [2.4, 20.5] },
+                                             build_hours_blocked_per_delivery_info: { bame: 'bla', build_hours_blocked_per_delivery_info: [2, 3.2] })
 
             expect(Flow::ContractsFlowInformation).to receive(:new).once.and_return(contracts_info)
 

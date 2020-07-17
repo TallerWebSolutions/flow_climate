@@ -700,6 +700,8 @@ pt-BR:
       delivered_hours: "% Horas Entregues"
       operational_risk:
         title: "Risco Operacional"
+      hours_blocked_per_delivery:
+        title: "Horas Bloqueadas por Entrega"
   demands:
     new:
       title: "Criar Demanda"
@@ -970,6 +972,8 @@ pt-BR:
     quality_info:
       bugs_by_delivery: "Bugs por Entrega"
       bugs_by_delivery_month: "Bugs por entrega no mês"
+    hours_blocked_per_delivery:
+      label: "Horas Bloqueadas por Entrega"
   finances_params:
     edit:
       title: "Editar Informação Financeira"

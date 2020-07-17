@@ -628,6 +628,8 @@ en:
       delivered_hours: "% Delivered Hours"
       operational_risk:
         title: "Operational Risk"
+      hours_blocked_per_delivery:
+        title: "Hours Blocked Per Delivery"
   demands:
     new:
       title: "Create Demand"
@@ -898,6 +900,8 @@ en:
     quality_info:
       bugs_by_delivery: "Bugs by Delivery"
       bugs_by_delivery_month: "Bugs by delivery in month"
+    hours_blocked_per_delivery:
+      label: "Hours Blocked per Delivery"
   finances_params:
     edit:
       title: "Edit Financial Information"
