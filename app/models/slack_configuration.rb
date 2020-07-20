@@ -7,10 +7,10 @@
 #  id                  :bigint           not null, primary key
 #  active              :boolean          default(TRUE)
 #  info_type           :integer          default("average_demand_cost"), not null
-#  notification_hour   :integer          not null
-#  notification_minute :integer          default(0), not null
+#  notification_hour   :integer
+#  notification_minute :integer          default(0)
 #  room_webhook        :string           not null
-#  weekday_to_notify   :integer          default("all_weekdays"), not null
+#  weekday_to_notify   :integer          default("all_weekdays")
 #  created_at          :datetime         not null
 #  updated_at          :datetime         not null
 #  team_id             :integer          not null
@@ -26,12 +26,12 @@
 #
 
 class SlackConfiguration < ApplicationRecord
-  enum info_type: { average_demand_cost: 0, current_week_throughput: 1, last_week_delivered_demands_info: 2, demands_wip_info: 3, outdated_demands: 4, failure_load: 5 }
+  enum info_type: { average_demand_cost: 0, current_week_throughput: 1, last_week_delivered_demands_info: 2, demands_wip_info: 3, outdated_demands: 4, failure_load: 5, demand_state_changed: 6 }
   enum weekday_to_notify: { all_weekdays: 0, monday: 1, tuesday: 2, wednesday: 3, thursday: 4, friday: 5 }
 
   belongs_to :team
 
-  validates :team, :room_webhook, :notification_hour, :notification_minute, :weekday_to_notify, presence: true
+  validates :team, :room_webhook, :weekday_to_notify, presence: true
   validates :info_type, uniqueness: { scope: :team, message: I18n.t('slack_configuration.info_type.uniqueness') }
 
   validate :valid_room_uri?

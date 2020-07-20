@@ -494,6 +494,7 @@ pt-BR:
             demands_wip_info: Demandas em WiP
             outdated_demands: Demandas atrasadas
             failure_load: Carga de Falha
+            demand_state_changed: Alteração no Estado da Demanda
           weekday_to_notify:
             all_weekdays: Todos
             monday: Segunda
@@ -737,3 +738,7 @@ pt-BR:
   user_notifier_mailer:
     user_invite_to_customer:
       registration_link: "Siga o link para registro"
+  demand_transition_notification:
+    validations:
+      stage:
+        uniqueness: "Não é permitida a mesma demanda para a mesma etapa."

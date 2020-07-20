@@ -186,7 +186,9 @@ RSpec.describe Slack::SlackNotificationService, type: :service do
 
     describe '#notify_beyond_expected_time_in_stage' do
       it 'calls slack notification method' do
-        expect_any_instance_of(Slack::Notifier).not_to receive(:ping)
+        Fabricate :demand, team: team, commitment_date: 1.day.ago, end_date: nil
+        allow_any_instance_of(Demand).to(receive(:beyond_limit_time?)).and_return(true)
+        expect_any_instance_of(Slack::Notifier).to(receive(:ping)).twice
 
         described_class.instance.notify_beyond_expected_time_in_stage(first_slack_notifier, team)
       end
@@ -194,9 +196,39 @@ RSpec.describe Slack::SlackNotificationService, type: :service do
 
     describe '#notify_failure_load' do
       it 'calls slack notification method' do
-        expect_any_instance_of(Slack::Notifier).not_to receive(:ping)
+        Fabricate :demand, team: team
+        Fabricate :slack_configuration, team: team, info_type: :failure_load
+        expect(first_slack_notifier).to receive(:ping)
 
         described_class.instance.notify_failure_load(first_slack_notifier, team)
+      end
+    end
+
+    describe '#notify_demand_state_changed' do
+      context 'with no end_point stage' do
+        it 'calls slack notification method' do
+          stage = Fabricate :stage, end_point: false
+          demand = Fabricate :demand, team: team
+          team_member = Fabricate :team_member
+          Fabricate :slack_configuration, team: team, info_type: :demand_state_changed
+
+          expect_any_instance_of(Slack::Notifier).to receive(:ping).with(/#{team_member.name}/)
+
+          described_class.instance.notify_demand_state_changed(stage, demand, team_member)
+        end
+      end
+
+      context 'with an end_point stage' do
+        it 'calls slack notification method' do
+          stage = Fabricate :stage, end_point: true
+          demand = Fabricate :demand, team: team
+          team_member = Fabricate :team_member
+          Fabricate :slack_configuration, team: team, info_type: :demand_state_changed
+
+          expect_any_instance_of(Slack::Notifier).to receive(:ping).with(/moneybag/)
+
+          described_class.instance.notify_demand_state_changed(stage, demand, team_member)
+        end
       end
     end
   end

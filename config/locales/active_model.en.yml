@@ -291,3 +291,7 @@ en:
   user_company_role:
     validations:
       user_company: "You can't have the same user twice in the company."
+  demand_transition_notification:
+    validations:
+      stage:
+        uniqueness: "It is not allowed the same demand to the same stage."

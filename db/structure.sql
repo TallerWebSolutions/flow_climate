@@ -1099,6 +1099,38 @@ ALTER SEQUENCE public.demand_score_matrices_id_seq OWNED BY public.demand_score_
 
 
 --
+-- Name: demand_transition_notifications; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.demand_transition_notifications (
+    id bigint NOT NULL,
+    demand_id integer NOT NULL,
+    stage_id integer NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: demand_transition_notifications_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.demand_transition_notifications_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: demand_transition_notifications_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.demand_transition_notifications_id_seq OWNED BY public.demand_transition_notifications.id;
+
+
+--
 -- Name: demand_transitions; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -2210,12 +2242,12 @@ CREATE TABLE public.slack_configurations (
     id bigint NOT NULL,
     team_id integer NOT NULL,
     room_webhook character varying NOT NULL,
-    notification_hour integer NOT NULL,
+    notification_hour integer,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     info_type integer DEFAULT 0 NOT NULL,
     weekday_to_notify integer DEFAULT 0 NOT NULL,
-    notification_minute integer DEFAULT 0 NOT NULL,
+    notification_minute integer DEFAULT 0,
     active boolean DEFAULT true
 );
 
@@ -2771,6 +2803,13 @@ ALTER TABLE ONLY public.demand_score_matrices ALTER COLUMN id SET DEFAULT nextva
 
 
 --
+-- Name: demand_transition_notifications id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.demand_transition_notifications ALTER COLUMN id SET DEFAULT nextval('public.demand_transition_notifications_id_seq'::regclass);
+
+
+--
 -- Name: demand_transitions id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -3304,6 +3343,14 @@ ALTER TABLE ONLY public.demand_score_matrices
 
 
 --
+-- Name: demand_transition_notifications demand_transition_notifications_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.demand_transition_notifications
+    ADD CONSTRAINT demand_transition_notifications_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: demand_transitions demand_transitions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -3726,6 +3773,13 @@ CREATE UNIQUE INDEX idx_demand_score_answers_unique ON public.score_matrix_answe
 
 
 --
+-- Name: idx_demand_transtions_notifications; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_demand_transtions_notifications ON public.demand_transition_notifications USING btree (demand_id, stage_id);
+
+
+--
 -- Name: idx_transitions_unique; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -3884,6 +3938,20 @@ CREATE INDEX index_demand_score_matrices_on_score_matrix_answer_id ON public.dem
 --
 
 CREATE INDEX index_demand_score_matrices_on_user_id ON public.demand_score_matrices USING btree (user_id);
+
+
+--
+-- Name: index_demand_transition_notifications_on_demand_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_demand_transition_notifications_on_demand_id ON public.demand_transition_notifications USING btree (demand_id);
+
+
+--
+-- Name: index_demand_transition_notifications_on_stage_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_demand_transition_notifications_on_stage_id ON public.demand_transition_notifications USING btree (stage_id);
 
 
 --
@@ -4897,6 +4965,14 @@ ALTER TABLE ONLY public.score_matrix_questions
 
 
 --
+-- Name: demand_transition_notifications fk_rails_3ae7fb6c0f; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.demand_transition_notifications
+    ADD CONSTRAINT fk_rails_3ae7fb6c0f FOREIGN KEY (stage_id) REFERENCES public.stages(id);
+
+
+--
 -- Name: jira_product_configs fk_rails_3b969f1e33; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -5126,6 +5202,14 @@ ALTER TABLE ONLY public.flow_impacts
 
 ALTER TABLE ONLY public.stages_teams
     ADD CONSTRAINT fk_rails_8d8a97b7b3 FOREIGN KEY (team_id) REFERENCES public.teams(id);
+
+
+--
+-- Name: demand_transition_notifications fk_rails_903f0b082b; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.demand_transition_notifications
+    ADD CONSTRAINT fk_rails_903f0b082b FOREIGN KEY (demand_id) REFERENCES public.demands(id);
 
 
 --
@@ -5596,6 +5680,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200711165002'),
 ('20200714214845'),
 ('20200716155407'),
-('20200716215041');
+('20200716215041'),
+('20200717214156');
 
 
