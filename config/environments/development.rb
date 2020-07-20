@@ -19,6 +19,8 @@ Rails.application.configure do
     config.cache_store = :null_store
   end
 
+  # config.hosts << "9cf366580661.ngrok.io"
+
   config.active_support.deprecation = :log
   config.active_record.migration_error = false
   config.assets.debug = true

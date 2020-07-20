@@ -126,10 +126,14 @@ module Jira
 
           to_transition_date = history['created']
           from_transition = create_from_transition(demand, item['from'], from_transition_date)
-          create_to_transition(demand, from_transition, item['to'], to_transition_date)
+          create_to_transition(demand, from_transition, item['to'], to_transition_date, read_author(history))
           from_transition_date = to_transition_date
         end
       end
+    end
+
+    def read_author(history)
+      TeamMember.where('lower(name) = :author', author: history['author']['displayName']&.downcase).first
     end
 
     def create_from_transition(demand, from_stage_id, from_transition_date)
@@ -139,13 +143,15 @@ module Jira
       demand_transition
     end
 
-    def create_to_transition(demand, from_transistion, to_stage_id, to_transition_date)
+    def create_to_transition(demand, from_transistion, to_stage_id, to_transition_date, author)
       from_transistion.with_lock { from_transistion.update(last_time_out: to_transition_date) }
 
       stage_to = demand.project.stages.find_by(integration_id: to_stage_id)
       to_transition = DemandTransition.find_or_initialize_by(demand: demand, stage: stage_to, last_time_in: to_transition_date)
 
       to_transition.with_lock { to_transition.save }
+
+      Slack::SlackNotificationService.instance.notify_demand_state_changed(stage_to, demand, author)
     end
 
     def read_comments(demand, jira_issue_attrs)
