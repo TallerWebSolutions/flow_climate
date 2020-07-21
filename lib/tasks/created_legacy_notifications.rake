@@ -2,8 +2,8 @@
 
 desc 'Create legacy notifications control'
 
-namespace :demand_transition_notification do
+namespace :item_assignment_notification do
   task create_legacy: :environment do
-    Company.all.each { |company| company.demands.each { |demand| demand.demand_transitions.each { |transition| DemandTransitionNotification.where(stage: transition.stage, demand: transition.demand).first_or_create } } }
+    Company.all.each { |company| company.projects.each { |project| project.demands.each { |demand| demand.item_assignments.each { |assignment| ItemAssignmentNotification.where(item_assignment: assignment).first_or_create } } } }
   end
 end
