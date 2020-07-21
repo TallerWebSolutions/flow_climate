@@ -1414,6 +1414,37 @@ ALTER SEQUENCE public.integration_errors_id_seq OWNED BY public.integration_erro
 
 
 --
+-- Name: item_assignment_notifications; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.item_assignment_notifications (
+    id bigint NOT NULL,
+    item_assignment_id integer NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: item_assignment_notifications_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.item_assignment_notifications_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: item_assignment_notifications_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.item_assignment_notifications_id_seq OWNED BY public.item_assignment_notifications.id;
+
+
+--
 -- Name: item_assignments; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -2859,6 +2890,13 @@ ALTER TABLE ONLY public.integration_errors ALTER COLUMN id SET DEFAULT nextval('
 
 
 --
+-- Name: item_assignment_notifications id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.item_assignment_notifications ALTER COLUMN id SET DEFAULT nextval('public.item_assignment_notifications_id_seq'::regclass);
+
+
+--
 -- Name: item_assignments id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -3404,6 +3442,14 @@ ALTER TABLE ONLY public.friendly_id_slugs
 
 ALTER TABLE ONLY public.integration_errors
     ADD CONSTRAINT integration_errors_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: item_assignment_notifications item_assignment_notifications_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.item_assignment_notifications
+    ADD CONSTRAINT item_assignment_notifications_pkey PRIMARY KEY (id);
 
 
 --
@@ -4102,6 +4148,13 @@ CREATE INDEX index_integration_errors_on_integration_type ON public.integration_
 
 
 --
+-- Name: index_item_assignment_notifications_on_item_assignment_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_item_assignment_notifications_on_item_assignment_id ON public.item_assignment_notifications USING btree (item_assignment_id);
+
+
+--
 -- Name: index_item_assignments_on_demand_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -4738,6 +4791,14 @@ ALTER TABLE ONLY public.jira_project_configs
 
 ALTER TABLE ONLY public.score_matrix_answers
     ADD CONSTRAINT fk_rails_0429e0abf2 FOREIGN KEY (score_matrix_question_id) REFERENCES public.score_matrix_questions(id);
+
+
+--
+-- Name: item_assignment_notifications fk_rails_07fec2e0f5; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.item_assignment_notifications
+    ADD CONSTRAINT fk_rails_07fec2e0f5 FOREIGN KEY (item_assignment_id) REFERENCES public.item_assignments(id);
 
 
 --
@@ -5681,6 +5742,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200714214845'),
 ('20200716155407'),
 ('20200716215041'),
-('20200717214156');
+('20200717214156'),
+('20200721155315');
 
 
