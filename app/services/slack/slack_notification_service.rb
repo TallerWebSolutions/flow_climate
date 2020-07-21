@@ -111,6 +111,7 @@ module Slack
       slack_notifier = Slack::Notifier.new(slack_configuration.room_webhook)
 
       change_state_notify = "*#{demand.external_id} - #{demand.demand_title}*\n:information_source: _#{team_member.name}_ moveu para _#{stage.name}_"
+      change_state_notify += "*Responsáveis:* #{demand.demand_title}\n:information_source: _#{team_member.name}_ moveu para _#{stage.name}_"
 
       if stage.end_point?
         change_state_notify += ' :tada: '
