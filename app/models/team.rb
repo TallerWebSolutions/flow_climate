@@ -93,7 +93,7 @@ class Team < ApplicationRecord
 
     return 0 if assigned_count.zero?
 
-    (assigned_count.to_f / active_memberships_count)
+    1 - (assigned_count.to_f / active_memberships_count)
   end
 
   private
