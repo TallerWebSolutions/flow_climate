@@ -112,12 +112,16 @@ module Slack
 
       change_state_notify = "*#{demand.external_id} - #{demand.demand_title}*\n:information_source: _#{team_member.name}_ moveu para _#{stage.name}_"
 
-      change_state_notify += ' :tada: ' if stage.end_point?
+      change_state_notify += if stage.end_point?
+                               " :tada: \n"
+                             else
+                               "\n"
+                             end
 
-      change_state_notify += "#{I18n.t("activerecord.attributes.demand.enums.demand_type.#{demand.demand_type}")} - #{I18n.t("activerecord.attributes.demand.enums.class_of_service.#{demand.class_of_service}")}\n"
-      change_state_notify += "*Responsáveis:* #{demand.active_team_members.map(&:team_member_name).join(', ')} (_#{demand.team_name}_)\n"
+      change_state_notify += "> #{I18n.t("activerecord.attributes.demand.enums.demand_type.#{demand.demand_type}")} - #{I18n.t("activerecord.attributes.demand.enums.class_of_service.#{demand.class_of_service}")}\n"
+      change_state_notify += "> *Responsáveis:* #{demand.active_team_members.map(&:team_member_name).join(', ')} (_#{demand.team_name}_)\n"
 
-      change_state_notify += " | :alarm_clock: #{time_distance_in_words(demand.partial_leadtime)} | :moneybag: #{number_to_currency(demand.cost_to_project, decimal: 2)}\n" if stage.end_point?
+      change_state_notify += "> :alarm_clock: #{time_distance_in_words(demand.partial_leadtime)} | :moneybag: #{number_to_currency(demand.cost_to_project, decimal: 2)}\n" if stage.end_point?
 
       slack_notifier.ping(change_state_notify)
 
