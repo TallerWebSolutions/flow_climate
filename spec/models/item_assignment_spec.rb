@@ -4,6 +4,7 @@ RSpec.describe ItemAssignment, type: :model do
   context 'associations' do
     it { is_expected.to belong_to :demand }
     it { is_expected.to belong_to :membership }
+    it { is_expected.to have_many(:item_assignment_notifications).dependent(:destroy) }
   end
 
   context 'validations' do
@@ -56,11 +57,33 @@ RSpec.describe ItemAssignment, type: :model do
       end
     end
 
-    pending '.not_for_membership'
+    describe '.not_for_membership' do
+      let(:membership) { Fabricate :membership }
+      let(:first_assignment) { Fabricate :item_assignment, membership: membership, finish_time: nil }
+      let(:second_assignment) { Fabricate :item_assignment, membership: membership, finish_time: nil }
+      let(:finished_assignment) { Fabricate :item_assignment, membership: membership, finish_time: Time.zone.now }
+      let(:other_membership_assignment) { Fabricate :item_assignment, finish_time: nil }
+      let(:second_other_membership_assignment) { Fabricate :item_assignment, finish_time: nil }
+
+      it { expect(described_class.not_for_membership(membership)).to match_array [other_membership_assignment, second_other_membership_assignment] }
+    end
+
+    describe '.open_assignments' do
+      let(:demand) { Fabricate :demand, end_date: nil }
+      let(:finished_demand) { Fabricate :demand, end_date: Time.zone.now }
+
+      let!(:first_assignment) { Fabricate :item_assignment, demand: demand, finish_time: nil }
+      let!(:second_assignment) { Fabricate :item_assignment, demand: demand, finish_time: nil }
+      let!(:third_assignment) { Fabricate :item_assignment, demand: finished_demand, finish_time: nil }
+      let!(:discarded_assignment) { Fabricate :item_assignment, demand: demand, finish_time: nil, discarded_at: Time.zone.now }
+      let!(:finished_assignment) { Fabricate :item_assignment, demand: demand, finish_time: Time.zone.now }
+
+      it { expect(described_class.open_assignments).to match_array [first_assignment, second_assignment] }
+    end
   end
 
   context 'delegations' do
-    it { is_expected.to delegate_method(:name).to(:membership).with_prefix }
+    it { is_expected.to delegate_method(:team_member_name).to(:membership) }
   end
 
   describe '#working_hours_until' do
@@ -188,6 +211,112 @@ RSpec.describe ItemAssignment, type: :model do
           expect(third_assignment.reload.pull_interval).to eq 0
         end
       end
+    end
+
+    describe '#notify_assignment' do
+      it 'notify after saving' do
+        expect(Slack::SlackNotificationService.instance).to receive(:notify_item_assigned)
+
+        Fabricate :item_assignment
+      end
+    end
+  end
+
+  describe '#assigned_at' do
+    let(:company) { Fabricate :company }
+    let(:team) { Fabricate :team, company: company }
+
+    let(:customer) { Fabricate :customer, company: company }
+    let(:product) { Fabricate :product, customer: customer }
+    let(:project) { Fabricate :project, products: [product], team: team, company: company }
+
+    it 'returns the stage where it was assigned at' do
+      travel_to Time.zone.local(2020, 7, 22, 20, 0, 0) do
+        analysis_stage = Fabricate :stage, company: company, projects: [project], teams: [team], name: 'analysis_stage', commitment_point: false, end_point: false, queue: false, stage_type: :analysis
+
+        first_team_member = Fabricate :team_member, company: company, name: 'first_member'
+
+        first_membership = Fabricate :membership, team: team, team_member: first_team_member, member_role: :developer
+
+        first_demand = Fabricate :demand, company: company, team: team, project: project
+        second_demand = Fabricate :demand, company: company, team: team, project: project
+
+        Fabricate :demand_transition, stage: analysis_stage, demand: first_demand, last_time_in: 10.days.ago, last_time_out: 5.days.ago
+
+        first_assignment = Fabricate :item_assignment, membership: first_membership, demand: first_demand, start_time: 9.days.ago, finish_time: 1.week.ago
+        second_assignment = Fabricate :item_assignment, membership: first_membership, demand: second_demand, start_time: 3.days.ago, finish_time: 1.hour.ago
+
+        expect(first_assignment.assigned_at).to eq analysis_stage
+
+        expect(second_assignment.assigned_at).to be_nil
+      end
+    end
+  end
+
+  describe '#previous_assignment' do
+    let(:company) { Fabricate :company }
+    let(:team) { Fabricate :team, company: company }
+
+    let(:customer) { Fabricate :customer, company: company }
+    let(:product) { Fabricate :product, customer: customer }
+    let(:project) { Fabricate :project, products: [product], team: team, company: company }
+
+    context 'with unpersisted assignment' do
+      it 'returns the stage where it was assigned at' do
+        first_team_member = Fabricate :team_member, company: company, name: 'first_member'
+        first_membership = Fabricate :membership, team: team, team_member: first_team_member, member_role: :developer
+
+        first_demand = Fabricate :demand, company: company, team: team, project: project
+        second_demand = Fabricate :demand, company: company, team: team, project: project
+
+        first_assignment = Fabricate :item_assignment, membership: first_membership, demand: first_demand, start_time: 9.days.ago, finish_time: nil
+        second_assignment = Fabricate.build :item_assignment, membership: first_membership, demand: second_demand, start_time: 3.days.ago, finish_time: nil
+
+        expect(second_assignment.previous_assignment).to eq first_assignment
+      end
+    end
+
+    context 'with persisted assignment' do
+      it 'returns the stage where it was assigned at' do
+        first_team_member = Fabricate :team_member, company: company, name: 'first_member'
+        first_membership = Fabricate :membership, team: team, team_member: first_team_member, member_role: :developer
+
+        first_demand = Fabricate :demand, company: company, team: team, project: project
+        second_demand = Fabricate :demand, company: company, team: team, project: project
+
+        first_assignment = Fabricate :item_assignment, membership: first_membership, demand: first_demand, start_time: 9.days.ago, finish_time: nil
+        second_assignment = Fabricate :item_assignment, membership: first_membership, demand: second_demand, start_time: 3.days.ago, finish_time: nil
+
+        expect(second_assignment.previous_assignment).to eq first_assignment
+      end
+    end
+  end
+
+  describe '#membership_open_assignments' do
+    let(:company) { Fabricate :company }
+    let(:team) { Fabricate :team, company: company }
+
+    let(:customer) { Fabricate :customer, company: company }
+    let(:product) { Fabricate :product, customer: customer }
+    let(:project) { Fabricate :project, products: [product], team: team, company: company }
+
+    it 'returns the open and kept assignments' do
+      first_team_member = Fabricate :team_member, company: company, name: 'first_member'
+      first_membership = Fabricate :membership, team: team, team_member: first_team_member, member_role: :developer
+
+      first_demand = Fabricate :demand, company: company, team: team, project: project, end_date: nil
+      second_demand = Fabricate :demand, company: company, team: team, project: project, end_date: nil
+      third_demand = Fabricate :demand, company: company, team: team, project: project, end_date: nil
+      fourth_demand = Fabricate :demand, company: company, team: team, project: project, end_date: Time.zone.now
+      fifth_demand = Fabricate :demand, company: company, team: team, project: project, end_date: nil
+
+      first_assignment = Fabricate :item_assignment, membership: first_membership, demand: first_demand, start_time: 9.days.ago, finish_time: nil
+      second_assignment = Fabricate :item_assignment, membership: first_membership, demand: second_demand, start_time: 3.days.ago, finish_time: nil
+      Fabricate :item_assignment, membership: first_membership, demand: third_demand, start_time: 3.days.ago, finish_time: Time.zone.now
+      Fabricate :item_assignment, membership: first_membership, demand: fourth_demand, start_time: 3.days.ago, finish_time: nil
+      Fabricate :item_assignment, membership: first_membership, demand: fifth_demand, start_time: 3.days.ago, finish_time: nil, discarded_at: Time.zone.now
+
+      expect(first_assignment.membership_open_assignments).to match_array [first_assignment, second_assignment]
     end
   end
 end

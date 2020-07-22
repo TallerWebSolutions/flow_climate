@@ -33,17 +33,22 @@ class ItemAssignment < ApplicationRecord
   belongs_to :demand
   belongs_to :membership
 
+  has_many :item_assignment_notifications, dependent: :destroy
+
   validates :demand, :membership, presence: true
 
   validates :demand, uniqueness: { scope: %i[membership start_time], message: I18n.t('item_assignment.validations.demand_unique') }
 
   scope :for_dates, ->(start_date, end_date) { where('(start_time <= :end_date AND finish_time >= :start_date) OR (start_time <= :end_date AND finish_time IS NULL) OR (finish_time >= :start_date AND :end_date IS NULL) OR (start_time <= :start_date AND finish_time IS NULL)', start_date: start_date, end_date: end_date) }
   scope :not_for_membership, ->(membership) { where('item_assignments.membership_id <> :membership', membership: membership.id) }
+  scope :open_assignments, -> { kept.joins(:demand).where(finish_time: nil, demands: { end_date: nil }) }
 
-  delegate :name, to: :membership, prefix: true
+  delegate :team_member_name, to: :membership
 
   before_save :compute_assignment_effort
   before_save :compute_pull_interval
+
+  after_create :notify_assignment
 
   def working_hours_until(beginning_time = nil, end_time = Time.zone.now)
     start_effort_time = [start_time, beginning_time].compact.max
@@ -54,6 +59,21 @@ class ItemAssignment < ApplicationRecord
 
   def stages_during_assignment
     demand.stages_at(start_time, finish_time)
+  end
+
+  def assigned_at
+    demand.stage_at(start_time)
+  end
+
+  def previous_assignment
+    ordered_assignments = membership.item_assignments.where('start_time < :start_time', start_time: start_time).order(:start_time)
+    ordered_assignments -= [self] if persisted?
+
+    ordered_assignments.last
+  end
+
+  def membership_open_assignments
+    membership.item_assignments.open_assignments
   end
 
   private
@@ -67,7 +87,7 @@ class ItemAssignment < ApplicationRecord
   end
 
   def compute_pull_interval
-    previous_assignment = membership.item_assignments.where('start_time < :start_time', start_time: start_time).order(:start_time).last
+    previous_assignment
 
     if previous_assignment.blank?
       self.pull_interval = 0
@@ -88,5 +108,9 @@ class ItemAssignment < ApplicationRecord
     return nil if transition_finished_time.blank? && assignment.finish_time.blank?
 
     [assignment.finish_time, transition_finished_time].compact.min
+  end
+
+  def notify_assignment
+    Slack::SlackNotificationService.instance.notify_item_assigned(self)
   end
 end
