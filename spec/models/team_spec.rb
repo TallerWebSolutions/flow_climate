@@ -333,7 +333,7 @@ RSpec.describe Team, type: :model do
     let!(:second_item_assignment) { Fabricate :item_assignment, demand: first_demand, membership: second_membership, finish_time: nil }
     let!(:third_item_assignment) { Fabricate :item_assignment, demand: fourth_demand, membership: fourth_membership, finish_time: nil }
 
-    it { expect(team.percentage_idle_members).to eq 0.4 }
+    it { expect(team.percentage_idle_members).to eq 0.6 }
     it { expect(other_team.percentage_idle_members).to eq 0 }
     it { expect(empty_team.percentage_idle_members).to eq 0 }
   end

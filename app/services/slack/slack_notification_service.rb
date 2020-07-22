@@ -142,7 +142,7 @@ module Slack
       item_assigned_notify = "*#{item_assignment.team_member_name}* puxou a _#{item_assignment.demand.external_id}_ em #{item_assignment.assigned_at&.name || 'sem etapa'}\n"
       item_assigned_notify += ":zzz: #{time_distance_in_words(item_assignment.pull_interval)} - :black_left_pointing_double_triangle_with_vertical_bar: #{item_assignment.previous_assignment&.demand&.external_id}"
       item_assigned_notify += ":fire: #{item_assignment.membership_open_assignments.map(&:demand).flatten.map { |demand| "#{demand.external_id} (#{demand.current_stage_name})" }.join(', ')}\n"
-      item_assigned_notify += ":zzz: :busts_in_silhouette: #{number_to_percentage(item_assignment.membership.team.percentage_idle_members, precision: 0)}"
+      item_assigned_notify += ":zzz: :busts_in_silhouette: #{number_to_percentage(item_assignment.membership.team.percentage_idle_members * 100, precision: 0)}"
 
       slack_notifier.ping(item_assigned_notify)
 
