@@ -495,6 +495,7 @@ pt-BR:
             outdated_demands: Demandas atrasadas
             failure_load: Carga de Falha
             demand_state_changed: Alteração no Estado da Demanda
+            item_assigned: Demanda Atribuída
           weekday_to_notify:
             all_weekdays: Todos
             monday: Segunda

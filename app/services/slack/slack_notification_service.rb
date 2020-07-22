@@ -100,7 +100,7 @@ module Slack
     end
 
     def notify_demand_state_changed(stage, demand, team_member)
-      slack_configuration = SlackConfiguration.find_by(team: demand.team, info_type: :demand_state_changed)
+      slack_configuration = SlackConfiguration.find_by(team: demand.team, info_type: :demand_state_changed, active: true)
 
       return if slack_configuration.blank?
 
@@ -110,19 +110,39 @@ module Slack
 
       slack_notifier = Slack::Notifier.new(slack_configuration.room_webhook)
 
-      change_state_notify = "*#{demand.external_id} - #{demand.demand_title}*\n:information_source: _#{team_member.name}_ moveu para _#{stage.name}_\n"
+      change_state_notify = "*#{demand.external_id} - #{demand.demand_title}*\n:information_source: _#{team_member.name}_ moveu para _#{stage.name}_"
+
+      change_state_notify += ' :tada: ' if stage.end_point?
+
       change_state_notify += "#{I18n.t("activerecord.attributes.demand.enums.demand_type.#{demand.demand_type}")} - #{I18n.t("activerecord.attributes.demand.enums.class_of_service.#{demand.class_of_service}")}\n"
-      change_state_notify += "*Responsáveis:* #{demand.active_team_members.map(&:name).join(', ')} (_#{demand.team_name}_)\n"
+      change_state_notify += "*Responsáveis:* #{demand.active_team_members.map(&:team_member_name).join(', ')} (_#{demand.team_name}_)\n"
 
-      if stage.end_point?
-        change_state_notify += ' :tada: '
-
-        change_state_notify += " | :alarm_clock: #{time_distance_in_words(demand.partial_leadtime)} | :moneybag: #{number_to_currency(demand.cost_to_project, decimal: 2)}"
-      end
+      change_state_notify += " | :alarm_clock: #{time_distance_in_words(demand.partial_leadtime)} | :moneybag: #{number_to_currency(demand.cost_to_project, decimal: 2)}\n" if stage.end_point?
 
       slack_notifier.ping(change_state_notify)
 
       DemandTransitionNotification.create(stage: stage, demand: demand)
+    end
+
+    def notify_item_assigned(item_assignment)
+      slack_configuration = SlackConfiguration.find_by(team: item_assignment.demand.team, info_type: :item_assigned, active: true)
+
+      return if slack_configuration.blank?
+
+      already_notified = ItemAssignmentNotification.where(item_assignment: item_assignment)
+
+      return if already_notified.present?
+
+      slack_notifier = Slack::Notifier.new(slack_configuration.room_webhook)
+
+      item_assigned_notify = "*#{item_assignment.team_member_name}* puxou a _#{item_assignment.demand.external_id}_ em #{item_assignment.assigned_at&.name || 'sem etapa'}\n"
+      item_assigned_notify += ":zzz: #{time_distance_in_words(item_assignment.pull_interval)} - :black_left_pointing_double_triangle_with_vertical_bar: #{item_assignment.previous_assignment&.demand&.external_id}"
+      item_assigned_notify += ":fire: #{item_assignment.membership_open_assignments.map(&:demand).flatten.map { |demand| "#{demand.external_id} (#{demand.current_stage_name})" }.join(', ')}\n"
+      item_assigned_notify += ":zzz: :busts_in_silhouette: #{number_to_percentage(item_assignment.membership.team.percentage_idle_members, precision: 0)}"
+
+      slack_notifier.ping(item_assigned_notify)
+
+      ItemAssignmentNotification.create(item_assignment: item_assignment)
     end
   end
 end

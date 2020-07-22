@@ -27,6 +27,7 @@ RSpec.describe Demand, type: :model do
     it { is_expected.to have_many(:item_assignments).dependent(:destroy) }
     it { is_expected.to have_many(:memberships).through(:item_assignments) }
     it { is_expected.to have_many(:demand_score_matrices).dependent(:destroy) }
+    it { is_expected.to have_many(:demand_transition_notifications).dependent(:destroy) }
   end
 
   context 'validations' do

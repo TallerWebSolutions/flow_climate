@@ -299,4 +299,42 @@ RSpec.describe Team, type: :model do
     it { expect(team.larger_lead_times(0, 3)).to eq [second_demand, first_demand, third_demand] }
     it { expect(team.larger_lead_times(1, 2)).to eq [third_demand] }
   end
+
+  describe '#percentage_idle_members' do
+    let(:company) { Fabricate :company }
+
+    let(:team) { Fabricate :team, company: company }
+
+    let!(:first_team_member) { Fabricate :team_member, company: company }
+    let!(:second_team_member) { Fabricate :team_member, company: company }
+    let!(:third_team_member) { Fabricate :team_member, company: company }
+    let!(:fourth_team_member) { Fabricate :team_member, company: company }
+    let!(:fifth_team_member) { Fabricate :team_member, company: company }
+    let!(:sixth_team_member) { Fabricate :team_member, company: company }
+
+    let!(:first_membership) { Fabricate :membership, team_member: first_team_member, team: team, end_date: nil }
+    let!(:second_membership) { Fabricate :membership, team_member: second_team_member, team: team, end_date: nil }
+    let!(:third_membership) { Fabricate :membership, team_member: third_team_member, team: team, end_date: nil }
+    let!(:fourth_membership) { Fabricate :membership, team_member: fourth_team_member, team: team, end_date: nil }
+    let!(:fifth_membership) { Fabricate :membership, team_member: fifth_team_member, team: team, end_date: nil }
+    let!(:sixth_membership) { Fabricate :membership, team_member: sixth_team_member, team: team, end_date: Time.zone.today }
+
+    let(:other_team) { Fabricate :team, company: company }
+
+    let(:empty_team) { Fabricate :team, company: company }
+
+    let!(:first_demand) { Fabricate :demand, team: team, end_date: nil }
+    let!(:second_demand) { Fabricate :demand, team: team, end_date: nil }
+    let!(:third_demand) { Fabricate :demand, team: team, end_date: nil }
+    let!(:fourth_demand) { Fabricate :demand, team: team, end_date: Time.zone.now }
+    let!(:fifth_demand) { Fabricate :demand, team: other_team, end_date: nil }
+
+    let!(:first_item_assignment) { Fabricate :item_assignment, demand: first_demand, membership: first_membership, finish_time: nil }
+    let!(:second_item_assignment) { Fabricate :item_assignment, demand: first_demand, membership: second_membership, finish_time: nil }
+    let!(:third_item_assignment) { Fabricate :item_assignment, demand: fourth_demand, membership: fourth_membership, finish_time: nil }
+
+    it { expect(team.percentage_idle_members).to eq 0.4 }
+    it { expect(other_team.percentage_idle_members).to eq 0 }
+    it { expect(empty_team.percentage_idle_members).to eq 0 }
+  end
 end

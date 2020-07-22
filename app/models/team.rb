@@ -83,7 +83,26 @@ class Team < ApplicationRecord
     end
   end
 
+  def percentage_idle_members
+    active_memberships_count = memberships.active.count
+    not_finished_demands = demands.kept.not_finished
+
+    return 0 if not_finished_demands.blank? || active_memberships_count.zero?
+
+    assigned_count = assigned_count(not_finished_demands)
+
+    return 0 if assigned_count.zero?
+
+    (assigned_count.to_f / active_memberships_count)
+  end
+
   private
+
+  def assigned_count(not_finished_demands)
+    open_assignments = not_finished_demands.map { |demand| demand.item_assignments.open_assignments }.flatten
+
+    open_assignments.map(&:membership).flatten.uniq.count
+  end
 
   def compute_available_hours_to_member(membership, start_date, end_date, full_period)
     start_period = [start_date, membership.start_date].compact.max
