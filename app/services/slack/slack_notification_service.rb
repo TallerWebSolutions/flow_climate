@@ -129,9 +129,12 @@ module Slack
     end
 
     def notify_item_assigned(item_assignment)
-      slack_configuration = SlackConfiguration.find_by(team: item_assignment.demand.team, info_type: :item_assigned, active: true)
+      slack_configuration = SlackConfiguration.find_by(team: item_assignment.demand.team, info_type: 'item_assigned', active: true)
 
-      return if slack_configuration.blank?
+      if slack_configuration.blank?
+        ItemAssignmentNotification.where(item_assignment: item_assignment).first_or_create
+        return
+      end
 
       already_notified = ItemAssignmentNotification.where(item_assignment: item_assignment)
 
