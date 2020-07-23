@@ -142,12 +142,13 @@ module Slack
 
       slack_notifier = Slack::Notifier.new(slack_configuration.room_webhook)
 
-      item_assigned_notify = "*#{item_assignment.team_member_name}* puxou a _#{item_assignment.demand.external_id}_ em #{item_assignment.assigned_at&.name || 'sem etapa'}\n"
-      item_assigned_notify += ":zzz: #{time_distance_in_words(item_assignment.pull_interval)} - :black_left_pointing_double_triangle_with_vertical_bar: #{item_assignment.previous_assignment&.demand&.external_id}"
-      item_assigned_notify += ":fire: #{item_assignment.membership_open_assignments.map(&:demand).flatten.map { |demand| "#{demand.external_id} (#{demand.current_stage_name})" }.join(', ')}\n"
-      item_assigned_notify += ":zzz: :busts_in_silhouette: #{number_to_percentage(item_assignment.membership.team.percentage_idle_members * 100, precision: 0)}"
+      message_title =  { "type": 'section', "text": { "type": 'mrkdwn', "text": "#{item_assignment.team_member_name} puxou a _#{item_assignment.demand.external_id}_ em _#{item_assignment.assigned_at&.name || 'sem etapa'}_" } }
+      message_divider = { "type": 'divider' }
+      message_previous_pull = { "type": 'section', "text": { "type": 'mrkdwn', "text": "Anterior: #{item_assignment.previous_assignment&.demand&.external_id}" } }
+      message_ongoing = { "type": 'section', "text": { "type": 'mrkdwn', "text": ":computer: #{item_assignment.membership_open_assignments.map(&:demand).flatten.map { |demand| "#{demand.external_id} (#{demand.current_stage_name})" }.join(', ')}" } }
+      message_idle = { "type": 'context', "elements": [{ "type": 'mrkdwn', "text": ":zzz: #{time_distance_in_words(item_assignment.pull_interval)} :zzz: :busts_in_silhouette: #{number_to_percentage(item_assignment.membership.team.percentage_idle_members * 100, precision: 0)}" }] }
 
-      slack_notifier.ping(item_assigned_notify)
+      slack_notifier.post(blocks: [message_title, message_divider, message_previous_pull, message_ongoing, message_idle])
 
       ItemAssignmentNotification.create(item_assignment: item_assignment)
     end

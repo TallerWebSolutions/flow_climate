@@ -66,10 +66,12 @@ class ItemAssignment < ApplicationRecord
   end
 
   def previous_assignment
+    return @previous_assignment if @previous_assignment.present?
+
     ordered_assignments = membership.item_assignments.where('start_time < :start_time', start_time: start_time).order(:start_time)
     ordered_assignments -= [self] if persisted?
 
-    ordered_assignments.last
+    @previous_assignment = ordered_assignments.last
   end
 
   def membership_open_assignments
@@ -89,10 +91,10 @@ class ItemAssignment < ApplicationRecord
   def compute_pull_interval
     previous_assignment
 
-    if previous_assignment.blank?
+    if @previous_assignment.blank?
       self.pull_interval = 0
     else
-      previous_assignment_finish_time = assignment_finish_time(previous_assignment)
+      previous_assignment_finish_time = assignment_finish_time(@previous_assignment)
       self.pull_interval = if previous_assignment_finish_time.present? && start_time > previous_assignment_finish_time
                              start_time - previous_assignment_finish_time
                            else
