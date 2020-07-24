@@ -123,7 +123,7 @@ module Jira
         history['items'].each do |item|
           next unless item['field'].casecmp('status').zero?
 
-          to_transition_date = history['created']
+          to_transition_date = history['created'].to_datetime
           from_transition = create_from_transition(demand, item['from'], from_transition_date)
           create_to_transition(demand, from_transition, item['to'], to_transition_date, read_author(history))
           from_transition_date = to_transition_date
@@ -203,8 +203,8 @@ module Jira
       from_array = responsible_string_processment(history_item['fromString'])
       unassigment_history = from_array.try(:-, to_array)
 
-      to_array.each { |to_responsible| read_assigned_responsibles(demand, team, history_hash['created'], to_responsible.strip) } if to_array.present?
-      unassigment_history.each { |from_responsible| read_unassigned_responsibles(demand, team, history_hash['created'], from_responsible.strip) } if unassigment_history.present?
+      to_array.each { |to_responsible| read_assigned_responsibles(demand, team, history_hash['created'].to_datetime, to_responsible.strip) } if to_array.present?
+      unassigment_history.each { |from_responsible| read_unassigned_responsibles(demand, team, history_hash['created'].to_datetime, from_responsible.strip) } if unassigment_history.present?
     end
 
     def responsible_string_processment(responsible_string)
@@ -215,19 +215,29 @@ module Jira
       exiting_team_member = TeamMember.where(company: team.company).where('lower(name) = :member_name', member_name: from_name.downcase).first
       exiting_membership = Membership.where(team_member: exiting_team_member, team: team).active_for_date(history_date).first
 
-      item_assignment_exiting = demand.item_assignments.where(membership: exiting_membership).where('start_time <= :start_time', start_time: history_date.to_datetime).order(:start_time).last
+      item_assignment_exiting = demand.item_assignments.where(membership: exiting_membership).where('start_time <= :start_time', start_time: history_date).order(:start_time).last
 
       item_assignment_exiting.update(finish_time: history_date) if item_assignment_exiting.present?
     end
 
     def read_assigned_responsibles(demand, team, history_date, responsible_name)
+      membership = define_membership(history_date, responsible_name, team)
+
+      already_assigned = demand.item_assignments.where(membership: membership, finish_time: nil)
+
+      return if already_assigned.present?
+
+      demand.item_assignments.where(membership: membership, start_time: history_date).first_or_create
+    end
+
+    def define_membership(history_date, responsible_name, team)
       team_member = TeamMember.where(company: team.company).where('lower(name) = :member_name', member_name: responsible_name.downcase).first
       membership = Membership.where(team_member: team_member, team: team).active_for_date(history_date).first
 
       team_member = TeamMember.create(company: team.company, name: responsible_name.downcase) if team_member.blank?
       membership = Membership.create(team: team, team_member: team_member, start_date: history_date) if membership.blank?
 
-      demand.item_assignments.where(membership: membership, start_time: history_date).first_or_create
+      membership
     end
 
     def ordered_history_data(jira_issue)

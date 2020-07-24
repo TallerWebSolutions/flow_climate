@@ -48,8 +48,8 @@ class Contract < ApplicationRecord
   delegate :name, to: :product, prefix: true
   delegate :company, to: :customer
 
-  before_update :save_estimation_change_history
   after_create :save_new_estimation_change_history
+  before_update :save_estimation_change_history
 
   def hour_value
     total_value / total_hours
