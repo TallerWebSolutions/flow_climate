@@ -7,7 +7,7 @@ module Consolidations
     def perform(contract)
       contract_start = contract.start_date
       start_date = contract.start_date
-      end_date = [contract.end_date, Time.zone.today.end_of_week].min
+      end_date = [contract.end_date, Time.zone.today.end_of_month].min
 
       while start_date <= end_date
         end_of_month = start_date.end_of_month
