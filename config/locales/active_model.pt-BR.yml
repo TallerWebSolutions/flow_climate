@@ -512,8 +512,6 @@ pt-BR:
         enums:
           portfolio_unit_type:
             product_module: Módulo do Produto
-            key_result: Key Result
-            source: Origem
             epic: Épico
       jira/jira_project_config:
         jira_product_config: Config do Produto
