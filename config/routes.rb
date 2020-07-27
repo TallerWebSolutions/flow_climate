@@ -213,8 +213,6 @@ Rails.application.routes.draw do
       end
 
       member do
-        patch :finish_project
-
         get :statistics
         get :risk_drill_down
         get :closing_dashboard
@@ -222,10 +220,12 @@ Rails.application.routes.draw do
         get :lead_time_dashboard
 
         patch :copy_stages_from
+        patch :finish_project
         patch 'associate_customer/:customer_id', action: :associate_customer, as: 'associate_customer'
         patch 'dissociate_customer/:customer_id', action: :dissociate_customer, as: 'dissociate_customer'
         patch 'associate_product/:product_id', action: :associate_product, as: 'associate_product'
         patch 'dissociate_product/:product_id', action: :dissociate_product, as: 'dissociate_product'
+        patch :update_consolidations
       end
 
       collection do

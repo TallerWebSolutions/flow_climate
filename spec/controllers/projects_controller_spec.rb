@@ -101,6 +101,12 @@ RSpec.describe ProjectsController, type: :controller do
 
       it { expect(response).to redirect_to new_user_session_path }
     end
+
+    describe 'GET #update_consolidations' do
+      before { get :update_consolidations, params: { company_id: 'foo', id: 'bar' } }
+
+      it { expect(response).to redirect_to new_user_session_path }
+    end
   end
 
   pending 'authenticated as lite'
@@ -1043,6 +1049,47 @@ RSpec.describe ProjectsController, type: :controller do
             let(:company) { Fabricate :company, users: [] }
 
             before { get :search_projects, params: { company_id: company }, xhr: true }
+
+            it { expect(response).to have_http_status :not_found }
+          end
+        end
+      end
+    end
+
+    describe 'PATCH #update_consolidations' do
+      let(:company) { Fabricate :company, users: [user] }
+      let(:customer) { Fabricate :customer, company: company }
+      let!(:project) { Fabricate :project, company: company }
+
+      context 'passing valid parameters' do
+        it 'calls the consolidation job and notices the user' do
+          expect(Consolidations::ProjectConsolidationJob).to(receive(:perform_later)).once
+
+          patch :update_consolidations, params: { company_id: company, id: project }
+
+          expect(response).to redirect_to company_project_path(company, project)
+          expect(flash[:notice]).to eq I18n.t('general.enqueued')
+        end
+      end
+
+      context 'passing an invalid' do
+        context 'non-existent project' do
+          before { patch :update_consolidations, params: { company_id: company, id: 'foo' } }
+
+          it { expect(response).to have_http_status :not_found }
+        end
+
+        context 'company' do
+          context 'non-existent' do
+            before { patch :update_consolidations, params: { company_id: 'foo', id: project } }
+
+            it { expect(response).to have_http_status :not_found }
+          end
+
+          context 'not permitted' do
+            let(:company) { Fabricate :company, users: [] }
+
+            before { patch :update_consolidations, params: { company_id: company, id: project } }
 
             it { expect(response).to have_http_status :not_found }
           end

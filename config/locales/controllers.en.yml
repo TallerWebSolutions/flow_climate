@@ -303,10 +303,10 @@ en:
       deadline:
         title: "Deadline Negotiations"
       deadline_countdown:
-        first_part: "Only "
+        first_part: "Remaining "
         second_part: " till D-day!"
         days: "%{remaining_days} day(s)"
-        risk: "Math risk to deadline is %{risk_value}"
+        risk: "Operational Risk of %{risk_value}"
       cmd: "Average Demand Cost"
       status_information_html: "This project is <b>%{status_description}</b>"
       delivered_demands:
@@ -368,6 +368,7 @@ en:
       unscored_demands:
         no_demands: "no unscored demands"
         title: "Unscored Demands"
+      update_consolidations: "Update Risk"
     charts:
       xlabel:
         weeks: "Weeks"
