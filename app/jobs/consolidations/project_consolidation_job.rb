@@ -8,6 +8,8 @@ module Consolidations
       min_date = project.start_date
       start_date = project.start_date
       end_date = [project.end_date, Time.zone.today.end_of_week].min
+      team = project.team
+      min_date_team = [team.demands.finished_with_leadtime.map(&:end_date).compact.min, 20.weeks.ago.beginning_of_week].compact.max
 
       while start_date <= end_date
         beginning_of_week = start_date.beginning_of_week
@@ -17,17 +19,15 @@ module Consolidations
         demands_finished = demands.finished_with_leadtime.where('demands.end_date <= :analysed_date', analysed_date: end_of_week).order(end_date: :asc)
         demands_finished_in_week = demands.finished_with_leadtime.to_end_dates(beginning_of_week, end_of_week).order(end_date: :asc)
 
-        team = project.team
-
         x_axis = TimeService.instance.weeks_between_of(min_date.end_of_week, start_date.end_of_week)
+        x_axis_team = TimeService.instance.weeks_between_of(min_date_team.end_of_week, start_date.end_of_week)
 
         project_work_item_flow_information = Flow::WorkItemFlowInformations.new(project.demands.kept, project.initial_scope, x_axis.length, x_axis.last)
         team_work_item_flow_information = Flow::WorkItemFlowInformations.new(team.demands.kept, team.projects.map(&:initial_scope).compact.sum, x_axis.length, x_axis.last)
 
-        x_axis.each_with_index do |analysed_date, distribution_index|
-          project_work_item_flow_information.work_items_flow_behaviour(x_axis.first, analysed_date, distribution_index, true)
-          team_work_item_flow_information.work_items_flow_behaviour(x_axis.first, analysed_date, distribution_index, true)
-        end
+        x_axis.each_with_index { |analysed_date, distribution_index| project_work_item_flow_information.work_items_flow_behaviour(x_axis.first, analysed_date, distribution_index, true) }
+
+        x_axis_team.each_with_index { |analysed_date, distribution_index| team_work_item_flow_information.work_items_flow_behaviour(x_axis_team.first, analysed_date, distribution_index, true) }
 
         project_based_montecarlo_durations = Stats::StatisticsService.instance.run_montecarlo(project.remaining_work(end_of_week), project_work_item_flow_information.throughput_array_for_monte_carlo.last(10), 500)
         team_based_montecarlo_durations = compute_team_monte_carlo_weeks(end_of_week, project, team_work_item_flow_information.throughput_per_period.last(20))
