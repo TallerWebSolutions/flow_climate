@@ -320,7 +320,7 @@ pt-BR:
         first_part: "Faltam "
         second_part: " para o fim do projeto"
         days: "%{remaining_days} dia(s)"
-        risk: "Risco matemático para o prazo é %{risk_value}"
+        risk: "Risco Operacional de %{risk_value}"
       cmd: "CMD"
       status_information_html: "Este projeto está <i>%{status_description}</i>"
       delivered_demands:
@@ -382,6 +382,7 @@ pt-BR:
       unscored_demands:
         no_demands: "sem demandas sem pontuação"
         title: "Demandas sem Pontuação"
+      update_consolidations: "Atualizar Risco"
     charts:
       xlabel:
         weeks: "Semanas"

@@ -4,7 +4,9 @@ module Consolidations
   class ProjectConsolidationJob < ApplicationJob
     queue_as :consolidations
 
-    def perform(project)
+    def perform(project, user = nil, project_url = nil)
+      started_time = Time.zone.now
+
       min_date = project.start_date
       start_date = project.start_date
       end_date = [project.end_date, Time.zone.today.end_of_week].min
@@ -49,6 +51,10 @@ module Consolidations
 
         start_date += 1.week
       end
+
+      finished_time = Time.zone.now
+
+      UserNotifierMailer.async_activity_finished(user.email, user.full_name, ProjectConsolidation.model_name.human.downcase, project.name, started_time, finished_time, project_url).deliver if user.present? && project_url.present?
     end
 
     private

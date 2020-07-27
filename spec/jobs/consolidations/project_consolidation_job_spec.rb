@@ -31,12 +31,30 @@ RSpec.describe Consolidations::ProjectConsolidationJob, type: :active_job do
     let!(:fifth_demand) { Fabricate :demand, project: first_project, commitment_date: 17.days.ago, end_date: 2.weeks.ago, effort_downstream: 400, effort_upstream: 130, created_date: 65.days.ago }
     let!(:sixth_demand) { Fabricate :demand, project: second_project, commitment_date: 2.weeks.ago, end_date: 2.weeks.ago, effort_downstream: 100, effort_upstream: 20 }
 
-    it 'saves de consolidation' do
-      # TODO: improve this spec
+    context 'with no user' do
+      it 'saves de consolidation and does not send the notification email' do
+        # TODO: improve this spec
 
-      described_class.perform_now(first_project)
+        expect(UserNotifierMailer).not_to(receive(:async_activity_finished))
+        described_class.perform_now(first_project)
 
-      expect(ProjectConsolidation.count).to eq 4
+        expect(ProjectConsolidation.count).to eq 4
+      end
+    end
+
+    context 'with user' do
+      it 'saves de consolidation and sends the notification email' do
+        # TODO: improve this spec
+
+        # rubocop:disable RSpec/VerifiedDoubles
+        mail_stubbed = double('UserNotifierMailer', deliver: true)
+        # rubocop:enable RSpec/VerifiedDoubles
+
+        expect(UserNotifierMailer).to(receive(:async_activity_finished)).and_return(mail_stubbed)
+        described_class.perform_now(first_project, first_user, 'http://foo.com')
+
+        expect(ProjectConsolidation.count).to eq 4
+      end
     end
   end
 end

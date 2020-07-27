@@ -165,6 +165,13 @@ class ProjectsController < AuthenticatedController
     render 'projects/running_projects_charts'
   end
 
+  def update_consolidations
+    Consolidations::ProjectConsolidationJob.perform_later(@project, current_user, company_project_url(@company, @project))
+    flash[:notice] = I18n.t('general.enqueued')
+
+    redirect_to company_project_path(@company, @project)
+  end
+
   private
 
   def build_work_item_flow_information
