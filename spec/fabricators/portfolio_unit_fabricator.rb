@@ -3,5 +3,5 @@
 Fabricator :portfolio_unit do
   product
   name { Faker::Company.name.gsub(/\W/, '') }
-  portfolio_unit_type { %i[product_module key_result].sample }
+  portfolio_unit_type { %i[product_module epic].sample }
 end
