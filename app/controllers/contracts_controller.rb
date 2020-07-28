@@ -3,7 +3,7 @@
 class ContractsController < AuthenticatedController
   before_action :assign_company
   before_action :assign_customer
-  before_action :assign_contract, only: %i[edit update destroy show]
+  before_action :assign_contract, only: %i[edit update destroy show update_consolidations]
 
   def new
     @contract = Contract.new(customer: @customer)
@@ -48,6 +48,13 @@ class ContractsController < AuthenticatedController
 
   def show
     @contracts_flow_information = Flow::ContractsFlowInformation.new(@contract, 'month')
+  end
+
+  def update_consolidations
+    Consolidations::ContractConsolidationJob.perform_later(@contract)
+    flash[:notice] = I18n.t('general.enqueued')
+
+    redirect_to company_customer_path(@company, @customer)
   end
 
   private

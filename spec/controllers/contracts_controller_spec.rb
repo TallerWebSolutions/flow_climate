@@ -37,6 +37,12 @@ RSpec.describe ContractsController, type: :controller do
 
       it { expect(response).to redirect_to new_user_session_path }
     end
+
+    describe 'GET #update_consolidations' do
+      before { get :update_consolidations, params: { company_id: 'foo', customer_id: 'xpto', id: 'bar' } }
+
+      it { expect(response).to redirect_to new_user_session_path }
+    end
   end
 
   context 'authenticated' do
@@ -339,6 +345,53 @@ RSpec.describe ContractsController, type: :controller do
             let(:company) { Fabricate :company, users: [] }
 
             before { get :show, params: { company_id: company, customer_id: customer, id: contract } }
+
+            it { expect(response).to have_http_status :not_found }
+          end
+        end
+      end
+    end
+
+    describe 'PATCH #update_consolidations' do
+      let(:company) { Fabricate :company, users: [user] }
+      let(:customer) { Fabricate :customer, company: company }
+      let!(:contract) { Fabricate :contract, customer: customer }
+
+      context 'passing valid parameters' do
+        it 'calls the consolidation job and notices the user' do
+          expect(Consolidations::ContractConsolidationJob).to(receive(:perform_later)).once
+
+          patch :update_consolidations, params: { company_id: company, customer_id: customer, id: contract }
+
+          expect(response).to redirect_to company_customer_path(company, customer)
+          expect(flash[:notice]).to eq I18n.t('general.enqueued')
+        end
+      end
+
+      context 'passing an invalid' do
+        context 'non-existent contract' do
+          before { patch :update_consolidations, params: { company_id: company, customer_id: customer, id: 'foo' } }
+
+          it { expect(response).to have_http_status :not_found }
+        end
+
+        context 'non-existent customer' do
+          before { patch :update_consolidations, params: { company_id: company, customer_id: 'foo', id: contract } }
+
+          it { expect(response).to have_http_status :not_found }
+        end
+
+        context 'company' do
+          context 'non-existent' do
+            before { patch :update_consolidations, params: { company_id: 'foo', customer_id: customer, id: contract } }
+
+            it { expect(response).to have_http_status :not_found }
+          end
+
+          context 'not permitted' do
+            let(:company) { Fabricate :company, users: [] }
+
+            before { patch :update_consolidations, params: { company_id: company, customer_id: customer, id: contract } }
 
             it { expect(response).to have_http_status :not_found }
           end

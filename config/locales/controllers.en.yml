@@ -1309,6 +1309,7 @@ en:
     index:
       current_hours_per_demand: "Current HpD"
       hours_estimate_gap: "Estimative Gap"
+      update_consolidations: "Update Consolidations"
   score_matrix_questions:
     create:
       success: "Score matrix question created."
