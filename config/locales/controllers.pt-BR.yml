@@ -1291,6 +1291,7 @@ pt-BR:
     index:
       current_hours_per_demand: "HpD Atual"
       hours_estimate_gap: "Gap da Estimativa"
+      update_consolidations: "Atualizar Consolidações"
   score_matrix_questions:
     create:
       success: "Pergunta de pontuação criada."

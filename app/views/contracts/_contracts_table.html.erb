@@ -28,6 +28,9 @@
           <td><%= I18n.t('general.hours_text', count: number_with_precision(contract.current_hours_per_demand, precision: 2)) %></td>
           <td><%= number_to_percentage(contract.current_estimate_gap * 100, precision: 2) %></td>
           <td>
+            <%= link_to update_consolidations_company_customer_contract_path(company, contract.customer, contract), method: :patch do %>
+              <i class="fas fa-sync-alt" aria-hidden="true" title="<%= I18n.t('contracts.index.update_consolidations') %>"></i>
+            <% end %>
             <%= link_to company_customer_contract_path(company, customer, contract) do %>
               <i class="fa fa-eye"></i>
             <% end %>

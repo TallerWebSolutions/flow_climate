@@ -109,8 +109,6 @@ RSpec.describe ProjectsController, type: :controller do
     end
   end
 
-  pending 'authenticated as lite'
-
   context 'authenticated as gold' do
     let(:plan) { Fabricate :plan, plan_type: :gold }
     let(:user) { Fabricate :user, first_name: 'zzz' }

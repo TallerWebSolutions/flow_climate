@@ -9,18 +9,16 @@
     </h4>
 
     <h3>
-      <p>
       <%= demand.external_id %>
       <% if demand.external_url.present? %>
         <%= link_to demand.external_url, target: :_blank do %>
           <i class="fas fa-external-link-alt" title="<%= I18n.t('activerecord.attributes.demand.external_url') %>"></i>
         <% end %>
       <% end %>
-      </p>
-      <p>
-        <%= I18n.t("activerecord.attributes.demand.enums.demand_type.#{demand.demand_type}") %>
-      </p>
     </h3>
+    <h4>
+      <%= I18n.t("activerecord.attributes.demand.enums.demand_type.#{demand.demand_type}") %>
+    </h4>
   </div>
 </div>
 
