@@ -226,7 +226,7 @@ RSpec.describe Company, type: :model do
 
           Fabricate :demand_transition, stage: third_stage, demand: third_demand, last_time_in: 2.months.ago, last_time_out: 5.weeks.ago
 
-          expect(company.current_cost_per_hour.to_f).to eq 1.893939393939394
+          expect(company.current_cost_per_hour.to_f).to eq 0.7407407407407407
         end
       end
 
@@ -284,7 +284,7 @@ RSpec.describe Company, type: :model do
 
           Fabricate :demand_transition, stage: third_stage, demand: third_demand, last_time_in: 2.months.ago, last_time_out: 5.weeks.ago
 
-          expect(company.current_hours_per_demand.to_f).to eq 35.199999999999996
+          expect(company.current_hours_per_demand.to_f).to eq 90.0
         end
       end
     end
@@ -345,7 +345,7 @@ RSpec.describe Company, type: :model do
 
         Fabricate :demand_transition, stage: third_stage, demand: third_demand, last_time_in: 2.months.ago, last_time_out: 5.weeks.ago
 
-        expect(company.consumed_hours_in_month.to_f).to eq 105.6
+        expect(company.consumed_hours_in_month.to_f).to eq 270
       end
     end
   end
@@ -572,7 +572,7 @@ RSpec.describe Company, type: :model do
 
           Fabricate :demand_transition, stage: third_stage, demand: third_demand, last_time_in: 2.months.ago, last_time_out: 5.weeks.ago
 
-          expect(company.total_active_consumed_hours.to_f).to eq 105.6
+          expect(company.total_active_consumed_hours.to_f).to eq 270
         end
       end
     end

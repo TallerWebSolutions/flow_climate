@@ -90,7 +90,7 @@ RSpec.describe FinancialInformation, type: :model do
 
     let!(:finances) { Fabricate :financial_information, company: company, finances_date: 1.month.ago, income_total: 20.4, expenses_total: 12.2 }
 
-    it { expect(finances.income_per_hour.to_f).to eq 0.18181818181818182 }
+    it { expect(finances.income_per_hour.to_f).to eq 0.11333333333333333 }
   end
 
   describe '#cost_per_hour' do
@@ -102,7 +102,7 @@ RSpec.describe FinancialInformation, type: :model do
 
     let!(:finances) { Fabricate :financial_information, company: company, finances_date: 1.month.ago, income_total: 20.4, expenses_total: 12.2 }
 
-    it { expect(finances.cost_per_hour.to_f).to eq 0.10873440285204991 }
+    it { expect(finances.cost_per_hour.to_f).to eq 0.06777777777777778 }
   end
 
   describe '#project_delivered_hours' do
@@ -114,7 +114,7 @@ RSpec.describe FinancialInformation, type: :model do
 
     let!(:finances) { Fabricate :financial_information, company: company, finances_date: 1.month.ago, income_total: 20.4, expenses_total: 12.2 }
 
-    it { expect(finances.project_delivered_hours).to eq 112.2 }
+    it { expect(finances.project_delivered_hours).to eq 180.0 }
   end
 
   describe '#hours_per_demand' do
@@ -126,7 +126,7 @@ RSpec.describe FinancialInformation, type: :model do
 
     let!(:finances) { Fabricate :financial_information, company: company, finances_date: 1.month.ago, income_total: 20.4, expenses_total: 12.2 }
 
-    it { expect(finances.hours_per_demand).to eq 56.1 }
+    it { expect(finances.hours_per_demand).to eq 90.0 }
   end
 
   describe '#red?' do

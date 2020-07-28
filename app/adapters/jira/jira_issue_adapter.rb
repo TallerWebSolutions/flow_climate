@@ -16,6 +16,8 @@ module Jira
       process_labels(demand, jira_issue_changelog(jira_issue))
 
       define_contract(demand, jira_account, jira_issue_attrs(jira_issue))
+
+      demand.update_effort!
     end
 
     private
@@ -99,7 +101,6 @@ module Jira
     end
 
     def read_transitions!(demand, issue_changelog)
-      demand.demand_transitions.map(&:destroy)
       backlog_transition_date = demand.created_date
 
       first_stage_in_the_flow = demand.first_stage_in_the_flow
@@ -137,18 +138,14 @@ module Jira
 
     def create_from_transition(demand, from_stage_id, from_transition_date)
       stage_from = demand.project.stages.find_by(integration_id: from_stage_id)
-      demand_transition = DemandTransition.find_or_initialize_by(demand: demand, stage: stage_from, last_time_in: from_transition_date)
-      demand_transition.with_lock { demand_transition.save }
-      demand_transition
+      DemandTransition.where(demand: demand, stage: stage_from, last_time_in: from_transition_date).first_or_create
     end
 
     def create_to_transition(demand, from_transistion, to_stage_id, to_transition_date, author)
       from_transistion.with_lock { from_transistion.update(last_time_out: to_transition_date) }
 
       stage_to = demand.project.stages.find_by(integration_id: to_stage_id)
-      to_transition = DemandTransition.find_or_initialize_by(demand: demand, stage: stage_to, last_time_in: to_transition_date)
-
-      to_transition.with_lock { to_transition.save }
+      DemandTransition.where(demand: demand, stage: stage_to, last_time_in: to_transition_date).first_or_create
 
       Slack::SlackNotificationService.instance.notify_demand_state_changed(stage_to, demand, author)
     end
@@ -227,7 +224,9 @@ module Jira
 
       return if already_assigned.present?
 
-      demand.item_assignments.where(membership: membership, start_time: history_date).first_or_create
+      item_assignment = demand.item_assignments.where(membership: membership, start_time: history_date).first_or_create
+
+      item_assignment.update(finish_time: nil)
     end
 
     def define_membership(history_date, responsible_name, team)

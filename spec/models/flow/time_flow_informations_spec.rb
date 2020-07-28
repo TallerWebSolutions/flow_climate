@@ -77,17 +77,17 @@ RSpec.describe Flow::TimeFlowInformations, type: :model do
         expect(time_flow_info.demands).to match_array Demand.all
 
         time_flow_info.hours_flow_behaviour(dates_array.first)
-        expect(time_flow_info.hours_delivered_upstream).to eq [0.0]
-        expect(time_flow_info.hours_delivered_downstream).to eq [0.0]
-        expect(time_flow_info.hours_per_demand).to eq [0.0]
+        expect(time_flow_info.hours_delivered_upstream).to eq [12]
+        expect(time_flow_info.hours_delivered_downstream).to eq [20]
+        expect(time_flow_info.hours_per_demand).to eq [32]
         expect(time_flow_info.queue_time).to eq [0.0]
         expect(time_flow_info.touch_time).to eq [0.0]
         expect(time_flow_info.flow_efficiency).to eq [0]
 
         time_flow_info.hours_flow_behaviour(dates_array.second)
-        expect(time_flow_info.hours_delivered_upstream).to eq [0.0, 0.0]
-        expect(time_flow_info.hours_delivered_downstream).to eq [0.0, 39.6]
-        expect(time_flow_info.hours_per_demand).to eq [0.0, 19.8]
+        expect(time_flow_info.hours_delivered_upstream).to eq [12.0, 10.0]
+        expect(time_flow_info.hours_delivered_downstream).to eq [20, 5]
+        expect(time_flow_info.hours_per_demand).to eq [32.0, 23.5]
         expect(time_flow_info.queue_time).to eq [0.0, 96.0]
         expect(time_flow_info.touch_time).to eq [0.0, 96.0]
         expect(time_flow_info.flow_efficiency).to eq [0, 50.0]

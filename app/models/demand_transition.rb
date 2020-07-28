@@ -97,7 +97,7 @@ class DemandTransition < ApplicationRecord
 
     pairing_assignments = assignments_in_dates.joins(:membership).where(memberships: { member_role: top_effort_membership.member_role }).to_a.delete_if { |assignment| assignment.membership == top_effort_membership }
 
-    top_effort_assignment.working_hours_until(start_date, end_date) + pairing_assignments.map { |assignments_in_date| assignments_in_date.working_hours_until(start_date, end_date) }.sum * (1 + pairing_percentage)
+    top_effort_assignment.working_hours_until(start_date, end_date) + pairing_assignments.map { |assignments_in_date| assignments_in_date.working_hours_until(start_date, end_date) }.sum * pairing_percentage
   end
 
   def set_demand_dates
@@ -112,7 +112,6 @@ class DemandTransition < ApplicationRecord
 
   def set_demand_computed_fields
     demand.update(total_queue_time: demand_current_queue_time, total_touch_time: demand_current_touch_time, current_stage: current_stage)
-    demand.update_effort!
     demand.send(:compute_and_update_automatic_fields)
   end
 
