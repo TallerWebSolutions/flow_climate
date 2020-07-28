@@ -331,8 +331,8 @@ RSpec.describe Demand, type: :model do
 
         it 'changes the effort informations' do
           demand.update_effort!
-          expect(demand.effort_upstream.to_f).to eq 17.16
-          expect(demand.effort_downstream.to_f).to eq 5.06
+          expect(demand.effort_upstream.to_f).to eq 10.56
+          expect(demand.effort_downstream.to_f).to eq 2.76
         end
       end
 
@@ -436,7 +436,7 @@ RSpec.describe Demand, type: :model do
         expect(first_demand.blocked_working_time_upstream.to_f).to eq 0.0
         expect(first_demand.total_bloked_working_time.to_f).to eq 18.0
         expect(first_demand.total_touch_blocked_time.to_f).to eq 144_000.0
-        expect(first_demand.cost_to_project.to_f).to eq 609.1200000000001
+        expect(first_demand.cost_to_project.to_f).to eq 150.0
 
         expect(second_demand.leadtime.to_f).to eq 0
         expect(second_demand.total_queue_time.to_f).to eq 0

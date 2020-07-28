@@ -506,6 +506,8 @@ RSpec.describe DemandsController, type: :controller do
 
       context 'valid parameters' do
         it 'calls the to_csv and responds success' do
+          demand.update_effort!
+
           get :demands_csv, params: { company_id: company, demands_ids: Demand.all.map(&:id).to_csv }, format: :csv
           expect(response).to have_http_status :ok
 

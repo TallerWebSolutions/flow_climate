@@ -412,7 +412,7 @@ RSpec.describe Project, type: :model do
 
     context 'having data' do
       include_context 'demands with effort'
-      it { expect(project.avg_hours_per_demand).to eq 59.4 }
+      it { expect(project.avg_hours_per_demand).to eq 90.0 }
     end
 
     context 'having no data' do
@@ -497,7 +497,7 @@ RSpec.describe Project, type: :model do
 
     context 'having data' do
       include_context 'demands with effort'
-      it { expect(project.total_hours_upstream).to eq 66 }
+      it { expect(project.total_hours_upstream).to eq 150 }
     end
 
     context 'having no data' do
@@ -514,7 +514,7 @@ RSpec.describe Project, type: :model do
 
     context 'having data' do
       include_context 'demands with effort'
-      it { expect(project.total_hours_downstream.to_f).to eq 112.2 }
+      it { expect(project.total_hours_downstream.to_f).to eq 120 }
     end
 
     context 'having no data' do
@@ -531,7 +531,7 @@ RSpec.describe Project, type: :model do
 
     context 'having data' do
       include_context 'demands with effort'
-      it { expect(project.total_hours_consumed.to_f).to eq 178.2 }
+      it { expect(project.total_hours_consumed.to_f).to eq 270 }
     end
 
     context 'having no data' do
@@ -548,7 +548,7 @@ RSpec.describe Project, type: :model do
 
     context 'having data' do
       include_context 'demands with effort'
-      it { expect(project.remaining_hours.to_f).to eq 2821.8 }
+      it { expect(project.remaining_hours.to_f).to eq 2730 }
     end
 
     context 'having no data' do
@@ -565,7 +565,7 @@ RSpec.describe Project, type: :model do
 
     context 'having data' do
       include_context 'demands with effort'
-      it { expect(project.required_hours).to eq 1782.0 }
+      it { expect(project.required_hours).to eq 2700.0 }
     end
 
     context 'having no data' do
@@ -582,7 +582,7 @@ RSpec.describe Project, type: :model do
 
     context 'having data' do
       include_context 'demands with effort'
-      it { expect(project.required_hours_per_available_hours).to be_within(0.02).of(0.63) }
+      it { expect(project.required_hours_per_available_hours).to be_within(0.02).of(0.98) }
     end
 
     context 'having no data' do
@@ -646,7 +646,7 @@ RSpec.describe Project, type: :model do
 
     context 'having data' do
       include_context 'demands with effort'
-      it { expect(project.money_per_deadline.to_f).to be_within(0.01).of(10_369.46) }
+      it { expect(project.money_per_deadline.to_f).to be_within(0.01).of(10_172.04) }
     end
 
     context 'having no data' do
@@ -680,7 +680,7 @@ RSpec.describe Project, type: :model do
 
     context 'having cost' do
       include_context 'demands with effort'
-      it { expect(project.current_cost.to_f).to eq 33_000.0 }
+      it { expect(project.current_cost.to_f).to eq 54_000.0 }
     end
 
     context 'having no cost yet' do
