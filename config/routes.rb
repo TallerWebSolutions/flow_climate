@@ -253,7 +253,7 @@ Rails.application.routes.draw do
       resources :stage_project_configs, only: %i[edit update]
     end
 
-    resources :demands, only: %i[show destroy] do
+    resources :demands, only: %i[show destroy index] do
       member do
         delete :destroy_physically
 

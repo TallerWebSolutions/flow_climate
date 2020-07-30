@@ -10,7 +10,7 @@ RSpec.describe Contract, type: :model do
     it { is_expected.to belong_to :product }
     it { is_expected.to belong_to :contract }
     it { is_expected.to have_many :contract_consolidations }
-    it { is_expected.to have_many :demands }
+    it { is_expected.to have_many(:demands).dependent(:nullify) }
     it { is_expected.to have_many :contract_estimation_change_histories }
   end
 

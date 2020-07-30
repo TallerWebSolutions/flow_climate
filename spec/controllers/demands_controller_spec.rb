@@ -38,6 +38,12 @@ RSpec.describe DemandsController, type: :controller do
       it { expect(response).to redirect_to new_user_session_path }
     end
 
+    describe 'GET #index' do
+      before { get :index, params: { company_id: 'foo' } }
+
+      it { expect(response).to redirect_to new_user_session_path }
+    end
+
     describe 'PUT #synchronize_jira' do
       before { put :synchronize_jira, params: { company_id: 'foo', project_id: 'bar', id: 'bla' } }
 
@@ -429,7 +435,7 @@ RSpec.describe DemandsController, type: :controller do
           let(:company) { Fabricate :company, users: [] }
           let(:demand) { Fabricate :demand, company: company }
 
-          before { get :show, params: { company_id: company, id: first_demand } }
+          before { get :show, params: { company_id: company, id: demand } }
 
           it { expect(response).to have_http_status :not_found }
         end
@@ -439,6 +445,61 @@ RSpec.describe DemandsController, type: :controller do
           let!(:demand) { Fabricate :demand, company: company, product: product }
 
           before { get :show, params: { company_id: other_company, id: demand } }
+
+          it { expect(response).to have_http_status :not_found }
+        end
+      end
+    end
+
+    describe 'GET #index' do
+      context 'passing a valid ID' do
+        context 'with data' do
+          it 'assigns the instance variable and renders the template' do
+            travel_to Time.zone.local(2019, 1, 24, 10, 0, 0) do
+              first_demand = Fabricate :demand, company: company, product: product, project: project, demand_title: 'first_demand', demand_type: :feature, class_of_service: :standard, created_date: Time.zone.local(2019, 1, 22, 10, 0, 0), commitment_date: nil, end_date: nil, effort_downstream: 20, effort_upstream: 15
+              second_demand = Fabricate :demand, company: company, product: product, project: project, demand_title: 'second_demand', demand_type: :bug, class_of_service: :expedite, created_date: Time.zone.local(2019, 1, 23, 10, 0, 0), commitment_date: Time.zone.local(2019, 1, 24, 10, 0, 0), end_date: nil, effort_downstream: 0, effort_upstream: 0
+              third_demand = Fabricate :demand, company: company, product: product, project: project, demand_title: 'third_demand', demand_type: :feature, class_of_service: :intangible, created_date: Time.zone.local(2019, 1, 19, 10, 0, 0), commitment_date: nil, end_date: Time.zone.local(2019, 1, 23, 10, 0, 0), effort_downstream: 0, effort_upstream: 10
+              fourth_demand = Fabricate :demand, company: company, product: product, project: project, demand_title: 'fourth_demand', demand_type: :chore, class_of_service: :standard, created_date: Time.zone.local(2019, 1, 14, 10, 0, 0), commitment_date: Time.zone.local(2019, 1, 19, 10, 0, 0), end_date: Time.zone.local(2019, 1, 24, 10, 0, 0), effort_downstream: 10, effort_upstream: 20
+
+              fifth_demand = Fabricate :demand, company: company, product: product, project: project, demand_title: 'fifth_demand', demand_type: :ui, class_of_service: :fixed_date, created_date: 1.month.ago, commitment_date: nil, end_date: nil, effort_downstream: 30, effort_upstream: 10
+              sixth_demand = Fabricate :demand, company: company, product: product, project: project, demand_title: 'sixth_demand', demand_type: :feature, class_of_service: :standard, created_date: Time.zone.local(2019, 1, 23, 10, 0, 0), commitment_date: Time.zone.local(2019, 1, 24, 10, 0, 0), end_date: nil, effort_downstream: 10, effort_upstream: 10
+              seventh_demand = Fabricate :demand, company: company, product: product, project: project, demand_title: 'seventh_demand', demand_type: :performance_improvement, class_of_service: :expedite, created_date: Time.zone.local(2019, 1, 22, 10, 0, 0), commitment_date: Time.zone.local(2019, 1, 22, 10, 0, 0), end_date: Time.zone.local(2019, 1, 23, 10, 0, 0), effort_downstream: 40, effort_upstream: 10
+              eigth_demand = Fabricate :demand, company: company, product: product, project: project, demand_title: 'eigth_demand', demand_type: :wireframe, class_of_service: :fixed_date, created_date: Time.zone.local(2019, 1, 21, 10, 0, 0), commitment_date: Time.zone.local(2019, 1, 23, 10, 0, 0), end_date: Time.zone.today, effort_downstream: 50, effort_upstream: 60
+
+              get :index, params: { company_id: company }
+
+              expect(response).to render_template :index
+              expect(assigns(:company)).to eq company
+              expect(assigns(:demands)).to eq [first_demand, fifth_demand, second_demand, sixth_demand, fourth_demand, eigth_demand, third_demand, seventh_demand]
+              expect(assigns(:unpaged_demands)).to eq [first_demand, fifth_demand, second_demand, sixth_demand, fourth_demand, eigth_demand, third_demand, seventh_demand]
+              expect(assigns(:demands_ids)).to eq [first_demand.id, fifth_demand.id, second_demand.id, sixth_demand.id, fourth_demand.id, eigth_demand.id, third_demand.id, seventh_demand.id]
+
+              expect(assigns(:confidence_95_leadtime).to_f).to eq 4.6
+              expect(assigns(:confidence_80_leadtime).to_f).to eq 3.4000000000000004
+              expect(assigns(:confidence_65_leadtime).to_f).to eq 2.2
+              expect(assigns(:total_queue_time).to_f).to eq 0.0
+              expect(assigns(:total_touch_time).to_f).to eq 0.0
+              expect(assigns(:average_queue_time).to_f).to eq 0.0
+              expect(assigns(:average_touch_time).to_f).to eq 0.0
+
+              expect(assigns(:start_date)).to eq Date.new(2018, 10, 24)
+              expect(assigns(:end_date)).to eq Date.new(2019, 1, 24)
+            end
+          end
+        end
+      end
+
+      context 'passing invalid parameters' do
+        context 'non-existent company' do
+          before { get :index, params: { company_id: 'foo' } }
+
+          it { expect(response).to have_http_status :not_found }
+        end
+
+        context 'not permitted' do
+          let(:company) { Fabricate :company, users: [] }
+
+          before { get :index, params: { company_id: company } }
 
           it { expect(response).to have_http_status :not_found }
         end

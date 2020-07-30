@@ -7,7 +7,7 @@ class DemandsController < AuthenticatedController
 
   before_action :assign_company
   before_action :assign_demand, only: %i[edit update show synchronize_jira destroy destroy_physically score_research]
-  before_action :assign_project, except: %i[demands_csv demands_tab search_demands show destroy destroy_physically montecarlo_dialog score_research]
+  before_action :assign_project, except: %i[demands_csv demands_tab search_demands show destroy destroy_physically montecarlo_dialog score_research index]
 
   def new
     @demand = Demand.new(project: @project)
@@ -56,6 +56,15 @@ class DemandsController < AuthenticatedController
     @downstream_percentage = 100 - @upstream_percentage
     @demand_comments = @demand.demand_comments.order(:comment_date)
     lead_time_breakdown
+  end
+
+  def index
+    @demands = @demands = @company.demands.order('end_date DESC, commitment_date DESC, created_date DESC').page(page_param)
+    @unpaged_demands = @demands.except(:limit, :offset)
+    @demands_ids = @unpaged_demands.map(&:id)
+
+    assign_dates_to_query
+    assign_consolidations
   end
 
   def synchronize_jira

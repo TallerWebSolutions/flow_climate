@@ -64,19 +64,19 @@
   <div class="row">
     <div class='col-xs-6 form-group <%= 'has-error' if demand.errors[:created_date].present? %>'>
       <%= form.label :created_date, class: 'control-label required' %>
-      <%= form.date_field :created_date, class: 'form-control' %>
+      <%= form.datetime_field :created_date, class: 'form-control' %>
       <span class="help-block"><%= demand.errors[:created_date].join(', ') %></span>
     </div>
     <div class='col-xs-6 form-group <%= 'has-error' if demand.errors[:commitment_date].present? %>'>
       <%= form.label :commitment_date, class: 'control-label' %>
-      <%= form.date_field :commitment_date, class: 'form-control' %>
+      <%= form.datetime_field :commitment_date, class: 'form-control' %>
       <span class="help-block"><%= demand.errors[:commitment_date].join(', ') %></span>
     </div>
   </div>
   <div class="row">
     <div class='col-xs-6 form-group <%= 'has-error' if demand.errors[:end_date].present? %>'>
       <%= form.label :end_date, class: 'control-label' %>
-      <%= form.date_field :end_date, class: 'form-control' %>
+      <%= form.datetime_field :end_date, class: 'form-control' %>
       <span class="help-block"><%= demand.errors[:end_date].join(', ') %></span>
     </div>
     <div class='col-xs-6 form-group'>

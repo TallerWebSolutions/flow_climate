@@ -1,0 +1,45 @@
+<div class="row">
+  <div class="col-xs-12">
+    <ul class="breadcrumb">
+      <li><%= link_to I18n.t('general.home.title'), root_path %></li>
+      <li><%= link_to @company.abbreviation&.upcase, company_path(@company) %></li>
+      <li><%= I18n.t('demands.index.title') %></li>
+    </ul>
+  </div>
+</div>
+
+<%= hidden_field_tag :company_id, @company.id %>
+<%= hidden_field_tag :demands_ids, @demands_ids.join(',') %>
+
+<%= render 'demands/demands_search_filters', start_date: @start_date, end_date: @end_date %>
+
+<div id="demand-tab-content">
+  <hr>
+  <div id="listing">
+    <div id="flat-demands-div">
+      <%= render 'demands/demands_table', company: @company,
+                 demands: @unpaged_demands,
+                 paged_demands: @demands,
+                 confidence_65_leadtime: @confidence_65_leadtime,
+                 confidence_80_leadtime: @confidence_80_leadtime,
+                 confidence_95_leadtime: @confidence_95_leadtime,
+                 avg_queue_time: @average_queue_time,
+                 avg_touch_time: @average_touch_time,
+                 avg_work_hours_per_demand: @avg_work_hours_per_demand,
+                 start_date: @start_date,
+                 end_date: @end_date %>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="edit-demand-form" tabindex="-1" role="dialog" aria-labelledby="edit-demand-form" aria-hidden="true"></div>
+
+<% content_for :javascript do %>
+  <%= javascript_include_tag 'routes/demand_routes' %>
+  <%= javascript_include_tag 'demands/demands_charts' %>
+  <%= javascript_include_tag 'demands/filter_binding' %>
+
+  <%= javascript_include_tag 'demands/form_modal' %>
+
+  <%= javascript_include_tag 'demands/index' %>
+<% end %>
