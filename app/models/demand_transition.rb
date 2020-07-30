@@ -102,11 +102,11 @@ class DemandTransition < ApplicationRecord
 
   def set_demand_dates
     if stage.commitment_point?
-      demand.update!(commitment_date: last_time_in)
+      demand.update(commitment_date: last_time_in)
     elsif stage.first_end_stage_in_pipe?
-      demand.update!(end_date: last_time_in)
+      demand.update(end_date: last_time_in)
     elsif stage.before_end_point?
-      demand.update!(end_date: nil)
+      demand.update(end_date: nil)
     end
   end
 
