@@ -193,7 +193,8 @@ RSpec.describe DemandsRepository, type: :repository do
 
   shared_context 'demand data for filters' do
     let(:company) { Fabricate :company }
-    let(:customer) { Fabricate :customer, company: company }
+    let(:customer) { Fabricate :customer, company: company, name: 'customer' }
+    let(:other_customer) { Fabricate :customer, company: company, name: 'other customer' }
     let(:team) { Fabricate :team, company: company }
 
     let(:product) { Fabricate :product, customer: customer, name: 'flow climate' }
@@ -214,6 +215,8 @@ RSpec.describe DemandsRepository, type: :repository do
     let!(:sixth_demand) { Fabricate :demand, company: company, product: other_product, portfolio_unit: nil, project: project, demand_title: 'voyager sas', demand_type: :feature, class_of_service: :standard, created_date: 1.day.ago, commitment_date: Time.zone.today, end_date: nil, effort_downstream: 10, effort_upstream: 10 }
     let!(:seventh_demand) { Fabricate :demand, company: company, product: other_product, project: other_project, demand_title: 'sas', demand_type: :performance_improvement, class_of_service: :expedite, created_date: 2.days.ago, commitment_date: 2.days.ago, end_date: 1.day.ago, effort_downstream: 40, effort_upstream: 10 }
     let!(:eigth_demand) { Fabricate :demand, company: company, product: other_product, project: other_project, demand_title: 'sas', demand_type: :wireframe, class_of_service: :fixed_date, created_date: 3.days.ago, commitment_date: 1.day.ago, end_date: Time.zone.today, effort_downstream: 50, effort_upstream: 60 }
+
+    let!(:ninth_demand) { Fabricate :demand, company: company, customer: other_customer, demand_title: 'customer test', demand_type: :bug, class_of_service: :fixed_date, created_date: 3.months.ago, commitment_date: 1.month.ago, end_date: 15.days.ago }
   end
 
   describe '#filter_demands_by_text' do
@@ -222,7 +225,7 @@ RSpec.describe DemandsRepository, type: :repository do
     it { expect(described_class.instance.filter_demands_by_text(Demand.all, '')).to eq Demand.all }
     it { expect(described_class.instance.filter_demands_by_text(Demand.none, '')).to eq [] }
     it { expect(described_class.instance.filter_demands_by_text(Demand.all, 'climate')).to match_array [first_demand, second_demand, third_demand, fourth_demand] }
-    it { expect(described_class.instance.filter_demands_by_text(Demand.all, 'flow')).to match_array Demand.all }
+    it { expect(described_class.instance.filter_demands_by_text(Demand.all, 'flow')).to match_array [first_demand, second_demand, third_demand, fourth_demand, fifth_demand, sixth_demand, seventh_demand, eigth_demand] }
     it { expect(described_class.instance.filter_demands_by_text(Demand.all, 'hhh')).to eq [first_demand] }
     it { expect(described_class.instance.filter_demands_by_text(Demand.all, 'bar')).to match_array [second_demand, third_demand] }
     it { expect(described_class.instance.filter_demands_by_text(Demand.all, 'voyager')).to match_array [sixth_demand, seventh_demand, eigth_demand] }
@@ -235,7 +238,7 @@ RSpec.describe DemandsRepository, type: :repository do
     it { expect(described_class.instance.flow_status_query(Demand.all, '')).to eq Demand.all }
     it { expect(described_class.instance.flow_status_query(Demand.none, '')).to eq [] }
     it { expect(described_class.instance.flow_status_query(Demand.all, 'wip')).to match_array [second_demand, sixth_demand] }
-    it { expect(described_class.instance.flow_status_query(Demand.all, 'delivered')).to match_array [third_demand, fourth_demand, seventh_demand, eigth_demand] }
+    it { expect(described_class.instance.flow_status_query(Demand.all, 'delivered')).to match_array [third_demand, fourth_demand, seventh_demand, eigth_demand, ninth_demand] }
     it { expect(described_class.instance.flow_status_query(Demand.all, 'not_started')).to match_array [first_demand, fifth_demand] }
   end
 
@@ -244,7 +247,7 @@ RSpec.describe DemandsRepository, type: :repository do
 
     it { expect(described_class.instance.demand_type_query(Demand.all, '')).to eq Demand.all }
     it { expect(described_class.instance.demand_type_query(Demand.none, '')).to eq [] }
-    it { expect(described_class.instance.demand_type_query(Demand.all, 'bug')).to match_array [second_demand] }
+    it { expect(described_class.instance.demand_type_query(Demand.all, 'bug')).to match_array [second_demand, ninth_demand] }
   end
 
   describe '#class_of_service_query' do
@@ -268,7 +271,7 @@ RSpec.describe DemandsRepository, type: :repository do
     include_context 'demand data for filters'
 
     it { expect(described_class.instance.lead_time_zone_count(Demand.all, 86_400.0, nil)).to eq 2 }
-    it { expect(described_class.instance.lead_time_zone_count(Demand.all, nil, 86_400)).to eq 1 }
+    it { expect(described_class.instance.lead_time_zone_count(Demand.all, nil, 86_400)).to eq 2 }
     it { expect(described_class.instance.lead_time_zone_count(Demand.all, 50_400.0, 396_000.0)).to eq 2 }
   end
 

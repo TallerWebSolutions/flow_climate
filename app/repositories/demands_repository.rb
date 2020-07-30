@@ -65,6 +65,7 @@ class DemandsRepository
     demands.includes(:project)
            .joins(:project)
            .joins(:product)
+           .left_outer_joins(:customer)
            .left_outer_joins(:portfolio_unit)
            .left_outer_joins(item_assignments: { membership: :team_member })
            .where('demands.demand_title ILIKE :search_param
@@ -72,7 +73,8 @@ class DemandsRepository
                    OR projects.name ILIKE :search_param
                    OR portfolio_units.name ILIKE :search_param
                    OR team_members.name ILIKE :search_param
-                   OR products.name ILIKE :search_param', search_param: "%#{filter_text.downcase}%")
+                   OR products.name ILIKE :search_param
+                   OR customers.name ILIKE :search_param', search_param: "%#{filter_text.downcase}%")
   end
 
   def flow_status_query(demands, flow_status)
