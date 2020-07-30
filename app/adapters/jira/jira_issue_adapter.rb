@@ -145,7 +145,9 @@ module Jira
       from_transistion.with_lock { from_transistion.update(last_time_out: to_transition_date) }
 
       stage_to = demand.project.stages.find_by(integration_id: to_stage_id)
-      DemandTransition.where(demand: demand, stage: stage_to, last_time_in: to_transition_date).first_or_create
+      demand_transition = DemandTransition.where(demand: demand, stage: stage_to, last_time_in: to_transition_date).first_or_initialize
+
+      demand_transition.save
 
       Slack::SlackNotificationService.instance.notify_demand_state_changed(stage_to, demand, author)
     end
