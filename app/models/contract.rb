@@ -38,7 +38,7 @@ class Contract < ApplicationRecord
   belongs_to :product
 
   has_many :contract_consolidations, dependent: :destroy
-  has_many :demands, dependent: :destroy
+  has_many :demands, dependent: :nullify
   has_many :contract_estimation_change_histories, dependent: :destroy
 
   validates :customer, :product, :start_date, :total_hours, :total_value, :renewal_period, :hours_per_demand, presence: true

@@ -661,7 +661,7 @@ en:
         throughput_per_period: "Used Throughput"
       search:
         text:
-          placeholder: "product, project, portfolio unit, demand title, id or responsible"
+          placeholder: "customer, product, project, portfolio unit, demand title, id or responsible"
       last_deliveries: "Last deliveries"
       last_larger_lead_times_four_weeks: "Last five largest lead times (4 weeks)"
       last_larger_lead_times: "Last five largest lead times"
