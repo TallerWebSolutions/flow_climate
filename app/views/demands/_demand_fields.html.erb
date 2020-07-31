@@ -2,13 +2,21 @@
 <td><%= link_to demand.external_id, company_demand_path(company, demand.slug), target: :_blank %></td>
 <td><%= I18n.t("activerecord.attributes.demand.enums.demand_type.#{demand.demand_type}") %></td>
 <td><%= I18n.t("activerecord.attributes.demand.enums.class_of_service.#{demand.class_of_service}") %></td>
-<td><%= link_to demand.customer_name, company_product_path(company, demand.customer), target: :_blank %></td>
+<% if demand.contract.present? %>
+  <td><%= link_to demand.customer_name, company_customer_path(company, demand.customer), target: :_blank %></td>
+<% else %>
+  <td></td>
+<% end %>
 <% if demand.contract.present? %>
   <td><%= link_to demand.contract.id, company_customer_contract_path(company, demand.customer, demand.contract), target: :_blank %></td>
 <% else %>
   <td></td>
 <% end %>
-<td><%= link_to demand.product_name, company_product_path(company, demand.product), target: :_blank %></td>
+<% if demand.product.present? %>
+  <td><%= link_to demand.product_name, company_product_path(company, demand.product), target: :_blank %></td>
+<% else %>
+  <td><%= demand.product_name %></td>
+<% end %>
 <td><%= demand.portfolio_unit_name %></td>
 <td><%= link_to demand.project_name, company_project_path(company, demand.project), target: :_blank %></td>
 <td><%= number_to_currency(demand.cost_to_project) %></td>
