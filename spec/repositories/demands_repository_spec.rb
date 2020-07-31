@@ -222,14 +222,16 @@ RSpec.describe DemandsRepository, type: :repository do
   describe '#filter_demands_by_text' do
     include_context 'demand data for filters'
 
-    it { expect(described_class.instance.filter_demands_by_text(Demand.all, '')).to eq Demand.all }
-    it { expect(described_class.instance.filter_demands_by_text(Demand.none, '')).to eq [] }
-    it { expect(described_class.instance.filter_demands_by_text(Demand.all, 'climate')).to match_array [first_demand, second_demand, third_demand, fourth_demand] }
-    it { expect(described_class.instance.filter_demands_by_text(Demand.all, 'flow')).to match_array [first_demand, second_demand, third_demand, fourth_demand, fifth_demand, sixth_demand, seventh_demand, eigth_demand] }
-    it { expect(described_class.instance.filter_demands_by_text(Demand.all, 'hhh')).to eq [first_demand] }
-    it { expect(described_class.instance.filter_demands_by_text(Demand.all, 'bar')).to match_array [second_demand, third_demand] }
-    it { expect(described_class.instance.filter_demands_by_text(Demand.all, 'voyager')).to match_array [sixth_demand, seventh_demand, eigth_demand] }
-    it { expect(described_class.instance.filter_demands_by_text(Demand.all, 'command')).to match_array [second_demand, fifth_demand] }
+    it 'search for the demands using the text' do
+      expect(described_class.instance.filter_demands_by_text(Demand.all, '')).to eq Demand.all
+      expect(described_class.instance.filter_demands_by_text(Demand.none, '')).to eq []
+      expect(described_class.instance.filter_demands_by_text(Demand.all, 'climate')).to match_array [first_demand, second_demand, third_demand, fourth_demand]
+      expect(described_class.instance.filter_demands_by_text(Demand.all, 'flow')).to match_array [first_demand, second_demand, third_demand, fourth_demand, fifth_demand, sixth_demand, seventh_demand, eigth_demand]
+      expect(described_class.instance.filter_demands_by_text(Demand.all, 'hhh')).to eq [first_demand]
+      expect(described_class.instance.filter_demands_by_text(Demand.all, 'bar')).to match_array [second_demand, third_demand]
+      expect(described_class.instance.filter_demands_by_text(Demand.all, 'voyager')).to match_array [sixth_demand, seventh_demand, eigth_demand]
+      expect(described_class.instance.filter_demands_by_text(Demand.all, 'command')).to match_array [second_demand, fifth_demand]
+    end
   end
 
   describe '#flow_status_query' do
