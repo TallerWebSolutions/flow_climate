@@ -337,6 +337,8 @@ class Demand < ApplicationRecord
   end
 
   def compute_and_update_automatic_fields
+    self.reload
+
     self.leadtime = (end_date - commitment_date if commitment_date.present? && end_date.present?)
     self.blocked_working_time_downstream = compute_blocked_working_time_downstream
     self.blocked_working_time_upstream = compute_blocked_working_time_upstream

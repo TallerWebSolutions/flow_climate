@@ -11,6 +11,8 @@
         <th><%= TeamMember.human_attribute_name :monthly_payment %></th>
         <th><%= TeamMember.human_attribute_name :hours_per_month %></th>
       <% end %>
+      <th><%= DemandComment.model_name.human(count: 2) %></th>
+      <th><%= DemandBlock.model_name.human(count: 2) %></th>
 
       <% if current_user.managing_company?(company) || current_user.admin? %>
         <th></th>
