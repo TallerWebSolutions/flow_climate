@@ -703,6 +703,8 @@ pt-BR:
         title: "Risco Operacional"
       hours_blocked_per_delivery:
         title: "Horas Bloqueadas por Entrega"
+      external_dependency:
+        title: "Dependências Externas"
   demands:
     new:
       title: "Criar Demanda"
@@ -975,6 +977,8 @@ pt-BR:
       bugs_by_delivery_month: "Bugs por entrega no mês"
     hours_blocked_per_delivery:
       label: "Horas Bloqueadas por Entrega"
+    external_dependency:
+      label: "Bloqueios"
   finances_params:
     edit:
       title: "Editar Informação Financeira"

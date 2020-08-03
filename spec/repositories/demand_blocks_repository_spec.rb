@@ -5,7 +5,7 @@ RSpec.describe DemandBlocksRepository, type: :repository do
     let!(:first_project) { Fabricate :project, status: :maintenance, start_date: 3.days.ago, end_date: 2.days.ago }
     let!(:second_project) { Fabricate :project, status: :executing, start_date: 3.days.ago, end_date: Time.zone.today }
 
-    context 'having data' do
+    context 'with data' do
       let!(:first_demand) { Fabricate :demand, project: first_project }
       let!(:second_demand) { Fabricate :demand, project: first_project }
       let!(:third_demand) { Fabricate :demand, project: second_project }
@@ -28,7 +28,7 @@ RSpec.describe DemandBlocksRepository, type: :repository do
       end
     end
 
-    context 'having no data' do
+    context 'with no data' do
       it { expect(described_class.instance.closed_blocks_to_projects_and_period_grouped([first_project, second_project], first_project.start_date, second_project.end_date)).to eq({}) }
     end
   end
@@ -38,7 +38,7 @@ RSpec.describe DemandBlocksRepository, type: :repository do
     let!(:second_project) { Fabricate :project, status: :executing, start_date: 3.days.ago, end_date: Time.zone.today }
     let!(:third_project) { Fabricate :project, status: :executing, start_date: 3.days.ago, end_date: Time.zone.today }
 
-    context 'having data' do
+    context 'with data' do
       let!(:first_demand) { Fabricate :demand, project: first_project }
       let!(:second_demand) { Fabricate :demand, project: first_project }
       let!(:third_demand) { Fabricate :demand, project: second_project }
@@ -62,7 +62,7 @@ RSpec.describe DemandBlocksRepository, type: :repository do
       end
     end
 
-    context 'having no data' do
+    context 'with no data' do
       it { expect(described_class.instance.active_blocks_to_projects_and_period([first_project, second_project], first_project.start_date, second_project.end_date)).to eq [] }
     end
   end
@@ -71,7 +71,7 @@ RSpec.describe DemandBlocksRepository, type: :repository do
     let!(:first_project) { Fabricate :project, status: :maintenance, start_date: 3.days.ago, end_date: 2.days.ago }
     let!(:second_project) { Fabricate :project, status: :executing, start_date: 3.days.ago, end_date: Time.zone.today }
 
-    context 'having data' do
+    context 'with data' do
       let!(:first_demand) { Fabricate :demand, project: first_project }
       let!(:second_demand) { Fabricate :demand, project: first_project }
       let!(:third_demand) { Fabricate :demand, project: second_project }
@@ -93,7 +93,7 @@ RSpec.describe DemandBlocksRepository, type: :repository do
       end
     end
 
-    context 'having no data' do
+    context 'with no data' do
       it { expect(described_class.instance.accumulated_blocks_to_date([first_project, second_project], second_project.end_date)).to eq 0 }
     end
   end
@@ -113,7 +113,7 @@ RSpec.describe DemandBlocksRepository, type: :repository do
     let(:first_stage) { Fabricate :stage, company: company, teams: [team], order: 0, name: 'bbb', projects: [first_project, second_project] }
     let(:second_stage) { Fabricate :stage, company: company, teams: [team], order: 1, name: 'aaa', projects: [first_project, second_project] }
 
-    context 'having data' do
+    context 'with data' do
       let!(:first_demand) { Fabricate :demand, project: first_project }
       let!(:second_demand) { Fabricate :demand, project: first_project }
       let!(:third_demand) { Fabricate :demand, project: second_project }
@@ -147,7 +147,7 @@ RSpec.describe DemandBlocksRepository, type: :repository do
       end
     end
 
-    context 'having no data' do
+    context 'with no data' do
       it { expect(described_class.instance.blocks_duration_per_stage(team.projects, 6.days.ago, Time.zone.now)).to eq [] }
     end
   end
@@ -167,7 +167,7 @@ RSpec.describe DemandBlocksRepository, type: :repository do
     let(:first_stage) { Fabricate :stage, company: company, teams: [team], order: 0, name: 'bbb', projects: [first_project, second_project] }
     let(:second_stage) { Fabricate :stage, company: company, teams: [team], order: 1, name: 'aaa', projects: [first_project, second_project] }
 
-    context 'having data' do
+    context 'with data' do
       let!(:first_demand) { Fabricate :demand, project: first_project }
       let!(:second_demand) { Fabricate :demand, project: first_project }
       let!(:third_demand) { Fabricate :demand, project: second_project }
@@ -201,8 +201,39 @@ RSpec.describe DemandBlocksRepository, type: :repository do
       end
     end
 
-    context 'having no data' do
+    context 'with no data' do
       it { expect(described_class.instance.blocks_duration_per_stage(team.projects, 6.days.ago, Time.zone.now)).to eq [] }
+    end
+  end
+
+  describe '#demand_blocks_for_products' do
+    let!(:company) { Fabricate :company }
+    let!(:customer) { Fabricate :customer }
+    let!(:first_product) { Fabricate :product, customer: customer }
+    let!(:second_product) { Fabricate :product, customer: customer }
+    let!(:third_product) { Fabricate :product, customer: customer }
+
+    context 'with data' do
+      let!(:first_demand) { Fabricate :demand, product: first_product }
+      let!(:second_demand) { Fabricate :demand, product: first_product }
+      let!(:third_demand) { Fabricate :demand, product: second_product }
+      let!(:fourth_demand) { Fabricate :demand, product: first_product }
+
+      let!(:fifth_demand) { Fabricate :demand, product: third_product }
+
+      let!(:first_block) { Fabricate :demand_block, demand: first_demand, block_time: 1.hour.ago, unblock_time: Time.zone.today }
+      let!(:second_block) { Fabricate :demand_block, demand: first_demand, block_time: 2.days.ago, unblock_time: 2.days.ago }
+      let!(:third_block) { Fabricate :demand_block, demand: second_demand, block_time: 6.days.ago, unblock_time: 4.days.ago }
+      let!(:fourth_block) { Fabricate :demand_block, demand: first_demand, block_time: 2.days.ago, unblock_time: Time.zone.yesterday }
+      let!(:fifth_block) { Fabricate :demand_block, demand: third_demand, block_time: 5.days.ago, unblock_time: 3.days.ago }
+      let!(:sixth_block) { Fabricate :demand_block, demand: fourth_demand, block_time: 2.days.ago, unblock_time: Time.zone.today }
+      let!(:seventh_block) { Fabricate :demand_block, demand: fifth_demand, block_time: 4.days.ago, unblock_time: 2.days.ago, discarded_at: Time.zone.today }
+
+      it { expect(described_class.instance.demand_blocks_for_products([first_product.id, second_product.id], 5.days.ago, Time.zone.today)).to match_array [second_block, fourth_block, sixth_block] }
+    end
+
+    context 'with no data' do
+      it { expect(described_class.instance.demand_blocks_for_products([first_product.id, second_product.id], 2.days.ago, 1.day.ago)).to match_array [] }
     end
   end
 end

@@ -631,6 +631,8 @@ en:
         title: "Operational Risk"
       hours_blocked_per_delivery:
         title: "Hours Blocked Per Delivery"
+      external_dependency:
+        title: "External Dependencies"
   demands:
     new:
       title: "Create Demand"
@@ -903,6 +905,8 @@ en:
       bugs_by_delivery_month: "Bugs by delivery in month"
     hours_blocked_per_delivery:
       label: "Hours Blocked per Delivery"
+    external_dependency:
+      label: "Blocks"
   finances_params:
     edit:
       title: "Edit Financial Information"

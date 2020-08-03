@@ -47,4 +47,8 @@ class DemandBlocksRepository
                                                                         .order('grouped_stage_order, grouped_stage_name')
                                                                         .map { |block_count| [block_count.grouped_stage_name, block_count.grouped_stage_order, block_count.count_block] }
   end
+
+  def demand_blocks_for_products(products_ids, start_date, end_date)
+    DemandBlock.joins(:demand).where(demands: { product_id: products_ids }).where('block_time BETWEEN :start_date AND :end_date', start_date: start_date, end_date: end_date)
+  end
 end
