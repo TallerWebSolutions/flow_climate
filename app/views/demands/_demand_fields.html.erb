@@ -2,12 +2,12 @@
 <td><%= link_to demand.external_id, company_demand_path(company, demand.slug), target: :_blank %></td>
 <td><%= I18n.t("activerecord.attributes.demand.enums.demand_type.#{demand.demand_type}") %></td>
 <td><%= I18n.t("activerecord.attributes.demand.enums.class_of_service.#{demand.class_of_service}") %></td>
-<% if demand.contract.present? %>
+<% if demand.contract.present? && demand.customer.present? %>
   <td><%= link_to demand.customer_name, company_customer_path(company, demand.customer), target: :_blank %></td>
 <% else %>
   <td></td>
 <% end %>
-<% if demand.contract.present? %>
+<% if demand.contract.present? && demand.customer.present? %>
   <td><%= link_to demand.contract.id, company_customer_contract_path(company, demand.customer, demand.contract), target: :_blank %></td>
 <% else %>
   <td></td>

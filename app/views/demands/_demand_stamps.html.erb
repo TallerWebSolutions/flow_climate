@@ -42,7 +42,7 @@
         </tr>
         <tr>
           <td><b><%= Contract.model_name.human %></b></td>
-          <% if company.present? && demand.contract.present? %>
+          <% if company.present? && demand.contract.present? && demand.customer.present? %>
             <td><%= link_to demand.contract.id, company_customer_contract_path(company, demand.customer, demand.contract) %></td>
           <% elsif demand.contract.present? && company.blank? %>
             <td><%= demand.contract.id %></td>
