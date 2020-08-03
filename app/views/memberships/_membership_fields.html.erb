@@ -9,6 +9,9 @@
   <td><%= membership.hours_per_month %></td>
 <% end %>
 
+<td><%= membership.demand_comments.count %></td>
+<td><%= membership.demand_blocks.count %></td>
+
 <% if current_user.managing_company?(membership.company) %>
   <td>
     <%= link_to edit_company_team_membership_path(company, team, membership), remote: true do %>

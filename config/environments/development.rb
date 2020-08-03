@@ -19,7 +19,7 @@ Rails.application.configure do
     config.cache_store = :null_store
   end
 
-  config.hosts << "fe4d3def0bc9.ngrok.io"
+  config.hosts << "50a671723297.ngrok.io"
 
   config.active_support.deprecation = :log
   config.active_record.migration_error = false
