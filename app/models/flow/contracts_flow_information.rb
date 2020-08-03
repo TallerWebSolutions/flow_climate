@@ -70,6 +70,12 @@ module Flow
       [{ name: I18n.t('customer.charts.hours_blocked_per_delivery.title'), data: @hours_blocked_per_deliver_info }]
     end
 
+    def build_external_dependency_info
+      return [{ name: I18n.t('customer.charts.external_dependency.title'), data: [] }] if @demands.blank?
+
+      [{ name: I18n.t('customer.charts.external_dependency.title'), data: @external_dependency_info }]
+    end
+
     private
 
     def blank_burnup
@@ -78,8 +84,8 @@ module Flow
 
     def build_operations_charts_info(hour_value)
       @dates_array.each_with_index do |date, index|
-        demands_delivered_to_date = @demands.kept.finished_until_date(date).finished_after_date(@contract.start_date)
-        demands_delivered_in_month = @demands.kept.finished_until_date(date.end_of_month).finished_after_date(date.beginning_of_month)
+        demands_delivered_to_date = demands_delivered_to_date(date)
+        demands_delivered_in_month = demands_delivered_in_month(date)
 
         add_value_to_burnup_arrays(date, hour_value, index, demands_delivered_to_date)
         add_value_to_scope_burnup(date, index, demands_delivered_to_date.count)
@@ -88,7 +94,16 @@ module Flow
         add_value_to_lead_time_chart(date, demands_delivered_to_date, demands_delivered_in_month)
         add_value_to_throughput_chart(date, demands_delivered_to_date)
         add_value_to_hours_blocked_per_deliver_chart(date, demands_delivered_to_date)
+        add_value_to_external_dependency_chart(date, demands_delivered_to_date)
       end
+    end
+
+    def demands_delivered_in_month(date)
+      @demands.kept.finished_until_date(date.end_of_month).finished_after_date(date.beginning_of_month)
+    end
+
+    def demands_delivered_to_date(date)
+      @demands.kept.finished_until_date(date).finished_after_date(@contract.start_date)
     end
 
     def add_value_to_burnup_arrays(date, hour_value, index, demands_delivered_to_date)
@@ -154,6 +169,18 @@ module Flow
                                          end
     end
 
+    def add_value_to_external_dependency_chart(date, demands_delivered_to_date)
+      return if date > @limit_date
+
+      products_ids = demands_delivered_to_date.map(&:product).flatten.map(&:id)
+
+      @external_dependency_info << if demands_delivered_to_date.count.positive?
+                                     DemandBlocksRepository.instance.demand_blocks_for_products(products_ids, date.beginning_of_month, date.end_of_month).external_dependency.count
+                                   else
+                                     0
+                                   end
+    end
+
     def build_dates_array(data_interval)
       @dates_array = dates_interval(data_interval, @contract.start_date, @contract.end_date)
     end
@@ -207,6 +234,8 @@ module Flow
       @throughput_info = []
 
       @hours_blocked_per_deliver_info = []
+
+      @external_dependency_info = []
     end
 
     def build_hours_finances_constants

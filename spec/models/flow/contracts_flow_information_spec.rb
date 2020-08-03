@@ -255,7 +255,7 @@ RSpec.describe Flow::ContractsFlowInformation do
     end
 
     context 'with demands' do
-      it 'builds the burnup with the correct information' do
+      it 'builds the lead time info with the correct information' do
         travel_to Time.zone.local(2020, 6, 24, 10, 0, 0) do
           product = Fabricate :product, customer: customer
           project = Fabricate :project, customers: [customer], products: [product]
@@ -342,7 +342,7 @@ RSpec.describe Flow::ContractsFlowInformation do
     end
 
     context 'with demands and no blocks' do
-      it 'builds the throughput info with the correct information' do
+      it 'builds the hours blocked info with the correct information' do
         travel_to Time.zone.local(2020, 6, 24, 10, 0, 0) do
           product = Fabricate :product, customer: customer
           project = Fabricate :project, customers: [customer], products: [product]
@@ -361,7 +361,7 @@ RSpec.describe Flow::ContractsFlowInformation do
     end
 
     context 'with demands and blocks' do
-      it 'builds the throughput info with the correct information' do
+      it 'builds the hours blocked info with the correct information' do
         travel_to Time.zone.local(2020, 6, 24, 10, 0, 0) do
           product = Fabricate :product, customer: customer
           project = Fabricate :project, customers: [customer], products: [product]
@@ -374,6 +374,54 @@ RSpec.describe Flow::ContractsFlowInformation do
           contract_flow = described_class.new(contract)
 
           expect(contract_flow.build_hours_blocked_per_delivery_info).to eq([{ name: I18n.t('customer.charts.hours_blocked_per_delivery.title'), data: [0, 0, 76.8, 76.8] }])
+        end
+      end
+    end
+  end
+
+  describe '#build_external_dependency_info' do
+    context 'with no demands' do
+      it 'builds an empty external dependency info' do
+        contract = Fabricate :contract, customer: customer, total_value: 100
+        contract_flow = described_class.new(contract)
+
+        expect(contract_flow.build_external_dependency_info).to eq([{ name: I18n.t('customer.charts.external_dependency.title'), data: [] }])
+      end
+    end
+
+    context 'with demands and no blocks' do
+      it 'builds the external dependency info with the correct information' do
+        travel_to Time.zone.local(2020, 6, 24, 10, 0, 0) do
+          product = Fabricate :product, customer: customer
+          project = Fabricate :project, customers: [customer], products: [product]
+          contract = Fabricate :contract, customer: customer, total_value: 100_000, total_hours: 2000, hours_per_demand: 30, start_date: 3.months.ago, end_date: 1.month.from_now
+
+          3.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, contract: contract, demand_type: :feature, commitment_date: 2.days.ago, end_date: Time.zone.now) }
+          5.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, contract: contract, demand_type: :bug, commitment_date: 35.days.ago, end_date: 1.month.ago) }
+          2.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, contract: contract, demand_type: :bug, commitment_date: 102.days.ago, end_date: 3.months.ago) }
+          6.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, contract: contract, demand_type: :feature, commitment_date: 134.days.ago, end_date: 4.months.ago) }
+
+          contract_flow = described_class.new(contract)
+
+          expect(contract_flow.build_external_dependency_info).to eq([{ name: I18n.t('customer.charts.external_dependency.title'), data: [0, 0, 0, 0] }])
+        end
+      end
+    end
+
+    context 'with demands and blocks' do
+      it 'builds the throughput info with the correct information' do
+        travel_to Time.zone.local(2020, 6, 24, 10, 0, 0) do
+          product = Fabricate :product, customer: customer
+          project = Fabricate :project, customers: [customer], products: [product]
+          contract = Fabricate :contract, customer: customer, total_value: 100_000, total_hours: 2000, hours_per_demand: 30, start_date: 3.months.ago, end_date: 1.month.from_now
+
+          5.times { Fabricate(:demand, company: company, product: product, customer: customer, project: project, contract: contract, demand_type: :bug, commitment_date: 35.days.ago, end_date: 1.month.ago) }
+
+          4.times { Fabricate :demand_block, demand: Demand.all.sample, block_time: 34.days.ago, unblock_time: 30.days.ago, block_type: :external_dependency }
+
+          contract_flow = described_class.new(contract)
+
+          expect(contract_flow.build_external_dependency_info).to eq([{ name: I18n.t('customer.charts.external_dependency.title'), data: [0, 0, 4, 0] }])
         end
       end
     end

@@ -53,4 +53,9 @@ function buildContractCharts() {
     if (hoursBlockedPerDeliveryValues.length !== 0) {
         buildLineChart(hoursBlockedPerDeliveryValues);
     }
+
+    const externalDependecyValues = $("#line-external-dependency-contract");
+    if (externalDependecyValues.length !== 0) {
+        buildLineChart(externalDependecyValues);
+    }
 }
