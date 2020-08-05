@@ -32,7 +32,7 @@
 
   <div class="row">
     <div class="col-xs-12 form-group">
-      <%= link_to I18n.t('general.download_csv'), demand_blocks_csv_company_demand_blocks_path(company, demand_blocks_ids, format: :csv), class: 'btn btn-sm btn-success pull-right' %>
+      <%= link_to I18n.t('general.download_csv'), demand_blocks_csv_company_demand_blocks_path(company, demand_blocks_ids: demand_blocks_ids, format: :csv), class: 'btn btn-sm btn-success pull-right' %>
     </div>
   </div>
 
