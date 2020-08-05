@@ -122,9 +122,13 @@
   </div>
 </div>
 
+<div class="modal fade" id="edit-block-form" tabindex="-1" role="dialog" aria-labelledby="edit-block-form" aria-hidden="true"></div>
+
 <% content_for :javascript do %>
   <%= javascript_include_tag 'charts/column' %>
-
   <%= javascript_include_tag 'components/components' %>
+
+  <%= javascript_include_tag 'demand_blocks/form_modal' %>
+  
   <%= javascript_include_tag 'demands/show' %>
 <% end %>
