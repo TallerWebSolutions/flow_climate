@@ -15,6 +15,10 @@
       <th><%= I18n.t('projects.replenishing.selected_last_week') %></th>
       <th><%= I18n.t('projects.replenishing.wip') %></th>
       <th><%= I18n.t('projects.replenishing.weeks_montecarlo') %></th>
+      <th>
+        <%= I18n.t('projects.replenishing.monte_carlo_factor') %>
+        <i class="far fa-question-circle" title="<%= I18n.t('projects.replenishing.monte_carlo_factor_help') %>"></i>
+      </th>
       <th></th>
     </tr>
   </thead>
@@ -47,13 +51,11 @@
         <td><%= I18n.t('general.weeks_text', count: number_with_precision(project_hash[:montecarlo_80_percent], precision: 1)) %></td>
         <td>
           <% if project_hash[:customer_happiness] > 2 %>
-            <i class="far fa-laugh fa-2x"></i>
-          <% elsif project_hash[:customer_happiness] > 1.2 %>
-            <i class="far fa-smile fa-2x"></i>
+            <div class="circle-green" title="<%= number_with_precision(project_hash[:customer_happiness], precision: 2) %>"></div>
           <% elsif project_hash[:customer_happiness] > 0.8 %>
-            <i class="far fa-meh fa-2x"></i>
+            <div class="circle-yellow" title="<%= number_with_precision(project_hash[:customer_happiness], precision: 2) %>"></div>
           <% else %>
-            <i class="far fa-sad-cry fa-2x"></i>
+            <div class="circle-red" title="<%= number_with_precision(project_hash[:customer_happiness], precision: 2) %>"></div>
           <% end %>
         </td>
       </tr>
