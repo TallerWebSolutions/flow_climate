@@ -530,6 +530,8 @@ en:
       aging: "Aging"
       throughput_data_mode: "Throughput Mode"
       last_four_weeks_lead_time: "Last 4 Weeks Lead Time"
+      monte_carlo_factor: "Factor"
+      monte_carlo_factor_help: "Remaining weeks / Monte Carlo weeks"
     statistics:
       scope_tab: "Scope Variation"
       leadtime_tab: "Lead time variation"

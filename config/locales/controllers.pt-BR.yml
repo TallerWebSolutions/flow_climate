@@ -546,6 +546,8 @@ pt-BR:
       aging: "Idade"
       throughput_data_mode: "Moda do Throughput"
       last_four_weeks_lead_time: "Lead Time das Últ, 4 Sem."
+      monte_carlo_factor: "Fator"
+      monte_carlo_factor_help: "Semanas restantes / Semanas de Monte Carlo"
     statistics:
       scope_tab: "Variação do Escopo"
       leadtime_tab: "Variação do lead time"
