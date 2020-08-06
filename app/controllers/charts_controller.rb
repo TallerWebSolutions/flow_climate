@@ -75,19 +75,19 @@ class ChartsController < AuthenticatedController
   end
 
   def assign_filter_parameters_to_charts
+    @period = params[:period] || 'month'
     @start_date = start_date
     @end_date = end_date
-    @period = params[:period] || 'month'
   end
 
   def start_date
     start_date = params[:start_date]&.to_date || [@projects.map(&:start_date).min, 3.months.ago.to_date].compact.max
-    TimeService.instance.start_of_period_for_date(start_date, @chart_period_interval)
+    TimeService.instance.start_of_period_for_date(start_date, @period)
   end
 
   def end_date
     end_date = params[:end_date]&.to_date || @projects.map(&:end_date).max || Time.zone.today
-    TimeService.instance.end_of_period_for_date(end_date, @chart_period_interval)
+    TimeService.instance.end_of_period_for_date(end_date, @period)
   end
 
   def assign_leadtime_confidence
