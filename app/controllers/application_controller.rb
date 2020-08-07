@@ -18,7 +18,7 @@ class ApplicationController < ActionController::Base
   end
 
   def redirect_subdomain
-    redirect_to('https://flowclimate.com' + request.fullpath, status: 301) if request.host == 'www.flowclimate.com'
+    redirect_to("https://flowclimate.com #{request.fullpath}", status: 301) if request.host == 'www.flowclimate.com'
   end
 
   def page_param

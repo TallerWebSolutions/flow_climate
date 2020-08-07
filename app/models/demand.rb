@@ -125,6 +125,7 @@ class Demand < ApplicationRecord
   delegate :count, to: :demand_blocks, prefix: true, allow_nil: true
 
   before_save :compute_and_update_automatic_fields
+  before_save :compute_lead_time
   after_discard :discard_dependencies
   after_undiscard :undiscard_dependencies
 
@@ -165,7 +166,7 @@ class Demand < ApplicationRecord
     memberships.includes(:item_assignments).where(item_assignments: { finish_time: nil }).uniq
   end
 
-  def update_effort!(update_manual_effort = false)
+  def update_effort!(update_manual_effort: false)
     return if manual_effort? && !update_manual_effort
 
     update(effort_downstream: compute_effort_downstream, effort_upstream: compute_effort_upstream)
@@ -337,12 +338,15 @@ class Demand < ApplicationRecord
   end
 
   def compute_and_update_automatic_fields
-    self.leadtime = (end_date - commitment_date if commitment_date.present? && end_date.present?)
     self.blocked_working_time_downstream = compute_blocked_working_time_downstream
     self.blocked_working_time_upstream = compute_blocked_working_time_upstream
     self.total_bloked_working_time = compute_total_bloked_working_time
     self.total_touch_blocked_time = compute_total_touch_blocked_time
     self.cost_to_project = compute_cost_to_project
+  end
+
+  def compute_lead_time
+    self.leadtime = (end_date - commitment_date if commitment_date.present? && end_date.present?)
   end
 
   def compute_total_touch_blocked_time
