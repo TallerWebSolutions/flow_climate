@@ -1,6 +1,6 @@
 # frozen-string-literal: true
 
-RSpec.describe ItemAssignmentNotification, type: :model do
+RSpec.describe Notifications::ItemAssignmentNotification, type: :model do
   context 'associations' do
     it { is_expected.to belong_to :item_assignment }
   end

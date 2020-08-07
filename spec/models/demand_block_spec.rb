@@ -11,6 +11,7 @@ RSpec.describe DemandBlock, type: :model do
     it { is_expected.to belong_to(:risk_review) }
     it { is_expected.to belong_to(:blocker).class_name(TeamMember).inverse_of(:demand_blocks) }
     it { is_expected.to belong_to(:unblocker).class_name(TeamMember).inverse_of(:demand_blocks) }
+    it { is_expected.to have_many(:demand_block_notifications).class_name('Notifications::DemandBlockNotification').dependent(:destroy) }
   end
 
   context 'validations' do

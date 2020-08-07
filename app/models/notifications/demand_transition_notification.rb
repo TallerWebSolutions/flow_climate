@@ -22,10 +22,12 @@
 #  fk_rails_903f0b082b  (demand_id => demands.id)
 #
 
-class DemandTransitionNotification < ApplicationRecord
-  belongs_to :stage
-  belongs_to :demand
+module Notifications
+  class DemandTransitionNotification < ApplicationRecord
+    belongs_to :stage
+    belongs_to :demand
 
-  validates :stage, :demand, presence: true
-  validates :stage, uniqueness: { scope: :demand, message: I18n.t('demand_transition_notification.validations.stage.uniqueness') }
+    validates :stage, :demand, presence: true
+    validates :stage, uniqueness: { scope: :demand, message: I18n.t('demand_transition_notification.validations.stage.uniqueness') }
+  end
 end

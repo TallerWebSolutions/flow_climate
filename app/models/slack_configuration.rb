@@ -10,7 +10,7 @@
 #  notification_hour   :integer
 #  notification_minute :integer          default(0)
 #  room_webhook        :string           not null
-#  weekday_to_notify   :integer          default("all_weekdays")
+#  weekday_to_notify   :integer          default("all_weekdays"), not null
 #  created_at          :datetime         not null
 #  updated_at          :datetime         not null
 #  team_id             :integer          not null

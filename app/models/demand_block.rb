@@ -45,9 +45,9 @@ class DemandBlock < ApplicationRecord
   belongs_to :unblocker, class_name: 'TeamMember', inverse_of: :demand_blocks
   belongs_to :risk_review
 
-  validates :demand, :demand_id, :blocker, :block_time, :block_type, presence: true
+  has_many :demand_block_notifications, dependent: :destroy, class_name: 'Notifications::DemandBlockNotification'
 
-  before_save :update_computed_fields!
+  validates :demand, :demand_id, :blocker, :block_time, :block_type, presence: true
 
   scope :for_date_interval, ->(start_date, end_date) { where('((block_time <= :finish_time) AND (unblock_time >= :start_time)) OR (unblock_time IS NULL AND block_time <= :finish_time)', start_time: start_date, finish_time: end_date) }
   scope :open, -> { where('unblock_time IS NULL') }
@@ -55,6 +55,8 @@ class DemandBlock < ApplicationRecord
   scope :active, -> { where(active: true) }
 
   delegate :name, to: :blocker, prefix: true
+
+  before_save :update_computed_fields!
 
   def csv_array
     [

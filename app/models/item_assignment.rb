@@ -33,7 +33,7 @@ class ItemAssignment < ApplicationRecord
   belongs_to :demand
   belongs_to :membership
 
-  has_many :item_assignment_notifications, dependent: :destroy
+  has_many :item_assignment_notifications, dependent: :destroy, class_name: 'Notifications::ItemAssignmentNotification'
 
   validates :demand, :membership, presence: true
 

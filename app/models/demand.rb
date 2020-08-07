@@ -92,7 +92,7 @@ class Demand < ApplicationRecord
   has_many :stages, -> { distinct }, through: :demand_transitions
   has_many :memberships, through: :item_assignments
   has_many :demand_score_matrices, dependent: :destroy
-  has_many :demand_transition_notifications, dependent: :destroy
+  has_many :demand_transition_notifications, dependent: :destroy, class_name: 'Notifications::DemandTransitionNotification'
 
   validates :project, :created_date, :external_id, :demand_type, :class_of_service, :assignees_count, :team, presence: true
   validates :external_id, uniqueness: { scope: :company_id, message: I18n.t('demand.validations.external_id_unique.message') }

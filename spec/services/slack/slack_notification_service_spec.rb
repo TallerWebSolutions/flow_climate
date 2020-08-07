@@ -235,14 +235,14 @@ RSpec.describe Slack::SlackNotificationService, type: :service do
       team_member = Fabricate :team_member
       membership = Fabricate :membership, team_member: team_member
       item_assignment = Fabricate :item_assignment, membership: membership, demand: demand
-      ItemAssignmentNotification.destroy_all
+      Notifications::ItemAssignmentNotification.destroy_all
 
       Fabricate :slack_configuration, team: team, info_type: :item_assigned, active: true
 
       expect_any_instance_of(Slack::Notifier).to receive(:post)
 
       described_class.instance.notify_item_assigned(item_assignment)
-      expect(ItemAssignmentNotification.all.count).to eq 1
+      expect(Notifications::ItemAssignmentNotification.all.count).to eq 1
     end
   end
 end
