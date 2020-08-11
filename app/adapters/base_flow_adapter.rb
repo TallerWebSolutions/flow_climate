@@ -3,9 +3,11 @@
 class BaseFlowAdapter
   private
 
-  def persist_block!(demand, author, created_at)
+  def persist_block!(demand, author, created_at, demand_url)
     demand_block = demand.demand_blocks.where(block_time: created_at).first_or_initialize
     demand_block.update(blocker: author, block_reason: read_reason(demand, created_at), unblock_time: nil, unblocker: nil)
+
+    Slack::SlackNotificationService.instance.notify_item_blocked(demand_block, demand_url)
   end
 
   def read_reason(demand, created)

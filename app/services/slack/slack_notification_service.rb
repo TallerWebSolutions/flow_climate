@@ -6,6 +6,7 @@ module Slack
 
     include ActionView::Helpers::NumberHelper
     include DateHelper
+    include ActionView::Helpers::UrlHelper
 
     def notify_cmd(slack_notifier, team)
       average_demand_cost_info = TeamService.instance.average_demand_cost_stats_info_hash(team)
@@ -155,6 +156,28 @@ module Slack
       slack_notifier.post(blocks: [message_title, message_divider, message_previous_pull, message_ongoing, message_idle])
 
       Notifications::ItemAssignmentNotification.create(item_assignment: item_assignment)
+    end
+
+    def notify_item_blocked(demand_block, demand_url)
+      slack_configuration = SlackConfiguration.find_by(team: demand_block.demand.team, info_type: 'demand_blocked', active: true)
+
+      if slack_configuration.blank?
+        Notifications::DemandBlockNotification.where(demand_block: demand_block, block_state: 'blocked').first_or_create
+        return
+      end
+
+      already_notified = Notifications::DemandBlockNotification.where(demand_block: demand_block, block_state: 'blocked')
+
+      return if already_notified.present?
+
+      slack_notifier = Slack::Notifier.new(slack_configuration.room_webhook)
+
+      message_title =  { "type": 'section', "text": { "type": 'mrkdwn', "text": "#{demand_block.blocker_name} bloqueou a <#{demand_url}|#{demand_block.demand.external_id}> em _#{demand_block.demand.stage_at(demand_block.block_time)&.name || 'sem etapa'}_" } }
+      block_reason = { "type": 'section', "text": { "type": 'mrkdwn', "text": "*Motivo:* #{demand_block.block_reason}" } }
+
+      slack_notifier.post(blocks: [message_title, block_reason])
+
+      Notifications::DemandBlockNotification.create(demand_block: demand_block, block_state: 'blocked')
     end
   end
 end

@@ -19,7 +19,7 @@ Rails.application.configure do
     config.cache_store = :null_store
   end
 
-  config.hosts << "50a671723297.ngrok.io"
+  config.hosts << "4d250c854576.ngrok.io"
 
   config.active_support.deprecation = :log
   config.active_record.migration_error = false
@@ -32,6 +32,8 @@ Rails.application.configure do
   config.action_mailer.raise_delivery_errors = true
   config.action_mailer.perform_deliveries = true
   config.action_mailer.delivery_method = :smtp
+
+  Rails.application.routes.default_url_options[:host] = host
 
   logger = ActiveSupport::Logger.new(STDOUT)
   logger.formatter = config.log_formatter

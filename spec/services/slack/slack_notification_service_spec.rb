@@ -245,4 +245,19 @@ RSpec.describe Slack::SlackNotificationService, type: :service do
       expect(Notifications::ItemAssignmentNotification.all.count).to eq 1
     end
   end
+
+  describe '#notify_item_blocked' do
+    it 'calls slack notification method' do
+      demand = Fabricate :demand, team: team
+      demand_block = Fabricate :demand_block, demand: demand
+      Notifications::DemandBlockNotification.destroy_all
+
+      Fabricate :slack_configuration, team: team, info_type: :demand_blocked, active: true
+
+      expect_any_instance_of(Slack::Notifier).to receive(:post)
+
+      described_class.instance.notify_item_blocked(demand_block, 'http://foo.com')
+      expect(Notifications::DemandBlockNotification.all.count).to eq 1
+    end
+  end
 end
