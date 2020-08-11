@@ -16,10 +16,12 @@ class BaseFlowAdapter
     demand_comments.find { |comment| comment.comment_text.downcase.include?('(flag)') }&.comment_text || ''
   end
 
-  def persist_unblock!(demand, author, unblock_time)
+  def persist_unblock!(demand, author, unblock_time, demand_url)
     demand_block = demand.demand_blocks.open.first
     return if demand_block.blank?
 
     demand_block.update(unblocker: author, unblock_time: unblock_time)
+
+    Slack::SlackNotificationService.instance.notify_item_blocked(demand_block, demand_url, 'unblocked')
   end
 end
