@@ -40,6 +40,33 @@ Lint/MixedRegexpCaptureTypes:
 Lint/DuplicateElsifCondition:
   Enabled: true
 
+Lint/UnreachableLoop:
+  Enabled: true
+
+Lint/TopLevelReturnWithArgument:
+  Enabled: true
+
+Lint/SelfAssignment:
+  Enabled: true
+
+Lint/OutOfRangeRegexpRef:
+  Enabled: true
+
+Lint/MissingSuper:
+  Enabled: true
+
+Lint/FloatComparison:
+  Enabled: true
+
+Lint/EmptyConditionalBody:
+  Enabled: true
+
+Lint/DuplicateRescueException:
+  Enabled: true
+
+Lint/BinaryOperatorWithIdenticalOperands:
+  Enabled: true
+
 Style/Documentation:
   Enabled: false
 
@@ -92,6 +119,21 @@ Style/HashLikeCase:
   Enabled: true
 
 Style/RedundantFileExtensionInRequire:
+  Enabled: true
+
+Style/StringConcatenation:
+  Enabled: true
+
+Style/SingleArgumentDig:
+  Enabled: true
+
+Style/OptionalBooleanParameter:
+  Enabled: true
+
+Style/GlobalStdStream:
+  Enabled: true
+
+Style/ExplicitBlockArgument:
   Enabled: true
 
 Performance/AncestorsInclude:
@@ -209,6 +251,7 @@ Metrics/CyclomaticComplexity:
 Metrics/PerceivedComplexity:
   Exclude:
     - 'app/controllers/base_report_controller.rb'
+    - 'app/services/slack/slack_notification_service.rb'
 
 Metrics/AbcSize:
   Exclude:
@@ -216,7 +259,8 @@ Metrics/AbcSize:
     - 'db/migrate/**/*'
     - 'app/controllers/home_controller.rb'
     - 'app/services/slack/slack_notification_service.rb'
-  Max: 18.5
+    - 'app/data_objects/replenishing_data.rb'
+  Max: 21
 
 Metrics/ParameterLists:
   Enabled: false

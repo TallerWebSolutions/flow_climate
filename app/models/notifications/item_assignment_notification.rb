@@ -18,8 +18,10 @@
 #  fk_rails_07fec2e0f5  (item_assignment_id => item_assignments.id)
 #
 
-class ItemAssignmentNotification < ApplicationRecord
-  belongs_to :item_assignment
+module Notifications
+  class ItemAssignmentNotification < ApplicationRecord
+    belongs_to :item_assignment
 
-  validates :item_assignment, presence: true
+    validates :item_assignment, presence: true
+  end
 end

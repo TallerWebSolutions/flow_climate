@@ -3,6 +3,7 @@
 module Jira
   class JiraIssueAdapter < BaseFlowAdapter
     include Singleton
+    include Rails.application.routes.url_helpers
 
     def process_issue!(jira_account, product_in_jira, project, jira_issue)
       issue_key = jira_issue_attrs(jira_issue)['key']
@@ -275,9 +276,10 @@ module Jira
 
       return if author.blank?
 
-      return persist_block!(demand, author, created) if block_history?(history_item)
+      demand_url = company_demand_url(demand.company, demand)
+      return persist_block!(demand, author, created, demand_url) if block_history?(history_item)
 
-      persist_unblock!(demand, author, created) if unblock_history?(history_item)
+      persist_unblock!(demand, author, created, demand_url) if unblock_history?(history_item)
     end
 
     def unblock_history?(history_item)

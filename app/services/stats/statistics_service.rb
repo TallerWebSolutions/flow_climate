@@ -78,7 +78,7 @@ module Stats
       min_weeks_montecarlo = montecarlo_durations.min
       max_weeks_montecarlo = montecarlo_durations.max
 
-      return 0 if min_weeks_montecarlo.blank? || min_weeks_montecarlo.blank? || weeks_to_deadline < min_weeks_montecarlo
+      return 0 if min_weeks_montecarlo.blank? || weeks_to_deadline < min_weeks_montecarlo
       return 1 if weeks_to_deadline >= max_weeks_montecarlo
 
       montecarlo_durations.count { |x| x <= weeks_to_deadline }.to_f / montecarlo_durations.count

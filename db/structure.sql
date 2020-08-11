@@ -954,6 +954,38 @@ ALTER SEQUENCE public.customers_projects_id_seq OWNED BY public.customers_projec
 
 
 --
+-- Name: demand_block_notifications; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.demand_block_notifications (
+    id bigint NOT NULL,
+    demand_block_id integer NOT NULL,
+    block_state integer DEFAULT 0 NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: demand_block_notifications_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.demand_block_notifications_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: demand_block_notifications_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.demand_block_notifications_id_seq OWNED BY public.demand_block_notifications.id;
+
+
+--
 -- Name: demand_blocks; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -2806,6 +2838,13 @@ ALTER TABLE ONLY public.customers_projects ALTER COLUMN id SET DEFAULT nextval('
 
 
 --
+-- Name: demand_block_notifications id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.demand_block_notifications ALTER COLUMN id SET DEFAULT nextval('public.demand_block_notifications_id_seq'::regclass);
+
+
+--
 -- Name: demand_blocks id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -3346,6 +3385,14 @@ ALTER TABLE ONLY public.customers
 
 ALTER TABLE ONLY public.customers_projects
     ADD CONSTRAINT customers_projects_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: demand_block_notifications demand_block_notifications_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.demand_block_notifications
+    ADD CONSTRAINT demand_block_notifications_pkey PRIMARY KEY (id);
 
 
 --
@@ -3942,6 +3989,20 @@ CREATE UNIQUE INDEX index_customers_projects_on_customer_id_and_project_id ON pu
 --
 
 CREATE INDEX index_customers_projects_on_project_id ON public.customers_projects USING btree (project_id);
+
+
+--
+-- Name: index_demand_block_notifications_on_block_state; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_demand_block_notifications_on_block_state ON public.demand_block_notifications USING btree (block_state);
+
+
+--
+-- Name: index_demand_block_notifications_on_demand_block_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_demand_block_notifications_on_demand_block_id ON public.demand_block_notifications USING btree (demand_block_id);
 
 
 --
@@ -5018,6 +5079,14 @@ ALTER TABLE ONLY public.jira_portfolio_unit_configs
 
 
 --
+-- Name: demand_block_notifications fk_rails_37865053c5; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.demand_block_notifications
+    ADD CONSTRAINT fk_rails_37865053c5 FOREIGN KEY (demand_block_id) REFERENCES public.demand_blocks(id);
+
+
+--
 -- Name: score_matrix_questions fk_rails_383aa02a04; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -5743,6 +5812,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200716155407'),
 ('20200716215041'),
 ('20200717214156'),
-('20200721155315');
+('20200721155315'),
+('20200807131518');
 
 
