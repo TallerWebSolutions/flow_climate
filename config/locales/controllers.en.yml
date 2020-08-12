@@ -635,6 +635,7 @@ en:
         title: "Hours Blocked Per Delivery"
       external_dependency:
         title: "External Dependencies"
+      effort_hours_info: "Effort Hours"
   demands:
     new:
       title: "Create Demand"

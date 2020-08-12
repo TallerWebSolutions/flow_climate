@@ -6,7 +6,8 @@ module Flow
                 :financial_ideal, :financial_current, :financial_ideal_slice, :financial_total, :total_financial_value,
                 :hours_ideal, :hours_current, :hours_ideal_slice, :hours_total, :total_hours_value, :remaining_hours,
                 :scope_ideal, :scope_current, :scope_ideal_slice, :scope_total, :total_scope_value, :delivered_demands_count, :remaining_backlog_count,
-                :quality_info, :quality_info_month, :lead_time_info, :throughput_info, :hours_blocked_per_deliver_info
+                :quality_info, :quality_info_month, :lead_time_info, :throughput_info, :hours_blocked_per_deliver_info,
+                :effort_info, :effort_info_month
 
     def initialize(contract, data_interval = 'month')
       @contract = contract
@@ -76,6 +77,10 @@ module Flow
       [{ name: I18n.t('customer.charts.external_dependency.title'), data: @external_dependency_info }]
     end
 
+    def build_effort_info
+      [{ type: 'column', yAxis: 1, name: I18n.t('general.dashboards.hours_delivered'), data: @effort_hours_info_month }, { type: 'spline', name: I18n.t('general.dashboards.hours_delivered_acc'), data: @effort_hours_info }]
+    end
+
     private
 
     def blank_burnup
@@ -95,6 +100,7 @@ module Flow
         add_value_to_throughput_chart(date, demands_delivered_to_date)
         add_value_to_hours_blocked_per_deliver_chart(date, demands_delivered_to_date)
         add_value_to_external_dependency_chart(date, demands_delivered_to_date)
+        add_value_to_effort_hours_info_chart(date, demands_delivered_to_date, demands_delivered_in_month)
       end
     end
 
@@ -181,6 +187,13 @@ module Flow
                                    end
     end
 
+    def add_value_to_effort_hours_info_chart(date, demands_delivered_to_date, demands_delivered_in_month)
+      return if date > @limit_date
+
+      @effort_hours_info << demands_delivered_to_date.map(&:total_effort).flatten.compact.sum.to_f
+      @effort_hours_info_month << demands_delivered_in_month.map(&:total_effort).flatten.compact.sum.to_f
+    end
+
     def build_dates_array(data_interval)
       @dates_array = dates_interval(data_interval, @contract.start_date, @contract.end_date)
     end
@@ -236,6 +249,8 @@ module Flow
       @hours_blocked_per_deliver_info = []
 
       @external_dependency_info = []
+      @effort_hours_info = []
+      @effort_hours_info_month = []
     end
 
     def build_hours_finances_constants
