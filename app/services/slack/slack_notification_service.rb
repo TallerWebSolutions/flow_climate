@@ -103,7 +103,7 @@ module Slack
     def notify_demand_state_changed(stage, demand, team_member)
       slack_configuration = SlackConfiguration.find_by(team: demand.team, info_type: :demand_state_changed, active: true)
 
-      if slack_configuration.blank?
+      if slack_configuration.blank? || slack_configuration.notify_stage?(stage)
         Notifications::DemandTransitionNotification.create(stage: stage, demand: demand)
 
         return

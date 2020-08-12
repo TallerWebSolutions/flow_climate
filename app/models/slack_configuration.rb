@@ -4,16 +4,17 @@
 #
 # Table name: slack_configurations
 #
-#  id                  :bigint           not null, primary key
-#  active              :boolean          default(TRUE)
-#  info_type           :integer          default("average_demand_cost"), not null
-#  notification_hour   :integer
-#  notification_minute :integer          default(0)
-#  room_webhook        :string           not null
-#  weekday_to_notify   :integer          default("all_weekdays"), not null
-#  created_at          :datetime         not null
-#  updated_at          :datetime         not null
-#  team_id             :integer          not null
+#  id                          :bigint           not null, primary key
+#  active                      :boolean          default(TRUE)
+#  info_type                   :integer          default("average_demand_cost"), not null
+#  notification_hour           :integer
+#  notification_minute         :integer
+#  room_webhook                :string           not null
+#  stages_to_notify_transition :integer          is an Array
+#  weekday_to_notify           :integer          default("all_weekdays"), not null
+#  created_at                  :datetime         not null
+#  updated_at                  :datetime         not null
+#  team_id                     :integer          not null
 #
 # Indexes
 #
@@ -40,6 +41,10 @@ class SlackConfiguration < ApplicationRecord
 
   def toggle_active
     update(active: !active?)
+  end
+
+  def notify_stage?(stage)
+    stages_to_notify_transition&.include?(stage.id)
   end
 
   private

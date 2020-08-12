@@ -26,6 +26,16 @@
   </div>
 </div>
 
+<div class="row bottom-spaced-component">
+  <div class="col-xs-12">
+    <h4>Etapas para notificar</h4>
+    <% team.stages.where('stages.order >= 0').order(:order).each do |stage| %>
+      <%= check_box_tag "stage_#{stage.id}", stage.id, false, class: 'form-check-input' %>
+      <%= label_tag stage.name, nil, class: 'check-box-group-label' %>
+    <% end %>
+  </div>
+</div>
+
 <div class="row">
   <div class="col-xs-12">
     <%= form.submit I18n.t('general.buttons.save'), class: 'btn btn-success' %>

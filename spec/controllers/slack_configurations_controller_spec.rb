@@ -85,15 +85,20 @@ RSpec.describe SlackConfigurationsController, type: :controller do
     end
 
     describe 'POST #create' do
+      let(:stage) { Fabricate :stage }
+      let(:other_stage) { Fabricate :stage }
+
       context 'passing valid parameters' do
         it 'creates the new slack config and renders the table' do
-          post :create, params: { company_id: company, team_id: team, slack_configuration: { info_type: :current_week_throughput, room_webhook: 'http://xpto', notification_hour: 4, notification_minute: 0, weekday_to_notify: :monday } }, xhr: true
-          expect(SlackConfiguration.last.room_webhook).to eq 'http://xpto'
-          expect(SlackConfiguration.last.info_type).to eq 'current_week_throughput'
-          expect(SlackConfiguration.last.notification_hour).to eq 4
-          expect(SlackConfiguration.last.notification_minute).to eq 0
-          expect(SlackConfiguration.last.weekday_to_notify).to eq 'monday'
-          expect(assigns(:slack_configurations)).to eq [second_slack_config, first_slack_config, SlackConfiguration.last]
+          post :create, params: { company_id: company, team_id: team, slack_configuration: { info_type: :current_week_throughput, room_webhook: 'http://xpto', notification_hour: 4, notification_minute: 0, weekday_to_notify: :monday, "stage_#{stage.id}" => stage.id, "stage_#{other_stage.id}" => other_stage.id } }, xhr: true
+          config_created = SlackConfiguration.last
+          expect(config_created.room_webhook).to eq 'http://xpto'
+          expect(config_created.info_type).to eq 'current_week_throughput'
+          expect(config_created.notification_hour).to eq 4
+          expect(config_created.notification_minute).to eq 0
+          expect(config_created.weekday_to_notify).to eq 'monday'
+          expect(config_created.stages_to_notify_transition).to match_array [stage.id, other_stage.id]
+          expect(assigns(:slack_configurations)).to eq [second_slack_config, first_slack_config, config_created]
           expect(response).to render_template 'slack_configurations/create_update'
         end
       end
@@ -195,10 +200,12 @@ RSpec.describe SlackConfigurationsController, type: :controller do
 
     describe 'PUT #update' do
       let(:slack_config) { Fabricate :slack_configuration, team: team, active: true }
+      let(:stage) { Fabricate :stage }
+      let(:other_stage) { Fabricate :stage }
 
       context 'passing valid parameters' do
         it 'updates the slack config' do
-          put :update, params: { company_id: company, team_id: team, id: slack_config, slack_configuration: { info_type: :current_week_throughput, room_webhook: 'http://xpto', notification_hour: 4, notification_minute: 0, weekday_to_notify: :monday } }, xhr: true
+          put :update, params: { company_id: company, team_id: team, id: slack_config, slack_configuration: { info_type: :current_week_throughput, room_webhook: 'http://xpto', notification_hour: 4, notification_minute: 0, weekday_to_notify: :monday, "stage_#{stage.id}" => stage.id, "stage_#{other_stage.id}" => other_stage.id } }, xhr: true
 
           expect(assigns(:slack_configurations)).to eq [second_slack_config, first_slack_config, slack_config]
 
@@ -208,6 +215,7 @@ RSpec.describe SlackConfigurationsController, type: :controller do
           expect(slack_config_updated.notification_hour).to eq 4
           expect(slack_config_updated.notification_minute).to eq 0
           expect(slack_config_updated.weekday_to_notify).to eq 'monday'
+          expect(slack_config_updated.stages_to_notify_transition).to match_array [stage.id, other_stage.id]
           expect(response).to render_template 'slack_configurations/create_update'
         end
       end

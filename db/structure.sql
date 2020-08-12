@@ -2310,8 +2310,9 @@ CREATE TABLE public.slack_configurations (
     updated_at timestamp without time zone NOT NULL,
     info_type integer DEFAULT 0 NOT NULL,
     weekday_to_notify integer DEFAULT 0 NOT NULL,
-    notification_minute integer DEFAULT 0,
-    active boolean DEFAULT true
+    notification_minute integer,
+    active boolean DEFAULT true,
+    stages_to_notify_transition integer[]
 );
 
 
@@ -5813,6 +5814,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200716215041'),
 ('20200717214156'),
 ('20200721155315'),
-('20200807131518');
+('20200807131518'),
+('20200812153534');
 
 

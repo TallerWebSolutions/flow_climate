@@ -15,7 +15,7 @@ function searchDemands(companyId, demandsIds, flowStatus, demandType, demandClas
 
     jQuery.ajax({
         url: `/companies/${companyId}/demands/search_demands.js`,
-        type: "GET",
+        type: "POST",
         data: `&demands_ids=${demandsIds}&flow_status=${flowStatus}&demand_type=${demandType}&demand_class_of_service=${demandClassOfService}&search_text=${searchText}&start_date=${startDate}&end_date=${endDate}&search_demand_tags=${searchDemandTags}`
     });
 }
