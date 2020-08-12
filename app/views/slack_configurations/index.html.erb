@@ -13,3 +13,7 @@
 <div id="slack-config-table">
   <%= render 'slack_configurations/slack_config_table', company: @company, team: @team, slack_configurations: @slack_configurations %>
 </div>
+
+<% content_for :javascript do %>
+  <%= javascript_include_tag 'slack_configurations/index' %>
+<% end %>
