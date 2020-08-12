@@ -58,4 +58,9 @@ function buildContractCharts() {
     if (externalDependecyValues.length !== 0) {
         buildLineChart(externalDependecyValues);
     }
+
+    const effortHoursInfoValues = $("#contract-hours-consumed-column-line");
+    if (effortHoursInfoValues.length !== 0) {
+        buildColumnLineChart(effortHoursInfoValues);
+    }
 }

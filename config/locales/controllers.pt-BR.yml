@@ -707,6 +707,7 @@ pt-BR:
         title: "Horas Bloqueadas por Entrega"
       external_dependency:
         title: "Dependências Externas"
+      effort_hours_info: "Horas de Esforço"
   demands:
     new:
       title: "Criar Demanda"

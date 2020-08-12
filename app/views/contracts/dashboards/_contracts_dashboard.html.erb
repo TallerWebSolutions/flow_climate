@@ -157,7 +157,9 @@
            data-decimals="2">
       </div>
   </div>
+</div>
 
+<div class="row">
   <div class="col-xs-6">
     <h4><%= I18n.t('customer.charts.external_dependency.title') %></h4>
 
@@ -172,5 +174,20 @@
            data-series="<%= contracts_flow_information.build_external_dependency_info.to_json %>"
            data-decimals="0">
       </div>
+  </div>
+
+  <div class="col-xs-6">
+    <div id="contract-hours-consumed-column-line"
+         class="flow-chart"
+         data-xcategories="<%= contracts_flow_information.dates_limit_now_array.to_json %>"
+         data-title=""
+         data-ytitle="<%= I18n.t('projects.charts.hours_per_month.ylabel') %>"
+         data-prefix=""
+         data-tooltipsuffix="<%= I18n.t('projects.charts.hours_per_month.ylabel') %>"
+         data-datalabelsuffix=""
+         data-series="<%= contracts_flow_information.build_effort_info.to_json %>"
+         data-stacking="normal"
+         data-decimals="2">
+    </div>
   </div>
 </div>
