@@ -91,4 +91,18 @@ RSpec.describe SlackConfiguration, type: :model do
       it { expect(slack_configuration.reload.active).to be false }
     end
   end
+
+  describe '#notify_stage?' do
+    let(:first_stage) { Fabricate :stage }
+    let(:second_stage) { Fabricate :stage }
+    let(:third_stage) { Fabricate :stage }
+
+    it 'returns if the stage is to be notified' do
+      slack_config = Fabricate :slack_configuration, stages_to_notify_transition: [first_stage.id, third_stage.id]
+
+      expect(slack_config.notify_stage?(first_stage)).to be true
+      expect(slack_config.notify_stage?(second_stage)).to be false
+      expect(slack_config.notify_stage?(third_stage)).to be true
+    end
+  end
 end

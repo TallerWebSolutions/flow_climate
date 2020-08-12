@@ -13,8 +13,8 @@ class SlackConfigurationsController < AuthenticatedController
   end
 
   def create
-    @slack_configuration = SlackConfiguration.new(slack_configuration_params.merge(team: @team))
-
+    read_stages_in_params
+    @slack_configuration = SlackConfiguration.new(slack_configuration_params.merge(team: @team, stages_to_notify_transition: @stage_ids))
     @slack_configurations = @team.slack_configurations.order(:created_at)
 
     if @slack_configuration.save
@@ -31,8 +31,9 @@ class SlackConfigurationsController < AuthenticatedController
 
   def update
     @slack_configurations = @team.slack_configurations.order(:created_at)
+    read_stages_in_params
 
-    if @slack_configuration.update(slack_configuration_params)
+    if @slack_configuration.update(slack_configuration_params.merge(stages_to_notify_transition: @stage_ids))
       respond_to { |format| format.js { render 'slack_configurations/create_update' } }
     else
       respond_to { |format| format.js { render 'slack_configurations/edit' } }
@@ -60,5 +61,13 @@ class SlackConfigurationsController < AuthenticatedController
 
   def assign_team
     @team = Team.find(params[:team_id])
+  end
+
+  def read_stages_in_params
+    @stage_ids = []
+
+    return unless slack_configuration_params[:info_type] == 'demand_state_changed'
+
+    params.each_pair { |key, value| @stage_ids << value if key.starts_with?('stage_') }
   end
 end

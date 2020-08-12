@@ -53,6 +53,10 @@
     margin-right: 100px;
 }
 
+.check-box-group-label {
+    padding-right: 10px;
+}
+
 label.required:after{content: " *"}
 
 tfoot {
