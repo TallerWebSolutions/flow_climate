@@ -30,7 +30,7 @@
   <div class="col-xs-12">
     <h4>Etapas para notificar</h4>
     <% team.stages.where('stages.order >= 0').order(:order).each do |stage| %>
-      <%= check_box_tag "stage_#{stage.id}", stage.id, false, class: 'form-check-input' %>
+      <%= check_box_tag "stage_#{stage.id}", stage.id, slack_configuration.notify_stage?(stage), class: 'form-check-input' %>
       <%= label_tag stage.name, nil, class: 'check-box-group-label' %>
     <% end %>
   </div>

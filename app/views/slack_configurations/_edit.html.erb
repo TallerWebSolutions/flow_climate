@@ -1,3 +1,3 @@
-<%= form_for slack_configuration, url: company_team_slack_configuration_url(company, team, slack_configuration), method: :put, remote: true do |form| %>
+<%= form_for slack_configuration, url: company_team_slack_configuration_url(company, team, slack_configuration), method: :put, id: 'slack-config-form', remote: true do |form| %>
   <%= render 'slack_configurations/form', slack_configuration: slack_configuration, form: form, team: team %>
 <% end %>

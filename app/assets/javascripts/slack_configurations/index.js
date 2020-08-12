@@ -7,12 +7,10 @@ function bindSlackConfigTypeSelect() {
 }
 
 function checkSlackConfigSelect(slackConfigSelectValue) {
-    console.log(slackConfigSelectValue);
-
-    if (slackConfigSelectValue.value === "demand_state_changed") {
+    if (slackConfigSelectValue === "demand_state_changed") {
         $("#stages-to-notify-div").show();
     } else {
-        $("input[type=checkbox]").prop("checked", false);
+        this.parent.reset();
         $("#stages-to-notify-div").hide();
     }
 }

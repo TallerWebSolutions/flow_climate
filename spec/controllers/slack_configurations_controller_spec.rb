@@ -90,10 +90,11 @@ RSpec.describe SlackConfigurationsController, type: :controller do
 
       context 'passing valid parameters' do
         it 'creates the new slack config and renders the table' do
-          post :create, params: { company_id: company, team_id: team, slack_configuration: { info_type: :current_week_throughput, room_webhook: 'http://xpto', notification_hour: 4, notification_minute: 0, weekday_to_notify: :monday, "stage_#{stage.id}" => stage.id, "stage_#{other_stage.id}" => other_stage.id } }, xhr: true
+          post :create, params: { company_id: company, team_id: team, "stage_#{stage.id}" => stage.id, "stage_#{other_stage.id}" => other_stage.id, slack_configuration: { info_type: :demand_state_changed, room_webhook: 'http://xpto', notification_hour: 4, notification_minute: 0, weekday_to_notify: :monday } }, xhr: true
+
           config_created = SlackConfiguration.last
           expect(config_created.room_webhook).to eq 'http://xpto'
-          expect(config_created.info_type).to eq 'current_week_throughput'
+          expect(config_created.info_type).to eq 'demand_state_changed'
           expect(config_created.notification_hour).to eq 4
           expect(config_created.notification_minute).to eq 0
           expect(config_created.weekday_to_notify).to eq 'monday'
@@ -205,13 +206,13 @@ RSpec.describe SlackConfigurationsController, type: :controller do
 
       context 'passing valid parameters' do
         it 'updates the slack config' do
-          put :update, params: { company_id: company, team_id: team, id: slack_config, slack_configuration: { info_type: :current_week_throughput, room_webhook: 'http://xpto', notification_hour: 4, notification_minute: 0, weekday_to_notify: :monday, "stage_#{stage.id}" => stage.id, "stage_#{other_stage.id}" => other_stage.id } }, xhr: true
+          put :update, params: { company_id: company, team_id: team, id: slack_config, "stage_#{stage.id}" => stage.id, "stage_#{other_stage.id}" => other_stage.id, slack_configuration: { info_type: :demand_state_changed, room_webhook: 'http://xpto', notification_hour: 4, notification_minute: 0, weekday_to_notify: :monday } }, xhr: true
 
           expect(assigns(:slack_configurations)).to eq [second_slack_config, first_slack_config, slack_config]
 
           slack_config_updated = slack_config.reload
           expect(slack_config_updated.room_webhook).to eq 'http://xpto'
-          expect(slack_config_updated.info_type).to eq 'current_week_throughput'
+          expect(slack_config_updated.info_type).to eq 'demand_state_changed'
           expect(slack_config_updated.notification_hour).to eq 4
           expect(slack_config_updated.notification_minute).to eq 0
           expect(slack_config_updated.weekday_to_notify).to eq 'monday'

@@ -65,6 +65,9 @@ class SlackConfigurationsController < AuthenticatedController
 
   def read_stages_in_params
     @stage_ids = []
-    params[:slack_configuration].each_pair { |key, value| @stage_ids << value if key.starts_with?('stage_') }
+
+    return unless slack_configuration_params[:info_type] == 'demand_state_changed'
+
+    params.each_pair { |key, value| @stage_ids << value if key.starts_with?('stage_') }
   end
 end
