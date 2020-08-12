@@ -207,7 +207,7 @@ RSpec.describe Slack::SlackNotificationService, type: :service do
         stage = Fabricate :stage, end_point: false
         demand = Fabricate :demand, team: team
         team_member = Fabricate :team_member
-        Fabricate :slack_configuration, team: team, info_type: :demand_state_changed
+        Fabricate :slack_configuration, team: team, info_type: :demand_state_changed, stages_to_notify_transition: [stage.id]
 
         expect_any_instance_of(Slack::Notifier).to receive(:ping).with(/#{team_member.name}/)
 
@@ -220,7 +220,7 @@ RSpec.describe Slack::SlackNotificationService, type: :service do
         stage = Fabricate :stage, end_point: true
         demand = Fabricate :demand, team: team
         team_member = Fabricate :team_member
-        Fabricate :slack_configuration, team: team, info_type: :demand_state_changed
+        Fabricate :slack_configuration, team: team, info_type: :demand_state_changed, stages_to_notify_transition: [stage.id]
 
         expect_any_instance_of(Slack::Notifier).to receive(:ping).with(/moneybag/)
 
