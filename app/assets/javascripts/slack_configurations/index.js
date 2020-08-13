@@ -10,7 +10,6 @@ function checkSlackConfigSelect(slackConfigSelectValue) {
     if (slackConfigSelectValue === "demand_state_changed") {
         $("#stages-to-notify-div").show();
     } else {
-        this.parent.reset();
         $("#stages-to-notify-div").hide();
     }
 }
