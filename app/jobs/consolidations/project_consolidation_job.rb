@@ -34,7 +34,7 @@ module Consolidations
         project_based_montecarlo_durations = Stats::StatisticsService.instance.run_montecarlo(project.remaining_work(end_of_week), project_work_item_flow_information.throughput_array_for_monte_carlo.last(10), 500)
         team_based_montecarlo_durations = compute_team_monte_carlo_weeks(end_of_week, project, team_work_item_flow_information.throughput_per_period.last(20))
 
-        consolidation = ProjectConsolidation.find_or_initialize_by(project: project, consolidation_date: end_of_week)
+        consolidation = Consolidations::ProjectConsolidation.find_or_initialize_by(project: project, consolidation_date: end_of_week)
         consolidation.update(population_start_date: demands.minimum(:created_date),
                              population_end_date: demands.maximum(:end_date),
                              wip_limit: project.max_work_in_progress,
@@ -54,7 +54,7 @@ module Consolidations
 
       finished_time = Time.zone.now
 
-      UserNotifierMailer.async_activity_finished(user.email, user.full_name, ProjectConsolidation.model_name.human.downcase, project.name, started_time, finished_time, project_url).deliver if user.present? && project_url.present?
+      UserNotifierMailer.async_activity_finished(user.email, user.full_name, Consolidations::ProjectConsolidation.model_name.human.downcase, project.name, started_time, finished_time, project_url).deliver if user.present? && project_url.present?
     end
 
     private

@@ -26,8 +26,11 @@
 #
 #  fk_rails_3ff1f4bb7a  (contract_id => contracts.id)
 #
-class ContractConsolidation < ApplicationRecord
-  belongs_to :contract
 
-  validates :contract, :consolidation_date, :operational_risk_value, presence: true
+module Consolidations
+  class ContractConsolidation < ApplicationRecord
+    belongs_to :contract
+
+    validates :contract, :consolidation_date, :operational_risk_value, presence: true
+  end
 end

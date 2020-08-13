@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-Fabricator(:contract_consolidation) do
+Fabricator(:contract_consolidation, from: 'Consolidations::ContractConsolidation') do
   contract
 
   consolidation_date { Time.zone.today }

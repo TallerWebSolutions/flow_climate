@@ -38,7 +38,7 @@ RSpec.describe Consolidations::ProjectConsolidationJob, type: :active_job do
         expect(UserNotifierMailer).not_to(receive(:async_activity_finished))
         described_class.perform_now(first_project)
 
-        expect(ProjectConsolidation.count).to eq 4
+        expect(Consolidations::ProjectConsolidation.count).to eq 4
       end
     end
 
@@ -53,7 +53,7 @@ RSpec.describe Consolidations::ProjectConsolidationJob, type: :active_job do
         expect(UserNotifierMailer).to(receive(:async_activity_finished)).and_return(mail_stubbed)
         described_class.perform_now(first_project, first_user, 'http://foo.com')
 
-        expect(ProjectConsolidation.count).to eq 4
+        expect(Consolidations::ProjectConsolidation.count).to eq 4
       end
     end
   end

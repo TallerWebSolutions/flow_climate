@@ -30,7 +30,7 @@ RSpec.describe Consolidations::ContractConsolidationJob, type: :active_job do
 
         described_class.perform_now(contract)
 
-        new_consolidations = ContractConsolidation.all.order(:consolidation_date)
+        new_consolidations = Consolidations::ContractConsolidation.all.order(:consolidation_date)
         expect(new_consolidations.count).to eq 4
 
         expect(new_consolidations[0].operational_risk_value).to eq 1
@@ -49,7 +49,7 @@ RSpec.describe Consolidations::ContractConsolidationJob, type: :active_job do
 
         described_class.perform_now(contract)
 
-        new_consolidations = ContractConsolidation.all.order(:consolidation_date)
+        new_consolidations = Consolidations::ContractConsolidation.all.order(:consolidation_date)
         expect(new_consolidations.count).to eq 4
 
         expect(new_consolidations[0].operational_risk_value).to eq 1

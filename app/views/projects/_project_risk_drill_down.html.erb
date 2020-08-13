@@ -103,7 +103,7 @@
         </div>
 
       <% else %>
-        <%= render 'layouts/no_data', missing_data: ProjectConsolidation.model_name.human %>
+        <%= render 'layouts/no_data', missing_data: Consolidations::ProjectConsolidation.model_name.human %>
       <% end %>
     </div>
   </div>

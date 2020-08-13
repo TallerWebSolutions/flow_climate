@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-Fabricator(:project_consolidation) do
+Fabricator(:project_consolidation, from: 'Consolidations::ProjectConsolidation') do
   project
   consolidation_date { Time.zone.today }
   demands_finished_ids [1, 2, 5, 7]
