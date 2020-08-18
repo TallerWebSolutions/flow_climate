@@ -2097,7 +2097,9 @@ CREATE TABLE public.replenishing_consolidations (
     customer_happiness numeric,
     max_work_in_progress integer,
     project_throughput_data integer[],
-    throughput_data_stddev integer,
+    team_wip integer,
+    team_throughput_data integer[],
+    team_lead_time numeric,
     team_based_montecarlo_80_percent numeric,
     team_monte_carlo_weeks_std_dev numeric,
     team_monte_carlo_weeks_min numeric,
@@ -3938,6 +3940,13 @@ CREATE INDEX idx_demand_transtions_notifications ON public.demand_transition_not
 
 
 --
+-- Name: idx_replenishing_unique; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_replenishing_unique ON public.replenishing_consolidations USING btree (project_id, consolidation_date);
+
+
+--
 -- Name: idx_transitions_unique; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -5091,6 +5100,14 @@ ALTER TABLE ONLY public.products
 
 ALTER TABLE ONLY public.user_company_roles
     ADD CONSTRAINT fk_rails_27539b2fc9 FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
+-- Name: replenishing_consolidations fk_rails_278fac0d87; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.replenishing_consolidations
+    ADD CONSTRAINT fk_rails_278fac0d87 FOREIGN KEY (project_id) REFERENCES public.projects(id);
 
 
 --

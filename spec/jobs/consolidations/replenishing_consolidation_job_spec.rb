@@ -52,7 +52,6 @@ RSpec.describe Consolidations::ReplenishingConsolidationJob do
         expect(new_consolidations[0].team_monte_carlo_weeks_max).to eq 12
         expect(new_consolidations[0].team_monte_carlo_weeks_min).to eq 8
         expect(new_consolidations[0].team_monte_carlo_weeks_std_dev).to eq 2.08166599946613
-        expect(new_consolidations[0].throughput_data_stddev).to eq 5
         expect(new_consolidations[0].work_in_progress).to eq 7
 
         expect(new_consolidations[1].consolidation_date).to eq Time.zone.today
@@ -71,7 +70,6 @@ RSpec.describe Consolidations::ReplenishingConsolidationJob do
         expect(new_consolidations[1].team_monte_carlo_weeks_max).to eq 10
         expect(new_consolidations[1].team_monte_carlo_weeks_min).to eq 3
         expect(new_consolidations[1].team_monte_carlo_weeks_std_dev).to eq 3.60555127546399
-        expect(new_consolidations[1].throughput_data_stddev).to eq 4
         expect(new_consolidations[1].work_in_progress).to eq 2
       end
     end
@@ -115,7 +113,6 @@ RSpec.describe Consolidations::ReplenishingConsolidationJob do
         expect(new_consolidations[0].team_monte_carlo_weeks_max).to eq nil
         expect(new_consolidations[0].team_monte_carlo_weeks_min).to eq nil
         expect(new_consolidations[0].team_monte_carlo_weeks_std_dev).to eq 0
-        expect(new_consolidations[0].throughput_data_stddev).to eq 0
         expect(new_consolidations[0].work_in_progress).to eq 0
 
         expect(new_consolidations[1].consolidation_date).to eq Time.zone.today
@@ -134,7 +131,6 @@ RSpec.describe Consolidations::ReplenishingConsolidationJob do
         expect(new_consolidations[1].team_monte_carlo_weeks_max).to eq nil
         expect(new_consolidations[1].team_monte_carlo_weeks_min).to eq nil
         expect(new_consolidations[1].team_monte_carlo_weeks_std_dev).to eq 0
-        expect(new_consolidations[1].throughput_data_stddev).to eq 0
         expect(new_consolidations[1].work_in_progress).to eq 0
       end
     end

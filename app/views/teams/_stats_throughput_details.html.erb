@@ -16,14 +16,14 @@
   </thead>
   <tbody>
     <tr>
-      <td><%= number_with_precision(project_hash[:max_work_in_progress], precision: 1) %></td>
-      <td><%= project_hash[:throughput_last_week] %></td>
-      <td><%= "#{project_hash[:throughput_data_size]} (#{project_hash[:throughput_data]})" %></td>
-      <td><%= project_hash[:throughput_data_mode] %></td>
-      <td><%= number_with_precision(project_hash[:throughput_data_stddev], precision: 2) %></td>
-      <td><%= "#{number_with_precision(project_hash[:team_based_montecarlo_80_percent], precision: 2)} (#{number_with_precision(project_hash[:team_monte_carlo_weeks_std_dev], precision: 2)})" %></td>
-      <td><%= "#{project_hash[:team_monte_carlo_weeks_min]} - #{project_hash[:team_monte_carlo_weeks_max]}" %></td>
-      <td><%= number_to_percentage(project_hash[:team_based_odds_to_deadline] * 100, precision: 2) if project_hash[:team_based_odds_to_deadline].present? %></td>
+      <td><%= number_with_precision(project_hash.max_work_in_progress, precision: 1) %></td>
+      <td><%= project_hash.project_throughput_data.last %></td>
+      <td><%= "#{project_hash.project_throughput_data.size} (#{project_hash.project_throughput_data})" %></td>
+      <td><%= project_hash.project_throughput_data %></td>
+      <td><%= number_with_precision(project_hash.project_throughput_data_stddev, precision: 2) %></td>
+      <td><%= "#{number_with_precision(project_hash.team_based_montecarlo_80_percent, precision: 2)} (#{number_with_precision(project_hash.team_monte_carlo_weeks_std_dev, precision: 2)})" %></td>
+      <td><%= "#{project_hash.team_monte_carlo_weeks_min} - #{project_hash.team_monte_carlo_weeks_max}" %></td>
+      <td><%= number_to_percentage(project_hash.team_based_odds_to_deadline * 100, precision: 2) if project_hash.team_based_odds_to_deadline.present? %></td>
     </tr>
   </tbody>
 </table>

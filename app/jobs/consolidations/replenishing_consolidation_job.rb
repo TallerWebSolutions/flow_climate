@@ -24,12 +24,14 @@ module Consolidations
                 qty_selected_last_week: project_hash[:qty_selected_last_week],
                 qty_using_pressure: project_hash[:qty_using_pressure].to_d,
                 relative_flow_pressure: project_hash[:relative_flow_pressure].to_d,
+                team_wip: project_hash[:team_wip],
+                team_throughput_data: project_hash[:four_last_throughputs],
+                team_lead_time: project_hash[:team_lead_time],
                 team_based_montecarlo_80_percent: project_hash[:team_based_montecarlo_80_percent].to_d,
                 team_based_odds_to_deadline: project_hash[:team_based_odds_to_deadline].to_d,
                 team_monte_carlo_weeks_max: project_hash[:team_monte_carlo_weeks_max],
                 team_monte_carlo_weeks_min: project_hash[:team_monte_carlo_weeks_min],
                 team_monte_carlo_weeks_std_dev: project_hash[:team_monte_carlo_weeks_std_dev].to_d,
-                throughput_data_stddev: project_hash[:throughput_data_stddev].to_d,
                 work_in_progress: project_hash[:work_in_progress],
             )
           end

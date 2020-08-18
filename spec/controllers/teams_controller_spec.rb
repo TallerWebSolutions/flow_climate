@@ -324,9 +324,15 @@ RSpec.describe TeamsController, type: :controller do
         include_context 'demands to filters'
 
         it 'returns the data and redirects' do
+          Fabricate :replenishing_consolidation, project: first_project
+          Fabricate :replenishing_consolidation, project: second_project
+          Fabricate :replenishing_consolidation, project: third_project
+          Fabricate :replenishing_consolidation, project: fourth_project
+
           get :replenishing_input, params: { company_id: company, id: team }, xhr: true
 
-          expect(assigns(:replenishing_data)).to be_a ReplenishingData
+          replenishing_data = assigns(:replenishing_data)
+          expect(replenishing_data.map(&:project)).to match_array [first_project, second_project]
         end
       end
 
@@ -334,8 +340,7 @@ RSpec.describe TeamsController, type: :controller do
         before { get :replenishing_input, params: { company_id: company, id: team }, xhr: true }
 
         it 'returns an empty array and redirects' do
-          replenishing_data = assigns(:replenishing_data).project_data_to_replenish
-          expect(replenishing_data).to eq []
+          expect(assigns(:replenishing_data)).to eq []
           expect(response).to render_template 'teams/replenishing_input'
         end
       end

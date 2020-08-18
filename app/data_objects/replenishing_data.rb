@@ -87,8 +87,6 @@ class ReplenishingData
 
     stats_hash[:throughput_data_size] = throughput_grouped_per_week_hash.count
 
-    stats_hash[:throughput_data_stddev] = Stats::StatisticsService.instance.standard_deviation(throughput_grouped_per_week_hash)
-    stats_hash[:throughput_data_mode] = Stats::StatisticsService.instance.mode(throughput_grouped_per_week_hash)
     stats_hash
   end
 

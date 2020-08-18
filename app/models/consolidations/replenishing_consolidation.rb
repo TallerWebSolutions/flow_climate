@@ -18,10 +18,12 @@
 #  relative_flow_pressure           :decimal(, )
 #  team_based_montecarlo_80_percent :decimal(, )
 #  team_based_odds_to_deadline      :decimal(, )
+#  team_lead_time                   :decimal(, )
 #  team_monte_carlo_weeks_max       :decimal(, )
 #  team_monte_carlo_weeks_min       :decimal(, )
 #  team_monte_carlo_weeks_std_dev   :decimal(, )
-#  throughput_data_stddev           :integer
+#  team_throughput_data             :integer          is an Array
+#  team_wip                         :integer
 #  work_in_progress                 :decimal(, )
 #  created_at                       :datetime         not null
 #  updated_at                       :datetime         not null
@@ -29,12 +31,31 @@
 #
 # Indexes
 #
+#  idx_replenishing_unique                                  (project_id,consolidation_date) UNIQUE
 #  index_replenishing_consolidations_on_consolidation_date  (consolidation_date)
 #  index_replenishing_consolidations_on_project_id          (project_id)
+#
+# Foreign Keys
+#
+#  fk_rails_278fac0d87  (project_id => projects.id)
 #
 
 module Consolidations
   class ReplenishingConsolidation < ApplicationRecord
     belongs_to :project
+
+    def average_team_throughput
+      return 0 if team_throughput_data.blank?
+
+      team_throughput_data.sum.to_f / team_throughput_data.count
+    end
+
+    def project_throughput_data_stddev
+      Stats::StatisticsService.instance.standard_deviation(project_throughput_data)
+    end
+
+    def project_throughput_data_mode
+      Stats::StatisticsService.instance.mode(project_throughput_data)
+    end
   end
 end

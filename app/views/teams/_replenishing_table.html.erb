@@ -24,45 +24,45 @@
   </thead>
 
   <tbody>
-    <% projects_to_replenish.each do |project_hash| %>
+    <% projects_to_replenish.each do |replenishing_consolidation| %>
       <tr>
-        <td><%= link_to '+', '#', class: 'toggle-table-details', onclick: "toggleTableDetails(#{project_hash[:id]})" %></td>
+        <td><%= link_to '+', '#', class: 'toggle-table-details', onclick: "toggleTableDetails(#{replenishing_consolidation.project_id})" %></td>
         <td>
-          <%= link_to project_hash[:name], company_project_path(company, project_hash[:id]) %>
-          <i class="fas fa-users" title='<%= project_hash[:customers_names]&.join(' | ') %>'></i>
-          <i class="fas fa-boxes" title='<%= project_hash[:products_names]&.join(' | ') %>'></i>
+          <%= link_to replenishing_consolidation[:name], company_project_path(company, replenishing_consolidation.project_id) %>
+          <i class="fas fa-users" title='<%= replenishing_consolidation.project.customers.map(&:name)&.join(' | ') %>'></i>
+          <i class="fas fa-boxes" title='<%= replenishing_consolidation.project.products.map(&:name)&.join(' | ') %>'></i>
         </td>
-        <td><%= I18n.l(project_hash[:start_date], format: :default) %></td>
-        <td><%= I18n.l(project_hash[:end_date], format: :default) %></td>
-        <td><%= I18n.t('general.days_text', count: project_hash[:aging_today]) %></td>
+        <td><%= I18n.l(replenishing_consolidation.project.start_date, format: :default) %></td>
+        <td><%= I18n.l(replenishing_consolidation.project.end_date, format: :default) %></td>
+        <td><%= I18n.t('general.days_text', count: replenishing_consolidation[:aging_today]) %></td>
         <td>
-          <%= I18n.t('general.weeks_text', count: project_hash[:weeks_to_end_date]) %>
-          <% if project_hash[:project_based_risks_to_deadline].present? %>
-            <i class="fas fa-info-circle" title="<%= I18n.t('general.risk.text', risk_value: number_to_percentage(project_hash[:project_based_risks_to_deadline] * 100, precision: 2)) %>"></i>
+          <%= I18n.t('general.weeks_text', count: replenishing_consolidation[:weeks_to_end_date]) %>
+          <% if replenishing_consolidation.project_based_risks_to_deadline.present? %>
+            <i class="fas fa-info-circle" title="<%= I18n.t('general.risk.text', risk_value: number_to_percentage(replenishing_consolidation.project_based_risks_to_deadline * 100, precision: 2)) %>"></i>
           <% end %>
         </td>
-        <td><%= I18n.t('general.demands_text', count: project_hash[:remaining_backlog]) %></td>
-        <td><%= number_with_precision(project_hash[:flow_pressure], precision: 3) %></td>
-        <td><%= number_to_percentage(project_hash[:relative_flow_pressure], precision: 2) %></td>
-        <td><%= I18n.t('general.demands_text', count: number_with_precision(project_hash[:qty_using_pressure], precision: 1)) %></td>
-        <td><%= I18n.t('general.days_text', count: number_with_precision(project_hash[:leadtime_80] / 1.day, precision: 3)) %></td>
-        <td><%= I18n.t('general.demands_text', count: project_hash[:qty_selected_last_week]) %></td>
-        <td><%= I18n.t('general.demands_text', count: project_hash[:work_in_progress]) %></td>
-        <td><%= I18n.t('general.weeks_text', count: number_with_precision(project_hash[:montecarlo_80_percent], precision: 1)) %></td>
+        <td><%= I18n.t('general.demands_text', count: replenishing_consolidation.project.remaining_backlog) %></td>
+        <td><%= number_with_precision(replenishing_consolidation.flow_pressure, precision: 3) %></td>
+        <td><%= number_to_percentage(replenishing_consolidation.relative_flow_pressure, precision: 2) %></td>
+        <td><%= I18n.t('general.demands_text', count: number_with_precision(replenishing_consolidation.qty_using_pressure, precision: 1)) %></td>
+        <td><%= I18n.t('general.days_text', count: number_with_precision(replenishing_consolidation.leadtime_80 / 1.day, precision: 3)) %></td>
+        <td><%= I18n.t('general.demands_text', count: replenishing_consolidation.qty_selected_last_week) %></td>
+        <td><%= I18n.t('general.demands_text', count: replenishing_consolidation.work_in_progress) %></td>
+        <td><%= I18n.t('general.weeks_text', count: number_with_precision(replenishing_consolidation.montecarlo_80_percent, precision: 1)) %></td>
         <td>
-          <% if project_hash[:customer_happiness] > 2 %>
-            <div class="circle-green" title="<%= number_with_precision(project_hash[:customer_happiness], precision: 2) %>"></div>
-          <% elsif project_hash[:customer_happiness] > 0.8 %>
-            <div class="circle-yellow" title="<%= number_with_precision(project_hash[:customer_happiness], precision: 2) %>"></div>
+          <% if replenishing_consolidation.customer_happiness > 2 %>
+            <div class="circle-green" title="<%= number_with_precision(replenishing_consolidation.customer_happiness, precision: 2) %>"></div>
+          <% elsif replenishing_consolidation[:customer_happiness] > 0.8 %>
+            <div class="circle-yellow" title="<%= number_with_precision(replenishing_consolidation.customer_happiness, precision: 2) %>"></div>
           <% else %>
-            <div class="circle-red" title="<%= number_with_precision(project_hash[:customer_happiness], precision: 2) %>"></div>
+            <div class="circle-red" title="<%= number_with_precision(replenishing_consolidation.customer_happiness, precision: 2) %>"></div>
           <% end %>
         </td>
       </tr>
-      <tr id="<%= project_hash[:id] %>" class="col-table-details">
+      <tr id="<%= replenishing_consolidation.project_id %>" class="col-table-details">
         <td></td>
         <td colspan="12">
-          <%= render 'teams/stats_throughput_details', project_hash: project_hash %>
+          <%= render 'teams/stats_throughput_details', project_hash: replenishing_consolidation %>
         </td>
       </tr>
     <% end %>
