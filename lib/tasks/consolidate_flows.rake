@@ -18,4 +18,9 @@ namespace :statistics do
       end
     end
   end
+
+  desc 'Consolidations for replenishing'
+  task consolidate_replenishing: :environment do
+    Consolidations::ReplenishingConsolidationJob.perform_now
+  end
 end

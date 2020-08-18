@@ -109,8 +109,8 @@ RSpec.describe ReplenishingData, type: :data_objects do
       end
     end
 
-    context 'with no data in project' do
-      it 'returns nil' do
+    context 'with no data in the project' do
+      it 'builds blank data' do
         other_team = Fabricate :team, company: company
         Fabricate :project, company: company, products: [product], customers: [customer], team: other_team, name: 'first_project', status: :executing, start_date: 4.months.ago, end_date: 2.weeks.from_now, max_work_in_progress: 3
 
@@ -123,7 +123,7 @@ RSpec.describe ReplenishingData, type: :data_objects do
     end
 
     context 'with no data' do
-      it 'returns nil' do
+      it 'builds blank data' do
         other_team = Fabricate :team, company: company
 
         replenishing_data = described_class.new(other_team)
