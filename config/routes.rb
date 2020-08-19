@@ -295,7 +295,6 @@ Rails.application.routes.draw do
       collection do
         get :new_direct_link
         post :create_direct_link
-        get 'demands_to_project/(:project_id)', action: :demands_to_project
         get :flow_impacts_tab
       end
     end

@@ -68,9 +68,9 @@ RSpec.describe UserNotifierMailer, type: :mailer do
   end
 
   describe '#notify_new_red_alert' do
-    include_context 'projects to alerts notifications tests'
-
     subject(:mail) { described_class.notify_new_red_alert(first_project, first_risk_config, 'green', 30.0).deliver_now }
+
+    include_context 'projects to alerts notifications tests'
 
     it 'renders the email' do
       expect(mail.subject).to eq I18n.t('projects.red_alert.subject', target_name: first_project.name)
@@ -84,9 +84,9 @@ RSpec.describe UserNotifierMailer, type: :mailer do
   end
 
   describe '#jira_requested_csv' do
-    include_context 'projects to alerts notifications tests'
-
     subject(:mail) { described_class.jira_requested_csv(first_user, 'bla').deliver_now }
+
+    include_context 'projects to alerts notifications tests'
 
     it 'renders the email' do
       expect(mail.subject).to eq I18n.t('exports.jira_requested_csv.subject')

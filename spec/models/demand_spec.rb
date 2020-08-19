@@ -123,6 +123,18 @@ RSpec.describe Demand, type: :model do
       it { expect(described_class.in_wip.map(&:id)).to match_array [second_demand.id, third_demand.id] }
     end
 
+    describe '.in_flow' do
+      let!(:first_demand) { Fabricate :demand, project: project, commitment_date: Time.zone.now, end_date: Time.zone.now }
+      let!(:second_demand) { Fabricate :demand, project: project, commitment_date: Time.zone.now, end_date: nil }
+      let!(:third_demand) { Fabricate :demand, project: project, commitment_date: Time.zone.now, end_date: nil }
+
+      let!(:first_demand_transition) { Fabricate :demand_transition, demand: first_demand }
+      let!(:second_demand_transition) { Fabricate :demand_transition, demand: first_demand }
+      let!(:third_demand_transition) { Fabricate :demand_transition, demand: second_demand }
+
+      it { expect(described_class.in_flow.map(&:id)).to match_array [first_demand.id] }
+    end
+
     describe '.to_dates' do
       let!(:first_demand) { Fabricate :demand, created_date: 3.months.ago, commitment_date: 2.months.ago, end_date: 2.months.ago }
       let!(:second_demand) { Fabricate :demand, created_date: 1.month.ago, commitment_date: 1.month.ago, end_date: 15.days.ago }

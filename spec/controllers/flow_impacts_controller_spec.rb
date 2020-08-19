@@ -38,12 +38,6 @@ RSpec.describe FlowImpactsController, type: :controller do
       it { is_expected.to redirect_to new_user_session_path }
     end
 
-    describe 'GET #demands_to_project' do
-      before { get :demands_to_project, params: { company_id: 'bar', project_id: 'foo' } }
-
-      it { is_expected.to redirect_to new_user_session_path }
-    end
-
     describe 'GET #edit' do
       before { get :edit, params: { company_id: 'bar', id: 'xpto' } }
 
@@ -83,6 +77,11 @@ RSpec.describe FlowImpactsController, type: :controller do
 
     let!(:not_started_demand) { Fabricate :demand, project: project, commitment_date: nil, end_date: nil, external_id: 'ddd' }
     let!(:finished_demand) { Fabricate :demand, project: project, commitment_date: 1.day.ago, end_date: Time.zone.today, external_id: 'eee' }
+
+    let!(:first_demand_transition) { Fabricate :demand_transition, demand: demand }
+    let!(:second_demand_transition) { Fabricate :demand_transition, demand: demand }
+    let!(:third_demand_transition) { Fabricate :demand_transition, demand: other_demand }
+    let!(:fourth_demand_transition) { Fabricate :demand_transition, demand: other_demand }
 
     describe 'GET #new' do
       context 'passing valid parameters' do
@@ -302,42 +301,6 @@ RSpec.describe FlowImpactsController, type: :controller do
             let(:not_permitted_company) { Fabricate :company }
 
             before { get :flow_impacts_tab, params: { company_id: not_permitted_company } }
-
-            it { expect(response).to have_http_status :not_found }
-          end
-        end
-      end
-    end
-
-    describe 'GET #demands_to_project' do
-      context 'passing valid parameters' do
-        it 'assign the instance variable and renders the template' do
-          get :demands_to_project, params: { company_id: company, project_id: project }, xhr: true
-          expect(response).to render_template 'flow_impacts/demands_to_project'
-          expect(assigns(:demands_to_project)).to eq [other_demand, demand]
-        end
-      end
-
-      context 'passing invalid' do
-        context 'company' do
-          context 'not found' do
-            before { get :demands_to_project, params: { company_id: 'foo', project_id: project } }
-
-            it { expect(response).to have_http_status :not_found }
-          end
-
-          context 'not permitted' do
-            let(:not_permitted_company) { Fabricate :company }
-
-            before { get :demands_to_project, params: { company_id: not_permitted_company, project_id: project } }
-
-            it { expect(response).to have_http_status :not_found }
-          end
-        end
-
-        context 'project' do
-          context 'not found' do
-            before { get :demands_to_project, params: { company_id: company, project_id: 'foo' } }
 
             it { expect(response).to have_http_status :not_found }
           end
