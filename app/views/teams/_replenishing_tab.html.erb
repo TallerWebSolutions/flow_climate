@@ -3,7 +3,7 @@
     <div class="col-xs-3 summary-card-frame">
       <div class="summary-card-content">
         <p class="summary-card-title"><%= I18n.t('projects.replenishing.last_four_weeks_throughput') %></p>
-        <p class="summary-card-value"><%= projects_to_replenish.first.team_throughput_data&.join(' | ') %></p>
+        <p class="summary-card-value"><%= projects_to_replenish.last.team_throughput_data&.join(' | ') %></p>
       </div>
     </div>
     <div class="col-xs-3 summary-card-frame">

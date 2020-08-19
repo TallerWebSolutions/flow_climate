@@ -10,7 +10,7 @@
       <th><%= 'MC - Min - Max' %></th>
       <th>
         <%= 'Chances da Data - Dados do Time' %>
-        <i class="far fa-question-circle" title="<%= "O sistema usa o WiP configurado no projeto para descobrir o quanto o projeto ocupa no WiP do time. Então o sistema pega esse share e aplica no throughput do time. Esta informação é usada para computar a projeção de monte carlo." %>"></i>
+        <i class="far fa-question-circle" title=" <%= "O sistema usa o WiP configurado no projeto para descobrir o quanto o projeto ocupa no WiP do time. Então o sistema pega esse share e aplica no throughput do time. Esta informação é usada para computar a projeção de monte carlo." %>"></i>
       </th>
     </tr>
   </thead>
@@ -18,8 +18,8 @@
     <tr>
       <td><%= number_with_precision(project_hash.max_work_in_progress, precision: 1) %></td>
       <td><%= project_hash.project_throughput_data.last %></td>
-      <td><%= "#{project_hash.project_throughput_data.size} (#{project_hash.project_throughput_data})" %></td>
-      <td><%= project_hash.project_throughput_data %></td>
+      <td><%= "#{project_hash.project_throughput_data.size} (#{project_hash.project_throughput_data.join(' | ')})" %></td>
+      <td><%= project_hash.project_throughput_data_mode %></td>
       <td><%= number_with_precision(project_hash.project_throughput_data_stddev, precision: 2) %></td>
       <td><%= "#{number_with_precision(project_hash.team_based_montecarlo_80_percent, precision: 2)} (#{number_with_precision(project_hash.team_monte_carlo_weeks_std_dev, precision: 2)})" %></td>
       <td><%= "#{project_hash.team_monte_carlo_weeks_min} - #{project_hash.team_monte_carlo_weeks_max}" %></td>

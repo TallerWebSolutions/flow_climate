@@ -127,5 +127,19 @@ RSpec.describe ReplenishingData, type: :data_objects do
         expect(project_data_to_replenish[0]).to be_nil
       end
     end
+
+    context 'with only finished projects' do
+      it 'builds blank data' do
+        other_team = Fabricate :team, company: company
+        project = Fabricate :project, company: company, products: [product], customers: [customer], team: other_team, name: 'first_project', status: :finished, start_date: 4.months.ago, end_date: 2.weeks.from_now, max_work_in_progress: 3
+        Fabricate :demand, product: product, team: other_team, project: project, created_date: 4.months.ago, commitment_date: 3.months.ago, end_date: 2.months.ago
+
+        replenishing_data = described_class.new(other_team)
+
+        expect(replenishing_data.summary_infos[:four_last_throughputs]).to be_nil
+        project_data_to_replenish = replenishing_data.project_data_to_replenish
+        expect(project_data_to_replenish[0]).to be_nil
+      end
+    end
   end
 end

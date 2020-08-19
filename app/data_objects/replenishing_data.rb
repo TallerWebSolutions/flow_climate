@@ -25,8 +25,8 @@ class ReplenishingData
   end
 
   def build_summary_infos
-    if @team_projects.present? && @team_demands.present?
-      th_for_team_per_week_hash = build_throughput_per_period_array(@team_demands, @start_date, @end_date, @team_projects.map(&:initial_scope).compact.sum)
+    if @running_projects.present? && @team_demands.present?
+      th_for_team_per_week_hash = build_throughput_per_period_array(@team_demands, @start_date, @end_date, @running_projects.map(&:initial_scope).compact.sum)
       build_basic_summary_infos(th_for_team_per_week_hash)
       @summary_infos[:average_throughput] = @summary_infos[:four_last_throughputs].sum / @summary_infos[:four_last_throughputs].count
     else

@@ -28,15 +28,16 @@
       <tr>
         <td><%= link_to '+', '#', class: 'toggle-table-details', onclick: "toggleTableDetails(#{replenishing_consolidation.project_id})" %></td>
         <td>
-          <%= link_to replenishing_consolidation[:name], company_project_path(company, replenishing_consolidation.project_id) %>
+          <%= link_to replenishing_consolidation.project.name, company_project_path(company, replenishing_consolidation.project_id) %>
           <i class="fas fa-users" title='<%= replenishing_consolidation.project.customers.map(&:name)&.join(' | ') %>'></i>
           <i class="fas fa-boxes" title='<%= replenishing_consolidation.project.products.map(&:name)&.join(' | ') %>'></i>
+          <i class="far fa-calendar-alt" title="<%= "#{I18n.t('general.last_update.text', last_update: I18n.l(replenishing_consolidation.consolidation_date, format: :short))}" %>"></i>
         </td>
         <td><%= I18n.l(replenishing_consolidation.project.start_date, format: :default) %></td>
         <td><%= I18n.l(replenishing_consolidation.project.end_date, format: :default) %></td>
-        <td><%= I18n.t('general.days_text', count: replenishing_consolidation[:aging_today]) %></td>
+        <td><%= I18n.t('general.days_text', count: replenishing_consolidation.project.aging_today) %></td>
         <td>
-          <%= I18n.t('general.weeks_text', count: replenishing_consolidation[:weeks_to_end_date]) %>
+          <%= I18n.t('general.weeks_text', count: replenishing_consolidation.project.remaining_weeks) %>
           <% if replenishing_consolidation.project_based_risks_to_deadline.present? %>
             <i class="fas fa-info-circle" title="<%= I18n.t('general.risk.text', risk_value: number_to_percentage(replenishing_consolidation.project_based_risks_to_deadline * 100, precision: 2)) %>"></i>
           <% end %>
