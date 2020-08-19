@@ -280,7 +280,7 @@ RSpec.describe Demand, type: :model do
         let!(:item_assignment) { Fabricate :item_assignment, demand: demand, membership: membership, start_time: Time.zone.parse('2018-03-05 22:00'), finish_time: nil }
 
         it 'changes the effort informations' do
-          demand.update_effort!
+          demand.update_effort!(false)
           expect(demand.effort_upstream.to_f).to eq 6.6
           expect(demand.effort_downstream.to_f).to eq 4.14
         end
@@ -298,7 +298,7 @@ RSpec.describe Demand, type: :model do
         let!(:item_assignment) { Fabricate :item_assignment, demand: demand, membership: membership, start_time: Time.zone.parse('2018-03-05 22:00'), finish_time: nil }
 
         it 'changes the effort informations' do
-          demand.update_effort!
+          demand.update_effort!(false)
           expect(demand.effort_upstream.to_f).to eq 8.8
           expect(demand.effort_downstream.to_f).to eq 0.0
         end
@@ -309,7 +309,7 @@ RSpec.describe Demand, type: :model do
         let!(:demand_transition) { Fabricate :demand_transition, demand: demand, last_time_in: Time.zone.parse('2018-03-05 22:00'), last_time_out: Time.zone.parse('2018-03-06 13:00') }
 
         it 'does not change the effort informations' do
-          demand.update_effort!
+          demand.update_effort!(false)
           expect(demand.effort_upstream.to_f).to eq 0.0
           expect(demand.effort_downstream.to_f).to eq 0.0
         end
@@ -330,7 +330,7 @@ RSpec.describe Demand, type: :model do
         let!(:other_downstream_item_assignment) { Fabricate :item_assignment, demand: demand, membership: other_membership, start_time: Time.zone.parse('2018-03-06 13:00'), finish_time: nil }
 
         it 'changes the effort informations' do
-          demand.update_effort!
+          demand.update_effort!(false)
           expect(demand.effort_upstream.to_f).to eq 10.56
           expect(demand.effort_downstream.to_f).to eq 2.76
         end
@@ -346,7 +346,7 @@ RSpec.describe Demand, type: :model do
         let!(:item_assignment) { Fabricate :item_assignment, demand: demand, membership: membership, start_time: Time.zone.parse('2018-03-05 22:00'), finish_time: nil }
 
         it 'changes the effort informations' do
-          demand.update_effort!
+          demand.update_effort!(false)
           expect(demand.effort_upstream.to_f).to eq 12.1
           expect(demand.effort_downstream.to_f).to eq 0.0
         end
@@ -356,7 +356,7 @@ RSpec.describe Demand, type: :model do
         let!(:demand_transition) { Fabricate :demand_transition, demand: demand, last_time_in: Time.zone.parse('2018-03-05 22:00'), last_time_out: Time.zone.parse('2018-03-06 13:00') }
 
         it 'does not change the effort informations' do
-          demand.update_effort!
+          demand.update_effort!(false)
           expect(demand.effort_upstream.to_f).to eq 0.0
           expect(demand.effort_downstream.to_f).to eq 0.0
         end
@@ -367,7 +367,7 @@ RSpec.describe Demand, type: :model do
         let!(:demand_transition) { Fabricate :demand_transition, demand: demand, last_time_in: Time.zone.parse('2018-03-05 22:00'), last_time_out: Time.zone.parse('2018-03-06 13:00') }
 
         it 'does not change the effort informations' do
-          demand.update_effort!
+          demand.update_effort!(false)
           expect(demand.effort_upstream.to_f).to eq 30.0
           expect(demand.effort_downstream.to_f).to eq 23.0
         end
@@ -381,7 +381,7 @@ RSpec.describe Demand, type: :model do
         let!(:item_assignment) { Fabricate :item_assignment, demand: demand, start_time: Time.zone.parse('2018-03-05 22:00'), finish_time: nil }
 
         it 'changes the effort based on the bug configuration' do
-          demand.update_effort!
+          demand.update_effort!(false)
           expect(demand.effort_upstream.to_f).to eq 14.52
           expect(demand.effort_downstream.to_f).to eq 7.866
         end

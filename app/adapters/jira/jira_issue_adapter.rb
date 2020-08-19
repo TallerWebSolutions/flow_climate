@@ -18,7 +18,7 @@ module Jira
 
       define_contract(demand, jira_account, jira_issue_attrs(jira_issue))
 
-      demand.update_effort!
+      demand.update_effort!(false)
     end
 
     private

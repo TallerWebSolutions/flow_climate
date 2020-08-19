@@ -166,7 +166,7 @@ class Demand < ApplicationRecord
     memberships.includes(:item_assignments).where(item_assignments: { finish_time: nil }).uniq
   end
 
-  def update_effort!(update_manual_effort: false)
+  def update_effort!(update_manual_effort)
     return if manual_effort? && !update_manual_effort
 
     update(effort_downstream: compute_effort_downstream, effort_upstream: compute_effort_upstream)
