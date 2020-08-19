@@ -11,13 +11,7 @@ RSpec.describe FinancialInformation, type: :model do
     it { is_expected.to validate_presence_of :expenses_total }
   end
 
-  context 'scopes' do
-    before { travel_to Date.new(2018, 8, 31) }
-
-    after { travel_back }
-
-    pending '.for_month'
-  end
+  pending '.for_month'
 
   describe '#financial_result' do
     let(:finances) { Fabricate :financial_information, income_total: 20.4, expenses_total: 12.2 }

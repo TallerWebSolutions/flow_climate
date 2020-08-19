@@ -294,3 +294,6 @@ RSpec/AnyInstance:
 
 RSpec/ScatteredSetup:
   Enabled: false
+
+RSpec/MultipleMemoizedHelpers:
+  Enabled: false
