@@ -179,7 +179,7 @@ module Slack
         block_detail = { "type": 'section', "text": { "type": 'mrkdwn', "text": "*Motivo:* #{demand_block.block_reason}" } }
       else
         message_title =  { "type": 'section', "text": { "type": 'mrkdwn', "text": ":tada: :tada: #{demand_block.unblocker.name} desbloqueou a <#{demand_url}|#{demand_block.demand.external_id}> em _#{demand_block.demand.stage_at(demand_block.block_time)&.name || 'sem etapa'}_ as #{I18n.l(demand_block.unblock_time, format: :short)}" } }
-        block_detail = { "type": 'section', "text": { "type": 'mrkdwn', "text": "*Tipo:* #{I18n.t("activerecord.attributes.demand_block.enums.block_type.#{demand_block.block_type}")}" } }
+        block_detail = { "type": 'section', "text": { "type": 'mrkdwn', "text": "*Tipo:* #{I18n.t("activerecord.attributes.demand_block.enums.block_type.#{demand_block.block_type}")} - :alarm_clock: #{time_distance_in_words(demand_block.reload.total_blocked_time)}" } }
       end
 
       divider_block = { "type": 'divider' }

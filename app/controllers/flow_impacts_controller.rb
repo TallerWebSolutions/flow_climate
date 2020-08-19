@@ -7,7 +7,7 @@ class FlowImpactsController < AuthenticatedController
 
   def new
     @flow_impact = FlowImpact.new(project: @project, impact_date: Time.zone.now)
-    @demands_for_impact_form = @project.demands.in_wip.order(:external_id)
+    @demands_for_impact_form = @project.demands.in_flow.order(:external_id)
     assign_flow_impacts_list
     respond_to { |format| format.js { render 'flow_impacts/new' } }
   end
@@ -16,7 +16,7 @@ class FlowImpactsController < AuthenticatedController
     @flow_impact = FlowImpact.new(flow_impact_params.merge(project: @project, user: current_user))
     @flow_impact.save
     assign_flow_impacts_list
-    @demands_for_impact_form = @project.demands.in_wip
+    @demands_for_impact_form = @project.demands.in_flow
     respond_to { |format| format.js { render 'flow_impacts/create' } }
   end
 
@@ -49,13 +49,6 @@ class FlowImpactsController < AuthenticatedController
     redirect_to new_direct_link_company_flow_impacts_path(@company)
   end
 
-  def demands_to_project
-    project = @company.projects.find(params[:project_id])
-    @demands_to_project = project.demands.in_wip.order(:external_id)
-
-    respond_to { |format| format.js { render 'flow_impacts/demands_to_project' } }
-  end
-
   def edit
     assign_flow_impacts_list
     @demands_for_impact_form = @flow_impact.project.demands.kept.order(:external_id)
@@ -64,7 +57,7 @@ class FlowImpactsController < AuthenticatedController
 
   def update
     @flow_impact.update(flow_impact_params)
-    @demands_for_impact_form = @flow_impact.project.demands.in_wip
+    @demands_for_impact_form = @flow_impact.project.demands.in_flow
     assign_flow_impacts_list
     respond_to { |format| format.js { render 'flow_impacts/update' } }
   end

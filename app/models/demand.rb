@@ -106,6 +106,7 @@ class Demand < ApplicationRecord
   scope :finished_after_date, ->(limit_date) { finished.where('demands.end_date >= :limit_date', limit_date: limit_date) }
   scope :not_finished, -> { kept.where('end_date IS NULL') }
   scope :in_wip, -> { kept.where('demands.commitment_date IS NOT NULL AND demands.end_date IS NULL') }
+  scope :in_flow, -> { kept.joins(:demand_transitions).where('end_date IS NULL').group('demands.id').having('COUNT(demand_transitions.id) > 1') }
   scope :to_dates, ->(start_date, end_date) { where('(demands.end_date IS NOT NULL AND demands.end_date BETWEEN :start_date AND :end_date) OR (demands.commitment_date IS NOT NULL AND demands.commitment_date BETWEEN :start_date AND :end_date) OR (demands.created_date BETWEEN :start_date AND :end_date)', start_date: start_date.beginning_of_day, end_date: end_date.end_of_day) }
   scope :to_end_dates, ->(start_date, end_date) { where('demands.end_date BETWEEN :start_date AND :end_date', start_date: start_date.beginning_of_day, end_date: end_date.end_of_day) }
   scope :dates_inconsistent_to_project, ->(project) { kept.where('demands.commitment_date < :start_date OR demands.end_date > :end_date', start_date: project.start_date, end_date: project.end_date.end_of_day) }
