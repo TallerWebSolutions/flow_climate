@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe ProjectConsolidation, type: :model do
+RSpec.describe Consolidations::ProjectConsolidation, type: :model do
   context 'associations' do
     it { is_expected.to belong_to :project }
   end

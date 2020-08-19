@@ -2079,6 +2079,57 @@ ALTER SEQUENCE public.projects_id_seq OWNED BY public.projects.id;
 
 
 --
+-- Name: replenishing_consolidations; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.replenishing_consolidations (
+    id bigint NOT NULL,
+    project_id integer NOT NULL,
+    consolidation_date date NOT NULL,
+    project_based_risks_to_deadline numeric,
+    flow_pressure numeric,
+    relative_flow_pressure numeric,
+    qty_using_pressure numeric,
+    leadtime_80 numeric,
+    qty_selected_last_week numeric,
+    work_in_progress numeric,
+    montecarlo_80_percent numeric,
+    customer_happiness numeric,
+    max_work_in_progress integer,
+    project_throughput_data integer[],
+    team_wip integer,
+    team_throughput_data integer[],
+    team_lead_time numeric,
+    team_based_montecarlo_80_percent numeric,
+    team_monte_carlo_weeks_std_dev numeric,
+    team_monte_carlo_weeks_min numeric,
+    team_monte_carlo_weeks_max numeric,
+    team_based_odds_to_deadline numeric,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: replenishing_consolidations_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.replenishing_consolidations_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: replenishing_consolidations_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.replenishing_consolidations_id_seq OWNED BY public.replenishing_consolidations.id;
+
+
+--
 -- Name: risk_review_action_items; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -3056,6 +3107,13 @@ ALTER TABLE ONLY public.projects ALTER COLUMN id SET DEFAULT nextval('public.pro
 
 
 --
+-- Name: replenishing_consolidations id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.replenishing_consolidations ALTER COLUMN id SET DEFAULT nextval('public.replenishing_consolidations_id_seq'::regclass);
+
+
+--
 -- Name: risk_review_action_items id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -3637,6 +3695,14 @@ ALTER TABLE ONLY public.projects
 
 
 --
+-- Name: replenishing_consolidations replenishing_consolidations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.replenishing_consolidations
+    ADD CONSTRAINT replenishing_consolidations_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: risk_review_action_items risk_review_action_items_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -3871,6 +3937,13 @@ CREATE UNIQUE INDEX idx_demand_score_answers_unique ON public.score_matrix_answe
 --
 
 CREATE INDEX idx_demand_transtions_notifications ON public.demand_transition_notifications USING btree (demand_id, stage_id);
+
+
+--
+-- Name: idx_replenishing_unique; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_replenishing_unique ON public.replenishing_consolidations USING btree (project_id, consolidation_date);
 
 
 --
@@ -4431,6 +4504,20 @@ CREATE INDEX index_project_risk_alerts_on_project_risk_config_id ON public.proje
 --
 
 CREATE UNIQUE INDEX index_projects_on_company_id_and_name ON public.projects USING btree (company_id, name);
+
+
+--
+-- Name: index_replenishing_consolidations_on_consolidation_date; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_replenishing_consolidations_on_consolidation_date ON public.replenishing_consolidations USING btree (consolidation_date);
+
+
+--
+-- Name: index_replenishing_consolidations_on_project_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_replenishing_consolidations_on_project_id ON public.replenishing_consolidations USING btree (project_id);
 
 
 --
@@ -5013,6 +5100,14 @@ ALTER TABLE ONLY public.products
 
 ALTER TABLE ONLY public.user_company_roles
     ADD CONSTRAINT fk_rails_27539b2fc9 FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
+-- Name: replenishing_consolidations fk_rails_278fac0d87; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.replenishing_consolidations
+    ADD CONSTRAINT fk_rails_278fac0d87 FOREIGN KEY (project_id) REFERENCES public.projects(id);
 
 
 --
@@ -5815,6 +5910,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200717214156'),
 ('20200721155315'),
 ('20200807131518'),
-('20200812153534');
+('20200812153534'),
+('20200813131313');
 
 

@@ -27,7 +27,7 @@ module Consolidations
                                     0
                                   end
 
-          consolidation = ContractConsolidation.find_or_initialize_by(contract: contract, consolidation_date: end_of_month)
+          consolidation = Consolidations::ContractConsolidation.find_or_initialize_by(contract: contract, consolidation_date: end_of_month)
           consolidation.update(operational_risk_value: risk_to_date,
                                min_monte_carlo_weeks: contract_based_montecarlo_durations.min || 0,
                                max_monte_carlo_weeks: contract_based_montecarlo_durations.max || 0,
@@ -35,7 +35,7 @@ module Consolidations
                                real_hours_per_demand: real_hours_per_demand,
                                estimated_hours_per_demand: contract.hours_per_demand_to_date(start_date))
         else
-          consolidation = ContractConsolidation.find_or_initialize_by(contract: contract, consolidation_date: end_of_month)
+          consolidation = Consolidations::ContractConsolidation.find_or_initialize_by(contract: contract, consolidation_date: end_of_month)
           consolidation.update(operational_risk_value: 1,
                                min_monte_carlo_weeks: 0,
                                max_monte_carlo_weeks: 0,

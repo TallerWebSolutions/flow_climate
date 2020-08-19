@@ -37,7 +37,7 @@ class Contract < ApplicationRecord
   belongs_to :customer
   belongs_to :product
 
-  has_many :contract_consolidations, dependent: :destroy
+  has_many :contract_consolidations, dependent: :destroy, class_name: 'Consolidations::ContractConsolidation'
   has_many :demands, dependent: :nullify
   has_many :contract_estimation_change_histories, dependent: :destroy
 

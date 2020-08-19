@@ -57,8 +57,6 @@ RSpec.describe ReplenishingData, type: :data_objects do
           expect(project_data_to_replenish[0][:throughput_last_week]).to eq 7
           expect(project_data_to_replenish[0][:customer_happiness]).to be_within(0.05).of(0.04)
           expect(project_data_to_replenish[0][:max_work_in_progress]).to eq 3
-          expect(project_data_to_replenish[0][:throughput_data_mode]).to eq 0
-          expect(project_data_to_replenish[0][:throughput_data_stddev]).to eq 1.6999134926086508
           expect(project_data_to_replenish[0][:throughput_data_size]).to eq 17
           expect(project_data_to_replenish[0][:customers_names]).to match_array first_project.customers.map(&:name)
           expect(project_data_to_replenish[0][:products_names]).to match_array first_project.products.map(&:name)
@@ -79,8 +77,6 @@ RSpec.describe ReplenishingData, type: :data_objects do
           expect(project_data_to_replenish[1][:throughput_last_week]).to eq 2
           expect(project_data_to_replenish[1][:customer_happiness]).to be_within(0.05).of(0.01)
           expect(project_data_to_replenish[1][:max_work_in_progress]).to eq 2
-          expect(project_data_to_replenish[1][:throughput_data_mode]).to eq 0
-          expect(project_data_to_replenish[1][:throughput_data_stddev]).to eq 0.6666666666666666
           expect(project_data_to_replenish[1][:throughput_data_size]).to eq 9
           expect(project_data_to_replenish[1][:customers_names]).to match_array second_project.customers.map(&:name)
           expect(project_data_to_replenish[1][:products_names]).to match_array second_project.products.map(&:name)
@@ -100,8 +96,6 @@ RSpec.describe ReplenishingData, type: :data_objects do
           expect(project_data_to_replenish[2][:montecarlo_80_percent]).to be_within(20).of(130)
           expect(project_data_to_replenish[2][:throughput_last_week]).to eq 1
           expect(project_data_to_replenish[2][:max_work_in_progress]).to eq 5
-          expect(project_data_to_replenish[2][:throughput_data_mode]).to eq 0
-          expect(project_data_to_replenish[2][:throughput_data_stddev]).to eq 0.5
           expect(project_data_to_replenish[2][:throughput_data_size]).to eq 4
           expect(project_data_to_replenish[2][:customers_names]).to match_array third_project.customers.map(&:name)
           expect(project_data_to_replenish[2][:products_names]).to match_array third_project.products.map(&:name)
@@ -109,8 +103,8 @@ RSpec.describe ReplenishingData, type: :data_objects do
       end
     end
 
-    context 'with no data in project' do
-      it 'returns nil' do
+    context 'with no data in the project' do
+      it 'builds blank data' do
         other_team = Fabricate :team, company: company
         Fabricate :project, company: company, products: [product], customers: [customer], team: other_team, name: 'first_project', status: :executing, start_date: 4.months.ago, end_date: 2.weeks.from_now, max_work_in_progress: 3
 
@@ -123,8 +117,22 @@ RSpec.describe ReplenishingData, type: :data_objects do
     end
 
     context 'with no data' do
-      it 'returns nil' do
+      it 'builds blank data' do
         other_team = Fabricate :team, company: company
+
+        replenishing_data = described_class.new(other_team)
+
+        expect(replenishing_data.summary_infos[:four_last_throughputs]).to be_nil
+        project_data_to_replenish = replenishing_data.project_data_to_replenish
+        expect(project_data_to_replenish[0]).to be_nil
+      end
+    end
+
+    context 'with only finished projects' do
+      it 'builds blank data' do
+        other_team = Fabricate :team, company: company
+        project = Fabricate :project, company: company, products: [product], customers: [customer], team: other_team, name: 'first_project', status: :finished, start_date: 4.months.ago, end_date: 2.weeks.from_now, max_work_in_progress: 3
+        Fabricate :demand, product: product, team: other_team, project: project, created_date: 4.months.ago, commitment_date: 3.months.ago, end_date: 2.months.ago
 
         replenishing_data = described_class.new(other_team)
 

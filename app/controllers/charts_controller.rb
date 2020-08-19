@@ -35,7 +35,7 @@ class ChartsController < AuthenticatedController
       @x_axis = project_statistics_chart_adapter.x_axis
       @project_statistics_data = ProjectStatisticsData.new(project_statistics_chart_adapter, @leadtime_confidence)
       @portfolio_statistics_data = PortfolioStatisticsData.new(portfolio_statistics_chart_adapter)
-      project_consolidations = ProjectConsolidation.where(project: @projects.map(&:id)).order(:consolidation_date)
+      project_consolidations = Consolidations::ProjectConsolidation.where(project: @projects.map(&:id)).order(:consolidation_date)
       @projects_consolidations_charts_adapter = Highchart::ProjectsConsolidationsChartsAdapter.new(project_consolidations, @start_date, @end_date)
     end
 
