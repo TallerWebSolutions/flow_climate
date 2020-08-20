@@ -367,7 +367,7 @@ RSpec.describe DemandTransition, type: :model do
     context 'when there is no last_time_out' do
       let(:demand_transition) { Fabricate :demand_transition, stage: stage, demand: demand, last_time_in: Time.zone.local(2018, 3, 5, 5, 9, 58), last_time_out: nil }
 
-      it { expect(demand_transition.time_blocked_in_transition).to eq 0 }
+      it { expect(demand_transition.time_blocked_in_transition).to eq 122_554.0 }
     end
 
     context 'when there is no blocks' do
