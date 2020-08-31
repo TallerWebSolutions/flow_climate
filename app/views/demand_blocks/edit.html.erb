@@ -1,0 +1,21 @@
+<div class="row">
+  <div class="col-xs-12">
+    <ul class="breadcrumb">
+      <li><%= link_to I18n.t('general.home.title'), root_path %></li>
+      <li><%= link_to @company.abbreviation&.upcase, company_path(@company) %></li>
+      <li><%= link_to @demand.project.name, company_project_path(@company, @demand.project) %></li>
+      <li><%= link_to @demand.external_id, company_demand_path(@company, @demand) %></li>
+      <li><%= I18n.t('demand_blocks.edit.title') %></li>
+    </ul>
+  </div>
+</div>
+
+<%= form_for @demand_block, url: company_project_demand_demand_block_path(@company, @project, @demand, @demand_block), method: :put, class: 'form' do |f| %>
+  <%= render 'demand_blocks/form', f: f, demand_block: @demand_block %>
+
+  <div class="row">
+    <div class="col-xs-12">
+      <%= f.submit I18n.t('general.buttons.save'), class: 'btn btn-success' %>
+    </div>
+  </div>
+<% end %>

@@ -1,17 +1,22 @@
 <div class="standard-form">
   <div class="row">
-    <div class='col-xs-4 form-group'>
+    <div class='col-xs-3 form-group'>
       <%= f.label :start_date, class: 'control-label' %>
       <%= f.date_field :start_date, class: 'form-control' %>
     </div>
-    <div class='col-xs-4 form-group'>
+    <div class='col-xs-3 form-group'>
       <%= f.label :end_date, class: 'control-label' %>
       <%= f.date_field :end_date, class: 'form-control' %>
     </div>
 
-    <div class='col-xs-4 form-group %>'>
+    <div class='col-xs-3 form-group %>'>
       <%= f.label :user_role, class: 'control-label' %>
       <%= f.select :user_role, UserCompanyRole.user_roles.map { |key, _value| [I18n.t("activerecord.attributes.user_company_role.enums.user_role.#{key}"), key] }, { selected: user_company_role.user_role }, class: 'form-control' %>
+    </div>
+
+    <div class='col-xs-3 form-group %>'>
+      <%= f.label :slack_user, class: 'control-label' %>
+      <%= f.text_field :slack_user, class: 'form-control' %>
     </div>
   </div>
 

@@ -115,4 +115,8 @@ class User < ApplicationRecord
   def managing_company?(company)
     user_company_roles.find_by(company: company).user_role_before_type_cast.positive?
   end
+
+  def slack_user_for_company(company)
+    user_company_roles.find_by(company: company)&.slack_user
+  end
 end

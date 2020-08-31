@@ -598,6 +598,7 @@ pt-BR:
         user_role: Função do usuário
         start_date: Início
         end_date: Fim
+        slack_user: Usuário no Slack
         enums:
           user_role:
             operations: Operação

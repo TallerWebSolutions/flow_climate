@@ -23,6 +23,6 @@ class UserCompanyRolesController < AuthenticatedController
   end
 
   def user_company_role_params
-    params.require(:user_company_role).permit(:start_date, :end_date, :user_role)
+    params.require(:user_company_role).permit(:start_date, :end_date, :user_role, :slack_user)
   end
 end

@@ -19,12 +19,19 @@ class DemandBlocksController < AuthenticatedController
   end
 
   def edit
-    render 'demand_blocks/edit'
+    respond_to do |format|
+      format.js { render 'demand_blocks/edit.js.erb' }
+      format.html { render 'demand_blocks/edit.html.erb' }
+    end
   end
 
   def update
     @demand_block.update(demand_block_params)
-    render 'demand_blocks/update'
+
+    respond_to do |format|
+      format.js { render 'demand_blocks/update.js.erb' }
+      format.html { redirect_to company_demand_path(@company, @demand) }
+    end
   end
 
   def index

@@ -47,6 +47,7 @@
         <th><%= User.human_attribute_name :last_name %></th>
         <th><%= User.human_attribute_name :email %></th>
         <th><%= UserCompanyRole.human_attribute_name :user_role %></th>
+        <th><%= UserCompanyRole.human_attribute_name :slack_user %></th>
         <th></th>
       </thead>
       <tbody>
@@ -56,12 +57,14 @@
             <td><%= user_company_role.last_name %></td>
             <td><%= user_company_role.email %></td>
             <td><%= I18n.t("activerecord.attributes.user_company_role.enums.user_role.#{user_company_role.user_role}") %></td>
+            <td><%= user_company_role.slack_user %></td>
             <% if current_user.managing_company?(@company) || current_user.admin? %>
               <td>
                 <%= link_to edit_user_company_user_company_role_path(user_company_role.user, @company, user_company_role) do %>
                   <i class="fas fa-edit"></i>
                 <% end %>
               </td>
+
             <% end %>
           </tr>
         <% end %>

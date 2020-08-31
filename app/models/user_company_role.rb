@@ -6,6 +6,7 @@
 #
 #  id         :integer          not null, primary key
 #  end_date   :date
+#  slack_user :string
 #  start_date :date
 #  user_role  :integer          default("operations"), not null
 #  created_at :datetime         not null
